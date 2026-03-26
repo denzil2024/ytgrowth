@@ -1,0 +1,37 @@
+@import "tailwindcss";
+
+/* Landing page */
+@keyframes landing-pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
+@keyframes landing-floatA { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+@keyframes landing-floatB { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-7px)} }
+
+.btn-primary {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 15px 32px; border-radius: 100px;
+  font-weight: 700; font-size: 15px; text-decoration: none;
+  background: #cc0000; color: #fff; transition: all 0.2s; cursor: pointer;
+}
+.btn-primary:hover { background: #e50000; transform: translateY(-1px); box-shadow: 0 8px 30px rgba(204,0,0,0.4); }
+
+.btn-secondary {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 15px 32px; border-radius: 100px;
+  font-weight: 600; font-size: 15px; text-decoration: none;
+  background: rgba(255,255,255,0.07); color: #fff;
+  border: 1px solid rgba(255,255,255,0.12); transition: all 0.2s; cursor: pointer;
+}
+.btn-secondary:hover { background: rgba(255,255,255,0.12); }
+
+.feature-card {
+  background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 20px; padding: 32px; transition: all 0.25s; cursor: default;
+}
+.feature-card:hover { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.15); transform: translateY(-2px); }
+
+.faq-item { border-bottom: 1px solid rgba(255,255,255,0.07); padding: 24px 0; }
+.faq-item:last-child { border-bottom: none; }
+
+.pill-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 8px 18px; border-radius: 100px; font-weight: 600; font-size: 12px; letter-spacing: 0.3px;
+}

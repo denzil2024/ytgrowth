@@ -1,0 +1,32 @@
+from sqlalchemy import Column, String, Integer, Float, DateTime, create_engine
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
+import datetime
+
+Base = declarative_base()
+
+class User(Base):
+    __tablename__ = "users"
+    id = Column(Integer, primary_key=True)
+    email = Column(String, unique=True)
+    google_token = Column(String)
+    channel_id = Column(String)
+    channel_name = Column(String)
+    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+
+class ChannelMetrics(Base):
+    __tablename__ = "channel_metrics"
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer)
+    subscribers = Column(Integer)
+    total_views = Column(Integer)
+    video_count = Column(Integer)
+    avg_views_per_video = Column(Float)
+    upload_frequency = Column(Float)
+    avg_ctr = Column(Float)
+    avg_watch_time = Column(Float)
+    fetched_at = Column(DateTime, default=datetime.datetime.utcnow)
+
+engine = create_engine("sqlite:///ytgrowth.db")
+Base.metadata.create_all(engine)
+SessionLocal = sessionmaker(bind=engine)
