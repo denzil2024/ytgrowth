@@ -717,7 +717,7 @@ export default function Competitors() {
     if (!searchQuery.trim()) return
     setLoadingSearch(true)
     setSearched(true)
-    fetch(`http://localhost:8000/competitors/search?q=${encodeURIComponent(searchQuery)}`,
+    fetch(`/competitors/search?q=${encodeURIComponent(searchQuery)}`,
       { credentials: 'include' })
       .then(r => r.json())
       .then(d => { if (d.results) setSearchResults(d.results); setLoadingSearch(false) })
@@ -727,7 +727,7 @@ export default function Competitors() {
   const handleAnalyze = (channelId) => {
     if (analyses.find(a => a.competitor.channel_id === channelId)) return
     setLoadingAnalyze(channelId)
-    fetch(`http://localhost:8000/competitors/analyze/${channelId}`, { credentials: 'include' })
+    fetch(`/competitors/analyze/${channelId}`, { credentials: 'include' })
       .then(r => r.json())
       .then(d => {
         if (d.competitor) {

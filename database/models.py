@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Integer, Float, DateTime, create_engine
+from sqlalchemy import Column, String, Integer, Float, DateTime, Text, create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 import datetime
@@ -26,6 +26,13 @@ class ChannelMetrics(Base):
     avg_ctr = Column(Float)
     avg_watch_time = Column(Float)
     fetched_at = Column(DateTime, default=datetime.datetime.utcnow)
+
+class UserSession(Base):
+    __tablename__ = "user_sessions"
+    session_id = Column(String, primary_key=True)
+    creds_json = Column(Text, nullable=False)
+    user_data_json = Column(Text, nullable=False)
+    updated_at = Column(DateTime, default=datetime.datetime.utcnow, onupdate=datetime.datetime.utcnow)
 
 engine = create_engine("sqlite:///ytgrowth.db")
 Base.metadata.create_all(engine)

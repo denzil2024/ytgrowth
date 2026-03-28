@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 
-const API = 'http://localhost:8000'
+const API = ''
 
 function cacheKey(videoId) { return `videoOptimize_${videoId}` }
 function loadCache(videoId) {

@@ -15,7 +15,7 @@ function saveToDisk(title, result) {
   } catch {}
 }
 
-const API = 'http://localhost:8000'
+const API = ''
 
 const C = {
   bg: '#f5f5f7',

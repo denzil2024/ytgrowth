@@ -294,8 +294,8 @@ export default function Landing() {
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
           <ThemeToggle light={light} onToggle={() => setLight(l => !l)} />
-          <a href="http://localhost:8000/auth/login" className="ytg-nav-link" style={{ padding: '8px 16px', borderRadius: 10 }}>Log in</a>
-          <a href="http://localhost:8000/auth/login" className="ytg-btn-primary" style={{ padding: '9px 20px', fontSize: 13.5 }}>
+          <a href="/auth/login" className="ytg-nav-link" style={{ padding: '8px 16px', borderRadius: 10 }}>Log in</a>
+          <a href="/auth/login" className="ytg-btn-primary" style={{ padding: '9px 20px', fontSize: 13.5 }}>
             Get started free
           </a>
         </div>
@@ -324,7 +324,7 @@ export default function Landing() {
           </p>
 
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12, marginBottom: 48 }}>
-            <a href="http://localhost:8000/auth/login" className="ytg-btn-primary" style={{ fontSize: 15.5, padding: '15px 32px' }}>
+            <a href="/auth/login" className="ytg-btn-primary" style={{ fontSize: 15.5, padding: '15px 32px' }}>
               Analyze my channel — it's free <Arrow />
             </a>
             <a href="#how-it-works" className="ytg-btn-ghost" style={{ fontSize: 15.5, padding: '15px 32px' }}>
@@ -676,7 +676,7 @@ export default function Landing() {
                   <span style={{ fontSize: 13.5, color: 'var(--ytg-text-2)' }}>{f}</span>
                 </div>
               ))}
-              <a href="http://localhost:8000/auth/login" className="ytg-btn-ghost" style={{ marginTop: 24, width: '100%', justifyContent: 'center', display: 'flex' }}>Get started free</a>
+              <a href="/auth/login" className="ytg-btn-ghost" style={{ marginTop: 24, width: '100%', justifyContent: 'center', display: 'flex' }}>Get started free</a>
             </div>
 
             {/* Growth — recommended */}
@@ -707,7 +707,7 @@ export default function Landing() {
                   <span style={{ fontSize: 13.5, color: 'var(--ytg-text)' }}>{f}</span>
                 </div>
               ))}
-              <a href="http://localhost:8000/auth/login" className="ytg-btn-primary" style={{ marginTop: 24, width: '100%', justifyContent: 'center', display: 'flex' }}>Start with Growth</a>
+              <a href="/auth/login" className="ytg-btn-primary" style={{ marginTop: 24, width: '100%', justifyContent: 'center', display: 'flex' }}>Start with Growth</a>
             </div>
 
             {/* Pro */}
@@ -735,7 +735,7 @@ export default function Landing() {
                   <span style={{ fontSize: 13.5, color: 'var(--ytg-text-2)' }}>{f}</span>
                 </div>
               ))}
-              <a href="http://localhost:8000/auth/login" className="ytg-btn-ghost" style={{ marginTop: 24, width: '100%', justifyContent: 'center', display: 'flex' }}>Start with Pro</a>
+              <a href="/auth/login" className="ytg-btn-ghost" style={{ marginTop: 24, width: '100%', justifyContent: 'center', display: 'flex' }}>Start with Pro</a>
             </div>
           </div>
 
@@ -817,7 +817,7 @@ export default function Landing() {
           <p style={{ fontSize: 17, color: 'var(--ytg-text-2)', marginBottom: 48, lineHeight: 1.8, maxWidth: 620, margin: '0 auto 48px' }}>
             Connect your channel in 30 seconds and get your full diagnosis — free. No credit card. No setup.
           </p>
-          <a href="http://localhost:8000/auth/login" className="ytg-btn-primary" style={{ fontSize: 16, padding: '16px 38px' }}>
+          <a href="/auth/login" className="ytg-btn-primary" style={{ fontSize: 16, padding: '16px 38px' }}>
             Analyze my channel — it's free <Arrow />
           </a>
           <p style={{ fontSize: 12.5, color: 'var(--ytg-text-3)', marginTop: 16 }}>No credit card. No setup. Cancel anytime.</p>
@@ -834,7 +834,7 @@ export default function Landing() {
           <p style={{ fontSize: 13, color: 'var(--ytg-text-3)' }}>Built for creators serious about growth.</p>
           <div style={{ display: 'flex', gap: 28 }}>
             {['Privacy policy', 'Terms of service', 'Log in'].map((l, i) => (
-              <a key={i} href="http://localhost:8000/auth/login" className="ytg-nav-link" style={{ fontSize: 13 }}>{l}</a>
+              <a key={i} href="/auth/login" className="ytg-nav-link" style={{ fontSize: 13 }}>{l}</a>
             ))}
           </div>
         </div>

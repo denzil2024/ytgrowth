@@ -7,6 +7,7 @@ import uuid
 import json
 from app.youtube import get_channel_stats, get_recent_videos, get_analytics, get_video_analytics
 from app.insights import analyze_channel
+from database.models import UserSession, SessionLocal
 
 router = APIRouter()
 
@@ -23,9 +24,7 @@ SCOPES = [
     "openid"
 ]
 
-_SESSIONS_DIR = "sessions"
-
-# In-memory cache — rebuilt from disk on demand after a server restart
+# In-memory cache — rebuilt from DB on demand after a server restart
 _pending_flows: dict[str, Flow] = {}
 _user_data:     dict[str, dict] = {}
 _user_creds:    dict[str, Credentials] = {}
@@ -33,44 +32,43 @@ _user_creds:    dict[str, Credentials] = {}
 
 # ── Session persistence helpers ────────────────────────────────────────────────
 
-def _session_path(session_id: str) -> str:
-    os.makedirs(_SESSIONS_DIR, exist_ok=True)
-    return os.path.join(_SESSIONS_DIR, f"{session_id}.json")
-
-
 def _persist_session(session_id: str, creds: Credentials, user_data: dict) -> None:
-    """Write credentials + user data to disk so they survive server restarts."""
-    payload = {
-        "creds": {
-            "token":         creds.token,
-            "refresh_token": creds.refresh_token,
-            "token_uri":     creds.token_uri,
-            "client_id":     creds.client_id,
-            "client_secret": creds.client_secret,
-            "scopes":        list(creds.scopes) if creds.scopes else [],
-        },
-        "user_data": user_data,
+    """Write credentials + user data to the database."""
+    creds_payload = {
+        "token":         creds.token,
+        "refresh_token": creds.refresh_token,
+        "token_uri":     creds.token_uri,
+        "client_id":     creds.client_id,
+        "client_secret": creds.client_secret,
+        "scopes":        list(creds.scopes) if creds.scopes else [],
     }
     try:
-        with open(_session_path(session_id), "w") as f:
-            json.dump(payload, f)
+        db = SessionLocal()
+        row = db.query(UserSession).filter_by(session_id=session_id).first()
+        if row:
+            row.creds_json     = json.dumps(creds_payload)
+            row.user_data_json = json.dumps(user_data)
+        else:
+            db.add(UserSession(
+                session_id=session_id,
+                creds_json=json.dumps(creds_payload),
+                user_data_json=json.dumps(user_data),
+            ))
+        db.commit()
     except Exception as e:
         print(f"Session persist error: {e}")
+    finally:
+        db.close()
 
 
 def _restore_session(session_id: str) -> tuple[Credentials | None, dict | None]:
-    """
-    Load a session from disk into the in-memory cache.
-    Called automatically when a request arrives with a valid session_id cookie
-    but the server has been restarted and the in-memory dicts are empty.
-    """
-    path = _session_path(session_id)
-    if not os.path.exists(path):
-        return None, None
+    """Load a session from the database into the in-memory cache."""
     try:
-        with open(path) as f:
-            payload = json.load(f)
-        c = payload["creds"]
+        db = SessionLocal()
+        row = db.query(UserSession).filter_by(session_id=session_id).first()
+        if not row:
+            return None, None
+        c = json.loads(row.creds_json)
         creds = Credentials(
             token=c["token"],
             refresh_token=c["refresh_token"],
@@ -79,8 +77,7 @@ def _restore_session(session_id: str) -> tuple[Credentials | None, dict | None]:
             client_secret=c["client_secret"],
             scopes=c["scopes"],
         )
-        user_data = payload.get("user_data")
-        # Warm the in-memory cache so subsequent requests don't hit disk again
+        user_data = json.loads(row.user_data_json)
         _user_creds[session_id] = creds
         if user_data:
             _user_data[session_id] = user_data
@@ -88,6 +85,8 @@ def _restore_session(session_id: str) -> tuple[Credentials | None, dict | None]:
     except Exception as e:
         print(f"Session restore error for {session_id}: {e}")
         return None, None
+    finally:
+        db.close()
 
 
 def get_session(session_id: str | None) -> tuple[dict | None, Credentials | None]:
@@ -219,11 +218,12 @@ def logout(request: Request):
         _user_data.pop(session_id, None)
         _user_creds.pop(session_id, None)
         _pending_flows.pop(session_id, None)
-        # Delete the persisted session file so it isn't restored after logout
         try:
-            path = _session_path(session_id)
-            if os.path.exists(path):
-                os.remove(path)
+            db = SessionLocal()
+            db.query(UserSession).filter_by(session_id=session_id).delete()
+            db.commit()
         except Exception:
             pass
+        finally:
+            db.close()
     return RedirectResponse(f"{BASE_URL}")

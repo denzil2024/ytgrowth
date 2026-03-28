@@ -315,7 +315,7 @@ export default function Dashboard() {
   const [checked, setChecked] = useState({})
 
   useEffect(() => {
-    fetch('http://localhost:8000/auth/data', { credentials: 'include' })
+    fetch('/auth/data', { credentials: 'include' })
       .then(r => { if (!r.ok) throw new Error('No data'); return r.json() })
       .then(d => {
         if (d.error) throw new Error(d.error)
@@ -335,7 +335,7 @@ export default function Dashboard() {
   useEffect(() => {
     if (!analyzingAI) return
     const interval = setInterval(() => {
-      fetch('http://localhost:8000/auth/data', { credentials: 'include' })
+      fetch('/auth/data', { credentials: 'include' })
         .then(r => r.json())
         .then(d => {
           if (d.insights !== null) {
@@ -468,7 +468,7 @@ export default function Dashboard() {
 
         {/* Disconnect */}
         <div style={{ padding: '14px 14px' }}>
-          <a href="http://localhost:8000/auth/logout"
+          <a href="/auth/logout"
             style={{ color: 'rgba(255,255,255,0.28)', fontSize: 12.5, textDecoration: 'none', fontWeight: 400, display: 'flex', alignItems: 'center', gap: 8, padding: '8px 10px', borderRadius: 10, transition: 'all 0.15s' }}
             onMouseEnter={e => { e.currentTarget.style.color = 'rgba(255,255,255,0.6)'; e.currentTarget.style.background = 'rgba(255,255,255,0.04)' }}
             onMouseLeave={e => { e.currentTarget.style.color = 'rgba(255,255,255,0.28)'; e.currentTarget.style.background = 'transparent' }}
@@ -1000,7 +1000,7 @@ export default function Dashboard() {
                     </div>
                   </div>
                 )}
-                <a href="http://localhost:8000/auth/logout" style={{ display: 'inline-flex', alignItems: 'center', gap: 7, background: C.redBg, color: C.red, border: `1px solid ${C.redBdr}`, padding: '9px 17px', borderRadius: 9, fontSize: 13, fontWeight: 700, textDecoration: 'none', fontFamily: 'inherit' }}>
+                <a href="/auth/logout" style={{ display: 'inline-flex', alignItems: 'center', gap: 7, background: C.redBg, color: C.red, border: `1px solid ${C.redBdr}`, padding: '9px 17px', borderRadius: 9, fontSize: 13, fontWeight: 700, textDecoration: 'none', fontFamily: 'inherit' }}>
                   <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M4 6h6M7.5 4L10 6l-2.5 2M6 1H2a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h4"/></svg>
                   Disconnect channel
                 </a>

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 
-const API = import.meta.env.VITE_API_URL || 'http://localhost:8000'
+const API = import.meta.env.VITE_API_URL || ''
 const LS_KEY = 'ytg_keywords_v1'
 
 function loadSaved() {
