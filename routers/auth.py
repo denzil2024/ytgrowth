@@ -13,6 +13,9 @@ router = APIRouter()
 os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
 os.environ["OAUTHLIB_RELAX_TOKEN_SCOPE"] = "1"
 
+BASE_URL = os.environ.get("BASE_URL", "http://localhost:5173")
+BACKEND_URL = os.environ.get("BACKEND_URL", "http://localhost:8000")
+
 SCOPES = [
     "https://www.googleapis.com/auth/userinfo.email",
     "https://www.googleapis.com/auth/youtube",
@@ -105,7 +108,7 @@ def get_flow():
     flow = Flow.from_client_secrets_file(
         "client_secret.json",
         scopes=SCOPES,
-        redirect_uri="http://localhost:8000/auth/callback"
+        redirect_uri=f"{BACKEND_URL}/auth/callback"
     )
     flow.code_verifier = None
     return flow
@@ -144,13 +147,13 @@ def _run_analysis_in_background(session_id: str, stats: dict, videos: list, anal
 def callback(request: Request, background_tasks: BackgroundTasks):
     code = request.query_params.get("code")
     if not code:
-        return RedirectResponse("http://localhost:5173?error=no_code")
+        return RedirectResponse(f"{BASE_URL}?error=no_code")
 
     session_id = request.session.get("session_id")
     pending = _pending_flows.pop(session_id, None) if session_id else None
 
     if not pending:
-        return RedirectResponse("http://localhost:5173?error=session_expired")
+        return RedirectResponse(f"{BASE_URL}?error=session_expired")
 
     try:
         flow = pending["flow"]
@@ -168,7 +171,7 @@ def callback(request: Request, background_tasks: BackgroundTasks):
 
         stats = get_channel_stats(creds)
         if not stats:
-            return RedirectResponse("http://localhost:5173?error=no_channel")
+            return RedirectResponse(f"{BASE_URL}?error=no_channel")
 
         videos = get_recent_videos(creds)
         analytics = get_analytics(creds, stats["channel_id"])
@@ -191,13 +194,13 @@ def callback(request: Request, background_tasks: BackgroundTasks):
             session_id, stats, videos, analytics, video_analytics
         )
 
-        return RedirectResponse("http://localhost:5173/dashboard")
+        return RedirectResponse(f"{BASE_URL}/dashboard")
 
     except Exception as e:
         print(f"Callback error: {e}")
         import traceback
         traceback.print_exc()
-        return RedirectResponse("http://localhost:5173?error=analysis_failed")
+        return RedirectResponse(f"{BASE_URL}?error=analysis_failed")
 
 
 @router.get("/data")
@@ -223,4 +226,4 @@ def logout(request: Request):
                 os.remove(path)
         except Exception:
             pass
-    return RedirectResponse("http://localhost:5173")
+    return RedirectResponse(f"{BASE_URL}")
