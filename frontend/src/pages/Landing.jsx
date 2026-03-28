@@ -265,7 +265,14 @@ function ScrollDots() {
 /* ─── Landing page ──────────────────────────────────────────────────────── */
 export default function Landing() {
   const [light, setLight] = useState(false)
+  const [loggedIn, setLoggedIn] = useState(false)
   useGlobalStyles(light)
+
+  useEffect(() => {
+    fetch('/auth/data', { credentials: 'include' })
+      .then(r => { if (r.ok) setLoggedIn(true) })
+      .catch(() => {})
+  }, [])
 
   return (
     <div style={{ fontFamily: "'DM Sans', system-ui, sans-serif", background: 'var(--ytg-bg)', color: 'var(--ytg-text)', overflowX: 'hidden' }}>
@@ -294,10 +301,18 @@ export default function Landing() {
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
           <ThemeToggle light={light} onToggle={() => setLight(l => !l)} />
-          <a href="/auth/login" className="ytg-nav-link" style={{ padding: '8px 16px', borderRadius: 10 }}>Log in</a>
-          <a href="/auth/login" className="ytg-btn-primary" style={{ padding: '9px 20px', fontSize: 13.5 }}>
-            Get started free
-          </a>
+          {loggedIn ? (
+            <a href="/dashboard" className="ytg-btn-primary" style={{ padding: '9px 20px', fontSize: 13.5 }}>
+              Dashboard
+            </a>
+          ) : (
+            <>
+              <a href="/auth/login" className="ytg-nav-link" style={{ padding: '8px 16px', borderRadius: 10 }}>Log in</a>
+              <a href="/auth/login" className="ytg-btn-primary" style={{ padding: '9px 20px', fontSize: 13.5 }}>
+                Get started free
+              </a>
+            </>
+          )}
         </div>
       </nav>
 
