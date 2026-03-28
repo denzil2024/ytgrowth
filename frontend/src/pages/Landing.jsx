@@ -243,9 +243,45 @@ function useGlobalStyles(light) {
         overflow: hidden;
         box-shadow: var(--ytg-shadow-xl);
       }
+
+      /* ── Mobile nav menu ─────────────────────────────────── */
+      .ytg-mobile-menu {
+        display: none; position: fixed; inset: 0; z-index: 99;
+        background: var(--ytg-nav); backdrop-filter: blur(24px);
+        -webkit-backdrop-filter: blur(24px);
+        flex-direction: column; align-items: center; justify-content: center; gap: 32px;
+        border-bottom: 1px solid var(--ytg-border);
+      }
+      .ytg-mobile-menu.open { display: flex; }
+
+      /* ── Responsive card grids ───────────────────────────── */
+      @media (max-width: 768px) {
+        .ytg-feature-card { border-radius: 20px; padding: 22px; }
+        .ytg-step-card { border-radius: 20px; padding: 22px; }
+        .ytg-testimonial-card { border-radius: 20px; padding: 22px 24px; }
+        .ytg-pricing-card { border-radius: 20px; padding: 28px 24px; }
+        .ytg-pricing-card-featured { border-radius: 20px; padding: 28px 24px; }
+        .ytg-faq-card { border-radius: 16px; }
+        .ytg-objection-card { border-radius: 14px; padding: 18px 16px; }
+        .ytg-btn-primary { padding: 13px 26px !important; font-size: 14px !important; }
+        .ytg-btn-ghost { padding: 13px 26px !important; font-size: 14px !important; }
+        .ytg-stat-row-item { padding: 0 16px; }
+        .ytg-stat-row-item + .ytg-stat-row-item { border-left: none; border-top: 1px solid var(--ytg-border); padding-top: 28px; margin-top: 28px; }
+      }
     `
     document.head.appendChild(style)
   }, [])
+}
+
+/* ─── Responsive hooks ──────────────────────────────────────────────────── */
+function useBreakpoint() {
+  const [width, setWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1280)
+  useEffect(() => {
+    const handler = () => setWidth(window.innerWidth)
+    window.addEventListener('resize', handler)
+    return () => window.removeEventListener('resize', handler)
+  }, [])
+  return { isMobile: width <= 768, isTablet: width <= 1024 }
 }
 
 /* ─── Logo ──────────────────────────────────────────────────────────────── */
@@ -419,6 +455,8 @@ export default function Landing() {
   const [loggedIn, setLoggedIn] = useState(false)
   const [pricingTab, setPricingTab] = useState('monthly')
   const [openFaq, setOpenFaq] = useState(0)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const { isMobile, isTablet } = useBreakpoint()
   useGlobalStyles(light)
 
   useEffect(() => {
@@ -438,7 +476,7 @@ export default function Landing() {
         WebkitBackdropFilter: 'blur(20px)',
         borderBottom: '1px solid var(--ytg-border)',
         height: 60, display: 'flex', alignItems: 'center',
-        justifyContent: 'space-between', padding: '0 64px',
+        justifyContent: 'space-between', padding: isMobile ? '0 20px' : '0 64px',
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
           <Logo size={28} />
@@ -446,15 +484,32 @@ export default function Landing() {
           <span style={{ background: 'var(--ytg-accent-light)', color: 'var(--ytg-accent-text)', fontSize: 9.5, fontWeight: 700, padding: '3px 8px', borderRadius: 100, border: '1px solid var(--ytg-accent-border)', letterSpacing: '0.06em', textTransform: 'uppercase' }}>Beta</span>
         </div>
 
-        <div style={{ display: 'flex', gap: 32 }}>
-          {['Features', 'How it works', 'Pricing', 'FAQ'].map((l, i) => (
-            <a key={i} href={`#${l.toLowerCase().replace(/ /g, '-')}`} className="ytg-nav-link">{l}</a>
-          ))}
-        </div>
+        {!isMobile && (
+          <div style={{ display: 'flex', gap: 32 }}>
+            {['Features', 'How it works', 'Pricing', 'FAQ'].map((l, i) => (
+              <a key={i} href={`#${l.toLowerCase().replace(/ /g, '-')}`} className="ytg-nav-link">{l}</a>
+            ))}
+          </div>
+        )}
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
           <ThemeToggle light={light} onToggle={() => setLight(l => !l)} />
-          {loggedIn ? (
+          {isMobile ? (
+            <button
+              onClick={() => setMobileMenuOpen(o => !o)}
+              style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 6, color: 'var(--ytg-text)', display: 'flex', flexDirection: 'column', gap: 4.5 }}
+            >
+              {mobileMenuOpen ? (
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M2 2l14 14M16 2L2 16" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>
+              ) : (
+                <>
+                  <span style={{ display: 'block', width: 20, height: 2, background: 'var(--ytg-text)', borderRadius: 2 }} />
+                  <span style={{ display: 'block', width: 20, height: 2, background: 'var(--ytg-text)', borderRadius: 2 }} />
+                  <span style={{ display: 'block', width: 14, height: 2, background: 'var(--ytg-text)', borderRadius: 2 }} />
+                </>
+              )}
+            </button>
+          ) : loggedIn ? (
             <a href="/dashboard" className="ytg-btn-primary" style={{ padding: '9px 20px', fontSize: 13.5 }}>
               Dashboard
             </a>
@@ -469,8 +524,29 @@ export default function Landing() {
         </div>
       </nav>
 
+      {/* Mobile menu overlay */}
+      <div className={`ytg-mobile-menu${mobileMenuOpen ? ' open' : ''}`} style={{ top: 60 }}>
+        {['Features', 'How it works', 'Pricing', 'FAQ'].map((l, i) => (
+          <a key={i} href={`#${l.toLowerCase().replace(/ /g, '-')}`}
+            onClick={() => setMobileMenuOpen(false)}
+            style={{ fontSize: 22, fontWeight: 700, color: 'var(--ytg-text)', textDecoration: 'none', letterSpacing: '-0.5px' }}>
+            {l}
+          </a>
+        ))}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 10, width: '100%', padding: '0 32px', alignItems: 'center' }}>
+          {loggedIn ? (
+            <a href="/dashboard" className="ytg-btn-primary" style={{ width: '100%', justifyContent: 'center' }}>Dashboard</a>
+          ) : (
+            <>
+              <a href="/auth/login" className="ytg-btn-primary" style={{ width: '100%', justifyContent: 'center' }}>Get started free</a>
+              <a href="/auth/login" className="ytg-btn-ghost" style={{ width: '100%', justifyContent: 'center' }}>Log in</a>
+            </>
+          )}
+        </div>
+      </div>
+
       {/* ── HERO ────────────────────────────────────────────────────────── */}
-      <div id="hero" style={{ position: 'relative', padding: '110px 48px 90px', overflow: 'hidden' }}>
+      <div id="hero" style={{ position: 'relative', padding: isMobile ? '70px 24px 50px' : '110px 48px 90px', overflow: 'hidden' }}>
         {/* Glow */}
         <div style={{ position: 'absolute', top: '-10%', left: '50%', transform: 'translateX(-50%)', width: 900, height: 700, background: 'radial-gradient(ellipse, rgba(229,48,42,0.06) 0%, transparent 65%)', pointerEvents: 'none' }} />
 
@@ -481,27 +557,27 @@ export default function Landing() {
             <span style={{ fontSize: 13, fontWeight: 500, color: 'var(--ytg-text-3)', letterSpacing: '-0.1px' }}>Free during beta — no credit card needed</span>
           </div>
 
-          <h1 style={{ fontWeight: 800, fontSize: 72, lineHeight: 1.02, letterSpacing: '-2.5px', color: 'var(--ytg-text)', marginBottom: 22 }}>
+          <h1 style={{ fontWeight: 800, fontSize: isMobile ? 40 : isTablet ? 56 : 72, lineHeight: 1.02, letterSpacing: isMobile ? '-1.5px' : '-2.5px', color: 'var(--ytg-text)', marginBottom: 22 }}>
             Know exactly what<br />
             <span style={{ color: 'var(--ytg-accent)' }}>to fix</span> on your<br />
             YouTube channel.
           </h1>
 
-          <p style={{ fontSize: 19, color: 'var(--ytg-text-2)', lineHeight: 1.8, marginBottom: 44, maxWidth: 620, margin: '0 auto 44px' }}>
+          <p style={{ fontSize: isMobile ? 16 : 19, color: 'var(--ytg-text-2)', lineHeight: 1.8, marginBottom: 44, maxWidth: 620, margin: '0 auto 44px' }}>
             Connect your channel and get a full AI-powered diagnosis in 30 seconds — health score, competitor gaps, and one clear action for every problem.
           </p>
 
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12, marginBottom: 48 }}>
-            <a href="/auth/login" className="ytg-btn-primary" style={{ fontSize: 15.5, padding: '15px 32px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12, marginBottom: 48, flexDirection: isMobile ? 'column' : 'row', width: isMobile ? '100%' : 'auto' }}>
+            <a href="/auth/login" className="ytg-btn-primary" style={{ fontSize: 15.5, padding: '15px 32px', width: isMobile ? '100%' : 'auto', justifyContent: 'center' }}>
               Analyze my channel — it's free <Arrow />
             </a>
-            <a href="#how-it-works" className="ytg-btn-ghost" style={{ fontSize: 15.5, padding: '15px 32px' }}>
+            <a href="#how-it-works" className="ytg-btn-ghost" style={{ fontSize: 15.5, padding: '15px 32px', width: isMobile ? '100%' : 'auto', justifyContent: 'center' }}>
               See how it works
             </a>
           </div>
 
           {/* Trust row */}
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 28, flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: isMobile ? 14 : 28, flexWrap: 'wrap' }}>
             {['Read-only access', 'Google OAuth secured', '30-second setup', 'Cancel anytime'].map((t, i) => (
               <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
                 <Check />
@@ -512,7 +588,7 @@ export default function Landing() {
         </div>
 
         {/* Dashboard mockup */}
-        <div style={{ maxWidth: 1280, margin: '72px auto 0', position: 'relative' }}>
+        <div style={{ maxWidth: 1280, margin: '72px auto 0', position: 'relative', display: isMobile ? 'none' : 'block' }}>
           <div style={{
             background: '#111114', border: '1px solid rgba(255,255,255,0.09)',
             borderRadius: 22, overflow: 'hidden',
@@ -609,7 +685,7 @@ export default function Landing() {
       {/* ── STATS BAR ───────────────────────────────────────────────────── */}
       <div style={{ borderTop: '1px solid var(--ytg-border-2)', borderBottom: '1px solid var(--ytg-border-2)', background: 'var(--ytg-section)', position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 700, height: 300, background: 'radial-gradient(ellipse, rgba(59,130,246,0.08) 0%, transparent 70%)', pointerEvents: 'none' }} />
-        <div style={{ maxWidth: 1280, margin: '0 auto', padding: '52px 64px', display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', position: 'relative', zIndex: 1 }}>
+        <div style={{ maxWidth: 1280, margin: '0 auto', padding: isMobile ? '40px 24px' : '52px 64px', display: 'grid', gridTemplateColumns: isMobile ? 'repeat(2,1fr)' : 'repeat(4,1fr)', position: 'relative', zIndex: 1 }}>
           {[['30s', 'To your first full diagnosis'], ['12+', 'Metrics analyzed per channel'], ['5', 'AI tools included'], ['5+', 'Competitor channels scanned']].map(([n, l], i) => (
             <div key={i} className="ytg-stat-row-item">
               <p style={{ fontWeight: 800, fontSize: 48, letterSpacing: '-1.5px', color: 'var(--ytg-text)', lineHeight: 1, marginBottom: 8, fontVariantNumeric: 'tabular-nums' }}>{n}</p>
@@ -620,16 +696,16 @@ export default function Landing() {
       </div>
 
       {/* ── FEATURES ────────────────────────────────────────────────────── */}
-      <div id="features" style={{ padding: '100px 64px', position: 'relative', overflow: 'hidden' }}>
+      <div id="features" style={{ padding: isMobile ? '60px 20px' : '100px 64px', position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', top: '-5%', right: '-5%', width: 700, height: 600, background: 'radial-gradient(ellipse, rgba(99,102,241,0.08) 0%, transparent 65%)', pointerEvents: 'none' }} />
         <div style={{ position: 'absolute', bottom: '10%', left: '-5%', width: 500, height: 400, background: 'radial-gradient(ellipse, rgba(14,165,233,0.07) 0%, transparent 65%)', pointerEvents: 'none' }} />
         <div style={{ maxWidth: 1280, margin: '0 auto', position: 'relative', zIndex: 1 }}>
           <div style={{ textAlign: 'center', marginBottom: 56 }}>
             <Badge>Features</Badge>
-            <h2 style={{ fontWeight: 800, fontSize: 48, letterSpacing: '-1.5px', color: 'var(--ytg-text)', lineHeight: 1.06, marginBottom: 14 }}>Everything you need to grow.</h2>
+            <h2 style={{ fontWeight: 800, fontSize: isMobile ? 32 : 48, letterSpacing: '-1.5px', color: 'var(--ytg-text)', lineHeight: 1.06, marginBottom: 14 }}>Everything you need to grow.</h2>
             <p style={{ fontSize: 17, color: 'var(--ytg-text-2)', maxWidth: 540, margin: '0 auto', lineHeight: 1.8 }}>Not just data — real answers with a clear action behind every metric.</p>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 14 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : isTablet ? 'repeat(2,1fr)' : 'repeat(3,1fr)', gap: 14 }}>
             {[
               { icon: '◎', color: '#ff3b30', title: 'Channel Health Score', desc: 'A single score out of 100 that captures retention, engagement, growth velocity, and consistency — updated live.', tag: 'Instant', tagColor: '#0a84ff' },
               { icon: '▲', color: '#ffd60a', title: 'Video Performance', desc: 'See exactly which videos drag your channel down and which the algorithm loves — with metric-by-metric breakdowns.', tag: 'Detailed', tagColor: '#ffd60a' },
@@ -654,15 +730,15 @@ export default function Landing() {
       </div>
 
       {/* ── BEFORE / AFTER ──────────────────────────────────────────────── */}
-      <div style={{ background: 'var(--ytg-section)', borderTop: '1px solid var(--ytg-border)', borderBottom: '1px solid var(--ytg-border)', padding: '100px 64px', position: 'relative', overflow: 'hidden' }}>
+      <div style={{ background: 'var(--ytg-section)', borderTop: '1px solid var(--ytg-border)', borderBottom: '1px solid var(--ytg-border)', padding: isMobile ? '60px 20px' : '100px 64px', position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', top: '50%', right: '10%', transform: 'translateY(-50%)', width: 600, height: 500, background: 'radial-gradient(ellipse, rgba(229,48,42,0.06) 0%, transparent 65%)', pointerEvents: 'none' }} />
         <div style={{ maxWidth: 1280, margin: '0 auto', position: 'relative', zIndex: 1 }}>
           <div style={{ textAlign: 'center', marginBottom: 56 }}>
             <Badge>The difference</Badge>
-            <h2 style={{ fontWeight: 800, fontSize: 48, letterSpacing: '-1.5px', color: 'var(--ytg-text)', lineHeight: 1.06, marginBottom: 14 }}>Data vs clarity.</h2>
+            <h2 style={{ fontWeight: 800, fontSize: isMobile ? 32 : 48, letterSpacing: '-1.5px', color: 'var(--ytg-text)', lineHeight: 1.06, marginBottom: 14 }}>Data vs clarity.</h2>
             <p style={{ fontSize: 17, color: 'var(--ytg-text-2)', maxWidth: 620, margin: '0 auto', lineHeight: 1.8 }}>YouTube Studio shows you numbers. YTGrowth tells you what they mean and what to do.</p>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: 14 }}>
             {/* Without */}
             <div className="ytg-card" style={{ overflow: 'hidden' }}>
               <div style={{ padding: '16px 26px', borderBottom: '1px solid var(--ytg-divider)', display: 'flex', alignItems: 'center', gap: 9 }}>
@@ -707,15 +783,15 @@ export default function Landing() {
       </div>
 
       {/* ── HOW IT WORKS ────────────────────────────────────────────────── */}
-      <div id="how-it-works" style={{ padding: '100px 64px', position: 'relative', overflow: 'hidden' }}>
+      <div id="how-it-works" style={{ padding: isMobile ? '60px 20px' : '100px 64px', position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 900, height: 600, background: 'radial-gradient(ellipse, rgba(59,130,246,0.07) 0%, transparent 60%)', pointerEvents: 'none' }} />
         <div style={{ maxWidth: 1280, margin: '0 auto', position: 'relative', zIndex: 1 }}>
           <div style={{ textAlign: 'center', marginBottom: 56 }}>
             <Badge>How it works</Badge>
-            <h2 style={{ fontWeight: 800, fontSize: 48, letterSpacing: '-1.5px', color: 'var(--ytg-text)', lineHeight: 1.06, marginBottom: 14 }}>From zero to action plan<br />in 30 seconds.</h2>
+            <h2 style={{ fontWeight: 800, fontSize: isMobile ? 32 : 48, letterSpacing: '-1.5px', color: 'var(--ytg-text)', lineHeight: 1.06, marginBottom: 14 }}>From zero to action plan<br />in 30 seconds.</h2>
             <p style={{ fontSize: 17, color: 'var(--ytg-text-2)', maxWidth: 620, margin: '0 auto', lineHeight: 1.8 }}>No setup, no configuration, no API keys. Just connect and go.</p>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 14 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3,1fr)', gap: 14 }}>
             {[
               {
                 n: '01', t: 'Connect your channel', d: 'Sign in with Google and grant read-only access. We never post, edit, or store your content.',
@@ -785,14 +861,14 @@ export default function Landing() {
       </div>
 
       {/* ── TESTIMONIALS ────────────────────────────────────────────────── */}
-      <div style={{ background: 'var(--ytg-section)', borderTop: '1px solid var(--ytg-border)', borderBottom: '1px solid var(--ytg-border)', padding: '100px 64px', position: 'relative', overflow: 'hidden' }}>
+      <div style={{ background: 'var(--ytg-section)', borderTop: '1px solid var(--ytg-border)', borderBottom: '1px solid var(--ytg-border)', padding: isMobile ? '60px 20px' : '100px 64px', position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', top: '30%', left: '50%', transform: 'translateX(-50%)', width: 800, height: 400, background: 'radial-gradient(ellipse, rgba(234,179,8,0.08) 0%, transparent 65%)', pointerEvents: 'none' }} />
         <div style={{ maxWidth: 1280, margin: '0 auto', position: 'relative', zIndex: 1 }}>
           <div style={{ textAlign: 'center', marginBottom: 56 }}>
             <Badge>Beta creators</Badge>
-            <h2 style={{ fontWeight: 800, fontSize: 48, letterSpacing: '-1.5px', color: 'var(--ytg-text)', lineHeight: 1.06 }}>What creators are saying.</h2>
+            <h2 style={{ fontWeight: 800, fontSize: isMobile ? 32 : 48, letterSpacing: '-1.5px', color: 'var(--ytg-text)', lineHeight: 1.06 }}>What creators are saying.</h2>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: 14 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(2,1fr)', gap: 14 }}>
             {[
               { q: 'Finally understand why my views dropped. The watch time insight alone changed everything — I had no idea my openings were killing my channel.', n: 'Finance creator', s: '8.2k subs' },
               { q: 'YouTube Studio shows numbers. YTGrowth shows answers. They are not the same thing at all. I wish I had this a year ago.', n: 'Tech reviews', s: '22k subs' },
@@ -820,29 +896,29 @@ export default function Landing() {
       </div>
 
       {/* ── PRICING ─────────────────────────────────────────────────────── */}
-      <div id="pricing" style={{ padding: '100px 64px', position: 'relative', overflow: 'hidden' }}>
+      <div id="pricing" style={{ padding: isMobile ? '60px 20px' : '100px 64px', position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', top: '0%', left: '50%', transform: 'translateX(-50%)', width: 1000, height: 600, background: 'radial-gradient(ellipse, rgba(229,48,42,0.08) 0%, transparent 60%)', pointerEvents: 'none' }} />
         <div style={{ position: 'absolute', bottom: '5%', left: '10%', width: 500, height: 400, background: 'radial-gradient(ellipse, rgba(99,102,241,0.07) 0%, transparent 65%)', pointerEvents: 'none' }} />
         <div style={{ maxWidth: 1280, margin: '0 auto', position: 'relative', zIndex: 1 }}>
           <div style={{ textAlign: 'center', marginBottom: 48 }}>
             <Badge>Pricing</Badge>
-            <h2 style={{ fontWeight: 800, fontSize: 48, letterSpacing: '-1.5px', color: 'var(--ytg-text)', lineHeight: 1.06, marginBottom: 14 }}>One good video idea pays for a year.</h2>
+            <h2 style={{ fontWeight: 800, fontSize: isMobile ? 28 : 48, letterSpacing: '-1.5px', color: 'var(--ytg-text)', lineHeight: 1.06, marginBottom: 14 }}>One good video idea pays for a year.</h2>
             <p style={{ fontSize: 17, color: 'var(--ytg-text-2)', lineHeight: 1.8 }}>AI-powered analysis across 5 tools — find what's working in your niche, then do more of it.</p>
           </div>
 
           {/* Tab switcher */}
-          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 52 }}>
+          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: isMobile ? 32 : 52 }}>
             <div style={{ display: 'inline-flex', background: 'var(--ytg-card)', border: '1px solid var(--ytg-border)', borderRadius: 100, padding: 4, gap: 2, flexWrap: 'wrap', justifyContent: 'center' }}>
               {[
-                ['monthly',  'Monthly'],
-                ['annual',   'Annual · 2 months free'],
+                ['monthly',  isMobile ? 'Monthly' : 'Monthly'],
+                ['annual',   isMobile ? 'Annual' : 'Annual · 2 months free'],
                 ['lifetime', 'Lifetime'],
-                ['founder',  'Founder Bundles'],
-                ['packs',    'Analysis Packs'],
+                ['founder',  isMobile ? 'Bundles' : 'Founder Bundles'],
+                ['packs',    isMobile ? 'Packs' : 'Analysis Packs'],
               ].map(([val, label]) => (
                 <button key={val} onClick={() => setPricingTab(val)} style={{
                   padding: '9px 18px', borderRadius: 100, border: 'none', cursor: 'pointer',
-                  fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: 13, fontWeight: 600,
+                  fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: isMobile ? 11 : 13, fontWeight: 600,
                   background: pricingTab === val ? '#ff3b30' : 'transparent',
                   color: pricingTab === val ? '#fff' : 'var(--ytg-text-3)',
                   transition: 'all 0.2s', whiteSpace: 'nowrap',
@@ -853,7 +929,7 @@ export default function Landing() {
 
           {/* ── MONTHLY ── */}
           {pricingTab === 'monthly' && (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 14 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : isTablet ? 'repeat(2,1fr)' : 'repeat(4,1fr)', gap: 14 }}>
               <div className="ytg-pricing-card">
                 <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-text-3)', marginBottom: 10, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Free</p>
                 <p style={{ fontWeight: 800, fontSize: 46, letterSpacing: '-2px', color: 'var(--ytg-text)', lineHeight: 1, marginBottom: 4 }}>$0</p>
@@ -915,7 +991,7 @@ export default function Landing() {
 
           {/* ── ANNUAL ── */}
           {pricingTab === 'annual' && (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 14 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : isTablet ? 'repeat(2,1fr)' : 'repeat(4,1fr)', gap: 14 }}>
               <div className="ytg-pricing-card">
                 <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-text-3)', marginBottom: 10, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Free</p>
                 <p style={{ fontWeight: 800, fontSize: 46, letterSpacing: '-2px', color: 'var(--ytg-text)', lineHeight: 1, marginBottom: 4 }}>$0</p>
@@ -980,7 +1056,7 @@ export default function Landing() {
               <p style={{ textAlign: 'center', fontSize: 14, color: 'var(--ytg-text-2)', marginBottom: 36, lineHeight: 1.8 }}>
                 Pay once. Get the monthly analyses forever. Limited to the first <strong style={{ color: 'var(--ytg-text)' }}>500 buyers</strong> — after that, this page goes away.
               </p>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 14 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3,1fr)', gap: 14 }}>
                 <div className="ytg-pricing-card" style={{ padding: '36px 32px' }}>
                   <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-text-3)', marginBottom: 10, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Lifetime Solo</p>
                   <p style={{ fontSize: 14, color: 'var(--ytg-text-2)', marginBottom: 18, lineHeight: 1.6 }}>Pay once. Keep the analyses coming, forever.</p>
@@ -1042,7 +1118,7 @@ export default function Landing() {
               <p style={{ textAlign: 'center', fontSize: 14, color: 'var(--ytg-text-2)', marginBottom: 36, lineHeight: 1.8 }}>
                 The all-in option. Lifetime access <em>plus</em> a bonus stack of analyses to hit the ground running — for the early believers.
               </p>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 14 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3,1fr)', gap: 14 }}>
                 <div className="ytg-pricing-card" style={{ padding: '36px 32px' }}>
                   <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-text-3)', marginBottom: 10, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Founder Solo</p>
                   <p style={{ fontSize: 14, color: 'var(--ytg-text-2)', marginBottom: 18, lineHeight: 1.6 }}>Pay once, grow forever, start with ammo loaded.</p>
@@ -1101,7 +1177,7 @@ export default function Landing() {
               <p style={{ textAlign: 'center', fontSize: 14, color: 'var(--ytg-text-2)', marginBottom: 36, lineHeight: 1.8 }}>
                 No subscription needed. Buy a pack, run analyses whenever you want — they never expire and work across all 5 tools.
               </p>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 14, marginBottom: 20 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3,1fr)', gap: 14, marginBottom: 20 }}>
                 <div className="ytg-pricing-card" style={{ padding: '36px 32px' }}>
                   <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-text-3)', marginBottom: 10, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Quick Boost</p>
                   <p style={{ fontSize: 14, color: 'var(--ytg-text-2)', marginBottom: 18, lineHeight: 1.6 }}>A top-up when you run low mid-sprint.</p>
@@ -1158,7 +1234,7 @@ export default function Landing() {
           )}
 
           {/* Objection crushers */}
-          <div style={{ marginTop: 56, display: 'grid', gridTemplateColumns: 'repeat(5,1fr)', gap: 12 }}>
+          <div style={{ marginTop: 56, display: 'grid', gridTemplateColumns: isMobile ? 'repeat(2,1fr)' : 'repeat(5,1fr)', gap: 12 }}>
             {[
               ['vs TubeBuddy / VidIQ', "They show you data. We run the AI and hand you the conclusion — so you can act, not scroll."],
               ['Small channel?', "Especially then. When you're getting 200 views a video, one right title decision is worth more than 10 wrong ones."],
@@ -1176,12 +1252,12 @@ export default function Landing() {
       </div>
 
       {/* ── FAQ ─────────────────────────────────────────────────────────── */}
-      <div id="faq" style={{ padding: '100px 64px', position: 'relative', overflow: 'hidden' }}>
+      <div id="faq" style={{ padding: isMobile ? '60px 20px' : '100px 64px', position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 900, height: 600, background: 'radial-gradient(ellipse, rgba(99,102,241,0.08) 0%, transparent 60%)', pointerEvents: 'none' }} />
         <div style={{ maxWidth: 960, margin: '0 auto', position: 'relative', zIndex: 1 }}>
           <div style={{ textAlign: 'center', marginBottom: 56 }}>
             <Badge>FAQ</Badge>
-            <h2 style={{ fontWeight: 800, fontSize: 48, letterSpacing: '-1.5px', color: 'var(--ytg-text)', lineHeight: 1.06, marginBottom: 14 }}>Questions answered.</h2>
+            <h2 style={{ fontWeight: 800, fontSize: isMobile ? 32 : 48, letterSpacing: '-1.5px', color: 'var(--ytg-text)', lineHeight: 1.06, marginBottom: 14 }}>Questions answered.</h2>
             <p style={{ fontSize: 17, color: 'var(--ytg-text-2)', lineHeight: 1.8 }}>Everything you want to know before you decide.</p>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
@@ -1234,18 +1310,18 @@ export default function Landing() {
       </div>
 
       {/* ── FINAL CTA ───────────────────────────────────────────────────── */}
-      <div style={{ padding: '120px 64px', position: 'relative', overflow: 'hidden' }}>
+      <div style={{ padding: isMobile ? '70px 24px' : '120px 64px', position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 800, height: 600, background: 'radial-gradient(ellipse, rgba(229,48,42,0.06) 0%, transparent 65%)', pointerEvents: 'none' }} />
         <div style={{ maxWidth: 860, margin: '0 auto', textAlign: 'center', position: 'relative', zIndex: 1 }}>
           <Badge>Get started</Badge>
-          <h2 style={{ fontWeight: 800, fontSize: 64, letterSpacing: '-2.5px', color: 'var(--ytg-text)', marginBottom: 18, lineHeight: 1.02 }}>
+          <h2 style={{ fontWeight: 800, fontSize: isMobile ? 38 : 64, letterSpacing: isMobile ? '-1.5px' : '-2.5px', color: 'var(--ytg-text)', marginBottom: 18, lineHeight: 1.02 }}>
             Stop making videos<br />
             <span style={{ color: 'var(--ytg-accent)' }}>nobody finds.</span>
           </h2>
           <p style={{ fontSize: 17, color: 'var(--ytg-text-2)', marginBottom: 48, lineHeight: 1.8, maxWidth: 620, margin: '0 auto 48px' }}>
             Start free. Run your first AI analysis on the house. See exactly what's holding your channel back.
           </p>
-          <div style={{ display: 'flex', gap: 14, justifyContent: 'center', flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', gap: 14, justifyContent: 'center', flexWrap: 'wrap', flexDirection: isMobile ? 'column' : 'row', alignItems: 'center' }}>
             <a href="/auth/login" className="ytg-btn-primary" style={{ fontSize: 16, padding: '16px 38px' }}>
               Start free <Arrow />
             </a>
@@ -1258,8 +1334,8 @@ export default function Landing() {
       </div>
 
       {/* ── FOOTER ──────────────────────────────────────────────────────── */}
-      <div style={{ borderTop: '1px solid var(--ytg-border)', padding: '36px 64px' }}>
-        <div style={{ maxWidth: 1280, margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div style={{ borderTop: '1px solid var(--ytg-border)', padding: isMobile ? '28px 20px' : '36px 64px' }}>
+        <div style={{ maxWidth: 1280, margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexDirection: isMobile ? 'column' : 'row', gap: isMobile ? 16 : 0, textAlign: isMobile ? 'center' : 'left' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
             <Logo size={26} />
             <span style={{ fontWeight: 800, fontSize: 15, color: 'var(--ytg-text)', letterSpacing: '-0.4px' }}>YTGrowth</span>
