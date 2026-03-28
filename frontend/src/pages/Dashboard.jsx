@@ -91,6 +91,25 @@ function useDashboardStyles() {
         border-radius: 12px;
         padding: 11px 13px;
       }
+      .ytg-insight-card.done {
+        opacity: 0.48;
+      }
+      .ytg-qw-row {
+        display: flex; gap: 9px; align-items: flex-start;
+        padding: 9px 11px; border-radius: 10px;
+        border: 1px solid transparent;
+        transition: background 0.15s, border-color 0.15s;
+      }
+      .ytg-qw-row:hover {
+        background: #f4f4f7; border-color: rgba(0,0,0,0.07);
+      }
+      .ytg-del-btn {
+        width: 22px; height: 22px; border-radius: 6px;
+        background: #fee2e2; border: 1px solid #fecaca;
+        display: flex; align-items: center; justify-content: center;
+        cursor: pointer; flex-shrink: 0; transition: background 0.15s;
+      }
+      .ytg-del-btn:hover { background: #fecaca; }
 
       .ytg-dash-btn {
         display: inline-flex; align-items: center; gap: 8px;
@@ -242,51 +261,67 @@ function Stat({ label, value, sub, alert, accent }) {
 }
 
 /* ─── Insight card ──────────────────────────────────────────────────────── */
-function InsightCard({ insight, index, checked, onToggle }) {
+function InsightCard({ insight, index, checked, onToggle, onDelete }) {
   const { color, bg, bdr } = sev(insight.impact || insight.severity)
   return (
-    <div className="ytg-insight-card">
-      <div style={{ borderLeft: `3px solid ${color}`, padding: '20px 22px' }}>
+    <div className={`ytg-insight-card${checked ? ' done' : ''}`} style={{ transition: 'opacity 0.2s' }}>
+      <div style={{ borderLeft: `3px solid ${checked ? C.green : color}`, padding: '18px 22px' }}>
         {/* Header */}
-        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 14, marginBottom: 10 }}>
+        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 14, marginBottom: checked ? 0 : 10 }}>
           <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
             {/* Checkbox + rank */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: 7, flexShrink: 0, marginTop: 3 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 7, flexShrink: 0, marginTop: 2 }}>
               <input
                 type="checkbox"
                 checked={!!checked}
                 onChange={onToggle}
                 style={{ width: 15, height: 15, accentColor: C.green, cursor: 'pointer', flexShrink: 0 }}
               />
-              <div style={{ width: 24, height: 24, borderRadius: 6, background: bg, border: `1px solid ${bdr}`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <span style={{ fontSize: 10.5, fontWeight: 800, color, fontVariantNumeric: 'tabular-nums' }}>{insight.rank ?? index + 1}</span>
+              <div style={{ width: 24, height: 24, borderRadius: 6, background: checked ? C.greenBg : bg, border: `1px solid ${checked ? C.greenBdr : bdr}`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                {checked
+                  ? <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke={C.green} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><polyline points="1.5,6.5 5,10 10.5,2"/></svg>
+                  : <span style={{ fontSize: 10.5, fontWeight: 800, color, fontVariantNumeric: 'tabular-nums' }}>{insight.rank ?? index + 1}</span>
+                }
               </div>
             </div>
-            <div>
-              <p style={{ fontSize: 14, fontWeight: 700, color: C.text1, lineHeight: 1.5 }}>{insight.problem}</p>
+            <div style={{ minWidth: 0 }}>
+              <p style={{ fontSize: 14, fontWeight: 700, color: checked ? C.text3 : C.text1, lineHeight: 1.5, textDecoration: checked ? 'line-through' : 'none' }}>{insight.problem}</p>
               {insight.category && <p style={{ fontSize: 11, color: C.text3, marginTop: 2 }}>{insight.category}</p>}
             </div>
           </div>
-          <span style={{ background: bg, color, fontSize: 10, fontWeight: 700, padding: '4px 10px', borderRadius: 20, flexShrink: 0, letterSpacing: '0.07em', textTransform: 'uppercase', border: `1px solid ${bdr}` }}>
-            {insight.impact || insight.severity || 'issue'}
-          </span>
-        </div>
-        {/* Why / Fix / Outcome */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 9, marginBottom: insight.expectedOutcome ? 9 : 0 }}>
-          <div className="ytg-inner-block">
-            <p style={{ fontSize: 10, fontWeight: 500, color: '#a0a0b0', marginBottom: 5, letterSpacing: '0.05em', textTransform: 'uppercase' }}>Why now</p>
-            <p style={{ fontSize: 12.5, color: C.text2, lineHeight: 1.7 }}>{insight.whyNow || insight.cause}</p>
-          </div>
-          <div style={{ background: 'rgba(240,253,244,0.85)', border: '1px solid rgba(134,239,172,0.7)', borderRadius: 12, padding: '11px 13px' }}>
-            <p style={{ fontSize: 10, fontWeight: 700, color: '#15803d', marginBottom: 5, letterSpacing: '0.07em', textTransform: 'uppercase' }}>Action</p>
-            <p style={{ fontSize: 12.5, color: '#166534', lineHeight: 1.7 }}>{insight.action}</p>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 7, flexShrink: 0 }}>
+            <span style={{ background: bg, color, fontSize: 10, fontWeight: 700, padding: '4px 10px', borderRadius: 20, letterSpacing: '0.07em', textTransform: 'uppercase', border: `1px solid ${bdr}` }}>
+              {insight.impact || insight.severity || 'issue'}
+            </span>
+            {checked && onDelete && (
+              <button className="ytg-del-btn" onClick={onDelete} title="Remove task">
+                <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="#e5251b" strokeWidth="1.8" strokeLinecap="round">
+                  <line x1="2" y1="2" x2="8" y2="8"/><line x1="8" y1="2" x2="2" y2="8"/>
+                </svg>
+              </button>
+            )}
           </div>
         </div>
-        {insight.expectedOutcome && (
-          <div style={{ background: 'rgba(239,246,255,0.85)', border: '1px solid rgba(147,197,253,0.7)', borderRadius: 12, padding: '9px 13px' }}>
-            <p style={{ fontSize: 10, fontWeight: 700, color: C.blue, marginBottom: 4, letterSpacing: '0.07em', textTransform: 'uppercase' }}>Expected outcome</p>
-            <p style={{ fontSize: 12.5, color: '#1e40af', lineHeight: 1.65 }}>{insight.expectedOutcome}</p>
-          </div>
+        {/* Why / Fix / Outcome — hidden when task is marked done */}
+        {!checked && (
+          <>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 9, marginBottom: insight.expectedOutcome ? 9 : 0 }}>
+              <div className="ytg-inner-block">
+                <p style={{ fontSize: 10, fontWeight: 600, color: '#a0a0b0', marginBottom: 5, letterSpacing: '0.06em', textTransform: 'uppercase' }}>Why now</p>
+                <p style={{ fontSize: 12.5, color: C.text2, lineHeight: 1.7 }}>{insight.whyNow || insight.cause}</p>
+              </div>
+              <div style={{ background: 'rgba(240,253,244,0.85)', border: '1px solid rgba(134,239,172,0.7)', borderRadius: 12, padding: '11px 13px' }}>
+                <p style={{ fontSize: 10, fontWeight: 700, color: '#15803d', marginBottom: 5, letterSpacing: '0.07em', textTransform: 'uppercase' }}>Action</p>
+                <p style={{ fontSize: 12.5, color: '#166534', lineHeight: 1.7 }}>{insight.action}</p>
+              </div>
+            </div>
+            {insight.expectedOutcome && (
+              <div style={{ background: 'rgba(239,246,255,0.85)', border: '1px solid rgba(147,197,253,0.7)', borderRadius: 12, padding: '9px 13px' }}>
+                <p style={{ fontSize: 10, fontWeight: 700, color: C.blue, marginBottom: 4, letterSpacing: '0.07em', textTransform: 'uppercase' }}>Expected outcome</p>
+                <p style={{ fontSize: 12.5, color: '#1e40af', lineHeight: 1.65 }}>{insight.expectedOutcome}</p>
+              </div>
+            )}
+          </>
         )}
       </div>
     </div>
@@ -335,7 +370,8 @@ export default function Dashboard() {
   const [nav,     setNav]    = useState('Overview')
   const [selectedVideoId, setSelectedVideoId] = useState(null)
   const [analyzingAI, setAnalyzingAI] = useState(false)
-  const [checked, setChecked] = useState({})
+  const [checked,  setChecked]  = useState({})
+  const [deleted,  setDeleted]  = useState({})
 
   useEffect(() => {
     fetch('/auth/data', { credentials: 'include' })
@@ -349,6 +385,8 @@ export default function Dashboard() {
         if (d.channel?.channel_id) {
           const saved = localStorage.getItem(`ytg_checked_${d.channel.channel_id}`)
           if (saved) setChecked(JSON.parse(saved))
+          const savedDel = localStorage.getItem(`ytg_deleted_${d.channel.channel_id}`)
+          if (savedDel) setDeleted(JSON.parse(savedDel))
         }
       })
       .catch(e => { setError(e.message); setLoad(false) })
@@ -381,6 +419,18 @@ export default function Dashboard() {
     setChecked(next)
     if (data?.channel?.channel_id) {
       localStorage.setItem(`ytg_checked_${data.channel.channel_id}`, JSON.stringify(next))
+    }
+  }
+
+  function handleDelete(key) {
+    const nextDel = { ...deleted, [key]: true }
+    const nextChk = { ...checked }
+    delete nextChk[key]
+    setDeleted(nextDel)
+    setChecked(nextChk)
+    if (data?.channel?.channel_id) {
+      localStorage.setItem(`ytg_deleted_${data.channel.channel_id}`, JSON.stringify(nextDel))
+      localStorage.setItem(`ytg_checked_${data.channel.channel_id}`, JSON.stringify(nextChk))
     }
   }
 
@@ -704,18 +754,18 @@ export default function Dashboard() {
 
           {data && nav === 'Insights' && data.insights && (
             <>
-              <div style={{ marginBottom: 24 }}>
-                <h2 style={{ fontSize: 22, fontWeight: 800, color: '#0a0a0a', letterSpacing: '-0.6px', marginBottom: 4 }}>Channel audit</h2>
+              <div style={{ marginBottom: 22 }}>
+                <h2 style={{ fontSize: 22, fontWeight: 800, color: '#0a0a0f', letterSpacing: '-0.6px', marginBottom: 4 }}>Channel audit</h2>
                 <p style={{ fontSize: 13, color: C.text3 }}>AI-powered analysis · {data.insights.priorityActions?.length ?? 0} priority actions</p>
               </div>
 
               {/* Summary + overall score */}
               {data.insights.channelSummary && (
-                <div className="ytg-card" style={{ padding: '20px 24px', marginBottom: 14, borderLeft: `4px solid ${scoreColor(score)}` }}>
-                  <div style={{ display: 'flex', alignItems: 'flex-start', gap: 20 }}>
+                <div className="ytg-card" style={{ padding: '20px 24px', marginBottom: 14, borderLeft: `4px solid ${scoreColor(score)}`, background: `linear-gradient(135deg, #fff 60%, ${scoreColor(score) === C.green ? '#f0fdf4' : scoreColor(score) === C.amber ? '#fffbeb' : '#fff5f5'} 100%)` }}>
+                  <div style={{ display: 'flex', alignItems: 'flex-start', gap: 24 }}>
                     <div style={{ flex: 1 }}>
-                      <p style={{ fontSize: 10.5, fontWeight: 500, color: '#a0a0b0', letterSpacing: '0.05em', textTransform: 'uppercase', marginBottom: 8 }}>Assessment</p>
-                      <p style={{ fontSize: 14, color: C.text2, lineHeight: 1.75 }}>{data.insights.channelSummary}</p>
+                      <p style={{ fontSize: 10.5, fontWeight: 600, color: '#a0a0b0', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 10 }}>Overall assessment</p>
+                      <p style={{ fontSize: 14, color: C.text2, lineHeight: 1.8 }}>{data.insights.channelSummary}</p>
                     </div>
                     <div style={{ textAlign: 'center', flexShrink: 0 }}>
                       <ScoreRing score={score} />
@@ -727,62 +777,108 @@ export default function Dashboard() {
               {/* Category scores */}
               {data.insights.categoryScores && (
                 <div className="ytg-card" style={{ padding: '20px 24px', marginBottom: 14 }}>
-                  <p style={{ fontSize: 10.5, fontWeight: 500, color: '#a0a0b0', letterSpacing: '0.05em', textTransform: 'uppercase', marginBottom: 14 }}>Category scores</p>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7,minmax(0,1fr))', gap: 10 }}>
+                  <p style={{ fontSize: 10.5, fontWeight: 600, color: '#a0a0b0', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 16 }}>Category breakdown</p>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, minmax(0,1fr))', gap: 8 }}>
                     {[
                       ['Posting', data.insights.categoryScores.postingConsistency],
                       ['Length', data.insights.categoryScores.videoLength],
                       ['CTR', data.insights.categoryScores.ctrHealth],
                       ['Retention', data.insights.categoryScores.audienceRetention],
-                      ['Engagement', data.insights.categoryScores.engagementQuality],
+                      ['Engage', data.insights.categoryScores.engagementQuality],
                       ['Strategy', data.insights.categoryScores.contentStrategy],
                       ['SEO', data.insights.categoryScores.seoDiscoverability],
-                    ].map(([label, val]) => (
-                      <div key={label} style={{ textAlign: 'center' }}>
-                        <div style={{ position: 'relative', width: 52, height: 52, margin: '0 auto 8px' }}>
-                          <svg width="52" height="52" viewBox="0 0 52 52">
-                            <circle cx="26" cy="26" r="20" fill="none" stroke="#ebebed" strokeWidth="5"/>
-                            <circle cx="26" cy="26" r="20" fill="none" stroke={scoreColor(val)} strokeWidth="5"
-                              strokeDasharray={`${(val / 100) * 125.7} 125.7`}
-                              strokeLinecap="round"
-                              transform="rotate(-90 26 26)"
-                            />
-                            <text x="26" y="30" textAnchor="middle" fill={scoreColor(val)} fontSize="11" fontWeight="800" fontFamily="Inter, sans-serif">{val}</text>
-                          </svg>
+                    ].map(([label, val]) => {
+                      const col = scoreColor(val)
+                      const catBg = val >= 75 ? C.greenBg : val >= 50 ? '#fffbeb' : C.redBg
+                      return (
+                        <div key={label} style={{ textAlign: 'center', background: catBg, borderRadius: 12, padding: '12px 6px 10px' }}>
+                          <div style={{ width: 56, height: 56, margin: '0 auto 8px' }}>
+                            <svg width="56" height="56" viewBox="0 0 56 56">
+                              <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(0,0,0,0.07)" strokeWidth="5"/>
+                              <circle cx="28" cy="28" r="22" fill="none" stroke={col} strokeWidth="5"
+                                strokeDasharray={`${(val / 100) * 138.2} 138.2`}
+                                strokeLinecap="round"
+                                transform="rotate(-90 28 28)"
+                                style={{ transition: 'stroke-dasharray 0.8s cubic-bezier(0.34,1.56,0.64,1)' }}
+                              />
+                              <text x="28" y="32" textAnchor="middle" fill={col} fontSize="12" fontWeight="800" fontFamily="Inter, sans-serif">{val}</text>
+                            </svg>
+                          </div>
+                          <p style={{ fontSize: 10, color: C.text2, fontWeight: 600, letterSpacing: '0.02em' }}>{label}</p>
                         </div>
-                        <p style={{ fontSize: 10.5, color: C.text3, fontWeight: 500 }}>{label}</p>
-                      </div>
-                    ))}
+                      )
+                    })}
                   </div>
                 </div>
               )}
 
               {/* Priority actions */}
               {data.insights.priorityActions?.length > 0 && (() => {
-                const actions = data.insights.priorityActions
-                const doneCount = actions.filter(a => checked[`rank_${a.rank ?? (actions.indexOf(a) + 1)}`]).length
+                const allActions = data.insights.priorityActions
+                const actions = allActions.filter((a, i) => !deleted[`rank_${a.rank ?? (i + 1)}`])
+                const doneCount = actions.filter((a, i) => {
+                  const rank = a.rank ?? (allActions.indexOf(a) + 1)
+                  return checked[`rank_${rank}`]
+                }).length
+                const hasDone = doneCount > 0
                 return (
-                  <div style={{ marginBottom: 14 }}>
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
-                      <p style={{ fontSize: 13, fontWeight: 700, color: C.text1, letterSpacing: '-0.2px' }}>Priority actions</p>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                        <div style={{ width: 80, height: 4, background: '#ebebef', borderRadius: 2, overflow: 'hidden' }}>
-                          <div style={{ width: `${(doneCount / actions.length) * 100}%`, height: '100%', background: C.green, borderRadius: 2, transition: 'width 0.3s' }}/>
+                  <div style={{ marginBottom: 16 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                        <p style={{ fontSize: 13.5, fontWeight: 700, color: C.text1, letterSpacing: '-0.2px' }}>Priority actions</p>
+                        <span style={{ fontSize: 11, fontWeight: 600, color: C.text3, background: '#f0f0f3', padding: '2px 8px', borderRadius: 20 }}>{actions.length}</span>
+                      </div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                        {hasDone && (
+                          <button
+                            onClick={() => {
+                              const nextDel = { ...deleted }
+                              const nextChk = { ...checked }
+                              actions.forEach(a => {
+                                const rank = a.rank ?? (allActions.indexOf(a) + 1)
+                                const k = `rank_${rank}`
+                                if (nextChk[k]) { nextDel[k] = true; delete nextChk[k] }
+                              })
+                              setDeleted(nextDel)
+                              setChecked(nextChk)
+                              if (data?.channel?.channel_id) {
+                                localStorage.setItem(`ytg_deleted_${data.channel.channel_id}`, JSON.stringify(nextDel))
+                                localStorage.setItem(`ytg_checked_${data.channel.channel_id}`, JSON.stringify(nextChk))
+                              }
+                            }}
+                            style={{ fontSize: 11.5, fontWeight: 600, color: C.red, background: C.redBg, border: `1px solid ${C.redBdr}`, borderRadius: 20, padding: '4px 12px', cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.15s' }}
+                          >
+                            Clear completed
+                          </button>
+                        )}
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
+                          <div style={{ width: 72, height: 4, background: '#ebebef', borderRadius: 2, overflow: 'hidden' }}>
+                            <div style={{ width: actions.length ? `${(doneCount / actions.length) * 100}%` : '0%', height: '100%', background: C.green, borderRadius: 2, transition: 'width 0.4s' }}/>
+                          </div>
+                          <span style={{ fontSize: 11.5, fontWeight: 600, color: doneCount > 0 && doneCount === actions.length ? C.green : C.text3, fontVariantNumeric: 'tabular-nums' }}>
+                            {doneCount}/{actions.length}
+                          </span>
                         </div>
-                        <span style={{ fontSize: 11.5, fontWeight: 600, color: doneCount === actions.length ? C.green : C.text3, fontVariantNumeric: 'tabular-nums' }}>
-                          {doneCount}/{actions.length}
-                        </span>
                       </div>
                     </div>
+                    {actions.length === 0 && (
+                      <div style={{ textAlign: 'center', padding: '32px 20px', background: C.greenBg, border: `1px solid ${C.greenBdr}`, borderRadius: 16 }}>
+                        <p style={{ fontSize: 22, marginBottom: 6 }}>✓</p>
+                        <p style={{ fontSize: 14, fontWeight: 700, color: C.green, marginBottom: 4 }}>All tasks cleared</p>
+                        <p style={{ fontSize: 13, color: '#166534' }}>Great work — you've handled every priority action.</p>
+                      </div>
+                    )}
                     {actions.map((ins, i) => {
-                      const rank = ins.rank ?? (i + 1)
+                      const rank = ins.rank ?? (allActions.indexOf(ins) + 1)
+                      const key = `rank_${rank}`
                       return (
                         <InsightCard
-                          key={i}
+                          key={rank}
                           insight={ins}
                           index={i}
-                          checked={!!checked[`rank_${rank}`]}
-                          onToggle={() => handleToggleCheck(`rank_${rank}`)}
+                          checked={!!checked[key]}
+                          onToggle={() => handleToggleCheck(key)}
+                          onDelete={() => handleDelete(key)}
                         />
                       )
                     })}
@@ -792,37 +888,58 @@ export default function Dashboard() {
 
               {/* Quick wins + big risk */}
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 14 }}>
-                {data.insights.quickWins?.length > 0 && (
-                  <div className="ytg-card" style={{ padding: '18px 20px' }}>
-                    <p style={{ fontSize: 11, fontWeight: 700, color: '#15803d', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 12 }}>Quick wins</p>
-                    <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 8 }}>
-                      {data.insights.quickWins.map((w, i) => {
-                        const key = `qw_${i}`
-                        return (
-                          <li key={i} style={{ display: 'flex', gap: 9, alignItems: 'flex-start' }}>
-                            <input
-                              type="checkbox"
-                              checked={!!checked[key]}
-                              onChange={() => handleToggleCheck(key)}
-                              style={{ width: 15, height: 15, accentColor: C.green, cursor: 'pointer', flexShrink: 0, marginTop: 3 }}
-                            />
-                            <p style={{ fontSize: 13, color: C.text2, lineHeight: 1.6 }}>{w}</p>
-                          </li>
-                        )
-                      })}
-                    </ul>
-                  </div>
-                )}
+                {data.insights.quickWins?.length > 0 && (() => {
+                  const wins = data.insights.quickWins.filter((_, i) => !deleted[`qw_${i}`])
+                  return (
+                    <div className="ytg-card" style={{ padding: '18px 20px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
+                        <p style={{ fontSize: 11, fontWeight: 700, color: '#15803d', letterSpacing: '0.08em', textTransform: 'uppercase' }}>Quick wins</p>
+                        <span style={{ fontSize: 11, color: C.text3 }}>{wins.length} left</span>
+                      </div>
+                      <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 2 }}>
+                        {data.insights.quickWins.map((w, i) => {
+                          if (deleted[`qw_${i}`]) return null
+                          const key = `qw_${i}`
+                          const isDone = !!checked[key]
+                          return (
+                            <li key={i} className="ytg-qw-row" style={{ opacity: isDone ? 0.5 : 1 }}>
+                              <input
+                                type="checkbox"
+                                checked={isDone}
+                                onChange={() => handleToggleCheck(key)}
+                                style={{ width: 14, height: 14, accentColor: C.green, cursor: 'pointer', flexShrink: 0, marginTop: 3 }}
+                              />
+                              <p style={{ fontSize: 13, color: isDone ? C.text3 : C.text2, lineHeight: 1.6, flex: 1, textDecoration: isDone ? 'line-through' : 'none' }}>{w}</p>
+                              {isDone && (
+                                <button className="ytg-del-btn" onClick={() => handleDelete(key)} title="Remove">
+                                  <svg width="9" height="9" viewBox="0 0 10 10" fill="none" stroke="#e5251b" strokeWidth="1.8" strokeLinecap="round">
+                                    <line x1="2" y1="2" x2="8" y2="8"/><line x1="8" y1="2" x2="2" y2="8"/>
+                                  </svg>
+                                </button>
+                              )}
+                            </li>
+                          )
+                        })}
+                      </ul>
+                    </div>
+                  )
+                })()}
                 <div className="ytg-card" style={{ padding: '18px 20px', display: 'flex', flexDirection: 'column', gap: 12 }}>
                   {data.insights.biggestRisk && (
                     <div>
-                      <p style={{ fontSize: 11, fontWeight: 700, color: C.red, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>Biggest risk</p>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8 }}>
+                        <div style={{ width: 6, height: 6, borderRadius: '50%', background: C.red, flexShrink: 0 }}/>
+                        <p style={{ fontSize: 11, fontWeight: 700, color: C.red, letterSpacing: '0.08em', textTransform: 'uppercase' }}>Biggest risk</p>
+                      </div>
                       <p style={{ fontSize: 13, color: C.text2, lineHeight: 1.65 }}>{data.insights.biggestRisk}</p>
                     </div>
                   )}
                   {data.insights.topPerformingPattern && (
                     <div style={{ paddingTop: data.insights.biggestRisk ? 12 : 0, borderTop: data.insights.biggestRisk ? `1px solid #ebebef` : 'none' }}>
-                      <p style={{ fontSize: 11, fontWeight: 700, color: C.green, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>What's working</p>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8 }}>
+                        <div style={{ width: 6, height: 6, borderRadius: '50%', background: C.green, flexShrink: 0 }}/>
+                        <p style={{ fontSize: 11, fontWeight: 700, color: C.green, letterSpacing: '0.08em', textTransform: 'uppercase' }}>What's working</p>
+                      </div>
                       <p style={{ fontSize: 13, color: C.text2, lineHeight: 1.65 }}>{data.insights.topPerformingPattern}</p>
                     </div>
                   )}
