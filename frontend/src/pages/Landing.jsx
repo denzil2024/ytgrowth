@@ -265,8 +265,17 @@ function useGlobalStyles(light) {
         .ytg-objection-card { border-radius: 14px; padding: 18px 16px; }
         .ytg-btn-primary { padding: 13px 26px !important; font-size: 14px !important; }
         .ytg-btn-ghost { padding: 13px 26px !important; font-size: 14px !important; }
-        .ytg-stat-row-item { padding: 0 16px; }
+        .ytg-stat-row-item { padding: 0 16px; text-align: center; }
         .ytg-stat-row-item + .ytg-stat-row-item { border-left: none; border-top: 1px solid var(--ytg-border); padding-top: 28px; margin-top: 28px; }
+        .ytg-testimonial-card { text-align: center; }
+        .ytg-testimonial-card > div:last-child { justify-content: center; }
+        .ytg-pricing-card { text-align: center; }
+        .ytg-pricing-card > div { justify-content: center; }
+        .ytg-pricing-card-featured { text-align: center; }
+        .ytg-pricing-card-featured > div { justify-content: center; }
+        .ytg-feature-card { text-align: center; }
+        .ytg-step-card { text-align: center; }
+        .ytg-step-card > div:nth-child(2) { margin: 0 auto 12px; }
       }
     `
     document.head.appendChild(style)
@@ -467,7 +476,7 @@ export default function Landing() {
 
   return (
     <div style={{ fontFamily: "'DM Sans', system-ui, sans-serif", background: 'var(--ytg-bg)', color: 'var(--ytg-text)', overflowX: 'hidden' }}>
-      <ScrollDots />
+      {!isMobile && <ScrollDots />}
 
       {/* ── NAV ─────────────────────────────────────────────────────────── */}
       <nav style={{
@@ -791,7 +800,7 @@ export default function Landing() {
             <h2 style={{ fontWeight: 800, fontSize: isMobile ? 32 : 48, letterSpacing: '-1.5px', color: 'var(--ytg-text)', lineHeight: 1.06, marginBottom: 14 }}>From zero to action plan<br />in 30 seconds.</h2>
             <p style={{ fontSize: 17, color: 'var(--ytg-text-2)', maxWidth: 620, margin: '0 auto', lineHeight: 1.8 }}>No setup, no configuration, no API keys. Just connect and go.</p>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3,1fr)', gap: 14 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3,1fr)', gap: 14, maxWidth: isMobile ? 480 : '100%', margin: '0 auto' }}>
             {[
               {
                 n: '01', t: 'Connect your channel', d: 'Sign in with Google and grant read-only access. We never post, edit, or store your content.',
@@ -868,7 +877,7 @@ export default function Landing() {
             <Badge>Beta creators</Badge>
             <h2 style={{ fontWeight: 800, fontSize: isMobile ? 32 : 48, letterSpacing: '-1.5px', color: 'var(--ytg-text)', lineHeight: 1.06 }}>What creators are saying.</h2>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(2,1fr)', gap: 14 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(2,1fr)', gap: 14, maxWidth: isMobile ? 480 : '100%', margin: '0 auto' }}>
             {[
               { q: 'Finally understand why my views dropped. The watch time insight alone changed everything — I had no idea my openings were killing my channel.', n: 'Finance creator', s: '8.2k subs' },
               { q: 'YouTube Studio shows numbers. YTGrowth shows answers. They are not the same thing at all. I wish I had this a year ago.', n: 'Tech reviews', s: '22k subs' },
@@ -929,7 +938,7 @@ export default function Landing() {
 
           {/* ── MONTHLY ── */}
           {pricingTab === 'monthly' && (
-            <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : isTablet ? 'repeat(2,1fr)' : 'repeat(4,1fr)', gap: 14 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : isTablet ? 'repeat(2,1fr)' : 'repeat(4,1fr)', gap: 14, maxWidth: isMobile ? 480 : '100%', margin: '0 auto' }}>
               <div className="ytg-pricing-card">
                 <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-text-3)', marginBottom: 10, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Free</p>
                 <p style={{ fontWeight: 800, fontSize: 46, letterSpacing: '-2px', color: 'var(--ytg-text)', lineHeight: 1, marginBottom: 4 }}>$0</p>
@@ -991,7 +1000,7 @@ export default function Landing() {
 
           {/* ── ANNUAL ── */}
           {pricingTab === 'annual' && (
-            <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : isTablet ? 'repeat(2,1fr)' : 'repeat(4,1fr)', gap: 14 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : isTablet ? 'repeat(2,1fr)' : 'repeat(4,1fr)', gap: 14, maxWidth: isMobile ? 480 : '100%', margin: '0 auto' }}>
               <div className="ytg-pricing-card">
                 <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-text-3)', marginBottom: 10, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Free</p>
                 <p style={{ fontWeight: 800, fontSize: 46, letterSpacing: '-2px', color: 'var(--ytg-text)', lineHeight: 1, marginBottom: 4 }}>$0</p>
@@ -1056,7 +1065,7 @@ export default function Landing() {
               <p style={{ textAlign: 'center', fontSize: 14, color: 'var(--ytg-text-2)', marginBottom: 36, lineHeight: 1.8 }}>
                 Pay once. Get the monthly analyses forever. Limited to the first <strong style={{ color: 'var(--ytg-text)' }}>500 buyers</strong> — after that, this page goes away.
               </p>
-              <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3,1fr)', gap: 14 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3,1fr)', gap: 14, maxWidth: isMobile ? 480 : '100%', margin: '0 auto' }}>
                 <div className="ytg-pricing-card" style={{ padding: '36px 32px' }}>
                   <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-text-3)', marginBottom: 10, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Lifetime Solo</p>
                   <p style={{ fontSize: 14, color: 'var(--ytg-text-2)', marginBottom: 18, lineHeight: 1.6 }}>Pay once. Keep the analyses coming, forever.</p>
@@ -1118,7 +1127,7 @@ export default function Landing() {
               <p style={{ textAlign: 'center', fontSize: 14, color: 'var(--ytg-text-2)', marginBottom: 36, lineHeight: 1.8 }}>
                 The all-in option. Lifetime access <em>plus</em> a bonus stack of analyses to hit the ground running — for the early believers.
               </p>
-              <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3,1fr)', gap: 14 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3,1fr)', gap: 14, maxWidth: isMobile ? 480 : '100%', margin: '0 auto' }}>
                 <div className="ytg-pricing-card" style={{ padding: '36px 32px' }}>
                   <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-text-3)', marginBottom: 10, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Founder Solo</p>
                   <p style={{ fontSize: 14, color: 'var(--ytg-text-2)', marginBottom: 18, lineHeight: 1.6 }}>Pay once, grow forever, start with ammo loaded.</p>
@@ -1177,7 +1186,7 @@ export default function Landing() {
               <p style={{ textAlign: 'center', fontSize: 14, color: 'var(--ytg-text-2)', marginBottom: 36, lineHeight: 1.8 }}>
                 No subscription needed. Buy a pack, run analyses whenever you want — they never expire and work across all 5 tools.
               </p>
-              <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3,1fr)', gap: 14, marginBottom: 20 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3,1fr)', gap: 14, marginBottom: 20, maxWidth: isMobile ? 480 : '100%', margin: isMobile ? '0 auto 20px' : '0 0 20px' }}>
                 <div className="ytg-pricing-card" style={{ padding: '36px 32px' }}>
                   <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-text-3)', marginBottom: 10, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Quick Boost</p>
                   <p style={{ fontSize: 14, color: 'var(--ytg-text-2)', marginBottom: 18, lineHeight: 1.6 }}>A top-up when you run low mid-sprint.</p>
@@ -1234,7 +1243,7 @@ export default function Landing() {
           )}
 
           {/* Objection crushers */}
-          <div style={{ marginTop: 56, display: 'grid', gridTemplateColumns: isMobile ? 'repeat(2,1fr)' : 'repeat(5,1fr)', gap: 12 }}>
+          {!isMobile && <div style={{ marginTop: 56, display: 'grid', gridTemplateColumns: 'repeat(5,1fr)', gap: 12 }}>
             {[
               ['vs TubeBuddy / VidIQ', "They show you data. We run the AI and hand you the conclusion — so you can act, not scroll."],
               ['Small channel?', "Especially then. When you're getting 200 views a video, one right title decision is worth more than 10 wrong ones."],
@@ -1247,7 +1256,7 @@ export default function Landing() {
                 <p style={{ fontSize: 12.5, color: 'var(--ytg-text-3)', lineHeight: 1.75 }}>{body}</p>
               </div>
             ))}
-          </div>
+          </div>}
         </div>
       </div>
 
