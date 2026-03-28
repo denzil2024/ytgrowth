@@ -198,14 +198,23 @@ def callback(request: Request, background_tasks: BackgroundTasks):
         existing_insights = existing_data.get("insights") if existing_data else None
         existing_analyzed_at = existing_data.get("analyzed_at") if existing_data else None
 
-        # Only re-run analysis if no insights or last analysis was over 24 hours ago
         import datetime
         now = datetime.datetime.utcnow().isoformat()
-        needs_analysis = (
-            not existing_insights or
-            not existing_analyzed_at or
-            (datetime.datetime.utcnow() - datetime.datetime.fromisoformat(existing_analyzed_at)).total_seconds() > 86400
+
+        is_fallback = bool(
+            existing_insights and
+            "fallback mode" in str(existing_insights.get("channelSummary", "")).lower()
         )
+
+        # Re-run only if: no insights, fallback result, or 24h has passed since last analysis
+        if not existing_insights or is_fallback:
+            needs_analysis = True
+        elif existing_analyzed_at:
+            hours_since = (datetime.datetime.utcnow() - datetime.datetime.fromisoformat(existing_analyzed_at)).total_seconds() / 3600
+            needs_analysis = hours_since > 24
+        else:
+            # Has valid insights but no analyzed_at — don't re-run, just stamp now
+            needs_analysis = False
 
         user_data = {
             "channel": stats,
