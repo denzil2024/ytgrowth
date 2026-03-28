@@ -11,14 +11,14 @@ function useDashboardStyles() {
 
     const link = document.createElement('link')
     link.rel = 'stylesheet'
-    link.href = 'https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800;900&display=swap'
+    link.href = 'https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700;9..40,800&family=Inter:wght@400;500;600;700;800;900&display=swap'
     document.head.appendChild(link)
 
     const style = document.createElement('style')
     style.id = 'ytg-dash-styles'
     style.textContent = `
       *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-      html, body { background: #f4f4f6; color: #111114; font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+      html, body { background: #f0f0f3; color: #111114; font-family: 'DM Sans', 'Inter', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
 
       @keyframes spin    { to { transform: rotate(360deg) } }
       @keyframes fadeUp  { from { opacity: 0; transform: translateY(10px) } to { opacity: 1; transform: translateY(0) } }
@@ -30,69 +30,92 @@ function useDashboardStyles() {
       ::-webkit-scrollbar-thumb:hover { background: #c8c8d0 }
 
       .ytg-stat-card {
-        background: rgba(255,255,255,0.85);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        border: 1px solid rgba(255,255,255,0.98);
+        background: #ffffff;
+        border: 1px solid rgba(0,0,0,0.09);
         border-radius: 20px;
         padding: 20px 22px;
-        box-shadow: 0 1px 0 rgba(255,255,255,0.8) inset, 0 6px 24px rgba(0,0,0,0.07), 0 1px 4px rgba(0,0,0,0.04);
+        box-shadow: 0 1px 3px rgba(0,0,0,0.07), 0 6px 24px rgba(0,0,0,0.09);
         transition: box-shadow 0.22s, transform 0.22s;
         cursor: default;
       }
       .ytg-stat-card:hover {
-        box-shadow: 0 1px 0 rgba(255,255,255,0.8) inset, 0 16px 48px rgba(0,0,0,0.11), 0 2px 8px rgba(0,0,0,0.05);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.10), 0 20px 56px rgba(0,0,0,0.13);
         transform: translateY(-2px);
+        border-color: rgba(0,0,0,0.13);
       }
       .ytg-stat-card.alert {
-        border-color: rgba(254,202,202,0.8);
-        background: linear-gradient(135deg, rgba(255,250,250,0.92) 0%, rgba(255,245,245,0.92) 100%);
+        border-color: rgba(229,37,27,0.18);
+        background: linear-gradient(135deg, #fffafa 0%, #fff5f5 100%);
       }
 
       .ytg-card {
-        background: rgba(255,255,255,0.85);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        border: 1px solid rgba(255,255,255,0.98);
+        background: #ffffff;
+        border: 1px solid rgba(0,0,0,0.09);
         border-radius: 20px;
-        box-shadow: 0 1px 0 rgba(255,255,255,0.8) inset, 0 6px 24px rgba(0,0,0,0.07), 0 1px 4px rgba(0,0,0,0.04);
+        box-shadow: 0 1px 3px rgba(0,0,0,0.07), 0 6px 24px rgba(0,0,0,0.09);
         transition: box-shadow 0.22s, transform 0.22s;
       }
       .ytg-card:hover {
-        box-shadow: 0 1px 0 rgba(255,255,255,0.8) inset, 0 14px 44px rgba(0,0,0,0.1), 0 2px 6px rgba(0,0,0,0.05);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.10), 0 20px 56px rgba(0,0,0,0.13);
         transform: translateY(-1px);
+        border-color: rgba(0,0,0,0.13);
       }
 
       .ytg-nav-btn {
         width: 100%; display: flex; align-items: center; gap: 10px;
-        padding: 9px 14px; border-radius: 12px; border: none; cursor: pointer;
-        font-size: 13px; font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+        padding: 9px 14px; border-radius: 100px; border: none; cursor: pointer;
+        font-size: 13px; font-family: 'DM Sans', 'Inter', sans-serif;
         transition: all 0.18s; text-align: left; font-weight: 500;
       }
 
       .ytg-video-row { transition: background 0.15s; }
-      .ytg-video-row:hover { background: #f7f7f9 !important; }
+      .ytg-video-row:hover { background: #f4f4f7 !important; }
 
       .ytg-insight-card {
-        background: rgba(255,255,255,0.85);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        border: 1px solid rgba(255,255,255,0.98);
+        background: #ffffff;
+        border: 1px solid rgba(0,0,0,0.09);
         border-radius: 20px;
         overflow: hidden;
         margin-bottom: 10px;
-        box-shadow: 0 1px 0 rgba(255,255,255,0.8) inset, 0 6px 24px rgba(0,0,0,0.07), 0 1px 4px rgba(0,0,0,0.04);
+        box-shadow: 0 1px 3px rgba(0,0,0,0.07), 0 6px 24px rgba(0,0,0,0.09);
         transition: box-shadow 0.22s, transform 0.22s;
       }
       .ytg-insight-card:hover {
-        box-shadow: 0 1px 0 rgba(255,255,255,0.8) inset, 0 16px 48px rgba(0,0,0,0.11), 0 2px 8px rgba(0,0,0,0.05);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.10), 0 20px 56px rgba(0,0,0,0.13);
         transform: translateY(-1px);
+        border-color: rgba(0,0,0,0.13);
       }
       .ytg-inner-block {
-        background: rgba(246,246,250,0.85);
-        border: 1px solid rgba(0,0,0,0.06);
+        background: #f7f7fa;
+        border: 1px solid rgba(0,0,0,0.07);
         border-radius: 12px;
         padding: 11px 13px;
+      }
+
+      .ytg-dash-btn {
+        display: inline-flex; align-items: center; gap: 8px;
+        padding: 9px 20px; border-radius: 100px; border: 1px solid rgba(0,0,0,0.1);
+        font-family: 'DM Sans', 'Inter', sans-serif; font-size: 12.5px; font-weight: 600;
+        background: #fff; color: #52525b; cursor: pointer;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.07), 0 4px 14px rgba(0,0,0,0.07);
+        transition: all 0.18s;
+      }
+      .ytg-dash-btn:hover {
+        border-color: rgba(0,0,0,0.18); color: #111114;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.10), 0 8px 28px rgba(0,0,0,0.10);
+        transform: translateY(-1px);
+      }
+      .ytg-dash-btn-primary {
+        display: inline-flex; align-items: center; gap: 8px;
+        padding: 9px 20px; border-radius: 100px; border: none;
+        font-family: 'DM Sans', 'Inter', sans-serif; font-size: 12.5px; font-weight: 700;
+        background: #e5251b; color: #fff; cursor: pointer;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 4px 14px rgba(229,37,27,0.32);
+        transition: all 0.18s;
+      }
+      .ytg-dash-btn-primary:hover {
+        filter: brightness(1.07); transform: translateY(-1px);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.15), 0 8px 28px rgba(229,37,27,0.42);
       }
     `
     document.head.appendChild(style)
@@ -112,8 +135,8 @@ const C = {
   text1:   '#111114',
   text2:   '#52525b',
   text3:   '#a0a0b0',
-  border:  'rgba(0,0,0,0.07)',
-  bg:      '#f4f4f6',
+  border:  'rgba(0,0,0,0.09)',
+  bg:      '#f0f0f3',
   surface: '#fff',
 }
 
@@ -395,14 +418,14 @@ export default function Dashboard() {
   ]
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', fontFamily: "'Plus Jakarta Sans', 'Inter', system-ui, sans-serif", background: C.bg }}>
+    <div style={{ display: 'flex', minHeight: '100vh', fontFamily: "'DM Sans', 'Inter', system-ui, sans-serif", background: C.bg }}>
 
       {/* ══ SIDEBAR ══════════════════════════════════════════════════════ */}
       <aside style={{
         width: 288, flexShrink: 0,
-        background: 'linear-gradient(180deg, #141416 0%, #0f0f11 100%)',
+        background: 'linear-gradient(180deg, #131315 0%, #0e0e10 100%)',
         position: 'sticky', top: 0, height: '100vh',
-        boxShadow: '1px 0 0 rgba(255,255,255,0.05), 12px 0 48px rgba(0,0,0,0.45)',
+        boxShadow: '1px 0 0 rgba(255,255,255,0.04), 16px 0 64px rgba(0,0,0,0.55)',
         display: 'flex', flexDirection: 'column', overflow: 'hidden',
       }}>
 
@@ -445,8 +468,8 @@ export default function Dashboard() {
                   {score}<span style={{ fontSize: 10, color: 'rgba(255,255,255,0.28)' }}> / 100</span>
                 </span>
               </div>
-              <div style={{ background: 'rgba(255,255,255,0.07)', borderRadius: 4, height: 3, overflow: 'hidden' }}>
-                <div style={{ width: `${score}%`, height: '100%', background: '#3b82f6', borderRadius: 4, transition: 'width 1.2s cubic-bezier(0.34,1.56,0.64,1)' }}/>
+              <div style={{ background: 'rgba(255,255,255,0.08)', borderRadius: 100, height: 4, overflow: 'hidden' }}>
+                <div style={{ width: `${score}%`, height: '100%', background: `linear-gradient(90deg, ${scoreColor(score)}, ${scoreColor(score)}cc)`, borderRadius: 100, transition: 'width 1.2s cubic-bezier(0.34,1.56,0.64,1)' }}/>
               </div>
               <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.3)', fontWeight: 400, marginTop: 6 }}>{scoreLabel(score)}</p>
             </div>
@@ -484,24 +507,25 @@ export default function Dashboard() {
 
         {/* Topbar */}
         <div style={{
-          borderBottom: '1px solid rgba(0,0,0,0.05)',
-          background: 'rgba(244,244,246,0.85)',
+          borderBottom: '1px solid rgba(0,0,0,0.09)',
+          background: 'rgba(240,240,243,0.9)',
           backdropFilter: 'blur(24px)',
           WebkitBackdropFilter: 'blur(24px)',
-          padding: '0 36px', height: 54,
+          padding: '0 36px', height: 58,
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
           position: 'sticky', top: 0, zIndex: 10,
+          boxShadow: '0 1px 0 rgba(255,255,255,0.6)',
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <span style={{ fontSize: 14, fontWeight: 600, color: '#111114', letterSpacing: '-0.3px' }}>{nav}</span>
+            <span style={{ fontSize: 15, fontWeight: 700, color: '#0a0a0f', letterSpacing: '-0.4px' }}>{nav}</span>
             {data && <>
-              <span style={{ color: '#c4c4cc', fontSize: 14 }}>·</span>
-              <span style={{ fontSize: 13, fontWeight: 400, color: '#9898a6' }}>{data.channel.channel_name}</span>
+              <span style={{ color: '#c4c4cc', fontSize: 15 }}>·</span>
+              <span style={{ fontSize: 13.5, fontWeight: 400, color: '#9898a6', letterSpacing: '-0.1px' }}>{data.channel.channel_name}</span>
             </>}
           </div>
-          <div style={{ background: '#fff', border: '1px solid rgba(0,0,0,0.07)', borderRadius: 20, padding: '5px 14px', display: 'flex', alignItems: 'center', gap: 7, boxShadow: '0 1px 4px rgba(0,0,0,0.05)' }}>
+          <div style={{ background: '#fff', border: '1px solid rgba(0,0,0,0.09)', borderRadius: 100, padding: '6px 16px', display: 'flex', alignItems: 'center', gap: 7, boxShadow: '0 1px 4px rgba(0,0,0,0.07), 0 4px 12px rgba(0,0,0,0.06)' }}>
             <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#22c55e', boxShadow: '0 0 0 3px #dcfce7', animation: 'pulse 2.5s infinite' }}/>
-            <span style={{ fontSize: 11.5, color: '#6b6b7b', fontWeight: 500 }}>Live</span>
+            <span style={{ fontSize: 11.5, color: '#6b6b7b', fontWeight: 600, letterSpacing: '-0.1px' }}>Live</span>
           </div>
         </div>
 
@@ -522,7 +546,7 @@ export default function Dashboard() {
               <div style={{ width: 48, height: 48, borderRadius: 13, background: C.redBg, border: `1px solid ${C.redBdr}`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20 }}>⚠</div>
               <p style={{ fontSize: 19, fontWeight: 700, color: C.text1, letterSpacing: '-0.4px' }}>No channel data</p>
               <p style={{ fontSize: 13.5, color: C.text2, maxWidth: 280, lineHeight: 1.7 }}>Connect your YouTube channel to see your analytics.</p>
-              <a href="/" style={{ background: C.red, color: '#fff', padding: '11px 24px', borderRadius: 10, fontSize: 13.5, fontWeight: 700, textDecoration: 'none', marginTop: 8 }}>Connect channel →</a>
+              <a href="/" className="ytg-dash-btn-primary" style={{ textDecoration: 'none', marginTop: 8 }}>Connect channel →</a>
             </div>
           )}
 
@@ -530,8 +554,8 @@ export default function Dashboard() {
           {data && nav === 'Overview' && (
             <>
               <div style={{ marginBottom: 24 }}>
-                <h1 style={{ fontSize: 22, fontWeight: 800, color: '#0a0a0a', letterSpacing: '-0.6px', marginBottom: 4 }}>Good to see you.</h1>
-                <p style={{ fontSize: 13, color: C.text3 }}>Here's how your channel is performing right now.</p>
+                <h1 style={{ fontSize: 24, fontWeight: 800, color: '#0a0a0f', letterSpacing: '-0.7px', marginBottom: 5 }}>Good to see you.</h1>
+                <p style={{ fontSize: 13.5, color: C.text3, letterSpacing: '-0.1px' }}>Here's how your channel is performing right now.</p>
               </div>
 
               {/* Row 1 */}
@@ -643,20 +667,13 @@ export default function Dashboard() {
                       <p style={{ fontSize: 13.5, fontWeight: 700, color: C.text1, marginBottom: 2, letterSpacing: '-0.2px' }}>Priority actions</p>
                       <p style={{ fontSize: 12, color: C.text3 }}>{data.insights.priorityActions.length} items · ranked by impact</p>
                     </div>
-                    <button onClick={() => setNav('Insights')} style={{
-                      background: '#f5f5f7', border: `1px solid ${C.border}`, borderRadius: 8,
-                      padding: '7px 15px', fontSize: 12.5, fontWeight: 600, color: C.text2,
-                      cursor: 'pointer', fontFamily: 'inherit', transition: 'border-color 0.15s',
-                    }}
-                      onMouseEnter={e => e.currentTarget.style.borderColor = '#a1a1aa'}
-                      onMouseLeave={e => e.currentTarget.style.borderColor = C.border}
-                    >Full audit →</button>
+                    <button onClick={() => setNav('Insights')} className="ytg-dash-btn">Full audit →</button>
                   </div>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 7 }}>
                     {data.insights.priorityActions.map((ins, i) => {
                       const { color, bg, bdr } = sev(ins.impact)
                       return (
-                        <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 11, padding: '11px 14px', background: 'rgba(246,246,250,0.85)', borderRadius: 12, border: '1px solid rgba(0,0,0,0.06)' }}>
+                        <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 11, padding: '11px 14px', background: '#f7f7fa', borderRadius: 14, border: '1px solid rgba(0,0,0,0.08)', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
                           <div style={{ width: 22, height: 22, borderRadius: 6, background: bg, border: `1px solid ${bdr}`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                             <span style={{ fontSize: 10, fontWeight: 800, color, fontVariantNumeric: 'tabular-nums' }}>{ins.rank}</span>
                           </div>
