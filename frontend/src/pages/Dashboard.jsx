@@ -835,53 +835,89 @@ export default function Dashboard() {
           {data && nav === 'Videos' && videos && (
             <>
               <div style={{ marginBottom: 24 }}>
-                <h2 style={{ fontSize: 22, fontWeight: 800, color: '#0a0a0a', letterSpacing: '-0.6px', marginBottom: 4 }}>Video performance</h2>
-                <p style={{ fontSize: 13, color: C.text3 }}>Last {videos.length} videos — click Optimise to get AI feedback on title, description &amp; thumbnail</p>
+                <h2 style={{ fontSize: 24, fontWeight: 800, color: '#0a0a0f', letterSpacing: '-0.7px', marginBottom: 5 }}>Video performance</h2>
+                <p style={{ fontSize: 13.5, color: C.text3, letterSpacing: '-0.1px' }}>{videos.length} videos — click Optimise to get AI feedback on title, description &amp; thumbnail</p>
               </div>
               <div className="ytg-card" style={{ overflow: 'hidden' }}>
                 {/* Header row */}
-                <div style={{ display: 'grid', gridTemplateColumns: '2fr 80px 70px 80px 80px 90px', padding: '11px 20px', borderBottom: `1px solid #ebebef`, background: '#f7f7f9' }}>
-                  {['Video','Views','Likes','Comments','Like rate',''].map((h, i) => (
+                <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1fr) 80px 90px 70px 90px 90px 130px', padding: '11px 20px', borderBottom: `1px solid #ebebef`, background: '#f8f8fb' }}>
+                  {['Video', 'Duration', 'Views', 'Likes', 'Comments', 'Like rate', ''].map((h, i) => (
                     <p key={i} style={{ fontSize: 10, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.07em', textAlign: i > 0 ? 'right' : 'left' }}>{h}</p>
                   ))}
                 </div>
                 {videos.map((v, i) => {
-                  const lr  = v.views > 0 ? (v.likes / v.views * 100).toFixed(1) : 0
-                  const lrN = parseFloat(lr)
+                  const lr     = v.views > 0 ? (v.likes / v.views * 100).toFixed(1) : 0
+                  const lrN    = parseFloat(lr)
                   const lrColor = lrN >= 4 ? C.green : lrN >= 2 ? C.amber : C.red
                   const isSelected = selectedVideoId === v.video_id
+                  const ytUrl  = v.video_id ? `https://www.youtube.com/watch?v=${v.video_id}` : null
+                  const durMatch = (v.duration || '').match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/)
+                  const durSecs  = durMatch ? (+durMatch[1]||0)*3600 + (+durMatch[2]||0)*60 + (+durMatch[3]||0) : 0
+                  const durLabel = durSecs > 0 ? (durSecs <= 60 ? `${durSecs}s` : `${Math.floor(durSecs/60)}:${String(durSecs%60).padStart(2,'0')}`) : '—'
+                  const isShort  = durSecs > 0 && durSecs <= 60
                   return (
                     <div key={v.video_id || i}>
                       <div className="ytg-video-row" style={{
-                        display: 'grid', gridTemplateColumns: '2fr 80px 70px 80px 80px 90px',
-                        padding: '12px 20px',
-                        borderBottom: !isSelected && i < videos.length - 1 ? `1px solid #f5f5f7` : 'none',
+                        display: 'grid', gridTemplateColumns: 'minmax(0,1fr) 80px 90px 70px 90px 90px 130px',
+                        padding: '13px 20px',
+                        borderBottom: !isSelected && i < videos.length - 1 ? `1px solid #f0f0f4` : 'none',
                         alignItems: 'center',
-                        background: isSelected ? '#f0f6ff' : undefined,
+                        background: isSelected ? '#f0f5ff' : undefined,
                       }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 11 }}>
-                          {v.thumbnail && <img src={v.thumbnail} alt="" style={{ width: 56, height: 35, borderRadius: 7, objectFit: 'cover', flexShrink: 0 }}/>}
-                          <div>
-                            <p style={{ fontSize: 12.5, color: C.text1, fontWeight: 600, lineHeight: 1.45, marginBottom: 2 }}>{v.title}</p>
+                        {/* Thumbnail + title */}
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 12, minWidth: 0 }}>
+                          <div style={{ position: 'relative', flexShrink: 0 }}>
+                            {v.thumbnail
+                              ? <img src={v.thumbnail} alt="" style={{ width: 72, height: 45, borderRadius: 8, objectFit: 'cover', display: 'block' }}/>
+                              : <div style={{ width: 72, height: 45, borderRadius: 8, background: '#ebebef' }}/>
+                            }
+                            {isShort && (
+                              <span style={{ position: 'absolute', bottom: 3, left: 3, background: '#111', color: '#fff', fontSize: 8, fontWeight: 700, padding: '1px 4px', borderRadius: 3, lineHeight: 1.4, letterSpacing: '0.04em' }}>SHORT</span>
+                            )}
+                          </div>
+                          <div style={{ minWidth: 0 }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 3 }}>
+                              <p style={{ fontSize: 13, color: C.text1, fontWeight: 600, lineHeight: 1.4, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{v.title}</p>
+                              {ytUrl && (
+                                <a href={ytUrl} target="_blank" rel="noopener noreferrer"
+                                  title="Watch on YouTube"
+                                  style={{ flexShrink: 0, color: '#aaaabc', display: 'flex', alignItems: 'center', transition: 'color 0.15s' }}
+                                  onMouseEnter={e => e.currentTarget.style.color = '#e5251b'}
+                                  onMouseLeave={e => e.currentTarget.style.color = '#aaaabc'}
+                                >
+                                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                                    <path d="M5.5 3H3a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V8.5M8.5 1H13M13 1v4.5M13 1L6 8" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
+                                  </svg>
+                                </a>
+                              )}
+                            </div>
                             <p style={{ fontSize: 11, color: C.text3 }}>{new Date(v.published_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</p>
                           </div>
                         </div>
+                        {/* Duration */}
+                        <p style={{ fontSize: 12.5, color: C.text3, textAlign: 'right', fontVariantNumeric: 'tabular-nums', fontWeight: 500 }}>{durLabel}</p>
+                        {/* Views */}
                         <p style={{ fontSize: 13, fontWeight: 700, color: C.text1, textAlign: 'right', fontVariantNumeric: 'tabular-nums' }}>{fmtNum(v.views)}</p>
+                        {/* Likes */}
                         <p style={{ fontSize: 13, color: C.text2, textAlign: 'right', fontVariantNumeric: 'tabular-nums' }}>{fmtNum(v.likes)}</p>
+                        {/* Comments */}
                         <p style={{ fontSize: 13, color: C.text2, textAlign: 'right', fontVariantNumeric: 'tabular-nums' }}>{fmtNum(v.comments)}</p>
-                        <p style={{ fontSize: 12.5, fontWeight: 700, color: lrColor, textAlign: 'right', fontVariantNumeric: 'tabular-nums' }}>{lr}%</p>
+                        {/* Like rate */}
                         <div style={{ textAlign: 'right' }}>
+                          <span style={{ fontSize: 12.5, fontWeight: 700, color: lrColor, background: lrN >= 4 ? C.greenBg : lrN >= 2 ? '#fffbeb' : C.redBg, padding: '3px 8px', borderRadius: 100, border: `1px solid ${lrN >= 4 ? C.greenBdr : lrN >= 2 ? '#fde68a' : C.redBdr}`, fontVariantNumeric: 'tabular-nums' }}>{lr}%</span>
+                        </div>
+                        {/* Actions */}
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 6 }}>
                           <button
                             onClick={() => setSelectedVideoId(isSelected ? null : v.video_id)}
-                            style={{
-                              fontSize: 11, fontWeight: 700,
-                              color: isSelected ? C.blue : C.text2,
-                              background: isSelected ? C.blueBg : '#f0f0f5',
-                              border: `1px solid ${isSelected ? '#c7dffe' : C.border}`,
-                              borderRadius: 7, padding: '4px 10px', cursor: 'pointer',
+                            className={isSelected ? '' : 'ytg-dash-btn'}
+                            style={isSelected ? {
+                              fontSize: 11.5, fontWeight: 700, color: C.blue,
+                              background: '#eff6ff', border: `1px solid #bfdbfe`,
+                              borderRadius: 100, padding: '5px 12px', cursor: 'pointer',
                               fontFamily: 'inherit', whiteSpace: 'nowrap',
-                            }}>
-                            {isSelected ? 'Close' : 'Optimise →'}
+                            } : { padding: '5px 12px', fontSize: 11.5, whiteSpace: 'nowrap' }}>
+                            {isSelected ? '✕ Close' : 'Optimise'}
                           </button>
                         </div>
                       </div>
