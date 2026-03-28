@@ -44,7 +44,14 @@ app.include_router(keyword_routes.router, prefix="/keywords")
 
 @app.get("/health")
 def health():
-    return {"status": "ok"}
+    import os
+    key = os.environ.get("ANTHROPIC_API_KEY", "")
+    return {
+        "status": "ok",
+        "anthropic_key_set": bool(key),
+        "anthropic_key_length": len(key),
+        "anthropic_key_prefix": key[:12] if key else "NOT SET"
+    }
 
 # Serve React frontend — must be after all API routes
 DIST = Path(__file__).parent.parent / "frontend" / "dist"
