@@ -251,6 +251,22 @@ def get_data(request: Request):
     return JSONResponse(data)
 
 
+@router.get("/debug")
+def debug_session(request: Request):
+    session_id = request.session.get("session_id")
+    data, creds = get_session(session_id)
+    insights = data.get("insights") if data else None
+    return JSONResponse({
+        "has_session_id": bool(session_id),
+        "has_data": bool(data),
+        "has_creds": bool(creds),
+        "has_insights": bool(insights),
+        "analyzed_at": data.get("analyzed_at") if data else None,
+        "is_fallback": bool(insights and "fallback mode" in str(insights.get("channelSummary", "")).lower()),
+        "channel_name": data["channel"].get("channel_name") if data and data.get("channel") else None,
+    })
+
+
 @router.post("/refresh-analysis")
 def refresh_analysis(request: Request, background_tasks: BackgroundTasks):
     session_id = request.session.get("session_id")
