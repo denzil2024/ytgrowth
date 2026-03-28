@@ -132,6 +132,34 @@ function useGlobalStyles(light) {
       }
       .ytg-faq-item:last-child { border-bottom: none; }
 
+      .ytg-faq-card {
+        background: var(--ytg-card);
+        border-radius: 18px;
+        overflow: hidden;
+        cursor: pointer;
+        transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 3px 10px rgba(0,0,0,0.05), 0 0 0 1px rgba(0,0,0,0.025) inset;
+      }
+      .ytg-faq-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 14px rgba(0,0,0,0.09), 0 1px 4px rgba(0,0,0,0.06), 0 0 0 1px rgba(0,0,0,0.04) inset;
+      }
+
+      .ytg-objection-card {
+        background: var(--ytg-card);
+        border: 1px solid var(--ytg-border);
+        border-radius: 16px;
+        padding: 22px 20px;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 3px 10px rgba(0,0,0,0.06);
+        transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+        cursor: default;
+      }
+      .ytg-objection-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 24px rgba(0,0,0,0.1), 0 2px 6px rgba(0,0,0,0.06);
+        border-color: var(--ytg-border-2);
+      }
+
       .ytg-stat-row-item {
         text-align: center; padding: 0 32px;
       }
@@ -1068,7 +1096,7 @@ export default function Landing() {
               ['Lifetime risk', "If we shut down (we won't), you keep your data export and we refund the pro-rated difference. Our reputation is the collateral."],
               ['Agency ROI', 'One viral video for a client makes the annual plan look like a rounding error on their invoice.'],
             ].map(([title, body], i) => (
-              <div key={i} style={{ background: 'var(--ytg-card)', border: '1px solid var(--ytg-border)', borderRadius: 16, padding: '22px 20px', boxShadow: 'var(--ytg-shadow)' }}>
+              <div key={i} className="ytg-objection-card">
                 <p style={{ fontSize: 12, fontWeight: 700, color: 'var(--ytg-text)', marginBottom: 8, letterSpacing: '-0.2px' }}>{title}</p>
                 <p style={{ fontSize: 12.5, color: 'var(--ytg-text-3)', lineHeight: 1.75 }}>{body}</p>
               </div>
@@ -1080,7 +1108,7 @@ export default function Landing() {
       {/* ── FAQ ─────────────────────────────────────────────────────────── */}
       <div id="faq" style={{ padding: '100px 64px', position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 900, height: 600, background: 'radial-gradient(ellipse, rgba(99,102,241,0.05) 0%, transparent 60%)', pointerEvents: 'none' }} />
-        <div style={{ maxWidth: 780, margin: '0 auto', position: 'relative', zIndex: 1 }}>
+        <div style={{ maxWidth: 960, margin: '0 auto', position: 'relative', zIndex: 1 }}>
           <div style={{ textAlign: 'center', marginBottom: 56 }}>
             <Badge>FAQ</Badge>
             <h2 style={{ fontWeight: 800, fontSize: 48, letterSpacing: '-1.5px', color: 'var(--ytg-text)', lineHeight: 1.06, marginBottom: 14 }}>Questions answered.</h2>
@@ -1088,34 +1116,31 @@ export default function Landing() {
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
             {[
-              { q: 'Is this worth it if my channel is under 1,000 subs?', a: "Especially then. The smaller your channel, the higher the leverage of a single good decision — right title, right topic, right timing. You can't afford to guess when you're getting 200 views a video." },
-              { q: 'What happens when I run out of AI analyses mid-month?', a: "Your features pause until your monthly analyses refill on the 1st, or until you grab a top-up pack. You'll see a warning banner at 80% so you're never surprised mid-sprint." },
-              { q: 'How is this different from TubeBuddy or VidIQ?', a: "TubeBuddy and VidIQ show you dashboards and data. YTGrowth runs the actual AI analysis — competitor gaps, keyword intent, title variants — and hands you the conclusion, not the raw numbers." },
-              { q: 'Can I cancel my subscription anytime?', a: "Yes. Monthly is month-to-month — cancel whenever. Annual gives you the rest of your year. No cancellation fees, no guilt-trip retention email. Just done." },
-              { q: 'Do unused monthly analyses roll over?', a: "Monthly included analyses reset every month — use them or lose them. But top-up pack analyses never expire and never reset. They sit in your account until you need them." },
-              { q: 'Can I use analysis packs without a subscription?', a: "Yes. Packs work standalone — buy a pack, run analyses, no subscription required. If you have analyses, you have full access. Subscribe later and your pack analyses stack on top." },
-              { q: 'Is the lifetime deal really lifetime? What if you shut down?', a: "If we shut down, you get a pro-rated refund based on time remaining against a 5-year expected lifespan. We're also small enough that your lifetime deal revenue genuinely helps us stay running — you're part of the bet." },
-              { q: 'Can I manage client channels on the agency plan?', a: "Yes. Agency supports up to 10 channels (5 on lifetime agency deals) with pooled analyses. You run the analyses, you own the insights, your clients see the results." },
+              { q: 'Is YTGrowth worth it when my channel is under 1,000 subscribers?', a: "Especially then. The smaller your channel, the higher the leverage of a single good decision — right title, right topic, right timing. You can't afford to guess when you're getting 200 views a video." },
+              { q: 'What happens when I run out of AI analyses before my month resets?', a: "Your features pause until your monthly analyses refill on the 1st, or until you grab a top-up pack. You'll see a warning banner at 80% so you're never surprised mid-sprint." },
+              { q: 'How is YTGrowth different from TubeBuddy or VidIQ, exactly?', a: "TubeBuddy and VidIQ show you dashboards and data. YTGrowth runs the actual AI analysis — competitor gaps, keyword intent, title variants — and hands you the conclusion, not the raw numbers." },
+              { q: 'Can I cancel or change my subscription at any time?', a: "Yes. Monthly is month-to-month — cancel whenever. Annual gives you the rest of your year. No cancellation fees, no guilt-trip retention email. Just done." },
+              { q: 'Do unused monthly analyses roll over to the following month?', a: "Monthly included analyses reset every month — use them or lose them. But top-up pack analyses never expire and never reset. They sit in your account until you need them." },
+              { q: 'Can I purchase and use analysis packs without a subscription plan?', a: "Yes. Packs work standalone — buy a pack, run analyses, no subscription required. If you have analyses, you have full access. Subscribe later and your pack analyses stack on top." },
+              { q: 'Is the lifetime deal truly lifetime, and what happens if you shut down?', a: "If we shut down, you get a pro-rated refund based on time remaining against a 5-year expected lifespan. We're also small enough that your lifetime deal revenue genuinely helps us stay running — you're part of the bet." },
+              { q: 'Can I manage and analyze multiple client channels on the agency plan?', a: "Yes. Agency supports up to 10 channels (5 on lifetime agency deals) with pooled analyses. You run the analyses, you own the insights, your clients see the results." },
             ].map((item, i) => {
               const isOpen = openFaq === i
               return (
                 <div
                   key={i}
                   onClick={() => setOpenFaq(isOpen ? null : i)}
+                  className="ytg-faq-card"
                   style={{
-                    background: 'var(--ytg-card)',
                     border: `1px solid ${isOpen ? 'var(--ytg-border-2)' : 'var(--ytg-border)'}`,
-                    borderRadius: 18,
-                    overflow: 'hidden',
-                    boxShadow: isOpen ? 'var(--ytg-shadow-lg)' : 'var(--ytg-shadow)',
-                    cursor: 'pointer',
-                    transition: 'border-color 0.2s, box-shadow 0.2s',
+                    boxShadow: isOpen ? '0 8px 28px rgba(0,0,0,0.1), 0 2px 8px rgba(0,0,0,0.06)' : undefined,
+                    transform: isOpen ? 'translateY(-1px)' : undefined,
                   }}
                 >
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '22px 26px', gap: 16 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '24px 28px', gap: 16 }}>
                     <p style={{ fontWeight: 700, fontSize: 15.5, color: 'var(--ytg-text)', letterSpacing: '-0.3px', lineHeight: 1.4 }}>{item.q}</p>
                     <div style={{
-                      width: 30, height: 30, borderRadius: 9, flexShrink: 0,
+                      width: 32, height: 32, borderRadius: 10, flexShrink: 0,
                       background: isOpen ? 'var(--ytg-accent-light)' : 'var(--ytg-card-2)',
                       border: `1px solid ${isOpen ? 'var(--ytg-accent-border)' : 'var(--ytg-border)'}`,
                       display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -1127,7 +1152,7 @@ export default function Landing() {
                     </div>
                   </div>
                   {isOpen && (
-                    <div style={{ padding: '0 26px 24px', borderTop: '1px solid var(--ytg-border)' }}>
+                    <div style={{ padding: '0 28px 26px', borderTop: '1px solid var(--ytg-border)' }}>
                       <p style={{ fontSize: 14.5, color: 'var(--ytg-text-2)', lineHeight: 1.9, paddingTop: 20 }}>{item.a}</p>
                     </div>
                   )}
