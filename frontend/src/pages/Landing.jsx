@@ -266,6 +266,7 @@ function ScrollDots() {
 export default function Landing() {
   const [light, setLight] = useState(false)
   const [loggedIn, setLoggedIn] = useState(false)
+  const [pricingTab, setPricingTab] = useState('monthly')
   useGlobalStyles(light)
 
   useEffect(() => {
@@ -663,133 +664,353 @@ export default function Landing() {
       {/* ── PRICING ─────────────────────────────────────────────────────── */}
       <div id="pricing" style={{ padding: '100px 64px' }}>
         <div style={{ maxWidth: 1280, margin: '0 auto' }}>
-          <div style={{ textAlign: 'center', marginBottom: 56 }}>
+          <div style={{ textAlign: 'center', marginBottom: 48 }}>
             <Badge>Pricing</Badge>
-            <h2 style={{ fontWeight: 800, fontSize: 48, letterSpacing: '-1.5px', color: 'var(--ytg-text)', lineHeight: 1.06, marginBottom: 14 }}>Simple, honest pricing.</h2>
-            <p style={{ fontSize: 17, color: 'var(--ytg-text-2)', lineHeight: 1.8 }}>Start free. Upgrade when you're ready to scale.</p>
+            <h2 style={{ fontWeight: 800, fontSize: 48, letterSpacing: '-1.5px', color: 'var(--ytg-text)', lineHeight: 1.06, marginBottom: 14 }}>One good video idea pays for a year.</h2>
+            <p style={{ fontSize: 17, color: 'var(--ytg-text-2)', lineHeight: 1.8 }}>AI-powered analysis across 5 tools — find what's working in your niche, then do more of it.</p>
           </div>
 
-          {/* Plan cards */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 14, marginBottom: 52, textAlign: 'left' }}>
-            {/* Starter */}
-            <div style={{ background: 'var(--ytg-card)', border: '1px solid var(--ytg-border)', borderRadius: 22, padding: '36px' }}>
-              <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-text-3)', marginBottom: 12, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Starter</p>
-              <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, marginBottom: 4 }}>
-                <p style={{ fontWeight: 800, fontSize: 50, letterSpacing: '-2px', color: 'var(--ytg-text)', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>$0</p>
-              </div>
-              <p style={{ fontSize: 13.5, color: 'var(--ytg-text-3)', marginBottom: 28 }}>Free forever</p>
+          {/* Tab switcher */}
+          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 52 }}>
+            <div style={{ display: 'inline-flex', background: 'var(--ytg-card)', border: '1px solid var(--ytg-border)', borderRadius: 14, padding: 4, gap: 2, flexWrap: 'wrap', justifyContent: 'center' }}>
               {[
-                'Basic channel stats',
-                '1 competitor channel',
-                '3 keyword searches / day',
-                '1 AI idea / day',
-                'Weekly SEO audit',
-                'Basic thumbnail preview',
-              ].map((f, i) => (
-                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 11 }}>
-                  <Check />
-                  <span style={{ fontSize: 13.5, color: 'var(--ytg-text-2)' }}>{f}</span>
-                </div>
+                ['monthly',  'Monthly'],
+                ['annual',   'Annual · 2 months free'],
+                ['lifetime', 'Lifetime'],
+                ['founder',  'Founder Bundles'],
+                ['packs',    'Analysis Packs'],
+              ].map(([val, label]) => (
+                <button key={val} onClick={() => setPricingTab(val)} style={{
+                  padding: '9px 18px', borderRadius: 10, border: 'none', cursor: 'pointer',
+                  fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: 13, fontWeight: 600,
+                  background: pricingTab === val ? '#ff3b30' : 'transparent',
+                  color: pricingTab === val ? '#fff' : 'var(--ytg-text-3)',
+                  transition: 'all 0.2s', whiteSpace: 'nowrap',
+                }}>{label}</button>
               ))}
-              <a href="/auth/login" className="ytg-btn-ghost" style={{ marginTop: 24, width: '100%', justifyContent: 'center', display: 'flex' }}>Get started free</a>
-            </div>
-
-            {/* Growth — recommended */}
-            <div style={{ background: 'rgba(255,59,48,0.06)', border: '1px solid rgba(255,59,48,0.28)', borderRadius: 22, padding: '36px', position: 'relative', overflow: 'hidden', boxShadow: '0 0 48px rgba(255,59,48,0.07)' }}>
-              <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 2, background: 'linear-gradient(90deg, #ff3b30, #ff6b63)' }} />
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
-                <p style={{ fontSize: 11, fontWeight: 700, color: '#ff6b63', textTransform: 'uppercase', letterSpacing: '0.07em' }}>Growth</p>
-                <span style={{ fontSize: 9.5, fontWeight: 700, background: 'rgba(255,59,48,0.15)', color: '#ff6b63', border: '1px solid rgba(255,59,48,0.25)', padding: '3px 10px', borderRadius: 100, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Most popular</span>
-              </div>
-              <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, marginBottom: 4 }}>
-                <p style={{ fontWeight: 800, fontSize: 50, letterSpacing: '-2px', color: 'var(--ytg-text)', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>$14.99</p>
-                <p style={{ fontSize: 14, color: 'var(--ytg-text-3)', marginBottom: 8 }}>/mo</p>
-              </div>
-              <p style={{ fontSize: 13.5, color: 'var(--ytg-text-3)', marginBottom: 28 }}>or $11.99/mo billed annually</p>
-              {[
-                'Full channel history',
-                '10 competitor channels',
-                '250 keyword searches / day',
-                'Live VPH tracking',
-                'Outlier discovery',
-                '20 AI ideas / day',
-                '50 AI titles & hooks / month',
-                'Real-time SEO audit',
-                'Thumbnail preview',
-              ].map((f, i) => (
-                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 11 }}>
-                  <Check color="#ff3b30" />
-                  <span style={{ fontSize: 13.5, color: 'var(--ytg-text)' }}>{f}</span>
-                </div>
-              ))}
-              <a href="/auth/login" className="ytg-btn-primary" style={{ marginTop: 24, width: '100%', justifyContent: 'center', display: 'flex' }}>Start with Growth</a>
-            </div>
-
-            {/* Pro */}
-            <div style={{ background: 'var(--ytg-card)', border: '1px solid var(--ytg-border)', borderRadius: 22, padding: '36px' }}>
-              <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-text-3)', marginBottom: 12, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Pro</p>
-              <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, marginBottom: 4 }}>
-                <p style={{ fontWeight: 800, fontSize: 50, letterSpacing: '-2px', color: 'var(--ytg-text)', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>$24.99</p>
-                <p style={{ fontSize: 14, color: 'var(--ytg-text-3)', marginBottom: 8 }}>/mo</p>
-              </div>
-              <p style={{ fontSize: 13.5, color: 'var(--ytg-text-3)', marginBottom: 28 }}>or $19.99/mo billed annually</p>
-              {[
-                'Full channel history',
-                '50 competitor channels',
-                'Unlimited keyword searches',
-                'Live VPH tracking',
-                'Outlier discovery',
-                '100 AI ideas / day',
-                'Unlimited AI titles & hooks',
-                'Real-time SEO audit',
-                'Bulk metadata editing',
-                'Thumbnail preview',
-              ].map((f, i) => (
-                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 11 }}>
-                  <Check />
-                  <span style={{ fontSize: 13.5, color: 'var(--ytg-text-2)' }}>{f}</span>
-                </div>
-              ))}
-              <a href="/auth/login" className="ytg-btn-ghost" style={{ marginTop: 24, width: '100%', justifyContent: 'center', display: 'flex' }}>Start with Pro</a>
             </div>
           </div>
 
-          {/* Early bird + PAYG row */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
-            <div style={{ background: 'var(--ytg-card)', border: '1px solid var(--ytg-border)', borderRadius: 18, padding: '28px 32px' }}>
-              <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-text-3)', marginBottom: 10, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Early Bird Annual Deal — 20% off</p>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: 6 }}>
-                {[
-                  ['Growth', '$11.99 / mo', '$144 billed annually'],
-                  ['Pro', '$19.99 / mo', '$240 billed annually'],
-                ].map(([plan, price, note], i) => (
-                  <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 16px', background: 'var(--ytg-card)', borderRadius: 12, border: '1px solid var(--ytg-divider)' }}>
-                    <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--ytg-text)' }}>{plan}</span>
-                    <div style={{ textAlign: 'right' }}>
-                      <p style={{ fontSize: 14, fontWeight: 700, color: '#ff6b63' }}>{price}</p>
-                      <p style={{ fontSize: 11.5, color: 'var(--ytg-text-3)', marginTop: 1 }}>{note}</p>
-                    </div>
-                  </div>
+          {/* ── MONTHLY ── */}
+          {pricingTab === 'monthly' && (
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 14 }}>
+              <div style={{ background: 'var(--ytg-card)', border: '1px solid var(--ytg-border)', borderRadius: 22, padding: '32px 28px' }}>
+                <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-text-3)', marginBottom: 10, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Free</p>
+                <p style={{ fontWeight: 800, fontSize: 46, letterSpacing: '-2px', color: 'var(--ytg-text)', lineHeight: 1, marginBottom: 4 }}>$0</p>
+                <p style={{ fontSize: 13, color: 'var(--ytg-text-3)', marginBottom: 4 }}>Forever free</p>
+                <p style={{ fontSize: 12, color: 'var(--ytg-text-4)', marginBottom: 22, fontStyle: 'italic' }}>Built for dipping your toes in</p>
+                {['5 AI analyses, yours to keep', 'All 5 tools included', '1 channel', 'No monthly refill', 'No credit card needed'].map((f, i) => (
+                  <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}><Check /><span style={{ fontSize: 13, color: 'var(--ytg-text-2)' }}>{f}</span></div>
                 ))}
+                <a href="/auth/login" className="ytg-btn-ghost" style={{ marginTop: 22, width: '100%', justifyContent: 'center', display: 'flex' }}>Start free</a>
+              </div>
+
+              <div style={{ background: 'var(--ytg-card)', border: '1px solid var(--ytg-border)', borderRadius: 22, padding: '32px 28px' }}>
+                <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-text-3)', marginBottom: 10, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Solo</p>
+                <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, marginBottom: 4 }}>
+                  <p style={{ fontWeight: 800, fontSize: 46, letterSpacing: '-2px', color: 'var(--ytg-text)', lineHeight: 1 }}>$19</p>
+                  <p style={{ fontSize: 14, color: 'var(--ytg-text-3)', marginBottom: 7 }}>/mo</p>
+                </div>
+                <p style={{ fontSize: 13, color: 'var(--ytg-text-3)', marginBottom: 4 }}>30 AI analyses / month</p>
+                <p style={{ fontSize: 12, color: 'var(--ytg-text-4)', marginBottom: 22, fontStyle: 'italic' }}>Built for solo creators who post consistently</p>
+                {['30 fresh AI analyses every month', 'All 5 tools unlocked', '1 channel', 'Top-up packs available', 'Cancel anytime'].map((f, i) => (
+                  <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}><Check /><span style={{ fontSize: 13, color: 'var(--ytg-text-2)' }}>{f}</span></div>
+                ))}
+                <a href="/auth/login" className="ytg-btn-ghost" style={{ marginTop: 22, width: '100%', justifyContent: 'center', display: 'flex' }}>Get Solo</a>
+              </div>
+
+              <div style={{ background: 'rgba(255,59,48,0.06)', border: '1px solid rgba(255,59,48,0.28)', borderRadius: 22, padding: '32px 28px', position: 'relative', overflow: 'hidden', boxShadow: '0 0 48px rgba(255,59,48,0.07)' }}>
+                <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 2, background: 'linear-gradient(90deg,#ff3b30,#ff6b63)' }} />
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
+                  <p style={{ fontSize: 11, fontWeight: 700, color: '#ff6b63', textTransform: 'uppercase', letterSpacing: '0.07em' }}>Growth</p>
+                  <span style={{ fontSize: 9.5, fontWeight: 700, background: 'rgba(255,59,48,0.15)', color: '#ff6b63', border: '1px solid rgba(255,59,48,0.25)', padding: '3px 10px', borderRadius: 100, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Most popular</span>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, marginBottom: 4 }}>
+                  <p style={{ fontWeight: 800, fontSize: 46, letterSpacing: '-2px', color: 'var(--ytg-text)', lineHeight: 1 }}>$49</p>
+                  <p style={{ fontSize: 14, color: 'var(--ytg-text-3)', marginBottom: 7 }}>/mo</p>
+                </div>
+                <p style={{ fontSize: 13, color: 'var(--ytg-text-3)', marginBottom: 4 }}>75 AI analyses / month</p>
+                <p style={{ fontSize: 12, color: 'var(--ytg-text-4)', marginBottom: 22, fontStyle: 'italic' }}>Built for creators serious about hitting 100k</p>
+                {['75 fresh AI analyses every month', 'All 5 tools unlocked', '1 channel', 'Top-up packs available', 'Cancel anytime'].map((f, i) => (
+                  <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}><Check color="#ff3b30" /><span style={{ fontSize: 13, color: 'var(--ytg-text)' }}>{f}</span></div>
+                ))}
+                <a href="/auth/login" className="ytg-btn-primary" style={{ marginTop: 22, width: '100%', justifyContent: 'center', display: 'flex' }}>Start with Growth</a>
+              </div>
+
+              <div style={{ background: 'var(--ytg-card)', border: '1px solid var(--ytg-border)', borderRadius: 22, padding: '32px 28px' }}>
+                <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-text-3)', marginBottom: 10, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Agency</p>
+                <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, marginBottom: 4 }}>
+                  <p style={{ fontWeight: 800, fontSize: 46, letterSpacing: '-2px', color: 'var(--ytg-text)', lineHeight: 1 }}>$149</p>
+                  <p style={{ fontSize: 14, color: 'var(--ytg-text-3)', marginBottom: 7 }}>/mo</p>
+                </div>
+                <p style={{ fontSize: 13, color: 'var(--ytg-text-3)', marginBottom: 4 }}>250 AI analyses / month</p>
+                <p style={{ fontSize: 12, color: 'var(--ytg-text-4)', marginBottom: 22, fontStyle: 'italic' }}>Built for agencies and multi-channel operators</p>
+                {['250 AI analyses / month', 'All 5 tools unlocked', 'Up to 10 channels', 'Analyses pooled across channels', 'Priority support'].map((f, i) => (
+                  <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}><Check /><span style={{ fontSize: 13, color: 'var(--ytg-text-2)' }}>{f}</span></div>
+                ))}
+                <a href="/auth/login" className="ytg-btn-ghost" style={{ marginTop: 22, width: '100%', justifyContent: 'center', display: 'flex' }}>Get Agency</a>
               </div>
             </div>
-            <div style={{ background: 'var(--ytg-card)', border: '1px solid var(--ytg-border)', borderRadius: 18, padding: '28px 32px' }}>
-              <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-text-3)', marginBottom: 10, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Pay-As-You-Go Credits</p>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: 6 }}>
-                {[
-                  ['AI Viral Shorts Extraction', '$15', '30 clips'],
-                  ['AI Script Writing (Deep Dive)', '$10', '10 scripts'],
-                ].map(([name, price, unit], i) => (
-                  <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 16px', background: 'var(--ytg-card)', borderRadius: 12, border: '1px solid var(--ytg-divider)' }}>
-                    <span style={{ fontSize: 13.5, fontWeight: 500, color: 'var(--ytg-text)' }}>{name}</span>
-                    <div style={{ textAlign: 'right', flexShrink: 0, marginLeft: 16 }}>
-                      <p style={{ fontSize: 14, fontWeight: 700, color: '#ff6b63' }}>{price}</p>
-                      <p style={{ fontSize: 11.5, color: 'var(--ytg-text-3)', marginTop: 1 }}>per {unit}</p>
-                    </div>
-                  </div>
+          )}
+
+          {/* ── ANNUAL ── */}
+          {pricingTab === 'annual' && (
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 14 }}>
+              <div style={{ background: 'var(--ytg-card)', border: '1px solid var(--ytg-border)', borderRadius: 22, padding: '32px 28px' }}>
+                <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-text-3)', marginBottom: 10, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Free</p>
+                <p style={{ fontWeight: 800, fontSize: 46, letterSpacing: '-2px', color: 'var(--ytg-text)', lineHeight: 1, marginBottom: 4 }}>$0</p>
+                <p style={{ fontSize: 13, color: 'var(--ytg-text-3)', marginBottom: 22 }}>Forever free</p>
+                {['5 AI analyses, yours to keep', 'All 5 tools included', '1 channel'].map((f, i) => (
+                  <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}><Check /><span style={{ fontSize: 13, color: 'var(--ytg-text-2)' }}>{f}</span></div>
                 ))}
+                <a href="/auth/login" className="ytg-btn-ghost" style={{ marginTop: 22, width: '100%', justifyContent: 'center', display: 'flex' }}>Start free</a>
+              </div>
+
+              <div style={{ background: 'var(--ytg-card)', border: '1px solid var(--ytg-border)', borderRadius: 22, padding: '32px 28px' }}>
+                <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-text-3)', marginBottom: 10, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Solo — Annual</p>
+                <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, marginBottom: 2 }}>
+                  <p style={{ fontWeight: 800, fontSize: 46, letterSpacing: '-2px', color: 'var(--ytg-text)', lineHeight: 1 }}>$190</p>
+                  <p style={{ fontSize: 13, color: 'var(--ytg-text-3)', marginBottom: 7 }}>/year</p>
+                </div>
+                <p style={{ fontSize: 13, color: 'var(--ytg-text-2)', marginBottom: 2 }}>$15.83 / month equivalent</p>
+                <p style={{ fontSize: 12, fontWeight: 700, color: '#30d158', marginBottom: 22 }}>You save $38</p>
+                {['30 AI analyses every month', 'All 5 tools unlocked', '1 channel', 'Loyalty badge in the app', 'Cancel anytime'].map((f, i) => (
+                  <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}><Check /><span style={{ fontSize: 13, color: 'var(--ytg-text-2)' }}>{f}</span></div>
+                ))}
+                <a href="/auth/login" className="ytg-btn-ghost" style={{ marginTop: 22, width: '100%', justifyContent: 'center', display: 'flex' }}>Commit to Solo</a>
+              </div>
+
+              <div style={{ background: 'rgba(255,59,48,0.06)', border: '1px solid rgba(255,59,48,0.28)', borderRadius: 22, padding: '32px 28px', position: 'relative', overflow: 'hidden', boxShadow: '0 0 48px rgba(255,59,48,0.07)' }}>
+                <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 2, background: 'linear-gradient(90deg,#ff3b30,#ff6b63)' }} />
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
+                  <p style={{ fontSize: 11, fontWeight: 700, color: '#ff6b63', textTransform: 'uppercase', letterSpacing: '0.07em' }}>Growth — Annual</p>
+                  <span style={{ fontSize: 9.5, fontWeight: 700, background: 'rgba(255,59,48,0.15)', color: '#ff6b63', border: '1px solid rgba(255,59,48,0.25)', padding: '3px 10px', borderRadius: 100, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Best value</span>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, marginBottom: 2 }}>
+                  <p style={{ fontWeight: 800, fontSize: 46, letterSpacing: '-2px', color: 'var(--ytg-text)', lineHeight: 1 }}>$490</p>
+                  <p style={{ fontSize: 13, color: 'var(--ytg-text-3)', marginBottom: 7 }}>/year</p>
+                </div>
+                <p style={{ fontSize: 13, color: 'var(--ytg-text-2)', marginBottom: 2 }}>$40.83 / month equivalent</p>
+                <p style={{ fontSize: 12, fontWeight: 700, color: '#30d158', marginBottom: 22 }}>You save $98</p>
+                {['75 AI analyses every month', 'All 5 tools unlocked', '1 channel', 'Loyalty badge in the app', 'Cancel anytime'].map((f, i) => (
+                  <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}><Check color="#ff3b30" /><span style={{ fontSize: 13, color: 'var(--ytg-text)' }}>{f}</span></div>
+                ))}
+                <a href="/auth/login" className="ytg-btn-primary" style={{ marginTop: 22, width: '100%', justifyContent: 'center', display: 'flex' }}>Commit to Growth</a>
+              </div>
+
+              <div style={{ background: 'var(--ytg-card)', border: '1px solid var(--ytg-border)', borderRadius: 22, padding: '32px 28px' }}>
+                <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-text-3)', marginBottom: 10, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Agency — Annual</p>
+                <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, marginBottom: 2 }}>
+                  <p style={{ fontWeight: 800, fontSize: 42, letterSpacing: '-2px', color: 'var(--ytg-text)', lineHeight: 1 }}>$1,490</p>
+                  <p style={{ fontSize: 13, color: 'var(--ytg-text-3)', marginBottom: 7 }}>/year</p>
+                </div>
+                <p style={{ fontSize: 13, color: 'var(--ytg-text-2)', marginBottom: 2 }}>$124.17 / month equivalent</p>
+                <p style={{ fontSize: 12, fontWeight: 700, color: '#30d158', marginBottom: 22 }}>You save $298</p>
+                {['250 AI analyses every month', 'All 5 tools unlocked', 'Up to 10 channels', 'Analyses pooled across channels', 'Priority support'].map((f, i) => (
+                  <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}><Check /><span style={{ fontSize: 13, color: 'var(--ytg-text-2)' }}>{f}</span></div>
+                ))}
+                <a href="/auth/login" className="ytg-btn-ghost" style={{ marginTop: 22, width: '100%', justifyContent: 'center', display: 'flex' }}>Commit to Agency</a>
               </div>
             </div>
+          )}
+
+          {/* ── LIFETIME ── */}
+          {pricingTab === 'lifetime' && (
+            <div>
+              <p style={{ textAlign: 'center', fontSize: 14, color: 'var(--ytg-text-2)', marginBottom: 36, lineHeight: 1.8 }}>
+                Pay once. Get the monthly analyses forever. Limited to the first <strong style={{ color: 'var(--ytg-text)' }}>500 buyers</strong> — after that, this page goes away.
+              </p>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 14 }}>
+                <div style={{ background: 'var(--ytg-card)', border: '1px solid var(--ytg-border)', borderRadius: 22, padding: '36px 32px' }}>
+                  <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-text-3)', marginBottom: 10, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Lifetime Solo</p>
+                  <p style={{ fontSize: 14, color: 'var(--ytg-text-2)', marginBottom: 18, lineHeight: 1.6 }}>Pay once. Keep the analyses coming, forever.</p>
+                  <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, marginBottom: 4 }}>
+                    <p style={{ fontWeight: 800, fontSize: 52, letterSpacing: '-2px', color: 'var(--ytg-text)', lineHeight: 1 }}>$149</p>
+                    <p style={{ fontSize: 14, color: 'var(--ytg-text-3)', marginBottom: 8 }}>one-time</p>
+                  </div>
+                  <p style={{ fontSize: 13, color: 'var(--ytg-text-3)', marginBottom: 4 }}>Equivalent to ~8 months of Solo</p>
+                  <p style={{ fontSize: 12, color: 'var(--ytg-text-4)', marginBottom: 22 }}>Worth $456 over 2 years of subscription</p>
+                  {['30 AI analyses every month — forever', 'All 5 tools unlocked', '1 channel', 'Top-up packs available', 'No recurring bill. Ever.'].map((f, i) => (
+                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}><Check /><span style={{ fontSize: 13, color: 'var(--ytg-text-2)' }}>{f}</span></div>
+                  ))}
+                  <p style={{ fontSize: 11, color: '#ff6b63', fontWeight: 700, marginTop: 18, marginBottom: 12 }}>Only 500 available — limited spots</p>
+                  <a href="/auth/login" className="ytg-btn-ghost" style={{ width: '100%', justifyContent: 'center', display: 'flex' }}>Lock In Lifetime Access</a>
+                </div>
+
+                <div style={{ background: 'rgba(255,59,48,0.06)', border: '1px solid rgba(255,59,48,0.28)', borderRadius: 22, padding: '36px 32px', position: 'relative', overflow: 'hidden', boxShadow: '0 0 48px rgba(255,59,48,0.07)' }}>
+                  <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 2, background: 'linear-gradient(90deg,#ff3b30,#ff6b63)' }} />
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
+                    <p style={{ fontSize: 11, fontWeight: 700, color: '#ff6b63', textTransform: 'uppercase', letterSpacing: '0.07em' }}>Lifetime Growth</p>
+                    <span style={{ fontSize: 9.5, fontWeight: 700, background: 'rgba(255,59,48,0.15)', color: '#ff6b63', border: '1px solid rgba(255,59,48,0.25)', padding: '3px 10px', borderRadius: 100, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Best deal</span>
+                  </div>
+                  <p style={{ fontSize: 14, color: 'var(--ytg-text-2)', marginBottom: 18, lineHeight: 1.6 }}>Pay once. Keep the analyses coming, forever.</p>
+                  <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, marginBottom: 4 }}>
+                    <p style={{ fontWeight: 800, fontSize: 52, letterSpacing: '-2px', color: 'var(--ytg-text)', lineHeight: 1 }}>$349</p>
+                    <p style={{ fontSize: 14, color: 'var(--ytg-text-3)', marginBottom: 8 }}>one-time</p>
+                  </div>
+                  <p style={{ fontSize: 13, color: 'var(--ytg-text-3)', marginBottom: 4 }}>Equivalent to ~7 months of Growth</p>
+                  <p style={{ fontSize: 12, color: 'var(--ytg-text-4)', marginBottom: 22 }}>Worth $1,176 over 2 years of subscription</p>
+                  {['75 AI analyses every month — forever', 'All 5 tools unlocked', '1 channel', 'Top-up packs available', 'No recurring bill. Ever.'].map((f, i) => (
+                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}><Check color="#ff3b30" /><span style={{ fontSize: 13, color: 'var(--ytg-text)' }}>{f}</span></div>
+                  ))}
+                  <p style={{ fontSize: 11, color: '#ff6b63', fontWeight: 700, marginTop: 18, marginBottom: 12 }}>Only 500 available — limited spots</p>
+                  <a href="/auth/login" className="ytg-btn-primary" style={{ width: '100%', justifyContent: 'center', display: 'flex' }}>Lock In Lifetime Access</a>
+                </div>
+
+                <div style={{ background: 'var(--ytg-card)', border: '1px solid var(--ytg-border)', borderRadius: 22, padding: '36px 32px' }}>
+                  <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-text-3)', marginBottom: 10, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Lifetime Agency</p>
+                  <p style={{ fontSize: 14, color: 'var(--ytg-text-2)', marginBottom: 18, lineHeight: 1.6 }}>Pay once. Manage your whole roster of channels, forever.</p>
+                  <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, marginBottom: 4 }}>
+                    <p style={{ fontWeight: 800, fontSize: 52, letterSpacing: '-2px', color: 'var(--ytg-text)', lineHeight: 1 }}>$897</p>
+                    <p style={{ fontSize: 14, color: 'var(--ytg-text-3)', marginBottom: 8 }}>one-time</p>
+                  </div>
+                  <p style={{ fontSize: 13, color: 'var(--ytg-text-3)', marginBottom: 4 }}>Equivalent to ~6 months of Agency</p>
+                  <p style={{ fontSize: 12, color: 'var(--ytg-text-4)', marginBottom: 22 }}>Worth $3,576 over 2 years of subscription</p>
+                  {['250 AI analyses every month — forever', 'All 5 tools unlocked', 'Up to 5 channels (fair use)', 'Analyses pooled across channels', 'No recurring bill. Ever.'].map((f, i) => (
+                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}><Check /><span style={{ fontSize: 13, color: 'var(--ytg-text-2)' }}>{f}</span></div>
+                  ))}
+                  <p style={{ fontSize: 11, color: '#ff6b63', fontWeight: 700, marginTop: 18, marginBottom: 12 }}>Only 500 available · Fair use: max 5 channels</p>
+                  <a href="/auth/login" className="ytg-btn-ghost" style={{ width: '100%', justifyContent: 'center', display: 'flex' }}>Lock In Lifetime Access</a>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* ── FOUNDER BUNDLES ── */}
+          {pricingTab === 'founder' && (
+            <div>
+              <p style={{ textAlign: 'center', fontSize: 14, color: 'var(--ytg-text-2)', marginBottom: 36, lineHeight: 1.8 }}>
+                The all-in option. Lifetime access <em>plus</em> a bonus stack of analyses to hit the ground running — for the early believers.
+              </p>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 14 }}>
+                <div style={{ background: 'var(--ytg-card)', border: '1px solid var(--ytg-border)', borderRadius: 22, padding: '36px 32px' }}>
+                  <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-text-3)', marginBottom: 10, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Founder Solo</p>
+                  <p style={{ fontSize: 14, color: 'var(--ytg-text-2)', marginBottom: 18, lineHeight: 1.6 }}>Pay once, grow forever, start with ammo loaded.</p>
+                  <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, marginBottom: 4 }}>
+                    <p style={{ fontWeight: 800, fontSize: 52, letterSpacing: '-2px', color: 'var(--ytg-text)', lineHeight: 1 }}>$169</p>
+                    <p style={{ fontSize: 14, color: 'var(--ytg-text-3)', marginBottom: 8 }}>one-time</p>
+                  </div>
+                  <p style={{ fontSize: 13, color: 'var(--ytg-text-3)', marginBottom: 2 }}>Lifetime Solo + 60 bonus analyses</p>
+                  <p style={{ fontSize: 12, fontWeight: 700, color: '#30d158', marginBottom: 22 }}>You're getting $190+ in value</p>
+                  {['Everything in Lifetime Solo', '+ 60 bonus analyses, on us', 'Use them across all 5 tools', 'Bonus analyses never expire', 'Founder badge in the app'].map((f, i) => (
+                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}><Check /><span style={{ fontSize: 13, color: 'var(--ytg-text-2)' }}>{f}</span></div>
+                  ))}
+                  <a href="/auth/login" className="ytg-btn-ghost" style={{ marginTop: 22, width: '100%', justifyContent: 'center', display: 'flex' }}>Become a Founder</a>
+                </div>
+
+                <div style={{ background: 'rgba(255,59,48,0.06)', border: '1px solid rgba(255,59,48,0.28)', borderRadius: 22, padding: '36px 32px', position: 'relative', overflow: 'hidden', boxShadow: '0 0 48px rgba(255,59,48,0.07)' }}>
+                  <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 2, background: 'linear-gradient(90deg,#ff3b30,#ff6b63)' }} />
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
+                    <p style={{ fontSize: 11, fontWeight: 700, color: '#ff6b63', textTransform: 'uppercase', letterSpacing: '0.07em' }}>Founder Growth</p>
+                    <span style={{ fontSize: 9.5, fontWeight: 700, background: 'rgba(255,59,48,0.15)', color: '#ff6b63', border: '1px solid rgba(255,59,48,0.25)', padding: '3px 10px', borderRadius: 100, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Most popular</span>
+                  </div>
+                  <p style={{ fontSize: 14, color: 'var(--ytg-text-2)', marginBottom: 18, lineHeight: 1.6 }}>Pay once, grow forever, start with ammo loaded.</p>
+                  <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, marginBottom: 4 }}>
+                    <p style={{ fontWeight: 800, fontSize: 52, letterSpacing: '-2px', color: 'var(--ytg-text)', lineHeight: 1 }}>$389</p>
+                    <p style={{ fontSize: 14, color: 'var(--ytg-text-3)', marginBottom: 8 }}>one-time</p>
+                  </div>
+                  <p style={{ fontSize: 13, color: 'var(--ytg-text-3)', marginBottom: 2 }}>Lifetime Growth + 75 bonus analyses</p>
+                  <p style={{ fontSize: 12, fontWeight: 700, color: '#30d158', marginBottom: 22 }}>You're getting $490+ in value</p>
+                  {['Everything in Lifetime Growth', '+ 75 bonus analyses, on us', 'Use them across all 5 tools', 'Bonus analyses never expire', 'Founder badge in the app'].map((f, i) => (
+                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}><Check color="#ff3b30" /><span style={{ fontSize: 13, color: 'var(--ytg-text)' }}>{f}</span></div>
+                  ))}
+                  <a href="/auth/login" className="ytg-btn-primary" style={{ marginTop: 22, width: '100%', justifyContent: 'center', display: 'flex' }}>Become a Founder</a>
+                </div>
+
+                <div style={{ background: 'var(--ytg-card)', border: '1px solid var(--ytg-border)', borderRadius: 22, padding: '36px 32px' }}>
+                  <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-text-3)', marginBottom: 10, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Founder Agency</p>
+                  <p style={{ fontSize: 14, color: 'var(--ytg-text-2)', marginBottom: 18, lineHeight: 1.6 }}>Pay once, grow your whole roster, start with ammo loaded.</p>
+                  <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, marginBottom: 4 }}>
+                    <p style={{ fontWeight: 800, fontSize: 52, letterSpacing: '-2px', color: 'var(--ytg-text)', lineHeight: 1 }}>$949</p>
+                    <p style={{ fontSize: 14, color: 'var(--ytg-text-3)', marginBottom: 8 }}>one-time</p>
+                  </div>
+                  <p style={{ fontSize: 13, color: 'var(--ytg-text-3)', marginBottom: 2 }}>Lifetime Agency + 150 bonus analyses</p>
+                  <p style={{ fontSize: 12, fontWeight: 700, color: '#30d158', marginBottom: 22 }}>You're getting $1,100+ in value</p>
+                  {['Everything in Lifetime Agency (max 5 channels)', '+ 150 bonus analyses, on us', 'Use them across all 5 tools', 'Bonus analyses never expire', 'Founder badge + priority support'].map((f, i) => (
+                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}><Check /><span style={{ fontSize: 13, color: 'var(--ytg-text-2)' }}>{f}</span></div>
+                  ))}
+                  <a href="/auth/login" className="ytg-btn-ghost" style={{ marginTop: 22, width: '100%', justifyContent: 'center', display: 'flex' }}>Become a Founder</a>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* ── ANALYSIS PACKS ── */}
+          {pricingTab === 'packs' && (
+            <div>
+              <p style={{ textAlign: 'center', fontSize: 14, color: 'var(--ytg-text-2)', marginBottom: 36, lineHeight: 1.8 }}>
+                No subscription needed. Buy a pack, run analyses whenever you want — they never expire and work across all 5 tools.
+              </p>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 14, marginBottom: 20 }}>
+                <div style={{ background: 'var(--ytg-card)', border: '1px solid var(--ytg-border)', borderRadius: 22, padding: '36px 32px' }}>
+                  <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-text-3)', marginBottom: 10, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Quick Boost</p>
+                  <p style={{ fontSize: 14, color: 'var(--ytg-text-2)', marginBottom: 18, lineHeight: 1.6 }}>A top-up when you run low mid-sprint.</p>
+                  <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, marginBottom: 4 }}>
+                    <p style={{ fontWeight: 800, fontSize: 52, letterSpacing: '-2px', color: 'var(--ytg-text)', lineHeight: 1 }}>$15</p>
+                    <p style={{ fontSize: 14, color: 'var(--ytg-text-3)', marginBottom: 8 }}>one-time</p>
+                  </div>
+                  <p style={{ fontSize: 13, color: 'var(--ytg-text-3)', marginBottom: 4 }}>20 AI analyses</p>
+                  <p style={{ fontSize: 12, color: 'var(--ytg-text-4)', marginBottom: 22 }}>$0.75 per analysis</p>
+                  {['20 AI analyses', 'All 5 tools unlocked', 'Never expire', 'Works with any plan or no plan', 'Stack multiple packs'].map((f, i) => (
+                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}><Check /><span style={{ fontSize: 13, color: 'var(--ytg-text-2)' }}>{f}</span></div>
+                  ))}
+                  <a href="/auth/login" className="ytg-btn-ghost" style={{ marginTop: 22, width: '100%', justifyContent: 'center', display: 'flex' }}>Buy Analyses</a>
+                </div>
+
+                <div style={{ background: 'rgba(255,59,48,0.06)', border: '1px solid rgba(255,59,48,0.28)', borderRadius: 22, padding: '36px 32px', position: 'relative', overflow: 'hidden', boxShadow: '0 0 48px rgba(255,59,48,0.07)' }}>
+                  <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 2, background: 'linear-gradient(90deg,#ff3b30,#ff6b63)' }} />
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
+                    <p style={{ fontSize: 11, fontWeight: 700, color: '#ff6b63', textTransform: 'uppercase', letterSpacing: '0.07em' }}>Power Pack</p>
+                    <span style={{ fontSize: 9.5, fontWeight: 700, background: 'rgba(255,59,48,0.15)', color: '#ff6b63', border: '1px solid rgba(255,59,48,0.25)', padding: '3px 10px', borderRadius: 100, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Most popular</span>
+                  </div>
+                  <p style={{ fontSize: 14, color: 'var(--ytg-text-2)', marginBottom: 18, lineHeight: 1.6 }}>Two solid months of deep dives.</p>
+                  <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, marginBottom: 4 }}>
+                    <p style={{ fontWeight: 800, fontSize: 52, letterSpacing: '-2px', color: 'var(--ytg-text)', lineHeight: 1 }}>$42</p>
+                    <p style={{ fontSize: 14, color: 'var(--ytg-text-3)', marginBottom: 8 }}>one-time</p>
+                  </div>
+                  <p style={{ fontSize: 13, color: 'var(--ytg-text-3)', marginBottom: 4 }}>60 AI analyses</p>
+                  <p style={{ fontSize: 12, color: 'var(--ytg-text-4)', marginBottom: 22 }}>$0.70 per analysis</p>
+                  {['60 AI analyses', 'All 5 tools unlocked', 'Never expire', 'Works with any plan or no plan', 'Stack multiple packs'].map((f, i) => (
+                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}><Check color="#ff3b30" /><span style={{ fontSize: 13, color: 'var(--ytg-text)' }}>{f}</span></div>
+                  ))}
+                  <a href="/auth/login" className="ytg-btn-primary" style={{ marginTop: 22, width: '100%', justifyContent: 'center', display: 'flex' }}>Buy Analyses</a>
+                </div>
+
+                <div style={{ background: 'var(--ytg-card)', border: '1px solid var(--ytg-border)', borderRadius: 22, padding: '36px 32px' }}>
+                  <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-text-3)', marginBottom: 10, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Full Arsenal</p>
+                  <p style={{ fontSize: 14, color: 'var(--ytg-text-2)', marginBottom: 18, lineHeight: 1.6 }}>Go deep. Analyse everything. Leave nothing unturned.</p>
+                  <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, marginBottom: 4 }}>
+                    <p style={{ fontWeight: 800, fontSize: 52, letterSpacing: '-2px', color: 'var(--ytg-text)', lineHeight: 1 }}>$99</p>
+                    <p style={{ fontSize: 14, color: 'var(--ytg-text-3)', marginBottom: 8 }}>one-time</p>
+                  </div>
+                  <p style={{ fontSize: 13, color: 'var(--ytg-text-3)', marginBottom: 4 }}>150 AI analyses</p>
+                  <p style={{ fontSize: 12, color: 'var(--ytg-text-4)', marginBottom: 22 }}>$0.66 per analysis</p>
+                  {['150 AI analyses', 'All 5 tools unlocked', 'Never expire', 'Works with any plan or no plan', 'Stack multiple packs'].map((f, i) => (
+                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}><Check /><span style={{ fontSize: 13, color: 'var(--ytg-text-2)' }}>{f}</span></div>
+                  ))}
+                  <a href="/auth/login" className="ytg-btn-ghost" style={{ marginTop: 22, width: '100%', justifyContent: 'center', display: 'flex' }}>Buy Analyses</a>
+                </div>
+              </div>
+              <p style={{ textAlign: 'center', fontSize: 13.5, color: 'var(--ytg-text-3)', lineHeight: 1.8 }}>
+                Pack analyses never expire and work across all five tools. Subscribe later and your pack analyses stack on top of your monthly allowance.
+              </p>
+            </div>
+          )}
+
+          {/* Objection crushers */}
+          <div style={{ marginTop: 56, display: 'grid', gridTemplateColumns: 'repeat(5,1fr)', gap: 12 }}>
+            {[
+              ['vs TubeBuddy / VidIQ', "They show you data. We run the AI and hand you the conclusion — so you can act, not scroll."],
+              ['Small channel?', "Especially then. When you're getting 200 views a video, one right title decision is worth more than 10 wrong ones."],
+              ['Cancel fear', 'Monthly is month-to-month. Cancel in 30 seconds, no retention email, no dark pattern. Just done.'],
+              ['Lifetime risk', "If we shut down (we won't), you keep your data export and we refund the pro-rated difference. Our reputation is the collateral."],
+              ['Agency ROI', 'One viral video for a client makes the annual plan look like a rounding error on their invoice.'],
+            ].map(([title, body], i) => (
+              <div key={i} style={{ background: 'var(--ytg-card)', border: '1px solid var(--ytg-border)', borderRadius: 16, padding: '22px 20px' }}>
+                <p style={{ fontSize: 12, fontWeight: 700, color: 'var(--ytg-text)', marginBottom: 8, letterSpacing: '-0.2px' }}>{title}</p>
+                <p style={{ fontSize: 12.5, color: 'var(--ytg-text-3)', lineHeight: 1.75 }}>{body}</p>
+              </div>
+            ))}
           </div>
         </div>
       </div>
@@ -802,12 +1023,14 @@ export default function Landing() {
             <h2 style={{ fontWeight: 800, fontSize: 48, letterSpacing: '-1.5px', color: 'var(--ytg-text)', lineHeight: 1.06 }}>Questions answered.</h2>
           </div>
           {[
-            { q: 'Is it really free?', a: 'Yes — completely free during the beta period. No credit card required, no hidden fees. When paid plans launch, we\'ll give you plenty of notice.' },
-            { q: 'What data do you access?', a: 'We request read-only access to your YouTube channel analytics. We never post, modify, delete, or interact with your content in any way. You can revoke access anytime from your Google account.' },
-            { q: 'How is this different from YouTube Studio?', a: 'YouTube Studio gives you raw numbers. YTGrowth tells you what those numbers mean and exactly what to do. We benchmark against your niche, rank issues by impact, and give you one specific action per problem.' },
-            { q: 'How often is data updated?', a: 'Every time you visit your dashboard, we pull fresh data. You always see your most current state.' },
-            { q: 'What channels is this for?', a: 'Any YouTube channel at any stage — 100 subscribers or 100,000. The insights scale with your channel size.' },
-            { q: 'Can I cancel?', a: 'Yes, anytime. Since it\'s free there\'s nothing to cancel — just stop using it. Contact us to delete your data and we\'ll handle it within 48 hours.' },
+            { q: 'Is this worth it if my channel is under 1,000 subs?', a: "Especially then. The smaller your channel, the higher the leverage of a single good decision — right title, right topic, right timing. You can't afford to guess when you're getting 200 views a video." },
+            { q: 'What happens when I run out of AI analyses mid-month?', a: "Your features pause until your monthly analyses refill on the 1st, or until you grab a top-up pack. You'll see a warning banner at 80% so you're never surprised mid-sprint." },
+            { q: 'How is this different from TubeBuddy or VidIQ?', a: "TubeBuddy and VidIQ show you dashboards and data. YTGrowth runs the actual AI analysis — competitor gaps, keyword intent, title variants — and hands you the conclusion, not the raw numbers." },
+            { q: 'Can I cancel my subscription anytime?', a: "Yes. Monthly is month-to-month — cancel whenever. Annual gives you the rest of your year. No cancellation fees, no guilt-trip retention email. Just done." },
+            { q: "Do unused monthly analyses roll over?", a: "Monthly included analyses reset every month — use them or lose them. But top-up pack analyses never expire and never reset. They sit in your account until you need them." },
+            { q: 'Can I use analysis packs without a subscription?', a: "Yes. Packs work standalone — buy a pack, run analyses, no subscription required. If you have analyses, you have full access. Subscribe later and your pack analyses stack on top." },
+            { q: "Is the lifetime deal really lifetime? What if you shut down?", a: "If we shut down, you get a pro-rated refund based on time remaining against a 5-year expected lifespan. We're also small enough that your lifetime deal revenue genuinely helps us stay running — you're part of the bet." },
+            { q: 'Can I manage client channels on the agency plan?', a: "Yes. Agency supports up to 10 channels (5 on lifetime agency deals) with pooled analyses. You run the analyses, you own the insights, your clients see the results." },
           ].map((item, i) => (
             <div key={i} className="ytg-faq-item">
               <p style={{ fontWeight: 700, fontSize: 16, color: 'var(--ytg-text)', marginBottom: 10, letterSpacing: '-0.3px' }}>{item.q}</p>
@@ -821,21 +1044,23 @@ export default function Landing() {
       <div style={{ padding: '120px 64px', position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 800, height: 600, background: 'radial-gradient(ellipse, rgba(255,59,48,0.08) 0%, transparent 65%)', pointerEvents: 'none' }} />
         <div style={{ maxWidth: 860, margin: '0 auto', textAlign: 'center', position: 'relative', zIndex: 1 }}>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'var(--ytg-card)', border: '1px solid var(--ytg-border-2)', borderRadius: 100, padding: '7px 18px', marginBottom: 32 }}>
-            <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#30d158', animation: 'pulse 2s infinite' }} />
-            <span style={{ fontSize: 13, color: 'var(--ytg-text-2)', fontWeight: 500 }}>Free during beta — join now</span>
-          </div>
+          <Badge>Get started</Badge>
           <h2 style={{ fontWeight: 800, fontSize: 64, letterSpacing: '-2px', color: 'var(--ytg-text)', marginBottom: 18, lineHeight: 1.02 }}>
-            Stop guessing.<br />
-            <span style={{ color: '#ff3b30' }}>Start growing.</span>
+            Stop making videos<br />
+            <span style={{ color: '#ff3b30' }}>nobody finds.</span>
           </h2>
           <p style={{ fontSize: 17, color: 'var(--ytg-text-2)', marginBottom: 48, lineHeight: 1.8, maxWidth: 620, margin: '0 auto 48px' }}>
-            Connect your channel in 30 seconds and get your full diagnosis — free. No credit card. No setup.
+            Start free. Run your first AI analysis on the house. See exactly what's holding your channel back.
           </p>
-          <a href="/auth/login" className="ytg-btn-primary" style={{ fontSize: 16, padding: '16px 38px' }}>
-            Analyze my channel — it's free <Arrow />
-          </a>
-          <p style={{ fontSize: 12.5, color: 'var(--ytg-text-3)', marginTop: 16 }}>No credit card. No setup. Cancel anytime.</p>
+          <div style={{ display: 'flex', gap: 14, justifyContent: 'center', flexWrap: 'wrap' }}>
+            <a href="/auth/login" className="ytg-btn-primary" style={{ fontSize: 16, padding: '16px 38px' }}>
+              Start free <Arrow />
+            </a>
+            <button onClick={() => { document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' }); setPricingTab('lifetime') }} className="ytg-btn-ghost" style={{ fontSize: 16, padding: '16px 38px' }}>
+              View lifetime deals
+            </button>
+          </div>
+          <p style={{ fontSize: 12.5, color: 'var(--ytg-text-3)', marginTop: 16 }}>No credit card. Lifetime deals capped at 500.</p>
         </div>
       </div>
 
