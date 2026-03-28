@@ -267,15 +267,6 @@ function useGlobalStyles(light) {
         .ytg-btn-ghost { padding: 13px 26px !important; font-size: 14px !important; }
         .ytg-stat-row-item { padding: 0 16px; text-align: center; }
         .ytg-stat-row-item + .ytg-stat-row-item { border-left: none; border-top: 1px solid var(--ytg-border); padding-top: 28px; margin-top: 28px; }
-        .ytg-testimonial-card { text-align: center; }
-        .ytg-testimonial-card > div:last-child { justify-content: center; }
-        .ytg-pricing-card { text-align: center; }
-        .ytg-pricing-card > div { justify-content: center; }
-        .ytg-pricing-card-featured { text-align: center; }
-        .ytg-pricing-card-featured > div { justify-content: center; }
-        .ytg-feature-card { text-align: center; }
-        .ytg-step-card { text-align: center; }
-        .ytg-step-card > div:nth-child(2) { margin: 0 auto 12px; }
       }
     `
     document.head.appendChild(style)
@@ -916,8 +907,8 @@ export default function Landing() {
           </div>
 
           {/* Tab switcher */}
-          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: isMobile ? 32 : 52 }}>
-            <div style={{ display: 'inline-flex', background: 'var(--ytg-card)', border: '1px solid var(--ytg-border)', borderRadius: 100, padding: 4, gap: 2, flexWrap: 'wrap', justifyContent: 'center' }}>
+          <div style={{ overflowX: isMobile ? 'auto' : 'visible', marginBottom: isMobile ? 32 : 52, display: 'flex', justifyContent: isMobile ? 'flex-start' : 'center', WebkitOverflowScrolling: 'touch', scrollbarWidth: 'none' }}>
+            <div style={{ display: 'inline-flex', background: 'var(--ytg-card)', border: '1px solid var(--ytg-border)', borderRadius: 100, padding: 4, gap: 2, flexWrap: 'nowrap', flexShrink: 0, margin: isMobile ? '0 auto' : undefined }}>
               {[
                 ['monthly',  isMobile ? 'Monthly' : 'Monthly'],
                 ['annual',   isMobile ? 'Annual' : 'Annual · 2 months free'],
