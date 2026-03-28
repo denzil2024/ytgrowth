@@ -103,6 +103,31 @@ def get_session(session_id: str | None) -> tuple[dict | None, Credentials | None
     return data, creds
 
 
+def _find_existing_insights(channel_id: str) -> tuple[str | None, dict | None]:
+    """
+    Scan all sessions in the DB for one that already has data for this channel.
+    Returns (session_id, user_data) if found, else (None, None).
+    Used so that a returning user with a new session cookie doesn't lose their
+    cached insights and trigger a fresh Claude analysis.
+    """
+    try:
+        db = SessionLocal()
+        rows = db.query(UserSession).all()
+        for row in rows:
+            try:
+                user_data = json.loads(row.user_data_json)
+                if user_data.get("channel", {}).get("channel_id") == channel_id:
+                    return row.session_id, user_data
+            except Exception:
+                continue
+        return None, None
+    except Exception as e:
+        print(f"Channel lookup error: {e}")
+        return None, None
+    finally:
+        db.close()
+
+
 def get_flow():
     client_secret_env = os.environ.get("GOOGLE_CLIENT_SECRET_JSON")
     if client_secret_env:
@@ -202,8 +227,25 @@ def callback(request: Request, background_tasks: BackgroundTasks):
 
         _user_creds[session_id] = creds
 
-        # Restore existing session to preserve cached insights
+        # Restore existing session to preserve cached insights.
+        # If this session_id has no data (e.g. new cookie after logout/expiry),
+        # fall back to a channel_id lookup so returning users never re-run analysis.
         existing_data, _ = get_session(session_id)
+        if not existing_data and stats.get("channel_id"):
+            old_sid, existing_data = _find_existing_insights(stats["channel_id"])
+            if old_sid and old_sid != session_id:
+                # Migrate the old session row to the new session_id
+                try:
+                    db = SessionLocal()
+                    old_row = db.query(UserSession).filter_by(session_id=old_sid).first()
+                    if old_row:
+                        db.delete(old_row)
+                        db.commit()
+                except Exception:
+                    pass
+                finally:
+                    db.close()
+
         existing_insights = existing_data.get("insights") if existing_data else None
         existing_analyzed_at = existing_data.get("analyzed_at") if existing_data else None
 
