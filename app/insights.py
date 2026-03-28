@@ -48,7 +48,6 @@ def _merge_video_data(videos, video_analytics):
             "likes": v.get("likes", 0),
             "comments": v.get("comments", 0),
             "subscribers_gained": va.get("subscribers_gained"),
-            "thumbnail_url": v.get("thumbnail", ""),
         })
     return merged
 
@@ -167,7 +166,7 @@ Average viewer age range: N/A
 Gender split: N/A
 Peak audience active hours: N/A"""
 
-    videos_section = f"--- LAST 20 VIDEOS (individual breakdown) ---\n{json.dumps(merged, indent=2, default=str)}"
+    videos_section = f"--- LAST 20 VIDEOS (individual breakdown) ---\n{json.dumps(merged, default=str)}"
 
     agg_section = f"""--- CHANNEL AGGREGATES (last 90 days) ---
 Average CTR across all videos: {agg.get('avg_ctr', 'N/A')}%
@@ -257,8 +256,8 @@ Return ONLY valid JSON. No markdown. No preamble. Exact structure:
     try:
         client = anthropic.Anthropic(api_key=os.environ.get("ANTHROPIC_API_KEY"))
         message = client.messages.create(
-            model="claude-sonnet-4-6",
-            max_tokens=4096,
+            model="claude-haiku-4-5-20251001",
+            max_tokens=1500,
             messages=[{"role": "user", "content": prompt}]
         )
         raw = message.content[0].text.strip()
