@@ -1336,7 +1336,7 @@ Tasks — return ONLY valid JSON, no markdown:
     try:
         resp = client.messages.create(
             model="claude-sonnet-4-6",
-            max_tokens=4096,
+            max_tokens=2500,
             system="You are a YouTube SEO analyst. Return only valid JSON, no markdown.",
             messages=[{"role": "user", "content": user_prompt}],
         )
