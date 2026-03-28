@@ -270,7 +270,9 @@ Return ONLY valid JSON. No markdown. No preamble. Exact structure:
         print(f"AI analysis JSON parse error: {e}")
         return _fallback_analysis(stats, videos, analytics)
     except Exception as e:
+        import traceback
         print(f"AI analysis error: {e}")
+        traceback.print_exc()
         return _fallback_analysis(stats, videos, analytics)
 
 
