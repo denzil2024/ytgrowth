@@ -28,11 +28,13 @@ function useGlobalStyles(light) {
         --ytg-section: rgba(10,10,15,0.03);
         --ytg-card: #ffffff;
         --ytg-card-2: #e8e8ec;
-        --ytg-border: rgba(10,10,15,0.09);
-        --ytg-border-2: rgba(10,10,15,0.14);
+        --ytg-border: rgba(10,10,15,0.11);
+        --ytg-border-2: rgba(10,10,15,0.18);
         --ytg-divider: rgba(10,10,15,0.06);
-        --ytg-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.05);
-        --ytg-shadow-lg: 0 2px 8px rgba(0,0,0,0.07), 0 12px 36px rgba(0,0,0,0.07);
+        --ytg-shadow: 0 1px 3px rgba(0,0,0,0.08), 0 6px 28px rgba(0,0,0,0.11);
+        --ytg-shadow-lg: 0 4px 14px rgba(0,0,0,0.12), 0 24px 64px rgba(0,0,0,0.14);
+        --ytg-shadow-xl: 0 8px 24px rgba(0,0,0,0.15), 0 40px 100px rgba(0,0,0,0.18);
+        --ytg-card-border: rgba(10,10,15,0.11);
         --ytg-accent: #e5302a;
         --ytg-accent-text: #c22b25;
         --ytg-accent-light: rgba(229,48,42,0.08);
@@ -54,6 +56,8 @@ function useGlobalStyles(light) {
         --ytg-divider: rgba(255,255,255,0.065);
         --ytg-shadow: 0 1px 4px rgba(0,0,0,0.38), 0 6px 24px rgba(0,0,0,0.22);
         --ytg-shadow-lg: 0 4px 16px rgba(0,0,0,0.5), 0 20px 60px rgba(0,0,0,0.3);
+        --ytg-shadow-xl: 0 12px 36px rgba(0,0,0,0.6), 0 48px 120px rgba(0,0,0,0.4);
+        --ytg-card-border: rgba(255,255,255,0.1);
         --ytg-accent: #ff3b30;
         --ytg-accent-text: #ff7a73;
         --ytg-accent-light: rgba(255,59,48,0.1);
@@ -74,7 +78,7 @@ function useGlobalStyles(light) {
 
       .ytg-btn-primary {
         display: inline-flex; align-items: center; gap: 10px;
-        padding: 14px 30px; border-radius: 12px; font-weight: 700;
+        padding: 14px 30px; border-radius: 100px; font-weight: 700;
         font-size: 15px; text-decoration: none;
         background: var(--ytg-accent);
         color: #fff; transition: all 0.18s ease; cursor: pointer;
@@ -90,7 +94,7 @@ function useGlobalStyles(light) {
 
       .ytg-btn-ghost {
         display: inline-flex; align-items: center; gap: 10px;
-        padding: 14px 30px; border-radius: 12px; font-weight: 600;
+        padding: 14px 30px; border-radius: 100px; font-weight: 600;
         font-size: 15px; text-decoration: none;
         background: var(--ytg-card);
         color: var(--ytg-text-2);
@@ -110,14 +114,15 @@ function useGlobalStyles(light) {
       .ytg-feature-card {
         background: var(--ytg-card);
         border: 1px solid var(--ytg-border);
-        border-radius: 20px; padding: 28px;
+        border-radius: 24px; padding: 28px;
         transition: all 0.2s ease; cursor: default;
-        box-shadow: var(--ytg-shadow);
+        box-shadow: var(--ytg-shadow-lg);
+        border-color: var(--ytg-card-border);
       }
       .ytg-feature-card:hover {
         border-color: var(--ytg-border-2);
-        transform: translateY(-2px);
-        box-shadow: var(--ytg-shadow-lg);
+        transform: translateY(-3px);
+        box-shadow: var(--ytg-shadow-xl);
       }
 
       .ytg-nav-link {
@@ -138,11 +143,11 @@ function useGlobalStyles(light) {
         overflow: hidden;
         cursor: pointer;
         transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
-        box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 3px 10px rgba(0,0,0,0.05), 0 0 0 1px rgba(0,0,0,0.025) inset;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.06), 0 8px 24px rgba(0,0,0,0.1);
       }
       .ytg-faq-card:hover {
         transform: translateY(-2px);
-        box-shadow: 0 4px 14px rgba(0,0,0,0.09), 0 1px 4px rgba(0,0,0,0.06), 0 0 0 1px rgba(0,0,0,0.04) inset;
+        box-shadow: 0 6px 20px rgba(0,0,0,0.13), 0 2px 6px rgba(0,0,0,0.07);
       }
 
       .ytg-objection-card {
@@ -150,13 +155,13 @@ function useGlobalStyles(light) {
         border: 1px solid var(--ytg-border);
         border-radius: 16px;
         padding: 22px 20px;
-        box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 3px 10px rgba(0,0,0,0.06);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08), 0 8px 28px rgba(0,0,0,0.1);
         transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
         cursor: default;
       }
       .ytg-objection-card:hover {
         transform: translateY(-3px);
-        box-shadow: 0 8px 24px rgba(0,0,0,0.1), 0 2px 6px rgba(0,0,0,0.06);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.14), 0 3px 8px rgba(0,0,0,0.08);
         border-color: var(--ytg-border-2);
       }
 
@@ -172,6 +177,71 @@ function useGlobalStyles(light) {
         border: 1px solid var(--ytg-border);
         border-radius: 22px;
         box-shadow: var(--ytg-shadow);
+      }
+      .ytg-card {
+        background: var(--ytg-card);
+        border: 1px solid var(--ytg-border);
+        border-radius: 24px;
+        box-shadow: var(--ytg-shadow-lg);
+        transition: box-shadow 0.2s, transform 0.2s, border-color 0.2s;
+      }
+      .ytg-card:hover {
+        box-shadow: var(--ytg-shadow-xl);
+        transform: translateY(-2px);
+        border-color: var(--ytg-border-2);
+      }
+      .ytg-card-accent {
+        background: var(--ytg-accent-light);
+        border: 1px solid var(--ytg-accent-border);
+        border-radius: 24px;
+        box-shadow: var(--ytg-shadow-xl);
+        position: relative;
+        overflow: hidden;
+      }
+      .ytg-step-card {
+        background: var(--ytg-card);
+        border: 1px solid var(--ytg-border);
+        border-radius: 24px;
+        padding: 26px;
+        box-shadow: var(--ytg-shadow-lg);
+        transition: box-shadow 0.2s, transform 0.2s;
+      }
+      .ytg-step-card:hover {
+        box-shadow: var(--ytg-shadow-xl);
+        transform: translateY(-2px);
+      }
+      .ytg-testimonial-card {
+        background: var(--ytg-card);
+        border: 1px solid var(--ytg-border);
+        border-radius: 24px;
+        padding: 28px 30px;
+        box-shadow: var(--ytg-shadow-lg);
+        transition: box-shadow 0.2s, transform 0.2s;
+      }
+      .ytg-testimonial-card:hover {
+        box-shadow: var(--ytg-shadow-xl);
+        transform: translateY(-2px);
+      }
+      .ytg-pricing-card {
+        background: var(--ytg-card);
+        border: 1px solid var(--ytg-border);
+        border-radius: 24px;
+        padding: 32px 28px;
+        box-shadow: var(--ytg-shadow-lg);
+        transition: box-shadow 0.2s, transform 0.2s;
+      }
+      .ytg-pricing-card:hover {
+        box-shadow: var(--ytg-shadow-xl);
+        transform: translateY(-2px);
+      }
+      .ytg-pricing-card-featured {
+        background: var(--ytg-accent-light);
+        border: 1px solid var(--ytg-accent-border);
+        border-radius: 24px;
+        padding: 32px 28px;
+        position: relative;
+        overflow: hidden;
+        box-shadow: var(--ytg-shadow-xl);
       }
     `
     document.head.appendChild(style)
@@ -390,7 +460,7 @@ export default function Landing() {
             </a>
           ) : (
             <>
-              <a href="/auth/login" className="ytg-nav-link" style={{ padding: '8px 16px', borderRadius: 10 }}>Log in</a>
+              <a href="/auth/login" className="ytg-nav-link" style={{ padding: '8px 16px', borderRadius: 100 }}>Log in</a>
               <a href="/auth/login" className="ytg-btn-primary" style={{ padding: '9px 20px', fontSize: 13.5 }}>
                 Get started free
               </a>
@@ -537,8 +607,8 @@ export default function Landing() {
       </div>
 
       {/* ── STATS BAR ───────────────────────────────────────────────────── */}
-      <div style={{ borderTop: '1px solid var(--ytg-border)', borderBottom: '1px solid var(--ytg-border)', background: 'var(--ytg-section)', position: 'relative', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 700, height: 300, background: 'radial-gradient(ellipse, rgba(59,130,246,0.05) 0%, transparent 70%)', pointerEvents: 'none' }} />
+      <div style={{ borderTop: '1px solid var(--ytg-border-2)', borderBottom: '1px solid var(--ytg-border-2)', background: 'var(--ytg-section)', position: 'relative', overflow: 'hidden' }}>
+        <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 700, height: 300, background: 'radial-gradient(ellipse, rgba(59,130,246,0.08) 0%, transparent 70%)', pointerEvents: 'none' }} />
         <div style={{ maxWidth: 1280, margin: '0 auto', padding: '52px 64px', display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', position: 'relative', zIndex: 1 }}>
           {[['30s', 'To your first full diagnosis'], ['12+', 'Metrics analyzed per channel'], ['5', 'AI tools included'], ['5+', 'Competitor channels scanned']].map(([n, l], i) => (
             <div key={i} className="ytg-stat-row-item">
@@ -551,8 +621,8 @@ export default function Landing() {
 
       {/* ── FEATURES ────────────────────────────────────────────────────── */}
       <div id="features" style={{ padding: '100px 64px', position: 'relative', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', top: '-5%', right: '-5%', width: 700, height: 600, background: 'radial-gradient(ellipse, rgba(99,102,241,0.05) 0%, transparent 65%)', pointerEvents: 'none' }} />
-        <div style={{ position: 'absolute', bottom: '10%', left: '-5%', width: 500, height: 400, background: 'radial-gradient(ellipse, rgba(14,165,233,0.04) 0%, transparent 65%)', pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', top: '-5%', right: '-5%', width: 700, height: 600, background: 'radial-gradient(ellipse, rgba(99,102,241,0.08) 0%, transparent 65%)', pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', bottom: '10%', left: '-5%', width: 500, height: 400, background: 'radial-gradient(ellipse, rgba(14,165,233,0.07) 0%, transparent 65%)', pointerEvents: 'none' }} />
         <div style={{ maxWidth: 1280, margin: '0 auto', position: 'relative', zIndex: 1 }}>
           <div style={{ textAlign: 'center', marginBottom: 56 }}>
             <Badge>Features</Badge>
@@ -585,7 +655,7 @@ export default function Landing() {
 
       {/* ── BEFORE / AFTER ──────────────────────────────────────────────── */}
       <div style={{ background: 'var(--ytg-section)', borderTop: '1px solid var(--ytg-border)', borderBottom: '1px solid var(--ytg-border)', padding: '100px 64px', position: 'relative', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', top: '50%', right: '10%', transform: 'translateY(-50%)', width: 600, height: 500, background: 'radial-gradient(ellipse, rgba(229,48,42,0.04) 0%, transparent 65%)', pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', top: '50%', right: '10%', transform: 'translateY(-50%)', width: 600, height: 500, background: 'radial-gradient(ellipse, rgba(229,48,42,0.06) 0%, transparent 65%)', pointerEvents: 'none' }} />
         <div style={{ maxWidth: 1280, margin: '0 auto', position: 'relative', zIndex: 1 }}>
           <div style={{ textAlign: 'center', marginBottom: 56 }}>
             <Badge>The difference</Badge>
@@ -594,7 +664,7 @@ export default function Landing() {
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
             {/* Without */}
-            <div style={{ background: 'var(--ytg-card)', border: '1px solid var(--ytg-border)', borderRadius: 20, overflow: 'hidden', boxShadow: 'var(--ytg-shadow)' }}>
+            <div className="ytg-card" style={{ overflow: 'hidden' }}>
               <div style={{ padding: '16px 26px', borderBottom: '1px solid var(--ytg-divider)', display: 'flex', alignItems: 'center', gap: 9 }}>
                 <div style={{ width: 7, height: 7, borderRadius: '50%', background: 'var(--ytg-text-4)' }} />
                 <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--ytg-text-4)' }}>Without YTGrowth</span>
@@ -613,7 +683,7 @@ export default function Landing() {
               ))}
             </div>
             {/* With */}
-            <div style={{ background: 'var(--ytg-accent-light)', border: '1px solid var(--ytg-accent-border)', borderRadius: 20, overflow: 'hidden', position: 'relative', boxShadow: 'var(--ytg-shadow-lg)' }}>
+            <div className="ytg-card-accent" style={{ overflow: 'hidden' }}>
               <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 2, background: 'linear-gradient(90deg, var(--ytg-accent), #ff7a73)' }} />
               <div style={{ padding: '16px 26px', borderBottom: '1px solid var(--ytg-accent-border)', display: 'flex', alignItems: 'center', gap: 9 }}>
                 <div style={{ width: 7, height: 7, borderRadius: '50%', background: 'var(--ytg-accent)' }} />
@@ -638,7 +708,7 @@ export default function Landing() {
 
       {/* ── HOW IT WORKS ────────────────────────────────────────────────── */}
       <div id="how-it-works" style={{ padding: '100px 64px', position: 'relative', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 900, height: 600, background: 'radial-gradient(ellipse, rgba(59,130,246,0.04) 0%, transparent 60%)', pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 900, height: 600, background: 'radial-gradient(ellipse, rgba(59,130,246,0.07) 0%, transparent 60%)', pointerEvents: 'none' }} />
         <div style={{ maxWidth: 1280, margin: '0 auto', position: 'relative', zIndex: 1 }}>
           <div style={{ textAlign: 'center', marginBottom: 56 }}>
             <Badge>How it works</Badge>
@@ -701,7 +771,7 @@ export default function Landing() {
                 )
               },
             ].map((step, i) => (
-              <div key={i} style={{ background: 'var(--ytg-card)', border: '1px solid var(--ytg-border)', borderRadius: 20, padding: '26px', boxShadow: 'var(--ytg-shadow)' }}>
+              <div key={i} className="ytg-step-card">
                 {step.card}
                 <div style={{ width: 36, height: 36, background: 'var(--ytg-card-2)', border: '1px solid var(--ytg-border-2)', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 12 }}>
                   <span style={{ fontWeight: 800, fontSize: 12.5, color: 'var(--ytg-text-3)', fontVariantNumeric: 'tabular-nums' }}>{step.n}</span>
@@ -716,7 +786,7 @@ export default function Landing() {
 
       {/* ── TESTIMONIALS ────────────────────────────────────────────────── */}
       <div style={{ background: 'var(--ytg-section)', borderTop: '1px solid var(--ytg-border)', borderBottom: '1px solid var(--ytg-border)', padding: '100px 64px', position: 'relative', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', top: '30%', left: '50%', transform: 'translateX(-50%)', width: 800, height: 400, background: 'radial-gradient(ellipse, rgba(234,179,8,0.05) 0%, transparent 65%)', pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', top: '30%', left: '50%', transform: 'translateX(-50%)', width: 800, height: 400, background: 'radial-gradient(ellipse, rgba(234,179,8,0.08) 0%, transparent 65%)', pointerEvents: 'none' }} />
         <div style={{ maxWidth: 1280, margin: '0 auto', position: 'relative', zIndex: 1 }}>
           <div style={{ textAlign: 'center', marginBottom: 56 }}>
             <Badge>Beta creators</Badge>
@@ -729,7 +799,7 @@ export default function Landing() {
               { q: 'The competitor gap analysis was eye-opening. I thought I was doing fine. Turns out I was 92% behind on average views. Now I know what to fix.', n: 'Personal development', s: '4.1k subs' },
               { q: 'Got 3 specific actions and implemented all of them the same day. My CTR went from 2.1% to 3.8% in under two weeks.', n: 'Cooking niche', s: '11k subs' },
             ].map((t, i) => (
-              <div key={i} style={{ background: 'var(--ytg-card)', border: '1px solid var(--ytg-border)', borderRadius: 20, padding: '28px 30px', boxShadow: 'var(--ytg-shadow)' }}>
+              <div key={i} className="ytg-testimonial-card">
                 <div style={{ marginBottom: 14 }}>
                   {[...Array(5)].map((_, j) => (
                     <span key={j} style={{ color: '#e8a000', fontSize: 13, marginRight: 2 }}>★</span>
@@ -751,8 +821,8 @@ export default function Landing() {
 
       {/* ── PRICING ─────────────────────────────────────────────────────── */}
       <div id="pricing" style={{ padding: '100px 64px', position: 'relative', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', top: '0%', left: '50%', transform: 'translateX(-50%)', width: 1000, height: 600, background: 'radial-gradient(ellipse, rgba(229,48,42,0.05) 0%, transparent 60%)', pointerEvents: 'none' }} />
-        <div style={{ position: 'absolute', bottom: '5%', left: '10%', width: 500, height: 400, background: 'radial-gradient(ellipse, rgba(99,102,241,0.04) 0%, transparent 65%)', pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', top: '0%', left: '50%', transform: 'translateX(-50%)', width: 1000, height: 600, background: 'radial-gradient(ellipse, rgba(229,48,42,0.08) 0%, transparent 60%)', pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', bottom: '5%', left: '10%', width: 500, height: 400, background: 'radial-gradient(ellipse, rgba(99,102,241,0.07) 0%, transparent 65%)', pointerEvents: 'none' }} />
         <div style={{ maxWidth: 1280, margin: '0 auto', position: 'relative', zIndex: 1 }}>
           <div style={{ textAlign: 'center', marginBottom: 48 }}>
             <Badge>Pricing</Badge>
@@ -762,7 +832,7 @@ export default function Landing() {
 
           {/* Tab switcher */}
           <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 52 }}>
-            <div style={{ display: 'inline-flex', background: 'var(--ytg-card)', border: '1px solid var(--ytg-border)', borderRadius: 14, padding: 4, gap: 2, flexWrap: 'wrap', justifyContent: 'center' }}>
+            <div style={{ display: 'inline-flex', background: 'var(--ytg-card)', border: '1px solid var(--ytg-border)', borderRadius: 100, padding: 4, gap: 2, flexWrap: 'wrap', justifyContent: 'center' }}>
               {[
                 ['monthly',  'Monthly'],
                 ['annual',   'Annual · 2 months free'],
@@ -771,7 +841,7 @@ export default function Landing() {
                 ['packs',    'Analysis Packs'],
               ].map(([val, label]) => (
                 <button key={val} onClick={() => setPricingTab(val)} style={{
-                  padding: '9px 18px', borderRadius: 10, border: 'none', cursor: 'pointer',
+                  padding: '9px 18px', borderRadius: 100, border: 'none', cursor: 'pointer',
                   fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: 13, fontWeight: 600,
                   background: pricingTab === val ? '#ff3b30' : 'transparent',
                   color: pricingTab === val ? '#fff' : 'var(--ytg-text-3)',
@@ -784,7 +854,7 @@ export default function Landing() {
           {/* ── MONTHLY ── */}
           {pricingTab === 'monthly' && (
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 14 }}>
-              <div style={{ background: 'var(--ytg-card)', border: '1px solid var(--ytg-border)', borderRadius: 22, padding: '32px 28px', boxShadow: 'var(--ytg-shadow)' }}>
+              <div className="ytg-pricing-card">
                 <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-text-3)', marginBottom: 10, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Free</p>
                 <p style={{ fontWeight: 800, fontSize: 46, letterSpacing: '-2px', color: 'var(--ytg-text)', lineHeight: 1, marginBottom: 4 }}>$0</p>
                 <p style={{ fontSize: 13, color: 'var(--ytg-text-3)', marginBottom: 4 }}>Forever free</p>
@@ -795,7 +865,7 @@ export default function Landing() {
                 <a href="/auth/login" className="ytg-btn-ghost" style={{ marginTop: 22, width: '100%', justifyContent: 'center', display: 'flex' }}>Start free</a>
               </div>
 
-              <div style={{ background: 'var(--ytg-card)', border: '1px solid var(--ytg-border)', borderRadius: 22, padding: '32px 28px', boxShadow: 'var(--ytg-shadow)' }}>
+              <div className="ytg-pricing-card">
                 <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-text-3)', marginBottom: 10, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Solo</p>
                 <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, marginBottom: 4 }}>
                   <p style={{ fontWeight: 800, fontSize: 46, letterSpacing: '-2px', color: 'var(--ytg-text)', lineHeight: 1 }}>$19</p>
@@ -809,7 +879,7 @@ export default function Landing() {
                 <a href="/auth/login" className="ytg-btn-ghost" style={{ marginTop: 22, width: '100%', justifyContent: 'center', display: 'flex' }}>Get Solo</a>
               </div>
 
-              <div style={{ background: 'var(--ytg-accent-light)', border: '1px solid var(--ytg-accent-border)', borderRadius: 22, padding: '32px 28px', position: 'relative', overflow: 'hidden', boxShadow: 'var(--ytg-shadow-lg)' }}>
+              <div className="ytg-pricing-card-featured">
                 <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 2, background: 'linear-gradient(90deg, var(--ytg-accent), #ff7a73)' }} />
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
                   <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-accent-text)', textTransform: 'uppercase', letterSpacing: '0.07em' }}>Growth</p>
@@ -827,7 +897,7 @@ export default function Landing() {
                 <a href="/auth/login" className="ytg-btn-primary" style={{ marginTop: 22, width: '100%', justifyContent: 'center', display: 'flex' }}>Start with Growth</a>
               </div>
 
-              <div style={{ background: 'var(--ytg-card)', border: '1px solid var(--ytg-border)', borderRadius: 22, padding: '32px 28px', boxShadow: 'var(--ytg-shadow)' }}>
+              <div className="ytg-pricing-card">
                 <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-text-3)', marginBottom: 10, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Agency</p>
                 <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, marginBottom: 4 }}>
                   <p style={{ fontWeight: 800, fontSize: 46, letterSpacing: '-2px', color: 'var(--ytg-text)', lineHeight: 1 }}>$149</p>
@@ -846,7 +916,7 @@ export default function Landing() {
           {/* ── ANNUAL ── */}
           {pricingTab === 'annual' && (
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 14 }}>
-              <div style={{ background: 'var(--ytg-card)', border: '1px solid var(--ytg-border)', borderRadius: 22, padding: '32px 28px', boxShadow: 'var(--ytg-shadow)' }}>
+              <div className="ytg-pricing-card">
                 <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-text-3)', marginBottom: 10, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Free</p>
                 <p style={{ fontWeight: 800, fontSize: 46, letterSpacing: '-2px', color: 'var(--ytg-text)', lineHeight: 1, marginBottom: 4 }}>$0</p>
                 <p style={{ fontSize: 13, color: 'var(--ytg-text-3)', marginBottom: 22 }}>Forever free</p>
@@ -856,7 +926,7 @@ export default function Landing() {
                 <a href="/auth/login" className="ytg-btn-ghost" style={{ marginTop: 22, width: '100%', justifyContent: 'center', display: 'flex' }}>Start free</a>
               </div>
 
-              <div style={{ background: 'var(--ytg-card)', border: '1px solid var(--ytg-border)', borderRadius: 22, padding: '32px 28px', boxShadow: 'var(--ytg-shadow)' }}>
+              <div className="ytg-pricing-card">
                 <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-text-3)', marginBottom: 10, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Solo — Annual</p>
                 <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, marginBottom: 2 }}>
                   <p style={{ fontWeight: 800, fontSize: 46, letterSpacing: '-2px', color: 'var(--ytg-text)', lineHeight: 1 }}>$190</p>
@@ -870,7 +940,7 @@ export default function Landing() {
                 <a href="/auth/login" className="ytg-btn-ghost" style={{ marginTop: 22, width: '100%', justifyContent: 'center', display: 'flex' }}>Commit to Solo</a>
               </div>
 
-              <div style={{ background: 'var(--ytg-accent-light)', border: '1px solid var(--ytg-accent-border)', borderRadius: 22, padding: '32px 28px', position: 'relative', overflow: 'hidden', boxShadow: 'var(--ytg-shadow-lg)' }}>
+              <div className="ytg-pricing-card-featured">
                 <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 2, background: 'linear-gradient(90deg, var(--ytg-accent), #ff7a73)' }} />
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
                   <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-accent-text)', textTransform: 'uppercase', letterSpacing: '0.07em' }}>Growth — Annual</p>
@@ -888,7 +958,7 @@ export default function Landing() {
                 <a href="/auth/login" className="ytg-btn-primary" style={{ marginTop: 22, width: '100%', justifyContent: 'center', display: 'flex' }}>Commit to Growth</a>
               </div>
 
-              <div style={{ background: 'var(--ytg-card)', border: '1px solid var(--ytg-border)', borderRadius: 22, padding: '32px 28px', boxShadow: 'var(--ytg-shadow)' }}>
+              <div className="ytg-pricing-card">
                 <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-text-3)', marginBottom: 10, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Agency — Annual</p>
                 <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, marginBottom: 2 }}>
                   <p style={{ fontWeight: 800, fontSize: 42, letterSpacing: '-2px', color: 'var(--ytg-text)', lineHeight: 1 }}>$1,490</p>
@@ -911,7 +981,7 @@ export default function Landing() {
                 Pay once. Get the monthly analyses forever. Limited to the first <strong style={{ color: 'var(--ytg-text)' }}>500 buyers</strong> — after that, this page goes away.
               </p>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 14 }}>
-                <div style={{ background: 'var(--ytg-card)', border: '1px solid var(--ytg-border)', borderRadius: 22, padding: '36px 32px', boxShadow: 'var(--ytg-shadow)' }}>
+                <div className="ytg-pricing-card" style={{ padding: '36px 32px' }}>
                   <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-text-3)', marginBottom: 10, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Lifetime Solo</p>
                   <p style={{ fontSize: 14, color: 'var(--ytg-text-2)', marginBottom: 18, lineHeight: 1.6 }}>Pay once. Keep the analyses coming, forever.</p>
                   <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, marginBottom: 4 }}>
@@ -927,7 +997,7 @@ export default function Landing() {
                   <a href="/auth/login" className="ytg-btn-ghost" style={{ width: '100%', justifyContent: 'center', display: 'flex' }}>Lock In Lifetime Access</a>
                 </div>
 
-                <div style={{ background: 'var(--ytg-accent-light)', border: '1px solid var(--ytg-accent-border)', borderRadius: 22, padding: '36px 32px', position: 'relative', overflow: 'hidden', boxShadow: 'var(--ytg-shadow-lg)' }}>
+                <div className="ytg-pricing-card-featured" style={{ padding: '36px 32px' }}>
                   <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 2, background: 'linear-gradient(90deg, var(--ytg-accent), #ff7a73)' }} />
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
                     <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-accent-text)', textTransform: 'uppercase', letterSpacing: '0.07em' }}>Lifetime Growth</p>
@@ -947,7 +1017,7 @@ export default function Landing() {
                   <a href="/auth/login" className="ytg-btn-primary" style={{ width: '100%', justifyContent: 'center', display: 'flex' }}>Lock In Lifetime Access</a>
                 </div>
 
-                <div style={{ background: 'var(--ytg-card)', border: '1px solid var(--ytg-border)', borderRadius: 22, padding: '36px 32px', boxShadow: 'var(--ytg-shadow)' }}>
+                <div className="ytg-pricing-card" style={{ padding: '36px 32px' }}>
                   <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-text-3)', marginBottom: 10, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Lifetime Agency</p>
                   <p style={{ fontSize: 14, color: 'var(--ytg-text-2)', marginBottom: 18, lineHeight: 1.6 }}>Pay once. Manage your whole roster of channels, forever.</p>
                   <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, marginBottom: 4 }}>
@@ -973,7 +1043,7 @@ export default function Landing() {
                 The all-in option. Lifetime access <em>plus</em> a bonus stack of analyses to hit the ground running — for the early believers.
               </p>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 14 }}>
-                <div style={{ background: 'var(--ytg-card)', border: '1px solid var(--ytg-border)', borderRadius: 22, padding: '36px 32px', boxShadow: 'var(--ytg-shadow)' }}>
+                <div className="ytg-pricing-card" style={{ padding: '36px 32px' }}>
                   <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-text-3)', marginBottom: 10, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Founder Solo</p>
                   <p style={{ fontSize: 14, color: 'var(--ytg-text-2)', marginBottom: 18, lineHeight: 1.6 }}>Pay once, grow forever, start with ammo loaded.</p>
                   <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, marginBottom: 4 }}>
@@ -988,7 +1058,7 @@ export default function Landing() {
                   <a href="/auth/login" className="ytg-btn-ghost" style={{ marginTop: 22, width: '100%', justifyContent: 'center', display: 'flex' }}>Become a Founder</a>
                 </div>
 
-                <div style={{ background: 'var(--ytg-accent-light)', border: '1px solid var(--ytg-accent-border)', borderRadius: 22, padding: '36px 32px', position: 'relative', overflow: 'hidden', boxShadow: 'var(--ytg-shadow-lg)' }}>
+                <div className="ytg-pricing-card-featured" style={{ padding: '36px 32px' }}>
                   <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 2, background: 'linear-gradient(90deg, var(--ytg-accent), #ff7a73)' }} />
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
                     <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-accent-text)', textTransform: 'uppercase', letterSpacing: '0.07em' }}>Founder Growth</p>
@@ -1007,7 +1077,7 @@ export default function Landing() {
                   <a href="/auth/login" className="ytg-btn-primary" style={{ marginTop: 22, width: '100%', justifyContent: 'center', display: 'flex' }}>Become a Founder</a>
                 </div>
 
-                <div style={{ background: 'var(--ytg-card)', border: '1px solid var(--ytg-border)', borderRadius: 22, padding: '36px 32px', boxShadow: 'var(--ytg-shadow)' }}>
+                <div className="ytg-pricing-card" style={{ padding: '36px 32px' }}>
                   <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-text-3)', marginBottom: 10, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Founder Agency</p>
                   <p style={{ fontSize: 14, color: 'var(--ytg-text-2)', marginBottom: 18, lineHeight: 1.6 }}>Pay once, grow your whole roster, start with ammo loaded.</p>
                   <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, marginBottom: 4 }}>
@@ -1032,7 +1102,7 @@ export default function Landing() {
                 No subscription needed. Buy a pack, run analyses whenever you want — they never expire and work across all 5 tools.
               </p>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 14, marginBottom: 20 }}>
-                <div style={{ background: 'var(--ytg-card)', border: '1px solid var(--ytg-border)', borderRadius: 22, padding: '36px 32px', boxShadow: 'var(--ytg-shadow)' }}>
+                <div className="ytg-pricing-card" style={{ padding: '36px 32px' }}>
                   <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-text-3)', marginBottom: 10, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Quick Boost</p>
                   <p style={{ fontSize: 14, color: 'var(--ytg-text-2)', marginBottom: 18, lineHeight: 1.6 }}>A top-up when you run low mid-sprint.</p>
                   <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, marginBottom: 4 }}>
@@ -1047,7 +1117,7 @@ export default function Landing() {
                   <a href="/auth/login" className="ytg-btn-ghost" style={{ marginTop: 22, width: '100%', justifyContent: 'center', display: 'flex' }}>Buy Analyses</a>
                 </div>
 
-                <div style={{ background: 'var(--ytg-accent-light)', border: '1px solid var(--ytg-accent-border)', borderRadius: 22, padding: '36px 32px', position: 'relative', overflow: 'hidden', boxShadow: 'var(--ytg-shadow-lg)' }}>
+                <div className="ytg-pricing-card-featured" style={{ padding: '36px 32px' }}>
                   <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 2, background: 'linear-gradient(90deg, var(--ytg-accent), #ff7a73)' }} />
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
                     <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-accent-text)', textTransform: 'uppercase', letterSpacing: '0.07em' }}>Power Pack</p>
@@ -1066,7 +1136,7 @@ export default function Landing() {
                   <a href="/auth/login" className="ytg-btn-primary" style={{ marginTop: 22, width: '100%', justifyContent: 'center', display: 'flex' }}>Buy Analyses</a>
                 </div>
 
-                <div style={{ background: 'var(--ytg-card)', border: '1px solid var(--ytg-border)', borderRadius: 22, padding: '36px 32px', boxShadow: 'var(--ytg-shadow)' }}>
+                <div className="ytg-pricing-card" style={{ padding: '36px 32px' }}>
                   <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-text-3)', marginBottom: 10, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Full Arsenal</p>
                   <p style={{ fontSize: 14, color: 'var(--ytg-text-2)', marginBottom: 18, lineHeight: 1.6 }}>Go deep. Analyse everything. Leave nothing unturned.</p>
                   <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, marginBottom: 4 }}>
@@ -1107,7 +1177,7 @@ export default function Landing() {
 
       {/* ── FAQ ─────────────────────────────────────────────────────────── */}
       <div id="faq" style={{ padding: '100px 64px', position: 'relative', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 900, height: 600, background: 'radial-gradient(ellipse, rgba(99,102,241,0.05) 0%, transparent 60%)', pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 900, height: 600, background: 'radial-gradient(ellipse, rgba(99,102,241,0.08) 0%, transparent 60%)', pointerEvents: 'none' }} />
         <div style={{ maxWidth: 960, margin: '0 auto', position: 'relative', zIndex: 1 }}>
           <div style={{ textAlign: 'center', marginBottom: 56 }}>
             <Badge>FAQ</Badge>
