@@ -149,12 +149,21 @@ def _run_analysis_in_background(session_id: str, stats: dict, videos: list, anal
     import datetime
     try:
         insights = analyze_channel(stats, videos, analytics, video_analytics)
-        if session_id in _user_data:
-            _user_data[session_id]["insights"] = insights
-            _user_data[session_id]["analyzed_at"] = datetime.datetime.utcnow().isoformat()
-            _persist_session(session_id, _user_creds[session_id], _user_data[session_id])
+        analyzed_at = datetime.datetime.utcnow().isoformat()
+        # Always reload from DB and save back — don't rely on in-memory state
+        data, creds = get_session(session_id)
+        if data and creds:
+            data["insights"] = insights
+            data["analyzed_at"] = analyzed_at
+            _user_data[session_id] = data
+            _persist_session(session_id, creds, data)
+            print(f"Analysis saved for {session_id[:8]}")
+        else:
+            print(f"Session not found when saving analysis for {session_id[:8]}")
     except Exception as e:
+        import traceback
         print(f"Background analysis error: {e}")
+        traceback.print_exc()
 
 
 @router.get("/callback")
