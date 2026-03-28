@@ -257,7 +257,7 @@ Return ONLY valid JSON. No markdown. No preamble. Exact structure:
         client = anthropic.Anthropic(api_key=os.environ.get("ANTHROPIC_API_KEY"))
         message = client.messages.create(
             model="claude-sonnet-4-6",
-            max_tokens=1500,
+            max_tokens=2500,
             messages=[{"role": "user", "content": prompt}]
         )
         raw = message.content[0].text.strip()
