@@ -14,40 +14,32 @@ function useCompetitorStyles() {
   useEffect(() => {
     if (document.getElementById('ytg-comp-styles')) return
 
-    const link = document.createElement('link')
-    link.rel = 'stylesheet'
-    link.href = 'https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap'
-    document.head.appendChild(link)
-
     const style = document.createElement('style')
     style.id = 'ytg-comp-styles'
     style.textContent = `
-      .comp-page * { box-sizing: border-box; font-family: 'Plus Jakarta Sans', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+      .comp-page * { box-sizing: border-box; font-family: 'DM Sans', 'Inter', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
       .comp-page p, .comp-page span, .comp-page div { margin: 0; }
 
       /* ── cards ── */
       .comp-card {
-        background: rgba(255,255,255,0.85);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        border: 1px solid rgba(255,255,255,0.98);
+        background: #ffffff;
+        border: 1px solid rgba(0,0,0,0.09);
         border-radius: 20px;
-        box-shadow: 0 1px 0 rgba(255,255,255,0.8) inset, 0 6px 24px rgba(0,0,0,0.07), 0 1px 4px rgba(0,0,0,0.04);
-        transition: box-shadow 0.22s, transform 0.22s;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.07), 0 6px 24px rgba(0,0,0,0.09);
+        transition: box-shadow 0.22s, transform 0.22s, border-color 0.22s;
       }
       .comp-card:hover {
-        box-shadow: 0 1px 0 rgba(255,255,255,0.8) inset, 0 16px 48px rgba(0,0,0,0.1), 0 2px 8px rgba(0,0,0,0.05);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.10), 0 20px 56px rgba(0,0,0,0.13);
         transform: translateY(-1px);
+        border-color: rgba(0,0,0,0.13);
       }
 
       .comp-channel-card {
-        background: rgba(255,255,255,0.85);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        border: 1px solid rgba(255,255,255,0.98);
+        background: #ffffff;
+        border: 1px solid rgba(0,0,0,0.09);
         border-radius: 16px;
-        box-shadow: 0 1px 0 rgba(255,255,255,0.8) inset, 0 4px 16px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04);
-        transition: box-shadow 0.2s, transform 0.2s;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.07);
+        transition: box-shadow 0.2s, transform 0.2s, border-color 0.2s;
         padding: 14px 18px;
         display: flex;
         align-items: center;
@@ -55,96 +47,98 @@ function useCompetitorStyles() {
         margin-bottom: 8px;
       }
       .comp-channel-card:hover {
-        box-shadow: 0 1px 0 rgba(255,255,255,0.8) inset, 0 12px 36px rgba(0,0,0,0.09), 0 2px 6px rgba(0,0,0,0.05);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.10), 0 16px 40px rgba(0,0,0,0.11);
         transform: translateY(-1px);
+        border-color: rgba(0,0,0,0.13);
       }
 
       /* ── tabs ── */
       .comp-tab-btn {
         padding: 9px 22px;
-        border-radius: 50px;
+        border-radius: 100px;
         font-size: 13px;
         font-weight: 600;
         cursor: pointer;
         transition: all 0.18s;
-        font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
-        border: 1.5px solid transparent;
+        font-family: 'DM Sans', 'Inter', sans-serif;
+        border: 1px solid transparent;
         white-space: nowrap;
-        letter-spacing: 0.1px;
+        letter-spacing: -0.1px;
       }
       .comp-tab-btn.active {
-        background: #111;
+        background: #111114;
         color: #fff;
-        border-color: #111;
-        box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+        border-color: #111114;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.18), 0 4px 16px rgba(0,0,0,0.14);
       }
       .comp-tab-btn.inactive {
-        background: rgba(255,255,255,0.78);
-        color: #666;
+        background: #ffffff;
+        color: #52525b;
         border-color: rgba(0,0,0,0.1);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
+        box-shadow: 0 1px 3px rgba(0,0,0,0.07), 0 4px 14px rgba(0,0,0,0.07);
       }
       .comp-tab-btn.inactive:hover {
-        background: rgba(255,255,255,0.95);
-        color: #222;
-        border-color: rgba(0,0,0,0.2);
+        background: #fff;
+        color: #111114;
+        border-color: rgba(0,0,0,0.18);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.10), 0 8px 28px rgba(0,0,0,0.10);
+        transform: translateY(-1px);
       }
 
       /* ── inputs ── */
       .comp-input {
         flex: 1;
-        padding: 12px 18px;
-        border-radius: 12px;
-        border: 1.5px solid rgba(0,0,0,0.1);
-        background: rgba(255,255,255,0.92);
+        padding: 11px 20px;
+        border-radius: 100px;
+        border: 1px solid rgba(0,0,0,0.1);
+        background: #ffffff;
         font-size: 13.5px;
-        font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+        font-family: 'DM Sans', 'Inter', sans-serif;
         outline: none;
         transition: border-color 0.18s, box-shadow 0.18s;
-        color: #111;
+        color: #111114;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 14px rgba(0,0,0,0.06);
       }
-      .comp-input::placeholder { color: #bbb; font-weight: 400; }
+      .comp-input::placeholder { color: #a0a0b0; font-weight: 400; }
       .comp-input:focus {
-        border-color: rgba(0,0,0,0.3);
-        box-shadow: 0 0 0 4px rgba(0,0,0,0.05);
-        background: #fff;
+        border-color: rgba(0,0,0,0.25);
+        box-shadow: 0 0 0 4px rgba(0,0,0,0.04), 0 1px 3px rgba(0,0,0,0.07);
       }
 
       /* ── buttons ── */
       .comp-btn-primary {
-        background: #111;
+        background: #e5251b;
         color: #fff;
         border: none;
-        border-radius: 12px;
-        padding: 12px 28px;
-        font-size: 13.5px;
+        border-radius: 100px;
+        padding: 11px 26px;
+        font-size: 13px;
         font-weight: 700;
-        font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+        font-family: 'DM Sans', 'Inter', sans-serif;
         cursor: pointer;
         white-space: nowrap;
-        transition: background 0.18s, box-shadow 0.18s, transform 0.18s;
-        box-shadow: 0 4px 16px rgba(0,0,0,0.24);
-        letter-spacing: 0.1px;
+        transition: all 0.18s;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 4px 14px rgba(229,37,27,0.32);
+        letter-spacing: -0.1px;
       }
       .comp-btn-primary:hover:not(:disabled) {
-        background: #1a1a1a;
-        box-shadow: 0 8px 24px rgba(0,0,0,0.28);
+        filter: brightness(1.07);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.15), 0 8px 28px rgba(229,37,27,0.42);
         transform: translateY(-1px);
       }
-      .comp-btn-primary:disabled { background: #ccc; box-shadow: none; cursor: default; }
+      .comp-btn-primary:disabled { background: #e0e0e6; color: #a0a0b0; box-shadow: none; cursor: default; }
 
       /* "Remove" — trash icon, appears on card hover only */
       .comp-remove-btn {
         position: absolute;
-        top: 10px;
-        right: 10px;
-        width: 30px;
-        height: 30px;
+        top: 12px;
+        right: 12px;
+        width: 28px;
+        height: 28px;
         border-radius: 8px;
         border: 1px solid transparent;
         background: transparent;
-        color: #ccc;
+        color: #c4c4cc;
         cursor: pointer;
         display: flex;
         align-items: center;
@@ -156,43 +150,45 @@ function useCompetitorStyles() {
       }
       .comp-accordion-wrapper:hover .comp-remove-btn { opacity: 1; }
       .comp-remove-btn:hover {
-        background: rgba(220,38,38,0.09);
-        border-color: rgba(220,38,38,0.18);
-        color: #dc2626;
+        background: rgba(229,37,27,0.08);
+        border-color: rgba(229,37,27,0.2);
+        color: #e5251b;
       }
 
-      /* "Open report" — solid filled, high contrast */
+      /* "Open report" — secondary style */
       .comp-btn-report {
-        background: #111;
-        color: #fff;
-        border: none;
-        border-radius: 10px;
-        padding: 9px 20px;
+        background: #fff;
+        color: #52525b;
+        border: 1px solid rgba(0,0,0,0.1);
+        border-radius: 100px;
+        padding: 8px 18px;
         font-size: 12.5px;
-        font-weight: 700;
-        font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+        font-weight: 600;
+        font-family: 'DM Sans', 'Inter', sans-serif;
         cursor: pointer;
         white-space: nowrap;
         transition: all 0.18s;
         display: flex;
         align-items: center;
         gap: 6px;
-        box-shadow: 0 3px 10px rgba(0,0,0,0.2);
-        letter-spacing: 0.1px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.07), 0 4px 14px rgba(0,0,0,0.07);
+        letter-spacing: -0.1px;
       }
       .comp-btn-report:hover {
-        background: #2a2a2a;
-        box-shadow: 0 6px 18px rgba(0,0,0,0.26);
+        border-color: rgba(0,0,0,0.18);
+        color: #111114;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.10), 0 8px 28px rgba(0,0,0,0.10);
         transform: translateY(-1px);
       }
       .comp-btn-report.open {
-        background: rgba(0,0,0,0.06);
-        color: #444;
+        background: #f0f0f3;
+        color: #52525b;
         box-shadow: none;
+        border-color: rgba(0,0,0,0.09);
       }
       .comp-btn-report.open:hover {
-        background: rgba(0,0,0,0.1);
-        color: #111;
+        background: #ebebef;
+        color: #111114;
         transform: none;
         box-shadow: none;
       }
@@ -208,27 +204,27 @@ function useCompetitorStyles() {
         padding: 4px 10px;
       }
       .comp-stat-chip .val {
-        font-size: 13px;
+        font-size: 12.5px;
         font-weight: 800;
-        color: #111;
+        color: #111114;
         line-height: 1;
       }
       .comp-stat-chip .lbl {
         font-size: 10.5px;
         font-weight: 500;
-        color: #aaa;
+        color: #a0a0b0;
         line-height: 1;
       }
 
       /* ── inner content blocks (video ideas, etc.) ── */
       .comp-inner-block {
-        background: rgba(246,246,250,0.85);
-        border: 1px solid rgba(0,0,0,0.06);
+        background: #f7f7fa;
+        border: 1px solid rgba(0,0,0,0.07);
         border-radius: 14px;
         padding: 14px 18px;
         transition: background 0.15s;
       }
-      .comp-inner-block:hover { background: rgba(242,242,248,0.95); }
+      .comp-inner-block:hover { background: #f0f0f4; }
 
       /* ── tags ── */
       .comp-tag {
@@ -237,8 +233,8 @@ function useCompetitorStyles() {
         border-radius: 50px;
         font-size: 11px;
         font-weight: 600;
-        font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
-        letter-spacing: 0.1px;
+        font-family: 'DM Sans', 'Inter', sans-serif;
+        letter-spacing: 0;
       }
 
       /* ── video rows ── */
@@ -251,14 +247,14 @@ function useCompetitorStyles() {
         text-decoration: none;
         transition: background 0.15s, transform 0.12s;
       }
-      .comp-video-row:hover { background: rgba(0,0,0,0.035); transform: translateX(2px); }
+      .comp-video-row:hover { background: #f4f4f7; transform: translateX(2px); }
 
       /* ── posting timing pills ── */
       .comp-timing-pill {
-        background: rgba(246,246,250,0.9);
+        background: #f7f7fa;
         border: 1px solid rgba(0,0,0,0.07);
-        border-radius: 14px;
-        padding: 14px 16px;
+        border-radius: 16px;
+        padding: 16px;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -267,43 +263,39 @@ function useCompetitorStyles() {
 
       /* ── insight mini-cards ── */
       .comp-insight-card {
-        background: rgba(246,246,250,0.7);
-        border: 1px solid rgba(0,0,0,0.06);
+        background: #f7f7fa;
+        border: 1px solid rgba(0,0,0,0.07);
         border-radius: 14px;
         padding: 16px 18px;
       }
 
       /* ── accordion ── */
       .comp-accordion-header {
-        background: rgba(255,255,255,0.9);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        border: 1px solid rgba(255,255,255,0.98);
-        box-shadow: 0 1px 0 rgba(255,255,255,0.8) inset, 0 4px 20px rgba(0,0,0,0.07), 0 1px 4px rgba(0,0,0,0.04);
+        background: #ffffff;
+        border: 1px solid rgba(0,0,0,0.09);
+        box-shadow: 0 1px 3px rgba(0,0,0,0.07), 0 6px 24px rgba(0,0,0,0.09);
         padding: 16px 20px;
         display: flex;
         align-items: center;
         gap: 16px;
-        transition: box-shadow 0.2s, background 0.2s;
+        transition: box-shadow 0.2s, border-color 0.2s;
         cursor: pointer;
         user-select: none;
       }
       .comp-accordion-header:hover {
-        background: rgba(255,255,255,0.96);
-        box-shadow: 0 1px 0 rgba(255,255,255,0.8) inset, 0 10px 32px rgba(0,0,0,0.09), 0 2px 6px rgba(0,0,0,0.05);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.10), 0 16px 40px rgba(0,0,0,0.11);
+        border-color: rgba(0,0,0,0.13);
       }
       .comp-accordion-header.closed { border-radius: 20px; }
       .comp-accordion-header.open   { border-radius: 20px 20px 0 0; border-bottom-color: rgba(0,0,0,0.07); }
 
       .comp-accordion-body {
-        border: 1px solid rgba(0,0,0,0.07);
+        border: 1px solid rgba(0,0,0,0.09);
         border-top: none;
         border-radius: 0 0 20px 20px;
-        background: rgba(250,250,253,0.75);
-        backdrop-filter: blur(14px);
-        -webkit-backdrop-filter: blur(14px);
+        background: #f8f8fb;
         padding: 24px 20px 28px;
-        box-shadow: 0 10px 28px rgba(0,0,0,0.07);
+        box-shadow: 0 8px 24px rgba(0,0,0,0.07);
       }
 
       /* ── section divider ── */
@@ -317,23 +309,23 @@ function useCompetitorStyles() {
       /* ── empty states ── */
       .comp-empty-state {
         text-align: center;
-        padding: 72px 0;
-        color: #aaa;
+        padding: 64px 0;
+        color: #a0a0b0;
       }
 
       /* ── section title label above card ── */
       .comp-card-label {
         font-size: 10.5px;
         font-weight: 700;
-        color: #aaa;
+        color: #a0a0b0;
         text-transform: uppercase;
-        letter-spacing: 0.7px;
+        letter-spacing: 0.06em;
         margin-bottom: 5px;
       }
 
       /* winner number badge */
       .comp-winner-num {
-        background: linear-gradient(145deg, #1a1a1a 0%, #3a3a3a 100%);
+        background: linear-gradient(145deg, #111114 0%, #3a3a3a 100%);
         color: #fff;
         border-radius: 50%;
         width: 24px;
@@ -344,7 +336,7 @@ function useCompetitorStyles() {
         display: flex;
         align-items: center;
         justify-content: center;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.22);
         margin-top: 1px;
       }
     `
@@ -375,14 +367,11 @@ function Card({ children, style }) {
   )
 }
 
-function SectionTitle({ icon, children }) {
+function SectionTitle({ children }) {
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: 7, marginBottom: 16 }}>
-      {icon && <span style={{ fontSize: 14, lineHeight: 1 }}>{icon}</span>}
-      <p style={{ fontSize: 12, fontWeight: 700, color: '#111', textTransform: 'uppercase', letterSpacing: '0.6px' }}>
-        {children}
-      </p>
-    </div>
+    <p style={{ fontSize: 10.5, fontWeight: 600, color: '#a0a0b0', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 14 }}>
+      {children}
+    </p>
   )
 }
 
@@ -464,7 +453,7 @@ function AIAnalysis({ ai, top5Videos }) {
       {/* ── intelligence summary ── */}
       <Card>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, marginBottom: 14 }}>
-          <SectionTitle icon="🧠">Intelligence summary</SectionTitle>
+          <SectionTitle>Intelligence summary</SectionTitle>
           <span style={{ background: threat.bg, color: threat.text, border: `1px solid ${threat.border}`,
             fontSize: 11.5, fontWeight: 700, padding: '5px 13px', borderRadius: 50, flexShrink: 0,
             display: 'inline-flex', alignItems: 'center', gap: 5, letterSpacing: '0.1px' }}>
@@ -487,7 +476,7 @@ function AIAnalysis({ ai, top5Videos }) {
       {/* ── winning moves ── */}
       {ai.winningMoves?.length > 0 && (
         <Card>
-          <SectionTitle icon="⚡">Winning moves — steal or counter these</SectionTitle>
+          <SectionTitle>Winning moves</SectionTitle>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
             {ai.winningMoves.map((m, i) => (
               <div key={i} style={{ display: 'flex', gap: 14, alignItems: 'flex-start' }}>
@@ -502,7 +491,7 @@ function AIAnalysis({ ai, top5Videos }) {
       {/* ── video ideas ── */}
       {ai.videoIdeas?.length > 0 && (
         <Card>
-          <SectionTitle icon="🎯">Topics to tackle — steal their audience</SectionTitle>
+          <SectionTitle>Topics to tackle</SectionTitle>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
             {ai.videoIdeas.map((idea, i) => (
               <div key={i} className="comp-inner-block">
@@ -530,7 +519,7 @@ function AIAnalysis({ ai, top5Videos }) {
       {/* ── top videos ── */}
       {top5Videos?.length > 0 && (
         <Card>
-          <SectionTitle icon="▶">Top videos to study</SectionTitle>
+          <SectionTitle>Top videos to study</SectionTitle>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             {top5Videos.map((v, i) => {
               const thumb  = v.video_id ? `https://i.ytimg.com/vi/${v.video_id}/mqdefault.jpg` : v.thumbnail_url || null
@@ -588,7 +577,7 @@ function AIAnalysis({ ai, top5Videos }) {
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
         {ai.topTopics?.length > 0 && (
           <Card>
-            <SectionTitle icon="📈">Top content topics</SectionTitle>
+            <SectionTitle>Top content topics</SectionTitle>
             <div style={{ display: 'flex', flexDirection: 'column' }}>
               {ai.topTopics.map((t, i) => (
                 <div key={i} style={{ display: 'flex', justifyContent: 'space-between',
@@ -607,7 +596,7 @@ function AIAnalysis({ ai, top5Videos }) {
 
         {ai.titlePatterns && (
           <Card>
-            <SectionTitle icon="✍">Title patterns</SectionTitle>
+            <SectionTitle>Title patterns</SectionTitle>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
               <div>
                 <p className="comp-card-label">Avg title length</p>
@@ -658,16 +647,13 @@ function AIAnalysis({ ai, top5Videos }) {
       {(ai.videoLengthInsight || ai.engagementInsight || ai.thumbnailPattern) && (
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 14 }}>
           {[
-            { key: 'videoLengthInsight', icon: '🎬', label: 'Video length',    val: ai.videoLengthInsight },
-            { key: 'engagementInsight',  icon: '💬', label: 'Engagement',      val: ai.engagementInsight },
-            { key: 'thumbnailPattern',   icon: '🖼', label: 'Thumbnail style', val: ai.thumbnailPattern },
-          ].filter(x => x.val).map(({ key, icon, label, val }) => (
+            { key: 'videoLengthInsight', label: 'Video length',    val: ai.videoLengthInsight },
+            { key: 'engagementInsight',  label: 'Engagement',      val: ai.engagementInsight },
+            { key: 'thumbnailPattern',   label: 'Thumbnail style', val: ai.thumbnailPattern },
+          ].filter(x => x.val).map(({ key, label, val }) => (
             <div key={key} className="comp-insight-card">
-              <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8 }}>
-                <span style={{ fontSize: 15 }}>{icon}</span>
-                <p className="comp-card-label" style={{ marginBottom: 0 }}>{label}</p>
-              </div>
-              <p style={{ fontSize: 13, color: '#444', lineHeight: 1.65, fontWeight: 400 }}>{val}</p>
+              <p className="comp-card-label" style={{ marginBottom: 8 }}>{label}</p>
+              <p style={{ fontSize: 13, color: '#52525b', lineHeight: 1.7, fontWeight: 400 }}>{val}</p>
             </div>
           ))}
         </div>
@@ -676,19 +662,17 @@ function AIAnalysis({ ai, top5Videos }) {
       {/* ── posting timing ── */}
       {ai.postingBehavior && (
         <Card>
-          <SectionTitle icon="📅">Posting timing</SectionTitle>
+          <SectionTitle>Posting timing</SectionTitle>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 10 }}>
             {[
-              { icon: '⏱', label: 'Avg gap',     val: `${ai.postingBehavior.avgGapDays}d` },
-              { icon: '📆', label: 'Best day',    val: ai.postingBehavior.bestDay },
-              { icon: '🕐', label: 'Best hour',   val: ai.postingBehavior.bestHour },
-              { icon: '📊', label: 'Consistency', val: `${ai.postingBehavior.consistencyScore}/100` },
-            ].map(({ icon, label, val }) => (
+              { label: 'Avg gap',     val: `${ai.postingBehavior.avgGapDays}d` },
+              { label: 'Best day',    val: ai.postingBehavior.bestDay },
+              { label: 'Best hour',   val: ai.postingBehavior.bestHour },
+              { label: 'Consistency', val: `${ai.postingBehavior.consistencyScore}/100` },
+            ].map(({ label, val }) => (
               <div key={label} className="comp-timing-pill">
-                <span style={{ fontSize: 18 }}>{icon}</span>
-                <p style={{ fontSize: 18, fontWeight: 800, color: '#111', letterSpacing: '-0.3px' }}>{val}</p>
-                <p style={{ fontSize: 10.5, fontWeight: 600, color: '#aaa', textTransform: 'uppercase',
-                  letterSpacing: '0.5px' }}>{label}</p>
+                <p style={{ fontSize: 20, fontWeight: 800, color: '#111114', letterSpacing: '-0.5px', lineHeight: 1 }}>{val}</p>
+                <p style={{ fontSize: 10.5, fontWeight: 600, color: '#a0a0b0', textTransform: 'uppercase', letterSpacing: '0.06em' }}>{label}</p>
               </div>
             ))}
           </div>
@@ -760,13 +744,12 @@ export default function Competitors() {
   return (
     <div className="comp-page">
       {/* ── header ── */}
-      <div style={{ marginBottom: 28 }}>
-        <h2 style={{ fontSize: 23, fontWeight: 800, color: '#0a0a0a', marginBottom: 5,
-          letterSpacing: '-0.4px', lineHeight: 1.2 }}>
+      <div style={{ marginBottom: 24 }}>
+        <h2 style={{ fontSize: 22, fontWeight: 800, color: '#0a0a0f', marginBottom: 4, letterSpacing: '-0.6px' }}>
           Competitor Analysis
         </h2>
-        <p style={{ fontSize: 13.5, color: '#999', fontWeight: 500, lineHeight: 1.5 }}>
-          Search channels in your niche and get a full AI-powered competitive intelligence report
+        <p style={{ fontSize: 13, color: '#a0a0b0', fontWeight: 400 }}>
+          Search channels in your niche · get a full AI-powered competitive intelligence report
         </p>
       </div>
 
@@ -785,10 +768,10 @@ export default function Competitors() {
       {activeTab === 'search' && (
         <div>
           <Card style={{ marginBottom: 20 }}>
-            <p style={{ fontSize: 15, fontWeight: 800, color: '#111', marginBottom: 4, letterSpacing: '-0.2px' }}>
+            <p style={{ fontSize: 14.5, fontWeight: 800, color: '#0a0a0f', marginBottom: 4, letterSpacing: '-0.3px' }}>
               Find a competitor
             </p>
-            <p style={{ fontSize: 13, color: '#aaa', marginBottom: 18, fontWeight: 500 }}>
+            <p style={{ fontSize: 13, color: '#a0a0b0', marginBottom: 16, fontWeight: 400 }}>
               Type the name of a YouTube channel in your niche, or paste a channel URL
             </p>
             <div style={{ display: 'flex', gap: 10 }}>
@@ -807,19 +790,21 @@ export default function Competitors() {
 
           {!searched && (
             <div className="comp-empty-state">
-              <div style={{ fontSize: 32, marginBottom: 14, filter: 'grayscale(0.2)' }}>🔍</div>
-              <p style={{ fontWeight: 700, color: '#666', marginBottom: 7, fontSize: 15 }}>
-                Search for a channel to compare
-              </p>
-              <p style={{ fontSize: 13, color: '#bbb' }}>Type any YouTube channel name above to get started</p>
+              <div style={{ width: 44, height: 44, borderRadius: 13, background: '#f0f0f3', border: '1px solid rgba(0,0,0,0.09)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#a0a0b0" strokeWidth="1.6" strokeLinecap="round"><circle cx="8.5" cy="8.5" r="5.5"/><line x1="13" y1="13" x2="17" y2="17"/></svg>
+              </div>
+              <p style={{ fontWeight: 700, color: '#52525b', marginBottom: 6, fontSize: 14 }}>Search for a channel to compare</p>
+              <p style={{ fontSize: 13, color: '#a0a0b0' }}>Type any YouTube channel name above to get started</p>
             </div>
           )}
 
           {searched && !loadingSearch && searchResults.length === 0 && (
             <div className="comp-empty-state">
-              <div style={{ fontSize: 32, marginBottom: 14 }}>😶</div>
-              <p style={{ fontWeight: 700, color: '#666', marginBottom: 7, fontSize: 15 }}>No channels found</p>
-              <p style={{ fontSize: 13, color: '#bbb' }}>Try a different search term or paste the channel URL</p>
+              <div style={{ width: 44, height: 44, borderRadius: 13, background: '#f0f0f3', border: '1px solid rgba(0,0,0,0.09)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#a0a0b0" strokeWidth="1.6" strokeLinecap="round"><circle cx="8.5" cy="8.5" r="5.5"/><line x1="13" y1="13" x2="17" y2="17"/><line x1="6.5" y1="8.5" x2="10.5" y2="8.5"/></svg>
+              </div>
+              <p style={{ fontWeight: 700, color: '#52525b', marginBottom: 6, fontSize: 14 }}>No channels found</p>
+              <p style={{ fontSize: 13, color: '#a0a0b0' }}>Try a different search term or paste the channel URL</p>
             </div>
           )}
 
@@ -835,9 +820,11 @@ export default function Competitors() {
         <div>
           {analyses.length === 0 ? (
             <div className="comp-empty-state">
-              <div style={{ fontSize: 36, marginBottom: 14 }}>📊</div>
-              <p style={{ fontWeight: 700, color: '#666', marginBottom: 7, fontSize: 15 }}>No competitors tracked yet</p>
-              <p style={{ fontSize: 13, color: '#bbb', maxWidth: 320, margin: '0 auto' }}>
+              <div style={{ width: 44, height: 44, borderRadius: 13, background: '#f0f0f3', border: '1px solid rgba(0,0,0,0.09)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#a0a0b0" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="10" width="3" height="7" rx="1"/><rect x="8.5" y="6" width="3" height="11" rx="1"/><rect x="14" y="3" width="3" height="14" rx="1"/></svg>
+              </div>
+              <p style={{ fontWeight: 700, color: '#52525b', marginBottom: 6, fontSize: 14 }}>No competitors tracked yet</p>
+              <p style={{ fontSize: 13, color: '#a0a0b0', maxWidth: 300, margin: '0 auto' }}>
                 Go to Search, find a channel and click Analyze — it'll be saved here automatically
               </p>
             </div>
