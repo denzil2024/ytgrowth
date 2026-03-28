@@ -146,10 +146,12 @@ def login(request: Request):
 
 def _run_analysis_in_background(session_id: str, stats: dict, videos: list, analytics: dict, video_analytics: list):
     """Run AI analysis after login and update session data when done."""
+    import datetime
     try:
         insights = analyze_channel(stats, videos, analytics, video_analytics)
         if session_id in _user_data:
             _user_data[session_id]["insights"] = insights
+            _user_data[session_id]["analyzed_at"] = datetime.datetime.utcnow().isoformat()
             _persist_session(session_id, _user_creds[session_id], _user_data[session_id])
     except Exception as e:
         print(f"Background analysis error: {e}")
@@ -191,20 +193,36 @@ def callback(request: Request, background_tasks: BackgroundTasks):
 
         _user_creds[session_id] = creds
 
+        # Restore existing session to preserve cached insights
+        existing_data, _ = get_session(session_id)
+        existing_insights = existing_data.get("insights") if existing_data else None
+        existing_analyzed_at = existing_data.get("analyzed_at") if existing_data else None
+
+        # Only re-run analysis if no insights or last analysis was over 24 hours ago
+        import datetime
+        now = datetime.datetime.utcnow().isoformat()
+        needs_analysis = (
+            not existing_insights or
+            not existing_analyzed_at or
+            (datetime.datetime.utcnow() - datetime.datetime.fromisoformat(existing_analyzed_at)).total_seconds() > 86400
+        )
+
         user_data = {
             "channel": stats,
             "videos": videos,
             "analytics": analytics,
             "video_analytics": video_analytics,
-            "insights": None  # will be populated by background task
+            "insights": existing_insights,
+            "analyzed_at": existing_analyzed_at or now,
         }
         _user_data[session_id] = user_data
         _persist_session(session_id, creds, user_data)
 
-        background_tasks.add_task(
-            _run_analysis_in_background,
-            session_id, stats, videos, analytics, video_analytics
-        )
+        if needs_analysis:
+            background_tasks.add_task(
+                _run_analysis_in_background,
+                session_id, stats, videos, analytics, video_analytics
+            )
 
         return RedirectResponse(f"{BASE_URL}/dashboard")
 
