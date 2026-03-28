@@ -320,6 +320,7 @@ export default function Landing() {
   const [light, setLight] = useState(true)
   const [loggedIn, setLoggedIn] = useState(false)
   const [pricingTab, setPricingTab] = useState('monthly')
+  const [openFaq, setOpenFaq] = useState(0)
   useGlobalStyles(light)
 
   useEffect(() => {
@@ -508,8 +509,9 @@ export default function Landing() {
       </div>
 
       {/* ── STATS BAR ───────────────────────────────────────────────────── */}
-      <div style={{ borderTop: '1px solid var(--ytg-border)', borderBottom: '1px solid var(--ytg-border)', background: 'var(--ytg-section)' }}>
-        <div style={{ maxWidth: 1280, margin: '0 auto', padding: '52px 64px', display: 'grid', gridTemplateColumns: 'repeat(4,1fr)' }}>
+      <div style={{ borderTop: '1px solid var(--ytg-border)', borderBottom: '1px solid var(--ytg-border)', background: 'var(--ytg-section)', position: 'relative', overflow: 'hidden' }}>
+        <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 700, height: 300, background: 'radial-gradient(ellipse, rgba(59,130,246,0.05) 0%, transparent 70%)', pointerEvents: 'none' }} />
+        <div style={{ maxWidth: 1280, margin: '0 auto', padding: '52px 64px', display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', position: 'relative', zIndex: 1 }}>
           {[['30s', 'To your first full diagnosis'], ['12+', 'Metrics analyzed per channel'], ['5', 'AI tools included'], ['5+', 'Competitor channels scanned']].map(([n, l], i) => (
             <div key={i} className="ytg-stat-row-item">
               <p style={{ fontWeight: 800, fontSize: 48, letterSpacing: '-1.5px', color: 'var(--ytg-text)', lineHeight: 1, marginBottom: 8, fontVariantNumeric: 'tabular-nums' }}>{n}</p>
@@ -520,8 +522,10 @@ export default function Landing() {
       </div>
 
       {/* ── FEATURES ────────────────────────────────────────────────────── */}
-      <div id="features" style={{ padding: '100px 64px' }}>
-        <div style={{ maxWidth: 1280, margin: '0 auto' }}>
+      <div id="features" style={{ padding: '100px 64px', position: 'relative', overflow: 'hidden' }}>
+        <div style={{ position: 'absolute', top: '-5%', right: '-5%', width: 700, height: 600, background: 'radial-gradient(ellipse, rgba(99,102,241,0.05) 0%, transparent 65%)', pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', bottom: '10%', left: '-5%', width: 500, height: 400, background: 'radial-gradient(ellipse, rgba(14,165,233,0.04) 0%, transparent 65%)', pointerEvents: 'none' }} />
+        <div style={{ maxWidth: 1280, margin: '0 auto', position: 'relative', zIndex: 1 }}>
           <div style={{ textAlign: 'center', marginBottom: 56 }}>
             <Badge>Features</Badge>
             <h2 style={{ fontWeight: 800, fontSize: 48, letterSpacing: '-1.5px', color: 'var(--ytg-text)', lineHeight: 1.06, marginBottom: 14 }}>Everything you need to grow.</h2>
@@ -552,8 +556,9 @@ export default function Landing() {
       </div>
 
       {/* ── BEFORE / AFTER ──────────────────────────────────────────────── */}
-      <div style={{ background: 'var(--ytg-section)', borderTop: '1px solid var(--ytg-border)', borderBottom: '1px solid var(--ytg-border)', padding: '100px 64px' }}>
-        <div style={{ maxWidth: 1280, margin: '0 auto' }}>
+      <div style={{ background: 'var(--ytg-section)', borderTop: '1px solid var(--ytg-border)', borderBottom: '1px solid var(--ytg-border)', padding: '100px 64px', position: 'relative', overflow: 'hidden' }}>
+        <div style={{ position: 'absolute', top: '50%', right: '10%', transform: 'translateY(-50%)', width: 600, height: 500, background: 'radial-gradient(ellipse, rgba(229,48,42,0.04) 0%, transparent 65%)', pointerEvents: 'none' }} />
+        <div style={{ maxWidth: 1280, margin: '0 auto', position: 'relative', zIndex: 1 }}>
           <div style={{ textAlign: 'center', marginBottom: 56 }}>
             <Badge>The difference</Badge>
             <h2 style={{ fontWeight: 800, fontSize: 48, letterSpacing: '-1.5px', color: 'var(--ytg-text)', lineHeight: 1.06, marginBottom: 14 }}>Data vs clarity.</h2>
@@ -604,8 +609,9 @@ export default function Landing() {
       </div>
 
       {/* ── HOW IT WORKS ────────────────────────────────────────────────── */}
-      <div id="how-it-works" style={{ padding: '100px 64px' }}>
-        <div style={{ maxWidth: 1280, margin: '0 auto' }}>
+      <div id="how-it-works" style={{ padding: '100px 64px', position: 'relative', overflow: 'hidden' }}>
+        <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 900, height: 600, background: 'radial-gradient(ellipse, rgba(59,130,246,0.04) 0%, transparent 60%)', pointerEvents: 'none' }} />
+        <div style={{ maxWidth: 1280, margin: '0 auto', position: 'relative', zIndex: 1 }}>
           <div style={{ textAlign: 'center', marginBottom: 56 }}>
             <Badge>How it works</Badge>
             <h2 style={{ fontWeight: 800, fontSize: 48, letterSpacing: '-1.5px', color: 'var(--ytg-text)', lineHeight: 1.06, marginBottom: 14 }}>From zero to action plan<br />in 30 seconds.</h2>
@@ -681,8 +687,9 @@ export default function Landing() {
       </div>
 
       {/* ── TESTIMONIALS ────────────────────────────────────────────────── */}
-      <div style={{ background: 'var(--ytg-section)', borderTop: '1px solid var(--ytg-border)', borderBottom: '1px solid var(--ytg-border)', padding: '100px 64px' }}>
-        <div style={{ maxWidth: 1280, margin: '0 auto' }}>
+      <div style={{ background: 'var(--ytg-section)', borderTop: '1px solid var(--ytg-border)', borderBottom: '1px solid var(--ytg-border)', padding: '100px 64px', position: 'relative', overflow: 'hidden' }}>
+        <div style={{ position: 'absolute', top: '30%', left: '50%', transform: 'translateX(-50%)', width: 800, height: 400, background: 'radial-gradient(ellipse, rgba(234,179,8,0.05) 0%, transparent 65%)', pointerEvents: 'none' }} />
+        <div style={{ maxWidth: 1280, margin: '0 auto', position: 'relative', zIndex: 1 }}>
           <div style={{ textAlign: 'center', marginBottom: 56 }}>
             <Badge>Beta creators</Badge>
             <h2 style={{ fontWeight: 800, fontSize: 48, letterSpacing: '-1.5px', color: 'var(--ytg-text)', lineHeight: 1.06 }}>What creators are saying.</h2>
@@ -715,8 +722,10 @@ export default function Landing() {
       </div>
 
       {/* ── PRICING ─────────────────────────────────────────────────────── */}
-      <div id="pricing" style={{ padding: '100px 64px' }}>
-        <div style={{ maxWidth: 1280, margin: '0 auto' }}>
+      <div id="pricing" style={{ padding: '100px 64px', position: 'relative', overflow: 'hidden' }}>
+        <div style={{ position: 'absolute', top: '0%', left: '50%', transform: 'translateX(-50%)', width: 1000, height: 600, background: 'radial-gradient(ellipse, rgba(229,48,42,0.05) 0%, transparent 60%)', pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', bottom: '5%', left: '10%', width: 500, height: 400, background: 'radial-gradient(ellipse, rgba(99,102,241,0.04) 0%, transparent 65%)', pointerEvents: 'none' }} />
+        <div style={{ maxWidth: 1280, margin: '0 auto', position: 'relative', zIndex: 1 }}>
           <div style={{ textAlign: 'center', marginBottom: 48 }}>
             <Badge>Pricing</Badge>
             <h2 style={{ fontWeight: 800, fontSize: 48, letterSpacing: '-1.5px', color: 'var(--ytg-text)', lineHeight: 1.06, marginBottom: 14 }}>One good video idea pays for a year.</h2>
@@ -1069,27 +1078,63 @@ export default function Landing() {
       </div>
 
       {/* ── FAQ ─────────────────────────────────────────────────────────── */}
-      <div id="faq" style={{ background: 'var(--ytg-section)', borderTop: '1px solid var(--ytg-border)', borderBottom: '1px solid var(--ytg-border)', padding: '100px 64px' }}>
-        <div style={{ maxWidth: 820, margin: '0 auto' }}>
-          <div style={{ textAlign: 'center', marginBottom: 52 }}>
+      <div id="faq" style={{ padding: '100px 64px', position: 'relative', overflow: 'hidden' }}>
+        <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 900, height: 600, background: 'radial-gradient(ellipse, rgba(99,102,241,0.05) 0%, transparent 60%)', pointerEvents: 'none' }} />
+        <div style={{ maxWidth: 780, margin: '0 auto', position: 'relative', zIndex: 1 }}>
+          <div style={{ textAlign: 'center', marginBottom: 56 }}>
             <Badge>FAQ</Badge>
-            <h2 style={{ fontWeight: 800, fontSize: 48, letterSpacing: '-1.5px', color: 'var(--ytg-text)', lineHeight: 1.06 }}>Questions answered.</h2>
+            <h2 style={{ fontWeight: 800, fontSize: 48, letterSpacing: '-1.5px', color: 'var(--ytg-text)', lineHeight: 1.06, marginBottom: 14 }}>Questions answered.</h2>
+            <p style={{ fontSize: 17, color: 'var(--ytg-text-2)', lineHeight: 1.8 }}>Everything you want to know before you decide.</p>
           </div>
-          {[
-            { q: 'Is this worth it if my channel is under 1,000 subs?', a: "Especially then. The smaller your channel, the higher the leverage of a single good decision — right title, right topic, right timing. You can't afford to guess when you're getting 200 views a video." },
-            { q: 'What happens when I run out of AI analyses mid-month?', a: "Your features pause until your monthly analyses refill on the 1st, or until you grab a top-up pack. You'll see a warning banner at 80% so you're never surprised mid-sprint." },
-            { q: 'How is this different from TubeBuddy or VidIQ?', a: "TubeBuddy and VidIQ show you dashboards and data. YTGrowth runs the actual AI analysis — competitor gaps, keyword intent, title variants — and hands you the conclusion, not the raw numbers." },
-            { q: 'Can I cancel my subscription anytime?', a: "Yes. Monthly is month-to-month — cancel whenever. Annual gives you the rest of your year. No cancellation fees, no guilt-trip retention email. Just done." },
-            { q: "Do unused monthly analyses roll over?", a: "Monthly included analyses reset every month — use them or lose them. But top-up pack analyses never expire and never reset. They sit in your account until you need them." },
-            { q: 'Can I use analysis packs without a subscription?', a: "Yes. Packs work standalone — buy a pack, run analyses, no subscription required. If you have analyses, you have full access. Subscribe later and your pack analyses stack on top." },
-            { q: "Is the lifetime deal really lifetime? What if you shut down?", a: "If we shut down, you get a pro-rated refund based on time remaining against a 5-year expected lifespan. We're also small enough that your lifetime deal revenue genuinely helps us stay running — you're part of the bet." },
-            { q: 'Can I manage client channels on the agency plan?', a: "Yes. Agency supports up to 10 channels (5 on lifetime agency deals) with pooled analyses. You run the analyses, you own the insights, your clients see the results." },
-          ].map((item, i) => (
-            <div key={i} className="ytg-faq-item">
-              <p style={{ fontWeight: 700, fontSize: 16, color: 'var(--ytg-text)', marginBottom: 10, letterSpacing: '-0.3px' }}>{item.q}</p>
-              <p style={{ fontSize: 14.5, color: 'var(--ytg-text-2)', lineHeight: 1.85 }}>{item.a}</p>
-            </div>
-          ))}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+            {[
+              { q: 'Is this worth it if my channel is under 1,000 subs?', a: "Especially then. The smaller your channel, the higher the leverage of a single good decision — right title, right topic, right timing. You can't afford to guess when you're getting 200 views a video." },
+              { q: 'What happens when I run out of AI analyses mid-month?', a: "Your features pause until your monthly analyses refill on the 1st, or until you grab a top-up pack. You'll see a warning banner at 80% so you're never surprised mid-sprint." },
+              { q: 'How is this different from TubeBuddy or VidIQ?', a: "TubeBuddy and VidIQ show you dashboards and data. YTGrowth runs the actual AI analysis — competitor gaps, keyword intent, title variants — and hands you the conclusion, not the raw numbers." },
+              { q: 'Can I cancel my subscription anytime?', a: "Yes. Monthly is month-to-month — cancel whenever. Annual gives you the rest of your year. No cancellation fees, no guilt-trip retention email. Just done." },
+              { q: 'Do unused monthly analyses roll over?', a: "Monthly included analyses reset every month — use them or lose them. But top-up pack analyses never expire and never reset. They sit in your account until you need them." },
+              { q: 'Can I use analysis packs without a subscription?', a: "Yes. Packs work standalone — buy a pack, run analyses, no subscription required. If you have analyses, you have full access. Subscribe later and your pack analyses stack on top." },
+              { q: 'Is the lifetime deal really lifetime? What if you shut down?', a: "If we shut down, you get a pro-rated refund based on time remaining against a 5-year expected lifespan. We're also small enough that your lifetime deal revenue genuinely helps us stay running — you're part of the bet." },
+              { q: 'Can I manage client channels on the agency plan?', a: "Yes. Agency supports up to 10 channels (5 on lifetime agency deals) with pooled analyses. You run the analyses, you own the insights, your clients see the results." },
+            ].map((item, i) => {
+              const isOpen = openFaq === i
+              return (
+                <div
+                  key={i}
+                  onClick={() => setOpenFaq(isOpen ? null : i)}
+                  style={{
+                    background: 'var(--ytg-card)',
+                    border: `1px solid ${isOpen ? 'var(--ytg-border-2)' : 'var(--ytg-border)'}`,
+                    borderRadius: 18,
+                    overflow: 'hidden',
+                    boxShadow: isOpen ? 'var(--ytg-shadow-lg)' : 'var(--ytg-shadow)',
+                    cursor: 'pointer',
+                    transition: 'border-color 0.2s, box-shadow 0.2s',
+                  }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '22px 26px', gap: 16 }}>
+                    <p style={{ fontWeight: 700, fontSize: 15.5, color: 'var(--ytg-text)', letterSpacing: '-0.3px', lineHeight: 1.4 }}>{item.q}</p>
+                    <div style={{
+                      width: 30, height: 30, borderRadius: 9, flexShrink: 0,
+                      background: isOpen ? 'var(--ytg-accent-light)' : 'var(--ytg-card-2)',
+                      border: `1px solid ${isOpen ? 'var(--ytg-accent-border)' : 'var(--ytg-border)'}`,
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      transition: 'all 0.2s',
+                    }}>
+                      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style={{ transform: isOpen ? 'rotate(45deg)' : 'rotate(0deg)', transition: 'transform 0.25s cubic-bezier(0.34,1.56,0.64,1)' }}>
+                        <path d="M6 1v10M1 6h10" stroke={isOpen ? 'var(--ytg-accent)' : 'var(--ytg-text-3)'} strokeWidth="1.8" strokeLinecap="round"/>
+                      </svg>
+                    </div>
+                  </div>
+                  {isOpen && (
+                    <div style={{ padding: '0 26px 24px', borderTop: '1px solid var(--ytg-border)' }}>
+                      <p style={{ fontSize: 14.5, color: 'var(--ytg-text-2)', lineHeight: 1.9, paddingTop: 20 }}>{item.a}</p>
+                    </div>
+                  )}
+                </div>
+              )
+            })}
+          </div>
         </div>
       </div>
 
