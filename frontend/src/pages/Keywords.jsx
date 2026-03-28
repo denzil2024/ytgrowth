@@ -15,15 +15,10 @@ function useKwStyles() {
   useEffect(() => {
     if (document.getElementById('ytg-kw-styles')) return
 
-    const link = document.createElement('link')
-    link.rel = 'stylesheet'
-    link.href = 'https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap'
-    document.head.appendChild(link)
-
     const style = document.createElement('style')
     style.id = 'ytg-kw-styles'
     style.textContent = `
-      .kw-page * { box-sizing: border-box; font-family: 'Plus Jakarta Sans', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+      .kw-page * { box-sizing: border-box; font-family: 'DM Sans', 'Inter', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
       .kw-page p, .kw-page span, .kw-page div { margin: 0; }
 
       @keyframes kwSpin { to { transform: rotate(360deg) } }
@@ -31,69 +26,69 @@ function useKwStyles() {
       .kw-in { animation: kwIn 0.28s ease both; }
 
       .kw-card {
-        background: rgba(255,255,255,0.85);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        border: 1px solid rgba(255,255,255,0.98);
+        background: #ffffff;
+        border: 1px solid rgba(0,0,0,0.09);
         border-radius: 20px;
-        box-shadow: 0 1px 0 rgba(255,255,255,0.8) inset, 0 6px 24px rgba(0,0,0,0.07), 0 1px 4px rgba(0,0,0,0.04);
-        transition: box-shadow 0.22s, transform 0.22s;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.07), 0 6px 24px rgba(0,0,0,0.09);
+        transition: box-shadow 0.22s, transform 0.22s, border-color 0.22s;
       }
       .kw-card:hover {
-        box-shadow: 0 1px 0 rgba(255,255,255,0.8) inset, 0 16px 48px rgba(0,0,0,0.1), 0 2px 8px rgba(0,0,0,0.05);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.10), 0 20px 56px rgba(0,0,0,0.13);
         transform: translateY(-1px);
+        border-color: rgba(0,0,0,0.13);
       }
 
       .kw-input {
-        flex: 1; padding: 12px 18px;
-        border-radius: 12px; border: 1.5px solid rgba(0,0,0,0.1);
-        background: rgba(255,255,255,0.92); font-size: 13.5px;
-        font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
-        outline: none; transition: border-color 0.18s, box-shadow 0.18s; color: #111;
+        flex: 1; padding: 11px 20px;
+        border-radius: 100px; border: 1px solid rgba(0,0,0,0.1);
+        background: #ffffff; font-size: 13.5px;
+        font-family: 'DM Sans', 'Inter', sans-serif;
+        outline: none; transition: border-color 0.18s, box-shadow 0.18s; color: #111114;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 14px rgba(0,0,0,0.06);
       }
-      .kw-input::placeholder { color: #bbb; font-weight: 400; }
-      .kw-input:focus { border-color: rgba(0,0,0,0.3); box-shadow: 0 0 0 4px rgba(0,0,0,0.05); background: #fff; }
+      .kw-input::placeholder { color: #a0a0b0; font-weight: 400; }
+      .kw-input:focus { border-color: rgba(0,0,0,0.25); box-shadow: 0 0 0 4px rgba(0,0,0,0.04), 0 1px 3px rgba(0,0,0,0.07); }
 
       .kw-btn-primary {
-        background: #111; color: #fff; border: none; border-radius: 12px;
-        padding: 12px 28px; font-size: 13.5px; font-weight: 700;
-        font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
-        cursor: pointer; white-space: nowrap;
-        transition: background 0.18s, box-shadow 0.18s, transform 0.18s;
-        box-shadow: 0 4px 16px rgba(0,0,0,0.24); letter-spacing: 0.1px;
-        display: flex; align-items: center; gap: 8px;
+        background: #e5251b; color: #fff; border: none; border-radius: 100px;
+        padding: 11px 26px; font-size: 13px; font-weight: 700;
+        font-family: 'DM Sans', 'Inter', sans-serif;
+        cursor: pointer; white-space: nowrap; transition: all 0.18s;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 4px 14px rgba(229,37,27,0.32);
+        letter-spacing: -0.1px; display: flex; align-items: center; gap: 8px;
       }
-      .kw-btn-primary:hover:not(:disabled) { background: #1a1a1a; box-shadow: 0 8px 24px rgba(0,0,0,0.28); transform: translateY(-1px); }
-      .kw-btn-primary:disabled { background: #ccc; box-shadow: none; cursor: default; }
+      .kw-btn-primary:hover:not(:disabled) { filter: brightness(1.07); box-shadow: 0 2px 8px rgba(0,0,0,0.15), 0 8px 28px rgba(229,37,27,0.42); transform: translateY(-1px); }
+      .kw-btn-primary:disabled { background: #e0e0e6; color: #a0a0b0; box-shadow: none; cursor: default; }
 
       .kw-btn-ghost {
-        background: rgba(255,255,255,0.78); color: #666;
-        border: 1.5px solid rgba(0,0,0,0.1); border-radius: 12px;
-        padding: 12px 20px; font-size: 13.5px; font-weight: 600;
-        font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+        background: #fff; color: #52525b;
+        border: 1px solid rgba(0,0,0,0.1); border-radius: 100px;
+        padding: 11px 22px; font-size: 13px; font-weight: 600;
+        font-family: 'DM Sans', 'Inter', sans-serif;
         cursor: pointer; white-space: nowrap; transition: all 0.18s;
-        backdrop-filter: blur(10px);
+        box-shadow: 0 1px 3px rgba(0,0,0,0.07), 0 4px 14px rgba(0,0,0,0.07);
       }
-      .kw-btn-ghost:hover { background: rgba(255,255,255,0.95); color: #222; border-color: rgba(0,0,0,0.2); }
+      .kw-btn-ghost:hover { border-color: rgba(0,0,0,0.18); color: #111114; box-shadow: 0 2px 8px rgba(0,0,0,0.10), 0 8px 28px rgba(0,0,0,0.10); transform: translateY(-1px); }
 
       .kw-intent-opt {
         display: flex; align-items: center; gap: 14px;
-        padding: 14px 18px; border: 1.5px solid rgba(0,0,0,0.08);
-        border-radius: 14px; cursor: pointer; background: rgba(255,255,255,0.7);
+        padding: 13px 16px; border: 1px solid rgba(0,0,0,0.09);
+        border-radius: 14px; cursor: pointer; background: #ffffff;
         transition: all 0.18s;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 12px rgba(0,0,0,0.06);
       }
-      .kw-intent-opt:hover { border-color: rgba(0,0,0,0.22); background: rgba(255,255,255,0.95); transform: translateX(2px); box-shadow: 0 4px 16px rgba(0,0,0,0.07); }
+      .kw-intent-opt:hover { border-color: rgba(0,0,0,0.18); transform: translateX(2px); box-shadow: 0 2px 8px rgba(0,0,0,0.09), 0 8px 24px rgba(0,0,0,0.09); }
 
-      .kw-row { transition: background 0.14s; cursor: pointer; }
-      .kw-row:hover { background: rgba(0,0,0,0.025); }
+      .kw-row { transition: background 0.14s; }
+      .kw-row:hover { background: #f4f4f7; }
 
-      .kw-chip { display: inline-flex; align-items: center; padding: 3px 9px; border-radius: 20px; font-size: 11px; font-weight: 700; letter-spacing: 0.02em; }
+      .kw-chip { display: inline-flex; align-items: center; padding: 3px 9px; border-radius: 20px; font-size: 11px; font-weight: 700; letter-spacing: 0; }
       .kw-stat-chip { display: inline-flex; align-items: baseline; gap: 4px; background: rgba(0,0,0,0.04); border: 1px solid rgba(0,0,0,0.07); border-radius: 8px; padding: 4px 10px; }
 
       .kw-bar { height: 4px; border-radius: 4px; background: rgba(0,0,0,0.07); overflow: hidden; }
       .kw-bar-fill { height: 4px; border-radius: 4px; transition: width 0.5s ease; }
 
-      .kw-spinner { width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.25); border-top-color: #fff; border-radius: 50%; animation: kwSpin 0.7s linear infinite; flex-shrink: 0; }
+      .kw-spinner { width: 15px; height: 15px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: kwSpin 0.7s linear infinite; flex-shrink: 0; }
     `
     document.head.appendChild(style)
   }, [])
@@ -126,13 +121,12 @@ export default function Keywords() {
   const [loading,       setLoading]       = useState(false)
   const [result,        setResult]        = useState(saved?.result || null)
   const [error,         setError]         = useState('')
-  const [expanded,      setExpanded]      = useState(null)
 
   useEffect(() => { saveToDisk(keyword, result) }, [keyword, result])
 
   async function handleSubmit() {
     if (!keyword.trim() || loadingIntent || loading) return
-    setError(''); setResult(null); setIntentOptions(null); setExpanded(null)
+    setError(''); setResult(null); setIntentOptions(null)
     setLoadingIntent(true)
     try {
       const res  = await fetch(`${API}/keywords/intent-options`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ keyword: keyword.trim() }) })
@@ -161,17 +155,17 @@ export default function Keywords() {
   }
 
   function handleClear() {
-    setKeyword(''); setResult(null); setIntentOptions(null); setError(''); setExpanded(null)
+    setKeyword(''); setResult(null); setIntentOptions(null); setError('')
     localStorage.removeItem(LS_KEY)
   }
 
   return (
-    <div className="kw-page" style={{ padding: '28px 32px' }}>
+    <div className="kw-page">
 
       {/* Header */}
-      <div style={{ marginBottom: 24 }}>
-        <p style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', marginBottom: 4 }}>Keyword Research</p>
-        <p style={{ fontSize: 13.5, color: C.text3 }}>YouTube autocomplete + Google related searches — filtered by intent, ranked by opportunity.</p>
+      <div style={{ marginBottom: 22 }}>
+        <p style={{ fontSize: 22, fontWeight: 800, color: '#0a0a0f', letterSpacing: '-0.6px', marginBottom: 4 }}>Keyword Research</p>
+        <p style={{ fontSize: 13, color: C.text3 }}>YouTube autocomplete + related searches — filtered by intent, ranked by opportunity.</p>
       </div>
 
       {/* Search bar */}
@@ -200,9 +194,9 @@ export default function Keywords() {
 
       {/* Intent picker */}
       {intentOptions && !loading && (
-        <div className="kw-card kw-in" style={{ padding: '22px 24px', marginBottom: 20, border: '2px solid rgba(147,197,253,0.5)', background: 'rgba(239,246,255,0.88)' }}>
+        <div className="kw-card kw-in" style={{ padding: '20px 22px', marginBottom: 20, borderColor: '#bfdbfe', background: '#eff6ff' }}>
           <p style={{ fontSize: 14, fontWeight: 800, color: C.text1, letterSpacing: '-0.3px', marginBottom: 3 }}>What niche is this keyword for?</p>
-          <p style={{ fontSize: 13, color: C.text3, marginBottom: 16 }}>Pick the right audience so we search the correct space.</p>
+          <p style={{ fontSize: 13, color: C.text3, marginBottom: 14 }}>Pick the right audience so we search the correct space.</p>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
             {intentOptions.map((opt, i) => (
               <div key={i} className="kw-intent-opt" onClick={() => runResearch(opt.keyword)}>
@@ -269,41 +263,41 @@ export default function Keywords() {
             {/* Right column: keyword table */}
             <div className="kw-card" style={{ overflow: 'hidden' }}>
               {/* Col headers */}
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 90px 110px 16px', gap: 10, padding: '10px 22px', borderBottom: `1px solid ${C.border}` }}>
-                {['Keyword', 'Intent Match', 'Opportunity', ''].map((h, i) => (
-                  <p key={i} style={{ fontSize: 10.5, fontWeight: 700, color: C.text4, textTransform: 'uppercase', letterSpacing: '0.07em' }}>{h}</p>
-                ))}
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 20px', borderBottom: `1px solid ${C.border}`, background: '#f8f8fb' }}>
+                <p style={{ fontSize: 10, fontWeight: 700, color: C.text4, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Keyword</p>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 0, flexShrink: 0 }}>
+                  <p style={{ width: 100, fontSize: 10, fontWeight: 700, color: C.text4, textTransform: 'uppercase', letterSpacing: '0.07em', textAlign: 'right' }}>Intent</p>
+                  <p style={{ width: 110, fontSize: 10, fontWeight: 700, color: C.text4, textTransform: 'uppercase', letterSpacing: '0.07em', textAlign: 'right' }}>Opportunity</p>
+                </div>
               </div>
 
               {result.keywords?.map((kw, idx) => (
-                <div key={kw.keyword} style={{ borderBottom: idx < result.keywords.length - 1 ? `1px solid ${C.border}` : 'none' }}>
-                  <div className="kw-row" style={{ display: 'grid', gridTemplateColumns: '1fr 90px 110px 16px', gap: 10, padding: '12px 22px', alignItems: 'center' }}
-                    onClick={() => setExpanded(expanded === idx ? null : idx)}>
+                <div key={kw.keyword} className="kw-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '11px 20px', borderBottom: idx < result.keywords.length - 1 ? `1px solid ${C.border}` : 'none', gap: 16 }}>
 
-                    <p style={{ fontSize: 13.5, fontWeight: 600, color: C.text1 }}>{kw.keyword}</p>
+                  {/* Keyword + content angle — fills left, won't stretch past content */}
+                  <div style={{ flex: '1 1 0', minWidth: 0 }}>
+                    <p style={{ fontSize: 13.5, fontWeight: 600, color: C.text1, marginBottom: kw.contentAngle ? 3 : 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{kw.keyword}</p>
+                    {kw.contentAngle && (
+                      <p style={{ fontSize: 11.5, color: C.text3, lineHeight: 1.4, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{kw.contentAngle}</p>
+                    )}
+                  </div>
 
-                    <span className="kw-chip" style={{ color: INTENT_COLOR[kw.intentMatch] || C.text3, background: INTENT_BG[kw.intentMatch] || C.bg }}>
-                      {kw.intentMatch}
-                    </span>
-
-                    <div>
+                  {/* Stats — fixed widths, grouped right */}
+                  <div style={{ display: 'flex', alignItems: 'center', flexShrink: 0, gap: 0 }}>
+                    <div style={{ width: 100, display: 'flex', justifyContent: 'flex-end' }}>
+                      <span className="kw-chip" style={{ color: INTENT_COLOR[kw.intentMatch] || C.text3, background: INTENT_BG[kw.intentMatch] || C.bg }}>
+                        {kw.intentMatch}
+                      </span>
+                    </div>
+                    <div style={{ width: 110, paddingLeft: 12 }}>
                       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 4 }}>
-                        <p style={{ fontSize: 13, fontWeight: 800, color: oppColor(kw.opportunityScore) }}>{kw.opportunityScore}</p>
+                        <p style={{ fontSize: 12.5, fontWeight: 800, color: oppColor(kw.opportunityScore) }}>{kw.opportunityScore}</p>
                       </div>
-                      <div className="kw-bar" style={{ width: 70 }}>
+                      <div className="kw-bar" style={{ width: '100%' }}>
                         <div className="kw-bar-fill" style={{ width: `${kw.opportunityScore}%`, background: oppColor(kw.opportunityScore) }} />
                       </div>
                     </div>
-
-                    <p style={{ color: C.text4, fontSize: 10, textAlign: 'center' }}>{expanded === idx ? '▲' : '▼'}</p>
                   </div>
-
-                  {expanded === idx && (
-                    <div style={{ padding: '12px 22px 16px', background: 'rgba(246,246,250,0.7)', borderTop: `1px solid ${C.border}` }}>
-                      <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 5 }}>Content Angle</p>
-                      <p style={{ fontSize: 13.5, color: C.text1, lineHeight: 1.55 }}>{kw.contentAngle}</p>
-                    </div>
-                  )}
                 </div>
               ))}
             </div>
@@ -312,7 +306,7 @@ export default function Keywords() {
           {/* Clusters — full width below */}
           {result.clusters?.length > 0 && (
             <div>
-              <p style={{ fontSize: 12, fontWeight: 700, color: C.text1, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 14 }}>Content Clusters</p>
+              <p style={{ fontSize: 10.5, fontWeight: 600, color: '#a0a0b0', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 14 }}>Content Clusters</p>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 14 }}>
                 {result.clusters.map((cl, i) => {
                   const palette = [
@@ -325,14 +319,12 @@ export default function Keywords() {
                   const p = palette[i % palette.length]
                   return (
                     <div key={cl.clusterName} style={{
-                      background: 'rgba(255,255,255,0.85)',
-                      backdropFilter: 'blur(20px)',
-                      WebkitBackdropFilter: 'blur(20px)',
-                      border: `1px solid ${p.bdr}`,
+                      background: '#ffffff',
+                      border: `1px solid rgba(0,0,0,0.09)`,
                       borderLeft: `4px solid ${p.clr}`,
                       borderRadius: 16,
                       padding: '16px 18px',
-                      boxShadow: '0 1px 0 rgba(255,255,255,0.8) inset, 0 4px 16px rgba(0,0,0,0.06)',
+                      boxShadow: '0 1px 3px rgba(0,0,0,0.07), 0 6px 24px rgba(0,0,0,0.08)',
                     }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
                         <span style={{ width: 22, height: 22, borderRadius: 7, background: p.bg, color: p.clr, fontSize: 11, fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>{i + 1}</span>
