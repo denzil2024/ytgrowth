@@ -45,12 +45,19 @@ app.include_router(keyword_routes.router, prefix="/keywords")
 @app.get("/health")
 def health():
     import os
+    from database.models import SessionLocal
     key = os.environ.get("ANTHROPIC_API_KEY", "")
+    try:
+        db = SessionLocal()
+        db.execute(__import__("sqlalchemy").text("SELECT 1"))
+        db.close()
+        db_status = "connected"
+    except Exception as e:
+        db_status = f"error: {e}"
     return {
         "status": "ok",
-        "anthropic_key_set": bool(key),
-        "anthropic_key_length": len(key),
-        "anthropic_key_prefix": key[:12] if key else "NOT SET"
+        "anthropic_key_prefix": key[:12] if key else "NOT SET",
+        "db": db_status
     }
 
 # Serve React frontend — must be after all API routes
