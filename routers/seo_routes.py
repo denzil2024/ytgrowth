@@ -1,30 +1,143 @@
 from fastapi import APIRouter, Request
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
-from app.seo import analyze_title
-from routers.auth import _user_data, _user_creds
+from app.seo import analyze_title, generate_intent_options, generate_description_suggestions, generate_thumbnail_text, optimize_video
+from routers.auth import get_session
 
 router = APIRouter()
 
 
-def _get_session(request: Request):
-    session_id = request.session.get("session_id")
-    data  = _user_data.get(session_id) if session_id else None
-    creds = _user_creds.get(session_id) if session_id else None
-    return data, creds
+class TitleIntentRequest(BaseModel):
+    title: str
 
 
 class TitleAnalyzeRequest(BaseModel):
     title: str
-    topic: str = ""
+    confirmed_keyword: str = ""
+
+
+class DescriptionRequest(BaseModel):
+    title: str
+    current_description: str = ""
+    niche: str = ""
+
+
+class ThumbnailTextRequest(BaseModel):
+    title: str
+    niche: str = ""
+
+
+@router.post("/intent-options")
+def intent_options(body: TitleIntentRequest):
+    """
+    Fast pre-analysis step: given a title, return 3 keyword intent options.
+    The frontend shows these as a picker before the full analysis runs.
+    """
+    if not body.title.strip():
+        return JSONResponse({"error": "Title cannot be empty."}, status_code=400)
+    options, error = generate_intent_options(body.title.strip())
+    if error and not options:
+        return JSONResponse({"error": error}, status_code=500)
+    return JSONResponse({"options": options})
 
 
 @router.post("/analyze")
 def analyze(body: TitleAnalyzeRequest, request: Request):
-    _, creds = _get_session(request)
+    _, creds = get_session(request.session.get("session_id"))
     if not creds:
         return JSONResponse({"error": "Not authenticated. Please login first."}, status_code=401)
     if not body.title.strip():
         return JSONResponse({"error": "Title cannot be empty."}, status_code=400)
-    result = analyze_title(creds, body.title.strip(), body.topic.strip())
+    result = analyze_title(creds, body.title.strip(), confirmed_keyword=body.confirmed_keyword.strip())
     return JSONResponse(result)
+
+
+@router.post("/generate-description")
+def generate_description(body: DescriptionRequest):
+    if not body.title.strip():
+        return JSONResponse({"error": "Title cannot be empty."}, status_code=400)
+    descriptions, error = generate_description_suggestions(
+        body.title.strip(),
+        body.current_description.strip(),
+        body.niche.strip(),
+    )
+    if error and not descriptions:
+        return JSONResponse({"error": error}, status_code=500)
+    return JSONResponse({"descriptions": descriptions})
+
+
+@router.post("/thumbnail-text")
+def thumbnail_text(body: ThumbnailTextRequest):
+    if not body.title.strip():
+        return JSONResponse({"error": "Title cannot be empty."}, status_code=400)
+    options, error = generate_thumbnail_text(body.title.strip(), body.niche.strip())
+    if error and not options:
+        return JSONResponse({"error": error}, status_code=500)
+    return JSONResponse({"options": options})
+
+
+class OptimizeVideoRequest(BaseModel):
+    video_id: str
+    title: str
+    thumbnail_url: str
+    views: int = 0
+    likes: int = 0
+
+
+@router.post("/optimize-video")
+def optimize_video_route(body: OptimizeVideoRequest, request: Request):
+    _, creds = get_session(request.session.get("session_id"))
+    if not creds:
+        return JSONResponse({"error": "Not authenticated. Please login first."}, status_code=401)
+    result = optimize_video(
+        creds,
+        body.video_id,
+        body.title,
+        body.thumbnail_url,
+        body.views,
+        body.likes,
+    )
+    if result.get("error") and not result.get("analysis"):
+        return JSONResponse({"error": result["error"]}, status_code=500)
+    return JSONResponse(result)
+
+
+class UpdateVideoRequest(BaseModel):
+    video_id: str
+    title: str = ""
+    description: str = ""
+
+
+@router.post("/update-video")
+def update_video_route(body: UpdateVideoRequest, request: Request):
+    _, creds = get_session(request.session.get("session_id"))
+    if not creds:
+        return JSONResponse({"error": "Not authenticated. Please login first."}, status_code=401)
+    if not body.title and not body.description:
+        return JSONResponse({"error": "Nothing to update."}, status_code=400)
+    try:
+        from googleapiclient.discovery import build
+        youtube = build("youtube", "v3", credentials=creds)
+        resp = youtube.videos().list(part="snippet", id=body.video_id).execute()
+        items = resp.get("items", [])
+        if not items:
+            return JSONResponse({"error": "Video not found."}, status_code=404)
+        snippet = items[0]["snippet"]
+        if body.title:
+            snippet["title"] = body.title
+        if body.description:
+            snippet["description"] = body.description
+        youtube.videos().update(
+            part="snippet",
+            body={"id": body.video_id, "snippet": snippet},
+        ).execute()
+        return JSONResponse({"ok": True})
+    except Exception as e:
+        err = str(e)
+        print(f"update_video error: {err}")
+        if "insufficientPermissions" in err or "insufficient authentication scopes" in err.lower():
+            return JSONResponse(
+                {"error": "Your session doesn't have write permission. Please log out and log back in to grant access."},
+                status_code=403,
+            )
+        return JSONResponse({"error": err}, status_code=500)

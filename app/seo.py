@@ -1,5 +1,8 @@
 import os
 import re
+import urllib.parse
+import requests
+from collections import Counter
 from googleapiclient.discovery import build
 import anthropic
 
@@ -54,6 +57,468 @@ _EN_WORDS = {
     "one","two","three","four","five","six","seven","eight","nine","ten",
 }
 
+VIRAL_FORMATS = {
+    "survival_challenge": {
+        "label": "Survival / Time Challenge",
+        "patterns": [r"\bi survived\b", r"\b\d+\s*(hour|day|week|month|year)s?\s*(with|in|of|challenge)\b"],
+        "example": "I Survived 24 Hours With [Person/Situation]",
+        "why": "Extreme curiosity — viewer must know the outcome.",
+    },
+    "extreme_comparison": {
+        "label": "Extreme Comparison",
+        "patterns": [r"\$[\d,]+\s+vs\.?\s+\$[\d,]+", r"\b(cheap|budget|expensive|luxury)\b.{0,25}\bvs\.?\b"],
+        "example": "$5 VS $500 [Subject]: Honest Review",
+        "why": "Price contrast triggers the value-seeking instinct immediately.",
+    },
+    "authority_warning": {
+        "label": "Authority / Warning",
+        "patterns": [r"\bdon'?t\b.{0,35}\buntil\b", r"\bnever\b.{0,25}\bdo this instead\b", r"\bbefore you (buy|start|try|do)\b"],
+        "example": "Don't Buy [Subject] Until You See This",
+        "why": "Fear of making a mistake drives very high CTR.",
+    },
+    "listicle": {
+        "label": "Listicle / Structure",
+        "patterns": [r"^\d+\s+(things|ways|tips|mistakes|reasons|steps|secrets|hacks|facts)\b", r"^\d+.{0,35}\bi (wish|knew|learned)\b"],
+        "example": "7 Things I Wish I Knew About [Subject]",
+        "why": "Numbers set clear expectations — viewers know exactly what they get.",
+    },
+    "curiosity_gap": {
+        "label": "Curiosity Gap",
+        "patterns": [r"\bi tested\b", r"\bi tried (every|all)\b", r"\bthe (truth|reality|secret) (about|behind)\b", r"\bnobody (talks|tells) (about|you)\b"],
+        "example": "I Tested Every [Subject] So You Don't Have To",
+        "why": "Creates an open loop the viewer must click to resolve.",
+    },
+    "aspirational": {
+        "label": "Aspirational / How I",
+        "patterns": [r"\bhow i\b.{0,45}\b(grew|made|built|earned|lost|gained|went from|turned)\b", r"\bfrom \d+.{0,30}to \d+\b"],
+        "example": "How I Grew [Subject] From 0 to [Number] in [Time]",
+        "why": "Transformation stories are the highest-retention format.",
+    },
+}
+
+# Stop words for n-gram extraction — includes contractions after punctuation-stripping
+_NGRAM_STOP = {
+    "the","a","an","in","on","at","to","for","of","and","or","but","is","are","was",
+    "i","my","we","our","you","your","it","this","that","with","as","so","if","be",
+    "been","being","have","has","had","do","does","did","will","would","could","should",
+    "may","might","shall","must","can","not","no","nor","yet","still","just","even",
+    "also","very","too","more","most","much","many","any","all","both","each","few",
+    "see","get","go","come","know","think","take","look","want","give","use","find",
+    "tell","ask","feel","try","keep","let","say","make","put","set","run","its",
+    # contractions become these after apostrophe is stripped:
+    "cant","dont","wont","doesnt","didnt","couldnt","shouldnt","wouldnt","isnt",
+    "arent","wasnt","werent","hasnt","havent","hadnt","ive","youre","theyre","hes",
+    "shes","weve","theyll","thats","whats","whos","lets","im","id","ill","youd",
+    # generic filler that leaks into title n-grams:
+    "how","why","what","when","who","which","where","now","then","here","there","well",
+    "really","literally","actually","basically","totally","completely","honestly",
+}
+
+_TITLE_NOISE = {"vlog","vlogging","shorts","video","watch","youtube","subscribe","channel"}
+
+
+# ─── Claude helpers ────────────────────────────────────────────────────────────
+
+def _make_client() -> anthropic.Anthropic:
+    return anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY", ""))
+
+
+# YouTube content genre keywords — must always be preserved in search terms, never dropped
+_GENRE_WORDS = {
+    "haul", "vlog", "vlogmas", "grwm", "ootd", "diml", "asmr",
+    "challenge", "reaction", "unboxing", "review", "tutorial", "mukbang",
+    "lookbook", "storytime", "transformation", "routine", "lifestyle",
+    "travel", "collab", "q&a", "qa", "favourites", "favorites", "empties",
+    "wishlist", "collection", "try-on", "tryon", "try on", "swap",
+    "monthly", "weekly", "daily", "day in my life",
+    # housing & real estate content
+    "tour", "house tour", "apartment tour", "room tour", "home tour",
+    "moving vlog", "rent", "apartment",
+}
+
+
+def generate_intent_options(title: str) -> tuple[list[dict], str]:
+    """
+    Fast Haiku call — given a title, return 3 possible search keyword interpretations.
+    The user picks one before the full analysis runs, so we search YouTube with the
+    right intent instead of guessing.
+
+    Example: "I Spent a Day Cleaning My Office and Wow"
+      → "home office cleaning vlog"  (personal vlog)
+      → "office cleaning tips"       (tutorial)
+      → "office desk transformation" (makeover)
+    """
+    import json as _json
+
+    api_key = os.getenv("ANTHROPIC_API_KEY", "")
+    if not api_key:
+        return [], "ANTHROPIC_API_KEY is not set"
+
+    client = _make_client()
+    try:
+        msg = client.messages.create(
+            model="claude-haiku-4-5-20251001",
+            max_tokens=300,
+            messages=[{"role": "user", "content": f"""A YouTube creator wrote this title: "{title}"
+
+The same words can mean very different things — e.g. "office cleaning" could be a personal home-office vlog OR a commercial cleaning business tutorial.
+
+Generate exactly 3 distinct search intent interpretations. Each should represent a genuinely different audience and purpose.
+
+For each, return:
+- keyword: the 2–4 word YouTube search phrase a viewer would type (be specific, keep niche identifiers)
+- label: 3–5 word label shown to the creator (e.g. "Personal home office vlog")
+- description: one sentence — who is this for and what do they want to see?
+
+Return ONLY a JSON array of 3 objects, no markdown:
+[{{"keyword":"...","label":"...","description":"..."}},{{"keyword":"...","label":"...","description":"..."}},{{"keyword":"...","label":"...","description":"..."}}]"""}]
+        )
+        raw = msg.content[0].text.strip()
+        if raw.startswith("```"):
+            raw = re.sub(r"^```[a-z]*\n?", "", raw)
+            raw = re.sub(r"\n?```$", "", raw.strip())
+        options = _json.loads(raw)
+        # Validate structure
+        clean = [
+            {"keyword": o["keyword"], "label": o["label"], "description": o["description"]}
+            for o in options if o.get("keyword") and o.get("label")
+        ]
+        return clean[:3], ""
+    except Exception as e:
+        print(f"Intent options error: {e}")
+        return [], str(e)
+
+
+def _extract_search_terms(client: anthropic.Anthropic, title: str, context: str) -> list[str]:
+    """
+    Extract the PRIMARY NICHE PHRASE + 2–3 related phrases from a title.
+
+    The first term returned is the core YouTube search query — e.g. "house tour kenya".
+    This is what viewers type to find this exact category of video and what we use
+    as the primary YouTube search query.
+
+    Rule: preserve content genre words (haul, vlog, tour, grwm, etc.) and any
+    location/person modifiers that define the niche. Never strip them into generic terms.
+      "My House Tour Kenya" → "house tour kenya"   ✓
+      NOT → "home decor", "interior design"        ✗
+    """
+    extra = f"\nExtra context: {context}" if context else ""
+
+    title_lower = title.lower()
+    found_genres = [g for g in _GENRE_WORDS if g in title_lower]
+    genre_hint = (
+        f"\nThese YouTube content-genre words appear in the title and MUST be in the primary phrase: {', '.join(found_genres)}"
+        if found_genres else ""
+    )
+
+    try:
+        msg = client.messages.create(
+            model="claude-haiku-4-5-20251001",
+            max_tokens=120,
+            messages=[{"role": "user", "content": (
+                f'Title: "{title}"{extra}{genre_hint}\n\n'
+                f'Task: identify the YouTube search phrases for this creator video.\n\n'
+                f'STEP 1 — PRIMARY NICHE PHRASE (return this FIRST):\n'
+                f'What 2–4 words would a viewer type on YouTube to find this exact category?\n'
+                f'Combine: content-type + subject/location/person.\n'
+                f'Examples:\n'
+                f'  "My House Tour Kenya // ..." → "house tour kenya"\n'
+                f'  "Monthly Amazon Haul..." → "amazon haul"\n'
+                f'  "GRWM: First Day of College..." → "grwm college"\n'
+                f'  "How I Made $10k on Etsy..." → "how to make money etsy"\n\n'
+                f'STEP 2 — 2–3 RELATED PHRASES:\n'
+                f'Variations a viewer might also search. Keep the genre word and modifier.\n\n'
+                f'RULES:\n'
+                f'- NEVER drop genre words (tour, haul, grwm, vlog, challenge, review, etc.)\n'
+                f'- NEVER drop location/person/platform modifiers (kenya, amazon, college, etc.)\n'
+                f'- Do NOT go generic: "house tour" without "kenya" loses the niche\n\n'
+                f'Return ONLY comma-separated phrases, primary first, no commentary.'
+            )}]
+        )
+        raw = msg.content[0].text.strip()
+        terms = [t.strip().lower() for t in raw.split(",") if t.strip()]
+        terms = [t for t in terms if len(t) > 3][:4]
+
+        # Safety: if the primary term lost any genre or location modifier, try to restore
+        if found_genres and terms:
+            primary = terms[0]
+            missing = [g for g in found_genres if g not in primary]
+            for g in missing[:1]:
+                terms[0] = f"{g} {primary}"[:50]
+
+        return terms if terms else [title[:60]]
+
+    except Exception as e:
+        print(f"Search term extraction error: {e}")
+        filler = _NGRAM_STOP | {"see", "come", "still", "make", "made", "get", "got"}
+        words = re.sub(r"[^\w\s]", " ", title.lower()).split()
+        meaningful = [w for w in words if (w not in filler and len(w) > 3) or w in _GENRE_WORDS]
+        return [" ".join(meaningful[:4])] if meaningful else [title[:50]]
+
+
+# ─── YouTube data fetching ─────────────────────────────────────────────────────
+
+def _is_ascii_english(text: str) -> bool:
+    """Return True only for ASCII text — filters Hindi, Arabic, CJK characters."""
+    try:
+        text.encode("ascii")
+        return bool(text.strip())
+    except UnicodeEncodeError:
+        return False
+
+
+def _is_english(text: str) -> bool:
+    if not text:
+        return False
+    clean = re.sub(r"#\w+", "", text)
+    clean = re.sub(r"[^\x00-\x7F]+", " ", clean).strip()
+    if not clean:
+        return False
+    words = [w.lower().strip('.,!?"\':;()[]{}|-') for w in clean.split() if w.strip()]
+    words = [w for w in words if w]
+    if not words:
+        return False
+    return sum(1 for w in words if w in _EN_WORDS) >= 2
+
+
+_SHORTS_PATTERNS = re.compile(r"#shorts?|#short\b|\byt\s*shorts?\b", re.IGNORECASE)
+
+
+def _parse_duration_seconds(iso: str) -> int:
+    """Parse ISO 8601 duration (PT4M30S) → total seconds."""
+    m = re.match(r"PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?", iso or "")
+    if not m:
+        return 0
+    h, mn, s = m.groups()
+    return int(h or 0) * 3600 + int(mn or 0) * 60 + int(s or 0)
+
+
+def _is_short(title: str, duration_seconds: int) -> bool:
+    """True if this is a YouTube Short — different content type, different title conventions."""
+    if _SHORTS_PATTERNS.search(title):
+        return True
+    # Shorts are ≤ 60 seconds; filter anything under 90s to have a safe margin
+    if 0 < duration_seconds <= 90:
+        return True
+    return False
+
+
+def _search_youtube_once(youtube, query: str, max_results: int = 25, order: str = "relevance") -> dict[str, dict]:
+    """Run a single YouTube search. Returns raw candidates (Shorts not yet filtered — done in batch)."""
+    try:
+        resp = youtube.search().list(
+            part="snippet",
+            q=query,
+            type="video",
+            order=order,
+            maxResults=max_results,
+            relevanceLanguage="en",
+            regionCode="US",
+        ).execute()
+    except Exception as e:
+        print(f"YouTube search error for '{query}': {e}")
+        return {}
+
+    results: dict[str, dict] = {}
+    for item in resp.get("items", []):
+        snippet = item["snippet"]
+        title = snippet.get("title", "")
+        if not _is_english(title):
+            continue
+        if _SHORTS_PATTERNS.search(title):
+            continue
+        vid_id = item["id"]["videoId"]
+        results[vid_id] = {
+            "video_id": vid_id,
+            "title": title,
+            "channel": snippet.get("channelTitle", ""),
+            "thumbnail": snippet.get("thumbnails", {}).get("medium", {}).get("url", ""),
+            "tags": [],
+            "view_count": 0,
+        }
+    return results
+
+
+def search_top_videos(credentials, search_terms: list[str], max_results: int = 25) -> list[dict]:
+    """
+    Multi-query YouTube search (order=relevance) → deduplicate → fetch details, view counts,
+    and duration → filter Shorts.
+
+    order=relevance gives us what actually ranks for this query — the real competitive landscape.
+    We fetch view counts so Claude can understand what's performing vs what's just ranking.
+    """
+    youtube = build("youtube", "v3", credentials=credentials)
+    combined: dict[str, dict] = {}
+
+    for term in search_terms:
+        # Primary search: relevance order (what competes for this query)
+        batch = _search_youtube_once(youtube, term, max_results=max_results, order="relevance")
+        for vid_id, data in batch.items():
+            if vid_id not in combined:
+                combined[vid_id] = data
+
+    if not combined:
+        return []
+
+    # Batch-fetch snippet (tags) + contentDetails (duration) + statistics (view count)
+    try:
+        details_resp = youtube.videos().list(
+            part="snippet,contentDetails,statistics",
+            id=",".join(list(combined.keys())[:50]),
+        ).execute()
+        non_shorts: dict[str, dict] = {}
+        for item in details_resp.get("items", []):
+            vid_id = item["id"]
+            if vid_id not in combined:
+                continue
+            duration_iso = item.get("contentDetails", {}).get("duration", "")
+            duration_sec = _parse_duration_seconds(duration_iso)
+            title = combined[vid_id]["title"]
+            if _is_short(title, duration_sec):
+                continue
+            raw_tags = item["snippet"].get("tags", [])
+            combined[vid_id]["tags"] = [t for t in raw_tags if _is_ascii_english(t)][:20]
+            combined[vid_id]["duration_seconds"] = duration_sec
+            combined[vid_id]["view_count"] = int(
+                item.get("statistics", {}).get("viewCount", 0)
+            )
+            combined[vid_id]["published_at"] = item["snippet"].get("publishedAt", "")[:10]
+            non_shorts[vid_id] = combined[vid_id]
+    except Exception as e:
+        print(f"Video details error: {e}")
+        non_shorts = combined
+
+    return list(non_shorts.values())
+
+
+def get_autocomplete_suggestions(search_terms: list[str]) -> list[str]:
+    """
+    Fetch YouTube autocomplete for each search term.
+    Autocomplete = what real viewers actually type = the highest-intent keywords.
+    """
+    results: list[str] = []
+    for term in search_terms:
+        for query in [term, f"best {term}", f"how to {term}"]:
+            try:
+                url = (
+                    "https://suggestqueries.google.com/complete/search"
+                    f"?client=firefox&ds=yt&q={urllib.parse.quote(query)}&hl=en"
+                )
+                resp = requests.get(url, timeout=4, headers={"User-Agent": "Mozilla/5.0"})
+                if resp.ok:
+                    data = resp.json()
+                    for s in (data[1] if len(data) > 1 else []):
+                        if isinstance(s, str) and _is_ascii_english(s) and s not in results:
+                            results.append(s)
+            except Exception as e:
+                print(f"Autocomplete error for '{query}': {e}")
+    return results[:30]
+
+
+# ─── Keyword research ──────────────────────────────────────────────────────────
+
+def _extract_ngram_candidates(titles: list[str], autocomplete: list[str]) -> list[str]:
+    """Extract 2–3 word phrases that repeat across top titles + autocomplete."""
+    all_text = titles + autocomplete
+    bigrams: list[str] = []
+    trigrams: list[str] = []
+
+    for text in all_text:
+        clean = re.sub(r"[^\w\s]", " ", text.lower())
+        words = [w for w in clean.split() if w and w not in _NGRAM_STOP and len(w) > 2]
+        for i in range(len(words) - 1):
+            bigrams.append(f"{words[i]} {words[i+1]}")
+        for i in range(len(words) - 2):
+            trigrams.append(f"{words[i]} {words[i+1]} {words[i+2]}")
+
+    bi_counts = Counter(bigrams)
+    tri_counts = Counter(trigrams)
+    phrases = [p for p, c in tri_counts.most_common(12) if c >= 2]
+    phrases += [p for p, c in bi_counts.most_common(20) if c >= 2 and p not in " ".join(phrases)]
+    return phrases[:20]
+
+
+def _score_keyword(
+    phrase: str,
+    autocomplete: list[str],
+    titles: list[str],
+    all_tags: list[str],
+) -> dict:
+    """
+    Score a keyword phrase on two axes — like VidIQ:
+
+    VOLUME  = how many people search for it
+              Proxy: how many autocomplete suggestions contain this phrase
+              (autocomplete only surfaces high-volume queries)
+
+    COMPETITION = how hard is it to rank
+              Proxy: how many of the top videos already target this exact phrase
+              in their title (high title frequency = established competition)
+
+    SCORE   = weighted combination favouring low competition + decent volume
+    """
+    p = phrase.lower()
+    ac_hits   = sum(1 for s in autocomplete if p in s.lower())
+    title_hits = sum(1 for t in titles    if p in t.lower())
+    tag_hits   = sum(1 for t in all_tags  if p in t.lower())
+
+    # Volume: autocomplete is the strongest signal (real search demand)
+    # 1 hit = LOW, 2–3 = MED, 4+ = HIGH
+    volume_score = min(ac_hits * 30, 100)
+
+    # Competition: more top videos targeting it = harder to break in
+    # 0–2 videos = LOW competition (green), 3–5 = MED, 6+ = HIGH
+    comp_score = min(title_hits * 18 + tag_hits * 8, 100)
+
+    # Overall score rewards LOW competition + HIGH volume
+    overall = int(volume_score * 0.55 + (100 - comp_score) * 0.45)
+
+    volume_label = "HIGH" if volume_score >= 70 else "MED" if volume_score >= 35 else "LOW"
+    comp_label   = "HIGH" if comp_score   >= 65 else "MED" if comp_score   >= 35 else "LOW"
+
+    return {
+        "phrase":      phrase,
+        "score":       overall,
+        "volume":      volume_label,
+        "competition": comp_label,
+        "ac_hits":     ac_hits,
+        "title_hits":  title_hits,
+    }
+
+
+def research_keywords(
+    search_terms: list[str],
+    autocomplete: list[str],
+    top_titles: list[str],
+    all_tags: list[str],
+) -> list[dict]:
+    """
+    Build a ranked keyword list with volume + competition scores.
+    This is the data that powers both the keyword panel and the Claude prompt.
+    """
+    candidates = _extract_ngram_candidates(top_titles, autocomplete)
+
+    # Also include the original search terms themselves as candidates
+    for term in search_terms:
+        if term not in candidates:
+            candidates.append(term)
+
+    scored = [_score_keyword(p, autocomplete, top_titles, all_tags) for p in candidates]
+    # Sort: highest overall score first (best opportunity = high volume, low competition)
+    scored.sort(key=lambda x: x["score"], reverse=True)
+    return scored[:15]
+
+
+# ─── Title scoring ─────────────────────────────────────────────────────────────
+
+def _detect_viral_format(title: str) -> str | None:
+    t = title.lower()
+    for fmt_key, fmt_data in VIRAL_FORMATS.items():
+        for pattern in fmt_data["patterns"]:
+            if re.search(pattern, t):
+                return fmt_key
+    return None
+
 
 def _score_title(title: str, top_titles: list[str]) -> dict:
     t = title.strip()
@@ -70,240 +535,818 @@ def _score_title(title: str, top_titles: list[str]) -> dict:
     else:
         scores["length"] = 8
 
-    found_power = [w for w in words if w.strip(".,!?\"'") in POWER_WORDS]
-    scores["power_words"] = min(len(found_power) * 8, 20)
+    first_three = [w.strip(".,!?\"'()[]") for w in words[:3]]
+    strong_start = (
+        any(w in POWER_WORDS or w in QUESTION_STARTERS for w in first_three)
+        or any(re.search(r"\d", w) for w in first_three)
+    )
+    scores["front_loading"] = 15 if strong_start else 0
 
-    scores["numbers"] = 15 if re.search(r'\d', t) else 0
+    found_power = [w for w in words if w.strip(".,!?\"'") in POWER_WORDS]
+    scores["power_words"] = min(len(found_power) * 8, 15)
+
+    scores["numbers"] = 10 if re.search(r"\d", t) else 0
 
     scores["question"] = 10 if (words[0] in QUESTION_STARTERS if words else False) or t.endswith("?") else 0
 
-    scores["hook_format"] = 10 if re.search(r'[\[\(\|:]', t) else 0
+    scores["hook_format"] = 10 if re.search(r"[\[\(\|:]", t) else 0
 
-    cap_words = [w for w in t.split() if w.isupper() and len(w) > 2]
-    scores["caps_emphasis"] = min(len(cap_words) * 5, 10)
-
-    NOISE = {"vlog","vlogging","shorts","shortsvideo","ytshorts","video","watch","youtube"}
     if top_titles:
-        top_words = set()
+        top_words: set[str] = set()
         for tt in top_titles:
-            clean = re.sub(r'#\w+', '', tt)
-            for w in clean.lower().split():
+            for w in re.sub(r"#\w+", "", tt).lower().split():
                 cw = w.strip(".,!?\"'")
-                if len(cw) > 3 and cw not in NOISE:
+                if len(cw) > 3 and cw not in _TITLE_NOISE:
                     top_words.add(cw)
         overlap = sum(1 for w in words if w.strip(".,!?\"'") in top_words)
         scores["keyword_relevance"] = min(overlap * 2, 10)
     else:
-        # Fallback: score against the title's own meaningful words repeated elsewhere
         scores["keyword_relevance"] = 5
 
-    total = sum(scores.values())
+    viral_fmt = _detect_viral_format(t)
+    scores["viral_format"] = 10 if viral_fmt else 0
+
     return {
-        "total": min(total, 100),
+        "total": min(sum(scores.values()), 100),
         "breakdown": scores,
         "length": length,
         "power_words_found": found_power,
+        "viral_format_detected": viral_fmt,
     }
 
 
-def _is_english(text: str) -> bool:
-    if not text:
-        return False
-    clean = re.sub(r'#\w+', '', text)
-    clean = re.sub(r'[^\x00-\x7F]+', ' ', clean).strip()
-    if not clean:
-        return False
-    words = [w.lower().strip('.,!?"\':;()[]{}|-') for w in clean.split() if w.strip()]
-    words = [w for w in words if w]
-    if not words:
-        return False
-    return sum(1 for w in words if w in _EN_WORDS) >= 2
+# ─── Claude prompt + suggestions ──────────────────────────────────────────────
 
-
-def search_top_videos(credentials, query: str, max_results: int = 20) -> list[dict]:
-    youtube = build("youtube", "v3", credentials=credentials)
-    try:
-        response = youtube.search().list(
-            part="snippet",
-            q=query,
-            type="video",
-            order="viewCount",
-            maxResults=max_results,
-            relevanceLanguage="en",
-            regionCode="US",
-        ).execute()
-        videos = []
-        for item in response.get("items", []):
-            snippet = item["snippet"]
-            title = snippet.get("title", "")
-            if not _is_english(title):
-                continue
-            videos.append({
-                "video_id": item["id"]["videoId"],
-                "title": title,
-                "channel": snippet.get("channelTitle", ""),
-                "thumbnail": snippet.get("thumbnails", {}).get("medium", {}).get("url", ""),
-            })
-        return videos
-    except Exception as e:
-        print(f"SEO search error: {e}")
-        return []
-
-
-def _build_criteria_instructions(breakdown: dict) -> str:
-    """Turn the score breakdown into explicit pass/fail requirements for Claude."""
-    lines = []
-
+def _build_gap_report(breakdown: dict) -> str:
+    gaps = []
     if breakdown.get("length", 0) < 25:
-        lines.append("LENGTH: Title must be exactly 50–70 characters — count every character including spaces")
-
+        gaps.append("LENGTH: Must be 50–70 characters. Count every character including spaces.")
+    if breakdown.get("front_loading", 0) == 0:
+        gaps.append(
+            "FRONT-LOADING [CRITICAL]: First 3 words must be the strongest. "
+            "Never start with: See, Come, Just, So, Still, Here, Well. "
+            "Strong openers: 'How I', '7 Things', 'The Truth About', 'Why I', 'Never Do This', 'I Tried'"
+        )
     if breakdown.get("power_words", 0) == 0:
-        lines.append("POWER WORD: Must include one of: Best, Top, Secret, Truth, Never, Always, Proven, Ultimate, Guide, Tips, Mistakes, Warning, Shocking, Revealed, Hack, Fast, Easy, Simple, Finally, Today")
-    else:
-        lines.append("POWER WORD: Keep or improve the power word already present")
-
+        gaps.append("POWER WORD: Add one of: Best, Secret, Truth, Never, Proven, Ultimate, Shocking, Revealed, Finally, Stop, Worst, Warning.")
     if breakdown.get("numbers", 0) == 0:
-        lines.append("NUMBER: Must include a digit (e.g. '5 Things', '3 Mistakes', '10 Tips', '24-Hour', '30 Days')")
-    else:
-        lines.append("NUMBER: Keep the number already present")
+        gaps.append("NUMBER: Add a digit — '5 Mistakes', '7 Tips', '24-Hour', '30-Day'. Specific numbers outperform vague titles.")
+    if breakdown.get("hook_format", 0) == 0 and breakdown.get("question", 0) == 0:
+        gaps.append("HOOK FORMAT: Add ':' or '(...)' to split into promise + payoff. Or end with '?'.")
+    if breakdown.get("viral_format", 0) == 0:
+        gaps.append("VIRAL FORMAT: Use one of the proven formats listed below.")
+    if breakdown.get("keyword_relevance", 0) < 5:
+        gaps.append("KEYWORDS: Title shares few words with top-performing videos. Use the keyword opportunities listed below.")
+    return (
+        "\n".join(f"  [{i+1}] {g}" for i, g in enumerate(gaps))
+        if gaps else "  No critical gaps — push for higher emotional impact."
+    )
 
-    if breakdown.get("question", 0) == 0 and breakdown.get("hook_format", 0) == 0:
-        lines.append("HOOK FORMAT: Must use one of — end with '?' (question), add '(...)' parenthesis after the main idea, or use a colon ':' to split the title")
-    elif breakdown.get("hook_format", 0) == 10:
-        lines.append("HOOK FORMAT: Keep the hook/colon/bracket format")
 
-    return "\n".join(f"  • {l}" for l in lines)
+def _strip_emdash(obj):
+    """Recursively replace em-dashes (—) with a plain hyphen (-) in all strings."""
+    if isinstance(obj, str):
+        return obj.replace('\u2014', '-').replace('\u2013', '-')
+    if isinstance(obj, dict):
+        return {k: _strip_emdash(v) for k, v in obj.items()}
+    if isinstance(obj, list):
+        return [_strip_emdash(i) for i in obj]
+    return obj
 
 
-def _call_claude(client, prompt: str) -> list[str]:
-    message = client.messages.create(
-        model="claude-haiku-4-5-20251001",
-        max_tokens=400,
+def _call_sonnet(client: anthropic.Anthropic, prompt: str) -> str:
+    msg = client.messages.create(
+        model="claude-sonnet-4-6",
+        max_tokens=900,
         messages=[{"role": "user", "content": prompt}]
     )
-    raw = message.content[0].text.strip()
-    return [line.strip().strip('"').strip("'") for line in raw.split("\n") if line.strip()]
+    return msg.content[0].text.strip()
+
+
+_VLOG_GENRES = {
+    "tour", "house tour", "apartment tour", "room tour", "home tour",
+    "vlog", "grwm", "diml", "day in my life", "haul", "ootd",
+    "storytime", "lookbook", "routine", "collab", "q&a",
+    "favourites", "favorites", "empties", "wishlist",
+    "moving vlog", "travel vlog",
+}
+
+_TUTORIAL_MARKERS = {"how to", "tutorial", "step by step", "beginners guide", "explained", "tips"}
+_REVIEW_MARKERS = {"review", "unboxing", "vs", "comparison", "honest review", "tested"}
+
+
+def _detect_content_type(title: str, primary_phrase: str) -> str:
+    """
+    Classify the video so we can apply the right title strategy.
+    Returns: 'personal_vlog' | 'tutorial' | 'review' | 'general'
+    """
+    combined = (title + " " + primary_phrase).lower()
+    if any(g in combined for g in _VLOG_GENRES):
+        return "personal_vlog"
+    if any(m in combined for m in _TUTORIAL_MARKERS):
+        return "tutorial"
+    if any(m in combined for m in _REVIEW_MARKERS):
+        return "review"
+    return "general"
 
 
 def generate_title_suggestions(
-    title: str, topic: str, top_titles: list[str], score_data: dict
-) -> tuple[list[dict], str]:
+    title: str,
+    search_terms: list[str],
+    top_videos: list[dict],
+    score_data: dict,
+    keyword_scores: list[dict],
+    autocomplete: list[str],
+    context: str = "",
+    primary_phrase: str = "",
+) -> tuple[list[dict], dict, str]:
+    """
+    3-phase prompt: analyse the live YouTube competitive data → find the gap →
+    generate 3 titles with different psychological hooks.
+
+    Returns (suggestions, intent_analysis, error_string).
+    """
+    import json as _json
+
+    api_key = os.getenv("ANTHROPIC_API_KEY", "")
+    if not api_key:
+        return [], {}, "ANTHROPIC_API_KEY is not set"
+
+    client = _make_client()
+    content_type = _detect_content_type(title, primary_phrase)
+    niche = primary_phrase or (search_terms[0] if search_terms else title[:40])
+    top_titles = [v["title"] for v in top_videos]
+
+    # Build the competitor data block with view counts — this is the ground truth
+    if top_videos:
+        competitor_block = "REAL YOUTUBE SEARCH RESULTS FOR THIS NICHE (live data):\n"
+        for i, v in enumerate(top_videos[:10], 1):
+            views = v.get("view_count", 0)
+            views_str = f"{views:,}" if views else "unknown"
+            competitor_block += f'  {i}. "{v["title"]}" — {views_str} views — {v["channel"]}\n'
+    else:
+        competitor_block = ""
+
+    ac_block = (
+        "YOUTUBE AUTOCOMPLETE (what viewers actually type when searching this niche):\n"
+        + "\n".join(f"  - {s}" for s in autocomplete[:10])
+    ) if autocomplete else ""
+
+    best_kws = [k for k in keyword_scores if k["competition"] != "HIGH"][:6]
+    kw_block = (
+        "HIGH-OPPORTUNITY KEYWORDS (real search demand, low competition):\n"
+        + "\n".join(f'  • "{k["phrase"]}"  volume={k["volume"]} competition={k["competition"]}' for k in best_kws)
+    ) if best_kws else ""
+
+    context_block = f"WHAT THE VIDEO IS ABOUT: {context}\n" if context else ""
+
+    vlog_note = ""
+    if content_type == "personal_vlog":
+        vlog_note = """
+CONTENT TYPE: Personal vlog / lifestyle video.
+- First-person voice is natural: "My", "I", "Come", "Inside My"
+- Do NOT invent listicle numbers ("7 Things") — this is not a list video
+- Numbers that exist in the video (e.g. "2 Bedroom") are fine
+"""
+
+    prompt = f"""You are a YouTube title strategist with access to live YouTube data.
+
+USER'S TITLE: "{title}"
+NICHE KEYWORD: "{niche}"
+{context_block}{vlog_note}
+{competitor_block}
+{ac_block}
+{kw_block}
+
+Your task has 3 phases. Return the result as a single JSON object.
+
+PHASE 1 — ANALYSIS
+Study the real YouTube results above. Determine:
+- search_intent: what is the viewer trying to achieve? (learn / discover / solve / buy / be entertained)
+- emotional_driver: what feeling makes someone click on this type of video?
+- viewer_profile: 1 sentence — who is typing this query and what outcome do they want?
+- top_keywords: list the 4–6 keyword phrases that appear most across the competitor titles
+- dominant_patterns: what title structure/format dominates the top results? (e.g. "listicle", "personal story", "luxury reveal", "how-to")
+
+PHASE 2 — GAP
+- overused_angle: what angle / framing appears in too many of the competitor titles?
+- gap_opportunity: what angle is completely MISSING from all the competitor titles? This is the differentiation opportunity.
+
+PHASE 3 — 3 TITLE VARIANTS
+Using the gap opportunity, write 3 titles with different psychological hooks.
+Each title must have a genuinely different structure and opening — not 3 rephrasings of the same sentence.
+
+Hook A — CURIOSITY / FOMO: make the viewer feel they're missing something they need to see
+Hook B — TRANSFORMATION: focus on the outcome or result the viewer will experience
+Hook C — CONTRARIAN / AUTHORITY: challenge assumptions or reveal what others don't show
+
+Rules for every title:
+- 50–70 characters exactly (count every character including spaces)
+- Primary keyword near the start
+- At least one power word (Best, Honest, Real, Never, Secret, Surprising, Finally, Truth)
+- Do NOT fabricate facts not present in the original title
+- Do NOT force listicle numbers unless the video is actually a list
+- Plain text only
+- NEVER use em-dashes (—) or en-dashes (–). Use a hyphen (-) or colon (:) instead
+
+Return ONLY this JSON (no markdown, no explanation):
+{{
+  "analysis": {{
+    "search_intent": "...",
+    "emotional_driver": "...",
+    "viewer_profile": "...",
+    "top_keywords": ["...", "..."],
+    "dominant_patterns": "...",
+    "overused_angle": "...",
+    "gap_opportunity": "..."
+  }},
+  "titles": [
+    {{
+      "title": "...",
+      "hook": "curiosity",
+      "primary_keyword": "...",
+      "power_words": ["..."],
+      "char_count": 0,
+      "seo_score": 0,
+      "ctr_score": 0,
+      "hook_score": 0,
+      "why_it_works": "..."
+    }},
+    {{
+      "title": "...",
+      "hook": "transformation",
+      "primary_keyword": "...",
+      "power_words": ["..."],
+      "char_count": 0,
+      "seo_score": 0,
+      "ctr_score": 0,
+      "hook_score": 0,
+      "why_it_works": "..."
+    }},
+    {{
+      "title": "...",
+      "hook": "contrarian",
+      "primary_keyword": "...",
+      "power_words": ["..."],
+      "char_count": 0,
+      "seo_score": 0,
+      "hook_score": 0,
+      "ctr_score": 0,
+      "why_it_works": "..."
+    }}
+  ]
+}}"""
+
+    try:
+        raw = _call_sonnet(client, prompt)
+
+        # Strip markdown code fences if present
+        clean = raw.strip()
+        if clean.startswith("```"):
+            clean = re.sub(r"^```[a-z]*\n?", "", clean)
+            clean = re.sub(r"\n?```$", "", clean.strip())
+
+        data = _json.loads(clean)
+        analysis = data.get("analysis", {})
+        raw_titles = data.get("titles", [])
+
+        suggestions = []
+        for t in raw_titles[:3]:
+            title_text = t.get("title", "").strip().strip('"')
+            if not title_text or len(title_text) < 15:
+                continue
+            s = _score_title(title_text, top_titles)
+            suggestions.append({
+                "title": title_text,
+                # Use Claude's contextual scores as primary; our formula as fallback
+                "score": t.get("seo_score") or s["total"],
+                "seo_score": t.get("seo_score") or s["total"],
+                "ctr_score": t.get("ctr_score", 0),
+                "hook_score": t.get("hook_score", 0),
+                "breakdown": s["breakdown"],
+                "length": len(title_text),
+                "power_words_found": t.get("power_words") or s["power_words_found"],
+                "viral_format_detected": s.get("viral_format_detected"),
+                "hook": t.get("hook", "curiosity"),
+                "primary_keyword": t.get("primary_keyword", ""),
+                "why_it_works": t.get("why_it_works", ""),
+                # Keep strategy field for frontend compatibility — map from hook type
+                "strategy": {"curiosity": "browse", "transformation": "hybrid", "contrarian": "search"}.get(
+                    t.get("hook", "curiosity"), "hybrid"
+                ),
+            })
+
+        return suggestions, analysis, ""
+
+    except Exception as e:
+        print(f"Claude error: {e}\nRaw response: {raw if 'raw' in dir() else 'none'}")
+        return [], {}, str(e)
+
+
+# ─── Video optimization (title + description + thumbnail critique) ──────────────
+
+def optimize_video(credentials, video_id: str, title: str, thumbnail_url: str, views: int = 0, likes: int = 0) -> dict:
+    """
+    Full critique of an already-uploaded video: scores the title, analyses the
+    description, and uses Claude vision to critique the thumbnail.
+    """
+    import json as _json
+    import base64
+
+    api_key = os.getenv("ANTHROPIC_API_KEY", "")
+    if not api_key:
+        return {"error": "ANTHROPIC_API_KEY is not set"}
+
+    # Step 1: Fetch description from YouTube
+    description = ""
+    try:
+        youtube = build("youtube", "v3", credentials=credentials)
+        resp = youtube.videos().list(part="snippet", id=video_id).execute()
+        items = resp.get("items", [])
+        if items:
+            description = items[0]["snippet"].get("description", "")
+    except Exception as e:
+        print(f"Description fetch error: {e}")
+
+    # Step 2: Score the title (no competitor context — standalone score)
+    score_data = _score_title(title, [])
+
+    # Step 3: Fetch thumbnail as base64 for vision analysis
+    thumb_b64 = None
+    thumb_media_type = "image/jpeg"
+    try:
+        r = requests.get(thumbnail_url, timeout=6, headers={"User-Agent": "Mozilla/5.0"})
+        if r.ok:
+            content_type = r.headers.get("Content-Type", "image/jpeg").split(";")[0].strip()
+            thumb_media_type = content_type if content_type.startswith("image/") else "image/jpeg"
+            thumb_b64 = base64.b64encode(r.content).decode()
+    except Exception as e:
+        print(f"Thumbnail fetch error: {e}")
+
+    # Step 4: Build Claude prompt
+    client = _make_client()
+    desc_preview = description[:600].strip() if description else "(no description set)"
+
+    messages_content = []
+    if thumb_b64:
+        messages_content.append({
+            "type": "image",
+            "source": {"type": "base64", "media_type": thumb_media_type, "data": thumb_b64},
+        })
+
+    messages_content.append({"type": "text", "text": f"""You are a YouTube growth strategist. Analyse this uploaded video and give specific, actionable improvement feedback.
+
+TITLE: "{title}"
+VIEWS: {views:,}  |  LIKES: {likes:,}
+LIKE RATE: {round(likes/views*100, 1) if views > 0 else 0}%
+
+DESCRIPTION (first 600 chars):
+\"\"\"
+{desc_preview}
+\"\"\"
+
+{"The thumbnail image is shown above." if thumb_b64 else "No thumbnail image available."}
+
+Give feedback across 3 areas. Be direct and specific - name the exact problem and the exact fix.
+NEVER use em-dashes (—) or en-dashes (–) anywhere in your response. Use a hyphen (-) or colon (:) instead.
+
+Return ONLY this JSON (no markdown, no explanation):
+{{
+  "title": {{
+    "score": <0-100>,
+    "verdict": "<one sentence>",
+    "issues": ["<issue 1>", "<issue 2>"],
+    "suggestions": [
+      {{"title": "<improved title A>", "why": "<one sentence>"}},
+      {{"title": "<improved title B>", "why": "<one sentence>"}}
+    ]
+  }},
+  "description": {{
+    "score": <0-100>,
+    "verdict": "<one sentence>",
+    "hook_quality": "<assessment of the first 150 chars — what shows before Show more>",
+    "issues": ["<issue 1>", "<issue 2>"],
+    "improved_opening": "<rewritten first 2 lines optimised for SEO and click-through>",
+    "full_description": "<complete rewritten description (200-400 words) — strong keyword-rich hook first 150 chars, value-packed body, CTA, timestamps if relevant, relevant hashtags at end>"
+  }},
+  "thumbnail": {{
+    "score": <0-100>,
+    "verdict": "<one sentence>",
+    "has_text_overlay": <true/false>,
+    "has_face": <true/false>,
+    "contrast_strong": <true/false>,
+    "tips": ["<specific tip 1>", "<specific tip 2>"]
+  }},
+  "priority": "<title|description|thumbnail — which to fix first and one-sentence reason>"
+}}"""})
+
+    try:
+        msg = client.messages.create(
+            model="claude-sonnet-4-6",
+            max_tokens=2200,
+            messages=[{"role": "user", "content": messages_content}]
+        )
+        raw = msg.content[0].text.strip()
+        if raw.startswith("```"):
+            raw = re.sub(r"^```[a-z]*\n?", "", raw)
+            raw = re.sub(r"\n?```$", "", raw.strip())
+        analysis = _strip_emdash(_json.loads(raw))
+        return {
+            "analysis": analysis,
+            "title_breakdown": score_data["breakdown"],
+            "title_score": score_data["total"],
+            "description": description,
+            "error": "",
+        }
+    except Exception as e:
+        print(f"optimize_video error: {e}")
+        return {"error": str(e)}
+
+
+# ─── Thumbnail text generation ─────────────────────────────────────────────────
+
+def generate_thumbnail_text(title: str, niche: str = "") -> tuple[list[dict], str]:
+    """
+    Generate 4 short thumbnail overlay text options for a given title.
+    Returns (options, error_string).
+    """
+    import json as _json
+
     api_key = os.getenv("ANTHROPIC_API_KEY", "")
     if not api_key:
         return [], "ANTHROPIC_API_KEY is not set"
 
-    client = anthropic.Anthropic(api_key=api_key)
-    top_sample = "\n".join(f"  - {t}" for t in top_titles[:6]) if top_titles else "  None available"
-    criteria = _build_criteria_instructions(score_data.get("breakdown", {}))
+    client = _make_client()
+    niche_block = f"NICHE: {niche}\n" if niche else ""
 
-    base_prompt = f"""You are a YouTube SEO specialist. Rewrite the title below to score higher on these specific criteria.
+    prompt = f"""You are a YouTube thumbnail strategist.
 
-Original title: "{title}"
-Topic/niche: "{topic}"
-Current score: {score_data['total']}/100
+VIDEO TITLE: "{title}"
+{niche_block}
+The thumbnail overlay text is short text placed ON the thumbnail image. It works WITH the title — not repeating it, but adding a second hook that makes the viewer feel they must click.
 
-MANDATORY criteria each new title MUST satisfy:
-{criteria}
+Generate exactly 4 thumbnail text options. Each must be:
+- 2–6 words, ALL CAPS
+- Complementary to the title (never just repeat it)
+- Instantly readable on a thumbnail at a glance
+- Punchy and specific
 
-Top-viewed English titles in this niche (study the patterns):
-{top_sample}
+Use these 4 styles, one each:
+1. number_callout — spotlight a number or stat implied by the title (e.g. "$10K", "30 DAYS", "3 YEARS")
+2. emotion_word — one or two powerful words that capture the feeling or reaction (e.g. "IT WORKED", "LIFE CHANGING", "I WAS WRONG")
+3. before_after — a contrast, transformation, or reveal (e.g. "FROM $0", "BEFORE & AFTER", "NEVER AGAIN")
+4. question_hook — a short question that creates an open loop (e.g. "WORTH IT?", "DOES IT WORK?", "HOW?!")
 
-Write exactly 3 improved titles. Each title:
-- Must satisfy ALL mandatory criteria above
-- Must be 50–70 characters — after writing each title, count every character including spaces and verify
-- Must keep the creator's actual topic — no fabricated claims
-- Must use plain ASCII only — no emoji, no special characters
-
-Return ONLY the 3 titles, one per line, no numbering, no commentary."""
-
-    MIN_SCORE = 65
-    MAX_ATTEMPTS = 2
-    good: list[dict] = []
+Return ONLY this JSON array (no markdown):
+[
+  {{"style": "number_callout", "label": "Number callout", "text": "...", "why": "one short phrase"}},
+  {{"style": "emotion_word",   "label": "Emotion / reaction", "text": "...", "why": "one short phrase"}},
+  {{"style": "before_after",   "label": "Before / After", "text": "...", "why": "one short phrase"}},
+  {{"style": "question_hook",  "label": "Question hook",  "text": "...", "why": "one short phrase"}}
+]"""
 
     try:
-        for attempt in range(MAX_ATTEMPTS):
-            needed = 3 - len(good)
-            if needed <= 0:
-                break
-
-            if attempt == 0:
-                prompt = base_prompt
-            else:
-                # Tell Claude exactly what failed and why
-                rejected_info = "\n".join(
-                    f'  - "{r["title"]}" ({r["length"]} chars, score {r["score"]}/100 — too short or missing criteria)'
-                    for r in _rejected
-                )
-                prompt = base_prompt + f"""
-
-IMPORTANT — your previous attempt produced titles that failed quality checks:
-{rejected_info}
-
-Common fixes:
-- If a title is under 50 chars, add a specific detail, location, or time frame (e.g. "in 7 Days", "That Actually Work", "Nobody Tells You")
-- If power word is missing, start with "How", "Why", "Top", "Best", or "Secret"
-- If no number, use "5", "7", "10", "24-Hour", or "30-Day"
-
-Write {needed} new title(s) only. Each must score 65+ on our criteria."""
-
-            raw_titles = _call_claude(client, prompt)[:needed]
-            _rejected = []
-
-            for t in raw_titles:
-                s = _score_title(t, top_titles)
-                entry = {
-                    "title": t,
-                    "score": s["total"],
-                    "breakdown": s["breakdown"],
-                    "length": s["length"],
-                    "power_words_found": s["power_words_found"],
-                }
-                if s["total"] >= MIN_SCORE:
-                    good.append(entry)
-                else:
-                    _rejected.append(entry)
-
-        # If we still don't have 3, include the best of the rejected ones
-        if len(good) < 3:
-            _rejected.sort(key=lambda x: x["score"], reverse=True)
-            good.extend(_rejected[: 3 - len(good)])
-
-        good.sort(key=lambda x: x["score"], reverse=True)
-        return good[:3], ""
-
+        msg = client.messages.create(
+            model="claude-haiku-4-5-20251001",
+            max_tokens=400,
+            messages=[{"role": "user", "content": prompt}]
+        )
+        raw = msg.content[0].text.strip()
+        if raw.startswith("```"):
+            raw = re.sub(r"^```[a-z]*\n?", "", raw)
+            raw = re.sub(r"\n?```$", "", raw.strip())
+        options = _json.loads(raw)
+        return options[:4], ""
     except Exception as e:
-        print(f"Claude error: {e}")
+        print(f"Thumbnail text error: {e}")
         return [], str(e)
 
 
-def analyze_title(credentials, title: str, topic: str) -> dict:
-    search_query = topic if topic else title
-    top_videos = search_top_videos(credentials, search_query, max_results=20)
-    top_titles = [v["title"] for v in top_videos]
+# ─── Description generation ────────────────────────────────────────────────────
 
-    # Score original title
+def generate_description_suggestions(
+    title: str,
+    current_description: str = "",
+    niche: str = "",
+) -> tuple[list[dict], str]:
+    """
+    Generate 3 YouTube description options for a given title.
+    Returns (descriptions, error_string).
+    """
+    import json as _json
+
+    api_key = os.getenv("ANTHROPIC_API_KEY", "")
+    if not api_key:
+        return [], "ANTHROPIC_API_KEY is not set"
+
+    client = _make_client()
+    niche_block = f"NICHE/KEYWORD: {niche}\n" if niche else ""
+    current_block = (
+        f'CURRENT DESCRIPTION (improve this):\n"""\n{current_description[:800]}\n"""\n'
+        if current_description.strip() else ""
+    )
+
+    prompt = f"""You are a YouTube SEO expert writing video descriptions.
+
+VIDEO TITLE: "{title}"
+{niche_block}{current_block}
+Write 3 YouTube description options, each with a different opening strategy.
+
+Rules for every description:
+- First 2 lines (≤150 chars total) MUST be a compelling hook — this is what shows before "Show more"
+- Include the primary keyword naturally in the first 2 lines
+- 150–250 words total
+- End with 3–5 relevant hashtags on the last line (e.g. #youtube #tutorial)
+- Do NOT include timestamps or external links — the creator will add those
+- Plain text only, no markdown
+- NEVER use em-dashes (—) or en-dashes (–). Use a hyphen (-) or colon (:) instead
+
+Description A — STORY/HOOK: Open with a personal, emotional, or surprising hook. E.g. "I never expected...", "After 3 years...", "The moment I realised..."
+Description B — VALUE/BENEFIT: Open by stating exactly what the viewer will get. E.g. "In this video you'll discover...", "Watch this if you want to..."
+Description C — DIRECT/KEYWORD: Open with the primary keyword phrase naturally integrated. SEO-optimised, direct, benefits-first.
+
+Return ONLY this JSON array (no markdown, no explanation):
+[
+  {{
+    "type": "story",
+    "label": "Story / Hook",
+    "preview": "first ~150 chars of the description",
+    "full": "the complete description text",
+    "why_it_works": "one short sentence"
+  }},
+  {{
+    "type": "value",
+    "label": "Value / Benefit",
+    "preview": "first ~150 chars of the description",
+    "full": "the complete description text",
+    "why_it_works": "one short sentence"
+  }},
+  {{
+    "type": "keyword",
+    "label": "SEO / Keyword-first",
+    "preview": "first ~150 chars of the description",
+    "full": "the complete description text",
+    "why_it_works": "one short sentence"
+  }}
+]"""
+
+    try:
+        msg = client.messages.create(
+            model="claude-sonnet-4-6",
+            max_tokens=1400,
+            messages=[{"role": "user", "content": prompt}]
+        )
+        raw = msg.content[0].text.strip()
+        if raw.startswith("```"):
+            raw = re.sub(r"^```[a-z]*\n?", "", raw)
+            raw = re.sub(r"\n?```$", "", raw.strip())
+        descriptions = _strip_emdash(_json.loads(raw))
+        return descriptions[:3], ""
+    except Exception as e:
+        print(f"Description generation error: {e}")
+        return [], str(e)
+
+
+# ─── Intent matching ───────────────────────────────────────────────────────────
+
+def _filter_by_intent(niche_phrase: str, videos: list[dict]) -> list[dict]:
+    """
+    Keep only videos whose titles contain ALL words from the niche phrase
+    as whole words (word-boundary match, not substring).
+
+    "tour" must not match "touring", "tourist", "touristy".
+    "house" must not match "household".
+    "kenya" must not match "kenyatta".
+
+    Returns whatever strict matches exist — never falls back to the full pool.
+    """
+    phrase_words = [
+        w.strip(".,!?\"'()[]{}:-")
+        for w in re.sub(r"[^\w\s]", " ", niche_phrase.lower()).split()
+        if len(w) > 1
+    ]
+    if not phrase_words:
+        return videos
+
+    matched: list[dict] = []
+    for v in videos:
+        v_lower = v["title"].lower()
+        if all(re.search(r"\b" + re.escape(w) + r"\b", v_lower) for w in phrase_words):
+            matched.append(v)
+    return matched
+
+
+# ─── Main entry point ──────────────────────────────────────────────────────────
+
+def analyze_title(credentials, title: str, confirmed_keyword: str = "") -> dict:
+    """
+    Main analysis entry point.
+
+    confirmed_keyword: if the user picked an intent option before running the analysis,
+    this is their chosen search phrase (e.g. "home office cleaning vlog").
+    When provided, we skip AI extraction and use it directly as the primary phrase.
+    """
+    api_key = os.getenv("ANTHROPIC_API_KEY", "")
+    client = _make_client() if api_key else None
+
+    # Step 1: Determine primary niche phrase
+    # Priority: user-confirmed keyword > AI extraction > fallback
+    if confirmed_keyword.strip():
+        primary_phrase = confirmed_keyword.strip().lower()
+        # Build secondary search terms from the title to widen the pool
+        if client:
+            search_terms = [primary_phrase] + _extract_search_terms(client, title, "")[1:3]
+        else:
+            search_terms = [primary_phrase]
+        print(f"Using confirmed keyword: {primary_phrase!r}")
+    elif client:
+        search_terms = _extract_search_terms(client, title, "")
+        primary_phrase = search_terms[0] if search_terms else title[:60]
+        print(f"AI-extracted primary phrase: {primary_phrase!r}  |  All terms: {search_terms}")
+    else:
+        filler = _NGRAM_STOP | {"see", "come", "still"}
+        words = re.sub(r"[^\w\s]", " ", title.lower()).split()
+        meaningful = [w for w in words if w not in filler and len(w) > 3]
+        search_terms = [" ".join(meaningful[:4])] if meaningful else [title[:50]]
+        primary_phrase = search_terms[0]
+
+    # Step 2: Search YouTube — primary niche phrase first (exact topic match),
+    #         then secondary keyword terms to broaden the pool
+    raw_videos = search_top_videos(credentials, search_terms, max_results=50)
+
+    # Step 2b: Filter to videos that match the niche phrase.
+    #
+    # When the user confirmed their keyword (confirmed_keyword is set), the YouTube
+    # search with order=relevance already filtered by intent — no need to filter further.
+    # Applying a strict word-filter on top would drop most results (e.g. "home office
+    # cleaning vlog" requires all 4 words in a video title, almost nothing passes).
+    #
+    # When the keyword was AI-extracted, we apply word-boundary filtering to remove
+    # false positives (e.g. "Kenya Moore" matching "house tour kenya").
+    if confirmed_keyword.strip():
+        intent_videos = raw_videos  # YouTube search already filtered by intent
+        top_videos = raw_videos
+    else:
+        intent_videos = _filter_by_intent(primary_phrase, raw_videos)
+        top_videos = intent_videos if intent_videos else raw_videos[:10]
+
+    top_titles = [v["title"] for v in top_videos]
+    print(f"Videos found: {len(raw_videos)} total, {len(intent_videos)} intent-matched")
+
+    # Step 3: Aggregate all tags (already ASCII-filtered in search_top_videos)
+    tag_freq: dict[str, int] = {}
+    for v in top_videos:
+        for tag in v.get("tags", []):
+            tl = tag.lower().strip()
+            if tl and len(tl) > 2:
+                tag_freq[tl] = tag_freq.get(tl, 0) + 1
+    all_tags_flat = [t for t, _ in sorted(tag_freq.items(), key=lambda x: -x[1])]
+
+    # Step 4: Autocomplete for all search terms
+    autocomplete = get_autocomplete_suggestions(search_terms)
+
+    # Step 5: Keyword research — scored by volume + competition
+    keyword_scores = research_keywords(search_terms, autocomplete, top_titles, all_tags_flat)
+
+    # Step 6: Score original title
     score_data = _score_title(title, top_titles)
 
-    # Score each top video and filter to quality examples only
+    # Step 7: Score top videos for comparison panel
     scored_top = []
     for v in top_videos:
         s = _score_title(v["title"], [])
         scored_top.append({**v, "seo_score": s["total"]})
-    # Show only titles that score well, sorted by our SEO score
-    scored_top = [v for v in scored_top if v["seo_score"] >= 45]
+    scored_top = [v for v in scored_top if v["seo_score"] >= 35]
     scored_top.sort(key=lambda x: x["seo_score"], reverse=True)
 
-    # Generate scored suggestions
-    suggestions, suggestion_error = generate_title_suggestions(
-        title, topic or title, top_titles, score_data
-    )
+    # Step 8: Generate 3 AI titles using live YouTube data
+    if client:
+        suggestions, intent_analysis, suggestion_error = generate_title_suggestions(
+            title,
+            search_terms,
+            top_videos,        # pass full video objects with view counts
+            score_data,
+            keyword_scores,
+            autocomplete,
+            primary_phrase=primary_phrase,
+        )
+    else:
+        suggestions, intent_analysis, suggestion_error = [], {}, "ANTHROPIC_API_KEY is not set"
 
-    return {
-        "score": score_data["total"],
-        "breakdown": score_data["breakdown"],
-        "title_length": score_data["length"],
-        "power_words_found": score_data["power_words_found"],
-        "suggestions": suggestions,
-        "suggestion_error": suggestion_error,
-        "top_videos": scored_top[:6],
-    }
+    return _strip_emdash({
+        "score":                score_data["total"],
+        "breakdown":            score_data["breakdown"],
+        "title_length":         score_data["length"],
+        "power_words_found":    score_data["power_words_found"],
+        "viral_format_detected":score_data.get("viral_format_detected"),
+        "primary_phrase":       primary_phrase,
+        "search_terms_used":    search_terms,
+        "videos_found":         len(raw_videos),
+        "intent_matched":       len(intent_videos),
+        "autocomplete_terms":   autocomplete[:10],
+        "keyword_scores":       keyword_scores,
+        "top_tags":             all_tags_flat[:15],
+        "suggestions":          suggestions,
+        "intent_analysis":      intent_analysis,
+        "suggestion_error":     suggestion_error,
+        "top_videos":           scored_top[:8],
+    })
+
+
+# ─── Keyword research ──────────────────────────────────────────────────────────
+
+def get_serpapi_autocomplete(seed_keyword: str) -> list[str]:
+    """
+    Fetch Google autocomplete suggestions via SerpAPI.
+    Different signal from YouTube autocomplete — broader web search intent.
+    """
+    api_key = os.getenv("SERPAPI_KEY", "")
+    if not api_key:
+        return []
+    try:
+        resp = requests.get(
+            "https://serpapi.com/search.json",
+            params={"engine": "google_autocomplete", "q": seed_keyword, "api_key": api_key},
+            timeout=10,
+        )
+        data = resp.json()
+        if data.get("error"):
+            print(f"SerpAPI error: {data['error']}")
+            return []
+        return [s.get("value", "") for s in data.get("suggestions", []) if s.get("value")]
+    except Exception as e:
+        print(f"SerpAPI error: {e}")
+        return []
+
+
+def get_serper_keywords(seed_keyword: str) -> list[str]:
+    """
+    Fetch related searches + People Also Ask from Serper.
+    Returns a flat list of additional keyword strings.
+    """
+    api_key = os.getenv("SERPER_KEY", "")
+    if not api_key:
+        return []
+    try:
+        resp = requests.post(
+            "https://google.serper.dev/search",
+            headers={"X-API-KEY": api_key, "Content-Type": "application/json"},
+            json={"q": seed_keyword, "num": 10},
+            timeout=10,
+        )
+        data = resp.json()
+        keywords = []
+        for r in data.get("relatedSearches", []):
+            q = r.get("query", "").strip()
+            if q:
+                keywords.append(q)
+        for r in data.get("peopleAlsoAsk", []):
+            q = r.get("question", "").strip()
+            if q:
+                keywords.append(q)
+        return keywords
+    except Exception as e:
+        print(f"Serper error: {e}")
+        return []
+
+
+def analyze_keywords(seed_keyword: str, autocomplete_results: list[str], serper_keywords: list[str]) -> dict:
+    """
+    Claude receives autocomplete + Serper related searches, filters by intent,
+    assigns content angles, clusters, and scores by keyword specificity.
+    """
+    import json as _json
+    client = _make_client()
+
+    all_suggestions = list(dict.fromkeys(autocomplete_results + serper_keywords))
+
+    user_prompt = f"""Seed keyword: "{seed_keyword}"
+
+Suggestions (YouTube autocomplete + Google related searches):
+{all_suggestions}
+
+Tasks — return ONLY valid JSON, no markdown:
+1. seedIntent: primaryIntent, viewerProfile, contentTypeExpected, funnelStage (awareness|consideration|decision), intentSummary (1 sentence).
+2. keywords: keep 15–25 that match the seed intent. Drop off-topic, duplicates, and unbranded branded queries. For each: contentAngle (1 sentence), intentMatch (exact|strong|partial), opportunityScore 0-100 (longer/specific = higher; broad single-word = lower).
+3. clusters: 3–5 named clusters (clusterName + keywords array only).
+4. topPick: best keyword + whyThisOne (1 sentence).
+
+{{"seedIntent":{{"primaryIntent":"","viewerProfile":"","contentTypeExpected":"","funnelStage":"","intentSummary":""}},"totalSuggestionsReceived":{len(all_suggestions)},"totalAfterIntentFilter":0,"keywords":[{{"keyword":"","contentAngle":"","intentMatch":"exact|strong|partial","opportunityScore":0}}],"clusters":[{{"clusterName":"","keywords":[]}}],"topPick":{{"keyword":"","whyThisOne":""}}}}"""
+
+    try:
+        resp = client.messages.create(
+            model="claude-sonnet-4-6",
+            max_tokens=4096,
+            system="You are a YouTube SEO analyst. Return only valid JSON, no markdown.",
+            messages=[{"role": "user", "content": user_prompt}],
+        )
+        raw = resp.content[0].text.strip()
+        if raw.startswith("```"):
+            raw = re.sub(r"^```[a-z]*\n?", "", raw)
+            raw = re.sub(r"\n?```$", "", raw)
+        result = _json.loads(raw)
+        result["keywords"].sort(key=lambda k: k.get("opportunityScore", 0), reverse=True)
+        return result
+    except Exception as e:
+        print(f"analyze_keywords error: {e}")
+        return {"error": str(e)}

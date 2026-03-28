@@ -1,73 +1,724 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
-const sColors = {critical:'#FF4444',high:'#FF8C00',medium:'#2196F3',low:'#9C27B0',info:'#16a34a'}
-const sBg = {critical:'#FFF5F5',high:'#FFF8F0',medium:'#F0F7FF',low:'#F8F0FF',info:'#F0FFF4'}
+// ─── persistence ──────────────────────────────────────────────────────────────
+const LS_KEY = 'ytgrowth_tracked_competitors'
+function loadTracked() {
+  try { return JSON.parse(localStorage.getItem(LS_KEY) || '[]') } catch { return [] }
+}
+function saveTracked(list) {
+  localStorage.setItem(LS_KEY, JSON.stringify(list))
+}
 
-function GapCard({gap}) {
-  const c = sColors[gap.severity]||'#FF8C00'
-  const bg = sBg[gap.severity]||'#FFF8F0'
+// ─── inject font + styles once ────────────────────────────────────────────────
+function useCompetitorStyles() {
+  useEffect(() => {
+    if (document.getElementById('ytg-comp-styles')) return
+
+    const link = document.createElement('link')
+    link.rel = 'stylesheet'
+    link.href = 'https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap'
+    document.head.appendChild(link)
+
+    const style = document.createElement('style')
+    style.id = 'ytg-comp-styles'
+    style.textContent = `
+      .comp-page * { box-sizing: border-box; font-family: 'Plus Jakarta Sans', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+      .comp-page p, .comp-page span, .comp-page div { margin: 0; }
+
+      /* ── cards ── */
+      .comp-card {
+        background: rgba(255,255,255,0.85);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(255,255,255,0.98);
+        border-radius: 20px;
+        box-shadow: 0 1px 0 rgba(255,255,255,0.8) inset, 0 6px 24px rgba(0,0,0,0.07), 0 1px 4px rgba(0,0,0,0.04);
+        transition: box-shadow 0.22s, transform 0.22s;
+      }
+      .comp-card:hover {
+        box-shadow: 0 1px 0 rgba(255,255,255,0.8) inset, 0 16px 48px rgba(0,0,0,0.1), 0 2px 8px rgba(0,0,0,0.05);
+        transform: translateY(-1px);
+      }
+
+      .comp-channel-card {
+        background: rgba(255,255,255,0.85);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(255,255,255,0.98);
+        border-radius: 16px;
+        box-shadow: 0 1px 0 rgba(255,255,255,0.8) inset, 0 4px 16px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04);
+        transition: box-shadow 0.2s, transform 0.2s;
+        padding: 14px 18px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin-bottom: 8px;
+      }
+      .comp-channel-card:hover {
+        box-shadow: 0 1px 0 rgba(255,255,255,0.8) inset, 0 12px 36px rgba(0,0,0,0.09), 0 2px 6px rgba(0,0,0,0.05);
+        transform: translateY(-1px);
+      }
+
+      /* ── tabs ── */
+      .comp-tab-btn {
+        padding: 9px 22px;
+        border-radius: 50px;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.18s;
+        font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+        border: 1.5px solid transparent;
+        white-space: nowrap;
+        letter-spacing: 0.1px;
+      }
+      .comp-tab-btn.active {
+        background: #111;
+        color: #fff;
+        border-color: #111;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+      }
+      .comp-tab-btn.inactive {
+        background: rgba(255,255,255,0.78);
+        color: #666;
+        border-color: rgba(0,0,0,0.1);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+      }
+      .comp-tab-btn.inactive:hover {
+        background: rgba(255,255,255,0.95);
+        color: #222;
+        border-color: rgba(0,0,0,0.2);
+      }
+
+      /* ── inputs ── */
+      .comp-input {
+        flex: 1;
+        padding: 12px 18px;
+        border-radius: 12px;
+        border: 1.5px solid rgba(0,0,0,0.1);
+        background: rgba(255,255,255,0.92);
+        font-size: 13.5px;
+        font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+        outline: none;
+        transition: border-color 0.18s, box-shadow 0.18s;
+        color: #111;
+      }
+      .comp-input::placeholder { color: #bbb; font-weight: 400; }
+      .comp-input:focus {
+        border-color: rgba(0,0,0,0.3);
+        box-shadow: 0 0 0 4px rgba(0,0,0,0.05);
+        background: #fff;
+      }
+
+      /* ── buttons ── */
+      .comp-btn-primary {
+        background: #111;
+        color: #fff;
+        border: none;
+        border-radius: 12px;
+        padding: 12px 28px;
+        font-size: 13.5px;
+        font-weight: 700;
+        font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+        cursor: pointer;
+        white-space: nowrap;
+        transition: background 0.18s, box-shadow 0.18s, transform 0.18s;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.24);
+        letter-spacing: 0.1px;
+      }
+      .comp-btn-primary:hover:not(:disabled) {
+        background: #1a1a1a;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.28);
+        transform: translateY(-1px);
+      }
+      .comp-btn-primary:disabled { background: #ccc; box-shadow: none; cursor: default; }
+
+      /* "Remove" — trash icon, appears on card hover only */
+      .comp-remove-btn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        width: 30px;
+        height: 30px;
+        border-radius: 8px;
+        border: 1px solid transparent;
+        background: transparent;
+        color: #ccc;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: opacity 0.18s, background 0.15s, color 0.15s, border-color 0.15s;
+        z-index: 2;
+        flex-shrink: 0;
+      }
+      .comp-accordion-wrapper:hover .comp-remove-btn { opacity: 1; }
+      .comp-remove-btn:hover {
+        background: rgba(220,38,38,0.09);
+        border-color: rgba(220,38,38,0.18);
+        color: #dc2626;
+      }
+
+      /* "Open report" — solid filled, high contrast */
+      .comp-btn-report {
+        background: #111;
+        color: #fff;
+        border: none;
+        border-radius: 10px;
+        padding: 9px 20px;
+        font-size: 12.5px;
+        font-weight: 700;
+        font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+        cursor: pointer;
+        white-space: nowrap;
+        transition: all 0.18s;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+        letter-spacing: 0.1px;
+      }
+      .comp-btn-report:hover {
+        background: #2a2a2a;
+        box-shadow: 0 6px 18px rgba(0,0,0,0.26);
+        transform: translateY(-1px);
+      }
+      .comp-btn-report.open {
+        background: rgba(0,0,0,0.06);
+        color: #444;
+        box-shadow: none;
+      }
+      .comp-btn-report.open:hover {
+        background: rgba(0,0,0,0.1);
+        color: #111;
+        transform: none;
+        box-shadow: none;
+      }
+
+      /* stat chips inside accordion header */
+      .comp-stat-chip {
+        display: inline-flex;
+        align-items: baseline;
+        gap: 4px;
+        background: rgba(0,0,0,0.04);
+        border: 1px solid rgba(0,0,0,0.07);
+        border-radius: 8px;
+        padding: 4px 10px;
+      }
+      .comp-stat-chip .val {
+        font-size: 13px;
+        font-weight: 800;
+        color: #111;
+        line-height: 1;
+      }
+      .comp-stat-chip .lbl {
+        font-size: 10.5px;
+        font-weight: 500;
+        color: #aaa;
+        line-height: 1;
+      }
+
+      /* ── inner content blocks (video ideas, etc.) ── */
+      .comp-inner-block {
+        background: rgba(246,246,250,0.85);
+        border: 1px solid rgba(0,0,0,0.06);
+        border-radius: 14px;
+        padding: 14px 18px;
+        transition: background 0.15s;
+      }
+      .comp-inner-block:hover { background: rgba(242,242,248,0.95); }
+
+      /* ── tags ── */
+      .comp-tag {
+        display: inline-block;
+        padding: 3px 10px;
+        border-radius: 50px;
+        font-size: 11px;
+        font-weight: 600;
+        font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+        letter-spacing: 0.1px;
+      }
+
+      /* ── video rows ── */
+      .comp-video-row {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 10px 6px;
+        border-radius: 12px;
+        text-decoration: none;
+        transition: background 0.15s, transform 0.12s;
+      }
+      .comp-video-row:hover { background: rgba(0,0,0,0.035); transform: translateX(2px); }
+
+      /* ── posting timing pills ── */
+      .comp-timing-pill {
+        background: rgba(246,246,250,0.9);
+        border: 1px solid rgba(0,0,0,0.07);
+        border-radius: 14px;
+        padding: 14px 16px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+      }
+
+      /* ── insight mini-cards ── */
+      .comp-insight-card {
+        background: rgba(246,246,250,0.7);
+        border: 1px solid rgba(0,0,0,0.06);
+        border-radius: 14px;
+        padding: 16px 18px;
+      }
+
+      /* ── accordion ── */
+      .comp-accordion-header {
+        background: rgba(255,255,255,0.9);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(255,255,255,0.98);
+        box-shadow: 0 1px 0 rgba(255,255,255,0.8) inset, 0 4px 20px rgba(0,0,0,0.07), 0 1px 4px rgba(0,0,0,0.04);
+        padding: 16px 20px;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        transition: box-shadow 0.2s, background 0.2s;
+        cursor: pointer;
+        user-select: none;
+      }
+      .comp-accordion-header:hover {
+        background: rgba(255,255,255,0.96);
+        box-shadow: 0 1px 0 rgba(255,255,255,0.8) inset, 0 10px 32px rgba(0,0,0,0.09), 0 2px 6px rgba(0,0,0,0.05);
+      }
+      .comp-accordion-header.closed { border-radius: 20px; }
+      .comp-accordion-header.open   { border-radius: 20px 20px 0 0; border-bottom-color: rgba(0,0,0,0.07); }
+
+      .comp-accordion-body {
+        border: 1px solid rgba(0,0,0,0.07);
+        border-top: none;
+        border-radius: 0 0 20px 20px;
+        background: rgba(250,250,253,0.75);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+        padding: 24px 20px 28px;
+        box-shadow: 0 10px 28px rgba(0,0,0,0.07);
+      }
+
+      /* ── section divider ── */
+      .comp-section-sep {
+        height: 1px;
+        background: rgba(0,0,0,0.06);
+        margin: 20px 0;
+        border: none;
+      }
+
+      /* ── empty states ── */
+      .comp-empty-state {
+        text-align: center;
+        padding: 72px 0;
+        color: #aaa;
+      }
+
+      /* ── section title label above card ── */
+      .comp-card-label {
+        font-size: 10.5px;
+        font-weight: 700;
+        color: #aaa;
+        text-transform: uppercase;
+        letter-spacing: 0.7px;
+        margin-bottom: 5px;
+      }
+
+      /* winner number badge */
+      .comp-winner-num {
+        background: linear-gradient(145deg, #1a1a1a 0%, #3a3a3a 100%);
+        color: #fff;
+        border-radius: 50%;
+        width: 24px;
+        height: 24px;
+        font-size: 11px;
+        font-weight: 800;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+        margin-top: 1px;
+      }
+    `
+    document.head.appendChild(style)
+  }, [])
+}
+
+// ─── colour tokens ────────────────────────────────────────────────────────────
+const THREAT = {
+  high:   { bg: 'rgba(254,226,226,0.85)', border: 'rgba(252,165,165,0.9)', text: '#DC2626', label: 'High threat',   dot: '#ef4444' },
+  medium: { bg: 'rgba(255,251,235,0.85)', border: 'rgba(252,211,77,0.9)',  text: '#92400E', label: 'Medium threat', dot: '#f59e0b' },
+  low:    { bg: 'rgba(240,253,244,0.85)', border: 'rgba(134,239,172,0.9)', text: '#166534', label: 'Low threat',    dot: '#22c55e' },
+}
+
+function fmtK(n) {
+  if (!n) return '0'
+  if (n >= 1_000_000) return (n / 1_000_000).toFixed(1).replace(/\.0$/, '') + 'M'
+  if (n >= 1_000)     return (n / 1_000).toFixed(1).replace(/\.0$/, '') + 'K'
+  return String(n)
+}
+
+// ─── base card ────────────────────────────────────────────────────────────────
+function Card({ children, style }) {
   return (
-    <div style={{background:'#fff',border:'1px solid #ebebeb',borderRadius:12,overflow:'hidden',marginBottom:10}}>
-      <div style={{borderLeft:`4px solid ${c}`,padding:'18px 22px'}}>
-        <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:12}}>
-          <p style={{fontWeight:700,color:'#0a0a0a',fontSize:14}}>{gap.metric}</p>
-          <span style={{background:bg,color:c,fontSize:10,fontWeight:700,padding:'3px 10px',borderRadius:20}}>{gap.gap}</span>
-        </div>
-        <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:12,marginBottom:12}}>
-          <div style={{background:'#fafafa',borderRadius:8,padding:'10px 14px'}}>
-            <p style={{fontSize:10,color:'#aaa',fontWeight:600,marginBottom:4,textTransform:'uppercase',letterSpacing:'0.5px'}}>Yours</p>
-            <p style={{fontSize:18,fontWeight:800,color:'#FF4444'}}>{gap.yours}</p>
-          </div>
-          <div style={{background:'#fafafa',borderRadius:8,padding:'10px 14px'}}>
-            <p style={{fontSize:10,color:'#aaa',fontWeight:600,marginBottom:4,textTransform:'uppercase',letterSpacing:'0.5px'}}>Theirs</p>
-            <p style={{fontSize:18,fontWeight:800,color:'#16a34a'}}>{gap.theirs}</p>
-          </div>
-        </div>
-        <div style={{background:'#F0FFF4',border:'1px solid #C6F6D5',borderRadius:8,padding:'10px 14px'}}>
-          <p style={{fontSize:12,color:'#166534',lineHeight:1.6}}><span style={{fontWeight:700}}>How to close this gap: </span>{gap.recommendation}</p>
-        </div>
-      </div>
+    <div className="comp-card" style={{ padding: '20px 24px', ...style }}>
+      {children}
     </div>
   )
 }
 
-function ChannelCard({channel, onAnalyze, isAdded, loadingId}) {
+function SectionTitle({ icon, children }) {
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 7, marginBottom: 16 }}>
+      {icon && <span style={{ fontSize: 14, lineHeight: 1 }}>{icon}</span>}
+      <p style={{ fontSize: 12, fontWeight: 700, color: '#111', textTransform: 'uppercase', letterSpacing: '0.6px' }}>
+        {children}
+      </p>
+    </div>
+  )
+}
+
+// small chip: bold number + dim label
+function StatChip({ value, label }) {
+  return (
+    <span className="comp-stat-chip">
+      <span className="val">{value}</span>
+      <span className="lbl">{label}</span>
+    </span>
+  )
+}
+
+// ─── search result card ───────────────────────────────────────────────────────
+function ChannelCard({ channel, onAnalyze, isAdded, loadingId }) {
   const loading = loadingId === channel.channel_id
   return (
-    <div style={{background:'#fff',border:'1px solid #ebebeb',borderRadius:12,padding:'16px 20px',display:'flex',alignItems:'center',gap:14,marginBottom:8}}>
+    <div className="comp-channel-card">
       {channel.thumbnail
-        ? <img src={channel.thumbnail} alt="" referrerPolicy="no-referrer" style={{width:44,height:44,borderRadius:10,objectFit:'cover',flexShrink:0}} />
-        : <div style={{width:44,height:44,background:'#f0f0f0',borderRadius:10,flexShrink:0,display:'flex',alignItems:'center',justifyContent:'center',fontWeight:700,fontSize:16,color:'#aaa'}}>{channel.channel_name[0]}</div>
+        ? <img src={channel.thumbnail} alt="" referrerPolicy="no-referrer"
+            style={{ width: 46, height: 46, borderRadius: 12, objectFit: 'cover', flexShrink: 0,
+              boxShadow: '0 2px 10px rgba(0,0,0,0.13)' }} />
+        : <div style={{ width: 46, height: 46, background: 'linear-gradient(135deg,#e0e0e8,#c8c8d8)',
+            borderRadius: 12, flexShrink: 0, display: 'flex', alignItems: 'center',
+            justifyContent: 'center', fontWeight: 800, fontSize: 18, color: '#888' }}>
+            {channel.channel_name[0]}
+          </div>
       }
-      <div style={{flex:1,minWidth:0}}>
-        <p style={{fontWeight:700,fontSize:14,color:'#111',marginBottom:3}}>{channel.channel_name}</p>
-        {channel.description && <p style={{fontSize:12,color:'#aaa',overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{channel.description}</p>}
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <p style={{ fontWeight: 700, fontSize: 14, color: '#111', marginBottom: 3, letterSpacing: '-0.1px' }}>
+          {channel.channel_name}
+        </p>
+        {channel.description && (
+          <p style={{ fontSize: 12.5, color: '#888', overflow: 'hidden', fontWeight: 400,
+            textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{channel.description}</p>
+        )}
       </div>
-      <button
-        onClick={() => onAnalyze(channel.channel_id, channel.channel_name)}
-        disabled={loading || isAdded}
-        style={{background:isAdded?'#F0FFF4':loading?'#f5f5f5':'#111',color:isAdded?'#16a34a':loading?'#aaa':'#fff',border:isAdded?'1px solid #C6F6D5':'1px solid transparent',borderRadius:8,padding:'8px 16px',fontSize:12,fontWeight:700,cursor:isAdded||loading?'default':'pointer',flexShrink:0,whiteSpace:'nowrap'}}
-      >
-        {isAdded ? 'Added' : loading ? 'Analyzing...' : 'Analyze'}
-      </button>
+      {isAdded ? (
+        <span style={{ background: 'rgba(240,253,244,0.95)', color: '#166534',
+          border: '1.5px solid rgba(134,239,172,0.85)', borderRadius: 10,
+          padding: '8px 16px', fontSize: 12.5, fontWeight: 700, flexShrink: 0,
+          display: 'flex', alignItems: 'center', gap: 5 }}>
+          <span style={{ fontSize: 11 }}>✓</span> Added
+        </span>
+      ) : loading ? (
+        <span style={{ background: 'rgba(245,245,247,0.95)', color: '#aaa',
+          border: '1.5px solid rgba(0,0,0,0.08)', borderRadius: 10,
+          padding: '8px 16px', fontSize: 12.5, fontWeight: 600, flexShrink: 0 }}>
+          Analyzing…
+        </span>
+      ) : (
+        <button className="comp-btn-primary" onClick={() => onAnalyze(channel.channel_id)}
+          style={{ padding: '9px 22px', fontSize: 13, borderRadius: 10, flexShrink: 0 }}>
+          Analyze
+        </button>
+      )}
     </div>
   )
 }
 
+// ─── AI analysis ──────────────────────────────────────────────────────────────
+function AIAnalysis({ ai, top5Videos }) {
+  if (!ai) return null
+  const threat = THREAT[ai.threatLevel] || THREAT.medium
+
+  const whyMap = {}
+  ;(ai.topVideosToStudy || []).forEach(aiVid => {
+    const match = (top5Videos || []).find(v =>
+      v.title === aiVid.title ||
+      v.title?.toLowerCase().includes(aiVid.title?.toLowerCase().slice(0, 25)) ||
+      aiVid.title?.toLowerCase().includes(v.title?.toLowerCase().slice(0, 25))
+    )
+    if (match?.video_id) whyMap[match.video_id] = aiVid.whyItWorked
+  })
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+
+      {/* ── intelligence summary ── */}
+      <Card>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, marginBottom: 14 }}>
+          <SectionTitle icon="🧠">Intelligence summary</SectionTitle>
+          <span style={{ background: threat.bg, color: threat.text, border: `1px solid ${threat.border}`,
+            fontSize: 11.5, fontWeight: 700, padding: '5px 13px', borderRadius: 50, flexShrink: 0,
+            display: 'inline-flex', alignItems: 'center', gap: 5, letterSpacing: '0.1px' }}>
+            <span style={{ width: 6, height: 6, borderRadius: '50%', background: threat.dot,
+              flexShrink: 0, boxShadow: `0 0 6px ${threat.dot}` }} />
+            {threat.label}
+          </span>
+        </div>
+        <p style={{ fontSize: 13.5, color: '#444', lineHeight: 1.78, marginBottom: 14, fontWeight: 400 }}>
+          {ai.competitorSummary}
+        </p>
+        <div style={{ background: threat.bg, border: `1px solid ${threat.border}`,
+          borderRadius: 12, padding: '12px 16px' }}>
+          <p style={{ fontSize: 13, color: threat.text, lineHeight: 1.65 }}>
+            <span style={{ fontWeight: 700 }}>Why: </span>{ai.threatReason}
+          </p>
+        </div>
+      </Card>
+
+      {/* ── winning moves ── */}
+      {ai.winningMoves?.length > 0 && (
+        <Card>
+          <SectionTitle icon="⚡">Winning moves — steal or counter these</SectionTitle>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+            {ai.winningMoves.map((m, i) => (
+              <div key={i} style={{ display: 'flex', gap: 14, alignItems: 'flex-start' }}>
+                <span className="comp-winner-num">{i + 1}</span>
+                <p style={{ fontSize: 13.5, color: '#333', lineHeight: 1.7, paddingTop: 3, fontWeight: 400 }}>{m}</p>
+              </div>
+            ))}
+          </div>
+        </Card>
+      )}
+
+      {/* ── video ideas ── */}
+      {ai.videoIdeas?.length > 0 && (
+        <Card>
+          <SectionTitle icon="🎯">Topics to tackle — steal their audience</SectionTitle>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+            {ai.videoIdeas.map((idea, i) => (
+              <div key={i} className="comp-inner-block">
+                <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between',
+                  gap: 12, marginBottom: 8 }}>
+                  <p style={{ fontSize: 13.5, fontWeight: 700, color: '#111', lineHeight: 1.45,
+                    letterSpacing: '-0.1px' }}>{idea.title}</p>
+                  {idea.targetKeyword && (
+                    <span className="comp-tag" style={{ background: 'rgba(239,246,255,0.95)', color: '#1D4ED8',
+                      border: '1px solid rgba(147,197,253,0.8)', flexShrink: 0, whiteSpace: 'nowrap',
+                      marginTop: 2 }}>
+                      {idea.targetKeyword}
+                    </span>
+                  )}
+                </div>
+                <p style={{ fontSize: 12.5, color: '#666', lineHeight: 1.6, fontWeight: 400 }}>
+                  <span style={{ fontWeight: 700, color: '#333' }}>Angle: </span>{idea.angle}
+                </p>
+              </div>
+            ))}
+          </div>
+        </Card>
+      )}
+
+      {/* ── top videos ── */}
+      {top5Videos?.length > 0 && (
+        <Card>
+          <SectionTitle icon="▶">Top videos to study</SectionTitle>
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            {top5Videos.map((v, i) => {
+              const thumb  = v.video_id ? `https://i.ytimg.com/vi/${v.video_id}/mqdefault.jpg` : v.thumbnail_url || null
+              const ytUrl  = v.video_id ? `https://www.youtube.com/watch?v=${v.video_id}` : null
+              const why    = whyMap[v.video_id]
+              const isLast = i === top5Videos.length - 1
+              return (
+                <a key={v.video_id || i}
+                  href={ytUrl || '#'} target="_blank" rel="noopener noreferrer"
+                  className="comp-video-row"
+                  style={{ borderBottom: isLast ? 'none' : '1px solid rgba(0,0,0,0.05)' }}>
+                  <div style={{ position: 'relative', flexShrink: 0 }}>
+                    {thumb
+                      ? <img src={thumb} alt="" style={{ width: 80, height: 46, borderRadius: 10,
+                          objectFit: 'cover', display: 'block', boxShadow: '0 2px 8px rgba(0,0,0,0.12)' }} />
+                      : <div style={{ width: 80, height: 46, borderRadius: 10,
+                          background: 'rgba(0,0,0,0.07)', display: 'block' }} />
+                    }
+                    <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center',
+                      justifyContent: 'center', opacity: 0, transition: 'opacity 0.15s',
+                      background: 'rgba(0,0,0,0.42)', borderRadius: 10 }}
+                      onMouseEnter={e => { e.currentTarget.style.opacity = 1 }}
+                      onMouseLeave={e => { e.currentTarget.style.opacity = 0 }}>
+                      <svg width="18" height="18" viewBox="0 0 18 18" fill="white"><path d="M7 5.5l6 3.5-6 3.5V5.5z"/></svg>
+                    </div>
+                  </div>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <p style={{ fontSize: 13, fontWeight: 600, color: '#111', lineHeight: 1.45,
+                      whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{v.title}</p>
+                    {why && (
+                      <p style={{ fontSize: 11.5, color: '#999', marginTop: 3, lineHeight: 1.4,
+                        whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', fontStyle: 'italic' }}>
+                        {why}
+                      </p>
+                    )}
+                  </div>
+                  {/* view count badge */}
+                  <span style={{ background: 'rgba(0,0,0,0.05)', border: '1px solid rgba(0,0,0,0.07)',
+                    color: '#222', fontSize: 12, fontWeight: 800, padding: '4px 10px',
+                    borderRadius: 8, flexShrink: 0, letterSpacing: '0.1px' }}>
+                    {fmtK(v.views)}
+                  </span>
+                  <svg width="12" height="12" viewBox="0 0 13 13" fill="none"
+                    stroke="#ccc" strokeWidth="1.8" strokeLinecap="round" style={{ flexShrink: 0 }}>
+                    <path d="M2 11L10 3M10 3H5M10 3v5"/>
+                  </svg>
+                </a>
+              )
+            })}
+          </div>
+        </Card>
+      )}
+
+      {/* ── two-column: topics + title patterns ── */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
+        {ai.topTopics?.length > 0 && (
+          <Card>
+            <SectionTitle icon="📈">Top content topics</SectionTitle>
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              {ai.topTopics.map((t, i) => (
+                <div key={i} style={{ display: 'flex', justifyContent: 'space-between',
+                  alignItems: 'center', padding: '9px 0',
+                  borderBottom: i < ai.topTopics.length - 1 ? '1px solid rgba(0,0,0,0.05)' : 'none' }}>
+                  <p style={{ fontSize: 13, color: '#333', fontWeight: 500 }}>{t.topic}</p>
+                  <div style={{ textAlign: 'right', flexShrink: 0, marginLeft: 12 }}>
+                    <p style={{ fontSize: 13, fontWeight: 800, color: '#111' }}>{fmtK(t.avgViews)}</p>
+                    <p style={{ fontSize: 10.5, color: '#aaa', fontWeight: 500 }}>{t.videoCount} videos</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </Card>
+        )}
+
+        {ai.titlePatterns && (
+          <Card>
+            <SectionTitle icon="✍">Title patterns</SectionTitle>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+              <div>
+                <p className="comp-card-label">Avg title length</p>
+                <p style={{ fontSize: 22, fontWeight: 800, color: '#111', letterSpacing: '-0.5px' }}>
+                  {ai.titlePatterns.avgTitleLength}
+                  <span style={{ fontSize: 13, fontWeight: 500, color: '#aaa', marginLeft: 4 }}>chars</span>
+                </p>
+              </div>
+              {ai.titlePatterns.dominantFormats?.length > 0 && (
+                <div>
+                  <p className="comp-card-label" style={{ marginBottom: 7 }}>Dominant formats</p>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5 }}>
+                    {ai.titlePatterns.dominantFormats.map((f, i) => (
+                      <span key={i} className="comp-tag" style={{ background: 'rgba(244,244,248,0.9)',
+                        color: '#444', border: '1px solid rgba(0,0,0,0.09)' }}>{f}</span>
+                    ))}
+                  </div>
+                </div>
+              )}
+              {ai.titlePatterns.topKeywords?.length > 0 && (
+                <div>
+                  <p className="comp-card-label" style={{ marginBottom: 7 }}>Top keywords</p>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5 }}>
+                    {ai.titlePatterns.topKeywords.map((k, i) => (
+                      <span key={i} className="comp-tag" style={{ background: 'rgba(239,246,255,0.95)',
+                        color: '#1D4ED8', border: '1px solid rgba(147,197,253,0.8)' }}>{k}</span>
+                    ))}
+                  </div>
+                </div>
+              )}
+              {ai.titlePatterns.powerWordsUsed?.length > 0 && (
+                <div>
+                  <p className="comp-card-label" style={{ marginBottom: 7 }}>Power words</p>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5 }}>
+                    {ai.titlePatterns.powerWordsUsed.map((w, i) => (
+                      <span key={i} className="comp-tag" style={{ background: 'rgba(255,247,237,0.95)',
+                        color: '#C2410C', border: '1px solid rgba(253,186,116,0.8)' }}>{w}</span>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </Card>
+        )}
+      </div>
+
+      {/* ── three-column insights ── */}
+      {(ai.videoLengthInsight || ai.engagementInsight || ai.thumbnailPattern) && (
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 14 }}>
+          {[
+            { key: 'videoLengthInsight', icon: '🎬', label: 'Video length',    val: ai.videoLengthInsight },
+            { key: 'engagementInsight',  icon: '💬', label: 'Engagement',      val: ai.engagementInsight },
+            { key: 'thumbnailPattern',   icon: '🖼', label: 'Thumbnail style', val: ai.thumbnailPattern },
+          ].filter(x => x.val).map(({ key, icon, label, val }) => (
+            <div key={key} className="comp-insight-card">
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8 }}>
+                <span style={{ fontSize: 15 }}>{icon}</span>
+                <p className="comp-card-label" style={{ marginBottom: 0 }}>{label}</p>
+              </div>
+              <p style={{ fontSize: 13, color: '#444', lineHeight: 1.65, fontWeight: 400 }}>{val}</p>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* ── posting timing ── */}
+      {ai.postingBehavior && (
+        <Card>
+          <SectionTitle icon="📅">Posting timing</SectionTitle>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 10 }}>
+            {[
+              { icon: '⏱', label: 'Avg gap',     val: `${ai.postingBehavior.avgGapDays}d` },
+              { icon: '📆', label: 'Best day',    val: ai.postingBehavior.bestDay },
+              { icon: '🕐', label: 'Best hour',   val: ai.postingBehavior.bestHour },
+              { icon: '📊', label: 'Consistency', val: `${ai.postingBehavior.consistencyScore}/100` },
+            ].map(({ icon, label, val }) => (
+              <div key={label} className="comp-timing-pill">
+                <span style={{ fontSize: 18 }}>{icon}</span>
+                <p style={{ fontSize: 18, fontWeight: 800, color: '#111', letterSpacing: '-0.3px' }}>{val}</p>
+                <p style={{ fontSize: 10.5, fontWeight: 600, color: '#aaa', textTransform: 'uppercase',
+                  letterSpacing: '0.5px' }}>{label}</p>
+              </div>
+            ))}
+          </div>
+        </Card>
+      )}
+    </div>
+  )
+}
+
+// ─── main page ────────────────────────────────────────────────────────────────
 export default function Competitors() {
-  const [searchQuery, setSearchQuery] = useState('')
-  const [searchResults, setSearchResults] = useState([])
-  const [analyses, setAnalyses] = useState([])
-  const [loadingSearch, setLoadingSearch] = useState(false)
+  useCompetitorStyles()
+
+  const [searchQuery, setSearchQuery]       = useState('')
+  const [searchResults, setSearchResults]   = useState([])
+  const [analyses, setAnalyses]             = useState(() => loadTracked())
+  const [loadingSearch, setLoadingSearch]   = useState(false)
   const [loadingAnalyze, setLoadingAnalyze] = useState(null)
-  const [activeTab, setActiveTab] = useState('search')
-  const [searched, setSearched] = useState(false)
+  const [activeTab, setActiveTab]           = useState('search')
+  const [searched, setSearched]             = useState(false)
+  const [expandedIdx, setExpandedIdx]       = useState(null)
+
+  useEffect(() => { saveTracked(analyses) }, [analyses])
 
   const handleSearch = () => {
     if (!searchQuery.trim()) return
     setLoadingSearch(true)
     setSearched(true)
-    fetch(`http://localhost:8000/competitors/search?q=${encodeURIComponent(searchQuery)}`, { credentials: 'include' })
+    fetch(`http://localhost:8000/competitors/search?q=${encodeURIComponent(searchQuery)}`,
+      { credentials: 'include' })
       .then(r => r.json())
       .then(d => { if (d.results) setSearchResults(d.results); setLoadingSearch(false) })
       .catch(() => setLoadingSearch(false))
@@ -80,124 +731,213 @@ export default function Competitors() {
       .then(r => r.json())
       .then(d => {
         if (d.competitor) {
-          setAnalyses(prev => [...prev, d])
-          setActiveTab('results')
+          const entry = { ...d, savedAt: new Date().toISOString() }
+          setAnalyses(prev => {
+            const next = [...prev, entry]
+            setExpandedIdx(next.length - 1)
+            return next
+          })
+          setActiveTab('tracked')
         }
         setLoadingAnalyze(null)
       })
       .catch(() => setLoadingAnalyze(null))
   }
 
+  const handleRemove = (e, channelId) => {
+    e.stopPropagation()
+    setAnalyses(prev => prev.filter(a => a.competitor.channel_id !== channelId))
+    setExpandedIdx(null)
+  }
+
   const addedIds = analyses.map(a => a.competitor.channel_id)
 
+  const TABS = [
+    { key: 'search',  label: 'Search channels' },
+    { key: 'tracked', label: analyses.length > 0 ? `Tracked (${analyses.length})` : 'Tracked' },
+  ]
+
   return (
-    <div>
-      <div style={{marginBottom:24}}>
-        <h2 style={{fontSize:18,fontWeight:800,color:'#0a0a0a',marginBottom:4}}>Competitor analysis</h2>
-        <p style={{fontSize:13,color:'#aaa'}}>Search for channels in your niche and get a full gap analysis showing exactly where you are behind and how to close it</p>
+    <div className="comp-page">
+      {/* ── header ── */}
+      <div style={{ marginBottom: 28 }}>
+        <h2 style={{ fontSize: 23, fontWeight: 800, color: '#0a0a0a', marginBottom: 5,
+          letterSpacing: '-0.4px', lineHeight: 1.2 }}>
+          Competitor Analysis
+        </h2>
+        <p style={{ fontSize: 13.5, color: '#999', fontWeight: 500, lineHeight: 1.5 }}>
+          Search channels in your niche and get a full AI-powered competitive intelligence report
+        </p>
       </div>
 
-      <div style={{display:'flex',gap:8,marginBottom:24}}>
-        {['search','results'].map(tab => (
-          <button key={tab} onClick={() => setActiveTab(tab)}
-            style={{padding:'8px 18px',borderRadius:8,fontSize:13,fontWeight:600,cursor:'pointer',background:activeTab===tab?'#111':'#fff',color:activeTab===tab?'#fff':'#666',border:activeTab===tab?'1px solid #111':'1px solid #e0e0e0'}}>
-            {tab === 'search' ? 'Search channels' : `Results (${analyses.length})`}
+      {/* ── tabs ── */}
+      <div style={{ display: 'flex', gap: 8, marginBottom: 24 }}>
+        {TABS.map(({ key, label }) => (
+          <button key={key}
+            className={`comp-tab-btn ${activeTab === key ? 'active' : 'inactive'}`}
+            onClick={() => setActiveTab(key)}>
+            {label}
           </button>
         ))}
       </div>
 
+      {/* ══ search tab ══════════════════════════════════════════════════════ */}
       {activeTab === 'search' && (
         <div>
-          <div style={{background:'#fff',border:'1px solid #ebebeb',borderRadius:12,padding:'20px 24px',marginBottom:20}}>
-            <p style={{fontSize:13,fontWeight:600,color:'#111',marginBottom:4}}>Find a competitor</p>
-            <p style={{fontSize:12,color:'#aaa',marginBottom:16}}>Type the name of a YouTube channel in your niche — for example "Ali Abdaal" or "finance with Peter"</p>
-            <div style={{display:'flex',gap:10}}>
+          <Card style={{ marginBottom: 20 }}>
+            <p style={{ fontSize: 15, fontWeight: 800, color: '#111', marginBottom: 4, letterSpacing: '-0.2px' }}>
+              Find a competitor
+            </p>
+            <p style={{ fontSize: 13, color: '#aaa', marginBottom: 18, fontWeight: 500 }}>
+              Type the name of a YouTube channel in your niche, or paste a channel URL
+            </p>
+            <div style={{ display: 'flex', gap: 10 }}>
               <input
+                className="comp-input"
                 value={searchQuery}
                 onChange={e => setSearchQuery(e.target.value)}
                 onKeyDown={e => e.key === 'Enter' && handleSearch()}
-                placeholder="Search YouTube channels..."
-                style={{flex:1,padding:'10px 16px',borderRadius:8,border:'1px solid #e0e0e0',fontSize:13,outline:'none'}}
+                placeholder="e.g. MrBeast, TechWithTim, or paste channel URL…"
               />
-              <button onClick={handleSearch} disabled={loadingSearch}
-                style={{background:'#111',color:'#fff',padding:'10px 24px',borderRadius:8,fontSize:13,fontWeight:700,cursor:'pointer',border:'none',whiteSpace:'nowrap'}}>
-                {loadingSearch ? 'Searching...' : 'Search'}
+              <button className="comp-btn-primary" onClick={handleSearch} disabled={loadingSearch}>
+                {loadingSearch ? 'Searching…' : 'Search'}
               </button>
             </div>
-          </div>
+          </Card>
 
           {!searched && (
-            <div style={{textAlign:'center',padding:'40px 0',color:'#aaa',fontSize:13}}>
-              <p style={{fontSize:28,marginBottom:12}}>🔍</p>
-              <p style={{fontWeight:600,color:'#888',marginBottom:6}}>Search for a channel to compare</p>
-              <p>Type any YouTube channel name above to get started</p>
+            <div className="comp-empty-state">
+              <div style={{ fontSize: 32, marginBottom: 14, filter: 'grayscale(0.2)' }}>🔍</div>
+              <p style={{ fontWeight: 700, color: '#666', marginBottom: 7, fontSize: 15 }}>
+                Search for a channel to compare
+              </p>
+              <p style={{ fontSize: 13, color: '#bbb' }}>Type any YouTube channel name above to get started</p>
             </div>
           )}
 
           {searched && !loadingSearch && searchResults.length === 0 && (
-            <div style={{textAlign:'center',padding:'40px 0',color:'#aaa',fontSize:13}}>No channels found. Try a different search term.</div>
+            <div className="comp-empty-state">
+              <div style={{ fontSize: 32, marginBottom: 14 }}>😶</div>
+              <p style={{ fontWeight: 700, color: '#666', marginBottom: 7, fontSize: 15 }}>No channels found</p>
+              <p style={{ fontSize: 13, color: '#bbb' }}>Try a different search term or paste the channel URL</p>
+            </div>
           )}
 
           {searchResults.map(ch => (
-            <ChannelCard key={ch.channel_id} channel={ch} onAnalyze={handleAnalyze} isAdded={addedIds.includes(ch.channel_id)} loadingId={loadingAnalyze} />
+            <ChannelCard key={ch.channel_id} channel={ch} onAnalyze={handleAnalyze}
+              isAdded={addedIds.includes(ch.channel_id)} loadingId={loadingAnalyze} />
           ))}
         </div>
       )}
 
-      {activeTab === 'results' && (
+      {/* ══ tracked tab ═════════════════════════════════════════════════════ */}
+      {activeTab === 'tracked' && (
         <div>
           {analyses.length === 0 ? (
-            <div style={{textAlign:'center',padding:'60px 0',color:'#aaa',fontSize:13}}>
-              <p style={{fontSize:32,marginBottom:12}}>📊</p>
-              <p style={{fontWeight:600,color:'#888',marginBottom:6}}>No competitors analyzed yet</p>
-              <p>Go to Search to find and analyze a competitor channel</p>
+            <div className="comp-empty-state">
+              <div style={{ fontSize: 36, marginBottom: 14 }}>📊</div>
+              <p style={{ fontWeight: 700, color: '#666', marginBottom: 7, fontSize: 15 }}>No competitors tracked yet</p>
+              <p style={{ fontSize: 13, color: '#bbb', maxWidth: 320, margin: '0 auto' }}>
+                Go to Search, find a channel and click Analyze — it'll be saved here automatically
+              </p>
             </div>
           ) : (
-            analyses.map((analysis, i) => (
-              <div key={i} style={{marginBottom:32}}>
-                <div style={{background:'#fff',border:'1px solid #ebebeb',borderRadius:12,padding:'20px 24px',marginBottom:16,display:'flex',alignItems:'center',gap:16}}>
-                  {analysis.competitor.thumbnail && (
-                    <img src={analysis.competitor.thumbnail} alt="" referrerPolicy="no-referrer" style={{width:52,height:52,borderRadius:10,objectFit:'cover'}} />
-                  )}
-                  <div style={{flex:1}}>
-                    <p style={{fontWeight:800,fontSize:16,color:'#111',marginBottom:6}}>{analysis.competitor.channel_name}</p>
-                    <div style={{display:'flex',gap:20,flexWrap:'wrap'}}>
-                      <span style={{fontSize:12,color:'#aaa'}}>{analysis.competitor.subscribers.toLocaleString()} subscribers</span>
-                      <span style={{fontSize:12,color:'#aaa'}}>{analysis.competitor.avg_views_per_video.toLocaleString()} avg views/video</span>
-                      <span style={{fontSize:12,color:'#aaa'}}>{analysis.competitor.upload_frequency}x uploads/week</span>
-                      <span style={{fontSize:12,color:'#aaa'}}>{analysis.competitor.like_rate}% like rate</span>
+            analyses.map((analysis, i) => {
+              const comp    = analysis.competitor
+              const ai      = analysis.ai_analysis
+              const isOpen  = expandedIdx === i
+              const threat  = ai ? (THREAT[ai.threatLevel] || THREAT.medium) : null
+              const savedAt = analysis.savedAt
+                ? new Date(analysis.savedAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })
+                : ''
+
+              // chevron direction
+              const Chevron = () => (
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none"
+                  stroke="currentColor" strokeWidth="2" strokeLinecap="round"
+                  style={{ transition: 'transform 0.2s', transform: isOpen ? 'rotate(180deg)' : 'none' }}>
+                  <path d="M2 4l4 4 4-4"/>
+                </svg>
+              )
+
+              return (
+                <div key={comp.channel_id} className="comp-accordion-wrapper"
+                  style={{ marginBottom: 12, position: 'relative' }}>
+
+                  {/* ── trash: appears on hover, far corner, away from report button ── */}
+                  <button className="comp-remove-btn"
+                    title="Remove competitor"
+                    onClick={e => handleRemove(e, comp.channel_id)}>
+                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none"
+                      stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
+                      <path d="M2 3.5h10M5.5 3.5V2.5h3v1M5 5.5l.5 5M9 5.5l-.5 5M3 3.5l.7 8.5h6.6L11 3.5"/>
+                    </svg>
+                  </button>
+
+                  {/* ── accordion header ── */}
+                  <div className={`comp-accordion-header ${isOpen ? 'open' : 'closed'}`}
+                    onClick={() => setExpandedIdx(isOpen ? null : i)}>
+
+                    {comp.thumbnail && (
+                      <img src={comp.thumbnail} alt="" referrerPolicy="no-referrer"
+                        style={{ width: 46, height: 46, borderRadius: 12, objectFit: 'cover',
+                          flexShrink: 0, boxShadow: '0 2px 10px rgba(0,0,0,0.13)' }} />
+                    )}
+
+                    {/* ── left: name + badges ── */}
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+                        <p style={{ fontWeight: 800, fontSize: 14.5, color: '#0a0a0a',
+                          letterSpacing: '-0.2px', whiteSpace: 'nowrap', overflow: 'hidden',
+                          textOverflow: 'ellipsis' }}>
+                          {comp.channel_name}
+                        </p>
+                        {threat && (
+                          <span style={{ background: threat.bg, color: threat.text,
+                            border: `1px solid ${threat.border}`, fontSize: 10.5, fontWeight: 700,
+                            padding: '3px 10px', borderRadius: 50, flexShrink: 0,
+                            display: 'inline-flex', alignItems: 'center', gap: 4, letterSpacing: '0.1px' }}>
+                            <span style={{ width: 5, height: 5, borderRadius: '50%', background: threat.dot,
+                              flexShrink: 0, boxShadow: `0 0 5px ${threat.dot}` }} />
+                            {threat.label}
+                          </span>
+                        )}
+                      </div>
+
+                      {/* ── stat chips ── */}
+                      <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+                        <StatChip value={fmtK(comp.subscribers)} label="subs" />
+                        <StatChip value={fmtK(comp.avg_views_per_video)} label="avg views" />
+                        {ai && <StatChip value={ai.gapsToExploit?.length || 0} label="gaps" />}
+                        {savedAt && (
+                          <span style={{ fontSize: 11, color: '#bbb', fontWeight: 500,
+                            alignSelf: 'center', marginLeft: 2 }}>
+                            · {savedAt}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* ── right: only the report toggle ── */}
+                    <div style={{ flexShrink: 0, borderLeft: '1px solid rgba(0,0,0,0.07)',
+                      paddingLeft: 16, marginLeft: 4, paddingRight: 28 }}>
+                      <button className={`comp-btn-report ${isOpen ? 'open' : ''}`}
+                        onClick={e => { e.stopPropagation(); setExpandedIdx(isOpen ? null : i) }}>
+                        {isOpen ? 'Close' : 'Open report'}
+                        <Chevron />
+                      </button>
                     </div>
                   </div>
-                  <div style={{textAlign:'right',flexShrink:0}}>
-                    <p style={{fontSize:10,color:'#aaa',marginBottom:4,textTransform:'uppercase',letterSpacing:'0.5px'}}>Gaps found</p>
-                    <p style={{fontSize:28,fontWeight:900,color:analysis.gaps.length>0?'#FF4444':'#16a34a'}}>{analysis.gaps.length}</p>
-                  </div>
+
+                  {/* ── expanded report ── */}
+                  {isOpen && (
+                    <div className="comp-accordion-body">
+                      <AIAnalysis ai={ai} top5Videos={comp.top_5_videos} />
+                    </div>
+                  )}
                 </div>
-
-                {analysis.gaps.length === 0 ? (
-                  <div style={{background:'#F0FFF4',border:'1px solid #C6F6D5',borderRadius:12,padding:'20px 24px',textAlign:'center',marginBottom:16}}>
-                    <p style={{color:'#166534',fontWeight:600,fontSize:14}}>You are performing on par with or better than this competitor on all measured metrics.</p>
-                  </div>
-                ) : (
-                  <div style={{marginBottom:16}}>
-                    <p style={{fontSize:13,fontWeight:600,color:'#111',marginBottom:12}}>Where you are behind — and how to catch up</p>
-                    {analysis.gaps.map((gap, j) => <GapCard key={j} gap={gap} />)}
-                  </div>
-                )}
-
-                {analysis.competitor.recent_videos && analysis.competitor.recent_videos.length > 0 && (
-                  <div style={{background:'#fff',border:'1px solid #ebebeb',borderRadius:12,padding:'20px 24px'}}>
-                    <p style={{fontSize:13,fontWeight:700,color:'#111',marginBottom:12}}>Their recent videos — study what is working for them</p>
-                    {analysis.competitor.recent_videos.map((v, k) => (
-                      <div key={k} style={{display:'flex',justifyContent:'space-between',alignItems:'center',padding:'10px 0',borderBottom:k<analysis.competitor.recent_videos.length-1?'1px solid #f5f5f5':'none',gap:16}}>
-                        <p style={{fontSize:12,color:'#333',flex:1,lineHeight:1.4}}>{v.title}</p>
-                        <p style={{fontSize:12,fontWeight:700,color:'#111',flexShrink:0}}>{v.views.toLocaleString()} views</p>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            ))
+              )
+            })
           )}
         </div>
       )}
