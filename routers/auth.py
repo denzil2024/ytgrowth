@@ -104,11 +104,24 @@ def get_session(session_id: str | None) -> tuple[dict | None, Credentials | None
 
 
 def get_flow():
-    flow = Flow.from_client_secrets_file(
-        "client_secret.json",
-        scopes=SCOPES,
-        redirect_uri=f"{BACKEND_URL}/auth/callback"
-    )
+    client_secret_env = os.environ.get("GOOGLE_CLIENT_SECRET_JSON")
+    if client_secret_env:
+        import tempfile
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as f:
+            f.write(client_secret_env)
+            tmp_path = f.name
+        flow = Flow.from_client_secrets_file(
+            tmp_path,
+            scopes=SCOPES,
+            redirect_uri=f"{BACKEND_URL}/auth/callback"
+        )
+        os.unlink(tmp_path)
+    else:
+        flow = Flow.from_client_secrets_file(
+            "client_secret.json",
+            scopes=SCOPES,
+            redirect_uri=f"{BACKEND_URL}/auth/callback"
+        )
     flow.code_verifier = None
     return flow
 
