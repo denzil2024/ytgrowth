@@ -257,12 +257,12 @@ def callback(request: Request, background_tasks: BackgroundTasks):
             "fallback mode" in str(existing_insights.get("channelSummary", "")).lower()
         )
 
-        # Re-run only if: no insights, fallback result, or 24h has passed since last analysis
+        # Re-run only if: no insights, fallback result, or 7 days have passed since last analysis
         if not existing_insights or is_fallback:
             needs_analysis = True
         elif existing_analyzed_at:
             hours_since = (datetime.datetime.utcnow() - datetime.datetime.fromisoformat(existing_analyzed_at)).total_seconds() / 3600
-            needs_analysis = hours_since > 24
+            needs_analysis = hours_since > 168  # 7 days
         else:
             # Has valid insights but no analyzed_at — don't re-run, just stamp now
             needs_analysis = False
