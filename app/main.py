@@ -1,5 +1,8 @@
+from pathlib import Path
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 from starlette.middleware.sessions import SessionMiddleware
 from dotenv import load_dotenv
 load_dotenv()
@@ -7,6 +10,7 @@ load_dotenv()
 from routers import auth
 from routers import competitor_routes
 from routers import seo_routes
+from routers import keyword_routes
 
 app = FastAPI(title="YTGrowth API", redirect_slashes=False)
 
@@ -23,7 +27,11 @@ app.add_middleware(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://localhost:5173"],
+    allow_origins=[
+        "http://localhost:3000",
+        "http://localhost:5173",
+        "https://ytgrowth.io",
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -32,11 +40,20 @@ app.add_middleware(
 app.include_router(auth.router, prefix="/auth")
 app.include_router(competitor_routes.router, prefix="/competitors")
 app.include_router(seo_routes.router, prefix="/seo")
-
-@app.get("/")
-def root():
-    return {"message": "YTGrowth API is running"}
+app.include_router(keyword_routes.router, prefix="/keywords")
 
 @app.get("/health")
 def health():
     return {"status": "ok"}
+
+# Serve React frontend — must be after all API routes
+DIST = Path(__file__).parent.parent / "frontend" / "dist"
+
+app.mount("/assets", StaticFiles(directory=DIST / "assets"), name="assets")
+
+@app.get("/{full_path:path}")
+def serve_frontend(full_path: str):
+    file = DIST / full_path
+    if file.is_file():
+        return FileResponse(file)
+    return FileResponse(DIST / "index.html")
