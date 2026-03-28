@@ -224,6 +224,26 @@ def get_data(request: Request):
     return JSONResponse(data)
 
 
+@router.post("/refresh-analysis")
+def refresh_analysis(request: Request, background_tasks: BackgroundTasks):
+    session_id = request.session.get("session_id")
+    data, creds = get_session(session_id)
+    if not data or not creds:
+        return JSONResponse({"error": "Not logged in"}, status_code=401)
+    data["insights"] = None
+    _user_data[session_id] = data
+    _persist_session(session_id, creds, data)
+    background_tasks.add_task(
+        _run_analysis_in_background,
+        session_id,
+        data["channel"],
+        data["videos"],
+        data["analytics"],
+        data.get("video_analytics", [])
+    )
+    return JSONResponse({"message": "Analysis started"})
+
+
 @router.get("/logout")
 def logout(request: Request):
     session_id = request.session.pop("session_id", None)
