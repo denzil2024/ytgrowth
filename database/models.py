@@ -34,6 +34,12 @@ class UserSession(Base):
     user_data_json = Column(Text, nullable=False)
     updated_at = Column(DateTime, default=datetime.datetime.utcnow, onupdate=datetime.datetime.utcnow)
 
-engine = create_engine("sqlite:///ytgrowth.db")
+import os
+DATABASE_URL = os.environ.get("DATABASE_URL", "sqlite:///ytgrowth.db")
+# Railway provides postgres:// but SQLAlchemy needs postgresql://
+if DATABASE_URL.startswith("postgres://"):
+    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
+
+engine = create_engine(DATABASE_URL)
 Base.metadata.create_all(engine)
 SessionLocal = sessionmaker(bind=engine)
