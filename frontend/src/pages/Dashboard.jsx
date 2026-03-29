@@ -998,7 +998,11 @@ export default function Dashboard() {
                       <a href={ytUrl || '#'} target="_blank" rel="noopener noreferrer"
                         style={{ display: 'block', position: 'relative', textDecoration: 'none', flexShrink: 0, borderRadius: '19px 19px 0 0', overflow: 'hidden' }}>
                         {v.thumbnail
-                          ? <img src={v.thumbnail} alt="" style={{ width: '100%', aspectRatio: '16/9', objectFit: 'cover', display: 'block' }}/>
+                          ? <img
+                              src={v.video_id ? `https://i.ytimg.com/vi/${v.video_id}/hqdefault.jpg` : v.thumbnail}
+                              alt=""
+                              style={{ width: '100%', aspectRatio: '16/9', objectFit: 'cover', display: 'block' }}
+                            />
                           : <div style={{ width: '100%', aspectRatio: '16/9', background: '#ebebef' }}/>
                         }
                         {isShort && (
