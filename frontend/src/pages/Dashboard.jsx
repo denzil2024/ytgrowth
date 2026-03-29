@@ -979,18 +979,18 @@ export default function Dashboard() {
                     <div key={v.video_id || i}>
                       <div className="ytg-video-row" style={{
                         display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-                        padding: '12px 20px',
+                        padding: '10px 20px',
                         borderBottom: !isSelected && i < videos.length - 1 ? `1px solid #f0f0f4` : 'none',
                         background: isSelected ? '#f0f5ff' : undefined,
                       }}>
                         {/* Thumbnail + title — natural width, won't stretch */}
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 12, minWidth: 0, flex: '0 1 500px' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 14, minWidth: 0, flex: 1 }}>
                           {/* Thumbnail — clickable */}
                           <a href={ytUrl || '#'} target="_blank" rel="noopener noreferrer"
                             style={{ position: 'relative', flexShrink: 0, display: 'block', borderRadius: 8, overflow: 'hidden', textDecoration: 'none' }}>
                             {v.thumbnail
-                              ? <img src={v.thumbnail} alt="" style={{ width: 72, height: 45, objectFit: 'cover', display: 'block' }}/>
-                              : <div style={{ width: 72, height: 45, background: '#ebebef' }}/>
+                              ? <img src={v.thumbnail} alt="" style={{ width: 100, height: 63, objectFit: 'cover', display: 'block' }}/>
+                              : <div style={{ width: 100, height: 63, background: '#ebebef' }}/>
                             }
                             {isShort && (
                               <span style={{ position: 'absolute', bottom: 3, left: 3, background: '#111', color: '#fff', fontSize: 8, fontWeight: 700, padding: '1px 4px', borderRadius: 3, lineHeight: 1.4, letterSpacing: '0.04em' }}>SHORT</span>
