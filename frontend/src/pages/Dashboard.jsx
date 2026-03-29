@@ -957,13 +957,10 @@ export default function Dashboard() {
               </div>
               <div className="ytg-card" style={{ overflow: 'hidden' }}>
                 {/* Header row */}
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '11px 20px', borderBottom: `1px solid #ebebef`, background: '#f8f8fb' }}>
-                  <p style={{ fontSize: 10, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Video</p>
-                  <div style={{ display: 'flex', alignItems: 'center', flexShrink: 0 }}>
-                    {[['Duration', 76], ['Views', 80], ['Likes', 66], ['Comments', 90], ['Like rate', 88], ['', 116]].map(([h, w]) => (
-                      <p key={h} style={{ width: w, fontSize: 10, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.07em', textAlign: 'right' }}>{h}</p>
-                    ))}
-                  </div>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 76px 80px 66px 90px 88px 116px', alignItems: 'center', padding: '11px 20px', borderBottom: `1px solid #ebebef`, background: '#f8f8fb' }}>
+                  {[['Video', 'left'], ['Duration', 'right'], ['Views', 'right'], ['Likes', 'right'], ['Comments', 'right'], ['Like rate', 'right'], ['', 'right']].map(([h, align]) => (
+                    <p key={h} style={{ fontSize: 10, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.07em', textAlign: align }}>{h}</p>
+                  ))}
                 </div>
                 {videos.map((v, i) => {
                   const lr      = v.views > 0 ? (v.likes / v.views * 100).toFixed(1) : 0
@@ -978,14 +975,13 @@ export default function Dashboard() {
                   return (
                     <div key={v.video_id || i}>
                       <div className="ytg-video-row" style={{
-                        display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+                        display: 'grid', gridTemplateColumns: '1fr 76px 80px 66px 90px 88px 116px', alignItems: 'center',
                         padding: '10px 20px',
                         borderBottom: !isSelected && i < videos.length - 1 ? `1px solid #f0f0f4` : 'none',
                         background: isSelected ? '#f0f5ff' : undefined,
                       }}>
-                        {/* Thumbnail + title — natural width, won't stretch */}
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 14, minWidth: 0, flex: 1 }}>
-                          {/* Thumbnail — clickable */}
+                        {/* Thumbnail + title */}
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 14, minWidth: 0 }}>
                           <a href={ytUrl || '#'} target="_blank" rel="noopener noreferrer"
                             style={{ position: 'relative', flexShrink: 0, display: 'block', borderRadius: 8, overflow: 'hidden', textDecoration: 'none' }}>
                             {v.thumbnail
@@ -1015,35 +1011,31 @@ export default function Dashboard() {
                             <p style={{ fontSize: 11, color: C.text3 }}>{new Date(v.published_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</p>
                           </div>
                         </div>
-
-                        {/* Stats — fixed widths, right-aligned, always flush right */}
-                        <div style={{ display: 'flex', alignItems: 'center', flexShrink: 0 }}>
-                          {/* Duration */}
-                          <p style={{ width: 76, fontSize: 12.5, color: C.text3, textAlign: 'right', fontVariantNumeric: 'tabular-nums', fontWeight: 500 }}>{durLabel}</p>
-                          {/* Views */}
-                          <p style={{ width: 80, fontSize: 13, fontWeight: 700, color: C.text1, textAlign: 'right', fontVariantNumeric: 'tabular-nums' }}>{fmtNum(v.views)}</p>
-                          {/* Likes */}
-                          <p style={{ width: 66, fontSize: 13, color: C.text2, textAlign: 'right', fontVariantNumeric: 'tabular-nums' }}>{fmtNum(v.likes)}</p>
-                          {/* Comments */}
-                          <p style={{ width: 90, fontSize: 13, color: C.text2, textAlign: 'right', fontVariantNumeric: 'tabular-nums' }}>{fmtNum(v.comments)}</p>
-                          {/* Like rate */}
-                          <div style={{ width: 88, textAlign: 'right' }}>
-                            <span style={{ fontSize: 12.5, fontWeight: 700, color: lrColor, background: lrN >= 4 ? C.greenBg : lrN >= 2 ? '#fffbeb' : C.redBg, padding: '3px 8px', borderRadius: 100, border: `1px solid ${lrN >= 4 ? C.greenBdr : lrN >= 2 ? '#fde68a' : C.redBdr}`, fontVariantNumeric: 'tabular-nums' }}>{lr}%</span>
-                          </div>
-                          {/* Actions */}
-                          <div style={{ width: 116, display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
-                            <button
-                              onClick={() => setSelectedVideoId(isSelected ? null : v.video_id)}
-                              className={isSelected ? '' : 'ytg-dash-btn'}
-                              style={isSelected ? {
-                                fontSize: 11.5, fontWeight: 700, color: C.blue,
-                                background: '#eff6ff', border: `1px solid #bfdbfe`,
-                                borderRadius: 100, padding: '5px 12px', cursor: 'pointer',
-                                fontFamily: 'inherit', whiteSpace: 'nowrap',
-                              } : { padding: '5px 12px', fontSize: 11.5, whiteSpace: 'nowrap' }}>
-                              {isSelected ? '✕ Close' : 'Optimise'}
-                            </button>
-                          </div>
+                        {/* Duration */}
+                        <p style={{ fontSize: 12.5, color: C.text3, textAlign: 'right', fontVariantNumeric: 'tabular-nums', fontWeight: 500 }}>{durLabel}</p>
+                        {/* Views */}
+                        <p style={{ fontSize: 13, fontWeight: 700, color: C.text1, textAlign: 'right', fontVariantNumeric: 'tabular-nums' }}>{fmtNum(v.views)}</p>
+                        {/* Likes */}
+                        <p style={{ fontSize: 13, color: C.text2, textAlign: 'right', fontVariantNumeric: 'tabular-nums' }}>{fmtNum(v.likes)}</p>
+                        {/* Comments */}
+                        <p style={{ fontSize: 13, color: C.text2, textAlign: 'right', fontVariantNumeric: 'tabular-nums' }}>{fmtNum(v.comments)}</p>
+                        {/* Like rate */}
+                        <div style={{ textAlign: 'right' }}>
+                          <span style={{ fontSize: 12.5, fontWeight: 700, color: lrColor, background: lrN >= 4 ? C.greenBg : lrN >= 2 ? '#fffbeb' : C.redBg, padding: '3px 8px', borderRadius: 100, border: `1px solid ${lrN >= 4 ? C.greenBdr : lrN >= 2 ? '#fde68a' : C.redBdr}`, fontVariantNumeric: 'tabular-nums' }}>{lr}%</span>
+                        </div>
+                        {/* Optimise */}
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
+                          <button
+                            onClick={() => setSelectedVideoId(isSelected ? null : v.video_id)}
+                            className={isSelected ? '' : 'ytg-dash-btn'}
+                            style={isSelected ? {
+                              fontSize: 11.5, fontWeight: 700, color: C.blue,
+                              background: '#eff6ff', border: `1px solid #bfdbfe`,
+                              borderRadius: 100, padding: '5px 12px', cursor: 'pointer',
+                              fontFamily: 'inherit', whiteSpace: 'nowrap',
+                            } : { padding: '5px 12px', fontSize: 11.5, whiteSpace: 'nowrap' }}>
+                            {isSelected ? '✕ Close' : 'Optimise'}
+                          </button>
                         </div>
                       </div>
                       {isSelected && (
