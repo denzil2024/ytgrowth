@@ -957,7 +957,7 @@ export default function Dashboard() {
               </div>
 
               {/* Card grid */}
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: 16 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, minmax(0, 1fr))', gap: 16 }}>
                 {videos.map((v, i) => {
                   const lr      = v.views > 0 ? (v.likes / v.views * 100).toFixed(1) : 0
                   const lrN     = parseFloat(lr)
@@ -972,13 +972,12 @@ export default function Dashboard() {
                   const isShort  = durSecs > 0 && durSecs <= 60
                   return (
                     <div key={v.video_id || i} className="ytg-card" style={{
-                      overflow: 'hidden', display: 'flex', flexDirection: 'column',
-                      outline: isSelected ? `2px solid ${C.blue}` : '2px solid transparent',
-                      outlineOffset: -2,
+                      display: 'flex', flexDirection: 'column',
+                      border: isSelected ? `1.5px solid ${C.blue}` : undefined,
                     }}>
                       {/* Thumbnail */}
                       <a href={ytUrl || '#'} target="_blank" rel="noopener noreferrer"
-                        style={{ display: 'block', position: 'relative', textDecoration: 'none', flexShrink: 0 }}>
+                        style={{ display: 'block', position: 'relative', textDecoration: 'none', flexShrink: 0, borderRadius: '19px 19px 0 0', overflow: 'hidden' }}>
                         {v.thumbnail
                           ? <img src={v.thumbnail} alt="" style={{ width: '100%', aspectRatio: '16/9', objectFit: 'cover', display: 'block' }}/>
                           : <div style={{ width: '100%', aspectRatio: '16/9', background: '#ebebef' }}/>
