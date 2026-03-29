@@ -271,7 +271,7 @@ export default function Keywords() {
           {/* ── Keyword table — full width, 4 columns ── */}
           <div className="kw-card" style={{ overflow: 'hidden', marginBottom: 14 }}>
             {/* Col headers */}
-            <div style={{ display: 'grid', gridTemplateColumns: '200px 1fr 100px 130px', alignItems: 'center', padding: '10px 20px', borderBottom: `1px solid ${C.border}`, background: '#f8f8fb' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'minmax(120px, 220px) 1fr 100px 130px', alignItems: 'center', padding: '10px 20px', borderBottom: `1px solid ${C.border}`, background: '#f8f8fb' }}>
               <p style={{ fontSize: 10, fontWeight: 700, color: C.text4, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Keyword</p>
               <p style={{ fontSize: 10, fontWeight: 700, color: C.text4, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Content Angle</p>
               <p style={{ fontSize: 10, fontWeight: 700, color: C.text4, textTransform: 'uppercase', letterSpacing: '0.07em', textAlign: 'center' }}>Intent</p>
@@ -289,16 +289,16 @@ export default function Keywords() {
             </div>
 
             {result.keywords?.map((kw, idx) => (
-              <div key={kw.keyword} className="kw-row" style={{ display: 'grid', gridTemplateColumns: '200px 1fr 100px 130px', alignItems: 'center', padding: '11px 20px', borderBottom: idx < result.keywords.length - 1 ? `1px solid ${C.border}` : 'none' }}>
+              <div key={kw.keyword} className="kw-row" style={{ display: 'grid', gridTemplateColumns: 'minmax(120px, 220px) 1fr 100px 130px', alignItems: 'center', padding: '11px 20px', borderBottom: idx < result.keywords.length - 1 ? `1px solid ${C.border}` : 'none' }}>
 
                 {/* Keyword name */}
                 <div style={{ minWidth: 0, paddingRight: 14 }}>
-                  <p style={{ fontSize: 13, fontWeight: 700, color: C.text1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{kw.keyword}</p>
+                  <p style={{ fontSize: 13, fontWeight: 700, color: C.text1, lineHeight: 1.4 }}>{kw.keyword}</p>
                 </div>
 
                 {/* Content angle */}
                 <div style={{ minWidth: 0, paddingRight: 14 }}>
-                  <p style={{ fontSize: 12, color: C.text3, lineHeight: 1.45, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{kw.contentAngle || '—'}</p>
+                  <p style={{ fontSize: 12, color: C.text3, lineHeight: 1.55, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{kw.contentAngle || '—'}</p>
                 </div>
 
                 {/* Intent */}
