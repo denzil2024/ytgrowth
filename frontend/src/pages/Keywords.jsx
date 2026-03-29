@@ -121,6 +121,16 @@ export default function Keywords() {
   const [loading,       setLoading]       = useState(false)
   const [result,        setResult]        = useState(saved?.result || null)
   const [error,         setError]         = useState('')
+  const [copied,        setCopied]        = useState(false)
+
+  function handleCopyKeywords() {
+    if (!result?.keywords?.length) return
+    const text = result.keywords.map(k => k.keyword).join(', ')
+    navigator.clipboard.writeText(text).then(() => {
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    })
+  }
 
   useEffect(() => { saveToDisk(keyword, result) }, [keyword, result])
 
@@ -263,45 +273,84 @@ export default function Keywords() {
             {/* Right column: keyword table */}
             <div className="kw-card" style={{ overflow: 'hidden' }}>
               {/* Col headers */}
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 20px', borderBottom: `1px solid ${C.border}`, background: '#f8f8fb' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 90px 120px', alignItems: 'center', padding: '10px 20px', borderBottom: `1px solid ${C.border}`, background: '#f8f8fb' }}>
                 <p style={{ fontSize: 10, fontWeight: 700, color: C.text4, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Keyword</p>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 0, flexShrink: 0 }}>
-                  <p style={{ width: 100, fontSize: 10, fontWeight: 700, color: C.text4, textTransform: 'uppercase', letterSpacing: '0.07em', textAlign: 'right' }}>Intent</p>
-                  <p style={{ width: 110, fontSize: 10, fontWeight: 700, color: C.text4, textTransform: 'uppercase', letterSpacing: '0.07em', textAlign: 'right' }}>Opportunity</p>
+                <p style={{ fontSize: 10, fontWeight: 700, color: C.text4, textTransform: 'uppercase', letterSpacing: '0.07em', textAlign: 'center' }}>Intent</p>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 10 }}>
+                  <p style={{ fontSize: 10, fontWeight: 700, color: C.text4, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Opportunity</p>
+                  <button onClick={handleCopyKeywords} style={{
+                    display: 'flex', alignItems: 'center', gap: 5, padding: '4px 10px',
+                    background: copied ? C.greenBg : '#fff', border: `1px solid ${copied ? '#bbf7d0' : C.border}`,
+                    borderRadius: 20, cursor: 'pointer', transition: 'all 0.18s',
+                    fontSize: 10, fontWeight: 700, color: copied ? C.green : C.text3,
+                    fontFamily: 'inherit', whiteSpace: 'nowrap',
+                  }}>
+                    {copied ? '✓ Copied' : 'Copy all'}
+                  </button>
                 </div>
               </div>
 
               {result.keywords?.map((kw, idx) => (
-                <div key={kw.keyword} className="kw-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '11px 20px', borderBottom: idx < result.keywords.length - 1 ? `1px solid ${C.border}` : 'none', gap: 16 }}>
+                <div key={kw.keyword} className="kw-row" style={{ display: 'grid', gridTemplateColumns: '1fr 90px 120px', alignItems: 'center', padding: '11px 20px', borderBottom: idx < result.keywords.length - 1 ? `1px solid ${C.border}` : 'none' }}>
 
-                  {/* Keyword + content angle — fills left, won't stretch past content */}
-                  <div style={{ flex: '1 1 0', minWidth: 0 }}>
+                  {/* Keyword + content angle */}
+                  <div style={{ minWidth: 0, paddingRight: 12 }}>
                     <p style={{ fontSize: 13.5, fontWeight: 600, color: C.text1, marginBottom: kw.contentAngle ? 3 : 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{kw.keyword}</p>
                     {kw.contentAngle && (
                       <p style={{ fontSize: 11.5, color: C.text3, lineHeight: 1.4, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{kw.contentAngle}</p>
                     )}
                   </div>
 
-                  {/* Stats — fixed widths, grouped right */}
-                  <div style={{ display: 'flex', alignItems: 'center', flexShrink: 0, gap: 0 }}>
-                    <div style={{ width: 100, display: 'flex', justifyContent: 'flex-end' }}>
-                      <span className="kw-chip" style={{ color: INTENT_COLOR[kw.intentMatch] || C.text3, background: INTENT_BG[kw.intentMatch] || C.bg }}>
-                        {kw.intentMatch}
-                      </span>
+                  {/* Intent */}
+                  <div style={{ display: 'flex', justifyContent: 'center' }}>
+                    <span className="kw-chip" style={{ color: INTENT_COLOR[kw.intentMatch] || C.text3, background: INTENT_BG[kw.intentMatch] || C.bg }}>
+                      {kw.intentMatch}
+                    </span>
+                  </div>
+
+                  {/* Opportunity */}
+                  <div style={{ paddingLeft: 12 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 4 }}>
+                      <p style={{ fontSize: 12.5, fontWeight: 800, color: oppColor(kw.opportunityScore) }}>{kw.opportunityScore}</p>
                     </div>
-                    <div style={{ width: 110, paddingLeft: 12 }}>
-                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 4 }}>
-                        <p style={{ fontSize: 12.5, fontWeight: 800, color: oppColor(kw.opportunityScore) }}>{kw.opportunityScore}</p>
-                      </div>
-                      <div className="kw-bar" style={{ width: '100%' }}>
-                        <div className="kw-bar-fill" style={{ width: `${kw.opportunityScore}%`, background: oppColor(kw.opportunityScore) }} />
-                      </div>
+                    <div className="kw-bar" style={{ width: '100%' }}>
+                      <div className="kw-bar-fill" style={{ width: `${kw.opportunityScore}%`, background: oppColor(kw.opportunityScore) }} />
                     </div>
                   </div>
                 </div>
               ))}
             </div>
           </div>
+
+          {/* Keyword tags — copy strip */}
+          {result.keywords?.length > 0 && (
+            <div style={{ marginBottom: 16 }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
+                <p style={{ fontSize: 10.5, fontWeight: 600, color: '#a0a0b0', textTransform: 'uppercase', letterSpacing: '0.06em' }}>All Keywords</p>
+                <button onClick={handleCopyKeywords} style={{
+                  display: 'flex', alignItems: 'center', gap: 5, padding: '5px 12px',
+                  background: copied ? C.greenBg : '#fff', border: `1px solid ${copied ? '#bbf7d0' : C.border}`,
+                  borderRadius: 20, cursor: 'pointer', transition: 'all 0.18s',
+                  fontSize: 11, fontWeight: 700, color: copied ? C.green : C.text2,
+                  fontFamily: 'inherit',
+                }}>
+                  {copied ? '✓ Copied!' : '⎘ Copy as list'}
+                </button>
+              </div>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                {result.keywords.map((kw, i) => (
+                  <span key={kw.keyword} style={{
+                    background: '#fff', border: `1px solid ${C.border}`,
+                    borderRadius: 20, padding: '4px 11px',
+                    fontSize: 12, fontWeight: 500, color: C.text2,
+                    boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
+                  }}>
+                    {kw.keyword}{i < result.keywords.length - 1 ? ',' : ''}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Clusters — full width below */}
           {result.clusters?.length > 0 && (
