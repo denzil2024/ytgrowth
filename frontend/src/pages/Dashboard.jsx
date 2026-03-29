@@ -49,16 +49,18 @@ function useDashboardStyles() {
       }
 
       .ytg-card {
-        background: #ffffff;
-        border: 1px solid rgba(0,0,0,0.09);
+        background: rgba(255,255,255,0.85);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255,255,255,0.6);
         border-radius: 20px;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.07), 0 6px 24px rgba(0,0,0,0.09);
+        box-shadow: 0 2px 6px rgba(0,0,0,0.10), 0 10px 36px rgba(0,0,0,0.14), 0 1px 0 rgba(255,255,255,0.8) inset;
         transition: box-shadow 0.22s, transform 0.22s;
       }
       .ytg-card:hover {
-        box-shadow: 0 4px 12px rgba(0,0,0,0.10), 0 20px 56px rgba(0,0,0,0.13);
-        transform: translateY(-1px);
-        border-color: rgba(0,0,0,0.13);
+        box-shadow: 0 6px 16px rgba(0,0,0,0.13), 0 28px 64px rgba(0,0,0,0.18), 0 1px 0 rgba(255,255,255,0.8) inset;
+        transform: translateY(-2px);
+        border-color: rgba(255,255,255,0.75);
       }
 
       .ytg-nav-btn {
@@ -135,6 +137,23 @@ function useDashboardStyles() {
       .ytg-dash-btn-primary:hover {
         filter: brightness(1.07); transform: translateY(-1px);
         box-shadow: 0 2px 8px rgba(0,0,0,0.15), 0 8px 28px rgba(229,37,27,0.42);
+      }
+      .ytg-optimise-btn {
+        display: inline-flex; align-items: center; gap: 6px;
+        padding: 6px 14px; border-radius: 100px;
+        border: 1px solid rgba(255,255,255,0.18);
+        font-family: 'DM Sans', 'Inter', sans-serif; font-size: 11.5px; font-weight: 700;
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        color: #fff; cursor: pointer; letter-spacing: 0.01em;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.28), 0 8px 24px rgba(0,0,0,0.22), 0 1px 0 rgba(255,255,255,0.08) inset;
+        transition: all 0.18s;
+        backdrop-filter: blur(8px);
+      }
+      .ytg-optimise-btn:hover {
+        background: linear-gradient(135deg, #252540 0%, #1e2d50 100%);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.35), 0 16px 40px rgba(0,0,0,0.28), 0 1px 0 rgba(255,255,255,0.12) inset;
+        transform: translateY(-1px);
+        border-color: rgba(255,255,255,0.25);
       }
     `
     document.head.appendChild(style)
@@ -957,7 +976,7 @@ export default function Dashboard() {
               </div>
 
               {/* Card grid */}
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, minmax(0, 1fr))', gap: 16 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, minmax(0, 1fr))', gap: 14 }}>
                 {videos.map((v, i) => {
                   const lr      = v.views > 0 ? (v.likes / v.views * 100).toFixed(1) : 0
                   const lrN     = parseFloat(lr)
@@ -1018,13 +1037,13 @@ export default function Dashboard() {
                           </span>
                           <button
                             onClick={() => setSelectedVideoId(isSelected ? null : v.video_id)}
-                            className={isSelected ? '' : 'ytg-dash-btn'}
+                            className={isSelected ? '' : 'ytg-optimise-btn'}
                             style={isSelected ? {
                               fontSize: 11.5, fontWeight: 700, color: C.blue,
                               background: '#eff6ff', border: `1px solid #bfdbfe`,
                               borderRadius: 100, padding: '5px 14px', cursor: 'pointer',
                               fontFamily: 'inherit', whiteSpace: 'nowrap',
-                            } : { padding: '5px 14px', fontSize: 11.5, whiteSpace: 'nowrap' }}>
+                            } : undefined}>
                             {isSelected ? '✕ Close' : 'Optimise'}
                           </button>
                         </div>
