@@ -2,15 +2,28 @@ import { useEffect, useState } from 'react'
 
 const API = ''
 
-function cacheKey(videoId) { return `videoOptimize_${videoId}` }
-function loadCache(videoId) {
-  try { const r = localStorage.getItem(cacheKey(videoId)); return r ? JSON.parse(r) : null } catch { return null }
+// ── DB-backed cache (survives refresh + logout) ───────────────────────────────
+async function loadDbCache(videoId) {
+  try {
+    const r = await fetch(`${API}/seo/optimize-cache/${videoId}`, { credentials: 'include' })
+    if (!r.ok) return null
+    const d = await r.json()
+    return d.cached || null
+  } catch { return null }
 }
-function saveCache(videoId, data) {
-  try { localStorage.setItem(cacheKey(videoId), JSON.stringify(data)) } catch {}
+async function saveDbCache(videoId, data) {
+  try {
+    await fetch(`${API}/seo/optimize-cache`, {
+      method: 'POST', credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ video_id: videoId, result_json: JSON.stringify(data) }),
+    })
+  } catch {}
 }
-function clearCache(videoId) {
-  try { localStorage.removeItem(cacheKey(videoId)) } catch {}
+async function clearDbCache(videoId) {
+  try {
+    await fetch(`${API}/seo/optimize-cache/${videoId}`, { method: 'DELETE', credentials: 'include' })
+  } catch {}
 }
 
 // ── Tight, disciplined palette — color used sparingly ─────────────────────────
@@ -75,8 +88,8 @@ function ScoreRing({ score }) {
           style={{ transition: 'stroke-dasharray 0.6s ease' }} />
       </svg>
       <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-        <span style={{ fontSize: 20, fontWeight: 800, color, letterSpacing: '-1px', lineHeight: 1 }}>{score}</span>
-        <span style={{ fontSize: 9, color: C.text3, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em' }}>/100</span>
+        <span style={{ fontSize: 22, fontWeight: 800, color, letterSpacing: '-1px', lineHeight: 1 }}>{score}</span>
+        <span style={{ fontSize: 11, color: C.text3, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em' }}>/100</span>
       </div>
     </div>
   )
@@ -87,8 +100,8 @@ function ScoreBar({ score, label }) {
   return (
     <div>
       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 5 }}>
-        <span style={{ fontSize: 12, fontWeight: 500, color: C.text2 }}>{label}</span>
-        <span style={{ fontSize: 12, fontWeight: 800, color }}>{score}/100</span>
+        <span style={{ fontSize: 13.5, fontWeight: 500, color: C.text2 }}>{label}</span>
+        <span style={{ fontSize: 13.5, fontWeight: 800, color }}>{score}/100</span>
       </div>
       <div style={{ height: 5, background: C.borderFaint, borderRadius: 4, overflow: 'hidden' }}>
         <div style={{ height: '100%', width: `${score}%`, background: color, borderRadius: 4, transition: 'width 0.6s ease' }} />
@@ -107,18 +120,18 @@ function BreakdownBar({ criterionKey, value, max }) {
     <div style={{ marginBottom: 9 }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 3 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
-          <span style={{ fontSize: 11.5, color: C.text2, fontWeight: 500 }}>{meta.label}</span>
+          <span style={{ fontSize: 13, color: C.text2, fontWeight: 500 }}>{meta.label}</span>
           <button onClick={() => setShowWhy(v => !v)}
-            style={{ width: 13, height: 13, borderRadius: '50%', border: `1px solid ${C.border}`, background: 'transparent', cursor: 'pointer', fontSize: 8, fontWeight: 700, color: C.text3, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 0 }}>?
+            style={{ width: 15, height: 15, borderRadius: '50%', border: `1px solid ${C.border}`, background: 'transparent', cursor: 'pointer', fontSize: 9, fontWeight: 700, color: C.text3, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 0 }}>?
           </button>
         </div>
-        <span style={{ fontSize: 11, color, fontWeight: 700 }}>{value}/{max}</span>
+        <span style={{ fontSize: 12.5, color, fontWeight: 700 }}>{value}/{max}</span>
       </div>
-      <div style={{ height: 4, background: C.borderFaint, borderRadius: 4, overflow: 'hidden' }}>
+      <div style={{ height: 5, background: C.borderFaint, borderRadius: 4, overflow: 'hidden' }}>
         <div style={{ height: '100%', width: `${pct}%`, background: color, borderRadius: 4, transition: 'width 0.5s ease' }} />
       </div>
       {showWhy && (
-        <p style={{ fontSize: 11, color: C.text3, marginTop: 5, lineHeight: 1.5, paddingLeft: 8, borderLeft: `2px solid ${C.border}` }}>
+        <p style={{ fontSize: 12.5, color: C.text3, marginTop: 5, lineHeight: 1.5, paddingLeft: 8, borderLeft: `2px solid ${C.border}` }}>
           {meta.why}
         </p>
       )}
@@ -129,7 +142,7 @@ function BreakdownBar({ criterionKey, value, max }) {
 function CheckBadge({ value, trueLabel, falseLabel }) {
   return (
     <span style={{
-      fontSize: 10.5, fontWeight: 600,
+      fontSize: 13, fontWeight: 600,
       color: value ? C.green : C.text3,
       background: value ? C.greenBg : C.surface,
       padding: '3px 9px', borderRadius: 100,
@@ -256,104 +269,83 @@ function DescriptionCard({ d, idx, applyState, applyError, onApply }) {
 // ── Main panel ────────────────────────────────────────────────────────────────
 
 export default function VideoOptimizePanel({ video, onClose, onVideoUpdated }) {
-  const cached = loadCache(video.video_id)
-
-  const [videoResult, setVideoResult] = useState(cached?.videoResult ?? null)
-  const [videoLoading, setVideoLoading] = useState(!cached)
+  const [videoResult, setVideoResult] = useState(null)
+  const [videoLoading, setVideoLoading] = useState(true)
   const [videoError, setVideoError] = useState('')
 
-  const [titleResult, setTitleResult] = useState(cached?.titleResult ?? null)
-  const [titleLoading, setTitleLoading] = useState(!cached)
+  const [titleResult, setTitleResult] = useState(null)
+  const [titleLoading, setTitleLoading] = useState(true)
   const [titleError, setTitleError] = useState('')
 
-  const [selectedSuggestion, setSelectedSuggestion] = useState(cached?.selectedSuggestion ?? 0)
+  const [selectedSuggestion, setSelectedSuggestion] = useState(0)
   const [titleApply, setTitleApply]       = useState('idle')
   const [titleApplyErr, setTitleApplyErr] = useState('')
 
   const [descLoading, setDescLoading] = useState(false)
-  const [descResult, setDescResult]   = useState(cached?.descResult ?? null)
+  const [descResult, setDescResult]   = useState(null)
   const [descError, setDescError]     = useState('')
   const [descApplyStates, setDescApplyStates] = useState({})
   const [descApplyErrors, setDescApplyErrors] = useState({})
 
+  // Save to DB whenever results change
   useEffect(() => {
     if (videoResult || titleResult) {
-      saveCache(video.video_id, { videoResult, titleResult, selectedSuggestion, descResult })
+      saveDbCache(video.video_id, { videoResult, titleResult, selectedSuggestion, descResult })
     }
   }, [videoResult, titleResult, selectedSuggestion, descResult])
 
+  // On mount: load from DB first, then fall back to fresh analysis
   useEffect(() => {
-    if (cached) return
-    async function runAll() {
-      const [videoRes, titleRes] = await Promise.allSettled([
-        fetch(`${API}/seo/optimize-video`, {
-          method: 'POST', credentials: 'include',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ video_id: video.video_id, title: video.title, thumbnail_url: video.thumbnail, views: video.views, likes: video.likes }),
-        }),
-        fetch(`${API}/seo/analyze`, {
-          method: 'POST', credentials: 'include',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ title: video.title, confirmed_keyword: '' }),
-        }),
-      ])
-      if (videoRes.status === 'fulfilled') {
-        const res = videoRes.value; const data = await res.json()
-        if (!res.ok) setVideoError(data.error || 'Video analysis failed.')
-        else setVideoResult(data)
-      } else { setVideoError('Could not reach the server.') }
-      setVideoLoading(false)
-      if (titleRes.status === 'fulfilled') {
-        const res = titleRes.value; const data = await res.json()
-        if (!res.ok) setTitleError(data.error || 'Title analysis failed.')
-        else setTitleResult(data)
-      } else { setTitleError('Could not reach the server.') }
-      setTitleLoading(false)
+    async function init() {
+      const cached = await loadDbCache(video.video_id)
+      if (cached) {
+        if (cached.videoResult) setVideoResult(cached.videoResult)
+        if (cached.titleResult) setTitleResult(cached.titleResult)
+        if (cached.selectedSuggestion != null) setSelectedSuggestion(cached.selectedSuggestion)
+        if (cached.descResult) setDescResult(cached.descResult)
+        setVideoLoading(false)
+        setTitleLoading(false)
+        return
+      }
+      await runAnalysis()
     }
-    runAll()
+    init()
   }, [video.video_id])
 
-  function handleClear() {
-    clearCache(video.video_id)
-    setVideoResult(null); setTitleResult(null); setDescResult(null)
-    setSelectedSuggestion(0); setVideoError(''); setTitleError(''); setDescError('')
+  async function runAnalysis() {
     setVideoLoading(true); setTitleLoading(true)
-    window.dispatchEvent(new Event('reanalyze'))
+    const [videoRes, titleRes] = await Promise.allSettled([
+      fetch(`${API}/seo/optimize-video`, {
+        method: 'POST', credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ video_id: video.video_id, title: video.title, thumbnail_url: video.thumbnail, views: video.views, likes: video.likes }),
+      }),
+      fetch(`${API}/seo/analyze`, {
+        method: 'POST', credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title: video.title, confirmed_keyword: '' }),
+      }),
+    ])
+    if (videoRes.status === 'fulfilled') {
+      const res = videoRes.value; const data = await res.json()
+      if (!res.ok) setVideoError(data.error || 'Video analysis failed.')
+      else setVideoResult(data)
+    } else { setVideoError('Could not reach the server.') }
+    setVideoLoading(false)
+    if (titleRes.status === 'fulfilled') {
+      const res = titleRes.value; const data = await res.json()
+      if (!res.ok) setTitleError(data.error || 'Title analysis failed.')
+      else setTitleResult(data)
+    } else { setTitleError('Could not reach the server.') }
+    setTitleLoading(false)
   }
 
-  useEffect(() => {
-    function onReanalyze() {
-      async function runAll() {
-        const [videoRes, titleRes] = await Promise.allSettled([
-          fetch(`${API}/seo/optimize-video`, {
-            method: 'POST', credentials: 'include',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ video_id: video.video_id, title: video.title, thumbnail_url: video.thumbnail, views: video.views, likes: video.likes }),
-          }),
-          fetch(`${API}/seo/analyze`, {
-            method: 'POST', credentials: 'include',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ title: video.title, confirmed_keyword: '' }),
-          }),
-        ])
-        if (videoRes.status === 'fulfilled') {
-          const res = videoRes.value; const data = await res.json()
-          if (!res.ok) setVideoError(data.error || 'Video analysis failed.')
-          else setVideoResult(data)
-        } else { setVideoError('Could not reach the server.') }
-        setVideoLoading(false)
-        if (titleRes.status === 'fulfilled') {
-          const res = titleRes.value; const data = await res.json()
-          if (!res.ok) setTitleError(data.error || 'Title analysis failed.')
-          else setTitleResult(data)
-        } else { setTitleError('Could not reach the server.') }
-        setTitleLoading(false)
-      }
-      runAll()
-    }
-    window.addEventListener('reanalyze', onReanalyze)
-    return () => window.removeEventListener('reanalyze', onReanalyze)
-  }, [video.video_id])
+  async function handleClear() {
+    await clearDbCache(video.video_id)
+    setVideoResult(null); setTitleResult(null); setDescResult(null)
+    setSelectedSuggestion(0); setVideoError(''); setTitleError(''); setDescError('')
+    await runAnalysis()
+  }
 
   async function applyTitle() {
     const suggestions = titleResult?.suggestions
@@ -433,8 +425,8 @@ export default function VideoOptimizePanel({ video, onClose, onVideoUpdated }) {
           />
         )}
         <div style={{ flex: 1, minWidth: 0 }}>
-          <p style={{ fontSize: 10, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 4 }}>Video Optimisation</p>
-          <p style={{ fontSize: 14, fontWeight: 700, color: C.text1, lineHeight: 1.35, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{video.title}</p>
+          <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 4 }}>Video Optimisation</p>
+          <p style={{ fontSize: 16, fontWeight: 700, color: C.text1, lineHeight: 1.35, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{video.title}</p>
         </div>
         <div style={{ display: 'flex', gap: 8, flexShrink: 0 }}>
           {(videoResult || titleResult) && (
@@ -454,7 +446,7 @@ export default function VideoOptimizePanel({ video, onClose, onVideoUpdated }) {
       {isLoading && (
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '16px 0', color: C.text3 }}>
           <SpinIcon />
-          <span style={{ fontSize: 13 }}>Analysing title, description &amp; thumbnail against competitor data…</span>
+          <span style={{ fontSize: 15 }}>Analysing title, description &amp; thumbnail against competitor data…</span>
         </div>
       )}
 
@@ -474,8 +466,8 @@ export default function VideoOptimizePanel({ video, onClose, onVideoUpdated }) {
             const msg  = a.priority.replace(/^[^|]*\|?\s*/, '')
             return (
               <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 12, padding: '12px 16px', marginBottom: 16, display: 'flex', alignItems: 'flex-start', gap: 12 }}>
-                <span style={{ fontSize: 10, fontWeight: 800, color: C.red, background: C.redBg, border: `1px solid ${C.redBdr}`, padding: '3px 9px', borderRadius: 100, textTransform: 'uppercase', letterSpacing: '0.06em', flexShrink: 0, marginTop: 1 }}>Fix first: {area}</span>
-                <p style={{ fontSize: 13, color: C.text2, lineHeight: 1.5 }}>{msg}</p>
+                <span style={{ fontSize: 11, fontWeight: 800, color: C.red, background: C.redBg, border: `1px solid ${C.redBdr}`, padding: '3px 10px', borderRadius: 100, textTransform: 'uppercase', letterSpacing: '0.06em', flexShrink: 0, marginTop: 1 }}>Fix first: {area}</span>
+                <p style={{ fontSize: 14.5, color: C.text2, lineHeight: 1.5 }}>{msg}</p>
               </div>
             )
           })()}
@@ -487,16 +479,16 @@ export default function VideoOptimizePanel({ video, onClose, onVideoUpdated }) {
                 {/* Score + keyword */}
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
                   <ScoreRing score={titleResult.score} />
-                  <span style={{ fontSize: 11.5, fontWeight: 700, color: titleResult.score >= 75 ? C.green : titleResult.score >= 50 ? C.amber : C.red }}>
+                  <span style={{ fontSize: 13, fontWeight: 700, color: titleResult.score >= 75 ? C.green : titleResult.score >= 50 ? C.amber : C.red }}>
                     {titleResult.score >= 75 ? 'Strong' : titleResult.score >= 50 ? 'Needs work' : 'Weak'}
                   </span>
                   {titleResult.primary_phrase && (
-                    <span style={{ fontSize: 10, color: C.blue, background: C.blueBg, padding: '2px 8px', borderRadius: 100, fontWeight: 600, border: `1px solid ${C.blueBdr}` }}>
+                    <span style={{ fontSize: 12, color: C.blue, background: C.blueBg, padding: '3px 10px', borderRadius: 100, fontWeight: 600, border: `1px solid ${C.blueBdr}` }}>
                       {titleResult.primary_phrase}
                     </span>
                   )}
                   {titleResult.videos_found > 0 && (
-                    <span style={{ fontSize: 10, color: C.text3 }}>{titleResult.videos_found} competitor videos</span>
+                    <span style={{ fontSize: 12, color: C.text3 }}>{titleResult.videos_found} competitor videos</span>
                   )}
                 </div>
                 {/* Breakdown bars */}
@@ -511,7 +503,7 @@ export default function VideoOptimizePanel({ video, onClose, onVideoUpdated }) {
               {titleResult.power_words_found?.length > 0 && (
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5, marginBottom: 16 }}>
                   {titleResult.power_words_found.map(w => (
-                    <span key={w} style={{ fontSize: 10, fontWeight: 700, background: C.surface, color: C.text2, padding: '2px 8px', borderRadius: 100, textTransform: 'uppercase', letterSpacing: '0.04em', border: `1px solid ${C.border}` }}>{w}</span>
+                    <span key={w} style={{ fontSize: 12, fontWeight: 700, background: C.surface, color: C.text2, padding: '2px 9px', borderRadius: 100, textTransform: 'uppercase', letterSpacing: '0.04em', border: `1px solid ${C.border}` }}>{w}</span>
                   ))}
                 </div>
               )}
@@ -521,20 +513,20 @@ export default function VideoOptimizePanel({ video, onClose, onVideoUpdated }) {
                 <div style={{ background: C.surface, borderRadius: 10, padding: '14px 16px', marginBottom: 16, border: `1px solid ${C.borderFaint}` }}>
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: titleResult.intent_analysis.gap_opportunity ? 12 : 0 }}>
                     <div>
-                      <p style={{ fontSize: 9.5, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 4 }}>Search Intent</p>
-                      <p style={{ fontSize: 13, fontWeight: 500, color: C.text1, lineHeight: 1.45 }}>{titleResult.intent_analysis.search_intent}</p>
+                      <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 4 }}>Search Intent</p>
+                      <p style={{ fontSize: 14.5, fontWeight: 500, color: C.text1, lineHeight: 1.45 }}>{titleResult.intent_analysis.search_intent}</p>
                     </div>
                     <div>
-                      <p style={{ fontSize: 9.5, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 4 }}>Emotional Driver</p>
-                      <p style={{ fontSize: 13, fontWeight: 500, color: C.text1, lineHeight: 1.45 }}>{titleResult.intent_analysis.emotional_driver}</p>
+                      <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 4 }}>Emotional Driver</p>
+                      <p style={{ fontSize: 14.5, fontWeight: 500, color: C.text1, lineHeight: 1.45 }}>{titleResult.intent_analysis.emotional_driver}</p>
                     </div>
                   </div>
                   {titleResult.intent_analysis.gap_opportunity && (
                     <div style={{ borderTop: `1px solid ${C.borderFaint}`, paddingTop: 12 }}>
-                      <p style={{ fontSize: 9.5, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 4 }}>Competitor Gap</p>
-                      <p style={{ fontSize: 13, color: C.text2, lineHeight: 1.5 }}>{titleResult.intent_analysis.gap_opportunity}</p>
+                      <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 4 }}>Competitor Gap</p>
+                      <p style={{ fontSize: 14.5, color: C.text2, lineHeight: 1.5 }}>{titleResult.intent_analysis.gap_opportunity}</p>
                       {titleResult.intent_analysis.overused_angle && (
-                        <p style={{ fontSize: 11.5, color: C.text3, marginTop: 5, lineHeight: 1.45 }}>
+                        <p style={{ fontSize: 13, color: C.text3, marginTop: 5, lineHeight: 1.45 }}>
                           <span style={{ fontWeight: 700, color: C.text2 }}>Overused: </span>{titleResult.intent_analysis.overused_angle}
                         </p>
                       )}
@@ -564,25 +556,25 @@ export default function VideoOptimizePanel({ video, onClose, onVideoUpdated }) {
                           }}>
                           <div style={{ padding: '11px 14px' }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-                              <span style={{ fontSize: 9.5, fontWeight: 800, color: hm.color, background: C.surface, padding: '2px 9px', borderRadius: 100, textTransform: 'uppercase', letterSpacing: '0.07em', border: `1px solid ${C.border}` }}>{hm.label}</span>
-                              <span style={{ fontSize: 11.5, color: C.text3 }}>{hm.desc}</span>
+                              <span style={{ fontSize: 11, fontWeight: 800, color: hm.color, background: C.surface, padding: '2px 10px', borderRadius: 100, textTransform: 'uppercase', letterSpacing: '0.07em', border: `1px solid ${C.border}` }}>{hm.label}</span>
+                              <span style={{ fontSize: 13, color: C.text3 }}>{hm.desc}</span>
                             </div>
-                            <p style={{ fontSize: 14, fontWeight: 600, color: C.text1, lineHeight: 1.4, marginBottom: 6 }}>{s.title}</p>
+                            <p style={{ fontSize: 16, fontWeight: 600, color: C.text1, lineHeight: 1.4, marginBottom: 6 }}>{s.title}</p>
                             <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
-                              <span style={{ fontSize: 11, color: s.length >= 50 && s.length <= 70 ? C.green : C.amber, fontWeight: 600 }}>{s.length} chars</span>
+                              <span style={{ fontSize: 12.5, color: s.length >= 50 && s.length <= 70 ? C.green : C.amber, fontWeight: 600 }}>{s.length} chars</span>
                               {s.power_words_found?.map(w => (
-                                <span key={w} style={{ fontSize: 9, fontWeight: 700, background: C.surface, color: C.text2, padding: '1px 7px', borderRadius: 100, textTransform: 'uppercase', border: `1px solid ${C.border}` }}>{w}</span>
+                                <span key={w} style={{ fontSize: 11, fontWeight: 700, background: C.surface, color: C.text2, padding: '2px 8px', borderRadius: 100, textTransform: 'uppercase', border: `1px solid ${C.border}` }}>{w}</span>
                               ))}
-                              <div style={{ marginLeft: 'auto', display: 'flex', gap: 10 }}>
-                                {s.seo_score  > 0 && <span style={{ fontSize: 11, fontWeight: 700, color: s.seo_score  >= 70 ? C.green : s.seo_score  >= 50 ? C.amber : C.red }}>{s.seo_score} SEO</span>}
-                                {s.ctr_score  > 0 && <span style={{ fontSize: 11, fontWeight: 700, color: s.ctr_score  >= 70 ? C.green : s.ctr_score  >= 50 ? C.amber : C.red }}>{s.ctr_score} CTR</span>}
-                                {s.hook_score > 0 && <span style={{ fontSize: 11, fontWeight: 700, color: s.hook_score >= 70 ? C.green : s.hook_score >= 50 ? C.amber : C.red }}>{s.hook_score} Hook</span>}
+                              <div style={{ marginLeft: 'auto', display: 'flex', gap: 12 }}>
+                                {s.seo_score  > 0 && <span style={{ fontSize: 12.5, fontWeight: 700, color: s.seo_score  >= 70 ? C.green : s.seo_score  >= 50 ? C.amber : C.red }}>{s.seo_score} SEO</span>}
+                                {s.ctr_score  > 0 && <span style={{ fontSize: 12.5, fontWeight: 700, color: s.ctr_score  >= 70 ? C.green : s.ctr_score  >= 50 ? C.amber : C.red }}>{s.ctr_score} CTR</span>}
+                                {s.hook_score > 0 && <span style={{ fontSize: 12.5, fontWeight: 700, color: s.hook_score >= 70 ? C.green : s.hook_score >= 50 ? C.amber : C.red }}>{s.hook_score} Hook</span>}
                               </div>
                             </div>
                           </div>
                           {s.why_it_works && (
-                            <div style={{ padding: '8px 14px 11px', borderTop: `1px solid ${C.borderFaint}` }}>
-                              <p style={{ fontSize: 12, color: C.text3, lineHeight: 1.5 }}>
+                            <div style={{ padding: '10px 14px 12px', borderTop: `1px solid ${C.borderFaint}` }}>
+                              <p style={{ fontSize: 13.5, color: C.text3, lineHeight: 1.55 }}>
                                 <span style={{ fontWeight: 700, color: C.text2 }}>Why it works: </span>{s.why_it_works}
                               </p>
                             </div>
@@ -610,12 +602,12 @@ export default function VideoOptimizePanel({ video, onClose, onVideoUpdated }) {
               <div style={{ marginBottom: 14 }}>
                 <ScoreBar score={a.description.score} label="Quality score" />
               </div>
-              <p style={{ fontSize: 13, color: C.text2, lineHeight: 1.6, marginBottom: 12 }}>{a.description.verdict}</p>
+              <p style={{ fontSize: 14.5, color: C.text2, lineHeight: 1.6, marginBottom: 12 }}>{a.description.verdict}</p>
 
               {a.description.hook_quality && (
                 <div style={{ background: C.surface, borderRadius: 8, padding: '10px 12px', marginBottom: 12, borderLeft: `2px solid ${C.blue}` }}>
-                  <p style={{ fontSize: 9.5, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 3 }}>Hook — first 150 chars</p>
-                  <p style={{ fontSize: 12.5, color: C.text2, lineHeight: 1.5 }}>{a.description.hook_quality}</p>
+                  <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 3 }}>Hook — first 150 chars</p>
+                  <p style={{ fontSize: 14, color: C.text2, lineHeight: 1.5 }}>{a.description.hook_quality}</p>
                 </div>
               )}
 
@@ -623,8 +615,8 @@ export default function VideoOptimizePanel({ video, onClose, onVideoUpdated }) {
                 <div style={{ marginBottom: 14 }}>
                   {a.description.issues.map((issue, i) => (
                     <div key={i} style={{ display: 'flex', gap: 8, alignItems: 'flex-start', marginBottom: 5 }}>
-                      <span style={{ fontSize: 11, color: C.red, fontWeight: 700, flexShrink: 0, marginTop: 1 }}>✕</span>
-                      <span style={{ fontSize: 12.5, color: C.text2, lineHeight: 1.45 }}>{issue}</span>
+                      <span style={{ fontSize: 13, color: C.red, fontWeight: 700, flexShrink: 0, marginTop: 1 }}>✕</span>
+                      <span style={{ fontSize: 14, color: C.text2, lineHeight: 1.45 }}>{issue}</span>
                     </div>
                   ))}
                 </div>
@@ -632,27 +624,27 @@ export default function VideoOptimizePanel({ video, onClose, onVideoUpdated }) {
 
               {!descResult && (
                 <div style={{ borderTop: `1px solid ${C.borderFaint}`, paddingTop: 14 }}>
-                  <p style={{ fontSize: 12.5, color: C.text3, marginBottom: 12 }}>
+                  <p style={{ fontSize: 14, color: C.text3, marginBottom: 12 }}>
                     Generate 3 AI-optimised descriptions (story / value / keyword) and apply directly to YouTube.
                     {titleApply === 'success' && <span style={{ color: C.green, fontWeight: 600 }}> Using your new applied title.</span>}
                   </p>
                   <button onClick={generateDescriptions} disabled={descLoading}
-                    style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '9px 20px', background: !descLoading ? C.blue : C.surface, color: !descLoading ? '#fff' : C.text3, border: 'none', borderRadius: 100, fontSize: 13, fontWeight: 700, fontFamily: 'inherit', cursor: !descLoading ? 'pointer' : 'not-allowed', transition: 'all 0.15s', boxShadow: !descLoading ? '0 1px 3px rgba(37,99,235,0.2), 0 4px 12px rgba(37,99,235,0.18)' : 'none' }}>
+                    style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '10px 22px', background: !descLoading ? C.blue : C.surface, color: !descLoading ? '#fff' : C.text3, border: 'none', borderRadius: 100, fontSize: 14, fontWeight: 700, fontFamily: 'inherit', cursor: !descLoading ? 'pointer' : 'not-allowed', transition: 'all 0.15s', boxShadow: !descLoading ? '0 1px 3px rgba(37,99,235,0.2), 0 4px 12px rgba(37,99,235,0.18)' : 'none' }}>
                     {descLoading ? <><SpinIcon /> Generating…</> : <>
-                      <svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2"><path d="M7 1l1.5 4.5H13l-3.7 2.7 1.4 4.3L7 10 3.3 12.5l1.4-4.3L1 5.5h4.5z"/></svg>
+                      <svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2"><path d="M7 1l1.5 4.5H13l-3.7 2.7 1.4 4.3L7 10 3.3 12.5l1.4-4.3L1 5.5h4.5z"/></svg>
                       Generate 3 descriptions
                     </>}
                   </button>
-                  {descError && <p style={{ marginTop: 10, fontSize: 12.5, color: C.red }}>{descError}</p>}
+                  {descError && <p style={{ marginTop: 10, fontSize: 14, color: C.red }}>{descError}</p>}
                 </div>
               )}
 
               {descResult?.length > 0 && (
                 <div style={{ borderTop: `1px solid ${C.borderFaint}`, paddingTop: 14 }}>
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
-                    <p style={{ fontSize: 12.5, color: C.text3 }}>Expand each to review &amp; edit, then apply directly to YouTube.</p>
+                    <p style={{ fontSize: 14, color: C.text3 }}>Expand each to review &amp; edit, then apply directly to YouTube.</p>
                     <button onClick={() => { setDescResult(null); setDescApplyStates({}); setDescApplyErrors({}) }}
-                      style={{ fontSize: 12, color: C.text2, background: C.card, border: `1px solid ${C.border}`, borderRadius: 100, padding: '5px 12px', cursor: 'pointer', fontFamily: 'inherit', fontWeight: 600 }}>
+                      style={{ fontSize: 13.5, color: C.text2, background: C.card, border: `1px solid ${C.border}`, borderRadius: 100, padding: '6px 14px', cursor: 'pointer', fontFamily: 'inherit', fontWeight: 600 }}>
                       Regenerate
                     </button>
                   </div>
@@ -677,7 +669,7 @@ export default function VideoOptimizePanel({ video, onClose, onVideoUpdated }) {
                   <div style={{ marginBottom: 14 }}>
                     <ScoreBar score={a.thumbnail.score} label="Visual score" />
                   </div>
-                  <p style={{ fontSize: 13, color: C.text2, lineHeight: 1.6, marginBottom: 12 }}>{a.thumbnail.verdict}</p>
+                  <p style={{ fontSize: 14.5, color: C.text2, lineHeight: 1.6, marginBottom: 12 }}>{a.thumbnail.verdict}</p>
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 14 }}>
                     <CheckBadge value={a.thumbnail.has_text_overlay} trueLabel="Text overlay"    falseLabel="No text overlay" />
                     <CheckBadge value={a.thumbnail.has_face}         trueLabel="Face present"    falseLabel="No face"         />
@@ -685,18 +677,18 @@ export default function VideoOptimizePanel({ video, onClose, onVideoUpdated }) {
                   </div>
                   {a.thumbnail.tips?.length > 0 && (
                     <div>
-                      <p style={{ fontSize: 10, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 8 }}>Recommendations</p>
+                      <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 8 }}>Recommendations</p>
                       {a.thumbnail.tips.map((tip, i) => (
                         <div key={i} style={{ display: 'flex', gap: 8, alignItems: 'flex-start', marginBottom: 6 }}>
-                          <span style={{ fontSize: 11, color: C.blue, fontWeight: 700, flexShrink: 0, marginTop: 1 }}>→</span>
-                          <span style={{ fontSize: 12.5, color: C.text2, lineHeight: 1.45 }}>{tip}</span>
+                          <span style={{ fontSize: 13, color: C.blue, fontWeight: 700, flexShrink: 0, marginTop: 1 }}>→</span>
+                          <span style={{ fontSize: 14, color: C.text2, lineHeight: 1.45 }}>{tip}</span>
                         </div>
                       ))}
                     </div>
                   )}
                 </div>
-                <div style={{ padding: '10px 14px', background: C.surface, border: `1px solid ${C.border}`, borderRadius: 10, maxWidth: 200 }}>
-                  <p style={{ fontSize: 11.5, color: C.text3, lineHeight: 1.55 }}>
+                <div style={{ padding: '12px 16px', background: C.surface, border: `1px solid ${C.border}`, borderRadius: 10, maxWidth: 220 }}>
+                  <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.55 }}>
                     Thumbnails must be uploaded manually in YouTube Studio. Use these recommendations to guide your redesign.
                   </p>
                 </div>

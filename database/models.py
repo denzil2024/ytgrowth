@@ -34,6 +34,14 @@ class UserSession(Base):
     user_data_json = Column(Text, nullable=False)
     updated_at = Column(DateTime, default=datetime.datetime.utcnow, onupdate=datetime.datetime.utcnow)
 
+class VideoOptimizeCache(Base):
+    __tablename__ = "video_optimize_cache"
+    id          = Column(Integer, primary_key=True)
+    channel_id  = Column(String, nullable=False, index=True)
+    video_id    = Column(String, nullable=False, index=True)
+    result_json = Column(Text, nullable=False)
+    updated_at  = Column(DateTime, default=datetime.datetime.utcnow, onupdate=datetime.datetime.utcnow)
+
 import os
 DATABASE_URL = os.environ.get("DATABASE_URL", "sqlite:///ytgrowth.db")
 # Railway provides postgres:// but SQLAlchemy needs postgresql://

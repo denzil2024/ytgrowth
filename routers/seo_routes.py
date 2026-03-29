@@ -3,6 +3,8 @@ from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from app.seo import analyze_title, generate_intent_options, generate_description_suggestions, generate_thumbnail_text, optimize_video
 from routers.auth import get_session
+from database.models import SessionLocal, VideoOptimizeCache
+import json
 
 router = APIRouter()
 
@@ -141,3 +143,61 @@ def update_video_route(body: UpdateVideoRequest, request: Request):
                 status_code=403,
             )
         return JSONResponse({"error": err}, status_code=500)
+
+
+# ── Optimize cache (persisted to Postgres) ────────────────────────────────────
+
+class SaveOptimizeCacheRequest(BaseModel):
+    video_id:    str
+    result_json: str   # JSON-encoded full result object
+
+
+@router.get("/optimize-cache/{video_id}")
+def get_optimize_cache(video_id: str, request: Request):
+    data, _ = get_session(request.session.get("session_id"))
+    if not data:
+        return JSONResponse({"error": "Not authenticated."}, status_code=401)
+    channel_id = data.get("channel_id", "")
+    db = SessionLocal()
+    try:
+        row = db.query(VideoOptimizeCache).filter_by(channel_id=channel_id, video_id=video_id).first()
+        if not row:
+            return JSONResponse({"cached": None})
+        return JSONResponse({"cached": json.loads(row.result_json)})
+    finally:
+        db.close()
+
+
+@router.post("/optimize-cache")
+def save_optimize_cache(body: SaveOptimizeCacheRequest, request: Request):
+    data, _ = get_session(request.session.get("session_id"))
+    if not data:
+        return JSONResponse({"error": "Not authenticated."}, status_code=401)
+    channel_id = data.get("channel_id", "")
+    db = SessionLocal()
+    try:
+        row = db.query(VideoOptimizeCache).filter_by(channel_id=channel_id, video_id=body.video_id).first()
+        if row:
+            row.result_json = body.result_json
+        else:
+            row = VideoOptimizeCache(channel_id=channel_id, video_id=body.video_id, result_json=body.result_json)
+            db.add(row)
+        db.commit()
+        return JSONResponse({"ok": True})
+    finally:
+        db.close()
+
+
+@router.delete("/optimize-cache/{video_id}")
+def delete_optimize_cache(video_id: str, request: Request):
+    data, _ = get_session(request.session.get("session_id"))
+    if not data:
+        return JSONResponse({"error": "Not authenticated."}, status_code=401)
+    channel_id = data.get("channel_id", "")
+    db = SessionLocal()
+    try:
+        db.query(VideoOptimizeCache).filter_by(channel_id=channel_id, video_id=video_id).delete()
+        db.commit()
+        return JSONResponse({"ok": True})
+    finally:
+        db.close()
