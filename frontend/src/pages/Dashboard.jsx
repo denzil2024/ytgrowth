@@ -955,100 +955,99 @@ export default function Dashboard() {
                 <h2 style={{ fontSize: 24, fontWeight: 800, color: '#0a0a0f', letterSpacing: '-0.7px', marginBottom: 5 }}>Video performance</h2>
                 <p style={{ fontSize: 13.5, color: C.text3, letterSpacing: '-0.1px' }}>{videos.length} videos — click Optimise to get AI feedback on title, description &amp; thumbnail</p>
               </div>
-              <div className="ytg-card" style={{ overflow: 'hidden' }}>
-                {/* Header row */}
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 76px 80px 66px 90px 88px 116px', alignItems: 'center', padding: '11px 20px', borderBottom: `1px solid #ebebef`, background: '#f8f8fb' }}>
-                  {[['Video', 'left'], ['Duration', 'right'], ['Views', 'right'], ['Likes', 'right'], ['Comments', 'right'], ['Like rate', 'right'], ['', 'right']].map(([h, align]) => (
-                    <p key={h} style={{ fontSize: 10, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.07em', textAlign: align }}>{h}</p>
-                  ))}
-                </div>
+
+              {/* Card grid */}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: 16 }}>
                 {videos.map((v, i) => {
                   const lr      = v.views > 0 ? (v.likes / v.views * 100).toFixed(1) : 0
                   const lrN     = parseFloat(lr)
                   const lrColor = lrN >= 4 ? C.green : lrN >= 2 ? C.amber : C.red
+                  const lrBg    = lrN >= 4 ? C.greenBg : lrN >= 2 ? '#fffbeb' : C.redBg
+                  const lrBdr   = lrN >= 4 ? C.greenBdr : lrN >= 2 ? '#fde68a' : C.redBdr
                   const isSelected = selectedVideoId === v.video_id
                   const ytUrl   = v.video_id ? `https://www.youtube.com/watch?v=${v.video_id}` : null
                   const durMatch = (v.duration || '').match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/)
                   const durSecs  = durMatch ? (+durMatch[1]||0)*3600 + (+durMatch[2]||0)*60 + (+durMatch[3]||0) : 0
-                  const durLabel = durSecs > 0 ? (durSecs <= 60 ? `${durSecs}s` : `${Math.floor(durSecs/60)}:${String(durSecs%60).padStart(2,'0')}`) : '—'
+                  const durLabel = durSecs > 0 ? (durSecs <= 60 ? `${durSecs}s` : `${Math.floor(durSecs/60)}:${String(durSecs%60).padStart(2,'0')}`) : null
                   const isShort  = durSecs > 0 && durSecs <= 60
                   return (
-                    <div key={v.video_id || i}>
-                      <div className="ytg-video-row" style={{
-                        display: 'grid', gridTemplateColumns: '1fr 76px 80px 66px 90px 88px 116px', alignItems: 'center',
-                        padding: '10px 20px',
-                        borderBottom: !isSelected && i < videos.length - 1 ? `1px solid #f0f0f4` : 'none',
-                        background: isSelected ? '#f0f5ff' : undefined,
-                      }}>
-                        {/* Thumbnail + title */}
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 14, minWidth: 0 }}>
-                          <a href={ytUrl || '#'} target="_blank" rel="noopener noreferrer"
-                            style={{ position: 'relative', flexShrink: 0, display: 'block', borderRadius: 8, overflow: 'hidden', textDecoration: 'none' }}>
-                            {v.thumbnail
-                              ? <img src={v.thumbnail} alt="" style={{ width: 100, height: 63, objectFit: 'cover', display: 'block' }}/>
-                              : <div style={{ width: 100, height: 63, background: '#ebebef' }}/>
-                            }
-                            {isShort && (
-                              <span style={{ position: 'absolute', bottom: 3, left: 3, background: '#111', color: '#fff', fontSize: 8, fontWeight: 700, padding: '1px 4px', borderRadius: 3, lineHeight: 1.4, letterSpacing: '0.04em' }}>SHORT</span>
-                            )}
-                          </a>
-                          <div style={{ minWidth: 0 }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 3 }}>
-                              <p style={{ fontSize: 13, color: C.text1, fontWeight: 600, lineHeight: 1.4, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{v.title}</p>
-                              {ytUrl && (
-                                <a href={ytUrl} target="_blank" rel="noopener noreferrer"
-                                  title="Watch on YouTube"
-                                  style={{ flexShrink: 0, color: '#c4c4cc', display: 'flex', alignItems: 'center', transition: 'color 0.15s' }}
-                                  onMouseEnter={e => e.currentTarget.style.color = C.red}
-                                  onMouseLeave={e => e.currentTarget.style.color = '#c4c4cc'}
-                                >
-                                  <svg width="13" height="13" viewBox="0 0 14 14" fill="none">
-                                    <path d="M5.5 3H3a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V8.5M8.5 1H13M13 1v4.5M13 1L6 8" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
-                                  </svg>
-                                </a>
-                              )}
+                    <div key={v.video_id || i} className="ytg-card" style={{
+                      overflow: 'hidden', display: 'flex', flexDirection: 'column',
+                      outline: isSelected ? `2px solid ${C.blue}` : '2px solid transparent',
+                      outlineOffset: -2,
+                    }}>
+                      {/* Thumbnail */}
+                      <a href={ytUrl || '#'} target="_blank" rel="noopener noreferrer"
+                        style={{ display: 'block', position: 'relative', textDecoration: 'none', flexShrink: 0 }}>
+                        {v.thumbnail
+                          ? <img src={v.thumbnail} alt="" style={{ width: '100%', aspectRatio: '16/9', objectFit: 'cover', display: 'block' }}/>
+                          : <div style={{ width: '100%', aspectRatio: '16/9', background: '#ebebef' }}/>
+                        }
+                        {isShort && (
+                          <span style={{ position: 'absolute', top: 8, left: 8, background: '#111', color: '#fff', fontSize: 9, fontWeight: 800, padding: '2px 6px', borderRadius: 4, letterSpacing: '0.06em' }}>SHORT</span>
+                        )}
+                        {durLabel && (
+                          <span style={{ position: 'absolute', bottom: 8, right: 8, background: 'rgba(0,0,0,0.72)', color: '#fff', fontSize: 11, fontWeight: 700, padding: '2px 7px', borderRadius: 5, fontVariantNumeric: 'tabular-nums' }}>{durLabel}</span>
+                        )}
+                      </a>
+
+                      {/* Body */}
+                      <div style={{ padding: '14px 16px 16px', display: 'flex', flexDirection: 'column', flex: 1 }}>
+                        {/* Title */}
+                        <p style={{
+                          fontSize: 13.5, fontWeight: 600, color: C.text1, lineHeight: 1.45, marginBottom: 5,
+                          display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden',
+                        }}>{v.title}</p>
+                        <p style={{ fontSize: 11, color: C.text3, marginBottom: 14 }}>
+                          {new Date(v.published_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
+                        </p>
+
+                        {/* Stats row */}
+                        <div style={{ display: 'flex', gap: 20, marginBottom: 14 }}>
+                          {[['Views', fmtNum(v.views), C.text1, true], ['Likes', fmtNum(v.likes), C.text2, false], ['Comments', fmtNum(v.comments), C.text2, false]].map(([label, val, col, bold]) => (
+                            <div key={label}>
+                              <p style={{ fontSize: 17, fontWeight: bold ? 800 : 600, color: col, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.5px', lineHeight: 1 }}>{val}</p>
+                              <p style={{ fontSize: 10, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.05em', marginTop: 3 }}>{label}</p>
                             </div>
-                            <p style={{ fontSize: 11, color: C.text3 }}>{new Date(v.published_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</p>
-                          </div>
+                          ))}
                         </div>
-                        {/* Duration */}
-                        <p style={{ fontSize: 12.5, color: C.text3, textAlign: 'right', fontVariantNumeric: 'tabular-nums', fontWeight: 500 }}>{durLabel}</p>
-                        {/* Views */}
-                        <p style={{ fontSize: 13, fontWeight: 700, color: C.text1, textAlign: 'right', fontVariantNumeric: 'tabular-nums' }}>{fmtNum(v.views)}</p>
-                        {/* Likes */}
-                        <p style={{ fontSize: 13, color: C.text2, textAlign: 'right', fontVariantNumeric: 'tabular-nums' }}>{fmtNum(v.likes)}</p>
-                        {/* Comments */}
-                        <p style={{ fontSize: 13, color: C.text2, textAlign: 'right', fontVariantNumeric: 'tabular-nums' }}>{fmtNum(v.comments)}</p>
-                        {/* Like rate */}
-                        <div style={{ textAlign: 'right' }}>
-                          <span style={{ fontSize: 12.5, fontWeight: 700, color: lrColor, background: lrN >= 4 ? C.greenBg : lrN >= 2 ? '#fffbeb' : C.redBg, padding: '3px 8px', borderRadius: 100, border: `1px solid ${lrN >= 4 ? C.greenBdr : lrN >= 2 ? '#fde68a' : C.redBdr}`, fontVariantNumeric: 'tabular-nums' }}>{lr}%</span>
-                        </div>
-                        {/* Optimise */}
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
+
+                        {/* Footer: like rate + optimise */}
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 'auto', paddingTop: 12, borderTop: `1px solid #f0f0f4` }}>
+                          <span style={{ fontSize: 12, fontWeight: 700, color: lrColor, background: lrBg, padding: '4px 10px', borderRadius: 100, border: `1px solid ${lrBdr}`, fontVariantNumeric: 'tabular-nums' }}>
+                            {lr}% like rate
+                          </span>
                           <button
                             onClick={() => setSelectedVideoId(isSelected ? null : v.video_id)}
                             className={isSelected ? '' : 'ytg-dash-btn'}
                             style={isSelected ? {
                               fontSize: 11.5, fontWeight: 700, color: C.blue,
                               background: '#eff6ff', border: `1px solid #bfdbfe`,
-                              borderRadius: 100, padding: '5px 12px', cursor: 'pointer',
+                              borderRadius: 100, padding: '5px 14px', cursor: 'pointer',
                               fontFamily: 'inherit', whiteSpace: 'nowrap',
-                            } : { padding: '5px 12px', fontSize: 11.5, whiteSpace: 'nowrap' }}>
+                            } : { padding: '5px 14px', fontSize: 11.5, whiteSpace: 'nowrap' }}>
                             {isSelected ? '✕ Close' : 'Optimise'}
                           </button>
                         </div>
                       </div>
-                      {isSelected && (
-                        <VideoOptimizePanel
-                          video={v}
-                          onClose={() => setSelectedVideoId(null)}
-                          onVideoUpdated={handleVideoUpdated}
-                        />
-                      )}
                     </div>
                   )
                 })}
               </div>
+
+              {/* Optimise panel — full width below grid */}
+              {selectedVideoId && (() => {
+                const sv = videos.find(v => v.video_id === selectedVideoId)
+                return sv ? (
+                  <div style={{ marginTop: 16 }}>
+                    <VideoOptimizePanel
+                      video={sv}
+                      onClose={() => setSelectedVideoId(null)}
+                      onVideoUpdated={handleVideoUpdated}
+                    />
+                  </div>
+                ) : null
+              })()}
             </>
           )}
 
