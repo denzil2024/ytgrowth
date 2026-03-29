@@ -10,16 +10,15 @@ if (typeof document !== 'undefined' && !document.getElementById('seo-opt-styles'
   .seo-result-section { animation: seoFadeUp 0.3s ease both; }
 
   .seo-glass-card {
-    background: rgba(255,255,255,0.85) !important;
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255,255,255,0.98) !important;
-    box-shadow: 0 1px 0 rgba(255,255,255,0.8) inset, 0 6px 24px rgba(0,0,0,0.07), 0 1px 4px rgba(0,0,0,0.04) !important;
+    background: #ffffff;
+    border: 1px solid rgba(0,0,0,0.09) !important;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.07), 0 6px 24px rgba(0,0,0,0.09) !important;
   }
   .seo-glass-card:hover {
-    box-shadow: 0 1px 0 rgba(255,255,255,0.8) inset, 0 14px 44px rgba(0,0,0,0.1), 0 2px 6px rgba(0,0,0,0.05) !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.10), 0 20px 56px rgba(0,0,0,0.13) !important;
     transform: translateY(-1px);
-    transition: box-shadow 0.22s, transform 0.22s;
+    border-color: rgba(0,0,0,0.13) !important;
+    transition: box-shadow 0.22s, transform 0.22s, border-color 0.22s;
   }
 `
   document.head.appendChild(s)
@@ -211,7 +210,7 @@ function TitlePreviewSimulator({ title }) {
     { label: 'Desktop search', maxChars: 70, icon: '🖥️' },
   ]
   return (
-    <div style={{ marginTop: 12, padding: '14px 16px', background: 'linear-gradient(135deg, #f8f8fc 0%, #f4f4f8 100%)', borderRadius: 12, border: `1px solid ${C.border}` }}>
+    <div style={{ marginTop: 12, padding: '14px 16px', background: '#f7f7fa', borderRadius: 12, border: `1px solid ${C.border}` }}>
       <p style={{ fontSize: 10.5, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 10 }}>Preview on YouTube</p>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 8 }}>
         {surfaces.map(({ label, maxChars, icon }) => {
@@ -240,7 +239,7 @@ function DescriptionCard({ d, idx, copiedDesc, onCopy }) {
   const tm = DESC_TYPE_META[d.type] || DESC_TYPE_META.value
   const isCopied = copiedDesc === idx
   return (
-    <div style={{ border: `1.5px solid ${isCopied ? 'rgba(134,239,172,0.7)' : 'rgba(255,255,255,0.98)'}`, borderRadius: 16, overflow: 'hidden', background: isCopied ? 'rgba(240,253,244,0.88)' : 'rgba(255,255,255,0.85)', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)', transition: 'all 0.2s', boxShadow: '0 1px 0 rgba(255,255,255,0.8) inset, 0 6px 20px rgba(0,0,0,0.07)' }}>
+    <div style={{ border: `1px solid ${isCopied ? '#bbf7d0' : 'rgba(0,0,0,0.09)'}`, borderRadius: 16, overflow: 'hidden', background: isCopied ? '#f0fdf4' : '#ffffff', transition: 'all 0.2s', boxShadow: '0 1px 3px rgba(0,0,0,0.07), 0 6px 24px rgba(0,0,0,0.09)' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 16px', background: tm.bg, borderBottom: `1px solid ${C.border}` }}>
         <div style={{ width: 22, height: 22, borderRadius: 6, background: tm.color, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
           <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round"><path d="M2 5h6M5 2l3 3-3 3"/></svg>
@@ -249,11 +248,11 @@ function DescriptionCard({ d, idx, copiedDesc, onCopy }) {
         <span style={{ fontSize: 11.5, color: C.text3, fontWeight: 400 }}>{d.why_it_works}</span>
       </div>
       <div style={{ padding: '14px 16px' }}>
-        <p style={{ fontSize: 13, color: C.text2, lineHeight: 1.65, background: 'linear-gradient(135deg, #f8f8fc, #f4f4f8)', padding: '10px 14px', borderRadius: 9, borderLeft: `3px solid ${tm.color}`, marginBottom: 10 }}>
+        <p style={{ fontSize: 13, color: C.text2, lineHeight: 1.65, background: '#f7f7fa', padding: '10px 14px', borderRadius: 9, borderLeft: `3px solid ${tm.color}`, marginBottom: 10 }}>
           {d.preview}
         </p>
         {expanded && (
-          <pre style={{ fontSize: 12.5, color: C.text1, lineHeight: 1.75, whiteSpace: 'pre-wrap', fontFamily: "'Plus Jakarta Sans', 'Inter', system-ui, sans-serif", background: '#fafafc', padding: '12px 14px', borderRadius: 10, marginBottom: 10, border: `1px solid ${C.border}`, boxShadow: 'inset 0 1px 4px rgba(0,0,0,0.03)' }}>
+          <pre style={{ fontSize: 12.5, color: C.text1, lineHeight: 1.75, whiteSpace: 'pre-wrap', fontFamily: "'DM Sans', 'Inter', system-ui, sans-serif", background: '#fafafc', padding: '12px 14px', borderRadius: 10, marginBottom: 10, border: `1px solid ${C.border}`, boxShadow: 'inset 0 1px 4px rgba(0,0,0,0.03)' }}>
             {d.full}
           </pre>
         )}
@@ -425,13 +424,13 @@ export default function SeoOptimizer() {
   )
 
   return (
-    <div style={{ width: '100%', fontFamily: "'Plus Jakarta Sans', 'Inter', system-ui, sans-serif" }}>
+    <div style={{ width: '100%', fontFamily: "'DM Sans', 'Inter', system-ui, sans-serif" }}>
 
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 28 }}>
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6 }}>
-            <div style={{ width: 36, height: 36, borderRadius: 10, background: 'linear-gradient(135deg, #2563eb, #7c3aed)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 14px rgba(37,99,235,0.3)' }}>
+            <div style={{ width: 36, height: 36, borderRadius: 10, background: '#e5251b', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 14px rgba(229,37,27,0.32)' }}>
               <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round"><circle cx="7" cy="7" r="5"/><path d="M10.5 10.5l4 4"/></svg>
             </div>
             <h2 style={{ fontSize: 26, fontWeight: 800, color: '#0a0a0a', letterSpacing: '-0.8px', lineHeight: 1 }}>SEO Optimizer</h2>
@@ -460,9 +459,9 @@ export default function SeoOptimizer() {
           <label style={{ display: 'block', fontSize: 11, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 8 }}>Your video title</label>
           <input value={title} onChange={e => setTitle(e.target.value)} onKeyDown={e => e.key === 'Enter' && handleSubmitTitle()}
             placeholder="e.g. How I grew my YouTube channel to 10k subscribers"
-            style={{ width: '100%', padding: '12px 16px', fontSize: 14.5, border: `2px solid ${C.border}`, borderRadius: 12, fontFamily: 'inherit', outline: 'none', color: C.text1, background: '#fafafa', boxSizing: 'border-box', transition: 'border-color 0.18s, box-shadow 0.18s', letterSpacing: '-0.1px' }}
-            onFocus={e => { e.target.style.borderColor = C.blue; e.target.style.boxShadow = `0 0 0 4px ${C.blueBg}` }}
-            onBlur={e => { e.target.style.borderColor = C.border; e.target.style.boxShadow = 'none' }} />
+            style={{ width: '100%', padding: '11px 20px', fontSize: 14, border: '1px solid rgba(0,0,0,0.1)', borderRadius: 100, fontFamily: 'inherit', outline: 'none', color: C.text1, background: '#ffffff', boxSizing: 'border-box', transition: 'border-color 0.18s, box-shadow 0.18s', letterSpacing: '-0.1px', boxShadow: '0 1px 3px rgba(0,0,0,0.06), 0 4px 14px rgba(0,0,0,0.06)' }}
+            onFocus={e => { e.target.style.borderColor = 'rgba(0,0,0,0.25)'; e.target.style.boxShadow = '0 0 0 4px rgba(0,0,0,0.04), 0 1px 3px rgba(0,0,0,0.07)' }}
+            onBlur={e => { e.target.style.borderColor = 'rgba(0,0,0,0.1)'; e.target.style.boxShadow = '0 1px 3px rgba(0,0,0,0.06), 0 4px 14px rgba(0,0,0,0.06)' }} />
           <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 6 }}>
             <span style={{
               fontSize: 11.5, fontWeight: 600,
@@ -477,9 +476,9 @@ export default function SeoOptimizer() {
         </div>
 
         <button onClick={handleSubmitTitle} disabled={loading || loadingIntent || !title.trim()}
-          style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '11px 24px', background: title.trim() && !loading && !loadingIntent ? 'linear-gradient(135deg, #2563eb, #1d4ed8)' : '#d1d1d8', color: '#fff', border: 'none', borderRadius: 11, fontSize: 14, fontWeight: 700, fontFamily: 'inherit', cursor: title.trim() && !loading && !loadingIntent ? 'pointer' : 'not-allowed', transition: 'all 0.18s', boxShadow: title.trim() && !loading && !loadingIntent ? '0 4px 14px rgba(37,99,235,0.35)' : 'none', letterSpacing: '-0.1px' }}
-          onMouseEnter={e => { if (!loading && !loadingIntent && title.trim()) e.currentTarget.style.boxShadow = '0 6px 20px rgba(37,99,235,0.45)' }}
-          onMouseLeave={e => { if (!loading && !loadingIntent && title.trim()) e.currentTarget.style.boxShadow = '0 4px 14px rgba(37,99,235,0.35)' }}>
+          style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '11px 26px', background: title.trim() && !loading && !loadingIntent ? '#e5251b' : '#e0e0e6', color: '#fff', border: 'none', borderRadius: 100, fontSize: 13, fontWeight: 700, fontFamily: 'inherit', cursor: title.trim() && !loading && !loadingIntent ? 'pointer' : 'not-allowed', transition: 'all 0.18s', boxShadow: title.trim() && !loading && !loadingIntent ? '0 1px 3px rgba(0,0,0,0.12), 0 4px 14px rgba(229,37,27,0.32)' : 'none', letterSpacing: '-0.1px' }}
+          onMouseEnter={e => { if (!loading && !loadingIntent && title.trim()) { e.currentTarget.style.filter = 'brightness(1.07)'; e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.15), 0 8px 28px rgba(229,37,27,0.42)'; e.currentTarget.style.transform = 'translateY(-1px)' } }}
+          onMouseLeave={e => { if (!loading && !loadingIntent && title.trim()) { e.currentTarget.style.filter = ''; e.currentTarget.style.boxShadow = '0 1px 3px rgba(0,0,0,0.12), 0 4px 14px rgba(229,37,27,0.32)'; e.currentTarget.style.transform = '' } }}>
           {loadingIntent ? (
             <><SpinIcon /> Identifying search intent…</>
           ) : loading ? (
@@ -502,7 +501,7 @@ export default function SeoOptimizer() {
 
       {/* Intent picker */}
       {intentOptions && !loading && !result && (
-        <div style={{ background: 'rgba(239,246,255,0.88)', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)', border: '2px solid rgba(147,197,253,0.7)', borderRadius: 20, padding: '24px 28px', marginBottom: 20, boxShadow: '0 1px 0 rgba(255,255,255,0.8) inset, 0 6px 24px rgba(37,99,235,0.08), 0 1px 4px rgba(0,0,0,0.04)' }}>
+        <div style={{ background: '#eff6ff', border: `1px solid ${C.blueBdr}`, borderRadius: 20, padding: '24px 28px', marginBottom: 20, boxShadow: '0 1px 3px rgba(0,0,0,0.07), 0 6px 24px rgba(0,0,0,0.09)' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 5 }}>
             <div style={{ width: 30, height: 30, borderRadius: 8, background: C.blueBg, border: `1px solid ${C.blueBdr}`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke={C.blue} strokeWidth="2" strokeLinecap="round"><circle cx="6.5" cy="4" r="2.5"/><path d="M1 12c0-3 2.5-5 5.5-5s5.5 2 5.5 5"/></svg>
@@ -610,7 +609,7 @@ export default function SeoOptimizer() {
               </div>
 
               <div style={{ border: `1px solid ${C.border}`, borderRadius: 12, overflow: 'hidden', marginBottom: 16 }}>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 60px 90px 55px', gap: 8, padding: '8px 14px', background: 'linear-gradient(135deg, #f8f8fc, #f4f4f8)', borderBottom: `1px solid ${C.border}` }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 60px 90px 55px', gap: 8, padding: '8px 14px', background: '#f8f8fb', borderBottom: `1px solid ${C.border}` }}>
                   <span style={{ fontSize: 10, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Keyword phrase</span>
                   <span style={{ fontSize: 10, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Volume</span>
                   <span style={{ fontSize: 10, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Competition</span>
@@ -707,7 +706,7 @@ export default function SeoOptimizer() {
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                   {fixes.map(([key, meta]) => (
-                    <div key={key} style={{ display: 'flex', gap: 12, alignItems: 'flex-start', padding: '8px 10px', background: 'rgba(255,255,255,0.6)', borderRadius: 9 }}>
+                    <div key={key} style={{ display: 'flex', gap: 12, alignItems: 'flex-start', padding: '8px 10px', background: '#ffffff', borderRadius: 9 }}>
                       <span style={{ fontSize: 11, fontWeight: 700, color: C.orange, minWidth: 110, paddingTop: 1, flexShrink: 0 }}>{meta.label}</span>
                       <span style={{ fontSize: 12.5, color: C.text2, lineHeight: 1.5 }}>{meta.why.split('.')[0]}.</span>
                     </div>
@@ -825,7 +824,7 @@ export default function SeoOptimizer() {
                       </div>
                       {/* Why it works */}
                       {s.why_it_works && (
-                        <div style={{ padding: '10px 18px', borderTop: `1px solid ${C.borderLight}`, background: 'linear-gradient(135deg, #fafafa, #f6f6fa)' }}>
+                        <div style={{ padding: '10px 18px', borderTop: `1px solid ${C.borderLight}`, background: '#f7f7fa' }}>
                           <p style={{ fontSize: 12.5, color: C.text2, lineHeight: 1.6 }}>
                             <span style={{ fontWeight: 700, color: hm.color }}>Why it works: </span>{s.why_it_works}
                           </p>
@@ -838,7 +837,7 @@ export default function SeoOptimizer() {
                           {copied === i ? '✓ Copied' : 'Copy'}
                         </button>
                         <button onClick={() => handleSelectTitle(s.title)}
-                          style={{ marginLeft: 'auto', fontSize: 13, fontWeight: 700, color: isSelected ? C.blue : '#fff', background: isSelected ? C.blueBg : 'linear-gradient(135deg, #2563eb, #1d4ed8)', border: `2px solid ${C.blue}`, borderRadius: 9, padding: '6px 16px', cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.18s', boxShadow: isSelected ? 'none' : '0 3px 10px rgba(37,99,235,0.3)' }}>
+                          style={{ marginLeft: 'auto', fontSize: 13, fontWeight: 700, color: isSelected ? C.red : '#fff', background: isSelected ? '#fff5f5' : '#e5251b', border: `1px solid ${isSelected ? '#fecaca' : 'transparent'}`, borderRadius: 100, padding: '6px 18px', cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.18s', boxShadow: isSelected ? 'none' : '0 1px 3px rgba(0,0,0,0.12), 0 4px 14px rgba(229,37,27,0.32)' }}>
                           {isSelected ? '✓ Selected' : 'Use this title →'}
                         </button>
                       </div>
@@ -903,7 +902,7 @@ export default function SeoOptimizer() {
               <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 20 }}>
                 <div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-                    <div style={{ width: 28, height: 28, borderRadius: 8, background: 'linear-gradient(135deg, #2563eb, #7c3aed)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 3px 10px rgba(37,99,235,0.3)' }}>
+                    <div style={{ width: 28, height: 28, borderRadius: 8, background: '#e5251b', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 3px 10px rgba(229,37,27,0.3)' }}>
                       <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round"><path d="M1 10V8l4-4 2 2-4 4H1zM7 4l2-2 2 2-2 2-2-2z"/></svg>
                     </div>
                     <p style={{ fontSize: 11, fontWeight: 800, color: C.blue, textTransform: 'uppercase', letterSpacing: '0.09em' }}>Description Optimizer</p>
@@ -911,7 +910,7 @@ export default function SeoOptimizer() {
                   <p style={{ fontSize: 15, fontWeight: 700, color: C.text1, lineHeight: 1.4, letterSpacing: '-0.3px' }}>"{selectedTitle}"</p>
                 </div>
                 <button onClick={() => { setSelectedTitle(null); setDescResult(null); setDescError('') }}
-                  style={{ flexShrink: 0, marginLeft: 16, fontSize: 12, fontWeight: 600, color: C.text3, background: 'rgba(255,255,255,0.8)', border: `1px solid ${C.border}`, borderRadius: 9, padding: '6px 13px', cursor: 'pointer', fontFamily: 'inherit', whiteSpace: 'nowrap', backdropFilter: 'blur(8px)' }}>
+                  style={{ flexShrink: 0, marginLeft: 16, fontSize: 12, fontWeight: 600, color: C.text3, background: '#ffffff', border: '1px solid rgba(0,0,0,0.1)', borderRadius: 100, padding: '6px 16px', cursor: 'pointer', fontFamily: 'inherit', whiteSpace: 'nowrap', boxShadow: '0 1px 3px rgba(0,0,0,0.07)', transition: 'all 0.18s' }}>
                   Change title
                 </button>
               </div>
@@ -926,14 +925,14 @@ export default function SeoOptimizer() {
                     <textarea value={currentDesc} onChange={e => setCurrentDesc(e.target.value)}
                       placeholder="Paste your existing description here…"
                       rows={4}
-                      style={{ width: '100%', padding: '12px 16px', fontSize: 13.5, border: `2px solid ${C.border}`, borderRadius: 12, fontFamily: 'inherit', outline: 'none', color: C.text1, background: 'rgba(255,255,255,0.85)', boxSizing: 'border-box', resize: 'vertical', lineHeight: 1.65, transition: 'border-color 0.18s, box-shadow 0.18s' }}
-                      onFocus={e => { e.target.style.borderColor = C.blue; e.target.style.boxShadow = `0 0 0 4px ${C.blueBg}` }}
-                      onBlur={e => { e.target.style.borderColor = C.border; e.target.style.boxShadow = 'none' }}
+                      style={{ width: '100%', padding: '12px 16px', fontSize: 13.5, border: '1px solid rgba(0,0,0,0.1)', borderRadius: 12, fontFamily: 'inherit', outline: 'none', color: C.text1, background: '#ffffff', boxSizing: 'border-box', resize: 'vertical', lineHeight: 1.65, transition: 'border-color 0.18s, box-shadow 0.18s', boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}
+                      onFocus={e => { e.target.style.borderColor = 'rgba(0,0,0,0.25)'; e.target.style.boxShadow = '0 0 0 4px rgba(0,0,0,0.04)' }}
+                      onBlur={e => { e.target.style.borderColor = 'rgba(0,0,0,0.1)'; e.target.style.boxShadow = '0 1px 3px rgba(0,0,0,0.06)' }}
                     />
                   </div>
 
                   <button onClick={handleGenerateDesc} disabled={descLoading}
-                    style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '11px 24px', background: !descLoading ? 'linear-gradient(135deg, #2563eb, #7c3aed)' : '#d1d1d8', color: '#fff', border: 'none', borderRadius: 11, fontSize: 14, fontWeight: 700, fontFamily: 'inherit', cursor: !descLoading ? 'pointer' : 'not-allowed', transition: 'all 0.18s', boxShadow: !descLoading ? '0 4px 16px rgba(37,99,235,0.35)' : 'none', letterSpacing: '-0.1px' }}>
+                    style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '11px 26px', background: !descLoading ? '#e5251b' : '#e0e0e6', color: '#fff', border: 'none', borderRadius: 100, fontSize: 13, fontWeight: 700, fontFamily: 'inherit', cursor: !descLoading ? 'pointer' : 'not-allowed', transition: 'all 0.18s', boxShadow: !descLoading ? '0 1px 3px rgba(0,0,0,0.12), 0 4px 14px rgba(229,37,27,0.32)' : 'none', letterSpacing: '-0.1px' }}>
                     {descLoading ? (
                       <><SpinIcon /> Generating descriptions…</>
                     ) : (
