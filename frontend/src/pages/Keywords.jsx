@@ -231,119 +231,117 @@ export default function Keywords() {
       {result && (
         <div className="kw-in">
 
-          {/* ── top row: intent summary (left) + keyword table (right) ── */}
-          <div style={{ display: 'grid', gridTemplateColumns: '320px 1fr', gap: 16, marginBottom: 16, alignItems: 'start' }}>
-
-            {/* Left column: intent summary + top pick */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-
-              {/* Intent summary */}
-              <div className="kw-card" style={{ padding: '20px 22px' }}>
-                <p style={{ fontSize: 10.5, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 8 }}>Search Intent</p>
-                <p style={{ fontSize: 13.5, fontWeight: 600, color: C.text1, lineHeight: 1.6, marginBottom: 12 }}>{result.seedIntent?.intentSummary}</p>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 16 }}>
-                  <span className="kw-chip" style={{ color: C.purple, background: C.purpleBg }}>{result.seedIntent?.primaryIntent}</span>
-                  <span className="kw-chip" style={{ color: C.teal, background: C.tealBg }}>{result.seedIntent?.contentTypeExpected}</span>
-                  <span className="kw-chip" style={{ color: C.blue, background: C.blueBg }}>{result.seedIntent?.funnelStage}</span>
-                </div>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 0, borderTop: `1px solid ${C.border}`, paddingTop: 14 }}>
-                  {[
-                    { label: 'Autocomplete', value: result.rawSuggestionsCount },
-                    { label: 'Related', value: result.serperCount },
-                    { label: 'Filtered', value: result.totalAfterIntentFilter, accent: true },
-                  ].map((s, i) => (
-                    <div key={i} style={{ textAlign: 'center', borderLeft: i > 0 ? `1px solid ${C.border}` : 'none' }}>
-                      <p style={{ fontSize: 18, fontWeight: 800, color: s.accent ? C.blue : C.text1, letterSpacing: '-0.5px' }}>{s.value ?? '—'}</p>
-                      <p style={{ fontSize: 10.5, color: C.text3, marginTop: 2 }}>{s.label}</p>
-                    </div>
-                  ))}
-                </div>
+          {/* ── Intent summary — compact horizontal card ── */}
+          <div className="kw-card" style={{ padding: '18px 22px', marginBottom: 14, display: 'flex', alignItems: 'stretch', gap: 0 }}>
+            {/* Left: summary text + chips */}
+            <div style={{ flex: 1, minWidth: 0, paddingRight: 22 }}>
+              <p style={{ fontSize: 10, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 6 }}>Search Intent</p>
+              <p style={{ fontSize: 13, fontWeight: 600, color: C.text1, lineHeight: 1.55, marginBottom: 10 }}>{result.seedIntent?.intentSummary}</p>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5 }}>
+                <span className="kw-chip" style={{ color: C.purple, background: C.purpleBg }}>{result.seedIntent?.primaryIntent}</span>
+                <span className="kw-chip" style={{ color: C.teal, background: C.tealBg }}>{result.seedIntent?.contentTypeExpected}</span>
+                <span className="kw-chip" style={{ color: C.blue, background: C.blueBg }}>{result.seedIntent?.funnelStage}</span>
               </div>
-
-              {/* Top pick */}
-              {result.topPick && (
-                <div style={{ background: C.greenBg, border: '1.5px solid #bbf7d0', borderRadius: 16, padding: '16px 18px' }}>
-                  <p style={{ fontSize: 10.5, fontWeight: 700, color: C.green, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 8 }}>Top Pick</p>
-                  <p style={{ fontSize: 14, fontWeight: 700, color: C.text1, lineHeight: 1.5 }}>{result.topPick.keyword}</p>
-                  <p style={{ fontSize: 12.5, fontWeight: 400, color: '#3f6212', marginTop: 5, lineHeight: 1.5 }}>{result.topPick.whyThisOne}</p>
-                </div>
-              )}
             </div>
 
-            {/* Right column: keyword table */}
-            <div className="kw-card" style={{ overflow: 'hidden' }}>
-              {/* Col headers */}
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 90px 120px', alignItems: 'center', padding: '10px 20px', borderBottom: `1px solid ${C.border}`, background: '#f8f8fb' }}>
-                <p style={{ fontSize: 10, fontWeight: 700, color: C.text4, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Keyword</p>
-                <p style={{ fontSize: 10, fontWeight: 700, color: C.text4, textTransform: 'uppercase', letterSpacing: '0.07em', textAlign: 'center' }}>Intent</p>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 10 }}>
-                  <p style={{ fontSize: 10, fontWeight: 700, color: C.text4, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Opportunity</p>
-                  <button onClick={handleCopyKeywords} style={{
-                    display: 'flex', alignItems: 'center', gap: 5, padding: '4px 10px',
-                    background: copied ? C.greenBg : '#fff', border: `1px solid ${copied ? '#bbf7d0' : C.border}`,
-                    borderRadius: 20, cursor: 'pointer', transition: 'all 0.18s',
-                    fontSize: 10, fontWeight: 700, color: copied ? C.green : C.text3,
-                    fontFamily: 'inherit', whiteSpace: 'nowrap',
-                  }}>
-                    {copied ? '✓ Copied' : 'Copy all'}
-                  </button>
-                </div>
-              </div>
-
-              {result.keywords?.map((kw, idx) => (
-                <div key={kw.keyword} className="kw-row" style={{ display: 'grid', gridTemplateColumns: '1fr 90px 120px', alignItems: 'center', padding: '11px 20px', borderBottom: idx < result.keywords.length - 1 ? `1px solid ${C.border}` : 'none' }}>
-
-                  {/* Keyword + content angle */}
-                  <div style={{ minWidth: 0, paddingRight: 12 }}>
-                    <p style={{ fontSize: 13.5, fontWeight: 600, color: C.text1, marginBottom: kw.contentAngle ? 3 : 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{kw.keyword}</p>
-                    {kw.contentAngle && (
-                      <p style={{ fontSize: 11.5, color: C.text3, lineHeight: 1.4, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{kw.contentAngle}</p>
-                    )}
-                  </div>
-
-                  {/* Intent */}
-                  <div style={{ display: 'flex', justifyContent: 'center' }}>
-                    <span className="kw-chip" style={{ color: INTENT_COLOR[kw.intentMatch] || C.text3, background: INTENT_BG[kw.intentMatch] || C.bg }}>
-                      {kw.intentMatch}
-                    </span>
-                  </div>
-
-                  {/* Opportunity */}
-                  <div style={{ paddingLeft: 12 }}>
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 4 }}>
-                      <p style={{ fontSize: 12.5, fontWeight: 800, color: oppColor(kw.opportunityScore) }}>{kw.opportunityScore}</p>
-                    </div>
-                    <div className="kw-bar" style={{ width: '100%' }}>
-                      <div className="kw-bar-fill" style={{ width: `${kw.opportunityScore}%`, background: oppColor(kw.opportunityScore) }} />
-                    </div>
-                  </div>
+            {/* Middle: stats */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 0, borderLeft: `1px solid ${C.border}`, paddingLeft: 22, paddingRight: 22, flexShrink: 0 }}>
+              {[
+                { label: 'Autocomplete', value: result.rawSuggestionsCount },
+                { label: 'Related',      value: result.serperCount },
+                { label: 'Filtered',     value: result.totalAfterIntentFilter, accent: true },
+              ].map((s, i) => (
+                <div key={i} style={{ textAlign: 'center', paddingLeft: i > 0 ? 20 : 0, borderLeft: i > 0 ? `1px solid ${C.border}` : 'none', paddingRight: 20 }}>
+                  <p style={{ fontSize: 20, fontWeight: 800, color: s.accent ? C.blue : C.text1, letterSpacing: '-0.5px', lineHeight: 1 }}>{s.value ?? '—'}</p>
+                  <p style={{ fontSize: 10, color: C.text3, marginTop: 3 }}>{s.label}</p>
                 </div>
               ))}
             </div>
+
+            {/* Right: top pick */}
+            {result.topPick && (
+              <div style={{ borderLeft: `1px solid ${C.border}`, paddingLeft: 22, maxWidth: 280, flexShrink: 0, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                <p style={{ fontSize: 10, fontWeight: 700, color: C.green, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 5 }}>Top Pick</p>
+                <p style={{ fontSize: 13.5, fontWeight: 700, color: C.text1, lineHeight: 1.4, marginBottom: 4 }}>{result.topPick.keyword}</p>
+                <p style={{ fontSize: 11.5, color: '#3f6212', lineHeight: 1.5 }}>{result.topPick.whyThisOne}</p>
+              </div>
+            )}
           </div>
 
-          {/* Keyword tags — copy strip */}
-          {result.keywords?.length > 0 && (
-            <div style={{ marginBottom: 16 }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
-                <p style={{ fontSize: 10.5, fontWeight: 600, color: '#a0a0b0', textTransform: 'uppercase', letterSpacing: '0.06em' }}>All Keywords</p>
+          {/* ── Keyword table — full width, 4 columns ── */}
+          <div className="kw-card" style={{ overflow: 'hidden', marginBottom: 14 }}>
+            {/* Col headers */}
+            <div style={{ display: 'grid', gridTemplateColumns: '200px 1fr 100px 130px', alignItems: 'center', padding: '10px 20px', borderBottom: `1px solid ${C.border}`, background: '#f8f8fb' }}>
+              <p style={{ fontSize: 10, fontWeight: 700, color: C.text4, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Keyword</p>
+              <p style={{ fontSize: 10, fontWeight: 700, color: C.text4, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Content Angle</p>
+              <p style={{ fontSize: 10, fontWeight: 700, color: C.text4, textTransform: 'uppercase', letterSpacing: '0.07em', textAlign: 'center' }}>Intent</p>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 8 }}>
+                <p style={{ fontSize: 10, fontWeight: 700, color: C.text4, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Opportunity</p>
                 <button onClick={handleCopyKeywords} style={{
-                  display: 'flex', alignItems: 'center', gap: 5, padding: '5px 12px',
+                  padding: '3px 9px', background: copied ? C.greenBg : '#fff',
+                  border: `1px solid ${copied ? '#bbf7d0' : C.border}`, borderRadius: 20,
+                  cursor: 'pointer', transition: 'all 0.18s', fontSize: 9.5, fontWeight: 700,
+                  color: copied ? C.green : C.text3, fontFamily: 'inherit', whiteSpace: 'nowrap',
+                }}>
+                  {copied ? '✓ Copied' : 'Copy all'}
+                </button>
+              </div>
+            </div>
+
+            {result.keywords?.map((kw, idx) => (
+              <div key={kw.keyword} className="kw-row" style={{ display: 'grid', gridTemplateColumns: '200px 1fr 100px 130px', alignItems: 'center', padding: '11px 20px', borderBottom: idx < result.keywords.length - 1 ? `1px solid ${C.border}` : 'none' }}>
+
+                {/* Keyword name */}
+                <div style={{ minWidth: 0, paddingRight: 14 }}>
+                  <p style={{ fontSize: 13, fontWeight: 700, color: C.text1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{kw.keyword}</p>
+                </div>
+
+                {/* Content angle */}
+                <div style={{ minWidth: 0, paddingRight: 14 }}>
+                  <p style={{ fontSize: 12, color: C.text3, lineHeight: 1.45, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{kw.contentAngle || '—'}</p>
+                </div>
+
+                {/* Intent */}
+                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                  <span className="kw-chip" style={{ color: INTENT_COLOR[kw.intentMatch] || C.text3, background: INTENT_BG[kw.intentMatch] || C.bg }}>
+                    {kw.intentMatch}
+                  </span>
+                </div>
+
+                {/* Opportunity */}
+                <div style={{ paddingLeft: 12 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', marginBottom: 4 }}>
+                    <p style={{ fontSize: 12.5, fontWeight: 800, color: oppColor(kw.opportunityScore) }}>{kw.opportunityScore}</p>
+                  </div>
+                  <div className="kw-bar">
+                    <div className="kw-bar-fill" style={{ width: `${kw.opportunityScore}%`, background: oppColor(kw.opportunityScore) }} />
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* ── Keyword tags — copy strip ── */}
+          {result.keywords?.length > 0 && (
+            <div className="kw-card" style={{ padding: '16px 20px', marginBottom: 14 }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
+                <p style={{ fontSize: 10.5, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em' }}>All Keywords</p>
+                <button onClick={handleCopyKeywords} style={{
+                  display: 'flex', alignItems: 'center', gap: 5, padding: '6px 14px',
                   background: copied ? C.greenBg : '#fff', border: `1px solid ${copied ? '#bbf7d0' : C.border}`,
                   borderRadius: 20, cursor: 'pointer', transition: 'all 0.18s',
-                  fontSize: 11, fontWeight: 700, color: copied ? C.green : C.text2,
-                  fontFamily: 'inherit',
+                  fontSize: 11.5, fontWeight: 700, color: copied ? C.green : C.text2,
+                  fontFamily: 'inherit', boxShadow: '0 1px 3px rgba(0,0,0,0.06)',
                 }}>
-                  {copied ? '✓ Copied!' : '⎘ Copy as list'}
+                  {copied ? '✓ Copied!' : 'Copy as list'}
                 </button>
               </div>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
                 {result.keywords.map((kw, i) => (
                   <span key={kw.keyword} style={{
-                    background: '#fff', border: `1px solid ${C.border}`,
-                    borderRadius: 20, padding: '4px 11px',
+                    background: '#f4f4f7', border: `1px solid ${C.border}`,
+                    borderRadius: 20, padding: '4px 12px',
                     fontSize: 12, fontWeight: 500, color: C.text2,
-                    boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
                   }}>
                     {kw.keyword}{i < result.keywords.length - 1 ? ',' : ''}
                   </span>
