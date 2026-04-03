@@ -694,24 +694,30 @@ export default function Landing() {
             <div style={{ padding: 24, display: 'grid', gridTemplateColumns: '260px 1fr', gap: 18, minHeight: 360 }}>
               {/* Sidebar mock */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-                <div style={{ background: 'rgba(255,59,48,0.08)', border: '1px solid rgba(255,59,48,0.18)', borderRadius: 14, padding: 18 }}>
+                <div style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.09)', borderRadius: 14, padding: 18 }}>
                   <p style={{ fontSize: 9.5, fontWeight: 700, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.7px', marginBottom: 12 }}>Channel health</p>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                    <svg width="52" height="52" viewBox="0 0 52 52" style={{ flexShrink: 0 }}>
-                      <circle cx="26" cy="26" r="20" fill="none" stroke="rgba(255,255,255,0.07)" strokeWidth="5" />
-                      <circle cx="26" cy="26" r="20" fill="none" stroke="#ff3b30" strokeWidth="5" strokeDasharray="56 70" strokeLinecap="round" transform="rotate(-90 26 26)" />
-                    </svg>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+                    <div style={{ position: 'relative', width: 52, height: 52, flexShrink: 0 }}>
+                      <svg width="52" height="52" viewBox="0 0 52 52">
+                        <circle cx="26" cy="26" r="20" fill="none" stroke="rgba(255,255,255,0.07)" strokeWidth="5" />
+                        <circle cx="26" cy="26" r="20" fill="none" stroke="#ff3b30" strokeWidth="5" strokeDasharray="56 70" strokeLinecap="round" transform="rotate(-90 26 26)" />
+                      </svg>
+                    </div>
                     <div>
-                      <div style={{ fontWeight: 800, fontSize: 32, color: '#ff3b30', letterSpacing: '-2px', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>45</div>
-                      <div style={{ fontSize: 10.5, color: 'rgba(255,255,255,0.3)', marginTop: 3 }}>out of 100 · Critical</div>
+                      <div style={{ fontWeight: 800, fontSize: 32, color: '#ffffff', letterSpacing: '-2px', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>45</div>
+                      <div style={{ fontSize: 10.5, color: 'rgba(255,255,255,0.35)', marginTop: 4 }}>out of 100</div>
+                      <div style={{ display: 'inline-flex', alignItems: 'center', gap: 4, marginTop: 5, background: 'rgba(255,59,48,0.15)', border: '1px solid rgba(255,59,48,0.25)', borderRadius: 100, padding: '2px 8px' }}>
+                        <div style={{ width: 4, height: 4, borderRadius: '50%', background: '#ff3b30' }} />
+                        <span style={{ fontSize: 9, fontWeight: 700, color: '#ff6b63', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Critical</span>
+                      </div>
                     </div>
                   </div>
                 </div>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
                   {[{ l: 'Avg views', v: '980', warn: true }, { l: 'Retention', v: '55.6%', warn: false }, { l: 'Duration', v: '0m 38s', warn: true }, { l: 'Net subs', v: '−1', warn: true }].map((m, i) => (
-                    <div key={i} style={{ background: 'rgba(255,255,255,0.03)', border: `1px solid ${m.warn ? 'rgba(255,59,48,0.18)' : 'rgba(255,255,255,0.07)'}`, borderRadius: 10, padding: '11px 13px' }}>
+                    <div key={i} style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 10, padding: '11px 13px' }}>
                       <p style={{ fontSize: 9, fontWeight: 700, color: 'rgba(255,255,255,0.25)', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: 5 }}>{m.l}</p>
-                      <p style={{ fontSize: 16, fontWeight: 700, color: m.warn ? '#ff6b63' : '#f4f4f5', fontVariantNumeric: 'tabular-nums' }}>{m.v}</p>
+                      <p style={{ fontSize: 16, fontWeight: 700, color: m.warn ? '#ff9f95' : '#f4f4f5', fontVariantNumeric: 'tabular-nums' }}>{m.v}</p>
                     </div>
                   ))}
                 </div>
@@ -733,8 +739,10 @@ export default function Landing() {
                       </div>
                       <p style={{ fontSize: 11.5, color: 'rgba(255,255,255,0.48)', lineHeight: 1.6 }}>{item.desc}</p>
                     </div>
-                    <div style={{ background: `${item.c}09`, borderTop: `1px solid ${item.c}22`, padding: '9px 16px', fontSize: 11.5, color: `${item.c}` , opacity: 0.85 }}>
-                      <span style={{ fontWeight: 700 }}>Fix — </span>{item.action}
+                    <div style={{ background: 'rgba(255,255,255,0.04)', borderTop: '1px solid rgba(255,255,255,0.07)', padding: '9px 16px', fontSize: 11.5, color: 'rgba(255,255,255,0.6)', display: 'flex', alignItems: 'center', gap: 7 }}>
+                      <span style={{ fontWeight: 700, color: item.c, flexShrink: 0 }}>Fix</span>
+                      <span style={{ color: 'rgba(255,255,255,0.2)' }}>—</span>
+                      {item.action}
                     </div>
                   </div>
                 ))}
