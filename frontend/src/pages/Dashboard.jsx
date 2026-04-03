@@ -657,7 +657,7 @@ export default function Dashboard() {
         </div>
 
         {/* Page */}
-        <div style={{ padding: '28px 36px', animation: 'fadeUp 0.25s ease', maxWidth: 1280, margin: '0 auto' }}>
+        <div style={{ padding: '28px 36px', animation: 'fadeUp 0.25s ease' }}>
 
           {/* Loading */}
           {loading && (
