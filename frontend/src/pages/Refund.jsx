@@ -38,11 +38,11 @@ export default function Refund() {
   useEffect(() => { document.title = 'Refund Policy — YTGrowth' }, [])
 
   const rows = [
-    ['Monthly subscription', 'Not refunded', 'Cancel anytime — access continues until period end'],
-    ['Annual subscription', '14 days from purchase', 'Less than 10% of monthly tokens used'],
-    ['Lifetime plan', '14 days from purchase', 'Fewer than 10 tokens used'],
-    ['Founder Bundle', '14 days from purchase', 'Fewer than 10 tokens used'],
-    ['Analysis Pack', '14 days from purchase', '0 tokens from the pack used'],
+    ['Monthly subscription', 'No refund', 'Cancel anytime — access continues until period end'],
+    ['Annual subscription', '48 hours from purchase', 'Only if 0 tokens have been used'],
+    ['Lifetime plan', 'No refund', 'All sales final'],
+    ['Founder Bundle', 'No refund', 'All sales final'],
+    ['Analysis Pack', 'No refund', 'All sales final'],
   ]
 
   return (
@@ -62,7 +62,7 @@ export default function Refund() {
         <p style={{ fontSize: 13, color: 'var(--ytg-text-3)', marginBottom: 48 }}>Last updated: April 3, 2025</p>
 
         <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.8, marginBottom: 16 }}>
-          We want you to be confident buying YTGrowth. Here's exactly when and how you can get a refund.
+          YTGrowth offers a free plan with 5 analyses before any payment is required. This means you can fully evaluate every tool in the product before spending a single dollar. Because a free trial is always available, all paid purchases are non-refundable except where described below.
         </p>
 
         <div style={{ height: 1, background: 'var(--ytg-border)', margin: '40px 0' }} />
@@ -72,7 +72,7 @@ export default function Refund() {
           <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 14 }}>
             <thead>
               <tr>
-                {['Product', 'Refund window', 'Condition'].map(h => (
+                {['Product', 'Refund', 'Notes'].map(h => (
                   <th key={h} style={{ textAlign: 'left', padding: '12px 16px', background: 'rgba(10,10,15,0.04)', borderBottom: '1px solid var(--ytg-border)', fontWeight: 700, color: 'var(--ytg-text)' }}>{h}</th>
                 ))}
               </tr>
@@ -81,7 +81,7 @@ export default function Refund() {
               {rows.map(([product, window, condition], i) => (
                 <tr key={i}>
                   <td style={{ padding: '11px 16px', borderBottom: i < rows.length - 1 ? '1px solid var(--ytg-border)' : 'none', color: 'var(--ytg-text)', fontWeight: 500 }}>{product}</td>
-                  <td style={{ padding: '11px 16px', borderBottom: i < rows.length - 1 ? '1px solid var(--ytg-border)' : 'none', color: 'var(--ytg-text-2)' }}>{window}</td>
+                  <td style={{ padding: '11px 16px', borderBottom: i < rows.length - 1 ? '1px solid var(--ytg-border)' : 'none', color: window === 'No refund' ? 'var(--ytg-text-3)' : 'var(--ytg-text-2)' }}>{window}</td>
                   <td style={{ padding: '11px 16px', borderBottom: i < rows.length - 1 ? '1px solid var(--ytg-border)' : 'none', color: 'var(--ytg-text-2)' }}>{condition}</td>
                 </tr>
               ))}
@@ -89,27 +89,23 @@ export default function Refund() {
           </table>
         </div>
 
-        {[
-          { t: 'Monthly subscriptions', b: 'Monthly plans are billed in advance. You can cancel at any time — access and remaining tokens continue until the end of the current billing period. We do not issue pro-rated refunds for partial months.' },
-          { t: 'Annual subscriptions', b: 'Full refund within 14 days of purchase if less than 10% of that month\'s included tokens have been used. After 14 days, no refund — but you retain full access for the remainder of the annual period.' },
-          { t: 'Lifetime plans & Founder Bundles', b: 'Full refund within 14 days if fewer than 10 tokens have been used. After 14 days or 10 tokens consumed (whichever comes first), all sales are final. If YTGrowth shuts down permanently, Lifetime and Founder plan holders receive a pro-rated refund against a 5-year expected service lifespan from their purchase date.' },
-          { t: 'Analysis Packs', b: 'Full refund within 14 days of purchase, provided no tokens from that pack have been used. Once any token from a pack is consumed, the pack is non-refundable.' },
-        ].map(({ t, b }) => (
-          <div key={t}>
-            <h2 style={{ fontWeight: 700, fontSize: 18, color: 'var(--ytg-text)', marginTop: 36, marginBottom: 10, letterSpacing: '-0.3px' }}>{t}</h2>
-            <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.8, marginBottom: 16 }}>{b}</p>
-          </div>
-        ))}
+        <h2 style={{ fontWeight: 700, fontSize: 18, color: 'var(--ytg-text)', marginTop: 36, marginBottom: 10, letterSpacing: '-0.3px' }}>Monthly subscriptions</h2>
+        <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.8, marginBottom: 16 }}>Monthly plans are non-refundable. You may cancel at any time — your access and remaining token balance continue until the end of the current billing period. No charges occur after cancellation.</p>
 
-        <h2 style={{ fontWeight: 700, fontSize: 18, color: 'var(--ytg-text)', marginTop: 36, marginBottom: 10, letterSpacing: '-0.3px' }}>How to request a refund</h2>
-        <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.8, marginBottom: 12 }}>Email <strong>support@ytgrowth.io</strong> with subject "Refund request" and include:</p>
-        <ul style={{ paddingLeft: 20, marginBottom: 16 }}>
-          {['The email address on your account.', 'The product you purchased.', 'Your reason for the refund (optional).'].map((item, i) => (
-            <li key={i} style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.8, marginBottom: 8 }}>{item}</li>
-          ))}
-        </ul>
-        <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.8, marginBottom: 16 }}>We process all refund requests within 3 business days. Refunds are issued to your original payment method via Paddle.</p>
+        <h2 style={{ fontWeight: 700, fontSize: 18, color: 'var(--ytg-text)', marginTop: 36, marginBottom: 10, letterSpacing: '-0.3px' }}>Annual subscriptions</h2>
+        <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.8, marginBottom: 16 }}>Annual plans include a 48-hour cooling-off window from the time of purchase, provided zero tokens have been used. After 48 hours, or once any token has been consumed, the purchase is non-refundable. You retain full access for the remainder of the annual period after cancellation.</p>
 
+        <h2 style={{ fontWeight: 700, fontSize: 18, color: 'var(--ytg-text)', marginTop: 36, marginBottom: 10, letterSpacing: '-0.3px' }}>Lifetime plans & Founder Bundles</h2>
+        <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.8, marginBottom: 16 }}>All lifetime plan and founder bundle purchases are final and non-refundable. YTGrowth's free plan allows you to run 5 full analyses across all tools before committing — we consider this a sufficient opportunity to evaluate the product. By completing a lifetime or founder purchase, you acknowledge that you have had the opportunity to try the Service for free.</p>
+
+        <h2 style={{ fontWeight: 700, fontSize: 18, color: 'var(--ytg-text)', marginTop: 36, marginBottom: 10, letterSpacing: '-0.3px' }}>Analysis Packs</h2>
+        <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.8, marginBottom: 16 }}>Analysis Pack purchases are non-refundable. Tokens from packs never expire and work across all five tools and any plan. They are the equivalent of a prepaid digital credit — all sales are final upon purchase.</p>
+
+        <h2 style={{ fontWeight: 700, fontSize: 18, color: 'var(--ytg-text)', marginTop: 36, marginBottom: 10, letterSpacing: '-0.3px' }}>Chargebacks</h2>
+        <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.8, marginBottom: 16 }}>If you initiate a chargeback without first contacting us, your account will be suspended pending resolution. We're a small team — reach out to <strong>support@ytgrowth.io</strong> first and we'll respond within 1 business day.</p>
+
+        <h2 style={{ fontWeight: 700, fontSize: 18, color: 'var(--ytg-text)', marginTop: 36, marginBottom: 10, letterSpacing: '-0.3px' }}>Contact</h2>
+        <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.8 }}>Questions? Email <strong>support@ytgrowth.io</strong>.</p>
       </div>
 
       <div style={{ borderTop: '1px solid var(--ytg-border)', padding: '28px 40px' }}>
