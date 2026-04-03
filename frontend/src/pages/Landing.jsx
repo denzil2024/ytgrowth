@@ -271,6 +271,7 @@ function useGlobalStyles(light) {
 
       /* ── Responsive card grids ───────────────────────────── */
       @media (max-width: 768px) {
+        .ytg-features-grid { grid-template-columns: 1fr !important; }
         .ytg-feature-card { border-radius: 20px; padding: 22px; }
         .ytg-step-card { border-radius: 20px; padding: 22px; }
         .ytg-testimonial-card { border-radius: 20px; padding: 22px 24px; }
@@ -794,7 +795,7 @@ export default function Landing() {
             <h2 style={{ fontWeight: 800, fontSize: isMobile ? 32 : 48, letterSpacing: '-1.5px', color: 'var(--ytg-text)', lineHeight: 1.06, marginBottom: 16 }}>Everything you need to grow.</h2> {/* IMPROVED: marginBottom 14→16 */}
             <p style={{ fontSize: 17, color: 'var(--ytg-text-2)', maxWidth: 540, margin: '0 auto', lineHeight: 1.8 }}>Not just data — real answers with a clear action behind every metric.</p>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? 'repeat(2,1fr)' : 'repeat(3,1fr)', gap: 16 }}> {/* IMPROVED: mobile 1-col→2-col, tablet 3-col */}
+          <div className="ytg-features-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 16 }}>
             {[
               { icon: (<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>), color: '#ff3b30', title: 'Channel Health Score', desc: 'A single score out of 100 that captures retention, engagement, growth velocity, and consistency — updated live.', tag: 'Instant', tagColor: '#0a84ff' },
               { icon: (<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="18" y="3" width="4" height="18"/><rect x="10" y="8" width="4" height="13"/><rect x="2" y="13" width="4" height="8"/></svg>), color: '#ffd60a', title: 'Video Performance', desc: 'See exactly which videos drag your channel down and which the algorithm loves — with metric-by-metric breakdowns.', tag: 'Detailed', tagColor: '#ffd60a' },
