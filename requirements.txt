@@ -12,3 +12,4 @@ starlette
 itsdangerous
 httpx
 requests
+apscheduler

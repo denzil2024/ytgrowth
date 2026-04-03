@@ -4,6 +4,7 @@ from pydantic import BaseModel
 from app.seo import analyze_title, generate_intent_options, generate_description_suggestions, generate_thumbnail_text, optimize_video
 from routers.auth import get_session
 from database.models import SessionLocal, VideoOptimizeCache
+from app.analysis_gate import check_and_deduct
 import json
 
 router = APIRouter()
@@ -45,12 +46,17 @@ def intent_options(body: TitleIntentRequest):
 
 @router.post("/analyze")
 def analyze(body: TitleAnalyzeRequest, request: Request):
-    _, creds = get_session(request.session.get("session_id"))
+    data, creds = get_session(request.session.get("session_id"))
     if not creds:
         return JSONResponse({"error": "Not authenticated. Please login first."}, status_code=401)
     if not body.title.strip():
         return JSONResponse({"error": "Title cannot be empty."}, status_code=400)
+    channel_id = (data or {}).get("channel", {}).get("channel_id", "")
+    gate = check_and_deduct(channel_id)
+    if not gate["allowed"]:
+        return JSONResponse({"error": gate["message"], "show_upgrade": True}, status_code=402)
     result = analyze_title(creds, body.title.strip(), confirmed_keyword=body.confirmed_keyword.strip())
+    result["_usage"] = {"warning": gate["warning"], "usage_pct": gate["usage_pct"]}
     return JSONResponse(result)
 
 
@@ -88,9 +94,13 @@ class OptimizeVideoRequest(BaseModel):
 
 @router.post("/optimize-video")
 def optimize_video_route(body: OptimizeVideoRequest, request: Request):
-    _, creds = get_session(request.session.get("session_id"))
+    data, creds = get_session(request.session.get("session_id"))
     if not creds:
         return JSONResponse({"error": "Not authenticated. Please login first."}, status_code=401)
+    channel_id = (data or {}).get("channel", {}).get("channel_id", "")
+    gate = check_and_deduct(channel_id)
+    if not gate["allowed"]:
+        return JSONResponse({"error": gate["message"], "show_upgrade": True}, status_code=402)
     result = optimize_video(
         creds,
         body.video_id,

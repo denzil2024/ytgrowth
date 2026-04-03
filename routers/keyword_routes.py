@@ -1,9 +1,11 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Request
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from concurrent.futures import ThreadPoolExecutor
 from app.youtube import scrape_autocomplete
 from app.seo import analyze_keywords, generate_intent_options, get_serper_keywords, get_serpapi_autocomplete
+from routers.auth import get_session
+from app.analysis_gate import check_and_deduct
 
 router = APIRouter()
 
@@ -29,10 +31,15 @@ def keyword_intent_options(body: KeywordIntentRequest):
 
 
 @router.post("/research")
-def research_keywords(body: KeywordResearchRequest):
+def research_keywords(body: KeywordResearchRequest, request: Request):
     seed = body.confirmed_keyword.strip() or body.keyword.strip()
     if not seed:
         return JSONResponse({"error": "Keyword cannot be empty."}, status_code=400)
+    data, _ = get_session(request.session.get("session_id"))
+    channel_id = (data or {}).get("channel", {}).get("channel_id", "")
+    gate = check_and_deduct(channel_id)
+    if not gate["allowed"]:
+        return JSONResponse({"error": gate["message"], "show_upgrade": True}, status_code=402)
 
     with ThreadPoolExecutor(max_workers=3) as pool:
         f_auto    = pool.submit(scrape_autocomplete, seed)

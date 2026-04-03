@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { openCheckout } from '../paddle'
 
 /* ─── inject font + global styles into <head> once ─────────────────────── */
 function useGlobalStyles(light) {
@@ -952,7 +953,7 @@ export default function Landing() {
                 {['30 fresh AI analyses every month', 'All 5 tools unlocked', '1 channel', 'Top-up packs available', 'Cancel anytime'].map((f, i) => (
                   <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}><Check /><span style={{ fontSize: 13, color: 'var(--ytg-text-2)' }}>{f}</span></div>
                 ))}
-                <a href="/auth/login" className="ytg-btn-ghost" style={{ marginTop: 22, width: '100%', justifyContent: 'center', display: 'flex' }}>Get Solo</a>
+                <button onClick={() => openCheckout('solo_monthly')} className="ytg-btn-ghost" style={{ marginTop: 22, width: '100%', justifyContent: 'center', display: 'flex' }}>Get Solo</button>
               </div>
 
               <div className="ytg-pricing-card-featured">
@@ -970,7 +971,7 @@ export default function Landing() {
                 {['75 fresh AI analyses every month', 'All 5 tools unlocked', '1 channel', 'Top-up packs available', 'Cancel anytime'].map((f, i) => (
                   <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}><Check color="var(--ytg-accent)" /><span style={{ fontSize: 13, color: 'var(--ytg-text)' }}>{f}</span></div>
                 ))}
-                <a href="/auth/login" className="ytg-btn-primary" style={{ marginTop: 22, width: '100%', justifyContent: 'center', display: 'flex' }}>Start with Growth</a>
+                <button onClick={() => openCheckout('growth_monthly')} className="ytg-btn-primary" style={{ marginTop: 22, width: '100%', justifyContent: 'center', display: 'flex' }}>Start with Growth</button>
               </div>
 
               <div className="ytg-pricing-card">
@@ -984,7 +985,7 @@ export default function Landing() {
                 {['250 AI analyses / month', 'All 5 tools unlocked', 'Up to 10 channels', 'Analyses pooled across channels', 'Priority support'].map((f, i) => (
                   <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}><Check /><span style={{ fontSize: 13, color: 'var(--ytg-text-2)' }}>{f}</span></div>
                 ))}
-                <a href="/auth/login" className="ytg-btn-ghost" style={{ marginTop: 22, width: '100%', justifyContent: 'center', display: 'flex' }}>Get Agency</a>
+                <button onClick={() => openCheckout('agency_monthly')} className="ytg-btn-ghost" style={{ marginTop: 22, width: '100%', justifyContent: 'center', display: 'flex' }}>Get Agency</button>
               </div>
             </div>
           )}
@@ -1013,7 +1014,7 @@ export default function Landing() {
                 {['30 AI analyses every month', 'All 5 tools unlocked', '1 channel', 'Loyalty badge in the app', 'Cancel anytime'].map((f, i) => (
                   <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}><Check /><span style={{ fontSize: 13, color: 'var(--ytg-text-2)' }}>{f}</span></div>
                 ))}
-                <a href="/auth/login" className="ytg-btn-ghost" style={{ marginTop: 22, width: '100%', justifyContent: 'center', display: 'flex' }}>Commit to Solo</a>
+                <button onClick={() => openCheckout('solo_annual')} className="ytg-btn-ghost" style={{ marginTop: 22, width: '100%', justifyContent: 'center', display: 'flex' }}>Commit to Solo</button>
               </div>
 
               <div className="ytg-pricing-card-featured">
@@ -1031,7 +1032,7 @@ export default function Landing() {
                 {['75 AI analyses every month', 'All 5 tools unlocked', '1 channel', 'Loyalty badge in the app', 'Cancel anytime'].map((f, i) => (
                   <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}><Check color="var(--ytg-accent)" /><span style={{ fontSize: 13, color: 'var(--ytg-text)' }}>{f}</span></div>
                 ))}
-                <a href="/auth/login" className="ytg-btn-primary" style={{ marginTop: 22, width: '100%', justifyContent: 'center', display: 'flex' }}>Commit to Growth</a>
+                <button onClick={() => openCheckout('growth_annual')} className="ytg-btn-primary" style={{ marginTop: 22, width: '100%', justifyContent: 'center', display: 'flex' }}>Commit to Growth</button>
               </div>
 
               <div className="ytg-pricing-card">
@@ -1045,7 +1046,7 @@ export default function Landing() {
                 {['250 AI analyses every month', 'All 5 tools unlocked', 'Up to 10 channels', 'Analyses pooled across channels', 'Priority support'].map((f, i) => (
                   <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}><Check /><span style={{ fontSize: 13, color: 'var(--ytg-text-2)' }}>{f}</span></div>
                 ))}
-                <a href="/auth/login" className="ytg-btn-ghost" style={{ marginTop: 22, width: '100%', justifyContent: 'center', display: 'flex' }}>Commit to Agency</a>
+                <button onClick={() => openCheckout('agency_annual')} className="ytg-btn-ghost" style={{ marginTop: 22, width: '100%', justifyContent: 'center', display: 'flex' }}>Commit to Agency</button>
               </div>
             </div>
           )}
@@ -1070,7 +1071,7 @@ export default function Landing() {
                     <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}><Check /><span style={{ fontSize: 13, color: 'var(--ytg-text-2)' }}>{f}</span></div>
                   ))}
                   <p style={{ fontSize: 11, color: '#ff6b63', fontWeight: 700, marginTop: 18, marginBottom: 12 }}>Only 500 available — limited spots</p>
-                  <a href="/auth/login" className="ytg-btn-ghost" style={{ width: '100%', justifyContent: 'center', display: 'flex' }}>Lock In Lifetime Access</a>
+                  <button onClick={() => openCheckout('lifetime_solo')} className="ytg-btn-ghost" style={{ width: '100%', justifyContent: 'center', display: 'flex' }}>Lock In Lifetime Access</button>
                 </div>
 
                 <div className="ytg-pricing-card-featured" style={{ padding: '36px 32px' }}>
@@ -1090,7 +1091,7 @@ export default function Landing() {
                     <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}><Check color="var(--ytg-accent)" /><span style={{ fontSize: 13, color: 'var(--ytg-text)' }}>{f}</span></div>
                   ))}
                   <p style={{ fontSize: 11, color: '#ff6b63', fontWeight: 700, marginTop: 18, marginBottom: 12 }}>Only 500 available — limited spots</p>
-                  <a href="/auth/login" className="ytg-btn-primary" style={{ width: '100%', justifyContent: 'center', display: 'flex' }}>Lock In Lifetime Access</a>
+                  <button onClick={() => openCheckout('lifetime_growth')} className="ytg-btn-primary" style={{ width: '100%', justifyContent: 'center', display: 'flex' }}>Lock In Lifetime Access</button>
                 </div>
 
                 <div className="ytg-pricing-card" style={{ padding: '36px 32px' }}>
@@ -1106,7 +1107,7 @@ export default function Landing() {
                     <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}><Check /><span style={{ fontSize: 13, color: 'var(--ytg-text-2)' }}>{f}</span></div>
                   ))}
                   <p style={{ fontSize: 11, color: '#ff6b63', fontWeight: 700, marginTop: 18, marginBottom: 12 }}>Only 500 available · Fair use: max 5 channels</p>
-                  <a href="/auth/login" className="ytg-btn-ghost" style={{ width: '100%', justifyContent: 'center', display: 'flex' }}>Lock In Lifetime Access</a>
+                  <button onClick={() => openCheckout('lifetime_agency')} className="ytg-btn-ghost" style={{ width: '100%', justifyContent: 'center', display: 'flex' }}>Lock In Lifetime Access</button>
                 </div>
               </div>
             </div>
@@ -1131,7 +1132,7 @@ export default function Landing() {
                   {['Everything in Lifetime Solo', '+ 60 bonus analyses, on us', 'Use them across all 5 tools', 'Bonus analyses never expire', 'Founder badge in the app'].map((f, i) => (
                     <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}><Check /><span style={{ fontSize: 13, color: 'var(--ytg-text-2)' }}>{f}</span></div>
                   ))}
-                  <a href="/auth/login" className="ytg-btn-ghost" style={{ marginTop: 22, width: '100%', justifyContent: 'center', display: 'flex' }}>Become a Founder</a>
+                  <button onClick={() => openCheckout('founder_solo')} className="ytg-btn-ghost" style={{ marginTop: 22, width: '100%', justifyContent: 'center', display: 'flex' }}>Become a Founder</button>
                 </div>
 
                 <div className="ytg-pricing-card-featured" style={{ padding: '36px 32px' }}>
@@ -1150,7 +1151,7 @@ export default function Landing() {
                   {['Everything in Lifetime Growth', '+ 75 bonus analyses, on us', 'Use them across all 5 tools', 'Bonus analyses never expire', 'Founder badge in the app'].map((f, i) => (
                     <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}><Check color="var(--ytg-accent)" /><span style={{ fontSize: 13, color: 'var(--ytg-text)' }}>{f}</span></div>
                   ))}
-                  <a href="/auth/login" className="ytg-btn-primary" style={{ marginTop: 22, width: '100%', justifyContent: 'center', display: 'flex' }}>Become a Founder</a>
+                  <button onClick={() => openCheckout('founder_growth')} className="ytg-btn-primary" style={{ marginTop: 22, width: '100%', justifyContent: 'center', display: 'flex' }}>Become a Founder</button>
                 </div>
 
                 <div className="ytg-pricing-card" style={{ padding: '36px 32px' }}>
@@ -1165,7 +1166,7 @@ export default function Landing() {
                   {['Everything in Lifetime Agency (max 5 channels)', '+ 150 bonus analyses, on us', 'Use them across all 5 tools', 'Bonus analyses never expire', 'Founder badge + priority support'].map((f, i) => (
                     <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}><Check /><span style={{ fontSize: 13, color: 'var(--ytg-text-2)' }}>{f}</span></div>
                   ))}
-                  <a href="/auth/login" className="ytg-btn-ghost" style={{ marginTop: 22, width: '100%', justifyContent: 'center', display: 'flex' }}>Become a Founder</a>
+                  <button onClick={() => openCheckout('founder_agency')} className="ytg-btn-ghost" style={{ marginTop: 22, width: '100%', justifyContent: 'center', display: 'flex' }}>Become a Founder</button>
                 </div>
               </div>
             </div>
@@ -1190,7 +1191,7 @@ export default function Landing() {
                   {['20 AI analyses', 'All 5 tools unlocked', 'Never expire', 'Works with any plan or no plan', 'Stack multiple packs'].map((f, i) => (
                     <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}><Check /><span style={{ fontSize: 13, color: 'var(--ytg-text-2)' }}>{f}</span></div>
                   ))}
-                  <a href="/auth/login" className="ytg-btn-ghost" style={{ marginTop: 22, width: '100%', justifyContent: 'center', display: 'flex' }}>Buy Analyses</a>
+                  <button onClick={() => openCheckout('pack_quick')} className="ytg-btn-ghost" style={{ marginTop: 22, width: '100%', justifyContent: 'center', display: 'flex' }}>Buy Analyses</button>
                 </div>
 
                 <div className="ytg-pricing-card-featured" style={{ padding: '36px 32px' }}>
@@ -1209,7 +1210,7 @@ export default function Landing() {
                   {['60 AI analyses', 'All 5 tools unlocked', 'Never expire', 'Works with any plan or no plan', 'Stack multiple packs'].map((f, i) => (
                     <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}><Check color="var(--ytg-accent)" /><span style={{ fontSize: 13, color: 'var(--ytg-text)' }}>{f}</span></div>
                   ))}
-                  <a href="/auth/login" className="ytg-btn-primary" style={{ marginTop: 22, width: '100%', justifyContent: 'center', display: 'flex' }}>Buy Analyses</a>
+                  <button onClick={() => openCheckout('pack_power')} className="ytg-btn-primary" style={{ marginTop: 22, width: '100%', justifyContent: 'center', display: 'flex' }}>Buy Analyses</button>
                 </div>
 
                 <div className="ytg-pricing-card" style={{ padding: '36px 32px' }}>
@@ -1224,7 +1225,7 @@ export default function Landing() {
                   {['150 AI analyses', 'All 5 tools unlocked', 'Never expire', 'Works with any plan or no plan', 'Stack multiple packs'].map((f, i) => (
                     <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}><Check /><span style={{ fontSize: 13, color: 'var(--ytg-text-2)' }}>{f}</span></div>
                   ))}
-                  <a href="/auth/login" className="ytg-btn-ghost" style={{ marginTop: 22, width: '100%', justifyContent: 'center', display: 'flex' }}>Buy Analyses</a>
+                  <button onClick={() => openCheckout('pack_arsenal')} className="ytg-btn-ghost" style={{ marginTop: 22, width: '100%', justifyContent: 'center', display: 'flex' }}>Buy Analyses</button>
                 </div>
               </div>
               <p style={{ textAlign: 'center', fontSize: 13.5, color: 'var(--ytg-text-3)', lineHeight: 1.8 }}>

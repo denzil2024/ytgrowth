@@ -3,6 +3,7 @@ import Competitors from './Competitors'
 import SeoOptimizer from './SeoOptimizer'
 import VideoOptimizePanel from './VideoOptimizePanel'
 import Keywords from './Keywords'
+import UsageBar from '../components/UsageBar'
 
 /* ─── Inject font + global styles once ─────────────────────────────────── */
 function useDashboardStyles() {
@@ -554,6 +555,20 @@ export default function Dashboard() {
             <NavBtn key={item.label} label={item.label} active={nav === item.label} onClick={() => setNav(item.label)} badge={item.badge} />
           ))}
         </nav>
+
+        {/* Divider */}
+        <div style={{ height: 1, background: 'rgba(255,255,255,0.05)' }}/>
+
+        {/* Usage bar */}
+        {data && (
+          <div style={{ padding: '14px 16px' }}>
+            <UsageBar
+              channelId={data.channel?.channel_id}
+              email={data.channel?.email}
+              dark={true}
+            />
+          </div>
+        )}
 
         {/* Divider */}
         <div style={{ height: 1, background: 'rgba(255,255,255,0.05)' }}/>

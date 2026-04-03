@@ -9,6 +9,7 @@ from app.competitors import (
 )
 from routers.auth import get_session
 from app.insights import calculate_upload_frequency
+from app.analysis_gate import check_and_deduct
 
 router = APIRouter()
 
@@ -40,6 +41,11 @@ def analyze_competitor(channel_id: str, request: Request):
     data, creds = get_session(request.session.get("session_id"))
     if not data or not creds:
         return JSONResponse({"error": "No channel data. Please login first."}, status_code=404)
+
+    my_channel_id = data.get("channel", {}).get("channel_id", "")
+    gate = check_and_deduct(my_channel_id)
+    if not gate["allowed"]:
+        return JSONResponse({"error": gate["message"], "show_upgrade": True}, status_code=402)
 
     comp_data = fetch_competitor_public_data(creds, channel_id)
     if not comp_data:

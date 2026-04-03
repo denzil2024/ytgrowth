@@ -11,14 +11,51 @@ from routers import auth
 from routers import competitor_routes
 from routers import seo_routes
 from routers import keyword_routes
+from routers import billing
 
 app = FastAPI(title="YTGrowth API", redirect_slashes=False)
+
+# ── Monthly reset scheduler ────────────────────────────────────────────────────
+from apscheduler.schedulers.background import BackgroundScheduler
+import datetime
+
+def _run_monthly_resets():
+    """Reset monthly_used for any subscription whose reset_date has passed."""
+    from database.models import SessionLocal, UserSubscription
+    db = SessionLocal()
+    try:
+        now = datetime.datetime.now(datetime.timezone.utc)
+        subs = db.query(UserSubscription).filter(
+            UserSubscription.reset_date != None,
+            UserSubscription.status.in_(["active", "free"]),
+        ).all()
+        for sub in subs:
+            reset = sub.reset_date
+            if reset.tzinfo is None:
+                reset = reset.replace(tzinfo=datetime.timezone.utc)
+            if now >= reset:
+                sub.monthly_used = 0
+                next_month = reset.replace(
+                    month=reset.month % 12 + 1 if reset.month == 12 else reset.month + 1,
+                    year=reset.year + 1 if reset.month == 12 else reset.year,
+                )
+                sub.reset_date = next_month
+        db.commit()
+    except Exception as e:
+        print(f"[reset_job] Error: {e}")
+        db.rollback()
+    finally:
+        db.close()
+
+_scheduler = BackgroundScheduler()
+_scheduler.add_job(_run_monthly_resets, "interval", hours=6)
+_scheduler.start()
 
 # SessionMiddleware must be added before CORS so the session cookie is available
 # on every request, including the OAuth callback redirect.
 app.add_middleware(
     SessionMiddleware,
-    secret_key="ytgrowth-secret-change-in-prod",
+    secret_key=os.environ.get("SESSION_SECRET_KEY", "ytgrowth-secret-change-in-prod"),
     session_cookie="ytg_session",
     max_age=60 * 60 * 24 * 7,  # 7 days
     same_site="lax",
@@ -41,6 +78,7 @@ app.include_router(auth.router, prefix="/auth")
 app.include_router(competitor_routes.router, prefix="/competitors")
 app.include_router(seo_routes.router, prefix="/seo")
 app.include_router(keyword_routes.router, prefix="/keywords")
+app.include_router(billing.router, prefix="/billing")
 
 @app.get("/health")
 def health():
