@@ -491,7 +491,7 @@ export default function Dashboard() {
 
       {/* ══ SIDEBAR ══════════════════════════════════════════════════════ */}
       <aside style={{
-        width: 288, flexShrink: 0,
+        width: 256, flexShrink: 0,
         background: 'linear-gradient(180deg, #131315 0%, #0e0e10 100%)',
         position: 'sticky', top: 0, height: '100vh',
         boxShadow: '1px 0 0 rgba(255,255,255,0.04), 16px 0 64px rgba(0,0,0,0.55)',
@@ -499,17 +499,14 @@ export default function Dashboard() {
       }}>
 
         {/* Brand */}
-        <a href="/" style={{ padding: '22px 20px 18px', display: 'flex', alignItems: 'center', gap: 11, textDecoration: 'none', flexShrink: 0 }}>
+        <a href="/" style={{ padding: '20px 16px 16px', display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none', flexShrink: 0 }}>
           <Logo size={26} />
-          <div>
-            <p style={{ fontSize: 14, fontWeight: 700, color: '#fff', letterSpacing: '-0.4px', lineHeight: 1.15 }}>YTGrowth</p>
-            <p style={{ fontSize: 9.5, fontWeight: 500, color: 'rgba(255,255,255,0.28)', letterSpacing: '0.1em', textTransform: 'uppercase', marginTop: 2 }}>Analytics</p>
-          </div>
+          <p style={{ fontSize: 14.5, fontWeight: 700, color: '#fff', letterSpacing: '-0.5px', lineHeight: 1 }}>YTGrowth</p>
         </a>
 
         {/* Channel block */}
         {data && (
-          <div style={{ padding: '0 14px 16px' }}>
+          <div style={{ padding: '0 16px 16px' }}>
             {/* Channel card */}
             <div style={{
               display: 'flex', alignItems: 'center', gap: 11,
@@ -536,7 +533,7 @@ export default function Dashboard() {
                   {score}<span style={{ fontSize: 10, fontWeight: 500, color: 'rgba(255,255,255,0.38)' }}> / 100</span>
                 </span>
               </div>
-              <div style={{ background: 'rgba(255,255,255,0.08)', borderRadius: 100, height: 4, overflow: 'hidden' }}>
+              <div style={{ background: 'rgba(255,255,255,0.08)', borderRadius: 100, height: 5, overflow: 'hidden' }}>
                 <div style={{ width: `${score}%`, height: '100%', background: `linear-gradient(90deg, ${scoreColor(score)}, ${scoreColor(score)}cc)`, borderRadius: 100, transition: 'width 1.2s cubic-bezier(0.34,1.56,0.64,1)' }}/>
               </div>
               <p style={{ fontSize: 11, fontWeight: 600, marginTop: 6, color: score < 50 ? '#ff7b72' : score < 75 ? '#fbbf24' : '#4ade80' }}>{scoreLabel(score)}</p>
@@ -548,7 +545,7 @@ export default function Dashboard() {
         <div style={{ height: 1, background: 'rgba(255,255,255,0.05)', marginBottom: 8 }}/>
 
         {/* Nav — main items */}
-        <nav style={{ padding: '4px 10px', flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
+        <nav style={{ padding: '4px 8px', flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
           {mainNavItems.map(item => (
             <NavBtn key={item.label} label={item.label} active={nav === item.label} onClick={() => setNav(item.label)} badge={item.badge} />
           ))}
@@ -589,7 +586,7 @@ export default function Dashboard() {
         </nav>
 
         {/* Settings — visually separated from main nav */}
-        <div style={{ padding: '4px 10px 8px' }}>
+        <div style={{ padding: '4px 8px 8px' }}>
           <div style={{ height: 1, background: 'rgba(255,255,255,0.05)', marginBottom: 6 }}/>
           <NavBtn label="Settings" active={nav === 'Settings'} onClick={() => setNav('Settings')} />
         </div>
@@ -597,7 +594,7 @@ export default function Dashboard() {
         {/* Usage bar */}
         <div style={{ height: 1, background: 'rgba(255,255,255,0.05)' }}/>
         {data && (
-          <div style={{ padding: '14px 16px' }}>
+          <div style={{ padding: '14px 16px 12px' }}>
             <UsageBar
               channelId={data.channel?.channel_id}
               email={data.channel?.email}
@@ -608,12 +605,12 @@ export default function Dashboard() {
 
         {/* Footer: Help + Disconnect */}
         <div style={{ height: 1, background: 'rgba(255,255,255,0.05)' }}/>
-        <div style={{ padding: '10px 14px', display: 'flex', alignItems: 'center', gap: 4 }}>
+        <div style={{ padding: '8px 8px', display: 'flex', alignItems: 'center', gap: 2 }}>
           <a
             href="mailto:support@ytgrowth.com"
-            style={{ flex: 1, color: 'rgba(255,255,255,0.28)', fontSize: 12, textDecoration: 'none', fontWeight: 500, display: 'flex', alignItems: 'center', gap: 6, padding: '7px 10px', borderRadius: 9, transition: 'all 0.15s' }}
-            onMouseEnter={e => { e.currentTarget.style.color = 'rgba(255,255,255,0.65)'; e.currentTarget.style.background = 'rgba(255,255,255,0.05)' }}
-            onMouseLeave={e => { e.currentTarget.style.color = 'rgba(255,255,255,0.28)'; e.currentTarget.style.background = 'transparent' }}
+            style={{ flex: 1, color: 'rgba(255,255,255,0.38)', fontSize: 12, textDecoration: 'none', fontWeight: 500, display: 'flex', alignItems: 'center', gap: 6, padding: '7px 10px', borderRadius: 9, transition: 'all 0.15s' }}
+            onMouseEnter={e => { e.currentTarget.style.color = 'rgba(255,255,255,0.72)'; e.currentTarget.style.background = 'rgba(255,255,255,0.05)' }}
+            onMouseLeave={e => { e.currentTarget.style.color = 'rgba(255,255,255,0.38)'; e.currentTarget.style.background = 'transparent' }}
           >
             <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
               <circle cx="6.5" cy="6.5" r="5"/><line x1="6.5" y1="4.5" x2="6.5" y2="4.51"/><line x1="6.5" y1="6.5" x2="6.5" y2="9"/>
@@ -622,9 +619,9 @@ export default function Dashboard() {
           </a>
           <a
             href="/auth/logout"
-            style={{ flex: 1, color: 'rgba(255,255,255,0.28)', fontSize: 12, textDecoration: 'none', fontWeight: 500, display: 'flex', alignItems: 'center', gap: 6, padding: '7px 10px', borderRadius: 9, transition: 'all 0.15s' }}
-            onMouseEnter={e => { e.currentTarget.style.color = 'rgba(255,255,255,0.65)'; e.currentTarget.style.background = 'rgba(255,255,255,0.05)' }}
-            onMouseLeave={e => { e.currentTarget.style.color = 'rgba(255,255,255,0.28)'; e.currentTarget.style.background = 'transparent' }}
+            style={{ flex: 1, color: 'rgba(255,255,255,0.38)', fontSize: 12, textDecoration: 'none', fontWeight: 500, display: 'flex', alignItems: 'center', gap: 6, padding: '7px 10px', borderRadius: 9, transition: 'all 0.15s' }}
+            onMouseEnter={e => { e.currentTarget.style.color = 'rgba(255,255,255,0.72)'; e.currentTarget.style.background = 'rgba(255,255,255,0.05)' }}
+            onMouseLeave={e => { e.currentTarget.style.color = 'rgba(255,255,255,0.38)'; e.currentTarget.style.background = 'transparent' }}
           >
             <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"><path d="M5 2H2.5A1 1 0 0 0 1.5 3v7a1 1 0 0 0 1 1H5M9 9.5l3-3-3-3M12 6.5H5"/></svg>
             Disconnect
@@ -660,7 +657,7 @@ export default function Dashboard() {
         </div>
 
         {/* Page */}
-        <div style={{ padding: '28px 36px', animation: 'fadeUp 0.25s ease' }}>
+        <div style={{ padding: '28px 36px', animation: 'fadeUp 0.25s ease', maxWidth: 1280, margin: '0 auto' }}>
 
           {/* Loading */}
           {loading && (
@@ -719,7 +716,7 @@ export default function Dashboard() {
               )}
 
               {/* Main 2-col */}
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 292px', gap: 14, marginBottom: 14 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 260px', gap: 14, marginBottom: 14 }}>
 
                 {/* Top priority card */}
                 <div className="ytg-card" style={{ padding: '22px 24px' }}>
