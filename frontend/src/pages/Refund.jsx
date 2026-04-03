@@ -110,11 +110,6 @@ export default function Refund() {
         </ul>
         <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.8, marginBottom: 16 }}>We process all refund requests within 3 business days. Refunds are issued to your original payment method via Paddle.</p>
 
-        <div style={{ height: 1, background: 'var(--ytg-border)', margin: '48px 0 32px' }} />
-        <div style={{ display: 'flex', gap: 24 }}>
-          <a href="/terms" style={{ fontSize: 13, color: 'var(--ytg-accent)', textDecoration: 'none', fontWeight: 500 }}>Terms of Service</a>
-          <a href="/privacy" style={{ fontSize: 13, color: 'var(--ytg-accent)', textDecoration: 'none', fontWeight: 500 }}>Privacy Policy</a>
-        </div>
       </div>
 
       <div style={{ borderTop: '1px solid var(--ytg-border)', padding: '28px 40px' }}>

@@ -108,11 +108,6 @@ export default function Terms() {
         <h2 style={{ fontWeight: 700, fontSize: 18, color: 'var(--ytg-text)', marginTop: 36, marginBottom: 10, letterSpacing: '-0.3px' }}>8. Contact</h2>
         <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.8, marginBottom: 16 }}>Questions? Email <strong>support@ytgrowth.io</strong>.</p>
 
-        <div style={{ height: 1, background: 'var(--ytg-border)', margin: '48px 0 32px' }} />
-        <div style={{ display: 'flex', gap: 24 }}>
-          <a href="/privacy" style={{ fontSize: 13, color: 'var(--ytg-accent)', textDecoration: 'none', fontWeight: 500 }}>Privacy Policy</a>
-          <a href="/refund" style={{ fontSize: 13, color: 'var(--ytg-accent)', textDecoration: 'none', fontWeight: 500 }}>Refund Policy</a>
-        </div>
       </div>
 
       {/* Footer */}

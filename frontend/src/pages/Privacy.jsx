@@ -120,11 +120,6 @@ export default function Privacy() {
         <h2 style={{ fontWeight: 700, fontSize: 18, color: 'var(--ytg-text)', marginTop: 36, marginBottom: 10, letterSpacing: '-0.3px' }}>7. Contact</h2>
         <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.8, marginBottom: 16 }}>Privacy questions? Email <strong>support@ytgrowth.io</strong>.</p>
 
-        <div style={{ height: 1, background: 'var(--ytg-border)', margin: '48px 0 32px' }} />
-        <div style={{ display: 'flex', gap: 24 }}>
-          <a href="/terms" style={{ fontSize: 13, color: 'var(--ytg-accent)', textDecoration: 'none', fontWeight: 500 }}>Terms of Service</a>
-          <a href="/refund" style={{ fontSize: 13, color: 'var(--ytg-accent)', textDecoration: 'none', fontWeight: 500 }}>Refund Policy</a>
-        </div>
       </div>
 
       <div style={{ borderTop: '1px solid var(--ytg-border)', padding: '28px 40px' }}>
