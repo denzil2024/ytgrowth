@@ -1342,7 +1342,7 @@ export default function Landing() {
             <span style={{ fontWeight: 800, fontSize: 15, color: 'var(--ytg-text)', letterSpacing: '-0.4px' }}>YTGrowth</span>
           </div>
           <p style={{ fontSize: 13, color: 'var(--ytg-text-3)' }}>Built for creators serious about growth.</p>
-          <div style={{ display: 'flex', gap: 28 }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: isMobile ? '10px 20px' : 28, justifyContent: isMobile ? 'center' : 'flex-end' }}>
             <a href="/privacy" className="ytg-nav-link" style={{ fontSize: 13 }}>Privacy policy</a>
             <a href="/terms" className="ytg-nav-link" style={{ fontSize: 13 }}>Terms of service</a>
             <a href="/refund" className="ytg-nav-link" style={{ fontSize: 13 }}>Refund policy</a>
