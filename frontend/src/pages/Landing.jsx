@@ -521,7 +521,6 @@ export default function Landing() {
 
   return (
     <div style={{ fontFamily: "'DM Sans', system-ui, sans-serif", background: 'var(--ytg-bg)', color: 'var(--ytg-text)', overflowX: 'hidden' }}>
-      {!isMobile && <ScrollProgress />}
 
       {/* ── NAV ─────────────────────────────────────────────────────────── */}
       <nav style={{
