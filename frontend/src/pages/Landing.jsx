@@ -150,6 +150,19 @@ function useGlobalStyles(light) {
         transform: translateY(-2px);
         box-shadow: 0 6px 20px rgba(0,0,0,0.13), 0 2px 6px rgba(0,0,0,0.07);
       }
+      .ytg-faq-answer {
+        display: grid;
+        grid-template-rows: 0fr;
+        transition: grid-template-rows 0.32s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease;
+        opacity: 0;
+      }
+      .ytg-faq-answer.open {
+        grid-template-rows: 1fr;
+        opacity: 1;
+      }
+      .ytg-faq-answer-inner {
+        overflow: hidden;
+      }
 
       .ytg-objection-card {
         background: var(--ytg-card);
@@ -1279,30 +1292,32 @@ export default function Landing() {
                   onClick={() => setOpenFaq(isOpen ? null : i)}
                   className="ytg-faq-card"
                   style={{
-                    border: `1px solid ${isOpen ? 'var(--ytg-border-2)' : 'var(--ytg-border)'}`,
-                    boxShadow: isOpen ? '0 8px 28px rgba(0,0,0,0.1), 0 2px 8px rgba(0,0,0,0.06)' : undefined,
+                    border: `1px solid ${isOpen ? 'var(--ytg-accent-border)' : 'var(--ytg-border)'}`,
+                    boxShadow: isOpen ? '0 8px 28px rgba(99,102,241,0.1), 0 2px 8px rgba(0,0,0,0.06)' : undefined,
                     transform: isOpen ? 'translateY(-1px)' : undefined,
                   }}
                 >
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '24px 28px', gap: 16 }}>
-                    <p style={{ fontWeight: 700, fontSize: 15.5, color: 'var(--ytg-text)', letterSpacing: '-0.3px', lineHeight: 1.4 }}>{item.q}</p>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: isMobile ? '18px 18px' : '22px 26px', gap: 14 }}>
+                    <p style={{ fontWeight: 700, fontSize: isMobile ? 14 : 15.5, color: 'var(--ytg-text)', letterSpacing: '-0.3px', lineHeight: 1.4, margin: 0 }}>{item.q}</p>
                     <div style={{
-                      width: 32, height: 32, borderRadius: 10, flexShrink: 0,
+                      width: 30, height: 30, borderRadius: 9, flexShrink: 0,
                       background: isOpen ? 'var(--ytg-accent-light)' : 'var(--ytg-card-2)',
                       border: `1px solid ${isOpen ? 'var(--ytg-accent-border)' : 'var(--ytg-border)'}`,
                       display: 'flex', alignItems: 'center', justifyContent: 'center',
                       transition: 'all 0.2s',
                     }}>
-                      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style={{ transform: isOpen ? 'rotate(45deg)' : 'rotate(0deg)', transition: 'transform 0.25s cubic-bezier(0.34,1.56,0.64,1)' }}>
+                      <svg width="11" height="11" viewBox="0 0 12 12" fill="none" style={{ transform: isOpen ? 'rotate(45deg)' : 'rotate(0deg)', transition: 'transform 0.28s cubic-bezier(0.34,1.56,0.64,1)' }}>
                         <path d="M6 1v10M1 6h10" stroke={isOpen ? 'var(--ytg-accent)' : 'var(--ytg-text-3)'} strokeWidth="1.8" strokeLinecap="round"/>
                       </svg>
                     </div>
                   </div>
-                  {isOpen && (
-                    <div style={{ padding: '0 28px 26px', borderTop: '1px solid var(--ytg-border)' }}>
-                      <p style={{ fontSize: 14.5, color: 'var(--ytg-text-2)', lineHeight: 1.9, paddingTop: 20 }}>{item.a}</p>
+                  <div className={`ytg-faq-answer${isOpen ? ' open' : ''}`}>
+                    <div className="ytg-faq-answer-inner">
+                      <div style={{ padding: isMobile ? '0 18px 20px' : '0 26px 24px', borderTop: '1px solid var(--ytg-border)' }}>
+                        <p style={{ fontSize: isMobile ? 13.5 : 14.5, color: 'var(--ytg-text-2)', lineHeight: 1.85, paddingTop: 18, margin: 0 }}>{item.a}</p>
+                      </div>
                     </div>
-                  )}
+                  </div>
                 </div>
               )
             })}
