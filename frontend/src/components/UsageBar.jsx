@@ -35,8 +35,8 @@ export default function UsageBar({ channelId, email, dark = false }) {
         <span style={{ fontSize: 10, fontWeight: 500, color: textColor, letterSpacing: '0.07em', textTransform: 'uppercase' }}>
           AI Analyses
         </span>
-        <span style={{ fontSize: 10.5, fontWeight: 600, color: atLimit ? '#e5251b' : nearLimit ? '#d97706' : textColor }}>
-          {pct}% used
+        <span style={{ fontSize: 10.5, fontWeight: 600, color: atLimit ? '#e5251b' : nearLimit ? '#d97706' : textColor, fontVariantNumeric: 'tabular-nums' }}>
+          {usage.monthly_used} / {usage.monthly_allowance}
         </span>
       </div>
       <div style={{ background: trackBg, borderRadius: 100, height: 4, overflow: 'hidden', marginBottom: 6 }}>

@@ -364,11 +364,11 @@ function NavBtn({ label, active, onClick, badge }) {
   return (
     <button className="ytg-nav-btn" onClick={onClick} style={{
       background: active ? 'rgba(255,255,255,0.08)' : 'transparent',
-      color: active ? 'rgba(255,255,255,0.95)' : 'rgba(255,255,255,0.38)',
+      color: active ? 'rgba(255,255,255,0.95)' : 'rgba(255,255,255,0.55)',
       boxShadow: active ? 'inset 0 0 0 1px rgba(255,255,255,0.08)' : 'none',
     }}
-      onMouseEnter={e => { if (!active) { e.currentTarget.style.background = 'rgba(255,255,255,0.05)'; e.currentTarget.style.color = 'rgba(255,255,255,0.7)' } }}
-      onMouseLeave={e => { if (!active) { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'rgba(255,255,255,0.38)' } }}
+      onMouseEnter={e => { if (!active) { e.currentTarget.style.background = 'rgba(255,255,255,0.05)'; e.currentTarget.style.color = 'rgba(255,255,255,0.82)' } }}
+      onMouseLeave={e => { if (!active) { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'rgba(255,255,255,0.55)' } }}
     >
       <span style={{ display: 'flex', flexShrink: 0, opacity: active ? 1 : 0.7 }}>{NAV_ICONS[label]}</span>
       <span style={{ flex: 1, letterSpacing: '-0.1px' }}>{label}</span>
@@ -476,7 +476,7 @@ export default function Dashboard() {
     }
   })() : null
 
-  const navItems = [
+  const mainNavItems = [
     { label: 'Overview' },
     { label: 'Insights', badge: data?.insights?.priorityActions?.length },
     { label: 'Videos' },
@@ -484,7 +484,6 @@ export default function Dashboard() {
     { label: 'Competitors' },
     { label: 'Keywords' },
     { label: 'SEO Optimizer' },
-    { label: 'Settings' },
   ]
 
   return (
@@ -541,7 +540,7 @@ export default function Dashboard() {
               <div style={{ background: 'rgba(255,255,255,0.08)', borderRadius: 100, height: 4, overflow: 'hidden' }}>
                 <div style={{ width: `${score}%`, height: '100%', background: `linear-gradient(90deg, ${scoreColor(score)}, ${scoreColor(score)}cc)`, borderRadius: 100, transition: 'width 1.2s cubic-bezier(0.34,1.56,0.64,1)' }}/>
               </div>
-              <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.3)', fontWeight: 400, marginTop: 6 }}>{scoreLabel(score)}</p>
+              <p style={{ fontSize: 11, fontWeight: 600, marginTop: 6, color: score < 50 ? '#ff7b72' : score < 75 ? '#fbbf24' : '#4ade80' }}>{scoreLabel(score)}</p>
             </div>
           </div>
         )}
@@ -549,17 +548,54 @@ export default function Dashboard() {
         {/* Divider */}
         <div style={{ height: 1, background: 'rgba(255,255,255,0.05)', marginBottom: 8 }}/>
 
-        {/* Nav */}
-        <nav style={{ padding: '4px 10px', flex: 1, overflowY: 'auto' }}>
-          {navItems.map(item => (
+        {/* Nav — main items */}
+        <nav style={{ padding: '4px 10px', flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
+          {mainNavItems.map(item => (
             <NavBtn key={item.label} label={item.label} active={nav === item.label} onClick={() => setNav(item.label)} badge={item.badge} />
           ))}
+
+          {/* Spacer pushes action card to bottom */}
+          <div style={{ flex: 1 }}/>
+
+          {/* Mini action card — only shown when there are insights */}
+          {data && (data.insights?.priorityActions?.length > 0) && (
+            <button
+              onClick={() => setNav('Insights')}
+              style={{
+                margin: '8px 2px 6px',
+                width: 'calc(100% - 4px)',
+                background: score < 50 ? 'rgba(229,37,27,0.1)' : 'rgba(255,255,255,0.04)',
+                border: `1px solid ${score < 50 ? 'rgba(229,37,27,0.22)' : 'rgba(255,255,255,0.08)'}`,
+                borderRadius: 14,
+                padding: '13px 15px',
+                cursor: 'pointer',
+                textAlign: 'left',
+                transition: 'background 0.18s, border-color 0.18s',
+              }}
+              onMouseEnter={e => { e.currentTarget.style.background = score < 50 ? 'rgba(229,37,27,0.17)' : 'rgba(255,255,255,0.08)' }}
+              onMouseLeave={e => { e.currentTarget.style.background = score < 50 ? 'rgba(229,37,27,0.1)' : 'rgba(255,255,255,0.04)' }}
+            >
+              <p style={{ fontSize: 9.5, fontWeight: 700, color: score < 50 ? 'rgba(255,120,100,0.9)' : 'rgba(255,255,255,0.38)', textTransform: 'uppercase', letterSpacing: '0.09em', marginBottom: 6 }}>
+                Action needed
+              </p>
+              <p style={{ fontSize: 14, fontWeight: 700, color: 'rgba(255,255,255,0.9)', lineHeight: 1.25, marginBottom: 5 }}>
+                {data.insights.priorityActions.length} insight{data.insights.priorityActions.length !== 1 ? 's' : ''} to fix
+              </p>
+              <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.38)', letterSpacing: '-0.1px' }}>
+                View Insights →
+              </p>
+            </button>
+          )}
         </nav>
 
-        {/* Divider */}
-        <div style={{ height: 1, background: 'rgba(255,255,255,0.05)' }}/>
+        {/* Settings — visually separated from main nav */}
+        <div style={{ padding: '4px 10px 8px' }}>
+          <div style={{ height: 1, background: 'rgba(255,255,255,0.05)', marginBottom: 6 }}/>
+          <NavBtn label="Settings" active={nav === 'Settings'} onClick={() => setNav('Settings')} />
+        </div>
 
         {/* Usage bar */}
+        <div style={{ height: 1, background: 'rgba(255,255,255,0.05)' }}/>
         {data && (
           <div style={{ padding: '14px 16px' }}>
             <UsageBar
@@ -570,14 +606,24 @@ export default function Dashboard() {
           </div>
         )}
 
-        {/* Divider */}
+        {/* Footer: Help + Disconnect */}
         <div style={{ height: 1, background: 'rgba(255,255,255,0.05)' }}/>
-
-        {/* Disconnect */}
-        <div style={{ padding: '14px 14px' }}>
-          <a href="/auth/logout"
-            style={{ color: 'rgba(255,255,255,0.28)', fontSize: 12.5, textDecoration: 'none', fontWeight: 400, display: 'flex', alignItems: 'center', gap: 8, padding: '8px 10px', borderRadius: 10, transition: 'all 0.15s' }}
-            onMouseEnter={e => { e.currentTarget.style.color = 'rgba(255,255,255,0.6)'; e.currentTarget.style.background = 'rgba(255,255,255,0.04)' }}
+        <div style={{ padding: '10px 14px', display: 'flex', alignItems: 'center', gap: 4 }}>
+          <a
+            href="mailto:support@ytgrowth.com"
+            style={{ flex: 1, color: 'rgba(255,255,255,0.28)', fontSize: 12, textDecoration: 'none', fontWeight: 500, display: 'flex', alignItems: 'center', gap: 6, padding: '7px 10px', borderRadius: 9, transition: 'all 0.15s' }}
+            onMouseEnter={e => { e.currentTarget.style.color = 'rgba(255,255,255,0.65)'; e.currentTarget.style.background = 'rgba(255,255,255,0.05)' }}
+            onMouseLeave={e => { e.currentTarget.style.color = 'rgba(255,255,255,0.28)'; e.currentTarget.style.background = 'transparent' }}
+          >
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="6.5" cy="6.5" r="5"/><line x1="6.5" y1="4.5" x2="6.5" y2="4.51"/><line x1="6.5" y1="6.5" x2="6.5" y2="9"/>
+            </svg>
+            Help
+          </a>
+          <a
+            href="/auth/logout"
+            style={{ flex: 1, color: 'rgba(255,255,255,0.28)', fontSize: 12, textDecoration: 'none', fontWeight: 500, display: 'flex', alignItems: 'center', gap: 6, padding: '7px 10px', borderRadius: 9, transition: 'all 0.15s' }}
+            onMouseEnter={e => { e.currentTarget.style.color = 'rgba(255,255,255,0.65)'; e.currentTarget.style.background = 'rgba(255,255,255,0.05)' }}
             onMouseLeave={e => { e.currentTarget.style.color = 'rgba(255,255,255,0.28)'; e.currentTarget.style.background = 'transparent' }}
           >
             <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"><path d="M5 2H2.5A1 1 0 0 0 1.5 3v7a1 1 0 0 0 1 1H5M9 9.5l3-3-3-3M12 6.5H5"/></svg>
