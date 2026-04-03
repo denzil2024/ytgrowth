@@ -1262,27 +1262,6 @@ export default function Landing() {
             </div>
           )}
 
-          {/* Objection crushers — IMPROVED: 5-col→3+2 layout, shown on mobile too */}
-          <div style={{ marginTop: 56 }}>
-            {[
-              ['vs TubeBuddy / VidIQ', "They show you data. We run the AI and hand you the conclusion — so you can act, not scroll."],
-              ['Small channel?', "Especially then. When you're getting 200 views a video, one right title decision is worth more than 10 wrong ones."],
-              ['Cancel fear', 'Monthly is month-to-month. Cancel in 30 seconds, no retention email, no dark pattern. Just done.'],
-              ['Lifetime risk', "If we shut down (we won't), you keep your data export and we refund the pro-rated difference. Our reputation is the collateral."],
-              ['Agency ROI', 'One viral video for a client makes the annual plan look like a rounding error on their invoice.'],
-            ].reduce((rows, item, i) => {
-              if (i < 3) rows[0].push(item); else rows[1].push(item); return rows
-            }, [[], []]).map((row, ri) => (
-              <div key={ri} style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : ri === 0 ? 'repeat(3,1fr)' : 'repeat(2,1fr)', gap: 12, marginBottom: 12, maxWidth: ri === 1 && !isMobile ? '66.66%' : '100%', margin: ri === 1 && !isMobile ? '0 auto' : undefined }}>
-                {row.map(([title, body], i) => (
-                  <div key={i} className="ytg-objection-card">
-                    <p style={{ fontSize: 12, fontWeight: 700, color: 'var(--ytg-text)', marginBottom: 8, letterSpacing: '-0.2px' }}>{title}</p>
-                    <p style={{ fontSize: 14, color: 'var(--ytg-text-3)', lineHeight: 1.75 }}>{body}</p> {/* IMPROVED: 12.5→14px */}
-                  </div>
-                ))}
-              </div>
-            ))}
-          </div>
         </div>
       </div>
 
