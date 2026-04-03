@@ -370,10 +370,10 @@ function NavBtn({ label, active, onClick, badge }) {
       onMouseEnter={e => { if (!active) { e.currentTarget.style.background = 'rgba(255,255,255,0.05)'; e.currentTarget.style.color = 'rgba(255,255,255,0.82)' } }}
       onMouseLeave={e => { if (!active) { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'rgba(255,255,255,0.55)' } }}
     >
-      <span style={{ display: 'flex', flexShrink: 0, opacity: active ? 1 : 0.7 }}>{NAV_ICONS[label]}</span>
+      <span style={{ display: 'flex', flexShrink: 0, opacity: active ? 1 : 0.55 }}>{NAV_ICONS[label]}</span>
       <span style={{ flex: 1, letterSpacing: '-0.1px' }}>{label}</span>
       {badge > 0 && (
-        <span style={{ background: '#3b82f6', color: '#fff', fontSize: 10, fontWeight: 600, padding: '2px 7px', borderRadius: 20, letterSpacing: '0.02em' }}>{badge}</span>
+        <span style={{ background: C.red, color: '#fff', fontSize: 10, fontWeight: 700, padding: '2px 7px', borderRadius: 20, letterSpacing: '0.01em', minWidth: 20, textAlign: 'center' }}>{badge}</span>
       )}
     </button>
   )
@@ -513,28 +513,27 @@ export default function Dashboard() {
             {/* Channel card */}
             <div style={{
               display: 'flex', alignItems: 'center', gap: 11,
-              padding: '11px 14px',
+              padding: '10px 13px',
               background: 'rgba(255,255,255,0.05)',
-              borderRadius: 22,
+              borderRadius: 14,
               border: '1px solid rgba(255,255,255,0.07)',
-              backdropFilter: 'blur(12px)',
             }}>
               {data.channel.thumbnail
-                ? <img src={data.channel.thumbnail} alt="" style={{ width: 36, height: 36, borderRadius: 10, objectFit: 'cover', flexShrink: 0 }}/>
-                : <div style={{ width: 36, height: 36, borderRadius: 10, background: 'rgba(229,37,27,0.7)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 700, color: '#fff', flexShrink: 0 }}>{data.channel.channel_name[0].toUpperCase()}</div>
+                ? <img src={data.channel.thumbnail} alt="" style={{ width: 36, height: 36, borderRadius: '50%', objectFit: 'cover', flexShrink: 0, boxShadow: '0 0 0 2px rgba(255,255,255,0.1)' }}/>
+                : <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'rgba(229,37,27,0.7)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 700, color: '#fff', flexShrink: 0 }}>{data.channel.channel_name[0].toUpperCase()}</div>
               }
               <div style={{ minWidth: 0, flex: 1 }}>
                 <p style={{ fontSize: 13, fontWeight: 600, color: 'rgba(255,255,255,0.92)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', letterSpacing: '-0.2px' }}>{data.channel.channel_name}</p>
-                <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.32)', marginTop: 2, fontWeight: 400 }}>{fmtNum(data.channel.subscribers)} subscribers</p>
+                <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.42)', marginTop: 2, fontWeight: 400 }}>{fmtNum(data.channel.subscribers)} subscribers</p>
               </div>
             </div>
 
             {/* Health bar */}
             <div style={{ padding: '13px 2px 0' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
-                <span style={{ fontSize: 10, fontWeight: 500, color: 'rgba(255,255,255,0.28)', letterSpacing: '0.08em', textTransform: 'uppercase' }}>Channel health</span>
+                <span style={{ fontSize: 10, fontWeight: 600, color: 'rgba(255,255,255,0.38)', letterSpacing: '0.07em', textTransform: 'uppercase' }}>Channel health</span>
                 <span style={{ fontSize: 12, fontWeight: 700, color: 'rgba(255,255,255,0.9)', fontVariantNumeric: 'tabular-nums' }}>
-                  {score}<span style={{ fontSize: 10, color: 'rgba(255,255,255,0.28)' }}> / 100</span>
+                  {score}<span style={{ fontSize: 10, fontWeight: 500, color: 'rgba(255,255,255,0.38)' }}> / 100</span>
                 </span>
               </div>
               <div style={{ background: 'rgba(255,255,255,0.08)', borderRadius: 100, height: 4, overflow: 'hidden' }}>
@@ -564,22 +563,23 @@ export default function Dashboard() {
               style={{
                 margin: '8px 2px 6px',
                 width: 'calc(100% - 4px)',
-                background: score < 50 ? 'rgba(229,37,27,0.1)' : 'rgba(255,255,255,0.04)',
-                border: `1px solid ${score < 50 ? 'rgba(229,37,27,0.22)' : 'rgba(255,255,255,0.08)'}`,
+                background: 'rgba(255,255,255,0.04)',
+                border: '1px solid rgba(255,255,255,0.08)',
                 borderRadius: 14,
                 padding: '13px 15px',
                 cursor: 'pointer',
                 textAlign: 'left',
                 transition: 'background 0.18s, border-color 0.18s',
               }}
-              onMouseEnter={e => { e.currentTarget.style.background = score < 50 ? 'rgba(229,37,27,0.17)' : 'rgba(255,255,255,0.08)' }}
-              onMouseLeave={e => { e.currentTarget.style.background = score < 50 ? 'rgba(229,37,27,0.1)' : 'rgba(255,255,255,0.04)' }}
+              onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.08)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.13)' }}
+              onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)' }}
             >
-              <p style={{ fontSize: 9.5, fontWeight: 700, color: score < 50 ? 'rgba(255,120,100,0.9)' : 'rgba(255,255,255,0.38)', textTransform: 'uppercase', letterSpacing: '0.09em', marginBottom: 6 }}>
-                Action needed
+              <p style={{ fontSize: 9.5, fontWeight: 700, color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase', letterSpacing: '0.09em', marginBottom: 7 }}>
+                Up next
               </p>
-              <p style={{ fontSize: 14, fontWeight: 700, color: 'rgba(255,255,255,0.9)', lineHeight: 1.25, marginBottom: 5 }}>
-                {data.insights.priorityActions.length} insight{data.insights.priorityActions.length !== 1 ? 's' : ''} to fix
+              <p style={{ fontSize: 22, fontWeight: 800, color: 'rgba(255,255,255,0.92)', lineHeight: 1, marginBottom: 5, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.5px' }}>
+                {data.insights.priorityActions.length}
+                <span style={{ fontSize: 12, fontWeight: 500, color: 'rgba(255,255,255,0.42)', marginLeft: 6, letterSpacing: '-0.1px' }}>insight{data.insights.priorityActions.length !== 1 ? 's' : ''}</span>
               </p>
               <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.38)', letterSpacing: '-0.1px' }}>
                 View Insights →
