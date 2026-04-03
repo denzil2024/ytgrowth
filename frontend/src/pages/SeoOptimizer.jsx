@@ -73,6 +73,16 @@ const C = {
   tealBdr: '#a5f3fc',
 }
 
+// IMPROVED: always-visible quick-start chip templates
+const QUICK_CHIPS = [
+  'How I [result] in [timeframe]',
+  'Why [common belief] is WRONG',
+  '[Number] things that [outcome]',
+  'The truth about [topic]',
+  'I tried [thing] for [timeframe] — here\'s what happened',
+  'Stop doing [mistake] (do this instead)',
+]
+
 const VIRAL_FORMATS = [
   { key: 'survival_challenge',  label: 'Survival / Time Challenge', example: 'I Survived 24 Hours With [Person/Situation]',        why: 'Extreme curiosity + suspense.' },
   { key: 'extreme_comparison',  label: 'Extreme Comparison',        example: '$5 VS $500 [Subject]: Honest Review',                 why: 'Price contrast triggers value-seeking.' },
@@ -164,71 +174,128 @@ function BreakdownBar({ criterionKey, value, max }) {
   )
 }
 
-function FormatTemplates({ onUse }) {
-  const [open, setOpen] = useState(false)
+// IMPROVED: always-visible horizontal scrollable chip row — no accordion
+function QuickStartChips({ onUse }) {
   return (
-    <div style={{ marginBottom: 16, border: `1px solid ${open ? C.purpleBdr : 'rgba(0,0,0,0.09)'}`, borderRadius: 14, overflow: 'hidden', transition: 'border-color 0.2s', boxShadow: open ? '0 4px 20px rgba(124,58,237,0.08)' : 'none' }}>
-      <button onClick={() => setOpen(v => !v)}
-        style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '13px 18px', background: open ? C.purpleBg : '#fafafa', border: 'none', cursor: 'pointer', fontFamily: 'inherit', transition: 'background 0.2s' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <div style={{ width: 28, height: 28, borderRadius: 8, background: C.purple, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round"><path d="M6.5 1L8 5h4L8.5 7.5l1.5 4L6.5 9.5 3 11.5l1.5-4L1 5h4z"/></svg>
-          </div>
-          <div>
-            <span style={{ fontSize: 13, fontWeight: 700, color: C.purple, display: 'block', letterSpacing: '-0.2px' }}>Viral Format Templates</span>
-            <span style={{ fontSize: 11, color: C.text3, fontWeight: 400 }}>Click any template to pre-fill your title</span>
-          </div>
-        </div>
-        <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke={C.text3} strokeWidth="2"
-          style={{ transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.25s', flexShrink: 0 }}>
-          <path d="M2 4.5l4.5 4.5 4.5-4.5"/>
-        </svg>
-      </button>
-      {open && (
-        <div style={{ padding: '14px 16px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, background: C.card, borderTop: `1px solid ${C.purpleBdr}` }}>
-          {VIRAL_FORMATS.map(fmt => (
-            <div key={fmt.key} onClick={() => onUse(fmt.example)}
-              style={{ padding: '12px 14px', border: `1px solid rgba(0,0,0,0.09)`, borderRadius: 11, cursor: 'pointer', background: '#fff', transition: 'all 0.18s' }}
-              onMouseEnter={e => { e.currentTarget.style.borderColor = C.purple; e.currentTarget.style.background = C.purpleBg; e.currentTarget.style.transform = 'translateY(-1px)'; e.currentTarget.style.boxShadow = `0 4px 14px ${C.purple}22` }}
-              onMouseLeave={e => { e.currentTarget.style.borderColor = C.border; e.currentTarget.style.background = '#fafafc'; e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = 'none' }}>
-              <p style={{ fontSize: 11, fontWeight: 800, color: C.purple, marginBottom: 4, textTransform: 'uppercase', letterSpacing: '0.04em' }}>{fmt.label}</p>
-              <p style={{ fontSize: 12, color: C.text1, fontWeight: 600, lineHeight: 1.4, marginBottom: 4 }}>{fmt.example}</p>
-              <p style={{ fontSize: 11, color: C.text3, lineHeight: 1.4 }}>{fmt.why}</p>
-            </div>
-          ))}
-        </div>
-      )}
+    <div style={{ marginBottom: 20 }}>
+      <p style={{ fontSize: 10, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.09em', marginBottom: 9 }}>Quick start templates</p>
+      <div style={{ display: 'flex', gap: 7, overflowX: 'auto', paddingBottom: 4, scrollbarWidth: 'none' }}>
+        {QUICK_CHIPS.map((chip, i) => (
+          <button key={i} onClick={() => onUse(chip)}
+            style={{
+              flexShrink: 0,
+              fontSize: 12, fontWeight: 500,
+              color: C.text2,
+              background: '#f4f4f7',
+              border: '1px solid rgba(0,0,0,0.09)',
+              borderRadius: 100,
+              padding: '6px 14px',
+              cursor: 'pointer',
+              fontFamily: 'inherit',
+              whiteSpace: 'nowrap',
+              transition: 'all 0.15s',
+            }}
+            onMouseEnter={e => { e.currentTarget.style.borderColor = C.red; e.currentTarget.style.color = C.red; e.currentTarget.style.background = '#fff5f5' }}
+            onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(0,0,0,0.09)'; e.currentTarget.style.color = C.text2; e.currentTarget.style.background = '#f4f4f7' }}
+          >
+            {chip}
+          </button>
+        ))}
+      </div>
     </div>
   )
 }
 
+// IMPROVED: real YouTube UI mockup cards with thumbnail placeholders
 function TitlePreviewSimulator({ title }) {
   if (!title.trim()) return null
-  const surfaces = [
-    { label: 'Suggested feed', maxChars: 45, icon: '📱' },
-    { label: 'Mobile search',  maxChars: 55, icon: '🔍' },
-    { label: 'Desktop search', maxChars: 70, icon: '🖥️' },
-  ]
+
+  const fits60 = title.length <= 60
+  const fits55 = title.length <= 55
+  const fits65 = title.length <= 65
+
+  function truncate(str, n) { return str.length > n ? str.slice(0, n - 1) + '…' : str }
+
+  const FitBadge = ({ ok }) => (
+    <span style={{ fontSize: 10, fontWeight: 700, color: ok ? C.green : C.orange, background: ok ? C.greenBg : C.orangeBg, border: `1px solid ${ok ? C.greenBdr : C.orangeBdr}`, padding: '2px 7px', borderRadius: 20 }}>
+      {ok ? '✓ fits' : 'cut off'}
+    </span>
+  )
+
+  // Shared thumbnail placeholder (16:9)
+  const Thumb = ({ width, height, radius = 8 }) => (
+    <div style={{ width, height, borderRadius: radius, background: 'linear-gradient(135deg, #e8e8ec 0%, #d4d4da 100%)', flexShrink: 0, position: 'relative', overflow: 'hidden' }}>
+      <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="10" fill="rgba(0,0,0,0.12)"/><path d="M8 7l6 3-6 3V7z" fill="rgba(0,0,0,0.35)"/></svg>
+      </div>
+    </div>
+  )
+
+  const Avatar = () => (
+    <div style={{ width: 24, height: 24, borderRadius: '50%', background: 'linear-gradient(135deg, #d4d4da, #c0c0c8)', flexShrink: 0 }} />
+  )
+
+  const YTLabel = () => (
+    <span style={{ position: 'absolute', bottom: 6, right: 8, fontSize: 9, fontWeight: 600, color: 'rgba(0,0,0,0.22)', letterSpacing: '0.04em', textTransform: 'uppercase' }}>Preview</span>
+  )
+
   return (
-    <div style={{ marginTop: 12, padding: '14px 16px', background: '#f7f7fa', borderRadius: 12, border: `1px solid ${C.border}` }}>
-      <p style={{ fontSize: 10.5, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 10 }}>Preview on YouTube</p>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 8 }}>
-        {surfaces.map(({ label, maxChars, icon }) => {
-          const truncated = title.length > maxChars
-          const display = truncated ? title.slice(0, maxChars - 1) + '…' : title
-          return (
-            <div key={label} style={{ padding: '10px 12px', background: C.card, borderRadius: 9, border: `1.5px solid ${truncated ? C.orangeBdr : C.greenBdr}`, boxShadow: '0 1px 4px rgba(0,0,0,0.04)' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
-                <span style={{ fontSize: 10, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.05em' }}>{label}</span>
-                <span style={{ fontSize: 10, fontWeight: 700, color: truncated ? C.orange : C.green, background: truncated ? C.orangeBg : C.greenBg, padding: '1px 6px', borderRadius: 20 }}>
-                  {truncated ? `cut` : '✓ fits'}
-                </span>
+    <div style={{ marginTop: 16, padding: '16px 18px', background: '#f7f7fa', borderRadius: 14, border: `1px solid ${C.border}` }}>
+      <p style={{ fontSize: 10, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.09em', marginBottom: 14 }}>How your title appears on YouTube</p>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 10 }}>
+
+        {/* Suggested Feed */}
+        <div style={{ background: '#fff', borderRadius: 12, border: `1px solid ${C.border}`, overflow: 'hidden', boxShadow: '0 1px 4px rgba(0,0,0,0.06)', position: 'relative' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 10px 6px' }}>
+            <span style={{ fontSize: 9.5, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Suggested Feed</span>
+            <FitBadge ok={fits60} />
+          </div>
+          <div style={{ padding: '0 10px 10px' }}>
+            <Thumb width="100%" height={90} radius={7} />
+            <div style={{ display: 'flex', gap: 8, marginTop: 9, alignItems: 'flex-start' }}>
+              <Avatar />
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <p style={{ fontSize: 11.5, fontWeight: 700, color: '#0f0f0f', lineHeight: 1.4, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{truncate(title, 60)}</p>
+                <p style={{ fontSize: 10.5, color: '#606060', marginTop: 3, fontWeight: 400 }}>Your Channel</p>
               </div>
-              <p style={{ fontSize: 11.5, fontWeight: 600, color: truncated ? C.text2 : C.text1, lineHeight: 1.45 }}>{display}</p>
-              {truncated && <p style={{ fontSize: 10, color: C.text4, marginTop: 4 }}>{title.length - maxChars + 1} chars over</p>}
             </div>
-          )
-        })}
+          </div>
+          <YTLabel />
+        </div>
+
+        {/* Mobile Search */}
+        <div style={{ background: '#fff', borderRadius: 12, border: `1px solid ${C.border}`, overflow: 'hidden', boxShadow: '0 1px 4px rgba(0,0,0,0.06)', position: 'relative' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 10px 6px' }}>
+            <span style={{ fontSize: 9.5, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Mobile Search</span>
+            <FitBadge ok={fits55} />
+          </div>
+          <div style={{ padding: '0 10px 10px', display: 'flex', gap: 10, alignItems: 'flex-start' }}>
+            <Thumb width={100} height={56} radius={6} />
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <p style={{ fontSize: 11.5, fontWeight: 700, color: '#0f0f0f', lineHeight: 1.4, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{truncate(title, 55)}</p>
+              <p style={{ fontSize: 10, color: '#606060', marginTop: 4, fontWeight: 400 }}>Your Channel</p>
+              <p style={{ fontSize: 10, color: '#606060', fontWeight: 400 }}>1.2K views</p>
+            </div>
+          </div>
+          <YTLabel />
+        </div>
+
+        {/* Desktop Search */}
+        <div style={{ background: '#fff', borderRadius: 12, border: `1px solid ${C.border}`, overflow: 'hidden', boxShadow: '0 1px 4px rgba(0,0,0,0.06)', position: 'relative' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 10px 6px' }}>
+            <span style={{ fontSize: 9.5, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Desktop Search</span>
+            <FitBadge ok={fits65} />
+          </div>
+          <div style={{ padding: '0 10px 10px', display: 'flex', gap: 10, alignItems: 'flex-start' }}>
+            <Thumb width={120} height={68} radius={6} />
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <p style={{ fontSize: 12, fontWeight: 700, color: '#0f0f0f', lineHeight: 1.4, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{truncate(title, 65)}</p>
+              <p style={{ fontSize: 10.5, color: '#606060', marginTop: 4, fontWeight: 400 }}>Your Channel · 1.2K views</p>
+            </div>
+          </div>
+          <YTLabel />
+        </div>
+
       </div>
     </div>
   )
@@ -293,6 +360,14 @@ export default function SeoOptimizer() {
   const [descError, setDescError]         = useState('')
   const [copiedDesc, setCopiedDesc]       = useState(null)
   const descRef = useRef(null)
+  const [usage, setUsage] = useState(null) // IMPROVED: for "X remaining" label
+
+  useEffect(() => {
+    fetch('/billing/usage', { credentials: 'include' })
+      .then(r => r.ok ? r.json() : null)
+      .then(d => d && setUsage(d))
+      .catch(() => {})
+  }, [result]) // refetch after each analysis so count updates
 
   useEffect(() => {
     if (result !== null) saveToDisk(title, result, selectedTitle, currentDesc, descResult)
@@ -426,62 +501,91 @@ export default function SeoOptimizer() {
   return (
     <div style={{ width: '100%', fontFamily: "'DM Sans', 'Inter', system-ui, sans-serif" }}>
 
-      {/* Header */}
-      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 22 }}>
-        <div>
-          <h2 style={{ fontSize: 22, fontWeight: 800, color: '#0a0a0f', letterSpacing: '-0.6px', marginBottom: 4 }}>SEO Optimizer</h2>
-          <p style={{ fontSize: 13, color: C.text3 }}>Analyse your title against competitor data · get 3 scored alternatives · generate a matching description.</p>
+      {/* IMPROVED: larger subtitle, better copy, divider */}
+      <div style={{ marginBottom: 24 }}>
+        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 16 }}>
+          <div>
+            <h2 style={{ fontSize: 22, fontWeight: 800, color: '#0a0a0f', letterSpacing: '-0.6px', marginBottom: 6 }}>SEO Optimizer</h2>
+            <p style={{ fontSize: 14, color: C.text3, lineHeight: 1.6, maxWidth: 560 }}>Type your draft title — we'll analyse competitor data, score it against the top 10 results, and generate 3 optimized alternatives with hooks and SEO reasoning.</p>
+          </div>
+          {(title || result) && (
+            <button onClick={handleClear}
+              style={{ flexShrink: 0, marginLeft: 16, display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, fontWeight: 600, color: C.text3, background: '#fff', border: '1px solid rgba(0,0,0,0.1)', borderRadius: 100, padding: '7px 16px', cursor: 'pointer', fontFamily: 'inherit', whiteSpace: 'nowrap', boxShadow: '0 1px 3px rgba(0,0,0,0.07)', transition: 'all 0.18s' }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor = C.red; e.currentTarget.style.color = C.red }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(0,0,0,0.1)'; e.currentTarget.style.color = C.text3 }}>
+              Clear
+            </button>
+          )}
         </div>
-        {(title || result) && (
-          <button onClick={handleClear}
-            style={{ flexShrink: 0, marginLeft: 16, display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, fontWeight: 600, color: C.text3, background: '#fff', border: '1px solid rgba(0,0,0,0.1)', borderRadius: 100, padding: '7px 16px', cursor: 'pointer', fontFamily: 'inherit', whiteSpace: 'nowrap', boxShadow: '0 1px 3px rgba(0,0,0,0.07)', transition: 'all 0.18s' }}
-            onMouseEnter={e => { e.currentTarget.style.borderColor = C.red; e.currentTarget.style.color = C.red }}
-            onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(0,0,0,0.1)'; e.currentTarget.style.color = C.text3 }}>
-            Clear
-          </button>
-        )}
+        <div style={{ height: 1, background: 'rgba(0,0,0,0.07)' }} />
       </div>
 
       {/* Input card */}
       <div className="seo-glass-card" style={{ borderRadius: 20, padding: '20px 22px', marginBottom: 14 }}>
 
-        <FormatTemplates onUse={t => setTitle(t)} />
+        <QuickStartChips onUse={t => setTitle(t)} />
 
-        <div style={{ marginBottom: 18 }}>
-          <label style={{ display: 'block', fontSize: 11, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 8 }}>Your video title</label>
+        {/* IMPROVED: card-style input, red focus glow, X/100 counter, tip text */}
+        <div style={{ marginBottom: 20 }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+            <label style={{ fontSize: 10, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.09em' }}>Your video title</label>
+            {title.length > 0 && (
+              <span style={{
+                fontSize: 11.5, fontWeight: 700, fontVariantNumeric: 'tabular-nums',
+                color: title.length > 90 ? C.red : title.length > 70 ? C.amber : C.green,
+                transition: 'color 0.2s',
+              }}>
+                {title.length} / 100
+              </span>
+            )}
+          </div>
           <input value={title} onChange={e => setTitle(e.target.value)} onKeyDown={e => e.key === 'Enter' && handleSubmitTitle()}
             placeholder="e.g. How I grew my YouTube channel to 10k subscribers"
-            style={{ width: '100%', padding: '11px 20px', fontSize: 14, border: '1px solid rgba(0,0,0,0.1)', borderRadius: 100, fontFamily: 'inherit', outline: 'none', color: C.text1, background: '#ffffff', boxSizing: 'border-box', transition: 'border-color 0.18s, box-shadow 0.18s', letterSpacing: '-0.1px', boxShadow: '0 1px 3px rgba(0,0,0,0.06), 0 4px 14px rgba(0,0,0,0.06)' }}
-            onFocus={e => { e.target.style.borderColor = 'rgba(0,0,0,0.25)'; e.target.style.boxShadow = '0 0 0 4px rgba(0,0,0,0.04), 0 1px 3px rgba(0,0,0,0.07)' }}
-            onBlur={e => { e.target.style.borderColor = 'rgba(0,0,0,0.1)'; e.target.style.boxShadow = '0 1px 3px rgba(0,0,0,0.06), 0 4px 14px rgba(0,0,0,0.06)' }} />
-          <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 6 }}>
-            <span style={{
-              fontSize: 11.5, fontWeight: 600,
-              color: title.length > 70 ? C.red : title.length >= 50 ? C.green : C.text3,
-              background: title.length > 70 ? C.redBg : title.length >= 50 ? C.greenBg : 'transparent',
-              padding: title.length ? '2px 8px' : '0', borderRadius: 20, transition: 'all 0.2s'
-            }}>
-              {title.length} chars {title.length >= 50 && title.length <= 70 ? '✓ ideal length' : title.length > 70 ? '— too long' : '— aim for 50–70'}
-            </span>
-          </div>
+            style={{ width: '100%', padding: '16px 20px', fontSize: 14.5, border: '1px solid rgba(0,0,0,0.1)', borderRadius: 12, fontFamily: 'inherit', outline: 'none', color: C.text1, background: '#ffffff', boxSizing: 'border-box', transition: 'border-color 0.18s, box-shadow 0.18s', letterSpacing: '-0.2px', boxShadow: '0 1px 3px rgba(0,0,0,0.06)', lineHeight: 1.5 }}
+            onFocus={e => { e.target.style.borderColor = C.red; e.target.style.boxShadow = '0 0 0 3px rgba(229,37,27,0.12), 0 1px 3px rgba(0,0,0,0.06)' }}
+            onBlur={e => { e.target.style.borderColor = 'rgba(0,0,0,0.1)'; e.target.style.boxShadow = '0 1px 3px rgba(0,0,0,0.06)' }} />
+          <p style={{ fontSize: 11.5, color: C.text4, marginTop: 7, letterSpacing: '-0.1px' }}>
+            Tip: Front-load your main keyword. Aim for <span style={{ fontWeight: 600, color: C.text3 }}>50–70 characters</span> for best CTR.
+          </p>
           <TitlePreviewSimulator title={title} />
         </div>
 
-        <button onClick={handleSubmitTitle} disabled={loading || loadingIntent || !title.trim()}
-          style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '11px 26px', background: title.trim() && !loading && !loadingIntent ? '#e5251b' : '#e0e0e6', color: '#fff', border: 'none', borderRadius: 100, fontSize: 13, fontWeight: 700, fontFamily: 'inherit', cursor: title.trim() && !loading && !loadingIntent ? 'pointer' : 'not-allowed', transition: 'all 0.18s', boxShadow: title.trim() && !loading && !loadingIntent ? '0 1px 3px rgba(0,0,0,0.12), 0 4px 14px rgba(229,37,27,0.32)' : 'none', letterSpacing: '-0.1px' }}
-          onMouseEnter={e => { if (!loading && !loadingIntent && title.trim()) { e.currentTarget.style.filter = 'brightness(1.07)'; e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.15), 0 8px 28px rgba(229,37,27,0.42)'; e.currentTarget.style.transform = 'translateY(-1px)' } }}
-          onMouseLeave={e => { if (!loading && !loadingIntent && title.trim()) { e.currentTarget.style.filter = ''; e.currentTarget.style.boxShadow = '0 1px 3px rgba(0,0,0,0.12), 0 4px 14px rgba(229,37,27,0.32)'; e.currentTarget.style.transform = '' } }}>
-          {loadingIntent ? (
-            <><SpinIcon /> Identifying search intent…</>
-          ) : loading ? (
-            <><SpinIcon /> Researching &amp; generating…</>
-          ) : (
-            <>
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="6" cy="6" r="5"/><path d="m9 9 3 3"/></svg>
-              Analyse &amp; suggest titles
-            </>
-          )}
-        </button>
+        {/* IMPROVED: full-width button, locked state, usage remaining label */}
+        {(() => {
+          const outOfCredits = usage && usage.monthly_remaining === 0 && usage.pack_balance === 0
+          const remaining = usage ? usage.monthly_remaining + (usage.pack_balance || 0) : null
+          const isActive = title.trim() && !loading && !loadingIntent && !outOfCredits
+
+          if (outOfCredits) return (
+            <div style={{ marginTop: 4 }}>
+              <div style={{ width: '100%', padding: '13px 20px', background: '#f4f4f7', border: '1px solid rgba(0,0,0,0.1)', borderRadius: 12, textAlign: 'center', color: C.text3, fontSize: 13, fontWeight: 600, marginBottom: 10, boxSizing: 'border-box' }}>
+                No analyses remaining this month
+              </div>
+              <div style={{ background: '#fff5f5', border: '1px solid #fecaca', borderRadius: 10, padding: '11px 14px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10 }}>
+                <p style={{ fontSize: 12.5, color: C.red, fontWeight: 500, lineHeight: 1.5 }}>You've used all your AI analyses this month. Top up to continue.</p>
+                <a href="/settings" style={{ flexShrink: 0, fontSize: 12, fontWeight: 700, color: '#fff', background: C.red, padding: '6px 14px', borderRadius: 8, textDecoration: 'none' }}>Top up →</a>
+              </div>
+            </div>
+          )
+
+          return (
+            <div style={{ marginTop: 4 }}>
+              <button onClick={handleSubmitTitle} disabled={!isActive}
+                style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, width: '100%', padding: '13px 26px', background: isActive ? C.red : '#e0e0e6', color: '#fff', border: 'none', borderRadius: 12, fontSize: 13.5, fontWeight: 700, fontFamily: 'inherit', cursor: isActive ? 'pointer' : 'not-allowed', transition: 'all 0.18s', boxShadow: isActive ? '0 1px 3px rgba(0,0,0,0.12), 0 4px 14px rgba(229,37,27,0.32)' : 'none', letterSpacing: '-0.1px', boxSizing: 'border-box' }}
+                onMouseEnter={e => { if (isActive) { e.currentTarget.style.filter = 'brightness(1.07)'; e.currentTarget.style.transform = 'translateY(-1px)'; e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.15), 0 8px 28px rgba(229,37,27,0.42)' } }}
+                onMouseLeave={e => { if (isActive) { e.currentTarget.style.filter = ''; e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = '0 1px 3px rgba(0,0,0,0.12), 0 4px 14px rgba(229,37,27,0.32)' } }}>
+                {loadingIntent ? <><SpinIcon /> Identifying search intent…</>
+                  : loading ? <><SpinIcon /> Analysing competitor data…</>
+                  : <><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="6" cy="6" r="5"/><path d="m9 9 3 3"/></svg>Analyse &amp; suggest titles</>}
+              </button>
+              {remaining !== null && (
+                <p style={{ fontSize: 11.5, color: C.text4, textAlign: 'center', marginTop: 8 }}>
+                  Uses 1 AI analysis · <span style={{ color: remaining <= 2 ? C.red : C.text3, fontWeight: remaining <= 2 ? 700 : 400 }}>{remaining} remaining</span>
+                </p>
+              )}
+            </div>
+          )
+        })()}
 
         {error && (
           <div style={{ marginTop: 12, display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: C.red, background: C.redBg, border: `1px solid #fecaca`, borderRadius: 9, padding: '9px 13px' }}>
