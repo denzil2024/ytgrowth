@@ -1,117 +1,137 @@
-import { useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { useEffect, useState } from 'react'
 
-const FONT_URL = 'https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700;9..40,800&display=swap'
-
-function injectStyles() {
-  if (document.getElementById('ytg-legal-font')) return
-  const link = document.createElement('link')
-  link.id = 'ytg-legal-font'
-  link.rel = 'stylesheet'
-  link.href = FONT_URL
-  document.head.appendChild(link)
+function Logo({ size = 32 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="32" height="32" rx="9" fill="#ff3b30"/>
+      <path d="M23.2 11.6a2.1 2.1 0 0 0-1.48-1.48C20.55 9.8 16 9.8 16 9.8s-4.55 0-5.72.32A2.1 2.1 0 0 0 8.8 11.6 22 22 0 0 0 8.5 16a22 22 0 0 0 .3 4.4 2.1 2.1 0 0 0 1.48 1.48C11.45 22.2 16 22.2 16 22.2s4.55 0 5.72-.32a2.1 2.1 0 0 0 1.48-1.48A22 22 0 0 0 23.5 16a22 22 0 0 0-.3-4.4z" fill="white"/>
+      <polygon points="13.5,19 19.5,16 13.5,13" fill="#ff3b30"/>
+    </svg>
+  )
 }
 
-const s = {
-  page: { fontFamily: "'DM Sans', system-ui, sans-serif", background: '#f4f4f6', color: '#0a0a0f', minHeight: '100vh' },
-  nav: { borderBottom: '1px solid rgba(10,10,15,0.1)', padding: '0 40px', height: 60, display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: '#fff' },
-  logo: { fontWeight: 800, fontSize: 18, color: '#0a0a0f', textDecoration: 'none', letterSpacing: '-0.5px' },
-  back: { fontSize: 13, color: 'rgba(10,10,15,0.5)', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 6 },
-  wrap: { maxWidth: 760, margin: '0 auto', padding: '60px 24px 100px' },
-  h1: { fontWeight: 800, fontSize: 38, letterSpacing: '-1.2px', color: '#0a0a0f', marginBottom: 8 },
-  meta: { fontSize: 13, color: 'rgba(10,10,15,0.45)', marginBottom: 48 },
-  h2: { fontWeight: 700, fontSize: 18, color: '#0a0a0f', marginTop: 40, marginBottom: 12, letterSpacing: '-0.3px' },
-  p: { fontSize: 15, color: 'rgba(10,10,15,0.7)', lineHeight: 1.8, marginBottom: 16 },
-  li: { fontSize: 15, color: 'rgba(10,10,15,0.7)', lineHeight: 1.8, marginBottom: 8 },
-  ul: { paddingLeft: 20, marginBottom: 16 },
-  divider: { height: 1, background: 'rgba(10,10,15,0.08)', margin: '48px 0' },
+function useGlobalStyles() {
+  useEffect(() => {
+    if (document.getElementById('ytg-font')) return
+    const link = document.createElement('link')
+    link.id = 'ytg-font'
+    link.rel = 'stylesheet'
+    link.href = 'https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700;9..40,800&display=swap'
+    document.head.appendChild(link)
+
+    const style = document.createElement('style')
+    style.id = 'ytg-styles'
+    style.textContent = `
+      :root {
+        --ytg-bg: #f4f4f6; --ytg-text: #0a0a0f; --ytg-text-2: rgba(10,10,15,0.62);
+        --ytg-text-3: rgba(10,10,15,0.44); --ytg-nav: rgba(244,244,246,0.9);
+        --ytg-card: #ffffff; --ytg-border: rgba(10,10,15,0.11);
+        --ytg-accent: #e5302a; --ytg-accent-text: #c22b25;
+        --ytg-shadow: 0 1px 3px rgba(0,0,0,0.08), 0 6px 28px rgba(0,0,0,0.11);
+      }
+    `
+    document.head.appendChild(style)
+  }, [])
 }
 
 export default function Terms() {
-  useEffect(() => { injectStyles(); document.title = 'Terms of Service — YTGrowth' }, [])
+  useGlobalStyles()
+  useEffect(() => { document.title = 'Terms of Service — YTGrowth' }, [])
 
   return (
-    <div style={s.page}>
-      <nav style={s.nav}>
-        <a href="/" style={s.logo}>YTGrowth</a>
-        <Link to="/" style={s.back}>← Back to home</Link>
+    <div style={{ fontFamily: "'DM Sans', system-ui, sans-serif", background: 'var(--ytg-bg)', color: 'var(--ytg-text)', minHeight: '100vh' }}>
+
+      {/* Nav */}
+      <nav style={{ position: 'sticky', top: 0, zIndex: 100, borderBottom: '1px solid var(--ytg-border)', padding: '0 40px', height: 60, display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'var(--ytg-nav)', backdropFilter: 'blur(12px)' }}>
+        <a href="/" style={{ display: 'flex', alignItems: 'center', gap: 9, textDecoration: 'none' }}>
+          <Logo size={28} />
+          <span style={{ fontWeight: 800, fontSize: 16, color: 'var(--ytg-text)', letterSpacing: '-0.4px' }}>YTGrowth</span>
+        </a>
+        <a href="/" style={{ fontSize: 13, color: 'var(--ytg-text-3)', textDecoration: 'none', fontWeight: 500 }}>← Back to home</a>
       </nav>
 
-      <div style={s.wrap}>
-        <h1 style={s.h1}>Terms of Service</h1>
-        <p style={s.meta}>Last updated: April 3, 2025 &nbsp;·&nbsp; Effective immediately</p>
+      {/* Content */}
+      <div style={{ maxWidth: 760, margin: '0 auto', padding: '60px 24px 100px' }}>
+        <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-accent-text)', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 12 }}>Legal</p>
+        <h1 style={{ fontWeight: 800, fontSize: 38, letterSpacing: '-1.2px', color: 'var(--ytg-text)', marginBottom: 8, lineHeight: 1.1 }}>Terms of Service</h1>
+        <p style={{ fontSize: 13, color: 'var(--ytg-text-3)', marginBottom: 48 }}>Last updated: April 3, 2025</p>
 
-        <p style={s.p}>
-          These Terms of Service ("Terms") govern your access to and use of YTGrowth ("Service"), operated by YTGrowth ("we", "us", or "our"). By creating an account or using the Service, you agree to be bound by these Terms.
+        <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.8, marginBottom: 16 }}>
+          These Terms of Service ("Terms") govern your access to and use of YTGrowth ("Service"). By creating an account or using the Service, you agree to be bound by these Terms.
         </p>
 
-        <div style={s.divider} />
+        <div style={{ height: 1, background: 'var(--ytg-border)', margin: '40px 0' }} />
 
-        <h2 style={s.h2}>1. The Service</h2>
-        <p style={s.p}>
-          YTGrowth is an AI-powered YouTube channel analysis platform. The Service provides channel insights, competitor analysis, SEO optimization, keyword research, and video optimization tools ("Tools"). Each use of a Tool consumes one token from your account balance.
-        </p>
+        {[
+          { t: '1. The Service', b: 'YTGrowth is an AI-powered YouTube channel analysis platform providing channel insights, competitor analysis, SEO optimization, keyword research, and video optimization tools. Each use of a tool consumes one token from your account balance.' },
+          { t: '2. Accounts & Eligibility', b: 'You must be at least 13 years old to use the Service. By connecting your Google account, you authorize us to access your YouTube channel data and analytics as permitted by the scopes you approve. You are responsible for maintaining the security of your account.' },
+        ].map(({ t, b }) => (
+          <div key={t}>
+            <h2 style={{ fontWeight: 700, fontSize: 18, color: 'var(--ytg-text)', marginTop: 36, marginBottom: 10, letterSpacing: '-0.3px' }}>{t}</h2>
+            <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.8, marginBottom: 16 }}>{b}</p>
+          </div>
+        ))}
 
-        <h2 style={s.h2}>2. Accounts & Eligibility</h2>
-        <p style={s.p}>You must be at least 13 years old to use the Service. By connecting your Google account, you authorize us to access your YouTube channel data and analytics as permitted by the scopes you approve. You are responsible for maintaining the security of your account.</p>
-
-        <h2 style={s.h2}>3. Tokens & Usage</h2>
-        <p style={s.p}>Access to AI-powered Tools is metered by tokens. One token equals one analysis run across any of the five Tools.</p>
-        <ul style={s.ul}>
-          <li style={s.li}><strong>Free plan:</strong> 5 tokens granted on signup, no monthly refill, no credit card required.</li>
-          <li style={s.li}><strong>Subscription plans (Solo, Growth, Agency):</strong> tokens reset at the start of each billing period. Unused monthly tokens do not roll over.</li>
-          <li style={s.li}><strong>Lifetime plans:</strong> monthly token allocation renews every calendar month, forever, as long as the Service operates.</li>
-          <li style={s.li}><strong>Analysis Packs:</strong> one-time token purchases that never expire and stack with any plan.</li>
-        </ul>
-        <p style={s.p}>We reserve the right to throttle or suspend accounts that exhibit abusive usage patterns (e.g. automated bulk requests).</p>
-
-        <h2 style={s.h2}>4. Payments & Billing</h2>
-        <p style={s.p}>Payments are processed by Paddle, our authorised reseller and Merchant of Record. By purchasing a plan or pack, you agree to Paddle's terms of service and privacy policy in addition to these Terms. All prices are in USD and inclusive of applicable taxes where Paddle is required to collect them.</p>
-        <ul style={s.ul}>
-          <li style={s.li}>Subscription plans are billed monthly or annually in advance.</li>
-          <li style={s.li}>Annual plans are non-refundable except as described in Section 5.</li>
-          <li style={s.li}>One-time purchases (Lifetime plans, Founder Bundles, Analysis Packs) are non-refundable after 14 days, or once more than 10% of the included tokens have been used.</li>
+        <h2 style={{ fontWeight: 700, fontSize: 18, color: 'var(--ytg-text)', marginTop: 36, marginBottom: 10, letterSpacing: '-0.3px' }}>3. Tokens & Usage</h2>
+        <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.8, marginBottom: 12 }}>Access to AI-powered tools is metered by tokens. One token equals one analysis run.</p>
+        <ul style={{ paddingLeft: 20, marginBottom: 16 }}>
+          {[
+            'Free plan: 5 tokens on signup, no monthly refill, no credit card required.',
+            'Subscriptions (Solo, Growth, Agency): tokens reset each billing period. Unused tokens do not roll over.',
+            'Lifetime plans: monthly token allocation renews every calendar month, forever.',
+            'Analysis Packs: one-time token purchases that never expire and stack with any plan.',
+          ].map((item, i) => (
+            <li key={i} style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.8, marginBottom: 8 }}>{item}</li>
+          ))}
         </ul>
 
-        <h2 style={s.h2}>5. Refunds & Cancellations</h2>
-        <p style={s.p}>Monthly subscriptions may be cancelled at any time. Cancellation takes effect at the end of the current billing period — you retain access and your token balance until then. We do not issue pro-rated refunds for monthly plans.</p>
-        <p style={s.p}>For annual plans, we offer a full refund within 14 days of purchase if fewer than 10% of monthly tokens for the period have been used. After 14 days, no refund is issued but you retain access for the remainder of the year.</p>
-        <p style={s.p}>If we shut down the Service permanently, Lifetime plan holders will receive a pro-rated refund calculated against a 5-year expected lifespan from date of purchase.</p>
-        <p style={s.p}>To request a refund, email <strong>support@ytgrowth.io</strong>.</p>
+        <h2 style={{ fontWeight: 700, fontSize: 18, color: 'var(--ytg-text)', marginTop: 36, marginBottom: 10, letterSpacing: '-0.3px' }}>4. Payments & Billing</h2>
+        <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.8, marginBottom: 16 }}>Payments are processed by Paddle, our authorised reseller and Merchant of Record. All prices are in USD. Subscription plans are billed monthly or annually in advance. One-time purchases are non-refundable after 14 days or once more than 10% of included tokens have been used.</p>
 
-        <h2 style={s.h2}>6. Intellectual Property</h2>
-        <p style={s.p}>YTGrowth and its content (excluding your YouTube data) are owned by us and protected by applicable intellectual property laws. You may not copy, resell, or reverse-engineer any part of the Service. AI-generated outputs are provided for your personal or business use — you own the outputs you generate.</p>
+        <h2 style={{ fontWeight: 700, fontSize: 18, color: 'var(--ytg-text)', marginTop: 36, marginBottom: 10, letterSpacing: '-0.3px' }}>5. Refunds & Cancellations</h2>
+        <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.8, marginBottom: 16 }}>Monthly subscriptions may be cancelled at any time — access continues until the period ends. Annual plans are refundable within 14 days if fewer than 10% of monthly tokens have been used. If YTGrowth shuts down, Lifetime plan holders receive a pro-rated refund against a 5-year expected lifespan. To request a refund, email <strong>support@ytgrowth.io</strong>.</p>
 
-        <h2 style={s.h2}>7. Acceptable Use</h2>
-        <p style={s.p}>You agree not to:</p>
-        <ul style={s.ul}>
-          <li style={s.li}>Use the Service to analyse channels you do not own or have explicit authorization to manage.</li>
-          <li style={s.li}>Attempt to circumvent token limits or account restrictions.</li>
-          <li style={s.li}>Share account credentials with third parties outside of legitimate agency use.</li>
-          <li style={s.li}>Use automated scripts to trigger analyses in bulk.</li>
+        <h2 style={{ fontWeight: 700, fontSize: 18, color: 'var(--ytg-text)', marginTop: 36, marginBottom: 10, letterSpacing: '-0.3px' }}>6. Acceptable Use</h2>
+        <ul style={{ paddingLeft: 20, marginBottom: 16 }}>
+          {[
+            'Do not analyse channels you do not own or have explicit authorization to manage.',
+            'Do not attempt to circumvent token limits or account restrictions.',
+            'Do not use automated scripts to trigger analyses in bulk.',
+          ].map((item, i) => (
+            <li key={i} style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.8, marginBottom: 8 }}>{item}</li>
+          ))}
         </ul>
 
-        <h2 style={s.h2}>8. Disclaimers</h2>
-        <p style={s.p}>The Service is provided "as is". AI-generated insights are for informational purposes only and do not constitute professional advice. We do not guarantee any specific growth outcomes from using YTGrowth. YouTube's API policies and data availability may affect the quality of analyses.</p>
+        <h2 style={{ fontWeight: 700, fontSize: 18, color: 'var(--ytg-text)', marginTop: 36, marginBottom: 10, letterSpacing: '-0.3px' }}>7. Disclaimers</h2>
+        <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.8, marginBottom: 16 }}>The Service is provided "as is". AI-generated insights are for informational purposes only. We do not guarantee specific growth outcomes. Our total liability shall not exceed the amount you paid us in the 12 months preceding the claim.</p>
 
-        <h2 style={s.h2}>9. Limitation of Liability</h2>
-        <p style={s.p}>To the fullest extent permitted by law, YTGrowth shall not be liable for indirect, incidental, or consequential damages arising from your use of the Service. Our total liability shall not exceed the amount you paid us in the 12 months preceding the claim.</p>
+        <h2 style={{ fontWeight: 700, fontSize: 18, color: 'var(--ytg-text)', marginTop: 36, marginBottom: 10, letterSpacing: '-0.3px' }}>8. Contact</h2>
+        <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.8, marginBottom: 16 }}>Questions? Email <strong>support@ytgrowth.io</strong>.</p>
 
-        <h2 style={s.h2}>10. Changes to These Terms</h2>
-        <p style={s.p}>We may update these Terms from time to time. We will notify you of material changes via email or an in-app notice. Continued use of the Service after the effective date constitutes acceptance of the revised Terms.</p>
-
-        <h2 style={s.h2}>11. Governing Law</h2>
-        <p style={s.p}>These Terms are governed by the laws of the jurisdiction in which YTGrowth is incorporated. Any disputes shall be resolved by binding arbitration or in the courts of that jurisdiction.</p>
-
-        <h2 style={s.h2}>12. Contact</h2>
-        <p style={s.p}>Questions about these Terms? Email us at <strong>support@ytgrowth.io</strong>.</p>
-
-        <div style={s.divider} />
-        <p style={{ ...s.p, fontSize: 13 }}>
-          <Link to="/privacy" style={{ color: '#e5302a', textDecoration: 'none', marginRight: 20 }}>Privacy Policy</Link>
-          <Link to="/refund" style={{ color: '#e5302a', textDecoration: 'none' }}>Refund Policy</Link>
-        </p>
+        <div style={{ height: 1, background: 'var(--ytg-border)', margin: '48px 0 32px' }} />
+        <div style={{ display: 'flex', gap: 24 }}>
+          <a href="/privacy" style={{ fontSize: 13, color: 'var(--ytg-accent)', textDecoration: 'none', fontWeight: 500 }}>Privacy Policy</a>
+          <a href="/refund" style={{ fontSize: 13, color: 'var(--ytg-accent)', textDecoration: 'none', fontWeight: 500 }}>Refund Policy</a>
+        </div>
       </div>
+
+      {/* Footer */}
+      <div style={{ borderTop: '1px solid var(--ytg-border)', padding: '28px 40px' }}>
+        <div style={{ maxWidth: 1280, margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 16 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
+            <Logo size={24} />
+            <span style={{ fontWeight: 800, fontSize: 14, color: 'var(--ytg-text)', letterSpacing: '-0.4px' }}>YTGrowth</span>
+          </div>
+          <p style={{ fontSize: 13, color: 'var(--ytg-text-3)' }}>Built for creators serious about growth.</p>
+          <div style={{ display: 'flex', gap: 24 }}>
+            <a href="/privacy" style={{ fontSize: 13, color: 'var(--ytg-text-3)', textDecoration: 'none' }}>Privacy policy</a>
+            <a href="/terms" style={{ fontSize: 13, color: 'var(--ytg-text-3)', textDecoration: 'none' }}>Terms of service</a>
+            <a href="/refund" style={{ fontSize: 13, color: 'var(--ytg-text-3)', textDecoration: 'none' }}>Refund policy</a>
+            <a href="/auth/login" style={{ fontSize: 13, color: 'var(--ytg-text-3)', textDecoration: 'none' }}>Log in</a>
+          </div>
+        </div>
+      </div>
+
     </div>
   )
 }

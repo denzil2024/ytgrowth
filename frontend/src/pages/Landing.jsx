@@ -1342,9 +1342,10 @@ export default function Landing() {
           </div>
           <p style={{ fontSize: 13, color: 'var(--ytg-text-3)' }}>Built for creators serious about growth.</p>
           <div style={{ display: 'flex', gap: 28 }}>
-            {['Privacy policy', 'Terms of service', 'Log in'].map((l, i) => (
-              <a key={i} href="/auth/login" className="ytg-nav-link" style={{ fontSize: 13 }}>{l}</a>
-            ))}
+            <a href="/privacy" className="ytg-nav-link" style={{ fontSize: 13 }}>Privacy policy</a>
+            <a href="/terms" className="ytg-nav-link" style={{ fontSize: 13 }}>Terms of service</a>
+            <a href="/refund" className="ytg-nav-link" style={{ fontSize: 13 }}>Refund policy</a>
+            <a href="/auth/login" className="ytg-nav-link" style={{ fontSize: 13 }}>Log in</a>
           </div>
         </div>
       </div>

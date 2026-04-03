@@ -1,111 +1,148 @@
 import { useEffect } from 'react'
-import { Link } from 'react-router-dom'
 
-function injectStyles() {
-  if (document.getElementById('ytg-legal-font')) return
-  const link = document.createElement('link')
-  link.id = 'ytg-legal-font'
-  link.rel = 'stylesheet'
-  link.href = 'https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700;9..40,800&display=swap'
-  document.head.appendChild(link)
+function Logo({ size = 32 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="32" height="32" rx="9" fill="#ff3b30"/>
+      <path d="M23.2 11.6a2.1 2.1 0 0 0-1.48-1.48C20.55 9.8 16 9.8 16 9.8s-4.55 0-5.72.32A2.1 2.1 0 0 0 8.8 11.6 22 22 0 0 0 8.5 16a22 22 0 0 0 .3 4.4 2.1 2.1 0 0 0 1.48 1.48C11.45 22.2 16 22.2 16 22.2s4.55 0 5.72-.32a2.1 2.1 0 0 0 1.48-1.48A22 22 0 0 0 23.5 16a22 22 0 0 0-.3-4.4z" fill="white"/>
+      <polygon points="13.5,19 19.5,16 13.5,13" fill="#ff3b30"/>
+    </svg>
+  )
 }
 
-const s = {
-  page: { fontFamily: "'DM Sans', system-ui, sans-serif", background: '#f4f4f6', color: '#0a0a0f', minHeight: '100vh' },
-  nav: { borderBottom: '1px solid rgba(10,10,15,0.1)', padding: '0 40px', height: 60, display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: '#fff' },
-  logo: { fontWeight: 800, fontSize: 18, color: '#0a0a0f', textDecoration: 'none', letterSpacing: '-0.5px' },
-  back: { fontSize: 13, color: 'rgba(10,10,15,0.5)', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 6 },
-  wrap: { maxWidth: 760, margin: '0 auto', padding: '60px 24px 100px' },
-  h1: { fontWeight: 800, fontSize: 38, letterSpacing: '-1.2px', color: '#0a0a0f', marginBottom: 8 },
-  meta: { fontSize: 13, color: 'rgba(10,10,15,0.45)', marginBottom: 48 },
-  h2: { fontWeight: 700, fontSize: 18, color: '#0a0a0f', marginTop: 40, marginBottom: 12, letterSpacing: '-0.3px' },
-  p: { fontSize: 15, color: 'rgba(10,10,15,0.7)', lineHeight: 1.8, marginBottom: 16 },
-  li: { fontSize: 15, color: 'rgba(10,10,15,0.7)', lineHeight: 1.8, marginBottom: 8 },
-  ul: { paddingLeft: 20, marginBottom: 16 },
-  divider: { height: 1, background: 'rgba(10,10,15,0.08)', margin: '48px 0' },
+function useGlobalStyles() {
+  useEffect(() => {
+    if (document.getElementById('ytg-font')) return
+    const link = document.createElement('link')
+    link.id = 'ytg-font'
+    link.rel = 'stylesheet'
+    link.href = 'https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700;9..40,800&display=swap'
+    document.head.appendChild(link)
+
+    const style = document.createElement('style')
+    style.id = 'ytg-styles'
+    style.textContent = `
+      :root {
+        --ytg-bg: #f4f4f6; --ytg-text: #0a0a0f; --ytg-text-2: rgba(10,10,15,0.62);
+        --ytg-text-3: rgba(10,10,15,0.44); --ytg-nav: rgba(244,244,246,0.9);
+        --ytg-card: #ffffff; --ytg-border: rgba(10,10,15,0.11);
+        --ytg-accent: #e5302a; --ytg-accent-text: #c22b25;
+      }
+    `
+    document.head.appendChild(style)
+  }, [])
 }
 
 export default function Privacy() {
-  useEffect(() => { injectStyles(); document.title = 'Privacy Policy — YTGrowth' }, [])
+  useGlobalStyles()
+  useEffect(() => { document.title = 'Privacy Policy — YTGrowth' }, [])
 
   return (
-    <div style={s.page}>
-      <nav style={s.nav}>
-        <a href="/" style={s.logo}>YTGrowth</a>
-        <Link to="/" style={s.back}>← Back to home</Link>
+    <div style={{ fontFamily: "'DM Sans', system-ui, sans-serif", background: 'var(--ytg-bg)', color: 'var(--ytg-text)', minHeight: '100vh' }}>
+
+      <nav style={{ position: 'sticky', top: 0, zIndex: 100, borderBottom: '1px solid var(--ytg-border)', padding: '0 40px', height: 60, display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'var(--ytg-nav)', backdropFilter: 'blur(12px)' }}>
+        <a href="/" style={{ display: 'flex', alignItems: 'center', gap: 9, textDecoration: 'none' }}>
+          <Logo size={28} />
+          <span style={{ fontWeight: 800, fontSize: 16, color: 'var(--ytg-text)', letterSpacing: '-0.4px' }}>YTGrowth</span>
+        </a>
+        <a href="/" style={{ fontSize: 13, color: 'var(--ytg-text-3)', textDecoration: 'none', fontWeight: 500 }}>← Back to home</a>
       </nav>
 
-      <div style={s.wrap}>
-        <h1 style={s.h1}>Privacy Policy</h1>
-        <p style={s.meta}>Last updated: April 3, 2025 &nbsp;·&nbsp; Effective immediately</p>
+      <div style={{ maxWidth: 760, margin: '0 auto', padding: '60px 24px 100px' }}>
+        <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-accent-text)', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 12 }}>Legal</p>
+        <h1 style={{ fontWeight: 800, fontSize: 38, letterSpacing: '-1.2px', color: 'var(--ytg-text)', marginBottom: 8, lineHeight: 1.1 }}>Privacy Policy</h1>
+        <p style={{ fontSize: 13, color: 'var(--ytg-text-3)', marginBottom: 48 }}>Last updated: April 3, 2025</p>
 
-        <p style={s.p}>
-          YTGrowth ("we", "us", "our") is committed to protecting your privacy. This policy explains what data we collect, how we use it, and your rights over it. By using YTGrowth you agree to the practices described here.
+        <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.8, marginBottom: 16 }}>
+          YTGrowth is committed to protecting your privacy. This policy explains what data we collect, how we use it, and your rights over it.
         </p>
 
-        <div style={s.divider} />
+        <div style={{ height: 1, background: 'var(--ytg-border)', margin: '40px 0' }} />
 
-        <h2 style={s.h2}>1. Data We Collect</h2>
-        <p style={s.p}>When you connect your Google account we receive:</p>
-        <ul style={s.ul}>
-          <li style={s.li}><strong>Google account email address</strong> — used to identify your account.</li>
-          <li style={s.li}><strong>YouTube channel data</strong> — channel name, subscriber count, video list, view counts, and public metadata, accessed via the YouTube Data API.</li>
-          <li style={s.li}><strong>YouTube Analytics data</strong> — impressions, click-through rate, watch time, and traffic source data, accessed via the YouTube Analytics API.</li>
-          <li style={s.li}><strong>OAuth credentials</strong> — access and refresh tokens required to fetch your data. These are stored encrypted in our database.</li>
-        </ul>
-        <p style={s.p}>We also collect:</p>
-        <ul style={s.ul}>
-          <li style={s.li}><strong>Usage data</strong> — which tools you run, token consumption, and timestamps. Used to enforce plan limits and improve the Service.</li>
-          <li style={s.li}><strong>Payment data</strong> — handled entirely by Paddle. We receive only your plan type, subscription status, and Paddle customer ID. We never see or store your card details.</li>
-        </ul>
-
-        <h2 style={s.h2}>2. How We Use Your Data</h2>
-        <ul style={s.ul}>
-          <li style={s.li}>To provide AI-powered analysis of your YouTube channel.</li>
-          <li style={s.li}>To enforce token limits and billing entitlements.</li>
-          <li style={s.li}>To send transactional emails (e.g. billing receipts, usage warnings). We do not send marketing emails without your explicit consent.</li>
-          <li style={s.li}>To improve the accuracy and relevance of our AI models (using aggregated, anonymised patterns only — never your personal channel data).</li>
+        <h2 style={{ fontWeight: 700, fontSize: 18, color: 'var(--ytg-text)', marginTop: 36, marginBottom: 10, letterSpacing: '-0.3px' }}>1. Data We Collect</h2>
+        <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.8, marginBottom: 12 }}>When you connect your Google account we receive:</p>
+        <ul style={{ paddingLeft: 20, marginBottom: 16 }}>
+          {[
+            'Google account email address — used to identify your account.',
+            'YouTube channel data — channel name, subscriber count, video list, view counts, and public metadata via the YouTube Data API.',
+            'YouTube Analytics data — impressions, CTR, watch time, and traffic source data via the YouTube Analytics API.',
+            'OAuth credentials — access and refresh tokens required to fetch your data. Stored encrypted in our database.',
+            'Usage data — which tools you run, token consumption, and timestamps.',
+            'Payment data — handled entirely by Paddle. We only receive your plan type and Paddle customer ID. We never store card details.',
+          ].map((item, i) => (
+            <li key={i} style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.8, marginBottom: 8 }}>{item}</li>
+          ))}
         </ul>
 
-        <h2 style={s.h2}>3. Data Storage & Security</h2>
-        <p style={s.p}>Your data is stored on servers hosted by our cloud provider. OAuth credentials are encrypted at rest. We use industry-standard TLS for all data in transit. We retain your session and channel data for as long as your account is active. You can delete your account and all associated data at any time by emailing <strong>support@ytgrowth.io</strong>.</p>
-
-        <h2 style={s.h2}>4. Third-Party Services</h2>
-        <ul style={s.ul}>
-          <li style={s.li}><strong>Google / YouTube APIs</strong> — governs access to your channel and analytics data. Subject to Google's Privacy Policy and YouTube's Terms of Service.</li>
-          <li style={s.li}><strong>Paddle</strong> — our payment processor and Merchant of Record. Handles all payment data under their own privacy policy.</li>
-          <li style={s.li}><strong>Anthropic (Claude API)</strong> — we send anonymised channel data to Anthropic's API to generate AI insights. No personally identifiable information is included in these requests.</li>
+        <h2 style={{ fontWeight: 700, fontSize: 18, color: 'var(--ytg-text)', marginTop: 36, marginBottom: 10, letterSpacing: '-0.3px' }}>2. How We Use Your Data</h2>
+        <ul style={{ paddingLeft: 20, marginBottom: 16 }}>
+          {[
+            'To provide AI-powered analysis of your YouTube channel.',
+            'To enforce token limits and billing entitlements.',
+            'To send transactional emails (billing receipts, usage warnings). No marketing emails without consent.',
+            'To improve our AI using aggregated, anonymised patterns only — never your personal channel data.',
+          ].map((item, i) => (
+            <li key={i} style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.8, marginBottom: 8 }}>{item}</li>
+          ))}
         </ul>
-        <p style={s.p}>We do not sell your data to any third party, ever.</p>
 
-        <h2 style={s.h2}>5. Google API Limited Use Disclosure</h2>
-        <p style={s.p}>YTGrowth's use and transfer of information received from Google APIs adheres to the <a href="https://developers.google.com/terms/api-services-user-data-policy" target="_blank" rel="noopener noreferrer" style={{ color: '#e5302a' }}>Google API Services User Data Policy</a>, including the Limited Use requirements. We only access the scopes required to provide the Service, and we do not use your Google data to serve advertising.</p>
-
-        <h2 style={s.h2}>6. Your Rights</h2>
-        <p style={s.p}>Depending on your location, you may have the right to:</p>
-        <ul style={s.ul}>
-          <li style={s.li}>Access the personal data we hold about you.</li>
-          <li style={s.li}>Request correction of inaccurate data.</li>
-          <li style={s.li}>Request deletion of your data ("right to be forgotten").</li>
-          <li style={s.li}>Revoke Google OAuth access at any time via your Google account settings.</li>
+        <h2 style={{ fontWeight: 700, fontSize: 18, color: 'var(--ytg-text)', marginTop: 36, marginBottom: 10, letterSpacing: '-0.3px' }}>3. Third-Party Services</h2>
+        <ul style={{ paddingLeft: 20, marginBottom: 16 }}>
+          {[
+            'Google / YouTube APIs — subject to Google\'s Privacy Policy and YouTube\'s Terms of Service.',
+            'Paddle — our payment processor and Merchant of Record. Handles all payment data under their own privacy policy.',
+            'Anthropic (Claude API) — we send anonymised channel data to generate AI insights. No personally identifiable information is included.',
+          ].map((item, i) => (
+            <li key={i} style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.8, marginBottom: 8 }}>{item}</li>
+          ))}
         </ul>
-        <p style={s.p}>To exercise any of these rights, email <strong>support@ytgrowth.io</strong>.</p>
+        <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.8, marginBottom: 16 }}>We do not sell your data to any third party, ever.</p>
 
-        <h2 style={s.h2}>7. Cookies</h2>
-        <p style={s.p}>We use a single session cookie (<code>ytg_session</code>) to keep you logged in. We do not use advertising or tracking cookies.</p>
+        <h2 style={{ fontWeight: 700, fontSize: 18, color: 'var(--ytg-text)', marginTop: 36, marginBottom: 10, letterSpacing: '-0.3px' }}>4. Google API Limited Use Disclosure</h2>
+        <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.8, marginBottom: 16 }}>YTGrowth's use and transfer of information received from Google APIs adheres to the Google API Services User Data Policy, including the Limited Use requirements. We only access scopes required to provide the Service and do not use your Google data to serve advertising.</p>
 
-        <h2 style={s.h2}>8. Changes to This Policy</h2>
-        <p style={s.p}>We may update this policy. Material changes will be communicated via email or in-app notice. Continued use of the Service after the effective date constitutes acceptance.</p>
+        <h2 style={{ fontWeight: 700, fontSize: 18, color: 'var(--ytg-text)', marginTop: 36, marginBottom: 10, letterSpacing: '-0.3px' }}>5. Your Rights</h2>
+        <ul style={{ paddingLeft: 20, marginBottom: 16 }}>
+          {[
+            'Access the personal data we hold about you.',
+            'Request correction of inaccurate data.',
+            'Request deletion of your data (right to be forgotten).',
+            'Revoke Google OAuth access at any time via your Google account settings.',
+          ].map((item, i) => (
+            <li key={i} style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.8, marginBottom: 8 }}>{item}</li>
+          ))}
+        </ul>
+        <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.8, marginBottom: 16 }}>To exercise any of these rights, email <strong>support@ytgrowth.io</strong>.</p>
 
-        <h2 style={s.h2}>9. Contact</h2>
-        <p style={s.p}>Privacy questions? Email <strong>support@ytgrowth.io</strong>.</p>
+        <h2 style={{ fontWeight: 700, fontSize: 18, color: 'var(--ytg-text)', marginTop: 36, marginBottom: 10, letterSpacing: '-0.3px' }}>6. Cookies</h2>
+        <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.8, marginBottom: 16 }}>We use a single session cookie (<code>ytg_session</code>) to keep you logged in. We do not use advertising or tracking cookies.</p>
 
-        <div style={s.divider} />
-        <p style={{ ...s.p, fontSize: 13 }}>
-          <Link to="/terms" style={{ color: '#e5302a', textDecoration: 'none', marginRight: 20 }}>Terms of Service</Link>
-          <Link to="/refund" style={{ color: '#e5302a', textDecoration: 'none' }}>Refund Policy</Link>
-        </p>
+        <h2 style={{ fontWeight: 700, fontSize: 18, color: 'var(--ytg-text)', marginTop: 36, marginBottom: 10, letterSpacing: '-0.3px' }}>7. Contact</h2>
+        <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.8, marginBottom: 16 }}>Privacy questions? Email <strong>support@ytgrowth.io</strong>.</p>
+
+        <div style={{ height: 1, background: 'var(--ytg-border)', margin: '48px 0 32px' }} />
+        <div style={{ display: 'flex', gap: 24 }}>
+          <a href="/terms" style={{ fontSize: 13, color: 'var(--ytg-accent)', textDecoration: 'none', fontWeight: 500 }}>Terms of Service</a>
+          <a href="/refund" style={{ fontSize: 13, color: 'var(--ytg-accent)', textDecoration: 'none', fontWeight: 500 }}>Refund Policy</a>
+        </div>
       </div>
+
+      <div style={{ borderTop: '1px solid var(--ytg-border)', padding: '28px 40px' }}>
+        <div style={{ maxWidth: 1280, margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 16 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
+            <Logo size={24} />
+            <span style={{ fontWeight: 800, fontSize: 14, color: 'var(--ytg-text)', letterSpacing: '-0.4px' }}>YTGrowth</span>
+          </div>
+          <p style={{ fontSize: 13, color: 'var(--ytg-text-3)' }}>Built for creators serious about growth.</p>
+          <div style={{ display: 'flex', gap: 24 }}>
+            <a href="/privacy" style={{ fontSize: 13, color: 'var(--ytg-text-3)', textDecoration: 'none' }}>Privacy policy</a>
+            <a href="/terms" style={{ fontSize: 13, color: 'var(--ytg-text-3)', textDecoration: 'none' }}>Terms of service</a>
+            <a href="/refund" style={{ fontSize: 13, color: 'var(--ytg-text-3)', textDecoration: 'none' }}>Refund policy</a>
+            <a href="/auth/login" style={{ fontSize: 13, color: 'var(--ytg-text-3)', textDecoration: 'none' }}>Log in</a>
+          </div>
+        </div>
+      </div>
+
     </div>
   )
 }
