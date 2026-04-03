@@ -474,6 +474,7 @@ export default function Landing() {
   const [pricingTab, setPricingTab] = useState('monthly')
   const [openFaq, setOpenFaq] = useState(0)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [scrolled, setScrolled] = useState(false)
   const { isMobile, isTablet } = useBreakpoint()
   useGlobalStyles(light)
 
@@ -481,6 +482,12 @@ export default function Landing() {
     fetch('/auth/data', { credentials: 'include' })
       .then(r => { if (r.ok) setLoggedIn(true) })
       .catch(() => {})
+  }, [])
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 20)
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
   // IMPROVED: scroll-triggered fade-up on section content
@@ -503,13 +510,14 @@ export default function Landing() {
         background: 'var(--ytg-nav)', backdropFilter: 'blur(20px)',
         WebkitBackdropFilter: 'blur(20px)',
         borderBottom: '1px solid var(--ytg-border)',
+        boxShadow: scrolled ? '0 4px 24px rgba(0,0,0,0.08)' : 'none',
+        transition: 'box-shadow 0.3s ease',
         height: 60, display: 'flex', alignItems: 'center',
         justifyContent: 'space-between', padding: isMobile ? '0 20px' : '0 64px',
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
           <Logo size={28} />
           <span style={{ fontWeight: 800, fontSize: 15, letterSpacing: '-0.4px', color: 'var(--ytg-text)' }}>YTGrowth</span>
-          <span style={{ background: 'var(--ytg-accent-light)', color: 'var(--ytg-accent-text)', fontSize: 9.5, fontWeight: 700, padding: '3px 8px', borderRadius: 100, border: '1px solid var(--ytg-accent-border)', letterSpacing: '0.06em', textTransform: 'uppercase' }}>Beta</span>
         </div>
 
         {!isMobile && (
@@ -582,7 +590,7 @@ export default function Landing() {
           {/* Live badge */}
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'var(--ytg-card)', border: '1px solid var(--ytg-border)', borderRadius: 100, padding: '7px 17px', marginBottom: 24, boxShadow: 'var(--ytg-shadow)' }}> {/* IMPROVED: marginBottom 32→24 */}
             <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#16a34a', animation: 'pulse 2s infinite', boxShadow: '0 0 0 3px rgba(22,163,74,0.15)' }} />
-            <span style={{ fontSize: 13, fontWeight: 500, color: 'var(--ytg-text-3)', letterSpacing: '-0.1px' }}>Free during beta — no credit card needed</span>
+            <span style={{ fontSize: 13, fontWeight: 500, color: 'var(--ytg-text-3)', letterSpacing: '-0.1px' }}>Free to start — no credit card needed</span>
           </div>
 
           <h1 style={{ fontWeight: 800, fontSize: isMobile ? 40 : isTablet ? 62 : 72, lineHeight: 1.02, letterSpacing: isMobile ? '-1.5px' : '-2.5px', color: 'var(--ytg-text)', marginBottom: 22 }}> {/* IMPROVED: tablet 56→62px */}
@@ -597,7 +605,7 @@ export default function Landing() {
 
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12, marginBottom: 48, flexDirection: isMobile ? 'column' : 'row', width: isMobile ? '100%' : 'auto' }}>
             <a href="/auth/login" className="ytg-btn-primary" style={{ fontSize: 15.5, padding: '15px 32px', width: isMobile ? '100%' : 'auto', justifyContent: 'center' }}>
-              Analyze my channel — it's free <Arrow />
+              Analyze my channel free <Arrow />
             </a>
             <a href="#how-it-works" className="ytg-btn-ghost" style={{ fontSize: 15.5, padding: '15px 32px', width: isMobile ? '100%' : 'auto', justifyContent: 'center', opacity: isMobile ? 0.85 : 1 }}> {/* IMPROVED: ghost btn 0.85 opacity on mobile */}
               See how it works
@@ -614,6 +622,41 @@ export default function Landing() {
             ))}
           </div>
         </div>
+
+        {/* Mobile hero mockup — simplified health score + action plan */}
+        {isMobile && (
+          <div style={{ marginTop: 48, background: '#111114', border: '1px solid rgba(255,255,255,0.09)', borderRadius: 20, overflow: 'hidden', boxShadow: '0 24px 60px rgba(0,0,0,0.45)' }}>
+            <div style={{ background: 'rgba(255,255,255,0.03)', borderBottom: '1px solid rgba(255,255,255,0.07)', padding: '10px 14px', display: 'flex', alignItems: 'center', gap: 6 }}>
+              {['#FF5F57','#FEBC2E','#28C840'].map((c,i) => <div key={i} style={{ width: 8, height: 8, borderRadius: '50%', background: c, opacity: 0.65 }} />)}
+              <div style={{ background: 'rgba(255,255,255,0.06)', borderRadius: 6, padding: '4px 10px', fontSize: 10, color: 'rgba(255,255,255,0.25)', marginLeft: 6, fontFamily: 'monospace' }}>ytgrowth.io/dashboard</div>
+            </div>
+            <div style={{ padding: 16 }}>
+              <div style={{ background: 'rgba(255,59,48,0.08)', border: '1px solid rgba(255,59,48,0.18)', borderRadius: 12, padding: '14px 16px', marginBottom: 12, display: 'flex', alignItems: 'center', gap: 14 }}>
+                <svg width="48" height="48" viewBox="0 0 52 52" style={{ flexShrink: 0 }}>
+                  <circle cx="26" cy="26" r="20" fill="none" stroke="rgba(255,255,255,0.07)" strokeWidth="5"/>
+                  <circle cx="26" cy="26" r="20" fill="none" stroke="#ff3b30" strokeWidth="5" strokeDasharray="56 70" strokeLinecap="round" transform="rotate(-90 26 26)"/>
+                </svg>
+                <div>
+                  <p style={{ fontSize: 9, fontWeight: 700, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.7px', marginBottom: 4 }}>Channel health</p>
+                  <div style={{ fontWeight: 800, fontSize: 28, color: '#ff3b30', letterSpacing: '-1.5px', lineHeight: 1 }}>45</div>
+                  <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.3)', marginTop: 2 }}>out of 100 · Critical</div>
+                </div>
+              </div>
+              <p style={{ fontSize: 9, fontWeight: 700, color: 'rgba(255,255,255,0.25)', textTransform: 'uppercase', letterSpacing: '0.7px', marginBottom: 8 }}>Your action plan</p>
+              {[
+                { c: '#ff3b30', t: 'Rewrite your video openings', p: 'Critical' },
+                { c: '#ffd60a', t: 'Post 1 video per week minimum', p: 'High' },
+                { c: '#0a84ff', t: 'A/B test thumbnail focal points', p: 'Medium' },
+              ].map((item, i) => (
+                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 9, padding: '10px 12px', background: 'rgba(255,255,255,0.025)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 10, marginBottom: i < 2 ? 7 : 0 }}>
+                  <div style={{ width: 6, height: 6, borderRadius: '50%', background: item.c, flexShrink: 0 }} />
+                  <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.6)', fontWeight: 500, flex: 1 }}>{item.t}</span>
+                  <span style={{ fontSize: 9.5, fontWeight: 700, color: item.c, textTransform: 'uppercase', letterSpacing: '0.05em', flexShrink: 0 }}>{item.p}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Dashboard mockup */}
         <div style={{ maxWidth: 1280, margin: '72px auto 0', position: 'relative', display: isMobile ? 'none' : 'block' }}>
@@ -733,7 +776,7 @@ export default function Landing() {
             <h2 style={{ fontWeight: 800, fontSize: isMobile ? 32 : 48, letterSpacing: '-1.5px', color: 'var(--ytg-text)', lineHeight: 1.06, marginBottom: 16 }}>Everything you need to grow.</h2> {/* IMPROVED: marginBottom 14→16 */}
             <p style={{ fontSize: 17, color: 'var(--ytg-text-2)', maxWidth: 540, margin: '0 auto', lineHeight: 1.8 }}>Not just data — real answers with a clear action behind every metric.</p>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3,1fr)', gap: 16 }}> {/* IMPROVED: tablet now 3-col, gap 14→16 */}
+          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? 'repeat(2,1fr)' : 'repeat(3,1fr)', gap: 16 }}> {/* IMPROVED: mobile 1-col→2-col, tablet 3-col */}
             {[
               { icon: (<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>), color: '#ff3b30', title: 'Channel Health Score', desc: 'A single score out of 100 that captures retention, engagement, growth velocity, and consistency — updated live.', tag: 'Instant', tagColor: '#0a84ff' },
               { icon: (<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="18" y="3" width="4" height="18"/><rect x="10" y="8" width="4" height="13"/><rect x="2" y="13" width="4" height="8"/></svg>), color: '#ffd60a', title: 'Video Performance', desc: 'See exactly which videos drag your channel down and which the algorithm loves — with metric-by-metric breakdowns.', tag: 'Detailed', tagColor: '#ffd60a' },
@@ -824,17 +867,17 @@ export default function Landing() {
               {
                 n: '01', t: 'Connect your channel', d: 'Sign in with Google and grant read-only access. We never post, edit, or store your content.',
                 card: (
-                  <div style={{ background: '#1c1c1e', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 13, padding: 18, marginBottom: 22 }}>
+                  <div style={{ background: light ? '#f0f0f4' : '#1c1c1e', border: `1px solid ${light ? 'var(--ytg-border)' : 'rgba(255,255,255,0.08)'}`, borderRadius: 13, padding: 18, marginBottom: 22 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 11, marginBottom: 14 }}>
                       <Logo size={32} />
                       <div>
-                        <p style={{ fontSize: 12.5, fontWeight: 700, color: '#f4f4f5' }}>YTGrowth</p>
-                        <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.45)' }}>wants YouTube read access</p>
+                        <p style={{ fontSize: 12.5, fontWeight: 700, color: light ? 'var(--ytg-text)' : '#f4f4f5' }}>YTGrowth</p>
+                        <p style={{ fontSize: 11, color: light ? 'var(--ytg-text-3)' : 'rgba(255,255,255,0.45)' }}>wants YouTube read access</p>
                       </div>
                     </div>
-                    <div style={{ background: 'rgba(255,255,255,0.06)', borderRadius: 8, padding: '8px 12px', marginBottom: 11, fontSize: 11.5, color: 'rgba(255,255,255,0.5)' }}>Read-only · No posting · Fully secure</div>
+                    <div style={{ background: light ? 'var(--ytg-section)' : 'rgba(255,255,255,0.06)', borderRadius: 8, padding: '8px 12px', marginBottom: 11, fontSize: 11.5, color: light ? 'var(--ytg-text-3)' : 'rgba(255,255,255,0.5)' }}>Read-only · No posting · Fully secure</div>
                     <div style={{ display: 'flex', gap: 7 }}>
-                      <div style={{ flex: 1, background: 'rgba(255,255,255,0.08)', borderRadius: 8, padding: '9px', textAlign: 'center', fontSize: 12, color: 'rgba(255,255,255,0.5)', fontWeight: 500 }}>Cancel</div>
+                      <div style={{ flex: 1, background: light ? 'var(--ytg-card-2)' : 'rgba(255,255,255,0.08)', borderRadius: 8, padding: '9px', textAlign: 'center', fontSize: 12, color: light ? 'var(--ytg-text-2)' : 'rgba(255,255,255,0.5)', fontWeight: 500 }}>Cancel</div>
                       <div style={{ flex: 1, background: '#ff3b30', borderRadius: 8, padding: '9px', textAlign: 'center', fontSize: 12, color: '#fff', fontWeight: 700 }}>Allow</div>
                     </div>
                   </div>
@@ -843,15 +886,15 @@ export default function Landing() {
               {
                 n: '02', t: 'We scan everything', d: '12+ metrics analyzed automatically — retention, watch time, upload cadence, engagement, and your top competitors.',
                 card: (
-                  <div style={{ background: '#1c1c1e', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 13, padding: 18, marginBottom: 22 }}>
-                    <p style={{ fontSize: 9.5, color: 'rgba(255,255,255,0.45)', fontWeight: 700, marginBottom: 14, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Analyzing your channel</p>
+                  <div style={{ background: light ? '#f0f0f4' : '#1c1c1e', border: `1px solid ${light ? 'var(--ytg-border)' : 'rgba(255,255,255,0.08)'}`, borderRadius: 13, padding: 18, marginBottom: 22 }}>
+                    <p style={{ fontSize: 9.5, color: light ? 'var(--ytg-text-3)' : 'rgba(255,255,255,0.45)', fontWeight: 700, marginBottom: 14, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Analyzing your channel</p>
                     {[{ l: 'Channel metrics', w: '100%', c: '#0a84ff' }, { l: 'Video performance', w: '100%', c: '#0a84ff' }, { l: 'Competitor data', w: '72%', c: '#0a84ff' }, { l: 'Generating insights', w: '38%', c: '#ffd60a' }].map((item, i) => (
                       <div key={i} style={{ marginBottom: i < 3 ? 11 : 0 }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 5 }}>
-                          <span style={{ fontSize: 11.5, color: 'rgba(255,255,255,0.58)', fontWeight: 500 }}>{item.l}</span>
+                          <span style={{ fontSize: 11.5, color: light ? 'var(--ytg-text-2)' : 'rgba(255,255,255,0.58)', fontWeight: 500 }}>{item.l}</span>
                           <span style={{ fontSize: 11.5, color: item.c, fontWeight: 700, fontVariantNumeric: 'tabular-nums' }}>{item.w}</span>
                         </div>
-                        <div style={{ background: 'rgba(255,255,255,0.06)', borderRadius: 100, height: 3, overflow: 'hidden' }}>
+                        <div style={{ background: light ? 'var(--ytg-border)' : 'rgba(255,255,255,0.06)', borderRadius: 100, height: 3, overflow: 'hidden' }}>
                           <div style={{ width: item.w, height: '100%', background: item.c, borderRadius: 100 }} />
                         </div>
                       </div>
@@ -862,12 +905,12 @@ export default function Landing() {
               {
                 n: '03', t: 'Get your action plan', d: 'Every issue ranked by impact with one specific action. Concrete steps based on your actual channel data.',
                 card: (
-                  <div style={{ background: '#1c1c1e', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 13, padding: 18, marginBottom: 22 }}>
-                    <p style={{ fontSize: 9.5, color: 'rgba(255,255,255,0.45)', fontWeight: 700, marginBottom: 14, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Your action plan</p>
+                  <div style={{ background: light ? '#f0f0f4' : '#1c1c1e', border: `1px solid ${light ? 'var(--ytg-border)' : 'rgba(255,255,255,0.08)'}`, borderRadius: 13, padding: 18, marginBottom: 22 }}>
+                    <p style={{ fontSize: 9.5, color: light ? 'var(--ytg-text-3)' : 'rgba(255,255,255,0.45)', fontWeight: 700, marginBottom: 14, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Your action plan</p>
                     {[{ c: '#ff3b30', t: 'Rewrite video openings', s: 'Critical' }, { c: '#ffd60a', t: 'Post 1 video per week', s: 'High' }, { c: '#0a84ff', t: 'Add like CTA at 30%', s: 'Medium' }].map((item, i) => (
-                      <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 9, padding: '9px 12px', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 9, marginBottom: i < 2 ? 7 : 0 }}>
+                      <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 9, padding: '9px 12px', background: light ? 'var(--ytg-section)' : 'rgba(255,255,255,0.06)', border: `1px solid ${light ? 'var(--ytg-border)' : 'rgba(255,255,255,0.1)'}`, borderRadius: 9, marginBottom: i < 2 ? 7 : 0 }}>
                         <div style={{ width: 6, height: 6, borderRadius: '50%', background: item.c, flexShrink: 0 }} />
-                        <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.6)', fontWeight: 500, flex: 1 }}>{item.t}</span>
+                        <span style={{ fontSize: 12, color: light ? 'var(--ytg-text-2)' : 'rgba(255,255,255,0.6)', fontWeight: 500, flex: 1 }}>{item.t}</span>
                         <span style={{ fontSize: 10, fontWeight: 700, color: item.c, textTransform: 'uppercase', letterSpacing: '0.05em' }}>{item.s}</span>
                       </div>
                     ))}
@@ -894,8 +937,9 @@ export default function Landing() {
         <div style={{ position: 'absolute', inset: 0, backgroundImage: `radial-gradient(circle, var(--ytg-border) 1px, transparent 1px)`, backgroundSize: '24px 24px', opacity: 0.6, pointerEvents: 'none' }} />
         <div style={{ maxWidth: 1280, margin: '0 auto', position: 'relative', zIndex: 1 }}>
           <div className="section-animate" style={{ textAlign: 'center', marginBottom: 56 }}> {/* IMPROVED: section-animate */}
-            <Badge>Beta creators</Badge>
-            <h2 style={{ fontWeight: 800, fontSize: isMobile ? 32 : 48, letterSpacing: '-1.5px', color: 'var(--ytg-text)', lineHeight: 1.06, marginBottom: 0 }}>What creators are saying.</h2> {/* IMPROVED: marginBottom 0 */}
+            <Badge>Creators</Badge>
+            <h2 style={{ fontWeight: 800, fontSize: isMobile ? 32 : 48, letterSpacing: '-1.5px', color: 'var(--ytg-text)', lineHeight: 1.06, marginBottom: 16 }}>What creators are saying.</h2>
+            <p style={{ fontSize: 17, color: 'var(--ytg-text-2)', maxWidth: 520, margin: '0 auto', lineHeight: 1.8 }}>Real feedback from channels at every stage — from 1k to 22k subscribers.</p>
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(2,1fr)', gap: 16, maxWidth: isMobile ? 480 : '100%', margin: '0 auto' }}> {/* IMPROVED: gap 14→16 */}
             {[
