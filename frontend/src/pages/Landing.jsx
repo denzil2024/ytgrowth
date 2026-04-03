@@ -407,20 +407,28 @@ const SECTIONS = [
   { id: 'faq',         label: 'FAQ' },
 ]
 
-function ScrollDots() {
+function ScrollProgress() {
+  const [progress, setProgress] = useState(0)
   const [active, setActive] = useState(0)
   const [hovered, setHovered] = useState(null)
 
   useEffect(() => {
+    const onScroll = () => {
+      const max = document.documentElement.scrollHeight - window.innerHeight
+      setProgress(max > 0 ? (window.scrollY / max) * 100 : 0)
+    }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+
+  useEffect(() => {
     const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            const idx = SECTIONS.findIndex(s => s.id === entry.target.id)
-            if (idx !== -1) setActive(idx)
-          }
-        })
-      },
+      (entries) => entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const idx = SECTIONS.findIndex(s => s.id === entry.target.id)
+          if (idx !== -1) setActive(idx)
+        }
+      }),
       { threshold: 0.35 }
     )
     SECTIONS.forEach(s => {
@@ -436,34 +444,45 @@ function ScrollDots() {
   }
 
   return (
-    <div style={{ position: 'fixed', right: 20, top: '50%', transform: 'translateY(-50%)', zIndex: 200, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
-      {SECTIONS.map((s, i) => (
-        <div key={i} style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
-          {hovered === i && (
-            <span style={{
-              position: 'absolute', right: 18, whiteSpace: 'nowrap',
-              background: 'var(--ytg-card)', border: '1px solid var(--ytg-border-2)',
-              borderRadius: 8, padding: '4px 10px', fontSize: 11.5, fontWeight: 600,
-              color: 'var(--ytg-text-2)', boxShadow: 'var(--ytg-shadow)',
-              pointerEvents: 'none', letterSpacing: '-0.1px',
-            }}>{s.label}</span>
-          )}
-          <button
-            onClick={() => scrollTo(s.id)}
-            onMouseEnter={() => setHovered(i)}
-            onMouseLeave={() => setHovered(null)}
-            style={{
-              width: active === i ? 3 : 3,
-              height: active === i ? 22 : 5,
-              borderRadius: 10, border: 'none', cursor: 'pointer', padding: 0,
-              background: active === i ? 'var(--ytg-accent)' : 'var(--ytg-border-2)',
-              transition: 'height 0.3s cubic-bezier(0.34,1.56,0.64,1), background 0.2s',
-              display: 'block',
-            }}
-          />
-        </div>
-      ))}
-    </div>
+    <>
+      {/* Top scroll progress bar */}
+      <div style={{ position: 'fixed', top: 0, left: 0, right: 0, height: 2, zIndex: 999, background: 'transparent' }}>
+        <div style={{ height: '100%', width: `${progress}%`, background: 'var(--ytg-accent)', transition: 'width 0.08s linear', borderRadius: '0 2px 2px 0' }} />
+      </div>
+      {/* Side section nav — horizontal dashes */}
+      <div style={{ position: 'fixed', right: 20, top: '50%', transform: 'translateY(-50%)', zIndex: 200, display: 'flex', flexDirection: 'column', gap: 10 }}>
+        {SECTIONS.map((s, i) => {
+          const isActive = active === i
+          const isHovered = hovered === i
+          return (
+            <button
+              key={i}
+              onClick={() => scrollTo(s.id)}
+              onMouseEnter={() => setHovered(i)}
+              onMouseLeave={() => setHovered(null)}
+              style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 8, background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
+            >
+              {(isActive || isHovered) && (
+                <span style={{
+                  fontSize: 10.5, fontWeight: isActive ? 700 : 500, whiteSpace: 'nowrap',
+                  color: isActive ? 'var(--ytg-accent-text)' : 'var(--ytg-text-3)',
+                  background: 'var(--ytg-card)', border: '1px solid var(--ytg-border)',
+                  padding: '3px 9px', borderRadius: 6, boxShadow: 'var(--ytg-shadow)',
+                  letterSpacing: '-0.1px', pointerEvents: 'none',
+                  opacity: isActive || isHovered ? 1 : 0, transition: 'opacity 0.15s',
+                }}>{s.label}</span>
+              )}
+              <div style={{
+                height: 2, borderRadius: 2, flexShrink: 0,
+                width: isActive ? 24 : isHovered ? 14 : 8,
+                background: isActive ? 'var(--ytg-accent)' : isHovered ? 'var(--ytg-border-2)' : 'var(--ytg-border)',
+                transition: 'width 0.25s cubic-bezier(0.34,1.56,0.64,1), background 0.2s',
+              }} />
+            </button>
+          )
+        })}
+      </div>
+    </>
   )
 }
 
@@ -502,7 +521,7 @@ export default function Landing() {
 
   return (
     <div style={{ fontFamily: "'DM Sans', system-ui, sans-serif", background: 'var(--ytg-bg)', color: 'var(--ytg-text)', overflowX: 'hidden' }}>
-      {!isMobile && <ScrollDots />}
+      {!isMobile && <ScrollProgress />}
 
       {/* ── NAV ─────────────────────────────────────────────────────────── */}
       <nav style={{
@@ -659,7 +678,7 @@ export default function Landing() {
         )}
 
         {/* Dashboard mockup */}
-        <div style={{ maxWidth: 1280, margin: '72px auto 0', position: 'relative', display: isMobile ? 'none' : 'block' }}>
+        <div style={{ maxWidth: 1280, margin: '72px auto 0', position: 'relative', display: isMobile ? 'none' : 'block', padding: '32px 36px', boxSizing: 'content-box' }}>
           <div style={{
             background: '#111114', border: '1px solid rgba(255,255,255,0.09)',
             borderRadius: 22, overflow: 'hidden',
@@ -706,16 +725,16 @@ export default function Landing() {
                   { c: '#ffd60a', t: 'Upload frequency too low', desc: 'You post 0.5× per week vs 2–3× niche avg.', action: 'Commit to 1 upload per week minimum.', p: 'High' },
                   { c: '#0a84ff', t: 'CTR below niche average', desc: '2.1% vs 4.8% niche average.', action: 'A/B test thumbnails with clearer focal points.', p: 'Medium' },
                 ].map((item, i) => (
-                  <div key={i} style={{ background: 'rgba(255,255,255,0.025)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 12, overflow: 'hidden' }}>
-                    <div style={{ borderLeft: `3px solid ${item.c}`, padding: '13px 16px' }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 5 }}>
-                        <p style={{ fontSize: 12.5, fontWeight: 600, color: '#f4f4f5' }}>{item.t}</p>
-                        <span style={{ fontSize: 9.5, fontWeight: 700, color: item.c, background: `${item.c}18`, padding: '3px 9px', borderRadius: 100, flexShrink: 0, marginLeft: 10, textTransform: 'uppercase', letterSpacing: '0.06em' }}>{item.p}</span>
+                  <div key={i} style={{ background: 'rgba(255,255,255,0.028)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 12, overflow: 'hidden' }}>
+                    <div style={{ borderLeft: `3px solid ${item.c}`, padding: '14px 16px' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
+                        <p style={{ fontSize: 12.5, fontWeight: 600, color: '#f0f0f5' }}>{item.t}</p>
+                        <span style={{ fontSize: 9.5, fontWeight: 700, color: item.c, background: `${item.c}22`, border: `1px solid ${item.c}30`, padding: '2px 9px', borderRadius: 100, flexShrink: 0, marginLeft: 10, textTransform: 'uppercase', letterSpacing: '0.06em' }}>{item.p}</span>
                       </div>
-                      <p style={{ fontSize: 11.5, color: 'rgba(255,255,255,0.35)', lineHeight: 1.6 }}>{item.desc}</p>
+                      <p style={{ fontSize: 11.5, color: 'rgba(255,255,255,0.48)', lineHeight: 1.6 }}>{item.desc}</p>
                     </div>
-                    <div style={{ background: 'rgba(10,132,255,0.06)', borderTop: '1px solid rgba(10,132,255,0.15)', padding: '9px 16px', fontSize: 11.5, color: 'rgba(10,132,255,0.85)' }}>
-                      <span style={{ fontWeight: 600 }}>Fix — </span>{item.action}
+                    <div style={{ background: `${item.c}09`, borderTop: `1px solid ${item.c}22`, padding: '9px 16px', fontSize: 11.5, color: `${item.c}` , opacity: 0.85 }}>
+                      <span style={{ fontWeight: 700 }}>Fix — </span>{item.action}
                     </div>
                   </div>
                 ))}
@@ -723,8 +742,8 @@ export default function Landing() {
             </div>
           </div>
 
-          {/* Floating cards */}
-          <div style={{ animation: 'floatA 4.5s ease-in-out infinite', position: 'absolute', top: -24, right: -28, background: 'rgba(17,17,20,0.95)', backdropFilter: 'blur(20px)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 16, padding: '16px 20px', boxShadow: '0 24px 60px rgba(0,0,0,0.5)' }}>
+          {/* Floating cards — repositioned inside wrapper padding so they don't clip */}
+          <div style={{ animation: 'floatA 4.5s ease-in-out infinite', position: 'absolute', top: 8, right: 8, background: 'rgba(17,17,20,0.95)', backdropFilter: 'blur(20px)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 16, padding: '16px 20px', boxShadow: '0 24px 60px rgba(0,0,0,0.5)' }}>
             <p style={{ fontSize: 9.5, fontWeight: 700, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.6px', marginBottom: 12 }}>You vs competitor</p>
             {[['Avg views', '980', '12.4k'], ['Upload freq', '0.5×/wk', '3×/wk'], ['Like rate', '2.7%', '5.1%']].map(([m, y, t], i) => (
               <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 18, marginBottom: i < 2 ? 8 : 0, paddingBottom: i < 2 ? 8 : 0, borderBottom: i < 2 ? '1px solid rgba(255,255,255,0.06)' : 'none' }}>
@@ -738,7 +757,7 @@ export default function Landing() {
             ))}
           </div>
 
-          <div style={{ animation: 'floatB 5.5s ease-in-out infinite 1s', position: 'absolute', bottom: -24, left: -28, background: 'rgba(17,17,20,0.95)', backdropFilter: 'blur(20px)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 16, padding: '16px 20px', boxShadow: '0 24px 60px rgba(0,0,0,0.5)' }}>
+          <div style={{ animation: 'floatB 5.5s ease-in-out infinite 1s', position: 'absolute', bottom: 8, left: 8, background: 'rgba(17,17,20,0.95)', backdropFilter: 'blur(20px)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 16, padding: '16px 20px', boxShadow: '0 24px 60px rgba(0,0,0,0.5)' }}>
             <p style={{ fontSize: 9.5, fontWeight: 700, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.6px', marginBottom: 12 }}>Analysis complete</p>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
               <div style={{ width: 36, height: 36, background: 'rgba(10,132,255,0.12)', border: '1px solid rgba(10,132,255,0.25)', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
