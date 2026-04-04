@@ -13,6 +13,7 @@ from fastapi import APIRouter, Request
 from fastapi.responses import JSONResponse
 from database.models import SessionLocal, UserSubscription
 from routers.auth import get_session
+from app.utils import get_or_create_subscription, next_reset_date
 
 router = APIRouter()
 
@@ -58,22 +59,6 @@ def _verify_signature(raw_body: bytes, signature_header: str) -> bool:
         return False
 
 
-def _next_reset(billing: str) -> datetime.datetime:
-    """Calculate next monthly reset date from now."""
-    now = datetime.datetime.now(datetime.timezone.utc)
-    return now.replace(month=now.month % 12 + 1 if now.month == 12 else now.month + 1,
-                       day=1, hour=0, minute=0, second=0, microsecond=0)
-
-
-def _get_or_create_sub(db, channel_id: str, email: str = None) -> UserSubscription:
-    sub = db.query(UserSubscription).filter_by(channel_id=channel_id).first()
-    if not sub:
-        sub = UserSubscription(channel_id=channel_id, email=email)
-        db.add(sub)
-    elif email and not sub.email:
-        sub.email = email
-    return sub
-
 
 def _activate(sub: UserSubscription, meta: dict, customer_id: str, subscription_id: str = None):
     """Apply plan metadata to a subscription row."""
@@ -98,7 +83,7 @@ def _activate(sub: UserSubscription, meta: dict, customer_id: str, subscription_
     if billing in ("monthly", "annual", "lifetime"):
         # Reset the monthly counter and set next reset date
         sub.monthly_used = 0
-        sub.reset_date   = _next_reset(billing)
+        sub.reset_date   = next_reset_date()
 
     # Pack purchases just top up the balance
     if plan == "pack":
@@ -164,7 +149,7 @@ async def paddle_webhook(request: Request):
                 return JSONResponse({"ok": True})
 
             sub_id = data.get("subscription_id")
-            sub = _get_or_create_sub(db, channel_id, email)
+            sub = get_or_create_subscription(db, channel_id, email)
             _activate(sub, meta, customer_id, sub_id)
             db.commit()
             print(f"[webhook] Activated {meta['plan']} for channel {channel_id}")
@@ -173,7 +158,7 @@ async def paddle_webhook(request: Request):
             sub_id = data.get("id")
             meta   = meta_from_custom(custom) or meta_from_price(data)
             if meta and channel_id:
-                sub = _get_or_create_sub(db, channel_id, email)
+                sub = get_or_create_subscription(db, channel_id, email)
                 sub.paddle_subscription_id = sub_id
                 sub.status = "active"
                 db.commit()
@@ -181,7 +166,7 @@ async def paddle_webhook(request: Request):
         elif event_type == "subscription.updated":
             meta = meta_from_custom(custom) or meta_from_price(data)
             if meta and channel_id:
-                sub = _get_or_create_sub(db, channel_id, email)
+                sub = get_or_create_subscription(db, channel_id, email)
                 sub.monthly_allowance = meta["analyses"]
                 sub.plan              = meta["plan"]
                 sub.channels_allowed  = meta["channels"]

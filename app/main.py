@@ -50,6 +50,7 @@ app.include_router(billing.router, prefix="/billing")
 # ── Monthly reset job (runs in background thread every 6 hours) ───────────────
 def _run_monthly_resets():
     from database.models import SessionLocal, UserSubscription
+    from app.utils import next_reset_date
     db = SessionLocal()
     try:
         now = datetime.datetime.now(datetime.timezone.utc)
@@ -63,11 +64,7 @@ def _run_monthly_resets():
                 reset = reset.replace(tzinfo=datetime.timezone.utc)
             if now >= reset:
                 sub.monthly_used = 0
-                next_month = reset.replace(
-                    month=reset.month % 12 + 1 if reset.month == 12 else reset.month + 1,
-                    year=reset.year + 1 if reset.month == 12 else reset.year,
-                )
-                sub.reset_date = next_month
+                sub.reset_date = next_reset_date(reset)
         db.commit()
     except Exception as e:
         print(f"[reset_job] Error: {e}")

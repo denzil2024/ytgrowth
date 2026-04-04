@@ -9,16 +9,8 @@ Returns a dict with:
   show_upgrade: bool (only when allowed=False)
 """
 import datetime
-from database.models import SessionLocal, UserSubscription
-
-
-def _get_or_create(db, channel_id: str) -> UserSubscription:
-    sub = db.query(UserSubscription).filter_by(channel_id=channel_id).first()
-    if not sub:
-        sub = UserSubscription(channel_id=channel_id)
-        db.add(sub)
-        db.flush()
-    return sub
+from database.models import SessionLocal
+from app.utils import get_or_create_subscription, next_reset_date
 
 
 def check_and_deduct(channel_id: str) -> dict:
@@ -29,7 +21,7 @@ def check_and_deduct(channel_id: str) -> dict:
     """
     db = SessionLocal()
     try:
-        sub = _get_or_create(db, channel_id)
+        sub = get_or_create_subscription(db, channel_id)
 
         # Auto-reset if reset_date has passed (for subscriptions & lifetime)
         now = datetime.datetime.now(datetime.timezone.utc)
@@ -39,12 +31,7 @@ def check_and_deduct(channel_id: str) -> dict:
                 reset = reset.replace(tzinfo=datetime.timezone.utc)
             if now >= reset:
                 sub.monthly_used = 0
-                # Advance reset_date by one month
-                next_month = reset.replace(
-                    month=reset.month % 12 + 1 if reset.month == 12 else reset.month + 1,
-                    year=reset.year + 1 if reset.month == 12 else reset.year,
-                )
-                sub.reset_date = next_month
+                sub.reset_date = next_reset_date(reset)
 
         monthly_remaining = max(0, sub.monthly_allowance - sub.monthly_used)
         pack_balance      = sub.pack_balance or 0

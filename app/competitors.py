@@ -1,11 +1,9 @@
-import os
 import re
 import json
 from collections import Counter
 from datetime import datetime, timedelta
 
-import anthropic
-from googleapiclient.discovery import build
+from app.utils import make_anthropic_client, build_youtube_client, compute_like_rate
 
 
 def parse_duration_seconds(iso_duration):
@@ -16,7 +14,7 @@ def parse_duration_seconds(iso_duration):
 
 
 def search_competitor_channels(credentials, query, max_results=5):
-    youtube = build("youtube", "v3", credentials=credentials)
+    youtube = build_youtube_client(credentials)
     try:
         response = youtube.search().list(
             part="snippet",
@@ -83,7 +81,7 @@ def fetch_competitor_public_data(credentials, channel_id):
     Pulls up to 30 recent videos with duration, stats, and posting behavior.
     No OAuth Analytics API calls — public data only.
     """
-    youtube = build("youtube", "v3", credentials=credentials)
+    youtube = build_youtube_client(credentials)
     try:
         response = youtube.channels().list(
             part="snippet,statistics,contentDetails,brandingSettings",
@@ -149,9 +147,7 @@ def fetch_competitor_public_data(credentials, channel_id):
         top_5 = sorted(recent_videos, key=lambda v: v["views"], reverse=True)[:5]
 
         avg_views = round(sum(v["views"] for v in recent_videos) / len(recent_videos)) if recent_videos else 0
-        total_likes = sum(v["likes"] for v in recent_videos)
-        total_views_recent = sum(v["views"] for v in recent_videos)
-        like_rate = round(total_likes / total_views_recent * 100, 2) if total_views_recent > 0 else 0
+        like_rate = compute_like_rate(recent_videos)
         upload_freq = round(7 / posting["avg_gap_days"], 2) if posting["avg_gap_days"] > 0 else 0
 
         thumbnails = snippet.get("thumbnails", {})
@@ -313,7 +309,7 @@ Return ONLY valid JSON, no markdown, no preamble:
 }}"""
 
     try:
-        client = anthropic.Anthropic(api_key=os.environ.get("ANTHROPIC_API_KEY"))
+        client = make_anthropic_client()
         message = client.messages.create(
             model="claude-sonnet-4-6",
             max_tokens=8192,
@@ -338,78 +334,6 @@ Return ONLY valid JSON, no markdown, no preamble:
         return f"Error: {e}"
 
 
-# ---------------------------------------------------------------------------
-# Legacy helpers kept for the rule-based gap fallback
-# ---------------------------------------------------------------------------
-
-def get_competitor_stats(credentials, channel_id):
-    """Thin wrapper that calls fetch_competitor_public_data for backward compat."""
-    return fetch_competitor_public_data(credentials, channel_id)
-
-
-def generate_competitor_gaps(my_stats, competitor_stats):
-    gaps = []
-    my_avg = my_stats.get("avg_views_per_video", 0)
-    comp_avg = competitor_stats.get("avg_views_per_video", 0)
-    if comp_avg > 0 and my_avg < comp_avg:
-        pct = round((comp_avg - my_avg) / comp_avg * 100)
-        gaps.append({
-            "metric": "Avg views per video",
-            "yours": f"{my_avg:,}",
-            "theirs": f"{comp_avg:,}",
-            "gap": f"{pct}% behind",
-            "severity": "critical" if pct > 70 else "high" if pct > 40 else "medium",
-            "recommendation": (
-                f"Their videos average {comp_avg:,} views vs your {my_avg:,}. "
-                "Study their top 3 videos and identify the title structure, thumbnail style, "
-                "and topic angle driving views. Model your next video on those patterns."
-            ),
-        })
-    my_freq = my_stats.get("upload_frequency", 0)
-    comp_freq = competitor_stats.get("upload_frequency", 0)
-    if comp_freq > my_freq and comp_freq > 0:
-        gap_ratio = round((comp_freq - my_freq) / comp_freq * 100)
-        gaps.append({
-            "metric": "Upload frequency",
-            "yours": f"{round(my_freq, 1)}x/week",
-            "theirs": f"{round(comp_freq, 1)}x/week",
-            "gap": f"{gap_ratio}% behind",
-            "severity": "high" if gap_ratio > 50 else "medium",
-            "recommendation": (
-                f"They post {round(comp_freq, 1)} times per week, you post {round(my_freq, 1)}. "
-                "Batch record 3–4 videos in one session to close this gap within 60 days."
-            ),
-        })
-    my_subs = my_stats.get("subscribers", 0)
-    comp_subs = competitor_stats.get("subscribers", 0)
-    if comp_subs > my_subs and comp_subs > 0:
-        pct = round((comp_subs - my_subs) / comp_subs * 100)
-        gaps.append({
-            "metric": "Subscribers",
-            "yours": f"{my_subs:,}",
-            "theirs": f"{comp_subs:,}",
-            "gap": f"{pct}% behind",
-            "severity": "medium",
-            "recommendation": (
-                f"They have {comp_subs:,} subscribers vs your {my_subs:,}. "
-                "Focus on increasing average views per video first — subscribers follow views."
-            ),
-        })
-    my_lr = my_stats.get("like_rate", 0)
-    comp_lr = competitor_stats.get("like_rate", 0)
-    if comp_lr > my_lr and comp_lr > 0:
-        gaps.append({
-            "metric": "Like rate",
-            "yours": f"{my_lr}%",
-            "theirs": f"{comp_lr}%",
-            "gap": f"{round(comp_lr - my_lr, 1)}% lower",
-            "severity": "medium",
-            "recommendation": (
-                f"Their like rate of {comp_lr}% vs your {my_lr}% suggests their content feels more valuable. "
-                "Add a specific like request tied to a benefit at the 30% mark of your video."
-            ),
-        })
-    return gaps
 
 
 def extract_niche_keywords(stats, videos):

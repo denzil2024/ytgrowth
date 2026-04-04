@@ -1,7 +1,8 @@
 from fastapi import APIRouter, Request
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
-from app.seo import analyze_title, generate_intent_options, generate_description_suggestions, generate_thumbnail_text, optimize_video
+from app.seo import analyze_title, generate_description_suggestions, generate_thumbnail_text, optimize_video
+from app.keywords import generate_intent_options
 from routers.auth import get_session
 from database.models import SessionLocal, VideoOptimizeCache
 from app.analysis_gate import check_and_deduct

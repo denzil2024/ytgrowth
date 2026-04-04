@@ -2,8 +2,7 @@ from fastapi import APIRouter, Request
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from concurrent.futures import ThreadPoolExecutor
-from app.youtube import scrape_autocomplete
-from app.seo import analyze_keywords, generate_intent_options, get_serper_keywords, get_serpapi_autocomplete
+from app.keywords import scrape_autocomplete, analyze_keywords, generate_intent_options, get_serper_keywords, get_serpapi_autocomplete
 from routers.auth import get_session
 from app.analysis_gate import check_and_deduct
 

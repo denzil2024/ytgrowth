@@ -4,12 +4,12 @@ from app.competitors import (
     search_competitor_channels,
     fetch_competitor_public_data,
     analyze_competitor_with_ai,
-    generate_competitor_gaps,
     extract_niche_keywords,
 )
 from routers.auth import get_session
 from app.insights import calculate_upload_frequency
 from app.analysis_gate import check_and_deduct
+from app.utils import compute_like_rate
 
 router = APIRouter()
 
@@ -47,20 +47,15 @@ def analyze_competitor(channel_id: str, request: Request):
         return JSONResponse({"error": "Could not fetch competitor data."}, status_code=404)
 
     videos = data.get("videos", [])
-    total_likes = sum(v.get("likes", 0) for v in videos)
-    total_views = sum(v.get("views", 0) for v in videos)
-    like_rate = round(total_likes / total_views * 100, 2) if total_views > 0 else 0
-
     my_stats = {
         "subscribers": data["channel"]["subscribers"],
         "total_views": data["channel"]["total_views"],
         "video_count": data["channel"]["video_count"],
         "avg_views_per_video": round(data["channel"]["total_views"] / max(data["channel"]["video_count"], 1)),
         "upload_frequency": calculate_upload_frequency(videos),
-        "like_rate": like_rate,
+        "like_rate": compute_like_rate(videos),
     }
 
-    gaps = generate_competitor_gaps(my_stats, comp_data)
     ai_analysis = analyze_competitor_with_ai(data["channel"], videos, comp_data)
 
     if not isinstance(ai_analysis, dict):
@@ -69,6 +64,5 @@ def analyze_competitor(channel_id: str, request: Request):
     return JSONResponse({
         "my_stats": my_stats,
         "competitor": comp_data,
-        "gaps": gaps,
         "ai_analysis": ai_analysis,
     })
