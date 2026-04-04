@@ -66,8 +66,8 @@ function useDashboardStyles() {
 
       .ytg-nav-btn {
         width: 100%; display: flex; align-items: center; gap: 10px;
-        height: 36px; padding: 0 12px; border-radius: 8px; border: none; cursor: pointer;
-        font-size: 13px; font-family: 'DM Sans', 'Inter', sans-serif;
+        height: 40px; padding: 0 12px; border-radius: 8px; border: none; cursor: pointer;
+        font-size: 13.5px; font-family: 'DM Sans', 'Inter', sans-serif;
         transition: background 0.15s, color 0.15s; text-align: left;
       }
 
@@ -495,94 +495,92 @@ export default function Dashboard() {
       {/* ══ SIDEBAR ══════════════════════════════════════════════════════ */}
       <aside style={{
         width: 272, flexShrink: 0,
-        background: '#ffffff',
-        borderRight: '1px solid rgba(0,0,0,0.08)',
+        background: '#f8f8fa',
+        borderRight: '1px solid rgba(0,0,0,0.09)',
         position: 'sticky', top: 0, height: '100vh',
-        boxShadow: '0 0 0 0.5px rgba(0,0,0,0.06), 4px 0 8px rgba(0,0,0,0.06), 12px 0 32px rgba(0,0,0,0.10), 24px 0 64px rgba(0,0,0,0.08)',
+        boxShadow: '2px 0 4px rgba(0,0,0,0.04), 8px 0 24px rgba(0,0,0,0.08), 20px 0 48px rgba(0,0,0,0.07)',
         display: 'flex', flexDirection: 'column', overflow: 'hidden',
-        paddingTop: 12,
         zIndex: 10,
       }}>
 
         {/* Brand */}
-        <a href="/" style={{ padding: '8px 16px 16px', display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none', flexShrink: 0 }}>
-          <Logo size={30} />
-          <p style={{ fontSize: 15, fontWeight: 700, color: '#111114', letterSpacing: '-0.4px', lineHeight: 1 }}>YTGrowth</p>
-        </a>
+        <div style={{ padding: '20px 18px 14px', display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0 }}>
+          <Logo size={28} />
+          <span style={{ fontSize: 15, fontWeight: 700, color: '#111114', letterSpacing: '-0.4px', lineHeight: 1 }}>YTGrowth</span>
+        </div>
 
-        {/* Channel card */}
+        {/* Channel card — white card on slightly grey sidebar so it pops */}
         {data && (
           <div style={{
-            margin: '0 12px 6px',
-            padding: '12px 14px',
-            background: '#f7f8fa',
-            border: '1px solid rgba(0,0,0,0.08)',
+            margin: '0 12px 12px',
+            padding: '14px 14px 12px',
+            background: '#ffffff',
+            border: '1px solid rgba(0,0,0,0.09)',
             borderRadius: 14,
+            boxShadow: '0 1px 2px rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.08)',
             flexShrink: 0,
           }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
+            {/* Avatar + name */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
               {data.channel.thumbnail
-                ? <img src={data.channel.thumbnail} alt="" style={{ width: 36, height: 36, borderRadius: '50%', objectFit: 'cover', flexShrink: 0, border: '2px solid rgba(0,0,0,0.06)' }}/>
-                : <div style={{ width: 36, height: 36, borderRadius: '50%', background: '#fef2f2', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 600, color: '#e5251b', flexShrink: 0 }}>{data.channel.channel_name[0].toUpperCase()}</div>
+                ? <img src={data.channel.thumbnail} alt="" style={{ width: 38, height: 38, borderRadius: '50%', objectFit: 'cover', flexShrink: 0, border: '1.5px solid rgba(0,0,0,0.08)' }}/>
+                : <div style={{ width: 38, height: 38, borderRadius: '50%', background: '#fef2f2', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 15, fontWeight: 600, color: '#e5251b', flexShrink: 0 }}>{data.channel.channel_name[0].toUpperCase()}</div>
               }
               <div style={{ minWidth: 0, flex: 1 }}>
-                <p style={{ fontSize: 13, fontWeight: 600, color: '#111114', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', letterSpacing: '-0.1px' }}>{data.channel.channel_name}</p>
-                <p style={{ fontSize: 11.5, color: '#6b7280', marginTop: 2 }}>{fmtNum(data.channel.subscribers)} subscribers</p>
+                <p style={{ fontSize: 13.5, fontWeight: 600, color: '#111114', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', letterSpacing: '-0.2px' }}>{data.channel.channel_name}</p>
+                <p style={{ fontSize: 12, color: '#6b7280', marginTop: 2 }}>{fmtNum(data.channel.subscribers)} subscribers</p>
               </div>
             </div>
+            {/* Divider */}
             <div style={{ height: 1, background: 'rgba(0,0,0,0.06)', marginBottom: 12 }}/>
-            <div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
-                <span style={{ fontSize: 10, fontWeight: 500, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Channel Health</span>
-                <span style={{ fontSize: 11, fontWeight: 700, color: scoreColor(score), fontVariantNumeric: 'tabular-nums' }}>{score} / 100</span>
-              </div>
-              <div style={{ background: 'rgba(0,0,0,0.08)', borderRadius: 4, height: 4, overflow: 'hidden' }}>
-                <div style={{ width: `${score}%`, height: '100%', background: scoreColor(score), borderRadius: 4, transition: 'width 1.2s cubic-bezier(0.34,1.56,0.64,1)' }}/>
-              </div>
-              <p style={{ fontSize: 10.5, fontWeight: 600, marginTop: 6, color: scoreColor(score) }}>{scoreLabel(score)}</p>
+            {/* Health */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 7 }}>
+              <span style={{ fontSize: 10, fontWeight: 600, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.09em' }}>Channel Health</span>
+              <span style={{ fontSize: 11.5, fontWeight: 700, color: scoreColor(score), fontVariantNumeric: 'tabular-nums' }}>{score} / 100</span>
             </div>
+            <div style={{ background: '#edeef0', borderRadius: 6, height: 5, overflow: 'hidden' }}>
+              <div style={{ width: `${score}%`, height: '100%', background: scoreColor(score), borderRadius: 6, transition: 'width 1.2s cubic-bezier(0.34,1.56,0.64,1)' }}/>
+            </div>
+            <p style={{ fontSize: 11, fontWeight: 600, marginTop: 7, color: scoreColor(score) }}>{scoreLabel(score)}</p>
           </div>
         )}
 
         {/* Nav */}
-        <nav style={{ overflowY: 'auto', paddingTop: 8, paddingBottom: 4 }}>
+        <nav style={{ overflowY: 'auto', flex: 1 }}>
 
           {/* Section: OPTIMIZE */}
-          <div style={{ padding: '4px 22px 6px' }}>
-            <span style={{ fontSize: 10, fontWeight: 600, color: '#b0b8c4', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Optimize</span>
+          <div style={{ padding: '6px 20px 5px' }}>
+            <span style={{ fontSize: 10.5, fontWeight: 600, color: '#adb5bd', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Optimize</span>
           </div>
-          <NavBtn label="Overview" active={nav === 'Overview'} onClick={() => setNav('Overview')} />
-          <NavBtn label="Videos" active={nav === 'Videos'} onClick={() => setNav('Videos')} badge={5} />
+          <NavBtn label="Overview"    active={nav === 'Overview'}    onClick={() => setNav('Overview')} />
+          <NavBtn label="Videos"      active={nav === 'Videos'}      onClick={() => setNav('Videos')} badge={5} />
 
-          <div style={{ height: 1, background: 'rgba(0,0,0,0.05)', margin: '10px 16px' }}/>
+          <div style={{ height: 1, background: 'rgba(0,0,0,0.07)', margin: '10px 14px' }}/>
 
           {/* Section: CREATE */}
-          <div style={{ padding: '4px 22px 6px' }}>
-            <span style={{ fontSize: 10, fontWeight: 600, color: '#b0b8c4', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Create</span>
+          <div style={{ padding: '6px 20px 5px' }}>
+            <span style={{ fontSize: 10.5, fontWeight: 600, color: '#adb5bd', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Create</span>
           </div>
-          <NavBtn label="SEO Studio" active={nav === 'SEO Studio'} onClick={() => setNav('SEO Studio')} />
+          <NavBtn label="SEO Studio"  active={nav === 'SEO Studio'}  onClick={() => setNav('SEO Studio')} />
 
-          <div style={{ height: 1, background: 'rgba(0,0,0,0.05)', margin: '10px 16px' }}/>
+          <div style={{ height: 1, background: 'rgba(0,0,0,0.07)', margin: '10px 14px' }}/>
 
           {/* Section: RESEARCH */}
-          <div style={{ padding: '4px 22px 6px' }}>
-            <span style={{ fontSize: 10, fontWeight: 600, color: '#b0b8c4', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Research</span>
+          <div style={{ padding: '6px 20px 5px' }}>
+            <span style={{ fontSize: 10.5, fontWeight: 600, color: '#adb5bd', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Research</span>
           </div>
-          <NavBtn label="Keywords" active={nav === 'Keywords'} onClick={() => setNav('Keywords')} />
+          <NavBtn label="Keywords"    active={nav === 'Keywords'}    onClick={() => setNav('Keywords')} />
           <NavBtn label="Competitors" active={nav === 'Competitors'} onClick={() => setNav('Competitors')} />
 
         </nav>
 
-        {/* Spacer — pushes footer to bottom */}
-        <div style={{ flex: 1 }}/>
-
         {/* Usage bar */}
         {data && (
           <div style={{
-            margin: '0 12px 8px',
+            margin: '8px 12px',
             padding: '12px 14px',
             background: '#fffbeb',
-            border: '1px solid rgba(245,158,11,0.25)',
+            border: '1px solid rgba(245,158,11,0.3)',
             borderRadius: 12,
             flexShrink: 0,
           }}>
@@ -594,22 +592,21 @@ export default function Dashboard() {
           </div>
         )}
 
-        {/* Bottom row: Settings + Disconnect */}
-        <div style={{ height: 1, background: 'rgba(0,0,0,0.06)' }}/>
-        <div style={{ padding: '10px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        {/* Footer: Settings + Disconnect */}
+        <div style={{ height: 1, background: 'rgba(0,0,0,0.07)', flexShrink: 0 }}/>
+        <div style={{ padding: '10px 14px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexShrink: 0 }}>
           <button
             onClick={() => setNav('Settings')}
-            style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6, color: '#9ca3af', fontSize: 12, fontFamily: "'DM Sans', 'Inter', sans-serif", fontWeight: 500, padding: '4px 6px', borderRadius: 6, transition: 'color 0.15s, background 0.15s' }}
-            onMouseEnter={e => { e.currentTarget.style.color = '#374151'; e.currentTarget.style.background = '#f3f4f6' }}
+            style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6, color: '#9ca3af', fontSize: 12, fontFamily: "'DM Sans','Inter',sans-serif", fontWeight: 500, padding: '5px 8px', borderRadius: 7, transition: 'color 0.15s, background 0.15s' }}
+            onMouseEnter={e => { e.currentTarget.style.color = '#374151'; e.currentTarget.style.background = 'rgba(0,0,0,0.05)' }}
             onMouseLeave={e => { e.currentTarget.style.color = '#9ca3af'; e.currentTarget.style.background = 'transparent' }}
           >
-            {NAV_ICONS['Settings']}
-            Settings
+            {NAV_ICONS['Settings']} Settings
           </button>
           <a
             href="/auth/logout"
-            style={{ display: 'flex', alignItems: 'center', gap: 6, color: '#9ca3af', fontSize: 12, fontWeight: 500, textDecoration: 'none', padding: '4px 6px', borderRadius: 6, transition: 'color 0.15s, background 0.15s' }}
-            onMouseEnter={e => { e.currentTarget.style.color = '#374151'; e.currentTarget.style.background = '#f3f4f6' }}
+            style={{ display: 'flex', alignItems: 'center', gap: 6, color: '#9ca3af', fontSize: 12, fontWeight: 500, textDecoration: 'none', padding: '5px 8px', borderRadius: 7, transition: 'color 0.15s, background 0.15s' }}
+            onMouseEnter={e => { e.currentTarget.style.color = '#374151'; e.currentTarget.style.background = 'rgba(0,0,0,0.05)' }}
             onMouseLeave={e => { e.currentTarget.style.color = '#9ca3af'; e.currentTarget.style.background = 'transparent' }}
           >
             <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"><path d="M5 2H2.5A1 1 0 0 0 1.5 3v7a1 1 0 0 0 1 1H5M9 9.5l3-3-3-3M12 6.5H5"/></svg>
