@@ -1429,14 +1429,14 @@ export default function Landing() {
             <span style={{ fontWeight: 800, fontSize: 15, color: 'var(--ytg-text)', letterSpacing: '-0.4px' }}>YTGrowth</span>
           </div>
           <p style={{ fontSize: 13, color: 'var(--ytg-text-3)' }}>Built for creators serious about growth.</p>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: isMobile ? '12px 24px' : 28, justifyContent: isMobile ? 'center' : 'flex-end' }}> {/* IMPROVED: mobile gap 10/20→12/24 */}
+          <p style={{ fontSize: 12, color: 'var(--ytg-text-4)' }}>© 2025 YTGrowth. All rights reserved.</p>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: isMobile ? '12px 24px' : 28, justifyContent: isMobile ? 'center' : 'flex-end' }}>
             <a href="/privacy" className="ytg-nav-link" style={{ fontSize: 13 }}>Privacy policy</a>
             <a href="/terms" className="ytg-nav-link" style={{ fontSize: 13 }}>Terms of service</a>
             <a href="/refund" className="ytg-nav-link" style={{ fontSize: 13 }}>Refund policy</a>
             <a href="/auth/login" className="ytg-nav-link" style={{ fontSize: 13 }}>Log in</a>
           </div>
         </div>
-        <p style={{ textAlign: 'center', fontSize: 12, color: 'var(--ytg-text-4)', marginTop: 20 }}>© 2025 YTGrowth. All rights reserved.</p> {/* IMPROVED: copyright line added */}
       </div>
 
     </div>
