@@ -494,13 +494,14 @@ export default function Dashboard() {
 
       {/* ══ SIDEBAR ══════════════════════════════════════════════════════ */}
       <aside style={{
-        width: 240, flexShrink: 0,
-        background: '#fafaf9',
-        borderRight: '0.5px solid rgba(0,0,0,0.07)',
+        width: 272, flexShrink: 0,
+        background: '#ffffff',
+        borderRight: '1px solid rgba(0,0,0,0.08)',
         position: 'sticky', top: 0, height: '100vh',
-        boxShadow: '0 2px 4px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.08), 0 24px 48px rgba(0,0,0,0.06)',
+        boxShadow: '0 0 0 0.5px rgba(0,0,0,0.06), 4px 0 8px rgba(0,0,0,0.06), 12px 0 32px rgba(0,0,0,0.10), 24px 0 64px rgba(0,0,0,0.08)',
         display: 'flex', flexDirection: 'column', overflow: 'hidden',
         paddingTop: 12,
+        zIndex: 10,
       }}>
 
         {/* Brand */}
