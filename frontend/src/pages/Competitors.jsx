@@ -23,22 +23,22 @@ function useCompetitorStyles() {
       /* ── cards ── */
       .comp-card {
         background: #ffffff;
-        border: 1px solid rgba(0,0,0,0.09);
+        border: 1px solid #d8d8e0;
         border-radius: 20px;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.07), 0 6px 24px rgba(0,0,0,0.09);
+        box-shadow: 0 4px 16px rgba(0,0,0,0.14), 0 24px 64px rgba(0,0,0,0.18), 0 1px 0 rgba(255,255,255,0.9) inset;
         transition: box-shadow 0.22s, transform 0.22s, border-color 0.22s;
       }
       .comp-card:hover {
-        box-shadow: 0 4px 12px rgba(0,0,0,0.10), 0 20px 56px rgba(0,0,0,0.13);
-        transform: translateY(-1px);
-        border-color: rgba(0,0,0,0.13);
+        box-shadow: 0 8px 28px rgba(0,0,0,0.18), 0 36px 80px rgba(0,0,0,0.22), 0 1px 0 rgba(255,255,255,0.9) inset;
+        transform: translateY(-2px);
+        border-color: #c0c0cc;
       }
 
       .comp-channel-card {
         background: #ffffff;
-        border: 1px solid rgba(0,0,0,0.09);
+        border: 1px solid #d8d8e0;
         border-radius: 16px;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.07);
+        box-shadow: 0 4px 16px rgba(0,0,0,0.14), 0 24px 64px rgba(0,0,0,0.18), 0 1px 0 rgba(255,255,255,0.9) inset;
         transition: box-shadow 0.2s, transform 0.2s, border-color 0.2s;
         padding: 14px 18px;
         display: flex;
@@ -47,9 +47,9 @@ function useCompetitorStyles() {
         margin-bottom: 8px;
       }
       .comp-channel-card:hover {
-        box-shadow: 0 4px 12px rgba(0,0,0,0.10), 0 16px 40px rgba(0,0,0,0.11);
-        transform: translateY(-1px);
-        border-color: rgba(0,0,0,0.13);
+        box-shadow: 0 8px 28px rgba(0,0,0,0.18), 0 36px 80px rgba(0,0,0,0.22), 0 1px 0 rgba(255,255,255,0.9) inset;
+        transform: translateY(-2px);
+        border-color: #c0c0cc;
       }
 
       /* ── tabs ── */
