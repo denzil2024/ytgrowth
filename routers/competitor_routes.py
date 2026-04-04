@@ -68,6 +68,9 @@ def analyze_competitor(channel_id: str, request: Request):
     gaps = generate_competitor_gaps(my_stats, comp_data)
     ai_analysis = analyze_competitor_with_ai(data["channel"], videos, comp_data)
 
+    if ai_analysis is None:
+        return JSONResponse({"error": "AI analysis timed out or failed. Please try again."}, status_code=500)
+
     return JSONResponse({
         "my_stats": my_stats,
         "competitor": comp_data,
