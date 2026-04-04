@@ -316,7 +316,7 @@ Return ONLY valid JSON, no markdown, no preamble:
         client = anthropic.Anthropic(api_key=os.environ.get("ANTHROPIC_API_KEY"))
         message = client.messages.create(
             model="claude-sonnet-4-6",
-            max_tokens=4096,
+            max_tokens=4098,
             system=(
                 "You are an elite YouTube competitive intelligence analyst. "
                 "Your job is not to describe a competitor — your job is to find the exact gaps, "
@@ -332,10 +332,10 @@ Return ONLY valid JSON, no markdown, no preamble:
         return json.loads(raw)
     except json.JSONDecodeError as e:
         print(f"Competitor AI analysis JSON parse error: {e}")
-        return None
+        return f"JSON parse error: {e}"
     except Exception as e:
         print(f"Competitor AI analysis error: {e}")
-        return None
+        return f"Error: {e}"
 
 
 # ---------------------------------------------------------------------------
