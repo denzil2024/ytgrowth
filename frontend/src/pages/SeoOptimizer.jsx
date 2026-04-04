@@ -11,13 +11,13 @@ if (typeof document !== 'undefined' && !document.getElementById('seo-opt-styles'
 
   .seo-glass-card {
     background: #ffffff;
-    border: 1px solid #e0e0e8 !important;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.08), 0 24px 64px rgba(0,0,0,0.10), 0 1px 0 rgba(255,255,255,0.9) inset !important;
+    border: 1px solid #d8d8e0 !important;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.14), 0 24px 64px rgba(0,0,0,0.18), 0 1px 0 rgba(255,255,255,0.9) inset !important;
   }
   .seo-glass-card:hover {
-    box-shadow: 0 8px 24px rgba(0,0,0,0.11), 0 32px 72px rgba(0,0,0,0.13), 0 1px 0 rgba(255,255,255,0.9) inset !important;
+    box-shadow: 0 8px 28px rgba(0,0,0,0.18), 0 36px 80px rgba(0,0,0,0.22), 0 1px 0 rgba(255,255,255,0.9) inset !important;
     transform: translateY(-2px);
-    border-color: #c8c8d4 !important;
+    border-color: #c0c0cc !important;
     transition: box-shadow 0.22s, transform 0.22s, border-color 0.22s;
   }
 `
@@ -205,14 +205,14 @@ function TitlePreviewSimulator({ title }) {
     { label: 'Desktop search', maxChars: 70, icon: '🖥️' },
   ]
   return (
-    <div style={{ marginTop: 12, padding: '14px 16px', background: '#f7f7fa', borderRadius: 12, border: `1px solid #e0e0e8`, boxShadow: '0 4px 16px rgba(0,0,0,0.08), 0 24px 64px rgba(0,0,0,0.10)' }}>
+    <div style={{ marginTop: 12, padding: '14px 16px', background: '#f7f7fa', borderRadius: 12, border: `1px solid #d8d8e0`, boxShadow: '0 4px 16px rgba(0,0,0,0.14), 0 24px 64px rgba(0,0,0,0.18)' }}>
       <p style={{ fontSize: 10.5, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 10 }}>Preview on YouTube</p>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 8 }}>
         {surfaces.map(({ label, maxChars, icon }) => {
           const truncated = title.length > maxChars
           const display = truncated ? title.slice(0, maxChars - 1) + '…' : title
           return (
-            <div key={label} style={{ padding: '10px 12px', background: C.card, borderRadius: 9, border: `1px solid ${truncated ? C.orangeBdr : '#e0e0e8'}`, boxShadow: '0 2px 8px rgba(0,0,0,0.07), 0 8px 24px rgba(0,0,0,0.08)' }}>
+            <div key={label} style={{ padding: '10px 12px', background: C.card, borderRadius: 9, border: `1px solid ${truncated ? C.orangeBdr : '#d8d8e0'}`, boxShadow: '0 4px 16px rgba(0,0,0,0.14), 0 24px 64px rgba(0,0,0,0.18)' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
                 <span style={{ fontSize: 10, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.05em' }}>{label}</span>
                 <span style={{ fontSize: 10, fontWeight: 700, color: truncated ? C.orange : C.green, background: truncated ? C.orangeBg : C.greenBg, padding: '1px 6px', borderRadius: 20 }}>
@@ -234,7 +234,7 @@ function DescriptionCard({ d, idx, copiedDesc, onCopy }) {
   const tm = DESC_TYPE_META[d.type] || DESC_TYPE_META.value
   const isCopied = copiedDesc === idx
   return (
-    <div style={{ border: `1px solid ${isCopied ? '#bbf7d0' : '#e0e0e8'}`, borderRadius: 16, overflow: 'hidden', background: isCopied ? '#f0fdf4' : '#ffffff', transition: 'all 0.2s', boxShadow: '0 4px 16px rgba(0,0,0,0.08), 0 24px 64px rgba(0,0,0,0.10), 0 1px 0 rgba(255,255,255,0.9) inset' }}>
+    <div style={{ border: `1px solid ${isCopied ? '#bbf7d0' : '#d8d8e0'}`, borderRadius: 16, overflow: 'hidden', background: isCopied ? '#f0fdf4' : '#ffffff', transition: 'all 0.2s', boxShadow: '0 4px 16px rgba(0,0,0,0.14), 0 24px 64px rgba(0,0,0,0.18), 0 1px 0 rgba(255,255,255,0.9) inset' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 16px', background: tm.bg, borderBottom: `1px solid ${C.border}` }}>
         <div style={{ width: 22, height: 22, borderRadius: 6, background: tm.color, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
           <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round"><path d="M2 5h6M5 2l3 3-3 3"/></svg>
