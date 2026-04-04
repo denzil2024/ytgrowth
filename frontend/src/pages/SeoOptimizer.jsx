@@ -170,14 +170,9 @@ function FormatTemplates({ onUse }) {
     <div style={{ marginBottom: 16, border: `1px solid ${open ? C.purpleBdr : 'rgba(0,0,0,0.09)'}`, borderRadius: 14, overflow: 'hidden', transition: 'border-color 0.2s', boxShadow: open ? '0 4px 20px rgba(124,58,237,0.08)' : 'none' }}>
       <button onClick={() => setOpen(v => !v)}
         style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '13px 18px', background: open ? C.purpleBg : '#fafafa', border: 'none', cursor: 'pointer', fontFamily: 'inherit', transition: 'background 0.2s' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <div style={{ width: 28, height: 28, borderRadius: 8, background: C.purple, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round"><path d="M6.5 1L8 5h4L8.5 7.5l1.5 4L6.5 9.5 3 11.5l1.5-4L1 5h4z"/></svg>
-          </div>
-          <div>
-            <span style={{ fontSize: 13, fontWeight: 700, color: C.purple, display: 'block', letterSpacing: '-0.2px' }}>Viral Format Templates</span>
-            <span style={{ fontSize: 11, color: C.text3, fontWeight: 400 }}>Click any template to pre-fill your title</span>
-          </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <span style={{ fontSize: 13, fontWeight: 700, color: C.purple, letterSpacing: '-0.2px' }}>Viral Format Templates</span>
+          <span style={{ fontSize: 11, color: C.text3, fontWeight: 400 }}>Click any template to pre-fill your title</span>
         </div>
         <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke={C.text3} strokeWidth="2"
           style={{ transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.25s', flexShrink: 0 }}>
