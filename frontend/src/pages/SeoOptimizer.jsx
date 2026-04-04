@@ -11,13 +11,13 @@ if (typeof document !== 'undefined' && !document.getElementById('seo-opt-styles'
 
   .seo-glass-card {
     background: #ffffff;
-    border: 1.5px solid rgba(0,0,0,0.11) !important;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08), 0 12px 40px rgba(0,0,0,0.13) !important;
+    border: 1.5px solid rgba(0,0,0,0.20) !important;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.10), 0 12px 40px rgba(0,0,0,0.14) !important;
   }
   .seo-glass-card:hover {
-    box-shadow: 0 6px 20px rgba(0,0,0,0.12), 0 24px 64px rgba(0,0,0,0.17) !important;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.14), 0 24px 64px rgba(0,0,0,0.18) !important;
     transform: translateY(-1px);
-    border-color: rgba(0,0,0,0.16) !important;
+    border-color: rgba(0,0,0,0.26) !important;
     transition: box-shadow 0.22s, transform 0.22s, border-color 0.22s;
   }
 `
@@ -205,14 +205,14 @@ function TitlePreviewSimulator({ title }) {
     { label: 'Desktop search', maxChars: 70, icon: '🖥️' },
   ]
   return (
-    <div style={{ marginTop: 12, padding: '14px 16px', background: '#f7f7fa', borderRadius: 12, border: `1.5px solid rgba(0,0,0,0.10)`, boxShadow: '0 2px 8px rgba(0,0,0,0.07)' }}>
+    <div style={{ marginTop: 12, padding: '14px 16px', background: '#f7f7fa', borderRadius: 12, border: `1.5px solid rgba(0,0,0,0.18)`, boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
       <p style={{ fontSize: 10.5, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 10 }}>Preview on YouTube</p>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 8 }}>
         {surfaces.map(({ label, maxChars, icon }) => {
           const truncated = title.length > maxChars
           const display = truncated ? title.slice(0, maxChars - 1) + '…' : title
           return (
-            <div key={label} style={{ padding: '10px 12px', background: C.card, borderRadius: 9, border: `1.5px solid ${truncated ? C.orangeBdr : C.border}`, boxShadow: '0 1px 6px rgba(0,0,0,0.07)' }}>
+            <div key={label} style={{ padding: '10px 12px', background: C.card, borderRadius: 9, border: `1.5px solid ${truncated ? C.orangeBdr : 'rgba(0,0,0,0.18)'}`, boxShadow: '0 1px 6px rgba(0,0,0,0.08)' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
                 <span style={{ fontSize: 10, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.05em' }}>{label}</span>
                 <span style={{ fontSize: 10, fontWeight: 700, color: truncated ? C.orange : C.green, background: truncated ? C.orangeBg : C.greenBg, padding: '1px 6px', borderRadius: 20 }}>
