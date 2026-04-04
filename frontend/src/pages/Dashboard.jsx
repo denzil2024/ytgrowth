@@ -66,15 +66,16 @@ function useDashboardStyles() {
 
       .ytg-nav-btn {
         display: flex; align-items: center; gap: 10px;
-        padding: 10px 14px; border-radius: 10px; cursor: pointer; text-align: left;
+        padding: 11px 14px; border-radius: 11px; cursor: pointer; text-align: left;
         font-size: 13.5px; font-family: 'DM Sans', 'Inter', sans-serif;
-        transition: box-shadow 0.18s, transform 0.18s, background 0.15s, border-color 0.15s;
-        border: 1px solid rgba(0,0,0,0.07);
+        transition: box-shadow 0.2s, transform 0.2s, border-color 0.2s;
+        border: 1px solid #d8d8e0;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.08), 0 16px 40px rgba(0,0,0,0.10), 0 1px 0 rgba(255,255,255,0.9) inset;
       }
       .ytg-nav-btn:hover:not(.active) {
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(0,0,0,0.10), 0 12px 32px rgba(0,0,0,0.09);
-        border-color: rgba(0,0,0,0.10);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 28px rgba(0,0,0,0.13), 0 28px 60px rgba(0,0,0,0.14), 0 1px 0 rgba(255,255,255,0.9) inset;
+        border-color: #c0c0cc;
       }
 
       .ytg-video-row { transition: background 0.15s; }
@@ -378,8 +379,8 @@ function NavBtn({ label, active, onClick, badge }) {
         borderLeft: active ? '3px solid #e5251b' : '1px solid rgba(0,0,0,0.07)',
         paddingLeft: active ? 13 : 14,
         boxShadow: active
-          ? '0 1px 3px rgba(229,37,27,0.08), 0 6px 20px rgba(229,37,27,0.10)'
-          : '0 1px 3px rgba(0,0,0,0.06), 0 4px 12px rgba(0,0,0,0.06)',
+          ? '0 4px 16px rgba(229,37,27,0.12), 0 16px 40px rgba(229,37,27,0.10), 0 1px 0 rgba(255,255,255,0.9) inset'
+          : undefined,
       }}
       onMouseEnter={e => { if (!active) { e.currentTarget.style.color = '#111114' } }}
       onMouseLeave={e => { if (!active) { e.currentTarget.style.color = '#52525b' } }}
@@ -585,10 +586,11 @@ export default function Dashboard() {
         {data && (
           <div style={{
             margin: '8px 12px',
-            padding: '12px 14px',
-            background: '#fffbeb',
-            border: '1px solid rgba(245,158,11,0.3)',
-            borderRadius: 12,
+            padding: '14px 16px',
+            background: '#ffffff',
+            border: '1px solid rgba(0,0,0,0.09)',
+            borderRadius: 14,
+            boxShadow: '0 1px 3px rgba(0,0,0,0.05), 0 4px 16px rgba(0,0,0,0.07)',
             flexShrink: 0,
           }}>
             <UsageBar

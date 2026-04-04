@@ -13,70 +13,57 @@ export default function UsageBar({ channelId, email, dark = false }) {
 
   if (!usage) return null
 
-  const pct          = usage.usage_pct ?? 0
-  const atLimit      = pct >= 100
-  const nearLimit    = pct >= 80 && !atLimit
-  const hasPack      = usage.pack_balance > 0
-  const user         = { email, channel_id: channelId }
+  const pct       = usage.usage_pct ?? 0
+  const atLimit   = pct >= 100
+  const nearLimit = pct >= 80 && !atLimit
+  const hasPack   = usage.pack_balance > 0
+  const user      = { email, channel_id: channelId }
 
-  const textColor    = dark ? 'rgba(255,255,255,0.55)' : '#71717a'
-  const labelColor   = dark ? 'rgba(255,255,255,0.85)' : '#111114'
-  const trackBg      = dark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)'
-  const barColor     = atLimit ? '#e5251b' : nearLimit ? '#d97706' : '#16a34a'
-  const warnBg       = dark ? 'rgba(217,119,6,0.15)' : '#fffbeb'
-  const warnBorder   = dark ? 'rgba(217,119,6,0.3)'  : '#fde68a'
-  const blockBg      = dark ? 'rgba(229,37,27,0.15)' : '#fff5f5'
-  const blockBorder  = dark ? 'rgba(229,37,27,0.3)'  : '#fecaca'
+  const barColor  = atLimit ? '#e5251b' : nearLimit ? '#111114' : '#111114'
+  const textMuted = dark ? 'rgba(255,255,255,0.45)' : '#9ca3af'
+  const textMain  = dark ? 'rgba(255,255,255,0.85)' : '#111114'
+  const trackBg   = dark ? 'rgba(255,255,255,0.10)' : '#e5e7eb'
 
   return (
-    <div style={{ padding: '0 2px' }}>
-      {/* Bar + label */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
-        <span style={{ fontSize: 10, fontWeight: 500, color: textColor, letterSpacing: '0.07em', textTransform: 'uppercase' }}>
+    <div>
+      {/* Label row */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 7 }}>
+        <span style={{ fontSize: 10, fontWeight: 600, color: textMuted, textTransform: 'uppercase', letterSpacing: '0.09em' }}>
           AI Analyses
         </span>
-        <span style={{ fontSize: 10.5, fontWeight: 600, color: atLimit ? '#e5251b' : nearLimit ? '#d97706' : textColor, fontVariantNumeric: 'tabular-nums' }}>
+        <span style={{ fontSize: 11, fontWeight: 700, color: atLimit ? '#e5251b' : textMain, fontVariantNumeric: 'tabular-nums' }}>
           {usage.monthly_used} / {usage.monthly_allowance}
         </span>
       </div>
-      <div style={{ background: trackBg, borderRadius: 100, height: 4, overflow: 'hidden', marginBottom: 6 }}>
+
+      {/* Bar */}
+      <div style={{ background: trackBg, borderRadius: 6, height: 5, overflow: 'hidden', marginBottom: 8 }}>
         <div style={{
           width: `${Math.min(pct, 100)}%`, height: '100%',
-          background: barColor, borderRadius: 100,
+          background: barColor, borderRadius: 6,
           transition: 'width 0.8s ease',
         }} />
       </div>
 
       {/* Pack balance */}
       {hasPack && (
-        <p style={{ fontSize: 10, color: textColor, marginBottom: nearLimit || atLimit ? 8 : 0 }}>
-          +{usage.pack_balance} bonus analyses available
+        <p style={{ fontSize: 11, color: textMuted, marginBottom: nearLimit || atLimit ? 8 : 0 }}>
+          +{usage.pack_balance} bonus analyses
         </p>
       )}
 
-      {/* Near limit warning */}
-      {nearLimit && (
-        <div style={{ background: warnBg, border: `1px solid ${warnBorder}`, borderRadius: 8, padding: '8px 10px', marginTop: 6 }}>
-          <p style={{ fontSize: 11, color: '#92400e', fontWeight: 600, marginBottom: 6 }}>
-            Running low on analyses
+      {/* Warning / limit — neutral, no color cocktail */}
+      {(nearLimit || atLimit) && (
+        <div style={{ marginTop: 4 }}>
+          <p style={{ fontSize: 11.5, fontWeight: 500, color: atLimit ? '#e5251b' : textMain, marginBottom: 8 }}>
+            {atLimit
+              ? hasPack ? 'Monthly limit reached — using pack' : 'Monthly analyses used up'
+              : 'Running low on analyses'}
           </p>
-          <div style={{ display: 'flex', gap: 6 }}>
-            <button onClick={() => openCheckout('pack_power', user)} style={btnStyle('#d97706')}>Top Up</button>
-            <button onClick={() => openCheckout('growth_monthly', user)} style={btnStyle('#2563eb')}>Upgrade</button>
-          </div>
-        </div>
-      )}
-
-      {/* At limit */}
-      {atLimit && (
-        <div style={{ background: blockBg, border: `1px solid ${blockBorder}`, borderRadius: 8, padding: '8px 10px', marginTop: 6 }}>
-          <p style={{ fontSize: 11, color: '#991b1b', fontWeight: 600, marginBottom: 6 }}>
-            {hasPack ? 'Monthly analyses used — drawing from your pack' : 'All analyses used for this month'}
-          </p>
-          {!hasPack && (
+          {(!atLimit || !hasPack) && (
             <div style={{ display: 'flex', gap: 6 }}>
-              <button onClick={() => openCheckout('pack_power', user)} style={btnStyle('#e5251b')}>Top Up</button>
-              <button onClick={() => openCheckout('growth_monthly', user)} style={btnStyle('#2563eb')}>Upgrade</button>
+              <button onClick={() => openCheckout('pack_power', user)} style={btnStyle('fill')}>Top Up</button>
+              <button onClick={() => openCheckout('growth_monthly', user)} style={btnStyle('outline')}>Upgrade</button>
             </div>
           )}
         </div>
@@ -85,10 +72,15 @@ export default function UsageBar({ channelId, email, dark = false }) {
   )
 }
 
-function btnStyle(color) {
-  return {
-    fontSize: 11, fontWeight: 700, padding: '4px 10px',
-    borderRadius: 6, border: 'none', cursor: 'pointer',
-    background: color, color: '#fff',
+function btnStyle(variant) {
+  const base = {
+    flex: 1, fontSize: 11.5, fontWeight: 600, padding: '6px 0',
+    borderRadius: 8, cursor: 'pointer', letterSpacing: '-0.1px',
+    fontFamily: "'DM Sans','Inter',sans-serif",
+    transition: 'opacity 0.15s',
   }
+  if (variant === 'fill') {
+    return { ...base, background: '#111114', color: '#ffffff', border: 'none' }
+  }
+  return { ...base, background: 'transparent', color: '#111114', border: '1px solid rgba(0,0,0,0.18)' }
 }
