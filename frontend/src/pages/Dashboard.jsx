@@ -351,12 +351,10 @@ function InsightCard({ insight, index, checked, onToggle, onDelete }) {
 /* ─── Nav icons ─────────────────────────────────────────────────────────── */
 const NAV_ICONS = {
   Overview:      <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"><rect x="1.5" y="1.5" width="5" height="5" rx="1.5"/><rect x="8.5" y="1.5" width="5" height="5" rx="1.5"/><rect x="1.5" y="8.5" width="5" height="5" rx="1.5"/><rect x="8.5" y="8.5" width="5" height="5" rx="1.5"/></svg>,
-  Insights:      <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"><polyline points="1.5,11 5,7 8,9 13.5,3.5"/><polyline points="10.5,3.5 13.5,3.5 13.5,6.5"/></svg>,
   Videos:        <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"><rect x="1" y="3" width="9" height="9" rx="2"/><path d="M10 6l4-2.5v8L10 9" fill="none"/></svg>,
-  Patterns:      <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"><circle cx="3" cy="12" r="1.2" fill="currentColor" stroke="none"/><circle cx="7.5" cy="7" r="1.2" fill="currentColor" stroke="none"/><circle cx="12" cy="3.5" r="1.2" fill="currentColor" stroke="none"/><line x1="3" y1="12" x2="7.5" y2="7"/><line x1="7.5" y1="7" x2="12" y2="3.5"/></svg>,
-  Competitors:   <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"><circle cx="5.5" cy="5" r="2.5"/><path d="M1 13c0-2.5 2-4 4.5-4s4.5 1.5 4.5 4"/><circle cx="11" cy="5" r="2" /><path d="M13.5 12.5c0-1.8-1.1-3-2.5-3.3"/></svg>,
+  'SEO Studio':  <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"><path d="M2 4h11M2 7.5h7M2 11h5"/><circle cx="12" cy="11" r="2"/><line x1="13.5" y1="12.5" x2="14.5" y2="13.5"/></svg>,
   Keywords:      <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"><circle cx="6" cy="6" r="4"/><line x1="9" y1="9" x2="13.5" y2="13.5"/><line x1="4" y1="6" x2="8" y2="6"/><line x1="6" y1="4" x2="6" y2="8"/></svg>,
-  'SEO Optimizer': <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"><circle cx="6.5" cy="6.5" r="4"/><line x1="9.5" y1="9.5" x2="13.5" y2="13.5"/></svg>,
+  Competitors:   <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"><circle cx="5.5" cy="5" r="2.5"/><path d="M1 13c0-2.5 2-4 4.5-4s4.5 1.5 4.5 4"/><circle cx="11" cy="5" r="2" /><path d="M13.5 12.5c0-1.8-1.1-3-2.5-3.3"/></svg>,
   Settings:      <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"><circle cx="7.5" cy="7.5" r="2"/><path d="M7.5 1v1.5M7.5 12.5V14M1 7.5h1.5M12.5 7.5H14M3.2 3.2l1 1M10.8 10.8l1 1M3.2 11.8l1-1M10.8 4.2l1-1"/></svg>,
 }
 
@@ -478,12 +476,10 @@ export default function Dashboard() {
 
   const mainNavItems = [
     { label: 'Overview' },
-    { label: 'Insights', badge: data?.insights?.priorityActions?.length },
     { label: 'Videos' },
-    { label: 'Patterns' },
-    { label: 'Competitors' },
+    { label: 'SEO Studio' },
     { label: 'Keywords' },
-    { label: 'SEO Optimizer' },
+    { label: 'Competitors' },
   ]
 
   return (
@@ -556,7 +552,7 @@ export default function Dashboard() {
           {/* Mini action card — only shown when there are insights */}
           {data && (data.insights?.priorityActions?.length > 0) && (
             <button
-              onClick={() => setNav('Insights')}
+              onClick={() => setNav('Overview')}
               style={{
                 margin: '8px 2px 6px',
                 width: 'calc(100% - 4px)',
@@ -794,7 +790,6 @@ export default function Dashboard() {
                       <p style={{ fontSize: 13.5, fontWeight: 700, color: C.text1, marginBottom: 2, letterSpacing: '-0.2px' }}>Priority actions</p>
                       <p style={{ fontSize: 12, color: C.text3 }}>{data.insights.priorityActions.length} items · ranked by impact</p>
                     </div>
-                    <button onClick={() => setNav('Insights')} className="ytg-dash-btn">Full audit →</button>
                   </div>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 7 }}>
                     {data.insights.priorityActions.map((ins, i) => {
@@ -821,7 +816,7 @@ export default function Dashboard() {
           )}
 
           {/* ── INSIGHTS ─────────────────────────────────────────────── */}
-          {data && nav === 'Insights' && analyzingAI && (
+          {data && nav === 'Overview' && analyzingAI && (
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '50vh', gap: 14 }}>
               <div style={{ width: 32, height: 32, border: `2.5px solid ${C.border}`, borderTop: `2.5px solid ${C.red}`, borderRadius: '50%', animation: 'spin 0.7s linear infinite' }}/>
               <p style={{ fontSize: 15, fontWeight: 700, color: C.text1 }}>Running AI audit…</p>
@@ -829,7 +824,7 @@ export default function Dashboard() {
             </div>
           )}
 
-          {data && nav === 'Insights' && data.insights && (
+          {data && nav === 'Overview' && data.insights && (
             <>
               <div style={{ marginBottom: 22 }}>
                 <h2 style={{ fontSize: 22, fontWeight: 800, color: '#0a0a0f', letterSpacing: '-0.6px', marginBottom: 4 }}>Channel audit</h2>
@@ -1133,7 +1128,7 @@ export default function Dashboard() {
           )}
 
           {/* ── PATTERNS ─────────────────────────────────────────────── */}
-          {data && nav === 'Patterns' && patterns && (
+          {data && nav === 'Overview' && patterns && (
             <>
               <div style={{ marginBottom: 24 }}>
                 <h2 style={{ fontSize: 22, fontWeight: 800, color: '#0a0a0a', letterSpacing: '-0.6px', marginBottom: 4 }}>Content patterns</h2>
@@ -1227,7 +1222,7 @@ export default function Dashboard() {
 
           {nav === 'Keywords' && <Keywords />}
 
-          {nav === 'SEO Optimizer' && <SeoOptimizer />}
+          {nav === 'SEO Studio' && <SeoOptimizer />}
 
           {/* ── SETTINGS ─────────────────────────────────────────────── */}
           {nav === 'Settings' && (
