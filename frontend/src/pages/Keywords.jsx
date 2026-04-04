@@ -231,50 +231,56 @@ export default function Keywords() {
       {result && (
         <div className="kw-in">
 
-          {/* ── Search Intent — one card, 4 sections divided by borders ── */}
-          <div className="kw-card" style={{ marginBottom: 14, overflow: 'hidden' }}>
+          {/* ── Search Intent — 30/70 two-panel card ── */}
+          <div className="kw-card" style={{ marginBottom: 14, overflow: 'hidden', display: 'flex' }}>
 
-            {/* Section 1: header — label + chips */}
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '11px 20px', background: '#f8f8fb', borderBottom: `1px solid ${C.border}` }}>
-              <p style={{ fontSize: 10, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.09em' }}>Search Intent</p>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5, justifyContent: 'flex-end' }}>
-                {result.seedIntent?.primaryIntent       && <span className="kw-chip" style={{ color: C.purple, background: C.purpleBg }}>{result.seedIntent.primaryIntent}</span>}
-                {result.seedIntent?.contentTypeExpected && <span className="kw-chip" style={{ color: C.teal,   background: C.tealBg   }}>{result.seedIntent.contentTypeExpected}</span>}
-                {result.seedIntent?.funnelStage         && <span className="kw-chip" style={{ color: C.blue,   background: C.blueBg   }}>{result.seedIntent.funnelStage}</span>}
+            {/* LEFT PANEL 30% — metrics + tags */}
+            <div style={{ width: '30%', flexShrink: 0, borderRight: `1px solid ${C.border}`, background: '#f8f8fb', display: 'flex', flexDirection: 'column' }}>
+
+              {/* Label */}
+              <div style={{ padding: '12px 18px 10px', borderBottom: `1px solid ${C.border}` }}>
+                <p style={{ fontSize: 10, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.09em' }}>Search Intent</p>
+              </div>
+
+              {/* Stats */}
+              <div style={{ padding: '14px 18px', borderBottom: `1px solid ${C.border}` }}>
+                {[
+                  { label: 'Autocomplete', value: result.rawSuggestionsCount },
+                  { label: 'Related',      value: result.serperCount },
+                  { label: 'Filtered',     value: result.totalAfterIntentFilter, accent: true },
+                ].map((s, i) => (
+                  <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: i > 0 ? 8 : 0, marginTop: i > 0 ? 8 : 0, borderTop: i > 0 ? `1px solid ${C.border}` : 'none' }}>
+                    <p style={{ fontSize: 11.5, color: C.text3 }}>{s.label}</p>
+                    <p style={{ fontSize: 14, fontWeight: 800, color: s.accent ? C.blue : C.text1, letterSpacing: '-0.4px' }}>{s.value ?? '—'}</p>
+                  </div>
+                ))}
+              </div>
+
+              {/* Tags */}
+              <div style={{ padding: '12px 18px', display: 'flex', flexDirection: 'column', gap: 6 }}>
+                {result.seedIntent?.primaryIntent       && <span className="kw-chip" style={{ color: C.purple, background: C.purpleBg, alignSelf: 'flex-start' }}>{result.seedIntent.primaryIntent}</span>}
+                {result.seedIntent?.contentTypeExpected && <span className="kw-chip" style={{ color: C.teal,   background: C.tealBg,   alignSelf: 'flex-start' }}>{result.seedIntent.contentTypeExpected}</span>}
+                {result.seedIntent?.funnelStage         && <span className="kw-chip" style={{ color: C.blue,   background: C.blueBg,   alignSelf: 'flex-start' }}>{result.seedIntent.funnelStage}</span>}
               </div>
             </div>
 
-            {/* Section 2: intent summary — capped to 2 lines */}
-            <div style={{ padding: '12px 20px', borderBottom: `1px solid ${C.border}` }}>
-              <p style={{ fontSize: 13, fontWeight: 400, color: C.text2, lineHeight: 1.6, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{result.seedIntent?.intentSummary}</p>
-            </div>
+            {/* RIGHT PANEL 70% — summary + top pick */}
+            <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
 
-            {/* Section 3: counts */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', borderBottom: result.topPick ? `1px solid ${C.border}` : 'none' }}>
-              {[
-                { label: 'Autocomplete', value: result.rawSuggestionsCount },
-                { label: 'Related',      value: result.serperCount },
-                { label: 'Filtered',     value: result.totalAfterIntentFilter, accent: true },
-              ].map((s, i) => (
-                <div key={i} style={{ textAlign: 'center', padding: '12px 12px', borderLeft: i > 0 ? `1px solid ${C.border}` : 'none' }}>
-                  <p style={{ fontSize: 22, fontWeight: 800, color: s.accent ? C.blue : C.text1, letterSpacing: '-0.5px', lineHeight: 1, marginBottom: 4 }}>{s.value ?? '—'}</p>
-                  <p style={{ fontSize: 10, fontWeight: 500, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.07em' }}>{s.label}</p>
-                </div>
-              ))}
-            </div>
-
-            {/* Section 4: top pick */}
-            {result.topPick && (
-              <div style={{ padding: '12px 20px', display: 'flex', alignItems: 'flex-start', gap: 12 }}>
-                <span style={{ flexShrink: 0, marginTop: 2, width: 20, height: 20, borderRadius: 6, background: C.greenBg, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke={C.green} strokeWidth="2" strokeLinecap="round"><path d="M2 5.5l2 2 4-4"/></svg>
-                </span>
-                <div style={{ minWidth: 0 }}>
-                  <p style={{ fontSize: 13, fontWeight: 700, color: C.text1, marginBottom: 2 }}>{result.topPick.keyword}</p>
-                  <p style={{ fontSize: 12, color: C.text3, lineHeight: 1.55, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{result.topPick.whyThisOne}</p>
-                </div>
+              {/* Summary */}
+              <div style={{ padding: '18px 22px', flex: 1, borderBottom: result.topPick ? `1px solid ${C.border}` : 'none' }}>
+                <p style={{ fontSize: 13.5, fontWeight: 400, color: C.text2, lineHeight: 1.75 }}>{result.seedIntent?.intentSummary}</p>
               </div>
-            )}
+
+              {/* Top pick */}
+              {result.topPick && (
+                <div style={{ padding: '14px 22px', background: C.greenBg, borderTop: `1px solid #bbf7d0` }}>
+                  <p style={{ fontSize: 10, fontWeight: 700, color: C.green, textTransform: 'uppercase', letterSpacing: '0.09em', marginBottom: 6 }}>Top Pick</p>
+                  <p style={{ fontSize: 14, fontWeight: 700, color: C.text1, marginBottom: 4 }}>{result.topPick.keyword}</p>
+                  <p style={{ fontSize: 12.5, color: '#3f6212', lineHeight: 1.6 }}>{result.topPick.whyThisOne}</p>
+                </div>
+              )}
+            </div>
           </div>
 
           {/* ── Keyword table — full width, 4 columns ── */}
