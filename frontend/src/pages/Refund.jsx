@@ -38,11 +38,11 @@ export default function Refund() {
   useEffect(() => { document.title = 'Refund Policy — YTGrowth' }, [])
 
   const rows = [
-    ['Monthly subscription', 'No refund', 'Cancel anytime — access continues until period end'],
-    ['Annual subscription', '48 hours from purchase', 'Only if 0 tokens have been used'],
-    ['Lifetime plan', 'No refund', 'All sales final'],
-    ['Founder Bundle', 'No refund', 'All sales final'],
-    ['Analysis Pack', 'No refund', 'All sales final'],
+    ['Monthly subscription', '14 days from purchase', 'Contact support within 14 days for a full refund'],
+    ['Annual subscription',  '14 days from purchase', 'Contact support within 14 days for a full refund'],
+    ['Lifetime plan',        '14 days from purchase', 'Contact support within 14 days for a full refund'],
+    ['Founder Bundle',       '14 days from purchase', 'Contact support within 14 days for a full refund'],
+    ['Analysis Pack',        '14 days from purchase', 'Contact support within 14 days for a full refund'],
   ]
 
   return (
@@ -59,10 +59,10 @@ export default function Refund() {
       <div style={{ maxWidth: 760, margin: '0 auto', padding: '60px 24px 100px' }}>
         <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-accent-text)', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 12 }}>Legal</p>
         <h1 style={{ fontWeight: 800, fontSize: 38, letterSpacing: '-1.2px', color: 'var(--ytg-text)', marginBottom: 8, lineHeight: 1.1 }}>Refund Policy</h1>
-        <p style={{ fontSize: 13, color: 'var(--ytg-text-3)', marginBottom: 48 }}>Last updated: April 3, 2025</p>
+        <p style={{ fontSize: 13, color: 'var(--ytg-text-3)', marginBottom: 48 }}>Last updated: April 4, 2026</p>
 
         <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.8, marginBottom: 16 }}>
-          YTGrowth offers a free plan with 5 analyses before any payment is required. This means you can fully evaluate every tool in the product before spending a single dollar. Because a free trial is always available, all paid purchases are non-refundable except where described below.
+          YTGrowth offers a free plan with 5 analyses before any payment is required, so you can fully evaluate every tool before spending a dollar. If for any reason you are not satisfied with your purchase, you may request a full refund within 14 days of the transaction date — no questions asked. Refund requests submitted after 14 days will not be accepted.
         </p>
 
         <div style={{ height: 1, background: 'var(--ytg-border)', margin: '40px 0' }} />
@@ -90,16 +90,16 @@ export default function Refund() {
         </div>
 
         <h2 style={{ fontWeight: 700, fontSize: 18, color: 'var(--ytg-text)', marginTop: 36, marginBottom: 10, letterSpacing: '-0.3px' }}>Monthly subscriptions</h2>
-        <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.8, marginBottom: 16 }}>Monthly plans are non-refundable. You may cancel at any time — your access and remaining token balance continue until the end of the current billing period. No charges occur after cancellation.</p>
+        <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.8, marginBottom: 16 }}>Monthly plans are eligible for a full refund if requested within 14 days of the charge date. You may also cancel at any time — access and your remaining token balance continue until the end of the current billing period, and no further charges occur.</p>
 
         <h2 style={{ fontWeight: 700, fontSize: 18, color: 'var(--ytg-text)', marginTop: 36, marginBottom: 10, letterSpacing: '-0.3px' }}>Annual subscriptions</h2>
-        <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.8, marginBottom: 16 }}>Annual plans include a 48-hour cooling-off window from the time of purchase, provided zero tokens have been used. After 48 hours, or once any token has been consumed, the purchase is non-refundable. You retain full access for the remainder of the annual period after cancellation.</p>
+        <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.8, marginBottom: 16 }}>Annual plans are eligible for a full refund if requested within 14 days of the purchase date. After 14 days the purchase is non-refundable. You retain full access for the remainder of the annual period after cancellation.</p>
 
         <h2 style={{ fontWeight: 700, fontSize: 18, color: 'var(--ytg-text)', marginTop: 36, marginBottom: 10, letterSpacing: '-0.3px' }}>Lifetime plans & Founder Bundles</h2>
-        <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.8, marginBottom: 16 }}>All lifetime plan and founder bundle purchases are final and non-refundable. YTGrowth's free plan allows you to run 5 full analyses across all tools before committing — we consider this a sufficient opportunity to evaluate the product. By completing a lifetime or founder purchase, you acknowledge that you have had the opportunity to try the Service for free.</p>
+        <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.8, marginBottom: 16 }}>Lifetime plans and Founder Bundles are eligible for a full refund if requested within 14 days of the purchase date. After 14 days, the purchase is non-refundable.</p>
 
         <h2 style={{ fontWeight: 700, fontSize: 18, color: 'var(--ytg-text)', marginTop: 36, marginBottom: 10, letterSpacing: '-0.3px' }}>Analysis Packs</h2>
-        <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.8, marginBottom: 16 }}>Analysis Pack purchases are non-refundable. Tokens from packs never expire and work across all five tools and any plan. They are the equivalent of a prepaid digital credit — all sales are final upon purchase.</p>
+        <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.8, marginBottom: 16 }}>Analysis Pack purchases are eligible for a full refund if requested within 14 days of the purchase date. Tokens from packs never expire and work across all tools and plans. After 14 days the purchase is non-refundable.</p>
 
         <h2 style={{ fontWeight: 700, fontSize: 18, color: 'var(--ytg-text)', marginTop: 36, marginBottom: 10, letterSpacing: '-0.3px' }}>Chargebacks</h2>
         <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.8, marginBottom: 16 }}>If you initiate a chargeback without first contacting us, your account will be suspended pending resolution. We're a small team — reach out to <strong>support@ytgrowth.io</strong> first and we'll respond within 1 business day.</p>
