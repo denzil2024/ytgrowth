@@ -513,11 +513,11 @@ export default function Dashboard() {
         zIndex: 10,
       }}>
 
-        {/* Brand — 16px left edge, logo + wordmark flush */}
-        <div style={{ padding: '20px 16px 14px', display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0 }}>
+        {/* Brand */}
+        <a href="/" style={{ padding: '20px 16px 14px', display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none', flexShrink: 0 }}>
           <Logo size={28} />
           <span style={{ fontSize: 15, fontWeight: 700, color: '#111114', letterSpacing: '-0.4px', lineHeight: 1 }}>YTGrowth</span>
-        </div>
+        </a>
 
         {/* Channel card — avatar left edge matches logo left edge (both at 16px) */}
         {data && (
@@ -590,7 +590,7 @@ export default function Dashboard() {
             background: '#ffffff',
             border: '1px solid rgba(0,0,0,0.09)',
             borderRadius: 14,
-            boxShadow: '0 1px 3px rgba(0,0,0,0.05), 0 4px 16px rgba(0,0,0,0.07)',
+            boxShadow: '0 4px 16px rgba(0,0,0,0.12), 0 24px 48px rgba(0,0,0,0.14), 0 1px 0 rgba(255,255,255,0.9) inset',
             flexShrink: 0,
           }}>
             <UsageBar
@@ -619,7 +619,7 @@ export default function Dashboard() {
             onMouseLeave={e => { e.currentTarget.style.color = '#9ca3af'; e.currentTarget.style.background = 'transparent' }}
           >
             <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"><path d="M5 2H2.5A1 1 0 0 0 1.5 3v7a1 1 0 0 0 1 1H5M9 9.5l3-3-3-3M12 6.5H5"/></svg>
-            Disconnect
+            Sign Out
           </a>
         </div>
       </aside>

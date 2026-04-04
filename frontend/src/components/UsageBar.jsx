@@ -19,28 +19,26 @@ export default function UsageBar({ channelId, email, dark = false }) {
   const hasPack   = usage.pack_balance > 0
   const user      = { email, channel_id: channelId }
 
-  const barColor  = atLimit ? '#e5251b' : nearLimit ? '#111114' : '#111114'
   const textMuted = dark ? 'rgba(255,255,255,0.45)' : '#9ca3af'
-  const textMain  = dark ? 'rgba(255,255,255,0.85)' : '#111114'
-  const trackBg   = dark ? 'rgba(255,255,255,0.10)' : '#e5e7eb'
+  const trackBg   = dark ? 'rgba(255,255,255,0.10)' : '#e9eaec'
 
   return (
     <div>
-      {/* Label row */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 7 }}>
+      {/* Label row — count always red */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
         <span style={{ fontSize: 10, fontWeight: 600, color: textMuted, textTransform: 'uppercase', letterSpacing: '0.09em' }}>
           AI Analyses
         </span>
-        <span style={{ fontSize: 11, fontWeight: 700, color: atLimit ? '#e5251b' : textMain, fontVariantNumeric: 'tabular-nums' }}>
+        <span style={{ fontSize: 11, fontWeight: 700, color: '#e5251b', fontVariantNumeric: 'tabular-nums' }}>
           {usage.monthly_used} / {usage.monthly_allowance}
         </span>
       </div>
 
-      {/* Bar */}
-      <div style={{ background: trackBg, borderRadius: 6, height: 5, overflow: 'hidden', marginBottom: 8 }}>
+      {/* Bar — always red */}
+      <div style={{ background: trackBg, borderRadius: 6, height: 5, overflow: 'hidden', marginBottom: 6 }}>
         <div style={{
           width: `${Math.min(pct, 100)}%`, height: '100%',
-          background: barColor, borderRadius: 6,
+          background: '#e5251b', borderRadius: 6,
           transition: 'width 0.8s ease',
         }} />
       </div>
@@ -52,18 +50,18 @@ export default function UsageBar({ channelId, email, dark = false }) {
         </p>
       )}
 
-      {/* Warning / limit — neutral, no color cocktail */}
+      {/* Warning */}
       {(nearLimit || atLimit) && (
-        <div style={{ marginTop: 4 }}>
-          <p style={{ fontSize: 11.5, fontWeight: 500, color: atLimit ? '#e5251b' : textMain, marginBottom: 8 }}>
+        <div style={{ marginTop: 8 }}>
+          <p style={{ fontSize: 11.5, fontWeight: 500, color: '#e5251b', marginBottom: 9 }}>
             {atLimit
               ? hasPack ? 'Monthly limit reached — using pack' : 'Monthly analyses used up'
               : 'Running low on analyses'}
           </p>
           {(!atLimit || !hasPack) && (
-            <div style={{ display: 'flex', gap: 6 }}>
-              <button onClick={() => openCheckout('pack_power', user)} style={btnStyle('fill')}>Top Up</button>
-              <button onClick={() => openCheckout('growth_monthly', user)} style={btnStyle('outline')}>Upgrade</button>
+            <div style={{ display: 'flex', gap: 7 }}>
+              <button onClick={() => openCheckout('pack_power', user)} style={topUpStyle}>Top Up</button>
+              <button onClick={() => openCheckout('growth_monthly', user)} style={upgradeStyle}>Upgrade</button>
             </div>
           )}
         </div>
@@ -72,15 +70,21 @@ export default function UsageBar({ channelId, email, dark = false }) {
   )
 }
 
-function btnStyle(variant) {
-  const base = {
-    flex: 1, fontSize: 11.5, fontWeight: 600, padding: '6px 0',
-    borderRadius: 8, cursor: 'pointer', letterSpacing: '-0.1px',
-    fontFamily: "'DM Sans','Inter',sans-serif",
-    transition: 'opacity 0.15s',
-  }
-  if (variant === 'fill') {
-    return { ...base, background: '#111114', color: '#ffffff', border: 'none' }
-  }
-  return { ...base, background: 'transparent', color: '#111114', border: '1px solid rgba(0,0,0,0.18)' }
+const base = {
+  flex: 1, fontSize: 11.5, fontWeight: 600, padding: '7px 0',
+  borderRadius: 8, cursor: 'pointer',
+  fontFamily: "'DM Sans','Inter',sans-serif",
+  border: 'none',
+}
+
+const topUpStyle = {
+  ...base,
+  background: '#111114',
+  color: '#ffffff',
+}
+
+const upgradeStyle = {
+  ...base,
+  background: '#e5251b',
+  color: '#ffffff',
 }
