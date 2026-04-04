@@ -66,9 +66,9 @@ function useDashboardStyles() {
 
       .ytg-nav-btn {
         width: 100%; display: flex; align-items: center; gap: 10px;
-        padding: 9px 14px; border-radius: 100px; border: none; cursor: pointer;
+        height: 36px; padding: 0 12px; border-radius: 8px; border: none; cursor: pointer;
         font-size: 13px; font-family: 'DM Sans', 'Inter', sans-serif;
-        transition: all 0.18s; text-align: left; font-weight: 500;
+        transition: background 0.15s, color 0.15s; text-align: left;
       }
 
       .ytg-video-row { transition: background 0.15s; }
@@ -350,28 +350,35 @@ function InsightCard({ insight, index, checked, onToggle, onDelete }) {
 
 /* ─── Nav icons ─────────────────────────────────────────────────────────── */
 const NAV_ICONS = {
-  Overview:      <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"><rect x="1.5" y="1.5" width="5" height="5" rx="1.5"/><rect x="8.5" y="1.5" width="5" height="5" rx="1.5"/><rect x="1.5" y="8.5" width="5" height="5" rx="1.5"/><rect x="8.5" y="8.5" width="5" height="5" rx="1.5"/></svg>,
-  Videos:        <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"><rect x="1" y="3" width="9" height="9" rx="2"/><path d="M10 6l4-2.5v8L10 9" fill="none"/></svg>,
-  'SEO Studio':  <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"><path d="M2 4h11M2 7.5h7M2 11h5"/><circle cx="12" cy="11" r="2"/><line x1="13.5" y1="12.5" x2="14.5" y2="13.5"/></svg>,
-  Keywords:      <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"><circle cx="6" cy="6" r="4"/><line x1="9" y1="9" x2="13.5" y2="13.5"/><line x1="4" y1="6" x2="8" y2="6"/><line x1="6" y1="4" x2="6" y2="8"/></svg>,
-  Competitors:   <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"><circle cx="5.5" cy="5" r="2.5"/><path d="M1 13c0-2.5 2-4 4.5-4s4.5 1.5 4.5 4"/><circle cx="11" cy="5" r="2" /><path d="M13.5 12.5c0-1.8-1.1-3-2.5-3.3"/></svg>,
-  Settings:      <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"><circle cx="7.5" cy="7.5" r="2"/><path d="M7.5 1v1.5M7.5 12.5V14M1 7.5h1.5M12.5 7.5H14M3.2 3.2l1 1M10.8 10.8l1 1M3.2 11.8l1-1M10.8 4.2l1-1"/></svg>,
+  Overview:      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"><rect x="1" y="1" width="5" height="5" rx="1.5"/><rect x="8" y="1" width="5" height="5" rx="1.5"/><rect x="1" y="8" width="5" height="5" rx="1.5"/><rect x="8" y="8" width="5" height="5" rx="1.5"/></svg>,
+  Videos:        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"><rect x="1" y="3" width="9" height="8" rx="1.5"/><path d="M10 5.5l3.5-2v7L10 8.5"/></svg>,
+  'SEO Studio':  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"><path d="M2 11V8M5 11V6M8 11V4M11 11V2"/></svg>,
+  Keywords:      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"><circle cx="6" cy="6" r="4"/><line x1="9.2" y1="9.2" x2="13" y2="13"/></svg>,
+  Competitors:   <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"><circle cx="5" cy="7" r="4"/><circle cx="9" cy="7" r="4"/></svg>,
+  Settings:      <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"><circle cx="6.5" cy="6.5" r="1.8"/><path d="M6.5 1v1.2M6.5 10.8V12M1 6.5h1.2M10.8 6.5H12M2.8 2.8l.85.85M9.35 9.35l.85.85M2.8 10.2l.85-.85M9.35 4.65l.85-.85"/></svg>,
 }
 
 function NavBtn({ label, active, onClick, badge }) {
   return (
-    <button className="ytg-nav-btn" onClick={onClick} style={{
-      background: active ? 'rgba(255,255,255,0.08)' : 'transparent',
-      color: active ? 'rgba(255,255,255,0.95)' : 'rgba(255,255,255,0.55)',
-      boxShadow: active ? 'inset 0 0 0 1px rgba(255,255,255,0.08)' : 'none',
-    }}
-      onMouseEnter={e => { if (!active) { e.currentTarget.style.background = 'rgba(255,255,255,0.05)'; e.currentTarget.style.color = 'rgba(255,255,255,0.82)' } }}
-      onMouseLeave={e => { if (!active) { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'rgba(255,255,255,0.55)' } }}
+    <button
+      className="ytg-nav-btn"
+      onClick={onClick}
+      style={{
+        margin: '1px 10px',
+        width: 'calc(100% - 20px)',
+        background: active ? '#fef2f2' : 'transparent',
+        color: active ? '#e5251b' : '#6b7280',
+        fontWeight: active ? 500 : 400,
+        borderLeft: active ? '3px solid #e5251b' : '3px solid transparent',
+        paddingLeft: active ? 13 : 12,
+      }}
+      onMouseEnter={e => { if (!active) { e.currentTarget.style.background = '#f9fafb'; e.currentTarget.style.color = '#111114' } }}
+      onMouseLeave={e => { if (!active) { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#6b7280' } }}
     >
-      <span style={{ display: 'flex', flexShrink: 0, opacity: active ? 1 : 0.55 }}>{NAV_ICONS[label]}</span>
+      <span style={{ display: 'flex', flexShrink: 0, opacity: active ? 1 : 0.5, color: active ? '#e5251b' : 'currentColor' }}>{NAV_ICONS[label]}</span>
       <span style={{ flex: 1, letterSpacing: '-0.1px' }}>{label}</span>
       {badge > 0 && (
-        <span style={{ background: C.red, color: '#fff', fontSize: 10, fontWeight: 700, padding: '2px 7px', borderRadius: 20, letterSpacing: '0.01em', minWidth: 20, textAlign: 'center' }}>{badge}</span>
+        <span style={{ background: '#fef3c7', color: '#d97706', border: '1px solid #fde68a', fontSize: 10, fontWeight: 700, padding: '1px 6px', borderRadius: 20, minWidth: 18, textAlign: 'center' }}>{badge}</span>
       )}
     </button>
   )
@@ -487,139 +494,129 @@ export default function Dashboard() {
 
       {/* ══ SIDEBAR ══════════════════════════════════════════════════════ */}
       <aside style={{
-        width: 256, flexShrink: 0,
-        background: 'linear-gradient(180deg, #131315 0%, #0e0e10 100%)',
+        width: 240, flexShrink: 0,
+        background: '#fafaf9',
+        borderRight: '0.5px solid rgba(0,0,0,0.07)',
         position: 'sticky', top: 0, height: '100vh',
-        boxShadow: '1px 0 0 rgba(255,255,255,0.04), 16px 0 64px rgba(0,0,0,0.55)',
+        boxShadow: '0 2px 4px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.08), 0 24px 48px rgba(0,0,0,0.06)',
         display: 'flex', flexDirection: 'column', overflow: 'hidden',
+        paddingTop: 12,
       }}>
 
         {/* Brand */}
-        <a href="/" style={{ padding: '20px 16px 16px', display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none', flexShrink: 0 }}>
-          <Logo size={26} />
-          <p style={{ fontSize: 14.5, fontWeight: 700, color: '#fff', letterSpacing: '-0.5px', lineHeight: 1 }}>YTGrowth</p>
+        <a href="/" style={{ padding: '4px 16px 14px', display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none', flexShrink: 0 }}>
+          <div style={{ width: 28, height: 28, borderRadius: 8, background: '#e5251b', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <polygon points="5,3.5 11,7 5,10.5" fill="white"/>
+            </svg>
+          </div>
+          <p style={{ fontSize: 15, fontWeight: 600, color: '#111114', letterSpacing: '-0.3px', lineHeight: 1 }}>YTGrowth</p>
         </a>
 
-        {/* Channel block */}
+        {/* Channel card */}
         {data && (
-          <div style={{ padding: '0 16px 16px' }}>
-            {/* Channel card */}
-            <div style={{
-              display: 'flex', alignItems: 'center', gap: 11,
-              padding: '10px 13px',
-              background: 'rgba(255,255,255,0.05)',
-              borderRadius: 14,
-              border: '1px solid rgba(255,255,255,0.07)',
-            }}>
+          <div style={{
+            margin: '0 12px 8px',
+            padding: '12px 14px',
+            background: '#ffffff',
+            border: '0.5px solid rgba(0,0,0,0.09)',
+            borderRadius: 12,
+            boxShadow: '0 1px 3px rgba(0,0,0,0.06), 0 4px 12px rgba(0,0,0,0.08)',
+            flexShrink: 0,
+          }}>
+            {/* Avatar + name row */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
               {data.channel.thumbnail
-                ? <img src={data.channel.thumbnail} alt="" style={{ width: 36, height: 36, borderRadius: '50%', objectFit: 'cover', flexShrink: 0, boxShadow: '0 0 0 2px rgba(255,255,255,0.1)' }}/>
-                : <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'rgba(229,37,27,0.7)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 700, color: '#fff', flexShrink: 0 }}>{data.channel.channel_name[0].toUpperCase()}</div>
+                ? <img src={data.channel.thumbnail} alt="" style={{ width: 34, height: 34, borderRadius: '50%', objectFit: 'cover', flexShrink: 0 }}/>
+                : <div style={{ width: 34, height: 34, borderRadius: '50%', background: '#fef2f2', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13, fontWeight: 600, color: '#e5251b', flexShrink: 0 }}>{data.channel.channel_name[0].toUpperCase()}</div>
               }
               <div style={{ minWidth: 0, flex: 1 }}>
-                <p style={{ fontSize: 13, fontWeight: 600, color: 'rgba(255,255,255,0.92)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', letterSpacing: '-0.2px' }}>{data.channel.channel_name}</p>
-                <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.42)', marginTop: 2, fontWeight: 400 }}>{fmtNum(data.channel.subscribers)} subscribers</p>
+                <p style={{ fontSize: 13, fontWeight: 600, color: '#111114', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{data.channel.channel_name}</p>
+                <p style={{ fontSize: 12, color: '#6b7280', marginTop: 1 }}>{fmtNum(data.channel.subscribers)} subscribers</p>
               </div>
             </div>
-
             {/* Health bar */}
-            <div style={{ padding: '13px 2px 0' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
-                <span style={{ fontSize: 10, fontWeight: 600, color: 'rgba(255,255,255,0.38)', letterSpacing: '0.07em', textTransform: 'uppercase' }}>Channel health</span>
-                <span style={{ fontSize: 12, fontWeight: 700, color: 'rgba(255,255,255,0.9)', fontVariantNumeric: 'tabular-nums' }}>
-                  {score}<span style={{ fontSize: 10, fontWeight: 500, color: 'rgba(255,255,255,0.38)' }}> / 100</span>
-                </span>
+            <div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 5 }}>
+                <span style={{ fontSize: 10, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Channel Health</span>
+                <span style={{ fontSize: 11, fontWeight: 600, color: '#e5251b', fontVariantNumeric: 'tabular-nums' }}>{score} / 100</span>
               </div>
-              <div style={{ background: 'rgba(255,255,255,0.08)', borderRadius: 100, height: 5, overflow: 'hidden' }}>
-                <div style={{ width: `${score}%`, height: '100%', background: `linear-gradient(90deg, ${scoreColor(score)}, ${scoreColor(score)}cc)`, borderRadius: 100, transition: 'width 1.2s cubic-bezier(0.34,1.56,0.64,1)' }}/>
+              <div style={{ background: '#f3f4f6', borderRadius: 4, height: 4, overflow: 'hidden' }}>
+                <div style={{ width: `${score}%`, height: '100%', background: '#e5251b', borderRadius: 4, transition: 'width 1.2s cubic-bezier(0.34,1.56,0.64,1)' }}/>
               </div>
-              <p style={{ fontSize: 11, fontWeight: 600, marginTop: 6, color: score < 50 ? '#ff7b72' : score < 75 ? '#fbbf24' : '#4ade80' }}>{scoreLabel(score)}</p>
+              <p style={{ fontSize: 10, fontWeight: 600, marginTop: 5, color: scoreColor(score) }}>{scoreLabel(score)}</p>
             </div>
           </div>
         )}
 
-        {/* Divider */}
-        <div style={{ height: 1, background: 'rgba(255,255,255,0.05)', marginBottom: 8 }}/>
+        {/* Nav */}
+        <nav style={{ flex: 1, overflowY: 'auto', paddingTop: 4, paddingBottom: 4 }}>
 
-        {/* Nav — main items */}
-        <nav style={{ padding: '4px 8px', flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
-          {mainNavItems.map(item => (
-            <NavBtn key={item.label} label={item.label} active={nav === item.label} onClick={() => setNav(item.label)} badge={item.badge} />
-          ))}
+          {/* Section: OPTIMIZE */}
+          <div style={{ padding: '8px 20px 4px' }}>
+            <span style={{ fontSize: 10, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Optimize</span>
+          </div>
+          <NavBtn label="Overview" active={nav === 'Overview'} onClick={() => setNav('Overview')} />
+          <NavBtn label="Videos" active={nav === 'Videos'} onClick={() => setNav('Videos')} badge={5} />
 
-          {/* Spacer pushes action card to bottom */}
-          <div style={{ flex: 1 }}/>
+          {/* Divider */}
+          <div style={{ height: '0.5px', background: 'rgba(0,0,0,0.06)', margin: '6px 16px' }}/>
 
-          {/* Mini action card — only shown when there are insights */}
-          {data && (data.insights?.priorityActions?.length > 0) && (
-            <button
-              onClick={() => setNav('Overview')}
-              style={{
-                margin: '8px 2px 6px',
-                width: 'calc(100% - 4px)',
-                background: 'rgba(255,255,255,0.04)',
-                border: '1px solid rgba(255,255,255,0.08)',
-                borderRadius: 14,
-                padding: '13px 15px',
-                cursor: 'pointer',
-                textAlign: 'left',
-                transition: 'background 0.18s, border-color 0.18s',
-              }}
-              onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.08)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.13)' }}
-              onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)' }}
-            >
-              <p style={{ fontSize: 9.5, fontWeight: 700, color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase', letterSpacing: '0.09em', marginBottom: 7 }}>
-                Up next
-              </p>
-              <p style={{ fontSize: 22, fontWeight: 800, color: 'rgba(255,255,255,0.92)', lineHeight: 1, marginBottom: 5, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.5px' }}>
-                {data.insights.priorityActions.length}
-                <span style={{ fontSize: 12, fontWeight: 500, color: 'rgba(255,255,255,0.42)', marginLeft: 6, letterSpacing: '-0.1px' }}>insight{data.insights.priorityActions.length !== 1 ? 's' : ''}</span>
-              </p>
-              <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.38)', letterSpacing: '-0.1px' }}>
-                View Insights →
-              </p>
-            </button>
-          )}
+          {/* Section: CREATE */}
+          <div style={{ padding: '8px 20px 4px' }}>
+            <span style={{ fontSize: 10, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Create</span>
+          </div>
+          <NavBtn label="SEO Studio" active={nav === 'SEO Studio'} onClick={() => setNav('SEO Studio')} />
+
+          {/* Divider */}
+          <div style={{ height: '0.5px', background: 'rgba(0,0,0,0.06)', margin: '6px 16px' }}/>
+
+          {/* Section: RESEARCH */}
+          <div style={{ padding: '8px 20px 4px' }}>
+            <span style={{ fontSize: 10, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Research</span>
+          </div>
+          <NavBtn label="Keywords" active={nav === 'Keywords'} onClick={() => setNav('Keywords')} />
+          <NavBtn label="Competitors" active={nav === 'Competitors'} onClick={() => setNav('Competitors')} />
+
         </nav>
 
-        {/* Settings — visually separated from main nav */}
-        <div style={{ padding: '4px 8px 8px' }}>
-          <div style={{ height: 1, background: 'rgba(255,255,255,0.05)', marginBottom: 6 }}/>
-          <NavBtn label="Settings" active={nav === 'Settings'} onClick={() => setNav('Settings')} />
-        </div>
-
         {/* Usage bar */}
-        <div style={{ height: 1, background: 'rgba(255,255,255,0.05)' }}/>
         {data && (
-          <div style={{ padding: '14px 16px 12px' }}>
+          <div style={{
+            margin: '0 12px 8px',
+            padding: '12px 14px',
+            background: '#fffbeb',
+            border: '0.5px solid rgba(245,158,11,0.3)',
+            borderRadius: 10,
+            flexShrink: 0,
+          }}>
             <UsageBar
               channelId={data.channel?.channel_id}
               email={data.channel?.email}
-              dark={true}
+              dark={false}
             />
           </div>
         )}
 
-        {/* Footer: Help + Disconnect */}
-        <div style={{ height: 1, background: 'rgba(255,255,255,0.05)' }}/>
-        <div style={{ padding: '8px 8px', display: 'flex', alignItems: 'center', gap: 2 }}>
-          <a
-            href="mailto:support@ytgrowth.com"
-            style={{ flex: 1, color: 'rgba(255,255,255,0.38)', fontSize: 12, textDecoration: 'none', fontWeight: 500, display: 'flex', alignItems: 'center', gap: 6, padding: '7px 10px', borderRadius: 9, transition: 'all 0.15s' }}
-            onMouseEnter={e => { e.currentTarget.style.color = 'rgba(255,255,255,0.72)'; e.currentTarget.style.background = 'rgba(255,255,255,0.05)' }}
-            onMouseLeave={e => { e.currentTarget.style.color = 'rgba(255,255,255,0.38)'; e.currentTarget.style.background = 'transparent' }}
+        {/* Bottom row: Settings + Disconnect */}
+        <div style={{ height: '0.5px', background: 'rgba(0,0,0,0.06)' }}/>
+        <div style={{ padding: '10px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <button
+            onClick={() => setNav('Settings')}
+            style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 5, color: '#9ca3af', fontSize: 12, fontFamily: "'DM Sans', 'Inter', sans-serif", padding: 0, transition: 'color 0.15s' }}
+            onMouseEnter={e => e.currentTarget.style.color = '#6b7280'}
+            onMouseLeave={e => e.currentTarget.style.color = '#9ca3af'}
           >
-            <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
-              <circle cx="6.5" cy="6.5" r="5"/><line x1="6.5" y1="4.5" x2="6.5" y2="4.51"/><line x1="6.5" y1="6.5" x2="6.5" y2="9"/>
-            </svg>
-            Help
-          </a>
+            {NAV_ICONS['Settings']}
+            Settings
+          </button>
           <a
             href="/auth/logout"
-            style={{ flex: 1, color: 'rgba(255,255,255,0.38)', fontSize: 12, textDecoration: 'none', fontWeight: 500, display: 'flex', alignItems: 'center', gap: 6, padding: '7px 10px', borderRadius: 9, transition: 'all 0.15s' }}
-            onMouseEnter={e => { e.currentTarget.style.color = 'rgba(255,255,255,0.72)'; e.currentTarget.style.background = 'rgba(255,255,255,0.05)' }}
-            onMouseLeave={e => { e.currentTarget.style.color = 'rgba(255,255,255,0.38)'; e.currentTarget.style.background = 'transparent' }}
+            style={{ display: 'flex', alignItems: 'center', gap: 5, color: '#9ca3af', fontSize: 12, textDecoration: 'none', transition: 'color 0.15s' }}
+            onMouseEnter={e => e.currentTarget.style.color = '#6b7280'}
+            onMouseLeave={e => e.currentTarget.style.color = '#9ca3af'}
           >
-            <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"><path d="M5 2H2.5A1 1 0 0 0 1.5 3v7a1 1 0 0 0 1 1H5M9 9.5l3-3-3-3M12 6.5H5"/></svg>
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"><path d="M5 2H2.5A1 1 0 0 0 1.5 3v7a1 1 0 0 0 1 1H5M9 9.5l3-3-3-3M12 6.5H5"/></svg>
             Disconnect
           </a>
         </div>
