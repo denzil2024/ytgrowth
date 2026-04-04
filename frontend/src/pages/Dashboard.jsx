@@ -505,81 +505,76 @@ export default function Dashboard() {
       }}>
 
         {/* Brand */}
-        <a href="/" style={{ padding: '4px 16px 14px', display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none', flexShrink: 0 }}>
-          <div style={{ width: 28, height: 28, borderRadius: 8, background: '#e5251b', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-              <polygon points="5,3.5 11,7 5,10.5" fill="white"/>
-            </svg>
-          </div>
-          <p style={{ fontSize: 15, fontWeight: 600, color: '#111114', letterSpacing: '-0.3px', lineHeight: 1 }}>YTGrowth</p>
+        <a href="/" style={{ padding: '8px 16px 16px', display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none', flexShrink: 0 }}>
+          <Logo size={30} />
+          <p style={{ fontSize: 15, fontWeight: 700, color: '#111114', letterSpacing: '-0.4px', lineHeight: 1 }}>YTGrowth</p>
         </a>
 
         {/* Channel card */}
         {data && (
           <div style={{
-            margin: '0 12px 8px',
+            margin: '0 12px 6px',
             padding: '12px 14px',
-            background: '#ffffff',
-            border: '0.5px solid rgba(0,0,0,0.09)',
-            borderRadius: 12,
-            boxShadow: '0 1px 3px rgba(0,0,0,0.06), 0 4px 12px rgba(0,0,0,0.08)',
+            background: '#f7f8fa',
+            border: '1px solid rgba(0,0,0,0.08)',
+            borderRadius: 14,
             flexShrink: 0,
           }}>
-            {/* Avatar + name row */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
               {data.channel.thumbnail
-                ? <img src={data.channel.thumbnail} alt="" style={{ width: 34, height: 34, borderRadius: '50%', objectFit: 'cover', flexShrink: 0 }}/>
-                : <div style={{ width: 34, height: 34, borderRadius: '50%', background: '#fef2f2', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13, fontWeight: 600, color: '#e5251b', flexShrink: 0 }}>{data.channel.channel_name[0].toUpperCase()}</div>
+                ? <img src={data.channel.thumbnail} alt="" style={{ width: 36, height: 36, borderRadius: '50%', objectFit: 'cover', flexShrink: 0, border: '2px solid rgba(0,0,0,0.06)' }}/>
+                : <div style={{ width: 36, height: 36, borderRadius: '50%', background: '#fef2f2', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 600, color: '#e5251b', flexShrink: 0 }}>{data.channel.channel_name[0].toUpperCase()}</div>
               }
               <div style={{ minWidth: 0, flex: 1 }}>
-                <p style={{ fontSize: 13, fontWeight: 600, color: '#111114', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{data.channel.channel_name}</p>
-                <p style={{ fontSize: 12, color: '#6b7280', marginTop: 1 }}>{fmtNum(data.channel.subscribers)} subscribers</p>
+                <p style={{ fontSize: 13, fontWeight: 600, color: '#111114', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', letterSpacing: '-0.1px' }}>{data.channel.channel_name}</p>
+                <p style={{ fontSize: 11.5, color: '#6b7280', marginTop: 2 }}>{fmtNum(data.channel.subscribers)} subscribers</p>
               </div>
             </div>
-            {/* Health bar */}
+            <div style={{ height: 1, background: 'rgba(0,0,0,0.06)', marginBottom: 12 }}/>
             <div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 5 }}>
-                <span style={{ fontSize: 10, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Channel Health</span>
-                <span style={{ fontSize: 11, fontWeight: 600, color: '#e5251b', fontVariantNumeric: 'tabular-nums' }}>{score} / 100</span>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
+                <span style={{ fontSize: 10, fontWeight: 500, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Channel Health</span>
+                <span style={{ fontSize: 11, fontWeight: 700, color: scoreColor(score), fontVariantNumeric: 'tabular-nums' }}>{score} / 100</span>
               </div>
-              <div style={{ background: '#f3f4f6', borderRadius: 4, height: 4, overflow: 'hidden' }}>
-                <div style={{ width: `${score}%`, height: '100%', background: '#e5251b', borderRadius: 4, transition: 'width 1.2s cubic-bezier(0.34,1.56,0.64,1)' }}/>
+              <div style={{ background: 'rgba(0,0,0,0.08)', borderRadius: 4, height: 4, overflow: 'hidden' }}>
+                <div style={{ width: `${score}%`, height: '100%', background: scoreColor(score), borderRadius: 4, transition: 'width 1.2s cubic-bezier(0.34,1.56,0.64,1)' }}/>
               </div>
-              <p style={{ fontSize: 10, fontWeight: 600, marginTop: 5, color: scoreColor(score) }}>{scoreLabel(score)}</p>
+              <p style={{ fontSize: 10.5, fontWeight: 600, marginTop: 6, color: scoreColor(score) }}>{scoreLabel(score)}</p>
             </div>
           </div>
         )}
 
         {/* Nav */}
-        <nav style={{ flex: 1, overflowY: 'auto', paddingTop: 4, paddingBottom: 4 }}>
+        <nav style={{ overflowY: 'auto', paddingTop: 8, paddingBottom: 4 }}>
 
           {/* Section: OPTIMIZE */}
-          <div style={{ padding: '8px 20px 4px' }}>
-            <span style={{ fontSize: 10, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Optimize</span>
+          <div style={{ padding: '4px 22px 6px' }}>
+            <span style={{ fontSize: 10, fontWeight: 600, color: '#b0b8c4', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Optimize</span>
           </div>
           <NavBtn label="Overview" active={nav === 'Overview'} onClick={() => setNav('Overview')} />
           <NavBtn label="Videos" active={nav === 'Videos'} onClick={() => setNav('Videos')} badge={5} />
 
-          {/* Divider */}
-          <div style={{ height: '0.5px', background: 'rgba(0,0,0,0.06)', margin: '6px 16px' }}/>
+          <div style={{ height: 1, background: 'rgba(0,0,0,0.05)', margin: '10px 16px' }}/>
 
           {/* Section: CREATE */}
-          <div style={{ padding: '8px 20px 4px' }}>
-            <span style={{ fontSize: 10, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Create</span>
+          <div style={{ padding: '4px 22px 6px' }}>
+            <span style={{ fontSize: 10, fontWeight: 600, color: '#b0b8c4', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Create</span>
           </div>
           <NavBtn label="SEO Studio" active={nav === 'SEO Studio'} onClick={() => setNav('SEO Studio')} />
 
-          {/* Divider */}
-          <div style={{ height: '0.5px', background: 'rgba(0,0,0,0.06)', margin: '6px 16px' }}/>
+          <div style={{ height: 1, background: 'rgba(0,0,0,0.05)', margin: '10px 16px' }}/>
 
           {/* Section: RESEARCH */}
-          <div style={{ padding: '8px 20px 4px' }}>
-            <span style={{ fontSize: 10, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Research</span>
+          <div style={{ padding: '4px 22px 6px' }}>
+            <span style={{ fontSize: 10, fontWeight: 600, color: '#b0b8c4', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Research</span>
           </div>
           <NavBtn label="Keywords" active={nav === 'Keywords'} onClick={() => setNav('Keywords')} />
           <NavBtn label="Competitors" active={nav === 'Competitors'} onClick={() => setNav('Competitors')} />
 
         </nav>
+
+        {/* Spacer — pushes footer to bottom */}
+        <div style={{ flex: 1 }}/>
 
         {/* Usage bar */}
         {data && (
@@ -587,8 +582,8 @@ export default function Dashboard() {
             margin: '0 12px 8px',
             padding: '12px 14px',
             background: '#fffbeb',
-            border: '0.5px solid rgba(245,158,11,0.3)',
-            borderRadius: 10,
+            border: '1px solid rgba(245,158,11,0.25)',
+            borderRadius: 12,
             flexShrink: 0,
           }}>
             <UsageBar
@@ -600,22 +595,22 @@ export default function Dashboard() {
         )}
 
         {/* Bottom row: Settings + Disconnect */}
-        <div style={{ height: '0.5px', background: 'rgba(0,0,0,0.06)' }}/>
-        <div style={{ padding: '10px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div style={{ height: 1, background: 'rgba(0,0,0,0.06)' }}/>
+        <div style={{ padding: '10px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <button
             onClick={() => setNav('Settings')}
-            style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 5, color: '#9ca3af', fontSize: 12, fontFamily: "'DM Sans', 'Inter', sans-serif", padding: 0, transition: 'color 0.15s' }}
-            onMouseEnter={e => e.currentTarget.style.color = '#6b7280'}
-            onMouseLeave={e => e.currentTarget.style.color = '#9ca3af'}
+            style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6, color: '#9ca3af', fontSize: 12, fontFamily: "'DM Sans', 'Inter', sans-serif", fontWeight: 500, padding: '4px 6px', borderRadius: 6, transition: 'color 0.15s, background 0.15s' }}
+            onMouseEnter={e => { e.currentTarget.style.color = '#374151'; e.currentTarget.style.background = '#f3f4f6' }}
+            onMouseLeave={e => { e.currentTarget.style.color = '#9ca3af'; e.currentTarget.style.background = 'transparent' }}
           >
             {NAV_ICONS['Settings']}
             Settings
           </button>
           <a
             href="/auth/logout"
-            style={{ display: 'flex', alignItems: 'center', gap: 5, color: '#9ca3af', fontSize: 12, textDecoration: 'none', transition: 'color 0.15s' }}
-            onMouseEnter={e => e.currentTarget.style.color = '#6b7280'}
-            onMouseLeave={e => e.currentTarget.style.color = '#9ca3af'}
+            style={{ display: 'flex', alignItems: 'center', gap: 6, color: '#9ca3af', fontSize: 12, fontWeight: 500, textDecoration: 'none', padding: '4px 6px', borderRadius: 6, transition: 'color 0.15s, background 0.15s' }}
+            onMouseEnter={e => { e.currentTarget.style.color = '#374151'; e.currentTarget.style.background = '#f3f4f6' }}
+            onMouseLeave={e => { e.currentTarget.style.color = '#9ca3af'; e.currentTarget.style.background = 'transparent' }}
           >
             <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"><path d="M5 2H2.5A1 1 0 0 0 1.5 3v7a1 1 0 0 0 1 1H5M9 9.5l3-3-3-3M12 6.5H5"/></svg>
             Disconnect
