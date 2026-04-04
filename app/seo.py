@@ -736,14 +736,15 @@ PHASE 3 — 3 TITLE VARIANTS
 Using the gap opportunity, write 3 titles with different psychological hooks.
 Each title must have a genuinely different structure and opening — not 3 rephrasings of the same sentence.
 
-Hook A — CURIOSITY / FOMO: make the viewer feel they're missing something they need to see
-Hook B — TRANSFORMATION: focus on the outcome or result the viewer will experience
-Hook C — CONTRARIAN / AUTHORITY: challenge assumptions or reveal what others don't show
+Hook A — CURIOSITY / PATTERN INTERRUPT: something specific and unexpected that stops the scroll. The viewer must feel "I've never seen this framed this way before."
+Hook B — TRANSFORMATION / STAKES: name the concrete outcome or cost. Make the viewer feel the gap between where they are and where this video takes them.
+Hook C — CONTRARIAN / INSIDER: challenge a common belief or reveal something the viewer assumed was settled. Feels like a secret being told directly to them.
 
 Rules for every title:
 - 50–70 characters exactly (count every character including spaces)
 - Primary keyword near the start
-- At least one power word (Best, Honest, Real, Never, Secret, Surprising, Finally, Truth)
+- Draw psychological pull from SPECIFICITY — real numbers, real outcomes, real contrasts — not from generic trigger words like "Finally", "Stop", "Secret", "Shocking"
+- If a power word appears it must earn its place through context, not be inserted mechanically
 - Do NOT fabricate facts not present in the original title
 - Do NOT force listicle numbers unless the video is actually a list
 - Plain text only
