@@ -691,6 +691,7 @@ export default function Competitors() {
   const [analyses, setAnalyses]             = useState(() => loadTracked())
   const [loadingSearch, setLoadingSearch]   = useState(false)
   const [loadingAnalyze, setLoadingAnalyze] = useState(null)
+  const [analyzeError, setAnalyzeError]     = useState('')
   const [activeTab, setActiveTab]           = useState('search')
   const [searched, setSearched]             = useState(false)
   const [expandedIdx, setExpandedIdx]       = useState(null)
@@ -711,6 +712,7 @@ export default function Competitors() {
   const handleAnalyze = (channelId) => {
     if (analyses.find(a => a.competitor.channel_id === channelId)) return
     setLoadingAnalyze(channelId)
+    setAnalyzeError('')
     fetch(`/competitors/analyze/${channelId}`, { credentials: 'include' })
       .then(r => r.json())
       .then(d => {
@@ -722,10 +724,15 @@ export default function Competitors() {
             return next
           })
           setActiveTab('tracked')
+        } else {
+          setAnalyzeError(d.error || 'Analysis failed. Please try again.')
         }
         setLoadingAnalyze(null)
       })
-      .catch(() => setLoadingAnalyze(null))
+      .catch(() => {
+        setAnalyzeError('Request timed out or network error. Please try again.')
+        setLoadingAnalyze(null)
+      })
   }
 
   const handleRemove = (e, channelId) => {
@@ -805,6 +812,12 @@ export default function Competitors() {
               </div>
               <p style={{ fontWeight: 700, color: '#52525b', marginBottom: 6, fontSize: 14 }}>No channels found</p>
               <p style={{ fontSize: 13, color: '#a0a0b0' }}>Try a different search term or paste the channel URL</p>
+            </div>
+          )}
+
+          {analyzeError && (
+            <div style={{ background: '#fff5f5', border: '1px solid #fecaca', borderRadius: 12, padding: '12px 16px', marginBottom: 12, fontSize: 13, color: '#e5251b', fontWeight: 500 }}>
+              {analyzeError}
             </div>
           )}
 

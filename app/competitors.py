@@ -206,8 +206,16 @@ def analyze_competitor_with_ai(user_channel, user_videos, competitor_data):
 
     comp = competitor_data
     posting = comp.get("posting_behavior", {})
-    videos_json = json.dumps(comp.get("recent_videos", []), default=str)
-    top_5_json = json.dumps(comp.get("top_5_videos", []), default=str)
+
+    # Slim down videos for the prompt — strip thumbnail URLs and cap at 20
+    def _slim(videos):
+        return [
+            {k: v for k, v in vid.items() if k != "thumbnail_url"}
+            for vid in (videos or [])[:20]
+        ]
+
+    videos_json = json.dumps(_slim(comp.get("recent_videos", [])), default=str)
+    top_5_json  = json.dumps(_slim(comp.get("top_5_videos", [])),  default=str)
 
     prompt = f"""The user's channel is: {user_channel.get('channel_name', 'Unknown')}
 Their niche (from channel keywords): {user_channel.get('keywords', 'N/A')}
@@ -308,7 +316,7 @@ Return ONLY valid JSON, no markdown, no preamble:
         client = anthropic.Anthropic(api_key=os.environ.get("ANTHROPIC_API_KEY"))
         message = client.messages.create(
             model="claude-sonnet-4-6",
-            max_tokens=4096,
+            max_tokens=2048,
             system=(
                 "You are an elite YouTube competitive intelligence analyst. "
                 "Your job is not to describe a competitor — your job is to find the exact gaps, "
