@@ -235,7 +235,7 @@ export default function Keywords() {
           <div className="kw-card" style={{ marginBottom: 14, overflow: 'hidden' }}>
 
             {/* Section 1: header — label + chips */}
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 22px', background: '#f8f8fb', borderBottom: `1px solid ${C.border}` }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '11px 20px', background: '#f8f8fb', borderBottom: `1px solid ${C.border}` }}>
               <p style={{ fontSize: 10, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.09em' }}>Search Intent</p>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5, justifyContent: 'flex-end' }}>
                 {result.seedIntent?.primaryIntent       && <span className="kw-chip" style={{ color: C.purple, background: C.purpleBg }}>{result.seedIntent.primaryIntent}</span>}
@@ -244,31 +244,35 @@ export default function Keywords() {
               </div>
             </div>
 
-            {/* Section 2: intent summary */}
-            <div style={{ padding: '16px 22px', borderBottom: `1px solid ${C.border}` }}>
-              <p style={{ fontSize: 14, fontWeight: 500, color: C.text1, lineHeight: 1.7 }}>{result.seedIntent?.intentSummary}</p>
+            {/* Section 2: intent summary — capped to 2 lines */}
+            <div style={{ padding: '12px 20px', borderBottom: `1px solid ${C.border}` }}>
+              <p style={{ fontSize: 13, fontWeight: 400, color: C.text2, lineHeight: 1.6, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{result.seedIntent?.intentSummary}</p>
             </div>
 
             {/* Section 3: counts */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', borderBottom: `1px solid ${C.border}` }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', borderBottom: result.topPick ? `1px solid ${C.border}` : 'none' }}>
               {[
                 { label: 'Autocomplete', value: result.rawSuggestionsCount },
                 { label: 'Related',      value: result.serperCount },
                 { label: 'Filtered',     value: result.totalAfterIntentFilter, accent: true },
               ].map((s, i) => (
-                <div key={i} style={{ textAlign: 'center', padding: '16px 12px', borderLeft: i > 0 ? `1px solid ${C.border}` : 'none' }}>
-                  <p style={{ fontSize: 24, fontWeight: 800, color: s.accent ? C.blue : C.text1, letterSpacing: '-0.6px', lineHeight: 1, marginBottom: 5 }}>{s.value ?? '—'}</p>
-                  <p style={{ fontSize: 10.5, fontWeight: 500, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.07em' }}>{s.label}</p>
+                <div key={i} style={{ textAlign: 'center', padding: '12px 12px', borderLeft: i > 0 ? `1px solid ${C.border}` : 'none' }}>
+                  <p style={{ fontSize: 22, fontWeight: 800, color: s.accent ? C.blue : C.text1, letterSpacing: '-0.5px', lineHeight: 1, marginBottom: 4 }}>{s.value ?? '—'}</p>
+                  <p style={{ fontSize: 10, fontWeight: 500, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.07em' }}>{s.label}</p>
                 </div>
               ))}
             </div>
 
             {/* Section 4: top pick */}
             {result.topPick && (
-              <div style={{ padding: '16px 22px' }}>
-                <p style={{ fontSize: 10, fontWeight: 700, color: C.green, textTransform: 'uppercase', letterSpacing: '0.09em', marginBottom: 8 }}>Top Pick</p>
-                <p style={{ fontSize: 14, fontWeight: 700, color: C.text1, lineHeight: 1.4, marginBottom: 6 }}>{result.topPick.keyword}</p>
-                <p style={{ fontSize: 12.5, color: '#3f6212', lineHeight: 1.65 }}>{result.topPick.whyThisOne}</p>
+              <div style={{ padding: '12px 20px', display: 'flex', alignItems: 'flex-start', gap: 12 }}>
+                <span style={{ flexShrink: 0, marginTop: 2, width: 20, height: 20, borderRadius: 6, background: C.greenBg, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke={C.green} strokeWidth="2" strokeLinecap="round"><path d="M2 5.5l2 2 4-4"/></svg>
+                </span>
+                <div style={{ minWidth: 0 }}>
+                  <p style={{ fontSize: 13, fontWeight: 700, color: C.text1, marginBottom: 2 }}>{result.topPick.keyword}</p>
+                  <p style={{ fontSize: 12, color: C.text3, lineHeight: 1.55, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{result.topPick.whyThisOne}</p>
+                </div>
               </div>
             )}
           </div>
@@ -355,34 +359,33 @@ export default function Keywords() {
             </div>
           )}
 
-          {/* Clusters — full width below */}
+          {/* Clusters — one card, columns divided by borders */}
           {result.clusters?.length > 0 && (
             <div>
               <p style={{ fontSize: 10.5, fontWeight: 600, color: '#a0a0b0', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 14 }}>Content Clusters</p>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 14 }}>
+              <div className="kw-card" style={{ overflow: 'hidden', display: 'flex' }}>
                 {result.clusters.map((cl, i) => {
                   const palette = [
-                    { clr: C.blue,   bg: C.blueBg,   bdr: C.blueBdr,         accentBg: 'rgba(37,99,235,0.06)'  },
-                    { clr: C.green,  bg: C.greenBg,  bdr: '#bbf7d0',         accentBg: 'rgba(22,163,74,0.06)'  },
-                    { clr: C.amber,  bg: C.amberBg,  bdr: '#fde68a',         accentBg: 'rgba(217,119,6,0.06)'  },
-                    { clr: C.purple, bg: C.purpleBg, bdr: '#ddd6fe',         accentBg: 'rgba(124,58,237,0.06)' },
-                    { clr: C.teal,   bg: C.tealBg,   bdr: '#a5f3fc',         accentBg: 'rgba(8,145,178,0.06)'  },
+                    { clr: C.blue,   bg: C.blueBg,   bdr: C.blueBdr,  accentBg: 'rgba(37,99,235,0.07)'  },
+                    { clr: C.green,  bg: C.greenBg,  bdr: '#bbf7d0',  accentBg: 'rgba(22,163,74,0.07)'  },
+                    { clr: C.amber,  bg: C.amberBg,  bdr: '#fde68a',  accentBg: 'rgba(217,119,6,0.07)'  },
+                    { clr: C.purple, bg: C.purpleBg, bdr: '#ddd6fe',  accentBg: 'rgba(124,58,237,0.07)' },
+                    { clr: C.teal,   bg: C.tealBg,   bdr: '#a5f3fc',  accentBg: 'rgba(8,145,178,0.07)'  },
                   ]
                   const p = palette[i % palette.length]
                   return (
                     <div key={cl.clusterName} style={{
-                      background: '#ffffff',
-                      border: `1px solid rgba(0,0,0,0.09)`,
-                      borderLeft: `4px solid ${p.clr}`,
-                      borderRadius: 16,
-                      padding: '16px 18px',
-                      boxShadow: '0 1px 3px rgba(0,0,0,0.07), 0 6px 24px rgba(0,0,0,0.08)',
+                      flex: 1,
+                      borderLeft: i === 0 ? `4px solid ${p.clr}` : `1px solid ${C.border}`,
+                      borderTop: i > 0 ? 'none' : 'none',
                     }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
-                        <span style={{ width: 22, height: 22, borderRadius: 7, background: p.bg, color: p.clr, fontSize: 11, fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>{i + 1}</span>
-                        <p style={{ fontSize: 13, fontWeight: 700, color: C.text1 }}>{cl.clusterName}</p>
+                      {/* Column header */}
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '12px 16px', background: '#f8f8fb', borderBottom: `1px solid ${C.border}` }}>
+                        <span style={{ width: 20, height: 20, borderRadius: 6, background: p.bg, color: p.clr, fontSize: 10.5, fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>{i + 1}</span>
+                        <p style={{ fontSize: 12.5, fontWeight: 700, color: C.text1, lineHeight: 1.3 }}>{cl.clusterName}</p>
                       </div>
-                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5 }}>
+                      {/* Keywords */}
+                      <div style={{ padding: '12px 16px', display: 'flex', flexWrap: 'wrap', gap: 5 }}>
                         {cl.keywords?.map(k => (
                           <span key={k} style={{ background: p.accentBg, border: `1px solid ${p.bdr}`, color: p.clr, padding: '3px 9px', borderRadius: 20, fontSize: 11.5, fontWeight: 600 }}>{k}</span>
                         ))}
