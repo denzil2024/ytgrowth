@@ -272,8 +272,8 @@ function useCompetitorStyles() {
       /* ── accordion ── */
       .comp-accordion-header {
         background: #ffffff;
-        border: 1px solid rgba(0,0,0,0.09);
-        box-shadow: 0 1px 3px rgba(0,0,0,0.07), 0 6px 24px rgba(0,0,0,0.09);
+        border: 1px solid #d8d8e0;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.14), 0 24px 64px rgba(0,0,0,0.18), 0 1px 0 rgba(255,255,255,0.9) inset;
         padding: 16px 20px;
         display: flex;
         align-items: center;
@@ -283,19 +283,19 @@ function useCompetitorStyles() {
         user-select: none;
       }
       .comp-accordion-header:hover {
-        box-shadow: 0 4px 12px rgba(0,0,0,0.10), 0 16px 40px rgba(0,0,0,0.11);
-        border-color: rgba(0,0,0,0.13);
+        box-shadow: 0 8px 28px rgba(0,0,0,0.18), 0 36px 80px rgba(0,0,0,0.22), 0 1px 0 rgba(255,255,255,0.9) inset;
+        border-color: #c0c0cc;
       }
       .comp-accordion-header.closed { border-radius: 20px; }
       .comp-accordion-header.open   { border-radius: 20px 20px 0 0; border-bottom-color: rgba(0,0,0,0.07); }
 
       .comp-accordion-body {
-        border: 1px solid rgba(0,0,0,0.09);
+        border: 1px solid #d8d8e0;
         border-top: none;
         border-radius: 0 0 20px 20px;
         background: #f8f8fb;
         padding: 24px 20px 28px;
-        box-shadow: 0 8px 24px rgba(0,0,0,0.07);
+        box-shadow: 0 8px 24px rgba(0,0,0,0.10);
       }
 
       /* ── section divider ── */
@@ -919,7 +919,17 @@ export default function Competitors() {
                   {/* ── expanded report ── */}
                   {isOpen && (
                     <div className="comp-accordion-body">
-                      <AIAnalysis ai={ai} top5Videos={comp.top_5_videos} />
+                      {ai ? (
+                        <AIAnalysis ai={ai} top5Videos={comp.top_5_videos} />
+                      ) : (
+                        <div style={{ textAlign: 'center', padding: '32px 0' }}>
+                          <p style={{ fontSize: 14, color: '#888', marginBottom: 16 }}>No analysis data. Remove this channel and re-add it to generate a fresh report.</p>
+                          <button onClick={e => handleRemove(e, comp.channel_id)}
+                            style={{ fontSize: 13, fontWeight: 600, color: '#e5251b', background: '#fff5f5', border: '1px solid #fecaca', borderRadius: 100, padding: '8px 20px', cursor: 'pointer', fontFamily: 'inherit' }}>
+                            Remove &amp; re-add manually
+                          </button>
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>
