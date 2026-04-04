@@ -27,15 +27,15 @@ function useKwStyles() {
 
       .kw-card {
         background: #ffffff;
-        border: 1px solid rgba(0,0,0,0.09);
+        border: 1px solid #d8d8e0;
         border-radius: 20px;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.07), 0 6px 24px rgba(0,0,0,0.09);
+        box-shadow: 0 4px 16px rgba(0,0,0,0.14), 0 24px 64px rgba(0,0,0,0.18), 0 1px 0 rgba(255,255,255,0.9) inset;
         transition: box-shadow 0.22s, transform 0.22s, border-color 0.22s;
       }
       .kw-card:hover {
-        box-shadow: 0 4px 12px rgba(0,0,0,0.10), 0 20px 56px rgba(0,0,0,0.13);
-        transform: translateY(-1px);
-        border-color: rgba(0,0,0,0.13);
+        box-shadow: 0 8px 28px rgba(0,0,0,0.18), 0 36px 80px rgba(0,0,0,0.22), 0 1px 0 rgba(255,255,255,0.9) inset;
+        transform: translateY(-2px);
+        border-color: #c0c0cc;
       }
 
       .kw-input {
@@ -231,41 +231,48 @@ export default function Keywords() {
       {result && (
         <div className="kw-in">
 
-          {/* ── Intent summary — compact horizontal card ── */}
-          <div className="kw-card" style={{ padding: '18px 22px', marginBottom: 14, display: 'flex', alignItems: 'stretch', gap: 0 }}>
-            {/* Left: summary text + chips */}
-            <div style={{ flex: 1, minWidth: 0, paddingRight: 22 }}>
-              <p style={{ fontSize: 10, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 6 }}>Search Intent</p>
-              <p style={{ fontSize: 13, fontWeight: 600, color: C.text1, lineHeight: 1.55, marginBottom: 10 }}>{result.seedIntent?.intentSummary}</p>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5 }}>
-                <span className="kw-chip" style={{ color: C.purple, background: C.purpleBg }}>{result.seedIntent?.primaryIntent}</span>
-                <span className="kw-chip" style={{ color: C.teal, background: C.tealBg }}>{result.seedIntent?.contentTypeExpected}</span>
-                <span className="kw-chip" style={{ color: C.blue, background: C.blueBg }}>{result.seedIntent?.funnelStage}</span>
+          {/* ── Search Intent card ── */}
+          <div className="kw-card" style={{ padding: '20px 24px', marginBottom: 14 }}>
+
+            {/* Row 1: label + chips */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
+              <p style={{ fontSize: 10, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.09em' }}>Search Intent</p>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5, justifyContent: 'flex-end' }}>
+                {result.seedIntent?.primaryIntent && <span className="kw-chip" style={{ color: C.purple, background: C.purpleBg }}>{result.seedIntent.primaryIntent}</span>}
+                {result.seedIntent?.contentTypeExpected && <span className="kw-chip" style={{ color: C.teal, background: C.tealBg }}>{result.seedIntent.contentTypeExpected}</span>}
+                {result.seedIntent?.funnelStage && <span className="kw-chip" style={{ color: C.blue, background: C.blueBg }}>{result.seedIntent.funnelStage}</span>}
               </div>
             </div>
 
-            {/* Middle: stats */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: 0, borderLeft: `1px solid ${C.border}`, paddingLeft: 22, paddingRight: 22, flexShrink: 0 }}>
-              {[
-                { label: 'Autocomplete', value: result.rawSuggestionsCount },
-                { label: 'Related',      value: result.serperCount },
-                { label: 'Filtered',     value: result.totalAfterIntentFilter, accent: true },
-              ].map((s, i) => (
-                <div key={i} style={{ textAlign: 'center', paddingLeft: i > 0 ? 20 : 0, borderLeft: i > 0 ? `1px solid ${C.border}` : 'none', paddingRight: 20 }}>
-                  <p style={{ fontSize: 20, fontWeight: 800, color: s.accent ? C.blue : C.text1, letterSpacing: '-0.5px', lineHeight: 1 }}>{s.value ?? '—'}</p>
-                  <p style={{ fontSize: 10, color: C.text3, marginTop: 3 }}>{s.label}</p>
+            {/* Row 2: summary text */}
+            <p style={{ fontSize: 14, fontWeight: 500, color: C.text1, lineHeight: 1.65, marginBottom: 16 }}>{result.seedIntent?.intentSummary}</p>
+
+            {/* Row 3: stats + top pick */}
+            <div style={{ display: 'flex', alignItems: 'stretch', gap: 0, borderTop: `1px solid ${C.border}`, paddingTop: 16 }}>
+
+              {/* Stats */}
+              <div style={{ display: 'flex', gap: 0, flex: 1 }}>
+                {[
+                  { label: 'Autocomplete', value: result.rawSuggestionsCount },
+                  { label: 'Related',      value: result.serperCount },
+                  { label: 'Filtered',     value: result.totalAfterIntentFilter, accent: true },
+                ].map((s, i) => (
+                  <div key={i} style={{ textAlign: 'center', flex: 1, paddingLeft: i > 0 ? 16 : 0, borderLeft: i > 0 ? `1px solid ${C.border}` : 'none' }}>
+                    <p style={{ fontSize: 22, fontWeight: 800, color: s.accent ? C.blue : C.text1, letterSpacing: '-0.5px', lineHeight: 1, marginBottom: 4 }}>{s.value ?? '—'}</p>
+                    <p style={{ fontSize: 10.5, color: C.text3 }}>{s.label}</p>
+                  </div>
+                ))}
+              </div>
+
+              {/* Top pick */}
+              {result.topPick && (
+                <div style={{ borderLeft: `1px solid ${C.border}`, paddingLeft: 24, maxWidth: 300, flexShrink: 0 }}>
+                  <p style={{ fontSize: 10, fontWeight: 700, color: C.green, textTransform: 'uppercase', letterSpacing: '0.09em', marginBottom: 6 }}>Top Pick</p>
+                  <p style={{ fontSize: 14, fontWeight: 700, color: C.text1, lineHeight: 1.4, marginBottom: 5 }}>{result.topPick.keyword}</p>
+                  <p style={{ fontSize: 12, color: '#3f6212', lineHeight: 1.6 }}>{result.topPick.whyThisOne}</p>
                 </div>
-              ))}
+              )}
             </div>
-
-            {/* Right: top pick */}
-            {result.topPick && (
-              <div style={{ borderLeft: `1px solid ${C.border}`, paddingLeft: 22, maxWidth: 280, flexShrink: 0, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                <p style={{ fontSize: 10, fontWeight: 700, color: C.green, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 5 }}>Top Pick</p>
-                <p style={{ fontSize: 13.5, fontWeight: 700, color: C.text1, lineHeight: 1.4, marginBottom: 4 }}>{result.topPick.keyword}</p>
-                <p style={{ fontSize: 11.5, color: '#3f6212', lineHeight: 1.5 }}>{result.topPick.whyThisOne}</p>
-              </div>
-            )}
           </div>
 
           {/* ── Keyword table — full width, 4 columns ── */}

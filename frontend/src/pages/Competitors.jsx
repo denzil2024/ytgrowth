@@ -551,7 +551,7 @@ function AIAnalysis({ ai, top5Videos }) {
                       whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{v.title}</p>
                     {why && (
                       <p style={{ fontSize: 11.5, color: '#999', marginTop: 3, lineHeight: 1.4,
-                        whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', fontStyle: 'italic' }}>
+                        whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                         {why}
                       </p>
                     )}
