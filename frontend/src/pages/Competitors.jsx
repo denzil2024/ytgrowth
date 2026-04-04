@@ -932,17 +932,7 @@ export default function Competitors() {
                   {/* ── expanded report ── */}
                   {isOpen && (
                     <div className="comp-accordion-body">
-                      {ai ? (
-                        <AIAnalysis ai={ai} top5Videos={comp.top_5_videos} />
-                      ) : (
-                        <div style={{ textAlign: 'center', padding: '32px 0' }}>
-                          <p style={{ fontSize: 14, color: '#888', marginBottom: 16 }}>No analysis data. Remove this channel and re-add it to generate a fresh report.</p>
-                          <button onClick={e => handleRemove(e, comp.channel_id)}
-                            style={{ fontSize: 13, fontWeight: 600, color: '#e5251b', background: '#fff5f5', border: '1px solid #fecaca', borderRadius: 100, padding: '8px 20px', cursor: 'pointer', fontFamily: 'inherit' }}>
-                            Remove &amp; re-add manually
-                          </button>
-                        </div>
-                      )}
+                      <AIAnalysis ai={ai} top5Videos={comp.top_5_videos} />
                     </div>
                   )}
                 </div>

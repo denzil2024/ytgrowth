@@ -316,7 +316,7 @@ Return ONLY valid JSON, no markdown, no preamble:
         client = anthropic.Anthropic(api_key=os.environ.get("ANTHROPIC_API_KEY"))
         message = client.messages.create(
             model="claude-sonnet-4-6",
-            max_tokens=2048,
+            max_tokens=4096,
             system=(
                 "You are an elite YouTube competitive intelligence analyst. "
                 "Your job is not to describe a competitor — your job is to find the exact gaps, "
