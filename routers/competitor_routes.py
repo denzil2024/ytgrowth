@@ -42,11 +42,6 @@ def analyze_competitor(channel_id: str, request: Request):
     if not data or not creds:
         return JSONResponse({"error": "No channel data. Please login first."}, status_code=404)
 
-    my_channel_id = data.get("channel", {}).get("channel_id", "")
-    gate = check_and_deduct(my_channel_id)
-    if not gate["allowed"]:
-        return JSONResponse({"error": gate["message"], "show_upgrade": True}, status_code=402)
-
     comp_data = fetch_competitor_public_data(creds, channel_id)
     if not comp_data:
         return JSONResponse({"error": "Could not fetch competitor data."}, status_code=404)
