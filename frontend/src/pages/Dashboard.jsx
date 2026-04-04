@@ -65,10 +65,16 @@ function useDashboardStyles() {
       }
 
       .ytg-nav-btn {
-        width: 100%; display: flex; align-items: center; gap: 10px;
-        height: 40px; padding: 0 12px; border-radius: 8px; border: none; cursor: pointer;
+        display: flex; align-items: center; gap: 10px;
+        padding: 10px 14px; border-radius: 10px; cursor: pointer; text-align: left;
         font-size: 13.5px; font-family: 'DM Sans', 'Inter', sans-serif;
-        transition: background 0.15s, color 0.15s; text-align: left;
+        transition: box-shadow 0.18s, transform 0.18s, background 0.15s, border-color 0.15s;
+        border: 1px solid rgba(0,0,0,0.07);
+      }
+      .ytg-nav-btn:hover:not(.active) {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.10), 0 12px 32px rgba(0,0,0,0.09);
+        border-color: rgba(0,0,0,0.10);
       }
 
       .ytg-video-row { transition: background 0.15s; }
@@ -361,24 +367,27 @@ const NAV_ICONS = {
 function NavBtn({ label, active, onClick, badge }) {
   return (
     <button
-      className="ytg-nav-btn"
+      className={`ytg-nav-btn${active ? ' active' : ''}`}
       onClick={onClick}
       style={{
-        margin: '1px 10px',
-        width: 'calc(100% - 20px)',
-        background: active ? '#fef2f2' : 'transparent',
-        color: active ? '#e5251b' : '#6b7280',
-        fontWeight: active ? 500 : 400,
-        borderLeft: active ? '3px solid #e5251b' : '3px solid transparent',
-        paddingLeft: active ? 13 : 12,
+        margin: '3px 14px',
+        width: 'calc(100% - 28px)',
+        background: active ? '#ffffff' : '#ffffff',
+        color: active ? '#e5251b' : '#52525b',
+        fontWeight: active ? 600 : 400,
+        borderLeft: active ? '3px solid #e5251b' : '1px solid rgba(0,0,0,0.07)',
+        paddingLeft: active ? 13 : 14,
+        boxShadow: active
+          ? '0 1px 3px rgba(229,37,27,0.08), 0 6px 20px rgba(229,37,27,0.10)'
+          : '0 1px 3px rgba(0,0,0,0.06), 0 4px 12px rgba(0,0,0,0.06)',
       }}
-      onMouseEnter={e => { if (!active) { e.currentTarget.style.background = '#f9fafb'; e.currentTarget.style.color = '#111114' } }}
-      onMouseLeave={e => { if (!active) { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#6b7280' } }}
+      onMouseEnter={e => { if (!active) { e.currentTarget.style.color = '#111114' } }}
+      onMouseLeave={e => { if (!active) { e.currentTarget.style.color = '#52525b' } }}
     >
-      <span style={{ display: 'flex', flexShrink: 0, opacity: active ? 1 : 0.5, color: active ? '#e5251b' : 'currentColor' }}>{NAV_ICONS[label]}</span>
+      <span style={{ display: 'flex', flexShrink: 0, color: active ? '#e5251b' : '#9ca3af' }}>{NAV_ICONS[label]}</span>
       <span style={{ flex: 1, letterSpacing: '-0.1px' }}>{label}</span>
       {badge > 0 && (
-        <span style={{ background: '#fef3c7', color: '#d97706', border: '1px solid #fde68a', fontSize: 10, fontWeight: 700, padding: '1px 6px', borderRadius: 20, minWidth: 18, textAlign: 'center' }}>{badge}</span>
+        <span style={{ background: '#fef3c7', color: '#d97706', border: '1px solid #fde68a', fontSize: 10, fontWeight: 700, padding: '2px 7px', borderRadius: 20, minWidth: 20, textAlign: 'center' }}>{badge}</span>
       )}
     </button>
   )
@@ -494,51 +503,49 @@ export default function Dashboard() {
 
       {/* ══ SIDEBAR ══════════════════════════════════════════════════════ */}
       <aside style={{
-        width: 272, flexShrink: 0,
-        background: '#f8f8fa',
+        width: 292, flexShrink: 0,
+        background: '#f4f4f7',
         borderRight: '1px solid rgba(0,0,0,0.09)',
         position: 'sticky', top: 0, height: '100vh',
-        boxShadow: '2px 0 4px rgba(0,0,0,0.04), 8px 0 24px rgba(0,0,0,0.08), 20px 0 48px rgba(0,0,0,0.07)',
+        boxShadow: '2px 0 4px rgba(0,0,0,0.05), 8px 0 24px rgba(0,0,0,0.09), 20px 0 48px rgba(0,0,0,0.08)',
         display: 'flex', flexDirection: 'column', overflow: 'hidden',
         zIndex: 10,
       }}>
 
-        {/* Brand */}
-        <div style={{ padding: '20px 18px 14px', display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0 }}>
+        {/* Brand — 16px left edge, logo + wordmark flush */}
+        <div style={{ padding: '20px 16px 14px', display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0 }}>
           <Logo size={28} />
           <span style={{ fontSize: 15, fontWeight: 700, color: '#111114', letterSpacing: '-0.4px', lineHeight: 1 }}>YTGrowth</span>
         </div>
 
-        {/* Channel card — white card on slightly grey sidebar so it pops */}
+        {/* Channel card — avatar left edge matches logo left edge (both at 16px) */}
         {data && (
           <div style={{
             margin: '0 12px 12px',
-            padding: '14px 14px 12px',
+            padding: '14px 14px 12px 16px',
             background: '#ffffff',
             border: '1px solid rgba(0,0,0,0.09)',
-            borderRadius: 14,
-            boxShadow: '0 1px 2px rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.08)',
+            borderRadius: 16,
+            boxShadow: '0 1px 3px rgba(0,0,0,0.07), 0 6px 24px rgba(0,0,0,0.09)',
             flexShrink: 0,
           }}>
-            {/* Avatar + name */}
+            {/* Avatar + name — avatar at 16px from sidebar edge */}
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
               {data.channel.thumbnail
-                ? <img src={data.channel.thumbnail} alt="" style={{ width: 38, height: 38, borderRadius: '50%', objectFit: 'cover', flexShrink: 0, border: '1.5px solid rgba(0,0,0,0.08)' }}/>
-                : <div style={{ width: 38, height: 38, borderRadius: '50%', background: '#fef2f2', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 15, fontWeight: 600, color: '#e5251b', flexShrink: 0 }}>{data.channel.channel_name[0].toUpperCase()}</div>
+                ? <img src={data.channel.thumbnail} alt="" style={{ width: 36, height: 36, borderRadius: '50%', objectFit: 'cover', flexShrink: 0, border: '1.5px solid rgba(0,0,0,0.08)' }}/>
+                : <div style={{ width: 36, height: 36, borderRadius: '50%', background: '#fef2f2', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 600, color: '#e5251b', flexShrink: 0 }}>{data.channel.channel_name[0].toUpperCase()}</div>
               }
               <div style={{ minWidth: 0, flex: 1 }}>
                 <p style={{ fontSize: 13.5, fontWeight: 600, color: '#111114', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', letterSpacing: '-0.2px' }}>{data.channel.channel_name}</p>
                 <p style={{ fontSize: 12, color: '#6b7280', marginTop: 2 }}>{fmtNum(data.channel.subscribers)} subscribers</p>
               </div>
             </div>
-            {/* Divider */}
             <div style={{ height: 1, background: 'rgba(0,0,0,0.06)', marginBottom: 12 }}/>
-            {/* Health */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 7 }}>
               <span style={{ fontSize: 10, fontWeight: 600, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.09em' }}>Channel Health</span>
               <span style={{ fontSize: 11.5, fontWeight: 700, color: scoreColor(score), fontVariantNumeric: 'tabular-nums' }}>{score} / 100</span>
             </div>
-            <div style={{ background: '#edeef0', borderRadius: 6, height: 5, overflow: 'hidden' }}>
+            <div style={{ background: '#e9eaec', borderRadius: 6, height: 5, overflow: 'hidden' }}>
               <div style={{ width: `${score}%`, height: '100%', background: scoreColor(score), borderRadius: 6, transition: 'width 1.2s cubic-bezier(0.34,1.56,0.64,1)' }}/>
             </div>
             <p style={{ fontSize: 11, fontWeight: 600, marginTop: 7, color: scoreColor(score) }}>{scoreLabel(score)}</p>
