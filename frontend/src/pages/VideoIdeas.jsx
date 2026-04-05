@@ -24,22 +24,23 @@ if (typeof document !== 'undefined' && !document.getElementById('ytg-vi-styles')
 
     .vi-idea-card {
       background: #ffffff;
-      border: 1px solid rgba(0,0,0,0.09);
+      border: 1px solid #d8d8e0;
       border-radius: 16px;
       padding: 16px 18px;
       margin-bottom: 9px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08), 0 10px 32px rgba(0,0,0,0.12), 0 1px 0 rgba(255,255,255,0.9) inset;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.14), 0 24px 64px rgba(0,0,0,0.18), 0 1px 0 rgba(255,255,255,0.9) inset;
       transition: box-shadow 0.22s, transform 0.22s, border-color 0.22s, opacity 0.22s;
       animation: viFadeUp 0.3s ease both;
     }
     .vi-idea-card:hover {
-      box-shadow: 0 6px 20px rgba(0,0,0,0.12), 0 24px 56px rgba(0,0,0,0.16), 0 1px 0 rgba(255,255,255,0.9) inset;
+      box-shadow: 0 8px 28px rgba(0,0,0,0.18), 0 36px 80px rgba(0,0,0,0.22), 0 1px 0 rgba(255,255,255,0.9) inset;
       transform: translateY(-2px);
-      border-color: rgba(0,0,0,0.14);
+      border-color: #c0c0cc;
     }
     .vi-idea-card.done {
       opacity: 0.42;
       box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.06);
+      border-color: rgba(0,0,0,0.07);
     }
     .vi-idea-card.done:hover {
       transform: none;
@@ -59,14 +60,17 @@ if (typeof document !== 'undefined' && !document.getElementById('ytg-vi-styles')
 
     .vi-cta-btn {
       display: inline-flex; align-items: center; gap: 6px;
-      padding: 7px 14px; border-radius: 100px;
+      padding: 7px 16px; border-radius: 100px;
       font-size: 12px; font-weight: 700; font-family: inherit;
-      background: #fff5f5; color: #e5251b;
-      border: 1px solid #fecaca; cursor: pointer;
+      background: #e5251b; color: #fff;
+      border: none; cursor: pointer;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 4px 14px rgba(229,37,27,0.32);
       transition: all 0.18s;
     }
     .vi-cta-btn:hover {
-      background: #e5251b; color: #fff; border-color: #e5251b;
+      filter: brightness(1.07);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15), 0 8px 28px rgba(229,37,27,0.42);
+      transform: translateY(-1px);
     }
 
     .vi-check-btn {
