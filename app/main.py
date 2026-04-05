@@ -1,4 +1,6 @@
 import os
+import threading
+from contextlib import asynccontextmanager
 from pathlib import Path
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -7,6 +9,16 @@ from fastapi.responses import FileResponse
 from starlette.middleware.sessions import SessionMiddleware
 from dotenv import load_dotenv
 load_dotenv()
+
+
+@asynccontextmanager
+async def lifespan(_):
+    from app.scheduler import scheduler, backfill_existing_users
+    threading.Thread(target=backfill_existing_users, daemon=True).start()
+    scheduler.start()
+    print("[scheduler] Jobs started: monthly_resets + weekly_reports")
+    yield
+    scheduler.shutdown(wait=False)
 
 from routers import auth
 from routers import competitor_routes
@@ -18,7 +30,7 @@ from routers import thumbnail_routes
 from routers import email_routes
 from routers import report_routes
 
-app = FastAPI(title="YTGrowth API", redirect_slashes=False)
+app = FastAPI(title="YTGrowth API", redirect_slashes=False, lifespan=lifespan)
 
 # SessionMiddleware must be added before CORS so the session cookie is available
 # on every request, including the OAuth callback redirect.
@@ -53,14 +65,6 @@ app.include_router(thumbnail_routes.router,  prefix="/thumbnail")
 app.include_router(email_routes.router)                          # /unsubscribe, /resubscribe
 app.include_router(report_routes.router,     prefix="/api/reports")
 
-
-# ── Unified background scheduler ──────────────────────────────────────────────
-try:
-    from app.scheduler import scheduler as _scheduler
-    _scheduler.start()
-    print("[scheduler] Jobs started: monthly_resets + weekly_reports")
-except Exception as _e:
-    print(f"[scheduler] Failed to start: {_e}")
 
 
 @app.get("/health")

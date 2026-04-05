@@ -148,3 +148,55 @@ scheduler.add_job(
     id="weekly_reports",
     replace_existing=True,
 )
+
+
+# ── One-time backfill ─────────────────────────────────────────────────────────
+
+def backfill_existing_users():
+    """
+    Runs ONCE on startup if the weekly_reports table is empty.
+    Generates a report immediately for every existing connected user
+    who does not yet have one.
+
+    Safe to deploy multiple times — the total_existing > 0 guard
+    means it exits immediately on all subsequent starts.
+    """
+    from database.models import SessionLocal, UserSession, WeeklyReport
+    from app.weekly_report import generate_and_send_report
+
+    db = SessionLocal()
+    try:
+        total_existing = db.query(WeeklyReport).count()
+        if total_existing > 0:
+            return
+
+        print("[backfill] Running first-time backfill for existing users...")
+        all_sessions = db.query(UserSession).all()
+        processed    = 0
+
+        for row in all_sessions:
+            if processed >= 95:
+                break
+            try:
+                user_data  = json.loads(row.user_data_json)
+                channel_id = user_data.get("channel", {}).get("channel_id")
+                email      = user_data.get("email")
+                insights   = user_data.get("insights")
+
+                if not channel_id or not email or not insights:
+                    continue
+
+                if "fallback mode" in str(insights.get("channelSummary", "")).lower():
+                    continue
+
+                generate_and_send_report(channel_id, email, user_data, db)
+                processed += 1
+                print(f"[backfill] Report generated for {channel_id[:8]}")
+
+            except Exception as e:
+                print(f"[backfill] Error: {e}")
+                continue
+
+        print(f"[backfill] Complete — {processed} report(s) generated")
+    finally:
+        db.close()
