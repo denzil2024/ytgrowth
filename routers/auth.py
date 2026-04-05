@@ -345,12 +345,6 @@ def logout(request: Request):
         _user_data.pop(session_id, None)
         _user_creds.pop(session_id, None)
         _pending_flows.pop(session_id, None)
-        try:
-            db = SessionLocal()
-            db.query(UserSession).filter_by(session_id=session_id).delete()
-            db.commit()
-        except Exception:
-            pass
-        finally:
-            db.close()
+        # Keep the DB row intact so re-login can restore cached insights
+        # without triggering a fresh (token-consuming) analysis.
     return RedirectResponse(f"{BASE_URL}")
