@@ -773,6 +773,7 @@ export default function ThumbnailScore({ channelData, onNavigate }) {
   useEffect(() => {
     // Read localStorage synchronously before any async calls
     const prefillRaw = localStorage.getItem('ytg_prefill_idea')
+    const hadPrefill = !!prefillRaw
     if (prefillRaw) {
       localStorage.removeItem('ytg_prefill_idea')
       try { setPreFill(JSON.parse(prefillRaw)) } catch {}
@@ -794,10 +795,10 @@ export default function ThumbnailScore({ channelData, onNavigate }) {
         setVideoIdeas(viData.ideas)
         setHasIdeas(true)
       }
-      // History
+      // History — skip restore if user came via "Score Thumbnail" to go straight to upload
       const analyses = histData.analyses || []
       setHistory(analyses)
-      if (analyses.length > 0) {
+      if (!hadPrefill && analyses.length > 0) {
         setAnalysis(analyses[0])
         setState(analyses[0].layer2_scores ? 'ready2' : 'ready1')
         setInitTopic(analyses[0].confirmed_keyword || '')
