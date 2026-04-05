@@ -427,19 +427,8 @@ class ClearBody(BaseModel):
 
 @router.post("/clear")
 def clear_thumbnail(body: ClearBody, request: Request):
+    """Kept for backward compatibility. Cleared_at logic removed — use /delete instead."""
     _, creds, channel_id, _ = _get_channel_data(request)
     if not creds:
         return JSONResponse({"error": "Not authenticated."}, status_code=401)
-
-    db = SessionLocal()
-    try:
-        row = db.query(ThumbnailAnalysis).filter_by(
-            id=body.thumbnail_id, channel_id=channel_id
-        ).first()
-        if not row:
-            return JSONResponse({"error": "Not found."}, status_code=404)
-        row.cleared_at = datetime.datetime.now(datetime.timezone.utc)
-        db.commit()
-        return JSONResponse({"ok": True})
-    finally:
-        db.close()
+    return JSONResponse({"ok": True})

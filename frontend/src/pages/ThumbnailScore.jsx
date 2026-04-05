@@ -470,7 +470,7 @@ function HistoryPanel({ history, activeId, onSelect, onDelete }) {
               </span>
               {item.linked_video_idea?.thumbnail_ready && (
                 <span style={{ fontSize: 10, fontWeight: 500, color: '#16a34a',
-                               background: '#f0fdf4', borderRadius: 20, padding: '2px 7px', flexShrink: 0 }}>
+                               background: '#dcfce7', borderRadius: 20, padding: '2px 6px', flexShrink: 0 }}>
                   Ready
                 </span>
               )}
@@ -842,7 +842,7 @@ export default function ThumbnailScore({ channelData, onNavigate }) {
       if (!r.ok || d.error) throw new Error(d.error || 'Upload failed')
       setAnalysis(d.analysis)
       setMarkedReady(false)
-      if (d.already_analyzed) setDupMsg('This thumbnail was analyzed before. Loading your saved results.')
+      if (d.already_analyzed) setDupMsg('This thumbnail was analyzed before. Here are your saved results.')
       setState(d.analysis.layer2_scores ? 'ready2' : 'ready1')
       // Refresh history
       fetch('/thumbnail/history', { credentials: 'include' }).then(r => r.json())
@@ -977,16 +977,11 @@ export default function ThumbnailScore({ channelData, onNavigate }) {
         </div>
       )}
 
-      {/* Duplicate banner */}
+      {/* Duplicate message */}
       {dupMessage && (
-        <div style={{ background: C.blueBg, border: `1px solid ${C.blueBdr}`, borderRadius: 12,
-                      padding: '10px 16px', marginBottom: 16, fontSize: 13, color: C.blue,
-                      display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <span>{dupMessage}</span>
-          <button onClick={() => setDupMsg('')}
-            style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 16,
-                     color: '#93c5fd', padding: '0 0 0 8px', fontFamily: 'inherit', lineHeight: 1 }}>×</button>
-        </div>
+        <p style={{ fontSize: 14, color: '#6b7280', fontWeight: 400, marginBottom: 14 }}>
+          {dupMessage}
+        </p>
       )}
 
       {/* Upload New overlay (shown when user clicks Upload New while results are visible) */}
