@@ -292,6 +292,7 @@ def get_or_build_benchmark_pool(
     keyword: str,
     fmt: str,
     size_bracket: str,
+    competitor_context: dict | None = None,
 ) -> dict | None:
     """
     Return a valid (unexpired) benchmark pool or build and cache a new one.
@@ -568,6 +569,7 @@ def run_layer2(
     benchmark: dict,
     channel_info: dict,
     video_title: str = "",
+    linked_video_idea: dict | None = None,
 ) -> dict:
     """
     Call Claude vision with the thumbnail + top 3 benchmark thumbnails.
@@ -608,6 +610,28 @@ def run_layer2(
                 "source": {"type": "base64", "media_type": "image/jpeg", "data": b64},
             })
 
+    # Build video idea context block (inserted into prompt if available)
+    if linked_video_idea:
+        _vi = linked_video_idea
+        video_idea_block = f"""
+
+VIDEO IDEA CONTEXT (from competitor research):
+This thumbnail is for a specific video idea that was identified through competitor gap analysis.
+
+Video title: "{_vi.get('title', '')}"
+Target keyword: "{_vi.get('targetKeyword', '')}"
+Competitor gap this exploits: "{_vi.get('angle', '')}"
+Opportunity score: {_vi.get('opportunityScore', 0)}/100
+Source: {_vi.get('source', 'competitor')}
+
+This means the thumbnail is directly competing against channels already ranking for "{_vi.get('targetKeyword', '')}".
+The top 3 benchmark thumbnails shown above are from those exact competing channels.
+
+When scoring Feed Distinctiveness and Click Psychology, reference the specific competitor gap this video is designed to exploit. Tell the user if their thumbnail will actually win against the specific competition identified, not just the niche in general.
+"""
+    else:
+        video_idea_block = ""
+
     # Build text prompt
     l1_face = layer1.get("face", {})
     l1_text = layer1.get("text_presence", {})
@@ -646,7 +670,7 @@ Score this thumbnail on exactly these 6 dimensions:
 Do title and thumbnail tell DIFFERENT parts of the same story? Score 0 if no title provided.
 
 6. FEED DISTINCTIVENESS (0-10): Based on the benchmark thumbnails shown — would this stand out? Identify the single most distinctive element or explain exactly why it blends in.
-
+{video_idea_block}
 For each dimension provide: score (0-10), verdict (one specific sentence referencing exact visual elements), fix (one direct actionable change if score < 8 — name exact colors, words, positions), vs_benchmark (one sentence comparing against top performers).
 
 Also provide: overallVerdict (2 honest sentences), biggestWin (single strongest element), biggestFix (highest impact single change), emotionLabel (1-2 words: e.g. "Strong shock"), feedPosition ("stands out"|"blends in"|"disappears"), clickPrediction ("above niche average"|"at niche average"|"below niche average").

@@ -1,10 +1,11 @@
 """
 Thumbnail IQ API routes.
 
-POST /thumbnail/upload      — upload image, run Layer 1, return technical score
-POST /thumbnail/analyze     — run Layer 2 Claude analysis (costs 1 credit)
-GET  /thumbnail/latest      — load most recent non-cleared analysis
-POST /thumbnail/clear       — soft-delete (sets cleared_at)
+POST /thumbnail/upload       — upload image, run Layer 1, return technical score
+POST /thumbnail/analyze      — run Layer 2 Claude analysis (costs 1 credit)
+GET  /thumbnail/latest       — load most recent non-cleared analysis
+GET  /thumbnail/video-ideas  — load saved video ideas for the dropdown (free)
+POST /thumbnail/clear        — soft-delete (sets cleared_at)
 """
 
 import json
@@ -14,6 +15,7 @@ import datetime
 
 from fastapi import APIRouter, Request, File, UploadFile, Form
 from fastapi.responses import JSONResponse
+from pydantic import BaseModel
 
 from routers.auth import get_session
 from database.models import SessionLocal, ThumbnailAnalysis
@@ -36,24 +38,25 @@ router = APIRouter()
 
 def _row_to_dict(row: ThumbnailAnalysis) -> dict:
     return {
-        "id":                 row.id,
-        "channel_id":         row.channel_id,
-        "thumbnail_hash":     row.thumbnail_hash,
-        "thumbnail_b64":      row.thumbnail_b64,
-        "video_title":        row.video_title,
-        "confirmed_keyword":  row.confirmed_keyword,
-        "format":             row.format,
-        "size_bracket":       row.size_bracket,
-        "uploaded_at":        row.uploaded_at.isoformat() if row.uploaded_at else None,
-        "last_analyzed_at":   row.last_analyzed_at.isoformat() if row.last_analyzed_at else None,
-        "layer1_scores":      json.loads(row.layer1_scores)      if row.layer1_scores      else None,
-        "layer2_scores":      json.loads(row.layer2_scores)      if row.layer2_scores      else None,
+        "id":                   row.id,
+        "channel_id":           row.channel_id,
+        "thumbnail_hash":       row.thumbnail_hash,
+        "thumbnail_b64":        row.thumbnail_b64,
+        "video_title":          row.video_title,
+        "confirmed_keyword":    row.confirmed_keyword,
+        "format":               row.format,
+        "size_bracket":         row.size_bracket,
+        "uploaded_at":          row.uploaded_at.isoformat() if row.uploaded_at else None,
+        "last_analyzed_at":     row.last_analyzed_at.isoformat() if row.last_analyzed_at else None,
+        "layer1_scores":        json.loads(row.layer1_scores)        if row.layer1_scores        else None,
+        "layer2_scores":        json.loads(row.layer2_scores)        if row.layer2_scores        else None,
         "benchmark_comparison": json.loads(row.benchmark_comparison) if row.benchmark_comparison else None,
-        "algorithm_score":    row.algorithm_score,
-        "claude_score":       row.claude_score,
-        "final_score":        row.final_score,
-        "niche_avg_score":    row.niche_avg_score,
-        "user_percentile":    row.user_percentile,
+        "algorithm_score":      row.algorithm_score,
+        "claude_score":         row.claude_score,
+        "final_score":          row.final_score,
+        "niche_avg_score":      row.niche_avg_score,
+        "user_percentile":      row.user_percentile,
+        "linked_video_idea":    json.loads(row.linked_video_idea)    if row.linked_video_idea    else None,
     }
 
 
@@ -68,6 +71,52 @@ def _get_channel_data(request: Request):
     return data, creds, channel_id, subs
 
 
+# ─── GET /thumbnail/video-ideas ───────────────────────────────────────────────
+
+@router.get("/video-ideas")
+def get_video_ideas_for_dropdown(request: Request, channel_id: str = ""):
+    """
+    Returns saved video ideas for the thumbnail upload dropdown.
+    Free — no credit charged. Read-only from DB.
+    """
+    data, creds, session_channel_id, _ = _get_channel_data(request)
+    if not creds:
+        return JSONResponse({"error": "Not authenticated."}, status_code=401)
+
+    effective_channel_id = channel_id or session_channel_id
+    if not effective_channel_id:
+        return JSONResponse({"ideas": [], "has_ideas": False})
+
+    from database.models import ChannelVideoIdeas
+
+    db = SessionLocal()
+    try:
+        row = (
+            db.query(ChannelVideoIdeas)
+            .filter_by(channel_id=effective_channel_id)
+            .order_by(ChannelVideoIdeas.last_updated.desc())
+            .first()
+        )
+        if not row:
+            return JSONResponse({"ideas": [], "has_ideas": False})
+
+        try:
+            ideas = json.loads(row.ideas_json)
+        except Exception:
+            ideas = []
+
+        if not ideas:
+            return JSONResponse({"ideas": [], "has_ideas": False})
+
+        return JSONResponse({
+            "ideas":        ideas,
+            "has_ideas":    True,
+            "last_updated": row.last_updated.isoformat() if row.last_updated else None,
+        })
+    finally:
+        db.close()
+
+
 # ─── POST /thumbnail/upload ────────────────────────────────────────────────────
 
 @router.post("/upload")
@@ -76,6 +125,8 @@ async def upload_thumbnail(
     file:              UploadFile = File(...),
     video_title:       str        = Form(default=""),
     confirmed_keyword: str        = Form(default=""),
+    video_idea_id:     str        = Form(default=""),
+    video_idea_data:   str        = Form(default=""),
 ):
     data, creds, channel_id, subs = _get_channel_data(request)
     if not creds:
@@ -91,6 +142,21 @@ async def upload_thumbnail(
     thumb_hash = md5_hash(image_bytes)
     thumb_b64  = base64.b64encode(image_bytes).decode()
 
+    # ── Parse video idea data ─────────────────────────────────────────────────
+    linked_idea = None
+    if video_idea_data.strip():
+        try:
+            linked_idea = json.loads(video_idea_data)
+        except Exception:
+            pass
+
+    idea_rank = None
+    if video_idea_id.strip():
+        try:
+            idea_rank = int(video_idea_id)
+        except (ValueError, TypeError):
+            pass
+
     db = SessionLocal()
     try:
         # ── Check for existing result for this exact image ────────────────────
@@ -104,10 +170,9 @@ async def upload_thumbnail(
                 "analysis": _row_to_dict(existing),
             })
 
-        # ── Determine confirmed_keyword ────────────────────────────────────────
+        # ── confirmed_keyword: always sent by frontend; fall back only as safety net
         keyword = confirmed_keyword.strip()
         if not keyword:
-            # Extract from title using seo.py helper
             if video_title.strip():
                 try:
                     from app.seo import _extract_search_terms, _make_client
@@ -116,14 +181,23 @@ async def upload_thumbnail(
                 except Exception:
                     keyword = video_title[:60]
             else:
-                # Fall back to channel name
                 keyword = (data or {}).get("channel", {}).get("channel_name", "youtube")[:60]
 
         fmt          = detect_format(video_title) if video_title else "general"
         size_bracket = get_size_bracket(subs)
 
         # ── Build / load benchmark pool ───────────────────────────────────────
-        benchmark = get_or_build_benchmark_pool(db, creds, keyword, fmt, size_bracket)
+        competitor_context = None
+        if linked_idea:
+            competitor_context = {
+                "targetKeyword": linked_idea.get("targetKeyword", ""),
+                "angle":         linked_idea.get("angle", ""),
+            }
+
+        benchmark = get_or_build_benchmark_pool(
+            db, creds, keyword, fmt, size_bracket,
+            competitor_context=competitor_context,
+        )
 
         # ── Run Layer 1 ────────────────────────────────────────────────────────
         l1 = run_layer1(image_bytes)
@@ -133,8 +207,8 @@ async def upload_thumbnail(
         algo_score = l1.get("algorithm_score", 0)
 
         # ── Benchmark comparison ───────────────────────────────────────────────
-        avgs       = benchmark.get("averages", {}) if benchmark else {}
-        bcomp      = calculate_benchmark_comparison(l1, avgs) if avgs else {}
+        avgs  = benchmark.get("averages", {}) if benchmark else {}
+        bcomp = calculate_benchmark_comparison(l1, avgs) if avgs else {}
 
         # ── Percentile ────────────────────────────────────────────────────────
         niche_avg, percentile = calculate_percentile(db, channel_id, keyword, fmt, size_bracket, algo_score)
@@ -156,6 +230,7 @@ async def upload_thumbnail(
             algorithm_score=algo_score,
             niche_avg_score=niche_avg,
             user_percentile=percentile,
+            linked_video_idea=json.dumps(linked_idea) if linked_idea else None,
         )
         db.add(row)
         db.commit()
@@ -181,11 +256,6 @@ async def upload_thumbnail(
 
 
 # ─── POST /thumbnail/analyze ───────────────────────────────────────────────────
-
-class AnalyzeRequest:
-    pass
-
-from pydantic import BaseModel
 
 class AnalyzeBody(BaseModel):
     thumbnail_id: str
@@ -228,6 +298,14 @@ def analyze_thumbnail(body: AnalyzeBody, request: Request):
             "channel_name": (data or {}).get("channel", {}).get("channel_name", ""),
         }
 
+        # ── Extract linked video idea for richer Claude prompt ─────────────────
+        linked_idea = None
+        if row.linked_video_idea:
+            try:
+                linked_idea = json.loads(row.linked_video_idea)
+            except Exception:
+                pass
+
         # ── Call Claude vision ─────────────────────────────────────────────────
         l2 = run_layer2(
             thumbnail_b64=row.thumbnail_b64,
@@ -235,6 +313,7 @@ def analyze_thumbnail(body: AnalyzeBody, request: Request):
             benchmark=benchmark,
             channel_info=channel_info,
             video_title=row.video_title or "",
+            linked_video_idea=linked_idea,
         )
         if "error" in l2:
             return JSONResponse({"error": l2["error"]}, status_code=500)

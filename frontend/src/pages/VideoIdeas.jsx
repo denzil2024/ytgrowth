@@ -197,7 +197,7 @@ function SkeletonCard({ index }) {
   )
 }
 
-function IdeaCard({ idea, done, onDone, onUseSeo }) {
+function IdeaCard({ idea, done, onDone, onUseSeo, onScoreThumbnail }) {
   return (
     <div className={`vi-idea-card${done ? ' done' : ''}`}>
       <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
@@ -225,7 +225,7 @@ function IdeaCard({ idea, done, onDone, onUseSeo }) {
 
         {/* Main content */}
         <div style={{ flex: 1, minWidth: 0 }}>
-          {/* Title + source badge row */}
+          {/* Title + badges row */}
           <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 10, marginBottom: 6 }}>
             <p style={{
               fontSize: 14.5, fontWeight: 600, color: C.text1,
@@ -234,8 +234,19 @@ function IdeaCard({ idea, done, onDone, onUseSeo }) {
             }}>
               {idea.title}
             </p>
-            <div style={{ flexShrink: 0, paddingTop: 2 }}>
+            <div style={{ flexShrink: 0, paddingTop: 2, display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 4 }}>
               <SourceBadge source={idea.source} />
+              {idea.thumbnail_ready && (
+                <span style={{
+                  fontSize: 10, fontWeight: 700,
+                  color: C.green, background: C.greenBg,
+                  border: '1px solid #bbf7d0',
+                  borderRadius: 100, padding: '2px 8px',
+                  whiteSpace: 'nowrap',
+                }}>
+                  Thumbnail Ready · {idea.thumbnail_score}/100
+                </span>
+              )}
             </div>
           </div>
 
@@ -251,14 +262,29 @@ function IdeaCard({ idea, done, onDone, onUseSeo }) {
             </p>
           )}
 
-          {/* CTA — only when not done */}
+          {/* CTAs — only when not done */}
           {!done && (
-            <div style={{ marginTop: 10 }}>
+            <div style={{ marginTop: 10, display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center' }}>
               <button className="vi-cta-btn" onClick={() => onUseSeo(idea.title)}>
                 Use in SEO Studio
                 <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
                   <path d="M2 5.5h7M5.5 2l3.5 3.5L5.5 9"/>
                 </svg>
+              </button>
+              <button
+                onClick={() => onScoreThumbnail(idea)}
+                style={{
+                  display: 'inline-flex', alignItems: 'center', gap: 5,
+                  padding: '7px 14px', borderRadius: 100,
+                  fontSize: 12, fontWeight: 700, fontFamily: 'inherit',
+                  background: '#f0f0f5', color: C.text2,
+                  border: '1px solid rgba(0,0,0,0.1)', cursor: 'pointer',
+                  transition: 'all 0.18s',
+                }}
+                onMouseEnter={e => { e.currentTarget.style.background = '#e4e4ec' }}
+                onMouseLeave={e => { e.currentTarget.style.background = '#f0f0f5' }}
+              >
+                Score Thumbnail →
               </button>
             </div>
           )}
@@ -449,6 +475,11 @@ export default function VideoIdeas({ onNavigate }) {
     if (onNavigate) onNavigate('SEO Studio')
   }
 
+  function handleScoreThumbnail(idea) {
+    try { localStorage.setItem('ytg_prefill_idea', JSON.stringify(idea)) } catch {}
+    if (onNavigate) onNavigate('Thumbnail Score')
+  }
+
   const sourceLabel = {
     competitor: 'Based on competitor research',
     ai:         'AI generated',
@@ -619,6 +650,7 @@ export default function VideoIdeas({ onNavigate }) {
               done={done.has(idea.title)}
               onDone={toggleDone}
               onUseSeo={handleUseSeo}
+              onScoreThumbnail={handleScoreThumbnail}
             />
           ))}
         </div>

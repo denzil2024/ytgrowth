@@ -104,6 +104,7 @@ class ThumbnailAnalysis(Base):
     niche_avg_score    = Column(Float,   nullable=True)
     user_percentile    = Column(Float,   nullable=True)
     cleared_at         = Column(DateTime, nullable=True)
+    linked_video_idea  = Column(Text, nullable=True)    # JSON — full idea object if one was selected
 
 
 class NicheBenchmarkPool(Base):
@@ -137,3 +138,15 @@ if DATABASE_URL.startswith("postgres://"):
 engine = create_engine(DATABASE_URL)
 Base.metadata.create_all(engine)
 SessionLocal = sessionmaker(bind=engine)
+
+# ── Incremental migrations (idempotent) ───────────────────────────────────────
+from sqlalchemy import text as _text
+with engine.connect() as _conn:
+    for _stmt in [
+        "ALTER TABLE thumbnail_analyses ADD COLUMN linked_video_idea TEXT",
+    ]:
+        try:
+            _conn.execute(_text(_stmt))
+            _conn.commit()
+        except Exception:
+            pass  # Column already exists

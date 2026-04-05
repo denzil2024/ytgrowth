@@ -239,6 +239,70 @@ def seed_video_ideas(body: SeedBody, request: Request):
         db.close()
 
 
+class MarkReadyBody(BaseModel):
+    channel_id:   str = ""
+    idea_rank:    int
+    thumbnail_id: str
+
+
+@router.post("/mark-ready")
+def mark_idea_ready(body: MarkReadyBody, request: Request):
+    """
+    Mark a video idea as Thumbnail Ready after Layer 2 completes.
+    Stores thumbnail_ready=true, thumbnail_score, thumbnail_id on the idea.
+    Free — no credit charged.
+    """
+    data, creds = get_session(request.session.get("session_id"))
+    if not data or not creds:
+        return JSONResponse({"error": "Not authenticated."}, status_code=401)
+
+    channel_id = data.get("channel", {}).get("channel_id", "")
+    if not channel_id:
+        return JSONResponse({"error": "No channel_id."}, status_code=400)
+
+    db = SessionLocal()
+    try:
+        # Get the final score from ThumbnailAnalysis
+        from database.models import ThumbnailAnalysis
+        thumb = db.query(ThumbnailAnalysis).filter_by(
+            id=body.thumbnail_id, channel_id=channel_id
+        ).first()
+        if not thumb:
+            return JSONResponse({"error": "Thumbnail not found."}, status_code=404)
+
+        final_score = thumb.final_score or 0
+
+        # Load and update ideas
+        row = db.query(ChannelVideoIdeas).filter_by(channel_id=channel_id).first()
+        if not row:
+            return JSONResponse({"error": "No ideas found."}, status_code=404)
+
+        try:
+            ideas = json.loads(row.ideas_json)
+        except Exception:
+            return JSONResponse({"error": "Invalid ideas data."}, status_code=500)
+
+        updated = False
+        for idea in ideas:
+            if idea.get("rank") == body.idea_rank:
+                idea["thumbnail_ready"] = True
+                idea["thumbnail_score"] = final_score
+                idea["thumbnail_id"]    = body.thumbnail_id
+                updated = True
+                break
+
+        if not updated:
+            return JSONResponse({"error": "Idea rank not found."}, status_code=404)
+
+        row.ideas_json   = json.dumps(ideas)
+        row.last_updated = datetime.datetime.now(datetime.timezone.utc)
+        db.commit()
+
+        return JSONResponse({"success": True, "thumbnail_score": final_score})
+    finally:
+        db.close()
+
+
 class RefreshBody(BaseModel):
     channel_id: str = ""
 
