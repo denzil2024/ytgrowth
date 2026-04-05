@@ -505,10 +505,10 @@ export default function Dashboard() {
       {/* ══ SIDEBAR ══════════════════════════════════════════════════════ */}
       <aside style={{
         width: 292, flexShrink: 0,
-        background: '#f4f4f7',
-        borderRight: '1px solid rgba(0,0,0,0.09)',
+        background: '#f3f3f7',
+        borderRight: '1px solid rgba(0,0,0,0.11)',
         position: 'sticky', top: 0, height: '100vh',
-        boxShadow: '2px 0 4px rgba(0,0,0,0.05), 8px 0 24px rgba(0,0,0,0.09), 20px 0 48px rgba(0,0,0,0.08)',
+        boxShadow: '2px 0 6px rgba(0,0,0,0.10), 10px 0 32px rgba(0,0,0,0.18), 28px 0 72px rgba(0,0,0,0.16)',
         display: 'flex', flexDirection: 'column', overflow: 'hidden',
         zIndex: 10,
       }}>
@@ -525,9 +525,9 @@ export default function Dashboard() {
             margin: '0 12px 12px',
             padding: '14px 14px 12px 16px',
             background: '#ffffff',
-            border: '1px solid rgba(0,0,0,0.09)',
+            border: '1px solid rgba(0,0,0,0.10)',
             borderRadius: 16,
-            boxShadow: '0 1px 3px rgba(0,0,0,0.07), 0 6px 24px rgba(0,0,0,0.09)',
+            boxShadow: '0 1px 3px rgba(0,0,0,0.10), 0 4px 14px rgba(0,0,0,0.13), 0 16px 40px rgba(0,0,0,0.16), 0 1px 0 rgba(255,255,255,0.85) inset',
             flexShrink: 0,
           }}>
             {/* Avatar + name — avatar at 16px from sidebar edge */}
@@ -588,9 +588,9 @@ export default function Dashboard() {
             margin: '8px 12px',
             padding: '14px 16px',
             background: '#ffffff',
-            border: '1px solid rgba(0,0,0,0.09)',
+            border: '1px solid rgba(0,0,0,0.10)',
             borderRadius: 14,
-            boxShadow: '0 4px 16px rgba(0,0,0,0.12), 0 24px 48px rgba(0,0,0,0.14), 0 1px 0 rgba(255,255,255,0.9) inset',
+            boxShadow: '0 1px 3px rgba(0,0,0,0.10), 0 4px 14px rgba(0,0,0,0.13), 0 16px 40px rgba(0,0,0,0.16), 0 1px 0 rgba(255,255,255,0.85) inset',
             flexShrink: 0,
           }}>
             <UsageBar
