@@ -116,39 +116,207 @@ const L1_META = {
   vibrancy:        { label: 'Color Vibrancy',    max: 5  },
 }
 
+function getL1Explanation(keyName, score, benchFaceRate, benchTextRate) {
+  switch (keyName) {
+    case 'dimensions':
+      if (score === 5) return {
+        explanation: 'Your thumbnail is at the correct resolution. YouTube will display it sharply on every device and screen size.',
+        fix: null,
+      }
+      if (score === 3) return {
+        explanation: 'Your thumbnail is the right aspect ratio but not exactly 1280x720 pixels. YouTube may scale it in ways that reduce sharpness.',
+        fix: 'Export your thumbnail at exactly 1280x720 pixels from your editing tool before uploading.',
+      }
+      return {
+        explanation: 'Your thumbnail has the wrong aspect ratio. YouTube will crop or stretch it, cutting off parts of your image.',
+        fix: 'Recreate your thumbnail at 1280x720 pixels with a 16:9 aspect ratio. Any other ratio will be distorted on YouTube.',
+      }
+
+    case 'file_size':
+      if (score === 5) return {
+        explanation: 'Your file size is optimal. It will load fast on all connections and devices.',
+        fix: null,
+      }
+      if (score === 2) return {
+        explanation: 'Your file is larger than the recommended 2MB. It may load slowly for viewers on mobile connections.',
+        fix: 'Compress your thumbnail using a free tool like TinyPNG or Squoosh and re-upload. Aim for under 2MB without visible quality loss.',
+      }
+      return {
+        explanation: 'Your file exceeds 4MB. YouTube may reject it or display a placeholder instead of your thumbnail.',
+        fix: 'Compress your file immediately using TinyPNG or Squoosh. Get it under 2MB before uploading to YouTube.',
+      }
+
+    case 'contrast':
+      if (score === 15) return {
+        explanation: 'Excellent contrast between the light and dark areas of your thumbnail. It will stand out clearly in a crowded feed.',
+        fix: null,
+      }
+      if (score >= 10) return {
+        explanation: 'Your contrast is good but there is room to make the thumbnail punch harder in the feed. Increasing the separation between light and dark areas will improve visibility.',
+        fix: 'In your editing tool, increase the contrast or brightness of your subject against the background. A darker background behind a bright subject works well.',
+      }
+      if (score >= 5) return {
+        explanation: 'Your thumbnail has low contrast. It will look flat next to higher-contrast thumbnails in the same feed and is likely to be skipped.',
+        fix: 'Add a strongly contrasting background color behind your subject. If your subject is bright, use a dark background. If your subject is dark, use a bright or saturated background.',
+      }
+      return {
+        explanation: 'No meaningful contrast was detected. This thumbnail will visually disappear in the feed against any competing video.',
+        fix: 'Rethink the color separation completely. The lightest and darkest areas of your thumbnail need to be dramatically different. Start with a plain colored background and a clearly lit subject.',
+      }
+
+    case 'face': {
+      if (score === 10) return {
+        explanation: 'A clear face was detected covering a strong portion of the thumbnail. Faces consistently drive higher CTR because viewers connect with human expression instantly.',
+        fix: null,
+      }
+      if (score === 6) return {
+        explanation: 'A face was detected but it covers less than 20% of the thumbnail. At thumbnail size on mobile, small faces lose their emotional impact and become hard to read.',
+        fix: 'Crop your thumbnail tighter or physically move closer to the camera when filming your thumbnail shot. The face should be the dominant element, not a small part of a wider scene.',
+      }
+      if (score === 3) {
+        const faceRef = benchFaceRate > 0 ? ` ${benchFaceRate}% of top performers in your niche use a prominent face as the anchor of their thumbnail.` : ''
+        return {
+          explanation: 'A face was detected but it is very small relative to the thumbnail. Viewers will not register the expression at a glance, which removes one of the strongest CTR drivers available.',
+          fix: `Make the face fill at least the left or right half of the thumbnail. Zoom in aggressively.${faceRef}`,
+        }
+      }
+      const faceIntro = benchFaceRate > 0
+        ? `${benchFaceRate}% of top performing videos in your niche use a face. Faces create immediate human connection and are one of the most reliable drivers of higher CTR.`
+        : 'Faces create immediate human connection and are one of the most reliable drivers of higher CTR.'
+      return {
+        explanation: `No face was detected in this thumbnail. ${faceIntro}`,
+        fix: "Consider adding your face or a person's face to this thumbnail. If the video does not feature a person, use a strong object or scene that creates visual tension on its own.",
+      }
+    }
+
+    case 'text_presence': {
+      if (score === 10) return {
+        explanation: 'Text was detected covering an optimal area of your thumbnail. The text is giving viewers additional context that works alongside the visual.',
+        fix: null,
+      }
+      if (score >= 5) return {
+        explanation: 'Text was detected but it covers a small area of the thumbnail. At mobile thumbnail size, small text becomes unreadable and loses its impact on CTR.',
+        fix: 'Make your text significantly larger and bolder. Every word on a thumbnail should be readable when the thumbnail is displayed at 200 pixels wide on a phone screen.',
+      }
+      const textIntro = benchTextRate > 0
+        ? `${benchTextRate}% of top performing videos in your niche use a text overlay. Text gives viewers an additional reason to click beyond the visual alone.`
+        : 'Text gives viewers an additional reason to click beyond the visual alone.'
+      return {
+        explanation: `No text was detected on this thumbnail. ${textIntro}`,
+        fix: 'Add a bold number, a strong question, or a short statement directly on the thumbnail image. Use white or yellow text with a thick black stroke so it reads on any background. Keep it under 5 words.',
+      }
+    }
+
+    case 'text_readability':
+      if (score === 10) return {
+        explanation: 'Your text has excellent contrast against its background. It will be readable on any device and at any thumbnail size.',
+        fix: null,
+      }
+      if (score >= 7) return {
+        explanation: 'Your text is readable but the contrast against its background is borderline. On some screens or in bright conditions, it may be hard to read.',
+        fix: 'Add a thick black stroke around your text or place a semi-transparent dark rectangle behind it. This separates the text from the background on any color.',
+      }
+      if (score >= 4) return {
+        explanation: 'Your text is difficult to read against its background. Viewers scanning the feed will not be able to register the words before moving on.',
+        fix: 'Switch to white or bright yellow text with a thick black stroke applied in your editing tool. Never place light-colored text on a light background or dark text on a dark background.',
+      }
+      return {
+        explanation: 'Text readability could not be measured because no text was detected on this thumbnail.',
+        fix: 'Add text to your thumbnail first, then re-upload for a readability score. See the Text Presence fix above for guidance on what to add.',
+      }
+
+    case 'vibrancy':
+      if (score === 5) return {
+        explanation: 'Your colors are vibrant and will catch the eye in a feed. Strong saturation is one of the clearest signals of a high-performing thumbnail.',
+        fix: null,
+      }
+      if (score === 3) return {
+        explanation: 'Your colors are moderately vibrant but have room to pop more. Slightly muted colors lose energy when placed next to more saturated thumbnails in the same feed.',
+        fix: 'In your editing tool, increase the saturation by 15 to 20 percent and slightly boost the vibrancy. Compare the result to a top performer in your niche and match their energy level.',
+      }
+      if (score === 1) return {
+        explanation: 'Your colors are muted. The thumbnail lacks visual energy and will look dull next to more saturated competitor thumbnails in the same feed row.',
+        fix: 'Significantly boost the saturation and contrast in your editing tool. Consider switching to a background color that is bold and bright. Yellows, reds, and oranges consistently outperform muted or grey-toned backgrounds in YouTube feeds.',
+      }
+      return {
+        explanation: 'Your thumbnail has very flat, desaturated colors. It has almost no visual energy and will be overlooked in any feed.',
+        fix: 'Rethink the color palette entirely. Start with a bold, highly saturated background color and build the composition on top of it. Look at the top 5 thumbnails in your niche and match the energy of their color choices.',
+      }
+
+    default:
+      return { explanation: '', fix: null }
+  }
+}
+
 function L1Row({ keyName, data, benchComp }) {
-  const meta  = L1_META[keyName] || { label: keyName, max: 10 }
-  const score = data?.score ?? 0
-  const max   = meta.max
-  const col   = scoreColor(score, max)
-  const bench = benchComp?.[keyName]
+  const [open, setOpen] = useState(false)
+  const meta      = L1_META[keyName] || { label: keyName, max: 10 }
+  const score     = data?.score ?? 0
+  const max       = meta.max
+  const col       = scoreColor(score, max)
+  const bench     = benchComp?.[keyName]
+  const faceRate  = benchComp?.benchmark_face_rate ?? 0
+  const textRate  = benchComp?.benchmark_text_rate ?? 0
+
+  const { explanation, fix } = getL1Explanation(keyName, score, faceRate, textRate)
+  const hasContent = !!explanation
 
   let indicator = null
   if (bench) {
     const diff = bench.pct_diff ?? 0
-    if (diff >= 0)      indicator = { icon: '✓', color: C.green, label: `Niche avg: ${bench.benchmark}/${max}` }
+    if (diff >= 0)       indicator = { icon: '✓', color: C.green, label: `Niche avg: ${bench.benchmark}/${max}` }
     else if (diff > -20) indicator = { icon: '⚠', color: C.amber, label: `Niche avg: ${bench.benchmark}/${max}` }
     else                 indicator = { icon: '✗', color: C.red,   label: `Niche avg: ${bench.benchmark}/${max}` }
   }
 
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 0',
-                  borderBottom: `1px solid #f0f0f4` }}>
-      <div style={{ width: 130, flexShrink: 0 }}>
-        <p style={{ fontSize: 12.5, fontWeight: 600, color: C.text1 }}>{meta.label}</p>
-      </div>
-      <div style={{ flex: 1 }}>
-        <MiniBar value={score} max={max} color={col}/>
-      </div>
-      <div style={{ width: 48, textAlign: 'right', flexShrink: 0 }}>
-        <span style={{ fontSize: 12, fontWeight: 700, color: col, fontVariantNumeric: 'tabular-nums' }}>
-          {score}/{max}
-        </span>
-      </div>
-      {indicator && (
-        <div style={{ width: 130, flexShrink: 0, display: 'flex', alignItems: 'center', gap: 5 }}>
-          <span style={{ fontSize: 11, color: indicator.color, fontWeight: 700 }}>{indicator.icon}</span>
-          <span style={{ fontSize: 11, color: C.text3 }}>{indicator.label}</span>
+    <div style={{ borderBottom: `1px solid #f0f0f4` }}>
+      <button
+        onClick={() => { if (hasContent) setOpen(o => !o) }}
+        style={{
+          width: '100%', background: 'none', border: 'none',
+          cursor: hasContent ? 'pointer' : 'default',
+          display: 'flex', alignItems: 'center', gap: 12, padding: '10px 0',
+          fontFamily: 'inherit', textAlign: 'left',
+        }}
+      >
+        <div style={{ width: 130, flexShrink: 0 }}>
+          <p style={{ fontSize: 12.5, fontWeight: 600, color: C.text1 }}>{meta.label}</p>
+        </div>
+        <div style={{ flex: 1 }}>
+          <MiniBar value={score} max={max} color={col}/>
+        </div>
+        <div style={{ width: 48, textAlign: 'right', flexShrink: 0 }}>
+          <span style={{ fontSize: 12, fontWeight: 700, color: col, fontVariantNumeric: 'tabular-nums' }}>
+            {score}/{max}
+          </span>
+        </div>
+        {indicator && (
+          <div style={{ width: 130, flexShrink: 0, display: 'flex', alignItems: 'center', gap: 5 }}>
+            <span style={{ fontSize: 11, color: indicator.color, fontWeight: 700 }}>{indicator.icon}</span>
+            <span style={{ fontSize: 11, color: C.text3 }}>{indicator.label}</span>
+          </div>
+        )}
+        {hasContent && (
+          <span style={{ fontSize: 11, color: C.text3, flexShrink: 0 }}>{open ? '▲' : '▼'}</span>
+        )}
+      </button>
+
+      {open && explanation && (
+        <div style={{ paddingBottom: 12 }}>
+          <p style={{ fontSize: 14, color: '#374151', fontWeight: 400, lineHeight: 1.6 }}>
+            {explanation}
+          </p>
+          {fix && (
+            <>
+              <div style={{ borderTop: '0.5px solid rgba(0,0,0,0.06)', margin: '8px 0' }}/>
+              <p style={{ fontSize: 12, fontWeight: 500, color: '#e5251b', marginBottom: 4,
+                          textTransform: 'uppercase', letterSpacing: '0.04em' }}>FIX</p>
+              <p style={{ fontSize: 14, color: '#374151', fontWeight: 400, lineHeight: 1.6 }}>
+                {fix}
+              </p>
+            </>
+          )}
         </div>
       )}
     </div>
@@ -202,8 +370,7 @@ function L2Row({ dimKey, dim }) {
             </p>
           )}
           {dim.vs_benchmark && (
-            <p style={{ fontSize: 11.5, color: C.text3, lineHeight: 1.6, marginBottom: hasFix ? 8 : 0,
-                        fontStyle: 'italic' }}>
+            <p style={{ fontSize: 11.5, color: C.text3, lineHeight: 1.6, marginBottom: hasFix ? 8 : 0 }}>
               vs. top performers: {dim.vs_benchmark}
             </p>
           )}
@@ -226,23 +393,22 @@ function LinkedIdeaCard({ idea }) {
   if (!idea) return null
   return (
     <div style={{
-      background: C.blueBg, border: `0.5px solid #93c5fd`,
+      background: C.blueBg, border: `0.5px solid #bfdbfe`,
       borderRadius: 10, padding: '12px 14px', marginBottom: 16,
     }}>
-      <p style={{ fontSize: 13, fontWeight: 700, color: '#1e3a5f', marginBottom: 4 }}>
+      <p style={{ fontSize: 14, fontWeight: 500, color: '#1e40af', marginBottom: 4 }}>
         Benchmarked for: {idea.title}
       </p>
       {idea.angle && (
-        <p style={{ fontSize: 12, color: '#3b6fa0', marginBottom: 8, lineHeight: 1.5 }}>
+        <p style={{ fontSize: 13, color: '#3b82f6', fontWeight: 400, marginBottom: 8, lineHeight: 1.5 }}>
           {idea.angle}
         </p>
       )}
       <span style={{
-        fontSize: 11, fontWeight: 700, color: C.blue,
-        background: '#dbeafe', border: `1px solid #93c5fd`,
-        borderRadius: 100, padding: '2px 10px',
+        fontSize: 11, fontWeight: 500, color: '#1d4ed8',
+        background: '#dbeafe', borderRadius: 20, padding: '2px 8px',
       }}>
-        Competitor gap · {idea.opportunityScore}/100
+        Competitor gap — {idea.opportunityScore}/100
       </span>
     </div>
   )
@@ -746,7 +912,7 @@ export default function ThumbnailScore({ channelData, onNavigate }) {
                     <p style={{ fontSize: 11.5, color: C.text3, lineHeight: 1.6 }}>
                       Benchmarked against <strong style={{ color: C.text2 }}>top {fmt}</strong> videos
                       {' · '}<strong style={{ color: C.text2 }}>{bracket}</strong> channels
-                      {' · '}<em>"{keyword}"</em>
+                      {' · '}<strong style={{ color: C.text2 }}>"{keyword}"</strong>
                     </p>
                   </div>
                 )}

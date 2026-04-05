@@ -529,6 +529,9 @@ def calculate_benchmark_comparison(layer1: dict, avgs: dict) -> dict:
         else:
             pct_diff = 0
         cmp[key] = {"user": user_score, "benchmark": bench_score, "pct_diff": pct_diff}
+    # Include detection rates so frontend can inject them into static explanations
+    cmp["benchmark_face_rate"] = avgs.get("benchmark_face_detection_rate", 0)
+    cmp["benchmark_text_rate"] = avgs.get("benchmark_text_detection_rate", 0)
     return cmp
 
 
