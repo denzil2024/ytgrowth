@@ -287,7 +287,23 @@ export default function SeoOptimizer() {
   const [descResult, setDescResult]       = useState(saved.descResult || null)
   const [descError, setDescError]         = useState('')
   const [copiedDesc, setCopiedDesc]       = useState(null)
-  const descRef = useRef(null)
+  const descRef      = useRef(null)
+  const titleInputRef = useRef(null)
+  const [prefillBanner, setPrefillBanner] = useState(false)
+
+  // Pre-fill title from Video Ideas tab via localStorage
+  useEffect(() => {
+    try {
+      const prefill = localStorage.getItem('ytg_prefill_title')
+      if (prefill) {
+        localStorage.removeItem('ytg_prefill_title')
+        setTitle(prefill)
+        setPrefillBanner(true)
+        setTimeout(() => titleInputRef.current?.focus(), 80)
+        setTimeout(() => setPrefillBanner(false), 5000)
+      }
+    } catch {}
+  }, [])
 
   useEffect(() => {
     if (result !== null) saveToDisk(title, result, selectedTitle, currentDesc, descResult)
@@ -443,8 +459,19 @@ export default function SeoOptimizer() {
         <FormatTemplates onUse={t => setTitle(t)} />
 
         <div style={{ marginBottom: 18 }}>
+          {prefillBanner && (
+            <div style={{
+              fontSize: 12, fontWeight: 600, color: C.blue,
+              background: C.blueBg, border: `1px solid ${C.blueBdr}`,
+              borderRadius: 8, padding: '7px 12px', marginBottom: 10,
+              display: 'flex', alignItems: 'center', gap: 6,
+            }}>
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><circle cx="6" cy="6" r="5"/><path d="M6 4v3M6 8.5v.5"/></svg>
+              Title pre-filled from Video Ideas
+            </div>
+          )}
           <label style={{ display: 'block', fontSize: 11, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 8 }}>Your video title</label>
-          <input value={title} onChange={e => setTitle(e.target.value)} onKeyDown={e => e.key === 'Enter' && handleSubmitTitle()}
+          <input ref={titleInputRef} value={title} onChange={e => setTitle(e.target.value)} onKeyDown={e => e.key === 'Enter' && handleSubmitTitle()}
             placeholder="e.g. How I grew my YouTube channel to 10k subscribers"
             style={{ width: '100%', padding: '11px 20px', fontSize: 14, border: '1px solid rgba(0,0,0,0.1)', borderRadius: 100, fontFamily: 'inherit', outline: 'none', color: C.text1, background: '#ffffff', boxSizing: 'border-box', transition: 'border-color 0.18s, box-shadow 0.18s', letterSpacing: '-0.1px', boxShadow: '0 1px 3px rgba(0,0,0,0.06), 0 4px 14px rgba(0,0,0,0.06)' }}
             onFocus={e => { e.target.style.borderColor = 'rgba(0,0,0,0.25)'; e.target.style.boxShadow = '0 0 0 4px rgba(0,0,0,0.04), 0 1px 3px rgba(0,0,0,0.07)' }}

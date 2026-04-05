@@ -1,3 +1,4 @@
+import json
 from fastapi import APIRouter, Query, Request
 from fastapi.responses import JSONResponse
 from app.competitors import (
@@ -10,8 +11,29 @@ from routers.auth import get_session
 from app.insights import calculate_upload_frequency
 from app.analysis_gate import check_and_deduct
 from app.utils import compute_like_rate
+from database.models import SessionLocal, CompetitorVideoIdeas
 
 router = APIRouter()
+
+
+def _persist_video_ideas(channel_id: str, competitor_id: str, ideas: list):
+    """Save videoIdeas from a competitor analysis to the DB."""
+    if not ideas:
+        return
+    db = SessionLocal()
+    try:
+        row = CompetitorVideoIdeas(
+            channel_id=channel_id,
+            competitor_id=competitor_id,
+            ideas_json=json.dumps(ideas),
+        )
+        db.add(row)
+        db.commit()
+    except Exception as e:
+        print(f"[competitor_routes] Failed to persist video ideas: {e}")
+        db.rollback()
+    finally:
+        db.close()
 
 
 @router.get("/suggest")
@@ -60,6 +82,10 @@ def analyze_competitor(channel_id: str, request: Request):
 
     if not isinstance(ai_analysis, dict):
         return JSONResponse({"error": f"AI analysis failed: {ai_analysis}"}, status_code=500)
+
+    # Persist video ideas so the Video Ideas tab can pool them for free
+    my_channel_id = data["channel"]["channel_id"]
+    _persist_video_ideas(my_channel_id, channel_id, ai_analysis.get("videoIdeas", []))
 
     return JSONResponse({
         "my_stats": my_stats,

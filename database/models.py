@@ -63,6 +63,25 @@ class UserSubscription(Base):
     updated_at        = Column(DateTime, default=_now, onupdate=_now)
 
 
+class CompetitorVideoIdeas(Base):
+    """Raw videoIdeas extracted from each competitor analysis run."""
+    __tablename__ = "competitor_video_ideas"
+    id            = Column(Integer, primary_key=True)
+    channel_id    = Column(String, nullable=False, index=True)   # the user's channel
+    competitor_id = Column(String, nullable=False)               # the competitor analyzed
+    ideas_json    = Column(Text, nullable=False)                  # JSON array of idea objects
+    created_at    = Column(DateTime, default=_now)
+
+
+class ChannelVideoIdeas(Base):
+    """Final merged/enriched video ideas per channel — single source of truth."""
+    __tablename__ = "channel_video_ideas"
+    channel_id   = Column(String, primary_key=True)
+    ideas_json   = Column(Text, nullable=False)      # JSON array of idea objects
+    source       = Column(String, default="competitor")  # "competitor"|"ai"|"mixed"
+    last_updated = Column(DateTime, default=_now, onupdate=_now)
+
+
 import os
 DATABASE_URL = os.environ.get("DATABASE_URL", "sqlite:///ytgrowth.db")
 # Railway provides postgres:// but SQLAlchemy needs postgresql://
