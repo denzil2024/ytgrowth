@@ -506,9 +506,9 @@ export default function Dashboard() {
       <aside style={{
         width: 316, flexShrink: 0,
         background: '#f3f3f7',
-        borderRight: '1px solid rgba(0,0,0,0.11)',
+        borderRight: '1px solid rgba(0,0,0,0.09)',
         position: 'sticky', top: 0, height: '100vh',
-        boxShadow: '2px 0 6px rgba(0,0,0,0.10), 10px 0 32px rgba(0,0,0,0.18), 28px 0 72px rgba(0,0,0,0.16), inset 8px 0 18px rgba(0,0,0,0.07)',
+        boxShadow: '2px 0 4px rgba(0,0,0,0.07), 8px 0 20px rgba(0,0,0,0.07), inset 5px 0 12px rgba(0,0,0,0.04)',
         display: 'flex', flexDirection: 'column', overflow: 'hidden',
         zIndex: 10,
       }}>
@@ -525,9 +525,9 @@ export default function Dashboard() {
             margin: '0 12px 12px',
             padding: '14px 14px 12px 16px',
             background: '#ffffff',
-            border: '1px solid rgba(0,0,0,0.10)',
+            border: '1px solid rgba(0,0,0,0.08)',
             borderRadius: 16,
-            boxShadow: '0 2px 6px rgba(0,0,0,0.11), 0 6px 20px rgba(0,0,0,0.14), 0 20px 44px rgba(0,0,0,0.17), 0 1px 0 rgba(255,255,255,0.9) inset',
+            boxShadow: '0 1px 3px rgba(0,0,0,0.07), 0 4px 14px rgba(0,0,0,0.09), 0 1px 0 rgba(255,255,255,0.95) inset',
             flexShrink: 0,
           }}>
             {/* Avatar + name — avatar at 16px from sidebar edge */}
@@ -590,9 +590,9 @@ export default function Dashboard() {
             margin: '8px 12px',
             padding: '14px 16px',
             background: '#ffffff',
-            border: '1px solid rgba(0,0,0,0.10)',
+            border: '1px solid rgba(0,0,0,0.08)',
             borderRadius: 14,
-            boxShadow: '0 2px 6px rgba(0,0,0,0.11), 0 6px 20px rgba(0,0,0,0.14), 0 20px 44px rgba(0,0,0,0.17), 0 1px 0 rgba(255,255,255,0.9) inset',
+            boxShadow: '0 1px 3px rgba(0,0,0,0.07), 0 4px 14px rgba(0,0,0,0.09), 0 1px 0 rgba(255,255,255,0.95) inset',
             flexShrink: 0,
           }}>
             <UsageBar
