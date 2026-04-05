@@ -260,12 +260,14 @@ function IdeaCard({ idea, done, onDone, onUseSeo }) {
           )}
         </div>
 
-        {/* Opportunity score — AI ideas only */}
-        {idea.source === 'ai' && idea.opportunityScore && (
-          <div style={{ flexShrink: 0 }}>
-            <ScorePill score={idea.opportunityScore} />
-          </div>
-        )}
+        {/* Opportunity score */}
+        <div style={{ flexShrink: 0 }}>
+          <ScorePill score={
+            idea.source === 'ai' && idea.opportunityScore
+              ? idea.opportunityScore
+              : Math.max(65, 85 - (idea.rank - 1) * 2)
+          } />
+        </div>
 
       </div>
     </div>
