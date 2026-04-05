@@ -28,14 +28,22 @@ if (typeof document !== 'undefined' && !document.getElementById('ytg-vi-styles')
       border-radius: 16px;
       padding: 16px 18px;
       margin-bottom: 9px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 6px 20px rgba(0,0,0,0.08);
-      transition: box-shadow 0.2s, transform 0.2s, border-color 0.2s;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08), 0 10px 32px rgba(0,0,0,0.12), 0 1px 0 rgba(255,255,255,0.9) inset;
+      transition: box-shadow 0.22s, transform 0.22s, border-color 0.22s, opacity 0.22s;
       animation: viFadeUp 0.3s ease both;
     }
     .vi-idea-card:hover {
-      box-shadow: 0 4px 12px rgba(0,0,0,0.10), 0 18px 48px rgba(0,0,0,0.12);
-      transform: translateY(-1px);
-      border-color: rgba(0,0,0,0.13);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.12), 0 24px 56px rgba(0,0,0,0.16), 0 1px 0 rgba(255,255,255,0.9) inset;
+      transform: translateY(-2px);
+      border-color: rgba(0,0,0,0.14);
+    }
+    .vi-idea-card.done {
+      opacity: 0.42;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.06);
+    }
+    .vi-idea-card.done:hover {
+      transform: none;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.06);
     }
 
     .vi-skeleton {
@@ -53,13 +61,22 @@ if (typeof document !== 'undefined' && !document.getElementById('ytg-vi-styles')
       display: inline-flex; align-items: center; gap: 6px;
       padding: 7px 14px; border-radius: 100px;
       font-size: 12px; font-weight: 700; font-family: inherit;
-      background: #eff6ff; color: #2563eb;
-      border: 1px solid #bfdbfe; cursor: pointer;
+      background: #fff5f5; color: #e5251b;
+      border: 1px solid #fecaca; cursor: pointer;
       transition: all 0.18s;
     }
     .vi-cta-btn:hover {
-      background: #2563eb; color: #fff; border-color: #2563eb;
+      background: #e5251b; color: #fff; border-color: #e5251b;
     }
+
+    .vi-check-btn {
+      width: 22px; height: 22px; border-radius: 6px; flex-shrink: 0;
+      border: 1.5px solid rgba(0,0,0,0.18); background: #fff;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; transition: all 0.15s; margin-top: 2px;
+    }
+    .vi-check-btn:hover { border-color: #16a34a; background: #f0fdf4; }
+    .vi-check-btn.checked { background: #16a34a; border-color: #16a34a; }
   `
   document.head.appendChild(s)
 }
@@ -176,30 +193,43 @@ function SkeletonCard({ index }) {
   )
 }
 
-function IdeaCard({ idea, onUseSeo }) {
+function IdeaCard({ idea, done, onDone, onUseSeo }) {
   return (
-    <div className="vi-idea-card">
-      <div style={{ display: 'flex', gap: 14, alignItems: 'flex-start' }}>
+    <div className={`vi-idea-card${done ? ' done' : ''}`}>
+      <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
+
+        {/* Checkbox */}
+        <button
+          className={`vi-check-btn${done ? ' checked' : ''}`}
+          onClick={() => onDone(idea.title)}
+          title={done ? 'Mark incomplete' : 'Mark as done'}
+        >
+          {done && (
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M2 6l3 3 5-5"/>
+            </svg>
+          )}
+        </button>
 
         {/* Rank */}
         <div style={{
-          fontSize: 18, fontWeight: 800, color: C.text4,
-          minWidth: 28, paddingTop: 1, textAlign: 'center', flexShrink: 0,
+          fontSize: 17, fontWeight: 800, color: C.text4,
+          minWidth: 22, paddingTop: 2, textAlign: 'center', flexShrink: 0,
         }}>
           {idea.rank}
         </div>
 
         {/* Main content */}
         <div style={{ flex: 1, minWidth: 0 }}>
-          {/* Title row */}
+          {/* Title + source badge row */}
           <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 10, marginBottom: 6 }}>
             <p style={{
               fontSize: 14.5, fontWeight: 600, color: C.text1,
               lineHeight: 1.4, margin: 0,
+              textDecoration: done ? 'line-through' : 'none',
             }}>
               {idea.title}
             </p>
-            {/* Source badge — top right */}
             <div style={{ flexShrink: 0, paddingTop: 2 }}>
               <SourceBadge source={idea.source} />
             </div>
@@ -217,21 +247,25 @@ function IdeaCard({ idea, onUseSeo }) {
             </p>
           )}
 
-          {/* CTA */}
-          <div style={{ marginTop: 10 }}>
-            <button className="vi-cta-btn" onClick={() => onUseSeo(idea.title)}>
-              Use in SEO Studio
-              <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                <path d="M2 5.5h7M5.5 2l3.5 3.5L5.5 9"/>
-              </svg>
-            </button>
-          </div>
+          {/* CTA — only when not done */}
+          {!done && (
+            <div style={{ marginTop: 10 }}>
+              <button className="vi-cta-btn" onClick={() => onUseSeo(idea.title)}>
+                Use in SEO Studio
+                <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                  <path d="M2 5.5h7M5.5 2l3.5 3.5L5.5 9"/>
+                </svg>
+              </button>
+            </div>
+          )}
         </div>
 
-        {/* Opportunity score */}
-        <div style={{ flexShrink: 0 }}>
-          <ScorePill score={idea.opportunityScore || 70} />
-        </div>
+        {/* Opportunity score — AI ideas only */}
+        {idea.source === 'ai' && idea.opportunityScore && (
+          <div style={{ flexShrink: 0 }}>
+            <ScorePill score={idea.opportunityScore} />
+          </div>
+        )}
 
       </div>
     </div>
@@ -239,6 +273,15 @@ function IdeaCard({ idea, onUseSeo }) {
 }
 
 /* ─── Main component ────────────────────────────────────────────────────── */
+
+const DONE_KEY = 'ytg_vi_done'
+
+function loadDone() {
+  try { return new Set(JSON.parse(localStorage.getItem(DONE_KEY) || '[]')) } catch { return new Set() }
+}
+function saveDone(set) {
+  try { localStorage.setItem(DONE_KEY, JSON.stringify([...set])) } catch {}
+}
 
 export default function VideoIdeas({ onNavigate }) {
   const [ideas,       setIdeas]      = useState([])
@@ -249,8 +292,30 @@ export default function VideoIdeas({ onNavigate }) {
   const [refreshing,  setRefreshing] = useState(false)  // paid refresh
   const [error,       setError]      = useState('')
   const [credits,     setCredits]    = useState(null)
-  const [prefillBanner, setPrefillBanner] = useState(false)
+  const [done,        setDone]       = useState(() => loadDone())
   const mountedRef = useRef(true)
+
+  function toggleDone(title) {
+    setDone(prev => {
+      const next = new Set(prev)
+      if (next.has(title)) next.delete(title)
+      else next.add(title)
+      saveDone(next)
+      return next
+    })
+  }
+
+  function clearCompleted() {
+    setDone(prev => {
+      const completed = [...prev].filter(t => ideas.some(i => i.title === t))
+      const next = new Set(prev)
+      completed.forEach(t => next.delete(t))
+      saveDone(next)
+      return next
+    })
+  }
+
+  const doneCount = ideas.filter(i => done.has(i.title)).length
 
   /* ── On mount: fetch ideas silently ── */
   useEffect(() => {
@@ -516,8 +581,39 @@ export default function VideoIdeas({ onNavigate }) {
       {/* Ideas list */}
       {!loading && !refreshing && ideas.length > 0 && (
         <div style={{ marginTop: 8 }}>
+          {/* Clear completed bar */}
+          {doneCount > 0 && (
+            <div style={{
+              display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+              padding: '8px 14px', marginBottom: 10,
+              background: '#f0fdf4', border: '1px solid #bbf7d0',
+              borderRadius: 10,
+            }}>
+              <span style={{ fontSize: 12.5, color: C.green, fontWeight: 600 }}>
+                {doneCount} idea{doneCount > 1 ? 's' : ''} completed
+              </span>
+              <button
+                onClick={clearCompleted}
+                style={{
+                  fontSize: 12, fontWeight: 700, color: C.green,
+                  background: 'none', border: 'none', cursor: 'pointer',
+                  fontFamily: 'inherit', padding: '2px 0',
+                  textDecoration: 'underline', textUnderlineOffset: 2,
+                }}
+              >
+                Clear completed
+              </button>
+            </div>
+          )}
+
           {ideas.map(idea => (
-            <IdeaCard key={`${idea.rank}-${idea.title}`} idea={idea} onUseSeo={handleUseSeo} />
+            <IdeaCard
+              key={`${idea.rank}-${idea.title}`}
+              idea={idea}
+              done={done.has(idea.title)}
+              onDone={toggleDone}
+              onUseSeo={handleUseSeo}
+            />
           ))}
         </div>
       )}
