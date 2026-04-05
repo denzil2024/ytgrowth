@@ -15,6 +15,7 @@ from routers import seo_routes
 from routers import keyword_routes
 from routers import billing
 from routers import video_ideas_routes
+from routers import thumbnail_routes
 
 app = FastAPI(title="YTGrowth API", redirect_slashes=False)
 
@@ -47,6 +48,7 @@ app.include_router(seo_routes.router, prefix="/seo")
 app.include_router(keyword_routes.router, prefix="/keywords")
 app.include_router(billing.router, prefix="/billing")
 app.include_router(video_ideas_routes.router, prefix="/video-ideas")
+app.include_router(thumbnail_routes.router, prefix="/thumbnail")
 
 
 # ── Monthly reset job (runs in background thread every 6 hours) ───────────────

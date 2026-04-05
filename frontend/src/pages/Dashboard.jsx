@@ -4,6 +4,7 @@ import SeoOptimizer from './SeoOptimizer'
 import VideoOptimizePanel from './VideoOptimizePanel'
 import Keywords from './Keywords'
 import VideoIdeas from './VideoIdeas'
+import ThumbnailScore from './ThumbnailScore'
 import UsageBar from '../components/UsageBar'
 
 /* ─── Inject font + global styles once ─────────────────────────────────── */
@@ -358,13 +359,14 @@ function InsightCard({ insight, index, checked, onToggle, onDelete }) {
 
 /* ─── Nav icons ─────────────────────────────────────────────────────────── */
 const NAV_ICONS = {
-  Overview:      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"><rect x="1" y="1" width="5" height="5" rx="1.5"/><rect x="8" y="1" width="5" height="5" rx="1.5"/><rect x="1" y="8" width="5" height="5" rx="1.5"/><rect x="8" y="8" width="5" height="5" rx="1.5"/></svg>,
-  Videos:        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"><rect x="1" y="3" width="9" height="8" rx="1.5"/><path d="M10 5.5l3.5-2v7L10 8.5"/></svg>,
-  'SEO Studio':  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"><path d="M2 11V8M5 11V6M8 11V4M11 11V2"/></svg>,
-  'Video Ideas': <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"><circle cx="7" cy="6" r="4"/><path d="M5 10.5h4M7 10.5v2.5"/><path d="M5.5 5.5l1.5 1 1.5-1"/></svg>,
-  Keywords:      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"><circle cx="6" cy="6" r="4"/><line x1="9.2" y1="9.2" x2="13" y2="13"/></svg>,
-  Competitors:   <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"><circle cx="5" cy="7" r="4"/><circle cx="9" cy="7" r="4"/></svg>,
-  Settings:      <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"><circle cx="6.5" cy="6.5" r="1.8"/><path d="M6.5 1v1.2M6.5 10.8V12M1 6.5h1.2M10.8 6.5H12M2.8 2.8l.85.85M9.35 9.35l.85.85M2.8 10.2l.85-.85M9.35 4.65l.85-.85"/></svg>,
+  Overview:          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"><rect x="1" y="1" width="5" height="5" rx="1.5"/><rect x="8" y="1" width="5" height="5" rx="1.5"/><rect x="1" y="8" width="5" height="5" rx="1.5"/><rect x="8" y="8" width="5" height="5" rx="1.5"/></svg>,
+  Videos:            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"><rect x="1" y="3" width="9" height="8" rx="1.5"/><path d="M10 5.5l3.5-2v7L10 8.5"/></svg>,
+  'SEO Studio':      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"><path d="M2 11V8M5 11V6M8 11V4M11 11V2"/></svg>,
+  'Thumbnail Score': <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"><rect x="1" y="3" width="12" height="8" rx="1.5"/><path d="M5 6l2 2 4-3"/></svg>,
+  'Video Ideas':     <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"><circle cx="7" cy="6" r="4"/><path d="M5 10.5h4M7 10.5v2.5"/><path d="M5.5 5.5l1.5 1 1.5-1"/></svg>,
+  Keywords:          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"><circle cx="6" cy="6" r="4"/><line x1="9.2" y1="9.2" x2="13" y2="13"/></svg>,
+  Competitors:       <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"><circle cx="5" cy="7" r="4"/><circle cx="9" cy="7" r="4"/></svg>,
+  Settings:          <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"><circle cx="6.5" cy="6.5" r="1.8"/><path d="M6.5 1v1.2M6.5 10.8V12M1 6.5h1.2M10.8 6.5H12M2.8 2.8l.85.85M9.35 9.35l.85.85M2.8 10.2l.85-.85M9.35 4.65l.85-.85"/></svg>,
 }
 
 function NavBtn({ label, active, onClick, badge }) {
@@ -573,8 +575,9 @@ export default function Dashboard() {
           <div style={{ padding: '6px 20px 5px' }}>
             <span style={{ fontSize: 10.5, fontWeight: 600, color: '#adb5bd', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Create</span>
           </div>
-          <NavBtn label="SEO Studio"  active={nav === 'SEO Studio'}  onClick={() => setNav('SEO Studio')} />
-          <NavBtn label="Video Ideas" active={nav === 'Video Ideas'} onClick={() => setNav('Video Ideas')} />
+          <NavBtn label="SEO Studio"      active={nav === 'SEO Studio'}      onClick={() => setNav('SEO Studio')} />
+          <NavBtn label="Thumbnail Score" active={nav === 'Thumbnail Score'} onClick={() => setNav('Thumbnail Score')} />
+          <NavBtn label="Video Ideas"     active={nav === 'Video Ideas'}     onClick={() => setNav('Video Ideas')} />
 
           <div style={{ height: 1, background: 'rgba(0,0,0,0.07)', margin: '10px 14px' }}/>
 
@@ -1092,22 +1095,48 @@ export default function Dashboard() {
                           ))}
                         </div>
 
-                        {/* Footer: like rate + optimise */}
+                        {/* Footer: like rate + optimise + Score This */}
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 'auto', paddingTop: 12, borderTop: `1px solid #f0f0f4` }}>
                           <span style={{ fontSize: 12, fontWeight: 700, color: lrColor, background: lrBg, padding: '4px 10px', borderRadius: 100, border: `1px solid ${lrBdr}`, fontVariantNumeric: 'tabular-nums' }}>
                             {lr}% like rate
                           </span>
-                          <button
-                            onClick={() => setSelectedVideoId(isSelected ? null : v.video_id)}
-                            className={isSelected ? '' : 'ytg-optimise-btn'}
-                            style={isSelected ? {
-                              fontSize: 11.5, fontWeight: 700, color: C.blue,
-                              background: '#eff6ff', border: `1px solid #bfdbfe`,
-                              borderRadius: 100, padding: '5px 14px', cursor: 'pointer',
-                              fontFamily: 'inherit', whiteSpace: 'nowrap',
-                            } : undefined}>
-                            {isSelected ? '✕ Close' : 'Optimise'}
-                          </button>
+                          <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+                            <button
+                              title="Score This Thumbnail"
+                              onClick={() => {
+                                const thumbUrl = `https://i.ytimg.com/vi/${v.video_id}/hqdefault.jpg`
+                                fetch(thumbUrl)
+                                  .then(r => r.blob())
+                                  .then(blob => new Promise((res, rej) => {
+                                    const reader = new FileReader()
+                                    reader.onload = () => res(reader.result)
+                                    reader.onerror = rej
+                                    reader.readAsDataURL(blob)
+                                  }))
+                                  .then(dataUrl => {
+                                    localStorage.setItem('ytg_score_this', JSON.stringify({ dataUrl, title: v.title }))
+                                    setNav('Thumbnail Score')
+                                  })
+                                  .catch(() => setNav('Thumbnail Score'))
+                              }}
+                              style={{ fontSize: 11, fontWeight: 700, color: '#7c3aed',
+                                       background: '#f5f3ff', border: '1px solid #ddd6fe',
+                                       borderRadius: 100, padding: '5px 10px', cursor: 'pointer',
+                                       fontFamily: 'inherit', whiteSpace: 'nowrap' }}>
+                              Score
+                            </button>
+                            <button
+                              onClick={() => setSelectedVideoId(isSelected ? null : v.video_id)}
+                              className={isSelected ? '' : 'ytg-optimise-btn'}
+                              style={isSelected ? {
+                                fontSize: 11.5, fontWeight: 700, color: C.blue,
+                                background: '#eff6ff', border: `1px solid #bfdbfe`,
+                                borderRadius: 100, padding: '5px 14px', cursor: 'pointer',
+                                fontFamily: 'inherit', whiteSpace: 'nowrap',
+                              } : undefined}>
+                              {isSelected ? '✕ Close' : 'Optimise'}
+                            </button>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -1226,7 +1255,9 @@ export default function Dashboard() {
 
           {nav === 'Keywords' && <Keywords />}
 
-          {nav === 'SEO Studio' && <SeoOptimizer />}
+          {nav === 'SEO Studio' && <SeoOptimizer onNavigate={setNav} />}
+
+          {nav === 'Thumbnail Score' && <ThumbnailScore channelData={data} onNavigate={setNav} />}
 
           {nav === 'Video Ideas' && <VideoIdeas onNavigate={setNav} />}
 

@@ -82,6 +82,52 @@ class ChannelVideoIdeas(Base):
     last_updated = Column(DateTime, default=_now, onupdate=_now)
 
 
+class ThumbnailAnalysis(Base):
+    """Per-user thumbnail analysis result. Never deleted — only soft-cleared."""
+    __tablename__ = "thumbnail_analyses"
+    id                 = Column(String, primary_key=True)   # UUID
+    channel_id         = Column(String, nullable=False, index=True)
+    thumbnail_hash     = Column(String, nullable=False, index=True)
+    thumbnail_b64      = Column(Text,   nullable=False)
+    video_title        = Column(String, nullable=True)
+    confirmed_keyword  = Column(String, nullable=True)
+    format             = Column(String, nullable=True)
+    size_bracket       = Column(String, nullable=True)
+    uploaded_at        = Column(DateTime, default=_now)
+    last_analyzed_at   = Column(DateTime, nullable=True)
+    layer1_scores      = Column(Text, nullable=True)    # JSON
+    layer2_scores      = Column(Text, nullable=True)    # JSON (null until Layer 2 runs)
+    benchmark_comparison = Column(Text, nullable=True)  # JSON
+    algorithm_score    = Column(Integer, nullable=True)
+    claude_score       = Column(Integer, nullable=True)  # null until Layer 2
+    final_score        = Column(Integer, nullable=True)  # null until Layer 2
+    niche_avg_score    = Column(Float,   nullable=True)
+    user_percentile    = Column(Float,   nullable=True)
+    cleared_at         = Column(DateTime, nullable=True)
+
+
+class NicheBenchmarkPool(Base):
+    """Shared benchmark pool cache — one entry per keyword+format+size_bracket combo."""
+    __tablename__ = "niche_benchmark_pools"
+    keyword        = Column(String, primary_key=True)
+    format         = Column(String, primary_key=True)
+    size_bracket   = Column(String, primary_key=True)
+    videos         = Column(Text,   nullable=False)          # JSON array
+    layer1_averages = Column(Text,  nullable=True)           # JSON
+    created_at     = Column(DateTime, default=_now)
+    expires_at     = Column(DateTime, nullable=False)
+
+
+class CompetitorThumbnailScore(Base):
+    """Cached Layer 1 scores for benchmark thumbnails — never recalculated."""
+    __tablename__ = "competitor_thumbnail_scores"
+    video_id       = Column(String,  primary_key=True)
+    thumbnail_url  = Column(String,  nullable=True)
+    layer1_scores  = Column(Text,    nullable=True)    # JSON
+    algorithm_score = Column(Integer, nullable=True)
+    scored_at      = Column(DateTime, default=_now)
+
+
 import os
 DATABASE_URL = os.environ.get("DATABASE_URL", "sqlite:///ytgrowth.db")
 # Railway provides postgres:// but SQLAlchemy needs postgresql://

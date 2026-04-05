@@ -1,0 +1,315 @@
+"""
+Thumbnail IQ API routes.
+
+POST /thumbnail/upload      — upload image, run Layer 1, return technical score
+POST /thumbnail/analyze     — run Layer 2 Claude analysis (costs 1 credit)
+GET  /thumbnail/latest      — load most recent non-cleared analysis
+POST /thumbnail/clear       — soft-delete (sets cleared_at)
+"""
+
+import json
+import uuid
+import base64
+import datetime
+
+from fastapi import APIRouter, Request, File, UploadFile, Form
+from fastapi.responses import JSONResponse
+
+from routers.auth import get_session
+from database.models import SessionLocal, ThumbnailAnalysis
+from app.analysis_gate import check_and_deduct
+from app.thumbnail import (
+    detect_format,
+    get_size_bracket,
+    run_layer1,
+    md5_hash,
+    get_or_build_benchmark_pool,
+    calculate_benchmark_comparison,
+    calculate_percentile,
+    run_layer2,
+)
+
+router = APIRouter()
+
+
+# ─── helpers ──────────────────────────────────────────────────────────────────
+
+def _row_to_dict(row: ThumbnailAnalysis) -> dict:
+    return {
+        "id":                 row.id,
+        "channel_id":         row.channel_id,
+        "thumbnail_hash":     row.thumbnail_hash,
+        "thumbnail_b64":      row.thumbnail_b64,
+        "video_title":        row.video_title,
+        "confirmed_keyword":  row.confirmed_keyword,
+        "format":             row.format,
+        "size_bracket":       row.size_bracket,
+        "uploaded_at":        row.uploaded_at.isoformat() if row.uploaded_at else None,
+        "last_analyzed_at":   row.last_analyzed_at.isoformat() if row.last_analyzed_at else None,
+        "layer1_scores":      json.loads(row.layer1_scores)      if row.layer1_scores      else None,
+        "layer2_scores":      json.loads(row.layer2_scores)      if row.layer2_scores      else None,
+        "benchmark_comparison": json.loads(row.benchmark_comparison) if row.benchmark_comparison else None,
+        "algorithm_score":    row.algorithm_score,
+        "claude_score":       row.claude_score,
+        "final_score":        row.final_score,
+        "niche_avg_score":    row.niche_avg_score,
+        "user_percentile":    row.user_percentile,
+    }
+
+
+def _get_channel_data(request: Request):
+    """Return (data, creds, channel_id, subscribers) from session."""
+    data, creds = get_session(request.session.get("session_id"))
+    if not data or not creds:
+        return None, None, None, 0
+    ch         = (data or {}).get("channel", {})
+    channel_id = ch.get("channel_id", "")
+    subs       = ch.get("subscribers", 0)
+    return data, creds, channel_id, subs
+
+
+# ─── POST /thumbnail/upload ────────────────────────────────────────────────────
+
+@router.post("/upload")
+async def upload_thumbnail(
+    request:           Request,
+    file:              UploadFile = File(...),
+    video_title:       str        = Form(default=""),
+    confirmed_keyword: str        = Form(default=""),
+):
+    data, creds, channel_id, subs = _get_channel_data(request)
+    if not creds:
+        return JSONResponse({"error": "Not authenticated."}, status_code=401)
+
+    if file.content_type not in ("image/jpeg", "image/png", "image/jpg"):
+        return JSONResponse({"error": "Only JPG and PNG files are accepted."}, status_code=400)
+
+    image_bytes = await file.read()
+    if len(image_bytes) > 4 * 1024 * 1024:
+        return JSONResponse({"error": "File exceeds 4 MB limit."}, status_code=400)
+
+    thumb_hash = md5_hash(image_bytes)
+    thumb_b64  = base64.b64encode(image_bytes).decode()
+
+    db = SessionLocal()
+    try:
+        # ── Check for existing result for this exact image ────────────────────
+        existing = db.query(ThumbnailAnalysis).filter_by(
+            channel_id=channel_id, thumbnail_hash=thumb_hash
+        ).filter(ThumbnailAnalysis.cleared_at == None).first()
+
+        if existing:
+            return JSONResponse({
+                "already_analyzed": True,
+                "analysis": _row_to_dict(existing),
+            })
+
+        # ── Determine confirmed_keyword ────────────────────────────────────────
+        keyword = confirmed_keyword.strip()
+        if not keyword:
+            # Extract from title using seo.py helper
+            if video_title.strip():
+                try:
+                    from app.seo import _extract_search_terms, _make_client
+                    terms   = _extract_search_terms(_make_client(), video_title.strip(), "")
+                    keyword = terms[0] if terms else video_title[:60]
+                except Exception:
+                    keyword = video_title[:60]
+            else:
+                # Fall back to channel name
+                keyword = (data or {}).get("channel", {}).get("channel_name", "youtube")[:60]
+
+        fmt          = detect_format(video_title) if video_title else "general"
+        size_bracket = get_size_bracket(subs)
+
+        # ── Build / load benchmark pool ───────────────────────────────────────
+        benchmark = get_or_build_benchmark_pool(db, creds, keyword, fmt, size_bracket)
+
+        # ── Run Layer 1 ────────────────────────────────────────────────────────
+        l1 = run_layer1(image_bytes)
+        if "error" in l1:
+            return JSONResponse({"error": l1["error"]}, status_code=500)
+
+        algo_score = l1.get("algorithm_score", 0)
+
+        # ── Benchmark comparison ───────────────────────────────────────────────
+        avgs       = benchmark.get("averages", {}) if benchmark else {}
+        bcomp      = calculate_benchmark_comparison(l1, avgs) if avgs else {}
+
+        # ── Percentile ────────────────────────────────────────────────────────
+        niche_avg, percentile = calculate_percentile(db, channel_id, keyword, fmt, size_bracket, algo_score)
+
+        # ── Persist ───────────────────────────────────────────────────────────
+        now = datetime.datetime.now(datetime.timezone.utc)
+        row = ThumbnailAnalysis(
+            id=str(uuid.uuid4()),
+            channel_id=channel_id,
+            thumbnail_hash=thumb_hash,
+            thumbnail_b64=thumb_b64,
+            video_title=video_title.strip() or None,
+            confirmed_keyword=keyword,
+            format=fmt,
+            size_bracket=size_bracket,
+            uploaded_at=now,
+            layer1_scores=json.dumps(l1),
+            benchmark_comparison=json.dumps(bcomp),
+            algorithm_score=algo_score,
+            niche_avg_score=niche_avg,
+            user_percentile=percentile,
+        )
+        db.add(row)
+        db.commit()
+
+        resp = _row_to_dict(row)
+        if benchmark:
+            resp["benchmark_context"] = {
+                "keyword":      keyword,
+                "format":       fmt,
+                "size_bracket": size_bracket,
+                "n_benchmarks": avgs.get("n_benchmarks", 0),
+                "averages":     avgs,
+                "top_titles":   [v.get("title", "") for v in benchmark.get("videos", [])[:5]],
+            }
+        return JSONResponse({"already_analyzed": False, "analysis": resp})
+
+    except Exception as e:
+        import traceback
+        print(f"[thumbnail] upload error: {traceback.format_exc()}")
+        return JSONResponse({"error": str(e)}, status_code=500)
+    finally:
+        db.close()
+
+
+# ─── POST /thumbnail/analyze ───────────────────────────────────────────────────
+
+class AnalyzeRequest:
+    pass
+
+from pydantic import BaseModel
+
+class AnalyzeBody(BaseModel):
+    thumbnail_id: str
+
+
+@router.post("/analyze")
+def analyze_thumbnail(body: AnalyzeBody, request: Request):
+    data, creds, channel_id, subs = _get_channel_data(request)
+    if not creds:
+        return JSONResponse({"error": "Not authenticated."}, status_code=401)
+
+    db = SessionLocal()
+    try:
+        row = db.query(ThumbnailAnalysis).filter_by(
+            id=body.thumbnail_id, channel_id=channel_id
+        ).first()
+        if not row:
+            return JSONResponse({"error": "Analysis not found."}, status_code=404)
+
+        # ── Return cached Layer 2 if it exists ────────────────────────────────
+        if row.layer2_scores:
+            return JSONResponse({"analysis": _row_to_dict(row)})
+
+        # ── Credit gate (only charged when actually calling Claude) ───────────
+        gate = check_and_deduct(channel_id)
+        if not gate["allowed"]:
+            return JSONResponse(
+                {"error": gate["message"], "show_upgrade": True}, status_code=402
+            )
+
+        # ── Load benchmark for context ─────────────────────────────────────────
+        keyword      = row.confirmed_keyword or ""
+        fmt          = row.format or "general"
+        size_bracket = row.size_bracket or "nano"
+        benchmark    = get_or_build_benchmark_pool(db, creds, keyword, fmt, size_bracket) or {}
+
+        l1 = json.loads(row.layer1_scores) if row.layer1_scores else {}
+        channel_info = {
+            "subscribers":  subs,
+            "channel_name": (data or {}).get("channel", {}).get("channel_name", ""),
+        }
+
+        # ── Call Claude vision ─────────────────────────────────────────────────
+        l2 = run_layer2(
+            thumbnail_b64=row.thumbnail_b64,
+            layer1=l1,
+            benchmark=benchmark,
+            channel_info=channel_info,
+            video_title=row.video_title or "",
+        )
+        if "error" in l2:
+            return JSONResponse({"error": l2["error"]}, status_code=500)
+
+        claude_score = l2.get("claude_score", 0)
+        final_score  = (row.algorithm_score or 0) + claude_score
+
+        now = datetime.datetime.now(datetime.timezone.utc)
+        row.layer2_scores    = json.dumps(l2)
+        row.claude_score     = claude_score
+        row.final_score      = final_score
+        row.last_analyzed_at = now
+        db.commit()
+
+        resp = _row_to_dict(row)
+        resp["_usage"] = {
+            "warning":      gate["warning"],
+            "usage_pct":    gate["usage_pct"],
+            "pack_balance": gate["pack_balance"],
+        }
+        return JSONResponse({"analysis": resp})
+
+    except Exception as e:
+        import traceback
+        print(f"[thumbnail] analyze error: {traceback.format_exc()}")
+        return JSONResponse({"error": str(e)}, status_code=500)
+    finally:
+        db.close()
+
+
+# ─── GET /thumbnail/latest ─────────────────────────────────────────────────────
+
+@router.get("/latest")
+def get_latest(request: Request):
+    data, creds, channel_id, _ = _get_channel_data(request)
+    if not creds:
+        return JSONResponse({"error": "Not authenticated."}, status_code=401)
+
+    db = SessionLocal()
+    try:
+        row = (
+            db.query(ThumbnailAnalysis)
+            .filter_by(channel_id=channel_id)
+            .filter(ThumbnailAnalysis.cleared_at == None)
+            .order_by(ThumbnailAnalysis.uploaded_at.desc())
+            .first()
+        )
+        if not row:
+            return JSONResponse({"analysis": None})
+        return JSONResponse({"analysis": _row_to_dict(row)})
+    finally:
+        db.close()
+
+
+# ─── POST /thumbnail/clear ─────────────────────────────────────────────────────
+
+class ClearBody(BaseModel):
+    thumbnail_id: str
+
+
+@router.post("/clear")
+def clear_thumbnail(body: ClearBody, request: Request):
+    _, creds, channel_id, _ = _get_channel_data(request)
+    if not creds:
+        return JSONResponse({"error": "Not authenticated."}, status_code=401)
+
+    db = SessionLocal()
+    try:
+        row = db.query(ThumbnailAnalysis).filter_by(
+            id=body.thumbnail_id, channel_id=channel_id
+        ).first()
+        if not row:
+            return JSONResponse({"error": "Not found."}, status_code=404)
+        row.cleared_at = datetime.datetime.now(datetime.timezone.utc)
+        db.commit()
+        return JSONResponse({"ok": True})
+    finally:
+        db.close()

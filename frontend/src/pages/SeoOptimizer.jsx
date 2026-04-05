@@ -266,7 +266,7 @@ function DescriptionCard({ d, idx, copiedDesc, onCopy }) {
   )
 }
 
-export default function SeoOptimizer() {
+export default function SeoOptimizer({ onNavigate }) {
   const saved = loadSaved()
   const [title, setTitle]               = useState(saved.title  || '')
   const [result, setResult]             = useState(saved.result || null)
@@ -900,6 +900,31 @@ export default function SeoOptimizer() {
                   )
                 })}
               </div>
+            </div>
+          )}
+
+          {/* ── Thumbnail IQ nudge ────────────────────────────── */}
+          {result && onNavigate && (
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center',
+                          padding: '10px 0 4px' }}>
+              <button
+                onClick={() => {
+                  try {
+                    const kw = result?.search_terms?.[0] || ''
+                    if (kw) localStorage.setItem('ytg_prefill_thumbnail_title',
+                      selectedTitle || title || '')
+                  } catch {}
+                  onNavigate('Thumbnail Score')
+                }}
+                style={{ background: 'none', border: 'none', cursor: 'pointer',
+                         fontSize: 12.5, color: '#7c3aed', fontFamily: 'inherit',
+                         fontWeight: 600, padding: '6px 12px', borderRadius: 8,
+                         transition: 'background 0.15s' }}
+                onMouseEnter={e => { e.currentTarget.style.background = '#f5f3ff' }}
+                onMouseLeave={e => { e.currentTarget.style.background = 'transparent' }}
+              >
+                Ready to test your thumbnail? → Thumbnail IQ
+              </button>
             </div>
           )}
 

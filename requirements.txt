@@ -13,3 +13,8 @@ itsdangerous
 httpx
 requests
 apscheduler
+Pillow
+opencv-python-headless
+numpy
+pytesseract
+python-multipart
