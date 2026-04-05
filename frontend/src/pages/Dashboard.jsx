@@ -508,7 +508,7 @@ export default function Dashboard() {
         background: '#f3f3f7',
         borderRight: '1px solid rgba(0,0,0,0.11)',
         position: 'sticky', top: 0, height: '100vh',
-        boxShadow: '2px 0 6px rgba(0,0,0,0.10), 10px 0 32px rgba(0,0,0,0.18), 28px 0 72px rgba(0,0,0,0.16)',
+        boxShadow: '2px 0 6px rgba(0,0,0,0.10), 10px 0 32px rgba(0,0,0,0.18), 28px 0 72px rgba(0,0,0,0.16), inset 8px 0 18px rgba(0,0,0,0.07)',
         display: 'flex', flexDirection: 'column', overflow: 'hidden',
         zIndex: 10,
       }}>
