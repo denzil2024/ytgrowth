@@ -35,6 +35,97 @@ if (typeof document !== 'undefined' && !document.getElementById('thumb-iq-styles
       height: 100%; border-radius: 3px;
       transition: width 0.8s cubic-bezier(0.34,1.56,0.64,1);
     }
+
+    /* ── Previous tab accordion (mirrors Competitors design) ── */
+    .tiq-acc-wrapper { margin-bottom: 12px; position: relative; }
+
+    .tiq-acc-header {
+      background: #ffffff;
+      border: 1px solid #d8d8e0;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.14), 0 24px 64px rgba(0,0,0,0.18), 0 1px 0 rgba(255,255,255,0.9) inset;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      transition: box-shadow 0.2s, border-color 0.2s;
+      cursor: pointer;
+      user-select: none;
+    }
+    .tiq-acc-header:hover {
+      box-shadow: 0 8px 28px rgba(0,0,0,0.18), 0 36px 80px rgba(0,0,0,0.22), 0 1px 0 rgba(255,255,255,0.9) inset;
+      border-color: #c0c0cc;
+    }
+    .tiq-acc-header.closed { border-radius: 20px; }
+    .tiq-acc-header.open   { border-radius: 20px 20px 0 0; border-bottom-color: rgba(0,0,0,0.07); }
+
+    .tiq-acc-body {
+      border: 1px solid #d8d8e0;
+      border-top: none;
+      border-radius: 0 0 20px 20px;
+      background: #f8f8fb;
+      padding: 24px 20px 28px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.10);
+    }
+
+    /* Trash button — hidden until wrapper hovered */
+    .tiq-remove-btn {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      border: 1px solid transparent;
+      background: transparent;
+      color: #c4c4cc;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.18s, background 0.15s, color 0.15s, border-color 0.15s;
+      z-index: 2;
+      flex-shrink: 0;
+    }
+    .tiq-acc-wrapper:hover .tiq-remove-btn { opacity: 1; }
+    .tiq-remove-btn:hover {
+      background: rgba(229,37,27,0.08);
+      border-color: rgba(229,37,27,0.2);
+      color: #e5251b;
+    }
+
+    /* "Open report" button — red background (as requested) */
+    .tiq-btn-report {
+      background: #e5251b;
+      color: #fff;
+      border: none;
+      border-radius: 100px;
+      padding: 8px 18px;
+      font-size: 12.5px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.18s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 4px 14px rgba(229,37,27,0.32);
+      letter-spacing: -0.1px;
+    }
+    .tiq-btn-report:hover {
+      filter: brightness(1.07);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15), 0 8px 28px rgba(229,37,27,0.42);
+      transform: translateY(-1px);
+    }
+    .tiq-btn-report.open {
+      background: #c01e15;
+      box-shadow: none;
+    }
+    .tiq-btn-report.open:hover {
+      filter: brightness(1.06);
+      transform: none;
+    }
   `
   document.head.appendChild(s)
 }
@@ -1010,151 +1101,198 @@ export default function ThumbnailScore({ channelData, onNavigate }) {
       {activeTab === 'previous' && (
         <div className="tiq-section">
           {history.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: '56px 24px', color: C.text3 }}>
-              <p style={{ fontSize: 14, fontWeight: 600, marginBottom: 6, color: C.text2 }}>No previous thumbnails</p>
-              <p style={{ fontSize: 13 }}>Upload a thumbnail to get started.</p>
+            <div style={{ textAlign: 'center', padding: '56px 24px' }}>
+              <div style={{ width: 44, height: 44, borderRadius: 13, background: '#f0f0f3',
+                            border: '1px solid rgba(0,0,0,0.09)', display: 'flex',
+                            alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#a0a0b0" strokeWidth="1.6" strokeLinecap="round">
+                  <rect x="2" y="2" width="16" height="12" rx="2"/>
+                  <path d="M6 18h8M10 14v4"/>
+                </svg>
+              </div>
+              <p style={{ fontWeight: 700, color: C.text2, marginBottom: 6, fontSize: 14 }}>No previous thumbnails</p>
+              <p style={{ fontSize: 13, color: C.text3, maxWidth: 300, margin: '0 auto' }}>
+                Upload a thumbnail to get started — it will be saved here automatically
+              </p>
             </div>
           ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-              {history.map(item => {
-                const isOpen  = historyOpen === item.id
-                const score   = item.final_score ?? item.algorithm_score ?? 0
-                const max     = item.final_score != null ? 100 : 60
-                const col     = scoreColor(score, max)
-                const itemL1  = item.layer1_scores
-                const itemL2  = item.layer2_scores
-                const itemLinked = item.linked_video_idea || null
+            history.map(item => {
+              const isOpen     = historyOpen === item.id
+              const score      = item.final_score ?? item.algorithm_score ?? 0
+              const max        = item.final_score != null ? 100 : 60
+              const col        = scoreColor(score, max)
+              const itemL1     = item.layer1_scores
+              const itemL2     = item.layer2_scores
+              const itemLinked = item.linked_video_idea || null
+              const savedAt    = item.uploaded_at
+                ? new Date(item.uploaded_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })
+                : ''
 
-                return (
-                  <div key={item.id} className="tiq-card" style={{ overflow: 'hidden' }}>
-                    {/* Row header — always visible */}
-                    <div
-                      onClick={() => setHistoryOpen(isOpen ? null : item.id)}
-                      style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 16px',
-                               cursor: 'pointer', userSelect: 'none' }}
-                    >
-                      {item.thumbnail_b64
-                        ? <img src={`data:image/jpeg;base64,${item.thumbnail_b64}`} alt=""
-                               style={{ width: 64, height: 36, borderRadius: 6, objectFit: 'cover', flexShrink: 0 }}/>
-                        : <div style={{ width: 64, height: 36, borderRadius: 6, background: '#ebebef', flexShrink: 0 }}/>
-                      }
-                      <div style={{ flex: 1, minWidth: 0 }}>
-                        <p style={{ fontSize: 13, fontWeight: 600, color: C.text1,
-                                    overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+              const Chevron = () => (
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none"
+                  stroke="currentColor" strokeWidth="2" strokeLinecap="round"
+                  style={{ transition: 'transform 0.2s', transform: isOpen ? 'rotate(180deg)' : 'none' }}>
+                  <path d="M2 4l4 4 4-4"/>
+                </svg>
+              )
+
+              return (
+                <div key={item.id} className="tiq-acc-wrapper">
+
+                  {/* Trash — hidden until wrapper hovered */}
+                  <button className="tiq-remove-btn"
+                    title="Remove thumbnail"
+                    onClick={e => { e.stopPropagation(); handleDelete(item.id) }}>
+                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none"
+                      stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
+                      <path d="M2 3.5h10M5.5 3.5V2.5h3v1M5 5.5l.5 5M9 5.5l-.5 5M3 3.5l.7 8.5h6.6L11 3.5"/>
+                    </svg>
+                  </button>
+
+                  {/* Accordion header */}
+                  <div className={`tiq-acc-header ${isOpen ? 'open' : 'closed'}`}
+                    onClick={() => setHistoryOpen(isOpen ? null : item.id)}>
+
+                    {item.thumbnail_b64
+                      ? <img src={`data:image/jpeg;base64,${item.thumbnail_b64}`} alt=""
+                             style={{ width: 64, height: 36, borderRadius: 8, objectFit: 'cover',
+                                      flexShrink: 0, boxShadow: '0 2px 10px rgba(0,0,0,0.13)' }}/>
+                      : <div style={{ width: 64, height: 36, borderRadius: 8, background: '#ebebef', flexShrink: 0 }}/>
+                    }
+
+                    {/* Left: keyword + chips */}
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
+                        <p style={{ fontWeight: 800, fontSize: 14, color: '#0a0a0a',
+                                    letterSpacing: '-0.2px', overflow: 'hidden',
+                                    textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                           {item.confirmed_keyword || 'Untitled'}
                         </p>
-                        <p style={{ fontSize: 11, color: C.text3, marginTop: 2 }}>
-                          {timeAgo(item.uploaded_at)}
-                          {item.format && <> · {item.format}</>}
-                        </p>
+                        {item.linked_video_idea?.thumbnail_ready && (
+                          <span style={{ fontSize: 10, fontWeight: 700, color: C.green,
+                                         background: C.greenBg, border: `1px solid ${C.greenBdr}`,
+                                         borderRadius: 100, padding: '2px 8px', flexShrink: 0 }}>
+                            Thumbnail Ready
+                          </span>
+                        )}
                       </div>
-                      <span style={{ fontSize: 13, fontWeight: 700, color: col,
-                                     fontVariantNumeric: 'tabular-nums', flexShrink: 0 }}>
-                        {score}/{max}
-                      </span>
-                      {item.linked_video_idea?.thumbnail_ready && (
-                        <span style={{ fontSize: 10, fontWeight: 700, color: C.green,
-                                       background: C.greenBg, border: `1px solid ${C.greenBdr}`,
-                                       borderRadius: 20, padding: '2px 8px', flexShrink: 0 }}>
-                          Ready
+                      <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', alignItems: 'center' }}>
+                        {/* Score chip */}
+                        <span style={{ display: 'inline-flex', alignItems: 'baseline', gap: 3,
+                                       background: 'rgba(0,0,0,0.04)', border: '1px solid rgba(0,0,0,0.07)',
+                                       borderRadius: 8, padding: '3px 8px', fontSize: 11 }}>
+                          <span style={{ fontWeight: 700, color: col, fontVariantNumeric: 'tabular-nums' }}>{score}</span>
+                          <span style={{ color: '#a0a0b0', fontWeight: 400 }}>/{max}</span>
                         </span>
-                      )}
-                      <button
-                        onClick={e => { e.stopPropagation(); handleDelete(item.id) }}
-                        style={{ background: 'none', border: 'none', cursor: 'pointer',
-                                 color: '#d1d5db', fontSize: 18, padding: '0 2px',
-                                 flexShrink: 0, lineHeight: 1, fontFamily: 'inherit' }}
-                        onMouseEnter={e => { e.currentTarget.style.color = C.red }}
-                        onMouseLeave={e => { e.currentTarget.style.color = '#d1d5db' }}
-                        title="Remove"
-                      >×</button>
-                      <span style={{ fontSize: 11, color: C.text3, flexShrink: 0 }}>{isOpen ? '▲' : '▼'}</span>
+                        {item.format && (
+                          <span style={{ display: 'inline-flex', alignItems: 'baseline', gap: 3,
+                                         background: 'rgba(0,0,0,0.04)', border: '1px solid rgba(0,0,0,0.07)',
+                                         borderRadius: 8, padding: '3px 8px', fontSize: 11, color: '#52525b', fontWeight: 500 }}>
+                            {item.format}
+                          </span>
+                        )}
+                        {savedAt && (
+                          <span style={{ fontSize: 11, color: '#bbb', fontWeight: 500, marginLeft: 2 }}>
+                            · {savedAt}
+                          </span>
+                        )}
+                      </div>
                     </div>
 
-                    {/* Expanded detail */}
-                    {isOpen && itemL1 && (
-                      <div style={{ borderTop: `1px solid ${C.border}`, padding: '16px' }}>
-                        <LinkedIdeaCard idea={itemLinked} />
-                        <div style={{ display: 'grid', gridTemplateColumns: '2fr 3fr', gap: 20 }}>
-                          {/* Left: image */}
-                          <div>
-                            <div style={{ borderRadius: 12, overflow: 'hidden', border: `1px solid ${C.border}` }}>
-                              {item.thumbnail_b64
-                                ? <img src={`data:image/jpeg;base64,${item.thumbnail_b64}`} alt=""
-                                       style={{ width: '100%', display: 'block', aspectRatio: '16/9', objectFit: 'cover' }}/>
-                                : <div style={{ width: '100%', aspectRatio: '16/9', background: '#ebebef' }}/>
-                              }
-                            </div>
-                            {itemL2 && (
-                              <div style={{ marginTop: 10, display: 'flex', flexDirection: 'column', gap: 6 }}>
-                                {itemL2.emotionLabel && (
-                                  <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                                    <span style={{ fontSize: 11, fontWeight: 600, color: C.text3, width: 70, flexShrink: 0 }}>Emotion</span>
-                                    <Badge text={itemL2.emotionLabel}
-                                      color={itemL2.emotionLabel.toLowerCase().includes('neutral') ? C.amber : C.green}
-                                      bg={itemL2.emotionLabel.toLowerCase().includes('neutral') ? C.amberBg : C.greenBg}
-                                      bdr={itemL2.emotionLabel.toLowerCase().includes('neutral') ? C.amberBdr : C.greenBdr}
-                                    />
-                                  </div>
-                                )}
-                                {itemL2.feedPosition && (
-                                  <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                                    <span style={{ fontSize: 11, fontWeight: 600, color: C.text3, width: 70, flexShrink: 0 }}>Feed</span>
-                                    <Badge
-                                      text={itemL2.feedPosition === 'stands out' ? 'Stands Out' : itemL2.feedPosition === 'disappears' ? 'Disappears' : 'Blends In'}
-                                      color={itemL2.feedPosition === 'stands out' ? C.green : itemL2.feedPosition === 'disappears' ? C.red : C.amber}
-                                      bg={itemL2.feedPosition === 'stands out' ? C.greenBg : itemL2.feedPosition === 'disappears' ? C.redBg : C.amberBg}
-                                      bdr={itemL2.feedPosition === 'stands out' ? C.greenBdr : itemL2.feedPosition === 'disappears' ? C.redBdr : C.amberBdr}
-                                    />
-                                  </div>
-                                )}
-                              </div>
-                            )}
+                    {/* Right: Open report button */}
+                    <div style={{ flexShrink: 0, borderLeft: '1px solid rgba(0,0,0,0.07)',
+                                  paddingLeft: 16, marginLeft: 4, paddingRight: 32 }}>
+                      <button className={`tiq-btn-report ${isOpen ? 'open' : ''}`}
+                        onClick={e => { e.stopPropagation(); setHistoryOpen(isOpen ? null : item.id) }}>
+                        {isOpen ? 'Close' : 'Open report'}
+                        <Chevron />
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Expanded body */}
+                  {isOpen && itemL1 && (
+                    <div className="tiq-acc-body">
+                      <LinkedIdeaCard idea={itemLinked} />
+                      <div style={{ display: 'grid', gridTemplateColumns: '2fr 3fr', gap: 20 }}>
+                        {/* Left: image + badges */}
+                        <div>
+                          <div style={{ borderRadius: 12, overflow: 'hidden', border: `1px solid ${C.border}` }}>
+                            {item.thumbnail_b64
+                              ? <img src={`data:image/jpeg;base64,${item.thumbnail_b64}`} alt=""
+                                     style={{ width: '100%', display: 'block', aspectRatio: '16/9', objectFit: 'cover' }}/>
+                              : <div style={{ width: '100%', aspectRatio: '16/9', background: '#ebebef' }}/>
+                            }
                           </div>
-                          {/* Right: scores */}
-                          <div>
-                            <div className="tiq-card" style={{ padding: '16px', marginBottom: 12 }}>
-                              <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 14 }}>
-                                <ScoreRing score={score} max={max} label={max === 100 ? 'Thumbnail IQ' : 'Technical'} size={90} strokeW={7}/>
-                                <div style={{ flex: 1 }}>
-                                  <p style={{ fontSize: 13, fontWeight: 700, color: col }}>
-                                    {scoreLabel(score, max)}
-                                    {!itemL2 && <span style={{ fontSize: 11, fontWeight: 400, color: C.text3 }}> — technical only</span>}
-                                  </p>
-                                  <p style={{ fontSize: 12, color: C.text3, marginTop: 4 }}>
-                                    {item.format} · {item.size_bracket}
-                                  </p>
+                          {itemL2 && (
+                            <div style={{ marginTop: 10, display: 'flex', flexDirection: 'column', gap: 6 }}>
+                              {itemL2.emotionLabel && (
+                                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                                  <span style={{ fontSize: 11, fontWeight: 600, color: C.text3, width: 70, flexShrink: 0 }}>Emotion</span>
+                                  <Badge text={itemL2.emotionLabel}
+                                    color={itemL2.emotionLabel.toLowerCase().includes('neutral') ? C.amber : C.green}
+                                    bg={itemL2.emotionLabel.toLowerCase().includes('neutral') ? C.amberBg : C.greenBg}
+                                    bdr={itemL2.emotionLabel.toLowerCase().includes('neutral') ? C.amberBdr : C.greenBdr}
+                                  />
                                 </div>
-                              </div>
-                              {Object.entries(L1_META).map(([k]) => (
-                                <L1Row key={k} keyName={k} data={itemL1[k]} benchComp={item.benchmark_comparison || {}}/>
-                              ))}
+                              )}
+                              {itemL2.feedPosition && (
+                                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                                  <span style={{ fontSize: 11, fontWeight: 600, color: C.text3, width: 70, flexShrink: 0 }}>Feed</span>
+                                  <Badge
+                                    text={itemL2.feedPosition === 'stands out' ? 'Stands Out' : itemL2.feedPosition === 'disappears' ? 'Disappears' : 'Blends In'}
+                                    color={itemL2.feedPosition === 'stands out' ? C.green : itemL2.feedPosition === 'disappears' ? C.red : C.amber}
+                                    bg={itemL2.feedPosition === 'stands out' ? C.greenBg : itemL2.feedPosition === 'disappears' ? C.redBg : C.amberBg}
+                                    bdr={itemL2.feedPosition === 'stands out' ? C.greenBdr : itemL2.feedPosition === 'disappears' ? C.redBdr : C.amberBdr}
+                                  />
+                                </div>
+                              )}
                             </div>
-                            {itemL2 && (
-                              <div className="tiq-card" style={{ padding: '16px', marginBottom: 12 }}>
-                                <p style={{ fontSize: 12, fontWeight: 700, color: C.text1, marginBottom: 8,
-                                            paddingBottom: 8, borderBottom: `1px solid #f0f0f4` }}>
-                                  AI Analysis — {itemL2.claude_score ?? 0}/40
+                          )}
+                        </div>
+                        {/* Right: scores */}
+                        <div>
+                          <div className="tiq-card" style={{ padding: '16px', marginBottom: 12, background: '#fff' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 14 }}>
+                              <ScoreRing score={score} max={max} label={max === 100 ? 'Thumbnail IQ' : 'Technical'} size={90} strokeW={7}/>
+                              <div style={{ flex: 1 }}>
+                                <p style={{ fontSize: 13, fontWeight: 700, color: col }}>
+                                  {scoreLabel(score, max)}
+                                  {!itemL2 && <span style={{ fontSize: 11, fontWeight: 400, color: C.text3 }}> — technical only</span>}
                                 </p>
-                                {Object.entries(itemL2.scores || {}).map(([k, v]) => (
-                                  <L2Row key={k} dimKey={k} dim={v}/>
-                                ))}
-                                {itemL2.overallVerdict && (
-                                  <p style={{ fontSize: 12.5, color: C.text2, lineHeight: 1.65,
-                                              marginTop: 12, paddingTop: 12, borderTop: `1px solid #f0f0f4` }}>
-                                    {itemL2.overallVerdict}
-                                  </p>
-                                )}
+                                <p style={{ fontSize: 12, color: C.text3, marginTop: 4 }}>
+                                  {item.format} · {item.size_bracket}
+                                </p>
                               </div>
-                            )}
+                            </div>
+                            {Object.entries(L1_META).map(([k]) => (
+                              <L1Row key={k} keyName={k} data={itemL1[k]} benchComp={item.benchmark_comparison || {}}/>
+                            ))}
                           </div>
+                          {itemL2 && (
+                            <div className="tiq-card" style={{ padding: '16px', background: '#fff' }}>
+                              <p style={{ fontSize: 12, fontWeight: 700, color: C.text1, marginBottom: 8,
+                                          paddingBottom: 8, borderBottom: `1px solid #f0f0f4` }}>
+                                AI Analysis — {itemL2.claude_score ?? 0}/40
+                              </p>
+                              {Object.entries(itemL2.scores || {}).map(([k, v]) => (
+                                <L2Row key={k} dimKey={k} dim={v}/>
+                              ))}
+                              {itemL2.overallVerdict && (
+                                <p style={{ fontSize: 12.5, color: C.text2, lineHeight: 1.65,
+                                            marginTop: 12, paddingTop: 12, borderTop: `1px solid #f0f0f4` }}>
+                                  {itemL2.overallVerdict}
+                                </p>
+                              )}
+                            </div>
+                          )}
                         </div>
                       </div>
-                    )}
-                  </div>
-                )
-              })}
-            </div>
+                    </div>
+                  )}
+                </div>
+              )
+            })
           )}
         </div>
       )}
