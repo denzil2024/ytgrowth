@@ -152,6 +152,48 @@ scheduler.add_job(
 
 # ── One-time backfill ─────────────────────────────────────────────────────────
 
+def _resolve_email(user_data: dict, creds_json_str: str, channel_id: str, db) -> str:
+    """
+    Find email for an existing session using three fallbacks:
+      1. user_data["email"]  — set by this PR on new logins
+      2. UserSubscription.email — set by billing webhooks
+      3. Google OAuth userinfo — fetched live with stored credentials
+    """
+    # 1. Already in user_data
+    email = user_data.get("email", "")
+    if email:
+        return email
+
+    # 2. Billing subscription row
+    try:
+        from database.models import UserSubscription
+        sub = db.query(UserSubscription).filter_by(channel_id=channel_id).first()
+        if sub and sub.email:
+            return sub.email
+    except Exception:
+        pass
+
+    # 3. Live Google userinfo call with stored credentials
+    try:
+        import json as _json
+        from google.oauth2.credentials import Credentials
+        from googleapiclient.discovery import build as _build
+        c     = _json.loads(creds_json_str)
+        creds = Credentials(
+            token=c["token"],
+            refresh_token=c.get("refresh_token"),
+            token_uri=c["token_uri"],
+            client_id=c["client_id"],
+            client_secret=c["client_secret"],
+            scopes=c.get("scopes"),
+        )
+        info  = _build("oauth2", "v2", credentials=creds).userinfo().get().execute()
+        return info.get("email", "")
+    except Exception as e:
+        print(f"[backfill] Email fetch error for {channel_id[:8]}: {e}")
+        return ""
+
+
 def backfill_existing_users():
     """
     Runs ONCE on startup if the weekly_reports table is empty.
@@ -166,8 +208,15 @@ def backfill_existing_users():
 
     db = SessionLocal()
     try:
+        # Already ran if any reports exist OR if the sentinel session row is present.
+        # We use a special sentinel channel_id so an empty-user deploy doesn't
+        # re-run the backfill (and hit Google APIs) on every restart.
         total_existing = db.query(WeeklyReport).count()
-        if total_existing > 0:
+        from database.models import UserEmailPreferences
+        sentinel = db.query(UserEmailPreferences).filter_by(
+            channel_id="__backfill_complete__"
+        ).first()
+        if total_existing > 0 or sentinel:
             return
 
         print("[backfill] Running first-time backfill for existing users...")
@@ -180,14 +229,21 @@ def backfill_existing_users():
             try:
                 user_data  = json.loads(row.user_data_json)
                 channel_id = user_data.get("channel", {}).get("channel_id")
-                email      = user_data.get("email")
                 insights   = user_data.get("insights")
 
-                if not channel_id or not email or not insights:
+                if not channel_id or not insights:
                     continue
 
                 if "fallback mode" in str(insights.get("channelSummary", "")).lower():
                     continue
+
+                email = _resolve_email(user_data, row.creds_json, channel_id, db)
+                if not email:
+                    print(f"[backfill] No email found for {channel_id[:8]} — skipping")
+                    continue
+
+                # Persist email so scheduler and future logins have it
+                user_data["email"] = email
 
                 generate_and_send_report(channel_id, email, user_data, db)
                 processed += 1
@@ -196,6 +252,15 @@ def backfill_existing_users():
             except Exception as e:
                 print(f"[backfill] Error: {e}")
                 continue
+
+        # Write sentinel so this never re-runs even if reports table stays empty
+        from database.models import UserEmailPreferences
+        db.add(UserEmailPreferences(
+            channel_id="__backfill_complete__",
+            email="__sentinel__",
+            weekly_report=False,
+        ))
+        db.commit()
 
         print(f"[backfill] Complete — {processed} report(s) generated")
     finally:
