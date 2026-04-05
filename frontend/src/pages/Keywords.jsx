@@ -252,9 +252,9 @@ export default function Keywords() {
                 ))}
               </div>
               <div style={{ padding: '12px 18px', display: 'flex', flexDirection: 'column', gap: 7 }}>
-                {result.seedIntent?.primaryIntent       && <span className="kw-chip" style={{ color: C.purple, background: C.purpleBg, alignSelf: 'flex-start' }}>{result.seedIntent.primaryIntent}</span>}
-                {result.seedIntent?.contentTypeExpected && <span className="kw-chip" style={{ color: C.teal,   background: C.tealBg,   alignSelf: 'flex-start' }}>{result.seedIntent.contentTypeExpected}</span>}
-                {result.seedIntent?.funnelStage         && <span className="kw-chip" style={{ color: C.blue,   background: C.blueBg,   alignSelf: 'flex-start' }}>{result.seedIntent.funnelStage}</span>}
+                {result.seedIntent?.primaryIntent       && <span className="kw-chip" style={{ color: '#fff', background: '#111114', alignSelf: 'flex-start', borderRadius: 20 }}>{result.seedIntent.primaryIntent}</span>}
+                {result.seedIntent?.contentTypeExpected && <span className="kw-chip" style={{ color: C.text2, background: '#f0f0f4', border: '1px solid rgba(0,0,0,0.1)', alignSelf: 'flex-start', borderRadius: 20 }}>{result.seedIntent.contentTypeExpected}</span>}
+                {result.seedIntent?.funnelStage         && <span className="kw-chip" style={{ color: C.text2, background: '#f0f0f4', border: '1px solid rgba(0,0,0,0.1)', alignSelf: 'flex-start', borderRadius: 20 }}>{result.seedIntent.funnelStage}</span>}
               </div>
             </div>
 
@@ -268,7 +268,7 @@ export default function Keywords() {
                 <div style={{ padding: '16px 22px', background: C.greenBg, borderTop: `1px solid #bbf7d0` }}>
                   <p style={{ fontSize: 10, fontWeight: 700, color: C.green, textTransform: 'uppercase', letterSpacing: '0.09em', marginBottom: 7 }}>Top Pick</p>
                   <p style={{ fontSize: 14, fontWeight: 700, color: C.text1, marginBottom: 5 }}>{result.topPick.keyword}</p>
-                  <p style={{ fontSize: 12.5, color: '#3f6212', lineHeight: 1.6 }}>{result.topPick.whyThisOne}</p>
+                  <p style={{ fontSize: 12.5, color: C.text2, lineHeight: 1.6 }}>{result.topPick.whyThisOne}</p>
                 </div>
               )}
             </div>
@@ -359,7 +359,7 @@ export default function Keywords() {
           {/* Clusters — one card, columns divided by borders */}
           {result.clusters?.length > 0 && (
             <div>
-              <p style={{ fontSize: 10.5, fontWeight: 600, color: '#a0a0b0', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 14 }}>Content Clusters</p>
+              <p style={{ fontSize: 10.5, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 14 }}>Content Clusters</p>
               <div className="kw-card" style={{ overflow: 'hidden', display: 'flex' }}>
                 {result.clusters.map((cl, i) => {
                   const palette = [
