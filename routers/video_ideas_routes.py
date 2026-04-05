@@ -1,6 +1,7 @@
 """
 Video Ideas routes
   GET  /video-ideas          — free load: pool competitor ideas from DB
+  POST /video-ideas/seed     — backfill ideas from frontend localStorage (free)
   POST /video-ideas/refresh  — paid: Claude-enriched ideas (1 credit)
 """
 import json
@@ -166,6 +167,77 @@ def get_video_ideas(request: Request, channel_id: str = ""):
 
 
 # ── POST /video-ideas/refresh ─────────────────────────────────────────────────
+
+class SeedBody(BaseModel):
+    ideas: list
+    channel_id: str = ""
+
+
+@router.post("/seed")
+def seed_video_ideas(body: SeedBody, request: Request):
+    """
+    Backfill: frontend sends ideas extracted from its localStorage cache
+    (ytgrowth_tracked_competitors). Free — no credit charged.
+    Only writes if the channel has no saved ideas yet.
+    """
+    data, creds = get_session(request.session.get("session_id"))
+    if not data or not creds:
+        return JSONResponse({"error": "Not authenticated."}, status_code=401)
+
+    channel_id = body.channel_id or data.get("channel", {}).get("channel_id", "")
+    if not channel_id:
+        return JSONResponse({"error": "No channel_id."}, status_code=400)
+
+    if not body.ideas:
+        return JSONResponse({"ideas": [], "source": "empty"})
+
+    db = SessionLocal()
+    try:
+        # Only seed if there's nothing saved yet — never overwrite real data
+        existing = _load_cached(db, channel_id)
+        if existing:
+            try:
+                ideas = json.loads(existing.ideas_json)
+            except Exception:
+                ideas = []
+            if ideas:
+                return JSONResponse({
+                    "ideas":        ideas,
+                    "source":       existing.source,
+                    "last_updated": _time_ago(existing.last_updated),
+                    "stale":        False,
+                })
+
+        # Normalise and cap at 10
+        ideas = []
+        seen  = set()
+        for rank, idea in enumerate(body.ideas[:10], 1):
+            title_key = (idea.get("title") or "").lower().strip()
+            if not title_key or title_key in seen:
+                continue
+            seen.add(title_key)
+            ideas.append({
+                "rank":             rank,
+                "title":            idea.get("title", ""),
+                "targetKeyword":    idea.get("targetKeyword", ""),
+                "angle":            idea.get("angle", ""),
+                "opportunityScore": idea.get("opportunityScore", 70),
+                "source":           "competitor",
+            })
+
+        if not ideas:
+            return JSONResponse({"ideas": [], "source": "empty"})
+
+        _save_ideas(db, channel_id, ideas, "competitor")
+        return JSONResponse({
+            "ideas":        ideas,
+            "source":       "competitor",
+            "last_updated": "today",
+            "stale":        False,
+        })
+    finally:
+        db.close()
+
 
 class RefreshBody(BaseModel):
     channel_id: str = ""

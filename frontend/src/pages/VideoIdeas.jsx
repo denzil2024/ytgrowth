@@ -267,15 +267,75 @@ export default function VideoIdeas({ onNavigate }) {
       const data = await res.json()
       if (!mountedRef.current) return
       if (res.ok) {
-        setIdeas(data.ideas || [])
-        setSource(data.source || 'empty')
-        setLastUpdated(data.last_updated || '')
-        setStale(!!data.stale)
+        if (data.source !== 'empty' && data.ideas?.length) {
+          setIdeas(data.ideas)
+          setSource(data.source)
+          setLastUpdated(data.last_updated || '')
+          setStale(!!data.stale)
+          return
+        }
+        // Backend has nothing — try backfilling from Competitors localStorage cache
+        const seeded = await seedFromLocalStorage()
+        if (seeded) {
+          setIdeas(seeded.ideas)
+          setSource(seeded.source)
+          setLastUpdated(seeded.last_updated || 'today')
+          setStale(false)
+        } else {
+          setSource('empty')
+        }
       }
     } catch (e) {
       if (mountedRef.current) setError('Could not load ideas. Check your connection.')
     } finally {
       if (mountedRef.current) setLoading(false)
+    }
+  }
+
+  async function seedFromLocalStorage() {
+    try {
+      const raw = localStorage.getItem('ytgrowth_tracked_competitors')
+      if (!raw) return null
+      const tracked = JSON.parse(raw)
+      if (!Array.isArray(tracked) || !tracked.length) return null
+
+      // Pool videoIdeas from all tracked competitor analyses
+      const seen = new Set()
+      const pooled = []
+      let rank = 1
+      for (const entry of tracked) {
+        const ideas = entry.ai_analysis?.videoIdeas || []
+        for (const idea of ideas) {
+          const key = (idea.title || '').toLowerCase().trim()
+          if (!key || seen.has(key)) continue
+          seen.add(key)
+          pooled.push({
+            rank: rank++,
+            title: idea.title || '',
+            targetKeyword: idea.targetKeyword || '',
+            angle: idea.angle || '',
+            opportunityScore: 70,
+            source: 'competitor',
+          })
+          if (pooled.length >= 10) break
+        }
+        if (pooled.length >= 10) break
+      }
+      if (!pooled.length) return null
+
+      // Persist to backend so future loads don't need this fallback
+      const res = await fetch(`${API}/video-ideas/seed`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ideas: pooled }),
+      })
+      if (!mountedRef.current) return null
+      if (res.ok) return await res.json()
+      // If seed call fails, still show the ideas from localStorage
+      return { ideas: pooled, source: 'competitor', last_updated: 'today' }
+    } catch {
+      return null
     }
   }
 
