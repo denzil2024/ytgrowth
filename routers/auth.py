@@ -7,7 +7,7 @@ import uuid
 import json
 from app.youtube import get_channel_stats, get_recent_videos, get_analytics, get_video_analytics
 from app.insights import analyze_channel
-from database.models import UserSession, SessionLocal
+from database.models import UserSession, UserEmailPreferences, SessionLocal
 
 router = APIRouter()
 
@@ -169,6 +169,27 @@ def login(request: Request):
     return RedirectResponse(auth_url)
 
 
+def _upsert_email_preferences(channel_id: str, email: str) -> None:
+    """Upsert user_email_preferences — only sets weekly_report=True for new records."""
+    try:
+        db = SessionLocal()
+        pref = db.query(UserEmailPreferences).filter_by(channel_id=channel_id).first()
+        if not pref:
+            db.add(UserEmailPreferences(
+                channel_id=channel_id,
+                email=email,
+                weekly_report=True,
+            ))
+            db.commit()
+        elif pref.email != email:
+            pref.email = email
+            db.commit()
+    except Exception as e:
+        print(f"Email pref upsert error: {e}")
+    finally:
+        db.close()
+
+
 def _run_analysis_in_background(session_id: str, stats: dict, videos: list, analytics: dict, video_analytics: list):
     """Run AI analysis after login and update session data when done."""
     import datetime
@@ -183,6 +204,27 @@ def _run_analysis_in_background(session_id: str, stats: dict, videos: list, anal
             _user_data[session_id] = data
             _persist_session(session_id, creds, data)
             print(f"Analysis saved for {session_id[:8]}")
+
+            # First report: generate immediately on channel connect
+            channel_id = stats.get("channel_id")
+            email = data.get("email", "")
+            if channel_id and email:
+                try:
+                    from database.models import WeeklyReport
+                    db = SessionLocal()
+                    existing = db.query(WeeklyReport).filter_by(channel_id=channel_id).first()
+                    db.close()
+                    if not existing:
+                        import time
+                        time.sleep(2)
+                        from app.weekly_report import generate_and_send_report
+                        db2 = SessionLocal()
+                        try:
+                            generate_and_send_report(channel_id, email, data, db2)
+                        finally:
+                            db2.close()
+                except Exception as e:
+                    print(f"First report error: {e}")
         else:
             print(f"Session not found when saving analysis for {session_id[:8]}")
     except Exception as e:
@@ -216,6 +258,16 @@ def callback(request: Request, background_tasks: BackgroundTasks):
             client_secret=credentials.client_secret,
             scopes=credentials.scopes
         )
+
+        # Fetch user email from Google OAuth
+        user_email = ""
+        try:
+            from googleapiclient.discovery import build as _build
+            _oauth2 = _build("oauth2", "v2", credentials=creds)
+            _uinfo  = _oauth2.userinfo().get().execute()
+            user_email = _uinfo.get("email", "")
+        except Exception as _e:
+            print(f"Email fetch error: {_e}")
 
         stats = get_channel_stats(creds)
         if not stats:
@@ -274,9 +326,14 @@ def callback(request: Request, background_tasks: BackgroundTasks):
             "video_analytics": video_analytics,
             "insights": existing_insights,
             "analyzed_at": existing_analyzed_at or now,
+            "email": user_email,
         }
         _user_data[session_id] = user_data
         _persist_session(session_id, creds, user_data)
+
+        # Upsert email preferences (respects existing unsubscribe status)
+        if user_email and stats.get("channel_id"):
+            _upsert_email_preferences(stats["channel_id"], user_email)
 
         if needs_analysis:
             background_tasks.add_task(

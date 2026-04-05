@@ -129,6 +129,34 @@ class CompetitorThumbnailScore(Base):
     scored_at      = Column(DateTime, default=_now)
 
 
+class WeeklyReport(Base):
+    """One report per channel per week. Never deleted."""
+    __tablename__ = "weekly_reports"
+    id             = Column(String, primary_key=True)   # UUID
+    channel_id     = Column(String, nullable=False, index=True)
+    email          = Column(String, nullable=False)
+    week_start     = Column(String, nullable=False)     # YYYY-MM-DD (Monday)
+    week_end       = Column(String, nullable=False)     # YYYY-MM-DD (Sunday)
+    report_data    = Column(Text,   nullable=False)     # JSON
+    email_sent     = Column(Boolean, default=False)
+    email_sent_at  = Column(DateTime, nullable=True)
+    created_at     = Column(DateTime, default=_now)
+    opened         = Column(Boolean, default=False)
+    unsubscribed   = Column(Boolean, default=False)
+
+
+class UserEmailPreferences(Base):
+    """Per-channel email preferences. Created on first report send."""
+    __tablename__ = "user_email_preferences"
+    channel_id        = Column(String, primary_key=True)
+    email             = Column(String, nullable=False)
+    weekly_report     = Column(Boolean, default=True)
+    unsubscribe_token = Column(String, nullable=True, unique=True, index=True)
+    unsubscribed_at   = Column(DateTime, nullable=True)
+    resubscribed_at   = Column(DateTime, nullable=True)
+    created_at        = Column(DateTime, default=_now)
+
+
 import os
 DATABASE_URL = os.environ.get("DATABASE_URL", "sqlite:///ytgrowth.db")
 # Railway provides postgres:// but SQLAlchemy needs postgresql://
@@ -144,6 +172,10 @@ from sqlalchemy import text as _text
 with engine.connect() as _conn:
     for _stmt in [
         "ALTER TABLE thumbnail_analyses ADD COLUMN linked_video_idea TEXT",
+        "ALTER TABLE weekly_reports ADD COLUMN opened BOOLEAN DEFAULT 0",
+        "ALTER TABLE weekly_reports ADD COLUMN unsubscribed BOOLEAN DEFAULT 0",
+        "ALTER TABLE user_email_preferences ADD COLUMN unsubscribe_token TEXT",
+        "ALTER TABLE user_email_preferences ADD COLUMN resubscribed_at DATETIME",
     ]:
         try:
             _conn.execute(_text(_stmt))

@@ -1,5 +1,4 @@
 import os
-import datetime
 from pathlib import Path
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -16,6 +15,8 @@ from routers import keyword_routes
 from routers import billing
 from routers import video_ideas_routes
 from routers import thumbnail_routes
+from routers import email_routes
+from routers import report_routes
 
 app = FastAPI(title="YTGrowth API", redirect_slashes=False)
 
@@ -42,48 +43,24 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(auth.router, prefix="/auth")
+app.include_router(auth.router,             prefix="/auth")
 app.include_router(competitor_routes.router, prefix="/competitors")
-app.include_router(seo_routes.router, prefix="/seo")
-app.include_router(keyword_routes.router, prefix="/keywords")
-app.include_router(billing.router, prefix="/billing")
+app.include_router(seo_routes.router,        prefix="/seo")
+app.include_router(keyword_routes.router,    prefix="/keywords")
+app.include_router(billing.router,           prefix="/billing")
 app.include_router(video_ideas_routes.router, prefix="/video-ideas")
-app.include_router(thumbnail_routes.router, prefix="/thumbnail")
+app.include_router(thumbnail_routes.router,  prefix="/thumbnail")
+app.include_router(email_routes.router)                          # /unsubscribe, /resubscribe
+app.include_router(report_routes.router,     prefix="/api/reports")
 
 
-# ── Monthly reset job (runs in background thread every 6 hours) ───────────────
-def _run_monthly_resets():
-    from database.models import SessionLocal, UserSubscription
-    from app.utils import next_reset_date
-    db = SessionLocal()
-    try:
-        now = datetime.datetime.now(datetime.timezone.utc)
-        subs = db.query(UserSubscription).filter(
-            UserSubscription.reset_date != None,
-            UserSubscription.status.in_(["active", "free"]),
-        ).all()
-        for sub in subs:
-            reset = sub.reset_date
-            if reset.tzinfo is None:
-                reset = reset.replace(tzinfo=datetime.timezone.utc)
-            if now >= reset:
-                sub.monthly_used = 0
-                sub.reset_date = next_reset_date(reset)
-        db.commit()
-    except Exception as e:
-        print(f"[reset_job] Error: {e}")
-        db.rollback()
-    finally:
-        db.close()
-
+# ── Unified background scheduler ──────────────────────────────────────────────
 try:
-    from apscheduler.schedulers.background import BackgroundScheduler
-    _scheduler = BackgroundScheduler()
-    _scheduler.add_job(_run_monthly_resets, "interval", hours=6)
+    from app.scheduler import scheduler as _scheduler
     _scheduler.start()
-    print("[scheduler] Monthly reset job started")
-except ImportError:
-    print("[scheduler] apscheduler not installed — monthly resets disabled")
+    print("[scheduler] Jobs started: monthly_resets + weekly_reports")
+except Exception as _e:
+    print(f"[scheduler] Failed to start: {_e}")
 
 
 @app.get("/health")
@@ -107,6 +84,11 @@ def health():
 DIST = Path(__file__).parent.parent / "frontend" / "dist"
 
 app.mount("/assets", StaticFiles(directory=DIST / "assets"), name="assets")
+
+# Static files (logo for emails, etc.)
+STATIC_DIR = Path(__file__).parent.parent / "static"
+STATIC_DIR.mkdir(exist_ok=True)
+app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 
 @app.get("/{full_path:path}")
 def serve_frontend(full_path: str):

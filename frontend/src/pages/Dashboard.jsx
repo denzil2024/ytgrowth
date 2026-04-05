@@ -5,6 +5,7 @@ import VideoOptimizePanel from './VideoOptimizePanel'
 import Keywords from './Keywords'
 import VideoIdeas from './VideoIdeas'
 import ThumbnailScore from './ThumbnailScore'
+import WeeklyReport from './WeeklyReport'
 import UsageBar from '../components/UsageBar'
 
 /* ─── Inject font + global styles once ─────────────────────────────────── */
@@ -366,6 +367,7 @@ const NAV_ICONS = {
   'Video Ideas':     <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"><circle cx="7" cy="6" r="4"/><path d="M5 10.5h4M7 10.5v2.5"/><path d="M5.5 5.5l1.5 1 1.5-1"/></svg>,
   Keywords:          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"><circle cx="6" cy="6" r="4"/><line x1="9.2" y1="9.2" x2="13" y2="13"/></svg>,
   Competitors:       <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"><circle cx="5" cy="7" r="4"/><circle cx="9" cy="7" r="4"/></svg>,
+  'Weekly Report':   <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"><rect x="1" y="2" width="12" height="10" rx="2"/><path d="M1 6h12M4 2v4M10 2v4"/></svg>,
   Settings:          <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"><circle cx="6.5" cy="6.5" r="1.8"/><path d="M6.5 1v1.2M6.5 10.8V12M1 6.5h1.2M10.8 6.5H12M2.8 2.8l.85.85M9.35 9.35l.85.85M2.8 10.2l.85-.85M9.35 4.65l.85-.85"/></svg>,
 }
 
@@ -566,8 +568,9 @@ export default function Dashboard() {
           <div style={{ padding: '6px 20px 5px' }}>
             <span style={{ fontSize: 10.5, fontWeight: 600, color: '#adb5bd', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Optimize</span>
           </div>
-          <NavBtn label="Overview"    active={nav === 'Overview'}    onClick={() => setNav('Overview')} />
-          <NavBtn label="Videos"      active={nav === 'Videos'}      onClick={() => setNav('Videos')} badge={5} />
+          <NavBtn label="Overview"       active={nav === 'Overview'}       onClick={() => setNav('Overview')} />
+          <NavBtn label="Videos"         active={nav === 'Videos'}         onClick={() => setNav('Videos')} badge={5} />
+          <NavBtn label="Weekly Report"  active={nav === 'Weekly Report'}  onClick={() => setNav('Weekly Report')} />
 
           <div style={{ height: 1, background: 'rgba(0,0,0,0.07)', margin: '10px 14px' }}/>
 
@@ -1254,6 +1257,13 @@ export default function Dashboard() {
           {nav === 'Competitors' && <Competitors />}
 
           {nav === 'Keywords' && <Keywords />}
+
+          {nav === 'Weekly Report' && (
+            <WeeklyReport
+              channelId={data?.channel?.channel_id}
+              channelEmail={data?.email}
+            />
+          )}
 
           {nav === 'SEO Studio' && <SeoOptimizer onNavigate={setNav} />}
 
