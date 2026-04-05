@@ -731,6 +731,11 @@ export default function ThumbnailScore({ channelData, onNavigate }) {
   const [error,        setError]      = useState('')
   const [l1open,       setL1Open]     = useState(false)
 
+  // Tabs: 'new' | 'previous'
+  const [activeTab,    setActiveTab]  = useState('new')
+  // Which history item is expanded in the Previous tab
+  const [historyOpen,  setHistoryOpen]= useState(null)   // id string
+
   // Video ideas integration
   const [videoIdeas,   setVideoIdeas] = useState([])
   const [hasIdeas,     setHasIdeas]   = useState(false)
@@ -742,13 +747,11 @@ export default function ThumbnailScore({ channelData, onNavigate }) {
   const [markingReady, setMarkingReady] = useState(false)
   const [markedReady,  setMarkedReady]  = useState(false)
 
-  // History + upload overlay
+  // History
   const [history,     setHistory]    = useState([])
-  const [showUpload,  setShowUpload] = useState(false)
   const [dupMessage,  setDupMsg]     = useState('')
 
-  const preloadRef   = useRef(null)
-  const prevStateRef = useRef('idle')
+  const preloadRef = useRef(null)
 
   // ── Derive initial topic from channel data ────────────────────────────────
   function deriveTopicFromChannel() {
@@ -773,7 +776,6 @@ export default function ThumbnailScore({ channelData, onNavigate }) {
   useEffect(() => {
     // Read localStorage synchronously before any async calls
     const prefillRaw = localStorage.getItem('ytg_prefill_idea')
-    const hadPrefill = !!prefillRaw
     if (prefillRaw) {
       localStorage.removeItem('ytg_prefill_idea')
       try { setPreFill(JSON.parse(prefillRaw)) } catch {}
@@ -795,18 +797,12 @@ export default function ThumbnailScore({ channelData, onNavigate }) {
         setVideoIdeas(viData.ideas)
         setHasIdeas(true)
       }
-      // History — skip restore if user came via "Score Thumbnail" to go straight to upload
+      // History — always start on "New Thumbnail" tab in idle state
       const analyses = histData.analyses || []
       setHistory(analyses)
-      if (!hadPrefill && analyses.length > 0) {
-        setAnalysis(analyses[0])
-        setState(analyses[0].layer2_scores ? 'ready2' : 'ready1')
-        setInitTopic(analyses[0].confirmed_keyword || '')
-      } else {
-        const topic = deriveTopicFromChannel()
-        setInitTopic(topic)
-        setState('idle')
-      }
+      const topic = deriveTopicFromChannel()
+      setInitTopic(topic)
+      setState('idle')
     })
   }, []) // eslint-disable-line
 
@@ -824,9 +820,7 @@ export default function ThumbnailScore({ channelData, onNavigate }) {
 
   // ── Upload handler ─────────────────────────────────────────────────────────
   async function handleUpload(file, confirmedKeyword, videoTitle, ideaId, ideaData) {
-    prevStateRef.current = state
     setState('uploading')
-    setShowUpload(false)
     setError('')
     setDupMsg('')
 
@@ -845,12 +839,13 @@ export default function ThumbnailScore({ channelData, onNavigate }) {
       setMarkedReady(false)
       if (d.already_analyzed) setDupMsg('This thumbnail was analyzed before. Here are your saved results.')
       setState(d.analysis.layer2_scores ? 'ready2' : 'ready1')
+      setActiveTab('new')
       // Refresh history
       fetch('/thumbnail/history', { credentials: 'include' }).then(r => r.json())
         .then(hd => setHistory(hd.analyses || [])).catch(() => {})
     } catch (e) {
       setError(e.message || 'Upload failed')
-      setState(prevStateRef.current)
+      setState('idle')
     }
   }
 
@@ -902,7 +897,7 @@ export default function ThumbnailScore({ channelData, onNavigate }) {
     setMarkedReady(!!item.linked_video_idea?.thumbnail_ready)
     setState(item.layer2_scores ? 'ready2' : 'ready1')
     setDupMsg('')
-    setShowUpload(false)
+    setActiveTab('previous')
   }
 
   // ── Mark idea as Thumbnail Ready ───────────────────────────────────────────
@@ -960,14 +955,40 @@ export default function ThumbnailScore({ channelData, onNavigate }) {
     )
   }
 
+  const TABS = [
+    { key: 'new',      label: 'New Thumbnail' },
+    { key: 'previous', label: history.length > 0 ? `Previous (${history.length})` : 'Previous' },
+  ]
+
   return (
     <div>
       {/* Header */}
-      <div style={{ marginBottom: 28 }}>
+      <div style={{ marginBottom: 20 }}>
         <h1 style={{ fontSize: 24, fontWeight: 800, color: '#0a0a0f', letterSpacing: '-0.7px', marginBottom: 5 }}>
           Thumbnail IQ
         </h1>
         <p style={{ fontSize: 13.5, color: C.text3 }}>See how your thumbnail performs before you publish</p>
+      </div>
+
+      {/* Tabs */}
+      <div style={{ display: 'flex', gap: 0, marginBottom: 24,
+                    borderBottom: '1.5px solid rgba(0,0,0,0.08)' }}>
+        {TABS.map(tab => (
+          <button
+            key={tab.key}
+            onClick={() => setActiveTab(tab.key)}
+            style={{
+              padding: '9px 20px', background: 'none', border: 'none',
+              cursor: 'pointer', fontFamily: 'inherit',
+              fontSize: 13.5, fontWeight: activeTab === tab.key ? 700 : 500,
+              color: activeTab === tab.key ? C.red : C.text3,
+              borderBottom: activeTab === tab.key ? `2px solid ${C.red}` : '2px solid transparent',
+              marginBottom: -1.5, transition: 'color 0.15s',
+            }}
+          >
+            {tab.label}
+          </button>
+        ))}
       </div>
 
       {/* Error banner */}
@@ -985,31 +1006,161 @@ export default function ThumbnailScore({ channelData, onNavigate }) {
         </p>
       )}
 
-      {/* Upload New overlay (shown when user clicks Upload New while results are visible) */}
-      {showUpload && (state === 'ready1' || state === 'ready2') && (
-        <div className="tiq-section" style={{ marginBottom: 16 }}>
-          <div className="tiq-card" style={{ padding: '20px 24px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
-              <p style={{ fontSize: 13, fontWeight: 600, color: C.text1 }}>Upload New Thumbnail</p>
-              <button onClick={() => setShowUpload(false)}
-                style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 20,
-                         color: C.text3, fontFamily: 'inherit', padding: 0, lineHeight: 1 }}>×</button>
+      {/* ── PREVIOUS TAB ─────────────────────────────────────────────────── */}
+      {activeTab === 'previous' && (
+        <div className="tiq-section">
+          {history.length === 0 ? (
+            <div style={{ textAlign: 'center', padding: '56px 24px', color: C.text3 }}>
+              <p style={{ fontSize: 14, fontWeight: 600, marginBottom: 6, color: C.text2 }}>No previous thumbnails</p>
+              <p style={{ fontSize: 13 }}>Upload a thumbnail to get started.</p>
             </div>
-            <UploadPanel
-              videoIdeas={videoIdeas}
-              hasIdeas={hasIdeas}
-              initialIdea={preFillIdea}
-              initialTopic={initialTopic}
-              topicSource={topicSource}
-              onNavigate={onNavigate}
-              onUpload={handleUpload}
-            />
-          </div>
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+              {history.map(item => {
+                const isOpen  = historyOpen === item.id
+                const score   = item.final_score ?? item.algorithm_score ?? 0
+                const max     = item.final_score != null ? 100 : 60
+                const col     = scoreColor(score, max)
+                const itemL1  = item.layer1_scores
+                const itemL2  = item.layer2_scores
+                const itemLinked = item.linked_video_idea || null
+
+                return (
+                  <div key={item.id} className="tiq-card" style={{ overflow: 'hidden' }}>
+                    {/* Row header — always visible */}
+                    <div
+                      onClick={() => setHistoryOpen(isOpen ? null : item.id)}
+                      style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 16px',
+                               cursor: 'pointer', userSelect: 'none' }}
+                    >
+                      {item.thumbnail_b64
+                        ? <img src={`data:image/jpeg;base64,${item.thumbnail_b64}`} alt=""
+                               style={{ width: 64, height: 36, borderRadius: 6, objectFit: 'cover', flexShrink: 0 }}/>
+                        : <div style={{ width: 64, height: 36, borderRadius: 6, background: '#ebebef', flexShrink: 0 }}/>
+                      }
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <p style={{ fontSize: 13, fontWeight: 600, color: C.text1,
+                                    overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                          {item.confirmed_keyword || 'Untitled'}
+                        </p>
+                        <p style={{ fontSize: 11, color: C.text3, marginTop: 2 }}>
+                          {timeAgo(item.uploaded_at)}
+                          {item.format && <> · {item.format}</>}
+                        </p>
+                      </div>
+                      <span style={{ fontSize: 13, fontWeight: 700, color: col,
+                                     fontVariantNumeric: 'tabular-nums', flexShrink: 0 }}>
+                        {score}/{max}
+                      </span>
+                      {item.linked_video_idea?.thumbnail_ready && (
+                        <span style={{ fontSize: 10, fontWeight: 700, color: C.green,
+                                       background: C.greenBg, border: `1px solid ${C.greenBdr}`,
+                                       borderRadius: 20, padding: '2px 8px', flexShrink: 0 }}>
+                          Ready
+                        </span>
+                      )}
+                      <button
+                        onClick={e => { e.stopPropagation(); handleDelete(item.id) }}
+                        style={{ background: 'none', border: 'none', cursor: 'pointer',
+                                 color: '#d1d5db', fontSize: 18, padding: '0 2px',
+                                 flexShrink: 0, lineHeight: 1, fontFamily: 'inherit' }}
+                        onMouseEnter={e => { e.currentTarget.style.color = C.red }}
+                        onMouseLeave={e => { e.currentTarget.style.color = '#d1d5db' }}
+                        title="Remove"
+                      >×</button>
+                      <span style={{ fontSize: 11, color: C.text3, flexShrink: 0 }}>{isOpen ? '▲' : '▼'}</span>
+                    </div>
+
+                    {/* Expanded detail */}
+                    {isOpen && itemL1 && (
+                      <div style={{ borderTop: `1px solid ${C.border}`, padding: '16px' }}>
+                        <LinkedIdeaCard idea={itemLinked} />
+                        <div style={{ display: 'grid', gridTemplateColumns: '2fr 3fr', gap: 20 }}>
+                          {/* Left: image */}
+                          <div>
+                            <div style={{ borderRadius: 12, overflow: 'hidden', border: `1px solid ${C.border}` }}>
+                              {item.thumbnail_b64
+                                ? <img src={`data:image/jpeg;base64,${item.thumbnail_b64}`} alt=""
+                                       style={{ width: '100%', display: 'block', aspectRatio: '16/9', objectFit: 'cover' }}/>
+                                : <div style={{ width: '100%', aspectRatio: '16/9', background: '#ebebef' }}/>
+                              }
+                            </div>
+                            {itemL2 && (
+                              <div style={{ marginTop: 10, display: 'flex', flexDirection: 'column', gap: 6 }}>
+                                {itemL2.emotionLabel && (
+                                  <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                                    <span style={{ fontSize: 11, fontWeight: 600, color: C.text3, width: 70, flexShrink: 0 }}>Emotion</span>
+                                    <Badge text={itemL2.emotionLabel}
+                                      color={itemL2.emotionLabel.toLowerCase().includes('neutral') ? C.amber : C.green}
+                                      bg={itemL2.emotionLabel.toLowerCase().includes('neutral') ? C.amberBg : C.greenBg}
+                                      bdr={itemL2.emotionLabel.toLowerCase().includes('neutral') ? C.amberBdr : C.greenBdr}
+                                    />
+                                  </div>
+                                )}
+                                {itemL2.feedPosition && (
+                                  <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                                    <span style={{ fontSize: 11, fontWeight: 600, color: C.text3, width: 70, flexShrink: 0 }}>Feed</span>
+                                    <Badge
+                                      text={itemL2.feedPosition === 'stands out' ? 'Stands Out' : itemL2.feedPosition === 'disappears' ? 'Disappears' : 'Blends In'}
+                                      color={itemL2.feedPosition === 'stands out' ? C.green : itemL2.feedPosition === 'disappears' ? C.red : C.amber}
+                                      bg={itemL2.feedPosition === 'stands out' ? C.greenBg : itemL2.feedPosition === 'disappears' ? C.redBg : C.amberBg}
+                                      bdr={itemL2.feedPosition === 'stands out' ? C.greenBdr : itemL2.feedPosition === 'disappears' ? C.redBdr : C.amberBdr}
+                                    />
+                                  </div>
+                                )}
+                              </div>
+                            )}
+                          </div>
+                          {/* Right: scores */}
+                          <div>
+                            <div className="tiq-card" style={{ padding: '16px', marginBottom: 12 }}>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 14 }}>
+                                <ScoreRing score={score} max={max} label={max === 100 ? 'Thumbnail IQ' : 'Technical'} size={90} strokeW={7}/>
+                                <div style={{ flex: 1 }}>
+                                  <p style={{ fontSize: 13, fontWeight: 700, color: col }}>
+                                    {scoreLabel(score, max)}
+                                    {!itemL2 && <span style={{ fontSize: 11, fontWeight: 400, color: C.text3 }}> — technical only</span>}
+                                  </p>
+                                  <p style={{ fontSize: 12, color: C.text3, marginTop: 4 }}>
+                                    {item.format} · {item.size_bracket}
+                                  </p>
+                                </div>
+                              </div>
+                              {Object.entries(L1_META).map(([k]) => (
+                                <L1Row key={k} keyName={k} data={itemL1[k]} benchComp={item.benchmark_comparison || {}}/>
+                              ))}
+                            </div>
+                            {itemL2 && (
+                              <div className="tiq-card" style={{ padding: '16px', marginBottom: 12 }}>
+                                <p style={{ fontSize: 12, fontWeight: 700, color: C.text1, marginBottom: 8,
+                                            paddingBottom: 8, borderBottom: `1px solid #f0f0f4` }}>
+                                  AI Analysis — {itemL2.claude_score ?? 0}/40
+                                </p>
+                                {Object.entries(itemL2.scores || {}).map(([k, v]) => (
+                                  <L2Row key={k} dimKey={k} dim={v}/>
+                                ))}
+                                {itemL2.overallVerdict && (
+                                  <p style={{ fontSize: 12.5, color: C.text2, lineHeight: 1.65,
+                                              marginTop: 12, paddingTop: 12, borderTop: `1px solid #f0f0f4` }}>
+                                    {itemL2.overallVerdict}
+                                  </p>
+                                )}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )
+              })}
+            </div>
+          )}
         </div>
       )}
 
-      {/* ── STATE: idle / uploading ──────────────────────────────────────── */}
-      {(state === 'idle' || state === 'uploading') && (
+      {/* ── NEW TAB ───────────────────────────────────────────────────────── */}
+      {activeTab === 'new' && (state === 'idle' || state === 'uploading') && (
         <div className="tiq-section">
           {state === 'uploading' ? (
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center',
@@ -1033,8 +1184,8 @@ export default function ThumbnailScore({ channelData, onNavigate }) {
         </div>
       )}
 
-      {/* ── STATE: Layer 1 ready / analyzing / Layer 2 ready ────────────── */}
-      {(state === 'ready1' || state === 'analyzing' || state === 'ready2') && l1 && (
+      {/* ── NEW TAB: results ─────────────────────────────────────────────── */}
+      {activeTab === 'new' && (state === 'ready1' || state === 'analyzing' || state === 'ready2') && l1 && (
         <div className="tiq-section">
           <div style={{ display: 'grid', gridTemplateColumns: '2fr 3fr', gap: 20 }}>
 
@@ -1096,9 +1247,9 @@ export default function ThumbnailScore({ channelData, onNavigate }) {
                 </div>
               )}
 
-              {/* Upload New button */}
+              {/* New thumbnail — switch to idle */}
               <button
-                onClick={() => setShowUpload(true)}
+                onClick={() => { setAnalysis(null); setMarkedReady(false); setState('idle') }}
                 style={{
                   marginTop: 12, background: 'none', cursor: 'pointer', fontFamily: 'inherit',
                   border: '0.5px solid rgba(0,0,0,0.1)', borderRadius: 8,
@@ -1356,13 +1507,6 @@ export default function ThumbnailScore({ channelData, onNavigate }) {
             </div>
           </div>
 
-          {/* History panel — shown below the 2-col grid when ≥2 analyses exist */}
-          <HistoryPanel
-            history={history}
-            activeId={analysis?.id}
-            onSelect={handleRestoreHistory}
-            onDelete={handleDelete}
-          />
         </div>
       )}
     </div>
