@@ -368,6 +368,57 @@ def get_latest(request: Request):
         db.close()
 
 
+# ─── GET /thumbnail/history ────────────────────────────────────────────────────
+
+@router.get("/history")
+def get_history(request: Request):
+    """Returns the last 5 non-deleted analyses for this channel, newest first."""
+    data, creds, channel_id, _ = _get_channel_data(request)
+    if not creds:
+        return JSONResponse({"error": "Not authenticated."}, status_code=401)
+
+    db = SessionLocal()
+    try:
+        rows = (
+            db.query(ThumbnailAnalysis)
+            .filter_by(channel_id=channel_id)
+            .filter(ThumbnailAnalysis.cleared_at == None)
+            .order_by(ThumbnailAnalysis.uploaded_at.desc())
+            .limit(5)
+            .all()
+        )
+        return JSONResponse({"analyses": [_row_to_dict(r) for r in rows]})
+    finally:
+        db.close()
+
+
+# ─── POST /thumbnail/delete ────────────────────────────────────────────────────
+
+class DeleteBody(BaseModel):
+    thumbnail_id: str
+
+
+@router.post("/delete")
+def delete_thumbnail(body: DeleteBody, request: Request):
+    """Hard-deletes a specific analysis. Only called on explicit user action."""
+    _, creds, channel_id, _ = _get_channel_data(request)
+    if not creds:
+        return JSONResponse({"error": "Not authenticated."}, status_code=401)
+
+    db = SessionLocal()
+    try:
+        row = db.query(ThumbnailAnalysis).filter_by(
+            id=body.thumbnail_id, channel_id=channel_id
+        ).first()
+        if not row:
+            return JSONResponse({"error": "Not found."}, status_code=404)
+        db.delete(row)
+        db.commit()
+        return JSONResponse({"ok": True})
+    finally:
+        db.close()
+
+
 # ─── POST /thumbnail/clear ─────────────────────────────────────────────────────
 
 class ClearBody(BaseModel):

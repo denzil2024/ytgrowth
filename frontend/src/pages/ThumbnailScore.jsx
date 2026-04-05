@@ -400,16 +400,93 @@ function LinkedIdeaCard({ idea }) {
         Benchmarked for: {idea.title}
       </p>
       {idea.angle && (
-        <p style={{ fontSize: 13, color: '#3b82f6', fontWeight: 400, marginBottom: 8, lineHeight: 1.5 }}>
+        <p style={{ fontSize: 13, color: '#6b7280', fontWeight: 400, marginBottom: 8, lineHeight: 1.5 }}>
           {idea.angle}
         </p>
       )}
       <span style={{
-        fontSize: 11, fontWeight: 500, color: '#1d4ed8',
-        background: '#dbeafe', borderRadius: 20, padding: '2px 8px',
+        fontSize: 11, fontWeight: 500, color: '#15803d',
+        background: '#f0fdf4', borderRadius: 20, padding: '2px 8px',
       }}>
         Competitor gap — {idea.opportunityScore}/100
       </span>
+    </div>
+  )
+}
+
+/* ─── Time helper ────────────────────────────────────────────────────────── */
+function timeAgo(isoStr) {
+  if (!isoStr) return ''
+  const d = Math.floor((Date.now() - new Date(isoStr).getTime()) / 86400000)
+  if (d === 0) return 'Today'
+  if (d === 1) return '1 day ago'
+  if (d < 30) return `${d} days ago`
+  const m = Math.floor(d / 30)
+  return `${m} month${m > 1 ? 's' : ''} ago`
+}
+
+/* ─── History panel ───────────────────────────────────────────────────────── */
+function HistoryPanel({ history, activeId, onSelect, onDelete }) {
+  if (!history || history.length < 2) return null
+  return (
+    <div style={{ marginTop: 24 }}>
+      <p style={{ fontSize: 11, fontWeight: 500, color: '#9ca3af', textTransform: 'uppercase',
+                  letterSpacing: '0.06em', marginBottom: 10 }}>Previous Thumbnails</p>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+        {history.map(item => {
+          const isActive = item.id === activeId
+          const score = item.final_score ?? item.algorithm_score ?? 0
+          const max   = item.final_score != null ? 100 : 60
+          const col   = scoreColor(score, max)
+          return (
+            <div
+              key={item.id}
+              onClick={() => onSelect(item)}
+              style={{
+                display: 'flex', alignItems: 'center', gap: 10,
+                padding: '7px 10px', borderRadius: 8, cursor: 'pointer',
+                border: `1px solid ${isActive ? 'rgba(0,0,0,0.1)' : 'rgba(0,0,0,0.06)'}`,
+                background: isActive ? '#f7f7fa' : '#fff',
+                transition: 'background 0.12s',
+              }}
+              onMouseEnter={e => { if (!isActive) e.currentTarget.style.background = '#f9f9fb' }}
+              onMouseLeave={e => { if (!isActive) e.currentTarget.style.background = '#fff' }}
+            >
+              {item.thumbnail_b64
+                ? <img src={`data:image/jpeg;base64,${item.thumbnail_b64}`} alt=""
+                       style={{ width: 48, height: 27, borderRadius: 4, objectFit: 'cover', flexShrink: 0 }}/>
+                : <div style={{ width: 48, height: 27, borderRadius: 4, background: '#ebebef', flexShrink: 0 }}/>
+              }
+              <span style={{ fontSize: 12, fontWeight: 500, color: col, flexShrink: 0,
+                             fontVariantNumeric: 'tabular-nums' }}>{score}/{max}</span>
+              {item.confirmed_keyword && (
+                <span style={{ fontSize: 11, color: '#9ca3af', flex: 1, overflow: 'hidden',
+                               textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                  {item.confirmed_keyword}
+                </span>
+              )}
+              <span style={{ fontSize: 11, color: '#9ca3af', flexShrink: 0 }}>
+                {timeAgo(item.uploaded_at)}
+              </span>
+              {item.linked_video_idea?.thumbnail_ready && (
+                <span style={{ fontSize: 10, fontWeight: 500, color: '#16a34a',
+                               background: '#f0fdf4', borderRadius: 20, padding: '2px 7px', flexShrink: 0 }}>
+                  Ready
+                </span>
+              )}
+              <button
+                onClick={e => { e.stopPropagation(); onDelete(item.id) }}
+                style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 15,
+                         color: '#d1d5db', padding: '0 2px', flexShrink: 0, lineHeight: 1,
+                         fontFamily: 'inherit' }}
+                onMouseEnter={e => { e.currentTarget.style.color = '#ef4444' }}
+                onMouseLeave={e => { e.currentTarget.style.color = '#d1d5db' }}
+                title="Remove"
+              >×</button>
+            </div>
+          )
+        })}
+      </div>
     </div>
   )
 }
@@ -665,7 +742,13 @@ export default function ThumbnailScore({ channelData, onNavigate }) {
   const [markingReady, setMarkingReady] = useState(false)
   const [markedReady,  setMarkedReady]  = useState(false)
 
-  const preloadRef = useRef(null)
+  // History + upload overlay
+  const [history,     setHistory]    = useState([])
+  const [showUpload,  setShowUpload] = useState(false)
+  const [dupMessage,  setDupMsg]     = useState('')
+
+  const preloadRef   = useRef(null)
+  const prevStateRef = useRef('idle')
 
   // ── Derive initial topic from channel data ────────────────────────────────
   function deriveTopicFromChannel() {
@@ -704,18 +787,20 @@ export default function ThumbnailScore({ channelData, onNavigate }) {
     // Fetch both in parallel; only transition to idle after both resolve
     Promise.all([
       fetch('/thumbnail/video-ideas', { credentials: 'include' }).then(r => r.json()).catch(() => ({})),
-      fetch('/thumbnail/latest',      { credentials: 'include' }).then(r => r.json()).catch(() => ({})),
-    ]).then(([viData, latestData]) => {
+      fetch('/thumbnail/history',     { credentials: 'include' }).then(r => r.json()).catch(() => ({})),
+    ]).then(([viData, histData]) => {
       // Video ideas
       if (viData.has_ideas && viData.ideas?.length) {
         setVideoIdeas(viData.ideas)
         setHasIdeas(true)
       }
-      // Latest analysis
-      if (latestData.analysis) {
-        setAnalysis(latestData.analysis)
-        setState(latestData.analysis.layer2_scores ? 'ready2' : 'ready1')
-        setInitTopic(latestData.analysis.confirmed_keyword || '')
+      // History
+      const analyses = histData.analyses || []
+      setHistory(analyses)
+      if (analyses.length > 0) {
+        setAnalysis(analyses[0])
+        setState(analyses[0].layer2_scores ? 'ready2' : 'ready1')
+        setInitTopic(analyses[0].confirmed_keyword || '')
       } else {
         const topic = deriveTopicFromChannel()
         setInitTopic(topic)
@@ -738,8 +823,11 @@ export default function ThumbnailScore({ channelData, onNavigate }) {
 
   // ── Upload handler ─────────────────────────────────────────────────────────
   async function handleUpload(file, confirmedKeyword, videoTitle, ideaId, ideaData) {
+    prevStateRef.current = state
     setState('uploading')
+    setShowUpload(false)
     setError('')
+    setDupMsg('')
 
     const fd = new FormData()
     fd.append('file', file)
@@ -754,10 +842,14 @@ export default function ThumbnailScore({ channelData, onNavigate }) {
       if (!r.ok || d.error) throw new Error(d.error || 'Upload failed')
       setAnalysis(d.analysis)
       setMarkedReady(false)
-      setState('ready1')
+      if (d.already_analyzed) setDupMsg('This thumbnail was analyzed before. Loading your saved results.')
+      setState(d.analysis.layer2_scores ? 'ready2' : 'ready1')
+      // Refresh history
+      fetch('/thumbnail/history', { credentials: 'include' }).then(r => r.json())
+        .then(hd => setHistory(hd.analyses || [])).catch(() => {})
     } catch (e) {
       setError(e.message || 'Upload failed')
-      setState('idle')
+      setState(prevStateRef.current)
     }
   }
 
@@ -782,17 +874,34 @@ export default function ThumbnailScore({ channelData, onNavigate }) {
     }
   }
 
-  // ── Clear handler ──────────────────────────────────────────────────────────
-  async function handleClear() {
-    if (!analysis?.id) return
-    await fetch('/thumbnail/clear', {
+  // ── Delete a history entry (hard delete, explicit only) ───────────────────
+  async function handleDelete(thumbnailId) {
+    await fetch('/thumbnail/delete', {
       method: 'POST', credentials: 'include',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ thumbnail_id: analysis.id }),
-    })
-    setAnalysis(null)
-    setMarkedReady(false)
-    setState('idle')
+      body: JSON.stringify({ thumbnail_id: thumbnailId }),
+    }).catch(() => {})
+    const remaining = history.filter(h => h.id !== thumbnailId)
+    setHistory(remaining)
+    if (analysis?.id === thumbnailId) {
+      if (remaining.length > 0) {
+        setAnalysis(remaining[0])
+        setState(remaining[0].layer2_scores ? 'ready2' : 'ready1')
+      } else {
+        setAnalysis(null)
+        setMarkedReady(false)
+        setState('idle')
+      }
+    }
+  }
+
+  // ── Restore a history entry as active ─────────────────────────────────────
+  function handleRestoreHistory(item) {
+    setAnalysis(item)
+    setMarkedReady(!!item.linked_video_idea?.thumbnail_ready)
+    setState(item.layer2_scores ? 'ready2' : 'ready1')
+    setDupMsg('')
+    setShowUpload(false)
   }
 
   // ── Mark idea as Thumbnail Ready ───────────────────────────────────────────
@@ -865,6 +974,41 @@ export default function ThumbnailScore({ channelData, onNavigate }) {
         <div style={{ background: C.redBg, border: `1px solid ${C.redBdr}`, borderRadius: 12,
                       padding: '12px 16px', marginBottom: 20, fontSize: 13, color: C.red }}>
           {error}
+        </div>
+      )}
+
+      {/* Duplicate banner */}
+      {dupMessage && (
+        <div style={{ background: C.blueBg, border: `1px solid ${C.blueBdr}`, borderRadius: 12,
+                      padding: '10px 16px', marginBottom: 16, fontSize: 13, color: C.blue,
+                      display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <span>{dupMessage}</span>
+          <button onClick={() => setDupMsg('')}
+            style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 16,
+                     color: '#93c5fd', padding: '0 0 0 8px', fontFamily: 'inherit', lineHeight: 1 }}>×</button>
+        </div>
+      )}
+
+      {/* Upload New overlay (shown when user clicks Upload New while results are visible) */}
+      {showUpload && (state === 'ready1' || state === 'ready2') && (
+        <div className="tiq-section" style={{ marginBottom: 16 }}>
+          <div className="tiq-card" style={{ padding: '20px 24px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
+              <p style={{ fontSize: 13, fontWeight: 600, color: C.text1 }}>Upload New Thumbnail</p>
+              <button onClick={() => setShowUpload(false)}
+                style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 20,
+                         color: C.text3, fontFamily: 'inherit', padding: 0, lineHeight: 1 }}>×</button>
+            </div>
+            <UploadPanel
+              videoIdeas={videoIdeas}
+              hasIdeas={hasIdeas}
+              initialIdea={preFillIdea}
+              initialTopic={initialTopic}
+              topicSource={topicSource}
+              onNavigate={onNavigate}
+              onUpload={handleUpload}
+            />
+          </div>
         </div>
       )}
 
@@ -956,12 +1100,19 @@ export default function ThumbnailScore({ channelData, onNavigate }) {
                 </div>
               )}
 
-              {/* Clear link */}
-              <button onClick={handleClear}
-                style={{ marginTop: 14, background: 'none', border: 'none', cursor: 'pointer',
-                         fontSize: 12, color: C.text3, fontFamily: 'inherit', padding: 0,
-                         textDecoration: 'underline', textUnderlineOffset: 2 }}>
-                Clear &amp; Upload New
+              {/* Upload New button */}
+              <button
+                onClick={() => setShowUpload(true)}
+                style={{
+                  marginTop: 12, background: 'none', cursor: 'pointer', fontFamily: 'inherit',
+                  border: '0.5px solid rgba(0,0,0,0.1)', borderRadius: 8,
+                  padding: '6px 14px', fontSize: 12, fontWeight: 500, color: '#6b7280',
+                  transition: 'background 0.12s, border-color 0.12s',
+                }}
+                onMouseEnter={e => { e.currentTarget.style.background = '#f4f4f7'; e.currentTarget.style.borderColor = 'rgba(0,0,0,0.18)' }}
+                onMouseLeave={e => { e.currentTarget.style.background = 'none'; e.currentTarget.style.borderColor = 'rgba(0,0,0,0.1)' }}
+              >
+                Upload New Thumbnail
               </button>
             </div>
 
@@ -1208,6 +1359,14 @@ export default function ThumbnailScore({ channelData, onNavigate }) {
               )}
             </div>
           </div>
+
+          {/* History panel — shown below the 2-col grid when ≥2 analyses exist */}
+          <HistoryPanel
+            history={history}
+            activeId={analysis?.id}
+            onSelect={handleRestoreHistory}
+            onDelete={handleDelete}
+          />
         </div>
       )}
     </div>
