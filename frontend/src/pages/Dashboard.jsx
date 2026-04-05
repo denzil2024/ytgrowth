@@ -504,7 +504,7 @@ export default function Dashboard() {
 
       {/* ══ SIDEBAR ══════════════════════════════════════════════════════ */}
       <aside style={{
-        width: 292, flexShrink: 0,
+        width: 316, flexShrink: 0,
         background: '#f3f3f7',
         borderRight: '1px solid rgba(0,0,0,0.11)',
         position: 'sticky', top: 0, height: '100vh',
@@ -527,11 +527,11 @@ export default function Dashboard() {
             background: '#ffffff',
             border: '1px solid rgba(0,0,0,0.10)',
             borderRadius: 16,
-            boxShadow: '0 1px 3px rgba(0,0,0,0.10), 0 4px 14px rgba(0,0,0,0.13), 0 16px 40px rgba(0,0,0,0.16), 0 1px 0 rgba(255,255,255,0.85) inset',
+            boxShadow: '0 2px 6px rgba(0,0,0,0.11), 0 6px 20px rgba(0,0,0,0.14), 0 20px 44px rgba(0,0,0,0.17), 0 1px 0 rgba(255,255,255,0.9) inset',
             flexShrink: 0,
           }}>
             {/* Avatar + name — avatar at 16px from sidebar edge */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
               {data.channel.thumbnail
                 ? <img src={data.channel.thumbnail} alt="" style={{ width: 36, height: 36, borderRadius: '50%', objectFit: 'cover', flexShrink: 0, border: '1.5px solid rgba(0,0,0,0.08)' }}/>
                 : <div style={{ width: 36, height: 36, borderRadius: '50%', background: '#fef2f2', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 600, color: '#e5251b', flexShrink: 0 }}>{data.channel.channel_name[0].toUpperCase()}</div>
@@ -541,15 +541,17 @@ export default function Dashboard() {
                 <p style={{ fontSize: 12, color: '#6b7280', marginTop: 2 }}>{fmtNum(data.channel.subscribers)} subscribers</p>
               </div>
             </div>
-            <div style={{ height: 1, background: 'rgba(0,0,0,0.06)', marginBottom: 12 }}/>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 7 }}>
-              <span style={{ fontSize: 10, fontWeight: 600, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.09em' }}>Channel Health</span>
-              <span style={{ fontSize: 11.5, fontWeight: 700, color: scoreColor(score), fontVariantNumeric: 'tabular-nums' }}>{score} / 100</span>
+            {/* Channel Health inner card */}
+            <div style={{ background: '#f5f5f9', border: '1px solid rgba(0,0,0,0.07)', borderRadius: 11, padding: '10px 12px', boxShadow: '0 1px 3px rgba(0,0,0,0.06) inset' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+                <span style={{ fontSize: 10, fontWeight: 600, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.09em' }}>Channel Health</span>
+                <span style={{ fontSize: 11.5, fontWeight: 700, color: scoreColor(score), fontVariantNumeric: 'tabular-nums' }}>{score} / 100</span>
+              </div>
+              <div style={{ background: 'rgba(0,0,0,0.10)', borderRadius: 6, height: 5, overflow: 'hidden' }}>
+                <div style={{ width: `${score}%`, height: '100%', background: scoreColor(score), borderRadius: 6, transition: 'width 1.2s cubic-bezier(0.34,1.56,0.64,1)' }}/>
+              </div>
+              <p style={{ fontSize: 11, fontWeight: 600, marginTop: 7, color: scoreColor(score) }}>{scoreLabel(score)}</p>
             </div>
-            <div style={{ background: '#e9eaec', borderRadius: 6, height: 5, overflow: 'hidden' }}>
-              <div style={{ width: `${score}%`, height: '100%', background: scoreColor(score), borderRadius: 6, transition: 'width 1.2s cubic-bezier(0.34,1.56,0.64,1)' }}/>
-            </div>
-            <p style={{ fontSize: 11, fontWeight: 600, marginTop: 7, color: scoreColor(score) }}>{scoreLabel(score)}</p>
           </div>
         )}
 
@@ -590,7 +592,7 @@ export default function Dashboard() {
             background: '#ffffff',
             border: '1px solid rgba(0,0,0,0.10)',
             borderRadius: 14,
-            boxShadow: '0 1px 3px rgba(0,0,0,0.10), 0 4px 14px rgba(0,0,0,0.13), 0 16px 40px rgba(0,0,0,0.16), 0 1px 0 rgba(255,255,255,0.85) inset',
+            boxShadow: '0 2px 6px rgba(0,0,0,0.11), 0 6px 20px rgba(0,0,0,0.14), 0 20px 44px rgba(0,0,0,0.17), 0 1px 0 rgba(255,255,255,0.9) inset',
             flexShrink: 0,
           }}>
             <UsageBar
