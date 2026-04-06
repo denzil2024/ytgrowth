@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import Competitors from './Competitors'
+import Settings from './Settings'
 import SeoOptimizer from './SeoOptimizer'
 import VideoOptimizePanel from './VideoOptimizePanel'
 import Keywords from './Keywords'
@@ -400,6 +401,138 @@ function NavBtn({ label, active, onClick, badge }) {
   )
 }
 
+/* ─── Channel switcher dropdown ─────────────────────────────────────────── */
+function ChannelSwitcher({ channels, channelsAllowed, canAddMore, currentChannelId }) {
+  const [open, setOpen] = useState(false)
+  const ref = useRef(null)
+
+  useEffect(() => {
+    function handleClick(e) {
+      if (ref.current && !ref.current.contains(e.target)) setOpen(false)
+    }
+    document.addEventListener('mousedown', handleClick)
+    return () => document.removeEventListener('mousedown', handleClick)
+  }, [])
+
+  const current = channels.find(c => c.is_current) || channels[0]
+
+  function scoreColor(s) { return s >= 75 ? '#16a34a' : s >= 50 ? '#d97706' : '#e5251b' }
+
+  function doSwitch(channelId) {
+    setOpen(false)
+    fetch('/channels/switch', {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ channel_id: channelId }),
+    })
+      .then(r => r.json())
+      .then(d => {
+        if (d.success) window.location.reload()
+        else if (d.needs_auth) window.location.href = '/auth/login'
+      })
+  }
+
+  function fmtSubs(n) {
+    if (!n) return '0'
+    if (n >= 1e6) return (n / 1e6).toFixed(1) + 'M'
+    if (n >= 1e3) return (n / 1e3).toFixed(1) + 'K'
+    return n.toLocaleString()
+  }
+
+  if (!current) return null
+
+  return (
+    <div ref={ref} style={{ position: 'relative' }}>
+      {/* Trigger */}
+      <div
+        onClick={() => setOpen(o => !o)}
+        style={{
+          display: 'flex', alignItems: 'center', gap: 10,
+          cursor: 'pointer', userSelect: 'none',
+        }}
+      >
+        {current.channel_thumbnail
+          ? <img src={current.channel_thumbnail} alt="" style={{ width: 36, height: 36, borderRadius: '50%', objectFit: 'cover', flexShrink: 0, border: '1.5px solid rgba(0,0,0,0.08)' }} />
+          : <div style={{ width: 36, height: 36, borderRadius: '50%', background: '#fef2f2', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 600, color: '#e5251b', flexShrink: 0 }}>{(current.channel_name || '?')[0].toUpperCase()}</div>
+        }
+        <div style={{ minWidth: 0, flex: 1 }}>
+          <p style={{ fontSize: 13.5, fontWeight: 600, color: '#111114', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', letterSpacing: '-0.2px' }}>{current.channel_name}</p>
+          <p style={{ fontSize: 12, color: '#6b7280', marginTop: 2 }}>{fmtSubs(current.subscribers)} subscribers</p>
+        </div>
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#9ca3af" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }}>
+          <polyline points="2,4 6,8 10,4" />
+        </svg>
+      </div>
+
+      {/* Dropdown */}
+      {open && (
+        <div style={{
+          position: 'absolute', top: 'calc(100% + 8px)', left: 0, right: 0,
+          background: '#ffffff',
+          border: '0.5px solid rgba(0,0,0,0.1)',
+          borderRadius: 12,
+          boxShadow: '0 4px 16px rgba(0,0,0,0.12)',
+          padding: 6,
+          zIndex: 100,
+        }}>
+          {channels.map(ch => (
+            <div
+              key={ch.channel_id}
+              onClick={() => !ch.is_current && doSwitch(ch.channel_id)}
+              style={{
+                padding: '8px 10px', borderRadius: 8,
+                display: 'flex', alignItems: 'center', gap: 10,
+                cursor: ch.is_current ? 'default' : 'pointer',
+                background: 'transparent',
+                transition: 'background 0.15s',
+              }}
+              onMouseEnter={e => { if (!ch.is_current) e.currentTarget.style.background = '#f9fafb' }}
+              onMouseLeave={e => { e.currentTarget.style.background = 'transparent' }}
+            >
+              {ch.channel_thumbnail
+                ? <img src={ch.channel_thumbnail} alt="" style={{ width: 28, height: 28, borderRadius: '50%', objectFit: 'cover', flexShrink: 0 }} />
+                : <div style={{ width: 28, height: 28, borderRadius: '50%', background: '#fef2f2', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 600, color: '#e5251b', flexShrink: 0 }}>{(ch.channel_name || '?')[0].toUpperCase()}</div>
+              }
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <p style={{ fontSize: 13, fontWeight: 500, color: '#111114', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{ch.channel_name}</p>
+                <p style={{ fontSize: 11, color: '#9ca3af' }}>{fmtSubs(ch.subscribers)} subscribers</p>
+              </div>
+              {ch.is_current
+                ? <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#16a34a', flexShrink: 0 }} />
+                : ch.channel_score > 0
+                  ? <span style={{ fontSize: 11, fontWeight: 500, color: scoreColor(ch.channel_score), background: '#f9fafb', border: '0.5px solid rgba(0,0,0,0.08)', borderRadius: 20, padding: '2px 7px', flexShrink: 0 }}>{ch.channel_score}</span>
+                  : null
+              }
+            </div>
+          ))}
+
+          <div style={{ height: '0.5px', background: 'rgba(0,0,0,0.06)', margin: '4px 4px' }} />
+
+          {canAddMore
+            ? <div
+                onClick={() => { setOpen(false); window.location.href = '/auth/login' }}
+                style={{ padding: '8px 10px', borderRadius: 8, cursor: 'pointer', transition: 'background 0.15s' }}
+                onMouseEnter={e => { e.currentTarget.style.background = '#f9fafb' }}
+                onMouseLeave={e => { e.currentTarget.style.background = 'transparent' }}
+              >
+                <span style={{ fontSize: 13, color: '#e5251b', fontWeight: 500 }}>+ Connect another channel</span>
+              </div>
+            : <div
+                onClick={() => { setOpen(false); window.location.href = '/#pricing' }}
+                style={{ padding: '8px 10px', borderRadius: 8, cursor: 'pointer', transition: 'background 0.15s' }}
+                onMouseEnter={e => { e.currentTarget.style.background = '#f9fafb' }}
+                onMouseLeave={e => { e.currentTarget.style.background = 'transparent' }}
+              >
+                <span style={{ fontSize: 13, color: '#9ca3af' }}>Upgrade to connect more channels</span>
+              </div>
+          }
+        </div>
+      )}
+    </div>
+  )
+}
+
 /* ─── Dashboard ─────────────────────────────────────────────────────────── */
 export default function Dashboard() {
   useDashboardStyles()
@@ -413,6 +546,9 @@ export default function Dashboard() {
   const [analyzingAI, setAnalyzingAI] = useState(false)
   const [checked,  setChecked]  = useState({})
   const [deleted,  setDeleted]  = useState({})
+  const [channels, setChannels] = useState([])
+  const [channelsAllowed, setChannelsAllowed] = useState(1)
+  const [canAddMore, setCanAddMore] = useState(false)
 
   useEffect(() => {
     fetch('/auth/data', { credentials: 'include' })
@@ -431,6 +567,18 @@ export default function Dashboard() {
         }
       })
       .catch(e => { setError(e.message); setLoad(false) })
+
+    // Load channel list for switcher
+    fetch('/channels/list', { credentials: 'include' })
+      .then(r => r.ok ? r.json() : null)
+      .then(d => {
+        if (d) {
+          setChannels(d.channels || [])
+          setChannelsAllowed(d.channels_allowed || 1)
+          setCanAddMore(d.can_add_more || false)
+        }
+      })
+      .catch(() => {})
   }, [])
 
   // Poll for AI analysis completion when insights are still pending
@@ -525,7 +673,7 @@ export default function Dashboard() {
           <span style={{ fontSize: 15, fontWeight: 700, color: '#111114', letterSpacing: '-0.4px', lineHeight: 1 }}>YTGrowth</span>
         </a>
 
-        {/* Channel card — avatar left edge matches logo left edge (both at 16px) */}
+        {/* Channel card — single channel shows static card, multi-channel shows switcher */}
         {data && (
           <div style={{
             margin: '0 12px 12px',
@@ -536,17 +684,27 @@ export default function Dashboard() {
             boxShadow: '0 1px 3px rgba(0,0,0,0.07), 0 4px 14px rgba(0,0,0,0.09), 0 1px 0 rgba(255,255,255,0.95) inset',
             flexShrink: 0,
           }}>
-            {/* Avatar + name — avatar at 16px from sidebar edge */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
-              {data.channel.thumbnail
-                ? <img src={data.channel.thumbnail} alt="" style={{ width: 36, height: 36, borderRadius: '50%', objectFit: 'cover', flexShrink: 0, border: '1.5px solid rgba(0,0,0,0.08)' }}/>
-                : <div style={{ width: 36, height: 36, borderRadius: '50%', background: '#fef2f2', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 600, color: '#e5251b', flexShrink: 0 }}>{data.channel.channel_name[0].toUpperCase()}</div>
-              }
-              <div style={{ minWidth: 0, flex: 1 }}>
-                <p style={{ fontSize: 13.5, fontWeight: 600, color: '#111114', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', letterSpacing: '-0.2px' }}>{data.channel.channel_name}</p>
-                <p style={{ fontSize: 12, color: '#6b7280', marginTop: 2 }}>{fmtNum(data.channel.subscribers)} subscribers</p>
-              </div>
-            </div>
+            {/* Avatar + name row — switcher when 2+ channels, static when 1 */}
+            {channels.length >= 2
+              ? <div style={{ marginBottom: 12 }}>
+                  <ChannelSwitcher
+                    channels={channels}
+                    channelsAllowed={channelsAllowed}
+                    canAddMore={canAddMore}
+                    currentChannelId={data.channel.channel_id}
+                  />
+                </div>
+              : <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
+                  {data.channel.thumbnail
+                    ? <img src={data.channel.thumbnail} alt="" style={{ width: 36, height: 36, borderRadius: '50%', objectFit: 'cover', flexShrink: 0, border: '1.5px solid rgba(0,0,0,0.08)' }}/>
+                    : <div style={{ width: 36, height: 36, borderRadius: '50%', background: '#fef2f2', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 600, color: '#e5251b', flexShrink: 0 }}>{data.channel.channel_name[0].toUpperCase()}</div>
+                  }
+                  <div style={{ minWidth: 0, flex: 1 }}>
+                    <p style={{ fontSize: 13.5, fontWeight: 600, color: '#111114', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', letterSpacing: '-0.2px' }}>{data.channel.channel_name}</p>
+                    <p style={{ fontSize: 12, color: '#6b7280', marginTop: 2 }}>{fmtNum(data.channel.subscribers)} subscribers</p>
+                  </div>
+                </div>
+            }
             {/* Channel Health inner card */}
             <div style={{ background: '#f5f5f9', border: '1px solid rgba(0,0,0,0.07)', borderRadius: 11, padding: '10px 12px', boxShadow: '0 1px 3px rgba(0,0,0,0.06) inset' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
@@ -591,6 +749,10 @@ export default function Dashboard() {
           <NavBtn label="Keywords"    active={nav === 'Keywords'}    onClick={() => setNav('Keywords')} />
           <NavBtn label="Competitors" active={nav === 'Competitors'} onClick={() => setNav('Competitors')} />
 
+          <div style={{ height: 1, background: 'rgba(0,0,0,0.07)', margin: '10px 14px' }}/>
+
+          <NavBtn label="Settings" active={nav === 'Settings'} onClick={() => setNav('Settings')} />
+
         </nav>
 
         {/* Usage bar */}
@@ -612,17 +774,9 @@ export default function Dashboard() {
           </div>
         )}
 
-        {/* Footer: Settings + Disconnect */}
+        {/* Footer: Sign Out */}
         <div style={{ height: 1, background: 'rgba(0,0,0,0.07)', flexShrink: 0 }}/>
-        <div style={{ padding: '10px 14px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexShrink: 0 }}>
-          <button
-            onClick={() => setNav('Settings')}
-            style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6, color: '#9ca3af', fontSize: 12, fontFamily: "'DM Sans','Inter',sans-serif", fontWeight: 500, padding: '5px 8px', borderRadius: 7, transition: 'color 0.15s, background 0.15s' }}
-            onMouseEnter={e => { e.currentTarget.style.color = '#374151'; e.currentTarget.style.background = 'rgba(0,0,0,0.05)' }}
-            onMouseLeave={e => { e.currentTarget.style.color = '#9ca3af'; e.currentTarget.style.background = 'transparent' }}
-          >
-            {NAV_ICONS['Settings']} Settings
-          </button>
+        <div style={{ padding: '10px 14px', display: 'flex', justifyContent: 'flex-end', alignItems: 'center', flexShrink: 0 }}>
           <a
             href="/auth/logout"
             style={{ display: 'flex', alignItems: 'center', gap: 6, color: '#9ca3af', fontSize: 12, fontWeight: 500, textDecoration: 'none', padding: '5px 8px', borderRadius: 7, transition: 'color 0.15s, background 0.15s' }}
@@ -1272,33 +1426,7 @@ export default function Dashboard() {
           {nav === 'Video Ideas' && <VideoIdeas onNavigate={setNav} />}
 
           {/* ── SETTINGS ─────────────────────────────────────────────── */}
-          {nav === 'Settings' && (
-            <div style={{ maxWidth: 440 }}>
-              <div style={{ marginBottom: 24 }}>
-                <h2 style={{ fontSize: 22, fontWeight: 800, color: '#0a0a0a', letterSpacing: '-0.6px', marginBottom: 4 }}>Settings</h2>
-                <p style={{ fontSize: 13, color: C.text3 }}>Manage your connection</p>
-              </div>
-              <div className="ytg-card" style={{ padding: '22px 24px' }}>
-                <p style={{ fontSize: 11, fontWeight: 500, color: '#a0a0b0', letterSpacing: '0.05em', textTransform: 'uppercase', marginBottom: 13 }}>Connected channel</p>
-                {data && (
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 11, marginBottom: 18 }}>
-                    {data.channel.thumbnail
-                      ? <img src={data.channel.thumbnail} alt="" style={{ width: 36, height: 36, borderRadius: '50%', objectFit: 'cover', border: `2px solid ${C.border}` }}/>
-                      : <div style={{ width: 36, height: 36, borderRadius: '50%', background: C.red, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 700, color: '#fff' }}>{data.channel.channel_name[0]}</div>
-                    }
-                    <div>
-                      <p style={{ fontSize: 14, fontWeight: 700, color: C.text1 }}>{data.channel.channel_name}</p>
-                      <p style={{ fontSize: 12, color: C.text3, marginTop: 1 }}>{data.channel.subscribers.toLocaleString()} subscribers</p>
-                    </div>
-                  </div>
-                )}
-                <a href="/auth/logout" style={{ display: 'inline-flex', alignItems: 'center', gap: 7, background: C.redBg, color: C.red, border: `1px solid ${C.redBdr}`, padding: '9px 17px', borderRadius: 9, fontSize: 13, fontWeight: 700, textDecoration: 'none', fontFamily: 'inherit' }}>
-                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M4 6h6M7.5 4L10 6l-2.5 2M6 1H2a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h4"/></svg>
-                  Disconnect channel
-                </a>
-              </div>
-            </div>
-          )}
+          {nav === 'Settings' && <Settings />}
 
         </div>
       </div>

@@ -488,6 +488,12 @@ function ScrollProgress() {
 }
 
 /* ─── Landing page ──────────────────────────────────────────────────────── */
+const AUTH_ERROR_MESSAGES = {
+  channel_locked: 'This channel was recently connected to another account. You can connect it again after 30 days.',
+  channel_taken:  'This channel is already connected to another YTGrowth account.',
+  channel_limit:  'You have reached the channel limit for your plan. Upgrade to connect more channels.',
+}
+
 export default function Landing() {
   const [light, setLight] = useState(true)
   const [loggedIn, setLoggedIn] = useState(false)
@@ -495,6 +501,7 @@ export default function Landing() {
   const [openFaq, setOpenFaq] = useState(0)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
+  const [authError, setAuthError] = useState(null)
   const { isMobile, isTablet } = useBreakpoint()
   useGlobalStyles(light)
 
@@ -502,6 +509,15 @@ export default function Landing() {
     fetch('/auth/data', { credentials: 'include' })
       .then(r => { if (r.ok) setLoggedIn(true) })
       .catch(() => {})
+  }, [])
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    const err = params.get('error')
+    if (err && AUTH_ERROR_MESSAGES[err]) {
+      setAuthError(AUTH_ERROR_MESSAGES[err])
+      setTimeout(() => setAuthError(null), 8000)
+    }
   }, [])
 
   useEffect(() => {
@@ -522,6 +538,27 @@ export default function Landing() {
 
   return (
     <div style={{ fontFamily: "'DM Sans', system-ui, sans-serif", background: 'var(--ytg-bg)', color: 'var(--ytg-text)', overflowX: 'hidden' }}>
+
+      {/* ── AUTH ERROR BANNER ────────────────────────────────────────────── */}
+      {authError && (
+        <div style={{
+          position: 'fixed', top: 16, left: '50%', transform: 'translateX(-50%)',
+          background: '#fff', border: '1px solid rgba(229,37,27,0.25)',
+          borderRadius: 10, padding: '14px 20px',
+          boxShadow: '0 4px 20px rgba(0,0,0,0.14)',
+          zIndex: 200, maxWidth: 480, width: '90%',
+          display: 'flex', alignItems: 'flex-start', gap: 12,
+          animation: 'fadeUp 0.3s ease',
+        }}>
+          <div style={{ width: 18, height: 18, borderRadius: '50%', background: '#fef2f2', border: '1px solid rgba(229,37,27,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 1 }}>
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="#e5251b" strokeWidth="1.8" strokeLinecap="round"><line x1="5" y1="2" x2="5" y2="5.5"/><circle cx="5" cy="7.5" r="0.5" fill="#e5251b" stroke="none"/></svg>
+          </div>
+          <p style={{ fontSize: 13, color: '#374151', lineHeight: 1.6, flex: 1 }}>{authError}</p>
+          <button onClick={() => setAuthError(null)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#9ca3af', padding: 2, flexShrink: 0 }}>
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><line x1="2" y1="2" x2="10" y2="10"/><line x1="10" y1="2" x2="2" y2="10"/></svg>
+          </button>
+        </div>
+      )}
 
       {/* ── NAV ─────────────────────────────────────────────────────────── */}
       <nav style={{

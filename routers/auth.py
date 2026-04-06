@@ -5,9 +5,13 @@ from google.oauth2.credentials import Credentials
 import os
 import uuid
 import json
+import datetime
 from app.youtube import get_channel_stats, get_recent_videos, get_analytics, get_video_analytics
 from app.insights import analyze_channel
-from database.models import UserSession, UserEmailPreferences, SessionLocal
+from database.models import (
+    UserSession, UserEmailPreferences, UserSubscription,
+    UserAccount, ChannelRegistry, SessionLocal,
+)
 
 router = APIRouter()
 
@@ -19,6 +23,7 @@ BACKEND_URL = os.environ.get("BACKEND_URL", "http://localhost:8000")
 
 SCOPES = [
     "https://www.googleapis.com/auth/userinfo.email",
+    "https://www.googleapis.com/auth/userinfo.profile",
     "https://www.googleapis.com/auth/youtube",
     "https://www.googleapis.com/auth/yt-analytics.readonly",
     "openid"
@@ -192,7 +197,6 @@ def _upsert_email_preferences(channel_id: str, email: str) -> None:
 
 def _run_analysis_in_background(session_id: str, stats: dict, videos: list, analytics: dict, video_analytics: list):
     """Run AI analysis after login and update session data when done."""
-    import datetime
     try:
         insights = analyze_channel(stats, videos, analytics, video_analytics)
         analyzed_at = datetime.datetime.utcnow().isoformat()
@@ -259,34 +263,132 @@ def callback(request: Request, background_tasks: BackgroundTasks):
             scopes=credentials.scopes
         )
 
-        # Fetch user email from Google OAuth
-        user_email = ""
+        # Fetch full Google user info (email, display_name, profile_picture)
+        google_email    = ""
+        google_id       = ""
+        display_name    = ""
+        profile_picture = ""
         try:
             from googleapiclient.discovery import build as _build
-            _oauth2 = _build("oauth2", "v2", credentials=creds)
-            _uinfo  = _oauth2.userinfo().get().execute()
-            user_email = _uinfo.get("email", "")
+            oauth2_svc = _build("oauth2", "v2", credentials=creds)
+            ginfo = oauth2_svc.userinfo().get().execute()
+            google_email    = ginfo.get("email", "")
+            google_id       = ginfo.get("id", "")
+            display_name    = ginfo.get("name", "")
+            profile_picture = ginfo.get("picture", "")
         except Exception as _e:
-            print(f"Email fetch error: {_e}")
+            print(f"Google userinfo fetch error: {_e}")
 
         stats = get_channel_stats(creds)
         if not stats:
             return RedirectResponse(f"{BASE_URL}?error=no_channel")
 
+        channel_id = stats["channel_id"]
+
+        # ── Upsert user_accounts ──────────────────────────────────────────
+        try:
+            db = SessionLocal()
+            account = db.query(UserAccount).filter_by(email=google_email).first()
+            if not account:
+                account = UserAccount(
+                    email=google_email,
+                    google_id=google_id,
+                    display_name=display_name,
+                    profile_picture=profile_picture,
+                )
+                db.add(account)
+            else:
+                account.display_name    = display_name
+                account.profile_picture = profile_picture
+                account.google_id       = google_id
+            db.commit()
+        except Exception as _e:
+            print(f"UserAccount upsert error: {_e}")
+        finally:
+            db.close()
+
+        # ── Channel abuse prevention ──────────────────────────────────────
+        if google_email:
+            db = SessionLocal()
+            try:
+                # Step 1 — check if channel belongs to a different account
+                existing = db.query(ChannelRegistry).filter(
+                    ChannelRegistry.channel_id == channel_id,
+                    ChannelRegistry.owner_email != google_email,
+                ).first()
+
+                if existing:
+                    if existing.disconnected_at:
+                        days_since = (datetime.datetime.utcnow() - existing.disconnected_at).days
+                        if days_since < 30:
+                            db.close()
+                            return RedirectResponse(f"{BASE_URL}?error=channel_locked")
+                        # Older than 30 days — allow transfer
+                        existing.owner_email     = google_email
+                        existing.is_active       = True
+                        existing.disconnected_at = None
+                        existing.connected_at    = datetime.datetime.utcnow()
+                        db.commit()
+                    else:
+                        # Still active under another account
+                        db.close()
+                        return RedirectResponse(f"{BASE_URL}?error=channel_taken")
+
+                # Step 2 — check channel limit for this account
+                sub = db.query(UserSubscription).filter_by(channel_id=channel_id).first()
+                channels_allowed = sub.channels_allowed if sub else 1
+
+                active_channels = db.query(ChannelRegistry).filter(
+                    ChannelRegistry.owner_email == google_email,
+                    ChannelRegistry.is_active   == True,
+                    ChannelRegistry.channel_id  != channel_id,
+                ).count()
+
+                if active_channels >= channels_allowed:
+                    db.close()
+                    return RedirectResponse(f"{BASE_URL}?error=channel_limit")
+
+                # Step 3 — register or update channel
+                registry = db.query(ChannelRegistry).filter_by(
+                    owner_email=google_email,
+                    channel_id=channel_id,
+                ).first()
+
+                if not registry:
+                    registry = ChannelRegistry(
+                        owner_email=google_email,
+                        channel_id=channel_id,
+                        channel_name=stats.get("channel_name"),
+                        channel_thumbnail=stats.get("thumbnail"),
+                        subscribers=stats.get("subscribers"),
+                        is_active=True,
+                    )
+                    db.add(registry)
+                else:
+                    registry.is_active         = True
+                    registry.disconnected_at   = None
+                    registry.channel_name      = stats.get("channel_name")
+                    registry.channel_thumbnail = stats.get("thumbnail")
+                    registry.subscribers       = stats.get("subscribers")
+
+                db.commit()
+            except Exception as _e:
+                print(f"Channel registry error: {_e}")
+                import traceback; traceback.print_exc()
+            finally:
+                db.close()
+
         videos = get_recent_videos(creds)
-        analytics = get_analytics(creds, stats["channel_id"])
-        video_analytics = get_video_analytics(creds, stats["channel_id"])
+        analytics = get_analytics(creds, channel_id)
+        video_analytics = get_video_analytics(creds, channel_id)
 
         _user_creds[session_id] = creds
 
         # Restore existing session to preserve cached insights.
-        # If this session_id has no data (e.g. new cookie after logout/expiry),
-        # fall back to a channel_id lookup so returning users never re-run analysis.
         existing_data, _ = get_session(session_id)
-        if not existing_data and stats.get("channel_id"):
-            old_sid, existing_data = _find_existing_insights(stats["channel_id"])
+        if not existing_data and channel_id:
+            old_sid, existing_data = _find_existing_insights(channel_id)
             if old_sid and old_sid != session_id:
-                # Migrate the old session row to the new session_id
                 try:
                     db = SessionLocal()
                     old_row = db.query(UserSession).filter_by(session_id=old_sid).first()
@@ -298,10 +400,9 @@ def callback(request: Request, background_tasks: BackgroundTasks):
                 finally:
                     db.close()
 
-        existing_insights = existing_data.get("insights") if existing_data else None
+        existing_insights    = existing_data.get("insights") if existing_data else None
         existing_analyzed_at = existing_data.get("analyzed_at") if existing_data else None
 
-        import datetime
         now = datetime.datetime.utcnow().isoformat()
 
         is_fallback = bool(
@@ -309,31 +410,44 @@ def callback(request: Request, background_tasks: BackgroundTasks):
             "fallback mode" in str(existing_insights.get("channelSummary", "")).lower()
         )
 
-        # Re-run only if: no insights, fallback result, or 7 days have passed since last analysis
         if not existing_insights or is_fallback:
             needs_analysis = True
         elif existing_analyzed_at:
             hours_since = (datetime.datetime.utcnow() - datetime.datetime.fromisoformat(existing_analyzed_at)).total_seconds() / 3600
             needs_analysis = hours_since > 168  # 7 days
         else:
-            # Has valid insights but no analyzed_at — don't re-run, just stamp now
             needs_analysis = False
 
         user_data = {
-            "channel": stats,
-            "videos": videos,
-            "analytics": analytics,
+            "channel":         stats,
+            "videos":          videos,
+            "analytics":       analytics,
             "video_analytics": video_analytics,
-            "insights": existing_insights,
-            "analyzed_at": existing_analyzed_at or now,
-            "email": user_email,
+            "insights":        existing_insights,
+            "analyzed_at":     existing_analyzed_at or now,
+            "email":           google_email,
+            "google_id":       google_id,
+            "display_name":    display_name,
+            "profile_picture": profile_picture,
         }
         _user_data[session_id] = user_data
         _persist_session(session_id, creds, user_data)
 
+        # Store owner_email in UserSession row
+        try:
+            db = SessionLocal()
+            row = db.query(UserSession).filter_by(session_id=session_id).first()
+            if row:
+                row.owner_email = google_email
+                db.commit()
+        except Exception as _e:
+            print(f"owner_email update error: {_e}")
+        finally:
+            db.close()
+
         # Upsert email preferences (respects existing unsubscribe status)
-        if user_email and stats.get("channel_id"):
-            _upsert_email_preferences(stats["channel_id"], user_email)
+        if google_email and channel_id:
+            _upsert_email_preferences(channel_id, google_email)
 
         if needs_analysis:
             background_tasks.add_task(
@@ -405,3 +519,132 @@ def logout(request: Request):
         # Keep the DB row intact so re-login can restore cached insights
         # without triggering a fresh (token-consuming) analysis.
     return RedirectResponse(f"{BASE_URL}")
+
+
+@router.get("/me")
+def get_me(request: Request):
+    """Single source of truth for the Settings page."""
+    session_id = request.session.get("session_id")
+    user_data, _ = get_session(session_id)
+    if not user_data:
+        return JSONResponse({"error": "Not authenticated"}, status_code=401)
+
+    channel_id = user_data.get("channel", {}).get("channel_id", "")
+    google_email = user_data.get("email", "")
+
+    db = SessionLocal()
+    try:
+        # Subscription info
+        sub = db.query(UserSubscription).filter_by(channel_id=channel_id).first()
+        plan             = sub.plan if sub else "free"
+        status           = sub.status if sub else "free"
+        billing_cycle    = sub.billing_cycle if sub else "none"
+        is_lifetime      = sub.is_lifetime if sub else False
+        monthly_allowance = sub.monthly_allowance if sub else 5
+        monthly_used     = sub.monthly_used if sub else 0
+        monthly_remaining = max(0, monthly_allowance - monthly_used)
+        pack_balance     = sub.pack_balance if sub else 0
+        usage_pct        = round(monthly_used / monthly_allowance * 100) if monthly_allowance > 0 else 100
+        channels_allowed = sub.channels_allowed if sub else 1
+        reset_date       = sub.reset_date.isoformat() if sub and sub.reset_date else None
+
+        # Account info
+        account = db.query(UserAccount).filter_by(email=google_email).first()
+        member_since = account.created_at.isoformat() if account and account.created_at else None
+
+        # Channels
+        channel_rows = db.query(ChannelRegistry).filter_by(
+            owner_email=google_email,
+            is_active=True,
+        ).order_by(ChannelRegistry.connected_at.asc()).all()
+
+        channels = []
+        for row in channel_rows:
+            row_sub = db.query(UserSubscription).filter_by(channel_id=row.channel_id).first()
+            ch_score = 0
+            # Try to get channel score from user_data insights if it's the current channel
+            if row.channel_id == channel_id:
+                ch_score = user_data.get("insights", {}).get("channelScore", 0) if user_data.get("insights") else 0
+            channels.append({
+                "channel_id":        row.channel_id,
+                "channel_name":      row.channel_name or "",
+                "channel_thumbnail": row.channel_thumbnail or "",
+                "subscribers":       row.subscribers or 0,
+                "is_current":        row.channel_id == channel_id,
+                "channel_score":     ch_score,
+                "plan":              row_sub.plan if row_sub else "free",
+                "connected_at":      row.connected_at.isoformat() if row.connected_at else "",
+            })
+
+        can_add_more = len(channels) < channels_allowed
+
+        # Email preference
+        pref = db.query(UserEmailPreferences).filter_by(channel_id=channel_id).first()
+        weekly_report_enabled = pref.weekly_report if pref else True
+
+        return JSONResponse({
+            "email":                google_email,
+            "display_name":         user_data.get("display_name", ""),
+            "profile_picture":      user_data.get("profile_picture", ""),
+            "google_id":            user_data.get("google_id", ""),
+            "member_since":         member_since,
+            "channels":             channels,
+            "channels_allowed":     channels_allowed,
+            "can_add_more":         can_add_more,
+            "plan":                 plan,
+            "status":               status,
+            "billing_cycle":        billing_cycle,
+            "is_lifetime":          is_lifetime,
+            "monthly_allowance":    monthly_allowance,
+            "monthly_used":         monthly_used,
+            "monthly_remaining":    monthly_remaining,
+            "pack_balance":         pack_balance,
+            "usage_pct":            usage_pct,
+            "reset_date":           reset_date,
+            "weekly_report_enabled": weekly_report_enabled,
+        })
+    finally:
+        db.close()
+
+
+@router.delete("/delete-account")
+def delete_account(request: Request):
+    """Permanently delete the account. Preserves all data rows — only clears session and marks channels inactive."""
+    session_id = request.session.get("session_id")
+    user_data, _ = get_session(session_id)
+    if not user_data:
+        return JSONResponse({"error": "Not authenticated"}, status_code=401)
+
+    google_email = user_data.get("email", "")
+
+    db = SessionLocal()
+    try:
+        # Mark all channels inactive
+        if google_email:
+            channels = db.query(ChannelRegistry).filter_by(owner_email=google_email).all()
+            for ch in channels:
+                ch.is_active       = False
+                ch.disconnected_at = datetime.datetime.utcnow()
+
+        # Delete the session row
+        if session_id:
+            row = db.query(UserSession).filter_by(session_id=session_id).first()
+            if row:
+                db.delete(row)
+
+        db.commit()
+    except Exception as e:
+        db.rollback()
+        print(f"Delete account error: {e}")
+        return JSONResponse({"error": "Failed to delete account"}, status_code=500)
+    finally:
+        db.close()
+
+    # Clear in-memory caches
+    if session_id:
+        _user_data.pop(session_id, None)
+        _user_creds.pop(session_id, None)
+        _pending_flows.pop(session_id, None)
+        request.session.pop("session_id", None)
+
+    return JSONResponse({"success": True})

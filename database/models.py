@@ -157,6 +157,31 @@ class UserEmailPreferences(Base):
     created_at        = Column(DateTime, default=_now)
 
 
+class UserAccount(Base):
+    """One Google account (email). One account can own multiple channels."""
+    __tablename__ = "user_accounts"
+    email           = Column(String, primary_key=True)
+    google_id       = Column(String, nullable=True)
+    display_name    = Column(String, nullable=True)
+    profile_picture = Column(String, nullable=True)
+    created_at      = Column(DateTime, default=_now)
+
+
+class ChannelRegistry(Base):
+    """Every channel ever connected to YTGrowth. Rows are never deleted."""
+    __tablename__ = "channel_registry"
+    id                 = Column(Integer, primary_key=True, autoincrement=True)
+    owner_email        = Column(String, nullable=False, index=True)
+    channel_id         = Column(String, nullable=False, index=True)
+    channel_name       = Column(String, nullable=True)
+    channel_thumbnail  = Column(String, nullable=True)
+    subscribers        = Column(Integer, nullable=True)
+    connected_at       = Column(DateTime, default=_now)
+    disconnected_at    = Column(DateTime, nullable=True)
+    is_active          = Column(Boolean, default=True)
+    last_audit_at      = Column(DateTime, nullable=True)
+
+
 import os
 DATABASE_URL = os.environ.get("DATABASE_URL", "sqlite:///ytgrowth.db")
 # Railway provides postgres:// but SQLAlchemy needs postgresql://
@@ -176,6 +201,12 @@ with engine.connect() as _conn:
         "ALTER TABLE weekly_reports ADD COLUMN unsubscribed BOOLEAN DEFAULT 0",
         "ALTER TABLE user_email_preferences ADD COLUMN unsubscribe_token TEXT",
         "ALTER TABLE user_email_preferences ADD COLUMN resubscribed_at DATETIME",
+        "ALTER TABLE user_sessions ADD COLUMN owner_email TEXT",
+        "CREATE TABLE IF NOT EXISTS user_accounts (email TEXT PRIMARY KEY, google_id TEXT, display_name TEXT, profile_picture TEXT, created_at DATETIME)",
+        "CREATE TABLE IF NOT EXISTS channel_registry (id INTEGER PRIMARY KEY AUTOINCREMENT, owner_email TEXT NOT NULL, channel_id TEXT NOT NULL, channel_name TEXT, channel_thumbnail TEXT, subscribers INTEGER, connected_at DATETIME, disconnected_at DATETIME, is_active BOOLEAN DEFAULT 1, last_audit_at DATETIME)",
+        "CREATE INDEX IF NOT EXISTS ix_channel_registry_channel_id ON channel_registry (channel_id)",
+        "CREATE INDEX IF NOT EXISTS ix_channel_registry_owner_email ON channel_registry (owner_email)",
+        "CREATE UNIQUE INDEX IF NOT EXISTS uq_channel_registry_owner_channel ON channel_registry (owner_email, channel_id)",
     ]:
         try:
             _conn.execute(_text(_stmt))
