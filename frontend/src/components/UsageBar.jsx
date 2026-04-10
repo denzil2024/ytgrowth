@@ -57,9 +57,12 @@ export default function UsageBar({ channelId, email, dark = false }) {
               : 'Running low on analyses'}
           </p>
           {(!atLimit || !hasPack) && (
-            <div style={{ display: 'flex', gap: 7 }}>
-              <button onClick={() => window.location.href = '/?tab=packs'} style={topUpStyle}>Top Up</button>
-              <button onClick={() => window.location.href = '/?tab=monthly'} style={upgradeStyle}>Upgrade</button>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+              <div style={{ display: 'flex', gap: 7 }}>
+                <button onClick={() => window.location.href = '/?tab=monthly'} style={upgradeStyle}>Monthly</button>
+                <button onClick={() => window.location.href = '/?tab=annual'} style={upgradeStyle}>Annual</button>
+              </div>
+              <button onClick={() => window.location.href = '/?tab=packs'} style={topUpStyle}>Top Up with a Pack</button>
             </div>
           )}
         </div>
