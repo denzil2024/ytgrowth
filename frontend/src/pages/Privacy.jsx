@@ -51,7 +51,7 @@ export default function Privacy() {
       <div style={{ maxWidth: 760, margin: '0 auto', padding: '60px 24px 100px' }}>
         <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-accent-text)', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 12 }}>Legal</p>
         <h1 style={{ fontWeight: 800, fontSize: 38, letterSpacing: '-1.2px', color: 'var(--ytg-text)', marginBottom: 8, lineHeight: 1.1 }}>Privacy Policy</h1>
-        <p style={{ fontSize: 13, color: 'var(--ytg-text-3)', marginBottom: 48 }}>Last updated: April 3, 2025</p>
+        <p style={{ fontSize: 13, color: 'var(--ytg-text-3)', marginBottom: 48 }}>Last updated: April 10, 2026</p>
 
         <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.8, marginBottom: 16 }}>
           YTGrowth is committed to protecting your privacy. This policy explains what data we collect, how we use it, and your rights over it.
@@ -99,9 +99,53 @@ export default function Privacy() {
         <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.8, marginBottom: 16 }}>We do not sell your data to any third party, ever.</p>
 
         <h2 style={{ fontWeight: 700, fontSize: 18, color: 'var(--ytg-text)', marginTop: 36, marginBottom: 10, letterSpacing: '-0.3px' }}>4. Google API Limited Use Disclosure</h2>
-        <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.8, marginBottom: 16 }}>YTGrowth's use and transfer of information received from Google APIs adheres to the Google API Services User Data Policy, including the Limited Use requirements. We only access scopes required to provide the Service and do not use your Google data to serve advertising.</p>
+        <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.8, marginBottom: 16 }}>YTGrowth's use and transfer of information received from Google APIs adheres to the <a href="https://developers.google.com/terms/api-services-user-data-policy" style={{ color: 'var(--ytg-accent-text)' }}>Google API Services User Data Policy</a>, including the Limited Use requirements. We only access scopes required to provide the Service and do not use your Google data to serve advertising or for any purpose beyond delivering the features described in this policy.</p>
 
-        <h2 style={{ fontWeight: 700, fontSize: 18, color: 'var(--ytg-text)', marginTop: 36, marginBottom: 10, letterSpacing: '-0.3px' }}>5. Your Rights</h2>
+        <h2 style={{ fontWeight: 700, fontSize: 18, color: 'var(--ytg-text)', marginTop: 36, marginBottom: 10, letterSpacing: '-0.3px' }}>4a. OAuth Scopes We Request</h2>
+        <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.8, marginBottom: 12 }}>When you sign in with Google, YTGrowth requests the following OAuth scopes. We request only what is necessary to provide the Service:</p>
+        <div style={{ overflowX: 'auto', marginBottom: 16 }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
+            <thead>
+              <tr style={{ borderBottom: '1px solid var(--ytg-border)' }}>
+                <th style={{ textAlign: 'left', padding: '8px 12px', color: 'var(--ytg-text)', fontWeight: 700 }}>Scope</th>
+                <th style={{ textAlign: 'left', padding: '8px 12px', color: 'var(--ytg-text)', fontWeight: 700 }}>Why we need it</th>
+              </tr>
+            </thead>
+            <tbody>
+              {[
+                { scope: 'openid', reason: 'Confirms your identity via Google Sign-In.' },
+                { scope: 'https://www.googleapis.com/auth/userinfo.email', reason: 'Retrieves your email address to create and identify your YTGrowth account.' },
+                { scope: 'https://www.googleapis.com/auth/userinfo.profile', reason: 'Retrieves your name and profile picture to personalise your dashboard.' },
+                { scope: 'https://www.googleapis.com/auth/youtube', reason: 'Reads your YouTube channel data (videos, titles, descriptions, thumbnails) and allows updating video metadata (title, description, tags) when you use the SEO Studio editor.' },
+                { scope: 'https://www.googleapis.com/auth/yt-analytics.readonly', reason: 'Reads YouTube Analytics data (impressions, CTR, watch time, traffic sources) to power the growth insights on your dashboard. Read-only — we never modify analytics data.' },
+              ].map(({ scope, reason }, i) => (
+                <tr key={i} style={{ borderBottom: '1px solid var(--ytg-border)', background: i % 2 === 0 ? 'transparent' : 'rgba(10,10,15,0.02)' }}>
+                  <td style={{ padding: '10px 12px', color: 'var(--ytg-text)', fontFamily: 'monospace', fontSize: 11, wordBreak: 'break-all', verticalAlign: 'top' }}>{scope}</td>
+                  <td style={{ padding: '10px 12px', color: 'var(--ytg-text-2)', lineHeight: 1.6, verticalAlign: 'top' }}>{reason}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <p style={{ fontSize: 14, color: 'var(--ytg-text-2)', lineHeight: 1.8, marginBottom: 16 }}>You can revoke any of these permissions at any time via <a href="https://myaccount.google.com/permissions" style={{ color: 'var(--ytg-accent-text)' }}>Google Account Permissions</a>. Revoking access will disconnect your YouTube channel from YTGrowth.</p>
+
+        <h2 style={{ fontWeight: 700, fontSize: 18, color: 'var(--ytg-text)', marginTop: 36, marginBottom: 10, letterSpacing: '-0.3px' }}>5. Data Security &amp; Protection Mechanisms</h2>
+        <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.8, marginBottom: 12 }}>We take the following technical and organisational measures to protect your data, including sensitive information such as OAuth tokens and YouTube Analytics data:</p>
+        <ul style={{ paddingLeft: 20, marginBottom: 16 }}>
+          {[
+            'Encryption in transit — all data transmitted between your browser, our servers, and third-party APIs is encrypted via TLS 1.2 or higher (HTTPS).',
+            'Encryption at rest — OAuth access tokens and refresh tokens are encrypted at rest in our database using AES-256 encryption. They are never stored or logged in plain text.',
+            'Minimal data retention — we store only the data required to operate the Service. YouTube Analytics data is fetched on-demand and not persisted beyond your session.',
+            'Access controls — access to the production database is restricted to authorised personnel only, using role-based access controls and strong authentication.',
+            'No third-party data sharing — your YouTube and analytics data is never sold, rented, or shared with third parties for advertising or any non-essential purpose.',
+            'Anthropic (Claude API) — when generating AI insights, only anonymised channel metrics are sent. No personally identifiable information, OAuth tokens, or raw Analytics data is included in AI prompts.',
+            'Incident response — in the event of a data breach affecting your personal data, we will notify affected users in accordance with applicable data protection laws.',
+          ].map((item, i) => (
+            <li key={i} style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.8, marginBottom: 8 }}>{item}</li>
+          ))}
+        </ul>
+
+        <h2 style={{ fontWeight: 700, fontSize: 18, color: 'var(--ytg-text)', marginTop: 36, marginBottom: 10, letterSpacing: '-0.3px' }}>6. Your Rights</h2>
         <ul style={{ paddingLeft: 20, marginBottom: 16 }}>
           {[
             'Access the personal data we hold about you.',
@@ -114,10 +158,10 @@ export default function Privacy() {
         </ul>
         <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.8, marginBottom: 16 }}>To exercise any of these rights, email <strong>support@ytgrowth.io</strong>.</p>
 
-        <h2 style={{ fontWeight: 700, fontSize: 18, color: 'var(--ytg-text)', marginTop: 36, marginBottom: 10, letterSpacing: '-0.3px' }}>6. Cookies</h2>
+        <h2 style={{ fontWeight: 700, fontSize: 18, color: 'var(--ytg-text)', marginTop: 36, marginBottom: 10, letterSpacing: '-0.3px' }}>7. Cookies</h2>
         <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.8, marginBottom: 16 }}>We use a single session cookie (<code>ytg_session</code>) to keep you logged in. We do not use advertising or tracking cookies.</p>
 
-        <h2 style={{ fontWeight: 700, fontSize: 18, color: 'var(--ytg-text)', marginTop: 36, marginBottom: 10, letterSpacing: '-0.3px' }}>7. Contact</h2>
+        <h2 style={{ fontWeight: 700, fontSize: 18, color: 'var(--ytg-text)', marginTop: 36, marginBottom: 10, letterSpacing: '-0.3px' }}>8. Contact</h2>
         <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.8, marginBottom: 16 }}>Privacy questions? Email <strong>support@ytgrowth.io</strong>.</p>
 
       </div>
