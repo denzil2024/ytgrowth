@@ -589,7 +589,7 @@ export default function Landing() {
             {['Features', 'How it works', 'Pricing', 'FAQ'].map((l, i) => (
               <a key={i} href={`#${l.toLowerCase().replace(/ /g, '-')}`} className="ytg-nav-link">{l}</a>
             ))}
-            <a href="/affiliate" className="ytg-nav-link" style={{ color: 'var(--ytg-accent-text)', fontWeight: 600 }}>Affiliates</a>
+            <a href="/affiliate" className="ytg-nav-link">Affiliates</a>
           </div>
         )}
 
