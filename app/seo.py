@@ -567,7 +567,7 @@ def _strip_emdash(obj):
 def _call_sonnet(client: anthropic.Anthropic, prompt: str) -> str:
     msg = client.messages.create(
         model="claude-sonnet-4-6",
-        max_tokens=900,
+        max_tokens=4900,
         messages=[{"role": "user", "content": prompt}]
     )
     return msg.content[0].text.strip()
