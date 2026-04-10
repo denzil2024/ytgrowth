@@ -56,8 +56,8 @@ class UserSubscription(Base):
     pack_balance      = Column(Integer, default=0)        # never expires, stacks
     reset_date        = Column(DateTime, nullable=True)   # next monthly reset (None = free)
     is_lifetime       = Column(Boolean,  default=False)
-    paddle_subscription_id = Column(String, nullable=True)
-    paddle_customer_id     = Column(String, nullable=True)
+    lemonsqueezy_subscription_id = Column(String, nullable=True)
+    lemonsqueezy_customer_id     = Column(String, nullable=True)
     channels_allowed  = Column(Integer, default=1)
     status            = Column(String,  default="free")   # free|active|canceled|past_due
     updated_at        = Column(DateTime, default=_now, onupdate=_now)
@@ -208,9 +208,33 @@ with engine.connect() as _conn:
         "CREATE INDEX IF NOT EXISTS ix_channel_registry_owner_email ON channel_registry (owner_email)",
         "CREATE UNIQUE INDEX IF NOT EXISTS uq_channel_registry_owner_channel ON channel_registry (owner_email, channel_id)",
         "UPDATE user_subscriptions SET monthly_allowance = 9999, monthly_used = 0 WHERE plan = 'free'",
+        # Rename paddle_* → lemonsqueezy_* (PostgreSQL supports RENAME COLUMN; SQLite fallback below)
+        "ALTER TABLE user_subscriptions RENAME COLUMN paddle_subscription_id TO lemonsqueezy_subscription_id",
+        "ALTER TABLE user_subscriptions RENAME COLUMN paddle_customer_id TO lemonsqueezy_customer_id",
     ]:
         try:
             _conn.execute(_text(_stmt))
             _conn.commit()
         except Exception:
-            pass  # Column already exists
+            pass  # Column already exists or rename already done
+
+# SQLite fallback: RENAME COLUMN is unsupported on older SQLite — add new columns and copy data
+with engine.connect() as _conn:
+    for _stmt in [
+        "ALTER TABLE user_subscriptions ADD COLUMN lemonsqueezy_subscription_id TEXT",
+        "ALTER TABLE user_subscriptions ADD COLUMN lemonsqueezy_customer_id TEXT",
+    ]:
+        try:
+            _conn.execute(_text(_stmt))
+            _conn.commit()
+        except Exception:
+            pass  # Column already exists (rename succeeded or already added)
+    for _stmt in [
+        "UPDATE user_subscriptions SET lemonsqueezy_subscription_id = paddle_subscription_id WHERE lemonsqueezy_subscription_id IS NULL AND paddle_subscription_id IS NOT NULL",
+        "UPDATE user_subscriptions SET lemonsqueezy_customer_id = paddle_customer_id WHERE lemonsqueezy_customer_id IS NULL AND paddle_customer_id IS NOT NULL",
+    ]:
+        try:
+            _conn.execute(_text(_stmt))
+            _conn.commit()
+        except Exception:
+            pass  # paddle_* columns don't exist (already renamed) — nothing to copy
