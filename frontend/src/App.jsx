@@ -4,6 +4,7 @@ import Dashboard from './pages/Dashboard'
 import Terms from './pages/Terms'
 import Privacy from './pages/Privacy'
 import Refund from './pages/Refund'
+import Affiliate from './pages/Affiliate'
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
         <Route path="/terms" element={<Terms />} />
         <Route path="/privacy" element={<Privacy />} />
         <Route path="/refund" element={<Refund />} />
+        <Route path="/affiliate" element={<Affiliate />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>

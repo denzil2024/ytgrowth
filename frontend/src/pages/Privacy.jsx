@@ -68,7 +68,7 @@ export default function Privacy() {
             'YouTube Analytics data — impressions, CTR, watch time, and traffic source data via the YouTube Analytics API.',
             'OAuth credentials — access and refresh tokens required to fetch your data. Stored encrypted in our database.',
             'Usage data — which tools you run, token consumption, and timestamps.',
-            'Payment data — handled entirely by Paddle. We only receive your plan type and Paddle customer ID. We never store card details.',
+            'Payment data — handled entirely by Lemon Squeezy. We only receive your plan type and Lemon Squeezy customer ID. We never store card details.',
           ].map((item, i) => (
             <li key={i} style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.8, marginBottom: 8 }}>{item}</li>
           ))}
@@ -90,7 +90,7 @@ export default function Privacy() {
         <ul style={{ paddingLeft: 20, marginBottom: 16 }}>
           {[
             'Google / YouTube APIs — subject to Google\'s Privacy Policy and YouTube\'s Terms of Service.',
-            'Paddle — our payment processor and Merchant of Record. Handles all payment data under their own privacy policy.',
+            'Lemon Squeezy — our payment processor and Merchant of Record. Handles all payment data under their own privacy policy.',
             'Anthropic (Claude API) — we send anonymised channel data to generate AI insights. No personally identifiable information is included.',
           ].map((item, i) => (
             <li key={i} style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.8, marginBottom: 8 }}>{item}</li>
@@ -177,6 +177,7 @@ export default function Privacy() {
             <a href="/privacy" style={{ fontSize: 13, color: 'var(--ytg-text-3)', textDecoration: 'none' }}>Privacy policy</a>
             <a href="/terms" style={{ fontSize: 13, color: 'var(--ytg-text-3)', textDecoration: 'none' }}>Terms of service</a>
             <a href="/refund" style={{ fontSize: 13, color: 'var(--ytg-text-3)', textDecoration: 'none' }}>Refund policy</a>
+            <a href="/affiliate" style={{ fontSize: 13, color: 'var(--ytg-text-3)', textDecoration: 'none' }}>Affiliates</a>
             <a href="/auth/login" style={{ fontSize: 13, color: 'var(--ytg-text-3)', textDecoration: 'none' }}>Log in</a>
           </div>
         </div>
