@@ -257,15 +257,17 @@ export default function Affiliate() {
       <ScrollProgress />
 
       {/* ── NAV ── */}
-      <nav style={{ position: 'sticky', top: 0, zIndex: 100, borderBottom: '1px solid var(--ytg-border)', padding: '0 40px', height: 60, display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'var(--ytg-nav)', backdropFilter: 'blur(16px)' }}>
-        <a href="/" style={{ display: 'flex', alignItems: 'center', gap: 9, textDecoration: 'none' }}>
+      <nav style={{ position: 'sticky', top: 0, zIndex: 100, borderBottom: '1px solid var(--ytg-border)', padding: isMobile ? '0 20px' : '0 40px', height: 60, display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'var(--ytg-nav)', backdropFilter: 'blur(16px)' }}>
+        <a href="/" style={{ display: 'flex', alignItems: 'center', gap: 9, textDecoration: 'none', minWidth: 0 }}>
           <Logo size={28} />
-          <span style={{ fontWeight: 800, fontSize: 16, color: 'var(--ytg-text)', letterSpacing: '-0.4px' }}>YTGrowth</span>
+          <span style={{ fontWeight: 800, fontSize: 15, color: 'var(--ytg-text)', letterSpacing: '-0.4px', whiteSpace: 'nowrap' }}>YTGrowth</span>
         </a>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
-          <a href="/" className="aff-nav-link">← Back to home</a>
-          <a href="https://ytgrowth.lemonsqueezy.com/affiliates" target="_blank" rel="noopener noreferrer" className="aff-btn" style={{ padding: '9px 22px', fontSize: 13, borderRadius: 100 }}>
-            Get your link
+        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+          {!isMobile && <a href="/" className="aff-nav-link">← Back to home</a>}
+          <a href="https://ytgrowth.lemonsqueezy.com/affiliates" target="_blank" rel="noopener noreferrer"
+            className="aff-btn"
+            style={{ padding: isMobile ? '8px 18px' : '9px 22px', fontSize: isMobile ? 13 : 13, borderRadius: 100, whiteSpace: 'nowrap' }}>
+            {isMobile ? 'Get link' : 'Get your link'}
           </a>
         </div>
       </nav>
@@ -273,7 +275,7 @@ export default function Affiliate() {
       {/* ══════════════════════════════════════════════════════════
           SECTION 1 — HERO   bg: var(--ytg-bg)  #f4f4f6
       ══════════════════════════════════════════════════════════ */}
-      <section id="aff-hero" className="aff-section-pad" style={{ padding: '110px 40px 88px', textAlign: 'center', background: 'var(--ytg-bg)' }}>
+      <section id="aff-hero" className="aff-section-pad" style={{ padding: isMobile ? '72px 20px 60px' : '110px 40px 88px', textAlign: 'center', background: 'var(--ytg-bg)' }}>
         <div style={{ maxWidth: 820, margin: '0 auto', animation: 'fadeUp 0.5s ease both' }}>
           <span className="aff-section-label">Partner Program</span>
           <h1 className="aff-hero-h1" style={{ fontSize: 58, fontWeight: 800, letterSpacing: '-2.5px', lineHeight: 1.06, color: 'var(--ytg-text)', marginBottom: 24 }}>
@@ -575,31 +577,44 @@ export default function Affiliate() {
       {/* ══════════════════════════════════════════════════════════
           SECTION 8 — BOTTOM CTA   bg: --ytg-bg-3  #e6e7ec
       ══════════════════════════════════════════════════════════ */}
-      <section style={{ padding: '0 40px 120px', background: 'var(--ytg-bg-3)', borderTop: '1px solid var(--ytg-border)' }}>
-        <div style={{ maxWidth: 1000, margin: '0 auto', paddingTop: 80 }}>
-          <div className="aff-cta-pad" style={{
-            borderRadius: 24, border: '1px solid var(--ytg-border)',
+      <section style={{ padding: isMobile ? '0 16px 80px' : '0 40px 120px', background: 'var(--ytg-bg-3)', borderTop: '1px solid var(--ytg-border)' }}>
+        <div style={{ maxWidth: 1000, margin: '0 auto', paddingTop: isMobile ? 48 : 80 }}>
+          <div style={{
+            borderRadius: isMobile ? 18 : 24,
+            border: '1px solid var(--ytg-border)',
             boxShadow: 'var(--ytg-shadow-xl)',
-            padding: '88px 60px', textAlign: 'center',
+            padding: isMobile ? '48px 24px 40px' : '88px 60px',
+            textAlign: 'center',
             background: 'var(--ytg-card)',
             position: 'relative', overflow: 'hidden',
           }}>
             <div style={{ position: 'absolute', top: -80, left: '50%', transform: 'translateX(-50%)', width: 500, height: 240, background: 'radial-gradient(ellipse, rgba(229,48,42,0.09) 0%, transparent 70%)', pointerEvents: 'none' }} />
             <span className="aff-section-label">Ready to start?</span>
-            <h2 style={{ fontSize: 44, fontWeight: 800, letterSpacing: '-1.6px', marginBottom: 16, lineHeight: 1.08 }}>
+            <h2 style={{ fontSize: isMobile ? 30 : 44, fontWeight: 800, letterSpacing: isMobile ? '-0.8px' : '-1.6px', marginBottom: 14, lineHeight: 1.1 }}>
               Turn your recommendations<br />into recurring revenue.
             </h2>
-            <p style={{ fontSize: 16, color: 'var(--ytg-text-2)', maxWidth: 480, margin: '0 auto 20px', lineHeight: 1.72 }}>
+            <p style={{ fontSize: isMobile ? 14 : 16, color: 'var(--ytg-text-2)', maxWidth: 480, margin: '0 auto 20px', lineHeight: 1.75 }}>
               Free to join. No minimum audience. No approval process. Get your link and earn your first commission this month.
             </p>
-            <div style={{ display: 'flex', gap: 24, justifyContent: 'center', flexWrap: 'wrap', marginBottom: 44 }}>
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: isMobile ? '1fr 1fr' : 'repeat(4,auto)',
+              gap: isMobile ? '10px 16px' : 24,
+              justifyContent: isMobile ? 'stretch' : 'center',
+              justifyItems: 'center',
+              marginBottom: isMobile ? 32 : 44,
+              maxWidth: isMobile ? 280 : 'none',
+              marginLeft: 'auto', marginRight: 'auto',
+            }}>
               {['30% recurring', '60-day cookie', 'Instant access', 'Monthly payouts'].map((t, i) => (
-                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 7, fontSize: 13, color: 'var(--ytg-text-3)' }}>
-                  <Check /><span>{t}</span>
+                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 13, color: 'var(--ytg-text-3)' }}>
+                  <Check /><span style={{ whiteSpace: 'nowrap' }}>{t}</span>
                 </div>
               ))}
             </div>
-            <a href="https://ytgrowth.lemonsqueezy.com/affiliates" target="_blank" rel="noopener noreferrer" className="aff-btn aff-btn-lg">
+            <a href="https://ytgrowth.lemonsqueezy.com/affiliates" target="_blank" rel="noopener noreferrer"
+              className={`aff-btn${isMobile ? ' aff-btn-full' : ' aff-btn-lg'}`}
+              style={isMobile ? { borderRadius: 14, padding: '15px 24px', fontSize: 15 } : {}}>
               Join the Affiliate Program →
             </a>
           </div>
