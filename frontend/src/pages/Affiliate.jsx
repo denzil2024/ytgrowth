@@ -92,21 +92,8 @@ function useGlobalStyles() {
   }, [])
 }
 
-/* ─── Sections for side-nav ──────────────────────────────────────────── */
-const SECTIONS = [
-  { id: 'aff-hero',       label: 'Top' },
-  { id: 'aff-stats',      label: 'Overview' },
-  { id: 'aff-calculator', label: 'Earnings' },
-  { id: 'aff-how',        label: 'How it works' },
-  { id: 'aff-compare',    label: 'Comparison' },
-  { id: 'aff-testimonials', label: 'Testimonials' },
-  { id: 'aff-faq',        label: 'FAQ' },
-]
-
 function ScrollProgress() {
   const [progress, setProgress] = useState(0)
-  const [active, setActive]     = useState(0)
-  const [hovered, setHovered]   = useState(null)
 
   useEffect(() => {
     const onScroll = () => {
@@ -117,60 +104,10 @@ function ScrollProgress() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      entries => entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          const idx = SECTIONS.findIndex(s => s.id === entry.target.id)
-          if (idx !== -1) setActive(idx)
-        }
-      }),
-      { threshold: 0.3 }
-    )
-    SECTIONS.forEach(s => { const el = document.getElementById(s.id); if (el) observer.observe(el) })
-    return () => observer.disconnect()
-  }, [])
-
-  const scrollTo = id => {
-    if (id === 'aff-hero') { window.scrollTo({ top: 0, behavior: 'smooth' }); return }
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
-  }
-
   return (
-    <>
-      {/* Top progress bar */}
-      <div style={{ position: 'fixed', top: 0, left: 0, right: 0, height: 2, zIndex: 999 }}>
-        <div style={{ height: '100%', width: `${progress}%`, background: 'var(--ytg-accent)', transition: 'width 0.08s linear', borderRadius: '0 2px 2px 0' }} />
-      </div>
-      {/* Side dash nav */}
-      <div style={{ position: 'fixed', right: 20, top: '50%', transform: 'translateY(-50%)', zIndex: 200, display: 'flex', flexDirection: 'column', gap: 10 }}>
-        {SECTIONS.map((s, i) => {
-          const isActive  = active === i
-          const isHovered = hovered === i
-          return (
-            <button key={i} onClick={() => scrollTo(s.id)}
-              onMouseEnter={() => setHovered(i)} onMouseLeave={() => setHovered(null)}
-              style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 8, background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
-              {(isActive || isHovered) && (
-                <span style={{
-                  fontSize: 10.5, fontWeight: isActive ? 700 : 500, whiteSpace: 'nowrap',
-                  color: isActive ? 'var(--ytg-accent-text)' : 'var(--ytg-text-3)',
-                  background: 'var(--ytg-card)', border: '1px solid var(--ytg-border)',
-                  padding: '3px 9px', borderRadius: 6, boxShadow: 'var(--ytg-shadow-sm)',
-                  letterSpacing: '-0.1px', pointerEvents: 'none',
-                }}>{s.label}</span>
-              )}
-              <div style={{
-                height: 2, borderRadius: 2, flexShrink: 0,
-                width: isActive ? 24 : isHovered ? 14 : 8,
-                background: isActive ? 'var(--ytg-accent)' : isHovered ? 'var(--ytg-border-2)' : 'var(--ytg-border)',
-                transition: 'width 0.25s cubic-bezier(0.34,1.56,0.64,1), background 0.2s',
-              }} />
-            </button>
-          )
-        })}
-      </div>
-    </>
+    <div style={{ position: 'fixed', top: 0, left: 0, right: 0, height: 3, zIndex: 999 }}>
+      <div style={{ height: '100%', width: `${progress}%`, background: 'var(--ytg-accent)', transition: 'width 0.08s linear', borderRadius: '0 2px 2px 0' }} />
+    </div>
   )
 }
 
