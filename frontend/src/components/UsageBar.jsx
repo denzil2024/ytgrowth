@@ -58,8 +58,8 @@ export default function UsageBar({ channelId, email, dark = false }) {
           </p>
           {(!atLimit || !hasPack) && (
             <div style={{ display: 'flex', gap: 7 }}>
-              <button onClick={() => window.location.href = '/#pricing'} style={topUpStyle}>Top Up</button>
-              <button onClick={() => window.location.href = '/#pricing'} style={upgradeStyle}>Upgrade</button>
+              <button onClick={() => window.location.href = '/?tab=packs'} style={topUpStyle}>Top Up</button>
+              <button onClick={() => window.location.href = '/?tab=monthly'} style={upgradeStyle}>Upgrade</button>
             </div>
           )}
         </div>

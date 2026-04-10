@@ -497,7 +497,10 @@ const AUTH_ERROR_MESSAGES = {
 export default function Landing() {
   const [light, setLight] = useState(true)
   const [loggedIn, setLoggedIn] = useState(false)
-  const [pricingTab, setPricingTab] = useState('monthly')
+  const [pricingTab, setPricingTab] = useState(() => {
+    const tab = new URLSearchParams(window.location.search).get('tab')
+    return ['monthly','annual','lifetime','founder','packs'].includes(tab) ? tab : 'monthly'
+  })
   const [openFaq, setOpenFaq] = useState(0)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
@@ -517,6 +520,11 @@ export default function Landing() {
     if (err && AUTH_ERROR_MESSAGES[err]) {
       setAuthError(AUTH_ERROR_MESSAGES[err])
       setTimeout(() => setAuthError(null), 8000)
+    }
+    if (params.get('tab')) {
+      setTimeout(() => {
+        document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' })
+      }, 200)
     }
   }, [])
 
