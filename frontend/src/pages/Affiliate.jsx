@@ -1,5 +1,15 @@
 import { useEffect, useState } from 'react'
 
+function useBreakpoint() {
+  const [width, setWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1280)
+  useEffect(() => {
+    const handler = () => setWidth(window.innerWidth)
+    window.addEventListener('resize', handler)
+    return () => window.removeEventListener('resize', handler)
+  }, [])
+  return { isMobile: width <= 768, isTablet: width <= 1024 }
+}
+
 function Logo({ size = 32 }) {
   return (
     <svg width={size} height={size} viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -76,16 +86,26 @@ function useGlobalStyles() {
       .aff-grid-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 22px; }
       .aff-grid-2 { display: grid; grid-template-columns: repeat(2,1fr); gap: 22px; }
 
+      .aff-nav-link {
+        font-size: 14px; color: var(--ytg-text-3); font-weight: 500;
+        text-decoration: none; transition: color 0.15s; letter-spacing: -0.1px;
+      }
+      .aff-nav-link:hover { color: var(--ytg-text-2); }
+
       @media (max-width: 900px) {
         .aff-grid-3 { grid-template-columns: 1fr; }
         .aff-grid-2 { grid-template-columns: 1fr; }
         .aff-calc-grid { grid-template-columns: 1fr !important; }
       }
-      @media (max-width: 640px) {
-        .aff-hero-h1 { font-size: 34px !important; letter-spacing: -1px !important; }
+      @media (max-width: 768px) {
+        .aff-hero-h1   { font-size: 34px !important; letter-spacing: -1px !important; }
+        .aff-section-h2 { font-size: 28px !important; letter-spacing: -0.8px !important; }
         .aff-section-pad { padding-left: 20px !important; padding-right: 20px !important; }
-        .aff-cta-pad { padding: 52px 24px !important; }
+        .aff-cta-pad   { padding: 52px 24px !important; }
         .aff-stats-inner { gap: 20px !important; }
+        .aff-compare-table { font-size: 12px !important; }
+        .aff-compare-col { display: none !important; }
+        .aff-compare-grid { grid-template-columns: 1fr 80px 80px !important; }
       }
     `
     document.head.appendChild(style)
@@ -229,6 +249,7 @@ export default function Affiliate() {
 
   const [referrals, setReferrals] = useState(10)
   const [openFaq, setOpenFaq]     = useState(0)
+  const { isMobile }              = useBreakpoint()
 
   return (
     <div style={{ fontFamily: "'DM Sans', system-ui, sans-serif", background: 'var(--ytg-bg)', color: 'var(--ytg-text)', minHeight: '100vh' }}>
@@ -242,7 +263,7 @@ export default function Affiliate() {
           <span style={{ fontWeight: 800, fontSize: 16, color: 'var(--ytg-text)', letterSpacing: '-0.4px' }}>YTGrowth</span>
         </a>
         <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
-          <a href="/" style={{ fontSize: 13, color: 'var(--ytg-text-3)', textDecoration: 'none', fontWeight: 500 }}>← Back to home</a>
+          <a href="/" className="aff-nav-link">← Back to home</a>
           <a href="https://ytgrowth.lemonsqueezy.com/affiliates" target="_blank" rel="noopener noreferrer" className="aff-btn" style={{ padding: '9px 22px', fontSize: 13, borderRadius: 100 }}>
             Get your link
           </a>
@@ -260,7 +281,7 @@ export default function Affiliate() {
             buying YouTube tools.<br />
             <span style={{ color: 'var(--ytg-accent)' }}>You should be earning from it.</span>
           </h1>
-          <p style={{ fontSize: 18, color: 'var(--ytg-text-2)', lineHeight: 1.75, maxWidth: 560, margin: '0 auto 14px' }}>
+          <p style={{ fontSize: isMobile ? 16 : 18, color: 'var(--ytg-text-2)', lineHeight: 1.8, maxWidth: 560, margin: '0 auto 14px' }}>
             30% recurring commission on every payment — not just the first sale. Every renewal, every month, for the full lifetime of each customer you refer.
           </p>
           <p style={{ fontSize: 14, color: 'var(--ytg-text-3)', marginBottom: 40 }}>
@@ -310,7 +331,7 @@ export default function Affiliate() {
         <div style={{ maxWidth: 1100, margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: 52 }}>
             <span className="aff-section-label">Earnings calculator</span>
-            <h2 style={{ fontSize: 36, fontWeight: 800, letterSpacing: '-1.2px', color: 'var(--ytg-text)' }}>See exactly what you could earn</h2>
+            <h2 className="aff-section-h2" style={{ fontSize: 36, fontWeight: 800, letterSpacing: '-1.2px', color: 'var(--ytg-text)' }}>See exactly what you could earn</h2>
           </div>
 
           <div className="aff-calc-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24, alignItems: 'start' }}>
@@ -414,7 +435,7 @@ export default function Affiliate() {
         <div style={{ maxWidth: 1160, margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: 56 }}>
             <span className="aff-section-label">Simple process</span>
-            <h2 style={{ fontSize: 36, fontWeight: 800, letterSpacing: '-1.2px' }}>Up and running in under 5 minutes</h2>
+            <h2 className="aff-section-h2" style={{ fontSize: 36, fontWeight: 800, letterSpacing: '-1.2px' }}>Up and running in under 5 minutes</h2>
           </div>
           <div className="aff-grid-3">
             {[
@@ -448,8 +469,8 @@ export default function Affiliate() {
         <div style={{ maxWidth: 860, margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: 52 }}>
             <span className="aff-section-label">How we compare</span>
-            <h2 style={{ fontSize: 36, fontWeight: 800, letterSpacing: '-1.2px' }}>The best affiliate deal in the YouTube tools market</h2>
-            <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', marginTop: 14, maxWidth: 520, margin: '14px auto 0', lineHeight: 1.7 }}>
+            <h2 className="aff-section-h2" style={{ fontSize: 36, fontWeight: 800, letterSpacing: '-1.2px' }}>The best affiliate deal in the YouTube tools market</h2>
+            <p style={{ fontSize: isMobile ? 14 : 15, color: 'var(--ytg-text-2)', marginTop: 14, maxWidth: 520, margin: '14px auto 0', lineHeight: 1.75 }}>
               We looked at every major competitor program before setting ours. We set out to be meaningfully better — not just slightly higher on paper.
             </p>
           </div>
@@ -494,7 +515,7 @@ export default function Affiliate() {
         <div style={{ maxWidth: 1160, margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: 56 }}>
             <span className="aff-section-label">Real affiliates</span>
-            <h2 style={{ fontSize: 36, fontWeight: 800, letterSpacing: '-1.2px' }}>Results from creators already earning</h2>
+            <h2 className="aff-section-h2" style={{ fontSize: 36, fontWeight: 800, letterSpacing: '-1.2px' }}>Results from creators already earning</h2>
           </div>
           <div className="aff-grid-3">
             {TESTIMONIALS.map((t, i) => (
@@ -522,8 +543,8 @@ export default function Affiliate() {
         <div style={{ maxWidth: 740, margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: 48 }}>
             <span className="aff-section-label">FAQ</span>
-            <h2 style={{ fontSize: 36, fontWeight: 800, letterSpacing: '-1.2px' }}>Every question answered</h2>
-            <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', marginTop: 14, lineHeight: 1.7 }}>
+            <h2 className="aff-section-h2" style={{ fontSize: 36, fontWeight: 800, letterSpacing: '-1.2px' }}>Every question answered</h2>
+            <p style={{ fontSize: isMobile ? 14 : 15, color: 'var(--ytg-text-2)', marginTop: 14, lineHeight: 1.75 }}>
               If something is not covered here, email <span style={{ color: 'var(--ytg-text)', fontWeight: 600 }}>support@ytgrowth.io</span> — we reply same day.
             </p>
           </div>
@@ -586,19 +607,20 @@ export default function Affiliate() {
       </section>
 
       {/* ── FOOTER ── */}
-      <div style={{ borderTop: '1px solid var(--ytg-border)', padding: '28px 40px', background: 'var(--ytg-bg-3)' }}>
-        <div style={{ maxWidth: 1280, margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 16 }}>
+      <div style={{ borderTop: '1px solid var(--ytg-border)', padding: isMobile ? '28px 20px' : '36px 64px', background: 'var(--ytg-bg-3)' }}>
+        <div style={{ maxWidth: 1280, margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexDirection: isMobile ? 'column' : 'row', gap: isMobile ? 16 : 0, textAlign: isMobile ? 'center' : 'left' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
-            <Logo size={24} />
-            <span style={{ fontWeight: 800, fontSize: 14, color: 'var(--ytg-text)', letterSpacing: '-0.4px' }}>YTGrowth</span>
+            <Logo size={26} />
+            <span style={{ fontWeight: 800, fontSize: 15, color: 'var(--ytg-text)', letterSpacing: '-0.4px' }}>YTGrowth</span>
           </div>
           <p style={{ fontSize: 13, color: 'var(--ytg-text-3)' }}>Built for creators serious about growth.</p>
-          <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap' }}>
-            <a href="/privacy"   style={{ fontSize: 13, color: 'var(--ytg-text-3)', textDecoration: 'none' }}>Privacy policy</a>
-            <a href="/terms"     style={{ fontSize: 13, color: 'var(--ytg-text-3)', textDecoration: 'none' }}>Terms of service</a>
-            <a href="/refund"    style={{ fontSize: 13, color: 'var(--ytg-text-3)', textDecoration: 'none' }}>Refund policy</a>
-            <a href="/affiliate" style={{ fontSize: 13, color: 'var(--ytg-text-3)', textDecoration: 'none' }}>Affiliates</a>
-            <a href="/auth/login" style={{ fontSize: 13, color: 'var(--ytg-text-3)', textDecoration: 'none' }}>Log in</a>
+          <p style={{ fontSize: 12, color: 'var(--ytg-text-3)' }}>© 2025 YTGrowth. All rights reserved.</p>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: isMobile ? '12px 20px' : 28, justifyContent: isMobile ? 'center' : 'flex-end' }}>
+            <a href="/privacy"    className="aff-nav-link" style={{ fontSize: 13 }}>Privacy policy</a>
+            <a href="/terms"      className="aff-nav-link" style={{ fontSize: 13 }}>Terms of service</a>
+            <a href="/refund"     className="aff-nav-link" style={{ fontSize: 13 }}>Refund policy</a>
+            <a href="/affiliate"  className="aff-nav-link" style={{ fontSize: 13 }}>Affiliates</a>
+            <a href="/auth/login" className="aff-nav-link" style={{ fontSize: 13 }}>Log in</a>
           </div>
         </div>
       </div>
