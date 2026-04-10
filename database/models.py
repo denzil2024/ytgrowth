@@ -51,7 +51,7 @@ class UserSubscription(Base):
     email             = Column(String, nullable=True, index=True)
     plan              = Column(String,  default="free")   # free|solo|growth|agency|lifetime_solo|lifetime_growth|lifetime_agency
     billing_cycle     = Column(String,  default="none")   # monthly|annual|lifetime|none
-    monthly_allowance = Column(Integer, default=5)        # analyses granted per period
+    monthly_allowance = Column(Integer, default=9999)      # analyses granted per period
     monthly_used      = Column(Integer, default=0)        # resets on reset_date (free never resets)
     pack_balance      = Column(Integer, default=0)        # never expires, stacks
     reset_date        = Column(DateTime, nullable=True)   # next monthly reset (None = free)
@@ -207,6 +207,7 @@ with engine.connect() as _conn:
         "CREATE INDEX IF NOT EXISTS ix_channel_registry_channel_id ON channel_registry (channel_id)",
         "CREATE INDEX IF NOT EXISTS ix_channel_registry_owner_email ON channel_registry (owner_email)",
         "CREATE UNIQUE INDEX IF NOT EXISTS uq_channel_registry_owner_channel ON channel_registry (owner_email, channel_id)",
+        "UPDATE user_subscriptions SET monthly_allowance = 9999, monthly_used = 0 WHERE plan = 'free'",
     ]:
         try:
             _conn.execute(_text(_stmt))
