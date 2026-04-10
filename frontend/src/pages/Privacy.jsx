@@ -121,13 +121,13 @@ export default function Privacy() {
               ].map(({ scope, reason }, i) => (
                 <tr key={i} style={{ borderBottom: '1px solid var(--ytg-border)', background: i % 2 === 0 ? 'transparent' : 'rgba(10,10,15,0.02)' }}>
                   <td style={{ padding: '10px 12px', color: 'var(--ytg-text)', fontFamily: 'monospace', fontSize: 11, wordBreak: 'break-all', verticalAlign: 'top' }}>{scope}</td>
-                  <td style={{ padding: '10px 12px', color: 'var(--ytg-text-2)', lineHeight: 1.6, verticalAlign: 'top' }}>{reason}</td>
+                  <td style={{ padding: '10px 12px', color: 'var(--ytg-text-2)', fontSize: 15, lineHeight: 1.6, verticalAlign: 'top' }}>{reason}</td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
-        <p style={{ fontSize: 14, color: 'var(--ytg-text-2)', lineHeight: 1.8, marginBottom: 16 }}>You can revoke any of these permissions at any time via <a href="https://myaccount.google.com/permissions" style={{ color: 'var(--ytg-accent-text)' }}>Google Account Permissions</a>. Revoking access will disconnect your YouTube channel from YTGrowth.</p>
+        <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.8, marginBottom: 16 }}>You can revoke any of these permissions at any time via <a href="https://myaccount.google.com/permissions" style={{ color: 'var(--ytg-accent-text)' }}>Google Account Permissions</a>. Revoking access will disconnect your YouTube channel from YTGrowth.</p>
 
         <h2 style={{ fontWeight: 700, fontSize: 18, color: 'var(--ytg-text)', marginTop: 36, marginBottom: 10, letterSpacing: '-0.3px' }}>5. Data Security &amp; Protection Mechanisms</h2>
         <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.8, marginBottom: 12 }}>We take the following technical and organisational measures to protect your data, including sensitive information such as OAuth tokens and YouTube Analytics data:</p>
