@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { openCheckout } from '../paddle'
+import { openCheckout } from '../checkout'
 
 export default function UsageBar({ channelId, email, dark = false }) {
   const [usage, setUsage] = useState(null)
@@ -60,8 +60,8 @@ export default function UsageBar({ channelId, email, dark = false }) {
           </p>
           {(!atLimit || !hasPack) && (
             <div style={{ display: 'flex', gap: 7 }}>
-              <button onClick={() => openCheckout('pack_power', user)} style={topUpStyle}>Top Up</button>
-              <button onClick={() => openCheckout('growth_monthly', user)} style={upgradeStyle}>Upgrade</button>
+              <button onClick={() => openCheckout('pack_60')} style={topUpStyle}>Top Up</button>
+              <button onClick={() => openCheckout('growth_monthly')} style={upgradeStyle}>Upgrade</button>
             </div>
           )}
         </div>

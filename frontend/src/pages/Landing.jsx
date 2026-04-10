@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { openCheckout } from '../paddle'
+import { openCheckout } from '../checkout'
 
 /* ─── inject font + global styles into <head> once ─────────────────────── */
 function useGlobalStyles(light) {
@@ -1207,7 +1207,7 @@ export default function Landing() {
                     <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}><Check /><span style={{ fontSize: 13, color: 'var(--ytg-text-2)' }}>{f}</span></div>
                   ))}
                   <p style={{ fontSize: 11, color: '#ff6b63', fontWeight: 700, marginTop: 18, marginBottom: 12 }}>Only 500 available — limited spots</p>
-                  <button onClick={() => openCheckout('lifetime_solo')} className="ytg-btn-ghost" style={{ width: '100%', justifyContent: 'center', display: 'flex' }}>Lock In Lifetime Access</button>
+                  <button onClick={() => openCheckout('solo_lifetime')} className="ytg-btn-ghost" style={{ width: '100%', justifyContent: 'center', display: 'flex' }}>Lock In Lifetime Access</button>
                 </div>
 
                 <div className="ytg-pricing-card-featured" style={{ padding: '36px 32px' }}>
@@ -1227,7 +1227,7 @@ export default function Landing() {
                     <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}><Check color="var(--ytg-accent)" /><span style={{ fontSize: 13, color: 'var(--ytg-text)' }}>{f}</span></div>
                   ))}
                   <p style={{ fontSize: 11, color: '#ff6b63', fontWeight: 700, marginTop: 18, marginBottom: 12 }}>Only 500 available — limited spots</p>
-                  <button onClick={() => openCheckout('lifetime_growth')} className="ytg-btn-primary" style={{ width: '100%', justifyContent: 'center', display: 'flex' }}>Lock In Lifetime Access</button>
+                  <button onClick={() => openCheckout('growth_lifetime')} className="ytg-btn-primary" style={{ width: '100%', justifyContent: 'center', display: 'flex' }}>Lock In Lifetime Access</button>
                 </div>
 
                 <div className="ytg-pricing-card" style={{ padding: '36px 32px' }}>
@@ -1243,7 +1243,7 @@ export default function Landing() {
                     <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}><Check /><span style={{ fontSize: 13, color: 'var(--ytg-text-2)' }}>{f}</span></div>
                   ))}
                   <p style={{ fontSize: 11, color: '#ff6b63', fontWeight: 700, marginTop: 18, marginBottom: 12 }}>Only 500 available · Fair use: max 5 channels</p>
-                  <button onClick={() => openCheckout('lifetime_agency')} className="ytg-btn-ghost" style={{ width: '100%', justifyContent: 'center', display: 'flex' }}>Lock In Lifetime Access</button>
+                  <button onClick={() => openCheckout('agency_lifetime')} className="ytg-btn-ghost" style={{ width: '100%', justifyContent: 'center', display: 'flex' }}>Lock In Lifetime Access</button>
                 </div>
               </div>
             </div>
@@ -1327,7 +1327,7 @@ export default function Landing() {
                   {['20 AI analyses', 'All 5 tools unlocked', 'Never expire', 'Works with any plan or no plan', 'Stack multiple packs'].map((f, i) => (
                     <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}><Check /><span style={{ fontSize: 13, color: 'var(--ytg-text-2)' }}>{f}</span></div>
                   ))}
-                  <button onClick={() => openCheckout('pack_quick')} className="ytg-btn-ghost" style={{ marginTop: 22, width: '100%', justifyContent: 'center', display: 'flex' }}>Buy Analyses</button>
+                  <button onClick={() => openCheckout('pack_20')} className="ytg-btn-ghost" style={{ marginTop: 22, width: '100%', justifyContent: 'center', display: 'flex' }}>Buy Analyses</button>
                 </div>
 
                 <div className="ytg-pricing-card-featured" style={{ padding: '36px 32px' }}>
@@ -1346,7 +1346,7 @@ export default function Landing() {
                   {['60 AI analyses', 'All 5 tools unlocked', 'Never expire', 'Works with any plan or no plan', 'Stack multiple packs'].map((f, i) => (
                     <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}><Check color="var(--ytg-accent)" /><span style={{ fontSize: 13, color: 'var(--ytg-text)' }}>{f}</span></div>
                   ))}
-                  <button onClick={() => openCheckout('pack_power')} className="ytg-btn-primary" style={{ marginTop: 22, width: '100%', justifyContent: 'center', display: 'flex' }}>Buy Analyses</button>
+                  <button onClick={() => openCheckout('pack_60')} className="ytg-btn-primary" style={{ marginTop: 22, width: '100%', justifyContent: 'center', display: 'flex' }}>Buy Analyses</button>
                 </div>
 
                 <div className="ytg-pricing-card" style={{ padding: '36px 32px' }}>
@@ -1361,7 +1361,7 @@ export default function Landing() {
                   {['150 AI analyses', 'All 5 tools unlocked', 'Never expire', 'Works with any plan or no plan', 'Stack multiple packs'].map((f, i) => (
                     <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}><Check /><span style={{ fontSize: 13, color: 'var(--ytg-text-2)' }}>{f}</span></div>
                   ))}
-                  <button onClick={() => openCheckout('pack_arsenal')} className="ytg-btn-ghost" style={{ marginTop: 22, width: '100%', justifyContent: 'center', display: 'flex' }}>Buy Analyses</button>
+                  <button onClick={() => openCheckout('pack_150')} className="ytg-btn-ghost" style={{ marginTop: 22, width: '100%', justifyContent: 'center', display: 'flex' }}>Buy Analyses</button>
                 </div>
               </div>
               <p style={{ textAlign: 'center', fontSize: 13.5, color: 'var(--ytg-text-3)', lineHeight: 1.8 }}>

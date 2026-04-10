@@ -253,7 +253,7 @@ export default function Settings() {
   const canAddMore = me?.can_add_more ?? false
   const usagePct = me?.usage_pct ?? 0
   const isTopPlan = me?.plan === 'agency' || me?.plan === 'lifetime_agency'
-  const hasPaddleSub = me?.status === 'active' && !me?.is_lifetime
+  const hasActiveSub = me?.status === 'active' && !me?.is_lifetime
 
   return (
     <>
@@ -417,9 +417,9 @@ export default function Settings() {
                     style={{ fontSize: 12, fontWeight: 500, cursor: 'pointer', border: 'none', background: C.red, color: '#fff', borderRadius: 7, padding: '7px 14px', fontFamily: 'inherit' }}
                   >Upgrade Plan</button>
                 )}
-                {hasPaddleSub && (
+                {hasActiveSub && (
                   <button
-                    onClick={() => fetch('/billing/portal', { credentials: 'include' }).then(r => r.json()).then(d => { if (d.url) window.open(d.url, '_blank') })}
+                    onClick={() => window.open('https://app.lemonsqueezy.com/my-orders', '_blank')}
                     style={{ fontSize: 12, fontWeight: 500, cursor: 'pointer', background: 'none', border: 'none', color: C.text2, padding: '7px 2px', fontFamily: 'inherit', textDecoration: 'underline' }}
                   >Manage Billing</button>
                 )}
