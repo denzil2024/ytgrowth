@@ -254,12 +254,13 @@ def get_checkout(plan: str, request: Request):
     channel_id = user_data.get("channel", {}).get("channel_id", "")
     email      = user_data.get("channel", {}).get("email", "")
 
-    params = {
-        "checkout[custom][channel_id]": channel_id,
-        "checkout[custom][email]":      email,
-        "checkout[email]":              email,
-    }
-    url = f"{base_url}?{urlencode(params)}"
+    params = {}
+    if channel_id:
+        params["checkout[custom][channel_id]"] = channel_id
+    if email:
+        params["checkout[custom][email]"] = email
+        params["checkout[email]"]         = email
+    url = f"{base_url}?{urlencode(params)}" if params else base_url
     return JSONResponse({"url": url})
 
 
