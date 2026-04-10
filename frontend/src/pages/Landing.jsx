@@ -589,6 +589,7 @@ export default function Landing() {
             {['Features', 'How it works', 'Pricing', 'FAQ'].map((l, i) => (
               <a key={i} href={`#${l.toLowerCase().replace(/ /g, '-')}`} className="ytg-nav-link">{l}</a>
             ))}
+            <a href="/affiliate" className="ytg-nav-link" style={{ color: 'var(--ytg-accent-text)', fontWeight: 600 }}>Affiliates</a>
           </div>
         )}
 
@@ -633,6 +634,9 @@ export default function Landing() {
             {l}
           </a>
         ))}
+        <a href="/affiliate" style={{ fontSize: 22, fontWeight: 700, color: 'var(--ytg-accent)', textDecoration: 'none', letterSpacing: '-0.5px' }}>
+          Affiliates
+        </a>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 10, width: '100%', padding: '0 32px', alignItems: 'center' }}>
           {loggedIn ? (
             <a href="/dashboard" className="ytg-btn-primary" style={{ width: '100%', justifyContent: 'center' }}>Dashboard</a>
