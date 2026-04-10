@@ -8,9 +8,14 @@ Returns a dict with:
   message: str    (only when allowed=False)
   show_upgrade: bool (only when allowed=False)
 """
+import os
 import datetime
 from database.models import SessionLocal
 from app.utils import get_or_create_subscription, next_reset_date
+
+# Set DEV_BYPASS_GATE=true in Render env vars to skip the gate entirely.
+# Remove that env var when you're ready to enforce limits again.
+_BYPASS = os.environ.get("DEV_BYPASS_GATE", "").lower() in ("1", "true", "yes")
 
 
 def check_and_deduct(channel_id: str) -> dict:
@@ -19,6 +24,9 @@ def check_and_deduct(channel_id: str) -> dict:
     Monthly bucket depletes first; pack_balance is the fallback.
     Free users have 5 lifetime analyses (monthly_allowance=5, no reset_date).
     """
+    if _BYPASS:
+        return {"allowed": True, "warning": False, "usage_pct": 0, "pack_balance": 999}
+
     db = SessionLocal()
     try:
         sub = get_or_create_subscription(db, channel_id)
