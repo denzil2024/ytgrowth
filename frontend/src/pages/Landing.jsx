@@ -524,7 +524,7 @@ export default function Landing() {
     if (params.get('tab')) {
       setTimeout(() => {
         document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' })
-      }, 200)
+      }, 600)
     }
   }, [])
 

@@ -362,7 +362,7 @@ export default function Settings() {
                     <p style={{ fontSize: 13, color: C.text2, lineHeight: 1.55, marginBottom: 10 }}>
                       You have reached your channel limit. Upgrade your plan to connect more channels.
                     </p>
-                    <a href="/?tab=monthly" style={{ display: 'inline-block', background: C.red, color: '#fff', fontSize: 12, fontWeight: 500, padding: '6px 14px', borderRadius: 7, textDecoration: 'none' }}>
+                    <a href="/?tab=monthly#pricing" style={{ display: 'inline-block', background: C.red, color: '#fff', fontSize: 12, fontWeight: 500, padding: '6px 14px', borderRadius: 7, textDecoration: 'none' }}>
                       Upgrade Plan
                     </a>
                   </div>
@@ -408,12 +408,12 @@ export default function Settings() {
               {/* Action buttons */}
               <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
                 <button
-                  onClick={() => window.location.href = '/?tab=packs'}
+                  onClick={() => window.location.href = '/?tab=packs#pricing'}
                   style={{ fontSize: 12, fontWeight: 500, cursor: 'pointer', border: `1px solid ${C.border}`, background: '#fff', color: C.text2, borderRadius: 7, padding: '7px 14px', fontFamily: 'inherit' }}
                 >Top Up Credits</button>
                 {!isTopPlan && (
                   <button
-                    onClick={() => window.location.href = '/?tab=monthly'}
+                    onClick={() => window.location.href = '/?tab=monthly#pricing'}
                     style={{ fontSize: 12, fontWeight: 500, cursor: 'pointer', border: 'none', background: C.red, color: '#fff', borderRadius: 7, padding: '7px 14px', fontFamily: 'inherit' }}
                   >Upgrade Plan</button>
                 )}
