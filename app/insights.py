@@ -138,7 +138,47 @@ def _channel_aggregates(merged_videos, analytics):
     }
 
 
-def analyze_channel(stats, videos, analytics=None, video_analytics=None):
+def analyze_channel(
+    stats, videos,
+    analytics=None,
+    video_analytics=None,
+    traffic_sources=None,
+    shares=None,
+    device_types=None,
+    geographies=None,
+    demographics=None,
+    dislikes=None,
+    playlist_adds=None,
+    competitor_analyses=None,
+    plan="free",
+):
+    # Fetch stored competitor analyses from the DB
+    try:
+        from database.models import SessionLocal, CompetitorAnalysisCache
+        db = SessionLocal()
+        rows = (
+            db.query(CompetitorAnalysisCache)
+            .filter_by(channel_id=stats["channel_id"])
+            .order_by(CompetitorAnalysisCache.analyzed_at.desc())
+            .limit(3)
+            .all()
+        )
+        competitor_analyses = [json.loads(r.result_json) for r in rows]
+        db.close()
+    except Exception as e:
+        print(f"Competitor analysis fetch error: {e}")
+        competitor_analyses = competitor_analyses or []
+
+    # Determine MAX_ACTIONS based on plan
+    if "agency" in plan:
+        MAX_ACTIONS = 15
+    elif "growth" in plan:
+        MAX_ACTIONS = 12
+    elif "solo" in plan:
+        MAX_ACTIONS = 8
+    else:
+        MAX_ACTIONS = 5
+
     merged = _merge_video_data(videos, video_analytics)
     posting = _posting_behavior(videos)
     agg = _channel_aggregates(merged, analytics)
@@ -180,9 +220,109 @@ Total watch time (hours): {agg.get('total_watch_time_hours', 0)}
 Best performing video (views): {agg.get('top_video_title', 'N/A')} — {agg.get('top_video_views', 0)} views
 Worst performing video (views): {agg.get('bottom_video_title', 'N/A')} — {agg.get('bottom_video_views', 0)} views"""
 
-    analysis_instructions = """## YOUR ANALYSIS INSTRUCTIONS
+    # ── New data sections ─────────────────────────────────────────────────────
 
-Perform a full deep audit across these 7 categories. For each category, assign a score from 0 to 100 and write specific observations based on the actual data above — never give generic advice.
+    if traffic_sources is None:
+        traffic_section = "--- TRAFFIC SOURCES (last 90 days) ---\nTraffic source data unavailable"
+    else:
+        lines = ["--- TRAFFIC SOURCES (last 90 days) ---"]
+        for ts in traffic_sources:
+            lines.append(f"{ts['source']}: {ts['views']} views, {ts['watch_minutes']} mins")
+        traffic_section = "\n".join(lines)
+
+    if device_types is None:
+        device_section = "--- DEVICE TYPES (last 90 days) ---\nDevice data unavailable"
+    else:
+        lines = ["--- DEVICE TYPES (last 90 days) ---"]
+        for dt in device_types:
+            lines.append(f"{dt['device']}: {dt['views']} views")
+        device_section = "\n".join(lines)
+
+    if geographies is None:
+        geo_section = "--- TOP 5 GEOGRAPHIES (last 90 days) ---\nGeography data unavailable"
+    else:
+        lines = ["--- TOP 5 GEOGRAPHIES (last 90 days) ---"]
+        for geo in geographies:
+            lines.append(f"{geo['country']}: {geo['views']} views, {geo['subscribers_gained']} subs gained")
+        geo_section = "\n".join(lines)
+
+    if not demographics:
+        demo_section = "--- AUDIENCE DEMOGRAPHICS ---\nInsufficient data — channel needs more viewers for demographic breakdown"
+    else:
+        lines = ["--- AUDIENCE DEMOGRAPHICS ---"]
+        for demo in demographics:
+            lines.append(f"{demo['age_group']} / {demo['gender']}: {demo['viewer_percentage']}%")
+        demo_section = "\n".join(lines)
+
+    shares_val = shares.get("total_shares") if shares else "Unavailable"
+    dislikes_val = dislikes.get("total_dislikes") if dislikes else "Unavailable"
+    playlist_val = playlist_adds.get("videos_added_to_playlists") if playlist_adds else "Unavailable"
+    engagement_section = f"""--- ADDITIONAL ENGAGEMENT (last 90 days) ---
+Total shares: {shares_val}
+Total dislikes: {dislikes_val}
+Videos added to playlists: {playlist_val}"""
+
+    if not competitor_analyses:
+        competitor_section = "--- STORED COMPETITOR INTELLIGENCE ---\nNo competitor data stored yet. User has not run a competitor analysis."
+    else:
+        user_avg_views = agg.get("avg_views_per_video", 0)
+        lines = ["--- STORED COMPETITOR INTELLIGENCE ---"]
+        for comp in competitor_analyses[:3]:
+            name = comp.get("channel_name") or "Unknown"
+            subs = comp.get("subscribers", "Unknown")
+            threat = comp.get("threatLevel", "Unknown")
+            top_topics = comp.get("topTopics") or []
+            topics_str = ", ".join(
+                t.get("topic", str(t)) if isinstance(t, dict) else str(t)
+                for t in top_topics[:3]
+            ) if top_topics else "Unknown"
+            title_patterns = comp.get("titlePatterns") or {}
+            formats = title_patterns.get("dominantFormats") or []
+            keywords = title_patterns.get("topKeywords") or []
+            formats_str = ", ".join(str(f) for f in formats) if formats else "Unknown"
+            keywords_str = ", ".join(str(k) for k in keywords) if keywords else "Unknown"
+            gaps = comp.get("gapsToExploit") or []
+            gap_strs = [
+                g.get("gap", str(g)) if isinstance(g, dict) else str(g)
+                for g in gaps[:3]
+            ]
+            gaps_str = "; ".join(gap_strs) if gap_strs else "None identified"
+            comp_avg = comp.get("avg_views_per_video", "Unknown")
+            view_cmp = f"User avg: {user_avg_views}, Competitor avg: {comp_avg}"
+            lines += [
+                f"\nCompetitor: {name}",
+                f"Subscribers: {subs}",
+                f"Threat level: {threat}",
+                f"Their top topics: {topics_str}",
+                f"Title patterns they use: {formats_str}",
+                f"Top keywords: {keywords_str}",
+                f"Gaps they leave open: {gaps_str}",
+                f"Avg views comparison: {view_cmp}",
+            ]
+        competitor_section = "\n".join(lines)
+
+    # ── Competitive category — only injected when data exists ─────────────────
+    competitive_category = ""
+    if competitor_analyses:
+        competitive_category = """
+
+### 11. COMPETITIVE POSITION
+Use stored competitor data to benchmark the user's channel directly.
+
+Compare:
+- User avg views vs competitor avg views
+- User CTR vs competitor CTR if available
+- User posting frequency vs competitors
+- Topics user covers vs gaps competitors leave open
+- Title patterns competitors use that user is not using
+
+Generate recommendations that say "Competitor X averages Y views while you average Z — here is the specific gap and how to close it." Never give generic advice. Always reference actual competitor data.
+
+If no competitor data exists, skip this category entirely and do not mention it."""
+
+    analysis_instructions = f"""## YOUR ANALYSIS INSTRUCTIONS
+
+Perform a full deep audit across these categories. For each category, assign a score from 0 to 100 and write specific observations based on the actual data above — never give generic advice.
 
 ### 1. POSTING CONSISTENCY
 Evaluate upload frequency, gaps between videos, and whether posting days/times align with the audience's peak active hours. Flag irregular patterns, long gaps, and mismatched timing.
@@ -191,7 +331,7 @@ Evaluate upload frequency, gaps between videos, and whether posting days/times a
 Compare video durations against average view percentage. If average view percentage is low, videos may be too long. If it is high, they may be leaving watch time on the table. Identify the sweet spot based on their actual retention data. Flag outlier videos that are significantly longer or shorter than what performs best.
 
 ### 3. CTR HEALTH (Titles + Thumbnails)
-Analyze the CTR across all 20 videos. YouTube benchmark is 4–6% for established channels, 2–4% for newer ones. Flag videos below benchmark. Identify which titles/thumbnails performed best and extract the pattern. Note if titles are too long, lack keywords, or lack emotional hooks.
+Analyze the CTR across all 20 videos. YouTube benchmark is 4-6% for established channels, 2-4% for newer ones. Flag videos below benchmark. Identify which titles/thumbnails performed best and extract the pattern. Note if titles are too long, lack keywords, or lack emotional hooks.
 
 ### 4. AUDIENCE RETENTION
 Evaluate average view percentage across all videos. Below 40% is a red flag. Above 50% is strong. Identify which videos had the best retention and what they have in common (length, topic, format). Flag videos where retention dropped sharply.
@@ -203,26 +343,39 @@ Calculate like-to-view ratio and comment-to-view ratio. Flag if engagement is lo
 Assess whether the last 20 video titles suggest a clear niche or scattered topics. Identify which topic clusters get the most views and engagement. Flag if the channel is inconsistent in its content focus.
 
 ### 7. SEO & DISCOVERABILITY
-Evaluate whether channel keywords are set and relevant. Check if video titles follow SEO best practices (primary keyword in first half, 50–70 characters, specificity). Flag missing or weak descriptions based on available data.
+Evaluate whether channel keywords are set and relevant. Check if video titles follow SEO best practices (primary keyword in first half, 50-70 characters, specificity). Flag missing or weak descriptions based on available data.
+
+### 8. TRAFFIC SOURCE INTELLIGENCE
+Where are views coming from? Browse/Suggested dominant means thumbnails and click appeal matter most. YouTube Search dominant means SEO and keyword-optimized titles are the priority. External dominant means leverage outside audience for cross-promotion. Flag over-reliance on one source as risk.
+
+### 9. AUDIENCE PROFILE
+Use device type, geography, demographics. Mobile-dominant means larger thumbnail text, shorter punchy hooks. Unexpected geography means opportunity to tailor language and cultural references. If demographics available, assess whether the channel is reaching its intended audience.
+
+### 10. CONTENT SHAREABILITY
+Use shares and playlist adds vs views. Low share rate on educational or entertaining content is a red flag. High playlist adds means evergreen content — flag as content type to double down on.{competitive_category}
 
 ## OUTPUT FORMAT
 
-Return ONLY valid JSON. No markdown. No preamble. Exact structure:
+Return ONLY valid JSON. No markdown. No preamble. Return exactly {MAX_ACTIONS} priority actions ranked by impact. No more, no fewer. Exact structure:
 
-{
+{{
   "channelScore": <number 0-100>,
   "channelSummary": "<2-3 sentence honest assessment>",
-  "categoryScores": {
+  "categoryScores": {{
     "postingConsistency": <number>,
     "videoLength": <number>,
     "ctrHealth": <number>,
     "audienceRetention": <number>,
     "engagementQuality": <number>,
     "contentStrategy": <number>,
-    "seoDiscoverability": <number>
-  },
+    "seoDiscoverability": <number>,
+    "trafficSourceIntelligence": <number>,
+    "audienceProfile": <number>,
+    "contentShareability": <number>,
+    "competitivePosition": <number or null if no competitor data>
+  }},
   "priorityActions": [
-    {
+    {{
       "rank": 1,
       "category": "<string>",
       "problem": "<specific problem found in their data>",
@@ -230,12 +383,16 @@ Return ONLY valid JSON. No markdown. No preamble. Exact structure:
       "action": "<exactly what to do, specific and actionable>",
       "whyNow": "<why this is the most urgent fix>",
       "expectedOutcome": "<what metric will improve and roughly by how much>"
-    }
+    }}
   ],
   "quickWins": ["<small thing they can fix today>"],
   "topPerformingPattern": "<what their best videos have in common>",
-  "biggestRisk": "<the one thing that will hold the channel back if not fixed>"
-}"""
+  "biggestRisk": "<the one thing that will hold the channel back if not fixed>",
+  "trafficDominantSource": "<string>",
+  "audienceSummary": "<string — 2 sentences on who is watching>",
+  "shareabilityScore": <number 0-100>,
+  "competitorBenchmark": "<string — 2-3 sentences comparing user to stored competitors. Null if no competitor data>"
+}}"""
 
     prompt = f"""Here is the full analytics data for this YouTube channel:
 
@@ -248,6 +405,18 @@ Return ONLY valid JSON. No markdown. No preamble. Exact structure:
 {videos_section}
 
 {agg_section}
+
+{traffic_section}
+
+{device_section}
+
+{geo_section}
+
+{demo_section}
+
+{engagement_section}
+
+{competitor_section}
 
 ---
 
@@ -301,7 +470,7 @@ def _fallback_analysis(stats, videos, analytics):
             "category": "Posting Consistency",
             "problem": f"Posting about {round(upload_freq * 4, 1)}x per month — well below algorithm threshold",
             "impact": "high",
-            "action": "Commit to at least 1 video per week. Batch record 3–4 videos per session to build a buffer.",
+            "action": "Commit to at least 1 video per week. Batch record 3-4 videos per session to build a buffer.",
             "whyNow": "Channels posting less than twice a month are rarely surfaced by YouTube recommendations.",
             "expectedOutcome": "Consistent weekly uploads can double recommendation frequency within 60 days."
         })
@@ -342,9 +511,17 @@ def _fallback_analysis(stats, videos, analytics):
             "engagementQuality": 50,
             "contentStrategy": 50,
             "seoDiscoverability": 50,
+            "trafficSourceIntelligence": 50,
+            "audienceProfile": 50,
+            "contentShareability": 50,
+            "competitivePosition": None,
         },
         "priorityActions": problems[:5],
         "quickWins": [],
         "topPerformingPattern": "Unable to determine without complete analysis.",
         "biggestRisk": "Unable to determine without complete analysis.",
+        "trafficDominantSource": None,
+        "audienceSummary": None,
+        "shareabilityScore": None,
+        "competitorBenchmark": None,
     }

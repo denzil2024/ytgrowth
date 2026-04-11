@@ -175,6 +175,196 @@ def get_video_analytics(credentials, channel_id):
         return []
 
 
+def get_traffic_sources(credentials, channel_id):
+    try:
+        analytics = build("youtubeAnalytics", "v2", credentials=credentials)
+        end_date = datetime.now().strftime("%Y-%m-%d")
+        start_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d")
+        response = analytics.reports().query(
+            ids=f"channel=={channel_id}",
+            startDate=start_date,
+            endDate=end_date,
+            metrics="views,estimatedMinutesWatched",
+            dimensions="insightTrafficSourceType",
+        ).execute()
+        rows = response.get("rows", [])
+        result = [
+            {"source": r[0], "views": int(r[1]), "watch_minutes": int(r[2])}
+            for r in rows
+        ]
+        result.sort(key=lambda x: x["views"], reverse=True)
+        return result
+    except Exception as e:
+        print(f"Traffic sources error: {e}")
+        return None
+
+
+def get_shares(credentials, channel_id):
+    try:
+        analytics = build("youtubeAnalytics", "v2", credentials=credentials)
+        end_date = datetime.now().strftime("%Y-%m-%d")
+        start_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d")
+        response = analytics.reports().query(
+            ids=f"channel=={channel_id}",
+            startDate=start_date,
+            endDate=end_date,
+            metrics="shares",
+        ).execute()
+        rows = response.get("rows", [])
+        total = int(rows[0][0]) if rows else 0
+        return {"total_shares": total}
+    except Exception as e:
+        print(f"Shares error: {e}")
+        return None
+
+
+def get_device_types(credentials, channel_id):
+    try:
+        analytics = build("youtubeAnalytics", "v2", credentials=credentials)
+        end_date = datetime.now().strftime("%Y-%m-%d")
+        start_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d")
+        response = analytics.reports().query(
+            ids=f"channel=={channel_id}",
+            startDate=start_date,
+            endDate=end_date,
+            metrics="views,estimatedMinutesWatched",
+            dimensions="deviceType",
+        ).execute()
+        rows = response.get("rows", [])
+        result = [
+            {"device": r[0], "views": int(r[1]), "watch_minutes": int(r[2])}
+            for r in rows
+        ]
+        result.sort(key=lambda x: x["views"], reverse=True)
+        return result
+    except Exception as e:
+        print(f"Device types error: {e}")
+        return None
+
+
+def get_top_geographies(credentials, channel_id):
+    try:
+        analytics = build("youtubeAnalytics", "v2", credentials=credentials)
+        end_date = datetime.now().strftime("%Y-%m-%d")
+        start_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d")
+        response = analytics.reports().query(
+            ids=f"channel=={channel_id}",
+            startDate=start_date,
+            endDate=end_date,
+            metrics="views,estimatedMinutesWatched,subscribersGained",
+            dimensions="country",
+            sort="-views",
+            maxResults=5,
+        ).execute()
+        rows = response.get("rows", [])
+        return [
+            {
+                "country": r[0],
+                "views": int(r[1]),
+                "watch_minutes": int(r[2]),
+                "subscribers_gained": int(r[3]),
+            }
+            for r in rows
+        ]
+    except Exception as e:
+        print(f"Geographies error: {e}")
+        return None
+
+
+def get_demographics(credentials, channel_id):
+    try:
+        analytics = build("youtubeAnalytics", "v2", credentials=credentials)
+        end_date = datetime.now().strftime("%Y-%m-%d")
+        start_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d")
+        response = analytics.reports().query(
+            ids=f"channel=={channel_id}",
+            startDate=start_date,
+            endDate=end_date,
+            metrics="viewerPercentage",
+            dimensions="ageGroup,gender",
+        ).execute()
+        rows = response.get("rows", [])
+        if not rows:
+            return []
+        return [
+            {"age_group": r[0], "gender": r[1], "viewer_percentage": round(float(r[2]), 2)}
+            for r in rows
+        ]
+    except Exception as e:
+        print(f"Demographics error: {e}")
+        return []
+
+
+def get_dislikes(credentials, channel_id):
+    try:
+        analytics = build("youtubeAnalytics", "v2", credentials=credentials)
+        end_date = datetime.now().strftime("%Y-%m-%d")
+        start_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d")
+        response = analytics.reports().query(
+            ids=f"channel=={channel_id}",
+            startDate=start_date,
+            endDate=end_date,
+            metrics="dislikes",
+        ).execute()
+        rows = response.get("rows", [])
+        total = int(rows[0][0]) if rows else 0
+        return {"total_dislikes": total}
+    except Exception as e:
+        print(f"Dislikes error: {e}")
+        return None
+
+
+def get_playlist_adds(credentials, channel_id):
+    try:
+        analytics = build("youtubeAnalytics", "v2", credentials=credentials)
+        end_date = datetime.now().strftime("%Y-%m-%d")
+        start_date = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d")
+        response = analytics.reports().query(
+            ids=f"channel=={channel_id}",
+            startDate=start_date,
+            endDate=end_date,
+            metrics="videosAddedToPlaylists",
+        ).execute()
+        rows = response.get("rows", [])
+        total = int(rows[0][0]) if rows else 0
+        return {"videos_added_to_playlists": total}
+    except Exception as e:
+        print(f"Playlist adds error: {e}")
+        return None
+
+
+def get_full_channel_data(credentials, channel_id):
+    """Fetch all analytics data in parallel. Any key that fails returns None."""
+    tasks = {
+        "analytics":       lambda: get_analytics(credentials, channel_id),
+        "video_analytics": lambda: get_video_analytics(credentials, channel_id),
+        "traffic_sources": lambda: get_traffic_sources(credentials, channel_id),
+        "shares":          lambda: get_shares(credentials, channel_id),
+        "device_types":    lambda: get_device_types(credentials, channel_id),
+        "geographies":     lambda: get_top_geographies(credentials, channel_id),
+        "demographics":    lambda: get_demographics(credentials, channel_id),
+        "dislikes":        lambda: get_dislikes(credentials, channel_id),
+        "playlist_adds":   lambda: get_playlist_adds(credentials, channel_id),
+    }
+
+    result = {k: None for k in tasks}
+
+    def run_task(key):
+        try:
+            return key, tasks[key]()
+        except Exception as e:
+            print(f"get_full_channel_data: {key} failed: {e}")
+            return key, None
+
+    with ThreadPoolExecutor(max_workers=9) as pool:
+        futures = {pool.submit(run_task, k): k for k in tasks}
+        for future in as_completed(futures):
+            key, value = future.result()
+            result[key] = value
+
+    return result
+
+
 def scrape_autocomplete(seed_keyword: str) -> list[str]:
     """
     Scrape YouTube autocomplete for a seed keyword.

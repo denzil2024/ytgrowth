@@ -11,7 +11,7 @@ from routers.auth import get_session
 from app.insights import calculate_upload_frequency
 from app.analysis_gate import check_and_deduct
 from app.utils import compute_like_rate
-from database.models import SessionLocal, CompetitorVideoIdeas
+from database.models import SessionLocal, CompetitorVideoIdeas, CompetitorAnalysisCache
 
 router = APIRouter()
 
@@ -31,6 +31,34 @@ def _persist_video_ideas(channel_id: str, competitor_id: str, ideas: list):
         db.commit()
     except Exception as e:
         print(f"[competitor_routes] Failed to persist video ideas: {e}")
+        db.rollback()
+    finally:
+        db.close()
+
+
+def _persist_full_analysis(channel_id: str, competitor_id: str, result: dict):
+    """Upsert full competitor analysis result to the DB."""
+    if not result:
+        return
+    import datetime as _dt
+    db = SessionLocal()
+    try:
+        row = db.query(CompetitorAnalysisCache).filter_by(
+            channel_id=channel_id,
+            competitor_id=competitor_id,
+        ).first()
+        if row:
+            row.result_json = json.dumps(result)
+            row.analyzed_at = _dt.datetime.utcnow()
+        else:
+            db.add(CompetitorAnalysisCache(
+                channel_id=channel_id,
+                competitor_id=competitor_id,
+                result_json=json.dumps(result),
+            ))
+        db.commit()
+    except Exception as e:
+        print(f"[competitor_routes] Failed to persist full analysis: {e}")
         db.rollback()
     finally:
         db.close()
@@ -86,6 +114,15 @@ def analyze_competitor(channel_id: str, request: Request):
     # Persist video ideas so the Video Ideas tab can pool them for free
     my_channel_id = data["channel"]["channel_id"]
     _persist_video_ideas(my_channel_id, channel_id, ai_analysis.get("videoIdeas", []))
+
+    # Persist full analysis (enriched with channel metadata) for channel insights
+    full_result = {
+        **ai_analysis,
+        "channel_name": comp_data.get("channel_name"),
+        "subscribers": comp_data.get("subscribers"),
+        "avg_views_per_video": comp_data.get("avg_views_per_video"),
+    }
+    _persist_full_analysis(my_channel_id, channel_id, full_result)
 
     return JSONResponse({
         "my_stats": my_stats,

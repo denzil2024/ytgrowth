@@ -182,6 +182,16 @@ class ChannelRegistry(Base):
     last_audit_at      = Column(DateTime, nullable=True)
 
 
+class CompetitorAnalysisCache(Base):
+    """Full analyze_competitor_with_ai() result per channel+competitor pair."""
+    __tablename__ = "competitor_analysis_cache"
+    id            = Column(Integer, primary_key=True)
+    channel_id    = Column(String, nullable=False, index=True)
+    competitor_id = Column(String, nullable=False)
+    result_json   = Column(Text,   nullable=False)
+    analyzed_at   = Column(DateTime, default=_now)
+
+
 import os
 DATABASE_URL = os.environ.get("DATABASE_URL", "sqlite:///ytgrowth.db")
 # Railway provides postgres:// but SQLAlchemy needs postgresql://
@@ -207,6 +217,7 @@ with engine.connect() as _conn:
         "CREATE INDEX IF NOT EXISTS ix_channel_registry_channel_id ON channel_registry (channel_id)",
         "CREATE INDEX IF NOT EXISTS ix_channel_registry_owner_email ON channel_registry (owner_email)",
         "CREATE UNIQUE INDEX IF NOT EXISTS uq_channel_registry_owner_channel ON channel_registry (owner_email, channel_id)",
+        "CREATE TABLE IF NOT EXISTS competitor_analysis_cache (id INTEGER PRIMARY KEY AUTOINCREMENT, channel_id TEXT NOT NULL, competitor_id TEXT NOT NULL, result_json TEXT NOT NULL, analyzed_at DATETIME)",
         "UPDATE user_subscriptions SET monthly_allowance = 5, monthly_used = 0 WHERE plan = 'free' AND monthly_allowance = 9999",
         # Rename paddle_* → lemonsqueezy_* (PostgreSQL supports RENAME COLUMN; SQLite fallback below)
         "ALTER TABLE user_subscriptions RENAME COLUMN paddle_subscription_id TO lemonsqueezy_subscription_id",

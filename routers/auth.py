@@ -6,7 +6,9 @@ import os
 import uuid
 import json
 import datetime
-from app.youtube import get_channel_stats, get_recent_videos, get_analytics, get_video_analytics
+from app.youtube import (
+    get_channel_stats, get_recent_videos,
+    get_full_channel_data)
 from app.insights import analyze_channel
 from database.models import (
     UserSession, UserEmailPreferences, UserSubscription,
@@ -195,10 +197,22 @@ def _upsert_email_preferences(channel_id: str, email: str) -> None:
         db.close()
 
 
-def _run_analysis_in_background(session_id: str, stats: dict, videos: list, analytics: dict, video_analytics: list):
+def _run_analysis_in_background(session_id: str, stats: dict, videos: list, full_data: dict, plan: str = "free"):
     """Run AI analysis after login and update session data when done."""
     try:
-        insights = analyze_channel(stats, videos, analytics, video_analytics)
+        insights = analyze_channel(
+            stats, videos,
+            analytics=full_data.get("analytics"),
+            video_analytics=full_data.get("video_analytics"),
+            traffic_sources=full_data.get("traffic_sources"),
+            shares=full_data.get("shares"),
+            device_types=full_data.get("device_types"),
+            geographies=full_data.get("geographies"),
+            demographics=full_data.get("demographics"),
+            dislikes=full_data.get("dislikes"),
+            playlist_adds=full_data.get("playlist_adds"),
+            plan=plan,
+        )
         analyzed_at = datetime.datetime.utcnow().isoformat()
         # Always reload from DB and save back — don't rely on in-memory state
         data, creds = get_session(session_id)
@@ -379,8 +393,7 @@ def callback(request: Request, background_tasks: BackgroundTasks):
                 db.close()
 
         videos = get_recent_videos(creds)
-        analytics = get_analytics(creds, channel_id)
-        video_analytics = get_video_analytics(creds, channel_id)
+        full_data = get_full_channel_data(creds, channel_id)
 
         _user_creds[session_id] = creds
 
@@ -421,8 +434,8 @@ def callback(request: Request, background_tasks: BackgroundTasks):
         user_data = {
             "channel":         stats,
             "videos":          videos,
-            "analytics":       analytics,
-            "video_analytics": video_analytics,
+            "analytics":       full_data.get("analytics"),
+            "video_analytics": full_data.get("video_analytics"),
             "insights":        existing_insights,
             "analyzed_at":     existing_analyzed_at or now,
             "email":           google_email,
@@ -449,10 +462,15 @@ def callback(request: Request, background_tasks: BackgroundTasks):
         if google_email and channel_id:
             _upsert_email_preferences(channel_id, google_email)
 
+        db = SessionLocal()
+        sub = db.query(UserSubscription).filter_by(channel_id=channel_id).first()
+        plan = sub.plan if sub else "free"
+        db.close()
+
         if needs_analysis:
             background_tasks.add_task(
                 _run_analysis_in_background,
-                session_id, stats, videos, analytics, video_analytics
+                session_id, stats, videos, full_data, plan
             )
 
         return RedirectResponse(f"{BASE_URL}/dashboard")
@@ -498,13 +516,22 @@ def refresh_analysis(request: Request, background_tasks: BackgroundTasks):
     data["insights"] = None
     _user_data[session_id] = data
     _persist_session(session_id, creds, data)
+    creds = _user_creds.get(session_id)
+    channel_id = data["channel"]["channel_id"]
+    full_data = get_full_channel_data(creds, channel_id)
+
+    db = SessionLocal()
+    sub = db.query(UserSubscription).filter_by(channel_id=channel_id).first()
+    plan = sub.plan if sub else "free"
+    db.close()
+
     background_tasks.add_task(
         _run_analysis_in_background,
         session_id,
         data["channel"],
         data["videos"],
-        data["analytics"],
-        data.get("video_analytics", [])
+        full_data,
+        plan,
     )
     return JSONResponse({"message": "Analysis started"})
 
