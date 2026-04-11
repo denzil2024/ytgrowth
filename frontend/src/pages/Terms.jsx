@@ -54,7 +54,7 @@ export default function Terms() {
       <div style={{ maxWidth: 760, margin: '0 auto', padding: '60px 24px 100px' }}>
         <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-accent-text)', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 12 }}>Legal</p>
         <h1 style={{ fontWeight: 800, fontSize: 38, letterSpacing: '-1.2px', color: 'var(--ytg-text)', marginBottom: 8, lineHeight: 1.1 }}>Terms of Service</h1>
-        <p style={{ fontSize: 13, color: 'var(--ytg-text-3)', marginBottom: 48 }}>Last updated: April 3, 2025</p>
+        <p style={{ fontSize: 13, color: 'var(--ytg-text-3)', marginBottom: 48 }}>Last updated: April 11, 2026</p>
 
         <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.8, marginBottom: 16 }}>
           These Terms of Service ("Terms") govern your access to and use of YTGrowth ("Service"). By creating an account or using the Service, you agree to be bound by these Terms.
