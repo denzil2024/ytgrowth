@@ -1259,30 +1259,6 @@ export default function Dashboard() {
                           </span>
                           <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
                             <button
-                              title="Score This Thumbnail"
-                              onClick={() => {
-                                const thumbUrl = `https://i.ytimg.com/vi/${v.video_id}/hqdefault.jpg`
-                                fetch(thumbUrl)
-                                  .then(r => r.blob())
-                                  .then(blob => new Promise((res, rej) => {
-                                    const reader = new FileReader()
-                                    reader.onload = () => res(reader.result)
-                                    reader.onerror = rej
-                                    reader.readAsDataURL(blob)
-                                  }))
-                                  .then(dataUrl => {
-                                    localStorage.setItem('ytg_score_this', JSON.stringify({ dataUrl, title: v.title }))
-                                    setNav('Thumbnail Score')
-                                  })
-                                  .catch(() => setNav('Thumbnail Score'))
-                              }}
-                              style={{ fontSize: 11, fontWeight: 700, color: '#7c3aed',
-                                       background: '#f5f3ff', border: '1px solid #ddd6fe',
-                                       borderRadius: 100, padding: '5px 10px', cursor: 'pointer',
-                                       fontFamily: 'inherit', whiteSpace: 'nowrap' }}>
-                              Score
-                            </button>
-                            <button
                               onClick={() => setSelectedVideoId(isSelected ? null : v.video_id)}
                               className={isSelected ? '' : 'ytg-optimise-btn'}
                               style={isSelected ? {

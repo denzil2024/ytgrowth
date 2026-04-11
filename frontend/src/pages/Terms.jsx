@@ -86,7 +86,7 @@ export default function Terms() {
         </ul>
 
         <h2 style={{ fontWeight: 700, fontSize: 18, color: 'var(--ytg-text)', marginTop: 36, marginBottom: 10, letterSpacing: '-0.3px' }}>4. Payments & Billing</h2>
-        <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.8, marginBottom: 16 }}>Payments are processed by Paddle, our authorised reseller and Merchant of Record. All prices are in USD. Subscription plans are billed monthly or annually in advance. One-time purchases are non-refundable after 14 days or once more than 10% of included tokens have been used.</p>
+        <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.8, marginBottom: 16 }}>Payments are processed by Lemon Squeezy, our authorised reseller and Merchant of Record. All prices are in USD. Subscription plans are billed monthly or annually in advance. One-time purchases are non-refundable after 14 days or once more than 10% of included tokens have been used.</p>
 
         <h2 style={{ fontWeight: 700, fontSize: 18, color: 'var(--ytg-text)', marginTop: 36, marginBottom: 10, letterSpacing: '-0.3px' }}>5. Refunds & Cancellations</h2>
         <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.8, marginBottom: 16 }}>Because YTGrowth provides a free plan with 5 analyses before any payment is required, all paid purchases are non-refundable except annual subscriptions within 48 hours of purchase and only if zero tokens have been used. Monthly subscriptions may be cancelled at any time — access continues until the period ends. Lifetime plans, Founder Bundles, and Analysis Packs are non-refundable. Full details at <a href="/refund" style={{ color: 'var(--ytg-accent)' }}>ytgrowth.io/refund</a>.</p>

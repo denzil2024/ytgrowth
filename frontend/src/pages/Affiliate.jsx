@@ -629,7 +629,7 @@ export default function Affiliate() {
             <span style={{ fontWeight: 800, fontSize: 15, color: 'var(--ytg-text)', letterSpacing: '-0.4px' }}>YTGrowth</span>
           </div>
           <p style={{ fontSize: 13, color: 'var(--ytg-text-3)' }}>Built for creators serious about growth.</p>
-          <p style={{ fontSize: 12, color: 'var(--ytg-text-3)' }}>© 2025 YTGrowth. All rights reserved.</p>
+          <p style={{ fontSize: 12, color: 'var(--ytg-text-3)' }}>© 2026 YTGrowth. All rights reserved.</p>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: isMobile ? '12px 20px' : 28, justifyContent: isMobile ? 'center' : 'flex-end' }}>
             <a href="/privacy"    className="aff-nav-link" style={{ fontSize: 13 }}>Privacy policy</a>
             <a href="/terms"      className="aff-nav-link" style={{ fontSize: 13 }}>Terms of service</a>
