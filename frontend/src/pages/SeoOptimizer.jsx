@@ -398,20 +398,39 @@ export default function SeoOptimizer({ onNavigate }) {
     setDescError('')
     setDescResult(null)
     try {
-      const res = await fetch(`${API}/seo/generate-description`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          title: selectedTitle,
-          current_description: currentDesc.trim(),
-          niche: result?.primary_phrase || '',
-        }),
-      })
+      const res = await fetch(
+        `${API}/seo/generate-description`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            title: selectedTitle,
+            current_description:
+              currentDesc.trim(),
+            niche:
+              result?.primary_phrase || '',
+            intent_analysis:
+              result?.intent_analysis || null,
+            keyword_scores:
+              result?.keyword_scores || null,
+            current_year: 2026,
+          }),
+        }
+      )
       const data = await res.json()
-      if (!res.ok) { setDescError(data.error || 'Something went wrong.'); return }
+      if (!res.ok) {
+        setDescError(
+          data.error || 'Generation failed.'
+        )
+        return
+      }
       setDescResult(data.descriptions)
     } catch {
-      setDescError('Could not reach the server.')
+      setDescError(
+        'Could not reach the server.'
+      )
     } finally {
       setDescLoading(false)
     }

@@ -866,11 +866,7 @@ Return ONLY this JSON (no markdown, no explanation):
   "title": {{
     "score": <0-100>,
     "verdict": "<one sentence>",
-    "issues": ["<issue 1>", "<issue 2>"],
-    "suggestions": [
-      {{"title": "<improved title A>", "why": "<one sentence>"}},
-      {{"title": "<improved title B>", "why": "<one sentence>"}}
-    ]
+    "issues": ["<issue 1>", "<issue 2>"]
   }},
   "description": {{
     "score": <0-100>,
@@ -887,8 +883,7 @@ Return ONLY this JSON (no markdown, no explanation):
     "has_face": <true/false>,
     "contrast_strong": <true/false>,
     "tips": ["<specific tip 1>", "<specific tip 2>"]
-  }},
-  "priority": "<title|description|thumbnail — which to fix first and one-sentence reason>"
+  }}
 }}"""})
 
     try:
@@ -979,6 +974,9 @@ def generate_description_suggestions(
     title: str,
     current_description: str = "",
     niche: str = "",
+    intent_analysis: dict = None,
+    keyword_scores: list = None,
+    current_year: int = 2026,
 ) -> tuple[list[dict], str]:
     """
     Generate 3 YouTube description options for a given title.
@@ -991,53 +989,79 @@ def generate_description_suggestions(
         return [], "ANTHROPIC_API_KEY is not set"
 
     client = _make_client()
-    niche_block = f"NICHE/KEYWORD: {niche}\n" if niche else ""
     current_block = (
         f'CURRENT DESCRIPTION (improve this):\n"""\n{current_description[:800]}\n"""\n'
         if current_description.strip() else ""
     )
 
-    prompt = f"""You are a YouTube SEO expert writing video descriptions.
+    search_intent = intent_analysis.get("search_intent", "") if intent_analysis else ""
+    emotional_driver = intent_analysis.get("emotional_driver", "") if intent_analysis else ""
+    gap_opportunity = intent_analysis.get("gap_opportunity", "") if intent_analysis else ""
+    viewer_profile = intent_analysis.get("viewer_profile", "") if intent_analysis else ""
+
+    top_3_keywords = ""
+    if keyword_scores:
+        top = [k["phrase"] for k in keyword_scores if k.get("competition") != "HIGH"][:3]
+        top_3_keywords = "\n".join(f"  - {k}" for k in top)
+
+    prompt = f"""You are a YouTube description strategist with deep knowledge of search intent.
 
 VIDEO TITLE: "{title}"
-{niche_block}{current_block}
-Write 3 YouTube description options, each with a different opening strategy.
+NICHE/KEYWORD: {niche}
+CURRENT YEAR: {current_year}
+
+SEARCH INTENT: {search_intent}
+EMOTIONAL DRIVER: {emotional_driver}
+GAP OPPORTUNITY: {gap_opportunity}
+VIEWER PROFILE: {viewer_profile}
+
+TOP 3 KEYWORDS TO USE NATURALLY:
+{top_3_keywords}
+
+{current_block}
+Write 3 YouTube descriptions. Each opens with a different strategy but all are driven by the search intent above.
 
 Rules for every description:
-- First 2 lines (≤150 chars total) MUST be a compelling hook — this is what shows before "Show more"
-- Include the primary keyword naturally in the first 2 lines
-- 150–250 words total
-- End with 3–5 relevant hashtags on the last line (e.g. #youtube #tutorial)
-- Do NOT include timestamps or external links — the creator will add those
-- Plain text only, no markdown
-- NEVER use em-dashes (—) or en-dashes (–). Use a hyphen (-) or colon (:) instead
+- First 2 lines (150 chars total max) must be a compelling hook matching the intent
+- Use all 3 keywords naturally - never stuffed, always reads like a human wrote it
+- 150-250 words total
+- If any year appears in the description, it must be {current_year} or later. Never write 2024 or any past year. If a year reference makes sense, use {current_year}.
+- End with exactly 3 hashtags on the last line - derived from the top 3 keywords above, formatted as #keyword
+- No timestamps, no external links
+- Plain text only
+- No em-dashes or en-dashes. Use hyphen or colon instead.
 
-Description A — STORY/HOOK: Open with a personal, emotional, or surprising hook. E.g. "I never expected...", "After 3 years...", "The moment I realised..."
-Description B — VALUE/BENEFIT: Open by stating exactly what the viewer will get. E.g. "In this video you'll discover...", "Watch this if you want to..."
-Description C — DIRECT/KEYWORD: Open with the primary keyword phrase naturally integrated. SEO-optimised, direct, benefits-first.
+Description A - STORY/HOOK:
+Open with a personal hook that matches the emotional driver above. The viewer must feel this was written for them.
 
-Return ONLY this JSON array (no markdown, no explanation):
+Description B - VALUE/BENEFIT:
+Open by stating the exact outcome the viewer gets - tied directly to their search intent. Make the gap between where they are and where this takes them feel urgent.
+
+Description C - DIRECT/KEYWORD:
+Open with the primary keyword naturally integrated. Intent-first, benefits clear, SEO-optimised.
+
+Return ONLY this JSON array:
 [
   {{
     "type": "story",
     "label": "Story / Hook",
-    "preview": "first ~150 chars of the description",
-    "full": "the complete description text",
-    "why_it_works": "one short sentence"
+    "preview": "first 150 chars",
+    "full": "complete description",
+    "why_it_works": "one sentence tied to the search intent"
   }},
   {{
     "type": "value",
     "label": "Value / Benefit",
-    "preview": "first ~150 chars of the description",
-    "full": "the complete description text",
-    "why_it_works": "one short sentence"
+    "preview": "first 150 chars",
+    "full": "complete description",
+    "why_it_works": "one sentence"
   }},
   {{
     "type": "keyword",
     "label": "SEO / Keyword-first",
-    "preview": "first ~150 chars of the description",
-    "full": "the complete description text",
-    "why_it_works": "one short sentence"
+    "preview": "first 150 chars",
+    "full": "complete description",
+    "why_it_works": "one sentence"
   }}
 ]"""
 

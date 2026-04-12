@@ -386,15 +386,32 @@ export default function VideoOptimizePanel({ video, onClose, onVideoUpdated }) {
   }
 
   async function generateDescriptions() {
-    const titleForDesc = titleResult?.suggestions?.[selectedSuggestion]?.title || video.title
+    const titleForDesc =
+      titleResult?.suggestions?.[selectedSuggestion]?.title || video.title
     setDescLoading(true); setDescError(''); setDescResult(null)
     setDescApplyStates({}); setDescApplyErrors({})
     try {
-      const res = await fetch(`${API}/seo/generate-description`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title: titleForDesc, current_description: videoResult?.description || '', niche: titleResult?.primary_phrase || '' }),
-      })
+      const res = await fetch(
+        `${API}/seo/generate-description`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            title: titleForDesc,
+            current_description:
+              videoResult?.description || '',
+            niche:
+              titleResult?.primary_phrase || '',
+            intent_analysis:
+              titleResult?.intent_analysis || null,
+            keyword_scores:
+              titleResult?.keyword_scores || null,
+            current_year: 2026,
+          }),
+        }
+      )
       const data = await res.json()
       if (!res.ok) { setDescError(data.error || 'Generation failed.'); return }
       setDescResult(data.descriptions)

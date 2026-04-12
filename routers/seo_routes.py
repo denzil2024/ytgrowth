@@ -24,6 +24,9 @@ class DescriptionRequest(BaseModel):
     title: str
     current_description: str = ""
     niche: str = ""
+    intent_analysis: dict = None
+    keyword_scores: list = None
+    current_year: int = 2026
 
 
 class ThumbnailTextRequest(BaseModel):
@@ -69,6 +72,9 @@ def generate_description(body: DescriptionRequest):
         body.title.strip(),
         body.current_description.strip(),
         body.niche.strip(),
+        intent_analysis=body.intent_analysis,
+        keyword_scores=body.keyword_scores,
+        current_year=body.current_year,
     )
     if error and not descriptions:
         return JSONResponse({"error": error}, status_code=500)
