@@ -1510,6 +1510,7 @@ export default function Landing() {
             <a href="/terms" className="ytg-nav-link" style={{ fontSize: 13 }}>Terms of service</a>
             <a href="/refund" className="ytg-nav-link" style={{ fontSize: 13 }}>Refund policy</a>
             <a href="/affiliate" className="ytg-nav-link" style={{ fontSize: 13 }}>Affiliates</a>
+            <a href="mailto:support@ytgrowth.io" className="ytg-nav-link" style={{ fontSize: 13 }}>support@ytgrowth.io</a>
             <a href="/auth/login" className="ytg-nav-link" style={{ fontSize: 13 }}>Log in</a>
           </div>
         </div>
