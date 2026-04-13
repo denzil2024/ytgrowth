@@ -10,9 +10,6 @@
 
 const PADDLE_TOKEN = 'live_2af860b645fca6f106c9d79f8d2'
 
-// Basic init for public-facing pages (no customer context yet)
-Paddle.Initialize({ token: PADDLE_TOKEN })
-
 /**
  * Re-initialise Paddle with the logged-in customer's Paddle ID.
  * Call this once after /billing/usage resolves and returns a paddle_customer_id.
