@@ -264,18 +264,19 @@ def get_usage(request: Request):
         )
 
         return JSONResponse({
-            "plan":              sub.plan,
-            "status":            sub.status,
-            "billing_cycle":     sub.billing_cycle,
-            "is_lifetime":       sub.is_lifetime,
-            "monthly_allowance": sub.monthly_allowance,
-            "monthly_used":      sub.monthly_used,
-            "monthly_remaining": monthly_remaining,
-            "pack_balance":      sub.pack_balance,
-            "total_available":   total_available,
-            "usage_pct":         usage_pct,
-            "channels_allowed":  sub.channels_allowed,
-            "reset_date":        sub.reset_date.isoformat() if sub.reset_date else None,
+            "plan":               sub.plan,
+            "status":             sub.status,
+            "billing_cycle":      sub.billing_cycle,
+            "is_lifetime":        sub.is_lifetime,
+            "monthly_allowance":  sub.monthly_allowance,
+            "monthly_used":       sub.monthly_used,
+            "monthly_remaining":  monthly_remaining,
+            "pack_balance":       sub.pack_balance,
+            "total_available":    total_available,
+            "usage_pct":          usage_pct,
+            "channels_allowed":   sub.channels_allowed,
+            "reset_date":         sub.reset_date.isoformat() if sub.reset_date else None,
+            "paddle_customer_id": sub.paddle_customer_id or None,
         })
     finally:
         db.close()

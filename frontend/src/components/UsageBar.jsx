@@ -1,11 +1,17 @@
 import { useEffect, useState } from 'react'
+import { initPaddleRetain } from '../checkout'
+
 export default function UsageBar({ channelId, email, dark = false }) {
   const [usage, setUsage] = useState(null)
 
   useEffect(() => {
     fetch('/billing/usage', { credentials: 'include' })
       .then(r => r.ok ? r.json() : null)
-      .then(d => d && setUsage(d))
+      .then(d => {
+        if (!d) return
+        setUsage(d)
+        if (d.paddle_customer_id) initPaddleRetain(d.paddle_customer_id)
+      })
       .catch(() => {})
   }, [])
 

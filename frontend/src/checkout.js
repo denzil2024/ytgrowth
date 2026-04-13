@@ -1,10 +1,30 @@
 /**
  * Paddle checkout helper.
- * Fetches the price ID + user context from the backend, then opens
- * the Paddle overlay. Paddle.js must be loaded via index.html.
+ * Paddle.js is loaded via index.html (cdn.paddle.com/paddle/v2/paddle.js).
+ *
+ * initPaddleRetain(customerId) — call once per authenticated page load
+ * with the Paddle customer ID (ctm_...) so Retain can track the user.
+ *
+ * openCheckout(planKey) — opens the Paddle overlay checkout.
  */
 
-Paddle.Initialize({ token: 'live_2af860b645fca6f106c9d79f8d2' })
+const PADDLE_TOKEN = 'live_2af860b645fca6f106c9d79f8d2'
+
+// Basic init for public-facing pages (no customer context yet)
+Paddle.Initialize({ token: PADDLE_TOKEN })
+
+/**
+ * Re-initialise Paddle with the logged-in customer's Paddle ID.
+ * Call this once after /billing/usage resolves and returns a paddle_customer_id.
+ * Safe to call multiple times — Paddle ignores repeat calls with the same ID.
+ */
+export function initPaddleRetain(customerId) {
+  if (!customerId) return
+  Paddle.Initialize({
+    token: PADDLE_TOKEN,
+    pwCustomer: { id: customerId },
+  })
+}
 
 export async function openCheckout(planKey) {
   try {
