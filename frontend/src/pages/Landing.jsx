@@ -1190,13 +1190,13 @@ export default function Landing() {
         <div style={{ maxWidth: 1280, margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: 56 }}>
             {/* Rating summary row */}
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 16, marginBottom: 20, flexWrap: 'wrap' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: isMobile ? 10 : 16, marginBottom: 20, flexWrap: 'wrap' }}>
               <div style={{ display: 'flex', gap: 3 }}>
                 {[...Array(5)].map((_, i) => <span key={i} style={{ fontSize: 20, color: '#f59e0b' }}>★</span>)}
               </div>
-              <div style={{ width: 1, height: 24, background: 'rgba(10,10,15,0.12)', alignSelf: 'center' }} />
+              {!isMobile && <div style={{ width: 1, height: 24, background: 'rgba(10,10,15,0.12)', alignSelf: 'center' }} />}
               <span style={{ fontSize: 22, fontWeight: 800, color: '#0a0a0f', letterSpacing: '-0.5px' }}>4.9 / 5</span>
-              <div style={{ width: 1, height: 24, background: 'rgba(10,10,15,0.12)', alignSelf: 'center' }} />
+              {!isMobile && <div style={{ width: 1, height: 24, background: 'rgba(10,10,15,0.12)', alignSelf: 'center' }} />}
               <span style={{ fontSize: 13, fontWeight: 500, color: 'rgba(10,10,15,0.45)' }}>Based on 200+ reviews</span>
             </div>
             <h2 style={{ fontWeight: 800, fontSize: isMobile ? 32 : 48, letterSpacing: '-1.5px', color: '#0a0a0f', lineHeight: 1.06, marginBottom: 12 }}>The tool creators actually recommend.</h2>
@@ -1211,7 +1211,7 @@ export default function Landing() {
               { initials: 'DR', color: '#e5251b',  name: 'Daniel Reyes', meta: 'Gaming · 89K subs',             platform: 'Trustpilot',   metric: 'Weekly subscribers: +180 avg',        quote: 'The weekly report is worth the entire subscription on its own. One priority action every Monday. My growth has been consistent ever since.' },
               { initials: 'AO', color: '#16a34a',  name: 'Amara Osei',   meta: 'Business · 31K subs',          platform: 'Product Hunt', metric: '3 channels managed, one tool',        quote: 'Multi-channel support is exactly what a channel manager needs. Each health score visible instantly. Nothing else comes close.' },
             ].map((t, i) => (
-              <div key={i} style={{ background: '#ffffff', borderRadius: 20, border: '1px solid rgba(10,10,15,0.06)', padding: 28, boxShadow: '0 2px 4px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.1), 0 32px 64px rgba(0,0,0,0.14)' }}>
+              <div key={i} style={{ background: '#ffffff', borderRadius: 20, border: '1px solid rgba(10,10,15,0.06)', padding: 28, boxShadow: '0 2px 4px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.1), 0 32px 64px rgba(0,0,0,0.14)', minWidth: 0, overflow: 'hidden' }}>
                 {/* Top row: avatar + name + platform badge */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                   <div style={{ width: 44, height: 44, borderRadius: '50%', background: t.color, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 15, fontWeight: 800, flexShrink: 0 }}>
@@ -1228,8 +1228,8 @@ export default function Landing() {
                   {[...Array(5)].map((_, j) => <span key={j} style={{ fontSize: 13, color: '#f59e0b' }}>★</span>)}
                 </div>
                 {/* Metric pill */}
-                <div style={{ background: 'rgba(229,48,42,0.06)', border: '1px solid rgba(229,48,42,0.14)', borderRadius: 8, padding: '8px 14px', marginBottom: 14, display: 'inline-block' }}>
-                  <span style={{ fontSize: 13, fontWeight: 700, color: '#c22b25' }}>{t.metric}</span>
+                <div style={{ background: 'rgba(229,48,42,0.06)', border: '1px solid rgba(229,48,42,0.14)', borderRadius: 8, padding: '8px 14px', marginBottom: 14, overflow: 'hidden' }}>
+                  <span style={{ fontSize: 13, fontWeight: 700, color: '#c22b25', display: 'block', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{t.metric}</span>
                 </div>
                 {/* Quote */}
                 <p style={{ fontSize: 14.5, color: 'rgba(10,10,15,0.65)', lineHeight: 1.75, margin: 0 }}>{t.quote}</p>
