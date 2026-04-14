@@ -6,6 +6,7 @@ from fastapi.responses import JSONResponse
 
 from database.models import SessionLocal, WeeklyReport, UserEmailPreferences
 from routers.auth import get_session
+from app.weekly_report import generate_and_send_report
 
 router = APIRouter()
 
@@ -41,6 +42,29 @@ def get_report_history(channel_id: str, request: Request):
                 "reportData":  rd,
             })
         return JSONResponse(result)
+    finally:
+        db.close()
+
+
+@router.post("/send-test")
+async def send_test_report(request: Request):
+    session_id = request.session.get("session_id")
+    data, _ = get_session(session_id)
+    if not data:
+        return JSONResponse({"error": "Not logged in"}, status_code=401)
+
+    channel_id = data.get("channel", {}).get("channel_id")
+    email      = data.get("email", "")
+
+    if not data.get("insights"):
+        return JSONResponse({"error": "No audit data yet"}, status_code=400)
+
+    db = SessionLocal()
+    try:
+        sent = generate_and_send_report(channel_id, email, data, db)
+        if sent:
+            return JSONResponse({"ok": True, "sent_to": email})
+        return JSONResponse({"error": "Failed to send — check server logs"}, status_code=500)
     finally:
         db.close()
 
