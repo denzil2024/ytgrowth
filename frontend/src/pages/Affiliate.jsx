@@ -622,23 +622,30 @@ export default function Affiliate() {
       </section>
 
       {/* ── FOOTER ── */}
-      <div style={{ borderTop: '1px solid var(--ytg-border)', padding: isMobile ? '28px 20px' : '36px 64px', background: 'var(--ytg-bg-3)' }}>
-        <div style={{ maxWidth: 1280, margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexDirection: isMobile ? 'column' : 'row', gap: isMobile ? 16 : 0, textAlign: isMobile ? 'center' : 'left' }}>
+      <footer style={{ background: '#0d0d12', borderTop: '1px solid rgba(255,255,255,0.07)', padding: isMobile ? '28px 20px' : '36px 64px' }}>
+        <div style={{ maxWidth: 1280, margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexDirection: isMobile ? 'column' : 'row', gap: isMobile ? 20 : 0, textAlign: isMobile ? 'center' : 'left' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
             <Logo size={26} />
-            <span style={{ fontWeight: 800, fontSize: 15, color: 'var(--ytg-text)', letterSpacing: '-0.4px' }}>YTGrowth</span>
+            <span style={{ fontWeight: 800, fontSize: 15, color: '#ffffff', letterSpacing: '-0.4px' }}>YTGrowth</span>
           </div>
-          <p style={{ fontSize: 13, color: 'var(--ytg-text-3)' }}>Built for creators serious about growth.</p>
-          <p style={{ fontSize: 12, color: 'var(--ytg-text-3)' }}>© 2026 YTGrowth. All rights reserved.</p>
+          <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.32)' }}>Built for creators serious about growth.</p>
+          <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.22)' }}>© 2026 YTGrowth. All rights reserved.</p>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: isMobile ? '12px 20px' : 28, justifyContent: isMobile ? 'center' : 'flex-end' }}>
-            <a href="/privacy"    className="aff-nav-link" style={{ fontSize: 13 }}>Privacy policy</a>
-            <a href="/terms"      className="aff-nav-link" style={{ fontSize: 13 }}>Terms of service</a>
-            <a href="/refund"     className="aff-nav-link" style={{ fontSize: 13 }}>Refund policy</a>
-            <a href="/affiliate"  className="aff-nav-link" style={{ fontSize: 13 }}>Affiliates</a>
-            <a href="/auth/login" className="aff-nav-link" style={{ fontSize: 13 }}>Log in</a>
+            {[
+              { label: 'Privacy policy',   href: '/privacy' },
+              { label: 'Terms of service', href: '/terms' },
+              { label: 'Refund policy',    href: '/refund' },
+              { label: 'Affiliates',       href: '/affiliate' },
+              { label: 'Log in',           href: '/auth/login' },
+            ].map((l, i) => (
+              <a key={i} href={l.href} style={{ fontSize: 13, color: 'rgba(255,255,255,0.38)', textDecoration: 'none', fontFamily: "'DM Sans', system-ui, sans-serif" }}
+                onMouseEnter={e => e.currentTarget.style.color = 'rgba(255,255,255,0.72)'}
+                onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.38)'}
+              >{l.label}</a>
+            ))}
           </div>
         </div>
-      </div>
+      </footer>
 
     </div>
   )
