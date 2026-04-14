@@ -111,21 +111,27 @@ export default function Terms() {
       </div>
 
       {/* Footer */}
-      <div style={{ borderTop: '1px solid var(--ytg-border)', padding: '28px 40px' }}>
-        <div style={{ maxWidth: 1280, margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 16 }}>
+      <footer style={{ background: '#0d0d12', borderTop: '1px solid rgba(255,255,255,0.07)', padding: '32px 40px' }}>
+        <div style={{ maxWidth: 1280, margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 20 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
-            <Logo size={24} />
-            <span style={{ fontWeight: 800, fontSize: 14, color: 'var(--ytg-text)', letterSpacing: '-0.4px' }}>YTGrowth</span>
+            <Logo size={26} />
+            <span style={{ fontWeight: 800, fontSize: 15, color: '#ffffff', letterSpacing: '-0.4px' }}>YTGrowth</span>
           </div>
-          <p style={{ fontSize: 13, color: 'var(--ytg-text-3)' }}>Built for creators serious about growth.</p>
-          <div style={{ display: 'flex', gap: 24 }}>
-            <a href="/privacy" style={{ fontSize: 13, color: 'var(--ytg-text-3)', textDecoration: 'none' }}>Privacy policy</a>
-            <a href="/terms" style={{ fontSize: 13, color: 'var(--ytg-text-3)', textDecoration: 'none' }}>Terms of service</a>
-            <a href="/refund" style={{ fontSize: 13, color: 'var(--ytg-text-3)', textDecoration: 'none' }}>Refund policy</a>
-            <a href="/auth/login" style={{ fontSize: 13, color: 'var(--ytg-text-3)', textDecoration: 'none' }}>Log in</a>
+          <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.32)' }}>Built for creators serious about growth.</p>
+          <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.22)' }}>© 2026 YTGrowth. All rights reserved.</p>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 24 }}>
+            {[
+              { label: 'Privacy policy',   href: '/privacy' },
+              { label: 'Terms of service', href: '/terms' },
+              { label: 'Refund policy',    href: '/refund' },
+              { label: 'Affiliates',       href: '/affiliate' },
+              { label: 'Log in',           href: '/auth/login' },
+            ].map((l, i) => (
+              <a key={i} href={l.href} style={{ fontSize: 13, color: 'rgba(255,255,255,0.38)', textDecoration: 'none', fontFamily: "'DM Sans', system-ui, sans-serif" }}>{l.label}</a>
+            ))}
           </div>
         </div>
-      </div>
+      </footer>
 
     </div>
   )

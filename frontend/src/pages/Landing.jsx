@@ -914,13 +914,13 @@ export default function Landing() {
       {/* ── FEATURES ────────────────────────────────────────────────────── */}
 
       {/* Section 1 — Channel Audit */}
-      <div id="features" style={{ background: '#faf8f5', borderTop: '2px solid rgba(10,10,15,0.10)', borderBottom: '1px solid rgba(10,10,15,0.08)', padding: isMobile ? '60px 24px' : '100px 64px', boxShadow: 'inset 0 -6px 24px rgba(10,10,15,0.04)' }}>
+      <div id="features" style={{ background: '#f4f4f6', borderTop: '1px solid rgba(10,10,15,0.08)', borderBottom: '1px solid rgba(10,10,15,0.08)', padding: isMobile ? '60px 24px' : '100px 64px' }}>
         <div style={{ maxWidth: 1160, margin: '0 auto', display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? 40 : 80, alignItems: 'center' }}>
           {/* Text */}
           <div>
             <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-accent-text)', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 12 }}>Deep Channel Intelligence</p>
-            <h2 style={{ fontSize: isMobile ? 28 : 40, fontWeight: 800, letterSpacing: '-1.2px', lineHeight: 1.1, marginBottom: 18, color: 'var(--ytg-text)' }}>10 dimensions. One brutal honest assessment.</h2>
-            <p style={{ fontSize: 16, color: 'var(--ytg-text-2)', lineHeight: 1.75, marginBottom: 28 }}>Most tools show you a score. YTGrowth shows you why — traffic sources, device breakdown, audience demographics, posting patterns, CTR health, retention, engagement quality, content strategy, SEO, and how you stack up against your actual competitors. All in one audit.</p>
+            <h2 style={{ fontSize: isMobile ? 26 : 36, fontWeight: 800, letterSpacing: '-1.2px', lineHeight: 1.1, marginBottom: 18, color: 'var(--ytg-text)' }}>10 dimensions. One brutal honest assessment.</h2>
+            <p style={{ fontSize: 14, color: 'var(--ytg-text-2)', lineHeight: 1.78, marginBottom: 28 }}>Most tools show you a score. YTGrowth shows you why — traffic sources, device breakdown, audience demographics, posting patterns, CTR health, retention, engagement quality, content strategy, SEO, and how you stack up against your actual competitors. All in one audit.</p>
             {[
               'Traffic source breakdown — search vs browse vs external',
               'Competitor benchmarking against channels in your niche',
@@ -929,7 +929,7 @@ export default function Landing() {
             ].map((t, i) => (
               <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 10, marginBottom: 10 }}>
                 <div style={{ flexShrink: 0, marginTop: 2 }}><Check /></div>
-                <span style={{ fontSize: 16, color: 'var(--ytg-text-2)' }}>{t}</span>
+                <span style={{ fontSize: 14, color: 'var(--ytg-text-2)' }}>{t}</span>
               </div>
             ))}
           </div>
@@ -964,7 +964,7 @@ export default function Landing() {
       </div>
 
       {/* Section 2 — Competitor Intelligence */}
-      <div style={{ background: '#f4f1ec', borderTop: '2px solid rgba(10,10,15,0.10)', borderBottom: '1px solid rgba(10,10,15,0.08)', padding: isMobile ? '60px 24px' : '100px 64px', boxShadow: 'inset 0 4px 20px rgba(10,10,15,0.03), inset 0 -6px 24px rgba(10,10,15,0.04)' }}>
+      <div style={{ background: '#ecedf1', borderTop: '1px solid rgba(10,10,15,0.08)', borderBottom: '1px solid rgba(10,10,15,0.08)', padding: isMobile ? '60px 24px' : '100px 64px' }}>
         <div style={{ maxWidth: 1160, margin: '0 auto', display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? 40 : 80, alignItems: 'center' }}>
           {/* Visual — left on desktop */}
           <div style={{ order: isMobile ? 1 : 0, background: '#ffffff', borderRadius: 20, border: '1px solid rgba(10,10,15,0.07)', boxShadow: 'var(--ytg-shadow-xl)', padding: 28 }}>
@@ -992,8 +992,8 @@ export default function Landing() {
           {/* Text — right on desktop */}
           <div style={{ order: isMobile ? 0 : 1 }}>
             <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-accent-text)', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 12 }}>Competitive Edge</p>
-            <h2 style={{ fontSize: isMobile ? 28 : 40, fontWeight: 800, letterSpacing: '-1.2px', lineHeight: 1.1, marginBottom: 18, color: 'var(--ytg-text)' }}>Find the gaps your competitors leave open.</h2>
-            <p style={{ fontSize: 16, color: 'var(--ytg-text-2)', lineHeight: 1.75, marginBottom: 28 }}>Connect a competitor channel and YTGrowth maps exactly what topics they ignore, which title patterns drive their views, and where their audience is underserved. Then tells you how to own those gaps.</p>
+            <h2 style={{ fontSize: isMobile ? 26 : 36, fontWeight: 800, letterSpacing: '-1.2px', lineHeight: 1.1, marginBottom: 18, color: 'var(--ytg-text)' }}>Find the gaps your competitors leave open.</h2>
+            <p style={{ fontSize: 14, color: 'var(--ytg-text-2)', lineHeight: 1.78, marginBottom: 28 }}>Connect a competitor channel and YTGrowth maps exactly what topics they ignore, which title patterns drive their views, and where their audience is underserved. Then tells you how to own those gaps.</p>
             {[
               'Topic gap analysis from real video data',
               'Title pattern and keyword extraction',
@@ -1002,7 +1002,7 @@ export default function Landing() {
             ].map((t, i) => (
               <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 10, marginBottom: 10 }}>
                 <div style={{ flexShrink: 0, marginTop: 2 }}><Check /></div>
-                <span style={{ fontSize: 16, color: 'var(--ytg-text-2)' }}>{t}</span>
+                <span style={{ fontSize: 14, color: 'var(--ytg-text-2)' }}>{t}</span>
               </div>
             ))}
           </div>
@@ -1010,13 +1010,13 @@ export default function Landing() {
       </div>
 
       {/* Section 3 — Thumbnail IQ */}
-      <div style={{ background: '#f7f4f0', borderTop: '2px solid rgba(10,10,15,0.10)', borderBottom: '1px solid rgba(10,10,15,0.08)', padding: isMobile ? '60px 24px' : '100px 64px', boxShadow: 'inset 0 4px 20px rgba(10,10,15,0.03), inset 0 -6px 24px rgba(10,10,15,0.04)' }}>
+      <div style={{ background: '#f4f4f6', borderTop: '1px solid rgba(10,10,15,0.08)', borderBottom: '1px solid rgba(10,10,15,0.08)', padding: isMobile ? '60px 24px' : '100px 64px' }}>
         <div style={{ maxWidth: 1160, margin: '0 auto', display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? 40 : 80, alignItems: 'center' }}>
           {/* Text */}
           <div>
             <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-accent-text)', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 12 }}>Thumbnail Intelligence</p>
-            <h2 style={{ fontSize: isMobile ? 28 : 40, fontWeight: 800, letterSpacing: '-1.2px', lineHeight: 1.1, marginBottom: 18, color: 'var(--ytg-text)' }}>Scored against the videos actually winning in your niche.</h2>
-            <p style={{ fontSize: 16, color: 'var(--ytg-text-2)', lineHeight: 1.75, marginBottom: 28 }}>Two layers of analysis — a deterministic algorithm checking contrast, text clarity, face detection, and composition, then Claude Vision comparing it against top-performing videos in your exact niche. You get a score out of 100 and know exactly what to fix.</p>
+            <h2 style={{ fontSize: isMobile ? 26 : 36, fontWeight: 800, letterSpacing: '-1.2px', lineHeight: 1.1, marginBottom: 18, color: 'var(--ytg-text)' }}>Scored against the videos actually winning in your niche.</h2>
+            <p style={{ fontSize: 14, color: 'var(--ytg-text-2)', lineHeight: 1.78, marginBottom: 28 }}>Two layers of analysis — a deterministic algorithm checking contrast, text clarity, face detection, and composition, then Claude Vision comparing it against top-performing videos in your exact niche. You get a score out of 100 and know exactly what to fix.</p>
             {[
               'Layer 1 — algorithm, instant, free',
               'Layer 2 — Claude Vision vs real niche benchmarks',
@@ -1025,7 +1025,7 @@ export default function Landing() {
             ].map((t, i) => (
               <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 10, marginBottom: 10 }}>
                 <div style={{ flexShrink: 0, marginTop: 2 }}><Check /></div>
-                <span style={{ fontSize: 16, color: 'var(--ytg-text-2)' }}>{t}</span>
+                <span style={{ fontSize: 14, color: 'var(--ytg-text-2)' }}>{t}</span>
               </div>
             ))}
           </div>
@@ -1053,7 +1053,7 @@ export default function Landing() {
       </div>
 
       {/* Section 4 — Weekly Report */}
-      <div style={{ background: '#f0ece5', borderTop: '2px solid rgba(10,10,15,0.10)', borderBottom: '2px solid rgba(10,10,15,0.10)', padding: isMobile ? '60px 24px' : '100px 64px', boxShadow: 'inset 0 4px 20px rgba(10,10,15,0.03), inset 0 -8px 32px rgba(10,10,15,0.05)' }}>
+      <div style={{ background: '#e6e7ec', borderTop: '1px solid rgba(10,10,15,0.08)', borderBottom: '1px solid rgba(10,10,15,0.08)', padding: isMobile ? '60px 24px' : '100px 64px' }}>
         <div style={{ maxWidth: 1160, margin: '0 auto', display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? 40 : 80, alignItems: 'center' }}>
           {/* Visual — left on desktop */}
           <div style={{ order: isMobile ? 1 : 0, background: '#ffffff', borderRadius: 20, border: '1px solid rgba(10,10,15,0.07)', boxShadow: 'var(--ytg-shadow-xl)', padding: 28 }}>
@@ -1082,8 +1082,8 @@ export default function Landing() {
           {/* Text — right on desktop */}
           <div style={{ order: isMobile ? 0 : 1 }}>
             <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-accent-text)', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 12 }}>Automated Intelligence</p>
-            <h2 style={{ fontSize: isMobile ? 28 : 40, fontWeight: 800, letterSpacing: '-1.2px', lineHeight: 1.1, marginBottom: 18, color: 'var(--ytg-text)' }}>Your channel's weekly performance, in your inbox.</h2>
-            <p style={{ fontSize: 16, color: 'var(--ytg-text-2)', lineHeight: 1.75, marginBottom: 28 }}>Every week YTGrowth generates a performance report — key metrics, biggest win, what to watch out for, and one priority action. Sent automatically every week. Always in your dashboard even if you unsubscribe from email.</p>
+            <h2 style={{ fontSize: isMobile ? 26 : 36, fontWeight: 800, letterSpacing: '-1.2px', lineHeight: 1.1, marginBottom: 18, color: 'var(--ytg-text)' }}>Your channel's weekly performance, in your inbox.</h2>
+            <p style={{ fontSize: 14, color: 'var(--ytg-text-2)', lineHeight: 1.78, marginBottom: 28 }}>Every week YTGrowth generates a performance report — key metrics, biggest win, what to watch out for, and one priority action. Sent automatically every week. Always in your dashboard even if you unsubscribe from email.</p>
             {[
               'Subscribers, views, CTR, channel score',
               'Week-on-week delta on every metric',
@@ -1092,7 +1092,7 @@ export default function Landing() {
             ].map((t, i) => (
               <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 10, marginBottom: 10 }}>
                 <div style={{ flexShrink: 0, marginTop: 2 }}><Check /></div>
-                <span style={{ fontSize: 16, color: 'var(--ytg-text-2)' }}>{t}</span>
+                <span style={{ fontSize: 14, color: 'var(--ytg-text-2)' }}>{t}</span>
               </div>
             ))}
           </div>
@@ -1573,7 +1573,7 @@ export default function Landing() {
       </div>
 
       {/* ── FAQ ─────────────────────────────────────────────────────────── */}
-      <div id="faq" style={{ background: '#fdfcfb', borderTop: '3px solid rgba(10,10,15,0.12)', borderBottom: '1px solid rgba(10,10,15,0.06)', padding: isMobile ? '60px 20px' : '100px 64px', position: 'relative', overflow: 'hidden', boxShadow: 'inset 0 4px 28px rgba(10,10,15,0.04)' }}>
+      <div id="faq" style={{ background: '#f4f4f6', borderTop: '1px solid rgba(10,10,15,0.08)', borderBottom: '1px solid rgba(10,10,15,0.08)', padding: isMobile ? '60px 20px' : '100px 64px', position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 900, height: 600, background: 'radial-gradient(ellipse, rgba(99,102,241,0.08) 0%, transparent 60%)', pointerEvents: 'none' }} />
         <div style={{ maxWidth: 960, margin: '0 auto', position: 'relative', zIndex: 1 }}>
           <div style={{ textAlign: 'center', marginBottom: 56 }}>
@@ -1634,7 +1634,7 @@ export default function Landing() {
       </div>
 
       {/* ── FINAL CTA ───────────────────────────────────────────────────── */}
-      <div style={{ background: 'linear-gradient(180deg, #f7f4f0 0%, #f2ede6 100%)', borderTop: '3px solid rgba(10,10,15,0.12)', borderBottom: '3px solid rgba(10,10,15,0.12)', padding: isMobile ? '70px 24px' : '120px 64px', position: 'relative', overflow: 'hidden', boxShadow: 'inset 0 4px 32px rgba(10,10,15,0.05), inset 0 -4px 32px rgba(10,10,15,0.05)' }}>
+      <div style={{ background: '#ecedf1', borderTop: '1px solid rgba(10,10,15,0.08)', borderBottom: '1px solid rgba(10,10,15,0.08)', padding: isMobile ? '70px 24px' : '120px 64px', position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 800, height: 600, background: 'radial-gradient(ellipse, rgba(229,48,42,0.06) 0%, transparent 65%)', pointerEvents: 'none' }} />
         <div style={{ maxWidth: 860, margin: '0 auto', textAlign: 'center', position: 'relative', zIndex: 1 }}>
           <Badge>Get started</Badge>
@@ -1658,62 +1658,27 @@ export default function Landing() {
       </div>
 
       {/* ── FOOTER ──────────────────────────────────────────────────────── */}
-      <footer style={{ background: '#0d0d12' }}>
-        {/* Top section */}
-        <div style={{ maxWidth: 1280, margin: '0 auto', padding: isMobile ? '52px 24px 40px' : '72px 64px 56px' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr 1fr' : '2fr 1fr 1fr 1fr', gap: isMobile ? '40px 32px' : '0 48px' }}>
-
-            {/* Brand — spans 2 cols on mobile */}
-            <div style={{ gridColumn: isMobile ? '1 / -1' : undefined, marginBottom: isMobile ? 4 : 0 }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 9, marginBottom: 14 }}>
-                <Logo size={28} />
-                <span style={{ fontWeight: 800, fontSize: 16, color: '#ffffff', letterSpacing: '-0.5px' }}>YTGrowth</span>
-              </div>
-              <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.36)', lineHeight: 1.75, maxWidth: 240, marginBottom: 24 }}>
-                AI-powered YouTube channel intelligence for creators serious about growth.
-              </p>
-            </div>
-
-            {/* Product */}
-            <div>
-              <p style={{ fontSize: 10.5, fontWeight: 700, color: 'rgba(255,255,255,0.24)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 18 }}>Product</p>
-              {[
-                { label: 'Channel Audit',     href: '#features' },
-                { label: 'Competitor Intel',  href: '#features' },
-                { label: 'Thumbnail IQ',      href: '#features' },
-                { label: 'Weekly Reports',    href: '#features' },
-                { label: 'How it works',      href: '#how-it-works' },
-                { label: 'Pricing',           href: '#pricing' },
-              ].map((l, i) => <a key={i} href={l.href} className="ytg-footer-link">{l.label}</a>)}
-            </div>
-
-            {/* Company */}
-            <div>
-              <p style={{ fontSize: 10.5, fontWeight: 700, color: 'rgba(255,255,255,0.24)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 18 }}>Company</p>
-              {[
-                { label: 'Affiliates',              href: '/affiliate' },
-                { label: 'support@ytgrowth.io',     href: 'mailto:support@ytgrowth.io' },
-                { label: 'Log in',                  href: '/auth/login' },
-              ].map((l, i) => <a key={i} href={l.href} className="ytg-footer-link">{l.label}</a>)}
-            </div>
-
-            {/* Legal */}
-            <div>
-              <p style={{ fontSize: 10.5, fontWeight: 700, color: 'rgba(255,255,255,0.24)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 18 }}>Legal</p>
-              {[
-                { label: 'Privacy policy',   href: '/privacy' },
-                { label: 'Terms of service', href: '/terms' },
-                { label: 'Refund policy',    href: '/refund' },
-              ].map((l, i) => <a key={i} href={l.href} className="ytg-footer-link">{l.label}</a>)}
-            </div>
+      <footer style={{ background: '#0d0d12', borderTop: '1px solid rgba(255,255,255,0.07)', padding: isMobile ? '28px 20px' : '36px 64px' }}>
+        <div style={{ maxWidth: 1280, margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexDirection: isMobile ? 'column' : 'row', gap: isMobile ? 20 : 0, textAlign: isMobile ? 'center' : 'left' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
+            <Logo size={26} />
+            <span style={{ fontWeight: 800, fontSize: 15, color: '#ffffff', letterSpacing: '-0.4px' }}>YTGrowth</span>
           </div>
-        </div>
-
-        {/* Bottom bar */}
-        <div style={{ borderTop: '1px solid rgba(255,255,255,0.055)', padding: isMobile ? '18px 24px' : '20px 64px' }}>
-          <div style={{ maxWidth: 1280, margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexDirection: isMobile ? 'column' : 'row', gap: 8 }}>
-            <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.18)', margin: 0 }}>© 2026 YTGrowth. All rights reserved.</p>
-            <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.18)', margin: 0 }}>Your channel data is never sold or shared.</p>
+          <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.32)' }}>Built for creators serious about growth.</p>
+          <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.22)' }}>© 2026 YTGrowth. All rights reserved.</p>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: isMobile ? '12px 20px' : 28, justifyContent: isMobile ? 'center' : 'flex-end' }}>
+            {[
+              { label: 'Privacy policy',   href: '/privacy' },
+              { label: 'Terms of service', href: '/terms' },
+              { label: 'Refund policy',    href: '/refund' },
+              { label: 'Affiliates',       href: '/affiliate' },
+              { label: 'Log in',           href: '/auth/login' },
+            ].map((l, i) => (
+              <a key={i} href={l.href} style={{ fontSize: 13, color: 'rgba(255,255,255,0.38)', textDecoration: 'none', transition: 'color 0.15s', fontFamily: "'DM Sans', system-ui, sans-serif" }}
+                onMouseEnter={e => e.currentTarget.style.color = 'rgba(255,255,255,0.72)'}
+                onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.38)'}
+              >{l.label}</a>
+            ))}
           </div>
         </div>
       </footer>
