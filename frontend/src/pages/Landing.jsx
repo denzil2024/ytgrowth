@@ -480,30 +480,30 @@ function CreatorTicker({ isMobile }) {
 
   return (
     <div style={{ background: '#ffffff', borderBottom: '1px solid rgba(10,10,15,0.06)' }}>
-      {/* Header row */}
-      <div style={{ maxWidth: 1280, margin: '0 auto', padding: isMobile ? '40px 24px 0' : '64px 64px 0', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <div>
-          <p style={{ fontSize: 13, fontWeight: 700, color: 'rgba(10,10,15,0.35)', textTransform: 'uppercase', letterSpacing: '0.08em', margin: '0 0 12px' }}>
-            Trusted by creators on YouTube
-          </p>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-            {['Lifestyle', 'Tech', 'Finance', 'Fitness', 'Travel'].map((label, i) => (
-              <span key={i} style={{
-                background: 'rgba(10,10,15,0.04)', border: '1px solid rgba(10,10,15,0.08)',
-                borderRadius: 8, padding: '6px 14px',
-                fontSize: 12, fontWeight: 600, color: 'rgba(10,10,15,0.45)',
-              }}>{label}</span>
-            ))}
+      {/* Header row — desktop only */}
+      {!isMobile && (
+        <div style={{ maxWidth: 1280, margin: '0 auto', padding: '64px 64px 0', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div>
+            <p style={{ fontSize: 13, fontWeight: 700, color: 'rgba(10,10,15,0.35)', textTransform: 'uppercase', letterSpacing: '0.08em', margin: '0 0 12px' }}>
+              Trusted by creators on YouTube
+            </p>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+              {['Lifestyle', 'Tech', 'Finance', 'Fitness', 'Travel'].map((label, i) => (
+                <span key={i} style={{
+                  background: 'rgba(10,10,15,0.04)', border: '1px solid rgba(10,10,15,0.08)',
+                  borderRadius: 8, padding: '6px 14px',
+                  fontSize: 12, fontWeight: 600, color: 'rgba(10,10,15,0.45)',
+                }}>{label}</span>
+              ))}
+            </div>
           </div>
-        </div>
-        {!isMobile && (
           <p style={{ fontSize: 13, fontWeight: 600, color: 'rgba(10,10,15,0.4)', flexShrink: 0, marginLeft: 24 }}>
             10,000+ channels analyzed
           </p>
-        )}
-      </div>
+        </div>
+      )}
       {/* Cards */}
-      <div style={{ maxWidth: 1280, margin: '0 auto', padding: isMobile ? '24px 24px 40px' : '32px 64px 56px' }}>
+      <div style={{ maxWidth: 1280, margin: '0 auto', padding: isMobile ? '32px 24px 40px' : '32px 64px 56px' }}>
         {isMobile ? (
           <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch', scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
             <div style={{ display: 'flex', gap: 12, width: 'max-content' }}>
@@ -888,7 +888,7 @@ export default function Landing() {
       </div>
 
       {/* ── STATS BAR ───────────────────────────────────────────────────── */}
-      <div style={{ background: '#ffffff', borderTop: '1px solid rgba(10,10,15,0.06)', borderBottom: '1px solid rgba(10,10,15,0.06)', padding: isMobile ? '28px 24px' : '28px 64px' }}>
+      <div style={{ background: '#ecedf1', borderTop: '1px solid rgba(10,10,15,0.06)', borderBottom: '1px solid rgba(10,10,15,0.06)', padding: isMobile ? '28px 24px' : '28px 64px' }}>
         <div style={{
           display: 'grid',
           gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(5, 1fr)',
@@ -899,7 +899,7 @@ export default function Landing() {
             ['3',        'Competitor benchmarks'],
             ['2-layer',  'Thumbnail scoring'],
             ['Weekly',   'Automated reports'],
-            ['5',        'Core growth tools'],
+            ['7+',       'Core growth tools'],
           ].map(([stat, label], i) => (
             <div key={i} style={{
               display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
@@ -922,7 +922,7 @@ export default function Landing() {
       {/* ── FEATURES ────────────────────────────────────────────────────── */}
 
       {/* Section 1 — Channel Audit */}
-      <div id="features" style={{ background: '#ffffff', borderTop: '1px solid rgba(10,10,15,0.06)', borderBottom: '1px solid rgba(10,10,15,0.06)', padding: isMobile ? '60px 24px' : '100px 64px' }}>
+      <div id="features" style={{ background: '#f4f4f6', borderTop: '1px solid rgba(10,10,15,0.06)', borderBottom: '1px solid rgba(10,10,15,0.06)', padding: isMobile ? '60px 24px' : '100px 64px' }}>
         <div style={{ maxWidth: 1160, margin: '0 auto', display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? 40 : 80, alignItems: 'center' }}>
           {/* Text */}
           <div>
@@ -937,44 +937,48 @@ export default function Landing() {
             ].map((t, i) => (
               <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 10, marginBottom: 10 }}>
                 <div style={{ flexShrink: 0, marginTop: 2 }}><Check /></div>
-                <span style={{ fontSize: 14, color: 'var(--ytg-text-2)' }}>{t}</span>
+                <span style={{ fontSize: 16, color: 'var(--ytg-text-2)' }}>{t}</span>
               </div>
             ))}
           </div>
           {/* Visual */}
-          <div style={{ background: '#ffffff', borderRadius: 20, boxShadow: 'var(--ytg-shadow-xl)', padding: 28 }}>
+          <div style={{ background: '#ffffff', borderRadius: 20, border: '1px solid rgba(10,10,15,0.07)', boxShadow: 'var(--ytg-shadow-xl)', padding: 28 }}>
             {[
-              { label: 'CTR Health',          score: 82, pct: '82%',  color: '#16a34a' },
-              { label: 'Audience Retention',  score: 67, pct: '67%',  color: '#d97706' },
-              { label: 'Content Strategy',    score: 71, pct: '71%',  color: '#d97706' },
-              { label: 'SEO Discovery',       score: 54, pct: '54%',  color: 'var(--ytg-accent)' },
-              { label: 'Posting Consistency', score: 90, pct: '90%',  color: '#16a34a' },
-            ].map((row, i) => (
-              <div key={i} style={{ marginBottom: i < 4 ? 16 : 0 }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
-                  <span style={{ fontSize: 13, fontWeight: 500, color: 'var(--ytg-text-2)' }}>{row.label}</span>
-                  <span style={{ fontSize: 13, fontWeight: 700, color: row.color }}>{row.score}</span>
+              { label: 'CTR Health',          score: 82, pct: '82%' },
+              { label: 'Audience Retention',  score: 67, pct: '67%' },
+              { label: 'Content Strategy',    score: 71, pct: '71%' },
+              { label: 'SEO Discovery',       score: 54, pct: '54%' },
+              { label: 'Posting Consistency', score: 90, pct: '90%' },
+            ].map((row, i) => {
+              const textColor = row.score > 70 ? '#16a34a' : row.score > 50 ? '#0a0a0f' : '#e5302a'
+              const barColor  = row.score > 70 ? '#16a34a' : row.score > 50 ? 'rgba(10,10,15,0.28)' : '#e5302a'
+              return (
+                <div key={i} style={{ marginBottom: i < 4 ? 16 : 0 }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
+                    <span style={{ fontSize: 13, fontWeight: 500, color: 'var(--ytg-text-2)' }}>{row.label}</span>
+                    <span style={{ fontSize: 13, fontWeight: 700, color: textColor }}>{row.score}</span>
+                  </div>
+                  <div style={{ height: 5, background: 'rgba(10,10,15,0.07)', borderRadius: 100, overflow: 'hidden' }}>
+                    <div style={{ height: '100%', width: row.pct, background: barColor, borderRadius: 100 }} />
+                  </div>
                 </div>
-                <div style={{ height: 5, background: 'rgba(10,10,15,0.07)', borderRadius: 100, overflow: 'hidden' }}>
-                  <div style={{ height: '100%', width: row.pct, background: row.color, borderRadius: 100 }} />
-                </div>
-              </div>
-            ))}
-            <div style={{ borderLeft: '3px solid var(--ytg-accent)', background: 'rgba(229,48,42,0.04)', borderRadius: 8, padding: '12px 16px', marginTop: 16 }}>
-              <p style={{ fontSize: 13, color: 'var(--ytg-text-2)', lineHeight: 1.6 }}>Your CTR is 54 — competitors in your niche average 6.8%. Fix your thumbnail text contrast first.</p>
+              )
+            })}
+            <div style={{ borderLeft: '3px solid #d97706', background: 'rgba(217,119,6,0.04)', borderRadius: 8, padding: '12px 16px', marginTop: 16 }}>
+              <p style={{ fontSize: 13, color: 'var(--ytg-text-2)', lineHeight: 1.6 }}>SEO Discovery at 54. Competitors average 6.8% CTR. Fix thumbnail text contrast first.</p>
             </div>
           </div>
         </div>
       </div>
 
       {/* Section 2 — Competitor Intelligence */}
-      <div style={{ background: '#f4f4f6', borderTop: '1px solid rgba(10,10,15,0.06)', borderBottom: '1px solid rgba(10,10,15,0.06)', padding: isMobile ? '60px 24px' : '100px 64px' }}>
+      <div style={{ background: '#ffffff', borderTop: '1px solid rgba(10,10,15,0.06)', borderBottom: '1px solid rgba(10,10,15,0.06)', padding: isMobile ? '60px 24px' : '100px 64px' }}>
         <div style={{ maxWidth: 1160, margin: '0 auto', display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? 40 : 80, alignItems: 'center' }}>
           {/* Visual — left on desktop */}
           <div style={{ order: isMobile ? 1 : 0, background: '#ffffff', borderRadius: 20, boxShadow: 'var(--ytg-shadow-xl)', padding: 28 }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                <div style={{ width: 40, height: 40, borderRadius: '50%', background: 'rgba(10,10,15,0.08)' }} />
+                <div style={{ width: 40, height: 40, borderRadius: '50%', background: 'rgba(10,10,15,0.08)', border: '2px solid rgba(10,10,15,0.14)', flexShrink: 0 }} />
                 <div>
                   <p style={{ fontSize: 14, fontWeight: 700, color: 'var(--ytg-text)' }}>TechCreator Pro</p>
                   <p style={{ fontSize: 12, color: 'var(--ytg-text-3)' }}>142K subscribers</p>
@@ -1006,7 +1010,7 @@ export default function Landing() {
             ].map((t, i) => (
               <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 10, marginBottom: 10 }}>
                 <div style={{ flexShrink: 0, marginTop: 2 }}><Check /></div>
-                <span style={{ fontSize: 14, color: 'var(--ytg-text-2)' }}>{t}</span>
+                <span style={{ fontSize: 16, color: 'var(--ytg-text-2)' }}>{t}</span>
               </div>
             ))}
           </div>
@@ -1014,7 +1018,7 @@ export default function Landing() {
       </div>
 
       {/* Section 3 — Thumbnail IQ */}
-      <div style={{ background: '#ffffff', borderTop: '1px solid rgba(10,10,15,0.06)', borderBottom: '1px solid rgba(10,10,15,0.06)', padding: isMobile ? '60px 24px' : '100px 64px' }}>
+      <div style={{ background: '#f4f4f6', borderTop: '1px solid rgba(10,10,15,0.06)', borderBottom: '1px solid rgba(10,10,15,0.06)', padding: isMobile ? '60px 24px' : '100px 64px' }}>
         <div style={{ maxWidth: 1160, margin: '0 auto', display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? 40 : 80, alignItems: 'center' }}>
           {/* Text */}
           <div>
@@ -1029,7 +1033,7 @@ export default function Landing() {
             ].map((t, i) => (
               <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 10, marginBottom: 10 }}>
                 <div style={{ flexShrink: 0, marginTop: 2 }}><Check /></div>
-                <span style={{ fontSize: 14, color: 'var(--ytg-text-2)' }}>{t}</span>
+                <span style={{ fontSize: 16, color: 'var(--ytg-text-2)' }}>{t}</span>
               </div>
             ))}
           </div>
@@ -1057,7 +1061,7 @@ export default function Landing() {
       </div>
 
       {/* Section 4 — Weekly Report */}
-      <div style={{ background: '#f4f4f6', borderTop: '1px solid rgba(10,10,15,0.06)', borderBottom: '1px solid rgba(10,10,15,0.06)', padding: isMobile ? '60px 24px' : '100px 64px' }}>
+      <div style={{ background: '#ffffff', borderTop: '1px solid rgba(10,10,15,0.06)', borderBottom: '1px solid rgba(10,10,15,0.06)', padding: isMobile ? '60px 24px' : '100px 64px' }}>
         <div style={{ maxWidth: 1160, margin: '0 auto', display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? 40 : 80, alignItems: 'center' }}>
           {/* Visual — left on desktop */}
           <div style={{ order: isMobile ? 1 : 0, background: '#ffffff', borderRadius: 20, boxShadow: 'var(--ytg-shadow-xl)', padding: 28 }}>
@@ -1096,7 +1100,7 @@ export default function Landing() {
             ].map((t, i) => (
               <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 10, marginBottom: 10 }}>
                 <div style={{ flexShrink: 0, marginTop: 2 }}><Check /></div>
-                <span style={{ fontSize: 14, color: 'var(--ytg-text-2)' }}>{t}</span>
+                <span style={{ fontSize: 16, color: 'var(--ytg-text-2)' }}>{t}</span>
               </div>
             ))}
           </div>
@@ -1104,7 +1108,7 @@ export default function Landing() {
       </div>
 
       {/* ── HOW IT WORKS ────────────────────────────────────────────────── */}
-      <div id="how-it-works" style={{ padding: isMobile ? '60px 20px' : '100px 64px', position: 'relative', overflow: 'hidden' }}>
+      <div id="how-it-works" style={{ background: '#ecedf1', borderTop: '1px solid rgba(10,10,15,0.06)', borderBottom: '1px solid rgba(10,10,15,0.06)', padding: isMobile ? '60px 20px' : '100px 64px', position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 900, height: 600, background: 'radial-gradient(ellipse, rgba(59,130,246,0.07) 0%, transparent 60%)', pointerEvents: 'none' }} />
         <div style={{ maxWidth: 1280, margin: '0 auto', position: 'relative', zIndex: 1 }}>
           <div className="section-animate" style={{ textAlign: 'center', marginBottom: 56 }}> {/* IMPROVED: section-animate */}
@@ -1182,7 +1186,7 @@ export default function Landing() {
       </div>
 
       {/* ── TESTIMONIALS ────────────────────────────────────────────────── */}
-      <div style={{ background: '#f4f4f6', borderTop: '1px solid rgba(10,10,15,0.06)', borderBottom: '1px solid rgba(10,10,15,0.06)', padding: isMobile ? '60px 24px' : '100px 64px' }}>
+      <div style={{ background: '#ffffff', borderTop: '1px solid rgba(10,10,15,0.06)', borderBottom: '1px solid rgba(10,10,15,0.06)', padding: isMobile ? '60px 24px' : '100px 64px' }}>
         <div style={{ maxWidth: 1280, margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: 56 }}>
             {/* Rating summary row */}
@@ -1207,17 +1211,17 @@ export default function Landing() {
               { initials: 'DR', color: '#e5251b',  name: 'Daniel Reyes', meta: 'Gaming · 89K subs',             platform: 'Trustpilot',   metric: 'Weekly subscribers: +180 avg',        quote: 'The weekly report is worth the entire subscription on its own. One priority action every Monday. My growth has been consistent ever since.' },
               { initials: 'AO', color: '#16a34a',  name: 'Amara Osei',   meta: 'Business · 31K subs',          platform: 'Product Hunt', metric: '3 channels managed, one tool',        quote: 'Multi-channel support is exactly what a channel manager needs. Each health score visible instantly. Nothing else comes close.' },
             ].map((t, i) => (
-              <div key={i} style={{ background: '#ffffff', borderRadius: 20, border: '1px solid rgba(10,10,15,0.08)', padding: 28, boxShadow: '0 2px 8px rgba(0,0,0,0.06), 0 12px 32px rgba(0,0,0,0.08)' }}>
+              <div key={i} style={{ background: '#ffffff', borderRadius: 20, border: '1px solid rgba(10,10,15,0.08)', padding: 28, boxShadow: '0 4px 16px rgba(0,0,0,0.08), 0 24px 60px rgba(0,0,0,0.12)' }}>
                 {/* Top row: avatar + name + platform badge */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-                  <div style={{ width: 48, height: 48, borderRadius: '50%', background: t.color, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 16, fontWeight: 800, flexShrink: 0 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                  <div style={{ width: 44, height: 44, borderRadius: '50%', background: t.color, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 15, fontWeight: 800, flexShrink: 0 }}>
                     {t.initials}
                   </div>
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <p style={{ fontSize: 14, fontWeight: 700, color: '#0a0a0f', margin: 0 }}>{t.name}</p>
-                    <p style={{ fontSize: 12, color: 'rgba(10,10,15,0.4)', marginTop: 2, marginBottom: 0 }}>{t.meta}</p>
+                  <div style={{ flex: 1, minWidth: 0, overflow: 'hidden' }}>
+                    <p style={{ fontSize: 14, fontWeight: 700, color: '#0a0a0f', margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{t.name}</p>
+                    <p style={{ fontSize: 12, color: 'rgba(10,10,15,0.4)', marginTop: 2, marginBottom: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{t.meta}</p>
                   </div>
-                  <span style={{ background: 'rgba(10,10,15,0.04)', border: '1px solid rgba(10,10,15,0.08)', borderRadius: 6, padding: '4px 10px', fontSize: 11, fontWeight: 700, color: 'rgba(10,10,15,0.45)', textTransform: 'uppercase', letterSpacing: '0.06em', flexShrink: 0 }}>{t.platform}</span>
+                  <span style={{ background: 'rgba(10,10,15,0.04)', border: '1px solid rgba(10,10,15,0.08)', borderRadius: 6, padding: '4px 8px', fontSize: 10, fontWeight: 700, color: 'rgba(10,10,15,0.45)', textTransform: 'uppercase', letterSpacing: '0.06em', flexShrink: 0 }}>{t.platform}</span>
                 </div>
                 {/* Stars */}
                 <div style={{ display: 'flex', gap: 3, marginTop: 14, marginBottom: 14 }}>
