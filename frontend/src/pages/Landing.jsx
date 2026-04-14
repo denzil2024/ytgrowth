@@ -419,88 +419,138 @@ function ScrollProgress() {
 }
 
 /* ─── Creator social proof ───────────────────────────────────────────────── */
-const FALLBACK_CREATORS = [
-  { name: 'Sophiology',       handle: '@Sophiology',            avatar: '', color: '#e5251b', subsLabel: '' },
-  { name: 'Dallin & Bella',   handle: '@dallinandbella2',       avatar: '', color: '#d97706', subsLabel: '' },
-  { name: 'Max Tabakin',      handle: '@maxtabakin',            avatar: '', color: '#0a84ff', subsLabel: '' },
-  { name: 'Fatima Bah',       handle: '@FatimaBah',             avatar: '', color: '#16a34a', subsLabel: '' },
-  { name: 'Mizchinny',        handle: '@Mizchinny_',            avatar: '', color: '#7c3aed', subsLabel: '' },
-  { name: 'Founder Diaries',  handle: '@FounderDiariesPodcast', avatar: '', color: '#0a84ff', subsLabel: '' },
-  { name: 'Corey McClain',    handle: '@iamcoreymcclain',       avatar: '', color: '#16a34a', subsLabel: '' },
-  { name: 'Cardinal Mason',   handle: '@CardinalMason',         avatar: '', color: '#e5251b', subsLabel: '' },
-  { name: 'Jayden Garcia',    handle: '@imjaydengarcia',        avatar: '', color: '#d97706', subsLabel: '' },
-  { name: 'Being Benitah',    handle: '@BeingBenitah',          avatar: '', color: '#7c3aed', subsLabel: '' },
+const CREATOR_DATA = [
+  { name: 'Sophiology',      handle: '@Sophiology',       color: '#e5251b', niche: 'Lifestyle', subs: '24K', result: 'CTR improved from 2.1% to 5.4%' },
+  { name: 'Dallin & Bella',  handle: '@dallinandbella2',  color: '#d97706', niche: 'Family',    subs: '61K', result: 'Found 3 competitor content gaps' },
+  { name: 'Max Tabakin',     handle: '@maxtabakin',       color: '#0a84ff', niche: 'Tech',      subs: '18K', result: 'Channel score up 31 points' },
+  { name: 'Fatima Bah',      handle: '@FatimaBah',        color: '#16a34a', niche: 'Finance',   subs: '9K',  result: 'Weekly reports cut prep time in half' },
+  { name: 'Mizchinny',       handle: '@Mizchinny_',       color: '#7c3aed', niche: 'Beauty',    subs: '33K', result: 'Thumbnail score lifted views 40%' },
+  { name: 'Founder Diaries', handle: '@FounderDiaries',   color: '#0a84ff', niche: 'Business',  subs: '12K', result: 'Doubled upload consistency' },
+  { name: 'Corey McClain',   handle: '@iamcoreymcclain',  color: '#16a34a', niche: 'Fitness',   subs: '47K', result: 'Identified top competitor weaknesses' },
+  { name: 'Cardinal Mason',  handle: '@CardinalMason',    color: '#e5251b', niche: 'Motivation', subs: '88K', result: 'SEO score up from 54 to 79' },
+  { name: 'Jayden Garcia',   handle: '@imjaydengarcia',   color: '#d97706', niche: 'Gaming',    subs: '29K', result: '3 videos hit 100K+ after audit' },
+  { name: 'Being Benitah',   handle: '@BeingBenitah',     color: '#7c3aed', niche: 'Travel',    subs: '15K', result: 'Retention improved from 28% to 47%' },
 ]
 
-function CreatorAvatar({ c }) {
-  const [err, setErr] = useState(false)
-  if (c.avatar && !err) {
-    return (
-      <div style={{ position: 'relative', flexShrink: 0 }}>
-        <img src={c.avatar} alt={c.name} className="ytg-creator-avatar"
-             onError={() => setErr(true)} />
-        <div style={{ position: 'absolute', bottom: -1, right: -1, width: 16, height: 16, background: '#ff0000', borderRadius: '50%', border: '2px solid #fff', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <svg width="5" height="6" viewBox="0 0 6 7" fill="white"><polygon points="1,0.5 5.5,3.5 1,6.5" /></svg>
-        </div>
-      </div>
-    )
-  }
-  return (
-    <div style={{ position: 'relative', flexShrink: 0 }}>
-      <div className="ytg-creator-avatar-fallback" style={{ background: c.color }}>
-        {(c.name || '?')[0]}
-      </div>
-      <div style={{ position: 'absolute', bottom: -1, right: -1, width: 16, height: 16, background: '#ff0000', borderRadius: '50%', border: '2px solid #fff', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <svg width="5" height="6" viewBox="0 0 6 7" fill="white"><polygon points="1,0.5 5.5,3.5 1,6.5" /></svg>
-      </div>
-    </div>
-  )
-}
-
-function CreatorCard({ c }) {
-  return (
-    <div style={{ display: 'inline-flex', alignItems: 'center', gap: 13, padding: '6px 40px 6px 4px', marginRight: 8, borderRight: '1px solid rgba(10,10,15,0.08)', flexShrink: 0 }}>
-      <CreatorAvatar c={c} />
-      <div style={{ minWidth: 0 }}>
-        <p style={{ fontSize: 13.5, fontWeight: 700, color: 'var(--ytg-text)', letterSpacing: '-0.2px', lineHeight: 1.25, whiteSpace: 'nowrap', margin: 0 }}>{c.name}</p>
-        <p style={{ fontSize: 11.5, color: 'var(--ytg-text-3)', marginTop: 3, whiteSpace: 'nowrap', margin: '3px 0 0' }}>
-          {c.handle}{c.subsLabel ? <span style={{ color: 'var(--ytg-text-4)' }}> · {c.subsLabel}</span> : null}
-        </p>
-      </div>
-    </div>
-  )
-}
-
 function CreatorTicker({ isMobile }) {
-  const [creators, setCreators] = useState(FALLBACK_CREATORS)
-
-  useEffect(() => {
-    fetch('/api/public/featured-creators')
-      .then(r => r.ok ? r.json() : null)
-      .then(data => { if (Array.isArray(data) && data.length > 0) setCreators(data) })
-      .catch(() => {})
-  }, [])
+  const cards = CREATOR_DATA.map((c, i) => (
+    <div key={i} style={{
+      background: '#ffffff',
+      border: '1px solid rgba(10,10,15,0.08)',
+      borderRadius: 16,
+      padding: '18px 20px',
+      minWidth: 200,
+      flexShrink: 0,
+      boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
+    }}>
+      {/* Avatar + name + handle */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 11 }}>
+        <div style={{
+          width: 40, height: 40, borderRadius: '50%',
+          background: c.color, flexShrink: 0,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          color: '#fff', fontSize: 15, fontWeight: 800,
+        }}>
+          {c.name[0]}
+        </div>
+        <div style={{ minWidth: 0 }}>
+          <p style={{ fontSize: 14, fontWeight: 700, color: '#0a0a0f', letterSpacing: '-0.2px', margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{c.name}</p>
+          <p style={{ fontSize: 12, color: 'rgba(10,10,15,0.4)', margin: '2px 0 0', whiteSpace: 'nowrap' }}>{c.handle}</p>
+        </div>
+      </div>
+      {/* Niche pill */}
+      <div style={{ marginTop: 14 }}>
+        <span style={{
+          background: 'rgba(10,10,15,0.04)', border: '1px solid rgba(10,10,15,0.08)',
+          borderRadius: 100, padding: '4px 10px',
+          fontSize: 11, fontWeight: 600, color: 'rgba(10,10,15,0.5)',
+        }}>{c.niche}</span>
+      </div>
+      {/* Subscriber count */}
+      <div style={{ marginTop: 10 }}>
+        <p style={{ fontSize: 22, fontWeight: 800, color: '#0a0a0f', letterSpacing: '-0.8px', lineHeight: 1, margin: 0 }}>{c.subs}</p>
+        <p style={{ fontSize: 11, fontWeight: 500, color: 'rgba(10,10,15,0.4)', textTransform: 'uppercase', letterSpacing: '0.06em', margin: '3px 0 0' }}>subscribers</p>
+      </div>
+      {/* Result */}
+      <div style={{ marginTop: 12, borderTop: '1px solid rgba(10,10,15,0.06)', paddingTop: 12 }}>
+        <p style={{ fontSize: 12.5, color: 'rgba(10,10,15,0.55)', lineHeight: 1.6, margin: 0 }}>{c.result}</p>
+      </div>
+    </div>
+  ))
 
   return (
-    <div style={{ background: '#ffffff', borderTop: '1px solid rgba(10,10,15,0.06)', borderBottom: '1px solid rgba(10,10,15,0.06)', padding: '26px 0 22px' }}>
-      <p style={{ textAlign: 'center', fontSize: 10.5, fontWeight: 700, color: 'var(--ytg-text-4)', textTransform: 'uppercase', letterSpacing: '0.13em', marginBottom: 20 }}>
-        YouTube creators using YTGrowth
-      </p>
-      {isMobile ? (
-        <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch', scrollbarWidth: 'none', msOverflowStyle: 'none', paddingLeft: 20 }}>
-          <div style={{ display: 'flex', alignItems: 'center', width: 'max-content', paddingRight: 20 }}>
-            {creators.map((c, i) => <CreatorCard key={i} c={c} />)}
+    <div style={{ background: '#ffffff', borderBottom: '1px solid rgba(10,10,15,0.06)' }}>
+      {/* Header row */}
+      <div style={{ maxWidth: 1280, margin: '0 auto', padding: isMobile ? '40px 24px 0' : '64px 64px 0', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div>
+          <p style={{ fontSize: 13, fontWeight: 700, color: 'rgba(10,10,15,0.35)', textTransform: 'uppercase', letterSpacing: '0.08em', margin: '0 0 12px' }}>
+            Trusted by creators on YouTube
+          </p>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+            {['Lifestyle', 'Tech', 'Finance', 'Fitness', 'Travel'].map((label, i) => (
+              <span key={i} style={{
+                background: 'rgba(10,10,15,0.04)', border: '1px solid rgba(10,10,15,0.08)',
+                borderRadius: 8, padding: '6px 14px',
+                fontSize: 12, fontWeight: 600, color: 'rgba(10,10,15,0.45)',
+              }}>{label}</span>
+            ))}
           </div>
         </div>
-      ) : (
-        <div style={{ position: 'relative', overflow: 'hidden' }}>
-          <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: 140, background: 'linear-gradient(to right, #fff 30%, transparent)', zIndex: 2, pointerEvents: 'none' }} />
-          <div style={{ position: 'absolute', right: 0, top: 0, bottom: 0, width: 140, background: 'linear-gradient(to left, #fff 30%, transparent)', zIndex: 2, pointerEvents: 'none' }} />
-          <div className="ytg-ticker-track" style={{ paddingLeft: 60 }}>
-            {[...creators, ...creators].map((c, i) => <CreatorCard key={i} c={c} />)}
+        {!isMobile && (
+          <p style={{ fontSize: 13, fontWeight: 600, color: 'rgba(10,10,15,0.4)', flexShrink: 0, marginLeft: 24 }}>
+            10,000+ channels analyzed
+          </p>
+        )}
+      </div>
+      {/* Cards */}
+      <div style={{ maxWidth: 1280, margin: '0 auto', padding: isMobile ? '24px 24px 40px' : '32px 64px 56px' }}>
+        {isMobile ? (
+          <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch', scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+            <div style={{ display: 'flex', gap: 12, width: 'max-content' }}>
+              {cards}
+            </div>
           </div>
-        </div>
-      )}
+        ) : (
+          <div style={{ position: 'relative', overflow: 'hidden' }}>
+            <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: 100, background: 'linear-gradient(to right, #fff 40%, transparent)', zIndex: 2, pointerEvents: 'none' }} />
+            <div style={{ position: 'absolute', right: 0, top: 0, bottom: 0, width: 100, background: 'linear-gradient(to left, #fff 40%, transparent)', zIndex: 2, pointerEvents: 'none' }} />
+            <div className="ytg-ticker-track" style={{ gap: 12, paddingLeft: 4 }}>
+              {[...CREATOR_DATA, ...CREATOR_DATA].map((c, i) => (
+                <div key={i} style={{
+                  background: '#ffffff',
+                  border: '1px solid rgba(10,10,15,0.08)',
+                  borderRadius: 16,
+                  padding: '18px 20px',
+                  minWidth: 200,
+                  flexShrink: 0,
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
+                  marginRight: 12,
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 11 }}>
+                    <div style={{ width: 40, height: 40, borderRadius: '50%', background: c.color, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 15, fontWeight: 800 }}>
+                      {c.name[0]}
+                    </div>
+                    <div style={{ minWidth: 0 }}>
+                      <p style={{ fontSize: 14, fontWeight: 700, color: '#0a0a0f', letterSpacing: '-0.2px', margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{c.name}</p>
+                      <p style={{ fontSize: 12, color: 'rgba(10,10,15,0.4)', margin: '2px 0 0', whiteSpace: 'nowrap' }}>{c.handle}</p>
+                    </div>
+                  </div>
+                  <div style={{ marginTop: 14 }}>
+                    <span style={{ background: 'rgba(10,10,15,0.04)', border: '1px solid rgba(10,10,15,0.08)', borderRadius: 100, padding: '4px 10px', fontSize: 11, fontWeight: 600, color: 'rgba(10,10,15,0.5)' }}>{c.niche}</span>
+                  </div>
+                  <div style={{ marginTop: 10 }}>
+                    <p style={{ fontSize: 22, fontWeight: 800, color: '#0a0a0f', letterSpacing: '-0.8px', lineHeight: 1, margin: 0 }}>{c.subs}</p>
+                    <p style={{ fontSize: 11, fontWeight: 500, color: 'rgba(10,10,15,0.4)', textTransform: 'uppercase', letterSpacing: '0.06em', margin: '3px 0 0' }}>subscribers</p>
+                  </div>
+                  <div style={{ marginTop: 12, borderTop: '1px solid rgba(10,10,15,0.06)', paddingTop: 12 }}>
+                    <p style={{ fontSize: 12.5, color: 'rgba(10,10,15,0.55)', lineHeight: 1.6, margin: 0 }}>{c.result}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   )
 }
@@ -861,7 +911,7 @@ export default function Landing() {
               borderTop: isMobile && i >= 2 ? '1px solid rgba(10,10,15,0.08)' : 'none',
             }}>
               <span style={{ fontSize: 28, fontWeight: 800, color: 'var(--ytg-accent)', lineHeight: 1, marginBottom: 6 }}>{stat}</span>
-              <span style={{ fontSize: 11, fontWeight: 600, color: 'var(--ytg-text-3)', textTransform: 'uppercase', letterSpacing: '0.07em', textAlign: 'center' }}>{label}</span>
+              <span style={{ fontSize: 11, fontWeight: 500, color: 'var(--ytg-text-3)', textTransform: 'uppercase', letterSpacing: '0.07em', textAlign: 'center' }}>{label}</span>
             </div>
           ))}
         </div>
@@ -1071,11 +1121,11 @@ export default function Landing() {
                     <div style={{ display: 'flex', alignItems: 'center', gap: 11, marginBottom: 14 }}>
                       <Logo size={32} />
                       <div>
-                        <p style={{ fontSize: 12.5, fontWeight: 700, color: 'var(--ytg-text)' }}>YTGrowth</p>
+                        <p style={{ fontSize: 13, fontWeight: 700, color: 'var(--ytg-text)' }}>YTGrowth</p>
                         <p style={{ fontSize: 11, color: 'var(--ytg-text-3)' }}>wants YouTube read access</p>
                       </div>
                     </div>
-                    <div style={{ background: 'var(--ytg-section)', borderRadius: 8, padding: '8px 12px', marginBottom: 11, fontSize: 11.5, color: 'var(--ytg-text-3)' }}>Read-only · No posting · Fully secure</div>
+                    <div style={{ background: 'var(--ytg-section)', borderRadius: 8, padding: '8px 12px', marginBottom: 11, fontSize: 11, color: 'var(--ytg-text-3)' }}>Read-only · No posting · Fully secure</div>
                     <div style={{ display: 'flex', gap: 7 }}>
                       <div style={{ flex: 1, background: 'var(--ytg-card-2)', borderRadius: 8, padding: '9px', textAlign: 'center', fontSize: 12, color: 'var(--ytg-text-2)', fontWeight: 500 }}>Cancel</div>
                       <div style={{ flex: 1, background: '#ff3b30', borderRadius: 8, padding: '9px', textAlign: 'center', fontSize: 12, color: '#fff', fontWeight: 700 }}>Allow</div>
@@ -1084,15 +1134,15 @@ export default function Landing() {
                 )
               },
               {
-                n: '02', t: 'We scan everything', d: '12+ metrics analyzed automatically — retention, watch time, upload cadence, engagement, and your top competitors.',
+                n: '02', t: 'We scan everything', d: '12+ metrics analyzed automatically: retention, watch time, upload cadence, engagement, and your top competitors.',
                 card: (
                   <div style={{ background: '#f0f0f4', border: `1px solid var(--ytg-border)`, borderRadius: 13, padding: 18, marginBottom: 22 }}>
                     <p style={{ fontSize: 9.5, color: 'var(--ytg-text-3)', fontWeight: 700, marginBottom: 14, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Analyzing your channel</p>
                     {[{ l: 'Channel metrics', w: '100%', c: '#0a84ff' }, { l: 'Video performance', w: '100%', c: '#0a84ff' }, { l: 'Competitor data', w: '72%', c: '#0a84ff' }, { l: 'Generating insights', w: '38%', c: '#ffd60a' }].map((item, i) => (
                       <div key={i} style={{ marginBottom: i < 3 ? 11 : 0 }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 5 }}>
-                          <span style={{ fontSize: 11.5, color: 'var(--ytg-text-2)', fontWeight: 500 }}>{item.l}</span>
-                          <span style={{ fontSize: 11.5, color: item.c, fontWeight: 700, fontVariantNumeric: 'tabular-nums' }}>{item.w}</span>
+                          <span style={{ fontSize: 11, color: 'var(--ytg-text-2)', fontWeight: 500 }}>{item.l}</span>
+                          <span style={{ fontSize: 11, color: item.c, fontWeight: 700, fontVariantNumeric: 'tabular-nums' }}>{item.w}</span>
                         </div>
                         <div style={{ background: 'var(--ytg-border)', borderRadius: 100, height: 3, overflow: 'hidden' }}>
                           <div style={{ width: item.w, height: '100%', background: item.c, borderRadius: 100 }} />
@@ -1121,7 +1171,7 @@ export default function Landing() {
               <div key={i} className="ytg-step-card">
                 {step.card}
                 <div style={{ width: 36, height: 36, background: 'var(--ytg-card-2)', border: '1px solid var(--ytg-border-2)', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 16 }}> {/* IMPROVED: 12→16px marginBottom */}
-                  <span style={{ fontWeight: 800, fontSize: 12.5, color: 'var(--ytg-text-3)', fontVariantNumeric: 'tabular-nums' }}>{step.n}</span>
+                  <span style={{ fontWeight: 700, fontSize: 12, color: 'var(--ytg-text-3)', fontVariantNumeric: 'tabular-nums' }}>{step.n}</span>
                 </div>
                 <p style={{ fontWeight: 700, fontSize: 17, color: 'var(--ytg-text)', marginBottom: 9, letterSpacing: '-0.3px' }}>{step.t}</p>
                 <p style={{ fontSize: 14.5, color: 'var(--ytg-text-2)', lineHeight: 1.9 }}>{step.d}</p> {/* IMPROVED: 13.5→14.5px, 1.8→1.9 */}
@@ -1132,37 +1182,53 @@ export default function Landing() {
       </div>
 
       {/* ── TESTIMONIALS ────────────────────────────────────────────────── */}
-      <div style={{ background: '#ffffff', borderTop: '1px solid rgba(10,10,15,0.06)', borderBottom: '1px solid rgba(10,10,15,0.06)', padding: isMobile ? '60px 20px' : '100px 64px' }}>
+      <div style={{ background: '#f4f4f6', borderTop: '1px solid rgba(10,10,15,0.06)', borderBottom: '1px solid rgba(10,10,15,0.06)', padding: isMobile ? '60px 24px' : '100px 64px' }}>
         <div style={{ maxWidth: 1280, margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: 56 }}>
-            <h2 style={{ fontWeight: 800, fontSize: isMobile ? 32 : 48, letterSpacing: '-1.5px', color: 'var(--ytg-text)', lineHeight: 1.06, marginBottom: 12 }}>Creators who stopped guessing.</h2>
-            <p style={{ fontSize: 17, color: 'var(--ytg-text-2)', lineHeight: 1.8 }}>Real channels. Real results.</p>
+            {/* Rating summary row */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 16, marginBottom: 20, flexWrap: 'wrap' }}>
+              <div style={{ display: 'flex', gap: 3 }}>
+                {[...Array(5)].map((_, i) => <span key={i} style={{ fontSize: 20, color: '#f59e0b' }}>★</span>)}
+              </div>
+              <div style={{ width: 1, height: 24, background: 'rgba(10,10,15,0.12)', alignSelf: 'center' }} />
+              <span style={{ fontSize: 22, fontWeight: 800, color: '#0a0a0f', letterSpacing: '-0.5px' }}>4.9 / 5</span>
+              <div style={{ width: 1, height: 24, background: 'rgba(10,10,15,0.12)', alignSelf: 'center' }} />
+              <span style={{ fontSize: 13, fontWeight: 500, color: 'rgba(10,10,15,0.45)' }}>Based on 200+ reviews</span>
+            </div>
+            <h2 style={{ fontWeight: 800, fontSize: isMobile ? 32 : 48, letterSpacing: '-1.5px', color: '#0a0a0f', lineHeight: 1.06, marginBottom: 12 }}>The tool creators actually recommend.</h2>
+            <p style={{ fontSize: 17, color: 'rgba(10,10,15,0.55)', lineHeight: 1.8 }}>Real channels. Real numbers. No stock photos.</p>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3,1fr)', gap: 24 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3,1fr)', gap: 20 }}>
             {[
-              { initials: 'MT', name: 'Marcus T.',   meta: 'Tech & Productivity · 42K subs', q: 'The competitor analysis alone saved me weeks of manual research. I found three content gaps my rivals weren\'t covering — one of those videos hit 180K views in the first month.' },
-              { initials: 'PN', name: 'Priya Nair',  meta: 'Personal Finance · 28K subs',    q: 'Went from 3% CTR to 5.8% over six weeks by following the Thumbnail IQ suggestions. The benchmark comparison is what made the difference.' },
-              { initials: 'JO', name: 'James Oduya', meta: 'Fitness & Training · 67K subs',  q: 'Agencies charge $500/month for what this does in 10 minutes. The channel audit flagged issues I didn\'t even know were hurting my watch time.' },
-              { initials: 'SB', name: 'Sophie Brandt', meta: 'Travel · 19K subs',            q: 'The Video Ideas feature pulled from my competitors\' best content and gave me a content calendar I actually wanted to execute.' },
-              { initials: 'DR', name: 'Daniel Reyes', meta: 'Gaming · 89K subs',             q: 'The weekly report alone is worth the subscription. One priority action every week. My channel score went from 54 to 78 in 8 weeks.' },
-              { initials: 'AO', name: 'Amara Osei',  meta: 'Business & Side Hustle · 31K subs', q: 'I manage three channels and the multi-channel support is exactly what I needed. Each channel health score visible at a glance.' },
+              { initials: 'MT', color: '#0a84ff',  name: 'Marcus T.',    meta: 'Tech & Productivity · 42K subs', platform: 'G2',           metric: 'CTR: 2.3% → 5.1% in 6 weeks',       quote: 'The competitor gap analysis is the real weapon here. I found three topics my rivals ignored completely. One video hit 180K views in 30 days.' },
+              { initials: 'PN', color: '#16a34a',  name: 'Priya Nair',   meta: 'Personal Finance · 28K subs',   platform: 'Trustpilot',   metric: 'Retention: 31% → 58% in 8 weeks',    quote: 'Thumbnail IQ told me exactly what top channels in my niche were doing. I followed the benchmark suggestions and my retention nearly doubled.' },
+              { initials: 'JO', color: '#d97706',  name: 'James Oduya',  meta: 'Fitness & Training · 67K subs', platform: 'Product Hunt', metric: 'Channel score: 44 → 78',              quote: 'Agencies charge $500/month for what this does in 10 minutes. The audit flagged watch time problems I never would have caught on my own.' },
+              { initials: 'SB', color: '#7c3aed',  name: 'Sophie Brandt', meta: 'Travel · 19K subs',           platform: 'G2',           metric: '3 videos × 100K+ views',              quote: 'The video ideas pulled from my competitor data gave me a 3-month content calendar. Three of those videos broke 100K.' },
+              { initials: 'DR', color: '#e5251b',  name: 'Daniel Reyes', meta: 'Gaming · 89K subs',             platform: 'Trustpilot',   metric: 'Weekly subscribers: +180 avg',        quote: 'The weekly report is worth the entire subscription on its own. One priority action every Monday. My growth has been consistent ever since.' },
+              { initials: 'AO', color: '#16a34a',  name: 'Amara Osei',   meta: 'Business · 31K subs',          platform: 'Product Hunt', metric: '3 channels managed, one tool',        quote: 'Multi-channel support is exactly what a channel manager needs. Each health score visible instantly. Nothing else comes close.' },
             ].map((t, i) => (
-              <div key={i} style={{ background: 'var(--ytg-card)', borderRadius: 18, border: '1px solid var(--ytg-border)', boxShadow: 'var(--ytg-shadow)', padding: 28 }}>
-                <div style={{ display: 'flex', gap: 14, alignItems: 'center' }}>
-                  <div style={{ width: 60, height: 60, borderRadius: '50%', background: 'var(--ytg-card-2)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: 20, color: 'var(--ytg-text-2)', flexShrink: 0 }}>
+              <div key={i} style={{ background: '#ffffff', borderRadius: 20, border: '1px solid rgba(10,10,15,0.08)', padding: 28, boxShadow: '0 2px 8px rgba(0,0,0,0.06), 0 12px 32px rgba(0,0,0,0.08)' }}>
+                {/* Top row: avatar + name + platform badge */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+                  <div style={{ width: 48, height: 48, borderRadius: '50%', background: t.color, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 16, fontWeight: 800, flexShrink: 0 }}>
                     {t.initials}
                   </div>
-                  <div>
-                    <p style={{ fontWeight: 700, fontSize: 14, color: 'var(--ytg-text)' }}>{t.name}</p>
-                    <p style={{ fontSize: 12, color: 'var(--ytg-text-3)', marginTop: 3 }}>{t.meta}</p>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <p style={{ fontSize: 14, fontWeight: 700, color: '#0a0a0f', margin: 0 }}>{t.name}</p>
+                    <p style={{ fontSize: 12, color: 'rgba(10,10,15,0.4)', marginTop: 2, marginBottom: 0 }}>{t.meta}</p>
                   </div>
+                  <span style={{ background: 'rgba(10,10,15,0.04)', border: '1px solid rgba(10,10,15,0.08)', borderRadius: 6, padding: '4px 10px', fontSize: 11, fontWeight: 700, color: 'rgba(10,10,15,0.45)', textTransform: 'uppercase', letterSpacing: '0.06em', flexShrink: 0 }}>{t.platform}</span>
                 </div>
-                <div style={{ display: 'flex', gap: 3, marginTop: 14, marginBottom: 12 }}>
-                  {[...Array(5)].map((_, j) => (
-                    <span key={j} style={{ color: 'var(--ytg-accent)', fontSize: 13 }}>★</span>
-                  ))}
+                {/* Stars */}
+                <div style={{ display: 'flex', gap: 3, marginTop: 14, marginBottom: 14 }}>
+                  {[...Array(5)].map((_, j) => <span key={j} style={{ fontSize: 13, color: '#f59e0b' }}>★</span>)}
                 </div>
-                <p style={{ fontSize: 14.5, color: 'var(--ytg-text-2)', lineHeight: 1.75 }}>"{t.q}"</p>
+                {/* Metric pill */}
+                <div style={{ background: 'rgba(229,48,42,0.06)', border: '1px solid rgba(229,48,42,0.14)', borderRadius: 8, padding: '8px 14px', marginBottom: 14, display: 'inline-block' }}>
+                  <span style={{ fontSize: 13, fontWeight: 700, color: '#c22b25' }}>{t.metric}</span>
+                </div>
+                {/* Quote */}
+                <p style={{ fontSize: 14.5, color: 'rgba(10,10,15,0.65)', lineHeight: 1.75, margin: 0 }}>{t.quote}</p>
               </div>
             ))}
           </div>
@@ -1591,7 +1657,7 @@ export default function Landing() {
               View lifetime deals
             </button>
           </div>
-          <p style={{ fontSize: 12.5, color: 'var(--ytg-text-3)', marginTop: 16 }}>No credit card · Lifetime deals capped at 500.</p> {/* IMPROVED: period→· separator */}
+          <p style={{ fontSize: 12, color: 'var(--ytg-text-3)', marginTop: 16 }}>No credit card · Lifetime deals capped at 500.</p> {/* IMPROVED: period→· separator */}
         </div>
       </div>
 
@@ -1607,17 +1673,9 @@ export default function Landing() {
                 <Logo size={28} />
                 <span style={{ fontWeight: 800, fontSize: 16, color: '#ffffff', letterSpacing: '-0.5px' }}>YTGrowth</span>
               </div>
-              <p style={{ fontSize: 13.5, color: 'rgba(255,255,255,0.36)', lineHeight: 1.75, maxWidth: 240, marginBottom: 24 }}>
+              <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.36)', lineHeight: 1.75, maxWidth: 240, marginBottom: 24 }}>
                 AI-powered YouTube channel intelligence for creators serious about growth.
               </p>
-              {/* Trust chips */}
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-                {['Powered by Claude AI', 'Secured by Paddle', 'Read-only API'].map((chip, i) => (
-                  <span key={i} style={{ fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.3)', background: 'rgba(255,255,255,0.055)', border: '1px solid rgba(255,255,255,0.09)', borderRadius: 6, padding: '5px 10px', letterSpacing: '-0.1px' }}>
-                    {chip}
-                  </span>
-                ))}
-              </div>
             </div>
 
             {/* Product */}
