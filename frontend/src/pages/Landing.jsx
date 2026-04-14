@@ -432,6 +432,40 @@ const CREATOR_DATA = [
   { name: 'Being Benitah',   handle: '@BeingBenitah',     color: '#7c3aed', niche: 'Travel',    subs: '14.2K', result: 'Retention improved from 28% to 47%',        avatar: '/avatars/beingbenitah.jpg' },
 ]
 
+function TestimonialCard({ t }) {
+  const [imgFailed, setImgFailed] = useState(false)
+  return (
+    <div style={{ background: '#ffffff', borderRadius: 20, border: '1px solid rgba(10,10,15,0.06)', padding: 28, boxShadow: '0 2px 4px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.1), 0 32px 64px rgba(0,0,0,0.14)', minWidth: 0, overflow: 'hidden' }}>
+      {/* Top row: avatar + name + platform badge */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+        {t.avatar && !imgFailed ? (
+          <img src={t.avatar} alt={t.name} onError={() => setImgFailed(true)}
+            style={{ width: 46, height: 46, borderRadius: '50%', objectFit: 'cover', flexShrink: 0, display: 'block' }} />
+        ) : (
+          <div style={{ width: 46, height: 46, borderRadius: '50%', background: `linear-gradient(135deg, ${t.color}, ${t.color}bb)`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 16, fontWeight: 800, flexShrink: 0 }}>
+            {t.name[0]}
+          </div>
+        )}
+        <div style={{ flex: 1, minWidth: 0, overflow: 'hidden' }}>
+          <p style={{ fontSize: 14, fontWeight: 700, color: '#0a0a0f', margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{t.name}</p>
+          <p style={{ fontSize: 12, color: 'rgba(10,10,15,0.4)', marginTop: 2, marginBottom: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{t.meta}</p>
+        </div>
+        <span style={{ background: 'rgba(10,10,15,0.04)', border: '1px solid rgba(10,10,15,0.08)', borderRadius: 6, padding: '4px 8px', fontSize: 10, fontWeight: 700, color: 'rgba(10,10,15,0.45)', textTransform: 'uppercase', letterSpacing: '0.06em', flexShrink: 0 }}>{t.platform}</span>
+      </div>
+      {/* Stars */}
+      <div style={{ display: 'flex', gap: 3, marginTop: 14, marginBottom: 14 }}>
+        {[...Array(5)].map((_, j) => <span key={j} style={{ fontSize: 13, color: '#f59e0b' }}>★</span>)}
+      </div>
+      {/* Metric pill */}
+      <div style={{ background: 'rgba(229,48,42,0.06)', border: '1px solid rgba(229,48,42,0.14)', borderRadius: 8, padding: '8px 14px', marginBottom: 14, overflow: 'hidden' }}>
+        <span style={{ fontSize: 13, fontWeight: 700, color: '#c22b25', display: 'block', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{t.metric}</span>
+      </div>
+      {/* Quote */}
+      <p style={{ fontSize: 14.5, color: 'rgba(10,10,15,0.65)', lineHeight: 1.75, margin: 0 }}>{t.quote}</p>
+    </div>
+  )
+}
+
 function CreatorAvatar({ c, size = 48 }) {
   const [failed, setFailed] = useState(false)
   if (c.avatar && !failed) {
@@ -1196,36 +1230,14 @@ export default function Landing() {
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3,1fr)', gap: 20 }}>
             {[
-              { initials: 'MT', color: '#0a84ff',  name: 'Marcus T.',    meta: 'Tech & Productivity · 42K subs', platform: 'G2',           metric: 'CTR: 2.3% → 5.1% in 6 weeks',       quote: 'The competitor gap analysis is the real weapon here. I found three topics my rivals ignored completely. One video hit 180K views in 30 days.' },
-              { initials: 'PN', color: '#16a34a',  name: 'Priya Nair',   meta: 'Personal Finance · 28K subs',   platform: 'Trustpilot',   metric: 'Retention: 31% → 58% in 8 weeks',    quote: 'Thumbnail IQ told me exactly what top channels in my niche were doing. I followed the benchmark suggestions and my retention nearly doubled.' },
-              { initials: 'JO', color: '#d97706',  name: 'James Oduya',  meta: 'Fitness & Training · 67K subs', platform: 'Product Hunt', metric: 'Channel score: 44 → 78',              quote: 'Agencies charge $500/month for what this does in 10 minutes. The audit flagged watch time problems I never would have caught on my own.' },
-              { initials: 'SB', color: '#7c3aed',  name: 'Sophie Brandt', meta: 'Travel · 19K subs',           platform: 'G2',           metric: '3 videos × 100K+ views',              quote: 'The video ideas pulled from my competitor data gave me a 3-month content calendar. Three of those videos broke 100K.' },
-              { initials: 'DR', color: '#e5251b',  name: 'Daniel Reyes', meta: 'Gaming · 89K subs',             platform: 'Trustpilot',   metric: 'Weekly subscribers: +180 avg',        quote: 'The weekly report is worth the entire subscription on its own. One priority action every Monday. My growth has been consistent ever since.' },
-              { initials: 'AO', color: '#16a34a',  name: 'Amara Osei',   meta: 'Business · 31K subs',          platform: 'Product Hunt', metric: '3 channels managed, one tool',        quote: 'Multi-channel support is exactly what a channel manager needs. Each health score visible instantly. Nothing else comes close.' },
+              { avatar: '/avatars/marcus.jpg',  color: '#0a84ff',  name: 'Marcus T.',    meta: 'Tech & Productivity · 42K subs', platform: 'G2',           metric: 'CTR: 2.3% → 5.1% in 6 weeks',       quote: 'The competitor gap analysis is the real weapon here. I found three topics my rivals ignored completely. One video hit 180K views in 30 days.' },
+              { avatar: '/avatars/priya.jpg',   color: '#16a34a',  name: 'Priya Nair',   meta: 'Personal Finance · 28K subs',   platform: 'Trustpilot',   metric: 'Retention: 31% → 58% in 8 weeks',    quote: 'Thumbnail IQ told me exactly what top channels in my niche were doing. I followed the benchmark suggestions and my retention nearly doubled.' },
+              { avatar: '/avatars/james.jpg',   color: '#d97706',  name: 'James Oduya',  meta: 'Fitness & Training · 67K subs', platform: 'Product Hunt', metric: 'Channel score: 44 → 78',              quote: 'Agencies charge $500/month for what this does in 10 minutes. The audit flagged watch time problems I never would have caught on my own.' },
+              { avatar: '/avatars/sophie.jpg',  color: '#7c3aed',  name: 'Sophie Brandt', meta: 'Travel · 19K subs',            platform: 'G2',           metric: '3 videos × 100K+ views',              quote: 'The video ideas pulled from my competitor data gave me a 3-month content calendar. Three of those videos broke 100K.' },
+              { avatar: '/avatars/daniel.jpg',  color: '#e5251b',  name: 'Daniel Reyes', meta: 'Gaming · 89K subs',             platform: 'Trustpilot',   metric: 'Weekly subscribers: +180 avg',        quote: 'The weekly report is worth the entire subscription on its own. One priority action every Monday. My growth has been consistent ever since.' },
+              { avatar: '/avatars/amara.jpg',   color: '#16a34a',  name: 'Amara Osei',   meta: 'Business · 31K subs',           platform: 'Product Hunt', metric: '3 channels managed, one tool',        quote: 'Multi-channel support is exactly what a channel manager needs. Each health score visible instantly. Nothing else comes close.' },
             ].map((t, i) => (
-              <div key={i} style={{ background: '#ffffff', borderRadius: 20, border: '1px solid rgba(10,10,15,0.06)', padding: 28, boxShadow: '0 2px 4px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.1), 0 32px 64px rgba(0,0,0,0.14)', minWidth: 0, overflow: 'hidden' }}>
-                {/* Top row: avatar + name + platform badge */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                  <div style={{ width: 44, height: 44, borderRadius: '50%', background: t.color, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 15, fontWeight: 800, flexShrink: 0 }}>
-                    {t.initials}
-                  </div>
-                  <div style={{ flex: 1, minWidth: 0, overflow: 'hidden' }}>
-                    <p style={{ fontSize: 14, fontWeight: 700, color: '#0a0a0f', margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{t.name}</p>
-                    <p style={{ fontSize: 12, color: 'rgba(10,10,15,0.4)', marginTop: 2, marginBottom: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{t.meta}</p>
-                  </div>
-                  <span style={{ background: 'rgba(10,10,15,0.04)', border: '1px solid rgba(10,10,15,0.08)', borderRadius: 6, padding: '4px 8px', fontSize: 10, fontWeight: 700, color: 'rgba(10,10,15,0.45)', textTransform: 'uppercase', letterSpacing: '0.06em', flexShrink: 0 }}>{t.platform}</span>
-                </div>
-                {/* Stars */}
-                <div style={{ display: 'flex', gap: 3, marginTop: 14, marginBottom: 14 }}>
-                  {[...Array(5)].map((_, j) => <span key={j} style={{ fontSize: 13, color: '#f59e0b' }}>★</span>)}
-                </div>
-                {/* Metric pill */}
-                <div style={{ background: 'rgba(229,48,42,0.06)', border: '1px solid rgba(229,48,42,0.14)', borderRadius: 8, padding: '8px 14px', marginBottom: 14, overflow: 'hidden' }}>
-                  <span style={{ fontSize: 13, fontWeight: 700, color: '#c22b25', display: 'block', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{t.metric}</span>
-                </div>
-                {/* Quote */}
-                <p style={{ fontSize: 14.5, color: 'rgba(10,10,15,0.65)', lineHeight: 1.75, margin: 0 }}>{t.quote}</p>
-              </div>
+              <TestimonialCard key={i} t={t} />
             ))}
           </div>
         </div>
