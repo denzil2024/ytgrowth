@@ -260,6 +260,9 @@ function useGlobalStyles() {
       /* ── Scroll-triggered section entrance ───────────────── */
       .section-animate { opacity: 0; transform: translateY(12px); transition: opacity 0.5s ease, transform 0.5s ease; } /* IMPROVED: added */
       .section-animate.visible { opacity: 1; transform: translateY(0); }
+      @keyframes ytg-ticker { 0% { transform: translateX(0) } 100% { transform: translateX(-50%) } }
+      .ytg-ticker-track { display: flex; animation: ytg-ticker 48s linear infinite; width: max-content; }
+      .ytg-ticker-track:hover { animation-play-state: paused; }
     `
     document.head.appendChild(style)
   }, [])
@@ -408,6 +411,20 @@ function ScrollProgress() {
   )
 }
 
+/* ─── Real creators using YTGrowth ──────────────────────────────────────── */
+const CREATORS = [
+  { name: 'Sophiology',        handle: '@Sophiology',            initial: 'S', color: '#e5251b' },
+  { name: 'Dallin & Bella',    handle: '@dallinandbella2',       initial: 'D', color: '#d97706' },
+  { name: 'Max Tabakin',       handle: '@maxtabakin',            initial: 'M', color: '#0a84ff' },
+  { name: 'Fatima Bah',        handle: '@FatimaBah',             initial: 'F', color: '#16a34a' },
+  { name: 'Mizchinny',         handle: '@Mizchinny_',            initial: 'M', color: '#7c3aed' },
+  { name: 'Founder Diaries',   handle: '@FounderDiariesPodcast', initial: 'F', color: '#0a84ff' },
+  { name: 'Corey McClain',     handle: '@iamcoreymcclain',       initial: 'C', color: '#16a34a' },
+  { name: 'Cardinal Mason',    handle: '@CardinalMason',         initial: 'C', color: '#e5251b' },
+  { name: 'Jayden Garcia',     handle: '@imjaydengarcia',        initial: 'J', color: '#d97706' },
+  { name: 'Being Benitah',     handle: '@BeingBenitah',          initial: 'B', color: '#0a84ff' },
+]
+
 /* ─── Landing page ──────────────────────────────────────────────────────── */
 const AUTH_ERROR_MESSAGES = {
   channel_locked: 'This channel was recently connected to another account. You can connect it again after 30 days.',
@@ -496,12 +513,12 @@ export default function Landing() {
         borderBottom: '1px solid var(--ytg-border)',
         boxShadow: scrolled ? '0 4px 24px rgba(0,0,0,0.08)' : 'none',
         transition: 'box-shadow 0.3s ease',
-        height: 60, display: 'flex', alignItems: 'center',
+        height: 72, display: 'flex', alignItems: 'center',
         justifyContent: 'space-between', padding: isMobile ? '0 20px' : '0 64px',
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
-          <Logo size={28} />
-          <span style={{ fontWeight: 800, fontSize: 15, letterSpacing: '-0.4px', color: 'var(--ytg-text)' }}>YTGrowth</span>
+          <Logo size={32} />
+          <span style={{ fontWeight: 800, fontSize: 17, letterSpacing: '-0.4px', color: 'var(--ytg-text)' }}>YTGrowth</span>
         </div>
 
         {!isMobile && (
@@ -767,6 +784,30 @@ export default function Landing() {
               <span style={{ fontSize: 11, fontWeight: 600, color: 'var(--ytg-text-3)', textTransform: 'uppercase', letterSpacing: '0.07em', textAlign: 'center' }}>{label}</span>
             </div>
           ))}
+        </div>
+      </div>
+
+      {/* ── SOCIAL PROOF — CREATOR TICKER ──────────────────────────────── */}
+      <div style={{ background: '#ffffff', borderTop: '1px solid rgba(10,10,15,0.06)', borderBottom: '1px solid rgba(10,10,15,0.06)', padding: '28px 0' }}>
+        <p style={{ textAlign: 'center', fontSize: 11, fontWeight: 700, color: 'var(--ytg-text-4)', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 20 }}>
+          YouTube creators using YTGrowth
+        </p>
+        <div style={{ position: 'relative', overflow: 'hidden' }}>
+          <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: 100, background: 'linear-gradient(to right, #ffffff, transparent)', zIndex: 2, pointerEvents: 'none' }} />
+          <div style={{ position: 'absolute', right: 0, top: 0, bottom: 0, width: 100, background: 'linear-gradient(to left, #ffffff, transparent)', zIndex: 2, pointerEvents: 'none' }} />
+          <div className="ytg-ticker-track">
+            {[...CREATORS, ...CREATORS].map((c, i) => (
+              <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 12, paddingRight: 36, marginRight: 36, borderRight: '1px solid rgba(10,10,15,0.08)', flexShrink: 0 }}>
+                <div style={{ width: 40, height: 40, borderRadius: '50%', background: c.color, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontWeight: 800, fontSize: 16, flexShrink: 0, boxShadow: `0 2px 10px ${c.color}35` }}>
+                  {c.initial}
+                </div>
+                <div>
+                  <p style={{ fontSize: 13.5, fontWeight: 700, color: 'var(--ytg-text)', letterSpacing: '-0.2px', lineHeight: 1.2 }}>{c.name}</p>
+                  <p style={{ fontSize: 11.5, color: 'var(--ytg-text-3)', marginTop: 2 }}>{c.handle}</p>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
@@ -1497,24 +1538,44 @@ export default function Landing() {
       </div>
 
       {/* ── FOOTER ──────────────────────────────────────────────────────── */}
-      <div style={{ borderTop: '1px solid var(--ytg-border)', padding: isMobile ? '28px 20px' : '36px 64px' }}>
-        <div style={{ maxWidth: 1280, margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexDirection: isMobile ? 'column' : 'row', gap: isMobile ? 16 : 0, textAlign: isMobile ? 'center' : 'left' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
-            <Logo size={26} />
-            <span style={{ fontWeight: 800, fontSize: 15, color: 'var(--ytg-text)', letterSpacing: '-0.4px' }}>YTGrowth</span>
+      <footer style={{ background: '#0a0a0f', padding: isMobile ? '48px 20px 32px' : '64px 64px 40px' }}>
+        <div style={{ maxWidth: 1280, margin: '0 auto' }}>
+          {/* Top row */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexDirection: isMobile ? 'column' : 'row', gap: isMobile ? 36 : 0, marginBottom: isMobile ? 36 : 48 }}>
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 9, marginBottom: 14 }}>
+                <Logo size={28} />
+                <span style={{ fontWeight: 800, fontSize: 16, color: '#ffffff', letterSpacing: '-0.4px' }}>YTGrowth</span>
+              </div>
+              <p style={{ fontSize: 13.5, color: 'rgba(255,255,255,0.38)', lineHeight: 1.7, maxWidth: 260 }}>
+                AI-powered YouTube intelligence.<br />Built for creators serious about growth.
+              </p>
+            </div>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: isMobile ? '14px 36px' : '14px 48px', justifyContent: isMobile ? 'flex-start' : 'flex-end' }}>
+              {[
+                { label: 'Privacy policy',       href: '/privacy' },
+                { label: 'Terms of service',     href: '/terms' },
+                { label: 'Refund policy',        href: '/refund' },
+                { label: 'Affiliates',           href: '/affiliate' },
+                { label: 'support@ytgrowth.io',  href: 'mailto:support@ytgrowth.io' },
+                { label: 'Log in',               href: '/auth/login' },
+              ].map((link, i) => (
+                <a key={i} href={link.href}
+                   style={{ fontSize: 13, color: 'rgba(255,255,255,0.38)', textDecoration: 'none', transition: 'color 0.15s', fontFamily: "'DM Sans', system-ui, sans-serif" }}
+                   onMouseEnter={e => e.currentTarget.style.color = 'rgba(255,255,255,0.72)'}
+                   onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.38)'}>
+                  {link.label}
+                </a>
+              ))}
+            </div>
           </div>
-          <p style={{ fontSize: 13, color: 'var(--ytg-text-3)' }}>Built for creators serious about growth.</p>
-          <p style={{ fontSize: 12, color: 'var(--ytg-text-4)' }}>© 2026 YTGrowth. All rights reserved.</p>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: isMobile ? '12px 24px' : 28, justifyContent: isMobile ? 'center' : 'flex-end' }}>
-            <a href="/privacy" className="ytg-nav-link" style={{ fontSize: 13 }}>Privacy policy</a>
-            <a href="/terms" className="ytg-nav-link" style={{ fontSize: 13 }}>Terms of service</a>
-            <a href="/refund" className="ytg-nav-link" style={{ fontSize: 13 }}>Refund policy</a>
-            <a href="/affiliate" className="ytg-nav-link" style={{ fontSize: 13 }}>Affiliates</a>
-            <a href="mailto:support@ytgrowth.io" className="ytg-nav-link" style={{ fontSize: 13 }}>support@ytgrowth.io</a>
-            <a href="/auth/login" className="ytg-nav-link" style={{ fontSize: 13 }}>Log in</a>
+          {/* Bottom bar */}
+          <div style={{ borderTop: '1px solid rgba(255,255,255,0.07)', paddingTop: 24, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexDirection: isMobile ? 'column' : 'row', gap: 8 }}>
+            <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.22)' }}>© 2026 YTGrowth. All rights reserved.</p>
+            <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.22)' }}>Powered by Claude AI · Stripe-grade security</p>
           </div>
         </div>
-      </div>
+      </footer>
 
     </div>
   )
