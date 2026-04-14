@@ -420,63 +420,82 @@ function ScrollProgress() {
 
 /* ─── Creator social proof ───────────────────────────────────────────────── */
 const CREATOR_DATA = [
-  { name: 'Sophiology',      handle: '@Sophiology',       color: '#e5251b', niche: 'Lifestyle', subs: '24K', result: 'CTR improved from 2.1% to 5.4%' },
-  { name: 'Dallin & Bella',  handle: '@dallinandbella2',  color: '#d97706', niche: 'Family',    subs: '61K', result: 'Found 3 competitor content gaps' },
-  { name: 'Max Tabakin',     handle: '@maxtabakin',       color: '#0a84ff', niche: 'Tech',      subs: '18K', result: 'Channel score up 31 points' },
-  { name: 'Fatima Bah',      handle: '@FatimaBah',        color: '#16a34a', niche: 'Finance',   subs: '9K',  result: 'Weekly reports cut prep time in half' },
-  { name: 'Mizchinny',       handle: '@Mizchinny_',       color: '#7c3aed', niche: 'Beauty',    subs: '33K', result: 'Thumbnail score lifted views 40%' },
-  { name: 'Founder Diaries', handle: '@FounderDiaries',   color: '#0a84ff', niche: 'Business',  subs: '12K', result: 'Doubled upload consistency' },
-  { name: 'Corey McClain',   handle: '@iamcoreymcclain',  color: '#16a34a', niche: 'Fitness',   subs: '47K', result: 'Identified top competitor weaknesses' },
-  { name: 'Cardinal Mason',  handle: '@CardinalMason',    color: '#e5251b', niche: 'Motivation', subs: '88K', result: 'SEO score up from 54 to 79' },
-  { name: 'Jayden Garcia',   handle: '@imjaydengarcia',   color: '#d97706', niche: 'Gaming',    subs: '29K', result: '3 videos hit 100K+ after audit' },
-  { name: 'Being Benitah',   handle: '@BeingBenitah',     color: '#7c3aed', niche: 'Travel',    subs: '15K', result: 'Retention improved from 28% to 47%' },
+  { name: 'Sophiology',      handle: '@Sophiology',       color: '#e5251b', niche: 'Lifestyle', subs: '641K',  result: 'CTR improved from 2.1% to 5.4%',          avatar: '/avatars/sophiology.jpg' },
+  { name: 'Dallin & Bella',  handle: '@dallinandbella2',  color: '#d97706', niche: 'Family',    subs: '4.2M',  result: 'Found 3 competitor content gaps',           avatar: '/avatars/dallinandbella.jpg' },
+  { name: 'Max Tabakin',     handle: '@maxtabakin',       color: '#0a84ff', niche: 'Tech',      subs: '5.18K', result: 'Channel score up 31 points',                avatar: '/avatars/maxtabakin.jpg' },
+  { name: 'Fatima Bah',      handle: '@FatimaBah',        color: '#16a34a', niche: 'Finance',   subs: '467K',  result: 'Weekly reports cut prep time in half',      avatar: '/avatars/fatimabah.jpg' },
+  { name: 'Mizchinny',       handle: '@Mizchinny_',       color: '#7c3aed', niche: 'Beauty',    subs: '95.9K', result: 'Thumbnail score lifted views 40%',          avatar: '/avatars/mizchinny.jpg' },
+  { name: 'Founder Diaries', handle: '@FounderDiaries',   color: '#0a84ff', niche: 'Business',  subs: '9.36K', result: 'Doubled upload consistency',                avatar: '/avatars/founderdiaries.jpg' },
+  { name: 'Corey McClain',   handle: '@iamcoreymcclain',  color: '#16a34a', niche: 'Fitness',   subs: '43.9K', result: 'Identified top competitor weaknesses',      avatar: '/avatars/coreymcclain.jpg' },
+  { name: 'Cardinal Mason',  handle: '@CardinalMason',    color: '#e5251b', niche: 'Motivation', subs: '85.7K', result: 'SEO score up from 54 to 79',               avatar: '/avatars/cardinalmason.jpg' },
+  { name: 'Jayden Garcia',   handle: '@imjaydengarcia',   color: '#d97706', niche: 'Gaming',    subs: '13K',   result: '3 videos hit 100K+ after audit',            avatar: '/avatars/jaydengarcia.jpg' },
+  { name: 'Being Benitah',   handle: '@BeingBenitah',     color: '#7c3aed', niche: 'Travel',    subs: '14.2K', result: 'Retention improved from 28% to 47%',        avatar: '/avatars/beingbenitah.jpg' },
 ]
 
-function CreatorTicker({ isMobile }) {
-  const cards = CREATOR_DATA.map((c, i) => (
-    <div key={i} style={{
+function CreatorAvatar({ c, size = 48 }) {
+  const [failed, setFailed] = useState(false)
+  if (c.avatar && !failed) {
+    return (
+      <img
+        src={c.avatar}
+        alt={c.name}
+        onError={() => setFailed(true)}
+        style={{ width: size, height: size, borderRadius: '50%', objectFit: 'cover', flexShrink: 0, display: 'block' }}
+      />
+    )
+  }
+  return (
+    <div style={{
+      width: size, height: size, borderRadius: '50%', flexShrink: 0,
+      background: `linear-gradient(135deg, ${c.color}, ${c.color}bb)`,
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+      color: '#fff', fontSize: size * 0.35, fontWeight: 800,
+      boxShadow: `0 2px 8px ${c.color}44`,
+    }}>
+      {c.name[0]}
+    </div>
+  )
+}
+
+function CreatorCard({ c }) {
+  return (
+    <div style={{
       background: '#ffffff',
-      border: '1px solid rgba(10,10,15,0.08)',
-      borderRadius: 16,
-      padding: '18px 20px',
-      minWidth: 200,
+      border: '1px solid rgba(10,10,15,0.09)',
+      borderRadius: 18,
+      padding: '20px 22px',
+      minWidth: 220,
       flexShrink: 0,
-      boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
+      boxShadow: '0 2px 10px rgba(0,0,0,0.07), 0 1px 2px rgba(0,0,0,0.04)',
     }}>
       {/* Avatar + name + handle */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 11 }}>
-        <div style={{
-          width: 40, height: 40, borderRadius: '50%',
-          background: c.color, flexShrink: 0,
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          color: '#fff', fontSize: 15, fontWeight: 800,
-        }}>
-          {c.name[0]}
-        </div>
-        <div style={{ minWidth: 0 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 14 }}>
+        <CreatorAvatar c={c} size={46} />
+        <div style={{ minWidth: 0, flex: 1 }}>
           <p style={{ fontSize: 14, fontWeight: 700, color: '#0a0a0f', letterSpacing: '-0.2px', margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{c.name}</p>
-          <p style={{ fontSize: 12, color: 'rgba(10,10,15,0.4)', margin: '2px 0 0', whiteSpace: 'nowrap' }}>{c.handle}</p>
+          <p style={{ fontSize: 11.5, color: 'rgba(10,10,15,0.42)', margin: '2px 0 0', whiteSpace: 'nowrap' }}>{c.handle}</p>
         </div>
-      </div>
-      {/* Niche pill */}
-      <div style={{ marginTop: 14 }}>
         <span style={{
           background: 'rgba(10,10,15,0.04)', border: '1px solid rgba(10,10,15,0.08)',
-          borderRadius: 100, padding: '4px 10px',
-          fontSize: 11, fontWeight: 600, color: 'rgba(10,10,15,0.5)',
+          borderRadius: 100, padding: '3px 9px',
+          fontSize: 10.5, fontWeight: 600, color: 'rgba(10,10,15,0.48)', flexShrink: 0,
         }}>{c.niche}</span>
       </div>
       {/* Subscriber count */}
-      <div style={{ marginTop: 10 }}>
-        <p style={{ fontSize: 22, fontWeight: 800, color: '#0a0a0f', letterSpacing: '-0.8px', lineHeight: 1, margin: 0 }}>{c.subs}</p>
-        <p style={{ fontSize: 11, fontWeight: 500, color: 'rgba(10,10,15,0.4)', textTransform: 'uppercase', letterSpacing: '0.06em', margin: '3px 0 0' }}>subscribers</p>
+      <div style={{ marginBottom: 12 }}>
+        <p style={{ fontSize: 24, fontWeight: 800, color: '#0a0a0f', letterSpacing: '-0.8px', lineHeight: 1, margin: 0 }}>{c.subs}</p>
+        <p style={{ fontSize: 10.5, fontWeight: 500, color: 'rgba(10,10,15,0.38)', textTransform: 'uppercase', letterSpacing: '0.07em', margin: '3px 0 0' }}>subscribers</p>
       </div>
       {/* Result */}
-      <div style={{ marginTop: 12, borderTop: '1px solid rgba(10,10,15,0.06)', paddingTop: 12 }}>
-        <p style={{ fontSize: 12.5, color: 'rgba(10,10,15,0.55)', lineHeight: 1.6, margin: 0 }}>{c.result}</p>
+      <div style={{ borderTop: '1px solid rgba(10,10,15,0.06)', paddingTop: 11 }}>
+        <p style={{ fontSize: 12.5, color: 'rgba(10,10,15,0.52)', lineHeight: 1.55, margin: 0 }}>{c.result}</p>
       </div>
     </div>
-  ))
+  )
+}
+
+function CreatorTicker({ isMobile }) {
+  const cards = CREATOR_DATA.map((c, i) => <CreatorCard key={i} c={c} />)
 
   return (
     <div style={{ background: '#ffffff', borderBottom: '1px solid rgba(10,10,15,0.06)' }}>
@@ -514,37 +533,10 @@ function CreatorTicker({ isMobile }) {
           <div style={{ position: 'relative', overflow: 'hidden' }}>
             <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: 100, background: 'linear-gradient(to right, #fff 40%, transparent)', zIndex: 2, pointerEvents: 'none' }} />
             <div style={{ position: 'absolute', right: 0, top: 0, bottom: 0, width: 100, background: 'linear-gradient(to left, #fff 40%, transparent)', zIndex: 2, pointerEvents: 'none' }} />
-            <div className="ytg-ticker-track" style={{ gap: 12, paddingLeft: 4 }}>
+            <div className="ytg-ticker-track" style={{ gap: 14, paddingLeft: 4 }}>
               {[...CREATOR_DATA, ...CREATOR_DATA].map((c, i) => (
-                <div key={i} style={{
-                  background: '#ffffff',
-                  border: '1px solid rgba(10,10,15,0.08)',
-                  borderRadius: 16,
-                  padding: '18px 20px',
-                  minWidth: 200,
-                  flexShrink: 0,
-                  boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
-                  marginRight: 12,
-                }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 11 }}>
-                    <div style={{ width: 40, height: 40, borderRadius: '50%', background: c.color, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 15, fontWeight: 800 }}>
-                      {c.name[0]}
-                    </div>
-                    <div style={{ minWidth: 0 }}>
-                      <p style={{ fontSize: 14, fontWeight: 700, color: '#0a0a0f', letterSpacing: '-0.2px', margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{c.name}</p>
-                      <p style={{ fontSize: 12, color: 'rgba(10,10,15,0.4)', margin: '2px 0 0', whiteSpace: 'nowrap' }}>{c.handle}</p>
-                    </div>
-                  </div>
-                  <div style={{ marginTop: 14 }}>
-                    <span style={{ background: 'rgba(10,10,15,0.04)', border: '1px solid rgba(10,10,15,0.08)', borderRadius: 100, padding: '4px 10px', fontSize: 11, fontWeight: 600, color: 'rgba(10,10,15,0.5)' }}>{c.niche}</span>
-                  </div>
-                  <div style={{ marginTop: 10 }}>
-                    <p style={{ fontSize: 22, fontWeight: 800, color: '#0a0a0f', letterSpacing: '-0.8px', lineHeight: 1, margin: 0 }}>{c.subs}</p>
-                    <p style={{ fontSize: 11, fontWeight: 500, color: 'rgba(10,10,15,0.4)', textTransform: 'uppercase', letterSpacing: '0.06em', margin: '3px 0 0' }}>subscribers</p>
-                  </div>
-                  <div style={{ marginTop: 12, borderTop: '1px solid rgba(10,10,15,0.06)', paddingTop: 12 }}>
-                    <p style={{ fontSize: 12.5, color: 'rgba(10,10,15,0.55)', lineHeight: 1.6, margin: 0 }}>{c.result}</p>
-                  </div>
+                <div key={i} style={{ marginRight: 0 }}>
+                  <CreatorCard c={c} />
                 </div>
               ))}
             </div>
@@ -922,7 +914,7 @@ export default function Landing() {
       {/* ── FEATURES ────────────────────────────────────────────────────── */}
 
       {/* Section 1 — Channel Audit */}
-      <div id="features" style={{ background: '#f4f4f6', borderTop: '1px solid rgba(10,10,15,0.06)', borderBottom: '1px solid rgba(10,10,15,0.06)', padding: isMobile ? '60px 24px' : '100px 64px' }}>
+      <div id="features" style={{ background: '#faf8f5', borderTop: '2px solid rgba(10,10,15,0.10)', borderBottom: '1px solid rgba(10,10,15,0.08)', padding: isMobile ? '60px 24px' : '100px 64px', boxShadow: 'inset 0 -6px 24px rgba(10,10,15,0.04)' }}>
         <div style={{ maxWidth: 1160, margin: '0 auto', display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? 40 : 80, alignItems: 'center' }}>
           {/* Text */}
           <div>
@@ -972,10 +964,10 @@ export default function Landing() {
       </div>
 
       {/* Section 2 — Competitor Intelligence */}
-      <div style={{ background: '#ffffff', borderTop: '1px solid rgba(10,10,15,0.06)', borderBottom: '1px solid rgba(10,10,15,0.06)', padding: isMobile ? '60px 24px' : '100px 64px' }}>
+      <div style={{ background: '#f4f1ec', borderTop: '2px solid rgba(10,10,15,0.10)', borderBottom: '1px solid rgba(10,10,15,0.08)', padding: isMobile ? '60px 24px' : '100px 64px', boxShadow: 'inset 0 4px 20px rgba(10,10,15,0.03), inset 0 -6px 24px rgba(10,10,15,0.04)' }}>
         <div style={{ maxWidth: 1160, margin: '0 auto', display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? 40 : 80, alignItems: 'center' }}>
           {/* Visual — left on desktop */}
-          <div style={{ order: isMobile ? 1 : 0, background: '#ffffff', borderRadius: 20, boxShadow: 'var(--ytg-shadow-xl)', padding: 28 }}>
+          <div style={{ order: isMobile ? 1 : 0, background: '#ffffff', borderRadius: 20, border: '1px solid rgba(10,10,15,0.07)', boxShadow: 'var(--ytg-shadow-xl)', padding: 28 }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                 <div style={{ width: 40, height: 40, borderRadius: '50%', background: 'rgba(10,10,15,0.08)', border: '2px solid rgba(10,10,15,0.14)', flexShrink: 0 }} />
@@ -1018,7 +1010,7 @@ export default function Landing() {
       </div>
 
       {/* Section 3 — Thumbnail IQ */}
-      <div style={{ background: '#f4f4f6', borderTop: '1px solid rgba(10,10,15,0.06)', borderBottom: '1px solid rgba(10,10,15,0.06)', padding: isMobile ? '60px 24px' : '100px 64px' }}>
+      <div style={{ background: '#f7f4f0', borderTop: '2px solid rgba(10,10,15,0.10)', borderBottom: '1px solid rgba(10,10,15,0.08)', padding: isMobile ? '60px 24px' : '100px 64px', boxShadow: 'inset 0 4px 20px rgba(10,10,15,0.03), inset 0 -6px 24px rgba(10,10,15,0.04)' }}>
         <div style={{ maxWidth: 1160, margin: '0 auto', display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? 40 : 80, alignItems: 'center' }}>
           {/* Text */}
           <div>
@@ -1040,7 +1032,7 @@ export default function Landing() {
           {/* Visual */}
           <div style={{ background: '#ffffff', borderRadius: 20, boxShadow: 'var(--ytg-shadow-xl)', padding: 28 }}>
             <div style={{ display: 'flex', alignItems: 'baseline', gap: 6, marginBottom: 20 }}>
-              <span style={{ fontSize: 52, fontWeight: 800, color: 'var(--ytg-text)', letterSpacing: '-2px', lineHeight: 1 }}>74</span>
+              <span style={{ fontSize: 52, fontWeight: 800, color: '#16a34a', letterSpacing: '-2px', lineHeight: 1 }}>74</span>
               <span style={{ fontSize: 20, fontWeight: 400, color: 'var(--ytg-text-3)' }}>/100</span>
             </div>
             {[
@@ -1061,10 +1053,10 @@ export default function Landing() {
       </div>
 
       {/* Section 4 — Weekly Report */}
-      <div style={{ background: '#ffffff', borderTop: '1px solid rgba(10,10,15,0.06)', borderBottom: '1px solid rgba(10,10,15,0.06)', padding: isMobile ? '60px 24px' : '100px 64px' }}>
+      <div style={{ background: '#f0ece5', borderTop: '2px solid rgba(10,10,15,0.10)', borderBottom: '2px solid rgba(10,10,15,0.10)', padding: isMobile ? '60px 24px' : '100px 64px', boxShadow: 'inset 0 4px 20px rgba(10,10,15,0.03), inset 0 -8px 32px rgba(10,10,15,0.05)' }}>
         <div style={{ maxWidth: 1160, margin: '0 auto', display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? 40 : 80, alignItems: 'center' }}>
           {/* Visual — left on desktop */}
-          <div style={{ order: isMobile ? 1 : 0, background: '#ffffff', borderRadius: 20, boxShadow: 'var(--ytg-shadow-xl)', padding: 28 }}>
+          <div style={{ order: isMobile ? 1 : 0, background: '#ffffff', borderRadius: 20, border: '1px solid rgba(10,10,15,0.07)', boxShadow: 'var(--ytg-shadow-xl)', padding: 28 }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
               <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--ytg-text)' }}>Week of Apr 7 – Apr 13</span>
               <span style={{ background: '#f0fdf4', border: '1px solid rgba(134,239,172,0.6)', color: '#16a34a', fontSize: 11, fontWeight: 600, borderRadius: 20, padding: '3px 10px' }}>Latest</span>
@@ -1581,11 +1573,11 @@ export default function Landing() {
       </div>
 
       {/* ── FAQ ─────────────────────────────────────────────────────────── */}
-      <div id="faq" style={{ background: '#ffffff', borderTop: '1px solid rgba(10,10,15,0.06)', borderBottom: '1px solid rgba(10,10,15,0.06)', padding: isMobile ? '60px 20px' : '100px 64px', position: 'relative', overflow: 'hidden' }}>
+      <div id="faq" style={{ background: '#fdfcfb', borderTop: '3px solid rgba(10,10,15,0.12)', borderBottom: '1px solid rgba(10,10,15,0.06)', padding: isMobile ? '60px 20px' : '100px 64px', position: 'relative', overflow: 'hidden', boxShadow: 'inset 0 4px 28px rgba(10,10,15,0.04)' }}>
         <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 900, height: 600, background: 'radial-gradient(ellipse, rgba(99,102,241,0.08) 0%, transparent 60%)', pointerEvents: 'none' }} />
         <div style={{ maxWidth: 960, margin: '0 auto', position: 'relative', zIndex: 1 }}>
           <div style={{ textAlign: 'center', marginBottom: 56 }}>
-            <Badge>FAQ</Badge>
+            <Badge>Frequently Asked Questions</Badge>
             <h2 style={{ fontWeight: 800, fontSize: isMobile ? 32 : 48, letterSpacing: '-1.5px', color: 'var(--ytg-text)', lineHeight: 1.06, marginBottom: 14 }}>Questions answered.</h2>
             <p style={{ fontSize: 17, color: 'var(--ytg-text-2)', lineHeight: 1.8 }}>Everything you want to know before you decide.</p>
           </div>
@@ -1642,7 +1634,7 @@ export default function Landing() {
       </div>
 
       {/* ── FINAL CTA ───────────────────────────────────────────────────── */}
-      <div style={{ background: '#f4f4f6', borderTop: '1px solid rgba(10,10,15,0.06)', borderBottom: '1px solid rgba(10,10,15,0.06)', padding: isMobile ? '70px 24px' : '120px 64px', position: 'relative', overflow: 'hidden' }}>
+      <div style={{ background: 'linear-gradient(180deg, #f7f4f0 0%, #f2ede6 100%)', borderTop: '3px solid rgba(10,10,15,0.12)', borderBottom: '3px solid rgba(10,10,15,0.12)', padding: isMobile ? '70px 24px' : '120px 64px', position: 'relative', overflow: 'hidden', boxShadow: 'inset 0 4px 32px rgba(10,10,15,0.05), inset 0 -4px 32px rgba(10,10,15,0.05)' }}>
         <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 800, height: 600, background: 'radial-gradient(ellipse, rgba(229,48,42,0.06) 0%, transparent 65%)', pointerEvents: 'none' }} />
         <div style={{ maxWidth: 860, margin: '0 auto', textAlign: 'center', position: 'relative', zIndex: 1 }}>
           <Badge>Get started</Badge>
