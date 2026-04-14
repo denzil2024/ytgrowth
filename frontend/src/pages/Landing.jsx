@@ -811,8 +811,8 @@ export default function Landing() {
                       </svg>
                     </div>
                     <div>
-                      <div style={{ fontWeight: 800, fontSize: 32, color: '#ffffff', letterSpacing: '-2px', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>45</div>
-                      <div style={{ fontSize: 10.5, color: 'rgba(255,255,255,0.35)', marginTop: 4 }}>out of 100</div>
+                      <div style={{ fontWeight: 800, fontSize: 32, color: '#ff3b30', letterSpacing: '-2px', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>45</div>
+                      <div style={{ fontSize: 10.5, color: 'rgba(255,255,255,0.35)', marginTop: 4 }}>out of 100 · Critical</div>
                       <div style={{ display: 'inline-flex', alignItems: 'center', gap: 4, marginTop: 5, background: 'rgba(255,59,48,0.15)', border: '1px solid rgba(255,59,48,0.25)', borderRadius: 100, padding: '2px 8px' }}>
                         <div style={{ width: 4, height: 4, borderRadius: '50%', background: '#ff3b30' }} />
                         <span style={{ fontSize: 9, fontWeight: 700, color: '#ff6b63', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Critical</span>
@@ -888,7 +888,7 @@ export default function Landing() {
       </div>
 
       {/* ── STATS BAR ───────────────────────────────────────────────────── */}
-      <div style={{ background: '#ecedf1', borderTop: '1px solid rgba(10,10,15,0.06)', borderBottom: '1px solid rgba(10,10,15,0.06)', padding: isMobile ? '28px 24px' : '28px 64px' }}>
+      <div style={{ background: '#e8e9ee', borderTop: '1px solid rgba(10,10,15,0.06)', borderBottom: '1px solid rgba(10,10,15,0.06)', padding: isMobile ? '28px 24px' : '28px 64px' }}>
         <div style={{
           display: 'grid',
           gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(5, 1fr)',
@@ -1108,7 +1108,7 @@ export default function Landing() {
       </div>
 
       {/* ── HOW IT WORKS ────────────────────────────────────────────────── */}
-      <div id="how-it-works" style={{ background: '#ecedf1', borderTop: '1px solid rgba(10,10,15,0.06)', borderBottom: '1px solid rgba(10,10,15,0.06)', padding: isMobile ? '60px 20px' : '100px 64px', position: 'relative', overflow: 'hidden' }}>
+      <div id="how-it-works" style={{ background: '#e8e9ee', borderTop: '1px solid rgba(10,10,15,0.06)', borderBottom: '1px solid rgba(10,10,15,0.06)', padding: isMobile ? '60px 20px' : '100px 64px', position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 900, height: 600, background: 'radial-gradient(ellipse, rgba(59,130,246,0.07) 0%, transparent 60%)', pointerEvents: 'none' }} />
         <div style={{ maxWidth: 1280, margin: '0 auto', position: 'relative', zIndex: 1 }}>
           <div className="section-animate" style={{ textAlign: 'center', marginBottom: 56 }}> {/* IMPROVED: section-animate */}
@@ -1186,7 +1186,7 @@ export default function Landing() {
       </div>
 
       {/* ── TESTIMONIALS ────────────────────────────────────────────────── */}
-      <div style={{ background: '#ffffff', borderTop: '1px solid rgba(10,10,15,0.06)', borderBottom: '1px solid rgba(10,10,15,0.06)', padding: isMobile ? '60px 24px' : '100px 64px' }}>
+      <div style={{ background: '#e8e9ee', borderTop: '1px solid rgba(10,10,15,0.06)', borderBottom: '1px solid rgba(10,10,15,0.06)', padding: isMobile ? '60px 24px' : '100px 64px' }}>
         <div style={{ maxWidth: 1280, margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: 56 }}>
             {/* Rating summary row */}
@@ -1200,7 +1200,7 @@ export default function Landing() {
               <span style={{ fontSize: 13, fontWeight: 500, color: 'rgba(10,10,15,0.45)' }}>Based on 200+ reviews</span>
             </div>
             <h2 style={{ fontWeight: 800, fontSize: isMobile ? 32 : 48, letterSpacing: '-1.5px', color: '#0a0a0f', lineHeight: 1.06, marginBottom: 12 }}>The tool creators actually recommend.</h2>
-            <p style={{ fontSize: 17, color: 'rgba(10,10,15,0.55)', lineHeight: 1.8 }}>Real channels. Real numbers. No stock photos.</p>
+            <p style={{ fontSize: 17, color: 'rgba(10,10,15,0.6)', lineHeight: 1.8 }}>Real channels. Real numbers. No stock photos.</p>
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3,1fr)', gap: 20 }}>
             {[
@@ -1211,7 +1211,7 @@ export default function Landing() {
               { initials: 'DR', color: '#e5251b',  name: 'Daniel Reyes', meta: 'Gaming · 89K subs',             platform: 'Trustpilot',   metric: 'Weekly subscribers: +180 avg',        quote: 'The weekly report is worth the entire subscription on its own. One priority action every Monday. My growth has been consistent ever since.' },
               { initials: 'AO', color: '#16a34a',  name: 'Amara Osei',   meta: 'Business · 31K subs',          platform: 'Product Hunt', metric: '3 channels managed, one tool',        quote: 'Multi-channel support is exactly what a channel manager needs. Each health score visible instantly. Nothing else comes close.' },
             ].map((t, i) => (
-              <div key={i} style={{ background: '#ffffff', borderRadius: 20, border: '1px solid rgba(10,10,15,0.08)', padding: 28, boxShadow: '0 4px 16px rgba(0,0,0,0.08), 0 24px 60px rgba(0,0,0,0.12)' }}>
+              <div key={i} style={{ background: '#ffffff', borderRadius: 20, border: '1px solid rgba(10,10,15,0.06)', padding: 28, boxShadow: '0 2px 4px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.1), 0 32px 64px rgba(0,0,0,0.14)' }}>
                 {/* Top row: avatar + name + platform badge */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                   <div style={{ width: 44, height: 44, borderRadius: '50%', background: t.color, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 15, fontWeight: 800, flexShrink: 0 }}>
