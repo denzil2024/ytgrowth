@@ -30,6 +30,7 @@ from routers import thumbnail_routes
 from routers import email_routes
 from routers import report_routes
 from routers import channel_routes
+from routers import public_routes
 
 app = FastAPI(title="YTGrowth API", redirect_slashes=False, lifespan=lifespan)
 
@@ -66,6 +67,7 @@ app.include_router(thumbnail_routes.router,  prefix="/thumbnail")
 app.include_router(email_routes.router)                          # /unsubscribe, /resubscribe
 app.include_router(report_routes.router,     prefix="/api/reports")
 app.include_router(channel_routes.router,    prefix="/channels")
+app.include_router(public_routes.router,     prefix="/api/public")
 
 
 
