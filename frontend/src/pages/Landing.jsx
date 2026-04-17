@@ -100,7 +100,7 @@ function useGlobalStyles() {
       }
 
       .ytg-nav-link {
-        font-size: 14px; color: rgba(255,255,255,0.55); font-weight: 500;
+        font-size: 15px; color: rgba(255,255,255,0.55); font-weight: 500;
         text-decoration: none; transition: color 0.15s; letter-spacing: -0.1px;
       }
       .ytg-nav-link:hover { color: rgba(255,255,255,0.9); }
@@ -671,19 +671,22 @@ export default function Landing() {
         height: 72, display: 'flex', alignItems: 'center',
         justifyContent: 'space-between', padding: isMobile ? '0 20px' : '0 64px',
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
-          <Logo size={32} />
-          <span style={{ fontWeight: 800, fontSize: 17, letterSpacing: '-0.4px', color: '#ffffff' }}>YTGrowth</span>
-        </div>
-
-        {!isMobile && (
-          <div style={{ display: 'flex', gap: 32 }}>
-            {['Features', 'How it works', 'Pricing', 'FAQ'].map((l, i) => (
-              <a key={i} href={`#${l.toLowerCase().replace(/ /g, '-')}`} className="ytg-nav-link">{l}</a>
-            ))}
-            <a href="/affiliate" className="ytg-nav-link">Affiliates</a>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 44 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
+            <Logo size={32} />
+            <span style={{ fontWeight: 800, fontSize: 22, lineHeight: 1, letterSpacing: '-0.5px', color: '#ffffff' }}>YTGrowth</span>
           </div>
-        )}
+
+          {!isMobile && (
+            <div style={{ display: 'flex', gap: 30 }}>
+              {['Features', 'How it works', 'Pricing', 'FAQ'].map((l, i) => (
+                <a key={i} href={`#${l.toLowerCase().replace(/ /g, '-')}`} className="ytg-nav-link">{l}</a>
+              ))}
+              <a href="/affiliate" className="ytg-nav-link">Affiliates</a>
+              <a href="/contact" className="ytg-nav-link">Contact</a>
+            </div>
+          )}
+        </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
           {isMobile ? (
@@ -718,16 +721,14 @@ export default function Landing() {
 
       {/* Mobile menu overlay */}
       <div className={`ytg-mobile-menu${mobileMenuOpen ? ' open' : ''}`} style={{ top: 72 }}>
-        {['Features', 'How it works', 'Pricing', 'FAQ'].map((l, i) => (
-          <a key={i} href={`#${l.toLowerCase().replace(/ /g, '-')}`}
+        {['Features', 'How it works', 'Pricing', 'FAQ', 'Affiliates', 'Contact'].map((l, i) => (
+          <a key={i}
+            href={l === 'Affiliates' ? '/affiliate' : l === 'Contact' ? '/contact' : `#${l.toLowerCase().replace(/ /g, '-')}`}
             onClick={() => setMobileMenuOpen(false)}
-            style={{ fontSize: 22, fontWeight: 700, color: 'var(--ytg-text)', textDecoration: 'none', letterSpacing: '-0.5px' }}>
+            style={{ fontSize: 22, fontWeight: 700, color: 'rgba(255,255,255,0.88)', textDecoration: 'none', letterSpacing: '-0.5px' }}>
             {l}
           </a>
         ))}
-        <a href="/affiliate" style={{ fontSize: 22, fontWeight: 700, color: 'var(--ytg-accent)', textDecoration: 'none', letterSpacing: '-0.5px' }}>
-          Affiliates
-        </a>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 10, width: '100%', padding: '0 32px', alignItems: 'center' }}>
           {loggedIn ? (
             <a href="/dashboard" className="ytg-btn-primary" style={{ width: '100%', justifyContent: 'center' }}>Dashboard</a>
