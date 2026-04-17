@@ -915,7 +915,7 @@ export default function Landing() {
       </div>
 
       {/* ── STATS BAR ───────────────────────────────────────────────────── */}
-      <div className="section-animate" style={{ background: '#e8e9ee', borderTop: '1px solid rgba(10,10,15,0.06)', borderBottom: '1px solid rgba(10,10,15,0.10)', boxShadow: '0 4px 20px rgba(0,0,0,0.07)', position: 'relative', zIndex: 1, padding: isMobile ? '28px 24px' : '28px 64px' }}>
+      <div className="section-animate" style={{ background: '#e8e9ee', borderTop: '1px solid rgba(10,10,15,0.06)', borderBottom: '1px solid rgba(10,10,15,0.10)', boxShadow: '0 4px 20px rgba(0,0,0,0.07)', position: 'relative', zIndex: 1, padding: isMobile ? '36px 24px' : '40px 64px' }}>
         <div style={{
           display: 'grid',
           gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(5, 1fr)',
@@ -943,8 +943,6 @@ export default function Landing() {
           ))}
         </div>
       </div>
-
-      <CreatorTicker isMobile={isMobile} />
 
       {/* ── FEATURES ────────────────────────────────────────────────────── */}
 
@@ -1242,6 +1240,8 @@ export default function Landing() {
           </div>
         </div>
       </div>
+
+      <CreatorTicker isMobile={isMobile} />
 
       {/* ── PRICING ─────────────────────────────────────────────────────── */}
       <div id="pricing" style={{ background: '#f4f4f6', borderTop: '1px solid rgba(10,10,15,0.06)', borderBottom: '1px solid rgba(10,10,15,0.06)', padding: isMobile ? '60px 20px' : '100px 64px', position: 'relative', overflow: 'hidden' }}>
