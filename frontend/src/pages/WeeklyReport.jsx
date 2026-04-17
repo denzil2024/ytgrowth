@@ -20,10 +20,10 @@ function DeltaBadge({ metric, unit, isScore }) {
   if (!metric) return null
   const { delta, direction } = metric
   if (delta === null || delta === undefined) {
-    return <span style={{ fontSize: 11, color: C.text4, fontWeight: 500 }}>First report</span>
+    return <span style={{ fontSize: 12, color: C.text4, fontWeight: 500 }}>First report</span>
   }
   if (direction === 'flat') {
-    return <span style={{ fontSize: 11, color: C.text4, fontWeight: 500 }}>→ No change</span>
+    return <span style={{ fontSize: 12, color: C.text4, fontWeight: 500 }}>→ No change</span>
   }
   const up    = direction === 'up'
   const color = up ? C.green : C.red
@@ -32,7 +32,7 @@ function DeltaBadge({ metric, unit, isScore }) {
   if (isScore) val = `${up ? '+' : ''}${Math.round(delta)} pts`
   else if (unit === '%') val = `${up ? '+' : ''}${Math.abs(delta).toFixed(1)}%`
   else val = `${up ? '+' : ''}${fmtNum(Math.abs(delta))}`
-  return <span style={{ fontSize: 11, color, fontWeight: 600 }}>{arrow} {val}</span>
+  return <span style={{ fontSize: 12, color, fontWeight: 600 }}>{arrow} {val}</span>
 }
 
 function MetricCard({ label, value, metric, unit, isScore }) {
@@ -41,7 +41,7 @@ function MetricCard({ label, value, metric, unit, isScore }) {
       background: '#f9fafb', borderRadius: 8, padding: '14px 16px',
       border: '1px solid rgba(0,0,0,0.07)', flex: '1 1 calc(50% - 6px)',
     }}>
-      <div style={{ fontSize: 11, fontWeight: 600, color: C.text4, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 6 }}>{label}</div>
+      <div style={{ fontSize: 12, fontWeight: 600, color: C.text4, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 6 }}>{label}</div>
       <div style={{ fontSize: 22, fontWeight: 600, color: C.text1, lineHeight: 1, fontVariantNumeric: 'tabular-nums', marginBottom: 5 }}>{value}</div>
       <DeltaBadge metric={metric} unit={unit} isScore={isScore} />
     </div>
@@ -50,7 +50,7 @@ function MetricCard({ label, value, metric, unit, isScore }) {
 
 function SectionLabel({ children, color }) {
   return (
-    <div style={{ fontSize: 10, fontWeight: 700, color: color || C.text4, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 8 }}>
+    <div style={{ fontSize: 12, fontWeight: 700, color: color || C.text4, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 8 }}>
       {children}
     </div>
   )
@@ -89,7 +89,7 @@ function ReportCard({ report, expanded, onToggle }) {
             )}
           </div>
           {!expanded && rd.weeklySummary && (
-            <div style={{ fontSize: 12.5, color: C.text3, marginTop: 6, lineHeight: 1.6, overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 1, WebkitBoxOrient: 'vertical' }}>
+            <div style={{ fontSize: 12, color: C.text3, marginTop: 6, lineHeight: 1.6, overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 1, WebkitBoxOrient: 'vertical' }}>
               {rd.weeklySummary}
             </div>
           )}
@@ -135,7 +135,7 @@ function ReportBody({ rd, isLatest }) {
       {rd.weeklySummary && (
         <div style={{ marginBottom: 18 }}>
           <SectionLabel>This Week</SectionLabel>
-          <p style={{ fontSize: 14.5, color: C.text2, lineHeight: 1.7 }}>{rd.weeklySummary}</p>
+          <p style={{ fontSize: 14, color: C.text2, lineHeight: 1.7 }}>{rd.weeklySummary}</p>
         </div>
       )}
 
@@ -162,13 +162,13 @@ function ReportBody({ rd, isLatest }) {
           padding: 18, marginBottom: 16,
         }}>
           <SectionLabel color={C.red}>Your Priority This Week</SectionLabel>
-          <p style={{ fontSize: 14.5, fontWeight: 500, color: C.text1, lineHeight: 1.7 }}>{rd.priorityAction}</p>
+          <p style={{ fontSize: 14, fontWeight: 500, color: C.text1, lineHeight: 1.7 }}>{rd.priorityAction}</p>
         </div>
       )}
 
       {/* Motivational close */}
       {rd.motivationalClose && (
-        <p style={{ fontSize: 13.5, color: C.text3, lineHeight: 1.6 }}>{rd.motivationalClose}</p>
+        <p style={{ fontSize: 14, color: C.text3, lineHeight: 1.6 }}>{rd.motivationalClose}</p>
       )}
     </>
   )
@@ -236,13 +236,13 @@ export default function WeeklyReport({ channelId, channelEmail }) {
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 28, gap: 16, flexWrap: 'wrap' }}>
         <div>
           <h1 style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', marginBottom: 4 }}>Weekly Report</h1>
-          <p style={{ fontSize: 13, color: C.text3 }}>Your channel performance, delivered every week.</p>
+          <p style={{ fontSize: 14, color: C.text3 }}>Your channel performance, delivered every week.</p>
         </div>
 
         {/* Email delivery toggle */}
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 4 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <span style={{ fontSize: 13, color: C.text2, fontWeight: 500 }}>Email delivery</span>
+            <span style={{ fontSize: 14, color: C.text2, fontWeight: 500 }}>Email delivery</span>
             <button
               onClick={toggleEmail}
               disabled={toggling}
@@ -262,7 +262,7 @@ export default function WeeklyReport({ channelId, channelEmail }) {
             </button>
           </div>
           {!emailOn && (
-            <span style={{ fontSize: 11, color: C.text4 }}>You can resubscribe anytime</span>
+            <span style={{ fontSize: 12, color: C.text4 }}>You can resubscribe anytime</span>
           )}
         </div>
       </div>
@@ -296,12 +296,12 @@ export default function WeeklyReport({ channelId, channelEmail }) {
         }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
             <div>
-              <div style={{ fontSize: 15, fontWeight: 700, color: C.text1, letterSpacing: '-0.3px', marginBottom: 2 }}>
+              <div style={{ fontSize: 14, fontWeight: 700, color: C.text1, letterSpacing: '-0.3px', marginBottom: 2 }}>
                 {latest.reportData?.reportTitle || 'Weekly Report'}
               </div>
               <div style={{ fontSize: 12, color: C.text4 }}>{latest.weekStart} – {latest.weekEnd}</div>
             </div>
-            <span style={{ fontSize: 11, fontWeight: 600, color: C.green, background: '#f0fdf4', border: '1px solid rgba(134,239,172,0.6)', borderRadius: 20, padding: '3px 10px' }}>Latest</span>
+            <span style={{ fontSize: 12, fontWeight: 600, color: C.green, background: '#f0fdf4', border: '1px solid rgba(134,239,172,0.6)', borderRadius: 20, padding: '3px 10px' }}>Latest</span>
           </div>
           <ReportBody rd={latest.reportData || {}} isLatest />
         </div>
@@ -310,7 +310,7 @@ export default function WeeklyReport({ channelId, channelEmail }) {
       {/* ── Previous reports ────────────────────────────────────────────── */}
       {previous.length > 0 && (
         <>
-          <div style={{ fontSize: 11, fontWeight: 600, color: C.text4, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 10, marginTop: 8 }}>Previous Reports</div>
+          <div style={{ fontSize: 12, fontWeight: 600, color: C.text4, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 10, marginTop: 8 }}>Previous Reports</div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
             {previous.map((r, i) => (
               <ReportCard

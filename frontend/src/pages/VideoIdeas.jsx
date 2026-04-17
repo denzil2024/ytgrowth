@@ -135,7 +135,7 @@ function ScorePill({ score }) {
   const bg    = score >= 80 ? C.greenBg : score >= 60 ? C.amberBg : C.grayBg
   return (
     <span style={{
-      fontSize: 13, fontWeight: 700, color,
+      fontSize: 14, fontWeight: 700, color,
       background: bg, borderRadius: 8,
       padding: '4px 10px', whiteSpace: 'nowrap',
     }}>
@@ -147,7 +147,7 @@ function ScorePill({ score }) {
 function SourceBadge({ source }) {
   if (source === 'ai') return (
     <span style={{
-      fontSize: 10, fontWeight: 700, letterSpacing: '0.04em',
+      fontSize: 12, fontWeight: 700, letterSpacing: '0.04em',
       color: C.purple, background: C.purpleBg,
       border: `1px solid ${C.purpleBdr}`,
       borderRadius: 100, padding: '2px 8px',
@@ -155,7 +155,7 @@ function SourceBadge({ source }) {
   )
   return (
     <span style={{
-      fontSize: 10, fontWeight: 700, letterSpacing: '0.04em',
+      fontSize: 12, fontWeight: 700, letterSpacing: '0.04em',
       color: C.blue, background: C.blueBg,
       border: `1px solid ${C.blueBdr}`,
       borderRadius: 100, padding: '2px 8px',
@@ -167,7 +167,7 @@ function KeywordPill({ keyword }) {
   if (!keyword) return null
   return (
     <span style={{
-      fontSize: 11, fontWeight: 600,
+      fontSize: 12, fontWeight: 600,
       color: C.text2, background: '#f4f4f6',
       border: '1px solid rgba(0,0,0,0.08)',
       borderRadius: 100, padding: '2px 10px',
@@ -217,7 +217,7 @@ function IdeaCard({ idea, done, onDone, onUseSeo, onScoreThumbnail }) {
 
         {/* Rank */}
         <div style={{
-          fontSize: 17, fontWeight: 800, color: C.text4,
+          fontSize: 16, fontWeight: 800, color: C.text4,
           minWidth: 22, paddingTop: 2, textAlign: 'center', flexShrink: 0,
         }}>
           {idea.rank}
@@ -228,7 +228,7 @@ function IdeaCard({ idea, done, onDone, onUseSeo, onScoreThumbnail }) {
           {/* Title + badges row */}
           <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 10, marginBottom: 6 }}>
             <p style={{
-              fontSize: 14.5, fontWeight: 600, color: C.text1,
+              fontSize: 14, fontWeight: 600, color: C.text1,
               lineHeight: 1.4, margin: 0,
               textDecoration: done ? 'line-through' : 'none',
             }}>
@@ -238,7 +238,7 @@ function IdeaCard({ idea, done, onDone, onUseSeo, onScoreThumbnail }) {
               <SourceBadge source={idea.source} />
               {idea.thumbnail_ready && (
                 <span style={{
-                  fontSize: 10, fontWeight: 700,
+                  fontSize: 12, fontWeight: 700,
                   color: C.green, background: C.greenBg,
                   border: '1px solid #bbf7d0',
                   borderRadius: 100, padding: '2px 8px',
@@ -497,7 +497,7 @@ export default function VideoIdeas({ onNavigate }) {
           <h2 style={{ fontSize: 22, fontWeight: 800, color: '#0a0a0f', letterSpacing: '-0.6px', marginBottom: 4 }}>
             Video Ideas
           </h2>
-          <p style={{ fontSize: 13, color: C.text3, margin: 0 }}>
+          <p style={{ fontSize: 14, color: C.text3, margin: 0 }}>
             Ready-to-use video titles ranked by opportunity
           </p>
         </div>
@@ -510,7 +510,7 @@ export default function VideoIdeas({ onNavigate }) {
             style={{
               display: 'inline-flex', alignItems: 'center', gap: 7,
               padding: '10px 20px', borderRadius: 100, border: 'none',
-              fontSize: 13, fontWeight: 700, fontFamily: 'inherit',
+              fontSize: 14, fontWeight: 700, fontFamily: 'inherit',
               background: refreshing ? '#e0e0e6' : C.red, color: '#fff',
               cursor: refreshing ? 'not-allowed' : 'pointer',
               boxShadow: refreshing ? 'none' : '0 1px 3px rgba(0,0,0,0.12), 0 4px 14px rgba(229,37,27,0.32)',
@@ -527,7 +527,7 @@ export default function VideoIdeas({ onNavigate }) {
               Refresh Ideas
             </>}
           </button>
-          <div style={{ fontSize: 11, color: C.text4, marginTop: 4 }}>
+          <div style={{ fontSize: 12, color: C.text4, marginTop: 4 }}>
             1 AI analysis
             {credits != null && <span> · {credits} credits left</span>}
           </div>
@@ -544,7 +544,7 @@ export default function VideoIdeas({ onNavigate }) {
       {/* Stale nudge */}
       {stale && !loading && (
         <div style={{
-          fontSize: 12.5, color: C.amber, background: C.amberBg,
+          fontSize: 12, color: C.amber, background: C.amberBg,
           border: '1px solid #fde68a', borderRadius: 10,
           padding: '9px 14px', marginBottom: 14,
         }}>
@@ -555,7 +555,7 @@ export default function VideoIdeas({ onNavigate }) {
       {/* Error */}
       {error && (
         <div style={{
-          fontSize: 13, color: C.red, background: C.redBg,
+          fontSize: 14, color: C.red, background: C.redBg,
           border: '1px solid #fecaca', borderRadius: 10,
           padding: '10px 14px', marginBottom: 14,
           display: 'flex', alignItems: 'center', gap: 8,
@@ -571,7 +571,7 @@ export default function VideoIdeas({ onNavigate }) {
       {(loading || refreshing) && (
         <>
           {refreshing && (
-            <p style={{ fontSize: 13, color: C.text3, marginBottom: 12 }}>
+            <p style={{ fontSize: 14, color: C.text3, marginBottom: 12 }}>
               Generating ideas from your channel data…
             </p>
           )}
@@ -589,7 +589,7 @@ export default function VideoIdeas({ onNavigate }) {
         }}>
           <div style={{ marginBottom: 14 }}><LightbulbIcon /></div>
           <h3 style={{ fontSize: 16, fontWeight: 700, color: C.text1, marginBottom: 8 }}>No ideas yet</h3>
-          <p style={{ fontSize: 13, color: C.text3, maxWidth: 340, margin: '0 auto 22px', lineHeight: 1.6 }}>
+          <p style={{ fontSize: 14, color: C.text3, maxWidth: 340, margin: '0 auto 22px', lineHeight: 1.6 }}>
             Analyze a competitor first to unlock free video ideas, or generate AI-powered ideas directly.
           </p>
           <button
@@ -598,7 +598,7 @@ export default function VideoIdeas({ onNavigate }) {
             style={{
               display: 'inline-flex', alignItems: 'center', gap: 8,
               padding: '11px 26px', borderRadius: 100, border: 'none',
-              fontSize: 13.5, fontWeight: 700, fontFamily: 'inherit',
+              fontSize: 14, fontWeight: 700, fontFamily: 'inherit',
               background: C.red, color: '#fff', cursor: 'pointer',
               boxShadow: '0 1px 3px rgba(0,0,0,0.12), 0 4px 14px rgba(229,37,27,0.32)',
               transition: 'all 0.18s',
@@ -626,7 +626,7 @@ export default function VideoIdeas({ onNavigate }) {
               background: '#f0fdf4', border: '1px solid #bbf7d0',
               borderRadius: 10,
             }}>
-              <span style={{ fontSize: 12.5, color: C.green, fontWeight: 600 }}>
+              <span style={{ fontSize: 12, color: C.green, fontWeight: 600 }}>
                 {doneCount} idea{doneCount > 1 ? 's' : ''} completed
               </span>
               <button

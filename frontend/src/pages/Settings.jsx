@@ -77,7 +77,7 @@ function billingCycleLabel(me) {
 function SectionHeading({ children, danger }) {
   return (
     <p style={{
-      fontSize: 11, fontWeight: 700, letterSpacing: '0.06em',
+      fontSize: 12, fontWeight: 700, letterSpacing: '0.06em',
       textTransform: 'uppercase',
       color: danger ? C.red : '#a0a0b0',
       marginBottom: 10,
@@ -133,8 +133,8 @@ function ConfirmDialog({ title, body, confirmLabel, onConfirm, onCancel, require
         boxShadow: '0 8px 32px rgba(0,0,0,0.18)',
         border: '1px solid rgba(0,0,0,0.08)',
       }}>
-        <p style={{ fontSize: 15, fontWeight: 600, color: C.text1, marginBottom: 8 }}>{title}</p>
-        <p style={{ fontSize: 13, color: C.text2, lineHeight: 1.65, marginBottom: requireTyping ? 16 : 22 }}>{body}</p>
+        <p style={{ fontSize: 14, fontWeight: 600, color: C.text1, marginBottom: 8 }}>{title}</p>
+        <p style={{ fontSize: 14, color: C.text2, lineHeight: 1.65, marginBottom: requireTyping ? 16 : 22 }}>{body}</p>
         {requireTyping && (
           <div style={{ marginBottom: 20 }}>
             <p style={{ fontSize: 12, color: C.text3, marginBottom: 6 }}>Type DELETE to confirm</p>
@@ -146,14 +146,14 @@ function ConfirmDialog({ title, body, confirmLabel, onConfirm, onCancel, require
               style={{
                 width: '100%', padding: '9px 12px',
                 border: `1px solid ${typed === 'DELETE' ? C.red : C.border}`,
-                borderRadius: 8, fontSize: 13, fontFamily: 'inherit',
+                borderRadius: 8, fontSize: 14, fontFamily: 'inherit',
                 outline: 'none', letterSpacing: '0.05em',
               }}
             />
           </div>
         )}
         <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end' }}>
-          <button onClick={onCancel} style={{ padding: '8px 18px', borderRadius: 8, border: `1px solid ${C.border}`, background: '#fff', color: C.text2, fontSize: 13, fontWeight: 500, cursor: 'pointer', fontFamily: 'inherit' }}>
+          <button onClick={onCancel} style={{ padding: '8px 18px', borderRadius: 8, border: `1px solid ${C.border}`, background: '#fff', color: C.text2, fontSize: 14, fontWeight: 500, cursor: 'pointer', fontFamily: 'inherit' }}>
             Cancel
           </button>
           <button
@@ -163,7 +163,7 @@ function ConfirmDialog({ title, body, confirmLabel, onConfirm, onCancel, require
               padding: '8px 18px', borderRadius: 8, border: 'none',
               background: canConfirm ? C.red : '#e5e7eb',
               color: canConfirm ? '#fff' : '#9ca3af',
-              fontSize: 13, fontWeight: 500, cursor: canConfirm ? 'pointer' : 'not-allowed',
+              fontSize: 14, fontWeight: 500, cursor: canConfirm ? 'pointer' : 'not-allowed',
               fontFamily: 'inherit',
             }}
           >{confirmLabel || 'Confirm'}</button>
@@ -275,7 +275,7 @@ export default function Settings() {
         }
         <div style={{ flex: 1, minWidth: 0 }}>
           <p style={{ fontSize: 16, fontWeight: 700, color: C.text1, letterSpacing: '-0.3px' }}>{me?.display_name || 'Account'}</p>
-          <p style={{ fontSize: 13, color: C.text2, marginTop: 3 }}>{me?.email || ''}</p>
+          <p style={{ fontSize: 14, color: C.text2, marginTop: 3 }}>{me?.email || ''}</p>
           {me?.member_since && (
             <p style={{ fontSize: 12, color: C.text3, marginTop: 3 }}>Member since {fmtMonthYear(me.member_since)}</p>
           )}
@@ -319,13 +319,13 @@ export default function Settings() {
                   }
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
-                      <p style={{ fontSize: 13, fontWeight: 600, color: C.text1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{ch.channel_name}</p>
+                      <p style={{ fontSize: 14, fontWeight: 600, color: C.text1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{ch.channel_name}</p>
                       {ch.is_current && (
-                        <span style={{ background: '#dcfce7', color: '#16a34a', fontSize: 10, fontWeight: 500, padding: '2px 8px', borderRadius: 20, flexShrink: 0 }}>Active</span>
+                        <span style={{ background: '#dcfce7', color: '#16a34a', fontSize: 12, fontWeight: 500, padding: '2px 8px', borderRadius: 20, flexShrink: 0 }}>Active</span>
                       )}
                     </div>
                     <p style={{ fontSize: 12, color: C.text2, marginTop: 1 }}>{fmtSubs(ch.subscribers)} subscribers</p>
-                    <p style={{ fontSize: 11, color: C.text3, marginTop: 1 }}>Connected {fmtDate(ch.connected_at)}</p>
+                    <p style={{ fontSize: 12, color: C.text3, marginTop: 1 }}>Connected {fmtDate(ch.connected_at)}</p>
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
                     {!ch.is_current && (
@@ -356,10 +356,10 @@ export default function Settings() {
                     border: '1px dashed rgba(0,0,0,0.15)', borderRadius: 10,
                     padding: '13px 16px', textDecoration: 'none',
                   }}>
-                    <span style={{ fontSize: 13, color: C.red, fontWeight: 500 }}>+ Connect another channel</span>
+                    <span style={{ fontSize: 14, color: C.red, fontWeight: 500 }}>+ Connect another channel</span>
                   </a>
                 : <div style={{ background: '#fef2f2', border: `0.5px solid rgba(229,37,27,0.15)`, borderRadius: 10, padding: '13px 16px' }}>
-                    <p style={{ fontSize: 13, color: C.text2, lineHeight: 1.55, marginBottom: 10 }}>
+                    <p style={{ fontSize: 14, color: C.text2, lineHeight: 1.55, marginBottom: 10 }}>
                       You have reached your channel limit. Upgrade your plan to connect more channels.
                     </p>
                     <a href="/?tab=monthly#pricing" style={{ display: 'inline-block', background: C.red, color: '#fff', fontSize: 12, fontWeight: 500, padding: '6px 14px', borderRadius: 7, textDecoration: 'none' }}>
@@ -383,11 +383,11 @@ export default function Settings() {
                 {/* Monthly analyses */}
                 <div style={{ marginBottom: 14 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <span style={{ fontSize: 13, color: C.text1, fontWeight: 500 }}>Monthly analyses</span>
-                    <span style={{ fontSize: 13, color: C.text2 }}>{me?.monthly_used ?? 0} / {me?.monthly_allowance ?? 5} used</span>
+                    <span style={{ fontSize: 14, color: C.text1, fontWeight: 500 }}>Monthly analyses</span>
+                    <span style={{ fontSize: 14, color: C.text2 }}>{me?.monthly_used ?? 0} / {me?.monthly_allowance ?? 5} used</span>
                   </div>
                   <ProgressBar pct={usagePct} />
-                  <p style={{ fontSize: 11, color: C.text3 }}>
+                  <p style={{ fontSize: 12, color: C.text3 }}>
                     {me?.is_lifetime || me?.plan === 'free'
                       ? 'Free plan — no reset'
                       : me?.reset_date ? `Resets ${fmtDate(me.reset_date)}` : ''
@@ -398,10 +398,10 @@ export default function Settings() {
                 {/* Pack balance */}
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', paddingTop: 14, borderTop: '1px solid rgba(0,0,0,0.06)' }}>
                   <div>
-                    <p style={{ fontSize: 13, color: C.text1, fontWeight: 500 }}>Credit pack balance</p>
-                    <p style={{ fontSize: 11, color: C.text3, marginTop: 3, lineHeight: 1.5 }}>Never expires — used after monthly analyses run out</p>
+                    <p style={{ fontSize: 14, color: C.text1, fontWeight: 500 }}>Credit pack balance</p>
+                    <p style={{ fontSize: 12, color: C.text3, marginTop: 3, lineHeight: 1.5 }}>Never expires — used after monthly analyses run out</p>
                   </div>
-                  <span style={{ fontSize: 13, fontWeight: 600, color: C.text1 }}>{me?.pack_balance ?? 0}</span>
+                  <span style={{ fontSize: 14, fontWeight: 600, color: C.text1 }}>{me?.pack_balance ?? 0}</span>
                 </div>
               </div>
 
@@ -441,7 +441,7 @@ export default function Settings() {
                 <Toggle on={me?.weekly_report_enabled ?? true} onChange={handleToggleReport} />
               </div>
               {!(me?.weekly_report_enabled ?? true) && (
-                <p style={{ fontSize: 11, color: C.text3, marginTop: 12 }}>You can resubscribe anytime</p>
+                <p style={{ fontSize: 12, color: C.text3, marginTop: 12 }}>You can resubscribe anytime</p>
               )}
             </div>
           </div>
@@ -462,7 +462,7 @@ export default function Settings() {
       }}>
         <div style={{ flex: 1 }}>
           <p style={{ fontSize: 14, fontWeight: 500, color: C.red }}>Delete account</p>
-          <p style={{ fontSize: 13, color: C.text2, marginTop: 5, lineHeight: 1.6 }}>
+          <p style={{ fontSize: 14, color: C.text2, marginTop: 5, lineHeight: 1.6 }}>
             This will permanently delete your account, all channel data, analyses, and reports. This cannot be undone.
           </p>
         </div>

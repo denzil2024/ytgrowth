@@ -284,9 +284,9 @@ function Stat({ label, value, sub, alert, accent }) {
   const col = alert ? '#c0392b' : (accent || '#111114')
   return (
     <div className={`ytg-stat-card${alert ? ' alert' : ''}`}>
-      <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', color: '#a0a0b0', marginBottom: 12 }}>{label}</p>
+      <p style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', color: '#a0a0b0', marginBottom: 12 }}>{label}</p>
       <p style={{ fontSize: 28, fontWeight: 800, letterSpacing: '-1px', color: col, lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{value}</p>
-      {sub && <p style={{ fontSize: 11.5, color: alert ? '#c0392b' : '#a0a0b0', fontWeight: 400, marginTop: 8 }}>{sub}</p>}
+      {sub && <p style={{ fontSize: 12, color: alert ? '#c0392b' : '#a0a0b0', fontWeight: 400, marginTop: 8 }}>{sub}</p>}
     </div>
   )
 }
@@ -311,17 +311,17 @@ function InsightCard({ insight, index, checked, onToggle, onDelete }) {
               <div style={{ width: 24, height: 24, borderRadius: 6, background: checked ? C.greenBg : bg, border: `1px solid ${checked ? C.greenBdr : bdr}`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                 {checked
                   ? <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke={C.green} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><polyline points="1.5,6.5 5,10 10.5,2"/></svg>
-                  : <span style={{ fontSize: 10.5, fontWeight: 800, color, fontVariantNumeric: 'tabular-nums' }}>{insight.rank ?? index + 1}</span>
+                  : <span style={{ fontSize: 12, fontWeight: 800, color, fontVariantNumeric: 'tabular-nums' }}>{insight.rank ?? index + 1}</span>
                 }
               </div>
             </div>
             <div style={{ minWidth: 0 }}>
               <p style={{ fontSize: 14, fontWeight: 700, color: checked ? C.text3 : C.text1, lineHeight: 1.5, textDecoration: checked ? 'line-through' : 'none' }}>{insight.problem}</p>
-              {insight.category && <p style={{ fontSize: 11, color: C.text3, marginTop: 2 }}>{insight.category}</p>}
+              {insight.category && <p style={{ fontSize: 12, color: C.text3, marginTop: 2 }}>{insight.category}</p>}
             </div>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 7, flexShrink: 0 }}>
-            <span style={{ background: bg, color, fontSize: 10, fontWeight: 700, padding: '4px 10px', borderRadius: 20, letterSpacing: '0.07em', textTransform: 'uppercase', border: `1px solid ${bdr}` }}>
+            <span style={{ background: bg, color, fontSize: 12, fontWeight: 700, padding: '4px 10px', borderRadius: 20, letterSpacing: '0.07em', textTransform: 'uppercase', border: `1px solid ${bdr}` }}>
               {insight.impact || insight.severity || 'issue'}
             </span>
             {checked && onDelete && (
@@ -338,18 +338,18 @@ function InsightCard({ insight, index, checked, onToggle, onDelete }) {
           <>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 9, marginBottom: insight.expectedOutcome ? 9 : 0 }}>
               <div className="ytg-inner-block">
-                <p style={{ fontSize: 10, fontWeight: 600, color: '#a0a0b0', marginBottom: 5, letterSpacing: '0.06em', textTransform: 'uppercase' }}>Why now</p>
-                <p style={{ fontSize: 12.5, color: C.text2, lineHeight: 1.7 }}>{insight.whyNow || insight.cause}</p>
+                <p style={{ fontSize: 12, fontWeight: 600, color: '#a0a0b0', marginBottom: 5, letterSpacing: '0.06em', textTransform: 'uppercase' }}>Why now</p>
+                <p style={{ fontSize: 12, color: C.text2, lineHeight: 1.7 }}>{insight.whyNow || insight.cause}</p>
               </div>
               <div style={{ background: 'rgba(240,253,244,0.85)', border: '1px solid rgba(134,239,172,0.7)', borderRadius: 12, padding: '11px 13px' }}>
-                <p style={{ fontSize: 10, fontWeight: 700, color: '#15803d', marginBottom: 5, letterSpacing: '0.07em', textTransform: 'uppercase' }}>Action</p>
-                <p style={{ fontSize: 12.5, color: '#166534', lineHeight: 1.7 }}>{insight.action}</p>
+                <p style={{ fontSize: 12, fontWeight: 700, color: '#15803d', marginBottom: 5, letterSpacing: '0.07em', textTransform: 'uppercase' }}>Action</p>
+                <p style={{ fontSize: 12, color: '#166534', lineHeight: 1.7 }}>{insight.action}</p>
               </div>
             </div>
             {insight.expectedOutcome && (
               <div style={{ background: 'rgba(239,246,255,0.85)', border: '1px solid rgba(147,197,253,0.7)', borderRadius: 12, padding: '9px 13px' }}>
-                <p style={{ fontSize: 10, fontWeight: 700, color: C.blue, marginBottom: 4, letterSpacing: '0.07em', textTransform: 'uppercase' }}>Expected outcome</p>
-                <p style={{ fontSize: 12.5, color: '#1e40af', lineHeight: 1.65 }}>{insight.expectedOutcome}</p>
+                <p style={{ fontSize: 12, fontWeight: 700, color: C.blue, marginBottom: 4, letterSpacing: '0.07em', textTransform: 'uppercase' }}>Expected outcome</p>
+                <p style={{ fontSize: 12, color: '#1e40af', lineHeight: 1.65 }}>{insight.expectedOutcome}</p>
               </div>
             )}
           </>
@@ -395,7 +395,7 @@ function NavBtn({ label, active, onClick, badge }) {
       <span style={{ display: 'flex', flexShrink: 0, color: active ? '#e5251b' : '#9ca3af' }}>{NAV_ICONS[label]}</span>
       <span style={{ flex: 1, letterSpacing: '-0.1px' }}>{label}</span>
       {badge > 0 && (
-        <span style={{ background: '#fef3c7', color: '#d97706', border: '1px solid #fde68a', fontSize: 10, fontWeight: 700, padding: '2px 7px', borderRadius: 20, minWidth: 20, textAlign: 'center' }}>{badge}</span>
+        <span style={{ background: '#fef3c7', color: '#d97706', border: '1px solid #fde68a', fontSize: 12, fontWeight: 700, padding: '2px 7px', borderRadius: 20, minWidth: 20, textAlign: 'center' }}>{badge}</span>
       )}
     </button>
   )
@@ -457,7 +457,7 @@ function ChannelSwitcher({ channels, channelsAllowed, canAddMore, currentChannel
           : <div style={{ width: 36, height: 36, borderRadius: '50%', background: '#fef2f2', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 600, color: '#e5251b', flexShrink: 0 }}>{(current.channel_name || '?')[0].toUpperCase()}</div>
         }
         <div style={{ minWidth: 0, flex: 1 }}>
-          <p style={{ fontSize: 13.5, fontWeight: 600, color: '#111114', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', letterSpacing: '-0.2px' }}>{current.channel_name}</p>
+          <p style={{ fontSize: 14, fontWeight: 600, color: '#111114', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', letterSpacing: '-0.2px' }}>{current.channel_name}</p>
           <p style={{ fontSize: 12, color: '#6b7280', marginTop: 2 }}>{fmtSubs(current.subscribers)} subscribers</p>
         </div>
         <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#9ca3af" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }}>
@@ -492,16 +492,16 @@ function ChannelSwitcher({ channels, channelsAllowed, canAddMore, currentChannel
             >
               {ch.channel_thumbnail
                 ? <img src={ch.channel_thumbnail} alt="" style={{ width: 28, height: 28, borderRadius: '50%', objectFit: 'cover', flexShrink: 0 }} />
-                : <div style={{ width: 28, height: 28, borderRadius: '50%', background: '#fef2f2', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 600, color: '#e5251b', flexShrink: 0 }}>{(ch.channel_name || '?')[0].toUpperCase()}</div>
+                : <div style={{ width: 28, height: 28, borderRadius: '50%', background: '#fef2f2', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: 600, color: '#e5251b', flexShrink: 0 }}>{(ch.channel_name || '?')[0].toUpperCase()}</div>
               }
               <div style={{ flex: 1, minWidth: 0 }}>
-                <p style={{ fontSize: 13, fontWeight: 500, color: '#111114', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{ch.channel_name}</p>
-                <p style={{ fontSize: 11, color: '#9ca3af' }}>{fmtSubs(ch.subscribers)} subscribers</p>
+                <p style={{ fontSize: 14, fontWeight: 500, color: '#111114', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{ch.channel_name}</p>
+                <p style={{ fontSize: 12, color: '#9ca3af' }}>{fmtSubs(ch.subscribers)} subscribers</p>
               </div>
               {ch.is_current
                 ? <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#16a34a', flexShrink: 0 }} />
                 : ch.channel_score > 0
-                  ? <span style={{ fontSize: 11, fontWeight: 500, color: scoreColor(ch.channel_score), background: '#f9fafb', border: '0.5px solid rgba(0,0,0,0.08)', borderRadius: 20, padding: '2px 7px', flexShrink: 0 }}>{ch.channel_score}</span>
+                  ? <span style={{ fontSize: 12, fontWeight: 500, color: scoreColor(ch.channel_score), background: '#f9fafb', border: '0.5px solid rgba(0,0,0,0.08)', borderRadius: 20, padding: '2px 7px', flexShrink: 0 }}>{ch.channel_score}</span>
                   : null
               }
             </div>
@@ -516,7 +516,7 @@ function ChannelSwitcher({ channels, channelsAllowed, canAddMore, currentChannel
                 onMouseEnter={e => { e.currentTarget.style.background = '#f9fafb' }}
                 onMouseLeave={e => { e.currentTarget.style.background = 'transparent' }}
               >
-                <span style={{ fontSize: 13, color: '#e5251b', fontWeight: 500 }}>+ Connect another channel</span>
+                <span style={{ fontSize: 14, color: '#e5251b', fontWeight: 500 }}>+ Connect another channel</span>
               </div>
             : <div
                 onClick={() => { setOpen(false); window.location.href = '/#pricing' }}
@@ -524,7 +524,7 @@ function ChannelSwitcher({ channels, channelsAllowed, canAddMore, currentChannel
                 onMouseEnter={e => { e.currentTarget.style.background = '#f9fafb' }}
                 onMouseLeave={e => { e.currentTarget.style.background = 'transparent' }}
               >
-                <span style={{ fontSize: 13, color: '#9ca3af' }}>Upgrade to connect more channels</span>
+                <span style={{ fontSize: 14, color: '#9ca3af' }}>Upgrade to connect more channels</span>
               </div>
           }
         </div>
@@ -598,16 +598,16 @@ function FirstTimeWelcome({ data, onDismiss, onNavigate }) {
         <div style={{ flex: '0 0 auto', width: 200 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 16 }}>
             <div style={{ width: 6, height: 6, borderRadius: '50%', background: C.red, flexShrink: 0, animation: 'pulse 2s infinite' }}/>
-            <span style={{ fontSize: 10, fontWeight: 700, color: '#a0a0b0', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Your audit is ready</span>
+            <span style={{ fontSize: 12, fontWeight: 700, color: '#a0a0b0', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Your audit is ready</span>
           </div>
           <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, lineHeight: 1 }}>
             <span style={{ fontSize: 56, fontWeight: 800, letterSpacing: '-2px', lineHeight: 1, color: scoreColor(score), fontVariantNumeric: 'tabular-nums' }}>{score}</span>
             <span style={{ fontSize: 16, color: '#a0a0b0', fontWeight: 400, paddingBottom: 8 }}>/100</span>
           </div>
-          <p style={{ fontSize: 13, fontWeight: 600, color: scoreColor(score), marginTop: 4 }}>{scoreLabel(score)}</p>
+          <p style={{ fontSize: 14, fontWeight: 600, color: scoreColor(score), marginTop: 4 }}>{scoreLabel(score)}</p>
           {data.insights.channelSummary && (
             <p style={{
-              fontSize: 12.5, color: '#52525b', lineHeight: 1.7, marginTop: 10,
+              fontSize: 12, color: '#52525b', lineHeight: 1.7, marginTop: 10,
               display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden',
             }}>{data.insights.channelSummary}</p>
           )}
@@ -618,22 +618,22 @@ function FirstTimeWelcome({ data, onDismiss, onNavigate }) {
 
         {/* CENTER — top priority */}
         <div style={{ flex: 1 }}>
-          <p style={{ fontSize: 10, fontWeight: 700, color: '#a0a0b0', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 14 }}>Your #1 priority right now</p>
+          <p style={{ fontSize: 12, fontWeight: 700, color: '#a0a0b0', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 14 }}>Your #1 priority right now</p>
           {top && s ? (
             <>
               <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10, marginBottom: 3 }}>
                 <p style={{ fontSize: 14, fontWeight: 700, color: '#111114', lineHeight: 1.4, flex: 1 }}>{top.problem}</p>
-                <span style={{ background: s.bg, color: s.color, fontSize: 10, fontWeight: 700, padding: '4px 10px', borderRadius: 20, flexShrink: 0, textTransform: 'uppercase', letterSpacing: '0.07em', border: `1px solid ${s.bdr}` }}>{top.impact}</span>
+                <span style={{ background: s.bg, color: s.color, fontSize: 12, fontWeight: 700, padding: '4px 10px', borderRadius: 20, flexShrink: 0, textTransform: 'uppercase', letterSpacing: '0.07em', border: `1px solid ${s.bdr}` }}>{top.impact}</span>
               </div>
-              {top.category && <p style={{ fontSize: 11, color: '#a0a0b0', marginTop: 3, marginBottom: 10 }}>{top.category}</p>}
+              {top.category && <p style={{ fontSize: 12, color: '#a0a0b0', marginTop: 3, marginBottom: 10 }}>{top.category}</p>}
               <div style={{ background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 11, padding: '12px 15px' }}>
-                <p style={{ fontSize: 13, color: '#166534', lineHeight: 1.7 }}>
+                <p style={{ fontSize: 14, color: '#166534', lineHeight: 1.7 }}>
                   <strong style={{ fontWeight: 700, color: '#16a34a' }}>Action — </strong>{top.action}
                 </p>
               </div>
             </>
           ) : (
-            <p style={{ fontSize: 13, color: '#a0a0b0' }}>No priority actions found.</p>
+            <p style={{ fontSize: 14, color: '#a0a0b0' }}>No priority actions found.</p>
           )}
         </div>
 
@@ -642,11 +642,11 @@ function FirstTimeWelcome({ data, onDismiss, onNavigate }) {
 
         {/* RIGHT — CTA */}
         <div style={{ flex: '0 0 auto', width: 190, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 12 }}>
-          <p style={{ fontSize: 10, fontWeight: 700, color: '#a0a0b0', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 4 }}>Start here</p>
+          <p style={{ fontSize: 12, fontWeight: 700, color: '#a0a0b0', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 4 }}>Start here</p>
           <button
             className="ytg-dash-btn-primary"
             onClick={() => { onNavigate(ctaNav); dismiss() }}
-            style={{ width: '100%', justifyContent: 'center', fontSize: 13 }}
+            style={{ width: '100%', justifyContent: 'center', fontSize: 14 }}
           >
             {ctaLabel}
           </button>
@@ -810,7 +810,7 @@ export default function Dashboard() {
         {/* Brand */}
         <a href="/" style={{ padding: '20px 16px 14px', display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none', flexShrink: 0 }}>
           <Logo size={28} />
-          <span style={{ fontSize: 15, fontWeight: 700, color: '#111114', letterSpacing: '-0.4px', lineHeight: 1 }}>YTGrowth</span>
+          <span style={{ fontSize: 14, fontWeight: 700, color: '#111114', letterSpacing: '-0.4px', lineHeight: 1 }}>YTGrowth</span>
         </a>
 
         {/* Channel card — single channel shows static card, multi-channel shows switcher */}
@@ -840,7 +840,7 @@ export default function Dashboard() {
                     : <div style={{ width: 36, height: 36, borderRadius: '50%', background: '#fef2f2', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 600, color: '#e5251b', flexShrink: 0 }}>{data.channel.channel_name[0].toUpperCase()}</div>
                   }
                   <div style={{ minWidth: 0, flex: 1 }}>
-                    <p style={{ fontSize: 13.5, fontWeight: 600, color: '#111114', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', letterSpacing: '-0.2px' }}>{data.channel.channel_name}</p>
+                    <p style={{ fontSize: 14, fontWeight: 600, color: '#111114', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', letterSpacing: '-0.2px' }}>{data.channel.channel_name}</p>
                     <p style={{ fontSize: 12, color: '#6b7280', marginTop: 2 }}>{fmtNum(data.channel.subscribers)} subscribers</p>
                   </div>
                 </div>
@@ -848,13 +848,13 @@ export default function Dashboard() {
             {/* Channel Health inner card */}
             <div style={{ background: '#f5f5f9', border: '1px solid rgba(0,0,0,0.07)', borderRadius: 11, padding: '10px 12px', boxShadow: '0 1px 3px rgba(0,0,0,0.06) inset' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
-                <span style={{ fontSize: 10, fontWeight: 600, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.09em' }}>Channel Health</span>
-                <span style={{ fontSize: 11.5, fontWeight: 700, color: scoreColor(score), fontVariantNumeric: 'tabular-nums' }}>{score} / 100</span>
+                <span style={{ fontSize: 12, fontWeight: 600, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.09em' }}>Channel Health</span>
+                <span style={{ fontSize: 12, fontWeight: 700, color: scoreColor(score), fontVariantNumeric: 'tabular-nums' }}>{score} / 100</span>
               </div>
               <div style={{ background: 'rgba(0,0,0,0.10)', borderRadius: 6, height: 5, overflow: 'hidden' }}>
                 <div style={{ width: `${score}%`, height: '100%', background: scoreColor(score), borderRadius: 6, transition: 'width 1.2s cubic-bezier(0.34,1.56,0.64,1)' }}/>
               </div>
-              <p style={{ fontSize: 11, fontWeight: 600, marginTop: 7, color: scoreColor(score) }}>{scoreLabel(score)}</p>
+              <p style={{ fontSize: 12, fontWeight: 600, marginTop: 7, color: scoreColor(score) }}>{scoreLabel(score)}</p>
             </div>
           </div>
         )}
@@ -864,7 +864,7 @@ export default function Dashboard() {
 
           {/* Section: OPTIMIZE */}
           <div style={{ padding: '6px 20px 5px' }}>
-            <span style={{ fontSize: 10.5, fontWeight: 600, color: '#adb5bd', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Optimize</span>
+            <span style={{ fontSize: 12, fontWeight: 600, color: '#adb5bd', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Optimize</span>
           </div>
           <NavBtn label="Overview"       active={nav === 'Overview'}       onClick={() => setNav('Overview')} />
           <NavBtn label="Videos"         active={nav === 'Videos'}         onClick={() => setNav('Videos')} badge={5} />
@@ -874,7 +874,7 @@ export default function Dashboard() {
 
           {/* Section: CREATE */}
           <div style={{ padding: '6px 20px 5px' }}>
-            <span style={{ fontSize: 10.5, fontWeight: 600, color: '#adb5bd', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Create</span>
+            <span style={{ fontSize: 12, fontWeight: 600, color: '#adb5bd', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Create</span>
           </div>
           <NavBtn label="SEO Studio"      active={nav === 'SEO Studio'}      onClick={() => setNav('SEO Studio')} />
           <NavBtn label="Thumbnail Score" active={nav === 'Thumbnail Score'} onClick={() => setNav('Thumbnail Score')} />
@@ -884,7 +884,7 @@ export default function Dashboard() {
 
           {/* Section: RESEARCH */}
           <div style={{ padding: '6px 20px 5px' }}>
-            <span style={{ fontSize: 10.5, fontWeight: 600, color: '#adb5bd', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Research</span>
+            <span style={{ fontSize: 12, fontWeight: 600, color: '#adb5bd', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Research</span>
           </div>
           <NavBtn label="Keywords"    active={nav === 'Keywords'}    onClick={() => setNav('Keywords')} />
           <NavBtn label="Competitors" active={nav === 'Competitors'} onClick={() => setNav('Competitors')} />
@@ -944,15 +944,15 @@ export default function Dashboard() {
           boxShadow: '0 1px 0 rgba(255,255,255,0.6)',
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <span style={{ fontSize: 15, fontWeight: 700, color: '#0a0a0f', letterSpacing: '-0.4px' }}>{nav}</span>
+            <span style={{ fontSize: 14, fontWeight: 700, color: '#0a0a0f', letterSpacing: '-0.4px' }}>{nav}</span>
             {data && <>
-              <span style={{ color: '#c4c4cc', fontSize: 15 }}>·</span>
-              <span style={{ fontSize: 13.5, fontWeight: 400, color: '#9898a6', letterSpacing: '-0.1px' }}>{data.channel.channel_name}</span>
+              <span style={{ color: '#c4c4cc', fontSize: 14 }}>·</span>
+              <span style={{ fontSize: 14, fontWeight: 400, color: '#9898a6', letterSpacing: '-0.1px' }}>{data.channel.channel_name}</span>
             </>}
           </div>
           <div style={{ background: '#fff', border: '1px solid rgba(0,0,0,0.09)', borderRadius: 100, padding: '6px 16px', display: 'flex', alignItems: 'center', gap: 7, boxShadow: '0 1px 4px rgba(0,0,0,0.07), 0 4px 12px rgba(0,0,0,0.06)' }}>
             <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#22c55e', boxShadow: '0 0 0 3px #dcfce7', animation: 'pulse 2.5s infinite' }}/>
-            <span style={{ fontSize: 11.5, color: '#6b6b7b', fontWeight: 600, letterSpacing: '-0.1px' }}>Live</span>
+            <span style={{ fontSize: 12, color: '#6b6b7b', fontWeight: 600, letterSpacing: '-0.1px' }}>Live</span>
           </div>
         </div>
 
@@ -963,7 +963,7 @@ export default function Dashboard() {
           {loading && (
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '60vh', gap: 14 }}>
               <div style={{ width: 32, height: 32, border: `2.5px solid ${C.border}`, borderTop: `2.5px solid ${C.red}`, borderRadius: '50%', animation: 'spin 0.7s linear infinite' }}/>
-              <p style={{ color: C.text3, fontSize: 13, fontWeight: 500 }}>Analyzing your channel…</p>
+              <p style={{ color: C.text3, fontSize: 14, fontWeight: 500 }}>Analyzing your channel…</p>
             </div>
           )}
 
@@ -971,8 +971,8 @@ export default function Dashboard() {
           {!loading && error && (
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '60vh', gap: 12, textAlign: 'center' }}>
               <div style={{ width: 48, height: 48, borderRadius: 13, background: C.redBg, border: `1px solid ${C.redBdr}`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20 }}>⚠</div>
-              <p style={{ fontSize: 19, fontWeight: 700, color: C.text1, letterSpacing: '-0.4px' }}>No channel data</p>
-              <p style={{ fontSize: 13.5, color: C.text2, maxWidth: 280, lineHeight: 1.7 }}>Connect your YouTube channel to see your analytics.</p>
+              <p style={{ fontSize: 18, fontWeight: 700, color: C.text1, letterSpacing: '-0.4px' }}>No channel data</p>
+              <p style={{ fontSize: 14, color: C.text2, maxWidth: 280, lineHeight: 1.7 }}>Connect your YouTube channel to see your analytics.</p>
               <a href="/" className="ytg-dash-btn-primary" style={{ textDecoration: 'none', marginTop: 8 }}>Connect channel →</a>
             </div>
           )}
@@ -998,7 +998,7 @@ export default function Dashboard() {
               )}
               <div style={{ marginBottom: 24 }}>
                 <h1 style={{ fontSize: 24, fontWeight: 800, color: '#0a0a0f', letterSpacing: '-0.7px', marginBottom: 5 }}>Good to see you.</h1>
-                <p style={{ fontSize: 13.5, color: C.text3, letterSpacing: '-0.1px' }}>Here's how your channel is performing right now.</p>
+                <p style={{ fontSize: 14, color: C.text3, letterSpacing: '-0.1px' }}>Here's how your channel is performing right now.</p>
               </div>
 
               {/* Row 1 */}
@@ -1038,13 +1038,13 @@ export default function Dashboard() {
                 <div className="ytg-card" style={{ padding: '22px 24px' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 7, marginBottom: 16 }}>
                     <div style={{ width: 7, height: 7, borderRadius: '50%', background: C.red, boxShadow: `0 0 0 3px ${C.redBdr}`, animation: 'pulse 2s infinite' }}/>
-                    <p style={{ fontSize: 10.5, fontWeight: 500, color: '#a0a0b0', letterSpacing: '0.05em', textTransform: 'uppercase' }}>Top priority</p>
+                    <p style={{ fontSize: 12, fontWeight: 500, color: '#a0a0b0', letterSpacing: '0.05em', textTransform: 'uppercase' }}>Top priority</p>
                   </div>
 
                   {analyzingAI && !data.insights && (
                     <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '14px 0' }}>
                       <div style={{ width: 18, height: 18, border: `2px solid ${C.border}`, borderTop: `2px solid ${C.red}`, borderRadius: '50%', animation: 'spin 0.7s linear infinite', flexShrink: 0 }}/>
-                      <p style={{ fontSize: 13, color: C.text3 }}>AI audit running — check back in ~30s</p>
+                      <p style={{ fontSize: 14, color: C.text3 }}>AI audit running — check back in ~30s</p>
                     </div>
                   )}
 
@@ -1054,13 +1054,13 @@ export default function Dashboard() {
                     return (
                       <>
                         <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10, marginBottom: 6 }}>
-                          <p style={{ fontSize: 15.5, fontWeight: 700, color: C.text1, letterSpacing: '-0.3px', flex: 1, lineHeight: 1.4 }}>{ins.problem}</p>
-                          <span style={{ background: s.bg, color: s.color, fontSize: 10, fontWeight: 700, padding: '4px 10px', borderRadius: 20, flexShrink: 0, textTransform: 'uppercase', letterSpacing: '0.07em', border: `1px solid ${s.bdr}` }}>{ins.impact}</span>
+                          <p style={{ fontSize: 16, fontWeight: 700, color: C.text1, letterSpacing: '-0.3px', flex: 1, lineHeight: 1.4 }}>{ins.problem}</p>
+                          <span style={{ background: s.bg, color: s.color, fontSize: 12, fontWeight: 700, padding: '4px 10px', borderRadius: 20, flexShrink: 0, textTransform: 'uppercase', letterSpacing: '0.07em', border: `1px solid ${s.bdr}` }}>{ins.impact}</span>
                         </div>
-                        <p style={{ fontSize: 11, color: C.text3, marginBottom: 8 }}>{ins.category}</p>
-                        <p style={{ fontSize: 13.5, color: C.text2, lineHeight: 1.75, marginBottom: 13 }}>{ins.whyNow}</p>
+                        <p style={{ fontSize: 12, color: C.text3, marginBottom: 8 }}>{ins.category}</p>
+                        <p style={{ fontSize: 14, color: C.text2, lineHeight: 1.75, marginBottom: 13 }}>{ins.whyNow}</p>
                         <div style={{ background: C.greenBg, border: `1px solid ${C.greenBdr}`, borderRadius: 11, padding: '12px 15px', marginBottom: 18 }}>
-                          <p style={{ fontSize: 13, color: '#166534', lineHeight: 1.7 }}>
+                          <p style={{ fontSize: 14, color: '#166534', lineHeight: 1.7 }}>
                             <strong style={{ fontWeight: 700, color: C.green }}>Action — </strong>{ins.action}
                           </p>
                         </div>
@@ -1070,7 +1070,7 @@ export default function Dashboard() {
 
                   {data.videos?.length > 0 && (
                     <div style={{ paddingTop: 16, borderTop: `1px solid #ebebef` }}>
-                      <p style={{ fontSize: 10.5, fontWeight: 500, color: '#a0a0b0', letterSpacing: '0.05em', textTransform: 'uppercase', marginBottom: 9 }}>Recent video views</p>
+                      <p style={{ fontSize: 12, fontWeight: 500, color: '#a0a0b0', letterSpacing: '0.05em', textTransform: 'uppercase', marginBottom: 9 }}>Recent video views</p>
                       <MiniBar videos={data.videos} />
                     </div>
                   )}
@@ -1081,7 +1081,7 @@ export default function Dashboard() {
                   <ScoreRing score={score} />
                   {data.insights?.categoryScores && (
                     <div style={{ width: '100%', marginTop: 14, paddingTop: 14, borderTop: `1px solid #ebebef` }}>
-                      <p style={{ fontSize: 10.5, fontWeight: 500, color: '#a0a0b0', letterSpacing: '0.05em', textTransform: 'uppercase', marginBottom: 9 }}>Categories</p>
+                      <p style={{ fontSize: 12, fontWeight: 500, color: '#a0a0b0', letterSpacing: '0.05em', textTransform: 'uppercase', marginBottom: 9 }}>Categories</p>
                       {[
                         ['Posting', data.insights.categoryScores.postingConsistency],
                         ['CTR', data.insights.categoryScores.ctrHealth],
@@ -1090,11 +1090,11 @@ export default function Dashboard() {
                         ['SEO', data.insights.categoryScores.seoDiscoverability],
                       ].map(([label, val]) => (
                         <div key={label} style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 7 }}>
-                          <span style={{ fontSize: 11.5, color: C.text2, flex: 1 }}>{label}</span>
+                          <span style={{ fontSize: 12, color: C.text2, flex: 1 }}>{label}</span>
                           <div style={{ width: 48, height: 4, background: '#ebebef', borderRadius: 2, overflow: 'hidden' }}>
                             <div style={{ width: `${val}%`, height: '100%', background: scoreColor(val), borderRadius: 2 }}/>
                           </div>
-                          <span style={{ fontSize: 11.5, fontWeight: 700, color: scoreColor(val), fontVariantNumeric: 'tabular-nums', minWidth: 22, textAlign: 'right' }}>{val}</span>
+                          <span style={{ fontSize: 12, fontWeight: 700, color: scoreColor(val), fontVariantNumeric: 'tabular-nums', minWidth: 22, textAlign: 'right' }}>{val}</span>
                         </div>
                       ))}
                     </div>
@@ -1107,7 +1107,7 @@ export default function Dashboard() {
                 <div className="ytg-card" style={{ padding: '20px 22px' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
                     <div>
-                      <p style={{ fontSize: 13.5, fontWeight: 700, color: C.text1, marginBottom: 2, letterSpacing: '-0.2px' }}>Priority actions</p>
+                      <p style={{ fontSize: 14, fontWeight: 700, color: C.text1, marginBottom: 2, letterSpacing: '-0.2px' }}>Priority actions</p>
                       <p style={{ fontSize: 12, color: C.text3 }}>{data.insights.priorityActions.length} items · ranked by impact</p>
                     </div>
                   </div>
@@ -1117,13 +1117,13 @@ export default function Dashboard() {
                       return (
                         <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 11, padding: '11px 14px', background: '#f7f7fa', borderRadius: 14, border: '1px solid rgba(0,0,0,0.08)', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
                           <div style={{ width: 22, height: 22, borderRadius: 6, background: bg, border: `1px solid ${bdr}`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                            <span style={{ fontSize: 10, fontWeight: 800, color, fontVariantNumeric: 'tabular-nums' }}>{ins.rank}</span>
+                            <span style={{ fontSize: 12, fontWeight: 800, color, fontVariantNumeric: 'tabular-nums' }}>{ins.rank}</span>
                           </div>
                           <div style={{ flex: 1, minWidth: 0 }}>
-                            <p style={{ fontSize: 12.5, color: C.text2, lineHeight: 1.4 }}>{ins.problem}</p>
-                            <p style={{ fontSize: 11, color: C.text3, marginTop: 2 }}>{ins.category}</p>
+                            <p style={{ fontSize: 12, color: C.text2, lineHeight: 1.4 }}>{ins.problem}</p>
+                            <p style={{ fontSize: 12, color: C.text3, marginTop: 2 }}>{ins.category}</p>
                           </div>
-                          <span style={{ fontSize: 10, fontWeight: 700, color, background: bg, padding: '3px 9px', borderRadius: 20, textTransform: 'uppercase', letterSpacing: '0.07em', flexShrink: 0, border: `1px solid ${bdr}` }}>
+                          <span style={{ fontSize: 12, fontWeight: 700, color, background: bg, padding: '3px 9px', borderRadius: 20, textTransform: 'uppercase', letterSpacing: '0.07em', flexShrink: 0, border: `1px solid ${bdr}` }}>
                             {ins.impact}
                           </span>
                         </div>
@@ -1139,8 +1139,8 @@ export default function Dashboard() {
           {data && nav === 'Overview' && analyzingAI && (
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '50vh', gap: 14 }}>
               <div style={{ width: 32, height: 32, border: `2.5px solid ${C.border}`, borderTop: `2.5px solid ${C.red}`, borderRadius: '50%', animation: 'spin 0.7s linear infinite' }}/>
-              <p style={{ fontSize: 15, fontWeight: 700, color: C.text1 }}>Running AI audit…</p>
-              <p style={{ fontSize: 13, color: C.text3, maxWidth: 320, textAlign: 'center', lineHeight: 1.6 }}>Claude is analyzing your last 20 videos, CTR, retention, and posting patterns. This takes about 20–30 seconds.</p>
+              <p style={{ fontSize: 14, fontWeight: 700, color: C.text1 }}>Running AI audit…</p>
+              <p style={{ fontSize: 14, color: C.text3, maxWidth: 320, textAlign: 'center', lineHeight: 1.6 }}>Claude is analyzing your last 20 videos, CTR, retention, and posting patterns. This takes about 20–30 seconds.</p>
             </div>
           )}
 
@@ -1148,7 +1148,7 @@ export default function Dashboard() {
             <>
               <div style={{ marginBottom: 22 }}>
                 <h2 style={{ fontSize: 22, fontWeight: 800, color: '#0a0a0f', letterSpacing: '-0.6px', marginBottom: 4 }}>Channel audit</h2>
-                <p style={{ fontSize: 13, color: C.text3 }}>AI-powered analysis · {data.insights.priorityActions?.length ?? 0} priority actions</p>
+                <p style={{ fontSize: 14, color: C.text3 }}>AI-powered analysis · {data.insights.priorityActions?.length ?? 0} priority actions</p>
               </div>
 
               {/* Summary + overall score */}
@@ -1156,7 +1156,7 @@ export default function Dashboard() {
                 <div className="ytg-card" style={{ padding: '20px 24px', marginBottom: 14, borderLeft: `4px solid ${scoreColor(score)}`, background: `linear-gradient(135deg, #fff 60%, ${scoreColor(score) === C.green ? '#f0fdf4' : scoreColor(score) === C.amber ? '#fffbeb' : '#fff5f5'} 100%)` }}>
                   <div style={{ display: 'flex', alignItems: 'flex-start', gap: 24 }}>
                     <div style={{ flex: 1 }}>
-                      <p style={{ fontSize: 10.5, fontWeight: 600, color: '#a0a0b0', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 10 }}>Overall assessment</p>
+                      <p style={{ fontSize: 12, fontWeight: 600, color: '#a0a0b0', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 10 }}>Overall assessment</p>
                       <p style={{ fontSize: 14, color: C.text2, lineHeight: 1.8 }}>{data.insights.channelSummary}</p>
                     </div>
                     <div style={{ textAlign: 'center', flexShrink: 0 }}>
@@ -1169,7 +1169,7 @@ export default function Dashboard() {
               {/* Category scores */}
               {data.insights.categoryScores && (
                 <div className="ytg-card" style={{ padding: '20px 24px', marginBottom: 14 }}>
-                  <p style={{ fontSize: 10.5, fontWeight: 600, color: '#a0a0b0', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 16 }}>Category breakdown</p>
+                  <p style={{ fontSize: 12, fontWeight: 600, color: '#a0a0b0', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 16 }}>Category breakdown</p>
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, minmax(0,1fr))', gap: 8 }}>
                     {[
                       ['Posting', data.insights.categoryScores.postingConsistency],
@@ -1196,7 +1196,7 @@ export default function Dashboard() {
                               <text x="28" y="32" textAnchor="middle" fill={col} fontSize="12" fontWeight="800" fontFamily="Inter, sans-serif">{val}</text>
                             </svg>
                           </div>
-                          <p style={{ fontSize: 10, color: C.text2, fontWeight: 600, letterSpacing: '0.02em' }}>{label}</p>
+                          <p style={{ fontSize: 12, color: C.text2, fontWeight: 600, letterSpacing: '0.02em' }}>{label}</p>
                         </div>
                       )
                     })}
@@ -1217,8 +1217,8 @@ export default function Dashboard() {
                   <div style={{ marginBottom: 16 }}>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                        <p style={{ fontSize: 13.5, fontWeight: 700, color: C.text1, letterSpacing: '-0.2px' }}>Priority actions</p>
-                        <span style={{ fontSize: 11, fontWeight: 600, color: C.text3, background: '#f0f0f3', padding: '2px 8px', borderRadius: 20 }}>{actions.length}</span>
+                        <p style={{ fontSize: 14, fontWeight: 700, color: C.text1, letterSpacing: '-0.2px' }}>Priority actions</p>
+                        <span style={{ fontSize: 12, fontWeight: 600, color: C.text3, background: '#f0f0f3', padding: '2px 8px', borderRadius: 20 }}>{actions.length}</span>
                       </div>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                         {hasDone && (
@@ -1238,7 +1238,7 @@ export default function Dashboard() {
                                 localStorage.setItem(`ytg_checked_${data.channel.channel_id}`, JSON.stringify(nextChk))
                               }
                             }}
-                            style={{ fontSize: 11.5, fontWeight: 600, color: C.red, background: C.redBg, border: `1px solid ${C.redBdr}`, borderRadius: 20, padding: '4px 12px', cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.15s' }}
+                            style={{ fontSize: 12, fontWeight: 600, color: C.red, background: C.redBg, border: `1px solid ${C.redBdr}`, borderRadius: 20, padding: '4px 12px', cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.15s' }}
                           >
                             Clear completed
                           </button>
@@ -1247,7 +1247,7 @@ export default function Dashboard() {
                           <div style={{ width: 72, height: 4, background: '#ebebef', borderRadius: 2, overflow: 'hidden' }}>
                             <div style={{ width: actions.length ? `${(doneCount / actions.length) * 100}%` : '0%', height: '100%', background: C.green, borderRadius: 2, transition: 'width 0.4s' }}/>
                           </div>
-                          <span style={{ fontSize: 11.5, fontWeight: 600, color: doneCount > 0 && doneCount === actions.length ? C.green : C.text3, fontVariantNumeric: 'tabular-nums' }}>
+                          <span style={{ fontSize: 12, fontWeight: 600, color: doneCount > 0 && doneCount === actions.length ? C.green : C.text3, fontVariantNumeric: 'tabular-nums' }}>
                             {doneCount}/{actions.length}
                           </span>
                         </div>
@@ -1257,7 +1257,7 @@ export default function Dashboard() {
                       <div style={{ textAlign: 'center', padding: '32px 20px', background: C.greenBg, border: `1px solid ${C.greenBdr}`, borderRadius: 16 }}>
                         <p style={{ fontSize: 22, marginBottom: 6 }}>✓</p>
                         <p style={{ fontSize: 14, fontWeight: 700, color: C.green, marginBottom: 4 }}>All tasks cleared</p>
-                        <p style={{ fontSize: 13, color: '#166534' }}>Great work — you've handled every priority action.</p>
+                        <p style={{ fontSize: 14, color: '#166534' }}>Great work — you've handled every priority action.</p>
                       </div>
                     )}
                     {actions.map((ins, i) => {
@@ -1285,8 +1285,8 @@ export default function Dashboard() {
                   return (
                     <div className="ytg-card" style={{ padding: '18px 20px' }}>
                       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
-                        <p style={{ fontSize: 11, fontWeight: 700, color: '#15803d', letterSpacing: '0.08em', textTransform: 'uppercase' }}>Quick wins</p>
-                        <span style={{ fontSize: 11, color: C.text3 }}>{wins.length} left</span>
+                        <p style={{ fontSize: 12, fontWeight: 700, color: '#15803d', letterSpacing: '0.08em', textTransform: 'uppercase' }}>Quick wins</p>
+                        <span style={{ fontSize: 12, color: C.text3 }}>{wins.length} left</span>
                       </div>
                       <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 2 }}>
                         {data.insights.quickWins.map((w, i) => {
@@ -1301,7 +1301,7 @@ export default function Dashboard() {
                                 onChange={() => handleToggleCheck(key)}
                                 style={{ width: 14, height: 14, accentColor: C.green, cursor: 'pointer', flexShrink: 0, marginTop: 3 }}
                               />
-                              <p style={{ fontSize: 13, color: isDone ? C.text3 : C.text2, lineHeight: 1.6, flex: 1, textDecoration: isDone ? 'line-through' : 'none' }}>{w}</p>
+                              <p style={{ fontSize: 14, color: isDone ? C.text3 : C.text2, lineHeight: 1.6, flex: 1, textDecoration: isDone ? 'line-through' : 'none' }}>{w}</p>
                               {isDone && (
                                 <button className="ytg-del-btn" onClick={() => handleDelete(key)} title="Remove">
                                   <svg width="9" height="9" viewBox="0 0 10 10" fill="none" stroke="#e5251b" strokeWidth="1.8" strokeLinecap="round">
@@ -1321,18 +1321,18 @@ export default function Dashboard() {
                     <div>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8 }}>
                         <div style={{ width: 6, height: 6, borderRadius: '50%', background: C.red, flexShrink: 0 }}/>
-                        <p style={{ fontSize: 11, fontWeight: 700, color: C.red, letterSpacing: '0.08em', textTransform: 'uppercase' }}>Biggest risk</p>
+                        <p style={{ fontSize: 12, fontWeight: 700, color: C.red, letterSpacing: '0.08em', textTransform: 'uppercase' }}>Biggest risk</p>
                       </div>
-                      <p style={{ fontSize: 13, color: C.text2, lineHeight: 1.65 }}>{data.insights.biggestRisk}</p>
+                      <p style={{ fontSize: 14, color: C.text2, lineHeight: 1.65 }}>{data.insights.biggestRisk}</p>
                     </div>
                   )}
                   {data.insights.topPerformingPattern && (
                     <div style={{ paddingTop: data.insights.biggestRisk ? 12 : 0, borderTop: data.insights.biggestRisk ? `1px solid #ebebef` : 'none' }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8 }}>
                         <div style={{ width: 6, height: 6, borderRadius: '50%', background: C.green, flexShrink: 0 }}/>
-                        <p style={{ fontSize: 11, fontWeight: 700, color: C.green, letterSpacing: '0.08em', textTransform: 'uppercase' }}>What's working</p>
+                        <p style={{ fontSize: 12, fontWeight: 700, color: C.green, letterSpacing: '0.08em', textTransform: 'uppercase' }}>What's working</p>
                       </div>
-                      <p style={{ fontSize: 13, color: C.text2, lineHeight: 1.65 }}>{data.insights.topPerformingPattern}</p>
+                      <p style={{ fontSize: 14, color: C.text2, lineHeight: 1.65 }}>{data.insights.topPerformingPattern}</p>
                     </div>
                   )}
                 </div>
@@ -1345,7 +1345,7 @@ export default function Dashboard() {
             <>
               <div style={{ marginBottom: 24 }}>
                 <h2 style={{ fontSize: 24, fontWeight: 800, color: '#0a0a0f', letterSpacing: '-0.7px', marginBottom: 5 }}>Video performance</h2>
-                <p style={{ fontSize: 13.5, color: C.text3, letterSpacing: '-0.1px' }}>{videos.length} videos — click Optimise to get AI feedback on title, description &amp; thumbnail</p>
+                <p style={{ fontSize: 14, color: C.text3, letterSpacing: '-0.1px' }}>{videos.length} videos — click Optimise to get AI feedback on title, description &amp; thumbnail</p>
               </div>
 
               {/* Card grid */}
@@ -1380,10 +1380,10 @@ export default function Dashboard() {
                           : <div style={{ width: '100%', aspectRatio: '16/9', background: '#ebebef' }}/>
                         }
                         {isShort && (
-                          <span style={{ position: 'absolute', top: 8, left: 8, background: '#111', color: '#fff', fontSize: 9, fontWeight: 800, padding: '2px 6px', borderRadius: 4, letterSpacing: '0.06em' }}>SHORT</span>
+                          <span style={{ position: 'absolute', top: 8, left: 8, background: '#111', color: '#fff', fontSize: 12, fontWeight: 800, padding: '2px 6px', borderRadius: 4, letterSpacing: '0.06em' }}>SHORT</span>
                         )}
                         {durLabel && (
-                          <span style={{ position: 'absolute', bottom: 8, right: 8, background: 'rgba(0,0,0,0.72)', color: '#fff', fontSize: 11, fontWeight: 700, padding: '2px 7px', borderRadius: 5, fontVariantNumeric: 'tabular-nums' }}>{durLabel}</span>
+                          <span style={{ position: 'absolute', bottom: 8, right: 8, background: 'rgba(0,0,0,0.72)', color: '#fff', fontSize: 12, fontWeight: 700, padding: '2px 7px', borderRadius: 5, fontVariantNumeric: 'tabular-nums' }}>{durLabel}</span>
                         )}
                       </a>
 
@@ -1391,10 +1391,10 @@ export default function Dashboard() {
                       <div style={{ padding: '14px 16px 16px', display: 'flex', flexDirection: 'column', flex: 1 }}>
                         {/* Title */}
                         <p style={{
-                          fontSize: 13.5, fontWeight: 600, color: C.text1, lineHeight: 1.45, marginBottom: 5,
+                          fontSize: 14, fontWeight: 600, color: C.text1, lineHeight: 1.45, marginBottom: 5,
                           display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden',
                         }}>{v.title}</p>
-                        <p style={{ fontSize: 11, color: C.text3, marginBottom: 14 }}>
+                        <p style={{ fontSize: 12, color: C.text3, marginBottom: 14 }}>
                           {new Date(v.published_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
                         </p>
 
@@ -1402,8 +1402,8 @@ export default function Dashboard() {
                         <div style={{ display: 'flex', gap: 20, marginBottom: 14 }}>
                           {[['Views', fmtNum(v.views), C.text1, true], ['Likes', fmtNum(v.likes), C.text2, false], ['Comments', fmtNum(v.comments), C.text2, false]].map(([label, val, col, bold]) => (
                             <div key={label}>
-                              <p style={{ fontSize: 17, fontWeight: bold ? 800 : 600, color: col, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.5px', lineHeight: 1 }}>{val}</p>
-                              <p style={{ fontSize: 10, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.05em', marginTop: 3 }}>{label}</p>
+                              <p style={{ fontSize: 16, fontWeight: bold ? 800 : 600, color: col, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.5px', lineHeight: 1 }}>{val}</p>
+                              <p style={{ fontSize: 12, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.05em', marginTop: 3 }}>{label}</p>
                             </div>
                           ))}
                         </div>
@@ -1418,7 +1418,7 @@ export default function Dashboard() {
                               onClick={() => setSelectedVideoId(isSelected ? null : v.video_id)}
                               className={isSelected ? '' : 'ytg-optimise-btn'}
                               style={isSelected ? {
-                                fontSize: 11.5, fontWeight: 700, color: C.blue,
+                                fontSize: 12, fontWeight: 700, color: C.blue,
                                 background: '#eff6ff', border: `1px solid #bfdbfe`,
                                 borderRadius: 100, padding: '5px 14px', cursor: 'pointer',
                                 fontFamily: 'inherit', whiteSpace: 'nowrap',
@@ -1454,7 +1454,7 @@ export default function Dashboard() {
             <>
               <div style={{ marginBottom: 24 }}>
                 <h2 style={{ fontSize: 22, fontWeight: 800, color: '#0a0a0a', letterSpacing: '-0.6px', marginBottom: 4 }}>Content patterns</h2>
-                <p style={{ fontSize: 13, color: C.text3 }}>What's working and what isn't</p>
+                <p style={{ fontSize: 14, color: C.text3 }}>What's working and what isn't</p>
               </div>
 
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,minmax(0,1fr))', gap: 12, marginBottom: 14 }}>
@@ -1464,10 +1464,10 @@ export default function Dashboard() {
                   { label: 'Overall like rate',   value: `${patterns.likeRate}%`,   verdict: patterns.likeRate >= 4 ? 'Healthy' : patterns.likeRate >= 2 ? 'Below target' : 'Critical', good: patterns.likeRate >= 4 },
                 ].map(p => (
                   <div key={p.label} className="ytg-card" style={{ padding: '18px 20px' }}>
-                    <p style={{ fontSize: 10.5, fontWeight: 500, color: '#a0a0b0', letterSpacing: '0.05em', textTransform: 'uppercase', marginBottom: 9 }}>{p.label}</p>
+                    <p style={{ fontSize: 12, fontWeight: 500, color: '#a0a0b0', letterSpacing: '0.05em', textTransform: 'uppercase', marginBottom: 9 }}>{p.label}</p>
                     <p style={{ fontSize: 26, fontWeight: 800, color: C.text1, letterSpacing: '-1px', marginBottom: 9, fontVariantNumeric: 'tabular-nums' }}>{p.value}</p>
                     <span style={{
-                      fontSize: 11, fontWeight: 700,
+                      fontSize: 12, fontWeight: 700,
                       color:   p.good ? C.green  : C.amber,
                       background: p.good ? C.greenBg : '#fffbeb',
                       padding: '4px 11px', borderRadius: 20,
@@ -1485,18 +1485,18 @@ export default function Dashboard() {
                   <div key={label} className="ytg-card" style={{ padding: '20px 22px' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 7, marginBottom: 14 }}>
                       <div style={{ width: 6, height: 6, borderRadius: '50%', background: isGood ? C.green : C.red }}/>
-                      <p style={{ fontSize: 10.5, fontWeight: 500, color: '#a0a0b0', letterSpacing: '0.05em', textTransform: 'uppercase' }}>{label}</p>
+                      <p style={{ fontSize: 12, fontWeight: 500, color: '#a0a0b0', letterSpacing: '0.05em', textTransform: 'uppercase' }}>{label}</p>
                     </div>
                     {video && (
                       <>
                         <div style={{ display: 'flex', gap: 11, marginBottom: 13, alignItems: 'flex-start' }}>
                           {video.thumbnail && <img src={video.thumbnail} alt="" style={{ width: 68, height: 43, borderRadius: 7, objectFit: 'cover', flexShrink: 0 }}/>}
-                          <p style={{ fontSize: 13, fontWeight: 600, color: C.text1, lineHeight: 1.5 }}>{video.title}</p>
+                          <p style={{ fontSize: 14, fontWeight: 600, color: C.text1, lineHeight: 1.5 }}>{video.title}</p>
                         </div>
                         <div style={{ display: 'flex', gap: 20, marginBottom: 12 }}>
                           {[['Views', fmtNum(video.views), isGood ? C.green : C.red], ['Likes', fmtNum(video.likes), C.text1]].map(([lbl, val, col]) => (
                             <div key={lbl}>
-                              <p style={{ fontSize: 10, color: C.text3, marginBottom: 3, textTransform: 'uppercase', letterSpacing: '0.07em', fontWeight: 700 }}>{lbl}</p>
+                              <p style={{ fontSize: 12, color: C.text3, marginBottom: 3, textTransform: 'uppercase', letterSpacing: '0.07em', fontWeight: 700 }}>{lbl}</p>
                               <p style={{ fontSize: 21, fontWeight: 800, color: col, letterSpacing: '-0.8px', fontVariantNumeric: 'tabular-nums' }}>{val}</p>
                             </div>
                           ))}
@@ -1517,17 +1517,17 @@ export default function Dashboard() {
               </div>
 
               <div className="ytg-card" style={{ padding: '20px 22px' }}>
-                <p style={{ fontSize: 13.5, fontWeight: 700, color: C.text1, marginBottom: 16, letterSpacing: '-0.2px' }}>Content mix</p>
+                <p style={{ fontSize: 14, fontWeight: 700, color: C.text1, marginBottom: 16, letterSpacing: '-0.2px' }}>Content mix</p>
                 <div style={{ display: 'flex', gap: 32, alignItems: 'flex-start' }}>
                   {[{ l: 'Shorts', v: patterns.shortsCount, s: '≤60s' }, { l: 'Long-form', v: patterns.longsCount, s: '>60s' }].map(p => (
                     <div key={p.l}>
-                      <p style={{ fontSize: 10, color: C.text3, marginBottom: 4, textTransform: 'uppercase', letterSpacing: '0.07em', fontWeight: 700 }}>{p.l}</p>
+                      <p style={{ fontSize: 12, color: C.text3, marginBottom: 4, textTransform: 'uppercase', letterSpacing: '0.07em', fontWeight: 700 }}>{p.l}</p>
                       <p style={{ fontSize: 26, fontWeight: 800, color: C.text1, letterSpacing: '-1px', fontVariantNumeric: 'tabular-nums' }}>{p.v}</p>
-                      <p style={{ fontSize: 11, color: C.text3, marginTop: 2 }}>{p.s}</p>
+                      <p style={{ fontSize: 12, color: C.text3, marginTop: 2 }}>{p.s}</p>
                     </div>
                   ))}
                   <div style={{ flex: 1, paddingLeft: 28, borderLeft: `1px solid #ebebef` }}>
-                    <p style={{ fontSize: 13.5, color: C.text2, lineHeight: 1.85 }}>
+                    <p style={{ fontSize: 14, color: C.text2, lineHeight: 1.85 }}>
                       {patterns.shortAvg > patterns.longAvg
                         ? `Shorts outperform long-form by ${fmtNum(patterns.shortAvg - patterns.longAvg)} views on average. Lean into Shorts for discovery.`
                         : patterns.longAvg > patterns.shortAvg

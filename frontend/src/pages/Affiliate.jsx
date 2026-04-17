@@ -260,7 +260,7 @@ export default function Affiliate() {
       <nav style={{ position: 'sticky', top: 0, zIndex: 100, borderBottom: '1px solid var(--ytg-border)', padding: isMobile ? '0 20px' : '0 40px 0 72px', height: 60, display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'var(--ytg-nav)', backdropFilter: 'blur(16px)' }}>
         <a href="/" style={{ display: 'flex', alignItems: 'center', gap: 9, textDecoration: 'none', minWidth: 0 }}>
           <Logo size={28} />
-          <span style={{ fontWeight: 800, fontSize: 15, color: 'var(--ytg-text)', letterSpacing: '-0.4px', whiteSpace: 'nowrap' }}>YTGrowth</span>
+          <span style={{ fontWeight: 800, fontSize: 14, color: 'var(--ytg-text)', letterSpacing: '-0.4px', whiteSpace: 'nowrap' }}>YTGrowth</span>
         </a>
         <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
           {!isMobile && <a href="/" className="aff-nav-link">← Back to home</a>}
@@ -294,7 +294,7 @@ export default function Affiliate() {
               Claim your affiliate link →
             </a>
             <a href="#aff-calculator"
-              style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '15px 28px', borderRadius: 100, fontSize: 15, fontWeight: 600, color: 'var(--ytg-text-2)', textDecoration: 'none', background: 'var(--ytg-card)', border: '1px solid var(--ytg-border)', boxShadow: 'var(--ytg-shadow-sm)', transition: 'color 0.15s, box-shadow 0.18s' }}
+              style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '15px 28px', borderRadius: 100, fontSize: 14, fontWeight: 600, color: 'var(--ytg-text-2)', textDecoration: 'none', background: 'var(--ytg-card)', border: '1px solid var(--ytg-border)', boxShadow: 'var(--ytg-shadow-sm)', transition: 'color 0.15s, box-shadow 0.18s' }}
               onMouseEnter={e => { e.currentTarget.style.color = 'var(--ytg-text)'; e.currentTarget.style.boxShadow = 'var(--ytg-shadow)' }}
               onMouseLeave={e => { e.currentTarget.style.color = 'var(--ytg-text-2)'; e.currentTarget.style.boxShadow = 'var(--ytg-shadow-sm)' }}
             >
@@ -318,7 +318,7 @@ export default function Affiliate() {
             ].map((s, i) => (
               <div key={i} style={{ textAlign: 'center', minWidth: 160 }}>
                 <div style={{ fontSize: 40, fontWeight: 800, letterSpacing: '-1.5px', color: 'var(--ytg-accent)', lineHeight: 1.1, marginBottom: 7 }}>{s.value}</div>
-                <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--ytg-text)', marginBottom: 4 }}>{s.label}</div>
+                <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--ytg-text)', marginBottom: 4 }}>{s.label}</div>
                 <div style={{ fontSize: 12, color: 'var(--ytg-text-3)' }}>{s.sub}</div>
               </div>
             ))}
@@ -353,7 +353,7 @@ export default function Affiliate() {
               <input type="range" min={1} max={100} value={referrals}
                 onChange={e => setReferrals(Number(e.target.value))}
                 style={{ width: '100%', marginBottom: 8, accentColor: 'var(--ytg-accent)', cursor: 'pointer', height: 4 }} />
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, color: 'var(--ytg-text-3)', marginBottom: 36 }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, color: 'var(--ytg-text-3)', marginBottom: 36 }}>
                 <span>1</span><span>50</span><span>100</span>
               </div>
               {PLANS.map((plan, i) => (
@@ -370,7 +370,7 @@ export default function Affiliate() {
                     <div style={{ fontSize: 22, fontWeight: 800, color: 'var(--ytg-accent)', letterSpacing: '-0.5px' }}>
                       {formatMoney(referrals * plan.price * 0.30)}
                     </div>
-                    <div style={{ fontSize: 11, color: 'var(--ytg-text-3)', marginTop: 2 }}>per month</div>
+                    <div style={{ fontSize: 12, color: 'var(--ytg-text-3)', marginTop: 2 }}>per month</div>
                   </div>
                 </div>
               ))}
@@ -384,10 +384,10 @@ export default function Affiliate() {
 
               {/* Annual projection card — accent background */}
               <div style={{ background: 'var(--ytg-accent)', borderRadius: 20, border: 'none', boxShadow: '0 4px 18px rgba(229,48,42,0.32), 0 24px 60px rgba(229,48,42,0.18)', color: '#fff', padding: 36 }}>
-                <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', opacity: 0.72, marginBottom: 14 }}>
+                <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', opacity: 0.72, marginBottom: 14 }}>
                   If all {referrals} referrals take Growth ($49/mo)
                 </div>
-                <div style={{ fontSize: 13, opacity: 0.78, marginBottom: 6 }}>Monthly recurring</div>
+                <div style={{ fontSize: 14, opacity: 0.78, marginBottom: 6 }}>Monthly recurring</div>
                 <div style={{ fontSize: 48, fontWeight: 800, letterSpacing: '-2.5px', lineHeight: 1, marginBottom: 20 }}>
                   {formatMoney(referrals * 49 * 0.30)}
                 </div>
@@ -406,7 +406,7 @@ export default function Affiliate() {
 
               {/* What they get */}
               <div style={{ background: 'var(--ytg-card)', borderRadius: 20, border: '1px solid var(--ytg-border)', boxShadow: 'var(--ytg-shadow)', padding: 28 }}>
-                <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--ytg-text)', marginBottom: 18 }}>What your referrals actually get</div>
+                <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--ytg-text)', marginBottom: 18 }}>What your referrals actually get</div>
                 {[
                   'AI-powered channel analysis & insights',
                   'SEO Studio — title, description & tag optimiser',
@@ -416,13 +416,13 @@ export default function Affiliate() {
                 ].map((f, i) => (
                   <div key={i} style={{ display: 'flex', gap: 10, alignItems: 'flex-start', marginBottom: 11 }}>
                     <Check />
-                    <span style={{ fontSize: 13, color: 'var(--ytg-text-2)', lineHeight: 1.55 }}>{f}</span>
+                    <span style={{ fontSize: 14, color: 'var(--ytg-text-2)', lineHeight: 1.55 }}>{f}</span>
                   </div>
                 ))}
               </div>
 
               <a href="https://ytgrowth.lemonsqueezy.com/affiliates" target="_blank" rel="noopener noreferrer"
-                className="aff-btn aff-btn-full" style={{ padding: 17, fontSize: 15, borderRadius: 14 }}>
+                className="aff-btn aff-btn-full" style={{ padding: 17, fontSize: 14, borderRadius: 14 }}>
                 Start earning this month →
               </a>
             </div>
@@ -455,9 +455,9 @@ export default function Affiliate() {
               },
             ].map((step, i) => (
               <div key={i} style={{ background: 'var(--ytg-card)', borderRadius: 18, border: '1px solid var(--ytg-border)', boxShadow: 'var(--ytg-shadow-lg)', padding: 36 }}>
-                <div style={{ fontSize: 13, fontWeight: 800, color: 'var(--ytg-accent)', letterSpacing: '0.04em', marginBottom: 22, fontFamily: 'monospace' }}>{step.n}</div>
-                <div style={{ fontSize: 17, fontWeight: 700, color: 'var(--ytg-text)', marginBottom: 12, letterSpacing: '-0.3px' }}>{step.title}</div>
-                <div style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.78 }}>{step.body}</div>
+                <div style={{ fontSize: 14, fontWeight: 800, color: 'var(--ytg-accent)', letterSpacing: '0.04em', marginBottom: 22, fontFamily: 'monospace' }}>{step.n}</div>
+                <div style={{ fontSize: 16, fontWeight: 700, color: 'var(--ytg-text)', marginBottom: 12, letterSpacing: '-0.3px' }}>{step.title}</div>
+                <div style={{ fontSize: 14, color: 'var(--ytg-text-2)', lineHeight: 1.78 }}>{step.body}</div>
               </div>
             ))}
           </div>
@@ -496,10 +496,10 @@ export default function Affiliate() {
                   {row.ytg === true ? <Check /> : row.ytg === false ? <Cross /> : <span style={{ fontSize: 14, fontWeight: 700, color: 'var(--ytg-accent)' }}>{row.ytg}</span>}
                 </div>
                 <div style={{ textAlign: 'center', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                  {row.vidiq === true ? <Check /> : row.vidiq === false ? <Cross /> : <span style={{ fontSize: 13, color: 'var(--ytg-text-3)' }}>{row.vidiq}</span>}
+                  {row.vidiq === true ? <Check /> : row.vidiq === false ? <Cross /> : <span style={{ fontSize: 14, color: 'var(--ytg-text-3)' }}>{row.vidiq}</span>}
                 </div>
                 <div style={{ textAlign: 'center', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                  {row.tubebuddy === true ? <Check /> : row.tubebuddy === false ? <Cross /> : <span style={{ fontSize: 13, color: 'var(--ytg-text-3)' }}>{row.tubebuddy}</span>}
+                  {row.tubebuddy === true ? <Check /> : row.tubebuddy === false ? <Cross /> : <span style={{ fontSize: 14, color: 'var(--ytg-text-3)' }}>{row.tubebuddy}</span>}
                 </div>
               </div>
             ))}
@@ -526,11 +526,11 @@ export default function Affiliate() {
                   <div style={{ width: 7, height: 7, borderRadius: '50%', background: 'var(--ytg-accent)' }} />
                   <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--ytg-accent-text)' }}>{t.earning} recurring</span>
                 </div>
-                <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.78, marginBottom: 28, fontWeight: 400, flex: 1 }}>
+                <p style={{ fontSize: 14, color: 'var(--ytg-text-2)', lineHeight: 1.78, marginBottom: 28, fontWeight: 400, flex: 1 }}>
                   "{t.quote}"
                 </p>
                 <div style={{ height: 1, background: 'var(--ytg-border)', marginBottom: 18 }} />
-                <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--ytg-text)' }}>{t.name}</div>
+                <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--ytg-text)' }}>{t.name}</div>
                 <div style={{ fontSize: 12, color: 'var(--ytg-text-3)', marginTop: 3 }}>{t.role}</div>
               </div>
             ))}
@@ -561,11 +561,11 @@ export default function Affiliate() {
                 onClick={() => setOpenFaq(openFaq === i ? -1 : i)}
                 onKeyDown={e => e.key === 'Enter' && setOpenFaq(openFaq === i ? -1 : i)}
                 style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '20px 24px', cursor: 'pointer', userSelect: 'none' }}>
-                <span style={{ fontSize: 15, fontWeight: 600, color: 'var(--ytg-text)', paddingRight: 16, lineHeight: 1.4 }}>{item.q}</span>
+                <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--ytg-text)', paddingRight: 16, lineHeight: 1.4 }}>{item.q}</span>
                 <ChevronIcon open={openFaq === i} />
               </div>
               {openFaq === i && (
-                <div style={{ padding: '0 24px 22px', fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.82 }}>
+                <div style={{ padding: '0 24px 22px', fontSize: 14, color: 'var(--ytg-text-2)', lineHeight: 1.82 }}>
                   {item.a}
                 </div>
               )}
@@ -607,14 +607,14 @@ export default function Affiliate() {
               marginLeft: 'auto', marginRight: 'auto',
             }}>
               {['30% recurring', '60-day cookie', 'Instant access', 'Monthly payouts'].map((t, i) => (
-                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 13, color: 'var(--ytg-text-3)' }}>
+                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 14, color: 'var(--ytg-text-3)' }}>
                   <Check /><span style={{ whiteSpace: 'nowrap' }}>{t}</span>
                 </div>
               ))}
             </div>
             <a href="https://ytgrowth.lemonsqueezy.com/affiliates" target="_blank" rel="noopener noreferrer"
               className={`aff-btn${isMobile ? ' aff-btn-full' : ' aff-btn-lg'}`}
-              style={isMobile ? { borderRadius: 14, padding: '15px 24px', fontSize: 15 } : {}}>
+              style={isMobile ? { borderRadius: 14, padding: '15px 24px', fontSize: 14 } : {}}>
               Join the Affiliate Program →
             </a>
           </div>
@@ -626,9 +626,9 @@ export default function Affiliate() {
         <div style={{ maxWidth: 1280, margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexDirection: isMobile ? 'column' : 'row', gap: isMobile ? 20 : 0, textAlign: isMobile ? 'center' : 'left' }}>
           <a href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 9 }}>
             <Logo size={26} />
-            <span style={{ fontWeight: 800, fontSize: 15, color: '#ffffff', letterSpacing: '-0.4px' }}>YTGrowth</span>
+            <span style={{ fontWeight: 800, fontSize: 14, color: '#ffffff', letterSpacing: '-0.4px' }}>YTGrowth</span>
           </a>
-          <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.32)' }}>Built for creators serious about growth.</p>
+          <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.32)' }}>Built for creators serious about growth.</p>
           <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.22)' }}>© 2026 YTGrowth. All rights reserved.</p>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: isMobile ? '12px 20px' : 28, justifyContent: isMobile ? 'center' : 'flex-end' }}>
             {[
@@ -638,7 +638,7 @@ export default function Affiliate() {
               { label: 'Affiliates',       href: '/affiliate' },
               { label: 'Log in',           href: '/auth/login' },
             ].map((l, i) => (
-              <a key={i} href={l.href} style={{ fontSize: 13, color: 'rgba(255,255,255,0.38)', textDecoration: 'none', fontFamily: "'DM Sans', system-ui, sans-serif" }}
+              <a key={i} href={l.href} style={{ fontSize: 14, color: 'rgba(255,255,255,0.38)', textDecoration: 'none', fontFamily: "'DM Sans', system-ui, sans-serif" }}
                 onMouseEnter={e => e.currentTarget.style.color = 'rgba(255,255,255,0.72)'}
                 onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.38)'}
               >{l.label}</a>

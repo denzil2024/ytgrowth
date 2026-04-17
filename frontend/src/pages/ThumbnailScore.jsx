@@ -190,7 +190,7 @@ function Badge({ text, color, bg, bdr }) {
     <span style={{
       display: 'inline-flex', alignItems: 'center',
       background: bg, color, border: `1px solid ${bdr}`,
-      fontSize: 11, fontWeight: 700, padding: '4px 11px', borderRadius: 20,
+      fontSize: 12, fontWeight: 700, padding: '4px 11px', borderRadius: 20,
       letterSpacing: '0.03em',
     }}>{text}</span>
   )
@@ -372,7 +372,7 @@ function L1Row({ keyName, data, benchComp }) {
         }}
       >
         <div style={{ width: 130, flexShrink: 0 }}>
-          <p style={{ fontSize: 12.5, fontWeight: 600, color: C.text1 }}>{meta.label}</p>
+          <p style={{ fontSize: 12, fontWeight: 600, color: C.text1 }}>{meta.label}</p>
         </div>
         <div style={{ flex: 1 }}>
           <MiniBar value={score} max={max} color={col}/>
@@ -384,12 +384,12 @@ function L1Row({ keyName, data, benchComp }) {
         </div>
         {indicator && (
           <div style={{ width: 130, flexShrink: 0, display: 'flex', alignItems: 'center', gap: 5 }}>
-            <span style={{ fontSize: 11, color: indicator.color, fontWeight: 700 }}>{indicator.icon}</span>
-            <span style={{ fontSize: 11, color: C.text3 }}>{indicator.label}</span>
+            <span style={{ fontSize: 12, color: indicator.color, fontWeight: 700 }}>{indicator.icon}</span>
+            <span style={{ fontSize: 12, color: C.text3 }}>{indicator.label}</span>
           </div>
         )}
         {hasContent && (
-          <span style={{ fontSize: 11, color: C.text3, flexShrink: 0 }}>{open ? '▲' : '▼'}</span>
+          <span style={{ fontSize: 12, color: C.text3, flexShrink: 0 }}>{open ? '▲' : '▼'}</span>
         )}
       </button>
 
@@ -440,7 +440,7 @@ function L2Row({ dimKey, dim }) {
                  fontFamily: 'inherit', textAlign: 'left' }}
       >
         <div style={{ width: 160, flexShrink: 0 }}>
-          <p style={{ fontSize: 13, fontWeight: 600, color: C.text1 }}>{L2_LABELS[dimKey] || dimKey}</p>
+          <p style={{ fontSize: 14, fontWeight: 600, color: C.text1 }}>{L2_LABELS[dimKey] || dimKey}</p>
         </div>
         <div style={{ flex: 1 }}>
           <MiniBar value={score} max={10} color={col}/>
@@ -450,27 +450,27 @@ function L2Row({ dimKey, dim }) {
             {score}/10
           </span>
         </div>
-        <span style={{ fontSize: 11, color: C.text3, flexShrink: 0 }}>{open ? '▲' : '▼'}</span>
+        <span style={{ fontSize: 12, color: C.text3, flexShrink: 0 }}>{open ? '▲' : '▼'}</span>
       </button>
 
       {open && (
         <div style={{ paddingBottom: 12 }}>
           {dim.verdict && (
-            <p style={{ fontSize: 12.5, color: C.text2, lineHeight: 1.65, marginBottom: 8 }}>
+            <p style={{ fontSize: 12, color: C.text2, lineHeight: 1.65, marginBottom: 8 }}>
               {dim.verdict}
             </p>
           )}
           {dim.vs_benchmark && (
-            <p style={{ fontSize: 11.5, color: C.text3, lineHeight: 1.6, marginBottom: hasFix ? 8 : 0 }}>
+            <p style={{ fontSize: 12, color: C.text3, lineHeight: 1.6, marginBottom: hasFix ? 8 : 0 }}>
               vs. top performers: {dim.vs_benchmark}
             </p>
           )}
           {hasFix && (
             <div style={{ borderLeft: `3px solid ${C.amber}`, paddingLeft: 10, background: C.amberBg,
                           borderRadius: '0 8px 8px 0', padding: '8px 10px 8px 12px' }}>
-              <p style={{ fontSize: 10, fontWeight: 700, color: C.amber, marginBottom: 4,
+              <p style={{ fontSize: 12, fontWeight: 700, color: C.amber, marginBottom: 4,
                           letterSpacing: '0.06em', textTransform: 'uppercase' }}>Fix</p>
-              <p style={{ fontSize: 12.5, color: '#92400e', lineHeight: 1.6 }}>{dim.fix}</p>
+              <p style={{ fontSize: 12, color: '#92400e', lineHeight: 1.6 }}>{dim.fix}</p>
             </div>
           )}
         </div>
@@ -491,12 +491,12 @@ function LinkedIdeaCard({ idea }) {
         Benchmarked for: {idea.title}
       </p>
       {idea.angle && (
-        <p style={{ fontSize: 13, color: '#6b7280', fontWeight: 400, marginBottom: 8, lineHeight: 1.5 }}>
+        <p style={{ fontSize: 14, color: '#6b7280', fontWeight: 400, marginBottom: 8, lineHeight: 1.5 }}>
           {idea.angle}
         </p>
       )}
       <span style={{
-        fontSize: 11, fontWeight: 500, color: '#15803d',
+        fontSize: 12, fontWeight: 500, color: '#15803d',
         background: '#f0fdf4', borderRadius: 20, padding: '2px 8px',
       }}>
         Competitor gap — {idea.opportunityScore}/100
@@ -521,7 +521,7 @@ function HistoryPanel({ history, activeId, onSelect, onDelete }) {
   if (!history || history.length < 2) return null
   return (
     <div style={{ marginTop: 24 }}>
-      <p style={{ fontSize: 11, fontWeight: 500, color: '#9ca3af', textTransform: 'uppercase',
+      <p style={{ fontSize: 12, fontWeight: 500, color: '#9ca3af', textTransform: 'uppercase',
                   letterSpacing: '0.06em', marginBottom: 10 }}>Previous Thumbnails</p>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
         {history.map(item => {
@@ -551,23 +551,23 @@ function HistoryPanel({ history, activeId, onSelect, onDelete }) {
               <span style={{ fontSize: 12, fontWeight: 500, color: col, flexShrink: 0,
                              fontVariantNumeric: 'tabular-nums' }}>{score}/{max}</span>
               {item.confirmed_keyword && (
-                <span style={{ fontSize: 11, color: '#9ca3af', flex: 1, overflow: 'hidden',
+                <span style={{ fontSize: 12, color: '#9ca3af', flex: 1, overflow: 'hidden',
                                textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                   {item.confirmed_keyword}
                 </span>
               )}
-              <span style={{ fontSize: 11, color: '#9ca3af', flexShrink: 0 }}>
+              <span style={{ fontSize: 12, color: '#9ca3af', flexShrink: 0 }}>
                 {timeAgo(item.uploaded_at)}
               </span>
               {item.linked_video_idea?.thumbnail_ready && (
-                <span style={{ fontSize: 10, fontWeight: 500, color: '#16a34a',
+                <span style={{ fontSize: 12, fontWeight: 500, color: '#16a34a',
                                background: '#dcfce7', borderRadius: 20, padding: '2px 6px', flexShrink: 0 }}>
                   Ready
                 </span>
               )}
               <button
                 onClick={e => { e.stopPropagation(); onDelete(item.id) }}
-                style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 15,
+                style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 14,
                          color: '#d1d5db', padding: '0 2px', flexShrink: 0, lineHeight: 1,
                          fontFamily: 'inherit' }}
                 onMouseEnter={e => { e.currentTarget.style.color = '#ef4444' }}
@@ -649,7 +649,7 @@ function UploadPanel({ videoIdeas, hasIdeas, initialIdea, initialTopic, topicSou
       {/* Part A: Video Ideas dropdown */}
       {hasIdeas && (
         <div style={{ marginBottom: 14 }}>
-          <p style={{ fontSize: 12.5, fontWeight: 600, color: C.text2, marginBottom: 6 }}>
+          <p style={{ fontSize: 12, fontWeight: 600, color: C.text2, marginBottom: 6 }}>
             Is this thumbnail for one of your video ideas?
           </p>
           <div style={{ position: 'relative' }}>
@@ -659,7 +659,7 @@ function UploadPanel({ videoIdeas, hasIdeas, initialIdea, initialTopic, topicSou
               style={{
                 width: '100%', boxSizing: 'border-box',
                 border: `1px solid ${C.border}`, borderRadius: 10,
-                padding: '11px 36px 11px 14px', fontSize: 13, color: C.text1,
+                padding: '11px 36px 11px 14px', fontSize: 14, color: C.text1,
                 background: '#fff', fontFamily: 'inherit', outline: 'none',
                 appearance: 'none', cursor: 'pointer',
               }}
@@ -684,7 +684,7 @@ function UploadPanel({ videoIdeas, hasIdeas, initialIdea, initialTopic, topicSou
                 ✓ Using competitor-researched keyword: &quot;{selectedIdea.targetKeyword}&quot;
               </p>
               {selectedIdea.angle && (
-                <p style={{ fontSize: 11.5, color: C.text3 }}>Gap: {selectedIdea.angle}</p>
+                <p style={{ fontSize: 12, color: C.text3 }}>Gap: {selectedIdea.angle}</p>
               )}
             </div>
           )}
@@ -694,7 +694,7 @@ function UploadPanel({ videoIdeas, hasIdeas, initialIdea, initialTopic, topicSou
       {/* Part B: Topic input */}
       <div style={{ marginBottom: 14 }}>
         {hasIdeas && (
-          <p style={{ fontSize: 12.5, fontWeight: 600, color: C.text2, marginBottom: 6 }}>
+          <p style={{ fontSize: 12, fontWeight: 600, color: C.text2, marginBottom: 6 }}>
             Your video topic
           </p>
         )}
@@ -710,14 +710,14 @@ function UploadPanel({ videoIdeas, hasIdeas, initialIdea, initialTopic, topicSou
           style={{
             width: '100%', boxSizing: 'border-box',
             border: `1px solid ${C.border}`, borderRadius: 10,
-            padding: '11px 14px', fontSize: 13.5,
+            padding: '11px 14px', fontSize: 14,
             color: selectedIdea ? C.text3 : C.text1,
             background: selectedIdea ? '#f7f7fa' : '#fff',
             fontFamily: 'inherit', outline: 'none',
           }}
         />
         {topicHint && (
-          <p style={{ fontSize: 11.5, color: C.text3, marginTop: 4 }}>{topicHint}</p>
+          <p style={{ fontSize: 12, color: C.text3, marginTop: 4 }}>{topicHint}</p>
         )}
       </div>
 
@@ -728,7 +728,7 @@ function UploadPanel({ videoIdeas, hasIdeas, initialIdea, initialTopic, topicSou
           borderRadius: 12, padding: '12px 16px',
           display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 8,
         }}>
-          <p style={{ fontSize: 12.5, color: '#1d4ed8', lineHeight: 1.65, margin: 0 }}>
+          <p style={{ fontSize: 12, color: '#1d4ed8', lineHeight: 1.65, margin: 0 }}>
             Run Video Ideas first for the most accurate thumbnail benchmarks. Your ideas are built from real competitor research.{' '}
             {onNavigate && (
               <button
@@ -782,10 +782,10 @@ function UploadPanel({ videoIdeas, hasIdeas, initialIdea, initialTopic, topicSou
               <rect width="44" height="44" rx="12" fill="#fef2f2"/>
               <path d="M22 14v16M14 22l8-8 8 8" stroke={C.red} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
-            <p style={{ fontSize: 15, fontWeight: 700, color: C.text1, marginBottom: 6 }}>
+            <p style={{ fontSize: 14, fontWeight: 700, color: C.text1, marginBottom: 6 }}>
               Drop your thumbnail here or click to upload
             </p>
-            <p style={{ fontSize: 12.5, color: C.text3 }}>JPG or PNG · Max 4MB · Best at 1280×720</p>
+            <p style={{ fontSize: 12, color: C.text3 }}>JPG or PNG · Max 4MB · Best at 1280×720</p>
           </>
         )}
         <input ref={inputRef} type="file" accept="image/jpeg,image/png"
@@ -1041,7 +1041,7 @@ export default function ThumbnailScore({ channelData, onNavigate }) {
         <div style={{ width: 24, height: 24, border: `2.5px solid #ebebef`,
                       borderTop: `2.5px solid ${C.red}`, borderRadius: '50%',
                       animation: 'thumbSpin 0.7s linear infinite' }}/>
-        <p style={{ color: C.text3, fontSize: 13 }}>Loading…</p>
+        <p style={{ color: C.text3, fontSize: 14 }}>Loading…</p>
       </div>
     )
   }
@@ -1058,7 +1058,7 @@ export default function ThumbnailScore({ channelData, onNavigate }) {
         <h1 style={{ fontSize: 24, fontWeight: 800, color: '#0a0a0f', letterSpacing: '-0.7px', marginBottom: 5 }}>
           Thumbnail IQ
         </h1>
-        <p style={{ fontSize: 13.5, color: C.text3 }}>See how your thumbnail performs before you publish</p>
+        <p style={{ fontSize: 14, color: C.text3 }}>See how your thumbnail performs before you publish</p>
       </div>
 
       {/* Tabs */}
@@ -1071,7 +1071,7 @@ export default function ThumbnailScore({ channelData, onNavigate }) {
             style={{
               padding: '9px 20px', background: 'none', border: 'none',
               cursor: 'pointer', fontFamily: 'inherit',
-              fontSize: 13.5, fontWeight: activeTab === tab.key ? 700 : 500,
+              fontSize: 14, fontWeight: activeTab === tab.key ? 700 : 500,
               color: activeTab === tab.key ? C.red : C.text3,
               borderBottom: activeTab === tab.key ? `2px solid ${C.red}` : '2px solid transparent',
               marginBottom: -1.5, transition: 'color 0.15s',
@@ -1085,7 +1085,7 @@ export default function ThumbnailScore({ channelData, onNavigate }) {
       {/* Error banner */}
       {error && (
         <div style={{ background: C.redBg, border: `1px solid ${C.redBdr}`, borderRadius: 12,
-                      padding: '12px 16px', marginBottom: 20, fontSize: 13, color: C.red }}>
+                      padding: '12px 16px', marginBottom: 20, fontSize: 14, color: C.red }}>
           {error}
         </div>
       )}
@@ -1111,7 +1111,7 @@ export default function ThumbnailScore({ channelData, onNavigate }) {
                 </svg>
               </div>
               <p style={{ fontWeight: 700, color: C.text2, marginBottom: 6, fontSize: 14 }}>No previous thumbnails</p>
-              <p style={{ fontSize: 13, color: C.text3, maxWidth: 300, margin: '0 auto' }}>
+              <p style={{ fontSize: 14, color: C.text3, maxWidth: 300, margin: '0 auto' }}>
                 Upload a thumbnail to get started — it will be saved here automatically
               </p>
             </div>
@@ -1169,7 +1169,7 @@ export default function ThumbnailScore({ channelData, onNavigate }) {
                           {item.confirmed_keyword || 'Untitled'}
                         </p>
                         {item.linked_video_idea?.thumbnail_ready && (
-                          <span style={{ fontSize: 10, fontWeight: 700, color: C.green,
+                          <span style={{ fontSize: 12, fontWeight: 700, color: C.green,
                                          background: C.greenBg, border: `1px solid ${C.greenBdr}`,
                                          borderRadius: 100, padding: '2px 8px', flexShrink: 0 }}>
                             Thumbnail Ready
@@ -1180,19 +1180,19 @@ export default function ThumbnailScore({ channelData, onNavigate }) {
                         {/* Score chip */}
                         <span style={{ display: 'inline-flex', alignItems: 'baseline', gap: 3,
                                        background: 'rgba(0,0,0,0.04)', border: '1px solid rgba(0,0,0,0.07)',
-                                       borderRadius: 8, padding: '3px 8px', fontSize: 11 }}>
+                                       borderRadius: 8, padding: '3px 8px', fontSize: 12 }}>
                           <span style={{ fontWeight: 700, color: col, fontVariantNumeric: 'tabular-nums' }}>{score}</span>
                           <span style={{ color: '#a0a0b0', fontWeight: 400 }}>/{max}</span>
                         </span>
                         {item.format && (
                           <span style={{ display: 'inline-flex', alignItems: 'baseline', gap: 3,
                                          background: 'rgba(0,0,0,0.04)', border: '1px solid rgba(0,0,0,0.07)',
-                                         borderRadius: 8, padding: '3px 8px', fontSize: 11, color: '#52525b', fontWeight: 500 }}>
+                                         borderRadius: 8, padding: '3px 8px', fontSize: 12, color: '#52525b', fontWeight: 500 }}>
                             {item.format}
                           </span>
                         )}
                         {savedAt && (
-                          <span style={{ fontSize: 11, color: '#bbb', fontWeight: 500, marginLeft: 2 }}>
+                          <span style={{ fontSize: 12, color: '#bbb', fontWeight: 500, marginLeft: 2 }}>
                             · {savedAt}
                           </span>
                         )}
@@ -1228,7 +1228,7 @@ export default function ThumbnailScore({ channelData, onNavigate }) {
                             <div style={{ marginTop: 10, display: 'flex', flexDirection: 'column', gap: 6 }}>
                               {itemL2.emotionLabel && (
                                 <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                                  <span style={{ fontSize: 11, fontWeight: 600, color: C.text3, width: 70, flexShrink: 0 }}>Emotion</span>
+                                  <span style={{ fontSize: 12, fontWeight: 600, color: C.text3, width: 70, flexShrink: 0 }}>Emotion</span>
                                   <Badge text={itemL2.emotionLabel}
                                     color={itemL2.emotionLabel.toLowerCase().includes('neutral') ? C.amber : C.green}
                                     bg={itemL2.emotionLabel.toLowerCase().includes('neutral') ? C.amberBg : C.greenBg}
@@ -1238,7 +1238,7 @@ export default function ThumbnailScore({ channelData, onNavigate }) {
                               )}
                               {itemL2.feedPosition && (
                                 <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                                  <span style={{ fontSize: 11, fontWeight: 600, color: C.text3, width: 70, flexShrink: 0 }}>Feed</span>
+                                  <span style={{ fontSize: 12, fontWeight: 600, color: C.text3, width: 70, flexShrink: 0 }}>Feed</span>
                                   <Badge
                                     text={itemL2.feedPosition === 'stands out' ? 'Stands Out' : itemL2.feedPosition === 'disappears' ? 'Disappears' : 'Blends In'}
                                     color={itemL2.feedPosition === 'stands out' ? C.green : itemL2.feedPosition === 'disappears' ? C.red : C.amber}
@@ -1256,9 +1256,9 @@ export default function ThumbnailScore({ channelData, onNavigate }) {
                             <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 14 }}>
                               <ScoreRing score={score} max={max} label={max === 100 ? 'Thumbnail IQ' : 'Technical'} size={90} strokeW={7}/>
                               <div style={{ flex: 1 }}>
-                                <p style={{ fontSize: 13, fontWeight: 700, color: col }}>
+                                <p style={{ fontSize: 14, fontWeight: 700, color: col }}>
                                   {scoreLabel(score, max)}
-                                  {!itemL2 && <span style={{ fontSize: 11, fontWeight: 400, color: C.text3 }}> — technical only</span>}
+                                  {!itemL2 && <span style={{ fontSize: 12, fontWeight: 400, color: C.text3 }}> — technical only</span>}
                                 </p>
                                 <p style={{ fontSize: 12, color: C.text3, marginTop: 4 }}>
                                   {item.format} · {item.size_bracket}
@@ -1279,7 +1279,7 @@ export default function ThumbnailScore({ channelData, onNavigate }) {
                                 <L2Row key={k} dimKey={k} dim={v}/>
                               ))}
                               {itemL2.overallVerdict && (
-                                <p style={{ fontSize: 12.5, color: C.text2, lineHeight: 1.65,
+                                <p style={{ fontSize: 12, color: C.text2, lineHeight: 1.65,
                                             marginTop: 12, paddingTop: 12, borderTop: `1px solid #f0f0f4` }}>
                                   {itemL2.overallVerdict}
                                 </p>
@@ -1306,7 +1306,7 @@ export default function ThumbnailScore({ channelData, onNavigate }) {
               <div style={{ width: 32, height: 32, border: `2.5px solid #ebebef`,
                             borderTop: `2.5px solid ${C.red}`, borderRadius: '50%',
                             animation: 'thumbSpin 0.7s linear infinite' }}/>
-              <p style={{ color: C.text3, fontSize: 13 }}>Analyzing your thumbnail…</p>
+              <p style={{ color: C.text3, fontSize: 14 }}>Analyzing your thumbnail…</p>
             </div>
           ) : (
             <UploadPanel
@@ -1338,7 +1338,7 @@ export default function ThumbnailScore({ channelData, onNavigate }) {
                 {/* Benchmark context */}
                 {keyword && (
                   <div style={{ padding: '12px 16px', borderTop: `1px solid ${C.border}` }}>
-                    <p style={{ fontSize: 11.5, color: C.text3, lineHeight: 1.6 }}>
+                    <p style={{ fontSize: 12, color: C.text3, lineHeight: 1.6 }}>
                       Benchmarked against <strong style={{ color: C.text2 }}>top {fmt}</strong> videos
                       {' · '}<strong style={{ color: C.text2 }}>{bracket}</strong> channels
                       {' · '}<strong style={{ color: C.text2 }}>"{keyword}"</strong>
@@ -1352,7 +1352,7 @@ export default function ThumbnailScore({ channelData, onNavigate }) {
                 <div style={{ marginTop: 12, display: 'flex', flexDirection: 'column', gap: 8 }}>
                   {l2.emotionLabel && (
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                      <span style={{ fontSize: 11, fontWeight: 600, color: C.text3, width: 90, flexShrink: 0 }}>Emotion</span>
+                      <span style={{ fontSize: 12, fontWeight: 600, color: C.text3, width: 90, flexShrink: 0 }}>Emotion</span>
                       <Badge text={l2.emotionLabel}
                         color={l2.emotionLabel.toLowerCase().includes('neutral') ? C.amber : C.green}
                         bg={l2.emotionLabel.toLowerCase().includes('neutral') ? C.amberBg : C.greenBg}
@@ -1362,7 +1362,7 @@ export default function ThumbnailScore({ channelData, onNavigate }) {
                   )}
                   {l2.feedPosition && (
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                      <span style={{ fontSize: 11, fontWeight: 600, color: C.text3, width: 90, flexShrink: 0 }}>Feed</span>
+                      <span style={{ fontSize: 12, fontWeight: 600, color: C.text3, width: 90, flexShrink: 0 }}>Feed</span>
                       <Badge
                         text={l2.feedPosition === 'stands out' ? 'Stands Out' : l2.feedPosition === 'disappears' ? 'Disappears' : 'Blends In'}
                         color={l2.feedPosition === 'stands out' ? C.green : l2.feedPosition === 'disappears' ? C.red : C.amber}
@@ -1373,7 +1373,7 @@ export default function ThumbnailScore({ channelData, onNavigate }) {
                   )}
                   {l2.clickPrediction && (
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                      <span style={{ fontSize: 11, fontWeight: 600, color: C.text3, width: 90, flexShrink: 0 }}>CTR</span>
+                      <span style={{ fontSize: 12, fontWeight: 600, color: C.text3, width: 90, flexShrink: 0 }}>CTR</span>
                       <Badge
                         text={l2.clickPrediction === 'above niche average' ? 'Above Niche Avg' : l2.clickPrediction === 'below niche average' ? 'Below Niche Avg' : 'At Niche Avg'}
                         color={l2.clickPrediction === 'above niche average' ? C.green : l2.clickPrediction === 'below niche average' ? C.red : C.amber}
@@ -1428,11 +1428,11 @@ export default function ThumbnailScore({ channelData, onNavigate }) {
                     ].map(s => (
                       <div key={s.label} style={{ textAlign: 'center', background: '#f7f7fa',
                                                    borderRadius: 12, padding: '12px 8px' }}>
-                        <p style={{ fontSize: 10, fontWeight: 600, color: C.text3, marginBottom: 6,
+                        <p style={{ fontSize: 12, fontWeight: 600, color: C.text3, marginBottom: 6,
                                     textTransform: 'uppercase', letterSpacing: '0.06em' }}>{s.label}</p>
                         <p style={{ fontSize: 18, fontWeight: 800, color: C.text1,
                                     fontVariantNumeric: 'tabular-nums' }}>{s.value}</p>
-                        {s.sub && <p style={{ fontSize: 10, color: C.text3, marginTop: 2 }}>{s.sub}</p>}
+                        {s.sub && <p style={{ fontSize: 12, color: C.text3, marginTop: 2 }}>{s.sub}</p>}
                       </div>
                     ))}
                   </div>
@@ -1444,7 +1444,7 @@ export default function ThumbnailScore({ channelData, onNavigate }) {
                               borderRadius: 10, padding: '8px 14px', display: 'flex', alignItems: 'center', gap: 8 }}>
                   <div style={{ width: 8, height: 8, borderRadius: '50%',
                                 background: scoreColor(state === 'ready2' ? finalScore : algoScore, state === 'ready2' ? 100 : 60), flexShrink: 0 }}/>
-                  <p style={{ fontSize: 12.5, fontWeight: 700,
+                  <p style={{ fontSize: 12, fontWeight: 700,
                                color: scoreColor(state === 'ready2' ? finalScore : algoScore, state === 'ready2' ? 100 : 60) }}>
                     {scoreLabel(state === 'ready2' ? finalScore : algoScore, state === 'ready2' ? 100 : 60)}
                     {state !== 'ready2' && ' — technical score only'}
@@ -1462,8 +1462,8 @@ export default function ThumbnailScore({ channelData, onNavigate }) {
                              display: 'flex', alignItems: 'center', justifyContent: 'space-between',
                              padding: '0 0 12px', fontFamily: 'inherit' }}
                   >
-                    <p style={{ fontSize: 13, fontWeight: 700, color: C.text1 }}>Technical — {algoScore}/60</p>
-                    <span style={{ fontSize: 11, color: C.text3 }}>{l1open ? 'Hide ▲' : 'Show ▼'}</span>
+                    <p style={{ fontSize: 14, fontWeight: 700, color: C.text1 }}>Technical — {algoScore}/60</p>
+                    <span style={{ fontSize: 12, color: C.text3 }}>{l1open ? 'Hide ▲' : 'Show ▼'}</span>
                   </button>
 
                   {l1open && (
@@ -1474,7 +1474,7 @@ export default function ThumbnailScore({ channelData, onNavigate }) {
                     </div>
                   )}
 
-                  <p style={{ fontSize: 13, fontWeight: 700, color: C.text1, paddingBottom: 10,
+                  <p style={{ fontSize: 14, fontWeight: 700, color: C.text1, paddingBottom: 10,
                                borderBottom: `1px solid #f0f0f4`, marginBottom: 4 }}>
                     AI Analysis — {l2.claude_score ?? 0}/40
                   </p>
@@ -1487,7 +1487,7 @@ export default function ThumbnailScore({ channelData, onNavigate }) {
               {/* Technical breakdown (state ready1) */}
               {state === 'ready1' && (
                 <div className="tiq-card" style={{ padding: '20px 24px', marginBottom: 16 }}>
-                  <p style={{ fontSize: 13, fontWeight: 700, color: C.text1, marginBottom: 4 }}>
+                  <p style={{ fontSize: 14, fontWeight: 700, color: C.text1, marginBottom: 4 }}>
                     Technical breakdown
                   </p>
                   {Object.entries(L1_META).map(([k]) => (
@@ -1501,15 +1501,15 @@ export default function ThumbnailScore({ channelData, onNavigate }) {
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 16 }}>
                   <div style={{ borderLeft: `3px solid ${C.green}`, background: C.greenBg,
                                 borderRadius: '0 12px 12px 0', padding: '14px 16px' }}>
-                    <p style={{ fontSize: 10, fontWeight: 700, color: C.green, marginBottom: 6,
+                    <p style={{ fontSize: 12, fontWeight: 700, color: C.green, marginBottom: 6,
                                 letterSpacing: '0.06em', textTransform: 'uppercase' }}>Biggest Win</p>
-                    <p style={{ fontSize: 12.5, color: '#166534', lineHeight: 1.65 }}>{l2.biggestWin}</p>
+                    <p style={{ fontSize: 12, color: '#166534', lineHeight: 1.65 }}>{l2.biggestWin}</p>
                   </div>
                   <div style={{ borderLeft: `3px solid ${C.red}`, background: C.redBg,
                                 borderRadius: '0 12px 12px 0', padding: '14px 16px' }}>
-                    <p style={{ fontSize: 10, fontWeight: 700, color: C.red, marginBottom: 6,
+                    <p style={{ fontSize: 12, fontWeight: 700, color: C.red, marginBottom: 6,
                                 letterSpacing: '0.06em', textTransform: 'uppercase' }}>Biggest Fix</p>
-                    <p style={{ fontSize: 12.5, color: '#991b1b', lineHeight: 1.65 }}>{l2.biggestFix}</p>
+                    <p style={{ fontSize: 12, color: '#991b1b', lineHeight: 1.65 }}>{l2.biggestFix}</p>
                   </div>
                 </div>
               )}
@@ -1518,9 +1518,9 @@ export default function ThumbnailScore({ channelData, onNavigate }) {
               {state === 'ready2' && l2?.overallVerdict && (
                 <div className="tiq-card" style={{ padding: '16px 20px', marginBottom: 16,
                                                     borderLeft: `3px solid ${C.blue}` }}>
-                  <p style={{ fontSize: 10, fontWeight: 700, color: C.blue, marginBottom: 6,
+                  <p style={{ fontSize: 12, fontWeight: 700, color: C.blue, marginBottom: 6,
                               letterSpacing: '0.06em', textTransform: 'uppercase' }}>Overall verdict</p>
-                  <p style={{ fontSize: 13, color: C.text2, lineHeight: 1.7 }}>{l2.overallVerdict}</p>
+                  <p style={{ fontSize: 14, color: C.text2, lineHeight: 1.7 }}>{l2.overallVerdict}</p>
                 </div>
               )}
 
@@ -1551,7 +1551,7 @@ export default function ThumbnailScore({ channelData, onNavigate }) {
                   <div style={{ width: 20, height: 20, border: `2.5px solid #ebebef`,
                                 borderTop: `2.5px solid ${C.red}`, borderRadius: '50%',
                                 animation: 'thumbSpin 0.7s linear infinite' }}/>
-                  <p style={{ color: C.text3, fontSize: 13 }}>Running Thumbnail IQ…</p>
+                  <p style={{ color: C.text3, fontSize: 14 }}>Running Thumbnail IQ…</p>
                 </div>
               )}
 
@@ -1563,7 +1563,7 @@ export default function ThumbnailScore({ channelData, onNavigate }) {
                       background: C.greenBg, border: `1px solid ${C.greenBdr}`,
                       borderRadius: 12, padding: '12px 16px', textAlign: 'center',
                     }}>
-                      <p style={{ fontSize: 13, fontWeight: 700, color: C.green }}>
+                      <p style={{ fontSize: 14, fontWeight: 700, color: C.green }}>
                         ✓ Idea marked as Thumbnail Ready · {finalScore}/100
                       </p>
                     </div>
@@ -1575,7 +1575,7 @@ export default function ThumbnailScore({ channelData, onNavigate }) {
                         width: '100%', height: 44,
                         background: markingReady ? '#e0e0e6' : C.green,
                         color: '#fff', border: 'none', borderRadius: 12,
-                        fontSize: 13.5, fontWeight: 700,
+                        fontSize: 14, fontWeight: 700,
                         cursor: markingReady ? 'not-allowed' : 'pointer',
                         fontFamily: 'inherit', transition: 'all 0.15s',
                       }}
@@ -1599,30 +1599,30 @@ export default function ThumbnailScore({ channelData, onNavigate }) {
                     )}
                     <div style={{ flex: 1 }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
-                        <span style={{ fontSize: 10, fontWeight: 700, color: 'rgba(255,255,255,0.5)',
+                        <span style={{ fontSize: 12, fontWeight: 700, color: 'rgba(255,255,255,0.5)',
                                        letterSpacing: '0.12em', textTransform: 'uppercase' }}>YTGrowth</span>
-                        <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.2)' }}>·</span>
-                        <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.4)' }}>Thumbnail IQ</span>
+                        <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.2)' }}>·</span>
+                        <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)' }}>Thumbnail IQ</span>
                       </div>
                       <p style={{ fontSize: 22, fontWeight: 800, color: '#fff', marginBottom: 8,
                                   fontVariantNumeric: 'tabular-nums' }}>
-                        {finalScore}<span style={{ fontSize: 13, fontWeight: 500, color: 'rgba(255,255,255,0.5)' }}>/100</span>
+                        {finalScore}<span style={{ fontSize: 14, fontWeight: 500, color: 'rgba(255,255,255,0.5)' }}>/100</span>
                       </p>
                       <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
                         {l2.emotionLabel && (
-                          <span style={{ fontSize: 10, fontWeight: 600, color: 'rgba(255,255,255,0.7)',
+                          <span style={{ fontSize: 12, fontWeight: 600, color: 'rgba(255,255,255,0.7)',
                                          background: 'rgba(255,255,255,0.1)', borderRadius: 6, padding: '3px 8px' }}>
                             {l2.emotionLabel}
                           </span>
                         )}
                         {l2.feedPosition && (
-                          <span style={{ fontSize: 10, fontWeight: 600, color: 'rgba(255,255,255,0.7)',
+                          <span style={{ fontSize: 12, fontWeight: 600, color: 'rgba(255,255,255,0.7)',
                                          background: 'rgba(255,255,255,0.1)', borderRadius: 6, padding: '3px 8px' }}>
                             {l2.feedPosition}
                           </span>
                         )}
                         {keyword && (
-                          <span style={{ fontSize: 10, fontWeight: 600, color: 'rgba(255,255,255,0.5)',
+                          <span style={{ fontSize: 12, fontWeight: 600, color: 'rgba(255,255,255,0.5)',
                                          background: 'rgba(255,255,255,0.07)', borderRadius: 6, padding: '3px 8px' }}>
                             &quot;{keyword}&quot;
                           </span>
@@ -1633,7 +1633,7 @@ export default function ThumbnailScore({ channelData, onNavigate }) {
                   <button
                     onClick={handleCopyCard}
                     style={{ marginTop: 8, width: '100%', background: '#f7f7fa', border: `1px solid ${C.border}`,
-                             borderRadius: 10, padding: '10px', fontSize: 12.5, fontWeight: 600,
+                             borderRadius: 10, padding: '10px', fontSize: 12, fontWeight: 600,
                              color: C.text2, cursor: 'pointer', fontFamily: 'inherit', transition: 'background 0.15s' }}
                     onMouseEnter={e => { e.currentTarget.style.background = '#ebebef' }}
                     onMouseLeave={e => { e.currentTarget.style.background = '#f7f7fa' }}

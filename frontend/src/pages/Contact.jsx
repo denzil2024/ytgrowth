@@ -127,14 +127,14 @@ export default function Contact() {
       <nav style={{ position: 'sticky', top: 0, zIndex: 100, borderBottom: '1px solid var(--ytg-border)', padding: isMobile ? '0 20px' : '0 40px', height: 60, display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'var(--ytg-nav)', backdropFilter: 'blur(16px)' }}>
         <a href="/" style={{ display: 'flex', alignItems: 'center', gap: 9, textDecoration: 'none' }}>
           <Logo size={28} />
-          <span style={{ fontWeight: 800, fontSize: 15, color: 'var(--ytg-text)', letterSpacing: '-0.4px' }}>YTGrowth</span>
+          <span style={{ fontWeight: 800, fontSize: 14, color: 'var(--ytg-text)', letterSpacing: '-0.4px' }}>YTGrowth</span>
         </a>
-        <a href="/" style={{ fontSize: 13, color: 'var(--ytg-text-3)', textDecoration: 'none', fontWeight: 500 }}>← Back to home</a>
+        <a href="/" style={{ fontSize: 14, color: 'var(--ytg-text-3)', textDecoration: 'none', fontWeight: 500 }}>← Back to home</a>
       </nav>
 
       {/* Hero */}
       <section style={{ padding: isMobile ? '64px 24px 52px' : '100px 40px 80px', textAlign: 'center', background: 'var(--ytg-bg)', animation: 'fadeUp 0.5s ease both' }}>
-        <span style={{ display: 'inline-block', fontSize: 11, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--ytg-accent-text)', background: 'var(--ytg-accent-light)', padding: '5px 14px', borderRadius: 100, marginBottom: 20 }}>Contact</span>
+        <span style={{ display: 'inline-block', fontSize: 12, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--ytg-accent-text)', background: 'var(--ytg-accent-light)', padding: '5px 14px', borderRadius: 100, marginBottom: 20 }}>Contact</span>
         <h1 style={{ fontWeight: 800, fontSize: isMobile ? 36 : 56, letterSpacing: isMobile ? '-1.2px' : '-2px', lineHeight: 1.06, color: 'var(--ytg-text)', marginBottom: 20 }}>
           Real people.<br />Same-day replies.
         </h1>
@@ -149,19 +149,19 @@ export default function Contact() {
           <div style={{ background: 'var(--ytg-card)', borderRadius: 24, border: '1px solid var(--ytg-border)', boxShadow: 'var(--ytg-shadow-xl)', padding: isMobile ? '36px 28px' : '52px 56px' }}>
             <div style={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', alignItems: isMobile ? 'flex-start' : 'center', gap: isMobile ? 28 : 48 }}>
               <div style={{ flex: 1 }}>
-                <span style={{ display: 'inline-block', fontSize: 11, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--ytg-accent-text)', background: 'var(--ytg-accent-light)', padding: '4px 12px', borderRadius: 100, marginBottom: 18 }}>Write to us</span>
+                <span style={{ display: 'inline-block', fontSize: 12, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--ytg-accent-text)', background: 'var(--ytg-accent-light)', padding: '4px 12px', borderRadius: 100, marginBottom: 18 }}>Write to us</span>
                 <p style={{ fontSize: isMobile ? 22 : 28, fontWeight: 800, color: 'var(--ytg-text)', letterSpacing: '-0.8px', marginBottom: 10, lineHeight: 1.2 }}>support@ytgrowth.io</p>
-                <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.75, marginBottom: 8 }}>
+                <p style={{ fontSize: 14, color: 'var(--ytg-text-2)', lineHeight: 1.75, marginBottom: 8 }}>
                   Send us anything — a question, a bug report, feedback, or just a hello. We reply to every email, personally.
                 </p>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 18 }}>
                   <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#16a34a', flexShrink: 0 }} />
-                  <span style={{ fontSize: 13, fontWeight: 600, color: '#16a34a' }}>Average response time: under 4 hours</span>
+                  <span style={{ fontSize: 14, fontWeight: 600, color: '#16a34a' }}>Average response time: under 4 hours</span>
                 </div>
               </div>
               <a
                 href="mailto:support@ytgrowth.io"
-                style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'var(--ytg-accent)', color: '#ffffff', fontFamily: "'DM Sans', system-ui, sans-serif", fontWeight: 700, fontSize: 15, padding: '15px 32px', borderRadius: 100, textDecoration: 'none', whiteSpace: 'nowrap', flexShrink: 0, boxShadow: '0 2px 6px rgba(0,0,0,0.12), 0 8px 28px rgba(229,48,42,0.36)', transition: 'filter 0.18s, transform 0.18s' }}
+                style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'var(--ytg-accent)', color: '#ffffff', fontFamily: "'DM Sans', system-ui, sans-serif", fontWeight: 700, fontSize: 14, padding: '15px 32px', borderRadius: 100, textDecoration: 'none', whiteSpace: 'nowrap', flexShrink: 0, boxShadow: '0 2px 6px rgba(0,0,0,0.12), 0 8px 28px rgba(229,48,42,0.36)', transition: 'filter 0.18s, transform 0.18s' }}
                 onMouseEnter={e => { e.currentTarget.style.filter = 'brightness(1.07)'; e.currentTarget.style.transform = 'translateY(-1px)' }}
                 onMouseLeave={e => { e.currentTarget.style.filter = 'none'; e.currentTarget.style.transform = 'none' }}
               >
@@ -176,7 +176,7 @@ export default function Contact() {
       <section style={{ padding: isMobile ? '64px 24px 80px' : '100px 40px 120px' }}>
         <div style={{ maxWidth: 1060, margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: 56 }}>
-            <span style={{ display: 'inline-block', fontSize: 11, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--ytg-accent-text)', background: 'var(--ytg-accent-light)', padding: '5px 14px', borderRadius: 100, marginBottom: 18 }}>Why people reach out</span>
+            <span style={{ display: 'inline-block', fontSize: 12, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--ytg-accent-text)', background: 'var(--ytg-accent-light)', padding: '5px 14px', borderRadius: 100, marginBottom: 18 }}>Why people reach out</span>
             <h2 style={{ fontWeight: 800, fontSize: isMobile ? 28 : 40, letterSpacing: '-1.2px', color: 'var(--ytg-text)', lineHeight: 1.1, marginBottom: 14 }}>No question is too small.</h2>
             <p style={{ fontSize: isMobile ? 15 : 16, color: 'var(--ytg-text-2)', lineHeight: 1.8, maxWidth: 480, margin: '0 auto' }}>
               Here's what usually lands in our inbox. If your reason isn't listed — email anyway.
@@ -191,7 +191,7 @@ export default function Contact() {
                     {r.emoji}
                   </div>
                   {r.tag && (
-                    <span style={{ fontSize: 11, fontWeight: 700, color: r.tagColor, background: `${r.tagColor}14`, border: `1px solid ${r.tagColor}30`, padding: '3px 10px', borderRadius: 100, letterSpacing: '0.04em' }}>
+                    <span style={{ fontSize: 12, fontWeight: 700, color: r.tagColor, background: `${r.tagColor}14`, border: `1px solid ${r.tagColor}30`, padding: '3px 10px', borderRadius: 100, letterSpacing: '0.04em' }}>
                       {r.tag}
                     </span>
                   )}
@@ -210,7 +210,7 @@ export default function Contact() {
           <p style={{ fontSize: isMobile ? 20 : 24, fontWeight: 800, color: 'var(--ytg-text)', letterSpacing: '-0.6px', lineHeight: 1.35, marginBottom: 16 }}>
             We respond to every email.<br />No exceptions.
           </p>
-          <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.8, maxWidth: 480, margin: '0 auto' }}>
+          <p style={{ fontSize: 14, color: 'var(--ytg-text-2)', lineHeight: 1.8, maxWidth: 480, margin: '0 auto' }}>
             If you've been waiting more than one business day, email again with <strong>URGENT</strong> in the subject — we'll prioritise it immediately.
           </p>
         </div>
@@ -221,9 +221,9 @@ export default function Contact() {
         <div style={{ maxWidth: 1280, margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexDirection: isMobile ? 'column' : 'row', gap: isMobile ? 20 : 0, textAlign: isMobile ? 'center' : 'left' }}>
           <a href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 9 }}>
             <Logo size={26} />
-            <span style={{ fontWeight: 800, fontSize: 15, color: '#ffffff', letterSpacing: '-0.4px' }}>YTGrowth</span>
+            <span style={{ fontWeight: 800, fontSize: 14, color: '#ffffff', letterSpacing: '-0.4px' }}>YTGrowth</span>
           </a>
-          <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.32)' }}>Built for creators serious about growth.</p>
+          <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.32)' }}>Built for creators serious about growth.</p>
           <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.22)' }}>© 2026 YTGrowth. All rights reserved.</p>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: isMobile ? '12px 20px' : 28, justifyContent: isMobile ? 'center' : 'flex-end' }}>
             {[
@@ -233,7 +233,7 @@ export default function Contact() {
               { label: 'Affiliates',       href: '/affiliate' },
               { label: 'Log in',           href: '/auth/login' },
             ].map((l, i) => (
-              <a key={i} href={l.href} style={{ fontSize: 13, color: 'rgba(255,255,255,0.38)', textDecoration: 'none', fontFamily: "'DM Sans', system-ui, sans-serif" }}
+              <a key={i} href={l.href} style={{ fontSize: 14, color: 'rgba(255,255,255,0.38)', textDecoration: 'none', fontFamily: "'DM Sans', system-ui, sans-serif" }}
                 onMouseEnter={e => e.currentTarget.style.color = 'rgba(255,255,255,0.72)'}
                 onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.38)'}
               >{l.label}</a>

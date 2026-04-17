@@ -175,7 +175,7 @@ export default function Keywords() {
       {/* Header */}
       <div style={{ marginBottom: 22 }}>
         <p style={{ fontSize: 22, fontWeight: 800, color: '#0a0a0f', letterSpacing: '-0.6px', marginBottom: 4 }}>Keyword Research</p>
-        <p style={{ fontSize: 13, color: C.text3 }}>YouTube autocomplete + related searches — filtered by intent, ranked by opportunity.</p>
+        <p style={{ fontSize: 14, color: C.text3 }}>YouTube autocomplete + related searches — filtered by intent, ranked by opportunity.</p>
       </div>
 
       {/* Search bar */}
@@ -197,7 +197,7 @@ export default function Keywords() {
 
       {/* Error */}
       {error && (
-        <div style={{ background: C.redBg, border: '1px solid #fecaca', borderRadius: 14, padding: '12px 16px', marginBottom: 16, color: C.red, fontSize: 13.5 }}>
+        <div style={{ background: C.redBg, border: '1px solid #fecaca', borderRadius: 14, padding: '12px 16px', marginBottom: 16, color: C.red, fontSize: 14 }}>
           {error}
         </div>
       )}
@@ -206,16 +206,16 @@ export default function Keywords() {
       {intentOptions && !loading && (
         <div className="kw-card kw-in" style={{ padding: '20px 22px', marginBottom: 20, borderColor: '#bfdbfe', background: '#eff6ff' }}>
           <p style={{ fontSize: 14, fontWeight: 800, color: C.text1, letterSpacing: '-0.3px', marginBottom: 3 }}>What niche is this keyword for?</p>
-          <p style={{ fontSize: 13, color: C.text3, marginBottom: 14 }}>Pick the right audience so we search the correct space.</p>
+          <p style={{ fontSize: 14, color: C.text3, marginBottom: 14 }}>Pick the right audience so we search the correct space.</p>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
             {intentOptions.map((opt, i) => (
               <div key={i} className="kw-intent-opt" onClick={() => runResearch(opt.keyword)}>
                 <div style={{ flex: 1 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 3 }}>
-                    <span style={{ fontSize: 13.5, fontWeight: 700, color: C.text1 }}>{opt.label}</span>
-                    <span style={{ fontSize: 10.5, fontWeight: 700, color: C.blue, background: C.blueBg, border: `1px solid ${C.blueBdr}`, padding: '2px 8px', borderRadius: 20 }}>{opt.keyword}</span>
+                    <span style={{ fontSize: 14, fontWeight: 700, color: C.text1 }}>{opt.label}</span>
+                    <span style={{ fontSize: 12, fontWeight: 700, color: C.blue, background: C.blueBg, border: `1px solid ${C.blueBdr}`, padding: '2px 8px', borderRadius: 20 }}>{opt.keyword}</span>
                   </div>
-                  <p style={{ fontSize: 12.5, color: C.text3 }}>{opt.description}</p>
+                  <p style={{ fontSize: 12, color: C.text3 }}>{opt.description}</p>
                 </div>
                 <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke={C.text4} strokeWidth="2" strokeLinecap="round"><path d="M5 3l4 4-4 4"/></svg>
               </div>
@@ -237,7 +237,7 @@ export default function Keywords() {
             {/* Card 1 (30%) — stats + intent tags */}
             <div className="kw-card" style={{ width: '30%', flexShrink: 0, overflow: 'hidden' }}>
               <div style={{ padding: '12px 18px', background: '#f8f8fb', borderBottom: `1px solid ${C.border}` }}>
-                <p style={{ fontSize: 10, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.09em' }}>Search Intent</p>
+                <p style={{ fontSize: 12, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.09em' }}>Search Intent</p>
               </div>
               <div style={{ padding: '14px 18px', borderBottom: `1px solid ${C.border}` }}>
                 {[
@@ -247,7 +247,7 @@ export default function Keywords() {
                 ].map((s, i) => (
                   <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: i > 0 ? 9 : 0, marginTop: i > 0 ? 9 : 0, borderTop: i > 0 ? `1px solid ${C.border}` : 'none' }}>
                     <p style={{ fontSize: 12, color: C.text3 }}>{s.label}</p>
-                    <p style={{ fontSize: 15, fontWeight: 800, color: s.accent ? C.blue : C.text1, letterSpacing: '-0.4px' }}>{s.value ?? '—'}</p>
+                    <p style={{ fontSize: 14, fontWeight: 800, color: s.accent ? C.blue : C.text1, letterSpacing: '-0.4px' }}>{s.value ?? '—'}</p>
                   </div>
                 ))}
               </div>
@@ -261,14 +261,14 @@ export default function Keywords() {
             {/* Card 2 (70%) — summary + top pick */}
             <div className="kw-card" style={{ flex: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
               <div style={{ padding: '18px 22px', flex: 1, borderBottom: result.topPick ? `1px solid ${C.border}` : 'none' }}>
-                <p style={{ fontSize: 10, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.09em', marginBottom: 10 }}>Intent Summary</p>
-                <p style={{ fontSize: 13.5, color: C.text2, lineHeight: 1.75 }}>{result.seedIntent?.intentSummary}</p>
+                <p style={{ fontSize: 12, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.09em', marginBottom: 10 }}>Intent Summary</p>
+                <p style={{ fontSize: 14, color: C.text2, lineHeight: 1.75 }}>{result.seedIntent?.intentSummary}</p>
               </div>
               {result.topPick && (
                 <div style={{ padding: '16px 22px', background: C.greenBg, borderTop: `1px solid #bbf7d0` }}>
-                  <p style={{ fontSize: 10, fontWeight: 700, color: C.green, textTransform: 'uppercase', letterSpacing: '0.09em', marginBottom: 7 }}>Top Pick</p>
+                  <p style={{ fontSize: 12, fontWeight: 700, color: C.green, textTransform: 'uppercase', letterSpacing: '0.09em', marginBottom: 7 }}>Top Pick</p>
                   <p style={{ fontSize: 14, fontWeight: 700, color: C.text1, marginBottom: 5 }}>{result.topPick.keyword}</p>
-                  <p style={{ fontSize: 12.5, color: C.text2, lineHeight: 1.6 }}>{result.topPick.whyThisOne}</p>
+                  <p style={{ fontSize: 12, color: C.text2, lineHeight: 1.6 }}>{result.topPick.whyThisOne}</p>
                 </div>
               )}
             </div>
@@ -278,15 +278,15 @@ export default function Keywords() {
           <div className="kw-card" style={{ overflow: 'hidden', marginBottom: 14 }}>
             {/* Col headers */}
             <div style={{ display: 'grid', gridTemplateColumns: 'minmax(120px, 220px) 1fr 100px 130px', alignItems: 'center', padding: '10px 20px', borderBottom: `1px solid ${C.border}`, background: '#f8f8fb' }}>
-              <p style={{ fontSize: 10, fontWeight: 700, color: C.text4, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Keyword</p>
-              <p style={{ fontSize: 10, fontWeight: 700, color: C.text4, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Content Angle</p>
-              <p style={{ fontSize: 10, fontWeight: 700, color: C.text4, textTransform: 'uppercase', letterSpacing: '0.07em', textAlign: 'center' }}>Intent</p>
+              <p style={{ fontSize: 12, fontWeight: 700, color: C.text4, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Keyword</p>
+              <p style={{ fontSize: 12, fontWeight: 700, color: C.text4, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Content Angle</p>
+              <p style={{ fontSize: 12, fontWeight: 700, color: C.text4, textTransform: 'uppercase', letterSpacing: '0.07em', textAlign: 'center' }}>Intent</p>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 8 }}>
-                <p style={{ fontSize: 10, fontWeight: 700, color: C.text4, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Opportunity</p>
+                <p style={{ fontSize: 12, fontWeight: 700, color: C.text4, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Opportunity</p>
                 <button onClick={handleCopyKeywords} style={{
                   padding: '3px 9px', background: copied ? C.greenBg : '#fff',
                   border: `1px solid ${copied ? '#bbf7d0' : C.border}`, borderRadius: 20,
-                  cursor: 'pointer', transition: 'all 0.18s', fontSize: 9.5, fontWeight: 700,
+                  cursor: 'pointer', transition: 'all 0.18s', fontSize: 12, fontWeight: 700,
                   color: copied ? C.green : C.text3, fontFamily: 'inherit', whiteSpace: 'nowrap',
                 }}>
                   {copied ? '✓ Copied' : 'Copy all'}
@@ -299,7 +299,7 @@ export default function Keywords() {
 
                 {/* Keyword name */}
                 <div style={{ minWidth: 0, paddingRight: 14 }}>
-                  <p style={{ fontSize: 13, fontWeight: 700, color: C.text1, lineHeight: 1.4 }}>{kw.keyword}</p>
+                  <p style={{ fontSize: 14, fontWeight: 700, color: C.text1, lineHeight: 1.4 }}>{kw.keyword}</p>
                 </div>
 
                 {/* Content angle */}
@@ -317,7 +317,7 @@ export default function Keywords() {
                 {/* Opportunity */}
                 <div style={{ paddingLeft: 12 }}>
                   <div style={{ display: 'flex', alignItems: 'center', marginBottom: 4 }}>
-                    <p style={{ fontSize: 12.5, fontWeight: 800, color: oppColor(kw.opportunityScore) }}>{kw.opportunityScore}</p>
+                    <p style={{ fontSize: 12, fontWeight: 800, color: oppColor(kw.opportunityScore) }}>{kw.opportunityScore}</p>
                   </div>
                   <div className="kw-bar">
                     <div className="kw-bar-fill" style={{ width: `${kw.opportunityScore}%`, background: oppColor(kw.opportunityScore) }} />
@@ -331,12 +331,12 @@ export default function Keywords() {
           {result.keywords?.length > 0 && (
             <div className="kw-card" style={{ padding: '16px 20px', marginBottom: 14 }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
-                <p style={{ fontSize: 10.5, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em' }}>All Keywords</p>
+                <p style={{ fontSize: 12, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em' }}>All Keywords</p>
                 <button onClick={handleCopyKeywords} style={{
                   display: 'flex', alignItems: 'center', gap: 5, padding: '6px 14px',
                   background: copied ? C.greenBg : '#fff', border: `1px solid ${copied ? '#bbf7d0' : C.border}`,
                   borderRadius: 20, cursor: 'pointer', transition: 'all 0.18s',
-                  fontSize: 11.5, fontWeight: 700, color: copied ? C.green : C.text2,
+                  fontSize: 12, fontWeight: 700, color: copied ? C.green : C.text2,
                   fontFamily: 'inherit', boxShadow: '0 1px 3px rgba(0,0,0,0.06)',
                 }}>
                   {copied ? '✓ Copied!' : 'Copy as list'}
@@ -359,7 +359,7 @@ export default function Keywords() {
           {/* Clusters — one card, columns divided by borders */}
           {result.clusters?.length > 0 && (
             <div>
-              <p style={{ fontSize: 10.5, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 14 }}>Content Clusters</p>
+              <p style={{ fontSize: 12, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 14 }}>Content Clusters</p>
               <div className="kw-card" style={{ overflow: 'hidden', display: 'flex' }}>
                 {result.clusters.map((cl, i) => {
                   const palette = [
@@ -378,13 +378,13 @@ export default function Keywords() {
                     }}>
                       {/* Column header */}
                       <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '12px 16px', background: '#f8f8fb', borderBottom: `1px solid ${C.border}` }}>
-                        <span style={{ width: 20, height: 20, borderRadius: 6, background: p.bg, color: p.clr, fontSize: 10.5, fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>{i + 1}</span>
-                        <p style={{ fontSize: 12.5, fontWeight: 700, color: C.text1, lineHeight: 1.3 }}>{cl.clusterName}</p>
+                        <span style={{ width: 20, height: 20, borderRadius: 6, background: p.bg, color: p.clr, fontSize: 12, fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>{i + 1}</span>
+                        <p style={{ fontSize: 12, fontWeight: 700, color: C.text1, lineHeight: 1.3 }}>{cl.clusterName}</p>
                       </div>
                       {/* Keywords */}
                       <div style={{ padding: '12px 16px', display: 'flex', flexWrap: 'wrap', gap: 5 }}>
                         {cl.keywords?.map(k => (
-                          <span key={k} style={{ background: p.accentBg, border: `1px solid ${p.bdr}`, color: p.clr, padding: '3px 9px', borderRadius: 20, fontSize: 11.5, fontWeight: 600 }}>{k}</span>
+                          <span key={k} style={{ background: p.accentBg, border: `1px solid ${p.bdr}`, color: p.clr, padding: '3px 9px', borderRadius: 20, fontSize: 12, fontWeight: 600 }}>{k}</span>
                         ))}
                       </div>
                     </div>

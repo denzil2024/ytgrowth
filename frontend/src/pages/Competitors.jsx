@@ -369,7 +369,7 @@ function Card({ children, style }) {
 
 function SectionTitle({ children }) {
   return (
-    <p style={{ fontSize: 10.5, fontWeight: 600, color: '#a0a0b0', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 14 }}>
+    <p style={{ fontSize: 12, fontWeight: 600, color: '#a0a0b0', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 14 }}>
       {children}
     </p>
   )
@@ -405,26 +405,26 @@ function ChannelCard({ channel, onAnalyze, isAdded, loadingId }) {
           {channel.channel_name}
         </p>
         {channel.description && (
-          <p style={{ fontSize: 12.5, color: '#888', overflow: 'hidden', fontWeight: 400,
+          <p style={{ fontSize: 12, color: '#888', overflow: 'hidden', fontWeight: 400,
             textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{channel.description}</p>
         )}
       </div>
       {isAdded ? (
         <span style={{ background: 'rgba(240,253,244,0.95)', color: '#166534',
           border: '1.5px solid rgba(134,239,172,0.85)', borderRadius: 10,
-          padding: '8px 16px', fontSize: 12.5, fontWeight: 700, flexShrink: 0,
+          padding: '8px 16px', fontSize: 12, fontWeight: 700, flexShrink: 0,
           display: 'flex', alignItems: 'center', gap: 5 }}>
-          <span style={{ fontSize: 11 }}>✓</span> Added
+          <span style={{ fontSize: 12 }}>✓</span> Added
         </span>
       ) : loading ? (
         <span style={{ background: 'rgba(245,245,247,0.95)', color: '#aaa',
           border: '1.5px solid rgba(0,0,0,0.08)', borderRadius: 10,
-          padding: '8px 16px', fontSize: 12.5, fontWeight: 600, flexShrink: 0 }}>
+          padding: '8px 16px', fontSize: 12, fontWeight: 600, flexShrink: 0 }}>
           Analyzing…
         </span>
       ) : (
         <button className="comp-btn-primary" onClick={() => onAnalyze(channel.channel_id)}
-          style={{ padding: '9px 22px', fontSize: 13, borderRadius: 10, flexShrink: 0 }}>
+          style={{ padding: '9px 22px', fontSize: 14, borderRadius: 10, flexShrink: 0 }}>
           Analyze
         </button>
       )}
@@ -455,19 +455,19 @@ function AIAnalysis({ ai, top5Videos }) {
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, marginBottom: 14 }}>
           <SectionTitle>Intelligence summary</SectionTitle>
           <span style={{ background: threat.bg, color: threat.text, border: `1px solid ${threat.border}`,
-            fontSize: 11.5, fontWeight: 700, padding: '5px 13px', borderRadius: 50, flexShrink: 0,
+            fontSize: 12, fontWeight: 700, padding: '5px 13px', borderRadius: 50, flexShrink: 0,
             display: 'inline-flex', alignItems: 'center', gap: 5, letterSpacing: '0.1px' }}>
             <span style={{ width: 6, height: 6, borderRadius: '50%', background: threat.dot,
               flexShrink: 0, boxShadow: `0 0 6px ${threat.dot}` }} />
             {threat.label}
           </span>
         </div>
-        <p style={{ fontSize: 13.5, color: '#444', lineHeight: 1.78, marginBottom: 14, fontWeight: 400 }}>
+        <p style={{ fontSize: 14, color: '#444', lineHeight: 1.78, marginBottom: 14, fontWeight: 400 }}>
           {ai.competitorSummary}
         </p>
         <div style={{ background: threat.bg, border: `1px solid ${threat.border}`,
           borderRadius: 12, padding: '12px 16px' }}>
-          <p style={{ fontSize: 13, color: threat.text, lineHeight: 1.65 }}>
+          <p style={{ fontSize: 14, color: threat.text, lineHeight: 1.65 }}>
             <span style={{ fontWeight: 700 }}>Why: </span>{ai.threatReason}
           </p>
         </div>
@@ -481,7 +481,7 @@ function AIAnalysis({ ai, top5Videos }) {
             {ai.winningMoves.map((m, i) => (
               <div key={i} style={{ display: 'flex', gap: 14, alignItems: 'flex-start' }}>
                 <span className="comp-winner-num">{i + 1}</span>
-                <p style={{ fontSize: 13.5, color: '#333', lineHeight: 1.7, paddingTop: 3, fontWeight: 400 }}>{m}</p>
+                <p style={{ fontSize: 14, color: '#333', lineHeight: 1.7, paddingTop: 3, fontWeight: 400 }}>{m}</p>
               </div>
             ))}
           </div>
@@ -497,7 +497,7 @@ function AIAnalysis({ ai, top5Videos }) {
               <div key={i} className="comp-inner-block">
                 <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between',
                   gap: 12, marginBottom: 8 }}>
-                  <p style={{ fontSize: 13.5, fontWeight: 700, color: '#111', lineHeight: 1.45,
+                  <p style={{ fontSize: 14, fontWeight: 700, color: '#111', lineHeight: 1.45,
                     letterSpacing: '-0.1px' }}>{idea.title}</p>
                   {idea.targetKeyword && (
                     <span className="comp-tag" style={{ background: 'rgba(239,246,255,0.95)', color: '#1D4ED8',
@@ -507,7 +507,7 @@ function AIAnalysis({ ai, top5Videos }) {
                     </span>
                   )}
                 </div>
-                <p style={{ fontSize: 12.5, color: '#666', lineHeight: 1.6, fontWeight: 400 }}>
+                <p style={{ fontSize: 12, color: '#666', lineHeight: 1.6, fontWeight: 400 }}>
                   <span style={{ fontWeight: 700, color: '#333' }}>Angle: </span>{idea.angle}
                 </p>
               </div>
@@ -547,10 +547,10 @@ function AIAnalysis({ ai, top5Videos }) {
                     </div>
                   </div>
                   <div style={{ flex: 1, minWidth: 0 }}>
-                    <p style={{ fontSize: 13, fontWeight: 600, color: '#111', lineHeight: 1.45,
+                    <p style={{ fontSize: 14, fontWeight: 600, color: '#111', lineHeight: 1.45,
                       whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{v.title}</p>
                     {why && (
-                      <p style={{ fontSize: 11.5, color: '#999', marginTop: 3, lineHeight: 1.4,
+                      <p style={{ fontSize: 12, color: '#999', marginTop: 3, lineHeight: 1.4,
                         whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                         {why}
                       </p>
@@ -583,10 +583,10 @@ function AIAnalysis({ ai, top5Videos }) {
                 <div key={i} style={{ display: 'flex', justifyContent: 'space-between',
                   alignItems: 'center', padding: '9px 0',
                   borderBottom: i < ai.topTopics.length - 1 ? '1px solid rgba(0,0,0,0.05)' : 'none' }}>
-                  <p style={{ fontSize: 13, color: '#333', fontWeight: 500 }}>{t.topic}</p>
+                  <p style={{ fontSize: 14, color: '#333', fontWeight: 500 }}>{t.topic}</p>
                   <div style={{ textAlign: 'right', flexShrink: 0, marginLeft: 12 }}>
-                    <p style={{ fontSize: 13, fontWeight: 800, color: '#111' }}>{fmtK(t.avgViews)}</p>
-                    <p style={{ fontSize: 10.5, color: '#aaa', fontWeight: 500 }}>{t.videoCount} videos</p>
+                    <p style={{ fontSize: 14, fontWeight: 800, color: '#111' }}>{fmtK(t.avgViews)}</p>
+                    <p style={{ fontSize: 12, color: '#aaa', fontWeight: 500 }}>{t.videoCount} videos</p>
                   </div>
                 </div>
               ))}
@@ -602,7 +602,7 @@ function AIAnalysis({ ai, top5Videos }) {
                 <p className="comp-card-label">Avg title length</p>
                 <p style={{ fontSize: 22, fontWeight: 800, color: '#111', letterSpacing: '-0.5px' }}>
                   {ai.titlePatterns.avgTitleLength}
-                  <span style={{ fontSize: 13, fontWeight: 500, color: '#aaa', marginLeft: 4 }}>chars</span>
+                  <span style={{ fontSize: 14, fontWeight: 500, color: '#aaa', marginLeft: 4 }}>chars</span>
                 </p>
               </div>
               {ai.titlePatterns.dominantFormats?.length > 0 && (
@@ -653,7 +653,7 @@ function AIAnalysis({ ai, top5Videos }) {
           ].filter(x => x.val).map(({ key, label, val }) => (
             <div key={key} className="comp-insight-card">
               <p className="comp-card-label" style={{ marginBottom: 8 }}>{label}</p>
-              <p style={{ fontSize: 13, color: '#52525b', lineHeight: 1.7, fontWeight: 400 }}>{val}</p>
+              <p style={{ fontSize: 14, color: '#52525b', lineHeight: 1.7, fontWeight: 400 }}>{val}</p>
             </div>
           ))}
         </div>
@@ -672,7 +672,7 @@ function AIAnalysis({ ai, top5Videos }) {
             ].map(({ label, val }) => (
               <div key={label} className="comp-timing-pill">
                 <p style={{ fontSize: 20, fontWeight: 800, color: '#111114', letterSpacing: '-0.5px', lineHeight: 1 }}>{val}</p>
-                <p style={{ fontSize: 10.5, fontWeight: 600, color: '#a0a0b0', textTransform: 'uppercase', letterSpacing: '0.06em' }}>{label}</p>
+                <p style={{ fontSize: 12, fontWeight: 600, color: '#a0a0b0', textTransform: 'uppercase', letterSpacing: '0.06em' }}>{label}</p>
               </div>
             ))}
           </div>
@@ -755,7 +755,7 @@ export default function Competitors() {
         <h2 style={{ fontSize: 22, fontWeight: 800, color: '#0a0a0f', marginBottom: 4, letterSpacing: '-0.6px' }}>
           Competitor Analysis
         </h2>
-        <p style={{ fontSize: 13, color: '#a0a0b0', fontWeight: 400 }}>
+        <p style={{ fontSize: 14, color: '#a0a0b0', fontWeight: 400 }}>
           Search channels in your niche · get a full AI-powered competitive intelligence report
         </p>
       </div>
@@ -775,10 +775,10 @@ export default function Competitors() {
       {activeTab === 'search' && (
         <div>
           <Card style={{ marginBottom: 20 }}>
-            <p style={{ fontSize: 14.5, fontWeight: 800, color: '#0a0a0f', marginBottom: 4, letterSpacing: '-0.3px' }}>
+            <p style={{ fontSize: 14, fontWeight: 800, color: '#0a0a0f', marginBottom: 4, letterSpacing: '-0.3px' }}>
               Find a competitor
             </p>
-            <p style={{ fontSize: 13, color: '#a0a0b0', marginBottom: 16, fontWeight: 400 }}>
+            <p style={{ fontSize: 14, color: '#a0a0b0', marginBottom: 16, fontWeight: 400 }}>
               Type the name of a YouTube channel in your niche, or paste a channel URL
             </p>
             <div style={{ display: 'flex', gap: 10 }}>
@@ -801,7 +801,7 @@ export default function Competitors() {
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#a0a0b0" strokeWidth="1.6" strokeLinecap="round"><circle cx="8.5" cy="8.5" r="5.5"/><line x1="13" y1="13" x2="17" y2="17"/></svg>
               </div>
               <p style={{ fontWeight: 700, color: '#52525b', marginBottom: 6, fontSize: 14 }}>Search for a channel to compare</p>
-              <p style={{ fontSize: 13, color: '#a0a0b0' }}>Type any YouTube channel name above to get started</p>
+              <p style={{ fontSize: 14, color: '#a0a0b0' }}>Type any YouTube channel name above to get started</p>
             </div>
           )}
 
@@ -811,12 +811,12 @@ export default function Competitors() {
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#a0a0b0" strokeWidth="1.6" strokeLinecap="round"><circle cx="8.5" cy="8.5" r="5.5"/><line x1="13" y1="13" x2="17" y2="17"/><line x1="6.5" y1="8.5" x2="10.5" y2="8.5"/></svg>
               </div>
               <p style={{ fontWeight: 700, color: '#52525b', marginBottom: 6, fontSize: 14 }}>No channels found</p>
-              <p style={{ fontSize: 13, color: '#a0a0b0' }}>Try a different search term or paste the channel URL</p>
+              <p style={{ fontSize: 14, color: '#a0a0b0' }}>Try a different search term or paste the channel URL</p>
             </div>
           )}
 
           {analyzeError && (
-            <div style={{ background: '#fff5f5', border: '1px solid #fecaca', borderRadius: 12, padding: '12px 16px', marginBottom: 12, fontSize: 13, color: '#e5251b', fontWeight: 500 }}>
+            <div style={{ background: '#fff5f5', border: '1px solid #fecaca', borderRadius: 12, padding: '12px 16px', marginBottom: 12, fontSize: 14, color: '#e5251b', fontWeight: 500 }}>
               {analyzeError}
             </div>
           )}
@@ -837,7 +837,7 @@ export default function Competitors() {
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#a0a0b0" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="10" width="3" height="7" rx="1"/><rect x="8.5" y="6" width="3" height="11" rx="1"/><rect x="14" y="3" width="3" height="14" rx="1"/></svg>
               </div>
               <p style={{ fontWeight: 700, color: '#52525b', marginBottom: 6, fontSize: 14 }}>No competitors tracked yet</p>
-              <p style={{ fontSize: 13, color: '#a0a0b0', maxWidth: 300, margin: '0 auto' }}>
+              <p style={{ fontSize: 14, color: '#a0a0b0', maxWidth: 300, margin: '0 auto' }}>
                 Go to Search, find a channel and click Analyze — it'll be saved here automatically
               </p>
             </div>
@@ -887,14 +887,14 @@ export default function Competitors() {
                     {/* ── left: name + badges ── */}
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-                        <p style={{ fontWeight: 800, fontSize: 14.5, color: '#0a0a0a',
+                        <p style={{ fontWeight: 800, fontSize: 14, color: '#0a0a0a',
                           letterSpacing: '-0.2px', whiteSpace: 'nowrap', overflow: 'hidden',
                           textOverflow: 'ellipsis' }}>
                           {comp.channel_name}
                         </p>
                         {threat && (
                           <span style={{ background: threat.bg, color: threat.text,
-                            border: `1px solid ${threat.border}`, fontSize: 10.5, fontWeight: 700,
+                            border: `1px solid ${threat.border}`, fontSize: 12, fontWeight: 700,
                             padding: '3px 10px', borderRadius: 50, flexShrink: 0,
                             display: 'inline-flex', alignItems: 'center', gap: 4, letterSpacing: '0.1px' }}>
                             <span style={{ width: 5, height: 5, borderRadius: '50%', background: threat.dot,
@@ -910,7 +910,7 @@ export default function Competitors() {
                         <StatChip value={fmtK(comp.avg_views_per_video)} label="avg views" />
                         {ai && <StatChip value={ai.gapsToExploit?.length || 0} label="gaps" />}
                         {savedAt && (
-                          <span style={{ fontSize: 11, color: '#bbb', fontWeight: 500,
+                          <span style={{ fontSize: 12, color: '#bbb', fontWeight: 500,
                             alignSelf: 'center', marginLeft: 2 }}>
                             · {savedAt}
                           </span>
