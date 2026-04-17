@@ -965,7 +965,7 @@ export default function Landing() {
           <div>
             <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-accent-text)', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 12 }}>Deep Channel Intelligence</p>
             <h2 style={{ fontSize: isMobile ? 26 : 36, fontWeight: 800, letterSpacing: '-1.2px', lineHeight: 1.1, marginBottom: 18, color: 'var(--ytg-text)' }}>10 dimensions. <span style={{ color: 'var(--ytg-accent)' }}>One brutal honest assessment.</span></h2>
-            <p style={{ fontSize: 14, color: 'var(--ytg-text-2)', lineHeight: 1.78, marginBottom: 28 }}>Most tools show you a score. YTGrowth shows you why — traffic sources, device breakdown, audience demographics, posting patterns, CTR health, retention, engagement quality, content strategy, SEO, and how you stack up against your actual competitors. All in one audit.</p>
+            <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.78, marginBottom: 28 }}>Most tools show you a score. YTGrowth shows you why — traffic sources, device breakdown, audience demographics, posting patterns, CTR health, retention, engagement quality, content strategy, SEO, and how you stack up against your actual competitors. All in one audit.</p>
             {[
               'Traffic source breakdown — search vs browse vs external',
               'Competitor benchmarking against channels in your niche',
@@ -1039,7 +1039,7 @@ export default function Landing() {
           <div style={{ order: isMobile ? 0 : 1 }}>
             <p style={{ fontSize: 11, fontWeight: 700, color: '#ff3b30', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 12 }}>Competitive Edge</p>
             <h2 style={{ fontSize: isMobile ? 26 : 36, fontWeight: 800, letterSpacing: '-1.2px', lineHeight: 1.1, marginBottom: 18, color: '#ffffff' }}>Find the gaps your competitors <span style={{ color: '#ff3b30' }}>leave open.</span></h2>
-            <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.55)', lineHeight: 1.78, marginBottom: 28 }}>Connect a competitor channel and YTGrowth maps exactly what topics they ignore, which title patterns drive their views, and where their audience is underserved. Then tells you how to own those gaps.</p>
+            <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.55)', lineHeight: 1.78, marginBottom: 28 }}>Connect a competitor channel and YTGrowth maps exactly what topics they ignore, which title patterns drive their views, and where their audience is underserved. Then tells you how to own those gaps.</p>
             {[
               'Topic gap analysis from real video data',
               'Title pattern and keyword extraction',
@@ -1062,7 +1062,7 @@ export default function Landing() {
           <div>
             <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-accent-text)', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 12 }}>Thumbnail Intelligence</p>
             <h2 style={{ fontSize: isMobile ? 26 : 36, fontWeight: 800, letterSpacing: '-1.2px', lineHeight: 1.1, marginBottom: 18, color: 'var(--ytg-text)' }}>Scored against the videos <span style={{ color: 'var(--ytg-accent)' }}>actually winning in your niche.</span></h2>
-            <p style={{ fontSize: 14, color: 'var(--ytg-text-2)', lineHeight: 1.78, marginBottom: 28 }}>Two layers of analysis — a deterministic algorithm checking contrast, text clarity, face detection, and composition, then Claude Vision comparing it against top-performing videos in your exact niche. You get a score out of 100 and know exactly what to fix.</p>
+            <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.78, marginBottom: 28 }}>Two layers of analysis — a deterministic algorithm checking contrast, text clarity, face detection, and composition, then Claude Vision comparing it against top-performing videos in your exact niche. You get a score out of 100 and know exactly what to fix.</p>
             {[
               'Layer 1 — algorithm, instant, free',
               'Layer 2 — Claude Vision vs real niche benchmarks',
@@ -1129,7 +1129,7 @@ export default function Landing() {
           <div style={{ order: isMobile ? 0 : 1 }}>
             <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-accent-text)', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 12 }}>Automated Intelligence</p>
             <h2 style={{ fontSize: isMobile ? 26 : 36, fontWeight: 800, letterSpacing: '-1.2px', lineHeight: 1.1, marginBottom: 18, color: 'var(--ytg-text)' }}>Your channel's weekly performance, <span style={{ color: 'var(--ytg-accent)' }}>in your inbox.</span></h2>
-            <p style={{ fontSize: 14, color: 'var(--ytg-text-2)', lineHeight: 1.78, marginBottom: 28 }}>Every week YTGrowth generates a performance report — key metrics, biggest win, what to watch out for, and one priority action. Sent automatically every week. Always in your dashboard even if you unsubscribe from email.</p>
+            <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.78, marginBottom: 28 }}>Every week YTGrowth generates a performance report — key metrics, biggest win, what to watch out for, and one priority action. Sent automatically every week. Always in your dashboard even if you unsubscribe from email.</p>
             {[
               'Subscribers, views, CTR, channel score',
               'Week-on-week delta on every metric',
@@ -1228,27 +1228,37 @@ export default function Landing() {
         <div style={{ maxWidth: 1280, margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: 56 }}>
             {/* Rating summary row */}
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: isMobile ? 10 : 16, marginBottom: 20, flexWrap: 'wrap' }}>
-              <div style={{ display: 'flex', gap: 3 }}>
-                {[...Array(5)].map((_, i) => <span key={i} style={{ fontSize: 20, color: '#f59e0b' }}>★</span>)}
+            {isMobile ? (
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, marginBottom: 20 }}>
+                <span style={{ fontSize: 28, fontWeight: 800, color: '#0a0a0f', letterSpacing: '-0.8px' }}>4.9 / 5</span>
+                <div style={{ display: 'flex', gap: 3 }}>
+                  {[...Array(5)].map((_, i) => <span key={i} style={{ fontSize: 20, color: '#f59e0b' }}>★</span>)}
+                </div>
+                <span style={{ fontSize: 12, fontWeight: 500, color: 'rgba(10,10,15,0.45)' }}>Based on 200+ reviews</span>
               </div>
-              {!isMobile && <div style={{ width: 1, height: 24, background: 'rgba(10,10,15,0.12)', alignSelf: 'center' }} />}
-              <span style={{ fontSize: 22, fontWeight: 800, color: '#0a0a0f', letterSpacing: '-0.5px' }}>4.9 / 5</span>
-              {!isMobile && <div style={{ width: 1, height: 24, background: 'rgba(10,10,15,0.12)', alignSelf: 'center' }} />}
-              <span style={{ fontSize: 13, fontWeight: 500, color: 'rgba(10,10,15,0.45)' }}>Based on 200+ reviews</span>
-            </div>
+            ) : (
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 16, marginBottom: 20 }}>
+                <div style={{ display: 'flex', gap: 3 }}>
+                  {[...Array(5)].map((_, i) => <span key={i} style={{ fontSize: 20, color: '#f59e0b' }}>★</span>)}
+                </div>
+                <div style={{ width: 1, height: 24, background: 'rgba(10,10,15,0.12)', alignSelf: 'center' }} />
+                <span style={{ fontSize: 22, fontWeight: 800, color: '#0a0a0f', letterSpacing: '-0.5px' }}>4.9 / 5</span>
+                <div style={{ width: 1, height: 24, background: 'rgba(10,10,15,0.12)', alignSelf: 'center' }} />
+                <span style={{ fontSize: 13, fontWeight: 500, color: 'rgba(10,10,15,0.45)' }}>Based on 200+ reviews</span>
+              </div>
+            )}
             <h2 style={{ fontWeight: 800, fontSize: isMobile ? 32 : 48, letterSpacing: '-1.5px', color: '#0a0a0f', lineHeight: 1.06, marginBottom: 12 }}>The tool creators <span style={{ color: 'var(--ytg-accent)' }}>actually recommend.</span></h2>
             <p style={{ fontSize: 17, color: 'rgba(10,10,15,0.6)', lineHeight: 1.8 }}>Real channels. Real numbers.</p>
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)', gap: 20 }}>
             {[
-              { avatar: '/avatars/marcus.jpg',  color: '#0a84ff',  name: 'Marcus T.',    meta: 'Tech & Productivity · 42K subs', platform: 'G2',           metric: 'CTR: 2.3% → 5.1% in 6 weeks',       quote: 'The competitor gap analysis is the real weapon here. I found three topics my rivals ignored completely. One video hit 180K views in 30 days.' },
-              { avatar: '/avatars/priya.jpg',   color: '#16a34a',  name: 'Priya Nair',   meta: 'Personal Finance · 28K subs',   platform: 'Trustpilot',   metric: 'Retention: 31% → 58% in 8 weeks',    quote: 'Thumbnail IQ told me exactly what top channels in my niche were doing. I followed the benchmark suggestions and my retention nearly doubled.' },
-              { avatar: '/avatars/james.jpg',   color: '#d97706',  name: 'James Oduya',  meta: 'Fitness & Training · 67K subs', platform: 'Product Hunt', metric: 'Channel score: 44 → 78',              quote: 'Agencies charge $500/month for what this does in 10 minutes. The audit flagged watch time problems I never would have caught on my own.' },
-              { avatar: '/avatars/sophie.jpg',  color: '#7c3aed',  name: 'Sophie Brandt', meta: 'Travel · 19K subs',            platform: 'G2',           metric: '3 videos × 100K+ views',              quote: 'The video ideas pulled from my competitor data gave me a 3-month content calendar. Three of those videos broke 100K.' },
-              { avatar: '/avatars/daniel.jpg',  color: '#e5251b',  name: 'Daniel Reyes', meta: 'Gaming · 89K subs',             platform: 'Trustpilot',   metric: 'Weekly subscribers: +180 avg',        quote: 'The weekly report is worth the entire subscription on its own. One priority action every Monday. My growth has been consistent ever since.' },
-              { avatar: '/avatars/amara.jpg',   color: '#16a34a',  name: 'Amara Osei',   meta: 'Business · 31K subs',           platform: 'Product Hunt', metric: '3 channels managed, one tool',        quote: 'Multi-channel support is exactly what a channel manager needs. Each health score visible instantly. Nothing else comes close.' },
-            ].map((t, i) => <TestimonialCard key={i} t={t} />)}
+              { avatar: '/avatars/marcus.jpg',  color: '#0a84ff',  name: 'Marcus T.',     meta: 'Tech & Productivity · 42K subs', platform: 'G2',           metric: 'CTR: 2.3% → 5.1% in 6 weeks',     quote: 'The competitor gap analysis is the real weapon here. I found three topics my rivals ignored completely. One video hit 180K views in 30 days.' },
+              { avatar: '/avatars/priya.jpg',   color: '#16a34a',  name: 'Priya Nair',    meta: 'Personal Finance · 28K subs',   platform: 'Trustpilot',   metric: 'Retention: 31% → 58% in 8 weeks',  quote: 'Thumbnail IQ told me exactly what top channels in my niche were doing. I followed the benchmark suggestions and my retention nearly doubled.' },
+              { avatar: '/avatars/james.jpg',   color: '#d97706',  name: 'James Oduya',   meta: 'Fitness & Training · 67K subs', platform: 'Product Hunt', metric: 'Channel score: 44 → 78',            quote: 'Agencies charge $500/month for what this does in 10 minutes. The audit flagged watch time problems I never would have caught on my own.' },
+              { avatar: '/avatars/sophie.jpg',  color: '#7c3aed',  name: 'Sophie Brandt', meta: 'Travel · 19K subs',             platform: 'G2',           metric: '3 videos × 100K+ views',            quote: 'The video ideas pulled from my competitor data gave me a 3-month content calendar. Three of those videos broke 100K.' },
+              { avatar: '/avatars/daniel.jpg',  color: '#e5251b',  name: 'Daniel Reyes',  meta: 'Gaming · 89K subs',             platform: 'Trustpilot',   metric: 'Weekly subscribers: +180 avg',      quote: 'The weekly report is worth the entire subscription on its own. One priority action every Monday. My growth has been consistent ever since.' },
+              { avatar: '/avatars/amara.jpg',   color: '#16a34a',  name: 'Amara Osei',    meta: 'Business · 31K subs',           platform: 'Product Hunt', metric: '3 channels managed, one tool',      quote: 'Multi-channel support is exactly what a channel manager needs. Each health score visible instantly. Nothing else comes close.' },
+            ].slice(isMobile ? 3 : 0).map((t, i) => <TestimonialCard key={i} t={t} />)}
           </div>
         </div>
       </div>
@@ -1658,26 +1668,26 @@ export default function Landing() {
       </div>
 
       {/* ── FINAL CTA ───────────────────────────────────────────────────── */}
-      <div style={{ background: '#ecedf1', borderTop: '1px solid rgba(10,10,15,0.08)', borderBottom: '1px solid rgba(10,10,15,0.08)', padding: isMobile ? '70px 24px' : '120px 64px', position: 'relative', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 800, height: 600, background: 'radial-gradient(ellipse, rgba(229,48,42,0.06) 0%, transparent 65%)', pointerEvents: 'none' }} />
+      <div style={{ background: '#0d0d12', borderTop: '1px solid rgba(255,255,255,0.07)', padding: isMobile ? '70px 24px' : '120px 64px', position: 'relative', overflow: 'hidden' }}>
+        <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 900, height: 700, background: 'radial-gradient(ellipse, rgba(229,48,42,0.14) 0%, transparent 65%)', pointerEvents: 'none' }} />
         <div style={{ maxWidth: 860, margin: '0 auto', textAlign: 'center', position: 'relative', zIndex: 1 }}>
           <Badge>Get started</Badge>
-          <h2 style={{ fontWeight: 800, fontSize: isMobile ? 44 : 64, letterSpacing: isMobile ? '-1.5px' : '-2.5px', color: 'var(--ytg-text)', marginBottom: 18, lineHeight: 1.02 }}> {/* IMPROVED: mobile 38→44px */}
+          <h2 style={{ fontWeight: 800, fontSize: isMobile ? 44 : 64, letterSpacing: isMobile ? '-1.5px' : '-2.5px', color: '#ffffff', marginBottom: 18, lineHeight: 1.02 }}>
             Stop making videos<br />
             <span style={{ color: 'var(--ytg-accent)' }}>nobody finds.</span>
           </h2>
-          <p style={{ fontSize: 17, color: 'var(--ytg-text-2)', marginBottom: 48, lineHeight: 1.8, maxWidth: 620, margin: '0 auto 48px' }}>
+          <p style={{ fontSize: 17, color: 'rgba(255,255,255,0.52)', marginBottom: 48, lineHeight: 1.8, maxWidth: 620, margin: '0 auto 48px' }}>
             Start free. Run your first AI analysis on the house. See exactly what's holding your channel back.
           </p>
           <div style={{ display: 'flex', gap: 14, justifyContent: 'center', flexWrap: 'wrap', flexDirection: isMobile ? 'column' : 'row', alignItems: 'center' }}>
             <a href="/auth/login" className="ytg-btn-primary" style={{ fontSize: 16, padding: '16px 38px' }}>
               Start free <Arrow />
             </a>
-            <button onClick={() => { document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' }); setPricingTab('lifetime') }} className="ytg-btn-ghost" style={{ fontSize: 16, padding: '16px 38px' }}>
+            <button onClick={() => { document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' }); setPricingTab('lifetime') }} className="ytg-btn-ghost" style={{ fontSize: 16, padding: '16px 38px', background: 'rgba(255,255,255,0.07)', color: '#ffffff', border: '1px solid rgba(255,255,255,0.15)', boxShadow: 'none' }}>
               View lifetime deals
             </button>
           </div>
-          <p style={{ fontSize: 12, color: 'var(--ytg-text-3)', marginTop: 16 }}>No credit card · Lifetime deals capped at 500.</p> {/* IMPROVED: period→· separator */}
+          <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.3)', marginTop: 16 }}>No credit card · Lifetime deals capped at 500.</p>
         </div>
       </div>
 

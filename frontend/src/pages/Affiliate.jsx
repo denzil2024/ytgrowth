@@ -457,7 +457,7 @@ export default function Affiliate() {
               <div key={i} style={{ background: 'var(--ytg-card)', borderRadius: 18, border: '1px solid var(--ytg-border)', boxShadow: 'var(--ytg-shadow-lg)', padding: 36 }}>
                 <div style={{ fontSize: 13, fontWeight: 800, color: 'var(--ytg-accent)', letterSpacing: '0.04em', marginBottom: 22, fontFamily: 'monospace' }}>{step.n}</div>
                 <div style={{ fontSize: 17, fontWeight: 700, color: 'var(--ytg-text)', marginBottom: 12, letterSpacing: '-0.3px' }}>{step.title}</div>
-                <div style={{ fontSize: 14, color: 'var(--ytg-text-2)', lineHeight: 1.78 }}>{step.body}</div>
+                <div style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.78 }}>{step.body}</div>
               </div>
             ))}
           </div>
@@ -565,7 +565,7 @@ export default function Affiliate() {
                 <ChevronIcon open={openFaq === i} />
               </div>
               {openFaq === i && (
-                <div style={{ padding: '0 24px 22px', fontSize: 14, color: 'var(--ytg-text-2)', lineHeight: 1.82 }}>
+                <div style={{ padding: '0 24px 22px', fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.82 }}>
                   {item.a}
                 </div>
               )}
