@@ -21,7 +21,7 @@ function useGlobalStyles() {
         --ytg-text-2: rgba(10,10,15,0.62);
         --ytg-text-3: rgba(10,10,15,0.44);
         --ytg-text-4: rgba(10,10,15,0.28);
-        --ytg-nav: rgba(244,244,246,0.9);
+        --ytg-nav: rgba(13,13,18,0.96);
         --ytg-section: rgba(10,10,15,0.03);
         --ytg-card: #ffffff;
         --ytg-card-2: #e8e8ec;
@@ -100,10 +100,10 @@ function useGlobalStyles() {
       }
 
       .ytg-nav-link {
-        font-size: 14px; color: var(--ytg-text-3); font-weight: 500;
+        font-size: 14px; color: rgba(255,255,255,0.55); font-weight: 500;
         text-decoration: none; transition: color 0.15s; letter-spacing: -0.1px;
       }
-      .ytg-nav-link:hover { color: var(--ytg-text-2); } /* IMPROVED: softer hover, was var(--ytg-text) */
+      .ytg-nav-link:hover { color: rgba(255,255,255,0.9); }
 
       .ytg-faq-item {
         border-bottom: 1px solid var(--ytg-border);
@@ -236,8 +236,8 @@ function useGlobalStyles() {
         display: flex; position: fixed; inset: 0; z-index: 99; /* IMPROVED: always flex, use opacity for transition */
         background: var(--ytg-nav); backdrop-filter: blur(24px);
         -webkit-backdrop-filter: blur(24px);
-        flex-direction: column; align-items: center; justify-content: center; gap: 24px; /* IMPROVED: gap 32→24px */
-        border-bottom: 1px solid var(--ytg-border);
+        flex-direction: column; align-items: center; justify-content: center; gap: 24px;
+        border-bottom: 1px solid rgba(255,255,255,0.08);
         opacity: 0; pointer-events: none; transition: opacity 0.2s ease; /* IMPROVED: fade-in animation */
       }
       .ytg-mobile-menu.open { opacity: 1; pointer-events: auto; } /* IMPROVED: was display:flex */
@@ -548,15 +548,6 @@ function CreatorTicker({ isMobile }) {
             <p style={{ fontSize: 13, fontWeight: 700, color: 'rgba(10,10,15,0.35)', textTransform: 'uppercase', letterSpacing: '0.08em', margin: '0 0 12px' }}>
               Trusted by creators on YouTube
             </p>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-              {['Lifestyle', 'Tech', 'Finance', 'Fitness', 'Travel'].map((label, i) => (
-                <span key={i} style={{
-                  background: 'rgba(10,10,15,0.04)', border: '1px solid rgba(10,10,15,0.08)',
-                  borderRadius: 8, padding: '6px 14px',
-                  fontSize: 12, fontWeight: 600, color: 'rgba(10,10,15,0.45)',
-                }}>{label}</span>
-              ))}
-            </div>
           </div>
           <p style={{ fontSize: 13, fontWeight: 600, color: 'rgba(10,10,15,0.4)', flexShrink: 0, marginLeft: 24 }}>
             10,000+ channels analyzed
@@ -674,15 +665,15 @@ export default function Landing() {
         position: 'sticky', top: 0, zIndex: 100,
         background: 'var(--ytg-nav)', backdropFilter: 'blur(20px)',
         WebkitBackdropFilter: 'blur(20px)',
-        borderBottom: '1px solid var(--ytg-border)',
-        boxShadow: scrolled ? '0 4px 24px rgba(0,0,0,0.08)' : 'none',
+        borderBottom: '1px solid rgba(255,255,255,0.08)',
+        boxShadow: scrolled ? '0 4px 24px rgba(0,0,0,0.4)' : 'none',
         transition: 'box-shadow 0.3s ease',
         height: 72, display: 'flex', alignItems: 'center',
         justifyContent: 'space-between', padding: isMobile ? '0 20px' : '0 64px',
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
           <Logo size={32} />
-          <span style={{ fontWeight: 800, fontSize: 17, letterSpacing: '-0.4px', color: 'var(--ytg-text)' }}>YTGrowth</span>
+          <span style={{ fontWeight: 800, fontSize: 17, letterSpacing: '-0.4px', color: '#ffffff' }}>YTGrowth</span>
         </div>
 
         {!isMobile && (
@@ -698,15 +689,15 @@ export default function Landing() {
           {isMobile ? (
             <button
               onClick={() => setMobileMenuOpen(o => !o)}
-              style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 6, color: 'var(--ytg-text)', display: 'flex', flexDirection: 'column', gap: 4.5 }}
+              style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 6, color: '#ffffff', display: 'flex', flexDirection: 'column', gap: 4.5 }}
             >
               {mobileMenuOpen ? (
                 <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M2 2l14 14M16 2L2 16" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>
               ) : (
                 <>
-                  <span style={{ display: 'block', width: 20, height: 2, background: 'var(--ytg-text)', borderRadius: 2 }} />
-                  <span style={{ display: 'block', width: 20, height: 2, background: 'var(--ytg-text)', borderRadius: 2 }} />
-                  <span style={{ display: 'block', width: 14, height: 2, background: 'var(--ytg-text)', borderRadius: 2 }} />
+                  <span style={{ display: 'block', width: 20, height: 2, background: '#ffffff', borderRadius: 2 }} />
+                  <span style={{ display: 'block', width: 20, height: 2, background: '#ffffff', borderRadius: 2 }} />
+                  <span style={{ display: 'block', width: 14, height: 2, background: '#ffffff', borderRadius: 2 }} />
                 </>
               )}
             </button>
