@@ -742,10 +742,7 @@ export default function Landing() {
       </div>
 
       {/* ── HERO ────────────────────────────────────────────────────────── */}
-      <div id="hero" style={{ position: 'relative', padding: isMobile ? '80px 24px 60px' : '110px 48px 90px', overflow: 'hidden' }}> {/* IMPROVED: mobile 70→80px top, 50→60px bottom */}
-        {/* Glow */}
-        <div style={{ position: 'absolute', top: '-10%', left: '50%', transform: 'translateX(-50%)', width: 1100, height: 820, background: `radial-gradient(ellipse, rgba(229,48,42,0.22) 0%, transparent 62%)`, pointerEvents: 'none' }} />
-        <div style={{ position: 'absolute', bottom: '-5%', left: '50%', transform: 'translateX(-50%)', width: 1400, height: 500, background: `radial-gradient(ellipse, rgba(229,48,42,0.09) 0%, transparent 60%)`, pointerEvents: 'none' }} />
+      <div id="hero" style={{ position: 'relative', padding: isMobile ? '80px 24px 60px' : '110px 48px 90px', overflow: 'hidden', background: '#ffffff' }}>
 
         <div style={{ maxWidth: 1000, margin: '0 auto', textAlign: 'center', position: 'relative', zIndex: 1, animation: 'fadeUp 0.5s ease' }}>
           {/* Live badge */}
