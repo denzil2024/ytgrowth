@@ -102,10 +102,10 @@ function useGlobalStyles() {
       }
 
       .ytg-nav-link {
-        font-size: 15px; color: rgba(255,255,255,0.55); font-weight: 500;
+        font-size: 15px; color: rgba(10,10,15,0.52); font-weight: 500;
         text-decoration: none; transition: color 0.15s; letter-spacing: -0.1px;
       }
-      .ytg-nav-link:hover { color: rgba(255,255,255,0.9); }
+      .ytg-nav-link:hover { color: rgba(10,10,15,0.88); }
 
       .ytg-faq-item {
         border-bottom: 1px solid var(--ytg-border);
@@ -665,17 +665,17 @@ export default function Landing() {
       {/* ── NAV ─────────────────────────────────────────────────────────── */}
       <nav style={{
         position: 'sticky', top: 0, zIndex: 100,
-        background: isMobile ? 'rgba(244,244,246,0.95)' : 'var(--ytg-nav)', backdropFilter: 'blur(20px)',
+        background: 'rgba(244,244,246,0.92)', backdropFilter: 'blur(20px)',
         WebkitBackdropFilter: 'blur(20px)',
-        borderBottom: isMobile ? '1px solid rgba(10,10,15,0.1)' : '1px solid rgba(255,255,255,0.08)',
-        boxShadow: scrolled ? (isMobile ? '0 2px 12px rgba(0,0,0,0.08)' : '0 4px 24px rgba(0,0,0,0.4)') : 'none',
+        borderBottom: '1px solid rgba(10,10,15,0.1)',
+        boxShadow: scrolled ? '0 2px 12px rgba(0,0,0,0.08)' : 'none',
         transition: 'box-shadow 0.3s ease',
         height: 72, display: 'flex', alignItems: 'center',
         justifyContent: 'space-between', padding: isMobile ? '0 20px' : '0 48px 0 80px',
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
-          <Logo size={32} />
-          <span style={{ fontWeight: 800, fontSize: 18, lineHeight: 1, letterSpacing: '-0.4px', color: isMobile ? '#0a0a0f' : '#ffffff' }}>YTGrowth</span>
+          <Logo size={28} />
+          <span style={{ fontWeight: 800, fontSize: 15, lineHeight: 1, letterSpacing: '-0.4px', color: '#0a0a0f' }}>YTGrowth</span>
         </div>
 
         {!isMobile && (
