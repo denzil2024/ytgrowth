@@ -842,7 +842,7 @@ export default function Landing() {
                       <div style={{ fontSize: 10.5, color: 'rgba(255,255,255,0.35)', marginTop: 4 }}>out of 100 · Critical</div>
                       <div style={{ display: 'inline-flex', alignItems: 'center', gap: 4, marginTop: 5, background: 'rgba(255,59,48,0.15)', border: '1px solid rgba(255,59,48,0.25)', borderRadius: 100, padding: '2px 8px' }}>
                         <div style={{ width: 4, height: 4, borderRadius: '50%', background: '#ff3b30' }} />
-                        <span style={{ fontSize: 9, fontWeight: 700, color: '#ff6b63', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Critical</span>
+                        <span style={{ fontSize: 9, fontWeight: 700, color: '#ff3b30', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Critical</span>
                       </div>
                     </div>
                   </div>
@@ -891,7 +891,7 @@ export default function Landing() {
               <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 18, marginBottom: i < 2 ? 8 : 0, paddingBottom: i < 2 ? 8 : 0, borderBottom: i < 2 ? '1px solid rgba(255,255,255,0.06)' : 'none' }}>
                 <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)' }}>{m}</span>
                 <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-                  <span style={{ fontSize: 12, fontWeight: 700, color: '#ff6b63', fontVariantNumeric: 'tabular-nums' }}>{y}</span>
+                  <span style={{ fontSize: 12, fontWeight: 700, color: '#ff3b30', fontVariantNumeric: 'tabular-nums' }}>{y}</span>
                   <span style={{ fontSize: 9, color: 'rgba(255,255,255,0.2)' }}>vs</span>
                   <span style={{ fontSize: 12, fontWeight: 700, color: 'rgba(255,255,255,0.65)', fontVariantNumeric: 'tabular-nums' }}>{t}</span>
                 </div>
@@ -1000,7 +1000,7 @@ export default function Landing() {
 
       {/* Section 2 — Competitor Intelligence */}
       <div className="section-animate" style={{ background: '#0d0d12', borderTop: '1px solid rgba(255,255,255,0.06)', borderBottom: '1px solid rgba(255,255,255,0.06)', padding: isMobile ? '60px 24px' : '100px 64px', position: 'relative', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 900, height: 700, background: 'radial-gradient(ellipse, rgba(229,48,42,0.08) 0%, transparent 65%)', pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 900, height: 700, background: 'radial-gradient(ellipse, rgba(229,48,42,0.18) 0%, transparent 65%)', pointerEvents: 'none' }} />
         <div style={{ maxWidth: 1160, margin: '0 auto', display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? 40 : 80, alignItems: 'center', position: 'relative', zIndex: 1 }}>
           {/* Visual — left on desktop */}
           <div style={{ order: isMobile ? 1 : 0, background: '#111114', borderRadius: 20, border: '1px solid rgba(255,255,255,0.09)', boxShadow: '0 8px 48px rgba(0,0,0,0.6)', padding: 28 }}>
@@ -1012,7 +1012,7 @@ export default function Landing() {
                   <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)' }}>142K subscribers</p>
                 </div>
               </div>
-              <span style={{ background: 'rgba(229,48,42,0.18)', color: '#ff6b63', fontSize: 11, fontWeight: 700, padding: '3px 10px', borderRadius: 20, border: '1px solid rgba(229,48,42,0.3)' }}>HIGH</span>
+              <span style={{ background: 'rgba(229,48,42,0.22)', color: '#ff3b30', fontSize: 11, fontWeight: 700, padding: '3px 10px', borderRadius: 20, border: '1px solid rgba(229,48,42,0.45)' }}>HIGH</span>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: 16 }}>
               <div style={{ borderLeft: '3px solid #f59e0b', background: 'rgba(217,119,6,0.10)', borderRadius: 8, padding: '12px 14px' }}>
@@ -1027,8 +1027,8 @@ export default function Landing() {
           </div>
           {/* Text — right on desktop */}
           <div style={{ order: isMobile ? 0 : 1 }}>
-            <p style={{ fontSize: 11, fontWeight: 700, color: '#ff6b63', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 12 }}>Competitive Edge</p>
-            <h2 style={{ fontSize: isMobile ? 26 : 36, fontWeight: 800, letterSpacing: '-1.2px', lineHeight: 1.1, marginBottom: 18, color: '#ffffff' }}>Find the gaps your competitors <span style={{ color: '#ff6b63' }}>leave open.</span></h2>
+            <p style={{ fontSize: 11, fontWeight: 700, color: '#ff3b30', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 12 }}>Competitive Edge</p>
+            <h2 style={{ fontSize: isMobile ? 26 : 36, fontWeight: 800, letterSpacing: '-1.2px', lineHeight: 1.1, marginBottom: 18, color: '#ffffff' }}>Find the gaps your competitors <span style={{ color: '#ff3b30' }}>leave open.</span></h2>
             <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.55)', lineHeight: 1.78, marginBottom: 28 }}>Connect a competitor channel and YTGrowth maps exactly what topics they ignore, which title patterns drive their views, and where their audience is underserved. Then tells you how to own those gaps.</p>
             {[
               'Topic gap analysis from real video data',
@@ -1230,32 +1230,16 @@ export default function Landing() {
             <h2 style={{ fontWeight: 800, fontSize: isMobile ? 32 : 48, letterSpacing: '-1.5px', color: '#0a0a0f', lineHeight: 1.06, marginBottom: 12 }}>The tool creators <span style={{ color: 'var(--ytg-accent)' }}>actually recommend.</span></h2>
             <p style={{ fontSize: 17, color: 'rgba(10,10,15,0.6)', lineHeight: 1.8 }}>Real channels. Real numbers.</p>
           </div>
-          {(() => {
-            const items = [
+          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)', gap: 20 }}>
+            {[
               { avatar: '/avatars/marcus.jpg',  color: '#0a84ff',  name: 'Marcus T.',    meta: 'Tech & Productivity · 42K subs', platform: 'G2',           metric: 'CTR: 2.3% → 5.1% in 6 weeks',       quote: 'The competitor gap analysis is the real weapon here. I found three topics my rivals ignored completely. One video hit 180K views in 30 days.' },
               { avatar: '/avatars/priya.jpg',   color: '#16a34a',  name: 'Priya Nair',   meta: 'Personal Finance · 28K subs',   platform: 'Trustpilot',   metric: 'Retention: 31% → 58% in 8 weeks',    quote: 'Thumbnail IQ told me exactly what top channels in my niche were doing. I followed the benchmark suggestions and my retention nearly doubled.' },
               { avatar: '/avatars/james.jpg',   color: '#d97706',  name: 'James Oduya',  meta: 'Fitness & Training · 67K subs', platform: 'Product Hunt', metric: 'Channel score: 44 → 78',              quote: 'Agencies charge $500/month for what this does in 10 minutes. The audit flagged watch time problems I never would have caught on my own.' },
               { avatar: '/avatars/sophie.jpg',  color: '#7c3aed',  name: 'Sophie Brandt', meta: 'Travel · 19K subs',            platform: 'G2',           metric: '3 videos × 100K+ views',              quote: 'The video ideas pulled from my competitor data gave me a 3-month content calendar. Three of those videos broke 100K.' },
               { avatar: '/avatars/daniel.jpg',  color: '#e5251b',  name: 'Daniel Reyes', meta: 'Gaming · 89K subs',             platform: 'Trustpilot',   metric: 'Weekly subscribers: +180 avg',        quote: 'The weekly report is worth the entire subscription on its own. One priority action every Monday. My growth has been consistent ever since.' },
               { avatar: '/avatars/amara.jpg',   color: '#16a34a',  name: 'Amara Osei',   meta: 'Business · 31K subs',           platform: 'Product Hunt', metric: '3 channels managed, one tool',        quote: 'Multi-channel support is exactly what a channel manager needs. Each health score visible instantly. Nothing else comes close.' },
-            ];
-            return isMobile ? (
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 20 }}>
-                {items.map((t, i) => <TestimonialCard key={i} t={t} />)}
-              </div>
-            ) : (
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: 20, alignItems: 'start' }}>
-                <TestimonialCard t={items[0]} />
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
-                  {items.slice(1).map((t, i, arr) => (
-                    <div key={i} style={{ gridColumn: i === arr.length - 1 && arr.length % 2 !== 0 ? '1 / -1' : undefined }}>
-                      <TestimonialCard t={t} />
-                    </div>
-                  ))}
-                </div>
-              </div>
-            );
-          })()}
+            ].map((t, i) => <TestimonialCard key={i} t={t} />)}
+          </div>
         </div>
       </div>
 
@@ -1433,7 +1417,7 @@ export default function Landing() {
                   {['Full channel audit (up to 3 channels)', '20 AI analyses/month — forever', 'SEO Studio (full)', 'Keyword Explorer (full)', 'Title Optimizer', 'Video Ideas', 'Competitor Analysis (up to 2 rivals)', 'Thumbnail IQ (standard credits)', 'No weekly reports', 'One-time payment, no subscription'].map((f, i) => (
                     <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>{f.startsWith('No ') ? <NoCheck /> : <Check />}<span style={{ fontSize: 13, color: f.startsWith('No ') ? 'var(--ytg-text-4)' : 'var(--ytg-text-2)' }}>{f}</span></div>
                   ))}
-                  <p style={{ fontSize: 11, color: '#ff6b63', fontWeight: 700, marginTop: 18, marginBottom: 12 }}>Only 500 available — limited spots</p>
+                  <p style={{ fontSize: 11, color: '#ff3b30', fontWeight: 700, marginTop: 18, marginBottom: 12 }}>Only 500 available — limited spots</p>
                   <button onClick={() => openCheckout('solo_lifetime')} className="ytg-btn-ghost" style={{ width: '100%', justifyContent: 'center', display: 'flex' }}>Lock In Lifetime Access</button>
                 </div>
 
@@ -1453,7 +1437,7 @@ export default function Landing() {
                   {['Full channel audit (up to 5 channels)', '50 AI analyses/month — forever', 'SEO Studio (full)', 'Keyword Explorer (full)', 'Title Optimizer', 'Video Ideas', 'Competitor Analysis (up to 5 rivals)', 'Thumbnail IQ (increased credits)', 'Weekly report emails', 'One-time payment, no subscription'].map((f, i) => (
                     <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}><Check color="var(--ytg-accent)" /><span style={{ fontSize: 13, color: 'var(--ytg-text)' }}>{f}</span></div>
                   ))}
-                  <p style={{ fontSize: 11, color: '#ff6b63', fontWeight: 700, marginTop: 18, marginBottom: 12 }}>Only 500 available — limited spots</p>
+                  <p style={{ fontSize: 11, color: '#ff3b30', fontWeight: 700, marginTop: 18, marginBottom: 12 }}>Only 500 available — limited spots</p>
                   <button onClick={() => openCheckout('growth_lifetime')} className="ytg-btn-primary" style={{ width: '100%', justifyContent: 'center', display: 'flex' }}>Lock In Lifetime Access</button>
                 </div>
 
@@ -1469,7 +1453,7 @@ export default function Landing() {
                   {['Full channel audit (up to 10 channels, pooled)', '150 AI analyses/month — forever', 'SEO Studio (full)', 'Keyword Explorer (full)', 'Title Optimizer', 'Video Ideas', 'Competitor Analysis (up to 10 rivals)', 'Thumbnail IQ (maximum credits)', 'Weekly reports + priority support', 'One-time payment, no subscription'].map((f, i) => (
                     <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}><Check /><span style={{ fontSize: 13, color: 'var(--ytg-text-2)' }}>{f}</span></div>
                   ))}
-                  <p style={{ fontSize: 11, color: '#ff6b63', fontWeight: 700, marginTop: 18, marginBottom: 12 }}>Only 500 available — limited spots</p>
+                  <p style={{ fontSize: 11, color: '#ff3b30', fontWeight: 700, marginTop: 18, marginBottom: 12 }}>Only 500 available — limited spots</p>
                   <button onClick={() => openCheckout('agency_lifetime')} className="ytg-btn-ghost" style={{ width: '100%', justifyContent: 'center', display: 'flex' }}>Lock In Lifetime Access</button>
                 </div>
               </div>
