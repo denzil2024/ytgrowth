@@ -913,7 +913,7 @@ export default function Landing() {
       </div>
 
       {/* ── STATS BAR ───────────────────────────────────────────────────── */}
-      <div style={{ background: '#e8e9ee', borderTop: '1px solid rgba(10,10,15,0.06)', borderBottom: '1px solid rgba(10,10,15,0.06)', padding: isMobile ? '28px 24px' : '28px 64px' }}>
+      <div style={{ background: '#e8e9ee', borderTop: '1px solid rgba(10,10,15,0.06)', borderBottom: '1px solid rgba(10,10,15,0.10)', boxShadow: '0 4px 20px rgba(0,0,0,0.07)', position: 'relative', zIndex: 1, padding: isMobile ? '28px 24px' : '28px 64px' }}>
         <div style={{
           display: 'grid',
           gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(5, 1fr)',
