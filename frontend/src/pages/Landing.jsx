@@ -987,8 +987,8 @@ export default function Landing() {
               { label: 'SEO Discovery',       score: 54, pct: '54%' },
               { label: 'Posting Consistency', score: 90, pct: '90%' },
             ].map((row, i) => {
-              const textColor = row.score > 70 ? '#16a34a' : row.score > 50 ? '#0a0a0f' : '#e5302a'
-              const barColor  = row.score > 70 ? '#16a34a' : row.score > 50 ? 'rgba(10,10,15,0.28)' : '#e5302a'
+              const textColor = row.score >= 75 ? '#16a34a' : row.score >= 60 ? '#0a84ff' : row.score >= 40 ? '#f59e0b' : '#e5302a'
+              const barColor  = row.score >= 75 ? '#16a34a' : row.score >= 60 ? '#0a84ff' : row.score >= 40 ? '#f59e0b' : '#e5302a'
               return (
                 <div key={i} style={{ marginBottom: i < 4 ? 16 : 0 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
