@@ -953,7 +953,7 @@ export default function Landing() {
           {/* Text */}
           <div>
             <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-accent-text)', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 12 }}>Deep Channel Intelligence</p>
-            <h2 style={{ fontSize: isMobile ? 26 : 36, fontWeight: 800, letterSpacing: '-1.2px', lineHeight: 1.1, marginBottom: 18, color: 'var(--ytg-text)' }}>10 dimensions. One brutal honest assessment.</h2>
+            <h2 style={{ fontSize: isMobile ? 26 : 36, fontWeight: 800, letterSpacing: '-1.2px', lineHeight: 1.1, marginBottom: 18, color: 'var(--ytg-text)' }}>10 dimensions. <span style={{ color: 'var(--ytg-accent)' }}>One brutal honest assessment.</span></h2>
             <p style={{ fontSize: 14, color: 'var(--ytg-text-2)', lineHeight: 1.78, marginBottom: 28 }}>Most tools show you a score. YTGrowth shows you why — traffic sources, device breakdown, audience demographics, posting patterns, CTR health, retention, engagement quality, content strategy, SEO, and how you stack up against your actual competitors. All in one audit.</p>
             {[
               'Traffic source breakdown — search vs browse vs external',
@@ -1026,7 +1026,7 @@ export default function Landing() {
           {/* Text — right on desktop */}
           <div style={{ order: isMobile ? 0 : 1 }}>
             <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-accent-text)', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 12 }}>Competitive Edge</p>
-            <h2 style={{ fontSize: isMobile ? 26 : 36, fontWeight: 800, letterSpacing: '-1.2px', lineHeight: 1.1, marginBottom: 18, color: 'var(--ytg-text)' }}>Find the gaps your competitors leave open.</h2>
+            <h2 style={{ fontSize: isMobile ? 26 : 36, fontWeight: 800, letterSpacing: '-1.2px', lineHeight: 1.1, marginBottom: 18, color: 'var(--ytg-text)' }}>Find the gaps your competitors <span style={{ color: 'var(--ytg-accent)' }}>leave open.</span></h2>
             <p style={{ fontSize: 14, color: 'var(--ytg-text-2)', lineHeight: 1.78, marginBottom: 28 }}>Connect a competitor channel and YTGrowth maps exactly what topics they ignore, which title patterns drive their views, and where their audience is underserved. Then tells you how to own those gaps.</p>
             {[
               'Topic gap analysis from real video data',
@@ -1049,7 +1049,7 @@ export default function Landing() {
           {/* Text */}
           <div>
             <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-accent-text)', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 12 }}>Thumbnail Intelligence</p>
-            <h2 style={{ fontSize: isMobile ? 26 : 36, fontWeight: 800, letterSpacing: '-1.2px', lineHeight: 1.1, marginBottom: 18, color: 'var(--ytg-text)' }}>Scored against the videos actually winning in your niche.</h2>
+            <h2 style={{ fontSize: isMobile ? 26 : 36, fontWeight: 800, letterSpacing: '-1.2px', lineHeight: 1.1, marginBottom: 18, color: 'var(--ytg-text)' }}>Scored against the videos <span style={{ color: 'var(--ytg-accent)' }}>actually winning in your niche.</span></h2>
             <p style={{ fontSize: 14, color: 'var(--ytg-text-2)', lineHeight: 1.78, marginBottom: 28 }}>Two layers of analysis — a deterministic algorithm checking contrast, text clarity, face detection, and composition, then Claude Vision comparing it against top-performing videos in your exact niche. You get a score out of 100 and know exactly what to fix.</p>
             {[
               'Layer 1 — algorithm, instant, free',
@@ -1116,7 +1116,7 @@ export default function Landing() {
           {/* Text — right on desktop */}
           <div style={{ order: isMobile ? 0 : 1 }}>
             <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-accent-text)', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 12 }}>Automated Intelligence</p>
-            <h2 style={{ fontSize: isMobile ? 26 : 36, fontWeight: 800, letterSpacing: '-1.2px', lineHeight: 1.1, marginBottom: 18, color: 'var(--ytg-text)' }}>Your channel's weekly performance, in your inbox.</h2>
+            <h2 style={{ fontSize: isMobile ? 26 : 36, fontWeight: 800, letterSpacing: '-1.2px', lineHeight: 1.1, marginBottom: 18, color: 'var(--ytg-text)' }}>Your channel's weekly performance, <span style={{ color: 'var(--ytg-accent)' }}>in your inbox.</span></h2>
             <p style={{ fontSize: 14, color: 'var(--ytg-text-2)', lineHeight: 1.78, marginBottom: 28 }}>Every week YTGrowth generates a performance report — key metrics, biggest win, what to watch out for, and one priority action. Sent automatically every week. Always in your dashboard even if you unsubscribe from email.</p>
             {[
               'Subscribers, views, CTR, channel score',
@@ -1225,7 +1225,7 @@ export default function Landing() {
               {!isMobile && <div style={{ width: 1, height: 24, background: 'rgba(10,10,15,0.12)', alignSelf: 'center' }} />}
               <span style={{ fontSize: 13, fontWeight: 500, color: 'rgba(10,10,15,0.45)' }}>Based on 200+ reviews</span>
             </div>
-            <h2 style={{ fontWeight: 800, fontSize: isMobile ? 32 : 48, letterSpacing: '-1.5px', color: '#0a0a0f', lineHeight: 1.06, marginBottom: 12 }}>The tool creators actually recommend.</h2>
+            <h2 style={{ fontWeight: 800, fontSize: isMobile ? 32 : 48, letterSpacing: '-1.5px', color: '#0a0a0f', lineHeight: 1.06, marginBottom: 12 }}>The tool creators <span style={{ color: 'var(--ytg-accent)' }}>actually recommend.</span></h2>
             <p style={{ fontSize: 17, color: 'rgba(10,10,15,0.6)', lineHeight: 1.8 }}>Real channels. Real numbers.</p>
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3,1fr)', gap: 20 }}>
