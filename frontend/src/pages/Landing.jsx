@@ -45,6 +45,8 @@ function useGlobalStyles() {
       @keyframes fadeUp { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:translateY(0)} }
       @keyframes floatA { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
       @keyframes floatB { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-7px)} }
+      .section-animate { opacity: 0; transform: translateY(24px); transition: opacity 0.7s cubic-bezier(0.16,1,0.3,1), transform 0.7s cubic-bezier(0.16,1,0.3,1); }
+      .section-animate.visible { opacity: 1; transform: translateY(0); }
       ::-webkit-scrollbar { width: 8px }
       ::-webkit-scrollbar-track { background: rgba(10,10,15,0.04) }
       ::-webkit-scrollbar-thumb { background: rgba(10,10,15,0.18); border-radius: 10px; min-height: 48px }
@@ -742,7 +744,8 @@ export default function Landing() {
       {/* ── HERO ────────────────────────────────────────────────────────── */}
       <div id="hero" style={{ position: 'relative', padding: isMobile ? '80px 24px 60px' : '110px 48px 90px', overflow: 'hidden' }}> {/* IMPROVED: mobile 70→80px top, 50→60px bottom */}
         {/* Glow */}
-        <div style={{ position: 'absolute', top: '-10%', left: '50%', transform: 'translateX(-50%)', width: 900, height: 700, background: `radial-gradient(ellipse, rgba(229,48,42,0.10) 0%, transparent 65%)`, pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', top: '-10%', left: '50%', transform: 'translateX(-50%)', width: 1100, height: 820, background: `radial-gradient(ellipse, rgba(229,48,42,0.22) 0%, transparent 62%)`, pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', bottom: '-5%', left: '50%', transform: 'translateX(-50%)', width: 1400, height: 500, background: `radial-gradient(ellipse, rgba(229,48,42,0.09) 0%, transparent 60%)`, pointerEvents: 'none' }} />
 
         <div style={{ maxWidth: 1000, margin: '0 auto', textAlign: 'center', position: 'relative', zIndex: 1, animation: 'fadeUp 0.5s ease' }}>
           {/* Live badge */}
@@ -809,7 +812,7 @@ export default function Landing() {
         )}
 
         {/* Dashboard mockup */}
-        <div style={{ maxWidth: 1280, margin: '72px auto 0', position: 'relative', display: isMobile ? 'none' : 'block', padding: '32px 36px', boxSizing: 'content-box' }}>
+        <div style={{ maxWidth: 1280, margin: '72px auto 0', position: 'relative', display: isMobile ? 'none' : 'block', padding: '32px 36px', boxSizing: 'content-box', animation: 'floatA 7s ease-in-out infinite' }}>
           <div style={{
             background: '#111114', border: '1px solid rgba(255,255,255,0.09)',
             borderRadius: 22, overflow: 'hidden',
@@ -912,7 +915,7 @@ export default function Landing() {
       </div>
 
       {/* ── STATS BAR ───────────────────────────────────────────────────── */}
-      <div style={{ background: '#e8e9ee', borderTop: '1px solid rgba(10,10,15,0.06)', borderBottom: '1px solid rgba(10,10,15,0.10)', boxShadow: '0 4px 20px rgba(0,0,0,0.07)', position: 'relative', zIndex: 1, padding: isMobile ? '28px 24px' : '28px 64px' }}>
+      <div className="section-animate" style={{ background: '#e8e9ee', borderTop: '1px solid rgba(10,10,15,0.06)', borderBottom: '1px solid rgba(10,10,15,0.10)', boxShadow: '0 4px 20px rgba(0,0,0,0.07)', position: 'relative', zIndex: 1, padding: isMobile ? '28px 24px' : '28px 64px' }}>
         <div style={{
           display: 'grid',
           gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(5, 1fr)',
@@ -946,7 +949,7 @@ export default function Landing() {
       {/* ── FEATURES ────────────────────────────────────────────────────── */}
 
       {/* Section 1 — Channel Audit */}
-      <div id="features" style={{ background: '#f4f4f6', borderTop: '1px solid rgba(10,10,15,0.08)', borderBottom: '1px solid rgba(10,10,15,0.08)', padding: isMobile ? '60px 24px' : '100px 64px' }}>
+      <div id="features" className="section-animate" style={{ background: '#f4f4f6', borderTop: '1px solid rgba(10,10,15,0.08)', borderBottom: '1px solid rgba(10,10,15,0.08)', padding: isMobile ? '60px 24px' : '100px 64px' }}>
         <div style={{ maxWidth: 1160, margin: '0 auto', display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? 40 : 80, alignItems: 'center' }}>
           {/* Text */}
           <div>
@@ -996,36 +999,37 @@ export default function Landing() {
       </div>
 
       {/* Section 2 — Competitor Intelligence */}
-      <div style={{ background: '#ecedf1', borderTop: '1px solid rgba(10,10,15,0.08)', borderBottom: '1px solid rgba(10,10,15,0.08)', padding: isMobile ? '60px 24px' : '100px 64px' }}>
-        <div style={{ maxWidth: 1160, margin: '0 auto', display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? 40 : 80, alignItems: 'center' }}>
+      <div className="section-animate" style={{ background: '#0d0d12', borderTop: '1px solid rgba(255,255,255,0.06)', borderBottom: '1px solid rgba(255,255,255,0.06)', padding: isMobile ? '60px 24px' : '100px 64px', position: 'relative', overflow: 'hidden' }}>
+        <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 900, height: 700, background: 'radial-gradient(ellipse, rgba(229,48,42,0.08) 0%, transparent 65%)', pointerEvents: 'none' }} />
+        <div style={{ maxWidth: 1160, margin: '0 auto', display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? 40 : 80, alignItems: 'center', position: 'relative', zIndex: 1 }}>
           {/* Visual — left on desktop */}
-          <div style={{ order: isMobile ? 1 : 0, background: '#ffffff', borderRadius: 20, border: '1px solid rgba(10,10,15,0.07)', boxShadow: 'var(--ytg-shadow-xl)', padding: 28 }}>
+          <div style={{ order: isMobile ? 1 : 0, background: '#111114', borderRadius: 20, border: '1px solid rgba(255,255,255,0.09)', boxShadow: '0 8px 48px rgba(0,0,0,0.6)', padding: 28 }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                <div style={{ width: 40, height: 40, borderRadius: '50%', background: 'rgba(10,10,15,0.08)', border: '2px solid rgba(10,10,15,0.14)', flexShrink: 0 }} />
+                <div style={{ width: 40, height: 40, borderRadius: '50%', background: 'rgba(255,255,255,0.08)', border: '2px solid rgba(255,255,255,0.14)', flexShrink: 0 }} />
                 <div>
-                  <p style={{ fontSize: 14, fontWeight: 700, color: 'var(--ytg-text)' }}>TechCreator Pro</p>
-                  <p style={{ fontSize: 12, color: 'var(--ytg-text-3)' }}>142K subscribers</p>
+                  <p style={{ fontSize: 14, fontWeight: 700, color: '#ffffff' }}>TechCreator Pro</p>
+                  <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)' }}>142K subscribers</p>
                 </div>
               </div>
-              <span style={{ background: 'rgba(229,48,42,0.1)', color: 'var(--ytg-accent)', fontSize: 11, fontWeight: 700, padding: '2px 8px', borderRadius: 20 }}>HIGH</span>
+              <span style={{ background: 'rgba(229,48,42,0.18)', color: '#ff6b63', fontSize: 11, fontWeight: 700, padding: '3px 10px', borderRadius: 20, border: '1px solid rgba(229,48,42,0.3)' }}>HIGH</span>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: 16 }}>
-              <div style={{ borderLeft: '3px solid #d97706', background: 'rgba(217,119,6,0.04)', borderRadius: 8, padding: '12px 14px' }}>
-                <p style={{ fontSize: 10, fontWeight: 700, color: '#d97706', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 4 }}>Content Gap</p>
-                <p style={{ fontSize: 13, color: 'var(--ytg-text-2)' }}>Tutorial content — 0 videos in last 90 days</p>
+              <div style={{ borderLeft: '3px solid #f59e0b', background: 'rgba(217,119,6,0.10)', borderRadius: 8, padding: '12px 14px' }}>
+                <p style={{ fontSize: 10, fontWeight: 700, color: '#f59e0b', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 4 }}>Content Gap</p>
+                <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.58)' }}>Tutorial content — 0 videos in last 90 days</p>
               </div>
-              <div style={{ borderLeft: '3px solid #16a34a', background: 'rgba(22,163,74,0.04)', borderRadius: 8, padding: '12px 14px' }}>
-                <p style={{ fontSize: 10, fontWeight: 700, color: '#16a34a', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 4 }}>Title Opportunity</p>
-                <p style={{ fontSize: 13, color: 'var(--ytg-text-2)' }}>How to [niche topic] in 2026 (Step by Step) — avg 84K views for this format in your niche</p>
+              <div style={{ borderLeft: '3px solid #4ade80', background: 'rgba(22,163,74,0.10)', borderRadius: 8, padding: '12px 14px' }}>
+                <p style={{ fontSize: 10, fontWeight: 700, color: '#4ade80', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 4 }}>Title Opportunity</p>
+                <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.58)' }}>How to [niche topic] in 2026 (Step by Step) — avg 84K views for this format in your niche</p>
               </div>
             </div>
           </div>
           {/* Text — right on desktop */}
           <div style={{ order: isMobile ? 0 : 1 }}>
-            <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-accent-text)', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 12 }}>Competitive Edge</p>
-            <h2 style={{ fontSize: isMobile ? 26 : 36, fontWeight: 800, letterSpacing: '-1.2px', lineHeight: 1.1, marginBottom: 18, color: 'var(--ytg-text)' }}>Find the gaps your competitors <span style={{ color: 'var(--ytg-accent)' }}>leave open.</span></h2>
-            <p style={{ fontSize: 14, color: 'var(--ytg-text-2)', lineHeight: 1.78, marginBottom: 28 }}>Connect a competitor channel and YTGrowth maps exactly what topics they ignore, which title patterns drive their views, and where their audience is underserved. Then tells you how to own those gaps.</p>
+            <p style={{ fontSize: 11, fontWeight: 700, color: '#ff6b63', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 12 }}>Competitive Edge</p>
+            <h2 style={{ fontSize: isMobile ? 26 : 36, fontWeight: 800, letterSpacing: '-1.2px', lineHeight: 1.1, marginBottom: 18, color: '#ffffff' }}>Find the gaps your competitors <span style={{ color: '#ff6b63' }}>leave open.</span></h2>
+            <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.55)', lineHeight: 1.78, marginBottom: 28 }}>Connect a competitor channel and YTGrowth maps exactly what topics they ignore, which title patterns drive their views, and where their audience is underserved. Then tells you how to own those gaps.</p>
             {[
               'Topic gap analysis from real video data',
               'Title pattern and keyword extraction',
@@ -1033,8 +1037,8 @@ export default function Landing() {
               'Ready-to-use video ideas from gap analysis',
             ].map((t, i) => (
               <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 10, marginBottom: 10 }}>
-                <div style={{ flexShrink: 0, marginTop: 2 }}><Check /></div>
-                <span style={{ fontSize: 14, color: 'var(--ytg-text-2)' }}>{t}</span>
+                <div style={{ flexShrink: 0, marginTop: 2 }}><Check color="rgba(255,255,255,0.45)" /></div>
+                <span style={{ fontSize: 14, color: 'rgba(255,255,255,0.58)' }}>{t}</span>
               </div>
             ))}
           </div>
@@ -1042,7 +1046,7 @@ export default function Landing() {
       </div>
 
       {/* Section 3 — Thumbnail IQ */}
-      <div style={{ background: '#f4f4f6', borderTop: '1px solid rgba(10,10,15,0.08)', borderBottom: '1px solid rgba(10,10,15,0.08)', padding: isMobile ? '60px 24px' : '100px 64px' }}>
+      <div className="section-animate" style={{ background: '#f4f4f6', borderTop: '1px solid rgba(10,10,15,0.08)', borderBottom: '1px solid rgba(10,10,15,0.08)', padding: isMobile ? '60px 24px' : '100px 64px' }}>
         <div style={{ maxWidth: 1160, margin: '0 auto', display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? 40 : 80, alignItems: 'center' }}>
           {/* Text */}
           <div>
@@ -1085,7 +1089,7 @@ export default function Landing() {
       </div>
 
       {/* Section 4 — Weekly Report */}
-      <div style={{ background: '#e6e7ec', borderTop: '1px solid rgba(10,10,15,0.08)', borderBottom: '1px solid rgba(10,10,15,0.08)', padding: isMobile ? '60px 24px' : '100px 64px' }}>
+      <div className="section-animate" style={{ background: '#e6e7ec', borderTop: '1px solid rgba(10,10,15,0.08)', borderBottom: '1px solid rgba(10,10,15,0.08)', padding: isMobile ? '60px 24px' : '100px 64px' }}>
         <div style={{ maxWidth: 1160, margin: '0 auto', display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? 40 : 80, alignItems: 'center' }}>
           {/* Visual — left on desktop */}
           <div style={{ order: isMobile ? 1 : 0, background: '#ffffff', borderRadius: 20, border: '1px solid rgba(10,10,15,0.07)', boxShadow: 'var(--ytg-shadow-xl)', padding: 28 }}>
@@ -1132,7 +1136,7 @@ export default function Landing() {
       </div>
 
       {/* ── HOW IT WORKS ────────────────────────────────────────────────── */}
-      <div id="how-it-works" style={{ background: '#e8e9ee', borderTop: '1px solid rgba(10,10,15,0.06)', borderBottom: '1px solid rgba(10,10,15,0.06)', padding: isMobile ? '60px 20px' : '100px 64px', position: 'relative', overflow: 'hidden' }}>
+      <div id="how-it-works" className="section-animate" style={{ background: '#e8e9ee', borderTop: '1px solid rgba(10,10,15,0.06)', borderBottom: '1px solid rgba(10,10,15,0.06)', padding: isMobile ? '60px 20px' : '100px 64px', position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 900, height: 600, background: 'radial-gradient(ellipse, rgba(59,130,246,0.07) 0%, transparent 60%)', pointerEvents: 'none' }} />
         <div style={{ maxWidth: 1280, margin: '0 auto', position: 'relative', zIndex: 1 }}>
           <div className="section-animate" style={{ textAlign: 'center', marginBottom: 56 }}> {/* IMPROVED: section-animate */}
@@ -1210,7 +1214,7 @@ export default function Landing() {
       </div>
 
       {/* ── TESTIMONIALS ────────────────────────────────────────────────── */}
-      <div style={{ background: '#e8e9ee', borderTop: '1px solid rgba(10,10,15,0.06)', borderBottom: '1px solid rgba(10,10,15,0.06)', padding: isMobile ? '60px 24px' : '100px 64px' }}>
+      <div className="section-animate" style={{ background: '#e8e9ee', borderTop: '1px solid rgba(10,10,15,0.06)', borderBottom: '1px solid rgba(10,10,15,0.06)', padding: isMobile ? '60px 24px' : '100px 64px' }}>
         <div style={{ maxWidth: 1280, margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: 56 }}>
             {/* Rating summary row */}
@@ -1226,18 +1230,32 @@ export default function Landing() {
             <h2 style={{ fontWeight: 800, fontSize: isMobile ? 32 : 48, letterSpacing: '-1.5px', color: '#0a0a0f', lineHeight: 1.06, marginBottom: 12 }}>The tool creators <span style={{ color: 'var(--ytg-accent)' }}>actually recommend.</span></h2>
             <p style={{ fontSize: 17, color: 'rgba(10,10,15,0.6)', lineHeight: 1.8 }}>Real channels. Real numbers.</p>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3,1fr)', gap: 20 }}>
-            {[
+          {(() => {
+            const items = [
               { avatar: '/avatars/marcus.jpg',  color: '#0a84ff',  name: 'Marcus T.',    meta: 'Tech & Productivity · 42K subs', platform: 'G2',           metric: 'CTR: 2.3% → 5.1% in 6 weeks',       quote: 'The competitor gap analysis is the real weapon here. I found three topics my rivals ignored completely. One video hit 180K views in 30 days.' },
               { avatar: '/avatars/priya.jpg',   color: '#16a34a',  name: 'Priya Nair',   meta: 'Personal Finance · 28K subs',   platform: 'Trustpilot',   metric: 'Retention: 31% → 58% in 8 weeks',    quote: 'Thumbnail IQ told me exactly what top channels in my niche were doing. I followed the benchmark suggestions and my retention nearly doubled.' },
               { avatar: '/avatars/james.jpg',   color: '#d97706',  name: 'James Oduya',  meta: 'Fitness & Training · 67K subs', platform: 'Product Hunt', metric: 'Channel score: 44 → 78',              quote: 'Agencies charge $500/month for what this does in 10 minutes. The audit flagged watch time problems I never would have caught on my own.' },
               { avatar: '/avatars/sophie.jpg',  color: '#7c3aed',  name: 'Sophie Brandt', meta: 'Travel · 19K subs',            platform: 'G2',           metric: '3 videos × 100K+ views',              quote: 'The video ideas pulled from my competitor data gave me a 3-month content calendar. Three of those videos broke 100K.' },
               { avatar: '/avatars/daniel.jpg',  color: '#e5251b',  name: 'Daniel Reyes', meta: 'Gaming · 89K subs',             platform: 'Trustpilot',   metric: 'Weekly subscribers: +180 avg',        quote: 'The weekly report is worth the entire subscription on its own. One priority action every Monday. My growth has been consistent ever since.' },
               { avatar: '/avatars/amara.jpg',   color: '#16a34a',  name: 'Amara Osei',   meta: 'Business · 31K subs',           platform: 'Product Hunt', metric: '3 channels managed, one tool',        quote: 'Multi-channel support is exactly what a channel manager needs. Each health score visible instantly. Nothing else comes close.' },
-            ].map((t, i) => (
-              <TestimonialCard key={i} t={t} />
-            ))}
-          </div>
+            ];
+            return isMobile ? (
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 20 }}>
+                {items.map((t, i) => <TestimonialCard key={i} t={t} />)}
+              </div>
+            ) : (
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: 20, alignItems: 'start' }}>
+                <TestimonialCard t={items[0]} />
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
+                  {items.slice(1).map((t, i, arr) => (
+                    <div key={i} style={{ gridColumn: i === arr.length - 1 && arr.length % 2 !== 0 ? '1 / -1' : undefined }}>
+                      <TestimonialCard t={t} />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            );
+          })()}
         </div>
       </div>
 
