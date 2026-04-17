@@ -82,10 +82,10 @@ export default function Refund() {
 
       <footer style={{ background: '#0d0d12', borderTop: '1px solid rgba(255,255,255,0.07)', padding: isMobile ? '28px 20px' : '36px 64px' }}>
         <div style={{ maxWidth: 1280, margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexDirection: isMobile ? 'column' : 'row', gap: isMobile ? 20 : 0, textAlign: isMobile ? 'center' : 'left' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
+          <a href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 9 }}>
             <Logo size={26} />
             <span style={{ fontWeight: 800, fontSize: 15, color: '#ffffff', letterSpacing: '-0.4px' }}>YTGrowth</span>
-          </div>
+          </a>
           <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.32)' }}>Built for creators serious about growth.</p>
           <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.22)' }}>© 2026 YTGrowth. All rights reserved.</p>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: isMobile ? '12px 20px' : 28, justifyContent: isMobile ? 'center' : 'flex-end' }}>
