@@ -16,7 +16,7 @@ function useGlobalStyles() {
     const link = document.createElement('link')
     link.id = 'ytg-font'
     link.rel = 'stylesheet'
-    link.href = 'https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap'
+    link.href = 'https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700;9..40,800&display=swap'
     document.head.appendChild(link)
 
     const style = document.createElement('style')
@@ -49,7 +49,7 @@ export default function Refund() {
   const { isMobile } = useBreakpoint()
 
   return (
-    <div style={{ fontFamily: "'Poppins', system-ui, sans-serif", background: 'var(--ytg-bg)', color: 'var(--ytg-text)', minHeight: '100vh' }}>
+    <div style={{ fontFamily: "'DM Sans', system-ui, sans-serif", background: 'var(--ytg-bg)', color: 'var(--ytg-text)', minHeight: '100vh' }}>
 
       <nav style={{ position: 'sticky', top: 0, zIndex: 100, borderBottom: '1px solid var(--ytg-border)', padding: '0 40px', height: 60, display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'var(--ytg-nav)', backdropFilter: 'blur(12px)' }}>
         <a href="/" style={{ display: 'flex', alignItems: 'center', gap: 9, textDecoration: 'none' }}>
@@ -96,7 +96,7 @@ export default function Refund() {
               { label: 'Affiliates',       href: '/affiliate' },
               { label: 'Log in',           href: '/auth/login' },
             ].map((l, i) => (
-              <a key={i} href={l.href} style={{ fontSize: 13, color: 'rgba(255,255,255,0.38)', textDecoration: 'none', fontFamily: "'Poppins', system-ui, sans-serif" }}
+              <a key={i} href={l.href} style={{ fontSize: 13, color: 'rgba(255,255,255,0.38)', textDecoration: 'none', fontFamily: "'DM Sans', system-ui, sans-serif" }}
                 onMouseEnter={e => e.currentTarget.style.color = 'rgba(255,255,255,0.72)'}
                 onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.38)'}
               >{l.label}</a>

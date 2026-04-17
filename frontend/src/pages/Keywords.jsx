@@ -252,7 +252,7 @@ export default function Keywords() {
                 ))}
               </div>
               <div style={{ padding: '12px 18px', display: 'flex', flexDirection: 'column', gap: 7 }}>
-                {result.seedIntent?.primaryIntent       && <span className="kw-chip" style={{ color: '#fff', background: '#111114', alignSelf: 'flex-start', borderRadius: 20 }}>{result.seedIntent.primaryIntent}</span>}
+                {result.seedIntent?.primaryIntent       && <span className="kw-chip" style={{ color: '#fff', background: C.red, alignSelf: 'flex-start', borderRadius: 20 }}>{result.seedIntent.primaryIntent}</span>}
                 {result.seedIntent?.contentTypeExpected && <span className="kw-chip" style={{ color: C.text2, background: '#f0f0f4', border: '1px solid rgba(0,0,0,0.1)', alignSelf: 'flex-start', borderRadius: 20 }}>{result.seedIntent.contentTypeExpected}</span>}
                 {result.seedIntent?.funnelStage         && <span className="kw-chip" style={{ color: C.text2, background: '#f0f0f4', border: '1px solid rgba(0,0,0,0.1)', alignSelf: 'flex-start', borderRadius: 20 }}>{result.seedIntent.funnelStage}</span>}
               </div>

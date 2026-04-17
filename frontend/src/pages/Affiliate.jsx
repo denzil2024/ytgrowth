@@ -26,7 +26,7 @@ function useGlobalStyles() {
     const link = document.createElement('link')
     link.id = 'ytg-font'
     link.rel = 'stylesheet'
-    link.href = 'https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap'
+    link.href = 'https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700;9..40,800&display=swap'
     document.head.appendChild(link)
 
     const style = document.createElement('style')
@@ -53,7 +53,7 @@ function useGlobalStyles() {
       }
       *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
       html { scroll-behavior: smooth; }
-      body { background: var(--ytg-bg); color: var(--ytg-text); font-family: 'Poppins', system-ui, sans-serif; overflow-x: hidden; }
+      body { background: var(--ytg-bg); color: var(--ytg-text); font-family: 'DM Sans', system-ui, sans-serif; overflow-x: hidden; }
       ::-webkit-scrollbar { width: 5px }
       ::-webkit-scrollbar-track { background: transparent }
       ::-webkit-scrollbar-thumb { background: rgba(10,10,15,0.16); border-radius: 10px }
@@ -63,7 +63,7 @@ function useGlobalStyles() {
       .aff-btn {
         display: inline-flex; align-items: center; gap: 8px;
         background: var(--ytg-accent); color: #fff;
-        font-size: 15px; font-weight: 700; font-family: 'Poppins', system-ui, sans-serif;
+        font-size: 15px; font-weight: 700; font-family: 'DM Sans', system-ui, sans-serif;
         padding: 15px 36px; border-radius: 100px; border: none;
         cursor: pointer; text-decoration: none; letter-spacing: -0.2px;
         box-shadow: 0 1px 2px rgba(0,0,0,0.14), 0 4px 20px rgba(229,48,42,0.38);
@@ -252,7 +252,7 @@ export default function Affiliate() {
   const { isMobile }              = useBreakpoint()
 
   return (
-    <div style={{ fontFamily: "'Poppins', system-ui, sans-serif", background: 'var(--ytg-bg)', color: 'var(--ytg-text)', minHeight: '100vh' }}>
+    <div style={{ fontFamily: "'DM Sans', system-ui, sans-serif", background: 'var(--ytg-bg)', color: 'var(--ytg-text)', minHeight: '100vh' }}>
 
       <ScrollProgress />
 
@@ -638,7 +638,7 @@ export default function Affiliate() {
               { label: 'Affiliates',       href: '/affiliate' },
               { label: 'Log in',           href: '/auth/login' },
             ].map((l, i) => (
-              <a key={i} href={l.href} style={{ fontSize: 13, color: 'rgba(255,255,255,0.38)', textDecoration: 'none', fontFamily: "'Poppins', system-ui, sans-serif" }}
+              <a key={i} href={l.href} style={{ fontSize: 13, color: 'rgba(255,255,255,0.38)', textDecoration: 'none', fontFamily: "'DM Sans', system-ui, sans-serif" }}
                 onMouseEnter={e => e.currentTarget.style.color = 'rgba(255,255,255,0.72)'}
                 onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.38)'}
               >{l.label}</a>
