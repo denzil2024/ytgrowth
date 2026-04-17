@@ -257,7 +257,7 @@ export default function Affiliate() {
       <ScrollProgress />
 
       {/* ── NAV ── */}
-      <nav style={{ position: 'sticky', top: 0, zIndex: 100, borderBottom: '1px solid var(--ytg-border)', padding: isMobile ? '0 20px' : '0 40px', height: 60, display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'var(--ytg-nav)', backdropFilter: 'blur(16px)' }}>
+      <nav style={{ position: 'sticky', top: 0, zIndex: 100, borderBottom: '1px solid var(--ytg-border)', padding: isMobile ? '0 20px' : '0 40px 0 72px', height: 60, display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'var(--ytg-nav)', backdropFilter: 'blur(16px)' }}>
         <a href="/" style={{ display: 'flex', alignItems: 'center', gap: 9, textDecoration: 'none', minWidth: 0 }}>
           <Logo size={28} />
           <span style={{ fontWeight: 800, fontSize: 15, color: 'var(--ytg-text)', letterSpacing: '-0.4px', whiteSpace: 'nowrap' }}>YTGrowth</span>
@@ -275,7 +275,7 @@ export default function Affiliate() {
       {/* ══════════════════════════════════════════════════════════
           SECTION 1 — HERO   bg: var(--ytg-bg)  #f4f4f6
       ══════════════════════════════════════════════════════════ */}
-      <section id="aff-hero" className="aff-section-pad" style={{ padding: isMobile ? '72px 20px 60px' : '110px 40px 88px', textAlign: 'center', background: 'var(--ytg-bg)' }}>
+      <section id="aff-hero" className="aff-section-pad" style={{ padding: isMobile ? '72px 20px 60px' : '110px 40px 88px', textAlign: 'center', background: '#ffffff' }}>
         <div style={{ maxWidth: 820, margin: '0 auto', animation: 'fadeUp 0.5s ease both' }}>
           <span className="aff-section-label">Partner Program</span>
           <h1 className="aff-hero-h1" style={{ fontSize: 58, fontWeight: 800, letterSpacing: '-2.5px', lineHeight: 1.06, color: 'var(--ytg-text)', marginBottom: 24 }}>
@@ -520,7 +520,7 @@ export default function Affiliate() {
             <h2 className="aff-section-h2" style={{ fontSize: 36, fontWeight: 800, letterSpacing: '-1.2px' }}>Results from creators already earning</h2>
           </div>
           <div className="aff-grid-3">
-            {TESTIMONIALS.map((t, i) => (
+            {(isMobile ? TESTIMONIALS.slice(0, 3) : TESTIMONIALS).map((t, i) => (
               <div key={i} style={{ background: 'var(--ytg-card)', borderRadius: 18, border: '1px solid var(--ytg-border)', boxShadow: 'var(--ytg-shadow-lg)', padding: 36, display: 'flex', flexDirection: 'column' }}>
                 <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: 'var(--ytg-accent-light)', borderRadius: 100, padding: '5px 12px', marginBottom: 22, alignSelf: 'flex-start' }}>
                   <div style={{ width: 7, height: 7, borderRadius: '50%', background: 'var(--ytg-accent)' }} />

@@ -665,17 +665,17 @@ export default function Landing() {
       {/* ── NAV ─────────────────────────────────────────────────────────── */}
       <nav style={{
         position: 'sticky', top: 0, zIndex: 100,
-        background: 'var(--ytg-nav)', backdropFilter: 'blur(20px)',
+        background: isMobile ? 'rgba(244,244,246,0.95)' : 'var(--ytg-nav)', backdropFilter: 'blur(20px)',
         WebkitBackdropFilter: 'blur(20px)',
-        borderBottom: '1px solid rgba(255,255,255,0.08)',
-        boxShadow: scrolled ? '0 4px 24px rgba(0,0,0,0.4)' : 'none',
+        borderBottom: isMobile ? '1px solid rgba(10,10,15,0.1)' : '1px solid rgba(255,255,255,0.08)',
+        boxShadow: scrolled ? (isMobile ? '0 2px 12px rgba(0,0,0,0.08)' : '0 4px 24px rgba(0,0,0,0.4)') : 'none',
         transition: 'box-shadow 0.3s ease',
         height: 72, display: 'flex', alignItems: 'center',
-        justifyContent: 'space-between', padding: isMobile ? '0 20px' : '0 48px',
+        justifyContent: 'space-between', padding: isMobile ? '0 20px' : '0 48px 0 80px',
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
           <Logo size={32} />
-          <span style={{ fontWeight: 800, fontSize: 18, lineHeight: 1, letterSpacing: '-0.4px', color: '#ffffff' }}>YTGrowth</span>
+          <span style={{ fontWeight: 800, fontSize: 18, lineHeight: 1, letterSpacing: '-0.4px', color: isMobile ? '#0a0a0f' : '#ffffff' }}>YTGrowth</span>
         </div>
 
         {!isMobile && (
@@ -692,15 +692,15 @@ export default function Landing() {
           {isMobile ? (
             <button
               onClick={() => setMobileMenuOpen(o => !o)}
-              style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 6, color: '#ffffff', display: 'flex', flexDirection: 'column', gap: 4.5 }}
+              style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 6, color: '#0a0a0f', display: 'flex', flexDirection: 'column', gap: 4.5 }}
             >
               {mobileMenuOpen ? (
                 <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M2 2l14 14M16 2L2 16" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>
               ) : (
                 <>
-                  <span style={{ display: 'block', width: 20, height: 2, background: '#ffffff', borderRadius: 2 }} />
-                  <span style={{ display: 'block', width: 20, height: 2, background: '#ffffff', borderRadius: 2 }} />
-                  <span style={{ display: 'block', width: 14, height: 2, background: '#ffffff', borderRadius: 2 }} />
+                  <span style={{ display: 'block', width: 20, height: 2, background: '#0a0a0f', borderRadius: 2 }} />
+                  <span style={{ display: 'block', width: 20, height: 2, background: '#0a0a0f', borderRadius: 2 }} />
+                  <span style={{ display: 'block', width: 14, height: 2, background: '#0a0a0f', borderRadius: 2 }} />
                 </>
               )}
             </button>
