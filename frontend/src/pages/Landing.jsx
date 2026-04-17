@@ -825,54 +825,63 @@ export default function Landing() {
             <div style={{ padding: 24, display: 'grid', gridTemplateColumns: '260px 1fr', gap: 18, minHeight: 360 }}>
               {/* Sidebar mock */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-                <div style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.09)', borderRadius: 14, padding: 18 }}>
-                  <p style={{ fontSize: 9.5, fontWeight: 700, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.7px', marginBottom: 12 }}>Channel health</p>
+
+                {/* Channel health — solid red card */}
+                <div style={{ background: '#e5302a', borderRadius: 14, padding: 18 }}>
+                  <p style={{ fontSize: 9.5, fontWeight: 700, color: 'rgba(255,255,255,0.55)', textTransform: 'uppercase', letterSpacing: '0.7px', marginBottom: 14 }}>Channel health</p>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
                     <div style={{ position: 'relative', width: 52, height: 52, flexShrink: 0 }}>
                       <svg width="52" height="52" viewBox="0 0 52 52">
-                        <circle cx="26" cy="26" r="20" fill="none" stroke="rgba(255,255,255,0.07)" strokeWidth="5" />
-                        <circle cx="26" cy="26" r="20" fill="none" stroke="#ff3b30" strokeWidth="5" strokeDasharray="56 70" strokeLinecap="round" transform="rotate(-90 26 26)" />
+                        <circle cx="26" cy="26" r="20" fill="none" stroke="rgba(0,0,0,0.2)" strokeWidth="5" />
+                        <circle cx="26" cy="26" r="20" fill="none" stroke="#ffffff" strokeWidth="5" strokeDasharray="56 70" strokeLinecap="round" transform="rotate(-90 26 26)" />
                       </svg>
                     </div>
                     <div>
-                      <div style={{ fontWeight: 800, fontSize: 32, color: '#ff3b30', letterSpacing: '-2px', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>45</div>
-                      <div style={{ fontSize: 10.5, color: 'rgba(255,255,255,0.35)', marginTop: 4 }}>out of 100 · Critical</div>
-                      <div style={{ display: 'inline-flex', alignItems: 'center', gap: 4, marginTop: 5, background: 'rgba(255,59,48,0.15)', border: '1px solid rgba(255,59,48,0.25)', borderRadius: 100, padding: '2px 8px' }}>
-                        <div style={{ width: 4, height: 4, borderRadius: '50%', background: '#ff3b30' }} />
-                        <span style={{ fontSize: 9, fontWeight: 700, color: '#ff3b30', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Critical</span>
+                      <div style={{ fontWeight: 800, fontSize: 34, color: '#ffffff', letterSpacing: '-2px', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>45</div>
+                      <div style={{ fontSize: 10.5, color: 'rgba(255,255,255,0.65)', marginTop: 4 }}>out of 100</div>
+                      <div style={{ display: 'inline-flex', alignItems: 'center', gap: 4, marginTop: 6, background: 'rgba(0,0,0,0.22)', borderRadius: 100, padding: '3px 9px' }}>
+                        <div style={{ width: 4, height: 4, borderRadius: '50%', background: '#ffffff' }} />
+                        <span style={{ fontSize: 9, fontWeight: 700, color: '#ffffff', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Critical</span>
                       </div>
                     </div>
                   </div>
                 </div>
+
+                {/* Metric mini-cards — near black */}
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
-                  {[{ l: 'Avg views', v: '980', warn: true }, { l: 'Retention', v: '55.6%', warn: false }, { l: 'Duration', v: '0m 38s', warn: true }, { l: 'Net subs', v: '−1', warn: true }].map((m, i) => (
-                    <div key={i} style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 10, padding: '11px 13px' }}>
-                      <p style={{ fontSize: 9, fontWeight: 700, color: 'rgba(255,255,255,0.25)', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: 5 }}>{m.l}</p>
-                      <p style={{ fontSize: 16, fontWeight: 700, color: m.warn ? '#ff9f95' : '#f4f4f5', fontVariantNumeric: 'tabular-nums' }}>{m.v}</p>
+                  {[
+                    { l: 'Avg views', v: '980',    good: false },
+                    { l: 'Retention', v: '55.6%',  good: true  },
+                    { l: 'Duration',  v: '0m 38s', good: false },
+                    { l: 'Net subs',  v: '−1',     good: false },
+                  ].map((m, i) => (
+                    <div key={i} style={{ background: '#0d0d12', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 10, padding: '11px 13px' }}>
+                      <p style={{ fontSize: 9, fontWeight: 700, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: 5 }}>{m.l}</p>
+                      <p style={{ fontSize: 16, fontWeight: 700, color: m.good ? '#4ade80' : '#ffffff', fontVariantNumeric: 'tabular-nums' }}>{m.v}</p>
                     </div>
                   ))}
                 </div>
               </div>
 
-              {/* Main mock */}
+              {/* Action plan — main panel */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-                <p style={{ fontSize: 10, fontWeight: 700, color: 'rgba(255,255,255,0.25)', textTransform: 'uppercase', letterSpacing: '0.7px', marginBottom: 2 }}>Your action plan</p>
+                <p style={{ fontSize: 10, fontWeight: 700, color: 'rgba(255,255,255,0.28)', textTransform: 'uppercase', letterSpacing: '0.7px', marginBottom: 2 }}>Your action plan</p>
                 {[
                   { c: '#ff3b30', t: 'Watch time is critically short', desc: 'Viewers only watch 38 seconds on average.', action: 'Rewrite your openings — hook in first 30s.', p: 'Critical' },
-                  { c: '#ffd60a', t: 'Upload frequency too low', desc: 'You post 0.5× per week vs 2–3× niche avg.', action: 'Commit to 1 upload per week minimum.', p: 'High' },
-                  { c: '#0a84ff', t: 'CTR below niche average', desc: '2.1% vs 4.8% niche average.', action: 'A/B test thumbnails with clearer focal points.', p: 'Medium' },
+                  { c: '#ffd60a', t: 'Upload frequency too low',       desc: 'You post 0.5× per week vs 2–3× niche avg.',  action: 'Commit to 1 upload per week minimum.',    p: 'High'     },
+                  { c: '#4ade80', t: 'CTR below niche average',        desc: '2.1% vs 4.8% niche average.',                action: 'A/B test thumbnails with clearer focal points.', p: 'Medium' },
                 ].map((item, i) => (
-                  <div key={i} style={{ background: 'rgba(255,255,255,0.028)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 12, overflow: 'hidden' }}>
-                    <div style={{ borderLeft: `3px solid ${item.c}`, padding: '14px 16px' }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
-                        <p style={{ fontSize: 12.5, fontWeight: 600, color: '#f0f0f5' }}>{item.t}</p>
-                        <span style={{ fontSize: 9.5, fontWeight: 700, color: item.c, background: `${item.c}22`, border: `1px solid ${item.c}30`, padding: '2px 9px', borderRadius: 100, flexShrink: 0, marginLeft: 10, textTransform: 'uppercase', letterSpacing: '0.06em' }}>{item.p}</span>
+                  <div key={i} style={{ background: '#0d0d12', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 12, overflow: 'hidden' }}>
+                    <div style={{ borderLeft: `3px solid ${item.c}`, padding: '13px 15px' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 5 }}>
+                        <p style={{ fontSize: 12.5, fontWeight: 600, color: '#ffffff' }}>{item.t}</p>
+                        <span style={{ fontSize: 9.5, fontWeight: 700, color: item.c, background: `${item.c}1a`, border: `1px solid ${item.c}40`, padding: '2px 9px', borderRadius: 100, flexShrink: 0, marginLeft: 10, textTransform: 'uppercase', letterSpacing: '0.06em' }}>{item.p}</span>
                       </div>
-                      <p style={{ fontSize: 11.5, color: 'rgba(255,255,255,0.48)', lineHeight: 1.6 }}>{item.desc}</p>
+                      <p style={{ fontSize: 11.5, color: 'rgba(255,255,255,0.42)', lineHeight: 1.6 }}>{item.desc}</p>
                     </div>
-                    <div style={{ background: 'rgba(255,255,255,0.04)', borderTop: '1px solid rgba(255,255,255,0.07)', padding: '9px 16px', fontSize: 11.5, color: 'rgba(255,255,255,0.6)', display: 'flex', alignItems: 'center', gap: 7 }}>
+                    <div style={{ background: 'rgba(255,255,255,0.03)', borderTop: '1px solid rgba(255,255,255,0.06)', padding: '8px 15px', fontSize: 11.5, color: 'rgba(255,255,255,0.5)', display: 'flex', alignItems: 'center', gap: 7 }}>
                       <span style={{ fontWeight: 700, color: item.c, flexShrink: 0 }}>Fix</span>
-                      <span style={{ color: 'rgba(255,255,255,0.2)' }}>—</span>
+                      <span style={{ color: 'rgba(255,255,255,0.15)' }}>—</span>
                       {item.action}
                     </div>
                   </div>
@@ -899,8 +908,8 @@ export default function Landing() {
           <div style={{ animation: 'floatB 5.5s ease-in-out infinite 1s', position: 'absolute', bottom: 8, left: 8, background: 'rgba(17,17,20,0.95)', backdropFilter: 'blur(20px)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 16, padding: '16px 20px', boxShadow: '0 24px 60px rgba(0,0,0,0.5)' }}>
             <p style={{ fontSize: 9.5, fontWeight: 700, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.6px', marginBottom: 12 }}>Analysis complete</p>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-              <div style={{ width: 36, height: 36, background: 'rgba(10,132,255,0.12)', border: '1px solid rgba(10,132,255,0.25)', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l3 3 7-7" stroke="#0a84ff" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg>
+              <div style={{ width: 36, height: 36, background: 'rgba(74,222,128,0.12)', border: '1px solid rgba(74,222,128,0.25)', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l3 3 7-7" stroke="#4ade80" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg>
               </div>
               <div>
                 <p style={{ fontSize: 12, fontWeight: 700, color: '#f4f4f5' }}>12 metrics scanned</p>
