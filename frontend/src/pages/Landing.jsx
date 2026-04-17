@@ -822,67 +822,73 @@ export default function Landing() {
             </div>
 
             {/* Mock dashboard content */}
-            <div style={{ padding: 24, display: 'grid', gridTemplateColumns: '260px 1fr', gap: 18, minHeight: 360 }}>
-              {/* Sidebar mock */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+            <div style={{ padding: '20px 22px', display: 'grid', gridTemplateColumns: '220px 1fr', gap: 16, minHeight: 360 }}>
 
-                {/* Channel health — solid red card */}
-                <div style={{ background: '#e5302a', borderRadius: 14, padding: 18 }}>
-                  <p style={{ fontSize: 9.5, fontWeight: 700, color: 'rgba(255,255,255,0.55)', textTransform: 'uppercase', letterSpacing: '0.7px', marginBottom: 14 }}>Channel health</p>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-                    <div style={{ position: 'relative', width: 52, height: 52, flexShrink: 0 }}>
-                      <svg width="52" height="52" viewBox="0 0 52 52">
-                        <circle cx="26" cy="26" r="20" fill="none" stroke="rgba(0,0,0,0.2)" strokeWidth="5" />
-                        <circle cx="26" cy="26" r="20" fill="none" stroke="#ffffff" strokeWidth="5" strokeDasharray="56 70" strokeLinecap="round" transform="rotate(-90 26 26)" />
+              {/* Sidebar */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+
+                {/* Channel health card */}
+                <div style={{ background: '#1c1c22', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 14, padding: '16px 18px' }}>
+                  <p style={{ fontSize: 9, fontWeight: 700, color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase', letterSpacing: '0.8px', marginBottom: 16 }}>Channel health</p>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+                    {/* Donut */}
+                    <div style={{ position: 'relative', flexShrink: 0 }}>
+                      <svg width="60" height="60" viewBox="0 0 60 60">
+                        <circle cx="30" cy="30" r="22" fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="6" />
+                        <circle cx="30" cy="30" r="22" fill="none" stroke="#e5302a" strokeWidth="6" strokeDasharray="62 138" strokeLinecap="round" transform="rotate(-90 30 30)" />
                       </svg>
+                      <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <span style={{ fontSize: 15, fontWeight: 800, color: '#ffffff', letterSpacing: '-0.5px' }}>45</span>
+                      </div>
                     </div>
                     <div>
-                      <div style={{ fontWeight: 800, fontSize: 34, color: '#ffffff', letterSpacing: '-2px', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>45</div>
-                      <div style={{ fontSize: 10.5, color: 'rgba(255,255,255,0.65)', marginTop: 4 }}>out of 100</div>
-                      <div style={{ display: 'inline-flex', alignItems: 'center', gap: 4, marginTop: 6, background: 'rgba(0,0,0,0.22)', borderRadius: 100, padding: '3px 9px' }}>
-                        <div style={{ width: 4, height: 4, borderRadius: '50%', background: '#ffffff' }} />
-                        <span style={{ fontSize: 9, fontWeight: 700, color: '#ffffff', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Critical</span>
+                      <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.45)', marginBottom: 6, lineHeight: 1.4 }}>Score out of 100</div>
+                      <div style={{ display: 'inline-flex', alignItems: 'center', gap: 5, background: 'rgba(229,48,42,0.15)', border: '1px solid rgba(229,48,42,0.3)', borderRadius: 100, padding: '3px 10px' }}>
+                        <div style={{ width: 5, height: 5, borderRadius: '50%', background: '#e5302a', flexShrink: 0 }} />
+                        <span style={{ fontSize: 10, fontWeight: 700, color: '#ff6b63', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Critical</span>
                       </div>
                     </div>
                   </div>
                 </div>
 
-                {/* Metric mini-cards — near black */}
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+                {/* Metric grid */}
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6 }}>
                   {[
-                    { l: 'Avg views', v: '980',    good: false },
-                    { l: 'Retention', v: '55.6%',  good: true  },
-                    { l: 'Duration',  v: '0m 38s', good: false },
-                    { l: 'Net subs',  v: '−1',     good: false },
+                    { l: 'Avg views', v: '980',    color: '#ff6b63' },
+                    { l: 'Retention', v: '55.6%',  color: '#4ade80' },
+                    { l: 'Duration',  v: '0m 38s', color: '#ff6b63' },
+                    { l: 'Net subs',  v: '−1',     color: '#ff6b63' },
                   ].map((m, i) => (
-                    <div key={i} style={{ background: '#0d0d12', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 10, padding: '11px 13px' }}>
-                      <p style={{ fontSize: 9, fontWeight: 700, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: 5 }}>{m.l}</p>
-                      <p style={{ fontSize: 16, fontWeight: 700, color: m.good ? '#4ade80' : '#ffffff', fontVariantNumeric: 'tabular-nums' }}>{m.v}</p>
+                    <div key={i} style={{ background: '#1c1c22', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 10, padding: '10px 12px' }}>
+                      <p style={{ fontSize: 8.5, fontWeight: 600, color: 'rgba(255,255,255,0.28)', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: 5 }}>{m.l}</p>
+                      <p style={{ fontSize: 17, fontWeight: 800, color: m.color, letterSpacing: '-0.5px', fontVariantNumeric: 'tabular-nums' }}>{m.v}</p>
                     </div>
                   ))}
                 </div>
               </div>
 
-              {/* Action plan — main panel */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-                <p style={{ fontSize: 10, fontWeight: 700, color: 'rgba(255,255,255,0.28)', textTransform: 'uppercase', letterSpacing: '0.7px', marginBottom: 2 }}>Your action plan</p>
+              {/* Action plan */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                <p style={{ fontSize: 9, fontWeight: 700, color: 'rgba(255,255,255,0.28)', textTransform: 'uppercase', letterSpacing: '0.8px', marginBottom: 4 }}>Your action plan</p>
                 {[
-                  { c: '#ff3b30', t: 'Watch time is critically short', desc: 'Viewers only watch 38 seconds on average.', action: 'Rewrite your openings — hook in first 30s.', p: 'Critical' },
-                  { c: '#ffd60a', t: 'Upload frequency too low',       desc: 'You post 0.5× per week vs 2–3× niche avg.',  action: 'Commit to 1 upload per week minimum.',    p: 'High'     },
-                  { c: '#4ade80', t: 'CTR below niche average',        desc: '2.1% vs 4.8% niche average.',                action: 'A/B test thumbnails with clearer focal points.', p: 'Medium' },
+                  { accent: '#e5302a', label: 'Critical', t: 'Watch time is critically short',  desc: 'Avg watch time is 38s — hook viewers in the first 15 seconds.',     fix: 'Rewrite your openings with a strong hook.' },
+                  { accent: '#f59e0b', label: 'High',     t: 'Upload frequency too low',         desc: 'You post 0.5× per week vs 2–3× for top channels in your niche.',   fix: 'Commit to 1 upload per week minimum.'       },
+                  { accent: '#4ade80', label: 'Good',     t: 'Retention above niche average',    desc: '55.6% vs 48% niche average — your content holds attention well.',   fix: 'Keep using your current editing style.'     },
                 ].map((item, i) => (
-                  <div key={i} style={{ background: '#0d0d12', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 12, overflow: 'hidden' }}>
-                    <div style={{ borderLeft: `3px solid ${item.c}`, padding: '13px 15px' }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 5 }}>
-                        <p style={{ fontSize: 12.5, fontWeight: 600, color: '#ffffff' }}>{item.t}</p>
-                        <span style={{ fontSize: 9.5, fontWeight: 700, color: item.c, background: `${item.c}1a`, border: `1px solid ${item.c}40`, padding: '2px 9px', borderRadius: 100, flexShrink: 0, marginLeft: 10, textTransform: 'uppercase', letterSpacing: '0.06em' }}>{item.p}</span>
+                  <div key={i} style={{ background: '#1c1c22', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 12, overflow: 'hidden', flex: 1 }}>
+                    <div style={{ display: 'flex', alignItems: 'stretch', height: '100%' }}>
+                      <div style={{ width: 3, background: item.accent, flexShrink: 0, borderRadius: '12px 0 0 12px' }} />
+                      <div style={{ padding: '12px 14px', flex: 1 }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 5 }}>
+                          <p style={{ fontSize: 12, fontWeight: 700, color: '#ffffff', lineHeight: 1.3 }}>{item.t}</p>
+                          <span style={{ fontSize: 9, fontWeight: 700, color: item.accent, background: `${item.accent}18`, border: `1px solid ${item.accent}35`, padding: '2px 8px', borderRadius: 100, flexShrink: 0, marginLeft: 10, textTransform: 'uppercase', letterSpacing: '0.05em', whiteSpace: 'nowrap' }}>{item.label}</span>
+                        </div>
+                        <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.38)', lineHeight: 1.55, marginBottom: 7 }}>{item.desc}</p>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                          <span style={{ fontSize: 9.5, fontWeight: 700, color: item.accent }}>→</span>
+                          <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.55)', fontWeight: 500 }}>{item.fix}</span>
+                        </div>
                       </div>
-                      <p style={{ fontSize: 11.5, color: 'rgba(255,255,255,0.42)', lineHeight: 1.6 }}>{item.desc}</p>
-                    </div>
-                    <div style={{ background: 'rgba(255,255,255,0.03)', borderTop: '1px solid rgba(255,255,255,0.06)', padding: '8px 15px', fontSize: 11.5, color: 'rgba(255,255,255,0.5)', display: 'flex', alignItems: 'center', gap: 7 }}>
-                      <span style={{ fontWeight: 700, color: item.c, flexShrink: 0 }}>Fix</span>
-                      <span style={{ color: 'rgba(255,255,255,0.15)' }}>—</span>
-                      {item.action}
                     </div>
                   </div>
                 ))}
