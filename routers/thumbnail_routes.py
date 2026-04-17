@@ -307,6 +307,7 @@ def analyze_thumbnail(body: AnalyzeBody, request: Request):
                 pass
 
         # ── Call Claude vision ─────────────────────────────────────────────────
+        raw_bytes = base64.b64decode(row.thumbnail_b64) if row.thumbnail_b64 else None
         l2 = run_layer2(
             thumbnail_b64=row.thumbnail_b64,
             layer1=l1,
@@ -314,6 +315,7 @@ def analyze_thumbnail(body: AnalyzeBody, request: Request):
             channel_info=channel_info,
             video_title=row.video_title or "",
             linked_video_idea=linked_idea,
+            image_bytes=raw_bytes,
         )
         if "error" in l2:
             return JSONResponse({"error": l2["error"]}, status_code=500)

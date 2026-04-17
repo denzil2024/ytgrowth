@@ -68,6 +68,17 @@ def md5_hash(data: bytes) -> str:
     return hashlib.md5(data).hexdigest()
 
 
+def detect_image_media_type(data: bytes) -> str:
+    """Return the correct MIME type based on the actual image bytes."""
+    if data[:8] == b'\x89PNG\r\n\x1a\n':
+        return "image/png"
+    if data[:3] == b'GIF':
+        return "image/gif"
+    if data[:4] == b'RIFF' and data[8:12] == b'WEBP':
+        return "image/webp"
+    return "image/jpeg"  # default
+
+
 # ─── Layer 1: deterministic algorithm ─────────────────────────────────────────
 
 def run_layer1(image_bytes: bytes) -> dict:
@@ -573,6 +584,7 @@ def run_layer2(
     channel_info: dict,
     video_title: str = "",
     linked_video_idea: dict | None = None,
+    image_bytes: bytes | None = None,
 ) -> dict:
     """
     Call Claude vision with the thumbnail + top 3 benchmark thumbnails.
@@ -597,9 +609,10 @@ def run_layer2(
     content = []
 
     # User thumbnail (first)
+    user_media_type = detect_image_media_type(image_bytes) if image_bytes else "image/jpeg"
     content.append({
         "type": "image",
-        "source": {"type": "base64", "media_type": "image/jpeg", "data": thumbnail_b64},
+        "source": {"type": "base64", "media_type": user_media_type, "data": thumbnail_b64},
     })
 
     # Top 3 benchmark thumbnails
@@ -608,9 +621,10 @@ def run_layer2(
         img_bytes  = fetch_image_bytes(thumb_url) if thumb_url else None
         if img_bytes:
             b64 = base64.b64encode(img_bytes).decode()
+            bench_media_type = detect_image_media_type(img_bytes)
             content.append({
                 "type": "image",
-                "source": {"type": "base64", "media_type": "image/jpeg", "data": b64},
+                "source": {"type": "base64", "media_type": bench_media_type, "data": b64},
             })
 
     # Build video idea context block (inserted into prompt if available)
