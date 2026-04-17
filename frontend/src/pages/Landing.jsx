@@ -9,7 +9,7 @@ function useGlobalStyles() {
     const link = document.createElement('link')
     link.id = 'ytg-font'
     link.rel = 'stylesheet'
-    link.href = 'https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700;9..40,800&display=swap'
+    link.href = 'https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap'
     document.head.appendChild(link)
 
     const style = document.createElement('style')
@@ -40,7 +40,7 @@ function useGlobalStyles() {
       }
       *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
       html { scroll-behavior: smooth; }
-      body { background: var(--ytg-bg); color: var(--ytg-text); font-family: 'DM Sans', system-ui, sans-serif; overflow-x: hidden; transition: background 0.3s, color 0.3s; }
+      body { background: var(--ytg-bg); color: var(--ytg-text); font-family: 'Poppins', system-ui, sans-serif; overflow-x: hidden; transition: background 0.3s, color 0.3s; }
       @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.35} }
       @keyframes fadeUp { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:translateY(0)} }
       @keyframes floatA { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
@@ -58,7 +58,7 @@ function useGlobalStyles() {
         font-size: 15px; text-decoration: none;
         background: var(--ytg-accent);
         color: #fff; transition: all 0.18s ease; cursor: pointer;
-        border: none; font-family: 'DM Sans', system-ui, sans-serif;
+        border: none; font-family: 'Poppins', system-ui, sans-serif;
         letter-spacing: -0.2px;
         box-shadow: 0 1px 2px rgba(0,0,0,0.12), 0 4px 14px rgba(229,48,42,0.32);
       }
@@ -76,7 +76,7 @@ function useGlobalStyles() {
         color: var(--ytg-text-2);
         border: 1px solid var(--ytg-border-2);
         transition: all 0.18s ease; cursor: pointer;
-        font-family: 'DM Sans', system-ui, sans-serif;
+        font-family: 'Poppins', system-ui, sans-serif;
         box-shadow: var(--ytg-shadow);
       }
       .ytg-btn-ghost:hover {
@@ -265,7 +265,7 @@ function useGlobalStyles() {
       @keyframes ytg-ticker { 0% { transform: translateX(0) } 100% { transform: translateX(-50%) } }
       .ytg-ticker-track { display: flex; animation: ytg-ticker 52s linear infinite; width: max-content; }
       .ytg-ticker-track:hover { animation-play-state: paused; }
-      .ytg-footer-link { display: block; font-size: 14px; color: rgba(255,255,255,0.42); text-decoration: none; margin-bottom: 13px; transition: color 0.15s; font-family: 'DM Sans',system-ui,sans-serif; line-height: 1; }
+      .ytg-footer-link { display: block; font-size: 14px; color: rgba(255,255,255,0.42); text-decoration: none; margin-bottom: 13px; transition: color 0.15s; font-family: 'Poppins',system-ui,sans-serif; line-height: 1; }
       .ytg-footer-link:hover { color: rgba(255,255,255,0.82); }
       .ytg-footer-link:last-child { margin-bottom: 0; }
       .ytg-creator-avatar { width: 46px; height: 46px; border-radius: 50%; object-fit: cover; display: block; }
@@ -639,7 +639,7 @@ export default function Landing() {
   }, [])
 
   return (
-    <div style={{ fontFamily: "'DM Sans', system-ui, sans-serif", background: 'var(--ytg-bg)', color: 'var(--ytg-text)', overflowX: 'hidden' }}>
+    <div style={{ fontFamily: "'Poppins', system-ui, sans-serif", background: 'var(--ytg-bg)', color: 'var(--ytg-text)', overflowX: 'hidden' }}>
 
       {/* ── AUTH ERROR BANNER ────────────────────────────────────────────── */}
       {authError && (
@@ -1288,7 +1288,7 @@ export default function Landing() {
               ].map(([val, label]) => (
                 <button key={val} onClick={() => setPricingTab(val)} style={{
                   padding: '9px 18px', borderRadius: 100, border: 'none', cursor: 'pointer',
-                  fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: isMobile ? 11 : 13, fontWeight: 600,
+                  fontFamily: "'Poppins', system-ui, sans-serif", fontSize: isMobile ? 11 : 13, fontWeight: 600,
                   background: pricingTab === val ? '#ff3b30' : 'transparent',
                   color: pricingTab === val ? '#fff' : 'var(--ytg-text-3)',
                   transition: 'all 0.2s', whiteSpace: 'nowrap',
@@ -1708,7 +1708,7 @@ export default function Landing() {
               { label: 'Affiliates',       href: '/affiliate' },
               { label: 'Log in',           href: '/auth/login' },
             ].map((l, i) => (
-              <a key={i} href={l.href} style={{ fontSize: 13, color: 'rgba(255,255,255,0.38)', textDecoration: 'none', transition: 'color 0.15s', fontFamily: "'DM Sans', system-ui, sans-serif" }}
+              <a key={i} href={l.href} style={{ fontSize: 13, color: 'rgba(255,255,255,0.38)', textDecoration: 'none', transition: 'color 0.15s', fontFamily: "'Poppins', system-ui, sans-serif" }}
                 onMouseEnter={e => e.currentTarget.style.color = 'rgba(255,255,255,0.72)'}
                 onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.38)'}
               >{l.label}</a>
