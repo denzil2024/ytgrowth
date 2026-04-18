@@ -69,7 +69,7 @@ export default function UsageBar({ channelId, email, dark = false, onPlan }) {
               onClick={() => window.location.href = '/?tab=monthly'}
               style={{
                 flex: 1, fontSize: 12, fontWeight: 600,
-                padding: '7px 0', borderRadius: 8,
+                padding: '7px 0', borderRadius: 100,
                 cursor: 'pointer', border: 'none',
                 background: '#e5251b', color: '#fff',
                 fontFamily: 'inherit',
@@ -84,7 +84,7 @@ export default function UsageBar({ channelId, email, dark = false, onPlan }) {
               onClick={() => window.location.href = '/?tab=packs'}
               style={{
                 flex: 1, fontSize: 12, fontWeight: 600,
-                padding: '7px 0', borderRadius: 8,
+                padding: '7px 0', borderRadius: 100,
                 cursor: 'pointer',
                 background: 'transparent',
                 border: '1px solid #e6e6ec',

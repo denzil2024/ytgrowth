@@ -23,7 +23,7 @@ function useDashboardStyles() {
     style.id = 'ytg-dash-styles'
     style.textContent = `
       *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-      html, body { background: #f1f1f6; color: #0f0f13; font-family: 'Inter', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+      html, body { background: #f5f5f9; color: #0f0f13; font-family: 'Inter', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
 
       @keyframes spin    { to { transform: rotate(360deg) } }
       @keyframes fadeUp  { from { opacity: 0; transform: translateY(10px) } to { opacity: 1; transform: translateY(0) } }
@@ -181,7 +181,7 @@ const C = {
   text2:    '#4a4a58',
   text3:    '#9595a4',
   border:   '#e6e6ec',
-  bg:       '#f1f1f6',
+  bg:       '#f5f5f9',
   surface:  '#ffffff',
 }
 
@@ -360,9 +360,9 @@ function InsightCard({ insight, index, checked, onToggle, onDelete, onNavigate }
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr 1fr', gap: 8, marginLeft: 30 }}>
 
             {/* Why now */}
-            <div style={{ background: '#f8f8fb', borderRadius: 10, padding: '12px 14px' }}>
-              <p style={{ fontSize: 10, fontWeight: 600, color: C.text3, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Why now</p>
-              <p style={{ fontSize: 13, color: C.text2, lineHeight: 1.75 }}>{insight.whyNow || insight.cause}</p>
+            <div style={{ background: 'rgba(79,134,247,0.07)', border: '1px solid rgba(79,134,247,0.12)', borderRadius: 10, padding: '12px 14px' }}>
+              <p style={{ fontSize: 10, fontWeight: 700, color: '#4a7cf7', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Why now</p>
+              <p style={{ fontSize: 14, color: C.text1, lineHeight: 1.7 }}>{insight.whyNow || insight.cause}</p>
             </div>
 
             {/* Action */}
@@ -372,18 +372,18 @@ function InsightCard({ insight, index, checked, onToggle, onDelete, onNavigate }
               borderLeft: `3px solid ${color}`,
               borderRadius: '0 10px 10px 0',
               padding: '12px 16px',
-              boxShadow: '0 1px 6px rgba(0,0,0,0.05)',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
               display: 'flex', flexDirection: 'column',
             }}>
-              <p style={{ fontSize: 10, fontWeight: 600, color, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>Action</p>
-              <p style={{ fontSize: 13, color: C.text1, lineHeight: 1.75 }}>{insight.action}</p>
+              <p style={{ fontSize: 10, fontWeight: 700, color, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>Action</p>
+              <p style={{ fontSize: 14, color: C.text1, lineHeight: 1.7 }}>{insight.action}</p>
             </div>
 
             {/* Expected outcome */}
             {insight.expectedOutcome
-              ? <div style={{ background: '#f8f8fb', borderRadius: 10, padding: '12px 14px' }}>
-                  <p style={{ fontSize: 10, fontWeight: 600, color: C.text3, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Expected outcome</p>
-                  <p style={{ fontSize: 13, color: C.text2, lineHeight: 1.75 }}>{insight.expectedOutcome}</p>
+              ? <div style={{ background: 'rgba(5,150,105,0.07)', border: '1px solid rgba(5,150,105,0.14)', borderRadius: 10, padding: '12px 14px' }}>
+                  <p style={{ fontSize: 10, fontWeight: 700, color: C.green, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Expected outcome</p>
+                  <p style={{ fontSize: 14, color: C.text1, lineHeight: 1.7 }}>{insight.expectedOutcome}</p>
                 </div>
               : <div />
             }
@@ -1138,7 +1138,7 @@ export default function Dashboard() {
 
               {/* Summary + overall score */}
               {data.insights.channelSummary && (
-                <div className="ytg-card" style={{ padding: '28px 32px', marginBottom: 16 }}>
+                <div className="ytg-card" style={{ padding: '28px 32px', marginBottom: 24 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 36 }}>
                     {/* Score ring — left */}
                     <div style={{ flexShrink: 0, textAlign: 'center' }}>
@@ -1150,7 +1150,7 @@ export default function Dashboard() {
                     {/* Summary text */}
                     <div style={{ flex: 1 }}>
                       <p style={{ fontSize: 11, fontWeight: 600, color: C.text3, letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 10 }}>AI assessment</p>
-                      <p style={{ fontSize: 14, color: C.text2, lineHeight: 1.85 }}>{data.insights.channelSummary}</p>
+                      <p style={{ fontSize: 14, color: C.text1, lineHeight: 1.85 }}>{data.insights.channelSummary}</p>
                     </div>
                   </div>
                 </div>
@@ -1158,7 +1158,7 @@ export default function Dashboard() {
 
               {/* Category scores */}
               {data.insights.categoryScores && (
-                <div className="ytg-card" style={{ padding: '24px 32px', marginBottom: 16 }}>
+                <div className="ytg-card" style={{ padding: '24px 32px', marginBottom: 24 }}>
                   <p style={{ fontSize: 11, fontWeight: 600, color: C.text3, letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 20 }}>Category breakdown</p>
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px 40px' }}>
                     {[
@@ -1195,8 +1195,8 @@ export default function Dashboard() {
                 }).length
                 const hasDone = doneCount > 0
                 return (
-                  <div style={{ marginBottom: 16 }}>
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
+                  <div style={{ marginBottom: 24 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                         <p style={{ fontSize: 18, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px' }}>Priority actions</p>
                         <span style={{ fontSize: 11, fontWeight: 700, color: C.text3, background: '#f1f1f6', padding: '2px 8px', borderRadius: 20, border: '1px solid #e6e6ec' }}>{actions.length}</span>
@@ -1302,13 +1302,13 @@ export default function Dashboard() {
                   {data.insights.biggestRisk && (
                     <div>
                       <p style={{ fontSize: 11, fontWeight: 700, color: C.red, letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 8 }}>Biggest risk</p>
-                      <p style={{ fontSize: 13, color: C.text2, lineHeight: 1.65 }}>{data.insights.biggestRisk}</p>
+                      <p style={{ fontSize: 14, color: C.text1, lineHeight: 1.7 }}>{data.insights.biggestRisk}</p>
                     </div>
                   )}
                   {data.insights.topPerformingPattern && (
                     <div style={{ paddingTop: data.insights.biggestRisk ? 16 : 0, borderTop: data.insights.biggestRisk ? `1px solid ${C.border}` : 'none' }}>
                       <p style={{ fontSize: 11, fontWeight: 700, color: C.green, letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 8 }}>What's working</p>
-                      <p style={{ fontSize: 13, color: C.text2, lineHeight: 1.65 }}>{data.insights.topPerformingPattern}</p>
+                      <p style={{ fontSize: 14, color: C.text1, lineHeight: 1.7 }}>{data.insights.topPerformingPattern}</p>
                     </div>
                   )}
                 </div>
