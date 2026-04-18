@@ -23,7 +23,7 @@ function useDashboardStyles() {
     style.id = 'ytg-dash-styles'
     style.textContent = `
       *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-      html, body { background: #f0f0f3; color: #111114; font-family: 'DM Sans', 'Inter', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+      html, body { background: #f1f1f6; color: #0f0f13; font-family: 'DM Sans', 'Inter', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
 
       @keyframes spin    { to { transform: rotate(360deg) } }
       @keyframes fadeUp  { from { opacity: 0; transform: translateY(10px) } to { opacity: 1; transform: translateY(0) } }
@@ -36,50 +36,44 @@ function useDashboardStyles() {
 
       .ytg-stat-card {
         background: #ffffff;
-        border: 1px solid rgba(0,0,0,0.09);
-        border-radius: 20px;
+        border: 1px solid #e6e6ec;
+        border-radius: 16px;
         padding: 20px 22px;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.07), 0 6px 24px rgba(0,0,0,0.09);
-        transition: box-shadow 0.22s, transform 0.22s;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 4px 14px rgba(0,0,0,0.06);
+        transition: box-shadow 0.2s, transform 0.2s;
         cursor: default;
       }
       .ytg-stat-card:hover {
-        box-shadow: 0 4px 12px rgba(0,0,0,0.10), 0 20px 56px rgba(0,0,0,0.13);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08), 0 16px 40px rgba(0,0,0,0.09);
         transform: translateY(-2px);
-        border-color: rgba(0,0,0,0.13);
       }
       .ytg-stat-card.alert {
-        border-color: rgba(229,37,27,0.18);
-        background: linear-gradient(135deg, #fffafa 0%, #fff5f5 100%);
+        border-color: rgba(229,37,27,0.22);
+        background: #fff8f8;
       }
 
       .ytg-card {
-        background: rgba(255,255,255,0.85);
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
-        border: 1px solid rgba(255,255,255,0.6);
-        border-radius: 20px;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.10), 0 10px 36px rgba(0,0,0,0.14), 0 1px 0 rgba(255,255,255,0.8) inset;
-        transition: box-shadow 0.22s, transform 0.22s;
+        background: #ffffff;
+        border: 1px solid #e6e6ec;
+        border-radius: 16px;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 4px 14px rgba(0,0,0,0.06);
+        transition: box-shadow 0.2s, transform 0.2s;
       }
       .ytg-card:hover {
-        box-shadow: 0 6px 16px rgba(0,0,0,0.13), 0 28px 64px rgba(0,0,0,0.18), 0 1px 0 rgba(255,255,255,0.8) inset;
-        transform: translateY(-2px);
-        border-color: rgba(255,255,255,0.75);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08), 0 16px 40px rgba(0,0,0,0.09);
+        transform: translateY(-1px);
       }
 
       .ytg-nav-btn {
         display: flex; align-items: center; gap: 10px;
-        padding: 11px 14px; border-radius: 11px; cursor: pointer; text-align: left;
-        font-size: 13.5px; font-family: 'DM Sans', 'Inter', sans-serif;
-        transition: box-shadow 0.2s, transform 0.2s, border-color 0.2s;
-        border: 1px solid #d8d8e0;
-        box-shadow: 0 4px 16px rgba(0,0,0,0.08), 0 16px 40px rgba(0,0,0,0.10), 0 1px 0 rgba(255,255,255,0.9) inset;
+        padding: 9px 12px; border-radius: 9px; cursor: pointer; text-align: left;
+        font-size: 13px; font-family: 'DM Sans', 'Inter', sans-serif;
+        transition: background 0.15s, color 0.15s;
+        border: none;
+        box-shadow: none;
       }
       .ytg-nav-btn:hover:not(.active) {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 28px rgba(0,0,0,0.13), 0 28px 60px rgba(0,0,0,0.14), 0 1px 0 rgba(255,255,255,0.9) inset;
-        border-color: #c0c0cc;
+        background: #f1f1f6;
       }
 
       .ytg-video-row { transition: background 0.15s; }
@@ -87,23 +81,22 @@ function useDashboardStyles() {
 
       .ytg-insight-card {
         background: #ffffff;
-        border: 1px solid rgba(0,0,0,0.09);
-        border-radius: 20px;
+        border: 1px solid #e6e6ec;
+        border-radius: 14px;
         overflow: hidden;
-        margin-bottom: 10px;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.07), 0 6px 24px rgba(0,0,0,0.09);
-        transition: box-shadow 0.22s, transform 0.22s;
+        margin-bottom: 8px;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 4px 14px rgba(0,0,0,0.06);
+        transition: box-shadow 0.2s, transform 0.2s;
       }
       .ytg-insight-card:hover {
-        box-shadow: 0 4px 12px rgba(0,0,0,0.10), 0 20px 56px rgba(0,0,0,0.13);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08), 0 16px 40px rgba(0,0,0,0.09);
         transform: translateY(-1px);
-        border-color: rgba(0,0,0,0.13);
       }
       .ytg-inner-block {
-        background: #f7f7fa;
-        border: 1px solid rgba(0,0,0,0.07);
-        border-radius: 12px;
-        padding: 11px 13px;
+        background: #f8f8fb;
+        border: 1px solid #eeeef3;
+        border-radius: 10px;
+        padding: 10px 12px;
       }
       .ytg-insight-card.done {
         opacity: 0.48;
@@ -174,29 +167,30 @@ function useDashboardStyles() {
 
 /* ─── Design tokens ─────────────────────────────────────────────────────── */
 const C = {
-  red:     '#e5251b',
-  redBg:   '#fff5f5',
-  redBdr:  '#fecaca',
-  green:   '#16a34a',
-  greenBg: '#f0fdf4',
-  greenBdr:'#bbf7d0',
-  amber:   '#d97706',
-  blue:    '#2563eb',
-  text1:   '#111114',
-  text2:   '#52525b',
-  text3:   '#a0a0b0',
-  border:  'rgba(0,0,0,0.09)',
-  bg:      '#f0f0f3',
-  surface: '#fff',
+  red:      '#e5251b',
+  redBg:    '#fff5f5',
+  redBdr:   '#fecaca',
+  green:    '#059669',
+  greenBg:  '#ecfdf5',
+  greenBdr: '#a7f3d0',
+  amber:    '#d97706',
+  amberBg:  '#fffbeb',
+  amberBdr: '#fde68a',
+  text1:    '#0f0f13',
+  text2:    '#4a4a58',
+  text3:    '#9595a4',
+  border:   '#e6e6ec',
+  bg:       '#f1f1f6',
+  surface:  '#ffffff',
 }
 
-/* Severity palette — desaturated, one accent only */
+/* Severity palette — 3-color system: red critical, amber warnings, slate minor */
 const SEV = {
-  critical: { color: C.red,   bg: C.redBg,   bdr: C.redBdr },
-  high:     { color: C.amber, bg: '#fffbeb',  bdr: '#fde68a' },
-  medium:   { color: C.blue,  bg: '#eff6ff',  bdr: '#bfdbfe' },
-  low:      { color: '#7c3aed', bg: '#f5f3ff', bdr: '#ddd6fe' },
-  info:     { color: C.green, bg: C.greenBg,  bdr: C.greenBdr },
+  critical: { color: '#dc2626', bg: '#fff5f5', bdr: '#fecaca' },
+  high:     { color: '#d97706', bg: '#fffbeb', bdr: '#fde68a' },
+  medium:   { color: '#d97706', bg: '#fffbeb', bdr: '#fde68a' },
+  low:      { color: '#6b7280', bg: '#f9fafb', bdr: '#e5e7eb' },
+  info:     { color: '#059669', bg: '#ecfdf5', bdr: '#a7f3d0' },
 }
 function sev(severity) { return SEV[severity] || SEV.critical }
 
@@ -281,12 +275,12 @@ function MiniBar({ videos }) {
 
 /* ─── Stat card ─────────────────────────────────────────────────────────── */
 function Stat({ label, value, sub, alert, accent }) {
-  const col = alert ? '#c0392b' : (accent || '#111114')
+  const col = alert ? C.red : (accent || C.text1)
   return (
     <div className={`ytg-stat-card${alert ? ' alert' : ''}`}>
-      <p style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', color: '#a0a0b0', marginBottom: 12 }}>{label}</p>
-      <p style={{ fontSize: 28, fontWeight: 800, letterSpacing: '-1px', color: col, lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{value}</p>
-      {sub && <p style={{ fontSize: 12, color: alert ? '#c0392b' : '#a0a0b0', fontWeight: 400, marginTop: 8 }}>{sub}</p>}
+      <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.07em', textTransform: 'uppercase', color: C.text3, marginBottom: 10 }}>{label}</p>
+      <p style={{ fontSize: 26, fontWeight: 800, letterSpacing: '-0.8px', color: col, lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{value}</p>
+      {sub && <p style={{ fontSize: 12, color: alert ? C.red : C.text3, fontWeight: 500, marginTop: 8 }}>{sub}</p>}
     </div>
   )
 }
@@ -307,32 +301,32 @@ function InsightCard({ insight, index, checked, onToggle, onDelete, onNavigate }
   const { color, bg, bdr } = sev(insight.impact || insight.severity)
   return (
     <div className={`ytg-insight-card${checked ? ' done' : ''}`} style={{ transition: 'opacity 0.2s' }}>
-      <div style={{ borderLeft: `3px solid ${checked ? C.green : color}`, padding: '18px 22px' }}>
+      <div style={{ borderLeft: `3px solid ${checked ? C.green : color}`, padding: '16px 20px' }}>
         {/* Header */}
-        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 14, marginBottom: checked ? 0 : 10 }}>
-          <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
+        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, marginBottom: checked ? 0 : 12 }}>
+          <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
             {/* Checkbox + rank */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: 7, flexShrink: 0, marginTop: 2 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexShrink: 0, marginTop: 2 }}>
               <input
                 type="checkbox"
                 checked={!!checked}
                 onChange={onToggle}
                 style={{ width: 15, height: 15, accentColor: C.green, cursor: 'pointer', flexShrink: 0 }}
               />
-              <div style={{ width: 24, height: 24, borderRadius: 6, background: checked ? C.greenBg : bg, border: `1px solid ${checked ? C.greenBdr : bdr}`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+              <div style={{ width: 22, height: 22, borderRadius: 6, background: checked ? C.greenBg : bg, border: `1px solid ${checked ? C.greenBdr : bdr}`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                 {checked
-                  ? <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke={C.green} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><polyline points="1.5,6.5 5,10 10.5,2"/></svg>
-                  : <span style={{ fontSize: 12, fontWeight: 800, color, fontVariantNumeric: 'tabular-nums' }}>{insight.rank ?? index + 1}</span>
+                  ? <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke={C.green} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><polyline points="1.5,6.5 5,10 10.5,2"/></svg>
+                  : <span style={{ fontSize: 11, fontWeight: 800, color, fontVariantNumeric: 'tabular-nums' }}>{insight.rank ?? index + 1}</span>
                 }
               </div>
             </div>
             <div style={{ minWidth: 0 }}>
-              <p style={{ fontSize: 14, fontWeight: 700, color: checked ? C.text3 : C.text1, lineHeight: 1.5, textDecoration: checked ? 'line-through' : 'none' }}>{insight.problem}</p>
+              <p style={{ fontSize: 14, fontWeight: 600, color: checked ? C.text3 : C.text1, lineHeight: 1.45, textDecoration: checked ? 'line-through' : 'none' }}>{insight.problem}</p>
               {insight.category && <p style={{ fontSize: 12, color: C.text3, marginTop: 2 }}>{insight.category}</p>}
             </div>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 7, flexShrink: 0 }}>
-            <span style={{ background: bg, color, fontSize: 12, fontWeight: 700, padding: '4px 10px', borderRadius: 20, letterSpacing: '0.07em', textTransform: 'uppercase', border: `1px solid ${bdr}` }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexShrink: 0 }}>
+            <span style={{ background: bg, color, fontSize: 11, fontWeight: 700, padding: '3px 9px', borderRadius: 20, letterSpacing: '0.06em', textTransform: 'uppercase', border: `1px solid ${bdr}` }}>
               {insight.impact || insight.severity || 'issue'}
             </span>
             {checked && onDelete && (
@@ -344,33 +338,33 @@ function InsightCard({ insight, index, checked, onToggle, onDelete, onNavigate }
             )}
           </div>
         </div>
-        {/* Why / Fix / Outcome — hidden when task is marked done */}
+        {/* Why / Action / Outcome — hidden when task is marked done */}
         {!checked && (
           <>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 9, marginBottom: insight.expectedOutcome ? 9 : 0 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginBottom: insight.expectedOutcome ? 8 : 0 }}>
               <div className="ytg-inner-block">
-                <p style={{ fontSize: 12, fontWeight: 600, color: '#a0a0b0', marginBottom: 5, letterSpacing: '0.06em', textTransform: 'uppercase' }}>Why now</p>
-                <p style={{ fontSize: 12, color: C.text2, lineHeight: 1.7 }}>{insight.whyNow || insight.cause}</p>
+                <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, marginBottom: 4, letterSpacing: '0.07em', textTransform: 'uppercase' }}>Why now</p>
+                <p style={{ fontSize: 13, color: C.text2, lineHeight: 1.65 }}>{insight.whyNow || insight.cause}</p>
               </div>
-              <div style={{ background: 'rgba(240,253,244,0.85)', border: '1px solid rgba(134,239,172,0.7)', borderRadius: 12, padding: '11px 13px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 5 }}>
-                  <p style={{ fontSize: 12, fontWeight: 700, color: '#15803d', letterSpacing: '0.07em', textTransform: 'uppercase' }}>Action</p>
+              <div style={{ background: '#f0fdf5', border: `1px solid ${C.greenBdr}`, borderRadius: 10, padding: '10px 12px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 4 }}>
+                  <p style={{ fontSize: 11, fontWeight: 700, color: C.green, letterSpacing: '0.07em', textTransform: 'uppercase' }}>Action</p>
                   {onNavigate && (
                     <button
                       onClick={() => onNavigate(categoryToNav(insight.category, insight.problem))}
-                      style={{ fontSize: 11, fontWeight: 700, color: '#15803d', background: 'rgba(134,239,172,0.35)', border: '1px solid rgba(134,239,172,0.6)', borderRadius: 20, padding: '2px 9px', cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.15s', letterSpacing: '0.02em' }}
+                      style={{ fontSize: 11, fontWeight: 700, color: C.green, background: C.greenBg, border: `1px solid ${C.greenBdr}`, borderRadius: 20, padding: '2px 8px', cursor: 'pointer', fontFamily: 'inherit', transition: 'background 0.15s', letterSpacing: '0.01em' }}
                     >
                       Fix this →
                     </button>
                   )}
                 </div>
-                <p style={{ fontSize: 12, color: '#166534', lineHeight: 1.7 }}>{insight.action}</p>
+                <p style={{ fontSize: 13, color: '#065f46', lineHeight: 1.65 }}>{insight.action}</p>
               </div>
             </div>
             {insight.expectedOutcome && (
-              <div style={{ background: 'rgba(239,246,255,0.85)', border: '1px solid rgba(147,197,253,0.7)', borderRadius: 12, padding: '9px 13px' }}>
-                <p style={{ fontSize: 12, fontWeight: 700, color: C.blue, marginBottom: 4, letterSpacing: '0.07em', textTransform: 'uppercase' }}>Expected outcome</p>
-                <p style={{ fontSize: 12, color: '#1e40af', lineHeight: 1.65 }}>{insight.expectedOutcome}</p>
+              <div style={{ background: '#fafafa', border: `1px solid #ebebef`, borderRadius: 10, padding: '9px 12px' }}>
+                <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, marginBottom: 3, letterSpacing: '0.07em', textTransform: 'uppercase' }}>Expected outcome</p>
+                <p style={{ fontSize: 13, color: C.text2, lineHeight: 1.6 }}>{insight.expectedOutcome}</p>
               </div>
             )}
           </>
@@ -399,24 +393,19 @@ function NavBtn({ label, active, onClick, badge }) {
       className={`ytg-nav-btn${active ? ' active' : ''}`}
       onClick={onClick}
       style={{
-        margin: '3px 14px',
-        width: 'calc(100% - 28px)',
-        background: active ? '#ffffff' : '#ffffff',
-        color: active ? '#e5251b' : '#52525b',
+        margin: '1px 10px',
+        width: 'calc(100% - 20px)',
+        background: active ? '#fef2f2' : 'transparent',
+        color: active ? C.red : '#52525b',
         fontWeight: active ? 600 : 400,
-        borderLeft: active ? '3px solid #e5251b' : '1px solid rgba(0,0,0,0.07)',
-        paddingLeft: active ? 13 : 14,
-        boxShadow: active
-          ? '0 4px 16px rgba(229,37,27,0.12), 0 16px 40px rgba(229,37,27,0.10), 0 1px 0 rgba(255,255,255,0.9) inset'
-          : undefined,
       }}
-      onMouseEnter={e => { if (!active) { e.currentTarget.style.color = '#111114' } }}
+      onMouseEnter={e => { if (!active) { e.currentTarget.style.color = C.text1 } }}
       onMouseLeave={e => { if (!active) { e.currentTarget.style.color = '#52525b' } }}
     >
-      <span style={{ display: 'flex', flexShrink: 0, color: active ? '#e5251b' : '#9ca3af' }}>{NAV_ICONS[label]}</span>
+      <span style={{ display: 'flex', flexShrink: 0, color: active ? C.red : '#b0b0bc' }}>{NAV_ICONS[label]}</span>
       <span style={{ flex: 1, letterSpacing: '-0.1px' }}>{label}</span>
       {badge > 0 && (
-        <span style={{ background: '#fef3c7', color: '#d97706', border: '1px solid #fde68a', fontSize: 12, fontWeight: 700, padding: '2px 7px', borderRadius: 20, minWidth: 20, textAlign: 'center' }}>{badge}</span>
+        <span style={{ background: C.amberBg, color: C.amber, border: `1px solid ${C.amberBdr}`, fontSize: 11, fontWeight: 700, padding: '1px 6px', borderRadius: 20, minWidth: 18, textAlign: 'center' }}>{badge}</span>
       )}
     </button>
   )
@@ -820,11 +809,11 @@ export default function Dashboard() {
 
       {/* ══ SIDEBAR ══════════════════════════════════════════════════════ */}
       <aside style={{
-        width: 316, flexShrink: 0,
-        background: '#f3f3f7',
-        borderRight: '1px solid rgba(0,0,0,0.09)',
+        width: 300, flexShrink: 0,
+        background: '#ffffff',
+        borderRight: '1px solid #e6e6ec',
         position: 'sticky', top: 0, height: '100vh',
-        boxShadow: '2px 0 4px rgba(0,0,0,0.07), 8px 0 20px rgba(0,0,0,0.07), inset 5px 0 12px rgba(0,0,0,0.04)',
+        boxShadow: '1px 0 0 #e6e6ec, 4px 0 16px rgba(0,0,0,0.04)',
         display: 'flex', flexDirection: 'column', overflow: 'hidden',
         zIndex: 10,
       }}>
@@ -840,10 +829,9 @@ export default function Dashboard() {
           <div style={{
             margin: '0 12px 12px',
             padding: '14px 14px 12px 16px',
-            background: '#ffffff',
-            border: '1px solid rgba(0,0,0,0.08)',
-            borderRadius: 16,
-            boxShadow: '0 1px 3px rgba(0,0,0,0.07), 0 4px 14px rgba(0,0,0,0.09), 0 1px 0 rgba(255,255,255,0.95) inset',
+            background: '#f7f7fb',
+            border: `1px solid ${C.border}`,
+            borderRadius: 14,
             flexShrink: 0,
           }}>
             {/* Avatar + name row — switcher when 2+ channels, static when 1 */}
@@ -868,15 +856,15 @@ export default function Dashboard() {
                 </div>
             }
             {/* Channel Health inner card */}
-            <div style={{ background: '#f5f5f9', border: '1px solid rgba(0,0,0,0.07)', borderRadius: 11, padding: '10px 12px', boxShadow: '0 1px 3px rgba(0,0,0,0.06) inset' }}>
+            <div style={{ background: '#ffffff', border: `1px solid ${C.border}`, borderRadius: 10, padding: '10px 12px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
-                <span style={{ fontSize: 12, fontWeight: 600, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.09em' }}>Channel Health</span>
-                <span style={{ fontSize: 12, fontWeight: 700, color: scoreColor(score), fontVariantNumeric: 'tabular-nums' }}>{score} / 100</span>
+                <span style={{ fontSize: 11, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.08em' }}>Channel Health</span>
+                <span style={{ fontSize: 12, fontWeight: 700, color: scoreColor(score), fontVariantNumeric: 'tabular-nums' }}>{score}/100</span>
               </div>
-              <div style={{ background: 'rgba(0,0,0,0.10)', borderRadius: 6, height: 5, overflow: 'hidden' }}>
+              <div style={{ background: '#ebebef', borderRadius: 6, height: 4, overflow: 'hidden' }}>
                 <div style={{ width: `${score}%`, height: '100%', background: scoreColor(score), borderRadius: 6, transition: 'width 1.2s cubic-bezier(0.34,1.56,0.64,1)' }}/>
               </div>
-              <p style={{ fontSize: 12, fontWeight: 600, marginTop: 7, color: scoreColor(score) }}>{scoreLabel(score)}</p>
+              <p style={{ fontSize: 12, fontWeight: 600, marginTop: 6, color: scoreColor(score) }}>{scoreLabel(score)}</p>
             </div>
           </div>
         )}
@@ -922,10 +910,9 @@ export default function Dashboard() {
           <div style={{
             margin: '8px 12px',
             padding: '14px 16px',
-            background: '#ffffff',
-            border: '1px solid rgba(0,0,0,0.08)',
-            borderRadius: 14,
-            boxShadow: '0 1px 3px rgba(0,0,0,0.07), 0 4px 14px rgba(0,0,0,0.09), 0 1px 0 rgba(255,255,255,0.95) inset',
+            background: '#f7f7fb',
+            border: `1px solid ${C.border}`,
+            borderRadius: 12,
             flexShrink: 0,
           }}>
             <UsageBar
@@ -952,34 +939,33 @@ export default function Dashboard() {
       </aside>
 
       {/* ══ MAIN ═════════════════════════════════════════════════════════ */}
-      <div style={{ flex: 1, overflow: 'auto', background: '#f4f4f6' }}>
+      <div style={{ flex: 1, overflow: 'auto', background: C.bg }}>
 
         {/* Topbar */}
         <div style={{
-          borderBottom: '1px solid rgba(0,0,0,0.09)',
-          background: 'rgba(240,240,243,0.9)',
-          backdropFilter: 'blur(24px)',
-          WebkitBackdropFilter: 'blur(24px)',
-          padding: '0 36px', height: 58,
+          borderBottom: `1px solid ${C.border}`,
+          background: 'rgba(241,241,246,0.92)',
+          backdropFilter: 'blur(20px)',
+          WebkitBackdropFilter: 'blur(20px)',
+          padding: '0 36px', height: 54,
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
           position: 'sticky', top: 0, zIndex: 10,
-          boxShadow: '0 1px 0 rgba(255,255,255,0.6)',
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <span style={{ fontSize: 14, fontWeight: 700, color: '#0a0a0f', letterSpacing: '-0.4px' }}>{nav}</span>
+            <span style={{ fontSize: 14, fontWeight: 700, color: C.text1, letterSpacing: '-0.3px' }}>{nav}</span>
             {data && <>
-              <span style={{ color: '#c4c4cc', fontSize: 14 }}>·</span>
-              <span style={{ fontSize: 14, fontWeight: 400, color: '#9898a6', letterSpacing: '-0.1px' }}>{data.channel.channel_name}</span>
+              <span style={{ color: C.border, fontSize: 14 }}>·</span>
+              <span style={{ fontSize: 13, fontWeight: 400, color: C.text3, letterSpacing: '-0.1px' }}>{data.channel.channel_name}</span>
             </>}
           </div>
-          <div style={{ background: '#fff', border: '1px solid rgba(0,0,0,0.09)', borderRadius: 100, padding: '6px 16px', display: 'flex', alignItems: 'center', gap: 7, boxShadow: '0 1px 4px rgba(0,0,0,0.07), 0 4px 12px rgba(0,0,0,0.06)' }}>
-            <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#22c55e', boxShadow: '0 0 0 3px #dcfce7', animation: 'pulse 2.5s infinite' }}/>
-            <span style={{ fontSize: 12, color: '#6b6b7b', fontWeight: 600, letterSpacing: '-0.1px' }}>Live</span>
+          <div style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 100, padding: '5px 14px', display: 'flex', alignItems: 'center', gap: 6, boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
+            <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#22c55e', animation: 'pulse 2.5s infinite' }}/>
+            <span style={{ fontSize: 12, color: C.text3, fontWeight: 600 }}>Live</span>
           </div>
         </div>
 
         {/* Page */}
-        <div style={{ padding: '28px 36px', animation: 'fadeUp 0.25s ease' }}>
+        <div style={{ padding: '28px 32px 48px', animation: 'fadeUp 0.25s ease' }}>
 
           {/* Loading */}
           {loading && (
@@ -1018,9 +1004,9 @@ export default function Dashboard() {
                   }}
                 />
               )}
-              <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 24 }}>
+              <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 22 }}>
                 <div>
-                  <h1 style={{ fontSize: 24, fontWeight: 800, color: '#0a0a0f', letterSpacing: '-0.7px', marginBottom: 5 }}>Good to see you.</h1>
+                  <h1 style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.6px', marginBottom: 4 }}>Good to see you.</h1>
                   <p style={{ fontSize: 14, color: C.text3, letterSpacing: '-0.1px' }}>
                     Here's how your channel is performing right now.
                     {data.stats_fetched_at && (
@@ -1093,7 +1079,7 @@ export default function Dashboard() {
               </div>
 
               {/* Row 1 */}
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,minmax(0,1fr))', gap: 12, marginBottom: 12 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,minmax(0,1fr))', gap: 14, marginBottom: 14 }}>
                 <Stat label="Subscribers"  value={fmtNum(data.channel.subscribers)}  sub="All time" />
                 <Stat label="Total views"  value={fmtNum(data.channel.total_views)}  sub="All time" />
                 <Stat label="Avg views"    value={fmtNum(avgViews)} sub={avgViews < 500 ? 'Below average' : 'On track'} alert={avgViews < 500} />
@@ -1102,7 +1088,7 @@ export default function Dashboard() {
 
               {/* Row 2 */}
               {data.analytics && (
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,minmax(0,1fr))', gap: 12, marginBottom: 20 }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,minmax(0,1fr))', gap: 14, marginBottom: 28 }}>
                   <Stat label="Views (90d)"    value={fmtNum(data.analytics.views_90d)} />
                   <Stat label="Avg retention"  value={`${data.analytics.avg_retention_percent}%`}
                     sub={data.analytics.avg_retention_percent >= 50 ? 'Good' : 'Below 50% target'}
@@ -1122,100 +1108,6 @@ export default function Dashboard() {
                 </div>
               )}
 
-              {/* Main 2-col — hidden while re-auditing so the empty skeleton doesn't show */}
-              {!analyzingAI && <div style={{ display: 'grid', gridTemplateColumns: '1fr 260px', gap: 14, marginBottom: 14 }}>
-
-                {/* Top priority card */}
-                <div className="ytg-card" style={{ padding: '22px 24px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 7, marginBottom: 16 }}>
-                    <div style={{ width: 7, height: 7, borderRadius: '50%', background: C.red, boxShadow: `0 0 0 3px ${C.redBdr}`, animation: 'pulse 2s infinite' }}/>
-                    <p style={{ fontSize: 12, fontWeight: 500, color: '#a0a0b0', letterSpacing: '0.05em', textTransform: 'uppercase' }}>Top priority</p>
-                  </div>
-
-                  {data.insights?.priorityActions?.[0] && (() => {
-                    const ins = data.insights.priorityActions[0]
-                    const s   = sev(ins.impact)
-                    return (
-                      <>
-                        <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10, marginBottom: 6 }}>
-                          <p style={{ fontSize: 16, fontWeight: 700, color: C.text1, letterSpacing: '-0.3px', flex: 1, lineHeight: 1.4 }}>{ins.problem}</p>
-                          <span style={{ background: s.bg, color: s.color, fontSize: 12, fontWeight: 700, padding: '4px 10px', borderRadius: 20, flexShrink: 0, textTransform: 'uppercase', letterSpacing: '0.07em', border: `1px solid ${s.bdr}` }}>{ins.impact}</span>
-                        </div>
-                        <p style={{ fontSize: 12, color: C.text3, marginBottom: 8 }}>{ins.category}</p>
-                        <p style={{ fontSize: 14, color: C.text2, lineHeight: 1.75, marginBottom: 13 }}>{ins.whyNow}</p>
-                        <div style={{ background: C.greenBg, border: `1px solid ${C.greenBdr}`, borderRadius: 11, padding: '12px 15px', marginBottom: 18 }}>
-                          <p style={{ fontSize: 14, color: '#166534', lineHeight: 1.7 }}>
-                            <strong style={{ fontWeight: 700, color: C.green }}>Action — </strong>{ins.action}
-                          </p>
-                        </div>
-                      </>
-                    )
-                  })()}
-
-                  {data.videos?.length > 0 && (
-                    <div style={{ paddingTop: 16, borderTop: `1px solid #ebebef` }}>
-                      <p style={{ fontSize: 12, fontWeight: 500, color: '#a0a0b0', letterSpacing: '0.05em', textTransform: 'uppercase', marginBottom: 9 }}>Recent video views</p>
-                      <MiniBar videos={data.videos} />
-                    </div>
-                  )}
-                </div>
-
-                {/* Score ring card */}
-                <div className="ytg-card" style={{ padding: '22px 24px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-                  <ScoreRing score={score} />
-                  {data.insights?.categoryScores && (
-                    <div style={{ width: '100%', marginTop: 14, paddingTop: 14, borderTop: `1px solid #ebebef` }}>
-                      <p style={{ fontSize: 12, fontWeight: 500, color: '#a0a0b0', letterSpacing: '0.05em', textTransform: 'uppercase', marginBottom: 9 }}>Categories</p>
-                      {[
-                        ['Posting', data.insights.categoryScores.postingConsistency],
-                        ['CTR', data.insights.categoryScores.ctrHealth],
-                        ['Retention', data.insights.categoryScores.audienceRetention],
-                        ['Engagement', data.insights.categoryScores.engagementQuality],
-                        ['SEO', data.insights.categoryScores.seoDiscoverability],
-                      ].map(([label, val]) => (
-                        <div key={label} style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 7 }}>
-                          <span style={{ fontSize: 12, color: C.text2, flex: 1 }}>{label}</span>
-                          <div style={{ width: 48, height: 4, background: '#ebebef', borderRadius: 2, overflow: 'hidden' }}>
-                            <div style={{ width: `${val}%`, height: '100%', background: scoreColor(val), borderRadius: 2 }}/>
-                          </div>
-                          <span style={{ fontSize: 12, fontWeight: 700, color: scoreColor(val), fontVariantNumeric: 'tabular-nums', minWidth: 22, textAlign: 'right' }}>{val}</span>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              </div>}
-
-              {/* Priority actions */}
-              {!analyzingAI && data.insights?.priorityActions?.length > 0 && (
-                <div className="ytg-card" style={{ padding: '20px 22px' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
-                    <div>
-                      <p style={{ fontSize: 14, fontWeight: 700, color: C.text1, marginBottom: 2, letterSpacing: '-0.2px' }}>Priority actions</p>
-                      <p style={{ fontSize: 12, color: C.text3 }}>{data.insights.priorityActions.length} items · ranked by impact</p>
-                    </div>
-                  </div>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: 7 }}>
-                    {data.insights.priorityActions.map((ins, i) => {
-                      const { color, bg, bdr } = sev(ins.impact)
-                      return (
-                        <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 11, padding: '11px 14px', background: '#f7f7fa', borderRadius: 14, border: '1px solid rgba(0,0,0,0.08)', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
-                          <div style={{ width: 22, height: 22, borderRadius: 6, background: bg, border: `1px solid ${bdr}`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                            <span style={{ fontSize: 12, fontWeight: 800, color, fontVariantNumeric: 'tabular-nums' }}>{ins.rank}</span>
-                          </div>
-                          <div style={{ flex: 1, minWidth: 0 }}>
-                            <p style={{ fontSize: 12, color: C.text2, lineHeight: 1.4 }}>{ins.problem}</p>
-                            <p style={{ fontSize: 12, color: C.text3, marginTop: 2 }}>{ins.category}</p>
-                          </div>
-                          <span style={{ fontSize: 12, fontWeight: 700, color, background: bg, padding: '3px 9px', borderRadius: 20, textTransform: 'uppercase', letterSpacing: '0.07em', flexShrink: 0, border: `1px solid ${bdr}` }}>
-                            {ins.impact}
-                          </span>
-                        </div>
-                      )
-                    })}
-                  </div>
-                </div>
-              )}
             </>
           )}
 
@@ -1230,18 +1122,18 @@ export default function Dashboard() {
 
           {data && nav === 'Overview' && data.insights && (
             <>
-              <div style={{ marginBottom: 22 }}>
-                <h2 style={{ fontSize: 22, fontWeight: 800, color: '#0a0a0f', letterSpacing: '-0.6px', marginBottom: 4 }}>Channel audit</h2>
-                <p style={{ fontSize: 14, color: C.text3 }}>AI-powered analysis · {data.insights.priorityActions?.length ?? 0} priority actions{data.analyzed_at ? ` · ${new Date(data.analyzed_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}` : ''}</p>
+              <div style={{ marginBottom: 20 }}>
+                <h2 style={{ fontSize: 20, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', marginBottom: 3 }}>Channel audit</h2>
+                <p style={{ fontSize: 13, color: C.text3 }}>AI-powered analysis · {data.insights.priorityActions?.length ?? 0} priority actions{data.analyzed_at ? ` · ${new Date(data.analyzed_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}` : ''}</p>
               </div>
 
               {/* Summary + overall score */}
               {data.insights.channelSummary && (
-                <div className="ytg-card" style={{ padding: '20px 24px', marginBottom: 14, borderLeft: `4px solid ${scoreColor(score)}`, background: `linear-gradient(135deg, #fff 60%, ${scoreColor(score) === C.green ? '#f0fdf4' : scoreColor(score) === C.amber ? '#fffbeb' : '#fff5f5'} 100%)` }}>
+                <div className="ytg-card" style={{ padding: '20px 24px', marginBottom: 14, borderLeft: `3px solid ${scoreColor(score)}` }}>
                   <div style={{ display: 'flex', alignItems: 'flex-start', gap: 24 }}>
                     <div style={{ flex: 1 }}>
-                      <p style={{ fontSize: 12, fontWeight: 600, color: '#a0a0b0', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 10 }}>Overall assessment</p>
-                      <p style={{ fontSize: 14, color: C.text2, lineHeight: 1.8 }}>{data.insights.channelSummary}</p>
+                      <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 8 }}>Overall assessment</p>
+                      <p style={{ fontSize: 14, color: C.text2, lineHeight: 1.75 }}>{data.insights.channelSummary}</p>
                     </div>
                     <div style={{ textAlign: 'center', flexShrink: 0 }}>
                       <ScoreRing score={score} />
@@ -1253,7 +1145,7 @@ export default function Dashboard() {
               {/* Category scores */}
               {data.insights.categoryScores && (
                 <div className="ytg-card" style={{ padding: '20px 24px', marginBottom: 14 }}>
-                  <p style={{ fontSize: 12, fontWeight: 600, color: '#a0a0b0', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 16 }}>Category breakdown</p>
+                  <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 16 }}>Category breakdown</p>
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, minmax(0,1fr))', gap: 8 }}>
                     {[
                       ['Posting', data.insights.categoryScores.postingConsistency],
@@ -1265,22 +1157,21 @@ export default function Dashboard() {
                       ['SEO', data.insights.categoryScores.seoDiscoverability],
                     ].map(([label, val]) => {
                       const col = scoreColor(val)
-                      const catBg = val >= 75 ? C.greenBg : val >= 50 ? '#fffbeb' : C.redBg
                       return (
-                        <div key={label} style={{ textAlign: 'center', background: catBg, borderRadius: 12, padding: '12px 6px 10px' }}>
-                          <div style={{ width: 56, height: 56, margin: '0 auto 8px' }}>
-                            <svg width="56" height="56" viewBox="0 0 56 56">
-                              <circle cx="28" cy="28" r="22" fill="none" stroke="rgba(0,0,0,0.07)" strokeWidth="5"/>
-                              <circle cx="28" cy="28" r="22" fill="none" stroke={col} strokeWidth="5"
-                                strokeDasharray={`${(val / 100) * 138.2} 138.2`}
+                        <div key={label} style={{ textAlign: 'center', background: '#fafafa', border: '1px solid #efefef', borderRadius: 12, padding: '14px 6px 12px' }}>
+                          <div style={{ width: 52, height: 52, margin: '0 auto 8px' }}>
+                            <svg width="52" height="52" viewBox="0 0 52 52">
+                              <circle cx="26" cy="26" r="20" fill="none" stroke="#ebebef" strokeWidth="4.5"/>
+                              <circle cx="26" cy="26" r="20" fill="none" stroke={col} strokeWidth="4.5"
+                                strokeDasharray={`${(val / 100) * 125.7} 125.7`}
                                 strokeLinecap="round"
-                                transform="rotate(-90 28 28)"
+                                transform="rotate(-90 26 26)"
                                 style={{ transition: 'stroke-dasharray 0.8s cubic-bezier(0.34,1.56,0.64,1)' }}
                               />
-                              <text x="28" y="32" textAnchor="middle" fill={col} fontSize="12" fontWeight="800" fontFamily="Inter, sans-serif">{val}</text>
+                              <text x="26" y="30" textAnchor="middle" fill={col} fontSize="12" fontWeight="800" fontFamily="Inter, sans-serif">{val}</text>
                             </svg>
                           </div>
-                          <p style={{ fontSize: 12, color: C.text2, fontWeight: 600, letterSpacing: '0.02em' }}>{label}</p>
+                          <p style={{ fontSize: 11, color: C.text2, fontWeight: 600, letterSpacing: '0.02em' }}>{label}</p>
                         </div>
                       )
                     })}
@@ -1300,9 +1191,9 @@ export default function Dashboard() {
                 return (
                   <div style={{ marginBottom: 16 }}>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                         <p style={{ fontSize: 14, fontWeight: 700, color: C.text1, letterSpacing: '-0.2px' }}>Priority actions</p>
-                        <span style={{ fontSize: 12, fontWeight: 600, color: C.text3, background: '#f0f0f3', padding: '2px 8px', borderRadius: 20 }}>{actions.length}</span>
+                        <span style={{ fontSize: 11, fontWeight: 700, color: C.text3, background: '#f1f1f6', padding: '2px 8px', borderRadius: 20, border: '1px solid #e6e6ec' }}>{actions.length}</span>
                       </div>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                         {hasDone && (
@@ -1364,14 +1255,14 @@ export default function Dashboard() {
               })()}
 
               {/* Quick wins + big risk */}
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 14 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, marginBottom: 14 }}>
                 {data.insights.quickWins?.length > 0 && (() => {
                   const wins = data.insights.quickWins.filter((_, i) => !deleted[`qw_${i}`])
                   return (
-                    <div className="ytg-card" style={{ padding: '18px 20px' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
-                        <p style={{ fontSize: 12, fontWeight: 700, color: '#15803d', letterSpacing: '0.08em', textTransform: 'uppercase' }}>Quick wins</p>
-                        <span style={{ fontSize: 12, color: C.text3 }}>{wins.length} left</span>
+                    <div className="ytg-card" style={{ padding: '20px 22px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
+                        <p style={{ fontSize: 11, fontWeight: 700, color: C.green, letterSpacing: '0.07em', textTransform: 'uppercase' }}>Quick wins</p>
+                        <span style={{ fontSize: 11, fontWeight: 600, color: C.text3, background: '#f1f1f6', padding: '2px 7px', borderRadius: 20, border: '1px solid #e6e6ec' }}>{wins.length} left</span>
                       </div>
                       <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 2 }}>
                         {data.insights.quickWins.map((w, i) => {
@@ -1401,23 +1292,17 @@ export default function Dashboard() {
                     </div>
                   )
                 })()}
-                <div className="ytg-card" style={{ padding: '18px 20px', display: 'flex', flexDirection: 'column', gap: 12 }}>
+                <div className="ytg-card" style={{ padding: '20px 22px', display: 'flex', flexDirection: 'column', gap: 16 }}>
                   {data.insights.biggestRisk && (
                     <div>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8 }}>
-                        <div style={{ width: 6, height: 6, borderRadius: '50%', background: C.red, flexShrink: 0 }}/>
-                        <p style={{ fontSize: 12, fontWeight: 700, color: C.red, letterSpacing: '0.08em', textTransform: 'uppercase' }}>Biggest risk</p>
-                      </div>
-                      <p style={{ fontSize: 14, color: C.text2, lineHeight: 1.65 }}>{data.insights.biggestRisk}</p>
+                      <p style={{ fontSize: 11, fontWeight: 700, color: C.red, letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 8 }}>Biggest risk</p>
+                      <p style={{ fontSize: 13, color: C.text2, lineHeight: 1.65 }}>{data.insights.biggestRisk}</p>
                     </div>
                   )}
                   {data.insights.topPerformingPattern && (
-                    <div style={{ paddingTop: data.insights.biggestRisk ? 12 : 0, borderTop: data.insights.biggestRisk ? `1px solid #ebebef` : 'none' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8 }}>
-                        <div style={{ width: 6, height: 6, borderRadius: '50%', background: C.green, flexShrink: 0 }}/>
-                        <p style={{ fontSize: 12, fontWeight: 700, color: C.green, letterSpacing: '0.08em', textTransform: 'uppercase' }}>What's working</p>
-                      </div>
-                      <p style={{ fontSize: 14, color: C.text2, lineHeight: 1.65 }}>{data.insights.topPerformingPattern}</p>
+                    <div style={{ paddingTop: data.insights.biggestRisk ? 16 : 0, borderTop: data.insights.biggestRisk ? `1px solid ${C.border}` : 'none' }}>
+                      <p style={{ fontSize: 11, fontWeight: 700, color: C.green, letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 8 }}>What's working</p>
+                      <p style={{ fontSize: 13, color: C.text2, lineHeight: 1.65 }}>{data.insights.topPerformingPattern}</p>
                     </div>
                   )}
                 </div>
@@ -1561,41 +1446,38 @@ export default function Dashboard() {
           {/* ── PATTERNS ─────────────────────────────────────────────── */}
           {data && nav === 'Overview' && patterns && (
             <>
-              <div style={{ marginBottom: 24 }}>
-                <h2 style={{ fontSize: 22, fontWeight: 800, color: '#0a0a0a', letterSpacing: '-0.6px', marginBottom: 4 }}>Content patterns</h2>
-                <p style={{ fontSize: 14, color: C.text3 }}>What's working and what isn't</p>
+              <div style={{ marginBottom: 20 }}>
+                <h2 style={{ fontSize: 20, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', marginBottom: 3 }}>Content patterns</h2>
+                <p style={{ fontSize: 13, color: C.text3 }}>What's working and what isn't</p>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,minmax(0,1fr))', gap: 12, marginBottom: 14 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,minmax(0,1fr))', gap: 14, marginBottom: 14 }}>
                 {[
                   { label: 'Shorts avg views',    value: fmtNum(patterns.shortAvg), verdict: patterns.shortAvg > patterns.longAvg ? 'Beats long-form' : 'Below long-form', good: patterns.shortAvg > patterns.longAvg },
                   { label: 'Long-form avg views', value: fmtNum(patterns.longAvg),  verdict: patterns.longAvg > patterns.shortAvg ? 'Beats Shorts'     : 'Below Shorts',    good: patterns.longAvg  > patterns.shortAvg },
                   { label: 'Overall like rate',   value: `${patterns.likeRate}%`,   verdict: patterns.likeRate >= 3 ? 'Healthy' : patterns.likeRate >= 1 ? 'Average' : 'Below average', good: patterns.likeRate >= 3 },
                 ].map(p => (
-                  <div key={p.label} className="ytg-card" style={{ padding: '18px 20px' }}>
-                    <p style={{ fontSize: 12, fontWeight: 500, color: '#a0a0b0', letterSpacing: '0.05em', textTransform: 'uppercase', marginBottom: 9 }}>{p.label}</p>
-                    <p style={{ fontSize: 26, fontWeight: 800, color: C.text1, letterSpacing: '-1px', marginBottom: 9, fontVariantNumeric: 'tabular-nums' }}>{p.value}</p>
+                  <div key={p.label} className="ytg-card" style={{ padding: '20px 22px' }}>
+                    <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 10 }}>{p.label}</p>
+                    <p style={{ fontSize: 26, fontWeight: 800, color: C.text1, letterSpacing: '-0.8px', marginBottom: 10, fontVariantNumeric: 'tabular-nums' }}>{p.value}</p>
                     <span style={{
-                      fontSize: 12, fontWeight: 700,
+                      fontSize: 11, fontWeight: 700,
                       color:   p.good ? C.green  : C.amber,
-                      background: p.good ? C.greenBg : '#fffbeb',
-                      padding: '4px 11px', borderRadius: 20,
-                      border: `1px solid ${p.good ? C.greenBdr : '#fde68a'}`,
+                      background: p.good ? C.greenBg : C.amberBg,
+                      padding: '3px 10px', borderRadius: 20,
+                      border: `1px solid ${p.good ? C.greenBdr : C.amberBdr}`,
                     }}>{p.verdict}</span>
                   </div>
                 ))}
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 14 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, marginBottom: 14 }}>
                 {[
                   { label: 'Best performing',  video: patterns.bestVideo,  isGood: true  },
                   { label: 'Worst performing', video: patterns.worstVideo, isGood: false },
                 ].map(({ label, video, isGood }) => (
                   <div key={label} className="ytg-card" style={{ padding: '20px 22px' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 7, marginBottom: 14 }}>
-                      <div style={{ width: 6, height: 6, borderRadius: '50%', background: isGood ? C.green : C.red }}/>
-                      <p style={{ fontSize: 12, fontWeight: 500, color: '#a0a0b0', letterSpacing: '0.05em', textTransform: 'uppercase' }}>{label}</p>
-                    </div>
+                    <p style={{ fontSize: 11, fontWeight: 700, color: isGood ? C.green : C.red, letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 14 }}>{label}</p>
                     {video && (
                       <>
                         <div style={{ display: 'flex', gap: 11, marginBottom: 13, alignItems: 'flex-start' }}>
@@ -1626,7 +1508,7 @@ export default function Dashboard() {
               </div>
 
               <div className="ytg-card" style={{ padding: '20px 22px' }}>
-                <p style={{ fontSize: 14, fontWeight: 700, color: C.text1, marginBottom: 16, letterSpacing: '-0.2px' }}>Content mix</p>
+                <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 16 }}>Content mix</p>
                 <div style={{ display: 'flex', gap: 32, alignItems: 'flex-start' }}>
                   {[{ l: 'Shorts', v: patterns.shortsCount, s: '≤60s' }, { l: 'Long-form', v: patterns.longsCount, s: '>60s' }].map(p => (
                     <div key={p.l}>
