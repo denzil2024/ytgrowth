@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { initPaddleRetain } from '../checkout'
 
-export default function UsageBar({ channelId, email, dark = false }) {
+export default function UsageBar({ channelId, email, dark = false, onPlan }) {
   const [usage, setUsage] = useState(null)
 
   useEffect(() => {
@@ -11,6 +11,7 @@ export default function UsageBar({ channelId, email, dark = false }) {
         if (!d) return
         setUsage(d)
         if (d.paddle_customer_id) initPaddleRetain(d.paddle_customer_id)
+        if (onPlan && d.plan) onPlan(d.plan)
       })
       .catch(() => {})
   }, [])

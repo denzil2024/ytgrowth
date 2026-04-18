@@ -195,6 +195,18 @@ const SEV = {
 }
 function sev(severity) { return SEV[severity] || SEV.critical }
 
+/* Plan badge helper */
+function planBadge(plan) {
+  if (!plan || plan === 'free') return { label: 'Free', color: '#6b7280', bg: 'rgba(107,114,128,0.08)', bdr: 'rgba(107,114,128,0.18)' }
+  const isLife = plan.startsWith('lifetime_')
+  const base   = isLife ? plan.replace('lifetime_', '') : plan
+  const label  = base.charAt(0).toUpperCase() + base.slice(1) + (isLife ? ' ∞' : '')
+  if (base === 'solo')   return { label, color: '#2563eb', bg: 'rgba(37,99,235,0.07)',   bdr: 'rgba(37,99,235,0.18)' }
+  if (base === 'growth') return { label, color: '#059669', bg: 'rgba(5,150,105,0.07)',   bdr: 'rgba(5,150,105,0.18)' }
+  if (base === 'agency') return { label, color: '#7c3aed', bg: 'rgba(124,58,237,0.07)', bdr: 'rgba(124,58,237,0.18)' }
+  return { label, color: '#6b7280', bg: 'rgba(107,114,128,0.08)', bdr: 'rgba(107,114,128,0.18)' }
+}
+
 /* ─── Helpers ───────────────────────────────────────────────────────────── */
 function healthScore(insights) {
   let s = 100
@@ -363,17 +375,7 @@ function InsightCard({ insight, index, checked, onToggle, onDelete, onNavigate }
               boxShadow: '0 1px 6px rgba(0,0,0,0.05)',
               display: 'flex', flexDirection: 'column',
             }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
-                <p style={{ fontSize: 10, fontWeight: 600, color, letterSpacing: '0.08em', textTransform: 'uppercase' }}>Action</p>
-                {onNavigate && (
-                  <button
-                    onClick={() => onNavigate(categoryToNav(insight.category, insight.problem))}
-                    style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 11, fontWeight: 700, color: C.green, background: C.greenBg, border: `1px solid ${C.greenBdr}`, borderRadius: 20, padding: '3px 10px', cursor: 'pointer', fontFamily: 'inherit', flexShrink: 0 }}
-                  >
-                    Fix this →
-                  </button>
-                )}
-              </div>
+              <p style={{ fontSize: 10, fontWeight: 600, color, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>Action</p>
               <p style={{ fontSize: 13, color: C.text1, lineHeight: 1.75 }}>{insight.action}</p>
             </div>
 
@@ -414,16 +416,16 @@ function NavBtn({ label, active, onClick, badge }) {
       style={{
         margin: '2px 12px',
         width: 'calc(100% - 24px)',
-        background: active ? 'rgba(229,37,27,0.07)' : 'transparent',
-        color: active ? C.red : C.text2,
-        fontWeight: active ? 700 : 400,
+        background: active ? 'rgba(15,15,19,0.07)' : 'transparent',
+        color: active ? C.text1 : C.text2,
+        fontWeight: active ? 600 : 400,
         letterSpacing: '-0.1px',
-        border: active ? '1px solid rgba(229,37,27,0.14)' : '1px solid transparent',
+        border: active ? '1px solid rgba(0,0,0,0.09)' : '1px solid transparent',
       }}
       onMouseEnter={e => { if (!active) { e.currentTarget.style.color = C.text1 } }}
       onMouseLeave={e => { if (!active) { e.currentTarget.style.color = C.text2 } }}
     >
-      <span style={{ display: 'flex', flexShrink: 0, color: active ? C.red : '#c0c0cc' }}>{NAV_ICONS[label]}</span>
+      <span style={{ display: 'flex', flexShrink: 0, color: active ? C.text1 : '#c0c0cc' }}>{NAV_ICONS[label]}</span>
       <span style={{ flex: 1, letterSpacing: '-0.1px' }}>{label}</span>
       {badge > 0 && (
         <span style={{ background: C.amberBg, color: C.amber, border: `1px solid ${C.amberBdr}`, fontSize: 11, fontWeight: 700, padding: '1px 6px', borderRadius: 20, minWidth: 18, textAlign: 'center' }}>{badge}</span>
@@ -717,6 +719,7 @@ export default function Dashboard() {
   const [channelsAllowed, setChannelsAllowed] = useState(1)
   const [canAddMore, setCanAddMore] = useState(false)
   const [showWelcome, setShowWelcome] = useState(false)
+  const [billingPlan, setBillingPlan] = useState(null)
 
   useEffect(() => {
     fetch('/auth/data', { credentials: 'include' })
@@ -842,7 +845,9 @@ export default function Dashboard() {
         <a href="/" style={{ padding: '22px 22px 18px', display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none', flexShrink: 0, borderBottom: `1px solid ${C.border}` }}>
           <Logo size={26} />
           <span style={{ fontSize: 15, fontWeight: 700, color: C.text1, letterSpacing: '-0.5px', lineHeight: 1 }}>YTGrowth</span>
-          <span style={{ marginLeft: 'auto', fontSize: 9, fontWeight: 700, color: '#7c3aed', background: 'rgba(124,58,237,0.07)', border: '1px solid rgba(124,58,237,0.18)', padding: '2px 7px', borderRadius: 20, letterSpacing: '0.08em', textTransform: 'uppercase', flexShrink: 0 }}>Beta</span>
+          {(() => { const pb = planBadge(billingPlan); return (
+            <span style={{ marginLeft: 'auto', fontSize: 9, fontWeight: 700, color: pb.color, background: pb.bg, border: `1px solid ${pb.bdr}`, padding: '2px 8px', borderRadius: 20, letterSpacing: '0.07em', textTransform: 'uppercase', flexShrink: 0 }}>{pb.label}</span>
+          ) })()}
         </a>
 
         {/* Channel profile block */}
@@ -926,6 +931,7 @@ export default function Dashboard() {
               channelId={data.channel?.channel_id}
               email={data.channel?.email}
               dark={false}
+              onPlan={setBillingPlan}
             />
           </div>
         )}
@@ -1192,7 +1198,7 @@ export default function Dashboard() {
                   <div style={{ marginBottom: 16 }}>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                        <p style={{ fontSize: 14, fontWeight: 700, color: C.text1, letterSpacing: '-0.2px' }}>Priority actions</p>
+                        <p style={{ fontSize: 18, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px' }}>Priority actions</p>
                         <span style={{ fontSize: 11, fontWeight: 700, color: C.text3, background: '#f1f1f6', padding: '2px 8px', borderRadius: 20, border: '1px solid #e6e6ec' }}>{actions.length}</span>
                       </div>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
