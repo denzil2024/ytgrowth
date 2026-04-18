@@ -313,12 +313,16 @@ function categoryToNav(category, problem) {
 function InsightCard({ insight, index, checked, onToggle, onDelete, onNavigate }) {
   const { color } = sev(insight.impact || insight.severity)
   return (
-    <div className={`ytg-insight-card${checked ? ' done' : ''}`} style={{ transition: 'opacity 0.2s', marginBottom: 10 }}>
-      <div style={{ padding: '18px 22px' }}>
+    <div className={`ytg-insight-card${checked ? ' done' : ''}`} style={{
+      transition: 'opacity 0.2s', marginBottom: 10,
+      borderTop: `3px solid ${checked ? C.border : color}`,
+    }}>
+      <div style={{ padding: '16px 22px 18px' }}>
 
         {/* ── Header ── */}
-        <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: checked ? 0 : 16 }}>
-          {/* Checkbox + rank badge */}
+        <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: checked ? 0 : 14 }}>
+
+          {/* Checkbox + solid rank badge */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0, paddingTop: 2 }}>
             <input
               type="checkbox"
@@ -326,18 +330,20 @@ function InsightCard({ insight, index, checked, onToggle, onDelete, onNavigate }
               onChange={onToggle}
               style={{ width: 15, height: 15, accentColor: C.green, cursor: 'pointer', flexShrink: 0 }}
             />
-            <div style={{ width: 22, height: 22, borderRadius: 6, background: checked ? C.greenBg : `${color}15`, border: `1px solid ${checked ? C.greenBdr : color}40`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            <div style={{ width: 26, height: 26, borderRadius: 8, background: checked ? C.greenBg : color, border: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
               {checked
                 ? <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke={C.green} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><polyline points="1.5,6.5 5,10 10.5,2"/></svg>
-                : <span style={{ fontSize: 11, fontWeight: 800, color, fontVariantNumeric: 'tabular-nums' }}>{insight.rank ?? index + 1}</span>
+                : <span style={{ fontSize: 12, fontWeight: 900, color: '#fff', fontVariantNumeric: 'tabular-nums' }}>{insight.rank ?? index + 1}</span>
               }
             </div>
           </div>
 
-          {/* Problem + category */}
+          {/* Category label above problem */}
           <div style={{ flex: 1, minWidth: 0 }}>
-            <p style={{ fontSize: 14, fontWeight: 600, color: checked ? C.text3 : C.text1, lineHeight: 1.5, textDecoration: checked ? 'line-through' : 'none', marginBottom: insight.category ? 3 : 0 }}>{insight.problem}</p>
-            {insight.category && <p style={{ fontSize: 11, color: C.text3, fontWeight: 500 }}>{insight.category}</p>}
+            {insight.category && (
+              <p style={{ fontSize: 10, fontWeight: 700, color: checked ? C.text3 : color, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 5 }}>{insight.category}</p>
+            )}
+            <p style={{ fontSize: 14, fontWeight: 700, color: checked ? C.text3 : C.text1, lineHeight: 1.55, textDecoration: checked ? 'line-through' : 'none' }}>{insight.problem}</p>
           </div>
 
           {/* Severity badge + delete */}
@@ -355,14 +361,17 @@ function InsightCard({ insight, index, checked, onToggle, onDelete, onNavigate }
           </div>
         </div>
 
+        {/* Divider between header and body */}
+        {!checked && <div style={{ height: 1, background: C.border, marginBottom: 14, marginLeft: 46 }} />}
+
         {/* ── Body — hidden when done ── */}
         {!checked && (
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr 1fr', gap: 8, marginLeft: 30 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr 1fr', gap: 8, marginLeft: 46 }}>
 
             {/* Why now */}
             <div style={{ background: 'rgba(79,134,247,0.07)', border: '1px solid rgba(79,134,247,0.12)', borderRadius: 10, padding: '12px 14px' }}>
               <p style={{ fontSize: 10, fontWeight: 700, color: '#4a7cf7', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Why now</p>
-              <p style={{ fontSize: 14, color: C.text1, lineHeight: 1.7 }}>{insight.whyNow || insight.cause}</p>
+              <p style={{ fontSize: 13.5, color: C.text1, lineHeight: 1.72 }}>{insight.whyNow || insight.cause}</p>
             </div>
 
             {/* Action */}
@@ -376,14 +385,14 @@ function InsightCard({ insight, index, checked, onToggle, onDelete, onNavigate }
               display: 'flex', flexDirection: 'column',
             }}>
               <p style={{ fontSize: 10, fontWeight: 700, color, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>Action</p>
-              <p style={{ fontSize: 14, color: C.text1, lineHeight: 1.7 }}>{insight.action}</p>
+              <p style={{ fontSize: 13.5, color: C.text1, lineHeight: 1.72 }}>{insight.action}</p>
             </div>
 
             {/* Expected outcome */}
             {insight.expectedOutcome
               ? <div style={{ background: 'rgba(5,150,105,0.07)', border: '1px solid rgba(5,150,105,0.14)', borderRadius: 10, padding: '12px 14px' }}>
                   <p style={{ fontSize: 10, fontWeight: 700, color: C.green, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Expected outcome</p>
-                  <p style={{ fontSize: 14, color: C.text1, lineHeight: 1.7 }}>{insight.expectedOutcome}</p>
+                  <p style={{ fontSize: 13.5, color: C.text1, lineHeight: 1.72 }}>{insight.expectedOutcome}</p>
                 </div>
               : <div />
             }
@@ -659,10 +668,9 @@ function FirstTimeWelcome({ data, onDismiss, onNavigate }) {
                 <span style={{ background: s.bg, color: s.color, fontSize: 12, fontWeight: 700, padding: '4px 10px', borderRadius: 20, flexShrink: 0, textTransform: 'uppercase', letterSpacing: '0.07em', border: `1px solid ${s.bdr}` }}>{top.impact}</span>
               </div>
               {top.category && <p style={{ fontSize: 12, color: '#a0a0b0', marginTop: 3, marginBottom: 10 }}>{top.category}</p>}
-              <div style={{ background: '#111114', borderRadius: 11, padding: '12px 15px' }}>
-                <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.8)', lineHeight: 1.7 }}>
-                  <strong style={{ fontWeight: 700, color: '#4ade80' }}>Action — </strong>{top.action}
-                </p>
+              <div style={{ background: 'rgba(79,134,247,0.07)', border: `1px solid rgba(79,134,247,0.12)`, borderLeft: `3px solid ${s.color}`, borderRadius: '0 10px 10px 0', padding: '12px 15px' }}>
+                <p style={{ fontSize: 10, fontWeight: 700, color: s.color, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Action</p>
+                <p style={{ fontSize: 13.5, color: C.text1, lineHeight: 1.72 }}>{top.action}</p>
               </div>
             </>
           ) : (
@@ -720,6 +728,7 @@ export default function Dashboard() {
   const [canAddMore, setCanAddMore] = useState(false)
   const [showWelcome, setShowWelcome] = useState(false)
   const [billingPlan, setBillingPlan] = useState(null)
+  const [prevScore,   setPrevScore]   = useState(null)
 
   useEffect(() => {
     fetch('/auth/data', { credentials: 'include' })
@@ -755,6 +764,15 @@ export default function Dashboard() {
       })
       .catch(() => {})
   }, [])
+
+  // Track score delta across audits
+  useEffect(() => {
+    if (data?.insights?.channelScore == null || !data?.channel?.channel_id) return
+    const key = `ytg_prev_score_${data.channel.channel_id}`
+    const stored = localStorage.getItem(key)
+    if (stored !== null) setPrevScore(+stored)
+    localStorage.setItem(key, data.insights.channelScore)
+  }, [data?.insights?.channelScore, data?.channel?.channel_id])
 
   // Poll for AI analysis completion when insights are still pending
   useEffect(() => {
@@ -883,7 +901,6 @@ export default function Dashboard() {
               <div style={{ background: '#eeeef3', borderRadius: 99, height: 5, overflow: 'hidden' }}>
                 <div style={{ width: `${score}%`, height: '100%', background: scoreColor(score), borderRadius: 99, transition: 'width 1.2s cubic-bezier(0.34,1.56,0.64,1)' }}/>
               </div>
-              <p style={{ fontSize: 12, fontWeight: 500, marginTop: 5, color: scoreColor(score) }}>{scoreLabel(score)}</p>
             </div>
           </div>
         )}
@@ -892,7 +909,7 @@ export default function Dashboard() {
         <nav style={{ overflowY: 'auto', flex: 1, paddingTop: 8, paddingBottom: 8 }}>
 
           {/* Section: OPTIMIZE */}
-          <div style={{ padding: '14px 22px 6px' }}>
+          <div style={{ padding: '12px 22px 4px' }}>
             <span style={{ fontSize: 10, fontWeight: 600, color: '#b8b8c8', textTransform: 'uppercase', letterSpacing: '0.09em' }}>Optimize</span>
           </div>
           <NavBtn label="Overview"       active={nav === 'Overview'}       onClick={() => setNav('Overview')} />
@@ -900,7 +917,7 @@ export default function Dashboard() {
           <NavBtn label="Weekly Report"  active={nav === 'Weekly Report'}  onClick={() => setNav('Weekly Report')} />
 
           {/* Section: CREATE */}
-          <div style={{ padding: '18px 22px 6px' }}>
+          <div style={{ padding: '20px 22px 4px' }}>
             <span style={{ fontSize: 10, fontWeight: 600, color: '#b8b8c8', textTransform: 'uppercase', letterSpacing: '0.09em' }}>Create</span>
           </div>
           <NavBtn label="SEO Studio"      active={nav === 'SEO Studio'}      onClick={() => setNav('SEO Studio')} />
@@ -908,7 +925,7 @@ export default function Dashboard() {
           <NavBtn label="Video Ideas"     active={nav === 'Video Ideas'}     onClick={() => setNav('Video Ideas')} />
 
           {/* Section: RESEARCH */}
-          <div style={{ padding: '18px 22px 6px' }}>
+          <div style={{ padding: '20px 22px 4px' }}>
             <span style={{ fontSize: 10, fontWeight: 600, color: '#b8b8c8', textTransform: 'uppercase', letterSpacing: '0.09em' }}>Research</span>
           </div>
           <NavBtn label="Keywords"    active={nav === 'Keywords'}    onClick={() => setNav('Keywords')} />
@@ -1145,6 +1162,11 @@ export default function Dashboard() {
                     <div style={{ flexShrink: 0, textAlign: 'center' }}>
                       <ScoreRing score={score} />
                       <p style={{ fontSize: 11, color: C.text3, fontWeight: 500, marginTop: 4, letterSpacing: '0.03em', textTransform: 'uppercase' }}>Overall</p>
+                      {prevScore != null && prevScore !== score && (
+                        <p style={{ fontSize: 11, fontWeight: 700, color: score > prevScore ? C.green : C.red, marginTop: 3 }}>
+                          {score > prevScore ? '▲' : '▼'} {Math.abs(score - prevScore)} from last audit
+                        </p>
+                      )}
                     </div>
                     {/* Divider */}
                     <div style={{ width: 1, alignSelf: 'stretch', background: C.border, flexShrink: 0 }}/>
