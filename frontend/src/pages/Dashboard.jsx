@@ -393,8 +393,8 @@ function NavBtn({ label, active, onClick, badge }) {
       className={`ytg-nav-btn${active ? ' active' : ''}`}
       onClick={onClick}
       style={{
-        margin: '1px 12px',
-        width: 'calc(100% - 24px)',
+        margin: '1px 14px',
+        width: 'calc(100% - 28px)',
         background: active ? C.redBg : 'transparent',
         color: active ? C.red : C.text2,
         fontWeight: active ? 600 : 400,
@@ -809,7 +809,7 @@ export default function Dashboard() {
 
       {/* ══ SIDEBAR ══════════════════════════════════════════════════════ */}
       <aside style={{
-        width: 280, flexShrink: 0,
+        width: 320, flexShrink: 0,
         background: '#ffffff',
         borderRight: `1px solid ${C.border}`,
         position: 'sticky', top: 0, height: '100vh',
@@ -818,14 +818,14 @@ export default function Dashboard() {
       }}>
 
         {/* Brand */}
-        <a href="/" style={{ padding: '22px 20px 18px', display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none', flexShrink: 0, borderBottom: `1px solid ${C.border}` }}>
+        <a href="/" style={{ padding: '22px 22px 18px', display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none', flexShrink: 0, borderBottom: `1px solid ${C.border}` }}>
           <Logo size={26} />
           <span style={{ fontSize: 15, fontWeight: 700, color: C.text1, letterSpacing: '-0.5px', lineHeight: 1 }}>YTGrowth</span>
         </a>
 
         {/* Channel profile block */}
         {data && (
-          <div style={{ padding: '16px 20px 14px', borderBottom: `1px solid ${C.border}`, flexShrink: 0 }}>
+          <div style={{ padding: '16px 22px 14px', borderBottom: `1px solid ${C.border}`, flexShrink: 0 }}>
             {/* Avatar + name */}
             {channels.length >= 2
               ? <div style={{ marginBottom: 14 }}>
@@ -865,7 +865,7 @@ export default function Dashboard() {
         <nav style={{ overflowY: 'auto', flex: 1, paddingTop: 8, paddingBottom: 8 }}>
 
           {/* Section: OPTIMIZE */}
-          <div style={{ padding: '14px 20px 6px' }}>
+          <div style={{ padding: '14px 22px 6px' }}>
             <span style={{ fontSize: 10, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.12em' }}>Optimize</span>
           </div>
           <NavBtn label="Overview"       active={nav === 'Overview'}       onClick={() => setNav('Overview')} />
@@ -873,7 +873,7 @@ export default function Dashboard() {
           <NavBtn label="Weekly Report"  active={nav === 'Weekly Report'}  onClick={() => setNav('Weekly Report')} />
 
           {/* Section: CREATE */}
-          <div style={{ padding: '18px 20px 6px' }}>
+          <div style={{ padding: '18px 22px 6px' }}>
             <span style={{ fontSize: 10, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.12em' }}>Create</span>
           </div>
           <NavBtn label="SEO Studio"      active={nav === 'SEO Studio'}      onClick={() => setNav('SEO Studio')} />
@@ -881,7 +881,7 @@ export default function Dashboard() {
           <NavBtn label="Video Ideas"     active={nav === 'Video Ideas'}     onClick={() => setNav('Video Ideas')} />
 
           {/* Section: RESEARCH */}
-          <div style={{ padding: '18px 20px 6px' }}>
+          <div style={{ padding: '18px 22px 6px' }}>
             <span style={{ fontSize: 10, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.12em' }}>Research</span>
           </div>
           <NavBtn label="Keywords"    active={nav === 'Keywords'}    onClick={() => setNav('Keywords')} />
