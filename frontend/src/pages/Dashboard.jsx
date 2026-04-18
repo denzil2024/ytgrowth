@@ -292,7 +292,18 @@ function Stat({ label, value, sub, alert, accent }) {
 }
 
 /* ─── Insight card ──────────────────────────────────────────────────────── */
-function InsightCard({ insight, index, checked, onToggle, onDelete }) {
+function categoryToNav(category, problem) {
+  const c = (category || '').toLowerCase()
+  const p = (problem || '').toLowerCase()
+  if (c.includes('thumbnail') || p.includes('thumbnail')) return 'Thumbnail Score'
+  if (c.includes('competitor') || p.includes('competitor')) return 'Competitors'
+  if (c.includes('keyword') || p.includes('keyword')) return 'Keywords'
+  if (c.includes('content') || c.includes('posting') || c.includes('frequency') || p.includes('content strategy') || p.includes('video idea')) return 'Video Ideas'
+  if (c.includes('seo') || c.includes('ctr') || p.includes('title') || p.includes('description') || p.includes('tag')) return 'SEO Studio'
+  return 'SEO Studio'
+}
+
+function InsightCard({ insight, index, checked, onToggle, onDelete, onNavigate }) {
   const { color, bg, bdr } = sev(insight.impact || insight.severity)
   return (
     <div className={`ytg-insight-card${checked ? ' done' : ''}`} style={{ transition: 'opacity 0.2s' }}>
@@ -342,7 +353,17 @@ function InsightCard({ insight, index, checked, onToggle, onDelete }) {
                 <p style={{ fontSize: 12, color: C.text2, lineHeight: 1.7 }}>{insight.whyNow || insight.cause}</p>
               </div>
               <div style={{ background: 'rgba(240,253,244,0.85)', border: '1px solid rgba(134,239,172,0.7)', borderRadius: 12, padding: '11px 13px' }}>
-                <p style={{ fontSize: 12, fontWeight: 700, color: '#15803d', marginBottom: 5, letterSpacing: '0.07em', textTransform: 'uppercase' }}>Action</p>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 5 }}>
+                  <p style={{ fontSize: 12, fontWeight: 700, color: '#15803d', letterSpacing: '0.07em', textTransform: 'uppercase' }}>Action</p>
+                  {onNavigate && (
+                    <button
+                      onClick={() => onNavigate(categoryToNav(insight.category, insight.problem))}
+                      style={{ fontSize: 11, fontWeight: 700, color: '#15803d', background: 'rgba(134,239,172,0.35)', border: '1px solid rgba(134,239,172,0.6)', borderRadius: 20, padding: '2px 9px', cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.15s', letterSpacing: '0.02em' }}
+                    >
+                      Fix this →
+                    </button>
+                  )}
+                </div>
                 <p style={{ fontSize: 12, color: '#166534', lineHeight: 1.7 }}>{insight.action}</p>
               </div>
             </div>
@@ -1014,6 +1035,18 @@ export default function Dashboard() {
                         })()}
                       </span>
                     )}
+                    {data.analyzed_at && (
+                      <span style={{ marginLeft: 8, color: '#a0a0b0' }}>
+                        · Audited {(() => {
+                          const diff = Math.round((Date.now() - new Date(data.analyzed_at).getTime()) / 60000)
+                          if (diff < 1)  return 'just now'
+                          if (diff < 60) return `${diff}m ago`
+                          const h = Math.round(diff / 60)
+                          if (h < 24)   return `${h}h ago`
+                          return `${Math.round(h / 24)}d ago`
+                        })()}
+                      </span>
+                    )}
                   </p>
                 </div>
                 <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexShrink: 0, marginBottom: 2 }}>
@@ -1030,7 +1063,7 @@ export default function Dashboard() {
                     <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
                       <path d="M11.5 2A6 6 0 1 0 12 6.5"/><path d="M11.5 2v3h-3"/>
                     </svg>
-                    {analyzingAI ? 'Auditing…' : 'Re-Audit'}
+                    {analyzingAI ? 'Auditing…' : <><span>Re-Audit</span><span style={{ fontSize: 11, fontWeight: 500, color: '#a0a0b0', marginLeft: 2 }}>· 1 credit</span></>}
                   </button>
                   <button
                     className="ytg-dash-btn"
@@ -1089,8 +1122,8 @@ export default function Dashboard() {
                 </div>
               )}
 
-              {/* Main 2-col */}
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 260px', gap: 14, marginBottom: 14 }}>
+              {/* Main 2-col — hidden while re-auditing so the empty skeleton doesn't show */}
+              {!analyzingAI && <div style={{ display: 'grid', gridTemplateColumns: '1fr 260px', gap: 14, marginBottom: 14 }}>
 
                 {/* Top priority card */}
                 <div className="ytg-card" style={{ padding: '22px 24px' }}>
@@ -1098,13 +1131,6 @@ export default function Dashboard() {
                     <div style={{ width: 7, height: 7, borderRadius: '50%', background: C.red, boxShadow: `0 0 0 3px ${C.redBdr}`, animation: 'pulse 2s infinite' }}/>
                     <p style={{ fontSize: 12, fontWeight: 500, color: '#a0a0b0', letterSpacing: '0.05em', textTransform: 'uppercase' }}>Top priority</p>
                   </div>
-
-                  {analyzingAI && !data.insights && (
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '14px 0' }}>
-                      <div style={{ width: 18, height: 18, border: `2px solid ${C.border}`, borderTop: `2px solid ${C.red}`, borderRadius: '50%', animation: 'spin 0.7s linear infinite', flexShrink: 0 }}/>
-                      <p style={{ fontSize: 14, color: C.text3 }}>AI audit running — check back in ~30s</p>
-                    </div>
-                  )}
 
                   {data.insights?.priorityActions?.[0] && (() => {
                     const ins = data.insights.priorityActions[0]
@@ -1158,10 +1184,10 @@ export default function Dashboard() {
                     </div>
                   )}
                 </div>
-              </div>
+              </div>}
 
               {/* Priority actions */}
-              {data.insights?.priorityActions?.length > 0 && (
+              {!analyzingAI && data.insights?.priorityActions?.length > 0 && (
                 <div className="ytg-card" style={{ padding: '20px 22px' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
                     <div>
@@ -1329,6 +1355,7 @@ export default function Dashboard() {
                           checked={!!checked[key]}
                           onToggle={() => handleToggleCheck(key)}
                           onDelete={() => handleDelete(key)}
+                          onNavigate={setNav}
                         />
                       )
                     })}
