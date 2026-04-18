@@ -65,7 +65,7 @@ export default function UsageBar({ channelId, email, dark = false }) {
           </p>
           <div style={{ display: 'flex', gap: 7 }}>
             <button
-              onClick={() => window.location.href = '/#pricing'}
+              onClick={() => window.location.href = '/?tab=monthly'}
               style={{
                 flex: 1, fontSize: 12, fontWeight: 600,
                 padding: '7px 0', borderRadius: 8,

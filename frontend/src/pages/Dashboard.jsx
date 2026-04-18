@@ -326,7 +326,7 @@ function InsightCard({ insight, index, checked, onToggle, onDelete, onNavigate }
             </div>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexShrink: 0 }}>
-            <span style={{ background: bg, color, fontSize: 11, fontWeight: 700, padding: '3px 9px', borderRadius: 20, letterSpacing: '0.06em', textTransform: 'uppercase', border: `1px solid ${bdr}` }}>
+            <span style={{ background: 'transparent', color, fontSize: 11, fontWeight: 700, padding: '3px 9px', borderRadius: 20, letterSpacing: '0.06em', textTransform: 'uppercase', border: `1.5px solid ${color}` }}>
               {insight.impact || insight.severity || 'issue'}
             </span>
             {checked && onDelete && (
@@ -346,19 +346,19 @@ function InsightCard({ insight, index, checked, onToggle, onDelete, onNavigate }
                 <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, marginBottom: 4, letterSpacing: '0.07em', textTransform: 'uppercase' }}>Why now</p>
                 <p style={{ fontSize: 13, color: C.text2, lineHeight: 1.65 }}>{insight.whyNow || insight.cause}</p>
               </div>
-              <div style={{ background: '#f0fdf5', border: `1px solid ${C.greenBdr}`, borderRadius: 10, padding: '10px 12px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 4 }}>
-                  <p style={{ fontSize: 11, fontWeight: 700, color: C.green, letterSpacing: '0.07em', textTransform: 'uppercase' }}>Action</p>
+              <div style={{ background: '#111114', border: 'none', borderRadius: 10, padding: '10px 14px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
+                  <p style={{ fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.4)', letterSpacing: '0.07em', textTransform: 'uppercase' }}>Action</p>
                   {onNavigate && (
                     <button
                       onClick={() => onNavigate(categoryToNav(insight.category, insight.problem))}
-                      style={{ fontSize: 11, fontWeight: 700, color: C.green, background: C.greenBg, border: `1px solid ${C.greenBdr}`, borderRadius: 20, padding: '2px 8px', cursor: 'pointer', fontFamily: 'inherit', transition: 'background 0.15s', letterSpacing: '0.01em' }}
+                      style={{ fontSize: 11, fontWeight: 700, color: '#4ade80', background: 'rgba(74,222,128,0.12)', border: '1px solid rgba(74,222,128,0.22)', borderRadius: 20, padding: '2px 8px', cursor: 'pointer', fontFamily: 'inherit', transition: 'background 0.15s', letterSpacing: '0.01em' }}
                     >
                       Fix this →
                     </button>
                   )}
                 </div>
-                <p style={{ fontSize: 13, color: '#065f46', lineHeight: 1.65 }}>{insight.action}</p>
+                <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.82)', lineHeight: 1.65 }}>{insight.action}</p>
               </div>
             </div>
             {insight.expectedOutcome && (
@@ -395,10 +395,11 @@ function NavBtn({ label, active, onClick, badge }) {
       style={{
         margin: '2px 12px',
         width: 'calc(100% - 24px)',
-        background: active ? '#111114' : 'transparent',
+        background: active ? C.red : 'transparent',
         color: active ? '#ffffff' : C.text2,
         fontWeight: active ? 600 : 400,
-        letterSpacing: active ? '-0.1px' : 'normal',
+        letterSpacing: '-0.1px',
+        boxShadow: active ? `0 2px 8px ${C.red}50, 0 1px 3px ${C.red}30` : 'none',
       }}
       onMouseEnter={e => { if (!active) { e.currentTarget.style.color = C.text1 } }}
       onMouseLeave={e => { if (!active) { e.currentTarget.style.color = C.text2 } }}
@@ -637,9 +638,9 @@ function FirstTimeWelcome({ data, onDismiss, onNavigate }) {
                 <span style={{ background: s.bg, color: s.color, fontSize: 12, fontWeight: 700, padding: '4px 10px', borderRadius: 20, flexShrink: 0, textTransform: 'uppercase', letterSpacing: '0.07em', border: `1px solid ${s.bdr}` }}>{top.impact}</span>
               </div>
               {top.category && <p style={{ fontSize: 12, color: '#a0a0b0', marginTop: 3, marginBottom: 10 }}>{top.category}</p>}
-              <div style={{ background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 11, padding: '12px 15px' }}>
-                <p style={{ fontSize: 14, color: '#166534', lineHeight: 1.7 }}>
-                  <strong style={{ fontWeight: 700, color: '#16a34a' }}>Action — </strong>{top.action}
+              <div style={{ background: '#111114', borderRadius: 11, padding: '12px 15px' }}>
+                <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.8)', lineHeight: 1.7 }}>
+                  <strong style={{ fontWeight: 700, color: '#4ade80' }}>Action — </strong>{top.action}
                 </p>
               </div>
             </>
@@ -822,6 +823,7 @@ export default function Dashboard() {
         <a href="/" style={{ padding: '22px 22px 18px', display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none', flexShrink: 0, borderBottom: `1px solid ${C.border}` }}>
           <Logo size={26} />
           <span style={{ fontSize: 15, fontWeight: 700, color: C.text1, letterSpacing: '-0.5px', lineHeight: 1 }}>YTGrowth</span>
+          <span style={{ marginLeft: 'auto', fontSize: 9, fontWeight: 700, color: '#7c3aed', background: 'rgba(124,58,237,0.07)', border: '1px solid rgba(124,58,237,0.18)', padding: '2px 7px', borderRadius: 20, letterSpacing: '0.08em', textTransform: 'uppercase', flexShrink: 0 }}>Beta</span>
         </a>
 
         {/* Channel profile block */}
@@ -839,8 +841,8 @@ export default function Dashboard() {
                 </div>
               : <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 14 }}>
                   {data.channel.thumbnail
-                    ? <img src={data.channel.thumbnail} alt="" style={{ width: 40, height: 40, borderRadius: '50%', objectFit: 'cover', flexShrink: 0 }}/>
-                    : <div style={{ width: 40, height: 40, borderRadius: '50%', background: C.redBg, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, fontWeight: 700, color: C.red, flexShrink: 0 }}>{data.channel.channel_name[0].toUpperCase()}</div>
+                    ? <img src={data.channel.thumbnail} alt="" style={{ width: 40, height: 40, borderRadius: '50%', objectFit: 'cover', flexShrink: 0, boxShadow: `0 0 0 2.5px #fff, 0 0 0 4.5px ${scoreColor(score)}, 0 0 14px ${scoreColor(score)}55` }}/>
+                    : <div style={{ width: 40, height: 40, borderRadius: '50%', background: C.redBg, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, fontWeight: 700, color: C.red, flexShrink: 0, boxShadow: `0 0 0 2.5px #fff, 0 0 0 4.5px ${scoreColor(score)}, 0 0 14px ${scoreColor(score)}55` }}>{data.channel.channel_name[0].toUpperCase()}</div>
                   }
                   <div style={{ minWidth: 0, flex: 1 }}>
                     <p style={{ fontSize: 14, fontWeight: 600, color: C.text1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', letterSpacing: '-0.2px' }}>{data.channel.channel_name}</p>
@@ -1442,9 +1444,9 @@ export default function Dashboard() {
                     <span style={{
                       fontSize: 11, fontWeight: 700,
                       color:   p.good ? C.green  : C.amber,
-                      background: p.good ? C.greenBg : C.amberBg,
+                      background: 'transparent',
                       padding: '3px 10px', borderRadius: 20,
-                      border: `1px solid ${p.good ? C.greenBdr : C.amberBdr}`,
+                      border: `1.5px solid ${p.good ? C.greenBdr : C.amberBdr}`,
                     }}>{p.verdict}</span>
                   </div>
                 ))}
