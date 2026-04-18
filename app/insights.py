@@ -12,6 +12,35 @@ def parse_duration_seconds(iso_duration):
     return int(match.group(1) or 0) * 3600 + int(match.group(2) or 0) * 60 + int(match.group(3) or 0)
 
 
+# Deterministic score weights — these are shown to users so they must be stable
+_SCORE_WEIGHTS = {
+    'ctrHealth':                 0.20,
+    'audienceRetention':         0.20,
+    'contentStrategy':           0.15,
+    'postingConsistency':        0.15,
+    'engagementQuality':         0.10,
+    'seoDiscoverability':        0.10,
+    'videoLength':               0.05,
+    'trafficSourceIntelligence': 0.05,
+}
+
+
+def _compute_channel_score(cat_scores: dict) -> int:
+    """Weighted deterministic score (0–100). Consistent across re-audits."""
+    if not cat_scores:
+        return 0
+    weighted_sum = 0.0
+    total_weight = 0.0
+    for key, weight in _SCORE_WEIGHTS.items():
+        val = cat_scores.get(key)
+        if isinstance(val, (int, float)):
+            weighted_sum += val * weight
+            total_weight += weight
+    if total_weight == 0:
+        return 0
+    return round(weighted_sum / total_weight)
+
+
 def calculate_upload_frequency(videos):
     if len(videos) < 2:
         return 0
@@ -433,7 +462,11 @@ Return ONLY valid JSON. No markdown. No preamble. Return exactly {MAX_ACTIONS} p
         # Strip markdown code fences if present
         raw = re.sub(r'^```[a-z]*\n?', '', raw)
         raw = re.sub(r'\n?```$', '', raw).strip()
-        return json.loads(raw)
+        result = json.loads(raw)
+        # Override AI-guessed score with deterministic weighted formula
+        if isinstance(result.get('categoryScores'), dict):
+            result['channelScore'] = _compute_channel_score(result['categoryScores'])
+        return result
     except json.JSONDecodeError as e:
         print(f"AI analysis JSON parse error: {e}")
         return _fallback_analysis(stats, videos, analytics)
@@ -500,22 +533,23 @@ def _fallback_analysis(stats, videos, analytics):
             "expectedOutcome": "Complete audit with 5 ranked, data-specific priority actions."
         })
 
+    fallback_cats = {
+        "postingConsistency": 50,
+        "videoLength": 50,
+        "ctrHealth": 50,
+        "audienceRetention": 50,
+        "engagementQuality": 50,
+        "contentStrategy": 50,
+        "seoDiscoverability": 50,
+        "trafficSourceIntelligence": 50,
+        "audienceProfile": 50,
+        "contentShareability": 50,
+        "competitivePosition": None,
+    }
     return {
-        "channelScore": max(score, 10),
+        "channelScore": _compute_channel_score(fallback_cats),
         "channelSummary": "Analysis ran in fallback mode. Reconnect your channel for a full AI-powered audit.",
-        "categoryScores": {
-            "postingConsistency": 50,
-            "videoLength": 50,
-            "ctrHealth": 50,
-            "audienceRetention": 50,
-            "engagementQuality": 50,
-            "contentStrategy": 50,
-            "seoDiscoverability": 50,
-            "trafficSourceIntelligence": 50,
-            "audienceProfile": 50,
-            "contentShareability": 50,
-            "competitivePosition": None,
-        },
+        "categoryScores": fallback_cats,
         "priorityActions": problems[:5],
         "quickWins": [],
         "topPerformingPattern": "Unable to determine without complete analysis.",

@@ -1159,25 +1159,30 @@ export default function Dashboard() {
               {/* Category scores */}
               {data.insights.categoryScores && (
                 <div className="ytg-card" style={{ padding: '24px 32px', marginBottom: 24 }}>
-                  <p style={{ fontSize: 11, fontWeight: 600, color: C.text3, letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 20 }}>Category breakdown</p>
+                  <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 20 }}>
+                    <p style={{ fontSize: 11, fontWeight: 600, color: C.text3, letterSpacing: '0.06em', textTransform: 'uppercase' }}>Score breakdown</p>
+                    <p style={{ fontSize: 11, color: C.text3 }}>Weighted formula · CTR &amp; retention count most</p>
+                  </div>
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px 40px' }}>
                     {[
-                      ['Posting consistency', data.insights.categoryScores.postingConsistency],
-                      ['CTR health',          data.insights.categoryScores.ctrHealth],
-                      ['Video length',        data.insights.categoryScores.videoLength],
-                      ['Audience retention',  data.insights.categoryScores.audienceRetention],
-                      ['Engagement quality',  data.insights.categoryScores.engagementQuality],
-                      ['Content strategy',    data.insights.categoryScores.contentStrategy],
-                      ['SEO discoverability', data.insights.categoryScores.seoDiscoverability],
-                    ].map(([label, val]) => {
+                      ['CTR health',                data.insights.categoryScores.ctrHealth,                '20%'],
+                      ['Audience retention',        data.insights.categoryScores.audienceRetention,        '20%'],
+                      ['Content strategy',          data.insights.categoryScores.contentStrategy,          '15%'],
+                      ['Posting consistency',       data.insights.categoryScores.postingConsistency,       '15%'],
+                      ['Engagement quality',        data.insights.categoryScores.engagementQuality,        '10%'],
+                      ['SEO discoverability',       data.insights.categoryScores.seoDiscoverability,       '10%'],
+                      ['Video length',              data.insights.categoryScores.videoLength,               '5%'],
+                      ['Traffic source intel',      data.insights.categoryScores.trafficSourceIntelligence,'5%'],
+                    ].map(([label, val, weight]) => {
                       const col = scoreColor(val)
                       return (
-                        <div key={label} style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+                        <div key={label} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                          <span style={{ fontSize: 11, fontWeight: 500, color: C.text3, flexShrink: 0, width: 36, textAlign: 'right' }}>{weight}</span>
                           <span style={{ fontSize: 13, color: C.text2, fontWeight: 400, flexShrink: 0, width: 148 }}>{label}</span>
                           <div style={{ flex: 1, height: 4, background: '#eeeef3', borderRadius: 99, overflow: 'hidden' }}>
-                            <div style={{ width: `${val}%`, height: '100%', background: col, borderRadius: 99, transition: 'width 0.8s cubic-bezier(0.34,1.56,0.64,1)' }}/>
+                            <div style={{ width: `${val ?? 0}%`, height: '100%', background: col, borderRadius: 99, transition: 'width 0.8s cubic-bezier(0.34,1.56,0.64,1)' }}/>
                           </div>
-                          <span style={{ fontSize: 13, fontWeight: 700, color: col, fontVariantNumeric: 'tabular-nums', minWidth: 26, textAlign: 'right' }}>{val}</span>
+                          <span style={{ fontSize: 13, fontWeight: 700, color: col, fontVariantNumeric: 'tabular-nums', minWidth: 26, textAlign: 'right' }}>{val ?? '—'}</span>
                         </div>
                       )
                     })}
