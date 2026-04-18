@@ -299,35 +299,38 @@ function categoryToNav(category, problem) {
 }
 
 function InsightCard({ insight, index, checked, onToggle, onDelete, onNavigate }) {
-  const { color, bg, bdr } = sev(insight.impact || insight.severity)
+  const { color } = sev(insight.impact || insight.severity)
   return (
-    <div className={`ytg-insight-card${checked ? ' done' : ''}`} style={{ transition: 'opacity 0.2s' }}>
-      <div style={{ borderLeft: `3px solid ${checked ? C.green : color}`, padding: '16px 20px' }}>
-        {/* Header */}
-        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, marginBottom: checked ? 0 : 12 }}>
-          <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
-            {/* Checkbox + rank */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexShrink: 0, marginTop: 2 }}>
-              <input
-                type="checkbox"
-                checked={!!checked}
-                onChange={onToggle}
-                style={{ width: 15, height: 15, accentColor: C.green, cursor: 'pointer', flexShrink: 0 }}
-              />
-              <div style={{ width: 22, height: 22, borderRadius: 6, background: checked ? C.greenBg : bg, border: `1px solid ${checked ? C.greenBdr : bdr}`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                {checked
-                  ? <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke={C.green} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><polyline points="1.5,6.5 5,10 10.5,2"/></svg>
-                  : <span style={{ fontSize: 11, fontWeight: 800, color, fontVariantNumeric: 'tabular-nums' }}>{insight.rank ?? index + 1}</span>
-                }
-              </div>
-            </div>
-            <div style={{ minWidth: 0 }}>
-              <p style={{ fontSize: 14, fontWeight: 600, color: checked ? C.text3 : C.text1, lineHeight: 1.45, textDecoration: checked ? 'line-through' : 'none' }}>{insight.problem}</p>
-              {insight.category && <p style={{ fontSize: 12, color: C.text3, marginTop: 2 }}>{insight.category}</p>}
+    <div className={`ytg-insight-card${checked ? ' done' : ''}`} style={{ transition: 'opacity 0.2s', marginBottom: 10 }}>
+      <div style={{ padding: '18px 22px' }}>
+
+        {/* ── Header ── */}
+        <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: checked ? 0 : 16 }}>
+          {/* Checkbox + rank badge */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0, paddingTop: 2 }}>
+            <input
+              type="checkbox"
+              checked={!!checked}
+              onChange={onToggle}
+              style={{ width: 15, height: 15, accentColor: C.green, cursor: 'pointer', flexShrink: 0 }}
+            />
+            <div style={{ width: 22, height: 22, borderRadius: 6, background: checked ? C.greenBg : `${color}15`, border: `1px solid ${checked ? C.greenBdr : color}40`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+              {checked
+                ? <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke={C.green} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><polyline points="1.5,6.5 5,10 10.5,2"/></svg>
+                : <span style={{ fontSize: 11, fontWeight: 800, color, fontVariantNumeric: 'tabular-nums' }}>{insight.rank ?? index + 1}</span>
+              }
             </div>
           </div>
+
+          {/* Problem + category */}
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <p style={{ fontSize: 14, fontWeight: 600, color: checked ? C.text3 : C.text1, lineHeight: 1.5, textDecoration: checked ? 'line-through' : 'none', marginBottom: insight.category ? 3 : 0 }}>{insight.problem}</p>
+            {insight.category && <p style={{ fontSize: 11, color: C.text3, fontWeight: 500 }}>{insight.category}</p>}
+          </div>
+
+          {/* Severity badge + delete */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexShrink: 0 }}>
-            <span style={{ background: 'transparent', color, fontSize: 11, fontWeight: 700, padding: '3px 9px', borderRadius: 20, letterSpacing: '0.06em', textTransform: 'uppercase', border: `1.5px solid ${color}` }}>
+            <span style={{ fontSize: 10, fontWeight: 700, color, padding: '3px 9px', borderRadius: 20, letterSpacing: '0.06em', textTransform: 'uppercase', border: `1.5px solid ${color}` }}>
               {insight.impact || insight.severity || 'issue'}
             </span>
             {checked && onDelete && (
@@ -339,34 +342,48 @@ function InsightCard({ insight, index, checked, onToggle, onDelete, onNavigate }
             )}
           </div>
         </div>
-        {/* Why / Action / Outcome — hidden when task is marked done */}
+
+        {/* ── Body — hidden when done ── */}
         {!checked && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 6, marginLeft: 30 }}>
+
             {/* Why now */}
-            <div style={{ background: '#f8f8fb', border: '1px solid #eeeef3', borderRadius: 10, padding: '10px 14px' }}>
-              <p style={{ fontSize: 10, fontWeight: 600, color: C.text3, marginBottom: 5, letterSpacing: '0.08em', textTransform: 'uppercase' }}>Why now</p>
-              <p style={{ fontSize: 13, color: C.text2, lineHeight: 1.65 }}>{insight.whyNow || insight.cause}</p>
+            <div style={{ background: '#f8f8fb', borderRadius: 10, padding: '12px 14px' }}>
+              <p style={{ fontSize: 10, fontWeight: 600, color: C.text3, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Why now</p>
+              <p style={{ fontSize: 13, color: C.text2, lineHeight: 1.75 }}>{insight.whyNow || insight.cause}</p>
             </div>
-            {/* Action */}
-            <div style={{ background: '#111114', borderRadius: 10, padding: '12px 14px' }}>
-              <p style={{ fontSize: 10, fontWeight: 600, color: 'rgba(255,255,255,0.35)', marginBottom: 6, letterSpacing: '0.08em', textTransform: 'uppercase' }}>Action</p>
-              <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.85)', lineHeight: 1.7, marginBottom: onNavigate ? 12 : 0 }}>{insight.action}</p>
-              {onNavigate && (
-                <button
-                  onClick={() => onNavigate(categoryToNav(insight.category, insight.problem))}
-                  style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: 12, fontWeight: 600, color: '#4ade80', background: 'rgba(74,222,128,0.1)', border: '1px solid rgba(74,222,128,0.2)', borderRadius: 8, padding: '5px 12px', cursor: 'pointer', fontFamily: 'inherit', transition: 'background 0.15s' }}
-                >
-                  Fix this →
-                </button>
-              )}
+
+            {/* Action — white elevated, left accent border */}
+            <div style={{
+              background: '#ffffff',
+              border: `1px solid ${C.border}`,
+              borderLeft: `3px solid ${color}`,
+              borderRadius: '0 10px 10px 0',
+              padding: '12px 16px',
+              boxShadow: '0 1px 6px rgba(0,0,0,0.05)',
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
+                <p style={{ fontSize: 10, fontWeight: 600, color, letterSpacing: '0.08em', textTransform: 'uppercase' }}>Action</p>
+                {onNavigate && (
+                  <button
+                    onClick={() => onNavigate(categoryToNav(insight.category, insight.problem))}
+                    style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 11, fontWeight: 700, color: C.green, background: C.greenBg, border: `1px solid ${C.greenBdr}`, borderRadius: 20, padding: '3px 10px', cursor: 'pointer', fontFamily: 'inherit', flexShrink: 0 }}
+                  >
+                    Fix this →
+                  </button>
+                )}
+              </div>
+              <p style={{ fontSize: 13, color: C.text1, lineHeight: 1.75 }}>{insight.action}</p>
             </div>
+
             {/* Expected outcome */}
             {insight.expectedOutcome && (
-              <div style={{ background: '#f8f8fb', border: '1px solid #eeeef3', borderRadius: 10, padding: '10px 14px' }}>
-                <p style={{ fontSize: 10, fontWeight: 600, color: C.text3, marginBottom: 5, letterSpacing: '0.08em', textTransform: 'uppercase' }}>Expected outcome</p>
-                <p style={{ fontSize: 13, color: C.text2, lineHeight: 1.65 }}>{insight.expectedOutcome}</p>
+              <div style={{ background: '#f8f8fb', borderRadius: 10, padding: '12px 14px' }}>
+                <p style={{ fontSize: 10, fontWeight: 600, color: C.text3, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Expected outcome</p>
+                <p style={{ fontSize: 13, color: C.text2, lineHeight: 1.75 }}>{insight.expectedOutcome}</p>
               </div>
             )}
+
           </div>
         )}
       </div>
