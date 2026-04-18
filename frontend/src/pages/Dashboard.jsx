@@ -68,12 +68,13 @@ function useDashboardStyles() {
         display: flex; align-items: center; gap: 10px;
         padding: 9px 13px; border-radius: 9px; cursor: pointer; text-align: left;
         font-size: 13.5px; font-family: 'Inter', system-ui, sans-serif;
-        transition: background 0.15s, color 0.15s;
-        border: none;
-        box-shadow: none;
+        color: #4a4a58;
+        transition: background 0.15s, color 0.15s, border-color 0.15s;
+        border: 1px solid transparent;
+        box-shadow: none; outline: none; -webkit-appearance: none;
       }
       .ytg-nav-btn:hover:not(.active) {
-        background: #f4f4f8;
+        background: #f4f4f8; color: #0f0f13;
       }
 
       .ytg-video-row { transition: background 0.15s; }
@@ -394,19 +395,19 @@ function NavBtn({ label, active, onClick, badge }) {
       style={{
         margin: '2px 12px',
         width: 'calc(100% - 24px)',
-        background: active ? C.red : 'transparent',
-        color: active ? '#ffffff' : C.text2,
-        fontWeight: active ? 600 : 400,
+        background: active ? 'rgba(229,37,27,0.07)' : 'transparent',
+        color: active ? C.red : C.text2,
+        fontWeight: active ? 700 : 400,
         letterSpacing: '-0.1px',
-        boxShadow: active ? `0 2px 8px ${C.red}50, 0 1px 3px ${C.red}30` : 'none',
+        border: active ? '1px solid rgba(229,37,27,0.14)' : '1px solid transparent',
       }}
       onMouseEnter={e => { if (!active) { e.currentTarget.style.color = C.text1 } }}
       onMouseLeave={e => { if (!active) { e.currentTarget.style.color = C.text2 } }}
     >
-      <span style={{ display: 'flex', flexShrink: 0, color: active ? '#ffffff' : '#c0c0cc' }}>{NAV_ICONS[label]}</span>
+      <span style={{ display: 'flex', flexShrink: 0, color: active ? C.red : '#c0c0cc' }}>{NAV_ICONS[label]}</span>
       <span style={{ flex: 1, letterSpacing: '-0.1px' }}>{label}</span>
       {badge > 0 && (
-        <span style={{ background: active ? 'rgba(255,255,255,0.18)' : C.amberBg, color: active ? '#fff' : C.amber, border: `1px solid ${active ? 'transparent' : C.amberBdr}`, fontSize: 11, fontWeight: 700, padding: '1px 6px', borderRadius: 20, minWidth: 18, textAlign: 'center' }}>{badge}</span>
+        <span style={{ background: C.amberBg, color: C.amber, border: `1px solid ${C.amberBdr}`, fontSize: 11, fontWeight: 700, padding: '1px 6px', borderRadius: 20, minWidth: 18, textAlign: 'center' }}>{badge}</span>
       )}
     </button>
   )
