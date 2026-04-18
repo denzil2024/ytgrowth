@@ -340,34 +340,33 @@ function InsightCard({ insight, index, checked, onToggle, onDelete, onNavigate }
         </div>
         {/* Why / Action / Outcome — hidden when task is marked done */}
         {!checked && (
-          <>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginBottom: insight.expectedOutcome ? 8 : 0 }}>
-              <div className="ytg-inner-block">
-                <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, marginBottom: 4, letterSpacing: '0.07em', textTransform: 'uppercase' }}>Why now</p>
-                <p style={{ fontSize: 13, color: C.text2, lineHeight: 1.65 }}>{insight.whyNow || insight.cause}</p>
-              </div>
-              <div style={{ background: '#111114', border: 'none', borderRadius: 10, padding: '10px 14px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
-                  <p style={{ fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.4)', letterSpacing: '0.07em', textTransform: 'uppercase' }}>Action</p>
-                  {onNavigate && (
-                    <button
-                      onClick={() => onNavigate(categoryToNav(insight.category, insight.problem))}
-                      style={{ fontSize: 11, fontWeight: 700, color: '#4ade80', background: 'rgba(74,222,128,0.12)', border: '1px solid rgba(74,222,128,0.22)', borderRadius: 20, padding: '2px 8px', cursor: 'pointer', fontFamily: 'inherit', transition: 'background 0.15s', letterSpacing: '0.01em' }}
-                    >
-                      Fix this →
-                    </button>
-                  )}
-                </div>
-                <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.82)', lineHeight: 1.65 }}>{insight.action}</p>
-              </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+            {/* Why now */}
+            <div style={{ background: '#f8f8fb', border: '1px solid #eeeef3', borderRadius: 10, padding: '10px 14px' }}>
+              <p style={{ fontSize: 10, fontWeight: 600, color: C.text3, marginBottom: 5, letterSpacing: '0.08em', textTransform: 'uppercase' }}>Why now</p>
+              <p style={{ fontSize: 13, color: C.text2, lineHeight: 1.65 }}>{insight.whyNow || insight.cause}</p>
             </div>
+            {/* Action */}
+            <div style={{ background: '#111114', borderRadius: 10, padding: '12px 14px' }}>
+              <p style={{ fontSize: 10, fontWeight: 600, color: 'rgba(255,255,255,0.35)', marginBottom: 6, letterSpacing: '0.08em', textTransform: 'uppercase' }}>Action</p>
+              <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.85)', lineHeight: 1.7, marginBottom: onNavigate ? 12 : 0 }}>{insight.action}</p>
+              {onNavigate && (
+                <button
+                  onClick={() => onNavigate(categoryToNav(insight.category, insight.problem))}
+                  style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: 12, fontWeight: 600, color: '#4ade80', background: 'rgba(74,222,128,0.1)', border: '1px solid rgba(74,222,128,0.2)', borderRadius: 8, padding: '5px 12px', cursor: 'pointer', fontFamily: 'inherit', transition: 'background 0.15s' }}
+                >
+                  Fix this →
+                </button>
+              )}
+            </div>
+            {/* Expected outcome */}
             {insight.expectedOutcome && (
-              <div style={{ background: '#fafafa', border: `1px solid #ebebef`, borderRadius: 10, padding: '9px 12px' }}>
-                <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, marginBottom: 3, letterSpacing: '0.07em', textTransform: 'uppercase' }}>Expected outcome</p>
-                <p style={{ fontSize: 13, color: C.text2, lineHeight: 1.6 }}>{insight.expectedOutcome}</p>
+              <div style={{ background: '#f8f8fb', border: '1px solid #eeeef3', borderRadius: 10, padding: '10px 14px' }}>
+                <p style={{ fontSize: 10, fontWeight: 600, color: C.text3, marginBottom: 5, letterSpacing: '0.08em', textTransform: 'uppercase' }}>Expected outcome</p>
+                <p style={{ fontSize: 13, color: C.text2, lineHeight: 1.65 }}>{insight.expectedOutcome}</p>
               </div>
             )}
-          </>
+          </div>
         )}
       </div>
     </div>
