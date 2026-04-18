@@ -910,7 +910,7 @@ export default function Dashboard() {
 
           {/* Section: OPTIMIZE */}
           <div style={{ padding: '12px 22px 4px' }}>
-            <span style={{ fontSize: 10, fontWeight: 600, color: '#b8b8c8', textTransform: 'uppercase', letterSpacing: '0.09em' }}>Optimize</span>
+            <span style={{ fontSize: 10, fontWeight: 600, color: C.text1, textTransform: 'uppercase', letterSpacing: '0.09em' }}>Optimize</span>
           </div>
           <NavBtn label="Overview"       active={nav === 'Overview'}       onClick={() => setNav('Overview')} />
           <NavBtn label="Videos"         active={nav === 'Videos'}         onClick={() => setNav('Videos')} badge={5} />
@@ -918,7 +918,7 @@ export default function Dashboard() {
 
           {/* Section: CREATE */}
           <div style={{ padding: '20px 22px 4px' }}>
-            <span style={{ fontSize: 10, fontWeight: 600, color: '#b8b8c8', textTransform: 'uppercase', letterSpacing: '0.09em' }}>Create</span>
+            <span style={{ fontSize: 10, fontWeight: 600, color: C.text1, textTransform: 'uppercase', letterSpacing: '0.09em' }}>Create</span>
           </div>
           <NavBtn label="SEO Studio"      active={nav === 'SEO Studio'}      onClick={() => setNav('SEO Studio')} />
           <NavBtn label="Thumbnail Score" active={nav === 'Thumbnail Score'} onClick={() => setNav('Thumbnail Score')} />
@@ -926,7 +926,7 @@ export default function Dashboard() {
 
           {/* Section: RESEARCH */}
           <div style={{ padding: '20px 22px 4px' }}>
-            <span style={{ fontSize: 10, fontWeight: 600, color: '#b8b8c8', textTransform: 'uppercase', letterSpacing: '0.09em' }}>Research</span>
+            <span style={{ fontSize: 10, fontWeight: 600, color: C.text1, textTransform: 'uppercase', letterSpacing: '0.09em' }}>Research</span>
           </div>
           <NavBtn label="Keywords"    active={nav === 'Keywords'}    onClick={() => setNav('Keywords')} />
           <NavBtn label="Competitors" active={nav === 'Competitors'} onClick={() => setNav('Competitors')} />
