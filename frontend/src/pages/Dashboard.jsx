@@ -1016,31 +1016,47 @@ export default function Dashboard() {
                     )}
                   </p>
                 </div>
-                <button
-                  className="ytg-dash-btn"
-                  disabled={refreshingStats}
-                  style={{ flexShrink: 0, marginBottom: 2 }}
-                  onClick={() => {
-                    setRefreshingStats(true)
-                    fetch('/auth/refresh-stats', { method: 'POST', credentials: 'include' })
-                      .then(r => r.json())
-                      .then(d => {
-                        if (!d.error) {
-                          setData(prev => ({
-                            ...prev,
-                            channel: d.channel,
-                            videos: d.videos,
-                            stats_fetched_at: d.stats_fetched_at,
-                          }))
-                          setVideos(d.videos || [])
-                        }
-                      })
-                      .catch(() => {})
-                      .finally(() => setRefreshingStats(false))
-                  }}
-                >
-                  {refreshingStats ? 'Refreshing…' : 'Refresh stats'}
-                </button>
+                <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexShrink: 0, marginBottom: 2 }}>
+                  <button
+                    className="ytg-dash-btn"
+                    disabled={analyzingAI}
+                    onClick={() => {
+                      setAnalyzingAI(true)
+                      setData(prev => ({ ...prev, insights: null }))
+                      fetch('/auth/refresh-analysis', { method: 'POST', credentials: 'include' })
+                        .catch(() => setAnalyzingAI(false))
+                    }}
+                  >
+                    <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+                      <path d="M11.5 2A6 6 0 1 0 12 6.5"/><path d="M11.5 2v3h-3"/>
+                    </svg>
+                    {analyzingAI ? 'Auditing…' : 'Re-Audit'}
+                  </button>
+                  <button
+                    className="ytg-dash-btn"
+                    disabled={refreshingStats}
+                    onClick={() => {
+                      setRefreshingStats(true)
+                      fetch('/auth/refresh-stats', { method: 'POST', credentials: 'include' })
+                        .then(r => r.json())
+                        .then(d => {
+                          if (!d.error) {
+                            setData(prev => ({
+                              ...prev,
+                              channel: d.channel,
+                              videos: d.videos,
+                              stats_fetched_at: d.stats_fetched_at,
+                            }))
+                            setVideos(d.videos || [])
+                          }
+                        })
+                        .catch(() => {})
+                        .finally(() => setRefreshingStats(false))
+                    }}
+                  >
+                    {refreshingStats ? 'Refreshing…' : 'Refresh stats'}
+                  </button>
+                </div>
               </div>
 
               {/* Row 1 */}
@@ -1188,28 +1204,9 @@ export default function Dashboard() {
 
           {data && nav === 'Overview' && data.insights && (
             <>
-              <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 22 }}>
-                <div>
-                  <h2 style={{ fontSize: 22, fontWeight: 800, color: '#0a0a0f', letterSpacing: '-0.6px', marginBottom: 4 }}>Channel audit</h2>
-                  <p style={{ fontSize: 14, color: C.text3 }}>AI-powered analysis · {data.insights.priorityActions?.length ?? 0} priority actions{data.analyzed_at ? ` · ${new Date(data.analyzed_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}` : ''}</p>
-                </div>
-                <button
-                  className="ytg-dash-btn"
-                  disabled={analyzingAI}
-                  onClick={() => {
-                    setAnalyzingAI(true)
-                    setData(prev => ({ ...prev, insights: null }))
-                    fetch('/auth/refresh-analysis', { method: 'POST', credentials: 'include' })
-                      .catch(() => setAnalyzingAI(false))
-                  }}
-                  style={{ flexShrink: 0, marginTop: 2, opacity: analyzingAI ? 0.5 : 1, cursor: analyzingAI ? 'not-allowed' : 'pointer' }}
-                >
-                  <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M11.5 2A6 6 0 1 0 12 6.5"/>
-                    <path d="M11.5 2v3h-3"/>
-                  </svg>
-                  {analyzingAI ? 'Running…' : 'Re-Audit'}
-                </button>
+              <div style={{ marginBottom: 22 }}>
+                <h2 style={{ fontSize: 22, fontWeight: 800, color: '#0a0a0f', letterSpacing: '-0.6px', marginBottom: 4 }}>Channel audit</h2>
+                <p style={{ fontSize: 14, color: C.text3 }}>AI-powered analysis · {data.insights.priorityActions?.length ?? 0} priority actions{data.analyzed_at ? ` · ${new Date(data.analyzed_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}` : ''}</p>
               </div>
 
               {/* Summary + overall score */}
