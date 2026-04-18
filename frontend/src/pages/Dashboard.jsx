@@ -1428,19 +1428,44 @@ export default function Dashboard() {
           {/* ── VIDEOS ───────────────────────────────────────────────── */}
           {data && nav === 'Videos' && videos && (
             <>
-              <div style={{ marginBottom: 24 }}>
-                <h2 style={{ fontSize: 24, fontWeight: 800, color: '#0a0a0f', letterSpacing: '-0.7px', marginBottom: 5 }}>Video performance</h2>
-                <p style={{ fontSize: 14, color: C.text3, letterSpacing: '-0.1px' }}>{videos.length} videos — click Optimise to get AI feedback on title, description &amp; thumbnail</p>
+              <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 24 }}>
+                <div>
+                  <h2 style={{ fontSize: 24, fontWeight: 800, color: '#0a0a0f', letterSpacing: '-0.7px', marginBottom: 5 }}>Video performance</h2>
+                  <p style={{ fontSize: 14, color: C.text3, letterSpacing: '-0.1px' }}>{videos.length} videos — click Optimise to get AI feedback on title, description &amp; thumbnail</p>
+                </div>
+                <button
+                  className="ytg-dash-btn"
+                  disabled={refreshingStats}
+                  onClick={() => {
+                    setRefreshingStats(true)
+                    fetch('/auth/refresh-stats', { method: 'POST', credentials: 'include' })
+                      .then(r => r.json())
+                      .then(d => {
+                        if (!d.error) {
+                          setData(prev => ({ ...prev, channel: d.channel, videos: d.videos, stats_fetched_at: d.stats_fetched_at }))
+                          setVideos(d.videos || [])
+                        }
+                      })
+                      .catch(() => {})
+                      .finally(() => setRefreshingStats(false))
+                  }}
+                  style={{ flexShrink: 0, marginBottom: 2 }}
+                >
+                  <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+                    <path d="M11.5 2A6 6 0 1 0 12 6.5"/><path d="M11.5 2v3h-3"/>
+                  </svg>
+                  {refreshingStats ? 'Refreshing…' : 'Refresh'}
+                </button>
               </div>
 
               {/* Card grid */}
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, minmax(0, 1fr))', gap: 14 }}>
                 {videos.map((v, i) => {
-                  const lr      = v.views > 0 ? (v.likes / v.views * 100).toFixed(1) : 0
-                  const lrN     = parseFloat(lr)
-                  const lrColor = lrN >= 4 ? C.green : lrN >= 2 ? C.amber : C.red
-                  const lrBg    = lrN >= 4 ? C.greenBg : lrN >= 2 ? '#fffbeb' : C.redBg
-                  const lrBdr   = lrN >= 4 ? C.greenBdr : lrN >= 2 ? '#fde68a' : C.redBdr
+                  const lr      = v.views > 0 ? (v.likes / v.views * 100).toFixed(1) : null
+                  const lrN     = lr !== null ? parseFloat(lr) : null
+                  const lrColor = lrN === null ? C.text3 : lrN >= 3 ? C.green : lrN >= 1 ? C.amber : C.red
+                  const lrBg    = lrN === null ? '#f5f5f9'   : lrN >= 3 ? C.greenBg : lrN >= 1 ? '#fffbeb' : C.redBg
+                  const lrBdr   = lrN === null ? C.border    : lrN >= 3 ? C.greenBdr : lrN >= 1 ? '#fde68a' : C.redBdr
                   const isSelected = selectedVideoId === v.video_id
                   const ytUrl   = v.video_id ? `https://www.youtube.com/watch?v=${v.video_id}` : null
                   const durMatch = (v.duration || '').match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/)
@@ -1448,10 +1473,7 @@ export default function Dashboard() {
                   const durLabel = durSecs > 0 ? (durSecs <= 60 ? `${durSecs}s` : `${Math.floor(durSecs/60)}:${String(durSecs%60).padStart(2,'0')}`) : null
                   const isShort  = durSecs > 0 && durSecs <= 60
                   return (
-                    <div key={v.video_id || i} className="ytg-card" style={{
-                      display: 'flex', flexDirection: 'column',
-                      border: isSelected ? `1.5px solid ${C.blue}` : undefined,
-                    }}>
+                    <div key={v.video_id || i} className="ytg-card" style={{ display: 'flex', flexDirection: 'column' }}>
                       {/* Thumbnail */}
                       <a href={ytUrl || '#'} target="_blank" rel="noopener noreferrer"
                         style={{ display: 'block', position: 'relative', textDecoration: 'none', flexShrink: 0, borderRadius: '19px 19px 0 0', overflow: 'hidden' }}>
@@ -1496,21 +1518,13 @@ export default function Dashboard() {
                         {/* Footer: like rate + optimise + Score This */}
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 'auto', paddingTop: 12, borderTop: `1px solid #f0f0f4` }}>
                           <span style={{ fontSize: 12, fontWeight: 700, color: lrColor, background: lrBg, padding: '4px 10px', borderRadius: 100, border: `1px solid ${lrBdr}`, fontVariantNumeric: 'tabular-nums' }}>
-                            {lr}% like rate
+                            {lrN !== null ? `${lr}% likes` : '— likes'}
                           </span>
-                          <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
-                            <button
-                              onClick={() => setSelectedVideoId(isSelected ? null : v.video_id)}
-                              className={isSelected ? '' : 'ytg-optimise-btn'}
-                              style={isSelected ? {
-                                fontSize: 12, fontWeight: 700, color: C.blue,
-                                background: '#eff6ff', border: `1px solid #bfdbfe`,
-                                borderRadius: 100, padding: '5px 14px', cursor: 'pointer',
-                                fontFamily: 'inherit', whiteSpace: 'nowrap',
-                              } : undefined}>
-                              {isSelected ? '✕ Close' : 'Optimise'}
-                            </button>
-                          </div>
+                          <button
+                            onClick={() => setSelectedVideoId(v.video_id)}
+                            className="ytg-optimise-btn">
+                            Optimise
+                          </button>
                         </div>
                       </div>
                     </div>
@@ -1518,16 +1532,26 @@ export default function Dashboard() {
                 })}
               </div>
 
-              {/* Optimise panel — full width below grid */}
+              {/* Optimise panel — modal overlay */}
               {selectedVideoId && (() => {
                 const sv = videos.find(v => v.video_id === selectedVideoId)
                 return sv ? (
-                  <div style={{ marginTop: 16 }}>
-                    <VideoOptimizePanel
-                      video={sv}
-                      onClose={() => setSelectedVideoId(null)}
-                      onVideoUpdated={handleVideoUpdated}
-                    />
+                  <div
+                    onClick={e => { if (e.target === e.currentTarget) setSelectedVideoId(null) }}
+                    style={{
+                      position: 'fixed', inset: 0, zIndex: 200,
+                      background: 'rgba(0,0,0,0.45)', backdropFilter: 'blur(3px)',
+                      display: 'flex', alignItems: 'flex-start', justifyContent: 'center',
+                      padding: '40px 24px 24px', overflowY: 'auto',
+                    }}
+                  >
+                    <div style={{ width: '100%', maxWidth: 900, flexShrink: 0 }}>
+                      <VideoOptimizePanel
+                        video={sv}
+                        onClose={() => setSelectedVideoId(null)}
+                        onVideoUpdated={handleVideoUpdated}
+                      />
+                    </div>
                   </div>
                 ) : null
               })()}
@@ -1546,7 +1570,7 @@ export default function Dashboard() {
                 {[
                   { label: 'Shorts avg views',    value: fmtNum(patterns.shortAvg), verdict: patterns.shortAvg > patterns.longAvg ? 'Beats long-form' : 'Below long-form', good: patterns.shortAvg > patterns.longAvg },
                   { label: 'Long-form avg views', value: fmtNum(patterns.longAvg),  verdict: patterns.longAvg > patterns.shortAvg ? 'Beats Shorts'     : 'Below Shorts',    good: patterns.longAvg  > patterns.shortAvg },
-                  { label: 'Overall like rate',   value: `${patterns.likeRate}%`,   verdict: patterns.likeRate >= 4 ? 'Healthy' : patterns.likeRate >= 2 ? 'Below target' : 'Critical', good: patterns.likeRate >= 4 },
+                  { label: 'Overall like rate',   value: `${patterns.likeRate}%`,   verdict: patterns.likeRate >= 3 ? 'Healthy' : patterns.likeRate >= 1 ? 'Average' : 'Below average', good: patterns.likeRate >= 3 },
                 ].map(p => (
                   <div key={p.label} className="ytg-card" style={{ padding: '18px 20px' }}>
                     <p style={{ fontSize: 12, fontWeight: 500, color: '#a0a0b0', letterSpacing: '0.05em', textTransform: 'uppercase', marginBottom: 9 }}>{p.label}</p>

@@ -395,6 +395,7 @@ export default function VideoOptimizePanel({ video, onClose, onVideoUpdated }) {
         `${API}/seo/generate-description`,
         {
           method: 'POST',
+          credentials: 'include',
           headers: {
             'Content-Type': 'application/json'
           },

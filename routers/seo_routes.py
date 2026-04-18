@@ -123,10 +123,8 @@ def optimize_video_route(body: OptimizeVideoRequest, request: Request):
     data, creds = get_session(request.session.get("session_id"))
     if not creds:
         return JSONResponse({"error": "Not authenticated. Please login first."}, status_code=401)
-    channel_id = (data or {}).get("channel", {}).get("channel_id", "")
-    gate = check_and_deduct(channel_id)
-    if not gate["allowed"]:
-        return JSONResponse({"error": gate["message"], "show_upgrade": True}, status_code=402)
+    # Credit is charged by /seo/analyze which runs in parallel in the frontend.
+    # optimize-video is the description/thumbnail half of the same operation — no double charge.
     result = optimize_video(
         creds,
         body.video_id,

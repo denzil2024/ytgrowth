@@ -534,17 +534,17 @@ def _build_gap_report(breakdown: dict) -> str:
     if breakdown.get("front_loading", 0) == 0:
         gaps.append(
             "FRONT-LOADING [CRITICAL]: First 3 words must be the strongest. "
-            "Never start with: See, Come, Just, So, Still, Here, Well. "
-            "Strong openers: 'How I', '7 Things', 'The Truth About', 'Why I', 'Never Do This', 'I Tried'"
+            "Never start with weak filler: See, Come, Just, So, Still, Here, Well. "
+            "Put the keyword, the number, or the strongest phrase first — the viewer decides in the first 3 words."
         )
     if breakdown.get("power_words", 0) == 0:
-        gaps.append("POWER WORD: Add one of: Best, Secret, Truth, Never, Proven, Ultimate, Shocking, Revealed, Finally, Stop, Worst, Warning.")
+        gaps.append("EMOTIONAL PULL: No strong signal in the title. Use specificity — concrete numbers, outcomes, or contrasts — not generic clickbait words. Make the viewer feel the gap between where they are and where the video takes them.")
     if breakdown.get("numbers", 0) == 0:
-        gaps.append("NUMBER: Add a digit — '5 Mistakes', '7 Tips', '24-Hour', '30-Day'. Specific numbers outperform vague titles.")
+        gaps.append("SPECIFICITY: A specific number, timeframe, or data point would make this more concrete and clickable (e.g. '3-Step', '$200', '7 Days').")
     if breakdown.get("hook_format", 0) == 0 and breakdown.get("question", 0) == 0:
-        gaps.append("HOOK FORMAT: Add ':' or '(...)' to split into promise + payoff. Or end with '?'.")
+        gaps.append("HOOK FORMAT: Consider splitting into hook + payoff with ':' (e.g. 'Why X: The Real Reason'). Or frame as a question the viewer is already asking.")
     if breakdown.get("viral_format", 0) == 0:
-        gaps.append("VIRAL FORMAT: Use one of the proven formats listed below.")
+        gaps.append("STRUCTURE: No clear pattern found. The strongest YouTube titles follow a recognisable structure — comparison, transformation, question, or insider reveal.")
     if breakdown.get("keyword_relevance", 0) < 5:
         gaps.append("KEYWORDS: Title shares few words with top-performing videos. Use the keyword opportunities listed below.")
     return (
