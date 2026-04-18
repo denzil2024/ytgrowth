@@ -188,8 +188,8 @@ const C = {
 /* Severity palette — 3-color system: red critical, amber warnings, slate minor */
 const SEV = {
   critical: { color: '#dc2626', bg: '#fff5f5', bdr: '#fecaca' },
-  high:     { color: '#e5251b', bg: '#fff5f5', bdr: '#fecaca' },
-  medium:   { color: '#e5251b', bg: '#fff5f5', bdr: '#fecaca' },
+  high:     { color: '#d97706', bg: '#fffbeb', bdr: '#fde68a' },
+  medium:   { color: '#d97706', bg: '#fffbeb', bdr: '#fde68a' },
   low:      { color: '#6b7280', bg: '#f9fafb', bdr: '#e5e7eb' },
   info:     { color: '#059669', bg: '#ecfdf5', bdr: '#a7f3d0' },
 }

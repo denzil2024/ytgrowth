@@ -24,7 +24,7 @@ export default function UsageBar({ channelId, email, dark = false, onPlan }) {
   const hasPack   = usage.pack_balance > 0
   const showCTA   = (nearLimit || atLimit) && !hasPack
 
-  const barColor  = (atLimit || nearLimit) ? '#e5251b' : '#22c55e'
+  const barColor  = atLimit ? '#e5251b' : nearLimit ? '#d97706' : '#22c55e'
   const textMuted = dark ? 'rgba(255,255,255,0.45)' : '#9595a4'
   const trackBg   = dark ? 'rgba(255,255,255,0.10)' : '#eeeef3'
 
