@@ -345,49 +345,46 @@ function InsightCard({ insight, index, checked, onToggle, onDelete, onNavigate }
 
         {/* ── Body — hidden when done ── */}
         {!checked && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginLeft: 30 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr 1fr', gap: 8, marginLeft: 30 }}>
 
-            {/* Why now + Action — side by side */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.6fr', gap: 8 }}>
-
-              {/* Why now */}
-              <div style={{ background: '#f8f8fb', borderRadius: 10, padding: '12px 14px' }}>
-                <p style={{ fontSize: 10, fontWeight: 600, color: C.text3, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Why now</p>
-                <p style={{ fontSize: 13, color: C.text2, lineHeight: 1.75 }}>{insight.whyNow || insight.cause}</p>
-              </div>
-
-              {/* Action */}
-              <div style={{
-                background: '#ffffff',
-                border: `1px solid ${C.border}`,
-                borderLeft: `3px solid ${color}`,
-                borderRadius: '0 10px 10px 0',
-                padding: '12px 16px',
-                boxShadow: '0 1px 6px rgba(0,0,0,0.05)',
-                display: 'flex', flexDirection: 'column',
-              }}>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
-                  <p style={{ fontSize: 10, fontWeight: 600, color, letterSpacing: '0.08em', textTransform: 'uppercase' }}>Action</p>
-                  {onNavigate && (
-                    <button
-                      onClick={() => onNavigate(categoryToNav(insight.category, insight.problem))}
-                      style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 11, fontWeight: 700, color: C.green, background: C.greenBg, border: `1px solid ${C.greenBdr}`, borderRadius: 20, padding: '3px 10px', cursor: 'pointer', fontFamily: 'inherit', flexShrink: 0 }}
-                    >
-                      Fix this →
-                    </button>
-                  )}
-                </div>
-                <p style={{ fontSize: 13, color: C.text1, lineHeight: 1.75 }}>{insight.action}</p>
-              </div>
+            {/* Why now */}
+            <div style={{ background: '#f8f8fb', borderRadius: 10, padding: '12px 14px' }}>
+              <p style={{ fontSize: 10, fontWeight: 600, color: C.text3, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Why now</p>
+              <p style={{ fontSize: 13, color: C.text2, lineHeight: 1.75 }}>{insight.whyNow || insight.cause}</p>
             </div>
 
-            {/* Expected outcome — full width below */}
-            {insight.expectedOutcome && (
-              <div style={{ background: '#f8f8fb', borderRadius: 10, padding: '12px 14px' }}>
-                <p style={{ fontSize: 10, fontWeight: 600, color: C.text3, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Expected outcome</p>
-                <p style={{ fontSize: 13, color: C.text2, lineHeight: 1.75 }}>{insight.expectedOutcome}</p>
+            {/* Action */}
+            <div style={{
+              background: '#ffffff',
+              border: `1px solid ${C.border}`,
+              borderLeft: `3px solid ${color}`,
+              borderRadius: '0 10px 10px 0',
+              padding: '12px 16px',
+              boxShadow: '0 1px 6px rgba(0,0,0,0.05)',
+              display: 'flex', flexDirection: 'column',
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
+                <p style={{ fontSize: 10, fontWeight: 600, color, letterSpacing: '0.08em', textTransform: 'uppercase' }}>Action</p>
+                {onNavigate && (
+                  <button
+                    onClick={() => onNavigate(categoryToNav(insight.category, insight.problem))}
+                    style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 11, fontWeight: 700, color: C.green, background: C.greenBg, border: `1px solid ${C.greenBdr}`, borderRadius: 20, padding: '3px 10px', cursor: 'pointer', fontFamily: 'inherit', flexShrink: 0 }}
+                  >
+                    Fix this →
+                  </button>
+                )}
               </div>
-            )}
+              <p style={{ fontSize: 13, color: C.text1, lineHeight: 1.75 }}>{insight.action}</p>
+            </div>
+
+            {/* Expected outcome */}
+            {insight.expectedOutcome
+              ? <div style={{ background: '#f8f8fb', borderRadius: 10, padding: '12px 14px' }}>
+                  <p style={{ fontSize: 10, fontWeight: 600, color: C.text3, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Expected outcome</p>
+                  <p style={{ fontSize: 13, color: C.text2, lineHeight: 1.75 }}>{insight.expectedOutcome}</p>
+                </div>
+              : <div />
+            }
 
           </div>
         )}
