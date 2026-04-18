@@ -66,7 +66,7 @@ function useDashboardStyles() {
 
       .ytg-nav-btn {
         display: flex; align-items: center; gap: 10px;
-        padding: 9px 13px; border-radius: 9px; cursor: pointer; text-align: left;
+        padding: 9px 13px; border-radius: 100px; cursor: pointer; text-align: left;
         font-size: 13.5px; font-family: 'Inter', system-ui, sans-serif;
         color: #4a4a58;
         transition: background 0.15s, color 0.15s, border-color 0.15s;
@@ -1046,7 +1046,7 @@ export default function Dashboard() {
                 </div>
                 <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexShrink: 0, marginBottom: 2 }}>
                   <button
-                    className="ytg-dash-btn"
+                    className="ytg-dash-btn-primary"
                     disabled={analyzingAI}
                     onClick={() => {
                       setAnalyzingAI(true)
@@ -1054,11 +1054,12 @@ export default function Dashboard() {
                       fetch('/auth/refresh-analysis', { method: 'POST', credentials: 'include' })
                         .catch(() => setAnalyzingAI(false))
                     }}
+                    style={{ opacity: analyzingAI ? 0.65 : 1 }}
                   >
                     <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
                       <path d="M11.5 2A6 6 0 1 0 12 6.5"/><path d="M11.5 2v3h-3"/>
                     </svg>
-                    {analyzingAI ? 'Auditing…' : <><span>Re-Audit</span><span style={{ fontSize: 11, fontWeight: 500, color: '#a0a0b0', marginLeft: 2 }}>· 1 credit</span></>}
+                    {analyzingAI ? 'Auditing…' : <><span>Re-Audit</span><span style={{ fontSize: 11, fontWeight: 500, color: 'rgba(255,255,255,0.6)', marginLeft: 2 }}>· 1 credit</span></>}
                   </button>
                   <button
                     className="ytg-dash-btn"
