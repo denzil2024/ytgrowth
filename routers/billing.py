@@ -155,6 +155,11 @@ async def paddle_webhook(request: Request):
             subscription_id = str(data.get("id", ""))
             if meta and channel_id:
                 sub = get_or_create_subscription(db, channel_id, email)
+                # Reset usage counter when upgrading to a higher allowance
+                # so the user can immediately use their new limit
+                if meta["analyses"] > (sub.monthly_allowance or 0):
+                    sub.monthly_used  = 0
+                    sub.reset_date    = next_reset_date()
                 sub.monthly_allowance = meta["analyses"]
                 sub.plan              = meta["plan"]
                 sub.channels_allowed  = meta["channels"]

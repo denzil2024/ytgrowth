@@ -564,6 +564,62 @@ def _strip_emdash(obj):
     return obj
 
 
+# Words that stay lowercase in YouTube title case unless they are the first or last word.
+_TC_MINOR = {
+    'a', 'an', 'the',
+    'and', 'but', 'or', 'nor', 'for', 'so', 'yet',
+    'at', 'by', 'in', 'of', 'on', 'to', 'up', 'as', 'vs',
+    'from', 'into', 'onto', 'with', 'per',
+}
+
+def _to_title_case(text: str) -> str:
+    """
+    Convert a YouTube title to proper title case.
+    - Capitalises the first letter of every significant word.
+    - Keeps short prepositions/conjunctions lowercase (unless first/last word).
+    - Preserves all-caps tokens like 'AI', 'SEO', 'VS', '$500'.
+    - Handles apostrophes correctly: "don't" → "Don't", not "Don'T".
+    """
+    if not text:
+        return text
+    words = text.split()
+    result = []
+    n = len(words)
+    for i, word in enumerate(words):
+        # Peel off any leading punctuation/symbols to find the alphabetic core
+        lstrip_chars = "([#@$\""
+        rstrip_chars = ")].,!?:;\""
+        prefix = ""
+        suffix = ""
+        core = word
+        while core and core[0] in lstrip_chars:
+            prefix += core[0]
+            core = core[1:]
+        while core and core[-1] in rstrip_chars:
+            suffix = core[-1] + suffix
+            core = core[:-1]
+
+        # Preserve all-caps tokens (acronyms, currency combos like $500, etc.)
+        if core.isupper() and len(core) > 1:
+            result.append(word)
+            continue
+
+        core_lower = core.lower()
+        is_first = i == 0
+        is_last  = i == n - 1
+
+        if not is_first and not is_last and core_lower in _TC_MINOR:
+            new_core = core_lower
+        else:
+            # Capitalise first letter only; fix apostrophe problem from str.title()
+            new_core = core[0].upper() + core[1:] if core else core
+            # "don't" → after upper → "Don't" is fine; but if it came in as "don'T" fix it
+            new_core = re.sub(r"'([A-Z])", lambda m: "'" + m.group(1).lower(), new_core)
+
+        result.append(prefix + new_core + suffix)
+    return " ".join(result)
+
+
 def _call_sonnet(client: anthropic.Anthropic, prompt: str) -> str:
     msg = client.messages.create(
         model="claude-sonnet-4-6",
@@ -763,7 +819,7 @@ Return ONLY this JSON (no markdown, no explanation):
 
         suggestions = []
         for t in raw_titles[:3]:
-            title_text = t.get("title", "").strip().strip('"')
+            title_text = _to_title_case(t.get("title", "").strip().strip('"'))
             if not title_text or len(title_text) < 15:
                 continue
             s = _score_title(title_text, top_titles)
@@ -845,6 +901,18 @@ def optimize_video(credentials, video_id: str, title: str, thumbnail_url: str, v
             "source": {"type": "base64", "media_type": thumb_media_type, "data": thumb_b64},
         })
 
+    # Detect geography for the optimize_video description too
+    opt_geo_match = _GEO_PATTERN.search(title)
+    opt_geo_note = (
+        f"Geography detected: '{opt_geo_match.group(0)}'. Reference the location naturally in the body."
+        if opt_geo_match
+        else "No specific geography — do NOT add location references. This is general/global content."
+    )
+
+    # Extract implied keywords from title for hashtag anchoring
+    title_words = [w.strip(".,!?\"'()[]").lower() for w in title.split() if len(w) > 3]
+    # We'll ask Claude to pick 3 hashtags from the title's core phrases, not guess broadly
+
     messages_content.append({"type": "text", "text": f"""You are a YouTube growth strategist. Analyse this uploaded video and give specific, actionable improvement feedback.
 
 TITLE: "{title}"
@@ -858,8 +926,18 @@ DESCRIPTION (first 600 chars):
 
 {"The thumbnail image is shown above." if thumb_b64 else "No thumbnail image available."}
 
+GEOGRAPHY RULE: {opt_geo_note}
+
 Give feedback across 3 areas. Be direct and specific - name the exact problem and the exact fix.
 NEVER use em-dashes (—) or en-dashes (–) anywhere in your response. Use a hyphen (-) or colon (:) instead.
+
+For the full_description field, write a complete rewritten description following these rules:
+- 300-400 words (hard minimum — short descriptions lose search ranking)
+- Opening (first 150 chars visible before "Show more"): contains the primary keyword, gives viewer an immediate reason to read on. No "Welcome to my channel."
+- Body: 2-3 flowing paragraphs. No bullet points. No generic sub-headers. Write like talking directly to the viewer. Weave the 3 most important keywords from the title naturally — once each.
+- One short, genuine CTA at the end (not "SMASH that like button")
+- Final line: exactly 3 hashtags derived from the 3 most important keyword phrases in the title, in CamelCase format (e.g. #HouseTourKenya). No more, no fewer. Only include a geo hashtag if geography is relevant per the geography rule above.
+- No timestamps, no external links, no em-dashes
 
 Return ONLY this JSON (no markdown, no explanation):
 {{
@@ -873,8 +951,8 @@ Return ONLY this JSON (no markdown, no explanation):
     "verdict": "<one sentence>",
     "hook_quality": "<assessment of the first 150 chars — what shows before Show more>",
     "issues": ["<issue 1>", "<issue 2>"],
-    "improved_opening": "<rewritten first 2 lines optimised for SEO and click-through>",
-    "full_description": "<complete rewritten description (200-400 words) — strong keyword-rich hook first 150 chars, value-packed body, CTA, timestamps if relevant, relevant hashtags at end>"
+    "improved_opening": "<rewritten first 2 lines — keyword-rich, compelling, under 150 chars>",
+    "full_description": "<complete 300-400 word rewritten description with 3 hashtags on the final line>"
   }},
   "thumbnail": {{
     "score": <0-100>,
@@ -889,7 +967,7 @@ Return ONLY this JSON (no markdown, no explanation):
     try:
         msg = client.messages.create(
             model="claude-sonnet-4-6",
-            max_tokens=2200,
+            max_tokens=3200,
             messages=[{"role": "user", "content": messages_content}]
         )
         raw = msg.content[0].text.strip()
@@ -970,6 +1048,28 @@ Return ONLY this JSON array (no markdown):
 
 # ─── Description generation ────────────────────────────────────────────────────
 
+# Location signals — if any of these appear in the title/niche, geography hashtags are appropriate.
+_GEO_PATTERN = re.compile(
+    r'\b(africa|kenya|nigeria|ghana|south africa|tanzania|uganda|ethiopia|'
+    r'rwanda|cameroon|senegal|ivory coast|zimbabwe|zambia|botswana|namibia|'
+    r'uk|london|united kingdom|england|scotland|wales|ireland|'
+    r'usa|america|new york|los angeles|chicago|houston|miami|'
+    r'india|pakistan|bangladesh|sri lanka|nepal|'
+    r'australia|sydney|melbourne|canada|toronto|vancouver|'
+    r'germany|france|spain|italy|portugal|netherlands|'
+    r'dubai|uae|saudi|qatar|kuwait|bahrain|'
+    r'nairobi|lagos|accra|johannesburg|cape town|addis ababa|'
+    r'singapore|malaysia|philippines|indonesia|thailand|vietnam)\b',
+    re.IGNORECASE,
+)
+
+
+def _phrase_to_hashtag(phrase: str) -> str:
+    """Convert a keyword phrase to CamelCase hashtag. 'house tour kenya' → '#HouseTourKenya'."""
+    words = re.sub(r"[^\w\s]", "", phrase).split()
+    return "#" + "".join(w.capitalize() for w in words if w)
+
+
 def generate_description_suggestions(
     title: str,
     current_description: str = "",
@@ -977,6 +1077,7 @@ def generate_description_suggestions(
     intent_analysis: dict = None,
     keyword_scores: list = None,
     current_year: int = 2026,
+    channel_context: dict = None,
 ) -> tuple[list[dict], str]:
     """
     Generate 3 YouTube description options for a given title.
@@ -989,86 +1090,132 @@ def generate_description_suggestions(
         return [], "ANTHROPIC_API_KEY is not set"
 
     client = _make_client()
+
+    # ── Pull the top 3 keywords and build exact hashtags from them ──
+    top_kw_phrases: list[str] = []
+    if keyword_scores:
+        top_kw_phrases = [k["phrase"] for k in keyword_scores if k.get("competition") != "HIGH"][:3]
+    # Fall back to niche if no keywords available
+    if not top_kw_phrases and niche:
+        top_kw_phrases = [niche]
+
+    hashtags_line = " ".join(_phrase_to_hashtag(p) for p in top_kw_phrases)
+    keywords_block = "\n".join(f"  {i+1}. {p}" for i, p in enumerate(top_kw_phrases))
+
+    # ── Geography detection ──
+    # Only include location context if the title or niche is genuinely location-specific.
+    combined_text = f"{title} {niche}"
+    geo_match = _GEO_PATTERN.search(combined_text)
+    geo_note = (
+        f"Geography detected: '{geo_match.group(0)}'. This is location-specific content — "
+        f"it is appropriate to reference the location naturally in the body text."
+        if geo_match
+        else
+        "No specific geography detected — do NOT invent or add any location references. "
+        "This content is global/general; adding a location would mislead viewers."
+    )
+
+    search_intent    = (intent_analysis or {}).get("search_intent", "")
+    emotional_driver = (intent_analysis or {}).get("emotional_driver", "")
+    viewer_profile   = (intent_analysis or {}).get("viewer_profile", "")
+    gap_opportunity  = (intent_analysis or {}).get("gap_opportunity", "")
+
     current_block = (
-        f'CURRENT DESCRIPTION (improve this):\n"""\n{current_description[:800]}\n"""\n'
+        f'CURRENT DESCRIPTION (use as context, but rewrite from scratch):\n"""\n{current_description[:600]}\n"""\n'
         if current_description.strip() else ""
     )
 
-    search_intent = intent_analysis.get("search_intent", "") if intent_analysis else ""
-    emotional_driver = intent_analysis.get("emotional_driver", "") if intent_analysis else ""
-    gap_opportunity = intent_analysis.get("gap_opportunity", "") if intent_analysis else ""
-    viewer_profile = intent_analysis.get("viewer_profile", "") if intent_analysis else ""
+    # Build channel context block — helps Claude use the creator's niche language
+    channel_block = ""
+    if channel_context:
+        ch_name    = channel_context.get("channel_name", "")
+        ch_kw      = channel_context.get("channel_keywords", "")
+        top_titles = channel_context.get("top_video_titles", [])
+        parts = []
+        if ch_name:
+            parts.append(f"Channel name: {ch_name}")
+        if ch_kw:
+            parts.append(f"Channel keywords/topics: {ch_kw[:300]}")
+        if top_titles:
+            titles_str = "\n".join(f"  - {t}" for t in top_titles[:5])
+            parts.append(f"Creator's top-performing videos (for context/voice matching):\n{titles_str}")
+        if parts:
+            channel_block = "\nCHANNEL CONTEXT (use to match the creator's niche terminology and avoid duplicating topics already covered):\n" + "\n".join(parts) + "\n"
 
-    top_3_keywords = ""
-    if keyword_scores:
-        top = [k["phrase"] for k in keyword_scores if k.get("competition") != "HIGH"][:3]
-        top_3_keywords = "\n".join(f"  - {k}" for k in top)
-
-    prompt = f"""You are a YouTube description strategist with deep knowledge of search intent.
+    prompt = f"""You are a YouTube description writer. Your job is to write descriptions that feel human, flow naturally, and are built around what viewers actually search for.
 
 VIDEO TITLE: "{title}"
-NICHE/KEYWORD: {niche}
+PRIMARY NICHE: {niche or title}
 CURRENT YEAR: {current_year}
+{channel_block}
+VIEWER CONTEXT:
+- Search intent: {search_intent or "find useful content on this topic"}
+- Emotional driver: {emotional_driver or "curiosity and desire to learn"}
+- Viewer profile: {viewer_profile or "someone interested in this topic"}
+- Gap opportunity: {gap_opportunity or ""}
 
-SEARCH INTENT: {search_intent}
-EMOTIONAL DRIVER: {emotional_driver}
-GAP OPPORTUNITY: {gap_opportunity}
-VIEWER PROFILE: {viewer_profile}
+TOP 3 KEYWORDS (these are the exact phrases viewers search — use them naturally):
+{keywords_block}
 
-TOP 3 KEYWORDS TO USE NATURALLY:
-{top_3_keywords}
+HASHTAG RULE (non-negotiable):
+The description must end with EXACTLY this line of 3 hashtags — no more, no fewer:
+{hashtags_line}
+These are derived directly from the top keyword phrases above. Do not change them. Do not add extras.
+
+GEOGRAPHY RULE:
+{geo_note}
 
 {current_block}
-Write 3 YouTube descriptions. Each opens with a different strategy but all are driven by the search intent above.
+Write 3 complete YouTube descriptions. Each uses a different opening strategy.
 
-Rules for every description:
-- First 2 lines (150 chars total max) must be a compelling hook matching the intent
-- Use all 3 keywords naturally - never stuffed, always reads like a human wrote it
-- 150-250 words total
-- If any year appears in the description, it must be {current_year} or later. Never write 2024 or any past year. If a year reference makes sense, use {current_year}.
-- End with exactly 3 hashtags on the last line - derived from the top 3 keywords above, formatted as #keyword
-- No timestamps, no external links
-- Plain text only
-- No em-dashes or en-dashes. Use hyphen or colon instead.
+CRITICAL WRITING RULES for every description:
+1. LENGTH: 300-400 words. This is a hard floor — descriptions shorter than 300 words are penalised by YouTube's algorithm.
+2. OPENING (first 150 characters — visible before "Show more"): This is the most important part. Must contain the primary keyword AND give the viewer an immediate reason to keep reading. No fluff. No "Welcome to my channel."
+3. PROSE STYLE: Write in flowing paragraphs. No bullet points. No numbered lists. No generic sub-headers. Each paragraph should lead naturally into the next, like you are talking directly to the viewer.
+4. KEYWORD USE: Weave all 3 keywords into the body naturally — once each is enough. If a keyword phrase sounds awkward, rephrase slightly while keeping the core words. Never repeat a keyword more than twice total.
+5. CALL TO ACTION: One short, genuine CTA at the end. Not "SMASH that like button!!!" — something like "If this helped, drop a comment below" or "Save this for later."
+6. HASHTAGS: The very last line must be exactly: {hashtags_line}
+7. No timestamps, no external links, no em-dashes, no en-dashes (use hyphen or colon instead).
+8. Year references must be {current_year} or later — never write a past year.
 
-Description A - STORY/HOOK:
-Open with a personal hook that matches the emotional driver above. The viewer must feel this was written for them.
+Description A — STORY / HOOK:
+Open with a personal or relatable moment tied to the emotional driver. Pull the viewer in by putting them in a scene or feeling they recognise. The primary keyword must appear in the first sentence.
 
-Description B - VALUE/BENEFIT:
-Open by stating the exact outcome the viewer gets - tied directly to their search intent. Make the gap between where they are and where this takes them feel urgent.
+Description B — VALUE / BENEFIT:
+Open with the concrete outcome the viewer gets from watching. State it directly and specifically. Make the gap between where they are and where this video takes them feel real — not vague. Primary keyword in the first sentence.
 
-Description C - DIRECT/KEYWORD:
-Open with the primary keyword naturally integrated. Intent-first, benefits clear, SEO-optimised.
+Description C — SEO / DIRECT:
+Open with the primary keyword naturally in the very first phrase. Intent-first, benefits clear, reads authoritative but still human. Best for search ranking.
 
-Return ONLY this JSON array:
+Return ONLY this JSON array — no markdown, no commentary:
 [
   {{
     "type": "story",
     "label": "Story / Hook",
-    "preview": "first 150 chars",
-    "full": "complete description",
-    "why_it_works": "one sentence tied to the search intent"
+    "preview": "<first 150 characters of the full description>",
+    "full": "<complete 300-400 word description ending with the hashtag line>",
+    "why_it_works": "<one sentence explaining why this opening matches the viewer's emotional driver>"
   }},
   {{
     "type": "value",
     "label": "Value / Benefit",
-    "preview": "first 150 chars",
-    "full": "complete description",
-    "why_it_works": "one sentence"
+    "preview": "<first 150 characters>",
+    "full": "<complete 300-400 word description ending with the hashtag line>",
+    "why_it_works": "<one sentence>"
   }},
   {{
     "type": "keyword",
     "label": "SEO / Keyword-first",
-    "preview": "first 150 chars",
-    "full": "complete description",
-    "why_it_works": "one sentence"
+    "preview": "<first 150 characters>",
+    "full": "<complete 300-400 word description ending with the hashtag line>",
+    "why_it_works": "<one sentence>"
   }}
 ]"""
 
     try:
         msg = client.messages.create(
             model="claude-sonnet-4-6",
-            max_tokens=1400,
+            max_tokens=3000,
             messages=[{"role": "user", "content": prompt}]
         )
         raw = msg.content[0].text.strip()

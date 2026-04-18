@@ -13,12 +13,13 @@ from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
 from routers.auth import get_session
-from app.analysis_gate import check_and_deduct
+from app.analysis_gate import check_and_deduct, refund_credit
 from app.utils import make_anthropic_client
 from database.models import (
     SessionLocal,
     CompetitorVideoIdeas,
     ChannelVideoIdeas,
+    CompetitorAnalysisCache,
 )
 
 router = APIRouter()
@@ -31,11 +32,54 @@ def _load_cached(db, channel_id: str):
     return db.query(ChannelVideoIdeas).filter_by(channel_id=channel_id).first()
 
 
+def _competitor_signal_score(db, channel_id: str, competitor_id: str) -> int:
+    """
+    Look up the stored competitor analysis and compute a base opportunity score
+    (55–85) reflecting how strongly YouTube distributes content in this niche.
+    Higher score = competitor has videos YouTube pushed to wide audiences.
+    """
+    cache_row = (
+        db.query(CompetitorAnalysisCache)
+        .filter_by(channel_id=channel_id, competitor_id=competitor_id)
+        .order_by(CompetitorAnalysisCache.analyzed_at.desc())
+        .first()
+    )
+    if not cache_row:
+        return 65  # no data, neutral score
+
+    try:
+        result = json.loads(cache_row.result_json)
+    except Exception:
+        return 65
+
+    comp_subs = result.get("_meta", {}).get("competitor_subscribers", 0)
+    top_videos = result.get("topVideosToStudy", [])
+
+    best_ratio = 0.0
+    for v in top_videos:
+        v_views = v.get("views", 0)
+        if comp_subs > 0:
+            ratio = v_views / comp_subs
+            if ratio > best_ratio:
+                best_ratio = ratio
+        elif v_views >= 100_000:
+            best_ratio = max(best_ratio, 2.0)
+
+    if best_ratio >= 3.0:
+        return 82   # very_high — YouTube actively pushing this niche
+    if best_ratio >= 1.5:
+        return 74   # high signal
+    if best_ratio >= 0.5:
+        return 67   # medium signal
+    return 60       # weak signal
+
+
 def _pool_competitor_ideas(db, channel_id: str) -> list:
     """
     Pull ALL competitor analysis runs for this channel, gather every
-    videoIdeas array, deduplicate by title (case-insensitive), add
-    opportunityScore=70 and source="competitor", return up to 10.
+    videoIdeas array, deduplicate by title (case-insensitive).
+    Opportunity scores are computed per-competitor from their analysis cache
+    (signal strength of how hard YouTube pushes content in this niche).
     """
     rows = (
         db.query(CompetitorVideoIdeas)
@@ -51,17 +95,23 @@ def _pool_competitor_ideas(db, channel_id: str) -> list:
             ideas = json.loads(row.ideas_json)
         except Exception:
             continue
-        for idea in ideas:
+
+        # Base score for this competitor derived from their cached analysis
+        base_score = _competitor_signal_score(db, channel_id, row.competitor_id)
+
+        for idx, idea in enumerate(ideas):
             title_key = idea.get("title", "").lower().strip()
             if not title_key or title_key in seen_titles:
                 continue
             seen_titles.add(title_key)
+            # Earlier ideas from Claude's list are usually stronger — decay by 3 per position
+            opp_score = max(base_score - (idx * 3), base_score - 9)
             pooled.append({
                 "rank": rank,
                 "title": idea.get("title", ""),
                 "targetKeyword": idea.get("targetKeyword", ""),
                 "angle": idea.get("angle", ""),
-                "opportunityScore": 70,
+                "opportunityScore": opp_score,
                 "source": "competitor",
             })
             rank += 1
@@ -342,7 +392,7 @@ def refresh_video_ideas(body: RefreshBody, request: Request):
             else ", ".join(keywords_raw)
         )
 
-        # Top video from recent list
+        # Own channel's top video
         top_video_title = ""
         top_video_views = 0
         if videos:
@@ -350,42 +400,137 @@ def refresh_video_ideas(body: RefreshBody, request: Request):
             top_video_title = top.get("title", "")
             top_video_views = top.get("views", 0)
 
-        top_pattern    = insights.get("topPerformingPattern", "N/A")
-        biggest_risk   = insights.get("biggestRisk", "N/A")
-        content_score  = (insights.get("categoryScores") or {}).get("contentStrategy", "N/A")
+        # ── 3. Mine competitor analysis cache for algorithmically-proven topics ──
+        # A topic is "proven" when YouTube pushed the video to audiences beyond
+        # the channel's own subscribers.  We identify this by:
+        #   (a) view-to-subscriber ratio > 1.5  (YouTube distributed it widely)
+        #   (b) views >= 2x the competitor's average (algorithmic spike)
+        # We pull the structured results already stored from competitor analyses.
 
-        # Pool existing competitor ideas
+        cache_rows = (
+            db.query(CompetitorAnalysisCache)
+            .filter_by(channel_id=channel_id)
+            .order_by(CompetitorAnalysisCache.analyzed_at.desc())
+            .all()
+        )
+
+        proven_topics = []    # topics confirmed by YouTube distribution
+        gap_topics    = []    # content gaps from competitor analysis
+
+        for row in cache_rows:
+            try:
+                result = json.loads(row.result_json)
+            except Exception:
+                continue
+
+            comp_subs = result.get("_meta", {}).get("competitor_subscribers", 0)
+
+            # topVideosToStudy — videos the AI flagged as outliers
+            for v in result.get("topVideosToStudy", []):
+                v_views = v.get("views", 0)
+                v_title = v.get("title", "")
+                if not v_title:
+                    continue
+                # Score the strength of the algorithmic signal
+                signal_strength = "medium"
+                if comp_subs > 0:
+                    ratio = v_views / comp_subs
+                    if ratio >= 3:
+                        signal_strength = "very_high"
+                    elif ratio >= 1.5:
+                        signal_strength = "high"
+                elif v_views >= 50_000:
+                    signal_strength = "high"
+
+                proven_topics.append({
+                    "competitor_video_title": v_title,
+                    "views": v_views,
+                    "signal_strength": signal_strength,
+                    "why_it_worked": v.get("whyItWorked", ""),
+                })
+
+            # topTopics — clusters that drive the most views for this competitor
+            for t in result.get("topTopics", []):
+                topic_name = t.get("topic", "")
+                topic_avg  = t.get("avgViews", 0)
+                if topic_name and topic_avg > avg_views:
+                    proven_topics.append({
+                        "competitor_video_title": f"[Topic cluster] {topic_name}",
+                        "views": topic_avg,
+                        "signal_strength": "high" if topic_avg > avg_views * 3 else "medium",
+                        "why_it_worked": f"Avg {topic_avg:,} views across {t.get('videoCount', '?')} videos in this niche",
+                    })
+
+            # gapsToExploit — opportunities the competitor is leaving on the table
+            for g in result.get("gapsToExploit", []):
+                gap_text = g.get("gap", "")
+                if gap_text:
+                    gap_topics.append({
+                        "gap": gap_text,
+                        "how_to_capture": g.get("howToCapture", ""),
+                        "impact": g.get("estimatedImpact", "medium"),
+                    })
+
+        # Deduplicate and sort proven topics by signal strength then views
+        signal_order = {"very_high": 0, "high": 1, "medium": 2, "low": 3}
+        seen_pt = set()
+        unique_proven = []
+        for pt in sorted(proven_topics, key=lambda x: (signal_order.get(x["signal_strength"], 3), -x["views"])):
+            key = pt["competitor_video_title"].lower().strip()[:60]
+            if key not in seen_pt:
+                seen_pt.add(key)
+                unique_proven.append(pt)
+
+        proven_json = json.dumps(unique_proven[:15], indent=2)
+        gaps_json   = json.dumps(gap_topics[:8],     indent=2)
+
+        # Also include the raw competitor video ideas pool as a fallback reference
         pooled = _pool_competitor_ideas(db, channel_id)
-        pooled_json = json.dumps(pooled, indent=2) if pooled else "[]"
 
-        # 3. Claude call
-        prompt = f"""CHANNEL DATA:
+        # ── 4. Claude call with algorithmic-signal framing ──
+        prompt = f"""YOUR CHANNEL:
 - Niche/keywords: {channel_keywords}
 - Subscribers: {subscribers:,}
 - Avg views per video: {avg_views:,}
-- Top performing video: {top_video_title} ({top_video_views:,} views)
-- Top performing pattern: {top_pattern}
-- Biggest risk: {biggest_risk}
-- Content strategy score: {content_score}/100
+- Best performing video: "{top_video_title}" ({top_video_views:,} views)
+- Channel audit summary: {insights.get("channelSummary", "N/A")}
 
-COMPETITOR VIDEO IDEAS ALREADY IDENTIFIED:
-{pooled_json}
+COMPETITOR VIDEOS THAT YOUTUBE PUSHED TO A WIDE AUDIENCE:
+These are real videos from channels in your niche where YouTube distributed the content
+beyond the channel's own subscribers (high view-to-subscriber ratio or large algorithmic spike).
+These topics have PROVEN demand — YouTube's algorithm is already promoting this type of content.
+
+{proven_json}
+
+CONTENT GAPS IN THIS NICHE (topics competitors are ignoring):
+{gaps_json}
 
 YOUR TASK:
-Generate 10 ranked video ideas for this creator. For each idea:
-- Build on or improve the competitor ideas above where relevant
-- Fill gaps the competitors have missed
-- Match the creator's niche exactly — no off-topic suggestions
-- Prioritize ideas likely to outperform their current avg of {avg_views:,} views
+Generate exactly 10 video ideas for this creator. Every idea MUST be derived from the
+proven-demand signals above — topics YouTube is already distributing in this niche.
+
+Rules:
+1. Each title must target a topic that appears in the proven-demand data above (or a close
+   variation of it). Do NOT invent topics that have no signal in the data.
+2. For small channels (under {subscribers:,} subscribers) YouTube needs to be able to suggest
+   the video to people who have NEVER heard of the channel. Only topics with broad algorithmic
+   appeal qualify. No niche-within-a-niche ideas.
+3. Prioritize "very_high" and "high" signal_strength signals over medium ones.
+4. Assign opportunityScore (0–100) based on: signal strength (40%), search demand evidence (30%),
+   fit for this creator's niche (30%). Never give a score above 80 unless signal_strength is high/very_high.
+5. The "angle" field must explain specifically WHY YouTube will distribute this video — not just
+   why it's a good idea.
+6. targetKeyword must be a phrase people actually type into YouTube search.
 
 Return ONLY valid JSON, no markdown:
 [
   {{
     "rank": 1,
-    "title": "ready-to-use video title (50-70 chars)",
-    "targetKeyword": "primary keyword phrase",
-    "angle": "one sentence — why this idea and why now",
-    "opportunityScore": 85,
+    "title": "ready-to-use video title, 50-70 chars, proven-topic framing",
+    "targetKeyword": "exact youtube search phrase",
+    "angle": "why YouTube will distribute this — reference the signal data",
+    "opportunityScore": 82,
+    "signalBasis": "brief note on which competitor signal this is derived from",
     "source": "ai"
   }}
 ]"""
@@ -393,15 +538,16 @@ Return ONLY valid JSON, no markdown:
         client = make_anthropic_client()
         message = client.messages.create(
             model="claude-sonnet-4-6",
-            max_tokens=1500,
+            max_tokens=2000,
             system=(
-                "You are a YouTube video idea strategist. Your job is to generate "
-                "specific, high-opportunity video ideas for a creator based on their "
-                "channel performance data and competitor gaps. Every idea must be "
-                "immediately actionable — a title the creator can use today, a keyword "
-                "they can rank for, and a clear reason why this idea will outperform "
-                "their current content. Never give generic advice. Reference the actual "
-                "data provided."
+                "You are a YouTube growth strategist specialising in algorithmic distribution. "
+                "Your job is NOT to brainstorm interesting topics — it is to identify topics "
+                "that YouTube's recommendation engine is already proven to push to wide audiences "
+                "in a given niche, then help a small creator produce the definitive video on those "
+                "topics. Every idea you give must have a real data signal backing it. "
+                "A good idea for a small channel is one where YouTube will suggest the video to "
+                "people who have never seen the channel. Generic, niche-within-a-niche, or "
+                "'could be interesting' ideas will waste the creator's time — only give proven ones."
             ),
             messages=[{"role": "user", "content": prompt}],
         )
@@ -411,28 +557,28 @@ Return ONLY valid JSON, no markdown:
         raw = re.sub(r"\n?```$", "", raw).strip()
         ai_ideas = json.loads(raw)
 
-        # 4. Merge AI ideas with competitor ideas; re-rank by opportunityScore desc
-        # AI ideas already have source="ai"; ensure competitor pool has source="competitor"
-        competitor_set = {i["title"].lower().strip() for i in pooled}
-        merged = list(ai_ideas)
+        # 5. If no proven-signal data was available, fall back to pooled competitor ideas
+        #    so the user still gets something useful.
+        merged_titles = {i["title"].lower().strip() for i in ai_ideas}
         for idea in pooled:
-            if idea["title"].lower().strip() not in {i["title"].lower().strip() for i in merged}:
-                merged.append(idea)
+            if idea["title"].lower().strip() not in merged_titles:
+                ai_ideas.append(idea)
 
-        merged.sort(key=lambda x: x.get("opportunityScore", 0), reverse=True)
-        # Re-assign ranks after sort
-        for i, idea in enumerate(merged[:10], 1):
+        # Re-rank by opportunityScore desc, cap at 10
+        ai_ideas.sort(key=lambda x: x.get("opportunityScore", 0), reverse=True)
+        for i, idea in enumerate(ai_ideas[:10], 1):
             idea["rank"] = i
-        merged = merged[:10]
+        final_ideas = ai_ideas[:10]
 
-        # 5. Persist BEFORE returning — never return without a successful DB write
-        _save_ideas(db, channel_id, merged, "mixed" if pooled else "ai")
+        # 6. Persist BEFORE returning
+        source = "ai" if not pooled else "mixed"
+        _save_ideas(db, channel_id, final_ideas, source)
 
         return JSONResponse({
-            "ideas":            merged,
-            "source":           "mixed" if pooled else "ai",
-            "last_updated":     "today",
-            "stale":            False,
+            "ideas":             final_ideas,
+            "source":            source,
+            "last_updated":      "today",
+            "stale":             False,
             "credits_remaining": gate.get("pack_balance", 0),
             "_usage": {
                 "warning":   gate["warning"],
@@ -441,11 +587,12 @@ Return ONLY valid JSON, no markdown:
         })
 
     except json.JSONDecodeError as e:
-        # Claude returned bad JSON — do NOT save, keep existing ideas intact
         print(f"[video_ideas] JSON parse error: {e}")
-        return JSONResponse({"error": "AI returned invalid data. Please try again."}, status_code=500)
+        refund_credit(channel_id)
+        return JSONResponse({"error": "AI returned invalid data. Your credit has been refunded."}, status_code=500)
     except Exception as e:
         print(f"[video_ideas] refresh error: {e}")
-        return JSONResponse({"error": "Failed to generate ideas. Please try again."}, status_code=500)
+        refund_credit(channel_id)
+        return JSONResponse({"error": "Failed to generate ideas. Your credit has been refunded."}, status_code=500)
     finally:
         db.close()

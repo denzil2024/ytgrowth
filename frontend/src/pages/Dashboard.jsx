@@ -679,6 +679,7 @@ export default function Dashboard() {
   const [nav,     setNav]    = useState('Overview')
   const [selectedVideoId, setSelectedVideoId] = useState(null)
   const [analyzingAI, setAnalyzingAI] = useState(false)
+  const [refreshingStats, setRefreshingStats] = useState(false)
   const [checked,  setChecked]  = useState({})
   const [deleted,  setDeleted]  = useState({})
   const [channels, setChannels] = useState([])
@@ -973,7 +974,7 @@ export default function Dashboard() {
               <div style={{ width: 48, height: 48, borderRadius: 13, background: C.redBg, border: `1px solid ${C.redBdr}`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20 }}>⚠</div>
               <p style={{ fontSize: 18, fontWeight: 700, color: C.text1, letterSpacing: '-0.4px' }}>No channel data</p>
               <p style={{ fontSize: 14, color: C.text2, maxWidth: 280, lineHeight: 1.7 }}>Connect your YouTube channel to see your analytics.</p>
-              <a href="/" className="ytg-dash-btn-primary" style={{ textDecoration: 'none', marginTop: 8 }}>Connect channel →</a>
+              <a href="/auth/login" className="ytg-dash-btn-primary" style={{ textDecoration: 'none', marginTop: 8 }}>Connect channel →</a>
             </div>
           )}
 
@@ -996,9 +997,50 @@ export default function Dashboard() {
                   }}
                 />
               )}
-              <div style={{ marginBottom: 24 }}>
-                <h1 style={{ fontSize: 24, fontWeight: 800, color: '#0a0a0f', letterSpacing: '-0.7px', marginBottom: 5 }}>Good to see you.</h1>
-                <p style={{ fontSize: 14, color: C.text3, letterSpacing: '-0.1px' }}>Here's how your channel is performing right now.</p>
+              <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 24 }}>
+                <div>
+                  <h1 style={{ fontSize: 24, fontWeight: 800, color: '#0a0a0f', letterSpacing: '-0.7px', marginBottom: 5 }}>Good to see you.</h1>
+                  <p style={{ fontSize: 14, color: C.text3, letterSpacing: '-0.1px' }}>
+                    Here's how your channel is performing right now.
+                    {data.stats_fetched_at && (
+                      <span style={{ marginLeft: 8, color: '#a0a0b0' }}>
+                        · Stats from {(() => {
+                          const diff = Math.round((Date.now() - new Date(data.stats_fetched_at).getTime()) / 60000)
+                          if (diff < 1)  return 'just now'
+                          if (diff < 60) return `${diff}m ago`
+                          const h = Math.round(diff / 60)
+                          if (h < 24)   return `${h}h ago`
+                          return `${Math.round(h / 24)}d ago`
+                        })()}
+                      </span>
+                    )}
+                  </p>
+                </div>
+                <button
+                  className="ytg-dash-btn"
+                  disabled={refreshingStats}
+                  style={{ flexShrink: 0, marginBottom: 2 }}
+                  onClick={() => {
+                    setRefreshingStats(true)
+                    fetch('/auth/refresh-stats', { method: 'POST', credentials: 'include' })
+                      .then(r => r.json())
+                      .then(d => {
+                        if (!d.error) {
+                          setData(prev => ({
+                            ...prev,
+                            channel: d.channel,
+                            videos: d.videos,
+                            stats_fetched_at: d.stats_fetched_at,
+                          }))
+                          setVideos(d.videos || [])
+                        }
+                      })
+                      .catch(() => {})
+                      .finally(() => setRefreshingStats(false))
+                  }}
+                >
+                  {refreshingStats ? 'Refreshing…' : 'Refresh stats'}
+                </button>
               </div>
 
               {/* Row 1 */}
@@ -1146,9 +1188,28 @@ export default function Dashboard() {
 
           {data && nav === 'Overview' && data.insights && (
             <>
-              <div style={{ marginBottom: 22 }}>
-                <h2 style={{ fontSize: 22, fontWeight: 800, color: '#0a0a0f', letterSpacing: '-0.6px', marginBottom: 4 }}>Channel audit</h2>
-                <p style={{ fontSize: 14, color: C.text3 }}>AI-powered analysis · {data.insights.priorityActions?.length ?? 0} priority actions</p>
+              <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 22 }}>
+                <div>
+                  <h2 style={{ fontSize: 22, fontWeight: 800, color: '#0a0a0f', letterSpacing: '-0.6px', marginBottom: 4 }}>Channel audit</h2>
+                  <p style={{ fontSize: 14, color: C.text3 }}>AI-powered analysis · {data.insights.priorityActions?.length ?? 0} priority actions{data.analyzed_at ? ` · ${new Date(data.analyzed_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}` : ''}</p>
+                </div>
+                <button
+                  className="ytg-dash-btn"
+                  disabled={analyzingAI}
+                  onClick={() => {
+                    setAnalyzingAI(true)
+                    setData(prev => ({ ...prev, insights: null }))
+                    fetch('/auth/refresh-analysis', { method: 'POST', credentials: 'include' })
+                      .catch(() => setAnalyzingAI(false))
+                  }}
+                  style={{ flexShrink: 0, marginTop: 2, opacity: analyzingAI ? 0.5 : 1, cursor: analyzingAI ? 'not-allowed' : 'pointer' }}
+                >
+                  <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M11.5 2A6 6 0 1 0 12 6.5"/>
+                    <path d="M11.5 2v3h-3"/>
+                  </svg>
+                  {analyzingAI ? 'Running…' : 'Re-Audit'}
+                </button>
               </div>
 
               {/* Summary + overall score */}

@@ -118,9 +118,21 @@ def analyze_competitor(channel_id: str, request: Request):
     # Persist full analysis (enriched with channel metadata) for channel insights
     full_result = {
         **ai_analysis,
-        "channel_name": comp_data.get("channel_name"),
-        "subscribers": comp_data.get("subscribers"),
+        "channel_name":       comp_data.get("channel_name"),
+        "subscribers":        comp_data.get("subscribers"),
         "avg_views_per_video": comp_data.get("avg_views_per_video"),
+        # Metadata needed to rebuild the tracked-competitors list server-side
+        "_competitor_meta": {
+            "channel_id":   channel_id,
+            "channel_name": comp_data.get("channel_name", ""),
+            "handle":       comp_data.get("handle", ""),
+            "thumbnail":    comp_data.get("thumbnail", ""),
+            "subscribers":  comp_data.get("subscribers", 0),
+        },
+        # Subscriber count used by video_ideas signal scoring
+        "_meta": {
+            "competitor_subscribers": comp_data.get("subscribers", 0),
+        },
     }
     _persist_full_analysis(my_channel_id, channel_id, full_result)
 
@@ -129,3 +141,55 @@ def analyze_competitor(channel_id: str, request: Request):
         "competitor": comp_data,
         "ai_analysis": ai_analysis,
     })
+
+
+@router.get("/tracked")
+def get_tracked_competitors(request: Request):
+    """
+    Return all competitors this user has previously analyzed — rebuilt from DB.
+    Used to restore the tracked list when localStorage is cleared or user switches devices.
+    """
+    data, creds = get_session(request.session.get("session_id"))
+    if not data or not creds:
+        return JSONResponse({"error": "Not authenticated."}, status_code=401)
+
+    my_channel_id = data["channel"]["channel_id"]
+
+    db = SessionLocal()
+    try:
+        rows = (
+            db.query(CompetitorAnalysisCache)
+            .filter_by(channel_id=my_channel_id)
+            .order_by(CompetitorAnalysisCache.analyzed_at.desc())
+            .all()
+        )
+
+        seen = set()
+        tracked = []
+        for row in rows:
+            try:
+                result = json.loads(row.result_json)
+            except Exception:
+                continue
+
+            meta = result.get("_competitor_meta", {})
+            comp_id = meta.get("channel_id") or row.competitor_id
+            if comp_id in seen:
+                continue
+            seen.add(comp_id)
+
+            tracked.append({
+                "competitor": {
+                    "channel_id":   comp_id,
+                    "channel_name": meta.get("channel_name", result.get("channel_name", "")),
+                    "handle":       meta.get("handle", ""),
+                    "thumbnail":    meta.get("thumbnail", ""),
+                    "subscribers":  meta.get("subscribers", result.get("subscribers", 0)),
+                },
+                "ai_analysis": {k: v for k, v in result.items() if not k.startswith("_")},
+                "savedAt": row.analyzed_at.isoformat() if row.analyzed_at else None,
+            })
+
+        return JSONResponse({"tracked": tracked})
+    finally:
+        db.close()

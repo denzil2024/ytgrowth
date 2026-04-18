@@ -19,7 +19,7 @@ from pydantic import BaseModel
 
 from routers.auth import get_session
 from database.models import SessionLocal, ThumbnailAnalysis
-from app.analysis_gate import check_and_deduct
+from app.analysis_gate import check_and_deduct, refund_credit
 from app.thumbnail import (
     detect_format,
     get_size_bracket,
@@ -341,7 +341,9 @@ def analyze_thumbnail(body: AnalyzeBody, request: Request):
     except Exception as e:
         import traceback
         print(f"[thumbnail] analyze error: {traceback.format_exc()}")
-        return JSONResponse({"error": str(e)}, status_code=500)
+        refund_credit(channel_id)
+        msg = "Analysis timed out. Your credit has been refunded." if "timeout" in str(e).lower() else str(e)
+        return JSONResponse({"error": msg}, status_code=500)
     finally:
         db.close()
 

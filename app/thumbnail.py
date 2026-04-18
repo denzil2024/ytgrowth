@@ -716,6 +716,7 @@ NEVER use em-dashes (—). Return ONLY this JSON:
         msg = client.messages.create(
             model="claude-sonnet-4-6",
             max_tokens=2400,
+            timeout=60.0,
             system=(
                 "You are an elite YouTube thumbnail analyst with deep knowledge of click psychology, "
                 "visual communication, and what makes viewers stop scrolling. "

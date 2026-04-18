@@ -255,6 +255,24 @@ function IdeaCard({ idea, done, onDone, onUseSeo, onScoreThumbnail }) {
             <KeywordPill keyword={idea.targetKeyword} />
           </div>
 
+          {/* Signal basis — why YouTube will distribute this */}
+          {idea.signalBasis && (
+            <div style={{
+              display: 'inline-flex', alignItems: 'center', gap: 5,
+              marginBottom: 5,
+              fontSize: 11, fontWeight: 600,
+              color: '#0369a1', background: '#f0f9ff',
+              border: '1px solid #bae6fd',
+              borderRadius: 100, padding: '2px 9px',
+            }}>
+              <svg width="9" height="9" viewBox="0 0 9 9" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
+                <path d="M4.5 1v2M4.5 6v2M1 4.5h2M6 4.5h2"/>
+                <circle cx="4.5" cy="4.5" r="3.5"/>
+              </svg>
+              {idea.signalBasis}
+            </div>
+          )}
+
           {/* Angle */}
           {idea.angle && (
             <p style={{ fontSize: 12, color: C.text3, margin: 0, lineHeight: 1.5 }}>

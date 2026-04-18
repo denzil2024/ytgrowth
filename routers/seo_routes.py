@@ -5,7 +5,7 @@ from app.seo import analyze_title, generate_description_suggestions, generate_th
 from app.keywords import generate_intent_options
 from routers.auth import get_session
 from database.models import SessionLocal, VideoOptimizeCache
-from app.analysis_gate import check_and_deduct
+from app.analysis_gate import check_and_deduct, refund_credit
 import json
 
 router = APIRouter()
@@ -59,15 +59,33 @@ def analyze(body: TitleAnalyzeRequest, request: Request):
     gate = check_and_deduct(channel_id)
     if not gate["allowed"]:
         return JSONResponse({"error": gate["message"], "show_upgrade": True}, status_code=402)
-    result = analyze_title(creds, body.title.strip(), confirmed_keyword=body.confirmed_keyword.strip())
+    try:
+        result = analyze_title(creds, body.title.strip(), confirmed_keyword=body.confirmed_keyword.strip())
+    except Exception as e:
+        refund_credit(channel_id)
+        return JSONResponse({"error": "Analysis failed. Your credit has been refunded."}, status_code=500)
     result["_usage"] = {"warning": gate["warning"], "usage_pct": gate["usage_pct"]}
     return JSONResponse(result)
 
 
 @router.post("/generate-description")
-def generate_description(body: DescriptionRequest):
+def generate_description(body: DescriptionRequest, request: Request):
     if not body.title.strip():
         return JSONResponse({"error": "Title cannot be empty."}, status_code=400)
+
+    # Inject channel context from session when available — helps Claude stay on-brand
+    channel_context = None
+    data, _ = get_session(request.session.get("session_id"))
+    if data:
+        ch = data.get("channel", {})
+        videos = data.get("videos", []) or []
+        top_titles = [v.get("title", "") for v in sorted(videos, key=lambda v: v.get("views", 0), reverse=True)[:5] if v.get("title")]
+        channel_context = {
+            "channel_name":    ch.get("channel_name", ""),
+            "channel_keywords": ch.get("keywords", ""),
+            "top_video_titles": top_titles,
+        }
+
     descriptions, error = generate_description_suggestions(
         body.title.strip(),
         body.current_description.strip(),
@@ -75,6 +93,7 @@ def generate_description(body: DescriptionRequest):
         intent_analysis=body.intent_analysis,
         keyword_scores=body.keyword_scores,
         current_year=body.current_year,
+        channel_context=channel_context,
     )
     if error and not descriptions:
         return JSONResponse({"error": error}, status_code=500)

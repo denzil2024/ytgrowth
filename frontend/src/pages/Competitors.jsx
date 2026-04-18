@@ -698,6 +698,21 @@ export default function Competitors() {
 
   useEffect(() => { saveTracked(analyses) }, [analyses])
 
+  // On mount: if localStorage is empty, try to restore tracked competitors from the backend.
+  // This recovers the list when the user clears their cache or logs in from a new device.
+  useEffect(() => {
+    if (loadTracked().length > 0) return  // already have local data
+    fetch('/competitors/tracked', { credentials: 'include' })
+      .then(r => r.ok ? r.json() : null)
+      .then(d => {
+        if (d?.tracked?.length > 0) {
+          setAnalyses(d.tracked)
+          setActiveTab('tracked')
+        }
+      })
+      .catch(() => {})
+  }, [])
+
   const handleSearch = () => {
     if (!searchQuery.trim()) return
     setLoadingSearch(true)

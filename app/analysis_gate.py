@@ -84,3 +84,29 @@ def check_and_deduct(channel_id: str) -> dict:
         return {"allowed": True, "warning": False, "usage_pct": 0, "pack_balance": 0}
     finally:
         db.close()
+
+
+def refund_credit(channel_id: str) -> None:
+    """
+    Refund one credit that was deducted by check_and_deduct().
+    Call this in exception handlers when the Claude API call fails after a credit was spent.
+    Monthly allowance is restored first; pack_balance is the fallback.
+    """
+    if _BYPASS:
+        return
+
+    db = SessionLocal()
+    try:
+        sub = get_or_create_subscription(db, channel_id)
+        # Reverse the deduction — monthly allowance was depleted first, restore it first
+        if sub.monthly_used and sub.monthly_used > 0:
+            sub.monthly_used -= 1
+        elif sub.pack_balance is not None and sub.pack_balance >= 0:
+            sub.pack_balance += 1
+        db.commit()
+        print(f"[analysis_gate] Refunded 1 credit to {channel_id}")
+    except Exception as e:
+        db.rollback()
+        print(f"[analysis_gate] Refund failed for {channel_id}: {e}")
+    finally:
+        db.close()

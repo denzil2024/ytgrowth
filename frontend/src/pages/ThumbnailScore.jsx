@@ -945,19 +945,27 @@ export default function ThumbnailScore({ channelData, onNavigate }) {
     if (!analysis?.id) return
     setState('analyzing')
     setError('')
+    const controller = new AbortController()
+    const timeoutId  = setTimeout(() => controller.abort(), 70000)  // 70s client timeout
     try {
       const r = await fetch('/thumbnail/analyze', {
         method: 'POST', credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ thumbnail_id: analysis.id }),
+        signal: controller.signal,
       })
       const d = await r.json()
       if (!r.ok || d.error) throw new Error(d.error || 'Analysis failed')
       setAnalysis(d.analysis)
       setState('ready2')
     } catch (e) {
-      setError(e.message || 'Analysis failed')
+      const msg = e.name === 'AbortError'
+        ? 'Analysis timed out. Your credit has been refunded — please try again.'
+        : (e.message || 'Analysis failed')
+      setError(msg)
       setState('ready1')
+    } finally {
+      clearTimeout(timeoutId)
     }
   }
 

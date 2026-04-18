@@ -432,16 +432,17 @@ def callback(request: Request, background_tasks: BackgroundTasks):
             needs_analysis = False
 
         user_data = {
-            "channel":         stats,
-            "videos":          videos,
-            "analytics":       full_data.get("analytics"),
-            "video_analytics": full_data.get("video_analytics"),
-            "insights":        existing_insights,
-            "analyzed_at":     existing_analyzed_at or now,
-            "email":           google_email,
-            "google_id":       google_id,
-            "display_name":    display_name,
-            "profile_picture": profile_picture,
+            "channel":          stats,
+            "videos":           videos,
+            "analytics":        full_data.get("analytics"),
+            "video_analytics":  full_data.get("video_analytics"),
+            "insights":         existing_insights,
+            "analyzed_at":      existing_analyzed_at or now,
+            "stats_fetched_at": now,
+            "email":            google_email,
+            "google_id":        google_id,
+            "display_name":     display_name,
+            "profile_picture":  profile_picture,
         }
         _user_data[session_id] = user_data
         _persist_session(session_id, creds, user_data)
@@ -534,6 +535,37 @@ def refresh_analysis(request: Request, background_tasks: BackgroundTasks):
         plan,
     )
     return JSONResponse({"message": "Analysis started"})
+
+
+@router.post("/refresh-stats")
+def refresh_stats(request: Request):
+    """Re-fetch channel stats and recent videos from YouTube. No AI call, no credit used."""
+    session_id = request.session.get("session_id")
+    data, creds = get_session(session_id)
+    if not data or not creds:
+        return JSONResponse({"error": "Not logged in"}, status_code=401)
+
+    try:
+        stats  = get_channel_stats(creds)
+        videos = get_recent_videos(creds)
+    except Exception as e:
+        return JSONResponse({"error": f"YouTube API error: {e}"}, status_code=500)
+
+    if not stats:
+        return JSONResponse({"error": "Could not fetch channel data."}, status_code=500)
+
+    now = datetime.datetime.utcnow().isoformat()
+    data["channel"]          = stats
+    data["videos"]           = videos
+    data["stats_fetched_at"] = now
+    _user_data[session_id]   = data
+    _persist_session(session_id, creds, data)
+
+    return JSONResponse({
+        "channel":          stats,
+        "videos":           videos,
+        "stats_fetched_at": now,
+    })
 
 
 @router.get("/logout")
