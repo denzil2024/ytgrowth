@@ -66,14 +66,14 @@ function useDashboardStyles() {
 
       .ytg-nav-btn {
         display: flex; align-items: center; gap: 10px;
-        padding: 9px 12px; border-radius: 9px; cursor: pointer; text-align: left;
-        font-size: 13px; font-family: 'DM Sans', 'Inter', sans-serif;
+        padding: 8px 12px; border-radius: 8px; cursor: pointer; text-align: left;
+        font-size: 14px; font-family: 'DM Sans', 'Inter', sans-serif;
         transition: background 0.15s, color 0.15s;
         border: none;
         box-shadow: none;
       }
       .ytg-nav-btn:hover:not(.active) {
-        background: #f1f1f6;
+        background: #f4f4f8;
       }
 
       .ytg-video-row { transition: background 0.15s; }
@@ -278,9 +278,9 @@ function Stat({ label, value, sub, alert, accent }) {
   const col = alert ? C.red : (accent || C.text1)
   return (
     <div className={`ytg-stat-card${alert ? ' alert' : ''}`}>
-      <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.07em', textTransform: 'uppercase', color: C.text3, marginBottom: 10 }}>{label}</p>
-      <p style={{ fontSize: 26, fontWeight: 800, letterSpacing: '-0.8px', color: col, lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{value}</p>
-      {sub && <p style={{ fontSize: 12, color: alert ? C.red : C.text3, fontWeight: 500, marginTop: 8 }}>{sub}</p>}
+      <p style={{ fontSize: 11, fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: C.text3, marginBottom: 14 }}>{label}</p>
+      <p style={{ fontSize: 30, fontWeight: 800, letterSpacing: '-1.2px', color: col, lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{value}</p>
+      {sub && <p style={{ fontSize: 12, color: alert ? C.red : C.text3, fontWeight: 500, marginTop: 10 }}>{sub}</p>}
     </div>
   )
 }
@@ -393,10 +393,10 @@ function NavBtn({ label, active, onClick, badge }) {
       className={`ytg-nav-btn${active ? ' active' : ''}`}
       onClick={onClick}
       style={{
-        margin: '1px 10px',
-        width: 'calc(100% - 20px)',
-        background: active ? '#fef2f2' : 'transparent',
-        color: active ? C.red : '#52525b',
+        margin: '1px 12px',
+        width: 'calc(100% - 24px)',
+        background: active ? C.redBg : 'transparent',
+        color: active ? C.red : C.text2,
         fontWeight: active ? 600 : 400,
       }}
       onMouseEnter={e => { if (!active) { e.currentTarget.style.color = C.text1 } }}
@@ -809,34 +809,26 @@ export default function Dashboard() {
 
       {/* ══ SIDEBAR ══════════════════════════════════════════════════════ */}
       <aside style={{
-        width: 300, flexShrink: 0,
+        width: 280, flexShrink: 0,
         background: '#ffffff',
-        borderRight: '1px solid #e6e6ec',
+        borderRight: `1px solid ${C.border}`,
         position: 'sticky', top: 0, height: '100vh',
-        boxShadow: '1px 0 0 #e6e6ec, 4px 0 16px rgba(0,0,0,0.04)',
         display: 'flex', flexDirection: 'column', overflow: 'hidden',
         zIndex: 10,
       }}>
 
         {/* Brand */}
-        <a href="/" style={{ padding: '20px 16px 14px', display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none', flexShrink: 0 }}>
-          <Logo size={28} />
-          <span style={{ fontSize: 14, fontWeight: 700, color: '#111114', letterSpacing: '-0.4px', lineHeight: 1 }}>YTGrowth</span>
+        <a href="/" style={{ padding: '22px 20px 18px', display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none', flexShrink: 0, borderBottom: `1px solid ${C.border}` }}>
+          <Logo size={26} />
+          <span style={{ fontSize: 15, fontWeight: 700, color: C.text1, letterSpacing: '-0.5px', lineHeight: 1 }}>YTGrowth</span>
         </a>
 
-        {/* Channel card — single channel shows static card, multi-channel shows switcher */}
+        {/* Channel profile block */}
         {data && (
-          <div style={{
-            margin: '0 12px 12px',
-            padding: '14px 14px 12px 16px',
-            background: '#f7f7fb',
-            border: `1px solid ${C.border}`,
-            borderRadius: 14,
-            flexShrink: 0,
-          }}>
-            {/* Avatar + name row — switcher when 2+ channels, static when 1 */}
+          <div style={{ padding: '16px 20px 14px', borderBottom: `1px solid ${C.border}`, flexShrink: 0 }}>
+            {/* Avatar + name */}
             {channels.length >= 2
-              ? <div style={{ marginBottom: 12 }}>
+              ? <div style={{ marginBottom: 14 }}>
                   <ChannelSwitcher
                     channels={channels}
                     channelsAllowed={channelsAllowed}
@@ -844,62 +836,58 @@ export default function Dashboard() {
                     currentChannelId={data.channel.channel_id}
                   />
                 </div>
-              : <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
+              : <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 14 }}>
                   {data.channel.thumbnail
-                    ? <img src={data.channel.thumbnail} alt="" style={{ width: 36, height: 36, borderRadius: '50%', objectFit: 'cover', flexShrink: 0, border: '1.5px solid rgba(0,0,0,0.08)' }}/>
-                    : <div style={{ width: 36, height: 36, borderRadius: '50%', background: '#fef2f2', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 600, color: '#e5251b', flexShrink: 0 }}>{data.channel.channel_name[0].toUpperCase()}</div>
+                    ? <img src={data.channel.thumbnail} alt="" style={{ width: 40, height: 40, borderRadius: '50%', objectFit: 'cover', flexShrink: 0 }}/>
+                    : <div style={{ width: 40, height: 40, borderRadius: '50%', background: C.redBg, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, fontWeight: 700, color: C.red, flexShrink: 0 }}>{data.channel.channel_name[0].toUpperCase()}</div>
                   }
                   <div style={{ minWidth: 0, flex: 1 }}>
-                    <p style={{ fontSize: 14, fontWeight: 600, color: '#111114', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', letterSpacing: '-0.2px' }}>{data.channel.channel_name}</p>
-                    <p style={{ fontSize: 12, color: '#6b7280', marginTop: 2 }}>{fmtNum(data.channel.subscribers)} subscribers</p>
+                    <p style={{ fontSize: 14, fontWeight: 600, color: C.text1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', letterSpacing: '-0.2px' }}>{data.channel.channel_name}</p>
+                    <p style={{ fontSize: 12, color: C.text3, marginTop: 2 }}>{fmtNum(data.channel.subscribers)} subs</p>
                   </div>
                 </div>
             }
-            {/* Channel Health inner card */}
-            <div style={{ background: '#ffffff', border: `1px solid ${C.border}`, borderRadius: 10, padding: '10px 12px' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
-                <span style={{ fontSize: 11, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.08em' }}>Channel Health</span>
-                <span style={{ fontSize: 12, fontWeight: 700, color: scoreColor(score), fontVariantNumeric: 'tabular-nums' }}>{score}/100</span>
+            {/* Health score bar */}
+            <div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 7 }}>
+                <span style={{ fontSize: 11, fontWeight: 600, color: C.text3, letterSpacing: '0.04em' }}>Channel health</span>
+                <span style={{ fontSize: 13, fontWeight: 700, color: scoreColor(score), fontVariantNumeric: 'tabular-nums' }}>{score}<span style={{ fontSize: 11, fontWeight: 500, color: C.text3 }}>/100</span></span>
               </div>
-              <div style={{ background: '#ebebef', borderRadius: 6, height: 4, overflow: 'hidden' }}>
-                <div style={{ width: `${score}%`, height: '100%', background: scoreColor(score), borderRadius: 6, transition: 'width 1.2s cubic-bezier(0.34,1.56,0.64,1)' }}/>
+              <div style={{ background: '#eeeef3', borderRadius: 99, height: 5, overflow: 'hidden' }}>
+                <div style={{ width: `${score}%`, height: '100%', background: scoreColor(score), borderRadius: 99, transition: 'width 1.2s cubic-bezier(0.34,1.56,0.64,1)' }}/>
               </div>
-              <p style={{ fontSize: 12, fontWeight: 600, marginTop: 6, color: scoreColor(score) }}>{scoreLabel(score)}</p>
+              <p style={{ fontSize: 12, fontWeight: 500, marginTop: 5, color: scoreColor(score) }}>{scoreLabel(score)}</p>
             </div>
           </div>
         )}
 
         {/* Nav */}
-        <nav style={{ overflowY: 'auto', flex: 1 }}>
+        <nav style={{ overflowY: 'auto', flex: 1, paddingTop: 8, paddingBottom: 8 }}>
 
           {/* Section: OPTIMIZE */}
-          <div style={{ padding: '6px 20px 5px' }}>
-            <span style={{ fontSize: 12, fontWeight: 600, color: '#adb5bd', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Optimize</span>
+          <div style={{ padding: '14px 20px 6px' }}>
+            <span style={{ fontSize: 10, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.12em' }}>Optimize</span>
           </div>
           <NavBtn label="Overview"       active={nav === 'Overview'}       onClick={() => setNav('Overview')} />
           <NavBtn label="Videos"         active={nav === 'Videos'}         onClick={() => setNav('Videos')} badge={5} />
           <NavBtn label="Weekly Report"  active={nav === 'Weekly Report'}  onClick={() => setNav('Weekly Report')} />
 
-          <div style={{ height: 1, background: 'rgba(0,0,0,0.07)', margin: '10px 14px' }}/>
-
           {/* Section: CREATE */}
-          <div style={{ padding: '6px 20px 5px' }}>
-            <span style={{ fontSize: 12, fontWeight: 600, color: '#adb5bd', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Create</span>
+          <div style={{ padding: '18px 20px 6px' }}>
+            <span style={{ fontSize: 10, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.12em' }}>Create</span>
           </div>
           <NavBtn label="SEO Studio"      active={nav === 'SEO Studio'}      onClick={() => setNav('SEO Studio')} />
           <NavBtn label="Thumbnail Score" active={nav === 'Thumbnail Score'} onClick={() => setNav('Thumbnail Score')} />
           <NavBtn label="Video Ideas"     active={nav === 'Video Ideas'}     onClick={() => setNav('Video Ideas')} />
 
-          <div style={{ height: 1, background: 'rgba(0,0,0,0.07)', margin: '10px 14px' }}/>
-
           {/* Section: RESEARCH */}
-          <div style={{ padding: '6px 20px 5px' }}>
-            <span style={{ fontSize: 12, fontWeight: 600, color: '#adb5bd', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Research</span>
+          <div style={{ padding: '18px 20px 6px' }}>
+            <span style={{ fontSize: 10, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.12em' }}>Research</span>
           </div>
           <NavBtn label="Keywords"    active={nav === 'Keywords'}    onClick={() => setNav('Keywords')} />
           <NavBtn label="Competitors" active={nav === 'Competitors'} onClick={() => setNav('Competitors')} />
 
-          <div style={{ height: 1, background: 'rgba(0,0,0,0.07)', margin: '10px 14px' }}/>
+          <div style={{ height: 1, background: C.border, margin: '16px 20px 8px' }}/>
 
           <NavBtn label="Settings" active={nav === 'Settings'} onClick={() => setNav('Settings')} />
 
@@ -908,11 +896,8 @@ export default function Dashboard() {
         {/* Usage bar */}
         {data && (
           <div style={{
-            margin: '8px 12px',
-            padding: '14px 16px',
-            background: '#f7f7fb',
-            border: `1px solid ${C.border}`,
-            borderRadius: 12,
+            padding: '14px 20px',
+            borderTop: `1px solid ${C.border}`,
             flexShrink: 0,
           }}>
             <UsageBar
@@ -924,16 +909,15 @@ export default function Dashboard() {
         )}
 
         {/* Footer: Sign Out */}
-        <div style={{ height: 1, background: 'rgba(0,0,0,0.07)', flexShrink: 0 }}/>
-        <div style={{ padding: '10px 14px', display: 'flex', justifyContent: 'flex-end', alignItems: 'center', flexShrink: 0 }}>
+        <div style={{ padding: '10px 20px 14px', borderTop: `1px solid ${C.border}`, flexShrink: 0 }}>
           <a
             href="/auth/logout"
-            style={{ display: 'flex', alignItems: 'center', gap: 6, color: '#9ca3af', fontSize: 12, fontWeight: 500, textDecoration: 'none', padding: '5px 8px', borderRadius: 7, transition: 'color 0.15s, background 0.15s' }}
-            onMouseEnter={e => { e.currentTarget.style.color = '#374151'; e.currentTarget.style.background = 'rgba(0,0,0,0.05)' }}
-            onMouseLeave={e => { e.currentTarget.style.color = '#9ca3af'; e.currentTarget.style.background = 'transparent' }}
+            style={{ display: 'flex', alignItems: 'center', gap: 7, color: C.text3, fontSize: 13, fontWeight: 500, textDecoration: 'none', padding: '6px 8px', borderRadius: 8, transition: 'color 0.15s, background 0.15s' }}
+            onMouseEnter={e => { e.currentTarget.style.color = C.text2; e.currentTarget.style.background = '#f4f4f8' }}
+            onMouseLeave={e => { e.currentTarget.style.color = C.text3; e.currentTarget.style.background = 'transparent' }}
           >
-            <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"><path d="M5 2H2.5A1 1 0 0 0 1.5 3v7a1 1 0 0 0 1 1H5M9 9.5l3-3-3-3M12 6.5H5"/></svg>
-            Sign Out
+            <svg width="14" height="14" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"><path d="M5 2H2.5A1 1 0 0 0 1.5 3v7a1 1 0 0 0 1 1H5M9 9.5l3-3-3-3M12 6.5H5"/></svg>
+            Sign out
           </a>
         </div>
       </aside>
@@ -944,10 +928,10 @@ export default function Dashboard() {
         {/* Topbar */}
         <div style={{
           borderBottom: `1px solid ${C.border}`,
-          background: 'rgba(241,241,246,0.92)',
+          background: 'rgba(241,241,246,0.95)',
           backdropFilter: 'blur(20px)',
           WebkitBackdropFilter: 'blur(20px)',
-          padding: '0 36px', height: 54,
+          padding: '0 32px', height: 52,
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
           position: 'sticky', top: 0, zIndex: 10,
         }}>
@@ -1004,9 +988,9 @@ export default function Dashboard() {
                   }}
                 />
               )}
-              <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 22 }}>
+              <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 24 }}>
                 <div>
-                  <h1 style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.6px', marginBottom: 4 }}>Good to see you.</h1>
+                  <h1 style={{ fontSize: 24, fontWeight: 800, color: C.text1, letterSpacing: '-0.8px', marginBottom: 4 }}>Good to see you.</h1>
                   <p style={{ fontSize: 14, color: C.text3, letterSpacing: '-0.1px' }}>
                     Here's how your channel is performing right now.
                     {data.stats_fetched_at && (
@@ -1122,21 +1106,26 @@ export default function Dashboard() {
 
           {data && nav === 'Overview' && data.insights && (
             <>
-              <div style={{ marginBottom: 20 }}>
-                <h2 style={{ fontSize: 20, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', marginBottom: 3 }}>Channel audit</h2>
-                <p style={{ fontSize: 13, color: C.text3 }}>AI-powered analysis · {data.insights.priorityActions?.length ?? 0} priority actions{data.analyzed_at ? ` · ${new Date(data.analyzed_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}` : ''}</p>
+              <div style={{ marginBottom: 20, marginTop: 8 }}>
+                <h2 style={{ fontSize: 18, fontWeight: 700, color: C.text1, letterSpacing: '-0.4px', marginBottom: 3 }}>Channel audit</h2>
+                <p style={{ fontSize: 13, color: C.text3 }}>{data.insights.priorityActions?.length ?? 0} priority actions{data.analyzed_at ? ` · Audited ${new Date(data.analyzed_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}` : ''}</p>
               </div>
 
               {/* Summary + overall score */}
               {data.insights.channelSummary && (
-                <div className="ytg-card" style={{ padding: '20px 24px', marginBottom: 14, borderLeft: `3px solid ${scoreColor(score)}` }}>
-                  <div style={{ display: 'flex', alignItems: 'flex-start', gap: 24 }}>
-                    <div style={{ flex: 1 }}>
-                      <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 8 }}>Overall assessment</p>
-                      <p style={{ fontSize: 14, color: C.text2, lineHeight: 1.75 }}>{data.insights.channelSummary}</p>
-                    </div>
-                    <div style={{ textAlign: 'center', flexShrink: 0 }}>
+                <div className="ytg-card" style={{ padding: '24px 28px', marginBottom: 14 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 32 }}>
+                    {/* Score ring — left */}
+                    <div style={{ flexShrink: 0, textAlign: 'center' }}>
                       <ScoreRing score={score} />
+                      <p style={{ fontSize: 11, color: C.text3, fontWeight: 600, marginTop: 4, letterSpacing: '0.04em' }}>Overall</p>
+                    </div>
+                    {/* Divider */}
+                    <div style={{ width: 1, height: 80, background: C.border, flexShrink: 0 }}/>
+                    {/* Summary text */}
+                    <div style={{ flex: 1 }}>
+                      <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 10 }}>AI assessment</p>
+                      <p style={{ fontSize: 14, color: C.text2, lineHeight: 1.8 }}>{data.insights.channelSummary}</p>
                     </div>
                   </div>
                 </div>
@@ -1145,33 +1134,25 @@ export default function Dashboard() {
               {/* Category scores */}
               {data.insights.categoryScores && (
                 <div className="ytg-card" style={{ padding: '20px 24px', marginBottom: 14 }}>
-                  <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 16 }}>Category breakdown</p>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, minmax(0,1fr))', gap: 8 }}>
+                  <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 18 }}>Category breakdown</p>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px 32px' }}>
                     {[
-                      ['Posting', data.insights.categoryScores.postingConsistency],
-                      ['Length', data.insights.categoryScores.videoLength],
-                      ['CTR', data.insights.categoryScores.ctrHealth],
-                      ['Retention', data.insights.categoryScores.audienceRetention],
-                      ['Engage', data.insights.categoryScores.engagementQuality],
-                      ['Strategy', data.insights.categoryScores.contentStrategy],
-                      ['SEO', data.insights.categoryScores.seoDiscoverability],
+                      ['Posting consistency', data.insights.categoryScores.postingConsistency],
+                      ['CTR health',          data.insights.categoryScores.ctrHealth],
+                      ['Video length',        data.insights.categoryScores.videoLength],
+                      ['Audience retention',  data.insights.categoryScores.audienceRetention],
+                      ['Engagement quality',  data.insights.categoryScores.engagementQuality],
+                      ['Content strategy',    data.insights.categoryScores.contentStrategy],
+                      ['SEO discoverability', data.insights.categoryScores.seoDiscoverability],
                     ].map(([label, val]) => {
                       const col = scoreColor(val)
                       return (
-                        <div key={label} style={{ textAlign: 'center', background: '#fafafa', border: '1px solid #efefef', borderRadius: 12, padding: '14px 6px 12px' }}>
-                          <div style={{ width: 52, height: 52, margin: '0 auto 8px' }}>
-                            <svg width="52" height="52" viewBox="0 0 52 52">
-                              <circle cx="26" cy="26" r="20" fill="none" stroke="#ebebef" strokeWidth="4.5"/>
-                              <circle cx="26" cy="26" r="20" fill="none" stroke={col} strokeWidth="4.5"
-                                strokeDasharray={`${(val / 100) * 125.7} 125.7`}
-                                strokeLinecap="round"
-                                transform="rotate(-90 26 26)"
-                                style={{ transition: 'stroke-dasharray 0.8s cubic-bezier(0.34,1.56,0.64,1)' }}
-                              />
-                              <text x="26" y="30" textAnchor="middle" fill={col} fontSize="12" fontWeight="800" fontFamily="Inter, sans-serif">{val}</text>
-                            </svg>
+                        <div key={label} style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                          <span style={{ fontSize: 13, color: C.text2, fontWeight: 500, flex: '0 0 160px', minWidth: 0 }}>{label}</span>
+                          <div style={{ flex: 1, height: 5, background: '#eeeef3', borderRadius: 99, overflow: 'hidden' }}>
+                            <div style={{ width: `${val}%`, height: '100%', background: col, borderRadius: 99, transition: 'width 0.8s cubic-bezier(0.34,1.56,0.64,1)' }}/>
                           </div>
-                          <p style={{ fontSize: 11, color: C.text2, fontWeight: 600, letterSpacing: '0.02em' }}>{label}</p>
+                          <span style={{ fontSize: 13, fontWeight: 700, color: col, fontVariantNumeric: 'tabular-nums', minWidth: 28, textAlign: 'right' }}>{val}</span>
                         </div>
                       )
                     })}
@@ -1446,8 +1427,8 @@ export default function Dashboard() {
           {/* ── PATTERNS ─────────────────────────────────────────────── */}
           {data && nav === 'Overview' && patterns && (
             <>
-              <div style={{ marginBottom: 20 }}>
-                <h2 style={{ fontSize: 20, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', marginBottom: 3 }}>Content patterns</h2>
+              <div style={{ marginBottom: 20, marginTop: 8 }}>
+                <h2 style={{ fontSize: 18, fontWeight: 700, color: C.text1, letterSpacing: '-0.4px', marginBottom: 3 }}>Content patterns</h2>
                 <p style={{ fontSize: 13, color: C.text3 }}>What's working and what isn't</p>
               </div>
 
