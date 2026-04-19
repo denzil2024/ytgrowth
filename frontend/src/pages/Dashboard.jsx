@@ -1076,42 +1076,33 @@ export default function Dashboard() {
                     ) : null
                   })()}
 
-                  {/* Re-Audit: normal state OR no-credits state (single button, no stacking) */}
-                  {usagePct >= 100 ? (
-                    <button
-                      className="ytg-dash-btn"
-                      onClick={() => window.location.href = '/?tab=monthly'}
-                    >
-                      No credits · Upgrade →
-                    </button>
-                  ) : (
-                    <button
-                      className="ytg-dash-btn-primary"
-                      disabled={analyzingAI}
-                      onClick={() => {
-                        const prevInsights = data?.insights
-                        setAnalyzingAI(true)
-                        setData(prev => ({ ...prev, insights: null }))
-                        fetch('/auth/refresh-analysis', { method: 'POST', credentials: 'include' })
-                          .then(r => {
-                            if (!r.ok) {
-                              setData(prev => ({ ...prev, insights: prevInsights }))
-                              setAnalyzingAI(false)
-                            }
-                          })
-                          .catch(() => {
+                  {/* Re-Audit */}
+                  <button
+                    className="ytg-dash-btn-primary"
+                    disabled={analyzingAI}
+                    onClick={() => {
+                      const prevInsights = data?.insights
+                      setAnalyzingAI(true)
+                      setData(prev => ({ ...prev, insights: null }))
+                      fetch('/auth/refresh-analysis', { method: 'POST', credentials: 'include' })
+                        .then(r => {
+                          if (!r.ok) {
                             setData(prev => ({ ...prev, insights: prevInsights }))
                             setAnalyzingAI(false)
-                          })
-                      }}
-                      style={{ opacity: analyzingAI ? 0.65 : 1 }}
-                    >
-                      <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
-                        <path d="M11.5 2A6 6 0 1 0 12 6.5"/><path d="M11.5 2v3h-3"/>
-                      </svg>
-                      {analyzingAI ? 'Auditing…' : <><span>Re-Audit</span><span style={{ fontSize: 11, fontWeight: 500, color: 'rgba(255,255,255,0.6)', marginLeft: 2 }}>· 1 credit</span></>}
-                    </button>
-                  )}
+                          }
+                        })
+                        .catch(() => {
+                          setData(prev => ({ ...prev, insights: prevInsights }))
+                          setAnalyzingAI(false)
+                        })
+                    }}
+                    style={{ opacity: analyzingAI ? 0.65 : 1 }}
+                  >
+                    <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+                      <path d="M11.5 2A6 6 0 1 0 12 6.5"/><path d="M11.5 2v3h-3"/>
+                    </svg>
+                    {analyzingAI ? 'Auditing…' : <><span>Re-Audit</span><span style={{ fontSize: 11, fontWeight: 500, color: 'rgba(255,255,255,0.6)', marginLeft: 2 }}>· 1 credit</span></>}
+                  </button>
 
                   {/* Refresh stats — with flash feedback */}
                   <button
