@@ -556,10 +556,10 @@ export default function VideoOptimizePanel({ video, onClose, onVideoUpdated }) {
               {/* Suggested titles */}
               {titleResult.suggestions?.length > 0 && (
                 <div>
-                  <p style={{ fontSize: 12, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 10 }}>
+                  <p style={{ fontSize: 13, fontWeight: 600, color: C.text3, marginBottom: 12 }}>
                     AI-Suggested Titles — select one to apply
                   </p>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 14 }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 16 }}>
                     {titleResult.suggestions.map((s, i) => {
                       const hm = HOOK_META[s.hook] || HOOK_META.curiosity
                       const isSelc = selectedSuggestion === i
@@ -568,35 +568,62 @@ export default function VideoOptimizePanel({ video, onClose, onVideoUpdated }) {
                           onClick={() => { setSelectedSuggestion(i); setTitleApply('idle') }}
                           style={{
                             border: `1.5px solid ${isSelc ? C.red : C.border}`,
+                            borderTop: `3px solid ${isSelc ? C.red : hm.color}`,
                             borderRadius: 12, background: C.card, cursor: 'pointer',
                             transition: 'border-color 0.15s, box-shadow 0.15s',
-                            boxShadow: isSelc ? '0 0 0 3px rgba(229,37,27,0.08)' : 'none',
+                            boxShadow: isSelc ? '0 0 0 3px rgba(229,37,27,0.08)' : '0 1px 4px rgba(0,0,0,0.05)',
                           }}>
-                          <div style={{ padding: '11px 14px' }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-                              <span style={{ fontSize: 12, fontWeight: 800, color: hm.color, background: C.surface, padding: '2px 10px', borderRadius: 100, textTransform: 'uppercase', letterSpacing: '0.07em', border: `1px solid ${C.border}` }}>{hm.label}</span>
-                              <span style={{ fontSize: 14, color: C.text3 }}>{hm.desc}</span>
+
+                          {/* Header row */}
+                          <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10, padding: '14px 16px 12px' }}>
+                            <div style={{ width: 26, height: 26, borderRadius: 8, background: hm.color, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 1 }}>
+                              <span style={{ fontSize: 12, fontWeight: 900, color: '#fff' }}>{i + 1}</span>
                             </div>
-                            <p style={{ fontSize: 16, fontWeight: 600, color: C.text1, lineHeight: 1.4, marginBottom: 6 }}>{s.title}</p>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
-                              <span style={{ fontSize: 12, color: s.length >= 50 && s.length <= 70 ? C.green : C.amber, fontWeight: 600 }}>{s.length} chars</span>
-                              {s.power_words_found?.map(w => (
-                                <span key={w} style={{ fontSize: 12, fontWeight: 700, background: C.surface, color: C.text2, padding: '2px 8px', borderRadius: 100, textTransform: 'uppercase', border: `1px solid ${C.border}` }}>{w}</span>
-                              ))}
-                              <div style={{ marginLeft: 'auto', display: 'flex', gap: 14 }}>
-                                {s.seo_score  > 0 && <div style={{ textAlign: 'center' }}><p style={{ fontSize: 14, fontWeight: 800, color: s.seo_score  >= 70 ? C.green : s.seo_score  >= 50 ? C.amber : C.red, lineHeight: 1 }}>{s.seo_score}</p><p style={{ fontSize: 11, color: C.text3, marginTop: 2 }}>SEO</p></div>}
-                                {s.ctr_score  > 0 && <div style={{ textAlign: 'center' }}><p style={{ fontSize: 14, fontWeight: 800, color: s.ctr_score  >= 70 ? C.green : s.ctr_score  >= 50 ? C.amber : C.red, lineHeight: 1 }}>{s.ctr_score}</p><p style={{ fontSize: 11, color: C.text3, marginTop: 2 }}>CTR</p></div>}
-                                {s.hook_score > 0 && <div style={{ textAlign: 'center' }}><p style={{ fontSize: 14, fontWeight: 800, color: s.hook_score >= 70 ? C.green : s.hook_score >= 50 ? C.amber : C.red, lineHeight: 1 }}>{s.hook_score}</p><p style={{ fontSize: 11, color: C.text3, marginTop: 2 }}>Hook</p></div>}
+                            <div style={{ flex: 1, minWidth: 0 }}>
+                              <p style={{ fontSize: 10, fontWeight: 700, color: hm.color, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 4 }}>{hm.label}</p>
+                              <p style={{ fontSize: 15, fontWeight: 700, color: C.text1, lineHeight: 1.45 }}>{s.title}</p>
+                            </div>
+                            <span style={{ fontSize: 10, fontWeight: 700, color: s.length >= 50 && s.length <= 70 ? C.green : C.amber, padding: '3px 9px', borderRadius: 20, border: `1.5px solid ${s.length >= 50 && s.length <= 70 ? C.green : C.amber}`, flexShrink: 0, marginTop: 2 }}>
+                              {s.length} chars
+                            </span>
+                          </div>
+
+                          {/* Divider */}
+                          <div style={{ height: 1, background: C.borderFaint, marginLeft: 52 }} />
+
+                          {/* 3-col body */}
+                          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr 1fr', gap: 8, padding: '12px 16px 14px', marginLeft: 36 }}>
+
+                            {/* Why it works */}
+                            <div style={{ background: 'rgba(79,134,247,0.07)', border: '1px solid rgba(79,134,247,0.12)', borderRadius: 10, padding: '10px 12px' }}>
+                              <p style={{ fontSize: 10, fontWeight: 700, color: '#4a7cf7', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 5 }}>Why it works</p>
+                              <p style={{ fontSize: 13, color: C.text1, lineHeight: 1.65 }}>{s.why_it_works || hm.desc}</p>
+                            </div>
+
+                            {/* Hook type */}
+                            <div style={{ background: '#fff', border: `1px solid ${C.border}`, borderLeft: `3px solid ${hm.color}`, borderRadius: '0 10px 10px 0', padding: '10px 14px', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
+                              <p style={{ fontSize: 10, fontWeight: 700, color: hm.color, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 5 }}>Hook strategy</p>
+                              <p style={{ fontSize: 13, color: C.text1, lineHeight: 1.65 }}>{hm.desc}</p>
+                              {s.power_words_found?.length > 0 && (
+                                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4, marginTop: 8 }}>
+                                  {s.power_words_found.map(w => (
+                                    <span key={w} style={{ fontSize: 11, fontWeight: 700, background: C.surface, color: C.text2, padding: '1px 7px', borderRadius: 100, textTransform: 'uppercase', border: `1px solid ${C.border}` }}>{w}</span>
+                                  ))}
+                                </div>
+                              )}
+                            </div>
+
+                            {/* Scores */}
+                            <div style={{ background: 'rgba(5,150,105,0.07)', border: '1px solid rgba(5,150,105,0.14)', borderRadius: 10, padding: '10px 12px' }}>
+                              <p style={{ fontSize: 10, fontWeight: 700, color: C.green, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>Scores</p>
+                              <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                                {s.seo_score  > 0 && <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}><span style={{ fontSize: 12, color: C.text3 }}>SEO</span><span style={{ fontSize: 14, fontWeight: 800, color: s.seo_score  >= 70 ? C.green : s.seo_score  >= 50 ? C.amber : C.red }}>{s.seo_score}</span></div>}
+                                {s.ctr_score  > 0 && <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}><span style={{ fontSize: 12, color: C.text3 }}>CTR</span><span style={{ fontSize: 14, fontWeight: 800, color: s.ctr_score  >= 70 ? C.green : s.ctr_score  >= 50 ? C.amber : C.red }}>{s.ctr_score}</span></div>}
+                                {s.hook_score > 0 && <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}><span style={{ fontSize: 12, color: C.text3 }}>Hook</span><span style={{ fontSize: 14, fontWeight: 800, color: s.hook_score >= 70 ? C.green : s.hook_score >= 50 ? C.amber : C.red }}>{s.hook_score}</span></div>}
                               </div>
                             </div>
+
                           </div>
-                          {s.why_it_works && (
-                            <div style={{ padding: '10px 14px 12px', borderTop: `1px solid ${C.borderFaint}` }}>
-                              <p style={{ fontSize: 14, color: C.text3, lineHeight: 1.55 }}>
-                                <span style={{ fontWeight: 700, color: C.text2 }}>Why it works: </span>{s.why_it_works}
-                              </p>
-                            </div>
-                          )}
                         </div>
                       )
                     })}

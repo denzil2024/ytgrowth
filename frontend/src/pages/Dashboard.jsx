@@ -1456,7 +1456,7 @@ export default function Dashboard() {
               </div>
 
               {/* Card grid */}
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, minmax(0, 1fr))', gap: 16 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, minmax(0, 1fr))', gap: 14 }}>
                 {[...videos].sort((a, b) => {
                   if (videoSort === 'views') return (b.views || 0) - (a.views || 0)
                   if (videoSort === 'likes') return (b.likes || 0) - (a.likes || 0)
