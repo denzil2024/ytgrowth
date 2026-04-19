@@ -726,7 +726,9 @@ export default function Dashboard() {
   useDashboardStyles()
 
   const [data,    setData]   = useState(null)
-  const [videos,  setVideos] = useState(null)
+  const [videos,       setVideos]       = useState(null)
+  const [videoSort,    setVideoSort]    = useState('date')   // 'date' | 'views' | 'likes'
+  const [videoFlash,   setVideoFlash]   = useState(null)     // 'ok' | 'err' | null
   const [error,   setError]  = useState(null)
   const [loading, setLoad]   = useState(true)
   const [nav,     setNav]    = useState('Overview')
@@ -1395,34 +1397,64 @@ export default function Dashboard() {
                   <h2 style={{ fontSize: 26, fontWeight: 800, color: C.text1, letterSpacing: '-0.7px', marginBottom: 5 }}>Video performance</h2>
                   <p style={{ fontSize: 14, color: C.text3, letterSpacing: '-0.1px' }}>{videos.length} videos — click Optimise to get AI feedback on title, description &amp; thumbnail</p>
                 </div>
-                <button
-                  className="ytg-dash-btn"
-                  disabled={refreshingStats}
-                  onClick={() => {
-                    setRefreshingStats(true)
-                    fetch('/auth/refresh-stats', { method: 'POST', credentials: 'include' })
-                      .then(r => r.json())
-                      .then(d => {
-                        if (!d.error) {
-                          setData(prev => ({ ...prev, channel: d.channel, videos: d.videos, stats_fetched_at: d.stats_fetched_at }))
-                          setVideos(d.videos || [])
-                        }
-                      })
-                      .catch(() => {})
-                      .finally(() => setRefreshingStats(false))
-                  }}
-                  style={{ flexShrink: 0, marginBottom: 2 }}
-                >
-                  <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
-                    <path d="M11.5 2A6 6 0 1 0 12 6.5"/><path d="M11.5 2v3h-3"/>
-                  </svg>
-                  {refreshingStats ? 'Refreshing…' : 'Refresh'}
-                </button>
+                <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexShrink: 0 }}>
+                  <select
+                    value={videoSort}
+                    onChange={e => setVideoSort(e.target.value)}
+                    style={{
+                      fontSize: 13, fontWeight: 500, color: C.text2,
+                      background: '#fff', border: `1px solid ${C.border}`,
+                      borderRadius: 8, padding: '6px 10px', cursor: 'pointer',
+                      fontFamily: 'inherit', outline: 'none',
+                    }}
+                  >
+                    <option value="date">Newest first</option>
+                    <option value="views">Most views</option>
+                    <option value="likes">Most likes</option>
+                  </select>
+                  <button
+                    className="ytg-dash-btn"
+                    disabled={refreshingStats}
+                    onClick={() => {
+                      setRefreshingStats(true)
+                      setVideoFlash(null)
+                      fetch('/auth/refresh-stats', { method: 'POST', credentials: 'include' })
+                        .then(r => r.json())
+                        .then(d => {
+                          if (!d.error) {
+                            setData(prev => ({ ...prev, channel: d.channel, videos: d.videos, stats_fetched_at: d.stats_fetched_at }))
+                            setVideos(d.videos || [])
+                            setVideoFlash('ok')
+                          } else {
+                            setVideoFlash('err')
+                          }
+                        })
+                        .catch(() => setVideoFlash('err'))
+                        .finally(() => {
+                          setRefreshingStats(false)
+                          setTimeout(() => setVideoFlash(null), 3000)
+                        })
+                    }}
+                    style={{ flexShrink: 0 }}
+                  >
+                    <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+                      <path d="M11.5 2A6 6 0 1 0 12 6.5"/><path d="M11.5 2v3h-3"/>
+                    </svg>
+                    {refreshingStats ? 'Refreshing…'
+                      : videoFlash === 'ok'  ? <span style={{ color: C.green }}>Updated ✓</span>
+                      : videoFlash === 'err' ? <span style={{ color: C.red }}>Failed ✕</span>
+                      : 'Refresh'}
+                  </button>
+                </div>
               </div>
 
               {/* Card grid */}
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, minmax(0, 1fr))', gap: 14 }}>
-                {videos.map((v, i) => {
+                {[...videos].sort((a, b) => {
+                  if (videoSort === 'views') return (b.views || 0) - (a.views || 0)
+                  if (videoSort === 'likes') return (b.likes || 0) - (a.likes || 0)
+                  return (parseUTC(b.published_at) || 0) - (parseUTC(a.published_at) || 0)
+                }).map((v, i) => {
                   const lr      = v.views > 0 ? (v.likes / v.views * 100).toFixed(1) : null
                   const lrN     = lr !== null ? parseFloat(lr) : null
                   const lrColor = lrN === null ? C.text3 : lrN >= 3 ? C.green : lrN >= 1 ? C.amber : C.red
@@ -1464,7 +1496,7 @@ export default function Dashboard() {
                           display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden',
                         }}>{v.title}</p>
                         <p style={{ fontSize: 12, color: C.text3, marginBottom: 14 }}>
-                          {new Date(v.published_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
+                          {(parseUTC(v.published_at) || new Date()).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
                         </p>
 
                         {/* Stats row */}
