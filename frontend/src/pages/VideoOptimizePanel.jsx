@@ -314,6 +314,22 @@ export default function VideoOptimizePanel({ video, onClose, onVideoUpdated }) {
 
   async function runAnalysis() {
     setVideoLoading(true); setTitleLoading(true)
+
+    // Step 1: detect the keyword for relevance-based analysis (same as SEO Studio)
+    let keyword = ''
+    try {
+      const intentRes = await fetch(`${API}/seo/intent-options`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title: video.title }),
+      })
+      if (intentRes.ok) {
+        const intentData = await intentRes.json()
+        keyword = intentData.options?.[0] || ''
+      }
+    } catch {}
+
+    // Step 2: run video analysis + keyword-aware title analysis in parallel
     const [videoRes, titleRes] = await Promise.allSettled([
       fetch(`${API}/seo/optimize-video`, {
         method: 'POST', credentials: 'include',
@@ -323,7 +339,7 @@ export default function VideoOptimizePanel({ video, onClose, onVideoUpdated }) {
       fetch(`${API}/seo/analyze`, {
         method: 'POST', credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title: video.title, confirmed_keyword: '' }),
+        body: JSON.stringify({ title: video.title, confirmed_keyword: keyword }),
       }),
     ])
     if (videoRes.status === 'fulfilled') {
