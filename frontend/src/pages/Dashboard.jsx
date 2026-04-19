@@ -1392,7 +1392,7 @@ export default function Dashboard() {
             <>
               <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 24 }}>
                 <div>
-                  <h2 style={{ fontSize: 24, fontWeight: 800, color: '#0a0a0f', letterSpacing: '-0.7px', marginBottom: 5 }}>Video performance</h2>
+                  <h2 style={{ fontSize: 26, fontWeight: 800, color: C.text1, letterSpacing: '-0.7px', marginBottom: 5 }}>Video performance</h2>
                   <p style={{ fontSize: 14, color: C.text3, letterSpacing: '-0.1px' }}>{videos.length} videos — click Optimise to get AI feedback on title, description &amp; thumbnail</p>
                 </div>
                 <button
@@ -1460,8 +1460,8 @@ export default function Dashboard() {
                       <div style={{ padding: '14px 16px 16px', display: 'flex', flexDirection: 'column', flex: 1 }}>
                         {/* Title */}
                         <p style={{
-                          fontSize: 14, fontWeight: 600, color: C.text1, lineHeight: 1.45, marginBottom: 5,
-                          display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden',
+                          fontSize: 15, fontWeight: 600, color: C.text1, lineHeight: 1.45, marginBottom: 5,
+                          display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden',
                         }}>{v.title}</p>
                         <p style={{ fontSize: 12, color: C.text3, marginBottom: 14 }}>
                           {new Date(v.published_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
@@ -1472,7 +1472,7 @@ export default function Dashboard() {
                           {[['Views', fmtNum(v.views), C.text1, true], ['Likes', fmtNum(v.likes), C.text2, false], ['Comments', fmtNum(v.comments), C.text2, false]].map(([label, val, col, bold]) => (
                             <div key={label}>
                               <p style={{ fontSize: 16, fontWeight: bold ? 800 : 600, color: col, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.5px', lineHeight: 1 }}>{val}</p>
-                              <p style={{ fontSize: 12, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.05em', marginTop: 3 }}>{label}</p>
+                              <p style={{ fontSize: 12, fontWeight: 500, color: C.text3, marginTop: 3 }}>{label}</p>
                             </div>
                           ))}
                         </div>
