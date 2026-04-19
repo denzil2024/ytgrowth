@@ -1055,7 +1055,8 @@ export default function Dashboard() {
               )}
               <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 24 }}>
                 <div>
-                  <h1 style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.6px', marginBottom: 6 }}>Good to see you{data.channel.channel_name ? `, ${data.channel.channel_name}` : ''}.</h1>
+                  <h1 style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.6px', marginBottom: 6 }}>
+                    Good to see you{data.channel.channel_name ? <>, <span style={{ color: C.red }}>{data.channel.channel_name}</span></> : ''}.</h1>
                   <p style={{ fontSize: 13, color: C.text3, display: 'flex', gap: 0, flexWrap: 'wrap' }}>
                     {data.stats_fetched_at && (
                       <span>Stats from {relTime(data.stats_fetched_at)}</span>
