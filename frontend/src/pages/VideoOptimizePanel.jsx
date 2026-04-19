@@ -644,28 +644,41 @@ export default function VideoOptimizePanel({ video, onClose, onVideoUpdated }) {
           {/* ── DESCRIPTION ── */}
           {a && (
             <Section title="Description">
-              <div style={{ marginBottom: 14 }}>
-                <ScoreBar score={a.description.score} label="Quality score" />
+              {/* 3-col assessment row */}
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr 1fr', gap: 8, marginBottom: 16 }}>
+
+                {/* Score + verdict */}
+                <div style={{ background: 'rgba(79,134,247,0.07)', border: '1px solid rgba(79,134,247,0.12)', borderRadius: 10, padding: '12px 14px' }}>
+                  <p style={{ fontSize: 10, fontWeight: 700, color: '#4a7cf7', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>Assessment</p>
+                  <div style={{ marginBottom: 10 }}>
+                    <ScoreBar score={a.description.score} label="Quality score" />
+                  </div>
+                  <p style={{ fontSize: 13, color: C.text1, lineHeight: 1.65 }}>{a.description.verdict}</p>
+                </div>
+
+                {/* Hook quality */}
+                <div style={{ background: '#fff', border: `1px solid ${C.border}`, borderLeft: `3px solid #4a7cf7`, borderRadius: '0 10px 10px 0', padding: '12px 14px', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
+                  <p style={{ fontSize: 10, fontWeight: 700, color: '#4a7cf7', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>Hook — first 150 chars</p>
+                  <p style={{ fontSize: 13, color: C.text1, lineHeight: 1.65 }}>{a.description.hook_quality || 'No hook data available.'}</p>
+                </div>
+
+                {/* Issues */}
+                <div style={{ background: a.description.issues?.length > 0 ? 'rgba(229,37,27,0.05)' : 'rgba(5,150,105,0.07)', border: `1px solid ${a.description.issues?.length > 0 ? C.redBdr : 'rgba(5,150,105,0.14)'}`, borderRadius: 10, padding: '12px 14px' }}>
+                  <p style={{ fontSize: 10, fontWeight: 700, color: a.description.issues?.length > 0 ? C.red : C.green, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>
+                    {a.description.issues?.length > 0 ? 'Issues to fix' : 'No issues'}
+                  </p>
+                  {a.description.issues?.length > 0
+                    ? a.description.issues.map((issue, i) => (
+                        <div key={i} style={{ display: 'flex', gap: 7, alignItems: 'flex-start', marginBottom: 6 }}>
+                          <span style={{ fontSize: 13, color: C.red, fontWeight: 700, flexShrink: 0 }}>✕</span>
+                          <span style={{ fontSize: 13, color: C.text1, lineHeight: 1.55 }}>{issue}</span>
+                        </div>
+                      ))
+                    : <p style={{ fontSize: 13, color: C.green, lineHeight: 1.65 }}>Description looks good.</p>
+                  }
+                </div>
+
               </div>
-              <p style={{ fontSize: 14, color: C.text2, lineHeight: 1.6, marginBottom: 12 }}>{a.description.verdict}</p>
-
-              {a.description.hook_quality && (
-                <div style={{ background: C.surface, borderRadius: 8, padding: '10px 12px', marginBottom: 12, borderLeft: `2px solid ${C.blue}` }}>
-                  <p style={{ fontSize: 12, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 3 }}>Hook — first 150 chars</p>
-                  <p style={{ fontSize: 14, color: C.text2, lineHeight: 1.5 }}>{a.description.hook_quality}</p>
-                </div>
-              )}
-
-              {a.description.issues?.length > 0 && (
-                <div style={{ marginBottom: 14 }}>
-                  {a.description.issues.map((issue, i) => (
-                    <div key={i} style={{ display: 'flex', gap: 8, alignItems: 'flex-start', marginBottom: 5 }}>
-                      <span style={{ fontSize: 14, color: C.red, fontWeight: 700, flexShrink: 0, marginTop: 1 }}>✕</span>
-                      <span style={{ fontSize: 14, color: C.text2, lineHeight: 1.45 }}>{issue}</span>
-                    </div>
-                  ))}
-                </div>
-              )}
 
               {!descResult && (
                 <div style={{ borderTop: `1px solid ${C.borderFaint}`, paddingTop: 14 }}>
@@ -709,34 +722,51 @@ export default function VideoOptimizePanel({ video, onClose, onVideoUpdated }) {
           {/* ── THUMBNAIL ── */}
           {a?.thumbnail && (
             <Section title="Thumbnail">
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: 20, alignItems: 'start' }}>
-                <div>
-                  <div style={{ marginBottom: 14 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr 1fr', gap: 8 }}>
+
+                {/* Score + verdict */}
+                <div style={{ background: 'rgba(79,134,247,0.07)', border: '1px solid rgba(79,134,247,0.12)', borderRadius: 10, padding: '12px 14px' }}>
+                  <p style={{ fontSize: 10, fontWeight: 700, color: '#4a7cf7', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>Assessment</p>
+                  <div style={{ marginBottom: 10 }}>
                     <ScoreBar score={a.thumbnail.score} label="Visual score" />
                   </div>
-                  <p style={{ fontSize: 14, color: C.text2, lineHeight: 1.6, marginBottom: 12 }}>{a.thumbnail.verdict}</p>
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 14 }}>
-                    <CheckBadge value={a.thumbnail.has_text_overlay} trueLabel="Text overlay"    falseLabel="No text overlay" />
-                    <CheckBadge value={a.thumbnail.has_face}         trueLabel="Face present"    falseLabel="No face"         />
-                    <CheckBadge value={a.thumbnail.contrast_strong}  trueLabel="Strong contrast" falseLabel="Weak contrast"   />
+                  <p style={{ fontSize: 13, color: C.text1, lineHeight: 1.65 }}>{a.thumbnail.verdict}</p>
+                </div>
+
+                {/* Checks */}
+                <div style={{ background: '#fff', border: `1px solid ${C.border}`, borderLeft: `3px solid #4a7cf7`, borderRadius: '0 10px 10px 0', padding: '12px 14px', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
+                  <p style={{ fontSize: 10, fontWeight: 700, color: '#4a7cf7', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 12 }}>Visual checks</p>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                    {[
+                      [a.thumbnail.has_text_overlay, 'Text overlay'],
+                      [a.thumbnail.has_face,         'Face present'],
+                      [a.thumbnail.contrast_strong,  'Strong contrast'],
+                    ].map(([val, label]) => (
+                      <div key={label} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                        <span style={{ fontSize: 13, fontWeight: 700, color: val ? C.green : C.red, flexShrink: 0 }}>{val ? '✓' : '✕'}</span>
+                        <span style={{ fontSize: 13, color: C.text1, fontWeight: 500 }}>{label}</span>
+                      </div>
+                    ))}
                   </div>
-                  {a.thumbnail.tips?.length > 0 && (
-                    <div>
-                      <p style={{ fontSize: 12, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 8 }}>Recommendations</p>
-                      {a.thumbnail.tips.map((tip, i) => (
-                        <div key={i} style={{ display: 'flex', gap: 8, alignItems: 'flex-start', marginBottom: 6 }}>
-                          <span style={{ fontSize: 14, color: C.blue, fontWeight: 700, flexShrink: 0, marginTop: 1 }}>→</span>
-                          <span style={{ fontSize: 14, color: C.text2, lineHeight: 1.45 }}>{tip}</span>
+                  <div style={{ marginTop: 12, padding: '10px 12px', background: C.surface, borderRadius: 8 }}>
+                    <p style={{ fontSize: 12, color: C.text3, lineHeight: 1.55 }}>Thumbnails are uploaded manually in YouTube Studio.</p>
+                  </div>
+                </div>
+
+                {/* Tips */}
+                <div style={{ background: 'rgba(5,150,105,0.07)', border: '1px solid rgba(5,150,105,0.14)', borderRadius: 10, padding: '12px 14px' }}>
+                  <p style={{ fontSize: 10, fontWeight: 700, color: C.green, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>Recommendations</p>
+                  {a.thumbnail.tips?.length > 0
+                    ? a.thumbnail.tips.map((tip, i) => (
+                        <div key={i} style={{ display: 'flex', gap: 7, alignItems: 'flex-start', marginBottom: 8 }}>
+                          <span style={{ fontSize: 13, color: C.green, fontWeight: 700, flexShrink: 0 }}>→</span>
+                          <span style={{ fontSize: 13, color: C.text1, lineHeight: 1.55 }}>{tip}</span>
                         </div>
-                      ))}
-                    </div>
-                  )}
+                      ))
+                    : <p style={{ fontSize: 13, color: C.green, lineHeight: 1.65 }}>Thumbnail looks good.</p>
+                  }
                 </div>
-                <div style={{ padding: '12px 16px', background: C.surface, border: `1px solid ${C.border}`, borderRadius: 10, maxWidth: 220 }}>
-                  <p style={{ fontSize: 14, color: C.text3, lineHeight: 1.55 }}>
-                    Thumbnails must be uploaded manually in YouTube Studio. Use these recommendations to guide your redesign.
-                  </p>
-                </div>
+
               </div>
             </Section>
           )}

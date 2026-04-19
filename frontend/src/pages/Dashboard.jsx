@@ -1546,7 +1546,7 @@ export default function Dashboard() {
                       padding: '32px 24px',
                     }}
                   >
-                    <div style={{ width: '100%', maxWidth: 860, maxHeight: 'calc(100vh - 64px)', overflowY: 'auto', borderRadius: 22, flexShrink: 0 }}>
+                    <div style={{ width: '100%', maxWidth: 1080, maxHeight: 'calc(100vh - 64px)', overflowY: 'auto', borderRadius: 22, flexShrink: 0 }}>
                       <VideoOptimizePanel
                         video={sv}
                         onClose={() => setSelectedVideoId(null)}
