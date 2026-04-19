@@ -1449,7 +1449,7 @@ export default function Dashboard() {
               </div>
 
               {/* Card grid */}
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, minmax(0, 1fr))', gap: 14 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, minmax(0, 1fr))', gap: 16 }}>
                 {[...videos].sort((a, b) => {
                   if (videoSort === 'views') return (b.views || 0) - (a.views || 0)
                   if (videoSort === 'likes') return (b.likes || 0) - (a.likes || 0)
@@ -1534,12 +1534,12 @@ export default function Dashboard() {
                     onClick={e => { if (e.target === e.currentTarget) setSelectedVideoId(null) }}
                     style={{
                       position: 'fixed', inset: 0, zIndex: 200,
-                      background: 'rgba(0,0,0,0.45)', backdropFilter: 'blur(3px)',
-                      display: 'flex', alignItems: 'flex-start', justifyContent: 'center',
-                      padding: '40px 24px 24px', overflowY: 'auto',
+                      background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      padding: '32px 24px',
                     }}
                   >
-                    <div style={{ width: '100%', maxWidth: 900, flexShrink: 0 }}>
+                    <div style={{ width: '100%', maxWidth: 860, maxHeight: 'calc(100vh - 64px)', overflowY: 'auto', borderRadius: 22, flexShrink: 0 }}>
                       <VideoOptimizePanel
                         video={sv}
                         onClose={() => setSelectedVideoId(null)}

@@ -184,8 +184,8 @@ function TitlePreviewSimulator({ title }) {
 
 function ApplyButton({ onClick, state, label = 'Apply to YouTube' }) {
   const styles = {
-    idle:    { bg: C.blue,    color: '#fff',    border: C.blue    },
-    loading: { bg: C.blueBg,  color: C.blue,    border: C.blueBdr },
+    idle:    { bg: C.red,     color: '#fff',    border: C.red     },
+    loading: { bg: C.redBg,   color: C.red,     border: C.redBdr  },
     success: { bg: C.greenBg, color: C.green,   border: C.greenBdr},
     error:   { bg: C.redBg,   color: C.red,     border: C.redBdr  },
   }
@@ -198,7 +198,7 @@ function ApplyButton({ onClick, state, label = 'Apply to YouTube' }) {
         background: s.bg, color: s.color, border: `1.5px solid ${s.border}`,
         cursor: state === 'loading' || state === 'success' ? 'default' : 'pointer',
         fontFamily: 'inherit', transition: 'all 0.2s',
-        boxShadow: state === 'idle' ? '0 1px 3px rgba(37,99,235,0.2), 0 4px 12px rgba(37,99,235,0.18)' : 'none',
+        boxShadow: state === 'idle' ? '0 1px 3px rgba(229,37,27,0.2), 0 4px 12px rgba(229,37,27,0.18)' : 'none',
       }}>
       {labels[state] || label}
     </button>
@@ -219,7 +219,7 @@ function SpinIcon() {
 function Section({ title, children }) {
   return (
     <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 16, padding: '20px 22px', marginBottom: 12 }}>
-      {title && <p style={{ fontSize: 12, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 16 }}>{title}</p>}
+      {title && <p style={{ fontSize: 15, fontWeight: 700, color: C.text1, letterSpacing: '-0.3px', marginBottom: 16 }}>{title}</p>}
       {children}
     </div>
   )
@@ -251,7 +251,7 @@ function DescriptionCard({ d, idx, applyState, applyError, onApply }) {
         )}
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <button onClick={() => setExpanded(v => !v)}
-            style={{ fontSize: 12, color: C.blue, background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'inherit', padding: 0, fontWeight: 600 }}>
+            style={{ fontSize: 12, color: C.red, background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'inherit', padding: 0, fontWeight: 600 }}>
             {expanded ? 'Collapse ↑' : 'Show full ↓'}
           </button>
           <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -567,10 +567,10 @@ export default function VideoOptimizePanel({ video, onClose, onVideoUpdated }) {
                         <div key={i}
                           onClick={() => { setSelectedSuggestion(i); setTitleApply('idle') }}
                           style={{
-                            border: `1.5px solid ${isSelc ? C.blue : C.border}`,
+                            border: `1.5px solid ${isSelc ? C.red : C.border}`,
                             borderRadius: 12, background: C.card, cursor: 'pointer',
                             transition: 'border-color 0.15s, box-shadow 0.15s',
-                            boxShadow: isSelc ? '0 0 0 3px rgba(37,99,235,0.08)' : 'none',
+                            boxShadow: isSelc ? '0 0 0 3px rgba(229,37,27,0.08)' : 'none',
                           }}>
                           <div style={{ padding: '11px 14px' }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
@@ -583,10 +583,10 @@ export default function VideoOptimizePanel({ video, onClose, onVideoUpdated }) {
                               {s.power_words_found?.map(w => (
                                 <span key={w} style={{ fontSize: 12, fontWeight: 700, background: C.surface, color: C.text2, padding: '2px 8px', borderRadius: 100, textTransform: 'uppercase', border: `1px solid ${C.border}` }}>{w}</span>
                               ))}
-                              <div style={{ marginLeft: 'auto', display: 'flex', gap: 12 }}>
-                                {s.seo_score  > 0 && <span style={{ fontSize: 12, fontWeight: 700, color: s.seo_score  >= 70 ? C.green : s.seo_score  >= 50 ? C.amber : C.red }}>{s.seo_score} SEO</span>}
-                                {s.ctr_score  > 0 && <span style={{ fontSize: 12, fontWeight: 700, color: s.ctr_score  >= 70 ? C.green : s.ctr_score  >= 50 ? C.amber : C.red }}>{s.ctr_score} CTR</span>}
-                                {s.hook_score > 0 && <span style={{ fontSize: 12, fontWeight: 700, color: s.hook_score >= 70 ? C.green : s.hook_score >= 50 ? C.amber : C.red }}>{s.hook_score} Hook</span>}
+                              <div style={{ marginLeft: 'auto', display: 'flex', gap: 14 }}>
+                                {s.seo_score  > 0 && <div style={{ textAlign: 'center' }}><p style={{ fontSize: 14, fontWeight: 800, color: s.seo_score  >= 70 ? C.green : s.seo_score  >= 50 ? C.amber : C.red, lineHeight: 1 }}>{s.seo_score}</p><p style={{ fontSize: 11, color: C.text3, marginTop: 2 }}>SEO</p></div>}
+                                {s.ctr_score  > 0 && <div style={{ textAlign: 'center' }}><p style={{ fontSize: 14, fontWeight: 800, color: s.ctr_score  >= 70 ? C.green : s.ctr_score  >= 50 ? C.amber : C.red, lineHeight: 1 }}>{s.ctr_score}</p><p style={{ fontSize: 11, color: C.text3, marginTop: 2 }}>CTR</p></div>}
+                                {s.hook_score > 0 && <div style={{ textAlign: 'center' }}><p style={{ fontSize: 14, fontWeight: 800, color: s.hook_score >= 70 ? C.green : s.hook_score >= 50 ? C.amber : C.red, lineHeight: 1 }}>{s.hook_score}</p><p style={{ fontSize: 11, color: C.text3, marginTop: 2 }}>Hook</p></div>}
                               </div>
                             </div>
                           </div>
@@ -647,7 +647,7 @@ export default function VideoOptimizePanel({ video, onClose, onVideoUpdated }) {
                     {titleApply === 'success' && <span style={{ color: C.green, fontWeight: 600 }}> Using your new applied title.</span>}
                   </p>
                   <button onClick={generateDescriptions} disabled={descLoading}
-                    style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '10px 22px', background: !descLoading ? C.blue : C.surface, color: !descLoading ? '#fff' : C.text3, border: 'none', borderRadius: 100, fontSize: 14, fontWeight: 700, fontFamily: 'inherit', cursor: !descLoading ? 'pointer' : 'not-allowed', transition: 'all 0.15s', boxShadow: !descLoading ? '0 1px 3px rgba(37,99,235,0.2), 0 4px 12px rgba(37,99,235,0.18)' : 'none' }}>
+                    style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '10px 22px', background: !descLoading ? C.red : C.surface, color: !descLoading ? '#fff' : C.text3, border: 'none', borderRadius: 100, fontSize: 14, fontWeight: 700, fontFamily: 'inherit', cursor: !descLoading ? 'pointer' : 'not-allowed', transition: 'all 0.15s', boxShadow: !descLoading ? '0 1px 3px rgba(229,37,27,0.2), 0 4px 12px rgba(229,37,27,0.18)' : 'none' }}>
                     {descLoading ? <><SpinIcon /> Generating…</> : <>
                       <svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2"><path d="M7 1l1.5 4.5H13l-3.7 2.7 1.4 4.3L7 10 3.3 12.5l1.4-4.3L1 5.5h4.5z"/></svg>
                       Generate 3 descriptions
