@@ -16,7 +16,7 @@ function useGlobalStyles() {
     const link = document.createElement('link')
     link.id = 'ytg-font'
     link.rel = 'stylesheet'
-    link.href = 'https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700;9..40,800&display=swap'
+    link.href = 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap'
     document.head.appendChild(link)
 
     const style = document.createElement('style')
@@ -41,7 +41,7 @@ function useGlobalStyles() {
       }
       *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
       html { scroll-behavior: smooth; }
-      body { background: var(--ytg-bg); color: var(--ytg-text); font-family: 'DM Sans', system-ui, sans-serif; overflow-x: hidden; }
+      body { background: var(--ytg-bg); color: var(--ytg-text); font-family: 'Inter', system-ui, sans-serif; overflow-x: hidden; }
       @keyframes fadeUp { from { opacity:0; transform:translateY(14px) } to { opacity:1; transform:translateY(0) } }
       .contact-reason-card {
         background: var(--ytg-card);
@@ -121,7 +121,7 @@ export default function Contact() {
   const { isMobile } = useBreakpoint()
 
   return (
-    <div style={{ fontFamily: "'DM Sans', system-ui, sans-serif", background: 'var(--ytg-bg)', color: 'var(--ytg-text)', minHeight: '100vh' }}>
+    <div style={{ fontFamily: "'Inter', system-ui, sans-serif", background: 'var(--ytg-bg)', color: 'var(--ytg-text)', minHeight: '100vh' }}>
 
       {/* Nav */}
       <nav style={{ position: 'sticky', top: 0, zIndex: 100, borderBottom: '1px solid var(--ytg-border)', padding: isMobile ? '0 20px' : '0 40px', height: 60, display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'var(--ytg-nav)', backdropFilter: 'blur(16px)' }}>
@@ -161,7 +161,7 @@ export default function Contact() {
               </div>
               <a
                 href="mailto:support@ytgrowth.io"
-                style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'var(--ytg-accent)', color: '#ffffff', fontFamily: "'DM Sans', system-ui, sans-serif", fontWeight: 700, fontSize: 14, padding: '15px 32px', borderRadius: 100, textDecoration: 'none', whiteSpace: 'nowrap', flexShrink: 0, boxShadow: '0 2px 6px rgba(0,0,0,0.12), 0 8px 28px rgba(229,48,42,0.36)', transition: 'filter 0.18s, transform 0.18s' }}
+                style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'var(--ytg-accent)', color: '#ffffff', fontFamily: "'Inter', system-ui, sans-serif", fontWeight: 700, fontSize: 14, padding: '15px 32px', borderRadius: 100, textDecoration: 'none', whiteSpace: 'nowrap', flexShrink: 0, boxShadow: '0 2px 6px rgba(0,0,0,0.12), 0 8px 28px rgba(229,48,42,0.36)', transition: 'filter 0.18s, transform 0.18s' }}
                 onMouseEnter={e => { e.currentTarget.style.filter = 'brightness(1.07)'; e.currentTarget.style.transform = 'translateY(-1px)' }}
                 onMouseLeave={e => { e.currentTarget.style.filter = 'none'; e.currentTarget.style.transform = 'none' }}
               >
@@ -233,7 +233,7 @@ export default function Contact() {
               { label: 'Affiliates',       href: '/affiliate' },
               { label: 'Log in',           href: '/auth/login' },
             ].map((l, i) => (
-              <a key={i} href={l.href} style={{ fontSize: 14, color: 'rgba(255,255,255,0.38)', textDecoration: 'none', fontFamily: "'DM Sans', system-ui, sans-serif" }}
+              <a key={i} href={l.href} style={{ fontSize: 14, color: 'rgba(255,255,255,0.38)', textDecoration: 'none', fontFamily: "'Inter', system-ui, sans-serif" }}
                 onMouseEnter={e => e.currentTarget.style.color = 'rgba(255,255,255,0.72)'}
                 onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.38)'}
               >{l.label}</a>
