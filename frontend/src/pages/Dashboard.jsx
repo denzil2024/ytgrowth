@@ -1066,36 +1066,27 @@ export default function Dashboard() {
                   </p>
                 </div>
                 <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexShrink: 0, marginBottom: 2 }}>
-                  {/* Re-Audit — disabled + warning banner when out of credits */}
-                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 5 }}>
-                    {(() => {
-                      const auditDate = parseUTC(data.analyzed_at)
-                      const daysOld = auditDate ? (Date.now() - auditDate.getTime()) / 86400000 : 0
-                      return daysOld > 7 && usagePct < 100 ? (
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 5, background: C.amberBg, border: `1px solid ${C.amberBdr}`, borderRadius: 8, padding: '5px 10px' }}>
-                          <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke={C.amber} strokeWidth="1.8" strokeLinecap="round"><circle cx="6" cy="6" r="5"/><line x1="6" y1="3.5" x2="6" y2="6.5"/><circle cx="6" cy="8.5" r="0.6" fill={C.amber} stroke="none"/></svg>
-                          <span style={{ fontSize: 11, fontWeight: 600, color: C.amber }}>Audit may be outdated</span>
-                        </div>
-                      ) : null
-                    })()}
-                    {usagePct >= 100 && (
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 6, background: C.redBg, border: `1px solid ${C.redBdr}`, borderRadius: 8, padding: '5px 10px' }}>
-                        <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke={C.red} strokeWidth="1.8" strokeLinecap="round"><circle cx="6" cy="6" r="5"/><line x1="6" y1="3.5" x2="6" y2="6.5"/><circle cx="6" cy="8.5" r="0.6" fill={C.red} stroke="none"/></svg>
-                        <span style={{ fontSize: 11, fontWeight: 600, color: C.red }}>No credits left —&nbsp;</span>
-                        <span
-                          onClick={() => window.location.href = '/?tab=monthly'}
-                          style={{ fontSize: 11, fontWeight: 700, color: C.red, textDecoration: 'underline', textUnderlineOffset: 2, cursor: 'pointer' }}
-                        >Upgrade</span>
-                        <span style={{ fontSize: 11, color: C.red }}>&nbsp;or&nbsp;</span>
-                        <span
-                          onClick={() => window.location.href = '/?tab=packs'}
-                          style={{ fontSize: 11, fontWeight: 700, color: C.red, textDecoration: 'underline', textUnderlineOffset: 2, cursor: 'pointer' }}
-                        >buy a pack</span>
-                      </div>
-                    )}
+                  {/* Stale nudge — inline, only when credits available */}
+                  {(() => {
+                    const auditDate = parseUTC(data.analyzed_at)
+                    const daysOld = auditDate ? (Date.now() - auditDate.getTime()) / 86400000 : 0
+                    return daysOld > 7 && usagePct < 100 ? (
+                      <span style={{ fontSize: 11, fontWeight: 600, color: C.amber }}>Audit may be outdated</span>
+                    ) : null
+                  })()}
+
+                  {/* Re-Audit: normal state OR no-credits state (single button, no stacking) */}
+                  {usagePct >= 100 ? (
+                    <button
+                      className="ytg-dash-btn"
+                      onClick={() => window.location.href = '/?tab=monthly'}
+                    >
+                      No credits · Upgrade →
+                    </button>
+                  ) : (
                     <button
                       className="ytg-dash-btn-primary"
-                      disabled={analyzingAI || usagePct >= 100}
+                      disabled={analyzingAI}
                       onClick={() => {
                         const prevInsights = data?.insights
                         setAnalyzingAI(true)
@@ -1112,14 +1103,14 @@ export default function Dashboard() {
                             setAnalyzingAI(false)
                           })
                       }}
-                      style={{ opacity: (analyzingAI || usagePct >= 100) ? 0.55 : 1 }}
+                      style={{ opacity: analyzingAI ? 0.65 : 1 }}
                     >
                       <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
                         <path d="M11.5 2A6 6 0 1 0 12 6.5"/><path d="M11.5 2v3h-3"/>
                       </svg>
                       {analyzingAI ? 'Auditing…' : <><span>Re-Audit</span><span style={{ fontSize: 11, fontWeight: 500, color: 'rgba(255,255,255,0.6)', marginLeft: 2 }}>· 1 credit</span></>}
                     </button>
-                  </div>
+                  )}
 
                   {/* Refresh stats — with flash feedback */}
                   <button
