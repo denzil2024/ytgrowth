@@ -1055,7 +1055,7 @@ export default function Dashboard() {
               )}
               <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 24 }}>
                 <div>
-                  <h1 style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.6px', marginBottom: 6 }}>
+                  <h1 style={{ fontSize: 24, fontWeight: 800, color: C.text1, letterSpacing: '-0.6px', marginBottom: 6 }}>
                     Good to see you{data.channel.channel_name ? <>, <span style={{ color: C.red }}>{data.channel.channel_name}</span></> : ''}.</h1>
                   <p style={{ fontSize: 13, color: C.text3, display: 'flex', gap: 0, flexWrap: 'wrap' }}>
                     {data.stats_fetched_at && (
@@ -1198,7 +1198,7 @@ export default function Dashboard() {
           {data && nav === 'Overview' && data.insights && (
             <>
               <div style={{ marginBottom: 20, marginTop: 44 }}>
-                <h2 style={{ fontSize: 20, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', marginBottom: 4 }}>Channel audit</h2>
+                <h2 style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', marginBottom: 4 }}>Channel audit</h2>
                 <p style={{ fontSize: 13, color: C.text3 }}>{data.insights.priorityActions?.length ?? 0} priority actions{data.analyzed_at ? ` · Audited ${parseUTC(data.analyzed_at)?.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) ?? ''}` : ''}</p>
               </div>
 
@@ -1274,7 +1274,7 @@ export default function Dashboard() {
                   <div style={{ marginBottom: 24 }}>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                        <p style={{ fontSize: 18, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px' }}>Priority actions</p>
+                        <p style={{ fontSize: 20, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px' }}>Priority actions</p>
                         <span style={{ fontSize: 11, fontWeight: 700, color: C.text3, background: '#f1f1f6', padding: '2px 8px', borderRadius: 20, border: '1px solid #e6e6ec' }}>{actions.length}</span>
                       </div>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
@@ -1529,7 +1529,7 @@ export default function Dashboard() {
           {data && nav === 'Overview' && patterns && (
             <>
               <div style={{ marginBottom: 20, marginTop: 44 }}>
-                <h2 style={{ fontSize: 20, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', marginBottom: 4 }}>Content patterns</h2>
+                <h2 style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', marginBottom: 4 }}>Content patterns</h2>
                 <p style={{ fontSize: 13, color: C.text3 }}>What's working and what isn't</p>
               </div>
 
