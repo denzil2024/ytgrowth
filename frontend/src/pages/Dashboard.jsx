@@ -993,20 +993,43 @@ export default function Dashboard() {
           background: 'rgba(241,241,246,0.95)',
           backdropFilter: 'blur(20px)',
           WebkitBackdropFilter: 'blur(20px)',
-          padding: '0 32px', height: 52,
+          padding: '0 32px', height: 58,
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
           position: 'sticky', top: 0, zIndex: 10,
         }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          {/* Left: nav label + channel info */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
             <span style={{ fontSize: 14, fontWeight: 700, color: C.text1, letterSpacing: '-0.3px' }}>{nav}</span>
-            {data && <>
-              <span style={{ color: C.border, fontSize: 14 }}>·</span>
-              <span style={{ fontSize: 13, fontWeight: 400, color: C.text3, letterSpacing: '-0.1px' }}>{data.channel.channel_name}</span>
-            </>}
+            {data && (
+              <>
+                <div style={{ width: 1, height: 20, background: C.border }} />
+                <div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
+                  {data.channel.channel_thumbnail
+                    ? <img src={data.channel.channel_thumbnail} alt="" style={{ width: 28, height: 28, borderRadius: '50%', objectFit: 'cover', border: `1.5px solid ${C.border}`, flexShrink: 0 }} />
+                    : <div style={{ width: 28, height: 28, borderRadius: '50%', background: C.surface, border: `1.5px solid ${C.border}`, flexShrink: 0 }} />
+                  }
+                  <div>
+                    <p style={{ fontSize: 13, fontWeight: 600, color: C.text1, letterSpacing: '-0.2px', lineHeight: 1 }}>{data.channel.channel_name}</p>
+                    {data.channel.subscribers > 0 && (
+                      <p style={{ fontSize: 11, color: C.text3, marginTop: 2 }}>{fmtSubs(data.channel.subscribers)} subscribers</p>
+                    )}
+                  </div>
+                </div>
+              </>
+            )}
           </div>
-          <div style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 100, padding: '5px 14px', display: 'flex', alignItems: 'center', gap: 6, boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
-            <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#22c55e' }}/>
-            <span style={{ fontSize: 12, color: C.text3, fontWeight: 600 }}>Connected</span>
+
+          {/* Right: last updated + connected */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            {data?.stats_fetched_at && (
+              <span style={{ fontSize: 11.5, color: C.text3, fontWeight: 500 }}>
+                Updated {relTime(data.stats_fetched_at)}
+              </span>
+            )}
+            <div style={{ background: C.greenBg, border: `1px solid ${C.greenBdr}`, borderRadius: 100, padding: '5px 12px', display: 'flex', alignItems: 'center', gap: 5 }}>
+              <div style={{ width: 6, height: 6, borderRadius: '50%', background: C.green }}/>
+              <span style={{ fontSize: 11.5, color: C.green, fontWeight: 700 }}>Connected</span>
+            </div>
           </div>
         </div>
 
