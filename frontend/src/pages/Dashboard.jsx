@@ -147,19 +147,14 @@ function useDashboardStyles() {
       .ytg-optimise-btn {
         display: inline-flex; align-items: center; gap: 6px;
         padding: 6px 14px; border-radius: 100px;
-        border: 1px solid rgba(255,255,255,0.18);
+        border: none;
         font-family: 'Inter', system-ui, sans-serif; font-size: 11.5px; font-weight: 700;
-        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        background: #e5251b;
         color: #fff; cursor: pointer; letter-spacing: 0.01em;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.28), 0 8px 24px rgba(0,0,0,0.22), 0 1px 0 rgba(255,255,255,0.08) inset;
-        transition: all 0.18s;
-        backdrop-filter: blur(8px);
+        transition: filter 0.15s;
       }
       .ytg-optimise-btn:hover {
-        background: linear-gradient(135deg, #252540 0%, #1e2d50 100%);
-        box-shadow: 0 4px 12px rgba(0,0,0,0.35), 0 16px 40px rgba(0,0,0,0.28), 0 1px 0 rgba(255,255,255,0.12) inset;
-        transform: translateY(-1px);
-        border-color: rgba(255,255,255,0.25);
+        filter: brightness(1.1);
       }
     `
     document.head.appendChild(style)
