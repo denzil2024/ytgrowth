@@ -1055,7 +1055,7 @@ export default function Dashboard() {
               )}
               <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 24 }}>
                 <div>
-                  <h1 style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.6px', marginBottom: 6 }}>Good to see you.</h1>
+                  <h1 style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.6px', marginBottom: 6 }}>Good to see you{data.channel.channel_name ? `, ${data.channel.channel_name}` : ''}.</h1>
                   <p style={{ fontSize: 13, color: C.text3, display: 'flex', gap: 0, flexWrap: 'wrap' }}>
                     {data.stats_fetched_at && (
                       <span>Stats from {relTime(data.stats_fetched_at)}</span>
@@ -1068,6 +1068,16 @@ export default function Dashboard() {
                 <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexShrink: 0, marginBottom: 2 }}>
                   {/* Re-Audit — disabled + warning banner when out of credits */}
                   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 5 }}>
+                    {(() => {
+                      const auditDate = parseUTC(data.analyzed_at)
+                      const daysOld = auditDate ? (Date.now() - auditDate.getTime()) / 86400000 : 0
+                      return daysOld > 7 && usagePct < 100 ? (
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 5, background: C.amberBg, border: `1px solid ${C.amberBdr}`, borderRadius: 8, padding: '5px 10px' }}>
+                          <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke={C.amber} strokeWidth="1.8" strokeLinecap="round"><circle cx="6" cy="6" r="5"/><line x1="6" y1="3.5" x2="6" y2="6.5"/><circle cx="6" cy="8.5" r="0.6" fill={C.amber} stroke="none"/></svg>
+                          <span style={{ fontSize: 11, fontWeight: 600, color: C.amber }}>Audit may be outdated</span>
+                        </div>
+                      ) : null
+                    })()}
                     {usagePct >= 100 && (
                       <div style={{ display: 'flex', alignItems: 'center', gap: 6, background: C.redBg, border: `1px solid ${C.redBdr}`, borderRadius: 8, padding: '5px 10px' }}>
                         <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke={C.red} strokeWidth="1.8" strokeLinecap="round"><circle cx="6" cy="6" r="5"/><line x1="6" y1="3.5" x2="6" y2="6.5"/><circle cx="6" cy="8.5" r="0.6" fill={C.red} stroke="none"/></svg>
