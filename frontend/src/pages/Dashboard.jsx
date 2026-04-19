@@ -1402,10 +1402,17 @@ export default function Dashboard() {
                     value={videoSort}
                     onChange={e => setVideoSort(e.target.value)}
                     style={{
-                      fontSize: 13, fontWeight: 500, color: C.text2,
-                      background: '#fff', border: `1px solid ${C.border}`,
-                      borderRadius: 8, padding: '6px 10px', cursor: 'pointer',
-                      fontFamily: 'inherit', outline: 'none',
+                      display: 'inline-flex', alignItems: 'center',
+                      padding: '9px 16px', borderRadius: 100,
+                      border: '1px solid rgba(0,0,0,0.1)',
+                      fontFamily: 'Inter, system-ui, sans-serif', fontSize: 12.5, fontWeight: 600,
+                      background: '#fff', color: '#52525b', cursor: 'pointer',
+                      boxShadow: '0 1px 3px rgba(0,0,0,0.07), 0 4px 14px rgba(0,0,0,0.07)',
+                      outline: 'none', appearance: 'none',
+                      backgroundImage: `url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%2371717a' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")`,
+                      backgroundRepeat: 'no-repeat',
+                      backgroundPosition: 'right 12px center',
+                      paddingRight: 32,
                     }}
                   >
                     <option value="date">Newest first</option>
