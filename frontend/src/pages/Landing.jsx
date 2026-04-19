@@ -670,7 +670,7 @@ export default function Landing() {
         borderBottom: '1px solid rgba(10,10,15,0.1)',
         boxShadow: scrolled ? '0 2px 12px rgba(0,0,0,0.08)' : 'none',
         transition: 'box-shadow 0.3s ease',
-        height: 72, display: 'flex', alignItems: 'center',
+        height: 60, display: 'flex', alignItems: 'center',
         justifyContent: 'space-between', padding: isMobile ? '0 20px' : '0 48px 0 80px',
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
@@ -720,12 +720,12 @@ export default function Landing() {
       </nav>
 
       {/* Mobile menu overlay */}
-      <div className={`ytg-mobile-menu${mobileMenuOpen ? ' open' : ''}`} style={{ top: 72 }}>
+      <div className={`ytg-mobile-menu${mobileMenuOpen ? ' open' : ''}`} style={{ top: 60 }}>
         {['Features', 'How it works', 'Pricing', 'FAQ', 'Affiliates', 'Contact'].map((l, i) => (
           <a key={i}
             href={l === 'Affiliates' ? '/affiliate' : l === 'Contact' ? '/contact' : `#${l.toLowerCase().replace(/ /g, '-')}`}
             onClick={() => setMobileMenuOpen(false)}
-            style={{ fontSize: 22, fontWeight: 700, color: 'rgba(255,255,255,0.88)', textDecoration: 'none', letterSpacing: '-0.5px' }}>
+            style={{ fontSize: 18, fontWeight: 700, color: 'rgba(255,255,255,0.88)', textDecoration: 'none', letterSpacing: '-0.5px' }}>
             {l}
           </a>
         ))}

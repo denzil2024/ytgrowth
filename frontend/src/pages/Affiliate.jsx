@@ -278,7 +278,7 @@ export default function Affiliate() {
       <section id="aff-hero" className="aff-section-pad" style={{ padding: isMobile ? '72px 20px 60px' : '110px 40px 88px', textAlign: 'center', background: '#ffffff' }}>
         <div style={{ maxWidth: 820, margin: '0 auto', animation: 'fadeUp 0.5s ease both' }}>
           <span className="aff-section-label">Partner Program</span>
-          <h1 className="aff-hero-h1" style={{ fontSize: 58, fontWeight: 800, letterSpacing: '-2.5px', lineHeight: 1.06, color: 'var(--ytg-text)', marginBottom: 24 }}>
+          <h1 className="aff-hero-h1" style={{ fontSize: isMobile ? 36 : 58, fontWeight: 800, letterSpacing: isMobile ? '-1.5px' : '-2.5px', lineHeight: 1.06, color: 'var(--ytg-text)', marginBottom: 24 }}>
             Your audience is already<br />
             buying YouTube tools.<br />
             <span style={{ color: 'var(--ytg-accent)' }}>You should be earning from it.</span>
