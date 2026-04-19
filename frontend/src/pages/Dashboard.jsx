@@ -746,6 +746,8 @@ export default function Dashboard() {
   const [showWelcome, setShowWelcome] = useState(false)
   const [billingPlan, setBillingPlan] = useState(null)
   const [prevScore,   setPrevScore]   = useState(null)
+  const [statsFlash,  setStatsFlash]  = useState(null)  // 'ok' | 'err' | null
+  const [usagePct,    setUsagePct]    = useState(0)
 
   useEffect(() => {
     fetch('/auth/data', { credentials: 'include' })
@@ -966,6 +968,7 @@ export default function Dashboard() {
               email={data.channel?.email}
               dark={false}
               onPlan={setBillingPlan}
+              onUsage={setUsagePct}
             />
           </div>
         )}
@@ -1005,8 +1008,8 @@ export default function Dashboard() {
             </>}
           </div>
           <div style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 100, padding: '5px 14px', display: 'flex', alignItems: 'center', gap: 6, boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
-            <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#22c55e', animation: 'pulse 2.5s infinite' }}/>
-            <span style={{ fontSize: 12, color: C.text3, fontWeight: 600 }}>Live</span>
+            <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#22c55e' }}/>
+            <span style={{ fontSize: 12, color: C.text3, fontWeight: 600 }}>Connected</span>
           </div>
         </div>
 
@@ -1063,38 +1066,58 @@ export default function Dashboard() {
                   </p>
                 </div>
                 <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexShrink: 0, marginBottom: 2 }}>
-                  <button
-                    className="ytg-dash-btn-primary"
-                    disabled={analyzingAI}
-                    onClick={() => {
-                      const prevInsights = data?.insights
-                      setAnalyzingAI(true)
-                      setData(prev => ({ ...prev, insights: null }))
-                      fetch('/auth/refresh-analysis', { method: 'POST', credentials: 'include' })
-                        .then(r => {
-                          if (!r.ok) {
+                  {/* Re-Audit — disabled + warning banner when out of credits */}
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 5 }}>
+                    {usagePct >= 100 && (
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 6, background: C.redBg, border: `1px solid ${C.redBdr}`, borderRadius: 8, padding: '5px 10px' }}>
+                        <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke={C.red} strokeWidth="1.8" strokeLinecap="round"><circle cx="6" cy="6" r="5"/><line x1="6" y1="3.5" x2="6" y2="6.5"/><circle cx="6" cy="8.5" r="0.6" fill={C.red} stroke="none"/></svg>
+                        <span style={{ fontSize: 11, fontWeight: 600, color: C.red }}>No credits left —&nbsp;</span>
+                        <span
+                          onClick={() => window.location.href = '/?tab=monthly'}
+                          style={{ fontSize: 11, fontWeight: 700, color: C.red, textDecoration: 'underline', textUnderlineOffset: 2, cursor: 'pointer' }}
+                        >Upgrade</span>
+                        <span style={{ fontSize: 11, color: C.red }}>&nbsp;or&nbsp;</span>
+                        <span
+                          onClick={() => window.location.href = '/?tab=packs'}
+                          style={{ fontSize: 11, fontWeight: 700, color: C.red, textDecoration: 'underline', textUnderlineOffset: 2, cursor: 'pointer' }}
+                        >buy a pack</span>
+                      </div>
+                    )}
+                    <button
+                      className="ytg-dash-btn-primary"
+                      disabled={analyzingAI || usagePct >= 100}
+                      onClick={() => {
+                        const prevInsights = data?.insights
+                        setAnalyzingAI(true)
+                        setData(prev => ({ ...prev, insights: null }))
+                        fetch('/auth/refresh-analysis', { method: 'POST', credentials: 'include' })
+                          .then(r => {
+                            if (!r.ok) {
+                              setData(prev => ({ ...prev, insights: prevInsights }))
+                              setAnalyzingAI(false)
+                            }
+                          })
+                          .catch(() => {
                             setData(prev => ({ ...prev, insights: prevInsights }))
                             setAnalyzingAI(false)
-                            if (r.status === 402) alert('No credits remaining. Upgrade your plan or buy an analysis pack to re-audit.')
-                          }
-                        })
-                        .catch(() => {
-                          setData(prev => ({ ...prev, insights: prevInsights }))
-                          setAnalyzingAI(false)
-                        })
-                    }}
-                    style={{ opacity: analyzingAI ? 0.65 : 1 }}
-                  >
-                    <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
-                      <path d="M11.5 2A6 6 0 1 0 12 6.5"/><path d="M11.5 2v3h-3"/>
-                    </svg>
-                    {analyzingAI ? 'Auditing…' : <><span>Re-Audit</span><span style={{ fontSize: 11, fontWeight: 500, color: 'rgba(255,255,255,0.6)', marginLeft: 2 }}>· 1 credit</span></>}
-                  </button>
+                          })
+                      }}
+                      style={{ opacity: (analyzingAI || usagePct >= 100) ? 0.55 : 1 }}
+                    >
+                      <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+                        <path d="M11.5 2A6 6 0 1 0 12 6.5"/><path d="M11.5 2v3h-3"/>
+                      </svg>
+                      {analyzingAI ? 'Auditing…' : <><span>Re-Audit</span><span style={{ fontSize: 11, fontWeight: 500, color: 'rgba(255,255,255,0.6)', marginLeft: 2 }}>· 1 credit</span></>}
+                    </button>
+                  </div>
+
+                  {/* Refresh stats — with flash feedback */}
                   <button
                     className="ytg-dash-btn"
                     disabled={refreshingStats}
                     onClick={() => {
                       setRefreshingStats(true)
+                      setStatsFlash(null)
                       fetch('/auth/refresh-stats', { method: 'POST', credentials: 'include' })
                         .then(r => r.json())
                         .then(d => {
@@ -1106,13 +1129,23 @@ export default function Dashboard() {
                               stats_fetched_at: d.stats_fetched_at,
                             }))
                             setVideos(d.videos || [])
+                            setStatsFlash('ok')
+                          } else {
+                            setStatsFlash('err')
                           }
                         })
-                        .catch(() => {})
-                        .finally(() => setRefreshingStats(false))
+                        .catch(() => setStatsFlash('err'))
+                        .finally(() => {
+                          setRefreshingStats(false)
+                          setTimeout(() => setStatsFlash(null), 3000)
+                        })
                     }}
+                    style={{ position: 'relative' }}
                   >
-                    {refreshingStats ? 'Refreshing…' : 'Refresh stats'}
+                    {refreshingStats ? 'Refreshing…'
+                      : statsFlash === 'ok'  ? <span style={{ color: C.green }}>Updated ✓</span>
+                      : statsFlash === 'err' ? <span style={{ color: C.red }}>Failed ✕</span>
+                      : 'Refresh stats'}
                   </button>
                 </div>
               </div>
@@ -1126,7 +1159,7 @@ export default function Dashboard() {
               </div>
 
               {/* Row 2 */}
-              {data.analytics && (
+              {data.analytics ? (
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,minmax(0,1fr))', gap: 16, marginBottom: 0 }}>
                   <Stat label="Views (90d)"    value={fmtNum(data.analytics.views_90d)} />
                   <Stat label="Avg retention"  value={`${data.analytics.avg_retention_percent}%`}
@@ -1144,6 +1177,16 @@ export default function Dashboard() {
                     alert={data.analytics.net_subscribers_90d < 0}
                     accent={data.analytics.net_subscribers_90d >= 0 ? C.green : undefined}
                   />
+                </div>
+              ) : (
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12, background: C.amberBg, border: `1px solid ${C.amberBdr}`, borderLeft: `3px solid ${C.amber}`, borderRadius: '0 12px 12px 0', padding: '12px 18px', marginBottom: 0 }}>
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke={C.amber} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+                    <circle cx="8" cy="8" r="6.5"/><line x1="8" y1="5" x2="8" y2="8.5"/><circle cx="8" cy="11" r="0.7" fill={C.amber} stroke="none"/>
+                  </svg>
+                  <p style={{ fontSize: 13, color: C.text2, lineHeight: 1.6 }}>
+                    <strong style={{ color: C.text1, fontWeight: 600 }}>Retention, duration &amp; subscriber data unavailable.</strong>
+                    {' '}Grant <strong style={{ fontWeight: 600 }}>YouTube Analytics read access</strong> when connecting your channel to unlock these metrics.
+                  </p>
                 </div>
               )}
 
