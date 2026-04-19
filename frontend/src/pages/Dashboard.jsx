@@ -1392,10 +1392,21 @@ export default function Dashboard() {
           {/* ── VIDEOS ───────────────────────────────────────────────── */}
           {data && nav === 'Videos' && videos && (
             <>
-              <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 24 }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 }}>
                 <div>
-                  <h2 style={{ fontSize: 26, fontWeight: 800, color: C.text1, letterSpacing: '-0.7px', marginBottom: 5 }}>Video performance</h2>
-                  <p style={{ fontSize: 14, color: C.text3, letterSpacing: '-0.1px' }}>{videos.length} videos — click Optimise to get AI feedback on title, description &amp; thumbnail</p>
+                  <h2 style={{ fontSize: 26, fontWeight: 800, color: C.text1, letterSpacing: '-0.7px', marginBottom: 10 }}>Video performance</h2>
+                  <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                    {[
+                      ['📹', `${videos.length} videos`],
+                      ['👁', `${fmtNum(videos.reduce((s, v) => s + (v.views || 0), 0))} total views`],
+                      ['👍', `${fmtNum(videos.reduce((s, v) => s + (v.likes || 0), 0))} total likes`],
+                      ['💬', `${fmtNum(videos.reduce((s, v) => s + (v.comments || 0), 0))} comments`],
+                    ].map(([icon, label]) => (
+                      <span key={label} style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: 12.5, fontWeight: 600, color: C.text2, background: '#fff', border: `1px solid ${C.border}`, borderRadius: 100, padding: '5px 12px', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
+                        <span>{icon}</span>{label}
+                      </span>
+                    ))}
+                  </div>
                 </div>
                 <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexShrink: 0 }}>
                   <select
