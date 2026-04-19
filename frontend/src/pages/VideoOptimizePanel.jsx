@@ -480,12 +480,16 @@ export default function VideoOptimizePanel({ video, onClose, onVideoUpdated }) {
         <>
           {/* Fix first banner */}
           {a?.priority && (() => {
-            const area = a.priority.split('|')[0]?.trim().toLowerCase()
-            const msg  = a.priority.replace(/^[^|]*\|?\s*/, '')
+            const parts = a.priority.split('|')
+            const area  = parts[0]?.trim()
+            const msg   = parts.slice(1).join('|').trim()
             return (
-              <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 12, padding: '12px 16px', marginBottom: 16, display: 'flex', alignItems: 'flex-start', gap: 12 }}>
-                <span style={{ fontSize: 12, fontWeight: 800, color: C.red, background: C.redBg, border: `1px solid ${C.redBdr}`, padding: '3px 10px', borderRadius: 100, textTransform: 'uppercase', letterSpacing: '0.06em', flexShrink: 0, marginTop: 1 }}>Fix first: {area}</span>
-                <p style={{ fontSize: 14, color: C.text2, lineHeight: 1.5 }}>{msg}</p>
+              <div style={{ background: C.redBg, border: `1px solid ${C.redBdr}`, borderLeft: `4px solid ${C.red}`, borderRadius: 12, padding: '14px 18px', marginBottom: 16 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: msg ? 8 : 0 }}>
+                  <span style={{ fontSize: 11, fontWeight: 800, color: C.red, textTransform: 'uppercase', letterSpacing: '0.08em', flexShrink: 0 }}>Fix first</span>
+                  <span style={{ fontSize: 14, fontWeight: 700, color: C.red, lineHeight: 1.5 }}>{area}</span>
+                </div>
+                {msg && <p style={{ fontSize: 14, color: C.text2, lineHeight: 1.6 }}>{msg}</p>}
               </div>
             )
           })()}
