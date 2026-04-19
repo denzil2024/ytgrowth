@@ -930,7 +930,7 @@ export default function Dashboard() {
             <span style={{ fontSize: 10, fontWeight: 600, color: C.text1, textTransform: 'uppercase', letterSpacing: '0.09em' }}>Optimize</span>
           </div>
           <NavBtn label="Overview"       active={nav === 'Overview'}       onClick={() => setNav('Overview')} />
-          <NavBtn label="Videos"         active={nav === 'Videos'}         onClick={() => setNav('Videos')} badge={5} />
+          <NavBtn label="Videos"         active={nav === 'Videos'}         onClick={() => setNav('Videos')} />
           <NavBtn label="Weekly Report"  active={nav === 'Weekly Report'}  onClick={() => setNav('Weekly Report')} />
 
           {/* Section: CREATE */}
@@ -1067,10 +1067,21 @@ export default function Dashboard() {
                     className="ytg-dash-btn-primary"
                     disabled={analyzingAI}
                     onClick={() => {
+                      const prevInsights = data?.insights
                       setAnalyzingAI(true)
                       setData(prev => ({ ...prev, insights: null }))
                       fetch('/auth/refresh-analysis', { method: 'POST', credentials: 'include' })
-                        .catch(() => setAnalyzingAI(false))
+                        .then(r => {
+                          if (!r.ok) {
+                            setData(prev => ({ ...prev, insights: prevInsights }))
+                            setAnalyzingAI(false)
+                            if (r.status === 402) alert('No credits remaining. Upgrade your plan or buy an analysis pack to re-audit.')
+                          }
+                        })
+                        .catch(() => {
+                          setData(prev => ({ ...prev, insights: prevInsights }))
+                          setAnalyzingAI(false)
+                        })
                     }}
                     style={{ opacity: analyzingAI ? 0.65 : 1 }}
                   >
