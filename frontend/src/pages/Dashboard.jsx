@@ -1000,7 +1000,7 @@ export default function Dashboard() {
           {/* Left: nav label + channel info */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
             <span style={{ fontSize: 14, fontWeight: 700, color: C.text1, letterSpacing: '-0.3px' }}>{nav}</span>
-            {data && (
+            {data?.channel && (
               <>
                 <div style={{ width: 1, height: 20, background: C.border }} />
                 <div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
