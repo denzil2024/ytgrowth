@@ -500,12 +500,9 @@ export default function VideoOptimizePanel({ video, onClose, onVideoUpdated }) {
             const area  = parts[0]?.trim()
             const msg   = parts.slice(1).join('|').trim()
             return (
-              <div style={{ background: C.redBg, border: `1px solid ${C.redBdr}`, borderLeft: `4px solid ${C.red}`, borderRadius: 12, padding: '14px 18px', marginBottom: 16 }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: msg ? 8 : 0 }}>
-                  <span style={{ fontSize: 11, fontWeight: 800, color: C.red, textTransform: 'uppercase', letterSpacing: '0.08em', flexShrink: 0 }}>Fix first</span>
-                  <span style={{ fontSize: 14, fontWeight: 700, color: C.red, lineHeight: 1.5 }}>{area}</span>
-                </div>
-                {msg && <p style={{ fontSize: 14, color: C.text2, lineHeight: 1.6 }}>{msg}</p>}
+              <div style={{ background: C.card, border: `1px solid ${C.border}`, borderLeft: `4px solid ${C.red}`, borderRadius: 12, padding: '14px 18px', marginBottom: 16, boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
+                <span style={{ fontSize: 10, fontWeight: 800, color: C.red, textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block', marginBottom: 6 }}>Fix first</span>
+                <p style={{ fontSize: 15, fontWeight: 700, color: C.text1, lineHeight: 1.55 }}>{area}{msg ? ` — ${msg}` : ''}</p>
               </div>
             )
           })()}
@@ -546,30 +543,33 @@ export default function VideoOptimizePanel({ video, onClose, onVideoUpdated }) {
                 </div>
               )}
 
-              {/* Intent analysis — clean 2-col layout */}
+              {/* Intent analysis — 3-col InsightCard layout */}
               {titleResult.intent_analysis?.search_intent && (
-                <div style={{ background: C.surface, borderRadius: 10, padding: '14px 16px', marginBottom: 16, border: `1px solid ${C.borderFaint}` }}>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: titleResult.intent_analysis.gap_opportunity ? 12 : 0 }}>
-                    <div>
-                      <p style={{ fontSize: 12, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 4 }}>Search Intent</p>
-                      <p style={{ fontSize: 14, fontWeight: 500, color: C.text1, lineHeight: 1.45 }}>{titleResult.intent_analysis.search_intent}</p>
-                    </div>
-                    <div>
-                      <p style={{ fontSize: 12, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 4 }}>Emotional Driver</p>
-                      <p style={{ fontSize: 14, fontWeight: 500, color: C.text1, lineHeight: 1.45 }}>{titleResult.intent_analysis.emotional_driver}</p>
-                    </div>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr 1fr', gap: 8, marginBottom: 16 }}>
+
+                  {/* Search Intent */}
+                  <div style={{ background: 'rgba(79,134,247,0.07)', border: '1px solid rgba(79,134,247,0.12)', borderRadius: 10, padding: '12px 14px' }}>
+                    <p style={{ fontSize: 10, fontWeight: 700, color: '#4a7cf7', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Search Intent</p>
+                    <p style={{ fontSize: 13, color: C.text1, lineHeight: 1.65 }}>{titleResult.intent_analysis.search_intent}</p>
                   </div>
-                  {titleResult.intent_analysis.gap_opportunity && (
-                    <div style={{ borderTop: `1px solid ${C.borderFaint}`, paddingTop: 12 }}>
-                      <p style={{ fontSize: 12, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 4 }}>Competitor Gap</p>
-                      <p style={{ fontSize: 14, color: C.text2, lineHeight: 1.5 }}>{titleResult.intent_analysis.gap_opportunity}</p>
-                      {titleResult.intent_analysis.overused_angle && (
-                        <p style={{ fontSize: 14, color: C.text3, marginTop: 5, lineHeight: 1.45 }}>
-                          <span style={{ fontWeight: 700, color: C.text2 }}>Overused: </span>{titleResult.intent_analysis.overused_angle}
-                        </p>
-                      )}
-                    </div>
-                  )}
+
+                  {/* Competitor Gap */}
+                  <div style={{ background: '#fff', border: `1px solid ${C.border}`, borderLeft: `3px solid ${C.amber}`, borderRadius: '0 10px 10px 0', padding: '12px 14px', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
+                    <p style={{ fontSize: 10, fontWeight: 700, color: C.amber, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Competitor Gap</p>
+                    <p style={{ fontSize: 13, color: C.text1, lineHeight: 1.65 }}>{titleResult.intent_analysis.gap_opportunity || '—'}</p>
+                    {titleResult.intent_analysis.overused_angle && (
+                      <p style={{ fontSize: 12, color: C.text3, marginTop: 8, lineHeight: 1.55 }}>
+                        <span style={{ fontWeight: 700, color: C.text2 }}>Overused: </span>{titleResult.intent_analysis.overused_angle}
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Emotional Driver */}
+                  <div style={{ background: 'rgba(5,150,105,0.07)', border: '1px solid rgba(5,150,105,0.14)', borderRadius: 10, padding: '12px 14px' }}>
+                    <p style={{ fontSize: 10, fontWeight: 700, color: C.green, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Emotional Driver</p>
+                    <p style={{ fontSize: 13, color: C.text1, lineHeight: 1.65 }}>{titleResult.intent_analysis.emotional_driver}</p>
+                  </div>
+
                 </div>
               )}
 
