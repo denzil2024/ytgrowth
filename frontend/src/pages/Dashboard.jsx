@@ -217,6 +217,23 @@ function healthScore(insights) {
   })
   return Math.max(Math.min(s, 100), 0)
 }
+/* Normalise backend timestamps — Python omits 'Z'; JS treats no-tz strings as local time */
+function parseUTC(str) {
+  if (!str) return null
+  const s = str.endsWith('Z') || /[+-]\d{2}:?\d{2}$/.test(str) ? str : str + 'Z'
+  return new Date(s)
+}
+function relTime(str) {
+  const d = parseUTC(str)
+  if (!d || isNaN(d)) return ''
+  const diff = Math.round((Date.now() - d.getTime()) / 60000)
+  if (diff < 1)  return 'just now'
+  if (diff < 60) return `${diff}m ago`
+  const h = Math.round(diff / 60)
+  if (h < 24)   return `${h}h ago`
+  return `${Math.round(h / 24)}d ago`
+}
+
 function scoreColor(s)  { return s >= 75 ? C.green : s >= 50 ? C.amber : C.red }
 function scoreLabel(s)  { return s >= 75 ? 'Healthy' : s >= 50 ? 'Needs work' : 'Critical' }
 function fmtSecs(s)     { return `${Math.floor(s / 60)}m ${s % 60}s` }
@@ -1038,26 +1055,10 @@ export default function Dashboard() {
                   <h1 style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.6px', marginBottom: 6 }}>Good to see you.</h1>
                   <p style={{ fontSize: 13, color: C.text3, display: 'flex', gap: 0, flexWrap: 'wrap' }}>
                     {data.stats_fetched_at && (
-                      <span>Stats from {(() => {
-                          const diff = Math.round((Date.now() - new Date(data.stats_fetched_at).getTime()) / 60000)
-                          if (diff < 1)  return 'just now'
-                          if (diff < 60) return `${diff}m ago`
-                          const h = Math.round(diff / 60)
-                          if (h < 24)   return `${h}h ago`
-                          return `${Math.round(h / 24)}d ago`
-                        })()}
-                      </span>
+                      <span>Stats from {relTime(data.stats_fetched_at)}</span>
                     )}
                     {data.analyzed_at && (
-                      <span style={{ marginLeft: 8 }}>· Audited {(() => {
-                          const diff = Math.round((Date.now() - new Date(data.analyzed_at).getTime()) / 60000)
-                          if (diff < 1)  return 'just now'
-                          if (diff < 60) return `${diff}m ago`
-                          const h = Math.round(diff / 60)
-                          if (h < 24)   return `${h}h ago`
-                          return `${Math.round(h / 24)}d ago`
-                        })()}
-                      </span>
+                      <span style={{ marginLeft: 8 }}>· Audited {relTime(data.analyzed_at)}</span>
                     )}
                   </p>
                 </div>
@@ -1151,7 +1152,7 @@ export default function Dashboard() {
             <>
               <div style={{ marginBottom: 20, marginTop: 44 }}>
                 <h2 style={{ fontSize: 20, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', marginBottom: 4 }}>Channel audit</h2>
-                <p style={{ fontSize: 13, color: C.text3 }}>{data.insights.priorityActions?.length ?? 0} priority actions{data.analyzed_at ? ` · Audited ${new Date(data.analyzed_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}` : ''}</p>
+                <p style={{ fontSize: 13, color: C.text3 }}>{data.insights.priorityActions?.length ?? 0} priority actions{data.analyzed_at ? ` · Audited ${parseUTC(data.analyzed_at)?.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) ?? ''}` : ''}</p>
               </div>
 
               {/* Summary + overall score */}

@@ -213,7 +213,7 @@ def _run_analysis_in_background(session_id: str, stats: dict, videos: list, full
             playlist_adds=full_data.get("playlist_adds"),
             plan=plan,
         )
-        analyzed_at = datetime.datetime.utcnow().isoformat()
+        analyzed_at = datetime.datetime.utcnow().isoformat() + 'Z'
         # Always reload from DB and save back — don't rely on in-memory state
         data, creds = get_session(session_id)
         if data and creds:
@@ -416,7 +416,7 @@ def callback(request: Request, background_tasks: BackgroundTasks):
         existing_insights    = existing_data.get("insights") if existing_data else None
         existing_analyzed_at = existing_data.get("analyzed_at") if existing_data else None
 
-        now = datetime.datetime.utcnow().isoformat()
+        now = datetime.datetime.utcnow().isoformat() + 'Z'
 
         is_fallback = bool(
             existing_insights and
@@ -426,7 +426,8 @@ def callback(request: Request, background_tasks: BackgroundTasks):
         if not existing_insights or is_fallback:
             needs_analysis = True
         elif existing_analyzed_at:
-            hours_since = (datetime.datetime.utcnow() - datetime.datetime.fromisoformat(existing_analyzed_at)).total_seconds() / 3600
+            _ts = existing_analyzed_at.rstrip('Z').split('+')[0]  # strip tz for naive comparison
+            hours_since = (datetime.datetime.utcnow() - datetime.datetime.fromisoformat(_ts)).total_seconds() / 3600
             needs_analysis = hours_since > 168  # 7 days
         else:
             needs_analysis = False
@@ -554,7 +555,7 @@ def refresh_stats(request: Request):
     if not stats:
         return JSONResponse({"error": "Could not fetch channel data."}, status_code=500)
 
-    now = datetime.datetime.utcnow().isoformat()
+    now = datetime.datetime.utcnow().isoformat() + 'Z'
     data["channel"]          = stats
     data["videos"]           = videos
     data["stats_fetched_at"] = now
