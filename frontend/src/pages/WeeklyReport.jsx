@@ -35,16 +35,24 @@ function DeltaBadge({ metric, unit, isScore }) {
   return <span style={{ fontSize: 12, color, fontWeight: 600 }}>{arrow} {val}</span>
 }
 
-function MetricCard({ label, value, metric, unit, isScore }) {
+function MetricCard({ label, value, metric, unit, isScore, valueColor }) {
   return (
     <div className="ytg-stat-card" style={{ cursor: 'default' }}>
       <p style={{ fontSize: 11, fontWeight: 500, letterSpacing: '0.05em', textTransform: 'uppercase', color: C.text3, marginBottom: 12 }}>{label}</p>
-      <p style={{ fontSize: 30, fontWeight: 800, letterSpacing: '-1.4px', color: C.text1, lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{value}</p>
+      <p style={{ fontSize: 30, fontWeight: 800, letterSpacing: '-1.4px', color: valueColor || C.text1, lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{value}</p>
       <div style={{ marginTop: 10 }}>
         <DeltaBadge metric={metric} unit={unit} isScore={isScore} />
       </div>
     </div>
   )
+}
+
+/* Health color for metric numbers — red when below healthy, amber mid, green good. */
+function healthColor(n, { red, amber }) {
+  if (n == null) return null
+  if (n < red)   return C.red
+  if (n < amber) return C.amber
+  return C.green
 }
 
 function ColLabel({ color, children }) {
@@ -124,6 +132,9 @@ function ReportBody({ rd, isLatest }) {
   const retVal   = m.avgRetention?.value != null ? `${m.avgRetention.value}%`        : '—'
   const scoreVal = m.channelScore?.value != null ? `${m.channelScore.value}/100`     : '—'
 
+  const retColor   = healthColor(m.avgRetention?.value,  { red: 40, amber: 50 })
+  const scoreColor = healthColor(m.channelScore?.value,  { red: 50, amber: 75 })
+
   const hasBody = rd.weeklySummary || rd.biggestWin || rd.watchOut || rd.priorityAction
 
   return (
@@ -136,8 +147,8 @@ function ReportBody({ rd, isLatest }) {
       }}>
         <MetricCard label="Subscribers"    value={subsVal}  metric={m.subscribers} />
         <MetricCard label="Weekly Views"   value={viewsVal} metric={m.weeklyViews} />
-        <MetricCard label="Avg Retention"  value={retVal}   metric={m.avgRetention} unit="%" />
-        <MetricCard label="Channel Score"  value={scoreVal} metric={m.channelScore} isScore />
+        <MetricCard label="Avg Retention"  value={retVal}   metric={m.avgRetention} unit="%" valueColor={retColor} />
+        <MetricCard label="Channel Score"  value={scoreVal} metric={m.channelScore} isScore valueColor={scoreColor} />
       </div>
 
       {/* Weekly summary — bold statement (like Overview insight problem) */}
@@ -231,6 +242,12 @@ export default function WeeklyReport({ channelId, channelEmail }) {
         setLoading(false)
       })
       .catch(() => { setReports([]); setLoading(false) })
+
+    // Load current email preference so toggle reflects real state
+    fetch(`/api/reports/email-preference?channel_id=${channelId}`, { credentials: 'include' })
+      .then(r => r.ok ? r.json() : null)
+      .then(d => { if (d && typeof d.weekly_report === 'boolean') setEmailOn(d.weekly_report) })
+      .catch(() => {})
   }, [channelId])
 
   function toggleEmail() {
@@ -269,9 +286,24 @@ export default function WeeklyReport({ channelId, channelEmail }) {
     <div>
       {/* ── Header row ──────────────────────────────────────────────────── */}
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 28, gap: 16, flexWrap: 'wrap' }}>
-        <div>
-          <h1 style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', marginBottom: 4 }}>Weekly Report</h1>
-          <p style={{ fontSize: 14, color: C.text3 }}>Your channel performance, delivered every week.</p>
+        <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
+          <span style={{
+            display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+            width: 36, height: 36, borderRadius: 10,
+            background: 'rgba(229,37,27,0.09)',
+            border: '1px solid rgba(229,37,27,0.18)',
+            flexShrink: 0, marginTop: 2,
+          }}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={C.red} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="4" y="5" width="16" height="16" rx="2"/>
+              <path d="M8 3v4M16 3v4M4 11h16"/>
+              <path d="M8 15h4"/>
+            </svg>
+          </span>
+          <div>
+            <h1 style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', marginBottom: 4 }}>Weekly Report</h1>
+            <p style={{ fontSize: 14, color: C.text3 }}>Your channel performance, delivered every week.</p>
+          </div>
         </div>
 
         {/* Email delivery toggle */}
@@ -326,6 +358,7 @@ export default function WeeklyReport({ channelId, channelEmail }) {
       {latest && (
         <div style={{
           background: '#fff', borderRadius: 16, border: '1px solid rgba(0,0,0,0.08)',
+          borderTop: `3px solid ${C.red}`,
           boxShadow: '0 2px 6px rgba(0,0,0,0.08), 0 10px 36px rgba(0,0,0,0.10)',
           padding: '28px 28px 30px', marginBottom: 16,
         }}>

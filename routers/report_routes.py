@@ -69,6 +69,23 @@ async def send_test_report(request: Request):
         db.close()
 
 
+@router.get("/email-preference")
+def get_email_preference(channel_id: str, request: Request):
+    """Return current weekly_report email preference for the channel."""
+    session_id = request.session.get("session_id")
+    data, _ = get_session(session_id)
+    if not data:
+        return JSONResponse({"error": "Not logged in"}, status_code=401)
+
+    db = SessionLocal()
+    try:
+        pref = db.query(UserEmailPreferences).filter_by(channel_id=channel_id).first()
+        weekly_report = pref.weekly_report if pref else True  # default on
+        return JSONResponse({"weekly_report": bool(weekly_report)})
+    finally:
+        db.close()
+
+
 @router.post("/email-preference")
 async def update_email_preference(request: Request):
     session_id = request.session.get("session_id")
@@ -87,13 +104,23 @@ async def update_email_preference(request: Request):
     try:
         import datetime
         pref = db.query(UserEmailPreferences).filter_by(channel_id=channel_id).first()
-        if pref:
+        now = datetime.datetime.utcnow()
+        if not pref:
+            # Upsert: create a row if none exists (email address may be unknown here,
+            # auth flow backfills it later).
+            pref = UserEmailPreferences(
+                channel_id=channel_id,
+                email="",
+                weekly_report=weekly_report,
+            )
+            db.add(pref)
+        else:
             pref.weekly_report = weekly_report
-            if not weekly_report:
-                pref.unsubscribed_at = datetime.datetime.utcnow()
-            else:
-                pref.resubscribed_at = datetime.datetime.utcnow()
-            db.commit()
-        return JSONResponse({"success": True})
+        if not weekly_report:
+            pref.unsubscribed_at = now
+        else:
+            pref.resubscribed_at = now
+        db.commit()
+        return JSONResponse({"success": True, "weekly_report": bool(weekly_report)})
     finally:
         db.close()
