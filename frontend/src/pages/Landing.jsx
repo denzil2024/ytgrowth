@@ -898,12 +898,16 @@ export default function Landing() {
                     <p style={{ fontSize: 10.5, fontWeight: 800, color: '#d97706', letterSpacing: '0.11em', textTransform: 'uppercase', marginBottom: 7 }}>Action</p>
                     <p style={{ fontSize: 13, color: '#0a0a0f', lineHeight: 1.5, fontWeight: 500 }}>Cold-open hook. Drop the intro, lead with the payoff.</p>
                   </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 14, paddingTop: 14, borderTop: '1px solid #f0f0f5', fontSize: 12, color: '#6a6a78', lineHeight: 1.4 }}>
-                    <span style={{ color: '#4a7cf7', fontWeight: 800 }}>38s</span>
-                    <span>avg watch</span>
-                    <span style={{ color: '#c8c8d0' }}>·</span>
-                    <span style={{ color: '#16a34a', fontWeight: 800 }}>+40%</span>
-                    <span>expected</span>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10, marginTop: 14, paddingTop: 14, borderTop: '1px solid #f0f0f5', fontSize: 12, color: '#6a6a78', lineHeight: 1.4 }}>
+                    <span style={{ display: 'inline-flex', alignItems: 'baseline', gap: 5 }}>
+                      <span style={{ color: '#4a7cf7', fontWeight: 800 }}>38s</span>
+                      <span>avg watch</span>
+                    </span>
+                    <span style={{ width: 1, height: 12, background: '#e4e4ea', flexShrink: 0 }}/>
+                    <span style={{ display: 'inline-flex', alignItems: 'baseline', gap: 5 }}>
+                      <span style={{ color: '#16a34a', fontWeight: 800 }}>+40%</span>
+                      <span>expected</span>
+                    </span>
                   </div>
 
                   {/* Next up preview — mobile compact version */}
@@ -999,65 +1003,6 @@ export default function Landing() {
             </div>
           </div>
 
-          {/* Floating milestone accent — desktop only, pill-shaped, offset further for real float */}
-          {!isMobile && (
-            <div style={{
-              position: 'absolute', top: -32, right: -8,
-              background: '#ffffff',
-              border: '1px solid rgba(10,10,15,0.06)',
-              borderRadius: 999,
-              padding: '10px 18px 10px 12px',
-              display: 'flex', alignItems: 'center', gap: 11,
-              boxShadow: '0 6px 16px rgba(0,0,0,0.08), 0 20px 48px rgba(0,0,0,0.12), 0 0 44px rgba(250,204,21,0.22)',
-              animation: 'floatB 6s ease-in-out infinite',
-              zIndex: 2,
-            }}>
-              <svg width="28" height="28" viewBox="0 0 24 24" style={{ flexShrink: 0, filter: 'drop-shadow(0 2px 5px rgba(217,119,6,0.35))' }}>
-                <defs>
-                  <linearGradient id="heroStarGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#fde047"/>
-                    <stop offset="100%" stopColor="#d97706"/>
-                  </linearGradient>
-                </defs>
-                <polygon points="12,2 14.9,8.7 22,9.6 16.8,14.6 18.2,21.6 12,18.1 5.8,21.6 7.2,14.6 2,9.6 9.1,8.7" fill="url(#heroStarGrad)" stroke="#a16207" strokeWidth="0.5" strokeLinejoin="round"/>
-              </svg>
-              <div>
-                <p style={{ fontSize: 9.5, fontWeight: 800, color: '#d97706', letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: 2 }}>Milestone unlocked</p>
-                <p style={{ fontSize: 13.5, fontWeight: 800, color: '#0a0a0f', letterSpacing: '-0.3px' }}>10K subscribers</p>
-              </div>
-            </div>
-          )}
-
-          {/* Floating analysis-complete accent — desktop only, pill-shaped, offset further */}
-          {!isMobile && (
-            <div style={{
-              position: 'absolute', bottom: -30, left: -4,
-              background: '#ffffff',
-              border: '1px solid rgba(10,10,15,0.06)',
-              borderRadius: 999,
-              padding: '10px 18px 10px 12px',
-              display: 'flex', alignItems: 'center', gap: 11,
-              boxShadow: '0 6px 16px rgba(0,0,0,0.08), 0 20px 48px rgba(0,0,0,0.12), 0 0 36px rgba(22,163,74,0.2)',
-              animation: 'floatA 5.2s ease-in-out infinite',
-              zIndex: 2,
-            }}>
-              <div style={{
-                width: 32, height: 32, borderRadius: 9,
-                background: 'linear-gradient(180deg, #4ade80 0%, #16a34a 100%)',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                flexShrink: 0,
-                boxShadow: '0 4px 10px rgba(22,163,74,0.3), inset 0 1px 0 rgba(255,255,255,0.25)',
-              }}>
-                <svg width="15" height="15" viewBox="0 0 16 16" fill="none">
-                  <path d="M3 8l3 3 7-7" stroke="#ffffff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-              </div>
-              <div>
-                <p style={{ fontSize: 9.5, fontWeight: 800, color: '#16a34a', letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: 2 }}>Analysis complete</p>
-                <p style={{ fontSize: 13.5, fontWeight: 800, color: '#0a0a0f', letterSpacing: '-0.3px' }}>12 metrics · 28 seconds</p>
-              </div>
-            </div>
-          )}
         </div>
       </div>
 
