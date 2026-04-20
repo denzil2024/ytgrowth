@@ -1,0 +1,6 @@
+{
+  "average_rating": null,
+  "total_reviews": null,
+  "_note": "Add real reviews to the `reviews` array when they come in. Section auto-appears on the landing page when length >= 3. Each review: { name, handle_or_title, avatar (/avatars/*.jpg), platform ('G2'|'Trustpilot'|'Product Hunt'|'Twitter'|'LinkedIn'), platform_url (link to the source review), rating (1-5), metric (one-line result), quote }.",
+  "reviews": []
+}

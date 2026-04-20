@@ -317,6 +317,29 @@ function NoCheck() {
   )
 }
 
+/* Larger, more visually present bullet for feature-section lists. */
+function FeatureBullet({ onDark = false }) {
+  const bg     = onDark ? 'rgba(74,222,128,0.16)' : 'rgba(22,163,74,0.12)'
+  const border = onDark ? 'rgba(74,222,128,0.38)' : 'rgba(22,163,74,0.28)'
+  const stroke = onDark ? '#4ade80' : '#16a34a'
+  return (
+    <svg width="22" height="22" viewBox="0 0 22 22" fill="none" style={{ flexShrink: 0 }}>
+      <circle cx="11" cy="11" r="10" fill={bg} stroke={border} strokeWidth="1"/>
+      <path d="M6.8 11.2l3 3 5.4-6" stroke={stroke} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+  )
+}
+
+function FeatureBulletRow({ onDark = false, children }) {
+  const textColor = onDark ? 'rgba(255,255,255,0.78)' : 'var(--ytg-text)'
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 13, marginBottom: 14 }}>
+      <FeatureBullet onDark={onDark} />
+      <span style={{ fontSize: 15, fontWeight: 500, color: textColor, lineHeight: 1.5, letterSpacing: '-0.1px' }}>{children}</span>
+    </div>
+  )
+}
+
 /* ─── Arrow icon ────────────────────────────────────────────────────────── */
 function Arrow() {
   return (
@@ -428,155 +451,97 @@ function ScrollProgress() {
   )
 }
 
-/* ─── Creator social proof ───────────────────────────────────────────────── */
-const CREATOR_DATA = [
-  { name: 'Sophiology',      handle: '@Sophiology',       color: '#e5251b', niche: 'Lifestyle', subs: '641K',  result: 'CTR improved from 2.1% to 5.4%',          avatar: '/avatars/sophiology.jpg' },
-  { name: 'Dallin & Bella',  handle: '@dallinandbella2',  color: '#d97706', niche: 'Family',    subs: '4.2M',  result: 'Found 3 competitor content gaps',           avatar: '/avatars/dallinandbella.jpg' },
-  { name: 'Max Tabakin',     handle: '@maxtabakin',       color: '#0a84ff', niche: 'Tech',      subs: '5.18K', result: 'Channel score up 31 points',                avatar: '/avatars/maxtabakin.jpg' },
-  { name: 'Fatima Bah',      handle: '@FatimaBah',        color: '#16a34a', niche: 'Finance',   subs: '467K',  result: 'Weekly reports cut prep time in half',      avatar: '/avatars/fatimabah.jpg' },
-  { name: 'Mizchinny',       handle: '@Mizchinny_',       color: '#7c3aed', niche: 'Beauty',    subs: '95.9K', result: 'Thumbnail score lifted views 40%',          avatar: '/avatars/mizchinny.jpg' },
-  { name: 'Founder Diaries', handle: '@FounderDiaries',   color: '#0a84ff', niche: 'Business',  subs: '9.36K', result: 'Doubled upload consistency',                avatar: '/avatars/founderdiaries.jpg' },
-  { name: 'Corey McClain',   handle: '@iamcoreymcclain',  color: '#16a34a', niche: 'Fitness',   subs: '43.9K', result: 'Identified top competitor weaknesses',      avatar: '/avatars/coreymcclain.jpg' },
-  { name: 'Cardinal Mason',  handle: '@CardinalMason',    color: '#e5251b', niche: 'Motivation', subs: '85.7K', result: 'SEO score up from 54 to 79',               avatar: '/avatars/cardinalmason.jpg' },
-  { name: 'Jayden Garcia',   handle: '@imjaydengarcia',   color: '#d97706', niche: 'Gaming',    subs: '13K',   result: '3 videos hit 100K+ after audit',            avatar: '/avatars/jaydengarcia.jpg' },
-  { name: 'Being Benitah',   handle: '@BeingBenitah',     color: '#7c3aed', niche: 'Travel',    subs: '14.2K', result: 'Retention improved from 28% to 47%',        avatar: '/avatars/beingbenitah.jpg' },
-]
+/* ─── Data-driven reviews (placeholder until real reviews arrive) ────────── */
+import reviewsData from '../data/reviews.json'
 
-function TestimonialCard({ t }) {
-  const [imgFailed, setImgFailed] = useState(false)
-  return (
-    <div style={{ background: '#ffffff', borderRadius: 20, border: '1px solid rgba(10,10,15,0.06)', padding: 28, boxShadow: '0 2px 4px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.1), 0 32px 64px rgba(0,0,0,0.14)', minWidth: 0, overflow: 'hidden' }}>
-      {/* Top row: avatar + name + platform badge */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-        {t.avatar && !imgFailed ? (
-          <img src={t.avatar} alt={t.name} onError={() => setImgFailed(true)}
-            style={{ width: 46, height: 46, borderRadius: '50%', objectFit: 'cover', flexShrink: 0, display: 'block' }} />
-        ) : (
-          <div style={{ width: 46, height: 46, borderRadius: '50%', background: `linear-gradient(135deg, ${t.color}, ${t.color}bb)`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 16, fontWeight: 800, flexShrink: 0 }}>
-            {t.name[0]}
-          </div>
-        )}
-        <div style={{ flex: 1, minWidth: 0, overflow: 'hidden' }}>
-          <p style={{ fontSize: 14, fontWeight: 700, color: '#0a0a0f', margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{t.name}</p>
-          <p style={{ fontSize: 12, color: 'rgba(10,10,15,0.4)', marginTop: 2, marginBottom: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{t.meta}</p>
-        </div>
-        <span style={{ background: 'rgba(10,10,15,0.04)', border: '1px solid rgba(10,10,15,0.08)', borderRadius: 6, padding: '4px 8px', fontSize: 12, fontWeight: 700, color: 'rgba(10,10,15,0.45)', textTransform: 'uppercase', letterSpacing: '0.06em', flexShrink: 0 }}>{t.platform}</span>
-      </div>
-      {/* Stars */}
-      <div style={{ display: 'flex', gap: 3, marginTop: 14, marginBottom: 14 }}>
-        {[...Array(5)].map((_, j) => <span key={j} style={{ fontSize: 14, color: '#f59e0b' }}>★</span>)}
-      </div>
-      {/* Metric pill */}
-      <div style={{ background: 'rgba(229,48,42,0.06)', border: '1px solid rgba(229,48,42,0.14)', borderRadius: 8, padding: '8px 14px', marginBottom: 14, overflow: 'hidden' }}>
-        <span style={{ fontSize: 14, fontWeight: 700, color: '#c22b25', display: 'block', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{t.metric}</span>
-      </div>
-      {/* Quote */}
-      <p style={{ fontSize: 14, color: 'rgba(10,10,15,0.65)', lineHeight: 1.75, margin: 0 }}>{t.quote}</p>
-    </div>
-  )
-}
+function Testimonials({ isMobile }) {
+  const list = Array.isArray(reviewsData?.reviews) ? reviewsData.reviews : []
+  if (list.length < 3) return null
 
-function CreatorAvatar({ c, size = 48 }) {
-  const [failed, setFailed] = useState(false)
-  if (c.avatar && !failed) {
-    return (
-      <img
-        src={c.avatar}
-        alt={c.name}
-        onError={() => setFailed(true)}
-        style={{ width: size, height: size, borderRadius: '50%', objectFit: 'cover', flexShrink: 0, display: 'block' }}
-      />
-    )
-  }
-  return (
-    <div style={{
-      width: size, height: size, borderRadius: '50%', flexShrink: 0,
-      background: `linear-gradient(135deg, ${c.color}, ${c.color}bb)`,
-      display: 'flex', alignItems: 'center', justifyContent: 'center',
-      color: '#fff', fontSize: size * 0.35, fontWeight: 800,
-      boxShadow: `0 2px 8px ${c.color}44`,
-    }}>
-      {c.name[0]}
-    </div>
-  )
-}
-
-function CreatorCard({ c }) {
-  return (
-    <div style={{
-      background: '#ffffff',
-      border: '1px solid rgba(10,10,15,0.09)',
-      borderRadius: 18,
-      padding: '20px 22px',
-      minWidth: 220,
-      flexShrink: 0,
-      boxShadow: '0 2px 10px rgba(0,0,0,0.07), 0 1px 2px rgba(0,0,0,0.04)',
-    }}>
-      {/* Avatar + name + handle */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 14 }}>
-        <CreatorAvatar c={c} size={46} />
-        <div style={{ minWidth: 0, flex: 1 }}>
-          <p style={{ fontSize: 14, fontWeight: 700, color: '#0a0a0f', letterSpacing: '-0.2px', margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{c.name}</p>
-          <p style={{ fontSize: 12, color: 'rgba(10,10,15,0.42)', margin: '2px 0 0', whiteSpace: 'nowrap' }}>{c.handle}</p>
-        </div>
-        <span style={{
-          background: 'rgba(10,10,15,0.04)', border: '1px solid rgba(10,10,15,0.08)',
-          borderRadius: 100, padding: '3px 9px',
-          fontSize: 12, fontWeight: 600, color: 'rgba(10,10,15,0.48)', flexShrink: 0,
-        }}>{c.niche}</span>
-      </div>
-      {/* Subscriber count */}
-      <div style={{ marginBottom: 12 }}>
-        <p style={{ fontSize: 24, fontWeight: 800, color: '#0a0a0f', letterSpacing: '-0.8px', lineHeight: 1, margin: 0 }}>{c.subs}</p>
-        <p style={{ fontSize: 12, fontWeight: 500, color: 'rgba(10,10,15,0.38)', textTransform: 'uppercase', letterSpacing: '0.07em', margin: '3px 0 0' }}>subscribers</p>
-      </div>
-      {/* Result */}
-      <div style={{ borderTop: '1px solid rgba(10,10,15,0.06)', paddingTop: 11 }}>
-        <p style={{ fontSize: 12, color: 'rgba(10,10,15,0.52)', lineHeight: 1.55, margin: 0 }}>{c.result}</p>
-      </div>
-    </div>
-  )
-}
-
-function CreatorTicker({ isMobile }) {
-  const cards = CREATOR_DATA.map((c, i) => <CreatorCard key={i} c={c} />)
+  const avg   = reviewsData.average_rating
+  const total = reviewsData.total_reviews
 
   return (
-    <div style={{ background: '#ffffff', borderBottom: '1px solid rgba(10,10,15,0.06)' }}>
-      {/* Header row — desktop only */}
-      {!isMobile && (
-        <div style={{ maxWidth: 1280, margin: '0 auto', padding: '64px 64px 0', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <div>
-            <p style={{ fontSize: 14, fontWeight: 700, color: 'rgba(10,10,15,0.35)', textTransform: 'uppercase', letterSpacing: '0.08em', margin: '0 0 12px' }}>
-              Trusted by creators on YouTube
-            </p>
-          </div>
-          <p style={{ fontSize: 14, fontWeight: 600, color: 'rgba(10,10,15,0.4)', flexShrink: 0, marginLeft: 24 }}>
-            10,000+ channels analyzed
-          </p>
-        </div>
-      )}
-      {/* Cards */}
-      <div style={{ maxWidth: 1280, margin: '0 auto', padding: isMobile ? '32px 24px 40px' : '32px 64px 56px' }}>
-        {isMobile ? (
-          <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch', scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
-            <div style={{ display: 'flex', gap: 12, width: 'max-content' }}>
-              {cards}
+    <div className="section-animate" style={{ background: '#e8e9ee', borderTop: '1px solid rgba(10,10,15,0.06)', borderBottom: '1px solid rgba(10,10,15,0.06)', padding: isMobile ? '60px 24px' : '100px 64px' }}>
+      <div style={{ maxWidth: 1280, margin: '0 auto' }}>
+        <div style={{ textAlign: 'center', marginBottom: 56 }}>
+          {avg != null && (
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 16, marginBottom: 20, flexWrap: 'wrap' }}>
+              <div style={{ display: 'flex', gap: 3 }}>
+                {[...Array(5)].map((_, i) => <span key={i} style={{ fontSize: 20, color: '#f59e0b' }}>★</span>)}
+              </div>
+              <div style={{ width: 1, height: 24, background: 'rgba(10,10,15,0.12)' }} />
+              <span style={{ fontSize: 22, fontWeight: 800, color: '#0a0a0f', letterSpacing: '-0.5px' }}>{avg} / 5</span>
+              {total != null && (
+                <>
+                  <div style={{ width: 1, height: 24, background: 'rgba(10,10,15,0.12)' }} />
+                  <span style={{ fontSize: 14, fontWeight: 500, color: 'rgba(10,10,15,0.45)' }}>Based on {total}+ reviews</span>
+                </>
+              )}
             </div>
-          </div>
-        ) : (
-          <div style={{ position: 'relative', overflow: 'hidden' }}>
-            <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: 100, background: 'linear-gradient(to right, #fff 40%, transparent)', zIndex: 2, pointerEvents: 'none' }} />
-            <div style={{ position: 'absolute', right: 0, top: 0, bottom: 0, width: 100, background: 'linear-gradient(to left, #fff 40%, transparent)', zIndex: 2, pointerEvents: 'none' }} />
-            <div className="ytg-ticker-track" style={{ gap: 14, paddingLeft: 4 }}>
-              {[...CREATOR_DATA, ...CREATOR_DATA].map((c, i) => (
-                <div key={i} style={{ marginRight: 0 }}>
-                  <CreatorCard c={c} />
+          )}
+          <h2 style={{ fontWeight: 800, fontSize: isMobile ? 32 : 48, letterSpacing: '-1.5px', color: '#0a0a0f', lineHeight: 1.06, marginBottom: 12 }}>The tool creators <span style={{ color: 'var(--ytg-accent)' }}>actually recommend.</span></h2>
+          <p style={{ fontSize: 16, color: 'rgba(10,10,15,0.6)', lineHeight: 1.8 }}>Real channels. Real numbers.</p>
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)', gap: 20 }}>
+          {list.map((r, i) => (
+            <a key={i} href={r.platform_url || '#'} target="_blank" rel="noopener noreferrer"
+              style={{ textDecoration: 'none', color: 'inherit', display: 'block', background: '#ffffff', borderRadius: 20, border: '1px solid rgba(10,10,15,0.06)', padding: 28, boxShadow: '0 2px 4px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.1), 0 32px 64px rgba(0,0,0,0.14)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                {r.avatar
+                  ? <img src={r.avatar} alt={r.name} style={{ width: 46, height: 46, borderRadius: '50%', objectFit: 'cover', flexShrink: 0 }} />
+                  : <div style={{ width: 46, height: 46, borderRadius: '50%', background: '#e5251b', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, fontWeight: 800, flexShrink: 0 }}>{(r.name || '?')[0]}</div>
+                }
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <p style={{ fontSize: 14, fontWeight: 700, color: '#0a0a0f', margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{r.name}</p>
+                  {r.handle_or_title && <p style={{ fontSize: 12, color: 'rgba(10,10,15,0.4)', marginTop: 2, marginBottom: 0 }}>{r.handle_or_title}</p>}
                 </div>
-              ))}
-            </div>
-          </div>
-        )}
+                {r.platform && (
+                  <span style={{ background: 'rgba(10,10,15,0.04)', border: '1px solid rgba(10,10,15,0.08)', borderRadius: 6, padding: '4px 8px', fontSize: 12, fontWeight: 700, color: 'rgba(10,10,15,0.45)', textTransform: 'uppercase', letterSpacing: '0.06em', flexShrink: 0 }}>{r.platform}</span>
+                )}
+              </div>
+              <div style={{ display: 'flex', gap: 3, marginTop: 14, marginBottom: 14 }}>
+                {[...Array(r.rating || 5)].map((_, j) => <span key={j} style={{ fontSize: 14, color: '#f59e0b' }}>★</span>)}
+              </div>
+              {r.metric && (
+                <div style={{ background: 'rgba(229,48,42,0.06)', border: '1px solid rgba(229,48,42,0.14)', borderRadius: 8, padding: '8px 14px', marginBottom: 14 }}>
+                  <span style={{ fontSize: 14, fontWeight: 700, color: '#c22b25' }}>{r.metric}</span>
+                </div>
+              )}
+              <p style={{ fontSize: 14, color: 'rgba(10,10,15,0.65)', lineHeight: 1.75, margin: 0 }}>{r.quote}</p>
+            </a>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function FounderPricingBand({ isMobile }) {
+  return (
+    <div className="section-animate" style={{
+      background: '#e8e9ee',
+      borderTop: '1px solid rgba(10,10,15,0.06)',
+      borderBottom: '1px solid rgba(10,10,15,0.06)',
+      padding: isMobile ? '48px 24px' : '64px 64px',
+    }}>
+      <div style={{ maxWidth: 760, margin: '0 auto', textAlign: 'center' }}>
+        <div style={{
+          display: 'inline-flex', alignItems: 'center', gap: 8,
+          padding: '6px 14px', borderRadius: 999,
+          background: 'rgba(229,37,27,0.09)',
+          border: '1px solid rgba(229,37,27,0.18)',
+          marginBottom: 20,
+        }}>
+          <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#e5251b', boxShadow: '0 0 8px #e5251b' }}/>
+          <span style={{ fontSize: 11.5, fontWeight: 800, color: '#e5251b', textTransform: 'uppercase', letterSpacing: '0.14em' }}>Early access</span>
+        </div>
+        <h2 style={{ fontSize: isMobile ? 28 : 36, fontWeight: 800, letterSpacing: '-1.2px', color: '#0a0a0f', lineHeight: 1.15, marginBottom: 14 }}>
+          Founder pricing while we&rsquo;re early
+        </h2>
+        <p style={{ fontSize: isMobile ? 15 : 16, color: 'rgba(10,10,15,0.6)', lineHeight: 1.7, maxWidth: 560, marginLeft: 'auto', marginRight: 'auto' }}>
+          YTGrowth is new. Pricing today is lower than it will be once reviews roll in — lock in the founder rate for the lifetime of your subscription.
+        </p>
       </div>
     </div>
   )
@@ -972,10 +937,7 @@ export default function Landing() {
               'Audience demographics and device profile',
               'Exact priority actions ranked by impact',
             ].map((t, i) => (
-              <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 10, marginBottom: 10 }}>
-                <div style={{ flexShrink: 0, marginTop: 2 }}><Check /></div>
-                <span style={{ fontSize: 14, color: 'var(--ytg-text-2)' }}>{t}</span>
-              </div>
+              <FeatureBulletRow key={i}>{t}</FeatureBulletRow>
             ))}
           </div>
           {/* Visual */}
@@ -1046,10 +1008,7 @@ export default function Landing() {
               'Threat level assessment per competitor',
               'Ready-to-use video ideas from gap analysis',
             ].map((t, i) => (
-              <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 10, marginBottom: 10 }}>
-                <div style={{ flexShrink: 0, marginTop: 2 }}><Check color="rgba(255,255,255,0.45)" /></div>
-                <span style={{ fontSize: 14, color: 'rgba(255,255,255,0.58)' }}>{t}</span>
-              </div>
+              <FeatureBulletRow key={i} onDark>{t}</FeatureBulletRow>
             ))}
           </div>
         </div>
@@ -1065,14 +1024,11 @@ export default function Landing() {
             <p style={{ fontSize: 14, color: 'var(--ytg-text-2)', lineHeight: 1.78, marginBottom: 28 }}>Two layers of analysis — a deterministic algorithm checking contrast, text clarity, face detection, and composition, then Claude Vision comparing it against top-performing videos in your exact niche. You get a score out of 100 and know exactly what to fix.</p>
             {[
               'Layer 1 — algorithm, instant, free',
-              'Layer 2 — Claude Vision vs real niche benchmarks',
+              'Layer 2 — YTGrowth vision vs real niche benchmarks',
               'Benchmarked by velocity, recency, and channel size bracket',
               'Full history — every thumbnail scored',
             ].map((t, i) => (
-              <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 10, marginBottom: 10 }}>
-                <div style={{ flexShrink: 0, marginTop: 2 }}><Check /></div>
-                <span style={{ fontSize: 14, color: 'var(--ytg-text-2)' }}>{t}</span>
-              </div>
+              <FeatureBulletRow key={i}>{t}</FeatureBulletRow>
             ))}
           </div>
           {/* Visual */}
@@ -1131,15 +1087,12 @@ export default function Landing() {
             <h2 style={{ fontSize: isMobile ? 26 : 36, fontWeight: 800, letterSpacing: '-1.2px', lineHeight: 1.1, marginBottom: 18, color: 'var(--ytg-text)' }}>Your channel's weekly performance, <span style={{ color: 'var(--ytg-accent)' }}>in your inbox.</span></h2>
             <p style={{ fontSize: 14, color: 'var(--ytg-text-2)', lineHeight: 1.78, marginBottom: 28 }}>Every week YTGrowth generates a performance report — key metrics, biggest win, what to watch out for, and one priority action. Sent automatically every week. Always in your dashboard even if you unsubscribe from email.</p>
             {[
-              'Subscribers, views, CTR, channel score',
+              'Subscribers, views, retention, channel score',
               'Week-on-week delta on every metric',
               'One priority action per week',
               'Full history in your dashboard',
             ].map((t, i) => (
-              <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 10, marginBottom: 10 }}>
-                <div style={{ flexShrink: 0, marginTop: 2 }}><Check /></div>
-                <span style={{ fontSize: 14, color: 'var(--ytg-text-2)' }}>{t}</span>
-              </div>
+              <FeatureBulletRow key={i}>{t}</FeatureBulletRow>
             ))}
           </div>
         </div>
@@ -1223,47 +1176,11 @@ export default function Landing() {
         </div>
       </div>
 
-      {/* ── TESTIMONIALS ────────────────────────────────────────────────── */}
-      <div className="section-animate" style={{ background: '#e8e9ee', borderTop: '1px solid rgba(10,10,15,0.06)', borderBottom: '1px solid rgba(10,10,15,0.06)', padding: isMobile ? '60px 24px' : '100px 64px' }}>
-        <div style={{ maxWidth: 1280, margin: '0 auto' }}>
-          <div style={{ textAlign: 'center', marginBottom: 56 }}>
-            {/* Rating summary row */}
-            {isMobile ? (
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, marginBottom: 20 }}>
-                <span style={{ fontSize: 28, fontWeight: 800, color: '#0a0a0f', letterSpacing: '-0.8px' }}>4.9 / 5</span>
-                <div style={{ display: 'flex', gap: 3 }}>
-                  {[...Array(5)].map((_, i) => <span key={i} style={{ fontSize: 20, color: '#f59e0b' }}>★</span>)}
-                </div>
-                <span style={{ fontSize: 12, fontWeight: 500, color: 'rgba(10,10,15,0.45)' }}>Based on 200+ reviews</span>
-              </div>
-            ) : (
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 16, marginBottom: 20 }}>
-                <div style={{ display: 'flex', gap: 3 }}>
-                  {[...Array(5)].map((_, i) => <span key={i} style={{ fontSize: 20, color: '#f59e0b' }}>★</span>)}
-                </div>
-                <div style={{ width: 1, height: 24, background: 'rgba(10,10,15,0.12)', alignSelf: 'center' }} />
-                <span style={{ fontSize: 22, fontWeight: 800, color: '#0a0a0f', letterSpacing: '-0.5px' }}>4.9 / 5</span>
-                <div style={{ width: 1, height: 24, background: 'rgba(10,10,15,0.12)', alignSelf: 'center' }} />
-                <span style={{ fontSize: 14, fontWeight: 500, color: 'rgba(10,10,15,0.45)' }}>Based on 200+ reviews</span>
-              </div>
-            )}
-            <h2 style={{ fontWeight: 800, fontSize: isMobile ? 32 : 48, letterSpacing: '-1.5px', color: '#0a0a0f', lineHeight: 1.06, marginBottom: 12 }}>The tool creators <span style={{ color: 'var(--ytg-accent)' }}>actually recommend.</span></h2>
-            <p style={{ fontSize: 16, color: 'rgba(10,10,15,0.6)', lineHeight: 1.8 }}>Real channels. Real numbers.</p>
-          </div>
-          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)', gap: 20 }}>
-            {[
-              { avatar: '/avatars/marcus.jpg',  color: '#0a84ff',  name: 'Marcus T.',     meta: 'Tech & Productivity · 42K subs', platform: 'G2',           metric: 'CTR: 2.3% → 5.1% in 6 weeks',     quote: 'The competitor gap analysis is the real weapon here. I found three topics my rivals ignored completely. One video hit 180K views in 30 days.' },
-              { avatar: '/avatars/priya.jpg',   color: '#16a34a',  name: 'Priya Nair',    meta: 'Personal Finance · 28K subs',   platform: 'Trustpilot',   metric: 'Retention: 31% → 58% in 8 weeks',  quote: 'Thumbnail IQ told me exactly what top channels in my niche were doing. I followed the benchmark suggestions and my retention nearly doubled.' },
-              { avatar: '/avatars/james.jpg',   color: '#d97706',  name: 'James Oduya',   meta: 'Fitness & Training · 67K subs', platform: 'Product Hunt', metric: 'Channel score: 44 → 78',            quote: 'Agencies charge $500/month for what this does in 10 minutes. The audit flagged watch time problems I never would have caught on my own.' },
-              { avatar: '/avatars/sophie.jpg',  color: '#7c3aed',  name: 'Sophie Brandt', meta: 'Travel · 19K subs',             platform: 'G2',           metric: '3 videos × 100K+ views',            quote: 'The video ideas pulled from my competitor data gave me a 3-month content calendar. Three of those videos broke 100K.' },
-              { avatar: '/avatars/daniel.jpg',  color: '#e5251b',  name: 'Daniel Reyes',  meta: 'Gaming · 89K subs',             platform: 'Trustpilot',   metric: 'Weekly subscribers: +180 avg',      quote: 'The weekly report is worth the entire subscription on its own. One priority action every Monday. My growth has been consistent ever since.' },
-              { avatar: '/avatars/amara.jpg',   color: '#16a34a',  name: 'Amara Osei',    meta: 'Business · 31K subs',           platform: 'Product Hunt', metric: '3 channels managed, one tool',      quote: 'Multi-channel support is exactly what a channel manager needs. Each health score visible instantly. Nothing else comes close.' },
-            ].slice(isMobile ? 3 : 0).map((t, i) => <TestimonialCard key={i} t={t} />)}
-          </div>
-        </div>
-      </div>
+      {/* ── TESTIMONIALS — renders only when reviews.json has 3+ entries ── */}
+      <Testimonials isMobile={isMobile} />
 
-      <CreatorTicker isMobile={isMobile} />
+      {/* ── FOUNDER PRICING BAND ─────────────────────────────────────────── */}
+      <FounderPricingBand isMobile={isMobile} />
 
       {/* ── PRICING ─────────────────────────────────────────────────────── */}
       <div id="pricing" style={{ background: '#f4f4f6', borderTop: '1px solid rgba(10,10,15,0.06)', borderBottom: '1px solid rgba(10,10,15,0.06)', padding: isMobile ? '60px 20px' : '100px 64px', position: 'relative', overflow: 'hidden' }}>
