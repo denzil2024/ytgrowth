@@ -1270,13 +1270,16 @@ export default function Landing() {
       </div>
 
       {/* ── HOW IT WORKS ────────────────────────────────────────────────── */}
-      <div id="how-it-works" className="section-animate" style={{ background: '#e8e9ee', borderTop: '1px solid rgba(10,10,15,0.06)', borderBottom: '1px solid rgba(10,10,15,0.06)', padding: isMobile ? '60px 20px' : '100px 64px', position: 'relative', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 900, height: 600, background: 'radial-gradient(ellipse, rgba(229,48,42,0.07) 0%, transparent 60%)', pointerEvents: 'none' }} />
+      <div id="how-it-works" className="section-animate" style={{ background: '#0d0d12', borderTop: '1px solid rgba(255,255,255,0.06)', borderBottom: '1px solid rgba(255,255,255,0.06)', padding: isMobile ? '60px 20px' : '100px 64px', position: 'relative', overflow: 'hidden' }}>
+        <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 900, height: 700, background: 'radial-gradient(ellipse, rgba(229,48,42,0.18) 0%, transparent 65%)', pointerEvents: 'none' }} />
         <div style={{ maxWidth: 1280, margin: '0 auto', position: 'relative', zIndex: 1 }}>
           <div className="section-animate" style={{ textAlign: 'center', marginBottom: 56 }}>
-            <Badge>How it works</Badge>
-            <h2 style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontWeight: 800, fontSize: isMobile ? 32 : 48, letterSpacing: '-1.5px', color: 'var(--ytg-text)', lineHeight: 1.06, marginBottom: 16, textWrap: 'balance' }}>From zero to action plan<br /><span style={{ color: 'var(--ytg-accent)' }}>in 30 seconds.</span></h2>
-            <p style={{ fontSize: 16, color: 'var(--ytg-text-2)', maxWidth: 620, margin: '0 auto', lineHeight: 1.8 }}>No setup, no configuration, no API keys. Just connect and go.</p>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.10)', borderRadius: 100, padding: '5px 12px 5px 10px', marginBottom: 20 }}>
+              <span aria-hidden="true" style={{ width: 6, height: 6, borderRadius: '50%', background: '#ff3b30', boxShadow: '0 0 0 3px rgba(229,48,42,0.18)' }} />
+              <span style={{ fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.7)', textTransform: 'uppercase', letterSpacing: '0.09em' }}>How it works</span>
+            </div>
+            <h2 style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontWeight: 800, fontSize: isMobile ? 32 : 48, letterSpacing: '-1.5px', color: '#ffffff', lineHeight: 1.06, marginBottom: 16, textWrap: 'balance' }}>From zero to action plan<br /><span style={{ color: '#ff3b30' }}>in 30 seconds.</span></h2>
+            <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.58)', maxWidth: 620, margin: '0 auto', lineHeight: 1.72 }}>No setup, no configuration, no API keys. Just connect and go.</p>
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3,1fr)', gap: 14, maxWidth: isMobile ? 480 : '100%', margin: '0 auto' }}>
             {[
@@ -1304,7 +1307,7 @@ export default function Landing() {
                 card: (
                   <div style={{ background: '#ffffff', border: '1px solid rgba(10,10,15,0.07)', boxShadow: 'var(--ytg-shadow-xl)', borderRadius: 13, padding: 18, marginBottom: 22 }}>
                     <p style={{ fontSize: 12, color: 'var(--ytg-text-3)', fontWeight: 700, marginBottom: 14, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Analyzing your channel</p>
-                    {[{ l: 'Channel metrics', w: '100%', c: '#0a84ff' }, { l: 'Video performance', w: '100%', c: '#0a84ff' }, { l: 'Competitor data', w: '72%', c: '#0a84ff' }, { l: 'Generating insights', w: '38%', c: '#ffd60a' }].map((item, i) => (
+                    {[{ l: 'Channel metrics', w: '100%', c: '#0a84ff' }, { l: 'Video performance', w: '100%', c: '#0a84ff' }, { l: 'Competitor data', w: '72%', c: '#0a84ff' }, { l: 'Generating insights', w: '38%', c: '#f59e0b' }].map((item, i) => (
                       <div key={i} style={{ marginBottom: i < 3 ? 11 : 0 }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 5 }}>
                           <span style={{ fontSize: 12, color: 'var(--ytg-text-2)', fontWeight: 500 }}>{item.l}</span>
@@ -1323,11 +1326,15 @@ export default function Landing() {
                 card: (
                   <div style={{ background: '#ffffff', border: '1px solid rgba(10,10,15,0.07)', boxShadow: 'var(--ytg-shadow-xl)', borderRadius: 13, padding: 18, marginBottom: 22 }}>
                     <p style={{ fontSize: 12, color: 'var(--ytg-text-3)', fontWeight: 700, marginBottom: 14, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Your action plan</p>
-                    {[{ c: '#ff3b30', t: 'Rewrite video openings', s: 'Critical' }, { c: '#ffd60a', t: 'Post 1 video per week', s: 'High' }, { c: '#0a84ff', t: 'Add like CTA at 30%', s: 'Medium' }].map((item, i) => (
+                    {[
+                      { dot: '#ef4444', bg: 'rgba(239,68,68,0.10)', bd: 'rgba(239,68,68,0.25)', tx: '#b91c1c', t: 'Rewrite video openings', s: 'Critical' },
+                      { dot: '#f59e0b', bg: 'rgba(245,158,11,0.12)', bd: 'rgba(245,158,11,0.30)', tx: '#b45309', t: 'Post 1 video per week', s: 'High' },
+                      { dot: '#0a84ff', bg: 'rgba(10,132,255,0.10)', bd: 'rgba(10,132,255,0.25)', tx: '#0369a1', t: 'Add like CTA at 30%', s: 'Medium' },
+                    ].map((item, i) => (
                       <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 9, padding: '9px 12px', background: '#f4f4f6', border: '1px solid rgba(10,10,15,0.06)', borderRadius: 9, marginBottom: i < 2 ? 7 : 0 }}>
-                        <div style={{ width: 6, height: 6, borderRadius: '50%', background: item.c, flexShrink: 0 }} />
+                        <div style={{ width: 6, height: 6, borderRadius: '50%', background: item.dot, flexShrink: 0 }} />
                         <span style={{ fontSize: 12, color: 'var(--ytg-text-2)', fontWeight: 500, flex: 1 }}>{item.t}</span>
-                        <span style={{ fontSize: 12, fontWeight: 700, color: item.c, textTransform: 'uppercase', letterSpacing: '0.05em' }}>{item.s}</span>
+                        <span style={{ fontSize: 10, fontWeight: 800, color: item.tx, background: item.bg, border: `1px solid ${item.bd}`, padding: '2px 8px', borderRadius: 100, textTransform: 'uppercase', letterSpacing: '0.08em' }}>{item.s}</span>
                       </div>
                     ))}
                   </div>
