@@ -1408,30 +1408,44 @@ export default function Dashboard() {
                     ))}
                   </div>
                 </div>
-                <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexShrink: 0 }}>
-                  <select
-                    value={videoSort}
-                    onChange={e => setVideoSort(e.target.value)}
-                    style={{
-                      display: 'inline-flex', alignItems: 'center',
-                      padding: '9px 16px', borderRadius: 100,
-                      border: '1px solid rgba(0,0,0,0.1)',
-                      fontFamily: 'Inter, system-ui, sans-serif', fontSize: 12.5, fontWeight: 600,
-                      background: '#fff', color: '#52525b', cursor: 'pointer',
-                      boxShadow: '0 1px 3px rgba(0,0,0,0.07), 0 4px 14px rgba(0,0,0,0.07)',
-                      outline: 'none', appearance: 'none',
-                      backgroundImage: `url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%2371717a' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")`,
-                      backgroundRepeat: 'no-repeat',
-                      backgroundPosition: 'right 12px center',
-                      paddingRight: 32,
-                    }}
-                  >
-                    <option value="date">Newest first</option>
-                    <option value="views">Most views</option>
-                    <option value="likes">Most likes</option>
-                  </select>
+                <div style={{ display: 'flex', gap: 10, alignItems: 'center', flexShrink: 0 }}>
+                  <div style={{
+                    display: 'inline-flex', alignItems: 'center',
+                    background: '#fff', borderRadius: 100,
+                    border: '1px solid rgba(0,0,0,0.08)',
+                    boxShadow: '0 1px 3px rgba(0,0,0,0.06), 0 4px 14px rgba(0,0,0,0.06)',
+                    padding: 3, gap: 2,
+                  }}>
+                    {[
+                      { k: 'date',  label: 'Newest' },
+                      { k: 'views', label: 'Most views' },
+                      { k: 'likes', label: 'Most likes' },
+                    ].map(opt => {
+                      const active = videoSort === opt.k
+                      return (
+                        <button
+                          key={opt.k}
+                          onClick={() => setVideoSort(opt.k)}
+                          style={{
+                            fontFamily: 'Inter, system-ui, sans-serif',
+                            fontSize: 12.5, fontWeight: 600,
+                            padding: '7px 14px', borderRadius: 100,
+                            border: 'none', cursor: 'pointer',
+                            background: active ? '#e5251b' : 'transparent',
+                            color: active ? '#fff' : '#52525b',
+                            boxShadow: active ? '0 1px 3px rgba(229,37,27,0.35)' : 'none',
+                            transition: 'all 0.18s',
+                          }}
+                          onMouseEnter={e => { if (!active) e.currentTarget.style.color = '#111114' }}
+                          onMouseLeave={e => { if (!active) e.currentTarget.style.color = '#52525b' }}
+                        >
+                          {opt.label}
+                        </button>
+                      )
+                    })}
+                  </div>
                   <button
-                    className="ytg-dash-btn"
+                    className="ytg-dash-btn-primary"
                     disabled={refreshingStats}
                     onClick={() => {
                       setRefreshingStats(true)
@@ -1459,8 +1473,8 @@ export default function Dashboard() {
                       <path d="M11.5 2A6 6 0 1 0 12 6.5"/><path d="M11.5 2v3h-3"/>
                     </svg>
                     {refreshingStats ? 'Refreshing…'
-                      : videoFlash === 'ok'  ? <span style={{ color: C.green }}>Updated ✓</span>
-                      : videoFlash === 'err' ? <span style={{ color: C.red }}>Failed ✕</span>
+                      : videoFlash === 'ok'  ? 'Updated ✓'
+                      : videoFlash === 'err' ? 'Failed ✕'
                       : 'Refresh'}
                   </button>
                 </div>
