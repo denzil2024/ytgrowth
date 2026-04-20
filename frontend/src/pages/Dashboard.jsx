@@ -180,11 +180,68 @@ const C = {
   surface:  '#ffffff',
 }
 
-const MILESTONE_STYLE = {
-  subs:        { emoji: '👥', bg: 'linear-gradient(135deg, #fff1f2 0%, #ffe4e6 100%)', accent: '#e5251b', plural: 'subscribers' },
-  views:       { emoji: '👁',  bg: 'linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)', accent: '#2563eb', plural: 'total views' },
-  watch_hours: { emoji: '⏱',  bg: 'linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%)', accent: '#d97706', plural: 'watch hours' },
-  uploads:     { emoji: '🎬', bg: 'linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%)', accent: '#059669', plural: 'videos' },
+const MILESTONE_TIERS = {
+  subs:        [100, 500, 1000, 5000, 10000, 50000, 100000, 1000000],
+  views:       [10000, 50000, 100000, 1000000, 10000000],
+  watch_hours: [100, 1000, 4000, 10000, 100000],
+  uploads:     [1, 10, 50, 100],
+}
+
+const MILESTONE_PLURAL = {
+  subs:        'subscribers',
+  views:       'total views',
+  watch_hours: 'watch hours',
+  uploads:     'videos',
+}
+
+// Metallic tier palette — derived from position of tier within its category ladder.
+const METAL = {
+  bronze:   { ring: 'linear-gradient(135deg, #e6a872 0%, #b87333 50%, #8b5a2b 100%)', chip: '#b87333', chipBg: '#fff4ec', chipBdr: '#f0c8a3', ink: '#7a4919' },
+  silver:   { ring: 'linear-gradient(135deg, #e8eaed 0%, #b4b8bc 50%, #7a7f85 100%)', chip: '#8a8f95', chipBg: '#f5f6f8', chipBdr: '#d4d7dc', ink: '#4a4e54' },
+  gold:     { ring: 'linear-gradient(135deg, #f5d565 0%, #d4af37 50%, #a07a10 100%)', chip: '#c99b15', chipBg: '#fff9e5', chipBdr: '#f0dc91', ink: '#7a5c0a' },
+  platinum: { ring: 'linear-gradient(135deg, #dfe6ed 0%, #9ca3af 50%, #4b5563 100%)', chip: '#4b5563', chipBg: '#f3f4f6', chipBdr: '#cbd1d9', ink: '#1f2937' },
+}
+
+function tierMetal(category, tier) {
+  const tiers = MILESTONE_TIERS[category] || []
+  const idx = tiers.indexOf(tier)
+  if (idx < 0) return METAL.bronze
+  const pct = tiers.length > 1 ? idx / (tiers.length - 1) : 0
+  if (pct < 0.26) return METAL.bronze
+  if (pct < 0.51) return METAL.silver
+  if (pct < 0.85) return METAL.gold
+  return METAL.platinum
+}
+
+function MilestoneIcon({ category, color = '#4a4a58', size = 26 }) {
+  const p = { width: size, height: size, viewBox: '0 0 24 24', fill: 'none', stroke: color, strokeWidth: 1.75, strokeLinecap: 'round', strokeLinejoin: 'round' }
+  if (category === 'subs') return (
+    <svg {...p}>
+      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+      <circle cx="9" cy="7" r="4"/>
+      <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+      <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+    </svg>
+  )
+  if (category === 'views') return (
+    <svg {...p}>
+      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+      <circle cx="12" cy="12" r="3"/>
+    </svg>
+  )
+  if (category === 'watch_hours') return (
+    <svg {...p}>
+      <circle cx="12" cy="12" r="10"/>
+      <polyline points="12 6 12 12 16 14"/>
+    </svg>
+  )
+  if (category === 'uploads') return (
+    <svg {...p}>
+      <polygon points="23 7 16 12 23 17 23 7"/>
+      <rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
+    </svg>
+  )
+  return null
 }
 
 /* Severity palette — 3-color system: red critical, amber warnings, slate minor */
@@ -1218,8 +1275,8 @@ export default function Dashboard() {
 
           {/* ── MILESTONES ─────────────────────────────────────────────── */}
           {data && nav === 'Overview' && milestones && (
-            <div style={{ marginTop: 36 }}>
-              <div style={{ marginBottom: 18 }}>
+            <div style={{ marginTop: 40 }}>
+              <div style={{ marginBottom: 20 }}>
                 <h2 style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', marginBottom: 4 }}>Milestones</h2>
                 <p style={{ fontSize: 13, color: C.text3 }}>
                   {milestones.earned.length} earned
@@ -1227,42 +1284,69 @@ export default function Dashboard() {
                 </p>
               </div>
 
-              <div className="ytg-card" style={{ padding: '28px 28px 26px' }}>
+              <div className="ytg-card" style={{ padding: '32px 32px 30px' }}>
                 {milestones.earned.length === 0 ? (
-                  <div style={{ padding: '8px 0 20px' }}>
+                  <div style={{ padding: '12px 0 24px', display: 'flex', alignItems: 'center', gap: 16 }}>
+                    <div style={{ width: 56, height: 56, borderRadius: '50%', background: METAL.bronze.ring, display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: 0.35 }}>
+                      <div style={{ width: 42, height: 42, borderRadius: '50%', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <MilestoneIcon category="subs" color={C.text3} size={20}/>
+                      </div>
+                    </div>
                     <p style={{ fontSize: 14, color: C.text2, lineHeight: 1.6 }}>
                       No badges yet — your first milestone is just around the corner. Keep shipping.
                     </p>
                   </div>
                 ) : (
                   <>
-                    <p style={{ fontSize: 10.5, fontWeight: 700, color: C.text3, letterSpacing: '0.09em', textTransform: 'uppercase', marginBottom: 16 }}>Earned</p>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(132px, 1fr))', gap: 14, marginBottom: milestones.upcoming.length > 0 ? 30 : 0 }}>
+                    <p style={{ fontSize: 10.5, fontWeight: 700, color: C.text3, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 24 }}>Earned</p>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: 24, marginBottom: milestones.upcoming.length > 0 ? 36 : 0 }}>
                       {milestones.earned.map(b => {
-                        const style = MILESTONE_STYLE[b.category] || { emoji: '⭐', bg: '#f5f5f9', accent: C.text2, plural: b.category }
+                        const metal = tierMetal(b.category, b.tier)
+                        const plural = MILESTONE_PLURAL[b.category] || b.category
                         return (
                           <div key={`${b.category}-${b.tier}`} style={{
-                            background: '#fff',
-                            border: `1px solid ${C.border}`,
-                            borderRadius: 14,
-                            padding: '16px 12px 14px',
                             textAlign: 'center',
-                            boxShadow: '0 1px 3px rgba(0,0,0,0.04), 0 4px 14px rgba(0,0,0,0.05)',
-                            transition: 'transform 0.18s, box-shadow 0.18s',
+                            padding: '8px 4px',
+                            transition: 'transform 0.2s',
+                            cursor: 'default',
                           }}
-                            onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 2px 6px rgba(0,0,0,0.08), 0 10px 28px rgba(0,0,0,0.09)' }}
-                            onMouseLeave={e => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = '0 1px 3px rgba(0,0,0,0.04), 0 4px 14px rgba(0,0,0,0.05)' }}
+                            onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-3px)' }}
+                            onMouseLeave={e => { e.currentTarget.style.transform = 'none' }}
                           >
+                            {/* Medal */}
                             <div style={{
-                              width: 48, height: 48, borderRadius: '50%',
-                              background: style.bg,
+                              width: 88, height: 88, margin: '0 auto 14px',
+                              borderRadius: '50%',
+                              background: metal.ring,
                               display: 'flex', alignItems: 'center', justifyContent: 'center',
-                              fontSize: 22, margin: '0 auto 12px',
-                              boxShadow: `inset 0 0 0 1px ${style.accent}26`,
-                            }}>{style.emoji}</div>
-                            <p style={{ fontSize: 17, fontWeight: 800, color: C.text1, letterSpacing: '-0.4px', marginBottom: 3, fontVariantNumeric: 'tabular-nums' }}>{fmtNum(b.tier)}</p>
-                            <p style={{ fontSize: 11, fontWeight: 600, color: C.text2, marginBottom: 6, textTransform: 'capitalize' }}>{style.plural}</p>
-                            <p style={{ fontSize: 10.5, color: C.text3 }}>{relTimeLong(b.achieved_at) || '—'}</p>
+                              boxShadow: `0 6px 18px ${metal.chip}40, inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -2px 0 rgba(0,0,0,0.12)`,
+                              position: 'relative',
+                            }}>
+                              <div style={{
+                                width: 68, height: 68, borderRadius: '50%',
+                                background: '#fff',
+                                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.06), 0 1px 1px rgba(255,255,255,0.9)',
+                              }}>
+                                <MilestoneIcon category={b.category} color={metal.ink} size={28}/>
+                              </div>
+                            </div>
+
+                            {/* Tier chip */}
+                            <div style={{
+                              display: 'inline-block',
+                              background: metal.chipBg,
+                              border: `1px solid ${metal.chipBdr}`,
+                              color: metal.ink,
+                              fontSize: 13, fontWeight: 800,
+                              padding: '4px 12px', borderRadius: 999,
+                              letterSpacing: '-0.2px',
+                              fontVariantNumeric: 'tabular-nums',
+                              marginBottom: 6,
+                            }}>{fmtNum(b.tier)}</div>
+
+                            {/* Category label */}
+                            <p style={{ fontSize: 12, fontWeight: 600, color: C.text3, textTransform: 'capitalize', letterSpacing: '-0.1px' }}>{plural}</p>
                           </div>
                         )
                       })}
@@ -1272,36 +1356,45 @@ export default function Dashboard() {
 
                 {milestones.upcoming.length > 0 && (
                   <>
-                    <p style={{ fontSize: 10.5, fontWeight: 700, color: C.text3, letterSpacing: '0.09em', textTransform: 'uppercase', marginBottom: 16 }}>Next up</p>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 22 }}>
+                    {milestones.earned.length > 0 && <div style={{ height: 1, background: '#eeeef3', margin: '0 0 28px' }}/>}
+                    <p style={{ fontSize: 10.5, fontWeight: 700, color: C.text3, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 20 }}>Next up</p>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 24 }}>
                       {milestones.upcoming.map(u => {
-                        const style = MILESTONE_STYLE[u.category] || { emoji: '⭐', bg: '#f5f5f9', accent: C.text2, plural: u.category }
+                        const metal = tierMetal(u.category, u.tier)
+                        const plural = MILESTONE_PLURAL[u.category] || u.category
                         return (
                           <div key={`next-${u.category}`}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 10 }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 12 }}>
+                              {/* Dimmed mini medal */}
                               <div style={{
-                                width: 34, height: 34, borderRadius: '50%',
-                                background: style.bg,
+                                width: 40, height: 40, borderRadius: '50%',
+                                background: metal.ring,
                                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                fontSize: 17, flexShrink: 0,
-                                boxShadow: `inset 0 0 0 1px ${style.accent}26`,
-                              }}>{style.emoji}</div>
-                              <div style={{ flex: 1, minWidth: 0, display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 8 }}>
-                                <span style={{ fontSize: 13.5, fontWeight: 700, color: C.text1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', textTransform: 'capitalize' }}>
-                                  {fmtNum(u.tier)} {style.plural}
-                                </span>
-                                <span style={{ fontSize: 12, fontWeight: 600, color: C.text3, fontVariantNumeric: 'tabular-nums', flexShrink: 0 }}>
-                                  {fmtNum(u.current)} / {fmtNum(u.tier)}
-                                </span>
+                                flexShrink: 0, opacity: 0.55,
+                                boxShadow: `inset 0 1px 0 rgba(255,255,255,0.5), inset 0 -1px 0 rgba(0,0,0,0.1)`,
+                              }}>
+                                <div style={{ width: 30, height: 30, borderRadius: '50%', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                  <MilestoneIcon category={u.category} color={metal.ink} size={15}/>
+                                </div>
                               </div>
-                            </div>
-                            <div style={{ height: 6, background: '#eeeef3', borderRadius: 99, overflow: 'hidden' }}>
-                              <div style={{
-                                width: `${Math.max(u.pct, 2)}%`, height: '100%',
-                                background: style.accent,
-                                borderRadius: 99,
-                                transition: 'width 0.8s ease',
-                              }}/>
+                              <div style={{ flex: 1, minWidth: 0 }}>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 8, marginBottom: 4 }}>
+                                  <span style={{ fontSize: 14, fontWeight: 700, color: C.text1, textTransform: 'capitalize', letterSpacing: '-0.2px' }}>
+                                    {fmtNum(u.tier)} {plural}
+                                  </span>
+                                  <span style={{ fontSize: 12, fontWeight: 600, color: C.text3, fontVariantNumeric: 'tabular-nums', flexShrink: 0 }}>
+                                    {fmtNum(u.current)} / {fmtNum(u.tier)}
+                                  </span>
+                                </div>
+                                <div style={{ height: 6, background: '#f1f2f6', borderRadius: 99, overflow: 'hidden' }}>
+                                  <div style={{
+                                    width: `${Math.max(u.pct, 2)}%`, height: '100%',
+                                    background: metal.ring,
+                                    borderRadius: 99,
+                                    transition: 'width 0.8s ease',
+                                  }}/>
+                                </div>
+                              </div>
                             </div>
                           </div>
                         )
