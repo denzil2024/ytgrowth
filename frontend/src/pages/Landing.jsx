@@ -1081,27 +1081,28 @@ export default function Landing() {
       {/* ── FEATURES ────────────────────────────────────────────────────── */}
 
       {/* Section 1 — Channel Audit */}
-      <div id="features" className="section-animate" style={{ background: '#f4f4f6', borderTop: '1px solid rgba(10,10,15,0.08)', borderBottom: '1px solid rgba(10,10,15,0.08)', padding: isMobile ? '60px 24px' : '100px 64px' }}>
-        <div style={{ maxWidth: 1160, margin: '0 auto', display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? 40 : 80, alignItems: 'center' }}>
+      <div id="features" className="section-animate" style={{ background: '#0d0d12', borderTop: '1px solid rgba(255,255,255,0.06)', borderBottom: '1px solid rgba(255,255,255,0.06)', padding: isMobile ? '60px 24px' : '100px 64px', position: 'relative', overflow: 'hidden' }}>
+        <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 900, height: 700, background: 'radial-gradient(ellipse, rgba(229,48,42,0.18) 0%, transparent 65%)', pointerEvents: 'none' }} />
+        <div style={{ maxWidth: 1160, margin: '0 auto', display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? 40 : 80, alignItems: 'center', position: 'relative', zIndex: 1 }}>
           {/* Text */}
           <div>
-            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#ffffff', border: '1px solid rgba(10,10,15,0.09)', borderRadius: 100, padding: '5px 12px 5px 10px', marginBottom: 16, boxShadow: '0 1px 2px rgba(10,10,15,0.04)' }}>
-              <span aria-hidden="true" style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--ytg-accent)', boxShadow: '0 0 0 3px rgba(229,48,42,0.12)' }} />
-              <span style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-text-2)', textTransform: 'uppercase', letterSpacing: '0.09em' }}>Deep Channel Intelligence</span>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.10)', borderRadius: 100, padding: '5px 12px 5px 10px', marginBottom: 16 }}>
+              <span aria-hidden="true" style={{ width: 6, height: 6, borderRadius: '50%', background: '#ff3b30', boxShadow: '0 0 0 3px rgba(229,48,42,0.18)' }} />
+              <span style={{ fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.7)', textTransform: 'uppercase', letterSpacing: '0.09em' }}>Deep Channel Intelligence</span>
             </div>
-            <h2 style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: isMobile ? 26 : 36, fontWeight: 800, letterSpacing: '-1.2px', lineHeight: 1.1, marginBottom: 18, color: 'var(--ytg-text)', textWrap: 'balance' }}>10 dimensions. <span style={{ color: 'var(--ytg-accent)' }}>One brutal honest assessment.</span></h2>
-            <p style={{ fontSize: 14, color: 'var(--ytg-text-2)', lineHeight: 1.78, marginBottom: 28 }}>Most tools show you a score. YTGrowth shows you why — traffic sources, device breakdown, audience demographics, posting patterns, CTR health, retention, engagement quality, content strategy, SEO, and how you stack up against your actual competitors. All in one audit.</p>
+            <h2 style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: isMobile ? 26 : 36, fontWeight: 800, letterSpacing: '-1.2px', lineHeight: 1.1, marginBottom: 18, color: '#ffffff', textWrap: 'balance' }}>10 dimensions. <span style={{ color: '#ff3b30' }}>One brutal honest assessment.</span></h2>
+            <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.55)', lineHeight: 1.78, marginBottom: 28 }}>Most tools show you a score. YTGrowth shows you why — traffic sources, device breakdown, audience demographics, posting patterns, CTR health, retention, engagement quality, content strategy, SEO, and how you stack up against your actual competitors. All in one audit.</p>
             {[
               'Traffic source breakdown — search vs browse vs external',
               'Competitor benchmarking against channels in your niche',
               'Audience demographics and device profile',
               'Exact priority actions ranked by impact',
             ].map((t, i) => (
-              <FeatureBulletRow key={i}>{t}</FeatureBulletRow>
+              <FeatureBulletRow key={i} onDark>{t}</FeatureBulletRow>
             ))}
           </div>
           {/* Visual */}
-          <div style={{ background: '#ffffff', borderRadius: 20, border: '1px solid rgba(10,10,15,0.07)', boxShadow: 'var(--ytg-shadow-xl)', padding: 28 }}>
+          <div style={{ background: '#111114', borderRadius: 20, border: '1px solid rgba(255,255,255,0.09)', boxShadow: '0 8px 48px rgba(0,0,0,0.6)', padding: 28 }}>
             {[
               { label: 'CTR Health',          score: 82, pct: '82%' },
               { label: 'Audience Retention',  score: 67, pct: '67%' },
@@ -1109,22 +1110,22 @@ export default function Landing() {
               { label: 'SEO Discovery',       score: 54, pct: '54%' },
               { label: 'Posting Consistency', score: 90, pct: '90%' },
             ].map((row, i) => {
-              const textColor = row.score >= 75 ? '#16a34a' : row.score >= 60 ? '#0a84ff' : row.score >= 40 ? '#f59e0b' : '#e5302a'
-              const barColor  = row.score >= 75 ? '#16a34a' : row.score >= 60 ? '#0a84ff' : row.score >= 40 ? '#f59e0b' : '#e5302a'
+              const color = row.score >= 75 ? '#4ade80' : row.score >= 60 ? '#60a5fa' : row.score >= 40 ? '#f59e0b' : '#ff3b30'
               return (
                 <div key={i} style={{ marginBottom: i < 4 ? 16 : 0 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
-                    <span style={{ fontSize: 14, fontWeight: 500, color: 'var(--ytg-text-2)' }}>{row.label}</span>
-                    <span style={{ fontSize: 14, fontWeight: 700, color: textColor }}>{row.score}</span>
+                    <span style={{ fontSize: 14, fontWeight: 500, color: 'rgba(255,255,255,0.6)' }}>{row.label}</span>
+                    <span style={{ fontSize: 14, fontWeight: 700, color }}>{row.score}</span>
                   </div>
-                  <div style={{ height: 5, background: 'rgba(10,10,15,0.07)', borderRadius: 100, overflow: 'hidden' }}>
-                    <div style={{ height: '100%', width: row.pct, background: barColor, borderRadius: 100 }} />
+                  <div style={{ height: 5, background: 'rgba(255,255,255,0.07)', borderRadius: 100, overflow: 'hidden' }}>
+                    <div style={{ height: '100%', width: row.pct, background: color, borderRadius: 100 }} />
                   </div>
                 </div>
               )
             })}
-            <div style={{ borderLeft: '3px solid #d97706', background: 'rgba(217,119,6,0.04)', borderRadius: 8, padding: '12px 16px', marginTop: 16 }}>
-              <p style={{ fontSize: 14, color: 'var(--ytg-text-2)', lineHeight: 1.6 }}>SEO Discovery at 54. Competitors average 6.8% CTR. Fix thumbnail text contrast first.</p>
+            <div style={{ borderLeft: '3px solid var(--ytg-accent)', background: 'rgba(229,48,42,0.08)', borderRadius: 8, padding: '12px 16px', marginTop: 16 }}>
+              <p style={{ fontSize: 12, fontWeight: 700, color: '#ff3b30', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 6 }}>Priority fix</p>
+              <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.7)', lineHeight: 1.6 }}>SEO Discovery at 54. Competitors average 6.8% CTR. Fix thumbnail text contrast first.</p>
             </div>
           </div>
         </div>
