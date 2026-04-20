@@ -1545,21 +1545,27 @@ export default function Dashboard() {
                           ))}
                         </div>
 
-                        {/* Footer: metric pills + Optimise */}
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, marginTop: 'auto', paddingTop: 12, borderTop: `1px solid #f0f0f4` }}>
-                          <div style={{ display: 'flex', flexDirection: 'column', gap: 4, minWidth: 0 }}>
-                            <span
+                        {/* Footer: CTR + engagement inline stats, Optimise on right */}
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10, marginTop: 'auto', paddingTop: 12, borderTop: `1px solid #f0f0f4` }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 14, minWidth: 0 }}>
+                            <div
                               title="Click-through rate = thumbnail clicks ÷ impressions. 5%+ is strong, 2–5% is average, under 2% is weak."
-                              style={{ fontSize: 11, fontWeight: 700, color: ctrColor, background: ctrBg, padding: '3px 9px', borderRadius: 100, border: `1px solid ${ctrBdr}`, fontVariantNumeric: 'tabular-nums', cursor: 'help', alignSelf: 'flex-start', whiteSpace: 'nowrap' }}
+                              style={{ cursor: 'help', minWidth: 0 }}
                             >
-                              {ctrN !== null ? `${ctrN.toFixed(1)}% CTR` : '— CTR'}
-                            </span>
-                            <span
+                              <p style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 2, lineHeight: 1 }}>CTR</p>
+                              <p style={{ fontSize: 13, fontWeight: 800, color: ctrColor, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.3px', lineHeight: 1 }}>
+                                {ctrN !== null ? `${ctrN.toFixed(1)}%` : '—'}
+                              </p>
+                            </div>
+                            <div
                               title="Engagement rate = likes ÷ views. 3%+ is strong, 1–3% is average, under 1% is weak."
-                              style={{ fontSize: 11, fontWeight: 700, color: lrColor, background: lrBg, padding: '3px 9px', borderRadius: 100, border: `1px solid ${lrBdr}`, fontVariantNumeric: 'tabular-nums', cursor: 'help', alignSelf: 'flex-start', whiteSpace: 'nowrap' }}
+                              style={{ cursor: 'help', minWidth: 0 }}
                             >
-                              {lrN !== null ? `${lr}% eng.` : '— eng.'}
-                            </span>
+                              <p style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 2, lineHeight: 1 }}>Eng</p>
+                              <p style={{ fontSize: 13, fontWeight: 800, color: lrColor, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.3px', lineHeight: 1 }}>
+                                {lrN !== null ? `${lr}%` : '—'}
+                              </p>
+                            </div>
                           </div>
                           <button
                             onClick={() => setSelectedVideoId(v.video_id)}
