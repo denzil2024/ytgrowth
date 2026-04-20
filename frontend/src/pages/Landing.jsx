@@ -1271,11 +1271,11 @@ export default function Landing() {
 
       {/* ── HOW IT WORKS ────────────────────────────────────────────────── */}
       <div id="how-it-works" className="section-animate" style={{ background: '#e8e9ee', borderTop: '1px solid rgba(10,10,15,0.06)', borderBottom: '1px solid rgba(10,10,15,0.06)', padding: isMobile ? '60px 20px' : '100px 64px', position: 'relative', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 900, height: 600, background: 'radial-gradient(ellipse, rgba(59,130,246,0.07) 0%, transparent 60%)', pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 900, height: 600, background: 'radial-gradient(ellipse, rgba(229,48,42,0.07) 0%, transparent 60%)', pointerEvents: 'none' }} />
         <div style={{ maxWidth: 1280, margin: '0 auto', position: 'relative', zIndex: 1 }}>
-          <div className="section-animate" style={{ textAlign: 'center', marginBottom: 56 }}> {/* IMPROVED: section-animate */}
+          <div className="section-animate" style={{ textAlign: 'center', marginBottom: 56 }}>
             <Badge>How it works</Badge>
-            <h2 style={{ fontWeight: 800, fontSize: isMobile ? 32 : 48, letterSpacing: '-1.5px', color: 'var(--ytg-text)', lineHeight: 1.06, marginBottom: 16 }}>From zero to action plan<br />in 30 seconds.</h2> {/* IMPROVED: 14→16 */}
+            <h2 style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontWeight: 800, fontSize: isMobile ? 32 : 48, letterSpacing: '-1.5px', color: 'var(--ytg-text)', lineHeight: 1.06, marginBottom: 16, textWrap: 'balance' }}>From zero to action plan<br /><span style={{ color: 'var(--ytg-accent)' }}>in 30 seconds.</span></h2>
             <p style={{ fontSize: 16, color: 'var(--ytg-text-2)', maxWidth: 620, margin: '0 auto', lineHeight: 1.8 }}>No setup, no configuration, no API keys. Just connect and go.</p>
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3,1fr)', gap: 14, maxWidth: isMobile ? 480 : '100%', margin: '0 auto' }}>
@@ -1283,7 +1283,7 @@ export default function Landing() {
               {
                 n: '01', t: 'Connect your channel', d: 'Sign in with Google and grant read-only access. We never post, edit, or store your content.',
                 card: (
-                  <div style={{ background: '#f0f0f4', border: `1px solid var(--ytg-border)`, borderRadius: 13, padding: 18, marginBottom: 22 }}>
+                  <div style={{ background: '#ffffff', border: '1px solid rgba(10,10,15,0.07)', boxShadow: 'var(--ytg-shadow-xl)', borderRadius: 13, padding: 18, marginBottom: 22 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 11, marginBottom: 14 }}>
                       <Logo size={32} />
                       <div>
@@ -1291,9 +1291,9 @@ export default function Landing() {
                         <p style={{ fontSize: 12, color: 'var(--ytg-text-3)' }}>wants YouTube read access</p>
                       </div>
                     </div>
-                    <div style={{ background: 'var(--ytg-section)', borderRadius: 8, padding: '8px 12px', marginBottom: 11, fontSize: 12, color: 'var(--ytg-text-3)' }}>Read-only · No posting · Fully secure</div>
+                    <div style={{ background: '#f4f4f6', borderRadius: 8, padding: '8px 12px', marginBottom: 11, fontSize: 12, color: 'var(--ytg-text-3)' }}>Read-only · No posting · Fully secure</div>
                     <div style={{ display: 'flex', gap: 7 }}>
-                      <div style={{ flex: 1, background: 'var(--ytg-card-2)', borderRadius: 8, padding: '9px', textAlign: 'center', fontSize: 12, color: 'var(--ytg-text-2)', fontWeight: 500 }}>Cancel</div>
+                      <div style={{ flex: 1, background: '#f4f4f6', borderRadius: 8, padding: '9px', textAlign: 'center', fontSize: 12, color: 'var(--ytg-text-2)', fontWeight: 500 }}>Cancel</div>
                       <div style={{ flex: 1, background: '#ff3b30', borderRadius: 8, padding: '9px', textAlign: 'center', fontSize: 12, color: '#fff', fontWeight: 700 }}>Allow</div>
                     </div>
                   </div>
@@ -1302,7 +1302,7 @@ export default function Landing() {
               {
                 n: '02', t: 'We scan everything', d: '12+ metrics analyzed automatically: retention, watch time, upload cadence, engagement, and your top competitors.',
                 card: (
-                  <div style={{ background: '#f0f0f4', border: `1px solid var(--ytg-border)`, borderRadius: 13, padding: 18, marginBottom: 22 }}>
+                  <div style={{ background: '#ffffff', border: '1px solid rgba(10,10,15,0.07)', boxShadow: 'var(--ytg-shadow-xl)', borderRadius: 13, padding: 18, marginBottom: 22 }}>
                     <p style={{ fontSize: 12, color: 'var(--ytg-text-3)', fontWeight: 700, marginBottom: 14, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Analyzing your channel</p>
                     {[{ l: 'Channel metrics', w: '100%', c: '#0a84ff' }, { l: 'Video performance', w: '100%', c: '#0a84ff' }, { l: 'Competitor data', w: '72%', c: '#0a84ff' }, { l: 'Generating insights', w: '38%', c: '#ffd60a' }].map((item, i) => (
                       <div key={i} style={{ marginBottom: i < 3 ? 11 : 0 }}>
@@ -1310,7 +1310,7 @@ export default function Landing() {
                           <span style={{ fontSize: 12, color: 'var(--ytg-text-2)', fontWeight: 500 }}>{item.l}</span>
                           <span style={{ fontSize: 12, color: item.c, fontWeight: 700, fontVariantNumeric: 'tabular-nums' }}>{item.w}</span>
                         </div>
-                        <div style={{ background: 'var(--ytg-border)', borderRadius: 100, height: 3, overflow: 'hidden' }}>
+                        <div style={{ background: 'rgba(10,10,15,0.07)', borderRadius: 100, height: 3, overflow: 'hidden' }}>
                           <div style={{ width: item.w, height: '100%', background: item.c, borderRadius: 100 }} />
                         </div>
                       </div>
@@ -1321,10 +1321,10 @@ export default function Landing() {
               {
                 n: '03', t: 'Get your action plan', d: 'Every issue ranked by impact with one specific action. Concrete steps based on your actual channel data.',
                 card: (
-                  <div style={{ background: '#f0f0f4', border: `1px solid var(--ytg-border)`, borderRadius: 13, padding: 18, marginBottom: 22 }}>
+                  <div style={{ background: '#ffffff', border: '1px solid rgba(10,10,15,0.07)', boxShadow: 'var(--ytg-shadow-xl)', borderRadius: 13, padding: 18, marginBottom: 22 }}>
                     <p style={{ fontSize: 12, color: 'var(--ytg-text-3)', fontWeight: 700, marginBottom: 14, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Your action plan</p>
                     {[{ c: '#ff3b30', t: 'Rewrite video openings', s: 'Critical' }, { c: '#ffd60a', t: 'Post 1 video per week', s: 'High' }, { c: '#0a84ff', t: 'Add like CTA at 30%', s: 'Medium' }].map((item, i) => (
-                      <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 9, padding: '9px 12px', background: 'var(--ytg-section)', border: `1px solid var(--ytg-border)`, borderRadius: 9, marginBottom: i < 2 ? 7 : 0 }}>
+                      <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 9, padding: '9px 12px', background: '#f4f4f6', border: '1px solid rgba(10,10,15,0.06)', borderRadius: 9, marginBottom: i < 2 ? 7 : 0 }}>
                         <div style={{ width: 6, height: 6, borderRadius: '50%', background: item.c, flexShrink: 0 }} />
                         <span style={{ fontSize: 12, color: 'var(--ytg-text-2)', fontWeight: 500, flex: 1 }}>{item.t}</span>
                         <span style={{ fontSize: 12, fontWeight: 700, color: item.c, textTransform: 'uppercase', letterSpacing: '0.05em' }}>{item.s}</span>
