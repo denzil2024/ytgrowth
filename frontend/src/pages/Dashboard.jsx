@@ -691,15 +691,15 @@ function MilestoneShareModal({ milestone, channelName, channelThumbnail, onClose
 
 /* ─── Confetti burst (CSS, no deps) ───────────────────────────────────── */
 const CONFETTI_COLORS = ['#ff3b30', '#ffd60a', '#30d158', '#0a84ff', '#bf5af2', '#ff9f0a', '#ffffff']
-function ConfettiBurst({ count = 60 }) {
+function ConfettiBurst({ count = 90 }) {
   const pieces = useRef(null)
   if (pieces.current === null) {
     pieces.current = Array.from({ length: count }, () => ({
       left:     Math.random() * 100,             // vw
-      cx:       (Math.random() - 0.5) * 40,      // vw drift
+      cx:       (Math.random() - 0.5) * 50,      // vw drift
       cr:       (Math.random() * 720 + 180) * (Math.random() < 0.5 ? -1 : 1),
-      delay:    Math.random() * 0.6,
-      duration: 2.4 + Math.random() * 2.2,
+      delay:    Math.random() * 2.8,             // staggered spawn up to 2.8s
+      duration: 4.8 + Math.random() * 4.2,       // 4.8–9s falls
       size:     6 + Math.random() * 6,
       color:    CONFETTI_COLORS[Math.floor(Math.random() * CONFETTI_COLORS.length)],
       round:    Math.random() < 0.35,
@@ -755,19 +755,19 @@ function MilestoneCelebrationModal({ milestone, channelName, channelThumbnail, o
           animation: 'popIn 0.55s cubic-bezier(0.22,1.3,0.36,1)',
         }}
       >
-        {/* Eyebrow */}
+        {/* Eyebrow — category-tinted pill with star */}
         <div style={{
           display: 'inline-flex', alignItems: 'center', gap: 8,
-          padding: '7px 14px', borderRadius: 999,
-          background: 'rgba(255,255,255,0.1)',
-          border: '1px solid rgba(255,255,255,0.22)',
-          color: '#ffffff', fontSize: 11.5, fontWeight: 800,
-          letterSpacing: '0.22em', textTransform: 'uppercase',
+          padding: '5px 14px 5px 11px', borderRadius: 999,
+          background: `linear-gradient(90deg, ${cat.h2}33 0%, ${cat.h2}1a 100%)`,
+          border: `1px solid ${cat.h2}55`,
+          color: '#ffffff', fontSize: 10.5, fontWeight: 800,
+          letterSpacing: '0.26em', textTransform: 'uppercase',
+          boxShadow: `0 0 20px ${cat.h2}30`,
         }}>
-          <span style={{
-            width: 7, height: 7, borderRadius: '50%',
-            background: cat.h2, boxShadow: `0 0 10px ${cat.h2}`,
-          }}/>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill={cat.h2} stroke={cat.h2} strokeWidth="1" strokeLinejoin="round">
+            <polygon points="12,2 14.9,8.7 22,9.6 16.8,14.6 18.2,21.6 12,18.1 5.8,21.6 7.2,14.6 2,9.6 9.1,8.7"/>
+          </svg>
           Milestone Unlocked
         </div>
 
@@ -780,24 +780,24 @@ function MilestoneCelebrationModal({ milestone, channelName, channelThumbnail, o
         />
 
         {/* Actions */}
-        <div style={{ display: 'flex', gap: 12, alignItems: 'center', marginTop: 4 }}>
+        <div style={{ display: 'flex', gap: 10, alignItems: 'center', marginTop: 2 }}>
           <button
             onClick={onShare}
             style={{
-              display: 'inline-flex', alignItems: 'center', gap: 9,
+              display: 'inline-flex', alignItems: 'center', gap: 8,
               background: `linear-gradient(180deg, ${cat.h2} 0%, ${cat.h3} 100%)`,
               color: '#ffffff',
-              fontSize: 14.5, fontWeight: 700,
-              padding: '14px 26px', borderRadius: 999,
+              fontSize: 13.5, fontWeight: 700,
+              padding: '11px 22px', borderRadius: 999,
               border: 'none', cursor: 'pointer',
               letterSpacing: '-0.1px',
-              boxShadow: `0 6px 20px ${cat.h2}55, inset 0 1px 0 rgba(255,255,255,0.22)`,
+              boxShadow: `0 6px 18px ${cat.h2}55, inset 0 1px 0 rgba(255,255,255,0.22)`,
               transition: 'transform 0.15s, box-shadow 0.15s',
             }}
-            onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = `0 10px 26px ${cat.h2}70, inset 0 1px 0 rgba(255,255,255,0.22)` }}
-            onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = `0 6px 20px ${cat.h2}55, inset 0 1px 0 rgba(255,255,255,0.22)` }}
+            onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-1.5px)'; e.currentTarget.style.boxShadow = `0 10px 24px ${cat.h2}70, inset 0 1px 0 rgba(255,255,255,0.22)` }}
+            onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = `0 6px 18px ${cat.h2}55, inset 0 1px 0 rgba(255,255,255,0.22)` }}
           >
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
               <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
               <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
             </svg>
@@ -807,8 +807,8 @@ function MilestoneCelebrationModal({ milestone, channelName, channelThumbnail, o
             onClick={onClose}
             style={{
               background: 'transparent', color: '#ffffff',
-              fontSize: 14, fontWeight: 600,
-              padding: '14px 20px', borderRadius: 999,
+              fontSize: 13, fontWeight: 600,
+              padding: '11px 18px', borderRadius: 999,
               border: '1px solid rgba(255,255,255,0.28)', cursor: 'pointer',
               letterSpacing: '-0.1px',
               transition: 'background 0.15s',
