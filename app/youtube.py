@@ -71,6 +71,29 @@ def get_video_metrics_map(credentials, channel_id, video_ids=None):
         return {}
 
 
+def get_watch_minutes_365d(credentials, channel_id):
+    """Total estimated watch minutes across the last 365 days. For milestone tracking."""
+    if not channel_id:
+        return 0
+    try:
+        analytics = build("youtubeAnalytics", "v2", credentials=credentials)
+        end_date   = datetime.now().strftime("%Y-%m-%d")
+        start_date = (datetime.now() - timedelta(days=365)).strftime("%Y-%m-%d")
+        response = analytics.reports().query(
+            ids=f"channel=={channel_id}",
+            startDate=start_date,
+            endDate=end_date,
+            metrics="estimatedMinutesWatched",
+        ).execute()
+        rows = response.get("rows", [])
+        if not rows:
+            return 0
+        return int(rows[0][0] or 0)
+    except Exception as e:
+        print(f"[watch_365d] fetch error: {e}")
+        return 0
+
+
 def merge_metrics_into_videos(videos, metrics_map):
     if not videos:
         return videos

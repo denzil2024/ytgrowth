@@ -8,7 +8,7 @@ import json
 import datetime
 from app.youtube import (
     get_channel_stats, get_recent_videos, get_video_metrics_map, merge_metrics_into_videos,
-    get_full_channel_data)
+    get_full_channel_data, get_watch_minutes_365d)
 from app.insights import analyze_channel
 from app.milestones import check_and_record as _check_milestones, get_state as _get_milestone_state
 from database.models import (
@@ -456,7 +456,9 @@ def callback(request: Request, background_tasks: BackgroundTasks):
 
         # Silently record any milestones the channel has already crossed (no toast on login).
         try:
-            _check_milestones(channel_id, stats, videos, full_data.get("analytics"))
+            analytics_for_ms = dict(full_data.get("analytics") or {})
+            analytics_for_ms["watch_minutes_365d"] = get_watch_minutes_365d(creds, channel_id)
+            _check_milestones(channel_id, stats, videos, analytics_for_ms)
         except Exception as _e:
             print(f"[milestones] login-check error: {_e}")
 
@@ -583,8 +585,10 @@ def refresh_stats(request: Request):
     # Milestone check — include newly unlocked in response so frontend can celebrate.
     new_milestones = []
     try:
+        analytics_for_ms = dict(data.get("analytics") or {})
+        analytics_for_ms["watch_minutes_365d"] = get_watch_minutes_365d(creds, stats.get("channel_id"))
         new_milestones = _check_milestones(
-            stats.get("channel_id"), stats, videos, data.get("analytics")
+            stats.get("channel_id"), stats, videos, analytics_for_ms
         )
     except Exception as _e:
         print(f"[milestones] refresh-check error: {_e}")

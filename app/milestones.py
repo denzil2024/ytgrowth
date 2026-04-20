@@ -10,14 +10,14 @@ from database.models import SessionLocal, Milestone
 TIERS = {
     "subs":        [100, 500, 1000, 5000, 10000, 50000, 100000, 1000000],
     "views":       [10000, 50000, 100000, 1000000, 10000000],
-    "watch_hours": [100, 1000, 10000, 100000],
+    "watch_hours": [100, 1000, 4000, 10000, 100000],  # 4000 = YT Partner monetization threshold
     "uploads":     [1, 10, 50, 100],
 }
 
 CATEGORY_LABELS = {
     "subs":        "subscribers",
     "views":       "total views",
-    "watch_hours": "watch hours (90d)",
+    "watch_hours": "watch hours (365d)",
     "uploads":     "videos published",
 }
 
@@ -28,8 +28,13 @@ def _current_values(stats: dict, videos: list, analytics: dict | None) -> dict:
     views = int((stats or {}).get("total_views") or 0)
     uploads = len(videos or [])
     watch_hours = 0
-    if analytics and analytics.get("watch_minutes_90d") is not None:
-        watch_hours = int(round(analytics["watch_minutes_90d"] / 60))
+    if analytics:
+        # Prefer 365-day window (matches YT Partner monetization threshold). Fall back to 90d.
+        mins = analytics.get("watch_minutes_365d")
+        if mins is None:
+            mins = analytics.get("watch_minutes_90d")
+        if mins is not None:
+            watch_hours = int(round(mins / 60))
     return {
         "subs":        subs,
         "views":       views,
