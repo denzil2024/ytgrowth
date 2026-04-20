@@ -480,7 +480,7 @@ function Testimonials({ isMobile }) {
               )}
             </div>
           )}
-          <h2 style={{ fontWeight: 800, fontSize: isMobile ? 32 : 48, letterSpacing: '-1.5px', color: '#0a0a0f', lineHeight: 1.06, marginBottom: 12 }}>The tool creators <span style={{ color: 'var(--ytg-accent)' }}>actually recommend.</span></h2>
+          <h2 style={{ fontWeight: 800, fontSize: isMobile ? 32 : 48, letterSpacing: '-1.5px', color: '#0a0a0f', lineHeight: 1.06, marginBottom: 12, textWrap: 'balance' }}>The tool creators <span style={{ color: 'var(--ytg-accent)' }}>actually recommend.</span></h2>
           <p style={{ fontSize: 16, color: 'rgba(10,10,15,0.6)', lineHeight: 1.8 }}>Real channels. Real numbers.</p>
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)', gap: 20 }}>
@@ -536,7 +536,7 @@ function FounderPricingBand({ isMobile }) {
           <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#e5251b', boxShadow: '0 0 8px #e5251b' }}/>
           <span style={{ fontSize: 11.5, fontWeight: 800, color: '#e5251b', textTransform: 'uppercase', letterSpacing: '0.14em' }}>Early access</span>
         </div>
-        <h2 style={{ fontSize: isMobile ? 28 : 36, fontWeight: 800, letterSpacing: '-1.2px', color: '#0a0a0f', lineHeight: 1.15, marginBottom: 14 }}>
+        <h2 style={{ fontSize: isMobile ? 26 : 36, fontWeight: 800, letterSpacing: '-1.2px', color: '#0a0a0f', lineHeight: 1.15, marginBottom: 14, textWrap: 'balance' }}>
           Founder pricing while we&rsquo;re early
         </h2>
         <p style={{ fontSize: isMobile ? 15 : 16, color: 'rgba(10,10,15,0.6)', lineHeight: 1.7, maxWidth: 560, marginLeft: 'auto', marginRight: 'auto' }}>
@@ -766,9 +766,10 @@ export default function Landing() {
           }}>
             {/* Headline */}
             <h2 style={{
-              fontSize: 15.5, fontWeight: 600, color: '#ffffff',
-              letterSpacing: '-0.2px', lineHeight: 1.5,
+              fontSize: 16, fontWeight: 700, color: '#ffffff',
+              letterSpacing: '-0.25px', lineHeight: 1.4,
               textAlign: 'center', margin: '0 12px 14px',
+              textWrap: 'balance',
             }}>
               The one thing to fix next — no guessing.
             </h2>
@@ -864,9 +865,10 @@ export default function Landing() {
           }}>
             {/* Headline */}
             <h2 style={{
-              fontSize: 22, fontWeight: 600, color: '#ffffff',
-              letterSpacing: '-0.3px', lineHeight: 1.5,
+              fontSize: 22, fontWeight: 700, color: '#ffffff',
+              letterSpacing: '-0.35px', lineHeight: 1.45,
               textAlign: 'center', maxWidth: 640, margin: '0 auto 30px',
+              textWrap: 'balance',
             }}>
               See your channel the way a $500/hour consultant would — and the one thing to fix next.
             </h2>
@@ -1017,7 +1019,7 @@ export default function Landing() {
           {/* Text */}
           <div>
             <p style={{ fontSize: 12, fontWeight: 700, color: 'var(--ytg-accent-text)', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 12 }}>Deep Channel Intelligence</p>
-            <h2 style={{ fontSize: isMobile ? 26 : 36, fontWeight: 800, letterSpacing: '-1.2px', lineHeight: 1.1, marginBottom: 18, color: 'var(--ytg-text)' }}>10 dimensions. <span style={{ color: 'var(--ytg-accent)' }}>One brutal honest assessment.</span></h2>
+            <h2 style={{ fontSize: isMobile ? 26 : 36, fontWeight: 800, letterSpacing: '-1.2px', lineHeight: 1.1, marginBottom: 18, color: 'var(--ytg-text)', textWrap: 'balance' }}>10 dimensions. <span style={{ color: 'var(--ytg-accent)' }}>One brutal honest assessment.</span></h2>
             <p style={{ fontSize: 14, color: 'var(--ytg-text-2)', lineHeight: 1.78, marginBottom: 28 }}>Most tools show you a score. YTGrowth shows you why — traffic sources, device breakdown, audience demographics, posting patterns, CTR health, retention, engagement quality, content strategy, SEO, and how you stack up against your actual competitors. All in one audit.</p>
             {[
               'Traffic source breakdown — search vs browse vs external',
@@ -1088,7 +1090,7 @@ export default function Landing() {
           {/* Text — right on desktop */}
           <div style={{ order: isMobile ? 0 : 1 }}>
             <p style={{ fontSize: 12, fontWeight: 700, color: '#ff3b30', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 12 }}>Competitive Edge</p>
-            <h2 style={{ fontSize: isMobile ? 26 : 36, fontWeight: 800, letterSpacing: '-1.2px', lineHeight: 1.1, marginBottom: 18, color: '#ffffff' }}>Find the gaps your competitors <span style={{ color: '#ff3b30' }}>leave open.</span></h2>
+            <h2 style={{ fontSize: isMobile ? 26 : 36, fontWeight: 800, letterSpacing: '-1.2px', lineHeight: 1.1, marginBottom: 18, color: '#ffffff', textWrap: 'balance' }}>Find the gaps your competitors <span style={{ color: '#ff3b30' }}>leave open.</span></h2>
             <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.55)', lineHeight: 1.78, marginBottom: 28 }}>Connect a competitor channel and YTGrowth maps exactly what topics they ignore, which title patterns drive their views, and where their audience is underserved. Then tells you how to own those gaps.</p>
             {[
               'Topic gap analysis from real video data',
@@ -1108,8 +1110,8 @@ export default function Landing() {
           {/* Text */}
           <div>
             <p style={{ fontSize: 12, fontWeight: 700, color: 'var(--ytg-accent-text)', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 12 }}>Thumbnail Intelligence</p>
-            <h2 style={{ fontSize: isMobile ? 26 : 36, fontWeight: 800, letterSpacing: '-1.2px', lineHeight: 1.1, marginBottom: 18, color: 'var(--ytg-text)' }}>Scored against the videos <span style={{ color: 'var(--ytg-accent)' }}>actually winning in your niche.</span></h2>
-            <p style={{ fontSize: 14, color: 'var(--ytg-text-2)', lineHeight: 1.78, marginBottom: 28 }}>Two layers of analysis — a deterministic algorithm checking contrast, text clarity, face detection, and composition, then Claude Vision comparing it against top-performing videos in your exact niche. You get a score out of 100 and know exactly what to fix.</p>
+            <h2 style={{ fontSize: isMobile ? 26 : 36, fontWeight: 800, letterSpacing: '-1.2px', lineHeight: 1.1, marginBottom: 18, color: 'var(--ytg-text)', textWrap: 'balance' }}>Scored against the videos <span style={{ color: 'var(--ytg-accent)' }}>actually winning in your niche.</span></h2>
+            <p style={{ fontSize: 14, color: 'var(--ytg-text-2)', lineHeight: 1.78, marginBottom: 28 }}>Two layers of analysis — a deterministic algorithm checking contrast, text clarity, face detection, and composition, then a vision model comparing it against top-performing videos in your exact niche. You get a score out of 100 and know exactly what to fix.</p>
             {[
               'Layer 1 — algorithm, instant, free',
               'Layer 2 — YTGrowth vision vs real niche benchmarks',
@@ -1172,7 +1174,7 @@ export default function Landing() {
           {/* Text — right on desktop */}
           <div style={{ order: isMobile ? 0 : 1 }}>
             <p style={{ fontSize: 12, fontWeight: 700, color: 'var(--ytg-accent-text)', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 12 }}>Automated Intelligence</p>
-            <h2 style={{ fontSize: isMobile ? 26 : 36, fontWeight: 800, letterSpacing: '-1.2px', lineHeight: 1.1, marginBottom: 18, color: 'var(--ytg-text)' }}>Your channel's weekly performance, <span style={{ color: 'var(--ytg-accent)' }}>in your inbox.</span></h2>
+            <h2 style={{ fontSize: isMobile ? 26 : 36, fontWeight: 800, letterSpacing: '-1.2px', lineHeight: 1.1, marginBottom: 18, color: 'var(--ytg-text)', textWrap: 'balance' }}>Your channel's weekly performance, <span style={{ color: 'var(--ytg-accent)' }}>in your inbox.</span></h2>
             <p style={{ fontSize: 14, color: 'var(--ytg-text-2)', lineHeight: 1.78, marginBottom: 28 }}>Every week YTGrowth generates a performance report — key metrics, biggest win, what to watch out for, and one priority action. Sent automatically every week. Always in your dashboard even if you unsubscribe from email.</p>
             {[
               'Subscribers, views, retention, channel score',
@@ -1277,7 +1279,7 @@ export default function Landing() {
         <div style={{ maxWidth: 1280, margin: '0 auto', position: 'relative', zIndex: 1 }}>
           <div className="section-animate" style={{ textAlign: 'center', marginBottom: 48 }}> {/* IMPROVED: section-animate */}
             <Badge>Pricing</Badge>
-            <h2 style={{ fontWeight: 800, fontSize: isMobile ? 28 : 48, letterSpacing: '-1.5px', color: 'var(--ytg-text)', lineHeight: 1.06, marginBottom: 16 }}>One good video idea pays for a year.</h2> {/* IMPROVED: 14→16 */}
+            <h2 style={{ fontWeight: 800, fontSize: isMobile ? 32 : 48, letterSpacing: '-1.5px', color: 'var(--ytg-text)', lineHeight: 1.06, marginBottom: 16, textWrap: 'balance' }}>One good video idea pays for a year.</h2>
             <p style={{ fontSize: 16, color: 'var(--ytg-text-2)', lineHeight: 1.8 }}>AI-powered analysis across 5 tools — find what's working in your niche, then do more of it.</p>
           </div>
 
@@ -1617,7 +1619,7 @@ export default function Landing() {
         <div style={{ maxWidth: 960, margin: '0 auto', position: 'relative', zIndex: 1 }}>
           <div style={{ textAlign: 'center', marginBottom: 56 }}>
             <Badge>Frequently Asked Questions</Badge>
-            <h2 style={{ fontWeight: 800, fontSize: isMobile ? 32 : 48, letterSpacing: '-1.5px', color: 'var(--ytg-text)', lineHeight: 1.06, marginBottom: 14 }}>Questions answered.</h2>
+            <h2 style={{ fontWeight: 800, fontSize: isMobile ? 32 : 48, letterSpacing: '-1.5px', color: 'var(--ytg-text)', lineHeight: 1.06, marginBottom: 14, textWrap: 'balance' }}>Questions answered.</h2>
             <p style={{ fontSize: 16, color: 'var(--ytg-text-2)', lineHeight: 1.8 }}>Everything you want to know before you decide.</p>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
