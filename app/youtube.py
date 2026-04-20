@@ -39,7 +39,7 @@ def get_channel_stats(credentials):
 
 
 def get_video_metrics_map(credentials, channel_id, video_ids=None):
-    """Fetch CTR + retention % for top videos. No filter — mirrors working get_video_analytics."""
+    """Fetch retention % + avg watch time for top videos. Avoids impressions (channel-restricted)."""
     if not channel_id:
         print("[metrics] no channel_id, skipping")
         return {}
@@ -51,9 +51,9 @@ def get_video_metrics_map(credentials, channel_id, video_ids=None):
             ids=f"channel=={channel_id}",
             startDate=start_date,
             endDate=end_date,
-            metrics="impressions,impressionClickThroughRate,averageViewPercentage",
+            metrics="views,averageViewDuration,averageViewPercentage",
             dimensions="video",
-            sort="-impressions",
+            sort="-views",
             maxResults=200,
         ).execute()
         rows = response.get("rows", [])
@@ -61,9 +61,8 @@ def get_video_metrics_map(credentials, channel_id, video_ids=None):
         out = {}
         for r in rows:
             out[r[0]] = {
-                "impressions":       int(r[1]) if r[1] is not None else None,
-                "ctr_percent":       round(r[2] * 100, 2) if r[2] is not None else None,
-                "avg_view_percent":  round(r[3], 1) if r[3] is not None else None,
+                "avg_duration_seconds":  int(r[2]) if r[2] is not None else None,
+                "avg_view_percent":      round(r[3], 1) if r[3] is not None else None,
             }
         return out
     except Exception as e:
@@ -81,9 +80,8 @@ def merge_metrics_into_videos(videos, metrics_map):
         entry = metrics_map.get(video.get("video_id"))
         if entry:
             matched += 1
-        video["ctr_percent"]       = entry.get("ctr_percent")      if entry else None
-        video["impressions"]       = entry.get("impressions")      if entry else None
-        video["avg_view_percent"]  = entry.get("avg_view_percent") if entry else None
+        video["avg_duration_seconds"] = entry.get("avg_duration_seconds") if entry else None
+        video["avg_view_percent"]     = entry.get("avg_view_percent")     if entry else None
     print(f"[metrics] merged {matched}/{len(videos)} videos (map had {len(metrics_map)} entries)")
     return videos
 
