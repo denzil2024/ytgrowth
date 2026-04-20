@@ -1490,8 +1490,10 @@ export default function Dashboard() {
                   const lr      = v.views > 0 ? (v.likes / v.views * 100).toFixed(1) : null
                   const lrN     = lr !== null ? parseFloat(lr) : null
                   const lrColor = lrN === null ? C.text3 : lrN >= 3 ? C.green : lrN >= 1 ? C.amber : C.red
-                  const lrBg    = lrN === null ? '#f5f5f9'   : lrN >= 3 ? C.greenBg : lrN >= 1 ? '#fffbeb' : C.redBg
-                  const lrBdr   = lrN === null ? C.border    : lrN >= 3 ? C.greenBdr : lrN >= 1 ? '#fde68a' : C.redBdr
+                  const ctrN    = typeof v.ctr_percent === 'number' ? v.ctr_percent : null
+                  const ctrColor = ctrN === null ? C.text3 : ctrN >= 5 ? C.green : ctrN >= 2 ? C.amber : C.red
+                  const retN    = typeof v.avg_view_percent === 'number' ? v.avg_view_percent : null
+                  const retColor = retN === null ? C.text3 : retN >= 50 ? C.green : retN >= 30 ? C.amber : C.red
                   const isSelected = selectedVideoId === v.video_id
                   const ytUrl   = v.video_id ? `https://www.youtube.com/watch?v=${v.video_id}` : null
                   const durMatch = (v.duration || '').match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/)
@@ -1541,17 +1543,24 @@ export default function Dashboard() {
                           ))}
                         </div>
 
-                        {/* Footer: engagement + Optimise */}
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 'auto', paddingTop: 12, borderTop: `1px solid #f0f0f4` }}>
-                          <span
-                            title="Engagement rate = likes ÷ views. 3%+ is strong, 1–3% is average, under 1% is weak."
-                            style={{ fontSize: 12, fontWeight: 700, color: lrColor, background: lrBg, padding: '4px 10px', borderRadius: 100, border: `1px solid ${lrBdr}`, fontVariantNumeric: 'tabular-nums', cursor: 'help' }}
-                          >
-                            {lrN !== null ? `${lr}% engagement` : '— engagement'}
-                          </span>
+                        {/* Footer: CTR · Retention · Eng + Optimise */}
+                        <div style={{ marginTop: 'auto', paddingTop: 12, borderTop: `1px solid #f0f0f4` }}>
+                          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 8, marginBottom: 10 }}>
+                            {[
+                              { label: 'CTR',       val: ctrN,  display: ctrN !== null ? `${ctrN.toFixed(1)}%` : '—', color: ctrColor, tip: 'Click-through rate = thumbnail clicks ÷ impressions. 5%+ strong, 2–5% avg, <2% weak.' },
+                              { label: 'Retention', val: retN,  display: retN !== null ? `${retN.toFixed(0)}%` : '—', color: retColor, tip: 'Average % of video watched. 50%+ strong, 30–50% avg, <30% weak.' },
+                              { label: 'Eng',       val: lrN,   display: lrN !== null ? `${lr}%` : '—',             color: lrColor,  tip: 'Engagement rate = likes ÷ views. 3%+ strong, 1–3% avg, <1% weak.' },
+                            ].map(m => (
+                              <div key={m.label} title={m.tip} style={{ cursor: 'help', textAlign: 'left' }}>
+                                <p style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 3, lineHeight: 1 }}>{m.label}</p>
+                                <p style={{ fontSize: 14, fontWeight: 800, color: m.color, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.3px', lineHeight: 1 }}>{m.display}</p>
+                              </div>
+                            ))}
+                          </div>
                           <button
                             onClick={() => setSelectedVideoId(v.video_id)}
-                            className="ytg-optimise-btn">
+                            className="ytg-optimise-btn"
+                            style={{ width: '100%', justifyContent: 'center', padding: '8px 14px', fontSize: 12.5 }}>
                             Optimise
                           </button>
                         </div>
