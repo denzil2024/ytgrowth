@@ -1476,6 +1476,22 @@ export default function Dashboard() {
       .then(r => r.ok ? r.json() : null)
       .then(d => { if (d && !d.error) setMilestones(d) })
       .catch(() => {})
+
+    // DEV: ?preview_milestone=subs:1000 fires the celebration modal for testing. Safe to remove.
+    try {
+      const params = new URLSearchParams(window.location.search)
+      const raw = params.get('preview_milestone')
+      if (raw) {
+        const [category, tierStr] = raw.split(':')
+        const tier = parseInt(tierStr, 10)
+        if (category && !isNaN(tier)) {
+          setCelebrateQueue([{ category, tier, achieved_at: new Date().toISOString() }])
+        }
+        params.delete('preview_milestone')
+        const qs = params.toString()
+        window.history.replaceState({}, '', window.location.pathname + (qs ? `?${qs}` : ''))
+      }
+    } catch {}
   }, [])
 
   // Track score delta across audits
