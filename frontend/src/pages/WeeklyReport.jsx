@@ -505,7 +505,6 @@ export default function WeeklyReport({ channelId, channelEmail, plan, channelSta
                   padding: '13px 24px', borderRadius: 999,
                   textDecoration: 'none', letterSpacing: '-0.1px',
                   boxShadow: `0 8px 22px ${C.red}50, inset 0 1px 0 rgba(255,255,255,0.22)`,
-                  marginBottom: 10,
                 }}
               >
                 See monthly plans
@@ -513,6 +512,9 @@ export default function WeeklyReport({ channelId, channelEmail, plan, channelSta
                   <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
                 </svg>
               </a>
+              <div style={{ fontSize: 12.5, color: C.text3, fontWeight: 500, marginTop: 10, marginBottom: 8 }}>
+                Plans from <span style={{ fontWeight: 700, color: C.text2 }}>$19/mo</span> · cancel anytime
+              </div>
               <div>
                 <a
                   href="/?tab=packs#pricing"
@@ -523,6 +525,35 @@ export default function WeeklyReport({ channelId, channelEmail, plan, channelSta
                 >
                   Or grab a one-time credit pack →
                 </a>
+              </div>
+
+              {/* Trust stack */}
+              <div style={{
+                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12,
+                marginTop: 22, paddingTop: 20,
+                borderTop: `1px solid ${C.border}`,
+              }}>
+                <div style={{ display: 'flex' }}>
+                  {['sophie', 'james', 'priya', 'amara', 'marcus'].map((name, i, arr) => (
+                    <img
+                      key={name}
+                      src={`/avatars/${name}.jpg`}
+                      alt=""
+                      style={{
+                        width: 28, height: 28, borderRadius: '50%',
+                        border: '2px solid #ffffff',
+                        marginLeft: i === 0 ? 0 : -9,
+                        objectFit: 'cover',
+                        boxShadow: '0 1px 4px rgba(0,0,0,0.15)',
+                        zIndex: arr.length - i,
+                        position: 'relative',
+                      }}
+                    />
+                  ))}
+                </div>
+                <span style={{ fontSize: 12.5, color: C.text3, fontWeight: 500, textAlign: 'left', lineHeight: 1.4 }}>
+                  Trusted by creators growing<br/>their channels every week
+                </span>
               </div>
             </div>
           </div>
