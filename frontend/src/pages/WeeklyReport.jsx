@@ -37,20 +37,48 @@ function DeltaBadge({ metric, unit, isScore }) {
 
 function MetricCard({ label, value, metric, unit, isScore }) {
   return (
-    <div style={{
-      background: '#f9fafb', borderRadius: 8, padding: '14px 16px',
-      border: '1px solid rgba(0,0,0,0.07)', flex: '1 1 calc(50% - 6px)',
-    }}>
-      <div style={{ fontSize: 12, fontWeight: 600, color: C.text4, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 6 }}>{label}</div>
-      <div style={{ fontSize: 22, fontWeight: 600, color: C.text1, lineHeight: 1, fontVariantNumeric: 'tabular-nums', marginBottom: 5 }}>{value}</div>
-      <DeltaBadge metric={metric} unit={unit} isScore={isScore} />
+    <div className="ytg-stat-card" style={{ cursor: 'default' }}>
+      <p style={{ fontSize: 11, fontWeight: 500, letterSpacing: '0.05em', textTransform: 'uppercase', color: C.text3, marginBottom: 12 }}>{label}</p>
+      <p style={{ fontSize: 30, fontWeight: 800, letterSpacing: '-1.4px', color: C.text1, lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{value}</p>
+      <div style={{ marginTop: 10 }}>
+        <DeltaBadge metric={metric} unit={unit} isScore={isScore} />
+      </div>
     </div>
   )
 }
 
-function SectionLabel({ children, color }) {
+function SectionIcon({ kind, color }) {
+  const p = { width: 14, height: 14, viewBox: '0 0 24 24', fill: 'none', stroke: color, strokeWidth: 2.2, strokeLinecap: 'round', strokeLinejoin: 'round' }
+  if (kind === 'summary') return <svg {...p}><rect x="3" y="4" width="18" height="16" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+  if (kind === 'win')     return <svg {...p}><path d="M6 9a6 6 0 0 0 12 0V3H6v6z"/><path d="M8 21h8M12 15v6"/><path d="M18 5h3v3a3 3 0 0 1-3 3M6 5H3v3a3 3 0 0 0 3 3"/></svg>
+  if (kind === 'warn')    return <svg {...p}><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+  if (kind === 'priority') return <svg {...p}><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+  return null
+}
+
+function SectionCard({ kind, accent, label, tint, children, hero }) {
   return (
-    <div style={{ fontSize: 12, fontWeight: 700, color: color || C.text4, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 8 }}>
+    <div style={{
+      background: hero ? `linear-gradient(180deg, ${tint} 0%, #ffffff 55%)` : '#ffffff',
+      border: `1px solid ${hero ? 'rgba(229,37,27,0.16)' : 'rgba(0,0,0,0.06)'}`,
+      borderTop: `3px solid ${accent}`,
+      borderRadius: 12,
+      padding: hero ? '20px 24px 22px' : '18px 22px',
+      marginBottom: 12,
+      boxShadow: hero
+        ? '0 2px 6px rgba(229,37,27,0.08), 0 8px 22px rgba(229,37,27,0.06)'
+        : '0 1px 2px rgba(0,0,0,0.03), 0 2px 8px rgba(0,0,0,0.04)',
+    }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 9, marginBottom: 10 }}>
+        <span style={{
+          display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+          width: 22, height: 22, borderRadius: 6,
+          background: `${accent}15`,
+        }}>
+          <SectionIcon kind={kind} color={accent}/>
+        </span>
+        <span style={{ fontSize: 11, fontWeight: 800, color: accent, letterSpacing: '0.1em', textTransform: 'uppercase' }}>{label}</span>
+      </div>
       {children}
     </div>
   )
@@ -123,8 +151,12 @@ function ReportBody({ rd, isLatest }) {
 
   return (
     <>
-      {/* Metrics grid */}
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, marginBottom: 20 }}>
+      {/* Metrics grid — elevated cards, Overview-style */}
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(190px, 1fr))',
+        gap: 14, marginBottom: 24,
+      }}>
         <MetricCard label="Subscribers"   value={subsVal}  metric={m.subscribers}  />
         <MetricCard label="Weekly Views"  value={viewsVal} metric={m.weeklyViews}  />
         <MetricCard label="Avg CTR"       value={ctrVal}   metric={m.avgCtr}   unit="%" />
@@ -133,42 +165,35 @@ function ReportBody({ rd, isLatest }) {
 
       {/* Weekly summary */}
       {rd.weeklySummary && (
-        <div style={{ marginBottom: 18 }}>
-          <SectionLabel>This Week</SectionLabel>
-          <p style={{ fontSize: 14, color: C.text2, lineHeight: 1.7 }}>{rd.weeklySummary}</p>
-        </div>
+        <SectionCard kind="summary" accent="#64748b" label="This Week">
+          <p style={{ fontSize: 14, color: C.text2, lineHeight: 1.75 }}>{rd.weeklySummary}</p>
+        </SectionCard>
       )}
 
       {/* Biggest win */}
       {rd.biggestWin && (
-        <div style={{ marginBottom: 16, borderLeft: `3px solid ${C.green}`, paddingLeft: 14 }}>
-          <SectionLabel color={C.green}>Biggest Win</SectionLabel>
-          <p style={{ fontSize: 14, color: C.text2, lineHeight: 1.6 }}>{rd.biggestWin}</p>
-        </div>
+        <SectionCard kind="win" accent={C.green} label="Biggest Win">
+          <p style={{ fontSize: 14, color: C.text2, lineHeight: 1.7 }}>{rd.biggestWin}</p>
+        </SectionCard>
       )}
 
       {/* Watch out */}
       {rd.watchOut && (
-        <div style={{ marginBottom: 20, borderLeft: `3px solid #f59e0b`, paddingLeft: 14 }}>
-          <SectionLabel color={C.amber}>Watch Out</SectionLabel>
-          <p style={{ fontSize: 14, color: C.text2, lineHeight: 1.6 }}>{rd.watchOut}</p>
-        </div>
+        <SectionCard kind="warn" accent={C.amber} label="Watch Out">
+          <p style={{ fontSize: 14, color: C.text2, lineHeight: 1.7 }}>{rd.watchOut}</p>
+        </SectionCard>
       )}
 
-      {/* Priority action */}
+      {/* Priority action — hero */}
       {rd.priorityAction && (
-        <div style={{
-          background: C.redBg, borderRadius: 10, border: `1px solid ${C.redBdr}`,
-          padding: 18, marginBottom: 16,
-        }}>
-          <SectionLabel color={C.red}>Your Priority This Week</SectionLabel>
-          <p style={{ fontSize: 14, fontWeight: 500, color: C.text1, lineHeight: 1.7 }}>{rd.priorityAction}</p>
-        </div>
+        <SectionCard kind="priority" accent={C.red} label="Your Priority This Week" tint="#fff5f5" hero>
+          <p style={{ fontSize: 14.5, fontWeight: 500, color: C.text1, lineHeight: 1.75, letterSpacing: '-0.1px' }}>{rd.priorityAction}</p>
+        </SectionCard>
       )}
 
       {/* Motivational close */}
       {rd.motivationalClose && (
-        <p style={{ fontSize: 14, color: C.text3, lineHeight: 1.6 }}>{rd.motivationalClose}</p>
+        <p style={{ fontSize: 13.5, color: C.text3, lineHeight: 1.65, fontStyle: 'italic', marginTop: 18, paddingTop: 16, borderTop: '1px solid rgba(0,0,0,0.06)' }}>{rd.motivationalClose}</p>
       )}
     </>
   )
@@ -291,17 +316,27 @@ export default function WeeklyReport({ channelId, channelEmail }) {
       {latest && (
         <div style={{
           background: '#fff', borderRadius: 16, border: '1px solid rgba(0,0,0,0.08)',
-          boxShadow: '0 2px 6px rgba(0,0,0,0.10), 0 10px 36px rgba(0,0,0,0.14)',
-          padding: '24px 24px 28px', marginBottom: 16,
+          boxShadow: '0 2px 6px rgba(0,0,0,0.08), 0 10px 36px rgba(0,0,0,0.10)',
+          padding: '28px 28px 30px', marginBottom: 16,
         }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
-            <div>
-              <div style={{ fontSize: 14, fontWeight: 700, color: C.text1, letterSpacing: '-0.3px', marginBottom: 2 }}>
+          <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, marginBottom: 24 }}>
+            <div style={{ minWidth: 0 }}>
+              <div style={{ fontSize: 18, fontWeight: 800, color: C.text1, letterSpacing: '-0.4px', marginBottom: 5 }}>
                 {latest.reportData?.reportTitle || 'Weekly Report'}
               </div>
-              <div style={{ fontSize: 12, color: C.text4 }}>{latest.weekStart} – {latest.weekEnd}</div>
+              <div style={{ fontSize: 12.5, color: C.text3, fontVariantNumeric: 'tabular-nums' }}>{latest.weekStart} – {latest.weekEnd}</div>
             </div>
-            <span style={{ fontSize: 12, fontWeight: 600, color: C.green, background: '#f0fdf4', border: '1px solid rgba(134,239,172,0.6)', borderRadius: 20, padding: '3px 10px' }}>Latest</span>
+            <span style={{
+              display: 'inline-flex', alignItems: 'center', gap: 6,
+              fontSize: 11, fontWeight: 800, color: C.green,
+              background: '#f0fdf4', border: '1px solid rgba(134,239,172,0.65)',
+              borderRadius: 999, padding: '4px 11px',
+              letterSpacing: '0.08em', textTransform: 'uppercase',
+              flexShrink: 0,
+            }}>
+              <span style={{ width: 6, height: 6, borderRadius: '50%', background: C.green, boxShadow: `0 0 8px ${C.green}` }}/>
+              Latest
+            </span>
           </div>
           <ReportBody rd={latest.reportData || {}} isLatest />
         </div>
