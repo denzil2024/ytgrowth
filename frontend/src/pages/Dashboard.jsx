@@ -213,35 +213,52 @@ function tierMetal(category, tier) {
   return METAL.platinum
 }
 
+// Each category has its own vivid gradient so badges are visually distinct at a glance.
+const CATEGORY_GRADIENT = {
+  subs:        { h1: '#ff8a80', h2: '#e5251b', h3: '#7a0f08', stroke: '#4a0903', ink: '#4a0903' },
+  views:       { h1: '#7fb3ff', h2: '#2563eb', h3: '#1e3a8a', stroke: '#172554', ink: '#172554' },
+  watch_hours: { h1: '#ffe082', h2: '#eab308', h3: '#8a6400', stroke: '#4a3400', ink: '#4a3400' },
+  uploads:     { h1: '#6ee7b7', h2: '#059669', h3: '#064e3b', stroke: '#022c1e', ink: '#022c1e' },
+}
+
+function YTGLogo({ size = 12 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="32" height="32" rx="9" fill="#ff3b30"/>
+      <path d="M23.2 11.6a2.1 2.1 0 0 0-1.48-1.48C20.55 9.8 16 9.8 16 9.8s-4.55 0-5.72.32A2.1 2.1 0 0 0 8.8 11.6 22 22 0 0 0 8.5 16a22 22 0 0 0 .3 4.4 2.1 2.1 0 0 0 1.48 1.48C11.45 22.2 16 22.2 16 22.2s4.55 0 5.72-.32a2.1 2.1 0 0 0 1.48-1.48A22 22 0 0 0 23.5 16a22 22 0 0 0-.3-4.4z" fill="white"/>
+      <polygon points="13.5,19 19.5,16 13.5,13" fill="#ff3b30"/>
+    </svg>
+  )
+}
+
 function StarBadge({ category, tier, size = 108 }) {
-  const metal = tierMetal(category, tier)
+  const cat = CATEGORY_GRADIENT[category] || CATEGORY_GRADIENT.subs
   const gid = `grad-${category}-${tier}`.replace(/\W/g, '')
   const s = size
   const cx = s / 2
   const cy = s / 2
-  // Scale 5-point star path to fit size
   const pts = [
     [60, 8], [73, 44], [112, 44], [80, 68], [92, 104],
     [60, 82], [28, 104], [40, 68], [8, 44], [47, 44],
   ].map(([x, y]) => `${(x / 120) * s},${(y / 120) * s}`).join(' ')
   return (
     <div style={{ position: 'relative', width: s, height: s, margin: '0 auto' }}>
-      <svg width={s} height={s} viewBox={`0 0 ${s} ${s}`} style={{ filter: 'drop-shadow(0 4px 10px rgba(0,0,0,0.22))' }}>
+      <svg width={s} height={s} viewBox={`0 0 ${s} ${s}`} style={{ filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.22))' }}>
         <defs>
-          <radialGradient id={gid} cx="38%" cy="32%" r="68%">
-            <stop offset="0%"  stopColor={metal.highlight}/>
-            <stop offset="55%" stopColor={metal.mid}/>
-            <stop offset="100%" stopColor={metal.deep}/>
+          <radialGradient id={gid} cx="36%" cy="30%" r="72%">
+            <stop offset="0%"  stopColor={cat.h1}/>
+            <stop offset="55%" stopColor={cat.h2}/>
+            <stop offset="100%" stopColor={cat.h3}/>
           </radialGradient>
         </defs>
         <polygon
           points={pts}
           fill={`url(#${gid})`}
-          stroke={metal.shadow}
+          stroke={cat.stroke}
           strokeWidth="1.25"
           strokeLinejoin="round"
         />
-        <circle cx={cx} cy={cy * 0.97} r={s * 0.18} fill="rgba(255,255,255,0.96)"/>
+        <circle cx={cx} cy={cy * 0.97} r={s * 0.19} fill="rgba(255,255,255,0.96)"/>
       </svg>
       <div style={{
         position: 'absolute', top: 0, left: 0, width: s, height: s,
@@ -249,7 +266,7 @@ function StarBadge({ category, tier, size = 108 }) {
         pointerEvents: 'none',
       }}>
         <div style={{ marginTop: -s * 0.03 }}>
-          <MilestoneIcon category={category} color={metal.ink} size={s * 0.24}/>
+          <MilestoneIcon category={category} color={cat.ink} size={s * 0.26}/>
         </div>
       </div>
     </div>
@@ -259,11 +276,11 @@ function StarBadge({ category, tier, size = 108 }) {
 function TierRibbon({ tier, metal }) {
   return (
     <div style={{
-      display: 'inline-flex', alignItems: 'center',
+      display: 'inline-flex', alignItems: 'center', gap: 7,
       background: `linear-gradient(180deg, ${metal.ribbon} 0%, ${metal.shadow} 100%)`,
       color: '#fff',
       fontSize: 12.5, fontWeight: 800,
-      padding: '5px 14px',
+      padding: '5px 12px 5px 8px',
       borderRadius: 3,
       letterSpacing: '-0.1px',
       fontVariantNumeric: 'tabular-nums',
@@ -283,6 +300,9 @@ function TierRibbon({ tier, metal }) {
         borderTop: '6px solid transparent',
         borderBottom: '6px solid transparent',
       }}/>
+      <span style={{ display: 'flex', alignItems: 'center', background: '#fff', borderRadius: 3, padding: 1.5 }}>
+        <YTGLogo size={11}/>
+      </span>
       {fmtNum(tier)}
     </div>
   )
@@ -1407,7 +1427,7 @@ export default function Dashboard() {
                     <p style={{ fontSize: 10.5, fontWeight: 700, color: C.text3, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 22 }}>Next up</p>
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 24 }}>
                       {milestones.upcoming.map(u => {
-                        const metal = tierMetal(u.category, u.tier)
+                        const cat = CATEGORY_GRADIENT[u.category] || CATEGORY_GRADIENT.subs
                         const plural = MILESTONE_PLURAL[u.category] || u.category
                         return (
                           <div key={`next-${u.category}`} style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
@@ -1426,7 +1446,7 @@ export default function Dashboard() {
                               <div style={{ height: 6, background: '#f1f2f6', borderRadius: 99, overflow: 'hidden' }}>
                                 <div style={{
                                   width: `${Math.max(u.pct, 2)}%`, height: '100%',
-                                  background: `linear-gradient(90deg, ${metal.mid} 0%, ${metal.deep} 100%)`,
+                                  background: `linear-gradient(90deg, ${cat.h2} 0%, ${cat.h3} 100%)`,
                                   borderRadius: 99,
                                   transition: 'width 0.8s ease',
                                 }}/>
@@ -1439,15 +1459,6 @@ export default function Dashboard() {
                   </>
                 )}
 
-                {/* YTGrowth brand footer */}
-                <div style={{ marginTop: 28, paddingTop: 18, borderTop: `1px solid #eeeef3`, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
-                  <svg width="18" height="18" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <rect width="32" height="32" rx="9" fill="#e5251b"/>
-                    <path d="M23.2 11.6a2.1 2.1 0 0 0-1.48-1.48C20.55 9.8 16 9.8 16 9.8s-4.55 0-5.72.32A2.1 2.1 0 0 0 8.8 11.6 22 22 0 0 0 8.5 16a22 22 0 0 0 .3 4.4 2.1 2.1 0 0 0 1.48 1.48C11.45 22.2 16 22.2 16 22.2s4.55 0 5.72-.32a2.1 2.1 0 0 0 1.48-1.48A22 22 0 0 0 23.5 16a22 22 0 0 0-.3-4.4z" fill="white"/>
-                    <polygon points="13.5,19 19.5,16 13.5,13" fill="#e5251b"/>
-                  </svg>
-                  <span style={{ fontSize: 11.5, fontWeight: 700, color: C.text3, letterSpacing: '-0.1px' }}>YTGrowth Achievements</span>
-                </div>
               </div>
             </div>
           )}
