@@ -1281,7 +1281,7 @@ export default function Landing() {
             <h2 style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontWeight: 800, fontSize: isMobile ? 32 : 48, letterSpacing: '-1.5px', color: '#ffffff', lineHeight: 1.06, marginBottom: 16, textWrap: 'balance' }}>From zero to action plan<br /><span style={{ color: '#ff3b30' }}>in 30 seconds.</span></h2>
             <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.58)', maxWidth: 620, margin: '0 auto', lineHeight: 1.72 }}>No setup, no configuration, no API keys. Just connect and go.</p>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3,1fr)', gap: 14, maxWidth: isMobile ? 480 : '100%', margin: '0 auto' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3,1fr)', gap: isMobile ? 36 : 14, maxWidth: isMobile ? 480 : '100%', margin: '0 auto' }}>
             {[
               {
                 n: '01', t: 'Connect your channel', d: 'Sign in with Google and grant read-only access. We never post, edit, or store your content.',
@@ -1341,13 +1341,13 @@ export default function Landing() {
                 )
               },
             ].map((step, i) => (
-              <div key={i} className="ytg-step-card">
+              <div key={i} className="ytg-step-card" style={isMobile ? { background: 'transparent', border: 'none', boxShadow: 'none', padding: 0 } : undefined}>
                 {step.card}
-                <div style={{ width: 36, height: 36, background: 'var(--ytg-card-2)', border: '1px solid var(--ytg-border-2)', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 16 }}> {/* IMPROVED: 12→16px marginBottom */}
-                  <span style={{ fontWeight: 700, fontSize: 12, color: 'var(--ytg-text-3)', fontVariantNumeric: 'tabular-nums' }}>{step.n}</span>
+                <div style={{ width: 36, height: 36, background: isMobile ? 'rgba(255,255,255,0.06)' : 'var(--ytg-card-2)', border: isMobile ? '1px solid rgba(255,255,255,0.12)' : '1px solid var(--ytg-border-2)', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 16 }}>
+                  <span style={{ fontWeight: 700, fontSize: 12, color: isMobile ? 'rgba(255,255,255,0.55)' : 'var(--ytg-text-3)', fontVariantNumeric: 'tabular-nums' }}>{step.n}</span>
                 </div>
-                <p style={{ fontWeight: 700, fontSize: 16, color: 'var(--ytg-text)', marginBottom: 9, letterSpacing: '-0.3px' }}>{step.t}</p>
-                <p style={{ fontSize: 14, color: 'var(--ytg-text-2)', lineHeight: 1.9 }}>{step.d}</p> {/* IMPROVED: 13.5→14.5px, 1.8→1.9 */}
+                <p style={{ fontWeight: 700, fontSize: 16, color: isMobile ? '#ffffff' : 'var(--ytg-text)', marginBottom: 9, letterSpacing: '-0.3px' }}>{step.t}</p>
+                <p style={{ fontSize: 14, color: isMobile ? 'rgba(255,255,255,0.6)' : 'var(--ytg-text-2)', lineHeight: 1.72 }}>{step.d}</p>
               </div>
             ))}
           </div>
