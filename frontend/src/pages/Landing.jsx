@@ -1806,30 +1806,33 @@ export default function Landing() {
 
       {/* ── FINAL CTA ───────────────────────────────────────────────────── */}
       <div style={{ background: '#0d0d12', borderTop: '1px solid rgba(255,255,255,0.07)', padding: isMobile ? '70px 24px' : '120px 64px', position: 'relative', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 900, height: 700, background: 'radial-gradient(ellipse, rgba(229,48,42,0.14) 0%, transparent 65%)', pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 1000, height: 800, background: 'radial-gradient(ellipse, rgba(229,48,42,0.22) 0%, transparent 65%)', pointerEvents: 'none' }} />
         <div style={{ maxWidth: 860, margin: '0 auto', textAlign: 'center', position: 'relative', zIndex: 1 }}>
-          <Badge>Get started</Badge>
-          <h2 style={{ fontWeight: 800, fontSize: isMobile ? 44 : 64, letterSpacing: isMobile ? '-1.5px' : '-2.5px', color: '#ffffff', marginBottom: 18, lineHeight: 1.02 }}>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.10)', borderRadius: 100, padding: '5px 12px 5px 10px', marginBottom: 20 }}>
+            <span aria-hidden="true" style={{ width: 6, height: 6, borderRadius: '50%', background: '#ff3b30', boxShadow: '0 0 0 3px rgba(229,48,42,0.18)' }} />
+            <span style={{ fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.7)', textTransform: 'uppercase', letterSpacing: '0.09em' }}>Get started</span>
+          </div>
+          <h2 style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontWeight: 800, fontSize: isMobile ? 40 : 60, letterSpacing: isMobile ? '-1.4px' : '-2.2px', color: '#ffffff', marginBottom: 18, lineHeight: 1.04, textWrap: 'balance' }}>
             Stop making videos<br />
-            <span style={{ color: 'var(--ytg-accent)' }}>nobody finds.</span>
+            <span style={{ color: '#ff3b30' }}>nobody finds.</span>
           </h2>
-          <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.52)', marginBottom: 48, lineHeight: 1.8, maxWidth: 620, margin: '0 auto 48px' }}>
+          <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.55)', lineHeight: 1.72, maxWidth: 620, margin: '0 auto 40px' }}>
             Start free. Run your first AI analysis on the house. See exactly what's holding your channel back.
           </p>
-          <div style={{ display: 'flex', gap: 14, justifyContent: 'center', flexWrap: 'wrap', flexDirection: isMobile ? 'column' : 'row', alignItems: 'center' }}>
-            <a href="/auth/login" className="ytg-btn-primary" style={{ fontSize: 16, padding: '16px 38px' }}>
+          <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap', flexDirection: isMobile ? 'column' : 'row', alignItems: 'center' }}>
+            <a href="/auth/login" className="ytg-btn-primary">
               Start free <Arrow />
             </a>
-            <button onClick={() => { document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' }); setPricingTab('lifetime') }} className="ytg-btn-ghost" style={{ fontSize: 16, padding: '16px 38px', background: 'rgba(255,255,255,0.07)', color: '#ffffff', border: '1px solid rgba(255,255,255,0.15)', boxShadow: 'none' }}>
+            <button onClick={() => { document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' }); setPricingTab('lifetime') }} className="ytg-btn-ghost" style={{ background: 'rgba(255,255,255,0.06)', color: '#ffffff', border: '1px solid rgba(255,255,255,0.14)', boxShadow: 'none' }}>
               View lifetime deals
             </button>
           </div>
-          <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.3)', marginTop: 16 }}>No credit card · Lifetime deals capped at 500.</p>
+          <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.3)', marginTop: 18 }}>No credit card · Lifetime deals capped at 500.</p>
         </div>
       </div>
 
       {/* ── FOOTER ──────────────────────────────────────────────────────── */}
-      <footer style={{ background: '#0d0d12', borderTop: '1px solid rgba(255,255,255,0.07)', padding: isMobile ? '28px 20px' : '36px 64px' }}>
+      <footer style={{ background: '#07070a', borderTop: '1px solid rgba(255,255,255,0.07)', padding: isMobile ? '28px 20px' : '36px 64px' }}>
         <div style={{ maxWidth: 1280, margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexDirection: isMobile ? 'column' : 'row', gap: isMobile ? 20 : 0, textAlign: isMobile ? 'center' : 'left' }}>
           <a href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 9 }}>
             <Logo size={26} />
