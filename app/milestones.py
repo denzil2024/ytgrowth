@@ -11,14 +11,12 @@ TIERS = {
     "subs":        [100, 500, 1000, 5000, 10000, 50000, 100000, 1000000],
     "views":       [10000, 50000, 100000, 1000000, 10000000],
     "watch_hours": [100, 1000, 4000, 10000, 100000],  # 4000 = YT Partner monetization threshold
-    "uploads":     [1, 10, 50, 100],
 }
 
 CATEGORY_LABELS = {
     "subs":        "subscribers",
     "views":       "total views",
     "watch_hours": "watch hours (365d)",
-    "uploads":     "videos published",
 }
 
 
@@ -26,7 +24,6 @@ def _current_values(stats: dict, videos: list, analytics: dict | None) -> dict:
     """Extract the current value per category from the shapes we already fetch."""
     subs  = int((stats or {}).get("subscribers") or 0)
     views = int((stats or {}).get("total_views") or 0)
-    uploads = len(videos or [])
     watch_hours = 0
     if analytics:
         # Prefer 365-day window (matches YT Partner monetization threshold). Fall back to 90d.
@@ -39,7 +36,6 @@ def _current_values(stats: dict, videos: list, analytics: dict | None) -> dict:
         "subs":        subs,
         "views":       views,
         "watch_hours": watch_hours,
-        "uploads":     uploads,
     }
 
 

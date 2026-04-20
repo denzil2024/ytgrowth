@@ -1369,99 +1369,104 @@ export default function Dashboard() {
           )}
 
           {/* ── MILESTONES ─────────────────────────────────────────────── */}
-          {data && nav === 'Overview' && milestones && (
-            <div style={{ marginTop: 40 }}>
-              <div style={{ marginBottom: 20 }}>
-                <h2 style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', marginBottom: 4 }}>Milestones</h2>
-                <p style={{ fontSize: 13, color: C.text3 }}>
-                  {milestones.earned.length} earned
-                  {milestones.upcoming.length > 0 ? ` · ${milestones.upcoming.length} in progress` : ''}
-                </p>
-              </div>
+          {data && nav === 'Overview' && milestones && (() => {
+            const cats = [
+              { key: 'subs',        Title: 'Subscribers' },
+              { key: 'views',       Title: 'Total Views' },
+              { key: 'watch_hours', Title: 'Watch Hours' },
+            ]
+            const perCat = cats.map(c => {
+              const earnedTiers = milestones.earned
+                .filter(e => e.category === c.key)
+                .map(e => e.tier)
+              const latestTier = earnedTiers.length ? Math.max(...earnedTiers) : null
+              const upcoming = milestones.upcoming.find(u => u.category === c.key) || null
+              return { ...c, latestTier, upcoming }
+            })
+            const totalEarned = perCat.filter(p => p.latestTier !== null).length
+            return (
+              <div style={{ marginTop: 40 }}>
+                <div style={{ marginBottom: 20 }}>
+                  <h2 style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', marginBottom: 4 }}>Milestones</h2>
+                  <p style={{ fontSize: 13, color: C.text3 }}>
+                    {totalEarned} of 3 categories started{perCat.some(p => p.upcoming) ? ' · progress to next tier below' : ''}
+                  </p>
+                </div>
 
-              <div className="ytg-card" style={{
-                padding: '36px 32px 24px',
-                background: 'linear-gradient(180deg, #fbfaf6 0%, #ffffff 50%, #ffffff 100%)',
-              }}>
-                {milestones.earned.length === 0 ? (
-                  <div style={{ padding: '12px 0 24px', display: 'flex', alignItems: 'center', gap: 18 }}>
-                    <div style={{ opacity: 0.5 }}>
-                      <StarBadge category="subs" tier={100} size={76}/>
-                    </div>
-                    <p style={{ fontSize: 14, color: C.text2, lineHeight: 1.6 }}>
-                      No badges yet — your first milestone is just around the corner. Keep shipping.
-                    </p>
-                  </div>
-                ) : (
-                  <>
-                    <p style={{ fontSize: 10.5, fontWeight: 700, color: C.text3, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 28 }}>Earned</p>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))', gap: 28, marginBottom: milestones.upcoming.length > 0 ? 40 : 8 }}>
-                      {milestones.earned.map(b => {
-                        const metal = tierMetal(b.category, b.tier)
-                        const plural = MILESTONE_PLURAL[b.category] || b.category
-                        return (
-                          <div key={`${b.category}-${b.tier}`} style={{
-                            textAlign: 'center',
-                            padding: '4px 4px',
-                            transition: 'transform 0.2s ease',
-                            cursor: 'default',
-                          }}
-                            onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-4px) scale(1.02)' }}
-                            onMouseLeave={e => { e.currentTarget.style.transform = 'none' }}
-                          >
-                            <StarBadge category={b.category} tier={b.tier} size={108}/>
-                            <div style={{ marginTop: -6, display: 'flex', justifyContent: 'center' }}>
-                              <TierRibbon tier={b.tier} metal={metal}/>
-                            </div>
-                            <p style={{ fontSize: 12, fontWeight: 600, color: C.text3, textTransform: 'capitalize', letterSpacing: '-0.1px', marginTop: 12 }}>{plural}</p>
-                          </div>
-                        )
-                      })}
-                    </div>
-                  </>
-                )}
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 18 }}>
+                  {perCat.map(p => {
+                    const cat = CATEGORY_GRADIENT[p.key]
+                    const displayTier = p.latestTier ?? (p.upcoming ? p.upcoming.tier : 0)
+                    const hasEarned = p.latestTier !== null
+                    const current = p.upcoming ? p.upcoming.current : (p.latestTier || 0)
+                    return (
+                      <div key={p.key} className="ytg-card" style={{
+                        padding: '26px 24px 22px',
+                        display: 'flex', flexDirection: 'column', alignItems: 'center',
+                        background: `linear-gradient(180deg, ${cat.h1}12 0%, #ffffff 45%, #ffffff 100%)`,
+                        position: 'relative', overflow: 'hidden',
+                      }}>
+                        {/* Top category banner */}
+                        <div style={{
+                          alignSelf: 'stretch', textAlign: 'center', marginBottom: 14,
+                          fontSize: 10.5, fontWeight: 800, letterSpacing: '0.14em', textTransform: 'uppercase',
+                          color: cat.h3,
+                        }}>{p.Title}</div>
 
-                {milestones.upcoming.length > 0 && (
-                  <>
-                    {milestones.earned.length > 0 && <div style={{ height: 1, background: '#eeeef3', margin: '0 0 28px' }}/>}
-                    <p style={{ fontSize: 10.5, fontWeight: 700, color: C.text3, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 22 }}>Next up</p>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 24 }}>
-                      {milestones.upcoming.map(u => {
-                        const cat = CATEGORY_GRADIENT[u.category] || CATEGORY_GRADIENT.subs
-                        const plural = MILESTONE_PLURAL[u.category] || u.category
-                        return (
-                          <div key={`next-${u.category}`} style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-                            <div style={{ flexShrink: 0, opacity: 0.5 }}>
-                              <StarBadge category={u.category} tier={u.tier} size={48}/>
+                        {/* Star badge */}
+                        <div style={{ opacity: hasEarned ? 1 : 0.38 }}>
+                          <StarBadge category={p.key} tier={displayTier} size={124}/>
+                        </div>
+
+                        {/* Tier value */}
+                        <p style={{
+                          fontSize: 38, fontWeight: 800, color: C.text1,
+                          letterSpacing: '-1.5px', lineHeight: 1,
+                          marginTop: 18, marginBottom: 6,
+                          fontVariantNumeric: 'tabular-nums',
+                        }}>{hasEarned ? fmtNum(p.latestTier) : '—'}</p>
+                        <p style={{ fontSize: 13, fontWeight: 600, color: C.text3, letterSpacing: '-0.1px' }}>
+                          {hasEarned ? p.Title : 'Not yet earned'}
+                        </p>
+
+                        {/* Progress toward next */}
+                        {p.upcoming && (
+                          <div style={{ alignSelf: 'stretch', marginTop: 22 }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 7 }}>
+                              <span style={{ fontSize: 11, fontWeight: 700, color: C.text3, letterSpacing: '0.05em', textTransform: 'uppercase' }}>
+                                Next: {fmtNum(p.upcoming.tier)}
+                              </span>
+                              <span style={{ fontSize: 11.5, fontWeight: 700, color: cat.h3, fontVariantNumeric: 'tabular-nums' }}>
+                                {fmtNum(current)} / {fmtNum(p.upcoming.tier)}
+                              </span>
                             </div>
-                            <div style={{ flex: 1, minWidth: 0 }}>
-                              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 8, marginBottom: 6 }}>
-                                <span style={{ fontSize: 14, fontWeight: 700, color: C.text1, textTransform: 'capitalize', letterSpacing: '-0.2px' }}>
-                                  {fmtNum(u.tier)} {plural}
-                                </span>
-                                <span style={{ fontSize: 12, fontWeight: 600, color: C.text3, fontVariantNumeric: 'tabular-nums', flexShrink: 0 }}>
-                                  {fmtNum(u.current)} / {fmtNum(u.tier)}
-                                </span>
-                              </div>
-                              <div style={{ height: 6, background: '#f1f2f6', borderRadius: 99, overflow: 'hidden' }}>
-                                <div style={{
-                                  width: `${Math.max(u.pct, 2)}%`, height: '100%',
-                                  background: `linear-gradient(90deg, ${cat.h2} 0%, ${cat.h3} 100%)`,
-                                  borderRadius: 99,
-                                  transition: 'width 0.8s ease',
-                                }}/>
-                              </div>
+                            <div style={{ height: 6, background: '#f1f2f6', borderRadius: 99, overflow: 'hidden' }}>
+                              <div style={{
+                                width: `${Math.max(p.upcoming.pct, 2)}%`, height: '100%',
+                                background: `linear-gradient(90deg, ${cat.h2} 0%, ${cat.h3} 100%)`,
+                                borderRadius: 99,
+                                transition: 'width 0.8s ease',
+                              }}/>
                             </div>
                           </div>
-                        )
-                      })}
-                    </div>
-                  </>
-                )}
+                        )}
 
+                        {/* Brand footer */}
+                        <div style={{
+                          alignSelf: 'stretch', marginTop: 22, paddingTop: 14,
+                          borderTop: `1px solid #eeeef3`,
+                          display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+                        }}>
+                          <YTGLogo size={18}/>
+                          <span style={{ fontSize: 14, fontWeight: 800, color: C.text1, letterSpacing: '-0.3px' }}>YTGrowth</span>
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
               </div>
-            </div>
-          )}
+            )
+          })()}
 
           {/* ── INSIGHTS ─────────────────────────────────────────────── */}
           {data && nav === 'Overview' && analyzingAI && (
