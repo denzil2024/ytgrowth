@@ -396,15 +396,25 @@ const MilestoneShareCard = forwardRef(function MilestoneShareCard(
           position: 'relative', width: '100%', height: 200,
           display: 'flex', alignItems: 'flex-end', justifyContent: 'center',
         }}>
-          {/* V-drape: two straps meeting behind the star */}
+          {/* V-drape: two folded straps meeting behind the star */}
           <svg
             width="200" height="140"
             viewBox="0 0 200 140"
             style={{ position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)' }}
           >
-            <polygon points="56,0 98,0 112,112 90,128 78,112" fill="#ff3b30"/>
-            <polygon points="102,0 144,0 122,112 110,128 88,112" fill="#c1150c"/>
-            <polygon points="92,118 108,118 100,134" fill="#7a0f08"/>
+            <defs>
+              <linearGradient id={`ribbonL-${category}-${tier}`} x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%"   stopColor="#ff5246"/>
+                <stop offset="100%" stopColor="#c1150c"/>
+              </linearGradient>
+              <linearGradient id={`ribbonR-${category}-${tier}`} x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%"   stopColor="#d31a10"/>
+                <stop offset="100%" stopColor="#8a0e07"/>
+              </linearGradient>
+            </defs>
+            <polygon points="56,0 98,0 112,112 90,128 78,112" fill={`url(#ribbonL-${category}-${tier})`}/>
+            <polygon points="102,0 144,0 122,112 110,128 88,112" fill={`url(#ribbonR-${category}-${tier})`}/>
+            <polygon points="92,118 108,118 100,134" fill="#5e0a04"/>
           </svg>
           <div style={{ position: 'relative', zIndex: 2 }}>
             <StarBadge category={category} tier={tier} size={148}/>
@@ -438,10 +448,10 @@ const MilestoneShareCard = forwardRef(function MilestoneShareCard(
             {fmtNum(tier)}
           </p>
           <p style={{
-            fontSize: 14, fontWeight: 800,
+            fontSize: 13, fontWeight: 800,
             color: cat.h2,
-            letterSpacing: '0.22em', textTransform: 'uppercase',
-            marginTop: 10,
+            letterSpacing: '0.18em', textTransform: 'uppercase',
+            marginTop: 12,
           }}>
             {title}
           </p>
@@ -616,30 +626,30 @@ function MilestoneShareModal({ milestone, channelName, channelThumbnail, onClose
 
         {/* Action row */}
         <div style={{
-          display: 'flex', gap: 10, marginTop: 6,
+          display: 'flex', gap: 8, marginTop: 6,
           background: 'rgba(255,255,255,0.06)',
-          padding: 10, borderRadius: 999,
+          padding: 6, borderRadius: 999,
           border: '1px solid rgba(255,255,255,0.12)',
         }}>
           <button
             onClick={handleDownload}
             disabled={downloading}
             style={{
-              display: 'inline-flex', alignItems: 'center', gap: 8,
+              display: 'inline-flex', alignItems: 'center', gap: 7,
               background: 'linear-gradient(180deg, #ffffff 0%, #f1f1f6 100%)',
               color: '#0f0f13',
-              fontSize: 14, fontWeight: 700,
-              padding: '12px 22px', borderRadius: 999,
+              fontSize: 13, fontWeight: 700,
+              padding: '9px 18px', borderRadius: 999,
               border: 'none', cursor: downloading ? 'wait' : 'pointer',
               opacity: downloading ? 0.7 : 1,
-              boxShadow: '0 3px 10px rgba(0,0,0,0.22), inset 0 1px 0 rgba(255,255,255,0.9)',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.9)',
               letterSpacing: '-0.1px',
               transition: 'transform 0.15s',
             }}
             onMouseEnter={(e) => { if (!downloading) e.currentTarget.style.transform = 'translateY(-1px)' }}
             onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)' }}
           >
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
               <polyline points="7 10 12 15 17 10"/>
               <line x1="12" y1="15" x2="12" y2="3"/>
@@ -649,20 +659,20 @@ function MilestoneShareModal({ milestone, channelName, channelThumbnail, onClose
           <button
             onClick={handleShareX}
             style={{
-              display: 'inline-flex', alignItems: 'center', gap: 8,
+              display: 'inline-flex', alignItems: 'center', gap: 7,
               background: 'linear-gradient(180deg, #1a1a22 0%, #0a0a0f 100%)',
               color: '#ffffff',
-              fontSize: 14, fontWeight: 700,
-              padding: '12px 22px', borderRadius: 999,
+              fontSize: 13, fontWeight: 700,
+              padding: '9px 18px', borderRadius: 999,
               border: '1px solid #2a2a33', cursor: 'pointer',
               letterSpacing: '-0.1px',
-              boxShadow: '0 3px 10px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.08)',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.08)',
               transition: 'transform 0.15s',
             }}
             onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-1px)' }}
             onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)' }}
           >
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
               <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
             </svg>
             Share on X
@@ -672,8 +682,8 @@ function MilestoneShareModal({ milestone, channelName, channelThumbnail, onClose
             style={{
               display: 'inline-flex', alignItems: 'center',
               background: 'transparent', color: '#ffffff',
-              fontSize: 14, fontWeight: 600,
-              padding: '12px 20px', borderRadius: 999,
+              fontSize: 13, fontWeight: 600,
+              padding: '9px 16px', borderRadius: 999,
               border: '1px solid rgba(255,255,255,0.28)', cursor: 'pointer',
               letterSpacing: '-0.1px',
               transition: 'background 0.15s',
