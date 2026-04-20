@@ -38,6 +38,17 @@ def get_channel_stats(credentials):
     }
 
 
+def merge_ctr_into_videos(videos, video_analytics):
+    if not videos:
+        return videos
+    ctr_map = {v["video_id"]: v for v in (video_analytics or []) if v.get("video_id")}
+    for video in videos:
+        entry = ctr_map.get(video.get("video_id"))
+        video["ctr_percent"]  = entry.get("ctr_percent")  if entry else None
+        video["impressions"]  = entry.get("impressions")  if entry else None
+    return videos
+
+
 def get_recent_videos(credentials, max_results=20):
     youtube = build("youtube", "v3", credentials=credentials)
     search_request = youtube.search().list(

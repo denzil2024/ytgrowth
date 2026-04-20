@@ -1492,6 +1492,10 @@ export default function Dashboard() {
                   const lrColor = lrN === null ? C.text3 : lrN >= 3 ? C.green : lrN >= 1 ? C.amber : C.red
                   const lrBg    = lrN === null ? '#f5f5f9'   : lrN >= 3 ? C.greenBg : lrN >= 1 ? '#fffbeb' : C.redBg
                   const lrBdr   = lrN === null ? C.border    : lrN >= 3 ? C.greenBdr : lrN >= 1 ? '#fde68a' : C.redBdr
+                  const ctrN    = typeof v.ctr_percent === 'number' ? v.ctr_percent : null
+                  const ctrColor = ctrN === null ? C.text3 : ctrN >= 5 ? C.green : ctrN >= 2 ? C.amber : C.red
+                  const ctrBg   = ctrN === null ? '#f5f5f9'   : ctrN >= 5 ? C.greenBg : ctrN >= 2 ? '#fffbeb' : C.redBg
+                  const ctrBdr  = ctrN === null ? C.border    : ctrN >= 5 ? C.greenBdr : ctrN >= 2 ? '#fde68a' : C.redBdr
                   const isSelected = selectedVideoId === v.video_id
                   const ytUrl   = v.video_id ? `https://www.youtube.com/watch?v=${v.video_id}` : null
                   const durMatch = (v.duration || '').match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/)
@@ -1541,14 +1545,22 @@ export default function Dashboard() {
                           ))}
                         </div>
 
-                        {/* Footer: like rate + optimise + Score This */}
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 'auto', paddingTop: 12, borderTop: `1px solid #f0f0f4` }}>
-                          <span
-                            title="Engagement rate = likes ÷ views. 3%+ is strong, 1–3% is average, under 1% is weak."
-                            style={{ fontSize: 12, fontWeight: 700, color: lrColor, background: lrBg, padding: '4px 10px', borderRadius: 100, border: `1px solid ${lrBdr}`, fontVariantNumeric: 'tabular-nums', cursor: 'help' }}
-                          >
-                            {lrN !== null ? `${lr}% engagement` : '— engagement'}
-                          </span>
+                        {/* Footer: metric pills + Optimise */}
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, marginTop: 'auto', paddingTop: 12, borderTop: `1px solid #f0f0f4` }}>
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: 4, minWidth: 0 }}>
+                            <span
+                              title="Click-through rate = thumbnail clicks ÷ impressions. 5%+ is strong, 2–5% is average, under 2% is weak."
+                              style={{ fontSize: 11, fontWeight: 700, color: ctrColor, background: ctrBg, padding: '3px 9px', borderRadius: 100, border: `1px solid ${ctrBdr}`, fontVariantNumeric: 'tabular-nums', cursor: 'help', alignSelf: 'flex-start', whiteSpace: 'nowrap' }}
+                            >
+                              {ctrN !== null ? `${ctrN.toFixed(1)}% CTR` : '— CTR'}
+                            </span>
+                            <span
+                              title="Engagement rate = likes ÷ views. 3%+ is strong, 1–3% is average, under 1% is weak."
+                              style={{ fontSize: 11, fontWeight: 700, color: lrColor, background: lrBg, padding: '3px 9px', borderRadius: 100, border: `1px solid ${lrBdr}`, fontVariantNumeric: 'tabular-nums', cursor: 'help', alignSelf: 'flex-start', whiteSpace: 'nowrap' }}
+                            >
+                              {lrN !== null ? `${lr}% eng.` : '— eng.'}
+                            </span>
+                          </div>
                           <button
                             onClick={() => setSelectedVideoId(v.video_id)}
                             className="ytg-optimise-btn">
