@@ -1543,7 +1543,7 @@ export default function Dashboard() {
                         }}>{v.title}</p>
 
                         {/* Meta line */}
-                        <p style={{ fontSize: 13.5, fontWeight: 500, color: C.text3, marginBottom: 22, lineHeight: 1.4 }}>
+                        <p style={{ fontSize: 13.5, fontWeight: 500, color: C.text3, marginBottom: 14, lineHeight: 1.4 }}>
                           <span style={{ color: C.text2, fontWeight: 600 }}>{fmtNum(v.views)}</span> views
                           <span style={{ margin: '0 8px', color: '#d4d4dc' }}>·</span>
                           <span style={{ color: C.text2, fontWeight: 600 }}>{fmtNum(v.likes)}</span> likes
