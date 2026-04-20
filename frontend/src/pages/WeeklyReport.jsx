@@ -154,8 +154,8 @@ function ReportBody({ rd, isLatest }) {
       {/* Weekly summary — bold statement (like Overview insight problem) */}
       {rd.weeklySummary && (
         <p style={{
-          fontSize: 14, fontWeight: 600,
-          color: C.text1, lineHeight: 1.72,
+          fontSize: 14, fontWeight: 700,
+          color: C.text1, lineHeight: 1.65,
           marginBottom: 14,
         }}>
           {rd.weeklySummary}
@@ -411,7 +411,7 @@ export default function WeeklyReport({ channelId, channelEmail, plan, channelSta
                 </span>
               </div>
 
-              <p style={{ fontSize: 14, fontWeight: 600, color: C.text1, lineHeight: 1.72, marginBottom: 14 }}>
+              <p style={{ fontSize: 14, fontWeight: 700, color: C.text1, lineHeight: 1.65, marginBottom: 14 }}>
                 {channelFirstName} grew 12% this week with strong retention on the house tour, but the 14-day posting gap is starting to hurt recommendation surfaces — here&rsquo;s what&rsquo;s working and what to focus on next.
               </p>
 
@@ -437,7 +437,7 @@ export default function WeeklyReport({ channelId, channelEmail, plan, channelSta
           {/* ─── Overlay with the actual conversion card ────────────────── */}
           <div style={{
             position: 'absolute', inset: 0,
-            background: 'linear-gradient(180deg, rgba(245,245,249,0.25) 0%, rgba(245,245,249,0.82) 32%, rgba(245,245,249,0.95) 100%)',
+            background: 'linear-gradient(180deg, rgba(245,245,249,0.15) 0%, rgba(245,245,249,0.62) 30%, rgba(245,245,249,0.82) 100%)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             padding: 24,
           }}>
@@ -445,9 +445,9 @@ export default function WeeklyReport({ channelId, channelEmail, plan, channelSta
               background: '#ffffff',
               border: '1px solid rgba(229,37,27,0.2)',
               borderRadius: 20,
-              boxShadow: '0 14px 46px rgba(0,0,0,0.14), 0 0 0 6px rgba(229,37,27,0.04)',
-              padding: '30px 34px 28px',
-              maxWidth: 480, width: '100%',
+              boxShadow: '0 20px 50px rgba(0,0,0,0.16)',
+              padding: '30px 36px 28px',
+              maxWidth: 540, width: '100%',
               textAlign: 'center',
             }}>
               {/* Lock icon */}
@@ -464,7 +464,7 @@ export default function WeeklyReport({ channelId, channelEmail, plan, channelSta
                 </svg>
               </div>
 
-              <h2 style={{ fontSize: 22, fontWeight: 900, color: C.text1, letterSpacing: '-0.5px', marginBottom: 10 }}>
+              <h2 style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', marginBottom: 10 }}>
                 Unlock weekly AI reports
               </h2>
               <p style={{ fontSize: 14, color: C.text2, lineHeight: 1.6, marginBottom: 22, maxWidth: 400, marginLeft: 'auto', marginRight: 'auto' }}>
