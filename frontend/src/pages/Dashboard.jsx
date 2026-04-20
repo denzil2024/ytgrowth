@@ -1522,40 +1522,40 @@ export default function Dashboard() {
                       </a>
 
                       {/* Body */}
-                      <div style={{ padding: '12px 14px 14px', display: 'flex', flexDirection: 'column', flex: 1 }}>
+                      <div style={{ padding: '20px 20px 20px', display: 'flex', flexDirection: 'column', flex: 1 }}>
                         {/* Title */}
                         <p style={{
-                          fontSize: 14, fontWeight: 700, color: C.text1, lineHeight: 1.38, marginBottom: 6, letterSpacing: '-0.2px',
+                          fontSize: 16, fontWeight: 700, color: C.text1, lineHeight: 1.45, marginBottom: 10, letterSpacing: '-0.3px',
                           display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden',
                         }}>{v.title}</p>
 
-                        {/* Inline meta: stats · date */}
-                        <p style={{ fontSize: 11.5, fontWeight: 500, color: C.text3, marginBottom: 12, lineHeight: 1.4, letterSpacing: '-0.1px' }}>
+                        {/* Meta line */}
+                        <p style={{ fontSize: 13, fontWeight: 500, color: C.text3, marginBottom: 22, lineHeight: 1.4 }}>
                           <span style={{ color: C.text2, fontWeight: 600 }}>{fmtNum(v.views)}</span> views
-                          <span style={{ margin: '0 6px', color: C.text4 || '#d4d4dc' }}>·</span>
+                          <span style={{ margin: '0 8px', color: '#d4d4dc' }}>·</span>
                           <span style={{ color: C.text2, fontWeight: 600 }}>{fmtNum(v.likes)}</span> likes
-                          <span style={{ margin: '0 6px', color: C.text4 || '#d4d4dc' }}>·</span>
+                          <span style={{ margin: '0 8px', color: '#d4d4dc' }}>·</span>
                           {(parseUTC(v.published_at) || new Date()).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}
                         </p>
 
                         {/* Footer: Watch · Retention · Eng + Optimise */}
-                        <div style={{ marginTop: 'auto', paddingTop: 12, borderTop: `1px solid #f0f0f4` }}>
-                          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 8, marginBottom: 10 }}>
+                        <div style={{ marginTop: 'auto', paddingTop: 18, borderTop: `1px solid #eeeef3` }}>
+                          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 12, marginBottom: 18 }}>
                             {[
                               { label: 'Watch',     display: wtDisplay,                                             color: C.text1,  tip: 'Average watch time per view (mm:ss). Longer is better relative to video length.' },
                               { label: 'Retention', display: retN !== null ? `${retN.toFixed(0)}%` : '—',           color: C.text1,  tip: 'Average % of video watched. 50%+ strong, 30–50% avg, <30% weak.' },
                               { label: 'Eng',       display: lrN !== null ? `${lr}%` : '—',                         color: lrColor,  tip: 'Engagement rate = likes ÷ views. 3%+ strong, 1–3% avg, <1% weak.' },
                             ].map(m => (
                               <div key={m.label} title={m.tip} style={{ cursor: 'help', textAlign: 'left' }}>
-                                <p style={{ fontSize: 9.5, fontWeight: 700, color: C.text3, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 3, lineHeight: 1 }}>{m.label}</p>
-                                <p style={{ fontSize: 13.5, fontWeight: 700, color: m.color, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.3px', lineHeight: 1 }}>{m.display}</p>
+                                <p style={{ fontSize: 10.5, fontWeight: 700, color: C.text3, letterSpacing: '0.09em', textTransform: 'uppercase', marginBottom: 7, lineHeight: 1 }}>{m.label}</p>
+                                <p style={{ fontSize: 17, fontWeight: 800, color: m.color, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.4px', lineHeight: 1 }}>{m.display}</p>
                               </div>
                             ))}
                           </div>
                           <button
                             onClick={() => setSelectedVideoId(v.video_id)}
                             className="ytg-optimise-btn"
-                            style={{ width: '100%', justifyContent: 'center', padding: '8px 14px', fontSize: 12.5 }}>
+                            style={{ width: '100%', justifyContent: 'center', padding: '11px 16px', fontSize: 13.5, fontWeight: 700 }}>
                             Optimise
                           </button>
                         </div>
