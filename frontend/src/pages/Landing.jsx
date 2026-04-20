@@ -758,9 +758,9 @@ export default function Landing() {
         {/* Product mockup — premium white priority card with dimensional floating accents */}
         <div style={{
           maxWidth: isMobile ? '100%' : 1080,
-          margin: isMobile ? '44px 0 0' : '80px auto 0',
+          margin: isMobile ? '52px 0 0' : '80px auto 0',
           position: 'relative',
-          padding: isMobile ? '0 4px' : '0 32px',
+          padding: isMobile ? '0 6px' : '0 32px',
         }}>
           {/* Dark ambient wash behind the card — adds depth without a hard frame */}
           {!isMobile && (
@@ -780,10 +780,10 @@ export default function Landing() {
             zIndex: 1,
             background: '#ffffff',
             border: '1px solid rgba(10,10,15,0.05)',
-            borderRadius: isMobile ? 18 : 24,
-            padding: isMobile ? '20px 18px 18px' : '34px 40px 32px',
+            borderRadius: isMobile ? 20 : 24,
+            padding: isMobile ? '22px 18px 20px' : '34px 40px 32px',
             boxShadow: isMobile
-              ? '0 2px 6px rgba(0,0,0,0.04), 0 14px 40px rgba(0,0,0,0.08), 0 40px 80px rgba(229,37,27,0.06)'
+              ? '0 2px 6px rgba(0,0,0,0.04), 0 16px 44px rgba(0,0,0,0.09), 0 48px 96px rgba(229,37,27,0.08)'
               : '0 2px 6px rgba(0,0,0,0.05), 0 24px 64px rgba(0,0,0,0.12), 0 72px 140px rgba(229,37,27,0.12)',
           }}>
             {/* Subtle top gradient seam */}
@@ -795,21 +795,21 @@ export default function Landing() {
 
             {/* Channel header */}
             <div style={{
-              display: 'flex', alignItems: 'center', gap: isMobile ? 12 : 16,
-              paddingBottom: isMobile ? 14 : 22,
+              display: 'flex', alignItems: 'center', gap: isMobile ? 13 : 16,
+              paddingBottom: isMobile ? 16 : 22,
               borderBottom: '1px solid #f0f0f5',
             }}>
               {/* Avatar with subtle red rim */}
               <div style={{
                 position: 'relative', flexShrink: 0,
-                padding: 3, borderRadius: '50%',
+                padding: isMobile ? 2.5 : 3, borderRadius: '50%',
                 background: 'linear-gradient(135deg, #ff3b30 0%, #a50f07 100%)',
-                boxShadow: isMobile ? 'none' : '0 4px 12px rgba(229,37,27,0.25)',
+                boxShadow: isMobile ? '0 2px 6px rgba(229,37,27,0.2)' : '0 4px 12px rgba(229,37,27,0.25)',
               }}>
                 <img
                   src="/avatars/sophie.jpg" alt=""
                   style={{
-                    width: isMobile ? 40 : 54, height: isMobile ? 40 : 54,
+                    width: isMobile ? 44 : 54, height: isMobile ? 44 : 54,
                     borderRadius: '50%', objectFit: 'cover',
                     display: 'block', border: '2px solid #ffffff',
                   }}
@@ -817,26 +817,26 @@ export default function Landing() {
               </div>
 
               <div style={{ flex: 1, minWidth: 0 }}>
-                <p style={{ fontSize: isMobile ? 14 : 17, fontWeight: 800, color: '#0a0a0f', letterSpacing: '-0.3px', lineHeight: 1.2 }}>Sophie Brandt</p>
-                <p style={{ fontSize: isMobile ? 12 : 13, color: '#6a6a78', marginTop: 4, lineHeight: 1.3 }}>
-                  {isMobile ? '42K subscribers' : 'Travel · 42K subscribers · 187K views'}
+                <p style={{ fontSize: isMobile ? 15 : 17, fontWeight: 800, color: '#0a0a0f', letterSpacing: '-0.3px', lineHeight: 1.2 }}>Sophie Brandt</p>
+                <p style={{ fontSize: isMobile ? 12 : 13, color: '#6a6a78', marginTop: 3, lineHeight: 1.3 }}>
+                  {isMobile ? 'Travel · 42K subscribers' : 'Travel · 42K subscribers · 187K views'}
                 </p>
               </div>
 
               {/* Score ring with gradient stroke */}
               <div style={{ position: 'relative', flexShrink: 0 }}>
-                <svg width={isMobile ? 48 : 66} height={isMobile ? 48 : 66} viewBox="0 0 66 66">
+                <svg width={isMobile ? 54 : 66} height={isMobile ? 54 : 66} viewBox="0 0 66 66">
                   <defs>
                     <linearGradient id="heroScoreGrad" x1="0" y1="0" x2="1" y2="1">
                       <stop offset="0%" stopColor="#4ade80"/>
                       <stop offset="100%" stopColor="#16a34a"/>
                     </linearGradient>
                   </defs>
-                  <circle cx="33" cy="33" r="27" fill="none" stroke="#ececf2" strokeWidth="6"/>
-                  <circle cx="33" cy="33" r="27" fill="none" stroke="url(#heroScoreGrad)" strokeWidth="6" strokeDasharray="122.1 170" strokeLinecap="round" transform="rotate(-90 33 33)"/>
+                  <circle cx="33" cy="33" r="27" fill="none" stroke="#ececf2" strokeWidth={isMobile ? 5.5 : 6}/>
+                  <circle cx="33" cy="33" r="27" fill="none" stroke="url(#heroScoreGrad)" strokeWidth={isMobile ? 5.5 : 6} strokeDasharray="122.1 170" strokeLinecap="round" transform="rotate(-90 33 33)"/>
                 </svg>
                 <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <span style={{ fontSize: isMobile ? 14 : 18, fontWeight: 800, color: '#0a0a0f', letterSpacing: '-0.5px' }}>72</span>
+                  <span style={{ fontSize: isMobile ? 15 : 18, fontWeight: 800, color: '#0a0a0f', letterSpacing: '-0.5px' }}>72</span>
                 </div>
               </div>
 
@@ -855,28 +855,28 @@ export default function Landing() {
             </div>
 
             {/* Priority action body */}
-            <div style={{ paddingTop: isMobile ? 16 : 24 }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: isMobile ? 10 : 18 }}>
+            <div style={{ paddingTop: isMobile ? 18 : 24 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: isMobile ? 12 : 18 }}>
                 <span style={{ display: 'inline-flex', alignItems: 'center', gap: 7 }}>
                   <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#d97706', boxShadow: '0 0 10px rgba(217,119,6,0.6)' }}/>
-                  <span style={{ fontSize: isMobile ? 10 : 11.5, fontWeight: 800, color: '#d97706', letterSpacing: '0.18em', textTransform: 'uppercase' }}>Priority this week</span>
+                  <span style={{ fontSize: isMobile ? 10.5 : 11.5, fontWeight: 800, color: '#d97706', letterSpacing: '0.16em', textTransform: 'uppercase' }}>Priority this week</span>
                 </span>
                 <span style={{ flex: 1, height: 1, background: '#ececf2' }}/>
                 <span style={{
                   fontSize: isMobile ? 10 : 11, fontWeight: 800,
                   color: '#ffffff',
                   background: 'linear-gradient(180deg, #f59e0b 0%, #d97706 100%)',
-                  padding: isMobile ? '4px 10px' : '5px 12px', borderRadius: 999,
+                  padding: isMobile ? '4px 11px' : '5px 12px', borderRadius: 999,
                   letterSpacing: '0.08em', textTransform: 'uppercase',
                   boxShadow: '0 2px 10px rgba(217,119,6,0.4)',
                 }}>{isMobile ? 'High' : 'High impact'}</span>
               </div>
 
               <h3 style={{
-                fontSize: isMobile ? 15 : 22,
+                fontSize: isMobile ? 16 : 22,
                 fontWeight: 800, color: '#0a0a0f',
-                letterSpacing: '-0.5px', lineHeight: 1.35,
-                marginBottom: isMobile ? 12 : 22,
+                letterSpacing: '-0.4px', lineHeight: 1.35,
+                marginBottom: isMobile ? 14 : 22,
                 textWrap: 'balance',
               }}>
                 {isMobile
@@ -891,19 +891,47 @@ export default function Landing() {
                     background: 'linear-gradient(180deg, #fffbf4 0%, #ffffff 100%)',
                     border: '1px solid #f4e6c8',
                     borderLeft: '3px solid #d97706',
-                    borderRadius: '0 12px 12px 0',
-                    padding: '12px 14px',
+                    borderRadius: 12,
+                    padding: '13px 15px',
                     boxShadow: '0 2px 10px rgba(217,119,6,0.08)',
                   }}>
-                    <p style={{ fontSize: 10.5, fontWeight: 800, color: '#d97706', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 6 }}>Action</p>
+                    <p style={{ fontSize: 10.5, fontWeight: 800, color: '#d97706', letterSpacing: '0.11em', textTransform: 'uppercase', marginBottom: 7 }}>Action</p>
                     <p style={{ fontSize: 13, color: '#0a0a0f', lineHeight: 1.5, fontWeight: 500 }}>Cold-open hook. Drop the intro, lead with the payoff.</p>
                   </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 12, paddingTop: 12, borderTop: '1px solid #f0f0f5', fontSize: 11.5, color: '#6a6a78', lineHeight: 1.4 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 14, paddingTop: 14, borderTop: '1px solid #f0f0f5', fontSize: 12, color: '#6a6a78', lineHeight: 1.4 }}>
                     <span style={{ color: '#4a7cf7', fontWeight: 800 }}>38s</span>
                     <span>avg watch</span>
                     <span style={{ color: '#c8c8d0' }}>·</span>
                     <span style={{ color: '#16a34a', fontWeight: 800 }}>+40%</span>
                     <span>expected</span>
+                  </div>
+
+                  {/* Next up preview — mobile compact version */}
+                  <div style={{ marginTop: 16, paddingTop: 14, borderTop: '1px solid #f0f0f5' }}>
+                    <p style={{ fontSize: 10, fontWeight: 800, color: '#9a9aa8', letterSpacing: '0.16em', textTransform: 'uppercase', marginBottom: 9 }}>Next up · 8 more</p>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                      {[
+                        { rank: 2, label: 'Posting cadence', sev: 'Medium', sevColor: '#d97706' },
+                        { rank: 3, label: 'Thumbnail SEO',   sev: 'Low',    sevColor: '#6b7280' },
+                      ].map((item, i) => (
+                        <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '9px 12px', background: '#fafafc', border: '1px solid #ececf2', borderRadius: 10 }}>
+                          <span style={{
+                            width: 20, height: 20, borderRadius: 5,
+                            background: '#eceff3', color: '#6a6a78',
+                            fontSize: 10.5, fontWeight: 900,
+                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            flexShrink: 0,
+                          }}>{item.rank}</span>
+                          <span style={{ fontSize: 12.5, fontWeight: 700, color: '#3a3a44', flex: 1, letterSpacing: '-0.1px' }}>{item.label}</span>
+                          <span style={{
+                            fontSize: 9.5, fontWeight: 700, color: item.sevColor,
+                            border: `1.5px solid ${item.sevColor}`, padding: '2px 8px',
+                            borderRadius: 999, letterSpacing: '0.08em', textTransform: 'uppercase',
+                            flexShrink: 0,
+                          }}>{item.sev}</span>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </>
               ) : (
