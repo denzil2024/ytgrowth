@@ -755,37 +755,103 @@ export default function Landing() {
           </div>
         </div>
 
-        {/* Mobile hero mockup — simplified health score + action plan */}
+        {/* Mobile dashboard mockup — same windsor-frame aesthetic, scaled for small screens */}
         {isMobile && (
-          <div style={{ marginTop: 48, background: '#111114', border: '1px solid rgba(255,255,255,0.09)', borderRadius: 20, overflow: 'hidden', boxShadow: '0 24px 60px rgba(0,0,0,0.45)' }}>
-            <div style={{ background: 'rgba(255,255,255,0.03)', borderBottom: '1px solid rgba(255,255,255,0.07)', padding: '10px 14px', display: 'flex', alignItems: 'center', gap: 6 }}>
-              {['#FF5F57','#FEBC2E','#28C840'].map((c,i) => <div key={i} style={{ width: 8, height: 8, borderRadius: '50%', background: c, opacity: 0.65 }} />)}
-              <div style={{ background: 'rgba(255,255,255,0.06)', borderRadius: 6, padding: '4px 10px', fontSize: 12, color: 'rgba(255,255,255,0.25)', marginLeft: 6, fontFamily: 'monospace' }}>ytgrowth.io/dashboard</div>
+          <div style={{
+            marginTop: 48,
+            background: 'linear-gradient(180deg, #0e1020 0%, #0a0d1c 100%)',
+            borderRadius: 22,
+            padding: '28px 14px 22px',
+            boxShadow: '0 24px 60px rgba(10,13,30,0.35)',
+          }}>
+            {/* Headline */}
+            <h2 style={{
+              fontSize: 16, fontWeight: 600, color: '#ffffff',
+              letterSpacing: '-0.2px', lineHeight: 1.5,
+              textAlign: 'center', margin: '0 16px 18px',
+            }}>
+              The one thing to fix next — no guessing.
+            </h2>
+
+            {/* Single active tab pill */}
+            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 18 }}>
+              <div style={{
+                padding: '7px 16px', borderRadius: 999,
+                fontSize: 12, fontWeight: 700,
+                background: '#ffffff', color: '#0a0d1c',
+                boxShadow: '0 2px 10px rgba(255,255,255,0.1)',
+              }}>
+                Your priority
+              </div>
             </div>
-            <div style={{ padding: 16 }}>
-              <div style={{ background: 'rgba(255,59,48,0.08)', border: '1px solid rgba(255,59,48,0.18)', borderRadius: 12, padding: '14px 16px', marginBottom: 12, display: 'flex', alignItems: 'center', gap: 14 }}>
-                <svg width="48" height="48" viewBox="0 0 52 52" style={{ flexShrink: 0 }}>
-                  <circle cx="26" cy="26" r="20" fill="none" stroke="rgba(255,255,255,0.07)" strokeWidth="5"/>
-                  <circle cx="26" cy="26" r="20" fill="none" stroke="#ff3b30" strokeWidth="5" strokeDasharray="56 70" strokeLinecap="round" transform="rotate(-90 26 26)"/>
-                </svg>
-                <div>
-                  <p style={{ fontSize: 12, fontWeight: 700, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.7px', marginBottom: 4 }}>Channel health</p>
-                  <div style={{ fontWeight: 800, fontSize: 28, color: '#ff3b30', letterSpacing: '-1.5px', lineHeight: 1 }}>45</div>
-                  <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.3)', marginTop: 2 }}>out of 100 · Critical</div>
+
+            {/* Inner white product card */}
+            <div style={{
+              background: '#ffffff',
+              borderRadius: 14,
+              padding: '18px 16px',
+              boxShadow: '0 12px 32px rgba(0,0,0,0.25)',
+            }}>
+              {/* Channel + score row */}
+              <div style={{
+                display: 'flex', alignItems: 'center', gap: 12,
+                paddingBottom: 14, borderBottom: '1px solid #f0f0f5',
+                marginBottom: 16,
+              }}>
+                <img
+                  src="/avatars/sophie.jpg" alt=""
+                  style={{ width: 40, height: 40, borderRadius: '50%', objectFit: 'cover', flexShrink: 0 }}
+                />
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <p style={{ fontSize: 13.5, fontWeight: 700, color: '#0a0a0f', letterSpacing: '-0.2px' }}>Sophie Brandt</p>
+                  <p style={{ fontSize: 11.5, color: '#6a6a78', marginTop: 2 }}>42K subscribers</p>
+                </div>
+                <div style={{ position: 'relative', flexShrink: 0 }}>
+                  <svg width="44" height="44" viewBox="0 0 44 44">
+                    <circle cx="22" cy="22" r="18" fill="none" stroke="#ececf2" strokeWidth="4"/>
+                    <circle cx="22" cy="22" r="18" fill="none" stroke="#16a34a" strokeWidth="4" strokeDasharray="81.4 113" strokeLinecap="round" transform="rotate(-90 22 22)"/>
+                  </svg>
+                  <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <span style={{ fontSize: 13, fontWeight: 800, color: '#0a0a0f', letterSpacing: '-0.3px' }}>72</span>
+                  </div>
                 </div>
               </div>
-              <p style={{ fontSize: 12, fontWeight: 700, color: 'rgba(255,255,255,0.25)', textTransform: 'uppercase', letterSpacing: '0.7px', marginBottom: 8 }}>Your action plan</p>
-              {[
-                { c: '#ff3b30', t: 'Rewrite your video openings', p: 'Critical' },
-                { c: '#ffd60a', t: 'Post 1 video per week minimum', p: 'High' },
-                { c: '#0a84ff', t: 'A/B test thumbnail focal points', p: 'Medium' },
-              ].map((item, i) => (
-                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 9, padding: '10px 12px', background: 'rgba(255,255,255,0.025)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 10, marginBottom: i < 2 ? 7 : 0 }}>
-                  <div style={{ width: 6, height: 6, borderRadius: '50%', background: item.c, flexShrink: 0 }} />
-                  <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.6)', fontWeight: 500, flex: 1 }}>{item.t}</span>
-                  <span style={{ fontSize: 12, fontWeight: 700, color: item.c, textTransform: 'uppercase', letterSpacing: '0.05em', flexShrink: 0 }}>{item.p}</span>
+
+              {/* Priority eyebrow */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
+                <span style={{ fontSize: 9.5, fontWeight: 800, color: '#d97706', letterSpacing: '0.18em', textTransform: 'uppercase' }}>Priority this week</span>
+                <span style={{ flex: 1, height: 1, background: '#ececf2' }}/>
+                <span style={{
+                  fontSize: 9, fontWeight: 700, color: '#d97706',
+                  border: '1.5px solid #d97706', padding: '2px 8px',
+                  borderRadius: 999, letterSpacing: '0.08em', textTransform: 'uppercase',
+                }}>High</span>
+              </div>
+
+              {/* Problem statement */}
+              <h3 style={{
+                fontSize: 15, fontWeight: 800, color: '#0a0a0f',
+                letterSpacing: '-0.3px', lineHeight: 1.4,
+                marginBottom: 14,
+              }}>
+                Watch time is critically short — rewrite openings to hook viewers in the first 15 seconds.
+              </h3>
+
+              {/* Stacked details (1 column on mobile) */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 7 }}>
+                <div style={{ background: 'rgba(79,134,247,0.06)', border: '1px solid rgba(79,134,247,0.15)', borderRadius: 10, padding: '10px 12px' }}>
+                  <p style={{ fontSize: 9.5, fontWeight: 700, color: '#4a7cf7', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 4 }}>Why now</p>
+                  <p style={{ fontSize: 12, color: '#3a3a44', lineHeight: 1.5 }}>Avg watch 38s vs 2:30 niche — viewers bail in the first 15s.</p>
                 </div>
-              ))}
+                <div style={{ background: '#ffffff', border: '1px solid #ececf2', borderLeft: '3px solid #d97706', borderRadius: '0 10px 10px 0', padding: '10px 12px', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
+                  <p style={{ fontSize: 9.5, fontWeight: 700, color: '#d97706', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 4 }}>Action</p>
+                  <p style={{ fontSize: 12, color: '#0a0a0f', lineHeight: 1.5, fontWeight: 500 }}>Cold-open hook. Drop the intro, lead with the payoff.</p>
+                </div>
+                <div style={{ background: 'rgba(22,163,74,0.06)', border: '1px solid rgba(22,163,74,0.18)', borderRadius: 10, padding: '10px 12px' }}>
+                  <p style={{ fontSize: 9.5, fontWeight: 700, color: '#16a34a', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 4 }}>Expected outcome</p>
+                  <p style={{ fontSize: 12, color: '#3a3a44', lineHeight: 1.5 }}>+40% watch time in 3 weeks.</p>
+                </div>
+              </div>
             </div>
           </div>
         )}
@@ -899,32 +965,47 @@ export default function Landing() {
         </div>
       </div>
 
-      {/* ── STATS BAR — thin inline feature row ─────────────────────────── */}
+      {/* ── STATS BAR — elevated white stat cards, grid layout ─────────── */}
       <div className="section-animate" style={{
         background: '#f4f4f6',
         borderTop: '1px solid rgba(10,10,15,0.06)',
         borderBottom: '1px solid rgba(10,10,15,0.06)',
-        padding: isMobile ? '20px 24px' : '22px 64px',
+        padding: isMobile ? '32px 20px' : '44px 64px',
       }}>
         <div style={{
-          maxWidth: 1100, margin: '0 auto',
-          display: 'flex', flexWrap: 'wrap',
-          justifyContent: 'center', alignItems: 'center',
-          gap: isMobile ? '10px 18px' : '10px 28px',
+          maxWidth: 1200, margin: '0 auto',
+          display: 'grid',
+          gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(5, 1fr)',
+          gap: isMobile ? 10 : 14,
         }}>
           {[
-            ['10',       'audit dimensions'],
-            ['3',        'competitor benchmarks'],
-            ['2-layer',  'thumbnail scoring'],
-            ['Weekly',   'automated reports'],
-            ['7+',       'core growth tools'],
-          ].map(([stat, label], i, arr) => (
-            <div key={i} style={{ display: 'inline-flex', alignItems: 'baseline', gap: 7 }}>
-              <span style={{ fontSize: 15, fontWeight: 800, color: 'var(--ytg-accent)', letterSpacing: '-0.3px' }}>{stat}</span>
-              <span style={{ fontSize: 13, color: 'rgba(10,10,15,0.52)', fontWeight: 500, letterSpacing: '-0.1px' }}>{label}</span>
-              {!isMobile && i < arr.length - 1 && (
-                <span style={{ color: 'rgba(10,10,15,0.15)', fontSize: 13, marginLeft: 20 }}>·</span>
-              )}
+            ['10',       'Audit dimensions'],
+            ['3',        'Competitor benchmarks'],
+            ['2-layer',  'Thumbnail scoring'],
+            ['Weekly',   'Automated reports'],
+            ['7+',       'Core growth tools'],
+          ].map(([stat, label], i) => (
+            <div key={i} style={{
+              background: '#ffffff',
+              border: '1px solid rgba(10,10,15,0.07)',
+              borderRadius: 14,
+              padding: isMobile ? '18px 14px' : '22px 22px',
+              textAlign: 'center',
+              boxShadow: '0 1px 2px rgba(0,0,0,0.03), 0 4px 14px rgba(0,0,0,0.05)',
+              gridColumn: isMobile && i === 4 ? '1 / -1' : undefined,
+            }}>
+              <p style={{
+                fontSize: isMobile ? 26 : 30, fontWeight: 800,
+                color: 'var(--ytg-accent)',
+                letterSpacing: '-1px', lineHeight: 1,
+                marginBottom: 8,
+              }}>{stat}</p>
+              <p style={{
+                fontSize: 11, fontWeight: 700,
+                color: 'rgba(10,10,15,0.52)',
+                textTransform: 'uppercase',
+                letterSpacing: '0.1em',
+              }}>{label}</p>
             </div>
           ))}
         </div>
