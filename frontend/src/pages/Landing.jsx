@@ -724,7 +724,7 @@ export default function Landing() {
             <span style={{ fontSize: 14, fontWeight: 500, color: 'var(--ytg-text-3)', letterSpacing: '-0.1px' }}>AI-Powered YouTube Intelligence</span>
           </div>
 
-          <h1 style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontWeight: 800, fontSize: isMobile ? 40 : isTablet ? 62 : 72, lineHeight: 1.02, letterSpacing: isMobile ? '-1.5px' : '-2.5px', color: 'var(--ytg-text)', marginBottom: 22, textWrap: 'balance' }}>
+          <h1 style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontWeight: 800, fontSize: isMobile ? 40 : isTablet ? 62 : 72, lineHeight: isMobile ? 1.08 : 1.02, letterSpacing: isMobile ? '-0.8px' : '-2.5px', color: 'var(--ytg-text)', marginBottom: 22, textWrap: 'balance' }}>
             The AI that audits your channel like a <span style={{ color: 'var(--ytg-accent)' }}>$500/hour consultant</span>
           </h1>
 
