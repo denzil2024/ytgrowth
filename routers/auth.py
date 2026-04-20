@@ -10,6 +10,7 @@ from app.youtube import (
     get_channel_stats, get_recent_videos, get_video_metrics_map, merge_metrics_into_videos,
     get_full_channel_data)
 from app.insights import analyze_channel
+from app.milestones import check_and_record as _check_milestones, get_state as _get_milestone_state
 from database.models import (
     UserSession, UserEmailPreferences, UserSubscription,
     UserAccount, ChannelRegistry, SessionLocal,
@@ -453,6 +454,12 @@ def callback(request: Request, background_tasks: BackgroundTasks):
         _user_data[session_id] = user_data
         _persist_session(session_id, creds, user_data)
 
+        # Silently record any milestones the channel has already crossed (no toast on login).
+        try:
+            _check_milestones(channel_id, stats, videos, full_data.get("analytics"))
+        except Exception as _e:
+            print(f"[milestones] login-check error: {_e}")
+
         # Store owner_email in UserSession row
         try:
             db = SessionLocal()
@@ -573,11 +580,37 @@ def refresh_stats(request: Request):
     _user_data[session_id]   = data
     _persist_session(session_id, creds, data)
 
+    # Milestone check — include newly unlocked in response so frontend can celebrate.
+    new_milestones = []
+    try:
+        new_milestones = _check_milestones(
+            stats.get("channel_id"), stats, videos, data.get("analytics")
+        )
+    except Exception as _e:
+        print(f"[milestones] refresh-check error: {_e}")
+
     return JSONResponse({
         "channel":          stats,
         "videos":           videos,
         "stats_fetched_at": now,
+        "new_milestones":   new_milestones,
     })
+
+
+@router.get("/milestones")
+def get_milestones(request: Request):
+    session_id = request.session.get("session_id")
+    data, _ = get_session(session_id)
+    if not data:
+        return JSONResponse({"error": "Not authenticated"}, status_code=401)
+    channel_id = (data.get("channel") or {}).get("channel_id")
+    state = _get_milestone_state(
+        channel_id,
+        data.get("channel") or {},
+        data.get("videos") or [],
+        data.get("analytics"),
+    )
+    return JSONResponse(state)
 
 
 @router.get("/logout")

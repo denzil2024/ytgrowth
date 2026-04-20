@@ -180,6 +180,13 @@ const C = {
   surface:  '#ffffff',
 }
 
+const MILESTONE_STYLE = {
+  subs:        { emoji: '👥', bg: 'linear-gradient(135deg, #fff1f2 0%, #ffe4e6 100%)', accent: '#e5251b', plural: 'subscribers' },
+  views:       { emoji: '👁',  bg: 'linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)', accent: '#2563eb', plural: 'total views' },
+  watch_hours: { emoji: '⏱',  bg: 'linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%)', accent: '#d97706', plural: 'watch hours' },
+  uploads:     { emoji: '🎬', bg: 'linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%)', accent: '#059669', plural: 'videos' },
+}
+
 /* Severity palette — 3-color system: red critical, amber warnings, slate minor */
 const SEV = {
   critical: { color: '#dc2626', bg: '#fff5f5', bdr: '#fecaca' },
@@ -758,6 +765,7 @@ export default function Dashboard() {
   const [prevScore,   setPrevScore]   = useState(null)
   const [statsFlash,  setStatsFlash]  = useState(null)  // 'ok' | 'err' | null
   const [usagePct,    setUsagePct]    = useState(0)
+  const [milestones,  setMilestones]  = useState(null)  // { earned: [...], upcoming: [...] }
 
   useEffect(() => {
     fetch('/auth/data', { credentials: 'include' })
@@ -791,6 +799,12 @@ export default function Dashboard() {
           setCanAddMore(d.can_add_more || false)
         }
       })
+      .catch(() => {})
+
+    // Load milestones
+    fetch('/auth/milestones', { credentials: 'include' })
+      .then(r => r.ok ? r.json() : null)
+      .then(d => { if (d && !d.error) setMilestones(d) })
       .catch(() => {})
   }, [])
 
@@ -1133,6 +1147,12 @@ export default function Dashboard() {
                             }))
                             setVideos(d.videos || [])
                             setStatsFlash('ok')
+                            if (d.new_milestones && d.new_milestones.length > 0) {
+                              fetch('/auth/milestones', { credentials: 'include' })
+                                .then(r => r.ok ? r.json() : null)
+                                .then(m => { if (m && !m.error) setMilestones(m) })
+                                .catch(() => {})
+                            }
                           } else {
                             setStatsFlash('err')
                           }
@@ -1194,6 +1214,103 @@ export default function Dashboard() {
               )}
 
             </>
+          )}
+
+          {/* ── MILESTONES ─────────────────────────────────────────────── */}
+          {data && nav === 'Overview' && milestones && (
+            <div style={{ marginTop: 36 }}>
+              <div style={{ marginBottom: 18 }}>
+                <h2 style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', marginBottom: 4 }}>Milestones</h2>
+                <p style={{ fontSize: 13, color: C.text3 }}>
+                  {milestones.earned.length} earned
+                  {milestones.upcoming.length > 0 ? ` · ${milestones.upcoming.length} in progress` : ''}
+                </p>
+              </div>
+
+              <div className="ytg-card" style={{ padding: '28px 28px 26px' }}>
+                {milestones.earned.length === 0 ? (
+                  <div style={{ padding: '8px 0 20px' }}>
+                    <p style={{ fontSize: 14, color: C.text2, lineHeight: 1.6 }}>
+                      No badges yet — your first milestone is just around the corner. Keep shipping.
+                    </p>
+                  </div>
+                ) : (
+                  <>
+                    <p style={{ fontSize: 10.5, fontWeight: 700, color: C.text3, letterSpacing: '0.09em', textTransform: 'uppercase', marginBottom: 16 }}>Earned</p>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(132px, 1fr))', gap: 14, marginBottom: milestones.upcoming.length > 0 ? 30 : 0 }}>
+                      {milestones.earned.map(b => {
+                        const style = MILESTONE_STYLE[b.category] || { emoji: '⭐', bg: '#f5f5f9', accent: C.text2, plural: b.category }
+                        return (
+                          <div key={`${b.category}-${b.tier}`} style={{
+                            background: '#fff',
+                            border: `1px solid ${C.border}`,
+                            borderRadius: 14,
+                            padding: '16px 12px 14px',
+                            textAlign: 'center',
+                            boxShadow: '0 1px 3px rgba(0,0,0,0.04), 0 4px 14px rgba(0,0,0,0.05)',
+                            transition: 'transform 0.18s, box-shadow 0.18s',
+                          }}
+                            onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 2px 6px rgba(0,0,0,0.08), 0 10px 28px rgba(0,0,0,0.09)' }}
+                            onMouseLeave={e => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = '0 1px 3px rgba(0,0,0,0.04), 0 4px 14px rgba(0,0,0,0.05)' }}
+                          >
+                            <div style={{
+                              width: 48, height: 48, borderRadius: '50%',
+                              background: style.bg,
+                              display: 'flex', alignItems: 'center', justifyContent: 'center',
+                              fontSize: 22, margin: '0 auto 12px',
+                              boxShadow: `inset 0 0 0 1px ${style.accent}26`,
+                            }}>{style.emoji}</div>
+                            <p style={{ fontSize: 17, fontWeight: 800, color: C.text1, letterSpacing: '-0.4px', marginBottom: 3, fontVariantNumeric: 'tabular-nums' }}>{fmtNum(b.tier)}</p>
+                            <p style={{ fontSize: 11, fontWeight: 600, color: C.text2, marginBottom: 6, textTransform: 'capitalize' }}>{style.plural}</p>
+                            <p style={{ fontSize: 10.5, color: C.text3 }}>{relTimeLong(b.achieved_at) || '—'}</p>
+                          </div>
+                        )
+                      })}
+                    </div>
+                  </>
+                )}
+
+                {milestones.upcoming.length > 0 && (
+                  <>
+                    <p style={{ fontSize: 10.5, fontWeight: 700, color: C.text3, letterSpacing: '0.09em', textTransform: 'uppercase', marginBottom: 16 }}>Next up</p>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 22 }}>
+                      {milestones.upcoming.map(u => {
+                        const style = MILESTONE_STYLE[u.category] || { emoji: '⭐', bg: '#f5f5f9', accent: C.text2, plural: u.category }
+                        return (
+                          <div key={`next-${u.category}`}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 10 }}>
+                              <div style={{
+                                width: 34, height: 34, borderRadius: '50%',
+                                background: style.bg,
+                                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                fontSize: 17, flexShrink: 0,
+                                boxShadow: `inset 0 0 0 1px ${style.accent}26`,
+                              }}>{style.emoji}</div>
+                              <div style={{ flex: 1, minWidth: 0, display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 8 }}>
+                                <span style={{ fontSize: 13.5, fontWeight: 700, color: C.text1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', textTransform: 'capitalize' }}>
+                                  {fmtNum(u.tier)} {style.plural}
+                                </span>
+                                <span style={{ fontSize: 12, fontWeight: 600, color: C.text3, fontVariantNumeric: 'tabular-nums', flexShrink: 0 }}>
+                                  {fmtNum(u.current)} / {fmtNum(u.tier)}
+                                </span>
+                              </div>
+                            </div>
+                            <div style={{ height: 6, background: '#eeeef3', borderRadius: 99, overflow: 'hidden' }}>
+                              <div style={{
+                                width: `${Math.max(u.pct, 2)}%`, height: '100%',
+                                background: style.accent,
+                                borderRadius: 99,
+                                transition: 'width 0.8s ease',
+                              }}/>
+                            </div>
+                          </div>
+                        )
+                      })}
+                    </div>
+                  </>
+                )}
+              </div>
+            </div>
           )}
 
           {/* ── INSIGHTS ─────────────────────────────────────────────── */}
@@ -1470,6 +1587,12 @@ export default function Dashboard() {
                             setData(prev => ({ ...prev, channel: d.channel, videos: d.videos, stats_fetched_at: d.stats_fetched_at }))
                             setVideos(d.videos || [])
                             setVideoFlash('ok')
+                            if (d.new_milestones && d.new_milestones.length > 0) {
+                              fetch('/auth/milestones', { credentials: 'include' })
+                                .then(r => r.ok ? r.json() : null)
+                                .then(m => { if (m && !m.error) setMilestones(m) })
+                                .catch(() => {})
+                            }
                           } else {
                             setVideoFlash('err')
                           }

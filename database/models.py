@@ -192,6 +192,16 @@ class CompetitorAnalysisCache(Base):
     analyzed_at   = Column(DateTime, default=_now)
 
 
+class Milestone(Base):
+    """One row per milestone tier a channel has crossed. (channel_id, category, tier) is unique."""
+    __tablename__ = "milestones"
+    id           = Column(Integer, primary_key=True, autoincrement=True)
+    channel_id   = Column(String, nullable=False, index=True)
+    category     = Column(String, nullable=False)   # 'subs' | 'views' | 'watch_hours' | 'uploads'
+    tier         = Column(Integer, nullable=False)  # threshold crossed
+    achieved_at  = Column(DateTime, default=_now)
+
+
 import os
 DATABASE_URL = os.environ.get("DATABASE_URL", "sqlite:///ytgrowth.db")
 # Railway provides postgres:// but SQLAlchemy needs postgresql://
@@ -218,6 +228,9 @@ with engine.connect() as _conn:
         "CREATE INDEX IF NOT EXISTS ix_channel_registry_owner_email ON channel_registry (owner_email)",
         "CREATE UNIQUE INDEX IF NOT EXISTS uq_channel_registry_owner_channel ON channel_registry (owner_email, channel_id)",
         "CREATE TABLE IF NOT EXISTS competitor_analysis_cache (id INTEGER PRIMARY KEY AUTOINCREMENT, channel_id TEXT NOT NULL, competitor_id TEXT NOT NULL, result_json TEXT NOT NULL, analyzed_at DATETIME)",
+        "CREATE TABLE IF NOT EXISTS milestones (id INTEGER PRIMARY KEY AUTOINCREMENT, channel_id TEXT NOT NULL, category TEXT NOT NULL, tier INTEGER NOT NULL, achieved_at DATETIME)",
+        "CREATE INDEX IF NOT EXISTS ix_milestones_channel_id ON milestones (channel_id)",
+        "CREATE UNIQUE INDEX IF NOT EXISTS uq_milestones_channel_cat_tier ON milestones (channel_id, category, tier)",
         "UPDATE user_subscriptions SET monthly_allowance = 5, monthly_used = 0 WHERE plan = 'free' AND monthly_allowance = 9999",
         # Rename paddle_* → lemonsqueezy_* (legacy; kept idempotent)
         "ALTER TABLE user_subscriptions RENAME COLUMN paddle_subscription_id TO lemonsqueezy_subscription_id",
