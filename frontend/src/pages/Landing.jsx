@@ -1359,10 +1359,13 @@ export default function Landing() {
         <div style={{ position: 'absolute', top: '0%', left: '50%', transform: 'translateX(-50%)', width: 1000, height: 600, background: 'radial-gradient(ellipse, rgba(229,48,42,0.08) 0%, transparent 60%)', pointerEvents: 'none' }} />
         <div style={{ position: 'absolute', bottom: '5%', left: '10%', width: 500, height: 400, background: 'radial-gradient(ellipse, rgba(99,102,241,0.07) 0%, transparent 65%)', pointerEvents: 'none' }} />
         <div style={{ maxWidth: 1280, margin: '0 auto', position: 'relative', zIndex: 1 }}>
-          <div className="section-animate" style={{ textAlign: 'center', marginBottom: 48 }}> {/* IMPROVED: section-animate */}
-            <Badge>Pricing</Badge>
-            <h2 style={{ fontWeight: 800, fontSize: isMobile ? 32 : 48, letterSpacing: '-1.5px', color: 'var(--ytg-text)', lineHeight: 1.06, marginBottom: 16, textWrap: 'balance' }}>One good video idea pays for a year.</h2>
-            <p style={{ fontSize: 16, color: 'var(--ytg-text-2)', lineHeight: 1.8 }}>AI-powered analysis across 5 tools — find what's working in your niche, then do more of it.</p>
+          <div className="section-animate" style={{ textAlign: 'center', marginBottom: 48 }}>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#ffffff', border: '1px solid rgba(10,10,15,0.09)', borderRadius: 100, padding: '5px 12px 5px 10px', marginBottom: 20, boxShadow: '0 1px 2px rgba(10,10,15,0.04)' }}>
+              <span aria-hidden="true" style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--ytg-accent)', boxShadow: '0 0 0 3px rgba(229,48,42,0.12)' }} />
+              <span style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-text-2)', textTransform: 'uppercase', letterSpacing: '0.09em' }}>Pricing</span>
+            </div>
+            <h2 style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontWeight: 800, fontSize: isMobile ? 32 : 48, letterSpacing: '-1.5px', color: 'var(--ytg-text)', lineHeight: 1.06, marginBottom: 16, textWrap: 'balance' }}>One good video idea <span style={{ color: 'var(--ytg-accent)' }}>pays for a year.</span></h2>
+            <p style={{ fontSize: 16, color: 'var(--ytg-text-2)', lineHeight: 1.72, maxWidth: 620, margin: '0 auto' }}>AI-powered analysis across 5 tools — find what's working in your niche, then do more of it.</p>
           </div>
 
           {/* Tab switcher */}
@@ -1393,10 +1396,13 @@ export default function Landing() {
                 <p style={{ fontSize: 12, fontWeight: 700, color: 'var(--ytg-text-3)', marginBottom: 10, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Free</p>
                 <p style={{ fontWeight: 800, fontSize: 46, letterSpacing: '-2px', color: 'var(--ytg-text)', lineHeight: 1, marginBottom: 4 }}>$0</p>
                 <p style={{ fontSize: 14, color: 'var(--ytg-text-3)', marginBottom: 4 }}>Forever free</p>
-                <p style={{ fontSize: 12, color: 'var(--ytg-text-4)', marginBottom: 22 }}>Built for dipping your toes in</p>
-                {['Full channel audit (1 channel)', '5 lifetime AI analyses', 'SEO Studio (limited)', 'Keyword Explorer (view only)', 'Thumbnail IQ (limited credits)', 'No Competitor Analysis', 'No Title Optimizer', 'No Video Ideas', 'No weekly reports'].map((f, i) => (
-                  <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>{f.startsWith('No ') ? <NoCheck /> : <Check />}<span style={{ fontSize: 14, color: f.startsWith('No ') ? 'var(--ytg-text-4)' : 'var(--ytg-text-2)' }}>{f}</span></div>
+                <p style={{ fontSize: 12, color: 'var(--ytg-text-4)', marginBottom: 22 }}>For trying YTGrowth risk-free</p>
+                {['Full channel audit (1 channel)', '3 lifetime AI analyses', 'SEO Studio (limited)', 'Keyword Explorer (view only)', 'Thumbnail IQ (limited credits)'].map((f, i) => (
+                  <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}><Check /><span style={{ fontSize: 14, color: 'var(--ytg-text-2)' }}>{f}</span></div>
                 ))}
+                <div style={{ borderTop: '1px solid rgba(10,10,15,0.07)', marginTop: 6, paddingTop: 12 }}>
+                  <p style={{ fontSize: 12, color: 'var(--ytg-text-4)', lineHeight: 1.6, margin: 0 }}>Not included: Competitor Analysis, Title Optimizer, Video Ideas, weekly reports.</p>
+                </div>
                 <a href="/auth/login" className="ytg-btn-ghost" style={{ marginTop: 22, width: '100%', justifyContent: 'center', display: 'flex' }}>Start free</a>
               </div>
 
@@ -1408,8 +1414,8 @@ export default function Landing() {
                 </div>
                 <p style={{ fontSize: 14, color: 'var(--ytg-text-3)', marginBottom: 4 }}>20 analyses/month</p>
                 <p style={{ fontSize: 12, color: 'var(--ytg-text-4)', marginBottom: 22 }}>Built for solo creators who post consistently</p>
-                {['Full channel audit (up to 3 channels)', '20 AI analyses/month', 'SEO Studio (full)', 'Keyword Explorer (full)', 'Title Optimizer', 'Video Ideas', 'Competitor Analysis (up to 2 rivals)', 'Thumbnail IQ (standard credits)', 'No weekly reports'].map((f, i) => (
-                  <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>{f.startsWith('No ') ? <NoCheck /> : <Check />}<span style={{ fontSize: 14, color: f.startsWith('No ') ? 'var(--ytg-text-4)' : 'var(--ytg-text-2)' }}>{f}</span></div>
+                {['Full channel audit (up to 3 channels)', '20 AI analyses/month', 'SEO Studio (full)', 'Keyword Explorer (full)', 'Title Optimizer', 'Video Ideas', 'Competitor Analysis (up to 2 rivals)', 'Thumbnail IQ (standard credits)'].map((f, i) => (
+                  <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}><Check /><span style={{ fontSize: 14, color: 'var(--ytg-text-2)' }}>{f}</span></div>
                 ))}
                 <button onClick={() => openCheckout('solo_monthly')} className="ytg-btn-ghost" style={{ marginTop: 22, width: '100%', justifyContent: 'center', display: 'flex' }}>Get Solo</button>
               </div>
@@ -1427,9 +1433,9 @@ export default function Landing() {
                 <p style={{ fontSize: 14, color: 'var(--ytg-text-3)', marginBottom: 4 }}>50 analyses/month</p>
                 <p style={{ fontSize: 12, color: 'var(--ytg-text-4)', marginBottom: 22 }}>Built for creators serious about hitting 100k</p>
                 {['Full channel audit (up to 5 channels)', '50 AI analyses/month', 'SEO Studio (full)', 'Keyword Explorer (full)', 'Title Optimizer', 'Video Ideas', 'Competitor Analysis (up to 5 rivals)', 'Thumbnail IQ (increased credits)', 'Weekly report emails'].map((f, i) => (
-                  <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}><Check color="var(--ytg-accent)" /><span style={{ fontSize: 14, color: 'var(--ytg-text)' }}>{f}</span></div>
+                  <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}><Check /><span style={{ fontSize: 14, color: 'var(--ytg-text)' }}>{f}</span></div>
                 ))}
-                <button onClick={() => openCheckout('growth_monthly')} className="ytg-btn-primary" style={{ marginTop: 22, width: '100%', justifyContent: 'center', display: 'flex' }}>Start with Growth</button>
+                <button onClick={() => openCheckout('growth_monthly')} className="ytg-btn-primary" style={{ marginTop: 22, width: '100%', justifyContent: 'center', display: 'flex' }}>Get Growth</button>
               </div>
 
               <div className="ytg-pricing-card">
@@ -1455,9 +1461,12 @@ export default function Landing() {
                 <p style={{ fontSize: 12, fontWeight: 700, color: 'var(--ytg-text-3)', marginBottom: 10, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Free</p>
                 <p style={{ fontWeight: 800, fontSize: 46, letterSpacing: '-2px', color: 'var(--ytg-text)', lineHeight: 1, marginBottom: 4 }}>$0</p>
                 <p style={{ fontSize: 14, color: 'var(--ytg-text-3)', marginBottom: 22 }}>Forever free</p>
-                {['Full channel audit (1 channel)', '5 lifetime AI analyses', 'SEO Studio (limited)', 'Keyword Explorer (view only)', 'Thumbnail IQ (limited credits)', 'No Competitor Analysis', 'No Title Optimizer', 'No Video Ideas', 'No weekly reports'].map((f, i) => (
-                  <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>{f.startsWith('No ') ? <NoCheck /> : <Check />}<span style={{ fontSize: 14, color: f.startsWith('No ') ? 'var(--ytg-text-4)' : 'var(--ytg-text-2)' }}>{f}</span></div>
+                {['Full channel audit (1 channel)', '3 lifetime AI analyses', 'SEO Studio (limited)', 'Keyword Explorer (view only)', 'Thumbnail IQ (limited credits)'].map((f, i) => (
+                  <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}><Check /><span style={{ fontSize: 14, color: 'var(--ytg-text-2)' }}>{f}</span></div>
                 ))}
+                <div style={{ borderTop: '1px solid rgba(10,10,15,0.07)', marginTop: 6, paddingTop: 12 }}>
+                  <p style={{ fontSize: 12, color: 'var(--ytg-text-4)', lineHeight: 1.6, margin: 0 }}>Not included: Competitor Analysis, Title Optimizer, Video Ideas, weekly reports.</p>
+                </div>
                 <a href="/auth/login" className="ytg-btn-ghost" style={{ marginTop: 22, width: '100%', justifyContent: 'center', display: 'flex' }}>Start free</a>
               </div>
 
@@ -1469,8 +1478,8 @@ export default function Landing() {
                 </div>
                 <p style={{ fontSize: 14, color: 'var(--ytg-text-2)', marginBottom: 2 }}>$15.83 / month equivalent</p>
                 <p style={{ fontSize: 12, fontWeight: 700, color: '#30d158', marginBottom: 22 }}>You save $38</p>
-                {['Full channel audit (up to 3 channels)', '20 AI analyses/month', 'SEO Studio (full)', 'Keyword Explorer (full)', 'Title Optimizer', 'Video Ideas', 'Competitor Analysis (up to 2 rivals)', 'Thumbnail IQ (standard credits)', 'No weekly reports'].map((f, i) => (
-                  <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>{f.startsWith('No ') ? <NoCheck /> : <Check />}<span style={{ fontSize: 14, color: f.startsWith('No ') ? 'var(--ytg-text-4)' : 'var(--ytg-text-2)' }}>{f}</span></div>
+                {['Full channel audit (up to 3 channels)', '20 AI analyses/month', 'SEO Studio (full)', 'Keyword Explorer (full)', 'Title Optimizer', 'Video Ideas', 'Competitor Analysis (up to 2 rivals)', 'Thumbnail IQ (standard credits)'].map((f, i) => (
+                  <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}><Check /><span style={{ fontSize: 14, color: 'var(--ytg-text-2)' }}>{f}</span></div>
                 ))}
                 <button onClick={() => openCheckout('solo_annual')} className="ytg-btn-ghost" style={{ marginTop: 22, width: '100%', justifyContent: 'center', display: 'flex' }}>Commit to Solo</button>
               </div>
@@ -1488,7 +1497,7 @@ export default function Landing() {
                 <p style={{ fontSize: 14, color: 'var(--ytg-text-2)', marginBottom: 2 }}>$40.83 / month equivalent</p>
                 <p style={{ fontSize: 12, fontWeight: 700, color: '#30d158', marginBottom: 22 }}>You save $98</p>
                 {['Full channel audit (up to 5 channels)', '50 AI analyses/month', 'SEO Studio (full)', 'Keyword Explorer (full)', 'Title Optimizer', 'Video Ideas', 'Competitor Analysis (up to 5 rivals)', 'Thumbnail IQ (increased credits)', 'Weekly report emails'].map((f, i) => (
-                  <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}><Check color="var(--ytg-accent)" /><span style={{ fontSize: 14, color: 'var(--ytg-text)' }}>{f}</span></div>
+                  <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}><Check /><span style={{ fontSize: 14, color: 'var(--ytg-text)' }}>{f}</span></div>
                 ))}
                 <button onClick={() => openCheckout('growth_annual')} className="ytg-btn-primary" style={{ marginTop: 22, width: '100%', justifyContent: 'center', display: 'flex' }}>Commit to Growth</button>
               </div>
@@ -1525,8 +1534,8 @@ export default function Landing() {
                   </div>
                   <p style={{ fontSize: 14, color: 'var(--ytg-text-3)', marginBottom: 4 }}>Equivalent to ~8 months of Solo</p>
                   <p style={{ fontSize: 12, color: 'var(--ytg-text-4)', marginBottom: 22 }}>Worth $456 over 2 years of subscription</p>
-                  {['Full channel audit (up to 3 channels)', '20 AI analyses/month — forever', 'SEO Studio (full)', 'Keyword Explorer (full)', 'Title Optimizer', 'Video Ideas', 'Competitor Analysis (up to 2 rivals)', 'Thumbnail IQ (standard credits)', 'No weekly reports', 'One-time payment, no subscription'].map((f, i) => (
-                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>{f.startsWith('No ') ? <NoCheck /> : <Check />}<span style={{ fontSize: 14, color: f.startsWith('No ') ? 'var(--ytg-text-4)' : 'var(--ytg-text-2)' }}>{f}</span></div>
+                  {['Full channel audit (up to 3 channels)', '20 AI analyses/month — forever', 'SEO Studio (full)', 'Keyword Explorer (full)', 'Title Optimizer', 'Video Ideas', 'Competitor Analysis (up to 2 rivals)', 'Thumbnail IQ (standard credits)', 'One-time payment, no subscription'].map((f, i) => (
+                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}><Check /><span style={{ fontSize: 14, color: 'var(--ytg-text-2)' }}>{f}</span></div>
                   ))}
                   <p style={{ fontSize: 12, color: '#ff3b30', fontWeight: 700, marginTop: 18, marginBottom: 12 }}>Only 500 available — limited spots</p>
                   <button onClick={() => openCheckout('solo_lifetime')} className="ytg-btn-ghost" style={{ width: '100%', justifyContent: 'center', display: 'flex' }}>Lock In Lifetime Access</button>
@@ -1546,7 +1555,7 @@ export default function Landing() {
                   <p style={{ fontSize: 14, color: 'var(--ytg-text-3)', marginBottom: 4 }}>Equivalent to ~7 months of Growth</p>
                   <p style={{ fontSize: 12, color: 'var(--ytg-text-4)', marginBottom: 22 }}>Worth $1,176 over 2 years of subscription</p>
                   {['Full channel audit (up to 5 channels)', '50 AI analyses/month — forever', 'SEO Studio (full)', 'Keyword Explorer (full)', 'Title Optimizer', 'Video Ideas', 'Competitor Analysis (up to 5 rivals)', 'Thumbnail IQ (increased credits)', 'Weekly report emails', 'One-time payment, no subscription'].map((f, i) => (
-                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}><Check color="var(--ytg-accent)" /><span style={{ fontSize: 14, color: 'var(--ytg-text)' }}>{f}</span></div>
+                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}><Check /><span style={{ fontSize: 14, color: 'var(--ytg-text)' }}>{f}</span></div>
                   ))}
                   <p style={{ fontSize: 12, color: '#ff3b30', fontWeight: 700, marginTop: 18, marginBottom: 12 }}>Only 500 available — limited spots</p>
                   <button onClick={() => openCheckout('growth_lifetime')} className="ytg-btn-primary" style={{ width: '100%', justifyContent: 'center', display: 'flex' }}>Lock In Lifetime Access</button>
@@ -1607,7 +1616,7 @@ export default function Landing() {
                   <p style={{ fontSize: 14, color: 'var(--ytg-text-3)', marginBottom: 2 }}>Lifetime Growth + 75 bonus analyses</p>
                   <p style={{ fontSize: 12, fontWeight: 700, color: '#30d158', marginBottom: 22 }}>You're getting $490+ in value</p>
                   {['Full channel audit (up to 5 channels)', '50 AI analyses/month — forever', 'SEO Studio (full)', 'Keyword Explorer (full)', 'Title Optimizer + Video Ideas', 'Competitor Analysis (up to 5 rivals)', 'Thumbnail IQ (increased credits)', 'Weekly report emails', '+75 bonus analyses, on us — never expire'].map((f, i) => (
-                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}><Check color="var(--ytg-accent)" /><span style={{ fontSize: 14, color: 'var(--ytg-text)' }}>{f}</span></div>
+                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}><Check /><span style={{ fontSize: 14, color: 'var(--ytg-text)' }}>{f}</span></div>
                   ))}
                   <button onClick={() => openCheckout('founder_growth')} className="ytg-btn-primary" style={{ marginTop: 22, width: '100%', justifyContent: 'center', display: 'flex' }}>Become a Founder</button>
                 </div>
@@ -1666,7 +1675,7 @@ export default function Landing() {
                   <p style={{ fontSize: 14, color: 'var(--ytg-text-3)', marginBottom: 4 }}>60 AI analyses</p>
                   <p style={{ fontSize: 12, color: 'var(--ytg-text-4)', marginBottom: 22 }}>$0.70 per analysis</p>
                   {['60 AI analyses, yours to keep', 'Works with any plan — or no plan', 'Use across all tools', 'Stack on top of your monthly allowance', 'Never expire'].map((f, i) => (
-                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}><Check color="var(--ytg-accent)" /><span style={{ fontSize: 14, color: 'var(--ytg-text)' }}>{f}</span></div>
+                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}><Check /><span style={{ fontSize: 14, color: 'var(--ytg-text)' }}>{f}</span></div>
                   ))}
                   <button onClick={() => openCheckout('pack_60')} className="ytg-btn-primary" style={{ marginTop: 22, width: '100%', justifyContent: 'center', display: 'flex' }}>Buy Analyses</button>
                 </div>
