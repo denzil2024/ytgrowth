@@ -530,18 +530,12 @@ function FounderPricingBand({ isMobile }) {
       padding: isMobile ? '48px 24px' : '64px 64px',
     }}>
       <div style={{ maxWidth: 760, margin: '0 auto', textAlign: 'center' }}>
-        <div style={{
-          display: 'inline-flex', alignItems: 'center', gap: 8,
-          padding: '6px 14px', borderRadius: 999,
-          background: 'rgba(229,37,27,0.09)',
-          border: '1px solid rgba(229,37,27,0.18)',
-          marginBottom: 20,
-        }}>
-          <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#e5251b', boxShadow: '0 0 8px #e5251b' }}/>
-          <span style={{ fontSize: 11.5, fontWeight: 800, color: '#e5251b', textTransform: 'uppercase', letterSpacing: '0.14em' }}>Early access</span>
+        <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#ffffff', border: '1px solid rgba(10,10,15,0.09)', borderRadius: 100, padding: '5px 12px 5px 10px', marginBottom: 20, boxShadow: '0 1px 2px rgba(10,10,15,0.04)' }}>
+          <span aria-hidden="true" style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--ytg-accent)', boxShadow: '0 0 0 3px rgba(229,48,42,0.12)' }} />
+          <span style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-text-2)', textTransform: 'uppercase', letterSpacing: '0.09em' }}>Early access</span>
         </div>
-        <h2 style={{ fontSize: isMobile ? 26 : 36, fontWeight: 800, letterSpacing: '-1.2px', color: '#0a0a0f', lineHeight: 1.15, marginBottom: 14, textWrap: 'balance' }}>
-          Founder pricing while we&rsquo;re early
+        <h2 style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: isMobile ? 28 : 38, fontWeight: 800, letterSpacing: '-1.3px', color: '#0a0a0f', lineHeight: 1.12, marginBottom: 14, textWrap: 'balance' }}>
+          Founder pricing <span style={{ color: 'var(--ytg-accent)' }}>while we&rsquo;re early.</span>
         </h2>
         <p style={{ fontSize: isMobile ? 15 : 16, color: 'rgba(10,10,15,0.6)', lineHeight: 1.7, maxWidth: 560, marginLeft: 'auto', marginRight: 'auto' }}>
           YTGrowth is new. Pricing today is lower than it will be once reviews roll in — lock in the founder rate for the lifetime of your subscription.
