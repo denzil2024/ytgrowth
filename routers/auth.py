@@ -11,6 +11,7 @@ from app.youtube import (
     get_full_channel_data, get_watch_minutes_365d)
 from app.insights import analyze_channel
 from app.milestones import check_and_record as _check_milestones, get_state as _get_milestone_state
+from app.milestone_email import send_milestone_emails as _send_milestone_emails
 from database.models import (
     UserSession, UserEmailPreferences, UserSubscription,
     UserAccount, ChannelRegistry, SessionLocal,
@@ -596,6 +597,13 @@ def refresh_stats(request: Request):
         new_milestones = _check_milestones(
             stats.get("channel_id"), stats, videos, data["analytics"]
         )
+        if new_milestones:
+            _send_milestone_emails(
+                stats.get("channel_id"),
+                new_milestones,
+                stats.get("channel_name") or "",
+                stats.get("thumbnail") or stats.get("channel_thumbnail"),
+            )
     except Exception as _e:
         print(f"[milestones] refresh-check error: {_e}")
 

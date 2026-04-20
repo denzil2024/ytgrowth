@@ -28,6 +28,16 @@ function useDashboardStyles() {
       @keyframes spin    { to { transform: rotate(360deg) } }
       @keyframes fadeUp  { from { opacity: 0; transform: translateY(10px) } to { opacity: 1; transform: translateY(0) } }
       @keyframes pulse   { 0%,100% { opacity: 1 } 50% { opacity: 0.35 } }
+      @keyframes confettiFall {
+        0%   { transform: translate3d(0, -10vh, 0) rotate(0deg); opacity: 1; }
+        85%  { opacity: 1; }
+        100% { transform: translate3d(var(--cx, 0), 110vh, 0) rotate(var(--cr, 540deg)); opacity: 0; }
+      }
+      @keyframes popIn {
+        0%   { opacity: 0; transform: scale(0.86); }
+        60%  { opacity: 1; transform: scale(1.02); }
+        100% { opacity: 1; transform: scale(1); }
+      }
 
       ::-webkit-scrollbar       { width: 4px }
       ::-webkit-scrollbar-track { background: transparent }
@@ -679,6 +689,141 @@ function MilestoneShareModal({ milestone, channelName, channelThumbnail, onClose
   )
 }
 
+/* ─── Confetti burst (CSS, no deps) ───────────────────────────────────── */
+const CONFETTI_COLORS = ['#ff3b30', '#ffd60a', '#30d158', '#0a84ff', '#bf5af2', '#ff9f0a', '#ffffff']
+function ConfettiBurst({ count = 60 }) {
+  const pieces = useRef(null)
+  if (pieces.current === null) {
+    pieces.current = Array.from({ length: count }, () => ({
+      left:     Math.random() * 100,             // vw
+      cx:       (Math.random() - 0.5) * 40,      // vw drift
+      cr:       (Math.random() * 720 + 180) * (Math.random() < 0.5 ? -1 : 1),
+      delay:    Math.random() * 0.6,
+      duration: 2.4 + Math.random() * 2.2,
+      size:     6 + Math.random() * 6,
+      color:    CONFETTI_COLORS[Math.floor(Math.random() * CONFETTI_COLORS.length)],
+      round:    Math.random() < 0.35,
+    }))
+  }
+  return (
+    <div aria-hidden="true" style={{
+      position: 'fixed', inset: 0, pointerEvents: 'none',
+      overflow: 'hidden', zIndex: 1,
+    }}>
+      {pieces.current.map((p, i) => (
+        <div key={i} style={{
+          position: 'absolute',
+          top: 0, left: `${p.left}vw`,
+          width: p.size, height: p.size * 1.6,
+          background: p.color,
+          borderRadius: p.round ? '50%' : 1.5,
+          boxShadow: `0 0 6px ${p.color}50`,
+          animation: `confettiFall ${p.duration}s cubic-bezier(0.22,0.7,0.32,1) ${p.delay}s forwards`,
+          '--cx': `${p.cx}vw`,
+          '--cr': `${p.cr}deg`,
+        }}/>
+      ))}
+    </div>
+  )
+}
+
+/* ─── Milestone unlocked celebration modal ────────────────────────────── */
+function MilestoneCelebrationModal({ milestone, channelName, channelThumbnail, onShare, onClose }) {
+  if (!milestone) return null
+  const cat = CATEGORY_GRADIENT[milestone.category] || CATEGORY_GRADIENT.subs
+
+  return (
+    <div
+      onClick={onClose}
+      style={{
+        position: 'fixed', inset: 0, zIndex: 1100,
+        background: 'rgba(8,8,14,0.82)',
+        backdropFilter: 'blur(8px)',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        padding: 24, overflowY: 'auto',
+        animation: 'fadeUp 0.22s ease-out',
+      }}
+    >
+      <ConfettiBurst />
+
+      <div
+        onClick={(e) => e.stopPropagation()}
+        style={{
+          position: 'relative', zIndex: 2,
+          display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 22,
+          maxWidth: 640, width: '100%',
+          animation: 'popIn 0.55s cubic-bezier(0.22,1.3,0.36,1)',
+        }}
+      >
+        {/* Eyebrow */}
+        <div style={{
+          display: 'inline-flex', alignItems: 'center', gap: 8,
+          padding: '7px 14px', borderRadius: 999,
+          background: 'rgba(255,255,255,0.1)',
+          border: '1px solid rgba(255,255,255,0.22)',
+          color: '#ffffff', fontSize: 11.5, fontWeight: 800,
+          letterSpacing: '0.22em', textTransform: 'uppercase',
+        }}>
+          <span style={{
+            width: 7, height: 7, borderRadius: '50%',
+            background: cat.h2, boxShadow: `0 0 10px ${cat.h2}`,
+          }}/>
+          Milestone Unlocked
+        </div>
+
+        <MilestoneShareCard
+          category={milestone.category}
+          tier={milestone.tier}
+          achievedAt={milestone.achieved_at}
+          channelName={channelName}
+          channelThumbnail={channelThumbnail}
+        />
+
+        {/* Actions */}
+        <div style={{ display: 'flex', gap: 12, alignItems: 'center', marginTop: 4 }}>
+          <button
+            onClick={onShare}
+            style={{
+              display: 'inline-flex', alignItems: 'center', gap: 9,
+              background: `linear-gradient(180deg, ${cat.h2} 0%, ${cat.h3} 100%)`,
+              color: '#ffffff',
+              fontSize: 14.5, fontWeight: 700,
+              padding: '14px 26px', borderRadius: 999,
+              border: 'none', cursor: 'pointer',
+              letterSpacing: '-0.1px',
+              boxShadow: `0 6px 20px ${cat.h2}55, inset 0 1px 0 rgba(255,255,255,0.22)`,
+              transition: 'transform 0.15s, box-shadow 0.15s',
+            }}
+            onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = `0 10px 26px ${cat.h2}70, inset 0 1px 0 rgba(255,255,255,0.22)` }}
+            onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = `0 6px 20px ${cat.h2}55, inset 0 1px 0 rgba(255,255,255,0.22)` }}
+          >
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
+              <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+            </svg>
+            Share milestone
+          </button>
+          <button
+            onClick={onClose}
+            style={{
+              background: 'transparent', color: '#ffffff',
+              fontSize: 14, fontWeight: 600,
+              padding: '14px 20px', borderRadius: 999,
+              border: '1px solid rgba(255,255,255,0.28)', cursor: 'pointer',
+              letterSpacing: '-0.1px',
+              transition: 'background 0.15s',
+            }}
+            onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.08)' }}
+            onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent' }}
+          >
+            Continue
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 function MilestoneIcon({ category, color = '#4a4a58', size = 26 }) {
   const p = { width: size, height: size, viewBox: '0 0 24 24', fill: 'none', stroke: color, strokeWidth: 1.75, strokeLinecap: 'round', strokeLinejoin: 'round' }
   if (category === 'subs') return (
@@ -1290,6 +1435,7 @@ export default function Dashboard() {
   const [usagePct,    setUsagePct]    = useState(0)
   const [milestones,  setMilestones]  = useState(null)  // { earned: [...], upcoming: [...] }
   const [shareMilestone, setShareMilestone] = useState(null) // { category, tier, achieved_at }
+  const [celebrateQueue, setCelebrateQueue] = useState([])   // [{ category, tier, achieved_at }]
 
   useEffect(() => {
     fetch('/auth/data', { credentials: 'include' })
@@ -1672,6 +1818,8 @@ export default function Dashboard() {
                             setVideos(d.videos || [])
                             setStatsFlash('ok')
                             if (d.new_milestones && d.new_milestones.length > 0) {
+                              const nowIso = new Date().toISOString()
+                              setCelebrateQueue(d.new_milestones.map(m => ({ ...m, achieved_at: nowIso })))
                               fetch('/auth/milestones', { credentials: 'include' })
                                 .then(r => r.ok ? r.json() : null)
                                 .then(m => { if (m && !m.error) setMilestones(m) })
@@ -2149,6 +2297,8 @@ export default function Dashboard() {
                             setVideos(d.videos || [])
                             setVideoFlash('ok')
                             if (d.new_milestones && d.new_milestones.length > 0) {
+                              const nowIso = new Date().toISOString()
+                              setCelebrateQueue(d.new_milestones.map(m => ({ ...m, achieved_at: nowIso })))
                               fetch('/auth/milestones', { credentials: 'include' })
                                 .then(r => r.ok ? r.json() : null)
                                 .then(m => { if (m && !m.error) setMilestones(m) })
@@ -2398,6 +2548,20 @@ export default function Dashboard() {
 
         </div>
       </div>
+
+      {/* ── Milestone unlocked celebration (only when share modal isn't open) ── */}
+      {celebrateQueue.length > 0 && !shareMilestone && (
+        <MilestoneCelebrationModal
+          milestone={celebrateQueue[0]}
+          channelName={data?.channel?.channel_name}
+          channelThumbnail={data?.channel?.thumbnail}
+          onShare={() => {
+            setShareMilestone(celebrateQueue[0])
+            setCelebrateQueue(q => q.slice(1))
+          }}
+          onClose={() => setCelebrateQueue(q => q.slice(1))}
+        />
+      )}
 
       {/* ── Milestone share modal ─────────────────────────────────────── */}
       {shareMilestone && (
