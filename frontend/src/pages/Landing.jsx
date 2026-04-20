@@ -179,6 +179,10 @@ function useGlobalStyles() {
         transform: translateY(-2px);
         border-color: var(--ytg-border-2);
       }
+      .ytg-stat-card-premium:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05), 0 12px 32px rgba(0,0,0,0.08), 0 0 0 1px rgba(229,37,27,0.15), inset 0 1px 0 rgba(255,255,255,0.9);
+      }
       .ytg-card-accent {
         background: var(--ytg-accent-light);
         border: 1px solid var(--ytg-accent-border);
@@ -1026,32 +1030,46 @@ export default function Landing() {
             ['Weekly',   'Automated reports',    'One priority action, every Monday'],
             ['7+',       'Core growth tools',    'Audit, SEO, keywords, ideas, thumbnails'],
           ].map(([stat, label, desc], i) => (
-            <div key={i} style={{
-              background: '#ffffff',
-              border: '1px solid rgba(10,10,15,0.07)',
-              borderRadius: 14,
-              padding: isMobile ? '18px 18px' : '24px 22px',
-              textAlign: 'center',
-              boxShadow: '0 1px 2px rgba(0,0,0,0.03), 0 4px 14px rgba(0,0,0,0.05)',
-              display: 'flex', flexDirection: 'column', alignItems: 'center',
-            }}>
+            <div
+              key={i}
+              className="ytg-stat-card-premium"
+              style={{
+                position: 'relative',
+                background: 'linear-gradient(180deg, #ffffff 0%, #fbfbfd 100%)',
+                border: '1px solid rgba(10,10,15,0.06)',
+                borderRadius: 16,
+                padding: isMobile ? '20px 18px' : '28px 22px 24px',
+                textAlign: 'center',
+                boxShadow: '0 1px 2px rgba(0,0,0,0.04), 0 6px 20px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.9)',
+                display: 'flex', flexDirection: 'column', alignItems: 'center',
+                overflow: 'hidden',
+                transition: 'transform 0.2s, box-shadow 0.2s',
+              }}
+            >
+              {/* Subtle red gradient seam on top edge — brand signature */}
+              <div aria-hidden="true" style={{
+                position: 'absolute', top: 0, left: '10%', right: '10%', height: 2,
+                background: 'linear-gradient(90deg, transparent 0%, rgba(229,37,27,0.3) 50%, transparent 100%)',
+              }}/>
               <p style={{
-                fontSize: isMobile ? 28 : 32, fontWeight: 800,
-                color: 'var(--ytg-accent)',
-                letterSpacing: '-1px', lineHeight: 1,
-                marginBottom: 8,
+                fontSize: isMobile ? 28 : 34, fontWeight: 800,
+                background: 'linear-gradient(180deg, #ef3a30 0%, #c41c13 100%)',
+                WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text', color: 'var(--ytg-accent)',
+                letterSpacing: '-1.2px', lineHeight: 1,
+                marginBottom: 10,
               }}>{stat}</p>
               <p style={{
-                fontSize: 11, fontWeight: 700,
-                color: 'rgba(10,10,15,0.55)',
+                fontSize: 11, fontWeight: 800,
+                color: 'rgba(10,10,15,0.62)',
                 textTransform: 'uppercase',
-                letterSpacing: '0.1em',
-                marginBottom: 10,
+                letterSpacing: '0.12em',
+                marginBottom: 12,
               }}>{label}</p>
               <p style={{
                 fontSize: 12.5, fontWeight: 500,
-                color: 'rgba(10,10,15,0.48)',
-                lineHeight: 1.5,
+                color: 'rgba(10,10,15,0.5)',
+                lineHeight: 1.55,
                 maxWidth: 220,
                 letterSpacing: '-0.1px',
               }}>{desc}</p>
