@@ -755,213 +755,236 @@ export default function Landing() {
           </div>
         </div>
 
-        {/* Mobile dashboard mockup — tighter, Action-only detail to keep the card short */}
-        {isMobile && (
+        {/* Product mockup — premium white priority card with dimensional floating accents */}
+        <div style={{
+          maxWidth: isMobile ? '100%' : 940,
+          margin: isMobile ? '44px 0 0' : '72px auto 0',
+          position: 'relative',
+          padding: isMobile ? '0 4px' : '0 28px',
+        }}>
+          {/* Main card */}
           <div style={{
-            marginTop: 44,
-            background: 'linear-gradient(180deg, #0e1020 0%, #0a0d1c 100%)',
-            borderRadius: 20,
-            padding: '22px 14px 18px',
-            boxShadow: '0 24px 60px rgba(10,13,30,0.35)',
+            position: 'relative',
+            background: '#ffffff',
+            border: '1px solid rgba(10,10,15,0.05)',
+            borderRadius: isMobile ? 18 : 22,
+            padding: isMobile ? '20px 18px 18px' : '28px 32px 30px',
+            boxShadow: isMobile
+              ? '0 2px 6px rgba(0,0,0,0.04), 0 14px 40px rgba(0,0,0,0.08), 0 40px 80px rgba(229,37,27,0.06)'
+              : '0 2px 6px rgba(0,0,0,0.04), 0 18px 50px rgba(0,0,0,0.08), 0 60px 120px rgba(229,37,27,0.08)',
           }}>
-            {/* Headline */}
-            <h2 style={{
-              fontSize: 16, fontWeight: 700, color: '#ffffff',
-              letterSpacing: '-0.25px', lineHeight: 1.4,
-              textAlign: 'center', margin: '0 12px 14px',
-              textWrap: 'balance',
-            }}>
-              The one thing to fix next — no guessing.
-            </h2>
+            {/* Subtle top gradient seam */}
+            <div aria-hidden="true" style={{
+              position: 'absolute', top: 0, left: 0, right: 0, height: 3,
+              background: 'linear-gradient(90deg, transparent 0%, rgba(229,37,27,0.35) 50%, transparent 100%)',
+              borderRadius: '22px 22px 0 0',
+            }}/>
 
-            {/* Single active pill */}
-            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 14 }}>
-              <div style={{
-                padding: '6px 15px', borderRadius: 999,
-                fontSize: 11.5, fontWeight: 700,
-                background: '#ffffff', color: '#0a0d1c',
-                boxShadow: '0 2px 10px rgba(255,255,255,0.1)',
-              }}>
-                Your priority
-              </div>
-            </div>
-
-            {/* Inner white product card */}
+            {/* Channel header */}
             <div style={{
-              background: '#ffffff',
-              borderRadius: 14,
-              padding: '16px 14px',
-              boxShadow: '0 12px 32px rgba(0,0,0,0.25)',
+              display: 'flex', alignItems: 'center', gap: isMobile ? 12 : 14,
+              paddingBottom: isMobile ? 14 : 18,
+              borderBottom: '1px solid #f0f0f5',
             }}>
-              {/* Channel + score row */}
+              {/* Avatar with subtle red rim */}
               <div style={{
-                display: 'flex', alignItems: 'center', gap: 12,
-                paddingBottom: 12, borderBottom: '1px solid #f0f0f5',
-                marginBottom: 14,
+                position: 'relative', flexShrink: 0,
+                padding: 2.5, borderRadius: '50%',
+                background: 'linear-gradient(135deg, #ff3b30 0%, #a50f07 100%)',
               }}>
                 <img
                   src="/avatars/sophie.jpg" alt=""
-                  style={{ width: 40, height: 40, borderRadius: '50%', objectFit: 'cover', flexShrink: 0 }}
+                  style={{
+                    width: isMobile ? 40 : 46, height: isMobile ? 40 : 46,
+                    borderRadius: '50%', objectFit: 'cover',
+                    display: 'block', border: '2px solid #ffffff',
+                  }}
                 />
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <p style={{ fontSize: 14, fontWeight: 700, color: '#0a0a0f', letterSpacing: '-0.2px' }}>Sophie Brandt</p>
-                  <p style={{ fontSize: 12, color: '#6a6a78', marginTop: 2 }}>42K subscribers</p>
-                </div>
-                <div style={{ position: 'relative', flexShrink: 0 }}>
-                  <svg width="44" height="44" viewBox="0 0 44 44">
-                    <circle cx="22" cy="22" r="18" fill="none" stroke="#ececf2" strokeWidth="4"/>
-                    <circle cx="22" cy="22" r="18" fill="none" stroke="#16a34a" strokeWidth="4" strokeDasharray="81.4 113" strokeLinecap="round" transform="rotate(-90 22 22)"/>
-                  </svg>
-                  <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <span style={{ fontSize: 13, fontWeight: 800, color: '#0a0a0f', letterSpacing: '-0.3px' }}>72</span>
-                  </div>
+              </div>
+
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <p style={{ fontSize: isMobile ? 14 : 15, fontWeight: 700, color: '#0a0a0f', letterSpacing: '-0.2px', lineHeight: 1.2 }}>Sophie Brandt</p>
+                <p style={{ fontSize: isMobile ? 12 : 12.5, color: '#6a6a78', marginTop: 3, lineHeight: 1.3 }}>
+                  {isMobile ? '42K subscribers' : 'Travel · 42K subscribers · 187K views'}
+                </p>
+              </div>
+
+              {/* Score ring with gradient stroke */}
+              <div style={{ position: 'relative', flexShrink: 0 }}>
+                <svg width={isMobile ? 48 : 56} height={isMobile ? 48 : 56} viewBox="0 0 56 56">
+                  <defs>
+                    <linearGradient id="heroScoreGrad" x1="0" y1="0" x2="1" y2="1">
+                      <stop offset="0%" stopColor="#4ade80"/>
+                      <stop offset="100%" stopColor="#16a34a"/>
+                    </linearGradient>
+                  </defs>
+                  <circle cx="28" cy="28" r="23" fill="none" stroke="#ececf2" strokeWidth="5"/>
+                  <circle cx="28" cy="28" r="23" fill="none" stroke="url(#heroScoreGrad)" strokeWidth="5" strokeDasharray="104 145" strokeLinecap="round" transform="rotate(-90 28 28)"/>
+                </svg>
+                <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <span style={{ fontSize: isMobile ? 14 : 15, fontWeight: 800, color: '#0a0a0f', letterSpacing: '-0.4px' }}>72</span>
                 </div>
               </div>
 
-              {/* Priority eyebrow */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
-                <span style={{ fontSize: 10.5, fontWeight: 800, color: '#d97706', letterSpacing: '0.16em', textTransform: 'uppercase' }}>Priority this week</span>
+              {!isMobile && (
+                <span style={{
+                  display: 'inline-flex', alignItems: 'center', gap: 6,
+                  background: 'linear-gradient(180deg, #f0fdf4 0%, #dcfce7 100%)',
+                  border: '1px solid rgba(22,163,74,0.28)',
+                  borderRadius: 999, padding: '5px 12px', flexShrink: 0,
+                  boxShadow: '0 0 14px rgba(22,163,74,0.12)',
+                }}>
+                  <span style={{ width: 5, height: 5, borderRadius: '50%', background: '#16a34a', boxShadow: '0 0 6px #16a34a' }}/>
+                  <span style={{ fontSize: 10.5, fontWeight: 800, color: '#166534', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Healthy</span>
+                </span>
+              )}
+            </div>
+
+            {/* Priority action body */}
+            <div style={{ paddingTop: isMobile ? 16 : 22 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: isMobile ? 10 : 14 }}>
+                <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+                  <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#d97706', boxShadow: '0 0 8px rgba(217,119,6,0.55)' }}/>
+                  <span style={{ fontSize: isMobile ? 10 : 10.5, fontWeight: 800, color: '#d97706', letterSpacing: '0.16em', textTransform: 'uppercase' }}>Priority this week</span>
+                </span>
                 <span style={{ flex: 1, height: 1, background: '#ececf2' }}/>
                 <span style={{
-                  fontSize: 10, fontWeight: 700, color: '#d97706',
-                  border: '1.5px solid #d97706', padding: '2px 9px',
-                  borderRadius: 999, letterSpacing: '0.08em', textTransform: 'uppercase',
-                }}>High</span>
+                  fontSize: 10, fontWeight: 800,
+                  color: '#ffffff',
+                  background: 'linear-gradient(180deg, #f59e0b 0%, #d97706 100%)',
+                  padding: '4px 10px', borderRadius: 999,
+                  letterSpacing: '0.08em', textTransform: 'uppercase',
+                  boxShadow: '0 2px 8px rgba(217,119,6,0.35)',
+                }}>{isMobile ? 'High' : 'High impact'}</span>
               </div>
 
-              {/* Problem statement */}
               <h3 style={{
-                fontSize: 15, fontWeight: 800, color: '#0a0a0f',
-                letterSpacing: '-0.3px', lineHeight: 1.42,
-                marginBottom: 12,
+                fontSize: isMobile ? 15 : 18,
+                fontWeight: 800, color: '#0a0a0f',
+                letterSpacing: '-0.4px', lineHeight: 1.38,
+                marginBottom: isMobile ? 12 : 18,
+                textWrap: 'balance',
               }}>
-                Watch time is short — rewrite openings to hook viewers in the first 15 seconds.
+                {isMobile
+                  ? 'Watch time is short — rewrite openings to hook viewers in the first 15 seconds.'
+                  : 'Watch time is critically short — rewrite openings to hook viewers in the first 15 seconds.'}
               </h3>
 
-              {/* Action card only (keeps the mockup short) */}
-              <div style={{ background: '#ffffff', border: '1px solid #ececf2', borderLeft: '3px solid #d97706', borderRadius: '0 10px 10px 0', padding: '11px 13px', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
-                <p style={{ fontSize: 10.5, fontWeight: 700, color: '#d97706', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 5 }}>Action</p>
-                <p style={{ fontSize: 13, color: '#0a0a0f', lineHeight: 1.5, fontWeight: 500 }}>Cold-open hook. Drop the intro, lead with the payoff.</p>
-              </div>
-
-              {/* Micro context line — compresses why + outcome into one subtle line */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 12, paddingTop: 10, borderTop: '1px solid #f0f0f5', fontSize: 11.5, color: '#6a6a78', lineHeight: 1.4 }}>
-                <span style={{ color: '#4a7cf7', fontWeight: 700 }}>38s</span>
-                <span>avg · expect</span>
-                <span style={{ color: '#16a34a', fontWeight: 700 }}>+40%</span>
-                <span>watch time</span>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Dashboard mockup — dark frame with headline + tabs, clean white product card nested inside. */}
-        <div style={{ maxWidth: 960, margin: '64px auto 0', position: 'relative', display: isMobile ? 'none' : 'block', padding: '0 32px' }}>
-          <div style={{
-            background: 'linear-gradient(180deg, #0e1020 0%, #0a0d1c 100%)',
-            borderRadius: 28,
-            padding: '46px 46px 42px',
-            boxShadow: '0 40px 100px rgba(10,13,30,0.28), 0 0 0 1px rgba(255,255,255,0.04)',
-          }}>
-            {/* Headline */}
-            <h2 style={{
-              fontSize: 22, fontWeight: 700, color: '#ffffff',
-              letterSpacing: '-0.35px', lineHeight: 1.45,
-              textAlign: 'center', maxWidth: 640, margin: '0 auto 30px',
-              textWrap: 'balance',
-            }}>
-              See your channel the way a $500/hour consultant would — and the one thing to fix next.
-            </h2>
-
-            {/* Tab pills */}
-            <div style={{ display: 'flex', justifyContent: 'center', gap: 8, flexWrap: 'wrap', marginBottom: 36 }}>
-              {['Overview', 'Priority actions', 'Competitor gaps', 'Weekly report', 'Milestones'].map((label, i) => (
-                <div key={i} style={{
-                  padding: '9px 18px', borderRadius: 999,
-                  fontSize: 13, fontWeight: 600,
-                  background: i === 0 ? '#ffffff' : 'transparent',
-                  color: i === 0 ? '#0a0d1c' : 'rgba(255,255,255,0.65)',
-                  border: i === 0 ? 'none' : '1px solid rgba(255,255,255,0.14)',
-                  boxShadow: i === 0 ? '0 2px 10px rgba(255,255,255,0.08)' : 'none',
-                  letterSpacing: '-0.1px',
-                }}>
-                  {label}
-                </div>
-              ))}
-            </div>
-
-            {/* Inner white product card */}
-            <div style={{
-              background: '#ffffff',
-              borderRadius: 16,
-              padding: '26px 28px',
-              boxShadow: '0 16px 44px rgba(0,0,0,0.22)',
-            }}>
-              {/* Channel header + score */}
-              <div style={{
-                display: 'flex', alignItems: 'center', gap: 16,
-                paddingBottom: 20, borderBottom: '1px solid #f0f0f5',
-              }}>
-                <img
-                  src="/avatars/sophie.jpg" alt=""
-                  style={{ width: 48, height: 48, borderRadius: '50%', objectFit: 'cover', flexShrink: 0 }}
-                />
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <p style={{ fontSize: 15, fontWeight: 700, color: '#0a0a0f', letterSpacing: '-0.2px' }}>Sophie Brandt</p>
-                  <p style={{ fontSize: 12.5, color: '#6a6a78', marginTop: 3 }}>Travel · 42K subscribers · 187K views</p>
-                </div>
-                <div style={{ position: 'relative', flexShrink: 0 }}>
-                  <svg width="56" height="56" viewBox="0 0 56 56">
-                    <circle cx="28" cy="28" r="23" fill="none" stroke="#ececf2" strokeWidth="5"/>
-                    <circle cx="28" cy="28" r="23" fill="none" stroke="#16a34a" strokeWidth="5" strokeDasharray="104 145" strokeLinecap="round" transform="rotate(-90 28 28)"/>
-                  </svg>
-                  <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <span style={{ fontSize: 15, fontWeight: 800, color: '#0a0a0f', letterSpacing: '-0.4px' }}>72</span>
+              {/* Detail grid — 3-col on desktop, single Action card on mobile */}
+              {isMobile ? (
+                <>
+                  <div style={{
+                    background: 'linear-gradient(180deg, #fffbf4 0%, #ffffff 100%)',
+                    border: '1px solid #f4e6c8',
+                    borderLeft: '3px solid #d97706',
+                    borderRadius: '0 12px 12px 0',
+                    padding: '12px 14px',
+                    boxShadow: '0 2px 10px rgba(217,119,6,0.08)',
+                  }}>
+                    <p style={{ fontSize: 10.5, fontWeight: 800, color: '#d97706', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 6 }}>Action</p>
+                    <p style={{ fontSize: 13, color: '#0a0a0f', lineHeight: 1.5, fontWeight: 500 }}>Cold-open hook. Drop the intro, lead with the payoff.</p>
                   </div>
-                </div>
-                <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: '#f0fdf4', border: '1px solid rgba(134,239,172,0.65)', borderRadius: 999, padding: '4px 11px', flexShrink: 0 }}>
-                  <span style={{ width: 5, height: 5, borderRadius: '50%', background: '#16a34a' }}/>
-                  <span style={{ fontSize: 10.5, fontWeight: 800, color: '#16a34a', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Healthy</span>
-                </span>
-              </div>
-
-              {/* Priority action */}
-              <div style={{ paddingTop: 22 }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
-                  <span style={{ fontSize: 10.5, fontWeight: 800, color: '#d97706', letterSpacing: '0.18em', textTransform: 'uppercase' }}>Priority this week</span>
-                  <span style={{ flex: 1, height: 1, background: '#ececf2' }}/>
-                  <span style={{
-                    fontSize: 10, fontWeight: 700, color: '#d97706',
-                    border: '1.5px solid #d97706', padding: '3px 10px',
-                    borderRadius: 999, letterSpacing: '0.08em', textTransform: 'uppercase',
-                  }}>High impact</span>
-                </div>
-
-                <h3 style={{
-                  fontSize: 18, fontWeight: 800, color: '#0a0a0f',
-                  letterSpacing: '-0.4px', lineHeight: 1.4,
-                  marginBottom: 18,
-                }}>
-                  Watch time is critically short — rewrite openings to hook viewers in the first 15 seconds.
-                </h3>
-
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.3fr 1fr', gap: 8 }}>
-                  <div style={{ background: 'rgba(79,134,247,0.06)', border: '1px solid rgba(79,134,247,0.15)', borderRadius: 10, padding: '12px 14px' }}>
-                    <p style={{ fontSize: 10, fontWeight: 700, color: '#4a7cf7', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 6 }}>Why now</p>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 12, paddingTop: 12, borderTop: '1px solid #f0f0f5', fontSize: 11.5, color: '#6a6a78', lineHeight: 1.4 }}>
+                    <span style={{ color: '#4a7cf7', fontWeight: 800 }}>38s</span>
+                    <span>avg watch</span>
+                    <span style={{ color: '#c8c8d0' }}>·</span>
+                    <span style={{ color: '#16a34a', fontWeight: 800 }}>+40%</span>
+                    <span>expected</span>
+                  </div>
+                </>
+              ) : (
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.3fr 1fr', gap: 10 }}>
+                  <div style={{
+                    background: 'linear-gradient(180deg, rgba(79,134,247,0.08) 0%, rgba(79,134,247,0.03) 100%)',
+                    border: '1px solid rgba(79,134,247,0.18)',
+                    borderRadius: 12, padding: '14px 16px',
+                  }}>
+                    <p style={{ fontSize: 10, fontWeight: 800, color: '#4a7cf7', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 8 }}>Why now</p>
                     <p style={{ fontSize: 12.5, color: '#3a3a44', lineHeight: 1.55 }}>Avg watch 38s vs 2:30 niche — viewers bail in the first 15 seconds.</p>
                   </div>
-                  <div style={{ background: '#ffffff', border: '1px solid #ececf2', borderLeft: '3px solid #d97706', borderRadius: '0 10px 10px 0', padding: '12px 14px', boxShadow: '0 2px 10px rgba(0,0,0,0.06)' }}>
-                    <p style={{ fontSize: 10, fontWeight: 700, color: '#d97706', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 6 }}>Action</p>
+                  <div style={{
+                    background: 'linear-gradient(180deg, #fffbf4 0%, #ffffff 100%)',
+                    border: '1px solid #f4e6c8',
+                    borderLeft: '3px solid #d97706',
+                    borderRadius: '0 12px 12px 0',
+                    padding: '14px 16px',
+                    boxShadow: '0 4px 16px rgba(217,119,6,0.1)',
+                  }}>
+                    <p style={{ fontSize: 10, fontWeight: 800, color: '#d97706', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 8 }}>Action</p>
                     <p style={{ fontSize: 12.5, color: '#0a0a0f', lineHeight: 1.55, fontWeight: 500 }}>Cold-open hook. Drop the intro, lead with the most visual moment or payoff.</p>
                   </div>
-                  <div style={{ background: 'rgba(22,163,74,0.06)', border: '1px solid rgba(22,163,74,0.18)', borderRadius: 10, padding: '12px 14px' }}>
-                    <p style={{ fontSize: 10, fontWeight: 700, color: '#16a34a', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 6 }}>Expected outcome</p>
+                  <div style={{
+                    background: 'linear-gradient(180deg, rgba(22,163,74,0.08) 0%, rgba(22,163,74,0.03) 100%)',
+                    border: '1px solid rgba(22,163,74,0.22)',
+                    borderRadius: 12, padding: '14px 16px',
+                  }}>
+                    <p style={{ fontSize: 10, fontWeight: 800, color: '#16a34a', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 8 }}>Expected outcome</p>
                     <p style={{ fontSize: 12.5, color: '#3a3a44', lineHeight: 1.55 }}>+40% watch time in 3 weeks. Algorithm picks the channel up again.</p>
                   </div>
                 </div>
-              </div>
+              )}
             </div>
           </div>
+
+          {/* Floating milestone accent — desktop only, offset top-right */}
+          {!isMobile && (
+            <div style={{
+              position: 'absolute', top: -26, right: 6,
+              background: '#ffffff',
+              border: '1px solid rgba(10,10,15,0.06)',
+              borderRadius: 14,
+              padding: '11px 14px',
+              display: 'flex', alignItems: 'center', gap: 11,
+              boxShadow: '0 4px 12px rgba(0,0,0,0.06), 0 16px 44px rgba(0,0,0,0.1), 0 0 40px rgba(250,204,21,0.18)',
+              animation: 'floatB 6s ease-in-out infinite',
+              zIndex: 2,
+            }}>
+              <svg width="28" height="28" viewBox="0 0 24 24" style={{ flexShrink: 0, filter: 'drop-shadow(0 2px 5px rgba(217,119,6,0.35))' }}>
+                <defs>
+                  <linearGradient id="heroStarGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#fde047"/>
+                    <stop offset="100%" stopColor="#d97706"/>
+                  </linearGradient>
+                </defs>
+                <polygon points="12,2 14.9,8.7 22,9.6 16.8,14.6 18.2,21.6 12,18.1 5.8,21.6 7.2,14.6 2,9.6 9.1,8.7" fill="url(#heroStarGrad)" stroke="#a16207" strokeWidth="0.5" strokeLinejoin="round"/>
+              </svg>
+              <div>
+                <p style={{ fontSize: 9.5, fontWeight: 800, color: '#d97706', letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: 2 }}>Milestone unlocked</p>
+                <p style={{ fontSize: 13.5, fontWeight: 800, color: '#0a0a0f', letterSpacing: '-0.3px' }}>10K subscribers</p>
+              </div>
+            </div>
+          )}
+
+          {/* Floating analysis-complete accent — desktop only, offset bottom-left */}
+          {!isMobile && (
+            <div style={{
+              position: 'absolute', bottom: -24, left: 12,
+              background: '#ffffff',
+              border: '1px solid rgba(10,10,15,0.06)',
+              borderRadius: 14,
+              padding: '11px 14px',
+              display: 'flex', alignItems: 'center', gap: 11,
+              boxShadow: '0 4px 12px rgba(0,0,0,0.06), 0 16px 44px rgba(0,0,0,0.1), 0 0 32px rgba(22,163,74,0.15)',
+              animation: 'floatA 5.2s ease-in-out infinite',
+              zIndex: 2,
+            }}>
+              <div style={{
+                width: 32, height: 32, borderRadius: 9,
+                background: 'linear-gradient(180deg, #4ade80 0%, #16a34a 100%)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                flexShrink: 0,
+                boxShadow: '0 4px 10px rgba(22,163,74,0.3), inset 0 1px 0 rgba(255,255,255,0.25)',
+              }}>
+                <svg width="15" height="15" viewBox="0 0 16 16" fill="none">
+                  <path d="M3 8l3 3 7-7" stroke="#ffffff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </div>
+              <div>
+                <p style={{ fontSize: 9.5, fontWeight: 800, color: '#16a34a', letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: 2 }}>Analysis complete</p>
+                <p style={{ fontSize: 13.5, fontWeight: 800, color: '#0a0a0f', letterSpacing: '-0.3px' }}>12 metrics · 28 seconds</p>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
