@@ -454,11 +454,14 @@ def callback(request: Request, background_tasks: BackgroundTasks):
         _user_data[session_id] = user_data
         _persist_session(session_id, creds, user_data)
 
-        # Silently record any milestones the channel has already crossed (no toast on login).
+        # Persist 365d watch minutes into analytics so /auth/milestones can read it later.
         try:
-            analytics_for_ms = dict(full_data.get("analytics") or {})
-            analytics_for_ms["watch_minutes_365d"] = get_watch_minutes_365d(creds, channel_id)
-            _check_milestones(channel_id, stats, videos, analytics_for_ms)
+            if full_data.get("analytics") is None:
+                full_data["analytics"] = {}
+            full_data["analytics"]["watch_minutes_365d"] = get_watch_minutes_365d(creds, channel_id)
+            user_data["analytics"] = full_data["analytics"]
+            _persist_session(session_id, creds, user_data)
+            _check_milestones(channel_id, stats, videos, full_data["analytics"])
         except Exception as _e:
             print(f"[milestones] login-check error: {_e}")
 
@@ -582,13 +585,16 @@ def refresh_stats(request: Request):
     _user_data[session_id]   = data
     _persist_session(session_id, creds, data)
 
-    # Milestone check — include newly unlocked in response so frontend can celebrate.
+    # Persist 365d watch minutes into session analytics so /auth/milestones reads fresh values.
     new_milestones = []
     try:
-        analytics_for_ms = dict(data.get("analytics") or {})
-        analytics_for_ms["watch_minutes_365d"] = get_watch_minutes_365d(creds, stats.get("channel_id"))
+        if data.get("analytics") is None:
+            data["analytics"] = {}
+        data["analytics"]["watch_minutes_365d"] = get_watch_minutes_365d(creds, stats.get("channel_id"))
+        _user_data[session_id] = data
+        _persist_session(session_id, creds, data)
         new_milestones = _check_milestones(
-            stats.get("channel_id"), stats, videos, analytics_for_ms
+            stats.get("channel_id"), stats, videos, data["analytics"]
         )
     except Exception as _e:
         print(f"[milestones] refresh-check error: {_e}")
