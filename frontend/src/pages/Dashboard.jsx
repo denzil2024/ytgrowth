@@ -229,6 +229,19 @@ function relTime(str) {
   return `${Math.round(h / 24)}d ago`
 }
 
+function relTimeLong(str) {
+  const d = parseUTC(str)
+  if (!d || isNaN(d)) return ''
+  const days = Math.floor((Date.now() - d.getTime()) / 86400000)
+  if (days < 1)   return 'today'
+  if (days === 1) return 'yesterday'
+  if (days < 7)   return `${days} days ago`
+  if (days < 30)  { const w = Math.floor(days / 7); return w === 1 ? 'a week ago' : `${w} weeks ago` }
+  if (days < 365) { const m = Math.floor(days / 30); return m === 1 ? 'a month ago' : `${m} months ago` }
+  const y = Math.floor(days / 365)
+  return y === 1 ? 'a year ago' : `${y} years ago`
+}
+
 function scoreColor(s)  { return s >= 75 ? C.green : s >= 50 ? C.amber : C.red }
 function scoreLabel(s)  { return s >= 75 ? 'Healthy' : s >= 50 ? 'Needs work' : 'Critical' }
 function fmtSecs(s)     { return `${Math.floor(s / 60)}m ${s % 60}s` }
@@ -1535,7 +1548,7 @@ export default function Dashboard() {
                           <span style={{ margin: '0 8px', color: '#d4d4dc' }}>·</span>
                           <span style={{ color: C.text2, fontWeight: 600 }}>{fmtNum(v.likes)}</span> likes
                           <span style={{ margin: '0 8px', color: '#d4d4dc' }}>·</span>
-                          {(parseUTC(v.published_at) || new Date()).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}
+                          {relTimeLong(v.published_at) || '—'}
                         </p>
 
                         {/* Footer: Watch · Retention · Eng + Optimise */}
