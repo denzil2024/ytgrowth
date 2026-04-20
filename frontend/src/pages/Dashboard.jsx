@@ -608,7 +608,7 @@ function MilestoneShareModal({ milestone, channelName, channelThumbnail, onClose
         <div style={{
           display: 'flex', gap: 10, marginTop: 6,
           background: 'rgba(255,255,255,0.06)',
-          padding: 10, borderRadius: 14,
+          padding: 10, borderRadius: 999,
           border: '1px solid rgba(255,255,255,0.12)',
         }}>
           <button
@@ -616,14 +616,18 @@ function MilestoneShareModal({ milestone, channelName, channelThumbnail, onClose
             disabled={downloading}
             style={{
               display: 'inline-flex', alignItems: 'center', gap: 8,
-              background: '#ffffff', color: '#0f0f13',
+              background: 'linear-gradient(180deg, #ffffff 0%, #f1f1f6 100%)',
+              color: '#0f0f13',
               fontSize: 14, fontWeight: 700,
-              padding: '11px 20px', borderRadius: 10,
+              padding: '12px 22px', borderRadius: 999,
               border: 'none', cursor: downloading ? 'wait' : 'pointer',
               opacity: downloading ? 0.7 : 1,
-              boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
+              boxShadow: '0 3px 10px rgba(0,0,0,0.22), inset 0 1px 0 rgba(255,255,255,0.9)',
               letterSpacing: '-0.1px',
+              transition: 'transform 0.15s',
             }}
+            onMouseEnter={(e) => { if (!downloading) e.currentTarget.style.transform = 'translateY(-1px)' }}
+            onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)' }}
           >
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
@@ -636,12 +640,17 @@ function MilestoneShareModal({ milestone, channelName, channelThumbnail, onClose
             onClick={handleShareX}
             style={{
               display: 'inline-flex', alignItems: 'center', gap: 8,
-              background: '#0f0f13', color: '#ffffff',
+              background: 'linear-gradient(180deg, #1a1a22 0%, #0a0a0f 100%)',
+              color: '#ffffff',
               fontSize: 14, fontWeight: 700,
-              padding: '11px 20px', borderRadius: 10,
+              padding: '12px 22px', borderRadius: 999,
               border: '1px solid #2a2a33', cursor: 'pointer',
               letterSpacing: '-0.1px',
+              boxShadow: '0 3px 10px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.08)',
+              transition: 'transform 0.15s',
             }}
+            onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-1px)' }}
+            onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)' }}
           >
             <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
               <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
@@ -654,10 +663,13 @@ function MilestoneShareModal({ milestone, channelName, channelThumbnail, onClose
               display: 'inline-flex', alignItems: 'center',
               background: 'transparent', color: '#ffffff',
               fontSize: 14, fontWeight: 600,
-              padding: '11px 16px', borderRadius: 10,
-              border: '1px solid rgba(255,255,255,0.25)', cursor: 'pointer',
+              padding: '12px 20px', borderRadius: 999,
+              border: '1px solid rgba(255,255,255,0.28)', cursor: 'pointer',
               letterSpacing: '-0.1px',
+              transition: 'background 0.15s',
             }}
+            onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.08)' }}
+            onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent' }}
           >
             Close
           </button>
@@ -1812,8 +1824,8 @@ export default function Dashboard() {
                           </div>
                         )}
 
-                        {/* Share button (earned only) */}
-                        {hasEarned && (
+                        {/* Share button (earned only) — full pill with gradient */}
+                        {hasEarned ? (
                           <button
                             onClick={() => setShareMilestone({
                               category: p.key,
@@ -1821,38 +1833,39 @@ export default function Dashboard() {
                               achieved_at: p.latestAchievedAt,
                             })}
                             style={{
-                              alignSelf: 'stretch', marginTop: 20,
-                              display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8,
-                              background: cat.h2, color: '#ffffff',
-                              fontSize: 13, fontWeight: 700,
-                              padding: '11px 16px', borderRadius: 10,
+                              alignSelf: 'stretch', marginTop: 24,
+                              display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 9,
+                              background: `linear-gradient(180deg, ${cat.h2} 0%, ${cat.h3} 100%)`,
+                              color: '#ffffff',
+                              fontSize: 13.5, fontWeight: 700,
+                              padding: '13px 20px', borderRadius: 999,
                               border: 'none', cursor: 'pointer',
                               letterSpacing: '-0.1px',
-                              boxShadow: `0 2px 8px ${cat.h2}35`,
+                              boxShadow: `0 4px 14px ${cat.h2}40, inset 0 1px 0 rgba(255,255,255,0.22)`,
                               transition: 'transform 0.15s, box-shadow 0.15s',
                             }}
-                            onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-1px)'; e.currentTarget.style.boxShadow = `0 4px 14px ${cat.h2}55` }}
-                            onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = `0 2px 8px ${cat.h2}35` }}
+                            onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-1.5px)'; e.currentTarget.style.boxShadow = `0 8px 20px ${cat.h2}55, inset 0 1px 0 rgba(255,255,255,0.22)` }}
+                            onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = `0 4px 14px ${cat.h2}40, inset 0 1px 0 rgba(255,255,255,0.22)` }}
                           >
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
                               <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
                               <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
                             </svg>
                             Share milestone
                           </button>
+                        ) : (
+                          /* Brand footer for unearned cards only */
+                          <div style={{
+                            alignSelf: 'stretch', marginTop: 22, paddingTop: 14,
+                            borderTop: `1px solid #eeeef3`,
+                            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+                          }}>
+                            <YTGLogo size={18}/>
+                            <span style={{ fontSize: 14, fontWeight: 800, color: C.text1, letterSpacing: '-0.3px' }}>
+                              YTGrowth<span style={{ color: C.red }}>.io</span>
+                            </span>
+                          </div>
                         )}
-
-                        {/* Brand footer */}
-                        <div style={{
-                          alignSelf: 'stretch', marginTop: hasEarned ? 16 : 22, paddingTop: 14,
-                          borderTop: `1px solid #eeeef3`,
-                          display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
-                        }}>
-                          <YTGLogo size={18}/>
-                          <span style={{ fontSize: 14, fontWeight: 800, color: C.text1, letterSpacing: '-0.3px' }}>
-                            YTGrowth<span style={{ color: C.red }}>.io</span>
-                          </span>
-                        </div>
                       </div>
                     )
                   })}
