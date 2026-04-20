@@ -1538,12 +1538,12 @@ export default function Dashboard() {
                       <div style={{ padding: '20px 20px 20px', display: 'flex', flexDirection: 'column', flex: 1 }}>
                         {/* Title */}
                         <p style={{
-                          fontSize: 16, fontWeight: 700, color: C.text1, lineHeight: 1.45, marginBottom: 10, letterSpacing: '-0.3px',
+                          fontSize: 16, fontWeight: 700, color: C.text1, lineHeight: 1.45, marginBottom: 14, letterSpacing: '-0.3px',
                           display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden',
                         }}>{v.title}</p>
 
                         {/* Meta line */}
-                        <p style={{ fontSize: 13, fontWeight: 500, color: C.text3, marginBottom: 22, lineHeight: 1.4 }}>
+                        <p style={{ fontSize: 13.5, fontWeight: 500, color: C.text3, marginBottom: 22, lineHeight: 1.4 }}>
                           <span style={{ color: C.text2, fontWeight: 600 }}>{fmtNum(v.views)}</span> views
                           <span style={{ margin: '0 8px', color: '#d4d4dc' }}>·</span>
                           <span style={{ color: C.text2, fontWeight: 600 }}>{fmtNum(v.likes)}</span> likes
