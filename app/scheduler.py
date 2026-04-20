@@ -59,9 +59,13 @@ def run_weekly_reports():
     Sends reports to users whose 7-day cycle is due today based on their
     connected_day. This spreads sends across 7 days and never exceeds
     Resend's 100/day free limit.
+
+    Paid plans only. Each send deducts 1 credit (refunded on failure).
+    Free plan users are skipped — the dashboard shows an upgrade nudge.
     """
-    from database.models import SessionLocal, UserSession, WeeklyReport, UserEmailPreferences
+    from database.models import SessionLocal, UserSession, WeeklyReport, UserEmailPreferences, UserSubscription
     from app.weekly_report import generate_and_send_report, _week_start
+    from app.analysis_gate import check_and_deduct, refund_credit
 
     db = SessionLocal()
     try:
@@ -86,16 +90,23 @@ def run_weekly_reports():
                 if pref and not pref.weekly_report:
                     continue
 
-                # Skip inactive users (no login/analysis in 14 days)
-                analyzed_at = user_data.get("analyzed_at")
-                if analyzed_at:
-                    try:
-                        last_active  = datetime.datetime.fromisoformat(analyzed_at)
-                        days_inactive = (datetime.datetime.utcnow() - last_active).days
-                        if days_inactive > 14:
-                            continue
-                    except Exception:
-                        pass
+                # Plan gate — paid plans only
+                sub = db.query(UserSubscription).filter_by(channel_id=channel_id).first()
+                plan = (sub.plan if sub else "free") or "free"
+                if plan == "free":
+                    continue
+
+                # Skip inactive users — use UserSession.updated_at as the activity
+                # signal (touched on every login and stats refresh). The previous
+                # implementation used analyzed_at, which only updates on a full AI
+                # audit, so most paid users dropped out of the pool after 14 days.
+                if row.updated_at:
+                    last_active = row.updated_at
+                    if last_active.tzinfo is not None:
+                        last_active = last_active.replace(tzinfo=None)
+                    days_inactive = (datetime.datetime.utcnow() - last_active).days
+                    if days_inactive > 14:
+                        continue
 
                 # Determine if report is due today based on connected_day
                 connected_day = _get_connected_day(user_data)
@@ -112,10 +123,25 @@ def run_weekly_reports():
                 if existing and existing.email_sent:
                     continue
 
-                # All checks passed — generate and send
-                success = generate_and_send_report(channel_id, email, user_data, db)
+                # Deduct 1 credit — skip if insufficient (dashboard surfaces the notice)
+                gate = check_and_deduct(channel_id)
+                if not gate.get("allowed"):
+                    print(f"[weekly_report] Skipping {channel_id[:8]} — out of credits")
+                    continue
+
+                # Generate + send — refund the credit if anything fails
+                try:
+                    success = generate_and_send_report(channel_id, email, user_data, db)
+                except Exception as gen_err:
+                    refund_credit(channel_id)
+                    print(f"[weekly_report] Generation failed for {channel_id[:8]}: {gen_err} — refunded")
+                    continue
+
                 if success:
                     sent_today += 1
+                else:
+                    refund_credit(channel_id)
+                    print(f"[weekly_report] Send failed for {channel_id[:8]} — refunded")
 
             except Exception as e:
                 print(f"[weekly_report] Error for session {row.session_id[:8]}: {e}")

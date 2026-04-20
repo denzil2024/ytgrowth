@@ -2567,6 +2567,10 @@ export default function Dashboard() {
             <WeeklyReport
               channelId={data?.channel?.channel_id}
               channelEmail={data?.email}
+              plan={billingPlan}
+              channelStats={data?.channel}
+              analytics={data?.analytics}
+              healthScore={score}
             />
           )}
 

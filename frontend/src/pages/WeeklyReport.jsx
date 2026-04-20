@@ -220,21 +220,25 @@ function ReportBody({ rd, isLatest }) {
   )
 }
 
-export default function WeeklyReport({ channelId, channelEmail }) {
+export default function WeeklyReport({ channelId, channelEmail, plan, channelStats, analytics, healthScore }) {
   const [reports,    setReports]    = useState(null)
   const [loading,    setLoading]    = useState(true)
   const [emailOn,    setEmailOn]    = useState(true)
   const [toggling,   setToggling]   = useState(false)
   const [expanded,   setExpanded]   = useState({})
+  const [creditNotice, setCreditNotice] = useState(false)
+
+  const isFree = plan === 'free' || plan == null
 
   useEffect(() => {
     if (!channelId) return
+    if (isFree) { setLoading(false); return }
+
     fetch(`/api/reports/history?channel_id=${channelId}`, { credentials: 'include' })
       .then(r => r.json())
       .then(data => {
         if (Array.isArray(data)) {
           setReports(data)
-          // Expand latest by default
           if (data.length > 0) setExpanded({ 0: true })
         } else {
           setReports([])
@@ -243,12 +247,18 @@ export default function WeeklyReport({ channelId, channelEmail }) {
       })
       .catch(() => { setReports([]); setLoading(false) })
 
-    // Load current email preference so toggle reflects real state
+    // Current email preference — seeds the toggle from real state
     fetch(`/api/reports/email-preference?channel_id=${channelId}`, { credentials: 'include' })
       .then(r => r.ok ? r.json() : null)
       .then(d => { if (d && typeof d.weekly_report === 'boolean') setEmailOn(d.weekly_report) })
       .catch(() => {})
-  }, [channelId])
+
+    // Out-of-credits notice — paid plan with 0 credits available
+    fetch(`/api/reports/status?channel_id=${channelId}`, { credentials: 'include' })
+      .then(r => r.ok ? r.json() : null)
+      .then(d => { if (d) setCreditNotice(!!d.should_show_credit_notice) })
+      .catch(() => {})
+  }, [channelId, isFree])
 
   function toggleEmail() {
     if (toggling) return
@@ -282,31 +292,34 @@ export default function WeeklyReport({ channelId, channelEmail }) {
   const latest     = hasReports ? reports[0] : null
   const previous   = hasReports ? reports.slice(1) : []
 
-  return (
-    <div>
-      {/* ── Header row ──────────────────────────────────────────────────── */}
-      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 28, gap: 16, flexWrap: 'wrap' }}>
-        <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
-          <span style={{
-            display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-            width: 36, height: 36, borderRadius: 10,
-            background: 'rgba(229,37,27,0.09)',
-            border: '1px solid rgba(229,37,27,0.18)',
-            flexShrink: 0, marginTop: 2,
-          }}>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={C.red} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <rect x="4" y="5" width="16" height="16" rx="2"/>
-              <path d="M8 3v4M16 3v4M4 11h16"/>
-              <path d="M8 15h4"/>
-            </svg>
-          </span>
-          <div>
-            <h1 style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', marginBottom: 4 }}>Weekly Report</h1>
-            <p style={{ fontSize: 14, color: C.text3 }}>Your channel performance, delivered every week.</p>
-          </div>
-        </div>
+  const subSubtitle = isFree
+    ? 'Weekly AI insights — available on paid plans.'
+    : 'Your channel performance, delivered every week.'
 
-        {/* Email delivery toggle */}
+  const header = (
+    <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 28, gap: 16, flexWrap: 'wrap' }}>
+      <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
+        <span style={{
+          display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+          width: 36, height: 36, borderRadius: 10,
+          background: 'rgba(229,37,27,0.09)',
+          border: '1px solid rgba(229,37,27,0.18)',
+          flexShrink: 0, marginTop: 2,
+        }}>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={C.red} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <rect x="4" y="5" width="16" height="16" rx="2"/>
+            <path d="M8 3v4M16 3v4M4 11h16"/>
+            <path d="M8 15h4"/>
+          </svg>
+        </span>
+        <div>
+          <h1 style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', marginBottom: 4 }}>Weekly Report</h1>
+          <p style={{ fontSize: 14, color: C.text3 }}>{subSubtitle}</p>
+        </div>
+      </div>
+
+      {/* Email delivery toggle — paid only (free users have nothing to toggle) */}
+      {!isFree && (
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 4 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
             <span style={{ fontSize: 14, color: C.text2, fontWeight: 500 }}>Email delivery</span>
@@ -332,7 +345,112 @@ export default function WeeklyReport({ channelId, channelEmail }) {
             <span style={{ fontSize: 12, color: C.text4 }}>You can resubscribe anytime</span>
           )}
         </div>
+      )}
+    </div>
+  )
+
+  // ── Free plan: live metric snapshot + upgrade nudge ─────────────────────
+  if (isFree) {
+    const subsVal   = channelStats?.subscribers != null ? fmtNum(channelStats.subscribers) : '—'
+    const viewsVal  = channelStats?.total_views != null ? fmtNum(channelStats.total_views) : '—'
+    const retRaw    = analytics?.avg_retention_percent
+    const retVal    = retRaw != null ? `${retRaw}%` : '—'
+    const scoreVal  = healthScore != null ? `${healthScore}/100` : '—'
+    const retColor   = healthColor(retRaw,      { red: 40, amber: 50 })
+    const scoreColor = healthColor(healthScore, { red: 50, amber: 75 })
+
+    return (
+      <div>
+        {header}
+
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(190px, 1fr))',
+          gap: 14, marginBottom: 20,
+        }}>
+          <MetricCard label="Subscribers"    value={subsVal}  />
+          <MetricCard label="Total Views"    value={viewsVal} />
+          <MetricCard label="Avg Retention"  value={retVal}   valueColor={retColor} />
+          <MetricCard label="Channel Score"  value={scoreVal} valueColor={scoreColor} />
+        </div>
+
+        <div style={{
+          background: 'linear-gradient(180deg, #fff5f5 0%, #ffffff 60%)',
+          border: '1px solid rgba(229,37,27,0.18)',
+          borderTop: `3px solid ${C.red}`,
+          borderRadius: 16,
+          padding: '28px 30px',
+          boxShadow: '0 2px 6px rgba(229,37,27,0.08), 0 8px 22px rgba(229,37,27,0.06)',
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
+            <span style={{
+              display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+              width: 28, height: 28, borderRadius: 8, background: `${C.red}15`,
+            }}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={C.red} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+              </svg>
+            </span>
+            <span style={{ fontSize: 11, fontWeight: 800, color: C.red, letterSpacing: '0.1em', textTransform: 'uppercase' }}>Paid feature</span>
+          </div>
+          <h2 style={{ fontSize: 20, fontWeight: 800, color: C.text1, letterSpacing: '-0.4px', marginBottom: 10 }}>
+            Weekly AI reports
+          </h2>
+          <p style={{ fontSize: 14, color: C.text2, lineHeight: 1.7, marginBottom: 18, maxWidth: 560 }}>
+            Claude analyzes your channel every week and sends a personalized report — your biggest win, what to watch out for, and your single priority action. Available on Solo, Growth, and Agency plans. Each weekly email costs 1 credit (4 per month).
+          </p>
+          <a
+            href="/#pricing"
+            style={{
+              display: 'inline-flex', alignItems: 'center', gap: 8,
+              background: C.red, color: '#ffffff',
+              fontSize: 13.5, fontWeight: 700,
+              padding: '11px 22px', borderRadius: 999,
+              textDecoration: 'none', letterSpacing: '-0.1px',
+              boxShadow: `0 4px 14px ${C.red}40, inset 0 1px 0 rgba(255,255,255,0.2)`,
+            }}
+          >
+            Upgrade to unlock
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+            </svg>
+          </a>
+        </div>
       </div>
+    )
+  }
+
+  // ── Paid plan ───────────────────────────────────────────────────────────
+  return (
+    <div>
+      {header}
+
+      {/* Out-of-credits notice — paid plan with 0 credits available */}
+      {creditNotice && (
+        <div style={{
+          display: 'flex', alignItems: 'flex-start', gap: 12,
+          background: '#fffbeb',
+          border: '1px solid rgba(217,119,6,0.25)',
+          borderLeft: `3px solid ${C.amber}`,
+          borderRadius: 12,
+          padding: '14px 18px',
+          marginBottom: 16,
+        }}>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={C.amber} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, marginTop: 1 }}>
+            <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+            <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+          </svg>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <p style={{ fontSize: 13.5, fontWeight: 700, color: C.text1, lineHeight: 1.5, marginBottom: 2 }}>
+              You&rsquo;re out of credits
+            </p>
+            <p style={{ fontSize: 13, color: C.text2, lineHeight: 1.6 }}>
+              This week&rsquo;s report will be skipped. Top up or upgrade to resume weekly delivery.{' '}
+              <a href="/#pricing" style={{ color: C.red, fontWeight: 700, textDecoration: 'none' }}>Top up →</a>
+            </p>
+          </div>
+        </div>
+      )}
 
       {/* ── Empty state ─────────────────────────────────────────────────── */}
       {!hasReports && (

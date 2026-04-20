@@ -225,24 +225,41 @@ def _run_analysis_in_background(session_id: str, stats: dict, videos: list, full
             _persist_session(session_id, creds, data)
             print(f"Analysis saved for {session_id[:8]}")
 
-            # First report: generate immediately on channel connect
+            # First report: generate immediately on channel connect — paid plans only,
+            # costs 1 credit (refunded on failure). Free plan shows an upgrade nudge
+            # in the Weekly Report tab instead.
             channel_id = stats.get("channel_id")
             email = data.get("email", "")
             if channel_id and email:
                 try:
-                    from database.models import WeeklyReport
+                    from database.models import WeeklyReport, UserSubscription
                     db = SessionLocal()
-                    existing = db.query(WeeklyReport).filter_by(channel_id=channel_id).first()
-                    db.close()
-                    if not existing:
-                        import time
-                        time.sleep(2)
-                        from app.weekly_report import generate_and_send_report
-                        db2 = SessionLocal()
-                        try:
-                            generate_and_send_report(channel_id, email, data, db2)
-                        finally:
-                            db2.close()
+                    try:
+                        sub = db.query(UserSubscription).filter_by(channel_id=channel_id).first()
+                        _plan = (sub.plan if sub else "free") or "free"
+                        existing = db.query(WeeklyReport).filter_by(channel_id=channel_id).first()
+                    finally:
+                        db.close()
+
+                    if _plan != "free" and not existing:
+                        from app.analysis_gate import check_and_deduct, refund_credit
+                        gate = check_and_deduct(channel_id)
+                        if gate.get("allowed"):
+                            import time
+                            time.sleep(2)
+                            from app.weekly_report import generate_and_send_report
+                            db2 = SessionLocal()
+                            try:
+                                sent = generate_and_send_report(channel_id, email, data, db2)
+                                if not sent:
+                                    refund_credit(channel_id)
+                            except Exception as gen_err:
+                                refund_credit(channel_id)
+                                print(f"First report generation error: {gen_err} — refunded")
+                            finally:
+                                db2.close()
+                        else:
+                            print(f"[first_report] Skipping {channel_id[:8]} — out of credits")
                 except Exception as e:
                     print(f"First report error: {e}")
         else:

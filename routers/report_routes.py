@@ -4,9 +4,9 @@ import json
 from fastapi import APIRouter, Request
 from fastapi.responses import JSONResponse
 
-from database.models import SessionLocal, WeeklyReport, UserEmailPreferences
+from database.models import SessionLocal, WeeklyReport, UserEmailPreferences, UserSubscription
 from routers.auth import get_session
-from app.weekly_report import generate_and_send_report
+from app.weekly_report import generate_and_send_report, _week_start
 
 router = APIRouter()
 
@@ -65,6 +65,40 @@ async def send_test_report(request: Request):
         if sent:
             return JSONResponse({"ok": True, "sent_to": email})
         return JSONResponse({"error": "Failed to send — check server logs"}, status_code=500)
+    finally:
+        db.close()
+
+
+@router.get("/status")
+def get_report_status(channel_id: str, request: Request):
+    """
+    Live status for the Weekly Report tab — drives the plan/credits UI:
+      - plan:                  'free' | 'solo' | 'growth' | ...
+      - credits_available:     monthly_remaining + pack_balance (0 for free)
+      - should_show_credit_notice: paid plan with 0 credits
+    """
+    session_id = request.session.get("session_id")
+    data, _ = get_session(session_id)
+    if not data:
+        return JSONResponse({"error": "Not logged in"}, status_code=401)
+
+    db = SessionLocal()
+    try:
+        sub = db.query(UserSubscription).filter_by(channel_id=channel_id).first()
+        plan = (sub.plan if sub else "free") or "free"
+
+        if plan == "free":
+            credits_available = 0
+        else:
+            monthly_remaining = max(0, (sub.monthly_allowance or 0) - (sub.monthly_used or 0))
+            pack_balance      = sub.pack_balance or 0
+            credits_available = monthly_remaining + pack_balance
+
+        return JSONResponse({
+            "plan":                      plan,
+            "credits_available":         credits_available,
+            "should_show_credit_notice": plan != "free" and credits_available == 0,
+        })
     finally:
         db.close()
 
