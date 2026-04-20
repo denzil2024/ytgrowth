@@ -1706,14 +1706,24 @@ export default function Landing() {
 
       {/* ── FAQ ─────────────────────────────────────────────────────────── */}
       <div id="faq" style={{ background: '#f4f4f6', borderTop: '1px solid rgba(10,10,15,0.08)', borderBottom: '1px solid rgba(10,10,15,0.08)', padding: isMobile ? '60px 20px' : '100px 64px', position: 'relative', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 900, height: 600, background: 'radial-gradient(ellipse, rgba(99,102,241,0.08) 0%, transparent 60%)', pointerEvents: 'none' }} />
-        <div style={{ maxWidth: 960, margin: '0 auto', position: 'relative', zIndex: 1 }}>
-          <div style={{ textAlign: 'center', marginBottom: 56 }}>
-            <Badge>Frequently Asked Questions</Badge>
-            <h2 style={{ fontWeight: 800, fontSize: isMobile ? 32 : 48, letterSpacing: '-1.5px', color: 'var(--ytg-text)', lineHeight: 1.06, marginBottom: 14, textWrap: 'balance' }}>Questions answered.</h2>
-            <p style={{ fontSize: 16, color: 'var(--ytg-text-2)', lineHeight: 1.8 }}>Everything you want to know before you decide.</p>
+        <div style={{ position: 'absolute', top: '-10%', left: '-5%', width: 700, height: 600, background: 'radial-gradient(ellipse, rgba(229,48,42,0.06) 0%, transparent 60%)', pointerEvents: 'none' }} />
+        <div style={{ maxWidth: 1160, margin: '0 auto', position: 'relative', zIndex: 1, display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '340px 1fr', gap: isMobile ? 40 : 88, alignItems: 'start' }}>
+          {/* Header column */}
+          <div style={{ textAlign: isMobile ? 'center' : 'left' }}>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#ffffff', border: '1px solid rgba(10,10,15,0.09)', borderRadius: 100, padding: '5px 12px 5px 10px', marginBottom: 20, boxShadow: '0 1px 2px rgba(10,10,15,0.04)' }}>
+              <span aria-hidden="true" style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--ytg-accent)', boxShadow: '0 0 0 3px rgba(229,48,42,0.12)' }} />
+              <span style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-text-2)', textTransform: 'uppercase', letterSpacing: '0.09em' }}>Frequently asked</span>
+            </div>
+            <h2 style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontWeight: 800, fontSize: isMobile ? 32 : 44, letterSpacing: '-1.5px', color: 'var(--ytg-text)', lineHeight: 1.05, marginBottom: 14, textWrap: 'balance' }}>
+              Questions <span style={{ color: 'var(--ytg-accent)' }}>answered.</span>
+            </h2>
+            <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.7, margin: 0, maxWidth: isMobile ? 520 : 320, marginLeft: isMobile ? 'auto' : 0, marginRight: isMobile ? 'auto' : 0 }}>
+              Everything you want to know before you decide. Still unsure? <a href="/contact" style={{ color: 'var(--ytg-accent)', fontWeight: 600, textDecoration: 'none' }}>Email us.</a>
+            </p>
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+
+          {/* FAQ list */}
+          <div style={{ borderTop: '1px solid rgba(10,10,15,0.10)' }}>
             {[
               { q: 'Is YTGrowth worth it when my channel is under 1,000 subscribers?', a: "Especially then. The smaller your channel, the higher the leverage of a single good decision — right title, right topic, right timing. You can't afford to guess when you're getting 200 views a video." },
               { q: 'What happens when I run out of AI analyses before my month resets?', a: "Your features pause until your monthly analyses refill on the 1st, or until you grab a top-up pack. You'll see a warning banner at 80% so you're never surprised mid-sprint." },
@@ -1725,36 +1735,65 @@ export default function Landing() {
               { q: 'Can I manage and analyze multiple client channels on the agency plan?', a: "Yes. Agency supports up to 10 channels (5 on lifetime agency deals) with pooled analyses. You run the analyses, you own the insights, your clients see the results." },
             ].map((item, i) => {
               const isOpen = openFaq === i
+              const num = String(i + 1).padStart(2, '0')
               return (
-                <div
-                  key={i}
-                  onClick={() => setOpenFaq(isOpen ? null : i)}
-                  className="ytg-faq-card"
-                  style={{
-                    border: `1px solid ${isOpen ? 'var(--ytg-accent-border)' : 'var(--ytg-border)'}`,
-                    borderLeft: isOpen ? '3px solid var(--ytg-accent)' : undefined, /* IMPROVED: accent left border when open */
-                    boxShadow: isOpen ? '0 8px 28px rgba(99,102,241,0.1), 0 2px 8px rgba(0,0,0,0.06)' : undefined,
-                    transform: isOpen ? 'translateY(-1px)' : undefined,
-                  }}
-                >
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: isMobile ? '18px 18px' : '22px 26px', gap: 14 }}>
-                    <p style={{ fontWeight: 700, fontSize: isMobile ? 14 : 15.5, color: 'var(--ytg-text)', letterSpacing: '-0.3px', lineHeight: 1.4, margin: 0 }}>{item.q}</p>
-                    <div style={{
-                      width: 30, height: 30, borderRadius: 9, flexShrink: 0,
-                      background: isOpen ? 'var(--ytg-accent-light)' : 'var(--ytg-card-2)',
-                      border: `1px solid ${isOpen ? 'var(--ytg-accent-border)' : 'var(--ytg-border)'}`,
+                <div key={i} style={{ borderBottom: '1px solid rgba(10,10,15,0.10)', position: 'relative' }}>
+                  {isOpen && (
+                    <div aria-hidden="true" style={{ position: 'absolute', left: 0, top: 6, bottom: 6, width: 2, background: 'var(--ytg-accent)', borderRadius: 2 }} />
+                  )}
+                  <div
+                    onClick={() => setOpenFaq(isOpen ? null : i)}
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setOpenFaq(isOpen ? null : i) } }}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'flex-start',
+                      gap: isMobile ? 14 : 20,
+                      padding: isMobile ? '20px 0' : '24px 0',
+                      paddingLeft: isOpen ? (isMobile ? 16 : 22) : 0,
+                      cursor: 'pointer',
+                      transition: 'padding-left 0.25s ease',
+                      userSelect: 'none',
+                    }}
+                  >
+                    <span style={{
+                      fontSize: isMobile ? 12 : 13,
+                      fontWeight: 700,
+                      color: isOpen ? 'var(--ytg-accent)' : 'var(--ytg-text-3)',
+                      fontVariantNumeric: 'tabular-nums',
+                      lineHeight: 1.5,
+                      flexShrink: 0,
+                      width: isMobile ? 22 : 28,
+                      paddingTop: 2,
+                      transition: 'color 0.2s',
+                    }}>{num}</span>
+                    <span style={{
+                      flex: 1,
+                      fontSize: isMobile ? 15 : 16,
+                      fontWeight: 600,
+                      color: 'var(--ytg-text)',
+                      lineHeight: 1.45,
+                      letterSpacing: '-0.2px',
+                    }}>{item.q}</span>
+                    <span aria-hidden="true" style={{
+                      width: 28, height: 28, borderRadius: '50%', flexShrink: 0,
                       display: 'flex', alignItems: 'center', justifyContent: 'center',
-                      transition: 'all 0.2s',
+                      background: isOpen ? 'var(--ytg-accent)' : 'rgba(10,10,15,0.05)',
+                      border: `1px solid ${isOpen ? 'var(--ytg-accent)' : 'rgba(10,10,15,0.10)'}`,
+                      transition: 'background 0.2s, border-color 0.2s',
+                      marginTop: 1,
                     }}>
-                      <svg width="11" height="11" viewBox="0 0 12 12" fill="none" style={{ transform: isOpen ? 'rotate(45deg)' : 'rotate(0deg)', transition: 'transform 0.28s cubic-bezier(0.34,1.56,0.64,1)' }}>
-                        <path d="M6 1v10M1 6h10" stroke={isOpen ? 'var(--ytg-accent)' : 'var(--ytg-text-3)'} strokeWidth="1.8" strokeLinecap="round"/>
+                      <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+                        <path d="M1 5h8" stroke={isOpen ? '#ffffff' : 'var(--ytg-text-2)'} strokeWidth="1.8" strokeLinecap="round" />
+                        {!isOpen && <path d="M5 1v8" stroke="var(--ytg-text-2)" strokeWidth="1.8" strokeLinecap="round" />}
                       </svg>
-                    </div>
+                    </span>
                   </div>
                   <div className={`ytg-faq-answer${isOpen ? ' open' : ''}`}>
                     <div className="ytg-faq-answer-inner">
-                      <div style={{ padding: isMobile ? '0 18px 20px' : '0 26px 24px', borderTop: '1px solid var(--ytg-border)' }}>
-                        <p style={{ fontSize: isMobile ? 14 : 14.5, color: 'var(--ytg-text-2)', lineHeight: 1.85, paddingTop: 18, margin: 0 }}>{item.a}</p> {/* IMPROVED: mobile 13.5→14px */}
+                      <div style={{ paddingLeft: isMobile ? 36 : 48, paddingRight: isMobile ? 40 : 48, paddingBottom: isMobile ? 22 : 26, paddingTop: 0 }}>
+                        <p style={{ fontSize: isMobile ? 14 : 15, color: 'var(--ytg-text-2)', lineHeight: 1.72, margin: 0 }}>{item.a}</p>
                       </div>
                     </div>
                   </div>
