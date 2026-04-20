@@ -38,45 +38,6 @@ def get_channel_stats(credentials):
     }
 
 
-def get_ctr_for_videos(credentials, video_ids):
-    if not video_ids:
-        return {}
-    try:
-        analytics = build("youtubeAnalytics", "v2", credentials=credentials)
-        end_date   = datetime.now().strftime("%Y-%m-%d")
-        start_date = (datetime.now() - timedelta(days=365)).strftime("%Y-%m-%d")
-        response = analytics.reports().query(
-            ids="channel==MINE",
-            startDate=start_date,
-            endDate=end_date,
-            metrics="impressions,impressionClickThroughRate",
-            dimensions="video",
-            filters=f"video=={','.join(video_ids)}",
-            maxResults=200,
-        ).execute()
-        out = {}
-        for r in response.get("rows", []):
-            out[r[0]] = {
-                "impressions": int(r[1]) if r[1] is not None else None,
-                "ctr_percent": round(r[2] * 100, 2) if r[2] is not None else None,
-            }
-        return out
-    except Exception as e:
-        print(f"CTR fetch error: {e}")
-        return {}
-
-
-def merge_ctr_into_videos(videos, ctr_map):
-    if not videos:
-        return videos
-    ctr_map = ctr_map or {}
-    for video in videos:
-        entry = ctr_map.get(video.get("video_id"))
-        video["ctr_percent"]  = entry.get("ctr_percent")  if entry else None
-        video["impressions"]  = entry.get("impressions")  if entry else None
-    return videos
-
-
 def get_recent_videos(credentials, max_results=20):
     youtube = build("youtube", "v3", credentials=credentials)
     search_request = youtube.search().list(

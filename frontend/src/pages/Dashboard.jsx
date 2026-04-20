@@ -1492,10 +1492,6 @@ export default function Dashboard() {
                   const lrColor = lrN === null ? C.text3 : lrN >= 3 ? C.green : lrN >= 1 ? C.amber : C.red
                   const lrBg    = lrN === null ? '#f5f5f9'   : lrN >= 3 ? C.greenBg : lrN >= 1 ? '#fffbeb' : C.redBg
                   const lrBdr   = lrN === null ? C.border    : lrN >= 3 ? C.greenBdr : lrN >= 1 ? '#fde68a' : C.redBdr
-                  const ctrN    = typeof v.ctr_percent === 'number' ? v.ctr_percent : null
-                  const ctrColor = ctrN === null ? C.text3 : ctrN >= 5 ? C.green : ctrN >= 2 ? C.amber : C.red
-                  const ctrBg   = ctrN === null ? '#f5f5f9'   : ctrN >= 5 ? C.greenBg : ctrN >= 2 ? '#fffbeb' : C.redBg
-                  const ctrBdr  = ctrN === null ? C.border    : ctrN >= 5 ? C.greenBdr : ctrN >= 2 ? '#fde68a' : C.redBdr
                   const isSelected = selectedVideoId === v.video_id
                   const ytUrl   = v.video_id ? `https://www.youtube.com/watch?v=${v.video_id}` : null
                   const durMatch = (v.duration || '').match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/)
@@ -1545,28 +1541,14 @@ export default function Dashboard() {
                           ))}
                         </div>
 
-                        {/* Footer: CTR + engagement inline stats, Optimise on right */}
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10, marginTop: 'auto', paddingTop: 12, borderTop: `1px solid #f0f0f4` }}>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: 14, minWidth: 0 }}>
-                            <div
-                              title="Click-through rate = thumbnail clicks ÷ impressions. 5%+ is strong, 2–5% is average, under 2% is weak."
-                              style={{ cursor: 'help', minWidth: 0 }}
-                            >
-                              <p style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 2, lineHeight: 1 }}>CTR</p>
-                              <p style={{ fontSize: 13, fontWeight: 800, color: ctrColor, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.3px', lineHeight: 1 }}>
-                                {ctrN !== null ? `${ctrN.toFixed(1)}%` : '—'}
-                              </p>
-                            </div>
-                            <div
-                              title="Engagement rate = likes ÷ views. 3%+ is strong, 1–3% is average, under 1% is weak."
-                              style={{ cursor: 'help', minWidth: 0 }}
-                            >
-                              <p style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 2, lineHeight: 1 }}>Eng</p>
-                              <p style={{ fontSize: 13, fontWeight: 800, color: lrColor, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.3px', lineHeight: 1 }}>
-                                {lrN !== null ? `${lr}%` : '—'}
-                              </p>
-                            </div>
-                          </div>
+                        {/* Footer: engagement + Optimise */}
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 'auto', paddingTop: 12, borderTop: `1px solid #f0f0f4` }}>
+                          <span
+                            title="Engagement rate = likes ÷ views. 3%+ is strong, 1–3% is average, under 1% is weak."
+                            style={{ fontSize: 12, fontWeight: 700, color: lrColor, background: lrBg, padding: '4px 10px', borderRadius: 100, border: `1px solid ${lrBdr}`, fontVariantNumeric: 'tabular-nums', cursor: 'help' }}
+                          >
+                            {lrN !== null ? `${lr}% engagement` : '— engagement'}
+                          </span>
                           <button
                             onClick={() => setSelectedVideoId(v.video_id)}
                             className="ytg-optimise-btn">

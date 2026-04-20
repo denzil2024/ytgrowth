@@ -7,7 +7,7 @@ import uuid
 import json
 import datetime
 from app.youtube import (
-    get_channel_stats, get_recent_videos, get_ctr_for_videos, merge_ctr_into_videos,
+    get_channel_stats, get_recent_videos,
     get_full_channel_data)
 from app.insights import analyze_channel
 from database.models import (
@@ -394,11 +394,6 @@ def callback(request: Request, background_tasks: BackgroundTasks):
 
         videos = get_recent_videos(creds)
         full_data = get_full_channel_data(creds, channel_id)
-        try:
-            ctr_map = get_ctr_for_videos(creds, [v.get("video_id") for v in videos if v.get("video_id")])
-            videos  = merge_ctr_into_videos(videos, ctr_map)
-        except Exception as _e:
-            print(f"CTR merge error (login): {_e}")
 
         _user_creds[session_id] = creds
 
@@ -559,12 +554,6 @@ def refresh_stats(request: Request):
 
     if not stats:
         return JSONResponse({"error": "Could not fetch channel data."}, status_code=500)
-
-    try:
-        ctr_map = get_ctr_for_videos(creds, [v.get("video_id") for v in videos if v.get("video_id")])
-        videos  = merge_ctr_into_videos(videos, ctr_map)
-    except Exception as _e:
-        print(f"CTR merge error (refresh): {_e}")
 
     now = datetime.datetime.utcnow().isoformat() + 'Z'
     data["channel"]          = stats
