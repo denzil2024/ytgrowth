@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState, useRef, forwardRef } from 'react'
 import Competitors from './Competitors'
 import Settings from './Settings'
 import SeoOptimizer from './SeoOptimizer'
@@ -304,6 +304,365 @@ function TierRibbon({ tier, metal }) {
         <YTGLogo size={11}/>
       </span>
       {fmtNum(tier)}
+    </div>
+  )
+}
+
+/* ─── Shareable milestone certificate (PNG-exportable) ─────────────────── */
+const MILESTONE_TITLE = {
+  subs:        'Subscribers',
+  views:       'Total Views',
+  watch_hours: 'Watch Hours',
+}
+const MILESTONE_VERB = {
+  subs:        'subscribers',
+  views:       'total views',
+  watch_hours: 'watch hours',
+}
+function formatAchievedDate(iso) {
+  if (!iso) return ''
+  const d = parseUTC(iso)
+  if (!d || isNaN(d)) return ''
+  return d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+}
+
+const MilestoneShareCard = forwardRef(function MilestoneShareCard(
+  { category, tier, achievedAt, channelName, channelThumbnail },
+  ref
+) {
+  const cat       = CATEGORY_GRADIENT[category] || CATEGORY_GRADIENT.subs
+  const title     = MILESTONE_TITLE[category] || ''
+  const verbLabel = MILESTONE_VERB[category] || ''
+  const dateStr   = formatAchievedDate(achievedAt) || formatAchievedDate(new Date().toISOString())
+  const initial   = (channelName || '?').charAt(0).toUpperCase()
+
+  return (
+    <div
+      ref={ref}
+      style={{
+        width: 600,
+        background: '#ffffff',
+        fontFamily: "'Inter', system-ui, sans-serif",
+        color: '#0f0f13',
+        borderRadius: 16,
+        overflow: 'hidden',
+        boxShadow: '0 24px 60px rgba(0,0,0,0.22)',
+        border: '1px solid #e8e8ee',
+      }}
+    >
+      {/* ── Top dark band with YTGrowth wordmark ── */}
+      <div style={{
+        background: 'linear-gradient(180deg, #15151c 0%, #0a0a0f 100%)',
+        padding: '22px 0',
+        display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
+      }}>
+        <div style={{
+          width: 34, height: 34, borderRadius: 8,
+          background: '#ff3b30',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          boxShadow: '0 2px 10px rgba(255,59,48,0.45)',
+        }}>
+          <svg width="20" height="20" viewBox="0 0 32 32" fill="none">
+            <path d="M23.2 11.6a2.1 2.1 0 0 0-1.48-1.48C20.55 9.8 16 9.8 16 9.8s-4.55 0-5.72.32A2.1 2.1 0 0 0 8.8 11.6 22 22 0 0 0 8.5 16a22 22 0 0 0 .3 4.4 2.1 2.1 0 0 0 1.48 1.48C11.45 22.2 16 22.2 16 22.2s4.55 0 5.72-.32a2.1 2.1 0 0 0 1.48-1.48A22 22 0 0 0 23.5 16a22 22 0 0 0-.3-4.4z" fill="white"/>
+            <polygon points="13.5,19 19.5,16 13.5,13" fill="#ff3b30"/>
+          </svg>
+        </div>
+        <span style={{
+          fontSize: 22, fontWeight: 800, color: '#ffffff',
+          letterSpacing: '-0.6px',
+        }}>
+          YTGrowth<span style={{ color: '#ff3b30' }}>.io</span>
+        </span>
+      </div>
+
+      {/* ── Inner certificate body ── */}
+      <div style={{
+        position: 'relative',
+        padding: '0 56px 40px',
+        background: `linear-gradient(180deg, ${cat.h1}18 0%, #ffffff 38%, #ffffff 100%)`,
+      }}>
+        {/* Hanging ribbon V-drape + star badge */}
+        <div style={{
+          position: 'relative', width: '100%', height: 200,
+          display: 'flex', alignItems: 'flex-end', justifyContent: 'center',
+        }}>
+          {/* V-drape: two straps meeting behind the star */}
+          <svg
+            width="200" height="140"
+            viewBox="0 0 200 140"
+            style={{ position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)' }}
+          >
+            <polygon points="56,0 98,0 112,112 90,128 78,112" fill="#ff3b30"/>
+            <polygon points="102,0 144,0 122,112 110,128 88,112" fill="#c1150c"/>
+            <polygon points="92,118 108,118 100,134" fill="#7a0f08"/>
+          </svg>
+          <div style={{ position: 'relative', zIndex: 2 }}>
+            <StarBadge category={category} tier={tier} size={148}/>
+          </div>
+        </div>
+
+        {/* Headline */}
+        <div style={{ textAlign: 'center', marginTop: 10 }}>
+          <h1 style={{
+            fontSize: 34, fontWeight: 900, color: '#0f0f13',
+            letterSpacing: '-1.1px', lineHeight: 1,
+          }}>
+            Congratulations!
+          </h1>
+          <p style={{
+            fontSize: 15, color: '#6a6a78',
+            marginTop: 10, fontWeight: 500,
+            letterSpacing: '-0.1px',
+          }}>
+            You&rsquo;ve reached {fmtNum(tier)} {verbLabel}
+          </p>
+        </div>
+
+        {/* Hero stat */}
+        <div style={{ textAlign: 'center', marginTop: 30 }}>
+          <p style={{
+            fontSize: 84, fontWeight: 900, color: cat.h2,
+            letterSpacing: '-3px', lineHeight: 0.95,
+            fontVariantNumeric: 'tabular-nums',
+          }}>
+            {fmtNum(tier)}
+          </p>
+          <p style={{
+            fontSize: 14, fontWeight: 800,
+            color: cat.h2,
+            letterSpacing: '0.22em', textTransform: 'uppercase',
+            marginTop: 10,
+          }}>
+            {title}
+          </p>
+        </div>
+
+        {/* Date ribbon */}
+        <div style={{ display: 'flex', justifyContent: 'center', marginTop: 30 }}>
+          <div style={{
+            position: 'relative',
+            background: 'linear-gradient(180deg, #ff4a3f 0%, #e5251b 100%)',
+            color: '#ffffff',
+            fontSize: 14, fontWeight: 700,
+            letterSpacing: '-0.1px',
+            padding: '11px 32px',
+            boxShadow: '0 3px 10px rgba(229,37,27,0.28)',
+            clipPath: 'polygon(0 0, 100% 0, 96% 50%, 100% 100%, 0 100%, 4% 50%)',
+          }}>
+            Achieved {dateStr}
+          </div>
+        </div>
+
+        {/* Channel identity */}
+        <div style={{
+          display: 'flex', flexDirection: 'column', alignItems: 'center',
+          marginTop: 32, gap: 10,
+        }}>
+          <div style={{ position: 'relative', width: 68, height: 68 }}>
+            {channelThumbnail ? (
+              <img
+                src={channelThumbnail}
+                alt=""
+                crossOrigin="anonymous"
+                style={{
+                  width: 68, height: 68, borderRadius: '50%',
+                  objectFit: 'cover',
+                  border: '3px solid #ffffff',
+                  boxShadow: '0 0 0 1.5px #e5e5ec, 0 4px 14px rgba(0,0,0,0.12)',
+                }}
+              />
+            ) : (
+              <div style={{
+                width: 68, height: 68, borderRadius: '50%',
+                background: '#ff3b30', color: '#ffffff',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                fontSize: 28, fontWeight: 800,
+                border: '3px solid #ffffff',
+                boxShadow: '0 0 0 1.5px #e5e5ec, 0 4px 14px rgba(0,0,0,0.12)',
+              }}>
+                {initial}
+              </div>
+            )}
+            {/* YouTube badge on avatar */}
+            <div style={{
+              position: 'absolute', bottom: -2, right: -2,
+              width: 26, height: 26, borderRadius: 7,
+              background: '#ff3b30',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              border: '2px solid #ffffff',
+              boxShadow: '0 2px 5px rgba(0,0,0,0.2)',
+            }}>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="#ffffff">
+                <path d="M8 5v14l11-7z"/>
+              </svg>
+            </div>
+          </div>
+          <p style={{
+            fontSize: 17, fontWeight: 800, color: '#0f0f13',
+            letterSpacing: '-0.3px',
+          }}>
+            {channelName || 'Your Channel'}
+          </p>
+        </div>
+
+        {/* Footer watermark */}
+        <div style={{
+          marginTop: 30, paddingTop: 20,
+          borderTop: '1px solid #ececf2',
+          display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
+        }}>
+          <span style={{
+            fontSize: 13, fontWeight: 800, color: '#0f0f13',
+            letterSpacing: '-0.2px',
+          }}>
+            YTGrowth.io
+          </span>
+          <span style={{ color: '#c8c8d0', fontSize: 14 }}>·</span>
+          <span style={{
+            fontSize: 12, fontWeight: 600, color: '#6a6a78',
+            letterSpacing: '0.02em',
+          }}>
+            YouTube Growth Analytics
+          </span>
+        </div>
+      </div>
+    </div>
+  )
+})
+
+/* ─── Share modal: preview + download PNG + share on X ─────────────────── */
+function MilestoneShareModal({ milestone, channelName, channelThumbnail, onClose }) {
+  const cardRef = useRef(null)
+  const [downloading, setDownloading] = useState(false)
+
+  if (!milestone) return null
+
+  const handleDownload = async () => {
+    if (!cardRef.current) return
+    setDownloading(true)
+    try {
+      const { default: html2canvas } = await import('html2canvas')
+      const canvas = await html2canvas(cardRef.current, {
+        backgroundColor: '#ffffff',
+        scale: 2,
+        useCORS: true,
+        allowTaint: true,
+        logging: false,
+      })
+      const url = canvas.toDataURL('image/png')
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `ytgrowth-milestone-${milestone.category}-${milestone.tier}.png`
+      document.body.appendChild(a)
+      a.click()
+      document.body.removeChild(a)
+    } catch (e) {
+      console.error('[share] download error:', e)
+      alert('Could not generate image. Please try again.')
+    } finally {
+      setDownloading(false)
+    }
+  }
+
+  const handleShareX = () => {
+    const text = `I just hit ${fmtNum(milestone.tier)} ${MILESTONE_VERB[milestone.category]} on YouTube! 🎉\n\nTracked with YTGrowth.io`
+    const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`
+    window.open(url, '_blank', 'noopener,noreferrer')
+  }
+
+  return (
+    <div
+      onClick={onClose}
+      style={{
+        position: 'fixed', inset: 0, zIndex: 1000,
+        background: 'rgba(8,8,14,0.78)',
+        backdropFilter: 'blur(6px)',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        padding: 24, overflowY: 'auto',
+        animation: 'fadeUp 0.22s ease-out',
+      }}
+    >
+      <div
+        onClick={(e) => e.stopPropagation()}
+        style={{
+          display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 20,
+          maxWidth: 640, width: '100%',
+        }}
+      >
+        {/* Scaled-down preview on small screens, full-size otherwise */}
+        <div style={{
+          transform: 'scale(var(--ytg-share-scale, 1))',
+          transformOrigin: 'top center',
+        }}>
+          <MilestoneShareCard
+            ref={cardRef}
+            category={milestone.category}
+            tier={milestone.tier}
+            achievedAt={milestone.achieved_at}
+            channelName={channelName}
+            channelThumbnail={channelThumbnail}
+          />
+        </div>
+
+        {/* Action row */}
+        <div style={{
+          display: 'flex', gap: 10, marginTop: 6,
+          background: 'rgba(255,255,255,0.06)',
+          padding: 10, borderRadius: 14,
+          border: '1px solid rgba(255,255,255,0.12)',
+        }}>
+          <button
+            onClick={handleDownload}
+            disabled={downloading}
+            style={{
+              display: 'inline-flex', alignItems: 'center', gap: 8,
+              background: '#ffffff', color: '#0f0f13',
+              fontSize: 14, fontWeight: 700,
+              padding: '11px 20px', borderRadius: 10,
+              border: 'none', cursor: downloading ? 'wait' : 'pointer',
+              opacity: downloading ? 0.7 : 1,
+              boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
+              letterSpacing: '-0.1px',
+            }}
+          >
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="7 10 12 15 17 10"/>
+              <line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+            {downloading ? 'Preparing…' : 'Download PNG'}
+          </button>
+          <button
+            onClick={handleShareX}
+            style={{
+              display: 'inline-flex', alignItems: 'center', gap: 8,
+              background: '#0f0f13', color: '#ffffff',
+              fontSize: 14, fontWeight: 700,
+              padding: '11px 20px', borderRadius: 10,
+              border: '1px solid #2a2a33', cursor: 'pointer',
+              letterSpacing: '-0.1px',
+            }}
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+            </svg>
+            Share on X
+          </button>
+          <button
+            onClick={onClose}
+            style={{
+              display: 'inline-flex', alignItems: 'center',
+              background: 'transparent', color: '#ffffff',
+              fontSize: 14, fontWeight: 600,
+              padding: '11px 16px', borderRadius: 10,
+              border: '1px solid rgba(255,255,255,0.25)', cursor: 'pointer',
+              letterSpacing: '-0.1px',
+            }}
+          >
+            Close
+          </button>
+        </div>
+      </div>
     </div>
   )
 }
@@ -918,6 +1277,7 @@ export default function Dashboard() {
   const [statsFlash,  setStatsFlash]  = useState(null)  // 'ok' | 'err' | null
   const [usagePct,    setUsagePct]    = useState(0)
   const [milestones,  setMilestones]  = useState(null)  // { earned: [...], upcoming: [...] }
+  const [shareMilestone, setShareMilestone] = useState(null) // { category, tier, achieved_at }
 
   useEffect(() => {
     fetch('/auth/data', { credentials: 'include' })
@@ -1376,12 +1736,13 @@ export default function Dashboard() {
               { key: 'watch_hours', Title: 'Watch Hours' },
             ]
             const perCat = cats.map(c => {
-              const earnedTiers = milestones.earned
-                .filter(e => e.category === c.key)
-                .map(e => e.tier)
-              const latestTier = earnedTiers.length ? Math.max(...earnedTiers) : null
+              const earnedForCat = milestones.earned.filter(e => e.category === c.key)
+              const latestTier = earnedForCat.length ? Math.max(...earnedForCat.map(e => e.tier)) : null
+              const latestRecord = latestTier != null
+                ? earnedForCat.find(e => e.tier === latestTier)
+                : null
               const upcoming = milestones.upcoming.find(u => u.category === c.key) || null
-              return { ...c, latestTier, upcoming }
+              return { ...c, latestTier, latestAchievedAt: latestRecord?.achieved_at || null, upcoming }
             })
             const totalEarned = perCat.filter(p => p.latestTier !== null).length
             return (
@@ -1451,14 +1812,46 @@ export default function Dashboard() {
                           </div>
                         )}
 
+                        {/* Share button (earned only) */}
+                        {hasEarned && (
+                          <button
+                            onClick={() => setShareMilestone({
+                              category: p.key,
+                              tier: p.latestTier,
+                              achieved_at: p.latestAchievedAt,
+                            })}
+                            style={{
+                              alignSelf: 'stretch', marginTop: 20,
+                              display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+                              background: cat.h2, color: '#ffffff',
+                              fontSize: 13, fontWeight: 700,
+                              padding: '11px 16px', borderRadius: 10,
+                              border: 'none', cursor: 'pointer',
+                              letterSpacing: '-0.1px',
+                              boxShadow: `0 2px 8px ${cat.h2}35`,
+                              transition: 'transform 0.15s, box-shadow 0.15s',
+                            }}
+                            onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-1px)'; e.currentTarget.style.boxShadow = `0 4px 14px ${cat.h2}55` }}
+                            onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = `0 2px 8px ${cat.h2}35` }}
+                          >
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                              <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
+                              <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+                            </svg>
+                            Share milestone
+                          </button>
+                        )}
+
                         {/* Brand footer */}
                         <div style={{
-                          alignSelf: 'stretch', marginTop: 22, paddingTop: 14,
+                          alignSelf: 'stretch', marginTop: hasEarned ? 16 : 22, paddingTop: 14,
                           borderTop: `1px solid #eeeef3`,
                           display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
                         }}>
                           <YTGLogo size={18}/>
-                          <span style={{ fontSize: 14, fontWeight: 800, color: C.text1, letterSpacing: '-0.3px' }}>YTGrowth</span>
+                          <span style={{ fontSize: 14, fontWeight: 800, color: C.text1, letterSpacing: '-0.3px' }}>
+                            YTGrowth<span style={{ color: C.red }}>.io</span>
+                          </span>
                         </div>
                       </div>
                     )
@@ -1992,6 +2385,16 @@ export default function Dashboard() {
 
         </div>
       </div>
+
+      {/* ── Milestone share modal ─────────────────────────────────────── */}
+      {shareMilestone && (
+        <MilestoneShareModal
+          milestone={shareMilestone}
+          channelName={data?.channel?.channel_name}
+          channelThumbnail={data?.channel?.thumbnail}
+          onClose={() => setShareMilestone(null)}
+        />
+      )}
     </div>
   )
 }
