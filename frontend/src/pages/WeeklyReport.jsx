@@ -297,24 +297,24 @@ export default function WeeklyReport({ channelId, channelEmail, plan, channelSta
     : 'Your channel performance, delivered every week.'
 
   const header = (
-    <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 28, gap: 16, flexWrap: 'wrap' }}>
-      <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
+    <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 32, gap: 16, flexWrap: 'wrap' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
         <span style={{
           display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-          width: 36, height: 36, borderRadius: 10,
+          width: 44, height: 44, borderRadius: 11,
           background: 'rgba(229,37,27,0.09)',
           border: '1px solid rgba(229,37,27,0.18)',
-          flexShrink: 0, marginTop: 2,
+          flexShrink: 0,
         }}>
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={C.red} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={C.red} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <rect x="4" y="5" width="16" height="16" rx="2"/>
             <path d="M8 3v4M16 3v4M4 11h16"/>
             <path d="M8 15h4"/>
           </svg>
         </span>
         <div>
-          <h1 style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', marginBottom: 4 }}>Weekly Report</h1>
-          <p style={{ fontSize: 14, color: C.text3 }}>{subSubtitle}</p>
+          <h1 style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', marginBottom: 4, lineHeight: 1.1 }}>Weekly Report</h1>
+          <p style={{ fontSize: 14, color: C.text3, lineHeight: 1.3 }}>{subSubtitle}</p>
         </div>
       </div>
 
@@ -368,7 +368,7 @@ export default function WeeklyReport({ channelId, channelEmail, plan, channelSta
         <div style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fit, minmax(190px, 1fr))',
-          gap: 14, marginBottom: 16,
+          gap: 14, marginBottom: 32,
         }}>
           <MetricCard label="Subscribers"    value={subsVal}  />
           <MetricCard label="Total Views"    value={viewsVal} />
@@ -437,7 +437,9 @@ export default function WeeklyReport({ channelId, channelEmail, plan, channelSta
           {/* ─── Overlay with the actual conversion card ────────────────── */}
           <div style={{
             position: 'absolute', inset: 0,
-            background: 'linear-gradient(180deg, rgba(245,245,249,0.15) 0%, rgba(245,245,249,0.62) 30%, rgba(245,245,249,0.82) 100%)',
+            background: 'linear-gradient(180deg, rgba(245,245,249,0.78) 0%, rgba(245,245,249,0.55) 30%, rgba(245,245,249,0.55) 70%, rgba(245,245,249,0.82) 100%)',
+            backdropFilter: 'blur(2px)',
+            WebkitBackdropFilter: 'blur(2px)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             padding: 24,
           }}>
@@ -468,7 +470,7 @@ export default function WeeklyReport({ channelId, channelEmail, plan, channelSta
                 Unlock weekly AI reports
               </h2>
               <p style={{ fontSize: 14, color: C.text2, lineHeight: 1.6, marginBottom: 22, maxWidth: 400, marginLeft: 'auto', marginRight: 'auto' }}>
-                Claude audits your channel every week and tells you the single thing to fix next — not a wall of data, a clear priority.
+                YTGrowth audits your channel every week and tells you the single thing to fix next — not a wall of data, a clear priority.
               </p>
 
               {/* Benefits */}
