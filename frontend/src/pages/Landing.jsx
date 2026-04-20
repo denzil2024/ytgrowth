@@ -340,17 +340,6 @@ function FeatureBulletRow({ onDark = false, children }) {
   )
 }
 
-/* ─── Stats bar icon ────────────────────────────────────────────────────── */
-function StatIcon({ name }) {
-  const p = { width: 18, height: 18, viewBox: '0 0 24 24', fill: 'none', stroke: 'var(--ytg-accent)', strokeWidth: 1.85, strokeLinecap: 'round', strokeLinejoin: 'round' }
-  if (name === 'layers')   return <svg {...p}><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
-  if (name === 'target')   return <svg {...p}><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
-  if (name === 'image')    return <svg {...p}><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-  if (name === 'calendar') return <svg {...p}><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-  if (name === 'grid')     return <svg {...p}><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-  return null
-}
-
 /* ─── Arrow icon ────────────────────────────────────────────────────────── */
 function Arrow() {
   return (
@@ -801,205 +790,141 @@ export default function Landing() {
           </div>
         )}
 
-        {/* Dashboard mockup — mirrors the real Overview tab so visitors see exactly what they get */}
-        <div style={{ maxWidth: 1280, margin: '72px auto 0', position: 'relative', display: isMobile ? 'none' : 'block', padding: '32px 36px', boxSizing: 'content-box', animation: 'floatA 7s ease-in-out infinite' }}>
+        {/* Dashboard mockup — dark frame with headline + tabs, clean white product card nested inside. */}
+        <div style={{ maxWidth: 960, margin: '64px auto 0', position: 'relative', display: isMobile ? 'none' : 'block', padding: '0 32px' }}>
           <div style={{
-            background: '#0f0f14', border: '1px solid rgba(255,255,255,0.09)',
-            borderRadius: 22, overflow: 'hidden',
-            boxShadow: '0 48px 120px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.04)',
+            background: 'linear-gradient(180deg, #0e1020 0%, #0a0d1c 100%)',
+            borderRadius: 28,
+            padding: '46px 46px 42px',
+            boxShadow: '0 40px 100px rgba(10,13,30,0.28), 0 0 0 1px rgba(255,255,255,0.04)',
           }}>
-            {/* Browser chrome */}
-            <div style={{ background: 'rgba(255,255,255,0.03)', borderBottom: '1px solid rgba(255,255,255,0.07)', padding: '13px 18px', display: 'flex', alignItems: 'center', gap: 8 }}>
-              {['#FF5F57', '#FEBC2E', '#28C840'].map((c, i) => <div key={i} style={{ width: 10, height: 10, borderRadius: '50%', background: c, opacity: 0.65 }} />)}
-              <div style={{ background: 'rgba(255,255,255,0.06)', borderRadius: 7, padding: '5px 14px', fontSize: 12, color: 'rgba(255,255,255,0.3)', marginLeft: 10, maxWidth: 320, fontFamily: 'monospace', letterSpacing: '-0.2px' }}>ytgrowth.io/dashboard</div>
+            {/* Headline */}
+            <h2 style={{
+              fontSize: 22, fontWeight: 600, color: '#ffffff',
+              letterSpacing: '-0.3px', lineHeight: 1.5,
+              textAlign: 'center', maxWidth: 640, margin: '0 auto 30px',
+            }}>
+              See your channel the way a $500/hour consultant would — and the one thing to fix next.
+            </h2>
+
+            {/* Tab pills */}
+            <div style={{ display: 'flex', justifyContent: 'center', gap: 8, flexWrap: 'wrap', marginBottom: 36 }}>
+              {['Overview', 'Priority actions', 'Competitor gaps', 'Weekly report', 'Milestones'].map((label, i) => (
+                <div key={i} style={{
+                  padding: '9px 18px', borderRadius: 999,
+                  fontSize: 13, fontWeight: 600,
+                  background: i === 0 ? '#ffffff' : 'transparent',
+                  color: i === 0 ? '#0a0d1c' : 'rgba(255,255,255,0.65)',
+                  border: i === 0 ? 'none' : '1px solid rgba(255,255,255,0.14)',
+                  boxShadow: i === 0 ? '0 2px 10px rgba(255,255,255,0.08)' : 'none',
+                  letterSpacing: '-0.1px',
+                }}>
+                  {label}
+                </div>
+              ))}
             </div>
 
-            {/* Mock dashboard content */}
-            <div style={{ padding: '22px 24px', display: 'flex', flexDirection: 'column', gap: 14 }}>
-
-              {/* ── Channel header strip ─────────────────────────────────── */}
+            {/* Inner white product card */}
+            <div style={{
+              background: '#ffffff',
+              borderRadius: 16,
+              padding: '26px 28px',
+              boxShadow: '0 16px 44px rgba(0,0,0,0.22)',
+            }}>
+              {/* Channel header + score */}
               <div style={{
-                display: 'flex', alignItems: 'center', gap: 18,
-                padding: '14px 18px',
-                background: '#16161c',
-                border: '1px solid rgba(255,255,255,0.07)',
-                borderRadius: 14,
+                display: 'flex', alignItems: 'center', gap: 16,
+                paddingBottom: 20, borderBottom: '1px solid #f0f0f5',
               }}>
-                {/* Avatar */}
-                <div style={{
-                  width: 46, height: 46, borderRadius: '50%',
-                  background: 'linear-gradient(135deg, #ff3b30 0%, #a50f07 100%)',
-                  flexShrink: 0,
-                  boxShadow: '0 0 0 2px #0f0f14, 0 0 0 4px rgba(255,59,48,0.6), 0 0 18px rgba(255,59,48,0.35)',
-                }}/>
+                <img
+                  src="/avatars/sophie.jpg" alt=""
+                  style={{ width: 48, height: 48, borderRadius: '50%', objectFit: 'cover', flexShrink: 0 }}
+                />
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <p style={{ fontSize: 14, fontWeight: 700, color: '#ffffff', letterSpacing: '-0.2px' }}>Your Channel</p>
-                  <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.45)', marginTop: 2 }}>4,284 subscribers · 187K total views</p>
+                  <p style={{ fontSize: 15, fontWeight: 700, color: '#0a0a0f', letterSpacing: '-0.2px' }}>Sophie Brandt</p>
+                  <p style={{ fontSize: 12.5, color: '#6a6a78', marginTop: 3 }}>Travel · 42K subscribers · 187K views</p>
                 </div>
-                {/* Score ring */}
                 <div style={{ position: 'relative', flexShrink: 0 }}>
-                  <svg width="58" height="58" viewBox="0 0 58 58">
-                    <circle cx="29" cy="29" r="23" fill="none" stroke="rgba(255,255,255,0.07)" strokeWidth="5"/>
-                    <circle cx="29" cy="29" r="23" fill="none" stroke="#4ade80" strokeWidth="5" strokeDasharray="104 145" strokeLinecap="round" transform="rotate(-90 29 29)"/>
+                  <svg width="56" height="56" viewBox="0 0 56 56">
+                    <circle cx="28" cy="28" r="23" fill="none" stroke="#ececf2" strokeWidth="5"/>
+                    <circle cx="28" cy="28" r="23" fill="none" stroke="#16a34a" strokeWidth="5" strokeDasharray="104 145" strokeLinecap="round" transform="rotate(-90 28 28)"/>
                   </svg>
                   <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <span style={{ fontSize: 15, fontWeight: 800, color: '#ffffff', letterSpacing: '-0.5px' }}>72</span>
+                    <span style={{ fontSize: 15, fontWeight: 800, color: '#0a0a0f', letterSpacing: '-0.4px' }}>72</span>
                   </div>
                 </div>
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 4 }}>
-                  <span style={{ fontSize: 10, fontWeight: 700, color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase', letterSpacing: '0.12em' }}>Health</span>
-                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, background: 'rgba(74,222,128,0.14)', border: '1px solid rgba(74,222,128,0.28)', borderRadius: 999, padding: '3px 9px' }}>
-                    <span style={{ width: 5, height: 5, borderRadius: '50%', background: '#4ade80', boxShadow: '0 0 6px #4ade80' }}/>
-                    <span style={{ fontSize: 10.5, fontWeight: 700, color: '#4ade80', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Healthy</span>
-                  </span>
-                </div>
+                <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: '#f0fdf4', border: '1px solid rgba(134,239,172,0.65)', borderRadius: 999, padding: '4px 11px', flexShrink: 0 }}>
+                  <span style={{ width: 5, height: 5, borderRadius: '50%', background: '#16a34a' }}/>
+                  <span style={{ fontSize: 10.5, fontWeight: 800, color: '#16a34a', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Healthy</span>
+                </span>
               </div>
 
-              {/* ── Stat cards row ───────────────────────────────────────── */}
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 10 }}>
-                {[
-                  { label: 'Subscribers',   value: '4.2K',  delta: '+124 this week',  good: true },
-                  { label: 'Weekly views',  value: '8.2K',  delta: '+12% vs last',    good: true },
-                  { label: 'Avg retention', value: '55.6%', delta: 'Above 48% niche', good: true },
-                  { label: 'Channel score', value: '72',    suffix: '/100', delta: '↑ 14 pts this month', good: true },
-                ].map((m, i) => (
-                  <div key={i} style={{
-                    background: '#16161c',
-                    border: '1px solid rgba(255,255,255,0.07)',
-                    borderRadius: 12,
-                    padding: '13px 15px',
-                  }}>
-                    <p style={{ fontSize: 10, fontWeight: 600, color: 'rgba(255,255,255,0.38)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 9 }}>{m.label}</p>
-                    <p style={{ fontSize: 22, fontWeight: 800, color: '#ffffff', letterSpacing: '-1px', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>
-                      {m.value}
-                      {m.suffix && <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.35)', fontWeight: 500, marginLeft: 1 }}>{m.suffix}</span>}
-                    </p>
-                    <p style={{ fontSize: 11, fontWeight: 500, color: m.good ? '#4ade80' : '#ff6b63', marginTop: 7, letterSpacing: '-0.1px' }}>
-                      {!m.delta.startsWith('↑') && !m.delta.startsWith('↓') && (m.good ? '↑ ' : '↓ ')}{m.delta}
-                    </p>
-                  </div>
-                ))}
-              </div>
-
-              {/* ── Priority action card — the signature 3-column layout ─ */}
-              <div style={{
-                background: '#16161c',
-                border: '1px solid rgba(255,255,255,0.07)',
-                borderTop: '3px solid #f59e0b',
-                borderRadius: 12,
-                padding: '14px 18px 16px',
-              }}>
-                {/* Header row */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 13 }}>
-                  <div style={{
-                    width: 24, height: 24, borderRadius: 7,
-                    background: '#f59e0b',
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    flexShrink: 0,
-                  }}>
-                    <span style={{ fontSize: 11, fontWeight: 900, color: '#0a0a0f' }}>1</span>
-                  </div>
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <p style={{ fontSize: 9.5, fontWeight: 700, color: '#f59e0b', letterSpacing: '0.09em', textTransform: 'uppercase', marginBottom: 3 }}>Content Strategy</p>
-                    <p style={{ fontSize: 13, fontWeight: 700, color: '#ffffff', lineHeight: 1.4, letterSpacing: '-0.1px' }}>Watch time is critically short — rewrite your openings to hook viewers in the first 15 seconds.</p>
-                  </div>
+              {/* Priority action */}
+              <div style={{ paddingTop: 22 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
+                  <span style={{ fontSize: 10.5, fontWeight: 800, color: '#d97706', letterSpacing: '0.18em', textTransform: 'uppercase' }}>Priority this week</span>
+                  <span style={{ flex: 1, height: 1, background: '#ececf2' }}/>
                   <span style={{
-                    fontSize: 10, fontWeight: 700, color: '#f59e0b',
-                    border: '1.5px solid #f59e0b', padding: '3px 9px',
-                    borderRadius: 999, letterSpacing: '0.06em', textTransform: 'uppercase',
-                    flexShrink: 0,
-                  }}>HIGH</span>
+                    fontSize: 10, fontWeight: 700, color: '#d97706',
+                    border: '1.5px solid #d97706', padding: '3px 10px',
+                    borderRadius: 999, letterSpacing: '0.08em', textTransform: 'uppercase',
+                  }}>High impact</span>
                 </div>
 
-                {/* Divider */}
-                <div style={{ height: 1, background: 'rgba(255,255,255,0.06)', marginBottom: 11, marginLeft: 36 }}/>
+                <h3 style={{
+                  fontSize: 18, fontWeight: 800, color: '#0a0a0f',
+                  letterSpacing: '-0.4px', lineHeight: 1.4,
+                  marginBottom: 18,
+                }}>
+                  Watch time is critically short — rewrite openings to hook viewers in the first 15 seconds.
+                </h3>
 
-                {/* 3-column grid */}
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr 1fr', gap: 6, marginLeft: 36 }}>
-                  <div style={{ background: 'rgba(79,134,247,0.1)', border: '1px solid rgba(79,134,247,0.18)', borderRadius: 8, padding: '9px 11px' }}>
-                    <p style={{ fontSize: 9, fontWeight: 700, color: '#6b96ff', letterSpacing: '0.09em', textTransform: 'uppercase', marginBottom: 5 }}>Why now</p>
-                    <p style={{ fontSize: 11.5, color: 'rgba(255,255,255,0.78)', lineHeight: 1.5 }}>Avg watch is 38s vs 2:30 niche — viewers bail in the first 15 seconds.</p>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.3fr 1fr', gap: 8 }}>
+                  <div style={{ background: 'rgba(79,134,247,0.06)', border: '1px solid rgba(79,134,247,0.15)', borderRadius: 10, padding: '12px 14px' }}>
+                    <p style={{ fontSize: 10, fontWeight: 700, color: '#4a7cf7', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 6 }}>Why now</p>
+                    <p style={{ fontSize: 12.5, color: '#3a3a44', lineHeight: 1.55 }}>Avg watch 38s vs 2:30 niche — viewers bail in the first 15 seconds.</p>
                   </div>
-                  <div style={{ background: '#1d1d24', border: '1px solid rgba(255,255,255,0.09)', borderLeft: '3px solid #f59e0b', borderRadius: '0 8px 8px 0', padding: '9px 12px', boxShadow: '0 2px 10px rgba(0,0,0,0.35)' }}>
-                    <p style={{ fontSize: 9, fontWeight: 700, color: '#f59e0b', letterSpacing: '0.09em', textTransform: 'uppercase', marginBottom: 5 }}>Action</p>
-                    <p style={{ fontSize: 11.5, color: 'rgba(255,255,255,0.9)', lineHeight: 1.5 }}>Cold-open hook — drop the intro, lead with the most visual moment or the payoff question.</p>
+                  <div style={{ background: '#ffffff', border: '1px solid #ececf2', borderLeft: '3px solid #d97706', borderRadius: '0 10px 10px 0', padding: '12px 14px', boxShadow: '0 2px 10px rgba(0,0,0,0.06)' }}>
+                    <p style={{ fontSize: 10, fontWeight: 700, color: '#d97706', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 6 }}>Action</p>
+                    <p style={{ fontSize: 12.5, color: '#0a0a0f', lineHeight: 1.55, fontWeight: 500 }}>Cold-open hook. Drop the intro, lead with the most visual moment or payoff.</p>
                   </div>
-                  <div style={{ background: 'rgba(74,222,128,0.1)', border: '1px solid rgba(74,222,128,0.2)', borderRadius: 8, padding: '9px 11px' }}>
-                    <p style={{ fontSize: 9, fontWeight: 700, color: '#4ade80', letterSpacing: '0.09em', textTransform: 'uppercase', marginBottom: 5 }}>Expected outcome</p>
-                    <p style={{ fontSize: 11.5, color: 'rgba(255,255,255,0.78)', lineHeight: 1.5 }}>+40% watch time in 3 weeks. Algorithm begins promoting the channel again.</p>
+                  <div style={{ background: 'rgba(22,163,74,0.06)', border: '1px solid rgba(22,163,74,0.18)', borderRadius: 10, padding: '12px 14px' }}>
+                    <p style={{ fontSize: 10, fontWeight: 700, color: '#16a34a', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 6 }}>Expected outcome</p>
+                    <p style={{ fontSize: 12.5, color: '#3a3a44', lineHeight: 1.55 }}>+40% watch time in 3 weeks. Algorithm picks the channel up again.</p>
                   </div>
                 </div>
-              </div>
-
-            </div>
-          </div>
-
-          {/* Floating cards — repositioned inside wrapper padding so they don't clip */}
-          <div style={{ animation: 'floatA 4.5s ease-in-out infinite', position: 'absolute', top: 8, right: 8, background: 'rgba(17,17,20,0.95)', backdropFilter: 'blur(20px)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 16, padding: '16px 20px', boxShadow: '0 24px 60px rgba(0,0,0,0.5)' }}>
-            <p style={{ fontSize: 12, fontWeight: 700, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.6px', marginBottom: 12 }}>You vs competitor</p>
-            {[['Avg views', '980', '12.4k'], ['Upload freq', '0.5×/wk', '3×/wk'], ['Like rate', '2.7%', '5.1%']].map(([m, y, t], i) => (
-              <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 18, marginBottom: i < 2 ? 8 : 0, paddingBottom: i < 2 ? 8 : 0, borderBottom: i < 2 ? '1px solid rgba(255,255,255,0.06)' : 'none' }}>
-                <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.35)' }}>{m}</span>
-                <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-                  <span style={{ fontSize: 12, fontWeight: 700, color: '#ff3b30', fontVariantNumeric: 'tabular-nums' }}>{y}</span>
-                  <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.2)' }}>vs</span>
-                  <span style={{ fontSize: 12, fontWeight: 700, color: 'rgba(255,255,255,0.65)', fontVariantNumeric: 'tabular-nums' }}>{t}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <div style={{ animation: 'floatB 5.5s ease-in-out infinite 1s', position: 'absolute', bottom: 8, left: 8, background: 'rgba(17,17,20,0.95)', backdropFilter: 'blur(20px)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 16, padding: '16px 20px', boxShadow: '0 24px 60px rgba(0,0,0,0.5)' }}>
-            <p style={{ fontSize: 12, fontWeight: 700, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.6px', marginBottom: 12 }}>Analysis complete</p>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-              <div style={{ width: 36, height: 36, background: 'rgba(74,222,128,0.12)', border: '1px solid rgba(74,222,128,0.25)', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l3 3 7-7" stroke="#4ade80" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" /></svg>
-              </div>
-              <div>
-                <p style={{ fontSize: 12, fontWeight: 700, color: '#f4f4f5' }}>12 metrics scanned</p>
-                <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.35)', marginTop: 1 }}>Done in 28 seconds</p>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* ── STATS BAR ───────────────────────────────────────────────────── */}
-      <div className="section-animate" style={{ background: '#e8e9ee', borderTop: '1px solid rgba(10,10,15,0.06)', borderBottom: '1px solid rgba(10,10,15,0.10)', boxShadow: '0 4px 20px rgba(0,0,0,0.07)', position: 'relative', zIndex: 1, padding: isMobile ? '44px 24px' : '56px 64px' }}>
+      {/* ── STATS BAR — thin inline feature row ─────────────────────────── */}
+      <div className="section-animate" style={{
+        background: '#f4f4f6',
+        borderTop: '1px solid rgba(10,10,15,0.06)',
+        borderBottom: '1px solid rgba(10,10,15,0.06)',
+        padding: isMobile ? '20px 24px' : '22px 64px',
+      }}>
         <div style={{
-          display: 'grid',
-          gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(5, 1fr)',
-          maxWidth: 1280, margin: '0 auto',
-          gap: isMobile ? 6 : 0,
+          maxWidth: 1100, margin: '0 auto',
+          display: 'flex', flexWrap: 'wrap',
+          justifyContent: 'center', alignItems: 'center',
+          gap: isMobile ? '10px 18px' : '10px 28px',
         }}>
           {[
-            { stat: '10',      label: 'Audit dimensions',    icon: 'layers' },
-            { stat: '3',       label: 'Competitor benchmarks', icon: 'target' },
-            { stat: '2-layer', label: 'Thumbnail scoring',   icon: 'image' },
-            { stat: 'Weekly',  label: 'Automated reports',   icon: 'calendar' },
-            { stat: '7+',      label: 'Core growth tools',   icon: 'grid' },
-          ].map(({ stat, label, icon }, i) => (
-            <div key={i} style={{
-              display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-              padding: isMobile ? '18px 8px' : '6px 24px',
-              borderRight: isMobile
-                ? (i % 2 === 0 && i !== 4 ? '1px solid rgba(10,10,15,0.08)' : 'none')
-                : (i < 4 ? '1px solid rgba(10,10,15,0.08)' : 'none'),
-              gridColumn: isMobile && i === 4 ? '1 / -1' : undefined,
-              borderTop: isMobile && i >= 2 ? '1px solid rgba(10,10,15,0.08)' : 'none',
-            }}>
-              {/* Icon pill */}
-              <span style={{
-                display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-                width: 36, height: 36, borderRadius: 10,
-                background: 'rgba(229,37,27,0.09)',
-                border: '1px solid rgba(229,37,27,0.18)',
-                marginBottom: 12,
-              }}>
-                <StatIcon name={icon}/>
-              </span>
-              <span style={{ fontSize: 28, fontWeight: 800, color: 'var(--ytg-accent)', lineHeight: 1, letterSpacing: '-0.6px', marginBottom: 6 }}>{stat}</span>
-              <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--ytg-text-3)', textTransform: 'uppercase', letterSpacing: '0.08em', textAlign: 'center' }}>{label}</span>
+            ['10',       'audit dimensions'],
+            ['3',        'competitor benchmarks'],
+            ['2-layer',  'thumbnail scoring'],
+            ['Weekly',   'automated reports'],
+            ['7+',       'core growth tools'],
+          ].map(([stat, label], i, arr) => (
+            <div key={i} style={{ display: 'inline-flex', alignItems: 'baseline', gap: 7 }}>
+              <span style={{ fontSize: 15, fontWeight: 800, color: 'var(--ytg-accent)', letterSpacing: '-0.3px' }}>{stat}</span>
+              <span style={{ fontSize: 13, color: 'rgba(10,10,15,0.52)', fontWeight: 500, letterSpacing: '-0.1px' }}>{label}</span>
+              {!isMobile && i < arr.length - 1 && (
+                <span style={{ color: 'rgba(10,10,15,0.15)', fontSize: 13, marginLeft: 20 }}>·</span>
+              )}
             </div>
           ))}
         </div>
