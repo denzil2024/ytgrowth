@@ -711,7 +711,7 @@ export default function Landing() {
       </div>
 
       {/* ── HERO ────────────────────────────────────────────────────────── */}
-      <div id="hero" style={{ position: 'relative', padding: isMobile ? '80px 24px 60px' : '110px 48px 90px', overflow: 'hidden', background: '#ffffff' }}>
+      <div id="hero" style={{ position: 'relative', padding: isMobile ? '48px 24px 60px' : '110px 48px 90px', overflow: 'hidden', background: '#ffffff' }}>
 
         {/* Subtle red radial glow — warms the hero without competing with content */}
         <div aria-hidden="true" style={{
@@ -728,7 +728,7 @@ export default function Landing() {
             <span style={{ fontSize: 14, fontWeight: 500, color: 'var(--ytg-text-3)', letterSpacing: '-0.1px' }}>AI-Powered YouTube Intelligence</span>
           </div>
 
-          <h1 style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontWeight: 800, fontSize: isMobile ? 40 : isTablet ? 62 : 72, lineHeight: isMobile ? 1.08 : 1.02, letterSpacing: isMobile ? '-0.8px' : '-2.5px', color: 'var(--ytg-text)', marginBottom: 22, textWrap: 'balance' }}>
+          <h1 style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontWeight: 800, fontSize: isMobile ? 34 : isTablet ? 62 : 72, lineHeight: isMobile ? 1.1 : 1.02, letterSpacing: isMobile ? '-0.6px' : '-2.5px', color: 'var(--ytg-text)', marginBottom: 22, textWrap: 'balance' }}>
             The AI that audits your channel like a <span style={{ color: 'var(--ytg-accent)' }}>$500/hour consultant</span>
           </h1>
 
