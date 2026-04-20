@@ -640,7 +640,7 @@ export default function Landing() {
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
           <Logo size={28} />
-          <span style={{ fontWeight: 800, fontSize: 14, lineHeight: 1, letterSpacing: '-0.4px', color: '#0a0a0f' }}>YTGrowth</span>
+          <span style={{ fontWeight: 800, fontSize: 14, lineHeight: 1, letterSpacing: '-0.4px', color: '#0a0a0f' }}>YTGrowth<span style={{ color: 'var(--ytg-accent)' }}>.io</span></span>
         </div>
 
         {!isMobile && (
@@ -709,23 +709,30 @@ export default function Landing() {
       {/* ── HERO ────────────────────────────────────────────────────────── */}
       <div id="hero" style={{ position: 'relative', padding: isMobile ? '80px 24px 60px' : '110px 48px 90px', overflow: 'hidden', background: '#ffffff' }}>
 
+        {/* Subtle red radial glow — warms the hero without competing with content */}
+        <div aria-hidden="true" style={{
+          position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)',
+          width: '120vw', maxWidth: 1400, height: 620,
+          background: 'radial-gradient(ellipse at center top, rgba(229,48,42,0.07) 0%, rgba(229,48,42,0.02) 40%, transparent 70%)',
+          pointerEvents: 'none', zIndex: 0,
+        }}/>
+
         <div style={{ maxWidth: 1000, margin: '0 auto', textAlign: 'center', position: 'relative', zIndex: 1, animation: 'fadeUp 0.5s ease' }}>
           {/* Live badge */}
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'var(--ytg-card)', border: '1px solid var(--ytg-border)', borderRadius: 100, padding: '7px 17px', marginBottom: 24, boxShadow: 'var(--ytg-shadow)' }}> {/* IMPROVED: marginBottom 32→24 */}
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'var(--ytg-card)', border: '1px solid var(--ytg-border)', borderRadius: 100, padding: '7px 17px', marginBottom: 24, boxShadow: 'var(--ytg-shadow)' }}>
             <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#16a34a', animation: 'pulse 2s infinite', boxShadow: '0 0 0 3px rgba(22,163,74,0.15)' }} />
             <span style={{ fontSize: 14, fontWeight: 500, color: 'var(--ytg-text-3)', letterSpacing: '-0.1px' }}>AI-Powered YouTube Intelligence</span>
           </div>
 
-          <h1 style={{ fontWeight: 800, fontSize: isMobile ? 40 : isTablet ? 62 : 72, lineHeight: 1.02, letterSpacing: isMobile ? '-1.5px' : '-2.5px', color: 'var(--ytg-text)', marginBottom: 22 }}> {/* IMPROVED: tablet 56→62px */}
-            The AI that audits your channel<br />
-            like a <span style={{ color: 'var(--ytg-accent)' }}>$500/hour consultant</span>
+          <h1 style={{ fontWeight: 800, fontSize: isMobile ? 40 : isTablet ? 62 : 72, lineHeight: 1.02, letterSpacing: isMobile ? '-1.5px' : '-2.5px', color: 'var(--ytg-text)', marginBottom: 22, textWrap: 'balance' }}>
+            The AI that audits your channel like a <span style={{ color: 'var(--ytg-accent)' }}>$500/hour consultant</span>
           </h1>
 
-          <p style={{ fontSize: isMobile ? 16 : 19, color: 'var(--ytg-text-2)', lineHeight: 1.8, marginBottom: 44, maxWidth: 620, margin: '0 auto 44px' }}>
+          <p style={{ fontSize: isMobile ? 16 : 19, color: 'var(--ytg-text-2)', lineHeight: 1.7, maxWidth: 620, margin: '0 auto 32px', textWrap: 'pretty' }}>
             10-dimension channel audit. Competitor gap analysis. Thumbnail scoring against real benchmarks. Weekly performance reports. Everything VidIQ shows you as data — YTGrowth tells you what to do with it.
           </p>
 
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12, marginBottom: 48, flexDirection: isMobile ? 'column' : 'row', width: isMobile ? '100%' : 'auto' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12, marginBottom: 28, flexDirection: isMobile ? 'column' : 'row', width: isMobile ? '100%' : 'auto' }}>
             <a href="/auth/login" className="ytg-btn-primary" style={{ fontSize: 16, padding: '15px 32px', width: isMobile ? '100%' : 'auto', justifyContent: 'center' }}>
               Analyse my channel free <Arrow />
             </a>
@@ -734,8 +741,18 @@ export default function Landing() {
             </a>
           </div>
 
-          {/* Trust row */}
-          <p style={{ fontSize: 12, color: 'var(--ytg-text-3)' }}>No credit card required · 5 free analyses on signup · Cancel anytime</p>
+          {/* Trust row — small green-check pills, mobile-wraps naturally */}
+          <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: isMobile ? 10 : 18, rowGap: 10 }}>
+            {['No credit card required', '5 free analyses on signup', 'Cancel anytime'].map((t, i) => (
+              <div key={i} style={{ display: 'inline-flex', alignItems: 'center', gap: 7, fontSize: 12.5, fontWeight: 500, color: 'var(--ytg-text-3)', letterSpacing: '-0.1px' }}>
+                <svg width="13" height="13" viewBox="0 0 16 16" fill="none" style={{ flexShrink: 0 }}>
+                  <circle cx="8" cy="8" r="7" fill="rgba(22,163,74,0.11)" stroke="rgba(22,163,74,0.28)" strokeWidth="1"/>
+                  <path d="M5 8l2 2 4-4" stroke="#16a34a" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+                {t}
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* Mobile hero mockup — simplified health score + action plan */}
@@ -1613,10 +1630,10 @@ export default function Landing() {
         <div style={{ maxWidth: 1280, margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexDirection: isMobile ? 'column' : 'row', gap: isMobile ? 20 : 0, textAlign: isMobile ? 'center' : 'left' }}>
           <a href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 9 }}>
             <Logo size={26} />
-            <span style={{ fontWeight: 800, fontSize: 14, color: '#ffffff', letterSpacing: '-0.4px' }}>YTGrowth</span>
+            <span style={{ fontWeight: 800, fontSize: 14, color: '#ffffff', letterSpacing: '-0.4px' }}>YTGrowth<span style={{ color: '#ff3b30' }}>.io</span></span>
           </a>
           <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.32)' }}>Built for creators serious about growth.</p>
-          <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.22)' }}>© 2026 YTGrowth. All rights reserved.</p>
+          <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.22)' }}>© 2026 YTGrowth.io. All rights reserved.</p>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: isMobile ? '12px 20px' : 28, justifyContent: isMobile ? 'center' : 'flex-end' }}>
             {[
               { label: 'Privacy policy',   href: '/privacy' },
