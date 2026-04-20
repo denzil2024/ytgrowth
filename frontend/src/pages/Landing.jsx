@@ -1178,41 +1178,46 @@ export default function Landing() {
       </div>
 
       {/* Section 3 — Thumbnail IQ */}
-      <div className="section-animate" style={{ background: '#f4f4f6', borderTop: '1px solid rgba(10,10,15,0.08)', borderBottom: '1px solid rgba(10,10,15,0.08)', padding: isMobile ? '60px 24px' : '100px 64px' }}>
-        <div style={{ maxWidth: 1160, margin: '0 auto', display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? 40 : 80, alignItems: 'center' }}>
+      <div className="section-animate" style={{ background: '#0d0d12', borderTop: '1px solid rgba(255,255,255,0.06)', borderBottom: '1px solid rgba(255,255,255,0.06)', padding: isMobile ? '60px 24px' : '100px 64px', position: 'relative', overflow: 'hidden' }}>
+        <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 900, height: 700, background: 'radial-gradient(ellipse, rgba(229,48,42,0.18) 0%, transparent 65%)', pointerEvents: 'none' }} />
+        <div style={{ maxWidth: 1160, margin: '0 auto', display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? 40 : 80, alignItems: 'center', position: 'relative', zIndex: 1 }}>
           {/* Text */}
           <div>
-            <p style={{ fontSize: 12, fontWeight: 700, color: 'var(--ytg-accent-text)', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 12 }}>Thumbnail Intelligence</p>
-            <h2 style={{ fontSize: isMobile ? 26 : 36, fontWeight: 800, letterSpacing: '-1.2px', lineHeight: 1.1, marginBottom: 18, color: 'var(--ytg-text)', textWrap: 'balance' }}>Scored against the videos <span style={{ color: 'var(--ytg-accent)' }}>actually winning in your niche.</span></h2>
-            <p style={{ fontSize: 14, color: 'var(--ytg-text-2)', lineHeight: 1.78, marginBottom: 28 }}>Two layers of analysis — a deterministic algorithm checking contrast, text clarity, face detection, and composition, then a vision model comparing it against top-performing videos in your exact niche. You get a score out of 100 and know exactly what to fix.</p>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.10)', borderRadius: 100, padding: '5px 12px 5px 10px', marginBottom: 16 }}>
+              <span aria-hidden="true" style={{ width: 6, height: 6, borderRadius: '50%', background: '#ff3b30', boxShadow: '0 0 0 3px rgba(229,48,42,0.18)' }} />
+              <span style={{ fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.7)', textTransform: 'uppercase', letterSpacing: '0.09em' }}>Thumbnail Intelligence</span>
+            </div>
+            <h2 style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: isMobile ? 28 : 40, fontWeight: 800, letterSpacing: '-1.4px', lineHeight: 1.08, marginBottom: 20, color: '#ffffff', textWrap: 'balance' }}>Scored against the videos <span style={{ color: '#ff3b30' }}>actually winning in your niche.</span></h2>
+            <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.58)', lineHeight: 1.72, marginBottom: 28 }}>Two layers of analysis — a deterministic algorithm checking contrast, text clarity, face detection, and composition, then a vision model comparing it against top-performing videos in your exact niche. You get a score out of 100 and know exactly what to fix.</p>
             {[
               'Layer 1 — algorithm, instant, free',
               'Layer 2 — YTGrowth vision vs real niche benchmarks',
               'Benchmarked by velocity, recency, and channel size bracket',
               'Full history — every thumbnail scored',
             ].map((t, i) => (
-              <FeatureBulletRow key={i}>{t}</FeatureBulletRow>
+              <FeatureBulletRow key={i} onDark>{t}</FeatureBulletRow>
             ))}
           </div>
           {/* Visual */}
-          <div style={{ background: '#ffffff', borderRadius: 20, boxShadow: 'var(--ytg-shadow-xl)', padding: 28 }}>
+          <div style={{ background: '#111114', borderRadius: 20, border: '1px solid rgba(255,255,255,0.09)', boxShadow: '0 8px 48px rgba(0,0,0,0.6)', padding: 28 }}>
             <div style={{ display: 'flex', alignItems: 'baseline', gap: 6, marginBottom: 20 }}>
-              <span style={{ fontSize: 52, fontWeight: 800, color: '#16a34a', letterSpacing: '-2px', lineHeight: 1 }}>74</span>
-              <span style={{ fontSize: 20, fontWeight: 400, color: 'var(--ytg-text-3)' }}>/100</span>
+              <span style={{ fontSize: 52, fontWeight: 800, color: '#4ade80', letterSpacing: '-2px', lineHeight: 1 }}>74</span>
+              <span style={{ fontSize: 20, fontWeight: 400, color: 'rgba(255,255,255,0.35)' }}>/100</span>
             </div>
             {[
               { label: 'Algorithm score', value: '42 / 60' },
               { label: 'Vision score',    value: '32 / 40' },
             ].map((row, i) => (
-              <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--ytg-border)', padding: '12px 0' }}>
-                <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--ytg-text-2)' }}>{row.label}</span>
-                <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--ytg-text)' }}>{row.value}</span>
+              <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(255,255,255,0.07)', padding: '12px 0' }}>
+                <span style={{ fontSize: 14, fontWeight: 600, color: 'rgba(255,255,255,0.6)' }}>{row.label}</span>
+                <span style={{ fontSize: 14, fontWeight: 600, color: '#ffffff' }}>{row.value}</span>
               </div>
             ))}
-            <div style={{ borderLeft: '3px solid #d97706', background: 'rgba(217,119,6,0.04)', borderRadius: 8, padding: '12px 14px', marginTop: 16 }}>
-              <p style={{ fontSize: 14, color: 'var(--ytg-text-2)' }}>Text too small for mobile — increase font weight or reduce to 4 words max.</p>
+            <div style={{ borderLeft: '3px solid var(--ytg-accent)', background: 'rgba(229,48,42,0.08)', borderRadius: 8, padding: '12px 16px', marginTop: 16 }}>
+              <p style={{ fontSize: 12, fontWeight: 700, color: '#ff3b30', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 6 }}>Priority fix</p>
+              <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.7)', lineHeight: 1.55 }}>Text too small for mobile — increase font weight or reduce to 4 words max.</p>
             </div>
-            <p style={{ fontSize: 12, color: 'var(--ytg-text-3)', marginTop: 12 }}>Top thumbnails in your niche average 81/100</p>
+            <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)', marginTop: 12 }}>Top thumbnails in your niche average 81/100</p>
           </div>
         </div>
       </div>
@@ -1246,9 +1251,12 @@ export default function Landing() {
           </div>
           {/* Text — right on desktop */}
           <div style={{ order: isMobile ? 0 : 1 }}>
-            <p style={{ fontSize: 12, fontWeight: 700, color: 'var(--ytg-accent-text)', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 12 }}>Automated Intelligence</p>
-            <h2 style={{ fontSize: isMobile ? 26 : 36, fontWeight: 800, letterSpacing: '-1.2px', lineHeight: 1.1, marginBottom: 18, color: 'var(--ytg-text)', textWrap: 'balance' }}>Your channel's weekly performance, <span style={{ color: 'var(--ytg-accent)' }}>in your inbox.</span></h2>
-            <p style={{ fontSize: 14, color: 'var(--ytg-text-2)', lineHeight: 1.78, marginBottom: 28 }}>Every week YTGrowth generates a performance report — key metrics, biggest win, what to watch out for, and one priority action. Sent automatically every week. Always in your dashboard even if you unsubscribe from email.</p>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#ffffff', border: '1px solid rgba(10,10,15,0.09)', borderRadius: 100, padding: '5px 12px 5px 10px', marginBottom: 16, boxShadow: '0 1px 2px rgba(10,10,15,0.04)' }}>
+              <span aria-hidden="true" style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--ytg-accent)', boxShadow: '0 0 0 3px rgba(229,48,42,0.12)' }} />
+              <span style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-text-2)', textTransform: 'uppercase', letterSpacing: '0.09em' }}>Automated Intelligence</span>
+            </div>
+            <h2 style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: isMobile ? 28 : 40, fontWeight: 800, letterSpacing: '-1.4px', lineHeight: 1.08, marginBottom: 20, color: 'var(--ytg-text)', textWrap: 'balance' }}>Your channel's weekly performance, <span style={{ color: 'var(--ytg-accent)' }}>in your inbox.</span></h2>
+            <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.72, marginBottom: 28 }}>Every week YTGrowth generates a performance report — key metrics, biggest win, what to watch out for, and one priority action. Sent automatically every week. Always in your dashboard even if you unsubscribe from email.</p>
             {[
               'Subscribers, views, retention, channel score',
               'Week-on-week delta on every metric',
