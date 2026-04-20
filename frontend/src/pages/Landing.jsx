@@ -1090,8 +1090,8 @@ export default function Landing() {
               <span aria-hidden="true" style={{ width: 6, height: 6, borderRadius: '50%', background: '#ff3b30', boxShadow: '0 0 0 3px rgba(229,48,42,0.18)' }} />
               <span style={{ fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.7)', textTransform: 'uppercase', letterSpacing: '0.09em' }}>Deep Channel Intelligence</span>
             </div>
-            <h2 style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: isMobile ? 26 : 36, fontWeight: 800, letterSpacing: '-1.2px', lineHeight: 1.1, marginBottom: 18, color: '#ffffff', textWrap: 'balance' }}>10 dimensions. <span style={{ color: '#ff3b30' }}>One brutal honest assessment.</span></h2>
-            <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.55)', lineHeight: 1.78, marginBottom: 28 }}>Most tools show you a score. YTGrowth shows you why — traffic sources, device breakdown, audience demographics, posting patterns, CTR health, retention, engagement quality, content strategy, SEO, and how you stack up against your actual competitors. All in one audit.</p>
+            <h2 style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: isMobile ? 28 : 40, fontWeight: 800, letterSpacing: '-1.4px', lineHeight: 1.08, marginBottom: 20, color: '#ffffff', textWrap: 'balance' }}>10 dimensions. <span style={{ color: '#ff3b30' }}>One brutal honest assessment.</span></h2>
+            <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.58)', lineHeight: 1.72, marginBottom: 28 }}>Most tools show you a score. YTGrowth shows you why — traffic sources, device breakdown, audience demographics, posting patterns, CTR health, retention, engagement quality, content strategy, SEO, and how you stack up against your actual competitors. All in one audit.</p>
             {[
               'Traffic source breakdown — search vs browse vs external',
               'Competitor benchmarking against channels in your niche',
@@ -1132,44 +1132,46 @@ export default function Landing() {
       </div>
 
       {/* Section 2 — Competitor Intelligence */}
-      <div className="section-animate" style={{ background: '#0d0d12', borderTop: '1px solid rgba(255,255,255,0.06)', borderBottom: '1px solid rgba(255,255,255,0.06)', padding: isMobile ? '60px 24px' : '100px 64px', position: 'relative', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 900, height: 700, background: 'radial-gradient(ellipse, rgba(229,48,42,0.18) 0%, transparent 65%)', pointerEvents: 'none' }} />
-        <div style={{ maxWidth: 1160, margin: '0 auto', display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? 40 : 80, alignItems: 'center', position: 'relative', zIndex: 1 }}>
+      <div className="section-animate" style={{ background: '#f4f4f6', borderTop: '1px solid rgba(10,10,15,0.08)', borderBottom: '1px solid rgba(10,10,15,0.08)', padding: isMobile ? '60px 24px' : '100px 64px' }}>
+        <div style={{ maxWidth: 1160, margin: '0 auto', display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? 40 : 80, alignItems: 'center' }}>
           {/* Visual — left on desktop */}
-          <div style={{ order: isMobile ? 1 : 0, background: '#111114', borderRadius: 20, border: '1px solid rgba(255,255,255,0.09)', boxShadow: '0 8px 48px rgba(0,0,0,0.6)', padding: 28 }}>
+          <div style={{ order: isMobile ? 1 : 0, background: '#ffffff', borderRadius: 20, border: '1px solid rgba(10,10,15,0.07)', boxShadow: 'var(--ytg-shadow-xl)', padding: 28 }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                <div style={{ width: 40, height: 40, borderRadius: '50%', background: 'rgba(255,255,255,0.08)', border: '2px solid rgba(255,255,255,0.14)', flexShrink: 0 }} />
+                <div style={{ width: 40, height: 40, borderRadius: '50%', background: 'rgba(10,10,15,0.05)', border: '2px solid rgba(10,10,15,0.08)', flexShrink: 0 }} />
                 <div>
-                  <p style={{ fontSize: 14, fontWeight: 700, color: '#ffffff' }}>TechCreator Pro</p>
-                  <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)' }}>142K subscribers</p>
+                  <p style={{ fontSize: 14, fontWeight: 700, color: 'var(--ytg-text)' }}>TechCreator Pro</p>
+                  <p style={{ fontSize: 12, color: 'var(--ytg-text-3)' }}>142K subscribers</p>
                 </div>
               </div>
-              <span style={{ background: 'rgba(229,48,42,0.22)', color: '#ff3b30', fontSize: 12, fontWeight: 700, padding: '3px 10px', borderRadius: 20, border: '1px solid rgba(229,48,42,0.45)' }}>HIGH</span>
+              <span style={{ background: 'rgba(229,48,42,0.08)', color: 'var(--ytg-accent)', fontSize: 12, fontWeight: 700, padding: '3px 10px', borderRadius: 20, border: '1px solid rgba(229,48,42,0.25)' }}>HIGH</span>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: 16 }}>
-              <div style={{ borderLeft: '3px solid #f59e0b', background: 'rgba(217,119,6,0.10)', borderRadius: 8, padding: '12px 14px' }}>
-                <p style={{ fontSize: 12, fontWeight: 700, color: '#f59e0b', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 4 }}>Content Gap</p>
-                <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.58)' }}>Tutorial content — 0 videos in last 90 days</p>
+              <div style={{ borderLeft: '3px solid #d97706', background: 'rgba(217,119,6,0.05)', borderRadius: 8, padding: '12px 14px' }}>
+                <p style={{ fontSize: 12, fontWeight: 700, color: '#b45309', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 4 }}>Content Gap</p>
+                <p style={{ fontSize: 14, color: 'var(--ytg-text-2)', lineHeight: 1.55 }}>Tutorial content — 0 videos in last 90 days</p>
               </div>
-              <div style={{ borderLeft: '3px solid #4ade80', background: 'rgba(22,163,74,0.10)', borderRadius: 8, padding: '12px 14px' }}>
-                <p style={{ fontSize: 12, fontWeight: 700, color: '#4ade80', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 4 }}>Title Opportunity</p>
-                <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.58)' }}>How to [niche topic] in 2026 (Step by Step) — avg 84K views for this format in your niche</p>
+              <div style={{ borderLeft: '3px solid #16a34a', background: 'rgba(22,163,74,0.05)', borderRadius: 8, padding: '12px 14px' }}>
+                <p style={{ fontSize: 12, fontWeight: 700, color: '#15803d', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 4 }}>Title Opportunity</p>
+                <p style={{ fontSize: 14, color: 'var(--ytg-text-2)', lineHeight: 1.55 }}>How to [niche topic] in 2026 (Step by Step) — avg 84K views for this format in your niche</p>
               </div>
             </div>
           </div>
           {/* Text — right on desktop */}
           <div style={{ order: isMobile ? 0 : 1 }}>
-            <p style={{ fontSize: 12, fontWeight: 700, color: '#ff3b30', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 12 }}>Competitive Edge</p>
-            <h2 style={{ fontSize: isMobile ? 26 : 36, fontWeight: 800, letterSpacing: '-1.2px', lineHeight: 1.1, marginBottom: 18, color: '#ffffff', textWrap: 'balance' }}>Find the gaps your competitors <span style={{ color: '#ff3b30' }}>leave open.</span></h2>
-            <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.55)', lineHeight: 1.78, marginBottom: 28 }}>Connect a competitor channel and YTGrowth maps exactly what topics they ignore, which title patterns drive their views, and where their audience is underserved. Then tells you how to own those gaps.</p>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#ffffff', border: '1px solid rgba(10,10,15,0.09)', borderRadius: 100, padding: '5px 12px 5px 10px', marginBottom: 16, boxShadow: '0 1px 2px rgba(10,10,15,0.04)' }}>
+              <span aria-hidden="true" style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--ytg-accent)', boxShadow: '0 0 0 3px rgba(229,48,42,0.12)' }} />
+              <span style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-text-2)', textTransform: 'uppercase', letterSpacing: '0.09em' }}>Competitive Edge</span>
+            </div>
+            <h2 style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: isMobile ? 28 : 40, fontWeight: 800, letterSpacing: '-1.4px', lineHeight: 1.08, marginBottom: 20, color: 'var(--ytg-text)', textWrap: 'balance' }}>Find the gaps your competitors <span style={{ color: 'var(--ytg-accent)' }}>leave open.</span></h2>
+            <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.72, marginBottom: 28 }}>Connect a competitor channel and YTGrowth maps exactly what topics they ignore, which title patterns drive their views, and where their audience is underserved. Then shows you how to own those gaps.</p>
             {[
               'Topic gap analysis from real video data',
               'Title pattern and keyword extraction',
               'Threat level assessment per competitor',
               'Ready-to-use video ideas from gap analysis',
             ].map((t, i) => (
-              <FeatureBulletRow key={i} onDark>{t}</FeatureBulletRow>
+              <FeatureBulletRow key={i}>{t}</FeatureBulletRow>
             ))}
           </div>
         </div>
