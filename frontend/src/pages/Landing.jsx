@@ -340,6 +340,17 @@ function FeatureBulletRow({ onDark = false, children }) {
   )
 }
 
+/* ─── Stats bar icon ────────────────────────────────────────────────────── */
+function StatIcon({ name }) {
+  const p = { width: 18, height: 18, viewBox: '0 0 24 24', fill: 'none', stroke: 'var(--ytg-accent)', strokeWidth: 1.85, strokeLinecap: 'round', strokeLinejoin: 'round' }
+  if (name === 'layers')   return <svg {...p}><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+  if (name === 'target')   return <svg {...p}><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+  if (name === 'image')    return <svg {...p}><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+  if (name === 'calendar') return <svg {...p}><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+  if (name === 'grid')     return <svg {...p}><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+  return null
+}
+
 /* ─── Arrow icon ────────────────────────────────────────────────────────── */
 function Arrow() {
   return (
@@ -640,7 +651,7 @@ export default function Landing() {
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
           <Logo size={28} />
-          <span style={{ fontWeight: 800, fontSize: 14, lineHeight: 1, letterSpacing: '-0.4px', color: '#0a0a0f' }}>YTGrowth<span style={{ color: 'var(--ytg-accent)' }}>.io</span></span>
+          <span style={{ fontWeight: 800, fontSize: 14, lineHeight: 1, letterSpacing: '-0.4px', color: '#0a0a0f' }}>YTGrowth</span>
         </div>
 
         {!isMobile && (
@@ -790,91 +801,136 @@ export default function Landing() {
           </div>
         )}
 
-        {/* Dashboard mockup */}
+        {/* Dashboard mockup — mirrors the real Overview tab so visitors see exactly what they get */}
         <div style={{ maxWidth: 1280, margin: '72px auto 0', position: 'relative', display: isMobile ? 'none' : 'block', padding: '32px 36px', boxSizing: 'content-box', animation: 'floatA 7s ease-in-out infinite' }}>
           <div style={{
-            background: '#111114', border: '1px solid rgba(255,255,255,0.09)',
+            background: '#0f0f14', border: '1px solid rgba(255,255,255,0.09)',
             borderRadius: 22, overflow: 'hidden',
             boxShadow: '0 48px 120px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.04)',
           }}>
             {/* Browser chrome */}
             <div style={{ background: 'rgba(255,255,255,0.03)', borderBottom: '1px solid rgba(255,255,255,0.07)', padding: '13px 18px', display: 'flex', alignItems: 'center', gap: 8 }}>
               {['#FF5F57', '#FEBC2E', '#28C840'].map((c, i) => <div key={i} style={{ width: 10, height: 10, borderRadius: '50%', background: c, opacity: 0.65 }} />)}
-              <div style={{ background: 'rgba(255,255,255,0.06)', borderRadius: 7, padding: '5px 14px', fontSize: 12, color: 'rgba(255,255,255,0.25)', marginLeft: 10, maxWidth: 300, fontFamily: 'monospace', letterSpacing: '-0.2px' }}>ytgrowth.io/dashboard</div>
+              <div style={{ background: 'rgba(255,255,255,0.06)', borderRadius: 7, padding: '5px 14px', fontSize: 12, color: 'rgba(255,255,255,0.3)', marginLeft: 10, maxWidth: 320, fontFamily: 'monospace', letterSpacing: '-0.2px' }}>ytgrowth.io/dashboard</div>
             </div>
 
             {/* Mock dashboard content */}
-            <div style={{ padding: '20px 22px', display: 'grid', gridTemplateColumns: '220px 1fr', gap: 16, minHeight: 360 }}>
+            <div style={{ padding: '22px 24px', display: 'flex', flexDirection: 'column', gap: 14 }}>
 
-              {/* Sidebar */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-
-                {/* Channel health card */}
-                <div style={{ background: '#1c1c22', border: '1px solid rgba(255,255,255,0.07)', borderRadius: 14, padding: '16px 18px' }}>
-                  <p style={{ fontSize: 12, fontWeight: 700, color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase', letterSpacing: '0.8px', marginBottom: 16 }}>Channel health</p>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-                    {/* Donut */}
-                    <div style={{ position: 'relative', flexShrink: 0 }}>
-                      <svg width="60" height="60" viewBox="0 0 60 60">
-                        <circle cx="30" cy="30" r="22" fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="6" />
-                        <circle cx="30" cy="30" r="22" fill="none" stroke="#e5302a" strokeWidth="6" strokeDasharray="62 138" strokeLinecap="round" transform="rotate(-90 30 30)" />
-                      </svg>
-                      <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <span style={{ fontSize: 14, fontWeight: 800, color: '#ffffff', letterSpacing: '-0.5px' }}>45</span>
-                      </div>
-                    </div>
-                    <div>
-                      <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.45)', marginBottom: 6, lineHeight: 1.4 }}>Score out of 100</div>
-                      <div style={{ display: 'inline-flex', alignItems: 'center', gap: 5, background: 'rgba(229,48,42,0.15)', border: '1px solid rgba(229,48,42,0.3)', borderRadius: 100, padding: '3px 10px' }}>
-                        <div style={{ width: 5, height: 5, borderRadius: '50%', background: '#e5302a', flexShrink: 0 }} />
-                        <span style={{ fontSize: 12, fontWeight: 700, color: '#ff6b63', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Critical</span>
-                      </div>
-                    </div>
+              {/* ── Channel header strip ─────────────────────────────────── */}
+              <div style={{
+                display: 'flex', alignItems: 'center', gap: 18,
+                padding: '14px 18px',
+                background: '#16161c',
+                border: '1px solid rgba(255,255,255,0.07)',
+                borderRadius: 14,
+              }}>
+                {/* Avatar */}
+                <div style={{
+                  width: 46, height: 46, borderRadius: '50%',
+                  background: 'linear-gradient(135deg, #ff3b30 0%, #a50f07 100%)',
+                  flexShrink: 0,
+                  boxShadow: '0 0 0 2px #0f0f14, 0 0 0 4px rgba(255,59,48,0.6), 0 0 18px rgba(255,59,48,0.35)',
+                }}/>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <p style={{ fontSize: 14, fontWeight: 700, color: '#ffffff', letterSpacing: '-0.2px' }}>Your Channel</p>
+                  <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.45)', marginTop: 2 }}>4,284 subscribers · 187K total views</p>
+                </div>
+                {/* Score ring */}
+                <div style={{ position: 'relative', flexShrink: 0 }}>
+                  <svg width="58" height="58" viewBox="0 0 58 58">
+                    <circle cx="29" cy="29" r="23" fill="none" stroke="rgba(255,255,255,0.07)" strokeWidth="5"/>
+                    <circle cx="29" cy="29" r="23" fill="none" stroke="#4ade80" strokeWidth="5" strokeDasharray="104 145" strokeLinecap="round" transform="rotate(-90 29 29)"/>
+                  </svg>
+                  <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <span style={{ fontSize: 15, fontWeight: 800, color: '#ffffff', letterSpacing: '-0.5px' }}>72</span>
                   </div>
                 </div>
-
-                {/* Metric grid */}
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6 }}>
-                  {[
-                    { l: 'Avg views', v: '980',    color: '#ff6b63' },
-                    { l: 'Retention', v: '55.6%',  color: '#4ade80' },
-                    { l: 'Duration',  v: '0m 38s', color: '#ff6b63' },
-                    { l: 'Net subs',  v: '−1',     color: '#ff6b63' },
-                  ].map((m, i) => (
-                    <div key={i} style={{ background: '#1c1c22', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 10, padding: '10px 12px' }}>
-                      <p style={{ fontSize: 12, fontWeight: 600, color: 'rgba(255,255,255,0.28)', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: 5 }}>{m.l}</p>
-                      <p style={{ fontSize: 16, fontWeight: 800, color: m.color, letterSpacing: '-0.5px', fontVariantNumeric: 'tabular-nums' }}>{m.v}</p>
-                    </div>
-                  ))}
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 4 }}>
+                  <span style={{ fontSize: 10, fontWeight: 700, color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase', letterSpacing: '0.12em' }}>Health</span>
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, background: 'rgba(74,222,128,0.14)', border: '1px solid rgba(74,222,128,0.28)', borderRadius: 999, padding: '3px 9px' }}>
+                    <span style={{ width: 5, height: 5, borderRadius: '50%', background: '#4ade80', boxShadow: '0 0 6px #4ade80' }}/>
+                    <span style={{ fontSize: 10.5, fontWeight: 700, color: '#4ade80', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Healthy</span>
+                  </span>
                 </div>
               </div>
 
-              {/* Action plan */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                <p style={{ fontSize: 12, fontWeight: 700, color: 'rgba(255,255,255,0.28)', textTransform: 'uppercase', letterSpacing: '0.8px', marginBottom: 4 }}>Your action plan</p>
+              {/* ── Stat cards row ───────────────────────────────────────── */}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 10 }}>
                 {[
-                  { accent: '#e5302a', label: 'Critical', t: 'Watch time is critically short',  desc: 'Avg watch time is 38s — hook viewers in the first 15 seconds.',     fix: 'Rewrite your openings with a strong hook.' },
-                  { accent: '#f59e0b', label: 'High',     t: 'Upload frequency too low',         desc: 'You post 0.5× per week vs 2–3× for top channels in your niche.',   fix: 'Commit to 1 upload per week minimum.'       },
-                  { accent: '#4ade80', label: 'Good',     t: 'Retention above niche average',    desc: '55.6% vs 48% niche average — your content holds attention well.',   fix: 'Keep using your current editing style.'     },
-                ].map((item, i) => (
-                  <div key={i} style={{ background: '#1c1c22', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 12, overflow: 'hidden', flex: 1 }}>
-                    <div style={{ display: 'flex', alignItems: 'stretch', height: '100%' }}>
-                      <div style={{ width: 3, background: item.accent, flexShrink: 0, borderRadius: '12px 0 0 12px' }} />
-                      <div style={{ padding: '12px 14px', flex: 1 }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 5 }}>
-                          <p style={{ fontSize: 12, fontWeight: 700, color: '#ffffff', lineHeight: 1.3 }}>{item.t}</p>
-                          <span style={{ fontSize: 12, fontWeight: 700, color: item.accent, background: `${item.accent}18`, border: `1px solid ${item.accent}35`, padding: '2px 8px', borderRadius: 100, flexShrink: 0, marginLeft: 10, textTransform: 'uppercase', letterSpacing: '0.05em', whiteSpace: 'nowrap' }}>{item.label}</span>
-                        </div>
-                        <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.38)', lineHeight: 1.55, marginBottom: 7 }}>{item.desc}</p>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                          <span style={{ fontSize: 12, fontWeight: 700, color: item.accent }}>→</span>
-                          <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.55)', fontWeight: 500 }}>{item.fix}</span>
-                        </div>
-                      </div>
-                    </div>
+                  { label: 'Subscribers',   value: '4.2K',  delta: '+124 this week',  good: true },
+                  { label: 'Weekly views',  value: '8.2K',  delta: '+12% vs last',    good: true },
+                  { label: 'Avg retention', value: '55.6%', delta: 'Above 48% niche', good: true },
+                  { label: 'Channel score', value: '72',    suffix: '/100', delta: '↑ 14 pts this month', good: true },
+                ].map((m, i) => (
+                  <div key={i} style={{
+                    background: '#16161c',
+                    border: '1px solid rgba(255,255,255,0.07)',
+                    borderRadius: 12,
+                    padding: '13px 15px',
+                  }}>
+                    <p style={{ fontSize: 10, fontWeight: 600, color: 'rgba(255,255,255,0.38)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 9 }}>{m.label}</p>
+                    <p style={{ fontSize: 22, fontWeight: 800, color: '#ffffff', letterSpacing: '-1px', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>
+                      {m.value}
+                      {m.suffix && <span style={{ fontSize: 13, color: 'rgba(255,255,255,0.35)', fontWeight: 500, marginLeft: 1 }}>{m.suffix}</span>}
+                    </p>
+                    <p style={{ fontSize: 11, fontWeight: 500, color: m.good ? '#4ade80' : '#ff6b63', marginTop: 7, letterSpacing: '-0.1px' }}>
+                      {!m.delta.startsWith('↑') && !m.delta.startsWith('↓') && (m.good ? '↑ ' : '↓ ')}{m.delta}
+                    </p>
                   </div>
                 ))}
               </div>
+
+              {/* ── Priority action card — the signature 3-column layout ─ */}
+              <div style={{
+                background: '#16161c',
+                border: '1px solid rgba(255,255,255,0.07)',
+                borderTop: '3px solid #f59e0b',
+                borderRadius: 12,
+                padding: '14px 18px 16px',
+              }}>
+                {/* Header row */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 13 }}>
+                  <div style={{
+                    width: 24, height: 24, borderRadius: 7,
+                    background: '#f59e0b',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    flexShrink: 0,
+                  }}>
+                    <span style={{ fontSize: 11, fontWeight: 900, color: '#0a0a0f' }}>1</span>
+                  </div>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <p style={{ fontSize: 9.5, fontWeight: 700, color: '#f59e0b', letterSpacing: '0.09em', textTransform: 'uppercase', marginBottom: 3 }}>Content Strategy</p>
+                    <p style={{ fontSize: 13, fontWeight: 700, color: '#ffffff', lineHeight: 1.4, letterSpacing: '-0.1px' }}>Watch time is critically short — rewrite your openings to hook viewers in the first 15 seconds.</p>
+                  </div>
+                  <span style={{
+                    fontSize: 10, fontWeight: 700, color: '#f59e0b',
+                    border: '1.5px solid #f59e0b', padding: '3px 9px',
+                    borderRadius: 999, letterSpacing: '0.06em', textTransform: 'uppercase',
+                    flexShrink: 0,
+                  }}>HIGH</span>
+                </div>
+
+                {/* Divider */}
+                <div style={{ height: 1, background: 'rgba(255,255,255,0.06)', marginBottom: 11, marginLeft: 36 }}/>
+
+                {/* 3-column grid */}
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr 1fr', gap: 6, marginLeft: 36 }}>
+                  <div style={{ background: 'rgba(79,134,247,0.1)', border: '1px solid rgba(79,134,247,0.18)', borderRadius: 8, padding: '9px 11px' }}>
+                    <p style={{ fontSize: 9, fontWeight: 700, color: '#6b96ff', letterSpacing: '0.09em', textTransform: 'uppercase', marginBottom: 5 }}>Why now</p>
+                    <p style={{ fontSize: 11.5, color: 'rgba(255,255,255,0.78)', lineHeight: 1.5 }}>Avg watch is 38s vs 2:30 niche — viewers bail in the first 15 seconds.</p>
+                  </div>
+                  <div style={{ background: '#1d1d24', border: '1px solid rgba(255,255,255,0.09)', borderLeft: '3px solid #f59e0b', borderRadius: '0 8px 8px 0', padding: '9px 12px', boxShadow: '0 2px 10px rgba(0,0,0,0.35)' }}>
+                    <p style={{ fontSize: 9, fontWeight: 700, color: '#f59e0b', letterSpacing: '0.09em', textTransform: 'uppercase', marginBottom: 5 }}>Action</p>
+                    <p style={{ fontSize: 11.5, color: 'rgba(255,255,255,0.9)', lineHeight: 1.5 }}>Cold-open hook — drop the intro, lead with the most visual moment or the payoff question.</p>
+                  </div>
+                  <div style={{ background: 'rgba(74,222,128,0.1)', border: '1px solid rgba(74,222,128,0.2)', borderRadius: 8, padding: '9px 11px' }}>
+                    <p style={{ fontSize: 9, fontWeight: 700, color: '#4ade80', letterSpacing: '0.09em', textTransform: 'uppercase', marginBottom: 5 }}>Expected outcome</p>
+                    <p style={{ fontSize: 11.5, color: 'rgba(255,255,255,0.78)', lineHeight: 1.5 }}>+40% watch time in 3 weeks. Algorithm begins promoting the channel again.</p>
+                  </div>
+                </div>
+              </div>
+
             </div>
           </div>
 
@@ -909,30 +965,41 @@ export default function Landing() {
       </div>
 
       {/* ── STATS BAR ───────────────────────────────────────────────────── */}
-      <div className="section-animate" style={{ background: '#e8e9ee', borderTop: '1px solid rgba(10,10,15,0.06)', borderBottom: '1px solid rgba(10,10,15,0.10)', boxShadow: '0 4px 20px rgba(0,0,0,0.07)', position: 'relative', zIndex: 1, padding: isMobile ? '36px 24px' : '40px 64px' }}>
+      <div className="section-animate" style={{ background: '#e8e9ee', borderTop: '1px solid rgba(10,10,15,0.06)', borderBottom: '1px solid rgba(10,10,15,0.10)', boxShadow: '0 4px 20px rgba(0,0,0,0.07)', position: 'relative', zIndex: 1, padding: isMobile ? '44px 24px' : '56px 64px' }}>
         <div style={{
           display: 'grid',
           gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(5, 1fr)',
           maxWidth: 1280, margin: '0 auto',
+          gap: isMobile ? 6 : 0,
         }}>
           {[
-            ['10',       'Audit dimensions'],
-            ['3',        'Competitor benchmarks'],
-            ['2-layer',  'Thumbnail scoring'],
-            ['Weekly',   'Automated reports'],
-            ['7+',       'Core growth tools'],
-          ].map(([stat, label], i) => (
+            { stat: '10',      label: 'Audit dimensions',    icon: 'layers' },
+            { stat: '3',       label: 'Competitor benchmarks', icon: 'target' },
+            { stat: '2-layer', label: 'Thumbnail scoring',   icon: 'image' },
+            { stat: 'Weekly',  label: 'Automated reports',   icon: 'calendar' },
+            { stat: '7+',      label: 'Core growth tools',   icon: 'grid' },
+          ].map(({ stat, label, icon }, i) => (
             <div key={i} style={{
               display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-              padding: isMobile ? '16px 8px' : '0 24px',
+              padding: isMobile ? '18px 8px' : '6px 24px',
               borderRight: isMobile
                 ? (i % 2 === 0 && i !== 4 ? '1px solid rgba(10,10,15,0.08)' : 'none')
                 : (i < 4 ? '1px solid rgba(10,10,15,0.08)' : 'none'),
               gridColumn: isMobile && i === 4 ? '1 / -1' : undefined,
               borderTop: isMobile && i >= 2 ? '1px solid rgba(10,10,15,0.08)' : 'none',
             }}>
-              <span style={{ fontSize: 28, fontWeight: 800, color: 'var(--ytg-accent)', lineHeight: 1, marginBottom: 6 }}>{stat}</span>
-              <span style={{ fontSize: 12, fontWeight: 500, color: 'var(--ytg-text-3)', textTransform: 'uppercase', letterSpacing: '0.07em', textAlign: 'center' }}>{label}</span>
+              {/* Icon pill */}
+              <span style={{
+                display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                width: 36, height: 36, borderRadius: 10,
+                background: 'rgba(229,37,27,0.09)',
+                border: '1px solid rgba(229,37,27,0.18)',
+                marginBottom: 12,
+              }}>
+                <StatIcon name={icon}/>
+              </span>
+              <span style={{ fontSize: 28, fontWeight: 800, color: 'var(--ytg-accent)', lineHeight: 1, letterSpacing: '-0.6px', marginBottom: 6 }}>{stat}</span>
+              <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--ytg-text-3)', textTransform: 'uppercase', letterSpacing: '0.08em', textAlign: 'center' }}>{label}</span>
             </div>
           ))}
         </div>
@@ -1630,10 +1697,10 @@ export default function Landing() {
         <div style={{ maxWidth: 1280, margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexDirection: isMobile ? 'column' : 'row', gap: isMobile ? 20 : 0, textAlign: isMobile ? 'center' : 'left' }}>
           <a href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 9 }}>
             <Logo size={26} />
-            <span style={{ fontWeight: 800, fontSize: 14, color: '#ffffff', letterSpacing: '-0.4px' }}>YTGrowth<span style={{ color: '#ff3b30' }}>.io</span></span>
+            <span style={{ fontWeight: 800, fontSize: 14, color: '#ffffff', letterSpacing: '-0.4px' }}>YTGrowth</span>
           </a>
           <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.32)' }}>Built for creators serious about growth.</p>
-          <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.22)' }}>© 2026 YTGrowth.io. All rights reserved.</p>
+          <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.22)' }}>© 2026 YTGrowth. All rights reserved.</p>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: isMobile ? '12px 20px' : 28, justifyContent: isMobile ? 'center' : 'flex-end' }}>
             {[
               { label: 'Privacy policy',   href: '/privacy' },
