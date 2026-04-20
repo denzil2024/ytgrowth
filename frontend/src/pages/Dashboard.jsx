@@ -194,12 +194,12 @@ const MILESTONE_PLURAL = {
   uploads:     'videos',
 }
 
-// Metallic tier palette — derived from position of tier within its category ladder.
+// Vivid metallic tier palette — radial gradients give true 3D metallic sheen.
 const METAL = {
-  bronze:   { ring: 'linear-gradient(135deg, #e6a872 0%, #b87333 50%, #8b5a2b 100%)', chip: '#b87333', chipBg: '#fff4ec', chipBdr: '#f0c8a3', ink: '#7a4919' },
-  silver:   { ring: 'linear-gradient(135deg, #e8eaed 0%, #b4b8bc 50%, #7a7f85 100%)', chip: '#8a8f95', chipBg: '#f5f6f8', chipBdr: '#d4d7dc', ink: '#4a4e54' },
-  gold:     { ring: 'linear-gradient(135deg, #f5d565 0%, #d4af37 50%, #a07a10 100%)', chip: '#c99b15', chipBg: '#fff9e5', chipBdr: '#f0dc91', ink: '#7a5c0a' },
-  platinum: { ring: 'linear-gradient(135deg, #dfe6ed 0%, #9ca3af 50%, #4b5563 100%)', chip: '#4b5563', chipBg: '#f3f4f6', chipBdr: '#cbd1d9', ink: '#1f2937' },
+  bronze:   { highlight: '#ffcfa0', mid: '#e28a3f', deep: '#8b4a13', shadow: '#5c2e08', ribbon: '#6b3712', ink: '#6b3712' },
+  silver:   { highlight: '#ffffff', mid: '#c8ccd1', deep: '#6d7378', shadow: '#3a4046', ribbon: '#4a5056', ink: '#3a4046' },
+  gold:     { highlight: '#fff2a8', mid: '#f1c61f', deep: '#a07500', shadow: '#5a4100', ribbon: '#7a5700', ink: '#5a4100' },
+  platinum: { highlight: '#f8fafc', mid: '#a8b2c4', deep: '#4b5563', shadow: '#252d38', ribbon: '#374151', ink: '#252d38' },
 }
 
 function tierMetal(category, tier) {
@@ -211,6 +211,81 @@ function tierMetal(category, tier) {
   if (pct < 0.51) return METAL.silver
   if (pct < 0.85) return METAL.gold
   return METAL.platinum
+}
+
+function StarBadge({ category, tier, size = 108 }) {
+  const metal = tierMetal(category, tier)
+  const gid = `grad-${category}-${tier}`.replace(/\W/g, '')
+  const s = size
+  const cx = s / 2
+  const cy = s / 2
+  // Scale 5-point star path to fit size
+  const pts = [
+    [60, 8], [73, 44], [112, 44], [80, 68], [92, 104],
+    [60, 82], [28, 104], [40, 68], [8, 44], [47, 44],
+  ].map(([x, y]) => `${(x / 120) * s},${(y / 120) * s}`).join(' ')
+  return (
+    <div style={{ position: 'relative', width: s, height: s, margin: '0 auto' }}>
+      <svg width={s} height={s} viewBox={`0 0 ${s} ${s}`} style={{ filter: 'drop-shadow(0 4px 10px rgba(0,0,0,0.22))' }}>
+        <defs>
+          <radialGradient id={gid} cx="38%" cy="32%" r="68%">
+            <stop offset="0%"  stopColor={metal.highlight}/>
+            <stop offset="55%" stopColor={metal.mid}/>
+            <stop offset="100%" stopColor={metal.deep}/>
+          </radialGradient>
+        </defs>
+        <polygon
+          points={pts}
+          fill={`url(#${gid})`}
+          stroke={metal.shadow}
+          strokeWidth="1.25"
+          strokeLinejoin="round"
+        />
+        <circle cx={cx} cy={cy * 0.97} r={s * 0.18} fill="rgba(255,255,255,0.96)"/>
+      </svg>
+      <div style={{
+        position: 'absolute', top: 0, left: 0, width: s, height: s,
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        pointerEvents: 'none',
+      }}>
+        <div style={{ marginTop: -s * 0.03 }}>
+          <MilestoneIcon category={category} color={metal.ink} size={s * 0.24}/>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function TierRibbon({ tier, metal }) {
+  return (
+    <div style={{
+      display: 'inline-flex', alignItems: 'center',
+      background: `linear-gradient(180deg, ${metal.ribbon} 0%, ${metal.shadow} 100%)`,
+      color: '#fff',
+      fontSize: 12.5, fontWeight: 800,
+      padding: '5px 14px',
+      borderRadius: 3,
+      letterSpacing: '-0.1px',
+      fontVariantNumeric: 'tabular-nums',
+      boxShadow: '0 2px 5px rgba(0,0,0,0.22), inset 0 1px 0 rgba(255,255,255,0.2)',
+      position: 'relative',
+      marginTop: -8,
+    }}>
+      <span style={{
+        position: 'absolute', left: -6, top: 0, bottom: 0, width: 0, height: '100%',
+        borderRight: `6px solid ${metal.shadow}`,
+        borderTop: '6px solid transparent',
+        borderBottom: '6px solid transparent',
+      }}/>
+      <span style={{
+        position: 'absolute', right: -6, top: 0, bottom: 0, width: 0, height: '100%',
+        borderLeft: `6px solid ${metal.shadow}`,
+        borderTop: '6px solid transparent',
+        borderBottom: '6px solid transparent',
+      }}/>
+      {fmtNum(tier)}
+    </div>
+  )
 }
 
 function MilestoneIcon({ category, color = '#4a4a58', size = 26 }) {
@@ -1284,13 +1359,14 @@ export default function Dashboard() {
                 </p>
               </div>
 
-              <div className="ytg-card" style={{ padding: '32px 32px 30px' }}>
+              <div className="ytg-card" style={{
+                padding: '36px 32px 24px',
+                background: 'linear-gradient(180deg, #fbfaf6 0%, #ffffff 50%, #ffffff 100%)',
+              }}>
                 {milestones.earned.length === 0 ? (
-                  <div style={{ padding: '12px 0 24px', display: 'flex', alignItems: 'center', gap: 16 }}>
-                    <div style={{ width: 56, height: 56, borderRadius: '50%', background: METAL.bronze.ring, display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: 0.35 }}>
-                      <div style={{ width: 42, height: 42, borderRadius: '50%', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <MilestoneIcon category="subs" color={C.text3} size={20}/>
-                      </div>
+                  <div style={{ padding: '12px 0 24px', display: 'flex', alignItems: 'center', gap: 18 }}>
+                    <div style={{ opacity: 0.5 }}>
+                      <StarBadge category="subs" tier={100} size={76}/>
                     </div>
                     <p style={{ fontSize: 14, color: C.text2, lineHeight: 1.6 }}>
                       No badges yet — your first milestone is just around the corner. Keep shipping.
@@ -1298,55 +1374,26 @@ export default function Dashboard() {
                   </div>
                 ) : (
                   <>
-                    <p style={{ fontSize: 10.5, fontWeight: 700, color: C.text3, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 24 }}>Earned</p>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: 24, marginBottom: milestones.upcoming.length > 0 ? 36 : 0 }}>
+                    <p style={{ fontSize: 10.5, fontWeight: 700, color: C.text3, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 28 }}>Earned</p>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))', gap: 28, marginBottom: milestones.upcoming.length > 0 ? 40 : 8 }}>
                       {milestones.earned.map(b => {
                         const metal = tierMetal(b.category, b.tier)
                         const plural = MILESTONE_PLURAL[b.category] || b.category
                         return (
                           <div key={`${b.category}-${b.tier}`} style={{
                             textAlign: 'center',
-                            padding: '8px 4px',
-                            transition: 'transform 0.2s',
+                            padding: '4px 4px',
+                            transition: 'transform 0.2s ease',
                             cursor: 'default',
                           }}
-                            onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-3px)' }}
+                            onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-4px) scale(1.02)' }}
                             onMouseLeave={e => { e.currentTarget.style.transform = 'none' }}
                           >
-                            {/* Medal */}
-                            <div style={{
-                              width: 88, height: 88, margin: '0 auto 14px',
-                              borderRadius: '50%',
-                              background: metal.ring,
-                              display: 'flex', alignItems: 'center', justifyContent: 'center',
-                              boxShadow: `0 6px 18px ${metal.chip}40, inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -2px 0 rgba(0,0,0,0.12)`,
-                              position: 'relative',
-                            }}>
-                              <div style={{
-                                width: 68, height: 68, borderRadius: '50%',
-                                background: '#fff',
-                                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.06), 0 1px 1px rgba(255,255,255,0.9)',
-                              }}>
-                                <MilestoneIcon category={b.category} color={metal.ink} size={28}/>
-                              </div>
+                            <StarBadge category={b.category} tier={b.tier} size={108}/>
+                            <div style={{ marginTop: -6, display: 'flex', justifyContent: 'center' }}>
+                              <TierRibbon tier={b.tier} metal={metal}/>
                             </div>
-
-                            {/* Tier chip */}
-                            <div style={{
-                              display: 'inline-block',
-                              background: metal.chipBg,
-                              border: `1px solid ${metal.chipBdr}`,
-                              color: metal.ink,
-                              fontSize: 13, fontWeight: 800,
-                              padding: '4px 12px', borderRadius: 999,
-                              letterSpacing: '-0.2px',
-                              fontVariantNumeric: 'tabular-nums',
-                              marginBottom: 6,
-                            }}>{fmtNum(b.tier)}</div>
-
-                            {/* Category label */}
-                            <p style={{ fontSize: 12, fontWeight: 600, color: C.text3, textTransform: 'capitalize', letterSpacing: '-0.1px' }}>{plural}</p>
+                            <p style={{ fontSize: 12, fontWeight: 600, color: C.text3, textTransform: 'capitalize', letterSpacing: '-0.1px', marginTop: 12 }}>{plural}</p>
                           </div>
                         )
                       })}
@@ -1357,43 +1404,32 @@ export default function Dashboard() {
                 {milestones.upcoming.length > 0 && (
                   <>
                     {milestones.earned.length > 0 && <div style={{ height: 1, background: '#eeeef3', margin: '0 0 28px' }}/>}
-                    <p style={{ fontSize: 10.5, fontWeight: 700, color: C.text3, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 20 }}>Next up</p>
+                    <p style={{ fontSize: 10.5, fontWeight: 700, color: C.text3, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 22 }}>Next up</p>
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 24 }}>
                       {milestones.upcoming.map(u => {
                         const metal = tierMetal(u.category, u.tier)
                         const plural = MILESTONE_PLURAL[u.category] || u.category
                         return (
-                          <div key={`next-${u.category}`}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 12 }}>
-                              {/* Dimmed mini medal */}
-                              <div style={{
-                                width: 40, height: 40, borderRadius: '50%',
-                                background: metal.ring,
-                                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                flexShrink: 0, opacity: 0.55,
-                                boxShadow: `inset 0 1px 0 rgba(255,255,255,0.5), inset 0 -1px 0 rgba(0,0,0,0.1)`,
-                              }}>
-                                <div style={{ width: 30, height: 30, borderRadius: '50%', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                  <MilestoneIcon category={u.category} color={metal.ink} size={15}/>
-                                </div>
+                          <div key={`next-${u.category}`} style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+                            <div style={{ flexShrink: 0, opacity: 0.5 }}>
+                              <StarBadge category={u.category} tier={u.tier} size={48}/>
+                            </div>
+                            <div style={{ flex: 1, minWidth: 0 }}>
+                              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 8, marginBottom: 6 }}>
+                                <span style={{ fontSize: 14, fontWeight: 700, color: C.text1, textTransform: 'capitalize', letterSpacing: '-0.2px' }}>
+                                  {fmtNum(u.tier)} {plural}
+                                </span>
+                                <span style={{ fontSize: 12, fontWeight: 600, color: C.text3, fontVariantNumeric: 'tabular-nums', flexShrink: 0 }}>
+                                  {fmtNum(u.current)} / {fmtNum(u.tier)}
+                                </span>
                               </div>
-                              <div style={{ flex: 1, minWidth: 0 }}>
-                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 8, marginBottom: 4 }}>
-                                  <span style={{ fontSize: 14, fontWeight: 700, color: C.text1, textTransform: 'capitalize', letterSpacing: '-0.2px' }}>
-                                    {fmtNum(u.tier)} {plural}
-                                  </span>
-                                  <span style={{ fontSize: 12, fontWeight: 600, color: C.text3, fontVariantNumeric: 'tabular-nums', flexShrink: 0 }}>
-                                    {fmtNum(u.current)} / {fmtNum(u.tier)}
-                                  </span>
-                                </div>
-                                <div style={{ height: 6, background: '#f1f2f6', borderRadius: 99, overflow: 'hidden' }}>
-                                  <div style={{
-                                    width: `${Math.max(u.pct, 2)}%`, height: '100%',
-                                    background: metal.ring,
-                                    borderRadius: 99,
-                                    transition: 'width 0.8s ease',
-                                  }}/>
-                                </div>
+                              <div style={{ height: 6, background: '#f1f2f6', borderRadius: 99, overflow: 'hidden' }}>
+                                <div style={{
+                                  width: `${Math.max(u.pct, 2)}%`, height: '100%',
+                                  background: `linear-gradient(90deg, ${metal.mid} 0%, ${metal.deep} 100%)`,
+                                  borderRadius: 99,
+                                  transition: 'width 0.8s ease',
+                                }}/>
                               </div>
                             </div>
                           </div>
@@ -1402,6 +1438,16 @@ export default function Dashboard() {
                     </div>
                   </>
                 )}
+
+                {/* YTGrowth brand footer */}
+                <div style={{ marginTop: 28, paddingTop: 18, borderTop: `1px solid #eeeef3`, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
+                  <svg width="18" height="18" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="32" height="32" rx="9" fill="#e5251b"/>
+                    <path d="M23.2 11.6a2.1 2.1 0 0 0-1.48-1.48C20.55 9.8 16 9.8 16 9.8s-4.55 0-5.72.32A2.1 2.1 0 0 0 8.8 11.6 22 22 0 0 0 8.5 16a22 22 0 0 0 .3 4.4 2.1 2.1 0 0 0 1.48 1.48C11.45 22.2 16 22.2 16 22.2s4.55 0 5.72-.32a2.1 2.1 0 0 0 1.48-1.48A22 22 0 0 0 23.5 16a22 22 0 0 0-.3-4.4z" fill="white"/>
+                    <polygon points="13.5,19 19.5,16 13.5,13" fill="#e5251b"/>
+                  </svg>
+                  <span style={{ fontSize: 11.5, fontWeight: 700, color: C.text3, letterSpacing: '-0.1px' }}>YTGrowth Achievements</span>
+                </div>
               </div>
             </div>
           )}
