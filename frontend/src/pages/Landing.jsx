@@ -755,29 +755,29 @@ export default function Landing() {
           </div>
         </div>
 
-        {/* Mobile dashboard mockup — same windsor-frame aesthetic, scaled for small screens */}
+        {/* Mobile dashboard mockup — tighter, Action-only detail to keep the card short */}
         {isMobile && (
           <div style={{
-            marginTop: 48,
+            marginTop: 44,
             background: 'linear-gradient(180deg, #0e1020 0%, #0a0d1c 100%)',
-            borderRadius: 22,
-            padding: '28px 14px 22px',
+            borderRadius: 20,
+            padding: '22px 14px 18px',
             boxShadow: '0 24px 60px rgba(10,13,30,0.35)',
           }}>
             {/* Headline */}
             <h2 style={{
-              fontSize: 16, fontWeight: 600, color: '#ffffff',
+              fontSize: 15.5, fontWeight: 600, color: '#ffffff',
               letterSpacing: '-0.2px', lineHeight: 1.5,
-              textAlign: 'center', margin: '0 16px 18px',
+              textAlign: 'center', margin: '0 12px 14px',
             }}>
               The one thing to fix next — no guessing.
             </h2>
 
-            {/* Single active tab pill */}
-            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 18 }}>
+            {/* Single active pill */}
+            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 14 }}>
               <div style={{
-                padding: '7px 16px', borderRadius: 999,
-                fontSize: 12, fontWeight: 700,
+                padding: '6px 15px', borderRadius: 999,
+                fontSize: 11.5, fontWeight: 700,
                 background: '#ffffff', color: '#0a0d1c',
                 boxShadow: '0 2px 10px rgba(255,255,255,0.1)',
               }}>
@@ -789,22 +789,22 @@ export default function Landing() {
             <div style={{
               background: '#ffffff',
               borderRadius: 14,
-              padding: '18px 16px',
+              padding: '16px 14px',
               boxShadow: '0 12px 32px rgba(0,0,0,0.25)',
             }}>
               {/* Channel + score row */}
               <div style={{
                 display: 'flex', alignItems: 'center', gap: 12,
-                paddingBottom: 14, borderBottom: '1px solid #f0f0f5',
-                marginBottom: 16,
+                paddingBottom: 12, borderBottom: '1px solid #f0f0f5',
+                marginBottom: 14,
               }}>
                 <img
                   src="/avatars/sophie.jpg" alt=""
                   style={{ width: 40, height: 40, borderRadius: '50%', objectFit: 'cover', flexShrink: 0 }}
                 />
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <p style={{ fontSize: 13.5, fontWeight: 700, color: '#0a0a0f', letterSpacing: '-0.2px' }}>Sophie Brandt</p>
-                  <p style={{ fontSize: 11.5, color: '#6a6a78', marginTop: 2 }}>42K subscribers</p>
+                  <p style={{ fontSize: 14, fontWeight: 700, color: '#0a0a0f', letterSpacing: '-0.2px' }}>Sophie Brandt</p>
+                  <p style={{ fontSize: 12, color: '#6a6a78', marginTop: 2 }}>42K subscribers</p>
                 </div>
                 <div style={{ position: 'relative', flexShrink: 0 }}>
                   <svg width="44" height="44" viewBox="0 0 44 44">
@@ -819,11 +819,11 @@ export default function Landing() {
 
               {/* Priority eyebrow */}
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
-                <span style={{ fontSize: 9.5, fontWeight: 800, color: '#d97706', letterSpacing: '0.18em', textTransform: 'uppercase' }}>Priority this week</span>
+                <span style={{ fontSize: 10.5, fontWeight: 800, color: '#d97706', letterSpacing: '0.16em', textTransform: 'uppercase' }}>Priority this week</span>
                 <span style={{ flex: 1, height: 1, background: '#ececf2' }}/>
                 <span style={{
-                  fontSize: 9, fontWeight: 700, color: '#d97706',
-                  border: '1.5px solid #d97706', padding: '2px 8px',
+                  fontSize: 10, fontWeight: 700, color: '#d97706',
+                  border: '1.5px solid #d97706', padding: '2px 9px',
                   borderRadius: 999, letterSpacing: '0.08em', textTransform: 'uppercase',
                 }}>High</span>
               </div>
@@ -831,26 +831,24 @@ export default function Landing() {
               {/* Problem statement */}
               <h3 style={{
                 fontSize: 15, fontWeight: 800, color: '#0a0a0f',
-                letterSpacing: '-0.3px', lineHeight: 1.4,
-                marginBottom: 14,
+                letterSpacing: '-0.3px', lineHeight: 1.42,
+                marginBottom: 12,
               }}>
-                Watch time is critically short — rewrite openings to hook viewers in the first 15 seconds.
+                Watch time is short — rewrite openings to hook viewers in the first 15 seconds.
               </h3>
 
-              {/* Stacked details (1 column on mobile) */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 7 }}>
-                <div style={{ background: 'rgba(79,134,247,0.06)', border: '1px solid rgba(79,134,247,0.15)', borderRadius: 10, padding: '10px 12px' }}>
-                  <p style={{ fontSize: 9.5, fontWeight: 700, color: '#4a7cf7', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 4 }}>Why now</p>
-                  <p style={{ fontSize: 12, color: '#3a3a44', lineHeight: 1.5 }}>Avg watch 38s vs 2:30 niche — viewers bail in the first 15s.</p>
-                </div>
-                <div style={{ background: '#ffffff', border: '1px solid #ececf2', borderLeft: '3px solid #d97706', borderRadius: '0 10px 10px 0', padding: '10px 12px', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
-                  <p style={{ fontSize: 9.5, fontWeight: 700, color: '#d97706', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 4 }}>Action</p>
-                  <p style={{ fontSize: 12, color: '#0a0a0f', lineHeight: 1.5, fontWeight: 500 }}>Cold-open hook. Drop the intro, lead with the payoff.</p>
-                </div>
-                <div style={{ background: 'rgba(22,163,74,0.06)', border: '1px solid rgba(22,163,74,0.18)', borderRadius: 10, padding: '10px 12px' }}>
-                  <p style={{ fontSize: 9.5, fontWeight: 700, color: '#16a34a', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 4 }}>Expected outcome</p>
-                  <p style={{ fontSize: 12, color: '#3a3a44', lineHeight: 1.5 }}>+40% watch time in 3 weeks.</p>
-                </div>
+              {/* Action card only (keeps the mockup short) */}
+              <div style={{ background: '#ffffff', border: '1px solid #ececf2', borderLeft: '3px solid #d97706', borderRadius: '0 10px 10px 0', padding: '11px 13px', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
+                <p style={{ fontSize: 10.5, fontWeight: 700, color: '#d97706', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 5 }}>Action</p>
+                <p style={{ fontSize: 13, color: '#0a0a0f', lineHeight: 1.5, fontWeight: 500 }}>Cold-open hook. Drop the intro, lead with the payoff.</p>
+              </div>
+
+              {/* Micro context line — compresses why + outcome into one subtle line */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 12, paddingTop: 10, borderTop: '1px solid #f0f0f5', fontSize: 11.5, color: '#6a6a78', lineHeight: 1.4 }}>
+                <span style={{ color: '#4a7cf7', fontWeight: 700 }}>38s</span>
+                <span>avg · expect</span>
+                <span style={{ color: '#16a34a', fontWeight: 700 }}>+40%</span>
+                <span>watch time</span>
               </div>
             </div>
           </div>
