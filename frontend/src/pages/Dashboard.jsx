@@ -1522,44 +1522,40 @@ export default function Dashboard() {
                       </a>
 
                       {/* Body */}
-                      <div style={{ padding: '16px 16px 16px', display: 'flex', flexDirection: 'column', flex: 1 }}>
+                      <div style={{ padding: '12px 14px 14px', display: 'flex', flexDirection: 'column', flex: 1 }}>
                         {/* Title */}
                         <p style={{
-                          fontSize: 14.5, fontWeight: 700, color: C.text1, lineHeight: 1.4, marginBottom: 6, letterSpacing: '-0.2px',
+                          fontSize: 14, fontWeight: 700, color: C.text1, lineHeight: 1.38, marginBottom: 6, letterSpacing: '-0.2px',
                           display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden',
                         }}>{v.title}</p>
-                        <p style={{ fontSize: 11.5, fontWeight: 500, color: C.text3, marginBottom: 14 }}>
-                          {(parseUTC(v.published_at) || new Date()).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
+
+                        {/* Inline meta: stats · date */}
+                        <p style={{ fontSize: 11.5, fontWeight: 500, color: C.text3, marginBottom: 12, lineHeight: 1.4, letterSpacing: '-0.1px' }}>
+                          <span style={{ color: C.text2, fontWeight: 600 }}>{fmtNum(v.views)}</span> views
+                          <span style={{ margin: '0 6px', color: C.text4 || '#d4d4dc' }}>·</span>
+                          <span style={{ color: C.text2, fontWeight: 600 }}>{fmtNum(v.likes)}</span> likes
+                          <span style={{ margin: '0 6px', color: C.text4 || '#d4d4dc' }}>·</span>
+                          {(parseUTC(v.published_at) || new Date()).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}
                         </p>
 
-                        {/* Stats row */}
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 8, marginBottom: 14 }}>
-                          {[['Views', fmtNum(v.views)], ['Likes', fmtNum(v.likes)], ['Comments', fmtNum(v.comments)]].map(([label, val]) => (
-                            <div key={label}>
-                              <p style={{ fontSize: 15, fontWeight: 700, color: C.text1, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.4px', lineHeight: 1 }}>{val}</p>
-                              <p style={{ fontSize: 11, fontWeight: 500, color: C.text3, marginTop: 4 }}>{label}</p>
-                            </div>
-                          ))}
-                        </div>
-
                         {/* Footer: Watch · Retention · Eng + Optimise */}
-                        <div style={{ marginTop: 'auto', paddingTop: 14, borderTop: `1px solid #f0f0f4` }}>
-                          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 8, marginBottom: 12 }}>
+                        <div style={{ marginTop: 'auto', paddingTop: 12, borderTop: `1px solid #f0f0f4` }}>
+                          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 8, marginBottom: 10 }}>
                             {[
                               { label: 'Watch',     display: wtDisplay,                                             color: C.text1,  tip: 'Average watch time per view (mm:ss). Longer is better relative to video length.' },
                               { label: 'Retention', display: retN !== null ? `${retN.toFixed(0)}%` : '—',           color: C.text1,  tip: 'Average % of video watched. 50%+ strong, 30–50% avg, <30% weak.' },
                               { label: 'Eng',       display: lrN !== null ? `${lr}%` : '—',                         color: lrColor,  tip: 'Engagement rate = likes ÷ views. 3%+ strong, 1–3% avg, <1% weak.' },
                             ].map(m => (
                               <div key={m.label} title={m.tip} style={{ cursor: 'help', textAlign: 'left' }}>
-                                <p style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 4, lineHeight: 1 }}>{m.label}</p>
-                                <p style={{ fontSize: 14, fontWeight: 700, color: m.color, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.3px', lineHeight: 1 }}>{m.display}</p>
+                                <p style={{ fontSize: 9.5, fontWeight: 700, color: C.text3, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 3, lineHeight: 1 }}>{m.label}</p>
+                                <p style={{ fontSize: 13.5, fontWeight: 700, color: m.color, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.3px', lineHeight: 1 }}>{m.display}</p>
                               </div>
                             ))}
                           </div>
                           <button
                             onClick={() => setSelectedVideoId(v.video_id)}
                             className="ytg-optimise-btn"
-                            style={{ width: '100%', justifyContent: 'center', padding: '9px 14px', fontSize: 13 }}>
+                            style={{ width: '100%', justifyContent: 'center', padding: '8px 14px', fontSize: 12.5 }}>
                             Optimise
                           </button>
                         </div>
