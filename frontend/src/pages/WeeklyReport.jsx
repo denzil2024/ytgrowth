@@ -47,40 +47,15 @@ function MetricCard({ label, value, metric, unit, isScore }) {
   )
 }
 
-function SectionIcon({ kind, color }) {
-  const p = { width: 14, height: 14, viewBox: '0 0 24 24', fill: 'none', stroke: color, strokeWidth: 2.2, strokeLinecap: 'round', strokeLinejoin: 'round' }
-  if (kind === 'summary') return <svg {...p}><rect x="3" y="4" width="18" height="16" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-  if (kind === 'win')     return <svg {...p}><path d="M6 9a6 6 0 0 0 12 0V3H6v6z"/><path d="M8 21h8M12 15v6"/><path d="M18 5h3v3a3 3 0 0 1-3 3M6 5H3v3a3 3 0 0 0 3 3"/></svg>
-  if (kind === 'warn')    return <svg {...p}><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-  if (kind === 'priority') return <svg {...p}><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-  return null
-}
-
-function SectionCard({ kind, accent, label, tint, children, hero }) {
+function ColLabel({ color, children }) {
   return (
-    <div style={{
-      background: hero ? `linear-gradient(180deg, ${tint} 0%, #ffffff 55%)` : '#ffffff',
-      border: `1px solid ${hero ? 'rgba(229,37,27,0.16)' : 'rgba(0,0,0,0.06)'}`,
-      borderTop: `3px solid ${accent}`,
-      borderRadius: 12,
-      padding: hero ? '20px 24px 22px' : '18px 22px',
-      marginBottom: 12,
-      boxShadow: hero
-        ? '0 2px 6px rgba(229,37,27,0.08), 0 8px 22px rgba(229,37,27,0.06)'
-        : '0 1px 2px rgba(0,0,0,0.03), 0 2px 8px rgba(0,0,0,0.04)',
+    <p style={{
+      fontSize: 10, fontWeight: 700, color,
+      letterSpacing: '0.08em', textTransform: 'uppercase',
+      marginBottom: 6,
     }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 9, marginBottom: 10 }}>
-        <span style={{
-          display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-          width: 22, height: 22, borderRadius: 6,
-          background: `${accent}15`,
-        }}>
-          <SectionIcon kind={kind} color={accent}/>
-        </span>
-        <span style={{ fontSize: 11, fontWeight: 800, color: accent, letterSpacing: '0.1em', textTransform: 'uppercase' }}>{label}</span>
-      </div>
       {children}
-    </div>
+    </p>
   )
 }
 
@@ -144,10 +119,12 @@ function ReportCard({ report, expanded, onToggle }) {
 function ReportBody({ rd, isLatest }) {
   const m = rd.metrics || {}
 
-  const subsVal  = m.subscribers?.value != null ? fmtNum(m.subscribers.value) : '—'
-  const viewsVal = m.weeklyViews?.value != null  ? fmtNum(m.weeklyViews.value)  : '—'
-  const ctrVal   = m.avgCtr?.value != null        ? `${m.avgCtr.value}%`         : '—'
-  const scoreVal = m.channelScore?.value != null  ? `${m.channelScore.value}/100` : '—'
+  const subsVal  = m.subscribers?.value  != null ? fmtNum(m.subscribers.value)       : '—'
+  const viewsVal = m.weeklyViews?.value  != null ? fmtNum(m.weeklyViews.value)       : '—'
+  const retVal   = m.avgRetention?.value != null ? `${m.avgRetention.value}%`        : '—'
+  const scoreVal = m.channelScore?.value != null ? `${m.channelScore.value}/100`     : '—'
+
+  const hasBody = rd.weeklySummary || rd.biggestWin || rd.watchOut || rd.priorityAction
 
   return (
     <>
@@ -155,45 +132,78 @@ function ReportBody({ rd, isLatest }) {
       <div style={{
         display: 'grid',
         gridTemplateColumns: 'repeat(auto-fit, minmax(190px, 1fr))',
-        gap: 14, marginBottom: 24,
+        gap: 14, marginBottom: hasBody ? 22 : 0,
       }}>
-        <MetricCard label="Subscribers"   value={subsVal}  metric={m.subscribers}  />
-        <MetricCard label="Weekly Views"  value={viewsVal} metric={m.weeklyViews}  />
-        <MetricCard label="Avg CTR"       value={ctrVal}   metric={m.avgCtr}   unit="%" />
-        <MetricCard label="Channel Score" value={scoreVal} metric={m.channelScore} isScore />
+        <MetricCard label="Subscribers"    value={subsVal}  metric={m.subscribers} />
+        <MetricCard label="Weekly Views"   value={viewsVal} metric={m.weeklyViews} />
+        <MetricCard label="Avg Retention"  value={retVal}   metric={m.avgRetention} unit="%" />
+        <MetricCard label="Channel Score"  value={scoreVal} metric={m.channelScore} isScore />
       </div>
 
-      {/* Weekly summary */}
+      {/* Weekly summary — bold statement (like Overview insight problem) */}
       {rd.weeklySummary && (
-        <SectionCard kind="summary" accent="#64748b" label="This Week">
-          <p style={{ fontSize: 14, color: C.text2, lineHeight: 1.75 }}>{rd.weeklySummary}</p>
-        </SectionCard>
+        <p style={{
+          fontSize: 14, fontWeight: 600,
+          color: C.text1, lineHeight: 1.72,
+          marginBottom: 14,
+        }}>
+          {rd.weeklySummary}
+        </p>
       )}
 
-      {/* Biggest win */}
-      {rd.biggestWin && (
-        <SectionCard kind="win" accent={C.green} label="Biggest Win">
-          <p style={{ fontSize: 14, color: C.text2, lineHeight: 1.7 }}>{rd.biggestWin}</p>
-        </SectionCard>
+      {/* Divider before 3-column grid */}
+      {(rd.biggestWin || rd.watchOut || rd.priorityAction) && (
+        <div style={{ height: 1, background: C.border, marginBottom: 14 }}/>
       )}
 
-      {/* Watch out */}
-      {rd.watchOut && (
-        <SectionCard kind="warn" accent={C.amber} label="Watch Out">
-          <p style={{ fontSize: 14, color: C.text2, lineHeight: 1.7 }}>{rd.watchOut}</p>
-        </SectionCard>
+      {/* 3-column grid — Overview priority-action pattern */}
+      {(rd.biggestWin || rd.watchOut || rd.priorityAction) && (
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: '1fr 1.4fr 1fr',
+          gap: 8,
+        }}>
+          {/* Watch out (amber — context/warning, like "Why now") */}
+          {rd.watchOut
+            ? <div style={{ background: 'rgba(217,119,6,0.07)', border: '1px solid rgba(217,119,6,0.14)', borderRadius: 10, padding: '12px 14px' }}>
+                <ColLabel color={C.amber}>Watch out</ColLabel>
+                <p style={{ fontSize: 13.5, color: C.text1, lineHeight: 1.72 }}>{rd.watchOut}</p>
+              </div>
+            : <div />
+          }
+
+          {/* Priority (hero — white with red left border + shadow, like "Action") */}
+          {rd.priorityAction
+            ? <div style={{
+                background: '#ffffff',
+                border: `1px solid ${C.border}`,
+                borderLeft: `3px solid ${C.red}`,
+                borderRadius: '0 10px 10px 0',
+                padding: '12px 16px',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
+              }}>
+                <ColLabel color={C.red}>Your Priority</ColLabel>
+                <p style={{ fontSize: 13.5, color: C.text1, lineHeight: 1.72 }}>{rd.priorityAction}</p>
+              </div>
+            : <div />
+          }
+
+          {/* Biggest win (green — positive outcome, like "Expected outcome") */}
+          {rd.biggestWin
+            ? <div style={{ background: 'rgba(5,150,105,0.07)', border: '1px solid rgba(5,150,105,0.14)', borderRadius: 10, padding: '12px 14px' }}>
+                <ColLabel color={C.green}>Biggest Win</ColLabel>
+                <p style={{ fontSize: 13.5, color: C.text1, lineHeight: 1.72 }}>{rd.biggestWin}</p>
+              </div>
+            : <div />
+          }
+        </div>
       )}
 
-      {/* Priority action — hero */}
-      {rd.priorityAction && (
-        <SectionCard kind="priority" accent={C.red} label="Your Priority This Week" tint="#fff5f5" hero>
-          <p style={{ fontSize: 14.5, fontWeight: 500, color: C.text1, lineHeight: 1.75, letterSpacing: '-0.1px' }}>{rd.priorityAction}</p>
-        </SectionCard>
-      )}
-
-      {/* Motivational close */}
+      {/* Motivational close — muted, no italic */}
       {rd.motivationalClose && (
-        <p style={{ fontSize: 13.5, color: C.text3, lineHeight: 1.65, fontStyle: 'italic', marginTop: 18, paddingTop: 16, borderTop: '1px solid rgba(0,0,0,0.06)' }}>{rd.motivationalClose}</p>
+        <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.65, marginTop: 18, paddingTop: 16, borderTop: `1px solid ${C.border}` }}>
+          {rd.motivationalClose}
+        </p>
       )}
     </>
   )
