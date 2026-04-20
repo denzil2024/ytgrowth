@@ -349,7 +349,7 @@ export default function WeeklyReport({ channelId, channelEmail, plan, channelSta
     </div>
   )
 
-  // ── Free plan: live metric snapshot + upgrade nudge ─────────────────────
+  // ── Free plan: live metric snapshot + BLURRED preview with gated CTA ────
   if (isFree) {
     const subsVal   = channelStats?.subscribers != null ? fmtNum(channelStats.subscribers) : '—'
     const viewsVal  = channelStats?.total_views != null ? fmtNum(channelStats.total_views) : '—'
@@ -358,15 +358,17 @@ export default function WeeklyReport({ channelId, channelEmail, plan, channelSta
     const scoreVal  = healthScore != null ? `${healthScore}/100` : '—'
     const retColor   = healthColor(retRaw,      { red: 40, amber: 50 })
     const scoreColor = healthColor(healthScore, { red: 50, amber: 75 })
+    const channelFirstName = (channelStats?.channel_name || 'your channel').split(' ')[0]
 
     return (
       <div>
         {header}
 
+        {/* Live metric snapshot */}
         <div style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fit, minmax(190px, 1fr))',
-          gap: 14, marginBottom: 20,
+          gap: 14, marginBottom: 16,
         }}>
           <MetricCard label="Subscribers"    value={subsVal}  />
           <MetricCard label="Total Views"    value={viewsVal} />
@@ -374,47 +376,156 @@ export default function WeeklyReport({ channelId, channelEmail, plan, channelSta
           <MetricCard label="Channel Score"  value={scoreVal} valueColor={scoreColor} />
         </div>
 
-        <div style={{
-          background: 'linear-gradient(180deg, #fff5f5 0%, #ffffff 60%)',
-          border: '1px solid rgba(229,37,27,0.18)',
-          borderTop: `3px solid ${C.red}`,
-          borderRadius: 16,
-          padding: '28px 30px',
-          boxShadow: '0 2px 6px rgba(229,37,27,0.08), 0 8px 22px rgba(229,37,27,0.06)',
-        }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
-            <span style={{
-              display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-              width: 28, height: 28, borderRadius: 8, background: `${C.red}15`,
+        {/* Blurred preview of a real report, gated with a centered CTA */}
+        <div style={{ position: 'relative', borderRadius: 16, overflow: 'hidden', minHeight: 520 }}>
+
+          {/* ─── Blurred mock report (what paid users see) ──────────────── */}
+          <div aria-hidden="true" style={{
+            filter: 'blur(6px)',
+            pointerEvents: 'none', userSelect: 'none',
+            transform: 'scale(1.015)', // hide blur halo at edges
+          }}>
+            <div style={{
+              background: '#fff', borderRadius: 16,
+              border: '1px solid rgba(0,0,0,0.08)',
+              borderTop: `3px solid ${C.red}`,
+              boxShadow: '0 2px 6px rgba(0,0,0,0.08), 0 10px 36px rgba(0,0,0,0.10)',
+              padding: '28px 28px 30px',
             }}>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={C.red} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
-              </svg>
-            </span>
-            <span style={{ fontSize: 11, fontWeight: 800, color: C.red, letterSpacing: '0.1em', textTransform: 'uppercase' }}>Paid feature</span>
+              <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, marginBottom: 24 }}>
+                <div>
+                  <div style={{ fontSize: 18, fontWeight: 800, color: C.text1, letterSpacing: '-0.4px', marginBottom: 5 }}>
+                    Your Week on YouTube — Apr 13 – 19
+                  </div>
+                  <div style={{ fontSize: 12.5, color: C.text3 }}>2026-04-13 – 2026-04-19</div>
+                </div>
+                <span style={{
+                  display: 'inline-flex', alignItems: 'center', gap: 6,
+                  fontSize: 11, fontWeight: 800, color: C.green,
+                  background: '#f0fdf4', border: '1px solid rgba(134,239,172,0.65)',
+                  borderRadius: 999, padding: '4px 11px',
+                  letterSpacing: '0.08em', textTransform: 'uppercase',
+                }}>
+                  <span style={{ width: 6, height: 6, borderRadius: '50%', background: C.green }}/>
+                  Latest
+                </span>
+              </div>
+
+              <p style={{ fontSize: 14, fontWeight: 600, color: C.text1, lineHeight: 1.72, marginBottom: 14 }}>
+                {channelFirstName} grew 12% this week with strong retention on the house tour, but the 14-day posting gap is starting to hurt recommendation surfaces — here&rsquo;s what&rsquo;s working and what to focus on next.
+              </p>
+
+              <div style={{ height: 1, background: C.border, marginBottom: 14 }}/>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr 1fr', gap: 8 }}>
+                <div style={{ background: 'rgba(217,119,6,0.07)', border: '1px solid rgba(217,119,6,0.14)', borderRadius: 10, padding: '12px 14px' }}>
+                  <ColLabel color={C.amber}>Watch out</ColLabel>
+                  <p style={{ fontSize: 13.5, color: C.text1, lineHeight: 1.72 }}>Posting frequency dropped to one video in 14 days and the algorithm is deprioritizing the channel.</p>
+                </div>
+                <div style={{ background: '#ffffff', border: `1px solid ${C.border}`, borderLeft: `3px solid ${C.red}`, borderRadius: '0 10px 10px 0', padding: '12px 16px', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}>
+                  <ColLabel color={C.red}>Your Priority</ColLabel>
+                  <p style={{ fontSize: 13.5, color: C.text1, lineHeight: 1.72 }}>Film two shopping hauls this week — they are your repeatable winner, and a second one inside 7 days compounds the algorithm boost.</p>
+                </div>
+                <div style={{ background: 'rgba(5,150,105,0.07)', border: '1px solid rgba(5,150,105,0.14)', borderRadius: 10, padding: '12px 14px' }}>
+                  <ColLabel color={C.green}>Biggest Win</ColLabel>
+                  <p style={{ fontSize: 13.5, color: C.text1, lineHeight: 1.72 }}>The house tour hit 13,908 views and pulled in 25 new subs — your best single video this quarter.</p>
+                </div>
+              </div>
+            </div>
           </div>
-          <h2 style={{ fontSize: 20, fontWeight: 800, color: C.text1, letterSpacing: '-0.4px', marginBottom: 10 }}>
-            Weekly AI reports
-          </h2>
-          <p style={{ fontSize: 14, color: C.text2, lineHeight: 1.7, marginBottom: 18, maxWidth: 560 }}>
-            Claude analyzes your channel every week and sends a personalized report — your biggest win, what to watch out for, and your single priority action. Available on Solo, Growth, and Agency plans. Each weekly email costs 1 credit (4 per month).
-          </p>
-          <a
-            href="/#pricing"
-            style={{
-              display: 'inline-flex', alignItems: 'center', gap: 8,
-              background: C.red, color: '#ffffff',
-              fontSize: 13.5, fontWeight: 700,
-              padding: '11px 22px', borderRadius: 999,
-              textDecoration: 'none', letterSpacing: '-0.1px',
-              boxShadow: `0 4px 14px ${C.red}40, inset 0 1px 0 rgba(255,255,255,0.2)`,
-            }}
-          >
-            Upgrade to unlock
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
-              <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
-            </svg>
-          </a>
+
+          {/* ─── Overlay with the actual conversion card ────────────────── */}
+          <div style={{
+            position: 'absolute', inset: 0,
+            background: 'linear-gradient(180deg, rgba(245,245,249,0.25) 0%, rgba(245,245,249,0.82) 32%, rgba(245,245,249,0.95) 100%)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            padding: 24,
+          }}>
+            <div style={{
+              background: '#ffffff',
+              border: '1px solid rgba(229,37,27,0.2)',
+              borderRadius: 20,
+              boxShadow: '0 14px 46px rgba(0,0,0,0.14), 0 0 0 6px rgba(229,37,27,0.04)',
+              padding: '30px 34px 28px',
+              maxWidth: 480, width: '100%',
+              textAlign: 'center',
+            }}>
+              {/* Lock icon */}
+              <div style={{
+                width: 50, height: 50, borderRadius: 14,
+                background: `linear-gradient(180deg, ${C.red} 0%, #a50f07 100%)`,
+                margin: '0 auto 18px',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                boxShadow: `0 8px 22px ${C.red}55, inset 0 1px 0 rgba(255,255,255,0.25)`,
+              }}>
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="3" y="11" width="18" height="11" rx="2"/>
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                </svg>
+              </div>
+
+              <h2 style={{ fontSize: 22, fontWeight: 900, color: C.text1, letterSpacing: '-0.5px', marginBottom: 10 }}>
+                Unlock weekly AI reports
+              </h2>
+              <p style={{ fontSize: 14, color: C.text2, lineHeight: 1.6, marginBottom: 22, maxWidth: 400, marginLeft: 'auto', marginRight: 'auto' }}>
+                Claude audits your channel every week and tells you the single thing to fix next — not a wall of data, a clear priority.
+              </p>
+
+              {/* Benefits */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 24, textAlign: 'left', maxWidth: 400, marginLeft: 'auto', marginRight: 'auto' }}>
+                {[
+                  'Biggest win, watch out, and priority — every week',
+                  'Fresh analysis delivered straight to your inbox',
+                  '4 emails/month · 1 credit each on Solo, Growth, Agency',
+                ].map((t, i) => (
+                  <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
+                    <span style={{
+                      display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                      width: 20, height: 20, borderRadius: '50%',
+                      background: `${C.green}18`, flexShrink: 0, marginTop: 1,
+                    }}>
+                      <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke={C.green} strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+                        <polyline points="1.5,6.5 5,10 10.5,2"/>
+                      </svg>
+                    </span>
+                    <span style={{ fontSize: 13.5, color: C.text2, lineHeight: 1.55 }}>{t}</span>
+                  </div>
+                ))}
+              </div>
+
+              {/* CTAs */}
+              <a
+                href="/?tab=monthly#pricing"
+                style={{
+                  display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+                  width: '100%', maxWidth: 360,
+                  background: `linear-gradient(180deg, ${C.red} 0%, #a50f07 100%)`,
+                  color: '#ffffff',
+                  fontSize: 14, fontWeight: 700,
+                  padding: '13px 24px', borderRadius: 999,
+                  textDecoration: 'none', letterSpacing: '-0.1px',
+                  boxShadow: `0 8px 22px ${C.red}50, inset 0 1px 0 rgba(255,255,255,0.22)`,
+                  marginBottom: 10,
+                }}
+              >
+                See monthly plans
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+                </svg>
+              </a>
+              <div>
+                <a
+                  href="/?tab=packs#pricing"
+                  style={{
+                    fontSize: 12.5, fontWeight: 600, color: C.text3,
+                    textDecoration: 'none',
+                  }}
+                >
+                  Or grab a one-time credit pack →
+                </a>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     )
