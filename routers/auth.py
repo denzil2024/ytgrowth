@@ -395,7 +395,7 @@ def callback(request: Request, background_tasks: BackgroundTasks):
         videos = get_recent_videos(creds)
         full_data = get_full_channel_data(creds, channel_id)
         try:
-            metrics_map = get_video_metrics_map(creds, channel_id, [v.get("video_id") for v in videos if v.get("video_id")])
+            metrics_map = get_video_metrics_map(creds, channel_id)
             videos = merge_metrics_into_videos(videos, metrics_map)
         except Exception as _e:
             print(f"Metrics merge error (login): {_e}")
@@ -561,7 +561,7 @@ def refresh_stats(request: Request):
         return JSONResponse({"error": "Could not fetch channel data."}, status_code=500)
 
     try:
-        metrics_map = get_video_metrics_map(creds, stats.get("channel_id"), [v.get("video_id") for v in videos if v.get("video_id")])
+        metrics_map = get_video_metrics_map(creds, stats.get("channel_id"))
         videos = merge_metrics_into_videos(videos, metrics_map)
     except Exception as _e:
         print(f"Metrics merge error (refresh): {_e}")
