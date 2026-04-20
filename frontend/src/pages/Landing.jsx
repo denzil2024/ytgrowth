@@ -1714,7 +1714,7 @@ export default function Landing() {
               <span aria-hidden="true" style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--ytg-accent)', boxShadow: '0 0 0 3px rgba(229,48,42,0.12)' }} />
               <span style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-text-2)', textTransform: 'uppercase', letterSpacing: '0.09em' }}>Frequently asked</span>
             </div>
-            <h2 style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontWeight: 800, fontSize: isMobile ? 32 : 44, letterSpacing: '-1.5px', color: 'var(--ytg-text)', lineHeight: 1.05, marginBottom: 14, textWrap: 'balance' }}>
+            <h2 style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontWeight: 800, fontSize: isMobile ? 32 : 48, letterSpacing: '-1.5px', color: 'var(--ytg-text)', lineHeight: 1.05, marginBottom: 14, textWrap: 'balance' }}>
               Questions <span style={{ color: 'var(--ytg-accent)' }}>answered.</span>
             </h2>
             <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.7, margin: 0, maxWidth: isMobile ? 520 : 320, marginLeft: isMobile ? 'auto' : 0, marginRight: isMobile ? 'auto' : 0 }}>
