@@ -1543,8 +1543,11 @@ export default function Dashboard() {
 
                         {/* Footer: like rate + optimise + Score This */}
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 'auto', paddingTop: 12, borderTop: `1px solid #f0f0f4` }}>
-                          <span style={{ fontSize: 12, fontWeight: 700, color: lrColor, background: lrBg, padding: '4px 10px', borderRadius: 100, border: `1px solid ${lrBdr}`, fontVariantNumeric: 'tabular-nums' }}>
-                            {lrN !== null ? `${lr}% likes` : '— likes'}
+                          <span
+                            title="Engagement rate = likes ÷ views. 3%+ is strong, 1–3% is average, under 1% is weak."
+                            style={{ fontSize: 12, fontWeight: 700, color: lrColor, background: lrBg, padding: '4px 10px', borderRadius: 100, border: `1px solid ${lrBdr}`, fontVariantNumeric: 'tabular-nums', cursor: 'help' }}
+                          >
+                            {lrN !== null ? `${lr}% engagement` : '— engagement'}
                           </span>
                           <button
                             onClick={() => setSelectedVideoId(v.video_id)}
@@ -1596,9 +1599,9 @@ export default function Dashboard() {
                 {[
                   { label: 'Shorts avg views',    value: fmtNum(patterns.shortAvg), verdict: patterns.shortAvg > patterns.longAvg ? 'Beats long-form' : 'Below long-form', good: patterns.shortAvg > patterns.longAvg },
                   { label: 'Long-form avg views', value: fmtNum(patterns.longAvg),  verdict: patterns.longAvg > patterns.shortAvg ? 'Beats Shorts'     : 'Below Shorts',    good: patterns.longAvg  > patterns.shortAvg },
-                  { label: 'Overall like rate',   value: `${patterns.likeRate}%`,   verdict: patterns.likeRate >= 3 ? 'Healthy' : patterns.likeRate >= 1 ? 'Average' : 'Below average', good: patterns.likeRate >= 3 },
+                  { label: 'Avg engagement rate', value: `${patterns.likeRate}%`,   verdict: patterns.likeRate >= 3 ? 'Healthy' : patterns.likeRate >= 1 ? 'Average' : 'Below average', good: patterns.likeRate >= 3, hint: 'likes ÷ views — 3%+ is strong' },
                 ].map(p => (
-                  <div key={p.label} className="ytg-card" style={{ padding: '20px 22px' }}>
+                  <div key={p.label} className="ytg-card" title={p.hint || undefined} style={{ padding: '20px 22px', cursor: p.hint ? 'help' : 'default' }}>
                     <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 10 }}>{p.label}</p>
                     <p style={{ fontSize: 26, fontWeight: 800, color: C.text1, letterSpacing: '-0.8px', marginBottom: 10, fontVariantNumeric: 'tabular-nums' }}>{p.value}</p>
                     <span style={{
