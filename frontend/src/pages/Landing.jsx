@@ -920,7 +920,7 @@ export default function Landing() {
                     background: 'linear-gradient(180deg, #fffbf4 0%, #ffffff 100%)',
                     border: '1px solid #f4e6c8',
                     borderLeft: '3px solid #d97706',
-                    borderRadius: '0 14px 14px 0',
+                    borderRadius: 14,
                     padding: '18px 20px',
                     boxShadow: '0 4px 20px rgba(217,119,6,0.12)',
                   }}>
@@ -971,16 +971,16 @@ export default function Landing() {
             </div>
           </div>
 
-          {/* Floating milestone accent — desktop only, offset top-right */}
+          {/* Floating milestone accent — desktop only, pill-shaped, offset further for real float */}
           {!isMobile && (
             <div style={{
-              position: 'absolute', top: -26, right: 6,
+              position: 'absolute', top: -32, right: -8,
               background: '#ffffff',
               border: '1px solid rgba(10,10,15,0.06)',
-              borderRadius: 14,
-              padding: '11px 14px',
+              borderRadius: 999,
+              padding: '10px 18px 10px 12px',
               display: 'flex', alignItems: 'center', gap: 11,
-              boxShadow: '0 4px 12px rgba(0,0,0,0.06), 0 16px 44px rgba(0,0,0,0.1), 0 0 40px rgba(250,204,21,0.18)',
+              boxShadow: '0 6px 16px rgba(0,0,0,0.08), 0 20px 48px rgba(0,0,0,0.12), 0 0 44px rgba(250,204,21,0.22)',
               animation: 'floatB 6s ease-in-out infinite',
               zIndex: 2,
             }}>
@@ -1000,16 +1000,16 @@ export default function Landing() {
             </div>
           )}
 
-          {/* Floating analysis-complete accent — desktop only, offset bottom-left */}
+          {/* Floating analysis-complete accent — desktop only, pill-shaped, offset further */}
           {!isMobile && (
             <div style={{
-              position: 'absolute', bottom: -24, left: 12,
+              position: 'absolute', bottom: -30, left: -4,
               background: '#ffffff',
               border: '1px solid rgba(10,10,15,0.06)',
-              borderRadius: 14,
-              padding: '11px 14px',
+              borderRadius: 999,
+              padding: '10px 18px 10px 12px',
               display: 'flex', alignItems: 'center', gap: 11,
-              boxShadow: '0 4px 12px rgba(0,0,0,0.06), 0 16px 44px rgba(0,0,0,0.1), 0 0 32px rgba(22,163,74,0.15)',
+              boxShadow: '0 6px 16px rgba(0,0,0,0.08), 0 20px 48px rgba(0,0,0,0.12), 0 0 36px rgba(22,163,74,0.2)',
               animation: 'floatA 5.2s ease-in-out infinite',
               zIndex: 2,
             }}>
