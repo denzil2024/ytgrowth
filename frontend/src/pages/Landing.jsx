@@ -1006,47 +1006,55 @@ export default function Landing() {
         </div>
       </div>
 
-      {/* ── STATS BAR — elevated white stat cards, grid layout ─────────── */}
+      {/* ── STATS BAR — elevated white stat cards with descriptive sub-line ─ */}
       <div className="section-animate" style={{
         background: '#f4f4f6',
         borderTop: '1px solid rgba(10,10,15,0.06)',
         borderBottom: '1px solid rgba(10,10,15,0.06)',
-        padding: isMobile ? '32px 20px' : '44px 64px',
+        padding: isMobile ? '28px 20px' : '52px 64px',
       }}>
         <div style={{
-          maxWidth: 1200, margin: '0 auto',
+          maxWidth: 1240, margin: '0 auto',
           display: 'grid',
-          gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(5, 1fr)',
+          gridTemplateColumns: isMobile ? '1fr' : 'repeat(5, 1fr)',
           gap: isMobile ? 10 : 14,
         }}>
           {[
-            ['10',       'Audit dimensions'],
-            ['3',        'Competitor benchmarks'],
-            ['2-layer',  'Thumbnail scoring'],
-            ['Weekly',   'Automated reports'],
-            ['7+',       'Core growth tools'],
-          ].map(([stat, label], i) => (
+            ['10',       'Audit dimensions',     'Traffic, retention, CTR, and 7 more'],
+            ['3',        'Competitor benchmarks', "See who's winning and what's working"],
+            ['2-layer',  'Thumbnail scoring',    'Algorithm + vision model in one pass'],
+            ['Weekly',   'Automated reports',    'One priority action, every Monday'],
+            ['7+',       'Core growth tools',    'Audit, SEO, keywords, ideas, thumbnails'],
+          ].map(([stat, label, desc], i) => (
             <div key={i} style={{
               background: '#ffffff',
               border: '1px solid rgba(10,10,15,0.07)',
               borderRadius: 14,
-              padding: isMobile ? '18px 14px' : '22px 22px',
+              padding: isMobile ? '18px 18px' : '24px 22px',
               textAlign: 'center',
               boxShadow: '0 1px 2px rgba(0,0,0,0.03), 0 4px 14px rgba(0,0,0,0.05)',
-              gridColumn: isMobile && i === 4 ? '1 / -1' : undefined,
+              display: 'flex', flexDirection: 'column', alignItems: 'center',
             }}>
               <p style={{
-                fontSize: isMobile ? 26 : 30, fontWeight: 800,
+                fontSize: isMobile ? 28 : 32, fontWeight: 800,
                 color: 'var(--ytg-accent)',
                 letterSpacing: '-1px', lineHeight: 1,
                 marginBottom: 8,
               }}>{stat}</p>
               <p style={{
                 fontSize: 11, fontWeight: 700,
-                color: 'rgba(10,10,15,0.52)',
+                color: 'rgba(10,10,15,0.55)',
                 textTransform: 'uppercase',
                 letterSpacing: '0.1em',
+                marginBottom: 10,
               }}>{label}</p>
+              <p style={{
+                fontSize: 12.5, fontWeight: 500,
+                color: 'rgba(10,10,15,0.48)',
+                lineHeight: 1.5,
+                maxWidth: 220,
+                letterSpacing: '-0.1px',
+              }}>{desc}</p>
             </div>
           ))}
         </div>
