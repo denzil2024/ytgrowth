@@ -690,20 +690,27 @@ function MilestoneShareModal({ milestone, channelName, channelThumbnail, onClose
 }
 
 /* ─── Confetti burst (CSS, no deps) ───────────────────────────────────── */
-const CONFETTI_COLORS = ['#ff3b30', '#ffd60a', '#30d158', '#0a84ff', '#bf5af2', '#ff9f0a', '#ffffff']
-function ConfettiBurst({ count = 90 }) {
+const CONFETTI_COLORS = ['#ff3b30', '#ffd60a', '#30d158', '#0a84ff', '#bf5af2', '#ff9f0a', '#ff2d92', '#64d2ff', '#ffffff']
+function ConfettiBurst({ count = 180 }) {
   const pieces = useRef(null)
   if (pieces.current === null) {
-    pieces.current = Array.from({ length: count }, () => ({
-      left:     Math.random() * 100,             // vw
-      cx:       (Math.random() - 0.5) * 50,      // vw drift
-      cr:       (Math.random() * 720 + 180) * (Math.random() < 0.5 ? -1 : 1),
-      delay:    Math.random() * 2.8,             // staggered spawn up to 2.8s
-      duration: 4.8 + Math.random() * 4.2,       // 4.8–9s falls
-      size:     6 + Math.random() * 6,
-      color:    CONFETTI_COLORS[Math.floor(Math.random() * CONFETTI_COLORS.length)],
-      round:    Math.random() < 0.35,
-    }))
+    pieces.current = Array.from({ length: count }, () => {
+      const shape = Math.random()
+      const isRound  = shape < 0.28
+      const isRibbon = !isRound && shape < 0.55
+      const w = 5 + Math.random() * 7
+      return {
+        left:     Math.random() * 100,
+        cx:       (Math.random() - 0.5) * 60,
+        cr:       (Math.random() * 900 + 240) * (Math.random() < 0.5 ? -1 : 1),
+        delay:    Math.random() * 2.8,
+        duration: 4.8 + Math.random() * 4.2,
+        w:        isRibbon ? w * 0.55 : w,
+        h:        isRibbon ? w * 3.2  : (isRound ? w : w * 1.6),
+        color:    CONFETTI_COLORS[Math.floor(Math.random() * CONFETTI_COLORS.length)],
+        round:    isRound,
+      }
+    })
   }
   return (
     <div aria-hidden="true" style={{
@@ -714,11 +721,11 @@ function ConfettiBurst({ count = 90 }) {
         <div key={i} style={{
           position: 'absolute',
           top: 0, left: `${p.left}vw`,
-          width: p.size, height: p.size * 1.6,
+          width: p.w, height: p.h,
           background: p.color,
           borderRadius: p.round ? '50%' : 1.5,
           boxShadow: `0 0 6px ${p.color}50`,
-          animation: `confettiFall ${p.duration}s cubic-bezier(0.22,0.7,0.32,1) ${p.delay}s forwards`,
+          animation: `confettiFall ${p.duration}s cubic-bezier(0.22,0.7,0.32,1) ${p.delay}s both`,
           '--cx': `${p.cx}vw`,
           '--cr': `${p.cr}deg`,
         }}/>
