@@ -137,11 +137,11 @@ function BreakdownBar({ criterionKey, value, max }) {
   return (
     <div>
       <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-        <span style={{ fontSize: 11, fontWeight: 500, color: '#6b7280', flexShrink: 0, width: 36, textAlign: 'right', fontVariantNumeric: 'tabular-nums' }}>{max}pt</span>
-        <span style={{ fontSize: 13, color: '#3c3c44', fontWeight: 400, flexShrink: 0, width: 148, display: 'flex', alignItems: 'center', gap: 6 }}>
+        <span style={{ fontSize: 11, fontWeight: 500, color: C.text3, flexShrink: 0, width: 36, textAlign: 'right', fontVariantNumeric: 'tabular-nums' }}>{max}pt</span>
+        <span style={{ fontSize: 13, color: C.text2, fontWeight: 400, flexShrink: 0, width: 148, display: 'flex', alignItems: 'center', gap: 6 }}>
           {meta.label}
           <button onClick={() => setShowWhy(v => !v)} aria-label="Why this matters"
-            style={{ width: 13, height: 13, borderRadius: '50%', border: 'none', background: showWhy ? '#6b7280' : '#f0f0f4', cursor: 'pointer', fontSize: 9, fontWeight: 700, color: showWhy ? '#fff' : '#6b7280', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 0, lineHeight: 1, transition: 'all 0.15s', flexShrink: 0 }}>?
+            style={{ width: 13, height: 13, borderRadius: '50%', border: 'none', background: showWhy ? C.text3 : '#f0f0f4', cursor: 'pointer', fontSize: 9, fontWeight: 700, color: showWhy ? '#fff' : C.text3, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 0, lineHeight: 1, transition: 'all 0.15s', flexShrink: 0 }}>?
           </button>
         </span>
         <div style={{ flex: 1, height: 4, background: '#eeeef3', borderRadius: 99, overflow: 'hidden', minWidth: 0 }}>
@@ -150,7 +150,7 @@ function BreakdownBar({ criterionKey, value, max }) {
         <span style={{ fontSize: 13, fontWeight: 700, color, fontVariantNumeric: 'tabular-nums', minWidth: 26, textAlign: 'right' }}>{value}</span>
       </div>
       {showWhy && (
-        <p style={{ fontSize: 12, color: '#52525b', marginTop: 8, marginLeft: 46, lineHeight: 1.55, background: '#fafafb', padding: '8px 11px', borderRadius: 7, borderLeft: `2px solid ${color}` }}>
+        <p style={{ fontSize: 12, color: C.text2, marginTop: 8, marginLeft: 46, lineHeight: 1.55, background: '#fafafb', padding: '8px 11px', borderRadius: 7, borderLeft: `2px solid ${color}` }}>
           {meta.why}
         </p>
       )}
@@ -200,7 +200,7 @@ function TitlePreviewSimulator({ title }) {
   ]
   return (
     <div style={{ marginTop: 12, padding: '12px 14px', background: '#fafafb', borderRadius: 10, border: '1px solid rgba(10,10,15,0.06)' }}>
-      <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 8 }}>Preview on YouTube</p>
+      <p style={{ fontSize: 11, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 8 }}>Preview on YouTube</p>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 8 }}>
         {surfaces.map(({ label, maxChars, icon }) => {
           const truncated = title.length > maxChars
@@ -486,7 +486,7 @@ export default function SeoOptimizer({ onNavigate }) {
               Title pre-filled from Video Ideas
             </div>
           )}
-          <label style={{ display: 'block', fontSize: 11, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 8 }}>Your video title</label>
+          <label style={{ display: 'block', fontSize: 11, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 8 }}>Your video title</label>
           <input ref={titleInputRef} value={title} onChange={e => setTitle(e.target.value)} onKeyDown={e => e.key === 'Enter' && handleSubmitTitle()}
             placeholder="e.g. How I grew my YouTube channel to 10k subscribers"
             style={{ width: '100%', padding: '11px 18px', fontSize: 14, border: '1px solid #e6e6ec', borderRadius: 100, fontFamily: 'inherit', outline: 'none', color: C.text1, background: '#ffffff', boxSizing: 'border-box', transition: 'border-color 0.18s, box-shadow 0.18s', letterSpacing: '-0.1px' }}
@@ -565,7 +565,7 @@ export default function SeoOptimizer({ onNavigate }) {
             <div style={{ display: 'flex', alignItems: 'center', gap: 22, flexWrap: 'wrap' }}>
               <ScoreRing score={result.score} />
               <div style={{ flex: 1, minWidth: 240 }}>
-                <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 6 }}>SEO score</p>
+                <p style={{ fontSize: 11, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }}>SEO score</p>
                 <p style={{ fontSize: 20, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', marginBottom: 4, lineHeight: 1.1 }}>{scoreLabel}</p>
                 <p style={{ fontSize: 13, color: C.text2, lineHeight: 1.5 }}>
                   {result.score >= 75 ? 'Well optimised. Small tweaks can push it further.'
@@ -604,7 +604,7 @@ export default function SeoOptimizer({ onNavigate }) {
           {/* Score Breakdown — full-width dense card with inline 2-col rows */}
           <div className="seo-glass-card" style={{ borderRadius: 16, padding: '22px 28px', marginBottom: 12 }}>
             <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 18 }}>
-              <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.08em' }}>Score breakdown</p>
+              <p style={{ fontSize: 11, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Score breakdown</p>
               <p style={{ fontSize: 11, color: C.text3 }}>8 criteria · title length &amp; keyword relevance weigh most</p>
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px 40px' }}>
@@ -617,17 +617,17 @@ export default function SeoOptimizer({ onNavigate }) {
           {/* Keyword Research */}
           {result.keyword_scores?.length > 0 && (
             <div className="seo-glass-card" style={{ borderRadius: 16, padding: '18px 20px', marginBottom: 12 }}>
-              <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 3 }}>Keyword research</p>
+              <p style={{ fontSize: 11, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 3 }}>Keyword research</p>
               <p style={{ fontSize: 12, color: C.text3, marginBottom: 14, lineHeight: 1.5 }}>
                 Volume is search demand from YouTube autocomplete. Competition counts how many top videos target it. Score favours high-volume, low-competition opportunities.
               </p>
 
               <div style={{ border: '1px solid #e6e6ec', borderRadius: 10, overflow: 'hidden', marginBottom: 14 }}>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 72px 100px 52px', gap: 8, padding: '8px 14px', background: '#fafafb', borderBottom: '1px solid #e6e6ec' }}>
-                  <span style={{ fontSize: 10.5, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.08em' }}>Keyword phrase</span>
-                  <span style={{ fontSize: 10.5, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.08em' }}>Volume</span>
-                  <span style={{ fontSize: 10.5, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.08em' }}>Competition</span>
-                  <span style={{ fontSize: 10.5, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.08em', textAlign: 'right' }}>Score</span>
+                  <span style={{ fontSize: 10.5, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Keyword phrase</span>
+                  <span style={{ fontSize: 10.5, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Volume</span>
+                  <span style={{ fontSize: 10.5, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Competition</span>
+                  <span style={{ fontSize: 10.5, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em', textAlign: 'right' }}>Score</span>
                 </div>
                 {result.keyword_scores.map((kw, i) => {
                   const volColor = kw.volume === 'HIGH' ? C.green : kw.volume === 'MED' ? C.amber : C.text3
@@ -670,7 +670,7 @@ export default function SeoOptimizer({ onNavigate }) {
             <div className="seo-glass-card" style={{ borderRadius: 16, padding: '18px 20px', marginBottom: 12 }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12, gap: 16 }}>
                 <div>
-                  <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 4 }}>Suggested tags</p>
+                  <p style={{ fontSize: 11, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 4 }}>Suggested tags</p>
                   <p style={{ fontSize: 12.5, color: C.text3, lineHeight: 1.5 }}>
                     Pulled from competitor videos in your niche. Add these directly to your video tags.
                   </p>
@@ -714,7 +714,7 @@ export default function SeoOptimizer({ onNavigate }) {
               <div style={{ background: 'rgba(217,119,6,0.05)', border: '1px solid rgba(217,119,6,0.18)', borderRadius: 12, padding: '14px 18px', marginBottom: 12 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 9, marginBottom: 10 }}>
                   <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke={C.amber} strokeWidth="2" strokeLinecap="round"><path d="M7 1v5M7 9v.5"/><circle cx="7" cy="7" r="6"/></svg>
-                  <p style={{ fontSize: 11, fontWeight: 700, color: C.amber, textTransform: 'uppercase', letterSpacing: '0.08em' }}>Gaps the AI titles fix</p>
+                  <p style={{ fontSize: 11, fontWeight: 700, color: C.amber, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Gaps the AI titles fix</p>
                 </div>
                 <div style={{ display: 'grid', gridTemplateColumns: fixes.length > 1 ? '1fr 1fr' : '1fr', gap: '8px 32px' }}>
                   {fixes.map(([key, meta]) => (
@@ -739,19 +739,19 @@ export default function SeoOptimizer({ onNavigate }) {
           {/* Intent analysis + gap */}
           {result.intent_analysis?.search_intent && (
             <div className="seo-glass-card" style={{ borderRadius: 16, padding: '18px 20px', marginBottom: 12 }}>
-              <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 14 }}>Search intent analysis</p>
+              <p style={{ fontSize: 11, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 14 }}>Search intent analysis</p>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 14 }}>
                 <div style={{ background: 'rgba(10,10,15,0.03)', border: '1px solid rgba(10,10,15,0.08)', borderRadius: 10, padding: '11px 14px' }}>
                   <p style={{ fontSize: 10.5, fontWeight: 700, color: C.blue, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 5 }}>Search intent</p>
                   <p style={{ fontSize: 13.5, fontWeight: 600, color: C.text1, lineHeight: 1.4 }}>{result.intent_analysis.search_intent}</p>
                 </div>
                 <div style={{ background: 'rgba(217,119,6,0.05)', border: '1px solid rgba(217,119,6,0.14)', borderRadius: 10, padding: '11px 14px' }}>
-                  <p style={{ fontSize: 10.5, fontWeight: 700, color: C.amber, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 5 }}>Emotional driver</p>
+                  <p style={{ fontSize: 10.5, fontWeight: 700, color: C.amber, textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 5 }}>Emotional driver</p>
                   <p style={{ fontSize: 13.5, fontWeight: 600, color: C.text1, lineHeight: 1.4 }}>{result.intent_analysis.emotional_driver}</p>
                 </div>
               </div>
               <div style={{ marginBottom: 14 }}>
-                <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 5 }}>Who's searching</p>
+                <p style={{ fontSize: 11, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 5 }}>Who's searching</p>
                 <p style={{ fontSize: 13, color: C.text2, lineHeight: 1.6 }}>{result.intent_analysis.viewer_profile}</p>
               </div>
               {result.intent_analysis.gap_opportunity && (
@@ -767,7 +767,7 @@ export default function SeoOptimizer({ onNavigate }) {
               )}
               {result.intent_analysis.top_keywords?.length > 0 && (
                 <div style={{ marginTop: 14 }}>
-                  <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 6 }}>Top keywords in competitor titles</p>
+                  <p style={{ fontSize: 11, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }}>Top keywords in competitor titles</p>
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5 }}>
                     {result.intent_analysis.top_keywords.map(kw => (
                       <span key={kw} onClick={() => setTitle(kw)} style={{ fontSize: 12, color: C.blue, background: 'rgba(10,10,15,0.04)', padding: '3px 9px', borderRadius: 6, cursor: 'pointer', fontWeight: 500, transition: 'background 0.15s' }}
@@ -785,7 +785,7 @@ export default function SeoOptimizer({ onNavigate }) {
             <div className="seo-glass-card" style={{ borderRadius: 16, padding: '18px 20px', marginBottom: 12 }}>
               <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 14, gap: 16 }}>
                 <div>
-                  <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 4 }}>AI-suggested titles</p>
+                  <p style={{ fontSize: 11, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 4 }}>AI-suggested titles</p>
                   <p style={{ fontSize: 13, color: C.text2, lineHeight: 1.5 }}>
                     3 psychological hooks. Pick one to continue to description optimisation.
                   </p>
@@ -863,7 +863,7 @@ export default function SeoOptimizer({ onNavigate }) {
           {/* Top videos in niche */}
           {result.top_videos?.length > 0 && (
             <div className="seo-glass-card" style={{ borderRadius: 16, padding: '18px 20px', marginBottom: 12 }}>
-              <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 4 }}>Top titles matching your topic</p>
+              <p style={{ fontSize: 11, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 4 }}>Top titles matching your topic</p>
               <p style={{ fontSize: 12, color: C.text3, marginBottom: 14, lineHeight: 1.5 }}>
                 Searched YouTube for{result.primary_phrase ? <><span style={{ fontWeight: 700, color: C.text2 }}> "{result.primary_phrase}"</span> —</> : ''} your closest competitors.
                 {result.intent_matched > 0 && result.intent_matched < result.videos_found
@@ -938,7 +938,7 @@ export default function SeoOptimizer({ onNavigate }) {
               {/* Header */}
               <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 14, gap: 16 }}>
                 <div>
-                  <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 5 }}>Description optimizer</p>
+                  <p style={{ fontSize: 11, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 5 }}>Description optimizer</p>
                   <p style={{ fontSize: 14, fontWeight: 700, color: C.text1, lineHeight: 1.4, letterSpacing: '-0.2px' }}>"{selectedTitle}"</p>
                 </div>
                 <button onClick={() => { setSelectedTitle(null); setDescResult(null); setDescError('') }}
@@ -950,7 +950,7 @@ export default function SeoOptimizer({ onNavigate }) {
               {!descResult && (
                 <>
                   <div style={{ marginBottom: 16 }}>
-                    <label style={{ display: 'block', fontSize: 11, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 8 }}>
+                    <label style={{ display: 'block', fontSize: 11, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 8 }}>
                       Current description{' '}
                       <span style={{ fontWeight: 400, textTransform: 'none', letterSpacing: 0, color: C.text3 }}>(optional — paste to improve, or leave blank)</span>
                     </label>
