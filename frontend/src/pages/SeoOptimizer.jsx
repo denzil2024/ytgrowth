@@ -977,19 +977,22 @@ export default function SeoOptimizer({ onNavigate }) {
                           <div style={{
                             background: '#ffffff',
                             border: `1px solid ${C.border}`,
-                            borderLeft: `3px solid ${C.amber}`,
+                            borderLeft: `3px solid ${sevColor}`,
                             borderRadius: '0 10px 10px 0',
                             padding: '12px 16px',
                             boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
                           }}>
-                            <p style={{ fontSize: 10, fontWeight: 700, color: C.amber, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 10 }}>Scores</p>
+                            <p style={{ fontSize: 10, fontWeight: 700, color: sevColor, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 10 }}>Scores</p>
                             <div style={{ display: 'flex', gap: 18, alignItems: 'baseline', flexWrap: 'wrap' }}>
-                              {[['SEO', s.seo_score], ['CTR', s.ctr_score], ['Hook', s.hook_score]].map(([label, val]) => (
-                                <div key={label} style={{ display: 'flex', alignItems: 'baseline', gap: 5 }}>
-                                  <span style={{ fontSize: 10, fontWeight: 600, color: C.text3, letterSpacing: '0.08em', textTransform: 'uppercase' }}>{label}</span>
-                                  <span style={{ fontSize: 16, fontWeight: 800, color: C.amber, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.2px' }}>{val || '—'}</span>
-                                </div>
-                              ))}
+                              {[['SEO', s.seo_score], ['CTR', s.ctr_score], ['Hook', s.hook_score]].map(([label, val]) => {
+                                const vc = val >= 75 ? C.green : val >= 55 ? C.amber : C.red
+                                return (
+                                  <div key={label} style={{ display: 'flex', alignItems: 'baseline', gap: 5 }}>
+                                    <span style={{ fontSize: 10, fontWeight: 600, color: C.text3, letterSpacing: '0.08em', textTransform: 'uppercase' }}>{label}</span>
+                                    <span style={{ fontSize: 16, fontWeight: 800, color: val ? vc : C.text3, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.2px' }}>{val || '—'}</span>
+                                  </div>
+                                )
+                              })}
                             </div>
                           </div>
                         </div>
