@@ -773,43 +773,43 @@ export default function SeoOptimizer({ onNavigate }) {
 
             return (
               <div className="seo-glass-card" style={{ borderRadius: 16, padding: '22px 24px', marginBottom: 24 }}>
-                {/* Card-level section label — 11/600/0.06em, like Overview's Score Breakdown header */}
                 <p style={{ ...T.sectionLabel, marginBottom: 20 }}>Search intent analysis</p>
 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-                  {/* Search intent — red · first block, NO separator (Overview line 2247) */}
-                  <div>
-                    <p style={roleLabel(C.red)}>Search intent</p>
-                    <p style={roleBody}>{result.intent_analysis.search_intent}</p>
-                  </div>
 
-                  {/* Emotional driver — amber */}
-                  <div style={separator}>
-                    <p style={roleLabel(C.amber)}>Emotional driver</p>
-                    <p style={roleBody}>{result.intent_analysis.emotional_driver}</p>
-                  </div>
-
-                  {/* Who's searching — neutral */}
-                  <div style={separator}>
-                    <p style={roleLabel(C.text3)}>Who's searching</p>
-                    <p style={roleBodyMuted}>{result.intent_analysis.viewer_profile}</p>
-                  </div>
-
-                  {/* Gap opportunity — green, with Overused nested as sub-block */}
-                  {hasGap && (
-                    <div style={separator}>
-                      <p style={roleLabel(C.green)}>Gap opportunity — what competitors aren't doing</p>
-                      <p style={roleBody}>{result.intent_analysis.gap_opportunity}</p>
-                      {result.intent_analysis.overused_angle && (
-                        <div style={{ marginTop: 14 }}>
-                          <p style={roleLabel(C.red)}>Overused angle</p>
-                          <p style={roleBodyMuted}>{result.intent_analysis.overused_angle}</p>
-                        </div>
-                      )}
+                  {/* Row 1 — Search intent | Emotional driver (parallel concepts) */}
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0 40px' }}>
+                    <div>
+                      <p style={roleLabel(C.red)}>Search intent</p>
+                      <p style={roleBody}>{result.intent_analysis.search_intent}</p>
                     </div>
-                  )}
+                    <div>
+                      <p style={roleLabel(C.amber)}>Emotional driver</p>
+                      <p style={roleBody}>{result.intent_analysis.emotional_driver}</p>
+                    </div>
+                  </div>
 
-                  {/* Top keywords — neutral uppercase + chip row */}
+                  {/* Row 2 — Who's searching | Gap opportunity (viewer + opportunity) */}
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0 40px', ...separator }}>
+                    <div>
+                      <p style={roleLabel(C.text3)}>Who's searching</p>
+                      <p style={roleBodyMuted}>{result.intent_analysis.viewer_profile}</p>
+                    </div>
+                    {hasGap && (
+                      <div>
+                        <p style={roleLabel(C.green)}>Gap opportunity — what competitors aren't doing</p>
+                        <p style={roleBody}>{result.intent_analysis.gap_opportunity}</p>
+                        {result.intent_analysis.overused_angle && (
+                          <div style={{ marginTop: 14 }}>
+                            <p style={roleLabel(C.red)}>Overused angle</p>
+                            <p style={roleBodyMuted}>{result.intent_analysis.overused_angle}</p>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Row 3 — Top keywords (full width) */}
                   {hasKeywords && (
                     <div style={separator}>
                       <p style={{ ...roleLabel(C.text3), marginBottom: 10 }}>Top keywords in competitor titles</p>
