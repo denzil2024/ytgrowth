@@ -775,54 +775,63 @@ export default function SeoOptimizer({ onNavigate }) {
               <div className="seo-glass-card" style={{ borderRadius: 16, padding: '22px 24px', marginBottom: 24 }}>
                 <p style={{ ...T.sectionLabel, marginBottom: 20 }}>Search intent analysis</p>
 
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-
-                  {/* Row 1 — Search intent | Emotional driver (parallel concepts) */}
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0 40px' }}>
-                    <div>
-                      <p style={roleLabel(C.red)}>Search intent</p>
-                      <p style={roleBody}>{result.intent_analysis.search_intent}</p>
-                    </div>
-                    <div>
-                      <p style={roleLabel(C.amber)}>Emotional driver</p>
-                      <p style={roleBody}>{result.intent_analysis.emotional_driver}</p>
-                    </div>
+                {/* Rows 1 + 2 — single 2-col grid with a vertical divider spanning both rows.
+                    Divider pattern borrowed from Overview's Summary card (Dashboard.jsx:2089). */}
+                <div style={{ position: 'relative', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px 48px' }}>
+                  {/* R1C1 — Search intent (red) */}
+                  <div>
+                    <p style={roleLabel(C.red)}>Search intent</p>
+                    <p style={roleBody}>{result.intent_analysis.search_intent}</p>
                   </div>
-
-                  {/* Row 2 — Who's searching | Gap opportunity (viewer + opportunity) */}
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0 40px', ...separator }}>
-                    <div>
-                      <p style={roleLabel(C.text3)}>Who's searching</p>
-                      <p style={roleBodyMuted}>{result.intent_analysis.viewer_profile}</p>
-                    </div>
-                    {hasGap && (
-                      <div>
-                        <p style={roleLabel(C.green)}>Gap opportunity — what competitors aren't doing</p>
-                        <p style={roleBody}>{result.intent_analysis.gap_opportunity}</p>
-                        {result.intent_analysis.overused_angle && (
-                          <div style={{ marginTop: 14 }}>
-                            <p style={roleLabel(C.red)}>Overused angle</p>
-                            <p style={roleBodyMuted}>{result.intent_analysis.overused_angle}</p>
-                          </div>
-                        )}
-                      </div>
-                    )}
+                  {/* R1C2 — Emotional driver (amber) */}
+                  <div>
+                    <p style={roleLabel(C.amber)}>Emotional driver</p>
+                    <p style={roleBody}>{result.intent_analysis.emotional_driver}</p>
                   </div>
-
-                  {/* Row 3 — Top keywords (full width) */}
-                  {hasKeywords && (
-                    <div style={separator}>
-                      <p style={{ ...roleLabel(C.text3), marginBottom: 10 }}>Top keywords in competitor titles</p>
-                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-                        {result.intent_analysis.top_keywords.map(kw => (
-                          <span key={kw} onClick={() => setTitle(kw)} style={T.chip}
-                            onMouseEnter={e => { e.currentTarget.style.background = '#f1f1f6'; e.currentTarget.style.borderColor = 'rgba(229,37,27,0.25)'; e.currentTarget.style.color = C.text1 }}
-                            onMouseLeave={e => { e.currentTarget.style.background = '#fafafb'; e.currentTarget.style.borderColor = '#e6e6ec'; e.currentTarget.style.color = C.text2 }}>{kw}</span>
-                        ))}
-                      </div>
+                  {/* R2C1 — Who's searching (neutral) · horizontal hairline above */}
+                  <div style={{ paddingTop: 20, borderTop: `1px solid ${C.border}` }}>
+                    <p style={roleLabel(C.text3)}>Who's searching</p>
+                    <p style={roleBodyMuted}>{result.intent_analysis.viewer_profile}</p>
+                  </div>
+                  {/* R2C2 — Gap opportunity (green), with Overused nested */}
+                  {hasGap ? (
+                    <div style={{ paddingTop: 20, borderTop: `1px solid ${C.border}` }}>
+                      <p style={roleLabel(C.green)}>Gap opportunity — what competitors aren't doing</p>
+                      <p style={roleBody}>{result.intent_analysis.gap_opportunity}</p>
+                      {result.intent_analysis.overused_angle && (
+                        <div style={{ marginTop: 14, paddingTop: 14, borderTop: `1px solid ${C.border}` }}>
+                          <p style={roleLabel(C.red)}>Overused angle</p>
+                          <p style={roleBodyMuted}>{result.intent_analysis.overused_angle}</p>
+                        </div>
+                      )}
                     </div>
+                  ) : (
+                    <div />
                   )}
+
+                  {/* Vertical divider — spans full height of the 2×2 grid, centered */}
+                  <div aria-hidden="true" style={{
+                    position: 'absolute',
+                    top: 0, bottom: 0, left: '50%',
+                    width: 1, background: C.border,
+                    transform: 'translateX(-50%)',
+                    pointerEvents: 'none',
+                  }}/>
                 </div>
+
+                {/* Row 3 — Top keywords (full width) */}
+                {hasKeywords && (
+                  <div style={{ ...separator, marginTop: 20 }}>
+                    <p style={{ ...roleLabel(C.text3), marginBottom: 10 }}>Top keywords in competitor titles</p>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                      {result.intent_analysis.top_keywords.map(kw => (
+                        <span key={kw} onClick={() => setTitle(kw)} style={T.chip}
+                          onMouseEnter={e => { e.currentTarget.style.background = '#f1f1f6'; e.currentTarget.style.borderColor = 'rgba(229,37,27,0.25)'; e.currentTarget.style.color = C.text1 }}
+                          onMouseLeave={e => { e.currentTarget.style.background = '#fafafb'; e.currentTarget.style.borderColor = '#e6e6ec'; e.currentTarget.style.color = C.text2 }}>{kw}</span>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             )
           })()}
