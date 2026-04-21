@@ -11,8 +11,23 @@ if (typeof document !== 'undefined' && !document.getElementById('seo-opt-styles'
 
   .seo-glass-card {
     background: #ffffff;
-    border: 1px solid rgba(10,10,15,0.08) !important;
+    border: 1px solid #e6e6ec !important;
+    border-radius: 16px;
     box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 4px 14px rgba(0,0,0,0.06) !important;
+    transition: box-shadow 0.2s, transform 0.2s;
+  }
+  .seo-suggestion-card {
+    background: #ffffff;
+    border: 1px solid #e6e6ec;
+    border-radius: 14px;
+    overflow: hidden;
+    margin-bottom: 8px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 4px 14px rgba(0,0,0,0.06);
+    transition: box-shadow 0.2s, transform 0.2s;
+  }
+  .seo-suggestion-card:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08), 0 16px 40px rgba(0,0,0,0.09);
+    transform: translateY(-1px);
   }
 `
   document.head.appendChild(s)
@@ -89,16 +104,6 @@ const STRATEGY_META = {
   hybrid: { label: 'Hybrid', color: C.red,   bg: C.redBg,   desc: 'Keywords + emotion — ranks and gets clicked' },
 }
 
-const BREAKDOWN_META = {
-  length:           { label: 'Title length',        max: 25, why: '50–70 chars is the sweet spot. Shorter = no context. Longer = cut off on mobile (70%+ of YouTube watch time).' },
-  front_loading:    { label: 'Front-loading',        max: 15, why: 'YouTube viewers scan the first 3 words to decide whether to read on. Your strongest keyword or hook must come first.' },
-  power_words:      { label: 'Power words',          max: 15, why: 'Words like "Best", "Secret", "Never", "Shocking" trigger an emotional response that overrides the rational decision not to click.' },
-  numbers:          { label: 'Numbers / digits',     max: 10, why: 'Specific numbers ("7 Tips", "24-Hour", "10x") outperform vague titles. They signal concrete, structured value.' },
-  question:         { label: 'Question format',      max: 10, why: 'Questions create an unresolved tension the viewer needs to close. "Why does..." and "How do I..." titles get disproportionate clicks.' },
-  hook_format:      { label: 'Hook / structure',     max: 10, why: 'A colon ":", parenthesis, or bracket splits your title into a hook + payoff — the viewer gets a promise and wants the answer.' },
-  keyword_relevance:{ label: 'Keyword relevance',    max: 10, why: 'Titles that share phrases with top-viewed videos in your niche rank higher in search and appear in suggested videos more often.' },
-  viral_format:     { label: 'Viral format',         max: 10, why: 'Titles following proven viral patterns (Curiosity Gap, Listicle, Authority/Warning, etc.) consistently outperform generic alternatives.' },
-}
 
 const DESC_TYPE_META = {
   story:   { color: '#e5251b', bg: 'rgba(229,37,27,0.05)', bdr: 'rgba(229,37,27,0.14)' },
@@ -128,35 +133,6 @@ function ScoreRing({ score }) {
   )
 }
 
-function BreakdownBar({ criterionKey, value, max }) {
-  const [showWhy, setShowWhy] = useState(false)
-  const meta = BREAKDOWN_META[criterionKey]
-  if (!meta) return null
-  const pct = Math.round((value / max) * 100)
-  const color = pct >= 80 ? '#059669' : pct >= 40 ? '#d97706' : '#e5251b'
-  return (
-    <div>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-        <span style={{ fontSize: 11, fontWeight: 500, color: C.text3, flexShrink: 0, width: 36, textAlign: 'right', fontVariantNumeric: 'tabular-nums' }}>{max}pt</span>
-        <span style={{ fontSize: 13, color: C.text2, fontWeight: 400, flexShrink: 0, width: 148, display: 'flex', alignItems: 'center', gap: 6 }}>
-          {meta.label}
-          <button onClick={() => setShowWhy(v => !v)} aria-label="Why this matters"
-            style={{ width: 13, height: 13, borderRadius: '50%', border: 'none', background: showWhy ? C.text3 : '#f0f0f4', cursor: 'pointer', fontSize: 9, fontWeight: 700, color: showWhy ? '#fff' : C.text3, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 0, lineHeight: 1, transition: 'all 0.15s', flexShrink: 0 }}>?
-          </button>
-        </span>
-        <div style={{ flex: 1, height: 4, background: '#eeeef3', borderRadius: 99, overflow: 'hidden', minWidth: 0 }}>
-          <div style={{ width: `${pct}%`, height: '100%', background: color, borderRadius: 99, transition: 'width 0.8s cubic-bezier(0.34,1.56,0.64,1)' }} />
-        </div>
-        <span style={{ fontSize: 13, fontWeight: 700, color, fontVariantNumeric: 'tabular-nums', minWidth: 26, textAlign: 'right' }}>{value}</span>
-      </div>
-      {showWhy && (
-        <p style={{ fontSize: 12, color: C.text2, marginTop: 8, marginLeft: 46, lineHeight: 1.55, background: '#fafafb', padding: '8px 11px', borderRadius: 7, borderLeft: `2px solid ${color}` }}>
-          {meta.why}
-        </p>
-      )}
-    </div>
-  )
-}
 
 function FormatTemplates({ onUse }) {
   const [open, setOpen] = useState(false)
@@ -434,10 +410,6 @@ export default function SeoOptimizer({ onNavigate }) {
     setTimeout(() => setCopiedDesc(null), 1800)
   }
 
-  const scoreLabel = result
-    ? result.score >= 75 ? 'Strong' : result.score >= 50 ? 'Needs work' : 'Weak'
-    : ''
-
   const SpinIcon = () => (
     <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2"
       style={{ animation: 'spin 0.8s linear infinite' }}>
@@ -566,58 +538,24 @@ export default function SeoOptimizer({ onNavigate }) {
 
       {result && (
         <div className="seo-result-section">
-          {/* SEO Score — full-width narrative card */}
-          <div className="seo-glass-card" style={{ borderRadius: 16, padding: '20px 24px', marginBottom: 12 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 22, flexWrap: 'wrap' }}>
-              <ScoreRing score={result.score} />
-              <div style={{ flex: 1, minWidth: 240 }}>
-                <p style={{ fontSize: 11, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }}>SEO score</p>
-                <p style={{ fontSize: 20, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', marginBottom: 4, lineHeight: 1.1 }}>{scoreLabel}</p>
-                <p style={{ fontSize: 13, color: C.text2, lineHeight: 1.5 }}>
-                  {result.score >= 75 ? 'Well optimised. Small tweaks can push it further.'
-                    : result.score >= 50 ? 'Decent — AI titles below fix your gaps.'
-                    : 'Needs work. AI titles below address every gap.'}
-                </p>
-              </div>
+          {/* Niche header — what the competitor set is */}
+          <div className="seo-glass-card" style={{ borderRadius: 16, padding: '22px 24px', marginBottom: 12 }}>
+            <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 14, gap: 16, flexWrap: 'wrap' }}>
+              <p style={{ fontSize: 11, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Competitor set</p>
               {result.primary_phrase && (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 6, paddingLeft: 22, borderLeft: '1px solid #f0f0f4', minWidth: 200 }}>
-                  <span style={{ fontSize: 10.5, color: C.text3, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em' }}>Niche</span>
-                  <span style={{ fontSize: 13, fontWeight: 600, color: C.text1 }}>{result.primary_phrase}</span>
-                  {result.videos_found > 0 && (
-                    <span style={{ fontSize: 11.5, color: C.text3, fontWeight: 500 }}>
-                      {result.videos_found} videos analysed{result.intent_matched > 0 && result.intent_matched < result.videos_found ? `, ${result.intent_matched} exact` : ''}
-                    </span>
-                  )}
-                </div>
+                <p style={{ fontSize: 11, color: C.text3 }}>
+                  {result.videos_found > 0 ? `${result.videos_found} live YouTube results${result.intent_matched > 0 && result.intent_matched < result.videos_found ? ` · ${result.intent_matched} exact match` : ''}` : 'No competitor data yet'}
+                </p>
               )}
             </div>
-            {(result.viral_format_detected || result.power_words_found?.length > 0) && (
-              <div style={{ marginTop: 14, paddingTop: 12, borderTop: '1px solid #f0f0f4', display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 6 }}>
-                <span style={{ fontSize: 10.5, color: C.text3, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', marginRight: 4 }}>Signals detected</span>
-                {result.viral_format_detected && (
-                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 10, fontWeight: 700, color: C.red, border: '1.5px solid rgba(229,37,27,0.35)', padding: '2px 8px', borderRadius: 20, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-                    <svg width="8" height="8" viewBox="0 0 9 9" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M4.5 1L5.5 3.5h2.5L6 5l1 3-2.5-1.5L2 8l1-3-2-1.5H3.5z"/></svg>
-                    {VIRAL_FORMAT_LABELS[result.viral_format_detected]}
-                  </span>
-                )}
-                {result.power_words_found?.map(w => (
-                  <span key={w} style={{ fontSize: 10, fontWeight: 700, color: C.text3, border: '1.5px solid #e6e6ec', padding: '2px 8px', borderRadius: 20, textTransform: 'uppercase', letterSpacing: '0.06em' }}>{w}</span>
-                ))}
-              </div>
+            {result.primary_phrase && (
+              <p style={{ fontSize: 20, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', lineHeight: 1.2, marginBottom: 6 }}>
+                &ldquo;{result.primary_phrase}&rdquo;
+              </p>
             )}
-          </div>
-
-          {/* Score Breakdown — full-width dense card with inline 2-col rows */}
-          <div className="seo-glass-card" style={{ borderRadius: 16, padding: '22px 28px', marginBottom: 12 }}>
-            <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 18 }}>
-              <p style={{ fontSize: 11, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Score breakdown</p>
-              <p style={{ fontSize: 11, color: C.text3 }}>8 criteria · title length &amp; keyword relevance weigh most</p>
-            </div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px 40px' }}>
-              {Object.entries(BREAKDOWN_META).map(([key]) => (
-                <BreakdownBar key={key} criterionKey={key} value={result.breakdown[key] ?? 0} max={BREAKDOWN_META[key].max} />
-              ))}
-            </div>
+            <p style={{ fontSize: 13, color: C.text2, lineHeight: 1.6, margin: 0 }}>
+              The 3 titles below are written from the gap between what these competitors do and what they leave open — not from forced keyword formulas.
+            </p>
           </div>
 
           {/* Keyword Research */}
@@ -712,28 +650,6 @@ export default function SeoOptimizer({ onNavigate }) {
             </div>
           )}
 
-          {/* Fix These First */}
-          {(() => {
-            const fixes = Object.entries(BREAKDOWN_META).filter(([k]) => (result.breakdown[k] ?? 0) === 0)
-            if (!fixes.length) return null
-            return (
-              <div style={{ background: 'rgba(217,119,6,0.05)', border: '1px solid rgba(217,119,6,0.18)', borderRadius: 12, padding: '14px 18px', marginBottom: 12 }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 9, marginBottom: 10 }}>
-                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke={C.amber} strokeWidth="2" strokeLinecap="round"><path d="M7 1v5M7 9v.5"/><circle cx="7" cy="7" r="6"/></svg>
-                  <p style={{ fontSize: 11, fontWeight: 700, color: C.amber, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Gaps the AI titles fix</p>
-                </div>
-                <div style={{ display: 'grid', gridTemplateColumns: fixes.length > 1 ? '1fr 1fr' : '1fr', gap: '8px 32px' }}>
-                  {fixes.map(([key, meta]) => (
-                    <div key={key} style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                      <span style={{ fontSize: 12, fontWeight: 700, color: C.text1 }}>{meta.label}</span>
-                      <span style={{ fontSize: 12, color: C.text2, lineHeight: 1.5 }}>{meta.why.split('.')[0]}.</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )
-          })()}
-
           {/* AI suggestion error */}
           {result.suggestion_error && !result.suggestions?.length && (
             <div style={{ background: '#fff7ed', border: '1px solid #fed7aa', borderRadius: 12, padding: '12px 16px', marginBottom: 16 }}>
@@ -786,78 +702,106 @@ export default function SeoOptimizer({ onNavigate }) {
             </div>
           )}
 
-          {/* AI-Suggested Titles */}
+          {/* AI-Suggested Titles — Overview InsightCard pattern */}
           {result.suggestions?.length > 0 && (
-            <div className="seo-glass-card" style={{ borderRadius: 16, padding: '18px 20px', marginBottom: 12 }}>
-              <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 14, gap: 16 }}>
-                <div>
-                  <p style={{ fontSize: 11, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 4 }}>AI-suggested titles</p>
-                  <p style={{ fontSize: 13, color: C.text2, lineHeight: 1.5 }}>
-                    3 psychological hooks. Pick one to continue to description optimisation.
-                  </p>
+            <div style={{ marginBottom: 16 }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16, gap: 16 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                  <p style={{ fontSize: 20, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px' }}>Suggested titles</p>
+                  <span style={{ fontSize: 11, fontWeight: 700, color: C.text3, background: '#f1f1f6', padding: '2px 8px', borderRadius: 20, border: '1px solid #e6e6ec' }}>{result.suggestions.length}</span>
                 </div>
                 <button onClick={() => handleSelectTitle(title.trim())}
                   style={{ flexShrink: 0, fontSize: 12, fontWeight: 600, color: C.text2, background: '#ffffff', border: '1px solid #e6e6ec', borderRadius: 100, padding: '6px 14px', cursor: 'pointer', fontFamily: 'inherit', whiteSpace: 'nowrap', boxShadow: '0 1px 3px rgba(0,0,0,0.06)', transition: 'all 0.18s' }}
-                  onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(0,0,0,0.18)'; e.currentTarget.style.color = '#111114' }}
+                  onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(0,0,0,0.18)'; e.currentTarget.style.color = C.text1 }}
                   onMouseLeave={e => { e.currentTarget.style.borderColor = '#e6e6ec'; e.currentTarget.style.color = C.text2 }}>
                   Use my original title →
                 </button>
               </div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+              <div>
                 {result.suggestions.map((s, i) => {
                   const hookMeta = {
-                    curiosity:      { label: 'Curiosity / FOMO', color: C.red,   tint: 'rgba(229,37,27,0.05)', bdr: 'rgba(229,37,27,0.14)', desc: "Makes viewers feel they're missing something" },
-                    transformation: { label: 'Transformation',   color: C.green, tint: 'rgba(5,150,105,0.05)', bdr: 'rgba(5,150,105,0.16)', desc: 'Focuses on the outcome or result' },
-                    contrarian:     { label: 'Contrarian',       color: C.amber, tint: 'rgba(217,119,6,0.05)', bdr: 'rgba(217,119,6,0.16)', desc: "Challenges assumptions — what others don't show" },
+                    curiosity:      { label: 'Curiosity / FOMO', color: C.red,   tint: 'rgba(229,37,27,0.06)', bdr: 'rgba(229,37,27,0.14)', desc: "Makes viewers feel they're missing something" },
+                    transformation: { label: 'Transformation',   color: C.green, tint: 'rgba(5,150,105,0.06)', bdr: 'rgba(5,150,105,0.16)', desc: 'Focuses on the outcome or result' },
+                    contrarian:     { label: 'Contrarian',       color: C.amber, tint: 'rgba(217,119,6,0.06)', bdr: 'rgba(217,119,6,0.16)', desc: "Challenges assumptions — what others don't show" },
                   }
                   const hm = hookMeta[s.hook] || hookMeta.curiosity
-                  const seoColor  = s.seo_score  >= 70 ? C.green : s.seo_score  >= 50 ? C.amber : C.red
-                  const ctrColor  = s.ctr_score  >= 70 ? C.green : s.ctr_score  >= 50 ? C.amber : C.red
-                  const hookColor = s.hook_score >= 70 ? C.green : s.hook_score >= 50 ? C.amber : C.red
+                  const avgScore = Math.round(((s.seo_score || 0) + (s.ctr_score || 0) + (s.hook_score || 0)) / Math.max(1, [s.seo_score, s.ctr_score, s.hook_score].filter(v => v > 0).length))
+                  const sevLabel = avgScore >= 75 ? 'Strong' : avgScore >= 55 ? 'Solid' : 'Weak'
+                  const sevColor = avgScore >= 75 ? C.green : avgScore >= 55 ? C.amber : C.red
                   const isSelected = selectedTitle === s.title
                   return (
-                    <div key={i} style={{ border: `1px solid ${isSelected ? 'rgba(229,37,27,0.35)' : copied === i ? 'rgba(5,150,105,0.38)' : '#e6e6ec'}`, borderRadius: 12, overflow: 'hidden', background: isSelected ? 'rgba(229,37,27,0.03)' : copied === i ? 'rgba(5,150,105,0.04)' : '#ffffff', transition: 'all 0.2s' }}>
-                      {/* Hook header */}
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '8px 14px', background: hm.tint, borderBottom: `1px solid ${hm.bdr}` }}>
-                        <span style={{ width: 6, height: 6, borderRadius: '50%', background: hm.color, flexShrink: 0 }} />
-                        <span style={{ fontSize: 10.5, fontWeight: 700, color: hm.color, textTransform: 'uppercase', letterSpacing: '0.08em' }}>{hm.label}</span>
-                        <span style={{ fontSize: 11.5, color: C.text3, fontWeight: 400 }}>{hm.desc}</span>
-                      </div>
-                      {/* Title + scores */}
-                      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 14, padding: '14px 16px' }}>
-                        <div style={{ flex: 1, minWidth: 0 }}>
-                          <p style={{ fontSize: 14, fontWeight: 700, color: C.text1, lineHeight: 1.45, letterSpacing: '-0.2px' }}>{s.title}</p>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 8, flexWrap: 'wrap' }}>
-                            <span style={{ fontSize: 11, fontWeight: 600, color: s.length >= 50 && s.length <= 70 ? C.green : C.amber }}>{s.length} chars</span>
-                            {s.power_words_found?.length > 0 && s.power_words_found.map(w => (
-                              <span key={w} style={{ fontSize: 10, fontWeight: 700, color: C.text3, border: '1.5px solid #e6e6ec', padding: '1px 7px', borderRadius: 20, textTransform: 'uppercase', letterSpacing: '0.06em' }}>{w}</span>
-                            ))}
+                    <div key={i} className="seo-suggestion-card" style={{
+                      borderTop: `3px solid ${hm.color}`,
+                      borderColor: isSelected ? 'rgba(229,37,27,0.30)' : copied === i ? 'rgba(5,150,105,0.30)' : '#e6e6ec',
+                      background: isSelected ? '#fff8f8' : copied === i ? '#f6fdf9' : '#ffffff',
+                    }}>
+                      <div style={{ padding: '16px 22px 18px' }}>
+                        {/* Header row — numbered badge + hook label + severity pill */}
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
+                          <div style={{
+                            width: 26, height: 26, borderRadius: 8,
+                            background: hm.color,
+                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            flexShrink: 0,
+                          }}>
+                            <span style={{ fontSize: 12, fontWeight: 900, color: '#ffffff', fontVariantNumeric: 'tabular-nums', lineHeight: 1 }}>{i + 1}</span>
+                          </div>
+                          <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, flex: 1, minWidth: 0, flexWrap: 'wrap' }}>
+                            <span style={{ fontSize: 11, fontWeight: 700, color: hm.color, textTransform: 'uppercase', letterSpacing: '0.07em' }}>{hm.label}</span>
+                            <span style={{ fontSize: 12, color: C.text3, fontWeight: 400 }}>{hm.desc}</span>
+                          </div>
+                          <span style={{
+                            fontSize: 10, fontWeight: 700, color: sevColor,
+                            border: `1.5px solid ${sevColor}`, padding: '3px 9px',
+                            borderRadius: 20, letterSpacing: '0.06em', textTransform: 'uppercase',
+                            flexShrink: 0,
+                          }}>{sevLabel}</span>
+                        </div>
+
+                        {/* Title — the main content */}
+                        <p style={{ fontSize: 16, fontWeight: 700, color: C.text1, lineHeight: 1.4, letterSpacing: '-0.3px', marginLeft: 36, marginBottom: 6 }}>{s.title}</p>
+                        <p style={{ fontSize: 11.5, color: C.text3, marginLeft: 36, marginBottom: 14, fontVariantNumeric: 'tabular-nums' }}>
+                          {s.length} chars{s.length >= 50 && s.length <= 70 ? ' · within the ideal 50–70 range' : s.length > 70 ? ' · over 70, will truncate on mobile' : ' · under 50, thin on context'}
+                        </p>
+
+                        {/* Divider — matches Overview InsightCard hairline */}
+                        <div style={{ height: 1, background: '#e6e6ec', marginBottom: 14, marginLeft: 36 }} />
+
+                        {/* 3-col insight grid — why / title score / action */}
+                        <div style={{ marginLeft: 36, display: 'grid', gridTemplateColumns: '1fr 1.4fr 1fr', gap: 8 }}>
+                          {/* WHY IT WORKS — hook-tinted */}
+                          <div style={{ background: hm.tint, border: `1px solid ${hm.bdr}`, borderRadius: 10, padding: '12px 14px' }}>
+                            <p style={{ fontSize: 10, fontWeight: 700, color: hm.color, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Why it works</p>
+                            <p style={{ fontSize: 13, color: C.text1, lineHeight: 1.6 }}>{s.why_it_works || hm.desc}</p>
+                          </div>
+                          {/* SCORES — white centre with hook-colored left accent */}
+                          <div style={{ background: '#ffffff', border: '1px solid #e6e6ec', borderLeft: `3px solid ${hm.color}`, borderRadius: '0 10px 10px 0', padding: '12px 16px', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
+                            <p style={{ fontSize: 10, fontWeight: 700, color: hm.color, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 10 }}>Scores vs competitors</p>
+                            <div style={{ display: 'flex', gap: 18 }}>
+                              {[['SEO', s.seo_score], ['CTR', s.ctr_score], ['Hook', s.hook_score]].map(([label, val]) => {
+                                const c = val >= 70 ? C.green : val >= 50 ? C.amber : C.red
+                                return (
+                                  <div key={label}>
+                                    <p style={{ fontSize: 18, fontWeight: 800, color: c, lineHeight: 1, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.3px' }}>{val || '—'}</p>
+                                    <p style={{ fontSize: 10, fontWeight: 700, color: C.text3, marginTop: 4, letterSpacing: '0.07em', textTransform: 'uppercase' }}>{label}</p>
+                                  </div>
+                                )
+                              })}
+                            </div>
+                          </div>
+                          {/* ACTION — green tint */}
+                          <div style={{ background: 'rgba(5,150,105,0.07)', border: '1px solid rgba(5,150,105,0.16)', borderRadius: 10, padding: '12px 14px', display: 'flex', flexDirection: 'column', gap: 10 }}>
+                            <p style={{ fontSize: 10, fontWeight: 700, color: C.green, letterSpacing: '0.08em', textTransform: 'uppercase' }}>Use this title</p>
+                            <button onClick={() => handleSelectTitle(s.title)}
+                              style={{ fontSize: 12.5, fontWeight: 700, color: isSelected ? C.red : '#ffffff', background: isSelected ? 'rgba(229,37,27,0.08)' : '#e5251b', border: `1px solid ${isSelected ? 'rgba(229,37,27,0.25)' : 'transparent'}`, borderRadius: 100, padding: '8px 14px', cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.18s', boxShadow: isSelected ? 'none' : '0 1px 3px rgba(0,0,0,0.12), 0 4px 14px rgba(229,37,27,0.32)', whiteSpace: 'nowrap' }}>
+                              {isSelected ? '✓ Selected' : 'Continue →'}
+                            </button>
+                            <button onClick={() => copyTitle(s.title, i)}
+                              style={{ fontSize: 12, fontWeight: 600, color: copied === i ? C.green : C.text2, background: '#ffffff', border: '1px solid #e6e6ec', borderRadius: 100, padding: '6px 14px', cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.15s', whiteSpace: 'nowrap' }}>
+                              {copied === i ? '✓ Copied' : 'Copy title'}
+                            </button>
                           </div>
                         </div>
-                        <div style={{ display: 'flex', gap: 10, flexShrink: 0 }}>
-                          {s.seo_score > 0 && <div style={{ textAlign: 'center', minWidth: 44 }}><p style={{ fontSize: 16, fontWeight: 800, color: seoColor, lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{s.seo_score}</p><p style={{ fontSize: 10, color: C.text3, fontWeight: 700, marginTop: 3, textTransform: 'uppercase', letterSpacing: '0.06em' }}>SEO</p></div>}
-                          {s.ctr_score > 0 && <div style={{ textAlign: 'center', minWidth: 44 }}><p style={{ fontSize: 16, fontWeight: 800, color: ctrColor, lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{s.ctr_score}</p><p style={{ fontSize: 10, color: C.text3, fontWeight: 700, marginTop: 3, textTransform: 'uppercase', letterSpacing: '0.06em' }}>CTR</p></div>}
-                          {s.hook_score > 0 && <div style={{ textAlign: 'center', minWidth: 44 }}><p style={{ fontSize: 16, fontWeight: 800, color: hookColor, lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{s.hook_score}</p><p style={{ fontSize: 10, color: C.text3, fontWeight: 700, marginTop: 3, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Hook</p></div>}
-                        </div>
-                      </div>
-                      {/* Why it works */}
-                      {s.why_it_works && (
-                        <div style={{ padding: '10px 16px', borderTop: '1px solid #f0f0f4' }}>
-                          <p style={{ fontSize: 12, color: C.text2, lineHeight: 1.6 }}>
-                            <span style={{ fontWeight: 700, color: hm.color }}>Why it works · </span>{s.why_it_works}
-                          </p>
-                        </div>
-                      )}
-                      {/* Action row */}
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '10px 16px', borderTop: '1px solid #f0f0f4', background: '#fafafb' }}>
-                        <button onClick={() => copyTitle(s.title, i)}
-                          style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 12, fontWeight: 600, color: copied === i ? C.green : C.text2, background: '#ffffff', border: '1px solid #e6e6ec', borderRadius: 100, padding: '5px 13px', cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.15s' }}>
-                          {copied === i ? '✓ Copied' : 'Copy'}
-                        </button>
-                        <button onClick={() => handleSelectTitle(s.title)}
-                          style={{ marginLeft: 'auto', fontSize: 12.5, fontWeight: 700, color: isSelected ? C.red : '#fff', background: isSelected ? 'rgba(229,37,27,0.08)' : '#e5251b', border: `1px solid ${isSelected ? 'rgba(229,37,27,0.25)' : 'transparent'}`, borderRadius: 100, padding: '6px 18px', cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.18s', boxShadow: isSelected ? 'none' : '0 1px 3px rgba(0,0,0,0.12), 0 4px 14px rgba(229,37,27,0.32)' }}>
-                          {isSelected ? '✓ Selected' : 'Use this title →'}
-                        </button>
                       </div>
                     </div>
                   )
@@ -871,11 +815,10 @@ export default function SeoOptimizer({ onNavigate }) {
             <div className="seo-glass-card" style={{ borderRadius: 16, padding: '18px 20px', marginBottom: 12 }}>
               <p style={{ fontSize: 11, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 4 }}>Top titles matching your topic</p>
               <p style={{ fontSize: 12, color: C.text3, marginBottom: 14, lineHeight: 1.5 }}>
-                Searched YouTube for{result.primary_phrase ? <><span style={{ fontWeight: 700, color: C.text2 }}> "{result.primary_phrase}"</span> —</> : ''} your closest competitors.
+                Searched YouTube for{result.primary_phrase ? <><span style={{ fontWeight: 700, color: C.text2 }}> &ldquo;{result.primary_phrase}&rdquo;</span> —</> : ''} your closest competitors.
                 {result.intent_matched > 0 && result.intent_matched < result.videos_found
                   ? ` Filtered to ${result.intent_matched} exact-match videos.`
-                  : ''}{' '}
-                Score uses the same 8 criteria as your title.
+                  : ''}
               </p>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
                 {result.top_videos.map((v, i) => {
