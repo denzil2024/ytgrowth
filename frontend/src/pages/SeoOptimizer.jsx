@@ -423,7 +423,7 @@ export default function SeoOptimizer({ onNavigate }) {
   return (
     <div style={{ width: '100%', fontFamily: "'Inter', system-ui, sans-serif" }}>
 
-      {/* Header — matches WeeklyReport pattern: 44×44 badge, 22/800 title, 14/text3 subtitle, 32 marginBottom */}
+      {/* Header — matches Overview page H1: 24/800/-0.6px, plus 44×44 tool badge */}
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 32, gap: 16, flexWrap: 'wrap' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
           <span style={{
@@ -439,8 +439,8 @@ export default function SeoOptimizer({ onNavigate }) {
             </svg>
           </span>
           <div>
-            <h1 style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', marginBottom: 4, lineHeight: 1.1 }}>SEO Optimizer</h1>
-            <p style={{ fontSize: 14, color: C.text3, lineHeight: 1.3 }}>Your title against live competitor data — 3 AI alternatives, plus a matching description.</p>
+            <h1 style={{ fontSize: 24, fontWeight: 800, color: C.text1, letterSpacing: '-0.6px', marginBottom: 6, lineHeight: 1.1 }}>SEO Optimizer</h1>
+            <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.4 }}>Your title against live competitor data — 3 AI alternatives, plus a matching description.</p>
           </div>
         </div>
         {(title || result) && (
@@ -576,9 +576,10 @@ export default function SeoOptimizer({ onNavigate }) {
 
       {/* Intent picker */}
       {intentOptions && !loading && !result && (
-        <div className="seo-glass-card" style={{ borderRadius: 16, padding: '18px 20px', marginBottom: 12 }}>
-          <p style={{ fontSize: 14, fontWeight: 700, color: C.text1, letterSpacing: '-0.2px', marginBottom: 3 }}>What's this video really about?</p>
-          <p style={{ fontSize: 12.5, color: C.text3, marginBottom: 14, lineHeight: 1.5 }}>
+        <div className="seo-glass-card" style={{ borderRadius: 16, padding: '22px 24px', marginBottom: 16 }}>
+          <p style={{ fontSize: 11, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 8 }}>Pick your niche</p>
+          <p style={{ fontSize: 18, fontWeight: 800, color: C.text1, letterSpacing: '-0.4px', lineHeight: 1.3, marginBottom: 6 }}>What's this video really about?</p>
+          <p style={{ fontSize: 13, color: C.text3, marginBottom: 14, lineHeight: 1.6 }}>
             Same words, different niches. Pick the closest match so we search the right audience.
           </p>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
@@ -608,7 +609,7 @@ export default function SeoOptimizer({ onNavigate }) {
       {result && (
         <div className="seo-result-section">
           {/* Niche header — what the competitor set is */}
-          <div className="seo-glass-card" style={{ borderRadius: 16, padding: '22px 24px', marginBottom: 12 }}>
+          <div className="seo-glass-card" style={{ borderRadius: 16, padding: '22px 24px', marginBottom: 16 }}>
             <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 14, gap: 16, flexWrap: 'wrap' }}>
               <p style={{ fontSize: 11, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Competitor set</p>
               {result.primary_phrase && (
@@ -629,7 +630,7 @@ export default function SeoOptimizer({ onNavigate }) {
 
           {/* Keyword Research */}
           {result.keyword_scores?.length > 0 && (
-            <div className="seo-glass-card" style={{ borderRadius: 16, padding: '18px 20px', marginBottom: 12 }}>
+            <div className="seo-glass-card" style={{ borderRadius: 16, padding: '22px 24px', marginBottom: 16 }}>
               <p style={{ fontSize: 11, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 3 }}>Keyword research</p>
               <p style={{ fontSize: 12, color: C.text3, marginBottom: 14, lineHeight: 1.5 }}>
                 Volume is search demand from YouTube autocomplete. Competition counts how many top videos target it. Score favours high-volume, low-competition opportunities.
@@ -680,7 +681,7 @@ export default function SeoOptimizer({ onNavigate }) {
 
           {/* Suggested Tags */}
           {result.top_tags?.length > 0 && (
-            <div className="seo-glass-card" style={{ borderRadius: 16, padding: '18px 20px', marginBottom: 12 }}>
+            <div className="seo-glass-card" style={{ borderRadius: 16, padding: '22px 24px', marginBottom: 16 }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12, gap: 16 }}>
                 <div>
                   <p style={{ fontSize: 11, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 4 }}>Suggested tags</p>
@@ -729,7 +730,7 @@ export default function SeoOptimizer({ onNavigate }) {
 
           {/* Intent analysis + gap */}
           {result.intent_analysis?.search_intent && (
-            <div className="seo-glass-card" style={{ borderRadius: 16, padding: '18px 20px', marginBottom: 12 }}>
+            <div className="seo-glass-card" style={{ borderRadius: 16, padding: '22px 24px', marginBottom: 16 }}>
               <p style={{ fontSize: 11, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 14 }}>Search intent analysis</p>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 14 }}>
                 <div style={{ background: 'rgba(10,10,15,0.03)', border: '1px solid rgba(10,10,15,0.08)', borderRadius: 10, padding: '11px 14px' }}>
@@ -881,7 +882,7 @@ export default function SeoOptimizer({ onNavigate }) {
 
           {/* Top videos in niche */}
           {result.top_videos?.length > 0 && (
-            <div className="seo-glass-card" style={{ borderRadius: 16, padding: '18px 20px', marginBottom: 12 }}>
+            <div className="seo-glass-card" style={{ borderRadius: 16, padding: '22px 24px', marginBottom: 16 }}>
               <p style={{ fontSize: 11, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 4 }}>Top titles matching your topic</p>
               <p style={{ fontSize: 12, color: C.text3, marginBottom: 14, lineHeight: 1.5 }}>
                 Searched YouTube for{result.primary_phrase ? <><span style={{ fontWeight: 700, color: C.text2 }}> &ldquo;{result.primary_phrase}&rdquo;</span> —</> : ''} your closest competitors.
@@ -951,13 +952,13 @@ export default function SeoOptimizer({ onNavigate }) {
 
           {/* ── Description Optimizer ──────────────────────────── */}
           {selectedTitle && (
-            <div ref={descRef} className="seo-glass-card" style={{ marginTop: 12, borderRadius: 16, padding: '18px 20px' }}>
+            <div ref={descRef} className="seo-glass-card" style={{ marginTop: 16, borderRadius: 16, padding: '22px 24px' }}>
 
               {/* Header */}
               <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 14, gap: 16 }}>
                 <div>
-                  <p style={{ fontSize: 11, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 5 }}>Description optimizer</p>
-                  <p style={{ fontSize: 14, fontWeight: 700, color: C.text1, lineHeight: 1.4, letterSpacing: '-0.2px' }}>"{selectedTitle}"</p>
+                  <p style={{ fontSize: 11, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }}>Description optimizer</p>
+                  <p style={{ fontSize: 16, fontWeight: 700, color: C.text1, lineHeight: 1.4, letterSpacing: '-0.3px' }}>"{selectedTitle}"</p>
                 </div>
                 <button onClick={() => { setSelectedTitle(null); setDescResult(null); setDescError('') }}
                   style={{ flexShrink: 0, fontSize: 12, fontWeight: 600, color: C.text2, background: '#ffffff', border: '1px solid #e6e6ec', borderRadius: 100, padding: '6px 14px', cursor: 'pointer', fontFamily: 'inherit', whiteSpace: 'nowrap', boxShadow: '0 1px 3px rgba(0,0,0,0.06)', transition: 'all 0.18s' }}>
