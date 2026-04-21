@@ -1097,9 +1097,15 @@ export default function SeoOptimizer({ onNavigate }) {
               </div>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
                 {result.autocomplete_terms.map(t => (
-                  <span key={t} onClick={() => setTitle(t)} style={T.chip}
+                  <span key={t} onClick={() => setTitle(t)}
+                    style={{ ...T.chip, display: 'inline-flex', alignItems: 'center', gap: 6 }}
                     onMouseEnter={e => { e.currentTarget.style.background = '#f1f1f6'; e.currentTarget.style.borderColor = 'rgba(229,37,27,0.25)'; e.currentTarget.style.color = C.text1 }}
-                    onMouseLeave={e => { e.currentTarget.style.background = '#fafafb'; e.currentTarget.style.borderColor = '#e6e6ec'; e.currentTarget.style.color = C.text2 }}>{t}</span>
+                    onMouseLeave={e => { e.currentTarget.style.background = '#fafafb'; e.currentTarget.style.borderColor = '#e6e6ec'; e.currentTarget.style.color = C.text2 }}>
+                    <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" style={{ flexShrink: 0, opacity: 0.55 }}>
+                      <circle cx="5" cy="5" r="3.2"/><path d="M7.3 7.3L10 10"/>
+                    </svg>
+                    {t}
+                  </span>
                 ))}
               </div>
             </div>
@@ -1126,16 +1132,24 @@ export default function SeoOptimizer({ onNavigate }) {
                   return (
                     <span key={tag}
                       onClick={() => { navigator.clipboard.writeText(tag) }}
-                      title="Click to copy"
+                      title={inTitle ? 'Already in your title — click to copy' : 'Click to copy'}
                       style={{
                         ...T.chip,
-                        color: inTitle ? C.red : C.text2,
-                        background: inTitle ? 'rgba(229,37,27,0.06)' : '#fafafb',
-                        border: `1px solid ${inTitle ? 'rgba(229,37,27,0.22)' : '#e6e6ec'}`,
+                        display: 'inline-flex', alignItems: 'center', gap: 6,
+                        color: inTitle ? C.green : C.text2,
+                        background: inTitle ? 'rgba(5,150,105,0.07)' : '#fafafb',
+                        border: `1px solid ${inTitle ? 'rgba(5,150,105,0.25)' : '#e6e6ec'}`,
                         fontWeight: inTitle ? 600 : 500,
                       }}
-                      onMouseEnter={e => { e.currentTarget.style.borderColor = inTitle ? 'rgba(229,37,27,0.4)' : '#d0d0d8' }}
-                      onMouseLeave={e => { e.currentTarget.style.borderColor = inTitle ? 'rgba(229,37,27,0.22)' : '#e6e6ec' }}>
+                      onMouseEnter={e => { e.currentTarget.style.borderColor = inTitle ? 'rgba(5,150,105,0.45)' : '#d0d0d8' }}
+                      onMouseLeave={e => { e.currentTarget.style.borderColor = inTitle ? 'rgba(5,150,105,0.25)' : '#e6e6ec' }}>
+                      {inTitle ? (
+                        <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+                          <polyline points="1.5,6.5 5,10 10.5,2"/>
+                        </svg>
+                      ) : (
+                        <span style={{ color: C.text4, fontWeight: 500, opacity: 0.8 }}>#</span>
+                      )}
                       {tag}
                     </span>
                   )
@@ -1164,6 +1178,9 @@ export default function SeoOptimizer({ onNavigate }) {
                       style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 8px', borderBottom: i < result.top_videos.length - 1 ? `1px solid ${C.border}` : 'none', textDecoration: 'none', borderRadius: 8, transition: 'background 0.15s, transform 0.15s', cursor: 'pointer' }}
                       onMouseEnter={e => { e.currentTarget.style.background = '#fafafb'; e.currentTarget.style.transform = 'translateX(2px)' }}
                       onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.transform = 'none' }}>
+                      <span style={{ flexShrink: 0, width: 26, fontSize: 11, fontWeight: 800, color: C.text4, fontVariantNumeric: 'tabular-nums', letterSpacing: '0.04em', textAlign: 'center' }}>
+                        {String(i + 1).padStart(2, '0')}
+                      </span>
                       <div style={{ position: 'relative', flexShrink: 0 }}>
                         {v.thumbnail && <img src={v.thumbnail} alt="" style={{ width: 72, height: 40, borderRadius: 7, objectFit: 'cover', display: 'block' }} />}
                         <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: 0, transition: 'opacity 0.15s', background: 'rgba(0,0,0,0.45)', borderRadius: 7 }}
