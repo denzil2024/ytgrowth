@@ -1807,7 +1807,7 @@ export default function Landing() {
 
       {/* ── FINAL CTA ───────────────────────────────────────────────────── */}
       <div style={{ background: '#0d0d12', borderTop: '1px solid rgba(255,255,255,0.07)', padding: isMobile ? '70px 24px' : '120px 64px', position: 'relative', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 1000, height: 800, background: 'radial-gradient(ellipse, rgba(229,48,42,0.22) 0%, transparent 65%)', pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', top: isMobile ? '38%' : '42%', left: '50%', transform: 'translate(-50%,-50%)', width: 1000, height: isMobile ? 600 : 800, background: 'radial-gradient(ellipse, rgba(229,48,42,0.20) 0%, transparent 65%)', pointerEvents: 'none' }} />
         <div style={{ maxWidth: 860, margin: '0 auto', textAlign: 'center', position: 'relative', zIndex: 1 }}>
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.10)', borderRadius: 100, padding: '5px 12px 5px 10px', marginBottom: 20 }}>
             <span aria-hidden="true" style={{ width: 6, height: 6, borderRadius: '50%', background: '#ff3b30', boxShadow: '0 0 0 3px rgba(229,48,42,0.18)' }} />
@@ -1833,29 +1833,60 @@ export default function Landing() {
       </div>
 
       {/* ── FOOTER ──────────────────────────────────────────────────────── */}
-      <footer style={{ background: '#07070a', borderTop: '1px solid rgba(255,255,255,0.07)', padding: isMobile ? '28px 20px' : '36px 64px' }}>
-        <div style={{ maxWidth: 1280, margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexDirection: isMobile ? 'column' : 'row', gap: isMobile ? 20 : 0, textAlign: isMobile ? 'center' : 'left' }}>
-          <a href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 9 }}>
-            <Logo size={26} />
-            <span style={{ fontWeight: 800, fontSize: 14, color: '#ffffff', letterSpacing: '-0.4px' }}>YTGrowth</span>
-          </a>
-          <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.32)' }}>Built for creators serious about growth.</p>
-          <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.22)' }}>© 2026 YTGrowth. All rights reserved.</p>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: isMobile ? '12px 20px' : 28, justifyContent: isMobile ? 'center' : 'flex-end' }}>
-            {[
-              { label: 'Privacy policy',   href: '/privacy' },
-              { label: 'Terms of service', href: '/terms' },
-              { label: 'Refund policy',    href: '/refund' },
-              { label: 'Affiliates',       href: '/affiliate' },
-              { label: 'Log in',           href: '/auth/login' },
-            ].map((l, i) => (
-              <a key={i} href={l.href} style={{ fontSize: 14, color: 'rgba(255,255,255,0.38)', textDecoration: 'none', transition: 'color 0.15s', fontFamily: "'Inter', system-ui, sans-serif" }}
-                onMouseEnter={e => e.currentTarget.style.color = 'rgba(255,255,255,0.72)'}
-                onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.38)'}
-              >{l.label}</a>
-            ))}
+      <footer style={{ background: '#07070a', borderTop: '1px solid rgba(255,255,255,0.07)', padding: isMobile ? '44px 24px 32px' : '36px 64px' }}>
+        {isMobile ? (
+          <div style={{ maxWidth: 360, margin: '0 auto', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            {/* Brand block */}
+            <a href="/" style={{ textDecoration: 'none', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12, marginBottom: 14 }}>
+              <Logo size={44} />
+              <span style={{ fontWeight: 800, fontSize: 20, color: '#ffffff', letterSpacing: '-0.5px' }}>YTGrowth</span>
+            </a>
+            <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)', textAlign: 'center', margin: 0, marginBottom: 28, lineHeight: 1.55 }}>
+              Built for creators serious about growth.
+            </p>
+            {/* Seam */}
+            <div style={{ height: 1, width: 56, background: 'rgba(255,255,255,0.10)', marginBottom: 24 }} />
+            {/* Links */}
+            <div style={{ display: 'flex', flexWrap: 'wrap', rowGap: 12, columnGap: 22, justifyContent: 'center', marginBottom: 28, maxWidth: 320 }}>
+              {[
+                { label: 'Privacy policy',   href: '/privacy' },
+                { label: 'Terms of service', href: '/terms' },
+                { label: 'Refund policy',    href: '/refund' },
+                { label: 'Affiliates',       href: '/affiliate' },
+                { label: 'Log in',           href: '/auth/login' },
+              ].map((l, i) => (
+                <a key={i} href={l.href} style={{ fontSize: 14, color: 'rgba(255,255,255,0.55)', textDecoration: 'none', transition: 'color 0.15s', fontFamily: "'Inter', system-ui, sans-serif", fontWeight: 500 }}
+                  onMouseEnter={e => e.currentTarget.style.color = '#ffffff'}
+                  onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.55)'}
+                >{l.label}</a>
+              ))}
+            </div>
+            <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.28)', margin: 0, textAlign: 'center' }}>© 2026 YTGrowth. All rights reserved.</p>
           </div>
-        </div>
+        ) : (
+          <div style={{ maxWidth: 1280, margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 0 }}>
+            <a href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 9 }}>
+              <Logo size={26} />
+              <span style={{ fontWeight: 800, fontSize: 14, color: '#ffffff', letterSpacing: '-0.4px' }}>YTGrowth</span>
+            </a>
+            <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.32)' }}>Built for creators serious about growth.</p>
+            <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.22)' }}>© 2026 YTGrowth. All rights reserved.</p>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 28, justifyContent: 'flex-end' }}>
+              {[
+                { label: 'Privacy policy',   href: '/privacy' },
+                { label: 'Terms of service', href: '/terms' },
+                { label: 'Refund policy',    href: '/refund' },
+                { label: 'Affiliates',       href: '/affiliate' },
+                { label: 'Log in',           href: '/auth/login' },
+              ].map((l, i) => (
+                <a key={i} href={l.href} style={{ fontSize: 14, color: 'rgba(255,255,255,0.38)', textDecoration: 'none', transition: 'color 0.15s', fontFamily: "'Inter', system-ui, sans-serif" }}
+                  onMouseEnter={e => e.currentTarget.style.color = 'rgba(255,255,255,0.72)'}
+                  onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.38)'}
+                >{l.label}</a>
+              ))}
+            </div>
+          </div>
+        )}
       </footer>
 
     </div>
