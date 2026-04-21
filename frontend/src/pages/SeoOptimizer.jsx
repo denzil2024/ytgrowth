@@ -955,52 +955,42 @@ export default function SeoOptimizer({ onNavigate }) {
               Actions section (one card per concept, neat vertical rhythm).
               ═══════════════════════════════════════════════════════════════ */}
 
-          {/* ── Card 1: Keyword research — 2-col inner grid, matches Overview's Category Scores pattern ── */}
-          {result.keyword_scores?.length > 0 && (() => {
-            const pillStyle = (color, borderColor) => ({
-              fontSize: 11, fontWeight: 700, color,
-              border: `1.5px solid ${borderColor}`,
-              padding: '2px 8px', borderRadius: 20,
-              textTransform: 'uppercase', letterSpacing: '0.05em',
-              flexShrink: 0,
-            })
-            return (
-              <div className="seo-glass-card" style={{ borderRadius: 16, padding: '22px 24px', marginBottom: 16 }}>
-                <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 14, gap: 16, flexWrap: 'wrap' }}>
-                  <div>
-                    <p style={{ ...T.sectionLabel, marginBottom: 4 }}>Keyword research</p>
-                    <p style={T.cardDesc}>
-                      {result.keyword_scores.length} phrases scored — high volume × low competition wins. Click a phrase to use as your title.
-                    </p>
-                  </div>
-                  <span style={{ ...T.sectionLabel, fontWeight: 500, whiteSpace: 'nowrap', flexShrink: 0 }}>Sorted by score</span>
+          {/* ── Card 1: Keyword research — 2-col inner grid, phrase + bar + score (Overview Category Scores pattern, exact) ── */}
+          {result.keyword_scores?.length > 0 && (
+            <div className="seo-glass-card" style={{ borderRadius: 16, padding: '22px 24px', marginBottom: 16 }}>
+              <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 14, gap: 16, flexWrap: 'wrap' }}>
+                <div>
+                  <p style={{ ...T.sectionLabel, marginBottom: 4 }}>Keyword research</p>
+                  <p style={T.cardDesc}>
+                    {result.keyword_scores.length} phrases scored — the bar shows opportunity (length × colour). Click a row to use as your title.
+                  </p>
                 </div>
-                <div style={{ height: 1, background: '#e6e6ec', marginBottom: 14 }} />
-
-                {/* 2-col inner grid — mirrors Overview Category Scores exactly (1fr 1fr, gap '8px 40px') */}
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '6px 40px' }}>
-                  {result.keyword_scores.map((kw) => {
-                    const volColor = kw.volume === 'HIGH' ? C.green : kw.volume === 'MED' ? C.amber : C.text3
-                    const compColor = kw.competition === 'LOW' ? C.green : kw.competition === 'MED' ? C.amber : C.red
-                    const scColor = kw.score >= 65 ? C.green : kw.score >= 40 ? C.amber : C.red
-                    return (
-                      <div key={kw.phrase}
-                        onClick={() => setTitle(kw.phrase)}
-                        title="Click to use as title"
-                        style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 10px', borderRadius: 8, cursor: 'pointer', transition: 'background 0.12s' }}
-                        onMouseEnter={e => e.currentTarget.style.background = '#fafafb'}
-                        onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
-                        <span style={{ ...T.keyword, flex: 1, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{kw.phrase}</span>
-                        <span style={pillStyle(volColor, volColor === C.text3 ? '#e6e6ec' : volColor)}>{kw.volume}</span>
-                        <span style={pillStyle(compColor, compColor)}>{kw.competition}</span>
-                        <span style={{ fontSize: 14, fontWeight: 800, color: scColor, fontVariantNumeric: 'tabular-nums', minWidth: 28, textAlign: 'right', letterSpacing: '-0.2px', flexShrink: 0 }}>{kw.score}</span>
-                      </div>
-                    )
-                  })}
-                </div>
+                <span style={{ ...T.sectionHint, whiteSpace: 'nowrap', flexShrink: 0 }}>Sorted by score</span>
               </div>
-            )
-          })()}
+              <div style={{ height: 1, background: '#e6e6ec', marginBottom: 10 }} />
+
+              {/* 2-col · phrase (fixed 180px, truncates) | bar (flex:1) | score (28px) — mirrors Dashboard.jsx:2119-2126 */}
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2px 40px' }}>
+                {result.keyword_scores.map((kw) => {
+                  const scColor = kw.score >= 65 ? C.green : kw.score >= 40 ? C.amber : C.red
+                  return (
+                    <div key={kw.phrase}
+                      onClick={() => setTitle(kw.phrase)}
+                      title={`Volume ${kw.volume} · Competition ${kw.competition} · Score ${kw.score} — click to use as title`}
+                      style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '8px 10px', borderRadius: 8, cursor: 'pointer', transition: 'background 0.12s' }}
+                      onMouseEnter={e => e.currentTarget.style.background = '#fafafb'}
+                      onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
+                      <span style={{ ...T.keyword, width: 180, flexShrink: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{kw.phrase}</span>
+                      <div style={{ flex: 1, height: 4, background: '#eeeef3', borderRadius: 99, overflow: 'hidden', minWidth: 40 }}>
+                        <div style={{ width: `${kw.score}%`, height: '100%', background: scColor, borderRadius: 99, transition: 'width 0.6s cubic-bezier(0.34,1.56,0.64,1)' }}/>
+                      </div>
+                      <span style={{ fontSize: 13.5, fontWeight: 700, color: scColor, fontVariantNumeric: 'tabular-nums', minWidth: 26, textAlign: 'right', letterSpacing: '-0.1px', flexShrink: 0 }}>{kw.score}</span>
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+          )}
 
           {/* ── Card 2: YouTube autocomplete (chip row) ── */}
           {result.autocomplete_terms?.length > 0 && (
