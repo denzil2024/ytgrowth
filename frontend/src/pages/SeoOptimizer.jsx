@@ -146,9 +146,9 @@ const C = {
 //    the hierarchy Overview uses, don't flatten it. ──
 const T = {
   // Page + section headers (Overview: H1 24, H2 22, H3 20)
-  h1:           { fontSize: 24, fontWeight: 800, color: '#0f0f13', letterSpacing: '-0.6px', lineHeight: 1.1 },
-  h2:           { fontSize: 22, fontWeight: 800, color: '#0f0f13', letterSpacing: '-0.5px' },
-  h3:           { fontSize: 20, fontWeight: 800, color: '#0f0f13', letterSpacing: '-0.5px' },
+  h1:           { fontSize: 24, fontWeight: 700, color: '#0f0f13', letterSpacing: '-0.6px', lineHeight: 1.1 },
+  h2:           { fontSize: 22, fontWeight: 700, color: '#0f0f13', letterSpacing: '-0.5px' },
+  h3:           { fontSize: 20, fontWeight: 700, color: '#0f0f13', letterSpacing: '-0.5px' },
 
   // Uppercase labels
   sectionLabel: { fontSize: 11, fontWeight: 600, color: '#9595a4', textTransform: 'uppercase', letterSpacing: '0.06em' },  // card-level label ("KEYWORD RESEARCH") — neutral grey (matches Overview); red is semantic only, don't spray it on utility eyebrows
@@ -170,7 +170,7 @@ const T = {
   chip:         { fontSize: 12, fontWeight: 500, color: '#4a4a58', background: '#fafafb', padding: '5px 11px', borderRadius: 20, border: '1px solid #e6e6ec', cursor: 'pointer', letterSpacing: '-0.05px', transition: 'all 0.15s', display: 'inline-block' },
 
   // Numbers
-  numberLg:     { fontSize: 14, fontWeight: 800, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.2px' },            // score numbers
+  numberLg:     { fontSize: 14, fontWeight: 700, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.2px' },            // score numbers
 
   // Tables (Overview uses 10.5/600 in Score breakdown headers)
   tableHeader:  { fontSize: 10.5, fontWeight: 600, color: '#9595a4', textTransform: 'uppercase', letterSpacing: '0.06em' },
@@ -178,12 +178,12 @@ const T = {
 }
 
 const VIRAL_FORMATS = [
-  { key: 'survival_challenge',  hook: 'curiosity',      color: '#e5251b', label: 'Survival / Time Challenge', example: 'I Survived 24 Hours With [Person/Situation]',        why: 'Extreme curiosity + suspense.' },
+  { key: 'survival_challenge',  hook: 'curiosity',      color: '#d97706', label: 'Survival / Time Challenge', example: 'I Survived 24 Hours With [Person/Situation]',        why: 'Extreme curiosity + suspense.' },
   { key: 'extreme_comparison',  hook: 'contrarian',     color: '#d97706', label: 'Extreme Comparison',        example: '$5 VS $500 [Subject]: Honest Review',                 why: 'Price contrast triggers value-seeking.' },
-  { key: 'authority_warning',   hook: 'curiosity',      color: '#e5251b', label: 'Authority / Warning',       example: "Don't Buy [Subject] Until You See This",              why: 'Fear of mistake drives high CTR.' },
+  { key: 'authority_warning',   hook: 'curiosity',      color: '#d97706', label: 'Authority / Warning',       example: "Don't Buy [Subject] Until You See This",              why: 'Fear of mistake drives high CTR.' },
   { key: 'listicle',            hook: 'transformation', color: '#d97706', label: 'Listicle / Structure',      example: '7 Things I Wish I Knew About [Subject]',             why: 'Numbers set clear expectations.' },
   { key: 'curiosity_gap',       hook: 'curiosity',      color: '#d97706', label: 'Curiosity Gap',             example: "I Tested Every [Subject] So You Don't Have To",      why: 'Open loop viewer must click to close.' },
-  { key: 'aspirational',        hook: 'transformation', color: '#059669', label: 'Aspirational / How I',      example: 'How I Grew [Subject] From 0 to [Number] in [Time]',  why: 'Transformation stories = highest retention.' },
+  { key: 'aspirational',        hook: 'transformation', color: '#d97706', label: 'Aspirational / How I',      example: 'How I Grew [Subject] From 0 to [Number] in [Time]',  why: 'Transformation stories = highest retention.' },
 ]
 
 const VIRAL_FORMAT_LABELS = Object.fromEntries(VIRAL_FORMATS.map(f => [f.key, f.label]))
@@ -221,7 +221,7 @@ function MiniStat({ label, value, sub, accent }) {
       transition: 'box-shadow 0.2s, transform 0.2s',
     }}>
       <p style={{ fontSize: 11, fontWeight: 500, letterSpacing: '0.05em', textTransform: 'uppercase', color: C.text3, marginBottom: 12 }}>{label}</p>
-      <p style={{ fontSize: 30, fontWeight: 800, letterSpacing: '-1.4px', color: col, lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{value}</p>
+      <p style={{ fontSize: 30, fontWeight: 700, letterSpacing: '-1.4px', color: col, lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{value}</p>
       {sub && <p style={{ fontSize: 12, color: C.text3, fontWeight: 500, marginTop: 10 }}>{sub}</p>}
     </div>
   )
@@ -242,7 +242,7 @@ function ScoreRing({ score }) {
           style={{ transition: 'stroke-dasharray 0.8s cubic-bezier(0.34,1.56,0.64,1)' }} />
       </svg>
       <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-        <span style={{ fontSize: 28, fontWeight: 800, color, letterSpacing: '-1px', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{score}</span>
+        <span style={{ fontSize: 28, fontWeight: 700, color, letterSpacing: '-1px', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{score}</span>
         <span style={{ fontSize: 12, color: C.text3, fontWeight: 600, letterSpacing: '0.06em', marginTop: 2 }}>/100</span>
       </div>
     </div>
@@ -532,7 +532,15 @@ export default function SeoOptimizer({ onNavigate }) {
   )
 
   return (
-    <div style={{ width: '100%', fontFamily: "'Inter', system-ui, sans-serif" }}>
+    <div style={{
+      // Negative margins cancel the Dashboard panel's 36/40/72 padding so the white bg extends to the scroll container edges.
+      // Re-adding identical padding inside keeps content visually in the same place.
+      margin: '-36px -40px -72px',
+      padding: '36px 40px 72px',
+      background: '#ffffff',
+      minHeight: 'calc(100vh - 52px)',
+      fontFamily: "'Inter', system-ui, sans-serif",
+    }}>
 
       {/* Header — matches Overview page H1: 24/800/-0.6px, plus 44×44 tool badge */}
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 32, gap: 16, flexWrap: 'wrap' }}>
@@ -550,7 +558,7 @@ export default function SeoOptimizer({ onNavigate }) {
             </svg>
           </span>
           <div>
-            <h1 style={{ fontSize: 24, fontWeight: 800, color: C.text1, letterSpacing: '-0.6px', marginBottom: 6, lineHeight: 1.1 }}>SEO Optimizer</h1>
+            <h1 style={{ fontSize: 24, fontWeight: 700, color: C.text1, letterSpacing: '-0.6px', marginBottom: 6, lineHeight: 1.1 }}>SEO Optimizer</h1>
             <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.4 }}>Your title against live competitor data — 3 AI alternatives, plus a matching description.</p>
           </div>
         </div>
@@ -716,7 +724,7 @@ export default function SeoOptimizer({ onNavigate }) {
                       display: 'flex', alignItems: 'center', justifyContent: 'center',
                       flexShrink: 0,
                     }}>
-                      <span style={{ fontSize: 10, fontWeight: 900, color: '#ffffff', fontVariantNumeric: 'tabular-nums', lineHeight: 1 }}>{i + 1}</span>
+                      <span style={{ fontSize: 10, fontWeight: 700, color: '#ffffff', fontVariantNumeric: 'tabular-nums', lineHeight: 1 }}>{i + 1}</span>
                     </div>
                     <span style={{ fontSize: 10, fontWeight: 700, color: fmt.color, textTransform: 'uppercase', letterSpacing: '0.08em', lineHeight: 1 }}>{fmt.label}</span>
                   </div>
@@ -738,9 +746,9 @@ export default function SeoOptimizer({ onNavigate }) {
               <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke={C.red} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M8 2v12M2 8h12M4 4l8 8M12 4l-8 8"/>
               </svg>
-              <span style={{ fontSize: 10.5, fontWeight: 800, color: C.red, letterSpacing: '0.16em', textTransform: 'uppercase' }}>Three directions</span>
+              <span style={{ fontSize: 10.5, fontWeight: 700, color: C.red, letterSpacing: '0.16em', textTransform: 'uppercase' }}>Three directions</span>
             </div>
-            <h2 style={{ fontSize: 24, fontWeight: 800, color: C.text1, letterSpacing: '-0.55px', lineHeight: 1.2, marginBottom: 10 }}>
+            <h2 style={{ fontSize: 24, fontWeight: 700, color: C.text1, letterSpacing: '-0.55px', lineHeight: 1.2, marginBottom: 10 }}>
               Your title could go <span style={{ color: C.red }}>3 ways</span>. Pick one.
             </h2>
             <p style={{ fontSize: 13.5, color: C.text3, lineHeight: 1.6, maxWidth: 540, margin: '0 auto' }}>
@@ -761,17 +769,17 @@ export default function SeoOptimizer({ onNavigate }) {
                     boxShadow: `0 4px 10px rgba(229,37,27,0.40), inset 0 1px 0 rgba(255,255,255,0.30)`,
                     flexShrink: 0,
                   }}>
-                    <span style={{ fontSize: 13, fontWeight: 900, color: '#ffffff', fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.4px' }}>
+                    <span style={{ fontSize: 13, fontWeight: 700, color: '#ffffff', fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.4px' }}>
                       0{i + 1}
                     </span>
                   </div>
-                  <span style={{ fontSize: 10, fontWeight: 800, color: C.red, letterSpacing: '0.14em', textTransform: 'uppercase' }}>
+                  <span style={{ fontSize: 10, fontWeight: 700, color: C.red, letterSpacing: '0.14em', textTransform: 'uppercase' }}>
                     Route 0{i + 1}
                   </span>
                 </div>
 
                 {/* Niche title */}
-                <p style={{ fontSize: 16, fontWeight: 800, color: C.text1, letterSpacing: '-0.3px', lineHeight: 1.35, marginBottom: 10, position: 'relative' }}>
+                <p style={{ fontSize: 16, fontWeight: 700, color: C.text1, letterSpacing: '-0.3px', lineHeight: 1.35, marginBottom: 10, position: 'relative' }}>
                   {opt.label}
                 </p>
 
@@ -823,7 +831,7 @@ export default function SeoOptimizer({ onNavigate }) {
         <div className="seo-result-section">
           {/* ── Section header — mirrors Overview "Channel audit" H2 (marginTop 40, Dashboard.jsx:2069) ───── */}
           <div style={{ marginBottom: 20, marginTop: 40 }}>
-            <h2 style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', marginBottom: 4 }}>Title analysis</h2>
+            <h2 style={{ fontSize: 22, fontWeight: 700, color: C.text1, letterSpacing: '-0.5px', marginBottom: 4 }}>Title analysis</h2>
             {result.primary_phrase ? (
               <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.5 }}>
                 Analysed against{' '}
@@ -926,7 +934,7 @@ export default function SeoOptimizer({ onNavigate }) {
             <div style={{ marginBottom: 24 }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16, gap: 16 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                  <p style={{ fontSize: 20, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px' }}>Suggested titles</p>
+                  <p style={{ fontSize: 20, fontWeight: 700, color: C.text1, letterSpacing: '-0.5px' }}>Suggested titles</p>
                   <span style={{ fontSize: 11, fontWeight: 700, color: C.text3, background: '#f1f1f6', padding: '2px 8px', borderRadius: 20, border: '1px solid #e6e6ec' }}>{result.suggestions.length}</span>
                 </div>
                 <button onClick={() => handleSelectTitle(title.trim())}
@@ -960,7 +968,7 @@ export default function SeoOptimizer({ onNavigate }) {
                         {/* Header — rank badge (amber) + hook eyebrow/title + severity pill */}
                         <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: 14 }}>
                           <div style={{ width: 26, height: 26, borderRadius: 8, background: C.amber, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 2 }}>
-                            <span style={{ fontSize: 12, fontWeight: 900, color: '#fff', fontVariantNumeric: 'tabular-nums' }}>{i + 1}</span>
+                            <span style={{ fontSize: 12, fontWeight: 700, color: '#fff', fontVariantNumeric: 'tabular-nums' }}>{i + 1}</span>
                           </div>
                           <div style={{ flex: 1, minWidth: 0 }}>
                             <p style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 5 }}>{hookLabel}</p>
@@ -998,7 +1006,7 @@ export default function SeoOptimizer({ onNavigate }) {
                                 return (
                                   <div key={label} style={{ display: 'flex', alignItems: 'baseline', gap: 5 }}>
                                     <span style={{ fontSize: 10, fontWeight: 600, color: C.text3, letterSpacing: '0.08em', textTransform: 'uppercase' }}>{label}</span>
-                                    <span style={{ fontSize: 16, fontWeight: 800, color: val ? vc : C.text3, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.2px' }}>{val || '—'}</span>
+                                    <span style={{ fontSize: 16, fontWeight: 700, color: val ? vc : C.text3, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.2px' }}>{val || '—'}</span>
                                   </div>
                                 )
                               })}
@@ -1022,31 +1030,6 @@ export default function SeoOptimizer({ onNavigate }) {
                   )
                 })}
               </div>
-            </div>
-          )}
-
-          {/* ── Thumbnail IQ nudge — right after the suggestions ── */}
-          {result && onNavigate && (
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center',
-                          padding: '4px 0 16px' }}>
-              <button
-                onClick={() => {
-                  try {
-                    const kw = result?.search_terms?.[0] || ''
-                    if (kw) localStorage.setItem('ytg_prefill_thumbnail_title',
-                      selectedTitle || title || '')
-                  } catch {}
-                  onNavigate('Thumbnail Score')
-                }}
-                style={{ background: 'none', border: 'none', cursor: 'pointer',
-                         fontSize: 12, color: C.red, fontFamily: 'inherit',
-                         fontWeight: 600, padding: '6px 12px', borderRadius: 8,
-                         transition: 'background 0.15s' }}
-                onMouseEnter={e => { e.currentTarget.style.background = 'rgba(229,37,27,0.06)' }}
-                onMouseLeave={e => { e.currentTarget.style.background = 'transparent' }}
-              >
-                Ready to test your thumbnail? → Thumbnail IQ
-              </button>
             </div>
           )}
 
@@ -1178,7 +1161,7 @@ export default function SeoOptimizer({ onNavigate }) {
                       style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 8px', borderBottom: i < result.top_videos.length - 1 ? `1px solid ${C.border}` : 'none', textDecoration: 'none', borderRadius: 8, transition: 'background 0.15s, transform 0.15s', cursor: 'pointer' }}
                       onMouseEnter={e => { e.currentTarget.style.background = '#fafafb'; e.currentTarget.style.transform = 'translateX(2px)' }}
                       onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.transform = 'none' }}>
-                      <span style={{ flexShrink: 0, width: 26, fontSize: 11, fontWeight: 800, color: C.text4, fontVariantNumeric: 'tabular-nums', letterSpacing: '0.04em', textAlign: 'center' }}>
+                      <span style={{ flexShrink: 0, width: 26, fontSize: 11, fontWeight: 700, color: C.text4, fontVariantNumeric: 'tabular-nums', letterSpacing: '0.04em', textAlign: 'center' }}>
                         {String(i + 1).padStart(2, '0')}
                       </span>
                       <div style={{ position: 'relative', flexShrink: 0 }}>
@@ -1194,7 +1177,7 @@ export default function SeoOptimizer({ onNavigate }) {
                         <p style={{ fontSize: 12, color: C.text3, marginTop: 2, fontWeight: 500 }}>{v.channel}</p>
                       </div>
                       <div style={{ textAlign: 'right', flexShrink: 0 }}>
-                        <p style={{ fontSize: 17, fontWeight: 800, color: scColor, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.3px', lineHeight: 1 }}>{sc}</p>
+                        <p style={{ fontSize: 17, fontWeight: 700, color: scColor, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.3px', lineHeight: 1 }}>{sc}</p>
                         <p style={{ fontSize: 10, fontWeight: 600, color: C.text3, marginTop: 4, letterSpacing: '0.08em', textTransform: 'uppercase' }}>score</p>
                       </div>
                       <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke={C.text4} strokeWidth="1.5" strokeLinecap="round" style={{ flexShrink: 0 }}><path d="M2 11L10 3M10 3H5M10 3v5"/></svg>
