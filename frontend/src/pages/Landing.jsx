@@ -1877,21 +1877,21 @@ export default function Landing() {
       </div>
 
       {/* ── FOOTER ──────────────────────────────────────────────────────── */}
-      <footer style={{ background: '#07070a', borderTop: '1px solid rgba(255,255,255,0.07)', padding: isMobile ? '44px 24px 32px' : '36px 64px' }}>
+      <footer style={{ background: '#07070a', borderTop: '1px solid rgba(255,255,255,0.07)', padding: isMobile ? '34px 24px 24px' : '36px 64px' }}>
         {isMobile ? (
           <div style={{ maxWidth: 360, margin: '0 auto', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             {/* Brand block */}
-            <a href="/" style={{ textDecoration: 'none', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12, marginBottom: 14 }}>
-              <Logo size={44} />
-              <span style={{ fontWeight: 800, fontSize: 20, color: '#ffffff', letterSpacing: '-0.5px' }}>YTGrowth</span>
+            <a href="/" style={{ textDecoration: 'none', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10, marginBottom: 10 }}>
+              <Logo size={36} />
+              <span style={{ fontWeight: 800, fontSize: 17, color: '#ffffff', letterSpacing: '-0.5px' }}>YTGrowth</span>
             </a>
-            <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)', textAlign: 'center', margin: 0, marginBottom: 28, lineHeight: 1.55 }}>
+            <p style={{ fontSize: 12.5, color: 'rgba(255,255,255,0.45)', textAlign: 'center', margin: 0, marginBottom: 22, lineHeight: 1.55 }}>
               Built for creators serious about growth.
             </p>
             {/* Seam */}
-            <div style={{ height: 1, width: 56, background: 'rgba(255,255,255,0.10)', marginBottom: 20 }} />
+            <div style={{ height: 1, width: 48, background: 'rgba(255,255,255,0.10)', marginBottom: 16 }} />
             {/* Links — single line with middot separators */}
-            <div style={{ fontSize: 13, textAlign: 'center', marginBottom: 24, lineHeight: 1.8 }}>
+            <div style={{ fontSize: 12.5, textAlign: 'center', marginBottom: 18, lineHeight: 1.8 }}>
               {[
                 { label: 'Privacy',    href: '/privacy' },
                 { label: 'Terms',      href: '/terms' },
@@ -1907,7 +1907,7 @@ export default function Landing() {
                 </span>
               ))}
             </div>
-            <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.28)', margin: 0, textAlign: 'center' }}>© 2026 YTGrowth. All rights reserved.</p>
+            <p style={{ fontSize: 11.5, color: 'rgba(255,255,255,0.28)', margin: 0, textAlign: 'center' }}>© 2026 YTGrowth. All rights reserved.</p>
           </div>
         ) : (
           <div style={{ maxWidth: 1280, margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 0 }}>
