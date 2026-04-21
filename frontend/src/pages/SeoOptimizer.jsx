@@ -57,19 +57,19 @@ if (typeof document !== 'undefined' && !document.getElementById('seo-opt-styles'
   .seo-route-card::before {
     content: '';
     position: absolute; inset: 0;
-    background: linear-gradient(180deg, rgba(245,158,11,0.05) 0%, transparent 60%);
+    background: linear-gradient(180deg, rgba(229,37,27,0.05) 0%, transparent 60%);
     opacity: 0;
     transition: opacity 0.25s;
     pointer-events: none;
   }
   .seo-route-card:hover {
     transform: translateY(-4px);
-    box-shadow: 0 6px 16px rgba(0,0,0,0.08), 0 20px 40px rgba(245,158,11,0.18);
-    border-color: rgba(245,158,11,0.40);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.08), 0 20px 40px rgba(229,37,27,0.20);
+    border-color: rgba(229,37,27,0.40);
   }
   .seo-route-card:hover::before { opacity: 1; }
   .seo-route-card:hover .seo-route-go { color: #e5251b; transform: translateX(3px); }
-  .seo-route-card:hover .seo-route-badge { box-shadow: 0 6px 16px rgba(245,158,11,0.55), inset 0 1px 0 rgba(255,255,255,0.35); }
+  .seo-route-card:hover .seo-route-badge { box-shadow: 0 6px 16px rgba(229,37,27,0.55), inset 0 1px 0 rgba(255,255,255,0.35); }
   .seo-route-go { transition: color 0.2s, transform 0.2s; display: inline-flex; align-items: center; gap: 6px; color: #9595a4; }
   .seo-route-badge { transition: box-shadow 0.22s; }
 `
@@ -726,13 +726,13 @@ export default function SeoOptimizer({ onNavigate }) {
           {/* Header — centered, feels like a beat in the flow */}
           <div style={{ textAlign: 'center', marginBottom: 20 }}>
             <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
-              <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke={C.amber} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke={C.red} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M8 2v12M2 8h12M4 4l8 8M12 4l-8 8"/>
               </svg>
-              <span style={{ fontSize: 10.5, fontWeight: 800, color: C.amber, letterSpacing: '0.16em', textTransform: 'uppercase' }}>Three directions</span>
+              <span style={{ fontSize: 10.5, fontWeight: 800, color: C.red, letterSpacing: '0.16em', textTransform: 'uppercase' }}>Three directions</span>
             </div>
             <h2 style={{ fontSize: 24, fontWeight: 800, color: C.text1, letterSpacing: '-0.55px', lineHeight: 1.2, marginBottom: 10 }}>
-              Your title could go <span style={{ color: C.amber }}>3 ways</span>. Pick one.
+              Your title could go <span style={{ color: C.red }}>3 ways</span>. Pick one.
             </h2>
             <p style={{ fontSize: 13.5, color: C.text3, lineHeight: 1.6, maxWidth: 540, margin: '0 auto' }}>
               Same words, different worlds. Pick the closest — that's the audience we'll analyze.
@@ -747,16 +747,16 @@ export default function SeoOptimizer({ onNavigate }) {
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14, position: 'relative' }}>
                   <div className="seo-route-badge" style={{
                     width: 38, height: 38, borderRadius: 12,
-                    background: `linear-gradient(135deg, ${C.amber} 0%, #d97706 100%)`,
+                    background: `linear-gradient(135deg, ${C.red} 0%, #b91c1c 100%)`,
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    boxShadow: `0 4px 10px ${C.amber}40, inset 0 1px 0 rgba(255,255,255,0.30)`,
+                    boxShadow: `0 4px 10px rgba(229,37,27,0.40), inset 0 1px 0 rgba(255,255,255,0.30)`,
                     flexShrink: 0,
                   }}>
                     <span style={{ fontSize: 13, fontWeight: 900, color: '#ffffff', fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.4px' }}>
                       0{i + 1}
                     </span>
                   </div>
-                  <span style={{ fontSize: 10, fontWeight: 800, color: C.amber, letterSpacing: '0.14em', textTransform: 'uppercase' }}>
+                  <span style={{ fontSize: 10, fontWeight: 800, color: C.red, letterSpacing: '0.14em', textTransform: 'uppercase' }}>
                     Route 0{i + 1}
                   </span>
                 </div>
@@ -766,13 +766,13 @@ export default function SeoOptimizer({ onNavigate }) {
                   {opt.label}
                 </p>
 
-                {/* Keyword as amber-tinted pill */}
+                {/* Keyword as red-tinted pill */}
                 <span style={{
                   alignSelf: 'flex-start',
                   fontSize: 11.5, fontWeight: 600,
-                  color: '#8a6611',
-                  background: 'rgba(245,158,11,0.10)',
-                  border: '1px solid rgba(245,158,11,0.24)',
+                  color: '#9a1c16',
+                  background: 'rgba(229,37,27,0.08)',
+                  border: '1px solid rgba(229,37,27,0.22)',
                   padding: '3px 10px', borderRadius: 999,
                   marginBottom: 12,
                   position: 'relative',
