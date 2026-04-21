@@ -128,29 +128,23 @@ function BreakdownBar({ criterionKey, value, max }) {
   const meta = BREAKDOWN_META[criterionKey]
   if (!meta) return null
   const pct = Math.round((value / max) * 100)
-  const color = pct >= 80 ? C.green : pct >= 40 ? C.amber : C.red
-  const trackBg = pct >= 80 ? '#dcfce7' : pct >= 40 ? '#fef3c7' : '#fee2e2'
-  const gradient = pct >= 80
-    ? 'linear-gradient(90deg, #16a34a, #22c55e)'
-    : pct >= 40
-    ? 'linear-gradient(90deg, #d97706, #f59e0b)'
-    : 'linear-gradient(90deg, #dc2626, #ef4444)'
+  const color = pct >= 80 ? '#16a34a' : pct >= 40 ? '#d97706' : '#dc2626'
   return (
-    <div style={{ marginBottom: 14 }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
-          <span style={{ fontSize: 12, color: C.text1, fontWeight: 600 }}>{meta.label}</span>
-          <button onClick={() => setShowWhy(v => !v)}
-            style={{ width: 16, height: 16, borderRadius: '50%', border: `1.5px solid ${C.text4}`, background: showWhy ? C.text3 : 'transparent', cursor: 'pointer', fontSize: 12, fontWeight: 700, color: showWhy ? '#fff' : C.text3, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 0, lineHeight: 1, transition: 'all 0.15s', flexShrink: 0 }}>?
+    <div>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6, gap: 8 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6, minWidth: 0 }}>
+          <span style={{ fontSize: 12.5, color: '#111114', fontWeight: 600, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{meta.label}</span>
+          <button onClick={() => setShowWhy(v => !v)} aria-label="Why this matters"
+            style={{ width: 14, height: 14, borderRadius: '50%', border: 'none', background: showWhy ? '#6b7280' : '#f0f0f4', cursor: 'pointer', fontSize: 10, fontWeight: 700, color: showWhy ? '#fff' : '#6b7280', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 0, lineHeight: 1, transition: 'all 0.15s', flexShrink: 0 }}>?
           </button>
         </div>
-        <span style={{ fontSize: 12, color, fontWeight: 700, background: trackBg, padding: '1px 7px', borderRadius: 20 }}>{value}/{max}</span>
+        <span style={{ fontSize: 11.5, color, fontWeight: 700, fontVariantNumeric: 'tabular-nums', flexShrink: 0 }}>{value}<span style={{ color: '#b8b8c8', fontWeight: 500 }}>/{max}</span></span>
       </div>
-      <div style={{ height: 8, background: C.borderLight, borderRadius: 6, overflow: 'hidden' }}>
-        <div style={{ height: '100%', width: `${pct}%`, background: gradient, borderRadius: 6, transition: 'width 0.6s cubic-bezier(0.34,1.56,0.64,1)', boxShadow: pct > 0 ? `0 1px 4px ${color}44` : 'none' }} />
+      <div style={{ height: 5, background: '#f0f0f4', borderRadius: 4, overflow: 'hidden' }}>
+        <div style={{ height: '100%', width: `${pct}%`, background: color, borderRadius: 4, transition: 'width 0.6s cubic-bezier(0.34,1.56,0.64,1)' }} />
       </div>
       {showWhy && (
-        <p style={{ fontSize: 12, color: C.text2, marginTop: 8, lineHeight: 1.6, background: trackBg, padding: '9px 12px', borderRadius: 8, borderLeft: `3px solid ${color}` }}>
+        <p style={{ fontSize: 12, color: '#52525b', marginTop: 8, lineHeight: 1.55, background: '#fafafb', padding: '8px 11px', borderRadius: 7, borderLeft: `2px solid ${color}` }}>
           {meta.why}
         </p>
       )}
@@ -560,55 +554,60 @@ export default function SeoOptimizer({ onNavigate }) {
 
       {result && (
         <div className="seo-result-section">
-          {/* Score + Breakdown */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 12 }}>
-
-            <div className="seo-glass-card" style={{ borderRadius: 16, padding: '18px 20px' }}>
-              <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 12 }}>SEO Score</p>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-                <ScoreRing score={result.score} />
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <p style={{ fontSize: 17, fontWeight: 800, color: C.text1, letterSpacing: '-0.4px', marginBottom: 4 }}>{scoreLabel}</p>
-                  <p style={{ fontSize: 13, color: C.text2, lineHeight: 1.55 }}>
-                    {result.score >= 75 ? 'Well optimised. Small tweaks can push it further.'
-                      : result.score >= 50 ? 'Decent — the 3 AI titles below fix your gaps.'
-                      : 'Needs work. The AI titles below address every gap.'}
-                  </p>
-                  {result.primary_phrase && (
-                    <div style={{ marginTop: 10, display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
-                      <span style={{ fontSize: 11, color: C.text3, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Niche</span>
-                      <span style={{ fontSize: 12, fontWeight: 600, color: C.text1, background: '#f4f4f6', padding: '2px 9px', borderRadius: 6 }}>
-                        {result.primary_phrase}
+          {/* SEO Score + Score Breakdown — full width card with left score / right breakdown */}
+          <div className="seo-glass-card" style={{ borderRadius: 16, padding: '20px 22px', marginBottom: 12 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'minmax(260px, 340px) 1fr', gap: 40, alignItems: 'start' }}>
+              {/* Left: Score ring + narrative + chips */}
+              <div>
+                <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 14 }}>SEO Score</p>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+                  <ScoreRing score={result.score} />
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <p style={{ fontSize: 17, fontWeight: 800, color: C.text1, letterSpacing: '-0.4px', marginBottom: 4 }}>{scoreLabel}</p>
+                    <p style={{ fontSize: 13, color: C.text2, lineHeight: 1.55 }}>
+                      {result.score >= 75 ? 'Well optimised.'
+                        : result.score >= 50 ? 'Decent — AI titles below fix your gaps.'
+                        : 'Needs work. AI titles below address every gap.'}
+                    </p>
+                  </div>
+                </div>
+                {result.primary_phrase && (
+                  <div style={{ marginTop: 14, display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
+                    <span style={{ fontSize: 10.5, color: C.text3, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em' }}>Niche</span>
+                    <span style={{ fontSize: 12, fontWeight: 600, color: C.text1, background: '#f4f4f6', padding: '2px 9px', borderRadius: 6 }}>
+                      {result.primary_phrase}
+                    </span>
+                    {result.videos_found > 0 && (
+                      <span style={{ fontSize: 11, color: C.text3, fontWeight: 500 }}>
+                        · {result.videos_found} videos{result.intent_matched > 0 && result.intent_matched < result.videos_found ? `, ${result.intent_matched} exact` : ''}
                       </span>
-                      {result.videos_found > 0 && (
-                        <span style={{ fontSize: 11, color: C.text3, fontWeight: 500 }}>
-                          · {result.videos_found} videos{result.intent_matched > 0 && result.intent_matched < result.videos_found ? `, ${result.intent_matched} exact` : ''}
-                        </span>
-                      )}
-                    </div>
-                  )}
-                  {(result.viral_format_detected || result.power_words_found?.length > 0) && (
-                    <div style={{ marginTop: 8, display: 'flex', flexWrap: 'wrap', gap: 5 }}>
-                      {result.viral_format_detected && (
-                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 10, fontWeight: 700, color: C.red, border: '1.5px solid rgba(229,37,27,0.35)', padding: '2px 8px', borderRadius: 20, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-                          <svg width="8" height="8" viewBox="0 0 9 9" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M4.5 1L5.5 3.5h2.5L6 5l1 3-2.5-1.5L2 8l1-3-2-1.5H3.5z"/></svg>
-                          {VIRAL_FORMAT_LABELS[result.viral_format_detected]}
-                        </span>
-                      )}
-                      {result.power_words_found?.map(w => (
-                        <span key={w} style={{ fontSize: 10, fontWeight: 700, color: C.text3, border: '1.5px solid #e6e6ec', padding: '2px 8px', borderRadius: 20, textTransform: 'uppercase', letterSpacing: '0.06em' }}>{w}</span>
-                      ))}
-                    </div>
-                  )}
+                    )}
+                  </div>
+                )}
+                {(result.viral_format_detected || result.power_words_found?.length > 0) && (
+                  <div style={{ marginTop: 8, display: 'flex', flexWrap: 'wrap', gap: 5 }}>
+                    {result.viral_format_detected && (
+                      <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 10, fontWeight: 700, color: C.red, border: '1.5px solid rgba(229,37,27,0.35)', padding: '2px 8px', borderRadius: 20, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                        <svg width="8" height="8" viewBox="0 0 9 9" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M4.5 1L5.5 3.5h2.5L6 5l1 3-2.5-1.5L2 8l1-3-2-1.5H3.5z"/></svg>
+                        {VIRAL_FORMAT_LABELS[result.viral_format_detected]}
+                      </span>
+                    )}
+                    {result.power_words_found?.map(w => (
+                      <span key={w} style={{ fontSize: 10, fontWeight: 700, color: C.text3, border: '1.5px solid #e6e6ec', padding: '2px 8px', borderRadius: 20, textTransform: 'uppercase', letterSpacing: '0.06em' }}>{w}</span>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Right: breakdown bars in 2-col grid */}
+              <div style={{ borderLeft: '1px solid #f0f0f4', paddingLeft: 40 }}>
+                <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 14 }}>Score breakdown</p>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px 32px' }}>
+                  {Object.entries(BREAKDOWN_META).map(([key]) => (
+                    <BreakdownBar key={key} criterionKey={key} value={result.breakdown[key] ?? 0} max={BREAKDOWN_META[key].max} />
+                  ))}
                 </div>
               </div>
-            </div>
-
-            <div className="seo-glass-card" style={{ borderRadius: 16, padding: '18px 20px' }}>
-              <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 12 }}>Score breakdown</p>
-              {Object.entries(BREAKDOWN_META).map(([key]) => (
-                <BreakdownBar key={key} criterionKey={key} value={result.breakdown[key] ?? 0} max={BREAKDOWN_META[key].max} />
-              ))}
             </div>
           </div>
 
@@ -714,10 +713,10 @@ export default function SeoOptimizer({ onNavigate }) {
                   <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke={C.amber} strokeWidth="2" strokeLinecap="round"><path d="M7 1v5M7 9v.5"/><circle cx="7" cy="7" r="6"/></svg>
                   <p style={{ fontSize: 11, fontWeight: 700, color: C.amber, textTransform: 'uppercase', letterSpacing: '0.08em' }}>Gaps the AI titles fix</p>
                 </div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                <div style={{ display: 'grid', gridTemplateColumns: fixes.length > 1 ? '1fr 1fr' : '1fr', gap: '8px 32px' }}>
                   {fixes.map(([key, meta]) => (
-                    <div key={key} style={{ display: 'flex', gap: 12, alignItems: 'baseline', padding: '4px 0' }}>
-                      <span style={{ fontSize: 12, fontWeight: 600, color: C.text1, minWidth: 120, flexShrink: 0 }}>{meta.label}</span>
+                    <div key={key} style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                      <span style={{ fontSize: 12, fontWeight: 700, color: C.text1 }}>{meta.label}</span>
                       <span style={{ fontSize: 12, color: C.text2, lineHeight: 1.5 }}>{meta.why.split('.')[0]}.</span>
                     </div>
                   ))}
