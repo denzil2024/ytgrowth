@@ -755,47 +755,39 @@ export default function SeoOptimizer({ onNavigate }) {
             </div>
           )}
 
-          {/* ── Search intent analysis — stacked concepts with colored labels + hairlines,
-                mirrors Overview's "Biggest risk + What's working" card (Dashboard.jsx:2246-2259) exactly ── */}
+          {/* ── Search intent analysis — TWO side-by-side cards, mirrors Overview's
+                "Quick wins + Biggest risk / What's working" pattern (Dashboard.jsx:2209-2260).
+                Each column owns its own dividers, so row alignment across columns is a non-problem. ── */}
           {result.intent_analysis?.search_intent && (() => {
-            // Inline role label — 11/700/0.07em uppercase (Overview line 2249, 2255).
             const roleLabel = (color) => ({
               fontSize: 11, fontWeight: 700, color, letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 8,
             })
-            // Body text — 14/text1/lineHeight 1.7 (Overview line 2250, 2256).
             const roleBody = { fontSize: 14, color: C.text1, lineHeight: 1.7 }
             const roleBodyMuted = { fontSize: 14, color: C.text2, lineHeight: 1.7 }
-            // Separator — paddingTop 16 + hairline (Overview line 2254).
-            const separator = { paddingTop: 16, borderTop: `1px solid ${C.border}` }
+            const subBlock = { paddingTop: 16, marginTop: 16, borderTop: `1px solid ${C.border}` }
 
             const hasGap = !!result.intent_analysis.gap_opportunity
             const hasKeywords = result.intent_analysis.top_keywords?.length > 0
+            const hasOverused = !!result.intent_analysis.overused_angle
 
             return (
-              <div className="seo-glass-card" style={{ borderRadius: 16, padding: '22px 24px', marginBottom: 24 }}>
-                <p style={{ ...T.sectionLabel, marginBottom: 20 }}>Search intent analysis</p>
-
-                {/* Rows 1 + 2 — single 2-col grid with a vertical divider spanning both rows.
-                    Divider pattern borrowed from Overview's Summary card (Dashboard.jsx:2089). */}
-                <div style={{ position: 'relative', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px 48px' }}>
-                  {/* R1C1 — Search intent (red) */}
-                  <div>
-                    <p style={roleLabel(C.red)}>Search intent</p>
-                    <p style={roleBody}>{result.intent_analysis.search_intent}</p>
-                  </div>
-                  {/* R1C2 — Emotional driver (amber) */}
-                  <div>
-                    <p style={roleLabel(C.amber)}>Emotional driver</p>
-                    <p style={roleBody}>{result.intent_analysis.emotional_driver}</p>
-                  </div>
-                  {/* R2C1 — Who's searching (neutral) + Top keywords chips below — balances the column against Gap + Overused on the right */}
-                  <div style={{ paddingTop: 20, borderTop: `1px solid ${C.border}` }}>
-                    <p style={roleLabel(C.text3)}>Who's searching</p>
-                    <p style={roleBodyMuted}>{result.intent_analysis.viewer_profile}</p>
+              <div style={{ marginBottom: 24 }}>
+                <p style={{ ...T.sectionLabel, marginBottom: 14 }}>Search intent analysis</p>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, alignItems: 'stretch' }}>
+                  {/* LEFT — Who it's for */}
+                  <div className="seo-glass-card" style={{ borderRadius: 16, padding: '22px 24px', display: 'flex', flexDirection: 'column' }}>
+                    <div>
+                      <p style={roleLabel(C.red)}>Search intent</p>
+                      <p style={roleBody}>{result.intent_analysis.search_intent}</p>
+                    </div>
+                    <div style={subBlock}>
+                      <p style={roleLabel(C.text3)}>Who's searching</p>
+                      <p style={roleBodyMuted}>{result.intent_analysis.viewer_profile}</p>
+                    </div>
                     {hasKeywords && (
-                      <div style={{ marginTop: 14, paddingTop: 14, borderTop: `1px solid ${C.border}` }}>
+                      <div style={subBlock}>
                         <p style={roleLabel(C.text3)}>Top keywords in competitor titles</p>
-                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 2 }}>
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 4 }}>
                           {result.intent_analysis.top_keywords.map(kw => (
                             <span key={kw} onClick={() => setTitle(kw)} style={T.chip}
                               onMouseEnter={e => { e.currentTarget.style.background = '#f1f1f6'; e.currentTarget.style.borderColor = 'rgba(229,37,27,0.25)'; e.currentTarget.style.color = C.text1 }}
@@ -805,30 +797,26 @@ export default function SeoOptimizer({ onNavigate }) {
                       </div>
                     )}
                   </div>
-                  {/* R2C2 — Gap opportunity (green), with Overused nested */}
-                  {hasGap ? (
-                    <div style={{ paddingTop: 20, borderTop: `1px solid ${C.border}` }}>
-                      <p style={roleLabel(C.green)}>Gap opportunity — what competitors aren't doing</p>
-                      <p style={roleBody}>{result.intent_analysis.gap_opportunity}</p>
-                      {result.intent_analysis.overused_angle && (
-                        <div style={{ marginTop: 14, paddingTop: 14, borderTop: `1px solid ${C.border}` }}>
-                          <p style={roleLabel(C.red)}>Overused angle</p>
-                          <p style={roleBodyMuted}>{result.intent_analysis.overused_angle}</p>
-                        </div>
-                      )}
-                    </div>
-                  ) : (
-                    <div />
-                  )}
 
-                  {/* Vertical divider — spans full height of the 2×2 grid, centered */}
-                  <div aria-hidden="true" style={{
-                    position: 'absolute',
-                    top: 0, bottom: 0, left: '50%',
-                    width: 1, background: C.border,
-                    transform: 'translateX(-50%)',
-                    pointerEvents: 'none',
-                  }}/>
+                  {/* RIGHT — Where the gap is */}
+                  <div className="seo-glass-card" style={{ borderRadius: 16, padding: '22px 24px', display: 'flex', flexDirection: 'column' }}>
+                    <div>
+                      <p style={roleLabel(C.amber)}>Emotional driver</p>
+                      <p style={roleBody}>{result.intent_analysis.emotional_driver}</p>
+                    </div>
+                    {hasGap && (
+                      <div style={subBlock}>
+                        <p style={roleLabel(C.green)}>Gap opportunity — what competitors aren't doing</p>
+                        <p style={roleBody}>{result.intent_analysis.gap_opportunity}</p>
+                      </div>
+                    )}
+                    {hasOverused && (
+                      <div style={subBlock}>
+                        <p style={roleLabel(C.red)}>Overused angle</p>
+                        <p style={roleBodyMuted}>{result.intent_analysis.overused_angle}</p>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
             )
