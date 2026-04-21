@@ -1764,22 +1764,6 @@ export default function Dashboard() {
           {/* ── OVERVIEW ─────────────────────────────────────────────── */}
           {data && nav === 'Overview' && (
             <>
-              {showWelcome && data?.insights && (
-                <FirstTimeWelcome
-                  data={data}
-                  onDismiss={() => {
-                    const key = `ytg_welcomed_${data.channel.channel_id}`
-                    localStorage.setItem(key, '1')
-                    setShowWelcome(false)
-                  }}
-                  onNavigate={tab => {
-                    setNav(tab)
-                    const key = `ytg_welcomed_${data.channel.channel_id}`
-                    localStorage.setItem(key, '1')
-                    setShowWelcome(false)
-                  }}
-                />
-              )}
               <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 24 }}>
                 <div>
                   <h1 style={{ fontSize: 24, fontWeight: 800, color: C.text1, letterSpacing: '-0.6px', marginBottom: 6 }}>
