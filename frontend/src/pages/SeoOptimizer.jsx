@@ -718,49 +718,81 @@ export default function SeoOptimizer({ onNavigate }) {
             </div>
           )}
 
-          {/* Intent analysis + gap */}
-          {result.intent_analysis?.search_intent && (
-            <div className="seo-glass-card" style={{ borderRadius: 16, padding: '22px 24px', marginBottom: 16 }}>
-              <p style={{ fontSize: 11, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 14 }}>Search intent analysis</p>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 14 }}>
-                <div style={{ background: 'rgba(10,10,15,0.03)', border: '1px solid rgba(10,10,15,0.08)', borderRadius: 10, padding: '11px 14px' }}>
-                  <p style={{ fontSize: 10.5, fontWeight: 700, color: C.blue, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 5 }}>Search intent</p>
-                  <p style={{ fontSize: 13.5, fontWeight: 600, color: C.text1, lineHeight: 1.4 }}>{result.intent_analysis.search_intent}</p>
+          {/* ── Search intent analysis — all inner blocks share one shape, only the 3px left-accent color changes ── */}
+          {result.intent_analysis?.search_intent && (() => {
+            // Inner block — matches Overview InsightCard's "Action" block shape.
+            const infoBlock = (accent) => ({
+              background: '#fafafb',
+              border: '1px solid #e6e6ec',
+              borderLeft: `3px solid ${accent}`,
+              borderRadius: '0 10px 10px 0',
+              padding: '14px 16px',
+            })
+            // ── Unified typography scale ──
+            const T = {
+              sectionLabel: { fontSize: 11, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em' },
+              cardDesc:     { fontSize: 13, color: C.text3, lineHeight: 1.55 },
+              blockLabel:   (color) => ({ fontSize: 11, fontWeight: 700, color, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 8 }),
+              blockValue:   { fontSize: 14, fontWeight: 600, color: C.text1, lineHeight: 1.55, letterSpacing: '-0.1px' },
+              bodyMuted:    { fontSize: 13, fontWeight: 500, color: C.text2, lineHeight: 1.65, letterSpacing: '-0.05px' },
+              chip:         { fontSize: 13, fontWeight: 500, color: C.text2, background: '#fafafb', padding: '6px 12px', borderRadius: 20, border: '1px solid #e6e6ec', cursor: 'pointer', letterSpacing: '-0.1px', transition: 'all 0.15s' },
+            }
+            return (
+              <div className="seo-glass-card" style={{ borderRadius: 16, padding: '22px 24px', marginBottom: 16 }}>
+                {/* Header */}
+                <div style={{ marginBottom: 16 }}>
+                  <p style={{ ...T.sectionLabel, marginBottom: 4 }}>Search intent analysis</p>
+                  <p style={T.cardDesc}>What the viewer wants, what they feel, and where competitors fall short.</p>
                 </div>
-                <div style={{ background: 'rgba(217,119,6,0.05)', border: '1px solid rgba(217,119,6,0.14)', borderRadius: 10, padding: '11px 14px' }}>
-                  <p style={{ fontSize: 10.5, fontWeight: 700, color: C.amber, textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 5 }}>Emotional driver</p>
-                  <p style={{ fontSize: 13.5, fontWeight: 600, color: C.text1, lineHeight: 1.4 }}>{result.intent_analysis.emotional_driver}</p>
-                </div>
-              </div>
-              <div style={{ marginBottom: 14 }}>
-                <p style={{ fontSize: 11, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 5 }}>Who's searching</p>
-                <p style={{ fontSize: 13, color: C.text2, lineHeight: 1.6 }}>{result.intent_analysis.viewer_profile}</p>
-              </div>
-              {result.intent_analysis.gap_opportunity && (
-                <div style={{ background: 'rgba(5,150,105,0.05)', border: '1px solid rgba(5,150,105,0.16)', borderRadius: 10, padding: '11px 14px' }}>
-                  <p style={{ fontSize: 10.5, fontWeight: 700, color: C.green, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 5 }}>Gap opportunity — what competitors aren't doing</p>
-                  <p style={{ fontSize: 13, fontWeight: 600, color: C.text1, lineHeight: 1.55 }}>{result.intent_analysis.gap_opportunity}</p>
-                  {result.intent_analysis.overused_angle && (
-                    <p style={{ fontSize: 12, color: C.text3, marginTop: 6, lineHeight: 1.5 }}>
-                      <span style={{ fontWeight: 700, color: C.red }}>Overused: </span>{result.intent_analysis.overused_angle}
-                    </p>
-                  )}
-                </div>
-              )}
-              {result.intent_analysis.top_keywords?.length > 0 && (
-                <div style={{ marginTop: 14 }}>
-                  <p style={{ fontSize: 11, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }}>Top keywords in competitor titles</p>
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5 }}>
-                    {result.intent_analysis.top_keywords.map(kw => (
-                      <span key={kw} onClick={() => setTitle(kw)} style={{ fontSize: 12, color: C.blue, background: 'rgba(10,10,15,0.04)', padding: '3px 9px', borderRadius: 6, cursor: 'pointer', fontWeight: 500, transition: 'background 0.15s' }}
-                        onMouseEnter={e => e.currentTarget.style.background = 'rgba(10,10,15,0.08)'}
-                        onMouseLeave={e => e.currentTarget.style.background = 'rgba(10,10,15,0.04)'}>{kw}</span>
-                    ))}
+
+                {/* 2-col: Search intent (red) | Emotional driver (amber) */}
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 10 }}>
+                  <div style={infoBlock(C.red)}>
+                    <p style={T.blockLabel(C.red)}>Search intent</p>
+                    <p style={T.blockValue}>{result.intent_analysis.search_intent}</p>
+                  </div>
+                  <div style={infoBlock(C.amber)}>
+                    <p style={T.blockLabel(C.amber)}>Emotional driver</p>
+                    <p style={T.blockValue}>{result.intent_analysis.emotional_driver}</p>
                   </div>
                 </div>
-              )}
-            </div>
-          )}
+
+                {/* Who's searching — neutral accent */}
+                <div style={{ ...infoBlock(C.text3), marginBottom: 10 }}>
+                  <p style={T.blockLabel(C.text3)}>Who's searching</p>
+                  <p style={T.bodyMuted}>{result.intent_analysis.viewer_profile}</p>
+                </div>
+
+                {/* Gap opportunity — green accent (key insight) */}
+                {result.intent_analysis.gap_opportunity && (
+                  <div style={{ ...infoBlock(C.green), marginBottom: result.intent_analysis.top_keywords?.length > 0 ? 16 : 0 }}>
+                    <p style={T.blockLabel(C.green)}>Gap opportunity — what competitors aren't doing</p>
+                    <p style={T.blockValue}>{result.intent_analysis.gap_opportunity}</p>
+                    {result.intent_analysis.overused_angle && (
+                      <div style={{ marginTop: 10, paddingTop: 10, borderTop: '1px solid #eeeef3' }}>
+                        <p style={{ ...T.blockLabel(C.red), marginBottom: 6 }}>Overused angle</p>
+                        <p style={{ fontSize: 13, fontWeight: 500, color: C.text2, lineHeight: 1.6 }}>{result.intent_analysis.overused_angle}</p>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* Top keywords — chip row */}
+                {result.intent_analysis.top_keywords?.length > 0 && (
+                  <div>
+                    <p style={{ ...T.sectionLabel, marginBottom: 8 }}>Top keywords in competitor titles</p>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                      {result.intent_analysis.top_keywords.map(kw => (
+                        <span key={kw} onClick={() => setTitle(kw)} style={T.chip}
+                          onMouseEnter={e => { e.currentTarget.style.background = '#f1f1f6'; e.currentTarget.style.borderColor = 'rgba(229,37,27,0.25)'; e.currentTarget.style.color = C.text1 }}
+                          onMouseLeave={e => { e.currentTarget.style.background = '#fafafb'; e.currentTarget.style.borderColor = '#e6e6ec'; e.currentTarget.style.color = C.text2 }}>{kw}</span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )
+          })()}
 
           {/* AI-Suggested Titles — Overview InsightCard pattern */}
           {result.suggestions?.length > 0 && (
@@ -896,70 +928,87 @@ export default function SeoOptimizer({ onNavigate }) {
           )}
 
           {/* ── Keyword research — supporting SEO data ── */}
-          {result.keyword_scores?.length > 0 && (
-            <div className="seo-glass-card" style={{ borderRadius: 16, padding: '22px 24px', marginBottom: 16 }}>
-              {/* Header — label + count + hint (unified typography with other cards) */}
-              <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 14, gap: 16, flexWrap: 'wrap' }}>
-                <div>
-                  <p style={{ fontSize: 11, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 4 }}>Keyword research</p>
-                  <p style={{ fontSize: 12.5, color: C.text3, lineHeight: 1.5 }}>
-                    {result.keyword_scores.length} phrases scored — high volume × low competition wins. Click a phrase to use as your title.
-                  </p>
-                </div>
-                <span style={{ fontSize: 11, color: C.text3, whiteSpace: 'nowrap', flexShrink: 0 }}>Sorted by score</span>
-              </div>
-
-              {/* 2-col grid: table (left, dense) + autocomplete (right) — fills the horizontal space */}
-              <div style={{ display: 'grid', gridTemplateColumns: result.autocomplete_terms?.length > 0 ? 'minmax(0, 1.35fr) minmax(0, 1fr)' : '1fr', gap: 20, alignItems: 'start' }}>
-
-                {/* LEFT — keyword table, tight column widths */}
-                <div style={{ border: '1px solid #e6e6ec', borderRadius: 10, overflow: 'hidden' }}>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) 56px 72px 44px', gap: 10, padding: '9px 14px', background: '#fafafb', borderBottom: '1px solid #e6e6ec' }}>
-                    <span style={{ fontSize: 10.5, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Keyword phrase</span>
-                    <span style={{ fontSize: 10.5, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Vol</span>
-                    <span style={{ fontSize: 10.5, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Comp</span>
-                    <span style={{ fontSize: 10.5, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em', textAlign: 'right' }}>Score</span>
-                  </div>
-                  {result.keyword_scores.map((kw, i) => {
-                    const volColor = kw.volume === 'HIGH' ? C.green : kw.volume === 'MED' ? C.amber : C.text3
-                    const compColor = kw.competition === 'LOW' ? C.green : kw.competition === 'MED' ? C.amber : C.red
-                    const scColor = kw.score >= 65 ? C.green : kw.score >= 40 ? C.amber : C.red
-                    return (
-                      <div key={kw.phrase}
-                        onClick={() => setTitle(kw.phrase)}
-                        title="Click to use as title"
-                        style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) 56px 72px 44px', gap: 10, padding: '9px 14px', borderBottom: i < result.keyword_scores.length - 1 ? '1px solid #f0f0f4' : 'none', alignItems: 'center', transition: 'background 0.12s', cursor: 'pointer' }}
-                        onMouseEnter={e => e.currentTarget.style.background = '#fafafb'}
-                        onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
-                        <span style={{ fontSize: 13, fontWeight: 600, color: C.text1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', letterSpacing: '-0.1px' }}>{kw.phrase}</span>
-                        <span style={{ fontSize: 10, fontWeight: 700, color: volColor, border: `1.5px solid ${volColor === C.text3 ? '#e6e6ec' : volColor}`, padding: '1px 6px', borderRadius: 20, textTransform: 'uppercase', letterSpacing: '0.05em', justifySelf: 'start' }}>{kw.volume}</span>
-                        <span style={{ fontSize: 10, fontWeight: 700, color: compColor, border: `1.5px solid ${compColor}`, padding: '1px 6px', borderRadius: 20, textTransform: 'uppercase', letterSpacing: '0.05em', justifySelf: 'start' }}>{kw.competition}</span>
-                        <span style={{ fontSize: 13.5, fontWeight: 800, color: scColor, textAlign: 'right', fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.2px' }}>{kw.score}</span>
-                      </div>
-                    )
-                  })}
-                </div>
-
-                {/* RIGHT — autocomplete chips, fills the empty space */}
-                {result.autocomplete_terms?.length > 0 && (
+          {result.keyword_scores?.length > 0 && (() => {
+            // Same unified typography scale as Intent Analysis.
+            const T = {
+              sectionLabel: { fontSize: 11, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em' },
+              cardDesc:     { fontSize: 13, color: C.text3, lineHeight: 1.55 },
+              tableHeader:  { fontSize: 11, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em' },
+              keyword:      { fontSize: 14, fontWeight: 600, color: C.text1, letterSpacing: '-0.1px' },
+              pill:         (color, borderColor) => ({
+                fontSize: 11, fontWeight: 700, color,
+                border: `1.5px solid ${borderColor}`,
+                padding: '2px 8px', borderRadius: 20,
+                textTransform: 'uppercase', letterSpacing: '0.05em',
+                justifySelf: 'start',
+              }),
+              number:       (color) => ({ fontSize: 14, fontWeight: 800, color, textAlign: 'right', fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.2px' }),
+              chip:         { fontSize: 13, fontWeight: 500, color: C.text2, background: '#fafafb', padding: '6px 12px', borderRadius: 20, border: '1px solid #e6e6ec', cursor: 'pointer', letterSpacing: '-0.1px', transition: 'all 0.15s' },
+            }
+            return (
+              <div className="seo-glass-card" style={{ borderRadius: 16, padding: '22px 24px', marginBottom: 16 }}>
+                {/* Header */}
+                <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 16, gap: 16, flexWrap: 'wrap' }}>
                   <div>
-                    <p style={{ fontSize: 10.5, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }}>YouTube autocomplete</p>
-                    <p style={{ fontSize: 12.5, color: C.text3, marginBottom: 12, lineHeight: 1.5 }}>
-                      Live suggestions from YouTube's search box — click any to set as your title.
+                    <p style={{ ...T.sectionLabel, marginBottom: 4 }}>Keyword research</p>
+                    <p style={T.cardDesc}>
+                      {result.keyword_scores.length} phrases scored — high volume × low competition wins. Click a phrase to use as your title.
                     </p>
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-                      {result.autocomplete_terms.map(t => (
-                        <span key={t} onClick={() => setTitle(t)}
-                          style={{ fontSize: 12, color: C.text2, background: '#fafafb', padding: '5px 11px', borderRadius: 20, border: '1px solid #e6e6ec', cursor: 'pointer', fontWeight: 500, letterSpacing: '-0.1px', transition: 'all 0.15s' }}
-                          onMouseEnter={e => { e.currentTarget.style.background = '#f1f1f6'; e.currentTarget.style.borderColor = 'rgba(229,37,27,0.25)'; e.currentTarget.style.color = C.text1 }}
-                          onMouseLeave={e => { e.currentTarget.style.background = '#fafafb'; e.currentTarget.style.borderColor = '#e6e6ec'; e.currentTarget.style.color = C.text2 }}>{t}</span>
-                      ))}
-                    </div>
                   </div>
-                )}
+                  <span style={{ ...T.sectionLabel, fontWeight: 500, whiteSpace: 'nowrap', flexShrink: 0 }}>Sorted by score</span>
+                </div>
+
+                {/* 2-col: keyword table (left) | autocomplete chips (right) */}
+                <div style={{ display: 'grid', gridTemplateColumns: result.autocomplete_terms?.length > 0 ? 'minmax(0, 1.35fr) minmax(0, 1fr)' : '1fr', gap: 20, alignItems: 'start' }}>
+
+                  {/* LEFT — keyword table */}
+                  <div style={{ border: '1px solid #e6e6ec', borderRadius: 10, overflow: 'hidden' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) 64px 80px 48px', gap: 12, padding: '10px 14px', background: '#fafafb', borderBottom: '1px solid #e6e6ec' }}>
+                      <span style={T.tableHeader}>Keyword phrase</span>
+                      <span style={T.tableHeader}>Vol</span>
+                      <span style={T.tableHeader}>Comp</span>
+                      <span style={{ ...T.tableHeader, textAlign: 'right' }}>Score</span>
+                    </div>
+                    {result.keyword_scores.map((kw, i) => {
+                      const volColor = kw.volume === 'HIGH' ? C.green : kw.volume === 'MED' ? C.amber : C.text3
+                      const compColor = kw.competition === 'LOW' ? C.green : kw.competition === 'MED' ? C.amber : C.red
+                      const scColor = kw.score >= 65 ? C.green : kw.score >= 40 ? C.amber : C.red
+                      return (
+                        <div key={kw.phrase}
+                          onClick={() => setTitle(kw.phrase)}
+                          title="Click to use as title"
+                          style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) 64px 80px 48px', gap: 12, padding: '11px 14px', borderBottom: i < result.keyword_scores.length - 1 ? '1px solid #f0f0f4' : 'none', alignItems: 'center', transition: 'background 0.12s', cursor: 'pointer' }}
+                          onMouseEnter={e => e.currentTarget.style.background = '#fafafb'}
+                          onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
+                          <span style={{ ...T.keyword, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{kw.phrase}</span>
+                          <span style={T.pill(volColor, volColor === C.text3 ? '#e6e6ec' : volColor)}>{kw.volume}</span>
+                          <span style={T.pill(compColor, compColor)}>{kw.competition}</span>
+                          <span style={T.number(scColor)}>{kw.score}</span>
+                        </div>
+                      )
+                    })}
+                  </div>
+
+                  {/* RIGHT — autocomplete chips */}
+                  {result.autocomplete_terms?.length > 0 && (
+                    <div>
+                      <p style={{ ...T.sectionLabel, marginBottom: 6 }}>YouTube autocomplete</p>
+                      <p style={{ ...T.cardDesc, marginBottom: 12 }}>
+                        Live suggestions from YouTube's search box — click any to set as your title.
+                      </p>
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                        {result.autocomplete_terms.map(t => (
+                          <span key={t} onClick={() => setTitle(t)} style={T.chip}
+                            onMouseEnter={e => { e.currentTarget.style.background = '#f1f1f6'; e.currentTarget.style.borderColor = 'rgba(229,37,27,0.25)'; e.currentTarget.style.color = C.text1 }}
+                            onMouseLeave={e => { e.currentTarget.style.background = '#fafafb'; e.currentTarget.style.borderColor = '#e6e6ec'; e.currentTarget.style.color = C.text2 }}>{t}</span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
-            </div>
-          )}
+            )
+          })()}
 
           {/* ── Suggested tags — implementation detail for upload ── */}
           {result.top_tags?.length > 0 && (
