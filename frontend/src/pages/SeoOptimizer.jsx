@@ -29,6 +29,7 @@ if (typeof document !== 'undefined' && !document.getElementById('seo-opt-styles'
     box-shadow: 0 4px 12px rgba(0,0,0,0.08), 0 16px 40px rgba(0,0,0,0.09);
     transform: translateY(-1px);
   }
+  .seo-kw-row:hover .seo-kw-phrase { color: #0f0f13 !important; }
   .seo-format-card { outline: none; }
   .seo-format-card:hover {
     border-color: rgba(0,0,0,0.18);
@@ -969,22 +970,23 @@ export default function SeoOptimizer({ onNavigate }) {
               </div>
               <div style={{ height: 1, background: '#e6e6ec', marginBottom: 10 }} />
 
-              {/* 2-col · phrase (fixed 180px, truncates) | bar (flex:1) | score (28px) — mirrors Dashboard.jsx:2119-2126 */}
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2px 40px' }}>
+              {/* 2-col grid mirrors Dashboard.jsx:2106 exactly — gap '14px 40px', no row bg / no padding */}
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px 40px' }}>
                 {result.keyword_scores.map((kw) => {
                   const scColor = kw.score >= 65 ? C.green : kw.score >= 40 ? C.amber : C.red
                   return (
-                    <div key={kw.phrase}
+                    <div key={kw.phrase} className="seo-kw-row"
                       onClick={() => setTitle(kw.phrase)}
                       title={`Volume ${kw.volume} · Competition ${kw.competition} · Score ${kw.score} — click to use as title`}
-                      style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '8px 10px', borderRadius: 8, cursor: 'pointer', transition: 'background 0.12s' }}
-                      onMouseEnter={e => e.currentTarget.style.background = '#fafafb'}
-                      onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
-                      <span style={{ ...T.keyword, width: 180, flexShrink: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{kw.phrase}</span>
+                      style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }}>
+                      {/* phrase: 13/400/text2 — same weight as Overview's category label */}
+                      <span className="seo-kw-phrase" style={{ fontSize: 13, color: C.text2, fontWeight: 400, width: 180, flexShrink: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', transition: 'color 0.12s' }}>{kw.phrase}</span>
+                      {/* bar: 4px tall, flex:1 — identical to Overview's progress bar */}
                       <div style={{ flex: 1, height: 4, background: '#eeeef3', borderRadius: 99, overflow: 'hidden', minWidth: 40 }}>
-                        <div style={{ width: `${kw.score}%`, height: '100%', background: scColor, borderRadius: 99, transition: 'width 0.6s cubic-bezier(0.34,1.56,0.64,1)' }}/>
+                        <div style={{ width: `${kw.score}%`, height: '100%', background: scColor, borderRadius: 99, transition: 'width 0.8s cubic-bezier(0.34,1.56,0.64,1)' }}/>
                       </div>
-                      <span style={{ fontSize: 13.5, fontWeight: 700, color: scColor, fontVariantNumeric: 'tabular-nums', minWidth: 26, textAlign: 'right', letterSpacing: '-0.1px', flexShrink: 0 }}>{kw.score}</span>
+                      {/* value: 13/700/color — identical to Overview's category value */}
+                      <span style={{ fontSize: 13, fontWeight: 700, color: scColor, fontVariantNumeric: 'tabular-nums', minWidth: 26, textAlign: 'right', flexShrink: 0 }}>{kw.score}</span>
                     </div>
                   )
                 })}
