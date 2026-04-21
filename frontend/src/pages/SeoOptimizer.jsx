@@ -161,29 +161,26 @@ function BreakdownBar({ criterionKey, value, max }) {
 function FormatTemplates({ onUse }) {
   const [open, setOpen] = useState(false)
   return (
-    <div style={{ marginBottom: 14, border: '1px solid rgba(10,10,15,0.08)', borderRadius: 10, overflow: 'hidden', transition: 'border-color 0.2s' }}>
+    <div style={{ marginBottom: 16 }}>
       <button onClick={() => setOpen(v => !v)}
-        style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '11px 14px', background: open ? '#fafafa' : '#ffffff', border: 'none', cursor: 'pointer', fontFamily: 'inherit', transition: 'background 0.2s' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <span style={{ fontSize: 13, fontWeight: 700, color: C.text1, letterSpacing: '-0.2px' }}>Viral format templates</span>
-          <span style={{ fontSize: 12, color: C.text3, fontWeight: 400 }}>Click any template to pre-fill your title</span>
-        </div>
-        <svg width="12" height="12" viewBox="0 0 13 13" fill="none" stroke={C.text3} strokeWidth="2"
-          style={{ transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.25s', flexShrink: 0 }}>
+        style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: 0, background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'inherit', color: C.text2, fontSize: 12, fontWeight: 600 }}>
+        <svg width="11" height="11" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="2"
+          style={{ transform: open ? 'rotate(180deg)' : 'rotate(-90deg)', transition: 'transform 0.25s', flexShrink: 0 }}>
           <path d="M2 4.5l4.5 4.5 4.5-4.5"/>
         </svg>
+        Start from a proven format
+        <span style={{ color: C.text3, fontWeight: 400 }}>· 6 viral patterns</span>
       </button>
       {open && (
-        <div style={{ padding: '10px 12px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, background: '#fafafb', borderTop: '1px solid rgba(10,10,15,0.06)' }}>
+        <div style={{ marginTop: 12, display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: 8 }}>
           {VIRAL_FORMATS.map(fmt => (
-            <div key={fmt.key} onClick={() => onUse(fmt.example)}
-              style={{ padding: '10px 12px', border: '1px solid rgba(10,10,15,0.08)', borderRadius: 8, cursor: 'pointer', background: '#ffffff', transition: 'all 0.18s' }}
+            <button key={fmt.key} onClick={() => onUse(fmt.example)}
+              style={{ textAlign: 'left', padding: '10px 12px', border: '1px solid #e6e6ec', borderRadius: 10, cursor: 'pointer', background: '#ffffff', fontFamily: 'inherit', transition: 'all 0.15s' }}
               onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(229,37,27,0.35)'; e.currentTarget.style.background = '#fffafa' }}
-              onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(10,10,15,0.08)'; e.currentTarget.style.background = '#ffffff' }}>
-              <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, marginBottom: 4, textTransform: 'uppercase', letterSpacing: '0.06em' }}>{fmt.label}</p>
-              <p style={{ fontSize: 12, color: C.text1, fontWeight: 600, lineHeight: 1.4, marginBottom: 3 }}>{fmt.example}</p>
-              <p style={{ fontSize: 12, color: C.text3, lineHeight: 1.4 }}>{fmt.why}</p>
-            </div>
+              onMouseLeave={e => { e.currentTarget.style.borderColor = '#e6e6ec'; e.currentTarget.style.background = '#ffffff' }}>
+              <p style={{ fontSize: 10, fontWeight: 600, color: C.text3, marginBottom: 4, textTransform: 'uppercase', letterSpacing: '0.07em' }}>{fmt.label}</p>
+              <p style={{ fontSize: 12.5, color: C.text1, fontWeight: 500, lineHeight: 1.4, margin: 0 }}>{fmt.example}</p>
+            </button>
           ))}
         </div>
       )}
@@ -194,27 +191,30 @@ function FormatTemplates({ onUse }) {
 function TitlePreviewSimulator({ title }) {
   if (!title.trim()) return null
   const surfaces = [
-    { label: 'Suggested feed', maxChars: 45, icon: '📱' },
-    { label: 'Mobile search',  maxChars: 55, icon: '🔍' },
-    { label: 'Desktop search', maxChars: 70, icon: '🖥️' },
+    { label: 'Suggested feed', maxChars: 45 },
+    { label: 'Mobile search',  maxChars: 55 },
+    { label: 'Desktop search', maxChars: 70 },
   ]
   return (
-    <div style={{ marginTop: 12, padding: '12px 14px', background: '#fafafb', borderRadius: 10, border: '1px solid rgba(10,10,15,0.06)' }}>
-      <p style={{ fontSize: 11, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 8 }}>Preview on YouTube</p>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 8 }}>
-        {surfaces.map(({ label, maxChars, icon }) => {
+    <div style={{ marginTop: 16 }}>
+      <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 10 }}>
+        <p style={{ fontSize: 11, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Preview on YouTube</p>
+        <p style={{ fontSize: 11, color: C.text3 }}>How your title renders across surfaces</p>
+      </div>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: 10 }}>
+        {surfaces.map(({ label, maxChars }) => {
           const truncated = title.length > maxChars
           const display = truncated ? title.slice(0, maxChars - 1) + '…' : title
           return (
-            <div key={label} style={{ padding: '10px 12px', background: '#ffffff', borderRadius: 8, border: `1px solid ${truncated ? C.orangeBdr : 'rgba(10,10,15,0.08)'}` }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
-                <span style={{ fontSize: 11, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em' }}>{label}</span>
-                <span style={{ fontSize: 11, fontWeight: 700, color: truncated ? C.orange : C.green }}>
-                  {truncated ? 'cut' : 'fits'}
+            <div key={label} style={{ padding: '12px 14px', background: '#ffffff', borderRadius: 10, border: '1px solid #e6e6ec' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+                <span style={{ fontSize: 10, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.08em' }}>{label}</span>
+                <span style={{ fontSize: 10, fontWeight: 700, color: truncated ? C.amber : C.green, letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+                  {truncated ? 'Cut' : 'Fits'}
                 </span>
               </div>
-              <p style={{ fontSize: 12, fontWeight: 600, color: truncated ? C.text2 : C.text1, lineHeight: 1.45 }}>{display}</p>
-              {truncated && <p style={{ fontSize: 11, color: C.text4, marginTop: 4 }}>{title.length - maxChars + 1} chars over</p>}
+              <p style={{ fontSize: 12.5, fontWeight: 500, color: truncated ? C.text2 : C.text1, lineHeight: 1.45, margin: 0 }}>{display}</p>
+              {truncated && <p style={{ fontSize: 10.5, color: C.amber, marginTop: 5, fontWeight: 500 }}>{title.length - maxChars + 1} chars over {maxChars}</p>}
             </div>
           )
         })}
@@ -470,61 +470,67 @@ export default function SeoOptimizer({ onNavigate }) {
       </div>
 
       {/* Input card */}
-      <div className="seo-glass-card" style={{ borderRadius: 16, padding: '18px 20px', marginBottom: 12 }}>
+      <div className="seo-glass-card" style={{ borderRadius: 16, padding: '22px 24px', marginBottom: 12 }}>
 
-        <FormatTemplates onUse={t => setTitle(t)} />
-
-        <div style={{ marginBottom: 16 }}>
-          {prefillBanner && (
-            <div style={{
-              fontSize: 12, fontWeight: 600, color: C.blue,
-              background: 'rgba(10,10,15,0.04)', border: '1px solid rgba(10,10,15,0.10)',
-              borderRadius: 8, padding: '6px 12px', marginBottom: 10,
-              display: 'flex', alignItems: 'center', gap: 6,
-            }}>
-              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><circle cx="6" cy="6" r="5"/><path d="M6 4v3M6 8.5v.5"/></svg>
-              Title pre-filled from Video Ideas
-            </div>
-          )}
-          <label style={{ display: 'block', fontSize: 11, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 8 }}>Your video title</label>
-          <input ref={titleInputRef} value={title} onChange={e => setTitle(e.target.value)} onKeyDown={e => e.key === 'Enter' && handleSubmitTitle()}
-            placeholder="e.g. How I grew my YouTube channel to 10k subscribers"
-            style={{ width: '100%', padding: '11px 18px', fontSize: 14, border: '1px solid #e6e6ec', borderRadius: 100, fontFamily: 'inherit', outline: 'none', color: C.text1, background: '#ffffff', boxSizing: 'border-box', transition: 'border-color 0.18s, box-shadow 0.18s', letterSpacing: '-0.1px' }}
-            onFocus={e => { e.target.style.borderColor = 'rgba(0,0,0,0.25)'; e.target.style.boxShadow = '0 0 0 4px rgba(0,0,0,0.04)' }}
-            onBlur={e => { e.target.style.borderColor = '#e6e6ec'; e.target.style.boxShadow = 'none' }} />
-          <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 6 }}>
-            <span style={{
-              fontSize: 12, fontWeight: 600,
-              color: title.length > 70 ? C.red : title.length >= 50 ? C.green : C.text3,
-            }}>
-              {title.length} chars {title.length >= 50 && title.length <= 70 ? '· ideal length' : title.length > 70 ? '· too long' : '· aim for 50–70'}
-            </span>
+        {prefillBanner && (
+          <div style={{
+            fontSize: 12, fontWeight: 500, color: C.text2,
+            background: '#fafafb', border: '1px solid #e6e6ec',
+            borderRadius: 8, padding: '7px 12px', marginBottom: 14,
+            display: 'inline-flex', alignItems: 'center', gap: 6,
+          }}>
+            <span style={{ width: 6, height: 6, borderRadius: '50%', background: C.green }} />
+            Title pre-filled from Video Ideas
           </div>
-          <TitlePreviewSimulator title={title} />
+        )}
+
+        <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 10 }}>
+          <label style={{ fontSize: 11, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Your video title</label>
+          <span style={{
+            fontSize: 11.5, fontWeight: 500,
+            color: title.length > 70 ? C.red : title.length >= 50 ? C.green : C.text3,
+            fontVariantNumeric: 'tabular-nums',
+          }}>
+            {title.length} chars · {title.length >= 50 && title.length <= 70 ? 'ideal' : title.length > 70 ? 'too long' : 'aim for 50–70'}
+          </span>
         </div>
 
-        <button onClick={handleSubmitTitle} disabled={loading || loadingIntent || !title.trim()}
-          style={{ display: 'inline-flex', alignItems: 'center', gap: 7, padding: '9px 20px', background: title.trim() && !loading && !loadingIntent ? '#e5251b' : '#e0e0e6', color: '#fff', border: 'none', borderRadius: 100, fontSize: 12.5, fontWeight: 700, fontFamily: 'inherit', cursor: title.trim() && !loading && !loadingIntent ? 'pointer' : 'not-allowed', transition: 'all 0.18s', boxShadow: title.trim() && !loading && !loadingIntent ? '0 1px 3px rgba(0,0,0,0.12), 0 4px 14px rgba(229,37,27,0.32)' : 'none', letterSpacing: '-0.1px' }}
-          onMouseEnter={e => { if (!loading && !loadingIntent && title.trim()) { e.currentTarget.style.filter = 'brightness(1.07)'; e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.15), 0 8px 28px rgba(229,37,27,0.42)'; e.currentTarget.style.transform = 'translateY(-1px)' } }}
-          onMouseLeave={e => { if (!loading && !loadingIntent && title.trim()) { e.currentTarget.style.filter = ''; e.currentTarget.style.boxShadow = '0 1px 3px rgba(0,0,0,0.12), 0 4px 14px rgba(229,37,27,0.32)'; e.currentTarget.style.transform = '' } }}>
-          {loadingIntent ? (
-            <><SpinIcon /> Identifying search intent…</>
-          ) : loading ? (
-            <><SpinIcon /> Researching &amp; generating…</>
-          ) : (
-            <>
-              <svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="6" cy="6" r="5"/><path d="m9 9 3 3"/></svg>
-              Analyse &amp; suggest titles
-            </>
-          )}
-        </button>
+        <input ref={titleInputRef} value={title} onChange={e => setTitle(e.target.value)} onKeyDown={e => e.key === 'Enter' && handleSubmitTitle()}
+          placeholder="e.g. How I grew my YouTube channel to 10k subscribers"
+          style={{ width: '100%', padding: '14px 18px', fontSize: 15, border: '1px solid #e6e6ec', borderRadius: 10, fontFamily: 'inherit', outline: 'none', color: C.text1, background: '#ffffff', boxSizing: 'border-box', transition: 'border-color 0.18s, box-shadow 0.18s', letterSpacing: '-0.15px', fontWeight: 500 }}
+          onFocus={e => { e.target.style.borderColor = 'rgba(0,0,0,0.25)'; e.target.style.boxShadow = '0 0 0 4px rgba(0,0,0,0.04)' }}
+          onBlur={e => { e.target.style.borderColor = '#e6e6ec'; e.target.style.boxShadow = 'none' }} />
+
+        <TitlePreviewSimulator title={title} />
+
+        <div style={{ marginTop: 18 }}>
+          <button onClick={handleSubmitTitle} disabled={loading || loadingIntent || !title.trim()}
+            style={{ display: 'inline-flex', alignItems: 'center', gap: 7, padding: '10px 22px', background: title.trim() && !loading && !loadingIntent ? '#e5251b' : '#e0e0e6', color: '#fff', border: 'none', borderRadius: 100, fontSize: 13, fontWeight: 700, fontFamily: 'inherit', cursor: title.trim() && !loading && !loadingIntent ? 'pointer' : 'not-allowed', transition: 'all 0.18s', boxShadow: title.trim() && !loading && !loadingIntent ? '0 1px 3px rgba(0,0,0,0.12), 0 4px 14px rgba(229,37,27,0.32)' : 'none', letterSpacing: '-0.1px' }}
+            onMouseEnter={e => { if (!loading && !loadingIntent && title.trim()) { e.currentTarget.style.filter = 'brightness(1.07)'; e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.15), 0 8px 28px rgba(229,37,27,0.42)'; e.currentTarget.style.transform = 'translateY(-1px)' } }}
+            onMouseLeave={e => { if (!loading && !loadingIntent && title.trim()) { e.currentTarget.style.filter = ''; e.currentTarget.style.boxShadow = '0 1px 3px rgba(0,0,0,0.12), 0 4px 14px rgba(229,37,27,0.32)'; e.currentTarget.style.transform = '' } }}>
+            {loadingIntent ? (
+              <><SpinIcon /> Identifying search intent…</>
+            ) : loading ? (
+              <><SpinIcon /> Researching &amp; generating…</>
+            ) : (
+              <>
+                <svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="6" cy="6" r="5"/><path d="m9 9 3 3"/></svg>
+                Analyse &amp; suggest titles
+              </>
+            )}
+          </button>
+        </div>
 
         {error && (
-          <div style={{ marginTop: 12, display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: C.red, background: 'rgba(229,37,27,0.06)', border: '1px solid rgba(229,37,27,0.18)', borderRadius: 9, padding: '9px 13px' }}>
+          <div style={{ marginTop: 14, display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: C.red, background: C.redBg, border: `1px solid ${C.redBdr}`, borderRadius: 9, padding: '9px 13px' }}>
             <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><circle cx="6.5" cy="6.5" r="5"/><path d="M6.5 4v3M6.5 9v.5"/></svg>
             {error}
           </div>
         )}
+
+        <div style={{ marginTop: 18, paddingTop: 16, borderTop: '1px solid #f0f0f4' }}>
+          <FormatTemplates onUse={t => setTitle(t)} />
+        </div>
       </div>
 
       {/* Intent picker */}
