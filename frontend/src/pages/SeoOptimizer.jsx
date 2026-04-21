@@ -86,6 +86,23 @@ if (typeof document !== 'undefined' && !document.getElementById('seo-opt-styles'
   .seo-route-card:hover .seo-route-badge { box-shadow: 0 6px 16px rgba(229,37,27,0.55), inset 0 1px 0 rgba(255,255,255,0.35); }
   .seo-route-go { transition: color 0.2s, transform 0.2s; display: inline-flex; align-items: center; gap: 6px; color: #9595a4; }
   .seo-route-badge { transition: box-shadow 0.22s; }
+
+  /* Local button classes — mirror ytg-dash-btn / ytg-dash-btn-primary from Overview,
+     scoped to this page via .seo- prefix so we don't touch global styles. */
+  .seo-btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 9px 20px; border-radius: 100px; border: 1px solid rgba(0,0,0,0.1);
+    font-family: 'Inter', system-ui, sans-serif; font-size: 12.5px; font-weight: 600;
+    background: #ffffff; color: #4a4a58; cursor: pointer;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.07), 0 4px 14px rgba(0,0,0,0.07);
+    transition: all 0.18s;
+    white-space: nowrap;
+  }
+  .seo-btn:hover {
+    border-color: rgba(0,0,0,0.18); color: #0f0f13;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.10), 0 8px 28px rgba(0,0,0,0.10);
+    transform: translateY(-1px);
+  }
 `
   document.head.appendChild(s)
 }
@@ -151,9 +168,9 @@ const C = {
 //    the hierarchy Overview uses, don't flatten it. ──
 const T = {
   // Page + section headers (Overview: H1 24, H2 22, H3 20)
-  h1:           { fontSize: 24, fontWeight: 700, color: '#0f0f13', letterSpacing: '-0.6px', lineHeight: 1.1 },
-  h2:           { fontSize: 22, fontWeight: 700, color: '#0f0f13', letterSpacing: '-0.5px' },
-  h3:           { fontSize: 20, fontWeight: 700, color: '#0f0f13', letterSpacing: '-0.5px' },
+  h1:           { fontSize: 24, fontWeight: 800, color: '#0f0f13', letterSpacing: '-0.6px', lineHeight: 1.1 },
+  h2:           { fontSize: 22, fontWeight: 800, color: '#0f0f13', letterSpacing: '-0.5px' },
+  h3:           { fontSize: 20, fontWeight: 800, color: '#0f0f13', letterSpacing: '-0.5px' },
 
   // Uppercase labels
   sectionLabel: { fontSize: 11, fontWeight: 600, color: '#9595a4', textTransform: 'uppercase', letterSpacing: '0.06em' },  // card-level label ("KEYWORD RESEARCH") — neutral grey (matches Overview); red is semantic only, don't spray it on utility eyebrows
@@ -600,15 +617,12 @@ export default function SeoOptimizer({ onNavigate }) {
             </svg>
           </span>
           <div>
-            <h1 style={{ fontSize: 24, fontWeight: 700, color: C.text1, letterSpacing: '-0.6px', marginBottom: 6, lineHeight: 1.1 }}>SEO Optimizer</h1>
+            <h1 style={{ fontSize: 24, fontWeight: 800, color: C.text1, letterSpacing: '-0.6px', marginBottom: 6, lineHeight: 1.1 }}>SEO Optimizer</h1>
             <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.4 }}>Your title against live competitor data — 3 AI alternatives, plus a matching description.</p>
           </div>
         </div>
         {(title || result) && (
-          <button onClick={handleClear}
-            style={{ flexShrink: 0, display: 'inline-flex', alignItems: 'center', gap: 10, padding: '9px 20px', borderRadius: 100, fontWeight: 600, fontSize: 12.5, background: '#ffffff', color: C.text2, border: '1px solid rgba(0,0,0,0.1)', boxShadow: '0 1px 3px rgba(0,0,0,0.07), 0 4px 14px rgba(0,0,0,0.07)', cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.18s' }}
-            onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(0,0,0,0.18)'; e.currentTarget.style.color = C.text1; e.currentTarget.style.transform = 'translateY(-1px)'; e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.10), 0 8px 28px rgba(0,0,0,0.10)' }}
-            onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(0,0,0,0.1)'; e.currentTarget.style.color = C.text2; e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = '0 1px 3px rgba(0,0,0,0.07), 0 4px 14px rgba(0,0,0,0.07)' }}>
+          <button onClick={handleClear} className="seo-btn" style={{ flexShrink: 0 }}>
             Clear
           </button>
         )}
@@ -787,7 +801,7 @@ export default function SeoOptimizer({ onNavigate }) {
 
       {/* Intent picker — "Three directions" moment. Cinematic header, 3 route tiles, amber route badges. */}
       {intentOptions && !loading && !result && (
-        <div style={{ marginBottom: 16, marginTop: 6 }}>
+        <div style={{ marginBottom: 16, marginTop: 40 }}>
           {/* Header — centered, feels like a beat in the flow */}
           <div style={{ textAlign: 'center', marginBottom: 20 }}>
             <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
@@ -796,7 +810,7 @@ export default function SeoOptimizer({ onNavigate }) {
               </svg>
               <span style={{ fontSize: 10.5, fontWeight: 700, color: C.red, letterSpacing: '0.16em', textTransform: 'uppercase' }}>Three directions</span>
             </div>
-            <h2 style={{ fontSize: 24, fontWeight: 700, color: C.text1, letterSpacing: '-0.55px', lineHeight: 1.2, marginBottom: 10 }}>
+            <h2 style={{ fontSize: 24, fontWeight: 800, color: C.text1, letterSpacing: '-0.55px', lineHeight: 1.2, marginBottom: 10 }}>
               Your title could go <span style={{ color: C.red }}>3 ways</span>. Pick one.
             </h2>
             <p style={{ fontSize: 13.5, color: C.text3, lineHeight: 1.6, maxWidth: 540, margin: '0 auto' }}>
@@ -865,10 +879,7 @@ export default function SeoOptimizer({ onNavigate }) {
 
           {/* Escape hatch — centered ghost pill */}
           <div style={{ display: 'flex', justifyContent: 'center', marginTop: 16 }}>
-            <button onClick={() => runAnalysis('')}
-              style={{ fontSize: 12.5, fontWeight: 600, color: C.text2, background: '#ffffff', border: '1px solid #e6e6ec', borderRadius: 100, padding: '9px 20px', cursor: 'pointer', fontFamily: 'inherit', boxShadow: '0 1px 3px rgba(0,0,0,0.06)', transition: 'all 0.18s', whiteSpace: 'nowrap' }}
-              onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(0,0,0,0.18)'; e.currentTarget.style.color = C.text1 }}
-              onMouseLeave={e => { e.currentTarget.style.borderColor = '#e6e6ec'; e.currentTarget.style.color = C.text2 }}>
+            <button onClick={() => runAnalysis('')} className="seo-btn">
               None of these — let AI decide
             </button>
           </div>
@@ -879,7 +890,7 @@ export default function SeoOptimizer({ onNavigate }) {
         <div className="seo-result-section">
           {/* ── Section header — mirrors Overview "Channel audit" H2 (marginTop 40, Dashboard.jsx:2069) ───── */}
           <div style={{ marginBottom: 20, marginTop: 40 }}>
-            <h2 style={{ fontSize: 22, fontWeight: 700, color: C.text1, letterSpacing: '-0.5px', marginBottom: 4 }}>Title analysis</h2>
+            <h2 style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', marginBottom: 4 }}>Title analysis</h2>
             {result.primary_phrase ? (
               <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.5 }}>
                 Analysed against{' '}
@@ -1061,7 +1072,7 @@ export default function SeoOptimizer({ onNavigate }) {
             <div style={{ marginBottom: 24 }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16, gap: 16 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                  <p style={{ fontSize: 20, fontWeight: 700, color: C.text1, letterSpacing: '-0.5px' }}>Suggested titles</p>
+                  <p style={{ fontSize: 20, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px' }}>Suggested titles</p>
                   <span style={{ fontSize: 11, fontWeight: 700, color: C.text3, background: '#f1f1f6', padding: '2px 8px', borderRadius: 20, border: '1px solid #e6e6ec' }}>{result.suggestions.length}</span>
                 </div>
                 <button onClick={() => handleSelectTitle(title.trim())}
@@ -1324,16 +1335,25 @@ export default function SeoOptimizer({ onNavigate }) {
 
           {/* ── Description Optimizer ── */}
           {selectedTitle && (
-            <div ref={descRef} className="seo-glass-card" style={{ marginTop: 0, borderRadius: 16, padding: '22px 24px' }}>
+            <>
+              {/* Section header — mirrors Overview's "Channel audit" H2 pattern (H2 + 1-line muted subtitle) */}
+              <div ref={descRef} style={{ marginBottom: 20, marginTop: 40 }}>
+                <h2 style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', marginBottom: 4 }}>Description optimizer</h2>
+                <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.5 }}>
+                  3 descriptions for your picked title — each opens with a different hook. Copy the one that fits.
+                </p>
+              </div>
 
-              {/* Header — label + selected title as content (same pattern as Overview's Summary card: label + 14 content) */}
+              <div className="seo-glass-card" style={{ borderRadius: 16, padding: '22px 24px' }}>
+
+              {/* Picked title + Change button */}
               <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 20, gap: 16 }}>
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <p style={{ ...T.sectionLabel, marginBottom: 8 }}>Description optimizer</p>
+                  <p style={{ ...T.sectionLabel, marginBottom: 8 }}>Picked title</p>
                   <p style={{ fontSize: 14, color: C.text1, lineHeight: 1.55, fontWeight: 700, letterSpacing: '-0.1px' }}>&ldquo;{selectedTitle}&rdquo;</p>
                 </div>
                 <button onClick={() => { setSelectedTitle(null); setDescResult(null); setDescError('') }}
-                  style={{ flexShrink: 0, fontSize: 12.5, fontWeight: 600, color: C.text2, background: '#ffffff', border: '1px solid rgba(0,0,0,0.1)', borderRadius: 100, padding: '9px 20px', cursor: 'pointer', fontFamily: 'inherit', whiteSpace: 'nowrap', boxShadow: '0 1px 3px rgba(0,0,0,0.07), 0 4px 14px rgba(0,0,0,0.07)', transition: 'all 0.18s' }}>
+                  className="seo-btn" style={{ flexShrink: 0 }}>
                   Change title
                 </button>
               </div>
@@ -1395,7 +1415,8 @@ export default function SeoOptimizer({ onNavigate }) {
                   </div>
                 </>
               )}
-            </div>
+              </div>
+            </>
           )}
         </div>
       )}
