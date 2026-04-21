@@ -898,51 +898,66 @@ export default function SeoOptimizer({ onNavigate }) {
           {/* ── Keyword research — supporting SEO data ── */}
           {result.keyword_scores?.length > 0 && (
             <div className="seo-glass-card" style={{ borderRadius: 16, padding: '22px 24px', marginBottom: 16 }}>
-              <p style={{ fontSize: 11, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 3 }}>Keyword research</p>
-              <p style={{ fontSize: 12, color: C.text3, marginBottom: 14, lineHeight: 1.5 }}>
-                Volume is search demand from YouTube autocomplete. Competition counts how many top videos target it. Score favours high-volume, low-competition opportunities.
-              </p>
-
-              <div style={{ border: '1px solid #e6e6ec', borderRadius: 10, overflow: 'hidden', marginBottom: 14 }}>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 72px 100px 52px', gap: 8, padding: '8px 14px', background: '#fafafb', borderBottom: '1px solid #e6e6ec' }}>
-                  <span style={{ fontSize: 10.5, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Keyword phrase</span>
-                  <span style={{ fontSize: 10.5, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Volume</span>
-                  <span style={{ fontSize: 10.5, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Competition</span>
-                  <span style={{ fontSize: 10.5, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em', textAlign: 'right' }}>Score</span>
+              {/* Header — label + count + hint (unified typography with other cards) */}
+              <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 14, gap: 16, flexWrap: 'wrap' }}>
+                <div>
+                  <p style={{ fontSize: 11, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 4 }}>Keyword research</p>
+                  <p style={{ fontSize: 12.5, color: C.text3, lineHeight: 1.5 }}>
+                    {result.keyword_scores.length} phrases scored — high volume × low competition wins. Click a phrase to use as your title.
+                  </p>
                 </div>
-                {result.keyword_scores.map((kw, i) => {
-                  const volColor = kw.volume === 'HIGH' ? C.green : kw.volume === 'MED' ? C.amber : C.text3
-                  const compColor = kw.competition === 'LOW' ? C.green : kw.competition === 'MED' ? C.amber : C.red
-                  const scColor = kw.score >= 65 ? C.green : kw.score >= 40 ? C.amber : C.red
-                  return (
-                    <div key={kw.phrase} style={{ display: 'grid', gridTemplateColumns: '1fr 72px 100px 52px', gap: 8, padding: '10px 14px', borderBottom: i < result.keyword_scores.length - 1 ? '1px solid #f0f0f4' : 'none', alignItems: 'center', transition: 'background 0.12s' }}
-                      onMouseEnter={e => e.currentTarget.style.background = '#fafafb'}
-                      onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
-                      <span style={{ fontSize: 13.5, fontWeight: 600, color: C.text1 }}>{kw.phrase}</span>
-                      <span style={{ fontSize: 10.5, fontWeight: 700, color: volColor, border: `1.5px solid ${volColor === C.text3 ? '#e6e6ec' : volColor}`, padding: '1px 7px', borderRadius: 20, textTransform: 'uppercase', letterSpacing: '0.06em', justifySelf: 'start' }}>{kw.volume}</span>
-                      <span style={{ fontSize: 10.5, fontWeight: 700, color: compColor, border: `1.5px solid ${compColor}`, padding: '1px 7px', borderRadius: 20, textTransform: 'uppercase', letterSpacing: '0.06em', justifySelf: 'start' }}>{kw.competition}</span>
-                      <span style={{ fontSize: 14, fontWeight: 800, color: scColor, textAlign: 'right', fontVariantNumeric: 'tabular-nums' }}>{kw.score}</span>
-                    </div>
-                  )
-                })}
+                <span style={{ fontSize: 11, color: C.text3, whiteSpace: 'nowrap', flexShrink: 0 }}>Sorted by score</span>
               </div>
 
-              {result.autocomplete_terms?.length > 0 && (
-                <div>
-                  <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, marginBottom: 8, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-                    YouTube autocomplete
-                    <span style={{ fontWeight: 500, color: C.text3, marginLeft: 6, textTransform: 'none', letterSpacing: 0 }}>— click to set as title</span>
-                  </p>
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5 }}>
-                    {result.autocomplete_terms.map(t => (
-                      <span key={t} onClick={() => setTitle(t)}
-                        style={{ fontSize: 12, color: C.blue, background: 'rgba(10,10,15,0.04)', padding: '3px 9px', borderRadius: 6, cursor: 'pointer', fontWeight: 500, transition: 'background 0.15s' }}
-                        onMouseEnter={e => e.currentTarget.style.background = 'rgba(10,10,15,0.08)'}
-                        onMouseLeave={e => e.currentTarget.style.background = 'rgba(10,10,15,0.04)'}>{t}</span>
-                    ))}
+              {/* 2-col grid: table (left, dense) + autocomplete (right) — fills the horizontal space */}
+              <div style={{ display: 'grid', gridTemplateColumns: result.autocomplete_terms?.length > 0 ? 'minmax(0, 1.35fr) minmax(0, 1fr)' : '1fr', gap: 20, alignItems: 'start' }}>
+
+                {/* LEFT — keyword table, tight column widths */}
+                <div style={{ border: '1px solid #e6e6ec', borderRadius: 10, overflow: 'hidden' }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) 56px 72px 44px', gap: 10, padding: '9px 14px', background: '#fafafb', borderBottom: '1px solid #e6e6ec' }}>
+                    <span style={{ fontSize: 10.5, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Keyword phrase</span>
+                    <span style={{ fontSize: 10.5, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Vol</span>
+                    <span style={{ fontSize: 10.5, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Comp</span>
+                    <span style={{ fontSize: 10.5, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em', textAlign: 'right' }}>Score</span>
                   </div>
+                  {result.keyword_scores.map((kw, i) => {
+                    const volColor = kw.volume === 'HIGH' ? C.green : kw.volume === 'MED' ? C.amber : C.text3
+                    const compColor = kw.competition === 'LOW' ? C.green : kw.competition === 'MED' ? C.amber : C.red
+                    const scColor = kw.score >= 65 ? C.green : kw.score >= 40 ? C.amber : C.red
+                    return (
+                      <div key={kw.phrase}
+                        onClick={() => setTitle(kw.phrase)}
+                        title="Click to use as title"
+                        style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) 56px 72px 44px', gap: 10, padding: '9px 14px', borderBottom: i < result.keyword_scores.length - 1 ? '1px solid #f0f0f4' : 'none', alignItems: 'center', transition: 'background 0.12s', cursor: 'pointer' }}
+                        onMouseEnter={e => e.currentTarget.style.background = '#fafafb'}
+                        onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
+                        <span style={{ fontSize: 13, fontWeight: 600, color: C.text1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', letterSpacing: '-0.1px' }}>{kw.phrase}</span>
+                        <span style={{ fontSize: 10, fontWeight: 700, color: volColor, border: `1.5px solid ${volColor === C.text3 ? '#e6e6ec' : volColor}`, padding: '1px 6px', borderRadius: 20, textTransform: 'uppercase', letterSpacing: '0.05em', justifySelf: 'start' }}>{kw.volume}</span>
+                        <span style={{ fontSize: 10, fontWeight: 700, color: compColor, border: `1.5px solid ${compColor}`, padding: '1px 6px', borderRadius: 20, textTransform: 'uppercase', letterSpacing: '0.05em', justifySelf: 'start' }}>{kw.competition}</span>
+                        <span style={{ fontSize: 13.5, fontWeight: 800, color: scColor, textAlign: 'right', fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.2px' }}>{kw.score}</span>
+                      </div>
+                    )
+                  })}
                 </div>
-              )}
+
+                {/* RIGHT — autocomplete chips, fills the empty space */}
+                {result.autocomplete_terms?.length > 0 && (
+                  <div>
+                    <p style={{ fontSize: 10.5, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }}>YouTube autocomplete</p>
+                    <p style={{ fontSize: 12.5, color: C.text3, marginBottom: 12, lineHeight: 1.5 }}>
+                      Live suggestions from YouTube's search box — click any to set as your title.
+                    </p>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                      {result.autocomplete_terms.map(t => (
+                        <span key={t} onClick={() => setTitle(t)}
+                          style={{ fontSize: 12, color: C.text2, background: '#fafafb', padding: '5px 11px', borderRadius: 20, border: '1px solid #e6e6ec', cursor: 'pointer', fontWeight: 500, letterSpacing: '-0.1px', transition: 'all 0.15s' }}
+                          onMouseEnter={e => { e.currentTarget.style.background = '#f1f1f6'; e.currentTarget.style.borderColor = 'rgba(229,37,27,0.25)'; e.currentTarget.style.color = C.text1 }}
+                          onMouseLeave={e => { e.currentTarget.style.background = '#fafafb'; e.currentTarget.style.borderColor = '#e6e6ec'; e.currentTarget.style.color = C.text2 }}>{t}</span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           )}
 
