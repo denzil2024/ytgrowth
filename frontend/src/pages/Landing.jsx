@@ -741,7 +741,7 @@ export default function Landing() {
 
           {/* Trust row — small green-check pills, mobile-wraps naturally */}
           <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: isMobile ? 10 : 18, rowGap: 10 }}>
-            {['No credit card required', '5 free analyses on signup', 'Cancel anytime'].map((t, i) => (
+            {['No credit card required', '3 free analyses on signup', 'Cancel anytime'].map((t, i) => (
               <div key={i} style={{ display: 'inline-flex', alignItems: 'center', gap: 7, fontSize: 12.5, fontWeight: 500, color: 'var(--ytg-text-3)', letterSpacing: '-0.1px' }}>
                 <svg width="13" height="13" viewBox="0 0 16 16" fill="none" style={{ flexShrink: 0 }}>
                   <circle cx="8" cy="8" r="7" fill="rgba(22,163,74,0.11)" stroke="rgba(22,163,74,0.28)" strokeWidth="1"/>
