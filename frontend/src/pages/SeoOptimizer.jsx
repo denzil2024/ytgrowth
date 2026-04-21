@@ -29,10 +29,15 @@ if (typeof document !== 'undefined' && !document.getElementById('seo-opt-styles'
     box-shadow: 0 4px 12px rgba(0,0,0,0.08), 0 16px 40px rgba(0,0,0,0.09);
     transform: translateY(-1px);
   }
+  .seo-format-card { outline: none; }
   .seo-format-card:hover {
-    border-color: rgba(229,37,27,0.28) !important;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.07), 0 12px 28px rgba(0,0,0,0.07) !important;
+    border-color: rgba(0,0,0,0.18);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06), 0 8px 22px rgba(0,0,0,0.07);
     transform: translateY(-1px);
+  }
+  .seo-format-card:focus-visible {
+    border-color: rgba(229,37,27,0.45);
+    box-shadow: 0 0 0 3px rgba(229,37,27,0.12);
   }
 `
   document.head.appendChild(s)
@@ -93,12 +98,12 @@ const C = {
 }
 
 const VIRAL_FORMATS = [
-  { key: 'survival_challenge',  label: 'Survival / Time Challenge', example: 'I Survived 24 Hours With [Person/Situation]',        why: 'Extreme curiosity + suspense.' },
-  { key: 'extreme_comparison',  label: 'Extreme Comparison',        example: '$5 VS $500 [Subject]: Honest Review',                 why: 'Price contrast triggers value-seeking.' },
-  { key: 'authority_warning',   label: 'Authority / Warning',       example: "Don't Buy [Subject] Until You See This",              why: 'Fear of mistake drives high CTR.' },
-  { key: 'listicle',            label: 'Listicle / Structure',      example: '7 Things I Wish I Knew About [Subject]',             why: 'Numbers set clear expectations.' },
-  { key: 'curiosity_gap',       label: 'Curiosity Gap',             example: "I Tested Every [Subject] So You Don't Have To",      why: 'Open loop viewer must click to close.' },
-  { key: 'aspirational',        label: 'Aspirational / How I',      example: 'How I Grew [Subject] From 0 to [Number] in [Time]',  why: 'Transformation stories = highest retention.' },
+  { key: 'survival_challenge',  hook: 'curiosity',      label: 'Survival / Time Challenge', example: 'I Survived 24 Hours With [Person/Situation]',        why: 'Extreme curiosity + suspense.' },
+  { key: 'extreme_comparison',  hook: 'contrarian',     label: 'Extreme Comparison',        example: '$5 VS $500 [Subject]: Honest Review',                 why: 'Price contrast triggers value-seeking.' },
+  { key: 'authority_warning',   hook: 'curiosity',      label: 'Authority / Warning',       example: "Don't Buy [Subject] Until You See This",              why: 'Fear of mistake drives high CTR.' },
+  { key: 'listicle',            hook: 'transformation', label: 'Listicle / Structure',      example: '7 Things I Wish I Knew About [Subject]',             why: 'Numbers set clear expectations.' },
+  { key: 'curiosity_gap',       hook: 'curiosity',      label: 'Curiosity Gap',             example: "I Tested Every [Subject] So You Don't Have To",      why: 'Open loop viewer must click to close.' },
+  { key: 'aspirational',        hook: 'transformation', label: 'Aspirational / How I',      example: 'How I Grew [Subject] From 0 to [Number] in [Time]',  why: 'Transformation stories = highest retention.' },
 ]
 
 const VIRAL_FORMAT_LABELS = Object.fromEntries(VIRAL_FORMATS.map(f => [f.key, f.label]))
@@ -453,11 +458,11 @@ export default function SeoOptimizer({ onNavigate }) {
         )}
       </div>
 
-      {/* Input area — 3-col card grid: Input / Preview / Formats */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: 14, marginBottom: 16, alignItems: 'stretch' }}>
+      {/* Input area — hero input on top, then 2-col (Preview | Formats) */}
+      <div style={{ marginBottom: 16 }}>
 
-        {/* ── Col 1: Your video title ─────────────────────────────────────── */}
-        <div className="seo-glass-card" style={{ padding: '22px 24px', display: 'flex', flexDirection: 'column' }}>
+        {/* ── Row 1: Your video title (full-width hero) ──────────────────── */}
+        <div className="seo-glass-card" style={{ padding: '22px 24px', marginBottom: 14 }}>
           <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 14, gap: 8 }}>
             <span style={{ fontSize: 11, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Your video title</span>
             <span style={{
@@ -484,8 +489,8 @@ export default function SeoOptimizer({ onNavigate }) {
           <textarea ref={titleInputRef} value={title} onChange={e => setTitle(e.target.value)}
             onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSubmitTitle() } }}
             placeholder="e.g. How I grew my YouTube channel to 10k subscribers"
-            rows={3}
-            style={{ width: '100%', padding: '14px 16px', fontSize: 15, border: '1px solid #e6e6ec', borderRadius: 12, fontFamily: 'inherit', outline: 'none', color: C.text1, background: '#ffffff', boxSizing: 'border-box', transition: 'border-color 0.18s, box-shadow 0.18s', letterSpacing: '-0.1px', fontWeight: 500, lineHeight: 1.4, resize: 'vertical', flex: 1, minHeight: 84 }}
+            rows={2}
+            style={{ width: '100%', padding: '14px 16px', fontSize: 15, border: '1px solid #e6e6ec', borderRadius: 12, fontFamily: 'inherit', outline: 'none', color: C.text1, background: '#ffffff', boxSizing: 'border-box', transition: 'border-color 0.18s, box-shadow 0.18s', letterSpacing: '-0.1px', fontWeight: 500, lineHeight: 1.4, resize: 'vertical', minHeight: 64 }}
             onFocus={e => { e.target.style.borderColor = 'rgba(0,0,0,0.25)'; e.target.style.boxShadow = '0 0 0 4px rgba(0,0,0,0.04)' }}
             onBlur={e => { e.target.style.borderColor = '#e6e6ec'; e.target.style.boxShadow = 'none' }} />
 
@@ -496,9 +501,9 @@ export default function SeoOptimizer({ onNavigate }) {
             </div>
           )}
 
-          <div style={{ marginTop: 16 }}>
+          <div style={{ marginTop: 14, display: 'flex', justifyContent: 'flex-end' }}>
             <button onClick={handleSubmitTitle} disabled={loading || loadingIntent || !title.trim()}
-              style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '11px 18px', background: title.trim() && !loading && !loadingIntent ? C.red : '#e0e0e6', color: '#fff', border: 'none', borderRadius: 100, fontSize: 13, fontWeight: 700, fontFamily: 'inherit', cursor: title.trim() && !loading && !loadingIntent ? 'pointer' : 'not-allowed', transition: 'all 0.18s', boxShadow: title.trim() && !loading && !loadingIntent ? '0 1px 3px rgba(0,0,0,0.12), 0 4px 14px rgba(229,37,27,0.32)' : 'none', letterSpacing: '-0.1px', width: '100%' }}
+              style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '11px 22px', background: title.trim() && !loading && !loadingIntent ? C.red : '#e0e0e6', color: '#fff', border: 'none', borderRadius: 100, fontSize: 13, fontWeight: 700, fontFamily: 'inherit', cursor: title.trim() && !loading && !loadingIntent ? 'pointer' : 'not-allowed', transition: 'all 0.18s', boxShadow: title.trim() && !loading && !loadingIntent ? '0 1px 3px rgba(0,0,0,0.12), 0 4px 14px rgba(229,37,27,0.32)' : 'none', letterSpacing: '-0.1px' }}
               onMouseEnter={e => { if (!loading && !loadingIntent && title.trim()) { e.currentTarget.style.filter = 'brightness(1.07)'; e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.15), 0 8px 28px rgba(229,37,27,0.42)'; e.currentTarget.style.transform = 'translateY(-1px)' } }}
               onMouseLeave={e => { if (!loading && !loadingIntent && title.trim()) { e.currentTarget.style.filter = ''; e.currentTarget.style.boxShadow = '0 1px 3px rgba(0,0,0,0.12), 0 4px 14px rgba(229,37,27,0.32)'; e.currentTarget.style.transform = '' } }}>
               {loadingIntent ? (
@@ -517,61 +522,108 @@ export default function SeoOptimizer({ onNavigate }) {
           </div>
         </div>
 
-        {/* ── Col 2: Preview on YouTube ───────────────────────────────────── */}
-        <div className="seo-glass-card" style={{ padding: '22px 24px', display: 'flex', flexDirection: 'column' }}>
-          <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 14, gap: 8 }}>
-            <span style={{ fontSize: 11, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Preview on YouTube</span>
-            <span style={{ fontSize: 11, color: C.text3, whiteSpace: 'nowrap' }}>3 surfaces</span>
-          </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 8, flex: 1 }}>
-            {title.trim() ? (
-              [
-                { label: 'Suggested feed', maxChars: 45 },
-                { label: 'Mobile search',  maxChars: 55 },
-                { label: 'Desktop search', maxChars: 70 },
-              ].map(({ label, maxChars }) => {
-                const truncated = title.length > maxChars
-                const display = truncated ? title.slice(0, maxChars - 1) + '…' : title
-                return (
-                  <div key={label} style={{ padding: '10px 12px', background: '#ffffff', borderRadius: 10, border: '1px solid #e6e6ec' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6, gap: 8 }}>
-                      <span style={{ fontSize: 10, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.08em' }}>{label}</span>
-                      <span style={{ fontSize: 10, fontWeight: 700, color: truncated ? C.amber : C.green, letterSpacing: '0.06em', textTransform: 'uppercase' }}>
-                        {truncated ? 'Cut' : 'Fits'}
-                      </span>
+        {/* ── Row 2: 2-col — Preview on YouTube | Start from a format ────── */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: 14 }}>
+
+          {/* Preview on YouTube — priority-action visual DNA: colored top border + status pill */}
+          <div className="seo-glass-card" style={{ padding: '22px 24px' }}>
+            <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 14, gap: 8 }}>
+              <span style={{ fontSize: 11, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Preview on YouTube</span>
+              <span style={{ fontSize: 11, color: C.text3, whiteSpace: 'nowrap' }}>3 surfaces</span>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+              {title.trim() ? (
+                [
+                  { label: 'Suggested feed', maxChars: 45 },
+                  { label: 'Mobile search',  maxChars: 55 },
+                  { label: 'Desktop search', maxChars: 70 },
+                ].map(({ label, maxChars }) => {
+                  const truncated = title.length > maxChars
+                  const display = truncated ? title.slice(0, maxChars - 1) + '…' : title
+                  const accent = truncated ? C.amber : C.green
+                  const accentBg = truncated ? C.amberBg : C.greenBg
+                  const accentBdr = truncated ? C.amberBdr : C.greenBdr
+                  return (
+                    <div key={label} style={{
+                      background: '#ffffff',
+                      border: '1px solid #e6e6ec',
+                      borderTop: `3px solid ${accent}`,
+                      borderRadius: 12,
+                      padding: '12px 14px 14px',
+                      boxShadow: '0 1px 2px rgba(0,0,0,0.03)',
+                    }}>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8, gap: 10 }}>
+                        <span style={{ fontSize: 10.5, fontWeight: 700, color: accent, textTransform: 'uppercase', letterSpacing: '0.08em' }}>{label}</span>
+                        <span style={{
+                          fontSize: 10, fontWeight: 700, color: accent,
+                          letterSpacing: '0.06em', textTransform: 'uppercase',
+                          padding: '2px 9px', borderRadius: 20,
+                          border: `1.2px solid ${accentBdr}`, background: accentBg,
+                        }}>
+                          {truncated ? 'Cut' : 'Fits'}
+                        </span>
+                      </div>
+                      <p style={{ fontSize: 14, fontWeight: 500, color: truncated ? C.text2 : C.text1, lineHeight: 1.5, margin: 0, letterSpacing: '-0.1px' }}>{display}</p>
+                      {truncated && (
+                        <p style={{ fontSize: 11.5, color: C.amber, marginTop: 7, fontWeight: 600, letterSpacing: '-0.05px' }}>
+                          +{title.length - maxChars} chars over {maxChars}
+                        </p>
+                      )}
                     </div>
-                    <p style={{ fontSize: 12, fontWeight: 500, color: truncated ? C.text2 : C.text1, lineHeight: 1.45, margin: 0 }}>{display}</p>
-                    {truncated && <p style={{ fontSize: 10, color: C.amber, marginTop: 4, fontWeight: 500 }}>{title.length - maxChars + 1} over {maxChars}</p>}
-                  </div>
+                  )
+                })
+              ) : (
+                <div style={{ padding: '44px 20px', background: '#fafafb', border: '1px dashed #e6e6ec', borderRadius: 12 }}>
+                  <p style={{ fontSize: 13, color: C.text3, textAlign: 'center', lineHeight: 1.6, margin: 0 }}>
+                    Type a title to see how it renders<br/>in Suggested feed, Mobile &amp; Desktop search.
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Start from a format — priority-action visual DNA: colored top border + numbered badge + hook label */}
+          <div className="seo-glass-card" style={{ padding: '22px 24px' }}>
+            <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 14, gap: 8 }}>
+              <span style={{ fontSize: 11, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Start from a format</span>
+              <span style={{ fontSize: 11, color: C.text3, whiteSpace: 'nowrap' }}>6 patterns · click to use</span>
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: 10 }}>
+              {VIRAL_FORMATS.map((fmt, i) => {
+                const hookColor = fmt.hook === 'transformation' ? C.green : fmt.hook === 'contrarian' ? C.amber : C.red
+                return (
+                  <button key={fmt.key} onClick={() => setTitle(fmt.example)} className="seo-format-card"
+                    style={{
+                      textAlign: 'left',
+                      padding: '12px 14px 14px',
+                      background: '#ffffff',
+                      border: '1px solid #e6e6ec',
+                      borderTop: `3px solid ${hookColor}`,
+                      borderRadius: 12,
+                      cursor: 'pointer',
+                      fontFamily: 'inherit',
+                      boxShadow: '0 1px 2px rgba(0,0,0,0.03)',
+                      transition: 'border-color 0.2s, box-shadow 0.2s, transform 0.2s',
+                    }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 7 }}>
+                      <div style={{
+                        width: 20, height: 20, borderRadius: 6,
+                        background: hookColor,
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        flexShrink: 0,
+                      }}>
+                        <span style={{ fontSize: 10, fontWeight: 900, color: '#ffffff', fontVariantNumeric: 'tabular-nums', lineHeight: 1 }}>{i + 1}</span>
+                      </div>
+                      <span style={{ fontSize: 10.5, fontWeight: 700, color: hookColor, textTransform: 'uppercase', letterSpacing: '0.08em', lineHeight: 1 }}>{fmt.label}</span>
+                    </div>
+                    <p style={{ fontSize: 13, color: C.text1, fontWeight: 500, lineHeight: 1.5, margin: 0, letterSpacing: '-0.1px' }}>{fmt.example}</p>
+                  </button>
                 )
-              })
-            ) : (
-              <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px 16px', background: '#fafafb', border: '1px dashed #e6e6ec', borderRadius: 10 }}>
-                <p style={{ fontSize: 12, color: C.text3, textAlign: 'center', lineHeight: 1.5, margin: 0 }}>
-                  Type a title to see how it renders<br/>in Suggested feed, Mobile &amp; Desktop search.
-                </p>
-              </div>
-            )}
+              })}
+            </div>
           </div>
-        </div>
 
-        {/* ── Col 3: Start from a format ──────────────────────────────────── */}
-        <div className="seo-glass-card" style={{ padding: '22px 24px', display: 'flex', flexDirection: 'column' }}>
-          <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 14, gap: 8 }}>
-            <span style={{ fontSize: 11, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Start from a format</span>
-            <span style={{ fontSize: 11, color: C.text3, whiteSpace: 'nowrap' }}>6 patterns</span>
-          </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 6, flex: 1 }}>
-            {VIRAL_FORMATS.map(fmt => (
-              <button key={fmt.key} onClick={() => setTitle(fmt.example)} className="seo-format-card"
-                style={{ textAlign: 'left', padding: '10px 12px', border: '1px solid #e6e6ec', borderRadius: 10, cursor: 'pointer', background: '#ffffff', fontFamily: 'inherit', boxShadow: '0 1px 2px rgba(0,0,0,0.03)', transition: 'box-shadow 0.2s, transform 0.2s, border-color 0.2s' }}>
-                <p style={{ fontSize: 10, fontWeight: 700, color: C.text3, marginBottom: 3, textTransform: 'uppercase', letterSpacing: '0.08em', lineHeight: 1 }}>{fmt.label}</p>
-                <p style={{ fontSize: 12, color: C.text1, fontWeight: 500, lineHeight: 1.35, margin: 0, letterSpacing: '-0.1px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{fmt.example}</p>
-              </button>
-            ))}
-          </div>
         </div>
-
       </div>
 
       {/* Intent picker */}
