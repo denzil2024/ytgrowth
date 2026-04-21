@@ -5,7 +5,7 @@ if (typeof document !== 'undefined' && !document.getElementById('seo-opt-inter-f
   const link = document.createElement('link')
   link.id = 'seo-opt-inter-font'
   link.rel = 'stylesheet'
-  link.href = 'https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800;900&display=swap'
+  link.href = 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap'
   document.head.appendChild(link)
 }
 
@@ -581,7 +581,7 @@ export default function SeoOptimizer({ onNavigate }) {
       padding: '36px 40px 72px',
       background: '#ffffff',
       minHeight: 'calc(100vh - 52px)',
-      fontFamily: "'DM Sans', system-ui, sans-serif",
+      fontFamily: "'Inter', system-ui, sans-serif",
     }}>
 
       {/* Header — matches Overview page H1: 24/800/-0.6px, plus 44×44 tool badge */}
