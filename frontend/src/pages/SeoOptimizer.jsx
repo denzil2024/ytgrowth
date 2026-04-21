@@ -209,8 +209,11 @@ function fmtNum(n) {
 }
 
 // Stats card — matches Dashboard's Stat component 1:1 (same padding, shadow, type scale).
-function MiniStat({ label, value, sub, accent }) {
+// Optional verdict pill matches Overview's Content-Patterns verdict pattern.
+function MiniStat({ label, value, sub, accent, verdict, verdictGood }) {
   const col = accent || C.text1
+  const pillColor = verdictGood === true ? '#059669' : verdictGood === false ? '#e5251b' : '#d97706'
+  const pillBdr   = verdictGood === true ? 'rgba(5,150,105,0.28)' : verdictGood === false ? 'rgba(229,37,27,0.28)' : 'rgba(217,119,6,0.28)'
   return (
     <div style={{
       background: '#ffffff',
@@ -223,6 +226,18 @@ function MiniStat({ label, value, sub, accent }) {
       <p style={{ fontSize: 11, fontWeight: 500, letterSpacing: '0.05em', textTransform: 'uppercase', color: C.text3, marginBottom: 12 }}>{label}</p>
       <p style={{ fontSize: 30, fontWeight: 700, letterSpacing: '-1.4px', color: col, lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{value}</p>
       {sub && <p style={{ fontSize: 12, color: C.text3, fontWeight: 500, marginTop: 10 }}>{sub}</p>}
+      {verdict && (
+        <span style={{
+          display: 'inline-block',
+          fontSize: 10, fontWeight: 700,
+          color: pillColor,
+          background: 'transparent',
+          border: `1.5px solid ${pillBdr}`,
+          padding: '3px 10px', borderRadius: 999,
+          marginTop: 10,
+          letterSpacing: '0.06em', textTransform: 'uppercase',
+        }}>{verdict}</span>
+      )}
     </div>
   )
 }
@@ -846,13 +861,92 @@ export default function SeoOptimizer({ onNavigate }) {
             )}
           </div>
 
-          {/* ── Stats row — 4 cards, mirrors Overview's stat row ───────── */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, minmax(0, 1fr))', gap: 16, marginBottom: 24 }}>
-            <MiniStat label="Competitors"     value={fmtNum(result.videos_found || 0)} sub="live YouTube results" />
-            <MiniStat label="Exact match"     value={result.intent_matched > 0 ? fmtNum(result.intent_matched) : '—'} sub={result.intent_matched > 0 ? 'matching your angle' : 'broader niche scope'} />
-            <MiniStat label="AI alternatives" value={result.suggestions?.length || 0} sub="new titles to choose" />
-            <MiniStat label="Keyword opps"    value={result.keyword_scores?.length || 0} sub="related phrases scored" />
-          </div>
+          {/* ── Title Scorecard hero — ScoreRing + AI verdict, mirrors Overview's Summary card (Dashboard.jsx:2076) ── */}
+          {result.suggestions?.length > 0 && (() => {
+            const sugAvg = (s) => {
+              const vals = [s.seo_score, s.ctr_score, s.hook_score].filter(v => v > 0)
+              return vals.length ? Math.round(vals.reduce((a, b) => a + b, 0) / vals.length) : 0
+            }
+            const bestSug = [...result.suggestions].sort((a, b) => sugAvg(b) - sugAvg(a))[0]
+            const bestAvg = sugAvg(bestSug)
+            const compAvg = result.top_videos?.length
+              ? Math.round(result.top_videos.reduce((s, v) => s + (v.seo_score || 0), 0) / result.top_videos.length)
+              : null
+            const delta = compAvg != null ? bestAvg - compAvg : null
+            const strongEntry = [['SEO', bestSug.seo_score || 0], ['CTR appeal', bestSug.ctr_score || 0], ['hook', bestSug.hook_score || 0]]
+              .filter(([_, v]) => v > 0)
+              .sort((a, b) => b[1] - a[1])
+            const strongest = strongEntry[0]
+            const weakest = strongEntry[strongEntry.length - 1]
+            const beatVerdict = delta == null
+              ? ''
+              : delta > 0
+                ? `beating the competitor average of ${compAvg} by ${delta} points`
+                : delta < 0
+                  ? `trailing the competitor average of ${compAvg} by ${Math.abs(delta)} points`
+                  : `matching the competitor average of ${compAvg}`
+            return (
+              <div style={{
+                background: '#ffffff', border: '1px solid #e6e6ec', borderRadius: 16,
+                padding: '28px 32px', marginBottom: 20,
+                boxShadow: '0 1px 2px rgba(0,0,0,0.04), 0 4px 14px rgba(0,0,0,0.06)',
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 36 }}>
+                  {/* Ring — left */}
+                  <div style={{ flexShrink: 0, textAlign: 'center' }}>
+                    <ScoreRing score={bestAvg} />
+                    <p style={{ fontSize: 11, color: C.text3, fontWeight: 500, marginTop: 4, letterSpacing: '0.03em', textTransform: 'uppercase' }}>Title score</p>
+                    {delta != null && delta !== 0 && (
+                      <p style={{ fontSize: 11, fontWeight: 700, color: delta > 0 ? C.green : C.red, marginTop: 3 }}>
+                        {delta > 0 ? '▲' : '▼'} {Math.abs(delta)} vs competitor avg
+                      </p>
+                    )}
+                  </div>
+                  {/* Divider */}
+                  <div style={{ width: 1, alignSelf: 'stretch', background: C.border, flexShrink: 0 }}/>
+                  {/* Verdict text */}
+                  <div style={{ flex: 1 }}>
+                    <p style={{ fontSize: 11, fontWeight: 600, color: C.text3, letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 10 }}>AI verdict</p>
+                    <p style={{ fontSize: 14, color: C.text1, lineHeight: 1.85 }}>
+                      Your strongest AI option scores <span style={{ fontWeight: 700, color: bestAvg >= 75 ? C.green : bestAvg >= 55 ? C.amber : C.red }}>{bestAvg}</span>
+                      {beatVerdict && <> — {beatVerdict}</>}.
+                      {strongest && weakest && strongest[0] !== weakest[0] && (
+                        <> Strongest on <span style={{ fontWeight: 700, color: C.text1 }}>{strongest[0].toLowerCase()}</span> ({strongest[1]}); room to grow on <span style={{ fontWeight: 700, color: C.text1 }}>{weakest[0].toLowerCase()}</span> ({weakest[1]}).</>
+                      )}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )
+          })()}
+
+          {/* ── Stats row — 4 cards with semantic verdict pills (mirrors Overview's Content Patterns verdict style) ───── */}
+          {(() => {
+            const compCount = result.videos_found || 0
+            const compVerdict  = compCount === 0 ? null : compCount >= 30 ? 'Crowded niche' : compCount >= 10 ? 'Active space' : 'Niche opening'
+            const compGood     = compCount === 0 ? null : compCount >= 30 ? false : compCount >= 10 ? null : true
+            const exactVerdict = result.intent_matched > 0 ? 'Direct rivals' : 'Broader scope'
+            const exactGood    = result.intent_matched > 0 ? false : null
+            const kwCount = result.keyword_scores?.length || 0
+            const kwVerdict = kwCount >= 10 ? 'Good spread' : kwCount >= 5 ? 'Workable' : kwCount > 0 ? 'Limited' : null
+            const kwGood    = kwCount >= 10 ? true : kwCount >= 5 ? null : false
+            return (
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, minmax(0, 1fr))', gap: 16, marginBottom: 24 }}>
+                <MiniStat label="Competitors"     value={fmtNum(compCount)}
+                  sub="live YouTube results"
+                  verdict={compVerdict} verdictGood={compGood} />
+                <MiniStat label="Exact match"     value={result.intent_matched > 0 ? fmtNum(result.intent_matched) : '—'}
+                  sub={result.intent_matched > 0 ? 'matching your angle' : 'broader niche scope'}
+                  verdict={exactVerdict} verdictGood={exactGood} />
+                <MiniStat label="AI alternatives" value={result.suggestions?.length || 0}
+                  sub="new titles to choose"
+                  verdict={result.suggestions?.length >= 3 ? 'Ready to pick' : null} verdictGood={result.suggestions?.length >= 3 ? true : null} />
+                <MiniStat label="Keyword opps"    value={kwCount}
+                  sub="related phrases scored"
+                  verdict={kwVerdict} verdictGood={kwGood} />
+              </div>
+            )
+          })()}
 
           {/* AI suggestion error */}
           {result.suggestion_error && !result.suggestions?.length && (
