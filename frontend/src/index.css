@@ -1,5 +1,12 @@
 @import "tailwindcss";
 
+/* Global font — Inter matches the Overview/Dashboard design system */
+html, body, #root {
+  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
 /* Landing page */
 @keyframes landing-pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
 @keyframes landing-floatA { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }

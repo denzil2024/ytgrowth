@@ -142,7 +142,7 @@ const T = {
   h3:           { fontSize: 20, fontWeight: 800, color: '#0f0f13', letterSpacing: '-0.5px' },
 
   // Uppercase labels
-  sectionLabel: { fontSize: 11, fontWeight: 700, color: '#e5251b', textTransform: 'uppercase', letterSpacing: '0.07em' },  // card-level label ("KEYWORD RESEARCH") — red per palette hierarchy (subheads are red)
+  sectionLabel: { fontSize: 11, fontWeight: 600, color: '#9595a4', textTransform: 'uppercase', letterSpacing: '0.06em' },  // card-level label ("KEYWORD RESEARCH") — neutral grey (matches Overview); red is semantic only, don't spray it on utility eyebrows
   sectionHint:  { fontSize: 11, fontWeight: 500, color: '#9595a4' },                                                       // right-aligned hint text
   innerLabel:   { fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em' },                    // inside sub-blocks (needs + color)
   statLabel:    { fontSize: 11, fontWeight: 500, color: '#9595a4', textTransform: 'uppercase', letterSpacing: '0.05em' },  // Overview Stat label
@@ -1152,10 +1152,9 @@ export default function SeoOptimizer({ onNavigate }) {
                     <a key={v.video_id}
                       href={`https://www.youtube.com/watch?v=${v.video_id}`}
                       target="_blank" rel="noopener noreferrer"
-                      style={{ position: 'relative', display: 'flex', alignItems: 'center', gap: 12, padding: '10px 12px', borderBottom: i < result.top_videos.length - 1 ? `1px solid ${C.border}` : 'none', textDecoration: 'none', borderRadius: 8, transition: 'background 0.15s, padding-left 0.18s', cursor: 'pointer' }}
-                      onMouseEnter={e => { e.currentTarget.style.background = 'rgba(229,37,27,0.04)'; e.currentTarget.style.paddingLeft = '16px'; const bar = e.currentTarget.querySelector('[data-hover-bar]'); if (bar) bar.style.opacity = '1' }}
-                      onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.paddingLeft = '12px'; const bar = e.currentTarget.querySelector('[data-hover-bar]'); if (bar) bar.style.opacity = '0' }}>
-                      <div aria-hidden="true" data-hover-bar style={{ position: 'absolute', left: 0, top: 6, bottom: 6, width: 3, background: C.red, borderRadius: 99, opacity: 0, transition: 'opacity 0.18s' }}/>
+                      style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 8px', borderBottom: i < result.top_videos.length - 1 ? `1px solid ${C.border}` : 'none', textDecoration: 'none', borderRadius: 8, transition: 'background 0.15s, transform 0.15s', cursor: 'pointer' }}
+                      onMouseEnter={e => { e.currentTarget.style.background = '#fafafb'; e.currentTarget.style.transform = 'translateX(2px)' }}
+                      onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.transform = 'none' }}>
                       <div style={{ position: 'relative', flexShrink: 0 }}>
                         {v.thumbnail && <img src={v.thumbnail} alt="" style={{ width: 72, height: 40, borderRadius: 7, objectFit: 'cover', display: 'block' }} />}
                         <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: 0, transition: 'opacity 0.15s', background: 'rgba(0,0,0,0.45)', borderRadius: 7 }}
