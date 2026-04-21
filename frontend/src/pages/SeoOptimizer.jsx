@@ -755,13 +755,13 @@ export default function SeoOptimizer({ onNavigate }) {
             </div>
           )}
 
-          {/* ── Search intent analysis — mirrors Overview InsightCard: inner blocks with 3px colored left accent ── */}
+          {/* ── Search intent analysis — tinted inner blocks, mirrors Overview InsightCard Why-now / Expected-outcome (Dashboard.jsx:1089-1113) ── */}
           {result.intent_analysis?.search_intent && (() => {
-            const infoBlock = (accent) => ({
-              background: '#fafafb',
-              border: '1px solid #e6e6ec',
-              borderLeft: `3px solid ${accent}`,
-              borderRadius: '0 10px 10px 0',
+            // Tinted block — same shape as Overview's "Why now" / "Expected outcome" inner blocks.
+            const tintBlock = (bg, bdr) => ({
+              background: bg,
+              border: `1px solid ${bdr}`,
+              borderRadius: 10,
               padding: '14px 16px',
             })
             return (
@@ -769,27 +769,27 @@ export default function SeoOptimizer({ onNavigate }) {
                 <p style={{ ...T.sectionLabel, marginBottom: 20 }}>Search intent analysis</p>
 
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 10 }}>
-                  <div style={infoBlock(C.red)}>
+                  <div style={tintBlock('rgba(229,37,27,0.05)', 'rgba(229,37,27,0.14)')}>
                     <p style={{ ...T.innerLabel, color: C.red, marginBottom: 6 }}>Search intent</p>
                     <p style={T.innerText}>{result.intent_analysis.search_intent}</p>
                   </div>
-                  <div style={infoBlock(C.amber)}>
+                  <div style={tintBlock('rgba(217,119,6,0.05)', 'rgba(217,119,6,0.14)')}>
                     <p style={{ ...T.innerLabel, color: C.amber, marginBottom: 6 }}>Emotional driver</p>
                     <p style={T.innerText}>{result.intent_analysis.emotional_driver}</p>
                   </div>
                 </div>
 
-                <div style={{ ...infoBlock(C.text3), marginBottom: 10 }}>
+                <div style={{ ...tintBlock('rgba(10,10,15,0.03)', 'rgba(10,10,15,0.08)'), marginBottom: 10 }}>
                   <p style={{ ...T.innerLabel, color: C.text3, marginBottom: 6 }}>Who's searching</p>
                   <p style={T.innerText}>{result.intent_analysis.viewer_profile}</p>
                 </div>
 
                 {result.intent_analysis.gap_opportunity && (
-                  <div style={{ ...infoBlock(C.green), marginBottom: result.intent_analysis.top_keywords?.length > 0 ? 16 : 0 }}>
+                  <div style={{ ...tintBlock('rgba(5,150,105,0.05)', 'rgba(5,150,105,0.16)'), marginBottom: result.intent_analysis.top_keywords?.length > 0 ? 16 : 0 }}>
                     <p style={{ ...T.innerLabel, color: C.green, marginBottom: 6 }}>Gap opportunity — what competitors aren't doing</p>
                     <p style={T.innerText}>{result.intent_analysis.gap_opportunity}</p>
                     {result.intent_analysis.overused_angle && (
-                      <div style={{ marginTop: 10, paddingTop: 10, borderTop: '1px solid #eeeef3' }}>
+                      <div style={{ marginTop: 10, paddingTop: 10, borderTop: '1px solid rgba(5,150,105,0.16)' }}>
                         <p style={{ ...T.innerLabel, color: C.red, marginBottom: 6 }}>Overused angle</p>
                         <p style={T.innerText}>{result.intent_analysis.overused_angle}</p>
                       </div>
@@ -880,13 +880,13 @@ export default function SeoOptimizer({ onNavigate }) {
 
                         {/* 3-col inner grid — mirrors Overview InsightCard's body (1fr 1.4fr 1fr, gap 8) */}
                         <div style={{ marginLeft: 36, display: 'grid', gridTemplateColumns: '1fr 1.4fr 1fr', gap: 8 }}>
-                          {/* WHY IT WORKS — hook-tinted */}
-                          <div style={{ background: hm.tint, border: `1px solid ${hm.bdr}`, borderRadius: 10, padding: '12px 14px' }}>
-                            <p style={{ ...T.innerLabel, color: hm.color, marginBottom: 6 }}>Why it works</p>
+                          {/* WHY IT WORKS — blue tint, matches Overview's "Why now" (Dashboard.jsx:1089) exactly */}
+                          <div style={{ background: 'rgba(79,134,247,0.07)', border: '1px solid rgba(79,134,247,0.12)', borderRadius: 10, padding: '12px 14px' }}>
+                            <p style={{ ...T.innerLabel, color: '#4a7cf7', marginBottom: 6 }}>Why it works</p>
                             <p style={T.innerText}>{s.why_it_works || hm.desc}</p>
                           </div>
-                          {/* SCORES — white centre with hook-colored left accent, matches Overview's Action block shape */}
-                          <div style={{ background: '#ffffff', border: '1px solid #e6e6ec', borderLeft: `3px solid ${hm.color}`, borderRadius: '0 10px 10px 0', padding: '12px 16px', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
+                          {/* SCORES — white centre with hook-colored left accent, matches Overview "Action" block (Dashboard.jsx:1094-1105) exactly */}
+                          <div style={{ background: '#ffffff', border: '1px solid #e6e6ec', borderLeft: `3px solid ${hm.color}`, borderRadius: '0 10px 10px 0', padding: '12px 16px', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}>
                             <p style={{ ...T.innerLabel, color: hm.color, marginBottom: 10 }}>Scores vs competitors</p>
                             <div style={{ display: 'flex', gap: 18 }}>
                               {[['SEO', s.seo_score], ['CTR', s.ctr_score], ['Hook', s.hook_score]].map(([label, val]) => {
@@ -900,8 +900,8 @@ export default function SeoOptimizer({ onNavigate }) {
                               })}
                             </div>
                           </div>
-                          {/* ACTION — green tint */}
-                          <div style={{ background: 'rgba(5,150,105,0.07)', border: '1px solid rgba(5,150,105,0.16)', borderRadius: 10, padding: '12px 14px', display: 'flex', flexDirection: 'column', gap: 10 }}>
+                          {/* ACTION — green tint, matches Overview "Expected outcome" (Dashboard.jsx:1110-1113) exactly */}
+                          <div style={{ background: 'rgba(5,150,105,0.07)', border: '1px solid rgba(5,150,105,0.14)', borderRadius: 10, padding: '12px 14px', display: 'flex', flexDirection: 'column', gap: 10 }}>
                             <p style={{ ...T.innerLabel, color: C.green }}>Use this title</p>
                             <button onClick={() => handleSelectTitle(s.title)}
                               style={{ fontSize: 12.5, fontWeight: 700, color: isSelected ? C.red : '#ffffff', background: isSelected ? 'rgba(229,37,27,0.08)' : '#e5251b', border: `1px solid ${isSelected ? 'rgba(229,37,27,0.25)' : 'transparent'}`, borderRadius: 100, padding: '8px 14px', cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.18s', boxShadow: isSelected ? 'none' : '0 1px 3px rgba(0,0,0,0.12), 0 4px 14px rgba(229,37,27,0.32)', whiteSpace: 'nowrap' }}>
