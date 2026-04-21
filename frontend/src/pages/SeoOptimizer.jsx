@@ -99,15 +99,40 @@ const C = {
 
 // Per-tile accent colors — scoped to this section ONLY, never reuse elsewhere.
 // Row 1 warm (red + amber), row 2 cool (purple + blue), row 3 green-family (teal + green).
-// ── Shared typography scale — one source of truth, don't improvise sizes elsewhere. ──
+// ── Canonical typography — matches Overview (Dashboard.jsx) exactly.
+//    Sizes intentionally vary by role (card label 11, inner label 10) — this is
+//    the hierarchy Overview uses, don't flatten it. ──
 const T = {
-  sectionLabel: { fontSize: 11, fontWeight: 600, color: '#9595a4', textTransform: 'uppercase', letterSpacing: '0.06em' },
+  // Page + section headers (Overview: H1 24, H2 22, H3 20)
+  h1:           { fontSize: 24, fontWeight: 800, color: '#0f0f13', letterSpacing: '-0.6px', lineHeight: 1.1 },
+  h2:           { fontSize: 22, fontWeight: 800, color: '#0f0f13', letterSpacing: '-0.5px' },
+  h3:           { fontSize: 20, fontWeight: 800, color: '#0f0f13', letterSpacing: '-0.5px' },
+
+  // Uppercase labels
+  sectionLabel: { fontSize: 11, fontWeight: 600, color: '#9595a4', textTransform: 'uppercase', letterSpacing: '0.06em' },  // card-level label ("KEYWORD RESEARCH")
+  sectionHint:  { fontSize: 11, fontWeight: 500, color: '#9595a4' },                                                       // right-aligned hint text
+  innerLabel:   { fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em' },                    // inside sub-blocks (needs + color)
+  statLabel:    { fontSize: 11, fontWeight: 500, color: '#9595a4', textTransform: 'uppercase', letterSpacing: '0.05em' },  // Overview Stat label
+
+  // Descriptions
   cardDesc:     { fontSize: 13, color: '#9595a4', lineHeight: 1.55 },
-  tableHeader:  { fontSize: 11, fontWeight: 600, color: '#9595a4', textTransform: 'uppercase', letterSpacing: '0.06em' },
-  keyword:      { fontSize: 14, fontWeight: 600, color: '#0f0f13', letterSpacing: '-0.1px' },
-  body:         { fontSize: 14, fontWeight: 600, color: '#0f0f13', lineHeight: 1.55, letterSpacing: '-0.1px' },
-  bodyMuted:    { fontSize: 13, fontWeight: 500, color: '#4a4a58', lineHeight: 1.65, letterSpacing: '-0.05px' },
-  chip:         { fontSize: 13, fontWeight: 500, color: '#4a4a58', background: '#fafafb', padding: '6px 12px', borderRadius: 20, border: '1px solid #e6e6ec', cursor: 'pointer', letterSpacing: '-0.1px', transition: 'all 0.15s', display: 'inline-block' },
+
+  // Body text
+  bodyBold:     { fontSize: 14, fontWeight: 700, color: '#0f0f13', lineHeight: 1.55, letterSpacing: '-0.1px' },
+  body:         { fontSize: 13.5, fontWeight: 500, color: '#4a4a58', lineHeight: 1.65 },
+  innerText:    { fontSize: 13.5, fontWeight: 500, color: '#0f0f13', lineHeight: 1.72 },                                   // inside InsightCard-style sub-blocks
+
+  // Pills / chips / badges
+  pill:         { fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em' },                    // severity + vol/comp
+  countBadge:   { fontSize: 11, fontWeight: 700, color: '#9595a4', background: '#f1f1f6', padding: '2px 8px', borderRadius: 20, border: '1px solid #e6e6ec' },
+  chip:         { fontSize: 12, fontWeight: 500, color: '#4a4a58', background: '#fafafb', padding: '5px 11px', borderRadius: 20, border: '1px solid #e6e6ec', cursor: 'pointer', letterSpacing: '-0.05px', transition: 'all 0.15s', display: 'inline-block' },
+
+  // Numbers
+  numberLg:     { fontSize: 14, fontWeight: 800, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.2px' },            // score numbers
+
+  // Tables (Overview uses 10.5/600 in Score breakdown headers)
+  tableHeader:  { fontSize: 10.5, fontWeight: 600, color: '#9595a4', textTransform: 'uppercase', letterSpacing: '0.06em' },
+  keyword:      { fontSize: 13.5, fontWeight: 600, color: '#0f0f13', letterSpacing: '-0.1px' },
 }
 
 const VIRAL_FORMATS = [
@@ -723,15 +748,14 @@ export default function SeoOptimizer({ onNavigate }) {
 
           {/* AI suggestion error */}
           {result.suggestion_error && !result.suggestions?.length && (
-            <div style={{ background: '#fff7ed', border: '1px solid #fed7aa', borderRadius: 12, padding: '12px 16px', marginBottom: 16 }}>
-              <p style={{ fontSize: 14, color: C.orange, fontWeight: 600 }}>AI suggestions unavailable</p>
-              <p style={{ fontSize: 12, color: C.text2, marginTop: 3 }}>{result.suggestion_error}</p>
+            <div style={{ background: C.amberBg, border: `1px solid ${C.amberBdr}`, borderLeft: `3px solid ${C.amber}`, borderRadius: '0 12px 12px 0', padding: '14px 18px', marginBottom: 16 }}>
+              <p style={{ ...T.innerLabel, color: C.amber, marginBottom: 6 }}>AI suggestions unavailable</p>
+              <p style={T.innerText}>{result.suggestion_error}</p>
             </div>
           )}
 
-          {/* ── Search intent analysis — all inner blocks share one shape, only the 3px left-accent color changes ── */}
+          {/* ── Search intent analysis — mirrors Overview InsightCard: inner blocks with 3px colored left accent ── */}
           {result.intent_analysis?.search_intent && (() => {
-            // Inner block — matches Overview InsightCard's "Action" block shape.
             const infoBlock = (accent) => ({
               background: '#fafafb',
               border: '1px solid #e6e6ec',
@@ -739,56 +763,43 @@ export default function SeoOptimizer({ onNavigate }) {
               borderRadius: '0 10px 10px 0',
               padding: '14px 16px',
             })
-            // ── Unified typography scale ──
-            const T = {
-              sectionLabel: { fontSize: 11, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em' },
-              cardDesc:     { fontSize: 13, color: C.text3, lineHeight: 1.55 },
-              blockLabel:   (color) => ({ fontSize: 11, fontWeight: 700, color, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 8 }),
-              blockValue:   { fontSize: 14, fontWeight: 600, color: C.text1, lineHeight: 1.55, letterSpacing: '-0.1px' },
-              bodyMuted:    { fontSize: 13, fontWeight: 500, color: C.text2, lineHeight: 1.65, letterSpacing: '-0.05px' },
-              chip:         { fontSize: 13, fontWeight: 500, color: C.text2, background: '#fafafb', padding: '6px 12px', borderRadius: 20, border: '1px solid #e6e6ec', cursor: 'pointer', letterSpacing: '-0.1px', transition: 'all 0.15s' },
-            }
             return (
               <div className="seo-glass-card" style={{ borderRadius: 16, padding: '22px 24px', marginBottom: 16 }}>
-                {/* Header */}
-                <div style={{ marginBottom: 16 }}>
+                <div style={{ marginBottom: 14 }}>
                   <p style={{ ...T.sectionLabel, marginBottom: 4 }}>Search intent analysis</p>
                   <p style={T.cardDesc}>What the viewer wants, what they feel, and where competitors fall short.</p>
                 </div>
+                <div style={{ height: 1, background: '#e6e6ec', marginBottom: 14 }} />
 
-                {/* 2-col: Search intent (red) | Emotional driver (amber) */}
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 10 }}>
                   <div style={infoBlock(C.red)}>
-                    <p style={T.blockLabel(C.red)}>Search intent</p>
-                    <p style={T.blockValue}>{result.intent_analysis.search_intent}</p>
+                    <p style={{ ...T.innerLabel, color: C.red, marginBottom: 6 }}>Search intent</p>
+                    <p style={T.innerText}>{result.intent_analysis.search_intent}</p>
                   </div>
                   <div style={infoBlock(C.amber)}>
-                    <p style={T.blockLabel(C.amber)}>Emotional driver</p>
-                    <p style={T.blockValue}>{result.intent_analysis.emotional_driver}</p>
+                    <p style={{ ...T.innerLabel, color: C.amber, marginBottom: 6 }}>Emotional driver</p>
+                    <p style={T.innerText}>{result.intent_analysis.emotional_driver}</p>
                   </div>
                 </div>
 
-                {/* Who's searching — neutral accent */}
                 <div style={{ ...infoBlock(C.text3), marginBottom: 10 }}>
-                  <p style={T.blockLabel(C.text3)}>Who's searching</p>
-                  <p style={T.bodyMuted}>{result.intent_analysis.viewer_profile}</p>
+                  <p style={{ ...T.innerLabel, color: C.text3, marginBottom: 6 }}>Who's searching</p>
+                  <p style={T.innerText}>{result.intent_analysis.viewer_profile}</p>
                 </div>
 
-                {/* Gap opportunity — green accent (key insight) */}
                 {result.intent_analysis.gap_opportunity && (
                   <div style={{ ...infoBlock(C.green), marginBottom: result.intent_analysis.top_keywords?.length > 0 ? 16 : 0 }}>
-                    <p style={T.blockLabel(C.green)}>Gap opportunity — what competitors aren't doing</p>
-                    <p style={T.blockValue}>{result.intent_analysis.gap_opportunity}</p>
+                    <p style={{ ...T.innerLabel, color: C.green, marginBottom: 6 }}>Gap opportunity — what competitors aren't doing</p>
+                    <p style={T.innerText}>{result.intent_analysis.gap_opportunity}</p>
                     {result.intent_analysis.overused_angle && (
                       <div style={{ marginTop: 10, paddingTop: 10, borderTop: '1px solid #eeeef3' }}>
-                        <p style={{ ...T.blockLabel(C.red), marginBottom: 6 }}>Overused angle</p>
-                        <p style={{ fontSize: 13, fontWeight: 500, color: C.text2, lineHeight: 1.6 }}>{result.intent_analysis.overused_angle}</p>
+                        <p style={{ ...T.innerLabel, color: C.red, marginBottom: 6 }}>Overused angle</p>
+                        <p style={T.innerText}>{result.intent_analysis.overused_angle}</p>
                       </div>
                     )}
                   </div>
                 )}
 
-                {/* Top keywords — chip row */}
                 {result.intent_analysis.top_keywords?.length > 0 && (
                   <div>
                     <p style={{ ...T.sectionLabel, marginBottom: 8 }}>Top keywords in competitor titles</p>
@@ -850,13 +861,13 @@ export default function SeoOptimizer({ onNavigate }) {
                             <span style={{ fontSize: 12, fontWeight: 900, color: '#ffffff', fontVariantNumeric: 'tabular-nums', lineHeight: 1 }}>{i + 1}</span>
                           </div>
                           <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, flex: 1, minWidth: 0, flexWrap: 'wrap' }}>
-                            <span style={{ fontSize: 11, fontWeight: 700, color: hm.color, textTransform: 'uppercase', letterSpacing: '0.07em' }}>{hm.label}</span>
+                            <span style={{ ...T.innerLabel, color: hm.color }}>{hm.label}</span>
                             <span style={{ fontSize: 12, color: C.text3, fontWeight: 400 }}>{hm.desc}</span>
                           </div>
                           <span style={{
-                            fontSize: 10, fontWeight: 700, color: sevColor,
+                            ...T.pill, color: sevColor,
                             border: `1.5px solid ${sevColor}`, padding: '3px 9px',
-                            borderRadius: 20, letterSpacing: '0.06em', textTransform: 'uppercase',
+                            borderRadius: 20,
                             flexShrink: 0,
                           }}>{sevLabel}</span>
                         </div>
@@ -870,23 +881,23 @@ export default function SeoOptimizer({ onNavigate }) {
                         {/* Divider — matches Overview InsightCard hairline */}
                         <div style={{ height: 1, background: '#e6e6ec', marginBottom: 14, marginLeft: 36 }} />
 
-                        {/* 3-col insight grid — why / title score / action */}
+                        {/* 3-col inner grid — mirrors Overview InsightCard's body (1fr 1.4fr 1fr, gap 8) */}
                         <div style={{ marginLeft: 36, display: 'grid', gridTemplateColumns: '1fr 1.4fr 1fr', gap: 8 }}>
                           {/* WHY IT WORKS — hook-tinted */}
                           <div style={{ background: hm.tint, border: `1px solid ${hm.bdr}`, borderRadius: 10, padding: '12px 14px' }}>
-                            <p style={{ fontSize: 10, fontWeight: 700, color: hm.color, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Why it works</p>
-                            <p style={{ fontSize: 13, color: C.text1, lineHeight: 1.6 }}>{s.why_it_works || hm.desc}</p>
+                            <p style={{ ...T.innerLabel, color: hm.color, marginBottom: 6 }}>Why it works</p>
+                            <p style={T.innerText}>{s.why_it_works || hm.desc}</p>
                           </div>
-                          {/* SCORES — white centre with hook-colored left accent */}
+                          {/* SCORES — white centre with hook-colored left accent, matches Overview's Action block shape */}
                           <div style={{ background: '#ffffff', border: '1px solid #e6e6ec', borderLeft: `3px solid ${hm.color}`, borderRadius: '0 10px 10px 0', padding: '12px 16px', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
-                            <p style={{ fontSize: 10, fontWeight: 700, color: hm.color, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 10 }}>Scores vs competitors</p>
+                            <p style={{ ...T.innerLabel, color: hm.color, marginBottom: 10 }}>Scores vs competitors</p>
                             <div style={{ display: 'flex', gap: 18 }}>
                               {[['SEO', s.seo_score], ['CTR', s.ctr_score], ['Hook', s.hook_score]].map(([label, val]) => {
                                 const c = val >= 70 ? C.green : val >= 50 ? C.amber : C.red
                                 return (
                                   <div key={label}>
                                     <p style={{ fontSize: 18, fontWeight: 800, color: c, lineHeight: 1, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.3px' }}>{val || '—'}</p>
-                                    <p style={{ fontSize: 10, fontWeight: 700, color: C.text3, marginTop: 4, letterSpacing: '0.07em', textTransform: 'uppercase' }}>{label}</p>
+                                    <p style={{ ...T.innerLabel, color: C.text3, marginTop: 4 }}>{label}</p>
                                   </div>
                                 )
                               })}
@@ -894,13 +905,13 @@ export default function SeoOptimizer({ onNavigate }) {
                           </div>
                           {/* ACTION — green tint */}
                           <div style={{ background: 'rgba(5,150,105,0.07)', border: '1px solid rgba(5,150,105,0.16)', borderRadius: 10, padding: '12px 14px', display: 'flex', flexDirection: 'column', gap: 10 }}>
-                            <p style={{ fontSize: 10, fontWeight: 700, color: C.green, letterSpacing: '0.08em', textTransform: 'uppercase' }}>Use this title</p>
+                            <p style={{ ...T.innerLabel, color: C.green }}>Use this title</p>
                             <button onClick={() => handleSelectTitle(s.title)}
                               style={{ fontSize: 12.5, fontWeight: 700, color: isSelected ? C.red : '#ffffff', background: isSelected ? 'rgba(229,37,27,0.08)' : '#e5251b', border: `1px solid ${isSelected ? 'rgba(229,37,27,0.25)' : 'transparent'}`, borderRadius: 100, padding: '8px 14px', cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.18s', boxShadow: isSelected ? 'none' : '0 1px 3px rgba(0,0,0,0.12), 0 4px 14px rgba(229,37,27,0.32)', whiteSpace: 'nowrap' }}>
                               {isSelected ? '✓ Selected' : 'Continue →'}
                             </button>
                             <button onClick={() => copyTitle(s.title, i)}
-                              style={{ fontSize: 12, fontWeight: 600, color: copied === i ? C.green : C.text2, background: '#ffffff', border: '1px solid #e6e6ec', borderRadius: 100, padding: '6px 14px', cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.15s', whiteSpace: 'nowrap' }}>
+                              style={{ fontSize: 12.5, fontWeight: 600, color: copied === i ? C.green : C.text2, background: '#ffffff', border: '1px solid #e6e6ec', borderRadius: 100, padding: '6px 14px', cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.15s', whiteSpace: 'nowrap' }}>
                               {copied === i ? '✓ Copied' : 'Copy title'}
                             </button>
                           </div>
@@ -944,16 +955,15 @@ export default function SeoOptimizer({ onNavigate }) {
               Actions section (one card per concept, neat vertical rhythm).
               ═══════════════════════════════════════════════════════════════ */}
 
-          {/* ── Card 1: Keyword research (table) ── */}
+          {/* ── Card 1: Keyword research — 2-col inner grid, matches Overview's Category Scores pattern ── */}
           {result.keyword_scores?.length > 0 && (() => {
             const pillStyle = (color, borderColor) => ({
               fontSize: 11, fontWeight: 700, color,
               border: `1.5px solid ${borderColor}`,
               padding: '2px 8px', borderRadius: 20,
               textTransform: 'uppercase', letterSpacing: '0.05em',
-              justifySelf: 'start',
+              flexShrink: 0,
             })
-            const numberStyle = (color) => ({ fontSize: 14, fontWeight: 800, color, textAlign: 'right', fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.2px' })
             return (
               <div className="seo-glass-card" style={{ borderRadius: 16, padding: '22px 24px', marginBottom: 16 }}>
                 <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 14, gap: 16, flexWrap: 'wrap' }}>
@@ -965,17 +975,11 @@ export default function SeoOptimizer({ onNavigate }) {
                   </div>
                   <span style={{ ...T.sectionLabel, fontWeight: 500, whiteSpace: 'nowrap', flexShrink: 0 }}>Sorted by score</span>
                 </div>
-                {/* Hairline divider — the Overview InsightCard signature */}
                 <div style={{ height: 1, background: '#e6e6ec', marginBottom: 14 }} />
-                {/* Table */}
-                <div style={{ border: '1px solid #e6e6ec', borderRadius: 10, overflow: 'hidden' }}>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) 64px 80px 52px', gap: 12, padding: '10px 14px', background: '#fafafb', borderBottom: '1px solid #e6e6ec' }}>
-                    <span style={T.tableHeader}>Keyword phrase</span>
-                    <span style={T.tableHeader}>Vol</span>
-                    <span style={T.tableHeader}>Comp</span>
-                    <span style={{ ...T.tableHeader, textAlign: 'right' }}>Score</span>
-                  </div>
-                  {result.keyword_scores.map((kw, i) => {
+
+                {/* 2-col inner grid — mirrors Overview Category Scores exactly (1fr 1fr, gap '8px 40px') */}
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '6px 40px' }}>
+                  {result.keyword_scores.map((kw) => {
                     const volColor = kw.volume === 'HIGH' ? C.green : kw.volume === 'MED' ? C.amber : C.text3
                     const compColor = kw.competition === 'LOW' ? C.green : kw.competition === 'MED' ? C.amber : C.red
                     const scColor = kw.score >= 65 ? C.green : kw.score >= 40 ? C.amber : C.red
@@ -983,13 +987,13 @@ export default function SeoOptimizer({ onNavigate }) {
                       <div key={kw.phrase}
                         onClick={() => setTitle(kw.phrase)}
                         title="Click to use as title"
-                        style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) 64px 80px 52px', gap: 12, padding: '11px 14px', borderBottom: i < result.keyword_scores.length - 1 ? '1px solid #f0f0f4' : 'none', alignItems: 'center', transition: 'background 0.12s', cursor: 'pointer' }}
+                        style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 10px', borderRadius: 8, cursor: 'pointer', transition: 'background 0.12s' }}
                         onMouseEnter={e => e.currentTarget.style.background = '#fafafb'}
                         onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
-                        <span style={{ ...T.keyword, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{kw.phrase}</span>
+                        <span style={{ ...T.keyword, flex: 1, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{kw.phrase}</span>
                         <span style={pillStyle(volColor, volColor === C.text3 ? '#e6e6ec' : volColor)}>{kw.volume}</span>
                         <span style={pillStyle(compColor, compColor)}>{kw.competition}</span>
-                        <span style={numberStyle(scColor)}>{kw.score}</span>
+                        <span style={{ fontSize: 14, fontWeight: 800, color: scColor, fontVariantNumeric: 'tabular-nums', minWidth: 28, textAlign: 'right', letterSpacing: '-0.2px', flexShrink: 0 }}>{kw.score}</span>
                       </div>
                     )
                   })}
@@ -1066,18 +1070,21 @@ export default function SeoOptimizer({ onNavigate }) {
             </div>
           )}
 
-          {/* ── Competitor set — the actual competitor videos we analysed ── */}
+          {/* ── Competitor set — the competitor videos we analysed ── */}
           {result.top_videos?.length > 0 && (
             <div className="seo-glass-card" style={{ borderRadius: 16, padding: '22px 24px', marginBottom: 16 }}>
-              <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 4, gap: 16, flexWrap: 'wrap' }}>
-                <p style={{ fontSize: 11, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Competitor set</p>
-                <p style={{ fontSize: 11, color: C.text3 }}>
-                  {result.videos_found} live YouTube {result.videos_found === 1 ? 'result' : 'results'}{result.intent_matched > 0 && result.intent_matched < result.videos_found ? ` · ${result.intent_matched} exact match` : ''}
-                </p>
+              <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 14, gap: 16, flexWrap: 'wrap' }}>
+                <div>
+                  <p style={{ ...T.sectionLabel, marginBottom: 4 }}>Competitor set</p>
+                  <p style={T.cardDesc}>
+                    The top videos {result.primary_phrase ? <>in <span style={{ color: C.text2, fontWeight: 600 }}>&ldquo;{result.primary_phrase}&rdquo;</span></> : 'we found'} — the set your suggested titles were benchmarked against.
+                  </p>
+                </div>
+                <span style={{ ...T.sectionHint, whiteSpace: 'nowrap', flexShrink: 0 }}>
+                  {result.videos_found} {result.videos_found === 1 ? 'result' : 'results'}{result.intent_matched > 0 && result.intent_matched < result.videos_found ? ` · ${result.intent_matched} exact` : ''}
+                </span>
               </div>
-              <p style={{ fontSize: 12, color: C.text3, marginBottom: 14, lineHeight: 1.5 }}>
-                The top videos {result.primary_phrase ? <>in <span style={{ fontWeight: 700, color: C.text2 }}>&ldquo;{result.primary_phrase}&rdquo;</span></> : 'we found'} — the set your suggested titles were benchmarked against.
-              </p>
+              <div style={{ height: 1, background: '#e6e6ec', marginBottom: 14 }} />
               <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
                 {result.top_videos.map((v, i) => {
                   const sc = v.seo_score
@@ -1098,12 +1105,12 @@ export default function SeoOptimizer({ onNavigate }) {
                         </div>
                       </div>
                       <div style={{ flex: 1, minWidth: 0 }}>
-                        <p style={{ fontSize: 14, fontWeight: 600, color: C.text1, lineHeight: 1.4, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{v.title}</p>
-                        <p style={{ fontSize: 12, color: C.text3, marginTop: 2 }}>{v.channel}</p>
+                        <p style={{ fontSize: 14, fontWeight: 600, color: C.text1, lineHeight: 1.4, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', letterSpacing: '-0.1px' }}>{v.title}</p>
+                        <p style={{ fontSize: 12, color: C.text3, marginTop: 2, fontWeight: 500 }}>{v.channel}</p>
                       </div>
                       <div style={{ textAlign: 'right', flexShrink: 0 }}>
-                        <p style={{ fontSize: 14, fontWeight: 700, color: scColor }}>{sc}</p>
-                        <p style={{ fontSize: 12, color: C.text3 }}>{v.title.length}ch</p>
+                        <p style={{ ...T.numberLg, color: scColor }}>{sc}</p>
+                        <p style={{ fontSize: 11, color: C.text3, marginTop: 2, fontVariantNumeric: 'tabular-nums' }}>{v.title.length}ch</p>
                       </div>
                       <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke={C.text4} strokeWidth="1.5" strokeLinecap="round" style={{ flexShrink: 0 }}><path d="M2 11L10 3M10 3H5M10 3v5"/></svg>
                     </a>
@@ -1113,26 +1120,27 @@ export default function SeoOptimizer({ onNavigate }) {
             </div>
           )}
 
-          {/* ── Description Optimizer ──────────────────────────── */}
+          {/* ── Description Optimizer ── */}
           {selectedTitle && (
             <div ref={descRef} className="seo-glass-card" style={{ marginTop: 16, borderRadius: 16, padding: '22px 24px' }}>
 
-              {/* Header */}
+              {/* Header — same pattern as every other card */}
               <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 14, gap: 16 }}>
-                <div>
-                  <p style={{ fontSize: 11, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }}>Description optimizer</p>
-                  <p style={{ fontSize: 16, fontWeight: 700, color: C.text1, lineHeight: 1.4, letterSpacing: '-0.3px' }}>"{selectedTitle}"</p>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <p style={{ ...T.sectionLabel, marginBottom: 4 }}>Description optimizer</p>
+                  <p style={{ ...T.bodyBold, letterSpacing: '-0.2px' }}>&ldquo;{selectedTitle}&rdquo;</p>
                 </div>
                 <button onClick={() => { setSelectedTitle(null); setDescResult(null); setDescError('') }}
-                  style={{ flexShrink: 0, fontSize: 12, fontWeight: 600, color: C.text2, background: '#ffffff', border: '1px solid #e6e6ec', borderRadius: 100, padding: '6px 14px', cursor: 'pointer', fontFamily: 'inherit', whiteSpace: 'nowrap', boxShadow: '0 1px 3px rgba(0,0,0,0.06)', transition: 'all 0.18s' }}>
+                  style={{ flexShrink: 0, fontSize: 12.5, fontWeight: 600, color: C.text2, background: '#ffffff', border: '1px solid rgba(0,0,0,0.1)', borderRadius: 100, padding: '9px 20px', cursor: 'pointer', fontFamily: 'inherit', whiteSpace: 'nowrap', boxShadow: '0 1px 3px rgba(0,0,0,0.07), 0 4px 14px rgba(0,0,0,0.07)', transition: 'all 0.18s' }}>
                   Change title
                 </button>
               </div>
+              <div style={{ height: 1, background: '#e6e6ec', marginBottom: 18 }} />
 
               {!descResult && (
                 <>
                   <div style={{ marginBottom: 16 }}>
-                    <label style={{ display: 'block', fontSize: 11, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 8 }}>
+                    <label style={{ display: 'block', ...T.sectionLabel, marginBottom: 8 }}>
                       Current description{' '}
                       <span style={{ fontWeight: 400, textTransform: 'none', letterSpacing: 0, color: C.text3 }}>(optional — paste to improve, or leave blank)</span>
                     </label>
@@ -1146,7 +1154,7 @@ export default function SeoOptimizer({ onNavigate }) {
                   </div>
 
                   <button onClick={handleGenerateDesc} disabled={descLoading}
-                    style={{ display: 'inline-flex', alignItems: 'center', gap: 7, padding: '9px 20px', background: !descLoading ? '#e5251b' : '#e0e0e6', color: '#fff', border: 'none', borderRadius: 100, fontSize: 12.5, fontWeight: 700, fontFamily: 'inherit', cursor: !descLoading ? 'pointer' : 'not-allowed', transition: 'all 0.18s', boxShadow: !descLoading ? '0 1px 3px rgba(0,0,0,0.12), 0 4px 14px rgba(229,37,27,0.32)' : 'none', letterSpacing: '-0.1px' }}>
+                    style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '9px 20px', background: !descLoading ? '#e5251b' : '#e0e0e6', color: '#fff', border: 'none', borderRadius: 100, fontSize: 12.5, fontWeight: 700, fontFamily: 'inherit', cursor: !descLoading ? 'pointer' : 'not-allowed', transition: 'all 0.18s', boxShadow: !descLoading ? '0 1px 3px rgba(0,0,0,0.12), 0 4px 14px rgba(229,37,27,0.32)' : 'none', letterSpacing: '-0.1px' }}>
                     {descLoading ? (
                       <><SpinIcon /> Generating descriptions…</>
                     ) : (
@@ -1171,11 +1179,11 @@ export default function SeoOptimizer({ onNavigate }) {
               {descResult?.length > 0 && (
                 <>
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14, gap: 14 }}>
-                    <p style={{ fontSize: 12.5, color: C.text3, lineHeight: 1.5 }}>
+                    <p style={T.cardDesc}>
                       3 descriptions — each opens with a different hook strategy. Expand to see the full text, then copy.
                     </p>
                     <button onClick={() => { setDescResult(null); setDescError('') }}
-                      style={{ flexShrink: 0, fontSize: 12, fontWeight: 600, color: C.text2, background: '#ffffff', border: '1px solid #e6e6ec', borderRadius: 100, padding: '5px 13px', cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.15s' }}>
+                      style={{ flexShrink: 0, fontSize: 12.5, fontWeight: 600, color: C.text2, background: '#ffffff', border: '1px solid #e6e6ec', borderRadius: 100, padding: '6px 14px', cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.15s' }}>
                       Regenerate
                     </button>
                   </div>
