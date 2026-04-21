@@ -903,9 +903,9 @@ export default function SeoOptimizer({ onNavigate }) {
 
                         {/* 3-col inner grid — mirrors Overview InsightCard's body (1fr 1.4fr 1fr, gap 8) */}
                         <div style={{ marginLeft: 36, display: 'grid', gridTemplateColumns: '1fr 1.4fr 1fr', gap: 8 }}>
-                          {/* WHY IT WORKS — red tint, matches the Expected-outcome inner-block shape */}
-                          <div style={{ background: 'rgba(229,37,27,0.06)', border: '1px solid rgba(229,37,27,0.12)', borderRadius: 10, padding: '12px 14px' }}>
-                            <p style={{ ...T.innerLabel, color: C.red, marginBottom: 6 }}>Why it works</p>
+                          {/* WHY IT WORKS — blue tint, matches Overview InsightCard "Why now" (Dashboard.jsx:1089) exactly */}
+                          <div style={{ background: 'rgba(79,134,247,0.07)', border: '1px solid rgba(79,134,247,0.12)', borderRadius: 10, padding: '12px 14px' }}>
+                            <p style={{ ...T.innerLabel, color: '#4a7cf7', marginBottom: 6 }}>Why it works</p>
                             <p style={T.innerText}>{s.why_it_works || hm.desc}</p>
                           </div>
                           {/* SCORES — white centre with hook-colored left accent, matches Overview "Action" block (Dashboard.jsx:1094-1105) exactly */}
