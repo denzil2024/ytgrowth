@@ -1336,12 +1336,13 @@ export default function Landing() {
               },
             ].map((step, i) => (
               <div key={i} className="ytg-step-card" style={isMobile ? { background: 'transparent', border: 'none', boxShadow: 'none', padding: 0 } : undefined}>
-                {step.card}
+                {!isMobile && step.card}
                 <div style={{ width: 36, height: 36, background: isMobile ? 'rgba(255,255,255,0.06)' : 'var(--ytg-card-2)', border: isMobile ? '1px solid rgba(255,255,255,0.12)' : '1px solid var(--ytg-border-2)', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 16 }}>
                   <span style={{ fontWeight: 700, fontSize: 12, color: isMobile ? 'rgba(255,255,255,0.55)' : 'var(--ytg-text-3)', fontVariantNumeric: 'tabular-nums' }}>{step.n}</span>
                 </div>
                 <p style={{ fontWeight: 700, fontSize: 16, color: isMobile ? '#ffffff' : 'var(--ytg-text)', marginBottom: 9, letterSpacing: '-0.3px' }}>{step.t}</p>
-                <p style={{ fontSize: 14, color: isMobile ? 'rgba(255,255,255,0.6)' : 'var(--ytg-text-2)', lineHeight: 1.72 }}>{step.d}</p>
+                <p style={{ fontSize: 14, color: isMobile ? 'rgba(255,255,255,0.6)' : 'var(--ytg-text-2)', lineHeight: 1.72, marginBottom: 0 }}>{step.d}</p>
+                {isMobile && <div style={{ marginTop: 22 }}>{step.card}</div>}
               </div>
             ))}
           </div>
