@@ -837,94 +837,81 @@ export default function SeoOptimizer({ onNavigate }) {
                   Use my original title →
                 </button>
               </div>
-              {/* Vertical stack of full-width "statement" cards — mirrors Overview's Priority Actions rhythm */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+              {/* Compact stacked cards — mirror Overview's InsightCard. One color per number: amber. */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                 {result.suggestions.map((s, i) => {
-                  const hookMeta = {
-                    curiosity:      { label: 'Curiosity / FOMO', color: C.red,   desc: "Makes viewers feel they're missing something" },
-                    transformation: { label: 'Transformation',   color: C.green, desc: 'Focuses on the outcome or result' },
-                    contrarian:     { label: 'Contrarian',       color: C.amber, desc: "Challenges assumptions — what others don't show" },
-                  }
-                  const hm = hookMeta[s.hook] || hookMeta.curiosity
+                  const hookLabel = s.hook === 'transformation' ? 'Transformation'
+                                  : s.hook === 'contrarian'     ? 'Contrarian'
+                                  : 'Curiosity / FOMO'
+                  const hookDesc  = s.hook === 'transformation' ? 'Focuses on the outcome or result'
+                                  : s.hook === 'contrarian'     ? "Challenges assumptions — what others don't show"
+                                  : "Makes viewers feel they're missing something"
                   const avgScore = Math.round(((s.seo_score || 0) + (s.ctr_score || 0) + (s.hook_score || 0)) / Math.max(1, [s.seo_score, s.ctr_score, s.hook_score].filter(v => v > 0).length))
                   const sevLabel = avgScore >= 75 ? 'Strong' : avgScore >= 55 ? 'Solid' : 'Weak'
                   const sevColor = avgScore >= 75 ? C.green : avgScore >= 55 ? C.amber : C.red
                   const isSelected = selectedTitle === s.title
                   return (
                     <div key={i} className="seo-suggestion-card" style={{
-                      position: 'relative',
                       marginBottom: 0,
+                      borderTop: `3px solid ${sevColor}`,
                       borderColor: isSelected ? 'rgba(229,37,27,0.30)' : copied === i ? 'rgba(5,150,105,0.30)' : '#e6e6ec',
                       background: isSelected ? '#fff8f8' : copied === i ? '#f6fdf9' : '#ffffff',
                     }}>
-                      {/* Full-height left accent bar — severity color */}
-                      <div aria-hidden="true" style={{
-                        position: 'absolute', left: 0, top: 0, bottom: 0, width: 4,
-                        background: sevColor,
-                      }}/>
+                      <div style={{ padding: '16px 22px 18px' }}>
+                        {/* Header — rank badge (amber) + hook eyebrow/title + severity pill */}
+                        <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: 14 }}>
+                          <div style={{ width: 26, height: 26, borderRadius: 8, background: C.amber, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 2 }}>
+                            <span style={{ fontSize: 12, fontWeight: 900, color: '#fff', fontVariantNumeric: 'tabular-nums' }}>{i + 1}</span>
+                          </div>
+                          <div style={{ flex: 1, minWidth: 0 }}>
+                            <p style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 5 }}>{hookLabel}</p>
+                            <p style={{ fontSize: 14, fontWeight: 700, color: C.text1, lineHeight: 1.55 }}>{s.title}</p>
+                            <p style={{ fontSize: 11, color: C.text3, fontVariantNumeric: 'tabular-nums', fontWeight: 500, marginTop: 4 }}>
+                              {s.length} chars{s.length >= 50 && s.length <= 70 ? ' · ideal 50–70' : s.length > 70 ? ' · over 70' : ' · under 50'}
+                            </p>
+                          </div>
+                          <span style={{ fontSize: 10, fontWeight: 700, color: sevColor, padding: '3px 9px', borderRadius: 20, letterSpacing: '0.06em', textTransform: 'uppercase', border: `1.5px solid ${sevColor}`, flexShrink: 0 }}>
+                            {sevLabel}
+                          </span>
+                        </div>
 
-                      <div style={{ padding: '22px 26px 22px 30px' }}>
-                        {/* Top row — numbered badge + hook label + severity pill + inline score ribbon */}
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 18, flexWrap: 'wrap' }}>
+                        {/* Divider aligned with title start */}
+                        <div style={{ height: 1, background: C.border, marginBottom: 14, marginLeft: 38 }} />
+
+                        {/* Body grid — Why-it-works (blue tint, Overview's Why-now pattern) + Scores (amber left bar, amber numbers) */}
+                        <div style={{ display: 'grid', gridTemplateColumns: '1.3fr 1fr', gap: 8, marginLeft: 38 }}>
+                          <div style={{ background: 'rgba(79,134,247,0.07)', border: '1px solid rgba(79,134,247,0.12)', borderRadius: 10, padding: '12px 14px' }}>
+                            <p style={{ fontSize: 10, fontWeight: 700, color: '#4a7cf7', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Why it works</p>
+                            <p style={{ fontSize: 13.5, color: C.text1, lineHeight: 1.72 }}>{s.why_it_works || hookDesc}</p>
+                          </div>
                           <div style={{
-                            width: 28, height: 28, borderRadius: 8,
-                            background: hm.color,
-                            display: 'flex', alignItems: 'center', justifyContent: 'center',
-                            flexShrink: 0,
-                            boxShadow: `0 2px 6px ${hm.color}40`,
+                            background: '#ffffff',
+                            border: `1px solid ${C.border}`,
+                            borderLeft: `3px solid ${C.amber}`,
+                            borderRadius: '0 10px 10px 0',
+                            padding: '12px 16px',
+                            boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
                           }}>
-                            <span style={{ fontSize: 12, fontWeight: 900, color: '#ffffff', fontVariantNumeric: 'tabular-nums', lineHeight: 1 }}>{i + 1}</span>
-                          </div>
-                          <span style={{ fontSize: 11, fontWeight: 700, color: hm.color, letterSpacing: '0.07em', textTransform: 'uppercase' }}>{hm.label}</span>
-                          <span style={{
-                            fontSize: 10, fontWeight: 700, color: sevColor,
-                            border: `1.5px solid ${sevColor}`,
-                            padding: '3px 9px', borderRadius: 20,
-                            letterSpacing: '0.06em', textTransform: 'uppercase',
-                          }}>{sevLabel}</span>
-
-                          <div style={{ flex: 1, minWidth: 8 }}/>
-
-                          {/* Inline score ribbon — right-aligned */}
-                          <div style={{ display: 'flex', gap: 16, alignItems: 'baseline' }}>
-                            {[['SEO', s.seo_score], ['CTR', s.ctr_score], ['Hook', s.hook_score]].map(([label, val]) => {
-                              const c = val >= 70 ? C.green : val >= 50 ? C.amber : C.red
-                              return (
-                                <div key={label} style={{ display: 'flex', alignItems: 'baseline', gap: 6 }}>
-                                  <span style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.08em', textTransform: 'uppercase' }}>{label}</span>
-                                  <span style={{ fontSize: 18, fontWeight: 800, color: c, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.3px' }}>{val || '—'}</span>
+                            <p style={{ fontSize: 10, fontWeight: 700, color: C.amber, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 10 }}>Scores</p>
+                            <div style={{ display: 'flex', gap: 18, alignItems: 'baseline', flexWrap: 'wrap' }}>
+                              {[['SEO', s.seo_score], ['CTR', s.ctr_score], ['Hook', s.hook_score]].map(([label, val]) => (
+                                <div key={label} style={{ display: 'flex', alignItems: 'baseline', gap: 5 }}>
+                                  <span style={{ fontSize: 10, fontWeight: 600, color: C.text3, letterSpacing: '0.08em', textTransform: 'uppercase' }}>{label}</span>
+                                  <span style={{ fontSize: 16, fontWeight: 800, color: C.amber, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.2px' }}>{val || '—'}</span>
                                 </div>
-                              )
-                            })}
+                              ))}
+                            </div>
                           </div>
                         </div>
 
-                        {/* HERO TITLE — big, confident */}
-                        <p style={{ fontSize: 22, fontWeight: 800, color: C.text1, lineHeight: 1.35, letterSpacing: '-0.5px', marginBottom: 8 }}>{s.title}</p>
-                        <p style={{ fontSize: 12, color: C.text3, fontVariantNumeric: 'tabular-nums', fontWeight: 500 }}>
-                          {s.length} chars{s.length >= 50 && s.length <= 70 ? ' · ideal 50–70' : s.length > 70 ? ' · over 70' : ' · under 50'}
-                        </p>
-
-                        {/* Divider */}
-                        <div style={{ height: 1, background: '#e6e6ec', marginTop: 18, marginBottom: 18 }}/>
-
-                        {/* Why it works */}
-                        <div>
-                          <p style={{ fontSize: 11, fontWeight: 700, color: hm.color, letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 8 }}>Why it works</p>
-                          <p style={{ fontSize: 14, fontWeight: 500, color: C.text1, lineHeight: 1.7 }}>{s.why_it_works || hm.desc}</p>
-                        </div>
-
-                        {/* Divider */}
-                        <div style={{ height: 1, background: '#e6e6ec', marginTop: 18, marginBottom: 18 }}/>
-
-                        {/* Action row — right-aligned: Copy (ghost) + Use this title (primary) */}
-                        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8 }}>
+                        {/* Action row — right-aligned */}
+                        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8, marginTop: 14, marginLeft: 38 }}>
                           <button onClick={() => copyTitle(s.title, i)}
-                            style={{ fontSize: 13, fontWeight: 600, color: copied === i ? C.green : C.text2, background: '#ffffff', border: `1px solid ${copied === i ? 'rgba(5,150,105,0.38)' : 'rgba(0,0,0,0.1)'}`, borderRadius: 100, padding: '10px 18px', cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.15s', whiteSpace: 'nowrap', boxShadow: '0 1px 3px rgba(0,0,0,0.07)' }}>
+                            style={{ fontSize: 12.5, fontWeight: 600, color: copied === i ? C.green : C.text2, background: '#ffffff', border: `1px solid ${copied === i ? 'rgba(5,150,105,0.38)' : 'rgba(0,0,0,0.1)'}`, borderRadius: 100, padding: '8px 16px', cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.15s', whiteSpace: 'nowrap', boxShadow: '0 1px 3px rgba(0,0,0,0.07)' }}>
                             {copied === i ? '✓ Copied' : 'Copy'}
                           </button>
                           <button onClick={() => handleSelectTitle(s.title)}
-                            style={{ fontSize: 13, fontWeight: 700, color: isSelected ? C.red : '#ffffff', background: isSelected ? 'rgba(229,37,27,0.08)' : '#e5251b', border: `1px solid ${isSelected ? 'rgba(229,37,27,0.25)' : 'transparent'}`, borderRadius: 100, padding: '10px 22px', cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.18s', boxShadow: isSelected ? 'none' : '0 1px 3px rgba(0,0,0,0.12), 0 4px 14px rgba(229,37,27,0.32)', whiteSpace: 'nowrap', letterSpacing: '-0.1px' }}>
+                            style={{ fontSize: 12.5, fontWeight: 700, color: isSelected ? C.red : '#ffffff', background: isSelected ? 'rgba(229,37,27,0.08)' : '#e5251b', border: `1px solid ${isSelected ? 'rgba(229,37,27,0.25)' : 'transparent'}`, borderRadius: 100, padding: '8px 18px', cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.18s', boxShadow: isSelected ? 'none' : '0 1px 3px rgba(0,0,0,0.12), 0 4px 14px rgba(229,37,27,0.32)', whiteSpace: 'nowrap', letterSpacing: '-0.1px' }}>
                             {isSelected ? '✓ Selected' : 'Use this title →'}
                           </button>
                         </div>
