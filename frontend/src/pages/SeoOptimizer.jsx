@@ -142,7 +142,7 @@ const T = {
   h3:           { fontSize: 20, fontWeight: 800, color: '#0f0f13', letterSpacing: '-0.5px' },
 
   // Uppercase labels
-  sectionLabel: { fontSize: 11, fontWeight: 600, color: '#9595a4', textTransform: 'uppercase', letterSpacing: '0.06em' },  // card-level label ("KEYWORD RESEARCH")
+  sectionLabel: { fontSize: 11, fontWeight: 700, color: '#e5251b', textTransform: 'uppercase', letterSpacing: '0.07em' },  // card-level label ("KEYWORD RESEARCH") — red per palette hierarchy (subheads are red)
   sectionHint:  { fontSize: 11, fontWeight: 500, color: '#9595a4' },                                                       // right-aligned hint text
   innerLabel:   { fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em' },                    // inside sub-blocks (needs + color)
   statLabel:    { fontSize: 11, fontWeight: 500, color: '#9595a4', textTransform: 'uppercase', letterSpacing: '0.05em' },  // Overview Stat label
@@ -1058,7 +1058,7 @@ export default function SeoOptimizer({ onNavigate }) {
               {/* 2-col grid mirrors Dashboard.jsx:2106 exactly — gap '14px 40px', no row bg / no padding */}
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px 40px' }}>
                 {result.keyword_scores.map((kw) => {
-                  const scColor = kw.score >= 65 ? C.green : kw.score >= 40 ? C.amber : C.red
+                  const scColor = kw.score >= 75 ? C.green : kw.score >= 55 ? C.amber : C.red
                   return (
                     <div key={kw.phrase} className="seo-kw-row"
                       onClick={() => setTitle(kw.phrase)}
@@ -1147,14 +1147,15 @@ export default function SeoOptimizer({ onNavigate }) {
               <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
                 {result.top_videos.map((v, i) => {
                   const sc = v.seo_score
-                  const scColor = sc >= 70 ? C.green : sc >= 50 ? C.amber : C.red
+                  const scColor = sc >= 75 ? C.green : sc >= 55 ? C.amber : C.red
                   return (
                     <a key={v.video_id}
                       href={`https://www.youtube.com/watch?v=${v.video_id}`}
                       target="_blank" rel="noopener noreferrer"
-                      style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 8px', borderBottom: i < result.top_videos.length - 1 ? `1px solid ${C.border}` : 'none', textDecoration: 'none', borderRadius: 8, transition: 'background 0.15s, transform 0.15s', cursor: 'pointer' }}
-                      onMouseEnter={e => { e.currentTarget.style.background = C.bg; e.currentTarget.style.transform = 'translateX(2px)' }}
-                      onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.transform = 'none' }}>
+                      style={{ position: 'relative', display: 'flex', alignItems: 'center', gap: 12, padding: '10px 12px', borderBottom: i < result.top_videos.length - 1 ? `1px solid ${C.border}` : 'none', textDecoration: 'none', borderRadius: 8, transition: 'background 0.15s, padding-left 0.18s', cursor: 'pointer' }}
+                      onMouseEnter={e => { e.currentTarget.style.background = 'rgba(229,37,27,0.04)'; e.currentTarget.style.paddingLeft = '16px'; const bar = e.currentTarget.querySelector('[data-hover-bar]'); if (bar) bar.style.opacity = '1' }}
+                      onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.paddingLeft = '12px'; const bar = e.currentTarget.querySelector('[data-hover-bar]'); if (bar) bar.style.opacity = '0' }}>
+                      <div aria-hidden="true" data-hover-bar style={{ position: 'absolute', left: 0, top: 6, bottom: 6, width: 3, background: C.red, borderRadius: 99, opacity: 0, transition: 'opacity 0.18s' }}/>
                       <div style={{ position: 'relative', flexShrink: 0 }}>
                         {v.thumbnail && <img src={v.thumbnail} alt="" style={{ width: 72, height: 40, borderRadius: 7, objectFit: 'cover', display: 'block' }} />}
                         <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: 0, transition: 'opacity 0.15s', background: 'rgba(0,0,0,0.45)', borderRadius: 7 }}
@@ -1168,8 +1169,8 @@ export default function SeoOptimizer({ onNavigate }) {
                         <p style={{ fontSize: 12, color: C.text3, marginTop: 2, fontWeight: 500 }}>{v.channel}</p>
                       </div>
                       <div style={{ textAlign: 'right', flexShrink: 0 }}>
-                        <p style={{ ...T.numberLg, color: scColor }}>{sc}</p>
-                        <p style={{ fontSize: 11, color: C.text3, marginTop: 2, fontVariantNumeric: 'tabular-nums' }}>{v.title.length}ch</p>
+                        <p style={{ fontSize: 17, fontWeight: 800, color: scColor, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.3px', lineHeight: 1 }}>{sc}</p>
+                        <p style={{ fontSize: 10, fontWeight: 600, color: C.text3, marginTop: 4, letterSpacing: '0.08em', textTransform: 'uppercase' }}>score</p>
                       </div>
                       <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke={C.text4} strokeWidth="1.5" strokeLinecap="round" style={{ flexShrink: 0 }}><path d="M2 11L10 3M10 3H5M10 3v5"/></svg>
                     </a>
