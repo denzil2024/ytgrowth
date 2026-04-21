@@ -755,60 +755,74 @@ export default function SeoOptimizer({ onNavigate }) {
             </div>
           )}
 
-          {/* ── Search intent analysis — tinted inner blocks, mirrors Overview InsightCard Why-now / Expected-outcome (Dashboard.jsx:1089-1113) ── */}
+          {/* ── Search intent analysis — stacked concepts with colored labels + hairlines,
+                mirrors Overview's "Biggest risk + What's working" card (Dashboard.jsx:2246-2259) exactly ── */}
           {result.intent_analysis?.search_intent && (() => {
-            // Tinted block — same shape as Overview's "Why now" / "Expected outcome" inner blocks.
-            const tintBlock = (bg, bdr) => ({
-              background: bg,
-              border: `1px solid ${bdr}`,
-              borderRadius: 10,
-              padding: '14px 16px',
+            // Inline role label — 11/700/0.07em uppercase (Overview line 2249, 2255).
+            const roleLabel = (color) => ({
+              fontSize: 11, fontWeight: 700, color, letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 8,
             })
+            // Body text — 14/text1/lineHeight 1.7 (Overview line 2250, 2256).
+            const roleBody = { fontSize: 14, color: C.text1, lineHeight: 1.7 }
+            const roleBodyMuted = { fontSize: 14, color: C.text2, lineHeight: 1.7 }
+            // Separator — paddingTop 16 + hairline (Overview line 2254).
+            const separator = { paddingTop: 16, borderTop: `1px solid ${C.border}` }
+
+            const hasGap = !!result.intent_analysis.gap_opportunity
+            const hasKeywords = result.intent_analysis.top_keywords?.length > 0
+
             return (
               <div className="seo-glass-card" style={{ borderRadius: 16, padding: '22px 24px', marginBottom: 24 }}>
+                {/* Card-level section label — 11/600/0.06em, like Overview's Score Breakdown header */}
                 <p style={{ ...T.sectionLabel, marginBottom: 20 }}>Search intent analysis</p>
 
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 10 }}>
-                  <div style={tintBlock('rgba(229,37,27,0.05)', 'rgba(229,37,27,0.14)')}>
-                    <p style={{ ...T.innerLabel, color: C.red, marginBottom: 6 }}>Search intent</p>
-                    <p style={T.innerText}>{result.intent_analysis.search_intent}</p>
-                  </div>
-                  <div style={tintBlock('rgba(217,119,6,0.05)', 'rgba(217,119,6,0.14)')}>
-                    <p style={{ ...T.innerLabel, color: C.amber, marginBottom: 6 }}>Emotional driver</p>
-                    <p style={T.innerText}>{result.intent_analysis.emotional_driver}</p>
-                  </div>
-                </div>
-
-                <div style={{ ...tintBlock('rgba(10,10,15,0.03)', 'rgba(10,10,15,0.08)'), marginBottom: 10 }}>
-                  <p style={{ ...T.innerLabel, color: C.text3, marginBottom: 6 }}>Who's searching</p>
-                  <p style={T.innerText}>{result.intent_analysis.viewer_profile}</p>
-                </div>
-
-                {result.intent_analysis.gap_opportunity && (
-                  <div style={{ ...tintBlock('rgba(5,150,105,0.05)', 'rgba(5,150,105,0.16)'), marginBottom: result.intent_analysis.top_keywords?.length > 0 ? 16 : 0 }}>
-                    <p style={{ ...T.innerLabel, color: C.green, marginBottom: 6 }}>Gap opportunity — what competitors aren't doing</p>
-                    <p style={T.innerText}>{result.intent_analysis.gap_opportunity}</p>
-                    {result.intent_analysis.overused_angle && (
-                      <div style={{ marginTop: 10, paddingTop: 10, borderTop: '1px solid rgba(5,150,105,0.16)' }}>
-                        <p style={{ ...T.innerLabel, color: C.red, marginBottom: 6 }}>Overused angle</p>
-                        <p style={T.innerText}>{result.intent_analysis.overused_angle}</p>
-                      </div>
-                    )}
-                  </div>
-                )}
-
-                {result.intent_analysis.top_keywords?.length > 0 && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                  {/* Search intent — red · first block, NO separator (Overview line 2247) */}
                   <div>
-                    <p style={{ ...T.sectionLabel, marginBottom: 8 }}>Top keywords in competitor titles</p>
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-                      {result.intent_analysis.top_keywords.map(kw => (
-                        <span key={kw} onClick={() => setTitle(kw)} style={T.chip}
-                          onMouseEnter={e => { e.currentTarget.style.background = '#f1f1f6'; e.currentTarget.style.borderColor = 'rgba(229,37,27,0.25)'; e.currentTarget.style.color = C.text1 }}
-                          onMouseLeave={e => { e.currentTarget.style.background = '#fafafb'; e.currentTarget.style.borderColor = '#e6e6ec'; e.currentTarget.style.color = C.text2 }}>{kw}</span>
-                      ))}
-                    </div>
+                    <p style={roleLabel(C.red)}>Search intent</p>
+                    <p style={roleBody}>{result.intent_analysis.search_intent}</p>
                   </div>
-                )}
+
+                  {/* Emotional driver — amber */}
+                  <div style={separator}>
+                    <p style={roleLabel(C.amber)}>Emotional driver</p>
+                    <p style={roleBody}>{result.intent_analysis.emotional_driver}</p>
+                  </div>
+
+                  {/* Who's searching — neutral */}
+                  <div style={separator}>
+                    <p style={roleLabel(C.text3)}>Who's searching</p>
+                    <p style={roleBodyMuted}>{result.intent_analysis.viewer_profile}</p>
+                  </div>
+
+                  {/* Gap opportunity — green, with Overused nested as sub-block */}
+                  {hasGap && (
+                    <div style={separator}>
+                      <p style={roleLabel(C.green)}>Gap opportunity — what competitors aren't doing</p>
+                      <p style={roleBody}>{result.intent_analysis.gap_opportunity}</p>
+                      {result.intent_analysis.overused_angle && (
+                        <div style={{ marginTop: 14 }}>
+                          <p style={roleLabel(C.red)}>Overused angle</p>
+                          <p style={roleBodyMuted}>{result.intent_analysis.overused_angle}</p>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Top keywords — neutral uppercase + chip row */}
+                  {hasKeywords && (
+                    <div style={separator}>
+                      <p style={{ ...roleLabel(C.text3), marginBottom: 10 }}>Top keywords in competitor titles</p>
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                        {result.intent_analysis.top_keywords.map(kw => (
+                          <span key={kw} onClick={() => setTitle(kw)} style={T.chip}
+                            onMouseEnter={e => { e.currentTarget.style.background = '#f1f1f6'; e.currentTarget.style.borderColor = 'rgba(229,37,27,0.25)'; e.currentTarget.style.color = C.text1 }}
+                            onMouseLeave={e => { e.currentTarget.style.background = '#fafafb'; e.currentTarget.style.borderColor = '#e6e6ec'; e.currentTarget.style.color = C.text2 }}>{kw}</span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
             )
           })()}
