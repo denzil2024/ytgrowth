@@ -788,10 +788,22 @@ export default function SeoOptimizer({ onNavigate }) {
                     <p style={roleLabel(C.amber)}>Emotional driver</p>
                     <p style={roleBody}>{result.intent_analysis.emotional_driver}</p>
                   </div>
-                  {/* R2C1 — Who's searching (neutral) · horizontal hairline above */}
+                  {/* R2C1 — Who's searching (neutral) + Top keywords chips below — balances the column against Gap + Overused on the right */}
                   <div style={{ paddingTop: 20, borderTop: `1px solid ${C.border}` }}>
                     <p style={roleLabel(C.text3)}>Who's searching</p>
                     <p style={roleBodyMuted}>{result.intent_analysis.viewer_profile}</p>
+                    {hasKeywords && (
+                      <div style={{ marginTop: 14, paddingTop: 14, borderTop: `1px solid ${C.border}` }}>
+                        <p style={roleLabel(C.text3)}>Top keywords in competitor titles</p>
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 2 }}>
+                          {result.intent_analysis.top_keywords.map(kw => (
+                            <span key={kw} onClick={() => setTitle(kw)} style={T.chip}
+                              onMouseEnter={e => { e.currentTarget.style.background = '#f1f1f6'; e.currentTarget.style.borderColor = 'rgba(229,37,27,0.25)'; e.currentTarget.style.color = C.text1 }}
+                              onMouseLeave={e => { e.currentTarget.style.background = '#fafafb'; e.currentTarget.style.borderColor = '#e6e6ec'; e.currentTarget.style.color = C.text2 }}>{kw}</span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </div>
                   {/* R2C2 — Gap opportunity (green), with Overused nested */}
                   {hasGap ? (
@@ -818,20 +830,6 @@ export default function SeoOptimizer({ onNavigate }) {
                     pointerEvents: 'none',
                   }}/>
                 </div>
-
-                {/* Row 3 — Top keywords (full width) */}
-                {hasKeywords && (
-                  <div style={{ ...separator, marginTop: 20 }}>
-                    <p style={{ ...roleLabel(C.text3), marginBottom: 10 }}>Top keywords in competitor titles</p>
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-                      {result.intent_analysis.top_keywords.map(kw => (
-                        <span key={kw} onClick={() => setTitle(kw)} style={T.chip}
-                          onMouseEnter={e => { e.currentTarget.style.background = '#f1f1f6'; e.currentTarget.style.borderColor = 'rgba(229,37,27,0.25)'; e.currentTarget.style.color = C.text1 }}
-                          onMouseLeave={e => { e.currentTarget.style.background = '#fafafb'; e.currentTarget.style.borderColor = '#e6e6ec'; e.currentTarget.style.color = C.text2 }}>{kw}</span>
-                      ))}
-                    </div>
-                  </div>
-                )}
               </div>
             )
           })()}
