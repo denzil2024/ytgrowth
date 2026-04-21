@@ -16,6 +16,11 @@ if (typeof document !== 'undefined' && !document.getElementById('seo-opt-styles'
   s.textContent = `
   @keyframes spin { to { transform: rotate(360deg) } }
   @keyframes seoFadeUp { from { opacity:0; transform:translateY(8px) } to { opacity:1; transform:translateY(0) } }
+  @keyframes seoLoadingSlide {
+    0%   { transform: translateX(-100%); }
+    50%  { transform: translateX(130%); }
+    100% { transform: translateX(260%); }
+  }
   .seo-result-section { animation: seoFadeUp 0.3s ease both; }
 
   .seo-glass-card {
@@ -373,6 +378,8 @@ export default function SeoOptimizer({ onNavigate }) {
   const [copied, setCopied]             = useState(null)
   const [intentOptions, setIntentOptions]     = useState(null)
   const [selectedKeyword, setSelectedKeyword] = useState('')
+  // Monotonic request id — latest submit wins; older responses are ignored (race-condition guard).
+  const reqIdRef = useRef(0)
 
   // Tags panel state
   const [copiedTags, setCopiedTags] = useState(false)
@@ -402,6 +409,12 @@ export default function SeoOptimizer({ onNavigate }) {
     } catch {}
   }, [])
 
+  // Clear the intent picker when the user edits the title — the picker was built for the previous title.
+  useEffect(() => {
+    if (intentOptions !== null) setIntentOptions(null)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [title])
+
   useEffect(() => {
     if (result !== null) saveToDisk(title, result, selectedTitle, currentDesc, descResult)
     else if (!loading) saveToDisk(title, null, selectedTitle, currentDesc, descResult)
@@ -422,6 +435,8 @@ export default function SeoOptimizer({ onNavigate }) {
 
   async function handleSubmitTitle() {
     if (!title.trim()) return
+    if (loadingIntent || loading) return  // guard against double-submit (Enter + click)
+    const myId = ++reqIdRef.current
     setLoadingIntent(true)
     setError('')
     setResult(null)
@@ -435,20 +450,29 @@ export default function SeoOptimizer({ onNavigate }) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ title: title.trim() }),
       })
+      if (myId !== reqIdRef.current) return  // stale — a newer submit started, ignore this response
       const data = await res.json()
+      if (myId !== reqIdRef.current) return
       if (!res.ok || !data.options?.length) {
-        await runAnalysis('')
+        setLoadingIntent(false)
+        await runAnalysis('', myId)
         return
       }
       setIntentOptions(data.options)
     } catch {
-      await runAnalysis('')
-    } finally {
+      if (myId !== reqIdRef.current) return
       setLoadingIntent(false)
+      await runAnalysis('', myId)
+      return
+    } finally {
+      if (myId === reqIdRef.current) setLoadingIntent(false)
     }
   }
 
-  async function runAnalysis(keyword) {
+  async function runAnalysis(keyword, existingId) {
+    // Use existing request id when chained from handleSubmitTitle, else start a new one.
+    const myId = existingId != null ? existingId : ++reqIdRef.current
+    if (existingId == null && loading) return
     setLoading(true)
     setError('')
     setResult(null)
@@ -459,14 +483,17 @@ export default function SeoOptimizer({ onNavigate }) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ title: title.trim(), confirmed_keyword: keyword }),
       })
+      if (myId !== reqIdRef.current) return
       const data = await res.json()
+      if (myId !== reqIdRef.current) return
       if (!res.ok) { setError(data.error || 'Something went wrong.'); return }
       setResult(data)
       setIntentOptions(null)
     } catch {
+      if (myId !== reqIdRef.current) return
       setError('Could not reach the server.')
     } finally {
-      setLoading(false)
+      if (myId === reqIdRef.current) setLoading(false)
     }
   }
 
@@ -630,9 +657,9 @@ export default function SeoOptimizer({ onNavigate }) {
             </div>
           )}
 
-          <div style={{ marginTop: 14, display: 'flex', justifyContent: 'flex-end' }}>
+          <div style={{ marginTop: 14, display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 10 }}>
             <button onClick={handleSubmitTitle} disabled={loading || loadingIntent || !title.trim()}
-              style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '11px 22px', background: title.trim() && !loading && !loadingIntent ? C.red : '#e0e0e6', color: '#fff', border: 'none', borderRadius: 100, fontSize: 13, fontWeight: 700, fontFamily: 'inherit', cursor: title.trim() && !loading && !loadingIntent ? 'pointer' : 'not-allowed', transition: 'all 0.18s', boxShadow: title.trim() && !loading && !loadingIntent ? '0 1px 3px rgba(0,0,0,0.12), 0 4px 14px rgba(229,37,27,0.32)' : 'none', letterSpacing: '-0.1px' }}
+              style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '11px 22px', background: !title.trim() ? '#e0e0e6' : C.red, color: '#fff', border: 'none', borderRadius: 100, fontSize: 13, fontWeight: 700, fontFamily: 'inherit', cursor: title.trim() && !loading && !loadingIntent ? 'pointer' : 'not-allowed', opacity: (loading || loadingIntent) ? 0.92 : 1, transition: 'all 0.18s', boxShadow: title.trim() ? '0 1px 3px rgba(0,0,0,0.12), 0 4px 14px rgba(229,37,27,0.32)' : 'none', letterSpacing: '-0.1px' }}
               onMouseEnter={e => { if (!loading && !loadingIntent && title.trim()) { e.currentTarget.style.filter = 'brightness(1.07)'; e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.15), 0 8px 28px rgba(229,37,27,0.42)'; e.currentTarget.style.transform = 'translateY(-1px)' } }}
               onMouseLeave={e => { if (!loading && !loadingIntent && title.trim()) { e.currentTarget.style.filter = ''; e.currentTarget.style.boxShadow = '0 1px 3px rgba(0,0,0,0.12), 0 4px 14px rgba(229,37,27,0.32)'; e.currentTarget.style.transform = '' } }}>
               {loadingIntent ? (
@@ -648,6 +675,12 @@ export default function SeoOptimizer({ onNavigate }) {
                 </>
               )}
             </button>
+            {/* Indeterminate progress bar — clearly signals "work in progress" during intent + analyze calls */}
+            {(loading || loadingIntent) && (
+              <div style={{ width: '100%', height: 3, background: 'rgba(229,37,27,0.12)', borderRadius: 99, overflow: 'hidden' }}>
+                <div style={{ width: '45%', height: '100%', background: C.red, borderRadius: 99, animation: 'seoLoadingSlide 1.4s ease-in-out infinite' }}/>
+              </div>
+            )}
           </div>
         </div>
 
@@ -1147,7 +1180,9 @@ export default function SeoOptimizer({ onNavigate }) {
                   const scColor = kw.score >= 75 ? C.green : kw.score >= 55 ? C.amber : C.red
                   return (
                     <div key={kw.phrase} className="seo-kw-row"
+                      role="button" tabIndex={0}
                       onClick={() => setTitle(kw.phrase)}
+                      onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setTitle(kw.phrase) } }}
                       title={`Volume ${kw.volume} · Competition ${kw.competition} · Score ${kw.score} — click to use as title`}
                       style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }}>
                       {/* phrase: 13/400/text2 — same weight as Overview's category label */}
@@ -1174,7 +1209,10 @@ export default function SeoOptimizer({ onNavigate }) {
               </div>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
                 {result.autocomplete_terms.map(t => (
-                  <span key={t} onClick={() => setTitle(t)}
+                  <span key={t}
+                    role="button" tabIndex={0}
+                    onClick={() => setTitle(t)}
+                    onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setTitle(t) } }}
                     style={{ ...T.chip, display: 'inline-flex', alignItems: 'center', gap: 6 }}
                     onMouseEnter={e => { e.currentTarget.style.background = '#f1f1f6'; e.currentTarget.style.borderColor = 'rgba(229,37,27,0.25)'; e.currentTarget.style.color = C.text1 }}
                     onMouseLeave={e => { e.currentTarget.style.background = '#fafafb'; e.currentTarget.style.borderColor = '#e6e6ec'; e.currentTarget.style.color = C.text2 }}>
@@ -1208,7 +1246,9 @@ export default function SeoOptimizer({ onNavigate }) {
                   const inTitle = title.toLowerCase().includes(tag.toLowerCase())
                   return (
                     <span key={tag}
+                      role="button" tabIndex={0}
                       onClick={() => { navigator.clipboard.writeText(tag) }}
+                      onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); navigator.clipboard.writeText(tag) } }}
                       title={inTitle ? 'Already in your title — click to copy' : 'Click to copy'}
                       style={{
                         ...T.chip,
