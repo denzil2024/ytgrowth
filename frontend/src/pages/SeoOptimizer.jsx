@@ -40,6 +40,38 @@ if (typeof document !== 'undefined' && !document.getElementById('seo-opt-styles'
     border-color: rgba(229,37,27,0.45);
     box-shadow: 0 0 0 3px rgba(229,37,27,0.12);
   }
+  .seo-route-card {
+    position: relative;
+    display: flex; flex-direction: column;
+    text-align: left;
+    background: #ffffff;
+    border: 1px solid #e6e6ec;
+    border-radius: 16px;
+    padding: 22px 22px 20px;
+    cursor: pointer;
+    font-family: inherit;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 4px 14px rgba(0,0,0,0.06);
+    transition: transform 0.22s cubic-bezier(0.2, 0.7, 0.3, 1), box-shadow 0.22s, border-color 0.22s;
+    overflow: hidden;
+  }
+  .seo-route-card::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(245,158,11,0.05) 0%, transparent 60%);
+    opacity: 0;
+    transition: opacity 0.25s;
+    pointer-events: none;
+  }
+  .seo-route-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.08), 0 20px 40px rgba(245,158,11,0.18);
+    border-color: rgba(245,158,11,0.40);
+  }
+  .seo-route-card:hover::before { opacity: 1; }
+  .seo-route-card:hover .seo-route-go { color: #e5251b; transform: translateX(3px); }
+  .seo-route-card:hover .seo-route-badge { box-shadow: 0 6px 16px rgba(245,158,11,0.55), inset 0 1px 0 rgba(255,255,255,0.35); }
+  .seo-route-go { transition: color 0.2s, transform 0.2s; display: inline-flex; align-items: center; gap: 6px; color: #9595a4; }
+  .seo-route-badge { transition: box-shadow 0.22s; }
 `
   document.head.appendChild(s)
 }
@@ -688,35 +720,93 @@ export default function SeoOptimizer({ onNavigate }) {
         </div>
       </div>
 
-      {/* Intent picker */}
+      {/* Intent picker — "Three directions" moment. Cinematic header, 3 route tiles, amber route badges. */}
       {intentOptions && !loading && !result && (
-        <div className="seo-glass-card" style={{ borderRadius: 16, padding: '22px 24px', marginBottom: 16 }}>
-          <p style={{ fontSize: 11, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 8 }}>Pick your niche</p>
-          <p style={{ fontSize: 18, fontWeight: 800, color: C.text1, letterSpacing: '-0.4px', lineHeight: 1.3, marginBottom: 6 }}>What's this video really about?</p>
-          <p style={{ fontSize: 13, color: C.text3, marginBottom: 14, lineHeight: 1.6 }}>
-            Same words, different niches. Pick the closest match so we search the right audience.
-          </p>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+        <div style={{ marginBottom: 16, marginTop: 6 }}>
+          {/* Header — centered, feels like a beat in the flow */}
+          <div style={{ textAlign: 'center', marginBottom: 20 }}>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke={C.amber} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M8 2v12M2 8h12M4 4l8 8M12 4l-8 8"/>
+              </svg>
+              <span style={{ fontSize: 10.5, fontWeight: 800, color: C.amber, letterSpacing: '0.16em', textTransform: 'uppercase' }}>Three directions</span>
+            </div>
+            <h2 style={{ fontSize: 24, fontWeight: 800, color: C.text1, letterSpacing: '-0.55px', lineHeight: 1.2, marginBottom: 10 }}>
+              Your title could go <span style={{ color: C.amber }}>3 ways</span>. Pick one.
+            </h2>
+            <p style={{ fontSize: 13.5, color: C.text3, lineHeight: 1.6, maxWidth: 540, margin: '0 auto' }}>
+              Same words, different worlds. Pick the closest — that's the audience we'll analyze.
+            </p>
+          </div>
+
+          {/* 3-tile route grid */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: 14 }}>
             {intentOptions.map((opt, i) => (
-              <div key={i} onClick={() => handleSelectIntent(opt.keyword)}
-                style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '11px 14px', border: '1px solid #e6e6ec', borderRadius: 10, cursor: 'pointer', background: '#ffffff', transition: 'all 0.18s' }}
-                onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(229,37,27,0.35)'; e.currentTarget.style.background = '#fffafa' }}
-                onMouseLeave={e => { e.currentTarget.style.borderColor = '#e6e6ec'; e.currentTarget.style.background = '#ffffff' }}>
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 3, flexWrap: 'wrap' }}>
-                    <span style={{ fontSize: 13.5, fontWeight: 700, color: C.text1, letterSpacing: '-0.2px' }}>{opt.label}</span>
-                    <span style={{ fontSize: 11, fontWeight: 600, color: C.text3, background: '#f4f4f6', padding: '2px 8px', borderRadius: 6 }}>{opt.keyword}</span>
+              <button key={i} className="seo-route-card" onClick={() => handleSelectIntent(opt.keyword)}>
+                {/* Route badge + eyebrow */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14, position: 'relative' }}>
+                  <div className="seo-route-badge" style={{
+                    width: 38, height: 38, borderRadius: 12,
+                    background: `linear-gradient(135deg, ${C.amber} 0%, #d97706 100%)`,
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    boxShadow: `0 4px 10px ${C.amber}40, inset 0 1px 0 rgba(255,255,255,0.30)`,
+                    flexShrink: 0,
+                  }}>
+                    <span style={{ fontSize: 13, fontWeight: 900, color: '#ffffff', fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.4px' }}>
+                      0{i + 1}
+                    </span>
                   </div>
-                  <p style={{ fontSize: 12, color: C.text3, lineHeight: 1.45 }}>{opt.description}</p>
+                  <span style={{ fontSize: 10, fontWeight: 800, color: C.amber, letterSpacing: '0.14em', textTransform: 'uppercase' }}>
+                    Route 0{i + 1}
+                  </span>
                 </div>
-                <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke={C.text4} strokeWidth="2" strokeLinecap="round" style={{ flexShrink: 0 }}><path d="M6 3l5 5-5 5"/></svg>
-              </div>
+
+                {/* Niche title */}
+                <p style={{ fontSize: 16, fontWeight: 800, color: C.text1, letterSpacing: '-0.3px', lineHeight: 1.35, marginBottom: 10, position: 'relative' }}>
+                  {opt.label}
+                </p>
+
+                {/* Keyword as amber-tinted pill */}
+                <span style={{
+                  alignSelf: 'flex-start',
+                  fontSize: 11.5, fontWeight: 600,
+                  color: '#8a6611',
+                  background: 'rgba(245,158,11,0.10)',
+                  border: '1px solid rgba(245,158,11,0.24)',
+                  padding: '3px 10px', borderRadius: 999,
+                  marginBottom: 12,
+                  position: 'relative',
+                }}>
+                  {opt.keyword}
+                </span>
+
+                {/* Description */}
+                <p style={{ fontSize: 12.5, color: C.text3, lineHeight: 1.55, flex: 1, position: 'relative' }}>
+                  {opt.description}
+                </p>
+
+                {/* Go footer */}
+                <div style={{ marginTop: 16, paddingTop: 14, borderTop: `1px solid ${C.border}`, position: 'relative' }}>
+                  <span className="seo-route-go" style={{ fontSize: 12, fontWeight: 700, letterSpacing: '-0.1px' }}>
+                    Go this way
+                    <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
+                      <path d="M6 3l5 5-5 5"/>
+                    </svg>
+                  </span>
+                </div>
+              </button>
             ))}
           </div>
-          <button onClick={() => runAnalysis('')}
-            style={{ marginTop: 14, fontSize: 12, fontWeight: 500, color: C.text3, background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'inherit', textDecoration: 'underline', textUnderlineOffset: '3px' }}>
-            None of these — let the AI decide
-          </button>
+
+          {/* Escape hatch — centered ghost pill */}
+          <div style={{ display: 'flex', justifyContent: 'center', marginTop: 16 }}>
+            <button onClick={() => runAnalysis('')}
+              style={{ fontSize: 12.5, fontWeight: 600, color: C.text2, background: '#ffffff', border: '1px solid #e6e6ec', borderRadius: 100, padding: '9px 20px', cursor: 'pointer', fontFamily: 'inherit', boxShadow: '0 1px 3px rgba(0,0,0,0.06)', transition: 'all 0.18s', whiteSpace: 'nowrap' }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(0,0,0,0.18)'; e.currentTarget.style.color = C.text1 }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = '#e6e6ec'; e.currentTarget.style.color = C.text2 }}>
+              None of these — let AI decide
+            </button>
+          </div>
         </div>
       )}
 
