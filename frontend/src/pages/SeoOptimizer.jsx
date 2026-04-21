@@ -97,13 +97,15 @@ const C = {
   tealBdr: '#a7f3d0',
 }
 
+// Per-tile accent colors — scoped to this section ONLY, never reuse elsewhere.
+// Row 1 warm (red + amber), row 2 cool (purple + blue), row 3 green-family (teal + green).
 const VIRAL_FORMATS = [
-  { key: 'survival_challenge',  hook: 'curiosity',      label: 'Survival / Time Challenge', example: 'I Survived 24 Hours With [Person/Situation]',        why: 'Extreme curiosity + suspense.' },
-  { key: 'extreme_comparison',  hook: 'contrarian',     label: 'Extreme Comparison',        example: '$5 VS $500 [Subject]: Honest Review',                 why: 'Price contrast triggers value-seeking.' },
-  { key: 'authority_warning',   hook: 'curiosity',      label: 'Authority / Warning',       example: "Don't Buy [Subject] Until You See This",              why: 'Fear of mistake drives high CTR.' },
-  { key: 'listicle',            hook: 'transformation', label: 'Listicle / Structure',      example: '7 Things I Wish I Knew About [Subject]',             why: 'Numbers set clear expectations.' },
-  { key: 'curiosity_gap',       hook: 'curiosity',      label: 'Curiosity Gap',             example: "I Tested Every [Subject] So You Don't Have To",      why: 'Open loop viewer must click to close.' },
-  { key: 'aspirational',        hook: 'transformation', label: 'Aspirational / How I',      example: 'How I Grew [Subject] From 0 to [Number] in [Time]',  why: 'Transformation stories = highest retention.' },
+  { key: 'survival_challenge',  hook: 'curiosity',      color: '#e5251b', label: 'Survival / Time Challenge', example: 'I Survived 24 Hours With [Person/Situation]',        why: 'Extreme curiosity + suspense.' },
+  { key: 'extreme_comparison',  hook: 'contrarian',     color: '#d97706', label: 'Extreme Comparison',        example: '$5 VS $500 [Subject]: Honest Review',                 why: 'Price contrast triggers value-seeking.' },
+  { key: 'authority_warning',   hook: 'curiosity',      color: '#7c3aed', label: 'Authority / Warning',       example: "Don't Buy [Subject] Until You See This",              why: 'Fear of mistake drives high CTR.' },
+  { key: 'listicle',            hook: 'transformation', color: '#4a7cf7', label: 'Listicle / Structure',      example: '7 Things I Wish I Knew About [Subject]',             why: 'Numbers set clear expectations.' },
+  { key: 'curiosity_gap',       hook: 'curiosity',      color: '#0891b2', label: 'Curiosity Gap',             example: "I Tested Every [Subject] So You Don't Have To",      why: 'Open loop viewer must click to close.' },
+  { key: 'aspirational',        hook: 'transformation', color: '#059669', label: 'Aspirational / How I',      example: 'How I Grew [Subject] From 0 to [Number] in [Time]',  why: 'Transformation stories = highest retention.' },
 ]
 
 const VIRAL_FORMAT_LABELS = Object.fromEntries(VIRAL_FORMATS.map(f => [f.key, f.label]))
@@ -589,38 +591,34 @@ export default function SeoOptimizer({ onNavigate }) {
               <span style={{ fontSize: 11, color: C.text3, whiteSpace: 'nowrap' }}>6 patterns · click to use</span>
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: 10 }}>
-              {VIRAL_FORMATS.map((fmt, i) => {
-                // One color per column: left column = red, right column = amber.
-                const colColor = i % 2 === 0 ? C.red : C.amber
-                return (
-                  <button key={fmt.key} onClick={() => setTitle(fmt.example)} className="seo-format-card"
-                    style={{
-                      textAlign: 'left',
-                      padding: '12px 14px 14px',
-                      background: '#ffffff',
-                      border: '1px solid #e6e6ec',
-                      borderTop: `3px solid ${colColor}`,
-                      borderRadius: 12,
-                      cursor: 'pointer',
-                      fontFamily: 'inherit',
-                      boxShadow: '0 1px 2px rgba(0,0,0,0.03)',
-                      transition: 'border-color 0.2s, box-shadow 0.2s, transform 0.2s',
+              {VIRAL_FORMATS.map((fmt, i) => (
+                <button key={fmt.key} onClick={() => setTitle(fmt.example)} className="seo-format-card"
+                  style={{
+                    textAlign: 'left',
+                    padding: '12px 14px 14px',
+                    background: '#ffffff',
+                    border: '1px solid #e6e6ec',
+                    borderTop: `3px solid ${fmt.color}`,
+                    borderRadius: 12,
+                    cursor: 'pointer',
+                    fontFamily: 'inherit',
+                    boxShadow: '0 1px 2px rgba(0,0,0,0.03)',
+                    transition: 'border-color 0.2s, box-shadow 0.2s, transform 0.2s',
+                  }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 7 }}>
+                    <div style={{
+                      width: 20, height: 20, borderRadius: 6,
+                      background: fmt.color,
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      flexShrink: 0,
                     }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 7 }}>
-                      <div style={{
-                        width: 20, height: 20, borderRadius: 6,
-                        background: colColor,
-                        display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        flexShrink: 0,
-                      }}>
-                        <span style={{ fontSize: 10, fontWeight: 900, color: '#ffffff', fontVariantNumeric: 'tabular-nums', lineHeight: 1 }}>{i + 1}</span>
-                      </div>
-                      <span style={{ fontSize: 10.5, fontWeight: 700, color: colColor, textTransform: 'uppercase', letterSpacing: '0.08em', lineHeight: 1 }}>{fmt.label}</span>
+                      <span style={{ fontSize: 10, fontWeight: 900, color: '#ffffff', fontVariantNumeric: 'tabular-nums', lineHeight: 1 }}>{i + 1}</span>
                     </div>
-                    <p style={{ fontSize: 13, color: C.text1, fontWeight: 500, lineHeight: 1.5, margin: 0, letterSpacing: '-0.1px' }}>{fmt.example}</p>
-                  </button>
-                )
-              })}
+                    <span style={{ fontSize: 10.5, fontWeight: 700, color: fmt.color, textTransform: 'uppercase', letterSpacing: '0.08em', lineHeight: 1 }}>{fmt.label}</span>
+                  </div>
+                  <p style={{ fontSize: 13, color: C.text1, fontWeight: 500, lineHeight: 1.5, margin: 0, letterSpacing: '-0.1px' }}>{fmt.example}</p>
+                </button>
+              ))}
             </div>
           </div>
 
