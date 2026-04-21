@@ -123,6 +123,32 @@ const DESC_TYPE_META = {
   keyword: { color: '#d97706', bg: 'rgba(217,119,6,0.05)',  bdr: 'rgba(217,119,6,0.16)'  },
 }
 
+function fmtNum(n) {
+  if (n == null) return '—'
+  if (n >= 1e6) return (n / 1e6).toFixed(1).replace(/\.0$/, '') + 'M'
+  if (n >= 1e3) return (n / 1e3).toFixed(1).replace(/\.0$/, '') + 'k'
+  return String(n)
+}
+
+// Stats card — matches Dashboard's Stat component 1:1 (same padding, shadow, type scale).
+function MiniStat({ label, value, sub, accent }) {
+  const col = accent || C.text1
+  return (
+    <div style={{
+      background: '#ffffff',
+      border: '1px solid #e6e6ec',
+      borderRadius: 16,
+      padding: '22px 24px',
+      boxShadow: '0 1px 2px rgba(0,0,0,0.04), 0 4px 14px rgba(0,0,0,0.06)',
+      transition: 'box-shadow 0.2s, transform 0.2s',
+    }}>
+      <p style={{ fontSize: 11, fontWeight: 500, letterSpacing: '0.05em', textTransform: 'uppercase', color: C.text3, marginBottom: 12 }}>{label}</p>
+      <p style={{ fontSize: 30, fontWeight: 800, letterSpacing: '-1.4px', color: col, lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{value}</p>
+      {sub && <p style={{ fontSize: 12, color: C.text3, fontWeight: 500, marginTop: 10 }}>{sub}</p>}
+    </div>
+  )
+}
+
 function ScoreRing({ score }) {
   const r = 42
   const circ = 2 * Math.PI * r
@@ -659,117 +685,30 @@ export default function SeoOptimizer({ onNavigate }) {
 
       {result && (
         <div className="seo-result-section">
-          {/* Niche header — what the competitor set is */}
-          <div className="seo-glass-card" style={{ borderRadius: 16, padding: '22px 24px', marginBottom: 16 }}>
-            <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 14, gap: 16, flexWrap: 'wrap' }}>
-              <p style={{ fontSize: 11, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Competitor set</p>
-              {result.primary_phrase && (
-                <p style={{ fontSize: 11, color: C.text3 }}>
-                  {result.videos_found > 0 ? `${result.videos_found} live YouTube results${result.intent_matched > 0 && result.intent_matched < result.videos_found ? ` · ${result.intent_matched} exact match` : ''}` : 'No competitor data yet'}
-                </p>
-              )}
-            </div>
-            {result.primary_phrase && (
-              <p style={{ fontSize: 20, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', lineHeight: 1.2, marginBottom: 6 }}>
-                &ldquo;{result.primary_phrase}&rdquo;
+          {/* ── Section header — mirrors Overview "Channel audit" H2 ───── */}
+          <div style={{ marginBottom: 20, marginTop: 8 }}>
+            <h2 style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', marginBottom: 4 }}>Title analysis</h2>
+            {result.primary_phrase ? (
+              <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.5 }}>
+                Analysed against{' '}
+                <span style={{ color: C.text2, fontWeight: 600 }}>{result.videos_found} live YouTube {result.videos_found === 1 ? 'video' : 'videos'}</span>{' '}
+                in the{' '}
+                <span style={{ color: C.text2, fontWeight: 600 }}>&ldquo;{result.primary_phrase}&rdquo;</span>{' '}
+                niche{result.intent_matched > 0 && result.intent_matched < result.videos_found ? ` · ${result.intent_matched} exact match` : ''}
+                {' — 3 titles written from the gap, not keyword formulas.'}
               </p>
+            ) : (
+              <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.5 }}>AI suggestions for your title.</p>
             )}
-            <p style={{ fontSize: 13, color: C.text2, lineHeight: 1.6, margin: 0 }}>
-              The 3 titles below are written from the gap between what these competitors do and what they leave open — not from forced keyword formulas.
-            </p>
           </div>
 
-          {/* Keyword Research */}
-          {result.keyword_scores?.length > 0 && (
-            <div className="seo-glass-card" style={{ borderRadius: 16, padding: '22px 24px', marginBottom: 16 }}>
-              <p style={{ fontSize: 11, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 3 }}>Keyword research</p>
-              <p style={{ fontSize: 12, color: C.text3, marginBottom: 14, lineHeight: 1.5 }}>
-                Volume is search demand from YouTube autocomplete. Competition counts how many top videos target it. Score favours high-volume, low-competition opportunities.
-              </p>
-
-              <div style={{ border: '1px solid #e6e6ec', borderRadius: 10, overflow: 'hidden', marginBottom: 14 }}>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 72px 100px 52px', gap: 8, padding: '8px 14px', background: '#fafafb', borderBottom: '1px solid #e6e6ec' }}>
-                  <span style={{ fontSize: 10.5, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Keyword phrase</span>
-                  <span style={{ fontSize: 10.5, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Volume</span>
-                  <span style={{ fontSize: 10.5, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Competition</span>
-                  <span style={{ fontSize: 10.5, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em', textAlign: 'right' }}>Score</span>
-                </div>
-                {result.keyword_scores.map((kw, i) => {
-                  const volColor = kw.volume === 'HIGH' ? C.green : kw.volume === 'MED' ? C.amber : C.text3
-                  const compColor = kw.competition === 'LOW' ? C.green : kw.competition === 'MED' ? C.amber : C.red
-                  const scColor = kw.score >= 65 ? C.green : kw.score >= 40 ? C.amber : C.red
-                  return (
-                    <div key={kw.phrase} style={{ display: 'grid', gridTemplateColumns: '1fr 72px 100px 52px', gap: 8, padding: '10px 14px', borderBottom: i < result.keyword_scores.length - 1 ? '1px solid #f0f0f4' : 'none', alignItems: 'center', transition: 'background 0.12s' }}
-                      onMouseEnter={e => e.currentTarget.style.background = '#fafafb'}
-                      onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
-                      <span style={{ fontSize: 13.5, fontWeight: 600, color: C.text1 }}>{kw.phrase}</span>
-                      <span style={{ fontSize: 10.5, fontWeight: 700, color: volColor, border: `1.5px solid ${volColor === C.text3 ? '#e6e6ec' : volColor}`, padding: '1px 7px', borderRadius: 20, textTransform: 'uppercase', letterSpacing: '0.06em', justifySelf: 'start' }}>{kw.volume}</span>
-                      <span style={{ fontSize: 10.5, fontWeight: 700, color: compColor, border: `1.5px solid ${compColor}`, padding: '1px 7px', borderRadius: 20, textTransform: 'uppercase', letterSpacing: '0.06em', justifySelf: 'start' }}>{kw.competition}</span>
-                      <span style={{ fontSize: 14, fontWeight: 800, color: scColor, textAlign: 'right', fontVariantNumeric: 'tabular-nums' }}>{kw.score}</span>
-                    </div>
-                  )
-                })}
-              </div>
-
-              {result.autocomplete_terms?.length > 0 && (
-                <div>
-                  <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, marginBottom: 8, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-                    YouTube autocomplete
-                    <span style={{ fontWeight: 500, color: C.text3, marginLeft: 6, textTransform: 'none', letterSpacing: 0 }}>— click to set as title</span>
-                  </p>
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5 }}>
-                    {result.autocomplete_terms.map(t => (
-                      <span key={t} onClick={() => setTitle(t)}
-                        style={{ fontSize: 12, color: C.blue, background: 'rgba(10,10,15,0.04)', padding: '3px 9px', borderRadius: 6, cursor: 'pointer', fontWeight: 500, transition: 'background 0.15s' }}
-                        onMouseEnter={e => e.currentTarget.style.background = 'rgba(10,10,15,0.08)'}
-                        onMouseLeave={e => e.currentTarget.style.background = 'rgba(10,10,15,0.04)'}>{t}</span>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* Suggested Tags */}
-          {result.top_tags?.length > 0 && (
-            <div className="seo-glass-card" style={{ borderRadius: 16, padding: '22px 24px', marginBottom: 16 }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12, gap: 16 }}>
-                <div>
-                  <p style={{ fontSize: 11, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 4 }}>Suggested tags</p>
-                  <p style={{ fontSize: 12.5, color: C.text3, lineHeight: 1.5 }}>
-                    Pulled from competitor videos in your niche. Add these directly to your video tags.
-                  </p>
-                </div>
-                <button
-                  onClick={() => {
-                    navigator.clipboard.writeText(result.top_tags.join(', '))
-                    setCopiedTags(true)
-                    setTimeout(() => setCopiedTags(false), 1800)
-                  }}
-                  style={{ flexShrink: 0, fontSize: 12, fontWeight: 600, color: copiedTags ? C.green : C.text2, background: '#ffffff', border: `1px solid ${copiedTags ? 'rgba(5,150,105,0.38)' : '#e6e6ec'}`, borderRadius: 100, padding: '6px 14px', cursor: 'pointer', fontFamily: 'inherit', whiteSpace: 'nowrap', boxShadow: '0 1px 3px rgba(0,0,0,0.06)', transition: 'all 0.18s' }}>
-                  {copiedTags ? '✓ Copied all' : 'Copy all'}
-                </button>
-              </div>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-                {result.top_tags.map(tag => {
-                  const inTitle = title.toLowerCase().includes(tag.toLowerCase())
-                  return (
-                    <span key={tag}
-                      onClick={() => { navigator.clipboard.writeText(tag) }}
-                      title="Click to copy"
-                      style={{ fontSize: 12, color: inTitle ? C.red : C.text2, background: inTitle ? 'rgba(229,37,27,0.06)' : '#fafafb', padding: '4px 10px', borderRadius: 6, border: `1px solid ${inTitle ? 'rgba(229,37,27,0.22)' : '#e6e6ec'}`, cursor: 'pointer', fontWeight: inTitle ? 600 : 500, transition: 'all 0.15s' }}
-                      onMouseEnter={e => { e.currentTarget.style.borderColor = inTitle ? 'rgba(229,37,27,0.4)' : '#d0d0d8' }}
-                      onMouseLeave={e => { e.currentTarget.style.borderColor = inTitle ? 'rgba(229,37,27,0.22)' : '#e6e6ec' }}>
-                      {tag}
-                    </span>
-                  )
-                })}
-              </div>
-              <p style={{ fontSize: 11.5, color: C.text4, marginTop: 10 }}>
-                Red-highlighted tags already appear in your title. Click any to copy individually.
-              </p>
-            </div>
-          )}
+          {/* ── Stats row — 4 cards, mirrors Overview's stat row ───────── */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, minmax(0, 1fr))', gap: 16, marginBottom: 24 }}>
+            <MiniStat label="Competitors"     value={fmtNum(result.videos_found || 0)} sub="live YouTube results" />
+            <MiniStat label="Exact match"     value={result.intent_matched > 0 ? fmtNum(result.intent_matched) : '—'} sub={result.intent_matched > 0 ? 'matching your angle' : 'broader niche scope'} />
+            <MiniStat label="AI alternatives" value={result.suggestions?.length || 0} sub="new titles to choose" />
+            <MiniStat label="Keyword opps"    value={result.keyword_scores?.length || 0} sub="related phrases scored" />
+          </div>
 
           {/* AI suggestion error */}
           {result.suggestion_error && !result.suggestions?.length && (
@@ -931,15 +870,134 @@ export default function SeoOptimizer({ onNavigate }) {
             </div>
           )}
 
-          {/* Top videos in niche */}
+          {/* ── Thumbnail IQ nudge — right after the suggestions ── */}
+          {result && onNavigate && (
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center',
+                          padding: '4px 0 16px' }}>
+              <button
+                onClick={() => {
+                  try {
+                    const kw = result?.search_terms?.[0] || ''
+                    if (kw) localStorage.setItem('ytg_prefill_thumbnail_title',
+                      selectedTitle || title || '')
+                  } catch {}
+                  onNavigate('Thumbnail Score')
+                }}
+                style={{ background: 'none', border: 'none', cursor: 'pointer',
+                         fontSize: 12, color: C.red, fontFamily: 'inherit',
+                         fontWeight: 600, padding: '6px 12px', borderRadius: 8,
+                         transition: 'background 0.15s' }}
+                onMouseEnter={e => { e.currentTarget.style.background = 'rgba(229,37,27,0.06)' }}
+                onMouseLeave={e => { e.currentTarget.style.background = 'transparent' }}
+              >
+                Ready to test your thumbnail? → Thumbnail IQ
+              </button>
+            </div>
+          )}
+
+          {/* ── Keyword research — supporting SEO data ── */}
+          {result.keyword_scores?.length > 0 && (
+            <div className="seo-glass-card" style={{ borderRadius: 16, padding: '22px 24px', marginBottom: 16 }}>
+              <p style={{ fontSize: 11, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 3 }}>Keyword research</p>
+              <p style={{ fontSize: 12, color: C.text3, marginBottom: 14, lineHeight: 1.5 }}>
+                Volume is search demand from YouTube autocomplete. Competition counts how many top videos target it. Score favours high-volume, low-competition opportunities.
+              </p>
+
+              <div style={{ border: '1px solid #e6e6ec', borderRadius: 10, overflow: 'hidden', marginBottom: 14 }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 72px 100px 52px', gap: 8, padding: '8px 14px', background: '#fafafb', borderBottom: '1px solid #e6e6ec' }}>
+                  <span style={{ fontSize: 10.5, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Keyword phrase</span>
+                  <span style={{ fontSize: 10.5, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Volume</span>
+                  <span style={{ fontSize: 10.5, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Competition</span>
+                  <span style={{ fontSize: 10.5, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em', textAlign: 'right' }}>Score</span>
+                </div>
+                {result.keyword_scores.map((kw, i) => {
+                  const volColor = kw.volume === 'HIGH' ? C.green : kw.volume === 'MED' ? C.amber : C.text3
+                  const compColor = kw.competition === 'LOW' ? C.green : kw.competition === 'MED' ? C.amber : C.red
+                  const scColor = kw.score >= 65 ? C.green : kw.score >= 40 ? C.amber : C.red
+                  return (
+                    <div key={kw.phrase} style={{ display: 'grid', gridTemplateColumns: '1fr 72px 100px 52px', gap: 8, padding: '10px 14px', borderBottom: i < result.keyword_scores.length - 1 ? '1px solid #f0f0f4' : 'none', alignItems: 'center', transition: 'background 0.12s' }}
+                      onMouseEnter={e => e.currentTarget.style.background = '#fafafb'}
+                      onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
+                      <span style={{ fontSize: 13.5, fontWeight: 600, color: C.text1 }}>{kw.phrase}</span>
+                      <span style={{ fontSize: 10.5, fontWeight: 700, color: volColor, border: `1.5px solid ${volColor === C.text3 ? '#e6e6ec' : volColor}`, padding: '1px 7px', borderRadius: 20, textTransform: 'uppercase', letterSpacing: '0.06em', justifySelf: 'start' }}>{kw.volume}</span>
+                      <span style={{ fontSize: 10.5, fontWeight: 700, color: compColor, border: `1.5px solid ${compColor}`, padding: '1px 7px', borderRadius: 20, textTransform: 'uppercase', letterSpacing: '0.06em', justifySelf: 'start' }}>{kw.competition}</span>
+                      <span style={{ fontSize: 14, fontWeight: 800, color: scColor, textAlign: 'right', fontVariantNumeric: 'tabular-nums' }}>{kw.score}</span>
+                    </div>
+                  )
+                })}
+              </div>
+
+              {result.autocomplete_terms?.length > 0 && (
+                <div>
+                  <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, marginBottom: 8, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+                    YouTube autocomplete
+                    <span style={{ fontWeight: 500, color: C.text3, marginLeft: 6, textTransform: 'none', letterSpacing: 0 }}>— click to set as title</span>
+                  </p>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5 }}>
+                    {result.autocomplete_terms.map(t => (
+                      <span key={t} onClick={() => setTitle(t)}
+                        style={{ fontSize: 12, color: C.blue, background: 'rgba(10,10,15,0.04)', padding: '3px 9px', borderRadius: 6, cursor: 'pointer', fontWeight: 500, transition: 'background 0.15s' }}
+                        onMouseEnter={e => e.currentTarget.style.background = 'rgba(10,10,15,0.08)'}
+                        onMouseLeave={e => e.currentTarget.style.background = 'rgba(10,10,15,0.04)'}>{t}</span>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* ── Suggested tags — implementation detail for upload ── */}
+          {result.top_tags?.length > 0 && (
+            <div className="seo-glass-card" style={{ borderRadius: 16, padding: '22px 24px', marginBottom: 16 }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12, gap: 16 }}>
+                <div>
+                  <p style={{ fontSize: 11, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 4 }}>Suggested tags</p>
+                  <p style={{ fontSize: 12.5, color: C.text3, lineHeight: 1.5 }}>
+                    Pulled from competitor videos in your niche. Add these directly to your video tags.
+                  </p>
+                </div>
+                <button
+                  onClick={() => {
+                    navigator.clipboard.writeText(result.top_tags.join(', '))
+                    setCopiedTags(true)
+                    setTimeout(() => setCopiedTags(false), 1800)
+                  }}
+                  style={{ flexShrink: 0, fontSize: 12, fontWeight: 600, color: copiedTags ? C.green : C.text2, background: '#ffffff', border: `1px solid ${copiedTags ? 'rgba(5,150,105,0.38)' : '#e6e6ec'}`, borderRadius: 100, padding: '6px 14px', cursor: 'pointer', fontFamily: 'inherit', whiteSpace: 'nowrap', boxShadow: '0 1px 3px rgba(0,0,0,0.06)', transition: 'all 0.18s' }}>
+                  {copiedTags ? '✓ Copied all' : 'Copy all'}
+                </button>
+              </div>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                {result.top_tags.map(tag => {
+                  const inTitle = title.toLowerCase().includes(tag.toLowerCase())
+                  return (
+                    <span key={tag}
+                      onClick={() => { navigator.clipboard.writeText(tag) }}
+                      title="Click to copy"
+                      style={{ fontSize: 12, color: inTitle ? C.red : C.text2, background: inTitle ? 'rgba(229,37,27,0.06)' : '#fafafb', padding: '4px 10px', borderRadius: 6, border: `1px solid ${inTitle ? 'rgba(229,37,27,0.22)' : '#e6e6ec'}`, cursor: 'pointer', fontWeight: inTitle ? 600 : 500, transition: 'all 0.15s' }}
+                      onMouseEnter={e => { e.currentTarget.style.borderColor = inTitle ? 'rgba(229,37,27,0.4)' : '#d0d0d8' }}
+                      onMouseLeave={e => { e.currentTarget.style.borderColor = inTitle ? 'rgba(229,37,27,0.22)' : '#e6e6ec' }}>
+                      {tag}
+                    </span>
+                  )
+                })}
+              </div>
+              <p style={{ fontSize: 11.5, color: C.text4, marginTop: 10 }}>
+                Red-highlighted tags already appear in your title. Click any to copy individually.
+              </p>
+            </div>
+          )}
+
+          {/* ── Competitor set — the actual competitor videos we analysed ── */}
           {result.top_videos?.length > 0 && (
             <div className="seo-glass-card" style={{ borderRadius: 16, padding: '22px 24px', marginBottom: 16 }}>
-              <p style={{ fontSize: 11, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 4 }}>Top titles matching your topic</p>
+              <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 4, gap: 16, flexWrap: 'wrap' }}>
+                <p style={{ fontSize: 11, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Competitor set</p>
+                <p style={{ fontSize: 11, color: C.text3 }}>
+                  {result.videos_found} live YouTube {result.videos_found === 1 ? 'result' : 'results'}{result.intent_matched > 0 && result.intent_matched < result.videos_found ? ` · ${result.intent_matched} exact match` : ''}
+                </p>
+              </div>
               <p style={{ fontSize: 12, color: C.text3, marginBottom: 14, lineHeight: 1.5 }}>
-                Searched YouTube for{result.primary_phrase ? <><span style={{ fontWeight: 700, color: C.text2 }}> &ldquo;{result.primary_phrase}&rdquo;</span> —</> : ''} your closest competitors.
-                {result.intent_matched > 0 && result.intent_matched < result.videos_found
-                  ? ` Filtered to ${result.intent_matched} exact-match videos.`
-                  : ''}
+                The top videos {result.primary_phrase ? <>in <span style={{ fontWeight: 700, color: C.text2 }}>&ldquo;{result.primary_phrase}&rdquo;</span></> : 'we found'} — the set your suggested titles were benchmarked against.
               </p>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
                 {result.top_videos.map((v, i) => {
@@ -973,31 +1031,6 @@ export default function SeoOptimizer({ onNavigate }) {
                   )
                 })}
               </div>
-            </div>
-          )}
-
-          {/* ── Thumbnail IQ nudge ────────────────────────────── */}
-          {result && onNavigate && (
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center',
-                          padding: '8px 0 4px' }}>
-              <button
-                onClick={() => {
-                  try {
-                    const kw = result?.search_terms?.[0] || ''
-                    if (kw) localStorage.setItem('ytg_prefill_thumbnail_title',
-                      selectedTitle || title || '')
-                  } catch {}
-                  onNavigate('Thumbnail Score')
-                }}
-                style={{ background: 'none', border: 'none', cursor: 'pointer',
-                         fontSize: 12, color: C.red, fontFamily: 'inherit',
-                         fontWeight: 600, padding: '6px 12px', borderRadius: 8,
-                         transition: 'background 0.15s' }}
-                onMouseEnter={e => { e.currentTarget.style.background = 'rgba(229,37,27,0.06)' }}
-                onMouseLeave={e => { e.currentTarget.style.background = 'transparent' }}
-              >
-                Ready to test your thumbnail? → Thumbnail IQ
-              </button>
             </div>
           )}
 
