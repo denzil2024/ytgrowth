@@ -280,8 +280,8 @@ function DescriptionCard({ d, idx, copiedDesc, onCopy }) {
     <div style={{ border: `1px solid ${isCopied ? 'rgba(5,150,105,0.38)' : '#e6e6ec'}`, borderRadius: 12, overflow: 'hidden', background: isCopied ? 'rgba(5,150,105,0.04)' : '#ffffff', transition: 'all 0.2s' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '8px 14px', background: tm.bg, borderBottom: `1px solid ${tm.bdr || '#f0f0f4'}` }}>
         <span style={{ width: 6, height: 6, borderRadius: '50%', background: tm.color, flexShrink: 0 }} />
-        <span style={{ fontSize: 10.5, fontWeight: 700, color: tm.color, textTransform: 'uppercase', letterSpacing: '0.08em' }}>{d.label}</span>
-        <span style={{ fontSize: 11.5, color: C.text3, fontWeight: 400 }}>{d.why_it_works}</span>
+        <span style={{ fontSize: 10, fontWeight: 700, color: tm.color, textTransform: 'uppercase', letterSpacing: '0.08em' }}>{d.label}</span>
+        <span style={{ fontSize: 12, color: C.text3, fontWeight: 400 }}>{d.why_it_works}</span>
       </div>
       <div style={{ padding: '14px 16px' }}>
         <p style={{ fontSize: 13.5, color: C.text2, lineHeight: 1.65, background: '#fafafb', padding: '10px 14px', borderRadius: 8, borderLeft: `3px solid ${tm.color}`, marginBottom: 10 }}>
@@ -618,7 +618,7 @@ export default function SeoOptimizer({ onNavigate }) {
                       boxShadow: '0 1px 2px rgba(0,0,0,0.03)',
                     }}>
                       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8, gap: 10 }}>
-                        <span style={{ fontSize: 10.5, fontWeight: 700, color: accent, textTransform: 'uppercase', letterSpacing: '0.08em' }}>{label}</span>
+                        <span style={{ fontSize: 10, fontWeight: 700, color: accent, textTransform: 'uppercase', letterSpacing: '0.08em' }}>{label}</span>
                         <span style={{
                           fontSize: 10, fontWeight: 700, color: accent,
                           letterSpacing: '0.06em', textTransform: 'uppercase',
@@ -630,7 +630,7 @@ export default function SeoOptimizer({ onNavigate }) {
                       </div>
                       <p style={{ fontSize: 14, fontWeight: 500, color: truncated ? C.text2 : C.text1, lineHeight: 1.5, margin: 0, letterSpacing: '-0.1px' }}>{display}</p>
                       {truncated && (
-                        <p style={{ fontSize: 11.5, color: C.amber, marginTop: 7, fontWeight: 600, letterSpacing: '-0.05px' }}>
+                        <p style={{ fontSize: 12, color: C.amber, marginTop: 7, fontWeight: 500, letterSpacing: '-0.05px' }}>
                           +{title.length - maxChars} chars over {maxChars}
                         </p>
                       )}
@@ -677,7 +677,7 @@ export default function SeoOptimizer({ onNavigate }) {
                     }}>
                       <span style={{ fontSize: 10, fontWeight: 900, color: '#ffffff', fontVariantNumeric: 'tabular-nums', lineHeight: 1 }}>{i + 1}</span>
                     </div>
-                    <span style={{ fontSize: 10.5, fontWeight: 700, color: fmt.color, textTransform: 'uppercase', letterSpacing: '0.08em', lineHeight: 1 }}>{fmt.label}</span>
+                    <span style={{ fontSize: 10, fontWeight: 700, color: fmt.color, textTransform: 'uppercase', letterSpacing: '0.08em', lineHeight: 1 }}>{fmt.label}</span>
                   </div>
                   <p style={{ fontSize: 13, color: C.text1, fontWeight: 500, lineHeight: 1.5, margin: 0, letterSpacing: '-0.1px' }}>{fmt.example}</p>
                 </button>
@@ -705,7 +705,7 @@ export default function SeoOptimizer({ onNavigate }) {
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 3, flexWrap: 'wrap' }}>
                     <span style={{ fontSize: 13.5, fontWeight: 700, color: C.text1, letterSpacing: '-0.2px' }}>{opt.label}</span>
-                    <span style={{ fontSize: 11, fontWeight: 600, color: C.text3, background: '#f4f4f6', padding: '2px 8px', borderRadius: 6, fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace' }}>{opt.keyword}</span>
+                    <span style={{ fontSize: 11, fontWeight: 600, color: C.text3, background: '#f4f4f6', padding: '2px 8px', borderRadius: 6 }}>{opt.keyword}</span>
                   </div>
                   <p style={{ fontSize: 12, color: C.text3, lineHeight: 1.45 }}>{opt.description}</p>
                 </div>
@@ -871,7 +871,7 @@ export default function SeoOptimizer({ onNavigate }) {
 
                         {/* Title — the main content */}
                         <p style={{ fontSize: 16, fontWeight: 700, color: C.text1, lineHeight: 1.4, letterSpacing: '-0.3px', marginLeft: 36, marginBottom: 6 }}>{s.title}</p>
-                        <p style={{ fontSize: 11.5, color: C.text3, marginLeft: 36, marginBottom: 14, fontVariantNumeric: 'tabular-nums' }}>
+                        <p style={{ fontSize: 12, color: C.text3, marginBottom: 14, marginLeft: 36, fontVariantNumeric: 'tabular-nums', fontWeight: 500 }}>
                           {s.length} chars{s.length >= 50 && s.length <= 70 ? ' · within the ideal 50–70 range' : s.length > 70 ? ' · over 70, will truncate on mobile' : ' · under 50, thin on context'}
                         </p>
 
