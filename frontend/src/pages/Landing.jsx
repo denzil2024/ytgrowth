@@ -872,7 +872,7 @@ export default function Landing() {
 
               <h3 style={{
                 fontSize: isMobile ? 16 : 22,
-                fontWeight: 800, color: '#0a0a0f',
+                fontWeight: 700, color: '#0a0a0f',
                 letterSpacing: '-0.4px', lineHeight: 1.35,
                 marginBottom: isMobile ? 14 : 22,
                 textWrap: 'balance',
@@ -1280,18 +1280,26 @@ export default function Landing() {
               {
                 n: '01', t: 'Connect your channel', d: 'Sign in with Google and grant read-only access. We never post, edit, or store your content.',
                 card: (
-                  <div style={{ background: '#ffffff', border: '1px solid rgba(10,10,15,0.07)', boxShadow: 'var(--ytg-shadow-xl)', borderRadius: 13, padding: 18, marginBottom: 22 }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 11, marginBottom: 14 }}>
-                      <Logo size={32} />
-                      <div>
-                        <p style={{ fontSize: 14, fontWeight: 700, color: 'var(--ytg-text)' }}>YTGrowth</p>
-                        <p style={{ fontSize: 12, color: 'var(--ytg-text-3)' }}>wants YouTube read access</p>
-                      </div>
+                  <div style={{ background: '#ffffff', border: '1px solid rgba(10,10,15,0.07)', boxShadow: 'var(--ytg-shadow-xl)', borderRadius: 14, padding: 0, marginBottom: 22, overflow: 'hidden' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '10px 14px', borderBottom: '1px solid rgba(10,10,15,0.06)', background: '#fafafb' }}>
+                      <span style={{ width: 9, height: 9, borderRadius: '50%', background: '#ff5f57' }} />
+                      <span style={{ width: 9, height: 9, borderRadius: '50%', background: '#febc2e' }} />
+                      <span style={{ width: 9, height: 9, borderRadius: '50%', background: '#28c840' }} />
+                      <span style={{ marginLeft: 'auto', fontSize: 10, fontWeight: 600, color: 'var(--ytg-text-4)', letterSpacing: '0.08em', textTransform: 'uppercase' }}>Sign-in</span>
                     </div>
-                    <div style={{ background: '#f4f4f6', borderRadius: 8, padding: '8px 12px', marginBottom: 11, fontSize: 12, color: 'var(--ytg-text-3)' }}>Read-only · No posting · Fully secure</div>
-                    <div style={{ display: 'flex', gap: 7 }}>
-                      <div style={{ flex: 1, background: '#f4f4f6', borderRadius: 8, padding: '9px', textAlign: 'center', fontSize: 12, color: 'var(--ytg-text-2)', fontWeight: 500 }}>Cancel</div>
-                      <div style={{ flex: 1, background: '#ff3b30', borderRadius: 8, padding: '9px', textAlign: 'center', fontSize: 12, color: '#fff', fontWeight: 700 }}>Allow</div>
+                    <div style={{ padding: 18 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 11, marginBottom: 14 }}>
+                        <Logo size={32} />
+                        <div>
+                          <p style={{ fontSize: 14, fontWeight: 700, color: 'var(--ytg-text)' }}>YTGrowth</p>
+                          <p style={{ fontSize: 12, color: 'var(--ytg-text-3)' }}>wants YouTube read access</p>
+                        </div>
+                      </div>
+                      <div style={{ background: '#f4f4f6', borderRadius: 8, padding: '8px 12px', marginBottom: 11, fontSize: 12, color: 'var(--ytg-text-3)' }}>Read-only · No posting · Fully secure</div>
+                      <div style={{ display: 'flex', gap: 7 }}>
+                        <div style={{ flex: 1, background: '#f4f4f6', borderRadius: 8, padding: '9px', textAlign: 'center', fontSize: 12, color: 'var(--ytg-text-2)', fontWeight: 500 }}>Cancel</div>
+                        <div style={{ flex: 1, background: '#ff3b30', borderRadius: 8, padding: '9px', textAlign: 'center', fontSize: 12, color: '#fff', fontWeight: 700 }}>Allow</div>
+                      </div>
                     </div>
                   </div>
                 )
@@ -1299,7 +1307,17 @@ export default function Landing() {
               {
                 n: '02', t: 'We scan everything', d: '12+ metrics analyzed automatically: retention, watch time, upload cadence, engagement, and your top competitors.',
                 card: (
-                  <div style={{ background: '#ffffff', border: '1px solid rgba(10,10,15,0.07)', boxShadow: 'var(--ytg-shadow-xl)', borderRadius: 13, padding: 18, marginBottom: 22 }}>
+                  <div style={{ background: '#ffffff', border: '1px solid rgba(10,10,15,0.07)', boxShadow: 'var(--ytg-shadow-xl)', borderRadius: 14, padding: 0, marginBottom: 22, overflow: 'hidden' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '10px 14px', borderBottom: '1px solid rgba(10,10,15,0.06)', background: '#fafafb' }}>
+                      <span style={{ width: 9, height: 9, borderRadius: '50%', background: '#ff5f57' }} />
+                      <span style={{ width: 9, height: 9, borderRadius: '50%', background: '#febc2e' }} />
+                      <span style={{ width: 9, height: 9, borderRadius: '50%', background: '#28c840' }} />
+                      <span style={{ marginLeft: 'auto', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+                        <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#ff3b30', animation: 'pulse 1.5s ease-in-out infinite' }} />
+                        <span style={{ fontSize: 10, fontWeight: 600, color: 'var(--ytg-text-4)', letterSpacing: '0.08em', textTransform: 'uppercase' }}>Live</span>
+                      </span>
+                    </div>
+                    <div style={{ padding: 18 }}>
                     <p style={{ fontSize: 12, color: 'var(--ytg-text-3)', fontWeight: 700, marginBottom: 14, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Analyzing your channel</p>
                     {[{ l: 'Channel metrics', w: '100%', c: '#0a84ff' }, { l: 'Video performance', w: '100%', c: '#0a84ff' }, { l: 'Competitor data', w: '72%', c: '#0a84ff' }, { l: 'Generating insights', w: '38%', c: '#f59e0b' }].map((item, i) => (
                       <div key={i} style={{ marginBottom: i < 3 ? 11 : 0 }}>
@@ -1312,14 +1330,22 @@ export default function Landing() {
                         </div>
                       </div>
                     ))}
+                    </div>
                   </div>
                 )
               },
               {
                 n: '03', t: 'Get your action plan', d: 'Every issue ranked by impact with one specific action. Concrete steps based on your actual channel data.',
                 card: (
-                  <div style={{ background: '#ffffff', border: '1px solid rgba(10,10,15,0.07)', boxShadow: 'var(--ytg-shadow-xl)', borderRadius: 13, padding: 18, marginBottom: 22 }}>
-                    <p style={{ fontSize: 12, color: 'var(--ytg-text-3)', fontWeight: 700, marginBottom: 14, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Your action plan</p>
+                  <div style={{ background: '#ffffff', border: '1px solid rgba(10,10,15,0.07)', boxShadow: 'var(--ytg-shadow-xl)', borderRadius: 14, padding: 0, marginBottom: 22, overflow: 'hidden' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '10px 14px', borderBottom: '1px solid rgba(10,10,15,0.06)', background: '#fafafb' }}>
+                      <span style={{ width: 9, height: 9, borderRadius: '50%', background: '#ff5f57' }} />
+                      <span style={{ width: 9, height: 9, borderRadius: '50%', background: '#febc2e' }} />
+                      <span style={{ width: 9, height: 9, borderRadius: '50%', background: '#28c840' }} />
+                      <span style={{ marginLeft: 'auto', fontSize: 10, fontWeight: 600, color: 'var(--ytg-text-4)', letterSpacing: '0.08em', textTransform: 'uppercase' }}>Results</span>
+                    </div>
+                    <div style={{ padding: 18 }}>
+                    <p style={{ fontSize: 12, color: 'var(--ytg-text-3)', fontWeight: 700, marginBottom: 14, textTransform: 'uppercase', letterSpacing: '0.5px' }}>3 priority actions</p>
                     {[
                       { dot: '#ef4444', bg: 'rgba(239,68,68,0.10)', bd: 'rgba(239,68,68,0.25)', tx: '#b91c1c', t: 'Rewrite video openings', s: 'Critical' },
                       { dot: '#f59e0b', bg: 'rgba(245,158,11,0.12)', bd: 'rgba(245,158,11,0.30)', tx: '#b45309', t: 'Post 1 video per week', s: 'High' },
@@ -1331,6 +1357,7 @@ export default function Landing() {
                         <span style={{ fontSize: 10, fontWeight: 800, color: item.tx, background: item.bg, border: `1px solid ${item.bd}`, padding: '2px 8px', borderRadius: 100, textTransform: 'uppercase', letterSpacing: '0.08em' }}>{item.s}</span>
                       </div>
                     ))}
+                    </div>
                   </div>
                 )
               },
@@ -1845,20 +1872,22 @@ export default function Landing() {
               Built for creators serious about growth.
             </p>
             {/* Seam */}
-            <div style={{ height: 1, width: 56, background: 'rgba(255,255,255,0.10)', marginBottom: 24 }} />
-            {/* Links */}
-            <div style={{ display: 'flex', flexWrap: 'wrap', rowGap: 12, columnGap: 22, justifyContent: 'center', marginBottom: 28, maxWidth: 320 }}>
+            <div style={{ height: 1, width: 56, background: 'rgba(255,255,255,0.10)', marginBottom: 20 }} />
+            {/* Links — single line with middot separators */}
+            <div style={{ fontSize: 13, textAlign: 'center', marginBottom: 24, lineHeight: 1.8 }}>
               {[
-                { label: 'Privacy policy',   href: '/privacy' },
-                { label: 'Terms of service', href: '/terms' },
-                { label: 'Refund policy',    href: '/refund' },
-                { label: 'Affiliates',       href: '/affiliate' },
-                { label: 'Log in',           href: '/auth/login' },
-              ].map((l, i) => (
-                <a key={i} href={l.href} style={{ fontSize: 14, color: 'rgba(255,255,255,0.55)', textDecoration: 'none', transition: 'color 0.15s', fontFamily: "'Inter', system-ui, sans-serif", fontWeight: 500 }}
-                  onMouseEnter={e => e.currentTarget.style.color = '#ffffff'}
-                  onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.55)'}
-                >{l.label}</a>
+                { label: 'Privacy',    href: '/privacy' },
+                { label: 'Terms',      href: '/terms' },
+                { label: 'Refunds',    href: '/refund' },
+                { label: 'Affiliates', href: '/affiliate' },
+              ].map((l, i, arr) => (
+                <span key={i}>
+                  <a href={l.href} style={{ color: 'rgba(255,255,255,0.58)', textDecoration: 'none', transition: 'color 0.15s', fontFamily: "'Inter', system-ui, sans-serif", fontWeight: 500 }}
+                    onMouseEnter={e => e.currentTarget.style.color = '#ffffff'}
+                    onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.58)'}
+                  >{l.label}</a>
+                  {i < arr.length - 1 && <span aria-hidden="true" style={{ margin: '0 10px', color: 'rgba(255,255,255,0.22)' }}>·</span>}
+                </span>
               ))}
             </div>
             <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.28)', margin: 0, textAlign: 'center' }}>© 2026 YTGrowth. All rights reserved.</p>
