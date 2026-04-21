@@ -11,14 +11,8 @@ if (typeof document !== 'undefined' && !document.getElementById('seo-opt-styles'
 
   .seo-glass-card {
     background: #ffffff;
-    border: 1px solid #d8d8e0 !important;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.14), 0 24px 64px rgba(0,0,0,0.18), 0 1px 0 rgba(255,255,255,0.9) inset !important;
-  }
-  .seo-glass-card:hover {
-    box-shadow: 0 8px 28px rgba(0,0,0,0.18), 0 36px 80px rgba(0,0,0,0.22), 0 1px 0 rgba(255,255,255,0.9) inset !important;
-    transform: translateY(-2px);
-    border-color: #c0c0cc !important;
-    transition: box-shadow 0.22s, transform 0.22s, border-color 0.22s;
+    border: 1px solid rgba(10,10,15,0.08) !important;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 4px 14px rgba(0,0,0,0.06) !important;
   }
 `
   document.head.appendChild(s)
@@ -167,27 +161,27 @@ function BreakdownBar({ criterionKey, value, max }) {
 function FormatTemplates({ onUse }) {
   const [open, setOpen] = useState(false)
   return (
-    <div style={{ marginBottom: 16, border: `1px solid ${open ? C.purpleBdr : 'rgba(0,0,0,0.09)'}`, borderRadius: 14, overflow: 'hidden', transition: 'border-color 0.2s', boxShadow: open ? '0 4px 20px rgba(124,58,237,0.08)' : 'none' }}>
+    <div style={{ marginBottom: 14, border: '1px solid rgba(10,10,15,0.08)', borderRadius: 10, overflow: 'hidden', transition: 'border-color 0.2s' }}>
       <button onClick={() => setOpen(v => !v)}
-        style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '13px 18px', background: open ? C.purpleBg : '#fafafa', border: 'none', cursor: 'pointer', fontFamily: 'inherit', transition: 'background 0.2s' }}>
+        style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '11px 14px', background: open ? '#fafafa' : '#ffffff', border: 'none', cursor: 'pointer', fontFamily: 'inherit', transition: 'background 0.2s' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <span style={{ fontSize: 14, fontWeight: 700, color: C.purple, letterSpacing: '-0.2px' }}>Viral Format Templates</span>
+          <span style={{ fontSize: 13, fontWeight: 700, color: C.text1, letterSpacing: '-0.2px' }}>Viral format templates</span>
           <span style={{ fontSize: 12, color: C.text3, fontWeight: 400 }}>Click any template to pre-fill your title</span>
         </div>
-        <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke={C.text3} strokeWidth="2"
+        <svg width="12" height="12" viewBox="0 0 13 13" fill="none" stroke={C.text3} strokeWidth="2"
           style={{ transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.25s', flexShrink: 0 }}>
           <path d="M2 4.5l4.5 4.5 4.5-4.5"/>
         </svg>
       </button>
       {open && (
-        <div style={{ padding: '14px 16px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, background: C.card, borderTop: `1px solid ${C.purpleBdr}` }}>
+        <div style={{ padding: '10px 12px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, background: '#fafafb', borderTop: '1px solid rgba(10,10,15,0.06)' }}>
           {VIRAL_FORMATS.map(fmt => (
             <div key={fmt.key} onClick={() => onUse(fmt.example)}
-              style={{ padding: '12px 14px', border: `1px solid rgba(0,0,0,0.09)`, borderRadius: 11, cursor: 'pointer', background: '#fff', transition: 'all 0.18s' }}
-              onMouseEnter={e => { e.currentTarget.style.borderColor = C.purple; e.currentTarget.style.background = C.purpleBg; e.currentTarget.style.transform = 'translateY(-1px)'; e.currentTarget.style.boxShadow = `0 4px 14px ${C.purple}22` }}
-              onMouseLeave={e => { e.currentTarget.style.borderColor = C.border; e.currentTarget.style.background = '#fafafc'; e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = 'none' }}>
-              <p style={{ fontSize: 12, fontWeight: 800, color: C.purple, marginBottom: 4, textTransform: 'uppercase', letterSpacing: '0.04em' }}>{fmt.label}</p>
-              <p style={{ fontSize: 12, color: C.text1, fontWeight: 600, lineHeight: 1.4, marginBottom: 4 }}>{fmt.example}</p>
+              style={{ padding: '10px 12px', border: '1px solid rgba(10,10,15,0.08)', borderRadius: 8, cursor: 'pointer', background: '#ffffff', transition: 'all 0.18s' }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(229,37,27,0.35)'; e.currentTarget.style.background = '#fffafa' }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(10,10,15,0.08)'; e.currentTarget.style.background = '#ffffff' }}>
+              <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, marginBottom: 4, textTransform: 'uppercase', letterSpacing: '0.06em' }}>{fmt.label}</p>
+              <p style={{ fontSize: 12, color: C.text1, fontWeight: 600, lineHeight: 1.4, marginBottom: 3 }}>{fmt.example}</p>
               <p style={{ fontSize: 12, color: C.text3, lineHeight: 1.4 }}>{fmt.why}</p>
             </div>
           ))}
@@ -205,22 +199,22 @@ function TitlePreviewSimulator({ title }) {
     { label: 'Desktop search', maxChars: 70, icon: '🖥️' },
   ]
   return (
-    <div style={{ marginTop: 12, padding: '14px 16px', background: '#f7f7fa', borderRadius: 12, border: `1px solid #d8d8e0`, boxShadow: '0 4px 16px rgba(0,0,0,0.14), 0 24px 64px rgba(0,0,0,0.18)' }}>
-      <p style={{ fontSize: 12, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 10 }}>Preview on YouTube</p>
+    <div style={{ marginTop: 12, padding: '12px 14px', background: '#fafafb', borderRadius: 10, border: '1px solid rgba(10,10,15,0.06)' }}>
+      <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 8 }}>Preview on YouTube</p>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 8 }}>
         {surfaces.map(({ label, maxChars, icon }) => {
           const truncated = title.length > maxChars
           const display = truncated ? title.slice(0, maxChars - 1) + '…' : title
           return (
-            <div key={label} style={{ padding: '10px 12px', background: C.card, borderRadius: 9, border: `1px solid ${truncated ? C.orangeBdr : '#d8d8e0'}`, boxShadow: '0 4px 16px rgba(0,0,0,0.14), 0 24px 64px rgba(0,0,0,0.18)' }}>
+            <div key={label} style={{ padding: '10px 12px', background: '#ffffff', borderRadius: 8, border: `1px solid ${truncated ? C.orangeBdr : 'rgba(10,10,15,0.08)'}` }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
-                <span style={{ fontSize: 12, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.05em' }}>{label}</span>
-                <span style={{ fontSize: 12, fontWeight: 700, color: truncated ? C.orange : C.green, background: truncated ? C.orangeBg : C.greenBg, padding: '1px 6px', borderRadius: 20 }}>
-                  {truncated ? `cut` : '✓ fits'}
+                <span style={{ fontSize: 11, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em' }}>{label}</span>
+                <span style={{ fontSize: 11, fontWeight: 700, color: truncated ? C.orange : C.green }}>
+                  {truncated ? 'cut' : 'fits'}
                 </span>
               </div>
               <p style={{ fontSize: 12, fontWeight: 600, color: truncated ? C.text2 : C.text1, lineHeight: 1.45 }}>{display}</p>
-              {truncated && <p style={{ fontSize: 12, color: C.text4, marginTop: 4 }}>{title.length - maxChars + 1} chars over</p>}
+              {truncated && <p style={{ fontSize: 11, color: C.text4, marginTop: 4 }}>{title.length - maxChars + 1} chars over</p>}
             </div>
           )
         })}
@@ -454,7 +448,7 @@ export default function SeoOptimizer({ onNavigate }) {
   )
 
   return (
-    <div style={{ width: '100%', fontFamily: "'DM Sans', 'Inter', system-ui, sans-serif" }}>
+    <div style={{ width: '100%', fontFamily: "'Inter', system-ui, sans-serif" }}>
 
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 22 }}>
