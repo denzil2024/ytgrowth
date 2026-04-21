@@ -99,6 +99,17 @@ const C = {
 
 // Per-tile accent colors — scoped to this section ONLY, never reuse elsewhere.
 // Row 1 warm (red + amber), row 2 cool (purple + blue), row 3 green-family (teal + green).
+// ── Shared typography scale — one source of truth, don't improvise sizes elsewhere. ──
+const T = {
+  sectionLabel: { fontSize: 11, fontWeight: 600, color: '#9595a4', textTransform: 'uppercase', letterSpacing: '0.06em' },
+  cardDesc:     { fontSize: 13, color: '#9595a4', lineHeight: 1.55 },
+  tableHeader:  { fontSize: 11, fontWeight: 600, color: '#9595a4', textTransform: 'uppercase', letterSpacing: '0.06em' },
+  keyword:      { fontSize: 14, fontWeight: 600, color: '#0f0f13', letterSpacing: '-0.1px' },
+  body:         { fontSize: 14, fontWeight: 600, color: '#0f0f13', lineHeight: 1.55, letterSpacing: '-0.1px' },
+  bodyMuted:    { fontSize: 13, fontWeight: 500, color: '#4a4a58', lineHeight: 1.65, letterSpacing: '-0.05px' },
+  chip:         { fontSize: 13, fontWeight: 500, color: '#4a4a58', background: '#fafafb', padding: '6px 12px', borderRadius: 20, border: '1px solid #e6e6ec', cursor: 'pointer', letterSpacing: '-0.1px', transition: 'all 0.15s', display: 'inline-block' },
+}
+
 const VIRAL_FORMATS = [
   { key: 'survival_challenge',  hook: 'curiosity',      color: '#e5251b', label: 'Survival / Time Challenge', example: 'I Survived 24 Hours With [Person/Situation]',        why: 'Extreme curiosity + suspense.' },
   { key: 'extreme_comparison',  hook: 'contrarian',     color: '#d97706', label: 'Extreme Comparison',        example: '$5 VS $500 [Subject]: Honest Review',                 why: 'Price contrast triggers value-seeking.' },
@@ -927,28 +938,25 @@ export default function SeoOptimizer({ onNavigate }) {
             </div>
           )}
 
-          {/* ── Keyword research — supporting SEO data ── */}
+          {/* ═══════════════════════════════════════════════════════════════
+              3 STACKED CARDS — identical shell, hairline-divider header,
+              shared typography. Pattern borrowed from Overview's Priority
+              Actions section (one card per concept, neat vertical rhythm).
+              ═══════════════════════════════════════════════════════════════ */}
+
+          {/* ── Card 1: Keyword research (table) ── */}
           {result.keyword_scores?.length > 0 && (() => {
-            // Same unified typography scale as Intent Analysis.
-            const T = {
-              sectionLabel: { fontSize: 11, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em' },
-              cardDesc:     { fontSize: 13, color: C.text3, lineHeight: 1.55 },
-              tableHeader:  { fontSize: 11, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em' },
-              keyword:      { fontSize: 14, fontWeight: 600, color: C.text1, letterSpacing: '-0.1px' },
-              pill:         (color, borderColor) => ({
-                fontSize: 11, fontWeight: 700, color,
-                border: `1.5px solid ${borderColor}`,
-                padding: '2px 8px', borderRadius: 20,
-                textTransform: 'uppercase', letterSpacing: '0.05em',
-                justifySelf: 'start',
-              }),
-              number:       (color) => ({ fontSize: 14, fontWeight: 800, color, textAlign: 'right', fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.2px' }),
-              chip:         { fontSize: 13, fontWeight: 500, color: C.text2, background: '#fafafb', padding: '6px 12px', borderRadius: 20, border: '1px solid #e6e6ec', cursor: 'pointer', letterSpacing: '-0.1px', transition: 'all 0.15s' },
-            }
+            const pillStyle = (color, borderColor) => ({
+              fontSize: 11, fontWeight: 700, color,
+              border: `1.5px solid ${borderColor}`,
+              padding: '2px 8px', borderRadius: 20,
+              textTransform: 'uppercase', letterSpacing: '0.05em',
+              justifySelf: 'start',
+            })
+            const numberStyle = (color) => ({ fontSize: 14, fontWeight: 800, color, textAlign: 'right', fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.2px' })
             return (
               <div className="seo-glass-card" style={{ borderRadius: 16, padding: '22px 24px', marginBottom: 16 }}>
-                {/* Header */}
-                <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 16, gap: 16, flexWrap: 'wrap' }}>
+                <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 14, gap: 16, flexWrap: 'wrap' }}>
                   <div>
                     <p style={{ ...T.sectionLabel, marginBottom: 4 }}>Keyword research</p>
                     <p style={T.cardDesc}>
@@ -957,67 +965,70 @@ export default function SeoOptimizer({ onNavigate }) {
                   </div>
                   <span style={{ ...T.sectionLabel, fontWeight: 500, whiteSpace: 'nowrap', flexShrink: 0 }}>Sorted by score</span>
                 </div>
-
-                {/* 2-col: keyword table (left) | autocomplete chips (right) */}
-                <div style={{ display: 'grid', gridTemplateColumns: result.autocomplete_terms?.length > 0 ? 'minmax(0, 1.35fr) minmax(0, 1fr)' : '1fr', gap: 20, alignItems: 'start' }}>
-
-                  {/* LEFT — keyword table */}
-                  <div style={{ border: '1px solid #e6e6ec', borderRadius: 10, overflow: 'hidden' }}>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) 64px 80px 48px', gap: 12, padding: '10px 14px', background: '#fafafb', borderBottom: '1px solid #e6e6ec' }}>
-                      <span style={T.tableHeader}>Keyword phrase</span>
-                      <span style={T.tableHeader}>Vol</span>
-                      <span style={T.tableHeader}>Comp</span>
-                      <span style={{ ...T.tableHeader, textAlign: 'right' }}>Score</span>
-                    </div>
-                    {result.keyword_scores.map((kw, i) => {
-                      const volColor = kw.volume === 'HIGH' ? C.green : kw.volume === 'MED' ? C.amber : C.text3
-                      const compColor = kw.competition === 'LOW' ? C.green : kw.competition === 'MED' ? C.amber : C.red
-                      const scColor = kw.score >= 65 ? C.green : kw.score >= 40 ? C.amber : C.red
-                      return (
-                        <div key={kw.phrase}
-                          onClick={() => setTitle(kw.phrase)}
-                          title="Click to use as title"
-                          style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) 64px 80px 48px', gap: 12, padding: '11px 14px', borderBottom: i < result.keyword_scores.length - 1 ? '1px solid #f0f0f4' : 'none', alignItems: 'center', transition: 'background 0.12s', cursor: 'pointer' }}
-                          onMouseEnter={e => e.currentTarget.style.background = '#fafafb'}
-                          onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
-                          <span style={{ ...T.keyword, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{kw.phrase}</span>
-                          <span style={T.pill(volColor, volColor === C.text3 ? '#e6e6ec' : volColor)}>{kw.volume}</span>
-                          <span style={T.pill(compColor, compColor)}>{kw.competition}</span>
-                          <span style={T.number(scColor)}>{kw.score}</span>
-                        </div>
-                      )
-                    })}
+                {/* Hairline divider — the Overview InsightCard signature */}
+                <div style={{ height: 1, background: '#e6e6ec', marginBottom: 14 }} />
+                {/* Table */}
+                <div style={{ border: '1px solid #e6e6ec', borderRadius: 10, overflow: 'hidden' }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) 64px 80px 52px', gap: 12, padding: '10px 14px', background: '#fafafb', borderBottom: '1px solid #e6e6ec' }}>
+                    <span style={T.tableHeader}>Keyword phrase</span>
+                    <span style={T.tableHeader}>Vol</span>
+                    <span style={T.tableHeader}>Comp</span>
+                    <span style={{ ...T.tableHeader, textAlign: 'right' }}>Score</span>
                   </div>
-
-                  {/* RIGHT — autocomplete chips */}
-                  {result.autocomplete_terms?.length > 0 && (
-                    <div>
-                      <p style={{ ...T.sectionLabel, marginBottom: 6 }}>YouTube autocomplete</p>
-                      <p style={{ ...T.cardDesc, marginBottom: 12 }}>
-                        Live suggestions from YouTube's search box — click any to set as your title.
-                      </p>
-                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-                        {result.autocomplete_terms.map(t => (
-                          <span key={t} onClick={() => setTitle(t)} style={T.chip}
-                            onMouseEnter={e => { e.currentTarget.style.background = '#f1f1f6'; e.currentTarget.style.borderColor = 'rgba(229,37,27,0.25)'; e.currentTarget.style.color = C.text1 }}
-                            onMouseLeave={e => { e.currentTarget.style.background = '#fafafb'; e.currentTarget.style.borderColor = '#e6e6ec'; e.currentTarget.style.color = C.text2 }}>{t}</span>
-                        ))}
+                  {result.keyword_scores.map((kw, i) => {
+                    const volColor = kw.volume === 'HIGH' ? C.green : kw.volume === 'MED' ? C.amber : C.text3
+                    const compColor = kw.competition === 'LOW' ? C.green : kw.competition === 'MED' ? C.amber : C.red
+                    const scColor = kw.score >= 65 ? C.green : kw.score >= 40 ? C.amber : C.red
+                    return (
+                      <div key={kw.phrase}
+                        onClick={() => setTitle(kw.phrase)}
+                        title="Click to use as title"
+                        style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) 64px 80px 52px', gap: 12, padding: '11px 14px', borderBottom: i < result.keyword_scores.length - 1 ? '1px solid #f0f0f4' : 'none', alignItems: 'center', transition: 'background 0.12s', cursor: 'pointer' }}
+                        onMouseEnter={e => e.currentTarget.style.background = '#fafafb'}
+                        onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
+                        <span style={{ ...T.keyword, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{kw.phrase}</span>
+                        <span style={pillStyle(volColor, volColor === C.text3 ? '#e6e6ec' : volColor)}>{kw.volume}</span>
+                        <span style={pillStyle(compColor, compColor)}>{kw.competition}</span>
+                        <span style={numberStyle(scColor)}>{kw.score}</span>
                       </div>
-                    </div>
-                  )}
+                    )
+                  })}
                 </div>
               </div>
             )
           })()}
 
-          {/* ── Suggested tags — implementation detail for upload ── */}
+          {/* ── Card 2: YouTube autocomplete (chip row) ── */}
+          {result.autocomplete_terms?.length > 0 && (
+            <div className="seo-glass-card" style={{ borderRadius: 16, padding: '22px 24px', marginBottom: 16 }}>
+              <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 14, gap: 16, flexWrap: 'wrap' }}>
+                <div>
+                  <p style={{ ...T.sectionLabel, marginBottom: 4 }}>YouTube autocomplete</p>
+                  <p style={T.cardDesc}>
+                    Live suggestions from YouTube's search box — click any to set as your title.
+                  </p>
+                </div>
+                <span style={{ ...T.sectionLabel, fontWeight: 500, whiteSpace: 'nowrap', flexShrink: 0 }}>{result.autocomplete_terms.length} suggestions</span>
+              </div>
+              <div style={{ height: 1, background: '#e6e6ec', marginBottom: 14 }} />
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                {result.autocomplete_terms.map(t => (
+                  <span key={t} onClick={() => setTitle(t)} style={T.chip}
+                    onMouseEnter={e => { e.currentTarget.style.background = '#f1f1f6'; e.currentTarget.style.borderColor = 'rgba(229,37,27,0.25)'; e.currentTarget.style.color = C.text1 }}
+                    onMouseLeave={e => { e.currentTarget.style.background = '#fafafb'; e.currentTarget.style.borderColor = '#e6e6ec'; e.currentTarget.style.color = C.text2 }}>{t}</span>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* ── Card 3: Suggested tags ── */}
           {result.top_tags?.length > 0 && (
             <div className="seo-glass-card" style={{ borderRadius: 16, padding: '22px 24px', marginBottom: 16 }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12, gap: 16 }}>
+              <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 14, gap: 16, flexWrap: 'wrap' }}>
                 <div>
-                  <p style={{ fontSize: 11, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 4 }}>Suggested tags</p>
-                  <p style={{ fontSize: 12.5, color: C.text3, lineHeight: 1.5 }}>
-                    Pulled from competitor videos in your niche. Add these directly to your video tags.
+                  <p style={{ ...T.sectionLabel, marginBottom: 4 }}>Suggested tags</p>
+                  <p style={T.cardDesc}>
+                    Pulled from competitor videos in your niche. Red = already in your title. Click any to copy.
                   </p>
                 </div>
                 <button
@@ -1026,10 +1037,11 @@ export default function SeoOptimizer({ onNavigate }) {
                     setCopiedTags(true)
                     setTimeout(() => setCopiedTags(false), 1800)
                   }}
-                  style={{ flexShrink: 0, fontSize: 12, fontWeight: 600, color: copiedTags ? C.green : C.text2, background: '#ffffff', border: `1px solid ${copiedTags ? 'rgba(5,150,105,0.38)' : '#e6e6ec'}`, borderRadius: 100, padding: '6px 14px', cursor: 'pointer', fontFamily: 'inherit', whiteSpace: 'nowrap', boxShadow: '0 1px 3px rgba(0,0,0,0.06)', transition: 'all 0.18s' }}>
+                  style={{ flexShrink: 0, fontSize: 13, fontWeight: 600, color: copiedTags ? C.green : C.text2, background: '#ffffff', border: `1px solid ${copiedTags ? 'rgba(5,150,105,0.38)' : '#e6e6ec'}`, borderRadius: 100, padding: '6px 14px', cursor: 'pointer', fontFamily: 'inherit', whiteSpace: 'nowrap', boxShadow: '0 1px 3px rgba(0,0,0,0.06)', transition: 'all 0.18s', letterSpacing: '-0.1px' }}>
                   {copiedTags ? '✓ Copied all' : 'Copy all'}
                 </button>
               </div>
+              <div style={{ height: 1, background: '#e6e6ec', marginBottom: 14 }} />
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
                 {result.top_tags.map(tag => {
                   const inTitle = title.toLowerCase().includes(tag.toLowerCase())
@@ -1037,7 +1049,13 @@ export default function SeoOptimizer({ onNavigate }) {
                     <span key={tag}
                       onClick={() => { navigator.clipboard.writeText(tag) }}
                       title="Click to copy"
-                      style={{ fontSize: 12, color: inTitle ? C.red : C.text2, background: inTitle ? 'rgba(229,37,27,0.06)' : '#fafafb', padding: '4px 10px', borderRadius: 6, border: `1px solid ${inTitle ? 'rgba(229,37,27,0.22)' : '#e6e6ec'}`, cursor: 'pointer', fontWeight: inTitle ? 600 : 500, transition: 'all 0.15s' }}
+                      style={{
+                        ...T.chip,
+                        color: inTitle ? C.red : C.text2,
+                        background: inTitle ? 'rgba(229,37,27,0.06)' : '#fafafb',
+                        border: `1px solid ${inTitle ? 'rgba(229,37,27,0.22)' : '#e6e6ec'}`,
+                        fontWeight: inTitle ? 600 : 500,
+                      }}
                       onMouseEnter={e => { e.currentTarget.style.borderColor = inTitle ? 'rgba(229,37,27,0.4)' : '#d0d0d8' }}
                       onMouseLeave={e => { e.currentTarget.style.borderColor = inTitle ? 'rgba(229,37,27,0.22)' : '#e6e6ec' }}>
                       {tag}
@@ -1045,9 +1063,6 @@ export default function SeoOptimizer({ onNavigate }) {
                   )
                 })}
               </div>
-              <p style={{ fontSize: 11.5, color: C.text4, marginTop: 10 }}>
-                Red-highlighted tags already appear in your title. Click any to copy individually.
-              </p>
             </div>
           )}
 
