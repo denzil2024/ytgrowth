@@ -1,5 +1,14 @@
 import { useState, useEffect, useRef } from 'react'
 
+// Load Inter once — SCOPED to this page, not global (each page owns its own font loading)
+if (typeof document !== 'undefined' && !document.getElementById('seo-opt-inter-font')) {
+  const link = document.createElement('link')
+  link.id = 'seo-opt-inter-font'
+  link.rel = 'stylesheet'
+  link.href = 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap'
+  document.head.appendChild(link)
+}
+
 // Inject spin keyframe once
 if (typeof document !== 'undefined' && !document.getElementById('seo-opt-styles')) {
   const s = document.createElement('style')
