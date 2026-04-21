@@ -722,8 +722,8 @@ export default function SeoOptimizer({ onNavigate }) {
 
       {result && (
         <div className="seo-result-section">
-          {/* ── Section header — mirrors Overview "Channel audit" H2 ───── */}
-          <div style={{ marginBottom: 20, marginTop: 8 }}>
+          {/* ── Section header — mirrors Overview "Channel audit" H2 (marginTop 40, Dashboard.jsx:2069) ───── */}
+          <div style={{ marginBottom: 20, marginTop: 40 }}>
             <h2 style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', marginBottom: 4 }}>Title analysis</h2>
             {result.primary_phrase ? (
               <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.5 }}>
@@ -749,7 +749,7 @@ export default function SeoOptimizer({ onNavigate }) {
 
           {/* AI suggestion error */}
           {result.suggestion_error && !result.suggestions?.length && (
-            <div style={{ background: C.amberBg, border: `1px solid ${C.amberBdr}`, borderLeft: `3px solid ${C.amber}`, borderRadius: '0 12px 12px 0', padding: '14px 18px', marginBottom: 16 }}>
+            <div style={{ background: C.amberBg, border: `1px solid ${C.amberBdr}`, borderLeft: `3px solid ${C.amber}`, borderRadius: '0 12px 12px 0', padding: '14px 18px', marginBottom: 24 }}>
               <p style={{ ...T.innerLabel, color: C.amber, marginBottom: 6 }}>AI suggestions unavailable</p>
               <p style={T.innerText}>{result.suggestion_error}</p>
             </div>
@@ -765,12 +765,8 @@ export default function SeoOptimizer({ onNavigate }) {
               padding: '14px 16px',
             })
             return (
-              <div className="seo-glass-card" style={{ borderRadius: 16, padding: '22px 24px', marginBottom: 16 }}>
-                <div style={{ marginBottom: 14 }}>
-                  <p style={{ ...T.sectionLabel, marginBottom: 4 }}>Search intent analysis</p>
-                  <p style={T.cardDesc}>What the viewer wants, what they feel, and where competitors fall short.</p>
-                </div>
-                <div style={{ height: 1, background: '#e6e6ec', marginBottom: 14 }} />
+              <div className="seo-glass-card" style={{ borderRadius: 16, padding: '22px 24px', marginBottom: 24 }}>
+                <p style={{ ...T.sectionLabel, marginBottom: 20 }}>Search intent analysis</p>
 
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 10 }}>
                   <div style={infoBlock(C.red)}>
@@ -817,9 +813,9 @@ export default function SeoOptimizer({ onNavigate }) {
             )
           })()}
 
-          {/* AI-Suggested Titles — Overview InsightCard pattern */}
+          {/* AI-Suggested Titles — Overview InsightCard pattern (wrapper mb matches Overview Priority Actions: 24) */}
           {result.suggestions?.length > 0 && (
-            <div style={{ marginBottom: 16 }}>
+            <div style={{ marginBottom: 24 }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16, gap: 16 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                   <p style={{ fontSize: 20, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px' }}>Suggested titles</p>
@@ -958,17 +954,11 @@ export default function SeoOptimizer({ onNavigate }) {
 
           {/* ── Card 1: Keyword research — 2-col inner grid, phrase + bar + score (Overview Category Scores pattern, exact) ── */}
           {result.keyword_scores?.length > 0 && (
-            <div className="seo-glass-card" style={{ borderRadius: 16, padding: '22px 24px', marginBottom: 16 }}>
-              <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 14, gap: 16, flexWrap: 'wrap' }}>
-                <div>
-                  <p style={{ ...T.sectionLabel, marginBottom: 4 }}>Keyword research</p>
-                  <p style={T.cardDesc}>
-                    {result.keyword_scores.length} phrases scored — the bar shows opportunity (length × colour). Click a row to use as your title.
-                  </p>
-                </div>
-                <span style={{ ...T.sectionHint, whiteSpace: 'nowrap', flexShrink: 0 }}>Sorted by score</span>
+            <div className="seo-glass-card" style={{ borderRadius: 16, padding: '22px 24px', marginBottom: 24 }}>
+              <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 20, gap: 16, flexWrap: 'wrap' }}>
+                <p style={T.sectionLabel}>Keyword research</p>
+                <span style={{ ...T.sectionHint, whiteSpace: 'nowrap', flexShrink: 0 }}>{result.keyword_scores.length} phrases · sorted by score</span>
               </div>
-              <div style={{ height: 1, background: '#e6e6ec', marginBottom: 10 }} />
 
               {/* 2-col grid mirrors Dashboard.jsx:2106 exactly — gap '14px 40px', no row bg / no padding */}
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px 40px' }}>
@@ -996,17 +986,11 @@ export default function SeoOptimizer({ onNavigate }) {
 
           {/* ── Card 2: YouTube autocomplete (chip row) ── */}
           {result.autocomplete_terms?.length > 0 && (
-            <div className="seo-glass-card" style={{ borderRadius: 16, padding: '22px 24px', marginBottom: 16 }}>
-              <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 14, gap: 16, flexWrap: 'wrap' }}>
-                <div>
-                  <p style={{ ...T.sectionLabel, marginBottom: 4 }}>YouTube autocomplete</p>
-                  <p style={T.cardDesc}>
-                    Live suggestions from YouTube's search box — click any to set as your title.
-                  </p>
-                </div>
-                <span style={{ ...T.sectionLabel, fontWeight: 500, whiteSpace: 'nowrap', flexShrink: 0 }}>{result.autocomplete_terms.length} suggestions</span>
+            <div className="seo-glass-card" style={{ borderRadius: 16, padding: '22px 24px', marginBottom: 24 }}>
+              <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 20, gap: 16, flexWrap: 'wrap' }}>
+                <p style={T.sectionLabel}>YouTube autocomplete</p>
+                <span style={{ ...T.sectionHint, whiteSpace: 'nowrap', flexShrink: 0 }}>{result.autocomplete_terms.length} suggestions · click to use</span>
               </div>
-              <div style={{ height: 1, background: '#e6e6ec', marginBottom: 14 }} />
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
                 {result.autocomplete_terms.map(t => (
                   <span key={t} onClick={() => setTitle(t)} style={T.chip}
@@ -1019,25 +1003,19 @@ export default function SeoOptimizer({ onNavigate }) {
 
           {/* ── Card 3: Suggested tags ── */}
           {result.top_tags?.length > 0 && (
-            <div className="seo-glass-card" style={{ borderRadius: 16, padding: '22px 24px', marginBottom: 16 }}>
-              <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 14, gap: 16, flexWrap: 'wrap' }}>
-                <div>
-                  <p style={{ ...T.sectionLabel, marginBottom: 4 }}>Suggested tags</p>
-                  <p style={T.cardDesc}>
-                    Pulled from competitor videos in your niche. Red = already in your title. Click any to copy.
-                  </p>
-                </div>
+            <div className="seo-glass-card" style={{ borderRadius: 16, padding: '22px 24px', marginBottom: 24 }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20, gap: 16, flexWrap: 'wrap' }}>
+                <p style={T.sectionLabel}>Suggested tags</p>
                 <button
                   onClick={() => {
                     navigator.clipboard.writeText(result.top_tags.join(', '))
                     setCopiedTags(true)
                     setTimeout(() => setCopiedTags(false), 1800)
                   }}
-                  style={{ flexShrink: 0, fontSize: 13, fontWeight: 600, color: copiedTags ? C.green : C.text2, background: '#ffffff', border: `1px solid ${copiedTags ? 'rgba(5,150,105,0.38)' : '#e6e6ec'}`, borderRadius: 100, padding: '6px 14px', cursor: 'pointer', fontFamily: 'inherit', whiteSpace: 'nowrap', boxShadow: '0 1px 3px rgba(0,0,0,0.06)', transition: 'all 0.18s', letterSpacing: '-0.1px' }}>
+                  style={{ flexShrink: 0, fontSize: 12.5, fontWeight: 600, color: copiedTags ? C.green : C.text2, background: '#ffffff', border: `1px solid ${copiedTags ? 'rgba(5,150,105,0.38)' : 'rgba(0,0,0,0.1)'}`, borderRadius: 100, padding: '6px 14px', cursor: 'pointer', fontFamily: 'inherit', whiteSpace: 'nowrap', boxShadow: '0 1px 3px rgba(0,0,0,0.07)', transition: 'all 0.18s' }}>
                   {copiedTags ? '✓ Copied all' : 'Copy all'}
                 </button>
               </div>
-              <div style={{ height: 1, background: '#e6e6ec', marginBottom: 14 }} />
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
                 {result.top_tags.map(tag => {
                   const inTitle = title.toLowerCase().includes(tag.toLowerCase())
@@ -1064,19 +1042,13 @@ export default function SeoOptimizer({ onNavigate }) {
 
           {/* ── Competitor set — the competitor videos we analysed ── */}
           {result.top_videos?.length > 0 && (
-            <div className="seo-glass-card" style={{ borderRadius: 16, padding: '22px 24px', marginBottom: 16 }}>
-              <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 14, gap: 16, flexWrap: 'wrap' }}>
-                <div>
-                  <p style={{ ...T.sectionLabel, marginBottom: 4 }}>Competitor set</p>
-                  <p style={T.cardDesc}>
-                    The top videos {result.primary_phrase ? <>in <span style={{ color: C.text2, fontWeight: 600 }}>&ldquo;{result.primary_phrase}&rdquo;</span></> : 'we found'} — the set your suggested titles were benchmarked against.
-                  </p>
-                </div>
+            <div className="seo-glass-card" style={{ borderRadius: 16, padding: '22px 24px', marginBottom: 24 }}>
+              <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 20, gap: 16, flexWrap: 'wrap' }}>
+                <p style={T.sectionLabel}>Competitor set</p>
                 <span style={{ ...T.sectionHint, whiteSpace: 'nowrap', flexShrink: 0 }}>
-                  {result.videos_found} {result.videos_found === 1 ? 'result' : 'results'}{result.intent_matched > 0 && result.intent_matched < result.videos_found ? ` · ${result.intent_matched} exact` : ''}
+                  {result.videos_found} {result.videos_found === 1 ? 'video' : 'videos'}{result.primary_phrase ? ` · "${result.primary_phrase}"` : ''}{result.intent_matched > 0 && result.intent_matched < result.videos_found ? ` · ${result.intent_matched} exact` : ''}
                 </span>
               </div>
-              <div style={{ height: 1, background: '#e6e6ec', marginBottom: 14 }} />
               <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
                 {result.top_videos.map((v, i) => {
                   const sc = v.seo_score
@@ -1114,20 +1086,19 @@ export default function SeoOptimizer({ onNavigate }) {
 
           {/* ── Description Optimizer ── */}
           {selectedTitle && (
-            <div ref={descRef} className="seo-glass-card" style={{ marginTop: 16, borderRadius: 16, padding: '22px 24px' }}>
+            <div ref={descRef} className="seo-glass-card" style={{ marginTop: 0, borderRadius: 16, padding: '22px 24px' }}>
 
-              {/* Header — same pattern as every other card */}
-              <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 14, gap: 16 }}>
+              {/* Header — label + selected title as content (same pattern as Overview's Summary card: label + 14 content) */}
+              <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 20, gap: 16 }}>
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <p style={{ ...T.sectionLabel, marginBottom: 4 }}>Description optimizer</p>
-                  <p style={{ ...T.bodyBold, letterSpacing: '-0.2px' }}>&ldquo;{selectedTitle}&rdquo;</p>
+                  <p style={{ ...T.sectionLabel, marginBottom: 8 }}>Description optimizer</p>
+                  <p style={{ fontSize: 14, color: C.text1, lineHeight: 1.55, fontWeight: 700, letterSpacing: '-0.1px' }}>&ldquo;{selectedTitle}&rdquo;</p>
                 </div>
                 <button onClick={() => { setSelectedTitle(null); setDescResult(null); setDescError('') }}
                   style={{ flexShrink: 0, fontSize: 12.5, fontWeight: 600, color: C.text2, background: '#ffffff', border: '1px solid rgba(0,0,0,0.1)', borderRadius: 100, padding: '9px 20px', cursor: 'pointer', fontFamily: 'inherit', whiteSpace: 'nowrap', boxShadow: '0 1px 3px rgba(0,0,0,0.07), 0 4px 14px rgba(0,0,0,0.07)', transition: 'all 0.18s' }}>
                   Change title
                 </button>
               </div>
-              <div style={{ height: 1, background: '#e6e6ec', marginBottom: 18 }} />
 
               {!descResult && (
                 <>
