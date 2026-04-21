@@ -899,8 +899,9 @@ export default function SeoOptimizer({ onNavigate }) {
                         {/* Divider — matches Overview InsightCard hairline */}
                         <div style={{ height: 1, background: '#e6e6ec', marginBottom: 14, marginLeft: 36 }} />
 
-                        {/* 3-col inner grid — mirrors Overview InsightCard's body (1fr 1.4fr 1fr, gap 8) */}
-                        <div style={{ marginLeft: 36, display: 'grid', gridTemplateColumns: '1fr 1.4fr 1fr', gap: 8 }}>
+                        {/* 3-col inner grid — ratio puts extra width on the text-heavy Why-it-works column (like Overview's ACTION at 1.4fr).
+                            alignItems:start so the SCORES and USE-THIS-TITLE blocks don't stretch past their content. */}
+                        <div style={{ marginLeft: 36, display: 'grid', gridTemplateColumns: '1.4fr 1fr 1fr', gap: 8, alignItems: 'start' }}>
                           {/* WHY IT WORKS — blue tint, matches Overview InsightCard "Why now" (Dashboard.jsx:1089) exactly */}
                           <div style={{ background: 'rgba(79,134,247,0.07)', border: '1px solid rgba(79,134,247,0.12)', borderRadius: 10, padding: '12px 14px' }}>
                             <p style={{ ...T.innerLabel, color: '#4a7cf7', marginBottom: 6 }}>Why it works</p>
