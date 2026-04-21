@@ -849,7 +849,8 @@ export default function SeoOptimizer({ onNavigate }) {
                   Use my original title →
                 </button>
               </div>
-              <div>
+              {/* 3-col grid — each suggestion is its own column: card + Continue/Copy buttons below */}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: 12, alignItems: 'start' }}>
                 {result.suggestions.map((s, i) => {
                   const hookMeta = {
                     curiosity:      { label: 'Curiosity / FOMO', color: C.red,   tint: C.redBg,   bdr: C.redBdr,   desc: "Makes viewers feel they're missing something" },
@@ -862,79 +863,81 @@ export default function SeoOptimizer({ onNavigate }) {
                   const sevColor = avgScore >= 75 ? C.green : avgScore >= 55 ? C.amber : C.red
                   const isSelected = selectedTitle === s.title
                   return (
-                    <div key={i} className="seo-suggestion-card" style={{
-                      borderTop: `3px solid ${hm.color}`,
-                      borderColor: isSelected ? 'rgba(229,37,27,0.30)' : copied === i ? 'rgba(5,150,105,0.30)' : '#e6e6ec',
-                      background: isSelected ? '#fff8f8' : copied === i ? '#f6fdf9' : '#ffffff',
-                    }}>
-                      <div style={{ padding: '16px 22px 18px' }}>
-                        {/* Header row — numbered badge + hook label + severity pill */}
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
-                          <div style={{
-                            width: 26, height: 26, borderRadius: 8,
-                            background: hm.color,
-                            display: 'flex', alignItems: 'center', justifyContent: 'center',
-                            flexShrink: 0,
-                          }}>
-                            <span style={{ fontSize: 12, fontWeight: 900, color: '#ffffff', fontVariantNumeric: 'tabular-nums', lineHeight: 1 }}>{i + 1}</span>
+                    <div key={i} style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                      {/* Card — no nested boxes inside. Uses Overview's "Biggest risk + What's working" pattern:
+                          colored uppercase labels + body text, hairline separators between sections. */}
+                      <div className="seo-suggestion-card" style={{
+                        borderTop: `3px solid ${hm.color}`,
+                        borderColor: isSelected ? 'rgba(229,37,27,0.30)' : copied === i ? 'rgba(5,150,105,0.30)' : '#e6e6ec',
+                        background: isSelected ? '#fff8f8' : copied === i ? '#f6fdf9' : '#ffffff',
+                        marginBottom: 0,
+                      }}>
+                        <div style={{ padding: '18px 20px 20px' }}>
+                          {/* Header — numbered badge + hook label + severity pill */}
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 14 }}>
+                            <div style={{
+                              width: 24, height: 24, borderRadius: 7,
+                              background: hm.color,
+                              display: 'flex', alignItems: 'center', justifyContent: 'center',
+                              flexShrink: 0,
+                            }}>
+                              <span style={{ fontSize: 11, fontWeight: 900, color: '#ffffff', fontVariantNumeric: 'tabular-nums', lineHeight: 1 }}>{i + 1}</span>
+                            </div>
+                            <span style={{ fontSize: 11, fontWeight: 700, color: hm.color, letterSpacing: '0.07em', textTransform: 'uppercase', flex: 1, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{hm.label}</span>
+                            <span style={{
+                              ...T.pill, color: sevColor,
+                              border: `1.5px solid ${sevColor}`, padding: '3px 9px',
+                              borderRadius: 20,
+                              flexShrink: 0,
+                            }}>{sevLabel}</span>
                           </div>
-                          <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, flex: 1, minWidth: 0, flexWrap: 'wrap' }}>
-                            <span style={{ ...T.innerLabel, color: hm.color }}>{hm.label}</span>
-                            <span style={{ fontSize: 12, color: C.text3, fontWeight: 400 }}>{hm.desc}</span>
+
+                          {/* Title — the hero */}
+                          <p style={{ fontSize: 16, fontWeight: 700, color: C.text1, lineHeight: 1.4, letterSpacing: '-0.25px', marginBottom: 6 }}>{s.title}</p>
+                          <p style={{ fontSize: 12, color: C.text3, fontVariantNumeric: 'tabular-nums', fontWeight: 500 }}>
+                            {s.length} chars{s.length >= 50 && s.length <= 70 ? ' · ideal 50–70' : s.length > 70 ? ' · over 70' : ' · under 50'}
+                          </p>
+
+                          {/* Divider */}
+                          <div style={{ height: 1, background: '#e6e6ec', marginTop: 16, marginBottom: 16 }} />
+
+                          {/* WHY IT WORKS — Overview's Biggest-risk pattern: colored uppercase label + body, no tinted box */}
+                          <div>
+                            <p style={{ fontSize: 11, fontWeight: 700, color: hm.color, letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 8 }}>Why it works</p>
+                            <p style={{ fontSize: 13.5, fontWeight: 500, color: C.text1, lineHeight: 1.7 }}>{s.why_it_works || hm.desc}</p>
                           </div>
-                          <span style={{
-                            ...T.pill, color: sevColor,
-                            border: `1.5px solid ${sevColor}`, padding: '3px 9px',
-                            borderRadius: 20,
-                            flexShrink: 0,
-                          }}>{sevLabel}</span>
-                        </div>
 
-                        {/* Title — the main content */}
-                        <p style={{ fontSize: 16, fontWeight: 700, color: C.text1, lineHeight: 1.4, letterSpacing: '-0.3px', marginLeft: 36, marginBottom: 6 }}>{s.title}</p>
-                        <p style={{ fontSize: 12, color: C.text3, marginBottom: 14, marginLeft: 36, fontVariantNumeric: 'tabular-nums', fontWeight: 500 }}>
-                          {s.length} chars{s.length >= 50 && s.length <= 70 ? ' · within the ideal 50–70 range' : s.length > 70 ? ' · over 70, will truncate on mobile' : ' · under 50, thin on context'}
-                        </p>
+                          {/* Divider */}
+                          <div style={{ height: 1, background: '#e6e6ec', marginTop: 16, marginBottom: 16 }} />
 
-                        {/* Divider — matches Overview InsightCard hairline */}
-                        <div style={{ height: 1, background: '#e6e6ec', marginBottom: 14, marginLeft: 36 }} />
-
-                        {/* 3-col inner grid — ratio puts extra width on the text-heavy Why-it-works column (like Overview's ACTION at 1.4fr).
-                            alignItems:start so the SCORES and USE-THIS-TITLE blocks don't stretch past their content. */}
-                        <div style={{ marginLeft: 36, display: 'grid', gridTemplateColumns: '1.4fr 1fr 1fr', gap: 8, alignItems: 'start' }}>
-                          {/* WHY IT WORKS — blue tint, matches Overview InsightCard "Why now" (Dashboard.jsx:1089) exactly */}
-                          <div style={{ background: 'rgba(79,134,247,0.07)', border: '1px solid rgba(79,134,247,0.12)', borderRadius: 10, padding: '12px 14px' }}>
-                            <p style={{ ...T.innerLabel, color: '#4a7cf7', marginBottom: 6 }}>Why it works</p>
-                            <p style={T.innerText}>{s.why_it_works || hm.desc}</p>
-                          </div>
-                          {/* SCORES — white centre with hook-colored left accent, matches Overview "Action" block (Dashboard.jsx:1094-1105) exactly */}
-                          <div style={{ background: '#ffffff', border: '1px solid #e6e6ec', borderLeft: `3px solid ${hm.color}`, borderRadius: '0 10px 10px 0', padding: '12px 16px', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}>
-                            <p style={{ ...T.innerLabel, color: hm.color, marginBottom: 10 }}>Scores vs competitors</p>
-                            <div style={{ display: 'flex', gap: 18 }}>
+                          {/* SCORES — uppercase label + big inline numbers, no tinted box */}
+                          <div>
+                            <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 10 }}>Scores vs competitors</p>
+                            <div style={{ display: 'flex', gap: 20 }}>
                               {[['SEO', s.seo_score], ['CTR', s.ctr_score], ['Hook', s.hook_score]].map(([label, val]) => {
                                 const c = val >= 70 ? C.green : val >= 50 ? C.amber : C.red
                                 return (
                                   <div key={label}>
-                                    <p style={{ fontSize: 18, fontWeight: 800, color: c, lineHeight: 1, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.3px' }}>{val || '—'}</p>
-                                    <p style={{ ...T.innerLabel, color: C.text3, marginTop: 4 }}>{label}</p>
+                                    <p style={{ fontSize: 20, fontWeight: 800, color: c, lineHeight: 1, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.4px' }}>{val || '—'}</p>
+                                    <p style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.08em', textTransform: 'uppercase', marginTop: 5 }}>{label}</p>
                                   </div>
                                 )
                               })}
                             </div>
                           </div>
-                          {/* ACTION — green tint, matches Overview "Expected outcome" (Dashboard.jsx:1110-1113) exactly */}
-                          <div style={{ background: 'rgba(5,150,105,0.07)', border: '1px solid rgba(5,150,105,0.14)', borderRadius: 10, padding: '12px 14px', display: 'flex', flexDirection: 'column', gap: 10 }}>
-                            <p style={{ ...T.innerLabel, color: C.green }}>Use this title</p>
-                            <button onClick={() => handleSelectTitle(s.title)}
-                              style={{ fontSize: 12.5, fontWeight: 700, color: isSelected ? C.red : '#ffffff', background: isSelected ? 'rgba(229,37,27,0.08)' : '#e5251b', border: `1px solid ${isSelected ? 'rgba(229,37,27,0.25)' : 'transparent'}`, borderRadius: 100, padding: '8px 14px', cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.18s', boxShadow: isSelected ? 'none' : '0 1px 3px rgba(0,0,0,0.12), 0 4px 14px rgba(229,37,27,0.32)', whiteSpace: 'nowrap' }}>
-                              {isSelected ? '✓ Selected' : 'Continue →'}
-                            </button>
-                            <button onClick={() => copyTitle(s.title, i)}
-                              style={{ fontSize: 12.5, fontWeight: 600, color: copied === i ? C.green : C.text2, background: '#ffffff', border: '1px solid #e6e6ec', borderRadius: 100, padding: '6px 14px', cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.15s', whiteSpace: 'nowrap' }}>
-                              {copied === i ? '✓ Copied' : 'Copy title'}
-                            </button>
-                          </div>
                         </div>
+                      </div>
+
+                      {/* Buttons below the card — Continue (primary, full-flex) + Copy (compact secondary) */}
+                      <div style={{ display: 'flex', gap: 6 }}>
+                        <button onClick={() => handleSelectTitle(s.title)}
+                          style={{ flex: 1, fontSize: 12.5, fontWeight: 700, color: isSelected ? C.red : '#ffffff', background: isSelected ? 'rgba(229,37,27,0.08)' : '#e5251b', border: `1px solid ${isSelected ? 'rgba(229,37,27,0.25)' : 'transparent'}`, borderRadius: 100, padding: '10px 14px', cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.18s', boxShadow: isSelected ? 'none' : '0 1px 3px rgba(0,0,0,0.12), 0 4px 14px rgba(229,37,27,0.32)', whiteSpace: 'nowrap', letterSpacing: '-0.1px' }}>
+                          {isSelected ? '✓ Selected' : 'Continue →'}
+                        </button>
+                        <button onClick={() => copyTitle(s.title, i)}
+                          style={{ flexShrink: 0, fontSize: 12.5, fontWeight: 600, color: copied === i ? C.green : C.text2, background: '#ffffff', border: `1px solid ${copied === i ? 'rgba(5,150,105,0.38)' : 'rgba(0,0,0,0.1)'}`, borderRadius: 100, padding: '10px 16px', cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.15s', whiteSpace: 'nowrap', boxShadow: '0 1px 3px rgba(0,0,0,0.07)' }}>
+                          {copied === i ? '✓' : 'Copy'}
+                        </button>
                       </div>
                     </div>
                   )
