@@ -139,9 +139,9 @@ const T = {
 const VIRAL_FORMATS = [
   { key: 'survival_challenge',  hook: 'curiosity',      color: '#e5251b', label: 'Survival / Time Challenge', example: 'I Survived 24 Hours With [Person/Situation]',        why: 'Extreme curiosity + suspense.' },
   { key: 'extreme_comparison',  hook: 'contrarian',     color: '#d97706', label: 'Extreme Comparison',        example: '$5 VS $500 [Subject]: Honest Review',                 why: 'Price contrast triggers value-seeking.' },
-  { key: 'authority_warning',   hook: 'curiosity',      color: '#7c3aed', label: 'Authority / Warning',       example: "Don't Buy [Subject] Until You See This",              why: 'Fear of mistake drives high CTR.' },
-  { key: 'listicle',            hook: 'transformation', color: '#4a7cf7', label: 'Listicle / Structure',      example: '7 Things I Wish I Knew About [Subject]',             why: 'Numbers set clear expectations.' },
-  { key: 'curiosity_gap',       hook: 'curiosity',      color: '#0891b2', label: 'Curiosity Gap',             example: "I Tested Every [Subject] So You Don't Have To",      why: 'Open loop viewer must click to close.' },
+  { key: 'authority_warning',   hook: 'curiosity',      color: '#e5251b', label: 'Authority / Warning',       example: "Don't Buy [Subject] Until You See This",              why: 'Fear of mistake drives high CTR.' },
+  { key: 'listicle',            hook: 'transformation', color: '#d97706', label: 'Listicle / Structure',      example: '7 Things I Wish I Knew About [Subject]',             why: 'Numbers set clear expectations.' },
+  { key: 'curiosity_gap',       hook: 'curiosity',      color: '#d97706', label: 'Curiosity Gap',             example: "I Tested Every [Subject] So You Don't Have To",      why: 'Open loop viewer must click to close.' },
   { key: 'aspirational',        hook: 'transformation', color: '#059669', label: 'Aspirational / How I',      example: 'How I Grew [Subject] From 0 to [Number] in [Time]',  why: 'Transformation stories = highest retention.' },
 ]
 
@@ -515,7 +515,7 @@ export default function SeoOptimizer({ onNavigate }) {
         </div>
         {(title || result) && (
           <button onClick={handleClear}
-            style={{ flexShrink: 0, display: 'inline-flex', alignItems: 'center', gap: 10, padding: '9px 20px', borderRadius: 100, fontWeight: 600, fontSize: 12.5, background: C.surface, color: C.text2, border: '1px solid rgba(0,0,0,0.1)', boxShadow: '0 1px 3px rgba(0,0,0,0.07), 0 4px 14px rgba(0,0,0,0.07)', cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.18s' }}
+            style={{ flexShrink: 0, display: 'inline-flex', alignItems: 'center', gap: 10, padding: '9px 20px', borderRadius: 100, fontWeight: 600, fontSize: 12.5, background: '#ffffff', color: C.text2, border: '1px solid rgba(0,0,0,0.1)', boxShadow: '0 1px 3px rgba(0,0,0,0.07), 0 4px 14px rgba(0,0,0,0.07)', cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.18s' }}
             onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(0,0,0,0.18)'; e.currentTarget.style.color = C.text1; e.currentTarget.style.transform = 'translateY(-1px)'; e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.10), 0 8px 28px rgba(0,0,0,0.10)' }}
             onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(0,0,0,0.1)'; e.currentTarget.style.color = C.text2; e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = '0 1px 3px rgba(0,0,0,0.07), 0 4px 14px rgba(0,0,0,0.07)' }}>
             Clear
@@ -845,9 +845,9 @@ export default function SeoOptimizer({ onNavigate }) {
               <div>
                 {result.suggestions.map((s, i) => {
                   const hookMeta = {
-                    curiosity:      { label: 'Curiosity / FOMO', color: C.red,   tint: 'rgba(229,37,27,0.06)', bdr: 'rgba(229,37,27,0.14)', desc: "Makes viewers feel they're missing something" },
-                    transformation: { label: 'Transformation',   color: C.green, tint: 'rgba(5,150,105,0.06)', bdr: 'rgba(5,150,105,0.16)', desc: 'Focuses on the outcome or result' },
-                    contrarian:     { label: 'Contrarian',       color: C.amber, tint: 'rgba(217,119,6,0.06)', bdr: 'rgba(217,119,6,0.16)', desc: "Challenges assumptions — what others don't show" },
+                    curiosity:      { label: 'Curiosity / FOMO', color: C.red,   tint: C.redBg,   bdr: C.redBdr,   desc: "Makes viewers feel they're missing something" },
+                    transformation: { label: 'Transformation',   color: C.green, tint: C.greenBg, bdr: C.greenBdr, desc: 'Focuses on the outcome or result' },
+                    contrarian:     { label: 'Contrarian',       color: C.amber, tint: C.amberBg, bdr: C.amberBdr, desc: "Challenges assumptions — what others don't show" },
                   }
                   const hm = hookMeta[s.hook] || hookMeta.curiosity
                   const avgScore = Math.round(((s.seo_score || 0) + (s.ctr_score || 0) + (s.hook_score || 0)) / Math.max(1, [s.seo_score, s.ctr_score, s.hook_score].filter(v => v > 0).length))
@@ -894,9 +894,9 @@ export default function SeoOptimizer({ onNavigate }) {
 
                         {/* 3-col inner grid — mirrors Overview InsightCard's body (1fr 1.4fr 1fr, gap 8) */}
                         <div style={{ marginLeft: 36, display: 'grid', gridTemplateColumns: '1fr 1.4fr 1fr', gap: 8 }}>
-                          {/* WHY IT WORKS — blue tint, matches Overview's "Why now" (Dashboard.jsx:1089) exactly */}
-                          <div style={{ background: 'rgba(79,134,247,0.07)', border: '1px solid rgba(79,134,247,0.12)', borderRadius: 10, padding: '12px 14px' }}>
-                            <p style={{ ...T.innerLabel, color: '#4a7cf7', marginBottom: 6 }}>Why it works</p>
+                          {/* WHY IT WORKS — red tint, matches the Expected-outcome inner-block shape */}
+                          <div style={{ background: 'rgba(229,37,27,0.06)', border: '1px solid rgba(229,37,27,0.12)', borderRadius: 10, padding: '12px 14px' }}>
+                            <p style={{ ...T.innerLabel, color: C.red, marginBottom: 6 }}>Why it works</p>
                             <p style={T.innerText}>{s.why_it_works || hm.desc}</p>
                           </div>
                           {/* SCORES — white centre with hook-colored left accent, matches Overview "Action" block (Dashboard.jsx:1094-1105) exactly */}
