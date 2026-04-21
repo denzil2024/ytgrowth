@@ -29,6 +29,11 @@ if (typeof document !== 'undefined' && !document.getElementById('seo-opt-styles'
     box-shadow: 0 4px 12px rgba(0,0,0,0.08), 0 16px 40px rgba(0,0,0,0.09);
     transform: translateY(-1px);
   }
+  .seo-format-card:hover {
+    border-color: rgba(229,37,27,0.28) !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.07), 0 12px 28px rgba(0,0,0,0.07) !important;
+    transform: translateY(-1px);
+  }
 `
   document.head.appendChild(s)
 }
@@ -137,10 +142,10 @@ function ScoreRing({ score }) {
 function FormatTemplates({ onUse }) {
   const [open, setOpen] = useState(false)
   return (
-    <div style={{ marginBottom: 16 }}>
+    <div>
       <button onClick={() => setOpen(v => !v)}
-        style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: 0, background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'inherit', color: C.text2, fontSize: 12, fontWeight: 600 }}>
-        <svg width="11" height="11" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="2"
+        style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: 0, background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'inherit', color: C.text2, fontSize: 13, fontWeight: 600, letterSpacing: '-0.1px' }}>
+        <svg width="12" height="12" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"
           style={{ transform: open ? 'rotate(180deg)' : 'rotate(-90deg)', transition: 'transform 0.25s', flexShrink: 0 }}>
           <path d="M2 4.5l4.5 4.5 4.5-4.5"/>
         </svg>
@@ -148,14 +153,12 @@ function FormatTemplates({ onUse }) {
         <span style={{ color: C.text3, fontWeight: 400 }}>· 6 viral patterns</span>
       </button>
       {open && (
-        <div style={{ marginTop: 12, display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: 8 }}>
+        <div style={{ marginTop: 14, display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: 10 }}>
           {VIRAL_FORMATS.map(fmt => (
-            <button key={fmt.key} onClick={() => onUse(fmt.example)}
-              style={{ textAlign: 'left', padding: '10px 12px', border: '1px solid #e6e6ec', borderRadius: 10, cursor: 'pointer', background: '#ffffff', fontFamily: 'inherit', transition: 'all 0.15s' }}
-              onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(229,37,27,0.35)'; e.currentTarget.style.background = '#fffafa' }}
-              onMouseLeave={e => { e.currentTarget.style.borderColor = '#e6e6ec'; e.currentTarget.style.background = '#ffffff' }}>
-              <p style={{ fontSize: 10, fontWeight: 600, color: C.text3, marginBottom: 4, textTransform: 'uppercase', letterSpacing: '0.07em' }}>{fmt.label}</p>
-              <p style={{ fontSize: 12.5, color: C.text1, fontWeight: 500, lineHeight: 1.4, margin: 0 }}>{fmt.example}</p>
+            <button key={fmt.key} onClick={() => onUse(fmt.example)} className="seo-format-card"
+              style={{ textAlign: 'left', padding: '14px 16px', border: '1px solid #e6e6ec', borderRadius: 12, cursor: 'pointer', background: '#ffffff', fontFamily: 'inherit', boxShadow: '0 1px 2px rgba(0,0,0,0.04)', transition: 'box-shadow 0.2s, transform 0.2s, border-color 0.2s' }}>
+              <p style={{ fontSize: 10.5, fontWeight: 700, color: C.text3, marginBottom: 6, textTransform: 'uppercase', letterSpacing: '0.08em', lineHeight: 1 }}>{fmt.label}</p>
+              <p style={{ fontSize: 13, color: C.text1, fontWeight: 500, lineHeight: 1.45, margin: 0, letterSpacing: '-0.1px' }}>{fmt.example}</p>
             </button>
           ))}
         </div>
@@ -420,64 +423,73 @@ export default function SeoOptimizer({ onNavigate }) {
   return (
     <div style={{ width: '100%', fontFamily: "'Inter', system-ui, sans-serif" }}>
 
-      {/* Header */}
-      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 22, gap: 16 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 14, minWidth: 0 }}>
-          <div style={{ width: 44, height: 44, borderRadius: 11, background: 'rgba(229,37,27,0.09)', border: '1px solid rgba(229,37,27,0.18)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-            <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="#e5251b" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="10" cy="10" r="6"/><path d="m15 15 4 4"/></svg>
-          </div>
-          <div style={{ minWidth: 0 }}>
-            <h2 style={{ fontSize: 22, fontWeight: 800, color: '#111114', letterSpacing: '-0.5px', marginBottom: 2, lineHeight: 1.1 }}>SEO Optimizer</h2>
-            <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.3 }}>Analyse your title against competitor data. Get 3 scored alternatives plus a matching description.</p>
+      {/* Header — matches WeeklyReport pattern: 44×44 badge, 22/800 title, 14/text3 subtitle, 32 marginBottom */}
+      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 32, gap: 16, flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+          <span style={{
+            display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+            width: 44, height: 44, borderRadius: 11,
+            background: 'rgba(229,37,27,0.09)',
+            border: '1px solid rgba(229,37,27,0.18)',
+            flexShrink: 0,
+          }}>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={C.red} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M12 3l1.8 5.4L19 10l-5.2 1.6L12 17l-1.8-5.4L5 10l5.2-1.6z"/>
+              <path d="M19 14l0.9 2.7L22 17.5l-2.1 0.8L19 21l-0.9-2.7L16 17.5l2.1-0.8z"/>
+            </svg>
+          </span>
+          <div>
+            <h1 style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', marginBottom: 4, lineHeight: 1.1 }}>SEO Optimizer</h1>
+            <p style={{ fontSize: 14, color: C.text3, lineHeight: 1.3 }}>Your title against live competitor data — 3 AI alternatives, plus a matching description.</p>
           </div>
         </div>
         {(title || result) && (
           <button onClick={handleClear}
-            style={{ flexShrink: 0, fontSize: 12, fontWeight: 600, color: C.text2, background: '#ffffff', border: '1px solid #e6e6ec', borderRadius: 100, padding: '6px 14px', cursor: 'pointer', fontFamily: 'inherit', whiteSpace: 'nowrap', boxShadow: '0 1px 3px rgba(0,0,0,0.06)', transition: 'all 0.18s' }}
-            onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(0,0,0,0.18)'; e.currentTarget.style.color = '#111114' }}
-            onMouseLeave={e => { e.currentTarget.style.borderColor = '#e6e6ec'; e.currentTarget.style.color = C.text2 }}>
+            style={{ flexShrink: 0, display: 'inline-flex', alignItems: 'center', gap: 10, padding: '9px 20px', borderRadius: 100, fontWeight: 600, fontSize: 12.5, background: C.surface, color: C.text2, border: '1px solid rgba(0,0,0,0.1)', boxShadow: '0 1px 3px rgba(0,0,0,0.07), 0 4px 14px rgba(0,0,0,0.07)', cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.18s' }}
+            onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(0,0,0,0.18)'; e.currentTarget.style.color = C.text1; e.currentTarget.style.transform = 'translateY(-1px)'; e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.10), 0 8px 28px rgba(0,0,0,0.10)' }}
+            onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(0,0,0,0.1)'; e.currentTarget.style.color = C.text2; e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = '0 1px 3px rgba(0,0,0,0.07), 0 4px 14px rgba(0,0,0,0.07)' }}>
             Clear
           </button>
         )}
       </div>
 
       {/* Input card */}
-      <div className="seo-glass-card" style={{ borderRadius: 16, padding: '22px 24px', marginBottom: 12 }}>
+      <div className="seo-glass-card" style={{ padding: '28px 32px', marginBottom: 16 }}>
 
         {prefillBanner && (
           <div style={{
-            fontSize: 12, fontWeight: 500, color: C.text2,
+            fontSize: 13, fontWeight: 500, color: C.text2,
             background: '#fafafb', border: '1px solid #e6e6ec',
-            borderRadius: 8, padding: '7px 12px', marginBottom: 14,
-            display: 'inline-flex', alignItems: 'center', gap: 6,
+            borderRadius: 8, padding: '8px 14px', marginBottom: 18,
+            display: 'inline-flex', alignItems: 'center', gap: 8,
           }}>
             <span style={{ width: 6, height: 6, borderRadius: '50%', background: C.green }} />
             Title pre-filled from Video Ideas
           </div>
         )}
 
-        <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 10 }}>
+        <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 12 }}>
           <label style={{ fontSize: 11, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Your video title</label>
           <span style={{
-            fontSize: 11.5, fontWeight: 500,
+            fontSize: 12, fontWeight: 500,
             color: title.length > 70 ? C.red : title.length >= 50 ? C.green : C.text3,
             fontVariantNumeric: 'tabular-nums',
           }}>
-            {title.length} chars · {title.length >= 50 && title.length <= 70 ? 'ideal' : title.length > 70 ? 'too long' : 'aim for 50–70'}
+            {title.length} chars · {title.length >= 50 && title.length <= 70 ? 'ideal length' : title.length > 70 ? 'too long' : 'aim for 50–70'}
           </span>
         </div>
 
         <input ref={titleInputRef} value={title} onChange={e => setTitle(e.target.value)} onKeyDown={e => e.key === 'Enter' && handleSubmitTitle()}
           placeholder="e.g. How I grew my YouTube channel to 10k subscribers"
-          style={{ width: '100%', padding: '14px 18px', fontSize: 15, border: '1px solid #e6e6ec', borderRadius: 10, fontFamily: 'inherit', outline: 'none', color: C.text1, background: '#ffffff', boxSizing: 'border-box', transition: 'border-color 0.18s, box-shadow 0.18s', letterSpacing: '-0.15px', fontWeight: 500 }}
+          style={{ width: '100%', padding: '16px 20px', fontSize: 16, border: '1px solid #e6e6ec', borderRadius: 12, fontFamily: 'inherit', outline: 'none', color: C.text1, background: '#ffffff', boxSizing: 'border-box', transition: 'border-color 0.18s, box-shadow 0.18s', letterSpacing: '-0.15px', fontWeight: 500, lineHeight: 1.4 }}
           onFocus={e => { e.target.style.borderColor = 'rgba(0,0,0,0.25)'; e.target.style.boxShadow = '0 0 0 4px rgba(0,0,0,0.04)' }}
           onBlur={e => { e.target.style.borderColor = '#e6e6ec'; e.target.style.boxShadow = 'none' }} />
 
         <TitlePreviewSimulator title={title} />
 
-        <div style={{ marginTop: 18 }}>
+        <div style={{ marginTop: 22 }}>
           <button onClick={handleSubmitTitle} disabled={loading || loadingIntent || !title.trim()}
-            style={{ display: 'inline-flex', alignItems: 'center', gap: 7, padding: '10px 22px', background: title.trim() && !loading && !loadingIntent ? '#e5251b' : '#e0e0e6', color: '#fff', border: 'none', borderRadius: 100, fontSize: 13, fontWeight: 700, fontFamily: 'inherit', cursor: title.trim() && !loading && !loadingIntent ? 'pointer' : 'not-allowed', transition: 'all 0.18s', boxShadow: title.trim() && !loading && !loadingIntent ? '0 1px 3px rgba(0,0,0,0.12), 0 4px 14px rgba(229,37,27,0.32)' : 'none', letterSpacing: '-0.1px' }}
+            style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '12px 24px', background: title.trim() && !loading && !loadingIntent ? C.red : '#e0e0e6', color: '#fff', border: 'none', borderRadius: 100, fontSize: 13.5, fontWeight: 700, fontFamily: 'inherit', cursor: title.trim() && !loading && !loadingIntent ? 'pointer' : 'not-allowed', transition: 'all 0.18s', boxShadow: title.trim() && !loading && !loadingIntent ? '0 1px 3px rgba(0,0,0,0.12), 0 4px 14px rgba(229,37,27,0.32)' : 'none', letterSpacing: '-0.1px' }}
             onMouseEnter={e => { if (!loading && !loadingIntent && title.trim()) { e.currentTarget.style.filter = 'brightness(1.07)'; e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.15), 0 8px 28px rgba(229,37,27,0.42)'; e.currentTarget.style.transform = 'translateY(-1px)' } }}
             onMouseLeave={e => { if (!loading && !loadingIntent && title.trim()) { e.currentTarget.style.filter = ''; e.currentTarget.style.boxShadow = '0 1px 3px rgba(0,0,0,0.12), 0 4px 14px rgba(229,37,27,0.32)'; e.currentTarget.style.transform = '' } }}>
             {loadingIntent ? (
@@ -486,7 +498,9 @@ export default function SeoOptimizer({ onNavigate }) {
               <><SpinIcon /> Researching &amp; generating…</>
             ) : (
               <>
-                <svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="6" cy="6" r="5"/><path d="m9 9 3 3"/></svg>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M12 3l1.8 5.4L19 10l-5.2 1.6L12 17l-1.8-5.4L5 10l5.2-1.6z"/>
+                </svg>
                 Analyse &amp; suggest titles
               </>
             )}
@@ -494,13 +508,13 @@ export default function SeoOptimizer({ onNavigate }) {
         </div>
 
         {error && (
-          <div style={{ marginTop: 14, display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: C.red, background: C.redBg, border: `1px solid ${C.redBdr}`, borderRadius: 9, padding: '9px 13px' }}>
+          <div style={{ marginTop: 16, display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: C.red, background: C.redBg, border: `1px solid ${C.redBdr}`, borderRadius: 9, padding: '10px 14px' }}>
             <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><circle cx="6.5" cy="6.5" r="5"/><path d="M6.5 4v3M6.5 9v.5"/></svg>
             {error}
           </div>
         )}
 
-        <div style={{ marginTop: 18, paddingTop: 16, borderTop: '1px solid #f0f0f4' }}>
+        <div style={{ marginTop: 24, paddingTop: 20, borderTop: '1px solid #f0f0f4' }}>
           <FormatTemplates onUse={t => setTitle(t)} />
         </div>
       </div>
