@@ -86,7 +86,7 @@ def generate_description(body: DescriptionRequest, request: Request):
             "top_video_titles": top_titles,
         }
 
-    descriptions, error = generate_description_suggestions(
+    descriptions, top_keywords, error = generate_description_suggestions(
         body.title.strip(),
         body.current_description.strip(),
         body.niche.strip(),
@@ -97,7 +97,7 @@ def generate_description(body: DescriptionRequest, request: Request):
     )
     if error and not descriptions:
         return JSONResponse({"error": error}, status_code=500)
-    return JSONResponse({"descriptions": descriptions})
+    return JSONResponse({"descriptions": descriptions, "top_keywords": top_keywords})
 
 
 @router.post("/thumbnail-text")

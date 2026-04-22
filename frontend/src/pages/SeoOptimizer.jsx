@@ -425,6 +425,7 @@ export default function SeoOptimizer({ onNavigate }) {
   const [currentDesc, setCurrentDesc]     = useState(saved.currentDesc || '')
   const [descLoading, setDescLoading]     = useState(false)
   const [descResult, setDescResult]       = useState(saved.descResult || null)
+  const [descKeywords, setDescKeywords]   = useState(saved.descKeywords || [])
   const [descError, setDescError]         = useState('')
   const [copiedDesc, setCopiedDesc]       = useState(null)
   const descRef      = useRef(null)
@@ -457,8 +458,8 @@ export default function SeoOptimizer({ onNavigate }) {
   useEffect(() => {
     // Don't persist state while a request is in flight — setResult(null) at submit start would otherwise overwrite a good previous result with null.
     if (loading || loadingIntent) return
-    saveToDisk({ title, result, selectedTitle, currentDesc, descResult, intentOptions, selectedKeyword })
-  }, [title, result, loading, loadingIntent, selectedTitle, currentDesc, descResult, intentOptions, selectedKeyword])
+    saveToDisk({ title, result, selectedTitle, currentDesc, descResult, descKeywords, intentOptions, selectedKeyword })
+  }, [title, result, loading, loadingIntent, selectedTitle, currentDesc, descResult, descKeywords, intentOptions, selectedKeyword])
 
   function handleClear() {
     localStorage.removeItem(STORAGE_KEY)
@@ -470,6 +471,7 @@ export default function SeoOptimizer({ onNavigate }) {
     setSelectedTitle(null)
     setCurrentDesc('')
     setDescResult(null)
+    setDescKeywords([])
     setDescError('')
   }
 
@@ -552,6 +554,7 @@ export default function SeoOptimizer({ onNavigate }) {
     setSelectedTitle(t)
     setCurrentDesc('')
     setDescResult(null)
+    setDescKeywords([])
     setDescError('')
     setTimeout(() => descRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 80)
   }
@@ -561,6 +564,7 @@ export default function SeoOptimizer({ onNavigate }) {
     setDescLoading(true)
     setDescError('')
     setDescResult(null)
+    setDescKeywords([])
     try {
       const res = await fetch(
         `${API}/seo/generate-description`,
@@ -591,6 +595,7 @@ export default function SeoOptimizer({ onNavigate }) {
         return
       }
       setDescResult(data.descriptions)
+      setDescKeywords(Array.isArray(data.top_keywords) ? data.top_keywords : [])
     } catch {
       setDescError(
         'Could not reach the server.'
@@ -1480,7 +1485,7 @@ export default function SeoOptimizer({ onNavigate }) {
                     <p style={T.cardDesc}>
                       3 descriptions — each opens with a different hook strategy. Expand to see the full text, then copy.
                     </p>
-                    <button onClick={() => { setDescResult(null); setDescError('') }} className="seo-btn" style={{ flexShrink: 0 }}>
+                    <button onClick={() => { setDescResult(null); setDescKeywords([]); setDescError('') }} className="seo-btn" style={{ flexShrink: 0 }}>
                       Regenerate
                     </button>
                   </div>
@@ -1489,6 +1494,50 @@ export default function SeoOptimizer({ onNavigate }) {
                       <DescriptionCard key={i} d={d} idx={i} copiedDesc={copiedDesc} onCopy={copyDesc} />
                     ))}
                   </div>
+
+                  {/* Top keywords woven into the descriptions — surfaced as chips so the user can see and copy them separately. */}
+                  {descKeywords.length > 0 && (
+                    <div style={{ marginTop: 18, paddingTop: 16, borderTop: `1px solid ${C.border}` }}>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10, gap: 10, flexWrap: 'wrap' }}>
+                        <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em', margin: 0 }}>
+                          Top {descKeywords.length} keywords used
+                        </p>
+                        <button
+                          onClick={() => { navigator.clipboard.writeText(descKeywords.join(', ')) }}
+                          style={{ fontSize: 11.5, fontWeight: 600, color: C.text3, background: 'transparent', border: 'none', cursor: 'pointer', fontFamily: 'inherit', padding: 0, letterSpacing: '-0.05px' }}
+                          onMouseEnter={e => { e.currentTarget.style.color = C.text1 }}
+                          onMouseLeave={e => { e.currentTarget.style.color = C.text3 }}>
+                          Copy all →
+                        </button>
+                      </div>
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                        {descKeywords.map(kw => (
+                          <span key={kw}
+                            role="button" tabIndex={0}
+                            onClick={() => navigator.clipboard.writeText(kw)}
+                            onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); navigator.clipboard.writeText(kw) } }}
+                            title="Click to copy"
+                            style={{
+                              display: 'inline-flex', alignItems: 'center', gap: 6,
+                              fontSize: 12, fontWeight: 600, color: C.green,
+                              background: 'rgba(5,150,105,0.07)',
+                              border: '1px solid rgba(5,150,105,0.22)',
+                              padding: '5px 11px', borderRadius: 20,
+                              cursor: 'pointer',
+                              letterSpacing: '-0.05px',
+                              transition: 'all 0.15s',
+                            }}
+                            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(5,150,105,0.12)'; e.currentTarget.style.borderColor = 'rgba(5,150,105,0.40)' }}
+                            onMouseLeave={e => { e.currentTarget.style.background = 'rgba(5,150,105,0.07)'; e.currentTarget.style.borderColor = 'rgba(5,150,105,0.22)' }}>
+                            <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+                              <polyline points="1.5,6.5 5,10 10.5,2"/>
+                            </svg>
+                            {kw}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </>
               )}
               </div>

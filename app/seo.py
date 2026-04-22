@@ -525,6 +525,152 @@ def _score_title(title: str, top_titles: list[str]) -> dict:
     }
 
 
+# ─── Deterministic SEO / CTR / Hook rubric for AI-suggested titles ──────────────
+#
+# Replaces the old "ask Claude to grade itself" pattern (which returned arbitrary
+# numbers with no rubric). All three scores here are computed purely from the
+# title text against the live keyword + competitor data — so rankings are stable,
+# repeatable, and explainable.
+
+_SPECIFICITY_PATTERN  = re.compile(r"(\$[\d,]+|\d+%|\d+\s*(hour|day|week|month|year|min|sec)s?|\d+\s*(k|m|b)\b|\$?\d{2,})", re.IGNORECASE)
+_CONTRAST_PATTERN     = re.compile(r"\b(vs\.?|versus|before|after|but|instead|actually|really|truth|reality)\b", re.IGNORECASE)
+_CURIOSITY_PATTERN    = re.compile(r"\b(why|how|what|secret|reason|nobody|no one|wish|never|until|behind|inside)\b", re.IGNORECASE)
+_GENERIC_CLICKBAIT    = re.compile(r"\b(shocking|unbelievable|insane|crazy|you won'?t believe|gone wrong|must watch)\b", re.IGNORECASE)
+
+
+def _tokenize(text: str) -> list[str]:
+    return [w.strip(".,!?\"'()[]:") for w in text.lower().split() if w.strip()]
+
+
+def _score_suggestion_rubric(title: str, top_titles: list[str], keyword_scores: list[dict] | None, primary_keyword: str = "") -> dict:
+    """
+    Returns { seo, ctr, hook, combined, breakdown } for a single suggested title.
+    Combined = SEO * 0.30 + CTR * 0.40 + Hook * 0.30  (CTR is the viewer's first decision).
+    """
+    t = title.strip()
+    words = _tokenize(t)
+    length = len(t)
+
+    # ───── SEO (0-100) ─────
+    seo = 0
+    # Length compliance (0-30)
+    if 50 <= length <= 70:    seo += 30
+    elif 40 <= length <= 80:  seo += 18
+    elif 30 <= length < 40:   seo += 8
+    else:                     seo += 0
+
+    # Primary keyword presence + position (0-30)
+    pk = (primary_keyword or "").strip().lower()
+    if pk and pk in t.lower():
+        first_third = t.lower()[: max(1, len(t) // 3)]
+        seo += 30 if pk in first_third else 18
+    elif pk:
+        # no primary keyword at all — baseline 0
+        seo += 0
+    else:
+        seo += 15  # no primary given — don't penalise
+
+    # Secondary keyword coverage (0-25) — rewards organic inclusion of related phrases
+    if keyword_scores:
+        phrases = [k.get("phrase", "").lower() for k in keyword_scores[:10] if k.get("phrase")]
+        hits = sum(1 for p in phrases if p and p != pk and p in t.lower())
+        seo += min(hits * 6, 25)
+    else:
+        seo += 10
+
+    # Anti-keyword-stuffing (0-15)
+    if pk:
+        repeats = t.lower().count(pk)
+        seo += 15 if repeats <= 1 else (8 if repeats == 2 else 0)
+    else:
+        seo += 12
+
+    seo = min(seo, 100)
+
+    # ───── CTR (0-100) — does the viewer's thumb stop scrolling ─────
+    ctr = 0
+    # Specificity (0-30): concrete numbers, timeframes, dollar amounts
+    if _SPECIFICITY_PATTERN.search(t):
+        ctr += 30
+
+    # Emotional contrast / turn (0-20)
+    if _CONTRAST_PATTERN.search(t):
+        ctr += 20
+
+    # Curiosity signal (0-20)
+    if _CURIOSITY_PATTERN.search(t) or t.endswith("?"):
+        ctr += 20
+
+    # Power-word discipline (0-15): some power words lift; too many flag as spam
+    power_hits = sum(1 for w in words if w in POWER_WORDS)
+    if power_hits == 0:    ctr += 10
+    elif power_hits == 1:  ctr += 15
+    elif power_hits == 2:  ctr += 10
+    else:                  ctr += 0
+
+    # Not generic clickbait (0-15)
+    ctr += 0 if _GENERIC_CLICKBAIT.search(t) else 15
+
+    ctr = min(ctr, 100)
+
+    # ───── Hook (0-100) — opening strength + pattern interrupt vs competitor set ─────
+    hook = 0
+
+    # Opening strength — first 3 words carry weight? (0-25)
+    first_three = words[:3]
+    strong_first = (
+        any(w in POWER_WORDS or w in QUESTION_STARTERS for w in first_three)
+        or any(re.search(r"\d", w) for w in first_three)
+        or bool(pk and words and pk.split()[0] == words[0])
+    )
+    hook += 25 if strong_first else 10
+
+    # Pattern interrupt vs competitor titles (0-30)
+    # Measure what % of the suggestion's meaningful words don't appear in ANY competitor title.
+    if top_titles and words:
+        competitor_words = set()
+        for ct in top_titles[:15]:
+            for w in _tokenize(ct):
+                if len(w) > 3 and w not in _TITLE_NOISE:
+                    competitor_words.add(w)
+        meaningful_title_words = [w for w in words if len(w) > 3 and w not in _TITLE_NOISE]
+        if meaningful_title_words:
+            novel = [w for w in meaningful_title_words if w not in competitor_words]
+            novelty_ratio = len(novel) / len(meaningful_title_words)
+            hook += int(novelty_ratio * 30)
+        else:
+            hook += 15
+    else:
+        hook += 15
+
+    # Concrete stakes / outcome (0-25) — named number OR outcome verb like grew/made/lost/built
+    outcome_verbs = re.compile(r"\b(grew|made|built|earned|lost|gained|turned|went from|saved|doubled|tripled|quit|fixed|broke)\b", re.IGNORECASE)
+    has_stakes = bool(_SPECIFICITY_PATTERN.search(t)) or bool(outcome_verbs.search(t))
+    hook += 25 if has_stakes else 8
+
+    # Viral format match (0-20) — only a mild signal; we don't want to overweight it
+    hook += 20 if _detect_viral_format(t) else 6
+
+    hook = min(hook, 100)
+
+    combined = round(seo * 0.30 + ctr * 0.40 + hook * 0.30)
+
+    return {
+        "seo": seo,
+        "ctr": ctr,
+        "hook": hook,
+        "combined": combined,
+        "breakdown": {
+            "length": length,
+            "has_primary_keyword": bool(pk and pk in t.lower()),
+            "power_word_count": power_hits,
+            "has_specificity": bool(_SPECIFICITY_PATTERN.search(t)),
+            "has_curiosity": bool(_CURIOSITY_PATTERN.search(t)),
+            "is_generic_clickbait": bool(_GENERIC_CLICKBAIT.search(t)),
+        },
+    }
+
+
 # ─── Claude prompt + suggestions ──────────────────────────────────────────────
 
 def _build_gap_report(breakdown: dict) -> str:
@@ -715,7 +861,7 @@ CONTENT TYPE: Personal vlog / lifestyle video.
 - Numbers that exist in the video (e.g. "2 Bedroom") are fine
 """
 
-    prompt = f"""You are a YouTube title strategist with access to live YouTube data.
+    prompt = f"""You are a YouTube growth strategist who writes titles for a living. Your job is NOT to brainstorm clever phrases — it is to write titles YouTube's recommendation engine will push to real viewers based on the live data below.
 
 USER'S TITLE: "{title}"
 NICHE KEYWORD: "{niche}"
@@ -724,39 +870,40 @@ NICHE KEYWORD: "{niche}"
 {ac_block}
 {kw_block}
 
-Your task has 3 phases. Return the result as a single JSON object.
+Your task has 3 phases. Return a single JSON object.
 
-PHASE 1 — ANALYSIS
-Study the real YouTube results above. Determine:
+PHASE 1 — ANALYSIS (from the live YouTube data, not guesswork)
 - search_intent: what is the viewer trying to achieve? (learn / discover / solve / buy / be entertained)
 - emotional_driver: what feeling makes someone click on this type of video?
 - viewer_profile: 1 sentence — who is typing this query and what outcome do they want?
-- top_keywords: list the 4–6 keyword phrases that appear most across the competitor titles
-- dominant_patterns: what title structure/format dominates the top results? (e.g. "listicle", "personal story", "luxury reveal", "how-to")
+- top_keywords: the 4–6 phrases that appear most across the competitor titles above
+- dominant_patterns: what title structure dominates the top results? (e.g. "listicle", "personal story", "luxury reveal", "how-to")
 
 PHASE 2 — GAP
-- overused_angle: what angle / framing appears in too many of the competitor titles?
-- gap_opportunity: what angle is completely MISSING from all the competitor titles? This is the differentiation opportunity.
+- overused_angle: the framing too many of the competitor titles share
+- gap_opportunity: the angle completely MISSING from every competitor title above. THIS is your differentiation wedge.
 
-PHASE 3 — 3 TITLE VARIANTS
-Using the gap opportunity, write 3 titles with different psychological hooks.
-Each title must have a genuinely different structure and opening — not 3 rephrasings of the same sentence.
+PHASE 3 — 3 CREATIVE TITLES
+Write 3 titles, each aimed at the gap above. They must feel like titles a creator would write, not templates.
 
-Hook A — CURIOSITY / PATTERN INTERRUPT: something specific and unexpected that stops the scroll. The viewer must feel "I've never seen this framed this way before."
-Hook B — TRANSFORMATION / STAKES: name the concrete outcome or cost. Make the viewer feel the gap between where they are and where this video takes them.
-Hook C — CONTRARIAN / INSIDER: challenge a common belief or reveal something the viewer assumed was settled. Feels like a secret being told directly to them.
+WHAT MAKES A TITLE WORK HERE:
+- Emotional pull from SPECIFICITY — a real number, a concrete outcome, a named contrast, a real moment. Never generic clickbait ("Shocking", "You Won't Believe").
+- Curiosity with a clear payoff — the viewer must know what they'll feel or learn by clicking.
+- Pattern interrupt vs the competitor set — if every competitor title opens the same way, yours opens differently.
+- Voice that sounds human, not marketing copy. Write as the creator talking directly to one person.
+- Every title anchors on the gap_opportunity above — that is the reason YouTube will push it to a fresh audience.
 
-Rules for every title:
-- 50–70 characters exactly (count every character including spaces)
-- Primary keyword near the start
-- Draw psychological pull from SPECIFICITY — real numbers, real outcomes, real contrasts — not from generic trigger words like "Finally", "Stop", "Secret", "Shocking"
-- If a power word appears it must earn its place through context, not be inserted mechanically
-- Do NOT fabricate facts not present in the original title
-- Do NOT force listicle numbers unless the video is actually a list
-- Plain text only
-- NEVER use em-dashes (—) or en-dashes (–). Use a hyphen (-) or colon (:) instead
+HARD RULES (enforced):
+- 50–70 characters total, including spaces. Count exactly.
+- Plain text only. No emoji. No ALL CAPS words.
+- FORBIDDEN CHARACTERS: em-dashes (—), en-dashes (–), colons (:), and pipes (|). Do not use them anywhere in the title. If you need punctuation, use a hyphen (-) or a comma.
+- No fabricated facts. No invented numbers. If the user's title already mentions a number, you may keep it; never invent one.
+- No forced listicle numbers unless the video is genuinely a list.
+- Do not reuse the same opening structure across all 3 titles. Vary how each one starts.
 
-Return ONLY this JSON (no markdown, no explanation):
+Each title must be DIFFERENT from the other two in both opening word and emotional angle — not 3 rephrasings.
+
+Return ONLY this JSON (no markdown, no prose):
 {{
   "analysis": {{
     "search_intent": "...",
@@ -769,36 +916,21 @@ Return ONLY this JSON (no markdown, no explanation):
   }},
   "titles": [
     {{
-      "title": "...",
-      "hook": "curiosity",
+      "title": "<50-70 chars, no colon>",
+      "primary_keyword": "<the keyword this title anchors on>",
+      "angle": "<1 sentence: why YouTube will distribute this to fresh viewers, anchored to the gap>",
+      "why_it_works": "<1 sentence: what emotion the viewer feels on seeing it>"
+    }},
+    {{
+      "title": "<different opening, different angle>",
       "primary_keyword": "...",
-      "power_words": ["..."],
-      "char_count": 0,
-      "seo_score": 0,
-      "ctr_score": 0,
-      "hook_score": 0,
+      "angle": "...",
       "why_it_works": "..."
     }},
     {{
-      "title": "...",
-      "hook": "transformation",
+      "title": "<third distinct angle>",
       "primary_keyword": "...",
-      "power_words": ["..."],
-      "char_count": 0,
-      "seo_score": 0,
-      "ctr_score": 0,
-      "hook_score": 0,
-      "why_it_works": "..."
-    }},
-    {{
-      "title": "...",
-      "hook": "contrarian",
-      "primary_keyword": "...",
-      "power_words": ["..."],
-      "char_count": 0,
-      "seo_score": 0,
-      "hook_score": 0,
-      "ctr_score": 0,
+      "angle": "...",
       "why_it_works": "..."
     }}
   ]
@@ -822,26 +954,38 @@ Return ONLY this JSON (no markdown, no explanation):
             title_text = _to_title_case(t.get("title", "").strip().strip('"'))
             if not title_text or len(title_text) < 15:
                 continue
-            s = _score_title(title_text, top_titles)
+
+            # Enforce the no-colon rule server-side as a safety net — if Claude slips one in,
+            # convert to a hyphen rather than discard the suggestion.
+            title_text = title_text.replace(":", " -").replace("|", " -")
+            title_text = re.sub(r"\s{2,}", " ", title_text).strip()
+
+            primary_kw = t.get("primary_keyword", "") or niche
+            rubric = _score_suggestion_rubric(title_text, top_titles, keyword_scores, primary_kw)
+            heuristic = _score_title(title_text, top_titles)  # kept for legacy "breakdown" field
             suggestions.append({
                 "title": title_text,
-                # Use Claude's contextual scores as primary; our formula as fallback
-                "score": t.get("seo_score") or s["total"],
-                "seo_score": t.get("seo_score") or s["total"],
-                "ctr_score": t.get("ctr_score", 0),
-                "hook_score": t.get("hook_score", 0),
-                "breakdown": s["breakdown"],
+                # Scores now deterministic — computed from the title + competitor/keyword data.
+                "score": rubric["combined"],
+                "seo_score": rubric["seo"],
+                "ctr_score": rubric["ctr"],
+                "hook_score": rubric["hook"],
+                "rubric": rubric["breakdown"],
+                "breakdown": heuristic["breakdown"],
                 "length": len(title_text),
-                "power_words_found": t.get("power_words") or s["power_words_found"],
-                "viral_format_detected": s.get("viral_format_detected"),
-                "hook": t.get("hook", "curiosity"),
-                "primary_keyword": t.get("primary_keyword", ""),
+                "power_words_found": heuristic["power_words_found"],
+                "viral_format_detected": heuristic.get("viral_format_detected"),
+                "primary_keyword": primary_kw,
+                "angle": t.get("angle", ""),
                 "why_it_works": t.get("why_it_works", ""),
-                # Keep strategy field for frontend compatibility — map from hook type
-                "strategy": {"curiosity": "browse", "transformation": "hybrid", "contrarian": "search"}.get(
-                    t.get("hook", "curiosity"), "hybrid"
-                ),
+                # Frontend still expects these keys; keep for compatibility but fill them sensibly.
+                "hook": t.get("hook", "curiosity"),
+                "strategy": "hybrid",
             })
+
+        # Best title first — the Title Scorecard hero + "Use this" selection flow
+        # all assume suggestions[0] is the strongest option.
+        suggestions.sort(key=lambda s: s["score"], reverse=True)
 
         return suggestions, analysis, ""
 
@@ -1078,16 +1222,18 @@ def generate_description_suggestions(
     keyword_scores: list = None,
     current_year: int = 2026,
     channel_context: dict = None,
-) -> tuple[list[dict], str]:
+) -> tuple[list[dict], list[str], str]:
     """
     Generate 3 YouTube description options for a given title.
-    Returns (descriptions, error_string).
+    Returns (descriptions, top_keywords, error_string).
+    top_keywords is the same top-3 list surfaced to the frontend so it can render
+    the keyword chips alongside the description output.
     """
     import json as _json
 
     api_key = os.getenv("ANTHROPIC_API_KEY", "")
     if not api_key:
-        return [], "ANTHROPIC_API_KEY is not set"
+        return [], [], "ANTHROPIC_API_KEY is not set"
 
     client = _make_client()
 
@@ -1142,7 +1288,7 @@ def generate_description_suggestions(
         if parts:
             channel_block = "\nCHANNEL CONTEXT (use to match the creator's niche terminology and avoid duplicating topics already covered):\n" + "\n".join(parts) + "\n"
 
-    prompt = f"""You are a YouTube description writer. Your job is to write descriptions that feel human, flow naturally, and are built around what viewers actually search for.
+    prompt = f"""You are a YouTube description writer who makes copy feel warm, genuine, and specific — never corporate, never keyword-stuffed. Viewers should feel like a real creator wrote this to them.
 
 VIDEO TITLE: "{title}"
 PRIMARY NICHE: {niche or title}
@@ -1169,14 +1315,15 @@ GEOGRAPHY RULE:
 Write 3 complete YouTube descriptions. Each uses a different opening strategy.
 
 CRITICAL WRITING RULES for every description:
-1. LENGTH: 300-400 words. This is a hard floor — descriptions shorter than 300 words are penalised by YouTube's algorithm.
-2. OPENING (first 150 characters — visible before "Show more"): This is the most important part. Must contain the primary keyword AND give the viewer an immediate reason to keep reading. No fluff. No "Welcome to my channel."
-3. PROSE STYLE: Write in flowing paragraphs. No bullet points. No numbered lists. No generic sub-headers. Each paragraph should lead naturally into the next, like you are talking directly to the viewer.
-4. KEYWORD USE: Weave all 3 keywords into the body naturally — once each is enough. If a keyword phrase sounds awkward, rephrase slightly while keeping the core words. Never repeat a keyword more than twice total.
-5. CALL TO ACTION: One short, genuine CTA at the end. Not "SMASH that like button!!!" — something like "If this helped, drop a comment below" or "Save this for later."
-6. HASHTAGS: The very last line must be exactly: {hashtags_line}
-7. No timestamps, no external links, no em-dashes, no en-dashes (use hyphen or colon instead).
-8. Year references must be {current_year} or later — never write a past year.
+1. LENGTH: 300-400 words. Hard floor — shorter descriptions get downgraded by YouTube.
+2. OPENING (first 150 characters — visible before "Show more"): Must contain the primary keyword AND give the viewer a specific, emotional reason to keep reading. Open with a scene, a feeling, a concrete promise — not "In this video" or "Welcome to my channel".
+3. PROSE STYLE: Warm flowing paragraphs. Write like you are talking to one person over coffee. No bullet points, no numbered lists, no sub-headers. Each paragraph leads into the next. Sentences vary in length — short ones land harder.
+4. SWEETNESS: Use sensory detail, small specifics, real moments. A description should feel lived-in, not like filler copy. Find one moment or image to anchor it.
+5. KEYWORD USE: Weave all 3 keywords into the body naturally — once each is enough, never more than twice total. They must feel like words a human would say, not forced anchors. If a keyword sounds awkward in a sentence, rephrase the sentence.
+6. CALL TO ACTION: One short genuine CTA at the end — warm, specific, not shouty. Examples: "If this helped, drop a comment below" or "Save this for later — you'll want it when you start."
+7. HASHTAGS: The very last line must be exactly: {hashtags_line}
+8. No timestamps, no external links, no em-dashes, no en-dashes. Use a hyphen or a comma instead. Do not use a colon to open a section.
+9. Year references must be {current_year} or later — never a past year.
 
 Description A — STORY / HOOK:
 Open with a personal or relatable moment tied to the emotional driver. Pull the viewer in by putting them in a scene or feeling they recognise. The primary keyword must appear in the first sentence.
@@ -1223,10 +1370,10 @@ Return ONLY this JSON array — no markdown, no commentary:
             raw = re.sub(r"^```[a-z]*\n?", "", raw)
             raw = re.sub(r"\n?```$", "", raw.strip())
         descriptions = _strip_emdash(_json.loads(raw))
-        return descriptions[:3], ""
+        return descriptions[:3], top_kw_phrases, ""
     except Exception as e:
         print(f"Description generation error: {e}")
-        return [], str(e)
+        return [], top_kw_phrases, str(e)
 
 
 # ─── Intent matching ───────────────────────────────────────────────────────────
