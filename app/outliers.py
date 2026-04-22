@@ -12,15 +12,14 @@ import socket
 import ssl
 import statistics
 import time
-from concurrent.futures import ThreadPoolExecutor
-from datetime import datetime, timezone
 
 import httplib2
 from googleapiclient.errors import HttpError
 
 from app.utils import make_anthropic_client, build_youtube_client
 from app.thumbnail import get_size_bracket
-from app.competitors import parse_duration_seconds
+from app.competitors import parse_duration_seconds, search_competitor_channels
+from app.seo import search_top_videos
 
 
 # ─── Transient-error retry for YouTube API calls ──────────────────────────────
@@ -120,44 +119,42 @@ def search_outliers(creds, query: str, kind: str, my_subscribers: int, confirmed
 
 
 # ─── Video / thumbnail pipeline ───────────────────────────────────────────────
+# Reuses SEO Optimizer's search_top_videos() for the search + video-details call
+# (deduplication, Shorts filtering, and stats batching are already handled there
+# and work in production). We add one bulk channels.list call for subscriber
+# counts since outliers is the only surface that needs them.
 
 def _search_video_outliers(creds, query: str, search_q: str, kind: str, my_subscribers: int) -> dict:
-    youtube = build_youtube_client(creds)
-
-    # 1. Raw search — uses confirmed intent keyword when available.
-    search_resp = _execute_with_retry(youtube.search().list(
-        part="snippet",
-        q=search_q,
-        type="video",
-        maxResults=_SEARCH_POOL_SIZE,
-        order="relevance",
-        regionCode="US",
-        relevanceLanguage="en",
-    ))
-    items = search_resp.get("items", [])
-    if not items:
+    # 1. Video search + stats — delegates to SEO's production helper.
+    videos = search_top_videos(creds, [search_q], max_results=_SEARCH_POOL_SIZE)
+    if not videos:
         return {"results": [], "cohort": {"query": query, "size_bracket": get_size_bracket(my_subscribers)}}
 
-    video_ids   = [it["id"]["videoId"] for it in items if it.get("id", {}).get("videoId")]
-    channel_ids = list({it["snippet"]["channelId"] for it in items if it.get("snippet", {}).get("channelId")})
+    # 2. Bulk subscriber lookup for every unique channel the videos came from.
+    channel_ids = list({v["channel_id"] for v in videos if v.get("channel_id")})
+    subs_by_channel = _batch_channel_subs(creds, channel_ids)
 
-    # 2. Fetch stats + channel subscriber counts in parallel.
-    with ThreadPoolExecutor(max_workers=2) as pool:
-        v_future = pool.submit(_batch_video_details, youtube, video_ids)
-        c_future = pool.submit(_batch_channel_subs, youtube, channel_ids)
-        videos_by_id      = v_future.result()
-        subs_by_channel   = c_future.result()
-
-    # 3. Attach channel subs to each video, drop entries below the view floor.
-    enriched = []
-    for vid_id in video_ids:
-        v = videos_by_id.get(vid_id)
-        if not v:
+    # 3. Normalise to the outlier-pipeline shape: attach subs, drop dead videos,
+    #    rename fields from search_top_videos' convention (view_count) to ours (views).
+    enriched: list[dict] = []
+    for v in videos:
+        views = v.get("view_count", 0)
+        if views < _MIN_VIDEO_VIEWS:
             continue
-        if v["views"] < _MIN_VIDEO_VIEWS:
-            continue
-        v["channel_subscribers"] = subs_by_channel.get(v["channel_id"], 0)
-        enriched.append(v)
+        enriched.append({
+            "video_id":           v["video_id"],
+            "title":              v.get("title", ""),
+            "channel_id":         v.get("channel_id", ""),
+            "channel_name":       v.get("channel", ""),
+            "published_at":       v.get("published_at", ""),
+            "views":              views,
+            "likes":              v.get("like_count", 0),
+            "comments":           v.get("comment_count", 0),
+            "duration_seconds":   v.get("duration_seconds", 0),
+            "thumbnail":          v.get("thumbnail", ""),
+            "description":        "",
+            "channel_subscribers": subs_by_channel.get(v.get("channel_id", ""), 0),
+        })
 
     # 4. Size-relevance filter — keep only videos from channels within the band.
     my_bracket = get_size_bracket(my_subscribers)
@@ -193,42 +190,14 @@ def _search_video_outliers(creds, query: str, search_q: str, kind: str, my_subsc
     }
 
 
-def _batch_video_details(youtube, video_ids: list[str]) -> dict[str, dict]:
-    if not video_ids:
-        return {}
-    out: dict[str, dict] = {}
-    # videos.list caps at 50 IDs per call
-    for i in range(0, len(video_ids), 50):
-        chunk = video_ids[i:i + 50]
-        resp = _execute_with_retry(youtube.videos().list(
-            part="statistics,snippet,contentDetails",
-            id=",".join(chunk),
-        ))
-        for item in resp.get("items", []):
-            s  = item.get("statistics", {})
-            sn = item.get("snippet", {})
-            cd = item.get("contentDetails", {})
-            thumbs = sn.get("thumbnails", {})
-            thumb_url = (thumbs.get("high") or thumbs.get("medium") or thumbs.get("default") or {}).get("url", "")
-            out[item["id"]] = {
-                "video_id":      item["id"],
-                "title":         sn.get("title", ""),
-                "channel_id":    sn.get("channelId", ""),
-                "channel_name":  sn.get("channelTitle", ""),
-                "published_at":  sn.get("publishedAt", ""),
-                "views":         int(s.get("viewCount", 0)),
-                "likes":         int(s.get("likeCount", 0)),
-                "comments":      int(s.get("commentCount", 0)),
-                "duration_seconds": parse_duration_seconds(cd.get("duration", "PT0S")),
-                "thumbnail":     thumb_url,
-                "description":   (sn.get("description") or "")[:200],
-            }
-    return out
-
-
-def _batch_channel_subs(youtube, channel_ids: list[str]) -> dict[str, int]:
+def _batch_channel_subs(creds, channel_ids: list[str]) -> dict[str, int]:
+    """
+    Bulk subscriber-count lookup. Mirrors the channels().list pattern used in
+    app/competitors.py, batched 50 at a time with transient-error retry.
+    """
     if not channel_ids:
         return {}
+    youtube = build_youtube_client(creds)
     out: dict[str, int] = {}
     for i in range(0, len(channel_ids), 50):
         chunk = channel_ids[i:i + 50]
@@ -274,23 +243,17 @@ def _score_videos(videos: list[dict]) -> list[dict]:
 # ─── Channel pipeline ─────────────────────────────────────────────────────────
 
 def _search_channel_outliers(creds, query: str, search_q: str, my_subscribers: int) -> dict:
-    youtube = build_youtube_client(creds)
-
-    # 1. Search channels by keyword — confirmed intent keyword wins when available.
-    search_resp = _execute_with_retry(youtube.search().list(
-        part="snippet",
-        q=search_q,
-        type="channel",
-        maxResults=25,
-        order="relevance",
-        regionCode="US",
-        relevanceLanguage="en",
-    ))
-    ids = [it["snippet"]["channelId"] for it in search_resp.get("items", []) if it.get("snippet", {}).get("channelId")]
+    # 1. Search channels by keyword — delegates to Competitors' production helper.
+    #    Returns [{channel_id, channel_name, description, thumbnail}]. We ignore
+    #    its description/thumbnail since the hydration call below has richer data.
+    found = search_competitor_channels(creds, search_q, max_results=25)
+    ids = [c["channel_id"] for c in found if c.get("channel_id")]
     if not ids:
         return {"results": [], "cohort": {"query": query, "size_bracket": get_size_bracket(my_subscribers)}}
 
-    # 2. Hydrate each channel with stats + snippet.
+    # 2. Hydrate each channel with stats + snippet via a bulk channels.list call
+    #    (same pattern Competitors uses — just batched across many ids at once).
+    youtube = build_youtube_client(creds)
     channels: list[dict] = []
     for i in range(0, len(ids), 50):
         chunk = ids[i:i + 50]

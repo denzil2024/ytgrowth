@@ -279,11 +279,12 @@ def _search_youtube_once(youtube, query: str, max_results: int = 25, order: str 
             continue
         vid_id = item["id"]["videoId"]
         results[vid_id] = {
-            "video_id": vid_id,
-            "title": title,
-            "channel": snippet.get("channelTitle", ""),
+            "video_id":  vid_id,
+            "title":     title,
+            "channel":   snippet.get("channelTitle", ""),
+            "channel_id": snippet.get("channelId", ""),
             "thumbnail": snippet.get("thumbnails", {}).get("medium", {}).get("url", ""),
-            "tags": [],
+            "tags":      [],
             "view_count": 0,
         }
     return results
