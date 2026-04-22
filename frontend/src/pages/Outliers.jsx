@@ -236,30 +236,61 @@ const SpinIcon = () => (
   </svg>
 )
 
+/* ─── Persistence — mirrors SEO Optimizer's STORAGE_KEY / loadSaved / saveToDisk.
+   Each Outliers search costs 1 credit, so results MUST survive a page refresh. ─── */
+const STORAGE_KEY = 'outliers_v1'
+
+function loadSaved() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY)
+    return raw ? JSON.parse(raw) : {}
+  } catch { return {} }
+}
+
+function saveToDisk(state) {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state))
+  } catch {}
+}
+
 /* ─── Page ───────────────────────────────────────────────────────────────── */
 export default function Outliers({ channelData, onNavigate }) {
-  const [tab,     setTab]     = useState('video')
-  const [query,   setQuery]   = useState('')
+  // Persisted state — restored on mount so a refresh doesn't burn the credit.
+  const saved = loadSaved()
+
+  const [tab,     setTab]     = useState(saved.tab || 'video')
+  const [query,   setQuery]   = useState(saved.query || '')
   const [loading, setLoading] = useState(false)
   const [error,   setError]   = useState('')
-  const [result,  setResult]  = useState(null)   // { results, cohort, ...}
-  const [active,  setActive]  = useState(null)   // the selected result for detail panel
+  const [result,  setResult]  = useState(saved.result || null)
+  const [active,  setActive]  = useState(null)
 
-  // Intent-picker state — same shape as SEO Optimizer
+  // Intent-picker state — same shape as SEO Optimizer, also persisted.
   const [loadingIntent, setLoadingIntent] = useState(false)
-  const [intentOptions, setIntentOptions] = useState(null)   // [{keyword, label, description}]
+  const [intentOptions, setIntentOptions] = useState(saved.intentOptions || null)
   const reqIdRef = useRef(0)
 
   const inputRef = useRef(null)
 
-  // Reset query + results + intent picker when switching tabs — cohorts differ per kind
+  // Tab-switch clearing — skip the first run on mount so restored state
+  // survives (mirrors SeoOptimizer's titleEditSinceMount pattern).
+  const tabChangedSinceMount = useRef(false)
   useEffect(() => {
+    if (!tabChangedSinceMount.current) { tabChangedSinceMount.current = true; return }
     setQuery('')
     setResult(null)
     setError('')
     setActive(null)
     setIntentOptions(null)
   }, [tab])
+
+  // Persist on every meaningful state change. Skip while a request is in
+  // flight — otherwise setResult(null) at the top of a new search would
+  // overwrite the previously-saved good result.
+  useEffect(() => {
+    if (loading || loadingIntent) return
+    saveToDisk({ tab, query, result, intentOptions })
+  }, [tab, query, result, intentOptions, loading, loadingIntent])
 
   const userSubs = channelData?.channel?.subscribers ?? 0
 
@@ -274,11 +305,14 @@ export default function Outliers({ channelData, onNavigate }) {
     setActive(null)
     setIntentOptions(null)
     try {
-      const r = await fetch('/seo/intent-options', {
+      // Dedicated Outliers intent endpoint — prompt is tuned for short
+      // search queries / niches, not video titles. AI-generated, no
+      // hardcoded categories.
+      const r = await fetch('/outliers/intent-options', {
         method: 'POST',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title: q }),
+        body: JSON.stringify({ query: q, kind: tab }),
       })
       if (myId !== reqIdRef.current) return
       const d = await r.json()

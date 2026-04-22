@@ -97,6 +97,66 @@ Return ONLY a JSON array of 3 objects, no markdown:
         return [], str(e)
 
 
+def generate_outliers_intent_options(query: str, kind: str = "video") -> tuple[list[dict], str]:
+    """
+    Fast Haiku call — given a raw search query (2–6 word keyword/topic the creator
+    typed into Outliers), return 3 distinct intent interpretations for discovering
+    over-performing videos/channels in that niche.
+
+    Different prompt from generate_intent_options because Outliers searches are
+    short keywords, not full titles. The framing is "which niche are you searching
+    for" rather than "which angle does this title take".
+
+    kind ∈ {"video", "thumbnail", "channel"} — shapes what counts as a useful
+    niche split. Returns the same shape as generate_intent_options so the
+    frontend picker UI stays identical.
+    """
+    import json as _json
+
+    api_key = os.getenv("ANTHROPIC_API_KEY", "")
+    if not api_key:
+        return [], "ANTHROPIC_API_KEY is not set"
+
+    target = {
+        "video":     "over-performing videos",
+        "thumbnail": "thumbnails that are winning clicks",
+        "channel":   "channels that are out-growing their size peers",
+    }.get(kind, "over-performing videos")
+
+    client = make_anthropic_client()
+    try:
+        msg = client.messages.create(
+            model="claude-haiku-4-5-20251001",
+            max_tokens=300,
+            messages=[{"role": "user", "content": f"""A YouTube creator typed this into an outlier-search tool: "{query}"
+
+They want to discover {target} in this niche. But the same keyword can belong to very different niches — e.g. "morning routine" could be productivity/hustle culture, fitness/gym, minimalist lifestyle, or mom/homemaker content, and each one has its own audience, competitors, and winning formats.
+
+Generate exactly 3 distinct niche interpretations for "{query}". Each should be a genuinely different audience the creator might be targeting. Infer them directly from the words — do not fall back to hardcoded categories. If the query is already highly specific, split by adjacent sub-niches or content angles.
+
+For each, return:
+- keyword: the 2–5 word YouTube search phrase we should actually search with (narrower than the raw query, preserves the niche identity)
+- label: 3–5 word label shown to the creator (what niche this represents)
+- description: one sentence — who watches this content and what they're looking for
+
+Return ONLY a JSON array of 3 objects, no markdown:
+[{{"keyword":"...","label":"...","description":"..."}},{{"keyword":"...","label":"...","description":"..."}},{{"keyword":"...","label":"...","description":"..."}}]"""}]
+        )
+        raw = msg.content[0].text.strip()
+        if raw.startswith("```"):
+            raw = re.sub(r"^```[a-z]*\n?", "", raw)
+            raw = re.sub(r"\n?```$", "", raw.strip())
+        options = _json.loads(raw)
+        clean = [
+            {"keyword": o["keyword"], "label": o["label"], "description": o["description"]}
+            for o in options if o.get("keyword") and o.get("label")
+        ]
+        return clean[:3], ""
+    except Exception as e:
+        print(f"Outliers intent options error: {e}")
+        return [], str(e)
+
+
 def get_serpapi_autocomplete(seed_keyword: str) -> list[str]:
     """
     Fetch Google autocomplete suggestions via SerpAPI.
