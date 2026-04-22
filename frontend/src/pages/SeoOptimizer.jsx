@@ -1553,16 +1553,23 @@ export default function SeoOptimizer({ onNavigate }) {
 
               <div className="seo-glass-card" style={{ borderRadius: 16, padding: '22px 24px' }}>
 
-              {/* Picked title + Change button */}
+              {/* Picked title + action cluster (Change title + Regenerate when descriptions exist) — single row */}
               <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 20, gap: 16 }}>
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <p style={{ ...T.sectionLabel, marginBottom: 8 }}>Picked title</p>
                   <p style={{ fontSize: 14, color: C.text1, lineHeight: 1.55, fontWeight: 700, letterSpacing: '-0.1px' }}>&ldquo;{selectedTitle}&rdquo;</p>
                 </div>
-                <button onClick={() => { setSelectedTitle(null); setDescResult(null); setDescError('') }}
-                  className="seo-btn" style={{ flexShrink: 0 }}>
-                  Change title
-                </button>
+                <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexShrink: 0 }}>
+                  {descResult?.length > 0 && (
+                    <button onClick={() => { setDescResult(null); setDescKeywords([]); setDescError('') }} className="seo-btn">
+                      Regenerate
+                    </button>
+                  )}
+                  <button onClick={() => { setSelectedTitle(null); setDescResult(null); setDescError('') }}
+                    className="seo-btn">
+                    Change title
+                  </button>
+                </div>
               </div>
 
               {!descResult && (
@@ -1605,14 +1612,6 @@ export default function SeoOptimizer({ onNavigate }) {
 
               {descResult?.length > 0 && (
                 <>
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14, gap: 14 }}>
-                    <p style={T.cardDesc}>
-                      3 descriptions — each opens with a different hook strategy. Expand to see the full text, then copy.
-                    </p>
-                    <button onClick={() => { setDescResult(null); setDescKeywords([]); setDescError('') }} className="seo-btn" style={{ flexShrink: 0 }}>
-                      Regenerate
-                    </button>
-                  </div>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                     {descResult.map((d, i) => (
                       <DescriptionCard key={i} d={d} idx={i} copiedDesc={copiedDesc} onCopy={copyDesc} />
