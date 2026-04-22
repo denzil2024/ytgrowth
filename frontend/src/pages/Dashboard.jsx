@@ -1453,6 +1453,8 @@ export default function Dashboard() {
   const [milestones,  setMilestones]  = useState(null)  // { earned: [...], upcoming: [...] }
   const [shareMilestone, setShareMilestone] = useState(null) // { category, tier, achieved_at }
   const [celebrateQueue, setCelebrateQueue] = useState([])   // [{ category, tier, achieved_at }]
+  // Result tracking — videos the user optimized via /seo/update-video, fetched when Videos tab opens
+  const [optimizations, setOptimizations] = useState([])
 
   useEffect(() => {
     fetch('/auth/data', { credentials: 'include' })
@@ -1519,6 +1521,22 @@ export default function Dashboard() {
     if (stored !== null) setPrevScore(+stored)
     localStorage.setItem(key, data.insights.channelScore)
   }, [data?.insights?.channelScore, data?.channel?.channel_id])
+
+  // Load tracked SEO optimizations for the Videos tab. Refetches on window focus so
+  // deltas update when the user returns from YouTube.
+  useEffect(() => {
+    let cancelled = false
+    const load = () => {
+      fetch('/seo/optimizations', { credentials: 'include' })
+        .then(r => r.ok ? r.json() : null)
+        .then(d => { if (d && !cancelled) setOptimizations(d.optimizations || []) })
+        .catch(() => {})
+    }
+    load()
+    const onFocus = () => load()
+    window.addEventListener('focus', onFocus)
+    return () => { cancelled = true; window.removeEventListener('focus', onFocus) }
+  }, [])
 
   // Poll for AI analysis completion when insights are still pending
   useEffect(() => {
@@ -2343,6 +2361,103 @@ export default function Dashboard() {
                   </button>
                 </div>
               </div>
+
+              {/* ── Your optimizations — videos the user updated via /seo/update-video, with before/after deltas.
+                    Matches Videos tab design language (ytg-card, H2 26/800, icon pills meta line). ── */}
+              {optimizations.length > 0 && (() => {
+                const daysSince = (iso) => {
+                  if (!iso) return null
+                  const d = new Date(iso)
+                  if (isNaN(d.getTime())) return null
+                  return Math.max(0, Math.floor((Date.now() - d.getTime()) / 86400000))
+                }
+                const pct = (before, after) => {
+                  if (before <= 0) return null
+                  return Math.round(((after - before) / before) * 100)
+                }
+                const totalViewGain    = optimizations.reduce((s, o) => s + Math.max(0, (o.current_views    || 0) - (o.before_views    || 0)), 0)
+                const totalLikeGain    = optimizations.reduce((s, o) => s + Math.max(0, (o.current_likes    || 0) - (o.before_likes    || 0)), 0)
+                const totalCommentGain = optimizations.reduce((s, o) => s + Math.max(0, (o.current_comments || 0) - (o.before_comments || 0)), 0)
+                return (
+                  <div style={{ marginBottom: 28 }}>
+                    <div style={{ marginBottom: 16 }}>
+                      <h2 style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', marginBottom: 10 }}>Your optimizations</h2>
+                      <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                        {[
+                          ['✏️', `${optimizations.length} tracked update${optimizations.length === 1 ? '' : 's'}`],
+                          ['👁', `+${fmtNum(totalViewGain)} views gained`],
+                          ['👍', `+${fmtNum(totalLikeGain)} likes gained`],
+                          ['💬', `+${fmtNum(totalCommentGain)} comments gained`],
+                        ].map(([icon, label]) => (
+                          <span key={label} style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: 12.5, fontWeight: 600, color: C.text2, background: '#fff', border: `1px solid ${C.border}`, borderRadius: 100, padding: '5px 12px', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
+                            <span>{icon}</span>{label}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="ytg-card" style={{ padding: '20px 22px' }}>
+                      <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 14 }}>Before → after · delta since update</p>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
+                        {optimizations.slice(0, 8).map((o, i) => {
+                          const isLast = i === Math.min(optimizations.length, 8) - 1
+                          const days   = daysSince(o.optimized_at)
+                          const vPct   = pct(o.before_views,    o.current_views)
+                          const lPct   = pct(o.before_likes,    o.current_likes)
+                          const cPct   = pct(o.before_comments, o.current_comments)
+                          const titleChanged = o.before_title && o.after_title && o.before_title !== o.after_title
+                          const DeltaCol = ({ label, pctVal }) => {
+                            const col  = pctVal == null ? C.text3 : pctVal > 0 ? C.green : pctVal < 0 ? C.red : C.text2
+                            const sign = pctVal == null ? '—' : pctVal > 0 ? `+${pctVal}%` : `${pctVal}%`
+                            return (
+                              <div style={{ textAlign: 'right', flexShrink: 0, width: 70 }}>
+                                <p style={{ fontSize: 14, fontWeight: 700, color: col, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.2px', lineHeight: 1 }}>{sign}</p>
+                                <p style={{ fontSize: 10, fontWeight: 600, color: C.text3, marginTop: 4, letterSpacing: '0.08em', textTransform: 'uppercase' }}>{label}</p>
+                              </div>
+                            )
+                          }
+                          return (
+                            <a key={`${o.video_id}-${o.optimized_at}`}
+                              href={`https://www.youtube.com/watch?v=${o.video_id}`}
+                              target="_blank" rel="noopener noreferrer"
+                              style={{
+                                display: 'flex', alignItems: 'center', gap: 12,
+                                padding: '14px 8px',
+                                borderBottom: isLast ? 'none' : `1px solid ${C.border}`,
+                                textDecoration: 'none', borderRadius: 8,
+                                transition: 'background 0.15s, transform 0.15s',
+                                cursor: 'pointer', minWidth: 0,
+                              }}
+                              onMouseEnter={e => { e.currentTarget.style.background = '#fafafb'; e.currentTarget.style.transform = 'translateX(2px)' }}
+                              onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.transform = 'none' }}>
+                              <div style={{ flexShrink: 0 }}>
+                                {o.thumbnail_url && <img src={o.thumbnail_url} alt="" style={{ width: 78, height: 44, borderRadius: 7, objectFit: 'cover', display: 'block' }}/>}
+                              </div>
+                              <div style={{ flex: 1, minWidth: 0 }}>
+                                {titleChanged ? (
+                                  <>
+                                    <p style={{ fontSize: 12, color: C.text3, fontWeight: 500, lineHeight: 1.4, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', textDecoration: 'line-through' }}>{o.before_title}</p>
+                                    <p style={{ fontSize: 14, fontWeight: 600, color: C.text1, lineHeight: 1.4, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', letterSpacing: '-0.1px', marginTop: 2 }}>{o.after_title}</p>
+                                  </>
+                                ) : (
+                                  <p style={{ fontSize: 14, fontWeight: 600, color: C.text1, lineHeight: 1.4, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', letterSpacing: '-0.1px' }}>{o.after_title || o.before_title}</p>
+                                )}
+                                <p style={{ fontSize: 12, color: C.text3, marginTop: 3, fontWeight: 500 }}>
+                                  {days === 0 ? 'Updated today' : days === 1 ? 'Updated 1 day ago' : `Updated ${days} days ago`}
+                                </p>
+                              </div>
+                              <DeltaCol label="views"    pctVal={vPct}/>
+                              <DeltaCol label="likes"    pctVal={lPct}/>
+                              <DeltaCol label="comments" pctVal={cPct}/>
+                              <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke={C.text4} strokeWidth="1.5" strokeLinecap="round" style={{ flexShrink: 0 }}><path d="M2 11L10 3M10 3H5M10 3v5"/></svg>
+                            </a>
+                          )
+                        })}
+                      </div>
+                    </div>
+                  </div>
+                )
+              })()}
 
               {/* Card grid */}
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, minmax(0, 1fr))', gap: 14 }}>
