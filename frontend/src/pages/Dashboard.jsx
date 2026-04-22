@@ -2387,8 +2387,11 @@ export default function Dashboard() {
                     white: { bg: '#ffffff', border: `1px solid ${C.border}`, borderLeft: `3px solid ${C.green}`, borderRadius: '0 10px 10px 0', boxShadow: '0 2px 8px rgba(0,0,0,0.06)', labelColor: C.green },
                     green: { bg: 'rgba(5,150,105,0.07)', border: '1px solid rgba(5,150,105,0.14)', labelColor: C.green },
                   }[tint]
-                  const col  = pctVal == null ? C.text3 : pctVal > 0 ? C.green : pctVal < 0 ? C.red : C.text2
-                  const sign = pctVal == null ? '—' : pctVal > 0 ? `+${pctVal}%` : `${pctVal}%`
+                  // Hide the delta label entirely when nothing has changed (pct is 0 or null).
+                  // 0% everywhere is noise — we only show the badge when there's a real move.
+                  const showDelta = pctVal != null && pctVal !== 0
+                  const col  = showDelta && pctVal > 0 ? C.green : showDelta && pctVal < 0 ? C.red : C.text3
+                  const sign = showDelta ? (pctVal > 0 ? `+${pctVal}%` : `${pctVal}%`) : null
                   return (
                     <div style={{
                       background: tintMap.bg,
@@ -2401,7 +2404,7 @@ export default function Dashboard() {
                       <p style={{ fontSize: 10, fontWeight: 700, color: tintMap.labelColor, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>{label}</p>
                       <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
                         <p style={{ fontSize: 18, fontWeight: 800, color: C.text1, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.4px', lineHeight: 1 }}>{fmtNum(current)}</p>
-                        <p style={{ fontSize: 12, fontWeight: 700, color: col, fontVariantNumeric: 'tabular-nums', lineHeight: 1 }}>{sign}</p>
+                        {showDelta && <p style={{ fontSize: 12, fontWeight: 700, color: col, fontVariantNumeric: 'tabular-nums', lineHeight: 1 }}>{sign}</p>}
                       </div>
                       <p style={{ fontSize: 11, color: C.text3, marginTop: 4, fontWeight: 500 }}>was {fmtNum(before)}</p>
                     </div>
@@ -2434,18 +2437,20 @@ export default function Dashboard() {
                       const titleChanged = o.before_title && o.after_title && o.before_title !== o.after_title
                       const daysLabel    = days === 0 ? 'Today' : days === 1 ? '1 day ago' : `${days} days ago`
                       return (
-                        <div key={`${o.video_id}-${o.optimized_at}`} className="ytg-insight-card" style={{ marginBottom: 10, borderTop: `3px solid ${C.green}` }}>
+                        <div key={`${o.video_id}-${o.optimized_at}`} className="ytg-insight-card" style={{ marginBottom: 10, borderTop: `3px solid ${C.amber}` }}>
                           <div style={{ padding: '16px 22px 18px' }}>
 
-                            {/* Header — rank badge (green, white #) + category eyebrow + title diff + days pill */}
+                            {/* Header — amber rank badge + category eyebrow + title diff + days pill.
+                                Thumbnail sized 100×56 so its height matches the 3-line text block (eyebrow + strike + new title),
+                                and alignSelf:center keeps it rooted to the text instead of hanging from the top. */}
                             <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: 14 }}>
-                              <div style={{ width: 26, height: 26, borderRadius: 8, background: C.green, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 2 }}>
+                              <div style={{ width: 26, height: 26, borderRadius: 8, background: C.amber, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 2 }}>
                                 <span style={{ fontSize: 12, fontWeight: 900, color: '#fff', fontVariantNumeric: 'tabular-nums' }}>{i + 1}</span>
                               </div>
 
                               {o.thumbnail_url && (
-                                <a href={`https://www.youtube.com/watch?v=${o.video_id}`} target="_blank" rel="noopener noreferrer" style={{ flexShrink: 0, lineHeight: 0, textDecoration: 'none' }}>
-                                  <img src={o.thumbnail_url} alt="" style={{ width: 72, height: 40, borderRadius: 7, objectFit: 'cover', display: 'block' }}/>
+                                <a href={`https://www.youtube.com/watch?v=${o.video_id}`} target="_blank" rel="noopener noreferrer" style={{ flexShrink: 0, lineHeight: 0, textDecoration: 'none', alignSelf: 'center' }}>
+                                  <img src={o.thumbnail_url} alt="" style={{ width: 100, height: 56, borderRadius: 7, objectFit: 'cover', display: 'block' }}/>
                                 </a>
                               )}
 
