@@ -1407,39 +1407,70 @@ export default function ThumbnailScore({ channelData, onNavigate }) {
                             </div>
                           )}
                         </div>
-                        {/* Right: scores */}
+                        {/* Right — Overview Channel-audit pattern: Summary → Technical breakdown → AI analysis → Win/Fix */}
                         <div>
-                          <div className="tiq-card" style={{ padding: '16px', marginBottom: 12, background: '#fff' }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 14 }}>
-                              <ScoreRing score={score} max={max} label={max === 100 ? 'Thumbnail IQ' : 'Technical'} size={90} strokeW={7}/>
-                              <div style={{ flex: 1 }}>
-                                <p style={{ fontSize: 14, fontWeight: 700, color: col }}>
-                                  {scoreLabel(score, max)}
-                                  {!itemL2 && <span style={{ fontSize: 12, fontWeight: 400, color: C.text3 }}> — technical only</span>}
+                          {/* Summary card — amber-topped, ScoreRing + divider + verdict text */}
+                          <div className="tiq-card" style={{ padding: '18px 20px', marginBottom: 10, borderTop: `3px solid ${C.amber}`, background: '#fff' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 18 }}>
+                              <div style={{ flexShrink: 0 }}>
+                                <ScoreRing score={score} max={max} label={max === 100 ? 'Thumbnail IQ' : 'Technical'} size={88} strokeW={7}/>
+                              </div>
+                              <div style={{ width: 1, alignSelf: 'stretch', background: C.border, flexShrink: 0 }}/>
+                              <div style={{ flex: 1, minWidth: 0 }}>
+                                <p style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 6 }}>AI assessment</p>
+                                <p style={{ fontSize: 13, fontWeight: 700, color: col, marginBottom: 4, letterSpacing: '-0.1px' }}>
+                                  {scoreLabel(score, max)}{!itemL2 && <span style={{ fontSize: 11, fontWeight: 500, color: C.text3 }}> · technical only</span>}
                                 </p>
-                                <p style={{ fontSize: 12, color: C.text3, marginTop: 4 }}>
-                                  {item.format} · {item.size_bracket}
-                                </p>
+                                {itemL2?.overallVerdict
+                                  ? <p style={{ fontSize: 12, color: C.text2, lineHeight: 1.65 }}>{itemL2.overallVerdict}</p>
+                                  : <p style={{ fontSize: 12, color: C.text3 }}>{item.format} · {item.size_bracket}</p>
+                                }
                               </div>
                             </div>
-                            {Object.entries(L1_META).map(([k]) => (
-                              <L1Row key={k} keyName={k} data={itemL1[k]} benchComp={item.benchmark_comparison || {}}/>
-                            ))}
                           </div>
-                          {itemL2 && (
-                            <div className="tiq-card" style={{ padding: '16px', background: '#fff' }}>
-                              <p style={{ fontSize: 12, fontWeight: 700, color: C.text1, marginBottom: 8,
-                                          paddingBottom: 8, borderBottom: `1px solid #f0f0f4` }}>
-                                AI Analysis — {itemL2.claude_score ?? 0}/40
-                              </p>
-                              {Object.entries(itemL2.scores || {}).map(([k, v]) => (
-                                <L2Row key={k} dimKey={k} dim={v}/>
+
+                          {/* Technical breakdown card */}
+                          <div className="tiq-card" style={{ padding: '16px 20px', marginBottom: 10, background: '#fff' }}>
+                            <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 10 }}>
+                              <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, letterSpacing: '0.07em', textTransform: 'uppercase' }}>Technical breakdown</p>
+                              <p style={{ fontSize: 11, color: C.text3, fontWeight: 500 }}>{item.algorithm_score ?? '—'}/60</p>
+                            </div>
+                            <div style={{ borderTop: `1px solid ${C.border}`, paddingTop: 4 }}>
+                              {Object.entries(L1_META).map(([k]) => (
+                                <L1Row key={k} keyName={k} data={itemL1[k]} benchComp={item.benchmark_comparison || {}}/>
                               ))}
-                              {itemL2.overallVerdict && (
-                                <p style={{ fontSize: 12, color: C.text2, lineHeight: 1.65,
-                                            marginTop: 12, paddingTop: 12, borderTop: `1px solid #f0f0f4` }}>
-                                  {itemL2.overallVerdict}
-                                </p>
+                            </div>
+                          </div>
+
+                          {/* AI analysis card */}
+                          {itemL2 && (
+                            <div className="tiq-card" style={{ padding: '16px 20px', marginBottom: 10, background: '#fff' }}>
+                              <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 10 }}>
+                                <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, letterSpacing: '0.07em', textTransform: 'uppercase' }}>AI analysis</p>
+                                <p style={{ fontSize: 11, color: C.text3, fontWeight: 500 }}>{itemL2.claude_score ?? 0}/40</p>
+                              </div>
+                              <div style={{ borderTop: `1px solid ${C.border}`, paddingTop: 4 }}>
+                                {Object.entries(itemL2.scores || {}).map(([k, v]) => (
+                                  <L2Row key={k} dimKey={k} dim={v}/>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+
+                          {/* Biggest Win / Biggest Fix — Priority-Actions-style colored top-border cards */}
+                          {itemL2 && (itemL2.biggestWin || itemL2.biggestFix) && (
+                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+                              {itemL2.biggestWin && (
+                                <div className="tiq-card" style={{ borderTop: `3px solid ${C.green}`, padding: '12px 16px', background: '#fff' }}>
+                                  <p style={{ fontSize: 10, fontWeight: 700, color: C.green, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 5 }}>Biggest win</p>
+                                  <p style={{ fontSize: 12, color: C.text1, lineHeight: 1.65 }}>{itemL2.biggestWin}</p>
+                                </div>
+                              )}
+                              {itemL2.biggestFix && (
+                                <div className="tiq-card" style={{ borderTop: `3px solid ${C.red}`, padding: '12px 16px', background: '#fff' }}>
+                                  <p style={{ fontSize: 10, fontWeight: 700, color: C.red, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 5 }}>Biggest fix</p>
+                                  <p style={{ fontSize: 12, color: C.text1, lineHeight: 1.65 }}>{itemL2.biggestFix}</p>
+                                </div>
                               )}
                             </div>
                           )}
@@ -1558,128 +1589,106 @@ export default function ThumbnailScore({ channelData, onNavigate }) {
               </button>
             </div>
 
-            {/* RIGHT */}
+            {/* RIGHT — Overview Channel-audit pattern: Summary card → Score breakdown → AI analysis → Insights */}
             <div>
               {/* Linked idea context card */}
               <LinkedIdeaCard idea={linkedIdea} />
 
-              {/* Score ring + stats row */}
-              <div className="tiq-card" style={{ padding: '24px', marginBottom: 16 }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 24, marginBottom: 20 }}>
-                  {state === 'ready2' && l2 ? (
-                    <div style={{ position: 'relative', width: 120, height: 120, flexShrink: 0 }}>
-                      <ScoreRing score={finalScore} max={100} label="Thumbnail IQ" size={120} strokeW={8}/>
-                    </div>
-                  ) : (
-                    <div style={{ flexShrink: 0 }}>
-                      <ScoreRing score={algoScore} max={60} label="Technical Score" size={120} strokeW={8}/>
-                    </div>
-                  )}
-
-                  <div style={{ flex: 1, display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 10 }}>
-                    {[
-                      { label: 'Your Score',    value: state === 'ready2' ? `${finalScore}/100` : `${algoScore}/60` },
-                      { label: 'Niche Average', value: analysis.niche_avg_score ? `${Math.round(analysis.niche_avg_score)}/60` : '—' },
-                      { label: 'You Beat',      value: analysis.user_percentile != null ? `${fmtPct(analysis.user_percentile)}` : '—',
-                        sub: 'of similar channels' },
-                    ].map(s => (
-                      <div key={s.label} style={{ textAlign: 'center', background: '#f7f7fa',
-                                                   borderRadius: 12, padding: '12px 8px' }}>
-                        <p style={{ fontSize: 12, fontWeight: 600, color: C.text3, marginBottom: 6,
-                                    textTransform: 'uppercase', letterSpacing: '0.06em' }}>{s.label}</p>
-                        <p style={{ fontSize: 18, fontWeight: 800, color: C.text1,
-                                    fontVariantNumeric: 'tabular-nums' }}>{s.value}</p>
-                        {s.sub && <p style={{ fontSize: 12, color: C.text3, marginTop: 2 }}>{s.sub}</p>}
+              {(() => {
+                const currentScore = state === 'ready2' && l2 ? finalScore : algoScore
+                const currentMax   = state === 'ready2' && l2 ? 100 : 60
+                const currentCol   = scoreColor(currentScore, currentMax)
+                const currentLabel = scoreLabel(currentScore, currentMax)
+                const isFinal      = state === 'ready2' && !!l2
+                return (
+                  <>
+                    {/* ── 1. Summary card — amber-topped, ScoreRing + vertical divider + AI-assessment text (Dashboard.jsx:2076-2099 pattern) ── */}
+                    <div className="tiq-card" style={{ padding: '26px 28px', marginBottom: 14, borderTop: `3px solid ${C.amber}` }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 28 }}>
+                        <div style={{ flexShrink: 0 }}>
+                          <ScoreRing score={currentScore} max={currentMax} label={isFinal ? 'Thumbnail IQ' : 'Technical'} size={120} strokeW={8}/>
+                        </div>
+                        <div style={{ width: 1, alignSelf: 'stretch', background: C.border, flexShrink: 0 }}/>
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 8 }}>AI assessment</p>
+                          <p style={{ fontSize: 14, fontWeight: 700, color: currentCol, marginBottom: 8, letterSpacing: '-0.15px' }}>
+                            {currentLabel}{!isFinal && <span style={{ fontSize: 12, fontWeight: 500, color: C.text3 }}> · technical only</span>}
+                          </p>
+                          {isFinal && l2.overallVerdict && (
+                            <p style={{ fontSize: 13, color: C.text2, lineHeight: 1.7 }}>{l2.overallVerdict}</p>
+                          )}
+                          {!isFinal && (
+                            <p style={{ fontSize: 13, color: C.text2, lineHeight: 1.7 }}>
+                              Technical scan complete. Run the full AI analysis below to add emotion, composition, and feed-distinctiveness scoring.
+                            </p>
+                          )}
+                        </div>
                       </div>
-                    ))}
-                  </div>
-                </div>
 
-                {/* Score label bar */}
-                <div style={{ background: scoreColor(state === 'ready2' ? finalScore : algoScore, state === 'ready2' ? 100 : 60) + '18',
-                              border: `1px solid ${scoreColor(state === 'ready2' ? finalScore : algoScore, state === 'ready2' ? 100 : 60)}30`,
-                              borderRadius: 10, padding: '8px 14px', display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <div style={{ width: 8, height: 8, borderRadius: '50%',
-                                background: scoreColor(state === 'ready2' ? finalScore : algoScore, state === 'ready2' ? 100 : 60), flexShrink: 0 }}/>
-                  <p style={{ fontSize: 12, fontWeight: 700,
-                               color: scoreColor(state === 'ready2' ? finalScore : algoScore, state === 'ready2' ? 100 : 60) }}>
-                    {scoreLabel(state === 'ready2' ? finalScore : algoScore, state === 'ready2' ? 100 : 60)}
-                    {state !== 'ready2' && ' — technical score only'}
-                  </p>
-                </div>
-              </div>
-
-              {/* Layer 2 full breakdown */}
-              {state === 'ready2' && l2 && (
-                <div className="tiq-card" style={{ padding: '20px 24px', marginBottom: 16 }}>
-                  {/* Collapsible L1 */}
-                  <button
-                    onClick={() => setL1Open(o => !o)}
-                    style={{ width: '100%', background: 'none', border: 'none', cursor: 'pointer',
-                             display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                             padding: '0 0 12px', fontFamily: 'inherit' }}
-                  >
-                    <p style={{ fontSize: 14, fontWeight: 700, color: C.text1 }}>Technical — {algoScore}/60</p>
-                    <span style={{ fontSize: 12, color: C.text3 }}>{l1open ? 'Hide ▲' : 'Show ▼'}</span>
-                  </button>
-
-                  {l1open && (
-                    <div style={{ marginBottom: 16, paddingBottom: 16, borderBottom: `1px solid #f0f0f4` }}>
-                      {Object.entries(L1_META).map(([k]) => (
-                        <L1Row key={k} keyName={k} data={l1[k]} benchComp={bcomp}/>
-                      ))}
+                      {/* Benchmark stats strip — 3 small tiles below the main row */}
+                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10, marginTop: 20, paddingTop: 18, borderTop: `1px solid ${C.border}` }}>
+                        {[
+                          { label: 'Your score',    value: `${currentScore}/${currentMax}` },
+                          { label: 'Niche average', value: analysis.niche_avg_score ? `${Math.round(analysis.niche_avg_score)}/60` : '—' },
+                          { label: 'You beat',      value: analysis.user_percentile != null ? fmtPct(analysis.user_percentile) : '—', sub: 'of similar channels' },
+                        ].map(s => (
+                          <div key={s.label}>
+                            <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 6 }}>{s.label}</p>
+                            <p style={{ fontSize: 18, fontWeight: 800, color: C.text1, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.4px', lineHeight: 1 }}>{s.value}</p>
+                            {s.sub && <p style={{ fontSize: 11, color: C.text3, marginTop: 4, fontWeight: 500 }}>{s.sub}</p>}
+                          </div>
+                        ))}
+                      </div>
                     </div>
-                  )}
 
-                  <p style={{ fontSize: 14, fontWeight: 700, color: C.text1, paddingBottom: 10,
-                               borderBottom: `1px solid #f0f0f4`, marginBottom: 4 }}>
-                    AI Analysis — {l2.claude_score ?? 0}/40
-                  </p>
-                  {Object.entries(l2.scores || {}).map(([k, v]) => (
-                    <L2Row key={k} dimKey={k} dim={v}/>
-                  ))}
-                </div>
-              )}
+                    {/* ── 2. Score breakdown — Overview Category-scores pattern (Dashboard.jsx:2101-2133) ── */}
+                    <div className="tiq-card" style={{ padding: '22px 28px', marginBottom: 14 }}>
+                      <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 16 }}>
+                        <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, letterSpacing: '0.07em', textTransform: 'uppercase' }}>Technical breakdown</p>
+                        <p style={{ fontSize: 11, color: C.text3, fontWeight: 500 }}>{algoScore}/60 · click a row for detail</p>
+                      </div>
+                      <div style={{ borderTop: `1px solid ${C.border}`, paddingTop: 4 }}>
+                        {Object.entries(L1_META).map(([k]) => (
+                          <L1Row key={k} keyName={k} data={l1[k]} benchComp={bcomp}/>
+                        ))}
+                      </div>
+                    </div>
 
-              {/* Technical breakdown (state ready1) */}
-              {state === 'ready1' && (
-                <div className="tiq-card" style={{ padding: '20px 24px', marginBottom: 16 }}>
-                  <p style={{ fontSize: 14, fontWeight: 700, color: C.text1, marginBottom: 4 }}>
-                    Technical breakdown
-                  </p>
-                  {Object.entries(L1_META).map(([k]) => (
-                    <L1Row key={k} keyName={k} data={l1[k]} benchComp={bcomp}/>
-                  ))}
-                </div>
-              )}
+                    {/* ── 3. AI Analysis — same Category-scores pattern, separate card for its own identity ── */}
+                    {isFinal && l2 && (
+                      <div className="tiq-card" style={{ padding: '22px 28px', marginBottom: 14 }}>
+                        <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 16 }}>
+                          <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, letterSpacing: '0.07em', textTransform: 'uppercase' }}>AI analysis</p>
+                          <p style={{ fontSize: 11, color: C.text3, fontWeight: 500 }}>{l2.claude_score ?? 0}/40 · click a row for detail</p>
+                        </div>
+                        <div style={{ borderTop: `1px solid ${C.border}`, paddingTop: 4 }}>
+                          {Object.entries(l2.scores || {}).map(([k, v]) => (
+                            <L2Row key={k} dimKey={k} dim={v}/>
+                          ))}
+                        </div>
+                      </div>
+                    )}
 
-              {/* Win / Fix summary cards (Layer 2) */}
-              {state === 'ready2' && l2 && (
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 16 }}>
-                  <div style={{ borderLeft: `3px solid ${C.green}`, background: C.greenBg,
-                                borderRadius: '0 12px 12px 0', padding: '14px 16px' }}>
-                    <p style={{ fontSize: 12, fontWeight: 700, color: C.green, marginBottom: 6,
-                                letterSpacing: '0.06em', textTransform: 'uppercase' }}>Biggest Win</p>
-                    <p style={{ fontSize: 12, color: '#166534', lineHeight: 1.65 }}>{l2.biggestWin}</p>
-                  </div>
-                  <div style={{ borderLeft: `3px solid ${C.red}`, background: C.redBg,
-                                borderRadius: '0 12px 12px 0', padding: '14px 16px' }}>
-                    <p style={{ fontSize: 12, fontWeight: 700, color: C.red, marginBottom: 6,
-                                letterSpacing: '0.06em', textTransform: 'uppercase' }}>Biggest Fix</p>
-                    <p style={{ fontSize: 12, color: '#991b1b', lineHeight: 1.65 }}>{l2.biggestFix}</p>
-                  </div>
-                </div>
-              )}
-
-              {/* Overall verdict (Layer 2) */}
-              {state === 'ready2' && l2?.overallVerdict && (
-                <div className="tiq-card" style={{ padding: '16px 20px', marginBottom: 16,
-                                                    borderLeft: `3px solid ${C.blue}` }}>
-                  <p style={{ fontSize: 12, fontWeight: 700, color: C.blue, marginBottom: 6,
-                              letterSpacing: '0.06em', textTransform: 'uppercase' }}>Overall verdict</p>
-                  <p style={{ fontSize: 14, color: C.text2, lineHeight: 1.7 }}>{l2.overallVerdict}</p>
-                </div>
-              )}
+                    {/* ── 4. Biggest Win / Biggest Fix — Priority-Actions-style colored top-border cards ── */}
+                    {isFinal && l2 && (l2.biggestWin || l2.biggestFix) && (
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 14 }}>
+                        {l2.biggestWin && (
+                          <div className="tiq-card" style={{ borderTop: `3px solid ${C.green}`, padding: '14px 18px' }}>
+                            <p style={{ fontSize: 10, fontWeight: 700, color: C.green, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Biggest win</p>
+                            <p style={{ fontSize: 13, color: C.text1, lineHeight: 1.65 }}>{l2.biggestWin}</p>
+                          </div>
+                        )}
+                        {l2.biggestFix && (
+                          <div className="tiq-card" style={{ borderTop: `3px solid ${C.red}`, padding: '14px 18px' }}>
+                            <p style={{ fontSize: 10, fontWeight: 700, color: C.red, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Biggest fix</p>
+                            <p style={{ fontSize: 13, color: C.text1, lineHeight: 1.65 }}>{l2.biggestFix}</p>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </>
+                )
+              })()}
 
               {/* CTA: Run Full Thumbnail IQ */}
               {state === 'ready1' && (
