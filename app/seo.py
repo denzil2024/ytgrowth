@@ -532,12 +532,33 @@ def _score_title(title: str, top_titles: list[str]) -> dict:
 # title text against the live keyword + competitor data — so rankings are stable,
 # repeatable, and explainable.
 
-_SPECIFICITY_PATTERN  = re.compile(r"(\$[\d,]+|[A-Za-z]{2,5}\s?[\d,]{2,}|\d+%|\d+\s*(hour|day|week|month|year|min|sec)s?|\d+\s*(k|m|b)\b|\$?\d{2,})", re.IGNORECASE)
+_SPECIFICITY_PATTERN  = re.compile(
+    r"("
+    r"\$[\d,]+|"                                                 # $500, $5,000
+    r"[A-Za-z]{2,5}\s?[\d,]{2,}|"                                # Ksh 12,000 / KES 3000 / USD 50
+    r"\d+%|"                                                     # 50%
+    r"\d+\s*(hour|day|week|month|year|min|sec)s?|"               # 24 hours, 7 days
+    r"\d+\s*(k|m|b)\b|"                                          # 10k, 5m
+    r"\$?\d{2,}|"                                                # 24, 100, 1000
+    r"\b(for\s+a\s+(day|week|month|year))\b|"                    # "for a week", "for a month"
+    r"\b(in\s+(a|one)\s+(day|week|month|year))\b|"               # "in a day", "in one month"
+    r"\bfrom\s+scratch\b|\bby\s+myself\b|\balone\b|"             # confession-style specificity
+    r"\bon\s+a\s+budget\b|\bunder\s+budget\b"                    # budget framings
+    r")",
+    re.IGNORECASE,
+)
 _CONTRAST_PATTERN     = re.compile(r"\b(vs\.?|versus|before|after|but|instead|actually|really|truth|reality|honest|worth it)\b", re.IGNORECASE)
-# Curiosity: explicit question words + implicit open-loop phrases the old pattern missed.
-_CURIOSITY_PATTERN    = re.compile(r"\b(why|how|what|which|secret|reason|nobody|no one|wish|never|until|behind|inside|actually|finally|did i|did it|did we|did they|does it|can i|will i|will it|is it|surviving|trying|testing|tested|tried|cover|covers|covered|works?|worked|really)\b", re.IGNORECASE)
+# Curiosity: explicit question words + implicit open-loop phrases + challenge/journey framings.
+_CURIOSITY_PATTERN    = re.compile(
+    r"\b(why|how|what|which|secret|reason|nobody|no one|wish|never|until|behind|inside|"
+    r"actually|finally|did i|did it|did we|did they|does it|can i|will i|will it|is it|"
+    r"surviving|trying|testing|tested|tried|cover|covers|covered|works?|worked|really|"
+    r"challenge|challenged|experiment|experimented|reset|makeover|transformation|transformed|"
+    r"reinvented|redesigned|rebuilt|overhaul|rebooted|reimagined)\b",
+    re.IGNORECASE,
+)
 # Present-tense verb openers that signal journey/story — reward alongside power words as a valid strong opener.
-_VERB_OPENER          = re.compile(r"^(surviving|trying|testing|spending|making|cooking|shopping|building|going|coming|inside|watch|meet|come|live|turning|finding|learning|growing)\b", re.IGNORECASE)
+_VERB_OPENER          = re.compile(r"^(surviving|trying|testing|spending|making|cooking|shopping|building|going|coming|inside|watch|meet|come|live|turning|finding|learning|growing|cooked|made|tested|tried|built|survived|transformed)\b", re.IGNORECASE)
 # First-person ownership — emotional anchor for vlog/personal content.
 _PERSONAL_VOICE       = re.compile(r"\b(i|i'?m|my|me|we|our|us)\b", re.IGNORECASE)
 _GENERIC_CLICKBAIT    = re.compile(r"\b(shocking|unbelievable|insane|crazy|you won'?t believe|gone wrong|must watch)\b", re.IGNORECASE)
@@ -562,9 +583,9 @@ def _score_suggestion_rubric(title: str, top_titles: list[str], keyword_scores: 
 
     # ───── SEO (0-100) ─────
     seo = 0
-    # Length compliance (0-25)
-    if 50 <= length <= 70:    seo += 25
-    elif 40 <= length <= 80:  seo += 18
+    # Length compliance (0-25). Range widened to 50-75 — pipe-structured titles need the room.
+    if 50 <= length <= 75:    seo += 25
+    elif 40 <= length <= 85:  seo += 18
     elif 30 <= length < 40:   seo += 10
     else:                     seo += 0
 
@@ -692,6 +713,14 @@ def _score_suggestion_rubric(title: str, top_titles: list[str], keyword_scores: 
 
     # Viral format match (0-10) — mild signal, don't overweight
     hook += 10 if _detect_viral_format(t) else 4
+
+    # Pipe structure (0-10) — properly pipe-segmented titles get a bonus; the format is mandated
+    # by the prompt because it mirrors the creator's preferred confession/challenge style.
+    if "|" in t:
+        parts = [p.strip() for p in t.split("|") if p.strip()]
+        # Want exactly 2 meaningful beats, each at least 2 words.
+        if len(parts) == 2 and all(len(p.split()) >= 2 for p in parts):
+            hook += 10
 
     hook = min(hook, 100)
 
@@ -905,6 +934,14 @@ CONTENT TYPE: Personal vlog / lifestyle video.
 - Numbers that exist in the video (e.g. "2 Bedroom") are fine
 """
 
+    # Geography detection — if the user's title/niche names a country, the suggestions should anchor there naturally.
+    geo_match = _GEO_PATTERN.search(f"{title} {niche}")
+    geo_note = (
+        f'GEOGRAPHY: The content is set in "{geo_match.group(0)}". Reference the location naturally (e.g. "Kenyan", "in Lagos") where it fits the framing — do not tack it on mechanically.'
+        if geo_match else
+        "GEOGRAPHY: No specific location in the source. Do NOT invent one."
+    )
+
     prompt = f"""You are a YouTube growth strategist who writes titles for a living. Your job is NOT to brainstorm clever phrases — it is to write titles YouTube's recommendation engine will push to real viewers based on the live data below.
 
 USER'S TITLE: "{title}"
@@ -913,6 +950,8 @@ NICHE KEYWORD: "{niche}"
 {competitor_block}
 {ac_block}
 {kw_block}
+
+{geo_note}
 
 Your task has 3 phases. Return a single JSON object.
 
@@ -930,22 +969,28 @@ PHASE 2 — GAP
 PHASE 3 — 3 CREATIVE TITLES
 Write 3 titles, each aimed at the gap above. They must feel like titles a creator would write, not templates.
 
+THE CREATIVE DNA you are aiming for (describe, do not copy):
+A strong title in this style reads like a confession or a dare — a real person narrating what they actually did, followed by a pipe and a second beat that names the challenge, the niche, or the geography. It should feel written, not assembled. Vivid verbs. Concrete stakes. Zero marketing language.
+
 WHAT MAKES A TITLE WORK HERE:
-- Emotional pull from SPECIFICITY — a real number, a concrete outcome, a named contrast, a real moment. Never generic clickbait ("Shocking", "You Won't Believe").
-- Curiosity with a clear payoff — the viewer must know what they'll feel or learn by clicking.
-- Pattern interrupt vs the competitor set — if every competitor title opens the same way, yours opens differently.
-- Voice that sounds human, not marketing copy. Write as the creator talking directly to one person.
-- Every title anchors on the gap_opportunity above — that is the reason YouTube will push it to a fresh audience.
+- First-person or journey voice to open ("I", "My", "Inside", "Surviving", "Cooking", "Testing"). Readers feel a real person behind the video.
+- Pipe (|) as the structural divider — opens with the story beat, then pipes to the sub-framing (niche, geography, stakes, challenge type).
+- Specificity — a real number, a concrete outcome, a named contrast. Never vague words like "Shocking", "Amazing", "You Won't Believe".
+- Anchored to the gap_opportunity above — that is the reason YouTube will push it to a fresh audience.
 
-HARD RULES (enforced):
-- 50–70 characters total, including spaces. Count exactly.
-- Plain text only. No emoji. No ALL CAPS words.
-- FORBIDDEN CHARACTERS: em-dashes (—), en-dashes (–), colons (:), and pipes (|). Do not use them anywhere in the title. If you need punctuation, use a hyphen (-) or a comma.
-- No fabricated facts. No invented numbers. If the user's title already mentions a number, you may keep it; never invent one.
-- No forced listicle numbers unless the video is genuinely a list.
-- Do not reuse the same opening structure across all 3 titles. Vary how each one starts.
+ANTI-GENERIC TEST (every title must pass):
+If you could swap the niche keyword in your title for a different topic and the title would still make sense, the title is TOO GENERIC. Each title must reference something specific that could ONLY belong to THIS niche, based on the competitor data above. Pull vocabulary and angle cues from the real competitor titles — not from generic YouTube title patterns.
 
-Each title must be DIFFERENT from the other two in both opening word and emotional angle — not 3 rephrasings.
+HARD RULES (enforced — any violation means the title is unusable):
+- 50–75 characters total, including spaces. Count exactly.
+- FORBIDDEN CHARACTERS: colons (:), hyphens (-), em-dashes (—), en-dashes (–). Do not use ANY of these.
+- REQUIRED STRUCTURE: exactly one pipe (|) separating two beats. Opening beat = 3-7 words personal/story hook. Closing beat = niche/geo/stakes framing.
+- NO YEAR references. Do not write "2024", "2025", "2026", or any year. The creator hates year-stamped titles.
+- Plain text. No emoji. No ALL CAPS words.
+- No fabricated facts. No invented numbers. If the user's title already mentions a number you may keep it; never invent one.
+- No forced listicle numbers ("7 Things") unless the video is genuinely a list.
+- Each title must be DIFFERENT from the other two in both opening verb and the secondary framing — not 3 rephrasings.
+- No generic stock phrases: "You Won't Believe", "This Will Shock You", "The Ultimate Guide", "Everything You Need to Know". Any of these = automatic fail.
 
 Return ONLY this JSON (no markdown, no prose):
 {{
@@ -999,10 +1044,20 @@ Return ONLY this JSON (no markdown, no prose):
             if not title_text or len(title_text) < 15:
                 continue
 
-            # Enforce the no-colon rule server-side as a safety net — if Claude slips one in,
-            # convert to a hyphen rather than discard the suggestion.
-            title_text = title_text.replace(":", " -").replace("|", " -")
-            title_text = re.sub(r"\s{2,}", " ", title_text).strip()
+            # Safety net: punctuation and year rules are non-negotiable, so enforce them here
+            # even if Claude slips up. Colons and hyphens get converted to pipes (the preferred
+            # divider). Em/en-dashes also become pipes. Year tokens are stripped.
+            title_text = title_text.replace("—", " | ").replace("–", " | ")
+            # Replace colons with pipes. Use " | " so words don't run together.
+            title_text = title_text.replace(":", " | ")
+            # Replace separator hyphens (space-hyphen-space) with pipes — keep internal hyphens like "first-person" alone.
+            title_text = re.sub(r"\s[-–—]\s", " | ", title_text)
+            # Strip any year tokens (2020-2099) — the creator doesn't want year-stamped titles.
+            title_text = re.sub(r"\s+(?:in\s+)?20[2-9][0-9]\b", "", title_text, flags=re.IGNORECASE)
+            title_text = re.sub(r"\b20[2-9][0-9]\s+", " ", title_text)
+            # Collapse any doubled pipes / trailing pipes / extra whitespace.
+            title_text = re.sub(r"\|\s*\|", "|", title_text)
+            title_text = re.sub(r"\s{2,}", " ", title_text).strip().strip("|").strip()
 
             primary_kw = t.get("primary_keyword", "") or niche
             rubric = _score_suggestion_rubric(title_text, top_titles, keyword_scores, primary_kw)
@@ -1281,16 +1336,20 @@ def generate_description_suggestions(
 
     client = _make_client()
 
-    # ── Pull the top 3 keywords and build exact hashtags from them ──
-    top_kw_phrases: list[str] = []
+    # ── Pull keywords: top 6 for body copy (weave into prose), top 3 for hashtags ──
+    body_kw_phrases: list[str] = []
     if keyword_scores:
-        top_kw_phrases = [k["phrase"] for k in keyword_scores if k.get("competition") != "HIGH"][:3]
-    # Fall back to niche if no keywords available
-    if not top_kw_phrases and niche:
-        top_kw_phrases = [niche]
+        body_kw_phrases = [k["phrase"] for k in keyword_scores if k.get("competition") != "HIGH"][:6]
+    if not body_kw_phrases and niche:
+        body_kw_phrases = [niche]
 
-    hashtags_line = " ".join(_phrase_to_hashtag(p) for p in top_kw_phrases)
-    keywords_block = "\n".join(f"  {i+1}. {p}" for i, p in enumerate(top_kw_phrases))
+    # Hashtags = first 3 of the body keyword set (the highest-scoring ones)
+    hashtag_kw_phrases = body_kw_phrases[:3]
+
+    hashtags_line = " ".join(_phrase_to_hashtag(p) for p in hashtag_kw_phrases)
+    keywords_block = "\n".join(f"  {i+1}. {p}" for i, p in enumerate(body_kw_phrases))
+    # "top_kw_phrases" kept as the frontend-visible surface: the top 3 that become hashtags.
+    top_kw_phrases = hashtag_kw_phrases
 
     # ── Geography detection ──
     # Only include location context if the title or niche is genuinely location-specific.
@@ -1344,13 +1403,15 @@ VIEWER CONTEXT:
 - Viewer profile: {viewer_profile or "someone interested in this topic"}
 - Gap opportunity: {gap_opportunity or ""}
 
-TOP 3 KEYWORDS (these are the exact phrases viewers search — use them naturally):
+KEYWORDS TO WEAVE INTO THE BODY (viewers actually type these — use them naturally across the 300-400 words):
 {keywords_block}
+
+Every description must use AT LEAST 6 of these keyword phrases organically across the prose. Do not bunch them. Do not repeat any single phrase more than twice total. If a phrase sounds awkward, rephrase the sentence but keep the core words.
 
 HASHTAG RULE (non-negotiable):
 The description must end with EXACTLY this line of 3 hashtags — no more, no fewer:
 {hashtags_line}
-These are derived directly from the top keyword phrases above. Do not change them. Do not add extras.
+These are derived from the top 3 highest-scoring keyword phrases. Do not change them. Do not add extras.
 
 GEOGRAPHY RULE:
 {geo_note}
@@ -1360,10 +1421,10 @@ Write 3 complete YouTube descriptions. Each uses a different opening strategy.
 
 CRITICAL WRITING RULES for every description:
 1. LENGTH: 300-400 words. Hard floor — shorter descriptions get downgraded by YouTube.
-2. OPENING (first 150 characters — visible before "Show more"): Must contain the primary keyword AND give the viewer a specific, emotional reason to keep reading. Open with a scene, a feeling, a concrete promise — not "In this video" or "Welcome to my channel".
+2. OPENING (first 150 characters — visible before "Show more"): Must reference something SPECIFIC to this video's title that could not apply to a generic video. Open with a sensory detail, a named moment, a concrete thing that only belongs to this topic. BANNED OPENINGS (automatic fail): "In this video", "Welcome to my channel", "Hey guys", "Today I'm going to", "Let me show you", "If you've ever", "Have you ever".
 3. PROSE STYLE: Warm flowing paragraphs. Write like you are talking to one person over coffee. No bullet points, no numbered lists, no sub-headers. Each paragraph leads into the next. Sentences vary in length — short ones land harder.
 4. SWEETNESS: Use sensory detail, small specifics, real moments. A description should feel lived-in, not like filler copy. Find one moment or image to anchor it.
-5. KEYWORD USE: Weave all 3 keywords into the body naturally — once each is enough, never more than twice total. They must feel like words a human would say, not forced anchors. If a keyword sounds awkward in a sentence, rephrase the sentence.
+5. KEYWORD USE: Weave at least 6 of the keyword phrases above into the body naturally, spread across different sentences. Never more than twice for any single phrase. They must feel like words a human would say, not forced anchors.
 6. CALL TO ACTION: One short genuine CTA at the end — warm, specific, not shouty. Examples: "If this helped, drop a comment below" or "Save this for later — you'll want it when you start."
 7. HASHTAGS: The very last line must be exactly: {hashtags_line}
 8. No timestamps, no external links, no em-dashes, no en-dashes. Use a hyphen or a comma instead. Do not use a colon to open a section.
