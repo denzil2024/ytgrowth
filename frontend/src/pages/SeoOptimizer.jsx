@@ -103,6 +103,25 @@ if (typeof document !== 'undefined' && !document.getElementById('seo-opt-styles'
     box-shadow: 0 2px 8px rgba(0,0,0,0.10), 0 8px 28px rgba(0,0,0,0.10);
     transform: translateY(-1px);
   }
+  .seo-btn-primary {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    padding: 9px 20px; border-radius: 100px; border: none;
+    font-family: 'Inter', system-ui, sans-serif; font-size: 12.5px; font-weight: 700;
+    background: #e5251b; color: #ffffff; cursor: pointer;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 4px 14px rgba(229,37,27,0.32);
+    transition: all 0.18s;
+    letter-spacing: -0.1px;
+    white-space: nowrap;
+  }
+  .seo-btn-primary:hover:not(:disabled) {
+    filter: brightness(1.07);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15), 0 8px 28px rgba(229,37,27,0.42);
+    transform: translateY(-1px);
+  }
+  .seo-btn-primary:disabled {
+    background: #e0e0e6; color: #ffffff; cursor: not-allowed;
+    box-shadow: none; opacity: 0.92;
+  }
 `
   document.head.appendChild(s)
 }
@@ -246,7 +265,7 @@ function MiniStat({ label, value, sub, accent, verdict, verdictGood }) {
       transition: 'box-shadow 0.2s, transform 0.2s',
     }}>
       <p style={{ fontSize: 11, fontWeight: 500, letterSpacing: '0.05em', textTransform: 'uppercase', color: C.text3, marginBottom: 12 }}>{label}</p>
-      <p style={{ fontSize: 30, fontWeight: 700, letterSpacing: '-1.4px', color: col, lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{value}</p>
+      <p style={{ fontSize: 30, fontWeight: 800, letterSpacing: '-1.4px', color: col, lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{value}</p>
       {sub && <p style={{ fontSize: 12, color: C.text3, fontWeight: 500, marginTop: 10 }}>{sub}</p>}
       {verdict && (
         <span style={{
@@ -279,7 +298,7 @@ function ScoreRing({ score }) {
           style={{ transition: 'stroke-dasharray 0.8s cubic-bezier(0.34,1.56,0.64,1)' }} />
       </svg>
       <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-        <span style={{ fontSize: 28, fontWeight: 700, color, letterSpacing: '-1px', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{score}</span>
+        <span style={{ fontSize: 28, fontWeight: 800, color, letterSpacing: '-1px', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{score}</span>
         <span style={{ fontSize: 12, color: C.text3, fontWeight: 600, letterSpacing: '0.06em', marginTop: 2 }}>/100</span>
       </div>
     </div>
@@ -673,9 +692,7 @@ export default function SeoOptimizer({ onNavigate }) {
 
           <div style={{ marginTop: 14, display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 10 }}>
             <button onClick={handleSubmitTitle} disabled={loading || loadingIntent || !title.trim()}
-              style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8, padding: '11px 22px', background: !title.trim() ? '#e0e0e6' : C.red, color: '#fff', border: 'none', borderRadius: 100, fontSize: 13, fontWeight: 700, fontFamily: 'inherit', cursor: title.trim() && !loading && !loadingIntent ? 'pointer' : 'not-allowed', opacity: (loading || loadingIntent) ? 0.92 : 1, transition: 'all 0.18s', boxShadow: title.trim() ? '0 1px 3px rgba(0,0,0,0.12), 0 4px 14px rgba(229,37,27,0.32)' : 'none', letterSpacing: '-0.1px' }}
-              onMouseEnter={e => { if (!loading && !loadingIntent && title.trim()) { e.currentTarget.style.filter = 'brightness(1.07)'; e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.15), 0 8px 28px rgba(229,37,27,0.42)'; e.currentTarget.style.transform = 'translateY(-1px)' } }}
-              onMouseLeave={e => { if (!loading && !loadingIntent && title.trim()) { e.currentTarget.style.filter = ''; e.currentTarget.style.boxShadow = '0 1px 3px rgba(0,0,0,0.12), 0 4px 14px rgba(229,37,27,0.32)'; e.currentTarget.style.transform = '' } }}>
+              className="seo-btn-primary" style={{ fontSize: 13, padding: '11px 22px' }}>
               {loadingIntent ? (
                 <><SpinIcon /> Identifying intent…</>
               ) : loading ? (
@@ -1016,18 +1033,25 @@ export default function SeoOptimizer({ onNavigate }) {
             const hasOverused = !!result.intent_analysis.overused_angle
 
             return (
-              <div style={{ marginBottom: 24 }}>
-                <p style={{ ...T.sectionLabel, marginBottom: 14 }}>Search intent analysis</p>
+              <div style={{ marginBottom: 24, marginTop: 40 }}>
+                <div style={{ marginBottom: 20 }}>
+                  <h2 style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', marginBottom: 4 }}>Search intent analysis</h2>
+                  <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.5 }}>What the audience wants · and the angle competitors are missing</p>
+                </div>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, alignItems: 'stretch' }}>
-                  {/* LEFT — Who it's for */}
+                  {/* LEFT — Who it's for (all-grey eyebrows; this side is descriptive, not actionable) */}
                   <div className="seo-glass-card" style={{ borderRadius: 16, padding: '22px 24px', display: 'flex', flexDirection: 'column' }}>
                     <div>
-                      <p style={roleLabel(C.red)}>Search intent</p>
+                      <p style={roleLabel(C.text3)}>Search intent</p>
                       <p style={roleBody}>{result.intent_analysis.search_intent}</p>
                     </div>
                     <div style={subBlock}>
                       <p style={roleLabel(C.text3)}>Who's searching</p>
                       <p style={roleBodyMuted}>{result.intent_analysis.viewer_profile}</p>
+                    </div>
+                    <div style={subBlock}>
+                      <p style={roleLabel(C.text3)}>Emotional driver</p>
+                      <p style={roleBodyMuted}>{result.intent_analysis.emotional_driver}</p>
                     </div>
                     {hasKeywords && (
                       <div style={subBlock}>
@@ -1043,21 +1067,22 @@ export default function SeoOptimizer({ onNavigate }) {
                     )}
                   </div>
 
-                  {/* RIGHT — Where the gap is */}
+                  {/* RIGHT — The actionable side. Two semantic colors only: green for opportunity, red for warning. */}
                   <div className="seo-glass-card" style={{ borderRadius: 16, padding: '22px 24px', display: 'flex', flexDirection: 'column' }}>
-                    <div>
-                      <p style={roleLabel(C.amber)}>Emotional driver</p>
-                      <p style={roleBody}>{result.intent_analysis.emotional_driver}</p>
-                    </div>
-                    {hasGap && (
-                      <div style={subBlock}>
+                    {hasGap ? (
+                      <div>
                         <p style={roleLabel(C.green)}>Gap opportunity — what competitors aren't doing</p>
                         <p style={roleBody}>{result.intent_analysis.gap_opportunity}</p>
+                      </div>
+                    ) : (
+                      <div>
+                        <p style={roleLabel(C.text3)}>Angle to take</p>
+                        <p style={roleBodyMuted}>Explore the full keyword list below — every phrase is a different angle.</p>
                       </div>
                     )}
                     {hasOverused && (
                       <div style={subBlock}>
-                        <p style={roleLabel(C.red)}>Overused angle</p>
+                        <p style={roleLabel(C.red)}>Overused angle — avoid framing it this way</p>
                         <p style={roleBodyMuted}>{result.intent_analysis.overused_angle}</p>
                       </div>
                     )}
@@ -1067,18 +1092,17 @@ export default function SeoOptimizer({ onNavigate }) {
             )
           })()}
 
-          {/* AI-Suggested Titles — Overview InsightCard pattern (wrapper mb matches Overview Priority Actions: 24) */}
+          {/* AI-Suggested Titles — H2+subtitle header pattern (matches Overview). */}
           {result.suggestions?.length > 0 && (
-            <div style={{ marginBottom: 24 }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16, gap: 16 }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                  <p style={{ fontSize: 20, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px' }}>Suggested titles</p>
-                  <span style={{ fontSize: 11, fontWeight: 700, color: C.text3, background: '#f1f1f6', padding: '2px 8px', borderRadius: 20, border: '1px solid #e6e6ec' }}>{result.suggestions.length}</span>
+            <div style={{ marginBottom: 24, marginTop: 40 }}>
+              <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 20, gap: 16 }}>
+                <div>
+                  <h2 style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', marginBottom: 4 }}>Suggested titles</h2>
+                  <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.5 }}>
+                    {result.suggestions.length} AI alternatives · pick one to generate a matching description
+                  </p>
                 </div>
-                <button onClick={() => handleSelectTitle(title.trim())}
-                  style={{ flexShrink: 0, fontSize: 12, fontWeight: 600, color: C.text2, background: '#ffffff', border: '1px solid #e6e6ec', borderRadius: 100, padding: '6px 14px', cursor: 'pointer', fontFamily: 'inherit', whiteSpace: 'nowrap', boxShadow: '0 1px 3px rgba(0,0,0,0.06)', transition: 'all 0.18s' }}
-                  onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(0,0,0,0.18)'; e.currentTarget.style.color = C.text1 }}
-                  onMouseLeave={e => { e.currentTarget.style.borderColor = '#e6e6ec'; e.currentTarget.style.color = C.text2 }}>
+                <button onClick={() => handleSelectTitle(title.trim())} className="seo-btn" style={{ flexShrink: 0 }}>
                   Use my original title →
                 </button>
               </div>
@@ -1125,8 +1149,8 @@ export default function SeoOptimizer({ onNavigate }) {
 
                         {/* Body grid — Why-it-works (blue tint, Overview's Why-now pattern) + Scores (amber left bar, amber numbers) */}
                         <div style={{ display: 'grid', gridTemplateColumns: '1.3fr 1fr', gap: 8, marginLeft: 38 }}>
-                          <div style={{ background: 'rgba(79,134,247,0.07)', border: '1px solid rgba(79,134,247,0.12)', borderRadius: 10, padding: '12px 14px' }}>
-                            <p style={{ fontSize: 10, fontWeight: 700, color: '#4a7cf7', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Why it works</p>
+                          <div style={{ background: '#fafafb', border: '1px solid #eeeef3', borderRadius: 10, padding: '12px 14px' }}>
+                            <p style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Why it works</p>
                             <p style={{ fontSize: 13.5, color: C.text1, lineHeight: 1.72 }}>{s.why_it_works || hookDesc}</p>
                           </div>
                           <div style={{
@@ -1179,12 +1203,14 @@ export default function SeoOptimizer({ onNavigate }) {
 
           {/* ── Card 1: Keyword research — 2-col inner grid, phrase + bar + score (Overview Category Scores pattern, exact) ── */}
           {result.keyword_scores?.length > 0 && (
-            <div className="seo-glass-card" style={{ borderRadius: 16, padding: '22px 24px', marginBottom: 24 }}>
-              <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 20, gap: 16, flexWrap: 'wrap' }}>
-                <p style={T.sectionLabel}>Keyword research</p>
-                <span style={{ ...T.sectionHint, whiteSpace: 'nowrap', flexShrink: 0 }}>{result.keyword_scores.length} phrases · sorted by score</span>
+            <>
+              <div style={{ marginBottom: 20, marginTop: 40 }}>
+                <h2 style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', marginBottom: 4 }}>Keyword research</h2>
+                <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.5 }}>
+                  {result.keyword_scores.length} related phrases · click any to use as title · sorted by score
+                </p>
               </div>
-
+              <div className="seo-glass-card" style={{ borderRadius: 16, padding: '22px 24px', marginBottom: 24 }}>
               {/* 2-col grid mirrors Dashboard.jsx:2106 exactly — gap '14px 40px', no row bg / no padding */}
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px 40px' }}>
                 {result.keyword_scores.map((kw) => {
@@ -1208,16 +1234,20 @@ export default function SeoOptimizer({ onNavigate }) {
                   )
                 })}
               </div>
-            </div>
+              </div>
+            </>
           )}
 
           {/* ── Card 2: YouTube autocomplete (chip row) ── */}
           {result.autocomplete_terms?.length > 0 && (
-            <div className="seo-glass-card" style={{ borderRadius: 16, padding: '22px 24px', marginBottom: 24 }}>
-              <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 20, gap: 16, flexWrap: 'wrap' }}>
-                <p style={T.sectionLabel}>YouTube autocomplete</p>
-                <span style={{ ...T.sectionHint, whiteSpace: 'nowrap', flexShrink: 0 }}>{result.autocomplete_terms.length} suggestions · click to use</span>
+            <>
+              <div style={{ marginBottom: 20, marginTop: 40 }}>
+                <h2 style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', marginBottom: 4 }}>YouTube autocomplete</h2>
+                <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.5 }}>
+                  {result.autocomplete_terms.length} real searches people type · click to use as your title
+                </p>
               </div>
+              <div className="seo-glass-card" style={{ borderRadius: 16, padding: '22px 24px', marginBottom: 24 }}>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
                 {result.autocomplete_terms.map(t => (
                   <span key={t}
@@ -1234,24 +1264,32 @@ export default function SeoOptimizer({ onNavigate }) {
                   </span>
                 ))}
               </div>
-            </div>
+              </div>
+            </>
           )}
 
           {/* ── Card 3: Suggested tags ── */}
           {result.top_tags?.length > 0 && (
-            <div className="seo-glass-card" style={{ borderRadius: 16, padding: '22px 24px', marginBottom: 24 }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20, gap: 16, flexWrap: 'wrap' }}>
-                <p style={T.sectionLabel}>Suggested tags</p>
+            <>
+              <div style={{ marginBottom: 20, marginTop: 40, display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', gap: 16 }}>
+                <div>
+                  <h2 style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', marginBottom: 4 }}>Suggested tags</h2>
+                  <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.5 }}>
+                    {result.top_tags.length} tags pulled from ranking competitors · click one to copy, or copy all
+                  </p>
+                </div>
                 <button
                   onClick={() => {
                     navigator.clipboard.writeText(result.top_tags.join(', '))
                     setCopiedTags(true)
                     setTimeout(() => setCopiedTags(false), 1800)
                   }}
-                  style={{ flexShrink: 0, fontSize: 12.5, fontWeight: 600, color: copiedTags ? C.green : C.text2, background: '#ffffff', border: `1px solid ${copiedTags ? 'rgba(5,150,105,0.38)' : 'rgba(0,0,0,0.1)'}`, borderRadius: 100, padding: '6px 14px', cursor: 'pointer', fontFamily: 'inherit', whiteSpace: 'nowrap', boxShadow: '0 1px 3px rgba(0,0,0,0.07)', transition: 'all 0.18s' }}>
+                  className="seo-btn"
+                  style={{ flexShrink: 0, color: copiedTags ? C.green : undefined, borderColor: copiedTags ? 'rgba(5,150,105,0.38)' : undefined }}>
                   {copiedTags ? '✓ Copied all' : 'Copy all'}
                 </button>
               </div>
+              <div className="seo-glass-card" style={{ borderRadius: 16, padding: '22px 24px', marginBottom: 24 }}>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
                 {result.top_tags.map(tag => {
                   const inTitle = title.toLowerCase().includes(tag.toLowerCase())
@@ -1283,18 +1321,20 @@ export default function SeoOptimizer({ onNavigate }) {
                   )
                 })}
               </div>
-            </div>
+              </div>
+            </>
           )}
 
           {/* ── Competitor set — the competitor videos we analysed ── */}
           {result.top_videos?.length > 0 && (
-            <div className="seo-glass-card" style={{ borderRadius: 16, padding: '22px 24px', marginBottom: 24 }}>
-              <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 20, gap: 16, flexWrap: 'wrap' }}>
-                <p style={T.sectionLabel}>Competitor set</p>
-                <span style={{ ...T.sectionHint, whiteSpace: 'nowrap', flexShrink: 0 }}>
-                  {result.videos_found} {result.videos_found === 1 ? 'video' : 'videos'}{result.primary_phrase ? ` · "${result.primary_phrase}"` : ''}{result.intent_matched > 0 && result.intent_matched < result.videos_found ? ` · ${result.intent_matched} exact` : ''}
-                </span>
+            <>
+              <div style={{ marginBottom: 20, marginTop: 40 }}>
+                <h2 style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', marginBottom: 4 }}>Competitor set</h2>
+                <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.5 }}>
+                  {result.videos_found} {result.videos_found === 1 ? 'video' : 'videos'} we analysed{result.primary_phrase ? ` in the "${result.primary_phrase}" niche` : ''}{result.intent_matched > 0 && result.intent_matched < result.videos_found ? ` · ${result.intent_matched} exact match` : ''}
+                </p>
               </div>
+              <div className="seo-glass-card" style={{ borderRadius: 16, padding: '22px 24px', marginBottom: 24 }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
                 {result.top_videos.map((v, i) => {
                   const sc = v.seo_score
@@ -1331,6 +1371,7 @@ export default function SeoOptimizer({ onNavigate }) {
                 })}
               </div>
             </div>
+            </>
           )}
 
           {/* ── Description Optimizer ── */}
@@ -1374,8 +1415,7 @@ export default function SeoOptimizer({ onNavigate }) {
                     />
                   </div>
 
-                  <button onClick={handleGenerateDesc} disabled={descLoading}
-                    style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '9px 20px', background: !descLoading ? '#e5251b' : '#e0e0e6', color: '#fff', border: 'none', borderRadius: 100, fontSize: 12.5, fontWeight: 700, fontFamily: 'inherit', cursor: !descLoading ? 'pointer' : 'not-allowed', transition: 'all 0.18s', boxShadow: !descLoading ? '0 1px 3px rgba(0,0,0,0.12), 0 4px 14px rgba(229,37,27,0.32)' : 'none', letterSpacing: '-0.1px' }}>
+                  <button onClick={handleGenerateDesc} disabled={descLoading} className="seo-btn-primary">
                     {descLoading ? (
                       <><SpinIcon /> Generating descriptions…</>
                     ) : (
@@ -1403,8 +1443,7 @@ export default function SeoOptimizer({ onNavigate }) {
                     <p style={T.cardDesc}>
                       3 descriptions — each opens with a different hook strategy. Expand to see the full text, then copy.
                     </p>
-                    <button onClick={() => { setDescResult(null); setDescError('') }}
-                      style={{ flexShrink: 0, fontSize: 12.5, fontWeight: 600, color: C.text2, background: '#ffffff', border: '1px solid #e6e6ec', borderRadius: 100, padding: '6px 14px', cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.15s' }}>
+                    <button onClick={() => { setDescResult(null); setDescError('') }} className="seo-btn" style={{ flexShrink: 0 }}>
                       Regenerate
                     </button>
                   </div>
