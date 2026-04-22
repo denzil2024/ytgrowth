@@ -6,6 +6,7 @@ import VideoOptimizePanel from './VideoOptimizePanel'
 import Keywords from './Keywords'
 import VideoIdeas from './VideoIdeas'
 import ThumbnailScore from './ThumbnailScore'
+import Outliers from './Outliers'
 import WeeklyReport from './WeeklyReport'
 import UsageBar from '../components/UsageBar'
 
@@ -1125,6 +1126,7 @@ function InsightCard({ insight, index, checked, onToggle, onDelete, onNavigate }
 const NAV_ICONS = {
   Overview:          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"><rect x="1" y="1" width="5" height="5" rx="1.5"/><rect x="8" y="1" width="5" height="5" rx="1.5"/><rect x="1" y="8" width="5" height="5" rx="1.5"/><rect x="8" y="8" width="5" height="5" rx="1.5"/></svg>,
   Videos:            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"><rect x="1" y="3" width="9" height="8" rx="1.5"/><path d="M10 5.5l3.5-2v7L10 8.5"/></svg>,
+  Outliers:          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"><path d="M2 10.5l3.2-3.2 2.3 2.3L12 5"/><path d="M8.5 5H12v3.5"/></svg>,
   'SEO Studio':      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"><path d="M2 11V8M5 11V6M8 11V4M11 11V2"/></svg>,
   'Thumbnail Score': <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"><rect x="1" y="3" width="12" height="8" rx="1.5"/><path d="M5 6l2 2 4-3"/></svg>,
   'Video Ideas':     <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"><circle cx="7" cy="6" r="4"/><path d="M5 10.5h4M7 10.5v2.5"/><path d="M5.5 5.5l1.5 1 1.5-1"/></svg>,
@@ -1678,6 +1680,7 @@ export default function Dashboard() {
           </div>
           <NavBtn label="Overview"       active={nav === 'Overview'}       onClick={() => setNav('Overview')} />
           <NavBtn label="Videos"         active={nav === 'Videos'}         onClick={() => setNav('Videos')} />
+          <NavBtn label="Outliers"       active={nav === 'Outliers'}       onClick={() => setNav('Outliers')} />
           <NavBtn label="Weekly Report"  active={nav === 'Weekly Report'}  onClick={() => setNav('Weekly Report')} />
 
           {/* Section: CREATE */}
@@ -2693,6 +2696,8 @@ export default function Dashboard() {
           {nav === 'Thumbnail Score' && <ThumbnailScore channelData={data} onNavigate={setNav} />}
 
           {nav === 'Video Ideas' && <VideoIdeas onNavigate={setNav} />}
+
+          {nav === 'Outliers' && <Outliers channelData={data} onNavigate={setNav} />}
 
           {/* ── SETTINGS ─────────────────────────────────────────────── */}
           {nav === 'Settings' && <Settings />}
