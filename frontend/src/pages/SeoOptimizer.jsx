@@ -966,10 +966,9 @@ export default function SeoOptimizer({ onNavigate }) {
 
           {/* ── Title Scorecard hero — ScoreRing + AI verdict, mirrors Overview's Summary card (Dashboard.jsx:2076) ── */}
           {result.suggestions?.length > 0 && (() => {
-            const sugAvg = (s) => {
-              const vals = [s.seo_score, s.ctr_score, s.hook_score].filter(v => v > 0)
-              return vals.length ? Math.round(vals.reduce((a, b) => a + b, 0) / vals.length) : 0
-            }
+            // Use the backend's weighted combined score (SEO*0.30 + CTR*0.40 + Hook*0.30) as single source of truth.
+            // Fallback to simple average only for older cached results that predate the principled rubric.
+            const sugAvg = (s) => Number.isFinite(s.score) ? s.score : Math.round(((s.seo_score || 0) + (s.ctr_score || 0) + (s.hook_score || 0)) / 3)
             const bestSug = [...result.suggestions].sort((a, b) => sugAvg(b) - sugAvg(a))[0]
             const bestAvg = sugAvg(bestSug)
             const compAvg = result.top_videos?.length
@@ -1151,15 +1150,13 @@ export default function SeoOptimizer({ onNavigate }) {
               {/* Compact stacked cards — mirror Overview's InsightCard. One color per number: amber. */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                 {result.suggestions.map((s, i) => {
-                  const hookLabel = s.hook === 'transformation' ? 'Transformation'
-                                  : s.hook === 'contrarian'     ? 'Contrarian'
-                                  : 'Curiosity / FOMO'
-                  const hookDesc  = s.hook === 'transformation' ? 'Focuses on the outcome or result'
-                                  : s.hook === 'contrarian'     ? "Challenges assumptions — what others don't show"
-                                  : "Makes viewers feel they're missing something"
-                  const avgScore = Math.round(((s.seo_score || 0) + (s.ctr_score || 0) + (s.hook_score || 0)) / Math.max(1, [s.seo_score, s.ctr_score, s.hook_score].filter(v => v > 0).length))
-                  const sevLabel = avgScore >= 75 ? 'Strong' : avgScore >= 55 ? 'Solid' : 'Weak'
-                  const sevColor = avgScore >= 75 ? C.green : avgScore >= 55 ? C.amber : C.red
+                  // New prompt returns primary_keyword + angle instead of a hook category.
+                  // Eyebrow shows what the title anchors on; "Why it works" now surfaces the angle line.
+                  const eyebrow = (s.primary_keyword || result.primary_phrase || '').trim()
+                  // Combined score from the backend's weighted rubric — single source of truth.
+                  const avgScore = Number.isFinite(s.score) ? s.score : Math.round(((s.seo_score || 0) + (s.ctr_score || 0) + (s.hook_score || 0)) / 3)
+                  const sevLabel = avgScore >= 75 ? 'Strong' : avgScore >= 60 ? 'Solid' : 'Weak'
+                  const sevColor = avgScore >= 75 ? C.green : avgScore >= 60 ? C.amber : C.red
                   const isSelected = selectedTitle === s.title
                   return (
                     <div key={i} className="seo-suggestion-card" style={{
@@ -1175,7 +1172,9 @@ export default function SeoOptimizer({ onNavigate }) {
                             <span style={{ fontSize: 12, fontWeight: 700, color: '#fff', fontVariantNumeric: 'tabular-nums' }}>{i + 1}</span>
                           </div>
                           <div style={{ flex: 1, minWidth: 0 }}>
-                            <p style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 5 }}>{hookLabel}</p>
+                            {eyebrow && (
+                              <p style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 5 }}>Built around: {eyebrow}</p>
+                            )}
                             <p style={{ fontSize: 14, fontWeight: 700, color: C.text1, lineHeight: 1.55 }}>{s.title}</p>
                             <p style={{ fontSize: 11, color: C.text3, fontVariantNumeric: 'tabular-nums', fontWeight: 500, marginTop: 4 }}>
                               {s.length} chars{s.length >= 50 && s.length <= 70 ? ' · ideal 50–70' : s.length > 70 ? ' · over 70' : ' · under 50'}
@@ -1193,7 +1192,13 @@ export default function SeoOptimizer({ onNavigate }) {
                         <div style={{ display: 'grid', gridTemplateColumns: '1.3fr 1fr', gap: 8, marginLeft: 38 }}>
                           <div style={{ background: '#fafafb', border: '1px solid #eeeef3', borderRadius: 10, padding: '12px 14px' }}>
                             <p style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Why it works</p>
-                            <p style={{ fontSize: 13.5, color: C.text1, lineHeight: 1.72 }}>{s.why_it_works || hookDesc}</p>
+                            <p style={{ fontSize: 13.5, color: C.text1, lineHeight: 1.72 }}>{s.why_it_works || s.angle || 'This framing gives the viewer a specific reason to click.'}</p>
+                            {s.angle && s.why_it_works && s.angle !== s.why_it_works && (
+                              <p style={{ fontSize: 12, color: C.text3, lineHeight: 1.6, marginTop: 8, paddingTop: 8, borderTop: `1px dashed ${C.border}` }}>
+                                <span style={{ fontWeight: 700, color: C.text3, letterSpacing: '0.05em', textTransform: 'uppercase', fontSize: 10 }}>Algorithm angle · </span>
+                                {s.angle}
+                              </p>
+                            )}
                           </div>
                           <div style={{
                             background: '#ffffff',

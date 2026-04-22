@@ -532,9 +532,14 @@ def _score_title(title: str, top_titles: list[str]) -> dict:
 # title text against the live keyword + competitor data — so rankings are stable,
 # repeatable, and explainable.
 
-_SPECIFICITY_PATTERN  = re.compile(r"(\$[\d,]+|\d+%|\d+\s*(hour|day|week|month|year|min|sec)s?|\d+\s*(k|m|b)\b|\$?\d{2,})", re.IGNORECASE)
-_CONTRAST_PATTERN     = re.compile(r"\b(vs\.?|versus|before|after|but|instead|actually|really|truth|reality)\b", re.IGNORECASE)
-_CURIOSITY_PATTERN    = re.compile(r"\b(why|how|what|secret|reason|nobody|no one|wish|never|until|behind|inside)\b", re.IGNORECASE)
+_SPECIFICITY_PATTERN  = re.compile(r"(\$[\d,]+|[A-Za-z]{2,5}\s?[\d,]{2,}|\d+%|\d+\s*(hour|day|week|month|year|min|sec)s?|\d+\s*(k|m|b)\b|\$?\d{2,})", re.IGNORECASE)
+_CONTRAST_PATTERN     = re.compile(r"\b(vs\.?|versus|before|after|but|instead|actually|really|truth|reality|honest|worth it)\b", re.IGNORECASE)
+# Curiosity: explicit question words + implicit open-loop phrases the old pattern missed.
+_CURIOSITY_PATTERN    = re.compile(r"\b(why|how|what|which|secret|reason|nobody|no one|wish|never|until|behind|inside|actually|finally|did i|did it|did we|did they|does it|can i|will i|will it|is it|surviving|trying|testing|tested|tried|cover|covers|covered|works?|worked|really)\b", re.IGNORECASE)
+# Present-tense verb openers that signal journey/story — reward alongside power words as a valid strong opener.
+_VERB_OPENER          = re.compile(r"^(surviving|trying|testing|spending|making|cooking|shopping|building|going|coming|inside|watch|meet|come|live|turning|finding|learning|growing)\b", re.IGNORECASE)
+# First-person ownership — emotional anchor for vlog/personal content.
+_PERSONAL_VOICE       = re.compile(r"\b(i|i'?m|my|me|we|our|us)\b", re.IGNORECASE)
 _GENERIC_CLICKBAIT    = re.compile(r"\b(shocking|unbelievable|insane|crazy|you won'?t believe|gone wrong|must watch)\b", re.IGNORECASE)
 
 
@@ -546,41 +551,62 @@ def _score_suggestion_rubric(title: str, top_titles: list[str], keyword_scores: 
     """
     Returns { seo, ctr, hook, combined, breakdown } for a single suggested title.
     Combined = SEO * 0.30 + CTR * 0.40 + Hook * 0.30  (CTR is the viewer's first decision).
+
+    Rubric is calibrated so a solid creative title (good length, keyword word-overlap,
+    concrete detail, personal voice, strong opener) lands in the 70-85 range — not 45-55.
     """
     t = title.strip()
+    t_lower = t.lower()
     words = _tokenize(t)
     length = len(t)
 
     # ───── SEO (0-100) ─────
     seo = 0
-    # Length compliance (0-30)
-    if 50 <= length <= 70:    seo += 30
+    # Length compliance (0-25)
+    if 50 <= length <= 70:    seo += 25
     elif 40 <= length <= 80:  seo += 18
-    elif 30 <= length < 40:   seo += 8
+    elif 30 <= length < 40:   seo += 10
     else:                     seo += 0
 
-    # Primary keyword presence + position (0-30)
+    # Primary keyword — WORD-LEVEL overlap, not substring. "shopping haul kenya" vs
+    # "Ksh 12,000 Monthly Shop" should register the partial match on "shop", not zero out.
     pk = (primary_keyword or "").strip().lower()
-    if pk and pk in t.lower():
-        first_third = t.lower()[: max(1, len(t) // 3)]
-        seo += 30 if pk in first_third else 18
-    elif pk:
-        # no primary keyword at all — baseline 0
-        seo += 0
+    pk_words = set(w for w in pk.split() if len(w) > 2)
+    title_word_set = set(words)
+    if pk_words:
+        overlap_ct = len(pk_words & title_word_set)
+        overlap_ratio = overlap_ct / len(pk_words)
+        first_half = t_lower[: max(1, len(t) // 2)]
+        if overlap_ratio >= 1.0:
+            seo += 35 if any(w in first_half for w in pk_words) else 26
+        elif overlap_ratio >= 0.5:
+            seo += 22
+        elif overlap_ratio > 0:
+            seo += 14
+        else:
+            seo += 4  # not zero — title can still be SEO-valid via secondary keywords
     else:
-        seo += 15  # no primary given — don't penalise
+        seo += 22  # no primary given — don't penalise
 
-    # Secondary keyword coverage (0-25) — rewards organic inclusion of related phrases
+    # Secondary keyword coverage (0-25) — word-overlap count across top 10 keyword phrases.
     if keyword_scores:
-        phrases = [k.get("phrase", "").lower() for k in keyword_scores[:10] if k.get("phrase")]
-        hits = sum(1 for p in phrases if p and p != pk and p in t.lower())
-        seo += min(hits * 6, 25)
+        hits = 0
+        seen_phrases = set()
+        for k in keyword_scores[:10]:
+            phrase = (k.get("phrase") or "").lower().strip()
+            if not phrase or phrase == pk or phrase in seen_phrases:
+                continue
+            seen_phrases.add(phrase)
+            phrase_words = set(w for w in phrase.split() if len(w) > 2)
+            if phrase_words and len(phrase_words & title_word_set) >= min(2, len(phrase_words)):
+                hits += 1
+        seo += min(hits * 7, 25)
     else:
         seo += 10
 
     # Anti-keyword-stuffing (0-15)
     if pk:
-        repeats = t.lower().count(pk)
+        repeats = t_lower.count(pk) if pk in t_lower else 0
         seo += 15 if repeats <= 1 else (8 if repeats == 2 else 0)
     else:
         seo += 12
@@ -589,44 +615,53 @@ def _score_suggestion_rubric(title: str, top_titles: list[str], keyword_scores: 
 
     # ───── CTR (0-100) — does the viewer's thumb stop scrolling ─────
     ctr = 0
-    # Specificity (0-30): concrete numbers, timeframes, dollar amounts
-    if _SPECIFICITY_PATTERN.search(t):
+    # Specificity (0-30): numbers, dollar/currency, timeframes
+    has_specificity = bool(_SPECIFICITY_PATTERN.search(t))
+    if has_specificity:
         ctr += 30
 
-    # Emotional contrast / turn (0-20)
-    if _CONTRAST_PATTERN.search(t):
-        ctr += 20
+    # Emotional contrast / turn (0-15)
+    has_contrast = bool(_CONTRAST_PATTERN.search(t))
+    if has_contrast:
+        ctr += 15
 
-    # Curiosity signal (0-20)
-    if _CURIOSITY_PATTERN.search(t) or t.endswith("?"):
-        ctr += 20
+    # Curiosity — broader: explicit questions, journey verbs, open-loop implications, "?" ending
+    has_curiosity = bool(_CURIOSITY_PATTERN.search(t)) or t.endswith("?")
+    if has_curiosity:
+        ctr += 25
 
-    # Power-word discipline (0-15): some power words lift; too many flag as spam
+    # Power-word discipline — 1 is ideal, more than 2 reads as spam
     power_hits = sum(1 for w in words if w in POWER_WORDS)
     if power_hits == 0:    ctr += 10
     elif power_hits == 1:  ctr += 15
     elif power_hits == 2:  ctr += 10
     else:                  ctr += 0
 
-    # Not generic clickbait (0-15)
-    ctr += 0 if _GENERIC_CLICKBAIT.search(t) else 15
+    # Personal voice (0-5) — "my", "i", "me" signals authentic creator content
+    if _PERSONAL_VOICE.search(t):
+        ctr += 5
+
+    # Not generic clickbait (0-10)
+    ctr += 0 if _GENERIC_CLICKBAIT.search(t) else 10
 
     ctr = min(ctr, 100)
 
     # ───── Hook (0-100) — opening strength + pattern interrupt vs competitor set ─────
     hook = 0
 
-    # Opening strength — first 3 words carry weight? (0-25)
+    # Opening strength (0-25) — any of: keyword/question/number, power word, strong verb opener, personal pronoun
     first_three = words[:3]
     strong_first = (
         any(w in POWER_WORDS or w in QUESTION_STARTERS for w in first_three)
         or any(re.search(r"\d", w) for w in first_three)
-        or bool(pk and words and pk.split()[0] == words[0])
+        or bool(pk_words and words and words[0] in pk_words)
+        or bool(_VERB_OPENER.match(t))
+        or (words and words[0] in {"i", "my", "me", "we"})
     )
-    hook += 25 if strong_first else 10
+    hook += 25 if strong_first else 14
 
-    # Pattern interrupt vs competitor titles (0-30)
-    # Measure what % of the suggestion's meaningful words don't appear in ANY competitor title.
+    # Pattern interrupt vs competitors (0-25). Low floor of 8 so a niche with overlapping
+    # vocabulary doesn't crater every title.
     if top_titles and words:
         competitor_words = set()
         for ct in top_titles[:15]:
@@ -637,19 +672,26 @@ def _score_suggestion_rubric(title: str, top_titles: list[str], keyword_scores: 
         if meaningful_title_words:
             novel = [w for w in meaningful_title_words if w not in competitor_words]
             novelty_ratio = len(novel) / len(meaningful_title_words)
-            hook += int(novelty_ratio * 30)
+            hook += max(8, int(novelty_ratio * 25))
         else:
             hook += 15
     else:
         hook += 15
 
-    # Concrete stakes / outcome (0-25) — named number OR outcome verb like grew/made/lost/built
-    outcome_verbs = re.compile(r"\b(grew|made|built|earned|lost|gained|turned|went from|saved|doubled|tripled|quit|fixed|broke)\b", re.IGNORECASE)
-    has_stakes = bool(_SPECIFICITY_PATTERN.search(t)) or bool(outcome_verbs.search(t))
-    hook += 25 if has_stakes else 8
+    # Concrete stakes / outcome (0-25)
+    outcome_verbs = re.compile(
+        r"\b(grew|made|built|earned|lost|gained|turned|went from|saved|doubled|tripled|quit|"
+        r"fixed|broke|survived|surviving|tested|tried|covers?|covered|discovered|found)\b",
+        re.IGNORECASE,
+    )
+    has_stakes = has_specificity or bool(outcome_verbs.search(t))
+    hook += 25 if has_stakes else 10
 
-    # Viral format match (0-20) — only a mild signal; we don't want to overweight it
-    hook += 20 if _detect_viral_format(t) else 6
+    # Personal investment (0-15) — first-person ownership makes the viewer feel it's a real story
+    hook += 15 if _PERSONAL_VOICE.search(t) else 0
+
+    # Viral format match (0-10) — mild signal, don't overweight
+    hook += 10 if _detect_viral_format(t) else 4
 
     hook = min(hook, 100)
 
@@ -662,10 +704,12 @@ def _score_suggestion_rubric(title: str, top_titles: list[str], keyword_scores: 
         "combined": combined,
         "breakdown": {
             "length": length,
-            "has_primary_keyword": bool(pk and pk in t.lower()),
+            "primary_keyword_overlap": round((len(pk_words & title_word_set) / len(pk_words)) if pk_words else 1.0, 2),
             "power_word_count": power_hits,
-            "has_specificity": bool(_SPECIFICITY_PATTERN.search(t)),
-            "has_curiosity": bool(_CURIOSITY_PATTERN.search(t)),
+            "has_specificity": has_specificity,
+            "has_contrast": has_contrast,
+            "has_curiosity": has_curiosity,
+            "has_personal_voice": bool(_PERSONAL_VOICE.search(t)),
             "is_generic_clickbait": bool(_GENERIC_CLICKBAIT.search(t)),
         },
     }
