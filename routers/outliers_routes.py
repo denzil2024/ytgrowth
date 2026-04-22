@@ -13,30 +13,28 @@ from pydantic import BaseModel
 from routers.auth import get_session
 from app.analysis_gate import check_and_deduct, refund_credit
 from app.outliers import search_outliers
-from app.keywords import generate_outliers_intent_options
+from app.keywords import generate_intent_options
 
 router = APIRouter()
 
 
 class IntentBody(BaseModel):
     query: str
-    kind:  str = "video"   # "video" | "thumbnail" | "channel"
+    kind:  str = "video"   # kept for frontend compatibility; unused here
 
 
 @router.post("/intent-options")
 def intent_options(body: IntentBody):
     """
-    Fast Haiku call — returns 3 AI-generated niche interpretations for the
-    query. Not credit-gated: intent generation is cheap and runs before the
-    paid search. The picker UI in Outliers.jsx uses the result verbatim.
+    Calls the SAME generate_intent_options() the SEO Optimizer uses — identical
+    prompt, identical output shape. We pass the query through as the "title"
+    argument so the single source of truth for intent generation stays in
+    app/keywords.py. Not credit-gated; runs before the paid search.
     """
     q = (body.query or "").strip()
     if not q:
         return JSONResponse({"error": "Query cannot be empty."}, status_code=400)
-    kind = (body.kind or "video").lower()
-    if kind not in ("video", "thumbnail", "channel"):
-        kind = "video"
-    options, error = generate_outliers_intent_options(q, kind)
+    options, error = generate_intent_options(q)
     if error and not options:
         return JSONResponse({"error": error}, status_code=500)
     return JSONResponse({"options": options})
