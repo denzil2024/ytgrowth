@@ -403,19 +403,18 @@ function L1Row({ keyName, data, benchComp }) {
       </button>
 
       {open && explanation && (
-        <div style={{ paddingBottom: 12 }}>
-          <p style={{ fontSize: 14, color: '#374151', fontWeight: 400, lineHeight: 1.6 }}>
-            {explanation}
-          </p>
+        <div style={{ paddingBottom: 14, display: 'grid', gridTemplateColumns: fix ? '1fr 1fr' : '1fr', gap: 8 }}>
+          {/* Why — blue tint, Priority-Actions "Why now" pattern */}
+          <div style={{ background: 'rgba(79,134,247,0.07)', border: '1px solid rgba(79,134,247,0.12)', borderRadius: 10, padding: '11px 13px' }}>
+            <p style={{ fontSize: 10, fontWeight: 700, color: '#4a7cf7', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Why</p>
+            <p style={{ fontSize: 13, color: C.text1, lineHeight: 1.7 }}>{explanation}</p>
+          </div>
           {fix && (
-            <>
-              <div style={{ borderTop: '0.5px solid rgba(0,0,0,0.06)', margin: '8px 0' }}/>
-              <p style={{ fontSize: 12, fontWeight: 500, color: '#e5251b', marginBottom: 4,
-                          textTransform: 'uppercase', letterSpacing: '0.04em' }}>FIX</p>
-              <p style={{ fontSize: 14, color: '#374151', fontWeight: 400, lineHeight: 1.6 }}>
-                {fix}
-              </p>
-            </>
+            /* Fix — white + 3px red bar, Priority-Actions "Action" pattern */
+            <div style={{ background: '#ffffff', border: `1px solid ${C.border}`, borderLeft: `3px solid ${C.red}`, borderRadius: '0 10px 10px 0', padding: '11px 14px', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}>
+              <p style={{ fontSize: 10, fontWeight: 700, color: C.red, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Fix</p>
+              <p style={{ fontSize: 13, color: C.text1, lineHeight: 1.7 }}>{fix}</p>
+            </div>
           )}
         </div>
       )}
@@ -1372,36 +1371,48 @@ export default function ThumbnailScore({ channelData, onNavigate }) {
                     <div className="tiq-acc-body">
                       <LinkedIdeaCard idea={itemLinked} />
                       <div style={{ display: 'grid', gridTemplateColumns: '2fr 3fr', gap: 20 }}>
-                        {/* Left: image + badges */}
+                        {/* Left: image + inline AI-tag pills + Biggest Win/Fix below to fill the column height */}
                         <div>
-                          <div style={{ borderRadius: 12, overflow: 'hidden', border: `1px solid ${C.border}` }}>
+                          <div style={{ borderRadius: 12, overflow: 'hidden', border: `1px solid ${C.border}`, background: '#fff' }}>
                             {item.thumbnail_b64
                               ? <img src={`data:image/jpeg;base64,${item.thumbnail_b64}`} alt=""
                                      style={{ width: '100%', display: 'block', aspectRatio: '16/9', objectFit: 'cover' }}/>
                               : <div style={{ width: '100%', aspectRatio: '16/9', background: '#ebebef' }}/>
                             }
-                          </div>
-                          {itemL2 && (
-                            <div style={{ marginTop: 10, display: 'flex', flexDirection: 'column', gap: 6 }}>
-                              {itemL2.emotionLabel && (
-                                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                                  <span style={{ fontSize: 12, fontWeight: 600, color: C.text3, width: 70, flexShrink: 0 }}>Emotion</span>
+                            {itemL2 && (itemL2.emotionLabel || itemL2.feedPosition) && (
+                              <div style={{ borderTop: `1px solid ${C.border}`, padding: '10px 12px', display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                                {itemL2.emotionLabel && (
                                   <Badge text={itemL2.emotionLabel}
                                     color={itemL2.emotionLabel.toLowerCase().includes('neutral') ? C.amber : C.green}
                                     bg={itemL2.emotionLabel.toLowerCase().includes('neutral') ? C.amberBg : C.greenBg}
                                     bdr={itemL2.emotionLabel.toLowerCase().includes('neutral') ? C.amberBdr : C.greenBdr}
                                   />
-                                </div>
-                              )}
-                              {itemL2.feedPosition && (
-                                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                                  <span style={{ fontSize: 12, fontWeight: 600, color: C.text3, width: 70, flexShrink: 0 }}>Feed</span>
+                                )}
+                                {itemL2.feedPosition && (
                                   <Badge
                                     text={itemL2.feedPosition === 'stands out' ? 'Stands Out' : itemL2.feedPosition === 'disappears' ? 'Disappears' : 'Blends In'}
                                     color={itemL2.feedPosition === 'stands out' ? C.green : itemL2.feedPosition === 'disappears' ? C.red : C.amber}
                                     bg={itemL2.feedPosition === 'stands out' ? C.greenBg : itemL2.feedPosition === 'disappears' ? C.redBg : C.amberBg}
                                     bdr={itemL2.feedPosition === 'stands out' ? C.greenBdr : itemL2.feedPosition === 'disappears' ? C.redBdr : C.amberBdr}
                                   />
+                                )}
+                              </div>
+                            )}
+                          </div>
+
+                          {/* Biggest Win / Fix stacked below thumbnail (fills the left-column void) */}
+                          {itemL2 && (itemL2.biggestWin || itemL2.biggestFix) && (
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: 12 }}>
+                              {itemL2.biggestWin && (
+                                <div className="tiq-card" style={{ borderTop: `3px solid ${C.green}`, padding: '12px 16px', background: '#fff' }}>
+                                  <p style={{ fontSize: 10, fontWeight: 700, color: C.green, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 5 }}>Biggest win</p>
+                                  <p style={{ fontSize: 12, color: C.text1, lineHeight: 1.65 }}>{itemL2.biggestWin}</p>
+                                </div>
+                              )}
+                              {itemL2.biggestFix && (
+                                <div className="tiq-card" style={{ borderTop: `3px solid ${C.red}`, padding: '12px 16px', background: '#fff' }}>
+                                  <p style={{ fontSize: 10, fontWeight: 700, color: C.red, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 5 }}>Biggest fix</p>
+                                  <p style={{ fontSize: 12, color: C.text1, lineHeight: 1.65 }}>{itemL2.biggestFix}</p>
                                 </div>
                               )}
                             </div>
@@ -1442,9 +1453,9 @@ export default function ThumbnailScore({ channelData, onNavigate }) {
                             </div>
                           </div>
 
-                          {/* AI analysis card */}
+                          {/* AI analysis card (no marginBottom — last card in right column) */}
                           {itemL2 && (
-                            <div className="tiq-card" style={{ padding: '16px 20px', marginBottom: 10, background: '#fff' }}>
+                            <div className="tiq-card" style={{ padding: '16px 20px', background: '#fff' }}>
                               <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 10 }}>
                                 <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, letterSpacing: '0.07em', textTransform: 'uppercase' }}>AI analysis</p>
                                 <p style={{ fontSize: 11, color: C.text3, fontWeight: 500 }}>{itemL2.claude_score ?? 0}/40</p>
@@ -1454,24 +1465,6 @@ export default function ThumbnailScore({ channelData, onNavigate }) {
                                   <L2Row key={k} dimKey={k} dim={v}/>
                                 ))}
                               </div>
-                            </div>
-                          )}
-
-                          {/* Biggest Win / Biggest Fix — Priority-Actions-style colored top-border cards */}
-                          {itemL2 && (itemL2.biggestWin || itemL2.biggestFix) && (
-                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
-                              {itemL2.biggestWin && (
-                                <div className="tiq-card" style={{ borderTop: `3px solid ${C.green}`, padding: '12px 16px', background: '#fff' }}>
-                                  <p style={{ fontSize: 10, fontWeight: 700, color: C.green, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 5 }}>Biggest win</p>
-                                  <p style={{ fontSize: 12, color: C.text1, lineHeight: 1.65 }}>{itemL2.biggestWin}</p>
-                                </div>
-                              )}
-                              {itemL2.biggestFix && (
-                                <div className="tiq-card" style={{ borderTop: `3px solid ${C.red}`, padding: '12px 16px', background: '#fff' }}>
-                                  <p style={{ fontSize: 10, fontWeight: 700, color: C.red, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 5 }}>Biggest fix</p>
-                                  <p style={{ fontSize: 12, color: C.text1, lineHeight: 1.65 }}>{itemL2.biggestFix}</p>
-                                </div>
-                              )}
                             </div>
                           )}
                         </div>
@@ -1515,7 +1508,7 @@ export default function ThumbnailScore({ channelData, onNavigate }) {
         <div className="tiq-section">
           <div style={{ display: 'grid', gridTemplateColumns: '2fr 3fr', gap: 20 }}>
 
-            {/* LEFT: thumbnail preview */}
+            {/* LEFT — thumbnail, AI-tag pill strip inline at the bottom of the card, then Win/Fix stacked below to fill the column */}
             <div>
               <div className="tiq-card" style={{ overflow: 'hidden' }}>
                 {analysis.thumbnail_b64
@@ -1523,10 +1516,40 @@ export default function ThumbnailScore({ channelData, onNavigate }) {
                          style={{ width: '100%', display: 'block', aspectRatio: '16/9', objectFit: 'cover' }}/>
                   : <div style={{ width: '100%', aspectRatio: '16/9', background: '#ebebef' }}/>
                 }
-                {/* Benchmark context */}
+
+                {/* AI-tag pill strip — Emotion / Feed / CTR as compact pills in the card footer */}
+                {state === 'ready2' && l2 && (l2.emotionLabel || l2.feedPosition || l2.clickPrediction) && (
+                  <div style={{ borderTop: `1px solid ${C.border}`, padding: '10px 14px', display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                    {l2.emotionLabel && (
+                      <Badge text={l2.emotionLabel}
+                        color={l2.emotionLabel.toLowerCase().includes('neutral') ? C.amber : C.green}
+                        bg={l2.emotionLabel.toLowerCase().includes('neutral') ? C.amberBg : C.greenBg}
+                        bdr={l2.emotionLabel.toLowerCase().includes('neutral') ? C.amberBdr : C.greenBdr}
+                      />
+                    )}
+                    {l2.feedPosition && (
+                      <Badge
+                        text={l2.feedPosition === 'stands out' ? 'Stands Out' : l2.feedPosition === 'disappears' ? 'Disappears' : 'Blends In'}
+                        color={l2.feedPosition === 'stands out' ? C.green : l2.feedPosition === 'disappears' ? C.red : C.amber}
+                        bg={l2.feedPosition === 'stands out' ? C.greenBg : l2.feedPosition === 'disappears' ? C.redBg : C.amberBg}
+                        bdr={l2.feedPosition === 'stands out' ? C.greenBdr : l2.feedPosition === 'disappears' ? C.redBdr : C.amberBdr}
+                      />
+                    )}
+                    {l2.clickPrediction && (
+                      <Badge
+                        text={l2.clickPrediction === 'above niche average' ? 'Above Niche Avg' : l2.clickPrediction === 'below niche average' ? 'Below Niche Avg' : 'At Niche Avg'}
+                        color={l2.clickPrediction === 'above niche average' ? C.green : l2.clickPrediction === 'below niche average' ? C.red : C.amber}
+                        bg={l2.clickPrediction === 'above niche average' ? C.greenBg : l2.clickPrediction === 'below niche average' ? C.redBg : C.amberBg}
+                        bdr={l2.clickPrediction === 'above niche average' ? C.greenBdr : l2.clickPrediction === 'below niche average' ? C.redBdr : C.amberBdr}
+                      />
+                    )}
+                  </div>
+                )}
+
+                {/* Benchmark context — small muted strip at the very bottom of the card */}
                 {keyword && (
-                  <div style={{ padding: '12px 16px', borderTop: `1px solid ${C.border}` }}>
-                    <p style={{ fontSize: 12, color: C.text3, lineHeight: 1.6 }}>
+                  <div style={{ padding: '10px 14px', borderTop: `1px solid ${C.border}` }}>
+                    <p style={{ fontSize: 12, color: C.text3, lineHeight: 1.55 }}>
                       Benchmarked against <strong style={{ color: C.text2 }}>top {fmt}</strong> videos
                       {' · '}<strong style={{ color: C.text2 }}>{bracket}</strong> channels
                       {' · '}<strong style={{ color: C.text2 }}>"{keyword}"</strong>
@@ -1535,39 +1558,19 @@ export default function ThumbnailScore({ channelData, onNavigate }) {
                 )}
               </div>
 
-              {/* Emotion + feed badges (Layer 2 only) */}
-              {state === 'ready2' && l2 && (
-                <div style={{ marginTop: 12, display: 'flex', flexDirection: 'column', gap: 8 }}>
-                  {l2.emotionLabel && (
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                      <span style={{ fontSize: 12, fontWeight: 600, color: C.text3, width: 90, flexShrink: 0 }}>Emotion</span>
-                      <Badge text={l2.emotionLabel}
-                        color={l2.emotionLabel.toLowerCase().includes('neutral') ? C.amber : C.green}
-                        bg={l2.emotionLabel.toLowerCase().includes('neutral') ? C.amberBg : C.greenBg}
-                        bdr={l2.emotionLabel.toLowerCase().includes('neutral') ? C.amberBdr : C.greenBdr}
-                      />
+              {/* Biggest Win / Fix stacked below the thumbnail — fills the left-column height */}
+              {state === 'ready2' && l2 && (l2.biggestWin || l2.biggestFix) && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: 12 }}>
+                  {l2.biggestWin && (
+                    <div className="tiq-card" style={{ borderTop: `3px solid ${C.green}`, padding: '14px 18px' }}>
+                      <p style={{ fontSize: 10, fontWeight: 700, color: C.green, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Biggest win</p>
+                      <p style={{ fontSize: 13, color: C.text1, lineHeight: 1.65 }}>{l2.biggestWin}</p>
                     </div>
                   )}
-                  {l2.feedPosition && (
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                      <span style={{ fontSize: 12, fontWeight: 600, color: C.text3, width: 90, flexShrink: 0 }}>Feed</span>
-                      <Badge
-                        text={l2.feedPosition === 'stands out' ? 'Stands Out' : l2.feedPosition === 'disappears' ? 'Disappears' : 'Blends In'}
-                        color={l2.feedPosition === 'stands out' ? C.green : l2.feedPosition === 'disappears' ? C.red : C.amber}
-                        bg={l2.feedPosition === 'stands out' ? C.greenBg : l2.feedPosition === 'disappears' ? C.redBg : C.amberBg}
-                        bdr={l2.feedPosition === 'stands out' ? C.greenBdr : l2.feedPosition === 'disappears' ? C.redBdr : C.amberBdr}
-                      />
-                    </div>
-                  )}
-                  {l2.clickPrediction && (
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                      <span style={{ fontSize: 12, fontWeight: 600, color: C.text3, width: 90, flexShrink: 0 }}>CTR</span>
-                      <Badge
-                        text={l2.clickPrediction === 'above niche average' ? 'Above Niche Avg' : l2.clickPrediction === 'below niche average' ? 'Below Niche Avg' : 'At Niche Avg'}
-                        color={l2.clickPrediction === 'above niche average' ? C.green : l2.clickPrediction === 'below niche average' ? C.red : C.amber}
-                        bg={l2.clickPrediction === 'above niche average' ? C.greenBg : l2.clickPrediction === 'below niche average' ? C.redBg : C.amberBg}
-                        bdr={l2.clickPrediction === 'above niche average' ? C.greenBdr : l2.clickPrediction === 'below niche average' ? C.redBdr : C.amberBdr}
-                      />
+                  {l2.biggestFix && (
+                    <div className="tiq-card" style={{ borderTop: `3px solid ${C.red}`, padding: '14px 18px' }}>
+                      <p style={{ fontSize: 10, fontWeight: 700, color: C.red, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Biggest fix</p>
+                      <p style={{ fontSize: 13, color: C.text1, lineHeight: 1.65 }}>{l2.biggestFix}</p>
                     </div>
                   )}
                 </div>
@@ -1669,23 +1672,6 @@ export default function ThumbnailScore({ channelData, onNavigate }) {
                       </div>
                     )}
 
-                    {/* ── 4. Biggest Win / Biggest Fix — Priority-Actions-style colored top-border cards ── */}
-                    {isFinal && l2 && (l2.biggestWin || l2.biggestFix) && (
-                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 14 }}>
-                        {l2.biggestWin && (
-                          <div className="tiq-card" style={{ borderTop: `3px solid ${C.green}`, padding: '14px 18px' }}>
-                            <p style={{ fontSize: 10, fontWeight: 700, color: C.green, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Biggest win</p>
-                            <p style={{ fontSize: 13, color: C.text1, lineHeight: 1.65 }}>{l2.biggestWin}</p>
-                          </div>
-                        )}
-                        {l2.biggestFix && (
-                          <div className="tiq-card" style={{ borderTop: `3px solid ${C.red}`, padding: '14px 18px' }}>
-                            <p style={{ fontSize: 10, fontWeight: 700, color: C.red, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Biggest fix</p>
-                            <p style={{ fontSize: 13, color: C.text1, lineHeight: 1.65 }}>{l2.biggestFix}</p>
-                          </div>
-                        )}
-                      </div>
-                    )}
                   </>
                 )
               })()}
