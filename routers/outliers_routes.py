@@ -20,6 +20,7 @@ router = APIRouter()
 class SearchBody(BaseModel):
     query: str
     kind:  str = "video"   # "video" | "thumbnail" | "channel"
+    confirmed_keyword: str = ""  # Set when the user picked an intent from the picker
 
 
 @router.post("/search")
@@ -48,7 +49,7 @@ def search(body: SearchBody, request: Request):
         )
 
     try:
-        result = search_outliers(creds, query, kind, subscribers)
+        result = search_outliers(creds, query, kind, subscribers, confirmed_keyword=(body.confirmed_keyword or "").strip())
     except Exception as e:
         refund_credit(channel_id)
         return JSONResponse(

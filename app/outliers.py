@@ -8,13 +8,65 @@ Credit model: one credit per /outliers/search call (shared across all N results)
 """
 import json
 import re
+import socket
+import ssl
 import statistics
+import time
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
+
+import httplib2
+from googleapiclient.errors import HttpError
 
 from app.utils import make_anthropic_client, build_youtube_client
 from app.thumbnail import get_size_bracket
 from app.competitors import parse_duration_seconds
+
+
+# ─── Transient-error retry for YouTube API calls ──────────────────────────────
+# SSL record layer failures, connection resets, and transient 5xx happen on the
+# YouTube Data API often enough to break user-facing searches. Every outbound
+# .execute() below is wrapped in this helper.
+
+_TRANSIENT_EXC = (
+    ssl.SSLError,
+    ConnectionResetError,
+    ConnectionError,
+    socket.timeout,
+    TimeoutError,
+    httplib2.HttpLib2Error,
+    OSError,
+)
+
+
+def _is_transient_http_error(e: HttpError) -> bool:
+    status = getattr(getattr(e, "resp", None), "status", 0) or 0
+    return status in (429, 500, 502, 503, 504)
+
+
+def _execute_with_retry(request, attempts: int = 3, base_delay: float = 0.6):
+    """
+    Run a googleapiclient request's .execute() with retries on transient SSL /
+    network / 5xx errors. Raises the last exception if all attempts fail.
+    """
+    last_err: Exception | None = None
+    for i in range(attempts):
+        try:
+            return request.execute()
+        except HttpError as e:
+            if _is_transient_http_error(e) and i < attempts - 1:
+                last_err = e
+                time.sleep(base_delay * (2 ** i))
+                continue
+            raise
+        except _TRANSIENT_EXC as e:
+            last_err = e
+            if i < attempts - 1:
+                time.sleep(base_delay * (2 ** i))
+                continue
+            raise
+    if last_err:
+        raise last_err
 
 
 # ─── Tunables ─────────────────────────────────────────────────────────────────
@@ -30,13 +82,14 @@ _MIN_VIDEO_VIEWS    = 1_000 # Skip dead videos that pollute the signal
 
 # ─── Entry point ──────────────────────────────────────────────────────────────
 
-def search_outliers(creds, query: str, kind: str, my_subscribers: int) -> dict:
+def search_outliers(creds, query: str, kind: str, my_subscribers: int, confirmed_keyword: str = "") -> dict:
     """
     kind ∈ {"video", "thumbnail", "channel"}.
-    Returns {"results": [...], "cohort": {...}} or {"error": "..."}.
+    confirmed_keyword (optional): when the user picked an intent in the picker,
+    this is the narrower keyword we actually send to YouTube. Falls back to the
+    raw query when the user skipped the picker.
 
-    video/thumbnail use the same backend pipeline — the UI framing differs on
-    the frontend, but the outlier math is identical (views vs. cohort median).
+    Returns {"results": [...], "cohort": {...}} or {"error": "..."}.
     """
     query = (query or "").strip()
     if not query:
@@ -44,10 +97,22 @@ def search_outliers(creds, query: str, kind: str, my_subscribers: int) -> dict:
     if kind not in ("video", "thumbnail", "channel"):
         return {"error": f"Unknown kind: {kind}"}
 
+    # The actual YouTube search query — confirmed intent wins when present.
+    search_q = (confirmed_keyword or "").strip() or query
+
     try:
         if kind == "channel":
-            return _search_channel_outliers(creds, query, my_subscribers)
-        return _search_video_outliers(creds, query, kind, my_subscribers)
+            return _search_channel_outliers(creds, query, search_q, my_subscribers)
+        return _search_video_outliers(creds, query, search_q, kind, my_subscribers)
+    except ssl.SSLError as e:
+        print(f"[outliers] SSL error after retries: {e}")
+        return {"error": "Network hiccup reaching YouTube. Please try again in a moment."}
+    except HttpError as e:
+        status = getattr(getattr(e, "resp", None), "status", 0) or 0
+        print(f"[outliers] YouTube API error {status}: {e}")
+        if status in (429, 403):
+            return {"error": "YouTube is rate-limiting us right now. Please wait a minute and try again."}
+        return {"error": f"YouTube rejected the request ({status}). Please try again."}
     except Exception as e:
         import traceback
         print(f"[outliers] search error: {traceback.format_exc()}")
@@ -56,19 +121,19 @@ def search_outliers(creds, query: str, kind: str, my_subscribers: int) -> dict:
 
 # ─── Video / thumbnail pipeline ───────────────────────────────────────────────
 
-def _search_video_outliers(creds, query: str, kind: str, my_subscribers: int) -> dict:
+def _search_video_outliers(creds, query: str, search_q: str, kind: str, my_subscribers: int) -> dict:
     youtube = build_youtube_client(creds)
 
-    # 1. Raw search — YouTube relevance ordering is our intent signal.
-    search_resp = youtube.search().list(
+    # 1. Raw search — uses confirmed intent keyword when available.
+    search_resp = _execute_with_retry(youtube.search().list(
         part="snippet",
-        q=query,
+        q=search_q,
         type="video",
         maxResults=_SEARCH_POOL_SIZE,
         order="relevance",
         regionCode="US",
         relevanceLanguage="en",
-    ).execute()
+    ))
     items = search_resp.get("items", [])
     if not items:
         return {"results": [], "cohort": {"query": query, "size_bracket": get_size_bracket(my_subscribers)}}
@@ -135,10 +200,10 @@ def _batch_video_details(youtube, video_ids: list[str]) -> dict[str, dict]:
     # videos.list caps at 50 IDs per call
     for i in range(0, len(video_ids), 50):
         chunk = video_ids[i:i + 50]
-        resp = youtube.videos().list(
+        resp = _execute_with_retry(youtube.videos().list(
             part="statistics,snippet,contentDetails",
             id=",".join(chunk),
-        ).execute()
+        ))
         for item in resp.get("items", []):
             s  = item.get("statistics", {})
             sn = item.get("snippet", {})
@@ -167,10 +232,10 @@ def _batch_channel_subs(youtube, channel_ids: list[str]) -> dict[str, int]:
     out: dict[str, int] = {}
     for i in range(0, len(channel_ids), 50):
         chunk = channel_ids[i:i + 50]
-        resp = youtube.channels().list(
+        resp = _execute_with_retry(youtube.channels().list(
             part="statistics",
             id=",".join(chunk),
-        ).execute()
+        ))
         for item in resp.get("items", []):
             s = item.get("statistics", {})
             out[item["id"]] = int(s.get("subscriberCount", 0))
@@ -208,19 +273,19 @@ def _score_videos(videos: list[dict]) -> list[dict]:
 
 # ─── Channel pipeline ─────────────────────────────────────────────────────────
 
-def _search_channel_outliers(creds, query: str, my_subscribers: int) -> dict:
+def _search_channel_outliers(creds, query: str, search_q: str, my_subscribers: int) -> dict:
     youtube = build_youtube_client(creds)
 
-    # 1. Search channels by keyword.
-    search_resp = youtube.search().list(
+    # 1. Search channels by keyword — confirmed intent keyword wins when available.
+    search_resp = _execute_with_retry(youtube.search().list(
         part="snippet",
-        q=query,
+        q=search_q,
         type="channel",
         maxResults=25,
         order="relevance",
         regionCode="US",
         relevanceLanguage="en",
-    ).execute()
+    ))
     ids = [it["snippet"]["channelId"] for it in search_resp.get("items", []) if it.get("snippet", {}).get("channelId")]
     if not ids:
         return {"results": [], "cohort": {"query": query, "size_bracket": get_size_bracket(my_subscribers)}}
@@ -229,7 +294,7 @@ def _search_channel_outliers(creds, query: str, my_subscribers: int) -> dict:
     channels: list[dict] = []
     for i in range(0, len(ids), 50):
         chunk = ids[i:i + 50]
-        resp = youtube.channels().list(part="snippet,statistics", id=",".join(chunk)).execute()
+        resp = _execute_with_retry(youtube.channels().list(part="snippet,statistics", id=",".join(chunk)))
         for item in resp.get("items", []):
             s  = item.get("statistics", {})
             sn = item.get("snippet", {})

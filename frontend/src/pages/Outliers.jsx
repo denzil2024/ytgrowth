@@ -245,43 +245,95 @@ export default function Outliers({ channelData, onNavigate }) {
   const [result,  setResult]  = useState(null)   // { results, cohort, ...}
   const [active,  setActive]  = useState(null)   // the selected result for detail panel
 
+  // Intent-picker state — same shape as SEO Optimizer
+  const [loadingIntent, setLoadingIntent] = useState(false)
+  const [intentOptions, setIntentOptions] = useState(null)   // [{keyword, label, description}]
+  const reqIdRef = useRef(0)
+
   const inputRef = useRef(null)
 
-  // Reset query + results when switching tabs — cohorts differ per kind
+  // Reset query + results + intent picker when switching tabs — cohorts differ per kind
   useEffect(() => {
     setQuery('')
     setResult(null)
     setError('')
     setActive(null)
+    setIntentOptions(null)
   }, [tab])
 
   const userSubs = channelData?.channel?.subscribers ?? 0
 
-  async function runSearch() {
+  // Step 1: fetch intent options, show picker. Falls back to direct search if no options.
+  async function handleSubmit() {
     const q = query.trim()
-    if (!q || loading) return
-    setLoading(true)
+    if (!q || loading || loadingIntent) return
+    const myId = ++reqIdRef.current
+    setLoadingIntent(true)
     setError('')
     setResult(null)
     setActive(null)
+    setIntentOptions(null)
+    try {
+      const r = await fetch('/seo/intent-options', {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title: q }),
+      })
+      if (myId !== reqIdRef.current) return
+      const d = await r.json()
+      if (myId !== reqIdRef.current) return
+      if (!r.ok || !d.options?.length) {
+        // No intent disambiguation possible — go straight to search.
+        setLoadingIntent(false)
+        await runSearch('', myId)
+        return
+      }
+      setIntentOptions(d.options)
+    } catch {
+      if (myId !== reqIdRef.current) return
+      setLoadingIntent(false)
+      await runSearch('', myId)
+      return
+    } finally {
+      if (myId === reqIdRef.current) setLoadingIntent(false)
+    }
+  }
+
+  // Step 2: actual outliers search with the confirmed intent keyword.
+  async function runSearch(confirmedKeyword = '', existingId) {
+    const q = query.trim()
+    if (!q) return
+    const myId = existingId != null ? existingId : ++reqIdRef.current
+    if (existingId == null && loading) return
+    setLoading(true)
+    setError('')
+    setIntentOptions(null)
     try {
       const r = await fetch('/outliers/search', {
         method: 'POST',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ query: q, kind: tab }),
+        body: JSON.stringify({ query: q, kind: tab, confirmed_keyword: confirmedKeyword }),
       })
+      if (myId !== reqIdRef.current) return
       const d = await r.json()
+      if (myId !== reqIdRef.current) return
       if (!r.ok) {
         setError(d.error || 'Search failed.')
       } else {
         setResult(d)
       }
     } catch (e) {
+      if (myId !== reqIdRef.current) return
       setError('Network error. Please try again.')
     } finally {
-      setLoading(false)
+      if (myId === reqIdRef.current) setLoading(false)
     }
+  }
+
+  function handleSelectIntent(keyword) {
+    runSearch(keyword)
   }
 
   /* ─── Render ───────────────────────────────────────────────────────── */
@@ -314,7 +366,7 @@ export default function Outliers({ channelData, onNavigate }) {
         </div>
         {result?.results?.length > 0 && (
           <button
-            onClick={() => { setQuery(''); setResult(null); setError(''); setActive(null); inputRef.current?.focus() }}
+            onClick={() => { setQuery(''); setResult(null); setError(''); setActive(null); setIntentOptions(null); inputRef.current?.focus() }}
             className="out-btn"
             style={{ flexShrink: 0 }}
           >
@@ -356,20 +408,22 @@ export default function Outliers({ channelData, onNavigate }) {
             type="text"
             value={query}
             onChange={e => setQuery(e.target.value)}
-            onKeyDown={e => { if (e.key === 'Enter') runSearch() }}
+            onKeyDown={e => { if (e.key === 'Enter') handleSubmit() }}
             placeholder={PLACEHOLDER_BY_TAB[tab]}
             className="out-search-input"
-            disabled={loading}
+            disabled={loading || loadingIntent}
           />
           <button
-            onClick={runSearch}
-            disabled={loading || !query.trim()}
+            onClick={handleSubmit}
+            disabled={loading || loadingIntent || !query.trim()}
             className="out-btn-primary"
             style={{ fontSize: 13, padding: '11px 22px', flexShrink: 0 }}
           >
-            {loading
-              ? <><SpinIcon /> Searching…</>
-              : <><SparkIcon /> Find outliers</>
+            {loadingIntent
+              ? <><SpinIcon /> Reading intent…</>
+              : loading
+                ? <><SpinIcon /> Searching…</>
+                : <><SparkIcon /> Find outliers</>
             }
           </button>
         </div>
@@ -389,8 +443,84 @@ export default function Outliers({ channelData, onNavigate }) {
         )}
       </div>
 
+      {/* ══ Intent picker — shown between intent fetch and actual search.
+           Same pattern as SEO Optimizer (three routes, click one to commit). ══ */}
+      {intentOptions && !loading && !result && (
+        <div className="out-section" style={{ marginBottom: 16, marginTop: 8 }}>
+          <div style={{ textAlign: 'center', marginBottom: 20 }}>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke={C.red} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M8 2v12M2 8h12M4 4l8 8M12 4l-8 8"/>
+              </svg>
+              <span style={{ fontSize: 10.5, fontWeight: 700, color: C.red, letterSpacing: '0.16em', textTransform: 'uppercase' }}>Three directions</span>
+            </div>
+            <h2 style={{ fontSize: 24, fontWeight: 800, color: C.text1, letterSpacing: '-0.55px', lineHeight: 1.2, marginBottom: 10 }}>
+              Your search could go <span style={{ color: C.red }}>3 ways</span>. Pick one.
+            </h2>
+            <p style={{ fontSize: 13.5, color: C.text3, lineHeight: 1.6, maxWidth: 540, margin: '0 auto' }}>
+              Same words, different niches. Pick the closest — that's the outlier cohort we'll pull.
+            </p>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: 14 }}>
+            {intentOptions.map((opt, i) => (
+              <button key={i} className="out-result-card" onClick={() => handleSelectIntent(opt.keyword)}
+                style={{ flexDirection: 'column', padding: 18, cursor: 'pointer', display: 'flex', alignItems: 'stretch' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
+                  <div style={{
+                    width: 38, height: 38, borderRadius: 12,
+                    background: `linear-gradient(135deg, ${C.red} 0%, #b91c1c 100%)`,
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    boxShadow: `0 4px 10px rgba(229,37,27,0.40), inset 0 1px 0 rgba(255,255,255,0.30)`,
+                    flexShrink: 0,
+                  }}>
+                    <span style={{ fontSize: 13, fontWeight: 700, color: '#ffffff', fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.4px' }}>
+                      0{i + 1}
+                    </span>
+                  </div>
+                  <span style={{ fontSize: 10, fontWeight: 700, color: C.red, letterSpacing: '0.14em', textTransform: 'uppercase' }}>
+                    Route 0{i + 1}
+                  </span>
+                </div>
+                <p style={{ fontSize: 16, fontWeight: 700, color: C.text1, letterSpacing: '-0.3px', lineHeight: 1.35, marginBottom: 10 }}>
+                  {opt.label}
+                </p>
+                <span style={{
+                  alignSelf: 'flex-start',
+                  fontSize: 11.5, fontWeight: 600,
+                  color: '#9a1c16',
+                  background: 'rgba(229,37,27,0.08)',
+                  border: '1px solid rgba(229,37,27,0.22)',
+                  padding: '3px 10px', borderRadius: 999,
+                  marginBottom: 12,
+                }}>
+                  {opt.keyword}
+                </span>
+                <p style={{ fontSize: 12.5, color: C.text3, lineHeight: 1.55, flex: 1 }}>
+                  {opt.description}
+                </p>
+                <div style={{ marginTop: 16, paddingTop: 14, borderTop: `1px solid ${C.border}` }}>
+                  <span style={{ fontSize: 12, fontWeight: 700, color: C.red, letterSpacing: '-0.1px', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+                    Go this way
+                    <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
+                      <path d="M6 3l5 5-5 5"/>
+                    </svg>
+                  </span>
+                </div>
+              </button>
+            ))}
+          </div>
+
+          <div style={{ display: 'flex', justifyContent: 'center', marginTop: 16 }}>
+            <button onClick={() => runSearch('')} className="out-btn">
+              None of these — search as typed
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* ══ Empty state (pre-search) ═════════════════════════════════════════ */}
-      {!loading && !error && !result && (
+      {!loading && !loadingIntent && !intentOptions && !error && !result && (
         <div className="out-card out-section" style={{
           padding: '40px 32px',
           display: 'flex', flexDirection: 'column', alignItems: 'center',
