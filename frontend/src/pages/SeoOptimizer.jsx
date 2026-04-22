@@ -1328,14 +1328,14 @@ export default function SeoOptimizer({ onNavigate }) {
                             padding: '12px 16px',
                             boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
                           }}>
-                            <p style={{ fontSize: 10, fontWeight: 700, color: C.amber, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 10 }}>Scores</p>
-                            <div style={{ display: 'flex', gap: 14, alignItems: 'baseline', flexWrap: 'wrap' }}>
+                            <p style={{ fontSize: 10, fontWeight: 700, color: C.amber, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 12 }}>Scores</p>
+                            <div style={{ display: 'flex', gap: 20, alignItems: 'baseline', flexWrap: 'wrap' }}>
                               {[['SEO', s.seo_score], ['CTR', s.ctr_score], ['Hook', s.hook_score]].map(([label, val]) => {
                                 const vc = val >= 75 ? C.green : val >= 55 ? C.amber : C.red
                                 return (
-                                  <div key={label} style={{ display: 'flex', alignItems: 'baseline', gap: 5 }}>
-                                    <span style={{ fontSize: 10, fontWeight: 600, color: C.text3, letterSpacing: '0.08em', textTransform: 'uppercase' }}>{label}</span>
-                                    <span style={{ fontSize: 16, fontWeight: 700, color: val ? vc : C.text3, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.2px' }}>{val || '—'}</span>
+                                  <div key={label} style={{ display: 'flex', alignItems: 'baseline', gap: 7 }}>
+                                    <span style={{ fontSize: 11, fontWeight: 700, color: C.text3, letterSpacing: '0.08em', textTransform: 'uppercase' }}>{label}</span>
+                                    <span style={{ fontSize: 24, fontWeight: 800, color: val ? vc : C.text3, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.6px', lineHeight: 1 }}>{val || '—'}</span>
                                   </div>
                                 )
                               })}
