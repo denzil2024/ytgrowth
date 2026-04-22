@@ -1280,15 +1280,15 @@ export default function SeoOptimizer({ onNavigate }) {
                   return (
                     <div key={i} className="seo-suggestion-card" style={{
                       marginBottom: 0,
-                      borderTop: `3px solid ${sevColor}`,
+                      borderTop: `3px solid ${C.amber}`,
                       borderColor: isSelected ? 'rgba(229,37,27,0.30)' : copied === i ? 'rgba(5,150,105,0.30)' : '#e6e6ec',
                       background: isSelected ? '#fff8f8' : copied === i ? '#f6fdf9' : '#ffffff',
                     }}>
                       <div style={{ padding: '16px 22px 18px' }}>
-                        {/* Header — rank badge (amber) + hook eyebrow/title + severity pill */}
+                        {/* Header — amber rank badge + "Built around" eyebrow + title + severity pill (matches InsightCard exactly) */}
                         <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: 14 }}>
                           <div style={{ width: 26, height: 26, borderRadius: 8, background: C.amber, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 2 }}>
-                            <span style={{ fontSize: 12, fontWeight: 700, color: '#fff', fontVariantNumeric: 'tabular-nums' }}>{i + 1}</span>
+                            <span style={{ fontSize: 12, fontWeight: 900, color: '#fff', fontVariantNumeric: 'tabular-nums' }}>{i + 1}</span>
                           </div>
                           <div style={{ flex: 1, minWidth: 0 }}>
                             {eyebrow && (
@@ -1307,28 +1307,25 @@ export default function SeoOptimizer({ onNavigate }) {
                         {/* Divider aligned with title start */}
                         <div style={{ height: 1, background: C.border, marginBottom: 14, marginLeft: 38 }} />
 
-                        {/* Body grid — Why-it-works (blue tint, Overview's Why-now pattern) + Scores (amber left bar, amber numbers) */}
-                        <div style={{ display: 'grid', gridTemplateColumns: '1.3fr 1fr', gap: 8, marginLeft: 38 }}>
-                          <div style={{ background: '#fafafb', border: '1px solid #eeeef3', borderRadius: 10, padding: '12px 14px' }}>
-                            <p style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Why it works</p>
-                            <p style={{ fontSize: 13.5, color: C.text1, lineHeight: 1.72 }}>{s.why_it_works || s.angle || 'This framing gives the viewer a specific reason to click.'}</p>
-                            {s.angle && s.why_it_works && s.angle !== s.why_it_works && (
-                              <p style={{ fontSize: 12, color: C.text3, lineHeight: 1.6, marginTop: 8, paddingTop: 8, borderTop: `1px dashed ${C.border}` }}>
-                                <span style={{ fontWeight: 700, color: C.text3, letterSpacing: '0.05em', textTransform: 'uppercase', fontSize: 10 }}>Algorithm angle · </span>
-                                {s.angle}
-                              </p>
-                            )}
+                        {/* 3-col body — EXACT InsightCard grid: blue Why-now | white+amber-bar Action | green Expected-outcome (Dashboard.jsx:1086) */}
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr 1fr', gap: 8, marginLeft: 38 }}>
+                          {/* Col 1 — Why it works (blue tint) */}
+                          <div style={{ background: 'rgba(79,134,247,0.07)', border: '1px solid rgba(79,134,247,0.12)', borderRadius: 10, padding: '12px 14px' }}>
+                            <p style={{ fontSize: 10, fontWeight: 700, color: '#4a7cf7', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Why it works</p>
+                            <p style={{ fontSize: 13, color: C.text1, lineHeight: 1.65 }}>{s.why_it_works || 'This framing gives the viewer a specific reason to click.'}</p>
                           </div>
+
+                          {/* Col 2 — Scores (white + amber left bar + shadow, Action slot) */}
                           <div style={{
                             background: '#ffffff',
                             border: `1px solid ${C.border}`,
-                            borderLeft: `3px solid ${sevColor}`,
+                            borderLeft: `3px solid ${C.amber}`,
                             borderRadius: '0 10px 10px 0',
                             padding: '12px 16px',
                             boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
                           }}>
-                            <p style={{ fontSize: 10, fontWeight: 700, color: sevColor, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 10 }}>Scores</p>
-                            <div style={{ display: 'flex', gap: 18, alignItems: 'baseline', flexWrap: 'wrap' }}>
+                            <p style={{ fontSize: 10, fontWeight: 700, color: C.amber, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 10 }}>Scores</p>
+                            <div style={{ display: 'flex', gap: 14, alignItems: 'baseline', flexWrap: 'wrap' }}>
                               {[['SEO', s.seo_score], ['CTR', s.ctr_score], ['Hook', s.hook_score]].map(([label, val]) => {
                                 const vc = val >= 75 ? C.green : val >= 55 ? C.amber : C.red
                                 return (
@@ -1339,6 +1336,12 @@ export default function SeoOptimizer({ onNavigate }) {
                                 )
                               })}
                             </div>
+                          </div>
+
+                          {/* Col 3 — Algorithm angle (green tint, Expected-outcome slot) */}
+                          <div style={{ background: 'rgba(5,150,105,0.07)', border: '1px solid rgba(5,150,105,0.14)', borderRadius: 10, padding: '12px 14px' }}>
+                            <p style={{ fontSize: 10, fontWeight: 700, color: C.green, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Algorithm angle</p>
+                            <p style={{ fontSize: 13, color: C.text1, lineHeight: 1.65 }}>{s.angle || 'Distributes on pattern interrupt within the niche.'}</p>
                           </div>
                         </div>
 
