@@ -444,6 +444,7 @@ export default function SeoOptimizer({ onNavigate }) {
 
   // Tags panel state
   const [copiedTags, setCopiedTags] = useState(false)
+  const [copiedAutocomplete, setCopiedAutocomplete] = useState(false)
 
   // Description optimizer state
   const [selectedTitle, setSelectedTitle] = useState(saved.selectedTitle || null)
@@ -1432,7 +1433,19 @@ export default function SeoOptimizer({ onNavigate }) {
                           <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 6 }}>YouTube autocomplete</p>
                           <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.5 }}>Real searches people type · click to use as your title</p>
                         </div>
-                        <p style={{ fontSize: 26, fontWeight: 800, color: C.text1, letterSpacing: '-0.8px', fontVariantNumeric: 'tabular-nums', flexShrink: 0, lineHeight: 1 }}>{result.autocomplete_terms.length}</p>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 14, flexShrink: 0 }}>
+                          <p style={{ fontSize: 26, fontWeight: 800, color: C.text1, letterSpacing: '-0.8px', fontVariantNumeric: 'tabular-nums', lineHeight: 1 }}>{result.autocomplete_terms.length}</p>
+                          <button
+                            onClick={() => {
+                              navigator.clipboard.writeText(result.autocomplete_terms.join(', '))
+                              setCopiedAutocomplete(true)
+                              setTimeout(() => setCopiedAutocomplete(false), 1800)
+                            }}
+                            className="seo-btn-primary"
+                            style={{ fontSize: 12, padding: '9px 18px' }}>
+                            {copiedAutocomplete ? '✓ Copied all' : 'Copy all'}
+                          </button>
+                        </div>
                       </div>
                       <div style={{ height: 1, background: C.border, margin: '0 0 16px' }}/>
                       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
@@ -1474,8 +1487,8 @@ export default function SeoOptimizer({ onNavigate }) {
                               setCopiedTags(true)
                               setTimeout(() => setCopiedTags(false), 1800)
                             }}
-                            className="seo-btn"
-                            style={{ color: copiedTags ? C.green : undefined, borderColor: copiedTags ? 'rgba(5,150,105,0.38)' : undefined }}>
+                            className="seo-btn-primary"
+                            style={{ fontSize: 12, padding: '9px 18px' }}>
                             {copiedTags ? '✓ Copied all' : 'Copy all'}
                           </button>
                         </div>
