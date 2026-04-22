@@ -2362,8 +2362,8 @@ export default function Dashboard() {
                 </div>
               </div>
 
-              {/* ── Your optimizations — videos the user updated via /seo/update-video, with before/after deltas.
-                    Matches Videos tab design language (ytg-card, H2 26/800, icon pills meta line). ── */}
+              {/* ── Your optimizations — each row is its own ytg-insight-card (same pattern as Overview's Priority Actions).
+                    Green top border + green rank badge = "tracked/active", 3-col body grid with tinted views/likes/comments deltas. ── */}
               {optimizations.length > 0 && (() => {
                 const daysSince = (iso) => {
                   if (!iso) return null
@@ -2378,6 +2378,36 @@ export default function Dashboard() {
                 const totalViewGain    = optimizations.reduce((s, o) => s + Math.max(0, (o.current_views    || 0) - (o.before_views    || 0)), 0)
                 const totalLikeGain    = optimizations.reduce((s, o) => s + Math.max(0, (o.current_likes    || 0) - (o.before_likes    || 0)), 0)
                 const totalCommentGain = optimizations.reduce((s, o) => s + Math.max(0, (o.current_comments || 0) - (o.before_comments || 0)), 0)
+
+                // Tinted delta cell — mirrors Priority Actions' 3-col body (blue/white/green tints).
+                // We use the same palette: Views=blue (info), Likes=white+bar (action), Comments=green (outcome).
+                const DeltaCell = ({ label, before, current, pctVal, tint }) => {
+                  const tintMap = {
+                    blue:  { bg: 'rgba(79,134,247,0.07)', border: '1px solid rgba(79,134,247,0.12)', labelColor: '#4a7cf7' },
+                    white: { bg: '#ffffff', border: `1px solid ${C.border}`, borderLeft: `3px solid ${C.green}`, borderRadius: '0 10px 10px 0', boxShadow: '0 2px 8px rgba(0,0,0,0.06)', labelColor: C.green },
+                    green: { bg: 'rgba(5,150,105,0.07)', border: '1px solid rgba(5,150,105,0.14)', labelColor: C.green },
+                  }[tint]
+                  const col  = pctVal == null ? C.text3 : pctVal > 0 ? C.green : pctVal < 0 ? C.red : C.text2
+                  const sign = pctVal == null ? '—' : pctVal > 0 ? `+${pctVal}%` : `${pctVal}%`
+                  return (
+                    <div style={{
+                      background: tintMap.bg,
+                      border: tintMap.border,
+                      borderLeft: tintMap.borderLeft,
+                      borderRadius: tintMap.borderRadius || 10,
+                      padding: '12px 14px',
+                      boxShadow: tintMap.boxShadow,
+                    }}>
+                      <p style={{ fontSize: 10, fontWeight: 700, color: tintMap.labelColor, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>{label}</p>
+                      <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
+                        <p style={{ fontSize: 18, fontWeight: 800, color: C.text1, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.4px', lineHeight: 1 }}>{fmtNum(current)}</p>
+                        <p style={{ fontSize: 12, fontWeight: 700, color: col, fontVariantNumeric: 'tabular-nums', lineHeight: 1 }}>{sign}</p>
+                      </div>
+                      <p style={{ fontSize: 11, color: C.text3, marginTop: 4, fontWeight: 500 }}>was {fmtNum(before)}</p>
+                    </div>
+                  )
+                }
+
                 return (
                   <div style={{ marginBottom: 28 }}>
                     <div style={{ marginBottom: 16 }}>
@@ -2396,65 +2426,59 @@ export default function Dashboard() {
                       </div>
                     </div>
 
-                    <div className="ytg-card" style={{ padding: '20px 22px' }}>
-                      <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 14 }}>Before → after · delta since update</p>
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
-                        {optimizations.slice(0, 8).map((o, i) => {
-                          const isLast = i === Math.min(optimizations.length, 8) - 1
-                          const days   = daysSince(o.optimized_at)
-                          const vPct   = pct(o.before_views,    o.current_views)
-                          const lPct   = pct(o.before_likes,    o.current_likes)
-                          const cPct   = pct(o.before_comments, o.current_comments)
-                          const titleChanged = o.before_title && o.after_title && o.before_title !== o.after_title
-                          const DeltaCol = ({ label, pctVal }) => {
-                            const col  = pctVal == null ? C.text3 : pctVal > 0 ? C.green : pctVal < 0 ? C.red : C.text2
-                            const sign = pctVal == null ? '—' : pctVal > 0 ? `+${pctVal}%` : `${pctVal}%`
-                            return (
-                              <div style={{ textAlign: 'right', flexShrink: 0, width: 70 }}>
-                                <p style={{ fontSize: 14, fontWeight: 700, color: col, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.2px', lineHeight: 1 }}>{sign}</p>
-                                <p style={{ fontSize: 10, fontWeight: 600, color: C.text3, marginTop: 4, letterSpacing: '0.08em', textTransform: 'uppercase' }}>{label}</p>
+                    {optimizations.slice(0, 8).map((o, i) => {
+                      const days         = daysSince(o.optimized_at)
+                      const vPct         = pct(o.before_views,    o.current_views)
+                      const lPct         = pct(o.before_likes,    o.current_likes)
+                      const cPct         = pct(o.before_comments, o.current_comments)
+                      const titleChanged = o.before_title && o.after_title && o.before_title !== o.after_title
+                      const daysLabel    = days === 0 ? 'Today' : days === 1 ? '1 day ago' : `${days} days ago`
+                      return (
+                        <div key={`${o.video_id}-${o.optimized_at}`} className="ytg-insight-card" style={{ marginBottom: 10, borderTop: `3px solid ${C.green}` }}>
+                          <div style={{ padding: '16px 22px 18px' }}>
+
+                            {/* Header — rank badge (green, white #) + category eyebrow + title diff + days pill */}
+                            <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: 14 }}>
+                              <div style={{ width: 26, height: 26, borderRadius: 8, background: C.green, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 2 }}>
+                                <span style={{ fontSize: 12, fontWeight: 900, color: '#fff', fontVariantNumeric: 'tabular-nums' }}>{i + 1}</span>
                               </div>
-                            )
-                          }
-                          return (
-                            <a key={`${o.video_id}-${o.optimized_at}`}
-                              href={`https://www.youtube.com/watch?v=${o.video_id}`}
-                              target="_blank" rel="noopener noreferrer"
-                              style={{
-                                display: 'flex', alignItems: 'center', gap: 12,
-                                padding: '14px 8px',
-                                borderBottom: isLast ? 'none' : `1px solid ${C.border}`,
-                                textDecoration: 'none', borderRadius: 8,
-                                transition: 'background 0.15s, transform 0.15s',
-                                cursor: 'pointer', minWidth: 0,
-                              }}
-                              onMouseEnter={e => { e.currentTarget.style.background = '#fafafb'; e.currentTarget.style.transform = 'translateX(2px)' }}
-                              onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.transform = 'none' }}>
-                              <div style={{ flexShrink: 0 }}>
-                                {o.thumbnail_url && <img src={o.thumbnail_url} alt="" style={{ width: 78, height: 44, borderRadius: 7, objectFit: 'cover', display: 'block' }}/>}
-                              </div>
+
+                              {o.thumbnail_url && (
+                                <a href={`https://www.youtube.com/watch?v=${o.video_id}`} target="_blank" rel="noopener noreferrer" style={{ flexShrink: 0, lineHeight: 0, textDecoration: 'none' }}>
+                                  <img src={o.thumbnail_url} alt="" style={{ width: 72, height: 40, borderRadius: 7, objectFit: 'cover', display: 'block' }}/>
+                                </a>
+                              )}
+
                               <div style={{ flex: 1, minWidth: 0 }}>
+                                <p style={{ fontSize: 10, fontWeight: 700, color: C.green, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 5 }}>Tracked update</p>
                                 {titleChanged ? (
                                   <>
-                                    <p style={{ fontSize: 12, color: C.text3, fontWeight: 500, lineHeight: 1.4, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', textDecoration: 'line-through' }}>{o.before_title}</p>
-                                    <p style={{ fontSize: 14, fontWeight: 600, color: C.text1, lineHeight: 1.4, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', letterSpacing: '-0.1px', marginTop: 2 }}>{o.after_title}</p>
+                                    <p style={{ fontSize: 12, color: C.text3, fontWeight: 500, lineHeight: 1.4, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', textDecoration: 'line-through', marginBottom: 3 }}>{o.before_title}</p>
+                                    <p style={{ fontSize: 14, fontWeight: 700, color: C.text1, lineHeight: 1.5, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', letterSpacing: '-0.1px' }}>{o.after_title}</p>
                                   </>
                                 ) : (
-                                  <p style={{ fontSize: 14, fontWeight: 600, color: C.text1, lineHeight: 1.4, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', letterSpacing: '-0.1px' }}>{o.after_title || o.before_title}</p>
+                                  <p style={{ fontSize: 14, fontWeight: 700, color: C.text1, lineHeight: 1.5, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', letterSpacing: '-0.1px' }}>{o.after_title || o.before_title}</p>
                                 )}
-                                <p style={{ fontSize: 12, color: C.text3, marginTop: 3, fontWeight: 500 }}>
-                                  {days === 0 ? 'Updated today' : days === 1 ? 'Updated 1 day ago' : `Updated ${days} days ago`}
-                                </p>
                               </div>
-                              <DeltaCol label="views"    pctVal={vPct}/>
-                              <DeltaCol label="likes"    pctVal={lPct}/>
-                              <DeltaCol label="comments" pctVal={cPct}/>
-                              <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke={C.text4} strokeWidth="1.5" strokeLinecap="round" style={{ flexShrink: 0 }}><path d="M2 11L10 3M10 3H5M10 3v5"/></svg>
-                            </a>
-                          )
-                        })}
-                      </div>
-                    </div>
+
+                              <span style={{ fontSize: 10, fontWeight: 700, color: C.green, padding: '3px 9px', borderRadius: 20, letterSpacing: '0.06em', textTransform: 'uppercase', border: `1.5px solid ${C.green}`, flexShrink: 0 }}>
+                                {daysLabel}
+                              </span>
+                            </div>
+
+                            {/* Hairline divider — aligned with content start, same offset Priority Actions uses */}
+                            <div style={{ height: 1, background: C.border, marginBottom: 14, marginLeft: 46 }}/>
+
+                            {/* 3-col body — Views (blue) / Likes (white+bar) / Comments (green), parallel stats in Priority Actions tint pattern */}
+                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr 1fr', gap: 8, marginLeft: 46 }}>
+                              <DeltaCell label="Views"    before={o.before_views}    current={o.current_views}    pctVal={vPct} tint="blue"/>
+                              <DeltaCell label="Likes"    before={o.before_likes}    current={o.current_likes}    pctVal={lPct} tint="white"/>
+                              <DeltaCell label="Comments" before={o.before_comments} current={o.current_comments} pctVal={cPct} tint="green"/>
+                            </div>
+                          </div>
+                        </div>
+                      )
+                    })}
                   </div>
                 )
               })()}
