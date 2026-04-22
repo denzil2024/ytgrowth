@@ -604,7 +604,7 @@ function Dropdown({ value, onChange, options, placeholder }) {
   }, [open])
   const selected = options.find(o => o.value === value)
   return (
-    <div ref={wrapRef} style={{ position: 'relative' }}>
+    <div ref={wrapRef} style={{ position: 'relative', fontFamily: "'Inter', system-ui, sans-serif" }}>
       <button
         type="button"
         onClick={() => setOpen(o => !o)}
@@ -612,7 +612,7 @@ function Dropdown({ value, onChange, options, placeholder }) {
           width: '100%', boxSizing: 'border-box', textAlign: 'left',
           border: `1px solid ${open ? 'rgba(229,37,27,0.35)' : C.border}`,
           borderRadius: 10,
-          padding: '12px 40px 12px 14px', fontSize: 14,
+          padding: '12px 40px 12px 14px', fontSize: 13, fontWeight: 500,
           color: selected ? C.text1 : C.text3,
           background: '#fff', fontFamily: 'inherit', outline: 'none',
           cursor: 'pointer', transition: 'border-color 0.15s, box-shadow 0.15s',
@@ -655,16 +655,16 @@ function Dropdown({ value, onChange, options, placeholder }) {
                   onMouseLeave={e => { e.currentTarget.style.background = isSelected ? 'rgba(229,37,27,0.05)' : 'transparent' }}
                   style={{
                     width: '100%', boxSizing: 'border-box', textAlign: 'left',
-                    display: 'flex', alignItems: 'center', gap: 10,
-                    padding: '10px 12px', border: 'none', borderRadius: 8,
+                    display: 'flex', alignItems: 'center', gap: 12,
+                    padding: '12px 14px', border: 'none', borderRadius: 8,
                     background: isSelected ? 'rgba(229,37,27,0.05)' : 'transparent',
                     cursor: 'pointer', fontFamily: 'inherit',
                   }}>
-                  <span style={{ flex: 1, minWidth: 0, fontSize: 13.5, color: C.text1, fontWeight: isSelected ? 600 : 500, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                  <span style={{ flex: 1, minWidth: 0, fontSize: 13, color: C.text1, fontWeight: isSelected ? 600 : 500, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', letterSpacing: '-0.1px' }}>
                     {opt.label}
                   </span>
                   {opt.meta && (
-                    <span style={{ fontSize: 11, fontWeight: 700, color: C.amber, background: C.amberBg, border: `1px solid ${C.amberBdr}`, borderRadius: 100, padding: '2px 8px', flexShrink: 0, fontVariantNumeric: 'tabular-nums' }}>
+                    <span style={{ fontSize: 11, fontWeight: 700, color: C.amber, background: C.amberBg, border: `1px solid ${C.amberBdr}`, borderRadius: 100, padding: '2px 9px', flexShrink: 0, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.1px' }}>
                       {opt.meta}
                     </span>
                   )}
@@ -746,23 +746,28 @@ function UploadPanel({ videoIdeas, hasIdeas, initialIdea, initialTopic, topicSou
   const dropdownOptions = [
     ...videoIdeas.map(idea => ({
       value: String(idea.rank),
-      label: `${idea.rank}. ${idea.title}`,
+      label: idea.title,
       meta: `${idea.opportunityScore}/100`,
     })),
     { value: 'manual', label: 'My own topic', divider: true },
   ]
 
   return (
-    <div style={{ maxWidth: 640, margin: '0 auto' }}>
-     {/* Elevated card — matches SEO Optimizer / Overview.
-         Section header inside gives the form an anchor rather than floating fields. */}
-     <div className="tiq-card" style={{ padding: '28px 30px' }}>
+    <div style={{ maxWidth: 640, margin: '0 auto', fontFamily: "'Inter', system-ui, sans-serif" }}>
+     {/* Elevated card with 3px amber top border — matches SEO Optimizer's seo-suggestion-card identity.
+         Font scoped explicitly so dropdown + inputs inherit Inter. */}
+     <div className="tiq-card" style={{
+       padding: '24px 26px',
+       borderTop: `3px solid ${C.amber}`,
+       fontFamily: "'Inter', system-ui, sans-serif",
+     }}>
 
-      {/* Card header — tells the user what this card does */}
-      <div style={{ marginBottom: 22, paddingBottom: 18, borderBottom: `1px solid ${C.border}` }}>
-        <p style={{ fontSize: 11, fontWeight: 700, color: C.red, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Score a new thumbnail</p>
-        <p style={{ fontSize: 14, fontWeight: 600, color: C.text1, lineHeight: 1.55, letterSpacing: '-0.15px' }}>
-          Match your thumbnail to a video idea — you'll get a benchmark from the videos already winning on YouTube for that topic.
+      {/* Card header — neutral grey eyebrow (red stays semantic for CTAs, not generic labels).
+          Typography scale: 11 eyebrow · 13 desc (matches Overview's card headers). */}
+      <div style={{ marginBottom: 18, paddingBottom: 16, borderBottom: `1px solid ${C.border}` }}>
+        <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 6 }}>Score a new thumbnail</p>
+        <p style={{ fontSize: 13, color: C.text2, lineHeight: 1.6 }}>
+          Match your thumbnail to a video idea — you'll get a benchmark from videos already winning on YouTube for that topic.
         </p>
       </div>
 
