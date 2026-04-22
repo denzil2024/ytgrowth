@@ -1410,89 +1410,111 @@ export default function SeoOptimizer({ onNavigate }) {
             </>
           )}
 
-          {/* ── Card 2: YouTube autocomplete (chip row) ── */}
-          {result.autocomplete_terms?.length > 0 && (
+          {/* ── Keyword discovery — autocomplete + competitor tags, unified ── */}
+          {(result.autocomplete_terms?.length > 0 || result.top_tags?.length > 0) && (
             <>
               <div style={{ marginBottom: 20, marginTop: 40 }}>
-                <h2 style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', marginBottom: 4 }}>YouTube autocomplete</h2>
+                <h2 style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', marginBottom: 4 }}>Keyword discovery</h2>
                 <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.5 }}>
-                  {result.autocomplete_terms.length} real searches people type · click to use as your title
+                  Real searches and competitor tags · borrow what's already working
                 </p>
               </div>
-              <div className="seo-glass-card" style={{ borderRadius: 16, padding: '22px 24px', marginBottom: 24 }}>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-                {result.autocomplete_terms.map(t => (
-                  <span key={t}
-                    role="button" tabIndex={0}
-                    onClick={() => setTitle(t)}
-                    onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setTitle(t) } }}
-                    style={{ ...T.chip, display: 'inline-flex', alignItems: 'center', gap: 6 }}
-                    onMouseEnter={e => { e.currentTarget.style.background = '#f1f1f6'; e.currentTarget.style.borderColor = 'rgba(229,37,27,0.25)'; e.currentTarget.style.color = C.text1 }}
-                    onMouseLeave={e => { e.currentTarget.style.background = '#fafafb'; e.currentTarget.style.borderColor = '#e6e6ec'; e.currentTarget.style.color = C.text2 }}>
-                    <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" style={{ flexShrink: 0, opacity: 0.55 }}>
-                      <circle cx="5" cy="5" r="3.2"/><path d="M7.3 7.3L10 10"/>
-                    </svg>
-                    {t}
-                  </span>
-                ))}
-              </div>
-              </div>
-            </>
-          )}
 
-          {/* ── Card 3: Suggested tags ── */}
-          {result.top_tags?.length > 0 && (
-            <>
-              <div style={{ marginBottom: 20, marginTop: 40, display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', gap: 16 }}>
-                <div>
-                  <h2 style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', marginBottom: 4 }}>Suggested tags</h2>
-                  <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.5 }}>
-                    {result.top_tags.length} tags pulled from ranking competitors · click one to copy, or copy all
-                  </p>
-                </div>
-                <button
-                  onClick={() => {
-                    navigator.clipboard.writeText(result.top_tags.join(', '))
-                    setCopiedTags(true)
-                    setTimeout(() => setCopiedTags(false), 1800)
-                  }}
-                  className="seo-btn"
-                  style={{ flexShrink: 0, color: copiedTags ? C.green : undefined, borderColor: copiedTags ? 'rgba(5,150,105,0.38)' : undefined }}>
-                  {copiedTags ? '✓ Copied all' : 'Copy all'}
-                </button>
-              </div>
-              <div className="seo-glass-card" style={{ borderRadius: 16, padding: '22px 24px', marginBottom: 24 }}>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-                {result.top_tags.map(tag => {
-                  const inTitle = title.toLowerCase().includes(tag.toLowerCase())
-                  return (
-                    <span key={tag}
-                      role="button" tabIndex={0}
-                      onClick={() => { navigator.clipboard.writeText(tag) }}
-                      onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); navigator.clipboard.writeText(tag) } }}
-                      title={inTitle ? 'Already in your title — click to copy' : 'Click to copy'}
-                      style={{
-                        ...T.chip,
-                        display: 'inline-flex', alignItems: 'center', gap: 6,
-                        color: inTitle ? C.green : C.text2,
-                        background: inTitle ? 'rgba(5,150,105,0.07)' : '#fafafb',
-                        border: `1px solid ${inTitle ? 'rgba(5,150,105,0.25)' : '#e6e6ec'}`,
-                        fontWeight: inTitle ? 600 : 500,
-                      }}
-                      onMouseEnter={e => { e.currentTarget.style.borderColor = inTitle ? 'rgba(5,150,105,0.45)' : '#d0d0d8' }}
-                      onMouseLeave={e => { e.currentTarget.style.borderColor = inTitle ? 'rgba(5,150,105,0.25)' : '#e6e6ec' }}>
-                      {inTitle ? (
-                        <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
-                          <polyline points="1.5,6.5 5,10 10.5,2"/>
-                        </svg>
-                      ) : (
-                        <span style={{ color: C.text4, fontWeight: 500, opacity: 0.8 }}>#</span>
-                      )}
-                      {tag}
-                    </span>
-                  )
-                })}
-              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 24 }}>
+                {/* Block 1 — YouTube autocomplete */}
+                {result.autocomplete_terms?.length > 0 && (
+                  <div className="seo-suggestion-card" style={{
+                    borderTop: `3px solid ${C.amber}`,
+                  }}>
+                    <div style={{ padding: '18px 22px 20px' }}>
+                      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16, marginBottom: 14 }}>
+                        <div style={{ minWidth: 0 }}>
+                          <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 6 }}>YouTube autocomplete</p>
+                          <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.5 }}>Real searches people type · click to use as your title</p>
+                        </div>
+                        <p style={{ fontSize: 26, fontWeight: 800, color: C.text1, letterSpacing: '-0.8px', fontVariantNumeric: 'tabular-nums', flexShrink: 0, lineHeight: 1 }}>{result.autocomplete_terms.length}</p>
+                      </div>
+                      <div style={{ height: 1, background: C.border, margin: '0 0 16px' }}/>
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                        {result.autocomplete_terms.map(t => (
+                          <span key={t}
+                            role="button" tabIndex={0}
+                            onClick={() => setTitle(t)}
+                            onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setTitle(t) } }}
+                            style={{ ...T.chip, display: 'inline-flex', alignItems: 'center', gap: 6 }}
+                            onMouseEnter={e => { e.currentTarget.style.background = '#f1f1f6'; e.currentTarget.style.borderColor = 'rgba(229,37,27,0.25)'; e.currentTarget.style.color = C.text1 }}
+                            onMouseLeave={e => { e.currentTarget.style.background = '#fafafb'; e.currentTarget.style.borderColor = '#e6e6ec'; e.currentTarget.style.color = C.text2 }}>
+                            <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" style={{ flexShrink: 0, opacity: 0.55 }}>
+                              <circle cx="5" cy="5" r="3.2"/><path d="M7.3 7.3L10 10"/>
+                            </svg>
+                            {t}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Block 2 — Suggested tags */}
+                {result.top_tags?.length > 0 && (
+                  <div className="seo-suggestion-card" style={{
+                    borderTop: `3px solid ${C.amber}`,
+                  }}>
+                    <div style={{ padding: '18px 22px 20px' }}>
+                      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16, marginBottom: 14 }}>
+                        <div style={{ minWidth: 0 }}>
+                          <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 6 }}>Suggested tags</p>
+                          <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.5 }}>Pulled from ranking competitors · click one to copy</p>
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 14, flexShrink: 0 }}>
+                          <p style={{ fontSize: 26, fontWeight: 800, color: C.text1, letterSpacing: '-0.8px', fontVariantNumeric: 'tabular-nums', lineHeight: 1 }}>{result.top_tags.length}</p>
+                          <button
+                            onClick={() => {
+                              navigator.clipboard.writeText(result.top_tags.join(', '))
+                              setCopiedTags(true)
+                              setTimeout(() => setCopiedTags(false), 1800)
+                            }}
+                            className="seo-btn"
+                            style={{ color: copiedTags ? C.green : undefined, borderColor: copiedTags ? 'rgba(5,150,105,0.38)' : undefined }}>
+                            {copiedTags ? '✓ Copied all' : 'Copy all'}
+                          </button>
+                        </div>
+                      </div>
+                      <div style={{ height: 1, background: C.border, margin: '0 0 16px' }}/>
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                        {result.top_tags.map(tag => {
+                          const inTitle = title.toLowerCase().includes(tag.toLowerCase())
+                          return (
+                            <span key={tag}
+                              role="button" tabIndex={0}
+                              onClick={() => { navigator.clipboard.writeText(tag) }}
+                              onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); navigator.clipboard.writeText(tag) } }}
+                              title={inTitle ? 'Already in your title — click to copy' : 'Click to copy'}
+                              style={{
+                                ...T.chip,
+                                display: 'inline-flex', alignItems: 'center', gap: 6,
+                                color: inTitle ? C.green : C.text2,
+                                background: inTitle ? 'rgba(5,150,105,0.07)' : '#fafafb',
+                                border: `1px solid ${inTitle ? 'rgba(5,150,105,0.25)' : '#e6e6ec'}`,
+                                fontWeight: inTitle ? 600 : 500,
+                              }}
+                              onMouseEnter={e => { e.currentTarget.style.borderColor = inTitle ? 'rgba(5,150,105,0.45)' : '#d0d0d8' }}
+                              onMouseLeave={e => { e.currentTarget.style.borderColor = inTitle ? 'rgba(5,150,105,0.25)' : '#e6e6ec' }}>
+                              {inTitle ? (
+                                <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+                                  <polyline points="1.5,6.5 5,10 10.5,2"/>
+                                </svg>
+                              ) : (
+                                <span style={{ color: C.text4, fontWeight: 500, opacity: 0.8 }}>#</span>
+                              )}
+                              {tag}
+                            </span>
+                          )
+                        })}
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             </>
           )}
