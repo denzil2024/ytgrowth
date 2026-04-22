@@ -1561,19 +1561,21 @@ export default function SeoOptimizer({ onNavigate }) {
 
                   <div style={{ height: 1, background: C.border, margin: '0 0 4px' }}/>
 
-                  {/* Ranked rows — rank · thumb · title + meta (channel · views · likes · comments) · score */}
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
+                  {/* Ranked rows — 2-column grid, rank · thumb · title · stats columns */}
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', columnGap: 20, rowGap: 0 }}>
                     {result.top_videos.map((v, i) => {
                       const sc      = v.seo_score
                       const scColor = sc >= 75 ? C.green : sc >= 55 ? C.amber : C.red
                       const views   = v.view_count || v.views || 0
                       const likes   = v.like_count || v.likes || 0
                       const comments= v.comment_count || v.comments || 0
+                      // In a 2-col grid, the last two items (bottom row) shouldn't have a bottom border
+                      const isLastRow = i >= result.top_videos.length - 2
                       return (
                         <a key={v.video_id}
                           href={`https://www.youtube.com/watch?v=${v.video_id}`}
                           target="_blank" rel="noopener noreferrer"
-                          style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 8px', borderBottom: i < result.top_videos.length - 1 ? `1px solid ${C.border}` : 'none', textDecoration: 'none', borderRadius: 8, transition: 'background 0.15s, transform 0.15s', cursor: 'pointer' }}
+                          style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 8px', borderBottom: isLastRow ? 'none' : `1px solid ${C.border}`, textDecoration: 'none', borderRadius: 8, transition: 'background 0.15s, transform 0.15s', cursor: 'pointer', minWidth: 0 }}
                           onMouseEnter={e => { e.currentTarget.style.background = '#fafafb'; e.currentTarget.style.transform = 'translateX(2px)' }}
                           onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.transform = 'none' }}>
                           <span style={{ flexShrink: 0, width: 26, fontSize: 11, fontWeight: 700, color: C.text4, fontVariantNumeric: 'tabular-nums', letterSpacing: '0.04em', textAlign: 'center' }}>
