@@ -1374,39 +1374,59 @@ export default function SeoOptimizer({ onNavigate }) {
               Actions section (one card per concept, neat vertical rhythm).
               ═══════════════════════════════════════════════════════════════ */}
 
-          {/* ── Card 1: Keyword research — 2-col inner grid, phrase + bar + score (Overview Category Scores pattern, exact) ── */}
+          {/* ── Keyword research — amber-topped card matching Keyword discovery / Competitor set ── */}
           {result.keyword_scores?.length > 0 && (
             <>
               <div style={{ marginBottom: 20, marginTop: 40 }}>
                 <h2 style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', marginBottom: 4 }}>Keyword research</h2>
                 <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.5 }}>
-                  {result.keyword_scores.length} related phrases · click any to use as title · sorted by score
+                  Related phrases ranked by opportunity · click any to use as title
                 </p>
               </div>
-              <div className="seo-glass-card" style={{ borderRadius: 16, padding: '22px 24px', marginBottom: 24 }}>
-              {/* 2-col grid mirrors Dashboard.jsx:2106 exactly — gap '14px 40px', no row bg / no padding */}
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px 40px' }}>
-                {result.keyword_scores.map((kw) => {
-                  const scColor = kw.score >= 75 ? C.green : kw.score >= 55 ? C.amber : C.red
-                  return (
-                    <div key={kw.phrase} className="seo-kw-row"
-                      role="button" tabIndex={0}
-                      onClick={() => setTitle(kw.phrase)}
-                      onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setTitle(kw.phrase) } }}
-                      title={`Volume ${kw.volume} · Competition ${kw.competition} · Score ${kw.score} — click to use as title`}
-                      style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }}>
-                      {/* phrase: 13/400/text2 — same weight as Overview's category label */}
-                      <span className="seo-kw-phrase" style={{ fontSize: 13, color: C.text2, fontWeight: 400, width: 180, flexShrink: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', transition: 'color 0.12s' }}>{kw.phrase}</span>
-                      {/* bar: 4px tall, flex:1 — identical to Overview's progress bar */}
-                      <div style={{ flex: 1, height: 4, background: '#eeeef3', borderRadius: 99, overflow: 'hidden', minWidth: 40 }}>
-                        <div style={{ width: `${kw.score}%`, height: '100%', background: scColor, borderRadius: 99, transition: 'width 0.8s cubic-bezier(0.34,1.56,0.64,1)' }}/>
-                      </div>
-                      {/* value: 13/700/color — identical to Overview's category value */}
-                      <span style={{ fontSize: 13, fontWeight: 700, color: scColor, fontVariantNumeric: 'tabular-nums', minWidth: 26, textAlign: 'right', flexShrink: 0 }}>{kw.score}</span>
+
+              <div className="seo-suggestion-card" style={{
+                borderTop: `3px solid ${C.amber}`,
+                marginBottom: 24,
+              }}>
+                <div style={{ padding: '18px 22px 20px' }}>
+                  {/* Eyebrow + big tabular count — same pattern as Competitor set */}
+                  <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16, marginBottom: 14 }}>
+                    <div style={{ minWidth: 0 }}>
+                      <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 6 }}>Related phrases</p>
+                      <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.5 }}>Sorted by score · click any to use as your title</p>
                     </div>
-                  )
-                })}
-              </div>
+                    <p style={{ fontSize: 26, fontWeight: 800, color: C.text1, letterSpacing: '-0.8px', fontVariantNumeric: 'tabular-nums', flexShrink: 0, lineHeight: 1 }}>{result.keyword_scores.length}</p>
+                  </div>
+
+                  <div style={{ height: 1, background: C.border, margin: '0 0 14px' }}/>
+
+                  {/* 2-col grid with amber vertical divider between columns (matches Competitor set) */}
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', columnGap: 0, rowGap: 14 }}>
+                    {result.keyword_scores.map((kw, i) => {
+                      const scColor    = kw.score >= 75 ? C.green : kw.score >= 55 ? C.amber : C.red
+                      const isRightCol = i % 2 === 1
+                      return (
+                        <div key={kw.phrase} className="seo-kw-row"
+                          role="button" tabIndex={0}
+                          onClick={() => setTitle(kw.phrase)}
+                          onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setTitle(kw.phrase) } }}
+                          title={`Volume ${kw.volume} · Competition ${kw.competition} · Score ${kw.score} — click to use as title`}
+                          style={{
+                            display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer',
+                            paddingLeft:  isRightCol ? 20 : 0,
+                            paddingRight: isRightCol ? 0 : 20,
+                            borderLeft: isRightCol ? `1px solid ${C.amberBdr}` : 'none',
+                          }}>
+                          <span className="seo-kw-phrase" style={{ fontSize: 13, color: C.text2, fontWeight: 400, width: 180, flexShrink: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', transition: 'color 0.12s' }}>{kw.phrase}</span>
+                          <div style={{ flex: 1, height: 4, background: '#eeeef3', borderRadius: 99, overflow: 'hidden', minWidth: 40 }}>
+                            <div style={{ width: `${kw.score}%`, height: '100%', background: scColor, borderRadius: 99, transition: 'width 0.8s cubic-bezier(0.34,1.56,0.64,1)' }}/>
+                          </div>
+                          <span style={{ fontSize: 13, fontWeight: 700, color: scColor, fontVariantNumeric: 'tabular-nums', minWidth: 26, textAlign: 'right', flexShrink: 0 }}>{kw.score}</span>
+                        </div>
+                      )
+                    })}
+                  </div>
+                </div>
               </div>
             </>
           )}
