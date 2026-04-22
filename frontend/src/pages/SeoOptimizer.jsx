@@ -249,16 +249,14 @@ function fmtNum(n) {
   return String(n)
 }
 
-// Stats card — matches Dashboard's Stat component 1:1 (same padding, shadow, type scale).
-// Optional verdict pill matches Overview's Content-Patterns verdict pattern.
-function MiniStat({ label, value, sub, accent, verdict, verdictGood }) {
-  const col = accent || C.text1
-  const pillColor = verdictGood === true ? '#059669' : verdictGood === false ? '#e5251b' : '#d97706'
-  const pillBdr   = verdictGood === true ? 'rgba(5,150,105,0.28)' : verdictGood === false ? 'rgba(229,37,27,0.28)' : 'rgba(217,119,6,0.28)'
+// Stats card — matches Dashboard.jsx Stat component EXACTLY (label + value + sub, no pill).
+// Same padding, shadow, type scale, spacing as Overview's 4-col stat grid.
+function MiniStat({ label, value, sub, accent, alert }) {
+  const col = alert ? C.red : (accent || C.text1)
   return (
     <div style={{
-      background: '#ffffff',
-      border: '1px solid #e6e6ec',
+      background: alert ? '#fff8f8' : '#ffffff',
+      border: `1px solid ${alert ? 'rgba(229,37,27,0.22)' : '#e6e6ec'}`,
       borderRadius: 16,
       padding: '22px 24px',
       boxShadow: '0 1px 2px rgba(0,0,0,0.04), 0 4px 14px rgba(0,0,0,0.06)',
@@ -266,19 +264,7 @@ function MiniStat({ label, value, sub, accent, verdict, verdictGood }) {
     }}>
       <p style={{ fontSize: 11, fontWeight: 500, letterSpacing: '0.05em', textTransform: 'uppercase', color: C.text3, marginBottom: 12 }}>{label}</p>
       <p style={{ fontSize: 30, fontWeight: 800, letterSpacing: '-1.4px', color: col, lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{value}</p>
-      {sub && <p style={{ fontSize: 12, color: C.text3, fontWeight: 500, marginTop: 10 }}>{sub}</p>}
-      {verdict && (
-        <span style={{
-          display: 'inline-block',
-          fontSize: 10, fontWeight: 700,
-          color: pillColor,
-          background: 'transparent',
-          border: `1.5px solid ${pillBdr}`,
-          padding: '3px 10px', borderRadius: 999,
-          marginTop: 10,
-          letterSpacing: '0.06em', textTransform: 'uppercase',
-        }}>{verdict}</span>
-      )}
+      {sub && <p style={{ fontSize: 12, color: alert ? C.red : C.text3, fontWeight: 500, marginTop: 10 }}>{sub}</p>}
     </div>
   )
 }
@@ -659,7 +645,7 @@ export default function SeoOptimizer({ onNavigate }) {
             boxShadow: '0 6px 18px rgba(229,37,27,0.38), inset 0 1px 0 rgba(255,255,255,0.28)',
             flexShrink: 0,
           }}>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="#ffffff">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="#ffffff">
               <path d="M12 2.5l2.1 6.3 6.3 2.1-6.3 2.1L12 19.3l-2.1-6.3L3.6 10.9l6.3-2.1z"/>
             </svg>
           </span>
@@ -1055,30 +1041,16 @@ export default function SeoOptimizer({ onNavigate }) {
             )
           })()}
 
-          {/* ── Stats row — 4 cards with semantic verdict pills (mirrors Overview's Content Patterns verdict style) ───── */}
+          {/* ── Stats row — label + big number + sub line, EXACTLY Overview's Stat component (Dashboard.jsx:1007-1016). No pills. ── */}
           {(() => {
             const compCount = result.videos_found || 0
-            const compVerdict  = compCount === 0 ? null : compCount >= 30 ? 'Crowded niche' : compCount >= 10 ? 'Active space' : 'Niche opening'
-            const compGood     = compCount === 0 ? null : compCount >= 30 ? false : compCount >= 10 ? null : true
-            const exactVerdict = result.intent_matched > 0 ? 'Direct rivals' : 'Broader scope'
-            const exactGood    = result.intent_matched > 0 ? false : null
             const kwCount = result.keyword_scores?.length || 0
-            const kwVerdict = kwCount >= 10 ? 'Good spread' : kwCount >= 5 ? 'Workable' : kwCount > 0 ? 'Limited' : null
-            const kwGood    = kwCount >= 10 ? true : kwCount >= 5 ? null : false
             return (
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, minmax(0, 1fr))', gap: 16, marginBottom: 24 }}>
-                <MiniStat label="Competitors"     value={fmtNum(compCount)}
-                  sub="live YouTube results"
-                  verdict={compVerdict} verdictGood={compGood} />
-                <MiniStat label="Exact match"     value={result.intent_matched > 0 ? fmtNum(result.intent_matched) : '—'}
-                  sub={result.intent_matched > 0 ? 'matching your angle' : 'broader niche scope'}
-                  verdict={exactVerdict} verdictGood={exactGood} />
-                <MiniStat label="AI alternatives" value={result.suggestions?.length || 0}
-                  sub="new titles to choose"
-                  verdict={result.suggestions?.length >= 3 ? 'Ready to pick' : null} verdictGood={result.suggestions?.length >= 3 ? true : null} />
-                <MiniStat label="Keyword opps"    value={kwCount}
-                  sub="related phrases scored"
-                  verdict={kwVerdict} verdictGood={kwGood} />
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, minmax(0, 1fr))', gap: 16, marginBottom: 16 }}>
+                <MiniStat label="Competitors"     value={fmtNum(compCount)}                          sub="live YouTube results" />
+                <MiniStat label="Exact match"     value={result.intent_matched > 0 ? fmtNum(result.intent_matched) : '—'} sub={result.intent_matched > 0 ? 'matching your angle' : 'broader niche scope'} />
+                <MiniStat label="AI alternatives" value={result.suggestions?.length || 0}              sub="new titles to choose" />
+                <MiniStat label="Keyword opps"    value={kwCount}                                      sub="related phrases scored" />
               </div>
             )
           })()}
