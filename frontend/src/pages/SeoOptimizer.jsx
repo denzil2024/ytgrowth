@@ -1106,12 +1106,12 @@ export default function SeoOptimizer({ onNavigate }) {
                 {/* ── Insight #1 — Opportunity (green border, info severity) ── */}
                 <div className="seo-suggestion-card" style={{
                   marginBottom: 10,
-                  borderTop: `3px solid ${greenColor}`,
+                  borderTop: `3px solid ${C.amber}`,
                 }}>
                   <div style={{ padding: '16px 22px 18px' }}>
                     {/* Header row — rank badge + category + problem title + severity pill */}
                     <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: 14 }}>
-                      <div style={{ width: 26, height: 26, borderRadius: 8, background: greenColor, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 2 }}>
+                      <div style={{ width: 26, height: 26, borderRadius: 8, background: C.amber, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 2 }}>
                         <span style={{ fontSize: 12, fontWeight: 900, color: '#fff', fontVariantNumeric: 'tabular-nums' }}>1</span>
                       </div>
                       <div style={{ flex: 1, minWidth: 0 }}>
@@ -1159,11 +1159,11 @@ export default function SeoOptimizer({ onNavigate }) {
                 {hasOverused && (
                   <div className="seo-suggestion-card" style={{
                     marginBottom: 10,
-                    borderTop: `3px solid ${redColor}`,
+                    borderTop: `3px solid ${C.amber}`,
                   }}>
                     <div style={{ padding: '16px 22px 18px' }}>
                       <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: 14 }}>
-                        <div style={{ width: 26, height: 26, borderRadius: 8, background: redColor, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 2 }}>
+                        <div style={{ width: 26, height: 26, borderRadius: 8, background: C.amber, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 2 }}>
                           <span style={{ fontSize: 12, fontWeight: 900, color: '#fff', fontVariantNumeric: 'tabular-nums' }}>2</span>
                         </div>
                         <div style={{ flex: 1, minWidth: 0 }}>
