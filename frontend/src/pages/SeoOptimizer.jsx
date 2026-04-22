@@ -135,9 +135,9 @@ function loadSaved() {
   } catch { return {} }
 }
 
-function saveToDisk(title, result, selectedTitle, currentDesc, descResult) {
+function saveToDisk(state) {
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({ title, result, selectedTitle, currentDesc, descResult }))
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state))
   } catch {}
 }
 
@@ -412,8 +412,8 @@ export default function SeoOptimizer({ onNavigate }) {
   const [loadingIntent, setLoadingIntent] = useState(false)
   const [error, setError]               = useState('')
   const [copied, setCopied]             = useState(null)
-  const [intentOptions, setIntentOptions]     = useState(null)
-  const [selectedKeyword, setSelectedKeyword] = useState('')
+  const [intentOptions, setIntentOptions]     = useState(saved.intentOptions || null)
+  const [selectedKeyword, setSelectedKeyword] = useState(saved.selectedKeyword || '')
   // Monotonic request id — latest submit wins; older responses are ignored (race-condition guard).
   const reqIdRef = useRef(0)
 
@@ -446,15 +446,19 @@ export default function SeoOptimizer({ onNavigate }) {
   }, [])
 
   // Clear the intent picker when the user edits the title — the picker was built for the previous title.
+  // Skip the first run on mount so a restored intentOptions from localStorage doesn't get wiped immediately.
+  const titleEditSinceMount = useRef(false)
   useEffect(() => {
+    if (!titleEditSinceMount.current) { titleEditSinceMount.current = true; return }
     if (intentOptions !== null) setIntentOptions(null)
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [title])
 
   useEffect(() => {
-    if (result !== null) saveToDisk(title, result, selectedTitle, currentDesc, descResult)
-    else if (!loading) saveToDisk(title, null, selectedTitle, currentDesc, descResult)
-  }, [title, result, loading, selectedTitle, currentDesc, descResult])
+    // Don't persist state while a request is in flight — setResult(null) at submit start would otherwise overwrite a good previous result with null.
+    if (loading || loadingIntent) return
+    saveToDisk({ title, result, selectedTitle, currentDesc, descResult, intentOptions, selectedKeyword })
+  }, [title, result, loading, loadingIntent, selectedTitle, currentDesc, descResult, intentOptions, selectedKeyword])
 
   function handleClear() {
     localStorage.removeItem(STORAGE_KEY)
@@ -620,19 +624,18 @@ export default function SeoOptimizer({ onNavigate }) {
       fontFamily: "'Inter', system-ui, sans-serif",
     }}>
 
-      {/* Header — matches Overview page H1: 24/800/-0.6px, plus 44×44 tool badge */}
+      {/* Header — matches Overview page H1: 24/800/-0.6px. Icon: elevated gradient badge (same visual DNA as intent route badges). */}
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 32, gap: 16, flexWrap: 'wrap' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
           <span style={{
             display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-            width: 44, height: 44, borderRadius: 11,
-            background: 'rgba(229,37,27,0.09)',
-            border: '1px solid rgba(229,37,27,0.18)',
+            width: 48, height: 48, borderRadius: 14,
+            background: 'linear-gradient(135deg, #ef4444 0%, #b91c1c 100%)',
+            boxShadow: '0 6px 18px rgba(229,37,27,0.38), inset 0 1px 0 rgba(255,255,255,0.28)',
             flexShrink: 0,
           }}>
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={C.red} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M12 3l1.8 5.4L19 10l-5.2 1.6L12 17l-1.8-5.4L5 10l5.2-1.6z"/>
-              <path d="M19 14l0.9 2.7L22 17.5l-2.1 0.8L19 21l-0.9-2.7L16 17.5l2.1-0.8z"/>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="#ffffff">
+              <path d="M12 2.5l2.1 6.3 6.3 2.1-6.3 2.1L12 19.3l-2.1-6.3L3.6 10.9l6.3-2.1z"/>
             </svg>
           </span>
           <div>
@@ -690,7 +693,7 @@ export default function SeoOptimizer({ onNavigate }) {
             </div>
           )}
 
-          <div style={{ marginTop: 14, display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 10 }}>
+          <div style={{ marginTop: 10, display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 10 }}>
             <button onClick={handleSubmitTitle} disabled={loading || loadingIntent || !title.trim()}
               className="seo-btn-primary" style={{ fontSize: 13, padding: '11px 22px' }}>
               {loadingIntent ? (
@@ -718,19 +721,58 @@ export default function SeoOptimizer({ onNavigate }) {
         {/* ── Row 2: 2-col — Preview on YouTube | Start from a format ────── */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: 14 }}>
 
-          {/* Preview on YouTube — priority-action visual DNA: colored top border + status pill */}
+          {/* Preview on YouTube — compact mode when everything fits (3 identical rows is noise); detailed rows kick in only when a surface actually cuts. */}
+          {(() => {
+            const surfaces = [
+              { label: 'Suggested feed', maxChars: 45 },
+              { label: 'Mobile search',  maxChars: 55 },
+              { label: 'Desktop search', maxChars: 70 },
+            ]
+            const anyCut = title.trim() && surfaces.some(s => title.length > s.maxChars)
+            return (
           <div className="seo-glass-card" style={{ padding: '22px 24px' }}>
             <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 14, gap: 8 }}>
               <span style={{ fontSize: 11, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Preview on YouTube</span>
-              <span style={{ fontSize: 11, color: C.text3, whiteSpace: 'nowrap' }}>3 surfaces</span>
+              <span style={{ fontSize: 11, color: C.text3, whiteSpace: 'nowrap' }}>
+                {title.trim() ? (anyCut ? 'check truncation' : 'all surfaces') : '3 surfaces'}
+              </span>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-              {title.trim() ? (
-                [
-                  { label: 'Suggested feed', maxChars: 45 },
-                  { label: 'Mobile search',  maxChars: 55 },
-                  { label: 'Desktop search', maxChars: 70 },
-                ].map(({ label, maxChars }) => {
+              {!title.trim() ? (
+                <div style={{ padding: '44px 20px', background: '#fafafb', border: '1px dashed #e6e6ec', borderRadius: 12 }}>
+                  <p style={{ fontSize: 13, color: C.text3, textAlign: 'center', lineHeight: 1.6, margin: 0 }}>
+                    Type a title to see how it renders<br/>in Suggested feed, Mobile &amp; Desktop search.
+                  </p>
+                </div>
+              ) : !anyCut ? (
+                // Compact "all fit" mode — one hero row + 3 small surface chips, no redundant title triple-print.
+                <div style={{
+                  background: C.greenBg,
+                  border: `1px solid ${C.greenBdr}`,
+                  borderLeft: `3px solid ${C.green}`,
+                  borderRadius: '0 12px 12px 0',
+                  padding: '16px 18px',
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke={C.green} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+                      <polyline points="3,8.5 6.5,12 13,4"/>
+                    </svg>
+                    <p style={{ fontSize: 13.5, fontWeight: 600, color: '#065f46', letterSpacing: '-0.1px', margin: 0 }}>
+                      Fits all 3 YouTube surfaces
+                    </p>
+                  </div>
+                  <div style={{ display: 'flex', gap: 18, flexWrap: 'wrap' }}>
+                    {surfaces.map(s => (
+                      <div key={s.label} style={{ display: 'flex', alignItems: 'baseline', gap: 6, fontSize: 11 }}>
+                        <span style={{ fontWeight: 700, color: C.green, textTransform: 'uppercase', letterSpacing: '0.06em' }}>{s.label}</span>
+                        <span style={{ color: C.text3, fontVariantNumeric: 'tabular-nums', fontWeight: 500 }}>{title.length}/{s.maxChars}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                // Detailed mode — only when a surface actually truncates. Each row shows exactly how the title gets cut.
+                surfaces.map(({ label, maxChars }) => {
                   const truncated = title.length > maxChars
                   const display = truncated ? title.slice(0, maxChars - 1) + '…' : title
                   const accent = truncated ? C.amber : C.green
@@ -765,17 +807,13 @@ export default function SeoOptimizer({ onNavigate }) {
                     </div>
                   )
                 })
-              ) : (
-                <div style={{ padding: '44px 20px', background: '#fafafb', border: '1px dashed #e6e6ec', borderRadius: 12 }}>
-                  <p style={{ fontSize: 13, color: C.text3, textAlign: 'center', lineHeight: 1.6, margin: 0 }}>
-                    Type a title to see how it renders<br/>in Suggested feed, Mobile &amp; Desktop search.
-                  </p>
-                </div>
               )}
             </div>
           </div>
+            )
+          })()}
 
-          {/* Start from a format — priority-action visual DNA: colored top border + numbered badge + hook label */}
+          {/* Start from a format — neutral tile; amber retained only on the numbered badge + label (one accent per tile, not three). */}
           <div className="seo-glass-card" style={{ padding: '22px 24px' }}>
             <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 14, gap: 8 }}>
               <span style={{ fontSize: 11, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Start from a format</span>
@@ -789,7 +827,6 @@ export default function SeoOptimizer({ onNavigate }) {
                     padding: '12px 14px 14px',
                     background: '#ffffff',
                     border: '1px solid #e6e6ec',
-                    borderTop: `3px solid ${fmt.color}`,
                     borderRadius: 12,
                     cursor: 'pointer',
                     fontFamily: 'inherit',
