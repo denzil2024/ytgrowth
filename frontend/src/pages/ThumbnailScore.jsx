@@ -1333,22 +1333,26 @@ export default function ThumbnailScore({ channelData, onNavigate }) {
                         )}
                       </div>
                       <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', alignItems: 'center' }}>
-                        {/* Score chip */}
-                        <span style={{ display: 'inline-flex', alignItems: 'baseline', gap: 3,
-                                       background: 'rgba(0,0,0,0.04)', border: '1px solid rgba(0,0,0,0.07)',
-                                       borderRadius: 8, padding: '3px 8px', fontSize: 12 }}>
-                          <span style={{ fontWeight: 700, color: col, fontVariantNumeric: 'tabular-nums' }}>{score}</span>
-                          <span style={{ color: '#a0a0b0', fontWeight: 400 }}>/{max}</span>
+                        {/* Score chip — tabular-nums, bolder value/max contrast (matches SEO Optimizer's scorecard style) */}
+                        <span style={{ display: 'inline-flex', alignItems: 'baseline', gap: 2,
+                                       background: '#fff', border: `1px solid ${col}30`,
+                                       borderRadius: 100, padding: '3px 10px', fontSize: 12, fontVariantNumeric: 'tabular-nums' }}>
+                          <span style={{ fontSize: 13, fontWeight: 800, color: col, letterSpacing: '-0.2px' }}>{score}</span>
+                          <span style={{ color: C.text3, fontWeight: 500 }}>/{max}</span>
+                        </span>
+                        {/* Verdict pill — colored by score tier, mirrors the pills on Suggested Titles / Competitor set */}
+                        <span style={{ fontSize: 10, fontWeight: 700, color: col, letterSpacing: '0.08em', textTransform: 'uppercase', padding: '3px 9px', borderRadius: 100, border: `1.5px solid ${col}` }}>
+                          {scoreLabel(score, max)}
                         </span>
                         {item.format && (
                           <span style={{ display: 'inline-flex', alignItems: 'baseline', gap: 3,
                                          background: 'rgba(0,0,0,0.04)', border: '1px solid rgba(0,0,0,0.07)',
-                                         borderRadius: 8, padding: '3px 8px', fontSize: 12, color: '#52525b', fontWeight: 500 }}>
+                                         borderRadius: 100, padding: '3px 9px', fontSize: 11, color: C.text3, fontWeight: 500, letterSpacing: '-0.05px' }}>
                             {item.format}
                           </span>
                         )}
                         {savedAt && (
-                          <span style={{ fontSize: 12, color: '#bbb', fontWeight: 500, marginLeft: 2 }}>
+                          <span style={{ fontSize: 12, color: C.text3, fontWeight: 500, marginLeft: 2 }}>
                             · {savedAt}
                           </span>
                         )}
