@@ -629,8 +629,28 @@ export default function SeoOptimizer({ onNavigate }) {
       fontFamily: "'Inter', system-ui, sans-serif",
     }}>
 
-      {/* Header — matches Overview page H1: 24/800/-0.6px. Icon: elevated gradient badge (same visual DNA as intent route badges). */}
-      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 32, gap: 16, flexWrap: 'wrap' }}>
+      {/* Header — Overview pattern: H1 (24/800/-0.6) + meta line with · separators + action buttons on right.
+          alignItems: flex-end so the H1 baseline aligns with the button bottom edge. */}
+      {(() => {
+        // Relative timestamp helper (inline, so this page doesn't need a shared import)
+        const relTime = (iso) => {
+          if (!iso) return ''
+          const d = new Date(iso)
+          if (isNaN(d.getTime())) return ''
+          const diffMs = Date.now() - d.getTime()
+          const sec = Math.floor(diffMs / 1000)
+          if (sec < 60) return 'just now'
+          const min = Math.floor(sec / 60)
+          if (min < 60) return `${min}m ago`
+          const hr = Math.floor(min / 60)
+          if (hr < 24) return `${hr}h ago`
+          const day = Math.floor(hr / 24)
+          if (day < 7) return `${day}d ago`
+          return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })
+        }
+        const lastSearchAt = result?._searched_at || result?.analyzed_at
+        return (
+      <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 24, gap: 16, flexWrap: 'wrap' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
           <span style={{
             display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
@@ -645,15 +665,27 @@ export default function SeoOptimizer({ onNavigate }) {
           </span>
           <div>
             <h1 style={{ fontSize: 24, fontWeight: 800, color: C.text1, letterSpacing: '-0.6px', marginBottom: 6, lineHeight: 1.1 }}>SEO Optimizer</h1>
-            <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.4 }}>Your title against live competitor data — 3 AI alternatives, plus a matching description.</p>
+            {/* Meta line with · separators, matches Overview's "Stats from Xh ago · Audited Xd ago" pattern */}
+            <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.4, display: 'flex', gap: 0, flexWrap: 'wrap' }}>
+              <span>Your title against live competitor data</span>
+              <span style={{ marginLeft: 8 }}>· 3 AI alternatives</span>
+              <span style={{ marginLeft: 8 }}>· 1 matching description</span>
+              {lastSearchAt && (
+                <span style={{ marginLeft: 8 }}>· Last searched {relTime(lastSearchAt)}</span>
+              )}
+            </p>
           </div>
         </div>
         {(title || result) && (
-          <button onClick={handleClear} className="seo-btn" style={{ flexShrink: 0 }}>
-            Clear
-          </button>
+          <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexShrink: 0, marginBottom: 2 }}>
+            <button onClick={handleClear} className="seo-btn" style={{ flexShrink: 0 }}>
+              Clear
+            </button>
+          </div>
         )}
       </div>
+        )
+      })()}
 
       {/* Input area — hero input on top, then 2-col (Preview | Formats) */}
       <div style={{ marginBottom: 16 }}>
@@ -710,7 +742,8 @@ export default function SeoOptimizer({ onNavigate }) {
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M12 3l1.8 5.4L19 10l-5.2 1.6L12 17l-1.8-5.4L5 10l5.2-1.6z"/>
                   </svg>
-                  Analyse &amp; suggest titles
+                  <span>Analyse &amp; suggest titles</span>
+                  <span style={{ fontSize: 11, fontWeight: 500, color: 'rgba(255,255,255,0.6)', marginLeft: 2 }}>· 1 token</span>
                 </>
               )}
             </button>
