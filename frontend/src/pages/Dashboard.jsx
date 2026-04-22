@@ -2375,9 +2375,6 @@ export default function Dashboard() {
                   if (before <= 0) return null
                   return Math.round(((after - before) / before) * 100)
                 }
-                const totalViewGain    = optimizations.reduce((s, o) => s + Math.max(0, (o.current_views    || 0) - (o.before_views    || 0)), 0)
-                const totalLikeGain    = optimizations.reduce((s, o) => s + Math.max(0, (o.current_likes    || 0) - (o.before_likes    || 0)), 0)
-                const totalCommentGain = optimizations.reduce((s, o) => s + Math.max(0, (o.current_comments || 0) - (o.before_comments || 0)), 0)
 
                 // Tinted delta cell — mirrors Priority Actions' 3-col body (blue/white/green tints).
                 // We use the same palette: Views=blue (info), Likes=white+bar (action), Comments=green (outcome).
@@ -2413,21 +2410,10 @@ export default function Dashboard() {
 
                 return (
                   <div style={{ marginBottom: 28 }}>
-                    <div style={{ marginBottom: 16 }}>
-                      <h2 style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', marginBottom: 10 }}>Your optimizations</h2>
-                      <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-                        {[
-                          ['✏️', `${optimizations.length} tracked update${optimizations.length === 1 ? '' : 's'}`],
-                          ['👁', `+${fmtNum(totalViewGain)} views gained`],
-                          ['👍', `+${fmtNum(totalLikeGain)} likes gained`],
-                          ['💬', `+${fmtNum(totalCommentGain)} comments gained`],
-                        ].map(([icon, label]) => (
-                          <span key={label} style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: 12.5, fontWeight: 600, color: C.text2, background: '#fff', border: `1px solid ${C.border}`, borderRadius: 100, padding: '5px 12px', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
-                            <span>{icon}</span>{label}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
+                    {/* Subtler secondary eyebrow — lets "Video performance" keep its H2 identity at the top */}
+                    <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 12 }}>
+                      Tracked updates · {optimizations.length} video{optimizations.length === 1 ? '' : 's'}
+                    </p>
 
                     {optimizations.slice(0, 8).map((o, i) => {
                       const days         = daysSince(o.optimized_at)
