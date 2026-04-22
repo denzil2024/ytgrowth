@@ -1,5 +1,14 @@
 import { useState, useEffect, useRef } from 'react'
 
+// Load Inter once — SCOPED to this page (each page owns its font loading, never global)
+if (typeof document !== 'undefined' && !document.getElementById('thumb-iq-inter-font')) {
+  const link = document.createElement('link')
+  link.id = 'thumb-iq-inter-font'
+  link.rel = 'stylesheet'
+  link.href = 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap'
+  document.head.appendChild(link)
+}
+
 /* ─── Inject styles once ─────────────────────────────────────────────────── */
 if (typeof document !== 'undefined' && !document.getElementById('thumb-iq-styles')) {
   const s = document.createElement('style')
@@ -644,12 +653,14 @@ function UploadPanel({ videoIdeas, hasIdeas, initialIdea, initialTopic, topicSou
   }
 
   return (
-    <div style={{ maxWidth: 580, margin: '0 auto' }}>
+    <div style={{ maxWidth: 620, margin: '0 auto' }}>
+     {/* Elevated card wrapper — matches the SEO Optimizer / Overview design language instead of bare bg */}
+     <div className="tiq-card" style={{ padding: '24px 26px' }}>
 
       {/* Part A: Video Ideas dropdown */}
       {hasIdeas && (
         <div style={{ marginBottom: 14 }}>
-          <p style={{ fontSize: 12, fontWeight: 600, color: C.text2, marginBottom: 6 }}>
+          <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 8 }}>
             Is this thumbnail for one of your video ideas?
           </p>
           <div style={{ position: 'relative' }}>
@@ -694,7 +705,7 @@ function UploadPanel({ videoIdeas, hasIdeas, initialIdea, initialTopic, topicSou
       {/* Part B: Topic input */}
       <div style={{ marginBottom: 14 }}>
         {hasIdeas && (
-          <p style={{ fontSize: 12, fontWeight: 600, color: C.text2, marginBottom: 6 }}>
+          <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 8 }}>
             Your video topic
           </p>
         )}
@@ -809,6 +820,7 @@ function UploadPanel({ videoIdeas, hasIdeas, initialIdea, initialTopic, topicSou
       >
         {!file ? 'Select a thumbnail first' : !confirmedKeyword ? 'Enter a topic first' : 'Analyze Thumbnail'}
       </button>
+     </div>
     </div>
   )
 }
@@ -1060,13 +1072,44 @@ export default function ThumbnailScore({ channelData, onNavigate }) {
   ]
 
   return (
-    <div>
-      {/* Header */}
-      <div style={{ marginBottom: 20 }}>
-        <h1 style={{ fontSize: 24, fontWeight: 800, color: '#0a0a0f', letterSpacing: '-0.7px', marginBottom: 5 }}>
-          Thumbnail IQ
-        </h1>
-        <p style={{ fontSize: 14, color: C.text3 }}>See how your thumbnail performs before you publish</p>
+    <div style={{
+      // Negative margin + matching padding so the white page bg extends to the scroll container edges,
+      // the same trick SEO Optimizer and Overview use. Inter is applied page-scoped here, never globally.
+      margin: '-36px -40px -72px',
+      padding: '36px 40px 72px',
+      background: '#ffffff',
+      minHeight: 'calc(100vh - 52px)',
+      fontFamily: "'Inter', system-ui, sans-serif",
+    }}>
+
+      {/* Header — red gradient icon badge + H1 24/800/-0.6 + meta line with · separators (Overview/SEO pattern) */}
+      <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 24, gap: 16, flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+          <span style={{
+            display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+            width: 48, height: 48, borderRadius: 14,
+            background: 'linear-gradient(135deg, #ef4444 0%, #b91c1c 100%)',
+            boxShadow: '0 6px 18px rgba(229,37,27,0.38), inset 0 1px 0 rgba(255,255,255,0.28)',
+            flexShrink: 0,
+          }}>
+            {/* Thumbnail/photo icon — represents the page's job */}
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="3" y="5" width="18" height="14" rx="2.5"/>
+              <circle cx="9" cy="11" r="1.8" fill="#ffffff" stroke="none"/>
+              <path d="M3 17l5-5 3.5 3.5L15 12l6 6"/>
+            </svg>
+          </span>
+          <div>
+            <h1 style={{ fontSize: 24, fontWeight: 800, color: C.text1, letterSpacing: '-0.6px', marginBottom: 6, lineHeight: 1.1 }}>Thumbnail IQ</h1>
+            <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.4, display: 'flex', gap: 0, flexWrap: 'wrap' }}>
+              <span>See how your thumbnail performs before you publish</span>
+              <span style={{ marginLeft: 8 }}>· Benchmarked against real top-ranked channels</span>
+              {history.length > 0 && (
+                <span style={{ marginLeft: 8 }}>· {history.length} saved</span>
+              )}
+            </p>
+          </div>
+        </div>
       </div>
 
       {/* Tabs */}
