@@ -1058,156 +1058,140 @@ export default function SeoOptimizer({ onNavigate }) {
             </div>
           )}
 
-          {/* ── Search intent analysis — redesigned: a persona header card + keyword strip + 2-col verdict row.
-                Every card carries an icon badge, its own color accent, and actual type hierarchy inside.
-                Raw " - " separators from Claude's output are stripped so prose reads cleanly. ── */}
+          {/* ── Search intent analysis — copies Overview's Priority Actions InsightCard design exactly.
+                Stacked cards: 3px colored top border, solid rank badge, category eyebrow + problem title,
+                severity pill on the right, hairline divider, 3-col body grid (Why now blue / Action / Outcome green). ── */}
           {result.intent_analysis?.search_intent && (() => {
             const ia = result.intent_analysis
-            // Clean Claude's prose: convert " - " (sentence separator) to ", " so reading isn't broken by hyphens.
             const clean = s => typeof s === 'string'
               ? s.replace(/\s+[-–—]\s+/g, ', ').replace(/\s+,\s*/g, ', ').replace(/\s{2,}/g, ' ').trim()
               : s
             const searchIntent   = clean(ia.search_intent)
             const viewerProfile  = clean(ia.viewer_profile)
             const emotionalDrv   = clean(ia.emotional_driver)
-            const gap            = clean(ia.gap_opportunity)
+            const gap            = clean(ia.gap_opportunity) || 'No single gap detected. Explore the keyword list below — each phrase is a different angle to own.'
             const overused       = clean(ia.overused_angle)
-            const hasKeywords    = ia.top_keywords?.length > 0
-            const hasGap         = !!gap
             const hasOverused    = !!overused
+
+            // Matches Dashboard SEV palette exactly (Dashboard.jsx:876-882).
+            const greenColor = '#059669'
+            const redColor   = '#dc2626'
 
             return (
               <div style={{ marginBottom: 24, marginTop: 40 }}>
                 <div style={{ marginBottom: 20 }}>
                   <h2 style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', marginBottom: 4 }}>Search intent analysis</h2>
-                  <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.5 }}>Who this video is for · the gap that makes it travel · the angle already saturated</p>
+                  <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.5 }}>
+                    2 insights · Overview priority-actions format
+                  </p>
                 </div>
 
-                {/* TOP: Viewer persona — full width, the single subject anchor */}
-                <div className="seo-glass-card" style={{ padding: '24px 28px', marginBottom: 14, display: 'flex', gap: 18, alignItems: 'flex-start' }}>
-                  <span style={{
-                    display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-                    width: 44, height: 44, borderRadius: 13,
-                    background: 'linear-gradient(135deg, #ef4444 0%, #b91c1c 100%)',
-                    boxShadow: '0 4px 14px rgba(229,37,27,0.32), inset 0 1px 0 rgba(255,255,255,0.28)',
-                    flexShrink: 0, marginTop: 2,
-                  }}>
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="#ffffff">
-                      <path d="M12 12.8a4.6 4.6 0 1 0 0-9.2 4.6 4.6 0 0 0 0 9.2zM4 21.5c0-4.4 3.6-7.7 8-7.7s8 3.3 8 7.7c0 0.5-0.4 0.9-0.9 0.9H4.9c-0.5 0-0.9-0.4-0.9-0.9z"/>
-                    </svg>
-                  </span>
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <p style={{ fontSize: 10.5, fontWeight: 700, color: C.text3, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>
-                      Who this video is for
-                    </p>
-                    <p style={{ fontSize: 16, fontWeight: 700, color: C.text1, lineHeight: 1.45, letterSpacing: '-0.2px', marginBottom: 10 }}>
-                      {viewerProfile}
-                    </p>
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px 32px', fontSize: 13.5, lineHeight: 1.55, color: C.text2 }}>
-                      <div>
-                        <span style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.08em', textTransform: 'uppercase', display: 'block', marginBottom: 3 }}>
-                          Why they search
-                        </span>
-                        {searchIntent}
+                {/* ── Insight #1 — Opportunity (green border, info severity) ── */}
+                <div className="seo-suggestion-card" style={{
+                  marginBottom: 10,
+                  borderTop: `3px solid ${greenColor}`,
+                }}>
+                  <div style={{ padding: '16px 22px 18px' }}>
+                    {/* Header row — rank badge + category + problem title + severity pill */}
+                    <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: 14 }}>
+                      <div style={{ width: 26, height: 26, borderRadius: 8, background: greenColor, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 2 }}>
+                        <span style={{ fontSize: 12, fontWeight: 900, color: '#fff', fontVariantNumeric: 'tabular-nums' }}>1</span>
                       </div>
-                      <div>
-                        <span style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.08em', textTransform: 'uppercase', display: 'block', marginBottom: 3 }}>
-                          What they feel
-                        </span>
-                        {emotionalDrv}
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <p style={{ fontSize: 10, fontWeight: 700, color: greenColor, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 5 }}>Opportunity</p>
+                        <p style={{ fontSize: 14, fontWeight: 700, color: C.text1, lineHeight: 1.55 }}>{gap}</p>
+                      </div>
+                      <span style={{ fontSize: 10, fontWeight: 700, color: greenColor, padding: '3px 9px', borderRadius: 20, letterSpacing: '0.06em', textTransform: 'uppercase', border: `1.5px solid ${greenColor}`, flexShrink: 0 }}>
+                        Act on this
+                      </span>
+                    </div>
+
+                    {/* Divider aligned with content start — mirrors Dashboard.jsx:1082 */}
+                    <div style={{ height: 1, background: C.border, marginBottom: 14, marginLeft: 38 }} />
+
+                    {/* 3-col body — EXACT Priority Actions pattern: Why now (blue) / Action (white+colored bar) / Expected outcome (green) */}
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr 1fr', gap: 8, marginLeft: 38 }}>
+                      {/* Why now — blue tint */}
+                      <div style={{ background: 'rgba(79,134,247,0.07)', border: '1px solid rgba(79,134,247,0.12)', borderRadius: 10, padding: '12px 14px' }}>
+                        <p style={{ fontSize: 10, fontWeight: 700, color: '#4a7cf7', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Who's searching</p>
+                        <p style={{ fontSize: 13.5, color: C.text1, lineHeight: 1.72 }}>{viewerProfile}</p>
+                      </div>
+                      {/* Action — white bg + colored left bar + shadow */}
+                      <div style={{
+                        background: '#ffffff',
+                        border: `1px solid ${C.border}`,
+                        borderLeft: `3px solid ${greenColor}`,
+                        borderRadius: '0 10px 10px 0',
+                        padding: '12px 16px',
+                        boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
+                        display: 'flex', flexDirection: 'column',
+                      }}>
+                        <p style={{ fontSize: 10, fontWeight: 700, color: greenColor, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>Search intent</p>
+                        <p style={{ fontSize: 13.5, color: C.text1, lineHeight: 1.72 }}>{searchIntent}</p>
+                      </div>
+                      {/* Expected outcome — green tint */}
+                      <div style={{ background: 'rgba(5,150,105,0.07)', border: '1px solid rgba(5,150,105,0.14)', borderRadius: 10, padding: '12px 14px' }}>
+                        <p style={{ fontSize: 10, fontWeight: 700, color: C.green, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Emotional pull</p>
+                        <p style={{ fontSize: 13.5, color: C.text1, lineHeight: 1.72 }}>{emotionalDrv}</p>
                       </div>
                     </div>
                   </div>
                 </div>
 
-                {/* MIDDLE: Keyword strip — slim, full width, scannable */}
-                {hasKeywords && (
-                  <div style={{
-                    display: 'flex', alignItems: 'center', gap: 14, flexWrap: 'wrap',
-                    padding: '14px 20px',
-                    background: '#fafafb',
-                    border: '1px solid #e6e6ec',
-                    borderRadius: 12,
-                    marginBottom: 14,
+                {/* ── Insight #2 — Overused angle (red border, critical severity) ── */}
+                {hasOverused && (
+                  <div className="seo-suggestion-card" style={{
+                    marginBottom: 10,
+                    borderTop: `3px solid ${redColor}`,
                   }}>
-                    <span style={{ fontSize: 10.5, fontWeight: 700, color: C.text3, letterSpacing: '0.08em', textTransform: 'uppercase', whiteSpace: 'nowrap', flexShrink: 0 }}>
-                      Words competitors are using
-                    </span>
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-                      {ia.top_keywords.map(kw => (
-                        <span key={kw} onClick={() => setTitle(kw)} style={T.chip}
-                          onMouseEnter={e => { e.currentTarget.style.background = '#f1f1f6'; e.currentTarget.style.borderColor = 'rgba(229,37,27,0.25)'; e.currentTarget.style.color = C.text1 }}
-                          onMouseLeave={e => { e.currentTarget.style.background = '#fafafb'; e.currentTarget.style.borderColor = '#e6e6ec'; e.currentTarget.style.color = C.text2 }}>{kw}</span>
-                      ))}
+                    <div style={{ padding: '16px 22px 18px' }}>
+                      <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: 14 }}>
+                        <div style={{ width: 26, height: 26, borderRadius: 8, background: redColor, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 2 }}>
+                          <span style={{ fontSize: 12, fontWeight: 900, color: '#fff', fontVariantNumeric: 'tabular-nums' }}>2</span>
+                        </div>
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <p style={{ fontSize: 10, fontWeight: 700, color: redColor, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 5 }}>Overused angle</p>
+                          <p style={{ fontSize: 14, fontWeight: 700, color: C.text1, lineHeight: 1.55 }}>{overused}</p>
+                        </div>
+                        <span style={{ fontSize: 10, fontWeight: 700, color: redColor, padding: '3px 9px', borderRadius: 20, letterSpacing: '0.06em', textTransform: 'uppercase', border: `1.5px solid ${redColor}`, flexShrink: 0 }}>
+                          Avoid
+                        </span>
+                      </div>
+
+                      <div style={{ height: 1, background: C.border, marginBottom: 14, marginLeft: 38 }} />
+
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr 1fr', gap: 8, marginLeft: 38 }}>
+                        <div style={{ background: 'rgba(79,134,247,0.07)', border: '1px solid rgba(79,134,247,0.12)', borderRadius: 10, padding: '12px 14px' }}>
+                          <p style={{ fontSize: 10, fontWeight: 700, color: '#4a7cf7', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Why it's saturated</p>
+                          <p style={{ fontSize: 13.5, color: C.text1, lineHeight: 1.72 }}>
+                            Most top-ranking titles in this niche already use this framing, so a new video starting from the same angle blends in instead of earning a click.
+                          </p>
+                        </div>
+                        <div style={{
+                          background: '#ffffff',
+                          border: `1px solid ${C.border}`,
+                          borderLeft: `3px solid ${redColor}`,
+                          borderRadius: '0 10px 10px 0',
+                          padding: '12px 16px',
+                          boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
+                          display: 'flex', flexDirection: 'column',
+                        }}>
+                          <p style={{ fontSize: 10, fontWeight: 700, color: redColor, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>Do instead</p>
+                          <p style={{ fontSize: 13.5, color: C.text1, lineHeight: 1.72 }}>
+                            Lead with the struggle, the choice, or the story behind the outcome — not the outcome itself. That is the gap above.
+                          </p>
+                        </div>
+                        <div style={{ background: 'rgba(5,150,105,0.07)', border: '1px solid rgba(5,150,105,0.14)', borderRadius: 10, padding: '12px 14px' }}>
+                          <p style={{ fontSize: 10, fontWeight: 700, color: C.green, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Expected lift</p>
+                          <p style={{ fontSize: 13.5, color: C.text1, lineHeight: 1.72 }}>
+                            Pattern-interrupt framings earn higher CTR on the suggested feed because they stand out from the wall of identical titles.
+                          </p>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 )}
 
-                {/* BOTTOM: Verdict row — two equal cards with semantic color accents */}
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, alignItems: 'stretch' }}>
-                  {/* GREEN — Opportunity */}
-                  <div style={{
-                    background: 'linear-gradient(180deg, rgba(5,150,105,0.06) 0%, #ffffff 55%)',
-                    border: '1px solid rgba(5,150,105,0.22)',
-                    borderLeft: `4px solid ${C.green}`,
-                    borderRadius: '14px',
-                    padding: '20px 22px 22px',
-                    display: 'flex', flexDirection: 'column', gap: 14,
-                    boxShadow: '0 1px 2px rgba(0,0,0,0.03), 0 4px 14px rgba(5,150,105,0.06)',
-                  }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                      <span style={{
-                        display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-                        width: 34, height: 34, borderRadius: 10,
-                        background: 'linear-gradient(135deg, #10b981 0%, #047857 100%)',
-                        boxShadow: '0 3px 10px rgba(5,150,105,0.32), inset 0 1px 0 rgba(255,255,255,0.28)',
-                        flexShrink: 0,
-                      }}>
-                        <svg width="17" height="17" viewBox="0 0 24 24" fill="#ffffff">
-                          <path d="M13 2.5 4 14.4h7l-1 7.1 9-11.9h-7z"/>
-                        </svg>
-                      </span>
-                      <p style={{ fontSize: 11, fontWeight: 800, color: '#047857', letterSpacing: '0.08em', textTransform: 'uppercase', margin: 0 }}>
-                        Opportunity gap
-                      </p>
-                    </div>
-                    <p style={{ fontSize: 14, fontWeight: 500, color: C.text1, lineHeight: 1.7, letterSpacing: '-0.05px', margin: 0 }}>
-                      {hasGap ? gap : 'No clear single gap detected. Explore the full keyword list below — each phrase represents a different angle you could own.'}
-                    </p>
-                  </div>
-
-                  {/* RED — Avoid this framing */}
-                  <div style={{
-                    background: 'linear-gradient(180deg, rgba(229,37,27,0.06) 0%, #ffffff 55%)',
-                    border: '1px solid rgba(229,37,27,0.22)',
-                    borderLeft: `4px solid ${C.red}`,
-                    borderRadius: '14px',
-                    padding: '20px 22px 22px',
-                    display: 'flex', flexDirection: 'column', gap: 14,
-                    boxShadow: '0 1px 2px rgba(0,0,0,0.03), 0 4px 14px rgba(229,37,27,0.06)',
-                  }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                      <span style={{
-                        display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-                        width: 34, height: 34, borderRadius: 10,
-                        background: 'linear-gradient(135deg, #ef4444 0%, #b91c1c 100%)',
-                        boxShadow: '0 3px 10px rgba(229,37,27,0.32), inset 0 1px 0 rgba(255,255,255,0.28)',
-                        flexShrink: 0,
-                      }}>
-                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round">
-                          <circle cx="12" cy="12" r="9"/>
-                          <line x1="5.5" y1="5.5" x2="18.5" y2="18.5"/>
-                        </svg>
-                      </span>
-                      <p style={{ fontSize: 11, fontWeight: 800, color: '#b91c1c', letterSpacing: '0.08em', textTransform: 'uppercase', margin: 0 }}>
-                        Avoid this framing
-                      </p>
-                    </div>
-                    <p style={{ fontSize: 14, fontWeight: 500, color: C.text1, lineHeight: 1.7, letterSpacing: '-0.05px', margin: 0 }}>
-                      {hasOverused ? overused : 'No single overused angle detected — you have creative latitude on framing.'}
-                    </p>
-                  </div>
-                </div>
               </div>
             )
           })()}
