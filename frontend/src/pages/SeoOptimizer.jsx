@@ -359,31 +359,70 @@ function DescriptionCard({ d, idx, copiedDesc, onCopy }) {
   const [expanded, setExpanded] = useState(false)
   const tm = DESC_TYPE_META[d.type] || DESC_TYPE_META.value
   const isCopied = copiedDesc === idx
+  // Short category pill label
+  const categoryShort = d.type === 'story' ? 'Story'
+                      : d.type === 'value' ? 'Value'
+                      : 'Keyword-first'
   return (
-    <div style={{ border: `1px solid ${isCopied ? 'rgba(5,150,105,0.38)' : '#e6e6ec'}`, borderRadius: 12, overflow: 'hidden', background: isCopied ? 'rgba(5,150,105,0.04)' : '#ffffff', transition: 'all 0.2s' }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '8px 14px', background: tm.bg, borderBottom: `1px solid ${tm.bdr || '#f0f0f4'}` }}>
-        <span style={{ width: 6, height: 6, borderRadius: '50%', background: tm.color, flexShrink: 0 }} />
-        <span style={{ fontSize: 10, fontWeight: 700, color: tm.color, textTransform: 'uppercase', letterSpacing: '0.08em' }}>{d.label}</span>
-        <span style={{ fontSize: 12, color: C.text3, fontWeight: 400 }}>{d.why_it_works}</span>
-      </div>
-      <div style={{ padding: '14px 16px' }}>
-        <p style={{ fontSize: 13.5, color: C.text2, lineHeight: 1.65, background: '#fafafb', padding: '10px 14px', borderRadius: 8, borderLeft: `3px solid ${tm.color}`, marginBottom: 10 }}>
-          {d.preview}
-        </p>
-        {expanded && (
-          <pre style={{ fontSize: 12, color: C.text1, lineHeight: 1.75, whiteSpace: 'pre-wrap', fontFamily: "'Inter', system-ui, sans-serif", background: '#fafafb', padding: '12px 14px', borderRadius: 8, marginBottom: 10, border: '1px solid #e6e6ec' }}>
-            {d.full}
-          </pre>
-        )}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <button onClick={() => setExpanded(v => !v)}
-            style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 12, fontWeight: 600, color: C.text2, background: '#ffffff', border: '1px solid #e6e6ec', borderRadius: 100, padding: '5px 12px', cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.15s' }}>
-            {expanded ? '↑ Collapse' : '↓ Show full'}
-          </button>
-          <button onClick={() => onCopy(d.full, idx)}
-            style={{ marginLeft: 'auto', fontSize: 12, fontWeight: 700, color: isCopied ? C.green : C.text2, background: '#ffffff', border: `1px solid ${isCopied ? 'rgba(5,150,105,0.38)' : '#e6e6ec'}`, borderRadius: 100, padding: '5px 14px', cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.2s' }}>
-            {isCopied ? '✓ Copied' : 'Copy'}
-          </button>
+    <div className="seo-suggestion-card" style={{
+      marginBottom: 10,
+      borderTop: `3px solid ${C.amber}`,
+    }}>
+      <div style={{ padding: '16px 22px 18px' }}>
+        {/* Header — amber rank badge + category eyebrow + preview title + category pill */}
+        <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: 14 }}>
+          <div style={{ width: 26, height: 26, borderRadius: 8, background: C.amber, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 2 }}>
+            <span style={{ fontSize: 12, fontWeight: 900, color: '#fff', fontVariantNumeric: 'tabular-nums' }}>{idx + 1}</span>
+          </div>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <p style={{ fontSize: 10, fontWeight: 700, color: tm.color, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 5 }}>{d.label}</p>
+            <p style={{ fontSize: 14, fontWeight: 700, color: C.text1, lineHeight: 1.55 }}>{d.preview}</p>
+          </div>
+          <span style={{ fontSize: 10, fontWeight: 700, color: tm.color, padding: '3px 9px', borderRadius: 20, letterSpacing: '0.06em', textTransform: 'uppercase', border: `1.5px solid ${tm.color}`, flexShrink: 0 }}>
+            {categoryShort}
+          </span>
+        </div>
+
+        {/* Divider aligned with content start — mirrors InsightCard (Dashboard.jsx:1082) */}
+        <div style={{ height: 1, background: C.border, marginBottom: 14, marginLeft: 38 }} />
+
+        {/* 2-col body — Why it works (blue tint) + Description (white + amber left bar + shadow). Amber left bar = ordinal identity, matching top border + rank badge. */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.6fr', gap: 8, marginLeft: 38 }}>
+          {/* Why it works — blue tint, matches InsightCard's Why now */}
+          <div style={{ background: 'rgba(79,134,247,0.07)', border: '1px solid rgba(79,134,247,0.12)', borderRadius: 10, padding: '12px 14px' }}>
+            <p style={{ fontSize: 10, fontWeight: 700, color: '#4a7cf7', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Why it works</p>
+            <p style={{ fontSize: 13, color: C.text1, lineHeight: 1.65 }}>{d.why_it_works}</p>
+          </div>
+
+          {/* Description — white + amber left bar + shadow, matches InsightCard's Action block */}
+          <div style={{
+            background: '#ffffff',
+            border: `1px solid ${C.border}`,
+            borderLeft: `3px solid ${C.amber}`,
+            borderRadius: '0 10px 10px 0',
+            padding: '12px 16px',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
+            display: 'flex', flexDirection: 'column',
+          }}>
+            <p style={{ fontSize: 10, fontWeight: 700, color: C.amber, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>
+              {expanded ? 'Full description' : 'Preview'}
+            </p>
+            {!expanded ? (
+              <p style={{ fontSize: 13, color: C.text1, lineHeight: 1.7, margin: 0 }}>{d.preview}</p>
+            ) : (
+              <pre style={{ fontSize: 12.5, color: C.text1, lineHeight: 1.75, whiteSpace: 'pre-wrap', fontFamily: "'Inter', system-ui, sans-serif", margin: 0 }}>
+                {d.full}
+              </pre>
+            )}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 14, justifyContent: 'flex-end' }}>
+              <button onClick={() => setExpanded(v => !v)} className="seo-btn">
+                {expanded ? '↑ Collapse' : '↓ Show full'}
+              </button>
+              <button onClick={() => onCopy(d.full, idx)} className="seo-btn-primary" style={{ fontSize: 12, padding: '9px 18px' }}>
+                {isCopied ? '✓ Copied' : 'Copy description'}
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
