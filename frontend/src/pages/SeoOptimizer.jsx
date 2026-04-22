@@ -772,7 +772,7 @@ export default function SeoOptimizer({ onNavigate }) {
             <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 14, gap: 8 }}>
               <span style={{ fontSize: 11, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Preview on YouTube</span>
               <span style={{ fontSize: 11, color: C.text3, whiteSpace: 'nowrap' }}>
-                {title.trim() ? (anyCut ? 'check truncation' : 'all surfaces') : '3 surfaces'}
+                3 surfaces · desktop, mobile, feed
               </span>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
@@ -871,14 +871,14 @@ export default function SeoOptimizer({ onNavigate }) {
                     boxShadow: '0 1px 2px rgba(0,0,0,0.03)',
                     transition: 'border-color 0.2s, box-shadow 0.2s, transform 0.2s',
                   }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 7 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
                     <div style={{
-                      width: 20, height: 20, borderRadius: 6,
+                      width: 26, height: 26, borderRadius: 8,
                       background: fmt.color,
                       display: 'flex', alignItems: 'center', justifyContent: 'center',
                       flexShrink: 0,
                     }}>
-                      <span style={{ fontSize: 10, fontWeight: 700, color: '#ffffff', fontVariantNumeric: 'tabular-nums', lineHeight: 1 }}>{i + 1}</span>
+                      <span style={{ fontSize: 12, fontWeight: 900, color: '#ffffff', fontVariantNumeric: 'tabular-nums' }}>{i + 1}</span>
                     </div>
                     <span style={{ fontSize: 10, fontWeight: 700, color: fmt.color, textTransform: 'uppercase', letterSpacing: '0.08em', lineHeight: 1 }}>{fmt.label}</span>
                   </div>
