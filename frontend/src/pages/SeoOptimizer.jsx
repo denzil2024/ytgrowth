@@ -1281,7 +1281,10 @@ export default function SeoOptimizer({ onNavigate }) {
                     <div key={i} className="seo-suggestion-card" style={{
                       marginBottom: 0,
                       borderTop: `3px solid ${C.amber}`,
-                      borderColor: isSelected ? 'rgba(229,37,27,0.30)' : copied === i ? 'rgba(5,150,105,0.30)' : '#e6e6ec',
+                      // Use side-specific color props so the amber top stripe isn't wiped by the shorthand.
+                      borderLeftColor:   isSelected ? 'rgba(229,37,27,0.30)' : copied === i ? 'rgba(5,150,105,0.30)' : '#e6e6ec',
+                      borderRightColor:  isSelected ? 'rgba(229,37,27,0.30)' : copied === i ? 'rgba(5,150,105,0.30)' : '#e6e6ec',
+                      borderBottomColor: isSelected ? 'rgba(229,37,27,0.30)' : copied === i ? 'rgba(5,150,105,0.30)' : '#e6e6ec',
                       background: isSelected ? '#fff8f8' : copied === i ? '#f6fdf9' : '#ffffff',
                     }}>
                       <div style={{ padding: '16px 22px 18px' }}>
