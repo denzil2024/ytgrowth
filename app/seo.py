@@ -532,84 +532,95 @@ def _score_title(title: str, top_titles: list[str]) -> dict:
 # title text against the live keyword + competitor data — so rankings are stable,
 # repeatable, and explainable.
 
-_SPECIFICITY_PATTERN  = re.compile(
-    r"("
-    r"\$[\d,]+|"                                                 # $500, $5,000
-    r"[A-Za-z]{2,5}\s?[\d,]{2,}|"                                # Ksh 12,000 / KES 3000 / USD 50
-    r"\d+%|"                                                     # 50%
-    r"\d+\s*(hour|day|week|month|year|min|sec)s?|"               # 24 hours, 7 days
-    r"\d+\s*(k|m|b)\b|"                                          # 10k, 5m
-    r"\$?\d{2,}|"                                                # 24, 100, 1000
-    r"\b(for\s+a\s+(day|week|month|year))\b|"                    # "for a week", "for a month"
-    r"\b(in\s+(a|one)\s+(day|week|month|year))\b|"               # "in a day", "in one month"
-    r"\bfrom\s+scratch\b|\bby\s+myself\b|\balone\b|"             # confession-style specificity
-    r"\bon\s+a\s+budget\b|\bunder\s+budget\b"                    # budget framings
-    r")",
-    re.IGNORECASE,
-)
-_CONTRAST_PATTERN     = re.compile(r"\b(vs\.?|versus|before|after|but|instead|actually|really|truth|reality|honest|worth it)\b", re.IGNORECASE)
-# Curiosity: explicit question words + implicit open-loop phrases + challenge/journey framings.
-_CURIOSITY_PATTERN    = re.compile(
-    r"\b(why|how|what|which|secret|reason|nobody|no one|wish|never|until|behind|inside|"
-    r"actually|finally|did i|did it|did we|did they|does it|can i|will i|will it|is it|"
-    r"surviving|trying|testing|tested|tried|cover|covers|covered|works?|worked|really|"
-    r"challenge|challenged|experiment|experimented|reset|makeover|transformation|transformed|"
-    r"reinvented|redesigned|rebuilt|overhaul|rebooted|reimagined)\b",
-    re.IGNORECASE,
-)
-# Present-tense verb openers that signal journey/story — reward alongside power words as a valid strong opener.
-_VERB_OPENER          = re.compile(r"^(surviving|trying|testing|spending|making|cooking|shopping|building|going|coming|inside|watch|meet|come|live|turning|finding|learning|growing|cooked|made|tested|tried|built|survived|transformed)\b", re.IGNORECASE)
-# First-person ownership — emotional anchor for vlog/personal content.
-_PERSONAL_VOICE       = re.compile(r"\b(i|i'?m|my|me|we|our|us)\b", re.IGNORECASE)
-_GENERIC_CLICKBAIT    = re.compile(r"\b(shocking|unbelievable|insane|crazy|you won'?t believe|gone wrong|must watch)\b", re.IGNORECASE)
+# Minimal structural patterns only — no word-list matching for subjective qualities
+# like curiosity, contrast, or emotion. Those are Claude's job to judge.
+_DIGIT_PRESENCE       = re.compile(r"\d")                          # Used for "has any number" — structural, not word-bingo
+_PERSONAL_PRONOUN     = re.compile(r"^(i|my|we|our|i'?m)\b", re.IGNORECASE)  # Used only for opening-strength check
 
 
 def _tokenize(text: str) -> list[str]:
-    return [w.strip(".,!?\"'()[]:") for w in text.lower().split() if w.strip()]
+    return [w.strip(".,!?\"'()[]:|") for w in text.lower().split() if w.strip()]
 
 
-def _score_suggestion_rubric(title: str, top_titles: list[str], keyword_scores: list[dict] | None, primary_keyword: str = "") -> dict:
+def _stem(w: str) -> str:
+    """Trivial stemmer so "shop", "shopping", "shopped" all collapse to the same root.
+    Not linguistically rigorous — just good enough for keyword overlap matching."""
+    for suffix in ("ing", "ed", "es", "er", "s"):
+        if len(w) > len(suffix) + 2 and w.endswith(suffix):
+            return w[: -len(suffix)]
+    return w
+
+
+def _fuzzy_overlap_count(pk_words: set[str], title_words: set[str]) -> int:
+    """Count how many primary-keyword words appear in the title, matching via
+    exact → prefix either direction → stem equality."""
+    count = 0
+    for pkw in pk_words:
+        pkw_stem = _stem(pkw)
+        for tw in title_words:
+            if tw == pkw:
+                count += 1; break
+            if len(tw) >= 4 and len(pkw) >= 4 and (tw.startswith(pkw) or pkw.startswith(tw)):
+                count += 1; break
+            if len(tw) >= 4 and _stem(tw) == pkw_stem:
+                count += 1; break
+    return count
+
+
+def _score_suggestion_rubric(
+    title: str,
+    top_titles: list[str],
+    keyword_scores: list[dict] | None,
+    primary_keyword: str = "",
+    claude_ctr: int | None = None,
+    claude_hook: int | None = None,
+) -> dict:
     """
     Returns { seo, ctr, hook, combined, breakdown } for a single suggested title.
-    Combined = SEO * 0.30 + CTR * 0.40 + Hook * 0.30  (CTR is the viewer's first decision).
 
-    Rubric is calibrated so a solid creative title (good length, keyword word-overlap,
-    concrete detail, personal voice, strong opener) lands in the 70-85 range — not 45-55.
+    SEO is PURELY STRUCTURAL (length, keyword overlap, anti-stuffing, pipe discipline) —
+    no word-list matching. CTR and Hook come from Claude's own judgement against the
+    rubric embedded in the prompt; Claude has seen the competitor data and is better at
+    judging emotional pull and opener strength than any regex.
+
+    If Claude's scores are missing we fall back to 55 (neutral) — not 0 — so the title
+    still ranks sensibly.
     """
     t = title.strip()
     t_lower = t.lower()
     words = _tokenize(t)
     length = len(t)
 
-    # ───── SEO (0-100) ─────
+    # ───── SEO (0-100) — purely structural ─────
     seo = 0
-    # Length compliance (0-25). Range widened to 50-75 — pipe-structured titles need the room.
-    if 50 <= length <= 75:    seo += 25
-    elif 40 <= length <= 85:  seo += 18
-    elif 30 <= length < 40:   seo += 10
+
+    # Length compliance (0-30). Widened to 50-75 so pipe-structured titles fit comfortably.
+    if 50 <= length <= 75:    seo += 30
+    elif 40 <= length <= 85:  seo += 20
+    elif 30 <= length < 40:   seo += 12
     else:                     seo += 0
 
-    # Primary keyword — WORD-LEVEL overlap, not substring. "shopping haul kenya" vs
-    # "Ksh 12,000 Monthly Shop" should register the partial match on "shop", not zero out.
+    # Primary keyword — fuzzy stem-match so shop/shopping/shopped collapse.
     pk = (primary_keyword or "").strip().lower()
     pk_words = set(w for w in pk.split() if len(w) > 2)
     title_word_set = set(words)
     if pk_words:
-        overlap_ct = len(pk_words & title_word_set)
+        overlap_ct = _fuzzy_overlap_count(pk_words, title_word_set)
         overlap_ratio = overlap_ct / len(pk_words)
-        first_half = t_lower[: max(1, len(t) // 2)]
+        first_half_words = set(_tokenize(t_lower[: max(1, len(t) // 2)]))
+        first_half_match = _fuzzy_overlap_count(pk_words, first_half_words) > 0
         if overlap_ratio >= 1.0:
-            seo += 35 if any(w in first_half for w in pk_words) else 26
+            seo += 35 if first_half_match else 26
         elif overlap_ratio >= 0.5:
-            seo += 22
+            seo += 24 if first_half_match else 20
         elif overlap_ratio > 0:
-            seo += 14
+            seo += 16
         else:
-            seo += 4  # not zero — title can still be SEO-valid via secondary keywords
+            seo += 6
     else:
-        seo += 22  # no primary given — don't penalise
+        seo += 24
 
-    # Secondary keyword coverage (0-25) — word-overlap count across top 10 keyword phrases.
+    # Secondary keyword coverage (0-20) — fuzzy overlap against the top 10 keyword phrases.
     if keyword_scores:
         hits = 0
         seen_phrases = set()
@@ -619,110 +630,41 @@ def _score_suggestion_rubric(title: str, top_titles: list[str], keyword_scores: 
                 continue
             seen_phrases.add(phrase)
             phrase_words = set(w for w in phrase.split() if len(w) > 2)
-            if phrase_words and len(phrase_words & title_word_set) >= min(2, len(phrase_words)):
+            if phrase_words and _fuzzy_overlap_count(phrase_words, title_word_set) >= min(2, len(phrase_words)):
                 hits += 1
-        seo += min(hits * 7, 25)
+        seo += min(hits * 6, 20)
     else:
         seo += 10
 
-    # Anti-keyword-stuffing (0-15)
+    # Pipe structure bonus (0-10) — required format, reward compliance.
+    pipe_structure_valid = False
+    if "|" in t:
+        parts = [p.strip() for p in t.split("|") if p.strip()]
+        if len(parts) == 2 and all(len(p.split()) >= 2 for p in parts):
+            pipe_structure_valid = True
+            seo += 10
+
+    # Anti-keyword-stuffing (0-5)
     if pk:
         repeats = t_lower.count(pk) if pk in t_lower else 0
-        seo += 15 if repeats <= 1 else (8 if repeats == 2 else 0)
+        seo += 5 if repeats <= 1 else (2 if repeats == 2 else 0)
     else:
-        seo += 12
+        seo += 5
 
     seo = min(seo, 100)
 
-    # ───── CTR (0-100) — does the viewer's thumb stop scrolling ─────
-    ctr = 0
-    # Specificity (0-30): numbers, dollar/currency, timeframes
-    has_specificity = bool(_SPECIFICITY_PATTERN.search(t))
-    if has_specificity:
-        ctr += 30
+    # ───── CTR + Hook come from Claude (scored in the prompt against an explicit rubric) ─────
+    # Validate and clamp. Fallback to 55 (below-average-but-not-dead) if Claude omitted.
+    def _clean_score(raw):
+        if raw is None: return 55
+        try:
+            v = int(round(float(raw)))
+        except (ValueError, TypeError):
+            return 55
+        return max(0, min(100, v))
 
-    # Emotional contrast / turn (0-15)
-    has_contrast = bool(_CONTRAST_PATTERN.search(t))
-    if has_contrast:
-        ctr += 15
-
-    # Curiosity — broader: explicit questions, journey verbs, open-loop implications, "?" ending
-    has_curiosity = bool(_CURIOSITY_PATTERN.search(t)) or t.endswith("?")
-    if has_curiosity:
-        ctr += 25
-
-    # Power-word discipline — 1 is ideal, more than 2 reads as spam
-    power_hits = sum(1 for w in words if w in POWER_WORDS)
-    if power_hits == 0:    ctr += 10
-    elif power_hits == 1:  ctr += 15
-    elif power_hits == 2:  ctr += 10
-    else:                  ctr += 0
-
-    # Personal voice (0-5) — "my", "i", "me" signals authentic creator content
-    if _PERSONAL_VOICE.search(t):
-        ctr += 5
-
-    # Not generic clickbait (0-10)
-    ctr += 0 if _GENERIC_CLICKBAIT.search(t) else 10
-
-    ctr = min(ctr, 100)
-
-    # ───── Hook (0-100) — opening strength + pattern interrupt vs competitor set ─────
-    hook = 0
-
-    # Opening strength (0-25) — any of: keyword/question/number, power word, strong verb opener, personal pronoun
-    first_three = words[:3]
-    strong_first = (
-        any(w in POWER_WORDS or w in QUESTION_STARTERS for w in first_three)
-        or any(re.search(r"\d", w) for w in first_three)
-        or bool(pk_words and words and words[0] in pk_words)
-        or bool(_VERB_OPENER.match(t))
-        or (words and words[0] in {"i", "my", "me", "we"})
-    )
-    hook += 25 if strong_first else 14
-
-    # Pattern interrupt vs competitors (0-25). Low floor of 8 so a niche with overlapping
-    # vocabulary doesn't crater every title.
-    if top_titles and words:
-        competitor_words = set()
-        for ct in top_titles[:15]:
-            for w in _tokenize(ct):
-                if len(w) > 3 and w not in _TITLE_NOISE:
-                    competitor_words.add(w)
-        meaningful_title_words = [w for w in words if len(w) > 3 and w not in _TITLE_NOISE]
-        if meaningful_title_words:
-            novel = [w for w in meaningful_title_words if w not in competitor_words]
-            novelty_ratio = len(novel) / len(meaningful_title_words)
-            hook += max(8, int(novelty_ratio * 25))
-        else:
-            hook += 15
-    else:
-        hook += 15
-
-    # Concrete stakes / outcome (0-25)
-    outcome_verbs = re.compile(
-        r"\b(grew|made|built|earned|lost|gained|turned|went from|saved|doubled|tripled|quit|"
-        r"fixed|broke|survived|surviving|tested|tried|covers?|covered|discovered|found)\b",
-        re.IGNORECASE,
-    )
-    has_stakes = has_specificity or bool(outcome_verbs.search(t))
-    hook += 25 if has_stakes else 10
-
-    # Personal investment (0-15) — first-person ownership makes the viewer feel it's a real story
-    hook += 15 if _PERSONAL_VOICE.search(t) else 0
-
-    # Viral format match (0-10) — mild signal, don't overweight
-    hook += 10 if _detect_viral_format(t) else 4
-
-    # Pipe structure (0-10) — properly pipe-segmented titles get a bonus; the format is mandated
-    # by the prompt because it mirrors the creator's preferred confession/challenge style.
-    if "|" in t:
-        parts = [p.strip() for p in t.split("|") if p.strip()]
-        # Want exactly 2 meaningful beats, each at least 2 words.
-        if len(parts) == 2 and all(len(p.split()) >= 2 for p in parts):
-            hook += 10
-
-    hook = min(hook, 100)
+    ctr  = _clean_score(claude_ctr)
+    hook = _clean_score(claude_hook)
 
     combined = round(seo * 0.30 + ctr * 0.40 + hook * 0.30)
 
@@ -733,13 +675,10 @@ def _score_suggestion_rubric(title: str, top_titles: list[str], keyword_scores: 
         "combined": combined,
         "breakdown": {
             "length": length,
-            "primary_keyword_overlap": round((len(pk_words & title_word_set) / len(pk_words)) if pk_words else 1.0, 2),
-            "power_word_count": power_hits,
-            "has_specificity": has_specificity,
-            "has_contrast": has_contrast,
-            "has_curiosity": has_curiosity,
-            "has_personal_voice": bool(_PERSONAL_VOICE.search(t)),
-            "is_generic_clickbait": bool(_GENERIC_CLICKBAIT.search(t)),
+            "primary_keyword_overlap": round((_fuzzy_overlap_count(pk_words, title_word_set) / len(pk_words)) if pk_words else 1.0, 2),
+            "has_digit": bool(_DIGIT_PRESENCE.search(t)),
+            "has_personal_opening": bool(_PERSONAL_PRONOUN.match(t)),
+            "pipe_structure_valid": pipe_structure_valid,
         },
     }
 
@@ -966,8 +905,8 @@ PHASE 2 — GAP
 - overused_angle: the framing too many of the competitor titles share
 - gap_opportunity: the angle completely MISSING from every competitor title above. THIS is your differentiation wedge.
 
-PHASE 3 — 3 CREATIVE TITLES
-Write 3 titles, each aimed at the gap above. They must feel like titles a creator would write, not templates.
+PHASE 3 — 5 CREATIVE TITLES
+Write 5 titles (the system will keep only the strongest 3, so make every one count). Each aimed at the gap above, feeling like titles a creator would write, not templates.
 
 THE CREATIVE DNA you are aiming for (describe, do not copy):
 A strong title in this style reads like a confession or a dare — a real person narrating what they actually did, followed by a pipe and a second beat that names the challenge, the niche, or the geography. It should feel written, not assembled. Vivid verbs. Concrete stakes. Zero marketing language.
@@ -981,6 +920,9 @@ WHAT MAKES A TITLE WORK HERE:
 ANTI-GENERIC TEST (every title must pass):
 If you could swap the niche keyword in your title for a different topic and the title would still make sense, the title is TOO GENERIC. Each title must reference something specific that could ONLY belong to THIS niche, based on the competitor data above. Pull vocabulary and angle cues from the real competitor titles — not from generic YouTube title patterns.
 
+TOPIC PRESERVATION (critical):
+The user's core topic phrase must appear in at least 4 of the 5 titles in its FULL form, not abbreviated. If the user's topic is "shopping haul" → use "shopping haul" — NOT "shop", NOT "haul" alone. If it is "apartment tour" → use "apartment tour", not "apartment" or "tour" alone. Core noun phrases drive search ranking. Shortening them kills SEO and reads awkwardly. Preserve the phrase as-is.
+
 HARD RULES (enforced — any violation means the title is unusable):
 - 50–75 characters total, including spaces. Count exactly.
 - FORBIDDEN CHARACTERS: colons (:), hyphens (-), em-dashes (—), en-dashes (–). Do not use ANY of these.
@@ -992,7 +934,25 @@ HARD RULES (enforced — any violation means the title is unusable):
 - Each title must be DIFFERENT from the other two in both opening verb and the secondary framing — not 3 rephrasings.
 - No generic stock phrases: "You Won't Believe", "This Will Shock You", "The Ultimate Guide", "Everything You Need to Know". Any of these = automatic fail.
 
-Return ONLY this JSON (no markdown, no prose):
+YOU MUST ALSO SCORE EACH TITLE on two dimensions, 0-100 each. Be honest — weak titles deserve weak scores.
+
+CTR_SCORE — will the viewer's thumb stop and click?
+  90-100: strong specificity + emotional pull + pattern interrupt + clear payoff — this one earns the click
+  75-89 : good on two or three of: specificity / emotion / curiosity / structure; would perform above niche average
+  60-74 : readable and solid, but the framing is familiar — middle of the pack
+  40-59 : generic or vague; nothing to make a viewer stop
+  below 40 : templated, clickbaity, or forgettable
+
+HOOK_SCORE — does the opening (first 3-5 words) make you stop scrolling?
+  90-100: unexpected specific opener that could only belong to this video
+  75-89 : strong first-person or verb-forward opener with concrete subject
+  60-74 : standard but functional opener
+  40-59 : weak, hedging, or filler opening ("See How I...", "Here's Why...")
+  below 40 : generic opener that could belong to any video
+
+Be strict. Most first-draft titles sit in the 60-74 band. A 90+ should be rare.
+
+Return ONLY this JSON (no markdown, no prose). Include ALL 5 titles — the system will rank them and keep the best 3.
 {{
   "analysis": {{
     "search_intent": "...",
@@ -1004,89 +964,102 @@ Return ONLY this JSON (no markdown, no prose):
     "gap_opportunity": "..."
   }},
   "titles": [
-    {{
-      "title": "<50-70 chars, no colon>",
-      "primary_keyword": "<the keyword this title anchors on>",
-      "angle": "<1 sentence: why YouTube will distribute this to fresh viewers, anchored to the gap>",
-      "why_it_works": "<1 sentence: what emotion the viewer feels on seeing it>"
-    }},
-    {{
-      "title": "<different opening, different angle>",
-      "primary_keyword": "...",
-      "angle": "...",
-      "why_it_works": "..."
-    }},
-    {{
-      "title": "<third distinct angle>",
-      "primary_keyword": "...",
-      "angle": "...",
-      "why_it_works": "..."
-    }}
+    {{"title": "<50-75 chars, pipe-structured, no colon/hyphen>", "primary_keyword": "<anchor keyword>", "angle": "<why YouTube pushes it>", "why_it_works": "<emotion the viewer feels>", "ctr_score": 0, "hook_score": 0}},
+    {{"title": "...", "primary_keyword": "...", "angle": "...", "why_it_works": "...", "ctr_score": 0, "hook_score": 0}},
+    {{"title": "...", "primary_keyword": "...", "angle": "...", "why_it_works": "...", "ctr_score": 0, "hook_score": 0}},
+    {{"title": "...", "primary_keyword": "...", "angle": "...", "why_it_works": "...", "ctr_score": 0, "hook_score": 0}},
+    {{"title": "...", "primary_keyword": "...", "angle": "...", "why_it_works": "...", "ctr_score": 0, "hook_score": 0}}
   ]
 }}"""
 
-    try:
-        raw = _call_sonnet(client, prompt)
+    def _clean_one_title(raw_t: dict) -> dict | None:
+        """Run safety-net cleanup on a single raw title dict, return the scored suggestion."""
+        title_text = _to_title_case((raw_t.get("title") or "").strip().strip('"'))
+        if not title_text or len(title_text) < 15:
+            return None
 
-        # Strip markdown code fences if present
+        # Punctuation + year safety net — non-negotiable rules we enforce even if Claude slips.
+        title_text = title_text.replace("—", " | ").replace("–", " | ")
+        title_text = title_text.replace(":", " | ")
+        title_text = re.sub(r"\s[-–—]\s", " | ", title_text)
+        title_text = re.sub(r"\s+(?:in\s+)?20[2-9][0-9]\b", "", title_text, flags=re.IGNORECASE)
+        title_text = re.sub(r"\b20[2-9][0-9]\s+", " ", title_text)
+        title_text = re.sub(r"\|\s*\|", "|", title_text)
+        title_text = re.sub(r"\s{2,}", " ", title_text).strip().strip("|").strip()
+
+        primary_kw = raw_t.get("primary_keyword", "") or niche
+        rubric = _score_suggestion_rubric(
+            title_text, top_titles, keyword_scores, primary_kw,
+            claude_ctr=raw_t.get("ctr_score"),
+            claude_hook=raw_t.get("hook_score"),
+        )
+        heuristic = _score_title(title_text, top_titles)
+        return {
+            "title": title_text,
+            "score": rubric["combined"],
+            "seo_score": rubric["seo"],
+            "ctr_score": rubric["ctr"],
+            "hook_score": rubric["hook"],
+            "rubric": rubric["breakdown"],
+            "breakdown": heuristic["breakdown"],
+            "length": len(title_text),
+            "power_words_found": heuristic["power_words_found"],
+            "viral_format_detected": heuristic.get("viral_format_detected"),
+            "primary_keyword": primary_kw,
+            "angle": raw_t.get("angle", ""),
+            "why_it_works": raw_t.get("why_it_works", ""),
+            "hook": raw_t.get("hook", "curiosity"),
+            "strategy": "hybrid",
+        }
+
+    def _one_pass(prompt_text: str) -> tuple[list[dict], dict, str]:
+        """Single prompt → parse → score → return (suggestions, analysis, raw response text)."""
+        raw = _call_sonnet(client, prompt_text)
         clean = raw.strip()
         if clean.startswith("```"):
             clean = re.sub(r"^```[a-z]*\n?", "", clean)
             clean = re.sub(r"\n?```$", "", clean.strip())
-
         data = _json.loads(clean)
         analysis = data.get("analysis", {})
         raw_titles = data.get("titles", [])
+        scored = []
+        for t in raw_titles[:5]:  # Claude asked for 5
+            s = _clean_one_title(t)
+            if s:
+                scored.append(s)
+        return scored, analysis, raw
 
-        suggestions = []
-        for t in raw_titles[:3]:
-            title_text = _to_title_case(t.get("title", "").strip().strip('"'))
-            if not title_text or len(title_text) < 15:
-                continue
+    try:
+        # PASS 1
+        scored, analysis, raw = _one_pass(prompt)
+        scored.sort(key=lambda s: s["score"], reverse=True)
+        top3 = scored[:3]
 
-            # Safety net: punctuation and year rules are non-negotiable, so enforce them here
-            # even if Claude slips up. Colons and hyphens get converted to pipes (the preferred
-            # divider). Em/en-dashes also become pipes. Year tokens are stripped.
-            title_text = title_text.replace("—", " | ").replace("–", " | ")
-            # Replace colons with pipes. Use " | " so words don't run together.
-            title_text = title_text.replace(":", " | ")
-            # Replace separator hyphens (space-hyphen-space) with pipes — keep internal hyphens like "first-person" alone.
-            title_text = re.sub(r"\s[-–—]\s", " | ", title_text)
-            # Strip any year tokens (2020-2099) — the creator doesn't want year-stamped titles.
-            title_text = re.sub(r"\s+(?:in\s+)?20[2-9][0-9]\b", "", title_text, flags=re.IGNORECASE)
-            title_text = re.sub(r"\b20[2-9][0-9]\s+", " ", title_text)
-            # Collapse any doubled pipes / trailing pipes / extra whitespace.
-            title_text = re.sub(r"\|\s*\|", "|", title_text)
-            title_text = re.sub(r"\s{2,}", " ", title_text).strip().strip("|").strip()
+        # Quality floor: if fewer than 3 titles passed parsing, or the weakest of the top 3
+        # is below 80, ask Claude for a second batch with stronger guidance and merge.
+        if len(top3) < 3 or (top3 and top3[-1]["score"] < 80):
+            retry_prompt = prompt + (
+                "\n\nIMPORTANT — FIRST PASS WAS INSUFFICIENT. "
+                "Write 5 NEW titles that are strictly stronger than your previous attempt: "
+                "sharper specificity, more vivid first-person openers, tighter pipe structure, "
+                "and fresh angles that don't overlap the competitor framing. Keep all prior rules."
+            )
+            try:
+                retry_scored, retry_analysis, _ = _one_pass(retry_prompt)
+                # Merge both batches, dedupe by lowercased title, keep best 3 by combined score.
+                combined_pool = {s["title"].lower(): s for s in scored}
+                for s in retry_scored:
+                    combined_pool.setdefault(s["title"].lower(), s)
+                merged = sorted(combined_pool.values(), key=lambda s: s["score"], reverse=True)
+                scored = merged
+                top3 = scored[:3]
+                # Prefer the retry's analysis block if the original was empty.
+                if not analysis and retry_analysis:
+                    analysis = retry_analysis
+            except Exception as retry_err:
+                print(f"Retry pass failed (using pass 1 results): {retry_err}")
 
-            primary_kw = t.get("primary_keyword", "") or niche
-            rubric = _score_suggestion_rubric(title_text, top_titles, keyword_scores, primary_kw)
-            heuristic = _score_title(title_text, top_titles)  # kept for legacy "breakdown" field
-            suggestions.append({
-                "title": title_text,
-                # Scores now deterministic — computed from the title + competitor/keyword data.
-                "score": rubric["combined"],
-                "seo_score": rubric["seo"],
-                "ctr_score": rubric["ctr"],
-                "hook_score": rubric["hook"],
-                "rubric": rubric["breakdown"],
-                "breakdown": heuristic["breakdown"],
-                "length": len(title_text),
-                "power_words_found": heuristic["power_words_found"],
-                "viral_format_detected": heuristic.get("viral_format_detected"),
-                "primary_keyword": primary_kw,
-                "angle": t.get("angle", ""),
-                "why_it_works": t.get("why_it_works", ""),
-                # Frontend still expects these keys; keep for compatibility but fill them sensibly.
-                "hook": t.get("hook", "curiosity"),
-                "strategy": "hybrid",
-            })
-
-        # Best title first — the Title Scorecard hero + "Use this" selection flow
-        # all assume suggestions[0] is the strongest option.
-        suggestions.sort(key=lambda s: s["score"], reverse=True)
-
-        return suggestions, analysis, ""
+        return top3, analysis, ""
 
     except Exception as e:
         print(f"Claude error: {e}\nRaw response: {raw if 'raw' in dir() else 'none'}")
