@@ -1058,75 +1058,154 @@ export default function SeoOptimizer({ onNavigate }) {
             </div>
           )}
 
-          {/* ── Search intent analysis — TWO side-by-side cards, mirrors Overview's
-                "Quick wins + Biggest risk / What's working" pattern (Dashboard.jsx:2209-2260).
-                Each column owns its own dividers, so row alignment across columns is a non-problem. ── */}
+          {/* ── Search intent analysis — redesigned: a persona header card + keyword strip + 2-col verdict row.
+                Every card carries an icon badge, its own color accent, and actual type hierarchy inside.
+                Raw " - " separators from Claude's output are stripped so prose reads cleanly. ── */}
           {result.intent_analysis?.search_intent && (() => {
-            const roleLabel = (color) => ({
-              fontSize: 11, fontWeight: 700, color, letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 8,
-            })
-            const roleBody = { fontSize: 14, color: C.text1, lineHeight: 1.7 }
-            const roleBodyMuted = { fontSize: 14, color: C.text2, lineHeight: 1.7 }
-            const subBlock = { paddingTop: 16, marginTop: 16, borderTop: `1px solid ${C.border}` }
-
-            const hasGap = !!result.intent_analysis.gap_opportunity
-            const hasKeywords = result.intent_analysis.top_keywords?.length > 0
-            const hasOverused = !!result.intent_analysis.overused_angle
+            const ia = result.intent_analysis
+            // Clean Claude's prose: convert " - " (sentence separator) to ", " so reading isn't broken by hyphens.
+            const clean = s => typeof s === 'string'
+              ? s.replace(/\s+[-–—]\s+/g, ', ').replace(/\s+,\s*/g, ', ').replace(/\s{2,}/g, ' ').trim()
+              : s
+            const searchIntent   = clean(ia.search_intent)
+            const viewerProfile  = clean(ia.viewer_profile)
+            const emotionalDrv   = clean(ia.emotional_driver)
+            const gap            = clean(ia.gap_opportunity)
+            const overused       = clean(ia.overused_angle)
+            const hasKeywords    = ia.top_keywords?.length > 0
+            const hasGap         = !!gap
+            const hasOverused    = !!overused
 
             return (
               <div style={{ marginBottom: 24, marginTop: 40 }}>
                 <div style={{ marginBottom: 20 }}>
                   <h2 style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', marginBottom: 4 }}>Search intent analysis</h2>
-                  <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.5 }}>What the audience wants · and the angle competitors are missing</p>
+                  <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.5 }}>Who this video is for · the gap that makes it travel · the angle already saturated</p>
                 </div>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, alignItems: 'stretch' }}>
-                  {/* LEFT — Who it's for (all-grey eyebrows; this side is descriptive, not actionable) */}
-                  <div className="seo-glass-card" style={{ borderRadius: 16, padding: '22px 24px', display: 'flex', flexDirection: 'column' }}>
-                    <div>
-                      <p style={roleLabel(C.text3)}>Search intent</p>
-                      <p style={roleBody}>{result.intent_analysis.search_intent}</p>
-                    </div>
-                    <div style={subBlock}>
-                      <p style={roleLabel(C.text3)}>Who's searching</p>
-                      <p style={roleBodyMuted}>{result.intent_analysis.viewer_profile}</p>
-                    </div>
-                    <div style={subBlock}>
-                      <p style={roleLabel(C.text3)}>Emotional driver</p>
-                      <p style={roleBodyMuted}>{result.intent_analysis.emotional_driver}</p>
-                    </div>
-                    {hasKeywords && (
-                      <div style={subBlock}>
-                        <p style={roleLabel(C.text3)}>Top keywords in competitor titles</p>
-                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 4 }}>
-                          {result.intent_analysis.top_keywords.map(kw => (
-                            <span key={kw} onClick={() => setTitle(kw)} style={T.chip}
-                              onMouseEnter={e => { e.currentTarget.style.background = '#f1f1f6'; e.currentTarget.style.borderColor = 'rgba(229,37,27,0.25)'; e.currentTarget.style.color = C.text1 }}
-                              onMouseLeave={e => { e.currentTarget.style.background = '#fafafb'; e.currentTarget.style.borderColor = '#e6e6ec'; e.currentTarget.style.color = C.text2 }}>{kw}</span>
-                          ))}
-                        </div>
+
+                {/* TOP: Viewer persona — full width, the single subject anchor */}
+                <div className="seo-glass-card" style={{ padding: '24px 28px', marginBottom: 14, display: 'flex', gap: 18, alignItems: 'flex-start' }}>
+                  <span style={{
+                    display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                    width: 44, height: 44, borderRadius: 13,
+                    background: 'linear-gradient(135deg, #ef4444 0%, #b91c1c 100%)',
+                    boxShadow: '0 4px 14px rgba(229,37,27,0.32), inset 0 1px 0 rgba(255,255,255,0.28)',
+                    flexShrink: 0, marginTop: 2,
+                  }}>
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="#ffffff">
+                      <path d="M12 12.8a4.6 4.6 0 1 0 0-9.2 4.6 4.6 0 0 0 0 9.2zM4 21.5c0-4.4 3.6-7.7 8-7.7s8 3.3 8 7.7c0 0.5-0.4 0.9-0.9 0.9H4.9c-0.5 0-0.9-0.4-0.9-0.9z"/>
+                    </svg>
+                  </span>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <p style={{ fontSize: 10.5, fontWeight: 700, color: C.text3, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>
+                      Who this video is for
+                    </p>
+                    <p style={{ fontSize: 16, fontWeight: 700, color: C.text1, lineHeight: 1.45, letterSpacing: '-0.2px', marginBottom: 10 }}>
+                      {viewerProfile}
+                    </p>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px 32px', fontSize: 13.5, lineHeight: 1.55, color: C.text2 }}>
+                      <div>
+                        <span style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.08em', textTransform: 'uppercase', display: 'block', marginBottom: 3 }}>
+                          Why they search
+                        </span>
+                        {searchIntent}
                       </div>
-                    )}
+                      <div>
+                        <span style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.08em', textTransform: 'uppercase', display: 'block', marginBottom: 3 }}>
+                          What they feel
+                        </span>
+                        {emotionalDrv}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* MIDDLE: Keyword strip — slim, full width, scannable */}
+                {hasKeywords && (
+                  <div style={{
+                    display: 'flex', alignItems: 'center', gap: 14, flexWrap: 'wrap',
+                    padding: '14px 20px',
+                    background: '#fafafb',
+                    border: '1px solid #e6e6ec',
+                    borderRadius: 12,
+                    marginBottom: 14,
+                  }}>
+                    <span style={{ fontSize: 10.5, fontWeight: 700, color: C.text3, letterSpacing: '0.08em', textTransform: 'uppercase', whiteSpace: 'nowrap', flexShrink: 0 }}>
+                      Words competitors are using
+                    </span>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                      {ia.top_keywords.map(kw => (
+                        <span key={kw} onClick={() => setTitle(kw)} style={T.chip}
+                          onMouseEnter={e => { e.currentTarget.style.background = '#f1f1f6'; e.currentTarget.style.borderColor = 'rgba(229,37,27,0.25)'; e.currentTarget.style.color = C.text1 }}
+                          onMouseLeave={e => { e.currentTarget.style.background = '#fafafb'; e.currentTarget.style.borderColor = '#e6e6ec'; e.currentTarget.style.color = C.text2 }}>{kw}</span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* BOTTOM: Verdict row — two equal cards with semantic color accents */}
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, alignItems: 'stretch' }}>
+                  {/* GREEN — Opportunity */}
+                  <div style={{
+                    background: 'linear-gradient(180deg, rgba(5,150,105,0.06) 0%, #ffffff 55%)',
+                    border: '1px solid rgba(5,150,105,0.22)',
+                    borderLeft: `4px solid ${C.green}`,
+                    borderRadius: '14px',
+                    padding: '20px 22px 22px',
+                    display: 'flex', flexDirection: 'column', gap: 14,
+                    boxShadow: '0 1px 2px rgba(0,0,0,0.03), 0 4px 14px rgba(5,150,105,0.06)',
+                  }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                      <span style={{
+                        display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                        width: 34, height: 34, borderRadius: 10,
+                        background: 'linear-gradient(135deg, #10b981 0%, #047857 100%)',
+                        boxShadow: '0 3px 10px rgba(5,150,105,0.32), inset 0 1px 0 rgba(255,255,255,0.28)',
+                        flexShrink: 0,
+                      }}>
+                        <svg width="17" height="17" viewBox="0 0 24 24" fill="#ffffff">
+                          <path d="M13 2.5 4 14.4h7l-1 7.1 9-11.9h-7z"/>
+                        </svg>
+                      </span>
+                      <p style={{ fontSize: 11, fontWeight: 800, color: '#047857', letterSpacing: '0.08em', textTransform: 'uppercase', margin: 0 }}>
+                        Opportunity gap
+                      </p>
+                    </div>
+                    <p style={{ fontSize: 14, fontWeight: 500, color: C.text1, lineHeight: 1.7, letterSpacing: '-0.05px', margin: 0 }}>
+                      {hasGap ? gap : 'No clear single gap detected. Explore the full keyword list below — each phrase represents a different angle you could own.'}
+                    </p>
                   </div>
 
-                  {/* RIGHT — The actionable side. Two semantic colors only: green for opportunity, red for warning. */}
-                  <div className="seo-glass-card" style={{ borderRadius: 16, padding: '22px 24px', display: 'flex', flexDirection: 'column' }}>
-                    {hasGap ? (
-                      <div>
-                        <p style={roleLabel(C.green)}>Gap opportunity — what competitors aren't doing</p>
-                        <p style={roleBody}>{result.intent_analysis.gap_opportunity}</p>
-                      </div>
-                    ) : (
-                      <div>
-                        <p style={roleLabel(C.text3)}>Angle to take</p>
-                        <p style={roleBodyMuted}>Explore the full keyword list below — every phrase is a different angle.</p>
-                      </div>
-                    )}
-                    {hasOverused && (
-                      <div style={subBlock}>
-                        <p style={roleLabel(C.red)}>Overused angle — avoid framing it this way</p>
-                        <p style={roleBodyMuted}>{result.intent_analysis.overused_angle}</p>
-                      </div>
-                    )}
+                  {/* RED — Avoid this framing */}
+                  <div style={{
+                    background: 'linear-gradient(180deg, rgba(229,37,27,0.06) 0%, #ffffff 55%)',
+                    border: '1px solid rgba(229,37,27,0.22)',
+                    borderLeft: `4px solid ${C.red}`,
+                    borderRadius: '14px',
+                    padding: '20px 22px 22px',
+                    display: 'flex', flexDirection: 'column', gap: 14,
+                    boxShadow: '0 1px 2px rgba(0,0,0,0.03), 0 4px 14px rgba(229,37,27,0.06)',
+                  }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                      <span style={{
+                        display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                        width: 34, height: 34, borderRadius: 10,
+                        background: 'linear-gradient(135deg, #ef4444 0%, #b91c1c 100%)',
+                        boxShadow: '0 3px 10px rgba(229,37,27,0.32), inset 0 1px 0 rgba(255,255,255,0.28)',
+                        flexShrink: 0,
+                      }}>
+                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round">
+                          <circle cx="12" cy="12" r="9"/>
+                          <line x1="5.5" y1="5.5" x2="18.5" y2="18.5"/>
+                        </svg>
+                      </span>
+                      <p style={{ fontSize: 11, fontWeight: 800, color: '#b91c1c', letterSpacing: '0.08em', textTransform: 'uppercase', margin: 0 }}>
+                        Avoid this framing
+                      </p>
+                    </div>
+                    <p style={{ fontSize: 14, fontWeight: 500, color: C.text1, lineHeight: 1.7, letterSpacing: '-0.05px', margin: 0 }}>
+                      {hasOverused ? overused : 'No single overused angle detected — you have creative latitude on framing.'}
+                    </p>
                   </div>
                 </div>
               </div>
