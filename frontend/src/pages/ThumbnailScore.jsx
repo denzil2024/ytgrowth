@@ -592,6 +592,97 @@ function HistoryPanel({ history, activeId, onSelect, onDelete }) {
 }
 
 /* ─── Upload panel (ideas dropdown + topic + file zone) ───────────────────── */
+/* Custom dropdown — replaces native <select> which renders as OS-default (ugly on Windows/Linux).
+   Supports options with a primary label, optional right-side meta chip, optional divider. Closes on outside click. */
+function Dropdown({ value, onChange, options, placeholder }) {
+  const [open, setOpen] = useState(false)
+  const wrapRef = useRef(null)
+  useEffect(() => {
+    const h = e => { if (wrapRef.current && !wrapRef.current.contains(e.target)) setOpen(false) }
+    if (open) document.addEventListener('mousedown', h)
+    return () => document.removeEventListener('mousedown', h)
+  }, [open])
+  const selected = options.find(o => o.value === value)
+  return (
+    <div ref={wrapRef} style={{ position: 'relative' }}>
+      <button
+        type="button"
+        onClick={() => setOpen(o => !o)}
+        style={{
+          width: '100%', boxSizing: 'border-box', textAlign: 'left',
+          border: `1px solid ${open ? 'rgba(229,37,27,0.35)' : C.border}`,
+          borderRadius: 10,
+          padding: '12px 40px 12px 14px', fontSize: 14,
+          color: selected ? C.text1 : C.text3,
+          background: '#fff', fontFamily: 'inherit', outline: 'none',
+          cursor: 'pointer', transition: 'border-color 0.15s, box-shadow 0.15s',
+          boxShadow: open ? '0 0 0 3px rgba(229,37,27,0.08)' : '0 1px 2px rgba(0,0,0,0.04)',
+          display: 'flex', alignItems: 'center', gap: 8,
+        }}>
+        <span style={{ flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+          {selected ? selected.label : placeholder}
+        </span>
+        {selected?.meta && (
+          <span style={{ fontSize: 11, fontWeight: 700, color: C.amber, background: C.amberBg, border: `1px solid ${C.amberBdr}`, borderRadius: 100, padding: '2px 8px', flexShrink: 0, fontVariantNumeric: 'tabular-nums' }}>
+            {selected.meta}
+          </span>
+        )}
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke={C.text3} strokeWidth="2"
+             style={{ position: 'absolute', right: 14, top: '50%', transform: `translateY(-50%) rotate(${open ? 180 : 0}deg)`, transition: 'transform 0.2s', pointerEvents: 'none' }}>
+          <path d="M2 4l4 4 4-4"/>
+        </svg>
+      </button>
+      {open && (
+        <div style={{
+          position: 'absolute', top: 'calc(100% + 6px)', left: 0, right: 0,
+          background: '#fff',
+          border: `1px solid rgba(0,0,0,0.1)`,
+          borderRadius: 12,
+          boxShadow: '0 4px 12px rgba(0,0,0,0.08), 0 16px 40px rgba(0,0,0,0.16)',
+          maxHeight: 320, overflowY: 'auto', overflowX: 'hidden',
+          padding: 6, zIndex: 20,
+          animation: 'thumbFadeUp 0.16s ease both',
+        }}>
+          {options.map((opt, i) => {
+            const isSelected = opt.value === value
+            return (
+              <div key={opt.value || `sep-${i}`}>
+                {opt.divider && <div style={{ height: 1, background: C.border, margin: '6px 8px' }}/>}
+                <button
+                  type="button"
+                  onClick={() => { onChange(opt.value); setOpen(false) }}
+                  onMouseEnter={e => { e.currentTarget.style.background = '#fafafb' }}
+                  onMouseLeave={e => { e.currentTarget.style.background = isSelected ? 'rgba(229,37,27,0.05)' : 'transparent' }}
+                  style={{
+                    width: '100%', boxSizing: 'border-box', textAlign: 'left',
+                    display: 'flex', alignItems: 'center', gap: 10,
+                    padding: '10px 12px', border: 'none', borderRadius: 8,
+                    background: isSelected ? 'rgba(229,37,27,0.05)' : 'transparent',
+                    cursor: 'pointer', fontFamily: 'inherit',
+                  }}>
+                  <span style={{ flex: 1, minWidth: 0, fontSize: 13.5, color: C.text1, fontWeight: isSelected ? 600 : 500, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                    {opt.label}
+                  </span>
+                  {opt.meta && (
+                    <span style={{ fontSize: 11, fontWeight: 700, color: C.amber, background: C.amberBg, border: `1px solid ${C.amberBdr}`, borderRadius: 100, padding: '2px 8px', flexShrink: 0, fontVariantNumeric: 'tabular-nums' }}>
+                      {opt.meta}
+                    </span>
+                  )}
+                  {isSelected && (
+                    <svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke={C.red} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+                      <polyline points="1.5,7.5 5.5,11.5 12.5,2.5"/>
+                    </svg>
+                  )}
+                </button>
+              </div>
+            )
+          })}
+        </div>
+      )}
+    </div>
+  )
+}
+
 function UploadPanel({ videoIdeas, hasIdeas, initialIdea, initialTopic, topicSource, onNavigate, onUpload }) {
   const inputRef = useRef(null)
   const [drag, setDrag]             = useState(false)
@@ -652,50 +743,49 @@ function UploadPanel({ videoIdeas, hasIdeas, initialIdea, initialTopic, topicSou
     onUpload(file, confirmedKeyword, videoTitle, selectedIdea ? selectedIdea.rank : null, selectedIdea)
   }
 
+  const dropdownOptions = [
+    ...videoIdeas.map(idea => ({
+      value: String(idea.rank),
+      label: `${idea.rank}. ${idea.title}`,
+      meta: `${idea.opportunityScore}/100`,
+    })),
+    { value: 'manual', label: 'My own topic', divider: true },
+  ]
+
   return (
-    <div style={{ maxWidth: 620, margin: '0 auto' }}>
-     {/* Elevated card wrapper — matches the SEO Optimizer / Overview design language instead of bare bg */}
-     <div className="tiq-card" style={{ padding: '24px 26px' }}>
+    <div style={{ maxWidth: 640, margin: '0 auto' }}>
+     {/* Elevated card — matches SEO Optimizer / Overview.
+         Section header inside gives the form an anchor rather than floating fields. */}
+     <div className="tiq-card" style={{ padding: '28px 30px' }}>
+
+      {/* Card header — tells the user what this card does */}
+      <div style={{ marginBottom: 22, paddingBottom: 18, borderBottom: `1px solid ${C.border}` }}>
+        <p style={{ fontSize: 11, fontWeight: 700, color: C.red, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Score a new thumbnail</p>
+        <p style={{ fontSize: 14, fontWeight: 600, color: C.text1, lineHeight: 1.55, letterSpacing: '-0.15px' }}>
+          Match your thumbnail to a video idea — you'll get a benchmark from the videos already winning on YouTube for that topic.
+        </p>
+      </div>
 
       {/* Part A: Video Ideas dropdown */}
       {hasIdeas && (
-        <div style={{ marginBottom: 14 }}>
+        <div style={{ marginBottom: 18 }}>
           <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 8 }}>
             Is this thumbnail for one of your video ideas?
           </p>
-          <div style={{ position: 'relative' }}>
-            <select
-              value={dropdownVal}
-              onChange={e => handleIdeaSelect(e.target.value)}
-              style={{
-                width: '100%', boxSizing: 'border-box',
-                border: `1px solid ${C.border}`, borderRadius: 10,
-                padding: '11px 36px 11px 14px', fontSize: 14, color: C.text1,
-                background: '#fff', fontFamily: 'inherit', outline: 'none',
-                appearance: 'none', cursor: 'pointer',
-              }}
-            >
-              <option value="">Select a video idea…</option>
-              {videoIdeas.map(idea => (
-                <option key={idea.rank} value={String(idea.rank)}>
-                  {idea.rank}. {idea.title} · {idea.opportunityScore}/100
-                </option>
-              ))}
-              <option value="manual">My own topic →</option>
-            </select>
-            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke={C.text3} strokeWidth="2"
-              style={{ position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }}>
-              <path d="M2 4l4 4 4-4"/>
-            </svg>
-          </div>
+          <Dropdown
+            value={dropdownVal}
+            onChange={handleIdeaSelect}
+            options={dropdownOptions}
+            placeholder="Select a video idea…"
+          />
 
           {selectedIdea && (
-            <div style={{ marginTop: 8 }}>
-              <p style={{ fontSize: 12, color: C.green, fontWeight: 600, marginBottom: 2 }}>
-                ✓ Using competitor-researched keyword: &quot;{selectedIdea.targetKeyword}&quot;
+            <div style={{ marginTop: 10, display: 'flex', flexDirection: 'column', gap: 3, background: C.greenBg, border: `1px solid ${C.greenBdr}`, borderLeft: `3px solid ${C.green}`, borderRadius: '0 10px 10px 0', padding: '10px 14px' }}>
+              <p style={{ fontSize: 12.5, color: C.green, fontWeight: 700, letterSpacing: '-0.1px' }}>
+                Using competitor-researched keyword: &quot;{selectedIdea.targetKeyword}&quot;
               </p>
               {selectedIdea.angle && (
-                <p style={{ fontSize: 12, color: C.text3 }}>Gap: {selectedIdea.angle}</p>
+                <p style={{ fontSize: 12, color: C.text2, lineHeight: 1.5 }}>Gap: {selectedIdea.angle}</p>
               )}
             </div>
           )}
@@ -721,10 +811,21 @@ function UploadPanel({ videoIdeas, hasIdeas, initialIdea, initialTopic, topicSou
           style={{
             width: '100%', boxSizing: 'border-box',
             border: `1px solid ${C.border}`, borderRadius: 10,
-            padding: '11px 14px', fontSize: 14,
+            padding: '12px 14px', fontSize: 14,
             color: selectedIdea ? C.text3 : C.text1,
             background: selectedIdea ? '#f7f7fa' : '#fff',
             fontFamily: 'inherit', outline: 'none',
+            boxShadow: '0 1px 2px rgba(0,0,0,0.04)',
+            transition: 'border-color 0.15s, box-shadow 0.15s',
+          }}
+          onFocus={e => {
+            if (selectedIdea) return
+            e.currentTarget.style.borderColor = 'rgba(229,37,27,0.35)'
+            e.currentTarget.style.boxShadow = '0 0 0 3px rgba(229,37,27,0.08)'
+          }}
+          onBlur={e => {
+            e.currentTarget.style.borderColor = C.border
+            e.currentTarget.style.boxShadow = '0 1px 2px rgba(0,0,0,0.04)'
           }}
         />
         {topicHint && (
