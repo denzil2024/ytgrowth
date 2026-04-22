@@ -1023,18 +1023,40 @@ export default function SeoOptimizer({ onNavigate }) {
                       </p>
                     )}
                   </div>
-                  {/* Divider */}
-                  <div style={{ width: 1, alignSelf: 'stretch', background: C.border, flexShrink: 0 }}/>
-                  {/* Verdict text */}
-                  <div style={{ flex: 1 }}>
-                    <p style={{ fontSize: 11, fontWeight: 600, color: C.text3, letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 10 }}>AI verdict</p>
-                    <p style={{ fontSize: 14, color: C.text1, lineHeight: 1.85 }}>
-                      Your strongest AI option scores <span style={{ fontWeight: 700, color: bestAvg >= 75 ? C.green : bestAvg >= 55 ? C.amber : C.red }}>{bestAvg}</span>
-                      {beatVerdict && <> — {beatVerdict}</>}.
-                      {strongest && weakest && strongest[0] !== weakest[0] && (
-                        <> Strongest on <span style={{ fontWeight: 700, color: C.text1 }}>{strongest[0].toLowerCase()}</span> ({strongest[1]}); room to grow on <span style={{ fontWeight: 700, color: C.text1 }}>{weakest[0].toLowerCase()}</span> ({weakest[1]}).</>
-                      )}
-                    </p>
+                  {/* Divider — amber 3px, matches the Priority Actions Action-box left bar in Overview (Dashboard.jsx:1098) */}
+                  <div style={{ width: 3, alignSelf: 'stretch', background: C.amber, flexShrink: 0, borderRadius: 2 }}/>
+                  {/* Verdict text (left) + Score breakdown (right) — breakdown rows mirror Category scores exactly (Dashboard.jsx:2103-2110) */}
+                  <div style={{ flex: 1, display: 'grid', gridTemplateColumns: '1.3fr 1fr', gap: 32, alignItems: 'start' }}>
+                    <div>
+                      <p style={{ fontSize: 11, fontWeight: 600, color: C.text3, letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 10 }}>AI verdict</p>
+                      <p style={{ fontSize: 14, color: C.text1, lineHeight: 1.85 }}>
+                        Your strongest AI option scores <span style={{ fontWeight: 700, color: bestAvg >= 75 ? C.green : bestAvg >= 55 ? C.amber : C.red }}>{bestAvg}</span>
+                        {beatVerdict && <> — {beatVerdict}</>}.
+                        {strongest && weakest && strongest[0] !== weakest[0] && (
+                          <> Strongest on <span style={{ fontWeight: 700, color: C.text1 }}>{strongest[0].toLowerCase()}</span> ({strongest[1]}); room to grow on <span style={{ fontWeight: 700, color: C.text1 }}>{weakest[0].toLowerCase()}</span> ({weakest[1]}).</>
+                        )}
+                      </p>
+                    </div>
+                    <div>
+                      <p style={{ fontSize: 11, fontWeight: 600, color: C.text3, letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 12 }}>Score breakdown</p>
+                      {[
+                        ['SEO',        bestSug.seo_score  || 0, '30%'],
+                        ['CTR appeal', bestSug.ctr_score  || 0, '40%'],
+                        ['Hook',       bestSug.hook_score || 0, '30%'],
+                      ].map(([label, val, weight]) => {
+                        const col = val >= 75 ? C.green : val >= 55 ? C.amber : C.red
+                        return (
+                          <div key={label} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
+                            <span style={{ fontSize: 11, fontWeight: 500, color: C.text3, flexShrink: 0, width: 30, textAlign: 'right' }}>{weight}</span>
+                            <span style={{ fontSize: 13, color: C.text2, fontWeight: 400, flexShrink: 0, width: 76 }}>{label}</span>
+                            <div style={{ flex: 1, height: 4, background: '#eeeef3', borderRadius: 99, overflow: 'hidden' }}>
+                              <div style={{ width: `${val}%`, height: '100%', background: col, borderRadius: 99, transition: 'width 0.8s cubic-bezier(0.34,1.56,0.64,1)' }}/>
+                            </div>
+                            <span style={{ fontSize: 13, fontWeight: 700, color: col, fontVariantNumeric: 'tabular-nums', minWidth: 26, textAlign: 'right' }}>{val || '—'}</span>
+                          </div>
+                        )
+                      })}
+                    </div>
                   </div>
                 </div>
               </div>
