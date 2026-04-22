@@ -1584,23 +1584,22 @@ export default function SeoOptimizer({ onNavigate }) {
                           </div>
                           <div style={{ flex: 1, minWidth: 0 }}>
                             <p style={{ fontSize: 14, fontWeight: 600, color: C.text1, lineHeight: 1.4, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', letterSpacing: '-0.1px' }}>{v.title}</p>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 4, flexWrap: 'nowrap', overflow: 'hidden' }}>
-                              <span style={{ fontSize: 12, color: C.text3, fontWeight: 500, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', minWidth: 0, maxWidth: 180 }}>{v.channel}</span>
-                              <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 12, color: C.text3, fontWeight: 500, fontVariantNumeric: 'tabular-nums', flexShrink: 0 }}>
-                                <svg width="11" height="11" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.6 }}><path d="M1 7s2.5-4.5 6-4.5S13 7 13 7s-2.5 4.5-6 4.5S1 7 1 7z"/><circle cx="7" cy="7" r="1.8"/></svg>
-                                {fmtNum(views)}
-                              </span>
-                              <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 12, color: C.text3, fontWeight: 500, fontVariantNumeric: 'tabular-nums', flexShrink: 0 }}>
-                                <svg width="11" height="11" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.6 }}><path d="M4 6v6.5H2V6h2zm2 0l2.2-4.5c.2-.4.6-.6 1-.5.5.1.8.5.8 1V5h2.5a1 1 0 0 1 1 1.2L12.3 11a1.5 1.5 0 0 1-1.5 1.3H6V6z"/></svg>
-                                {fmtNum(likes)}
-                              </span>
-                              <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 12, color: C.text3, fontWeight: 500, fontVariantNumeric: 'tabular-nums', flexShrink: 0 }}>
-                                <svg width="11" height="11" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.6 }}><path d="M12 9c0 .6-.4 1-1 1H5l-3 2.5V4c0-.6.4-1 1-1h8c.6 0 1 .4 1 1v5z"/></svg>
-                                {fmtNum(comments)}
-                              </span>
-                            </div>
+                            <p style={{ fontSize: 12, color: C.text3, marginTop: 3, fontWeight: 500, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{v.channel}</p>
                           </div>
-                          <div style={{ textAlign: 'right', flexShrink: 0 }}>
+                          {/* Tabular stat columns — VIEWS / LIKES / COMMENTS / SCORE, all right-aligned, matching Overview's label-above-value pattern */}
+                          <div style={{ textAlign: 'right', flexShrink: 0, width: 58 }}>
+                            <p style={{ fontSize: 14, fontWeight: 700, color: C.text1, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.2px', lineHeight: 1 }}>{fmtNum(views)}</p>
+                            <p style={{ fontSize: 10, fontWeight: 600, color: C.text3, marginTop: 4, letterSpacing: '0.08em', textTransform: 'uppercase' }}>views</p>
+                          </div>
+                          <div style={{ textAlign: 'right', flexShrink: 0, width: 52 }}>
+                            <p style={{ fontSize: 14, fontWeight: 700, color: C.text1, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.2px', lineHeight: 1 }}>{fmtNum(likes)}</p>
+                            <p style={{ fontSize: 10, fontWeight: 600, color: C.text3, marginTop: 4, letterSpacing: '0.08em', textTransform: 'uppercase' }}>likes</p>
+                          </div>
+                          <div style={{ textAlign: 'right', flexShrink: 0, width: 62 }}>
+                            <p style={{ fontSize: 14, fontWeight: 700, color: C.text1, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.2px', lineHeight: 1 }}>{fmtNum(comments)}</p>
+                            <p style={{ fontSize: 10, fontWeight: 600, color: C.text3, marginTop: 4, letterSpacing: '0.08em', textTransform: 'uppercase' }}>comments</p>
+                          </div>
+                          <div style={{ textAlign: 'right', flexShrink: 0, width: 44 }}>
                             <p style={{ fontSize: 17, fontWeight: 700, color: scColor, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.3px', lineHeight: 1 }}>{sc}</p>
                             <p style={{ fontSize: 10, fontWeight: 600, color: C.text3, marginTop: 4, letterSpacing: '0.08em', textTransform: 'uppercase' }}>score</p>
                           </div>
