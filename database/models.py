@@ -192,6 +192,34 @@ class CompetitorAnalysisCache(Base):
     analyzed_at   = Column(DateTime, default=_now)
 
 
+class SeoOptimization(Base):
+    """
+    One row per video the user optimized via SEO Optimizer (/seo/update-video).
+    Snapshots the pre-update stats so we can compare against current stats later
+    and prove the tool moved the numbers. Never deleted.
+    """
+    __tablename__ = "seo_optimizations"
+    id                  = Column(Integer, primary_key=True, autoincrement=True)
+    channel_id          = Column(String, nullable=False, index=True)
+    video_id            = Column(String, nullable=False, index=True)
+    thumbnail_url       = Column(Text,   nullable=True)
+    # Before snapshot (captured the moment the user clicked Update)
+    before_title        = Column(Text,   nullable=True)
+    before_description  = Column(Text,   nullable=True)
+    before_views        = Column(Integer, default=0)
+    before_likes        = Column(Integer, default=0)
+    before_comments     = Column(Integer, default=0)
+    # What the user changed to
+    after_title         = Column(Text,   nullable=True)
+    after_description   = Column(Text,   nullable=True)
+    optimized_at        = Column(DateTime, default=_now)
+    # Latest refreshed stats (populated lazily)
+    current_views       = Column(Integer, default=0)
+    current_likes       = Column(Integer, default=0)
+    current_comments    = Column(Integer, default=0)
+    stats_refreshed_at  = Column(DateTime, default=_now)
+
+
 class Milestone(Base):
     """One row per milestone tier a channel has crossed. (channel_id, category, tier) is unique."""
     __tablename__ = "milestones"

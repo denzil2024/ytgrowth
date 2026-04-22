@@ -4,9 +4,9 @@ from pydantic import BaseModel
 from app.seo import analyze_title, generate_description_suggestions, generate_thumbnail_text, optimize_video
 from app.keywords import generate_intent_options
 from routers.auth import get_session
-from database.models import SessionLocal, VideoOptimizeCache
+from database.models import SessionLocal, VideoOptimizeCache, SeoOptimization
 from app.analysis_gate import check_and_deduct, refund_credit
-import json
+import json, datetime
 
 router = APIRouter()
 
@@ -146,7 +146,7 @@ class UpdateVideoRequest(BaseModel):
 
 @router.post("/update-video")
 def update_video_route(body: UpdateVideoRequest, request: Request):
-    _, creds = get_session(request.session.get("session_id"))
+    data, creds = get_session(request.session.get("session_id"))
     if not creds:
         return JSONResponse({"error": "Not authenticated. Please login first."}, status_code=401)
     if not body.title and not body.description:
@@ -154,11 +154,21 @@ def update_video_route(body: UpdateVideoRequest, request: Request):
     try:
         from googleapiclient.discovery import build
         youtube = build("youtube", "v3", credentials=creds)
-        resp = youtube.videos().list(part="snippet", id=body.video_id).execute()
+        # Fetch snippet + statistics so we can snapshot the "before" state for result tracking
+        resp = youtube.videos().list(part="snippet,statistics", id=body.video_id).execute()
         items = resp.get("items", [])
         if not items:
             return JSONResponse({"error": "Video not found."}, status_code=404)
-        snippet = items[0]["snippet"]
+        snippet    = items[0]["snippet"]
+        statistics = items[0].get("statistics", {})
+
+        before_title       = snippet.get("title", "")
+        before_description = snippet.get("description", "")
+        before_views       = int(statistics.get("viewCount", 0))
+        before_likes       = int(statistics.get("likeCount", 0))
+        before_comments    = int(statistics.get("commentCount", 0))
+        thumbnail_url      = (snippet.get("thumbnails", {}).get("medium") or snippet.get("thumbnails", {}).get("default") or {}).get("url")
+
         if body.title:
             snippet["title"] = body.title
         if body.description:
@@ -167,6 +177,35 @@ def update_video_route(body: UpdateVideoRequest, request: Request):
             part="snippet",
             body={"id": body.video_id, "snippet": snippet},
         ).execute()
+
+        # Write SeoOptimization row — one per update, never merged, so the user
+        # can see each optimization attempt separately in "Your optimizations"
+        channel_id = (data or {}).get("channel", {}).get("channel_id", "")
+        if channel_id:
+            db = SessionLocal()
+            try:
+                row = SeoOptimization(
+                    channel_id         = channel_id,
+                    video_id           = body.video_id,
+                    thumbnail_url      = thumbnail_url,
+                    before_title       = before_title,
+                    before_description = before_description,
+                    before_views       = before_views,
+                    before_likes       = before_likes,
+                    before_comments    = before_comments,
+                    after_title        = body.title or before_title,
+                    after_description  = body.description or before_description,
+                    current_views      = before_views,
+                    current_likes      = before_likes,
+                    current_comments   = before_comments,
+                )
+                db.add(row)
+                db.commit()
+            except Exception as snap_err:
+                print(f"optimization snapshot error: {snap_err}")
+            finally:
+                db.close()
+
         return JSONResponse({"ok": True})
     except Exception as e:
         err = str(e)
@@ -177,6 +216,91 @@ def update_video_route(body: UpdateVideoRequest, request: Request):
                 status_code=403,
             )
         return JSONResponse({"error": err}, status_code=500)
+
+
+# ── Your optimizations — result tracking (shows the tool moved the numbers) ───
+
+@router.get("/optimizations")
+def list_optimizations(request: Request):
+    """
+    Returns every /seo/update-video optimization for this channel, with current
+    view/like/comment stats refreshed lazily if the snapshot is >6h old. The
+    frontend uses this to render the "Your optimizations" card at the top of
+    SEO Optimizer.
+    """
+    data, creds = get_session(request.session.get("session_id"))
+    if not data:
+        return JSONResponse({"error": "Not authenticated."}, status_code=401)
+    channel_id = data.get("channel", {}).get("channel_id", "") or data.get("channel_id", "")
+    if not channel_id:
+        return JSONResponse({"optimizations": []})
+
+    db = SessionLocal()
+    try:
+        rows = (
+            db.query(SeoOptimization)
+              .filter_by(channel_id=channel_id)
+              .order_by(SeoOptimization.optimized_at.desc())
+              .limit(20)
+              .all()
+        )
+        if not rows:
+            return JSONResponse({"optimizations": []})
+
+        # Lazy refresh: find rows whose stats snapshot is >6h old and re-fetch in one batch.
+        stale_cutoff = datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(hours=6)
+        stale_rows = [r for r in rows if _as_utc(r.stats_refreshed_at) < stale_cutoff]
+        if stale_rows and creds:
+            try:
+                from googleapiclient.discovery import build
+                youtube = build("youtube", "v3", credentials=creds)
+                # Batch in chunks of 50 (YouTube API limit)
+                stale_ids = [r.video_id for r in stale_rows]
+                for i in range(0, len(stale_ids), 50):
+                    batch = stale_ids[i:i+50]
+                    resp = youtube.videos().list(part="statistics", id=",".join(batch)).execute()
+                    stats_by_id = {
+                        item["id"]: item.get("statistics", {})
+                        for item in resp.get("items", [])
+                    }
+                    for r in stale_rows:
+                        if r.video_id in stats_by_id:
+                            s = stats_by_id[r.video_id]
+                            r.current_views    = int(s.get("viewCount", 0))
+                            r.current_likes    = int(s.get("likeCount", 0))
+                            r.current_comments = int(s.get("commentCount", 0))
+                            r.stats_refreshed_at = datetime.datetime.now(datetime.timezone.utc)
+                db.commit()
+            except Exception as e:
+                print(f"optimizations stats refresh error: {e}")
+
+        out = []
+        for r in rows:
+            out.append({
+                "video_id":          r.video_id,
+                "thumbnail_url":     r.thumbnail_url,
+                "before_title":      r.before_title,
+                "after_title":       r.after_title,
+                "before_views":      r.before_views or 0,
+                "before_likes":      r.before_likes or 0,
+                "before_comments":   r.before_comments or 0,
+                "current_views":     r.current_views or 0,
+                "current_likes":     r.current_likes or 0,
+                "current_comments":  r.current_comments or 0,
+                "optimized_at":      r.optimized_at.isoformat() if r.optimized_at else None,
+            })
+        return JSONResponse({"optimizations": out})
+    finally:
+        db.close()
+
+
+def _as_utc(dt):
+    """Normalise SQLite's naive datetimes to UTC for comparison."""
+    if dt is None:
+        return datetime.datetime.min.replace(tzinfo=datetime.timezone.utc)
+    if dt.tzinfo is None:
+        return dt.replace(tzinfo=datetime.timezone.utc)
+    return dt
 
 
 # ── Optimize cache (persisted to Postgres) ────────────────────────────────────
