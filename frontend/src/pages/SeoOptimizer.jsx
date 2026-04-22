@@ -1041,20 +1041,6 @@ export default function SeoOptimizer({ onNavigate }) {
             )
           })()}
 
-          {/* ── Stats row — label + big number + sub line, EXACTLY Overview's Stat component (Dashboard.jsx:1007-1016). No pills. ── */}
-          {(() => {
-            const compCount = result.videos_found || 0
-            const kwCount = result.keyword_scores?.length || 0
-            return (
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, minmax(0, 1fr))', gap: 16, marginBottom: 16 }}>
-                <MiniStat label="Competitors"     value={fmtNum(compCount)}                          sub="live YouTube results" />
-                <MiniStat label="Exact match"     value={result.intent_matched > 0 ? fmtNum(result.intent_matched) : '—'} sub={result.intent_matched > 0 ? 'matching your angle' : 'broader niche scope'} />
-                <MiniStat label="AI alternatives" value={result.suggestions?.length || 0}              sub="new titles to choose" />
-                <MiniStat label="Keyword opps"    value={kwCount}                                      sub="related phrases scored" />
-              </div>
-            )
-          })()}
-
           {/* AI suggestion error */}
           {result.suggestion_error && !result.suggestions?.length && (
             <div style={{ background: C.amberBg, border: `1px solid ${C.amberBdr}`, borderLeft: `3px solid ${C.amber}`, borderRadius: '0 12px 12px 0', padding: '14px 18px', marginBottom: 24 }}>
