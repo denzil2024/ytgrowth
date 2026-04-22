@@ -1532,52 +1532,85 @@ export default function SeoOptimizer({ onNavigate }) {
             </>
           )}
 
-          {/* ── Competitor set — the competitor videos we analysed ── */}
+          {/* ── Competitor set — amber-topped card matching Keyword discovery pattern ── */}
           {result.top_videos?.length > 0 && (
             <>
               <div style={{ marginBottom: 20, marginTop: 40 }}>
                 <h2 style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', marginBottom: 4 }}>Competitor set</h2>
                 <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.5 }}>
-                  {result.videos_found} {result.videos_found === 1 ? 'video' : 'videos'} we analysed{result.primary_phrase ? ` in the "${result.primary_phrase}" niche` : ''}{result.intent_matched > 0 && result.intent_matched < result.videos_found ? ` · ${result.intent_matched} exact match` : ''}
+                  The videos ranking for your niche · what's actually winning on YouTube right now
                 </p>
               </div>
-              <div className="seo-glass-card" style={{ borderRadius: 16, padding: '22px 24px', marginBottom: 24 }}>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
-                {result.top_videos.map((v, i) => {
-                  const sc = v.seo_score
-                  const scColor = sc >= 75 ? C.green : sc >= 55 ? C.amber : C.red
-                  return (
-                    <a key={v.video_id}
-                      href={`https://www.youtube.com/watch?v=${v.video_id}`}
-                      target="_blank" rel="noopener noreferrer"
-                      style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 8px', borderBottom: i < result.top_videos.length - 1 ? `1px solid ${C.border}` : 'none', textDecoration: 'none', borderRadius: 8, transition: 'background 0.15s, transform 0.15s', cursor: 'pointer' }}
-                      onMouseEnter={e => { e.currentTarget.style.background = '#fafafb'; e.currentTarget.style.transform = 'translateX(2px)' }}
-                      onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.transform = 'none' }}>
-                      <span style={{ flexShrink: 0, width: 26, fontSize: 11, fontWeight: 700, color: C.text4, fontVariantNumeric: 'tabular-nums', letterSpacing: '0.04em', textAlign: 'center' }}>
-                        {String(i + 1).padStart(2, '0')}
-                      </span>
-                      <div style={{ position: 'relative', flexShrink: 0 }}>
-                        {v.thumbnail && <img src={v.thumbnail} alt="" style={{ width: 72, height: 40, borderRadius: 7, objectFit: 'cover', display: 'block' }} />}
-                        <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: 0, transition: 'opacity 0.15s', background: 'rgba(0,0,0,0.45)', borderRadius: 7 }}
-                          onMouseEnter={e => { e.currentTarget.style.opacity = 1 }}
-                          onMouseLeave={e => { e.currentTarget.style.opacity = 0 }}>
-                          <svg width="18" height="18" viewBox="0 0 18 18" fill="white"><path d="M7 5.5l6 3.5-6 3.5V5.5z"/></svg>
-                        </div>
-                      </div>
-                      <div style={{ flex: 1, minWidth: 0 }}>
-                        <p style={{ fontSize: 14, fontWeight: 600, color: C.text1, lineHeight: 1.4, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', letterSpacing: '-0.1px' }}>{v.title}</p>
-                        <p style={{ fontSize: 12, color: C.text3, marginTop: 2, fontWeight: 500 }}>{v.channel}</p>
-                      </div>
-                      <div style={{ textAlign: 'right', flexShrink: 0 }}>
-                        <p style={{ fontSize: 17, fontWeight: 700, color: scColor, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.3px', lineHeight: 1 }}>{sc}</p>
-                        <p style={{ fontSize: 10, fontWeight: 600, color: C.text3, marginTop: 4, letterSpacing: '0.08em', textTransform: 'uppercase' }}>score</p>
-                      </div>
-                      <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke={C.text4} strokeWidth="1.5" strokeLinecap="round" style={{ flexShrink: 0 }}><path d="M2 11L10 3M10 3H5M10 3v5"/></svg>
-                    </a>
-                  )
-                })}
+
+              <div className="seo-suggestion-card" style={{
+                borderTop: `3px solid ${C.amber}`,
+                marginBottom: 24,
+              }}>
+                <div style={{ padding: '18px 22px 20px' }}>
+                  {/* Eyebrow header — Overview Content-patterns style (small uppercase label + big tabular count) */}
+                  <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16, marginBottom: 14 }}>
+                    <div style={{ minWidth: 0 }}>
+                      <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 6 }}>Videos analysed</p>
+                      <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.5 }}>
+                        {result.primary_phrase ? `"${result.primary_phrase}" niche` : 'Top-ranking videos for your topic'}
+                        {result.intent_matched > 0 && result.intent_matched < result.videos_found ? ` · ${result.intent_matched} exact match` : ''}
+                      </p>
+                    </div>
+                    <p style={{ fontSize: 26, fontWeight: 800, color: C.text1, letterSpacing: '-0.8px', fontVariantNumeric: 'tabular-nums', flexShrink: 0, lineHeight: 1 }}>{result.videos_found}</p>
+                  </div>
+
+                  <div style={{ height: 1, background: C.border, margin: '0 0 4px' }}/>
+
+                  {/* Ranked rows — rank · thumb · title + meta (channel · views · likes · comments) · score */}
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
+                    {result.top_videos.map((v, i) => {
+                      const sc      = v.seo_score
+                      const scColor = sc >= 75 ? C.green : sc >= 55 ? C.amber : C.red
+                      const views   = v.view_count || v.views || 0
+                      const likes   = v.like_count || v.likes || 0
+                      const comments= v.comment_count || v.comments || 0
+                      return (
+                        <a key={v.video_id}
+                          href={`https://www.youtube.com/watch?v=${v.video_id}`}
+                          target="_blank" rel="noopener noreferrer"
+                          style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 8px', borderBottom: i < result.top_videos.length - 1 ? `1px solid ${C.border}` : 'none', textDecoration: 'none', borderRadius: 8, transition: 'background 0.15s, transform 0.15s', cursor: 'pointer' }}
+                          onMouseEnter={e => { e.currentTarget.style.background = '#fafafb'; e.currentTarget.style.transform = 'translateX(2px)' }}
+                          onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.transform = 'none' }}>
+                          <span style={{ flexShrink: 0, width: 26, fontSize: 11, fontWeight: 700, color: C.text4, fontVariantNumeric: 'tabular-nums', letterSpacing: '0.04em', textAlign: 'center' }}>
+                            {String(i + 1).padStart(2, '0')}
+                          </span>
+                          <div style={{ flexShrink: 0 }}>
+                            {v.thumbnail && <img src={v.thumbnail} alt="" style={{ width: 72, height: 40, borderRadius: 7, objectFit: 'cover', display: 'block' }} />}
+                          </div>
+                          <div style={{ flex: 1, minWidth: 0 }}>
+                            <p style={{ fontSize: 14, fontWeight: 600, color: C.text1, lineHeight: 1.4, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', letterSpacing: '-0.1px' }}>{v.title}</p>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 4, flexWrap: 'nowrap', overflow: 'hidden' }}>
+                              <span style={{ fontSize: 12, color: C.text3, fontWeight: 500, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', minWidth: 0, maxWidth: 180 }}>{v.channel}</span>
+                              <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 12, color: C.text3, fontWeight: 500, fontVariantNumeric: 'tabular-nums', flexShrink: 0 }}>
+                                <svg width="11" height="11" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.6 }}><path d="M1 7s2.5-4.5 6-4.5S13 7 13 7s-2.5 4.5-6 4.5S1 7 1 7z"/><circle cx="7" cy="7" r="1.8"/></svg>
+                                {fmtNum(views)}
+                              </span>
+                              <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 12, color: C.text3, fontWeight: 500, fontVariantNumeric: 'tabular-nums', flexShrink: 0 }}>
+                                <svg width="11" height="11" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.6 }}><path d="M4 6v6.5H2V6h2zm2 0l2.2-4.5c.2-.4.6-.6 1-.5.5.1.8.5.8 1V5h2.5a1 1 0 0 1 1 1.2L12.3 11a1.5 1.5 0 0 1-1.5 1.3H6V6z"/></svg>
+                                {fmtNum(likes)}
+                              </span>
+                              <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 12, color: C.text3, fontWeight: 500, fontVariantNumeric: 'tabular-nums', flexShrink: 0 }}>
+                                <svg width="11" height="11" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.6 }}><path d="M12 9c0 .6-.4 1-1 1H5l-3 2.5V4c0-.6.4-1 1-1h8c.6 0 1 .4 1 1v5z"/></svg>
+                                {fmtNum(comments)}
+                              </span>
+                            </div>
+                          </div>
+                          <div style={{ textAlign: 'right', flexShrink: 0 }}>
+                            <p style={{ fontSize: 17, fontWeight: 700, color: scColor, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.3px', lineHeight: 1 }}>{sc}</p>
+                            <p style={{ fontSize: 10, fontWeight: 600, color: C.text3, marginTop: 4, letterSpacing: '0.08em', textTransform: 'uppercase' }}>score</p>
+                          </div>
+                          <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke={C.text4} strokeWidth="1.5" strokeLinecap="round" style={{ flexShrink: 0 }}><path d="M2 11L10 3M10 3H5M10 3v5"/></svg>
+                        </a>
+                      )
+                    })}
+                  </div>
+                </div>
               </div>
-            </div>
             </>
           )}
 

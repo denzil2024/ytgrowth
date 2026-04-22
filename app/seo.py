@@ -329,10 +329,11 @@ def search_top_videos(credentials, search_terms: list[str], max_results: int = 2
             raw_tags = item["snippet"].get("tags", [])
             combined[vid_id]["tags"] = [t for t in raw_tags if _is_ascii_english(t)][:20]
             combined[vid_id]["duration_seconds"] = duration_sec
-            combined[vid_id]["view_count"] = int(
-                item.get("statistics", {}).get("viewCount", 0)
-            )
-            combined[vid_id]["published_at"] = item["snippet"].get("publishedAt", "")[:10]
+            stats = item.get("statistics", {})
+            combined[vid_id]["view_count"]    = int(stats.get("viewCount", 0))
+            combined[vid_id]["like_count"]    = int(stats.get("likeCount", 0))
+            combined[vid_id]["comment_count"] = int(stats.get("commentCount", 0))
+            combined[vid_id]["published_at"]  = item["snippet"].get("publishedAt", "")[:10]
             non_shorts[vid_id] = combined[vid_id]
     except Exception as e:
         print(f"Video details error: {e}")
