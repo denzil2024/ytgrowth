@@ -193,8 +193,10 @@ function MomentumBadge({ momentum }) {
   )
 }
 
-/* Expanded detail for a ranked-keyword row — compact two-line strip, no
-   cards, no elevation. Line 1: signals inline. Line 2: recommendation. */
+/* Expanded detail for a ranked-keyword row — Priority Actions pattern
+   scaled down. 2 tinted cards side-by-side: SIGNALS (amber tint, left)
+   + HOW TO USE (red 3px bar + white + shadow, right). Signals packed
+   inline (· separated) so card height stays tight, not stretched. */
 function KwDetailPanel({ kw, C }) {
   const comp = kw.competition || {}
   const parts = []
@@ -210,19 +212,24 @@ function KwDetailPanel({ kw, C }) {
     parts.push(<><span style={{ color: C.text3 }}>Newest </span><b style={{ color: C.text1, fontWeight: 600, fontVariantNumeric: 'tabular-nums' }}>{comp.days_since_newest}d ago</b></>)
   }
   return (
-    <div style={{ padding: '6px 0 2px', display: 'flex', flexDirection: 'column', gap: 4 }}>
-      <p style={{ fontSize: 12, lineHeight: 1.55 }}>
-        {parts.map((p, i) => (
-          <React.Fragment key={i}>
-            {i > 0 && <span style={{ color: C.text4, margin: '0 8px' }}>·</span>}
-            {p}
-          </React.Fragment>
-        ))}
-      </p>
-      <p style={{ fontSize: 12, color: C.text2, lineHeight: 1.55 }}>
-        <span style={{ color: C.red, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', marginRight: 8, fontSize: 10 }}>Tip</span>
-        {buildRecommendation(kw)}
-      </p>
+    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.2fr', gap: 8, marginTop: 8, marginBottom: 2 }}>
+      {/* SIGNALS — amber tint (Priority Actions "Why now" counterpart) */}
+      <div style={{ background: C.amberBg, border: `1px solid ${C.amberBdr}`, borderRadius: 10, padding: '10px 12px' }}>
+        <p style={{ fontSize: 10, fontWeight: 700, color: C.amber, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Signals</p>
+        <p style={{ fontSize: 12.5, lineHeight: 1.65 }}>
+          {parts.map((p, i) => (
+            <React.Fragment key={i}>
+              {i > 0 && <span style={{ color: C.text4, margin: '0 7px' }}>·</span>}
+              {p}
+            </React.Fragment>
+          ))}
+        </p>
+      </div>
+      {/* HOW TO USE — white + red 3px bar + soft shadow (Priority Actions "Action" counterpart) */}
+      <div style={{ background: '#fff', border: `1px solid ${C.border}`, borderLeft: `3px solid ${C.red}`, borderRadius: '0 10px 10px 0', padding: '10px 14px', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}>
+        <p style={{ fontSize: 10, fontWeight: 700, color: C.red, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>How to use</p>
+        <p style={{ fontSize: 12.5, color: C.text1, lineHeight: 1.65 }}>{buildRecommendation(kw)}</p>
+      </div>
     </div>
   )
 }
