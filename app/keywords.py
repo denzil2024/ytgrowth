@@ -288,73 +288,29 @@ def fetch_competition_signals(keywords: list[str], top_n: int = 10) -> dict[str,
     return out
 
 
-def fetch_trend_signals(keywords: list[str]) -> dict[str, dict]:
+def _momentum_from_competition(comp: dict) -> str:
     """
-    Hit Google Trends (pytrends) for a 90-day interest timeline per keyword,
-    then derive a direction label (rising/flat/declining) + percentage
-    change from the first half of the window to the second half.
-
-    pytrends allows up to 5 keywords per request. Batches are processed
-    sequentially with short jitter to avoid the rate limiter. Best-effort:
-    any failure returns {} for that keyword (feature stays useful even
-    when Trends is flaky).
+    Derive a momentum label from data we already have (no extra API calls,
+    no pytrends, no paid trend source):
+      - 'active'    = newest top-5 video < 30 days old (creators shipping now)
+      - 'unclaimed' = newest top-5 video > 180 days old (nobody's updating it)
+      - 'steady'    = otherwise
+    Returned as a cheap badge-friendly string. The real trend info lives
+    inside the competition.days_since_newest field.
     """
-    if not keywords:
-        return {}
-    try:
-        from pytrends.request import TrendReq
-    except Exception as e:
-        print(f"[keywords] pytrends not available: {e}")
-        return {}
-
-    out: dict[str, dict] = {}
-    try:
-        pt = TrendReq(hl="en-US", tz=0, timeout=(3, 10), retries=1, backoff_factor=0.2)
-        # Batch 5 at a time
-        for i in range(0, len(keywords), 5):
-            batch = keywords[i:i + 5]
-            try:
-                pt.build_payload(batch, timeframe="today 3-m", geo="")
-                df = pt.interest_over_time()
-                if df is None or df.empty:
-                    continue
-                for kw in batch:
-                    if kw not in df.columns:
-                        continue
-                    series = df[kw].dropna().tolist()
-                    if len(series) < 4:
-                        continue
-                    mid = len(series) // 2
-                    first_half_avg  = sum(series[:mid]) / max(mid, 1)
-                    second_half_avg = sum(series[mid:]) / max(len(series) - mid, 1)
-                    # Percentage change; if first half is 0, use absolute delta as fallback
-                    if first_half_avg > 0:
-                        pct = (second_half_avg - first_half_avg) / first_half_avg * 100
-                    else:
-                        pct = second_half_avg * 2  # crude fallback when starting near zero
-                    direction = "rising" if pct >= 15 else "declining" if pct <= -15 else "flat"
-                    out[kw] = {
-                        "direction":   direction,
-                        "change_pct":  round(pct),
-                        "peak":        int(max(series)),
-                        "current":     int(series[-1]),
-                    }
-            except Exception as e:
-                print(f"[keywords] pytrends batch error on {batch}: {e}")
-                continue
-    except Exception as e:
-        print(f"[keywords] pytrends init error: {e}")
-        return out
-    return out
+    days = comp.get("days_since_newest")
+    if days is None:        return ""
+    if days < 30:           return "active"
+    if days > 180:          return "unclaimed"
+    return "steady"
 
 
-def _score_with_real_data(kw: dict, comp: dict, trend: dict, autocomplete_rank: int | None) -> int:
+def _score_with_real_data(kw: dict, comp: dict, autocomplete_rank: int | None) -> int:
     """
     Build a data-backed opportunity score out of:
       - feasibility   (top-channel size — smaller = easier win)
       - traffic       (median views on top-5 — headroom to pull)
       - freshness     (stale landscape = unclaimed territory)
-      - trend         (rising gets a bonus, declining a penalty)
       - autocomplete  (earlier position = more searched)
       - intent match  (keep Claude's exact/strong/partial signal as a multiplier)
 
@@ -386,10 +342,6 @@ def _score_with_real_data(kw: dict, comp: dict, trend: dict, autocomplete_rank: 
     elif days < 180:     freshness = 70
     else:                freshness = 100
 
-    # Trend — rising +10, flat 0, declining -15.  Separate from the 0-100 core.
-    direction = (trend or {}).get("direction", "flat")
-    trend_adj = 10 if direction == "rising" else -15 if direction == "declining" else 0
-
     # Autocomplete rank bonus (earlier = more searched)
     # rank 0-4 = +8, 5-14 = +4, 15+ = 0, None = 0
     if autocomplete_rank is None:    rank_adj = 0
@@ -404,7 +356,7 @@ def _score_with_real_data(kw: dict, comp: dict, trend: dict, autocomplete_rank: 
     im = (kw.get("intentMatch") or "").lower()
     mult = 1.0 if im == "exact" else 0.9 if im == "strong" else 0.75 if im == "partial" else 0.85
 
-    score = int(round(base * mult + trend_adj + rank_adj))
+    score = int(round(base * mult + rank_adj))
     return max(0, min(100, score))
 
 
@@ -415,13 +367,13 @@ def enrich_keywords_with_real_data(
 ) -> dict:
     """
     Take the Claude-filtered keyword list and overwrite `opportunityScore`
-    with a score derived from real YouTube + Google Trends data. Also
-    attaches `competition` and `trend` objects to each keyword so the
-    frontend can render trend arrows + competition badges.
+    with a score derived from real YouTube competition data. Also attaches
+    a `competition` dict and a lightweight `momentum` label (active /
+    unclaimed / steady) derived from days_since_newest — no extra API
+    calls, no paid Google Trends source.
 
     Only the top_n keywords (by Claude's initial score) get the live data
-    enrichment to keep quota costs bounded. The remaining keywords keep
-    Claude's original score.
+    enrichment to keep quota costs bounded.
     """
     keywords = result.get("keywords") or []
     if not keywords:
@@ -438,26 +390,20 @@ def enrich_keywords_with_real_data(
     keywords.sort(key=lambda k: k.get("opportunityScore", 0), reverse=True)
     enrich_targets = [k["keyword"] for k in keywords[:top_n] if k.get("keyword")]
 
-    # Fire competition + trend in parallel
-    with ThreadPoolExecutor(max_workers=2) as pool:
-        f_comp  = pool.submit(fetch_competition_signals, enrich_targets, top_n)
-        f_trend = pool.submit(fetch_trend_signals,       enrich_targets)
-        competition = f_comp.result()  or {}
-        trends      = f_trend.result() or {}
+    competition = fetch_competition_signals(enrich_targets, top_n)
 
-    for i, kw in enumerate(keywords):
+    for kw in keywords:
         phrase = kw.get("keyword", "")
         comp   = competition.get(phrase, {})
-        trend  = trends.get(phrase, {})
         rank   = rank_map.get(phrase.lower())
 
-        kw["competition"] = comp
-        kw["trend"]       = trend
+        kw["competition"]       = comp
+        kw["momentum"]          = _momentum_from_competition(comp) if comp else ""
         kw["autocomplete_rank"] = rank
 
         # Only rescore the enriched subset. The tail keeps Claude's score.
-        if phrase in competition or phrase in trends:
-            kw["opportunityScore"] = _score_with_real_data(kw, comp, trend, rank)
+        if phrase in competition:
+            kw["opportunityScore"] = _score_with_real_data(kw, comp, rank)
 
     # Re-sort with the new data-backed scores on top
     keywords.sort(key=lambda k: k.get("opportunityScore", 0), reverse=True)
@@ -470,7 +416,7 @@ def enrich_keywords_with_real_data(
         if match:
             tp["opportunityScore"] = match["opportunityScore"]
             tp["competition"]      = match.get("competition", {})
-            tp["trend"]            = match.get("trend", {})
+            tp["momentum"]         = match.get("momentum", "")
             result["topPick"] = tp
 
     return result

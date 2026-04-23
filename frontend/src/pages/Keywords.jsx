@@ -169,35 +169,26 @@ const INTENT_TONE = {
 
 function oppColor(s) { return s >= 70 ? C.green : s >= 45 ? C.amber : C.red }
 
-/* ─── TrendArrow — visible 90-day Google Trends direction next to each
-       keyword. Green up / red down / neutral flat, with the % change
-       shown when meaningful. */
-function TrendArrow({ trend }) {
-  // No data → render nothing (don't reserve an empty slot, it wastes
-  // horizontal space when pytrends is silent).
-  if (!trend || !trend.direction) return null
-  const tone = trend.direction === 'rising'
-    ? { color: C.green, path: 'M2 9l3.5-3.5L8 8l4-4', head: 'M9 4h3v3' }
-    : trend.direction === 'declining'
-      ? { color: C.red, path: 'M2 5l3.5 3.5L8 6l4 4', head: 'M9 10h3v-3' }
-      : { color: C.text3, path: 'M2 7h10', head: '' }
-  const pct = trend.change_pct
-  const label = trend.direction === 'flat'
-    ? 'flat'
-    : (pct > 0 ? `+${pct}%` : `${pct}%`)
+/* ─── MomentumBadge — derived from YouTube competition data we already
+       fetched. No extra API calls. Three states:
+         - active    : newest top-5 video was published in the last 30 days
+         - unclaimed : newest top-5 video is over 180 days old
+         - steady    : in between — rendered as nothing (keeps rows clean) */
+function MomentumBadge({ momentum }) {
+  if (!momentum || momentum === 'steady') return null
+  const config = momentum === 'active'
+    ? { color: C.green, bg: C.greenBg, bdr: C.greenBdr, label: 'Active' }
+    :                                                   { color: C.amber, bg: C.amberBg, bdr: C.amberBdr, label: 'Open' }
   return (
     <span style={{
-      display: 'inline-flex', alignItems: 'center', gap: 4,
-      minWidth: 54, flexShrink: 0,
-      fontSize: 11, fontWeight: 700, color: tone.color,
-      fontVariantNumeric: 'tabular-nums',
-    }}>
-      <svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-        <path d={tone.path}/>
-        {tone.head && <path d={tone.head}/>}
-      </svg>
-      {label}
-    </span>
+      display: 'inline-flex', alignItems: 'center',
+      fontSize: 10, fontWeight: 700,
+      color: config.color, background: config.bg,
+      border: `1px solid ${config.bdr}`,
+      borderRadius: 100, padding: '1px 7px',
+      letterSpacing: '0.06em', textTransform: 'uppercase',
+      flexShrink: 0,
+    }}>{config.label}</span>
   )
 }
 
@@ -214,10 +205,6 @@ function buildRowTooltip(kw) {
   }
   if (typeof comp.days_since_newest === 'number') {
     parts.push(`Newest top-5 video ${comp.days_since_newest}d ago`)
-  }
-  const trend = kw.trend
-  if (trend?.direction && trend.direction !== 'flat') {
-    parts.push(`Trend ${trend.direction} ${trend.change_pct > 0 ? '+' : ''}${trend.change_pct}%`)
   }
   return parts.join(' · ')
 }
@@ -561,21 +548,21 @@ export default function Keywords() {
                             borderLeft: isRightCol ? `1px solid ${C.amberBdr}` : 'none',
                           }}
                         >
-                          {/* Phrase — flex-grows so full keywords show without
-                              clipping. Only truncates when the row truly runs
-                              out of width (long tail queries on narrow screens). */}
+                          {/* Phrase — fixed 260px column (SEO Studio pattern,
+                              widened from 180 to fit longer YouTube
+                              autocomplete queries like 'large family budget
+                              grocery haul'). Bar flex-fills the rest of the
+                              row so there's no dead space. */}
                           <span className="kw-row-phrase" style={{
                             fontSize: 13, color: C.text2, fontWeight: 400,
-                            flex: 1, minWidth: 0,
+                            width: 260, flexShrink: 0,
                             overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
                             transition: 'color 0.12s',
                           }}>{kw.keyword}</span>
-                          {/* Trend arrow — green rising / red declining / grey flat.
-                              Absent when we have no trend data for this keyword. */}
-                          <TrendArrow trend={kw.trend} />
-                          {/* Bar — fixed width so the keyword text owns the flex
-                              space, not the progress fill. */}
-                          <div style={{ width: 120, height: 4, background: '#eeeef3', borderRadius: 99, overflow: 'hidden', flexShrink: 0 }}>
+                          {/* Momentum badge — ACTIVE (green) / OPEN (amber) /
+                              nothing. Derived from competition.days_since_newest. */}
+                          <MomentumBadge momentum={kw.momentum} />
+                          <div style={{ flex: 1, height: 4, background: '#eeeef3', borderRadius: 99, overflow: 'hidden', minWidth: 40 }}>
                             <div style={{ width: `${kw.opportunityScore}%`, height: '100%', background: scColor, borderRadius: 99, transition: 'width 0.8s cubic-bezier(0.34,1.56,0.64,1)' }}/>
                           </div>
                           <span style={{

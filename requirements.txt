@@ -19,4 +19,3 @@ numpy
 pytesseract
 python-multipart
 resend
-pytrends
