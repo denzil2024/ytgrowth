@@ -277,10 +277,17 @@ function KwDetailModal({ kw, C, onClose }) {
           <div style={{ background: '#fff', border: `1px solid ${C.border}`, borderRadius: 16, padding: '20px 22px' }}>
             <p style={{ fontSize: 15, fontWeight: 700, color: C.text1, letterSpacing: '-0.3px', marginBottom: 16 }}>Keyword playbook</p>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr 1fr', gap: 8 }}>
-              {/* Blue — Why it works */}
+              {/* Blue — Why it works (numbered list, mirrors Quick actions) */}
               <div style={{ background: 'rgba(79,134,247,0.07)', border: '1px solid rgba(79,134,247,0.12)', borderRadius: 10, padding: '12px 14px' }}>
                 <p style={{ fontSize: 10, fontWeight: 700, color: '#4a7cf7', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Why it works</p>
-                <p style={{ fontSize: 13, color: C.text1, lineHeight: 1.65 }}>{buildWhyItWorks(kw)}</p>
+                <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 7, margin: 0, padding: 0 }}>
+                  {buildWhyItWorks(kw).map((s, i) => (
+                    <li key={i} style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
+                      <span style={{ fontSize: 12, fontWeight: 700, color: '#4a7cf7', fontVariantNumeric: 'tabular-nums', lineHeight: 1.55, minWidth: 14 }}>{i + 1}.</span>
+                      <span style={{ fontSize: 13, color: C.text1, lineHeight: 1.6, flex: 1 }}>{s}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
               {/* Amber — Quick actions (numbered list) */}
               <div style={{ background: '#fff', border: `1px solid ${C.border}`, borderLeft: `3px solid ${C.amber}`, borderRadius: '0 10px 10px 0', padding: '12px 14px', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
@@ -324,20 +331,20 @@ function buildRowTooltip(kw) {
   return parts.join(' · ')
 }
 
-/* Narrative version of the row's signals — fills the "Why it works"
-   column of the Outlier-playbook dropdown. */
+/* Ordered list of "Why it works" signal points — rendered as a numbered
+   list (same layout as Quick actions), so the panel reads clean. */
 function buildWhyItWorks(kw) {
   const comp = kw.competition || {}
-  const bits = []
+  const out = []
   const intentUp = (kw.intentMatch || '—').replace(/^\w/, c => c.toUpperCase())
-  bits.push(`${intentUp} intent match at ${kw.opportunityScore}/100.`)
+  out.push(`${intentUp} intent match at ${kw.opportunityScore}/100.`)
   if (comp.top_subs_median) {
-    bits.push(`Top-5 competitors average ~${fmtCompact(comp.top_subs_median)} subs with ${comp.top_views_median ? fmtCompact(comp.top_views_median) + ' median views' : 'typical reach'}.`)
+    out.push(`Top-5 competitors average ~${fmtCompact(comp.top_subs_median)} subs${comp.top_views_median ? ` with ${fmtCompact(comp.top_views_median)} median views` : ''}.`)
   }
   if (typeof comp.days_since_newest === 'number') {
-    bits.push(`Newest top-5 video was ${comp.days_since_newest}d ago.`)
+    out.push(`Newest top-5 video was ${comp.days_since_newest}d ago.`)
   }
-  return bits.join(' ')
+  return out
 }
 
 /* Rule-based ordered action list — fills the "Quick actions" column. */
@@ -800,7 +807,7 @@ export default function Keywords() {
                               </p>
                             </div>
                           </div>
-                          <p style={{ fontSize: 22, fontWeight: 800, color: C.green, letterSpacing: '-0.6px', fontVariantNumeric: 'tabular-nums', flexShrink: 0, lineHeight: 1 }}>
+                          <p style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.6px', fontVariantNumeric: 'tabular-nums', flexShrink: 0, lineHeight: 1 }}>
                             {cl.keywords?.length || 0}
                           </p>
                         </div>
