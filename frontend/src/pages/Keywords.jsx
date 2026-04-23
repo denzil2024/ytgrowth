@@ -117,22 +117,29 @@ function useKwStyles() {
         padding: 7px 15px; /* compensate for 1px border */
       }
 
-      /* Cluster "Copy theme" button — ghost red (white bg, red text +
-         red hairline border). Filled red is reserved for *the* primary
-         CTA (Research / Copy all); ghost keeps 5 cluster buttons quiet. */
+      /* Cluster "Copy theme" button — neutral elevated pill.
+         White bg, near-black text, hairline border, system-elevation
+         shadow. Red is reserved for primary CTAs; this is a utility
+         action repeated 5x so it stays quiet but tactile. */
       .kw-ghost-btn {
         display: inline-flex; align-items: center; gap: 6px;
         padding: 7px 15px; border-radius: 100px;
         font-size: 12px; font-weight: 700; letter-spacing: 0.01em;
         font-family: 'Inter', system-ui, sans-serif;
-        background: #fff; color: #e5251b;
-        border: 1px solid #fecaca; cursor: pointer;
-        transition: background 0.15s, border-color 0.15s;
+        background: #ffffff; color: #111114;
+        border: 1px solid rgba(0,0,0,0.09); cursor: pointer;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.05);
+        transition: box-shadow 0.18s, transform 0.12s;
       }
-      .kw-ghost-btn:hover { background: #fff5f5; border-color: #e5251b; }
+      .kw-ghost-btn:hover {
+        box-shadow: 0 2px 6px rgba(0,0,0,0.07), 0 8px 20px rgba(0,0,0,0.08);
+        transform: translateY(-1px);
+      }
       .kw-ghost-btn.copied {
         background: #f0fdf4; color: #16a34a;
         border-color: #bbf7d0;
+        box-shadow: none;
+        transform: none;
       }
 
       .kw-bar { height: 4px; border-radius: 4px; background: rgba(0,0,0,0.07); overflow: hidden; }
@@ -213,9 +220,12 @@ function KwDetailPanel({ kw, C }) {
   }
   return (
     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.2fr', gap: 8, marginTop: 8, marginBottom: 2 }}>
-      {/* SIGNALS — amber tint (Priority Actions "Why now" counterpart) */}
-      <div style={{ background: C.amberBg, border: `1px solid ${C.amberBdr}`, borderRadius: 10, padding: '10px 12px' }}>
-        <p style={{ fontSize: 10, fontWeight: 700, color: C.amber, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Signals</p>
+      {/* SIGNALS — neutral grey tint. The amber areas above already
+          saturate the row (top border, dividers, OPEN pill), so the
+          informational card stays calm/neutral rather than piling more
+          amber on top. Eyebrow is neutral grey too — the standard Overview-tab eyebrow treatment. */}
+      <div style={{ background: '#fafafb', border: `1px solid ${C.border}`, borderRadius: 10, padding: '10px 12px' }}>
+        <p style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Signals</p>
         <p style={{ fontSize: 12.5, lineHeight: 1.65 }}>
           {parts.map((p, i) => (
             <React.Fragment key={i}>
@@ -225,9 +235,11 @@ function KwDetailPanel({ kw, C }) {
           ))}
         </p>
       </div>
-      {/* HOW TO USE — white + red 3px bar + soft shadow (Priority Actions "Action" counterpart) */}
-      <div style={{ background: '#fff', border: `1px solid ${C.border}`, borderLeft: `3px solid ${C.red}`, borderRadius: '0 10px 10px 0', padding: '10px 14px', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}>
-        <p style={{ fontSize: 10, fontWeight: 700, color: C.red, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>How to use</p>
+      {/* HOW TO USE — white + green 3px bar + soft shadow. Green carries
+          "this is the play / the way forward" semantic — fits actionable
+          guidance. Red is reserved for primary CTAs (Research / Copy all). */}
+      <div style={{ background: '#fff', border: `1px solid ${C.border}`, borderLeft: `3px solid ${C.green}`, borderRadius: '0 10px 10px 0', padding: '10px 14px', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}>
+        <p style={{ fontSize: 10, fontWeight: 700, color: C.green, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>How to use</p>
         <p style={{ fontSize: 12.5, color: C.text1, lineHeight: 1.65 }}>{buildRecommendation(kw)}</p>
       </div>
     </div>
@@ -718,7 +730,7 @@ export default function Keywords() {
                               </p>
                             </div>
                           </div>
-                          <p style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.6px', fontVariantNumeric: 'tabular-nums', flexShrink: 0, lineHeight: 1 }}>
+                          <p style={{ fontSize: 22, fontWeight: 800, color: C.green, letterSpacing: '-0.6px', fontVariantNumeric: 'tabular-nums', flexShrink: 0, lineHeight: 1 }}>
                             {cl.keywords?.length || 0}
                           </p>
                         </div>
