@@ -196,19 +196,32 @@ def _run_unified_search(
     # channel diversity than a single search.
     search_terms = _build_search_terms(title, confirmed_keyword)
 
-    # Multi-query YouTube fetch + own-channel drop + 12-month recency filter.
-    intent_videos, channel_details = _fetch_intent_filtered(
-        creds, search_terms, confirmed_keyword, my_channel_id,
-    )
+    # Classify the topic's vertical in PARALLEL with the YouTube fetch. The
+    # classification is only used to rank the Channels tab; the YouTube
+    # search is the wall-clock-critical call. Running them concurrently
+    # means this feature adds 0s to total search time in practice.
+    primary_topic = (confirmed_keyword or title).strip()
+    with ThreadPoolExecutor(max_workers=2) as pool:
+        vertical_fut = pool.submit(_classify_topic_vertical, primary_topic)
+        fetch_fut    = pool.submit(
+            _fetch_intent_filtered, creds, search_terms, confirmed_keyword, my_channel_id,
+        )
+        vertical_info                   = vertical_fut.result() or {}
+        intent_videos, channel_details  = fetch_fut.result()
 
-    # Niche matching — now a SOFT signal. We fetch recent titles in parallel,
-    # but only for the top 25 channels by how many videos each contributes to
-    # the intent pool (the ones most likely to surface). Channels that aren't
-    # scanned default to "not niche-matched" and fall into tier 3/4.
-    recent_titles  = _fetch_channel_recent_titles(
+    vertical_traits   = vertical_info.get("vertical_traits", []) or []
+    topic_specificity = vertical_info.get("topic_specificity", "generalist")
+
+    # Niche matching — parallel fetch of the top 25 channels' recent titles.
+    # We derive TWO sets from the same fetched titles:
+    #   niche_channels    — match against the user's personal niche (videos tier sort)
+    #   vertical_channels — match against the search topic's industry (channels tier sort)
+    # Channels that aren't scanned default to not-matched → tier 3/4.
+    recent_titles = _fetch_channel_recent_titles(
         creds, _top_channels_by_pool_presence(intent_videos, channel_details, limit=25),
     )
-    niche_channels = _niche_match_channels(recent_titles, niche_keywords)
+    niche_channels    = _niche_match_channels(recent_titles, niche_keywords)
+    vertical_channels = _niche_match_channels(recent_titles, vertical_traits) if vertical_traits else set()
 
     # Broaden ONCE if we don't have enough for a full 8-video AND 8-channel
     # result set. Adds videos from a stopword-stripped query.
@@ -241,7 +254,9 @@ def _run_unified_search(
                 )
                 extra_titles = _fetch_channel_recent_titles(creds, extra_details_to_scan)
                 recent_titles.update(extra_titles)
-                niche_channels |= _niche_match_channels(extra_titles, niche_keywords)
+                niche_channels    |= _niche_match_channels(extra_titles, niche_keywords)
+                if vertical_traits:
+                    vertical_channels |= _niche_match_channels(extra_titles, vertical_traits)
 
     # Enrich + apply views floor + score.
     enriched = _enrich(intent_videos, channel_details)
@@ -290,9 +305,15 @@ def _run_unified_search(
     autocomplete   = get_autocomplete_suggestions(search_terms)
     keyword_scores = research_keywords(search_terms, autocomplete, top_titles, all_tags_flat)
 
-    # Derive breakout channels — same tiered logic as videos (niche-matched +
-    # above-floor preferred, then fill to _RESULTS_CHANNEL from the pool).
-    top_channels = _derive_breakout_channels(scored, channel_details, niche_channels)
+    # Derive breakout channels — tier sort uses `vertical_channels` (topic's
+    # industry) instead of personal niche, so we surface lifestyle-vloggers-
+    # who-occasionally-haul rather than haul-specialists. If classification
+    # failed (empty vertical_channels), we fall back to personal niche so the
+    # tab still shows sensible results.
+    channels_match_set = vertical_channels if vertical_traits else niche_channels
+    top_channels = _derive_breakout_channels(
+        scored, channel_details, channels_match_set, topic_specificity,
+    )
 
     # Claude explanations — three independent calls run IN PARALLEL. Sequential
     # these took ~40s (Sonnet video + Sonnet channel + Sonnet vision thumbnail);
@@ -340,19 +361,88 @@ def _run_unified_search(
         "intent_matched":      len(intent_videos),
         "primary_phrase":      primary_phrase,
         "cohort": {
-            "query":           title,
-            "my_subscribers":  my_subscribers,
-            "niche_keywords":  niche_keywords,
-            "pool_size":       len(scored),
-            "median_vps":      round(cohort_median_vps, 3),
-            "cohort_tier":     cohort_tag,        # diagnostic for the UI
-            "broadened_with":  broadened_with,    # null unless query-broadening kicked in
-            "window_days":     _RECENCY_DAYS,
+            "query":             title,
+            "my_subscribers":    my_subscribers,
+            "niche_keywords":    niche_keywords,
+            "pool_size":         len(scored),
+            "median_vps":        round(cohort_median_vps, 3),
+            "cohort_tier":       cohort_tag,         # diagnostic for the UI
+            "broadened_with":    broadened_with,     # null unless query-broadening kicked in
+            "window_days":       _RECENCY_DAYS,
+            "vertical":          vertical_info.get("vertical", ""),
+            "vertical_traits":   vertical_info.get("vertical_traits", []),
+            "topic_specificity": topic_specificity,
         },
     }
 
 
 # ─── Fetch + core filters ─────────────────────────────────────────────────────
+
+def _classify_topic_vertical(query: str) -> dict:
+    """
+    Classify a search topic into its broad content vertical — e.g.
+        "grocery haul"       -> {"vertical": "lifestyle vlog",
+                                  "vertical_traits": ["vlog","routine","day in the life",...],
+                                  "topic_specificity": "generalist"}
+        "react native test"  -> {"vertical": "dev tutorial",
+                                  "vertical_traits": ["tutorial","crash course","fix",...],
+                                  "topic_specificity": "specialist"}
+
+    Used by the Channels tab ranking: we match candidate channels' recent
+    uploads against `vertical_traits` instead of the user's personal niche,
+    so the tab surfaces lifestyle-vloggers-who-occasionally-haul rather than
+    haul-only channels. Fails open — empty dict if the AI call errors out,
+    which reverts Channels tab to personal-niche behaviour.
+    """
+    query = (query or "").strip()
+    if not query:
+        return {}
+    import os
+    if not os.getenv("ANTHROPIC_API_KEY", ""):
+        return {}
+    try:
+        client = make_anthropic_client()
+        msg = client.messages.create(
+            model="claude-haiku-4-5-20251001",
+            max_tokens=280,
+            messages=[{"role": "user", "content": (
+                f'YouTube search topic: "{query}"\n\n'
+                f'Classify this into a BROAD content vertical the way a '
+                f'creator would think about their niche.\n\n'
+                f'Also decide: are the top channels covering this topic '
+                f'usually broader-vertical channels who occasionally touch '
+                f'it ("generalist"), or dedicated topic channels '
+                f'("specialist")?\n\n'
+                f'Return ONLY valid JSON, no markdown:\n'
+                f'{{\n'
+                f'  "vertical": "<2-4 word broad category, e.g. \'lifestyle vlog\', \'tech tutorial\', \'finance explainer\'>",\n'
+                f'  "vertical_traits": ["<6-10 short broad-trait keywords typical of channels in this vertical; e.g. for lifestyle vlog: vlog, routine, day in the life, daily, morning, mom life, life update; AVOID topic-specific words>"],\n'
+                f'  "topic_specificity": "generalist"\n'
+                f'}}'
+            )}],
+        )
+        raw = msg.content[0].text.strip()
+        if raw.startswith("```"):
+            raw = re.sub(r"^```[a-z]*\n?", "", raw)
+            raw = re.sub(r"\n?```$", "", raw.strip())
+        parsed = json.loads(raw)
+        traits = [
+            t.strip().lower()
+            for t in (parsed.get("vertical_traits") or [])
+            if isinstance(t, str) and t.strip()
+        ][:10]
+        specificity = (parsed.get("topic_specificity") or "generalist").strip().lower()
+        if specificity not in ("generalist", "specialist"):
+            specificity = "generalist"
+        return {
+            "vertical":          (parsed.get("vertical") or "").strip(),
+            "vertical_traits":   traits,
+            "topic_specificity": specificity,
+        }
+    except Exception as e:
+        print(f"[outliers] topic-vertical classify error: {e}")
+        return {}
+
 
 def _build_search_terms(title: str, confirmed_keyword: str) -> list[str]:
     """
@@ -675,14 +765,22 @@ def _tier_sort_key(v: dict) -> tuple:
 def _derive_breakout_channels(
     scored_videos: list[dict],
     channel_details: dict[str, dict],
-    niche_channels: set[str],
+    match_channels: set[str],
+    topic_specificity: str = "generalist",
 ) -> list[dict]:
     """
     Aggregate the scored-video pool by channel. No hard outlier-floor filter —
     we want to fill _RESULTS_CHANNEL slots whenever possible. The tier sort
-    surfaces niche-matched + above-floor channels first; below-floor and
-    off-niche channels still get shown if they're the best available.
-    Channel outlier_score = its best video's outlier_score in this search.
+    surfaces match-set channels (the topic's vertical) first, then above-
+    floor, then anything else. Channel outlier_score = its best video's
+    outlier_score in this search.
+
+    topic_specificity:
+      - "generalist" (default): within a tier, channels with FEWER videos in
+        this search rank higher — genuine generalists dabbling beat
+        topic-specialists who happen to also be in the vertical.
+      - "specialist": invert — more videos in search rank higher (the channel
+        is an authority on this specific topic).
     """
     by_ch: dict[str, dict] = {}
     for v in scored_videos:
@@ -718,7 +816,7 @@ def _derive_breakout_channels(
             continue
         vc = meta.get("video_count", 0)
         tv = meta.get("total_views", 0)
-        is_niche    = cid in niche_channels
+        is_match    = cid in match_channels
         is_above    = data["best_outlier_score"] >= _MIN_OUTLIER_SCORE
         channels.append({
             "channel_id":          cid,
@@ -737,12 +835,16 @@ def _derive_breakout_channels(
             "top_video_title":     data["top_video_title"],
             "top_video_id":        data["top_video_id"],
             "top_video_views":     data["top_video_views"],
-            "is_niche_matched":    is_niche,
+            "is_niche_matched":    is_match,   # the match set passed in (vertical or niche fallback)
             "is_above_floor":      is_above,
         })
 
-    # Shared tiered sort — same preference ladder as videos.
-    channels.sort(key=_tier_sort_key)
+    # Tier sort with specificity-aware tiebreak. _tier_sort_key handles the
+    # first 3 dimensions (match set, floor, score); we add a 4th for videos-
+    # in-search so generalists dabbling beat specialists when topic is
+    # generalist, and vice versa.
+    sign = 1 if topic_specificity == "generalist" else -1
+    channels.sort(key=lambda c: _tier_sort_key(c) + (sign * c.get("videos_in_search", 0),))
     return channels[:_RESULTS_CHANNEL]
 
 
