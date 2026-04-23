@@ -19,8 +19,8 @@ if (typeof document !== 'undefined' && !document.getElementById('thumb-iq-styles
     .tiq-card {
       background: #fff;
       border: 1px solid rgba(0,0,0,0.09);
-      border-radius: 20px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.08), 0 10px 32px rgba(0,0,0,0.12);
+      border-radius: 16px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.06);
     }
     .tiq-section { animation: thumbFadeUp 0.28s ease both; }
     .tiq-upload-zone {
@@ -50,8 +50,8 @@ if (typeof document !== 'undefined' && !document.getElementById('thumb-iq-styles
 
     .tiq-acc-header {
       background: #ffffff;
-      border: 1px solid #d8d8e0;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.14), 0 24px 64px rgba(0,0,0,0.18), 0 1px 0 rgba(255,255,255,0.9) inset;
+      border: 1px solid rgba(0,0,0,0.09);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.06);
       padding: 16px 20px;
       display: flex;
       align-items: center;
@@ -61,19 +61,19 @@ if (typeof document !== 'undefined' && !document.getElementById('thumb-iq-styles
       user-select: none;
     }
     .tiq-acc-header:hover {
-      box-shadow: 0 8px 28px rgba(0,0,0,0.18), 0 36px 80px rgba(0,0,0,0.22), 0 1px 0 rgba(255,255,255,0.9) inset;
-      border-color: #c0c0cc;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.06), 0 8px 24px rgba(0,0,0,0.08);
+      border-color: rgba(0,0,0,0.14);
     }
-    .tiq-acc-header.closed { border-radius: 20px; }
-    .tiq-acc-header.open   { border-radius: 20px 20px 0 0; border-bottom-color: rgba(0,0,0,0.07); }
+    .tiq-acc-header.closed { border-radius: 16px; }
+    .tiq-acc-header.open   { border-radius: 16px 16px 0 0; border-bottom-color: rgba(0,0,0,0.07); }
 
     .tiq-acc-body {
-      border: 1px solid #d8d8e0;
+      border: 1px solid rgba(0,0,0,0.09);
       border-top: none;
-      border-radius: 0 0 20px 20px;
-      background: #f8f8fb;
+      border-radius: 0 0 16px 16px;
+      background: #ffffff;
       padding: 24px 20px 28px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.10);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.06);
     }
 
     /* Trash button — hidden until wrapper hovered */
@@ -478,7 +478,7 @@ function L2Row({ dimKey, dim }) {
                           borderRadius: '0 8px 8px 0', padding: '8px 10px 8px 12px' }}>
               <p style={{ fontSize: 12, fontWeight: 700, color: C.amber, marginBottom: 4,
                           letterSpacing: '0.06em', textTransform: 'uppercase' }}>Fix</p>
-              <p style={{ fontSize: 12, color: '#92400e', lineHeight: 1.6 }}>{dim.fix}</p>
+              <p style={{ fontSize: 12, color: C.text1, lineHeight: 1.6 }}>{dim.fix}</p>
             </div>
           )}
         </div>
@@ -492,22 +492,24 @@ function LinkedIdeaCard({ idea }) {
   if (!idea) return null
   return (
     <div style={{
-      background: C.blueBg, border: `0.5px solid #bfdbfe`,
+      background: C.blueBg, border: `1px solid ${C.blueBdr}`,
       borderRadius: 10, padding: '12px 14px', marginBottom: 16,
     }}>
-      <p style={{ fontSize: 14, fontWeight: 500, color: '#1e40af', marginBottom: 4 }}>
+      <p style={{ fontSize: 14, fontWeight: 700, color: C.text1, marginBottom: 4, letterSpacing: '-0.1px' }}>
         Benchmarked for: {idea.title}
       </p>
       {idea.angle && (
-        <p style={{ fontSize: 14, color: '#6b7280', fontWeight: 400, marginBottom: 8, lineHeight: 1.5 }}>
+        <p style={{ fontSize: 13, color: C.text2, fontWeight: 400, marginBottom: 8, lineHeight: 1.5 }}>
           {idea.angle}
         </p>
       )}
       <span style={{
-        fontSize: 12, fontWeight: 500, color: '#15803d',
-        background: '#f0fdf4', borderRadius: 20, padding: '2px 8px',
+        fontSize: 11, fontWeight: 700, color: C.green,
+        background: C.greenBg, border: `1px solid ${C.greenBdr}`,
+        borderRadius: 100, padding: '2px 9px',
+        letterSpacing: '0.06em', textTransform: 'uppercase',
       }}>
-        Competitor gap — {idea.opportunityScore}/100
+        Competitor gap · {idea.opportunityScore}/100
       </span>
     </div>
   )
@@ -766,7 +768,7 @@ function UploadPanel({ videoIdeas, hasIdeas, initialIdea, initialTopic, topicSou
       <div style={{ marginBottom: 18, paddingBottom: 16, borderBottom: `1px solid ${C.border}` }}>
         <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 6 }}>Score a new thumbnail</p>
         <p style={{ fontSize: 13, color: C.text2, lineHeight: 1.6 }}>
-          Match your thumbnail to a video idea — you'll get a benchmark from videos already winning on YouTube for that topic.
+          Match your thumbnail to a video idea. You'll get a benchmark from videos already winning on YouTube for that topic.
         </p>
       </div>
 
@@ -909,19 +911,22 @@ function UploadPanel({ videoIdeas, hasIdeas, initialIdea, initialTopic, topicSou
                onChange={e => handleFileSelect(e.target.files)}/>
       </div>
 
-      {/* Analyze button */}
+      {/* Analyze button — matches the full-width red pill CTA used site-wide
+          (Overview / Videos / Outliers / SEO Optimizer): radius 100, 13.5/700 */}
       <button
         onClick={handleUploadClick}
         disabled={!canUpload}
         style={{
-          marginTop: 14, width: '100%', height: 48,
+          marginTop: 14, width: '100%',
+          padding: '11px 16px',
           background: canUpload ? C.red : '#e0e0e6',
           color: canUpload ? '#fff' : '#a0a0b0',
-          border: 'none', borderRadius: 12, fontSize: 14, fontWeight: 700,
+          border: 'none', borderRadius: 100, fontSize: 13.5, fontWeight: 700,
           cursor: canUpload ? 'pointer' : 'not-allowed',
-          fontFamily: 'inherit', letterSpacing: '-0.2px', transition: 'all 0.15s',
-          boxShadow: canUpload ? '0 2px 8px rgba(229,37,27,0.25)' : 'none',
+          fontFamily: 'inherit', letterSpacing: '0.01em', transition: 'filter 0.15s',
         }}
+        onMouseEnter={e => { if (canUpload) e.currentTarget.style.filter = 'brightness(1.1)' }}
+        onMouseLeave={e => { e.currentTarget.style.filter = 'none' }}
       >
         {!file ? 'Select a thumbnail first' : !confirmedKeyword ? 'Enter a topic first' : 'Analyze Thumbnail'}
       </button>
@@ -1077,7 +1082,7 @@ export default function ThumbnailScore({ channelData, onNavigate }) {
       setState('ready2')
     } catch (e) {
       const msg = e.name === 'AbortError'
-        ? 'Analysis timed out. Your credit has been refunded — please try again.'
+        ? 'Analysis timed out. Your credit has been refunded. Please try again.'
         : (e.message || 'Analysis failed')
       setError(msg)
       setState('ready1')
@@ -1226,7 +1231,7 @@ export default function ThumbnailScore({ channelData, onNavigate }) {
 
       {/* Error banner */}
       {error && (
-        <div style={{ background: C.redBg, border: `1px solid ${C.redBdr}`, borderRadius: 12,
+        <div style={{ background: C.redBg, border: `1px solid ${C.redBdr}`, borderRadius: 10,
                       padding: '12px 16px', marginBottom: 20, fontSize: 14, color: C.red }}>
           {error}
         </div>
@@ -1234,7 +1239,7 @@ export default function ThumbnailScore({ channelData, onNavigate }) {
 
       {/* Duplicate message */}
       {dupMessage && (
-        <p style={{ fontSize: 14, color: '#6b7280', fontWeight: 400, marginBottom: 14 }}>
+        <p style={{ fontSize: 14, color: C.text2, fontWeight: 400, marginBottom: 14 }}>
           {dupMessage}
         </p>
       )}
@@ -1254,7 +1259,7 @@ export default function ThumbnailScore({ channelData, onNavigate }) {
               </div>
               <p style={{ fontWeight: 700, color: C.text2, marginBottom: 6, fontSize: 14 }}>No previous thumbnails</p>
               <p style={{ fontSize: 14, color: C.text3, maxWidth: 300, margin: '0 auto' }}>
-                Upload a thumbnail to get started — it will be saved here automatically
+                Upload a thumbnail to get started. It will be saved here automatically.
               </p>
             </div>
           ) : (
@@ -1571,8 +1576,8 @@ export default function ThumbnailScore({ channelData, onNavigate }) {
                 onClick={() => { setAnalysis(null); setMarkedReady(false); setState('idle') }}
                 style={{
                   marginTop: 12, background: 'none', cursor: 'pointer', fontFamily: 'inherit',
-                  border: '0.5px solid rgba(0,0,0,0.1)', borderRadius: 8,
-                  padding: '6px 14px', fontSize: 12, fontWeight: 500, color: '#6b7280',
+                  border: `1px solid ${C.border}`, borderRadius: 100,
+                  padding: '6px 14px', fontSize: 12, fontWeight: 500, color: C.text2,
                   transition: 'background 0.12s, border-color 0.12s',
                 }}
                 onMouseEnter={e => { e.currentTarget.style.background = '#f4f4f7'; e.currentTarget.style.borderColor = 'rgba(0,0,0,0.18)' }}
@@ -1666,22 +1671,23 @@ export default function ThumbnailScore({ channelData, onNavigate }) {
                 )
               })()}
 
-              {/* CTA: Run Full Thumbnail IQ */}
+              {/* CTA: Run Full Thumbnail IQ — same pill CTA as Overview / Videos / Outliers */}
               {state === 'ready1' && (
                 <div style={{ marginTop: 4 }}>
                   <button
                     onClick={handleAnalyze}
                     style={{
-                      width: '100%', height: 48, background: C.red, color: '#fff',
-                      border: 'none', borderRadius: 12, fontSize: 14, fontWeight: 700,
-                      cursor: 'pointer', fontFamily: 'inherit', letterSpacing: '-0.2px',
-                      boxShadow: `0 2px 8px rgba(229,37,27,0.3), 0 8px 24px rgba(229,37,27,0.2)`,
-                      transition: 'filter 0.15s, transform 0.15s',
+                      width: '100%',
+                      padding: '11px 16px',
+                      background: C.red, color: '#fff',
+                      border: 'none', borderRadius: 100, fontSize: 13.5, fontWeight: 700,
+                      cursor: 'pointer', fontFamily: 'inherit', letterSpacing: '0.01em',
+                      transition: 'filter 0.15s',
                     }}
-                    onMouseEnter={e => { e.currentTarget.style.filter = 'brightness(1.08)'; e.currentTarget.style.transform = 'translateY(-1px)' }}
-                    onMouseLeave={e => { e.currentTarget.style.filter = ''; e.currentTarget.style.transform = '' }}
+                    onMouseEnter={e => e.currentTarget.style.filter = 'brightness(1.1)'}
+                    onMouseLeave={e => e.currentTarget.style.filter = 'none'}
                   >
-                    Run Full Thumbnail IQ — 1 AI analysis
+                    Run Full Thumbnail IQ · 1 AI analysis
                   </button>
                 </div>
               )}
