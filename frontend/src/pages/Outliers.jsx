@@ -852,9 +852,17 @@ function VideoResultCard({ item, kind, onOpen }) {
       <a href={ytUrl || '#'} target="_blank" rel="noopener noreferrer"
         onClick={e => { if (!ytUrl) e.preventDefault() }}
         style={{ display: 'block', position: 'relative', textDecoration: 'none', flexShrink: 0, borderRadius: '15px 15px 0 0', overflow: 'hidden' }}>
-        {item.thumbnail
-          ? <img src={item.thumbnail} alt=""
-              style={{ width: '100%', aspectRatio: '16/9', objectFit: 'cover', display: 'block' }}/>
+        {/* High-res thumbnail — constructed from video_id like the Videos tab
+            does (Dashboard.jsx:2506). hqdefault.jpg is 480x360 (the search-API
+            thumbnail is ~320x180). onError drops to the stored thumbnail if
+            hqdefault is somehow missing. */}
+        {(item.video_id || item.thumbnail)
+          ? <img
+              src={item.video_id ? `https://i.ytimg.com/vi/${item.video_id}/hqdefault.jpg` : item.thumbnail}
+              alt=""
+              style={{ width: '100%', aspectRatio: '16/9', objectFit: 'cover', display: 'block' }}
+              onError={e => { e.target.onerror = null; if (item.thumbnail) e.target.src = item.thumbnail }}
+            />
           : <div style={{ width: '100%', aspectRatio: '16/9', background: '#ebebef' }}/>
         }
         {/* SHORT / duration badges — identical to Videos tab. Outlier signal
@@ -942,9 +950,16 @@ function ChannelResultCard({ item, onOpen }) {
       <a href={ytUrl || '#'} target="_blank" rel="noopener noreferrer"
         onClick={e => { if (!ytUrl) e.preventDefault() }}
         style={{ display: 'block', position: 'relative', textDecoration: 'none', flexShrink: 0, borderRadius: '15px 15px 0 0', overflow: 'hidden' }}>
-        {item.top_video_thumbnail
-          ? <img src={item.top_video_thumbnail} alt=""
-              style={{ width: '100%', aspectRatio: '16/9', objectFit: 'cover', display: 'block' }}/>
+        {/* High-res banner — uses the channel's top-video hqdefault (480x360).
+            Same pattern as the Videos tab. onError falls back to the stored
+            top_video_thumbnail if hqdefault isn't served. */}
+        {(item.top_video_id || item.top_video_thumbnail)
+          ? <img
+              src={item.top_video_id ? `https://i.ytimg.com/vi/${item.top_video_id}/hqdefault.jpg` : item.top_video_thumbnail}
+              alt=""
+              style={{ width: '100%', aspectRatio: '16/9', objectFit: 'cover', display: 'block' }}
+              onError={e => { e.target.onerror = null; if (item.top_video_thumbnail) e.target.src = item.top_video_thumbnail }}
+            />
           : <div style={{ width: '100%', aspectRatio: '16/9', background: '#ebebef' }}/>
         }
       </a>
@@ -1102,8 +1117,14 @@ function DetailModal({ kind, item, query, onClose, onNavigate }) {
     ? 'Breakout channel'
     : kind === 'thumbnail' ? 'Winning thumbnail' : 'Outlier video'
 
-  const headerThumb = isChannel ? (item.top_video_thumbnail || item.thumbnail) : item.thumbnail
-  const headerTitle = isChannel ? item.channel_name : item.title
+  // Prefer YouTube's high-res hqdefault (480x360) over the search API's
+  // medium thumbnail (~320x180). Falls back to the stored thumbnail if the
+  // high-res isn't available.
+  const headerVideoId = isChannel ? item.top_video_id : item.video_id
+  const headerThumbHi = headerVideoId ? `https://i.ytimg.com/vi/${headerVideoId}/hqdefault.jpg` : null
+  const headerThumbLo = isChannel ? (item.top_video_thumbnail || item.thumbnail) : item.thumbnail
+  const headerThumb   = headerThumbHi || headerThumbLo
+  const headerTitle   = isChannel ? item.channel_name : item.title
 
   // ── Action buttons used in the bottom row ─────────────────────────────
   const actionList = isChannel
@@ -1129,7 +1150,8 @@ function DetailModal({ kind, item, query, onClose, onNavigate }) {
           <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 20, paddingBottom: 20, borderBottom: `1px solid ${C.borderLight}` }}>
             {headerThumb
               ? <img src={headerThumb} alt=""
-                  style={{ width: 96, height: 60, borderRadius: 8, objectFit: 'cover', flexShrink: 0, border: `1px solid ${C.border}` }}/>
+                  style={{ width: 96, height: 60, borderRadius: 8, objectFit: 'cover', flexShrink: 0, border: `1px solid ${C.border}` }}
+                  onError={e => { e.target.onerror = null; if (headerThumbLo) e.target.src = headerThumbLo }}/>
               : <div style={{ width: 96, height: 60, borderRadius: 8, background: '#eeeef3', flexShrink: 0, border: `1px solid ${C.border}` }}/>}
             <div style={{ flex: 1, minWidth: 0 }}>
               <p style={{ fontSize: 12, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 4 }}>{kindLabel}</p>

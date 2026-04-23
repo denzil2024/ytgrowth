@@ -1040,7 +1040,11 @@ Be specific. Reference actual visual details you see. No generic advice."""
 
     content_blocks: list[dict] = [{"type": "text", "text": prompt_text}]
     for v in thumbs:
-        url = v.get("thumbnail")
+        # Prefer YouTube's high-res hqdefault.jpg (480x360) over the search
+        # API's medium thumbnail (~320x180) — sharper images = better visual
+        # pattern analysis.
+        vid = v.get("video_id")
+        url = f"https://i.ytimg.com/vi/{vid}/hqdefault.jpg" if vid else v.get("thumbnail")
         if not url:
             continue
         content_blocks.append({
