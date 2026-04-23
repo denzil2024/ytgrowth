@@ -1187,23 +1187,9 @@ export default function ThumbnailScore({ channelData, onNavigate }) {
       fontFamily: "'Inter', system-ui, sans-serif",
     }}>
 
-      {/* Header — red gradient icon badge + H1 24/800/-0.6 + meta line with · separators (Overview/SEO pattern) */}
+      {/* Header — H1 24/800/-0.6 + meta line with · separators (Overview/SEO pattern) */}
       <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 24, gap: 16, flexWrap: 'wrap' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-          <span style={{
-            display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-            width: 48, height: 48, borderRadius: 14,
-            background: 'linear-gradient(135deg, #ef4444 0%, #b91c1c 100%)',
-            boxShadow: '0 6px 18px rgba(229,37,27,0.38), inset 0 1px 0 rgba(255,255,255,0.28)',
-            flexShrink: 0,
-          }}>
-            {/* Thumbnail/photo icon — represents the page's job */}
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <rect x="3" y="5" width="18" height="14" rx="2.5"/>
-              <circle cx="9" cy="11" r="1.8" fill="#ffffff" stroke="none"/>
-              <path d="M3 17l5-5 3.5 3.5L15 12l6 6"/>
-            </svg>
-          </span>
           <div>
             <h1 style={{ fontSize: 24, fontWeight: 800, color: C.text1, letterSpacing: '-0.6px', marginBottom: 6, lineHeight: 1.1 }}>Thumbnail IQ</h1>
             <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.4, display: 'flex', gap: 0, flexWrap: 'wrap' }}>

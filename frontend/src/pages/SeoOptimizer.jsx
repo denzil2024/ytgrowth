@@ -678,17 +678,6 @@ export default function SeoOptimizer({ onNavigate }) {
         return (
       <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 24, gap: 16, flexWrap: 'wrap' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-          <span style={{
-            display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-            width: 48, height: 48, borderRadius: 14,
-            background: 'linear-gradient(135deg, #ef4444 0%, #b91c1c 100%)',
-            boxShadow: '0 6px 18px rgba(229,37,27,0.38), inset 0 1px 0 rgba(255,255,255,0.28)',
-            flexShrink: 0,
-          }}>
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="#ffffff">
-              <path d="M12 2.5l2.1 6.3 6.3 2.1-6.3 2.1L12 19.3l-2.1-6.3L3.6 10.9l6.3-2.1z"/>
-            </svg>
-          </span>
           <div>
             <h1 style={{ fontSize: 24, fontWeight: 800, color: C.text1, letterSpacing: '-0.6px', marginBottom: 6, lineHeight: 1.1 }}>SEO Optimizer</h1>
             {/* Meta line with · separators, matches Overview's "Stats from Xh ago · Audited Xd ago" pattern */}
