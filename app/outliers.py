@@ -24,6 +24,7 @@ from app.seo import (
     _filter_by_intent,
     research_keywords,
     get_autocomplete_suggestions,
+    _extract_search_terms,
     _NGRAM_STOP as _SEO_STOP,
 )
 
@@ -76,9 +77,10 @@ def _execute_with_retry(request, attempts: int = 3, base_delay: float = 0.6):
 
 # ─── Tunables ─────────────────────────────────────────────────────────────────
 
-_SEARCH_POOL_SIZE   = 40    # YouTube search results requested
+_SEARCH_POOL_SIZE   = 50    # Per-query YouTube pool (matches SEO Optimizer)
 _RESULTS_VIDEO      = 12    # Returned to the frontend for video/thumbnail tabs
 _RESULTS_CHANNEL    = 10    # Returned for channel tab
+_PER_CHANNEL_CAP    = 2     # Max videos from one channel in the videos/thumbnails tabs
 _MIN_OUTLIER_SCORE  = 1.8   # Below this, not really an outlier; drop it
 
 # Recency: only results from the last 12 months. Anything older is dropped.
@@ -188,9 +190,14 @@ def _run_unified_search(
     my_subscribers: int,
     niche_keywords: list[str],
 ) -> dict:
-    # Fetch + intent filter + own-channel drop + 12-month recency filter.
+    # Build the search_terms list SEO-style: primary phrase + 2 AI-extracted
+    # secondaries from the original title. Three queries merged = way more
+    # channel diversity than a single search.
+    search_terms = _build_search_terms(title, confirmed_keyword)
+
+    # Multi-query YouTube fetch + own-channel drop + 12-month recency filter.
     intent_videos, channel_details = _fetch_intent_filtered(
-        creds, title, confirmed_keyword, my_channel_id,
+        creds, search_terms, confirmed_keyword, my_channel_id,
     )
 
     # Niche matching — now a SOFT signal. We still fetch recent titles per
@@ -208,7 +215,7 @@ def _run_unified_search(
         if broader_query and broader_query.lower() != title.lower():
             broadened_with = broader_query
             extra_videos, extra_details = _fetch_intent_filtered(
-                creds, broader_query, confirmed_keyword, my_channel_id,
+                creds, [broader_query], confirmed_keyword, my_channel_id,
             )
             new_ch_ids = [c for c in extra_details.keys() if c not in channel_details]
             channel_details.update(extra_details)
@@ -238,7 +245,13 @@ def _run_unified_search(
 
     # Tiered video sort — guarantees 8+ as long as the relevance pool has 8+.
     scored_sorted = sorted(scored, key=_tier_sort_key)
-    top_videos    = scored_sorted[:_RESULTS_VIDEO]
+    # Per-channel cap prevents a single vlogger from dominating the results.
+    # If the capped pool falls below 8, relax the cap to backfill (we'd rather
+    # show a channel's 3rd hit than a blank slot).
+    capped = _apply_channel_cap(scored_sorted, _PER_CHANNEL_CAP)
+    if len(capped) < _MIN_RESULTS:
+        capped = _apply_channel_cap(scored_sorted, _PER_CHANNEL_CAP + 2)
+    top_videos = capped[:_RESULTS_VIDEO]
 
     # Diagnostic tag for the cohort payload.
     if top_videos and top_videos[0].get("is_niche_matched") and top_videos[0].get("is_above_floor"):
@@ -319,24 +332,84 @@ def _run_unified_search(
 
 # ─── Fetch + core filters ─────────────────────────────────────────────────────
 
+def _build_search_terms(title: str, confirmed_keyword: str) -> list[str]:
+    """
+    Build the list of YouTube search phrases for this request — same pattern
+    SEO Optimizer uses in analyze_title. Primary phrase (confirmed_keyword if
+    the user picked one, otherwise the AI-extracted niche phrase) followed by
+    up to 2 AI-extracted secondary phrases from the original title. Three
+    searches merged gives us real channel diversity, not a single vlogger's
+    back catalog repeated.
+    """
+    title = (title or "").strip()
+    confirmed = (confirmed_keyword or "").strip().lower()
+    if not title and not confirmed:
+        return []
+
+    primary = confirmed or title
+
+    # Try to AI-extract richer phrases; degrade gracefully if the key is missing.
+    import os
+    from app.utils import make_anthropic_client
+    if not os.getenv("ANTHROPIC_API_KEY", ""):
+        return [primary]
+    try:
+        client = make_anthropic_client()
+        extracted = _extract_search_terms(client, title, "") or []
+    except Exception as e:
+        print(f"[outliers] _extract_search_terms failed: {e}")
+        extracted = []
+
+    # Primary first, then 2 secondaries from the extracted list, deduped
+    # preserving order. This matches seo.py's: [primary] + extracted[1:3].
+    seen: set[str] = set()
+    terms: list[str] = []
+    for t in [primary] + list(extracted[1:3]):
+        key = (t or "").strip().lower()
+        if key and key not in seen:
+            seen.add(key)
+            terms.append(key)
+    return terms
+
+
+def _apply_channel_cap(videos: list[dict], per_channel: int) -> list[dict]:
+    """Keep at most per_channel videos per channel, preserving tier order."""
+    counts: dict[str, int] = {}
+    out: list[dict] = []
+    for v in videos:
+        cid = v.get("channel_id") or ""
+        if counts.get(cid, 0) >= per_channel:
+            continue
+        counts[cid] = counts.get(cid, 0) + 1
+        out.append(v)
+    return out
+
+
 def _fetch_intent_filtered(
-    creds, query: str, confirmed_keyword: str, my_channel_id: str,
+    creds, search_terms: list[str], confirmed_keyword: str, my_channel_id: str,
 ) -> tuple[list[dict], dict[str, dict]]:
     """
-    One YouTube search pass → intent filter → own-channel drop → 12-month filter
-    → channel-detail hydration. Returns the surviving videos plus the channel
-    details (incl. uploads playlist IDs) for every unique channel in them.
+    Multi-query YouTube search (same pattern SEO Optimizer uses) → intent filter
+    → own-channel drop → 12-month filter → channel-detail hydration.
+
+    When confirmed_keyword is set we SKIP the word-boundary intent filter — the
+    YouTube search's own relevance ordering has already matched intent, and
+    layering _filter_by_intent on top drops most results (e.g. "home office
+    cleaning vlog" would require all 4 words in a title and almost nothing
+    survives). This mirrors seo.py's analyze_title behaviour.
     """
-    raw_videos = search_top_videos(creds, [query], max_results=_SEARCH_POOL_SIZE)
+    terms = [t for t in (search_terms or []) if t and t.strip()]
+    if not terms:
+        return [], {}
+    raw_videos = search_top_videos(creds, terms, max_results=_SEARCH_POOL_SIZE)
     if not raw_videos:
         return [], {}
 
     if confirmed_keyword:
-        intent_videos = _filter_by_intent(confirmed_keyword, raw_videos)
-        if not intent_videos:
-            intent_videos = raw_videos[:10]
-    else:
+        # Skip word-boundary filter — YouTube relevance already handles intent.
         intent_videos = raw_videos
+    else:
+        intent_videos = _filter_by_intent(terms[0], raw_videos) or raw_videos[:10]
 
     # Drop user's own channel.
     if my_channel_id:
