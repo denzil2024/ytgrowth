@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 
 const API = import.meta.env.VITE_API_URL || ''
 const LS_KEY = 'ytg_keywords_v1'
@@ -53,6 +53,7 @@ function useKwStyles() {
       /* Keyword row — matches SEO Studio's .seo-kw-row exactly. Phrase
          text darkens on hover. */
       .kw-row-seo:hover .kw-row-phrase { color: #0f0f13; }
+      .kw-caret:hover { color: #52525b !important; }
 
       .kw-input {
         flex: 1; padding: 11px 18px;
@@ -192,6 +193,44 @@ function MomentumBadge({ momentum }) {
   )
 }
 
+/* Expanded detail panel for a ranked-keyword row — mirrors Thumbnail IQ's
+   Why/Fix 2-col drop-down: left panel lists the real signals (same data
+   the hover tooltip exposes), right panel gives a rule-based "How to use"
+   recommendation. Palette-compliant: left = amber tint, right = red bar. */
+function KwDetailPanel({ kw, C }) {
+  const comp = kw.competition || {}
+  const signals = []
+  signals.push(['Intent match', (kw.intentMatch || '—').replace(/^\w/, c => c.toUpperCase())])
+  signals.push(['Opportunity score', `${kw.opportunityScore}/100`])
+  if (comp.top_subs_median)  signals.push(['Top-5 channels', `~${fmtCompact(comp.top_subs_median)} subs`])
+  if (comp.top_views_median) signals.push(['Top-5 median views', fmtCompact(comp.top_views_median)])
+  if (typeof comp.days_since_newest === 'number') {
+    signals.push(['Newest top-5 video', `${comp.days_since_newest}d ago`])
+  }
+  const rec = buildRecommendation(kw)
+  return (
+    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginTop: 4 }}>
+      {/* Signals — amber-tinted, matches "Why" column */}
+      <div style={{ background: C.amberBg, border: `1px solid ${C.amberBdr}`, borderRadius: 10, padding: '11px 14px' }}>
+        <p style={{ fontSize: 10, fontWeight: 700, color: C.amber, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>Signals</p>
+        <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', columnGap: 14, rowGap: 5 }}>
+          {signals.map(([label, val]) => (
+            <React.Fragment key={label}>
+              <span style={{ fontSize: 12, color: C.text3, fontWeight: 500 }}>{label}</span>
+              <span style={{ fontSize: 12, color: C.text1, fontWeight: 600, fontVariantNumeric: 'tabular-nums' }}>{val}</span>
+            </React.Fragment>
+          ))}
+        </div>
+      </div>
+      {/* How to use — red left bar + white, matches "Fix" column */}
+      <div style={{ background: '#fff', border: `1px solid ${C.border}`, borderLeft: `3px solid ${C.red}`, borderRadius: '0 10px 10px 0', padding: '11px 14px', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}>
+        <p style={{ fontSize: 10, fontWeight: 700, color: C.red, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>How to use</p>
+        <p style={{ fontSize: 13, color: C.text1, lineHeight: 1.65 }}>{rec}</p>
+      </div>
+    </div>
+  )
+}
+
 /* Tooltip copy for each ranked-keyword row — folds together the real
    data signals so hovering gives the full story at a glance. */
 function buildRowTooltip(kw) {
@@ -207,6 +246,28 @@ function buildRowTooltip(kw) {
     parts.push(`Newest top-5 video ${comp.days_since_newest}d ago`)
   }
   return parts.join(' · ')
+}
+
+/* Rule-based "How to use" copy derived from the data already on kw.
+   No extra API calls. Rules checked in priority order; first match wins. */
+function buildRecommendation(kw) {
+  const comp = kw.competition || {}
+  if (kw.momentum === 'unclaimed') {
+    return "No major video in 6+ months — first-mover advantage. Publish this week while the slot is empty."
+  }
+  if (kw.momentum === 'active') {
+    return "Rising niche with recent activity. Put this in your title and first 100 chars of description to ride the wave."
+  }
+  if (kw.intentMatch === 'exact' && kw.opportunityScore >= 75) {
+    return "Strong exact match. Lead your title with this phrase for maximum relevance."
+  }
+  if (comp.top_subs_median && comp.top_subs_median > 500000) {
+    return "Big channels dominate this query. Try a long-tail variant or a sharper angle to stand out."
+  }
+  if (kw.intentMatch === 'partial') {
+    return "Partial intent match — use as a secondary keyword in description or tags, not the main title."
+  }
+  return "Balanced opportunity. Include in your title and test against similar variants."
 }
 
 function fmtCompact(n) {
@@ -253,6 +314,7 @@ export default function Keywords() {
   const [error,         setError]         = useState('')
   const [copied,        setCopied]        = useState(false)
   const [copiedCluster, setCopiedCluster] = useState(null)
+  const [openRow,       setOpenRow]       = useState(null)
 
   function handleCopyCluster(cl) {
     if (!cl?.keywords?.length) return
@@ -500,7 +562,7 @@ export default function Keywords() {
               <div style={{ marginBottom: 20, marginTop: 40 }}>
                 <h2 style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', marginBottom: 4 }}>Ranked keywords</h2>
                 <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.5 }}>
-                  Click any to copy · hover for details · <span style={{ color: C.green, fontWeight: 700 }}>ACTIVE</span> = rising · <span style={{ color: C.amber, fontWeight: 700 }}>OPEN</span> = underclaimed
+                  Click row to copy · click ▾ to expand · <span style={{ color: C.green, fontWeight: 700 }}>ACTIVE</span> = rising · <span style={{ color: C.amber, fontWeight: 700 }}>OPEN</span> = underclaimed
                 </p>
               </div>
 
@@ -524,52 +586,88 @@ export default function Keywords() {
 
                   <div style={{ height: 1, background: C.border, margin: '0 0 14px' }}/>
 
-                  {/* 2-col grid of rows — amber vertical divider between cols */}
+                  {/* 2-col grid of rows — amber vertical divider between cols.
+                      When a row is expanded, a full-width detail panel is
+                      inserted after its pair (gridColumn: 1 / -1) so the grid
+                      layout stays intact and other rows keep their pairing. */}
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', columnGap: 0, rowGap: 14 }}>
-                    {result.keywords.map((kw, i) => {
-                      const scColor    = oppColor(kw.opportunityScore)
-                      const isRightCol = i % 2 === 1
-                      return (
-                        <div
-                          key={kw.keyword}
-                          className="kw-row-seo"
-                          role="button"
-                          tabIndex={0}
-                          onClick={() => navigator.clipboard.writeText(kw.keyword)}
-                          onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); navigator.clipboard.writeText(kw.keyword) } }}
-                          title={buildRowTooltip(kw)}
-                          style={{
-                            display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer',
-                            paddingLeft:  isRightCol ? 20 : 0,
-                            paddingRight: isRightCol ? 0 : 20,
-                            borderLeft: isRightCol ? `1px solid ${C.amberBdr}` : 'none',
-                          }}
-                        >
-                          {/* Phrase — fixed 260px column (SEO Studio pattern,
-                              widened from 180 to fit longer YouTube
-                              autocomplete queries like 'large family budget
-                              grocery haul'). Bar flex-fills the rest of the
-                              row so there's no dead space. */}
-                          <span className="kw-row-phrase" style={{
-                            fontSize: 13, color: C.text2, fontWeight: 400,
-                            width: 260, flexShrink: 0,
-                            overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
-                            transition: 'color 0.12s',
-                          }}>{kw.keyword}</span>
-                          {/* Momentum badge — ACTIVE (green) / OPEN (amber) /
-                              nothing. Derived from competition.days_since_newest. */}
-                          <MomentumBadge momentum={kw.momentum} />
-                          <div style={{ flex: 1, height: 4, background: '#eeeef3', borderRadius: 99, overflow: 'hidden', minWidth: 40 }}>
-                            <div style={{ width: `${kw.opportunityScore}%`, height: '100%', background: scColor, borderRadius: 99, transition: 'width 0.8s cubic-bezier(0.34,1.56,0.64,1)' }}/>
-                          </div>
-                          <span style={{
-                            fontSize: 13, fontWeight: 700, color: scColor,
-                            fontVariantNumeric: 'tabular-nums',
-                            minWidth: 26, textAlign: 'right', flexShrink: 0,
-                          }}>{kw.opportunityScore}</span>
-                        </div>
-                      )
-                    })}
+                    {(() => {
+                      const pairs = []
+                      for (let i = 0; i < result.keywords.length; i += 2) {
+                        pairs.push(result.keywords.slice(i, i + 2))
+                      }
+                      return pairs.map((pair, pairIdx) => {
+                        const openKw = pair.find(k => openRow === k.keyword)
+                        return (
+                          <React.Fragment key={pairIdx}>
+                            {pair.map((kw, j) => {
+                              const scColor    = oppColor(kw.opportunityScore)
+                              const isRightCol = j === 1
+                              const isOpen     = openRow === kw.keyword
+                              return (
+                                <div
+                                  key={kw.keyword}
+                                  className="kw-row-seo"
+                                  role="button"
+                                  tabIndex={0}
+                                  onClick={() => navigator.clipboard.writeText(kw.keyword)}
+                                  onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); navigator.clipboard.writeText(kw.keyword) } }}
+                                  title={buildRowTooltip(kw)}
+                                  style={{
+                                    display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer',
+                                    paddingLeft:  isRightCol ? 20 : 0,
+                                    paddingRight: isRightCol ? 0 : 20,
+                                    borderLeft: isRightCol ? `1px solid ${C.amberBdr}` : 'none',
+                                  }}
+                                >
+                                  {/* Phrase — fixed 260px column (SEO Studio pattern,
+                                      widened from 180 to fit longer YouTube
+                                      autocomplete queries like 'large family budget
+                                      grocery haul'). Bar flex-fills the rest of the
+                                      row so there's no dead space. */}
+                                  <span className="kw-row-phrase" style={{
+                                    fontSize: 13, color: C.text2, fontWeight: 400,
+                                    width: 260, flexShrink: 0,
+                                    overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+                                    transition: 'color 0.12s',
+                                  }}>{kw.keyword}</span>
+                                  {/* Momentum badge — ACTIVE (green) / OPEN (amber) /
+                                      nothing. Derived from competition.days_since_newest. */}
+                                  <MomentumBadge momentum={kw.momentum} />
+                                  <div style={{ flex: 1, height: 4, background: '#eeeef3', borderRadius: 99, overflow: 'hidden', minWidth: 40 }}>
+                                    <div style={{ width: `${kw.opportunityScore}%`, height: '100%', background: scColor, borderRadius: 99, transition: 'width 0.8s cubic-bezier(0.34,1.56,0.64,1)' }}/>
+                                  </div>
+                                  <span style={{
+                                    fontSize: 13, fontWeight: 700, color: scColor,
+                                    fontVariantNumeric: 'tabular-nums',
+                                    minWidth: 26, textAlign: 'right', flexShrink: 0,
+                                  }}>{kw.opportunityScore}</span>
+                                  {/* Caret — Thumbnail IQ pattern. stopPropagation
+                                      so clicking the caret doesn't also fire copy. */}
+                                  <button
+                                    className="kw-caret"
+                                    aria-label={isOpen ? 'Collapse details' : 'Expand details'}
+                                    aria-expanded={isOpen}
+                                    onClick={e => { e.stopPropagation(); setOpenRow(isOpen ? null : kw.keyword) }}
+                                    style={{
+                                      background: 'transparent', border: 'none', cursor: 'pointer',
+                                      color: C.text3, fontSize: 11, padding: '4px 6px',
+                                      marginLeft: 2, flexShrink: 0, lineHeight: 1,
+                                      transition: 'color 0.15s',
+                                    }}
+                                  >{isOpen ? '▲' : '▼'}</button>
+                                </div>
+                              )
+                            })}
+                            {openKw && (
+                              <div style={{ gridColumn: '1 / -1', paddingTop: 2 }}>
+                                <KwDetailPanel kw={openKw} C={C} />
+                              </div>
+                            )}
+                          </React.Fragment>
+                        )
+                      })
+                    })()}
                   </div>
                 </div>
               </div>
