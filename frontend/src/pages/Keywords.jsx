@@ -361,11 +361,16 @@ export default function Keywords() {
                     {result.seedIntent.intentSummary}
                   </p>
                   <div style={{ display: 'flex', gap: 5, flexWrap: 'wrap' }}>
+                    {/* Pills are for SHORT labels only (<=28 chars). The LLM
+                        sometimes returns full sentences in these fields — those
+                        belong in the summary paragraph above, not as pills. */}
                     {[
                       result.seedIntent.primaryIntent,
                       result.seedIntent.contentTypeExpected,
                       result.seedIntent.funnelStage,
-                    ].filter(Boolean).map((tag, i) => (
+                    ]
+                      .filter(t => t && t.trim().length > 0 && t.trim().length <= 28)
+                      .map((tag, i) => (
                       <span key={i} style={{
                         fontSize: 10.5, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase',
                         color: C.text2, background: C.chipBg, border: `1px solid ${C.border}`,
@@ -409,49 +414,70 @@ export default function Keywords() {
             </button>
           </div>
 
+          {/* Keyword cards — fixed 2-col grid (auto-fill was stretching to
+              7 cols on wide screens). Each card uses the exact Priority
+              Actions / IdeaCard pattern: 3px amber top border, 26x26 amber
+              rank badge, eyebrow (intent label) + keyword title, hairline
+              divider at marginLeft:46, angle body + score pill at mL:46. */}
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
+            gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
             gap: 10, marginBottom: 18,
           }}>
-            {result.keywords?.map(kw => {
+            {result.keywords?.map((kw, i) => {
               const tone = INTENT_TONE[kw.intentMatch] || INTENT_TONE.partial
               const oc   = oppColor(kw.opportunityScore)
               return (
-                <div key={kw.keyword} className="kw-kw-card">
-                  {/* Top row — keyword + score */}
-                  <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 10, marginBottom: kw.contentAngle ? 6 : 10 }}>
-                    <p style={{
-                      flex: 1, minWidth: 0,
-                      fontSize: 14, fontWeight: 700, color: C.text1,
-                      lineHeight: 1.4, letterSpacing: '-0.15px',
-                      overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
-                    }}>{kw.keyword}</p>
-                    <div style={{ display: 'flex', alignItems: 'baseline', gap: 2, flexShrink: 0 }}>
-                      <p style={{ fontSize: 17, fontWeight: 800, color: oc, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.3px', lineHeight: 1 }}>
-                        {kw.opportunityScore}
-                      </p>
-                      <p style={{ fontSize: 10.5, fontWeight: 600, color: C.text3, lineHeight: 1 }}>/100</p>
+                <div key={kw.keyword} className="kw-card" style={{ padding: 0, borderTop: `3px solid ${C.amber}` }}>
+                  <div style={{ padding: '16px 22px 18px' }}>
+
+                    {/* Header — rank badge + eyebrow/title + score */}
+                    <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: 14 }}>
+                      <div style={{
+                        width: 26, height: 26, borderRadius: 8,
+                        background: C.amber,
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        flexShrink: 0, marginTop: 2,
+                      }}>
+                        <span style={{ fontSize: 12, fontWeight: 900, color: '#fff', fontVariantNumeric: 'tabular-nums' }}>{i + 1}</span>
+                      </div>
+
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <p style={{
+                          fontSize: 10, fontWeight: 700,
+                          color: tone.color,
+                          letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 5,
+                        }}>{kw.intentMatch} match</p>
+                        <p style={{
+                          fontSize: 14, fontWeight: 700, color: C.text1,
+                          lineHeight: 1.4, letterSpacing: '-0.15px',
+                          overflow: 'hidden', textOverflow: 'ellipsis',
+                          display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical',
+                        }}>{kw.keyword}</p>
+                      </div>
+
+                      <div style={{ display: 'flex', alignItems: 'baseline', gap: 2, flexShrink: 0, paddingTop: 2 }}>
+                        <p style={{ fontSize: 18, fontWeight: 800, color: oc, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.4px', lineHeight: 1 }}>
+                          {kw.opportunityScore}
+                        </p>
+                        <p style={{ fontSize: 11, fontWeight: 600, color: C.text3, lineHeight: 1 }}>/100</p>
+                      </div>
                     </div>
-                  </div>
 
-                  {/* Angle — 1-line clamp for density */}
-                  {kw.contentAngle && (
-                    <p style={{
-                      fontSize: 12.5, color: C.text3, lineHeight: 1.5, marginBottom: 10,
-                      display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden',
-                    }}>{kw.contentAngle}</p>
-                  )}
+                    {/* Hairline divider — aligned at mL:46, mirrors Priority Actions */}
+                    <div style={{ height: 1, background: C.border, marginBottom: 12, marginLeft: 46 }} />
 
-                  {/* Footer — intent pill + opportunity bar */}
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                    <span style={{
-                      fontSize: 10, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase',
-                      color: tone.color, background: tone.bg, border: `1px solid ${tone.bdr}`,
-                      borderRadius: 100, padding: '2px 8px', flexShrink: 0,
-                    }}>{kw.intentMatch}</span>
-                    <div className="kw-bar" style={{ flex: 1 }}>
-                      <div className="kw-bar-fill" style={{ width: `${kw.opportunityScore}%`, background: oc }} />
+                    {/* Body — angle paragraph + opportunity bar */}
+                    <div style={{ marginLeft: 46 }}>
+                      {kw.contentAngle && (
+                        <p style={{
+                          fontSize: 13, color: C.text2, lineHeight: 1.65, marginBottom: 12,
+                          display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden',
+                        }}>{kw.contentAngle}</p>
+                      )}
+                      <div className="kw-bar">
+                        <div className="kw-bar-fill" style={{ width: `${kw.opportunityScore}%`, background: oc }} />
+                      </div>
                     </div>
                   </div>
                 </div>
