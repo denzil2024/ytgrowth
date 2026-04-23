@@ -1,35 +1,58 @@
 import { useEffect, useState } from 'react'
 
-/* ── Design tokens matching the dashboard ─────────────────────────────────── */
+/* ── Design tokens — strict palette matching Dashboard/Keywords/Competitors */
 const C = {
-  red:     '#e5251b',
-  redBg:   '#fef2f2',
-  redBdr:  'rgba(229,37,27,0.2)',
-  green:   '#16a34a',
-  greenBg: '#dcfce7',
+  red:     '#e5251b', redBg:   '#fff5f5', redBdr:   '#fecaca',
+  green:   '#16a34a', greenBg: '#f0fdf4', greenBdr: '#bbf7d0',
+  amber:   '#d97706', amberBg: '#fffbeb', amberBdr: '#fde68a',
   text1:   '#111114',
-  text2:   '#6b7280',
-  text3:   '#9ca3af',
+  text2:   '#52525b',
+  text3:   '#9595a4',
+  text4:   '#c0c0cc',
   border:  'rgba(0,0,0,0.09)',
-  bg:      '#f4f4f6',
+  borderHex: '#e6e6ec',
+  chipBg:  '#f4f4f6',
 }
 
-/* Matches .ytg-stat-card shadow from Dashboard */
+/* System elevation — matches Dashboard / Keywords / Competitors */
 const CARD = {
   background:   '#ffffff',
-  border:       '1px solid rgba(0,0,0,0.09)',
-  borderRadius: 20,
-  boxShadow:    '0 1px 3px rgba(0,0,0,0.07), 0 6px 24px rgba(0,0,0,0.09)',
+  border:       `1px solid ${C.borderHex}`,
+  borderRadius: 16,
+  boxShadow:    '0 1px 3px rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.06)',
+}
+
+/* Page-scoped Inter + font smoothing. Matches the pattern used by
+   Dashboard / Keywords / Competitors / Outliers — never loaded globally. */
+function useSettingsStyles() {
+  useEffect(() => {
+    if (document.getElementById('ytg-settings-fonts')) return
+    const link = document.createElement('link')
+    link.id = 'ytg-settings-fonts'
+    link.rel = 'stylesheet'
+    link.href = 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap'
+    document.head.appendChild(link)
+    if (document.getElementById('ytg-settings-styles')) return
+    const style = document.createElement('style')
+    style.id = 'ytg-settings-styles'
+    style.textContent = `
+      .settings-page, .settings-page * { font-family: 'Inter', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+      .settings-page p, .settings-page span, .settings-page div, .settings-page h1 { margin: 0; }
+      @keyframes settingsSpin { to { transform: rotate(360deg) } }
+    `
+    document.head.appendChild(style)
+  }, [])
 }
 
 /* ── Helpers ──────────────────────────────────────────────────────────────── */
+/* Plan badge — mapped to strict red/amber/green + neutral palette.
+   Tier hierarchy: Free=neutral → Solo=amber → Growth=green → Agency=red. */
 function planBadgeStyle(plan) {
   const p = (plan || '').toLowerCase()
-  if (p.includes('agency'))  return { background: '#faf5ff', color: '#7c3aed' }
-  if (p.includes('growth'))  return { background: '#f0fdf4', color: '#16a34a' }
-  if (p.includes('solo'))    return { background: '#eff6ff', color: '#1d4ed8' }
-  if (p.includes('lifetime'))return { background: '#fffbeb', color: '#d97706' }
-  return { background: '#f3f4f6', color: '#374151' }
+  if (p.includes('agency')) return { background: C.redBg,   color: C.red,   border: `1px solid ${C.redBdr}` }
+  if (p.includes('growth')) return { background: C.greenBg, color: C.green, border: `1px solid ${C.greenBdr}` }
+  if (p.includes('solo'))   return { background: C.amberBg, color: C.amber, border: `1px solid ${C.amberBdr}` }
+  return { background: C.chipBg, color: C.text2, border: `1px solid ${C.border}` }
 }
 
 function planLabel(plan) {
@@ -86,10 +109,10 @@ function SectionHeading({ children, danger }) {
 }
 
 function ProgressBar({ pct }) {
-  const color = pct < 60 ? '#16a34a' : pct < 80 ? '#d97706' : '#e5251b'
+  const color = pct < 60 ? C.green : pct < 80 ? C.amber : C.red
   return (
-    <div style={{ height: 4, background: '#f3f4f6', borderRadius: 4, overflow: 'hidden', margin: '6px 0' }}>
-      <div style={{ width: `${Math.min(pct, 100)}%`, height: '100%', background: color, borderRadius: 4, transition: 'width 0.8s' }} />
+    <div style={{ height: 4, background: '#eeeef3', borderRadius: 99, overflow: 'hidden', margin: '6px 0' }}>
+      <div style={{ width: `${Math.min(pct, 100)}%`, height: '100%', background: color, borderRadius: 99, transition: 'width 0.8s cubic-bezier(0.34,1.56,0.64,1)' }} />
     </div>
   )
 }
@@ -99,8 +122,8 @@ function Toggle({ on, onChange }) {
     <button
       onClick={() => onChange(!on)}
       style={{
-        width: 44, height: 24, borderRadius: 12,
-        background: on ? '#16a34a' : '#d1d5db',
+        width: 44, height: 24, borderRadius: 100,
+        background: on ? C.green : '#d4d4dc',
         border: 'none', cursor: 'pointer', position: 'relative',
         transition: 'background 0.2s', flexShrink: 0,
       }}
@@ -144,26 +167,26 @@ function ConfirmDialog({ title, body, confirmLabel, onConfirm, onCancel, require
               onChange={e => setTyped(e.target.value)}
               placeholder="DELETE"
               style={{
-                width: '100%', padding: '9px 12px',
+                width: '100%', padding: '9px 14px',
                 border: `1px solid ${typed === 'DELETE' ? C.red : C.border}`,
-                borderRadius: 8, fontSize: 14, fontFamily: 'inherit',
+                borderRadius: 100, fontSize: 14, fontFamily: 'inherit',
                 outline: 'none', letterSpacing: '0.05em',
               }}
             />
           </div>
         )}
         <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end' }}>
-          <button onClick={onCancel} style={{ padding: '8px 18px', borderRadius: 8, border: `1px solid ${C.border}`, background: '#fff', color: C.text2, fontSize: 14, fontWeight: 500, cursor: 'pointer', fontFamily: 'inherit' }}>
+          <button onClick={onCancel} style={{ padding: '8px 18px', borderRadius: 100, border: `1px solid ${C.border}`, background: '#fff', color: C.text2, fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>
             Cancel
           </button>
           <button
             onClick={onConfirm}
             disabled={!canConfirm}
             style={{
-              padding: '8px 18px', borderRadius: 8, border: 'none',
+              padding: '8px 18px', borderRadius: 100, border: 'none',
               background: canConfirm ? C.red : '#e5e7eb',
-              color: canConfirm ? '#fff' : '#9ca3af',
-              fontSize: 14, fontWeight: 500, cursor: canConfirm ? 'pointer' : 'not-allowed',
+              color: canConfirm ? '#fff' : C.text3,
+              fontSize: 13, fontWeight: 700, cursor: canConfirm ? 'pointer' : 'not-allowed',
               fontFamily: 'inherit',
             }}
           >{confirmLabel || 'Confirm'}</button>
@@ -175,6 +198,7 @@ function ConfirmDialog({ title, body, confirmLabel, onConfirm, onCancel, require
 
 /* ── Main component ───────────────────────────────────────────────────────── */
 export default function Settings() {
+  useSettingsStyles()
   const [me, setMe] = useState(null)
   const [loading, setLoading] = useState(true)
   const [disconnectTarget, setDisconnectTarget] = useState(null)
@@ -243,8 +267,8 @@ export default function Settings() {
 
   if (loading) {
     return (
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '60vh' }}>
-        <div style={{ width: 28, height: 28, border: '2.5px solid #e5e7eb', borderTop: '2.5px solid #e5251b', borderRadius: '50%', animation: 'spin 0.7s linear infinite' }} />
+      <div className="settings-page" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '60vh' }}>
+        <div style={{ width: 28, height: 28, border: '2.5px solid #e5e7eb', borderTop: `2.5px solid ${C.red}`, borderRadius: '50%', animation: 'settingsSpin 0.7s linear infinite' }} />
       </div>
     )
   }
@@ -256,10 +280,11 @@ export default function Settings() {
   const hasActiveSub = me?.status === 'active' && !me?.is_lifetime
 
   return (
-    <>
+    <div className="settings-page">
       {/* ── Page heading ──────────────────────────────────────────────────── */}
       <div style={{ marginBottom: 24 }}>
-        <h1 style={{ fontSize: 24, fontWeight: 800, color: '#0a0a0f', letterSpacing: '-0.7px', marginBottom: 5 }}>Settings</h1>
+        <h1 style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.6px', marginBottom: 4 }}>Settings</h1>
+        <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.5 }}>Account · plan · channels · preferences</p>
       </div>
 
       {/* ── Row 1: Account — full width ───────────────────────────────────── */}
@@ -268,8 +293,8 @@ export default function Settings() {
       </div>
       <div style={{ ...CARD, padding: '20px 24px', marginBottom: 24, display: 'flex', alignItems: 'center', gap: 20 }}>
         {me?.profile_picture
-          ? <img src={me.profile_picture} alt="" style={{ width: 52, height: 52, borderRadius: '50%', objectFit: 'cover', flexShrink: 0, border: '1.5px solid rgba(0,0,0,0.09)' }} />
-          : <div style={{ width: 52, height: 52, borderRadius: '50%', background: '#fef2f2', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, fontWeight: 700, color: C.red, flexShrink: 0 }}>
+          ? <img src={me.profile_picture} alt="" style={{ width: 52, height: 52, borderRadius: '50%', objectFit: 'cover', flexShrink: 0, border: `1px solid ${C.border}` }} />
+          : <div style={{ width: 52, height: 52, borderRadius: '50%', background: C.chipBg, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, fontWeight: 700, color: C.text1, flexShrink: 0, border: `1px solid ${C.border}` }}>
               {(me?.display_name || me?.email || '?')[0].toUpperCase()}
             </div>
         }
@@ -284,11 +309,12 @@ export default function Settings() {
         <div style={{ flexShrink: 0, textAlign: 'right' }}>
           <span style={{
             ...planBadgeStyle(me?.plan),
-            fontSize: 12, fontWeight: 600,
-            padding: '5px 14px', borderRadius: 20,
+            fontSize: 11, fontWeight: 700,
+            letterSpacing: '0.06em', textTransform: 'uppercase',
+            padding: '4px 12px', borderRadius: 100,
             display: 'inline-block',
           }}>{planLabel(me?.plan)}</span>
-          <p style={{ fontSize: 12, color: C.text3, marginTop: 5 }}>{billingCycleLabel(me)}</p>
+          <p style={{ fontSize: 12, color: C.text3, marginTop: 6 }}>{billingCycleLabel(me)}</p>
         </div>
       </div>
 
@@ -312,8 +338,8 @@ export default function Settings() {
                   display: 'flex', alignItems: 'center', gap: 12,
                 }}>
                   {ch.channel_thumbnail
-                    ? <img src={ch.channel_thumbnail} alt="" style={{ width: 34, height: 34, borderRadius: '50%', objectFit: 'cover', flexShrink: 0, border: '1px solid rgba(0,0,0,0.08)' }} />
-                    : <div style={{ width: 34, height: 34, borderRadius: '50%', background: '#fef2f2', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: 700, color: C.red, flexShrink: 0 }}>
+                    ? <img src={ch.channel_thumbnail} alt="" style={{ width: 34, height: 34, borderRadius: '50%', objectFit: 'cover', flexShrink: 0, border: `1px solid ${C.border}` }} />
+                    : <div style={{ width: 34, height: 34, borderRadius: '50%', background: C.chipBg, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: 700, color: C.text1, flexShrink: 0, border: `1px solid ${C.border}` }}>
                         {(ch.channel_name || '?')[0].toUpperCase()}
                       </div>
                   }
@@ -321,27 +347,27 @@ export default function Settings() {
                     <div style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
                       <p style={{ fontSize: 14, fontWeight: 600, color: C.text1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{ch.channel_name}</p>
                       {ch.is_current && (
-                        <span style={{ background: '#dcfce7', color: '#16a34a', fontSize: 12, fontWeight: 500, padding: '2px 8px', borderRadius: 20, flexShrink: 0 }}>Active</span>
+                        <span style={{ background: C.greenBg, color: C.green, border: `1px solid ${C.greenBdr}`, fontSize: 10, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', padding: '2px 8px', borderRadius: 100, flexShrink: 0 }}>Active</span>
                       )}
                     </div>
-                    <p style={{ fontSize: 12, color: C.text2, marginTop: 1 }}>{fmtSubs(ch.subscribers)} subscribers</p>
-                    <p style={{ fontSize: 12, color: C.text3, marginTop: 1 }}>Connected {fmtDate(ch.connected_at)}</p>
+                    <p style={{ fontSize: 12, color: C.text2, marginTop: 2 }}>{fmtSubs(ch.subscribers)} subscribers</p>
+                    <p style={{ fontSize: 12, color: C.text3, marginTop: 2 }}>Connected {fmtDate(ch.connected_at)}</p>
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
                     {!ch.is_current && (
                       <button
                         onClick={() => handleSwitch(ch.channel_id)}
                         style={{
-                          fontSize: 12, fontWeight: 500, cursor: 'pointer',
+                          fontSize: 12, fontWeight: 600, cursor: 'pointer',
                           border: `1px solid ${C.border}`, background: '#fff',
-                          color: C.text2, borderRadius: 7, padding: '5px 11px',
+                          color: C.text2, borderRadius: 100, padding: '6px 14px',
                           fontFamily: 'inherit',
                         }}
                       >Switch</button>
                     )}
                     <button
                       onClick={() => setDisconnectTarget(ch)}
-                      style={{ fontSize: 12, fontWeight: 500, cursor: 'pointer', background: 'transparent', border: 'none', color: C.red, fontFamily: 'inherit', padding: '5px 2px' }}
+                      style={{ fontSize: 12, fontWeight: 600, cursor: 'pointer', background: 'transparent', border: 'none', color: C.red, fontFamily: 'inherit', padding: '6px 4px' }}
                     >Disconnect</button>
                   </div>
                 </div>
@@ -353,16 +379,17 @@ export default function Settings() {
               {canAddMore
                 ? <a href="/auth/login" style={{
                     display: 'block', textAlign: 'center',
-                    border: '1px dashed rgba(0,0,0,0.15)', borderRadius: 10,
+                    border: `1px dashed ${C.border}`, borderRadius: 12,
                     padding: '13px 16px', textDecoration: 'none',
+                    transition: 'border-color 0.15s, background 0.15s',
                   }}>
-                    <span style={{ fontSize: 14, color: C.red, fontWeight: 500 }}>+ Connect another channel</span>
+                    <span style={{ fontSize: 13, color: C.red, fontWeight: 700 }}>+ Connect another channel</span>
                   </a>
-                : <div style={{ background: '#fef2f2', border: `0.5px solid rgba(229,37,27,0.15)`, borderRadius: 10, padding: '13px 16px' }}>
-                    <p style={{ fontSize: 14, color: C.text2, lineHeight: 1.55, marginBottom: 10 }}>
+                : <div style={{ background: C.redBg, border: `1px solid ${C.redBdr}`, borderRadius: 12, padding: '13px 16px' }}>
+                    <p style={{ fontSize: 13, color: C.text2, lineHeight: 1.55, marginBottom: 10 }}>
                       You have reached your channel limit. Upgrade your plan to connect more channels.
                     </p>
-                    <a href="/?tab=monthly#pricing" style={{ display: 'inline-block', background: C.red, color: '#fff', fontSize: 12, fontWeight: 500, padding: '6px 14px', borderRadius: 7, textDecoration: 'none' }}>
+                    <a href="/?tab=monthly#pricing" style={{ display: 'inline-block', background: C.red, color: '#fff', fontSize: 12, fontWeight: 700, padding: '7px 16px', borderRadius: 100, textDecoration: 'none' }}>
                       Upgrade Plan
                     </a>
                   </div>
@@ -409,19 +436,19 @@ export default function Settings() {
               <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
                 <button
                   onClick={() => window.location.href = '/?tab=packs#pricing'}
-                  style={{ fontSize: 12, fontWeight: 500, cursor: 'pointer', border: `1px solid ${C.border}`, background: '#fff', color: C.text2, borderRadius: 7, padding: '7px 14px', fontFamily: 'inherit' }}
-                >Top Up Credits</button>
+                  style={{ fontSize: 12, fontWeight: 700, cursor: 'pointer', border: `1px solid ${C.border}`, background: '#fff', color: C.text1, borderRadius: 100, padding: '7px 16px', fontFamily: 'inherit' }}
+                >Top up credits</button>
                 {!isTopPlan && (
                   <button
                     onClick={() => window.location.href = '/?tab=monthly#pricing'}
-                    style={{ fontSize: 12, fontWeight: 500, cursor: 'pointer', border: 'none', background: C.red, color: '#fff', borderRadius: 7, padding: '7px 14px', fontFamily: 'inherit' }}
-                  >Upgrade Plan</button>
+                    style={{ fontSize: 12, fontWeight: 700, cursor: 'pointer', border: 'none', background: C.red, color: '#fff', borderRadius: 100, padding: '7px 16px', fontFamily: 'inherit' }}
+                  >Upgrade plan</button>
                 )}
                 {hasActiveSub && (
-                  <button
-                    onClick={() => window.open('https://app.lemonsqueezy.com/my-orders', '_blank')}
-                    style={{ fontSize: 12, fontWeight: 500, cursor: 'pointer', background: 'none', border: 'none', color: C.text2, padding: '7px 2px', fontFamily: 'inherit', textDecoration: 'underline' }}
-                  >Manage Billing</button>
+                  <a
+                    href="mailto:support@ytgrowth.io?subject=Manage%20billing"
+                    style={{ fontSize: 12, fontWeight: 600, cursor: 'pointer', background: 'none', border: 'none', color: C.text2, padding: '7px 4px', fontFamily: 'inherit', textDecoration: 'underline' }}
+                  >Manage billing</a>
                 )}
               </div>
             </div>
@@ -455,23 +482,23 @@ export default function Settings() {
       </div>
       <div style={{
         ...CARD,
-        border: `1px solid rgba(229,37,27,0.2)`,
-        background: '#fffafa',
+        border: `1px solid ${C.redBdr}`,
+        background: C.redBg,
         padding: '20px 24px',
         display: 'flex', alignItems: 'center', gap: 20,
       }}>
         <div style={{ flex: 1 }}>
-          <p style={{ fontSize: 14, fontWeight: 500, color: C.red }}>Delete account</p>
-          <p style={{ fontSize: 14, color: C.text2, marginTop: 5, lineHeight: 1.6 }}>
+          <p style={{ fontSize: 14, fontWeight: 700, color: C.red }}>Delete account</p>
+          <p style={{ fontSize: 13, color: C.text2, marginTop: 5, lineHeight: 1.6 }}>
             This will permanently delete your account, all channel data, analyses, and reports. This cannot be undone.
           </p>
         </div>
         <button
           onClick={() => setShowDeleteDialog(true)}
           style={{
-            fontSize: 12, fontWeight: 500, cursor: 'pointer',
-            background: 'transparent', border: `0.5px solid ${C.red}`,
-            color: C.red, borderRadius: 7, padding: '8px 16px',
+            fontSize: 12, fontWeight: 700, cursor: 'pointer',
+            background: '#fff', border: `1px solid ${C.redBdr}`,
+            color: C.red, borderRadius: 100, padding: '7px 16px',
             fontFamily: 'inherit', flexShrink: 0,
           }}
         >Delete account</button>
@@ -499,6 +526,6 @@ export default function Settings() {
           onCancel={() => setShowDeleteDialog(false)}
         />
       )}
-    </>
+    </div>
   )
 }
