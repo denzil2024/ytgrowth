@@ -507,12 +507,12 @@ function AIAnalysis({ ai, top5Videos, channelId, checkedIdeas, onToggleIdea }) {
         </div>
       </Card>
 
-      {/* ── winning moves — Priority Actions-mimicking cards ──────────────────
-           Each move is its own elevated card (matches Dashboard's InsightCard):
-           amber top-border + amber rank badge + "MOVE N" eyebrow + bold action,
-           hairline divider, then a blue "Why it works" block (same palette as
-           Overview's "Why now" tile) with the move's reasoning.
-           Model output comes as "Action — explanation"; we split on " — ". */}
+      {/* ── winning moves — 2-per-row InsightCard copy ───────────────────────
+           Copies Dashboard's InsightCard layout: amber top-border + amber rank
+           badge + action title, then blue "Why it works" block. Two per row to
+           fill the accordion width (single-column was stretching with huge
+           internal whitespace). Badge carries the rank — no redundant "MOVE N"
+           eyebrow. Model output is "Action — explanation"; we split on " — ". */}
       {ai.winningMoves?.length > 0 && (
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 14 }}>
@@ -525,59 +525,49 @@ function AIAnalysis({ ai, top5Videos, channelId, checkedIdeas, onToggleIdea }) {
             </span>
           </div>
 
-          {ai.winningMoves.map((m, i) => {
-            const parts = m.split(/\s+—\s+/)
-            const action = (parts[0] || m).trim()
-            const why    = parts.length > 1 ? parts.slice(1).join(' — ').trim() : null
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+            {ai.winningMoves.map((m, i) => {
+              const parts  = m.split(/\s+—\s+/)
+              const action = (parts[0] || m).trim()
+              const why    = parts.length > 1 ? parts.slice(1).join(' — ').trim() : null
 
-            return (
-              <div key={i} className="comp-card" style={{
-                borderRadius: 14,
-                overflow: 'hidden',
-                marginBottom: 10,
-                borderTop: '3px solid #d97706',
-              }}>
-                <div style={{ padding: '16px 22px 18px' }}>
-
-                  {/* header — amber rank badge + eyebrow + action title */}
-                  <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: why ? 14 : 0 }}>
-                    <div style={{ width: 26, height: 26, borderRadius: 8, background: '#d97706',
+              return (
+                <div key={i} className="comp-card" style={{
+                  borderRadius: 14,
+                  borderTop: '3px solid #d97706',
+                  padding: '14px 16px 16px',
+                  display: 'flex', flexDirection: 'column', gap: 12,
+                }}>
+                  {/* header — rank badge + action title */}
+                  <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
+                    <div style={{ width: 24, height: 24, borderRadius: 7, background: '#d97706',
                       display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 1 }}>
-                      <span style={{ fontSize: 12, fontWeight: 900, color: '#fff', fontVariantNumeric: 'tabular-nums' }}>
+                      <span style={{ fontSize: 11, fontWeight: 900, color: '#fff', fontVariantNumeric: 'tabular-nums' }}>
                         {i + 1}
                       </span>
                     </div>
-                    <div style={{ flex: 1, minWidth: 0 }}>
-                      <p style={{ fontSize: 10, fontWeight: 700, color: '#d97706',
-                        letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 5 }}>
-                        Move {i + 1}
-                      </p>
-                      <p style={{ fontSize: 14, fontWeight: 700, color: '#111114', lineHeight: 1.55, letterSpacing: '-0.1px' }}>
-                        {action}
-                      </p>
-                    </div>
+                    <p style={{ fontSize: 13.5, fontWeight: 700, color: '#111114', lineHeight: 1.5, letterSpacing: '-0.1px', flex: 1 }}>
+                      {action}
+                    </p>
                   </div>
 
-                  {/* body — blue "Why it works" block (Overview's Why-now palette) */}
+                  {/* "Why it works" block — same palette as Overview's Why-now tile */}
                   {why && (
-                    <>
-                      <div style={{ height: 1, background: '#e6e6ec', marginBottom: 14, marginLeft: 38 }}/>
-                      <div style={{ marginLeft: 38, background: 'rgba(79,134,247,0.07)',
-                        border: '1px solid rgba(79,134,247,0.12)', borderRadius: 10, padding: '12px 14px' }}>
-                        <p style={{ fontSize: 10, fontWeight: 700, color: '#4a7cf7',
-                          letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>
-                          Why it works
-                        </p>
-                        <p style={{ fontSize: 13.5, color: '#111114', lineHeight: 1.72 }}>
-                          {why}
-                        </p>
-                      </div>
-                    </>
+                    <div style={{ background: 'rgba(79,134,247,0.07)', border: '1px solid rgba(79,134,247,0.12)',
+                      borderRadius: 10, padding: '10px 12px' }}>
+                      <p style={{ fontSize: 10, fontWeight: 700, color: '#4a7cf7',
+                        letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 5 }}>
+                        Why it works
+                      </p>
+                      <p style={{ fontSize: 13, color: '#111114', lineHeight: 1.6 }}>
+                        {why}
+                      </p>
+                    </div>
                   )}
                 </div>
-              </div>
-            )
-          })}
+              )
+            })}
+          </div>
         </div>
       )}
 
@@ -699,6 +689,9 @@ function AIAnalysis({ ai, top5Videos, channelId, checkedIdeas, onToggleIdea }) {
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
         {ai.topTopics?.length > 0 && (() => {
           const maxViews = Math.max(...ai.topTopics.map(t => t.avgViews || 0), 1)
+          // Semantic scoreColor — same thresholds Dashboard uses in "Score breakdown":
+          // ≥75% of max = green (strong performer), 55–74% = amber, <55% = red.
+          const scoreColor = (pct) => pct >= 75 ? '#059669' : pct >= 55 ? '#d97706' : '#e5251b'
           return (
             <Card>
               <SectionTitle hint="Their strongest content clusters by average views">
@@ -707,6 +700,7 @@ function AIAnalysis({ ai, top5Videos, channelId, checkedIdeas, onToggleIdea }) {
               <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
                 {ai.topTopics.map((t, i) => {
                   const pct = (t.avgViews || 0) / maxViews * 100
+                  const col = scoreColor(pct)
                   return (
                     <div key={i}>
                       <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginBottom: 6 }}>
@@ -714,7 +708,7 @@ function AIAnalysis({ ai, top5Videos, channelId, checkedIdeas, onToggleIdea }) {
                           letterSpacing: '-0.1px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                           {t.topic}
                         </p>
-                        <span style={{ fontSize: 14, fontWeight: 800, color: '#111114',
+                        <span style={{ fontSize: 14, fontWeight: 800, color: col,
                           fontVariantNumeric: 'tabular-nums', flexShrink: 0, letterSpacing: '-0.3px' }}>
                           {fmtK(t.avgViews)}
                         </span>
@@ -724,7 +718,7 @@ function AIAnalysis({ ai, top5Videos, channelId, checkedIdeas, onToggleIdea }) {
                         </span>
                       </div>
                       <div style={{ height: 4, background: '#eeeef3', borderRadius: 99, overflow: 'hidden' }}>
-                        <div style={{ width: `${Math.max(pct, 2)}%`, height: '100%', background: '#d97706',
+                        <div style={{ width: `${Math.max(pct, 2)}%`, height: '100%', background: col,
                           borderRadius: 99, transition: 'width 0.8s cubic-bezier(0.34,1.56,0.64,1)' }}/>
                       </div>
                     </div>
@@ -735,18 +729,25 @@ function AIAnalysis({ ai, top5Videos, channelId, checkedIdeas, onToggleIdea }) {
           )
         })()}
 
-        {ai.titlePatterns && (
+        {ai.titlePatterns && (() => {
+          // Same scoreColor thresholds as Overview's Score breakdown: 75/55 cut-offs.
+          // Title length is scored AGAINST the 100-char YouTube cap — shorter is better,
+          // so we invert: low% → green, mid% → amber, high% → red (close to truncation).
+          const len    = ai.titlePatterns.avgTitleLength || 0
+          const lenPct = Math.min(100, len)
+          const lenCol = lenPct <= 60 ? '#059669' : lenPct <= 80 ? '#d97706' : '#e5251b'
+          return (
           <Card>
             <SectionTitle hint="What works across their recent titles">Title patterns</SectionTitle>
 
-            {/* Hero: avg title length as a gauge against the 100-char YouTube display cap.
-                Mirrors Priority Actions' hero progress + tabular value pattern. */}
+            {/* Hero: avg title length — same gauge+tabular-value pattern as
+                Priority Actions' hero, scoreColor palette from Score breakdown. */}
             <div style={{ marginBottom: 18, paddingBottom: 14, borderBottom: '1px solid rgba(0,0,0,0.06)' }}>
               <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between',
                 gap: 12, marginBottom: 10 }}>
                 <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
-                  <p style={{ fontSize: 30, fontWeight: 800, color: '#111114', letterSpacing: '-0.8px', lineHeight: 1 }}>
-                    {ai.titlePatterns.avgTitleLength}
+                  <p style={{ fontSize: 30, fontWeight: 800, color: lenCol, letterSpacing: '-0.8px', lineHeight: 1 }}>
+                    {len}
                   </p>
                   <p style={{ fontSize: 13, color: '#9595a4', fontWeight: 500 }}>char avg title length</p>
                 </div>
@@ -754,8 +755,8 @@ function AIAnalysis({ ai, top5Videos, channelId, checkedIdeas, onToggleIdea }) {
               </div>
               <div style={{ height: 4, background: '#eeeef3', borderRadius: 99, overflow: 'hidden' }}>
                 <div style={{
-                  width: `${Math.min(100, ai.titlePatterns.avgTitleLength || 0)}%`,
-                  height: '100%', background: '#d97706', borderRadius: 99,
+                  width: `${lenPct}%`,
+                  height: '100%', background: lenCol, borderRadius: 99,
                   transition: 'width 0.8s cubic-bezier(0.34,1.56,0.64,1)',
                 }}/>
               </div>
@@ -797,7 +798,8 @@ function AIAnalysis({ ai, top5Videos, channelId, checkedIdeas, onToggleIdea }) {
               )}
             </div>
           </Card>
-        )}
+          )
+        })()}
       </div>
 
       {/* ── three-column insights ── */}
