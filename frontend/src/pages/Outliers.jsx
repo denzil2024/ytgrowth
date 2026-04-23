@@ -240,6 +240,32 @@ function fmtDuration(seconds) {
   return `${m}:${String(s).padStart(2, '0')}`
 }
 
+/* YouTube serves 3 thumbnail sizes per video. We use the highest one that
+   actually exists on a given video:
+     1. maxresdefault.jpg  — 1280x720. Only present if the uploader gave YouTube
+                             an HD master; missing on many older or low-quality
+                             uploads.
+     2. hqdefault.jpg      — 480x360. ALWAYS present on every YouTube video.
+     3. {stored thumbnail} — whatever the search API returned (~320x180).
+   The onError handler walks this cascade in order — invisible to the user. */
+function ytMaxThumbUrl(videoId) {
+  return videoId ? `https://i.ytimg.com/vi/${videoId}/maxresdefault.jpg` : null
+}
+function makeThumbOnError(videoId, fallbackUrl) {
+  return (e) => {
+    const step = e.target.dataset.thumbStep || 'max'
+    if (step === 'max' && videoId) {
+      e.target.dataset.thumbStep = 'hq'
+      e.target.src = `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`
+    } else if (step !== 'done' && fallbackUrl) {
+      e.target.dataset.thumbStep = 'done'
+      e.target.src = fallbackUrl
+    } else {
+      e.target.onerror = null
+    }
+  }
+}
+
 function relPublished(iso) {
   if (!iso) return ''
   const then = new Date(iso).getTime()
@@ -762,7 +788,15 @@ export default function Outliers({ channelData, onNavigate }) {
 
       {/* ══ Results — one search, three tab views of the same payload ════════ */}
       {!loading && (result?.videos?.length > 0 || result?.channels?.length > 0) && (() => {
-        const raw = tab === 'channel' ? (result.channels || []) : (result.videos || [])
+        // Each tab reads from its own slice of the payload.
+        // • Videos tab:     result.videos     — ranked by outlier score
+        // • Thumbnails tab: result.thumbnails — ranked by vision click-worthiness
+        //   (falls back to result.videos if the vision call failed)
+        // • Channels tab:   result.channels   — the breakout-channel pool
+        const raw =
+          tab === 'channel'   ? (result.channels || []) :
+          tab === 'thumbnail' ? (result.thumbnails || result.videos || []) :
+                                (result.videos || [])
         // Tab-aware sort (falls back to outlier score if the current sort key
         // doesn't apply to this tab, e.g. switching videos -> channels).
         const items = [...raw].sort((a, b) => {
@@ -791,7 +825,7 @@ export default function Outliers({ channelData, onNavigate }) {
                 </p>
               </div>
             ) : (
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, minmax(0, 1fr))', gap: 14 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, minmax(0, 1fr))', gap: 14 }}>
                 {items.map(item => (
                   tab === 'channel'
                     ? <ChannelResultCard key={item.channel_id} item={item} onOpen={() => setActive(item)} />
@@ -852,16 +886,17 @@ function VideoResultCard({ item, kind, onOpen }) {
       <a href={ytUrl || '#'} target="_blank" rel="noopener noreferrer"
         onClick={e => { if (!ytUrl) e.preventDefault() }}
         style={{ display: 'block', position: 'relative', textDecoration: 'none', flexShrink: 0, borderRadius: '15px 15px 0 0', overflow: 'hidden' }}>
-        {/* High-res thumbnail — constructed from video_id like the Videos tab
-            does (Dashboard.jsx:2506). hqdefault.jpg is 480x360 (the search-API
-            thumbnail is ~320x180). onError drops to the stored thumbnail if
-            hqdefault is somehow missing. */}
+        {/* Max-resolution thumbnail — uses maxresdefault.jpg (1280x720) where
+            the uploader supplied an HD master, else cascades through
+            hqdefault.jpg (480x360, always present) and finally the stored
+            search-API thumbnail. Any card always renders the sharpest image
+            YouTube has for this video. */}
         {(item.video_id || item.thumbnail)
           ? <img
-              src={item.video_id ? `https://i.ytimg.com/vi/${item.video_id}/hqdefault.jpg` : item.thumbnail}
+              src={item.video_id ? ytMaxThumbUrl(item.video_id) : item.thumbnail}
               alt=""
               style={{ width: '100%', aspectRatio: '16/9', objectFit: 'cover', display: 'block' }}
-              onError={e => { e.target.onerror = null; if (item.thumbnail) e.target.src = item.thumbnail }}
+              onError={makeThumbOnError(item.video_id, item.thumbnail)}
             />
           : <div style={{ width: '100%', aspectRatio: '16/9', background: '#ebebef' }}/>
         }
@@ -879,26 +914,32 @@ function VideoResultCard({ item, kind, onOpen }) {
       {/* Body — identical to Videos tab: title → meta line (3 items separated
           by dots, bold values) → footer hairline + 3 metrics + red CTA. */}
       <div style={{ padding: '20px 20px 20px', display: 'flex', flexDirection: 'column', flex: 1 }}>
-        {/* Title — same 16/700/-0.3ls/mb:14/2-line clamp as Videos tab */}
+        {/* Title — same 16/700/-0.3ls/2-line clamp as Videos tab */}
         <p style={{
-          fontSize: 16, fontWeight: 700, color: C.text1, lineHeight: 1.45, marginBottom: 14, letterSpacing: '-0.3px',
+          fontSize: 16, fontWeight: 700, color: C.text1, lineHeight: 1.45, marginBottom: 6, letterSpacing: '-0.3px',
           display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden',
         }}>{item.title}</p>
 
-        {/* Meta line — same 3-item · separator pattern as Videos tab. Swap
-            the "likes" slot for the channel name (the Outliers-relevant
-            dimension: who made this, since it's not the user's own video). */}
+        {/* Channel name — its own line under the title, slightly heavier weight
+            than the meta line below so it reads as a byline ("who made this"),
+            not as a stat. */}
+        <p style={{
+          fontSize: 13, fontWeight: 600, color: C.text2, marginBottom: 6, letterSpacing: '-0.1px',
+          whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
+        }}>{item.channel_name}</p>
+
+        {/* Meta line — views · relTime. 2 items instead of 3 now that channel
+            name has its own line. Matches the Videos tab meta typography. */}
         <p style={{ fontSize: 13.5, fontWeight: 500, color: C.text3, marginBottom: 14, lineHeight: 1.4, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-          <span style={{ color: C.text2, fontWeight: 600 }}>{item.channel_name}</span>
-          <span style={{ margin: '0 8px', color: '#d4d4dc' }}>·</span>
           <span style={{ color: C.text2, fontWeight: 600 }}>{fmtNum(views)}</span> views
           <span style={{ margin: '0 8px', color: '#d4d4dc' }}>·</span>
           {relPublished(item.published_at) || '—'}
         </p>
 
-        {/* Footer — 3-metric grid + full-width red CTA, Videos-tab pattern */}
+        {/* Footer — metrics cluster LEFT (not spread across full width) so
+            the labels sit close to their values and don't feel stranded. */}
         <div style={{ marginTop: 'auto', paddingTop: 18, borderTop: '1px solid #eeeef3' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 12, marginBottom: 18 }}>
+          <div style={{ display: 'flex', gap: 28, marginBottom: 18, flexWrap: 'wrap' }}>
             {[
               { label: 'Outlier', display: `${item.outlier_score}×`,                                                       color: tier.color, tip: 'How many times this video beat its niche cohort\'s median views-per-subscriber. 5×+ is breakout.' },
               { label: 'VPS',     display: vpsDisplay,                                                                     color: C.text1,    tip: 'Views per subscriber — normalises out raw channel size so small-channel wins show up.' },
@@ -932,60 +973,100 @@ function VideoResultCard({ item, kind, onOpen }) {
   )
 }
 
-/* ─── Channel result card — same grid-card silhouette as the Videos tab,
-   using the channel's best-performing video as the banner image and the
-   channel avatar overlaid bottom-left. Body body/footer structure matches
-   VideoResultCard so both tabs feel like one design system.
+/* ─── Channel result card — channel-identity design, NOT a video thumbnail.
+   Purpose: make the Channels tab visually distinct from Videos / Thumbnails
+   so users don't feel they're looking at the same results three times.
+
+   Layout (uses our own tokens, not copied from Videos tab):
+     - Red-to-amber soft gradient banner (72px, no image) signals "channel
+       profile" the way YouTube channel pages do
+     - Channel avatar (72x72 circle, 4px white ring) overlaps the banner
+       bottom, same visual cue as YT's channel header
+     - Channel name + @handle byline
+     - 2-line description clamp
+     - Meta line (subs · videos)
+     - 3-metric row (Outlier / Hits / Avg views) and red CTA — same footer
+       shape as VideoResultCard for brand consistency
    ──────────────────────────────────────────────────────────────────────── */
 function ChannelResultCard({ item, onOpen }) {
-  const tier       = outlierTier(item.outlier_score)
-  const hits       = item.videos_in_search || 0
-  const initial    = (item.channel_name || '?')[0].toUpperCase()
-  const ytUrl      = item.channel_id ? `https://www.youtube.com/channel/${item.channel_id}` : null
+  const tier    = outlierTier(item.outlier_score)
+  const hits    = item.videos_in_search || 0
+  const initial = (item.channel_name || '?')[0].toUpperCase()
+  const ytUrl   = item.channel_id ? `https://www.youtube.com/channel/${item.channel_id}` : null
+  const handle  = (item.handle || '').replace(/^@/, '')
 
   return (
     <div className="out-grid-card">
-      {/* Banner = their best-performing video's thumbnail. No overlay pills,
-          no avatar ring — keeps the thumbnail as clean as the Videos tab. */}
+      {/* Gradient banner — no video thumbnail; soft red→amber wash that reads
+          as "channel page" instead of "video card". Small user icon top-right
+          reinforces that this is a profile, not content. */}
       <a href={ytUrl || '#'} target="_blank" rel="noopener noreferrer"
         onClick={e => { if (!ytUrl) e.preventDefault() }}
-        style={{ display: 'block', position: 'relative', textDecoration: 'none', flexShrink: 0, borderRadius: '15px 15px 0 0', overflow: 'hidden' }}>
-        {/* High-res banner — uses the channel's top-video hqdefault (480x360).
-            Same pattern as the Videos tab. onError falls back to the stored
-            top_video_thumbnail if hqdefault isn't served. */}
-        {(item.top_video_id || item.top_video_thumbnail)
-          ? <img
-              src={item.top_video_id ? `https://i.ytimg.com/vi/${item.top_video_id}/hqdefault.jpg` : item.top_video_thumbnail}
-              alt=""
-              style={{ width: '100%', aspectRatio: '16/9', objectFit: 'cover', display: 'block' }}
-              onError={e => { e.target.onerror = null; if (item.top_video_thumbnail) e.target.src = item.top_video_thumbnail }}
-            />
-          : <div style={{ width: '100%', aspectRatio: '16/9', background: '#ebebef' }}/>
-        }
+        style={{
+          display: 'block', position: 'relative', textDecoration: 'none',
+          flexShrink: 0, borderRadius: '15px 15px 0 0', overflow: 'hidden',
+          height: 72,
+          background: `linear-gradient(135deg, ${C.redBg} 0%, #fff0e4 50%, ${C.amberBg} 100%)`,
+        }}>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={C.amber} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"
+          style={{ position: 'absolute', top: 12, right: 14, opacity: 0.55 }}>
+          <circle cx="12" cy="8" r="4"/>
+          <path d="M4 20c0-4 4-6 8-6s8 2 8 6"/>
+        </svg>
       </a>
 
-      {/* Body — identical to VideoResultCard / Videos tab structure:
-          title → meta line (3 items · separated) → footer. */}
-      <div style={{ padding: '20px 20px 20px', display: 'flex', flexDirection: 'column', flex: 1 }}>
-        {/* Title slot = channel name, same 16/700/-0.3ls as Videos tab titles */}
+      {/* Body — avatar overlaps the banner via negative marginTop */}
+      <div style={{ padding: '0 20px 20px', display: 'flex', flexDirection: 'column', flex: 1 }}>
+
+        {/* Channel avatar — 64x64 circle, 4px white ring, overlaps banner */}
+        <div style={{
+          width: 64, height: 64, borderRadius: '50%',
+          overflow: 'hidden',
+          border: '4px solid #fff',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.10)',
+          marginTop: -32, marginBottom: 12,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          flexShrink: 0, background: C.redBg,
+        }}>
+          {item.thumbnail
+            ? <img src={item.thumbnail} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }}/>
+            : <span style={{ fontSize: 24, fontWeight: 700, color: C.red }}>{initial}</span>
+          }
+        </div>
+
+        {/* Channel name — same 16/700/-0.3ls as VideoResultCard title */}
         <p style={{
-          fontSize: 16, fontWeight: 700, color: C.text1, lineHeight: 1.45, marginBottom: 14, letterSpacing: '-0.3px',
-          display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden',
-          minHeight: 46,
+          fontSize: 16, fontWeight: 700, color: C.text1, lineHeight: 1.35, marginBottom: 3, letterSpacing: '-0.3px',
+          whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
         }}>{item.channel_name}</p>
 
-        {/* Meta line — same 3-item · separator pattern as Videos tab */}
+        {/* @handle byline — sits where VideoResultCard puts the channel name */}
+        {handle ? (
+          <p style={{
+            fontSize: 13, fontWeight: 500, color: C.text3, marginBottom: 10, letterSpacing: '-0.05px',
+            whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
+          }}>@{handle}</p>
+        ) : (
+          <p style={{ fontSize: 13, color: C.text3, marginBottom: 10 }}>&nbsp;</p>
+        )}
+
+        {/* Description — 2-line clamp, fixed minHeight so every card is same height */}
+        <p style={{
+          fontSize: 13, fontWeight: 500, color: C.text3, lineHeight: 1.5, marginBottom: 14,
+          display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden',
+          minHeight: 39,
+        }}>{item.description || '—'}</p>
+
+        {/* Meta line — subs · videos, same typography as VideoResultCard meta */}
         <p style={{ fontSize: 13.5, fontWeight: 500, color: C.text3, marginBottom: 14, lineHeight: 1.4, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
           <span style={{ color: C.text2, fontWeight: 600 }}>{fmtNum(item.subscribers)}</span> subs
           <span style={{ margin: '0 8px', color: '#d4d4dc' }}>·</span>
           <span style={{ color: C.text2, fontWeight: 600 }}>{fmtNum(item.video_count)}</span> videos
-          <span style={{ margin: '0 8px', color: '#d4d4dc' }}>·</span>
-          {fmtNum(item.avg_views_per_video)} avg
         </p>
 
-        {/* Footer — same 3-metric grid pattern as VideoResultCard */}
+        {/* Footer — identical to VideoResultCard: flex metrics + full-width red CTA */}
         <div style={{ marginTop: 'auto', paddingTop: 18, borderTop: '1px solid #eeeef3' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 12, marginBottom: 18 }}>
+          <div style={{ display: 'flex', gap: 28, marginBottom: 18, flexWrap: 'wrap' }}>
             {[
               { label: 'Outlier',  display: `${item.outlier_score}×`,            color: tier.color, tip: 'Their best-performing video in this search beat the niche median by this multiple.' },
               { label: 'Hits',     display: String(hits),                         color: C.text1,    tip: 'Number of videos from this channel that surfaced in your search — higher = more on-topic.' },
@@ -1032,7 +1113,6 @@ function DetailModal({ kind, item, query, onClose, onNavigate }) {
   }, [onClose])
 
   const isChannel = kind === 'channel'
-  const tier      = outlierTier(item.outlier_score)
 
   const youTubeUrl = isChannel
     ? `https://www.youtube.com/channel/${item.channel_id}`
@@ -1117,11 +1197,10 @@ function DetailModal({ kind, item, query, onClose, onNavigate }) {
     ? 'Breakout channel'
     : kind === 'thumbnail' ? 'Winning thumbnail' : 'Outlier video'
 
-  // Prefer YouTube's high-res hqdefault (480x360) over the search API's
-  // medium thumbnail (~320x180). Falls back to the stored thumbnail if the
-  // high-res isn't available.
+  // Max-res header thumbnail — same cascade as VideoResultCard:
+  // maxresdefault (1280x720) → hqdefault (480x360) → stored medium.
   const headerVideoId = isChannel ? item.top_video_id : item.video_id
-  const headerThumbHi = headerVideoId ? `https://i.ytimg.com/vi/${headerVideoId}/hqdefault.jpg` : null
+  const headerThumbHi = ytMaxThumbUrl(headerVideoId)
   const headerThumbLo = isChannel ? (item.top_video_thumbnail || item.thumbnail) : item.thumbnail
   const headerThumb   = headerThumbHi || headerThumbLo
   const headerTitle   = isChannel ? item.channel_name : item.title
@@ -1151,7 +1230,7 @@ function DetailModal({ kind, item, query, onClose, onNavigate }) {
             {headerThumb
               ? <img src={headerThumb} alt=""
                   style={{ width: 96, height: 60, borderRadius: 8, objectFit: 'cover', flexShrink: 0, border: `1px solid ${C.border}` }}
-                  onError={e => { e.target.onerror = null; if (headerThumbLo) e.target.src = headerThumbLo }}/>
+                  onError={makeThumbOnError(headerVideoId, headerThumbLo)}/>
               : <div style={{ width: 96, height: 60, borderRadius: 8, background: '#eeeef3', flexShrink: 0, border: `1px solid ${C.border}` }}/>}
             <div style={{ flex: 1, minWidth: 0 }}>
               <p style={{ fontSize: 12, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 4 }}>{kindLabel}</p>
@@ -1322,7 +1401,7 @@ function OutlierRing({ score, color }) {
       </svg>
       <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
         <span style={{ fontSize: 22, fontWeight: 800, color, letterSpacing: '-1px', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{val.toFixed(1)}</span>
-        <span style={{ fontSize: 11, color: '#9595a4', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em' }}>× outlier</span>
+        <span style={{ fontSize: 9.5, color: '#9595a4', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.02em', marginTop: 3, lineHeight: 1 }}>× outlier</span>
       </div>
     </div>
   )
@@ -1357,184 +1436,110 @@ function OutlierBar({ label, score, tip }) {
   )
 }
 
-/* ─── Action button used in the modal ────────────────────────────────────── */
-function ActionButton({ label, icon, onClick, disabled, success, wide }) {
-  const [hover, setHover] = useState(false)
-  const bg     = success ? C.greenBg       : (hover && !disabled ? '#fafafb' : '#ffffff')
-  const color  = success ? C.green         : C.text1
-  const border = success ? C.greenBdr      : (hover && !disabled ? 'rgba(0,0,0,0.18)' : '#e6e6ec')
-  return (
-    <button
-      onClick={onClick}
-      disabled={disabled}
-      onMouseEnter={() => setHover(true)}
-      onMouseLeave={() => setHover(false)}
-      style={{
-        gridColumn: wide ? 'span 2' : undefined,
-        display: 'flex', alignItems: 'center', gap: 10,
-        padding: '12px 14px', borderRadius: 12,
-        border: `1px solid ${border}`, background: bg, color,
-        fontFamily: 'inherit', fontSize: 13, fontWeight: 600,
-        letterSpacing: '-0.1px', cursor: disabled ? 'default' : 'pointer',
-        textAlign: 'left', transition: 'all 0.16s',
-        boxShadow: hover && !disabled ? '0 2px 8px rgba(0,0,0,0.06)' : '0 1px 2px rgba(0,0,0,0.04)',
-        opacity: disabled && !success ? 0.75 : 1,
-      }}
-    >
-      <span style={{ color: success ? C.green : C.text2, display: 'inline-flex', flexShrink: 0 }}>
-        {icon}
-      </span>
-      {label}
-    </button>
-  )
-}
-
-/* ─── Detail modal body sections — clean, no tinted blocks ───────────────── */
-/* Design parity with the existing Outliers modal: small colored eyebrow, body
-   text, hairline divider between sections. No stacked tinted tiles. */
-function DetailSection({ tone, eyebrow, body, list, isFirst }) {
-  const eyebrowColor =
-    tone === 'red'   ? C.red     :
-    tone === 'amber' ? C.amber   :
-    tone === 'blue'  ? '#4a7cf7' : C.text2
-
-  const hasList = Array.isArray(list) && list.filter(Boolean).length > 0
-  const hasBody = !!(body && body.trim())
-  if (!hasList && !hasBody) return null
-
-  return (
-    <div style={{
-      paddingTop: isFirst ? 0 : 14,
-      marginTop:  isFirst ? 0 : 14,
-      borderTop:  isFirst ? 'none' : `1px solid ${C.borderLight}`,
-    }}>
-      <p style={{
-        fontSize: 10, fontWeight: 700, color: eyebrowColor,
-        letterSpacing: '0.09em', textTransform: 'uppercase', marginBottom: 8,
-      }}>
-        {eyebrow}
-      </p>
-
-      {hasList ? (
-        <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 7 }}>
-          {list.filter(Boolean).map((item, i) => (
-            <li key={i} style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
-              <span style={{
-                flexShrink: 0, fontSize: 12, fontWeight: 700, color: eyebrowColor,
-                fontVariantNumeric: 'tabular-nums', lineHeight: 1.55, marginTop: 0,
-                minWidth: 14,
-              }}>{i + 1}.</span>
-              <span style={{ fontSize: 13.5, color: C.text1, lineHeight: 1.55, flex: 1 }}>
-                {item}
-              </span>
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p style={{ fontSize: 13.5, color: C.text1, lineHeight: 1.6 }}>
-          {body}
-        </p>
-      )}
-    </div>
-  )
-}
-
-/* ─── Thumbnails tab — niche visual-pattern report (tab-level, not per-row) */
-/* Matches the existing out-card aesthetic: white card, amber top border for
-   identity, stacked rows separated by hairlines — no nested tinted blocks. */
+/* ─── Thumbnails tab — niche visual-pattern report (tab-level, not per-row)
+   Copies the Overview "Priority Actions" InsightCard silhouette exactly:
+   3px amber top border, 26x26 amber badge, category eyebrow + title +
+   outlined "N analysed" pill, hairline at marginLeft:46, 3-cell tinted
+   body grid (blue / white+amber bar / green) at the same offset. One row,
+   three cells — no stacked sub-sections, no nested tiles.
+   ──────────────────────────────────────────────────────────────────────── */
 function ThumbnailPatternsCard({ patterns, query }) {
   if (!patterns || (!patterns.dominant_style && !(patterns.recommendations || []).length)) {
     return null
   }
   const traits = [
-    { label: 'Dominant style',  value: patterns.dominant_style   },
-    { label: 'Text overlay',    value: patterns.text_overlay     },
-    { label: 'Face presence',   value: patterns.face_presence    },
-    { label: 'Color palette',   value: patterns.color_palette    },
-    { label: 'Layout pattern',  value: patterns.layout_pattern   },
-  ].filter(t => t.value && t.value.trim())
+    ['Dominant style', patterns.dominant_style],
+    ['Text overlay',   patterns.text_overlay],
+    ['Face presence',  patterns.face_presence],
+    ['Color palette',  patterns.color_palette],
+    ['Layout',         patterns.layout_pattern],
+  ].filter(([, v]) => v && v.trim())
+  const recs = patterns.recommendations || []
 
   return (
     <div className="out-card" style={{ padding: 0, marginBottom: 16, borderTop: `3px solid ${C.amber}` }}>
-      {/* Header */}
-      <div style={{ padding: '18px 22px 12px', display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
-        <div style={{ flex: 1, minWidth: 0 }}>
-          <p style={{ fontSize: 10, fontWeight: 700, color: C.amber, letterSpacing: '0.09em', textTransform: 'uppercase', marginBottom: 3 }}>
-            Thumbnail pattern · last 12 months
-          </p>
-          <h3 style={{ fontSize: 17, fontWeight: 800, color: C.text1, letterSpacing: '-0.35px', lineHeight: 1.3 }}>
-            What wins in your niche{query ? <span style={{ color: C.text3, fontWeight: 600 }}> · "{query}"</span> : null}
-          </h3>
+      <div style={{ padding: '16px 22px 18px' }}>
+
+        {/* Header — same 3-column flex (badge | eyebrow+title | pill) as Priority Actions InsightCard */}
+        <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: 14 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0, paddingTop: 2 }}>
+            <div style={{ width: 26, height: 26, borderRadius: 8, background: C.amber, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#fff" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="1.5" y="2.5" width="11" height="9" rx="1.5"/>
+                <circle cx="5" cy="6.5" r="1" fill="#fff" stroke="none"/>
+                <path d="m2 10 2.5-2.5 2.5 2.5 1.5-1.5 2.5 2.5"/>
+              </svg>
+            </div>
+          </div>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <p style={{ fontSize: 10, fontWeight: 700, color: C.amber, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 5 }}>
+              Thumbnail pattern · last 12 months
+            </p>
+            <p style={{ fontSize: 14, fontWeight: 700, color: C.text1, lineHeight: 1.55 }}>
+              What wins in your niche{query ? ` · "${query}"` : ''}
+            </p>
+          </div>
+          {patterns.sample_size ? (
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexShrink: 0 }}>
+              <span style={{ fontSize: 10, fontWeight: 700, color: C.amber, padding: '3px 9px', borderRadius: 20, letterSpacing: '0.06em', textTransform: 'uppercase', border: `1.5px solid ${C.amber}` }}>
+                {patterns.sample_size} analysed
+              </span>
+            </div>
+          ) : null}
         </div>
-        {patterns.sample_size ? (
-          <span style={{ fontSize: 11, fontWeight: 600, color: C.text3, fontVariantNumeric: 'tabular-nums', flexShrink: 0 }}>
-            {patterns.sample_size} analysed
-          </span>
-        ) : null}
-      </div>
 
-      <div style={{ height: 1, background: C.border, marginLeft: 22, marginRight: 22 }} />
+        {/* Hairline — aligned with content start at marginLeft:46, same as Priority Actions */}
+        <div style={{ height: 1, background: C.border, marginBottom: 14, marginLeft: 46 }} />
 
-      {/* Traits — vertical rows, hairline separators */}
-      <div style={{ padding: '6px 22px 2px' }}>
-        {traits.map((t, i) => (
-          <div key={i} style={{
-            padding: '12px 0',
-            borderBottom: i === traits.length - 1 ? 'none' : `1px solid ${C.borderLight}`,
-            display: 'flex', gap: 18, alignItems: 'flex-start',
+        {/* 3-cell body — same 1fr 1.4fr 1fr column weights and tints as Priority Actions */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr 1fr', gap: 8, marginLeft: 46 }}>
+
+          {/* Blue "Visual formula" — all 5 traits compacted into one tinted cell */}
+          <div style={{ background: 'rgba(79,134,247,0.07)', border: '1px solid rgba(79,134,247,0.12)', borderRadius: 10, padding: '12px 14px' }}>
+            <p style={{ fontSize: 10, fontWeight: 700, color: '#4a7cf7', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 10 }}>Visual formula</p>
+            {traits.map(([label, value], i) => (
+              <div key={label} style={{ marginBottom: i === traits.length - 1 ? 0 : 10 }}>
+                <p style={{ fontSize: 9.5, fontWeight: 700, color: C.text3, letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 3 }}>{label}</p>
+                <p style={{ fontSize: 12.5, color: C.text1, lineHeight: 1.55 }}>{value}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* Amber+bar "Next thumbnail" — the "Action" equivalent in Priority Actions */}
+          <div style={{
+            background: '#fff',
+            border: `1px solid ${C.border}`,
+            borderLeft: `3px solid ${C.amber}`,
+            borderRadius: '0 10px 10px 0',
+            padding: '12px 16px',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
+            display: 'flex', flexDirection: 'column',
           }}>
-            <p style={{
-              width: 130, flexShrink: 0,
-              fontSize: 10.5, fontWeight: 700, color: C.text3,
-              letterSpacing: '0.08em', textTransform: 'uppercase',
-              lineHeight: 1.55, paddingTop: 1,
-            }}>
-              {t.label}
-            </p>
-            <p style={{ fontSize: 13.5, color: C.text1, lineHeight: 1.6, flex: 1 }}>
-              {t.value}
-            </p>
+            <p style={{ fontSize: 10, fontWeight: 700, color: C.amber, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 10 }}>Next thumbnail</p>
+            {recs.length === 0 ? (
+              <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.6 }}>—</p>
+            ) : (
+              <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 8 }}>
+                {recs.map((r, i) => (
+                  <li key={i} style={{ display: 'flex', gap: 8, alignItems: 'flex-start' }}>
+                    <span style={{ fontSize: 12, fontWeight: 700, color: C.amber, fontVariantNumeric: 'tabular-nums', lineHeight: 1.55, minWidth: 14 }}>{i + 1}.</span>
+                    <span style={{ fontSize: 13, color: C.text1, lineHeight: 1.6, flex: 1 }}>{r}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
-        ))}
+
+          {/* Green "Why now" — same Expected outcome tile in Priority Actions */}
+          {patterns.why_now ? (
+            <div style={{ background: 'rgba(5,150,105,0.07)', border: '1px solid rgba(5,150,105,0.14)', borderRadius: 10, padding: '12px 14px' }}>
+              <p style={{ fontSize: 10, fontWeight: 700, color: C.green, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Why now</p>
+              <p style={{ fontSize: 13, color: C.text1, lineHeight: 1.65 }}>{patterns.why_now}</p>
+            </div>
+          ) : <div />}
+
+        </div>
       </div>
-
-      {/* Recommendations */}
-      {(patterns.recommendations || []).length > 0 && (
-        <>
-          <div style={{ height: 1, background: C.border, marginLeft: 22, marginRight: 22 }} />
-          <div style={{ padding: '16px 22px 8px' }}>
-            <p style={{ fontSize: 10.5, fontWeight: 700, color: C.amber, letterSpacing: '0.09em', textTransform: 'uppercase', marginBottom: 10 }}>
-              What to do on your next thumbnail
-            </p>
-            <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 8 }}>
-              {patterns.recommendations.map((r, i) => (
-                <li key={i} style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
-                  <span style={{
-                    flexShrink: 0, fontSize: 12, fontWeight: 700, color: C.amber,
-                    fontVariantNumeric: 'tabular-nums', lineHeight: 1.55, minWidth: 14,
-                  }}>{i + 1}.</span>
-                  <span style={{ fontSize: 13.5, color: C.text1, lineHeight: 1.55, flex: 1 }}>{r}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </>
-      )}
-
-      {/* Why now */}
-      {patterns.why_now && (
-        <>
-          <div style={{ height: 1, background: C.borderLight, marginLeft: 22, marginRight: 22, marginTop: 10 }} />
-          <div style={{ padding: '12px 22px 18px' }}>
-            <p style={{ fontSize: 10.5, fontWeight: 700, color: '#4a7cf7', letterSpacing: '0.09em', textTransform: 'uppercase', marginBottom: 6 }}>
-              Why now
-            </p>
-            <p style={{ fontSize: 13.5, color: C.text1, lineHeight: 1.6 }}>
-              {patterns.why_now}
-            </p>
-          </div>
-        </>
-      )}
     </div>
   )
 }

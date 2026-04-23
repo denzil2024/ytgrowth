@@ -79,8 +79,8 @@ def _execute_with_retry(request, attempts: int = 3, base_delay: float = 0.6):
 # ─── Tunables ─────────────────────────────────────────────────────────────────
 
 _SEARCH_POOL_SIZE   = 50    # Per-query YouTube pool (matches SEO Optimizer)
-_RESULTS_VIDEO      = 12    # Returned to the frontend for video/thumbnail tabs
-_RESULTS_CHANNEL    = 10    # Returned for channel tab
+_RESULTS_VIDEO      = 8     # 4x2 grid on the frontend — wider cards, better thumbnail fidelity
+_RESULTS_CHANNEL    = 8     # Same 4x2 treatment for consistency
 _PER_CHANNEL_CAP    = 2     # Max videos from one channel in the videos/thumbnails tabs
 _MIN_OUTLIER_SCORE  = 1.8   # Below this, not really an outlier; drop it
 
@@ -315,28 +315,70 @@ def _run_unified_search(
         scored, channel_details, channels_match_set, topic_specificity,
     )
 
-    # Claude explanations — three independent calls run IN PARALLEL. Sequential
-    # these took ~40s (Sonnet video + Sonnet channel + Sonnet vision thumbnail);
-    # parallel collapses to roughly the slowest of the three (~15-20s).
+    # Claude calls. Dependency: video explanations need the union of top_videos
+    # + top_thumbnails, which we can't compute until the vision call returns
+    # ranked_ids. So we run vision + channel-explain in parallel first, THEN
+    # the video-explain call on the union of tabs. Two round-trips instead of
+    # the old one, but the slowest step (vision ~15-20s) still bounds the
+    # wall-clock.
     video_explanations:   dict[str, dict] = {}
     channel_explanations: dict[str, dict] = {}
     thumbnail_patterns:   dict             = {}
 
-    with ThreadPoolExecutor(max_workers=3) as pool:
+    # Pass the channel-capped pool (up to 16 items) to vision so the Thumbnails
+    # tab can pick from a wider set than just the 8 Videos-tab picks.
+    thumb_pool = capped[:16]
+
+    with ThreadPoolExecutor(max_workers=2) as pool:
         futures: dict = {}
-        if top_videos:
-            futures["videos"]  = pool.submit(_explain_video_outliers, title, top_videos, my_subscribers)
-            futures["thumbs"]  = pool.submit(_analyze_thumbnail_patterns, title, top_videos)
+        if thumb_pool:
+            futures["thumbs"]   = pool.submit(_analyze_thumbnail_patterns, title, thumb_pool)
         if top_channels:
             futures["channels"] = pool.submit(_explain_channel_outliers, title, top_channels, my_subscribers)
-        if "videos" in futures:
-            video_explanations   = futures["videos"].result()   or {}
-        if "channels" in futures:
-            channel_explanations = futures["channels"].result() or {}
         if "thumbs" in futures:
             thumbnail_patterns   = futures["thumbs"].result()   or {}
+        if "channels" in futures:
+            channel_explanations = futures["channels"].result() or {}
 
-    for r in top_videos:
+    # Build top_thumbnails from vision's ranked_ids. If vision returns fewer
+    # than _RESULTS_VIDEO picks (thin ranking, partial failure, etc.), pad
+    # from the outlier-sorted pool so the Thumbnails tab always hits its 8.
+    # If vision returned nothing at all, fall back to top_videos so the tab
+    # always renders something.
+    id_to_video = {v["video_id"]: v for v in capped}
+    ranked_ids  = thumbnail_patterns.get("ranked_ids", []) or []
+    top_thumbnails: list[dict] = []
+    seen_tid = set()
+    for rid in ranked_ids:
+        v = id_to_video.get(rid)
+        if v and rid not in seen_tid:
+            top_thumbnails.append(v)
+            seen_tid.add(rid)
+        if len(top_thumbnails) >= _RESULTS_VIDEO:
+            break
+    if len(top_thumbnails) < _RESULTS_VIDEO:
+        for v in capped:
+            vid = v.get("video_id")
+            if vid and vid not in seen_tid:
+                top_thumbnails.append(v)
+                seen_tid.add(vid)
+                if len(top_thumbnails) >= _RESULTS_VIDEO:
+                    break
+    if not top_thumbnails:
+        top_thumbnails = list(top_videos)
+
+    # Union the two tab pools so a single video-explain call covers every video
+    # surfaced to the user — whether via the Videos tab or the Thumbnails tab.
+    # Same Python object references, so assigning fields below updates both.
+    surfaced_map: dict[str, dict] = {v["video_id"]: v for v in top_videos}
+    for v in top_thumbnails:
+        surfaced_map.setdefault(v["video_id"], v)
+    surfaced = list(surfaced_map.values())
+
+    if surfaced:
+        video_explanations = _explain_video_outliers(title, surfaced, my_subscribers) or {}
+
+    for r in surfaced:
         ex = video_explanations.get(r["video_id"], {}) or {}
         r["why_worked"]    = ex.get("why_worked", "")
         r["quick_actions"] = ex.get("quick_actions", []) or []
@@ -353,6 +395,7 @@ def _run_unified_search(
     cohort_median_vps = statistics.median([s["views_per_sub"] for s in scored]) if scored else 0
     return {
         "videos":              top_videos,
+        "thumbnails":          top_thumbnails,
         "channels":            top_channels,
         "thumbnail_patterns":  thumbnail_patterns,
         "keyword_scores":      keyword_scores,
@@ -993,56 +1036,76 @@ Return ONLY valid JSON, no markdown:
 
 def _analyze_thumbnail_patterns(query: str, videos: list[dict]) -> dict:
     """
-    Vision-enabled Claude call scanning the actual thumbnail images of the
-    outlier videos. Returns the niche's winning visual patterns plus concrete
-    recommendations. Sent to Claude as image URLs (up to 10 thumbnails) so it
-    can analyse layout, text, faces, and colors directly.
+    Vision-enabled Claude call that does two jobs in one round-trip:
+      1. Return the niche's winning visual pattern (dominant style, text
+         overlay, face presence, colour palette, layout, recommendations,
+         why-now) — rendered as the Thumbnails tab report card.
+      2. Rank the analysed thumbnails by click-worthiness, using only the
+         visual signals (not view counts). The returned order populates the
+         Thumbnails tab itself — which means the tab shows a genuinely
+         different slice from the Videos tab (outlier-ordered), not a
+         duplicate.
+
+    Up to 16 thumbnails are sent in one multi-image message.
     """
     if not videos:
         return {}
-    # Cap the image payload — 10 is plenty of signal, keeps the call fast/cheap
-    thumbs = [v for v in videos if v.get("thumbnail")][:10]
+    # 16 keeps the vision call within a reasonable budget (~2k tokens/image)
+    # while giving the ranking step enough candidates to produce a meaningfully
+    # different list from the outlier-sorted Videos tab.
+    thumbs = [v for v in videos if v.get("thumbnail")][:16]
     if not thumbs:
         return {}
 
+    # Include the YouTube video_id in each line so Claude can reference a
+    # stable identifier in `ranked_ids` (rather than a positional index
+    # the model might drift on).
     titles_lines = "\n".join(
-        f"{i + 1}. \"{v.get('title', '')}\" — {v.get('views', 0):,} views"
+        f"{i + 1}. [id: {v.get('video_id', '')}] \"{v.get('title', '')}\" — {v.get('views', 0):,} views"
         for i, v in enumerate(thumbs)
     )
 
     prompt_text = f"""A YouTube creator searched: "{query}"
 
 I'm showing you the thumbnails of {len(thumbs)} videos that over-performed in
-this niche over the last 12 months. For context, here are their titles and
-view counts in the same order:
+this niche over the last 12 months. For context, here are their titles, view
+counts, and IDs — in the same order as the images below:
 
 {titles_lines}
 
-Analyse the ACTUAL images and find the winning visual pattern in this niche.
+Do TWO things:
+
+A) Analyse the ACTUAL images and name the winning visual pattern in this niche.
+
+B) Rank the thumbnails from MOST to LEAST click-worthy based PURELY on the
+   visual signals — text impact, face emotion, contrast, composition,
+   novelty, how strongly each embodies the winning pattern. Do NOT use view
+   counts. The ordering should look different from an outlier-score
+   ranking; reward thumbnail craft, not video popularity.
 
 Return ONLY valid JSON, no markdown:
 {{
   "dominant_style": "<1 sentence — the overall visual approach that dominates>",
-  "text_overlay": "<1 sentence — how they use on-thumbnail text: size, font, ALL CAPS vs mixed, word count, placement>",
+  "text_overlay": "<1 sentence — on-thumbnail text: size, font, ALL CAPS vs mixed, word count, placement>",
   "face_presence": "<1 sentence — how many have faces, typical expression/emotion, face size/placement>",
-  "color_palette": "<1 sentence — dominant colors, contrast level, saturation>",
-  "layout_pattern": "<1 sentence — spatial composition: subject left vs right, object/prop placement, bars, borders, arrows>",
+  "color_palette": "<1 sentence — dominant colours, contrast level, saturation>",
+  "layout_pattern": "<1 sentence — spatial composition: subject side, props, bars, borders, arrows>",
   "recommendations": [
     "<concrete recommendation 1 — ≤ 18 words, imperative, specific>",
     "<concrete recommendation 2>",
     "<concrete recommendation 3>",
     "<concrete recommendation 4>"
   ],
-  "why_now": "<1 sentence — the timing reason this visual pattern is working RIGHT NOW in this niche; reference momentum or a signal you spotted across the images>"
+  "why_now": "<1 sentence — the timing reason this visual pattern is working RIGHT NOW in this niche>",
+  "ranked_ids": ["<video_id of the most click-worthy thumbnail>", "<next>", ...]
 }}
 
 Be specific. Reference actual visual details you see. No generic advice."""
 
     content_blocks: list[dict] = [{"type": "text", "text": prompt_text}]
     for v in thumbs:
-        # Prefer YouTube's high-res hqdefault.jpg (480x360) over the search
-        # API's medium thumbnail (~320x180) — sharper images = better visual
-        # pattern analysis.
+        # hqdefault.jpg (480x360) is always present; stick with it for the
+        # backend vision call so we never 404. Frontend cascades to maxres.
         vid = v.get("video_id")
         url = f"https://i.ytimg.com/vi/{vid}/hqdefault.jpg" if vid else v.get("thumbnail")
         if not url:
@@ -1056,11 +1119,11 @@ Be specific. Reference actual visual details you see. No generic advice."""
         client = make_anthropic_client()
         msg = client.messages.create(
             model="claude-sonnet-4-6",
-            max_tokens=1200,
+            max_tokens=1500,
             system=(
                 "You are a YouTube thumbnail strategist. You look at real "
                 "thumbnails and name the exact visual mechanic that wins. "
-                "Always reference concrete details — faces, text size, colors, "
+                "Always reference concrete details — faces, text size, colours, "
                 "layout — never generic advice."
             ),
             messages=[{"role": "user", "content": content_blocks}],
@@ -1069,7 +1132,12 @@ Be specific. Reference actual visual details you see. No generic advice."""
         raw = re.sub(r"^```[a-z]*\n?", "", raw)
         raw = re.sub(r"\n?```$", "", raw).strip()
         parsed = json.loads(raw)
-        # Normalise fields + trim recommendations to 4
+        # Filter ranked_ids to only those we actually sent (model can hallucinate)
+        valid_ids = {v.get("video_id") for v in thumbs if v.get("video_id")}
+        ranked_ids = [
+            rid.strip() for rid in (parsed.get("ranked_ids") or [])
+            if isinstance(rid, str) and rid.strip() in valid_ids
+        ]
         return {
             "dominant_style":  (parsed.get("dominant_style") or "").strip(),
             "text_overlay":    (parsed.get("text_overlay") or "").strip(),
@@ -1082,6 +1150,7 @@ Be specific. Reference actual visual details you see. No generic advice."""
             ][:4],
             "why_now":         (parsed.get("why_now") or "").strip(),
             "sample_size":     len(thumbs),
+            "ranked_ids":      ranked_ids,
         }
     except Exception as e:
         print(f"[outliers] thumbnail-pattern analysis error: {e}")
