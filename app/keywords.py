@@ -5,8 +5,10 @@ Moved here from app/seo.py and app/youtube.py.
 import os
 import re
 import urllib.parse
+from datetime import datetime, timezone
 import requests
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from googleapiclient.discovery import build
 from app.utils import make_anthropic_client
 
 
@@ -192,3 +194,283 @@ Tasks — return ONLY valid JSON, no markdown:
     except Exception as e:
         print(f"analyze_keywords error: {e}")
         return {"error": str(e)}
+
+
+# ─── Real competition + trend signals ─────────────────────────────────────────
+# Goal: stop shipping vibe-only opportunity scores. Each keyword gets real
+# YouTube competitive-landscape data (who ranks, how big they are, how fresh
+# their videos) and a Google Trends direction. Scoring then becomes a function
+# of actual numbers, not Claude's word-length heuristic.
+
+def _fetch_competition_for_keyword(keyword: str, yt_api_key: str) -> dict:
+    """
+    Query YouTube Data API (search.list, then videos.list + channels.list)
+    for the top 5 results of a keyword. Returns a compact competition dict:
+        - result_count:    how many results YouTube returned (landscape size)
+        - top_subs_median: median subscriber count of the top-5 channels
+                           (smaller = easier to rank; huge = dominated)
+        - top_views_median:median view count of the top-5 videos
+                           (traffic ceiling the topic can pull)
+        - days_since_newest: days since the most recent top-5 video
+                           (>180 = stale landscape = opportunity)
+    Uses an anonymous API key, NOT user OAuth, so this doesn't consume the
+    creator's own YouTube quota.
+    """
+    default = {"result_count": 0, "top_subs_median": 0, "top_views_median": 0, "days_since_newest": None}
+    if not yt_api_key:
+        return default
+    try:
+        yt = build("youtube", "v3", developerKey=yt_api_key, cache_discovery=False)
+        search = yt.search().list(
+            part="snippet",
+            q=keyword,
+            type="video",
+            maxResults=5,
+            order="relevance",
+            relevanceLanguage="en",
+        ).execute()
+        items = search.get("items", [])
+        if not items:
+            return default
+
+        video_ids   = [it["id"]["videoId"]        for it in items if it.get("id", {}).get("videoId")]
+        channel_ids = list({it["snippet"]["channelId"] for it in items if it.get("snippet", {}).get("channelId")})
+        published   = [it["snippet"].get("publishedAt") for it in items if it.get("snippet", {}).get("publishedAt")]
+
+        # Batch fetch video stats + channel stats (cheap: 1 unit each)
+        vids = yt.videos().list(part="statistics", id=",".join(video_ids)).execute() if video_ids else {"items": []}
+        chs  = yt.channels().list(part="statistics", id=",".join(channel_ids)).execute() if channel_ids else {"items": []}
+
+        view_counts = sorted(int(v.get("statistics", {}).get("viewCount", 0) or 0) for v in vids.get("items", []))
+        sub_counts  = sorted(int(c.get("statistics", {}).get("subscriberCount", 0) or 0) for c in chs.get("items", []))
+
+        def median(xs):
+            return xs[len(xs) // 2] if xs else 0
+
+        # Days since the MOST RECENT top-5 video
+        days_since = None
+        if published:
+            def _parse(iso):
+                try: return datetime.fromisoformat(iso.replace("Z", "+00:00"))
+                except Exception: return None
+            parsed = [d for d in (_parse(p) for p in published) if d]
+            if parsed:
+                newest = max(parsed)
+                days_since = (datetime.now(timezone.utc) - newest).days
+
+        return {
+            "result_count":       search.get("pageInfo", {}).get("totalResults", len(items)),
+            "top_subs_median":    median(sub_counts),
+            "top_views_median":   median(view_counts),
+            "days_since_newest":  days_since,
+        }
+    except Exception as e:
+        print(f"[keywords] competition fetch error for '{keyword}': {e}")
+        return default
+
+
+def fetch_competition_signals(keywords: list[str], top_n: int = 10) -> dict[str, dict]:
+    """
+    Enrich the top N keywords with YouTube competitive data in parallel.
+    top_n default is 10 to stay inside the daily search quota budget
+    (each keyword costs ~102 units: 100 for search + 1 videos + 1 channels;
+    10 keywords = ~1020 units per analysis, ~9 analyses/day headroom).
+    """
+    yt_api_key = os.getenv("YOUTUBE_API_KEY", "")
+    if not yt_api_key or not keywords:
+        return {}
+    targets = keywords[:top_n]
+    out: dict[str, dict] = {}
+    with ThreadPoolExecutor(max_workers=min(5, len(targets))) as pool:
+        futures = {pool.submit(_fetch_competition_for_keyword, kw, yt_api_key): kw for kw in targets}
+        for fut in as_completed(futures):
+            out[futures[fut]] = fut.result()
+    return out
+
+
+def fetch_trend_signals(keywords: list[str]) -> dict[str, dict]:
+    """
+    Hit Google Trends (pytrends) for a 90-day interest timeline per keyword,
+    then derive a direction label (rising/flat/declining) + percentage
+    change from the first half of the window to the second half.
+
+    pytrends allows up to 5 keywords per request. Batches are processed
+    sequentially with short jitter to avoid the rate limiter. Best-effort:
+    any failure returns {} for that keyword (feature stays useful even
+    when Trends is flaky).
+    """
+    if not keywords:
+        return {}
+    try:
+        from pytrends.request import TrendReq
+    except Exception as e:
+        print(f"[keywords] pytrends not available: {e}")
+        return {}
+
+    out: dict[str, dict] = {}
+    try:
+        pt = TrendReq(hl="en-US", tz=0, timeout=(3, 10), retries=1, backoff_factor=0.2)
+        # Batch 5 at a time
+        for i in range(0, len(keywords), 5):
+            batch = keywords[i:i + 5]
+            try:
+                pt.build_payload(batch, timeframe="today 3-m", geo="")
+                df = pt.interest_over_time()
+                if df is None or df.empty:
+                    continue
+                for kw in batch:
+                    if kw not in df.columns:
+                        continue
+                    series = df[kw].dropna().tolist()
+                    if len(series) < 4:
+                        continue
+                    mid = len(series) // 2
+                    first_half_avg  = sum(series[:mid]) / max(mid, 1)
+                    second_half_avg = sum(series[mid:]) / max(len(series) - mid, 1)
+                    # Percentage change; if first half is 0, use absolute delta as fallback
+                    if first_half_avg > 0:
+                        pct = (second_half_avg - first_half_avg) / first_half_avg * 100
+                    else:
+                        pct = second_half_avg * 2  # crude fallback when starting near zero
+                    direction = "rising" if pct >= 15 else "declining" if pct <= -15 else "flat"
+                    out[kw] = {
+                        "direction":   direction,
+                        "change_pct":  round(pct),
+                        "peak":        int(max(series)),
+                        "current":     int(series[-1]),
+                    }
+            except Exception as e:
+                print(f"[keywords] pytrends batch error on {batch}: {e}")
+                continue
+    except Exception as e:
+        print(f"[keywords] pytrends init error: {e}")
+        return out
+    return out
+
+
+def _score_with_real_data(kw: dict, comp: dict, trend: dict, autocomplete_rank: int | None) -> int:
+    """
+    Build a data-backed opportunity score out of:
+      - feasibility   (top-channel size — smaller = easier win)
+      - traffic       (median views on top-5 — headroom to pull)
+      - freshness     (stale landscape = unclaimed territory)
+      - trend         (rising gets a bonus, declining a penalty)
+      - autocomplete  (earlier position = more searched)
+      - intent match  (keep Claude's exact/strong/partial signal as a multiplier)
+
+    All components are 0-100; they're weighted and summed. The intentMatch
+    multiplier shrinks the score for off-topic drift.
+    """
+    # Feasibility — smaller median subs = higher score. Break points:
+    # <10k = easy (100), 10k-100k = fair (70), 100k-1M = hard (40), >1M = brutal (15)
+    subs = comp.get("top_subs_median", 0)
+    if   subs == 0:       feasibility = 50   # no data, neutral
+    elif subs < 10_000:   feasibility = 100
+    elif subs < 100_000:  feasibility = 75
+    elif subs < 1_000_000:feasibility = 45
+    else:                 feasibility = 15
+
+    # Traffic ceiling — higher median views on top-5 = more traffic to win.
+    # 100k+ = strong (100), 10k-100k = decent (70), <10k = thin (40)
+    views = comp.get("top_views_median", 0)
+    if   views >= 100_000: traffic = 100
+    elif views >= 10_000:  traffic = 70
+    elif views > 0:        traffic = 45
+    else:                  traffic = 50  # no data
+
+    # Freshness — if the newest top-5 video is old, the landscape is stale and open.
+    # <30d = competitive (40), 30-180d = normal (70), 180+d = stale/open (100)
+    days = comp.get("days_since_newest")
+    if   days is None:   freshness = 50
+    elif days < 30:      freshness = 40
+    elif days < 180:     freshness = 70
+    else:                freshness = 100
+
+    # Trend — rising +10, flat 0, declining -15.  Separate from the 0-100 core.
+    direction = (trend or {}).get("direction", "flat")
+    trend_adj = 10 if direction == "rising" else -15 if direction == "declining" else 0
+
+    # Autocomplete rank bonus (earlier = more searched)
+    # rank 0-4 = +8, 5-14 = +4, 15+ = 0, None = 0
+    if autocomplete_rank is None:    rank_adj = 0
+    elif autocomplete_rank < 5:      rank_adj = 8
+    elif autocomplete_rank < 15:     rank_adj = 4
+    else:                             rank_adj = 0
+
+    # Weighted base
+    base = round(feasibility * 0.45 + traffic * 0.30 + freshness * 0.25)
+
+    # Intent match multiplier — exact=1.0, strong=0.9, partial=0.75, else 0.85
+    im = (kw.get("intentMatch") or "").lower()
+    mult = 1.0 if im == "exact" else 0.9 if im == "strong" else 0.75 if im == "partial" else 0.85
+
+    score = int(round(base * mult + trend_adj + rank_adj))
+    return max(0, min(100, score))
+
+
+def enrich_keywords_with_real_data(
+    result: dict,
+    autocomplete_results: list[str],
+    top_n: int = 10,
+) -> dict:
+    """
+    Take the Claude-filtered keyword list and overwrite `opportunityScore`
+    with a score derived from real YouTube + Google Trends data. Also
+    attaches `competition` and `trend` objects to each keyword so the
+    frontend can render trend arrows + competition badges.
+
+    Only the top_n keywords (by Claude's initial score) get the live data
+    enrichment to keep quota costs bounded. The remaining keywords keep
+    Claude's original score.
+    """
+    keywords = result.get("keywords") or []
+    if not keywords:
+        return result
+
+    # Build autocomplete rank map (lower index = appeared earlier = more searched)
+    rank_map = {}
+    for i, phrase in enumerate(autocomplete_results):
+        kw = (phrase or "").strip().lower()
+        if kw and kw not in rank_map:
+            rank_map[kw] = i
+
+    # Sort first so top_n means "the keywords Claude liked most"
+    keywords.sort(key=lambda k: k.get("opportunityScore", 0), reverse=True)
+    enrich_targets = [k["keyword"] for k in keywords[:top_n] if k.get("keyword")]
+
+    # Fire competition + trend in parallel
+    with ThreadPoolExecutor(max_workers=2) as pool:
+        f_comp  = pool.submit(fetch_competition_signals, enrich_targets, top_n)
+        f_trend = pool.submit(fetch_trend_signals,       enrich_targets)
+        competition = f_comp.result()  or {}
+        trends      = f_trend.result() or {}
+
+    for i, kw in enumerate(keywords):
+        phrase = kw.get("keyword", "")
+        comp   = competition.get(phrase, {})
+        trend  = trends.get(phrase, {})
+        rank   = rank_map.get(phrase.lower())
+
+        kw["competition"] = comp
+        kw["trend"]       = trend
+        kw["autocomplete_rank"] = rank
+
+        # Only rescore the enriched subset. The tail keeps Claude's score.
+        if phrase in competition or phrase in trends:
+            kw["opportunityScore"] = _score_with_real_data(kw, comp, trend, rank)
+
+    # Re-sort with the new data-backed scores on top
+    keywords.sort(key=lambda k: k.get("opportunityScore", 0), reverse=True)
+    result["keywords"] = keywords
+
+    # If Claude nominated a topPick, update its score to match the enriched version
+    tp = result.get("topPick") or {}
+    if tp.get("keyword"):
+        match = next((k for k in keywords if k["keyword"].lower() == tp["keyword"].lower()), None)
+        if match:
+            tp["opportunityScore"] = match["opportunityScore"]
+            tp["competition"]      = match.get("competition", {})
+            tp["trend"]            = match.get("trend", {})
+            result["topPick"] = tp
+
+    return result

@@ -169,6 +169,65 @@ const INTENT_TONE = {
 
 function oppColor(s) { return s >= 70 ? C.green : s >= 45 ? C.amber : C.red }
 
+/* ─── TrendArrow — visible 90-day Google Trends direction next to each
+       keyword. Green up / red down / neutral flat, with the % change
+       shown when meaningful. */
+function TrendArrow({ trend }) {
+  if (!trend || !trend.direction) {
+    return <span style={{ width: 36, flexShrink: 0 }} aria-hidden="true"/>
+  }
+  const tone = trend.direction === 'rising'
+    ? { color: C.green, path: 'M2 9l3.5-3.5L8 8l4-4', head: 'M9 4h3v3' }
+    : trend.direction === 'declining'
+      ? { color: C.red, path: 'M2 5l3.5 3.5L8 6l4 4', head: 'M9 10h3v-3' }
+      : { color: C.text3, path: 'M2 7h10', head: '' }
+  const pct = trend.change_pct
+  const label = trend.direction === 'flat'
+    ? 'flat'
+    : (pct > 0 ? `+${pct}%` : `${pct}%`)
+  return (
+    <span style={{
+      display: 'inline-flex', alignItems: 'center', gap: 4,
+      width: 54, flexShrink: 0,
+      fontSize: 11, fontWeight: 700, color: tone.color,
+      fontVariantNumeric: 'tabular-nums',
+    }}>
+      <svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <path d={tone.path}/>
+        {tone.head && <path d={tone.head}/>}
+      </svg>
+      {label}
+    </span>
+  )
+}
+
+/* Tooltip copy for each ranked-keyword row — folds together the real
+   data signals so hovering gives the full story at a glance. */
+function buildRowTooltip(kw) {
+  const parts = [`${kw.intentMatch || '—'} match`, `Score ${kw.opportunityScore}`]
+  const comp = kw.competition || {}
+  if (comp.top_subs_median) {
+    parts.push(`Top channels ~${fmtCompact(comp.top_subs_median)} subs`)
+  }
+  if (comp.top_views_median) {
+    parts.push(`Top videos ~${fmtCompact(comp.top_views_median)} views`)
+  }
+  if (typeof comp.days_since_newest === 'number') {
+    parts.push(`Newest top-5 video ${comp.days_since_newest}d ago`)
+  }
+  const trend = kw.trend
+  if (trend?.direction && trend.direction !== 'flat') {
+    parts.push(`Trend ${trend.direction} ${trend.change_pct > 0 ? '+' : ''}${trend.change_pct}%`)
+  }
+  return parts.join(' · ')
+}
+
+function fmtCompact(n) {
+  if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(n >= 10_000_000 ? 0 : 1)}M`
+  if (n >= 1_000)     return `${(n / 1_000).toFixed(n >= 10_000 ? 0 : 1)}K`
+  return String(n)
+}
+
 /* ─── ScoreRing — copied verbatim from SeoOptimizer.jsx:272 so the hero
        uses the exact same 108px ring the user already approves on the
        Title Scorecard. */
@@ -494,7 +553,7 @@ export default function Keywords() {
                           tabIndex={0}
                           onClick={() => navigator.clipboard.writeText(kw.keyword)}
                           onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); navigator.clipboard.writeText(kw.keyword) } }}
-                          title={`${kw.intentMatch} match · Score ${kw.opportunityScore} — click to copy`}
+                          title={buildRowTooltip(kw)}
                           style={{
                             display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer',
                             paddingLeft:  isRightCol ? 20 : 0,
@@ -504,10 +563,13 @@ export default function Keywords() {
                         >
                           <span className="kw-row-phrase" style={{
                             fontSize: 13, color: C.text2, fontWeight: 400,
-                            width: 180, flexShrink: 0,
+                            width: 160, flexShrink: 0,
                             overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
                             transition: 'color 0.12s',
                           }}>{kw.keyword}</span>
+                          {/* Trend arrow — green rising / red declining / grey flat.
+                              Absent when we have no trend data for this keyword. */}
+                          <TrendArrow trend={kw.trend} />
                           <div style={{ flex: 1, height: 4, background: '#eeeef3', borderRadius: 99, overflow: 'hidden', minWidth: 40 }}>
                             <div style={{ width: `${kw.opportunityScore}%`, height: '100%', background: scColor, borderRadius: 99, transition: 'width 0.8s cubic-bezier(0.34,1.56,0.64,1)' }}/>
                           </div>
