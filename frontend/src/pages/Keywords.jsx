@@ -116,20 +116,23 @@ function useKwStyles() {
         padding: 7px 15px; /* compensate for 1px border */
       }
 
-      /* Cluster "Copy theme" button — ghost pill for secondary actions so
-         the red stays reserved for primary moments. Matches the ghost
-         button pattern used across the app. */
+      /* Cluster "Copy theme" button — red brand pill (matches Copy all
+         on Ranked keywords + SEO Studio's seo-btn-primary). */
       .kw-ghost-btn {
         display: inline-flex; align-items: center; gap: 6px;
-        padding: 7px 14px; border-radius: 100px;
+        padding: 8px 16px; border-radius: 100px;
         font-size: 12px; font-weight: 700; letter-spacing: 0.01em;
         font-family: 'Inter', system-ui, sans-serif;
-        background: #fff; color: #52525b;
-        border: 1px solid rgba(0,0,0,0.12); cursor: pointer;
-        transition: background 0.15s, border-color 0.15s, color 0.15s;
+        background: #e5251b; color: #fff;
+        border: none; cursor: pointer;
+        transition: filter 0.15s;
       }
-      .kw-ghost-btn:hover { background: #fff5f5; border-color: rgba(229,37,27,0.35); color: #e5251b; }
-      .kw-ghost-btn.copied { background: #f0fdf4; color: #16a34a; border-color: #bbf7d0; }
+      .kw-ghost-btn:hover { filter: brightness(1.1); }
+      .kw-ghost-btn.copied {
+        background: #f0fdf4; color: #16a34a;
+        border: 1px solid #bbf7d0;
+        padding: 7px 15px;
+      }
 
       .kw-bar { height: 4px; border-radius: 4px; background: rgba(0,0,0,0.07); overflow: hidden; }
       .kw-bar-fill { height: 4px; border-radius: 4px; transition: width 0.5s ease; }
@@ -577,25 +580,27 @@ export default function Keywords() {
                             }}>{k}</span>
                           ))}
                         </div>
-                        {/* Per-cluster action — ghost pill that turns red on hover.
-                            Copies all keywords in this theme as a comma list. */}
-                        <button
-                          className={`kw-ghost-btn${isCopied ? ' copied' : ''}`}
-                          onClick={() => handleCopyCluster(cl)}
-                          style={{ marginTop: 'auto', alignSelf: 'flex-start' }}
-                        >
-                          {isCopied ? (
-                            <>
-                              <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><polyline points="1.5,6 4.5,9 9.5,2"/></svg>
-                              Copied
-                            </>
-                          ) : (
-                            <>
-                              <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="6.5" height="6.5" rx="1"/><path d="M1.5 7.5V2A0.5 0.5 0 0 1 2 1.5h5.5"/></svg>
-                              Copy theme
-                            </>
-                          )}
-                        </button>
+                        {/* Per-cluster action — red brand pill, bottom-right
+                            of the card. Copies all keywords in this theme
+                            as a comma list. */}
+                        <div style={{ marginTop: 'auto', display: 'flex', justifyContent: 'flex-end' }}>
+                          <button
+                            className={`kw-ghost-btn${isCopied ? ' copied' : ''}`}
+                            onClick={() => handleCopyCluster(cl)}
+                          >
+                            {isCopied ? (
+                              <>
+                                <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><polyline points="1.5,6 4.5,9 9.5,2"/></svg>
+                                Copied
+                              </>
+                            ) : (
+                              <>
+                                <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="6.5" height="6.5" rx="1"/><path d="M1.5 7.5V2A0.5 0.5 0 0 1 2 1.5h5.5"/></svg>
+                                Copy theme
+                              </>
+                            )}
+                          </button>
+                        </div>
                       </div>
                     </div>
                   )
