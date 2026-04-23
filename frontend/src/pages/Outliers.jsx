@@ -46,6 +46,61 @@ if (typeof document !== 'undefined' && !document.getElementById('outliers-styles
       transform: translateY(-1px);
     }
 
+    .out-grid-card {
+      background: #ffffff;
+      border: 1px solid #e6e6ec;
+      border-radius: 16px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 4px 14px rgba(0,0,0,0.06);
+      transition: box-shadow 0.2s, transform 0.2s;
+      display: flex; flex-direction: column;
+      overflow: hidden;
+    }
+    .out-grid-card:hover {
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08), 0 16px 40px rgba(0,0,0,0.09);
+      transform: translateY(-1px);
+    }
+    .out-chip {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 12.5px; font-weight: 600; color: #4a4a58;
+      background: #fff; border: 1px solid #e6e6ec;
+      border-radius: 100px; padding: 5px 12px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .out-sort-group {
+      display: inline-flex; align-items: center;
+      background: #fff; border-radius: 100px;
+      border: 1px solid rgba(0,0,0,0.08);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 14px rgba(0,0,0,0.06);
+      padding: 3px; gap: 2px;
+    }
+    .out-sort-btn {
+      font-family: 'Inter', system-ui, sans-serif;
+      font-size: 12.5px; font-weight: 600;
+      padding: 7px 14px; border-radius: 100px;
+      border: none; cursor: pointer; background: transparent;
+      color: #52525b;
+      transition: all 0.18s;
+    }
+    .out-sort-btn:hover:not(.active) { color: #111114; }
+    .out-sort-btn.active {
+      background: #e5251b; color: #fff;
+      box-shadow: 0 1px 3px rgba(229,37,27,0.35);
+    }
+    .out-cta {
+      display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+      padding: 10px 16px; border-radius: 100px; border: none;
+      font-family: 'Inter', system-ui, sans-serif;
+      font-size: 13px; font-weight: 700;
+      background: #e5251b; color: #fff; cursor: pointer;
+      transition: filter 0.15s, transform 0.15s, box-shadow 0.15s;
+      box-shadow: 0 1px 3px rgba(229,37,27,0.32), 0 4px 14px rgba(229,37,27,0.22);
+      letter-spacing: 0.01em;
+    }
+    .out-cta:hover {
+      filter: brightness(1.08); transform: translateY(-1px);
+      box-shadow: 0 2px 8px rgba(229,37,27,0.38), 0 8px 24px rgba(229,37,27,0.28);
+    }
+
     .out-tab-btn {
       display: inline-flex; align-items: center; gap: 8px;
       padding: 9px 18px; border-radius: 100px;
@@ -253,6 +308,7 @@ export default function Outliers({ channelData, onNavigate }) {
   const [error,          setError]         = useState('')
   const [result,         setResult]        = useState(null)    // {videos, channels, keyword_scores, cohort, ...}
   const [active,         setActive]        = useState(null)
+  const [sort,           setSort]          = useState('outlier')  // outlier | views | newest (for channels: outlier | subs | hits)
 
   // Intent-picker state
   const [loadingIntent,  setLoadingIntent] = useState(false)
@@ -397,39 +453,74 @@ export default function Outliers({ channelData, onNavigate }) {
   return (
     <div style={{ width: '100%', fontFamily: "'Inter', system-ui, sans-serif", color: C.text1 }}>
 
-      {/* ══ Header ═══════════════════════════════════════════════════════════ */}
-      <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 24, gap: 16 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-          <span style={{
-            display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-            width: 48, height: 48, borderRadius: 14,
-            background: 'linear-gradient(135deg, #ef4444 0%, #b91c1c 100%)',
-            boxShadow: '0 6px 18px rgba(229,37,27,0.38), inset 0 1px 0 rgba(255,255,255,0.28)',
-            flexShrink: 0,
-          }}>
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M3 17l6-6 4 4 8-8"/>
-              <path d="M14 7h7v7"/>
-            </svg>
-          </span>
-          <div>
-            <h1 style={{ fontSize: 24, fontWeight: 800, color: C.text1, letterSpacing: '-0.6px', marginBottom: 6, lineHeight: 1.1 }}>Outliers</h1>
-            <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.4, display: 'flex', gap: 0, flexWrap: 'wrap' }}>
-              <span>Recent videos, thumbnails, and channels in your niche that over-performed</span>
-              <span style={{ marginLeft: 8 }}>· Last 12 months · 3 credits per search</span>
-            </p>
+      {/* ══ Header — Videos-tab pattern: H2 + stat chips + sort group + primary CTA ═══ */}
+      {(() => {
+        const hasResults = result?.videos?.length > 0 || result?.channels?.length > 0
+        const videosCount   = result?.videos?.length || 0
+        const channelsCount = result?.channels?.length || 0
+        const poolSize      = result?.cohort?.pool_size || 0
+        const verticalLabel = result?.cohort?.vertical || ''
+
+        // Sort options are tab-aware — Channels has different facets from Videos/Thumbnails.
+        const sortOptions = tab === 'channel'
+          ? [
+              { k: 'outlier', label: 'Top outliers' },
+              { k: 'subs',    label: 'Most subs'    },
+              { k: 'hits',    label: 'Most hits'    },
+            ]
+          : [
+              { k: 'outlier', label: 'Top outliers' },
+              { k: 'views',   label: 'Most views'   },
+              { k: 'newest',  label: 'Newest'       },
+            ]
+
+        return (
+          <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 24, gap: 16, flexWrap: 'wrap' }}>
+            <div style={{ flex: '1 1 auto', minWidth: 0 }}>
+              <h2 style={{ fontSize: 26, fontWeight: 800, color: C.text1, letterSpacing: '-0.7px', marginBottom: 10 }}>Outliers</h2>
+              <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                {hasResults ? (
+                  <>
+                    <span className="out-chip"><span>🎯</span>{videosCount} outlier{videosCount === 1 ? '' : 's'}</span>
+                    <span className="out-chip"><span>🏢</span>{channelsCount} breakout channel{channelsCount === 1 ? '' : 's'}</span>
+                    <span className="out-chip"><span>📊</span>Niche pool · {poolSize}</span>
+                    {verticalLabel && <span className="out-chip"><span>🧭</span>{verticalLabel}</span>}
+                    <span className="out-chip"><span>🗓</span>Last 12 months</span>
+                  </>
+                ) : (
+                  <>
+                    <span className="out-chip"><span>🎯</span>Over-performing videos</span>
+                    <span className="out-chip"><span>🏢</span>Breakout channels</span>
+                    <span className="out-chip"><span>🗓</span>Last 12 months</span>
+                    <span className="out-chip"><span>⚡</span>3 credits per search</span>
+                  </>
+                )}
+              </div>
+            </div>
+            {hasResults && (
+              <div style={{ display: 'flex', gap: 10, alignItems: 'center', flexShrink: 0 }}>
+                <div className="out-sort-group">
+                  {sortOptions.map(opt => (
+                    <button
+                      key={opt.k}
+                      onClick={() => setSort(opt.k)}
+                      className={`out-sort-btn${sort === opt.k ? ' active' : ''}`}
+                    >
+                      {opt.label}
+                    </button>
+                  ))}
+                </div>
+                <button onClick={handleClear} className="out-cta" style={{ flexShrink: 0 }}>
+                  <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="5.5" cy="5.5" r="3.5"/><path d="M10 10l-2-2"/>
+                  </svg>
+                  New search
+                </button>
+              </div>
+            )}
           </div>
-        </div>
-        {(result?.videos?.length > 0 || result?.channels?.length > 0) && (
-          <button
-            onClick={handleClear}
-            className="out-btn"
-            style={{ flexShrink: 0 }}
-          >
-            New search
-          </button>
-        )}
-      </div>
+        )
+      })()}
 
       {/* ══ Tabs ═════════════════════════════════════════════════════════════ */}
       <div style={{
@@ -670,28 +761,25 @@ export default function Outliers({ channelData, onNavigate }) {
 
       {/* ══ Results — one search, three tab views of the same payload ════════ */}
       {!loading && (result?.videos?.length > 0 || result?.channels?.length > 0) && (() => {
-        const items = tab === 'channel' ? (result.channels || []) : (result.videos || [])
-        const eyebrowLabel =
-          tab === 'channel'   ? `${items.length} breakout channel${items.length === 1 ? '' : 's'}` :
-          tab === 'thumbnail' ? `${items.length} winning thumbnail${items.length === 1 ? '' : 's'}` :
-                                `${items.length} outlier video${items.length === 1 ? '' : 's'}`
+        const raw = tab === 'channel' ? (result.channels || []) : (result.videos || [])
+        // Tab-aware sort (falls back to outlier score if the current sort key
+        // doesn't apply to this tab, e.g. switching videos -> channels).
+        const items = [...raw].sort((a, b) => {
+          if (tab === 'channel') {
+            if (sort === 'subs') return (b.subscribers || 0) - (a.subscribers || 0)
+            if (sort === 'hits') return (b.videos_in_search || 0) - (a.videos_in_search || 0)
+            return (b.outlier_score || 0) - (a.outlier_score || 0)
+          }
+          if (sort === 'views')  return (b.views || 0) - (a.views || 0)
+          if (sort === 'newest') return (new Date(b.published_at || 0).getTime()) - (new Date(a.published_at || 0).getTime())
+          return (b.outlier_score || 0) - (a.outlier_score || 0)
+        })
         return (
           <div className="out-section">
             {/* Thumbnails tab: niche visual-pattern report lives above the grid */}
             {tab === 'thumbnail' && result.thumbnail_patterns && (
               <ThumbnailPatternsCard patterns={result.thumbnail_patterns} query={result.cohort?.query} />
             )}
-
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12, gap: 12, flexWrap: 'wrap' }}>
-              <span style={{ fontSize: 11, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-                {eyebrowLabel} for "{result.cohort?.query}"
-              </span>
-              {result.cohort?.pool_size != null && (
-                <span style={{ fontSize: 11, fontWeight: 500, color: C.text3 }}>
-                  Niche pool · {result.cohort.pool_size} peer video{result.cohort.pool_size === 1 ? '' : 's'} · last 12 months
-                </span>
-              )}
-            </div>
 
             {items.length === 0 ? (
               <div className="out-card" style={{ padding: '28px 24px', textAlign: 'center' }}>
@@ -702,7 +790,7 @@ export default function Outliers({ channelData, onNavigate }) {
                 </p>
               </div>
             ) : (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 14 }}>
                 {items.map(item => (
                   tab === 'channel'
                     ? <ChannelResultCard key={item.channel_id} item={item} onOpen={() => setActive(item)} />
@@ -728,175 +816,235 @@ export default function Outliers({ channelData, onNavigate }) {
   )
 }
 
-/* ─── Video / thumbnail result card ──────────────────────────────────────── */
+/* ─── Video / thumbnail result card ───────────────────────────────────────
+   Visual language copied from Dashboard.jsx Videos tab (.ytg-card):
+   - White card, 16px radius, soft shadow, hover lift
+   - Full-width 16:9 thumbnail with rounded top corners
+   - Bottom-right duration pill, top-left SHORT pill replaced by OUTLIER pill
+   - Body: title (16/700) → meta line (views · subs · relTime) → footer
+     separated by a 1px hairline with a 3-metric grid + full-width CTA
+   Content adapted to Outliers: OUTLIER / VIEWS-PER-SUB / ENG rather than
+   Watch / Retention / Eng (those only apply to the user's own videos).
+   ──────────────────────────────────────────────────────────────────────── */
 function VideoResultCard({ item, kind, onOpen }) {
-  const tier = outlierTier(item.outlier_score)
-  // Thumbnails tab: bigger image, title secondary. Video tab: balanced.
-  const thumbWidth = kind === 'thumbnail' ? 220 : 180
+  const tier          = outlierTier(item.outlier_score)
+  const views         = item.views || 0
+  const likes         = item.likes || 0
+  const subs          = item.channel_subscribers || 0
+  const engPct        = views > 0 ? (likes / views * 100) : null
+  const engColor      = engPct == null ? C.text3 : engPct >= 3 ? C.green : engPct >= 1 ? C.amber : C.red
+  const vpsRaw        = typeof item.views_per_sub === 'number'
+                          ? item.views_per_sub
+                          : (subs > 0 ? views / subs : null)
+  const vpsDisplay    = vpsRaw == null ? '—'
+                         : vpsRaw >= 10   ? vpsRaw.toFixed(1) + '×'
+                         : vpsRaw >= 1    ? vpsRaw.toFixed(2) + '×'
+                         : vpsRaw.toFixed(2) + '×'
+  const isShort       = item.duration_seconds > 0 && item.duration_seconds <= 60
+  const durLabel      = item.duration_seconds > 0 ? fmtDuration(item.duration_seconds) : null
+  const ytUrl         = item.video_id ? `https://www.youtube.com/watch?v=${item.video_id}` : null
+  const ctaLabel      = kind === 'thumbnail' ? 'See pattern' : 'See why'
 
   return (
-    <button className="out-result-card" onClick={onOpen}>
-      {/* Thumbnail */}
-      <div style={{
-        position: 'relative',
-        width: thumbWidth, flexShrink: 0,
-        aspectRatio: '16 / 9',
-        borderRadius: 10, overflow: 'hidden',
-        background: '#eeeef3',
-        border: `1px solid ${C.border}`,
-      }}>
+    <div className="out-grid-card">
+      {/* Thumbnail — YouTube link, matching Videos tab */}
+      <a href={ytUrl || '#'} target="_blank" rel="noopener noreferrer"
+        onClick={e => { if (!ytUrl) e.preventDefault() }}
+        style={{ display: 'block', position: 'relative', textDecoration: 'none', flexShrink: 0, borderRadius: '15px 15px 0 0', overflow: 'hidden' }}>
         {item.thumbnail
-          ? <img src={item.thumbnail} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}/>
-          : null}
-        {item.duration_seconds > 0 && (
-          <span style={{
-            position: 'absolute', bottom: 6, right: 6,
-            fontSize: 10.5, fontWeight: 700, color: '#fff',
-            background: 'rgba(15,15,19,0.82)',
-            padding: '2px 6px', borderRadius: 4,
-            fontVariantNumeric: 'tabular-nums',
-          }}>{fmtDuration(item.duration_seconds)}</span>
+          ? <img src={item.thumbnail} alt=""
+              style={{ width: '100%', aspectRatio: '16/9', objectFit: 'cover', display: 'block' }}/>
+          : <div style={{ width: '100%', aspectRatio: '16/9', background: '#ebebef' }}/>
+        }
+        {/* Outlier pill — top-left, same position SHORT pill occupies on the Videos tab */}
+        <span style={{
+          position: 'absolute', top: 8, left: 8,
+          background: tier.color, color: '#fff',
+          fontSize: 11, fontWeight: 800, padding: '3px 9px', borderRadius: 20,
+          letterSpacing: '0.03em', textTransform: 'uppercase',
+          fontVariantNumeric: 'tabular-nums',
+          boxShadow: '0 1px 3px rgba(0,0,0,0.25)',
+          display: 'inline-flex', alignItems: 'center', gap: 4,
+        }}>
+          <svg width="10" height="10" viewBox="0 0 12 12" fill="currentColor"><path d="M6 1l1.4 3.6L11 6l-3.6 1.4L6 11l-1.4-3.6L1 6l3.6-1.4z"/></svg>
+          {tier.label}
+        </span>
+        {isShort && (
+          <span style={{ position: 'absolute', top: 8, right: 8, background: '#111', color: '#fff', fontSize: 11, fontWeight: 800, padding: '2px 6px', borderRadius: 4, letterSpacing: '0.06em' }}>SHORT</span>
         )}
-      </div>
+        {durLabel && !isShort && (
+          <span style={{ position: 'absolute', bottom: 8, right: 8, background: 'rgba(0,0,0,0.72)', color: '#fff', fontSize: 12, fontWeight: 700, padding: '2px 7px', borderRadius: 5, fontVariantNumeric: 'tabular-nums' }}>{durLabel}</span>
+        )}
+      </a>
 
-      {/* Body */}
-      <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: 8 }}>
-        {/* Row 1: outlier pill + stats */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
-          <span style={{
-            display: 'inline-flex', alignItems: 'center', gap: 5,
-            background: tier.bg, color: tier.color, border: `1px solid ${tier.bdr}`,
-            fontSize: 11, fontWeight: 700, padding: '3px 9px', borderRadius: 20,
-            letterSpacing: '0.03em', textTransform: 'uppercase',
-            fontVariantNumeric: 'tabular-nums',
-          }}>
-            <svg width="10" height="10" viewBox="0 0 12 12" fill="currentColor"><path d="M6 1l1.4 3.6L11 6l-3.6 1.4L6 11l-1.4-3.6L1 6l3.6-1.4z"/></svg>
-            {tier.label}
-          </span>
-          <span style={{ fontSize: 11, fontWeight: 600, color: C.text2, fontVariantNumeric: 'tabular-nums' }}>
-            {fmtNum(item.views)} views
-          </span>
-          <span style={{ fontSize: 11, color: C.text3 }}>·</span>
-          <span style={{ fontSize: 11, fontWeight: 500, color: C.text3 }}>
-            {fmtNum(item.channel_subscribers)} sub channel
-          </span>
-          {item.published_at && (
-            <>
-              <span style={{ fontSize: 11, color: C.text3 }}>·</span>
-              <span style={{ fontSize: 11, fontWeight: 500, color: C.text3 }}>{relPublished(item.published_at)}</span>
-            </>
-          )}
-        </div>
-
-        {/* Row 2: title */}
+      {/* Body — matches Videos tab padding + layout */}
+      <div style={{ padding: '20px 20px 20px', display: 'flex', flexDirection: 'column', flex: 1 }}>
+        {/* Title */}
         <p style={{
-          fontSize: 14.5, fontWeight: 700, color: C.text1,
-          letterSpacing: '-0.2px', lineHeight: 1.4,
-          display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical',
-          overflow: 'hidden',
+          fontSize: 16, fontWeight: 700, color: C.text1, lineHeight: 1.45, marginBottom: 10, letterSpacing: '-0.3px',
+          display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden',
         }}>{item.title}</p>
 
-        {/* Row 3: channel name */}
-        <p style={{ fontSize: 12, color: C.text3, fontWeight: 500, letterSpacing: '-0.05px' }}>
-          {item.channel_name}
+        {/* Channel name — one extra line to identify the creator (channels aren't yours here) */}
+        <p style={{ fontSize: 12.5, color: C.text3, fontWeight: 500, marginBottom: 10, letterSpacing: '-0.05px',
+          whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
+        }}>{item.channel_name}</p>
+
+        {/* Meta line — same pattern as Videos tab (bold values, dot separators, relative time) */}
+        <p style={{ fontSize: 13.5, fontWeight: 500, color: C.text3, marginBottom: 14, lineHeight: 1.4 }}>
+          <span style={{ color: C.text2, fontWeight: 600 }}>{fmtNum(views)}</span> views
+          <span style={{ margin: '0 8px', color: '#d4d4dc' }}>·</span>
+          <span style={{ color: C.text2, fontWeight: 600 }}>{fmtNum(subs)}</span> subs
+          <span style={{ margin: '0 8px', color: '#d4d4dc' }}>·</span>
+          {relPublished(item.published_at) || '—'}
         </p>
 
-        {/* Row 4: AI explanation */}
-        {item.explanation && (
-          <div style={{
-            marginTop: 2,
-            fontSize: 12.5, color: C.text2,
-            background: '#fafafb',
-            border: `1px solid ${C.borderLight}`,
-            borderRadius: 9,
-            padding: '8px 11px',
-            lineHeight: 1.55,
-            display: 'flex', alignItems: 'flex-start', gap: 8,
-          }}>
-            <span style={{ color: C.red, flexShrink: 0, marginTop: 1 }}>
-              <SparkIcon size={12} />
-            </span>
-            <span style={{ flex: 1, minWidth: 0 }}>{item.explanation}</span>
+        {/* Footer — 3-metric grid + full-width red CTA, Videos-tab pattern */}
+        <div style={{ marginTop: 'auto', paddingTop: 18, borderTop: '1px solid #eeeef3' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 12, marginBottom: 18 }}>
+            {[
+              { label: 'Outlier', display: `${item.outlier_score}×`,                                                       color: tier.color, tip: 'How many times this video beat its niche cohort\'s median views-per-subscriber. 5×+ is breakout.' },
+              { label: 'VPS',     display: vpsDisplay,                                                                     color: C.text1,    tip: 'Views per subscriber — normalises out raw channel size so small-channel wins show up.' },
+              { label: 'Eng',     display: engPct != null ? `${engPct.toFixed(1)}%` : '—',                                  color: engColor,   tip: 'Engagement rate = likes ÷ views. 3%+ strong, 1–3% avg, <1% weak.' },
+            ].map(m => (
+              <div key={m.label} title={m.tip} style={{ cursor: 'help', textAlign: 'left' }}>
+                <p style={{ fontSize: 10.5, fontWeight: 700, color: C.text3, letterSpacing: '0.09em', textTransform: 'uppercase', marginBottom: 7, lineHeight: 1 }}>{m.label}</p>
+                <p style={{ fontSize: 17, fontWeight: 800, color: m.color, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.4px', lineHeight: 1 }}>{m.display}</p>
+              </div>
+            ))}
           </div>
-        )}
+          <button
+            onClick={onOpen}
+            style={{
+              width: '100%', justifyContent: 'center',
+              padding: '11px 16px', fontSize: 13.5, fontWeight: 700,
+              border: 'none', borderRadius: 100, cursor: 'pointer',
+              background: C.red, color: '#fff',
+              fontFamily: 'inherit', letterSpacing: '0.01em',
+              display: 'inline-flex', alignItems: 'center', gap: 6,
+              transition: 'filter 0.15s',
+            }}
+            onMouseEnter={e => e.currentTarget.style.filter = 'brightness(1.1)'}
+            onMouseLeave={e => e.currentTarget.style.filter = 'none'}
+          >
+            {ctaLabel}
+          </button>
+        </div>
       </div>
-    </button>
+    </div>
   )
 }
 
-/* ─── Channel result card ────────────────────────────────────────────────── */
+/* ─── Channel result card — same grid-card silhouette as the Videos tab,
+   using the channel's best-performing video as the banner image and the
+   channel avatar overlaid bottom-left. Body body/footer structure matches
+   VideoResultCard so both tabs feel like one design system.
+   ──────────────────────────────────────────────────────────────────────── */
 function ChannelResultCard({ item, onOpen }) {
-  const tier = outlierTier(item.outlier_score)
-  return (
-    <button className="out-result-card" onClick={onOpen}>
-      {/* Avatar */}
-      <div style={{
-        width: 72, height: 72, flexShrink: 0,
-        borderRadius: '50%', overflow: 'hidden',
-        background: C.redBg, border: `1px solid ${C.border}`,
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
-        fontSize: 24, fontWeight: 700, color: C.red,
-      }}>
-        {item.thumbnail
-          ? <img src={item.thumbnail} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }}/>
-          : (item.channel_name || '?')[0].toUpperCase()
-        }
-      </div>
+  const tier       = outlierTier(item.outlier_score)
+  const hits       = item.videos_in_search || 0
+  const initial    = (item.channel_name || '?')[0].toUpperCase()
+  const ytUrl      = item.channel_id ? `https://www.youtube.com/channel/${item.channel_id}` : null
 
-      {/* Body */}
-      <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: 6 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
-          <span style={{
-            display: 'inline-flex', alignItems: 'center', gap: 5,
-            background: tier.bg, color: tier.color, border: `1px solid ${tier.bdr}`,
-            fontSize: 11, fontWeight: 700, padding: '3px 9px', borderRadius: 20,
-            letterSpacing: '0.03em', textTransform: 'uppercase',
-            fontVariantNumeric: 'tabular-nums',
-          }}>
-            <svg width="10" height="10" viewBox="0 0 12 12" fill="currentColor"><path d="M6 1l1.4 3.6L11 6l-3.6 1.4L6 11l-1.4-3.6L1 6l3.6-1.4z"/></svg>
-            {tier.label}
-          </span>
-          <span style={{ fontSize: 11, fontWeight: 600, color: C.text2, fontVariantNumeric: 'tabular-nums' }}>
-            {fmtNum(item.subscribers)} subs
-          </span>
-          <span style={{ fontSize: 11, color: C.text3 }}>·</span>
-          <span style={{ fontSize: 11, fontWeight: 500, color: C.text3 }}>
-            {fmtNum(item.avg_views_per_video)} avg views
-          </span>
-          <span style={{ fontSize: 11, color: C.text3 }}>·</span>
-          <span style={{ fontSize: 11, fontWeight: 500, color: C.text3 }}>
-            {fmtNum(item.video_count)} videos
-          </span>
+  return (
+    <div className="out-grid-card">
+      {/* Banner = top video thumbnail (or a neutral fill); avatar + outlier pill overlay */}
+      <a href={ytUrl || '#'} target="_blank" rel="noopener noreferrer"
+        onClick={e => { if (!ytUrl) e.preventDefault() }}
+        style={{ display: 'block', position: 'relative', textDecoration: 'none', flexShrink: 0, borderRadius: '15px 15px 0 0', overflow: 'hidden' }}>
+        {item.top_video_thumbnail
+          ? <img src={item.top_video_thumbnail} alt=""
+              style={{ width: '100%', aspectRatio: '16/9', objectFit: 'cover', display: 'block' }}/>
+          : <div style={{ width: '100%', aspectRatio: '16/9', background: `linear-gradient(135deg, ${C.redBg} 0%, #ffe4e4 100%)` }}/>
+        }
+        {/* Outlier pill — same position as VideoResultCard */}
+        <span style={{
+          position: 'absolute', top: 8, left: 8,
+          background: tier.color, color: '#fff',
+          fontSize: 11, fontWeight: 800, padding: '3px 9px', borderRadius: 20,
+          letterSpacing: '0.03em', textTransform: 'uppercase',
+          fontVariantNumeric: 'tabular-nums',
+          boxShadow: '0 1px 3px rgba(0,0,0,0.25)',
+          display: 'inline-flex', alignItems: 'center', gap: 4,
+        }}>
+          <svg width="10" height="10" viewBox="0 0 12 12" fill="currentColor"><path d="M6 1l1.4 3.6L11 6l-3.6 1.4L6 11l-1.4-3.6L1 6l3.6-1.4z"/></svg>
+          {tier.label}
+        </span>
+        {/* Channel avatar — overlaid bottom-left, circular, white ring */}
+        <div style={{
+          position: 'absolute', left: 12, bottom: -22,
+          width: 44, height: 44, borderRadius: '50%',
+          overflow: 'hidden', background: C.redBg,
+          border: '3px solid #fff',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.12)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          fontSize: 16, fontWeight: 800, color: C.red,
+        }}>
+          {item.thumbnail
+            ? <img src={item.thumbnail} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }}/>
+            : initial
+          }
         </div>
-        <p style={{ fontSize: 14.5, fontWeight: 700, color: C.text1, letterSpacing: '-0.2px', lineHeight: 1.35 }}>
-          {item.channel_name}
+      </a>
+
+      {/* Body — same structure as VideoResultCard for visual parity */}
+      <div style={{ padding: '30px 20px 20px', display: 'flex', flexDirection: 'column', flex: 1 }}>
+        {/* Channel name — role parallel to video title */}
+        <p style={{
+          fontSize: 16, fontWeight: 700, color: C.text1, lineHeight: 1.4, marginBottom: 8, letterSpacing: '-0.3px',
+          whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
+        }}>{item.channel_name}</p>
+
+        {/* Description — 1-line clamp, replaces the "channel-name" role in VideoResultCard */}
+        <p style={{
+          fontSize: 12.5, color: C.text3, fontWeight: 500, marginBottom: 10,
+          lineHeight: 1.45,
+          display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden',
+          minHeight: 36,
+        }}>{item.description || '—'}</p>
+
+        {/* Meta line — bold values, dot separators, matches VideoResultCard */}
+        <p style={{ fontSize: 13.5, fontWeight: 500, color: C.text3, marginBottom: 14, lineHeight: 1.4 }}>
+          <span style={{ color: C.text2, fontWeight: 600 }}>{fmtNum(item.subscribers)}</span> subs
+          <span style={{ margin: '0 8px', color: '#d4d4dc' }}>·</span>
+          <span style={{ color: C.text2, fontWeight: 600 }}>{fmtNum(item.avg_views_per_video)}</span> avg views
+          <span style={{ margin: '0 8px', color: '#d4d4dc' }}>·</span>
+          {fmtNum(item.video_count)} videos
         </p>
-        {item.description && (
-          <p style={{
-            fontSize: 12, color: C.text3, fontWeight: 500,
-            display: '-webkit-box', WebkitLineClamp: 1, WebkitBoxOrient: 'vertical',
-            overflow: 'hidden',
-          }}>{item.description}</p>
-        )}
-        {item.explanation && (
-          <div style={{
-            marginTop: 2,
-            fontSize: 12.5, color: C.text2,
-            background: '#fafafb',
-            border: `1px solid ${C.borderLight}`,
-            borderRadius: 9,
-            padding: '8px 11px',
-            lineHeight: 1.55,
-            display: 'flex', alignItems: 'flex-start', gap: 8,
-          }}>
-            <span style={{ color: C.red, flexShrink: 0, marginTop: 1 }}>
-              <SparkIcon size={12} />
-            </span>
-            <span style={{ flex: 1, minWidth: 0 }}>{item.explanation}</span>
+
+        {/* Footer — same 3-metric grid pattern as VideoResultCard */}
+        <div style={{ marginTop: 'auto', paddingTop: 18, borderTop: '1px solid #eeeef3' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 12, marginBottom: 18 }}>
+            {[
+              { label: 'Outlier',  display: `${item.outlier_score}×`,            color: tier.color, tip: 'Their best-performing video in this search beat the niche median by this multiple.' },
+              { label: 'Hits',     display: String(hits),                         color: C.text1,    tip: 'Number of videos from this channel that surfaced in your search — higher = more on-topic.' },
+              { label: 'Avg views', display: fmtNum(item.avg_views_per_video),    color: C.text1,    tip: 'Average views per video across this channel\'s entire catalog.' },
+            ].map(m => (
+              <div key={m.label} title={m.tip} style={{ cursor: 'help', textAlign: 'left' }}>
+                <p style={{ fontSize: 10.5, fontWeight: 700, color: C.text3, letterSpacing: '0.09em', textTransform: 'uppercase', marginBottom: 7, lineHeight: 1 }}>{m.label}</p>
+                <p style={{ fontSize: 17, fontWeight: 800, color: m.color, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.4px', lineHeight: 1 }}>{m.display}</p>
+              </div>
+            ))}
           </div>
-        )}
+          <button
+            onClick={onOpen}
+            style={{
+              width: '100%', justifyContent: 'center',
+              padding: '11px 16px', fontSize: 13.5, fontWeight: 700,
+              border: 'none', borderRadius: 100, cursor: 'pointer',
+              background: C.red, color: '#fff',
+              fontFamily: 'inherit', letterSpacing: '0.01em',
+              display: 'inline-flex', alignItems: 'center', gap: 6,
+              transition: 'filter 0.15s',
+            }}
+            onMouseEnter={e => e.currentTarget.style.filter = 'brightness(1.1)'}
+            onMouseLeave={e => e.currentTarget.style.filter = 'none'}
+          >
+            Analyze channel
+          </button>
+        </div>
       </div>
-    </button>
+    </div>
   )
 }
 
