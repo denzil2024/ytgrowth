@@ -823,21 +823,101 @@ function AIAnalysis({ ai, top5Videos, channelId, checkedIdeas, onToggleIdea }) {
         })()}
       </div>
 
-      {/* ── three-column insights ── */}
-      {(ai.videoLengthInsight || ai.engagementInsight || ai.thumbnailPattern) && (
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 14 }}>
-          {[
-            { key: 'videoLengthInsight', label: 'Video length',    val: ai.videoLengthInsight },
-            { key: 'engagementInsight',  label: 'Engagement',      val: ai.engagementInsight },
-            { key: 'thumbnailPattern',   label: 'Thumbnail style', val: ai.thumbnailPattern },
-          ].filter(x => x.val).map(({ key, label, val }) => (
-            <div key={key} className="comp-insight-card">
-              <p className="comp-card-label" style={{ marginBottom: 8 }}>{label}</p>
-              <p style={{ fontSize: 14, color: '#52525b', lineHeight: 1.7, fontWeight: 400 }}>{val}</p>
+      {/* ── channel insights — faithful Priority Actions copy ────────────────
+           Same layout as Dashboard's InsightCard: stacked full-width cards,
+           header = numbered badge + category eyebrow + bold headline + right
+           pill, marginLeft:46 divider, then a blue "Analysis" tile (same tint
+           as Overview's Why-now cell) with the remaining reasoning.
+           Accent is NEUTRAL GREY — these are observational insights, not
+           wins, problems, or ordinals, so no semantic colour applies. */}
+      {(() => {
+        const insights = [
+          { key: 'videoLengthInsight', label: 'Video length',    val: ai.videoLengthInsight },
+          { key: 'engagementInsight',  label: 'Engagement',      val: ai.engagementInsight },
+          { key: 'thumbnailPattern',   label: 'Thumbnail style', val: ai.thumbnailPattern },
+        ].filter(x => x.val)
+        if (insights.length === 0) return null
+        return (
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
+              <p style={{ fontSize: 20, fontWeight: 800, color: '#111114', letterSpacing: '-0.5px' }}>
+                Channel insights
+              </p>
+              <span style={{ fontSize: 11, fontWeight: 700, color: '#9595a4', background: '#f1f1f6',
+                padding: '2px 8px', borderRadius: 20, border: '1px solid #e6e6ec' }}>
+                {insights.length}
+              </span>
             </div>
-          ))}
-        </div>
-      )}
+
+            {insights.map(({ key, label, val }, i) => {
+              // Split the first sentence off as the headline; the rest becomes
+              // the body. AI returns a single paragraph that reads as "assertion.
+              // evidence evidence evidence." so this gives us the Priority
+              // Actions headline/body split without fabricating content.
+              const match    = val.match(/^(.+?[.!?])\s+(.+)$/s)
+              const headline = (match ? match[1] : val).trim()
+              const body     = match ? match[2].trim() : null
+
+              return (
+                <div key={key} className="comp-card" style={{
+                  borderRadius: 14,
+                  overflow: 'hidden',
+                  marginBottom: 10,
+                  borderTop: '3px solid #9595a4',
+                }}>
+                  <div style={{ padding: '16px 22px 18px' }}>
+
+                    {/* header — badge + category + headline + right pill */}
+                    <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: body ? 14 : 0 }}>
+                      <div style={{ width: 26, height: 26, borderRadius: 8, background: '#9595a4',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 2 }}>
+                        <span style={{ fontSize: 12, fontWeight: 900, color: '#fff', fontVariantNumeric: 'tabular-nums' }}>
+                          {i + 1}
+                        </span>
+                      </div>
+
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <p style={{ fontSize: 10, fontWeight: 700, color: '#9595a4',
+                          letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 5 }}>
+                          {label}
+                        </p>
+                        <p style={{ fontSize: 14, fontWeight: 700, color: '#111114', lineHeight: 1.55 }}>
+                          {headline}
+                        </p>
+                      </div>
+
+                      <span style={{ fontSize: 10, fontWeight: 700, color: '#9595a4',
+                        padding: '3px 9px', borderRadius: 20, letterSpacing: '0.06em',
+                        textTransform: 'uppercase', border: '1.5px solid #9595a4', flexShrink: 0 }}>
+                        Insight
+                      </span>
+                    </div>
+
+                    {/* divider — offset past the badge column, same as InsightCard */}
+                    {body && <div style={{ height: 1, background: '#e6e6ec', marginBottom: 14, marginLeft: 46 }}/>}
+
+                    {/* body — blue "Analysis" tile, same palette as Overview's Why-now cell */}
+                    {body && (
+                      <div style={{ marginLeft: 46 }}>
+                        <div style={{ background: 'rgba(79,134,247,0.07)', border: '1px solid rgba(79,134,247,0.12)',
+                          borderRadius: 10, padding: '12px 14px' }}>
+                          <p style={{ fontSize: 10, fontWeight: 700, color: '#4a7cf7',
+                            letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>
+                            Analysis
+                          </p>
+                          <p style={{ fontSize: 13.5, color: '#111114', lineHeight: 1.72 }}>
+                            {body}
+                          </p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        )
+      })()}
 
       {/* ── posting timing ── */}
       {ai.postingBehavior && (
