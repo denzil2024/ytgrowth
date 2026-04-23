@@ -220,13 +220,12 @@ function KwDetailPanel({ kw, C }) {
   }
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginTop: 2, marginBottom: 2 }}>
-      {/* SIGNALS — neutral grey tint. The amber areas above already
-          saturate the row (top border, dividers, OPEN pill), so the
-          informational card stays calm/neutral rather than piling more
-          amber on top. Eyebrow is neutral grey too — the standard Overview-tab eyebrow treatment. */}
-      <div style={{ background: '#fafafb', border: `1px solid ${C.border}`, borderRadius: 10, padding: '10px 12px' }}>
-        <p style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Signals</p>
-        <p style={{ fontSize: 12.5, lineHeight: 1.65 }}>
+      {/* SIGNALS — Priority Actions "Why now" treatment (soft blue-grey
+          tint). Matches the Dashboard pattern user pointed to; reads as
+          clean/informational rather than piling more amber on top. */}
+      <div style={{ background: 'rgba(79,134,247,0.07)', border: '1px solid rgba(79,134,247,0.12)', borderRadius: 10, padding: '11px 14px' }}>
+        <p style={{ fontSize: 10, fontWeight: 700, color: '#4a7cf7', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Signals</p>
+        <p style={{ fontSize: 13, color: C.text1, lineHeight: 1.7 }}>
           {parts.map((p, i) => (
             <React.Fragment key={i}>
               {i > 0 && <span style={{ color: C.text4, margin: '0 7px' }}>·</span>}
@@ -235,12 +234,12 @@ function KwDetailPanel({ kw, C }) {
           ))}
         </p>
       </div>
-      {/* HOW TO USE — white + green 3px bar + soft shadow. Green carries
-          "this is the play / the way forward" semantic — fits actionable
-          guidance. Red is reserved for primary CTAs (Research / Copy all). */}
-      <div style={{ background: '#fff', border: `1px solid ${C.border}`, borderLeft: `3px solid ${C.green}`, borderRadius: '0 10px 10px 0', padding: '10px 14px', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}>
+      {/* HOW TO USE — Priority Actions "Action" treatment (white + 3px
+          coloured left bar + soft shadow). Green because this is the
+          path forward. */}
+      <div style={{ background: '#fff', border: `1px solid ${C.border}`, borderLeft: `3px solid ${C.green}`, borderRadius: '0 10px 10px 0', padding: '11px 14px', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}>
         <p style={{ fontSize: 10, fontWeight: 700, color: C.green, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>How to use</p>
-        <p style={{ fontSize: 12.5, color: C.text1, lineHeight: 1.65 }}>{buildRecommendation(kw)}</p>
+        <p style={{ fontSize: 13, color: C.text1, lineHeight: 1.7 }}>{buildRecommendation(kw)}</p>
       </div>
     </div>
   )
@@ -607,10 +606,12 @@ export default function Keywords() {
                       crosses the divider. Columns can now grow to different
                       heights when one side is expanded — intentional. */}
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', position: 'relative' }}>
-                    {/* Continuous amber vertical divider */}
+                    {/* Continuous saturated amber vertical divider —
+                        matches the thickness/boldness of Priority Actions'
+                        Action-card left bar. Not a pale hairline. */}
                     <div style={{
-                      position: 'absolute', left: '50%', top: 0, bottom: 0,
-                      width: 1, background: C.amberBdr, pointerEvents: 'none',
+                      position: 'absolute', left: 'calc(50% - 1px)', top: 0, bottom: 0,
+                      width: 2, background: C.amber, borderRadius: 2, pointerEvents: 'none',
                     }}/>
                     {[0, 1].map(colIdx => {
                       const colKws = result.keywords.filter((_, i) => i % 2 === colIdx)
@@ -696,7 +697,7 @@ export default function Keywords() {
                 {result.clusters.map((cl, i) => {
                   const isCopied = copiedCluster === cl.clusterName
                   return (
-                    <div key={cl.clusterName} className="kw-card">
+                    <div key={cl.clusterName} className="kw-card" style={{ borderTop: `3px solid ${C.green}` }}>
                       <div style={{ padding: '18px 22px 20px', display: 'flex', flexDirection: 'column', height: '100%' }}>
                         <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, marginBottom: 14 }}>
                           <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10, minWidth: 0, flex: 1 }}>
