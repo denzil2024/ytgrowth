@@ -193,40 +193,36 @@ function MomentumBadge({ momentum }) {
   )
 }
 
-/* Expanded detail panel for a ranked-keyword row — mirrors Thumbnail IQ's
-   Why/Fix 2-col drop-down: left panel lists the real signals (same data
-   the hover tooltip exposes), right panel gives a rule-based "How to use"
-   recommendation. Palette-compliant: left = amber tint, right = red bar. */
+/* Expanded detail for a ranked-keyword row — compact two-line strip, no
+   cards, no elevation. Line 1: signals inline. Line 2: recommendation. */
 function KwDetailPanel({ kw, C }) {
   const comp = kw.competition || {}
-  const signals = []
-  signals.push(['Intent match', (kw.intentMatch || '—').replace(/^\w/, c => c.toUpperCase())])
-  signals.push(['Opportunity score', `${kw.opportunityScore}/100`])
-  if (comp.top_subs_median)  signals.push(['Top-5 channels', `~${fmtCompact(comp.top_subs_median)} subs`])
-  if (comp.top_views_median) signals.push(['Top-5 median views', fmtCompact(comp.top_views_median)])
-  if (typeof comp.days_since_newest === 'number') {
-    signals.push(['Newest top-5 video', `${comp.days_since_newest}d ago`])
+  const parts = []
+  parts.push(<><span style={{ color: C.text3 }}>Intent </span><b style={{ color: C.text1, fontWeight: 600 }}>{(kw.intentMatch || '—').replace(/^\w/, c => c.toUpperCase())}</b></>)
+  parts.push(<><span style={{ color: C.text3 }}>Score </span><b style={{ color: C.text1, fontWeight: 600, fontVariantNumeric: 'tabular-nums' }}>{kw.opportunityScore}/100</b></>)
+  if (comp.top_subs_median) {
+    parts.push(<><span style={{ color: C.text3 }}>Top-5 </span><b style={{ color: C.text1, fontWeight: 600, fontVariantNumeric: 'tabular-nums' }}>~{fmtCompact(comp.top_subs_median)} subs</b></>)
   }
-  const rec = buildRecommendation(kw)
+  if (comp.top_views_median) {
+    parts.push(<><span style={{ color: C.text3 }}>Median views </span><b style={{ color: C.text1, fontWeight: 600, fontVariantNumeric: 'tabular-nums' }}>{fmtCompact(comp.top_views_median)}</b></>)
+  }
+  if (typeof comp.days_since_newest === 'number') {
+    parts.push(<><span style={{ color: C.text3 }}>Newest </span><b style={{ color: C.text1, fontWeight: 600, fontVariantNumeric: 'tabular-nums' }}>{comp.days_since_newest}d ago</b></>)
+  }
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginTop: 4 }}>
-      {/* Signals — amber-tinted, matches "Why" column */}
-      <div style={{ background: C.amberBg, border: `1px solid ${C.amberBdr}`, borderRadius: 10, padding: '11px 14px' }}>
-        <p style={{ fontSize: 10, fontWeight: 700, color: C.amber, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>Signals</p>
-        <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', columnGap: 14, rowGap: 5 }}>
-          {signals.map(([label, val]) => (
-            <React.Fragment key={label}>
-              <span style={{ fontSize: 12, color: C.text3, fontWeight: 500 }}>{label}</span>
-              <span style={{ fontSize: 12, color: C.text1, fontWeight: 600, fontVariantNumeric: 'tabular-nums' }}>{val}</span>
-            </React.Fragment>
-          ))}
-        </div>
-      </div>
-      {/* How to use — red left bar + white, matches "Fix" column */}
-      <div style={{ background: '#fff', border: `1px solid ${C.border}`, borderLeft: `3px solid ${C.red}`, borderRadius: '0 10px 10px 0', padding: '11px 14px', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}>
-        <p style={{ fontSize: 10, fontWeight: 700, color: C.red, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>How to use</p>
-        <p style={{ fontSize: 13, color: C.text1, lineHeight: 1.65 }}>{rec}</p>
-      </div>
+    <div style={{ padding: '6px 0 2px', display: 'flex', flexDirection: 'column', gap: 4 }}>
+      <p style={{ fontSize: 12, lineHeight: 1.55 }}>
+        {parts.map((p, i) => (
+          <React.Fragment key={i}>
+            {i > 0 && <span style={{ color: C.text4, margin: '0 8px' }}>·</span>}
+            {p}
+          </React.Fragment>
+        ))}
+      </p>
+      <p style={{ fontSize: 12, color: C.text2, lineHeight: 1.55 }}>
+        <span style={{ color: C.red, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', marginRight: 8, fontSize: 10 }}>Tip</span>
+        {buildRecommendation(kw)}
+      </p>
     </div>
   )
 }
