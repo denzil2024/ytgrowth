@@ -671,11 +671,20 @@ export default function Outliers({ channelData, onNavigate }) {
       {/* ══ Results — one search, three tab views of the same payload ════════ */}
       {!loading && (result?.videos?.length > 0 || result?.channels?.length > 0) && (() => {
         const items = tab === 'channel' ? (result.channels || []) : (result.videos || [])
+        const eyebrowLabel =
+          tab === 'channel'   ? `${items.length} breakout channel${items.length === 1 ? '' : 's'}` :
+          tab === 'thumbnail' ? `${items.length} winning thumbnail${items.length === 1 ? '' : 's'}` :
+                                `${items.length} outlier video${items.length === 1 ? '' : 's'}`
         return (
           <div className="out-section">
+            {/* Thumbnails tab: niche visual-pattern report lives above the grid */}
+            {tab === 'thumbnail' && result.thumbnail_patterns && (
+              <ThumbnailPatternsCard patterns={result.thumbnail_patterns} query={result.cohort?.query} />
+            )}
+
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12, gap: 12, flexWrap: 'wrap' }}>
               <span style={{ fontSize: 11, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-                {items.length} outlier{items.length === 1 ? '' : 's'} for "{result.cohort?.query}"
+                {eyebrowLabel} for "{result.cohort?.query}"
               </span>
               {result.cohort?.pool_size != null && (
                 <span style={{ fontSize: 11, fontWeight: 500, color: C.text3 }}>
@@ -1047,27 +1056,25 @@ function DetailModal({ kind, item, query, onClose, onNavigate }) {
 
         {/* Body */}
         <div style={{ padding: '18px 24px 22px' }}>
-          {/* AI explanation */}
-          {item.explanation && (
-            <div style={{
-              background: C.redBg, border: `1px solid ${C.redBdr}`,
-              borderRadius: 12, padding: '12px 14px', marginBottom: 18,
-            }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 7, marginBottom: 6, color: C.red }}>
-                <SparkIcon size={12} />
-                <span style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-                  Why it outperformed
-                </span>
-              </div>
-              <p style={{ fontSize: 13.5, color: C.text1, lineHeight: 1.6, fontWeight: 500 }}>
-                {item.explanation}
-              </p>
-            </div>
+          {/* ── Three structured sections (clean, no tinted blocks) ──────── */}
+          {isChannel ? (
+            <>
+              <DetailSection isFirst tone="red"   eyebrow="Why this channel" body={item.why_this_channel || item.explanation || ''} />
+              <DetailSection          tone="amber" eyebrow="What to do"      list={item.what_to_do} />
+              <DetailSection          tone="blue"  eyebrow="Why now"         body={item.why_now || ''} />
+            </>
+          ) : (
+            <>
+              <DetailSection isFirst tone="red"   eyebrow="Why it worked"  body={item.why_worked || item.explanation || ''} />
+              <DetailSection          tone="amber" eyebrow="Quick actions" list={item.quick_actions} />
+              <DetailSection          tone="blue"  eyebrow="Why now"       body={item.why_now || ''} />
+            </>
           )}
 
-          {/* Quick actions */}
+          {/* Shortcut buttons (kept below the structured report) */}
+          <div style={{ height: 1, background: C.border, marginTop: 18, marginBottom: 14 }} />
           <p style={{ fontSize: 10, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 10 }}>
-            Quick actions
+            Shortcuts
           </p>
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
@@ -1173,5 +1180,155 @@ function ActionButton({ label, icon, onClick, disabled, success, wide }) {
       </span>
       {label}
     </button>
+  )
+}
+
+/* ─── Detail modal body sections — clean, no tinted blocks ───────────────── */
+/* Design parity with the existing Outliers modal: small colored eyebrow, body
+   text, hairline divider between sections. No stacked tinted tiles. */
+function DetailSection({ tone, eyebrow, body, list, isFirst }) {
+  const eyebrowColor =
+    tone === 'red'   ? C.red     :
+    tone === 'amber' ? C.amber   :
+    tone === 'blue'  ? '#4a7cf7' : C.text2
+
+  const hasList = Array.isArray(list) && list.filter(Boolean).length > 0
+  const hasBody = !!(body && body.trim())
+  if (!hasList && !hasBody) return null
+
+  return (
+    <div style={{
+      paddingTop: isFirst ? 0 : 14,
+      marginTop:  isFirst ? 0 : 14,
+      borderTop:  isFirst ? 'none' : `1px solid ${C.borderLight}`,
+    }}>
+      <p style={{
+        fontSize: 10, fontWeight: 700, color: eyebrowColor,
+        letterSpacing: '0.09em', textTransform: 'uppercase', marginBottom: 8,
+      }}>
+        {eyebrow}
+      </p>
+
+      {hasList ? (
+        <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 7 }}>
+          {list.filter(Boolean).map((item, i) => (
+            <li key={i} style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
+              <span style={{
+                flexShrink: 0, fontSize: 12, fontWeight: 700, color: eyebrowColor,
+                fontVariantNumeric: 'tabular-nums', lineHeight: 1.55, marginTop: 0,
+                minWidth: 14,
+              }}>{i + 1}.</span>
+              <span style={{ fontSize: 13.5, color: C.text1, lineHeight: 1.55, flex: 1 }}>
+                {item}
+              </span>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p style={{ fontSize: 13.5, color: C.text1, lineHeight: 1.6 }}>
+          {body}
+        </p>
+      )}
+    </div>
+  )
+}
+
+/* ─── Thumbnails tab — niche visual-pattern report (tab-level, not per-row) */
+/* Matches the existing out-card aesthetic: white card, amber top border for
+   identity, stacked rows separated by hairlines — no nested tinted blocks. */
+function ThumbnailPatternsCard({ patterns, query }) {
+  if (!patterns || (!patterns.dominant_style && !(patterns.recommendations || []).length)) {
+    return null
+  }
+  const traits = [
+    { label: 'Dominant style',  value: patterns.dominant_style   },
+    { label: 'Text overlay',    value: patterns.text_overlay     },
+    { label: 'Face presence',   value: patterns.face_presence    },
+    { label: 'Color palette',   value: patterns.color_palette    },
+    { label: 'Layout pattern',  value: patterns.layout_pattern   },
+  ].filter(t => t.value && t.value.trim())
+
+  return (
+    <div className="out-card" style={{ padding: 0, marginBottom: 16, borderTop: `3px solid ${C.amber}` }}>
+      {/* Header */}
+      <div style={{ padding: '18px 22px 12px', display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <p style={{ fontSize: 10, fontWeight: 700, color: C.amber, letterSpacing: '0.09em', textTransform: 'uppercase', marginBottom: 3 }}>
+            Thumbnail pattern · last 12 months
+          </p>
+          <h3 style={{ fontSize: 17, fontWeight: 800, color: C.text1, letterSpacing: '-0.35px', lineHeight: 1.3 }}>
+            What wins in your niche{query ? <span style={{ color: C.text3, fontWeight: 600 }}> · "{query}"</span> : null}
+          </h3>
+        </div>
+        {patterns.sample_size ? (
+          <span style={{ fontSize: 11, fontWeight: 600, color: C.text3, fontVariantNumeric: 'tabular-nums', flexShrink: 0 }}>
+            {patterns.sample_size} analysed
+          </span>
+        ) : null}
+      </div>
+
+      <div style={{ height: 1, background: C.border, marginLeft: 22, marginRight: 22 }} />
+
+      {/* Traits — vertical rows, hairline separators */}
+      <div style={{ padding: '6px 22px 2px' }}>
+        {traits.map((t, i) => (
+          <div key={i} style={{
+            padding: '12px 0',
+            borderBottom: i === traits.length - 1 ? 'none' : `1px solid ${C.borderLight}`,
+            display: 'flex', gap: 18, alignItems: 'flex-start',
+          }}>
+            <p style={{
+              width: 130, flexShrink: 0,
+              fontSize: 10.5, fontWeight: 700, color: C.text3,
+              letterSpacing: '0.08em', textTransform: 'uppercase',
+              lineHeight: 1.55, paddingTop: 1,
+            }}>
+              {t.label}
+            </p>
+            <p style={{ fontSize: 13.5, color: C.text1, lineHeight: 1.6, flex: 1 }}>
+              {t.value}
+            </p>
+          </div>
+        ))}
+      </div>
+
+      {/* Recommendations */}
+      {(patterns.recommendations || []).length > 0 && (
+        <>
+          <div style={{ height: 1, background: C.border, marginLeft: 22, marginRight: 22 }} />
+          <div style={{ padding: '16px 22px 8px' }}>
+            <p style={{ fontSize: 10.5, fontWeight: 700, color: C.amber, letterSpacing: '0.09em', textTransform: 'uppercase', marginBottom: 10 }}>
+              What to do on your next thumbnail
+            </p>
+            <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 8 }}>
+              {patterns.recommendations.map((r, i) => (
+                <li key={i} style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
+                  <span style={{
+                    flexShrink: 0, fontSize: 12, fontWeight: 700, color: C.amber,
+                    fontVariantNumeric: 'tabular-nums', lineHeight: 1.55, minWidth: 14,
+                  }}>{i + 1}.</span>
+                  <span style={{ fontSize: 13.5, color: C.text1, lineHeight: 1.55, flex: 1 }}>{r}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </>
+      )}
+
+      {/* Why now */}
+      {patterns.why_now && (
+        <>
+          <div style={{ height: 1, background: C.borderLight, marginLeft: 22, marginRight: 22, marginTop: 10 }} />
+          <div style={{ padding: '12px 22px 18px' }}>
+            <p style={{ fontSize: 10.5, fontWeight: 700, color: '#4a7cf7', letterSpacing: '0.09em', textTransform: 'uppercase', marginBottom: 6 }}>
+              Why now
+            </p>
+            <p style={{ fontSize: 13.5, color: C.text1, lineHeight: 1.6 }}>
+              {patterns.why_now}
+            </p>
+          </div>
+        </>
+      )}
+    </div>
   )
 }

@@ -260,17 +260,34 @@ def _run_unified_search(
     top_channels = _derive_breakout_channels(scored, channel_details)
 
     # Claude explanations (batched — one call each for videos/channels).
+    # Each explanation is now structured: why_worked / why_this_channel,
+    # quick_actions / what_to_do, why_now. "explanation" kept as a short alias
+    # (why_worked / why_this_channel) so older card renders still display text.
     video_explanations = _explain_video_outliers(title, top_videos, my_subscribers) if top_videos else {}
     for r in top_videos:
-        r["explanation"] = video_explanations.get(r["video_id"], "")
+        ex = video_explanations.get(r["video_id"], {}) or {}
+        r["why_worked"]    = ex.get("why_worked", "")
+        r["quick_actions"] = ex.get("quick_actions", []) or []
+        r["why_now"]       = ex.get("why_now", "")
+        r["explanation"]   = ex.get("why_worked", "")   # back-compat alias
+
     channel_explanations = _explain_channel_outliers(title, top_channels, my_subscribers) if top_channels else {}
     for c in top_channels:
-        c["explanation"] = channel_explanations.get(c["channel_id"], "")
+        ex = channel_explanations.get(c["channel_id"], {}) or {}
+        c["why_this_channel"] = ex.get("why_this_channel", "")
+        c["what_to_do"]       = ex.get("what_to_do", []) or []
+        c["why_now"]          = ex.get("why_now", "")
+        c["explanation"]      = ex.get("why_this_channel", "")
+
+    # Tab-distinct report: Thumbnails tab gets a niche-wide visual-pattern
+    # analysis (one vision-enabled Claude call over the actual thumbnail images).
+    thumbnail_patterns = _analyze_thumbnail_patterns(title, top_videos) if top_videos else {}
 
     cohort_median_vps = statistics.median([s["views_per_sub"] for s in scored]) if scored else 0
     return {
         "videos":              top_videos,
         "channels":            top_channels,
+        "thumbnail_patterns":  thumbnail_patterns,
         "keyword_scores":      keyword_scores,
         "autocomplete_terms":  autocomplete[:10],
         "top_tags":            all_tags_flat[:15],
@@ -586,9 +603,13 @@ def _score_videos(videos: list[dict]) -> list[dict]:
 
 
 # ─── Claude explanations (batched — one call per search) ──────────────────────
+# Each detail panel needs 3 sections — so the batch output is structured, not a
+# single sentence. Videos/Thumbnails: {why_worked, quick_actions[3], why_now}.
+# Channels: {why_this_channel, what_to_do[3], why_now}. "Why now" must be
+# specific + urgent — it's the Priority-Actions-style pressure line, not fluff.
 
-def _explain_video_outliers(query: str, videos: list[dict], my_subs: int) -> dict[str, str]:
-    """One Claude call generates explanations for every result, keyed by video_id."""
+def _explain_video_outliers(query: str, videos: list[dict], my_subs: int) -> dict[str, dict]:
+    """One Claude call returns {video_id: {why_worked, quick_actions, why_now}}."""
     if not videos:
         return {}
     slim = [
@@ -602,32 +623,51 @@ def _explain_video_outliers(query: str, videos: list[dict], my_subs: int) -> dic
             "comments":    v["comments"],
             "duration_s":  v["duration_seconds"],
             "outlier":     v["outlier_score"],
+            "published":   v.get("published_at", ""),
         }
         for v in videos
     ]
 
     prompt = f"""A YouTube creator with {my_subs:,} subscribers searched: "{query}"
 
-These videos over-performed their niche cohort. Each has an outlier score
-(how many times the cohort median views-per-subscriber it hit).
+These recent videos over-performed their niche cohort. Each has an outlier
+score (how many times the niche median views-per-subscriber it hit).
 
 {json.dumps(slim, indent=2)}
 
-For EACH video, explain in ONE sentence (max 22 words) WHY it outperformed —
-reference the specific title hook, topic angle, or pattern that made it work.
-No generic advice. No "great title" fluff. Be concrete.
+For EACH video return three things:
+
+1. why_worked — ONE sentence (max 22 words). The exact hook, angle, or pattern
+   that made this outperform. Reference the specific title phrasing or format.
+   No generic praise.
+
+2. quick_actions — EXACTLY 3 short, concrete actions (each ≤ 14 words). Things
+   the creator can do TODAY to borrow from this result. Imperative voice.
+   Specific (e.g. "Open with a 3-second before/after shot") not vague
+   ("make a better hook").
+
+3. why_now — ONE sentence (max 22 words) explaining why acting on this is
+   URGENT right now. Reference recency, rising momentum, seasonal timing,
+   audience gap, or a specific signal the data shows. Be concrete — "This
+   angle is still climbing in the last 30 days" beats "it's a hot topic".
+   Never generic.
 
 Return ONLY valid JSON, no markdown:
 {{
   "explanations": [
-    {{"id": "<video_id>", "why": "<one sentence>"}},
-    ...
+    {{
+      "id": "<video_id>",
+      "why_worked": "<one sentence>",
+      "quick_actions": ["<action 1>", "<action 2>", "<action 3>"],
+      "why_now": "<one urgent sentence>"
+    }}
   ]
 }}"""
-    return _run_claude_batch(prompt)
+    return _run_claude_structured_batch(prompt, id_key="id")
 
 
-def _explain_channel_outliers(query: str, channels: list[dict], my_subs: int) -> dict[str, str]:
+def _explain_channel_outliers(query: str, channels: list[dict], my_subs: int) -> dict[str, dict]:
+    """One Claude call returns {channel_id: {why_this_channel, what_to_do, why_now}}."""
     if not channels:
         return {}
     slim = [
@@ -638,38 +678,156 @@ def _explain_channel_outliers(query: str, channels: list[dict], my_subs: int) ->
             "subs":             c["subscribers"],
             "video_count":      c["video_count"],
             "avg_views":        c["avg_views_per_video"],
+            "videos_in_search": c["videos_in_search"],
             "outlier":          c["outlier_score"],
+            "top_video_title":  c.get("top_video_title", ""),
         }
         for c in channels
     ]
 
     prompt = f"""A YouTube creator with {my_subs:,} subscribers searched: "{query}"
 
-These channels over-performed in the user's niche on this topic. Each has an
-outlier score (how many times the cohort median views-per-subscriber it hits).
+These channels over-perform in the user's niche. Each has an outlier score
+(how many times the niche median views-per-subscriber it hits). They also
+show how many videos in THIS search surfaced from the channel.
 
 {json.dumps(slim, indent=2)}
 
-For EACH channel, explain in ONE sentence (max 22 words) WHY it outperforms —
-reference its specific niche angle, positioning, or content formula.
-No generic advice. Be concrete.
+For EACH channel return three things — this is a deep channel profile, not
+a summary. The creator wants to know how to borrow from them specifically.
+
+1. why_this_channel — 2 sentences (max 40 words total). Their specific content
+   formula: positioning, angle, topic coverage, posting rhythm, anything that
+   makes them consistently win in this niche. Reference their name and at
+   least one concrete detail (their top video's pattern, their sub-niche,
+   etc.). No generic descriptions.
+
+2. what_to_do — EXACTLY 3 concrete actions (each ≤ 16 words). Exact moves the
+   creator should borrow from this channel. Imperative, specific — e.g.
+   "Steal their 60-second cold open before the title card" not "make
+   stronger openings".
+
+3. why_now — ONE sentence (max 22 words). Why acting on this channel's
+   playbook is URGENT: what signal in the data makes this the moment?
+   Reference recency, momentum, or an audience gap. Never generic.
 
 Return ONLY valid JSON, no markdown:
 {{
   "explanations": [
-    {{"id": "<channel_id>", "why": "<one sentence>"}},
-    ...
+    {{
+      "id": "<channel_id>",
+      "why_this_channel": "<2 sentences>",
+      "what_to_do": ["<action 1>", "<action 2>", "<action 3>"],
+      "why_now": "<one urgent sentence>"
+    }}
   ]
 }}"""
-    return _run_claude_batch(prompt)
+    return _run_claude_structured_batch(prompt, id_key="id")
 
 
-def _run_claude_batch(prompt: str) -> dict[str, str]:
+def _analyze_thumbnail_patterns(query: str, videos: list[dict]) -> dict:
+    """
+    Vision-enabled Claude call scanning the actual thumbnail images of the
+    outlier videos. Returns the niche's winning visual patterns plus concrete
+    recommendations. Sent to Claude as image URLs (up to 10 thumbnails) so it
+    can analyse layout, text, faces, and colors directly.
+    """
+    if not videos:
+        return {}
+    # Cap the image payload — 10 is plenty of signal, keeps the call fast/cheap
+    thumbs = [v for v in videos if v.get("thumbnail")][:10]
+    if not thumbs:
+        return {}
+
+    titles_lines = "\n".join(
+        f"{i + 1}. \"{v.get('title', '')}\" — {v.get('views', 0):,} views"
+        for i, v in enumerate(thumbs)
+    )
+
+    prompt_text = f"""A YouTube creator searched: "{query}"
+
+I'm showing you the thumbnails of {len(thumbs)} videos that over-performed in
+this niche over the last 12 months. For context, here are their titles and
+view counts in the same order:
+
+{titles_lines}
+
+Analyse the ACTUAL images and find the winning visual pattern in this niche.
+
+Return ONLY valid JSON, no markdown:
+{{
+  "dominant_style": "<1 sentence — the overall visual approach that dominates>",
+  "text_overlay": "<1 sentence — how they use on-thumbnail text: size, font, ALL CAPS vs mixed, word count, placement>",
+  "face_presence": "<1 sentence — how many have faces, typical expression/emotion, face size/placement>",
+  "color_palette": "<1 sentence — dominant colors, contrast level, saturation>",
+  "layout_pattern": "<1 sentence — spatial composition: subject left vs right, object/prop placement, bars, borders, arrows>",
+  "recommendations": [
+    "<concrete recommendation 1 — ≤ 18 words, imperative, specific>",
+    "<concrete recommendation 2>",
+    "<concrete recommendation 3>",
+    "<concrete recommendation 4>"
+  ],
+  "why_now": "<1 sentence — the timing reason this visual pattern is working RIGHT NOW in this niche; reference momentum or a signal you spotted across the images>"
+}}
+
+Be specific. Reference actual visual details you see. No generic advice."""
+
+    content_blocks: list[dict] = [{"type": "text", "text": prompt_text}]
+    for v in thumbs:
+        url = v.get("thumbnail")
+        if not url:
+            continue
+        content_blocks.append({
+            "type": "image",
+            "source": {"type": "url", "url": url},
+        })
+
     try:
         client = make_anthropic_client()
         msg = client.messages.create(
             model="claude-sonnet-4-6",
-            max_tokens=2048,
+            max_tokens=1200,
+            system=(
+                "You are a YouTube thumbnail strategist. You look at real "
+                "thumbnails and name the exact visual mechanic that wins. "
+                "Always reference concrete details — faces, text size, colors, "
+                "layout — never generic advice."
+            ),
+            messages=[{"role": "user", "content": content_blocks}],
+        )
+        raw = msg.content[0].text.strip()
+        raw = re.sub(r"^```[a-z]*\n?", "", raw)
+        raw = re.sub(r"\n?```$", "", raw).strip()
+        parsed = json.loads(raw)
+        # Normalise fields + trim recommendations to 4
+        return {
+            "dominant_style":  (parsed.get("dominant_style") or "").strip(),
+            "text_overlay":    (parsed.get("text_overlay") or "").strip(),
+            "face_presence":   (parsed.get("face_presence") or "").strip(),
+            "color_palette":   (parsed.get("color_palette") or "").strip(),
+            "layout_pattern":  (parsed.get("layout_pattern") or "").strip(),
+            "recommendations": [
+                r.strip() for r in (parsed.get("recommendations") or [])
+                if isinstance(r, str) and r.strip()
+            ][:4],
+            "why_now":         (parsed.get("why_now") or "").strip(),
+            "sample_size":     len(thumbs),
+        }
+    except Exception as e:
+        print(f"[outliers] thumbnail-pattern analysis error: {e}")
+        return {}
+
+
+def _run_claude_structured_batch(prompt: str, id_key: str = "id") -> dict[str, dict]:
+    """
+    Shared driver for the structured video/channel batch calls. Returns a map
+    keyed by id_key, value = the parsed entry object (minus the id itself).
+    """
+    try:
+        client = make_anthropic_client()
+        msg = client.messages.create(
+            model="claude-sonnet-4-6",
+            max_tokens=3500,
             system=(
                 "You are an elite YouTube growth analyst. You spot the exact "
                 "mechanism that made a video or channel over-perform its peers. "
@@ -681,13 +839,21 @@ def _run_claude_batch(prompt: str) -> dict[str, str]:
         raw = re.sub(r"^```[a-z]*\n?", "", raw)
         raw = re.sub(r"\n?```$", "", raw).strip()
         parsed = json.loads(raw)
-        out: dict[str, str] = {}
+        out: dict[str, dict] = {}
         for entry in parsed.get("explanations", []):
-            rid = entry.get("id")
-            why = (entry.get("why") or "").strip()
-            if rid and why:
-                out[rid] = why
+            rid = entry.get(id_key)
+            if not rid:
+                continue
+            entry_copy = {k: v for k, v in entry.items() if k != id_key}
+            # Clean list fields in-place
+            for list_field in ("quick_actions", "what_to_do"):
+                if list_field in entry_copy:
+                    entry_copy[list_field] = [
+                        s.strip() for s in (entry_copy[list_field] or [])
+                        if isinstance(s, str) and s.strip()
+                    ][:3]
+            out[rid] = entry_copy
         return out
     except Exception as e:
-        print(f"[outliers] Claude batch explanation error: {e}")
+        print(f"[outliers] Claude structured batch error: {e}")
         return {}
