@@ -132,35 +132,35 @@ function useCompetitorStyles() {
         color: #e5251b;
       }
 
-      /* "Open report" — neutral secondary (quiet, no red) */
+      /* "Open report" — red CTA (buttons are always red; matches Dashboard's
+         primary action affordance). When open, switches to an outlined red
+         "Close" so it reads as toggled-on without competing with the body. */
       .comp-btn-report {
-        background: #fff;
-        color: #52525b;
-        border: 1px solid rgba(0,0,0,0.09);
+        background: #e5251b;
+        color: #fff;
+        border: 1px solid #e5251b;
         border-radius: 100px;
         padding: 8px 18px;
         font-size: 12.5px;
-        font-weight: 600;
+        font-weight: 700;
         font-family: 'Inter', system-ui, sans-serif;
         cursor: pointer;
         white-space: nowrap;
-        transition: color 0.15s, border-color 0.15s, background 0.15s;
+        transition: filter 0.15s, background 0.15s, color 0.15s, box-shadow 0.15s;
         display: flex;
         align-items: center;
         gap: 6px;
         letter-spacing: -0.1px;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+        box-shadow: 0 1px 3px rgba(229,37,27,0.18), 0 4px 12px rgba(229,37,27,0.18);
       }
-      .comp-btn-report:hover {
-        color: #111114;
-        border-color: rgba(0,0,0,0.18);
-      }
+      .comp-btn-report:hover { filter: brightness(1.07); }
       .comp-btn-report.open {
-        background: #f4f4f7;
-        color: #52525b;
-        border-color: rgba(0,0,0,0.09);
+        background: #fff;
+        color: #e5251b;
+        border-color: #fecaca;
         box-shadow: none;
       }
+      .comp-btn-report.open:hover { background: #fff5f5; filter: none; }
 
       /* stat chips inside accordion header */
       .comp-stat-chip {
@@ -649,38 +649,77 @@ function AIAnalysis({ ai, top5Videos, channelId, checkedIdeas, onToggleIdea }) {
         </Card>
       )}
 
-      {/* ── two-column: topics + title patterns ── */}
+      {/* ── two-column: topics + title patterns ──────────────────────────────
+           Uses Overview's bar-row pattern (see Dashboard's "Score breakdown"
+           and the hero gauge in Priority Actions): label → bar → tabular
+           number. Fills horizontal space instead of stacking tiny right-aligned
+           stats with lots of whitespace beside them. */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
-        {ai.topTopics?.length > 0 && (
-          <Card>
-            <SectionTitle>Top content topics</SectionTitle>
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
-              {ai.topTopics.map((t, i) => (
-                <div key={i} style={{ display: 'flex', justifyContent: 'space-between',
-                  alignItems: 'center', padding: '9px 0',
-                  borderBottom: i < ai.topTopics.length - 1 ? '1px solid rgba(0,0,0,0.05)' : 'none' }}>
-                  <p style={{ fontSize: 14, color: '#52525b', fontWeight: 500 }}>{t.topic}</p>
-                  <div style={{ textAlign: 'right', flexShrink: 0, marginLeft: 12 }}>
-                    <p style={{ fontSize: 14, fontWeight: 800, color: '#111114' }}>{fmtK(t.avgViews)}</p>
-                    <p style={{ fontSize: 12, color: '#9595a4', fontWeight: 500 }}>{t.videoCount} videos</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </Card>
-        )}
+        {ai.topTopics?.length > 0 && (() => {
+          const maxViews = Math.max(...ai.topTopics.map(t => t.avgViews || 0), 1)
+          return (
+            <Card>
+              <SectionTitle hint="Their strongest content clusters by average views">
+                Top content topics
+              </SectionTitle>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+                {ai.topTopics.map((t, i) => {
+                  const pct = (t.avgViews || 0) / maxViews * 100
+                  return (
+                    <div key={i}>
+                      <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginBottom: 6 }}>
+                        <p style={{ fontSize: 13.5, color: '#111114', fontWeight: 600, flex: 1, minWidth: 0,
+                          letterSpacing: '-0.1px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                          {t.topic}
+                        </p>
+                        <span style={{ fontSize: 14, fontWeight: 800, color: '#111114',
+                          fontVariantNumeric: 'tabular-nums', flexShrink: 0, letterSpacing: '-0.3px' }}>
+                          {fmtK(t.avgViews)}
+                        </span>
+                        <span style={{ fontSize: 11, color: '#9595a4', fontWeight: 500,
+                          fontVariantNumeric: 'tabular-nums', flexShrink: 0 }}>
+                          · {t.videoCount}v
+                        </span>
+                      </div>
+                      <div style={{ height: 4, background: '#eeeef3', borderRadius: 99, overflow: 'hidden' }}>
+                        <div style={{ width: `${Math.max(pct, 2)}%`, height: '100%', background: '#d97706',
+                          borderRadius: 99, transition: 'width 0.8s cubic-bezier(0.34,1.56,0.64,1)' }}/>
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            </Card>
+          )
+        })()}
 
         {ai.titlePatterns && (
           <Card>
-            <SectionTitle>Title patterns</SectionTitle>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-              <div>
-                <p className="comp-card-label">Avg title length</p>
-                <p style={{ fontSize: 22, fontWeight: 800, color: '#111114', letterSpacing: '-0.5px' }}>
-                  {ai.titlePatterns.avgTitleLength}
-                  <span style={{ fontSize: 14, fontWeight: 500, color: '#9595a4', marginLeft: 4 }}>chars</span>
-                </p>
+            <SectionTitle hint="What works across their recent titles">Title patterns</SectionTitle>
+
+            {/* Hero: avg title length as a gauge against the 100-char YouTube display cap.
+                Mirrors Priority Actions' hero progress + tabular value pattern. */}
+            <div style={{ marginBottom: 18, paddingBottom: 14, borderBottom: '1px solid rgba(0,0,0,0.06)' }}>
+              <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between',
+                gap: 12, marginBottom: 10 }}>
+                <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
+                  <p style={{ fontSize: 30, fontWeight: 800, color: '#111114', letterSpacing: '-0.8px', lineHeight: 1 }}>
+                    {ai.titlePatterns.avgTitleLength}
+                  </p>
+                  <p style={{ fontSize: 13, color: '#9595a4', fontWeight: 500 }}>char avg title length</p>
+                </div>
+                <span style={{ fontSize: 11, color: '#9595a4', fontWeight: 500 }}>YouTube cap: 100</span>
               </div>
+              <div style={{ height: 4, background: '#eeeef3', borderRadius: 99, overflow: 'hidden' }}>
+                <div style={{
+                  width: `${Math.min(100, ai.titlePatterns.avgTitleLength || 0)}%`,
+                  height: '100%', background: '#d97706', borderRadius: 99,
+                  transition: 'width 0.8s cubic-bezier(0.34,1.56,0.64,1)',
+                }}/>
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
               {ai.titlePatterns.dominantFormats?.length > 0 && (
                 <div>
                   <p className="comp-card-label" style={{ marginBottom: 7 }}>Dominant formats</p>
