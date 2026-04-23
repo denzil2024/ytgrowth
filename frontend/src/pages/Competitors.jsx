@@ -532,76 +532,107 @@ function AIAnalysis({ ai, top5Videos, channelId, checkedIdeas, onToggleIdea }) {
         </div>
       </Card>
 
-      {/* ── winning moves — DescriptionCard pattern (SeoOptimizer) ───────────
-           Ranked AI suggestions use the app's standard stacked-card style:
-           amber top border + amber rank badge + amber eyebrow + bold title +
-           divider + blue "Why it works" tile. No right-side pill (we don't
-           have a descriptor/verdict), no fake 3-col grid (we only have why). */}
-      {ai.winningMoves?.length > 0 && (
-        <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
-            <p style={{ fontSize: 20, fontWeight: 800, color: '#111114', letterSpacing: '-0.5px' }}>
-              Winning moves
-            </p>
-            <span style={{ fontSize: 11, fontWeight: 700, color: '#9595a4', background: '#f1f1f6',
-              padding: '2px 8px', borderRadius: 20, border: '1px solid #e6e6ec' }}>
-              {ai.winningMoves.length}
-            </span>
-          </div>
+      {/* ── winning moves — 2-column grid of Priority-Actions InsightCards ───
+           Exact Dashboard.jsx:1063-1155 InsightCard design, arranged 2-per-row.
+           Even-count rule: slice to largest even ≤ N, capped at 10 (so 7→6,
+           11→10, 8→8) so the 2-col grid has no orphan.
+           Body: 2-col grid (Why now + Action), the Expected-outcome slot is
+           omitted — Winning moves only has 2 data fields.
+           No checkbox (observations, not tickable tasks). */}
+      {ai.winningMoves?.length > 0 && (() => {
+        const evenCount = Math.min(10, Math.floor(ai.winningMoves.length / 2) * 2)
+        const moves = ai.winningMoves.slice(0, evenCount)
+        if (moves.length === 0) return null
 
-          {ai.winningMoves.map((m, i) => {
-            const parts  = m.split(/\s+—\s+/)
-            const action = (parts[0] || m).trim()
-            const why    = parts.length > 1 ? parts.slice(1).join(' — ').trim() : null
+        return (
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
+              <p style={{ fontSize: 20, fontWeight: 800, color: '#111114', letterSpacing: '-0.5px' }}>
+                Winning moves
+              </p>
+              <span style={{ fontSize: 11, fontWeight: 700, color: '#9595a4', background: '#f1f1f6',
+                padding: '2px 8px', borderRadius: 20, border: '1px solid #e6e6ec' }}>
+                {moves.length}
+              </span>
+            </div>
 
-            return (
-              <div key={i} className="comp-card" style={{
-                borderRadius: 14,
-                overflow: 'hidden',
-                marginBottom: 10,
-                borderTop: '3px solid #d97706',
-              }}>
-                <div style={{ padding: '16px 22px 18px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+              {moves.map((m, i) => {
+                const parts  = m.split(/\s+—\s+/)
+                const action = (parts[0] || m).trim()
+                const why    = parts.length > 1 ? parts.slice(1).join(' — ').trim() : null
 
-                  {/* Header: amber rank badge + amber eyebrow + bold title */}
-                  <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: why ? 14 : 0 }}>
-                    <div style={{ width: 26, height: 26, borderRadius: 8, background: '#d97706',
-                      display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 2 }}>
-                      <span style={{ fontSize: 12, fontWeight: 900, color: '#fff', fontVariantNumeric: 'tabular-nums' }}>
-                        {i + 1}
-                      </span>
-                    </div>
-                    <div style={{ flex: 1, minWidth: 0 }}>
-                      <p style={{ fontSize: 10, fontWeight: 700, color: '#d97706',
-                        letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 5 }}>
-                        Winning move
-                      </p>
-                      <p style={{ fontSize: 14, fontWeight: 700, color: '#111114', lineHeight: 1.55 }}>
-                        {action}
-                      </p>
+                return (
+                  <div key={i} className="comp-card" style={{
+                    borderRadius: 14,
+                    overflow: 'hidden',
+                    borderTop: '3px solid #d97706',
+                  }}>
+                    <div style={{ padding: '16px 22px 18px' }}>
+
+                      {/* Header — rank badge + category eyebrow + bold title */}
+                      <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: 14 }}>
+                        <div style={{ width: 26, height: 26, borderRadius: 8, background: '#d97706',
+                          display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 2 }}>
+                          <span style={{ fontSize: 12, fontWeight: 900, color: '#fff', fontVariantNumeric: 'tabular-nums' }}>
+                            {i + 1}
+                          </span>
+                        </div>
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <p style={{ fontSize: 10, fontWeight: 700, color: '#d97706',
+                            letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 5 }}>
+                            Winning move
+                          </p>
+                          <p style={{ fontSize: 14, fontWeight: 700, color: '#111114', lineHeight: 1.55 }}>
+                            {action}
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Divider — marginLeft:38 past the badge column (no checkbox, so no +8) */}
+                      <div style={{ height: 1, background: '#e6e6ec', marginBottom: 14, marginLeft: 38 }} />
+
+                      {/* Body — 2-col grid (Why now + Action); Expected-outcome slot omitted */}
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginLeft: 38 }}>
+
+                        {/* Why now — blue tint, same palette as Overview's Why-now cell */}
+                        <div style={{ background: 'rgba(79,134,247,0.07)',
+                          border: '1px solid rgba(79,134,247,0.12)',
+                          borderRadius: 10, padding: '12px 14px' }}>
+                          <p style={{ fontSize: 10, fontWeight: 700, color: '#4a7cf7',
+                            letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>
+                            Why now
+                          </p>
+                          <p style={{ fontSize: 13.5, color: '#111114', lineHeight: 1.72 }}>
+                            {why || '—'}
+                          </p>
+                        </div>
+
+                        {/* Action — white + amber left bar, same as Overview's Action slot */}
+                        <div style={{
+                          background: '#ffffff',
+                          border: '1px solid #e6e6ec',
+                          borderLeft: '3px solid #d97706',
+                          borderRadius: '0 10px 10px 0',
+                          padding: '12px 16px',
+                          boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
+                          display: 'flex', flexDirection: 'column',
+                        }}>
+                          <p style={{ fontSize: 10, fontWeight: 700, color: '#d97706',
+                            letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>
+                            Action
+                          </p>
+                          <p style={{ fontSize: 13.5, color: '#111114', lineHeight: 1.72 }}>{action}</p>
+                        </div>
+                      </div>
                     </div>
                   </div>
-
-                  {/* Divider + full-width blue "Why it works" tile */}
-                  {why && (
-                    <>
-                      <div style={{ height: 1, background: '#e6e6ec', marginBottom: 14, marginLeft: 38 }} />
-                      <div style={{ marginLeft: 38, background: 'rgba(79,134,247,0.07)',
-                        border: '1px solid rgba(79,134,247,0.12)', borderRadius: 10, padding: '12px 14px' }}>
-                        <p style={{ fontSize: 10, fontWeight: 700, color: '#4a7cf7',
-                          letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>
-                          Why it works
-                        </p>
-                        <p style={{ fontSize: 13.5, color: '#111114', lineHeight: 1.72 }}>{why}</p>
-                      </div>
-                    </>
-                  )}
-                </div>
-              </div>
-            )
-          })}
-        </div>
-      )}
+                )
+              })}
+            </div>
+          </div>
+        )
+      })()}
 
       {/* ── topics to tackle — Quick wins pattern (Dashboard.jsx:2247-2282) ──
            Direct copy of Overview's Quick wins card: green uppercase eyebrow +
