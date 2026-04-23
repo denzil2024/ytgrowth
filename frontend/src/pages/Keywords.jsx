@@ -219,7 +219,7 @@ function KwDetailPanel({ kw, C }) {
     parts.push(<><span style={{ color: C.text3 }}>Newest </span><b style={{ color: C.text1, fontWeight: 600, fontVariantNumeric: 'tabular-nums' }}>{comp.days_since_newest}d ago</b></>)
   }
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.2fr', gap: 8, marginTop: 8, marginBottom: 2 }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginTop: 2, marginBottom: 2 }}>
       {/* SIGNALS — neutral grey tint. The amber areas above already
           saturate the row (top border, dividers, OPEN pill), so the
           informational card stays calm/neutral rather than piling more
@@ -601,53 +601,45 @@ export default function Keywords() {
 
                   <div style={{ height: 1, background: C.border, margin: '0 0 14px' }}/>
 
-                  {/* 2-col grid of rows — amber vertical divider between cols.
-                      When a row is expanded, a full-width detail panel is
-                      inserted after its pair (gridColumn: 1 / -1) so the grid
-                      layout stays intact and other rows keep their pairing. */}
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', columnGap: 0, rowGap: 14 }}>
-                    {(() => {
-                      const pairs = []
-                      for (let i = 0; i < result.keywords.length; i += 2) {
-                        pairs.push(result.keywords.slice(i, i + 2))
-                      }
-                      return pairs.map((pair, pairIdx) => {
-                        const openKw = pair.find(k => openRow === k.keyword)
-                        return (
-                          <React.Fragment key={pairIdx}>
-                            {pair.map((kw, j) => {
-                              const scColor    = oppColor(kw.opportunityScore)
-                              const isRightCol = j === 1
-                              const isOpen     = openRow === kw.keyword
-                              return (
+                  {/* Two independent flex columns + a real full-height
+                      amber divider at 50%. This keeps each row's expanded
+                      dropdown inside its own column so content never
+                      crosses the divider. Columns can now grow to different
+                      heights when one side is expanded — intentional. */}
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', position: 'relative' }}>
+                    {/* Continuous amber vertical divider */}
+                    <div style={{
+                      position: 'absolute', left: '50%', top: 0, bottom: 0,
+                      width: 1, background: C.amberBdr, pointerEvents: 'none',
+                    }}/>
+                    {[0, 1].map(colIdx => {
+                      const colKws = result.keywords.filter((_, i) => i % 2 === colIdx)
+                      return (
+                        <div key={colIdx} style={{
+                          display: 'flex', flexDirection: 'column', gap: 14,
+                          paddingLeft:  colIdx === 1 ? 20 : 0,
+                          paddingRight: colIdx === 0 ? 20 : 0,
+                        }}>
+                          {colKws.map(kw => {
+                            const scColor = oppColor(kw.opportunityScore)
+                            const isOpen  = openRow === kw.keyword
+                            return (
+                              <React.Fragment key={kw.keyword}>
                                 <div
-                                  key={kw.keyword}
                                   className="kw-row-seo"
                                   role="button"
                                   tabIndex={0}
                                   onClick={() => navigator.clipboard.writeText(kw.keyword)}
                                   onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); navigator.clipboard.writeText(kw.keyword) } }}
                                   title={buildRowTooltip(kw)}
-                                  style={{
-                                    display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer',
-                                    paddingLeft:  isRightCol ? 20 : 0,
-                                    paddingRight: isRightCol ? 0 : 20,
-                                    borderLeft: isRightCol ? `1px solid ${C.amberBdr}` : 'none',
-                                  }}
+                                  style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }}
                                 >
-                                  {/* Phrase — fixed 260px column (SEO Studio pattern,
-                                      widened from 180 to fit longer YouTube
-                                      autocomplete queries like 'large family budget
-                                      grocery haul'). Bar flex-fills the rest of the
-                                      row so there's no dead space. */}
                                   <span className="kw-row-phrase" style={{
                                     fontSize: 13, color: C.text2, fontWeight: 400,
                                     width: 260, flexShrink: 0,
                                     overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
                                     transition: 'color 0.12s',
                                   }}>{kw.keyword}</span>
-                                  {/* Momentum badge — ACTIVE (green) / OPEN (amber) /
-                                      nothing. Derived from competition.days_since_newest. */}
                                   <MomentumBadge momentum={kw.momentum} />
                                   <div style={{ flex: 1, height: 4, background: '#eeeef3', borderRadius: 99, overflow: 'hidden', minWidth: 40 }}>
                                     <div style={{ width: `${kw.opportunityScore}%`, height: '100%', background: scColor, borderRadius: 99, transition: 'width 0.8s cubic-bezier(0.34,1.56,0.64,1)' }}/>
@@ -657,8 +649,6 @@ export default function Keywords() {
                                     fontVariantNumeric: 'tabular-nums',
                                     minWidth: 26, textAlign: 'right', flexShrink: 0,
                                   }}>{kw.opportunityScore}</span>
-                                  {/* Caret — Thumbnail IQ pattern. stopPropagation
-                                      so clicking the caret doesn't also fire copy. */}
                                   <button
                                     className="kw-caret"
                                     aria-label={isOpen ? 'Collapse details' : 'Expand details'}
@@ -672,17 +662,13 @@ export default function Keywords() {
                                     }}
                                   >{isOpen ? '▲' : '▼'}</button>
                                 </div>
-                              )
-                            })}
-                            {openKw && (
-                              <div style={{ gridColumn: '1 / -1', paddingTop: 2 }}>
-                                <KwDetailPanel kw={openKw} C={C} />
-                              </div>
-                            )}
-                          </React.Fragment>
-                        )
-                      })
-                    })()}
+                                {isOpen && <KwDetailPanel kw={kw} C={C} />}
+                              </React.Fragment>
+                            )
+                          })}
+                        </div>
+                      )
+                    })}
                   </div>
                 </div>
               </div>
