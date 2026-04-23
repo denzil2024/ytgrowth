@@ -508,12 +508,11 @@ function AIAnalysis({ ai, top5Videos, channelId, checkedIdeas, onToggleIdea }) {
         </div>
       </Card>
 
-      {/* ── winning moves — InsightCard layout, NO checkbox ──────────────────
-           Mirrors Dashboard's InsightCard structurally (rank badge, category
-           eyebrow + title, right pill, divider, 3-col body grid), BUT omits
-           the checkbox + done-state — winning moves are observations to
-           internalize, not tasks to tick off. Copying blindly would import a
-           checkbox that has no real job. */}
+      {/* ── winning moves — DescriptionCard pattern (SeoOptimizer) ───────────
+           Ranked AI suggestions use the app's standard stacked-card style:
+           amber top border + amber rank badge + amber eyebrow + bold title +
+           divider + blue "Why it works" tile. No right-side pill (we don't
+           have a descriptor/verdict), no fake 3-col grid (we only have why). */}
       {ai.winningMoves?.length > 0 && (
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
@@ -530,31 +529,26 @@ function AIAnalysis({ ai, top5Videos, channelId, checkedIdeas, onToggleIdea }) {
             const parts  = m.split(/\s+—\s+/)
             const action = (parts[0] || m).trim()
             const why    = parts.length > 1 ? parts.slice(1).join(' — ').trim() : null
-            const color  = '#059669'
 
             return (
               <div key={i} className="comp-card" style={{
                 borderRadius: 14,
                 overflow: 'hidden',
                 marginBottom: 10,
-                borderTop: `3px solid ${color}`,
+                borderTop: '3px solid #d97706',
               }}>
                 <div style={{ padding: '16px 22px 18px' }}>
 
-                  {/* ── Header ── */}
-                  <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: 14 }}>
-
-                    {/* Solid rank badge (no checkbox — see comment above) */}
-                    <div style={{ width: 26, height: 26, borderRadius: 8, background: color,
+                  {/* Header: amber rank badge + amber eyebrow + bold title */}
+                  <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: why ? 14 : 0 }}>
+                    <div style={{ width: 26, height: 26, borderRadius: 8, background: '#d97706',
                       display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 2 }}>
                       <span style={{ fontSize: 12, fontWeight: 900, color: '#fff', fontVariantNumeric: 'tabular-nums' }}>
                         {i + 1}
                       </span>
                     </div>
-
-                    {/* Category label above action */}
                     <div style={{ flex: 1, minWidth: 0 }}>
-                      <p style={{ fontSize: 10, fontWeight: 700, color,
+                      <p style={{ fontSize: 10, fontWeight: 700, color: '#d97706',
                         letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 5 }}>
                         Winning move
                       </p>
@@ -562,53 +556,22 @@ function AIAnalysis({ ai, top5Videos, channelId, checkedIdeas, onToggleIdea }) {
                         {action}
                       </p>
                     </div>
-
-                    {/* "WIN" pill (severity-pill slot) */}
-                    <span style={{ fontSize: 10, fontWeight: 700, color,
-                      padding: '3px 9px', borderRadius: 20, letterSpacing: '0.06em',
-                      textTransform: 'uppercase', border: `1.5px solid ${color}`, flexShrink: 0 }}>
-                      Win
-                    </span>
                   </div>
 
-                  {/* Divider — marginLeft:38 so it aligns with the start of content
-                      (badge-col is 26px + 12px gap = 38px, not 46px like Priority
-                      Actions which has the extra checkbox column). */}
-                  <div style={{ height: 1, background: '#e6e6ec', marginBottom: 14, marginLeft: 38 }} />
-
-                  {/* ── Body — same 1fr / 1.4fr / 1fr grid as InsightCard, offset 38 ── */}
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr 1fr', gap: 8, marginLeft: 38 }}>
-
-                    {/* Why it works (blue — same as Why-now) */}
-                    <div style={{ background: 'rgba(79,134,247,0.07)', border: '1px solid rgba(79,134,247,0.12)',
-                      borderRadius: 10, padding: '12px 14px' }}>
-                      <p style={{ fontSize: 10, fontWeight: 700, color: '#4a7cf7',
-                        letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>
-                        Why it works
-                      </p>
-                      <p style={{ fontSize: 13.5, color: '#111114', lineHeight: 1.72 }}>{why}</p>
-                    </div>
-
-                    {/* Move (white + green left bar — Action slot) */}
-                    <div style={{
-                      background: '#ffffff',
-                      border: '1px solid #e6e6ec',
-                      borderLeft: `3px solid ${color}`,
-                      borderRadius: '0 10px 10px 0',
-                      padding: '12px 16px',
-                      boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
-                      display: 'flex', flexDirection: 'column',
-                    }}>
-                      <p style={{ fontSize: 10, fontWeight: 700, color,
-                        letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>
-                        Move
-                      </p>
-                      <p style={{ fontSize: 13.5, color: '#111114', lineHeight: 1.72 }}>{action}</p>
-                    </div>
-
-                    {/* Expected outcome — no data, empty div (same as InsightCard) */}
-                    <div />
-                  </div>
+                  {/* Divider + full-width blue "Why it works" tile */}
+                  {why && (
+                    <>
+                      <div style={{ height: 1, background: '#e6e6ec', marginBottom: 14, marginLeft: 38 }} />
+                      <div style={{ marginLeft: 38, background: 'rgba(79,134,247,0.07)',
+                        border: '1px solid rgba(79,134,247,0.12)', borderRadius: 10, padding: '12px 14px' }}>
+                        <p style={{ fontSize: 10, fontWeight: 700, color: '#4a7cf7',
+                          letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>
+                          Why it works
+                        </p>
+                        <p style={{ fontSize: 13.5, color: '#111114', lineHeight: 1.72 }}>{why}</p>
+                      </div>
+                    </>
+                  )}
                 </div>
               </div>
             )
@@ -847,13 +810,13 @@ function AIAnalysis({ ai, top5Videos, channelId, checkedIdeas, onToggleIdea }) {
         })()}
       </div>
 
-      {/* ── channel insights — faithful Priority Actions copy ────────────────
-           Same layout as Dashboard's InsightCard: stacked full-width cards,
-           header = numbered badge + category eyebrow + bold headline + right
-           pill, marginLeft:46 divider, then a blue "Analysis" tile (same tint
-           as Overview's Why-now cell) with the remaining reasoning.
-           Accent is NEUTRAL GREY — these are observational insights, not
-           wins, problems, or ordinals, so no semantic colour applies. */}
+      {/* ── channel insights — same stacked-card pattern as Winning moves ────
+           Same pattern as the app's standard ranked suggestion cards
+           (Suggested Titles, DescriptionCard, etc): amber top border +
+           amber rank badge + amber category eyebrow (VIDEO LENGTH /
+           ENGAGEMENT / THUMBNAIL STYLE — competitor-specific labels) +
+           bold first-sentence headline + divider + blue "Why it works"
+           tile with the remaining analysis. */}
       {(() => {
         const insights = [
           { key: 'videoLengthInsight', label: 'Video length',    val: ai.videoLengthInsight },
@@ -874,10 +837,6 @@ function AIAnalysis({ ai, top5Videos, channelId, checkedIdeas, onToggleIdea }) {
             </div>
 
             {insights.map(({ key, label, val }, i) => {
-              // Split the first sentence off as the headline; the rest becomes
-              // the body. AI returns a single paragraph that reads as "assertion.
-              // evidence evidence evidence." so this gives us the Priority
-              // Actions headline/body split without fabricating content.
               const match    = val.match(/^(.+?[.!?])\s+(.+)$/s)
               const headline = (match ? match[1] : val).trim()
               const body     = match ? match[2].trim() : null
@@ -887,21 +846,20 @@ function AIAnalysis({ ai, top5Videos, channelId, checkedIdeas, onToggleIdea }) {
                   borderRadius: 14,
                   overflow: 'hidden',
                   marginBottom: 10,
-                  borderTop: '3px solid #9595a4',
+                  borderTop: '3px solid #d97706',
                 }}>
                   <div style={{ padding: '16px 22px 18px' }}>
 
-                    {/* header — badge + category + headline + right pill */}
+                    {/* Header: amber badge + amber category + bold headline */}
                     <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: body ? 14 : 0 }}>
-                      <div style={{ width: 26, height: 26, borderRadius: 8, background: '#9595a4',
+                      <div style={{ width: 26, height: 26, borderRadius: 8, background: '#d97706',
                         display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 2 }}>
                         <span style={{ fontSize: 12, fontWeight: 900, color: '#fff', fontVariantNumeric: 'tabular-nums' }}>
                           {i + 1}
                         </span>
                       </div>
-
                       <div style={{ flex: 1, minWidth: 0 }}>
-                        <p style={{ fontSize: 10, fontWeight: 700, color: '#9595a4',
+                        <p style={{ fontSize: 10, fontWeight: 700, color: '#d97706',
                           letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 5 }}>
                           {label}
                         </p>
@@ -909,31 +867,21 @@ function AIAnalysis({ ai, top5Videos, channelId, checkedIdeas, onToggleIdea }) {
                           {headline}
                         </p>
                       </div>
-
-                      <span style={{ fontSize: 10, fontWeight: 700, color: '#9595a4',
-                        padding: '3px 9px', borderRadius: 20, letterSpacing: '0.06em',
-                        textTransform: 'uppercase', border: '1.5px solid #9595a4', flexShrink: 0 }}>
-                        Insight
-                      </span>
                     </div>
 
-                    {/* divider — offset past the badge column, same as InsightCard */}
-                    {body && <div style={{ height: 1, background: '#e6e6ec', marginBottom: 14, marginLeft: 46 }}/>}
-
-                    {/* body — blue "Analysis" tile, same palette as Overview's Why-now cell */}
+                    {/* Divider + full-width blue "Why it works" tile */}
                     {body && (
-                      <div style={{ marginLeft: 46 }}>
-                        <div style={{ background: 'rgba(79,134,247,0.07)', border: '1px solid rgba(79,134,247,0.12)',
-                          borderRadius: 10, padding: '12px 14px' }}>
+                      <>
+                        <div style={{ height: 1, background: '#e6e6ec', marginBottom: 14, marginLeft: 38 }} />
+                        <div style={{ marginLeft: 38, background: 'rgba(79,134,247,0.07)',
+                          border: '1px solid rgba(79,134,247,0.12)', borderRadius: 10, padding: '12px 14px' }}>
                           <p style={{ fontSize: 10, fontWeight: 700, color: '#4a7cf7',
                             letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>
-                            Analysis
+                            Why it works
                           </p>
-                          <p style={{ fontSize: 13.5, color: '#111114', lineHeight: 1.72 }}>
-                            {body}
-                          </p>
+                          <p style={{ fontSize: 13.5, color: '#111114', lineHeight: 1.72 }}>{body}</p>
                         </div>
-                      </div>
+                      </>
                     )}
                   </div>
                 </div>
