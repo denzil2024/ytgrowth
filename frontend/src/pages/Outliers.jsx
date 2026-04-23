@@ -236,73 +236,66 @@ const SpinIcon = () => (
   </svg>
 )
 
-/* ─── Persistence — mirrors SEO Optimizer's STORAGE_KEY / loadSaved / saveToDisk.
-   Each Outliers search costs 1 credit, so results MUST survive a page refresh. ─── */
-const STORAGE_KEY = 'outliers_v1'
-
-function loadSaved() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY)
-    return raw ? JSON.parse(raw) : {}
-  } catch { return {} }
-}
-
-function saveToDisk(state) {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state))
-  } catch {}
-}
+/* Persistence lives server-side now (outliers_search_cache table). We keep
+   only the tab display preference in localStorage — results/query/intent come
+   from /outliers/cache so they survive logout and device switches. */
 
 /* ─── Page ───────────────────────────────────────────────────────────────── */
 export default function Outliers({ channelData, onNavigate }) {
-  // Persisted state — restored on mount so a refresh doesn't burn the credit.
-  const saved = loadSaved()
+  // Tab is purely a display-state choice now — switching tabs NEVER triggers a
+  // new search. Persisted locally so the user returns to the same tab view.
+  const [tab,    setTab]    = useState(() => {
+    try { return localStorage.getItem('outliers_tab') || 'video' } catch { return 'video' }
+  })
+  const [query,          setQuery]         = useState('')
+  const [loading,        setLoading]       = useState(false)
+  const [loadingCache,   setLoadingCache]  = useState(true)    // initial load from /outliers/cache
+  const [error,          setError]         = useState('')
+  const [result,         setResult]        = useState(null)    // {videos, channels, keyword_scores, cohort, ...}
+  const [active,         setActive]        = useState(null)
 
-  const [tab,     setTab]     = useState(saved.tab || 'video')
-  const [query,   setQuery]   = useState(saved.query || '')
-  const [loading, setLoading] = useState(false)
-  const [error,   setError]   = useState('')
-  const [result,  setResult]  = useState(saved.result || null)
-  const [active,  setActive]  = useState(null)
-
-  // Intent-picker state — same shape as SEO Optimizer, also persisted.
-  const [loadingIntent, setLoadingIntent] = useState(false)
-  const [intentOptions, setIntentOptions] = useState(saved.intentOptions || null)
+  // Intent-picker state
+  const [loadingIntent,  setLoadingIntent] = useState(false)
+  const [intentOptions,  setIntentOptions] = useState(null)
+  const [manualIntent,   setManualIntent]  = useState('')      // the "type your own" textbox
   const reqIdRef = useRef(0)
 
   const inputRef = useRef(null)
 
-  // Tab-switch clearing — skip the first run on mount so restored state
-  // survives (mirrors SeoOptimizer's titleEditSinceMount pattern).
-  const tabChangedSinceMount = useRef(false)
+  // On mount: fetch the server-side cached search. The DB is the source of
+  // truth now — results survive refresh / logout / tab switch.
   useEffect(() => {
-    if (!tabChangedSinceMount.current) { tabChangedSinceMount.current = true; return }
-    setQuery('')
-    setResult(null)
-    setError('')
-    setActive(null)
-    setIntentOptions(null)
+    // One-time cleanup — drop any leftover localStorage cache from the old
+    // client-persisted version so ghost data doesn't leak into the new flow.
+    try { localStorage.removeItem('outliers_v1') } catch {}
+    let cancelled = false
+    fetch('/outliers/cache', { credentials: 'include' })
+      .then(r => r.ok ? r.json() : null)
+      .then(d => {
+        if (cancelled) return
+        if (d && d.cached) {
+          setResult(d.cached)
+          setQuery(d.cached.query || '')
+        }
+      })
+      .catch(() => {})
+      .finally(() => { if (!cancelled) setLoadingCache(false) })
+    return () => { cancelled = true }
+  }, [])
+
+  // Persist tab choice (display preference only — not the result).
+  useEffect(() => {
+    try { localStorage.setItem('outliers_tab', tab) } catch {}
   }, [tab])
 
-  // Clear stale intent options when the user edits the query — the picker was
-  // built for the previous query, so leaving it on-screen makes new-query
-  // options look identical to old ones (hence "looks hardcoded"). Skip the
-  // first run so restored intentOptions from localStorage survive mount.
-  // Mirrors SeoOptimizer.jsx's titleEditSinceMount pattern exactly.
+  // Clear stale intent picker when the user edits the query (matches SEO).
   const queryEditSinceMount = useRef(false)
   useEffect(() => {
     if (!queryEditSinceMount.current) { queryEditSinceMount.current = true; return }
     if (intentOptions !== null) setIntentOptions(null)
+    if (manualIntent) setManualIntent('')
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [query])
-
-  // Persist on every meaningful state change. Skip while a request is in
-  // flight — otherwise setResult(null) at the top of a new search would
-  // overwrite the previously-saved good result.
-  useEffect(() => {
-    if (loading || loadingIntent) return
-    saveToDisk({ tab, query, result, intentOptions })
-  }, [tab, query, result, intentOptions, loading, loadingIntent])
 
   const userSubs = channelData?.channel?.subscribers ?? 0
 
@@ -313,24 +306,20 @@ export default function Outliers({ channelData, onNavigate }) {
     const myId = ++reqIdRef.current
     setLoadingIntent(true)
     setError('')
-    setResult(null)
     setActive(null)
     setIntentOptions(null)
+    setManualIntent('')
     try {
-      // Dedicated Outliers intent endpoint — prompt is tuned for short
-      // search queries / niches, not video titles. AI-generated, no
-      // hardcoded categories.
       const r = await fetch('/outliers/intent-options', {
         method: 'POST',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ query: q, kind: tab }),
+        body: JSON.stringify({ query: q }),
       })
       if (myId !== reqIdRef.current) return
       const d = await r.json()
       if (myId !== reqIdRef.current) return
       if (!r.ok || !d.options?.length) {
-        // No intent disambiguation possible — go straight to search.
         setLoadingIntent(false)
         await runSearch('', myId)
         return
@@ -346,7 +335,9 @@ export default function Outliers({ channelData, onNavigate }) {
     }
   }
 
-  // Step 2: actual outliers search with the confirmed intent keyword.
+  // Step 2: the actual search. Backend persists the result to the DB keyed by
+  // channel_id — no more localStorage. confirmedKeyword can be a picked intent
+  // option, a manually-typed intent (up to 160 chars), or empty (search as typed).
   async function runSearch(confirmedKeyword = '', existingId) {
     const q = query.trim()
     if (!q) return
@@ -355,12 +346,13 @@ export default function Outliers({ channelData, onNavigate }) {
     setLoading(true)
     setError('')
     setIntentOptions(null)
+    setManualIntent('')
     try {
       const r = await fetch('/outliers/search', {
         method: 'POST',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ query: q, kind: tab, confirmed_keyword: confirmedKeyword }),
+        body: JSON.stringify({ query: q, confirmed_keyword: confirmedKeyword }),
       })
       if (myId !== reqIdRef.current) return
       const d = await r.json()
@@ -380,6 +372,25 @@ export default function Outliers({ channelData, onNavigate }) {
 
   function handleSelectIntent(keyword) {
     runSearch(keyword)
+  }
+
+  function handleManualIntentSubmit() {
+    const trimmed = manualIntent.trim().slice(0, 160)
+    if (!trimmed) return
+    runSearch(trimmed)
+  }
+
+  // "New search" / clear — also tells the backend to drop the saved search so
+  // the next fresh mount doesn't reload it.
+  function handleClear() {
+    setQuery('')
+    setResult(null)
+    setError('')
+    setActive(null)
+    setIntentOptions(null)
+    setManualIntent('')
+    fetch('/outliers/cache', { method: 'DELETE', credentials: 'include' }).catch(() => {})
+    setTimeout(() => inputRef.current?.focus(), 0)
   }
 
   /* ─── Render ───────────────────────────────────────────────────────── */
@@ -410,9 +421,9 @@ export default function Outliers({ channelData, onNavigate }) {
             </p>
           </div>
         </div>
-        {result?.results?.length > 0 && (
+        {(result?.videos?.length > 0 || result?.channels?.length > 0) && (
           <button
-            onClick={() => { setQuery(''); setResult(null); setError(''); setActive(null); setIntentOptions(null); inputRef.current?.focus() }}
+            onClick={handleClear}
             className="out-btn"
             style={{ flexShrink: 0 }}
           >
@@ -441,10 +452,10 @@ export default function Outliers({ channelData, onNavigate }) {
       <div className="out-card" style={{ padding: '20px 22px', marginBottom: 20 }}>
         <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 12 }}>
           <span style={{ fontSize: 11, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-            Keyword or topic
+            Your video title
           </span>
           <span style={{ fontSize: 11, fontWeight: 500, color: C.text3 }}>
-            Filtered by intent · matched to your channel size
+            One search powers all three tabs · filtered by intent
           </span>
         </div>
 
@@ -455,7 +466,7 @@ export default function Outliers({ channelData, onNavigate }) {
             value={query}
             onChange={e => setQuery(e.target.value)}
             onKeyDown={e => { if (e.key === 'Enter') handleSubmit() }}
-            placeholder={PLACEHOLDER_BY_TAB[tab]}
+            placeholder="e.g. How I grew my YouTube channel to 10k subscribers"
             className="out-search-input"
             disabled={loading || loadingIntent}
           />
@@ -557,16 +568,50 @@ export default function Outliers({ channelData, onNavigate }) {
             ))}
           </div>
 
-          <div style={{ display: 'flex', justifyContent: 'center', marginTop: 16 }}>
+          {/* Manual-intent option — not in SEO Optimizer, unique to Outliers.
+              Up to 160 chars of user-typed intent, used verbatim as confirmed_keyword. */}
+          <div className="out-card" style={{ padding: '18px 20px', marginTop: 14 }}>
+            <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 10, gap: 8 }}>
+              <span style={{ fontSize: 11, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                None of these? Type your own intent
+              </span>
+              <span style={{ fontSize: 11, fontWeight: 500, color: manualIntent.length > 160 ? C.red : C.text3, fontVariantNumeric: 'tabular-nums' }}>
+                {manualIntent.length}/160
+              </span>
+            </div>
+            <div style={{ display: 'flex', gap: 10 }}>
+              <input
+                type="text"
+                value={manualIntent}
+                maxLength={160}
+                onChange={e => setManualIntent(e.target.value)}
+                onKeyDown={e => { if (e.key === 'Enter') handleManualIntentSubmit() }}
+                placeholder="e.g. home office organization for remote workers"
+                className="out-search-input"
+                disabled={loading}
+                style={{ flex: 1 }}
+              />
+              <button
+                onClick={handleManualIntentSubmit}
+                disabled={loading || !manualIntent.trim()}
+                className="out-btn-primary"
+                style={{ fontSize: 13, padding: '11px 22px', flexShrink: 0 }}
+              >
+                {loading ? <><SpinIcon /> Searching…</> : <><SparkIcon /> Use this intent</>}
+              </button>
+            </div>
+          </div>
+
+          <div style={{ display: 'flex', justifyContent: 'center', marginTop: 14 }}>
             <button onClick={() => runSearch('')} className="out-btn">
-              None of these — search as typed
+              Or search as typed
             </button>
           </div>
         </div>
       )}
 
       {/* ══ Empty state (pre-search) ═════════════════════════════════════════ */}
-      {!loading && !loadingIntent && !intentOptions && !error && !result && (
+      {!loading && !loadingIntent && !loadingCache && !intentOptions && !error && !result && (
         <div className="out-card out-section" style={{
           padding: '40px 32px',
           display: 'flex', flexDirection: 'column', alignItems: 'center',
@@ -610,7 +655,7 @@ export default function Outliers({ channelData, onNavigate }) {
       )}
 
       {/* ══ No-results state ═════════════════════════════════════════════════ */}
-      {!loading && !error && result && result.results.length === 0 && (
+      {!loading && !error && result && !result.videos?.length && !result.channels?.length && (
         <div className="out-card out-section" style={{
           padding: '40px 32px', textAlign: 'center',
           display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10,
@@ -619,37 +664,47 @@ export default function Outliers({ channelData, onNavigate }) {
             No outliers found
           </p>
           <p style={{ fontSize: 13, color: C.text2, maxWidth: 380, lineHeight: 1.6 }}>
-            {result.message || 'Try a broader keyword, or try a different tab.'}
+            {result.message || 'Try a broader title, or pick a different intent.'}
           </p>
         </div>
       )}
 
-      {/* ══ Results ══════════════════════════════════════════════════════════ */}
-      {!loading && result?.results?.length > 0 && (
-        <div className="out-section">
-
-          {/* Cohort summary */}
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12, gap: 12, flexWrap: 'wrap' }}>
-            <span style={{ fontSize: 11, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-              {result.results.length} outlier{result.results.length === 1 ? '' : 's'} for "{result.cohort?.query}"
-            </span>
-            {result.cohort?.pool_size != null && (
-              <span style={{ fontSize: 11, fontWeight: 500, color: C.text3 }}>
-                Cohort · {result.cohort.pool_size} peer {tab === 'channel' ? 'channel' : 'video'}{result.cohort.pool_size === 1 ? '' : 's'} in your size bracket
+      {/* ══ Results — one search, three tab views of the same payload ════════ */}
+      {!loading && (result?.videos?.length > 0 || result?.channels?.length > 0) && (() => {
+        const items = tab === 'channel' ? (result.channels || []) : (result.videos || [])
+        return (
+          <div className="out-section">
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12, gap: 12, flexWrap: 'wrap' }}>
+              <span style={{ fontSize: 11, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                {items.length} outlier{items.length === 1 ? '' : 's'} for "{result.cohort?.query}"
               </span>
+              {result.cohort?.pool_size != null && (
+                <span style={{ fontSize: 11, fontWeight: 500, color: C.text3 }}>
+                  Cohort · {result.cohort.pool_size} peer video{result.cohort.pool_size === 1 ? '' : 's'} in your size bracket
+                </span>
+              )}
+            </div>
+
+            {items.length === 0 ? (
+              <div className="out-card" style={{ padding: '28px 24px', textAlign: 'center' }}>
+                <p style={{ fontSize: 13, color: C.text2, lineHeight: 1.6 }}>
+                  {tab === 'channel'
+                    ? 'No breakout channels surfaced in this search. The Videos and Thumbnails tabs still have results.'
+                    : 'No results for this tab. Try another tab.'}
+                </p>
+              </div>
+            ) : (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                {items.map(item => (
+                  tab === 'channel'
+                    ? <ChannelResultCard key={item.channel_id} item={item} onOpen={() => setActive(item)} />
+                    : <VideoResultCard   key={item.video_id}   item={item} kind={tab} onOpen={() => setActive(item)} />
+                ))}
+              </div>
             )}
           </div>
-
-          {/* Result list */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-            {result.results.map(item => (
-              tab === 'channel'
-                ? <ChannelResultCard key={item.channel_id} item={item} onOpen={() => setActive(item)} />
-                : <VideoResultCard  key={item.video_id} item={item} kind={tab} onOpen={() => setActive(item)} />
-            ))}
-          </div>
-        </div>
-      )}
+        )
+      })()}
 
       {/* ══ Detail modal ═════════════════════════════════════════════════════ */}
       {active && (

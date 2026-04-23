@@ -192,6 +192,20 @@ class CompetitorAnalysisCache(Base):
     analyzed_at   = Column(DateTime, default=_now)
 
 
+class OutliersSearchCache(Base):
+    """
+    One row per channel — the single most recent Outliers search the user ran.
+    Results persist across refresh / logout / tab switch. The only way they
+    clear is a new search (overwrites this row) or explicit user clear.
+    """
+    __tablename__ = "outliers_search_cache"
+    channel_id        = Column(String, primary_key=True)
+    query             = Column(Text,   nullable=False)   # the title the user typed
+    confirmed_keyword = Column(Text,   default="")       # picked / manually-entered intent
+    result_json       = Column(Text,   nullable=False)   # full search payload
+    updated_at        = Column(DateTime, default=_now, onupdate=_now)
+
+
 class SeoOptimization(Base):
     """
     One row per video the user optimized via SEO Optimizer (/seo/update-video).
