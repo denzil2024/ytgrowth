@@ -26,6 +26,7 @@ from routers.auth import get_session
 from app.analysis_gate import check_and_deduct, refund_credit
 from app.outliers import search_outliers
 from app.keywords import generate_intent_options
+from app.competitors import extract_niche_keywords
 from database.models import SessionLocal, OutliersSearchCache
 
 router = APIRouter()
@@ -77,8 +78,18 @@ def search(body: SearchBody, request: Request):
     # the "type your own intent" manual option.
     confirmed = (body.confirmed_keyword or "").strip()[:160]
 
+    # Niche keywords derived from the user's own channel + top videos — same
+    # helper the Competitors feature uses to figure out the user's niche.
+    niche_keywords = extract_niche_keywords(channel, (data or {}).get("videos", []))
+
     try:
-        result = search_outliers(creds, query, subscribers, confirmed_keyword=confirmed)
+        result = search_outliers(
+            creds, query,
+            my_channel_id     = channel_id,
+            my_subscribers    = subscribers,
+            my_niche_keywords = niche_keywords,
+            confirmed_keyword = confirmed,
+        )
     except Exception as e:
         refund_credit(channel_id)
         return JSONResponse(
