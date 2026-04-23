@@ -161,9 +161,24 @@ def search_outliers(
 # One call produces videos + breakout channels + keyword scores. The three UI
 # tabs are just different views of the same result set — no separate searches.
 #
-# Result-count contract: every search MUST return >= _MIN_RESULTS videos. When
-# the niche-matched pool is too thin we broaden the YouTube query, and if still
-# short we drop the outlier floor so the user always sees something useful.
+# Relevance model:
+#   HARD constraints (always enforced) — the definition of "relevant":
+#     • intent filter (_filter_by_intent on confirmed_keyword)
+#     • recency (last 12 months only)
+#     • user's own channel excluded
+#     • niche-relative views floor (kills dead uploads)
+#
+#   SOFT preferences (used for ranking, not filtering):
+#     • niche match — channel's recent uploads overlap the user's niche keywords
+#     • outlier score ≥ _MIN_OUTLIER_SCORE (1.8×)
+#
+# Videos AND channels both sort in tiers:
+#   Tier 1: niche-matched + above outlier floor
+#   Tier 2: niche-matched
+#   Tier 3: above outlier floor
+#   Tier 4: anything else (still relevance-guaranteed)
+# Take top 12 videos and top 10 channels from the tiered sort. When the pool's
+# distinct-channel count is below the minimum, broaden the query once to enlarge.
 
 def _run_unified_search(
     creds,
@@ -173,41 +188,28 @@ def _run_unified_search(
     my_subscribers: int,
     niche_keywords: list[str],
 ) -> dict:
-    # Step 1–4: fetch + intent filter + own-channel drop + 12-month filter.
+    # Fetch + intent filter + own-channel drop + 12-month recency filter.
     intent_videos, channel_details = _fetch_intent_filtered(
         creds, title, confirmed_keyword, my_channel_id,
     )
 
-    # Step 5: niche matching. Fetch each candidate channel's recent titles
-    # once, then keep only channels whose recent content overlaps the niche.
-    channel_ids = list(channel_details.keys())
-    recent_titles = _fetch_channel_recent_titles(creds, channel_details)
+    # Niche matching — now a SOFT signal. We still fetch recent titles per
+    # channel, but we never hard-drop channels that miss niche overlap;
+    # instead we rank niche-matched ones higher.
+    recent_titles  = _fetch_channel_recent_titles(creds, channel_details)
     niche_channels = _niche_match_channels(recent_titles, niche_keywords)
-    intent_videos = [v for v in intent_videos if v.get("channel_id") in niche_channels]
 
-    # Step 6–7: enrich, views-floor, score. Helper so broadening can re-run it.
-    def _score_from(videos: list[dict]) -> tuple[list[dict], list[dict]]:
-        enriched = _enrich(videos, channel_details)
-        floored  = _apply_niche_views_floor(enriched)
-        return floored, _score_videos(list(floored))
-
-    floored, scored = _score_from(intent_videos)
-    above = [s for s in scored if s["outlier_score"] >= _MIN_OUTLIER_SCORE]
-    above.sort(key=lambda s: s["outlier_score"], reverse=True)
-    top_videos = above[:_RESULTS_VIDEO] if len(above) >= _MIN_RESULTS else []
-    cohort_tag = "niche" if top_videos else None
-
-    # Still short? Broaden the YouTube query by stripping stopwords and re-run
-    # the full pipeline (intent filter + niche match + floor + score).
+    # Broaden ONCE if we don't have enough for a full 8-video AND 8-channel
+    # result set. Adds videos from a stopword-stripped query.
     broadened_with = None
-    if len(top_videos) < _MIN_RESULTS:
+    distinct_channels = {v.get("channel_id") for v in intent_videos if v.get("channel_id")}
+    if len(intent_videos) < _MIN_RESULTS or len(distinct_channels) < _MIN_RESULTS:
         broader_query = _shorten_title(title)
         if broader_query and broader_query.lower() != title.lower():
             broadened_with = broader_query
             extra_videos, extra_details = _fetch_intent_filtered(
                 creds, broader_query, confirmed_keyword, my_channel_id,
             )
-            # Merge channel details + recent titles for brand-new channels.
             new_ch_ids = [c for c in extra_details.keys() if c not in channel_details]
             channel_details.update(extra_details)
             if new_ch_ids:
@@ -217,27 +219,36 @@ def _run_unified_search(
                 recent_titles.update(extra_titles)
                 niche_channels |= _niche_match_channels(extra_titles, niche_keywords)
 
-            # Dedupe + merge video lists.
             seen = {v["video_id"] for v in intent_videos}
             for v in extra_videos:
-                if v["video_id"] not in seen and v.get("channel_id") in niche_channels:
+                if v["video_id"] not in seen:
                     intent_videos.append(v)
                     seen.add(v["video_id"])
 
-            floored, scored = _score_from(intent_videos)
-            above = [s for s in scored if s["outlier_score"] >= _MIN_OUTLIER_SCORE]
-            above.sort(key=lambda s: s["outlier_score"], reverse=True)
-            if len(above) >= _MIN_RESULTS:
-                top_videos = above[:_RESULTS_VIDEO]
-                cohort_tag = "broadened"
+    # Enrich + apply views floor + score.
+    enriched = _enrich(intent_videos, channel_details)
+    floored  = _apply_niche_views_floor(enriched)
+    scored   = _score_videos(list(floored))
 
-    # Last resort — drop the outlier floor and take the top N by score from the
-    # already-niche-matched pool. Guarantees we never show < _MIN_RESULTS
-    # unless the niche itself has nothing, in which case we return what we have.
-    if len(top_videos) < _MIN_RESULTS and scored:
-        scored_sorted = sorted(scored, key=lambda s: s.get("outlier_score", 0), reverse=True)
-        top_videos = scored_sorted[:max(_MIN_RESULTS, _RESULTS_VIDEO)]
-        cohort_tag = cohort_tag or "best-effort"
+    # Tag each video with its soft signals (used by both tiered sort + UI).
+    for v in scored:
+        cid = v.get("channel_id")
+        v["is_niche_matched"] = cid in niche_channels
+        v["is_above_floor"]   = v["outlier_score"] >= _MIN_OUTLIER_SCORE
+
+    # Tiered video sort — guarantees 8+ as long as the relevance pool has 8+.
+    scored_sorted = sorted(scored, key=_tier_sort_key)
+    top_videos    = scored_sorted[:_RESULTS_VIDEO]
+
+    # Diagnostic tag for the cohort payload.
+    if top_videos and top_videos[0].get("is_niche_matched") and top_videos[0].get("is_above_floor"):
+        cohort_tag = "niche"
+    elif top_videos and any(v.get("is_niche_matched") for v in top_videos):
+        cohort_tag = "mixed"
+    elif broadened_with:
+        cohort_tag = "broadened"
+    else:
+        cohort_tag = "best-effort"
 
     # Primary phrase for the UI eyebrow
     primary_phrase = confirmed_keyword.lower() if confirmed_keyword else title.lower()
@@ -255,9 +266,9 @@ def _run_unified_search(
     autocomplete   = get_autocomplete_suggestions(search_terms)
     keyword_scores = research_keywords(search_terms, autocomplete, top_titles, all_tags_flat)
 
-    # Derive breakout channels from whatever scored pool we ended up with
-    # (already own-channel-excluded + niche-matched + 12-month filtered).
-    top_channels = _derive_breakout_channels(scored, channel_details)
+    # Derive breakout channels — same tiered logic as videos (niche-matched +
+    # above-floor preferred, then fill to _RESULTS_CHANNEL from the pool).
+    top_channels = _derive_breakout_channels(scored, channel_details, niche_channels)
 
     # Claude explanations (batched — one call each for videos/channels).
     # Each explanation is now structured: why_worked / why_this_channel,
@@ -515,14 +526,33 @@ def _batch_channel_details(creds, channel_ids: list[str]) -> dict[str, dict]:
     return out
 
 
+def _tier_sort_key(v: dict) -> tuple:
+    """
+    Shared tiered ordering for both videos and channels. Lower is better.
+    Tier 1 (0,0): niche-matched + above outlier floor
+    Tier 2 (0,1): niche-matched
+    Tier 3 (1,0): above outlier floor
+    Tier 4 (1,1): neither (still relevance-guaranteed)
+    Within a tier, higher outlier_score wins (so we negate it).
+    """
+    return (
+        0 if v.get("is_niche_matched") else 1,
+        0 if v.get("is_above_floor")   else 1,
+        -float(v.get("outlier_score", 0) or 0),
+    )
+
+
 def _derive_breakout_channels(
     scored_videos: list[dict],
     channel_details: dict[str, dict],
+    niche_channels: set[str],
 ) -> list[dict]:
     """
-    Aggregate niche-matched outlier videos by channel. A breakout channel is
-    one whose best video in this search scored above the outlier floor.
-    Channel outlier_score = its best video's outlier_score.
+    Aggregate the scored-video pool by channel. No hard outlier-floor filter —
+    we want to fill _RESULTS_CHANNEL slots whenever possible. The tier sort
+    surfaces niche-matched + above-floor channels first; below-floor and
+    off-niche channels still get shown if they're the best available.
+    Channel outlier_score = its best video's outlier_score in this search.
     """
     by_ch: dict[str, dict] = {}
     for v in scored_videos:
@@ -551,14 +581,15 @@ def _derive_breakout_channels(
 
     channels: list[dict] = []
     for cid, data in by_ch.items():
-        if data["best_outlier_score"] < _MIN_OUTLIER_SCORE:
-            continue
         meta = channel_details.get(cid, {})
         subs = meta.get("subscribers", 0)
         if subs <= 0:
+            # subs == 0 usually = zombie / deleted channel; never show.
             continue
         vc = meta.get("video_count", 0)
         tv = meta.get("total_views", 0)
+        is_niche    = cid in niche_channels
+        is_above    = data["best_outlier_score"] >= _MIN_OUTLIER_SCORE
         channels.append({
             "channel_id":          cid,
             "channel_name":        meta.get("channel_name", ""),
@@ -576,9 +607,12 @@ def _derive_breakout_channels(
             "top_video_title":     data["top_video_title"],
             "top_video_id":        data["top_video_id"],
             "top_video_views":     data["top_video_views"],
+            "is_niche_matched":    is_niche,
+            "is_above_floor":      is_above,
         })
 
-    channels.sort(key=lambda c: (c["outlier_score"], c["videos_in_search"]), reverse=True)
+    # Shared tiered sort — same preference ladder as videos.
+    channels.sort(key=_tier_sort_key)
     return channels[:_RESULTS_CHANNEL]
 
 
