@@ -295,93 +295,71 @@ export default function Keywords() {
       {result && (
         <div className="kw-in">
 
-          {/* ── Row 1 — Hero split: Top Pick (3fr) + Context panel (2fr).
-              Breaks the previous wall of stacked full-width cards and gives
-              the two most-read items (winner + context) equal visual airtime. */}
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'minmax(0, 3fr) minmax(260px, 2fr)',
-            gap: 14, marginBottom: 14,
-          }}>
+          {/* ── Top Pick — single standalone InsightCard (Priority Actions
+              pattern exactly: 3px amber top border, 26x26 amber rank badge,
+              'TOP PICK' eyebrow, keyword as 14/700 title, hairline divider
+              at marginLeft:46, body aligned to the same anchor with
+              whyThisOne + intent summary folded in). ──────────────────── */}
+          {result.topPick && (
+            <div className="kw-card" style={{ padding: 0, marginBottom: 14, borderTop: `3px solid ${C.amber}` }}>
+              <div style={{ padding: '16px 22px 18px' }}>
 
-            {/* LEFT — Top Pick hero (amber 3px top border + large keyword) */}
-            {result.topPick ? (
-              <div className="kw-card" style={{ padding: 0, borderTop: `3px solid ${C.amber}` }}>
-                <div style={{ padding: '18px 24px 22px', display: 'flex', flexDirection: 'column', height: '100%' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
-                    <div style={{ width: 26, height: 26, borderRadius: 8, background: C.amber, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M7 1.5l1.6 3.6 3.9 0.4-2.9 2.7 0.8 3.9L7 10.3 3.6 12.1l0.8-3.9L1.5 5.5l3.9-0.4z"/>
-                      </svg>
-                    </div>
-                    <p style={{ fontSize: 10, fontWeight: 700, color: C.amber, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+                {/* Header */}
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: 14 }}>
+                  <div style={{
+                    width: 26, height: 26, borderRadius: 8, background: C.amber,
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    flexShrink: 0, marginTop: 2,
+                  }}>
+                    <svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M7 1.5l1.6 3.6 3.9 0.4-2.9 2.7 0.8 3.9L7 10.3 3.6 12.1l0.8-3.9L1.5 5.5l3.9-0.4z"/>
+                    </svg>
+                  </div>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <p style={{ fontSize: 10, fontWeight: 700, color: C.amber, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 5 }}>
                       Top pick
                     </p>
+                    <p style={{ fontSize: 14, fontWeight: 700, color: C.text1, lineHeight: 1.55, letterSpacing: '-0.1px' }}>
+                      {result.topPick.keyword}
+                    </p>
                   </div>
-                  <p style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', lineHeight: 1.25, marginBottom: 10 }}>
-                    {result.topPick.keyword}
-                  </p>
-                  <p style={{ fontSize: 13.5, color: C.text2, lineHeight: 1.72 }}>
+                </div>
+
+                {/* Hairline */}
+                <div style={{ height: 1, background: C.border, marginBottom: 14, marginLeft: 46 }} />
+
+                {/* Body — whyThisOne + intent summary + intent pills */}
+                <div style={{ marginLeft: 46 }}>
+                  <p style={{ fontSize: 13.5, color: C.text2, lineHeight: 1.72, marginBottom: result.seedIntent?.intentSummary ? 10 : 0 }}>
                     {result.topPick.whyThisOne}
                   </p>
+                  {result.seedIntent?.intentSummary && (
+                    <p style={{ fontSize: 13.5, color: C.text2, lineHeight: 1.72, marginBottom: 12 }}>
+                      {result.seedIntent.intentSummary}
+                    </p>
+                  )}
+                  {result.seedIntent && (
+                    <div style={{ display: 'flex', gap: 5, flexWrap: 'wrap' }}>
+                      {/* Only short values render as pills (<=28 chars). */}
+                      {[
+                        result.seedIntent.primaryIntent,
+                        result.seedIntent.contentTypeExpected,
+                        result.seedIntent.funnelStage,
+                      ]
+                        .filter(t => t && t.trim().length > 0 && t.trim().length <= 28)
+                        .map((tag, i) => (
+                          <span key={i} style={{
+                            fontSize: 10.5, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase',
+                            color: C.text2, background: C.chipBg, border: `1px solid ${C.border}`,
+                            borderRadius: 100, padding: '2px 9px',
+                          }}>{tag}</span>
+                        ))}
+                    </div>
+                  )}
                 </div>
               </div>
-            ) : <div/>}
-
-            {/* RIGHT — Context panel: 3 stats + intent tags stacked. All
-                pure-white sub-tiles with hairline borders (no fafafa). */}
-            <div className="kw-card" style={{ padding: '18px 20px 20px' }}>
-              <p style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 12 }}>
-                Search space
-              </p>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8, marginBottom: 14 }}>
-                {[
-                  { label: 'Auto',     value: result.rawSuggestionsCount },
-                  { label: 'Related',  value: result.serperCount },
-                  { label: 'Filtered', value: result.totalAfterIntentFilter, highlight: true },
-                ].map((s, i) => (
-                  <div key={i} style={{
-                    padding: '10px 10px',
-                    background: '#fff',
-                    border: `1px solid ${s.highlight ? C.amberBdr : C.border}`,
-                    borderRadius: 10, textAlign: 'center',
-                  }}>
-                    <p style={{ fontSize: 9.5, fontWeight: 700, color: C.text3, letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 4 }}>
-                      {s.label}
-                    </p>
-                    <p style={{ fontSize: 18, fontWeight: 800, color: s.highlight ? C.amber : C.text1, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.4px', lineHeight: 1 }}>
-                      {s.value ?? '—'}
-                    </p>
-                  </div>
-                ))}
-              </div>
-              {result.seedIntent?.intentSummary && (
-                <>
-                  <p style={{ fontSize: 13, color: C.text2, lineHeight: 1.65, marginBottom: 10 }}>
-                    {result.seedIntent.intentSummary}
-                  </p>
-                  <div style={{ display: 'flex', gap: 5, flexWrap: 'wrap' }}>
-                    {/* Pills are for SHORT labels only (<=28 chars). The LLM
-                        sometimes returns full sentences in these fields — those
-                        belong in the summary paragraph above, not as pills. */}
-                    {[
-                      result.seedIntent.primaryIntent,
-                      result.seedIntent.contentTypeExpected,
-                      result.seedIntent.funnelStage,
-                    ]
-                      .filter(t => t && t.trim().length > 0 && t.trim().length <= 28)
-                      .map((tag, i) => (
-                      <span key={i} style={{
-                        fontSize: 10.5, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase',
-                        color: C.text2, background: C.chipBg, border: `1px solid ${C.border}`,
-                        borderRadius: 100, padding: '2px 9px',
-                      }}>{tag}</span>
-                    ))}
-                  </div>
-                </>
-              )}
             </div>
-          </div>
+          )}
 
           {/* ── Row 2 — Keyword cards in a 2-col responsive grid (no more
               full-width table stretching end-to-end). Each card is compact
