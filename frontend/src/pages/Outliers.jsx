@@ -284,6 +284,18 @@ export default function Outliers({ channelData, onNavigate }) {
     setIntentOptions(null)
   }, [tab])
 
+  // Clear stale intent options when the user edits the query — the picker was
+  // built for the previous query, so leaving it on-screen makes new-query
+  // options look identical to old ones (hence "looks hardcoded"). Skip the
+  // first run so restored intentOptions from localStorage survive mount.
+  // Mirrors SeoOptimizer.jsx's titleEditSinceMount pattern exactly.
+  const queryEditSinceMount = useRef(false)
+  useEffect(() => {
+    if (!queryEditSinceMount.current) { queryEditSinceMount.current = true; return }
+    if (intentOptions !== null) setIntentOptions(null)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [query])
+
   // Persist on every meaningful state change. Skip while a request is in
   // flight — otherwise setResult(null) at the top of a new search would
   // overwrite the previously-saved good result.
