@@ -116,22 +116,22 @@ function useKwStyles() {
         padding: 7px 15px; /* compensate for 1px border */
       }
 
-      /* Cluster "Copy theme" button — red brand pill (matches Copy all
-         on Ranked keywords + SEO Studio's seo-btn-primary). */
+      /* Cluster "Copy theme" button — ghost red (white bg, red text +
+         red hairline border). Filled red is reserved for *the* primary
+         CTA (Research / Copy all); ghost keeps 5 cluster buttons quiet. */
       .kw-ghost-btn {
         display: inline-flex; align-items: center; gap: 6px;
-        padding: 8px 16px; border-radius: 100px;
+        padding: 7px 15px; border-radius: 100px;
         font-size: 12px; font-weight: 700; letter-spacing: 0.01em;
         font-family: 'Inter', system-ui, sans-serif;
-        background: #e5251b; color: #fff;
-        border: none; cursor: pointer;
-        transition: filter 0.15s;
+        background: #fff; color: #e5251b;
+        border: 1px solid #fecaca; cursor: pointer;
+        transition: background 0.15s, border-color 0.15s;
       }
-      .kw-ghost-btn:hover { filter: brightness(1.1); }
+      .kw-ghost-btn:hover { background: #fff5f5; border-color: #e5251b; }
       .kw-ghost-btn.copied {
         background: #f0fdf4; color: #16a34a;
-        border: 1px solid #bbf7d0;
-        padding: 7px 15px;
+        border-color: #bbf7d0;
       }
 
       .kw-bar { height: 4px; border-radius: 4px; background: rgba(0,0,0,0.07); overflow: hidden; }
@@ -500,20 +500,14 @@ export default function Keywords() {
               <div style={{ marginBottom: 20, marginTop: 40 }}>
                 <h2 style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', marginBottom: 4 }}>Ranked keywords</h2>
                 <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.5 }}>
-                  Sorted by opportunity score · click any to copy
-                </p>
-                <p style={{ fontSize: 12, color: C.text3, lineHeight: 1.5, marginTop: 4 }}>
-                  Tip: hover any row for competition details · <span style={{ color: C.green, fontWeight: 700 }}>ACTIVE</span> = rising niche · <span style={{ color: C.amber, fontWeight: 700 }}>OPEN</span> = underclaimed
+                  Click any to copy · hover for details · <span style={{ color: C.green, fontWeight: 700 }}>ACTIVE</span> = rising · <span style={{ color: C.amber, fontWeight: 700 }}>OPEN</span> = underclaimed
                 </p>
               </div>
 
               <div className="kw-card" style={{ borderTop: `3px solid ${C.amber}`, marginBottom: 24 }}>
                 <div style={{ padding: '18px 22px 20px' }}>
-                  <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16, marginBottom: 14 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, marginBottom: 14 }}>
                     <div style={{ minWidth: 0 }}>
-                      <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 6 }}>
-                        Related phrases
-                      </p>
                       <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.5 }}>
                         Score = volume signal + intent match + competition gap
                       </p>
@@ -603,7 +597,7 @@ export default function Keywords() {
                 {result.clusters.map((cl, i) => {
                   const isCopied = copiedCluster === cl.clusterName
                   return (
-                    <div key={cl.clusterName} className="kw-card" style={{ borderTop: `3px solid ${C.amber}` }}>
+                    <div key={cl.clusterName} className="kw-card">
                       <div style={{ padding: '18px 22px 20px', display: 'flex', flexDirection: 'column', height: '100%' }}>
                         <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, marginBottom: 14 }}>
                           <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10, minWidth: 0, flex: 1 }}>
