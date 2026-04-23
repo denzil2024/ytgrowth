@@ -479,8 +479,11 @@ function AIAnalysis({ ai, top5Videos, channelId, checkedIdeas, onToggleIdea }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
 
-      {/* ── intelligence summary ── */}
-      <Card>
+      {/* ── intelligence summary — threat-coloured top border ────────────────
+           Top accent is driven by threat level (red/amber/green) so the card
+           and the pill reinforce the same semantic — same as InsightCard's
+           severity-coloured top border in Overview. */}
+      <Card topAccent={threat.dot}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, marginBottom: 14 }}>
           <SectionTitle>Intelligence summary</SectionTitle>
           <span style={{ background: threat.bg, color: threat.text, border: `1px solid ${threat.border}`,
@@ -494,8 +497,6 @@ function AIAnalysis({ ai, top5Videos, channelId, checkedIdeas, onToggleIdea }) {
         <p style={{ fontSize: 14, color: '#52525b', lineHeight: 1.78, marginBottom: 14, fontWeight: 400 }}>
           {ai.competitorSummary}
         </p>
-        {/* "Why" block — neutralized to Priority Actions blue so threat colour
-            doesn't re-paint the same message twice (threat pill already carries it). */}
         <div style={{ background: 'rgba(79,134,247,0.07)', border: '1px solid rgba(79,134,247,0.12)',
           borderRadius: 10, padding: '12px 14px' }}>
           <p style={{ fontSize: 10, fontWeight: 700, color: '#4a7cf7',
@@ -891,25 +892,31 @@ function AIAnalysis({ ai, top5Videos, channelId, checkedIdeas, onToggleIdea }) {
         )
       })()}
 
-      {/* ── posting timing ── */}
-      {ai.postingBehavior && (
+      {/* ── posting timing ── Consistency uses scoreColor (same thresholds as
+           Overview's Score breakdown: ≥75 green, 55–74 amber, <55 red). Other
+           three tiles are identity/timestamp values and stay neutral. */}
+      {ai.postingBehavior && (() => {
+        const cs = ai.postingBehavior.consistencyScore ?? 0
+        const consistencyColor = cs >= 75 ? '#059669' : cs >= 55 ? '#d97706' : '#e5251b'
+        return (
         <Card>
           <SectionTitle>Posting timing</SectionTitle>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 10 }}>
             {[
-              { label: 'Avg gap',     val: `${ai.postingBehavior.avgGapDays}d` },
-              { label: 'Best day',    val: ai.postingBehavior.bestDay },
-              { label: 'Best hour',   val: ai.postingBehavior.bestHour },
-              { label: 'Consistency', val: `${ai.postingBehavior.consistencyScore}/100` },
-            ].map(({ label, val }) => (
+              { label: 'Avg gap',     val: `${ai.postingBehavior.avgGapDays}d`, color: '#111114' },
+              { label: 'Best day',    val: ai.postingBehavior.bestDay,          color: '#111114' },
+              { label: 'Best hour',   val: ai.postingBehavior.bestHour,         color: '#111114' },
+              { label: 'Consistency', val: `${cs}/100`,                         color: consistencyColor },
+            ].map(({ label, val, color }) => (
               <div key={label} className="comp-timing-pill">
-                <p style={{ fontSize: 20, fontWeight: 800, color: '#111114', letterSpacing: '-0.5px', lineHeight: 1 }}>{val}</p>
+                <p style={{ fontSize: 20, fontWeight: 800, color, letterSpacing: '-0.5px', lineHeight: 1 }}>{val}</p>
                 <p style={{ fontSize: 12, fontWeight: 600, color: '#a0a0b0', textTransform: 'uppercase', letterSpacing: '0.06em' }}>{label}</p>
               </div>
             ))}
           </div>
         </Card>
-      )}
+        )
+      })()}
     </div>
   )
 }
