@@ -507,17 +507,18 @@ function AIAnalysis({ ai, top5Videos, channelId, checkedIdeas, onToggleIdea }) {
         </div>
       </Card>
 
-      {/* ── winning moves — 2-per-row InsightCard copy ───────────────────────
-           Copies Dashboard's InsightCard layout, but semantically GREEN: these
-           are wins / success actions, not problems, so the accent matches
-           Overview's Quick wins eyebrow (C.green #059669) — not amber. Amber
-           in this product is reserved for ordinals/format tiles.
-           Structure: green top-border + green rank badge + action title, then
-           blue "Why it works" block (same palette as Overview's "Why now"). */}
+      {/* ── winning moves — faithful Priority Actions copy ───────────────────
+           Mirrors Dashboard.jsx InsightCard one-for-one: full-width stacked
+           cards, header = rank badge + green category eyebrow + bold action
+           title + right-side "WIN" pill, hairline divider offset past the
+           badge (marginLeft 46), then a full-width blue "Why it works" tile
+           (same tint as Overview's "Why now"). Accent is green — winning
+           moves are success actions, not problems, so they follow the Quick
+           wins / success palette (#059669), not severity red/amber. */}
       {ai.winningMoves?.length > 0 && (
         <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 14 }}>
-            <p style={{ fontSize: 15, fontWeight: 700, color: '#111114', letterSpacing: '-0.3px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
+            <p style={{ fontSize: 20, fontWeight: 800, color: '#111114', letterSpacing: '-0.5px' }}>
               Winning moves
             </p>
             <span style={{ fontSize: 11, fontWeight: 700, color: '#9595a4', background: '#f1f1f6',
@@ -526,49 +527,68 @@ function AIAnalysis({ ai, top5Videos, channelId, checkedIdeas, onToggleIdea }) {
             </span>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
-            {ai.winningMoves.map((m, i) => {
-              const parts  = m.split(/\s+—\s+/)
-              const action = (parts[0] || m).trim()
-              const why    = parts.length > 1 ? parts.slice(1).join(' — ').trim() : null
+          {ai.winningMoves.map((m, i) => {
+            const parts  = m.split(/\s+—\s+/)
+            const action = (parts[0] || m).trim()
+            const why    = parts.length > 1 ? parts.slice(1).join(' — ').trim() : null
 
-              return (
-                <div key={i} className="comp-card" style={{
-                  borderRadius: 14,
-                  borderTop: '3px solid #059669',
-                  padding: '14px 16px 16px',
-                  display: 'flex', flexDirection: 'column', gap: 12,
-                }}>
-                  {/* header — rank badge + action title */}
-                  <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
-                    <div style={{ width: 24, height: 24, borderRadius: 7, background: '#059669',
-                      display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 1 }}>
-                      <span style={{ fontSize: 11, fontWeight: 900, color: '#fff', fontVariantNumeric: 'tabular-nums' }}>
+            return (
+              <div key={i} className="comp-card" style={{
+                borderRadius: 14,
+                overflow: 'hidden',
+                marginBottom: 10,
+                borderTop: '3px solid #059669',
+              }}>
+                <div style={{ padding: '16px 22px 18px' }}>
+
+                  {/* header — matches InsightCard's header row exactly */}
+                  <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: why ? 14 : 0 }}>
+                    <div style={{ width: 26, height: 26, borderRadius: 8, background: '#059669',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 2 }}>
+                      <span style={{ fontSize: 12, fontWeight: 900, color: '#fff', fontVariantNumeric: 'tabular-nums' }}>
                         {i + 1}
                       </span>
                     </div>
-                    <p style={{ fontSize: 13.5, fontWeight: 700, color: '#111114', lineHeight: 1.5, letterSpacing: '-0.1px', flex: 1 }}>
-                      {action}
-                    </p>
+
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <p style={{ fontSize: 10, fontWeight: 700, color: '#059669',
+                        letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 5 }}>
+                        Winning move
+                      </p>
+                      <p style={{ fontSize: 14, fontWeight: 700, color: '#111114', lineHeight: 1.55 }}>
+                        {action}
+                      </p>
+                    </div>
+
+                    <span style={{ fontSize: 10, fontWeight: 700, color: '#059669',
+                      padding: '3px 9px', borderRadius: 20, letterSpacing: '0.06em',
+                      textTransform: 'uppercase', border: '1.5px solid #059669', flexShrink: 0 }}>
+                      Win
+                    </span>
                   </div>
 
-                  {/* "Why it works" block — same palette as Overview's Why-now tile */}
+                  {/* divider — InsightCard uses marginLeft:46 to offset past the badge column */}
+                  {why && <div style={{ height: 1, background: '#e6e6ec', marginBottom: 14, marginLeft: 46 }}/>}
+
+                  {/* body — blue "Why it works" tile, same palette as Overview's Why-now cell */}
                   {why && (
-                    <div style={{ background: 'rgba(79,134,247,0.07)', border: '1px solid rgba(79,134,247,0.12)',
-                      borderRadius: 10, padding: '10px 12px' }}>
-                      <p style={{ fontSize: 10, fontWeight: 700, color: '#4a7cf7',
-                        letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 5 }}>
-                        Why it works
-                      </p>
-                      <p style={{ fontSize: 13, color: '#111114', lineHeight: 1.6 }}>
-                        {why}
-                      </p>
+                    <div style={{ marginLeft: 46 }}>
+                      <div style={{ background: 'rgba(79,134,247,0.07)', border: '1px solid rgba(79,134,247,0.12)',
+                        borderRadius: 10, padding: '12px 14px' }}>
+                        <p style={{ fontSize: 10, fontWeight: 700, color: '#4a7cf7',
+                          letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>
+                          Why it works
+                        </p>
+                        <p style={{ fontSize: 13.5, color: '#111114', lineHeight: 1.72 }}>
+                          {why}
+                        </p>
+                      </div>
                     </div>
                   )}
                 </div>
-              )
-            })}
-          </div>
+              </div>
+            )
+          })}
         </div>
       )}
 
