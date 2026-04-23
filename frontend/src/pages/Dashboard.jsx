@@ -883,6 +883,38 @@ const SEV = {
 }
 function sev(severity) { return SEV[severity] || SEV.critical }
 
+/* YouTube thumbnail cascade — prefers maxresdefault (1280x720), falls back to
+   hqdefault (always present at 480x360), finally to the stored thumbnail URL.
+   Also detects YouTube's 120x90 grey placeholder (HTTP 200 — onError never
+   fires) via onLoad dimension check so broken thumbs don't render. Identical
+   to the Outliers page helpers, kept local here to avoid cross-page imports. */
+function ytMaxThumbUrl(videoId) {
+  return videoId ? `https://i.ytimg.com/vi/${videoId}/maxresdefault.jpg` : null
+}
+function _advanceThumb(target, videoId, fallbackUrl) {
+  const step = target.dataset.thumbStep || 'max'
+  if (step === 'max' && videoId) {
+    target.dataset.thumbStep = 'hq'
+    target.src = `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`
+  } else if (step !== 'done' && fallbackUrl) {
+    target.dataset.thumbStep = 'done'
+    target.src = fallbackUrl
+  } else {
+    target.onerror = null
+  }
+}
+function makeThumbOnError(videoId, fallbackUrl) {
+  return (e) => _advanceThumb(e.target, videoId, fallbackUrl)
+}
+function makeThumbOnLoad(videoId, fallbackUrl) {
+  return (e) => {
+    const step = e.target.dataset.thumbStep || 'max'
+    if (step === 'max' && e.target.naturalWidth === 120 && e.target.naturalHeight === 90) {
+      _advanceThumb(e.target, videoId, fallbackUrl)
+    }
+  }
+}
+
 /* Plan badge helper */
 function planBadge(plan) {
   if (!plan || plan === 'free') return { label: 'Free', color: '#6b7280', bg: 'rgba(107,114,128,0.08)', bdr: 'rgba(107,114,128,0.18)' }
@@ -2503,10 +2535,11 @@ export default function Dashboard() {
                         style={{ display: 'block', position: 'relative', textDecoration: 'none', flexShrink: 0, borderRadius: '19px 19px 0 0', overflow: 'hidden' }}>
                         {v.thumbnail || v.video_id
                           ? <img
-                              src={v.video_id ? `https://i.ytimg.com/vi/${v.video_id}/hqdefault.jpg` : v.thumbnail}
+                              src={v.video_id ? ytMaxThumbUrl(v.video_id) : v.thumbnail}
                               alt=""
                               style={{ width: '100%', aspectRatio: '16/9', objectFit: 'cover', display: 'block' }}
-                              onError={e => { e.target.onerror = null; e.target.src = v.thumbnail || '' }}
+                              onError={makeThumbOnError(v.video_id, v.thumbnail)}
+                              onLoad={makeThumbOnLoad(v.video_id, v.thumbnail)}
                             />
                           : <div style={{ width: '100%', aspectRatio: '16/9', background: '#ebebef' }}/>
                         }
