@@ -179,19 +179,20 @@ if (typeof document !== 'undefined' && !document.getElementById('outliers-styles
 
     .out-modal-overlay {
       position: fixed; inset: 0;
-      background: rgba(15,15,19,0.48);
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(4px);
       display: flex; align-items: center; justify-content: center;
       z-index: 100;
       animation: outFadeIn 0.18s ease both;
-      padding: 24px;
+      padding: 32px 24px;
     }
     .out-modal {
-      background: #ffffff;
-      border: 1px solid #e6e6ec;
+      background: #f7f7fa;
+      border: 1px solid #e8e8ec;
       border-radius: 20px;
-      box-shadow: 0 24px 64px rgba(0,0,0,0.18), 0 8px 24px rgba(0,0,0,0.10);
-      width: 100%; max-width: 560px;
-      max-height: calc(100vh - 48px);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.08), 0 24px 64px rgba(0,0,0,0.10);
+      width: 100%; max-width: 1280px;
+      max-height: calc(100vh - 64px);
       overflow: auto;
       animation: outSlideIn 0.22s cubic-bezier(0.2, 0.7, 0.3, 1) both;
     }
@@ -1061,195 +1062,275 @@ function DetailModal({ kind, item, query, onClose, onNavigate }) {
     }
   }
 
+  // ── Metric computation (honest signals drawn from fields we already have) ──
+  const views   = item.views || 0
+  const likes   = item.likes || 0
+  const engPct  = views > 0 ? (likes / views * 100) : 0
+  const days    = item.published_at ? Math.max(0, (Date.now() - new Date(item.published_at).getTime()) / 86400000) : null
+  const verdict = item.outlier_score >= 5 ? { label: 'Strong',      color: C.red   }
+                 : item.outlier_score >= 3 ? { label: 'Notable',     color: C.amber }
+                 : item.outlier_score >= 1.8 ? { label: 'Over median', color: C.green }
+                 : { label: 'Subtle', color: C.text3 }
+
+  const outlierPct = Math.min(100, Math.round((item.outlier_score || 0) * 20))
+  const engScore   = Math.min(100, Math.round(engPct * 20))  // 5% = 100
+  const recencyScore = days == null ? 40
+                     : days <= 30  ? 100
+                     : days <= 90  ? 80
+                     : days <= 180 ? 60
+                     : days <= 365 ? 35
+                     : 15
+  const subs       = isChannel ? (item.subscribers || 0) : (item.channel_subscribers || 0)
+  const reachScore = subs <= 0 ? 0 : Math.min(100, Math.round(Math.log10(Math.max(1, subs)) * 16))  // ~1M = 100, 100k = 80, 10k = 64
+  const nicheScore = item.is_niche_matched ? 85 : 45
+
+  const bars = isChannel
+    ? [
+        { label: 'Outlier strength',  score: outlierPct,                                                                                 tip: 'Best video in this search vs the niche median (5× = max).' },
+        { label: 'Catalog momentum',  score: Math.min(100, (item.videos_in_search || 0) * 16),                                            tip: 'How many of this channel\'s videos surfaced in your search.' },
+        { label: 'Reach',              score: reachScore,                                                                                 tip: 'Subscriber-count-based reach on a log scale.' },
+        { label: 'Niche fit',          score: nicheScore,                                                                                 tip: 'Whether this channel\'s recent uploads overlap your search vertical.' },
+      ]
+    : [
+        { label: 'Outlier strength',  score: outlierPct,    tip: 'Views per subscriber vs niche median (5× = max).' },
+        { label: 'Engagement',         score: engScore,     tip: 'Likes ÷ views scaled — 5%+ is a ceiling.' },
+        { label: 'Recency',            score: recencyScore, tip: 'Newer videos score higher (0–30 days = max).' },
+        { label: 'Niche fit',          score: nicheScore,   tip: 'Whether the posting channel\'s content overlaps your niche.' },
+      ]
+
+  const kindLabel = isChannel
+    ? 'Breakout channel'
+    : kind === 'thumbnail' ? 'Winning thumbnail' : 'Outlier video'
+
+  const headerThumb = isChannel ? (item.top_video_thumbnail || item.thumbnail) : item.thumbnail
+  const headerTitle = isChannel ? item.channel_name : item.title
+
+  // ── Action buttons used in the bottom row ─────────────────────────────
+  const actionList = isChannel
+    ? [
+        { label: 'Open on YouTube',    onClick: openOnYouTube },
+        { label: addState === 'added' ? 'Added ✓' : addState === 'adding' ? 'Adding…' : 'Add as competitor',
+          onClick: addAsCompetitor, disabled: addState === 'adding' || addState === 'added', success: addState === 'added' },
+      ]
+    : [
+        { label: 'Open on YouTube', onClick: openOnYouTube },
+        { label: 'Remix title',     onClick: remixTitle },
+        { label: 'Remix thumbnail', onClick: remixThumbnail },
+        { label: addState === 'added' ? 'Added ✓' : addState === 'adding' ? 'Adding…' : 'Add channel as competitor',
+          onClick: addAsCompetitor, disabled: addState === 'adding' || addState === 'added', success: addState === 'added' },
+      ]
+
   return (
     <div className="out-modal-overlay" onClick={onClose}>
       <div className="out-modal" onClick={e => e.stopPropagation()}>
+        <div style={{ padding: '24px 28px' }}>
 
-        {/* Header */}
-        <div style={{ position: 'relative', padding: '22px 24px 0' }}>
-          <button
-            onClick={onClose}
-            aria-label="Close"
-            style={{
-              position: 'absolute', top: 14, right: 14,
-              width: 30, height: 30, borderRadius: 10,
-              background: 'transparent', border: '1px solid transparent',
-              color: C.text3, cursor: 'pointer',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              transition: 'all 0.15s',
-            }}
-            onMouseEnter={e => { e.currentTarget.style.background = '#f5f5f9'; e.currentTarget.style.color = C.text1 }}
-            onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = C.text3 }}
-          >
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-              <path d="M3 3l8 8M11 3l-8 8"/>
-            </svg>
-          </button>
-
-          {/* Thumbnail/avatar */}
-          {isChannel ? (
-            <div style={{
-              width: 64, height: 64, borderRadius: '50%',
-              overflow: 'hidden', background: C.redBg,
-              border: `1px solid ${C.border}`, marginBottom: 14,
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: 22, fontWeight: 700, color: C.red,
-            }}>
-              {item.thumbnail
-                ? <img src={item.thumbnail} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }}/>
-                : (item.channel_name || '?')[0].toUpperCase()
-              }
+          {/* Header — same silhouette as VideoOptimizePanel.jsx:453-477 */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 20, paddingBottom: 20, borderBottom: `1px solid ${C.borderLight}` }}>
+            {headerThumb
+              ? <img src={headerThumb} alt=""
+                  style={{ width: 96, height: 60, borderRadius: 8, objectFit: 'cover', flexShrink: 0, border: `1px solid ${C.border}` }}/>
+              : <div style={{ width: 96, height: 60, borderRadius: 8, background: '#eeeef3', flexShrink: 0, border: `1px solid ${C.border}` }}/>}
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <p style={{ fontSize: 12, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 4 }}>{kindLabel}</p>
+              <p style={{ fontSize: 16, fontWeight: 700, color: C.text1, lineHeight: 1.35, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{headerTitle}</p>
             </div>
-          ) : (
-            <div style={{
-              width: '100%', aspectRatio: '16 / 9',
-              borderRadius: 12, overflow: 'hidden',
-              background: '#eeeef3', border: `1px solid ${C.border}`,
-              marginBottom: 14,
-            }}>
-              {item.thumbnail
-                ? <img src={item.thumbnail} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}/>
-                : null}
+            <div style={{ display: 'flex', gap: 8, flexShrink: 0 }}>
+              <button onClick={openOnYouTube}
+                style={{ fontSize: 12, color: C.text2, background: '#fff', border: `1px solid ${C.border}`, borderRadius: 100, padding: '6px 14px', cursor: 'pointer', fontFamily: 'inherit', fontWeight: 600, boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
+                Open on YouTube
+              </button>
+              <button onClick={onClose}
+                style={{ fontSize: 12, color: C.text3, background: '#fff', border: `1px solid ${C.border}`, borderRadius: 100, padding: '6px 14px', cursor: 'pointer', fontFamily: 'inherit', fontWeight: 600, boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
+                Close ✕
+              </button>
             </div>
-          )}
-
-          {/* Outlier pill + stats */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', marginBottom: 8 }}>
-            <span style={{
-              display: 'inline-flex', alignItems: 'center', gap: 5,
-              background: tier.bg, color: tier.color, border: `1px solid ${tier.bdr}`,
-              fontSize: 11, fontWeight: 700, padding: '3px 9px', borderRadius: 20,
-              letterSpacing: '0.03em', textTransform: 'uppercase',
-              fontVariantNumeric: 'tabular-nums',
-            }}>
-              <svg width="10" height="10" viewBox="0 0 12 12" fill="currentColor"><path d="M6 1l1.4 3.6L11 6l-3.6 1.4L6 11l-1.4-3.6L1 6l3.6-1.4z"/></svg>
-              {tier.label}
-            </span>
-            <span style={{ fontSize: 11, fontWeight: 600, color: C.text2, fontVariantNumeric: 'tabular-nums' }}>
-              {fmtNum(isChannel ? item.subscribers : item.views)} {isChannel ? 'subs' : 'views'}
-            </span>
-            {!isChannel && (
-              <>
-                <span style={{ fontSize: 11, color: C.text3 }}>·</span>
-                <span style={{ fontSize: 11, fontWeight: 500, color: C.text3 }}>
-                  {fmtNum(item.channel_subscribers)} sub channel
-                </span>
-              </>
-            )}
-            {isChannel && (
-              <>
-                <span style={{ fontSize: 11, color: C.text3 }}>·</span>
-                <span style={{ fontSize: 11, fontWeight: 500, color: C.text3 }}>
-                  {fmtNum(item.avg_views_per_video)} avg views
-                </span>
-              </>
-            )}
           </div>
 
-          {/* Title / channel name */}
-          <p style={{ fontSize: 17, fontWeight: 800, color: C.text1, letterSpacing: '-0.4px', lineHeight: 1.3, marginBottom: 4 }}>
-            {isChannel ? item.channel_name : item.title}
-          </p>
-          {!isChannel && (
-            <p style={{ fontSize: 12.5, color: C.text3, fontWeight: 500 }}>
-              {item.channel_name}
-            </p>
-          )}
-        </div>
-
-        {/* Body */}
-        <div style={{ padding: '18px 24px 22px' }}>
-          {/* ── Three structured sections (clean, no tinted blocks) ──────── */}
-          {isChannel ? (
-            <>
-              <DetailSection isFirst tone="red"   eyebrow="Why this channel" body={item.why_this_channel || item.explanation || ''} />
-              <DetailSection          tone="amber" eyebrow="What to do"      list={item.what_to_do} />
-              <DetailSection          tone="blue"  eyebrow="Why now"         body={item.why_now || ''} />
-            </>
-          ) : (
-            <>
-              <DetailSection isFirst tone="red"   eyebrow="Why it worked"  body={item.why_worked || item.explanation || ''} />
-              <DetailSection          tone="amber" eyebrow="Quick actions" list={item.quick_actions} />
-              <DetailSection          tone="blue"  eyebrow="Why now"       body={item.why_now || ''} />
-            </>
-          )}
-
-          {/* Shortcut buttons (kept below the structured report) */}
-          <div style={{ height: 1, background: C.border, marginTop: 18, marginBottom: 14 }} />
-          <p style={{ fontSize: 10, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 10 }}>
-            Shortcuts
-          </p>
-
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
-            <ActionButton
-              label="Open in YouTube"
-              icon={
-                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-                  <rect x="1" y="3" width="12" height="8" rx="2"/><path d="M6 5.5v3l2.5-1.5z" fill="currentColor"/>
-                </svg>
-              }
-              onClick={openOnYouTube}
-            />
-            {!isChannel && (
-              <ActionButton
-                label="Remix title"
-                icon={
-                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M3 9.5l6.5-6.5 1.5 1.5L4.5 11 2.5 11.5z"/><path d="M8.5 4l1.5 1.5"/>
-                  </svg>
-                }
-                onClick={remixTitle}
-              />
-            )}
-            {!isChannel && (
-              <ActionButton
-                label="Remix thumbnail"
-                icon={
-                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                    <rect x="1" y="2.5" width="12" height="9" rx="2"/><circle cx="5" cy="6.5" r="1.2"/><path d="m1.5 10 3-3 3 3 2-2 3 3"/>
-                  </svg>
-                }
-                onClick={remixThumbnail}
-              />
-            )}
-            <ActionButton
-              label={
-                addState === 'adding' ? 'Adding…' :
-                addState === 'added'  ? 'Added ✓' :
-                'Add as competitor'
-              }
-              icon={
-                addState === 'adding'
-                  ? <SpinIcon />
-                  : <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-                      <circle cx="5.5" cy="6" r="2.5"/><path d="M1.5 11.5c.5-1.6 2.2-2.5 4-2.5s3.5.9 4 2.5"/>
-                      <path d="M10.5 5v3M12 6.5h-3"/>
-                    </svg>
-              }
-              onClick={addAsCompetitor}
-              disabled={addState === 'adding' || addState === 'added'}
-              success={addState === 'added'}
-              wide={isChannel}
-            />
-          </div>
-
-          {addError && (
-            <div style={{
-              marginTop: 10, fontSize: 12, color: C.red,
-              background: C.redBg, border: `1px solid ${C.redBdr}`,
-              borderRadius: 9, padding: '8px 11px', lineHeight: 1.4,
-            }}>
-              {addError}
+          {/* Why Now hero — same "Fix first" card silhouette (white bg, red left-bar) */}
+          {item.why_now && (
+            <div style={{ background: '#fff', border: `1px solid ${C.border}`, borderLeft: `4px solid ${C.red}`, borderRadius: 12, padding: '14px 18px', marginBottom: 16, boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
+              <span style={{ fontSize: 10, fontWeight: 800, color: C.red, textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block', marginBottom: 6 }}>Why now</span>
+              <p style={{ fontSize: 15, fontWeight: 700, color: C.text1, lineHeight: 1.55 }}>{item.why_now}</p>
             </div>
           )}
 
-          {addState === 'added' && (
-            <p style={{ marginTop: 10, fontSize: 11.5, color: C.text3, lineHeight: 1.5 }}>
-              Open the Competitors tab to see the full analysis.
+          {/* Breakdown Section — same silhouette as "Title Analysis" */}
+          <div style={{ background: '#fff', border: `1px solid ${C.border}`, borderRadius: 16, padding: '20px 22px', marginBottom: 12 }}>
+            <p style={{ fontSize: 15, fontWeight: 700, color: C.text1, letterSpacing: '-0.3px', marginBottom: 16 }}>
+              {isChannel ? 'Channel breakdown' : 'Outlier breakdown'}
             </p>
-          )}
+
+            <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: 24, marginBottom: 18 }}>
+              {/* Ring + verdict + niche pill */}
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
+                <OutlierRing score={item.outlier_score} color={verdict.color}/>
+                <span style={{ fontSize: 14, fontWeight: 700, color: verdict.color }}>{verdict.label}</span>
+                {query && (
+                  <span style={{ fontSize: 12, color: '#2563eb', background: '#eff6ff', padding: '3px 10px', borderRadius: 100, fontWeight: 600, border: '1px solid #bfdbfe' }}>
+                    {query}
+                  </span>
+                )}
+                <span style={{ fontSize: 12, color: C.text3, fontVariantNumeric: 'tabular-nums' }}>
+                  {isChannel
+                    ? `${item.videos_in_search || 0} hit${(item.videos_in_search || 0) === 1 ? '' : 's'} in search`
+                    : `${fmtNum(views)} views`}
+                </span>
+              </div>
+
+              {/* Breakdown bars */}
+              <div>
+                {bars.map((b, i) => (
+                  <OutlierBar key={i} label={b.label} score={b.score} tip={b.tip}/>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* 3-col intent grid — same silhouette as Search Intent / Competitor Gap / Emotional Driver */}
+          <div style={{ background: '#fff', border: `1px solid ${C.border}`, borderRadius: 16, padding: '20px 22px', marginBottom: 12 }}>
+            <p style={{ fontSize: 15, fontWeight: 700, color: C.text1, letterSpacing: '-0.3px', marginBottom: 16 }}>
+              {isChannel ? 'Channel playbook' : 'Outlier playbook'}
+            </p>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr 1fr', gap: 8 }}>
+
+              {/* Blue — Why it worked / Why this channel */}
+              <div style={{ background: 'rgba(79,134,247,0.07)', border: '1px solid rgba(79,134,247,0.12)', borderRadius: 10, padding: '12px 14px' }}>
+                <p style={{ fontSize: 10, fontWeight: 700, color: '#4a7cf7', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>
+                  {isChannel ? 'Why this channel' : 'Why it worked'}
+                </p>
+                <p style={{ fontSize: 13, color: C.text1, lineHeight: 1.65 }}>
+                  {(isChannel ? item.why_this_channel : item.why_worked) || item.explanation || '—'}
+                </p>
+              </div>
+
+              {/* Amber — Quick actions / What to do (list) */}
+              <div style={{ background: '#fff', border: `1px solid ${C.border}`, borderLeft: `3px solid ${C.amber}`, borderRadius: '0 10px 10px 0', padding: '12px 14px', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
+                <p style={{ fontSize: 10, fontWeight: 700, color: C.amber, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>
+                  {isChannel ? 'What to do' : 'Quick actions'}
+                </p>
+                {(() => {
+                  const list = (isChannel ? item.what_to_do : item.quick_actions) || []
+                  if (!list.length) return <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.6 }}>—</p>
+                  return (
+                    <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 7 }}>
+                      {list.map((s, i) => (
+                        <li key={i} style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
+                          <span style={{ fontSize: 12, fontWeight: 700, color: C.amber, fontVariantNumeric: 'tabular-nums', lineHeight: 1.55, minWidth: 14 }}>{i + 1}.</span>
+                          <span style={{ fontSize: 13, color: C.text1, lineHeight: 1.6, flex: 1 }}>{s}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  )
+                })()}
+              </div>
+
+              {/* Green — Why now (same text as hero; keeps the 3-col symmetry) */}
+              <div style={{ background: 'rgba(5,150,105,0.07)', border: '1px solid rgba(5,150,105,0.14)', borderRadius: 10, padding: '12px 14px' }}>
+                <p style={{ fontSize: 10, fontWeight: 700, color: C.green, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>
+                  Act on this because
+                </p>
+                <p style={{ fontSize: 13, color: C.text1, lineHeight: 1.65 }}>
+                  {item.why_now || 'This result is fresh in your niche — move on it while the topic is still climbing.'}
+                </p>
+              </div>
+
+            </div>
+          </div>
+
+          {/* Actions Section — same card silhouette, full-width button row */}
+          <div style={{ background: '#fff', border: `1px solid ${C.border}`, borderRadius: 16, padding: '20px 22px' }}>
+            <p style={{ fontSize: 15, fontWeight: 700, color: C.text1, letterSpacing: '-0.3px', marginBottom: 16 }}>Shortcuts</p>
+            <div style={{ display: 'grid', gridTemplateColumns: `repeat(${actionList.length}, minmax(0, 1fr))`, gap: 10 }}>
+              {actionList.map((a, i) => (
+                <button
+                  key={i}
+                  onClick={a.onClick}
+                  disabled={a.disabled}
+                  style={{
+                    fontSize: 13, fontWeight: 700,
+                    padding: '11px 16px', borderRadius: 100,
+                    background: a.success ? C.greenBg : C.red,
+                    color: a.success ? C.green : '#fff',
+                    border: a.success ? `1px solid ${C.greenBdr}` : 'none',
+                    cursor: a.disabled ? 'default' : 'pointer',
+                    fontFamily: 'inherit',
+                    boxShadow: a.success ? 'none' : '0 1px 3px rgba(229,37,27,0.32), 0 4px 14px rgba(229,37,27,0.22)',
+                    transition: 'filter 0.15s, transform 0.15s',
+                    opacity: a.disabled && !a.success ? 0.7 : 1,
+                  }}
+                  onMouseEnter={e => { if (!a.disabled && !a.success) e.currentTarget.style.filter = 'brightness(1.1)' }}
+                  onMouseLeave={e => { e.currentTarget.style.filter = 'none' }}
+                >
+                  {a.label}
+                </button>
+              ))}
+            </div>
+            {addError && (
+              <p style={{ marginTop: 10, fontSize: 12, color: C.red, background: C.redBg, border: `1px solid ${C.redBdr}`, borderRadius: 9, padding: '8px 11px', lineHeight: 1.4 }}>
+                {addError}
+              </p>
+            )}
+            {addState === 'added' && (
+              <p style={{ marginTop: 10, fontSize: 11.5, color: C.text3, lineHeight: 1.5 }}>
+                Open the Competitors tab to see the full analysis.
+              </p>
+            )}
+          </div>
         </div>
       </div>
+    </div>
+  )
+}
+
+/* ─── Score ring — outlier variant of VideoOptimizePanel's ScoreRing ──────── */
+function OutlierRing({ score, color }) {
+  const val   = Math.max(0, Math.min(10, score || 0))
+  const r     = 34
+  const circ  = 2 * Math.PI * r
+  const pct   = Math.min(100, (val / 5) * 100)  // 5×+ = full ring
+  const filled = (pct / 100) * circ
+  return (
+    <div style={{ position: 'relative', width: 88, height: 88, flexShrink: 0 }}>
+      <svg width="88" height="88" style={{ transform: 'rotate(-90deg)' }}>
+        <circle cx="44" cy="44" r={r} fill="none" stroke="#f0f0f4" strokeWidth="6" />
+        <circle cx="44" cy="44" r={r} fill="none" stroke={color} strokeWidth="6"
+          strokeDasharray={`${filled} ${circ}`} strokeLinecap="round"
+          style={{ transition: 'stroke-dasharray 0.6s ease' }} />
+      </svg>
+      <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+        <span style={{ fontSize: 22, fontWeight: 800, color, letterSpacing: '-1px', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{val.toFixed(1)}</span>
+        <span style={{ fontSize: 11, color: '#9595a4', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em' }}>× outlier</span>
+      </div>
+    </div>
+  )
+}
+
+/* ─── Bar — copied from VideoOptimizePanel's BreakdownBar ─────────────────── */
+function OutlierBar({ label, score, tip }) {
+  const [showWhy, setShowWhy] = useState(false)
+  const color = score >= 70 ? '#16a34a' : score >= 40 ? '#d97706' : '#e5251b'
+  return (
+    <div style={{ marginBottom: 9 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 3 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+          <span style={{ fontSize: 14, color: '#3a3a3c', fontWeight: 500 }}>{label}</span>
+          {tip && (
+            <button onClick={() => setShowWhy(v => !v)}
+              style={{ width: 15, height: 15, borderRadius: '50%', border: '1px solid #e8e8ec', background: 'transparent', cursor: 'pointer', fontSize: 12, fontWeight: 700, color: '#8e8e93', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 0 }}>?
+            </button>
+          )}
+        </div>
+        <span style={{ fontSize: 12, color, fontWeight: 700, fontVariantNumeric: 'tabular-nums' }}>{score}/100</span>
+      </div>
+      <div style={{ height: 5, background: '#f0f0f4', borderRadius: 4, overflow: 'hidden' }}>
+        <div style={{ height: '100%', width: `${score}%`, background: color, borderRadius: 4, transition: 'width 0.5s ease' }} />
+      </div>
+      {showWhy && tip && (
+        <p style={{ fontSize: 12, color: '#8e8e93', marginTop: 5, lineHeight: 1.5, paddingLeft: 8, borderLeft: '2px solid #e8e8ec' }}>
+          {tip}
+        </p>
+      )}
     </div>
   )
 }
