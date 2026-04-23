@@ -173,9 +173,9 @@ function oppColor(s) { return s >= 70 ? C.green : s >= 45 ? C.amber : C.red }
        keyword. Green up / red down / neutral flat, with the % change
        shown when meaningful. */
 function TrendArrow({ trend }) {
-  if (!trend || !trend.direction) {
-    return <span style={{ width: 36, flexShrink: 0 }} aria-hidden="true"/>
-  }
+  // No data → render nothing (don't reserve an empty slot, it wastes
+  // horizontal space when pytrends is silent).
+  if (!trend || !trend.direction) return null
   const tone = trend.direction === 'rising'
     ? { color: C.green, path: 'M2 9l3.5-3.5L8 8l4-4', head: 'M9 4h3v3' }
     : trend.direction === 'declining'
@@ -188,7 +188,7 @@ function TrendArrow({ trend }) {
   return (
     <span style={{
       display: 'inline-flex', alignItems: 'center', gap: 4,
-      width: 54, flexShrink: 0,
+      minWidth: 54, flexShrink: 0,
       fontSize: 11, fontWeight: 700, color: tone.color,
       fontVariantNumeric: 'tabular-nums',
     }}>
@@ -561,16 +561,21 @@ export default function Keywords() {
                             borderLeft: isRightCol ? `1px solid ${C.amberBdr}` : 'none',
                           }}
                         >
+                          {/* Phrase — flex-grows so full keywords show without
+                              clipping. Only truncates when the row truly runs
+                              out of width (long tail queries on narrow screens). */}
                           <span className="kw-row-phrase" style={{
                             fontSize: 13, color: C.text2, fontWeight: 400,
-                            width: 160, flexShrink: 0,
+                            flex: 1, minWidth: 0,
                             overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
                             transition: 'color 0.12s',
                           }}>{kw.keyword}</span>
                           {/* Trend arrow — green rising / red declining / grey flat.
                               Absent when we have no trend data for this keyword. */}
                           <TrendArrow trend={kw.trend} />
-                          <div style={{ flex: 1, height: 4, background: '#eeeef3', borderRadius: 99, overflow: 'hidden', minWidth: 40 }}>
+                          {/* Bar — fixed width so the keyword text owns the flex
+                              space, not the progress fill. */}
+                          <div style={{ width: 120, height: 4, background: '#eeeef3', borderRadius: 99, overflow: 'hidden', flexShrink: 0 }}>
                             <div style={{ width: `${kw.opportunityScore}%`, height: '100%', background: scColor, borderRadius: 99, transition: 'width 0.8s cubic-bezier(0.34,1.56,0.64,1)' }}/>
                           </div>
                           <span style={{
