@@ -502,6 +502,9 @@ export default function Keywords() {
                 <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.5 }}>
                   Sorted by opportunity score · click any to copy
                 </p>
+                <p style={{ fontSize: 12, color: C.text3, lineHeight: 1.5, marginTop: 4 }}>
+                  Tip: hover any row for competition details · <span style={{ color: C.green, fontWeight: 700 }}>ACTIVE</span> = rising niche · <span style={{ color: C.amber, fontWeight: 700 }}>OPEN</span> = underclaimed
+                </p>
               </div>
 
               <div className="kw-card" style={{ borderTop: `3px solid ${C.amber}`, marginBottom: 24 }}>
