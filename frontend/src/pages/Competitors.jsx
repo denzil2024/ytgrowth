@@ -292,23 +292,6 @@ function useCompetitorStyles() {
         margin-bottom: 5px;
       }
 
-      /* winner number badge — amber rounded square, matches Priority Actions / Keywords clusters */
-      .comp-winner-num {
-        background: #d97706;
-        color: #fff;
-        border-radius: 6px;
-        width: 22px;
-        height: 22px;
-        font-size: 11px;
-        font-weight: 900;
-        flex-shrink: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-variant-numeric: tabular-nums;
-        margin-top: 2px;
-      }
-
       /* neutral elevated pill — used for per-row secondary actions (Analyze),
          since red filled is reserved for the page's primary CTA (Search). */
       .comp-btn-ghost {
@@ -524,19 +507,78 @@ function AIAnalysis({ ai, top5Videos, channelId, checkedIdeas, onToggleIdea }) {
         </div>
       </Card>
 
-      {/* ── winning moves ── */}
+      {/* ── winning moves — Priority Actions-mimicking cards ──────────────────
+           Each move is its own elevated card (matches Dashboard's InsightCard):
+           amber top-border + amber rank badge + "MOVE N" eyebrow + bold action,
+           hairline divider, then a blue "Why it works" block (same palette as
+           Overview's "Why now" tile) with the move's reasoning.
+           Model output comes as "Action — explanation"; we split on " — ". */}
       {ai.winningMoves?.length > 0 && (
-        <Card>
-          <SectionTitle>Winning moves</SectionTitle>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-            {ai.winningMoves.map((m, i) => (
-              <div key={i} style={{ display: 'flex', gap: 14, alignItems: 'flex-start' }}>
-                <span className="comp-winner-num">{i + 1}</span>
-                <p style={{ fontSize: 14, color: '#52525b', lineHeight: 1.7, paddingTop: 3, fontWeight: 400 }}>{m}</p>
-              </div>
-            ))}
+        <div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 14 }}>
+            <p style={{ fontSize: 15, fontWeight: 700, color: '#111114', letterSpacing: '-0.3px' }}>
+              Winning moves
+            </p>
+            <span style={{ fontSize: 11, fontWeight: 700, color: '#9595a4', background: '#f1f1f6',
+              padding: '2px 8px', borderRadius: 20, border: '1px solid #e6e6ec' }}>
+              {ai.winningMoves.length}
+            </span>
           </div>
-        </Card>
+
+          {ai.winningMoves.map((m, i) => {
+            const parts = m.split(/\s+—\s+/)
+            const action = (parts[0] || m).trim()
+            const why    = parts.length > 1 ? parts.slice(1).join(' — ').trim() : null
+
+            return (
+              <div key={i} className="comp-card" style={{
+                borderRadius: 14,
+                overflow: 'hidden',
+                marginBottom: 10,
+                borderTop: '3px solid #d97706',
+              }}>
+                <div style={{ padding: '16px 22px 18px' }}>
+
+                  {/* header — amber rank badge + eyebrow + action title */}
+                  <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: why ? 14 : 0 }}>
+                    <div style={{ width: 26, height: 26, borderRadius: 8, background: '#d97706',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 1 }}>
+                      <span style={{ fontSize: 12, fontWeight: 900, color: '#fff', fontVariantNumeric: 'tabular-nums' }}>
+                        {i + 1}
+                      </span>
+                    </div>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <p style={{ fontSize: 10, fontWeight: 700, color: '#d97706',
+                        letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 5 }}>
+                        Move {i + 1}
+                      </p>
+                      <p style={{ fontSize: 14, fontWeight: 700, color: '#111114', lineHeight: 1.55, letterSpacing: '-0.1px' }}>
+                        {action}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* body — blue "Why it works" block (Overview's Why-now palette) */}
+                  {why && (
+                    <>
+                      <div style={{ height: 1, background: '#e6e6ec', marginBottom: 14, marginLeft: 38 }}/>
+                      <div style={{ marginLeft: 38, background: 'rgba(79,134,247,0.07)',
+                        border: '1px solid rgba(79,134,247,0.12)', borderRadius: 10, padding: '12px 14px' }}>
+                        <p style={{ fontSize: 10, fontWeight: 700, color: '#4a7cf7',
+                          letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>
+                          Why it works
+                        </p>
+                        <p style={{ fontSize: 13.5, color: '#111114', lineHeight: 1.72 }}>
+                          {why}
+                        </p>
+                      </div>
+                    </>
+                  )}
+                </div>
+              </div>
+            )
+          })}
+        </div>
       )}
 
       {/* ── video ideas — checkbox-driven to-do list ── */}
