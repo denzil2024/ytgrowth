@@ -364,16 +364,6 @@ function saveCheckedIdeas(map) {
   try { localStorage.setItem(LS_CHECKED, JSON.stringify(map)) } catch {}
 }
 
-// Persist which Winning moves the user has applied (same shape as checkedIdeas,
-// keyed by channel_id → move_index). Matches the checkbox behaviour of Overview's
-// Priority Actions, which is what we're copying for the Winning moves card.
-const LS_CHECKED_MOVES = 'ytgrowth_comp_checked_moves'
-function loadCheckedMoves() {
-  try { return JSON.parse(localStorage.getItem(LS_CHECKED_MOVES) || '{}') } catch { return {} }
-}
-function saveCheckedMoves(map) {
-  try { localStorage.setItem(LS_CHECKED_MOVES, JSON.stringify(map)) } catch {}
-}
 
 // Relative time ("12d ago" / "3mo ago") for Top videos published date.
 function relTime(iso) {
@@ -471,11 +461,10 @@ function ChannelCard({ channel, onAnalyze, isAdded, loadingId }) {
 }
 
 // ─── AI analysis ──────────────────────────────────────────────────────────────
-function AIAnalysis({ ai, top5Videos, channelId, checkedIdeas, onToggleIdea, checkedMoves, onToggleMove }) {
+function AIAnalysis({ ai, top5Videos, channelId, checkedIdeas, onToggleIdea }) {
   if (!ai) return null
   const threat   = THREAT[ai.threatLevel] || THREAT.medium
   const checksForChannel = (checkedIdeas && channelId) ? (checkedIdeas[channelId] || {}) : {}
-  const movesForChannel  = (checkedMoves && channelId) ? (checkedMoves[channelId]  || {}) : {}
 
   const whyMap = {}
   ;(ai.topVideosToStudy || []).forEach(aiVid => {
@@ -519,19 +508,12 @@ function AIAnalysis({ ai, top5Videos, channelId, checkedIdeas, onToggleIdea, che
         </div>
       </Card>
 
-      {/* ── winning moves — 1:1 copy of Dashboard's InsightCard ──────────────
-           Mirrors Priority Actions EXACTLY — same HTML tree, same gaps, same
-           marginLeft:46 body offset, same 1fr / 1.4fr / 1fr grid. Fields:
-             • problem title  → action text (left of " — ")
-             • whyNow (blue)  → why text    (right of " — ")
-             • action  (white + colour bar) → action text (restated, same as
-               Priority Actions' Action cell)
-             • expectedOutcome (green) → N/A here, empty div placeholder (this
-               is the exact same conditional render Priority Actions uses when
-               expectedOutcome is missing)
-           Accent colour green (#059669) because winning moves are success
-           actions — the semantic equivalent of a green severity. Checkbox is
-           functional and persists via LS_CHECKED_MOVES. */}
+      {/* ── winning moves — InsightCard layout, NO checkbox ──────────────────
+           Mirrors Dashboard's InsightCard structurally (rank badge, category
+           eyebrow + title, right pill, divider, 3-col body grid), BUT omits
+           the checkbox + done-state — winning moves are observations to
+           internalize, not tasks to tick off. Copying blindly would import a
+           checkbox that has no real job. */}
       {ai.winningMoves?.length > 0 && (
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
@@ -545,106 +527,88 @@ function AIAnalysis({ ai, top5Videos, channelId, checkedIdeas, onToggleIdea, che
           </div>
 
           {ai.winningMoves.map((m, i) => {
-            const parts   = m.split(/\s+—\s+/)
-            const action  = (parts[0] || m).trim()
-            const why     = parts.length > 1 ? parts.slice(1).join(' — ').trim() : null
-            const color   = '#059669'  // win = green, same slot severity colour occupies in InsightCard
-            const checked = !!movesForChannel[i]
+            const parts  = m.split(/\s+—\s+/)
+            const action = (parts[0] || m).trim()
+            const why    = parts.length > 1 ? parts.slice(1).join(' — ').trim() : null
+            const color  = '#059669'
 
             return (
               <div key={i} className="comp-card" style={{
                 borderRadius: 14,
                 overflow: 'hidden',
                 marginBottom: 10,
-                borderTop: `3px solid ${checked ? '#e6e6ec' : color}`,
-                opacity: checked ? 0.48 : 1,
-                transition: 'opacity 0.2s',
+                borderTop: `3px solid ${color}`,
               }}>
                 <div style={{ padding: '16px 22px 18px' }}>
 
                   {/* ── Header ── */}
-                  <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: checked ? 0 : 14 }}>
+                  <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: 14 }}>
 
-                    {/* Checkbox + solid rank badge */}
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0, paddingTop: 2 }}>
-                      <input
-                        type="checkbox"
-                        checked={checked}
-                        onChange={() => onToggleMove && onToggleMove(channelId, i)}
-                        style={{ width: 15, height: 15, accentColor: color, cursor: 'pointer', flexShrink: 0 }}
-                      />
-                      <div style={{ width: 26, height: 26, borderRadius: 8,
-                        background: checked ? '#ecfdf5' : color, border: 'none',
-                        display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                        {checked
-                          ? <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke={color} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><polyline points="1.5,6.5 5,10 10.5,2"/></svg>
-                          : <span style={{ fontSize: 12, fontWeight: 900, color: '#fff', fontVariantNumeric: 'tabular-nums' }}>{i + 1}</span>
-                        }
-                      </div>
+                    {/* Solid rank badge (no checkbox — see comment above) */}
+                    <div style={{ width: 26, height: 26, borderRadius: 8, background: color,
+                      display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 2 }}>
+                      <span style={{ fontSize: 12, fontWeight: 900, color: '#fff', fontVariantNumeric: 'tabular-nums' }}>
+                        {i + 1}
+                      </span>
                     </div>
 
                     {/* Category label above action */}
                     <div style={{ flex: 1, minWidth: 0 }}>
-                      <p style={{ fontSize: 10, fontWeight: 700,
-                        color: checked ? '#9595a4' : color,
+                      <p style={{ fontSize: 10, fontWeight: 700, color,
                         letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 5 }}>
                         Winning move
                       </p>
-                      <p style={{ fontSize: 14, fontWeight: 700,
-                        color: checked ? '#9595a4' : '#111114', lineHeight: 1.55,
-                        textDecoration: checked ? 'line-through' : 'none' }}>
+                      <p style={{ fontSize: 14, fontWeight: 700, color: '#111114', lineHeight: 1.55 }}>
                         {action}
                       </p>
                     </div>
 
                     {/* "WIN" pill (severity-pill slot) */}
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexShrink: 0 }}>
-                      <span style={{ fontSize: 10, fontWeight: 700, color,
-                        padding: '3px 9px', borderRadius: 20, letterSpacing: '0.06em',
-                        textTransform: 'uppercase', border: `1.5px solid ${color}` }}>
-                        Win
-                      </span>
-                    </div>
+                    <span style={{ fontSize: 10, fontWeight: 700, color,
+                      padding: '3px 9px', borderRadius: 20, letterSpacing: '0.06em',
+                      textTransform: 'uppercase', border: `1.5px solid ${color}`, flexShrink: 0 }}>
+                      Win
+                    </span>
                   </div>
 
-                  {/* Divider between header and body */}
-                  {!checked && <div style={{ height: 1, background: '#e6e6ec', marginBottom: 14, marginLeft: 46 }} />}
+                  {/* Divider — marginLeft:38 so it aligns with the start of content
+                      (badge-col is 26px + 12px gap = 38px, not 46px like Priority
+                      Actions which has the extra checkbox column). */}
+                  <div style={{ height: 1, background: '#e6e6ec', marginBottom: 14, marginLeft: 38 }} />
 
-                  {/* ── Body — same 1fr / 1.4fr / 1fr grid as InsightCard ── */}
-                  {!checked && (
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr 1fr', gap: 8, marginLeft: 46 }}>
+                  {/* ── Body — same 1fr / 1.4fr / 1fr grid as InsightCard, offset 38 ── */}
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr 1fr', gap: 8, marginLeft: 38 }}>
 
-                      {/* Why it works */}
-                      <div style={{ background: 'rgba(79,134,247,0.07)', border: '1px solid rgba(79,134,247,0.12)',
-                        borderRadius: 10, padding: '12px 14px' }}>
-                        <p style={{ fontSize: 10, fontWeight: 700, color: '#4a7cf7',
-                          letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>
-                          Why it works
-                        </p>
-                        <p style={{ fontSize: 13.5, color: '#111114', lineHeight: 1.72 }}>{why}</p>
-                      </div>
-
-                      {/* Move (Action slot) */}
-                      <div style={{
-                        background: '#ffffff',
-                        border: '1px solid #e6e6ec',
-                        borderLeft: `3px solid ${color}`,
-                        borderRadius: '0 10px 10px 0',
-                        padding: '12px 16px',
-                        boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
-                        display: 'flex', flexDirection: 'column',
-                      }}>
-                        <p style={{ fontSize: 10, fontWeight: 700, color,
-                          letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>
-                          Move
-                        </p>
-                        <p style={{ fontSize: 13.5, color: '#111114', lineHeight: 1.72 }}>{action}</p>
-                      </div>
-
-                      {/* Expected outcome — no data, render empty div (same pattern as InsightCard) */}
-                      <div />
+                    {/* Why it works (blue — same as Why-now) */}
+                    <div style={{ background: 'rgba(79,134,247,0.07)', border: '1px solid rgba(79,134,247,0.12)',
+                      borderRadius: 10, padding: '12px 14px' }}>
+                      <p style={{ fontSize: 10, fontWeight: 700, color: '#4a7cf7',
+                        letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>
+                        Why it works
+                      </p>
+                      <p style={{ fontSize: 13.5, color: '#111114', lineHeight: 1.72 }}>{why}</p>
                     </div>
-                  )}
+
+                    {/* Move (white + green left bar — Action slot) */}
+                    <div style={{
+                      background: '#ffffff',
+                      border: '1px solid #e6e6ec',
+                      borderLeft: `3px solid ${color}`,
+                      borderRadius: '0 10px 10px 0',
+                      padding: '12px 16px',
+                      boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
+                      display: 'flex', flexDirection: 'column',
+                    }}>
+                      <p style={{ fontSize: 10, fontWeight: 700, color,
+                        letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>
+                        Move
+                      </p>
+                      <p style={{ fontSize: 13.5, color: '#111114', lineHeight: 1.72 }}>{action}</p>
+                    </div>
+
+                    {/* Expected outcome — no data, empty div (same as InsightCard) */}
+                    <div />
+                  </div>
                 </div>
               </div>
             )
@@ -1016,7 +980,6 @@ export default function Competitors() {
   const [searched, setSearched]             = useState(false)
   const [expandedIdx, setExpandedIdx]       = useState(null)
   const [checkedIdeas, setCheckedIdeas]     = useState(() => loadCheckedIdeas())
-  const [checkedMoves, setCheckedMoves]     = useState(() => loadCheckedMoves())
 
   useEffect(() => { saveTracked(analyses) }, [analyses])
 
@@ -1025,15 +988,6 @@ export default function Competitors() {
       const ch = prev[channelId] || {}
       const next = { ...prev, [channelId]: { ...ch, [ideaTitle]: !ch[ideaTitle] } }
       saveCheckedIdeas(next)
-      return next
-    })
-  }
-
-  function toggleMove(channelId, moveIdx) {
-    setCheckedMoves(prev => {
-      const ch = prev[channelId] || {}
-      const next = { ...prev, [channelId]: { ...ch, [moveIdx]: !ch[moveIdx] } }
-      saveCheckedMoves(next)
       return next
     })
   }
@@ -1293,8 +1247,6 @@ export default function Competitors() {
                         channelId={comp.channel_id}
                         checkedIdeas={checkedIdeas}
                         onToggleIdea={toggleIdea}
-                        checkedMoves={checkedMoves}
-                        onToggleMove={toggleMove}
                       />
                     </div>
                   )}
