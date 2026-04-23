@@ -53,7 +53,31 @@ function useKwStyles() {
       /* Keyword row — matches SEO Studio's .seo-kw-row exactly. Phrase
          text darkens on hover. */
       .kw-row-seo:hover .kw-row-phrase { color: #0f0f13; }
-      .kw-caret:hover { color: #52525b !important; }
+
+      /* ── Detail modal (Outliers pattern) ───────────────────────────── */
+      .kw-modal-overlay {
+        position: fixed; inset: 0;
+        background: rgba(0,0,0,0.5);
+        backdrop-filter: blur(4px);
+        display: flex; align-items: center; justify-content: center;
+        z-index: 100;
+        animation: kwFadeIn 0.18s ease both;
+        padding: 32px 24px;
+      }
+      .kw-modal {
+        background: #f7f7fa;
+        border: 1px solid #e8e8ec;
+        border-radius: 20px;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.08), 0 24px 64px rgba(0,0,0,0.10);
+        width: 100%; max-width: 1040px;
+        max-height: calc(100vh - 64px);
+        overflow: auto;
+        animation: kwSlideIn 0.22s cubic-bezier(0.2, 0.7, 0.3, 1) both;
+      }
+      .kw-modal::-webkit-scrollbar { width: 4px }
+      .kw-modal::-webkit-scrollbar-thumb { background: #e0e0e6; border-radius: 4px }
+      @keyframes kwFadeIn  { from { opacity: 0 } to { opacity: 1 } }
+      @keyframes kwSlideIn { from { opacity: 0; transform: translateY(10px) scale(0.98) } to { opacity: 1; transform: none } }
 
       .kw-input {
         flex: 1; padding: 11px 18px;
@@ -200,46 +224,84 @@ function MomentumBadge({ momentum }) {
   )
 }
 
-/* Expanded detail for a ranked-keyword row — Priority Actions pattern
-   scaled down. 2 tinted cards side-by-side: SIGNALS (amber tint, left)
-   + HOW TO USE (red 3px bar + white + shadow, right). Signals packed
-   inline (· separated) so card height stays tight, not stretched. */
-function KwDetailPanel({ kw, C }) {
-  const comp = kw.competition || {}
-  const parts = []
-  parts.push(<><span style={{ color: C.text3 }}>Intent </span><b style={{ color: C.text1, fontWeight: 600 }}>{(kw.intentMatch || '—').replace(/^\w/, c => c.toUpperCase())}</b></>)
-  parts.push(<><span style={{ color: C.text3 }}>Score </span><b style={{ color: C.text1, fontWeight: 600, fontVariantNumeric: 'tabular-nums' }}>{kw.opportunityScore}/100</b></>)
-  if (comp.top_subs_median) {
-    parts.push(<><span style={{ color: C.text3 }}>Top-5 </span><b style={{ color: C.text1, fontWeight: 600, fontVariantNumeric: 'tabular-nums' }}>~{fmtCompact(comp.top_subs_median)} subs</b></>)
+/* Detail modal — Outliers DetailModal pattern. Header + 3-col playbook
+   (Why it works / Quick actions / Why now) + action buttons. Opens on
+   keyword row click; esc or overlay click to close. */
+function KwDetailModal({ kw, C, onClose }) {
+  const [copied, setCopied] = useState(false)
+
+  useEffect(() => {
+    function onKey(e) { if (e.key === 'Escape') onClose() }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [onClose])
+
+  if (!kw) return null
+  const comp      = kw.competition || {}
+  const scColor   = oppColor(kw.opportunityScore)
+  const actions   = buildQuickActions(kw)
+
+  function copyKeyword() {
+    navigator.clipboard.writeText(kw.keyword)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 1400)
   }
-  if (comp.top_views_median) {
-    parts.push(<><span style={{ color: C.text3 }}>Median views </span><b style={{ color: C.text1, fontWeight: 600, fontVariantNumeric: 'tabular-nums' }}>{fmtCompact(comp.top_views_median)}</b></>)
-  }
-  if (typeof comp.days_since_newest === 'number') {
-    parts.push(<><span style={{ color: C.text3 }}>Newest </span><b style={{ color: C.text1, fontWeight: 600, fontVariantNumeric: 'tabular-nums' }}>{comp.days_since_newest}d ago</b></>)
-  }
+
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginTop: 2, marginBottom: 2 }}>
-      {/* SIGNALS — Priority Actions "Why now" treatment (soft blue-grey
-          tint). Matches the Dashboard pattern user pointed to; reads as
-          clean/informational rather than piling more amber on top. */}
-      <div style={{ background: 'rgba(79,134,247,0.07)', border: '1px solid rgba(79,134,247,0.12)', borderRadius: 10, padding: '11px 14px' }}>
-        <p style={{ fontSize: 10, fontWeight: 700, color: '#4a7cf7', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Signals</p>
-        <p style={{ fontSize: 13, color: C.text1, lineHeight: 1.7 }}>
-          {parts.map((p, i) => (
-            <React.Fragment key={i}>
-              {i > 0 && <span style={{ color: C.text4, margin: '0 7px' }}>·</span>}
-              {p}
-            </React.Fragment>
-          ))}
-        </p>
-      </div>
-      {/* HOW TO USE — Priority Actions "Action" treatment (white + 3px
-          coloured left bar + soft shadow). Green because this is the
-          path forward. */}
-      <div style={{ background: '#fff', border: `1px solid ${C.border}`, borderLeft: `3px solid ${C.green}`, borderRadius: '0 10px 10px 0', padding: '11px 14px', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}>
-        <p style={{ fontSize: 10, fontWeight: 700, color: C.green, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>How to use</p>
-        <p style={{ fontSize: 13, color: C.text1, lineHeight: 1.7 }}>{buildRecommendation(kw)}</p>
+    <div className="kw-modal-overlay" onClick={onClose}>
+      <div className="kw-modal" onClick={e => e.stopPropagation()}>
+        <div style={{ padding: '24px 28px' }}>
+          {/* Header */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 20, paddingBottom: 20, borderBottom: `1px solid ${C.border}` }}>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 5 }}>Keyword playbook</p>
+              <p style={{ fontSize: 18, fontWeight: 800, color: C.text1, lineHeight: 1.3, letterSpacing: '-0.3px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{kw.keyword}</p>
+            </div>
+            <div style={{ display: 'flex', gap: 8, flexShrink: 0, alignItems: 'center' }}>
+              <MomentumBadge momentum={kw.momentum} />
+              <span style={{ fontSize: 13, fontWeight: 800, color: scColor, fontVariantNumeric: 'tabular-nums', padding: '3px 10px', border: `1px solid ${scColor}30`, borderRadius: 100 }}>
+                {kw.opportunityScore}/100
+              </span>
+              <button onClick={copyKeyword}
+                style={{ fontSize: 12, color: copied ? C.green : C.text2, background: '#fff', border: `1px solid ${copied ? C.greenBdr : C.border}`, borderRadius: 100, padding: '6px 14px', cursor: 'pointer', fontFamily: 'inherit', fontWeight: 600, boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
+                {copied ? 'Copied' : 'Copy keyword'}
+              </button>
+              <button onClick={onClose}
+                style={{ fontSize: 12, color: C.text3, background: '#fff', border: `1px solid ${C.border}`, borderRadius: 100, padding: '6px 14px', cursor: 'pointer', fontFamily: 'inherit', fontWeight: 600, boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
+                Close ✕
+              </button>
+            </div>
+          </div>
+
+          {/* 3-col playbook — exact Outliers pattern (blue / amber / green) */}
+          <div style={{ background: '#fff', border: `1px solid ${C.border}`, borderRadius: 16, padding: '20px 22px' }}>
+            <p style={{ fontSize: 15, fontWeight: 700, color: C.text1, letterSpacing: '-0.3px', marginBottom: 16 }}>Keyword playbook</p>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr 1fr', gap: 8 }}>
+              {/* Blue — Why it works */}
+              <div style={{ background: 'rgba(79,134,247,0.07)', border: '1px solid rgba(79,134,247,0.12)', borderRadius: 10, padding: '12px 14px' }}>
+                <p style={{ fontSize: 10, fontWeight: 700, color: '#4a7cf7', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Why it works</p>
+                <p style={{ fontSize: 13, color: C.text1, lineHeight: 1.65 }}>{buildWhyItWorks(kw)}</p>
+              </div>
+              {/* Amber — Quick actions (numbered list) */}
+              <div style={{ background: '#fff', border: `1px solid ${C.border}`, borderLeft: `3px solid ${C.amber}`, borderRadius: '0 10px 10px 0', padding: '12px 14px', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
+                <p style={{ fontSize: 10, fontWeight: 700, color: C.amber, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Quick actions</p>
+                <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 7, margin: 0, padding: 0 }}>
+                  {actions.map((s, i) => (
+                    <li key={i} style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
+                      <span style={{ fontSize: 12, fontWeight: 700, color: C.amber, fontVariantNumeric: 'tabular-nums', lineHeight: 1.55, minWidth: 14 }}>{i + 1}.</span>
+                      <span style={{ fontSize: 13, color: C.text1, lineHeight: 1.6, flex: 1 }}>{s}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              {/* Green — Why now */}
+              <div style={{ background: 'rgba(5,150,105,0.07)', border: '1px solid rgba(5,150,105,0.14)', borderRadius: 10, padding: '12px 14px' }}>
+                <p style={{ fontSize: 10, fontWeight: 700, color: C.green, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Act on this because</p>
+                <p style={{ fontSize: 13, color: C.text1, lineHeight: 1.65 }}>{buildWhyNow(kw)}</p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   )
@@ -262,26 +324,62 @@ function buildRowTooltip(kw) {
   return parts.join(' · ')
 }
 
-/* Rule-based "How to use" copy derived from the data already on kw.
-   No extra API calls. Rules checked in priority order; first match wins. */
-function buildRecommendation(kw) {
+/* Narrative version of the row's signals — fills the "Why it works"
+   column of the Outlier-playbook dropdown. */
+function buildWhyItWorks(kw) {
+  const comp = kw.competition || {}
+  const bits = []
+  const intentUp = (kw.intentMatch || '—').replace(/^\w/, c => c.toUpperCase())
+  bits.push(`${intentUp} intent match at ${kw.opportunityScore}/100.`)
+  if (comp.top_subs_median) {
+    bits.push(`Top-5 competitors average ~${fmtCompact(comp.top_subs_median)} subs with ${comp.top_views_median ? fmtCompact(comp.top_views_median) + ' median views' : 'typical reach'}.`)
+  }
+  if (typeof comp.days_since_newest === 'number') {
+    bits.push(`Newest top-5 video was ${comp.days_since_newest}d ago.`)
+  }
+  return bits.join(' ')
+}
+
+/* Rule-based ordered action list — fills the "Quick actions" column. */
+function buildQuickActions(kw) {
+  const comp = kw.competition || {}
+  const out = []
+  if (kw.intentMatch === 'exact') {
+    out.push('Lead your title with this phrase verbatim.')
+  } else if (kw.intentMatch === 'strong') {
+    out.push('Include this phrase near the start of your title.')
+  } else {
+    out.push('Use as a secondary keyword in description and tags.')
+  }
+  out.push('Put the phrase in the first 100 characters of your description.')
+  if (comp.top_subs_median && comp.top_subs_median > 500000) {
+    out.push('Try a long-tail variant — big channels dominate the head term.')
+  } else if (kw.momentum === 'unclaimed') {
+    out.push('Publish within 7 days while the slot is empty.')
+  } else if (kw.momentum === 'active') {
+    out.push('Publish fast — the niche is rising and competitors are still shipping.')
+  } else {
+    out.push('Add a long-tail variant as a secondary tag for extra coverage.')
+  }
+  return out
+}
+
+/* One-line "because" — the reason this is the right play right now. */
+function buildWhyNow(kw) {
   const comp = kw.competition || {}
   if (kw.momentum === 'unclaimed') {
-    return "No major video in 6+ months — first-mover advantage. Publish this week while the slot is empty."
+    return 'No major video in 6+ months — first-mover advantage while the topic is quiet.'
   }
   if (kw.momentum === 'active') {
-    return "Rising niche with recent activity. Put this in your title and first 100 chars of description to ride the wave."
+    return 'Rising niche with recent activity — the algorithm is actively recommending this space.'
   }
   if (kw.intentMatch === 'exact' && kw.opportunityScore >= 75) {
-    return "Strong exact match. Lead your title with this phrase for maximum relevance."
+    return 'Strong exact match with high opportunity score — relevance is on your side.'
   }
   if (comp.top_subs_median && comp.top_subs_median > 500000) {
-    return "Big channels dominate this query. Try a long-tail variant or a sharper angle to stand out."
+    return 'Big channels dominate — but a sharper angle can still carve space in the long tail.'
   }
-  if (kw.intentMatch === 'partial') {
-    return "Partial intent match — use as a secondary keyword in description or tags, not the main title."
-  }
-  return "Balanced opportunity. Include in your title and test against similar variants."
+  return 'Balanced opportunity with room to compete — worth testing against similar variants.'
 }
 
 function fmtCompact(n) {
@@ -576,7 +674,7 @@ export default function Keywords() {
               <div style={{ marginBottom: 20, marginTop: 40 }}>
                 <h2 style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', marginBottom: 4 }}>Ranked keywords</h2>
                 <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.5 }}>
-                  Click row to copy · click ▾ to expand · <span style={{ color: C.green, fontWeight: 700 }}>ACTIVE</span> = rising · <span style={{ color: C.amber, fontWeight: 700 }}>OPEN</span> = underclaimed
+                  Click any keyword for the playbook · <span style={{ color: C.green, fontWeight: 700 }}>ACTIVE</span> = rising · <span style={{ color: C.amber, fontWeight: 700 }}>OPEN</span> = underclaimed
                 </p>
               </div>
 
@@ -623,48 +721,33 @@ export default function Keywords() {
                         }}>
                           {colKws.map(kw => {
                             const scColor = oppColor(kw.opportunityScore)
-                            const isOpen  = openRow === kw.keyword
                             return (
-                              <React.Fragment key={kw.keyword}>
-                                <div
-                                  className="kw-row-seo"
-                                  role="button"
-                                  tabIndex={0}
-                                  onClick={() => navigator.clipboard.writeText(kw.keyword)}
-                                  onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); navigator.clipboard.writeText(kw.keyword) } }}
-                                  title={buildRowTooltip(kw)}
-                                  style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }}
-                                >
-                                  <span className="kw-row-phrase" style={{
-                                    fontSize: 13, color: C.text2, fontWeight: 400,
-                                    width: 260, flexShrink: 0,
-                                    overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
-                                    transition: 'color 0.12s',
-                                  }}>{kw.keyword}</span>
-                                  <MomentumBadge momentum={kw.momentum} />
-                                  <div style={{ flex: 1, height: 4, background: '#eeeef3', borderRadius: 99, overflow: 'hidden', minWidth: 40 }}>
-                                    <div style={{ width: `${kw.opportunityScore}%`, height: '100%', background: scColor, borderRadius: 99, transition: 'width 0.8s cubic-bezier(0.34,1.56,0.64,1)' }}/>
-                                  </div>
-                                  <span style={{
-                                    fontSize: 13, fontWeight: 700, color: scColor,
-                                    fontVariantNumeric: 'tabular-nums',
-                                    minWidth: 26, textAlign: 'right', flexShrink: 0,
-                                  }}>{kw.opportunityScore}</span>
-                                  <button
-                                    className="kw-caret"
-                                    aria-label={isOpen ? 'Collapse details' : 'Expand details'}
-                                    aria-expanded={isOpen}
-                                    onClick={e => { e.stopPropagation(); setOpenRow(isOpen ? null : kw.keyword) }}
-                                    style={{
-                                      background: 'transparent', border: 'none', cursor: 'pointer',
-                                      color: C.text3, fontSize: 11, padding: '4px 6px',
-                                      marginLeft: 2, flexShrink: 0, lineHeight: 1,
-                                      transition: 'color 0.15s',
-                                    }}
-                                  >{isOpen ? '▲' : '▼'}</button>
+                              <div
+                                key={kw.keyword}
+                                className="kw-row-seo"
+                                role="button"
+                                tabIndex={0}
+                                onClick={() => setOpenRow(kw.keyword)}
+                                onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setOpenRow(kw.keyword) } }}
+                                title={buildRowTooltip(kw)}
+                                style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }}
+                              >
+                                <span className="kw-row-phrase" style={{
+                                  fontSize: 13, color: C.text2, fontWeight: 400,
+                                  width: 260, flexShrink: 0,
+                                  overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+                                  transition: 'color 0.12s',
+                                }}>{kw.keyword}</span>
+                                <MomentumBadge momentum={kw.momentum} />
+                                <div style={{ flex: 1, height: 4, background: '#eeeef3', borderRadius: 99, overflow: 'hidden', minWidth: 40 }}>
+                                  <div style={{ width: `${kw.opportunityScore}%`, height: '100%', background: scColor, borderRadius: 99, transition: 'width 0.8s cubic-bezier(0.34,1.56,0.64,1)' }}/>
                                 </div>
-                                {isOpen && <KwDetailPanel kw={kw} C={C} />}
-                              </React.Fragment>
+                                <span style={{
+                                  fontSize: 13, fontWeight: 700, color: scColor,
+                                  fontVariantNumeric: 'tabular-nums',
+                                  minWidth: 26, textAlign: 'right', flexShrink: 0,
+                                }}>{kw.opportunityScore}</span>
+                              </div>
                             )
                           })}
                         </div>
@@ -760,6 +843,15 @@ export default function Keywords() {
             </>
           )}
         </div>
+      )}
+
+      {/* Keyword playbook modal — row click opens this. */}
+      {openRow && result?.keywords && (
+        <KwDetailModal
+          kw={result.keywords.find(k => k.keyword === openRow)}
+          C={C}
+          onClose={() => setOpenRow(null)}
+        />
       )}
     </div>
   )
