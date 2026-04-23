@@ -18,12 +18,17 @@ from app.utils import get_or_create_subscription, next_reset_date
 _BYPASS = os.environ.get("DEV_BYPASS_GATE", "").lower() in ("1", "true", "yes")
 
 
-def check_and_deduct(channel_id: str) -> dict:
+def check_and_deduct(channel_id: str, amount: int = 1) -> dict:
     """
-    Check if the user has analyses remaining, deduct 1 if so.
-    Monthly bucket depletes first; pack_balance is the fallback.
-    Free users have 5 lifetime analyses (monthly_allowance=5, no reset_date).
+    Check if the user has `amount` analyses remaining, deduct all of them
+    atomically if so. Monthly bucket depletes first; pack_balance is the
+    fallback. Free users have 5 lifetime analyses (monthly_allowance=5,
+    no reset_date).
+
+    Outliers charges 3 (videos + thumbnails + channels = 3 distinct reports);
+    everything else charges the default 1.
     """
+    amount = max(1, int(amount or 1))
     if _BYPASS:
         return {"allowed": True, "warning": False, "usage_pct": 0, "pack_balance": 999}
 
@@ -45,22 +50,29 @@ def check_and_deduct(channel_id: str) -> dict:
         pack_balance      = sub.pack_balance or 0
         total_available   = monthly_remaining + pack_balance
 
-        if total_available <= 0:
+        if total_available < amount:
             db.commit()
+            msg = (
+                f"You need {amount} credits for this action and only have "
+                f"{total_available}. Top up or upgrade to continue."
+            ) if amount > 1 else (
+                "You've used all your analyses. Top up or upgrade to continue."
+            )
             return {
                 "allowed":      False,
-                "message":      "You've used all your analyses. Top up or upgrade to continue.",
+                "message":      msg,
                 "show_upgrade": True,
                 "usage_pct":    100,
                 "pack_balance": pack_balance,
                 "warning":      False,
             }
 
-        # Deduct — monthly first, then pack
-        if monthly_remaining > 0:
-            sub.monthly_used += 1
-        else:
-            sub.pack_balance -= 1
+        # Deduct `amount` — monthly first, then pack.
+        take_monthly = min(monthly_remaining, amount)
+        take_pack    = amount - take_monthly
+        sub.monthly_used += take_monthly
+        if take_pack > 0:
+            sub.pack_balance = max(0, (sub.pack_balance or 0) - take_pack)
 
         db.commit()
 
@@ -86,25 +98,29 @@ def check_and_deduct(channel_id: str) -> dict:
         db.close()
 
 
-def refund_credit(channel_id: str) -> None:
+def refund_credit(channel_id: str, amount: int = 1) -> None:
     """
-    Refund one credit that was deducted by check_and_deduct().
-    Call this in exception handlers when the Claude API call fails after a credit was spent.
-    Monthly allowance is restored first; pack_balance is the fallback.
+    Refund `amount` credits that were deducted by check_and_deduct().
+    Call this in exception handlers when the downstream work fails after the
+    credit was spent. Monthly allowance is restored first; pack_balance is
+    the fallback.
     """
+    amount = max(1, int(amount or 1))
     if _BYPASS:
         return
 
     db = SessionLocal()
     try:
         sub = get_or_create_subscription(db, channel_id)
-        # Reverse the deduction — monthly allowance was depleted first, restore it first
-        if sub.monthly_used and sub.monthly_used > 0:
-            sub.monthly_used -= 1
-        elif sub.pack_balance is not None and sub.pack_balance >= 0:
-            sub.pack_balance += 1
+        # Reverse the deduction in the same order check_and_deduct uses:
+        # monthly first (since it depleted monthly first), then pack.
+        give_back_monthly = min(amount, sub.monthly_used or 0)
+        sub.monthly_used = (sub.monthly_used or 0) - give_back_monthly
+        remainder = amount - give_back_monthly
+        if remainder > 0:
+            sub.pack_balance = (sub.pack_balance or 0) + remainder
         db.commit()
-        print(f"[analysis_gate] Refunded 1 credit to {channel_id}")
+        print(f"[analysis_gate] Refunded {amount} credit(s) to {channel_id}")
     except Exception as e:
         db.rollback()
         print(f"[analysis_gate] Refund failed for {channel_id}: {e}")

@@ -679,7 +679,7 @@ def get_me(request: Request):
         status           = sub.status if sub else "free"
         billing_cycle    = sub.billing_cycle if sub else "none"
         is_lifetime      = sub.is_lifetime if sub else False
-        monthly_allowance = sub.monthly_allowance if sub else 5
+        monthly_allowance = sub.monthly_allowance if sub else 3
         monthly_used     = sub.monthly_used if sub else 0
         monthly_remaining = max(0, monthly_allowance - monthly_used)
         pack_balance     = sub.pack_balance if sub else 0

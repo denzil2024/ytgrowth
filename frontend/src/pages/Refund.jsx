@@ -65,7 +65,7 @@ export default function Refund() {
         <p style={{ fontSize: 14, color: 'var(--ytg-text-3)', marginBottom: 48 }}>Last updated: April 11, 2026</p>
 
         <p style={{ fontSize: 14, color: 'var(--ytg-text-2)', lineHeight: 1.8, marginBottom: 16 }}>
-          Because YTGrowth provides a free plan with 5 analyses before any payment is required, all purchases are non-refundable. By the time you upgrade, you have already used the product and know exactly what you are paying for.
+          Because YTGrowth provides a free plan with 3 analyses per month before any payment is required, all purchases are non-refundable. By the time you upgrade, you have already used the product and know exactly what you are paying for.
         </p>
 
         <div style={{ height: 1, background: 'var(--ytg-border)', margin: '40px 0' }} />

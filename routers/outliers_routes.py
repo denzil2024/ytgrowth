@@ -67,7 +67,9 @@ def search(body: SearchBody, request: Request):
     channel_id  = channel.get("channel_id", "")
     subscribers = int(channel.get("subscribers", 0) or 0)
 
-    gate = check_and_deduct(channel_id)
+    # Outliers ships 3 distinct reports in one search (videos / thumbnails /
+    # channels) — charge accordingly.
+    gate = check_and_deduct(channel_id, amount=3)
     if not gate["allowed"]:
         return JSONResponse(
             {"error": gate["message"], "show_upgrade": True},
@@ -91,19 +93,19 @@ def search(body: SearchBody, request: Request):
             confirmed_keyword = confirmed,
         )
     except Exception as e:
-        refund_credit(channel_id)
+        refund_credit(channel_id, amount=3)
         return JSONResponse(
             {"error": "Search failed. Your credit has been refunded."},
             status_code=500,
         )
 
     if result.get("error"):
-        refund_credit(channel_id)
+        refund_credit(channel_id, amount=3)
         return JSONResponse({"error": result["error"]}, status_code=500)
 
     # Refund when the user got nothing useful (no videos, no channels).
     if not result.get("videos") and not result.get("channels"):
-        refund_credit(channel_id)
+        refund_credit(channel_id, amount=3)
         return JSONResponse({
             "videos":   [],
             "channels": [],

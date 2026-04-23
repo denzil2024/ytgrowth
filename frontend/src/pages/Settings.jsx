@@ -384,12 +384,12 @@ export default function Settings() {
                 <div style={{ marginBottom: 14 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <span style={{ fontSize: 14, color: C.text1, fontWeight: 500 }}>Monthly analyses</span>
-                    <span style={{ fontSize: 14, color: C.text2 }}>{me?.monthly_used ?? 0} / {me?.monthly_allowance ?? 5} used</span>
+                    <span style={{ fontSize: 14, color: C.text2 }}>{me?.monthly_used ?? 0} / {me?.monthly_allowance ?? 3} used</span>
                   </div>
                   <ProgressBar pct={usagePct} />
                   <p style={{ fontSize: 12, color: C.text3 }}>
-                    {me?.is_lifetime || me?.plan === 'free'
-                      ? 'Free plan — no reset'
+                    {me?.is_lifetime
+                      ? 'Lifetime plan — monthly reset'
                       : me?.reset_date ? `Resets ${fmtDate(me.reset_date)}` : ''
                     }
                   </p>

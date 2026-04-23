@@ -51,10 +51,10 @@ class UserSubscription(Base):
     email             = Column(String, nullable=True, index=True)
     plan              = Column(String,  default="free")   # free|solo|growth|agency|lifetime_solo|lifetime_growth|lifetime_agency
     billing_cycle     = Column(String,  default="none")   # monthly|annual|lifetime|none
-    monthly_allowance = Column(Integer, default=5)          # analyses granted per period
-    monthly_used      = Column(Integer, default=0)        # resets on reset_date (free never resets)
+    monthly_allowance = Column(Integer, default=3)          # free tier: 3 analyses per month
+    monthly_used      = Column(Integer, default=0)        # resets on reset_date
     pack_balance      = Column(Integer, default=0)        # never expires, stacks
-    reset_date        = Column(DateTime, nullable=True)   # next monthly reset (None = free)
+    reset_date        = Column(DateTime, nullable=True)   # next monthly reset (set for free + paid)
     is_lifetime       = Column(Boolean,  default=False)
     paddle_subscription_id = Column(String, nullable=True)
     paddle_customer_id     = Column(String, nullable=True)
@@ -274,6 +274,8 @@ with engine.connect() as _conn:
         "CREATE INDEX IF NOT EXISTS ix_milestones_channel_id ON milestones (channel_id)",
         "CREATE UNIQUE INDEX IF NOT EXISTS uq_milestones_channel_cat_tier ON milestones (channel_id, category, tier)",
         "UPDATE user_subscriptions SET monthly_allowance = 5, monthly_used = 0 WHERE plan = 'free' AND monthly_allowance = 9999",
+        # Free plan change 2026-04-23: 5 lifetime → 3 per month with monthly reset
+        "UPDATE user_subscriptions SET monthly_allowance = 3 WHERE plan = 'free' AND monthly_allowance = 5",
         # Rename paddle_* → lemonsqueezy_* (legacy; kept idempotent)
         "ALTER TABLE user_subscriptions RENAME COLUMN paddle_subscription_id TO lemonsqueezy_subscription_id",
         "ALTER TABLE user_subscriptions RENAME COLUMN paddle_customer_id TO lemonsqueezy_customer_id",
@@ -307,3 +309,17 @@ with engine.connect() as _conn:
             _conn.commit()
         except Exception:
             pass  # lemonsqueezy_* columns don't exist (already renamed) — nothing to copy
+
+# Free-plan reset_date backfill — portable across SQLite/Postgres via bound param.
+# Runs once: any free user still on a lifetime model (reset_date IS NULL) gets
+# a 30-day forward reset anchored on today.
+import datetime as _dt
+with engine.connect() as _conn:
+    try:
+        _conn.execute(
+            _text("UPDATE user_subscriptions SET reset_date = :rd WHERE plan = 'free' AND reset_date IS NULL"),
+            {"rd": _dt.datetime.now(_dt.timezone.utc) + _dt.timedelta(days=30)},
+        )
+        _conn.commit()
+    except Exception as _e:
+        print(f"[migration] free-plan reset_date backfill skipped: {_e}")

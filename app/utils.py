@@ -29,7 +29,12 @@ def next_reset_date(from_dt: datetime.datetime = None) -> datetime.datetime:
 def get_or_create_subscription(db, channel_id: str, email: str = None) -> UserSubscription:
     sub = db.query(UserSubscription).filter_by(channel_id=channel_id).first()
     if not sub:
-        sub = UserSubscription(channel_id=channel_id, email=email)
+        # Free plan defaults: 3 analyses per month, first reset 30 days out.
+        sub = UserSubscription(
+            channel_id = channel_id,
+            email      = email,
+            reset_date = next_reset_date(),
+        )
         db.add(sub)
         db.flush()
     elif email and not sub.email:

@@ -416,7 +416,7 @@ export default function Outliers({ channelData, onNavigate }) {
             <h1 style={{ fontSize: 24, fontWeight: 800, color: C.text1, letterSpacing: '-0.6px', marginBottom: 6, lineHeight: 1.1 }}>Outliers</h1>
             <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.4, display: 'flex', gap: 0, flexWrap: 'wrap' }}>
               <span>Recent videos, thumbnails, and channels in your niche that over-performed</span>
-              <span style={{ marginLeft: 8 }}>· Last 12 months · 1 credit per search</span>
+              <span style={{ marginLeft: 8 }}>· Last 12 months · 3 credits per search</span>
             </p>
           </div>
         </div>
