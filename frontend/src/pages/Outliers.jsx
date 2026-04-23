@@ -251,17 +251,29 @@ function fmtDuration(seconds) {
 function ytMaxThumbUrl(videoId) {
   return videoId ? `https://i.ytimg.com/vi/${videoId}/maxresdefault.jpg` : null
 }
+function _advanceThumb(target, videoId, fallbackUrl) {
+  const step = target.dataset.thumbStep || 'max'
+  if (step === 'max' && videoId) {
+    target.dataset.thumbStep = 'hq'
+    target.src = `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`
+  } else if (step !== 'done' && fallbackUrl) {
+    target.dataset.thumbStep = 'done'
+    target.src = fallbackUrl
+  } else {
+    target.onerror = null
+  }
+}
 function makeThumbOnError(videoId, fallbackUrl) {
+  return (e) => _advanceThumb(e.target, videoId, fallbackUrl)
+}
+// YouTube returns a 120x90 grey placeholder (HTTP 200) when maxresdefault
+// doesn't exist — onError never fires for it. Detect the placeholder
+// dimensions in onLoad and walk the fallback cascade manually.
+function makeThumbOnLoad(videoId, fallbackUrl) {
   return (e) => {
     const step = e.target.dataset.thumbStep || 'max'
-    if (step === 'max' && videoId) {
-      e.target.dataset.thumbStep = 'hq'
-      e.target.src = `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`
-    } else if (step !== 'done' && fallbackUrl) {
-      e.target.dataset.thumbStep = 'done'
-      e.target.src = fallbackUrl
-    } else {
-      e.target.onerror = null
+    if (step === 'max' && e.target.naturalWidth === 120 && e.target.naturalHeight === 90) {
+      _advanceThumb(e.target, videoId, fallbackUrl)
     }
   }
 }
@@ -897,6 +909,7 @@ function VideoResultCard({ item, kind, onOpen }) {
               alt=""
               style={{ width: '100%', aspectRatio: '16/9', objectFit: 'cover', display: 'block' }}
               onError={makeThumbOnError(item.video_id, item.thumbnail)}
+              onLoad={makeThumbOnLoad(item.video_id, item.thumbnail)}
             />
           : <div style={{ width: '100%', aspectRatio: '16/9', background: '#ebebef' }}/>
         }
@@ -916,7 +929,7 @@ function VideoResultCard({ item, kind, onOpen }) {
       <div style={{ padding: '20px 20px 20px', display: 'flex', flexDirection: 'column', flex: 1 }}>
         {/* Title — same 16/700/-0.3ls/2-line clamp as Videos tab */}
         <p style={{
-          fontSize: 16, fontWeight: 700, color: C.text1, lineHeight: 1.45, marginBottom: 6, letterSpacing: '-0.3px',
+          fontSize: 16, fontWeight: 700, color: C.text1, lineHeight: 1.4, marginBottom: 12, letterSpacing: '-0.3px',
           display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden',
         }}>{item.title}</p>
 
@@ -924,13 +937,13 @@ function VideoResultCard({ item, kind, onOpen }) {
             than the meta line below so it reads as a byline ("who made this"),
             not as a stat. */}
         <p style={{
-          fontSize: 13, fontWeight: 600, color: C.text2, marginBottom: 6, letterSpacing: '-0.1px',
+          fontSize: 13, fontWeight: 600, color: C.text2, marginBottom: 8, letterSpacing: '-0.1px',
           whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
         }}>{item.channel_name}</p>
 
         {/* Meta line — views · relTime. 2 items instead of 3 now that channel
             name has its own line. Matches the Videos tab meta typography. */}
-        <p style={{ fontSize: 13.5, fontWeight: 500, color: C.text3, marginBottom: 14, lineHeight: 1.4, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+        <p style={{ fontSize: 13.5, fontWeight: 500, color: C.text3, marginBottom: 16, lineHeight: 1.4, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
           <span style={{ color: C.text2, fontWeight: 600 }}>{fmtNum(views)}</span> views
           <span style={{ margin: '0 8px', color: '#d4d4dc' }}>·</span>
           {relPublished(item.published_at) || '—'}
@@ -994,6 +1007,7 @@ function ChannelResultCard({ item, onOpen }) {
   const initial = (item.channel_name || '?')[0].toUpperCase()
   const ytUrl   = item.channel_id ? `https://www.youtube.com/channel/${item.channel_id}` : null
   const handle  = (item.handle || '').replace(/^@/, '')
+  const [avatarFailed, setAvatarFailed] = useState(false)
 
   return (
     <div className="out-grid-card">
@@ -1018,19 +1032,20 @@ function ChannelResultCard({ item, onOpen }) {
       {/* Body — avatar overlaps the banner via negative marginTop */}
       <div style={{ padding: '0 20px 20px', display: 'flex', flexDirection: 'column', flex: 1 }}>
 
-        {/* Channel avatar — 64x64 circle, 4px white ring, overlaps banner */}
+        {/* Channel avatar — 80x80 circle, 5px white ring, overlaps banner.
+            Falls back to initial letter if the avatar URL fails to load. */}
         <div style={{
-          width: 64, height: 64, borderRadius: '50%',
+          width: 80, height: 80, borderRadius: '50%',
           overflow: 'hidden',
-          border: '4px solid #fff',
-          boxShadow: '0 4px 12px rgba(0,0,0,0.10)',
-          marginTop: -32, marginBottom: 12,
+          border: '5px solid #fff',
+          boxShadow: '0 6px 16px rgba(0,0,0,0.12)',
+          marginTop: -40, marginBottom: 14,
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           flexShrink: 0, background: C.redBg,
         }}>
-          {item.thumbnail
-            ? <img src={item.thumbnail} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }}/>
-            : <span style={{ fontSize: 24, fontWeight: 700, color: C.red }}>{initial}</span>
+          {item.thumbnail && !avatarFailed
+            ? <img src={item.thumbnail} alt="" onError={() => setAvatarFailed(true)} style={{ width: '100%', height: '100%', objectFit: 'cover' }}/>
+            : <span style={{ fontSize: 30, fontWeight: 700, color: C.red }}>{initial}</span>
           }
         </div>
 
@@ -1230,7 +1245,8 @@ function DetailModal({ kind, item, query, onClose, onNavigate }) {
             {headerThumb
               ? <img src={headerThumb} alt=""
                   style={{ width: 96, height: 60, borderRadius: 8, objectFit: 'cover', flexShrink: 0, border: `1px solid ${C.border}` }}
-                  onError={makeThumbOnError(headerVideoId, headerThumbLo)}/>
+                  onError={makeThumbOnError(headerVideoId, headerThumbLo)}
+                  onLoad={makeThumbOnLoad(headerVideoId, headerThumbLo)}/>
               : <div style={{ width: 96, height: 60, borderRadius: 8, background: '#eeeef3', flexShrink: 0, border: `1px solid ${C.border}` }}/>}
             <div style={{ flex: 1, minWidth: 0 }}>
               <p style={{ fontSize: 12, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 4 }}>{kindLabel}</p>
