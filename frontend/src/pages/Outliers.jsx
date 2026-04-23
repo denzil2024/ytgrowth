@@ -1013,21 +1013,14 @@ function ChannelResultCard({ item, onOpen }) {
     <div className="out-grid-card">
       {/* Gradient banner — no video thumbnail; soft red→amber wash that reads
           as "channel page" instead of "video card". Small user icon top-right
-          reinforces that this is a profile, not content.
-
-          Layered backgrounds: the top `to bottom` fade softens the banner's
-          lower edge to white so the hard horizontal line doesn't slice through
-          the overlapping avatar below. */}
+          reinforces that this is a profile, not content. */}
       <a href={ytUrl || '#'} target="_blank" rel="noopener noreferrer"
         onClick={e => { if (!ytUrl) e.preventDefault() }}
         style={{
           display: 'block', position: 'relative', textDecoration: 'none',
           flexShrink: 0, borderRadius: '15px 15px 0 0', overflow: 'hidden',
-          height: 88,
-          background: `
-            linear-gradient(to bottom, rgba(255,255,255,0) 55%, rgba(255,255,255,0.85) 85%, #fff 100%),
-            linear-gradient(135deg, ${C.redBg} 0%, #fff0e4 50%, ${C.amberBg} 100%)
-          `,
+          height: 72,
+          background: `linear-gradient(135deg, ${C.redBg} 0%, #fff0e4 50%, ${C.amberBg} 100%)`,
         }}>
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={C.amber} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"
           style={{ position: 'absolute', top: 12, right: 14, opacity: 0.55 }}>
@@ -1039,20 +1032,28 @@ function ChannelResultCard({ item, onOpen }) {
       {/* Body — avatar overlaps the banner via negative marginTop */}
       <div style={{ padding: '0 20px 20px', display: 'flex', flexDirection: 'column', flex: 1 }}>
 
-        {/* Channel avatar — 80x80 circle, 5px white ring, overlaps banner.
-            Falls back to initial letter if the avatar URL fails to load. */}
+        {/* Channel avatar — 72x72 circle, 4px white ring, overlaps banner.
+            `position: relative` + absolute-positioned child guarantees the
+            image fills the full circle regardless of box-sizing or flex
+            quirks (an earlier flex-based centering version was rendering the
+            image only half-height, leaving the bottom showing through). */}
         <div style={{
-          width: 80, height: 80, borderRadius: '50%',
+          width: 72, height: 72, borderRadius: '50%',
           overflow: 'hidden',
-          border: '5px solid #fff',
-          boxShadow: '0 6px 16px rgba(0,0,0,0.12)',
-          marginTop: -40, marginBottom: 14,
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          border: '4px solid #fff',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.10)',
+          marginTop: -36, marginBottom: 12,
           flexShrink: 0, background: C.redBg,
+          position: 'relative',
         }}>
           {item.thumbnail && !avatarFailed
-            ? <img src={item.thumbnail} alt="" onError={() => setAvatarFailed(true)} style={{ width: '100%', height: '100%', objectFit: 'cover' }}/>
-            : <span style={{ fontSize: 30, fontWeight: 700, color: C.red }}>{initial}</span>
+            ? <img src={item.thumbnail} alt="" onError={() => setAvatarFailed(true)}
+                style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}/>
+            : <span style={{
+                position: 'absolute', inset: 0,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                fontSize: 28, fontWeight: 700, color: C.red,
+              }}>{initial}</span>
           }
         </div>
 
