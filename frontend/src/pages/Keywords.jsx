@@ -780,7 +780,7 @@ export default function Keywords() {
                 {result.clusters.map((cl, i) => {
                   const isCopied = copiedCluster === cl.clusterName
                   return (
-                    <div key={cl.clusterName} className="kw-card" style={{ borderTop: `3px solid ${C.green}` }}>
+                    <div key={cl.clusterName} className="kw-card" style={{ borderTop: `3px solid ${C.amber}` }}>
                       <div style={{ padding: '18px 22px 20px', display: 'flex', flexDirection: 'column', height: '100%' }}>
                         <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, marginBottom: 14 }}>
                           <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10, minWidth: 0, flex: 1 }}>
