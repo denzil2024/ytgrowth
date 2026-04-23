@@ -185,15 +185,17 @@ function useCompetitorStyles() {
         line-height: 1;
       }
 
-      /* inner content blocks (video ideas, etc.) */
-      .comp-inner-block {
-        background: #f7f7fa;
-        border: 1px solid rgba(0,0,0,0.07);
-        border-radius: 12px;
-        padding: 14px 18px;
-        transition: background 0.15s;
+      /* Quick-wins row — direct copy of Dashboard.jsx's .ytg-qw-row so Topics
+         to tackle reads as a checkbox task list, not an elevated card stack. */
+      .comp-qw-row {
+        display: flex; gap: 10px; align-items: flex-start;
+        padding: 10px 12px; border-radius: 10px;
+        border: 1px solid transparent;
+        transition: background 0.15s, border-color 0.15s;
       }
-      .comp-inner-block:hover { background: #f0f0f4; }
+      .comp-qw-row:hover {
+        background: #f4f4f7; border-color: rgba(0,0,0,0.07);
+      }
 
       /* tags — neutral chip by default; variants use inline amber palette */
       .comp-tag {
@@ -596,47 +598,64 @@ function AIAnalysis({ ai, top5Videos, channelId, checkedIdeas, onToggleIdea }) {
         </div>
       )}
 
-      {/* ── video ideas — checkbox-driven to-do list ── */}
-      {ai.videoIdeas?.length > 0 && (
-        <Card>
-          <SectionTitle>Topics to tackle</SectionTitle>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-            {ai.videoIdeas.map((idea, i) => {
-              const isDone = !!checksForChannel[idea.title]
-              return (
-                <div key={i} className="comp-inner-block"
-                  style={{ opacity: isDone ? 0.55 : 1, transition: 'opacity 0.15s' }}>
-                  <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
-                    <input type="checkbox" className="comp-check"
+      {/* ── topics to tackle — Quick wins pattern (Dashboard.jsx:2247-2282) ──
+           Direct copy of Overview's Quick wins card: green uppercase eyebrow +
+           count pill on the right, hairline rows (not elevated inner-blocks),
+           checkbox + title + inline amber keyword chip + subtle angle line. */}
+      {ai.videoIdeas?.length > 0 && (() => {
+        const doneCount = ai.videoIdeas.filter(idea => !!checksForChannel[idea.title]).length
+        const leftCount = ai.videoIdeas.length - doneCount
+        return (
+          <Card>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
+              <p style={{ fontSize: 11, fontWeight: 700, color: '#059669',
+                letterSpacing: '0.07em', textTransform: 'uppercase' }}>
+                Topics to tackle
+              </p>
+              <span style={{ fontSize: 11, fontWeight: 600, color: '#9595a4', background: '#f1f1f6',
+                padding: '2px 7px', borderRadius: 20, border: '1px solid #e6e6ec' }}>
+                {leftCount} left
+              </span>
+            </div>
+            <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 2, padding: 0, margin: 0 }}>
+              {ai.videoIdeas.map((idea, i) => {
+                const isDone = !!checksForChannel[idea.title]
+                return (
+                  <li key={i} className="comp-qw-row" style={{ opacity: isDone ? 0.5 : 1 }}>
+                    <input
+                      type="checkbox"
                       checked={isDone}
-                      onChange={() => onToggleIdea && onToggleIdea(channelId, idea.title)} />
+                      onChange={() => onToggleIdea && onToggleIdea(channelId, idea.title)}
+                      style={{ width: 14, height: 14, accentColor: '#059669', cursor: 'pointer',
+                        flexShrink: 0, marginTop: 4 }}
+                    />
                     <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between',
-                        gap: 12, marginBottom: 6 }}>
-                        <p style={{ fontSize: 14, fontWeight: 700, color: '#111114', lineHeight: 1.45,
+                      <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, flexWrap: 'wrap' }}>
+                        <p style={{ fontSize: 14, fontWeight: 600,
+                          color: isDone ? '#9595a4' : '#111114', lineHeight: 1.5,
                           letterSpacing: '-0.1px',
                           textDecoration: isDone ? 'line-through' : 'none' }}>
                           {idea.title}
                         </p>
                         {idea.targetKeyword && (
                           <span className="comp-tag" style={{ background: '#fffbeb', color: '#d97706',
-                            border: '1px solid #fde68a', flexShrink: 0, whiteSpace: 'nowrap',
-                            marginTop: 2 }}>
+                            border: '1px solid #fde68a', whiteSpace: 'nowrap' }}>
                             {idea.targetKeyword}
                           </span>
                         )}
                       </div>
-                      <p style={{ fontSize: 12, color: '#52525b', lineHeight: 1.6, fontWeight: 400 }}>
-                        <span style={{ fontWeight: 700, color: '#111114' }}>Angle: </span>{idea.angle}
+                      <p style={{ fontSize: 12.5, color: '#9595a4', lineHeight: 1.55,
+                        fontWeight: 400, marginTop: 3 }}>
+                        {idea.angle}
                       </p>
                     </div>
-                  </div>
-                </div>
-              )
-            })}
-          </div>
-        </Card>
-      )}
+                  </li>
+                )
+              })}
+            </ul>
+          </Card>
+        )
+      })()}
 
       {/* ── top videos ── */}
       {top5Videos?.length > 0 && (
