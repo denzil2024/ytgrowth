@@ -387,10 +387,15 @@ function fmtK(n) {
   return String(n)
 }
 
-// ─── base card — amber 3px top border matches SEO Studio / Keywords pattern ──
+// ─── base card — amber 3px top border matches SEO Studio / Keywords pattern.
+// Pass topAccent={null} to render a plain card with no colored top border. ──
 function Card({ children, style, topAccent = '#d97706' }) {
   return (
-    <div className="comp-card" style={{ padding: '20px 24px', borderTop: `3px solid ${topAccent}`, ...style }}>
+    <div className="comp-card" style={{
+      padding: '20px 24px',
+      ...(topAccent ? { borderTop: `3px solid ${topAccent}` } : {}),
+      ...style,
+    }}>
       {children}
     </div>
   )
@@ -484,9 +489,9 @@ function AIAnalysis({ ai, top5Videos, channelId, checkedIdeas, onToggleIdea }) {
       {/* ── intelligence summary — paneled card (SeoOptimizer Title Scorecard pattern) ──
            Two analytical panels separated by a 3px amber vertical bar, same as
            SeoOptimizer.jsx:1015–1097. Left: competitor summary (what they do).
-           Right: threat reason (why it matters to Nthenya). Top border is
-           threat-coloured so card + pill reinforce the severity. */}
-      <Card topAccent={threat.dot}>
+           Right: threat reason (why it matters to Nthenya). No coloured top
+           border — the threat pill carries the severity signal on its own. */}
+      <Card topAccent={null}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, marginBottom: 18 }}>
           <SectionTitle>Intelligence summary</SectionTitle>
           <span style={{ background: threat.bg, color: threat.text, border: `1px solid ${threat.border}`,
@@ -725,133 +730,142 @@ function AIAnalysis({ ai, top5Videos, channelId, checkedIdeas, onToggleIdea }) {
         </Card>
       )}
 
-      {/* ── Content strategy — single paneled card ──────────────────────────
-           Copies SEO Optimizer's Title Scorecard hero pattern (SeoOptimizer.jsx
-           :1015–1097): one elevated card, horizontal flex, 3px amber vertical
-           bars separating related analytical panels. Topics + Title patterns
-           are two facets of the same question ("how do they win attention?")
-           so they belong inside one card, not two. */}
-      {(ai.topTopics?.length > 0 || ai.titlePatterns) && (() => {
+      {/* ── Top content topics — faithful copy of SEO Optimizer's "Related phrases"
+           card (SeoOptimizer.jsx:1366–1421). Amber 3px top border, eyebrow + hint
+           on the left, big tabular count on the right, hairline divider, then
+           a 2-col grid of bar rows with a 1px amber vertical divider between
+           the two columns (left col padding-right 20, right col padding-left 20
+           + border-left amberBdr). Bar width + value colour both driven by
+           scoreColor (relative-to-max here since topics aren't absolute scored). */}
+      {ai.topTopics?.length > 0 && (() => {
         const scoreColor = (pct) => pct >= 75 ? '#059669' : pct >= 55 ? '#d97706' : '#e5251b'
-        const maxViews   = ai.topTopics?.length
-          ? Math.max(...ai.topTopics.map(t => t.avgViews || 0), 1) : 1
-        const len        = ai.titlePatterns?.avgTitleLength || 0
-        const lenPct     = Math.min(100, len)
-        const lenCol     = lenPct <= 60 ? '#059669' : lenPct <= 80 ? '#d97706' : '#e5251b'
+        const maxViews   = Math.max(...ai.topTopics.map(t => t.avgViews || 0), 1)
+        return (
+          <div>
+            <div style={{ marginBottom: 12 }}>
+              <h2 style={{ fontSize: 20, fontWeight: 800, color: '#111114', letterSpacing: '-0.5px', marginBottom: 4 }}>
+                Top content topics
+              </h2>
+              <p style={{ fontSize: 13, color: '#9595a4', lineHeight: 1.5 }}>
+                Their strongest content clusters · ranked by average views per video
+              </p>
+            </div>
 
+            <div className="comp-card" style={{ borderTop: '3px solid #d97706' }}>
+              <div style={{ padding: '18px 22px 20px' }}>
+                <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between',
+                  gap: 16, marginBottom: 14 }}>
+                  <div style={{ minWidth: 0 }}>
+                    <p style={{ fontSize: 11, fontWeight: 700, color: '#9595a4',
+                      letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 6 }}>
+                      Topics by reach
+                    </p>
+                    <p style={{ fontSize: 13, color: '#9595a4', lineHeight: 1.5 }}>
+                      Bar width shows each topic's pull relative to their strongest
+                    </p>
+                  </div>
+                  <p style={{ fontSize: 26, fontWeight: 800, color: '#111114', letterSpacing: '-0.8px',
+                    fontVariantNumeric: 'tabular-nums', flexShrink: 0, lineHeight: 1 }}>
+                    {ai.topTopics.length}
+                  </p>
+                </div>
+
+                <div style={{ height: 1, background: '#e6e6ec', margin: '0 0 14px' }}/>
+
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', columnGap: 0, rowGap: 14 }}>
+                  {ai.topTopics.map((t, i) => {
+                    const pct = (t.avgViews || 0) / maxViews * 100
+                    const col = scoreColor(pct)
+                    const isRightCol = i % 2 === 1
+                    return (
+                      <div key={i} style={{
+                        display: 'flex', alignItems: 'center', gap: 10,
+                        paddingLeft:  isRightCol ? 20 : 0,
+                        paddingRight: isRightCol ? 0 : 20,
+                        borderLeft:   isRightCol ? '1px solid #fde68a' : 'none',
+                      }}>
+                        <span style={{ fontSize: 13, color: '#52525b', fontWeight: 500,
+                          flex: 1, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis',
+                          whiteSpace: 'nowrap' }}>
+                          {t.topic}
+                        </span>
+                        <div style={{ flex: 1, height: 4, background: '#eeeef3', borderRadius: 99,
+                          overflow: 'hidden', minWidth: 40 }}>
+                          <div style={{ width: `${Math.max(pct, 2)}%`, height: '100%', background: col,
+                            borderRadius: 99, transition: 'width 0.8s cubic-bezier(0.34,1.56,0.64,1)' }}/>
+                        </div>
+                        <span style={{ fontSize: 13, fontWeight: 700, color: col,
+                          fontVariantNumeric: 'tabular-nums', minWidth: 52, textAlign: 'right',
+                          flexShrink: 0 }}>
+                          {fmtK(t.avgViews)}
+                        </span>
+                      </div>
+                    )
+                  })}
+                </div>
+              </div>
+            </div>
+          </div>
+        )
+      })()}
+
+      {/* ── Title patterns — standalone card (will be redesigned next per user feedback) */}
+      {ai.titlePatterns && (() => {
+        const len    = ai.titlePatterns.avgTitleLength || 0
+        const lenPct = Math.min(100, len)
+        const lenCol = lenPct <= 60 ? '#059669' : lenPct <= 80 ? '#d97706' : '#e5251b'
         return (
           <Card>
-            <SectionTitle hint="How they win attention in their niche">
-              Content strategy
-            </SectionTitle>
+            <SectionTitle hint="What works across their recent titles">Title patterns</SectionTitle>
 
-            <div style={{ display: 'flex', alignItems: 'stretch', gap: 24 }}>
-
-              {/* ── Left panel: Top content topics (bar rows) ── */}
-              {ai.topTopics?.length > 0 && (
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <p style={{ fontSize: 11, fontWeight: 600, color: '#9595a4',
-                    letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 14 }}>
-                    Top content topics
+            <div style={{ marginBottom: 18, paddingBottom: 14, borderBottom: '1px solid rgba(0,0,0,0.06)' }}>
+              <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between',
+                gap: 12, marginBottom: 10 }}>
+                <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
+                  <p style={{ fontSize: 30, fontWeight: 800, color: lenCol, letterSpacing: '-0.8px', lineHeight: 1 }}>
+                    {len}
                   </p>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-                    {ai.topTopics.map((t, i) => {
-                      const pct = (t.avgViews || 0) / maxViews * 100
-                      const col = scoreColor(pct)
-                      return (
-                        <div key={i}>
-                          <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginBottom: 6 }}>
-                            <p style={{ fontSize: 13.5, color: '#111114', fontWeight: 600, flex: 1, minWidth: 0,
-                              letterSpacing: '-0.1px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                              {t.topic}
-                            </p>
-                            <span style={{ fontSize: 14, fontWeight: 800, color: col,
-                              fontVariantNumeric: 'tabular-nums', flexShrink: 0, letterSpacing: '-0.3px' }}>
-                              {fmtK(t.avgViews)}
-                            </span>
-                            <span style={{ fontSize: 11, color: '#9595a4', fontWeight: 500,
-                              fontVariantNumeric: 'tabular-nums', flexShrink: 0 }}>
-                              · {t.videoCount}v
-                            </span>
-                          </div>
-                          <div style={{ height: 4, background: '#eeeef3', borderRadius: 99, overflow: 'hidden' }}>
-                            <div style={{ width: `${Math.max(pct, 2)}%`, height: '100%', background: col,
-                              borderRadius: 99, transition: 'width 0.8s cubic-bezier(0.34,1.56,0.64,1)' }}/>
-                          </div>
-                        </div>
-                      )
-                    })}
+                  <p style={{ fontSize: 13, color: '#9595a4', fontWeight: 500 }}>char avg title length</p>
+                </div>
+                <span style={{ fontSize: 11, color: '#9595a4', fontWeight: 500 }}>YouTube cap: 100</span>
+              </div>
+              <div style={{ height: 4, background: '#eeeef3', borderRadius: 99, overflow: 'hidden' }}>
+                <div style={{ width: `${lenPct}%`, height: '100%', background: lenCol,
+                  borderRadius: 99, transition: 'width 0.8s cubic-bezier(0.34,1.56,0.64,1)' }}/>
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+              {ai.titlePatterns.dominantFormats?.length > 0 && (
+                <div>
+                  <p className="comp-card-label" style={{ marginBottom: 7 }}>Dominant formats</p>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5 }}>
+                    {ai.titlePatterns.dominantFormats.map((f, i) => (
+                      <span key={i} className="comp-tag" style={{ background: '#f4f4f6',
+                        color: '#52525b', border: '1px solid rgba(0,0,0,0.09)' }}>{f}</span>
+                    ))}
                   </div>
                 </div>
               )}
-
-              {/* ── Amber divider — 3px vertical bar, copied verbatim from
-                   SeoOptimizer.jsx:1056. Separates related panels inside one card. ── */}
-              {ai.topTopics?.length > 0 && ai.titlePatterns && (
-                <div style={{ width: 3, alignSelf: 'stretch', background: '#d97706',
-                  flexShrink: 0, borderRadius: 2 }}/>
-              )}
-
-              {/* ── Right panel: Title patterns (gauge + chips) ── */}
-              {ai.titlePatterns && (
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <p style={{ fontSize: 11, fontWeight: 600, color: '#9595a4',
-                    letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 14 }}>
-                    Title patterns
-                  </p>
-
-                  {/* Hero gauge */}
-                  <div style={{ marginBottom: 18, paddingBottom: 14, borderBottom: '1px solid rgba(0,0,0,0.06)' }}>
-                    <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between',
-                      gap: 12, marginBottom: 10 }}>
-                      <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
-                        <p style={{ fontSize: 30, fontWeight: 800, color: lenCol, letterSpacing: '-0.8px', lineHeight: 1 }}>
-                          {len}
-                        </p>
-                        <p style={{ fontSize: 13, color: '#9595a4', fontWeight: 500 }}>char avg title length</p>
-                      </div>
-                      <span style={{ fontSize: 11, color: '#9595a4', fontWeight: 500 }}>YouTube cap: 100</span>
-                    </div>
-                    <div style={{ height: 4, background: '#eeeef3', borderRadius: 99, overflow: 'hidden' }}>
-                      <div style={{ width: `${lenPct}%`, height: '100%', background: lenCol,
-                        borderRadius: 99, transition: 'width 0.8s cubic-bezier(0.34,1.56,0.64,1)' }}/>
-                    </div>
+              {ai.titlePatterns.topKeywords?.length > 0 && (
+                <div>
+                  <p className="comp-card-label" style={{ marginBottom: 7 }}>Top keywords</p>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5 }}>
+                    {ai.titlePatterns.topKeywords.map((k, i) => (
+                      <span key={i} className="comp-tag" style={{ background: '#f4f4f6',
+                        color: '#52525b', border: '1px solid rgba(0,0,0,0.09)' }}>{k}</span>
+                    ))}
                   </div>
-
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-                    {ai.titlePatterns.dominantFormats?.length > 0 && (
-                      <div>
-                        <p className="comp-card-label" style={{ marginBottom: 7 }}>Dominant formats</p>
-                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5 }}>
-                          {ai.titlePatterns.dominantFormats.map((f, i) => (
-                            <span key={i} className="comp-tag" style={{ background: '#f4f4f6',
-                              color: '#52525b', border: '1px solid rgba(0,0,0,0.09)' }}>{f}</span>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-                    {ai.titlePatterns.topKeywords?.length > 0 && (
-                      <div>
-                        <p className="comp-card-label" style={{ marginBottom: 7 }}>Top keywords</p>
-                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5 }}>
-                          {ai.titlePatterns.topKeywords.map((k, i) => (
-                            <span key={i} className="comp-tag" style={{ background: '#f4f4f6',
-                              color: '#52525b', border: '1px solid rgba(0,0,0,0.09)' }}>{k}</span>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-                    {ai.titlePatterns.powerWordsUsed?.length > 0 && (
-                      <div>
-                        <p className="comp-card-label" style={{ marginBottom: 7 }}>Power words</p>
-                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5 }}>
-                          {ai.titlePatterns.powerWordsUsed.map((w, i) => (
-                            <span key={i} className="comp-tag" style={{ background: '#fffbeb',
-                              color: '#d97706', border: '1px solid #fde68a' }}>{w}</span>
-                          ))}
-                        </div>
-                      </div>
-                    )}
+                </div>
+              )}
+              {ai.titlePatterns.powerWordsUsed?.length > 0 && (
+                <div>
+                  <p className="comp-card-label" style={{ marginBottom: 7 }}>Power words</p>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5 }}>
+                    {ai.titlePatterns.powerWordsUsed.map((w, i) => (
+                      <span key={i} className="comp-tag" style={{ background: '#fffbeb',
+                        color: '#d97706', border: '1px solid #fde68a' }}>{w}</span>
+                    ))}
                   </div>
                 </div>
               )}
