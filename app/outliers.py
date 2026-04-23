@@ -13,6 +13,7 @@ import socket
 import ssl
 import statistics
 import time
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timedelta, timezone
 
 import httplib2
@@ -200,10 +201,13 @@ def _run_unified_search(
         creds, search_terms, confirmed_keyword, my_channel_id,
     )
 
-    # Niche matching — now a SOFT signal. We still fetch recent titles per
-    # channel, but we never hard-drop channels that miss niche overlap;
-    # instead we rank niche-matched ones higher.
-    recent_titles  = _fetch_channel_recent_titles(creds, channel_details)
+    # Niche matching — now a SOFT signal. We fetch recent titles in parallel,
+    # but only for the top 25 channels by how many videos each contributes to
+    # the intent pool (the ones most likely to surface). Channels that aren't
+    # scanned default to "not niche-matched" and fall into tier 3/4.
+    recent_titles  = _fetch_channel_recent_titles(
+        creds, _top_channels_by_pool_presence(intent_videos, channel_details, limit=25),
+    )
     niche_channels = _niche_match_channels(recent_titles, niche_keywords)
 
     # Broaden ONCE if we don't have enough for a full 8-video AND 8-channel
@@ -219,18 +223,25 @@ def _run_unified_search(
             )
             new_ch_ids = [c for c in extra_details.keys() if c not in channel_details]
             channel_details.update(extra_details)
-            if new_ch_ids:
-                extra_titles = _fetch_channel_recent_titles(
-                    creds, {c: channel_details[c] for c in new_ch_ids},
-                )
-                recent_titles.update(extra_titles)
-                niche_channels |= _niche_match_channels(extra_titles, niche_keywords)
 
             seen = {v["video_id"] for v in intent_videos}
             for v in extra_videos:
                 if v["video_id"] not in seen:
                     intent_videos.append(v)
                     seen.add(v["video_id"])
+
+            # Only scan recent titles for new channels that will have >=1 video
+            # in the final pool — same top-25-by-presence cap the primary path
+            # uses, but we only consider channels we haven't already scanned.
+            if new_ch_ids:
+                extra_details_to_scan = _top_channels_by_pool_presence(
+                    intent_videos,
+                    {c: channel_details[c] for c in new_ch_ids},
+                    limit=15,
+                )
+                extra_titles = _fetch_channel_recent_titles(creds, extra_details_to_scan)
+                recent_titles.update(extra_titles)
+                niche_channels |= _niche_match_channels(extra_titles, niche_keywords)
 
     # Enrich + apply views floor + score.
     enriched = _enrich(intent_videos, channel_details)
@@ -283,11 +294,27 @@ def _run_unified_search(
     # above-floor preferred, then fill to _RESULTS_CHANNEL from the pool).
     top_channels = _derive_breakout_channels(scored, channel_details, niche_channels)
 
-    # Claude explanations (batched — one call each for videos/channels).
-    # Each explanation is now structured: why_worked / why_this_channel,
-    # quick_actions / what_to_do, why_now. "explanation" kept as a short alias
-    # (why_worked / why_this_channel) so older card renders still display text.
-    video_explanations = _explain_video_outliers(title, top_videos, my_subscribers) if top_videos else {}
+    # Claude explanations — three independent calls run IN PARALLEL. Sequential
+    # these took ~40s (Sonnet video + Sonnet channel + Sonnet vision thumbnail);
+    # parallel collapses to roughly the slowest of the three (~15-20s).
+    video_explanations:   dict[str, dict] = {}
+    channel_explanations: dict[str, dict] = {}
+    thumbnail_patterns:   dict             = {}
+
+    with ThreadPoolExecutor(max_workers=3) as pool:
+        futures: dict = {}
+        if top_videos:
+            futures["videos"]  = pool.submit(_explain_video_outliers, title, top_videos, my_subscribers)
+            futures["thumbs"]  = pool.submit(_analyze_thumbnail_patterns, title, top_videos)
+        if top_channels:
+            futures["channels"] = pool.submit(_explain_channel_outliers, title, top_channels, my_subscribers)
+        if "videos" in futures:
+            video_explanations   = futures["videos"].result()   or {}
+        if "channels" in futures:
+            channel_explanations = futures["channels"].result() or {}
+        if "thumbs" in futures:
+            thumbnail_patterns   = futures["thumbs"].result()   or {}
+
     for r in top_videos:
         ex = video_explanations.get(r["video_id"], {}) or {}
         r["why_worked"]    = ex.get("why_worked", "")
@@ -295,17 +322,12 @@ def _run_unified_search(
         r["why_now"]       = ex.get("why_now", "")
         r["explanation"]   = ex.get("why_worked", "")   # back-compat alias
 
-    channel_explanations = _explain_channel_outliers(title, top_channels, my_subscribers) if top_channels else {}
     for c in top_channels:
         ex = channel_explanations.get(c["channel_id"], {}) or {}
         c["why_this_channel"] = ex.get("why_this_channel", "")
         c["what_to_do"]       = ex.get("what_to_do", []) or []
         c["why_now"]          = ex.get("why_now", "")
         c["explanation"]      = ex.get("why_this_channel", "")
-
-    # Tab-distinct report: Thumbnails tab gets a niche-wide visual-pattern
-    # analysis (one vision-enabled Claude call over the actual thumbnail images).
-    thumbnail_patterns = _analyze_thumbnail_patterns(title, top_videos) if top_videos else {}
 
     cohort_median_vps = statistics.median([s["views_per_sub"] for s in scored]) if scored else 0
     return {
@@ -370,6 +392,28 @@ def _build_search_terms(title: str, confirmed_keyword: str) -> list[str]:
             seen.add(key)
             terms.append(key)
     return terms
+
+
+def _top_channels_by_pool_presence(
+    videos: list[dict],
+    channel_details: dict[str, dict],
+    limit: int,
+) -> dict[str, dict]:
+    """
+    Return the subset of channel_details for the top-`limit` channels by how
+    many videos each contributes to the intent pool. Used to cap the niche-
+    match fan-out: we only spend a playlistItems.list call on channels most
+    likely to surface in the final result, not every channel ever touched.
+    """
+    if len(channel_details) <= limit:
+        return dict(channel_details)
+    counts: dict[str, int] = {}
+    for v in videos:
+        cid = v.get("channel_id") or ""
+        if cid and cid in channel_details:
+            counts[cid] = counts.get(cid, 0) + 1
+    ranked = sorted(channel_details.keys(), key=lambda c: -counts.get(c, 0))
+    return {cid: channel_details[cid] for cid in ranked[:limit]}
 
 
 def _apply_channel_cap(videos: list[dict], per_channel: int) -> list[dict]:
@@ -451,21 +495,28 @@ def _fetch_channel_recent_titles(
     creds, channel_details: dict[str, dict],
 ) -> dict[str, list[str]]:
     """
-    For each channel whose details include an uploads playlist, fetch the titles
-    of the last _NICHE_TITLES_PER_CHANNEL uploads. One playlistItems.list per
-    channel — cost ~N quota units, worth it for niche validation.
+    Fetch the last _NICHE_TITLES_PER_CHANNEL upload titles for each channel —
+    in parallel. One playlistItems.list per channel was the biggest wall-clock
+    cost in Outliers (sequential, 20-40 channels × ~300-500ms = 10-20s). With
+    a thread pool we collapse that to ~1-3s.
+
+    Each thread builds its own googleapiclient service — the underlying
+    httplib2.Http is not thread-safe, so we don't share the outer client.
+    Only channels with an uploads_playlist are queried; the rest map to [].
     """
-    out: dict[str, list[str]] = {}
-    if not channel_details:
+    out: dict[str, list[str]] = {cid: [] for cid in channel_details}
+    jobs = [
+        (cid, meta.get("uploads_playlist"))
+        for cid, meta in channel_details.items()
+        if meta.get("uploads_playlist")
+    ]
+    if not jobs:
         return out
-    youtube = build_youtube_client(creds)
-    for cid, meta in channel_details.items():
-        pid = meta.get("uploads_playlist")
-        if not pid:
-            out[cid] = []
-            continue
+
+    def fetch_one(cid: str, pid: str) -> tuple[str, list[str]]:
         try:
-            resp = _execute_with_retry(youtube.playlistItems().list(
+            yt = build_youtube_client(creds)  # per-thread client (see docstring)
+            resp = _execute_with_retry(yt.playlistItems().list(
                 part="snippet",
                 playlistId=pid,
                 maxResults=_NICHE_TITLES_PER_CHANNEL,
@@ -475,10 +526,16 @@ def _fetch_channel_recent_titles(
                 t = (item.get("snippet", {}).get("title") or "").strip()
                 if t:
                     titles.append(t)
-            out[cid] = titles
+            return cid, titles
         except Exception as e:
             print(f"[outliers] recent-titles fetch error for {cid}: {e}")
-            out[cid] = []
+            return cid, []
+
+    with ThreadPoolExecutor(max_workers=10) as pool:
+        futures = [pool.submit(fetch_one, cid, pid) for cid, pid in jobs]
+        for f in as_completed(futures):
+            cid, titles = f.result()
+            out[cid] = titles
     return out
 
 
