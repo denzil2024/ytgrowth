@@ -35,14 +35,24 @@ function useKwStyles() {
       @keyframes kwIn   { from { opacity:0; transform:translateY(6px) } to { opacity:1; transform:translateY(0) } }
       .kw-in { animation: kwIn 0.26s ease both; }
 
+      /* Card — matches SEO Studio's .seo-suggestion-card exactly
+         (SeoOptimizer.jsx:33). That's the benchmark the user wants. */
       .kw-card {
         background: #ffffff;
-        border: 1px solid rgba(0,0,0,0.09);
-        border-radius: 16px;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.06);
-        transition: border-color 0.2s;
+        border: 1px solid #e6e6ec;
+        border-radius: 14px;
+        overflow: hidden;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 4px 14px rgba(0,0,0,0.06);
+        transition: box-shadow 0.2s, transform 0.2s;
       }
-      .kw-card:hover { border-color: rgba(0,0,0,0.14); }
+      .kw-card:hover {
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08), 0 16px 40px rgba(0,0,0,0.09);
+        transform: translateY(-1px);
+      }
+
+      /* Keyword row — matches SEO Studio's .seo-kw-row exactly. Phrase
+         text darkens on hover. */
+      .kw-row-seo:hover .kw-row-phrase { color: #0f0f13; }
 
       .kw-input {
         flex: 1; padding: 11px 18px;
@@ -86,16 +96,6 @@ function useKwStyles() {
       }
       .kw-intent-opt:hover { border-color: rgba(0,0,0,0.18); background: #f6f6f9; }
 
-      /* Keyword card — compact, lives inside the 2-col results grid.
-         Hairline border, system elevation, hover just darkens the border. */
-      .kw-kw-card {
-        background: #fff;
-        border: 1px solid rgba(0,0,0,0.09);
-        border-radius: 12px;
-        padding: 14px 16px 14px;
-        transition: border-color 0.15s;
-      }
-      .kw-kw-card:hover { border-color: rgba(0,0,0,0.18); }
 
       /* Copy button — small pill toolbar action */
       .kw-copy-btn {
@@ -291,217 +291,266 @@ export default function Keywords() {
         </div>
       )}
 
-      {/* Results */}
+      {/* Results — every section follows the SEO Studio "Keyword research"
+          pattern exactly (SeoOptimizer.jsx:1366-1421):
+          out-of-card H2 section header, then a single amber-topped card
+          with an uppercase eyebrow + subtitle on the left and a big tabular
+          count on the right, hairline divider, then a 2-col row grid with
+          an amber vertical divider between columns. */}
       {result && (
         <div className="kw-in">
 
-          {/* ── Top Pick — single standalone InsightCard (Priority Actions
-              pattern exactly: 3px amber top border, 26x26 amber rank badge,
-              'TOP PICK' eyebrow, keyword as 14/700 title, hairline divider
-              at marginLeft:46, body aligned to the same anchor with
-              whyThisOne + intent summary folded in). ──────────────────── */}
-          {result.topPick && (
-            <div className="kw-card" style={{ padding: 0, marginBottom: 14, borderTop: `3px solid ${C.amber}` }}>
-              <div style={{ padding: '16px 22px 18px' }}>
-
-                {/* Header */}
-                <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: 14 }}>
-                  <div style={{
-                    width: 26, height: 26, borderRadius: 8, background: C.amber,
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    flexShrink: 0, marginTop: 2,
-                  }}>
-                    <svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M7 1.5l1.6 3.6 3.9 0.4-2.9 2.7 0.8 3.9L7 10.3 3.6 12.1l0.8-3.9L1.5 5.5l3.9-0.4z"/>
-                    </svg>
-                  </div>
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <p style={{ fontSize: 10, fontWeight: 700, color: C.amber, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 5 }}>
-                      Top pick
-                    </p>
-                    <p style={{ fontSize: 14, fontWeight: 700, color: C.text1, lineHeight: 1.55, letterSpacing: '-0.1px' }}>
-                      {result.topPick.keyword}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Hairline */}
-                <div style={{ height: 1, background: C.border, marginBottom: 14, marginLeft: 46 }} />
-
-                {/* Body — whyThisOne + intent summary + intent pills */}
-                <div style={{ marginLeft: 46 }}>
-                  <p style={{ fontSize: 13.5, color: C.text2, lineHeight: 1.72, marginBottom: result.seedIntent?.intentSummary ? 10 : 0 }}>
-                    {result.topPick.whyThisOne}
-                  </p>
-                  {result.seedIntent?.intentSummary && (
-                    <p style={{ fontSize: 13.5, color: C.text2, lineHeight: 1.72, marginBottom: 12 }}>
-                      {result.seedIntent.intentSummary}
-                    </p>
-                  )}
-                  {result.seedIntent && (
-                    <div style={{ display: 'flex', gap: 5, flexWrap: 'wrap' }}>
-                      {/* Only short values render as pills (<=28 chars). */}
-                      {[
-                        result.seedIntent.primaryIntent,
-                        result.seedIntent.contentTypeExpected,
-                        result.seedIntent.funnelStage,
-                      ]
-                        .filter(t => t && t.trim().length > 0 && t.trim().length <= 28)
-                        .map((tag, i) => (
-                          <span key={i} style={{
-                            fontSize: 10.5, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase',
-                            color: C.text2, background: C.chipBg, border: `1px solid ${C.border}`,
-                            borderRadius: 100, padding: '2px 9px',
-                          }}>{tag}</span>
-                        ))}
+          {/* ── Summary strip — the opening beat of the results. Three big
+              tabular numbers on a single card: total opportunities, top
+              score, cluster count. Gives the page a cinematic "here's what
+              we found" moment before the detail sections. */}
+          {(() => {
+            const topScore  = Math.max(0, ...(result.keywords || []).map(k => k.opportunityScore || 0))
+            const topColor  = oppColor(topScore)
+            const stats = [
+              { label: 'Opportunities', value: (result.keywords || []).length, color: C.text1 },
+              { label: 'Top score',     value: topScore,                        color: topColor },
+              { label: 'Themes',        value: (result.clusters || []).length,  color: C.text1 },
+            ]
+            return (
+              <div className="kw-card" style={{ borderTop: `3px solid ${C.amber}`, marginBottom: 24 }}>
+                <div style={{ padding: '18px 22px 20px', display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)' }}>
+                  {stats.map((s, i) => (
+                    <div key={s.label} style={{
+                      display: 'flex', flexDirection: 'column', gap: 6,
+                      paddingLeft:  i === 0 ? 0  : 22,
+                      paddingRight: i === 2 ? 0  : 22,
+                      borderLeft:   i === 0 ? 'none' : `1px solid ${C.amberBdr}`,
+                    }}>
+                      <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, letterSpacing: '0.07em', textTransform: 'uppercase' }}>
+                        {s.label}
+                      </p>
+                      <p style={{ fontSize: 32, fontWeight: 800, color: s.color, letterSpacing: '-1px', fontVariantNumeric: 'tabular-nums', lineHeight: 1 }}>
+                        {s.value}
+                      </p>
                     </div>
-                  )}
+                  ))}
                 </div>
               </div>
-            </div>
+            )
+          })()}
+
+          {/* ── Top pick ── */}
+          {result.topPick && (
+            <>
+              <div style={{ marginBottom: 20, marginTop: 8 }}>
+                <h2 style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', marginBottom: 4 }}>Top pick</h2>
+                <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.5 }}>
+                  The strongest keyword to build your next video around
+                </p>
+              </div>
+
+              <div className="kw-card" style={{ borderTop: `3px solid ${C.amber}`, marginBottom: 24 }}>
+                <div style={{ padding: '18px 22px 20px' }}>
+                  <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16, marginBottom: 14 }}>
+                    <div style={{ minWidth: 0, flex: 1 }}>
+                      <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 6 }}>
+                        Recommended keyword
+                      </p>
+                      <p style={{ fontSize: 16, fontWeight: 700, color: C.text1, lineHeight: 1.4, letterSpacing: '-0.2px' }}>
+                        {result.topPick.keyword}
+                      </p>
+                    </div>
+                    {typeof result.topPick.opportunityScore === 'number' && (
+                      <p style={{
+                        fontSize: 26, fontWeight: 800,
+                        color: oppColor(result.topPick.opportunityScore),
+                        letterSpacing: '-0.8px', fontVariantNumeric: 'tabular-nums',
+                        flexShrink: 0, lineHeight: 1,
+                      }}>{result.topPick.opportunityScore}</p>
+                    )}
+                  </div>
+
+                  <div style={{ height: 1, background: C.border, margin: '0 0 14px' }}/>
+
+                  <p style={{ fontSize: 13, color: C.text2, lineHeight: 1.75 }}>
+                    {result.topPick.whyThisOne}
+                  </p>
+                </div>
+              </div>
+            </>
           )}
 
-          {/* ── Row 2 — Keyword cards in a 2-col responsive grid (no more
-              full-width table stretching end-to-end). Each card is compact
-              and self-contained. Toolbar lives OUTSIDE the grid so the grid
-              itself is pure content. */}
-          <div style={{
-            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-            marginBottom: 10, padding: '0 2px',
-          }}>
-            <div>
-              <p style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 3 }}>
-                Ranked keywords
-              </p>
-              <p style={{ fontSize: 13.5, fontWeight: 700, color: C.text1, letterSpacing: '-0.1px' }}>
-                {(result.keywords || []).length} opportunities matching your intent
-              </p>
-            </div>
-            <button className={`kw-copy-btn${copied ? ' copied' : ''}`} onClick={handleCopyKeywords}>
-              {copied ? (
-                <>
-                  <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><polyline points="1.5,6 4.5,9 9.5,2"/></svg>
-                  Copied
-                </>
-              ) : (
-                <>
-                  <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="6.5" height="6.5" rx="1"/><path d="M1.5 7.5V2A0.5 0.5 0 0 1 2 1.5h5.5"/></svg>
-                  Copy all
-                </>
-              )}
-            </button>
-          </div>
+          {/* ── Search intent ── */}
+          {result.seedIntent?.intentSummary && (
+            <>
+              <div style={{ marginBottom: 20, marginTop: 40 }}>
+                <h2 style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', marginBottom: 4 }}>Search intent</h2>
+                <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.5 }}>
+                  What YouTube thinks people want when they type this
+                </p>
+              </div>
 
-          {/* Keyword cards — fixed 2-col grid (auto-fill was stretching to
-              7 cols on wide screens). Each card uses the exact Priority
-              Actions / IdeaCard pattern: 3px amber top border, 26x26 amber
-              rank badge, eyebrow (intent label) + keyword title, hairline
-              divider at marginLeft:46, angle body + score pill at mL:46. */}
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
-            gap: 10, marginBottom: 18,
-          }}>
-            {result.keywords?.map((kw, i) => {
-              const tone = INTENT_TONE[kw.intentMatch] || INTENT_TONE.partial
-              const oc   = oppColor(kw.opportunityScore)
-              return (
-                <div key={kw.keyword} className="kw-card" style={{ padding: 0, borderTop: `3px solid ${C.amber}` }}>
-                  <div style={{ padding: '16px 22px 18px' }}>
-
-                    {/* Header — rank badge + eyebrow/title + score */}
-                    <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: 14 }}>
-                      <div style={{
-                        width: 26, height: 26, borderRadius: 8,
-                        background: C.amber,
-                        display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        flexShrink: 0, marginTop: 2,
-                      }}>
-                        <span style={{ fontSize: 12, fontWeight: 900, color: '#fff', fontVariantNumeric: 'tabular-nums' }}>{i + 1}</span>
-                      </div>
-
-                      <div style={{ flex: 1, minWidth: 0 }}>
-                        <p style={{
-                          fontSize: 10, fontWeight: 700,
-                          color: tone.color,
-                          letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 5,
-                        }}>{kw.intentMatch} match</p>
-                        <p style={{
-                          fontSize: 14, fontWeight: 700, color: C.text1,
-                          lineHeight: 1.4, letterSpacing: '-0.15px',
-                          overflow: 'hidden', textOverflow: 'ellipsis',
-                          display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical',
-                        }}>{kw.keyword}</p>
-                      </div>
-
-                      <div style={{ display: 'flex', alignItems: 'baseline', gap: 2, flexShrink: 0, paddingTop: 2 }}>
-                        <p style={{ fontSize: 18, fontWeight: 800, color: oc, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.4px', lineHeight: 1 }}>
-                          {kw.opportunityScore}
-                        </p>
-                        <p style={{ fontSize: 11, fontWeight: 600, color: C.text3, lineHeight: 1 }}>/100</p>
-                      </div>
-                    </div>
-
-                    {/* Hairline divider — aligned at mL:46, mirrors Priority Actions */}
-                    <div style={{ height: 1, background: C.border, marginBottom: 12, marginLeft: 46 }} />
-
-                    {/* Body — angle paragraph + opportunity bar */}
-                    <div style={{ marginLeft: 46 }}>
-                      {kw.contentAngle && (
-                        <p style={{
-                          fontSize: 13, color: C.text2, lineHeight: 1.65, marginBottom: 12,
-                          display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden',
-                        }}>{kw.contentAngle}</p>
-                      )}
-                      <div className="kw-bar">
-                        <div className="kw-bar-fill" style={{ width: `${kw.opportunityScore}%`, background: oc }} />
-                      </div>
-                    </div>
+              <div className="kw-card" style={{ borderTop: `3px solid ${C.amber}`, marginBottom: 24 }}>
+                <div style={{ padding: '18px 22px 20px' }}>
+                  <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 10 }}>
+                    Intent read
+                  </p>
+                  <div style={{ height: 1, background: C.border, margin: '0 0 14px' }}/>
+                  <p style={{ fontSize: 13, color: C.text2, lineHeight: 1.75, marginBottom: 12 }}>
+                    {result.seedIntent.intentSummary}
+                  </p>
+                  <div style={{ display: 'flex', gap: 5, flexWrap: 'wrap' }}>
+                    {[
+                      result.seedIntent.primaryIntent,
+                      result.seedIntent.contentTypeExpected,
+                      result.seedIntent.funnelStage,
+                    ]
+                      .filter(t => t && t.trim().length > 0 && t.trim().length <= 28)
+                      .map((tag, i) => (
+                        <span key={i} style={{
+                          fontSize: 10.5, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase',
+                          color: C.text2, background: C.chipBg, border: `1px solid ${C.border}`,
+                          borderRadius: 100, padding: '2px 9px',
+                        }}>{tag}</span>
+                      ))}
                   </div>
                 </div>
-              )
-            })}
-          </div>
+              </div>
+            </>
+          )}
 
-          {/* ── Clusters — responsive 2/3-col grid. All cards use the same
-              amber 3px top border (strict palette: no per-card color
-              variation). Rank badge gives ordinal identity within the
-              single color. ─────────────────────────────────────────── */}
+          {/* ── Ranked keywords — EXACT SEO Studio "Keyword research" pattern.
+              One card, 2-col row grid inside with amber vertical divider. ── */}
+          {result.keywords?.length > 0 && (
+            <>
+              <div style={{ marginBottom: 20, marginTop: 40 }}>
+                <h2 style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', marginBottom: 4 }}>Ranked keywords</h2>
+                <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.5 }}>
+                  Sorted by opportunity score · click any to copy
+                </p>
+              </div>
+
+              <div className="kw-card" style={{ borderTop: `3px solid ${C.amber}`, marginBottom: 24 }}>
+                <div style={{ padding: '18px 22px 20px' }}>
+                  <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16, marginBottom: 14 }}>
+                    <div style={{ minWidth: 0 }}>
+                      <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 6 }}>
+                        Related phrases
+                      </p>
+                      <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.5 }}>
+                        Score = volume signal + intent match + competition gap
+                      </p>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 14, flexShrink: 0 }}>
+                      <p style={{ fontSize: 26, fontWeight: 800, color: C.text1, letterSpacing: '-0.8px', fontVariantNumeric: 'tabular-nums', lineHeight: 1 }}>
+                        {result.keywords.length}
+                      </p>
+                      <button className={`kw-copy-btn${copied ? ' copied' : ''}`} onClick={handleCopyKeywords}>
+                        {copied ? 'Copied' : 'Copy all'}
+                      </button>
+                    </div>
+                  </div>
+
+                  <div style={{ height: 1, background: C.border, margin: '0 0 14px' }}/>
+
+                  {/* 2-col grid of rows — amber vertical divider between cols */}
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', columnGap: 0, rowGap: 14 }}>
+                    {result.keywords.map((kw, i) => {
+                      const scColor    = oppColor(kw.opportunityScore)
+                      const isRightCol = i % 2 === 1
+                      return (
+                        <div
+                          key={kw.keyword}
+                          className="kw-row-seo"
+                          role="button"
+                          tabIndex={0}
+                          onClick={() => navigator.clipboard.writeText(kw.keyword)}
+                          onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); navigator.clipboard.writeText(kw.keyword) } }}
+                          title={`${kw.intentMatch} match · Score ${kw.opportunityScore} — click to copy`}
+                          style={{
+                            display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer',
+                            paddingLeft:  isRightCol ? 20 : 0,
+                            paddingRight: isRightCol ? 0 : 20,
+                            borderLeft: isRightCol ? `1px solid ${C.amberBdr}` : 'none',
+                          }}
+                        >
+                          <span className="kw-row-phrase" style={{
+                            fontSize: 13, color: C.text2, fontWeight: 400,
+                            width: 180, flexShrink: 0,
+                            overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+                            transition: 'color 0.12s',
+                          }}>{kw.keyword}</span>
+                          <div style={{ flex: 1, height: 4, background: '#eeeef3', borderRadius: 99, overflow: 'hidden', minWidth: 40 }}>
+                            <div style={{ width: `${kw.opportunityScore}%`, height: '100%', background: scColor, borderRadius: 99, transition: 'width 0.8s cubic-bezier(0.34,1.56,0.64,1)' }}/>
+                          </div>
+                          <span style={{
+                            fontSize: 13, fontWeight: 700, color: scColor,
+                            fontVariantNumeric: 'tabular-nums',
+                            minWidth: 26, textAlign: 'right', flexShrink: 0,
+                          }}>{kw.opportunityScore}</span>
+                        </div>
+                      )
+                    })}
+                  </div>
+                </div>
+              </div>
+            </>
+          )}
+
+          {/* ── Content clusters — matches SEO Studio pattern.
+              One amber-topped card per cluster, header row with rank badge
+              + name + big tabular count of keywords in the cluster, hairline,
+              chip body. Responsive grid of these cards. ───────────────── */}
           {result.clusters?.length > 0 && (
-            <div>
-              <p style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 10 }}>
-                Content clusters
-              </p>
+            <>
+              <div style={{ marginBottom: 20, marginTop: 40 }}>
+                <h2 style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', marginBottom: 4 }}>Content clusters</h2>
+                <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.5 }}>
+                  Themes you can build a series around
+                </p>
+              </div>
+
               <div style={{
                 display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-                gap: 10,
+                gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+                gap: 10, marginBottom: 24,
               }}>
                 {result.clusters.map((cl, i) => (
-                  <div key={cl.clusterName} className="kw-card" style={{ padding: 0, borderTop: `3px solid ${C.amber}`, overflow: 'hidden' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '12px 16px', borderBottom: `1px solid ${C.border}` }}>
-                      <span style={{
-                        width: 22, height: 22, borderRadius: 6,
-                        background: C.amber, color: '#fff',
-                        fontSize: 11, fontWeight: 900,
-                        display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        flexShrink: 0, fontVariantNumeric: 'tabular-nums',
-                      }}>{i + 1}</span>
-                      <p style={{ fontSize: 13, fontWeight: 700, color: C.text1, lineHeight: 1.35, letterSpacing: '-0.1px' }}>{cl.clusterName}</p>
-                    </div>
-                    <div style={{ padding: '12px 16px 14px', display: 'flex', flexWrap: 'wrap', gap: 5 }}>
-                      {cl.keywords?.map(k => (
-                        <span key={k} style={{
-                          background: C.chipBg, border: `1px solid ${C.border}`, color: C.text2,
-                          padding: '3px 10px', borderRadius: 100,
-                          fontSize: 11.5, fontWeight: 600, letterSpacing: '-0.05px',
-                        }}>{k}</span>
-                      ))}
+                  <div key={cl.clusterName} className="kw-card" style={{ borderTop: `3px solid ${C.amber}` }}>
+                    <div style={{ padding: '18px 22px 20px' }}>
+                      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, marginBottom: 14 }}>
+                        <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10, minWidth: 0, flex: 1 }}>
+                          <span style={{
+                            width: 22, height: 22, borderRadius: 6,
+                            background: C.amber, color: '#fff',
+                            fontSize: 11, fontWeight: 900,
+                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            flexShrink: 0, fontVariantNumeric: 'tabular-nums', marginTop: 2,
+                          }}>{i + 1}</span>
+                          <div style={{ minWidth: 0 }}>
+                            <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 5 }}>
+                              Theme
+                            </p>
+                            <p style={{ fontSize: 13.5, fontWeight: 700, color: C.text1, lineHeight: 1.4, letterSpacing: '-0.1px' }}>
+                              {cl.clusterName}
+                            </p>
+                          </div>
+                        </div>
+                        <p style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.6px', fontVariantNumeric: 'tabular-nums', flexShrink: 0, lineHeight: 1 }}>
+                          {cl.keywords?.length || 0}
+                        </p>
+                      </div>
+                      <div style={{ height: 1, background: C.border, margin: '0 0 14px' }}/>
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                        {cl.keywords?.map(k => (
+                          <span key={k} style={{
+                            background: C.chipBg, border: `1px solid ${C.border}`, color: C.text2,
+                            padding: '3px 10px', borderRadius: 100,
+                            fontSize: 11.5, fontWeight: 600, letterSpacing: '-0.05px',
+                          }}>{k}</span>
+                        ))}
+                      </div>
                     </div>
                   </div>
                 ))}
               </div>
-            </div>
+            </>
           )}
         </div>
       )}
