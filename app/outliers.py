@@ -24,6 +24,7 @@ from app.seo import (
     _filter_by_intent,
     research_keywords,
     get_autocomplete_suggestions,
+    _NGRAM_STOP as _SEO_STOP,
 )
 
 
@@ -83,6 +84,20 @@ _SIZE_RELEVANCE_BAND = 10.0 # Cohort = channels within 1/10x–10x of user's sub
 _MIN_OUTLIER_SCORE  = 1.8   # Below this, not really an outlier; drop it
 _MIN_VIDEO_VIEWS    = 1_000 # Skip dead videos that pollute the signal
 
+# Minimum results contract — every /outliers/search MUST return at least this
+# many videos. Progressive fallbacks below guarantee we hit it.
+_MIN_RESULTS = 8
+
+# Progressive size-band cascade:
+#   10x  — tight: user's own bracket (roughly)
+#   100x — wider: user's bracket + the next one up
+#   None — no size filter at all
+_SIZE_BAND_CASCADE = [10.0, 100.0, None]
+
+# Stopwords lifted from app/seo.py, extended with outliers-specific filler
+# ("video", "channel") that show up in titles but carry no search intent.
+_BROADEN_STOP = set(_SEO_STOP) | {"video", "channel", "episode", "part"}
+
 
 # ─── Entry point ──────────────────────────────────────────────────────────────
 
@@ -125,32 +140,148 @@ def search_outliers(creds, query: str, my_subscribers: int, confirmed_keyword: s
 # ─── Unified search pipeline ──────────────────────────────────────────────────
 # One call produces videos + breakout channels + keyword scores. The three UI
 # tabs are just different views of the same result set — no separate searches.
+#
+# Result-count contract: every search MUST return >= _MIN_RESULTS videos. We
+# cascade through progressively looser strategies to guarantee this:
+#   1. Tight size band (10x of user's subs) — the user's own cohort
+#   2. Wider size band (100x) — adds the adjacent bracket up
+#   3. No size filter — all intent-matched videos compete as one pool
+#   4. Broaden the YouTube query itself (strip stopwords from title, re-search)
+#   5. If still short, take the top _MIN_RESULTS by outlier_score regardless
+#      of the usual _MIN_OUTLIER_SCORE floor.
+# All fallbacks run inside a single /outliers/search request — no extra credit.
 
 def _run_unified_search(creds, title: str, confirmed_keyword: str, my_subscribers: int) -> dict:
-    # 1. YouTube search using the ORIGINAL title (SEO analyze_title step 2).
-    raw_videos = search_top_videos(creds, [title], max_results=_SEARCH_POOL_SIZE)
-    if not raw_videos:
-        return {
-            "videos": [], "channels": [], "keyword_scores": [],
-            "cohort": {"query": title, "size_bracket": get_size_bracket(my_subscribers)},
-        }
+    my_bracket = get_size_bracket(my_subscribers)
 
-    # 2. Filter by confirmed intent (SEO step 2b — _filter_by_intent word-boundary match).
+    # Primary fetch — YouTube search by the original title.
+    intent_videos, channel_details = _fetch_intent_filtered(creds, title, confirmed_keyword)
+
+    # Helper: score at a given size band, return (filtered_enriched, scored_pool).
+    def _score_at_band(band):
+        enriched = _enrich(intent_videos, channel_details)
+        pool = enriched if band is None else _apply_band(enriched, my_subscribers, band)
+        if len(pool) < 3:  # statistical floor — median is meaningless with <3 data points
+            pool = enriched
+        return pool, _score_videos(list(pool))  # copy so _score_videos doesn't mutate shared refs
+
+    # Cascade through size bands until we have enough above-floor outliers.
+    top_videos, scored, cohort_tag = [], [], None
+    for band in _SIZE_BAND_CASCADE:
+        pool, scored = _score_at_band(band)
+        above = [s for s in scored if s["outlier_score"] >= _MIN_OUTLIER_SCORE]
+        above.sort(key=lambda s: s["outlier_score"], reverse=True)
+        if len(above) >= _MIN_RESULTS:
+            top_videos = above[:_RESULTS_VIDEO]
+            cohort_tag = {10.0: "tight", 100.0: "wide", None: "unfiltered"}[band]
+            break
+
+    # Still short after removing the size filter? Broaden the YouTube query by
+    # stripping stopwords from the title and re-searching, then re-cascade.
+    broadened_with = None
+    if len(top_videos) < _MIN_RESULTS:
+        broader_query = _shorten_title(title)
+        if broader_query and broader_query.lower() != title.lower():
+            broadened_with = broader_query
+            extra_videos, extra_details = _fetch_intent_filtered(creds, broader_query, confirmed_keyword)
+            # Merge + dedupe by video_id
+            seen = {v["video_id"] for v in intent_videos}
+            for v in extra_videos:
+                if v["video_id"] not in seen:
+                    intent_videos.append(v)
+                    seen.add(v["video_id"])
+            channel_details.update(extra_details)
+            # Re-cascade on the enlarged pool.
+            for band in _SIZE_BAND_CASCADE:
+                pool, scored = _score_at_band(band)
+                above = [s for s in scored if s["outlier_score"] >= _MIN_OUTLIER_SCORE]
+                above.sort(key=lambda s: s["outlier_score"], reverse=True)
+                if len(above) >= _MIN_RESULTS:
+                    top_videos = above[:_RESULTS_VIDEO]
+                    cohort_tag = f"broadened-{ {10.0:'tight', 100.0:'wide', None:'unfiltered'}[band] }"
+                    break
+
+    # Last resort — drop the outlier floor entirely and take the top N by score
+    # from the unfiltered scored pool. Guarantees we never show < _MIN_RESULTS.
+    if len(top_videos) < _MIN_RESULTS:
+        _, scored = _score_at_band(None)
+        scored.sort(key=lambda s: s.get("outlier_score", 0), reverse=True)
+        top_videos = scored[:max(_MIN_RESULTS, _RESULTS_VIDEO)]
+        cohort_tag = cohort_tag or "best-effort"
+
+    # Primary phrase for the UI eyebrow
     primary_phrase = confirmed_keyword.lower() if confirmed_keyword else title.lower()
+
+    # Keyword extraction on the intent-filtered set (SEO steps 3–5).
+    search_terms = [confirmed_keyword] if confirmed_keyword else [title]
+    top_titles   = [v["title"] for v in intent_videos]
+    tag_freq: dict[str, int] = {}
+    for v in intent_videos:
+        for tag in v.get("tags", []):
+            tl = tag.lower().strip()
+            if tl and len(tl) > 2:
+                tag_freq[tl] = tag_freq.get(tl, 0) + 1
+    all_tags_flat  = [t for t, _ in sorted(tag_freq.items(), key=lambda x: -x[1])]
+    autocomplete   = get_autocomplete_suggestions(search_terms)
+    keyword_scores = research_keywords(search_terms, autocomplete, top_titles, all_tags_flat)
+
+    # Derive breakout channels from whatever scored pool we ended up with.
+    top_channels = _derive_breakout_channels(scored, channel_details, my_subscribers)
+
+    # Claude explanations (batched — one call each for videos/channels).
+    video_explanations = _explain_video_outliers(title, top_videos, my_subscribers) if top_videos else {}
+    for r in top_videos:
+        r["explanation"] = video_explanations.get(r["video_id"], "")
+    channel_explanations = _explain_channel_outliers(title, top_channels, my_subscribers) if top_channels else {}
+    for c in top_channels:
+        c["explanation"] = channel_explanations.get(c["channel_id"], "")
+
+    cohort_median_vps = statistics.median([s["views_per_sub"] for s in scored]) if scored else 0
+    return {
+        "videos":              top_videos,
+        "channels":            top_channels,
+        "keyword_scores":      keyword_scores,
+        "autocomplete_terms":  autocomplete[:10],
+        "top_tags":            all_tags_flat[:15],
+        "intent_matched":      len(intent_videos),
+        "primary_phrase":      primary_phrase,
+        "cohort": {
+            "query":          title,
+            "size_bracket":   my_bracket,
+            "my_subscribers": my_subscribers,
+            "pool_size":      len(scored),
+            "median_vps":     round(cohort_median_vps, 3),
+            "cohort_tier":    cohort_tag,          # diagnostic for the UI
+            "broadened_with": broadened_with,      # null unless query-broadening kicked in
+        },
+    }
+
+
+# ─── Cascade helpers ──────────────────────────────────────────────────────────
+
+def _fetch_intent_filtered(creds, query: str, confirmed_keyword: str) -> tuple[list[dict], dict[str, dict]]:
+    """
+    One YouTube search pass → intent filter → channel-detail hydration.
+    Returns the intent-filtered videos plus the channel_details for every
+    unique channel in them. Separated from the cascade so it can be called
+    a second time when broadening the query (step 4).
+    """
+    raw_videos = search_top_videos(creds, [query], max_results=_SEARCH_POOL_SIZE)
+    if not raw_videos:
+        return [], {}
     if confirmed_keyword:
         intent_videos = _filter_by_intent(confirmed_keyword, raw_videos)
         if not intent_videos:
             intent_videos = raw_videos[:10]
     else:
         intent_videos = raw_videos
-
-    # 3. Bulk channel details (subs + name + thumbnail + stats) for every unique
-    #    channel in the intent-filtered set. Needed for video cards AND for the
-    #    derived breakout-channel tab.
     channel_ids = list({v["channel_id"] for v in intent_videos if v.get("channel_id")})
     channel_details = _batch_channel_details(creds, channel_ids)
+    return intent_videos, channel_details
 
-    # 4. Normalise to the outlier-pipeline shape.
+
+def _enrich(intent_videos: list[dict], channel_details: dict[str, dict]) -> list[dict]:
+    """Normalise search_top_videos' shape to the outlier-pipeline shape; drop dead videos."""
     enriched: list[dict] = []
     for v in intent_videos:
         views = v.get("view_count", 0)
@@ -174,60 +305,29 @@ def _run_unified_search(creds, title: str, confirmed_keyword: str, my_subscriber
             "description":         "",
             "channel_subscribers": ch_meta.get("subscribers", 0),
         })
+    return enriched
 
-    # 5. Size-relevance filter.
-    my_bracket = get_size_bracket(my_subscribers)
-    relevant = _filter_size_relevant(enriched, my_subscribers)
-    if len(relevant) < 3:
-        relevant = enriched
 
-    # 6. Outlier scoring (views-per-sub vs cohort median).
-    scored = _score_videos(relevant)
-    scored_above_floor = [s for s in scored if s["outlier_score"] >= _MIN_OUTLIER_SCORE]
-    scored_above_floor.sort(key=lambda s: s["outlier_score"], reverse=True)
-    top_videos = scored_above_floor[:_RESULTS_VIDEO]
+def _apply_band(videos: list[dict], my_subs: int, band: float) -> list[dict]:
+    """Keep videos whose channel subs fall within my_subs / band .. my_subs * band."""
+    if my_subs <= 0 or band is None:
+        return videos
+    low  = my_subs / band
+    high = my_subs * band
+    return [v for v in videos if low <= max(v["channel_subscribers"], 1) <= high]
 
-    # 7. Keyword extraction (SEO steps 3–5) on the intent-filtered set.
-    search_terms = [confirmed_keyword] if confirmed_keyword else [title]
-    top_titles   = [v["title"] for v in intent_videos]
-    tag_freq: dict[str, int] = {}
-    for v in intent_videos:
-        for tag in v.get("tags", []):
-            tl = tag.lower().strip()
-            if tl and len(tl) > 2:
-                tag_freq[tl] = tag_freq.get(tl, 0) + 1
-    all_tags_flat  = [t for t, _ in sorted(tag_freq.items(), key=lambda x: -x[1])]
-    autocomplete   = get_autocomplete_suggestions(search_terms)
-    keyword_scores = research_keywords(search_terms, autocomplete, top_titles, all_tags_flat)
 
-    # 8. Derive breakout channels from the outlier-scored videos.
-    top_channels = _derive_breakout_channels(scored, channel_details, my_subscribers)
-
-    # 9. Claude explanations for outlier videos + breakout channels (batched).
-    video_explanations = _explain_video_outliers(title, top_videos, my_subscribers) if top_videos else {}
-    for r in top_videos:
-        r["explanation"] = video_explanations.get(r["video_id"], "")
-    channel_explanations = _explain_channel_outliers(title, top_channels, my_subscribers) if top_channels else {}
-    for c in top_channels:
-        c["explanation"] = channel_explanations.get(c["channel_id"], "")
-
-    cohort_median_vps = statistics.median([s["views_per_sub"] for s in scored]) if scored else 0
-    return {
-        "videos":              top_videos,
-        "channels":            top_channels,
-        "keyword_scores":      keyword_scores,
-        "autocomplete_terms":  autocomplete[:10],
-        "top_tags":            all_tags_flat[:15],
-        "intent_matched":      len(intent_videos),
-        "primary_phrase":      primary_phrase,
-        "cohort": {
-            "query":          title,
-            "size_bracket":   my_bracket,
-            "my_subscribers": my_subscribers,
-            "pool_size":      len(relevant),
-            "median_vps":     round(cohort_median_vps, 3),
-        },
-    }
+def _shorten_title(title: str) -> str:
+    """
+    Strip stopwords + short tokens from the title to produce a broader YouTube
+    query. Keeps up to 4 of the most meaningful content words in original order.
+    Used only when the full title yields too few results even with no size filter.
+    """
+    words = re.sub(r"[^\w\s]", " ", title.lower()).split()
+    content = [w for w in words if w and len(w) > 2 and w not in _BROADEN_STOP]
+    if not content:
+        return ""
+    return " ".join(content[:4])
 
 
 def _batch_channel_details(creds, channel_ids: list[str]) -> dict[str, dict]:
@@ -331,15 +431,6 @@ def _derive_breakout_channels(scored_videos: list[dict], channel_details: dict[s
 
     channels.sort(key=lambda c: (c["outlier_score"], c["videos_in_search"]), reverse=True)
     return channels[:_RESULTS_CHANNEL]
-
-
-def _filter_size_relevant(videos: list[dict], my_subs: int) -> list[dict]:
-    """Keep videos from channels within ~0.1x–10x of the user's subscriber count."""
-    if my_subs <= 0:
-        return videos
-    low  = my_subs / _SIZE_RELEVANCE_BAND
-    high = my_subs * _SIZE_RELEVANCE_BAND
-    return [v for v in videos if low <= max(v["channel_subscribers"], 1) <= high]
 
 
 def _score_videos(videos: list[dict]) -> list[dict]:
