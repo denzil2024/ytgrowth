@@ -508,11 +508,12 @@ function AIAnalysis({ ai, top5Videos, channelId, checkedIdeas, onToggleIdea }) {
       </Card>
 
       {/* ── winning moves — 2-per-row InsightCard copy ───────────────────────
-           Copies Dashboard's InsightCard layout: amber top-border + amber rank
-           badge + action title, then blue "Why it works" block. Two per row to
-           fill the accordion width (single-column was stretching with huge
-           internal whitespace). Badge carries the rank — no redundant "MOVE N"
-           eyebrow. Model output is "Action — explanation"; we split on " — ". */}
+           Copies Dashboard's InsightCard layout, but semantically GREEN: these
+           are wins / success actions, not problems, so the accent matches
+           Overview's Quick wins eyebrow (C.green #059669) — not amber. Amber
+           in this product is reserved for ordinals/format tiles.
+           Structure: green top-border + green rank badge + action title, then
+           blue "Why it works" block (same palette as Overview's "Why now"). */}
       {ai.winningMoves?.length > 0 && (
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 14 }}>
@@ -534,13 +535,13 @@ function AIAnalysis({ ai, top5Videos, channelId, checkedIdeas, onToggleIdea }) {
               return (
                 <div key={i} className="comp-card" style={{
                   borderRadius: 14,
-                  borderTop: '3px solid #d97706',
+                  borderTop: '3px solid #059669',
                   padding: '14px 16px 16px',
                   display: 'flex', flexDirection: 'column', gap: 12,
                 }}>
                   {/* header — rank badge + action title */}
                   <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
-                    <div style={{ width: 24, height: 24, borderRadius: 7, background: '#d97706',
+                    <div style={{ width: 24, height: 24, borderRadius: 7, background: '#059669',
                       display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 1 }}>
                       <span style={{ fontSize: 11, fontWeight: 900, color: '#fff', fontVariantNumeric: 'tabular-nums' }}>
                         {i + 1}
