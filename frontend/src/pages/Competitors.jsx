@@ -401,20 +401,21 @@ function fmtK(n) {
   return String(n)
 }
 
-// ─── base card ────────────────────────────────────────────────────────────────
-function Card({ children, style }) {
+// ─── base card — amber 3px top border matches SEO Studio / Keywords pattern ──
+function Card({ children, style, topAccent = '#d97706' }) {
   return (
-    <div className="comp-card" style={{ padding: '20px 24px', ...style }}>
+    <div className="comp-card" style={{ padding: '20px 24px', borderTop: `3px solid ${topAccent}`, ...style }}>
       {children}
     </div>
   )
 }
 
-function SectionTitle({ children }) {
+function SectionTitle({ children, hint }) {
   return (
-    <p style={{ fontSize: 12, fontWeight: 600, color: '#a0a0b0', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 14 }}>
-      {children}
-    </p>
+    <div style={{ marginBottom: 14 }}>
+      <p style={{ fontSize: 15, fontWeight: 700, color: '#111114', letterSpacing: '-0.3px' }}>{children}</p>
+      {hint && <p style={{ fontSize: 12, color: '#9595a4', marginTop: 3, lineHeight: 1.5 }}>{hint}</p>}
+    </div>
   )
 }
 
@@ -466,8 +467,8 @@ function ChannelCard({ channel, onAnalyze, isAdded, loadingId }) {
           Analyzing…
         </span>
       ) : (
-        <button className="comp-btn-ghost" onClick={() => onAnalyze(channel.channel_id)}
-          style={{ flexShrink: 0 }}>
+        <button className="comp-btn-primary" onClick={() => onAnalyze(channel.channel_id)}
+          style={{ padding: '9px 22px', fontSize: 13, flexShrink: 0 }}>
           Analyze
         </button>
       )}
@@ -509,10 +510,16 @@ function AIAnalysis({ ai, top5Videos, channelId, checkedIdeas, onToggleIdea }) {
         <p style={{ fontSize: 14, color: '#52525b', lineHeight: 1.78, marginBottom: 14, fontWeight: 400 }}>
           {ai.competitorSummary}
         </p>
-        <div style={{ background: threat.bg, border: `1px solid ${threat.border}`,
-          borderRadius: 12, padding: '12px 16px' }}>
-          <p style={{ fontSize: 14, color: threat.text, lineHeight: 1.65 }}>
-            <span style={{ fontWeight: 700 }}>Why: </span>{ai.threatReason}
+        {/* "Why" block — neutralized to Priority Actions blue so threat colour
+            doesn't re-paint the same message twice (threat pill already carries it). */}
+        <div style={{ background: 'rgba(79,134,247,0.07)', border: '1px solid rgba(79,134,247,0.12)',
+          borderRadius: 10, padding: '12px 14px' }}>
+          <p style={{ fontSize: 10, fontWeight: 700, color: '#4a7cf7',
+            letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>
+            Why
+          </p>
+          <p style={{ fontSize: 13.5, color: '#111114', lineHeight: 1.72 }}>
+            {ai.threatReason}
           </p>
         </div>
       </Card>

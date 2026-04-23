@@ -385,7 +385,7 @@ export default function Settings() {
                   }}>
                     <span style={{ fontSize: 13, color: C.red, fontWeight: 700 }}>+ Connect another channel</span>
                   </a>
-                : <div style={{ background: C.redBg, border: `1px solid ${C.redBdr}`, borderRadius: 12, padding: '13px 16px' }}>
+                : <div style={{ background: '#f7f7fa', border: '1px solid rgba(0,0,0,0.07)', borderRadius: 12, padding: '13px 16px' }}>
                     <p style={{ fontSize: 13, color: C.text2, lineHeight: 1.55, marginBottom: 10 }}>
                       You have reached your channel limit. Upgrade your plan to connect more channels.
                     </p>
