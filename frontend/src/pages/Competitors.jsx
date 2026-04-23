@@ -17,40 +17,30 @@ function useCompetitorStyles() {
     const style = document.createElement('style')
     style.id = 'ytg-comp-styles'
     style.textContent = `
-      .comp-page * { box-sizing: border-box; font-family: 'DM Sans', 'Inter', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+      .comp-page * { box-sizing: border-box; font-family: 'Inter', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
       .comp-page p, .comp-page span, .comp-page div { margin: 0; }
 
-      /* ── cards ── */
+      /* ── cards — system elevation, no hover lift (matches Dashboard/Keywords/Outliers) ── */
       .comp-card {
         background: #ffffff;
-        border: 1px solid #d8d8e0;
-        border-radius: 20px;
-        box-shadow: 0 4px 16px rgba(0,0,0,0.14), 0 24px 64px rgba(0,0,0,0.18), 0 1px 0 rgba(255,255,255,0.9) inset;
-        transition: box-shadow 0.22s, transform 0.22s, border-color 0.22s;
-      }
-      .comp-card:hover {
-        box-shadow: 0 8px 28px rgba(0,0,0,0.18), 0 36px 80px rgba(0,0,0,0.22), 0 1px 0 rgba(255,255,255,0.9) inset;
-        transform: translateY(-2px);
-        border-color: #c0c0cc;
+        border: 1px solid #e6e6ec;
+        border-radius: 16px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.06);
       }
 
       .comp-channel-card {
         background: #ffffff;
-        border: 1px solid #d8d8e0;
+        border: 1px solid #e6e6ec;
         border-radius: 16px;
-        box-shadow: 0 4px 16px rgba(0,0,0,0.14), 0 24px 64px rgba(0,0,0,0.18), 0 1px 0 rgba(255,255,255,0.9) inset;
-        transition: box-shadow 0.2s, transform 0.2s, border-color 0.2s;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.06);
         padding: 14px 18px;
         display: flex;
         align-items: center;
         gap: 14px;
         margin-bottom: 8px;
+        transition: border-color 0.15s;
       }
-      .comp-channel-card:hover {
-        box-shadow: 0 8px 28px rgba(0,0,0,0.18), 0 36px 80px rgba(0,0,0,0.22), 0 1px 0 rgba(255,255,255,0.9) inset;
-        transform: translateY(-2px);
-        border-color: #c0c0cc;
-      }
+      .comp-channel-card:hover { border-color: rgba(0,0,0,0.14); }
 
       /* ── tabs ── */
       .comp-tab-btn {
@@ -59,8 +49,8 @@ function useCompetitorStyles() {
         font-size: 13px;
         font-weight: 600;
         cursor: pointer;
-        transition: all 0.18s;
-        font-family: 'DM Sans', 'Inter', sans-serif;
+        transition: color 0.15s, border-color 0.15s, background 0.15s;
+        font-family: 'Inter', system-ui, sans-serif;
         border: 1px solid transparent;
         white-space: nowrap;
         letter-spacing: -0.1px;
@@ -69,20 +59,16 @@ function useCompetitorStyles() {
         background: #111114;
         color: #fff;
         border-color: #111114;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.18), 0 4px 16px rgba(0,0,0,0.14);
       }
       .comp-tab-btn.inactive {
         background: #ffffff;
         color: #52525b;
-        border-color: rgba(0,0,0,0.1);
-        box-shadow: 0 1px 3px rgba(0,0,0,0.07), 0 4px 14px rgba(0,0,0,0.07);
+        border-color: rgba(0,0,0,0.09);
+        box-shadow: 0 1px 3px rgba(0,0,0,0.04);
       }
       .comp-tab-btn.inactive:hover {
-        background: #fff;
         color: #111114;
         border-color: rgba(0,0,0,0.18);
-        box-shadow: 0 2px 8px rgba(0,0,0,0.10), 0 8px 28px rgba(0,0,0,0.10);
-        transform: translateY(-1px);
       }
 
       /* ── inputs ── */
@@ -90,22 +76,18 @@ function useCompetitorStyles() {
         flex: 1;
         padding: 11px 20px;
         border-radius: 100px;
-        border: 1px solid rgba(0,0,0,0.1);
+        border: 1px solid rgba(0,0,0,0.12);
         background: #ffffff;
         font-size: 13.5px;
-        font-family: 'DM Sans', 'Inter', sans-serif;
+        font-family: 'Inter', system-ui, sans-serif;
         outline: none;
         transition: border-color 0.18s, box-shadow 0.18s;
         color: #111114;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 14px rgba(0,0,0,0.06);
       }
       .comp-input::placeholder { color: #a0a0b0; font-weight: 400; }
-      .comp-input:focus {
-        border-color: rgba(0,0,0,0.25);
-        box-shadow: 0 0 0 4px rgba(0,0,0,0.04), 0 1px 3px rgba(0,0,0,0.07);
-      }
+      .comp-input:focus { border-color: rgba(0,0,0,0.3); box-shadow: 0 0 0 3px rgba(0,0,0,0.04); }
 
-      /* ── buttons ── */
+      /* ── primary red CTA — reserved for Search / Analyze ── */
       .comp-btn-primary {
         background: #e5251b;
         color: #fff;
@@ -114,21 +96,16 @@ function useCompetitorStyles() {
         padding: 11px 26px;
         font-size: 13px;
         font-weight: 700;
-        font-family: 'DM Sans', 'Inter', sans-serif;
+        font-family: 'Inter', system-ui, sans-serif;
         cursor: pointer;
         white-space: nowrap;
-        transition: all 0.18s;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 4px 14px rgba(229,37,27,0.32);
+        transition: filter 0.15s;
         letter-spacing: -0.1px;
       }
-      .comp-btn-primary:hover:not(:disabled) {
-        filter: brightness(1.07);
-        box-shadow: 0 2px 8px rgba(0,0,0,0.15), 0 8px 28px rgba(229,37,27,0.42);
-        transform: translateY(-1px);
-      }
-      .comp-btn-primary:disabled { background: #e0e0e6; color: #a0a0b0; box-shadow: none; cursor: default; }
+      .comp-btn-primary:hover:not(:disabled) { filter: brightness(1.07); }
+      .comp-btn-primary:disabled { background: #e0e0e6; color: #a0a0b0; cursor: default; }
 
-      /* "Remove" — trash icon, appears on card hover only */
+      /* "Remove" — trash icon, appears on wrapper hover only */
       .comp-remove-btn {
         position: absolute;
         top: 12px;
@@ -155,41 +132,33 @@ function useCompetitorStyles() {
         color: #e5251b;
       }
 
-      /* "Open report" — secondary style */
+      /* "Open report" — neutral secondary (quiet, no red) */
       .comp-btn-report {
         background: #fff;
         color: #52525b;
-        border: 1px solid rgba(0,0,0,0.1);
+        border: 1px solid rgba(0,0,0,0.09);
         border-radius: 100px;
         padding: 8px 18px;
         font-size: 12.5px;
         font-weight: 600;
-        font-family: 'DM Sans', 'Inter', sans-serif;
+        font-family: 'Inter', system-ui, sans-serif;
         cursor: pointer;
         white-space: nowrap;
-        transition: all 0.18s;
+        transition: color 0.15s, border-color 0.15s, background 0.15s;
         display: flex;
         align-items: center;
         gap: 6px;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.07), 0 4px 14px rgba(0,0,0,0.07);
         letter-spacing: -0.1px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.04);
       }
       .comp-btn-report:hover {
-        border-color: rgba(0,0,0,0.18);
         color: #111114;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.10), 0 8px 28px rgba(0,0,0,0.10);
-        transform: translateY(-1px);
+        border-color: rgba(0,0,0,0.18);
       }
       .comp-btn-report.open {
-        background: #f0f0f3;
+        background: #f4f4f7;
         color: #52525b;
-        box-shadow: none;
         border-color: rgba(0,0,0,0.09);
-      }
-      .comp-btn-report.open:hover {
-        background: #ebebef;
-        color: #111114;
-        transform: none;
         box-shadow: none;
       }
 
@@ -198,8 +167,8 @@ function useCompetitorStyles() {
         display: inline-flex;
         align-items: baseline;
         gap: 4px;
-        background: rgba(0,0,0,0.04);
-        border: 1px solid rgba(0,0,0,0.07);
+        background: #f4f4f6;
+        border: 1px solid rgba(0,0,0,0.09);
         border-radius: 8px;
         padding: 4px 10px;
       }
@@ -216,28 +185,28 @@ function useCompetitorStyles() {
         line-height: 1;
       }
 
-      /* ── inner content blocks (video ideas, etc.) ── */
+      /* inner content blocks (video ideas, etc.) */
       .comp-inner-block {
         background: #f7f7fa;
         border: 1px solid rgba(0,0,0,0.07);
-        border-radius: 14px;
+        border-radius: 12px;
         padding: 14px 18px;
         transition: background 0.15s;
       }
       .comp-inner-block:hover { background: #f0f0f4; }
 
-      /* ── tags ── */
+      /* tags — neutral chip by default; variants use inline amber palette */
       .comp-tag {
         display: inline-block;
         padding: 3px 10px;
         border-radius: 50px;
         font-size: 11px;
         font-weight: 600;
-        font-family: 'DM Sans', 'Inter', sans-serif;
+        font-family: 'Inter', system-ui, sans-serif;
         letter-spacing: 0;
       }
 
-      /* ── video rows ── */
+      /* video rows */
       .comp-video-row {
         display: flex;
         align-items: center;
@@ -245,15 +214,15 @@ function useCompetitorStyles() {
         padding: 10px 6px;
         border-radius: 12px;
         text-decoration: none;
-        transition: background 0.15s, transform 0.12s;
+        transition: background 0.15s;
       }
-      .comp-video-row:hover { background: #f4f4f7; transform: translateX(2px); }
+      .comp-video-row:hover { background: #f4f4f7; }
 
-      /* ── posting timing pills ── */
+      /* posting timing pills */
       .comp-timing-pill {
         background: #f7f7fa;
         border: 1px solid rgba(0,0,0,0.07);
-        border-radius: 16px;
+        border-radius: 12px;
         padding: 16px;
         display: flex;
         flex-direction: column;
@@ -261,44 +230,44 @@ function useCompetitorStyles() {
         gap: 6px;
       }
 
-      /* ── insight mini-cards ── */
+      /* insight mini-cards */
       .comp-insight-card {
         background: #f7f7fa;
         border: 1px solid rgba(0,0,0,0.07);
-        border-radius: 14px;
+        border-radius: 12px;
         padding: 16px 18px;
       }
 
-      /* ── accordion ── */
+      /* accordion */
       .comp-accordion-header {
         background: #ffffff;
-        border: 1px solid #d8d8e0;
-        box-shadow: 0 4px 16px rgba(0,0,0,0.14), 0 24px 64px rgba(0,0,0,0.18), 0 1px 0 rgba(255,255,255,0.9) inset;
+        border: 1px solid #e6e6ec;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.06);
         padding: 16px 20px;
         display: flex;
         align-items: center;
         gap: 16px;
-        transition: box-shadow 0.2s, border-color 0.2s;
+        transition: box-shadow 0.15s, border-color 0.15s;
         cursor: pointer;
         user-select: none;
       }
       .comp-accordion-header:hover {
-        box-shadow: 0 8px 28px rgba(0,0,0,0.18), 0 36px 80px rgba(0,0,0,0.22), 0 1px 0 rgba(255,255,255,0.9) inset;
-        border-color: #c0c0cc;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.06), 0 8px 24px rgba(0,0,0,0.08);
+        border-color: rgba(0,0,0,0.14);
       }
-      .comp-accordion-header.closed { border-radius: 20px; }
-      .comp-accordion-header.open   { border-radius: 20px 20px 0 0; border-bottom-color: rgba(0,0,0,0.07); }
+      .comp-accordion-header.closed { border-radius: 16px; }
+      .comp-accordion-header.open   { border-radius: 16px 16px 0 0; border-bottom-color: rgba(0,0,0,0.07); }
 
       .comp-accordion-body {
-        border: 1px solid #d8d8e0;
+        border: 1px solid #e6e6ec;
         border-top: none;
-        border-radius: 0 0 20px 20px;
+        border-radius: 0 0 16px 16px;
         background: #f8f8fb;
         padding: 24px 20px 28px;
-        box-shadow: 0 8px 24px rgba(0,0,0,0.10);
+        box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.06);
       }
 
-      /* ── section divider ── */
+      /* section divider */
       .comp-section-sep {
         height: 1px;
         background: rgba(0,0,0,0.06);
@@ -306,14 +275,14 @@ function useCompetitorStyles() {
         border: none;
       }
 
-      /* ── empty states ── */
+      /* empty states */
       .comp-empty-state {
         text-align: center;
         padding: 64px 0;
         color: #a0a0b0;
       }
 
-      /* ── section title label above card ── */
+      /* section title label above card */
       .comp-card-label {
         font-size: 10.5px;
         font-weight: 700;
@@ -323,32 +292,106 @@ function useCompetitorStyles() {
         margin-bottom: 5px;
       }
 
-      /* winner number badge */
+      /* winner number badge — amber rounded square, matches Priority Actions / Keywords clusters */
       .comp-winner-num {
-        background: linear-gradient(145deg, #111114 0%, #3a3a3a 100%);
+        background: #d97706;
         color: #fff;
-        border-radius: 50%;
-        width: 24px;
-        height: 24px;
+        border-radius: 6px;
+        width: 22px;
+        height: 22px;
         font-size: 11px;
-        font-weight: 800;
+        font-weight: 900;
         flex-shrink: 0;
         display: flex;
         align-items: center;
         justify-content: center;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.22);
-        margin-top: 1px;
+        font-variant-numeric: tabular-nums;
+        margin-top: 2px;
+      }
+
+      /* neutral elevated pill — used for per-row secondary actions (Analyze),
+         since red filled is reserved for the page's primary CTA (Search). */
+      .comp-btn-ghost {
+        background: #ffffff;
+        color: #111114;
+        border: 1px solid rgba(0,0,0,0.09);
+        border-radius: 100px;
+        padding: 9px 22px;
+        font-size: 13px;
+        font-weight: 700;
+        font-family: 'Inter', system-ui, sans-serif;
+        cursor: pointer;
+        white-space: nowrap;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.05);
+        transition: box-shadow 0.18s, transform 0.12s;
+        letter-spacing: -0.1px;
+      }
+      .comp-btn-ghost:hover {
+        box-shadow: 0 2px 6px rgba(0,0,0,0.07), 0 8px 20px rgba(0,0,0,0.08);
+        transform: translateY(-1px);
+      }
+
+      /* custom checkbox for Topics to tackle */
+      .comp-check {
+        appearance: none;
+        width: 18px;
+        height: 18px;
+        border-radius: 5px;
+        border: 1.5px solid rgba(0,0,0,0.18);
+        background: #fff;
+        cursor: pointer;
+        flex-shrink: 0;
+        transition: border-color 0.15s, background 0.15s;
+        position: relative;
+        margin-top: 2px;
+      }
+      .comp-check:hover { border-color: rgba(0,0,0,0.32); }
+      .comp-check:checked {
+        background: #16a34a;
+        border-color: #16a34a;
+      }
+      .comp-check:checked::after {
+        content: '';
+        position: absolute;
+        left: 5px; top: 1.5px;
+        width: 5px; height: 10px;
+        border-right: 2px solid #fff;
+        border-bottom: 2px solid #fff;
+        transform: rotate(45deg);
       }
     `
     document.head.appendChild(style)
   }, [])
 }
 
-// ─── colour tokens ────────────────────────────────────────────────────────────
+// ─── colour tokens — strict red/amber/green palette with system tints ────────
 const THREAT = {
-  high:   { bg: 'rgba(254,226,226,0.85)', border: 'rgba(252,165,165,0.9)', text: '#DC2626', label: 'High threat',   dot: '#ef4444' },
-  medium: { bg: 'rgba(255,251,235,0.85)', border: 'rgba(252,211,77,0.9)',  text: '#92400E', label: 'Medium threat', dot: '#f59e0b' },
-  low:    { bg: 'rgba(240,253,244,0.85)', border: 'rgba(134,239,172,0.9)', text: '#166534', label: 'Low threat',    dot: '#22c55e' },
+  high:   { bg: '#fff5f5', border: '#fecaca', text: '#e5251b', label: 'High threat',   dot: '#e5251b' },
+  medium: { bg: '#fffbeb', border: '#fde68a', text: '#d97706', label: 'Medium threat', dot: '#d97706' },
+  low:    { bg: '#f0fdf4', border: '#bbf7d0', text: '#16a34a', label: 'Low threat',    dot: '#16a34a' },
+}
+
+// Persist which "Topics to tackle" ideas the user has checked off. Scoped per
+// competitor channel_id so the state survives page reloads.
+const LS_CHECKED = 'ytgrowth_comp_checked_ideas'
+function loadCheckedIdeas() {
+  try { return JSON.parse(localStorage.getItem(LS_CHECKED) || '{}') } catch { return {} }
+}
+function saveCheckedIdeas(map) {
+  try { localStorage.setItem(LS_CHECKED, JSON.stringify(map)) } catch {}
+}
+
+// Relative time ("12d ago" / "3mo ago") for Top videos published date.
+function relTime(iso) {
+  if (!iso) return ''
+  try {
+    const t = new Date(iso).getTime()
+    const days = Math.max(0, Math.floor((Date.now() - t) / 86400000))
+    if (days < 1) return 'today'
+    if (days < 30)  return `${days}d ago`
+    if (days < 365) return `${Math.round(days / 30)}mo ago`
+    return `${Math.round(days / 365)}y ago`
+  } catch { return '' }
 }
 
 function fmtK(n) {
@@ -401,30 +444,30 @@ function ChannelCard({ channel, onAnalyze, isAdded, loadingId }) {
           </div>
       }
       <div style={{ flex: 1, minWidth: 0 }}>
-        <p style={{ fontWeight: 700, fontSize: 14, color: '#111', marginBottom: 3, letterSpacing: '-0.1px' }}>
+        <p style={{ fontWeight: 700, fontSize: 14, color: '#111114', marginBottom: 3, letterSpacing: '-0.1px' }}>
           {channel.channel_name}
         </p>
         {channel.description && (
-          <p style={{ fontSize: 12, color: '#888', overflow: 'hidden', fontWeight: 400,
+          <p style={{ fontSize: 12, color: '#9595a4', overflow: 'hidden', fontWeight: 400,
             textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{channel.description}</p>
         )}
       </div>
       {isAdded ? (
-        <span style={{ background: 'rgba(240,253,244,0.95)', color: '#166534',
-          border: '1.5px solid rgba(134,239,172,0.85)', borderRadius: 10,
-          padding: '8px 16px', fontSize: 12, fontWeight: 700, flexShrink: 0,
+        <span style={{ background: '#f0fdf4', color: '#16a34a',
+          border: '1px solid #bbf7d0', borderRadius: 100,
+          padding: '6px 14px', fontSize: 12, fontWeight: 700, flexShrink: 0,
           display: 'flex', alignItems: 'center', gap: 5 }}>
           <span style={{ fontSize: 12 }}>✓</span> Added
         </span>
       ) : loading ? (
-        <span style={{ background: 'rgba(245,245,247,0.95)', color: '#aaa',
-          border: '1.5px solid rgba(0,0,0,0.08)', borderRadius: 10,
-          padding: '8px 16px', fontSize: 12, fontWeight: 600, flexShrink: 0 }}>
+        <span style={{ background: '#f4f4f6', color: '#9595a4',
+          border: '1px solid rgba(0,0,0,0.09)', borderRadius: 100,
+          padding: '6px 14px', fontSize: 12, fontWeight: 600, flexShrink: 0 }}>
           Analyzing…
         </span>
       ) : (
-        <button className="comp-btn-primary" onClick={() => onAnalyze(channel.channel_id)}
-          style={{ padding: '9px 22px', fontSize: 14, borderRadius: 10, flexShrink: 0 }}>
+        <button className="comp-btn-ghost" onClick={() => onAnalyze(channel.channel_id)}
+          style={{ flexShrink: 0 }}>
           Analyze
         </button>
       )}
@@ -433,9 +476,10 @@ function ChannelCard({ channel, onAnalyze, isAdded, loadingId }) {
 }
 
 // ─── AI analysis ──────────────────────────────────────────────────────────────
-function AIAnalysis({ ai, top5Videos }) {
+function AIAnalysis({ ai, top5Videos, channelId, checkedIdeas, onToggleIdea }) {
   if (!ai) return null
-  const threat = THREAT[ai.threatLevel] || THREAT.medium
+  const threat   = THREAT[ai.threatLevel] || THREAT.medium
+  const checksForChannel = (checkedIdeas && channelId) ? (checkedIdeas[channelId] || {}) : {}
 
   const whyMap = {}
   ;(ai.topVideosToStudy || []).forEach(aiVid => {
@@ -462,7 +506,7 @@ function AIAnalysis({ ai, top5Videos }) {
             {threat.label}
           </span>
         </div>
-        <p style={{ fontSize: 14, color: '#444', lineHeight: 1.78, marginBottom: 14, fontWeight: 400 }}>
+        <p style={{ fontSize: 14, color: '#52525b', lineHeight: 1.78, marginBottom: 14, fontWeight: 400 }}>
           {ai.competitorSummary}
         </p>
         <div style={{ background: threat.bg, border: `1px solid ${threat.border}`,
@@ -481,37 +525,51 @@ function AIAnalysis({ ai, top5Videos }) {
             {ai.winningMoves.map((m, i) => (
               <div key={i} style={{ display: 'flex', gap: 14, alignItems: 'flex-start' }}>
                 <span className="comp-winner-num">{i + 1}</span>
-                <p style={{ fontSize: 14, color: '#333', lineHeight: 1.7, paddingTop: 3, fontWeight: 400 }}>{m}</p>
+                <p style={{ fontSize: 14, color: '#52525b', lineHeight: 1.7, paddingTop: 3, fontWeight: 400 }}>{m}</p>
               </div>
             ))}
           </div>
         </Card>
       )}
 
-      {/* ── video ideas ── */}
+      {/* ── video ideas — checkbox-driven to-do list ── */}
       {ai.videoIdeas?.length > 0 && (
         <Card>
           <SectionTitle>Topics to tackle</SectionTitle>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-            {ai.videoIdeas.map((idea, i) => (
-              <div key={i} className="comp-inner-block">
-                <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between',
-                  gap: 12, marginBottom: 8 }}>
-                  <p style={{ fontSize: 14, fontWeight: 700, color: '#111', lineHeight: 1.45,
-                    letterSpacing: '-0.1px' }}>{idea.title}</p>
-                  {idea.targetKeyword && (
-                    <span className="comp-tag" style={{ background: 'rgba(239,246,255,0.95)', color: '#1D4ED8',
-                      border: '1px solid rgba(147,197,253,0.8)', flexShrink: 0, whiteSpace: 'nowrap',
-                      marginTop: 2 }}>
-                      {idea.targetKeyword}
-                    </span>
-                  )}
+            {ai.videoIdeas.map((idea, i) => {
+              const isDone = !!checksForChannel[idea.title]
+              return (
+                <div key={i} className="comp-inner-block"
+                  style={{ opacity: isDone ? 0.55 : 1, transition: 'opacity 0.15s' }}>
+                  <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
+                    <input type="checkbox" className="comp-check"
+                      checked={isDone}
+                      onChange={() => onToggleIdea && onToggleIdea(channelId, idea.title)} />
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between',
+                        gap: 12, marginBottom: 6 }}>
+                        <p style={{ fontSize: 14, fontWeight: 700, color: '#111114', lineHeight: 1.45,
+                          letterSpacing: '-0.1px',
+                          textDecoration: isDone ? 'line-through' : 'none' }}>
+                          {idea.title}
+                        </p>
+                        {idea.targetKeyword && (
+                          <span className="comp-tag" style={{ background: '#fffbeb', color: '#d97706',
+                            border: '1px solid #fde68a', flexShrink: 0, whiteSpace: 'nowrap',
+                            marginTop: 2 }}>
+                            {idea.targetKeyword}
+                          </span>
+                        )}
+                      </div>
+                      <p style={{ fontSize: 12, color: '#52525b', lineHeight: 1.6, fontWeight: 400 }}>
+                        <span style={{ fontWeight: 700, color: '#111114' }}>Angle: </span>{idea.angle}
+                      </p>
+                    </div>
+                  </div>
                 </div>
-                <p style={{ fontSize: 12, color: '#666', lineHeight: 1.6, fontWeight: 400 }}>
-                  <span style={{ fontWeight: 700, color: '#333' }}>Angle: </span>{idea.angle}
-                </p>
-              </div>
-            ))}
+              )
+            })}
           </div>
         </Card>
       )}
@@ -547,23 +605,34 @@ function AIAnalysis({ ai, top5Videos }) {
                     </div>
                   </div>
                   <div style={{ flex: 1, minWidth: 0 }}>
-                    <p style={{ fontSize: 14, fontWeight: 600, color: '#111', lineHeight: 1.45,
-                      whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{v.title}</p>
+                    <p style={{ fontSize: 14, fontWeight: 600, color: '#111114', lineHeight: 1.45,
+                      whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', marginBottom: 4 }}>{v.title}</p>
+                    {/* Stats row — views · likes · comments · date */}
+                    <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', alignItems: 'center',
+                      fontSize: 12, color: '#9595a4', fontWeight: 500, fontVariantNumeric: 'tabular-nums' }}>
+                      <span><b style={{ color: '#52525b', fontWeight: 700 }}>{fmtK(v.views)}</b> views</span>
+                      {typeof v.likes === 'number' && (
+                        <><span style={{ color: '#d0d0d8' }}>·</span>
+                         <span><b style={{ color: '#52525b', fontWeight: 700 }}>{fmtK(v.likes)}</b> likes</span></>
+                      )}
+                      {typeof v.comments === 'number' && (
+                        <><span style={{ color: '#d0d0d8' }}>·</span>
+                         <span><b style={{ color: '#52525b', fontWeight: 700 }}>{fmtK(v.comments)}</b> comments</span></>
+                      )}
+                      {v.published_at && (
+                        <><span style={{ color: '#d0d0d8' }}>·</span>
+                         <span>{relTime(v.published_at)}</span></>
+                      )}
+                    </div>
                     {why && (
-                      <p style={{ fontSize: 12, color: '#999', marginTop: 3, lineHeight: 1.4,
+                      <p style={{ fontSize: 12, color: '#9595a4', marginTop: 4, lineHeight: 1.4,
                         whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                         {why}
                       </p>
                     )}
                   </div>
-                  {/* view count badge */}
-                  <span style={{ background: 'rgba(0,0,0,0.05)', border: '1px solid rgba(0,0,0,0.07)',
-                    color: '#222', fontSize: 12, fontWeight: 800, padding: '4px 10px',
-                    borderRadius: 8, flexShrink: 0, letterSpacing: '0.1px' }}>
-                    {fmtK(v.views)}
-                  </span>
                   <svg width="12" height="12" viewBox="0 0 13 13" fill="none"
-                    stroke="#ccc" strokeWidth="1.8" strokeLinecap="round" style={{ flexShrink: 0 }}>
+                    stroke="#c0c0cc" strokeWidth="1.8" strokeLinecap="round" style={{ flexShrink: 0 }}>
                     <path d="M2 11L10 3M10 3H5M10 3v5"/>
                   </svg>
                 </a>
@@ -583,10 +652,10 @@ function AIAnalysis({ ai, top5Videos }) {
                 <div key={i} style={{ display: 'flex', justifyContent: 'space-between',
                   alignItems: 'center', padding: '9px 0',
                   borderBottom: i < ai.topTopics.length - 1 ? '1px solid rgba(0,0,0,0.05)' : 'none' }}>
-                  <p style={{ fontSize: 14, color: '#333', fontWeight: 500 }}>{t.topic}</p>
+                  <p style={{ fontSize: 14, color: '#52525b', fontWeight: 500 }}>{t.topic}</p>
                   <div style={{ textAlign: 'right', flexShrink: 0, marginLeft: 12 }}>
-                    <p style={{ fontSize: 14, fontWeight: 800, color: '#111' }}>{fmtK(t.avgViews)}</p>
-                    <p style={{ fontSize: 12, color: '#aaa', fontWeight: 500 }}>{t.videoCount} videos</p>
+                    <p style={{ fontSize: 14, fontWeight: 800, color: '#111114' }}>{fmtK(t.avgViews)}</p>
+                    <p style={{ fontSize: 12, color: '#9595a4', fontWeight: 500 }}>{t.videoCount} videos</p>
                   </div>
                 </div>
               ))}
@@ -600,9 +669,9 @@ function AIAnalysis({ ai, top5Videos }) {
             <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
               <div>
                 <p className="comp-card-label">Avg title length</p>
-                <p style={{ fontSize: 22, fontWeight: 800, color: '#111', letterSpacing: '-0.5px' }}>
+                <p style={{ fontSize: 22, fontWeight: 800, color: '#111114', letterSpacing: '-0.5px' }}>
                   {ai.titlePatterns.avgTitleLength}
-                  <span style={{ fontSize: 14, fontWeight: 500, color: '#aaa', marginLeft: 4 }}>chars</span>
+                  <span style={{ fontSize: 14, fontWeight: 500, color: '#9595a4', marginLeft: 4 }}>chars</span>
                 </p>
               </div>
               {ai.titlePatterns.dominantFormats?.length > 0 && (
@@ -610,8 +679,8 @@ function AIAnalysis({ ai, top5Videos }) {
                   <p className="comp-card-label" style={{ marginBottom: 7 }}>Dominant formats</p>
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5 }}>
                     {ai.titlePatterns.dominantFormats.map((f, i) => (
-                      <span key={i} className="comp-tag" style={{ background: 'rgba(244,244,248,0.9)',
-                        color: '#444', border: '1px solid rgba(0,0,0,0.09)' }}>{f}</span>
+                      <span key={i} className="comp-tag" style={{ background: '#f4f4f6',
+                        color: '#52525b', border: '1px solid rgba(0,0,0,0.09)' }}>{f}</span>
                     ))}
                   </div>
                 </div>
@@ -621,8 +690,8 @@ function AIAnalysis({ ai, top5Videos }) {
                   <p className="comp-card-label" style={{ marginBottom: 7 }}>Top keywords</p>
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5 }}>
                     {ai.titlePatterns.topKeywords.map((k, i) => (
-                      <span key={i} className="comp-tag" style={{ background: 'rgba(239,246,255,0.95)',
-                        color: '#1D4ED8', border: '1px solid rgba(147,197,253,0.8)' }}>{k}</span>
+                      <span key={i} className="comp-tag" style={{ background: '#f4f4f6',
+                        color: '#52525b', border: '1px solid rgba(0,0,0,0.09)' }}>{k}</span>
                     ))}
                   </div>
                 </div>
@@ -632,8 +701,8 @@ function AIAnalysis({ ai, top5Videos }) {
                   <p className="comp-card-label" style={{ marginBottom: 7 }}>Power words</p>
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5 }}>
                     {ai.titlePatterns.powerWordsUsed.map((w, i) => (
-                      <span key={i} className="comp-tag" style={{ background: 'rgba(255,247,237,0.95)',
-                        color: '#C2410C', border: '1px solid rgba(253,186,116,0.8)' }}>{w}</span>
+                      <span key={i} className="comp-tag" style={{ background: '#fffbeb',
+                        color: '#d97706', border: '1px solid #fde68a' }}>{w}</span>
                     ))}
                   </div>
                 </div>
@@ -695,8 +764,18 @@ export default function Competitors() {
   const [activeTab, setActiveTab]           = useState('search')
   const [searched, setSearched]             = useState(false)
   const [expandedIdx, setExpandedIdx]       = useState(null)
+  const [checkedIdeas, setCheckedIdeas]     = useState(() => loadCheckedIdeas())
 
   useEffect(() => { saveTracked(analyses) }, [analyses])
+
+  function toggleIdea(channelId, ideaTitle) {
+    setCheckedIdeas(prev => {
+      const ch = prev[channelId] || {}
+      const next = { ...prev, [channelId]: { ...ch, [ideaTitle]: !ch[ideaTitle] } }
+      saveCheckedIdeas(next)
+      return next
+    })
+  }
 
   // On mount: if localStorage is empty, try to restore tracked competitors from the backend.
   // This recovers the list when the user clears their cache or logs in from a new device.
@@ -767,7 +846,7 @@ export default function Competitors() {
     <div className="comp-page">
       {/* ── header ── */}
       <div style={{ marginBottom: 24 }}>
-        <h2 style={{ fontSize: 22, fontWeight: 800, color: '#0a0a0f', marginBottom: 4, letterSpacing: '-0.6px' }}>
+        <h2 style={{ fontSize: 22, fontWeight: 800, color: '#111114', marginBottom: 4, letterSpacing: '-0.6px' }}>
           Competitor Analysis
         </h2>
         <p style={{ fontSize: 14, color: '#a0a0b0', fontWeight: 400 }}>
@@ -790,7 +869,7 @@ export default function Competitors() {
       {activeTab === 'search' && (
         <div>
           <Card style={{ marginBottom: 20 }}>
-            <p style={{ fontSize: 14, fontWeight: 800, color: '#0a0a0f', marginBottom: 4, letterSpacing: '-0.3px' }}>
+            <p style={{ fontSize: 14, fontWeight: 800, color: '#111114', marginBottom: 4, letterSpacing: '-0.3px' }}>
               Find a competitor
             </p>
             <p style={{ fontSize: 14, color: '#a0a0b0', marginBottom: 16, fontWeight: 400 }}>
@@ -902,7 +981,7 @@ export default function Competitors() {
                     {/* ── left: name + badges ── */}
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-                        <p style={{ fontWeight: 800, fontSize: 14, color: '#0a0a0a',
+                        <p style={{ fontWeight: 800, fontSize: 14, color: '#111114',
                           letterSpacing: '-0.2px', whiteSpace: 'nowrap', overflow: 'hidden',
                           textOverflow: 'ellipsis' }}>
                           {comp.channel_name}
@@ -925,7 +1004,7 @@ export default function Competitors() {
                         <StatChip value={fmtK(comp.avg_views_per_video)} label="avg views" />
                         {ai && <StatChip value={ai.gapsToExploit?.length || 0} label="gaps" />}
                         {savedAt && (
-                          <span style={{ fontSize: 12, color: '#bbb', fontWeight: 500,
+                          <span style={{ fontSize: 12, color: '#9595a4', fontWeight: 500,
                             alignSelf: 'center', marginLeft: 2 }}>
                             · {savedAt}
                           </span>
@@ -947,7 +1026,13 @@ export default function Competitors() {
                   {/* ── expanded report ── */}
                   {isOpen && (
                     <div className="comp-accordion-body">
-                      <AIAnalysis ai={ai} top5Videos={comp.top_5_videos} />
+                      <AIAnalysis
+                        ai={ai}
+                        top5Videos={comp.top_5_videos}
+                        channelId={comp.channel_id}
+                        checkedIdeas={checkedIdeas}
+                        onToggleIdea={toggleIdea}
+                      />
                     </div>
                   )}
                 </div>
