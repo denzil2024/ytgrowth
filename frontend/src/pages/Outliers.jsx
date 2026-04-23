@@ -790,7 +790,7 @@ export default function Outliers({ channelData, onNavigate }) {
                 </p>
               </div>
             ) : (
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 14 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, minmax(0, 1fr))', gap: 14 }}>
                 {items.map(item => (
                   tab === 'channel'
                     ? <ChannelResultCard key={item.channel_id} item={item} onOpen={() => setActive(item)} />
@@ -856,45 +856,33 @@ function VideoResultCard({ item, kind, onOpen }) {
               style={{ width: '100%', aspectRatio: '16/9', objectFit: 'cover', display: 'block' }}/>
           : <div style={{ width: '100%', aspectRatio: '16/9', background: '#ebebef' }}/>
         }
-        {/* Outlier pill — top-left, same position SHORT pill occupies on the Videos tab */}
-        <span style={{
-          position: 'absolute', top: 8, left: 8,
-          background: tier.color, color: '#fff',
-          fontSize: 11, fontWeight: 800, padding: '3px 9px', borderRadius: 20,
-          letterSpacing: '0.03em', textTransform: 'uppercase',
-          fontVariantNumeric: 'tabular-nums',
-          boxShadow: '0 1px 3px rgba(0,0,0,0.25)',
-          display: 'inline-flex', alignItems: 'center', gap: 4,
-        }}>
-          <svg width="10" height="10" viewBox="0 0 12 12" fill="currentColor"><path d="M6 1l1.4 3.6L11 6l-3.6 1.4L6 11l-1.4-3.6L1 6l3.6-1.4z"/></svg>
-          {tier.label}
-        </span>
+        {/* SHORT / duration badges — identical to Videos tab. Outlier signal
+            lives in the footer's OUTLIER metric, not on the thumbnail, so the
+            thumbnail stays as clean as the Videos tab's. */}
         {isShort && (
-          <span style={{ position: 'absolute', top: 8, right: 8, background: '#111', color: '#fff', fontSize: 11, fontWeight: 800, padding: '2px 6px', borderRadius: 4, letterSpacing: '0.06em' }}>SHORT</span>
+          <span style={{ position: 'absolute', top: 8, left: 8, background: '#111', color: '#fff', fontSize: 12, fontWeight: 800, padding: '2px 6px', borderRadius: 4, letterSpacing: '0.06em' }}>SHORT</span>
         )}
-        {durLabel && !isShort && (
+        {durLabel && (
           <span style={{ position: 'absolute', bottom: 8, right: 8, background: 'rgba(0,0,0,0.72)', color: '#fff', fontSize: 12, fontWeight: 700, padding: '2px 7px', borderRadius: 5, fontVariantNumeric: 'tabular-nums' }}>{durLabel}</span>
         )}
       </a>
 
-      {/* Body — matches Videos tab padding + layout */}
+      {/* Body — identical to Videos tab: title → meta line (3 items separated
+          by dots, bold values) → footer hairline + 3 metrics + red CTA. */}
       <div style={{ padding: '20px 20px 20px', display: 'flex', flexDirection: 'column', flex: 1 }}>
-        {/* Title */}
+        {/* Title — same 16/700/-0.3ls/mb:14/2-line clamp as Videos tab */}
         <p style={{
-          fontSize: 16, fontWeight: 700, color: C.text1, lineHeight: 1.45, marginBottom: 10, letterSpacing: '-0.3px',
+          fontSize: 16, fontWeight: 700, color: C.text1, lineHeight: 1.45, marginBottom: 14, letterSpacing: '-0.3px',
           display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden',
         }}>{item.title}</p>
 
-        {/* Channel name — one extra line to identify the creator (channels aren't yours here) */}
-        <p style={{ fontSize: 12.5, color: C.text3, fontWeight: 500, marginBottom: 10, letterSpacing: '-0.05px',
-          whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
-        }}>{item.channel_name}</p>
-
-        {/* Meta line — same pattern as Videos tab (bold values, dot separators, relative time) */}
-        <p style={{ fontSize: 13.5, fontWeight: 500, color: C.text3, marginBottom: 14, lineHeight: 1.4 }}>
-          <span style={{ color: C.text2, fontWeight: 600 }}>{fmtNum(views)}</span> views
+        {/* Meta line — same 3-item · separator pattern as Videos tab. Swap
+            the "likes" slot for the channel name (the Outliers-relevant
+            dimension: who made this, since it's not the user's own video). */}
+        <p style={{ fontSize: 13.5, fontWeight: 500, color: C.text3, marginBottom: 14, lineHeight: 1.4, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+          <span style={{ color: C.text2, fontWeight: 600 }}>{item.channel_name}</span>
           <span style={{ margin: '0 8px', color: '#d4d4dc' }}>·</span>
-          <span style={{ color: C.text2, fontWeight: 600 }}>{fmtNum(subs)}</span> subs
+          <span style={{ color: C.text2, fontWeight: 600 }}>{fmtNum(views)}</span> views
           <span style={{ margin: '0 8px', color: '#d4d4dc' }}>·</span>
           {relPublished(item.published_at) || '—'}
         </p>
@@ -948,68 +936,35 @@ function ChannelResultCard({ item, onOpen }) {
 
   return (
     <div className="out-grid-card">
-      {/* Banner = top video thumbnail (or a neutral fill); avatar + outlier pill overlay */}
+      {/* Banner = their best-performing video's thumbnail. No overlay pills,
+          no avatar ring — keeps the thumbnail as clean as the Videos tab. */}
       <a href={ytUrl || '#'} target="_blank" rel="noopener noreferrer"
         onClick={e => { if (!ytUrl) e.preventDefault() }}
         style={{ display: 'block', position: 'relative', textDecoration: 'none', flexShrink: 0, borderRadius: '15px 15px 0 0', overflow: 'hidden' }}>
         {item.top_video_thumbnail
           ? <img src={item.top_video_thumbnail} alt=""
               style={{ width: '100%', aspectRatio: '16/9', objectFit: 'cover', display: 'block' }}/>
-          : <div style={{ width: '100%', aspectRatio: '16/9', background: `linear-gradient(135deg, ${C.redBg} 0%, #ffe4e4 100%)` }}/>
+          : <div style={{ width: '100%', aspectRatio: '16/9', background: '#ebebef' }}/>
         }
-        {/* Outlier pill — same position as VideoResultCard */}
-        <span style={{
-          position: 'absolute', top: 8, left: 8,
-          background: tier.color, color: '#fff',
-          fontSize: 11, fontWeight: 800, padding: '3px 9px', borderRadius: 20,
-          letterSpacing: '0.03em', textTransform: 'uppercase',
-          fontVariantNumeric: 'tabular-nums',
-          boxShadow: '0 1px 3px rgba(0,0,0,0.25)',
-          display: 'inline-flex', alignItems: 'center', gap: 4,
-        }}>
-          <svg width="10" height="10" viewBox="0 0 12 12" fill="currentColor"><path d="M6 1l1.4 3.6L11 6l-3.6 1.4L6 11l-1.4-3.6L1 6l3.6-1.4z"/></svg>
-          {tier.label}
-        </span>
-        {/* Channel avatar — overlaid bottom-left, circular, white ring */}
-        <div style={{
-          position: 'absolute', left: 12, bottom: -22,
-          width: 44, height: 44, borderRadius: '50%',
-          overflow: 'hidden', background: C.redBg,
-          border: '3px solid #fff',
-          boxShadow: '0 2px 8px rgba(0,0,0,0.12)',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          fontSize: 16, fontWeight: 800, color: C.red,
-        }}>
-          {item.thumbnail
-            ? <img src={item.thumbnail} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }}/>
-            : initial
-          }
-        </div>
       </a>
 
-      {/* Body — same structure as VideoResultCard for visual parity */}
-      <div style={{ padding: '30px 20px 20px', display: 'flex', flexDirection: 'column', flex: 1 }}>
-        {/* Channel name — role parallel to video title */}
+      {/* Body — identical to VideoResultCard / Videos tab structure:
+          title → meta line (3 items · separated) → footer. */}
+      <div style={{ padding: '20px 20px 20px', display: 'flex', flexDirection: 'column', flex: 1 }}>
+        {/* Title slot = channel name, same 16/700/-0.3ls as Videos tab titles */}
         <p style={{
-          fontSize: 16, fontWeight: 700, color: C.text1, lineHeight: 1.4, marginBottom: 8, letterSpacing: '-0.3px',
-          whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
+          fontSize: 16, fontWeight: 700, color: C.text1, lineHeight: 1.45, marginBottom: 14, letterSpacing: '-0.3px',
+          display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden',
+          minHeight: 46,
         }}>{item.channel_name}</p>
 
-        {/* Description — 1-line clamp, replaces the "channel-name" role in VideoResultCard */}
-        <p style={{
-          fontSize: 12.5, color: C.text3, fontWeight: 500, marginBottom: 10,
-          lineHeight: 1.45,
-          display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden',
-          minHeight: 36,
-        }}>{item.description || '—'}</p>
-
-        {/* Meta line — bold values, dot separators, matches VideoResultCard */}
-        <p style={{ fontSize: 13.5, fontWeight: 500, color: C.text3, marginBottom: 14, lineHeight: 1.4 }}>
+        {/* Meta line — same 3-item · separator pattern as Videos tab */}
+        <p style={{ fontSize: 13.5, fontWeight: 500, color: C.text3, marginBottom: 14, lineHeight: 1.4, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
           <span style={{ color: C.text2, fontWeight: 600 }}>{fmtNum(item.subscribers)}</span> subs
           <span style={{ margin: '0 8px', color: '#d4d4dc' }}>·</span>
-          <span style={{ color: C.text2, fontWeight: 600 }}>{fmtNum(item.avg_views_per_video)}</span> avg views
+          <span style={{ color: C.text2, fontWeight: 600 }}>{fmtNum(item.video_count)}</span> videos
           <span style={{ margin: '0 8px', color: '#d4d4dc' }}>·</span>
-          {fmtNum(item.video_count)} videos
+          {fmtNum(item.avg_views_per_video)} avg
         </p>
 
         {/* Footer — same 3-metric grid pattern as VideoResultCard */}
