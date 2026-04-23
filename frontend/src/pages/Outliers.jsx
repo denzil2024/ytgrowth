@@ -1467,19 +1467,16 @@ function OutlierBar({ label, score, tip }) {
    three cells — no stacked sub-sections, no nested tiles.
    ──────────────────────────────────────────────────────────────────────── */
 function ThumbnailPatternsCard({ patterns, query }) {
-  if (!patterns || (!patterns.visual_formula && !patterns.dominant_style && !(patterns.recommendations || []).length)) {
+  if (!patterns || (!patterns.dominant_style && !(patterns.recommendations || []).length)) {
     return null
   }
-  // Prefer the single-paragraph synthesis (matches Priority Actions density);
-  // fall back to joining the 5 field sentences for any older cached results
-  // that don't have visual_formula yet.
-  const formulaPara = (patterns.visual_formula || '').trim() || [
-    patterns.dominant_style,
-    patterns.text_overlay,
-    patterns.face_presence,
-    patterns.color_palette,
-    patterns.layout_pattern,
-  ].filter(s => s && s.trim()).join(' ')
+  const traits = [
+    ['Dominant style', patterns.dominant_style],
+    ['Text overlay',   patterns.text_overlay],
+    ['Face presence',  patterns.face_presence],
+    ['Color palette',  patterns.color_palette],
+    ['Layout',         patterns.layout_pattern],
+  ].filter(([, v]) => v && v.trim())
   const recs = patterns.recommendations || []
 
   return (
@@ -1520,13 +1517,15 @@ function ThumbnailPatternsCard({ patterns, query }) {
         {/* 3-cell body — same 1fr 1.4fr 1fr column weights and tints as Priority Actions */}
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr 1fr', gap: 8, marginLeft: 46 }}>
 
-          {/* Blue "Visual formula" — single flowing paragraph that weaves
-              dominant style, text overlay, faces, colour palette and layout
-              into prose. Matches Priority Actions' single-paragraph density
-              so the three cells feel balanced. */}
+          {/* Blue "Visual formula" — all 5 traits compacted into one tinted cell */}
           <div style={{ background: 'rgba(79,134,247,0.07)', border: '1px solid rgba(79,134,247,0.12)', borderRadius: 10, padding: '12px 14px' }}>
-            <p style={{ fontSize: 10, fontWeight: 700, color: '#4a7cf7', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Visual formula</p>
-            <p style={{ fontSize: 13.5, color: C.text1, lineHeight: 1.72 }}>{formulaPara || '—'}</p>
+            <p style={{ fontSize: 10, fontWeight: 700, color: '#4a7cf7', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 10 }}>Visual formula</p>
+            {traits.map(([label, value], i) => (
+              <div key={label} style={{ marginBottom: i === traits.length - 1 ? 0 : 10 }}>
+                <p style={{ fontSize: 9.5, fontWeight: 700, color: C.text3, letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 3 }}>{label}</p>
+                <p style={{ fontSize: 12.5, color: C.text1, lineHeight: 1.55 }}>{value}</p>
+              </div>
+            ))}
           </div>
 
           {/* Amber+bar "Next thumbnail" — the "Action" equivalent in Priority Actions */}
@@ -1539,15 +1538,15 @@ function ThumbnailPatternsCard({ patterns, query }) {
             boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
             display: 'flex', flexDirection: 'column',
           }}>
-            <p style={{ fontSize: 10, fontWeight: 700, color: C.amber, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>Next thumbnail</p>
+            <p style={{ fontSize: 10, fontWeight: 700, color: C.amber, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 10 }}>Next thumbnail</p>
             {recs.length === 0 ? (
-              <p style={{ fontSize: 13.5, color: C.text3, lineHeight: 1.72 }}>—</p>
+              <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.6 }}>—</p>
             ) : (
               <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 8 }}>
                 {recs.map((r, i) => (
                   <li key={i} style={{ display: 'flex', gap: 8, alignItems: 'flex-start' }}>
-                    <span style={{ fontSize: 13.5, fontWeight: 700, color: C.amber, fontVariantNumeric: 'tabular-nums', lineHeight: 1.72, minWidth: 14 }}>{i + 1}.</span>
-                    <span style={{ fontSize: 13.5, color: C.text1, lineHeight: 1.72, flex: 1 }}>{r}</span>
+                    <span style={{ fontSize: 12, fontWeight: 700, color: C.amber, fontVariantNumeric: 'tabular-nums', lineHeight: 1.55, minWidth: 14 }}>{i + 1}.</span>
+                    <span style={{ fontSize: 13, color: C.text1, lineHeight: 1.6, flex: 1 }}>{r}</span>
                   </li>
                 ))}
               </ul>
@@ -1558,7 +1557,7 @@ function ThumbnailPatternsCard({ patterns, query }) {
           {patterns.why_now ? (
             <div style={{ background: 'rgba(5,150,105,0.07)', border: '1px solid rgba(5,150,105,0.14)', borderRadius: 10, padding: '12px 14px' }}>
               <p style={{ fontSize: 10, fontWeight: 700, color: C.green, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Why now</p>
-              <p style={{ fontSize: 13.5, color: C.text1, lineHeight: 1.72 }}>{patterns.why_now}</p>
+              <p style={{ fontSize: 13, color: C.text1, lineHeight: 1.65 }}>{patterns.why_now}</p>
             </div>
           ) : <div />}
 

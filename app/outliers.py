@@ -1085,12 +1085,11 @@ B) Rank the thumbnails from MOST to LEAST click-worthy based PURELY on the
 
 Return ONLY valid JSON, no markdown:
 {{
-  "visual_formula": "<ONE flowing paragraph, 3–4 sentences, 50–65 words total. Weave together: dominant style, on-thumbnail text (size/caps/placement), face presence & expression, colour palette & contrast, and spatial layout. Read as prose, NOT as a bulleted breakdown. Reference concrete details you see.>",
-  "dominant_style": "<1 short sentence — kept for back-compat>",
-  "text_overlay": "<1 short sentence — kept for back-compat>",
-  "face_presence": "<1 short sentence — kept for back-compat>",
-  "color_palette": "<1 short sentence — kept for back-compat>",
-  "layout_pattern": "<1 short sentence — kept for back-compat>",
+  "dominant_style": "<1 sentence — the overall visual approach that dominates>",
+  "text_overlay": "<1 sentence — on-thumbnail text: size, font, ALL CAPS vs mixed, word count, placement>",
+  "face_presence": "<1 sentence — how many have faces, typical expression/emotion, face size/placement>",
+  "color_palette": "<1 sentence — dominant colours, contrast level, saturation>",
+  "layout_pattern": "<1 sentence — spatial composition: subject side, props, bars, borders, arrows>",
   "recommendations": [
     "<concrete recommendation 1 — ≤ 18 words, imperative, specific>",
     "<concrete recommendation 2>",
@@ -1140,7 +1139,6 @@ Be specific. Reference actual visual details you see. No generic advice."""
             if isinstance(rid, str) and rid.strip() in valid_ids
         ]
         return {
-            "visual_formula":  (parsed.get("visual_formula") or "").strip(),
             "dominant_style":  (parsed.get("dominant_style") or "").strip(),
             "text_overlay":    (parsed.get("text_overlay") or "").strip(),
             "face_presence":   (parsed.get("face_presence") or "").strip(),
