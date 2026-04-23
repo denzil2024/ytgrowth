@@ -7,6 +7,7 @@ Video Ideas routes
 import json
 import re
 import datetime
+from datetime import timezone, timedelta
 
 from fastapi import APIRouter, Request
 from fastapi.responses import JSONResponse
@@ -407,9 +408,15 @@ def refresh_video_ideas(body: RefreshBody, request: Request):
         #   (b) views >= 2x the competitor's average (algorithmic spike)
         # We pull the structured results already stored from competitor analyses.
 
+        # Only consider competitor analyses from the last 12 months.  Older
+        # cached analyses reference videos/topics that may no longer reflect
+        # what YouTube's algorithm is currently pushing, so we drop them to
+        # keep the proven-demand pool fresh.
+        recency_cutoff = datetime.datetime.now(timezone.utc) - timedelta(days=365)
         cache_rows = (
             db.query(CompetitorAnalysisCache)
-            .filter_by(channel_id=channel_id)
+            .filter(CompetitorAnalysisCache.channel_id == channel_id)
+            .filter(CompetitorAnalysisCache.analyzed_at >= recency_cutoff)
             .order_by(CompetitorAnalysisCache.analyzed_at.desc())
             .all()
         )
@@ -488,6 +495,7 @@ def refresh_video_ideas(body: RefreshBody, request: Request):
         pooled = _pool_competitor_ideas(db, channel_id)
 
         # ── 4. Claude call with algorithmic-signal framing ──
+        current_year = datetime.datetime.now(timezone.utc).year
         prompt = f"""YOUR CHANNEL:
 - Niche/keywords: {channel_keywords}
 - Subscribers: {subscribers:,}
@@ -495,7 +503,7 @@ def refresh_video_ideas(body: RefreshBody, request: Request):
 - Best performing video: "{top_video_title}" ({top_video_views:,} views)
 - Channel audit summary: {insights.get("channelSummary", "N/A")}
 
-COMPETITOR VIDEOS THAT YOUTUBE PUSHED TO A WIDE AUDIENCE:
+COMPETITOR VIDEOS THAT YOUTUBE PUSHED TO A WIDE AUDIENCE (last 12 months only):
 These are real videos from channels in your niche where YouTube distributed the content
 beyond the channel's own subscribers (high view-to-subscriber ratio or large algorithmic spike).
 These topics have PROVEN demand — YouTube's algorithm is already promoting this type of content.
@@ -506,8 +514,9 @@ CONTENT GAPS IN THIS NICHE (topics competitors are ignoring):
 {gaps_json}
 
 YOUR TASK:
-Generate exactly 10 video ideas for this creator. Every idea MUST be derived from the
-proven-demand signals above — topics YouTube is already distributing in this niche.
+Generate exactly 10 video ideas for this creator that are fresh and relevant for {current_year}.
+Every idea MUST be derived from the proven-demand signals above — topics YouTube is already
+distributing in this niche.
 
 Rules:
 1. Each title must target a topic that appears in the proven-demand data above (or a close
@@ -519,8 +528,12 @@ Rules:
 4. Assign opportunityScore (0–100) based on: signal strength (40%), search demand evidence (30%),
    fit for this creator's niche (30%). Never give a score above 80 unless signal_strength is high/very_high.
 5. The "angle" field must explain specifically WHY YouTube will distribute this video — not just
-   why it's a good idea.
+   why it's a good idea. If the framing benefits from a time hook, use {current_year} — never an
+   older year. Do NOT produce titles with dated year references (e.g. "2023", "2024") unless the
+   topic is explicitly retrospective.
 6. targetKeyword must be a phrase people actually type into YouTube search.
+7. Favour evergreen-but-currently-trending angles over fads that already peaked. The goal is
+   distribution in the next 30-90 days, not nostalgia.
 
 Return ONLY valid JSON, no markdown:
 [

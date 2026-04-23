@@ -23,18 +23,14 @@ if (typeof document !== 'undefined' && !document.getElementById('ytg-vi-styles')
       background: #ffffff;
       border: 1px solid rgba(0,0,0,0.09);
       border-radius: 16px;
-      padding: 16px 20px 18px;
       margin-bottom: 10px;
       box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.06);
-      transition: border-color 0.2s, opacity 0.2s, box-shadow 0.2s;
+      transition: border-color 0.2s, opacity 0.2s;
       animation: viFadeUp 0.26s ease both;
+      overflow: hidden;
     }
-    .vi-idea-card:hover {
-      border-color: rgba(0,0,0,0.14);
-    }
-    .vi-idea-card.done {
-      opacity: 0.5;
-    }
+    .vi-idea-card:hover { border-color: rgba(0,0,0,0.14); }
+    .vi-idea-card.done  { opacity: 0.55; }
 
     .vi-skeleton {
       background: linear-gradient(90deg, #f0f0f3 25%, #e8e8ec 50%, #f0f0f3 75%);
@@ -59,26 +55,20 @@ if (typeof document !== 'undefined' && !document.getElementById('ytg-vi-styles')
     }
     .vi-cta-btn:hover { filter: brightness(1.1); }
 
-    /* Ghost CTA sibling — outlined, same rhythm as the primary pill */
-    .vi-cta-ghost {
-      display: inline-flex; align-items: center; gap: 6px;
-      padding: 8px 14px; border-radius: 100px;
-      font-size: 12.5px; font-weight: 600; font-family: inherit;
-      letter-spacing: 0.01em;
-      background: #fff; color: #3c3c44;
-      border: 1px solid rgba(0,0,0,0.12); cursor: pointer;
-      transition: background 0.15s, border-color 0.15s;
-    }
-    .vi-cta-ghost:hover { background: #f6f6f9; border-color: rgba(0,0,0,0.2); }
-
-    .vi-check-btn {
-      width: 22px; height: 22px; border-radius: 6px; flex-shrink: 0;
-      border: 1.5px solid rgba(0,0,0,0.2); background: #fff;
+    /* Refresh-confirm modal — minimal overlay, matches other dialogs in the
+       app: backdrop blur + centered card with hairline + system elevation. */
+    .vi-modal-backdrop {
+      position: fixed; inset: 0; z-index: 200;
+      background: rgba(10,10,15,0.42); backdrop-filter: blur(4px);
       display: flex; align-items: center; justify-content: center;
-      cursor: pointer; transition: background 0.15s, border-color 0.15s; margin-top: 2px;
+      padding: 20px; animation: viFadeUp 0.2s ease both;
     }
-    .vi-check-btn:hover { border-color: #16a34a; background: #f0fdf4; }
-    .vi-check-btn.checked { background: #16a34a; border-color: #16a34a; }
+    .vi-modal {
+      background: #fff; border-radius: 16px;
+      border: 1px solid rgba(0,0,0,0.09);
+      box-shadow: 0 10px 40px rgba(0,0,0,0.14);
+      width: 100%; max-width: 440px; overflow: hidden;
+    }
   `
   document.head.appendChild(s)
 }
@@ -190,101 +180,189 @@ function SkeletonCard({ index }) {
   )
 }
 
-/* IdeaCard — clean row layout, not stacked pills. Header row: checkbox +
-   rank badge + title + score. Meta row: source badge + keyword + thumbnail
-   readiness, all inline. Angle (if present) sits under as a single line.
-   CTAs only shown when not done. */
-function IdeaCard({ idea, done, onDone, onUseSeo, onScoreThumbnail }) {
+/* RefreshConfirmModal — shown before a paid refresh. Lists the cost and
+   how the generation is scoped so the user knows what 1 credit buys. */
+function RefreshConfirmModal({ credits, onCancel, onConfirm }) {
+  useEffect(() => {
+    function onKey(e) { if (e.key === 'Escape') onCancel() }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [onCancel])
+
+  return (
+    <div className="vi-modal-backdrop" onClick={onCancel}>
+      <div className="vi-modal" onClick={e => e.stopPropagation()}>
+        <div style={{ padding: '22px 24px 20px' }}>
+          <p style={{ fontSize: 10, fontWeight: 700, color: C.amber, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>
+            Uses 1 credit
+          </p>
+          <h3 style={{ fontSize: 18, fontWeight: 800, color: C.text1, letterSpacing: '-0.3px', lineHeight: 1.3, marginBottom: 10 }}>
+            Generate fresh video ideas?
+          </h3>
+          <p style={{ fontSize: 13.5, color: C.text2, lineHeight: 1.65, marginBottom: 14 }}>
+            YTGrowth will produce 10 new ideas based on:
+          </p>
+          <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 16px 0', display: 'flex', flexDirection: 'column', gap: 8 }}>
+            {[
+              'Your channel niche and audit signals',
+              'Your tracked competitors (last 12 months only)',
+              'Current-year search and distribution trends',
+            ].map((t, i) => (
+              <li key={i} style={{ display: 'flex', gap: 8, alignItems: 'flex-start', fontSize: 13, color: C.text2, lineHeight: 1.55 }}>
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke={C.green} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, marginTop: 2 }}>
+                  <polyline points="2,7.5 6,11 12,3"/>
+                </svg>
+                <span>{t}</span>
+              </li>
+            ))}
+          </ul>
+          <div style={{
+            fontSize: 12.5, color: C.text3, background: '#f6f6f9',
+            border: `1px solid ${C.border}`, borderRadius: 10,
+            padding: '9px 12px', lineHeight: 1.55, marginBottom: 18,
+          }}>
+            Your existing ideas will be replaced.
+            {credits != null && <> You have <strong style={{ color: C.text1 }}>{credits} credits</strong> remaining.</>}
+          </div>
+          <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
+            <button
+              onClick={onCancel}
+              style={{
+                padding: '10px 18px', borderRadius: 100,
+                border: `1px solid ${C.border}`, background: '#fff', color: C.text2,
+                fontSize: 13.5, fontWeight: 600, fontFamily: 'inherit', cursor: 'pointer',
+                transition: 'background 0.15s, border-color 0.15s',
+              }}
+              onMouseEnter={e => { e.currentTarget.style.background = '#f6f6f9' }}
+              onMouseLeave={e => { e.currentTarget.style.background = '#fff' }}
+            >Cancel</button>
+            <button
+              onClick={onConfirm}
+              style={{
+                padding: '10px 20px', borderRadius: 100, border: 'none',
+                background: C.red, color: '#fff',
+                fontSize: 13.5, fontWeight: 700, fontFamily: 'inherit',
+                letterSpacing: '0.01em', cursor: 'pointer',
+                transition: 'filter 0.15s',
+              }}
+              onMouseEnter={e => { e.currentTarget.style.filter = 'brightness(1.1)' }}
+              onMouseLeave={e => { e.currentTarget.style.filter = 'none' }}
+            >Refresh · 1 credit</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+/* IdeaCard — Priority Actions pattern exactly (Dashboard.jsx:1031-1123).
+   3px colored top border tinted by source (amber for AI, blue for competitor
+   gap), header row with small native checkbox + 26x26 colored rank badge +
+   category eyebrow + title + score pill, hairline divider at marginLeft:46,
+   body (keyword chip + angle + single CTA) aligned to the same mL:46 anchor. */
+function IdeaCard({ idea, done, onDone, onUseSeo }) {
   const score = idea.source === 'ai' && idea.opportunityScore
     ? idea.opportunityScore
     : Math.max(65, 85 - (idea.rank - 1) * 2)
 
+  const tone = idea.source === 'ai'
+    ? { color: C.amber, label: 'AI opportunity' }
+    : { color: C.blue,  label: 'Competitor gap' }
+
   return (
-    <div className={`vi-idea-card${done ? ' done' : ''}`}>
-      {/* Header row: checkbox + rank + title + score */}
-      <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start', marginBottom: 10 }}>
-        <button
-          className={`vi-check-btn${done ? ' checked' : ''}`}
-          onClick={() => onDone(idea.title)}
-          title={done ? 'Mark incomplete' : 'Mark as done'}
-        >
-          {done && (
-            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M2 6l3 3 5-5"/>
-            </svg>
-          )}
-        </button>
+    <div
+      className={`vi-idea-card${done ? ' done' : ''}`}
+      style={{ borderTop: `3px solid ${done ? C.border : tone.color}`, padding: 0 }}
+    >
+      <div style={{ padding: '16px 22px 18px' }}>
 
-        <div style={{
-          fontSize: 13, fontWeight: 700, color: C.text3,
-          minWidth: 22, paddingTop: 3, textAlign: 'center', flexShrink: 0,
-          fontVariantNumeric: 'tabular-nums',
-        }}>{idea.rank}</div>
+        {/* Header — checkbox + rank badge + eyebrow/title + score pill */}
+        <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: done ? 0 : 14 }}>
 
-        <p style={{
-          flex: 1, minWidth: 0,
-          fontSize: 14.5, fontWeight: 700, color: C.text1,
-          lineHeight: 1.45, margin: 0, letterSpacing: '-0.2px',
-          textDecoration: done ? 'line-through' : 'none',
-        }}>
-          {idea.title}
-        </p>
+          {/* Native checkbox + colored rank badge pair */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0, paddingTop: 2 }}>
+            <input
+              type="checkbox"
+              checked={!!done}
+              onChange={() => onDone(idea.title)}
+              style={{ width: 15, height: 15, accentColor: C.green, cursor: 'pointer', flexShrink: 0 }}
+            />
+            <div style={{
+              width: 26, height: 26, borderRadius: 8,
+              background: done ? C.greenBg : tone.color,
+              display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+            }}>
+              {done
+                ? <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke={C.green} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><polyline points="1.5,6.5 5,10 10.5,2"/></svg>
+                : <span style={{ fontSize: 12, fontWeight: 900, color: '#fff', fontVariantNumeric: 'tabular-nums' }}>{idea.rank}</span>
+              }
+            </div>
+          </div>
 
-        <div style={{ flexShrink: 0, paddingTop: 1 }}>
-          <ScorePill score={score} />
+          {/* Eyebrow + title */}
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <p style={{
+              fontSize: 10, fontWeight: 700,
+              color: done ? C.text3 : tone.color,
+              letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 5,
+            }}>{tone.label}</p>
+            <p style={{
+              fontSize: 14, fontWeight: 700,
+              color: done ? C.text3 : C.text1,
+              lineHeight: 1.55, letterSpacing: '-0.1px',
+              textDecoration: done ? 'line-through' : 'none',
+            }}>{idea.title}</p>
+          </div>
+
+          {/* Score pill on the right */}
+          <div style={{ flexShrink: 0, paddingTop: 1 }}>
+            <ScorePill score={score} />
+          </div>
         </div>
-      </div>
 
-      {/* Meta row — all pills inline (replaces the three stacked pill rows).
-          Source badge + keyword + optional thumbnail-ready chip. */}
-      <div style={{
-        display: 'flex', flexWrap: 'wrap', gap: 6, alignItems: 'center',
-        marginLeft: 46,
-        marginBottom: idea.angle ? 8 : (done ? 0 : 12),
-      }}>
-        <SourceBadge source={idea.source} />
-        <KeywordPill keyword={idea.targetKeyword} />
-        {idea.thumbnail_ready && (
-          <span style={{
-            fontSize: 11, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase',
-            color: C.green, background: C.greenBg,
-            border: `1px solid ${C.greenBdr}`,
-            borderRadius: 100, padding: '2px 9px',
-            whiteSpace: 'nowrap',
-          }}>
-            Thumbnail ready · {idea.thumbnail_score}/100
-          </span>
+        {/* Hairline + body only when not done — mirrors Priority Actions */}
+        {!done && (
+          <>
+            <div style={{ height: 1, background: C.border, marginBottom: 14, marginLeft: 46 }} />
+
+            <div style={{ marginLeft: 46 }}>
+              {/* Meta chips row — keyword + optional thumbnail-ready */}
+              {(idea.targetKeyword || idea.thumbnail_ready) && (
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, alignItems: 'center', marginBottom: idea.angle ? 10 : 14 }}>
+                  <KeywordPill keyword={idea.targetKeyword} />
+                  {idea.thumbnail_ready && (
+                    <span style={{
+                      fontSize: 11, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase',
+                      color: C.green, background: C.greenBg,
+                      border: `1px solid ${C.greenBdr}`,
+                      borderRadius: 100, padding: '2px 9px',
+                      whiteSpace: 'nowrap',
+                    }}>
+                      Thumbnail ready · {idea.thumbnail_score}/100
+                    </span>
+                  )}
+                </div>
+              )}
+
+              {/* Angle — explains why YouTube will distribute this */}
+              {idea.angle && (
+                <p style={{ fontSize: 13.5, color: C.text2, lineHeight: 1.72, marginBottom: 14 }}>
+                  {idea.angle}
+                </p>
+              )}
+
+              {/* Single CTA — Use in SEO Studio. (Score thumbnail removed per
+                  feedback — unnecessary noise on the ideas list.) */}
+              <button className="vi-cta-btn" onClick={() => onUseSeo(idea.title)}>
+                Use in SEO Studio
+                <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                  <path d="M2 5.5h7M5.5 2l3.5 3.5L5.5 9"/>
+                </svg>
+              </button>
+            </div>
+          </>
         )}
       </div>
-
-      {/* Angle — why this idea would work. 13/text2/1.6 matches Overview copy. */}
-      {idea.angle && (
-        <p style={{
-          fontSize: 13, color: C.text2, margin: 0, lineHeight: 1.6,
-          marginLeft: 46, marginBottom: done ? 0 : 12,
-        }}>
-          {idea.angle}
-        </p>
-      )}
-
-      {/* CTAs — only when not done. Red pill primary + ghost pill secondary,
-          same shape as Overview / Videos / Outliers. */}
-      {!done && (
-        <div style={{ marginLeft: 46, display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-          <button className="vi-cta-btn" onClick={() => onUseSeo(idea.title)}>
-            Use in SEO Studio
-            <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-              <path d="M2 5.5h7M5.5 2l3.5 3.5L5.5 9"/>
-            </svg>
-          </button>
-          <button className="vi-cta-ghost" onClick={() => onScoreThumbnail(idea)}>
-            Score thumbnail
-            <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-              <path d="M2 5.5h7M5.5 2l3.5 3.5L5.5 9"/>
-            </svg>
-          </button>
-        </div>
-      )}
     </div>
   )
 }
@@ -310,6 +388,7 @@ export default function VideoIdeas({ onNavigate }) {
   const [error,       setError]      = useState('')
   const [credits,     setCredits]    = useState(null)
   const [done,        setDone]       = useState(() => loadDone())
+  const [confirmOpen, setConfirmOpen]= useState(false)
   const mountedRef = useRef(true)
 
   function toggleDone(title) {
@@ -460,11 +539,6 @@ export default function VideoIdeas({ onNavigate }) {
     if (onNavigate) onNavigate('SEO Studio')
   }
 
-  function handleScoreThumbnail(idea) {
-    try { localStorage.setItem('ytg_prefill_idea', JSON.stringify(idea)) } catch {}
-    if (onNavigate) onNavigate('Thumbnail Score')
-  }
-
   const sourceLabel = {
     competitor: 'Based on competitor research',
     ai:         'AI generated',
@@ -490,10 +564,12 @@ export default function VideoIdeas({ onNavigate }) {
           </p>
         </div>
 
-        {/* Refresh — red pill, matches Overview/Videos/Outliers CTA shape */}
+        {/* Refresh — red pill, matches Overview/Videos/Outliers CTA shape.
+            Opens a confirmation modal (1 credit cost + approach summary)
+            instead of running immediately. */}
         <div style={{ textAlign: 'right', flexShrink: 0 }}>
           <button
-            onClick={handleRefresh}
+            onClick={() => setConfirmOpen(true)}
             disabled={refreshing}
             style={{
               display: 'inline-flex', alignItems: 'center', gap: 7,
@@ -575,7 +651,7 @@ export default function VideoIdeas({ onNavigate }) {
             Analyze a competitor first to unlock free video ideas, or generate AI-powered ideas directly.
           </p>
           <button
-            onClick={handleRefresh}
+            onClick={() => setConfirmOpen(true)}
             disabled={refreshing}
             style={{
               display: 'inline-flex', alignItems: 'center', gap: 8,
@@ -595,6 +671,17 @@ export default function VideoIdeas({ onNavigate }) {
             Generate AI ideas · 1 analysis
           </button>
         </div>
+      )}
+
+      {/* Refresh confirmation modal — warns about the 1-credit cost and
+          what the generation considers (niche + competitors + recent data)
+          so the user knows what they're paying for. */}
+      {confirmOpen && (
+        <RefreshConfirmModal
+          credits={credits}
+          onCancel={() => setConfirmOpen(false)}
+          onConfirm={() => { setConfirmOpen(false); handleRefresh() }}
+        />
       )}
 
       {/* Ideas list */}
@@ -631,7 +718,6 @@ export default function VideoIdeas({ onNavigate }) {
               done={done.has(idea.title)}
               onDone={toggleDone}
               onUseSeo={handleUseSeo}
-              onScoreThumbnail={handleScoreThumbnail}
             />
           ))}
         </div>
