@@ -707,8 +707,10 @@ def get_me(request: Request):
 
     db = SessionLocal()
     try:
-        # Subscription info
-        sub = db.query(UserSubscription).filter_by(channel_id=channel_id).first()
+        # Subscription info — free users pool across sibling channels.
+        from app.analysis_gate import _resolve_billing_channel
+        billing_channel = _resolve_billing_channel(db, channel_id)
+        sub = db.query(UserSubscription).filter_by(channel_id=billing_channel).first()
         plan             = sub.plan if sub else "free"
         status           = sub.status if sub else "free"
         billing_cycle    = sub.billing_cycle if sub else "none"

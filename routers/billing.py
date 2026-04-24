@@ -251,10 +251,14 @@ def get_usage(request: Request):
     channel_id = user_data.get("channel", {}).get("channel_id", "")
     db = SessionLocal()
     try:
-        sub = db.query(UserSubscription).filter_by(channel_id=channel_id).first()
+        # Read from the billing bucket — on free plan, all sibling channels
+        # on the same Google account share one row (see _resolve_billing_channel).
+        from app.analysis_gate import _resolve_billing_channel
+        billing_channel = _resolve_billing_channel(db, channel_id)
+        sub = db.query(UserSubscription).filter_by(channel_id=billing_channel).first()
         if not sub:
             # First-time user — create free record
-            sub = UserSubscription(channel_id=channel_id)
+            sub = UserSubscription(channel_id=billing_channel)
             email = user_data.get("channel", {}).get("email", "")
             if email:
                 sub.email = email

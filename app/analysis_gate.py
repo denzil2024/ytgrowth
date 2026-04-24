@@ -18,12 +18,62 @@ from app.utils import get_or_create_subscription, next_reset_date
 _BYPASS = os.environ.get("DEV_BYPASS_GATE", "").lower() in ("1", "true", "yes")
 
 
+def _resolve_billing_channel(db, channel_id: str) -> str:
+    """
+    Free-tier abuse guard: one Google account with N YouTube channels should
+    share ONE credit bucket, not get 3 credits per channel.
+
+    Returns the channel_id whose UserSubscription row actually owns this
+    user's credits:
+      - PAID plans → passthrough (the channel's own sub is the billing row,
+        tied to Paddle).
+      - FREE plans → the earliest-connected FREE channel_id for the same
+        owner_email in ChannelRegistry becomes the canonical bucket. Every
+        sibling free channel reads/writes to that one row.
+
+    Falls back to the input channel_id whenever we can't resolve an
+    owner_email (defensive — never escalate blocks due to missing data).
+    """
+    from database.models import ChannelRegistry, UserSubscription
+    if not channel_id:
+        return channel_id
+    sub = db.query(UserSubscription).filter_by(channel_id=channel_id).first()
+    if sub and (sub.plan or "free").lower() != "free":
+        return channel_id  # paid plan keeps its own billing row
+
+    reg = (
+        db.query(ChannelRegistry)
+          .filter_by(channel_id=channel_id)
+          .order_by(ChannelRegistry.id.asc())
+          .first()
+    )
+    owner_email = (reg.owner_email if reg else None) or (sub.email if sub else None)
+    if not owner_email:
+        return channel_id
+
+    earliest = (
+        db.query(ChannelRegistry)
+          .filter_by(owner_email=owner_email)
+          .order_by(ChannelRegistry.id.asc())
+          .first()
+    )
+    if not earliest or earliest.channel_id == channel_id:
+        return channel_id
+
+    canonical_sub = db.query(UserSubscription).filter_by(channel_id=earliest.channel_id).first()
+    # Only route if the earliest sibling is also free — don't cross-charge
+    # a free channel to a paid sibling's monthly bucket.
+    if canonical_sub and (canonical_sub.plan or "free").lower() == "free":
+        return earliest.channel_id
+    return channel_id
+
+
 def check_and_deduct(channel_id: str, amount: int = 1) -> dict:
     """
     Check if the user has `amount` analyses remaining, deduct all of them
     atomically if so. Monthly bucket depletes first; pack_balance is the
-    fallback. Free users have 5 lifetime analyses (monthly_allowance=5,
-    no reset_date).
+    fallback. Free users have 3 analyses per month, pooled across every
+    channel on the same Google account (see _resolve_billing_channel).
 
     Outliers charges 3 (videos + thumbnails + channels = 3 distinct reports);
     everything else charges the default 1.
@@ -34,7 +84,8 @@ def check_and_deduct(channel_id: str, amount: int = 1) -> dict:
 
     db = SessionLocal()
     try:
-        sub = get_or_create_subscription(db, channel_id)
+        billing_channel = _resolve_billing_channel(db, channel_id)
+        sub = get_or_create_subscription(db, billing_channel)
 
         # Auto-reset if reset_date has passed (for subscriptions & lifetime)
         now = datetime.datetime.now(datetime.timezone.utc)
@@ -148,7 +199,10 @@ def check_free_tier_access(channel_id: str, feature: str) -> dict:
     db = SessionLocal()
     try:
         from database.models import FreeTierFeatureUsage
-        sub = get_or_create_subscription(db, channel_id)
+        # Pool free-tier state across all sibling channels on the same
+        # Google account (see _resolve_billing_channel).
+        billing_channel = _resolve_billing_channel(db, channel_id)
+        sub = get_or_create_subscription(db, billing_channel)
 
         # Paid plans: not feature-gated (they pay via credits).
         if (sub.plan or "free") != "free":
@@ -164,7 +218,7 @@ def check_free_tier_access(channel_id: str, feature: str) -> dict:
             existing = (
                 db.query(FreeTierFeatureUsage)
                   .filter(
-                      FreeTierFeatureUsage.channel_id == channel_id,
+                      FreeTierFeatureUsage.channel_id == billing_channel,
                       FreeTierFeatureUsage.feature == feature,
                       FreeTierFeatureUsage.cycle_reset == cycle_reset,
                   )
@@ -175,7 +229,7 @@ def check_free_tier_access(channel_id: str, feature: str) -> dict:
 
             # Record the one-shot usage atomically with the allow.
             db.add(FreeTierFeatureUsage(
-                channel_id=channel_id,
+                channel_id=billing_channel,
                 feature=feature,
                 cycle_reset=cycle_reset,
                 used_at=datetime.datetime.now(datetime.timezone.utc),
@@ -212,7 +266,8 @@ def peek_free_tier_access(channel_id: str, feature: str) -> dict:
     db = SessionLocal()
     try:
         from database.models import FreeTierFeatureUsage
-        sub = get_or_create_subscription(db, channel_id)
+        billing_channel = _resolve_billing_channel(db, channel_id)
+        sub = get_or_create_subscription(db, billing_channel)
 
         if (sub.plan or "free") != "free":
             return {"allowed": True}
@@ -227,7 +282,7 @@ def peek_free_tier_access(channel_id: str, feature: str) -> dict:
             existing = (
                 db.query(FreeTierFeatureUsage)
                   .filter(
-                      FreeTierFeatureUsage.channel_id == channel_id,
+                      FreeTierFeatureUsage.channel_id == billing_channel,
                       FreeTierFeatureUsage.feature == feature,
                       FreeTierFeatureUsage.cycle_reset == cycle_reset,
                   )
@@ -259,7 +314,8 @@ def refund_credit(channel_id: str, amount: int = 1) -> None:
 
     db = SessionLocal()
     try:
-        sub = get_or_create_subscription(db, channel_id)
+        billing_channel = _resolve_billing_channel(db, channel_id)
+        sub = get_or_create_subscription(db, billing_channel)
         # Reverse the deduction in the same order check_and_deduct uses:
         # monthly first (since it depleted monthly first), then pack.
         give_back_monthly = min(amount, sub.monthly_used or 0)
