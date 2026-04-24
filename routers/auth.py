@@ -687,6 +687,16 @@ def get_me(request: Request):
         channels_allowed = sub.channels_allowed if sub else 1
         reset_date       = sub.reset_date.isoformat() if sub and sub.reset_date else None
 
+        # Dev bypass — override usage fields so the dashboard reliably shows
+        # a fresh free-tier state during testing. DB untouched.
+        from app.analysis_gate import _BYPASS
+        if _BYPASS:
+            monthly_allowance = 3
+            monthly_used      = 0
+            monthly_remaining = 3
+            pack_balance      = 0
+            usage_pct         = 0
+
         # Account info
         account = db.query(UserAccount).filter_by(email=google_email).first()
         member_since = account.created_at.isoformat() if account and account.created_at else None

@@ -261,6 +261,27 @@ def get_usage(request: Request):
             db.add(sub)
             db.commit()
 
+        # Dev bypass — report a fresh free-tier state so testing isn't
+        # blocked by stale DB values (e.g. stuck 5/5 from a prior tier).
+        # Actual DB row is untouched; this only overrides the response.
+        from app.analysis_gate import _BYPASS
+        if _BYPASS:
+            return JSONResponse({
+                "plan":               sub.plan or "free",
+                "status":             sub.status or "free",
+                "billing_cycle":      sub.billing_cycle or "none",
+                "is_lifetime":        False,
+                "monthly_allowance":  3,
+                "monthly_used":       0,
+                "monthly_remaining":  3,
+                "pack_balance":       0,
+                "total_available":    3,
+                "usage_pct":          0,
+                "channels_allowed":   sub.channels_allowed or 1,
+                "reset_date":         sub.reset_date.isoformat() if sub.reset_date else None,
+                "paddle_customer_id": sub.paddle_customer_id or None,
+            })
+
         monthly_remaining = max(0, sub.monthly_allowance - sub.monthly_used)
         total_available   = monthly_remaining + sub.pack_balance
         usage_pct = (
