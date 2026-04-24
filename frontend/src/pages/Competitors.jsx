@@ -56,9 +56,10 @@ function useCompetitorStyles() {
         letter-spacing: -0.1px;
       }
       .comp-tab-btn.active {
-        background: #111114;
+        background: #e5251b;
         color: #fff;
-        border-color: #111114;
+        border-color: #e5251b;
+        box-shadow: 0 1px 3px rgba(229,37,27,0.18), 0 4px 14px rgba(229,37,27,0.22);
       }
       .comp-tab-btn.inactive {
         background: #ffffff;
@@ -67,8 +68,8 @@ function useCompetitorStyles() {
         box-shadow: 0 1px 3px rgba(0,0,0,0.04);
       }
       .comp-tab-btn.inactive:hover {
-        color: #111114;
-        border-color: rgba(0,0,0,0.18);
+        color: #e5251b;
+        border-color: #fecaca;
       }
 
       /* ── inputs ── */
