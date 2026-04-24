@@ -122,6 +122,70 @@ if (typeof document !== 'undefined' && !document.getElementById('seo-opt-styles'
     background: #e0e0e6; color: #ffffff; cursor: not-allowed;
     box-shadow: none; opacity: 0.92;
   }
+
+  /* ── Reports list — mirrors the Competitors tracked accordion pattern ── */
+  .seo-report-wrapper { position: relative; margin-bottom: 12px; }
+  .seo-report-header {
+    background: #ffffff;
+    border: 1px solid #e6e6ec;
+    border-radius: 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.06);
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    transition: box-shadow 0.15s, border-color 0.15s;
+    cursor: pointer;
+    user-select: none;
+  }
+  .seo-report-header:hover {
+    box-shadow: 0 2px 6px rgba(0,0,0,0.06), 0 8px 24px rgba(0,0,0,0.08);
+    border-color: rgba(0,0,0,0.14);
+  }
+  .seo-report-remove {
+    position: absolute;
+    top: 12px; right: 12px;
+    width: 28px; height: 28px;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    background: transparent;
+    color: #c4c4cc;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0;
+    transition: opacity 0.15s, background 0.15s, color 0.15s, border-color 0.15s;
+    z-index: 2;
+  }
+  .seo-report-wrapper:hover .seo-report-remove { opacity: 1; }
+  .seo-report-remove:hover {
+    background: rgba(229,37,27,0.08);
+    border-color: rgba(229,37,27,0.2);
+    color: #e5251b;
+  }
+  .seo-report-cta {
+    background: #e5251b;
+    color: #fff;
+    border: 1px solid #e5251b;
+    border-radius: 100px;
+    padding: 8px 18px;
+    font-size: 12.5px; font-weight: 700;
+    font-family: 'Inter', system-ui, sans-serif;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: filter 0.15s;
+    display: flex; align-items: center; gap: 6px;
+    box-shadow: 0 1px 3px rgba(229,37,27,0.20), 0 4px 14px rgba(229,37,27,0.25);
+  }
+  .seo-report-cta:hover { filter: brightness(1.07); }
+  .seo-report-chip {
+    display: inline-flex; align-items: baseline; gap: 4px;
+    background: #f4f4f6;
+    border: 1px solid rgba(0,0,0,0.09);
+    border-radius: 8px;
+    padding: 4px 10px;
+  }
+  .seo-report-chip .val { font-size: 12px; font-weight: 700; color: #111114; letter-spacing: '-0.1px'; }
+  .seo-report-chip .lbl { font-size: 11px; color: #9595a4; font-weight: 500; }
 `
   document.head.appendChild(s)
 }
@@ -1954,7 +2018,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures }) {
               </p>
             </div>
           ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+            <div>
               {reports.map(r => {
                 const relTime = (iso) => {
                   if (!iso) return ''
@@ -1973,55 +2037,56 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures }) {
                 const suggestionCount = Array.isArray(r.result?.suggestions) ? r.result.suggestions.length : 0
                 const hasDescription  = !!r.desc_result
                 return (
-                  <div key={r.id} className="seo-suggestion-card" style={{
-                    borderTop: `3px solid ${C.amber}`,
-                    padding: '16px 22px 18px',
-                    cursor: 'pointer',
-                  }}
-                  onClick={() => openReport(r)}
-                  role="button"
-                  tabIndex={0}
-                  onKeyDown={e => { if (e.key === 'Enter') openReport(r) }}>
-                    <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
+                  <div key={r.id} className="seo-report-wrapper">
+                    <button
+                      className="seo-report-remove"
+                      title="Remove report"
+                      onClick={e => deleteReport(r.id, e)}>
+                      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
+                        <path d="M2 3.5h10M5.5 3.5V2.5h3v1M5 5.5l.5 5M9 5.5l-.5 5M3 3.5l.7 8.5h6.6L11 3.5"/>
+                      </svg>
+                    </button>
+                    <div className="seo-report-header" onClick={() => openReport(r)}>
                       <div style={{ flex: 1, minWidth: 0 }}>
-                        {r.confirmed_keyword && (
-                          <p style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 5 }}>
-                            Built around: {r.confirmed_keyword}
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+                          <p style={{ fontWeight: 800, fontSize: 14, color: '#111114',
+                            letterSpacing: '-0.2px', whiteSpace: 'nowrap', overflow: 'hidden',
+                            textOverflow: 'ellipsis' }}>
+                            {r.title}
                           </p>
-                        )}
-                        <p style={{ fontSize: 14, fontWeight: 700, color: C.text1, lineHeight: 1.55, marginBottom: 6 }}>
-                          {r.title}
-                        </p>
-                        <p style={{ fontSize: 12, color: C.text3, lineHeight: 1.5 }}>
-                          {suggestionCount > 0 && <span>{suggestionCount} AI title{suggestionCount === 1 ? '' : 's'}</span>}
-                          {suggestionCount > 0 && <span> · </span>}
-                          {hasDescription && <span>Description ready · </span>}
-                          <span>Updated {relTime(r.updated_at)}</span>
-                        </p>
+                        </div>
+                        <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', alignItems: 'center' }}>
+                          {r.confirmed_keyword && (
+                            <span className="seo-report-chip">
+                              <span className="val">{r.confirmed_keyword}</span>
+                              <span className="lbl">keyword</span>
+                            </span>
+                          )}
+                          {suggestionCount > 0 && (
+                            <span className="seo-report-chip">
+                              <span className="val">{suggestionCount}</span>
+                              <span className="lbl">AI title{suggestionCount === 1 ? '' : 's'}</span>
+                            </span>
+                          )}
+                          {hasDescription && (
+                            <span className="seo-report-chip">
+                              <span className="val">Ready</span>
+                              <span className="lbl">description</span>
+                            </span>
+                          )}
+                          <span style={{ fontSize: 12, color: '#9595a4', fontWeight: 500, marginLeft: 2 }}>
+                            · {relTime(r.updated_at)}
+                          </span>
+                        </div>
                       </div>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
-                        <button
-                          onClick={e => { e.stopPropagation(); openReport(r) }}
-                          className="seo-btn-primary"
-                          style={{ fontSize: 12, padding: '7px 16px' }}>
+                      <div style={{ flexShrink: 0, borderLeft: '1px solid rgba(0,0,0,0.07)',
+                        paddingLeft: 16, marginLeft: 4, paddingRight: 28 }}>
+                        <button className="seo-report-cta"
+                          onClick={e => { e.stopPropagation(); openReport(r) }}>
                           Open report
-                        </button>
-                        <button
-                          onClick={e => deleteReport(r.id, e)}
-                          title="Remove report"
-                          style={{
-                            width: 28, height: 28, borderRadius: 8,
-                            border: `1px solid ${C.border}`,
-                            background: '#ffffff',
-                            color: C.text3,
-                            display: 'flex', alignItems: 'center', justifyContent: 'center',
-                            cursor: 'pointer', flexShrink: 0,
-                            transition: 'background 0.15s, color 0.15s, border-color 0.15s',
-                          }}
-                          onMouseEnter={e => { e.currentTarget.style.background = 'rgba(229,37,27,0.08)'; e.currentTarget.style.color = C.red; e.currentTarget.style.borderColor = 'rgba(229,37,27,0.25)' }}
-                          onMouseLeave={e => { e.currentTarget.style.background = '#ffffff'; e.currentTarget.style.color = C.text3; e.currentTarget.style.borderColor = C.border }}>
-                          <svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-                            <path d="M2 3.5h10M5 3.5V2.5A1 1 0 0 1 6 1.5h2A1 1 0 0 1 9 2.5v1M3 3.5l.8 8A1 1 0 0 0 4.8 12.5h4.4a1 1 0 0 0 1-1l.8-8"/>
+                          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"
+                            stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                            <path d="M4 2l4 4-4 4"/>
                           </svg>
                         </button>
                       </div>
