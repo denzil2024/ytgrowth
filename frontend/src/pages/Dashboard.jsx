@@ -1863,10 +1863,17 @@ export default function Dashboard() {
                       setAnalyzingAI(true)
                       setData(prev => ({ ...prev, insights: null }))
                       fetch('/auth/refresh-analysis', { method: 'POST', credentials: 'include' })
-                        .then(r => {
+                        .then(async r => {
                           if (!r.ok) {
                             setData(prev => ({ ...prev, insights: prevInsights }))
                             setAnalyzingAI(false)
+                            if (r.status === 402) {
+                              let msg = "You're out of analyses this month. Upgrade for more."
+                              try { const j = await r.json(); if (j?.error) msg = j.error } catch {}
+                              if (window.confirm(`${msg}\n\nView plans?`)) {
+                                window.location.href = '/?tab=monthly#pricing'
+                              }
+                            }
                           }
                         })
                         .catch(() => {

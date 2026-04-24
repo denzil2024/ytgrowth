@@ -199,8 +199,12 @@ def _upsert_email_preferences(channel_id: str, email: str) -> None:
         db.close()
 
 
-def _run_analysis_in_background(session_id: str, stats: dict, videos: list, full_data: dict, plan: str = "free"):
-    """Run AI analysis after login and update session data when done."""
+def _run_analysis_in_background(session_id: str, stats: dict, videos: list, full_data: dict, plan: str = "free", charged: bool = False):
+    """Run AI analysis after login and update session data when done.
+    If `charged=True`, the caller already spent 1 credit via check_and_deduct;
+    refund it if the Claude call fails so users aren't debited for our errors.
+    """
+    channel_id = stats.get("channel_id") if stats else None
     try:
         insights = analyze_channel(
             stats, videos,
@@ -268,6 +272,13 @@ def _run_analysis_in_background(session_id: str, stats: dict, videos: list, full
         import traceback
         print(f"Background analysis error: {e}")
         traceback.print_exc()
+        if charged and channel_id:
+            try:
+                from app.analysis_gate import refund_credit
+                refund_credit(channel_id)
+                print(f"Refunded analysis credit for {channel_id}")
+            except Exception as refund_err:
+                print(f"Refund failed after analysis error: {refund_err}")
 
 
 @router.get("/callback")
@@ -505,10 +516,19 @@ def callback(request: Request, background_tasks: BackgroundTasks):
         db.close()
 
         if needs_analysis:
-            background_tasks.add_task(
-                _run_analysis_in_background,
-                session_id, stats, videos, full_data, plan
-            )
+            # Charge 1 credit for the signup/login audit; refund in the
+            # background task on failure. If the user has no credits left
+            # (e.g. reconnecting an existing channel mid-cycle at 0), skip
+            # the AI analysis silently — they still land on the dashboard.
+            from app.analysis_gate import check_and_deduct
+            gate = check_and_deduct(channel_id)
+            if gate.get("allowed"):
+                background_tasks.add_task(
+                    _run_analysis_in_background,
+                    session_id, stats, videos, full_data, plan, True
+                )
+            else:
+                print(f"[callback] Skipping audit for {channel_id[:8]} — out of credits")
 
         return RedirectResponse(f"{BASE_URL}/dashboard")
 
@@ -550,11 +570,24 @@ def refresh_analysis(request: Request, background_tasks: BackgroundTasks):
     data, creds = get_session(session_id)
     if not data or not creds:
         return JSONResponse({"error": "Not logged in"}, status_code=401)
+    channel_id = data["channel"]["channel_id"]
+
+    # Charge 1 credit up-front; refund in the background task on failure.
+    from app.analysis_gate import check_and_deduct
+    gate = check_and_deduct(channel_id)
+    if not gate.get("allowed"):
+        return JSONResponse(
+            {
+                "error": gate.get("message") or "You're out of analyses. Top up or upgrade to continue.",
+                "show_upgrade": True,
+            },
+            status_code=402,
+        )
+
     data["insights"] = None
     _user_data[session_id] = data
     _persist_session(session_id, creds, data)
     creds = _user_creds.get(session_id)
-    channel_id = data["channel"]["channel_id"]
     full_data = get_full_channel_data(creds, channel_id)
 
     db = SessionLocal()
@@ -569,6 +602,7 @@ def refresh_analysis(request: Request, background_tasks: BackgroundTasks):
         data["videos"],
         full_data,
         plan,
+        True,
     )
     return JSONResponse({"message": "Analysis started"})
 
