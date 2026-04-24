@@ -634,24 +634,68 @@ function AIAnalysis({ ai, top5Videos, channelId, checkedIdeas, onToggleIdea }) {
         )
       })()}
 
-      {/* ── Topics to tackle + Top videos — single paneled card ─────────────
-           Two related learning surfaces (what to make + what to study) merged
-           into one card, separated by a 3px amber vertical bar — same pattern
-           as Intelligence summary / SeoOptimizer Title Scorecard.
-           Left panel: Quick wins checkbox list for idea capture.
-           Right panel: video rows with thumbnails for reference study. */}
+      {/* ── Topics to tackle (split 5+5) + Top videos — 3-column paneled card
+           Three panels separated by 3px amber vertical bars. Topics are split
+           across the first two columns (1-5 | 6-10) so nothing is clipped;
+           Top videos takes the third column. "Topics to tackle" header spans
+           columns 1 and 2 (only rendered on col 1; col 2 has a spacer the
+           same height so content alignment stays clean). */}
       {(ai.videoIdeas?.length > 0 || top5Videos?.length > 0) && (() => {
-        const doneCount = ai.videoIdeas
-          ? ai.videoIdeas.filter(idea => !!checksForChannel[idea.title]).length : 0
-        const leftCount = (ai.videoIdeas?.length || 0) - doneCount
+        const allIdeas  = ai.videoIdeas || []
+        const col1Ideas = allIdeas.slice(0, 5)
+        const col2Ideas = allIdeas.slice(5, 10)
+        const doneCount = allIdeas.filter(idea => !!checksForChannel[idea.title]).length
+        const leftCount = allIdeas.length - doneCount
+        const hasTopics = col1Ideas.length > 0
+
+        const renderIdeaRow = (idea, i) => {
+          const isDone = !!checksForChannel[idea.title]
+          return (
+            <li key={i} className="comp-qw-row" style={{ opacity: isDone ? 0.5 : 1 }}>
+              <input
+                type="checkbox"
+                checked={isDone}
+                onChange={() => onToggleIdea && onToggleIdea(channelId, idea.title)}
+                style={{ width: 14, height: 14, accentColor: '#059669', cursor: 'pointer',
+                  flexShrink: 0, marginTop: 4 }}
+              />
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, flexWrap: 'wrap' }}>
+                  <p style={{ fontSize: 13, fontWeight: 600,
+                    color: isDone ? '#9595a4' : '#111114', lineHeight: 1.5,
+                    letterSpacing: '-0.1px',
+                    textDecoration: isDone ? 'line-through' : 'none' }}>
+                    {idea.title}
+                  </p>
+                  {idea.targetKeyword && (
+                    <span className="comp-tag" style={{ background: '#fffbeb', color: '#d97706',
+                      border: '1px solid #fde68a', whiteSpace: 'nowrap' }}>
+                      {idea.targetKeyword}
+                    </span>
+                  )}
+                </div>
+                <p style={{ fontSize: 12, color: '#9595a4', lineHeight: 1.55,
+                  fontWeight: 400, marginTop: 3 }}>
+                  {idea.angle}
+                </p>
+              </div>
+            </li>
+          )
+        }
+
+        // Matching row-height placeholder for col-2's missing header (so col-2
+        // rows align vertically with col-1 rows even without its own eyebrow).
+        const HEADER_SPACER_HEIGHT = 34
+
         return (
           <Card>
             <div style={{ display: 'flex', alignItems: 'stretch', gap: 24 }}>
 
-              {/* ── Left panel: Topics to tackle ── */}
-              {ai.videoIdeas?.length > 0 && (
+              {/* ── Column 1: Topics to tackle (1–5) ── */}
+              {hasTopics && (
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                    marginBottom: 14, height: HEADER_SPACER_HEIGHT }}>
                     <p style={{ fontSize: 11, fontWeight: 700, color: '#059669',
                       letterSpacing: '0.07em', textTransform: 'uppercase' }}>
                       Topics to tackle
@@ -663,54 +707,40 @@ function AIAnalysis({ ai, top5Videos, channelId, checkedIdeas, onToggleIdea }) {
                   </div>
                   <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column',
                     gap: 2, padding: 0, margin: 0 }}>
-                    {ai.videoIdeas.map((idea, i) => {
-                      const isDone = !!checksForChannel[idea.title]
-                      return (
-                        <li key={i} className="comp-qw-row" style={{ opacity: isDone ? 0.5 : 1 }}>
-                          <input
-                            type="checkbox"
-                            checked={isDone}
-                            onChange={() => onToggleIdea && onToggleIdea(channelId, idea.title)}
-                            style={{ width: 14, height: 14, accentColor: '#059669', cursor: 'pointer',
-                              flexShrink: 0, marginTop: 4 }}
-                          />
-                          <div style={{ flex: 1, minWidth: 0 }}>
-                            <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, flexWrap: 'wrap' }}>
-                              <p style={{ fontSize: 13.5, fontWeight: 600,
-                                color: isDone ? '#9595a4' : '#111114', lineHeight: 1.5,
-                                letterSpacing: '-0.1px',
-                                textDecoration: isDone ? 'line-through' : 'none' }}>
-                                {idea.title}
-                              </p>
-                              {idea.targetKeyword && (
-                                <span className="comp-tag" style={{ background: '#fffbeb', color: '#d97706',
-                                  border: '1px solid #fde68a', whiteSpace: 'nowrap' }}>
-                                  {idea.targetKeyword}
-                                </span>
-                              )}
-                            </div>
-                            <p style={{ fontSize: 12, color: '#9595a4', lineHeight: 1.55,
-                              fontWeight: 400, marginTop: 3 }}>
-                              {idea.angle}
-                            </p>
-                          </div>
-                        </li>
-                      )
-                    })}
+                    {col1Ideas.map(renderIdeaRow)}
                   </ul>
                 </div>
               )}
 
-              {/* ── Amber 3px vertical divider ── */}
-              {ai.videoIdeas?.length > 0 && top5Videos?.length > 0 && (
+              {/* Amber divider between col 1 and col 2 */}
+              {hasTopics && col2Ideas.length > 0 && (
                 <div style={{ width: 3, alignSelf: 'stretch', background: '#d97706',
                   flexShrink: 0, borderRadius: 2 }}/>
               )}
 
-              {/* ── Right panel: Top videos to study ── */}
+              {/* ── Column 2: Topics to tackle (6–10) ── */}
+              {col2Ideas.length > 0 && (
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  {/* Invisible spacer — matches col-1 header height so row 1 aligns */}
+                  <div style={{ height: HEADER_SPACER_HEIGHT, marginBottom: 14 }} aria-hidden="true" />
+                  <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column',
+                    gap: 2, padding: 0, margin: 0 }}>
+                    {col2Ideas.map((idea, i) => renderIdeaRow(idea, i + 5))}
+                  </ul>
+                </div>
+              )}
+
+              {/* Amber divider between topics and top videos */}
+              {hasTopics && top5Videos?.length > 0 && (
+                <div style={{ width: 3, alignSelf: 'stretch', background: '#d97706',
+                  flexShrink: 0, borderRadius: 2 }}/>
+              )}
+
+              {/* ── Column 3: Top videos to study ── */}
               {top5Videos?.length > 0 && (
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                    marginBottom: 14, height: HEADER_SPACER_HEIGHT }}>
                     <p style={{ fontSize: 11, fontWeight: 700, color: '#9595a4',
                       letterSpacing: '0.07em', textTransform: 'uppercase' }}>
                       Top videos to study
@@ -731,13 +761,13 @@ function AIAnalysis({ ai, top5Videos, channelId, checkedIdeas, onToggleIdea }) {
                           href={ytUrl || '#'} target="_blank" rel="noopener noreferrer"
                           className="comp-video-row"
                           style={{ borderBottom: isLast ? 'none' : '1px solid rgba(0,0,0,0.05)',
-                            gap: 12, padding: '8px 6px' }}>
+                            gap: 10, padding: '8px 6px' }}>
                           <div style={{ position: 'relative', flexShrink: 0 }}>
                             {thumb
-                              ? <img src={thumb} alt="" style={{ width: 72, height: 42, borderRadius: 8,
+                              ? <img src={thumb} alt="" style={{ width: 64, height: 38, borderRadius: 8,
                                   objectFit: 'cover', display: 'block',
                                   boxShadow: '0 2px 8px rgba(0,0,0,0.12)' }} />
-                              : <div style={{ width: 72, height: 42, borderRadius: 8,
+                              : <div style={{ width: 64, height: 38, borderRadius: 8,
                                   background: 'rgba(0,0,0,0.07)', display: 'block' }} />
                             }
                             <div style={{ position: 'absolute', inset: 0, display: 'flex',
@@ -746,19 +776,19 @@ function AIAnalysis({ ai, top5Videos, channelId, checkedIdeas, onToggleIdea }) {
                               borderRadius: 8 }}
                               onMouseEnter={e => { e.currentTarget.style.opacity = 1 }}
                               onMouseLeave={e => { e.currentTarget.style.opacity = 0 }}>
-                              <svg width="16" height="16" viewBox="0 0 18 18" fill="white">
+                              <svg width="14" height="14" viewBox="0 0 18 18" fill="white">
                                 <path d="M7 5.5l6 3.5-6 3.5V5.5z"/>
                               </svg>
                             </div>
                           </div>
                           <div style={{ flex: 1, minWidth: 0 }}>
-                            <p style={{ fontSize: 13.5, fontWeight: 600, color: '#111114', lineHeight: 1.45,
+                            <p style={{ fontSize: 13, fontWeight: 600, color: '#111114', lineHeight: 1.45,
                               whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
-                              marginBottom: 3, letterSpacing: '-0.1px' }}>
+                              marginBottom: 2, letterSpacing: '-0.1px' }}>
                               {v.title}
                             </p>
-                            <div style={{ display: 'flex', gap: 8, alignItems: 'center',
-                              fontSize: 11.5, color: '#9595a4', fontWeight: 500,
+                            <div style={{ display: 'flex', gap: 6, alignItems: 'center',
+                              fontSize: 11, color: '#9595a4', fontWeight: 500,
                               fontVariantNumeric: 'tabular-nums' }}>
                               <span><b style={{ color: '#52525b', fontWeight: 700 }}>{fmtK(v.views)}</b> views</span>
                               {v.published_at && (
@@ -766,13 +796,6 @@ function AIAnalysis({ ai, top5Videos, channelId, checkedIdeas, onToggleIdea }) {
                                  <span>{relTime(v.published_at)}</span></>
                               )}
                             </div>
-                            {why && (
-                              <p style={{ fontSize: 11.5, color: '#9595a4', marginTop: 3,
-                                lineHeight: 1.4, whiteSpace: 'nowrap', overflow: 'hidden',
-                                textOverflow: 'ellipsis' }}>
-                                {why}
-                              </p>
-                            )}
                           </div>
                         </a>
                       )
