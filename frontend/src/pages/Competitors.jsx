@@ -995,8 +995,8 @@ function AIAnalysis({ ai, top5Videos, channelId, checkedIdeas, onToggleIdea }) {
                 </p>
                 {idea.targetKeyword && (
                   <div style={{ marginTop: 6 }}>
-                    <span className="comp-tag" style={{ background: '#f4f4f6', color: '#52525b',
-                      border: '1px solid rgba(0,0,0,0.09)', whiteSpace: 'nowrap' }}>
+                    <span className="comp-tag" style={{ background: '#d1fae5', color: '#059669',
+                      border: '1px solid #a7f3d0', whiteSpace: 'nowrap' }}>
                       {idea.targetKeyword}
                     </span>
                   </div>
