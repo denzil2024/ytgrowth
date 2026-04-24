@@ -532,8 +532,8 @@ export default function VideoOptimizePanel({ video, onClose, onVideoUpdated, pla
         <div style={{ display: 'flex', gap: 8, flexShrink: 0 }}>
           {(videoResult || titleResult) && (
             <button onClick={handleClear}
-              style={{ fontSize: 12, color: C.text2, background: C.card, border: `1px solid ${C.border}`, borderRadius: 100, padding: '6px 14px', cursor: 'pointer', fontFamily: 'inherit', fontWeight: 600, boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
-              Re-analyse <span style={{ color: C.text3, fontWeight: 500, marginLeft: 2 }}>· 1 credit</span>
+              style={{ fontSize: 12, color: C.red, background: '#fff', border: `1px solid ${C.red}`, borderRadius: 100, padding: '6px 14px', cursor: 'pointer', fontFamily: 'inherit', fontWeight: 600, boxShadow: '0 1px 3px rgba(229,37,27,0.12)' }}>
+              Re-analyse <span style={{ color: C.red, opacity: 0.7, fontWeight: 500, marginLeft: 2 }}>· 1 credit</span>
             </button>
           )}
           <button onClick={onClose}
@@ -789,8 +789,8 @@ export default function VideoOptimizePanel({ video, onClose, onVideoUpdated, pla
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
                     <p style={{ fontSize: 14, color: C.text3 }}>Expand each to review &amp; edit, then apply directly to YouTube.</p>
                     <button onClick={() => { setDescApplyStates({}); setDescApplyErrors({}); generateDescriptions() }} disabled={descLoading}
-                      style={{ fontSize: 14, color: C.text2, background: C.card, border: `1px solid ${C.border}`, borderRadius: 100, padding: '6px 14px', cursor: descLoading ? 'not-allowed' : 'pointer', fontFamily: 'inherit', fontWeight: 600, opacity: descLoading ? 0.6 : 1 }}>
-                      {descLoading ? 'Regenerating…' : <>Regenerate <span style={{ color: C.text3, fontWeight: 500, marginLeft: 2 }}>· 1 credit</span></>}
+                      style={{ fontSize: 14, color: C.red, background: '#fff', border: `1px solid ${C.red}`, borderRadius: 100, padding: '6px 14px', cursor: descLoading ? 'not-allowed' : 'pointer', fontFamily: 'inherit', fontWeight: 600, opacity: descLoading ? 0.6 : 1, boxShadow: '0 1px 3px rgba(229,37,27,0.12)' }}>
+                      {descLoading ? 'Regenerating…' : <>Regenerate <span style={{ color: C.red, opacity: 0.7, fontWeight: 500, marginLeft: 2 }}>· 1 credit</span></>}
                     </button>
                   </div>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>

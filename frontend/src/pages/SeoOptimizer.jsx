@@ -92,16 +92,16 @@ if (typeof document !== 'undefined' && !document.getElementById('seo-opt-styles'
      scoped to this page via .seo- prefix so we don't touch global styles. */
   .seo-btn {
     display: inline-flex; align-items: center; gap: 8px;
-    padding: 9px 20px; border-radius: 100px; border: 1px solid rgba(0,0,0,0.1);
+    padding: 9px 20px; border-radius: 100px; border: 1px solid #e5251b;
     font-family: 'Inter', system-ui, sans-serif; font-size: 12.5px; font-weight: 600;
-    background: #ffffff; color: #4a4a58; cursor: pointer;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.07), 0 4px 14px rgba(0,0,0,0.07);
+    background: #ffffff; color: #e5251b; cursor: pointer;
+    box-shadow: 0 1px 3px rgba(229,37,27,0.10), 0 4px 14px rgba(229,37,27,0.10);
     transition: all 0.18s;
     white-space: nowrap;
   }
   .seo-btn:hover {
-    border-color: rgba(0,0,0,0.18); color: #0f0f13;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.10), 0 8px 28px rgba(0,0,0,0.10);
+    background: rgba(229,37,27,0.06);
+    box-shadow: 0 2px 8px rgba(229,37,27,0.14), 0 8px 28px rgba(229,37,27,0.14);
     transform: translateY(-1px);
   }
   .seo-btn-primary {

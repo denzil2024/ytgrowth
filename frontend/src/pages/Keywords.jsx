@@ -103,15 +103,15 @@ function useKwStyles() {
       .kw-btn-primary:disabled { background: #e0e0e6; color: #a0a0b0; cursor: not-allowed; }
 
       .kw-btn-ghost {
-        background: #fff; color: #52525b;
-        border: 1px solid rgba(0,0,0,0.12); border-radius: 100px;
+        background: #fff; color: #e5251b;
+        border: 1px solid #e5251b; border-radius: 100px;
         padding: 11px 18px; font-size: 13.5px; font-weight: 600;
         font-family: 'Inter', system-ui, sans-serif;
         cursor: pointer; white-space: nowrap;
         transition: background 0.15s, border-color 0.15s;
         letter-spacing: 0.01em;
       }
-      .kw-btn-ghost:hover { border-color: rgba(0,0,0,0.2); background: #f6f6f9; }
+      .kw-btn-ghost:hover { background: rgba(229,37,27,0.06); }
 
       /* Intent picker row — hairline card, hover bg change, no lift */
       .kw-intent-opt {
