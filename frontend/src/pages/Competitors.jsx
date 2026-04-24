@@ -536,6 +536,323 @@ function AIAnalysis({ ai, top5Videos, channelId, checkedIdeas, onToggleIdea }) {
         </div>
       </Card>
 
+      {/* ── channel insights — same stacked-card pattern as Winning moves ────
+           Same pattern as the app's standard ranked suggestion cards
+           (Suggested Titles, DescriptionCard, etc): amber top border +
+           amber rank badge + amber category eyebrow (VIDEO LENGTH /
+           ENGAGEMENT / THUMBNAIL STYLE — competitor-specific labels) +
+           bold first-sentence headline + divider + blue "Why it works"
+           tile with the remaining analysis. */}
+      {(() => {
+        const insights = [
+          { key: 'videoLengthInsight', label: 'Video length',    val: ai.videoLengthInsight },
+          { key: 'engagementInsight',  label: 'Engagement',      val: ai.engagementInsight },
+          { key: 'thumbnailPattern',   label: 'Thumbnail style', val: ai.thumbnailPattern },
+        ].filter(x => x.val)
+        if (insights.length === 0) return null
+        return (
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
+              <p style={{ fontSize: 20, fontWeight: 800, color: '#111114', letterSpacing: '-0.5px' }}>
+                Channel insights
+              </p>
+              <span style={{ fontSize: 11, fontWeight: 700, color: '#9595a4', background: '#f1f1f6',
+                padding: '2px 8px', borderRadius: 20, border: '1px solid #e6e6ec' }}>
+                {insights.length}
+              </span>
+            </div>
+
+            {insights.map(({ key, label, val }, i) => {
+              const match    = val.match(/^(.+?[.!?])\s+(.+)$/s)
+              const headline = (match ? match[1] : val).trim()
+              const body     = match ? match[2].trim() : null
+
+              return (
+                <div key={key} className="comp-card" style={{
+                  borderRadius: 14,
+                  overflow: 'hidden',
+                  marginBottom: 10,
+                  borderTop: '3px solid #d97706',
+                }}>
+                  <div style={{ padding: '16px 22px 18px' }}>
+
+                    {/* Header: amber badge + amber category + bold headline */}
+                    <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: body ? 14 : 0 }}>
+                      <div style={{ width: 26, height: 26, borderRadius: 8, background: '#d97706',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 2 }}>
+                        <span style={{ fontSize: 12, fontWeight: 900, color: '#fff', fontVariantNumeric: 'tabular-nums' }}>
+                          {i + 1}
+                        </span>
+                      </div>
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <p style={{ fontSize: 10, fontWeight: 700, color: '#d97706',
+                          letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 5 }}>
+                          {label}
+                        </p>
+                        <p style={{ fontSize: 14, fontWeight: 700, color: '#111114', lineHeight: 1.55 }}>
+                          {headline}
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Divider + full-width blue "Why it works" tile */}
+                    {body && (
+                      <>
+                        <div style={{ height: 1, background: '#e6e6ec', marginBottom: 14, marginLeft: 38 }} />
+                        <div style={{ marginLeft: 38, background: 'rgba(79,134,247,0.07)',
+                          border: '1px solid rgba(79,134,247,0.12)', borderRadius: 10, padding: '12px 14px' }}>
+                          <p style={{ fontSize: 10, fontWeight: 700, color: '#4a7cf7',
+                            letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>
+                            Why it works
+                          </p>
+                          <p style={{ fontSize: 13.5, color: '#111114', lineHeight: 1.72 }}>{body}</p>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        )
+      })()}
+
+      {/* ── posting timing ── Consistency uses scoreColor (same thresholds as
+           Overview's Score breakdown: ≥75 green, 55–74 amber, <55 red). Other
+           three tiles are identity/timestamp values and stay neutral. */}
+      {ai.postingBehavior && (() => {
+        const cs = ai.postingBehavior.consistencyScore ?? 0
+        const consistencyColor = cs >= 75 ? '#059669' : cs >= 55 ? '#d97706' : '#e5251b'
+        return (
+        <Card>
+          <SectionTitle>Posting timing</SectionTitle>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 10 }}>
+            {[
+              { label: 'Avg gap',     val: `${ai.postingBehavior.avgGapDays}d`, color: '#111114' },
+              { label: 'Best day',    val: ai.postingBehavior.bestDay,          color: '#111114' },
+              { label: 'Best hour',   val: ai.postingBehavior.bestHour,         color: '#111114' },
+              { label: 'Consistency', val: `${cs}/100`,                         color: consistencyColor },
+            ].map(({ label, val, color }) => (
+              <div key={label} className="comp-timing-pill">
+                <p style={{ fontSize: 20, fontWeight: 800, color, letterSpacing: '-0.5px', lineHeight: 1 }}>{val}</p>
+                <p style={{ fontSize: 12, fontWeight: 600, color: '#a0a0b0', textTransform: 'uppercase', letterSpacing: '0.06em' }}>{label}</p>
+              </div>
+            ))}
+          </div>
+        </Card>
+        )
+      })()}
+      {/* ── Top content topics — faithful copy of SEO Optimizer's "Related phrases"
+           card (SeoOptimizer.jsx:1366–1421). Amber 3px top border, eyebrow + hint
+           on the left, big tabular count on the right, hairline divider, then
+           a 2-col grid of bar rows with a 1px amber vertical divider between
+           the two columns (left col padding-right 20, right col padding-left 20
+           + border-left amberBdr). Bar width + value colour both driven by
+           scoreColor (relative-to-max here since topics aren't absolute scored). */}
+      {ai.topTopics?.length > 0 && (() => {
+        // Rank-based colour (not threshold-based): only the lowest-performing
+        // topic is red, everything else is green. Bar width still scales
+        // relative to the strongest topic so the leader stays the only full bar.
+        const viewVals = ai.topTopics.map(t => t.avgViews || 0)
+        const maxViews = Math.max(...viewVals, 1)
+        const minViews = Math.min(...viewVals)
+        const hasVariance = new Set(viewVals).size > 1
+        const topicColor = (v) => (hasVariance && v === minViews) ? '#e5251b' : '#059669'
+        return (
+          <div>
+            <div style={{ marginBottom: 12 }}>
+              <h2 style={{ fontSize: 20, fontWeight: 800, color: '#111114', letterSpacing: '-0.5px', marginBottom: 4 }}>
+                Top content topics
+              </h2>
+              <p style={{ fontSize: 13, color: '#9595a4', lineHeight: 1.5 }}>
+                Their strongest content clusters · ranked by average views per video
+              </p>
+            </div>
+
+            <div className="comp-card" style={{ borderTop: '3px solid #d97706' }}>
+              <div style={{ padding: '18px 22px 20px' }}>
+                <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between',
+                  gap: 16, marginBottom: 14 }}>
+                  <div style={{ minWidth: 0 }}>
+                    <p style={{ fontSize: 11, fontWeight: 700, color: '#9595a4',
+                      letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 6 }}>
+                      Topics by reach
+                    </p>
+                    <p style={{ fontSize: 13, color: '#9595a4', lineHeight: 1.5 }}>
+                      Bar width shows each topic's pull relative to their strongest
+                    </p>
+                  </div>
+                  <p style={{ fontSize: 26, fontWeight: 800, color: '#111114', letterSpacing: '-0.8px',
+                    fontVariantNumeric: 'tabular-nums', flexShrink: 0, lineHeight: 1 }}>
+                    {ai.topTopics.length}
+                  </p>
+                </div>
+
+                <div style={{ height: 1, background: '#e6e6ec', margin: '0 0 14px' }}/>
+
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', columnGap: 0, rowGap: 14 }}>
+                  {ai.topTopics.map((t, i) => {
+                    const pct = (t.avgViews || 0) / maxViews * 100
+                    const col = topicColor(t.avgViews || 0)
+                    const isRightCol = i % 2 === 1
+                    return (
+                      <div key={i} style={{
+                        display: 'flex', alignItems: 'center', gap: 10,
+                        paddingLeft:  isRightCol ? 20 : 0,
+                        paddingRight: isRightCol ? 0 : 20,
+                        borderLeft:   isRightCol ? '1px solid #fde68a' : 'none',
+                      }}>
+                        <span style={{ fontSize: 13, color: '#52525b', fontWeight: 500,
+                          flex: 1, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis',
+                          whiteSpace: 'nowrap' }}>
+                          {t.topic}
+                        </span>
+                        <div style={{ flex: 1, height: 4, background: '#eeeef3', borderRadius: 99,
+                          overflow: 'hidden', minWidth: 40 }}>
+                          <div style={{ width: `${Math.max(pct, 2)}%`, height: '100%', background: col,
+                            borderRadius: 99, transition: 'width 0.8s cubic-bezier(0.34,1.56,0.64,1)' }}/>
+                        </div>
+                        <span style={{ fontSize: 13, fontWeight: 700, color: col,
+                          fontVariantNumeric: 'tabular-nums', minWidth: 52, textAlign: 'right',
+                          flexShrink: 0 }}>
+                          {fmtK(t.avgViews)}
+                        </span>
+                      </div>
+                    )
+                  })}
+                </div>
+              </div>
+            </div>
+          </div>
+        )
+      })()}
+
+      {/* ── Title patterns — Title Scorecard hero layout (SeoOptimizer.jsx:1015-1097)
+           Three panels separated by 3px amber vertical bars:
+             • Left — big scoreColor'd number + "AVG LENGTH" label + vs-YT-cap delta
+             • Middle — "DOMINANT FORMATS" eyebrow + numbered list of format strings
+             • Right — "TITLE VOCABULARY" eyebrow + Top keywords (neutral chips) +
+               Power words (amber chips) stacked
+           H2 + subtitle above the card, matching the Top content topics header. */}
+      {ai.titlePatterns && (() => {
+        const len      = ai.titlePatterns.avgTitleLength || 0
+        const lenCol   = len <= 60 ? '#059669' : len <= 80 ? '#d97706' : '#e5251b'
+        const overCap  = len > 100
+        const capDelta = 100 - len
+        const deltaCol = overCap ? '#e5251b' : '#059669'
+
+        return (
+          <div>
+            <div style={{ marginBottom: 12 }}>
+              <h2 style={{ fontSize: 20, fontWeight: 800, color: '#111114',
+                letterSpacing: '-0.5px', marginBottom: 4 }}>
+                Title patterns
+              </h2>
+              <p style={{ fontSize: 13, color: '#9595a4', lineHeight: 1.5 }}>
+                What works across their recent titles · how they package ideas
+              </p>
+            </div>
+
+            <Card topAccent={null}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 32 }}>
+
+                {/* LEFT — big avg length + label + delta (scoreColor by truncation risk) */}
+                <div style={{ flexShrink: 0, textAlign: 'center', minWidth: 120 }}>
+                  <p style={{ fontSize: 44, fontWeight: 800, color: lenCol,
+                    letterSpacing: '-1.2px', lineHeight: 1 }}>
+                    {len}
+                    <span style={{ fontSize: 16, color: '#9595a4', fontWeight: 600,
+                      letterSpacing: '-0.3px', marginLeft: 2 }}>/100</span>
+                  </p>
+                  <p style={{ fontSize: 11, color: '#9595a4', fontWeight: 500, marginTop: 4,
+                    letterSpacing: '0.03em', textTransform: 'uppercase' }}>
+                    Avg title length
+                  </p>
+                  {capDelta !== 0 && (
+                    <p style={{ fontSize: 11, fontWeight: 700, color: deltaCol, marginTop: 3 }}>
+                      {overCap ? '▲' : '▼'} {Math.abs(capDelta)} {overCap ? 'over' : 'under'} YT cap
+                    </p>
+                  )}
+                </div>
+
+                {/* AMBER 3px vertical divider */}
+                <div style={{ width: 3, alignSelf: 'stretch', background: '#d97706',
+                  flexShrink: 0, borderRadius: 2 }}/>
+
+                {/* MIDDLE — dominant formats listed as verdict-style content */}
+                <div style={{ flex: 1.3, minWidth: 0 }}>
+                  <p style={{ fontSize: 11, fontWeight: 600, color: '#9595a4',
+                    letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 10 }}>
+                    Dominant formats
+                  </p>
+                  {ai.titlePatterns.dominantFormats?.length > 0 ? (
+                    <ol style={{ listStyle: 'none', padding: 0, margin: 0,
+                      display: 'flex', flexDirection: 'column', gap: 10 }}>
+                      {ai.titlePatterns.dominantFormats.map((f, i) => (
+                        <li key={i} style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
+                          <span style={{ fontSize: 11, fontWeight: 700, color: '#d97706',
+                            fontVariantNumeric: 'tabular-nums', flexShrink: 0, marginTop: 3,
+                            minWidth: 14 }}>
+                            {i + 1}
+                          </span>
+                          <p style={{ fontSize: 13, color: '#111114', lineHeight: 1.6, fontWeight: 400 }}>
+                            {f}
+                          </p>
+                        </li>
+                      ))}
+                    </ol>
+                  ) : (
+                    <p style={{ fontSize: 13, color: '#9595a4' }}>No format patterns detected.</p>
+                  )}
+                </div>
+
+                {/* AMBER 3px vertical divider */}
+                <div style={{ width: 3, alignSelf: 'stretch', background: '#d97706',
+                  flexShrink: 0, borderRadius: 2 }}/>
+
+                {/* RIGHT — title vocabulary (keywords + power words) */}
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <p style={{ fontSize: 11, fontWeight: 600, color: '#9595a4',
+                    letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 12 }}>
+                    Title vocabulary
+                  </p>
+
+                  {ai.titlePatterns.topKeywords?.length > 0 && (
+                    <div style={{ marginBottom: ai.titlePatterns.powerWordsUsed?.length > 0 ? 12 : 0 }}>
+                      <p style={{ fontSize: 10, fontWeight: 600, color: '#9595a4',
+                        letterSpacing: '0.04em', textTransform: 'uppercase', marginBottom: 6 }}>
+                        Keywords
+                      </p>
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5 }}>
+                        {ai.titlePatterns.topKeywords.map((k, i) => (
+                          <span key={i} className="comp-tag" style={{ background: '#f4f4f6',
+                            color: '#52525b', border: '1px solid rgba(0,0,0,0.09)' }}>{k}</span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {ai.titlePatterns.powerWordsUsed?.length > 0 && (
+                    <div>
+                      <p style={{ fontSize: 10, fontWeight: 600, color: '#9595a4',
+                        letterSpacing: '0.04em', textTransform: 'uppercase', marginBottom: 6 }}>
+                        Power words
+                      </p>
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5 }}>
+                        {ai.titlePatterns.powerWordsUsed.map((w, i) => (
+                          <span key={i} className="comp-tag" style={{ background: '#fffbeb',
+                            color: '#d97706', border: '1px solid #fde68a' }}>{w}</span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </Card>
+          </div>
+        )
+      })()}
+
       {/* ── winning moves — 2-column grid of Priority-Actions InsightCards ───
            Exact Dashboard.jsx:1063-1155 InsightCard design, arranged 2-per-row.
            Even-count rule: slice to largest even ≤ N, capped at 10 (so 7→6,
@@ -824,323 +1141,6 @@ function AIAnalysis({ ai, top5Videos, channelId, checkedIdeas, onToggleIdea }) {
         )
       })()}
 
-      {/* ── Top content topics — faithful copy of SEO Optimizer's "Related phrases"
-           card (SeoOptimizer.jsx:1366–1421). Amber 3px top border, eyebrow + hint
-           on the left, big tabular count on the right, hairline divider, then
-           a 2-col grid of bar rows with a 1px amber vertical divider between
-           the two columns (left col padding-right 20, right col padding-left 20
-           + border-left amberBdr). Bar width + value colour both driven by
-           scoreColor (relative-to-max here since topics aren't absolute scored). */}
-      {ai.topTopics?.length > 0 && (() => {
-        // Rank-based colour (not threshold-based): only the lowest-performing
-        // topic is red, everything else is green. Bar width still scales
-        // relative to the strongest topic so the leader stays the only full bar.
-        const viewVals = ai.topTopics.map(t => t.avgViews || 0)
-        const maxViews = Math.max(...viewVals, 1)
-        const minViews = Math.min(...viewVals)
-        const hasVariance = new Set(viewVals).size > 1
-        const topicColor = (v) => (hasVariance && v === minViews) ? '#e5251b' : '#059669'
-        return (
-          <div>
-            <div style={{ marginBottom: 12 }}>
-              <h2 style={{ fontSize: 20, fontWeight: 800, color: '#111114', letterSpacing: '-0.5px', marginBottom: 4 }}>
-                Top content topics
-              </h2>
-              <p style={{ fontSize: 13, color: '#9595a4', lineHeight: 1.5 }}>
-                Their strongest content clusters · ranked by average views per video
-              </p>
-            </div>
-
-            <div className="comp-card" style={{ borderTop: '3px solid #d97706' }}>
-              <div style={{ padding: '18px 22px 20px' }}>
-                <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between',
-                  gap: 16, marginBottom: 14 }}>
-                  <div style={{ minWidth: 0 }}>
-                    <p style={{ fontSize: 11, fontWeight: 700, color: '#9595a4',
-                      letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 6 }}>
-                      Topics by reach
-                    </p>
-                    <p style={{ fontSize: 13, color: '#9595a4', lineHeight: 1.5 }}>
-                      Bar width shows each topic's pull relative to their strongest
-                    </p>
-                  </div>
-                  <p style={{ fontSize: 26, fontWeight: 800, color: '#111114', letterSpacing: '-0.8px',
-                    fontVariantNumeric: 'tabular-nums', flexShrink: 0, lineHeight: 1 }}>
-                    {ai.topTopics.length}
-                  </p>
-                </div>
-
-                <div style={{ height: 1, background: '#e6e6ec', margin: '0 0 14px' }}/>
-
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', columnGap: 0, rowGap: 14 }}>
-                  {ai.topTopics.map((t, i) => {
-                    const pct = (t.avgViews || 0) / maxViews * 100
-                    const col = topicColor(t.avgViews || 0)
-                    const isRightCol = i % 2 === 1
-                    return (
-                      <div key={i} style={{
-                        display: 'flex', alignItems: 'center', gap: 10,
-                        paddingLeft:  isRightCol ? 20 : 0,
-                        paddingRight: isRightCol ? 0 : 20,
-                        borderLeft:   isRightCol ? '1px solid #fde68a' : 'none',
-                      }}>
-                        <span style={{ fontSize: 13, color: '#52525b', fontWeight: 500,
-                          flex: 1, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis',
-                          whiteSpace: 'nowrap' }}>
-                          {t.topic}
-                        </span>
-                        <div style={{ flex: 1, height: 4, background: '#eeeef3', borderRadius: 99,
-                          overflow: 'hidden', minWidth: 40 }}>
-                          <div style={{ width: `${Math.max(pct, 2)}%`, height: '100%', background: col,
-                            borderRadius: 99, transition: 'width 0.8s cubic-bezier(0.34,1.56,0.64,1)' }}/>
-                        </div>
-                        <span style={{ fontSize: 13, fontWeight: 700, color: col,
-                          fontVariantNumeric: 'tabular-nums', minWidth: 52, textAlign: 'right',
-                          flexShrink: 0 }}>
-                          {fmtK(t.avgViews)}
-                        </span>
-                      </div>
-                    )
-                  })}
-                </div>
-              </div>
-            </div>
-          </div>
-        )
-      })()}
-
-      {/* ── Title patterns — Title Scorecard hero layout (SeoOptimizer.jsx:1015-1097)
-           Three panels separated by 3px amber vertical bars:
-             • Left — big scoreColor'd number + "AVG LENGTH" label + vs-YT-cap delta
-             • Middle — "DOMINANT FORMATS" eyebrow + numbered list of format strings
-             • Right — "TITLE VOCABULARY" eyebrow + Top keywords (neutral chips) +
-               Power words (amber chips) stacked
-           H2 + subtitle above the card, matching the Top content topics header. */}
-      {ai.titlePatterns && (() => {
-        const len      = ai.titlePatterns.avgTitleLength || 0
-        const lenCol   = len <= 60 ? '#059669' : len <= 80 ? '#d97706' : '#e5251b'
-        const overCap  = len > 100
-        const capDelta = 100 - len
-        const deltaCol = overCap ? '#e5251b' : '#059669'
-
-        return (
-          <div>
-            <div style={{ marginBottom: 12 }}>
-              <h2 style={{ fontSize: 20, fontWeight: 800, color: '#111114',
-                letterSpacing: '-0.5px', marginBottom: 4 }}>
-                Title patterns
-              </h2>
-              <p style={{ fontSize: 13, color: '#9595a4', lineHeight: 1.5 }}>
-                What works across their recent titles · how they package ideas
-              </p>
-            </div>
-
-            <Card topAccent={null}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 32 }}>
-
-                {/* LEFT — big avg length + label + delta (scoreColor by truncation risk) */}
-                <div style={{ flexShrink: 0, textAlign: 'center', minWidth: 120 }}>
-                  <p style={{ fontSize: 44, fontWeight: 800, color: lenCol,
-                    letterSpacing: '-1.2px', lineHeight: 1 }}>
-                    {len}
-                    <span style={{ fontSize: 16, color: '#9595a4', fontWeight: 600,
-                      letterSpacing: '-0.3px', marginLeft: 2 }}>/100</span>
-                  </p>
-                  <p style={{ fontSize: 11, color: '#9595a4', fontWeight: 500, marginTop: 4,
-                    letterSpacing: '0.03em', textTransform: 'uppercase' }}>
-                    Avg title length
-                  </p>
-                  {capDelta !== 0 && (
-                    <p style={{ fontSize: 11, fontWeight: 700, color: deltaCol, marginTop: 3 }}>
-                      {overCap ? '▲' : '▼'} {Math.abs(capDelta)} {overCap ? 'over' : 'under'} YT cap
-                    </p>
-                  )}
-                </div>
-
-                {/* AMBER 3px vertical divider */}
-                <div style={{ width: 3, alignSelf: 'stretch', background: '#d97706',
-                  flexShrink: 0, borderRadius: 2 }}/>
-
-                {/* MIDDLE — dominant formats listed as verdict-style content */}
-                <div style={{ flex: 1.3, minWidth: 0 }}>
-                  <p style={{ fontSize: 11, fontWeight: 600, color: '#9595a4',
-                    letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 10 }}>
-                    Dominant formats
-                  </p>
-                  {ai.titlePatterns.dominantFormats?.length > 0 ? (
-                    <ol style={{ listStyle: 'none', padding: 0, margin: 0,
-                      display: 'flex', flexDirection: 'column', gap: 10 }}>
-                      {ai.titlePatterns.dominantFormats.map((f, i) => (
-                        <li key={i} style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
-                          <span style={{ fontSize: 11, fontWeight: 700, color: '#d97706',
-                            fontVariantNumeric: 'tabular-nums', flexShrink: 0, marginTop: 3,
-                            minWidth: 14 }}>
-                            {i + 1}
-                          </span>
-                          <p style={{ fontSize: 13, color: '#111114', lineHeight: 1.6, fontWeight: 400 }}>
-                            {f}
-                          </p>
-                        </li>
-                      ))}
-                    </ol>
-                  ) : (
-                    <p style={{ fontSize: 13, color: '#9595a4' }}>No format patterns detected.</p>
-                  )}
-                </div>
-
-                {/* AMBER 3px vertical divider */}
-                <div style={{ width: 3, alignSelf: 'stretch', background: '#d97706',
-                  flexShrink: 0, borderRadius: 2 }}/>
-
-                {/* RIGHT — title vocabulary (keywords + power words) */}
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <p style={{ fontSize: 11, fontWeight: 600, color: '#9595a4',
-                    letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 12 }}>
-                    Title vocabulary
-                  </p>
-
-                  {ai.titlePatterns.topKeywords?.length > 0 && (
-                    <div style={{ marginBottom: ai.titlePatterns.powerWordsUsed?.length > 0 ? 12 : 0 }}>
-                      <p style={{ fontSize: 10, fontWeight: 600, color: '#9595a4',
-                        letterSpacing: '0.04em', textTransform: 'uppercase', marginBottom: 6 }}>
-                        Keywords
-                      </p>
-                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5 }}>
-                        {ai.titlePatterns.topKeywords.map((k, i) => (
-                          <span key={i} className="comp-tag" style={{ background: '#f4f4f6',
-                            color: '#52525b', border: '1px solid rgba(0,0,0,0.09)' }}>{k}</span>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  {ai.titlePatterns.powerWordsUsed?.length > 0 && (
-                    <div>
-                      <p style={{ fontSize: 10, fontWeight: 600, color: '#9595a4',
-                        letterSpacing: '0.04em', textTransform: 'uppercase', marginBottom: 6 }}>
-                        Power words
-                      </p>
-                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5 }}>
-                        {ai.titlePatterns.powerWordsUsed.map((w, i) => (
-                          <span key={i} className="comp-tag" style={{ background: '#fffbeb',
-                            color: '#d97706', border: '1px solid #fde68a' }}>{w}</span>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </Card>
-          </div>
-        )
-      })()}
-
-      {/* ── channel insights — same stacked-card pattern as Winning moves ────
-           Same pattern as the app's standard ranked suggestion cards
-           (Suggested Titles, DescriptionCard, etc): amber top border +
-           amber rank badge + amber category eyebrow (VIDEO LENGTH /
-           ENGAGEMENT / THUMBNAIL STYLE — competitor-specific labels) +
-           bold first-sentence headline + divider + blue "Why it works"
-           tile with the remaining analysis. */}
-      {(() => {
-        const insights = [
-          { key: 'videoLengthInsight', label: 'Video length',    val: ai.videoLengthInsight },
-          { key: 'engagementInsight',  label: 'Engagement',      val: ai.engagementInsight },
-          { key: 'thumbnailPattern',   label: 'Thumbnail style', val: ai.thumbnailPattern },
-        ].filter(x => x.val)
-        if (insights.length === 0) return null
-        return (
-          <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
-              <p style={{ fontSize: 20, fontWeight: 800, color: '#111114', letterSpacing: '-0.5px' }}>
-                Channel insights
-              </p>
-              <span style={{ fontSize: 11, fontWeight: 700, color: '#9595a4', background: '#f1f1f6',
-                padding: '2px 8px', borderRadius: 20, border: '1px solid #e6e6ec' }}>
-                {insights.length}
-              </span>
-            </div>
-
-            {insights.map(({ key, label, val }, i) => {
-              const match    = val.match(/^(.+?[.!?])\s+(.+)$/s)
-              const headline = (match ? match[1] : val).trim()
-              const body     = match ? match[2].trim() : null
-
-              return (
-                <div key={key} className="comp-card" style={{
-                  borderRadius: 14,
-                  overflow: 'hidden',
-                  marginBottom: 10,
-                  borderTop: '3px solid #d97706',
-                }}>
-                  <div style={{ padding: '16px 22px 18px' }}>
-
-                    {/* Header: amber badge + amber category + bold headline */}
-                    <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: body ? 14 : 0 }}>
-                      <div style={{ width: 26, height: 26, borderRadius: 8, background: '#d97706',
-                        display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 2 }}>
-                        <span style={{ fontSize: 12, fontWeight: 900, color: '#fff', fontVariantNumeric: 'tabular-nums' }}>
-                          {i + 1}
-                        </span>
-                      </div>
-                      <div style={{ flex: 1, minWidth: 0 }}>
-                        <p style={{ fontSize: 10, fontWeight: 700, color: '#d97706',
-                          letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 5 }}>
-                          {label}
-                        </p>
-                        <p style={{ fontSize: 14, fontWeight: 700, color: '#111114', lineHeight: 1.55 }}>
-                          {headline}
-                        </p>
-                      </div>
-                    </div>
-
-                    {/* Divider + full-width blue "Why it works" tile */}
-                    {body && (
-                      <>
-                        <div style={{ height: 1, background: '#e6e6ec', marginBottom: 14, marginLeft: 38 }} />
-                        <div style={{ marginLeft: 38, background: 'rgba(79,134,247,0.07)',
-                          border: '1px solid rgba(79,134,247,0.12)', borderRadius: 10, padding: '12px 14px' }}>
-                          <p style={{ fontSize: 10, fontWeight: 700, color: '#4a7cf7',
-                            letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>
-                            Why it works
-                          </p>
-                          <p style={{ fontSize: 13.5, color: '#111114', lineHeight: 1.72 }}>{body}</p>
-                        </div>
-                      </>
-                    )}
-                  </div>
-                </div>
-              )
-            })}
-          </div>
-        )
-      })()}
-
-      {/* ── posting timing ── Consistency uses scoreColor (same thresholds as
-           Overview's Score breakdown: ≥75 green, 55–74 amber, <55 red). Other
-           three tiles are identity/timestamp values and stay neutral. */}
-      {ai.postingBehavior && (() => {
-        const cs = ai.postingBehavior.consistencyScore ?? 0
-        const consistencyColor = cs >= 75 ? '#059669' : cs >= 55 ? '#d97706' : '#e5251b'
-        return (
-        <Card>
-          <SectionTitle>Posting timing</SectionTitle>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 10 }}>
-            {[
-              { label: 'Avg gap',     val: `${ai.postingBehavior.avgGapDays}d`, color: '#111114' },
-              { label: 'Best day',    val: ai.postingBehavior.bestDay,          color: '#111114' },
-              { label: 'Best hour',   val: ai.postingBehavior.bestHour,         color: '#111114' },
-              { label: 'Consistency', val: `${cs}/100`,                         color: consistencyColor },
-            ].map(({ label, val, color }) => (
-              <div key={label} className="comp-timing-pill">
-                <p style={{ fontSize: 20, fontWeight: 800, color, letterSpacing: '-0.5px', lineHeight: 1 }}>{val}</p>
-                <p style={{ fontSize: 12, fontWeight: 600, color: '#a0a0b0', textTransform: 'uppercase', letterSpacing: '0.06em' }}>{label}</p>
-              </div>
-            ))}
-          </div>
-        </Card>
-        )
-      })()}
     </div>
   )
 }
