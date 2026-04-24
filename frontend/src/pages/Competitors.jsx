@@ -1026,7 +1026,7 @@ function AIAnalysis({ ai, top5Videos, channelId, checkedIdeas, onToggleIdea }) {
               </p>
             </div>
 
-            <Card topAccent={null}>
+            <Card topAccent={null} style={{ background: '#f4f4f6' }}>
             <div style={{ display: 'flex', alignItems: 'stretch', gap: 24 }}>
 
               {/* ── Column 1: Topics to tackle (1–5) ── */}
