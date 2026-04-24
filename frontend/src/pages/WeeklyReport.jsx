@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react'
 
+// Tokens match the canonical palette used by Dashboard.jsx and
+// SeoOptimizer.jsx (the benchmark pages). No drift, no extra tiers.
 const C = {
   red: '#e5251b', redBg: '#fef2f2', redBdr: 'rgba(229,37,27,0.15)',
-  green: '#16a34a', greenBg: '#f0fdf4', greenBdr: 'rgba(134,239,172,0.7)',
+  green: '#059669', greenBg: '#f0fdf4', greenBdr: 'rgba(134,239,172,0.7)',
   amber: '#d97706', amberBg: '#fffbeb',
-  text1: '#111114', text2: '#374151', text3: '#6b7280', text4: '#9ca3af',
-  border: 'rgba(0,0,0,0.08)',
+  text1: '#0f0f13', text2: '#4a4a58', text3: '#9595a4',
+  border: '#e6e6ec',
 }
 
 function fmtNum(n) {
@@ -20,10 +22,10 @@ function DeltaBadge({ metric, unit, isScore }) {
   if (!metric) return null
   const { delta, direction } = metric
   if (delta === null || delta === undefined) {
-    return <span style={{ fontSize: 12, color: C.text4, fontWeight: 500 }}>First report</span>
+    return <span style={{ fontSize: 12, color: C.text3, fontWeight: 500 }}>First report</span>
   }
   if (direction === 'flat') {
-    return <span style={{ fontSize: 12, color: C.text4, fontWeight: 500 }}>→ No change</span>
+    return <span style={{ fontSize: 12, color: C.text3, fontWeight: 500 }}>→ No change</span>
   }
   const up    = direction === 'up'
   const color = up ? C.green : C.red
@@ -72,11 +74,9 @@ function ReportCard({ report, expanded, onToggle }) {
   const m  = rd.metrics || {}
 
   return (
-    <div style={{
-      background: '#fff', borderRadius: 16, border: '1px solid rgba(0,0,0,0.08)',
-      boxShadow: '0 1px 3px rgba(0,0,0,0.07), 0 6px 24px rgba(0,0,0,0.09)',
-      overflow: 'hidden',
-    }}>
+    // .ytg-card carries canonical bg/border/shadow + hover lift. Injected
+    // by Dashboard.useDashboardStyles() (WeeklyReport renders inside it).
+    <div className="ytg-card" style={{ overflow: 'hidden' }}>
       {/* Header row — always visible */}
       <button
         onClick={onToggle}
@@ -107,7 +107,7 @@ function ReportCard({ report, expanded, onToggle }) {
         </div>
         <svg
           width="16" height="16" viewBox="0 0 16 16" fill="none"
-          stroke={C.text4} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
+          stroke={C.text3} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
           style={{ flexShrink: 0, transform: expanded ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }}
         >
           <path d="M4 6l4 4 4-4"/>
@@ -342,7 +342,7 @@ export default function WeeklyReport({ channelId, channelEmail, plan, channelSta
             </button>
           </div>
           {!emailOn && (
-            <span style={{ fontSize: 12, color: C.text4 }}>You can resubscribe anytime</span>
+            <span style={{ fontSize: 12, color: C.text3 }}>You can resubscribe anytime</span>
           )}
         </div>
       )}
@@ -385,11 +385,8 @@ export default function WeeklyReport({ channelId, channelEmail, plan, channelSta
             pointerEvents: 'none', userSelect: 'none',
             transform: 'scale(1.015)', // hide blur halo at edges
           }}>
-            <div style={{
-              background: '#fff', borderRadius: 16,
-              border: '1px solid rgba(0,0,0,0.08)',
+            <div className="ytg-card" style={{
               borderTop: `3px solid ${C.red}`,
-              boxShadow: '0 2px 6px rgba(0,0,0,0.08), 0 10px 36px rgba(0,0,0,0.10)',
               padding: '28px 28px 30px',
             }}>
               <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, marginBottom: 24 }}>
@@ -598,13 +595,11 @@ export default function WeeklyReport({ channelId, channelEmail, plan, channelSta
 
       {/* ── Empty state ─────────────────────────────────────────────────── */}
       {!hasReports && (
-        <div style={{
+        <div className="ytg-card" style={{
           display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
           padding: '80px 32px', textAlign: 'center',
-          background: '#fff', borderRadius: 16, border: '1px solid rgba(0,0,0,0.08)',
-          boxShadow: '0 1px 3px rgba(0,0,0,0.07), 0 6px 24px rgba(0,0,0,0.09)',
         }}>
-          <svg width="48" height="48" viewBox="0 0 48 48" fill="none" stroke={C.text4} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ marginBottom: 16 }}>
+          <svg width="48" height="48" viewBox="0 0 48 48" fill="none" stroke={C.text3} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ marginBottom: 16 }}>
             <rect x="8" y="10" width="32" height="34" rx="4"/>
             <path d="M16 6v8M32 6v8M8 22h32"/>
             <path d="M16 30h8M16 36h16"/>
@@ -618,10 +613,8 @@ export default function WeeklyReport({ channelId, channelEmail, plan, channelSta
 
       {/* ── Latest report ───────────────────────────────────────────────── */}
       {latest && (
-        <div style={{
-          background: '#fff', borderRadius: 16, border: '1px solid rgba(0,0,0,0.08)',
+        <div className="ytg-card" style={{
           borderTop: `3px solid ${C.red}`,
-          boxShadow: '0 2px 6px rgba(0,0,0,0.08), 0 10px 36px rgba(0,0,0,0.10)',
           padding: '28px 28px 30px', marginBottom: 16,
         }}>
           <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, marginBottom: 24 }}>
@@ -650,7 +643,7 @@ export default function WeeklyReport({ channelId, channelEmail, plan, channelSta
       {/* ── Previous reports ────────────────────────────────────────────── */}
       {previous.length > 0 && (
         <>
-          <div style={{ fontSize: 12, fontWeight: 600, color: C.text4, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 10, marginTop: 8 }}>Previous Reports</div>
+          <div style={{ fontSize: 12, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 10, marginTop: 8 }}>Previous Reports</div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
             {previous.map((r, i) => (
               <ReportCard
