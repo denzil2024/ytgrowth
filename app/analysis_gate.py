@@ -199,10 +199,13 @@ def check_free_tier_access(channel_id: str, feature: str) -> dict:
 def peek_free_tier_access(channel_id: str, feature: str) -> dict:
     """Read-only variant of check_free_tier_access — does NOT record usage.
     Used for frontend status checks (e.g., /api/auth/me) so loading the
-    page doesn't burn a free run."""
-    if _BYPASS:
-        return {"allowed": True}
+    page doesn't burn a free run.
 
+    Deliberately IGNORES DEV_BYPASS_GATE: the frontend needs the real gate
+    state so the upsell UI renders for testing, even while `check_*` lets
+    the underlying API calls pass through. Only enforcement honors the
+    bypass; presentation is always truthful.
+    """
     db = SessionLocal()
     try:
         from database.models import FreeTierFeatureUsage
