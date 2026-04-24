@@ -1205,65 +1205,6 @@ Return ONLY this JSON (no markdown, no explanation):
         return {"error": str(e)}
 
 
-# ─── Thumbnail text generation ─────────────────────────────────────────────────
-
-def generate_thumbnail_text(title: str, niche: str = "") -> tuple[list[dict], str]:
-    """
-    Generate 4 short thumbnail overlay text options for a given title.
-    Returns (options, error_string).
-    """
-    import json as _json
-
-    api_key = os.getenv("ANTHROPIC_API_KEY", "")
-    if not api_key:
-        return [], "ANTHROPIC_API_KEY is not set"
-
-    client = _make_client()
-    niche_block = f"NICHE: {niche}\n" if niche else ""
-
-    prompt = f"""You are a YouTube thumbnail strategist.
-
-VIDEO TITLE: "{title}"
-{niche_block}
-The thumbnail overlay text is short text placed ON the thumbnail image. It works WITH the title — not repeating it, but adding a second hook that makes the viewer feel they must click.
-
-Generate exactly 4 thumbnail text options. Each must be:
-- 2–6 words, ALL CAPS
-- Complementary to the title (never just repeat it)
-- Instantly readable on a thumbnail at a glance
-- Punchy and specific
-
-Use these 4 styles, one each:
-1. number_callout — spotlight a number or stat implied by the title (e.g. "$10K", "30 DAYS", "3 YEARS")
-2. emotion_word — one or two powerful words that capture the feeling or reaction (e.g. "IT WORKED", "LIFE CHANGING", "I WAS WRONG")
-3. before_after — a contrast, transformation, or reveal (e.g. "FROM $0", "BEFORE & AFTER", "NEVER AGAIN")
-4. question_hook — a short question that creates an open loop (e.g. "WORTH IT?", "DOES IT WORK?", "HOW?!")
-
-Return ONLY this JSON array (no markdown):
-[
-  {{"style": "number_callout", "label": "Number callout", "text": "...", "why": "one short phrase"}},
-  {{"style": "emotion_word",   "label": "Emotion / reaction", "text": "...", "why": "one short phrase"}},
-  {{"style": "before_after",   "label": "Before / After", "text": "...", "why": "one short phrase"}},
-  {{"style": "question_hook",  "label": "Question hook",  "text": "...", "why": "one short phrase"}}
-]"""
-
-    try:
-        msg = client.messages.create(
-            model="claude-haiku-4-5-20251001",
-            max_tokens=400,
-            messages=[{"role": "user", "content": prompt}]
-        )
-        raw = msg.content[0].text.strip()
-        if raw.startswith("```"):
-            raw = re.sub(r"^```[a-z]*\n?", "", raw)
-            raw = re.sub(r"\n?```$", "", raw.strip())
-        options = _json.loads(raw)
-        return options[:4], ""
-    except Exception as e:
-        print(f"Thumbnail text error: {e}")
-        return [], str(e)
-
-
 # ─── Description generation ────────────────────────────────────────────────────
 
 # Location signals — if any of these appear in the title/niche, geography hashtags are appropriate.

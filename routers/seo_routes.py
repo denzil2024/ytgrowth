@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Request
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
-from app.seo import analyze_title, generate_description_suggestions, generate_thumbnail_text, optimize_video
+from app.seo import analyze_title, generate_description_suggestions, optimize_video
 from app.keywords import generate_intent_options
 from routers.auth import get_session
 from database.models import SessionLocal, VideoOptimizeCache, SeoOptimization, SeoAnalysisCache
@@ -27,11 +27,6 @@ class DescriptionRequest(BaseModel):
     intent_analysis: dict = None
     keyword_scores: list = None
     current_year: int = 2026
-
-
-class ThumbnailTextRequest(BaseModel):
-    title: str
-    niche: str = ""
 
 
 def _locked_response(feature: str, reason: str = "locked"):
@@ -231,21 +226,6 @@ def generate_description(body: DescriptionRequest, request: Request):
         "top_keywords": top_keywords,
         "_usage": {"warning": gate["warning"], "usage_pct": gate["usage_pct"]},
     })
-
-
-@router.post("/thumbnail-text")
-def thumbnail_text(body: ThumbnailTextRequest, request: Request):
-    if not body.title.strip():
-        return JSONResponse({"error": "Title cannot be empty."}, status_code=400)
-    data, _ = get_session(request.session.get("session_id"))
-    channel_id = (data or {}).get("channel", {}).get("channel_id", "") if data else ""
-    feat = check_free_tier_access(channel_id, "seo")
-    if not feat["allowed"]:
-        return _locked_response("seo", feat.get("reason", "locked"))
-    options, error = generate_thumbnail_text(body.title.strip(), body.niche.strip())
-    if error and not options:
-        return JSONResponse({"error": error}, status_code=500)
-    return JSONResponse({"options": options})
 
 
 class OptimizeVideoRequest(BaseModel):
