@@ -219,6 +219,7 @@ export default function TitleOptimizer() {
       if (!res.ok) { setError(data.error || 'Something went wrong.'); return }
       setResult(data)
       setIntentOptions(null)
+      window.dispatchEvent(new CustomEvent('ytg:credits-changed'))
     } catch {
       setError('Could not reach the server.')
     } finally {
@@ -294,7 +295,8 @@ export default function TitleOptimizer() {
           ) : (
             <>
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="6" cy="6" r="5"/><path d="m9 9 3 3"/></svg>
-              Analyze &amp; suggest titles
+              <span>Analyze &amp; suggest titles</span>
+              <span style={{ fontSize: 11, fontWeight: 500, color: 'rgba(255,255,255,0.65)', marginLeft: 2 }}>· 1 credit</span>
             </>
           )}
         </button>

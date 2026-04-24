@@ -491,6 +491,7 @@ export default function Keywords({ plan, freeTierFeatures }) {
       const data = await res.json()
       if (!res.ok) throw new Error(data.error || 'Something went wrong.')
       setResult(data)
+      window.dispatchEvent(new CustomEvent('ytg:credits-changed'))
     } catch (e) {
       setError(e.message)
     } finally {
@@ -584,7 +585,7 @@ export default function Keywords({ plan, freeTierFeatures }) {
           <button className="kw-btn-primary" onClick={handleSubmit} disabled={loadingIntent || loading || !keyword.trim()}>
             {loadingIntent ? <><span className="kw-spinner" /> Detecting intent</>
              : loading     ? <><span className="kw-spinner" /> Researching</>
-             : 'Research'}
+             : <><span>Research</span><span style={{ fontSize: 11, fontWeight: 500, opacity: 0.7, marginLeft: 4 }}>· 1 credit</span></>}
           </button>
         </div>
       </div>

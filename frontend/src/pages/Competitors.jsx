@@ -462,7 +462,7 @@ function ChannelCard({ channel, onAnalyze, isAdded, loadingId }) {
       ) : (
         <button className="comp-btn-primary" onClick={() => onAnalyze(channel.channel_id)}
           style={{ padding: '9px 22px', fontSize: 13, flexShrink: 0 }}>
-          Analyze
+          Analyze <span style={{ fontSize: 11, fontWeight: 500, opacity: 0.7, marginLeft: 2 }}>· 1 credit</span>
         </button>
       )}
     </div>
@@ -1224,6 +1224,12 @@ export default function Competitors({ plan, freeTierFeatures }) {
           setLoadingAnalyze(null)
           return null
         }
+        // 402 = out of credits for paid users. Surface upgrade nudge.
+        if (r.status === 402) {
+          setAnalyzeError(d.error || "You're out of analyses this month. Upgrade for more.")
+          setLoadingAnalyze(null)
+          return null
+        }
         return d
       })
       .then(d => {
@@ -1236,6 +1242,7 @@ export default function Competitors({ plan, freeTierFeatures }) {
             return next
           })
           setActiveTab('tracked')
+          window.dispatchEvent(new CustomEvent('ytg:credits-changed'))
         } else {
           setAnalyzeError((d && d.error) || 'Analysis failed. Please try again.')
         }

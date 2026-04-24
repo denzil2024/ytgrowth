@@ -617,6 +617,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures }) {
       if (!res.ok) { setError(data.error || 'Something went wrong.'); return }
       setResult(data)
       setIntentOptions(null)
+      window.dispatchEvent(new CustomEvent('ytg:credits-changed'))
     } catch {
       if (myId !== reqIdRef.current) return
       setError('Could not reach the server.')
@@ -683,6 +684,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures }) {
       }
       setDescResult(data.descriptions)
       setDescKeywords(Array.isArray(data.top_keywords) ? data.top_keywords : [])
+      window.dispatchEvent(new CustomEvent('ytg:credits-changed'))
     } catch {
       setDescError(
         'Could not reach the server.'
@@ -929,7 +931,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures }) {
                     <path d="M12 3l1.8 5.4L19 10l-5.2 1.6L12 17l-1.8-5.4L5 10l5.2-1.6z"/>
                   </svg>
                   <span>Analyse &amp; suggest titles</span>
-                  <span style={{ fontSize: 11, fontWeight: 500, color: 'rgba(255,255,255,0.6)', marginLeft: 2 }}>· 1 token</span>
+                  <span style={{ fontSize: 11, fontWeight: 500, color: 'rgba(255,255,255,0.6)', marginLeft: 2 }}>· 1 credit</span>
                 </>
               )}
             </button>

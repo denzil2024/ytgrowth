@@ -630,6 +630,7 @@ export default function VideoIdeas({ onNavigate, plan, freeTierFeatures }) {
       setLastUpdated(data.last_updated || 'today')
       setStale(false)
       if (data.credits_remaining != null) setCredits(data.credits_remaining)
+      window.dispatchEvent(new CustomEvent('ytg:credits-changed'))
     } catch (e) {
       if (mountedRef.current) setError('Request failed. Please try again.')
     } finally {

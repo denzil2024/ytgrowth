@@ -356,7 +356,7 @@ export default function VideoOptimizePanel({ video, onClose, onVideoUpdated, pla
     if (titleRes.status === 'fulfilled') {
       const res = titleRes.value; const data = await res.json()
       if (!res.ok) setTitleError(data.error || 'Title analysis failed.')
-      else setTitleResult(data)
+      else { setTitleResult(data); window.dispatchEvent(new CustomEvent('ytg:credits-changed')) }
     } else { setTitleError('Could not reach the server.') }
     setTitleLoading(false)
   }
@@ -437,6 +437,7 @@ export default function VideoOptimizePanel({ video, onClose, onVideoUpdated, pla
       const data = await res.json()
       if (!res.ok) { setDescError(data.error || 'Generation failed.'); return }
       setDescResult(data.descriptions)
+      window.dispatchEvent(new CustomEvent('ytg:credits-changed'))
     } catch { setDescError('Could not reach the server.') }
     finally { setDescLoading(false) }
   }
@@ -532,7 +533,7 @@ export default function VideoOptimizePanel({ video, onClose, onVideoUpdated, pla
           {(videoResult || titleResult) && (
             <button onClick={handleClear}
               style={{ fontSize: 12, color: C.text2, background: C.card, border: `1px solid ${C.border}`, borderRadius: 100, padding: '6px 14px', cursor: 'pointer', fontFamily: 'inherit', fontWeight: 600, boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
-              Re-analyse
+              Re-analyse <span style={{ color: C.text3, fontWeight: 500, marginLeft: 2 }}>· 1 credit</span>
             </button>
           )}
           <button onClick={onClose}

@@ -1103,6 +1103,7 @@ export default function ThumbnailScore({ channelData, onNavigate, plan, freeTier
       if (!r.ok || d.error) throw new Error(d.error || 'Analysis failed')
       setAnalysis(d.analysis)
       setState('ready2')
+      window.dispatchEvent(new CustomEvent('ytg:credits-changed'))
     } catch (e) {
       const msg = e.name === 'AbortError'
         ? 'Analysis timed out. Your credit has been refunded. Please try again.'
@@ -1794,7 +1795,7 @@ export default function ThumbnailScore({ channelData, onNavigate, plan, freeTier
                     onMouseEnter={e => e.currentTarget.style.filter = 'brightness(1.1)'}
                     onMouseLeave={e => e.currentTarget.style.filter = 'none'}
                   >
-                    Run Full Thumbnail IQ · 1 AI analysis
+                    Run Full Thumbnail IQ · 1 credit
                   </button>
                 </div>
               )}

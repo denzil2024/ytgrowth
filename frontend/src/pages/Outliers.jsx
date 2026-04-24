@@ -463,6 +463,7 @@ export default function Outliers({ channelData, onNavigate, plan, freeTierFeatur
         setError(d.error || 'Search failed.')
       } else {
         setResult(d)
+        window.dispatchEvent(new CustomEvent('ytg:credits-changed'))
       }
     } catch (e) {
       if (myId !== reqIdRef.current) return
@@ -687,7 +688,7 @@ export default function Outliers({ channelData, onNavigate, plan, freeTierFeatur
               ? <><SpinIcon /> Reading intent…</>
               : loading
                 ? <><SpinIcon /> Searching…</>
-                : <><SparkIcon /> Find outliers</>
+                : <><SparkIcon /> <span>Find outliers</span><span style={{ fontSize: 11, fontWeight: 500, color: 'rgba(255,255,255,0.65)', marginLeft: 2 }}>· 3 credits</span></>
             }
           </button>
         </div>
@@ -1252,6 +1253,7 @@ function DetailModal({ kind, item, query, onClose, onNavigate }) {
         return
       }
       setAddState('added')
+      window.dispatchEvent(new CustomEvent('ytg:credits-changed'))
     } catch (e) {
       setAddState('error')
       setAddError('Network error.')
@@ -1310,14 +1312,14 @@ function DetailModal({ kind, item, query, onClose, onNavigate }) {
   const actionList = isChannel
     ? [
         { label: 'Open on YouTube',    onClick: openOnYouTube },
-        { label: addState === 'added' ? 'Added ✓' : addState === 'adding' ? 'Adding…' : 'Add as competitor',
+        { label: addState === 'added' ? 'Added ✓' : addState === 'adding' ? 'Adding…' : 'Add as competitor · 1 credit',
           onClick: addAsCompetitor, disabled: addState === 'adding' || addState === 'added', success: addState === 'added' },
       ]
     : [
         { label: 'Open on YouTube', onClick: openOnYouTube },
         { label: 'Remix title',     onClick: remixTitle },
         { label: 'Remix thumbnail', onClick: remixThumbnail },
-        { label: addState === 'added' ? 'Added ✓' : addState === 'adding' ? 'Adding…' : 'Add channel as competitor',
+        { label: addState === 'added' ? 'Added ✓' : addState === 'adding' ? 'Adding…' : 'Add channel as competitor · 1 credit',
           onClick: addAsCompetitor, disabled: addState === 'adding' || addState === 'added', success: addState === 'added' },
       ]
 

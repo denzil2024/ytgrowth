@@ -103,8 +103,18 @@ def analyze_competitor(channel_id: str, request: Request):
             status_code=403,
         )
 
+    # Credit gate — paid users pay per analysis; free users already used
+    # their one-run quota above.
+    gate = check_and_deduct(my_channel_id_for_gate)
+    if not gate["allowed"]:
+        return JSONResponse(
+            {"error": gate["message"], "show_upgrade": True},
+            status_code=402,
+        )
+
     comp_data = fetch_competitor_public_data(creds, channel_id)
     if not comp_data:
+        refund_credit(my_channel_id_for_gate)
         return JSONResponse({"error": "Could not fetch competitor data."}, status_code=404)
 
     videos = data.get("videos", [])
@@ -117,9 +127,14 @@ def analyze_competitor(channel_id: str, request: Request):
         "like_rate": compute_like_rate(videos),
     }
 
-    ai_analysis = analyze_competitor_with_ai(data["channel"], videos, comp_data)
+    try:
+        ai_analysis = analyze_competitor_with_ai(data["channel"], videos, comp_data)
+    except Exception as e:
+        refund_credit(my_channel_id_for_gate)
+        return JSONResponse({"error": f"AI analysis failed: {e}"}, status_code=500)
 
     if not isinstance(ai_analysis, dict):
+        refund_credit(my_channel_id_for_gate)
         return JSONResponse({"error": f"AI analysis failed: {ai_analysis}"}, status_code=500)
 
     # Persist video ideas so the Video Ideas tab can pool them for free
