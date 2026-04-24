@@ -201,11 +201,14 @@ def peek_free_tier_access(channel_id: str, feature: str) -> dict:
     Used for frontend status checks (e.g., /api/auth/me) so loading the
     page doesn't burn a free run.
 
-    Deliberately IGNORES DEV_BYPASS_GATE: the frontend needs the real gate
-    state so the upsell UI renders for testing, even while `check_*` lets
-    the underlying API calls pass through. Only enforcement honors the
-    bypass; presentation is always truthful.
+    Honors DEV_BYPASS_GATE: while bypass is on, peek reports every feature
+    as allowed so dev accounts (likely on the free plan) aren't blocked
+    from clicking into paid features. To preview the gated UX, flip
+    DEV_BYPASS_GATE off on Railway for 30 seconds, reload, then flip back.
     """
+    if _BYPASS:
+        return {"allowed": True}
+
     db = SessionLocal()
     try:
         from database.models import FreeTierFeatureUsage
