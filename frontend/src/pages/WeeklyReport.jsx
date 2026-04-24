@@ -377,15 +377,18 @@ export default function WeeklyReport({ channelId, channelEmail, plan, channelSta
           <MetricCard label="Channel Score"  value={scoreVal} valueColor={scoreColor} />
         </div>
 
-        {/* Blurred preview of a real report, gated with a centered CTA */}
-        <div style={{ position: 'relative', borderRadius: 16, overflow: 'hidden', minHeight: 520 }}>
-
-          {/* ─── Blurred mock report (what paid users see) ──────────────── */}
-          <div aria-hidden="true" style={{
-            filter: 'blur(6px)',
-            pointerEvents: 'none', userSelect: 'none',
-            transform: 'scale(1.015)', // hide blur halo at edges
-          }}>
+        {/* Gate with inline blurred preview (mock report tease) — handled
+            by UpsellGate's previewContent prop. Same visual as before,
+            now shared across every gated page. */}
+        <UpsellGate
+          title="Unlock weekly AI reports"
+          description="YTGrowth audits your channel every week and tells you the single thing to fix next — not a wall of data, a clear priority."
+          bullets={[
+            'Biggest win, watch out, and priority — every week',
+            'Fresh analysis delivered straight to your inbox',
+            '4 AI reports delivered to your inbox every month.',
+          ]}
+          previewContent={
             <div className="ytg-card" style={{
               borderTop: `3px solid ${C.red}`,
               padding: '28px 28px 30px',
@@ -430,28 +433,8 @@ export default function WeeklyReport({ channelId, channelEmail, plan, channelSta
                 </div>
               </div>
             </div>
-          </div>
-
-          {/* ─── Overlay with the actual conversion card ────────────────── */}
-          <div style={{
-            position: 'absolute', inset: 0,
-            background: 'linear-gradient(180deg, rgba(245,245,249,0.78) 0%, rgba(245,245,249,0.55) 30%, rgba(245,245,249,0.55) 70%, rgba(245,245,249,0.82) 100%)',
-            backdropFilter: 'blur(2px)',
-            WebkitBackdropFilter: 'blur(2px)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            padding: 24,
-          }}>
-            <UpsellGate
-              title="Unlock weekly AI reports"
-              description="YTGrowth audits your channel every week and tells you the single thing to fix next — not a wall of data, a clear priority."
-              bullets={[
-                'Biggest win, watch out, and priority — every week',
-                'Fresh analysis delivered straight to your inbox',
-                '4 AI reports delivered to your inbox every month.',
-              ]}
-            />
-          </div>
-        </div>
+          }
+        />
       </div>
     )
   }

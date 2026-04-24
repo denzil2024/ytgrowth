@@ -500,8 +500,57 @@ export default function Outliers({ channelData, onNavigate, plan, freeTierFeatur
   // Free-tier gate — replaces the entire page content with the shared upsell
   // modal. Hooks above still run on every render; this just swaps the JSX.
   if (outliersGated) {
+    // Teaser preview — mock grid of outlier cards sitting behind the gate
+    // so free users see the shape of what they're missing (blurred).
+    const teaserCard = (i) => {
+      const titles = [
+        'I Tried 7 Morning Routines — This One Actually Worked',
+        'The $0 YouTube Growth Strategy Nobody Talks About',
+        'Why Your Retention Graph Looks Like a Cliff',
+        'I Ran a 30-Day Posting Sprint · Here\'s What Happened',
+      ]
+      const scores = [94, 87, 81, 76]
+      const colors = [C.green, C.green, C.amber, C.amber]
+      return (
+        <div key={i} style={{
+          background: '#ffffff', border: `1px solid ${C.border}`,
+          borderRadius: 12, overflow: 'hidden',
+          boxShadow: '0 1px 2px rgba(0,0,0,0.04), 0 4px 14px rgba(0,0,0,0.06)',
+        }}>
+          <div style={{
+            height: 120, background: `linear-gradient(135deg, ${['#fecaca', '#fde68a', '#bbf7d0', '#bfdbfe'][i]} 0%, #f4f4f6 100%)`,
+            position: 'relative',
+          }}>
+            <span style={{
+              position: 'absolute', top: 10, right: 10,
+              fontSize: 12, fontWeight: 800, color: '#fff',
+              background: colors[i], padding: '3px 9px',
+              borderRadius: 100, letterSpacing: '0.04em',
+            }}>
+              {scores[i]}
+            </span>
+          </div>
+          <div style={{ padding: '12px 14px' }}>
+            <p style={{ fontSize: 13, fontWeight: 700, color: C.text1, lineHeight: 1.4, marginBottom: 6 }}>{titles[i]}</p>
+            <p style={{ fontSize: 11, color: C.text3 }}>
+              {[248, 183, 142, 98][i]}K views · {[12, 8, 5, 3][i]}x sub ratio
+            </p>
+          </div>
+        </div>
+      )
+    }
+    const teaserPreview = (
+      <div style={{ padding: '12px 4px' }}>
+        <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 14 }}>
+          Top outliers · last 12 months
+        </p>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 12 }}>
+          {[0, 1, 2, 3].map(teaserCard)}
+        </div>
+      </div>
+    )
     return (
-      <div style={{ width: '100%', display: 'flex', alignItems: 'flex-start', justifyContent: 'center', paddingTop: 40, minHeight: '60vh', fontFamily: "'Inter', system-ui, sans-serif" }}>
+      <div style={{ width: '100%', fontFamily: "'Inter', system-ui, sans-serif" }}>
         <UpsellGate
           title="Unlock Outlier Scoring"
           description="See the thumbnails, titles, and channels actually winning in your niche right now — with a ranked outlier score so you know which to copy and which to ignore."
@@ -512,6 +561,7 @@ export default function Outliers({ channelData, onNavigate, plan, freeTierFeatur
           ]}
           note="Outlier Scoring requires 3 credits."
           showPackLink={false}
+          previewContent={teaserPreview}
         />
       </div>
     )

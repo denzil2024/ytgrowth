@@ -706,8 +706,66 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures }) {
   )
 
   if (seoGated) {
+    // Teaser preview — mock title scorecard + 3 AI suggestions behind the
+    // gate so free users glimpse what they unlock.
+    const seoTeaser = (
+      <div className="seo-glass-card" style={{ padding: '22px 24px' }}>
+        <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 10 }}>Your title</p>
+        <p style={{ fontSize: 18, fontWeight: 700, color: C.text1, lineHeight: 1.35, marginBottom: 16, letterSpacing: '-0.2px' }}>
+          7 YouTube Growth Hacks I Wish I Knew Sooner
+        </p>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 20 }}>
+          <div style={{
+            width: 72, height: 72, borderRadius: '50%',
+            background: `conic-gradient(${C.green} 0deg 302deg, #eeeef3 302deg 360deg)`,
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+          }}>
+            <div style={{ width: 56, height: 56, borderRadius: '50%', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column' }}>
+              <span style={{ fontSize: 20, fontWeight: 800, color: C.green, letterSpacing: '-0.6px', lineHeight: 1 }}>84</span>
+              <span style={{ fontSize: 9, fontWeight: 600, color: C.text3, marginTop: 1 }}>/ 100</span>
+            </div>
+          </div>
+          <div style={{ flex: 1, display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 10 }}>
+            {[
+              ['SEO',  86, C.green],
+              ['CTR',  79, C.amber],
+              ['Hook', 91, C.green],
+              ['Length', 74, C.amber],
+            ].map(([label, val, col]) => (
+              <div key={label} style={{ display: 'flex', alignItems: 'baseline', gap: 6 }}>
+                <span style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.07em', textTransform: 'uppercase' }}>{label}</span>
+                <span style={{ fontSize: 16, fontWeight: 800, color: col, letterSpacing: '-0.3px' }}>{val}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div style={{ height: 1, background: C.border, marginBottom: 14 }}/>
+        <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 10 }}>3 AI alternatives</p>
+        {[
+          ['I Tried Every YouTube Growth Hack — Only 7 Worked', 91],
+          ['The 7 YouTube Secrets That Grew My Channel 10x',  87],
+          ['7 Underrated YouTube Growth Tips (Actually Works)', 82],
+        ].map(([t, score], i) => (
+          <div key={i} style={{
+            display: 'flex', alignItems: 'center', gap: 12,
+            padding: '10px 0',
+            borderTop: i === 0 ? 'none' : `1px solid ${C.border}`,
+          }}>
+            <div style={{ width: 24, height: 24, borderRadius: 6, background: C.amber, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+              <span style={{ fontSize: 11, fontWeight: 900, color: '#fff' }}>{i + 1}</span>
+            </div>
+            <p style={{ flex: 1, fontSize: 13, fontWeight: 600, color: C.text1, lineHeight: 1.4 }}>{t}</p>
+            <span style={{
+              fontSize: 11, fontWeight: 800, color: score >= 85 ? C.green : C.amber,
+              padding: '2px 8px', borderRadius: 100,
+              border: `1.5px solid ${score >= 85 ? C.green : C.amber}`,
+            }}>{score}</span>
+          </div>
+        ))}
+      </div>
+    )
     return (
-      <div style={{ width: '100%', display: 'flex', alignItems: 'flex-start', justifyContent: 'center', paddingTop: 40, minHeight: '60vh', fontFamily: "'Inter', system-ui, sans-serif" }}>
+      <div style={{ width: '100%', fontFamily: "'Inter', system-ui, sans-serif" }}>
         <UpsellGate
           title="Unlock SEO Studio"
           description="Rewrite your titles, descriptions, and tags against the videos actually winning in your niche — with AI-scored keywords and three direction-picked title suggestions."
@@ -717,6 +775,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures }) {
             'Keyword research with real search volume and competition',
           ]}
           showPackLink={false}
+          previewContent={seoTeaser}
         />
       </div>
     )

@@ -4,15 +4,19 @@
    single source of truth so every gated feature reads identically.
 
    Props:
-     title         — h2 headline (e.g. "Unlock Outlier Scoring")
-     description   — p body under the title
-     bullets       — string[] of 2–4 value props
-     note          — optional small amber note under description
-                     (e.g. "Outlier Scoring requires 3 credits.")
-     showPackLink  — default true; pass false for the one-run gates
-                     (per product spec: only Weekly Report offers the pack
-                     link as a secondary option)
-     primaryCta    — default "See monthly plans" */
+     title          — h2 headline (e.g. "Unlock Outlier Scoring")
+     description    — p body under the title
+     bullets        — string[] of 2–4 value props
+     note           — optional small amber note under description
+                      (e.g. "Outlier Scoring requires 3 credits.")
+     showPackLink   — default true; pass false for the one-run gates
+                      (per product spec: only Weekly Report offers the pack
+                      link as a secondary option)
+     primaryCta     — default "See monthly plans"
+     previewContent — optional ReactNode rendered blurred behind the card.
+                      Teases what the feature produces so free users see
+                      what they're missing (Weekly Report pattern). If
+                      omitted, the card renders solo on the page background. */
 
 const C = {
   red: '#e5251b', green: '#059669', amber: '#d97706',
@@ -27,8 +31,9 @@ export default function UpsellGate({
   note = null,
   showPackLink = true,
   primaryCta = 'See monthly plans',
+  previewContent = null,
 }) {
-  return (
+  const card = (
     <div style={{
       background: '#ffffff',
       border: '1px solid rgba(229,37,27,0.2)',
@@ -150,6 +155,34 @@ export default function UpsellGate({
         <span style={{ fontSize: 12.5, color: C.text3, fontWeight: 500, textAlign: 'left', lineHeight: 1.4 }}>
           Trusted by creators growing<br/>their channels every week
         </span>
+      </div>
+    </div>
+  )
+
+  // No preview → card renders solo, caller controls its wrapper.
+  if (!previewContent) return card
+
+  // Preview → blur the mock content behind + overlay the card on a frosted
+  // gradient. Same pattern Weekly Report uses so gated features tease
+  // what the user is missing instead of showing a bare modal.
+  return (
+    <div style={{ position: 'relative', borderRadius: 16, overflow: 'hidden', minHeight: 520 }}>
+      <div aria-hidden="true" style={{
+        filter: 'blur(6px)',
+        pointerEvents: 'none', userSelect: 'none',
+        transform: 'scale(1.015)',  // hide blur halo at edges
+      }}>
+        {previewContent}
+      </div>
+      <div style={{
+        position: 'absolute', inset: 0,
+        background: 'linear-gradient(180deg, rgba(245,245,249,0.78) 0%, rgba(245,245,249,0.55) 30%, rgba(245,245,249,0.55) 70%, rgba(245,245,249,0.82) 100%)',
+        backdropFilter: 'blur(2px)',
+        WebkitBackdropFilter: 'blur(2px)',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        padding: 24,
+      }}>
+        {card}
       </div>
     </div>
   )

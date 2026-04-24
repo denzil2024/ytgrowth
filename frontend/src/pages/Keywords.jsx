@@ -504,8 +504,43 @@ export default function Keywords({ plan, freeTierFeatures }) {
   }
 
   if (gated) {
+    // Teaser preview — mock keyword list with score bars so free users
+    // glimpse the research output when the gate shows.
+    const kwTeaser = (
+      <div style={{
+        background: '#ffffff', border: `1px solid ${C.border}`,
+        borderRadius: 16, padding: '22px 24px',
+        boxShadow: '0 1px 2px rgba(0,0,0,0.04), 0 4px 14px rgba(0,0,0,0.06)',
+      }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 16 }}>
+          <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, letterSpacing: '0.07em', textTransform: 'uppercase' }}>
+            Top keyword opportunities
+          </p>
+          <span style={{ fontSize: 11, fontWeight: 600, color: C.text3, background: '#f1f1f6', border: `1px solid ${C.border}`, borderRadius: 100, padding: '2px 8px' }}>8 found</span>
+        </div>
+        {[
+          ['how to grow youtube channel', 92, C.green],
+          ['youtube algorithm explained', 86, C.green],
+          ['best video editing software', 74, C.amber],
+          ['youtube thumbnail ideas',     71, C.amber],
+          ['how to get more subscribers', 68, C.amber],
+        ].map(([phrase, score, col], i) => (
+          <div key={i} style={{
+            display: 'flex', alignItems: 'center', gap: 14,
+            padding: '10px 0',
+            borderTop: i === 0 ? 'none' : `1px solid ${C.border}`,
+          }}>
+            <span style={{ flex: 1, fontSize: 13, fontWeight: 600, color: C.text1, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{phrase}</span>
+            <div style={{ flex: 1, height: 4, background: '#eeeef3', borderRadius: 99, overflow: 'hidden' }}>
+              <div style={{ width: `${score}%`, height: '100%', background: col, borderRadius: 99 }}/>
+            </div>
+            <span style={{ fontSize: 13, fontWeight: 700, color: col, minWidth: 28, textAlign: 'right', fontVariantNumeric: 'tabular-nums' }}>{score}</span>
+          </div>
+        ))}
+      </div>
+    )
     return (
-      <div className="kw-page" style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'center', paddingTop: 40, minHeight: '60vh' }}>
+      <div className="kw-page">
         <UpsellGate
           title="You've used your free Keyword research"
           description="Free accounts get one keyword research run per monthly cycle. Upgrade to keep researching — with YouTube autocomplete, related searches, and opportunity-ranked scoring every time."
@@ -515,6 +550,7 @@ export default function Keywords({ plan, freeTierFeatures }) {
             'Ranked by niche opportunity so you pick the strongest title',
           ]}
           showPackLink={false}
+          previewContent={kwTeaser}
         />
       </div>
     )

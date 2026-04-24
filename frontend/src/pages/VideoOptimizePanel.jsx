@@ -445,12 +445,50 @@ export default function VideoOptimizePanel({ video, onClose, onVideoUpdated, pla
   const isLoading = videoLoading || titleLoading
 
   if (videoOptimizeGated) {
+    // Teaser preview — mock video optimization card (current title +
+    // score ring + AI rewrite suggestion) behind the gate.
+    const videoOptTeaser = (
+      <div style={{
+        background: '#ffffff', border: `1px solid ${C.border}`,
+        borderRadius: 16, padding: '22px 24px',
+        boxShadow: '0 1px 2px rgba(0,0,0,0.04), 0 4px 14px rgba(0,0,0,0.06)',
+      }}>
+        <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 10 }}>
+          Current title
+        </p>
+        <p style={{ fontSize: 17, fontWeight: 700, color: C.text1, lineHeight: 1.35, marginBottom: 18, letterSpacing: '-0.2px' }}>
+          How I Grew My Channel From 0 to 10K Subscribers
+        </p>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 20 }}>
+          <div style={{
+            width: 68, height: 68, borderRadius: '50%',
+            background: `conic-gradient(${C.amber} 0deg 230deg, #eeeef3 230deg 360deg)`,
+            display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+          }}>
+            <div style={{ width: 54, height: 54, borderRadius: '50%', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <span style={{ fontSize: 20, fontWeight: 800, color: C.amber, letterSpacing: '-0.5px' }}>64</span>
+            </div>
+          </div>
+          <div style={{ flex: 1 }}>
+            <p style={{ fontSize: 10, fontWeight: 700, color: C.amber, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Needs work</p>
+            <p style={{ fontSize: 13, color: C.text2, lineHeight: 1.55 }}>Front-loading weak · no power word · missing number specificity</p>
+          </div>
+        </div>
+        <div style={{
+          background: 'rgba(5,150,105,0.07)', border: '1px solid rgba(5,150,105,0.14)',
+          borderRadius: 10, padding: '14px 16px',
+        }}>
+          <p style={{ fontSize: 10, fontWeight: 700, color: C.green, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>AI rewrite · Score 88</p>
+          <p style={{ fontSize: 14, fontWeight: 700, color: C.text1, lineHeight: 1.4 }}>
+            0 to 10K Subs in 90 Days: The 3 Things That Actually Moved the Needle
+          </p>
+        </div>
+      </div>
+    )
     return (
       <div style={{
-        background: C.surface, border: `1px solid ${C.border}`,
-        borderRadius: 20, padding: '40px 28px',
+        background: C.surface, borderRadius: 20, overflow: 'hidden',
         boxShadow: '0 4px 16px rgba(0,0,0,0.08), 0 24px 64px rgba(0,0,0,0.10)',
-        display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 480,
       }}>
         <UpsellGate
           title="Unlock video optimization"
@@ -461,6 +499,7 @@ export default function VideoOptimizePanel({ video, onClose, onVideoUpdated, pla
             'One-click update pushed live to YouTube',
           ]}
           showPackLink={false}
+          previewContent={videoOptTeaser}
         />
       </div>
     )
