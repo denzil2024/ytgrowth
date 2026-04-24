@@ -111,9 +111,11 @@ function LightbulbIcon() {
 }
 
 function ScorePill({ score }) {
-  const color = score >= 80 ? C.green : score >= 60 ? C.amber : C.text3
-  const bg    = score >= 80 ? C.greenBg : score >= 60 ? C.amberBg : '#f4f4f6'
-  const bdr   = score >= 80 ? C.greenBdr : score >= 60 ? C.amberBdr : 'rgba(0,0,0,0.08)'
+  // Standard app scoreColor thresholds: ≥75 green, 55–74 amber, <55 red
+  // (matches Overview's Score breakdown and SeoOptimizer's score rings).
+  const color = score >= 75 ? C.green : score >= 55 ? C.amber : C.red
+  const bg    = score >= 75 ? C.greenBg : score >= 55 ? C.amberBg : C.redBg
+  const bdr   = score >= 75 ? C.greenBdr : score >= 55 ? C.amberBdr : C.redBdr
   return (
     <span style={{
       fontSize: 14, fontWeight: 800, color,
@@ -351,14 +353,15 @@ function IdeaCard({ idea, done, onDone, onUseSeo }) {
                 </p>
               )}
 
-              {/* Single CTA — Use in SEO Studio. (Score thumbnail removed per
-                  feedback — unnecessary noise on the ideas list.) */}
-              <button className="vi-cta-btn" onClick={() => onUseSeo(idea.title)}>
-                Use in SEO Studio
-                <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                  <path d="M2 5.5h7M5.5 2l3.5 3.5L5.5 9"/>
-                </svg>
-              </button>
+              {/* Single CTA — bottom-right follows the forward-arrow Z-pattern */}
+              <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                <button className="vi-cta-btn" onClick={() => onUseSeo(idea.title)}>
+                  Use in SEO Studio
+                  <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                    <path d="M2 5.5h7M5.5 2l3.5 3.5L5.5 9"/>
+                  </svg>
+                </button>
+              </div>
             </div>
           </>
         )}
