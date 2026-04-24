@@ -634,132 +634,156 @@ function AIAnalysis({ ai, top5Videos, channelId, checkedIdeas, onToggleIdea }) {
         )
       })()}
 
-      {/* ── topics to tackle — Quick wins pattern (Dashboard.jsx:2247-2282) ──
-           Direct copy of Overview's Quick wins card: green uppercase eyebrow +
-           count pill on the right, hairline rows (not elevated inner-blocks),
-           checkbox + title + inline amber keyword chip + subtle angle line. */}
-      {ai.videoIdeas?.length > 0 && (() => {
-        const doneCount = ai.videoIdeas.filter(idea => !!checksForChannel[idea.title]).length
-        const leftCount = ai.videoIdeas.length - doneCount
+      {/* ── Topics to tackle + Top videos — single paneled card ─────────────
+           Two related learning surfaces (what to make + what to study) merged
+           into one card, separated by a 3px amber vertical bar — same pattern
+           as Intelligence summary / SeoOptimizer Title Scorecard.
+           Left panel: Quick wins checkbox list for idea capture.
+           Right panel: video rows with thumbnails for reference study. */}
+      {(ai.videoIdeas?.length > 0 || top5Videos?.length > 0) && (() => {
+        const doneCount = ai.videoIdeas
+          ? ai.videoIdeas.filter(idea => !!checksForChannel[idea.title]).length : 0
+        const leftCount = (ai.videoIdeas?.length || 0) - doneCount
         return (
           <Card>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
-              <p style={{ fontSize: 11, fontWeight: 700, color: '#059669',
-                letterSpacing: '0.07em', textTransform: 'uppercase' }}>
-                Topics to tackle
-              </p>
-              <span style={{ fontSize: 11, fontWeight: 600, color: '#9595a4', background: '#f1f1f6',
-                padding: '2px 7px', borderRadius: 20, border: '1px solid #e6e6ec' }}>
-                {leftCount} left
-              </span>
+            <div style={{ display: 'flex', alignItems: 'stretch', gap: 24 }}>
+
+              {/* ── Left panel: Topics to tackle ── */}
+              {ai.videoIdeas?.length > 0 && (
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
+                    <p style={{ fontSize: 11, fontWeight: 700, color: '#059669',
+                      letterSpacing: '0.07em', textTransform: 'uppercase' }}>
+                      Topics to tackle
+                    </p>
+                    <span style={{ fontSize: 11, fontWeight: 600, color: '#9595a4', background: '#f1f1f6',
+                      padding: '2px 7px', borderRadius: 20, border: '1px solid #e6e6ec' }}>
+                      {leftCount} left
+                    </span>
+                  </div>
+                  <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column',
+                    gap: 2, padding: 0, margin: 0 }}>
+                    {ai.videoIdeas.map((idea, i) => {
+                      const isDone = !!checksForChannel[idea.title]
+                      return (
+                        <li key={i} className="comp-qw-row" style={{ opacity: isDone ? 0.5 : 1 }}>
+                          <input
+                            type="checkbox"
+                            checked={isDone}
+                            onChange={() => onToggleIdea && onToggleIdea(channelId, idea.title)}
+                            style={{ width: 14, height: 14, accentColor: '#059669', cursor: 'pointer',
+                              flexShrink: 0, marginTop: 4 }}
+                          />
+                          <div style={{ flex: 1, minWidth: 0 }}>
+                            <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, flexWrap: 'wrap' }}>
+                              <p style={{ fontSize: 13.5, fontWeight: 600,
+                                color: isDone ? '#9595a4' : '#111114', lineHeight: 1.5,
+                                letterSpacing: '-0.1px',
+                                textDecoration: isDone ? 'line-through' : 'none' }}>
+                                {idea.title}
+                              </p>
+                              {idea.targetKeyword && (
+                                <span className="comp-tag" style={{ background: '#fffbeb', color: '#d97706',
+                                  border: '1px solid #fde68a', whiteSpace: 'nowrap' }}>
+                                  {idea.targetKeyword}
+                                </span>
+                              )}
+                            </div>
+                            <p style={{ fontSize: 12, color: '#9595a4', lineHeight: 1.55,
+                              fontWeight: 400, marginTop: 3 }}>
+                              {idea.angle}
+                            </p>
+                          </div>
+                        </li>
+                      )
+                    })}
+                  </ul>
+                </div>
+              )}
+
+              {/* ── Amber 3px vertical divider ── */}
+              {ai.videoIdeas?.length > 0 && top5Videos?.length > 0 && (
+                <div style={{ width: 3, alignSelf: 'stretch', background: '#d97706',
+                  flexShrink: 0, borderRadius: 2 }}/>
+              )}
+
+              {/* ── Right panel: Top videos to study ── */}
+              {top5Videos?.length > 0 && (
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
+                    <p style={{ fontSize: 11, fontWeight: 700, color: '#9595a4',
+                      letterSpacing: '0.07em', textTransform: 'uppercase' }}>
+                      Top videos to study
+                    </p>
+                    <span style={{ fontSize: 11, fontWeight: 600, color: '#9595a4', background: '#f1f1f6',
+                      padding: '2px 7px', borderRadius: 20, border: '1px solid #e6e6ec' }}>
+                      {top5Videos.length}
+                    </span>
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column' }}>
+                    {top5Videos.map((v, i) => {
+                      const thumb  = v.video_id ? `https://i.ytimg.com/vi/${v.video_id}/mqdefault.jpg` : v.thumbnail_url || null
+                      const ytUrl  = v.video_id ? `https://www.youtube.com/watch?v=${v.video_id}` : null
+                      const why    = whyMap[v.video_id]
+                      const isLast = i === top5Videos.length - 1
+                      return (
+                        <a key={v.video_id || i}
+                          href={ytUrl || '#'} target="_blank" rel="noopener noreferrer"
+                          className="comp-video-row"
+                          style={{ borderBottom: isLast ? 'none' : '1px solid rgba(0,0,0,0.05)',
+                            gap: 12, padding: '8px 6px' }}>
+                          <div style={{ position: 'relative', flexShrink: 0 }}>
+                            {thumb
+                              ? <img src={thumb} alt="" style={{ width: 72, height: 42, borderRadius: 8,
+                                  objectFit: 'cover', display: 'block',
+                                  boxShadow: '0 2px 8px rgba(0,0,0,0.12)' }} />
+                              : <div style={{ width: 72, height: 42, borderRadius: 8,
+                                  background: 'rgba(0,0,0,0.07)', display: 'block' }} />
+                            }
+                            <div style={{ position: 'absolute', inset: 0, display: 'flex',
+                              alignItems: 'center', justifyContent: 'center', opacity: 0,
+                              transition: 'opacity 0.15s', background: 'rgba(0,0,0,0.42)',
+                              borderRadius: 8 }}
+                              onMouseEnter={e => { e.currentTarget.style.opacity = 1 }}
+                              onMouseLeave={e => { e.currentTarget.style.opacity = 0 }}>
+                              <svg width="16" height="16" viewBox="0 0 18 18" fill="white">
+                                <path d="M7 5.5l6 3.5-6 3.5V5.5z"/>
+                              </svg>
+                            </div>
+                          </div>
+                          <div style={{ flex: 1, minWidth: 0 }}>
+                            <p style={{ fontSize: 13.5, fontWeight: 600, color: '#111114', lineHeight: 1.45,
+                              whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
+                              marginBottom: 3, letterSpacing: '-0.1px' }}>
+                              {v.title}
+                            </p>
+                            <div style={{ display: 'flex', gap: 8, alignItems: 'center',
+                              fontSize: 11.5, color: '#9595a4', fontWeight: 500,
+                              fontVariantNumeric: 'tabular-nums' }}>
+                              <span><b style={{ color: '#52525b', fontWeight: 700 }}>{fmtK(v.views)}</b> views</span>
+                              {v.published_at && (
+                                <><span style={{ color: '#d0d0d8' }}>·</span>
+                                 <span>{relTime(v.published_at)}</span></>
+                              )}
+                            </div>
+                            {why && (
+                              <p style={{ fontSize: 11.5, color: '#9595a4', marginTop: 3,
+                                lineHeight: 1.4, whiteSpace: 'nowrap', overflow: 'hidden',
+                                textOverflow: 'ellipsis' }}>
+                                {why}
+                              </p>
+                            )}
+                          </div>
+                        </a>
+                      )
+                    })}
+                  </div>
+                </div>
+              )}
             </div>
-            <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 2, padding: 0, margin: 0 }}>
-              {ai.videoIdeas.map((idea, i) => {
-                const isDone = !!checksForChannel[idea.title]
-                return (
-                  <li key={i} className="comp-qw-row" style={{ opacity: isDone ? 0.5 : 1 }}>
-                    <input
-                      type="checkbox"
-                      checked={isDone}
-                      onChange={() => onToggleIdea && onToggleIdea(channelId, idea.title)}
-                      style={{ width: 14, height: 14, accentColor: '#059669', cursor: 'pointer',
-                        flexShrink: 0, marginTop: 4 }}
-                    />
-                    <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, flexWrap: 'wrap' }}>
-                        <p style={{ fontSize: 14, fontWeight: 600,
-                          color: isDone ? '#9595a4' : '#111114', lineHeight: 1.5,
-                          letterSpacing: '-0.1px',
-                          textDecoration: isDone ? 'line-through' : 'none' }}>
-                          {idea.title}
-                        </p>
-                        {idea.targetKeyword && (
-                          <span className="comp-tag" style={{ background: '#fffbeb', color: '#d97706',
-                            border: '1px solid #fde68a', whiteSpace: 'nowrap' }}>
-                            {idea.targetKeyword}
-                          </span>
-                        )}
-                      </div>
-                      <p style={{ fontSize: 12.5, color: '#9595a4', lineHeight: 1.55,
-                        fontWeight: 400, marginTop: 3 }}>
-                        {idea.angle}
-                      </p>
-                    </div>
-                  </li>
-                )
-              })}
-            </ul>
           </Card>
         )
       })()}
-
-      {/* ── top videos ── */}
-      {top5Videos?.length > 0 && (
-        <Card>
-          <SectionTitle>Top videos to study</SectionTitle>
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
-            {top5Videos.map((v, i) => {
-              const thumb  = v.video_id ? `https://i.ytimg.com/vi/${v.video_id}/mqdefault.jpg` : v.thumbnail_url || null
-              const ytUrl  = v.video_id ? `https://www.youtube.com/watch?v=${v.video_id}` : null
-              const why    = whyMap[v.video_id]
-              const isLast = i === top5Videos.length - 1
-              return (
-                <a key={v.video_id || i}
-                  href={ytUrl || '#'} target="_blank" rel="noopener noreferrer"
-                  className="comp-video-row"
-                  style={{ borderBottom: isLast ? 'none' : '1px solid rgba(0,0,0,0.05)' }}>
-                  <div style={{ position: 'relative', flexShrink: 0 }}>
-                    {thumb
-                      ? <img src={thumb} alt="" style={{ width: 80, height: 46, borderRadius: 10,
-                          objectFit: 'cover', display: 'block', boxShadow: '0 2px 8px rgba(0,0,0,0.12)' }} />
-                      : <div style={{ width: 80, height: 46, borderRadius: 10,
-                          background: 'rgba(0,0,0,0.07)', display: 'block' }} />
-                    }
-                    <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center',
-                      justifyContent: 'center', opacity: 0, transition: 'opacity 0.15s',
-                      background: 'rgba(0,0,0,0.42)', borderRadius: 10 }}
-                      onMouseEnter={e => { e.currentTarget.style.opacity = 1 }}
-                      onMouseLeave={e => { e.currentTarget.style.opacity = 0 }}>
-                      <svg width="18" height="18" viewBox="0 0 18 18" fill="white"><path d="M7 5.5l6 3.5-6 3.5V5.5z"/></svg>
-                    </div>
-                  </div>
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <p style={{ fontSize: 14, fontWeight: 600, color: '#111114', lineHeight: 1.45,
-                      whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', marginBottom: 4 }}>{v.title}</p>
-                    {/* Stats row — views · likes · comments · date */}
-                    <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', alignItems: 'center',
-                      fontSize: 12, color: '#9595a4', fontWeight: 500, fontVariantNumeric: 'tabular-nums' }}>
-                      <span><b style={{ color: '#52525b', fontWeight: 700 }}>{fmtK(v.views)}</b> views</span>
-                      {typeof v.likes === 'number' && (
-                        <><span style={{ color: '#d0d0d8' }}>·</span>
-                         <span><b style={{ color: '#52525b', fontWeight: 700 }}>{fmtK(v.likes)}</b> likes</span></>
-                      )}
-                      {typeof v.comments === 'number' && (
-                        <><span style={{ color: '#d0d0d8' }}>·</span>
-                         <span><b style={{ color: '#52525b', fontWeight: 700 }}>{fmtK(v.comments)}</b> comments</span></>
-                      )}
-                      {v.published_at && (
-                        <><span style={{ color: '#d0d0d8' }}>·</span>
-                         <span>{relTime(v.published_at)}</span></>
-                      )}
-                    </div>
-                    {why && (
-                      <p style={{ fontSize: 12, color: '#9595a4', marginTop: 4, lineHeight: 1.4,
-                        whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                        {why}
-                      </p>
-                    )}
-                  </div>
-                  <svg width="12" height="12" viewBox="0 0 13 13" fill="none"
-                    stroke="#c0c0cc" strokeWidth="1.8" strokeLinecap="round" style={{ flexShrink: 0 }}>
-                    <path d="M2 11L10 3M10 3H5M10 3v5"/>
-                  </svg>
-                </a>
-              )
-            })}
-          </div>
-        </Card>
-      )}
 
       {/* ── Top content topics — faithful copy of SEO Optimizer's "Related phrases"
            card (SeoOptimizer.jsx:1366–1421). Amber 3px top border, eyebrow + hint
