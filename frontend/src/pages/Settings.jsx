@@ -240,7 +240,12 @@ export default function Settings() {
       .catch(() => setLoading(false))
   }
 
-  useEffect(() => { loadMe() }, [])
+  useEffect(() => {
+    loadMe()
+    const refresh = () => loadMe()
+    window.addEventListener('ytg:credits-changed', refresh)
+    return () => window.removeEventListener('ytg:credits-changed', refresh)
+  }, [])
 
   function handleSwitch(channelId) {
     fetch('/channels/switch', {

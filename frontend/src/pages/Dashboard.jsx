@@ -1864,7 +1864,9 @@ export default function Dashboard() {
                       setData(prev => ({ ...prev, insights: null }))
                       fetch('/auth/refresh-analysis', { method: 'POST', credentials: 'include' })
                         .then(async r => {
-                          if (!r.ok) {
+                          if (r.ok) {
+                            window.dispatchEvent(new CustomEvent('ytg:credits-changed'))
+                          } else {
                             setData(prev => ({ ...prev, insights: prevInsights }))
                             setAnalyzingAI(false)
                             if (r.status === 402) {

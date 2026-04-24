@@ -27,16 +27,23 @@ export default function UsageBar({ channelId, email, dark = false, onPlan, onUsa
   const [usage, setUsage] = useState(null)
 
   useEffect(() => {
-    fetch('/billing/usage', { credentials: 'include' })
-      .then(r => r.ok ? r.json() : null)
-      .then(d => {
-        if (!d) return
-        setUsage(d)
-        if (d.paddle_customer_id) initPaddleRetain(d.paddle_customer_id)
-        if (onPlan && d.plan) onPlan(d.plan)
-        if (onUsage) onUsage(d.usage_pct ?? 0)
-      })
-      .catch(() => {})
+    let active = true
+    const load = () => {
+      fetch('/billing/usage', { credentials: 'include' })
+        .then(r => r.ok ? r.json() : null)
+        .then(d => {
+          if (!active || !d) return
+          setUsage(d)
+          if (d.paddle_customer_id) initPaddleRetain(d.paddle_customer_id)
+          if (onPlan && d.plan) onPlan(d.plan)
+          if (onUsage) onUsage(d.usage_pct ?? 0)
+        })
+        .catch(() => {})
+    }
+    load()
+    const refresh = () => load()
+    window.addEventListener('ytg:credits-changed', refresh)
+    return () => { active = false; window.removeEventListener('ytg:credits-changed', refresh) }
   }, [])
 
   if (!usage) return null
