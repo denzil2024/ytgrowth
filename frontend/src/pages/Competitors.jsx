@@ -634,16 +634,16 @@ function AIAnalysis({ ai, top5Videos, channelId, checkedIdeas, onToggleIdea }) {
         )
       })()}
 
-      {/* ── Topics to tackle (split 5+5) + Top videos — 3-column paneled card
-           Three panels separated by 3px amber vertical bars. Topics are split
-           across the first two columns (1-5 | 6-10) so nothing is clipped;
-           Top videos takes the third column. "Topics to tackle" header spans
-           columns 1 and 2 (only rendered on col 1; col 2 has a spacer the
-           same height so content alignment stays clean). */}
+      {/* ── Topics to tackle + Top videos — 3-column paneled card ───────────
+           Three panels separated by 3px amber vertical bars.
+           Topics split BALANCED across cols 1 and 2 — ceil(N/2) | floor(N/2):
+             6 ideas → 3+3 · 7 → 4+3 · 10 → 5+5
+           No amber top border on the card — only the vertical dividers. */}
       {(ai.videoIdeas?.length > 0 || top5Videos?.length > 0) && (() => {
         const allIdeas  = ai.videoIdeas || []
-        const col1Ideas = allIdeas.slice(0, 5)
-        const col2Ideas = allIdeas.slice(5, 10)
+        const half      = Math.ceil(allIdeas.length / 2)
+        const col1Ideas = allIdeas.slice(0, half)
+        const col2Ideas = allIdeas.slice(half)
         const doneCount = allIdeas.filter(idea => !!checksForChannel[idea.title]).length
         const leftCount = allIdeas.length - doneCount
         const hasTopics = col1Ideas.length > 0
@@ -688,7 +688,18 @@ function AIAnalysis({ ai, top5Videos, channelId, checkedIdeas, onToggleIdea }) {
         const HEADER_SPACER_HEIGHT = 34
 
         return (
-          <Card>
+          <div>
+            <div style={{ marginBottom: 12 }}>
+              <h2 style={{ fontSize: 20, fontWeight: 800, color: '#111114',
+                letterSpacing: '-0.5px', marginBottom: 4 }}>
+                Your playbook
+              </h2>
+              <p style={{ fontSize: 13, color: '#9595a4', lineHeight: 1.5 }}>
+                Topics to tackle from their gaps · alongside their top performers to reference
+              </p>
+            </div>
+
+            <Card topAccent={null}>
             <div style={{ display: 'flex', alignItems: 'stretch', gap: 24 }}>
 
               {/* ── Column 1: Topics to tackle (1–5) ── */}
@@ -725,7 +736,7 @@ function AIAnalysis({ ai, top5Videos, channelId, checkedIdeas, onToggleIdea }) {
                   <div style={{ height: HEADER_SPACER_HEIGHT, marginBottom: 14 }} aria-hidden="true" />
                   <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column',
                     gap: 2, padding: 0, margin: 0 }}>
-                    {col2Ideas.map((idea, i) => renderIdeaRow(idea, i + 5))}
+                    {col2Ideas.map((idea, i) => renderIdeaRow(idea, i + half))}
                   </ul>
                 </div>
               )}
@@ -804,7 +815,8 @@ function AIAnalysis({ ai, top5Videos, channelId, checkedIdeas, onToggleIdea }) {
                 </div>
               )}
             </div>
-          </Card>
+            </Card>
+          </div>
         )
       })()}
 
