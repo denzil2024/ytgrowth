@@ -23,7 +23,7 @@ from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
 from routers.auth import get_session
-from app.analysis_gate import check_and_deduct, refund_credit
+from app.analysis_gate import check_and_deduct, refund_credit, check_free_tier_access
 from app.outliers import search_outliers
 from app.keywords import generate_intent_options
 from app.competitors import extract_niche_keywords
@@ -66,6 +66,14 @@ def search(body: SearchBody, request: Request):
     channel     = (data or {}).get("channel", {})
     channel_id  = channel.get("channel_id", "")
     subscribers = int(channel.get("subscribers", 0) or 0)
+
+    # Free-tier feature gate — Outliers is fully gated for free users.
+    feat_gate = check_free_tier_access(channel_id, "outliers")
+    if not feat_gate["allowed"]:
+        return JSONResponse(
+            {"error": "locked", "feature": "outliers", "reason": feat_gate.get("reason", "locked")},
+            status_code=403,
+        )
 
     # Outliers ships 3 distinct reports in one search (videos / thumbnails /
     # channels) — charge accordingly.

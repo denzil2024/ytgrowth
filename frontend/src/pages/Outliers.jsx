@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import UpsellGate from '../components/UpsellGate'
 
 // Load Inter once — SCOPED to this page (each page owns its font, never global)
 if (typeof document !== 'undefined' && !document.getElementById('outliers-inter-font')) {
@@ -335,7 +336,13 @@ const SpinIcon = () => (
    from /outliers/cache so they survive logout and device switches. */
 
 /* ─── Page ───────────────────────────────────────────────────────────────── */
-export default function Outliers({ channelData, onNavigate }) {
+export default function Outliers({ channelData, onNavigate, plan, freeTierFeatures }) {
+  // Free-tier feature flag — Outliers is fully gated for free users. All
+  // hooks still declared below (React rules); the actual render-replace
+  // happens at the bottom of the component.
+  const outliersGated = (plan || 'free') === 'free'
+    && (freeTierFeatures?.outliers === 'locked' || freeTierFeatures?.outliers === 'used')
+
   // Tab is purely a display-state choice now — switching tabs NEVER triggers a
   // new search. Persisted locally so the user returns to the same tab view.
   const [tab,    setTab]    = useState(() => {
@@ -489,6 +496,27 @@ export default function Outliers({ channelData, onNavigate }) {
   }
 
   /* ─── Render ───────────────────────────────────────────────────────── */
+
+  // Free-tier gate — replaces the entire page content with the shared upsell
+  // modal. Hooks above still run on every render; this just swaps the JSX.
+  if (outliersGated) {
+    return (
+      <div style={{ width: '100%', display: 'flex', alignItems: 'flex-start', justifyContent: 'center', paddingTop: 40, minHeight: '60vh', fontFamily: "'Inter', system-ui, sans-serif" }}>
+        <UpsellGate
+          title="Unlock Outlier Scoring"
+          description="See the thumbnails, titles, and channels actually winning in your niche right now — with a ranked outlier score so you know which to copy and which to ignore."
+          bullets={[
+            'Top outlier videos in your niche, ranked by performance vs. subs',
+            'Winning thumbnail patterns distilled into a reusable formula',
+            "Breakout channels and keyword opportunities you're missing",
+          ]}
+          note="Outlier Scoring requires 3 credits."
+          showPackLink={false}
+        />
+      </div>
+    )
+  }
+
   return (
     <div style={{ width: '100%', fontFamily: "'Inter', system-ui, sans-serif", color: C.text1 }}>
 

@@ -5,7 +5,7 @@ from app.seo import analyze_title, generate_description_suggestions, generate_th
 from app.keywords import generate_intent_options
 from routers.auth import get_session
 from database.models import SessionLocal, VideoOptimizeCache, SeoOptimization
-from app.analysis_gate import check_and_deduct, refund_credit
+from app.analysis_gate import check_and_deduct, refund_credit, check_free_tier_access
 import json, datetime
 
 router = APIRouter()
@@ -34,14 +34,28 @@ class ThumbnailTextRequest(BaseModel):
     niche: str = ""
 
 
+def _locked_response(feature: str, reason: str = "locked"):
+    return JSONResponse(
+        {"error": "locked", "feature": feature, "reason": reason},
+        status_code=403,
+    )
+
+
 @router.post("/intent-options")
-def intent_options(body: TitleIntentRequest):
+def intent_options(body: TitleIntentRequest, request: Request):
     """
     Fast pre-analysis step: given a title, return 3 keyword intent options.
     The frontend shows these as a picker before the full analysis runs.
     """
     if not body.title.strip():
         return JSONResponse({"error": "Title cannot be empty."}, status_code=400)
+    # Free-tier: SEO Studio is fully gated. Guard here too so the endpoint
+    # can't be abused by bypassing the UI.
+    data, _ = get_session(request.session.get("session_id"))
+    channel_id = (data or {}).get("channel", {}).get("channel_id", "")
+    feat = check_free_tier_access(channel_id, "seo")
+    if not feat["allowed"]:
+        return _locked_response("seo", feat.get("reason", "locked"))
     options, error = generate_intent_options(body.title.strip())
     if error and not options:
         return JSONResponse({"error": error}, status_code=500)
@@ -56,6 +70,11 @@ def analyze(body: TitleAnalyzeRequest, request: Request):
     if not body.title.strip():
         return JSONResponse({"error": "Title cannot be empty."}, status_code=400)
     channel_id = (data or {}).get("channel", {}).get("channel_id", "")
+    # Feature-gate first so free users get a clean 403 "locked", not a 402
+    # credit-empty response.
+    feat = check_free_tier_access(channel_id, "seo")
+    if not feat["allowed"]:
+        return _locked_response("seo", feat.get("reason", "locked"))
     gate = check_and_deduct(channel_id)
     if not gate["allowed"]:
         return JSONResponse({"error": gate["message"], "show_upgrade": True}, status_code=402)
@@ -76,6 +95,10 @@ def generate_description(body: DescriptionRequest, request: Request):
     # Inject channel context from session when available — helps Claude stay on-brand
     channel_context = None
     data, _ = get_session(request.session.get("session_id"))
+    channel_id = (data or {}).get("channel", {}).get("channel_id", "") if data else ""
+    feat = check_free_tier_access(channel_id, "seo")
+    if not feat["allowed"]:
+        return _locked_response("seo", feat.get("reason", "locked"))
     if data:
         ch = data.get("channel", {})
         videos = data.get("videos", []) or []
@@ -101,9 +124,14 @@ def generate_description(body: DescriptionRequest, request: Request):
 
 
 @router.post("/thumbnail-text")
-def thumbnail_text(body: ThumbnailTextRequest):
+def thumbnail_text(body: ThumbnailTextRequest, request: Request):
     if not body.title.strip():
         return JSONResponse({"error": "Title cannot be empty."}, status_code=400)
+    data, _ = get_session(request.session.get("session_id"))
+    channel_id = (data or {}).get("channel", {}).get("channel_id", "") if data else ""
+    feat = check_free_tier_access(channel_id, "seo")
+    if not feat["allowed"]:
+        return _locked_response("seo", feat.get("reason", "locked"))
     options, error = generate_thumbnail_text(body.title.strip(), body.niche.strip())
     if error and not options:
         return JSONResponse({"error": error}, status_code=500)
@@ -123,6 +151,10 @@ def optimize_video_route(body: OptimizeVideoRequest, request: Request):
     data, creds = get_session(request.session.get("session_id"))
     if not creds:
         return JSONResponse({"error": "Not authenticated. Please login first."}, status_code=401)
+    channel_id = (data or {}).get("channel", {}).get("channel_id", "")
+    feat = check_free_tier_access(channel_id, "video_optimize")
+    if not feat["allowed"]:
+        return _locked_response("video_optimize", feat.get("reason", "locked"))
     # Credit is charged by /seo/analyze which runs in parallel in the frontend.
     # optimize-video is the description/thumbnail half of the same operation — no double charge.
     result = optimize_video(
@@ -149,6 +181,10 @@ def update_video_route(body: UpdateVideoRequest, request: Request):
     data, creds = get_session(request.session.get("session_id"))
     if not creds:
         return JSONResponse({"error": "Not authenticated. Please login first."}, status_code=401)
+    channel_id_check = (data or {}).get("channel", {}).get("channel_id", "")
+    feat = check_free_tier_access(channel_id_check, "video_optimize")
+    if not feat["allowed"]:
+        return _locked_response("video_optimize", feat.get("reason", "locked"))
     if not body.title and not body.description:
         return JSONResponse({"error": "Nothing to update."}, status_code=400)
     try:

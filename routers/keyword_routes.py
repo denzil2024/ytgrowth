@@ -11,7 +11,7 @@ from app.keywords import (
     enrich_keywords_with_real_data,
 )
 from routers.auth import get_session
-from app.analysis_gate import check_and_deduct
+from app.analysis_gate import check_and_deduct, check_free_tier_access
 
 router = APIRouter()
 
@@ -43,6 +43,14 @@ def research_keywords(body: KeywordResearchRequest, request: Request):
         return JSONResponse({"error": "Keyword cannot be empty."}, status_code=400)
     data, _ = get_session(request.session.get("session_id"))
     channel_id = (data or {}).get("channel", {}).get("channel_id", "")
+    # Free-tier feature gate — Keywords is one-run per cycle for free users.
+    # Records usage on first successful call; subsequent calls return 403.
+    feat = check_free_tier_access(channel_id, "keywords")
+    if not feat["allowed"]:
+        return JSONResponse(
+            {"error": "locked", "feature": "keywords", "reason": feat.get("reason", "locked")},
+            status_code=403,
+        )
     gate = check_and_deduct(channel_id)
     if not gate["allowed"]:
         return JSONResponse({"error": gate["message"], "show_upgrade": True}, status_code=402)

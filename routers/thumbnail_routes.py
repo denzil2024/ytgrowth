@@ -19,7 +19,7 @@ from pydantic import BaseModel
 
 from routers.auth import get_session
 from database.models import SessionLocal, ThumbnailAnalysis
-from app.analysis_gate import check_and_deduct, refund_credit
+from app.analysis_gate import check_and_deduct, refund_credit, check_free_tier_access
 from app.thumbnail import (
     detect_format,
     get_size_bracket,
@@ -278,6 +278,17 @@ def analyze_thumbnail(body: AnalyzeBody, request: Request):
         # ── Return cached Layer 2 if it exists ────────────────────────────────
         if row.layer2_scores:
             return JSONResponse({"analysis": _row_to_dict(row)})
+
+        # ── Free-tier feature gate (one-run per cycle) ────────────────────────
+        # Records usage atomically on first successful call this cycle; after
+        # that returns "used" until subscription.reset_date moves forward.
+        # Paid plans flow straight through to the credit gate below.
+        feat = check_free_tier_access(channel_id, "thumbnail_score")
+        if not feat["allowed"]:
+            return JSONResponse(
+                {"error": "locked", "feature": "thumbnail_score", "reason": feat.get("reason", "locked")},
+                status_code=403,
+            )
 
         # ── Credit gate (only charged when actually calling Claude) ───────────
         gate = check_and_deduct(channel_id)

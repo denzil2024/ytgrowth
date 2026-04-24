@@ -1481,6 +1481,10 @@ export default function Dashboard() {
   const [canAddMore, setCanAddMore] = useState(false)
   const [showWelcome, setShowWelcome] = useState(false)
   const [billingPlan, setBillingPlan] = useState(null)
+  // Free-tier per-feature gate status. Map of feature id → 'allowed' | 'locked' | 'used'.
+  // Fetched from /auth/me on mount; empty {} for paid plans. Passed to gated
+  // child pages so they can show the upsell modal on first render.
+  const [freeTierFeatures, setFreeTierFeatures] = useState({})
   const [prevScore,   setPrevScore]   = useState(null)
   const [statsFlash,  setStatsFlash]  = useState(null)  // 'ok' | 'err' | null
   const [usagePct,    setUsagePct]    = useState(0)
@@ -1528,6 +1532,16 @@ export default function Dashboard() {
     fetch('/auth/milestones', { credentials: 'include' })
       .then(r => r.ok ? r.json() : null)
       .then(d => { if (d && !d.error) setMilestones(d) })
+      .catch(() => {})
+
+    // Load plan + per-feature gate state (for free-tier gating on child pages).
+    fetch('/auth/me', { credentials: 'include' })
+      .then(r => r.ok ? r.json() : null)
+      .then(d => {
+        if (!d) return
+        if (d.plan) setBillingPlan(d.plan)
+        setFreeTierFeatures(d.free_tier_features || {})
+      })
       .catch(() => {})
 
     // DEV: ?preview_milestone=subs:1000 fires the celebration modal for testing. Safe to remove.
@@ -2613,6 +2627,8 @@ export default function Dashboard() {
                         video={sv}
                         onClose={() => setSelectedVideoId(null)}
                         onVideoUpdated={handleVideoUpdated}
+                        plan={billingPlan}
+                        freeTierFeatures={freeTierFeatures}
                       />
                     </div>
                   </div>
@@ -2709,9 +2725,9 @@ export default function Dashboard() {
             </>
           )}
 
-          {nav === 'Competitors' && <Competitors />}
+          {nav === 'Competitors' && <Competitors plan={billingPlan} freeTierFeatures={freeTierFeatures} />}
 
-          {nav === 'Keywords' && <Keywords />}
+          {nav === 'Keywords' && <Keywords plan={billingPlan} freeTierFeatures={freeTierFeatures} />}
 
           {nav === 'Weekly Report' && (
             <WeeklyReport
@@ -2724,13 +2740,13 @@ export default function Dashboard() {
             />
           )}
 
-          {nav === 'SEO Studio' && <SeoOptimizer onNavigate={setNav} />}
+          {nav === 'SEO Studio' && <SeoOptimizer onNavigate={setNav} plan={billingPlan} freeTierFeatures={freeTierFeatures} />}
 
-          {nav === 'Thumbnail Score' && <ThumbnailScore channelData={data} onNavigate={setNav} />}
+          {nav === 'Thumbnail Score' && <ThumbnailScore channelData={data} onNavigate={setNav} plan={billingPlan} freeTierFeatures={freeTierFeatures} />}
 
-          {nav === 'Video Ideas' && <VideoIdeas onNavigate={setNav} />}
+          {nav === 'Video Ideas' && <VideoIdeas onNavigate={setNav} plan={billingPlan} freeTierFeatures={freeTierFeatures} />}
 
-          {nav === 'Outliers' && <Outliers channelData={data} onNavigate={setNav} />}
+          {nav === 'Outliers' && <Outliers channelData={data} onNavigate={setNav} plan={billingPlan} freeTierFeatures={freeTierFeatures} />}
 
           {/* ── SETTINGS ─────────────────────────────────────────────── */}
           {nav === 'Settings' && <Settings />}

@@ -14,14 +14,35 @@ from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
 from routers.auth import get_session
-from app.analysis_gate import check_and_deduct, refund_credit
+from app.analysis_gate import check_and_deduct, refund_credit, check_free_tier_access
 from app.utils import make_anthropic_client
 from database.models import (
     SessionLocal,
     CompetitorVideoIdeas,
     ChannelVideoIdeas,
     CompetitorAnalysisCache,
+    UserSubscription,
 )
+
+
+# Free users only see the top 5 ideas after the current ranking — no
+# refresh, no further access. See _cap_for_free() usage below.
+FREE_IDEAS_CAP = 5
+
+
+def _is_free_plan(db, channel_id: str) -> bool:
+    """Quick plan lookup for partial-access gating (Video Ideas cap)."""
+    if not channel_id:
+        return True
+    sub = db.query(UserSubscription).filter_by(channel_id=channel_id).first()
+    return (sub.plan if sub else "free") == "free"
+
+
+def _cap_for_free(ideas: list, is_free: bool) -> list:
+    """Take the first N ideas after the current ranking for free users."""
+    if is_free and isinstance(ideas, list):
+        return ideas[:FREE_IDEAS_CAP]
+    return ideas
 
 router = APIRouter()
 
@@ -176,6 +197,8 @@ def get_video_ideas(request: Request, channel_id: str = ""):
 
     db = SessionLocal()
     try:
+        is_free = _is_free_plan(db, channel_id)
+
         # 1. Return cached merged result if it exists
         cached = _load_cached(db, channel_id)
         if cached:
@@ -193,25 +216,27 @@ def get_video_ideas(request: Request, channel_id: str = ""):
                     ).days > 30
                 )
                 return JSONResponse({
-                    "ideas":        ideas,
+                    "ideas":        _cap_for_free(ideas, is_free),
                     "source":       cached.source,
                     "last_updated": _time_ago(cached.last_updated),
                     "stale":        is_stale,
+                    "free_capped":  is_free,
                 })
 
         # 2. No cache → pool from raw competitor analyses
         pooled = _pool_competitor_ideas(db, channel_id)
         if not pooled:
-            return JSONResponse({"ideas": [], "source": "empty"})
+            return JSONResponse({"ideas": [], "source": "empty", "free_capped": is_free})
 
         # Cache the pooled result
         _save_ideas(db, channel_id, pooled, "competitor")
 
         return JSONResponse({
-            "ideas":        pooled,
+            "ideas":        _cap_for_free(pooled, is_free),
             "source":       "competitor",
             "last_updated": "today",
             "stale":        False,
+            "free_capped":  is_free,
         })
     finally:
         db.close()
@@ -367,6 +392,15 @@ def refresh_video_ideas(body: RefreshBody, request: Request):
     channel_id = body.channel_id or data.get("channel", {}).get("channel_id", "")
     if not channel_id:
         return JSONResponse({"error": "No channel_id."}, status_code=400)
+
+    # Free-tier: refresh is fully blocked for free users (they keep their
+    # 5 capped ideas from competitor runs but cannot generate new ones).
+    feat = check_free_tier_access(channel_id, "video_ideas_refresh")
+    if not feat["allowed"]:
+        return JSONResponse(
+            {"error": "locked", "feature": "video_ideas_refresh", "reason": feat.get("reason", "locked")},
+            status_code=403,
+        )
 
     # 1. Gate check BEFORE any Claude call
     gate = check_and_deduct(channel_id)

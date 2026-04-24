@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import UpsellGate from '../components/UpsellGate'
 
 // ─── persistence ──────────────────────────────────────────────────────────────
 const LS_KEY = 'ytgrowth_tracked_competitors'
@@ -1152,7 +1153,13 @@ function AIAnalysis({ ai, top5Videos, channelId, checkedIdeas, onToggleIdea }) {
 }
 
 // ─── main page ────────────────────────────────────────────────────────────────
-export default function Competitors() {
+export default function Competitors({ plan, freeTierFeatures }) {
+  // Free-tier one-run gate. Pre-loaded from /auth/me; flips to true on a
+  // live 403 from /competitors/analyze. Backend remains the source of truth.
+  const [gated, setGated] = useState(
+    (plan || 'free') === 'free'
+    && (freeTierFeatures?.competitors === 'locked' || freeTierFeatures?.competitors === 'used')
+  )
   useCompetitorStyles()
 
   const [searchQuery, setSearchQuery]       = useState('')
@@ -1208,9 +1215,20 @@ export default function Competitors() {
     setLoadingAnalyze(channelId)
     setAnalyzeError('')
     fetch(`/competitors/analyze/${channelId}`, { credentials: 'include' })
-      .then(r => r.json())
+      .then(async r => {
+        const d = await r.json().catch(() => ({}))
+        // 403 "locked" = free-tier one-run gate hit. Flip to upsell; don't
+        // show an error banner.
+        if (r.status === 403 && (d.error === 'locked' || d.reason === 'used' || d.reason === 'locked')) {
+          setGated(true)
+          setLoadingAnalyze(null)
+          return null
+        }
+        return d
+      })
       .then(d => {
-        if (d.competitor) {
+        if (d === null) return
+        if (d && d.competitor) {
           const entry = { ...d, savedAt: new Date().toISOString() }
           setAnalyses(prev => {
             const next = [...prev, entry]
@@ -1219,7 +1237,7 @@ export default function Competitors() {
           })
           setActiveTab('tracked')
         } else {
-          setAnalyzeError(d.error || 'Analysis failed. Please try again.')
+          setAnalyzeError((d && d.error) || 'Analysis failed. Please try again.')
         }
         setLoadingAnalyze(null)
       })
@@ -1241,6 +1259,23 @@ export default function Competitors() {
     { key: 'search',  label: 'Search channels' },
     { key: 'tracked', label: analyses.length > 0 ? `Tracked (${analyses.length})` : 'Tracked' },
   ]
+
+  if (gated) {
+    return (
+      <div className="comp-page" style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'center', paddingTop: 40, minHeight: '60vh' }}>
+        <UpsellGate
+          title="You've used your free Competitor analysis"
+          description="Free accounts get one competitor deep-dive per monthly cycle. Upgrade to keep analysing channels — their posting cadence, their title patterns, and the video ideas their audience is asking for."
+          bullets={[
+            'Unlimited competitor deep-dives every month',
+            'Full AI breakdown — posting timing, title patterns, playbook',
+            'Video ideas pooled from every competitor you analyse',
+          ]}
+          showPackLink={false}
+        />
+      </div>
+    )
+  }
 
   return (
     <div className="comp-page">

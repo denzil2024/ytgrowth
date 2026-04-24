@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import UpsellGate from '../components/UpsellGate'
 
 // Tokens match the canonical palette used by Dashboard.jsx and
 // SeoOptimizer.jsx (the benchmark pages). No drift, no extra tiers.
@@ -440,121 +441,15 @@ export default function WeeklyReport({ channelId, channelEmail, plan, channelSta
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             padding: 24,
           }}>
-            <div style={{
-              background: '#ffffff',
-              border: '1px solid rgba(229,37,27,0.2)',
-              borderRadius: 20,
-              boxShadow: '0 20px 50px rgba(0,0,0,0.16)',
-              padding: '30px 36px 28px',
-              maxWidth: 540, width: '100%',
-              textAlign: 'center',
-            }}>
-              {/* Lock icon */}
-              <div style={{
-                width: 50, height: 50, borderRadius: 14,
-                background: `linear-gradient(180deg, ${C.red} 0%, #a50f07 100%)`,
-                margin: '0 auto 18px',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                boxShadow: `0 8px 22px ${C.red}55, inset 0 1px 0 rgba(255,255,255,0.25)`,
-              }}>
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                  <rect x="3" y="11" width="18" height="11" rx="2"/>
-                  <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-                </svg>
-              </div>
-
-              <h2 style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', marginBottom: 10 }}>
-                Unlock weekly AI reports
-              </h2>
-              <p style={{ fontSize: 14, color: C.text2, lineHeight: 1.6, marginBottom: 22, maxWidth: 400, marginLeft: 'auto', marginRight: 'auto' }}>
-                YTGrowth audits your channel every week and tells you the single thing to fix next — not a wall of data, a clear priority.
-              </p>
-
-              {/* Benefits */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 24, textAlign: 'left', maxWidth: 400, marginLeft: 'auto', marginRight: 'auto' }}>
-                {[
-                  'Biggest win, watch out, and priority — every week',
-                  'Fresh analysis delivered straight to your inbox',
-                  '4 AI reports delivered to your inbox every month.',
-                ].map((t, i) => (
-                  <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
-                    <span style={{
-                      display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-                      width: 20, height: 20, borderRadius: '50%',
-                      background: `${C.green}18`, flexShrink: 0, marginTop: 1,
-                    }}>
-                      <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke={C.green} strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
-                        <polyline points="1.5,6.5 5,10 10.5,2"/>
-                      </svg>
-                    </span>
-                    <span style={{ fontSize: 13.5, color: C.text2, lineHeight: 1.55 }}>{t}</span>
-                  </div>
-                ))}
-              </div>
-
-              {/* CTAs */}
-              <a
-                href="/?tab=monthly#pricing"
-                style={{
-                  display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8,
-                  width: '100%', maxWidth: 360,
-                  background: `linear-gradient(180deg, ${C.red} 0%, #a50f07 100%)`,
-                  color: '#ffffff',
-                  fontSize: 14, fontWeight: 700,
-                  padding: '13px 24px', borderRadius: 999,
-                  textDecoration: 'none', letterSpacing: '-0.1px',
-                  boxShadow: `0 8px 22px ${C.red}50, inset 0 1px 0 rgba(255,255,255,0.22)`,
-                }}
-              >
-                See monthly plans
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
-                  <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
-                </svg>
-              </a>
-              <div style={{ fontSize: 12.5, color: C.text3, fontWeight: 500, marginTop: 10, marginBottom: 8 }}>
-                Plans from <span style={{ fontWeight: 700, color: C.text2 }}>$19/mo</span> · cancel anytime
-              </div>
-              <div>
-                <a
-                  href="/?tab=packs#pricing"
-                  style={{
-                    fontSize: 12.5, fontWeight: 600, color: C.text3,
-                    textDecoration: 'none',
-                  }}
-                >
-                  Or grab a one-time credit pack →
-                </a>
-              </div>
-
-              {/* Trust stack */}
-              <div style={{
-                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12,
-                marginTop: 22, paddingTop: 20,
-                borderTop: `1px solid ${C.border}`,
-              }}>
-                <div style={{ display: 'flex' }}>
-                  {['sophie', 'james', 'priya', 'amara', 'marcus'].map((name, i, arr) => (
-                    <img
-                      key={name}
-                      src={`/avatars/${name}.jpg`}
-                      alt=""
-                      style={{
-                        width: 28, height: 28, borderRadius: '50%',
-                        border: '2px solid #ffffff',
-                        marginLeft: i === 0 ? 0 : -9,
-                        objectFit: 'cover',
-                        boxShadow: '0 1px 4px rgba(0,0,0,0.15)',
-                        zIndex: arr.length - i,
-                        position: 'relative',
-                      }}
-                    />
-                  ))}
-                </div>
-                <span style={{ fontSize: 12.5, color: C.text3, fontWeight: 500, textAlign: 'left', lineHeight: 1.4 }}>
-                  Trusted by creators growing<br/>their channels every week
-                </span>
-              </div>
-            </div>
+            <UpsellGate
+              title="Unlock weekly AI reports"
+              description="YTGrowth audits your channel every week and tells you the single thing to fix next — not a wall of data, a clear priority."
+              bullets={[
+                'Biggest win, watch out, and priority — every week',
+                'Fresh analysis delivered straight to your inbox',
+                '4 AI reports delivered to your inbox every month.',
+              ]}
+            />
           </div>
         </div>
       </div>

@@ -244,6 +244,29 @@ class Milestone(Base):
     achieved_at  = Column(DateTime, default=_now)
 
 
+class FreeTierFeatureUsage(Base):
+    """
+    Tracks one-run-per-cycle usage of the feature-level gate for free-tier
+    users. Only the ONE_RUN features write here (thumbnail_score, keywords,
+    competitors). A row means "this channel used this feature during the
+    subscription cycle that ended at `cycle_reset`".
+
+    `cycle_reset` is the subscription.reset_date at time of use — comparing
+    it to the subscription's *current* reset_date tells us whether the
+    usage falls inside the current cycle. Once reset_date moves forward,
+    old rows no longer count.
+
+    Distinct from the credit pool (user_subscriptions.monthly_used) — this
+    is feature-level access control, not per-call credits.
+    """
+    __tablename__ = "free_tier_feature_usage"
+    id            = Column(Integer, primary_key=True, autoincrement=True)
+    channel_id    = Column(String, nullable=False, index=True)
+    feature       = Column(String, nullable=False)   # 'thumbnail_score' | 'keywords' | 'competitors'
+    cycle_reset   = Column(DateTime, nullable=False) # the sub's reset_date at time of use
+    used_at       = Column(DateTime, default=_now)
+
+
 import os
 DATABASE_URL = os.environ.get("DATABASE_URL", "sqlite:///ytgrowth.db")
 # Railway provides postgres:// but SQLAlchemy needs postgresql://
@@ -273,6 +296,10 @@ with engine.connect() as _conn:
         "CREATE TABLE IF NOT EXISTS milestones (id INTEGER PRIMARY KEY AUTOINCREMENT, channel_id TEXT NOT NULL, category TEXT NOT NULL, tier INTEGER NOT NULL, achieved_at DATETIME)",
         "CREATE INDEX IF NOT EXISTS ix_milestones_channel_id ON milestones (channel_id)",
         "CREATE UNIQUE INDEX IF NOT EXISTS uq_milestones_channel_cat_tier ON milestones (channel_id, category, tier)",
+        # Free-tier feature-level gate table (thumbnail_score / keywords / competitors one-run tracking)
+        "CREATE TABLE IF NOT EXISTS free_tier_feature_usage (id INTEGER PRIMARY KEY AUTOINCREMENT, channel_id TEXT NOT NULL, feature TEXT NOT NULL, cycle_reset DATETIME NOT NULL, used_at DATETIME)",
+        "CREATE INDEX IF NOT EXISTS ix_free_tier_feature_usage_channel_id ON free_tier_feature_usage (channel_id)",
+        "CREATE UNIQUE INDEX IF NOT EXISTS uq_free_tier_feature_usage_cycle ON free_tier_feature_usage (channel_id, feature, cycle_reset)",
         "UPDATE user_subscriptions SET monthly_allowance = 5, monthly_used = 0 WHERE plan = 'free' AND monthly_allowance = 9999",
         # Free plan change 2026-04-23: 5 lifetime → 3 per month with monthly reset
         "UPDATE user_subscriptions SET monthly_allowance = 3 WHERE plan = 'free' AND monthly_allowance = 5",

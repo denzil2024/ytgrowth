@@ -98,6 +98,148 @@ def check_and_deduct(channel_id: str, amount: int = 1) -> dict:
         db.close()
 
 
+# ───────────────────────────────────────────────────────────────────────────
+# Free-tier feature-level gate — separate from the credit pool above.
+#
+# Paid plans pay per call via check_and_deduct(). Free plans face feature-
+# level access control: some features are fully off-limits, others allow a
+# single run per monthly cycle (cycle = subscription.reset_date window).
+# ───────────────────────────────────────────────────────────────────────────
+
+# Features the free tier cannot access at all. Route returns 403 immediately.
+FULLY_GATED_FEATURES = {"outliers", "seo", "video_optimize", "video_ideas_refresh"}
+
+# Features the free tier can run exactly once per cycle. After the first
+# successful run, the route returns 403 until reset_date moves forward.
+ONE_RUN_FEATURES = {"thumbnail_score", "keywords", "competitors"}
+
+
+def _apply_reset_if_overdue(db, sub):
+    """Shared helper — rolls the subscription over if reset_date has passed."""
+    now = datetime.datetime.now(datetime.timezone.utc)
+    if sub.reset_date:
+        reset = sub.reset_date
+        if reset.tzinfo is None:
+            reset = reset.replace(tzinfo=datetime.timezone.utc)
+        if now >= reset:
+            sub.monthly_used = 0
+            sub.reset_date = next_reset_date(reset)
+            db.commit()
+    return now
+
+
+def check_free_tier_access(channel_id: str, feature: str) -> dict:
+    """
+    Feature-level access control. Call this BEFORE any credit deduction.
+
+    Returns:
+      {"allowed": True}
+        — paid plan, or first run of a one-run feature this cycle
+        — side-effect for one-run features: records usage in
+          FreeTierFeatureUsage so subsequent calls return "used"
+      {"allowed": False, "reason": "locked",   "feature": ...}
+        — feature is fully gated on free tier
+      {"allowed": False, "reason": "used",     "feature": ...}
+        — one-run feature already used this cycle
+    """
+    if _BYPASS:
+        return {"allowed": True}
+
+    db = SessionLocal()
+    try:
+        from database.models import FreeTierFeatureUsage
+        sub = get_or_create_subscription(db, channel_id)
+
+        # Paid plans: not feature-gated (they pay via credits).
+        if (sub.plan or "free") != "free":
+            return {"allowed": True}
+
+        _apply_reset_if_overdue(db, sub)
+        cycle_reset = sub.reset_date
+
+        if feature in FULLY_GATED_FEATURES:
+            return {"allowed": False, "reason": "locked", "feature": feature}
+
+        if feature in ONE_RUN_FEATURES:
+            existing = (
+                db.query(FreeTierFeatureUsage)
+                  .filter(
+                      FreeTierFeatureUsage.channel_id == channel_id,
+                      FreeTierFeatureUsage.feature == feature,
+                      FreeTierFeatureUsage.cycle_reset == cycle_reset,
+                  )
+                  .first()
+            )
+            if existing:
+                return {"allowed": False, "reason": "used", "feature": feature}
+
+            # Record the one-shot usage atomically with the allow.
+            db.add(FreeTierFeatureUsage(
+                channel_id=channel_id,
+                feature=feature,
+                cycle_reset=cycle_reset,
+                used_at=datetime.datetime.now(datetime.timezone.utc),
+            ))
+            db.commit()
+            return {"allowed": True}
+
+        # Unknown feature id — default open so misuse of this helper can't
+        # accidentally block unrelated endpoints.
+        return {"allowed": True}
+
+    except Exception as e:
+        db.rollback()
+        print(f"[analysis_gate] Free-tier check error for {channel_id}/{feature}: {e}")
+        # Fail open — don't block paying users on a DB hiccup
+        return {"allowed": True}
+    finally:
+        db.close()
+
+
+def peek_free_tier_access(channel_id: str, feature: str) -> dict:
+    """Read-only variant of check_free_tier_access — does NOT record usage.
+    Used for frontend status checks (e.g., /api/auth/me) so loading the
+    page doesn't burn a free run."""
+    if _BYPASS:
+        return {"allowed": True}
+
+    db = SessionLocal()
+    try:
+        from database.models import FreeTierFeatureUsage
+        sub = get_or_create_subscription(db, channel_id)
+
+        if (sub.plan or "free") != "free":
+            return {"allowed": True}
+
+        _apply_reset_if_overdue(db, sub)
+        cycle_reset = sub.reset_date
+
+        if feature in FULLY_GATED_FEATURES:
+            return {"allowed": False, "reason": "locked", "feature": feature}
+
+        if feature in ONE_RUN_FEATURES:
+            existing = (
+                db.query(FreeTierFeatureUsage)
+                  .filter(
+                      FreeTierFeatureUsage.channel_id == channel_id,
+                      FreeTierFeatureUsage.feature == feature,
+                      FreeTierFeatureUsage.cycle_reset == cycle_reset,
+                  )
+                  .first()
+            )
+            if existing:
+                return {"allowed": False, "reason": "used", "feature": feature}
+            return {"allowed": True}
+
+        return {"allowed": True}
+
+    except Exception as e:
+        print(f"[analysis_gate] Free-tier peek error for {channel_id}/{feature}: {e}")
+        return {"allowed": True}
+    finally:
+        db.close()
+
+
 def refund_credit(channel_id: str, amount: int = 1) -> None:
     """
     Refund `amount` credits that were deducted by check_and_deduct().

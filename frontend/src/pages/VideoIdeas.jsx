@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import UpsellGate from '../components/UpsellGate'
 
 // Inter loaded page-scoped (each page owns its font loading, never global)
 if (typeof document !== 'undefined' && !document.getElementById('vi-inter-font')) {
@@ -467,7 +468,7 @@ function saveDone(set) {
   try { localStorage.setItem(DONE_KEY, JSON.stringify([...set])) } catch {}
 }
 
-export default function VideoIdeas({ onNavigate }) {
+export default function VideoIdeas({ onNavigate, plan, freeTierFeatures }) {
   const [ideas,       setIdeas]      = useState([])
   const [source,      setSource]     = useState('empty')
   const [lastUpdated, setLastUpdated]= useState('')
@@ -479,6 +480,14 @@ export default function VideoIdeas({ onNavigate }) {
   const [done,        setDone]       = useState(() => loadDone())
   const [confirmOpen, setConfirmOpen]= useState(false)
   const mountedRef = useRef(true)
+
+  // Free-tier partial-access gate. Free users:
+  // - See their 5 ideas (the backend caps the GET response).
+  // - Cannot trigger refresh (the Refresh button is hidden).
+  // - If they somehow hit /video-ideas/refresh and server 403s, we flip to
+  //   the full upsell modal to make the spec enforcement visible.
+  const isFreePlan = (plan || 'free') === 'free'
+  const [refreshGated, setRefreshGated] = useState(false)
 
   function toggleDone(title) {
     setDone(prev => {
@@ -603,6 +612,11 @@ export default function VideoIdeas({ onNavigate }) {
       const data = await res.json()
       if (!mountedRef.current) return
 
+      // 403 "locked" = free-tier refresh gate; swap to the upsell modal.
+      if (res.status === 403 && (data.error === 'locked' || data.reason === 'locked')) {
+        setRefreshGated(true)
+        return
+      }
       if (res.status === 402) {
         setError(data.error || 'No credits remaining. Please upgrade to continue.')
         return
@@ -636,6 +650,27 @@ export default function VideoIdeas({ onNavigate }) {
   }[source] || ''
 
   /* ── Render ── */
+
+  // Free-tier refresh was attempted and server returned 403 — replace the
+  // feature with the upsell modal. (Standard flow: free user's Refresh
+  // button is already hidden; this catches any bypass attempts.)
+  if (refreshGated) {
+    return (
+      <div style={{ width: '100%', fontFamily: "'Inter', system-ui, sans-serif", display: 'flex', alignItems: 'flex-start', justifyContent: 'center', paddingTop: 40, minHeight: '60vh' }}>
+        <UpsellGate
+          title="Unlock Video Ideas refreshes"
+          description="Free accounts see up to 5 video ideas from your competitor analyses. Upgrade to refresh with AI every month — fresh ideas tuned to your niche, trend signals, and current-year search queries."
+          bullets={[
+            'Refresh your 10 ranked video ideas on demand',
+            'Ideas tuned to your channel + tracked competitors + trend data',
+            'Pair with SEO Studio to build the title and description in one click',
+          ]}
+          showPackLink={false}
+        />
+      </div>
+    )
+  }
+
   return (
     <div style={{ width: '100%', fontFamily: "'Inter', system-ui, sans-serif" }}>
 
@@ -650,42 +685,46 @@ export default function VideoIdeas({ onNavigate }) {
             <span>Ready-to-use video titles ranked by opportunity</span>
             {lastUpdated && !loading && <span style={{ marginLeft: 8 }}>· Last updated {lastUpdated}</span>}
             {sourceLabel && !loading && <span style={{ marginLeft: 8 }}>· {sourceLabel}</span>}
+            {isFreePlan && !loading && <span style={{ marginLeft: 8 }}>· Free plan: 5 idea cap</span>}
           </p>
         </div>
 
         {/* Refresh — red pill, matches Overview/Videos/Outliers CTA shape.
             Opens a confirmation modal (1 credit cost + approach summary)
-            instead of running immediately. */}
-        <div style={{ textAlign: 'right', flexShrink: 0 }}>
-          <button
-            onClick={() => setConfirmOpen(true)}
-            disabled={refreshing}
-            style={{
-              display: 'inline-flex', alignItems: 'center', gap: 7,
-              padding: '10px 18px', borderRadius: 100, border: 'none',
-              fontSize: 13.5, fontWeight: 700, fontFamily: 'inherit',
-              letterSpacing: '0.01em',
-              background: refreshing ? '#e0e0e6' : C.red,
-              color: refreshing ? '#a0a0b0' : '#fff',
-              cursor: refreshing ? 'not-allowed' : 'pointer',
-              transition: 'filter 0.15s',
-            }}
-            onMouseEnter={e => { if (!refreshing) e.currentTarget.style.filter = 'brightness(1.1)' }}
-            onMouseLeave={e => { e.currentTarget.style.filter = 'none' }}
-          >
-            {refreshing ? <><SpinIcon /> Generating</> : <>
-              <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                <path d="M11 6.5A4.5 4.5 0 1 1 6.5 2a4.5 4.5 0 0 1 3.18 1.32"/>
-                <path d="M9.5 1v2.8H12.3"/>
-              </svg>
-              Refresh ideas
-            </>}
-          </button>
-          <div style={{ fontSize: 11.5, color: C.text3, marginTop: 6, fontWeight: 500 }}>
-            1 AI analysis
-            {credits != null && <span> · {credits} credits left</span>}
+            instead of running immediately. Hidden for free users; backend
+            also blocks the refresh endpoint with a 403. */}
+        {!isFreePlan && (
+          <div style={{ textAlign: 'right', flexShrink: 0 }}>
+            <button
+              onClick={() => setConfirmOpen(true)}
+              disabled={refreshing}
+              style={{
+                display: 'inline-flex', alignItems: 'center', gap: 7,
+                padding: '10px 18px', borderRadius: 100, border: 'none',
+                fontSize: 13.5, fontWeight: 700, fontFamily: 'inherit',
+                letterSpacing: '0.01em',
+                background: refreshing ? '#e0e0e6' : C.red,
+                color: refreshing ? '#a0a0b0' : '#fff',
+                cursor: refreshing ? 'not-allowed' : 'pointer',
+                transition: 'filter 0.15s',
+              }}
+              onMouseEnter={e => { if (!refreshing) e.currentTarget.style.filter = 'brightness(1.1)' }}
+              onMouseLeave={e => { e.currentTarget.style.filter = 'none' }}
+            >
+              {refreshing ? <><SpinIcon /> Generating</> : <>
+                <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                  <path d="M11 6.5A4.5 4.5 0 1 1 6.5 2a4.5 4.5 0 0 1 3.18 1.32"/>
+                  <path d="M9.5 1v2.8H12.3"/>
+                </svg>
+                Refresh ideas
+              </>}
+            </button>
+            <div style={{ fontSize: 11.5, color: C.text3, marginTop: 6, fontWeight: 500 }}>
+              1 AI analysis
+              {credits != null && <span> · {credits} credits left</span>}
+            </div>
           </div>
-        </div>
+        )}
       </div>
 
       {/* Stale nudge — amber tint, same language as other banners in the app */}
@@ -737,28 +776,48 @@ export default function VideoIdeas({ onNavigate }) {
           <div style={{ marginBottom: 14 }}><LightbulbIcon /></div>
           <h3 style={{ fontSize: 16, fontWeight: 700, color: C.text1, marginBottom: 8, letterSpacing: '-0.2px' }}>No ideas yet</h3>
           <p style={{ fontSize: 13.5, color: C.text3, maxWidth: 340, margin: '0 auto 22px', lineHeight: 1.6 }}>
-            Analyze a competitor first to unlock free video ideas, or generate AI-powered ideas directly.
+            {isFreePlan
+              ? 'Analyse a competitor to unlock up to 5 free video ideas tuned to their playbook.'
+              : 'Analyze a competitor first to unlock free video ideas, or generate AI-powered ideas directly.'}
           </p>
-          <button
-            onClick={() => setConfirmOpen(true)}
-            disabled={refreshing}
-            style={{
-              display: 'inline-flex', alignItems: 'center', gap: 8,
-              padding: '11px 22px', borderRadius: 100, border: 'none',
-              fontSize: 13.5, fontWeight: 700, fontFamily: 'inherit',
-              letterSpacing: '0.01em',
-              background: C.red, color: '#fff', cursor: 'pointer',
-              transition: 'filter 0.15s',
-            }}
-            onMouseEnter={e => e.currentTarget.style.filter = 'brightness(1.1)'}
-            onMouseLeave={e => e.currentTarget.style.filter = 'none'}
-          >
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-              <path d="M7 1v3M7 10v3M1 7h3M10 7h3"/>
-              <path d="M3.2 3.2l2.1 2.1M8.7 8.7l2.1 2.1M3.2 10.8l2.1-2.1M8.7 5.3l2.1-2.1"/>
-            </svg>
-            Generate AI ideas · 1 analysis
-          </button>
+          {isFreePlan ? (
+            <button
+              onClick={() => onNavigate && onNavigate('Competitors')}
+              style={{
+                display: 'inline-flex', alignItems: 'center', gap: 8,
+                padding: '11px 22px', borderRadius: 100, border: 'none',
+                fontSize: 13.5, fontWeight: 700, fontFamily: 'inherit',
+                letterSpacing: '0.01em',
+                background: C.red, color: '#fff', cursor: 'pointer',
+                transition: 'filter 0.15s',
+              }}
+              onMouseEnter={e => e.currentTarget.style.filter = 'brightness(1.1)'}
+              onMouseLeave={e => e.currentTarget.style.filter = 'none'}
+            >
+              Go to Competitors →
+            </button>
+          ) : (
+            <button
+              onClick={() => setConfirmOpen(true)}
+              disabled={refreshing}
+              style={{
+                display: 'inline-flex', alignItems: 'center', gap: 8,
+                padding: '11px 22px', borderRadius: 100, border: 'none',
+                fontSize: 13.5, fontWeight: 700, fontFamily: 'inherit',
+                letterSpacing: '0.01em',
+                background: C.red, color: '#fff', cursor: 'pointer',
+                transition: 'filter 0.15s',
+              }}
+              onMouseEnter={e => e.currentTarget.style.filter = 'brightness(1.1)'}
+              onMouseLeave={e => e.currentTarget.style.filter = 'none'}
+            >
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                <path d="M7 1v3M7 10v3M1 7h3M10 7h3"/>
+                <path d="M3.2 3.2l2.1 2.1M8.7 8.7l2.1 2.1M3.2 10.8l2.1-2.1M8.7 5.3l2.1-2.1"/>
+              </svg>
+              Generate AI ideas · 1 analysis
+            </button>
+          )}
         </div>
       )}
 

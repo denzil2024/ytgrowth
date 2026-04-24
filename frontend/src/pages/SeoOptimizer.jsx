@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import UpsellGate from '../components/UpsellGate'
 
 // Load Inter once — SCOPED to this page, not global (each page owns its own font loading)
 if (typeof document !== 'undefined' && !document.getElementById('seo-opt-inter-font')) {
@@ -428,7 +429,11 @@ function DescriptionCard({ d, idx, copiedDesc, onCopy }) {
   )
 }
 
-export default function SeoOptimizer({ onNavigate }) {
+export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures }) {
+  // Free-tier: SEO Studio is fully gated. Flag computed up-front so hooks
+  // below still run; the render-replace lives just before the main return.
+  const seoGated = (plan || 'free') === 'free'
+    && (freeTierFeatures?.seo === 'locked' || freeTierFeatures?.seo === 'used')
   const saved = loadSaved()
   const [title, setTitle]               = useState(saved.title  || '')
   const [result, setResult]             = useState(saved.result || null)
@@ -642,6 +647,23 @@ export default function SeoOptimizer({ onNavigate }) {
       <path d="M7 1v2M7 11v2M1 7h2M11 7h2M2.93 2.93l1.41 1.41M9.66 9.66l1.41 1.41M2.93 11.07l1.41-1.41M9.66 4.34l1.41-1.41"/>
     </svg>
   )
+
+  if (seoGated) {
+    return (
+      <div style={{ width: '100%', display: 'flex', alignItems: 'flex-start', justifyContent: 'center', paddingTop: 40, minHeight: '60vh', fontFamily: "'Inter', system-ui, sans-serif" }}>
+        <UpsellGate
+          title="Unlock SEO Studio"
+          description="Rewrite your titles, descriptions, and tags against the videos actually winning in your niche — with AI-scored keywords and three direction-picked title suggestions."
+          bullets={[
+            'AI-scored title alternatives with SEO, CTR, and hook breakdowns',
+            'Description generator trained on your channel and your niche',
+            'Keyword research with real search volume and competition',
+          ]}
+          showPackLink={false}
+        />
+      </div>
+    )
+  }
 
   return (
     <div style={{

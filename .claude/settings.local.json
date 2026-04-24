@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:apitracker.io)",
+      "WebFetch(domain:jsr.io)",
+      "WebFetch(domain:freeapihub.com)",
+      "Bash(npm run *)",
+      "Bash(xargs grep *)",
+      "Bash(git push *)",
+      "Bash(git pull *)",
+      "Bash(python -c \"from app.outliers import search_outliers; print\\('ok'\\)\")",
+      "Bash(git -C /c/Users/Windows/Desktop/ytgrowth add frontend/src/pages/Keywords.jsx frontend/dist/)",
+      "Bash(git -C /c/Users/Windows/Desktop/ytgrowth commit -m 'Keywords: full redesign against the shared dashboard design system *)",
+      "Bash(git -C /c/Users/Windows/Desktop/ytgrowth push origin main)"
+    ]
+  }
+}

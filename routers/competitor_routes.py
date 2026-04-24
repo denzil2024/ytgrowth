@@ -9,7 +9,7 @@ from app.competitors import (
 )
 from routers.auth import get_session
 from app.insights import calculate_upload_frequency
-from app.analysis_gate import check_and_deduct
+from app.analysis_gate import check_and_deduct, refund_credit, check_free_tier_access
 from app.utils import compute_like_rate
 from database.models import SessionLocal, CompetitorVideoIdeas, CompetitorAnalysisCache
 
@@ -91,6 +91,17 @@ def analyze_competitor(channel_id: str, request: Request):
     data, creds = get_session(request.session.get("session_id"))
     if not data or not creds:
         return JSONResponse({"error": "No channel data. Please login first."}, status_code=404)
+
+    # Free-tier feature gate — Competitors analysis is one-run per cycle for
+    # free users. Records usage atomically on first successful call this
+    # cycle; subsequent calls return 403 "used".
+    my_channel_id_for_gate = (data.get("channel") or {}).get("channel_id", "")
+    feat = check_free_tier_access(my_channel_id_for_gate, "competitors")
+    if not feat["allowed"]:
+        return JSONResponse(
+            {"error": "locked", "feature": "competitors", "reason": feat.get("reason", "locked")},
+            status_code=403,
+        )
 
     comp_data = fetch_competitor_public_data(creds, channel_id)
     if not comp_data:

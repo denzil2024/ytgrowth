@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import UpsellGate from '../components/UpsellGate'
 
 // Load Inter once — SCOPED to this page (each page owns its font loading, never global)
 if (typeof document !== 'undefined' && !document.getElementById('thumb-iq-inter-font')) {
@@ -941,7 +942,15 @@ function UploadPanel({ videoIdeas, hasIdeas, initialIdea, initialTopic, topicSou
 
 
 /* ─── Main component ──────────────────────────────────────────────────────── */
-export default function ThumbnailScore({ channelData, onNavigate }) {
+export default function ThumbnailScore({ channelData, onNavigate, plan, freeTierFeatures }) {
+  // Free-tier one-run gate. `gated` starts true when the user has already
+  // used their run this cycle (from /auth/me); flips to true if a live
+  // /thumbnail/analyze call returns 403. Backend remains the source of truth.
+  const [gated, setGated] = useState(
+    (plan || 'free') === 'free'
+    && (freeTierFeatures?.thumbnail_score === 'locked' || freeTierFeatures?.thumbnail_score === 'used')
+  )
+
   // state: 'loading' | 'idle' | 'uploading' | 'ready1' | 'analyzing' | 'ready2'
   const [state,        setState]      = useState('loading')
   const [analysis,     setAnalysis]   = useState(null)
@@ -1080,6 +1089,16 @@ export default function ThumbnailScore({ channelData, onNavigate }) {
         body: JSON.stringify({ thumbnail_id: analysis.id }),
         signal: controller.signal,
       })
+      // 403 with {error:"locked"} = free-tier one-run gate hit. Flip to the
+      // upsell view; don't treat it as a retryable analysis failure.
+      if (r.status === 403) {
+        const d = await r.json().catch(() => ({}))
+        if (d.error === 'locked' || d.reason === 'used' || d.reason === 'locked') {
+          setGated(true)
+          setState('ready1')
+          return
+        }
+      }
       const d = await r.json()
       if (!r.ok || d.error) throw new Error(d.error || 'Analysis failed')
       setAnalysis(d.analysis)
@@ -1184,6 +1203,30 @@ export default function ThumbnailScore({ channelData, onNavigate }) {
     { key: 'new',      label: 'New Thumbnail' },
     { key: 'previous', label: history.length > 0 ? `Previous (${history.length})` : 'Previous' },
   ]
+
+  if (gated) {
+    return (
+      <div style={{
+        margin: '-36px -40px -72px',
+        padding: '60px 40px',
+        background: '#ffffff',
+        minHeight: 'calc(100vh - 52px)',
+        fontFamily: "'Inter', system-ui, sans-serif",
+        display: 'flex', alignItems: 'flex-start', justifyContent: 'center',
+      }}>
+        <UpsellGate
+          title="You've used your free Thumbnail Score"
+          description="Free accounts can score one thumbnail per monthly cycle. Upgrade to keep scoring every thumbnail you upload — against the exact videos winning in your niche."
+          bullets={[
+            'Score unlimited thumbnails against your niche benchmark',
+            'Layer 2 AI critique — why it works and what to change',
+            'Full history across every thumbnail you\'ve scored',
+          ]}
+          showPackLink={false}
+        />
+      </div>
+    )
+  }
 
   return (
     <div style={{

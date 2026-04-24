@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import UpsellGate from '../components/UpsellGate'
 
 const API = ''
 
@@ -268,7 +269,11 @@ function DescriptionCard({ d, idx, applyState, applyError, onApply }) {
 
 // ── Main panel ────────────────────────────────────────────────────────────────
 
-export default function VideoOptimizePanel({ video, onClose, onVideoUpdated }) {
+export default function VideoOptimizePanel({ video, onClose, onVideoUpdated, plan, freeTierFeatures }) {
+  // Free-tier: Video optimization is fully gated. Flag up-front; actual
+  // render-replace is at the top of the main return below.
+  const videoOptimizeGated = (plan || 'free') === 'free'
+    && (freeTierFeatures?.video_optimize === 'locked' || freeTierFeatures?.video_optimize === 'used')
   const [videoResult, setVideoResult] = useState(null)
   const [videoLoading, setVideoLoading] = useState(true)
   const [videoError, setVideoError] = useState('')
@@ -438,6 +443,28 @@ export default function VideoOptimizePanel({ video, onClose, onVideoUpdated }) {
 
   const a = videoResult?.analysis
   const isLoading = videoLoading || titleLoading
+
+  if (videoOptimizeGated) {
+    return (
+      <div style={{
+        background: C.surface, border: `1px solid ${C.border}`,
+        borderRadius: 20, padding: '40px 28px',
+        boxShadow: '0 4px 16px rgba(0,0,0,0.08), 0 24px 64px rgba(0,0,0,0.10)',
+        display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 480,
+      }}>
+        <UpsellGate
+          title="Unlock video optimization"
+          description="AI rewrites your existing video's title, description, and thumbnail text using the exact signals the YouTube algorithm scores on — then lets you push the update straight to YouTube."
+          bullets={[
+            'AI title analysis with SEO, CTR, and hook scores',
+            'New descriptions generated to match the rewritten title',
+            'One-click update pushed live to YouTube',
+          ]}
+          showPackLink={false}
+        />
+      </div>
+    )
+  }
 
   return (
     <div style={{

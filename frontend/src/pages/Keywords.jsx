@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import UpsellGate from '../components/UpsellGate'
 
 const API = import.meta.env.VITE_API_URL || ''
 const LS_KEY = 'ytg_keywords_v1'
@@ -421,7 +422,13 @@ function ScoreRing({ score }) {
 }
 
 /* ─── Component ─────────────────────────────────────────────────────────── */
-export default function Keywords() {
+export default function Keywords({ plan, freeTierFeatures }) {
+  // Free-tier one-run gate. Pre-loaded from /auth/me; flips to true on a
+  // live 403 from /keywords/research. Backend is authoritative.
+  const [gated, setGated] = useState(
+    (plan || 'free') === 'free'
+    && (freeTierFeatures?.keywords === 'locked' || freeTierFeatures?.keywords === 'used')
+  )
   useKwStyles()
 
   const saved = loadSaved()
@@ -474,6 +481,13 @@ export default function Keywords() {
     setLoading(true); setError(''); setResult(null); setIntentOptions(null)
     try {
       const res  = await fetch(`${API}/keywords/research`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ keyword: keyword.trim(), confirmed_keyword: confirmedKeyword }) })
+      if (res.status === 403) {
+        const d = await res.json().catch(() => ({}))
+        if (d.error === 'locked' || d.reason === 'used' || d.reason === 'locked') {
+          setGated(true)
+          return
+        }
+      }
       const data = await res.json()
       if (!res.ok) throw new Error(data.error || 'Something went wrong.')
       setResult(data)
@@ -487,6 +501,23 @@ export default function Keywords() {
   function handleClear() {
     setKeyword(''); setResult(null); setIntentOptions(null); setError('')
     localStorage.removeItem(LS_KEY)
+  }
+
+  if (gated) {
+    return (
+      <div className="kw-page" style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'center', paddingTop: 40, minHeight: '60vh' }}>
+        <UpsellGate
+          title="You've used your free Keyword research"
+          description="Free accounts get one keyword research run per monthly cycle. Upgrade to keep researching — with YouTube autocomplete, related searches, and opportunity-ranked scoring every time."
+          bullets={[
+            'Unlimited keyword research runs every month',
+            'Real search volume and competition via YouTube + SerpAPI',
+            'Ranked by niche opportunity so you pick the strongest title',
+          ]}
+          showPackLink={false}
+        />
+      </div>
+    )
   }
 
   return (

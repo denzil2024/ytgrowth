@@ -721,6 +721,24 @@ def get_me(request: Request):
         pref = db.query(UserEmailPreferences).filter_by(channel_id=channel_id).first()
         weekly_report_enabled = pref.weekly_report if pref else True
 
+        # Free-tier feature-gate status — tells the frontend which features
+        # are locked / used-up so gated pages can render the upsell modal
+        # on load without burning a free run. Non-free plans get an empty
+        # map (frontend code keys off plan !== 'free' first anyway).
+        from app.analysis_gate import (
+            peek_free_tier_access,
+            FULLY_GATED_FEATURES,
+            ONE_RUN_FEATURES,
+        )
+        free_tier_features = {}
+        if (plan or "free") == "free" and channel_id:
+            for feat in sorted(FULLY_GATED_FEATURES | ONE_RUN_FEATURES):
+                res = peek_free_tier_access(channel_id, feat)
+                if res.get("allowed"):
+                    free_tier_features[feat] = "allowed"
+                else:
+                    free_tier_features[feat] = res.get("reason", "locked")
+
         return JSONResponse({
             "email":                google_email,
             "display_name":         user_data.get("display_name", ""),
@@ -741,6 +759,7 @@ def get_me(request: Request):
             "usage_pct":            usage_pct,
             "reset_date":           reset_date,
             "weekly_report_enabled": weekly_report_enabled,
+            "free_tier_features":   free_tier_features,
         })
     finally:
         db.close()
