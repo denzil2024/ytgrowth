@@ -19,18 +19,28 @@ if (typeof document !== 'undefined' && !document.getElementById('ytg-vi-styles')
     @keyframes viSpin    { to { transform: rotate(360deg) } }
     @keyframes viFadeUp  { from { opacity:0; transform:translateY(6px) } to { opacity:1; transform:translateY(0) } }
 
-    .vi-idea-card {
+    /* Outer list card — single elevated surface, rows inside. Matches the
+       Paneled card pattern (one card, multiple related items) used on
+       Competitors' playbook. */
+    .vi-list-card {
       background: #ffffff;
       border: 1px solid rgba(0,0,0,0.09);
       border-radius: 16px;
-      margin-bottom: 10px;
       box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.06);
-      transition: border-color 0.2s, opacity 0.2s;
-      animation: viFadeUp 0.26s ease both;
       overflow: hidden;
+      animation: viFadeUp 0.26s ease both;
     }
-    .vi-idea-card:hover { border-color: rgba(0,0,0,0.14); }
-    .vi-idea-card.done  { opacity: 0.55; }
+
+    /* Compact idea row — mirrors Competitors .comp-qw-row so both
+       "topics to tackle" surfaces read as the same pattern. */
+    .vi-row {
+      display: flex; align-items: flex-start; gap: 14px;
+      padding: 14px 20px;
+      transition: background 0.15s, opacity 0.2s;
+    }
+    .vi-row + .vi-row { border-top: 1px solid rgba(0,0,0,0.06); }
+    .vi-row:hover { background: #fafafb; }
+    .vi-row.done { opacity: 0.55; }
 
     .vi-skeleton {
       background: linear-gradient(90deg, #f0f0f3 25%, #e8e8ec 50%, #f0f0f3 75%);
@@ -43,17 +53,18 @@ if (typeof document !== 'undefined' && !document.getElementById('ytg-vi-styles')
       100% { background-position: -200% 0 }
     }
 
-    /* Red pill CTA — same shape/typography as Overview / Videos / Outliers */
-    .vi-cta-btn {
-      display: inline-flex; align-items: center; gap: 6px;
-      padding: 8px 16px; border-radius: 100px;
-      font-size: 12.5px; font-weight: 700; font-family: inherit;
-      letter-spacing: 0.01em;
-      background: #e5251b; color: #fff;
-      border: none; cursor: pointer;
-      transition: filter 0.15s;
+    /* Per-row CTA — outlined-red pill (no ghost buttons; icon affordance or
+       outlined-red is the rule from feedback_buttons_always_red). */
+    .vi-row-cta {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 6px 12px; border-radius: 100px;
+      font-size: 11.5px; font-weight: 700; font-family: inherit;
+      letter-spacing: 0.01em; white-space: nowrap;
+      background: #fff; color: #e5251b;
+      border: 1px solid #fecaca; cursor: pointer;
+      transition: background 0.15s, border-color 0.15s;
     }
-    .vi-cta-btn:hover { filter: brightness(1.1); }
+    .vi-row-cta:hover { background: #fff5f5; border-color: #e5251b; }
 
     /* Refresh-confirm modal — minimal overlay, matches other dialogs in the
        app: backdrop blur + centered card with hairline + system elevation. */
@@ -158,25 +169,21 @@ function KeywordPill({ keyword }) {
   )
 }
 
-function SkeletonCard({ index }) {
+function SkeletonRow({ index }) {
   return (
-    <div style={{
-      background: '#ffffff', border: `1px solid ${C.border}`,
-      borderRadius: 16, padding: '16px 20px 18px', marginBottom: 10,
-      boxShadow: '0 1px 3px rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.06)',
-      opacity: 1 - index * 0.06,
-    }}>
-      <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start', marginBottom: 10 }}>
-        <div className="vi-skeleton" style={{ width: 22, height: 22, borderRadius: 6, flexShrink: 0 }} />
-        <div className="vi-skeleton" style={{ width: 22, height: 14, flexShrink: 0, marginTop: 3 }} />
-        <div style={{ flex: 1 }}>
-          <div className="vi-skeleton" style={{ height: 14, width: '80%' }} />
-        </div>
-        <div className="vi-skeleton" style={{ width: 44, height: 26, borderRadius: 8, flexShrink: 0 }} />
+    <div className="vi-row" style={{ opacity: 1 - index * 0.05 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0, paddingTop: 1 }}>
+        <div className="vi-skeleton" style={{ width: 14, height: 14, borderRadius: 3 }} />
+        <div className="vi-skeleton" style={{ width: 22, height: 22, borderRadius: 6 }} />
       </div>
-      <div style={{ marginLeft: 46, display: 'flex', gap: 6 }}>
-        <div className="vi-skeleton" style={{ width: 90, height: 20, borderRadius: 100 }} />
-        <div className="vi-skeleton" style={{ width: 120, height: 20, borderRadius: 100 }} />
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <div className="vi-skeleton" style={{ height: 14, width: '72%', marginBottom: 8 }} />
+        <div className="vi-skeleton" style={{ height: 18, width: 140, borderRadius: 100, marginBottom: 8 }} />
+        <div className="vi-skeleton" style={{ height: 12, width: '88%' }} />
+      </div>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0, paddingTop: 1 }}>
+        <div className="vi-skeleton" style={{ width: 42, height: 26, borderRadius: 8 }} />
+        <div className="vi-skeleton" style={{ width: 78, height: 26, borderRadius: 100 }} />
       </div>
     </div>
   )
@@ -257,12 +264,13 @@ function RefreshConfirmModal({ credits, onCancel, onConfirm }) {
   )
 }
 
-/* IdeaCard — Priority Actions pattern exactly (Dashboard.jsx:1031-1123).
-   3px colored top border tinted by source (amber for AI, blue for competitor
-   gap), header row with small native checkbox + 26x26 colored rank badge +
-   category eyebrow + title + score pill, hairline divider at marginLeft:46,
-   body (keyword chip + angle + single CTA) aligned to the same mL:46 anchor. */
-function IdeaCard({ idea, done, onDone, onUseSeo }) {
+/* IdeaRow — compact row that mirrors Competitors' Topics-to-tackle pattern
+   so both "ideas to tackle" surfaces read as the same element. Checkbox +
+   small rank badge (tinted by source: amber AI / blue competitor) on the
+   left; title + keyword chip + 2-line angle in the middle; score pill and
+   outlined-red CTA on the right. No per-row elevation — rows sit inside a
+   single elevated list card. */
+function IdeaRow({ idea, done, onDone, onUseSeo }) {
   const score = idea.source === 'ai' && idea.opportunityScore
     ? idea.opportunityScore
     : Math.max(65, 85 - (idea.rank - 1) * 2)
@@ -272,100 +280,82 @@ function IdeaCard({ idea, done, onDone, onUseSeo }) {
     : { color: C.blue,  label: 'Competitor gap' }
 
   return (
-    <div
-      className={`vi-idea-card${done ? ' done' : ''}`}
-      style={{ borderTop: `3px solid ${done ? C.border : tone.color}`, padding: 0 }}
-    >
-      <div style={{ padding: '16px 22px 18px' }}>
+    <div className={`vi-row${done ? ' done' : ''}`}>
 
-        {/* Header — checkbox + rank badge + eyebrow/title + score pill */}
-        <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: done ? 0 : 14 }}>
-
-          {/* Native checkbox + colored rank badge pair */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0, paddingTop: 2 }}>
-            <input
-              type="checkbox"
-              checked={!!done}
-              onChange={() => onDone(idea.title)}
-              style={{ width: 15, height: 15, accentColor: C.green, cursor: 'pointer', flexShrink: 0 }}
-            />
-            <div style={{
-              width: 26, height: 26, borderRadius: 8,
-              background: done ? C.greenBg : tone.color,
-              display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
-            }}>
-              {done
-                ? <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke={C.green} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><polyline points="1.5,6.5 5,10 10.5,2"/></svg>
-                : <span style={{ fontSize: 12, fontWeight: 900, color: '#fff', fontVariantNumeric: 'tabular-nums' }}>{idea.rank}</span>
-              }
-            </div>
-          </div>
-
-          {/* Eyebrow + title */}
-          <div style={{ flex: 1, minWidth: 0 }}>
-            <p style={{
-              fontSize: 10, fontWeight: 700,
-              color: done ? C.text3 : tone.color,
-              letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 5,
-            }}>{tone.label}</p>
-            <p style={{
-              fontSize: 14, fontWeight: 700,
-              color: done ? C.text3 : C.text1,
-              lineHeight: 1.55, letterSpacing: '-0.1px',
-              textDecoration: done ? 'line-through' : 'none',
-            }}>{idea.title}</p>
-          </div>
-
-          {/* Score pill on the right */}
-          <div style={{ flexShrink: 0, paddingTop: 1 }}>
-            <ScorePill score={score} />
-          </div>
+      {/* Checkbox + rank badge pair */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0, paddingTop: 1 }}>
+        <input
+          type="checkbox"
+          checked={!!done}
+          onChange={() => onDone(idea.title)}
+          style={{ width: 14, height: 14, accentColor: C.green, cursor: 'pointer', flexShrink: 0 }}
+        />
+        <div style={{
+          width: 22, height: 22, borderRadius: 6,
+          background: done ? C.greenBg : tone.color,
+          display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+        }}>
+          {done
+            ? <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke={C.green} strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><polyline points="1.5,6.5 5,10 10.5,2"/></svg>
+            : <span style={{ fontSize: 11, fontWeight: 900, color: '#fff', fontVariantNumeric: 'tabular-nums', lineHeight: 1 }}>{idea.rank}</span>
+          }
         </div>
+      </div>
 
-        {/* Hairline + body only when not done — mirrors Priority Actions */}
-        {!done && (
-          <>
-            <div style={{ height: 1, background: C.border, marginBottom: 14, marginLeft: 46 }} />
+      {/* Middle — title + keyword chip + angle (2-line clamp) */}
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <p style={{
+          fontSize: 14, fontWeight: 700,
+          color: done ? C.text3 : C.text1,
+          lineHeight: 1.45, letterSpacing: '-0.1px',
+          textDecoration: done ? 'line-through' : 'none',
+          marginBottom: (idea.targetKeyword || idea.thumbnail_ready || idea.angle) ? 6 : 0,
+        }}>{idea.title}</p>
 
-            <div style={{ marginLeft: 46 }}>
-              {/* Meta chips row — keyword + optional thumbnail-ready */}
-              {(idea.targetKeyword || idea.thumbnail_ready) && (
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, alignItems: 'center', marginBottom: idea.angle ? 10 : 14 }}>
-                  <KeywordPill keyword={idea.targetKeyword} />
-                  {idea.thumbnail_ready && (
-                    <span style={{
-                      fontSize: 11, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase',
-                      color: C.green, background: C.greenBg,
-                      border: `1px solid ${C.greenBdr}`,
-                      borderRadius: 100, padding: '2px 9px',
-                      whiteSpace: 'nowrap',
-                    }}>
-                      Thumbnail ready · {idea.thumbnail_score}/100
-                    </span>
-                  )}
-                </div>
-              )}
+        {(idea.targetKeyword || idea.thumbnail_ready) && (
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, alignItems: 'center', marginBottom: idea.angle ? 6 : 0 }}>
+            <KeywordPill keyword={idea.targetKeyword} />
+            {idea.thumbnail_ready && (
+              <span style={{
+                fontSize: 11, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase',
+                color: C.green, background: C.greenBg,
+                border: `1px solid ${C.greenBdr}`,
+                borderRadius: 100, padding: '2px 9px', whiteSpace: 'nowrap',
+              }}>
+                Thumbnail ready · {idea.thumbnail_score}/100
+              </span>
+            )}
+          </div>
+        )}
 
-              {/* Angle — explains why YouTube will distribute this */}
-              {idea.angle && (
-                <p style={{ fontSize: 13.5, color: C.text2, lineHeight: 1.72, marginBottom: 14 }}>
-                  {idea.angle}
-                </p>
-              )}
-
-              {/* Single CTA — bottom-right follows the forward-arrow Z-pattern */}
-              <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                <button className="vi-cta-btn" onClick={() => onUseSeo(idea.title)}>
-                  Use in SEO Studio
-                  <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                    <path d="M2 5.5h7M5.5 2l3.5 3.5L5.5 9"/>
-                  </svg>
-                </button>
-              </div>
-            </div>
-          </>
+        {idea.angle && (
+          <p style={{
+            fontSize: 12.5, color: C.text2, lineHeight: 1.55, margin: 0,
+            display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden',
+          }}>
+            <span style={{
+              fontSize: 10.5, fontWeight: 700, letterSpacing: '0.07em',
+              textTransform: 'uppercase', color: tone.color, marginRight: 7,
+            }}>
+              {tone.label}
+            </span>
+            {idea.angle}
+          </p>
         )}
       </div>
+
+      {/* Right — score pill + outlined-red CTA (hidden when done) */}
+      {!done && (
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0, paddingTop: 1 }}>
+          <ScorePill score={score} />
+          <button className="vi-row-cta" onClick={() => onUseSeo(idea.title)}>
+            Use in SEO
+            <svg width="10" height="10" viewBox="0 0 11 11" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+              <path d="M2 5.5h7M5.5 2l3.5 3.5L5.5 9"/>
+            </svg>
+          </button>
+        </div>
+      )}
     </div>
   )
 }
@@ -636,7 +626,9 @@ export default function VideoIdeas({ onNavigate }) {
               Generating ideas from your channel data…
             </p>
           )}
-          {Array.from({ length: 10 }, (_, i) => <SkeletonCard key={i} index={i} />)}
+          <div className="vi-list-card">
+            {Array.from({ length: 10 }, (_, i) => <SkeletonRow key={i} index={i} />)}
+          </div>
         </>
       )}
 
@@ -714,15 +706,17 @@ export default function VideoIdeas({ onNavigate }) {
             </div>
           )}
 
-          {ideas.map(idea => (
-            <IdeaCard
-              key={`${idea.rank}-${idea.title}`}
-              idea={idea}
-              done={done.has(idea.title)}
-              onDone={toggleDone}
-              onUseSeo={handleUseSeo}
-            />
-          ))}
+          <div className="vi-list-card">
+            {ideas.map(idea => (
+              <IdeaRow
+                key={`${idea.rank}-${idea.title}`}
+                idea={idea}
+                done={done.has(idea.title)}
+                onDone={toggleDone}
+                onUseSeo={handleUseSeo}
+              />
+            ))}
+          </div>
         </div>
       )}
 
