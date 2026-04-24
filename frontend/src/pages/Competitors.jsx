@@ -624,7 +624,7 @@ function AIAnalysis({ ai, top5Videos, channelId, checkedIdeas, onToggleIdea }) {
         const cs = ai.postingBehavior.consistencyScore ?? 0
         const consistencyColor = cs >= 75 ? '#059669' : cs >= 55 ? '#d97706' : '#e5251b'
         return (
-        <Card>
+        <Card topAccent={null}>
           <SectionTitle>Posting timing</SectionTitle>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 10 }}>
             {[
