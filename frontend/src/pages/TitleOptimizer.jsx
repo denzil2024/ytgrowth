@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import CreditsEmptyModal from '../components/CreditsEmptyModal'
 
 const STORAGE_KEY = 'titleOptimizer_v1'
 
@@ -157,6 +158,7 @@ export default function TitleOptimizer() {
   const [loadingIntent, setLoadingIntent] = useState(false)
   const [error, setError]               = useState('')
   const [copied, setCopied]             = useState(null)
+  const [creditsOut, setCreditsOut]     = useState(false)
   const [intentOptions, setIntentOptions]     = useState(null)
   const [selectedKeyword, setSelectedKeyword] = useState('')
 
@@ -216,6 +218,7 @@ export default function TitleOptimizer() {
         body: JSON.stringify({ title: title.trim(), confirmed_keyword: keyword }),
       })
       const data = await res.json()
+      if (res.status === 402) { setCreditsOut(true); return }
       if (!res.ok) { setError(data.error || 'Something went wrong.'); return }
       setResult(data)
       setIntentOptions(null)
@@ -609,6 +612,12 @@ export default function TitleOptimizer() {
           )}
         </>
       )}
+
+      <CreditsEmptyModal
+        open={creditsOut}
+        onClose={() => setCreditsOut(false)}
+        featureName="title analyses"
+      />
     </div>
   )
 }

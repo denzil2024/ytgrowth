@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import UpsellGate from '../components/UpsellGate'
+import CreditsEmptyModal from '../components/CreditsEmptyModal'
 
 // Load Inter once — SCOPED to this page, not global (each page owns its own font loading)
 if (typeof document !== 'undefined' && !document.getElementById('seo-opt-inter-font')) {
@@ -506,6 +507,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures }) {
   const [activeTab, setActiveTab] = useState('new')
   const [reports,   setReports]   = useState([])
   const [reportsLoading, setReportsLoading] = useState(false)
+  const [creditsOut, setCreditsOut] = useState(false)
 
   const [title, setTitle]               = useState(saved.title  || '')
   const [result, setResult]             = useState(saved.result || null)
@@ -678,6 +680,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures }) {
       if (myId !== reqIdRef.current) return
       const data = await res.json()
       if (myId !== reqIdRef.current) return
+      if (res.status === 402) { setCreditsOut(true); return }
       if (!res.ok) { setError(data.error || 'Something went wrong.'); return }
       setResult(data)
       setIntentOptions(null)
@@ -740,6 +743,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures }) {
         }
       )
       const data = await res.json()
+      if (res.status === 402) { setCreditsOut(true); return }
       if (!res.ok) {
         setDescError(
           data.error || 'Generation failed.'
@@ -2098,6 +2102,12 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures }) {
           )}
         </div>
       )}
+
+      <CreditsEmptyModal
+        open={creditsOut}
+        onClose={() => setCreditsOut(false)}
+        featureName="SEO analyses"
+      />
     </div>
   )
 }

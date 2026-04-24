@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import UpsellGate from '../components/UpsellGate'
+import CreditsEmptyModal from '../components/CreditsEmptyModal'
 
 // Load Inter once — SCOPED to this page (each page owns its font loading, never global)
 if (typeof document !== 'undefined' && !document.getElementById('thumb-iq-inter-font')) {
@@ -956,6 +957,7 @@ export default function ThumbnailScore({ channelData, onNavigate, plan, freeTier
   const [analysis,     setAnalysis]   = useState(null)
   const [error,        setError]      = useState('')
   const [l1open,       setL1Open]     = useState(false)
+  const [creditsOut,   setCreditsOut] = useState(false)
 
   // Tabs: 'new' | 'previous'
   const [activeTab,    setActiveTab]  = useState('new')
@@ -1099,6 +1101,7 @@ export default function ThumbnailScore({ channelData, onNavigate, plan, freeTier
           return
         }
       }
+      if (r.status === 402) { setCreditsOut(true); setState('ready1'); return }
       const d = await r.json()
       if (!r.ok || d.error) throw new Error(d.error || 'Analysis failed')
       setAnalysis(d.analysis)
@@ -1903,6 +1906,12 @@ export default function ThumbnailScore({ channelData, onNavigate, plan, freeTier
 
         </div>
       )}
+
+      <CreditsEmptyModal
+        open={creditsOut}
+        onClose={() => setCreditsOut(false)}
+        featureName="thumbnail analyses"
+      />
     </div>
   )
 }

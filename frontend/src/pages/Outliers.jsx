@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import UpsellGate from '../components/UpsellGate'
+import CreditsEmptyModal from '../components/CreditsEmptyModal'
 
 // Load Inter once — SCOPED to this page (each page owns its font, never global)
 if (typeof document !== 'undefined' && !document.getElementById('outliers-inter-font')) {
@@ -433,6 +434,7 @@ export default function Outliers({ channelData, onNavigate, plan, freeTierFeatur
   const [view,           setView]          = useState('search')
   const [reports,        setReports]       = useState([])
   const [reportsLoading, setReportsLoading] = useState(false)
+  const [creditsOut,     setCreditsOut]    = useState(false)
 
   async function fetchReports() {
     setReportsLoading(true)
@@ -564,6 +566,7 @@ export default function Outliers({ channelData, onNavigate, plan, freeTierFeatur
         body: JSON.stringify({ query: q, confirmed_keyword: confirmedKeyword }),
       })
       if (myId !== reqIdRef.current) return
+      if (r.status === 402) { setCreditsOut(true); return }
       const d = await r.json()
       if (myId !== reqIdRef.current) return
       if (!r.ok) {
@@ -1188,6 +1191,12 @@ export default function Outliers({ channelData, onNavigate, plan, freeTierFeatur
           )}
         </div>
       )}
+
+      <CreditsEmptyModal
+        open={creditsOut}
+        onClose={() => setCreditsOut(false)}
+        featureName="Outliers searches"
+      />
     </div>
   )
 }

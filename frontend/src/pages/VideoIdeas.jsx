@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import UpsellGate from '../components/UpsellGate'
+import CreditsEmptyModal from '../components/CreditsEmptyModal'
 
 // Inter loaded page-scoped (each page owns its font loading, never global)
 if (typeof document !== 'undefined' && !document.getElementById('vi-inter-font')) {
@@ -471,6 +472,7 @@ function saveDone(set) {
 export default function VideoIdeas({ onNavigate, plan, freeTierFeatures }) {
   const [ideas,       setIdeas]      = useState([])
   const [source,      setSource]     = useState('empty')
+  const [creditsOut,  setCreditsOut] = useState(false)
   const [lastUpdated, setLastUpdated]= useState('')
   const [stale,       setStale]      = useState(false)
   const [loading,     setLoading]    = useState(true)   // initial fetch
@@ -618,7 +620,7 @@ export default function VideoIdeas({ onNavigate, plan, freeTierFeatures }) {
         return
       }
       if (res.status === 402) {
-        setError(data.error || 'No credits remaining. Please upgrade to continue.')
+        setCreditsOut(true)
         return
       }
       if (!res.ok) {
@@ -913,6 +915,11 @@ export default function VideoIdeas({ onNavigate, plan, freeTierFeatures }) {
         </div>
       )}
 
+      <CreditsEmptyModal
+        open={creditsOut}
+        onClose={() => setCreditsOut(false)}
+        featureName="video idea refreshes"
+      />
     </div>
   )
 }

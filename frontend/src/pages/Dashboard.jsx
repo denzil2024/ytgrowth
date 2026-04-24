@@ -9,6 +9,7 @@ import ThumbnailScore from './ThumbnailScore'
 import Outliers from './Outliers'
 import WeeklyReport from './WeeklyReport'
 import UsageBar from '../components/UsageBar'
+import CreditsEmptyModal from '../components/CreditsEmptyModal'
 
 /* ─── Inject font + global styles once ─────────────────────────────────── */
 function useDashboardStyles() {
@@ -1474,6 +1475,7 @@ export default function Dashboard() {
   const [selectedVideoId, setSelectedVideoId] = useState(null)
   const [analyzingAI, setAnalyzingAI] = useState(false)
   const [refreshingStats, setRefreshingStats] = useState(false)
+  const [creditsOut, setCreditsOut] = useState(false)
   const [checked,  setChecked]  = useState({})
   const [deleted,  setDeleted]  = useState({})
   const [channels, setChannels] = useState([])
@@ -1869,13 +1871,7 @@ export default function Dashboard() {
                           } else {
                             setData(prev => ({ ...prev, insights: prevInsights }))
                             setAnalyzingAI(false)
-                            if (r.status === 402) {
-                              let msg = "You're out of analyses this month. Upgrade for more."
-                              try { const j = await r.json(); if (j?.error) msg = j.error } catch {}
-                              if (window.confirm(`${msg}\n\nView plans?`)) {
-                                window.location.href = '/?tab=monthly#pricing'
-                              }
-                            }
+                            if (r.status === 402) setCreditsOut(true)
                           }
                         })
                         .catch(() => {
@@ -2786,6 +2782,12 @@ export default function Dashboard() {
           onClose={() => setShareMilestone(null)}
         />
       )}
+
+      <CreditsEmptyModal
+        open={creditsOut}
+        onClose={() => setCreditsOut(false)}
+        featureName="channel audits"
+      />
     </div>
   )
 }

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import UpsellGate from '../components/UpsellGate'
+import CreditsEmptyModal from '../components/CreditsEmptyModal'
 
 const API = ''
 
@@ -274,6 +275,7 @@ export default function VideoOptimizePanel({ video, onClose, onVideoUpdated, pla
   // render-replace is at the top of the main return below.
   const videoOptimizeGated = (plan || 'free') === 'free'
     && (freeTierFeatures?.video_optimize === 'locked' || freeTierFeatures?.video_optimize === 'used')
+  const [creditsOut, setCreditsOut] = useState(false)
   const [videoResult, setVideoResult] = useState(null)
   const [videoLoading, setVideoLoading] = useState(true)
   const [videoError, setVideoError] = useState('')
@@ -355,7 +357,8 @@ export default function VideoOptimizePanel({ video, onClose, onVideoUpdated, pla
     setVideoLoading(false)
     if (titleRes.status === 'fulfilled') {
       const res = titleRes.value; const data = await res.json()
-      if (!res.ok) setTitleError(data.error || 'Title analysis failed.')
+      if (res.status === 402) setCreditsOut(true)
+      else if (!res.ok) setTitleError(data.error || 'Title analysis failed.')
       else { setTitleResult(data); window.dispatchEvent(new CustomEvent('ytg:credits-changed')) }
     } else { setTitleError('Could not reach the server.') }
     setTitleLoading(false)
@@ -435,6 +438,7 @@ export default function VideoOptimizePanel({ video, onClose, onVideoUpdated, pla
         }
       )
       const data = await res.json()
+      if (res.status === 402) { setCreditsOut(true); return }
       if (!res.ok) { setDescError(data.error || 'Generation failed.'); return }
       setDescResult(data.descriptions)
       window.dispatchEvent(new CustomEvent('ytg:credits-changed'))
@@ -859,6 +863,12 @@ export default function VideoOptimizePanel({ video, onClose, onVideoUpdated, pla
           )}
         </>
       )}
+
+      <CreditsEmptyModal
+        open={creditsOut}
+        onClose={() => setCreditsOut(false)}
+        featureName="optimise runs"
+      />
     </div>
   )
 }

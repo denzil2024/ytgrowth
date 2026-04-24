@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import UpsellGate from '../components/UpsellGate'
+import CreditsEmptyModal from '../components/CreditsEmptyModal'
 
 const API = import.meta.env.VITE_API_URL || ''
 const LS_KEY = 'ytg_keywords_v1'
@@ -513,6 +514,7 @@ export default function Keywords({ plan, freeTierFeatures }) {
   const [activeTab,      setActiveTab]      = useState('new')
   const [reports,        setReports]        = useState([])
   const [reportsLoading, setReportsLoading] = useState(false)
+  const [creditsOut,     setCreditsOut]     = useState(false)
 
   async function fetchReports() {
     setReportsLoading(true)
@@ -592,6 +594,7 @@ export default function Keywords({ plan, freeTierFeatures }) {
           return
         }
       }
+      if (res.status === 402) { setCreditsOut(true); return }
       const data = await res.json()
       if (!res.ok) throw new Error(data.error || 'Something went wrong.')
       setResult(data)
@@ -1170,6 +1173,12 @@ export default function Keywords({ plan, freeTierFeatures }) {
           )}
         </div>
       )}
+
+      <CreditsEmptyModal
+        open={creditsOut}
+        onClose={() => setCreditsOut(false)}
+        featureName="keyword research runs"
+      />
     </div>
   )
 }

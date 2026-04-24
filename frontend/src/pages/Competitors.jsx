@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import UpsellGate from '../components/UpsellGate'
+import CreditsEmptyModal from '../components/CreditsEmptyModal'
 
 // ─── persistence ──────────────────────────────────────────────────────────────
 const LS_KEY = 'ytgrowth_tracked_competitors'
@@ -1168,6 +1169,7 @@ export default function Competitors({ plan, freeTierFeatures }) {
   const [loadingSearch, setLoadingSearch]   = useState(false)
   const [loadingAnalyze, setLoadingAnalyze] = useState(null)
   const [analyzeError, setAnalyzeError]     = useState('')
+  const [creditsOut, setCreditsOut]         = useState(false)
   const [activeTab, setActiveTab]           = useState('search')
   const [searched, setSearched]             = useState(false)
   const [expandedIdx, setExpandedIdx]       = useState(null)
@@ -1226,7 +1228,7 @@ export default function Competitors({ plan, freeTierFeatures }) {
         }
         // 402 = out of credits for paid users. Surface upgrade nudge.
         if (r.status === 402) {
-          setAnalyzeError(d.error || "You're out of analyses this month. Upgrade for more.")
+          setCreditsOut(true)
           setLoadingAnalyze(null)
           return null
         }
@@ -1537,6 +1539,12 @@ export default function Competitors({ plan, freeTierFeatures }) {
           )}
         </div>
       )}
+
+      <CreditsEmptyModal
+        open={creditsOut}
+        onClose={() => setCreditsOut(false)}
+        featureName="competitor analyses"
+      />
     </div>
   )
 }
