@@ -692,8 +692,13 @@ function AIAnalysis({ ai, top5Videos, channelId, checkedIdeas, onToggleIdea }) {
 
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', columnGap: 0, rowGap: 14 }}>
                   {ai.topTopics.map((t, i) => {
-                    const pct = (t.avgViews || 0) / maxViews * 100
-                    const col = topicColor(t.avgViews || 0)
+                    // Square-root scaling — stops one runaway leader (517K) from
+                    // squashing every other topic's bar into a sliver. sqrt(val/max)
+                    // compresses the gap so a second-place topic still shows real
+                    // bar length while the leader stays at 100%.
+                    const ratio = (t.avgViews || 0) / maxViews
+                    const pct   = Math.sqrt(ratio) * 100
+                    const col   = topicColor(t.avgViews || 0)
                     const isRightCol = i % 2 === 1
                     return (
                       <div key={i} style={{
