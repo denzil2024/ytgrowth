@@ -117,6 +117,34 @@ function ProgressBar({ pct }) {
   )
 }
 
+/* Remaining-bar variant — fills from the left with the accent colour and
+   empties as the user spends credits. Matches the sidebar UsageBar so
+   "3/3 left" feels alive instead of dead-space. */
+function RemainingBar({ remainingPct, accent }) {
+  return (
+    <div style={{ height: 6, background: '#eeeef3', borderRadius: 99, overflow: 'hidden', margin: '10px 0 0' }}>
+      <div style={{ width: `${Math.min(Math.max(remainingPct, 0), 100)}%`, height: '100%', background: accent, borderRadius: 99, transition: 'width 0.8s cubic-bezier(0.34,1.56,0.64,1), background 0.2s' }} />
+    </div>
+  )
+}
+
+function daysUntilReset(iso) {
+  if (!iso) return null
+  try {
+    const diff = new Date(iso).getTime() - Date.now()
+    return Math.max(0, Math.ceil(diff / 86400000))
+  } catch { return null }
+}
+
+function refillLabel(iso, isLifetime) {
+  if (isLifetime) return 'Lifetime plan — monthly reset'
+  const d = daysUntilReset(iso)
+  if (d == null) return ''
+  if (d === 0) return 'Refills today'
+  if (d === 1) return 'Refills tomorrow'
+  return `Refills in ${d} days`
+}
+
 function Toggle({ on, onChange }) {
   return (
     <button
@@ -405,32 +433,52 @@ export default function Settings() {
           <div>
             <SectionHeading>Plan and Credits</SectionHeading>
             <div style={{ ...CARD, padding: '20px 22px' }}>
-              {/* Credits inner block */}
-              <div style={{ background: '#f7f7fa', border: '1px solid rgba(0,0,0,0.07)', borderRadius: 12, padding: '14px 16px', marginBottom: 16 }}>
-                {/* Monthly analyses */}
-                <div style={{ marginBottom: 14 }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <span style={{ fontSize: 14, color: C.text1, fontWeight: 500 }}>Monthly analyses</span>
-                    <span style={{ fontSize: 14, color: C.text2 }}>{me?.monthly_used ?? 0} / {me?.monthly_allowance ?? 3} used</span>
-                  </div>
-                  <ProgressBar pct={usagePct} />
-                  <p style={{ fontSize: 12, color: C.text3 }}>
-                    {me?.is_lifetime
-                      ? 'Lifetime plan — monthly reset'
-                      : me?.reset_date ? `Resets ${fmtDate(me.reset_date)}` : ''
-                    }
-                  </p>
-                </div>
+              {/* Credits inner block — remaining-centric treatment. Hero
+                  number = credits LEFT (not used), coloured by state
+                  (green / amber / red), above a remaining-bar + refill
+                  countdown. Matches the sidebar UsageBar pattern. */}
+              {(() => {
+                const allowance    = me?.monthly_allowance ?? 3
+                const used         = me?.monthly_used ?? 0
+                const remaining    = Math.max(0, allowance - used)
+                const remainingPct = allowance > 0 ? (remaining / allowance) * 100 : 0
+                const atLimit      = remaining === 0
+                const nearLimit    = !atLimit && remainingPct <= 20
+                const accent       = atLimit ? C.red : nearLimit ? C.amber : C.green
+                return (
+                  <div style={{ background: '#f7f7fa', border: '1px solid rgba(0,0,0,0.07)', borderRadius: 12, padding: '18px 20px', marginBottom: 16 }}>
+                    {/* Monthly analyses — hero block */}
+                    <div style={{ marginBottom: 16 }}>
+                      <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>
+                        AI analyses
+                      </p>
+                      <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
+                        <span style={{ fontSize: 34, fontWeight: 800, color: accent, letterSpacing: '-1.2px', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>
+                          {remaining}
+                        </span>
+                        <span style={{ fontSize: 14, fontWeight: 500, color: C.text2 }}>
+                          of {allowance} left
+                        </span>
+                      </div>
+                      <RemainingBar remainingPct={remainingPct} accent={accent} />
+                      <p style={{ fontSize: 12, color: C.text3, marginTop: 8 }}>
+                        {refillLabel(me?.reset_date, me?.is_lifetime)}
+                      </p>
+                    </div>
 
-                {/* Pack balance */}
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', paddingTop: 14, borderTop: '1px solid rgba(0,0,0,0.06)' }}>
-                  <div>
-                    <p style={{ fontSize: 14, color: C.text1, fontWeight: 500 }}>Credit pack balance</p>
-                    <p style={{ fontSize: 12, color: C.text3, marginTop: 3, lineHeight: 1.5 }}>Never expires — used after monthly analyses run out</p>
+                    {/* Pack balance row */}
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', paddingTop: 14, borderTop: '1px solid rgba(0,0,0,0.06)' }}>
+                      <div>
+                        <p style={{ fontSize: 14, color: C.text1, fontWeight: 500 }}>Credit pack balance</p>
+                        <p style={{ fontSize: 12, color: C.text3, marginTop: 3, lineHeight: 1.5 }}>Never expires — used after monthly analyses run out</p>
+                      </div>
+                      <span style={{ fontSize: 14, fontWeight: 700, color: (me?.pack_balance ?? 0) > 0 ? C.green : C.text1 }}>
+                        {me?.pack_balance ?? 0}
+                      </span>
+                    </div>
                   </div>
-                  <span style={{ fontSize: 14, fontWeight: 600, color: C.text1 }}>{me?.pack_balance ?? 0}</span>
-                </div>
-              </div>
+                )
+              })()}
 
               {/* Action buttons */}
               <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
