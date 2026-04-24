@@ -4,7 +4,7 @@ from pydantic import BaseModel
 from app.seo import analyze_title, generate_description_suggestions, generate_thumbnail_text, optimize_video
 from app.keywords import generate_intent_options
 from routers.auth import get_session
-from database.models import SessionLocal, VideoOptimizeCache, SeoOptimization
+from database.models import SessionLocal, VideoOptimizeCache, SeoOptimization, SeoAnalysisCache
 from app.analysis_gate import check_and_deduct, refund_credit, check_free_tier_access
 import json, datetime
 
@@ -39,6 +39,86 @@ def _locked_response(feature: str, reason: str = "locked"):
         {"error": "locked", "feature": feature, "reason": reason},
         status_code=403,
     )
+
+
+def _save_analysis_cache(channel_id: str, title: str, confirmed_keyword: str, result: dict) -> None:
+    """Persist /seo/analyze output so it shows up in the Reports tab and
+    can be reopened. Dedupes on (channel_id, title_lower) — re-running the
+    same title updates the existing row, so users don't stack near-duplicates.
+    Best-effort; any DB error is swallowed so the analysis response isn't
+    held up by persistence issues."""
+    if not channel_id or not title:
+        return
+    db = SessionLocal()
+    try:
+        title_lower = title.strip().lower()
+        row = db.query(SeoAnalysisCache).filter_by(
+            channel_id=channel_id, title_lower=title_lower,
+        ).first()
+        payload = json.dumps(result, default=str)
+        if row:
+            row.title             = title.strip()
+            row.confirmed_keyword = (confirmed_keyword or "").strip()
+            row.result_json       = payload
+            # reset description-side fields so the row reflects a fresh
+            # analysis run (user will regenerate description separately)
+            row.selected_title    = None
+            row.current_desc      = None
+            row.desc_result_json  = None
+            row.desc_keywords_json = None
+        else:
+            row = SeoAnalysisCache(
+                channel_id         = channel_id,
+                title              = title.strip(),
+                title_lower        = title_lower,
+                confirmed_keyword  = (confirmed_keyword or "").strip(),
+                result_json        = payload,
+            )
+            db.add(row)
+        db.commit()
+    except Exception as e:
+        db.rollback()
+        print(f"[seo_routes] _save_analysis_cache error: {e}")
+    finally:
+        db.close()
+
+
+def _update_description_cache(
+    channel_id: str,
+    selected_title: str,
+    current_description: str,
+    descriptions: list,
+    top_keywords: list,
+) -> None:
+    """Tag the description-optimizer output onto the user's MOST RECENT
+    analysis row for this channel. We don't know which analyzed title the
+    description run belongs to (the request body carries the *selected*
+    suggestion, not the originally-analyzed title), so "most recent" is a
+    pragmatic match — the row the user is currently working in. Fire-and-
+    forget; errors are swallowed."""
+    if not channel_id:
+        return
+    db = SessionLocal()
+    try:
+        row = (
+            db.query(SeoAnalysisCache)
+              .filter_by(channel_id=channel_id)
+              .order_by(SeoAnalysisCache.updated_at.desc())
+              .first()
+        )
+        if not row:
+            return
+        if selected_title:
+            row.selected_title = selected_title.strip()
+        row.current_desc        = (current_description or "").strip()
+        row.desc_result_json    = json.dumps(descriptions, default=str) if descriptions else None
+        row.desc_keywords_json  = json.dumps(top_keywords, default=str) if top_keywords else None
+        db.commit()
+    except Exception as e:
+        db.rollback()
+        print(f"[seo_routes] _update_description_cache error: {e}")
+    finally:
+        db.close()
 
 
 @router.post("/intent-options")
@@ -84,6 +164,9 @@ def analyze(body: TitleAnalyzeRequest, request: Request):
         refund_credit(channel_id)
         return JSONResponse({"error": "Analysis failed. Your credit has been refunded."}, status_code=500)
     result["_usage"] = {"warning": gate["warning"], "usage_pct": gate["usage_pct"]}
+    # Persist to the Reports cache so this charged run shows up in the
+    # Reports tab and can be reopened later.
+    _save_analysis_cache(channel_id, body.title, body.confirmed_keyword, result)
     return JSONResponse(result)
 
 
@@ -120,6 +203,15 @@ def generate_description(body: DescriptionRequest, request: Request):
     )
     if error and not descriptions:
         return JSONResponse({"error": error}, status_code=500)
+    # Tag description output onto the most recent analysis row so it
+    # rehydrates alongside the main report when the user reopens it.
+    _update_description_cache(
+        channel_id=channel_id,
+        selected_title=body.title,
+        current_description=body.current_description,
+        descriptions=descriptions,
+        top_keywords=top_keywords,
+    )
     return JSONResponse({"descriptions": descriptions, "top_keywords": top_keywords})
 
 
@@ -393,5 +485,85 @@ def delete_optimize_cache(video_id: str, request: Request):
         db.query(VideoOptimizeCache).filter_by(channel_id=channel_id, video_id=video_id).delete()
         db.commit()
         return JSONResponse({"ok": True})
+    finally:
+        db.close()
+
+
+# ── Reports (past SEO analyses) ──────────────────────────────────────────────
+# Every /seo/analyze run is persisted into SeoAnalysisCache. The Reports tab
+# in the frontend lists them and reopens any on click.
+
+@router.get("/reports")
+def list_reports(request: Request):
+    """List the channel's past SEO analyses — newest first. Returns the
+    rehydrated shape the frontend needs (title + confirmed_keyword +
+    result + description fields + timestamps) so reopen is a one-shot load."""
+    data, _ = get_session(request.session.get("session_id"))
+    if not data:
+        return JSONResponse({"error": "Not authenticated."}, status_code=401)
+    channel_id = (data or {}).get("channel", {}).get("channel_id", "")
+    if not channel_id:
+        return JSONResponse({"reports": []})
+
+    db = SessionLocal()
+    try:
+        rows = (
+            db.query(SeoAnalysisCache)
+              .filter_by(channel_id=channel_id)
+              .order_by(SeoAnalysisCache.updated_at.desc())
+              .limit(50)
+              .all()
+        )
+        reports = []
+        for row in rows:
+            try:
+                result = json.loads(row.result_json) if row.result_json else None
+            except Exception:
+                result = None
+            try:
+                desc_result = json.loads(row.desc_result_json) if row.desc_result_json else None
+            except Exception:
+                desc_result = None
+            try:
+                desc_keywords = json.loads(row.desc_keywords_json) if row.desc_keywords_json else None
+            except Exception:
+                desc_keywords = None
+            reports.append({
+                "id":                row.id,
+                "title":             row.title,
+                "confirmed_keyword": row.confirmed_keyword or "",
+                "result":            result,
+                "selected_title":    row.selected_title,
+                "current_desc":      row.current_desc,
+                "desc_result":       desc_result,
+                "desc_keywords":     desc_keywords,
+                "created_at":        row.created_at.isoformat() if row.created_at else None,
+                "updated_at":        row.updated_at.isoformat() if row.updated_at else None,
+            })
+        return JSONResponse({"reports": reports})
+    finally:
+        db.close()
+
+
+@router.delete("/reports/{report_id}")
+def delete_report(report_id: int, request: Request):
+    """Remove one past analysis. Scoped to the calling channel so users
+    can only delete their own rows."""
+    data, _ = get_session(request.session.get("session_id"))
+    if not data:
+        return JSONResponse({"error": "Not authenticated."}, status_code=401)
+    channel_id = (data or {}).get("channel", {}).get("channel_id", "")
+    if not channel_id:
+        return JSONResponse({"error": "No channel."}, status_code=400)
+
+    db = SessionLocal()
+    try:
+        deleted = (
+            db.query(SeoAnalysisCache)
+              .filter_by(channel_id=channel_id, id=report_id)
+              .delete()
+        )
+        db.commit()
+        return JSONResponse({"ok": True, "deleted": deleted})
     finally:
         db.close()

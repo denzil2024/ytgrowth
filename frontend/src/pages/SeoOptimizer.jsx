@@ -435,6 +435,14 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures }) {
   const seoGated = (plan || 'free') === 'free'
     && (freeTierFeatures?.seo === 'locked' || freeTierFeatures?.seo === 'used')
   const saved = loadSaved()
+
+  // Tab state — 'new' is the active editor; 'reports' lists past analyses
+  // persisted server-side (SeoAnalysisCache). Reopening a report loads it
+  // back into the editor via setTitle/setResult/etc.
+  const [activeTab, setActiveTab] = useState('new')
+  const [reports,   setReports]   = useState([])
+  const [reportsLoading, setReportsLoading] = useState(false)
+
   const [title, setTitle]               = useState(saved.title  || '')
   const [result, setResult]             = useState(saved.result || null)
   const [loading, setLoading]           = useState(false)
@@ -503,6 +511,54 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures }) {
     setDescResult(null)
     setDescKeywords([])
     setDescError('')
+  }
+
+  // ── Reports tab: fetch, reopen, delete ──────────────────────────────────
+  async function fetchReports() {
+    setReportsLoading(true)
+    try {
+      const res = await fetch(`${API}/seo/reports`, { credentials: 'include' })
+      if (!res.ok) return
+      const data = await res.json()
+      setReports(data.reports || [])
+    } catch {}
+    finally { setReportsLoading(false) }
+  }
+
+  // Fetch reports on mount (one-shot) and again whenever a new analysis
+  // completes, so the list stays current without a hard refresh.
+  useEffect(() => { fetchReports() }, [])
+  useEffect(() => {
+    if (result && !loading) fetchReports()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [result])
+
+  function openReport(report) {
+    // Rehydrate state from the persisted row and jump back to the editor.
+    setTitle(report.title || '')
+    setResult(report.result || null)
+    setSelectedKeyword(report.confirmed_keyword || '')
+    setIntentOptions(null)  // picker is for the current title — not rehydrated
+    setSelectedTitle(report.selected_title || null)
+    setCurrentDesc(report.current_desc || '')
+    setDescResult(report.desc_result || null)
+    setDescKeywords(report.desc_keywords || [])
+    setError('')
+    setDescError('')
+    setActiveTab('new')
+    // Scroll to top so the reopened analysis is visible
+    if (typeof window !== 'undefined') window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
+  async function deleteReport(reportId, e) {
+    if (e) { e.stopPropagation() }
+    // Optimistic: drop from the list immediately
+    setReports(prev => prev.filter(r => r.id !== reportId))
+    try {
+      await fetch(`${API}/seo/reports/${reportId}`, { method: 'DELETE', credentials: 'include' })
+    } catch {
+      // Silent — if the delete failed the next fetchReports call will restore it.
+    }
   }
 
   async function handleSubmitTitle() {
@@ -722,6 +778,40 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures }) {
       </div>
         )
       })()}
+
+      {/* ── Tabs — "New analysis" vs. "Reports (N)" ─────────────────────────
+          Reports are past /seo/analyze runs persisted server-side
+          (SeoAnalysisCache). Clicking a report rehydrates the editor. */}
+      <div style={{ display: 'flex', gap: 8, marginBottom: 20 }}>
+        {[
+          { key: 'new',     label: 'New analysis' },
+          { key: 'reports', label: reports.length > 0 ? `Reports (${reports.length})` : 'Reports' },
+        ].map(({ key, label }) => {
+          const active = activeTab === key
+          return (
+            <button key={key}
+              onClick={() => setActiveTab(key)}
+              style={{
+                fontSize: 12.5, fontWeight: 700, padding: '7px 16px',
+                borderRadius: 100,
+                border: active ? 'none' : `1px solid ${C.border}`,
+                background: active ? C.red : '#ffffff',
+                color: active ? '#ffffff' : C.text2,
+                cursor: 'pointer', fontFamily: 'inherit',
+                letterSpacing: '-0.1px',
+                boxShadow: active ? '0 1px 3px rgba(229,37,27,0.28), 0 4px 14px rgba(229,37,27,0.22)' : 'none',
+                transition: 'all 0.15s',
+              }}
+              onMouseEnter={e => { if (!active) { e.currentTarget.style.borderColor = C.text3; e.currentTarget.style.color = C.text1 } }}
+              onMouseLeave={e => { if (!active) { e.currentTarget.style.borderColor = C.border;  e.currentTarget.style.color = C.text2 } }}
+            >
+              {label}
+            </button>
+          )
+        })}
+      </div>
+
+      {activeTab === 'new' && (<>
 
       {/* Input area — hero input on top, then 2-col (Preview | Formats) */}
       <div style={{ marginBottom: 16 }}>
@@ -1777,6 +1867,107 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures }) {
               )}
               </div>
             </>
+          )}
+        </div>
+      )}
+
+      </>)}
+
+      {/* ── Reports tab — list of past /seo/analyze runs ──────────────────── */}
+      {activeTab === 'reports' && (
+        <div>
+          {reportsLoading ? (
+            <div style={{ padding: '60px 0', textAlign: 'center', color: C.text3, fontSize: 13 }}>
+              Loading reports…
+            </div>
+          ) : reports.length === 0 ? (
+            <div className="seo-glass-card" style={{
+              padding: '56px 24px', textAlign: 'center',
+            }}>
+              <p style={{ fontSize: 16, fontWeight: 700, color: C.text1, letterSpacing: '-0.2px', marginBottom: 8 }}>
+                No reports yet
+              </p>
+              <p style={{ fontSize: 13.5, color: C.text3, maxWidth: 360, margin: '0 auto', lineHeight: 1.6 }}>
+                Run a title analysis and it'll show up here — so you can always come back to a report you've already paid for.
+              </p>
+            </div>
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+              {reports.map(r => {
+                const relTime = (iso) => {
+                  if (!iso) return ''
+                  const d = new Date(iso)
+                  if (isNaN(d.getTime())) return ''
+                  const sec = Math.floor((Date.now() - d.getTime()) / 1000)
+                  if (sec < 60) return 'just now'
+                  const min = Math.floor(sec / 60)
+                  if (min < 60) return `${min}m ago`
+                  const hr = Math.floor(min / 60)
+                  if (hr < 24) return `${hr}h ago`
+                  const day = Math.floor(hr / 24)
+                  if (day < 7) return `${day}d ago`
+                  return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })
+                }
+                const suggestionCount = Array.isArray(r.result?.suggestions) ? r.result.suggestions.length : 0
+                const hasDescription  = !!r.desc_result
+                return (
+                  <div key={r.id} className="seo-suggestion-card" style={{
+                    borderTop: `3px solid ${C.amber}`,
+                    padding: '16px 22px 18px',
+                    cursor: 'pointer',
+                  }}
+                  onClick={() => openReport(r)}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={e => { if (e.key === 'Enter') openReport(r) }}>
+                    <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        {r.confirmed_keyword && (
+                          <p style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 5 }}>
+                            Built around: {r.confirmed_keyword}
+                          </p>
+                        )}
+                        <p style={{ fontSize: 14, fontWeight: 700, color: C.text1, lineHeight: 1.55, marginBottom: 6 }}>
+                          {r.title}
+                        </p>
+                        <p style={{ fontSize: 12, color: C.text3, lineHeight: 1.5 }}>
+                          {suggestionCount > 0 && <span>{suggestionCount} AI title{suggestionCount === 1 ? '' : 's'}</span>}
+                          {suggestionCount > 0 && <span> · </span>}
+                          {hasDescription && <span>Description ready · </span>}
+                          <span>Updated {relTime(r.updated_at)}</span>
+                        </p>
+                      </div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
+                        <button
+                          onClick={e => { e.stopPropagation(); openReport(r) }}
+                          className="seo-btn-primary"
+                          style={{ fontSize: 12, padding: '7px 16px' }}>
+                          Open report
+                        </button>
+                        <button
+                          onClick={e => deleteReport(r.id, e)}
+                          title="Remove report"
+                          style={{
+                            width: 28, height: 28, borderRadius: 8,
+                            border: `1px solid ${C.border}`,
+                            background: '#ffffff',
+                            color: C.text3,
+                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            cursor: 'pointer', flexShrink: 0,
+                            transition: 'background 0.15s, color 0.15s, border-color 0.15s',
+                          }}
+                          onMouseEnter={e => { e.currentTarget.style.background = 'rgba(229,37,27,0.08)'; e.currentTarget.style.color = C.red; e.currentTarget.style.borderColor = 'rgba(229,37,27,0.25)' }}
+                          onMouseLeave={e => { e.currentTarget.style.background = '#ffffff'; e.currentTarget.style.color = C.text3; e.currentTarget.style.borderColor = C.border }}>
+                          <svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M2 3.5h10M5 3.5V2.5A1 1 0 0 1 6 1.5h2A1 1 0 0 1 9 2.5v1M3 3.5l.8 8A1 1 0 0 0 4.8 12.5h4.4a1 1 0 0 0 1-1l.8-8"/>
+                          </svg>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
           )}
         </div>
       )}

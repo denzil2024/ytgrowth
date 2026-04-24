@@ -244,6 +244,32 @@ class Milestone(Base):
     achieved_at  = Column(DateTime, default=_now)
 
 
+class SeoAnalysisCache(Base):
+    """
+    One row per SEO Optimizer analysis a user has run. Lets the Reports
+    tab show past reports (with the original title, intent, scores, and
+    optional description output) and reopen any of them in the main
+    editor. Dedup on (channel_id, title_lower) — re-running the same
+    title updates the existing row instead of stacking duplicates.
+
+    Fields mirror the client-side seoOptimizer_v1 localStorage shape
+    so reopen is a straight rehydration.
+    """
+    __tablename__ = "seo_analysis_cache"
+    id                = Column(Integer, primary_key=True, autoincrement=True)
+    channel_id        = Column(String, nullable=False, index=True)
+    title             = Column(Text, nullable=False)                 # original title typed by user
+    title_lower       = Column(String, nullable=False, index=True)   # lowercased, trimmed — used for dedup
+    confirmed_keyword = Column(Text, default="")                     # intent they picked (may be empty)
+    result_json       = Column(Text, nullable=False)                 # full /seo/analyze response
+    selected_title    = Column(Text, nullable=True)                  # suggestion they picked (if any)
+    current_desc      = Column(Text, nullable=True)                  # description input when /seo/generate-description ran
+    desc_result_json  = Column(Text, nullable=True)                  # /seo/generate-description output
+    desc_keywords_json = Column(Text, nullable=True)                 # top_keywords from description run
+    created_at        = Column(DateTime, default=_now)
+    updated_at        = Column(DateTime, default=_now, onupdate=_now)
+
+
 class FreeTierFeatureUsage(Base):
     """
     Tracks one-run-per-cycle usage of the feature-level gate for free-tier
@@ -300,6 +326,12 @@ with engine.connect() as _conn:
         "CREATE TABLE IF NOT EXISTS free_tier_feature_usage (id INTEGER PRIMARY KEY AUTOINCREMENT, channel_id TEXT NOT NULL, feature TEXT NOT NULL, cycle_reset DATETIME NOT NULL, used_at DATETIME)",
         "CREATE INDEX IF NOT EXISTS ix_free_tier_feature_usage_channel_id ON free_tier_feature_usage (channel_id)",
         "CREATE UNIQUE INDEX IF NOT EXISTS uq_free_tier_feature_usage_cycle ON free_tier_feature_usage (channel_id, feature, cycle_reset)",
+        # SEO Optimizer report history — every charged /seo/analyze run persisted
+        # (dedup per channel+title) so users can reopen past reports in the editor.
+        "CREATE TABLE IF NOT EXISTS seo_analysis_cache (id INTEGER PRIMARY KEY AUTOINCREMENT, channel_id TEXT NOT NULL, title TEXT NOT NULL, title_lower TEXT NOT NULL, confirmed_keyword TEXT DEFAULT '', result_json TEXT NOT NULL, selected_title TEXT, current_desc TEXT, desc_result_json TEXT, desc_keywords_json TEXT, created_at DATETIME, updated_at DATETIME)",
+        "CREATE INDEX IF NOT EXISTS ix_seo_analysis_cache_channel_id ON seo_analysis_cache (channel_id)",
+        "CREATE INDEX IF NOT EXISTS ix_seo_analysis_cache_title_lower ON seo_analysis_cache (title_lower)",
+        "CREATE UNIQUE INDEX IF NOT EXISTS uq_seo_analysis_cache_channel_title ON seo_analysis_cache (channel_id, title_lower)",
         "UPDATE user_subscriptions SET monthly_allowance = 5, monthly_used = 0 WHERE plan = 'free' AND monthly_allowance = 9999",
         # Free plan change 2026-04-23: 5 lifetime → 3 per month with monthly reset
         "UPDATE user_subscriptions SET monthly_allowance = 3 WHERE plan = 'free' AND monthly_allowance = 5",
