@@ -27,7 +27,8 @@ from app.analysis_gate import check_and_deduct, refund_credit, check_free_tier_a
 from app.outliers import search_outliers
 from app.keywords import generate_intent_options
 from app.competitors import extract_niche_keywords
-from database.models import SessionLocal, OutliersSearchCache
+import datetime
+from database.models import SessionLocal, OutliersSearchCache, OutliersReport
 
 router = APIRouter()
 
@@ -124,11 +125,13 @@ def search(body: SearchBody, request: Request):
     # Persist the result to the DB. Tab-agnostic — the three UI tabs will all
     # render different slices of this single payload. Survives refresh / logout
     # / tab switch until the user triggers a new search or clears explicitly.
+    # ALSO persist to the Reports history table (dedup per query+intent) so the
+    # user can always reopen past charged searches.
     if channel_id:
         db = SessionLocal()
         try:
-            row = db.query(OutliersSearchCache).filter_by(channel_id=channel_id).first()
             payload = json.dumps(result)
+            row = db.query(OutliersSearchCache).filter_by(channel_id=channel_id).first()
             if row:
                 row.query = query
                 row.confirmed_keyword = confirmed
@@ -139,6 +142,29 @@ def search(body: SearchBody, request: Request):
                     query             = query,
                     confirmed_keyword = confirmed,
                     result_json       = payload,
+                ))
+
+            # Reports history — dedup on (channel_id, query_lower, intent_lower)
+            q_lower = query.lower()
+            intent_lower = (confirmed or "").lower()
+            report = (
+                db.query(OutliersReport)
+                  .filter_by(channel_id=channel_id, query_lower=q_lower, confirmed_keyword_lower=intent_lower)
+                  .first()
+            )
+            if report:
+                report.query = query
+                report.confirmed_keyword = confirmed
+                report.result_json = payload
+                report.updated_at = datetime.datetime.utcnow()
+            else:
+                db.add(OutliersReport(
+                    channel_id              = channel_id,
+                    query                   = query,
+                    query_lower             = q_lower,
+                    confirmed_keyword       = confirmed,
+                    confirmed_keyword_lower = intent_lower,
+                    result_json             = payload,
                 ))
             db.commit()
         except Exception as e:
@@ -177,6 +203,58 @@ def get_cache(request: Request):
         result["query"] = row.query
         result["confirmed_keyword"] = row.confirmed_keyword or ""
         return JSONResponse({"cached": result})
+    finally:
+        db.close()
+
+
+# ─── Reports — list / open / delete ────────────────────────────────────────────
+
+@router.get("/reports")
+def list_outlier_reports(request: Request):
+    data, _ = get_session(request.session.get("session_id"))
+    channel_id = (data or {}).get("channel", {}).get("channel_id", "")
+    if not channel_id:
+        return JSONResponse({"reports": []})
+    db = SessionLocal()
+    try:
+        rows = (
+            db.query(OutliersReport)
+              .filter_by(channel_id=channel_id)
+              .order_by(OutliersReport.updated_at.desc())
+              .all()
+        )
+        reports = []
+        for r in rows:
+            try:
+                result = json.loads(r.result_json)
+            except Exception:
+                result = None
+            reports.append({
+                "id": r.id,
+                "query": r.query,
+                "confirmed_keyword": r.confirmed_keyword or "",
+                "result": result,
+                "created_at": r.created_at.isoformat() if r.created_at else None,
+                "updated_at": r.updated_at.isoformat() if r.updated_at else None,
+            })
+        return JSONResponse({"reports": reports})
+    finally:
+        db.close()
+
+
+@router.delete("/reports/{report_id}")
+def delete_outlier_report(report_id: int, request: Request):
+    data, _ = get_session(request.session.get("session_id"))
+    channel_id = (data or {}).get("channel", {}).get("channel_id", "")
+    if not channel_id:
+        return JSONResponse({"error": "Not authenticated."}, status_code=401)
+    db = SessionLocal()
+    try:
+        row = db.query(OutliersReport).filter_by(id=report_id, channel_id=channel_id).first()
+        if row:
+            db.delete(row)
+            db.commit()
+        return JSONResponse({"ok": True})
     finally:
         db.close()
 
