@@ -475,7 +475,7 @@ export default function WeeklyReport({ channelId, channelEmail, plan, channelSta
                 {[
                   'Biggest win, watch out, and priority — every week',
                   'Fresh analysis delivered straight to your inbox',
-                  '4 emails/month · 1 credit each on Solo, Growth, Agency',
+                  '4 AI reports delivered to your inbox every month.',
                 ].map((t, i) => (
                   <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
                     <span style={{
