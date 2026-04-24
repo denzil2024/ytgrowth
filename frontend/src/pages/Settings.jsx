@@ -482,8 +482,8 @@ export default function Settings() {
       </div>
       <div style={{
         ...CARD,
-        border: `1px solid ${C.redBdr}`,
-        background: '#f4f4f6',
+        border: '1px solid rgba(0,0,0,0.07)',
+        background: '#f7f7fa',
         padding: '20px 24px',
         display: 'flex', alignItems: 'center', gap: 20,
       }}>
