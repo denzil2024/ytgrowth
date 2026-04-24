@@ -1515,8 +1515,29 @@ function ThumbnailPatternsCard({ patterns, query }) {
         {/* Hairline — aligned with content start at marginLeft:46, same as Priority Actions */}
         <div style={{ height: 1, background: C.border, marginBottom: 14, marginLeft: 46 }} />
 
-        {/* 3-cell body — same 1fr 1.4fr 1fr column weights and tints as Priority Actions */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr 1fr', gap: 8, marginLeft: 46 }}>
+        {/* Why Now — promoted to a full-width green strip because its copy is
+            always 1–2 sentences and a full column left large dead space next
+            to Visual formula / Next thumbnail. Sits between the hairline and
+            the paneled body so it reads as "here's why, now here's the
+            analysis". */}
+        {patterns.why_now && (
+          <div style={{
+            background: 'rgba(5,150,105,0.07)',
+            border: '1px solid rgba(5,150,105,0.14)',
+            borderRadius: 10,
+            padding: '10px 14px',
+            marginLeft: 46,
+            marginBottom: 12,
+          }}>
+            <p style={{ fontSize: 10, fontWeight: 700, color: C.green, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 4 }}>Why now</p>
+            <p style={{ fontSize: 13, color: C.text1, lineHeight: 1.6 }}>{patterns.why_now}</p>
+          </div>
+        )}
+
+        {/* 2-col body — Visual formula (diagnostic, blue) + Next thumbnail
+            (prescriptive, white+amber bar). Same panelled pattern used by the
+            SeoOptimizer Title Scorecard: two analytical views of one topic. */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr', gap: 8, marginLeft: 46 }}>
 
           {/* Blue "Visual formula" — all 5 traits compacted into one tinted cell */}
           <div style={{ background: 'rgba(79,134,247,0.07)', border: '1px solid rgba(79,134,247,0.12)', borderRadius: 10, padding: '12px 14px' }}>
@@ -1553,14 +1574,6 @@ function ThumbnailPatternsCard({ patterns, query }) {
               </ul>
             )}
           </div>
-
-          {/* Green "Why now" — same Expected outcome tile in Priority Actions */}
-          {patterns.why_now ? (
-            <div style={{ background: 'rgba(5,150,105,0.07)', border: '1px solid rgba(5,150,105,0.14)', borderRadius: 10, padding: '12px 14px' }}>
-              <p style={{ fontSize: 10, fontWeight: 700, color: C.green, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Why now</p>
-              <p style={{ fontSize: 13, color: C.text1, lineHeight: 1.65 }}>{patterns.why_now}</p>
-            </div>
-          ) : <div />}
 
         </div>
       </div>
