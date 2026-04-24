@@ -995,8 +995,8 @@ function AIAnalysis({ ai, top5Videos, channelId, checkedIdeas, onToggleIdea }) {
                 </p>
                 {idea.targetKeyword && (
                   <div style={{ marginTop: 6 }}>
-                    <span className="comp-tag" style={{ background: '#fffbeb', color: '#d97706',
-                      border: '1px solid #fde68a', whiteSpace: 'nowrap' }}>
+                    <span className="comp-tag" style={{ background: '#f4f4f6', color: '#52525b',
+                      border: '1px solid rgba(0,0,0,0.09)', whiteSpace: 'nowrap' }}>
                       {idea.targetKeyword}
                     </span>
                   </div>
@@ -1026,7 +1026,7 @@ function AIAnalysis({ ai, top5Videos, channelId, checkedIdeas, onToggleIdea }) {
               </p>
             </div>
 
-            <Card topAccent={null} style={{ background: '#f4f4f6' }}>
+            <Card topAccent={null} style={{ background: '#ffffff' }}>
             <div style={{ display: 'flex', alignItems: 'stretch', gap: 24 }}>
 
               {/* ── Column 1: Topics to tackle (1–5) ── */}
