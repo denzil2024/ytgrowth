@@ -2,6 +2,8 @@ from fastapi import APIRouter, Request
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from concurrent.futures import ThreadPoolExecutor
+import json
+import datetime
 from app.keywords import (
     scrape_autocomplete,
     analyze_keywords,
@@ -12,8 +14,42 @@ from app.keywords import (
 )
 from routers.auth import get_session
 from app.analysis_gate import check_and_deduct, check_free_tier_access
+from database.models import SessionLocal, KeywordsResearchCache
 
 router = APIRouter()
+
+
+def _save_keywords_cache(channel_id: str, keyword: str, confirmed_keyword: str, result: dict) -> None:
+    if not channel_id or not keyword.strip():
+        return
+    kw_lower = keyword.strip().lower()
+    db = SessionLocal()
+    try:
+        existing = (
+            db.query(KeywordsResearchCache)
+              .filter_by(channel_id=channel_id, keyword_lower=kw_lower)
+              .first()
+        )
+        payload = json.dumps(result)
+        if existing:
+            existing.keyword = keyword
+            existing.confirmed_keyword = confirmed_keyword or ""
+            existing.result_json = payload
+            existing.updated_at = datetime.datetime.utcnow()
+        else:
+            db.add(KeywordsResearchCache(
+                channel_id=channel_id,
+                keyword=keyword,
+                keyword_lower=kw_lower,
+                confirmed_keyword=confirmed_keyword or "",
+                result_json=payload,
+            ))
+        db.commit()
+    except Exception as e:
+        db.rollback()
+        print(f"[keywords] cache save failed: {e}")
+    finally:
+        db.close()
 
 
 class KeywordIntentRequest(BaseModel):
@@ -80,4 +116,60 @@ def research_keywords(body: KeywordResearchRequest, request: Request):
 
     result["rawSuggestionsCount"] = len(autocomplete)
     result["serperCount"] = len(serper_keywords)
+
+    # Persist to Reports cache so the charged run is always reopenable.
+    _save_keywords_cache(channel_id, body.keyword.strip(), body.confirmed_keyword.strip(), result)
+
     return JSONResponse(result)
+
+
+# ─── Reports — list / open / delete ────────────────────────────────────────────
+
+@router.get("/reports")
+def list_keyword_reports(request: Request):
+    data, _ = get_session(request.session.get("session_id"))
+    channel_id = (data or {}).get("channel", {}).get("channel_id", "")
+    if not channel_id:
+        return JSONResponse({"reports": []})
+    db = SessionLocal()
+    try:
+        rows = (
+            db.query(KeywordsResearchCache)
+              .filter_by(channel_id=channel_id)
+              .order_by(KeywordsResearchCache.updated_at.desc())
+              .all()
+        )
+        reports = []
+        for r in rows:
+            try:
+                result = json.loads(r.result_json)
+            except Exception:
+                result = None
+            reports.append({
+                "id": r.id,
+                "keyword": r.keyword,
+                "confirmed_keyword": r.confirmed_keyword or "",
+                "result": result,
+                "created_at": r.created_at.isoformat() if r.created_at else None,
+                "updated_at": r.updated_at.isoformat() if r.updated_at else None,
+            })
+        return JSONResponse({"reports": reports})
+    finally:
+        db.close()
+
+
+@router.delete("/reports/{report_id}")
+def delete_keyword_report(report_id: int, request: Request):
+    data, _ = get_session(request.session.get("session_id"))
+    channel_id = (data or {}).get("channel", {}).get("channel_id", "")
+    if not channel_id:
+        return JSONResponse({"error": "Not authenticated."}, status_code=401)
+    db = SessionLocal()
+    try:
+        row = db.query(KeywordsResearchCache).filter_by(id=report_id, channel_id=channel_id).first()
+        if row:
+            db.delete(row)
+            db.commit()
+        return JSONResponse({"ok": True})
+    finally:
+        db.close()

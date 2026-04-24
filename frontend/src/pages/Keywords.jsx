@@ -113,6 +113,72 @@ function useKwStyles() {
       }
       .kw-btn-ghost:hover { background: rgba(229,37,27,0.06); }
 
+      /* Tab pills — match Competitors pattern (comp-tab-btn). */
+      .kw-tab-btn {
+        background: #ffffff; color: #4a4a58;
+        border: 1px solid #e6e6ec; border-radius: 100px;
+        padding: 8px 18px; font-size: 13px; font-weight: 600;
+        font-family: 'Inter', system-ui, sans-serif;
+        cursor: pointer; white-space: nowrap;
+        transition: all 0.15s;
+      }
+      .kw-tab-btn:hover { border-color: #e5251b; color: #e5251b; }
+      .kw-tab-btn.active {
+        background: #e5251b; color: #fff; border-color: #e5251b;
+        box-shadow: 0 1px 3px rgba(229,37,27,0.25), 0 4px 14px rgba(229,37,27,0.25);
+      }
+
+      /* Reports list — mirrors Competitors tracked accordion */
+      .kw-report-wrapper { position: relative; margin-bottom: 12px; }
+      .kw-report-header {
+        background: #ffffff;
+        border: 1px solid #e6e6ec;
+        border-radius: 16px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.06);
+        padding: 16px 20px;
+        display: flex; align-items: center; gap: 16px;
+        transition: box-shadow 0.15s, border-color 0.15s;
+        cursor: pointer; user-select: none;
+      }
+      .kw-report-header:hover {
+        box-shadow: 0 2px 6px rgba(0,0,0,0.06), 0 8px 24px rgba(0,0,0,0.08);
+        border-color: rgba(0,0,0,0.14);
+      }
+      .kw-report-remove {
+        position: absolute; top: 12px; right: 12px;
+        width: 28px; height: 28px; border-radius: 8px;
+        border: 1px solid transparent; background: transparent;
+        color: #c4c4cc; cursor: pointer;
+        display: flex; align-items: center; justify-content: center;
+        opacity: 0;
+        transition: opacity 0.15s, background 0.15s, color 0.15s, border-color 0.15s;
+        z-index: 2;
+      }
+      .kw-report-wrapper:hover .kw-report-remove { opacity: 1; }
+      .kw-report-remove:hover {
+        background: rgba(229,37,27,0.08);
+        border-color: rgba(229,37,27,0.2);
+        color: #e5251b;
+      }
+      .kw-report-cta {
+        background: #e5251b; color: #fff;
+        border: 1px solid #e5251b; border-radius: 100px;
+        padding: 8px 18px; font-size: 12.5px; font-weight: 700;
+        font-family: 'Inter', system-ui, sans-serif;
+        cursor: pointer; white-space: nowrap;
+        transition: filter 0.15s;
+        display: flex; align-items: center; gap: 6px;
+        box-shadow: 0 1px 3px rgba(229,37,27,0.20), 0 4px 14px rgba(229,37,27,0.25);
+      }
+      .kw-report-cta:hover { filter: brightness(1.07); }
+      .kw-report-chip {
+        display: inline-flex; align-items: baseline; gap: 4px;
+        background: #f4f4f6; border: 1px solid rgba(0,0,0,0.09);
+        border-radius: 8px; padding: 4px 10px;
+      }
+      .kw-report-chip .val { font-size: 12px; font-weight: 700; color: #111114; }
+      .kw-report-chip .lbl { font-size: 11px; color: #9595a4; font-weight: 500; }
+
       /* Intent picker row — hairline card, hover bg change, no lift */
       .kw-intent-opt {
         display: flex; align-items: center; gap: 14px;
@@ -442,6 +508,44 @@ export default function Keywords({ plan, freeTierFeatures }) {
   const [copiedCluster, setCopiedCluster] = useState(null)
   const [openRow,       setOpenRow]       = useState(null)
 
+  // Reports tab state — past /keywords/research runs persisted to DB so
+  // they stay reopenable even when the user is out of credits.
+  const [activeTab,      setActiveTab]      = useState('new')
+  const [reports,        setReports]        = useState([])
+  const [reportsLoading, setReportsLoading] = useState(false)
+
+  async function fetchReports() {
+    setReportsLoading(true)
+    try {
+      const res = await fetch(`${API}/keywords/reports`, { credentials: 'include' })
+      if (!res.ok) return
+      const d = await res.json()
+      setReports(d.reports || [])
+    } catch {} finally { setReportsLoading(false) }
+  }
+
+  function openReport(r) {
+    setKeyword(r.keyword || '')
+    setResult(r.result || null)
+    setIntentOptions(null)
+    setError('')
+    setActiveTab('new')
+    if (typeof window !== 'undefined') window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
+  async function deleteReport(reportId, e) {
+    if (e) e.stopPropagation()
+    setReports(prev => prev.filter(r => r.id !== reportId))
+    try { await fetch(`${API}/keywords/reports/${reportId}`, { method: 'DELETE', credentials: 'include' }) } catch {}
+  }
+
+  // Load reports once on mount, and again after a fresh research completes.
+  useEffect(() => { fetchReports() }, [])
+  useEffect(() => {
+    if (result && !loading) fetchReports()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [result])
+
   function handleCopyCluster(cl) {
     if (!cl?.keywords?.length) return
     navigator.clipboard.writeText(cl.keywords.join(', ')).then(() => {
@@ -504,7 +608,10 @@ export default function Keywords({ plan, freeTierFeatures }) {
     localStorage.removeItem(LS_KEY)
   }
 
-  if (gated) {
+  // When gated + user already has past reports, let them through to the
+  // tabs so they can still browse/reopen past research (already paid for).
+  // Only full-strangers-to-the-feature (no reports) see the UpsellGate.
+  if (gated && reports.length === 0) {
     // Teaser preview — mock keyword list with score bars so free users
     // glimpse the research output when the gate shows.
     const kwTeaser = (
@@ -573,16 +680,51 @@ export default function Keywords({ plan, freeTierFeatures }) {
         </p>
       </div>
 
+      {/* Tabs — New / Reports (mirrors Competitors pattern) */}
+      <div style={{ display: 'flex', gap: 8, marginBottom: 20 }}>
+        <button
+          className={`kw-tab-btn ${activeTab === 'new' ? 'active' : ''}`}
+          onClick={() => setActiveTab('new')}>
+          New research
+        </button>
+        <button
+          className={`kw-tab-btn ${activeTab === 'reports' ? 'active' : ''}`}
+          onClick={() => setActiveTab('reports')}>
+          {reports.length > 0 ? `Reports (${reports.length})` : 'Reports'}
+        </button>
+      </div>
+
+      {activeTab === 'new' && (<>
+
+      {/* When user is gated but has past reports, show a banner above the
+          search bar instead of taking over the whole page. */}
+      {gated && (
+        <div style={{
+          background: 'rgba(229,37,27,0.06)', border: '1px solid rgba(229,37,27,0.2)',
+          borderRadius: 12, padding: '12px 16px', marginBottom: 14,
+          display: 'flex', alignItems: 'center', gap: 10, fontSize: 13.5, color: C.text1,
+        }}>
+          <span style={{ flex: 1 }}>
+            You've used your free Keyword research this cycle. Your past reports stay available.
+          </span>
+          <button
+            onClick={() => window.location.href = '/?tab=monthly#pricing'}
+            className="kw-btn-primary" style={{ padding: '7px 14px', fontSize: 12.5 }}>
+            Upgrade
+          </button>
+        </div>
+      )}
+
       {/* Search bar */}
       <div className="kw-card" style={{ padding: '14px 18px', marginBottom: 16 }}>
         <div style={{ display: 'flex', gap: 10 }}>
           <input className="kw-input" placeholder="e.g. grocery haul, home workout, budget cooking"
             value={keyword} onChange={e => setKeyword(e.target.value)}
             onKeyDown={e => e.key === 'Enter' && handleSubmit()}
-            disabled={loadingIntent || loading}
+            disabled={loadingIntent || loading || gated}
           />
           {result && <button className="kw-btn-ghost" onClick={handleClear}>Clear</button>}
-          <button className="kw-btn-primary" onClick={handleSubmit} disabled={loadingIntent || loading || !keyword.trim()}>
+          <button className="kw-btn-primary" onClick={handleSubmit} disabled={loadingIntent || loading || !keyword.trim() || gated}>
             {loadingIntent ? <><span className="kw-spinner" /> Detecting intent</>
              : loading     ? <><span className="kw-spinner" /> Researching</>
              : <><span>Research</span><span style={{ fontSize: 11, fontWeight: 500, opacity: 0.7, marginLeft: 4 }}>· 1 credit</span></>}
@@ -927,6 +1069,106 @@ export default function Keywords({ plan, freeTierFeatures }) {
           C={C}
           onClose={() => setOpenRow(null)}
         />
+      )}
+
+      </>)}
+
+      {/* ── Reports tab — past /keywords/research runs ────────────────────── */}
+      {activeTab === 'reports' && (
+        <div>
+          {reportsLoading ? (
+            <div style={{ padding: '60px 0', textAlign: 'center', color: C.text3, fontSize: 13 }}>
+              Loading reports…
+            </div>
+          ) : reports.length === 0 ? (
+            <div style={{
+              padding: '56px 24px', textAlign: 'center',
+              background: '#ffffff', border: `1px solid ${C.border}`, borderRadius: 16,
+              boxShadow: '0 1px 2px rgba(0,0,0,0.04), 0 4px 14px rgba(0,0,0,0.06)',
+            }}>
+              <p style={{ fontSize: 16, fontWeight: 700, color: C.text1, letterSpacing: '-0.2px', marginBottom: 8 }}>
+                No reports yet
+              </p>
+              <p style={{ fontSize: 13.5, color: C.text3, maxWidth: 360, margin: '0 auto', lineHeight: 1.6 }}>
+                Run a keyword research and it'll show up here — so you can always come back to a report you've already paid for.
+              </p>
+            </div>
+          ) : (
+            <div>
+              {reports.map(r => {
+                const relTime = (iso) => {
+                  if (!iso) return ''
+                  const d = new Date(iso)
+                  if (isNaN(d.getTime())) return ''
+                  const sec = Math.floor((Date.now() - d.getTime()) / 1000)
+                  if (sec < 60) return 'just now'
+                  const min = Math.floor(sec / 60)
+                  if (min < 60) return `${min}m ago`
+                  const hr = Math.floor(min / 60)
+                  if (hr < 24) return `${hr}h ago`
+                  const day = Math.floor(hr / 24)
+                  if (day < 7) return `${day}d ago`
+                  return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })
+                }
+                const kwCount = Array.isArray(r.result?.keywords) ? r.result.keywords.length : 0
+                const clusterCount = Array.isArray(r.result?.clusters) ? r.result.clusters.length : 0
+                return (
+                  <div key={r.id} className="kw-report-wrapper">
+                    <button className="kw-report-remove" title="Remove report"
+                      onClick={e => deleteReport(r.id, e)}>
+                      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
+                        <path d="M2 3.5h10M5.5 3.5V2.5h3v1M5 5.5l.5 5M9 5.5l-.5 5M3 3.5l.7 8.5h6.6L11 3.5"/>
+                      </svg>
+                    </button>
+                    <div className="kw-report-header" onClick={() => openReport(r)}>
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <p style={{ fontWeight: 800, fontSize: 14, color: '#111114',
+                          letterSpacing: '-0.2px', whiteSpace: 'nowrap', overflow: 'hidden',
+                          textOverflow: 'ellipsis', marginBottom: 8 }}>
+                          {r.keyword}
+                        </p>
+                        <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', alignItems: 'center' }}>
+                          {r.confirmed_keyword && (
+                            <span className="kw-report-chip">
+                              <span className="val">{r.confirmed_keyword}</span>
+                              <span className="lbl">intent</span>
+                            </span>
+                          )}
+                          {kwCount > 0 && (
+                            <span className="kw-report-chip">
+                              <span className="val">{kwCount}</span>
+                              <span className="lbl">keyword{kwCount === 1 ? '' : 's'}</span>
+                            </span>
+                          )}
+                          {clusterCount > 0 && (
+                            <span className="kw-report-chip">
+                              <span className="val">{clusterCount}</span>
+                              <span className="lbl">cluster{clusterCount === 1 ? '' : 's'}</span>
+                            </span>
+                          )}
+                          <span style={{ fontSize: 12, color: '#9595a4', fontWeight: 500, marginLeft: 2 }}>
+                            · {relTime(r.updated_at)}
+                          </span>
+                        </div>
+                      </div>
+                      <div style={{ flexShrink: 0, borderLeft: '1px solid rgba(0,0,0,0.07)',
+                        paddingLeft: 16, marginLeft: 4, paddingRight: 28 }}>
+                        <button className="kw-report-cta"
+                          onClick={e => { e.stopPropagation(); openReport(r) }}>
+                          Open report
+                          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"
+                            stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                            <path d="M4 2l4 4-4 4"/>
+                          </svg>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          )}
+        </div>
       )}
     </div>
   )

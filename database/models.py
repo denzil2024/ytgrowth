@@ -270,6 +270,45 @@ class SeoAnalysisCache(Base):
     updated_at        = Column(DateTime, default=_now, onupdate=_now)
 
 
+class KeywordsResearchCache(Base):
+    """
+    One row per Keywords research run a user has completed. Lets the Reports
+    tab show past research (original keyword, confirmed intent, full result)
+    and reopen any of them in the main editor. Dedup on
+    (channel_id, keyword_lower) — re-running the same keyword updates the
+    existing row instead of stacking duplicates.
+    """
+    __tablename__ = "keywords_research_cache"
+    id                = Column(Integer, primary_key=True, autoincrement=True)
+    channel_id        = Column(String, nullable=False, index=True)
+    keyword           = Column(Text, nullable=False)
+    keyword_lower     = Column(String, nullable=False, index=True)
+    confirmed_keyword = Column(Text, default="")
+    result_json       = Column(Text, nullable=False)
+    created_at        = Column(DateTime, default=_now)
+    updated_at        = Column(DateTime, default=_now, onupdate=_now)
+
+
+class OutliersReport(Base):
+    """
+    Persisted Outliers search reports — the paid-once pool the user can always
+    come back to. One row per charged /outliers/search. Dedup on
+    (channel_id, query_lower, confirmed_keyword_lower) so re-running the same
+    query updates the existing row. Distinct from OutliersSearchCache which
+    only holds the single most-recent search for the in-page restore.
+    """
+    __tablename__ = "outliers_reports"
+    id                      = Column(Integer, primary_key=True, autoincrement=True)
+    channel_id              = Column(String, nullable=False, index=True)
+    query                   = Column(Text, nullable=False)
+    query_lower             = Column(String, nullable=False, index=True)
+    confirmed_keyword       = Column(Text, default="")
+    confirmed_keyword_lower = Column(String, default="")
+    result_json             = Column(Text, nullable=False)
+    created_at              = Column(DateTime, default=_now)
+    updated_at              = Column(DateTime, default=_now, onupdate=_now)
+
+
 class FreeTierFeatureUsage(Base):
     """
     Tracks one-run-per-cycle usage of the feature-level gate for free-tier
@@ -332,6 +371,18 @@ with engine.connect() as _conn:
         "CREATE INDEX IF NOT EXISTS ix_seo_analysis_cache_channel_id ON seo_analysis_cache (channel_id)",
         "CREATE INDEX IF NOT EXISTS ix_seo_analysis_cache_title_lower ON seo_analysis_cache (title_lower)",
         "CREATE UNIQUE INDEX IF NOT EXISTS uq_seo_analysis_cache_channel_title ON seo_analysis_cache (channel_id, title_lower)",
+        # Keywords research report history — every charged /keywords/research run
+        # persisted (dedup per channel+keyword) so users can reopen past reports.
+        "CREATE TABLE IF NOT EXISTS keywords_research_cache (id INTEGER PRIMARY KEY AUTOINCREMENT, channel_id TEXT NOT NULL, keyword TEXT NOT NULL, keyword_lower TEXT NOT NULL, confirmed_keyword TEXT DEFAULT '', result_json TEXT NOT NULL, created_at DATETIME, updated_at DATETIME)",
+        "CREATE INDEX IF NOT EXISTS ix_keywords_research_cache_channel_id ON keywords_research_cache (channel_id)",
+        "CREATE INDEX IF NOT EXISTS ix_keywords_research_cache_keyword_lower ON keywords_research_cache (keyword_lower)",
+        "CREATE UNIQUE INDEX IF NOT EXISTS uq_keywords_research_cache_channel_keyword ON keywords_research_cache (channel_id, keyword_lower)",
+        # Outliers report history — every charged /outliers/search run persisted
+        # (dedup per channel+query+intent) so users can reopen past reports.
+        "CREATE TABLE IF NOT EXISTS outliers_reports (id INTEGER PRIMARY KEY AUTOINCREMENT, channel_id TEXT NOT NULL, query TEXT NOT NULL, query_lower TEXT NOT NULL, confirmed_keyword TEXT DEFAULT '', confirmed_keyword_lower TEXT DEFAULT '', result_json TEXT NOT NULL, created_at DATETIME, updated_at DATETIME)",
+        "CREATE INDEX IF NOT EXISTS ix_outliers_reports_channel_id ON outliers_reports (channel_id)",
+        "CREATE INDEX IF NOT EXISTS ix_outliers_reports_query_lower ON outliers_reports (query_lower)",
+        "CREATE UNIQUE INDEX IF NOT EXISTS uq_outliers_reports_channel_query_intent ON outliers_reports (channel_id, query_lower, confirmed_keyword_lower)",
         "UPDATE user_subscriptions SET monthly_allowance = 5, monthly_used = 0 WHERE plan = 'free' AND monthly_allowance = 9999",
         # Free plan change 2026-04-23: 5 lifetime → 3 per month with monthly reset
         "UPDATE user_subscriptions SET monthly_allowance = 3 WHERE plan = 'free' AND monthly_allowance = 5",
