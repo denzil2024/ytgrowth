@@ -832,8 +832,14 @@ function AIAnalysis({ ai, top5Videos, channelId, checkedIdeas, onToggleIdea }) {
            + border-left amberBdr). Bar width + value colour both driven by
            scoreColor (relative-to-max here since topics aren't absolute scored). */}
       {ai.topTopics?.length > 0 && (() => {
-        const scoreColor = (pct) => pct >= 75 ? '#059669' : pct >= 55 ? '#d97706' : '#e5251b'
-        const maxViews   = Math.max(...ai.topTopics.map(t => t.avgViews || 0), 1)
+        // Rank-based colour (not threshold-based): only the lowest-performing
+        // topic is red, everything else is green. Bar width still scales
+        // relative to the strongest topic so the leader stays the only full bar.
+        const viewVals = ai.topTopics.map(t => t.avgViews || 0)
+        const maxViews = Math.max(...viewVals, 1)
+        const minViews = Math.min(...viewVals)
+        const hasVariance = new Set(viewVals).size > 1
+        const topicColor = (v) => (hasVariance && v === minViews) ? '#e5251b' : '#059669'
         return (
           <div>
             <div style={{ marginBottom: 12 }}>
@@ -869,7 +875,7 @@ function AIAnalysis({ ai, top5Videos, channelId, checkedIdeas, onToggleIdea }) {
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', columnGap: 0, rowGap: 14 }}>
                   {ai.topTopics.map((t, i) => {
                     const pct = (t.avgViews || 0) / maxViews * 100
-                    const col = scoreColor(pct)
+                    const col = topicColor(t.avgViews || 0)
                     const isRightCol = i % 2 === 1
                     return (
                       <div key={i} style={{
