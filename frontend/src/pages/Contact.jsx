@@ -1,6 +1,16 @@
 import { useEffect, useState } from 'react'
 import LandingFooter from '../components/LandingFooter'
 
+function useBreakpoint() {
+  const [width, setWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1280)
+  useEffect(() => {
+    const handler = () => setWidth(window.innerWidth)
+    window.addEventListener('resize', handler)
+    return () => window.removeEventListener('resize', handler)
+  }, [])
+  return { isMobile: width <= 768 }
+}
+
 function Logo({ size = 32 }) {
   return (
     <svg width={size} height={size} viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -14,9 +24,8 @@ function Logo({ size = 32 }) {
 function useGlobalStyles() {
   useEffect(() => {
     if (document.getElementById('ytg-contact-styles')) return
-    // Match Landing's font loading exactly (DM Sans for display headings +
-    // Inter for body/UI) so this page reads as a sibling of the marketing
-    // home, not the utility policy pages.
+    // DM Sans for display headings + Inter for body — same font pair Landing
+    // and Affiliate use. This page is a direct sibling to those two.
     const link = document.createElement('link')
     link.id = 'ytg-font'
     link.rel = 'stylesheet'
@@ -29,13 +38,14 @@ function useGlobalStyles() {
       :root {
         --ytg-bg:           #f4f4f6;
         --ytg-bg-2:         #ecedf1;
+        --ytg-bg-3:         #e6e7ec;
         --ytg-text:         #0a0a0f;
         --ytg-text-2:       rgba(10,10,15,0.62);
         --ytg-text-3:       rgba(10,10,15,0.40);
         --ytg-nav:          rgba(244,244,246,0.92);
         --ytg-card:         #ffffff;
         --ytg-border:       rgba(10,10,15,0.09);
-        /* Canonical app red (matches Dashboard C.red + Landing --ytg-accent) */
+        /* Canonical app red */
         --ytg-accent:       #e5251b;
         --ytg-accent-text:  #b91c1c;
         --ytg-accent-light: rgba(229,37,27,0.07);
@@ -47,37 +57,105 @@ function useGlobalStyles() {
       *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
       html { scroll-behavior: smooth; }
       body { background: var(--ytg-bg); color: var(--ytg-text); font-family: 'Inter', system-ui, sans-serif; overflow-x: hidden; }
-      @keyframes fadeUp { from { opacity:0; transform:translateY(14px) } to { opacity:1; transform:translateY(0) } }
-      .contact-reason-card {
+      ::-webkit-scrollbar { width: 5px }
+      ::-webkit-scrollbar-track { background: transparent }
+      ::-webkit-scrollbar-thumb { background: rgba(10,10,15,0.16); border-radius: 10px }
+
+      @keyframes fadeUp { from { opacity:0; transform:translateY(18px) } to { opacity:1; transform:translateY(0) } }
+
+      /* Button pattern — copied verbatim from Affiliate's .aff-btn so CTAs
+         read identically across the marketing site. */
+      .contact-btn {
+        display: inline-flex; align-items: center; gap: 8px;
+        background: var(--ytg-accent); color: #fff;
+        font-size: 15px; font-weight: 700; font-family: 'Inter', system-ui, sans-serif;
+        padding: 15px 36px; border-radius: 100px; border: none;
+        cursor: pointer; text-decoration: none; letter-spacing: -0.2px;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.14), 0 4px 20px rgba(229,37,27,0.38);
+        transition: filter 0.18s, transform 0.18s, box-shadow 0.18s;
+      }
+      .contact-btn:hover {
+        filter: brightness(1.07); transform: translateY(-1px);
+        box-shadow: 0 3px 8px rgba(0,0,0,0.16), 0 12px 36px rgba(229,37,27,0.46);
+      }
+      .contact-btn-lg   { font-size: 16px; padding: 17px 44px; }
+      .contact-btn-full { width: 100%; justify-content: center; }
+
+      .contact-section-label {
+        display: inline-block; font-size: 11px; font-weight: 700;
+        letter-spacing: 0.08em; text-transform: uppercase;
+        color: var(--ytg-accent-text); background: var(--ytg-accent-light);
+        padding: 5px 13px; border-radius: 100px; margin-bottom: 16px;
+      }
+
+      .contact-grid-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 22px; }
+
+      .contact-nav-link {
+        font-size: 14px; color: var(--ytg-text-3); font-weight: 500;
+        text-decoration: none; transition: color 0.15s; letter-spacing: -0.1px;
+      }
+      .contact-nav-link:hover { color: var(--ytg-text-2); }
+
+      .contact-card {
         background: var(--ytg-card);
-        border-radius: 20px;
+        border-radius: 18px;
         border: 1px solid var(--ytg-border);
         box-shadow: var(--ytg-shadow-lg);
-        padding: 32px 36px;
+        padding: 36px;
         transition: box-shadow 0.22s, transform 0.22s;
       }
-      .contact-reason-card:hover {
+      .contact-card:hover {
         box-shadow: var(--ytg-shadow-xl);
         transform: translateY(-3px);
+      }
+
+      @media (max-width: 900px) {
+        .contact-grid-3 { grid-template-columns: 1fr; }
+        .contact-stats-grid { grid-template-columns: repeat(2,1fr) !important; }
+      }
+      @media (max-width: 768px) {
+        .contact-hero-h1   { font-size: 34px !important; letter-spacing: -1px !important; }
+        .contact-section-h2 { font-size: 28px !important; letter-spacing: -0.8px !important; }
+        .contact-section-pad { padding-left: 20px !important; padding-right: 20px !important; }
+        .contact-stats-inner { gap: 20px !important; }
       }
     `
     document.head.appendChild(style)
   }, [])
 }
 
-function useBreakpoint() {
-  const [width, setWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1280)
+/* Thin red scroll progress bar — same pattern as Affiliate. */
+function ScrollProgress() {
+  const [progress, setProgress] = useState(0)
+
   useEffect(() => {
-    const handler = () => setWidth(window.innerWidth)
-    window.addEventListener('resize', handler)
-    return () => window.removeEventListener('resize', handler)
+    const onScroll = () => {
+      const max = document.documentElement.scrollHeight - window.innerHeight
+      setProgress(max > 0 ? (window.scrollY / max) * 100 : 0)
+    }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
   }, [])
-  return { isMobile: width <= 768 }
+
+  return (
+    <div style={{ position: 'fixed', top: 0, left: 0, right: 0, height: 3, zIndex: 999 }}>
+      <div style={{ height: '100%', width: `${progress}%`, background: 'var(--ytg-accent)', transition: 'width 0.08s linear', borderRadius: '0 2px 2px 0' }} />
+    </div>
+  )
 }
 
-/* Stroke-icon set — matches the app's SVG icon language (Dashboard nav,
-   SEO Studio pills, Landing feature tiles). Size 24 inside the 52×52
-   tinted container; color via currentColor so they inherit the accent. */
+/* Filled check — mirrors Affiliate's Check icon (Affiliate.jsx:219). */
+function Check() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+      <circle cx="9" cy="9" r="9" fill="rgba(229,37,27,0.1)" />
+      <path d="M5 9l3 3 5-5" stroke="#e5251b" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  )
+}
+
+/* Stroke-icon set for the reasons grid — matches the app's SVG icon
+   language (Dashboard nav, SEO Studio pills, Landing feature tiles). */
 const ICON_PROPS = { width: 24, height: 24, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 1.6, strokeLinecap: 'round', strokeLinejoin: 'round' }
 
 function BillingIcon()   { return (<svg {...ICON_PROPS}><rect x="2.5" y="6" width="19" height="13" rx="2"/><line x1="2.5" y1="10" x2="21.5" y2="10"/><line x1="6.5" y1="15" x2="10.5" y2="15"/></svg>) }
@@ -132,6 +210,24 @@ const REASONS = [
   },
 ]
 
+const STEPS = [
+  {
+    n: '01',
+    title: 'You email us — anything',
+    body: 'Write support@ytgrowth.io from any address. One line or ten paragraphs. Attach a screenshot or don\'t. We\'ll figure it out from whatever you send.',
+  },
+  {
+    n: '02',
+    title: 'A human reads it — personally',
+    body: 'No auto-responder. No ticket queue. No "your issue has been assigned ticket #48219" email. One of us opens your message and reads it through, usually within the hour.',
+  },
+  {
+    n: '03',
+    title: 'You get a real reply',
+    body: 'Usually in under 4 hours during our working day. With an actual answer, a fix, or a follow-up question — not a templated reply that ignores what you wrote.',
+  },
+]
+
 export default function Contact() {
   useGlobalStyles()
   useEffect(() => { document.title = 'Contact — YTGrowth' }, [])
@@ -140,69 +236,119 @@ export default function Contact() {
   return (
     <div style={{ fontFamily: "'Inter', system-ui, sans-serif", background: 'var(--ytg-bg)', color: 'var(--ytg-text)', minHeight: '100vh' }}>
 
-      {/* Nav */}
-      <nav style={{ position: 'sticky', top: 0, zIndex: 100, borderBottom: '1px solid var(--ytg-border)', padding: isMobile ? '0 20px' : '0 40px', height: 60, display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'var(--ytg-nav)', backdropFilter: 'blur(16px)' }}>
-        <a href="/" style={{ display: 'flex', alignItems: 'center', gap: 9, textDecoration: 'none' }}>
+      <ScrollProgress />
+
+      {/* ── NAV ── same pattern as Affiliate: left brand, right back-link + pill CTA */}
+      <nav style={{ position: 'sticky', top: 0, zIndex: 100, borderBottom: '1px solid var(--ytg-border)', padding: isMobile ? '0 20px' : '0 40px 0 72px', height: 60, display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'var(--ytg-nav)', backdropFilter: 'blur(16px)' }}>
+        <a href="/" style={{ display: 'flex', alignItems: 'center', gap: 9, textDecoration: 'none', minWidth: 0 }}>
           <Logo size={28} />
-          <span style={{ fontWeight: 800, fontSize: 14, color: 'var(--ytg-text)', letterSpacing: '-0.4px' }}>YTGrowth</span>
+          <span style={{ fontWeight: 800, fontSize: 14, color: 'var(--ytg-text)', letterSpacing: '-0.4px', whiteSpace: 'nowrap' }}>YTGrowth</span>
         </a>
-        <a href="/" style={{ fontSize: 14, color: 'var(--ytg-text-3)', textDecoration: 'none', fontWeight: 500 }}>← Back to home</a>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+          {!isMobile && <a href="/" className="contact-nav-link">← Back to home</a>}
+          <a href="mailto:support@ytgrowth.io"
+            className="contact-btn"
+            style={{ padding: isMobile ? '8px 18px' : '9px 22px', fontSize: 13, borderRadius: 100, whiteSpace: 'nowrap' }}>
+            {isMobile ? 'Email us' : 'Send email'}
+          </a>
+        </div>
       </nav>
 
-      {/* Hero */}
-      <section style={{ padding: isMobile ? '64px 24px 52px' : '100px 40px 80px', textAlign: 'center', background: 'var(--ytg-bg)', animation: 'fadeUp 0.5s ease both' }}>
-        <span style={{ display: 'inline-block', fontSize: 12, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--ytg-accent-text)', background: 'var(--ytg-accent-light)', padding: '5px 14px', borderRadius: 100, marginBottom: 20 }}>Contact</span>
-        <h1 style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontWeight: 800, fontSize: isMobile ? 36 : 56, letterSpacing: isMobile ? '-1.2px' : '-2px', lineHeight: 1.06, color: 'var(--ytg-text)', marginBottom: 20, textWrap: 'balance' }}>
-          Real people.<br /><span style={{ color: 'var(--ytg-accent)' }}>Same-day replies.</span>
-        </h1>
-        <p style={{ fontSize: isMobile ? 16 : 18, color: 'var(--ytg-text-2)', lineHeight: 1.8, maxWidth: 480, margin: '0 auto 0' }}>
-          No ticket queues, no bots, no runaround. One inbox — and we actually answer it.
-        </p>
-      </section>
-
-      {/* Email hero card */}
-      <section style={{ background: 'var(--ytg-bg-2)', borderTop: '1px solid var(--ytg-border)', borderBottom: '1px solid var(--ytg-border)', padding: isMobile ? '48px 24px' : '72px 40px' }}>
-        <div style={{ maxWidth: 700, margin: '0 auto' }}>
-          <div style={{ background: 'var(--ytg-card)', borderRadius: 24, border: '1px solid var(--ytg-border)', boxShadow: 'var(--ytg-shadow-xl)', padding: isMobile ? '36px 28px' : '52px 56px' }}>
-            <div style={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', alignItems: isMobile ? 'flex-start' : 'center', gap: isMobile ? 28 : 48 }}>
-              <div style={{ flex: 1 }}>
-                <span style={{ display: 'inline-block', fontSize: 12, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--ytg-accent-text)', background: 'var(--ytg-accent-light)', padding: '4px 12px', borderRadius: 100, marginBottom: 18 }}>Write to us</span>
-                <p style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: isMobile ? 22 : 28, fontWeight: 800, color: 'var(--ytg-text)', letterSpacing: '-0.8px', marginBottom: 10, lineHeight: 1.2 }}>support@ytgrowth.io</p>
-                <p style={{ fontSize: 14, color: 'var(--ytg-text-2)', lineHeight: 1.75, marginBottom: 8 }}>
-                  Send us anything — a question, a bug report, feedback, or just a hello. We reply to every email, personally.
-                </p>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 18 }}>
-                  <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#16a34a', flexShrink: 0 }} />
-                  <span style={{ fontSize: 14, fontWeight: 600, color: '#16a34a' }}>Average response time: under 4 hours</span>
-                </div>
-              </div>
-              <a
-                href="mailto:support@ytgrowth.io"
-                style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'var(--ytg-accent)', color: '#ffffff', fontFamily: "'Inter', system-ui, sans-serif", fontWeight: 700, fontSize: 14, padding: '15px 32px', borderRadius: 100, textDecoration: 'none', whiteSpace: 'nowrap', flexShrink: 0, boxShadow: '0 2px 6px rgba(0,0,0,0.12), 0 8px 28px rgba(229,37,27,0.36)', transition: 'filter 0.18s, transform 0.18s' }}
-                onMouseEnter={e => { e.currentTarget.style.filter = 'brightness(1.07)'; e.currentTarget.style.transform = 'translateY(-1px)' }}
-                onMouseLeave={e => { e.currentTarget.style.filter = 'none'; e.currentTarget.style.transform = 'none' }}
-              >
-                Send an email →
-              </a>
-            </div>
+      {/* ══════════════════════════════════════════════════════════
+          SECTION 1 — HERO   bg: #ffffff  (matches Affiliate hero)
+      ══════════════════════════════════════════════════════════ */}
+      <section className="contact-section-pad" style={{ padding: isMobile ? '72px 20px 60px' : '110px 40px 88px', textAlign: 'center', background: '#ffffff' }}>
+        <div style={{ maxWidth: 820, margin: '0 auto', animation: 'fadeUp 0.5s ease both' }}>
+          <span className="contact-section-label">Contact</span>
+          <h1 className="contact-hero-h1" style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: isMobile ? 36 : 58, fontWeight: 800, letterSpacing: isMobile ? '-1.5px' : '-2.5px', lineHeight: 1.06, color: 'var(--ytg-text)', marginBottom: 24, textWrap: 'balance' }}>
+            Real people.<br />
+            Same-day replies.<br />
+            <span style={{ color: 'var(--ytg-accent)' }}>No ticket queues.</span>
+          </h1>
+          <p style={{ fontSize: isMobile ? 16 : 18, color: 'var(--ytg-text-2)', lineHeight: 1.8, maxWidth: 560, margin: '0 auto 14px' }}>
+            One inbox. One human at the other end. Write anything — a bug, a billing question, a feature idea, or just hello — and we'll reply with an actual answer, usually within 4 hours.
+          </p>
+          <p style={{ fontSize: 14, color: 'var(--ytg-text-3)', marginBottom: 40 }}>
+            No auto-responders. No forms to fill. No routing bots.
+          </p>
+          <div style={{ display: 'flex', gap: 14, justifyContent: 'center', flexWrap: 'wrap' }}>
+            <a href="mailto:support@ytgrowth.io" className="contact-btn contact-btn-lg">
+              Email support@ytgrowth.io →
+            </a>
+            <a href="#contact-how"
+              style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '15px 28px', borderRadius: 100, fontSize: 14, fontWeight: 600, color: 'var(--ytg-text-2)', textDecoration: 'none', background: 'var(--ytg-card)', border: '1px solid var(--ytg-border)', boxShadow: 'var(--ytg-shadow-sm)', transition: 'color 0.15s, box-shadow 0.18s' }}
+              onMouseEnter={e => { e.currentTarget.style.color = 'var(--ytg-text)'; e.currentTarget.style.boxShadow = 'var(--ytg-shadow)' }}
+              onMouseLeave={e => { e.currentTarget.style.color = 'var(--ytg-text-2)'; e.currentTarget.style.boxShadow = 'var(--ytg-shadow-sm)' }}
+            >
+              See how we handle email
+            </a>
           </div>
         </div>
       </section>
 
-      {/* Reasons grid */}
-      <section style={{ padding: isMobile ? '64px 24px 80px' : '100px 40px 120px' }}>
-        <div style={{ maxWidth: 1060, margin: '0 auto' }}>
+      {/* ══════════════════════════════════════════════════════════
+          SECTION 2 — STATS BAR   bg: --ytg-bg-2  (stepped)
+      ══════════════════════════════════════════════════════════ */}
+      <section style={{ background: 'var(--ytg-bg-2)', borderTop: '1px solid var(--ytg-border)', borderBottom: '1px solid var(--ytg-border)', padding: isMobile ? '52px 24px' : '60px 40px' }}>
+        <div style={{ maxWidth: 1000, margin: '0 auto' }}>
+          <div className="contact-stats-inner contact-stats-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', alignItems: 'center', gap: 32 }}>
+            {[
+              { value: '< 4h',  label: 'Median reply time',        sub: 'Weekdays, during working hours' },
+              { value: '100%',  label: 'Emails that get a reply',  sub: 'No exceptions — ever' },
+              { value: '0',     label: 'Auto-responders or bots',  sub: 'Only humans answer your email' },
+              { value: '7d',    label: 'Inbox monitored',          sub: 'Urgent issues handled at weekends too' },
+            ].map((s, i) => (
+              <div key={i} style={{ textAlign: 'center', minWidth: 140 }}>
+                <div style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: isMobile ? 34 : 40, fontWeight: 800, letterSpacing: '-1.5px', color: 'var(--ytg-accent)', lineHeight: 1.1, marginBottom: 7 }}>{s.value}</div>
+                <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--ytg-text)', marginBottom: 4 }}>{s.label}</div>
+                <div style={{ fontSize: 12, color: 'var(--ytg-text-3)', lineHeight: 1.5 }}>{s.sub}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════════════════════
+          SECTION 3 — HOW IT WORKS   bg: --ytg-bg-3  (darkest step)
+      ══════════════════════════════════════════════════════════ */}
+      <section id="contact-how" className="contact-section-pad" style={{ padding: isMobile ? '72px 20px' : '100px 40px', background: 'var(--ytg-bg-3)', borderBottom: '1px solid var(--ytg-border)' }}>
+        <div style={{ maxWidth: 1160, margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: 56 }}>
-            <span style={{ display: 'inline-block', fontSize: 12, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--ytg-accent-text)', background: 'var(--ytg-accent-light)', padding: '5px 14px', borderRadius: 100, marginBottom: 18 }}>Why people reach out</span>
-            <h2 style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontWeight: 800, fontSize: isMobile ? 28 : 40, letterSpacing: '-1.4px', color: 'var(--ytg-text)', lineHeight: 1.08, marginBottom: 14, textWrap: 'balance' }}>No question is <span style={{ color: 'var(--ytg-accent)' }}>too small.</span></h2>
-            <p style={{ fontSize: isMobile ? 15 : 16, color: 'var(--ytg-text-2)', lineHeight: 1.8, maxWidth: 480, margin: '0 auto' }}>
-              Here's what usually lands in our inbox. If your reason isn't listed — email anyway.
+            <span className="contact-section-label">How it works</span>
+            <h2 className="contact-section-h2" style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: 36, fontWeight: 800, letterSpacing: '-1.2px', color: 'var(--ytg-text)', lineHeight: 1.08, textWrap: 'balance' }}>
+              No tickets. <span style={{ color: 'var(--ytg-accent)' }}>Just email and a reply.</span>
+            </h2>
+          </div>
+          <div className="contact-grid-3">
+            {STEPS.map((step, i) => (
+              <div key={i} style={{ background: 'var(--ytg-card)', borderRadius: 18, border: '1px solid var(--ytg-border)', boxShadow: 'var(--ytg-shadow-lg)', padding: 36 }}>
+                <div style={{ fontSize: 14, fontWeight: 800, color: 'var(--ytg-accent)', letterSpacing: '0.04em', marginBottom: 22, fontFamily: 'monospace' }}>{step.n}</div>
+                <div style={{ fontSize: 16, fontWeight: 700, color: 'var(--ytg-text)', marginBottom: 12, letterSpacing: '-0.3px' }}>{step.title}</div>
+                <div style={{ fontSize: 14, color: 'var(--ytg-text-2)', lineHeight: 1.78 }}>{step.body}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ══════════════════════════════════════════════════════════
+          SECTION 4 — REASONS GRID   bg: --ytg-bg
+      ══════════════════════════════════════════════════════════ */}
+      <section className="contact-section-pad" style={{ padding: isMobile ? '72px 20px' : '100px 40px', background: 'var(--ytg-bg)' }}>
+        <div style={{ maxWidth: 1160, margin: '0 auto' }}>
+          <div style={{ textAlign: 'center', marginBottom: 56 }}>
+            <span className="contact-section-label">Why people reach out</span>
+            <h2 className="contact-section-h2" style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: 36, fontWeight: 800, letterSpacing: '-1.2px', color: 'var(--ytg-text)', lineHeight: 1.08, marginBottom: 14, textWrap: 'balance' }}>
+              No question is <span style={{ color: 'var(--ytg-accent)' }}>too small.</span>
+            </h2>
+            <p style={{ fontSize: isMobile ? 14 : 15, color: 'var(--ytg-text-2)', maxWidth: 520, margin: '14px auto 0', lineHeight: 1.75 }}>
+              Here's what usually lands in our inbox. If your reason isn't listed, email anyway — we'll figure out where it needs to go.
             </p>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)', gap: 22 }}>
+          <div className="contact-grid-3">
             {REASONS.map((r, i) => (
-              <div key={i} className="contact-reason-card">
+              <div key={i} className="contact-card">
                 <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 20 }}>
                   <div style={{ width: 52, height: 52, borderRadius: 16, background: 'var(--ytg-accent-light)', border: '1px solid rgba(229,37,27,0.14)', color: 'var(--ytg-accent)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                     <r.Icon />
@@ -221,20 +367,55 @@ export default function Contact() {
         </div>
       </section>
 
-      {/* Promise strip */}
-      <section style={{ background: 'var(--ytg-bg-2)', borderTop: '1px solid var(--ytg-border)', padding: isMobile ? '48px 24px' : '64px 40px' }}>
-        <div style={{ maxWidth: 700, margin: '0 auto', textAlign: 'center' }}>
-          <span style={{ display: 'inline-block', fontSize: 12, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--ytg-accent-text)', background: 'var(--ytg-accent-light)', padding: '5px 14px', borderRadius: 100, marginBottom: 18 }}>Our promise</span>
-          <p style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: isMobile ? 24 : 32, fontWeight: 800, color: 'var(--ytg-text)', letterSpacing: '-1px', lineHeight: 1.15, marginBottom: 16, textWrap: 'balance' }}>
-            We respond to every email.<br /><span style={{ color: 'var(--ytg-accent)' }}>No exceptions.</span>
-          </p>
-          <p style={{ fontSize: 14, color: 'var(--ytg-text-2)', lineHeight: 1.8, maxWidth: 480, margin: '0 auto' }}>
-            If you've been waiting more than one business day, email again with <strong>URGENT</strong> in the subject — we'll prioritise it immediately.
-          </p>
+      {/* ══════════════════════════════════════════════════════════
+          SECTION 5 — BOTTOM CTA   bg: --ytg-bg-3  (matches Affiliate's bottom CTA)
+      ══════════════════════════════════════════════════════════ */}
+      <section style={{ padding: isMobile ? '0 16px 80px' : '0 40px 120px', background: 'var(--ytg-bg-3)', borderTop: '1px solid var(--ytg-border)' }}>
+        <div style={{ maxWidth: 1000, margin: '0 auto', paddingTop: isMobile ? 48 : 80 }}>
+          <div style={{
+            borderRadius: isMobile ? 18 : 24,
+            border: '1px solid var(--ytg-border)',
+            boxShadow: 'var(--ytg-shadow-xl)',
+            padding: isMobile ? '48px 24px 40px' : '88px 60px',
+            textAlign: 'center',
+            background: 'var(--ytg-card)',
+            position: 'relative', overflow: 'hidden',
+          }}>
+            {/* radial red glow — same trick Affiliate uses on its bottom CTA */}
+            <div style={{ position: 'absolute', top: -80, left: '50%', transform: 'translateX(-50%)', width: 500, height: 240, background: 'radial-gradient(ellipse, rgba(229,37,27,0.09) 0%, transparent 70%)', pointerEvents: 'none' }} />
+            <span className="contact-section-label">The inbox is open</span>
+            <h2 style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: isMobile ? 30 : 44, fontWeight: 800, letterSpacing: isMobile ? '-0.8px' : '-1.6px', marginBottom: 14, lineHeight: 1.1, textWrap: 'balance' }}>
+              Got something to say?<br />
+              <span style={{ color: 'var(--ytg-accent)' }}>Send the first email.</span>
+            </h2>
+            <p style={{ fontSize: isMobile ? 14 : 16, color: 'var(--ytg-text-2)', maxWidth: 480, margin: '0 auto 20px', lineHeight: 1.75 }}>
+              We read every message. We reply to every message. If you've been waiting more than one business day, email again with <strong style={{ color: 'var(--ytg-text)' }}>URGENT</strong> in the subject — we'll prioritise it immediately.
+            </p>
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: isMobile ? '1fr 1fr' : 'repeat(4,auto)',
+              gap: isMobile ? '10px 16px' : 24,
+              justifyContent: isMobile ? 'stretch' : 'center',
+              justifyItems: 'center',
+              marginBottom: isMobile ? 32 : 44,
+              maxWidth: isMobile ? 280 : 'none',
+              marginLeft: 'auto', marginRight: 'auto',
+            }}>
+              {['Reply under 4h', 'Real humans only', 'No ticket queue', 'Weekend urgents'].map((t, i) => (
+                <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 14, color: 'var(--ytg-text-3)' }}>
+                  <Check /><span style={{ whiteSpace: 'nowrap' }}>{t}</span>
+                </div>
+              ))}
+            </div>
+            <a href="mailto:support@ytgrowth.io"
+              className={`contact-btn${isMobile ? ' contact-btn-full' : ' contact-btn-lg'}`}
+              style={isMobile ? { borderRadius: 14, padding: '15px 24px', fontSize: 14 } : {}}>
+              Email support@ytgrowth.io →
+            </a>
+          </div>
         </div>
       </section>
 
-      {/* Footer */}
       <LandingFooter />
 
     </div>
