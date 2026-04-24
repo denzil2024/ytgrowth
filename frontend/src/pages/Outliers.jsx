@@ -1536,8 +1536,11 @@ function ThumbnailPatternsCard({ patterns, query }) {
 
         {/* 2-col body — Visual formula (diagnostic, blue) + Next thumbnail
             (prescriptive, white+amber bar). Same panelled pattern used by the
-            SeoOptimizer Title Scorecard: two analytical views of one topic. */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr', gap: 8, marginLeft: 46 }}>
+            SeoOptimizer Title Scorecard: two analytical views of one topic.
+            alignItems:start stops the shorter panel from stretching to match
+            the taller one — panels end at their own content so neither card
+            carries dead space. */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr', gap: 8, marginLeft: 46, alignItems: 'start' }}>
 
           {/* Blue "Visual formula" — all 5 traits compacted into one tinted cell */}
           <div style={{ background: 'rgba(79,134,247,0.07)', border: '1px solid rgba(79,134,247,0.12)', borderRadius: 10, padding: '12px 14px' }}>
