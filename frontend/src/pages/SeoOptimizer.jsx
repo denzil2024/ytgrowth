@@ -656,6 +656,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures }) {
         `${API}/seo/generate-description`,
         {
           method: 'POST',
+          credentials: 'include',
           headers: {
             'Content-Type': 'application/json'
           },
@@ -1798,7 +1799,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures }) {
                         <svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2">
                           <path d="M7 1l1.5 4.5H13l-3.7 2.7 1.4 4.3L7 10 3.3 12.5l1.4-4.3L1 5.5h4.5z"/>
                         </svg>
-                        Generate 3 descriptions
+                        Generate 3 descriptions · 1 credit
                       </>
                     )}
                   </button>

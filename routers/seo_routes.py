@@ -182,6 +182,14 @@ def generate_description(body: DescriptionRequest, request: Request):
     feat = check_free_tier_access(channel_id, "seo")
     if not feat["allowed"]:
         return _locked_response("seo", feat.get("reason", "locked"))
+
+    # Credit-gated: this is a full Claude call producing 3 description
+    # alternatives + keyword set. Charged separately from /seo/analyze so
+    # the button can honestly label "Generate 3 descriptions · 1 credit".
+    gate = check_and_deduct(channel_id)
+    if not gate["allowed"]:
+        return JSONResponse({"error": gate["message"], "show_upgrade": True}, status_code=402)
+
     if data:
         ch = data.get("channel", {})
         videos = data.get("videos", []) or []
@@ -192,16 +200,22 @@ def generate_description(body: DescriptionRequest, request: Request):
             "top_video_titles": top_titles,
         }
 
-    descriptions, top_keywords, error = generate_description_suggestions(
-        body.title.strip(),
-        body.current_description.strip(),
-        body.niche.strip(),
-        intent_analysis=body.intent_analysis,
-        keyword_scores=body.keyword_scores,
-        current_year=body.current_year,
-        channel_context=channel_context,
-    )
+    try:
+        descriptions, top_keywords, error = generate_description_suggestions(
+            body.title.strip(),
+            body.current_description.strip(),
+            body.niche.strip(),
+            intent_analysis=body.intent_analysis,
+            keyword_scores=body.keyword_scores,
+            current_year=body.current_year,
+            channel_context=channel_context,
+        )
+    except Exception as e:
+        refund_credit(channel_id)
+        return JSONResponse({"error": "Description generation failed. Your credit has been refunded."}, status_code=500)
+
     if error and not descriptions:
+        refund_credit(channel_id)
         return JSONResponse({"error": error}, status_code=500)
     # Tag description output onto the most recent analysis row so it
     # rehydrates alongside the main report when the user reopens it.
@@ -212,7 +226,11 @@ def generate_description(body: DescriptionRequest, request: Request):
         descriptions=descriptions,
         top_keywords=top_keywords,
     )
-    return JSONResponse({"descriptions": descriptions, "top_keywords": top_keywords})
+    return JSONResponse({
+        "descriptions": descriptions,
+        "top_keywords": top_keywords,
+        "_usage": {"warning": gate["warning"], "usage_pct": gate["usage_pct"]},
+    })
 
 
 @router.post("/thumbnail-text")

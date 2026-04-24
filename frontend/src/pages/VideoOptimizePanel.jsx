@@ -737,7 +737,7 @@ export default function VideoOptimizePanel({ video, onClose, onVideoUpdated, pla
                     style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '10px 22px', background: !descLoading ? C.red : C.surface, color: !descLoading ? '#fff' : C.text3, border: 'none', borderRadius: 100, fontSize: 14, fontWeight: 700, fontFamily: 'inherit', cursor: !descLoading ? 'pointer' : 'not-allowed', transition: 'all 0.15s', boxShadow: !descLoading ? '0 1px 3px rgba(229,37,27,0.2), 0 4px 12px rgba(229,37,27,0.18)' : 'none' }}>
                     {descLoading ? <><SpinIcon /> Generating…</> : <>
                       <svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2"><path d="M7 1l1.5 4.5H13l-3.7 2.7 1.4 4.3L7 10 3.3 12.5l1.4-4.3L1 5.5h4.5z"/></svg>
-                      Generate 3 descriptions
+                      Generate 3 descriptions · 1 credit
                     </>}
                   </button>
                   {descError && <p style={{ marginTop: 10, fontSize: 14, color: C.red }}>{descError}</p>}
