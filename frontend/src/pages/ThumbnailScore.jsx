@@ -18,9 +18,9 @@ if (typeof document !== 'undefined' && !document.getElementById('thumb-iq-styles
     @keyframes thumbSpin    { to { transform: rotate(360deg) } }
     .tiq-card {
       background: #fff;
-      border: 1px solid rgba(0,0,0,0.09);
+      border: 1px solid #e6e6ec;
       border-radius: 16px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.06);
+      box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 4px 14px rgba(0,0,0,0.06);
     }
     .tiq-section { animation: thumbFadeUp 0.28s ease both; }
     .tiq-upload-zone {
@@ -50,8 +50,8 @@ if (typeof document !== 'undefined' && !document.getElementById('thumb-iq-styles
 
     .tiq-acc-header {
       background: #ffffff;
-      border: 1px solid rgba(0,0,0,0.09);
-      box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.06);
+      border: 1px solid #e6e6ec;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 4px 14px rgba(0,0,0,0.06);
       padding: 16px 20px;
       display: flex;
       align-items: center;
@@ -61,19 +61,19 @@ if (typeof document !== 'undefined' && !document.getElementById('thumb-iq-styles
       user-select: none;
     }
     .tiq-acc-header:hover {
-      box-shadow: 0 2px 6px rgba(0,0,0,0.06), 0 8px 24px rgba(0,0,0,0.08);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08), 0 16px 40px rgba(0,0,0,0.09);
       border-color: rgba(0,0,0,0.14);
     }
     .tiq-acc-header.closed { border-radius: 16px; }
     .tiq-acc-header.open   { border-radius: 16px 16px 0 0; border-bottom-color: rgba(0,0,0,0.07); }
 
     .tiq-acc-body {
-      border: 1px solid rgba(0,0,0,0.09);
+      border: 1px solid #e6e6ec;
       border-top: none;
       border-radius: 0 0 16px 16px;
       background: #ffffff;
       padding: 24px 20px 28px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.06);
+      box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 4px 14px rgba(0,0,0,0.06);
     }
 
     /* Trash button — hidden until wrapper hovered */
@@ -139,24 +139,28 @@ if (typeof document !== 'undefined' && !document.getElementById('thumb-iq-styles
   document.head.appendChild(s)
 }
 
-/* ─── Design tokens ──────────────────────────────────────────────────────── */
+/* ─── Design tokens — match Dashboard/SeoOptimizer C object exactly. No
+       orange tier (canonical palette is red/amber/green with blue for
+       reasoning context). ────────────────────────────────────────────── */
 const C = {
   red:     '#e5251b', redBg:  '#fff5f5', redBdr: '#fecaca',
-  green:   '#16a34a', greenBg:'#f0fdf4', greenBdr:'#bbf7d0',
+  green:   '#059669', greenBg:'#f0fdf4', greenBdr:'#bbf7d0',
   amber:   '#d97706', amberBg:'#fffbeb', amberBdr:'#fde68a',
-  orange:  '#ea580c', orangeBg:'#fff7ed',
   blue:    '#2563eb', blueBg: '#eff6ff', blueBdr: '#bfdbfe',
-  text1:   '#111114', text2: '#52525b', text3: '#a0a0b0',
-  border:  'rgba(0,0,0,0.09)',
+  text1:   '#0f0f13', text2: '#4a4a58', text3: '#9595a4',
+  border:  '#e6e6ec',
 }
 
+// Canonical thresholds: ≥75 green / ≥50 amber / <50 red (matches
+// Dashboard.jsx:1212 and SeoOptimizer.jsx:275). 4-tier + orange tier
+// removed so the same score renders identically across every page.
 function scoreColor(s, max = 100) {
   const pct = s / max * 100
-  return pct >= 80 ? C.green : pct >= 65 ? C.amber : pct >= 50 ? C.orange : C.red
+  return pct >= 75 ? C.green : pct >= 50 ? C.amber : C.red
 }
 function scoreLabel(s, max = 100) {
   const pct = s / max * 100
-  return pct >= 80 ? 'Strong' : pct >= 65 ? 'Needs work' : pct >= 50 ? 'Weak' : 'Critical'
+  return pct >= 75 ? 'Strong' : pct >= 50 ? 'Needs work' : 'Weak'
 }
 function fmtPct(n) { return `${Math.round(n)}%` }
 
