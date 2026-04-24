@@ -505,21 +505,25 @@ function AIAnalysis({ ai, top5Videos, channelId, checkedIdeas, onToggleIdea }) {
 
         <div style={{ display: 'flex', alignItems: 'stretch', gap: 24 }}>
 
-          {/* Left panel: what they do */}
-          <div style={{ flex: 1.2, minWidth: 0 }}>
+          {/* Left panel: Summary — wrapped in the blue Why-now tile style */}
+          <div style={{ flex: 1, minWidth: 0 }}>
             <p style={{ fontSize: 11, fontWeight: 600, color: '#9595a4',
               letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 10 }}>
               Summary
             </p>
-            <p style={{ fontSize: 14, color: '#111114', lineHeight: 1.78, fontWeight: 400 }}>
-              {ai.competitorSummary}
-            </p>
+            <div style={{ background: 'rgba(79,134,247,0.07)',
+              border: '1px solid rgba(79,134,247,0.12)',
+              borderRadius: 10, padding: '14px 16px' }}>
+              <p style={{ fontSize: 13.5, color: '#111114', lineHeight: 1.72, fontWeight: 400 }}>
+                {ai.competitorSummary}
+              </p>
+            </div>
           </div>
 
-          {/* Amber divider — 3px vertical bar between panels */}
+          {/* Amber divider — 3px vertical bar, now centered since both panels are flex:1 */}
           <div style={{ width: 3, alignSelf: 'stretch', background: '#d97706', flexShrink: 0, borderRadius: 2 }}/>
 
-          {/* Right panel: why it's a threat */}
+          {/* Right panel: Why this threat level */}
           <div style={{ flex: 1, minWidth: 0 }}>
             <p style={{ fontSize: 11, fontWeight: 600, color: '#9595a4',
               letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 10 }}>
