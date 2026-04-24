@@ -281,7 +281,7 @@ function useCompetitorStyles() {
       /* empty states */
       .comp-empty-state {
         text-align: center;
-        padding: 64px 0;
+        padding: 48px 0;
         color: #a0a0b0;
       }
 
@@ -1268,13 +1268,17 @@ export default function Competitors() {
       {/* ══ search tab ══════════════════════════════════════════════════════ */}
       {activeTab === 'search' && (
         <div>
-          <Card style={{ marginBottom: 20 }}>
-            <p style={{ fontSize: 14, fontWeight: 800, color: '#111114', marginBottom: 4, letterSpacing: '-0.3px' }}>
-              Find a competitor
-            </p>
-            <p style={{ fontSize: 14, color: '#a0a0b0', marginBottom: 16, fontWeight: 400 }}>
-              Type the name of a YouTube channel in your niche, or paste a channel URL
-            </p>
+          <Card topAccent={null} style={{ marginBottom: 20 }}>
+            <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between',
+              marginBottom: 14, gap: 8 }}>
+              <p style={{ fontSize: 11, fontWeight: 700, color: '#9595a4',
+                letterSpacing: '0.07em', textTransform: 'uppercase' }}>
+                Find a competitor
+              </p>
+              <p style={{ fontSize: 12, color: '#9595a4', fontWeight: 500 }}>
+                Channel name or URL
+              </p>
+            </div>
             <div style={{ display: 'flex', gap: 10 }}>
               <input
                 className="comp-input"
