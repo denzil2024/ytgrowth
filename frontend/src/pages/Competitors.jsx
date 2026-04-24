@@ -660,22 +660,22 @@ function AIAnalysis({ ai, top5Videos, channelId, checkedIdeas, onToggleIdea }) {
                   flexShrink: 0, marginTop: 4 }}
               />
               <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, flexWrap: 'wrap' }}>
-                  <p style={{ fontSize: 13, fontWeight: 600,
-                    color: isDone ? '#9595a4' : '#111114', lineHeight: 1.5,
-                    letterSpacing: '-0.1px',
-                    textDecoration: isDone ? 'line-through' : 'none' }}>
-                    {idea.title}
-                  </p>
-                  {idea.targetKeyword && (
+                <p style={{ fontSize: 13, fontWeight: 600,
+                  color: isDone ? '#9595a4' : '#111114', lineHeight: 1.5,
+                  letterSpacing: '-0.1px',
+                  textDecoration: isDone ? 'line-through' : 'none' }}>
+                  {idea.title}
+                </p>
+                {idea.targetKeyword && (
+                  <div style={{ marginTop: 6 }}>
                     <span className="comp-tag" style={{ background: '#fffbeb', color: '#d97706',
                       border: '1px solid #fde68a', whiteSpace: 'nowrap' }}>
                       {idea.targetKeyword}
                     </span>
-                  )}
-                </div>
+                  </div>
+                )}
                 <p style={{ fontSize: 12, color: '#9595a4', lineHeight: 1.55,
-                  fontWeight: 400, marginTop: 3 }}>
+                  fontWeight: 400, marginTop: 6 }}>
                   {idea.angle}
                 </p>
               </div>
@@ -707,7 +707,7 @@ function AIAnalysis({ ai, top5Videos, channelId, checkedIdeas, onToggleIdea }) {
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between',
                     marginBottom: 14, height: HEADER_SPACER_HEIGHT }}>
-                    <p style={{ fontSize: 11, fontWeight: 700, color: '#059669',
+                    <p style={{ fontSize: 11, fontWeight: 700, color: '#9595a4',
                       letterSpacing: '0.07em', textTransform: 'uppercase' }}>
                       Topics to tackle
                     </p>
