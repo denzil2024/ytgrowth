@@ -19,28 +19,26 @@ if (typeof document !== 'undefined' && !document.getElementById('ytg-vi-styles')
     @keyframes viSpin    { to { transform: rotate(360deg) } }
     @keyframes viFadeUp  { from { opacity:0; transform:translateY(6px) } to { opacity:1; transform:translateY(0) } }
 
-    /* Outer list card — single elevated surface, rows inside. Matches the
-       Paneled card pattern (one card, multiple related items) used on
-       Competitors' playbook. */
-    .vi-list-card {
+    /* Idea card — direct copy of SEO Studio's .seo-suggestion-card tokens
+       (SeoOptimizer.jsx:33-45) so Video Ideas reads as the same element as
+       "Suggested titles": 14px radius, hairline border, system elevation
+       (0 1/2 + 0 4/14), lift on hover. Amber 3px top stripe is applied
+       inline per-card, matching Dashboard Priority Actions. */
+    .vi-idea-card {
       background: #ffffff;
-      border: 1px solid rgba(0,0,0,0.09);
-      border-radius: 16px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.06);
+      border: 1px solid #e6e6ec;
+      border-radius: 14px;
       overflow: hidden;
+      margin-bottom: 8px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 4px 14px rgba(0,0,0,0.06);
+      transition: box-shadow 0.2s, transform 0.2s, opacity 0.2s;
       animation: viFadeUp 0.26s ease both;
     }
-
-    /* Compact idea row — mirrors Competitors .comp-qw-row so both
-       "topics to tackle" surfaces read as the same pattern. */
-    .vi-row {
-      display: flex; align-items: flex-start; gap: 14px;
-      padding: 14px 20px;
-      transition: background 0.15s, opacity 0.2s;
+    .vi-idea-card:hover {
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08), 0 16px 40px rgba(0,0,0,0.09);
+      transform: translateY(-1px);
     }
-    .vi-row + .vi-row { border-top: 1px solid rgba(0,0,0,0.06); }
-    .vi-row:hover { background: #fafafb; }
-    .vi-row.done { opacity: 0.55; }
+    .vi-idea-card.done { opacity: 0.48; }
 
     .vi-skeleton {
       background: linear-gradient(90deg, #f0f0f3 25%, #e8e8ec 50%, #f0f0f3 75%);
@@ -52,19 +50,6 @@ if (typeof document !== 'undefined' && !document.getElementById('ytg-vi-styles')
       0%   { background-position: 200% 0 }
       100% { background-position: -200% 0 }
     }
-
-    /* Per-row CTA — outlined-red pill (no ghost buttons; icon affordance or
-       outlined-red is the rule from feedback_buttons_always_red). */
-    .vi-row-cta {
-      display: inline-flex; align-items: center; gap: 5px;
-      padding: 6px 12px; border-radius: 100px;
-      font-size: 11.5px; font-weight: 700; font-family: inherit;
-      letter-spacing: 0.01em; white-space: nowrap;
-      background: #fff; color: #e5251b;
-      border: 1px solid #fecaca; cursor: pointer;
-      transition: background 0.15s, border-color 0.15s;
-    }
-    .vi-row-cta:hover { background: #fff5f5; border-color: #e5251b; }
 
     /* Refresh-confirm modal — minimal overlay, matches other dialogs in the
        app: backdrop blur + centered card with hairline + system elevation. */
@@ -159,31 +144,43 @@ function KeywordPill({ keyword }) {
   if (!keyword) return null
   return (
     <span style={{
-      fontSize: 12, fontWeight: 600,
-      color: C.text2, background: '#f4f4f6',
+      display: 'inline-block',
+      fontSize: 12, fontWeight: 500,
+      color: C.text2, background: '#fafafb',
       border: `1px solid ${C.border}`,
-      borderRadius: 100, padding: '3px 10px',
+      borderRadius: 20, padding: '5px 11px',
     }}>
       {keyword}
     </span>
   )
 }
 
-function SkeletonRow({ index }) {
+function SkeletonCard({ index }) {
   return (
-    <div className="vi-row" style={{ opacity: 1 - index * 0.05 }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0, paddingTop: 1 }}>
-        <div className="vi-skeleton" style={{ width: 14, height: 14, borderRadius: 3 }} />
-        <div className="vi-skeleton" style={{ width: 22, height: 22, borderRadius: 6 }} />
-      </div>
-      <div style={{ flex: 1, minWidth: 0 }}>
-        <div className="vi-skeleton" style={{ height: 14, width: '72%', marginBottom: 8 }} />
-        <div className="vi-skeleton" style={{ height: 18, width: 140, borderRadius: 100, marginBottom: 8 }} />
-        <div className="vi-skeleton" style={{ height: 12, width: '88%' }} />
-      </div>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0, paddingTop: 1 }}>
-        <div className="vi-skeleton" style={{ width: 42, height: 26, borderRadius: 8 }} />
-        <div className="vi-skeleton" style={{ width: 78, height: 26, borderRadius: 100 }} />
+    <div className="vi-idea-card" style={{
+      borderTop: `3px solid ${C.amber}`,
+      opacity: 1 - index * 0.05,
+    }}>
+      <div style={{ padding: '16px 22px 18px' }}>
+        <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: 14 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0, paddingTop: 2 }}>
+            <div className="vi-skeleton" style={{ width: 15, height: 15, borderRadius: 3 }} />
+            <div className="vi-skeleton" style={{ width: 26, height: 26, borderRadius: 8 }} />
+          </div>
+          <div style={{ flex: 1 }}>
+            <div className="vi-skeleton" style={{ height: 10, width: 140, marginBottom: 7 }} />
+            <div className="vi-skeleton" style={{ height: 14, width: '72%' }} />
+          </div>
+          <div className="vi-skeleton" style={{ width: 58, height: 22, borderRadius: 20, flexShrink: 0 }} />
+        </div>
+        <div style={{ height: 1, background: C.border, marginBottom: 14, marginLeft: 46 }} />
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr', gap: 8, marginLeft: 46 }}>
+          <div className="vi-skeleton" style={{ height: 78, borderRadius: 10 }} />
+          <div className="vi-skeleton" style={{ height: 78, borderRadius: 10 }} />
+        </div>
+        <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 14, marginLeft: 46 }}>
+          <div className="vi-skeleton" style={{ width: 168, height: 36, borderRadius: 100 }} />
+        </div>
       </div>
     </div>
   )
@@ -264,98 +261,197 @@ function RefreshConfirmModal({ credits, onCancel, onConfirm }) {
   )
 }
 
-/* IdeaRow — compact row that mirrors Competitors' Topics-to-tackle pattern
-   so both "ideas to tackle" surfaces read as the same element. Checkbox +
-   small rank badge (tinted by source: amber AI / blue competitor) on the
-   left; title + keyword chip + 2-line angle in the middle; score pill and
-   outlined-red CTA on the right. No per-row elevation — rows sit inside a
-   single elevated list card. */
-function IdeaRow({ idea, done, onDone, onUseSeo }) {
+/* IdeaCard — direct adaptation of SEO Studio's Suggested Title card
+   (SeoOptimizer.jsx:1271-1353). Canonical insight-card skeleton shared by
+   Dashboard Priority Actions and SEO Studio suggestions: 3px amber top
+   stripe, 14px radius, 26×26 amber rank badge + "Built around" eyebrow +
+   title + severity pill header, hairline divider at marginLeft:46, tinted
+   2-col body (blue Why-now / white+amber-bar Action), bottom action row
+   with red primary CTA. Checkbox added to the rank cluster so this card
+   also tracks completion like Priority Actions. */
+function IdeaCard({ idea, done, onDone, onUseSeo }) {
   const score = idea.source === 'ai' && idea.opportunityScore
     ? idea.opportunityScore
     : Math.max(65, 85 - (idea.rank - 1) * 2)
 
-  const tone = idea.source === 'ai'
-    ? { color: C.amber, label: 'AI opportunity' }
-    : { color: C.blue,  label: 'Competitor gap' }
+  // Severity thresholds match SEO Studio Suggested Titles exactly
+  // (SeoOptimizer.jsx:1267-1268) so the pill reads the same across the app.
+  const sevLabel = score >= 75 ? 'Strong' : score >= 60 ? 'Solid' : 'Weak'
+  const sevColor = score >= 75 ? C.green : score >= 60 ? C.amber : C.red
 
   return (
-    <div className={`vi-row${done ? ' done' : ''}`}>
+    <div className={`vi-idea-card${done ? ' done' : ''}`} style={{
+      borderTop: `3px solid ${done ? C.border : C.amber}`,
+    }}>
+      <div style={{ padding: '16px 22px 18px' }}>
 
-      {/* Checkbox + rank badge pair */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0, paddingTop: 1 }}>
-        <input
-          type="checkbox"
-          checked={!!done}
-          onChange={() => onDone(idea.title)}
-          style={{ width: 14, height: 14, accentColor: C.green, cursor: 'pointer', flexShrink: 0 }}
-        />
-        <div style={{
-          width: 22, height: 22, borderRadius: 6,
-          background: done ? C.greenBg : tone.color,
-          display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
-        }}>
-          {done
-            ? <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke={C.green} strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><polyline points="1.5,6.5 5,10 10.5,2"/></svg>
-            : <span style={{ fontSize: 11, fontWeight: 900, color: '#fff', fontVariantNumeric: 'tabular-nums', lineHeight: 1 }}>{idea.rank}</span>
-          }
-        </div>
-      </div>
+        {/* ── Header — checkbox + amber rank badge + eyebrow/title + severity pill ── */}
+        <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: done ? 0 : 14 }}>
 
-      {/* Middle — title + keyword chip + angle (2-line clamp) */}
-      <div style={{ flex: 1, minWidth: 0 }}>
-        <p style={{
-          fontSize: 14, fontWeight: 700,
-          color: done ? C.text3 : C.text1,
-          lineHeight: 1.45, letterSpacing: '-0.1px',
-          textDecoration: done ? 'line-through' : 'none',
-          marginBottom: (idea.targetKeyword || idea.thumbnail_ready || idea.angle) ? 6 : 0,
-        }}>{idea.title}</p>
-
-        {(idea.targetKeyword || idea.thumbnail_ready) && (
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, alignItems: 'center', marginBottom: idea.angle ? 6 : 0 }}>
-            <KeywordPill keyword={idea.targetKeyword} />
-            {idea.thumbnail_ready && (
-              <span style={{
-                fontSize: 11, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase',
-                color: C.green, background: C.greenBg,
-                border: `1px solid ${C.greenBdr}`,
-                borderRadius: 100, padding: '2px 9px', whiteSpace: 'nowrap',
-              }}>
-                Thumbnail ready · {idea.thumbnail_score}/100
-              </span>
-            )}
-          </div>
-        )}
-
-        {idea.angle && (
-          <p style={{
-            fontSize: 12.5, color: C.text2, lineHeight: 1.55, margin: 0,
-            display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden',
-          }}>
-            <span style={{
-              fontSize: 10.5, fontWeight: 700, letterSpacing: '0.07em',
-              textTransform: 'uppercase', color: tone.color, marginRight: 7,
+          {/* Checkbox + rank badge pair — 26×26, 8px radius, amber background with white 12/900 numeral */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0, paddingTop: 2 }}>
+            <input
+              type="checkbox"
+              checked={!!done}
+              onChange={() => onDone(idea.title)}
+              style={{ width: 15, height: 15, accentColor: C.green, cursor: 'pointer', flexShrink: 0 }}
+            />
+            <div style={{
+              width: 26, height: 26, borderRadius: 8,
+              background: done ? C.greenBg : C.amber,
+              display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
             }}>
-              {tone.label}
+              {done
+                ? <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke={C.green} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><polyline points="1.5,6.5 5,10 10.5,2"/></svg>
+                : <span style={{ fontSize: 12, fontWeight: 900, color: '#fff', fontVariantNumeric: 'tabular-nums' }}>{idea.rank}</span>
+              }
+            </div>
+          </div>
+
+          {/* Eyebrow + title — "Built around: {keyword}" mirrors SEO Studio */}
+          <div style={{ flex: 1, minWidth: 0 }}>
+            {idea.targetKeyword && (
+              <p style={{
+                fontSize: 10, fontWeight: 700, color: C.text3,
+                letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 5,
+              }}>
+                Built around: {idea.targetKeyword}
+              </p>
+            )}
+            <p style={{
+              fontSize: 14, fontWeight: 700,
+              color: done ? C.text3 : C.text1,
+              lineHeight: 1.55,
+              textDecoration: done ? 'line-through' : 'none',
+            }}>{idea.title}</p>
+          </div>
+
+          {/* Severity pill on the right — 10/700 uppercase, 1.5px border, scoreColor */}
+          {!done && (
+            <span style={{
+              fontSize: 10, fontWeight: 700, color: sevColor,
+              padding: '3px 9px', borderRadius: 20,
+              letterSpacing: '0.06em', textTransform: 'uppercase',
+              border: `1.5px solid ${sevColor}`, flexShrink: 0,
+            }}>
+              {sevLabel}
             </span>
-            {idea.angle}
-          </p>
+          )}
+        </div>
+
+        {/* ── Body + action row — hidden when done ── */}
+        {!done && (
+          <>
+            {/* Hairline aligned with title start */}
+            <div style={{ height: 1, background: C.border, marginBottom: 14, marginLeft: 46 }} />
+
+            {/* 2-col body grid — blue Why-now | white+amber-bar Action. 3rd col
+                dropped since Video Ideas has no Expected-outcome facet (matches
+                InsightCard's pattern of rendering an empty placeholder when a
+                facet is missing). */}
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr', gap: 8, marginLeft: 46 }}>
+
+              {/* Col 1 — Why now (blue tint) */}
+              <div style={{
+                background: 'rgba(79,134,247,0.07)',
+                border: '1px solid rgba(79,134,247,0.12)',
+                borderRadius: 10, padding: '12px 14px',
+              }}>
+                <p style={{
+                  fontSize: 10, fontWeight: 700, color: '#4a7cf7',
+                  letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6,
+                }}>
+                  Why now
+                </p>
+                <p style={{ fontSize: 13, color: C.text1, lineHeight: 1.65 }}>
+                  {idea.angle || 'This topic is under-served in your niche right now.'}
+                </p>
+              </div>
+
+              {/* Col 2 — Opportunity score + target keyword (white + amber bar, Action slot) */}
+              <div style={{
+                background: '#ffffff',
+                border: `1px solid ${C.border}`,
+                borderLeft: `3px solid ${C.amber}`,
+                borderRadius: '0 10px 10px 0',
+                padding: '12px 16px',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
+                display: 'flex', flexDirection: 'column', gap: 12,
+              }}>
+                <div>
+                  <p style={{
+                    fontSize: 10, fontWeight: 700, color: C.amber,
+                    letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 10,
+                  }}>
+                    Opportunity
+                  </p>
+                  <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
+                    <span style={{
+                      fontSize: 28, fontWeight: 800, color: sevColor,
+                      fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.8px', lineHeight: 1,
+                    }}>
+                      {score}
+                    </span>
+                    <span style={{
+                      fontSize: 11, fontWeight: 600, color: C.text3,
+                      letterSpacing: '0.06em', textTransform: 'uppercase',
+                    }}>
+                      / 100 score
+                    </span>
+                  </div>
+                </div>
+
+                {(idea.targetKeyword || idea.thumbnail_ready) && (
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, alignItems: 'center' }}>
+                    <KeywordPill keyword={idea.targetKeyword} />
+                    {idea.thumbnail_ready && (
+                      <span style={{
+                        fontSize: 11, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase',
+                        color: C.green, background: C.greenBg,
+                        border: `1px solid ${C.greenBdr}`,
+                        borderRadius: 100, padding: '2px 9px', whiteSpace: 'nowrap',
+                      }}>
+                        Thumbnail ready · {idea.thumbnail_score}/100
+                      </span>
+                    )}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Action row — single red primary CTA, right-aligned (mirrors
+                SeoOptimizer.jsx:1342-1351 action row) */}
+            <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 14, marginLeft: 46 }}>
+              <button
+                onClick={() => onUseSeo(idea.title)}
+                style={{
+                  display: 'inline-flex', alignItems: 'center', gap: 7,
+                  padding: '9px 20px', borderRadius: 100, border: 'none',
+                  fontFamily: 'inherit', fontSize: 12.5, fontWeight: 700,
+                  background: C.red, color: '#fff', cursor: 'pointer',
+                  boxShadow: '0 1px 3px rgba(0,0,0,0.12), 0 4px 14px rgba(229,37,27,0.32)',
+                  transition: 'all 0.18s', letterSpacing: '-0.1px', whiteSpace: 'nowrap',
+                }}
+                onMouseEnter={e => {
+                  e.currentTarget.style.filter = 'brightness(1.07)'
+                  e.currentTarget.style.transform = 'translateY(-1px)'
+                  e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.15), 0 8px 28px rgba(229,37,27,0.42)'
+                }}
+                onMouseLeave={e => {
+                  e.currentTarget.style.filter = 'none'
+                  e.currentTarget.style.transform = 'translateY(0)'
+                  e.currentTarget.style.boxShadow = '0 1px 3px rgba(0,0,0,0.12), 0 4px 14px rgba(229,37,27,0.32)'
+                }}
+              >
+                Use in SEO Studio
+                <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                  <path d="M2 5.5h7M5.5 2l3.5 3.5L5.5 9"/>
+                </svg>
+              </button>
+            </div>
+          </>
         )}
       </div>
-
-      {/* Right — score pill + outlined-red CTA (hidden when done) */}
-      {!done && (
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0, paddingTop: 1 }}>
-          <ScorePill score={score} />
-          <button className="vi-row-cta" onClick={() => onUseSeo(idea.title)}>
-            Use in SEO
-            <svg width="10" height="10" viewBox="0 0 11 11" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-              <path d="M2 5.5h7M5.5 2l3.5 3.5L5.5 9"/>
-            </svg>
-          </button>
-        </div>
-      )}
     </div>
   )
 }
@@ -626,9 +722,7 @@ export default function VideoIdeas({ onNavigate }) {
               Generating ideas from your channel data…
             </p>
           )}
-          <div className="vi-list-card">
-            {Array.from({ length: 10 }, (_, i) => <SkeletonRow key={i} index={i} />)}
-          </div>
+          {Array.from({ length: 10 }, (_, i) => <SkeletonCard key={i} index={i} />)}
         </>
       )}
 
@@ -706,17 +800,15 @@ export default function VideoIdeas({ onNavigate }) {
             </div>
           )}
 
-          <div className="vi-list-card">
-            {ideas.map(idea => (
-              <IdeaRow
-                key={`${idea.rank}-${idea.title}`}
-                idea={idea}
-                done={done.has(idea.title)}
-                onDone={toggleDone}
-                onUseSeo={handleUseSeo}
-              />
-            ))}
-          </div>
+          {ideas.map(idea => (
+            <IdeaCard
+              key={`${idea.rank}-${idea.title}`}
+              idea={idea}
+              done={done.has(idea.title)}
+              onDone={toggleDone}
+              onUseSeo={handleUseSeo}
+            />
+          ))}
         </div>
       )}
 
