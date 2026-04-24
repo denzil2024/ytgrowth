@@ -104,13 +104,12 @@ if (typeof document !== 'undefined' && !document.getElementById('seo-opt-styles'
     transform: translateY(-1px);
   }
   .seo-btn-primary {
-    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    display: inline-flex; align-items: center; gap: 8px;
     padding: 9px 20px; border-radius: 100px; border: none;
     font-family: 'Inter', system-ui, sans-serif; font-size: 12.5px; font-weight: 700;
     background: #e5251b; color: #ffffff; cursor: pointer;
     box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 4px 14px rgba(229,37,27,0.32);
     transition: all 0.18s;
-    letter-spacing: -0.1px;
     white-space: nowrap;
   }
   .seo-btn-primary:hover:not(:disabled) {
@@ -1058,7 +1057,7 @@ export default function SeoOptimizer({ onNavigate }) {
                   <div style={{ flex: 1.3, minWidth: 0 }}>
                     <p style={{ fontSize: 11, fontWeight: 600, color: C.text3, letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 10 }}>AI verdict</p>
                     <p style={{ fontSize: 14, color: C.text1, lineHeight: 1.85 }}>
-                      Your strongest AI option scores <span style={{ fontWeight: 700, color: bestAvg >= 75 ? C.green : bestAvg >= 55 ? C.amber : C.red }}>{bestAvg}</span>
+                      Your strongest AI option scores <span style={{ fontWeight: 700, color: bestAvg >= 75 ? C.green : bestAvg >= 50 ? C.amber : C.red }}>{bestAvg}</span>
                       {beatVerdict && <> — {beatVerdict}</>}.
                       {strongest && weakest && strongest[0] !== weakest[0] && (
                         <> Strongest on <span style={{ fontWeight: 700, color: C.text1 }}>{strongest[0].toLowerCase()}</span> ({strongest[1]}); room to grow on <span style={{ fontWeight: 700, color: C.text1 }}>{weakest[0].toLowerCase()}</span> ({weakest[1]}).</>
@@ -1392,7 +1391,7 @@ export default function SeoOptimizer({ onNavigate }) {
                   {/* 2-col grid with amber vertical divider between columns (matches Competitor set) */}
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', columnGap: 0, rowGap: 14 }}>
                     {result.keyword_scores.map((kw, i) => {
-                      const scColor    = kw.score >= 75 ? C.green : kw.score >= 55 ? C.amber : C.red
+                      const scColor    = kw.score >= 75 ? C.green : kw.score >= 50 ? C.amber : C.red
                       const isRightCol = i % 2 === 1
                       return (
                         <div key={kw.phrase} className="seo-kw-row"
