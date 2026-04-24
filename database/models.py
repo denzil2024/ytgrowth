@@ -303,6 +303,13 @@ with engine.connect() as _conn:
         "UPDATE user_subscriptions SET monthly_allowance = 5, monthly_used = 0 WHERE plan = 'free' AND monthly_allowance = 9999",
         # Free plan change 2026-04-23: 5 lifetime → 3 per month with monthly reset
         "UPDATE user_subscriptions SET monthly_allowance = 3 WHERE plan = 'free' AND monthly_allowance = 5",
+        # 2026-04-24: catch legacy free users whose plan string isn't literally
+        # 'free' (e.g. 'lifetime_free', 'trial', empty) but still sit on the
+        # old 5-allowance. Drop to 3 AND zero used so the UsageBar flips from
+        # stuck "5/5" → a fresh "0/3". Paid plans (solo/growth/agency +
+        # lifetime variants) all have much larger allowances, so this
+        # allowance=5 match is unique to legacy free rows.
+        "UPDATE user_subscriptions SET monthly_allowance = 3, monthly_used = 0 WHERE monthly_allowance = 5",
         # Rename paddle_* → lemonsqueezy_* (legacy; kept idempotent)
         "ALTER TABLE user_subscriptions RENAME COLUMN paddle_subscription_id TO lemonsqueezy_subscription_id",
         "ALTER TABLE user_subscriptions RENAME COLUMN paddle_customer_id TO lemonsqueezy_customer_id",
