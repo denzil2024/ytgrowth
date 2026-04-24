@@ -899,68 +899,129 @@ function AIAnalysis({ ai, top5Videos, channelId, checkedIdeas, onToggleIdea }) {
         )
       })()}
 
-      {/* ── Title patterns — standalone card (will be redesigned next per user feedback) */}
+      {/* ── Title patterns — Title Scorecard hero layout (SeoOptimizer.jsx:1015-1097)
+           Three panels separated by 3px amber vertical bars:
+             • Left — big scoreColor'd number + "AVG LENGTH" label + vs-YT-cap delta
+             • Middle — "DOMINANT FORMATS" eyebrow + numbered list of format strings
+             • Right — "TITLE VOCABULARY" eyebrow + Top keywords (neutral chips) +
+               Power words (amber chips) stacked
+           H2 + subtitle above the card, matching the Top content topics header. */}
       {ai.titlePatterns && (() => {
-        const len    = ai.titlePatterns.avgTitleLength || 0
-        const lenPct = Math.min(100, len)
-        const lenCol = lenPct <= 60 ? '#059669' : lenPct <= 80 ? '#d97706' : '#e5251b'
+        const len      = ai.titlePatterns.avgTitleLength || 0
+        const lenCol   = len <= 60 ? '#059669' : len <= 80 ? '#d97706' : '#e5251b'
+        const overCap  = len > 100
+        const capDelta = 100 - len
+        const deltaCol = overCap ? '#e5251b' : '#059669'
+
         return (
-          <Card>
-            <SectionTitle hint="What works across their recent titles">Title patterns</SectionTitle>
+          <div>
+            <div style={{ marginBottom: 12 }}>
+              <h2 style={{ fontSize: 20, fontWeight: 800, color: '#111114',
+                letterSpacing: '-0.5px', marginBottom: 4 }}>
+                Title patterns
+              </h2>
+              <p style={{ fontSize: 13, color: '#9595a4', lineHeight: 1.5 }}>
+                What works across their recent titles · how they package ideas
+              </p>
+            </div>
 
-            <div style={{ marginBottom: 18, paddingBottom: 14, borderBottom: '1px solid rgba(0,0,0,0.06)' }}>
-              <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between',
-                gap: 12, marginBottom: 10 }}>
-                <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
-                  <p style={{ fontSize: 30, fontWeight: 800, color: lenCol, letterSpacing: '-0.8px', lineHeight: 1 }}>
+            <Card topAccent={null}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 32 }}>
+
+                {/* LEFT — big avg length + label + delta (scoreColor by truncation risk) */}
+                <div style={{ flexShrink: 0, textAlign: 'center', minWidth: 120 }}>
+                  <p style={{ fontSize: 44, fontWeight: 800, color: lenCol,
+                    letterSpacing: '-1.2px', lineHeight: 1 }}>
                     {len}
+                    <span style={{ fontSize: 16, color: '#9595a4', fontWeight: 600,
+                      letterSpacing: '-0.3px', marginLeft: 2 }}>/100</span>
                   </p>
-                  <p style={{ fontSize: 13, color: '#9595a4', fontWeight: 500 }}>char avg title length</p>
+                  <p style={{ fontSize: 11, color: '#9595a4', fontWeight: 500, marginTop: 4,
+                    letterSpacing: '0.03em', textTransform: 'uppercase' }}>
+                    Avg title length
+                  </p>
+                  {capDelta !== 0 && (
+                    <p style={{ fontSize: 11, fontWeight: 700, color: deltaCol, marginTop: 3 }}>
+                      {overCap ? '▲' : '▼'} {Math.abs(capDelta)} {overCap ? 'over' : 'under'} YT cap
+                    </p>
+                  )}
                 </div>
-                <span style={{ fontSize: 11, color: '#9595a4', fontWeight: 500 }}>YouTube cap: 100</span>
-              </div>
-              <div style={{ height: 4, background: '#eeeef3', borderRadius: 99, overflow: 'hidden' }}>
-                <div style={{ width: `${lenPct}%`, height: '100%', background: lenCol,
-                  borderRadius: 99, transition: 'width 0.8s cubic-bezier(0.34,1.56,0.64,1)' }}/>
-              </div>
-            </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-              {ai.titlePatterns.dominantFormats?.length > 0 && (
-                <div>
-                  <p className="comp-card-label" style={{ marginBottom: 7 }}>Dominant formats</p>
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5 }}>
-                    {ai.titlePatterns.dominantFormats.map((f, i) => (
-                      <span key={i} className="comp-tag" style={{ background: '#f4f4f6',
-                        color: '#52525b', border: '1px solid rgba(0,0,0,0.09)' }}>{f}</span>
-                    ))}
-                  </div>
+                {/* AMBER 3px vertical divider */}
+                <div style={{ width: 3, alignSelf: 'stretch', background: '#d97706',
+                  flexShrink: 0, borderRadius: 2 }}/>
+
+                {/* MIDDLE — dominant formats listed as verdict-style content */}
+                <div style={{ flex: 1.3, minWidth: 0 }}>
+                  <p style={{ fontSize: 11, fontWeight: 600, color: '#9595a4',
+                    letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 10 }}>
+                    Dominant formats
+                  </p>
+                  {ai.titlePatterns.dominantFormats?.length > 0 ? (
+                    <ol style={{ listStyle: 'none', padding: 0, margin: 0,
+                      display: 'flex', flexDirection: 'column', gap: 10 }}>
+                      {ai.titlePatterns.dominantFormats.map((f, i) => (
+                        <li key={i} style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
+                          <span style={{ fontSize: 11, fontWeight: 700, color: '#d97706',
+                            fontVariantNumeric: 'tabular-nums', flexShrink: 0, marginTop: 3,
+                            minWidth: 14 }}>
+                            {i + 1}
+                          </span>
+                          <p style={{ fontSize: 13, color: '#111114', lineHeight: 1.6, fontWeight: 400 }}>
+                            {f}
+                          </p>
+                        </li>
+                      ))}
+                    </ol>
+                  ) : (
+                    <p style={{ fontSize: 13, color: '#9595a4' }}>No format patterns detected.</p>
+                  )}
                 </div>
-              )}
-              {ai.titlePatterns.topKeywords?.length > 0 && (
-                <div>
-                  <p className="comp-card-label" style={{ marginBottom: 7 }}>Top keywords</p>
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5 }}>
-                    {ai.titlePatterns.topKeywords.map((k, i) => (
-                      <span key={i} className="comp-tag" style={{ background: '#f4f4f6',
-                        color: '#52525b', border: '1px solid rgba(0,0,0,0.09)' }}>{k}</span>
-                    ))}
-                  </div>
+
+                {/* AMBER 3px vertical divider */}
+                <div style={{ width: 3, alignSelf: 'stretch', background: '#d97706',
+                  flexShrink: 0, borderRadius: 2 }}/>
+
+                {/* RIGHT — title vocabulary (keywords + power words) */}
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <p style={{ fontSize: 11, fontWeight: 600, color: '#9595a4',
+                    letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 12 }}>
+                    Title vocabulary
+                  </p>
+
+                  {ai.titlePatterns.topKeywords?.length > 0 && (
+                    <div style={{ marginBottom: ai.titlePatterns.powerWordsUsed?.length > 0 ? 12 : 0 }}>
+                      <p style={{ fontSize: 10, fontWeight: 600, color: '#9595a4',
+                        letterSpacing: '0.04em', textTransform: 'uppercase', marginBottom: 6 }}>
+                        Keywords
+                      </p>
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5 }}>
+                        {ai.titlePatterns.topKeywords.map((k, i) => (
+                          <span key={i} className="comp-tag" style={{ background: '#f4f4f6',
+                            color: '#52525b', border: '1px solid rgba(0,0,0,0.09)' }}>{k}</span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {ai.titlePatterns.powerWordsUsed?.length > 0 && (
+                    <div>
+                      <p style={{ fontSize: 10, fontWeight: 600, color: '#9595a4',
+                        letterSpacing: '0.04em', textTransform: 'uppercase', marginBottom: 6 }}>
+                        Power words
+                      </p>
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5 }}>
+                        {ai.titlePatterns.powerWordsUsed.map((w, i) => (
+                          <span key={i} className="comp-tag" style={{ background: '#fffbeb',
+                            color: '#d97706', border: '1px solid #fde68a' }}>{w}</span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
-              )}
-              {ai.titlePatterns.powerWordsUsed?.length > 0 && (
-                <div>
-                  <p className="comp-card-label" style={{ marginBottom: 7 }}>Power words</p>
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5 }}>
-                    {ai.titlePatterns.powerWordsUsed.map((w, i) => (
-                      <span key={i} className="comp-tag" style={{ background: '#fffbeb',
-                        color: '#d97706', border: '1px solid #fde68a' }}>{w}</span>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-          </Card>
+              </div>
+            </Card>
+          </div>
         )
       })()}
 
