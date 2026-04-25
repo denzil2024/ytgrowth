@@ -114,25 +114,74 @@ def get_session(session_id: str | None) -> tuple[dict | None, Credentials | None
 
 def _find_existing_insights(channel_id: str) -> tuple[str | None, dict | None]:
     """
-    Scan all sessions in the DB for one that already has data for this channel.
-    Returns (session_id, user_data) if found, else (None, None).
-    Used so that a returning user with a new session cookie doesn't lose their
-    cached insights and trigger a fresh Claude analysis.
+    Scan sessions for the row that owns the freshest insights for this
+    channel_id. A user can have multiple UserSession rows (logout/login
+    creates a new session_id) — pick the one with the most recent
+    analyzed_at, preferring rows that actually carry insights over rows
+    that don't.
+
+    This is what stops a re-audited user from logging out, back in, and
+    seeing their old audit because /callback picked up an arbitrary
+    earlier row.
     """
     try:
         db = SessionLocal()
         rows = db.query(UserSession).all()
+        best = None  # (analyzed_at_str, has_insights, session_id, user_data)
         for row in rows:
             try:
                 user_data = json.loads(row.user_data_json)
-                if user_data.get("channel", {}).get("channel_id") == channel_id:
-                    return row.session_id, user_data
+                if user_data.get("channel", {}).get("channel_id") != channel_id:
+                    continue
+                analyzed_at = user_data.get("analyzed_at") or ""
+                has_insights = bool(user_data.get("insights"))
+                # Sort key: prefer rows WITH insights, then by analyzed_at desc.
+                key = (1 if has_insights else 0, analyzed_at)
+                if best is None or key > best[0]:
+                    best = (key, row.session_id, user_data)
             except Exception:
                 continue
+        if best:
+            _, sid, ud = best
+            return sid, ud
         return None, None
     except Exception as e:
         print(f"Channel lookup error: {e}")
         return None, None
+    finally:
+        db.close()
+
+
+def _fanout_insights_to_channel(channel_id: str, insights: dict, analyzed_at: str, exclude_session_id: str | None = None) -> None:
+    """
+    Write the freshest `insights` + `analyzed_at` to every UserSession row
+    that owns this channel_id. Used by `_run_analysis_in_background` so a
+    user who logged out/in mid-audit (or has the dashboard open on a second
+    device) sees the new audit on every active session — not just the one
+    that triggered the re-audit.
+    """
+    if not channel_id:
+        return
+    db = SessionLocal()
+    try:
+        rows = db.query(UserSession).all()
+        for row in rows:
+            if exclude_session_id and row.session_id == exclude_session_id:
+                continue
+            try:
+                user_data = json.loads(row.user_data_json) if row.user_data_json else None
+            except Exception:
+                continue
+            if not user_data or user_data.get("channel", {}).get("channel_id") != channel_id:
+                continue
+            user_data["insights"] = insights
+            user_data["analyzed_at"] = analyzed_at
+            row.user_data_json = json.dumps(user_data)
+            # Mirror to the in-memory cache if present so subsequent reads
+            # for that session don't fall back to the stale dict.
+            if row.session_id in _user_data:
+                _user_data[row.session_id] = user_data
+        db.commit()
     finally:
         db.close()
 
@@ -228,6 +277,17 @@ def _run_analysis_in_background(session_id: str, stats: dict, videos: list, full
             _user_data[session_id] = data
             _persist_session(session_id, creds, data)
             print(f"Analysis saved for {session_id[:8]}")
+
+        # Fan-out: if the user logged out and back in (or has the dashboard
+        # open on another device) WHILE this background task was running,
+        # they now have a different session_id pointing at the same
+        # channel_id. Write the fresh insights to every UserSession row that
+        # owns this channel so all sessions converge on the new audit.
+        if channel_id:
+            try:
+                _fanout_insights_to_channel(channel_id, insights, analyzed_at, exclude_session_id=session_id)
+            except Exception as fan_err:
+                print(f"Insights fan-out error: {fan_err}")
 
             # First report: generate immediately on channel connect — paid plans only,
             # costs 1 credit (refunded on failure). Free plan shows an upgrade nudge
@@ -584,9 +644,14 @@ def refresh_analysis(request: Request, background_tasks: BackgroundTasks):
             status_code=402,
         )
 
+    # Show "loading" state for THIS session only — never persist null insights
+    # to the DB. If we wrote null and the user logged out/in (or hit another
+    # device) before the background task finished, /auth/callback would pull
+    # the nulled row and the user would see their previous audit instead of
+    # the fresh one. Keep the previous insights on disk; the background task
+    # below will overwrite them once analysis completes.
     data["insights"] = None
     _user_data[session_id] = data
-    _persist_session(session_id, creds, data)
     creds = _user_creds.get(session_id)
     full_data = get_full_channel_data(creds, channel_id)
 
