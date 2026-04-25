@@ -309,6 +309,22 @@ class OutliersReport(Base):
     updated_at              = Column(DateTime, default=_now, onupdate=_now)
 
 
+class VideoAutopsyCache(Base):
+    """
+    Persisted post-publish autopsy reports — one per (channel_id, video_id).
+    Re-running an autopsy on the same video updates the existing row instead
+    of stacking duplicates. The Autopsy page Reports tab reads from here.
+    """
+    __tablename__ = "video_autopsy_cache"
+    id          = Column(Integer, primary_key=True, autoincrement=True)
+    channel_id  = Column(String, nullable=False, index=True)
+    video_id    = Column(String, nullable=False, index=True)
+    video_title = Column(Text, nullable=False)
+    result_json = Column(Text, nullable=False)
+    created_at  = Column(DateTime, default=_now)
+    updated_at  = Column(DateTime, default=_now, onupdate=_now)
+
+
 class FreeTierFeatureUsage(Base):
     """
     Tracks one-run-per-cycle usage of the feature-level gate for free-tier
@@ -377,6 +393,12 @@ with engine.connect() as _conn:
         "CREATE INDEX IF NOT EXISTS ix_keywords_research_cache_channel_id ON keywords_research_cache (channel_id)",
         "CREATE INDEX IF NOT EXISTS ix_keywords_research_cache_keyword_lower ON keywords_research_cache (keyword_lower)",
         "CREATE UNIQUE INDEX IF NOT EXISTS uq_keywords_research_cache_channel_keyword ON keywords_research_cache (channel_id, keyword_lower)",
+        # Video autopsy reports — one per (channel_id, video_id), dedup so a
+        # re-run overwrites. Read by the Autopsy page Reports tab.
+        "CREATE TABLE IF NOT EXISTS video_autopsy_cache (id INTEGER PRIMARY KEY AUTOINCREMENT, channel_id TEXT NOT NULL, video_id TEXT NOT NULL, video_title TEXT NOT NULL, result_json TEXT NOT NULL, created_at DATETIME, updated_at DATETIME)",
+        "CREATE INDEX IF NOT EXISTS ix_video_autopsy_cache_channel_id ON video_autopsy_cache (channel_id)",
+        "CREATE INDEX IF NOT EXISTS ix_video_autopsy_cache_video_id ON video_autopsy_cache (video_id)",
+        "CREATE UNIQUE INDEX IF NOT EXISTS uq_video_autopsy_cache_channel_video ON video_autopsy_cache (channel_id, video_id)",
         # Outliers report history — every charged /outliers/search run persisted
         # (dedup per channel+query+intent) so users can reopen past reports.
         "CREATE TABLE IF NOT EXISTS outliers_reports (id INTEGER PRIMARY KEY AUTOINCREMENT, channel_id TEXT NOT NULL, query TEXT NOT NULL, query_lower TEXT NOT NULL, confirmed_keyword TEXT DEFAULT '', confirmed_keyword_lower TEXT DEFAULT '', result_json TEXT NOT NULL, created_at DATETIME, updated_at DATETIME)",

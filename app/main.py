@@ -32,6 +32,7 @@ from routers import report_routes
 from routers import channel_routes
 from routers import public_routes
 from routers import outliers_routes
+from routers import autopsy_routes
 
 app = FastAPI(title="YTGrowth API", redirect_slashes=False, lifespan=lifespan)
 
@@ -70,6 +71,7 @@ app.include_router(report_routes.router,     prefix="/api/reports")
 app.include_router(channel_routes.router,    prefix="/channels")
 app.include_router(public_routes.router,     prefix="/api/public")
 app.include_router(outliers_routes.router,   prefix="/outliers")
+app.include_router(autopsy_routes.router,    prefix="/autopsy")
 
 
 

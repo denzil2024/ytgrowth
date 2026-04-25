@@ -7,6 +7,7 @@ import Keywords from './Keywords'
 import VideoIdeas from './VideoIdeas'
 import ThumbnailScore from './ThumbnailScore'
 import Outliers from './Outliers'
+import Autopsy from './Autopsy'
 import WeeklyReport from './WeeklyReport'
 import UsageBar from '../components/UsageBar'
 import CreditsEmptyModal from '../components/CreditsEmptyModal'
@@ -1166,6 +1167,7 @@ const NAV_ICONS = {
   Keywords:          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"><circle cx="6" cy="6" r="4"/><line x1="9.2" y1="9.2" x2="13" y2="13"/></svg>,
   Competitors:       <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"><circle cx="5" cy="7" r="4"/><circle cx="9" cy="7" r="4"/></svg>,
   'Weekly Report':   <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"><rect x="1" y="2" width="12" height="10" rx="2"/><path d="M1 6h12M4 2v4M10 2v4"/></svg>,
+  Autopsy:           <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"><path d="M7 1.5v11M2 6h10M3.5 9.5L10.5 9.5"/></svg>,
   Settings:          <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"><circle cx="6.5" cy="6.5" r="1.8"/><path d="M6.5 1v1.2M6.5 10.8V12M1 6.5h1.2M10.8 6.5H12M2.8 2.8l.85.85M9.35 9.35l.85.85M2.8 10.2l.85-.85M9.35 4.65l.85-.85"/></svg>,
 }
 
@@ -1729,6 +1731,7 @@ export default function Dashboard() {
           <NavBtn label="Overview"       active={nav === 'Overview'}       onClick={() => setNav('Overview')} />
           <NavBtn label="Videos"         active={nav === 'Videos'}         onClick={() => setNav('Videos')} />
           <NavBtn label="Outliers"       active={nav === 'Outliers'}       onClick={() => setNav('Outliers')} />
+          <NavBtn label="Autopsy"        active={nav === 'Autopsy'}        onClick={() => setNav('Autopsy')} />
           <NavBtn label="Weekly Report"  active={nav === 'Weekly Report'}  onClick={() => setNav('Weekly Report')} />
 
           {/* Section: CREATE */}
@@ -2752,6 +2755,8 @@ export default function Dashboard() {
           {nav === 'Video Ideas' && <VideoIdeas onNavigate={setNav} plan={billingPlan} freeTierFeatures={freeTierFeatures} />}
 
           {nav === 'Outliers' && <Outliers channelData={data} onNavigate={setNav} plan={billingPlan} freeTierFeatures={freeTierFeatures} />}
+
+          {nav === 'Autopsy' && <Autopsy />}
 
           {/* ── SETTINGS ─────────────────────────────────────────────── */}
           {nav === 'Settings' && <Settings />}
