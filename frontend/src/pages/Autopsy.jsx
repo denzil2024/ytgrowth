@@ -120,18 +120,31 @@ if (typeof document !== 'undefined' && !document.getElementById('ytg-au-styles')
     .au-chip .val { font-size: 12px; font-weight: 700; color: ${C.text1}; }
     .au-chip .lbl { font-size: 11px; color: ${C.text3}; font-weight: 500; }
 
-    /* Eligible video tile — clickable card with thumbnail + meta */
+    /* Eligible video tile — whole tile is the click target. No button:
+       the cursor + hover lift + bottom-right "run autopsy" affordance
+       carry the action so we don't paint every card red. */
     .au-vid-tile {
       background: #fff; border: 1px solid ${C.border}; border-radius: 14px;
       overflow: hidden;
       box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 4px 14px rgba(0,0,0,0.06);
-      transition: box-shadow 0.15s, transform 0.15s;
+      transition: box-shadow 0.18s, transform 0.18s, border-color 0.18s;
       cursor: pointer; display: flex; flex-direction: column;
     }
     .au-vid-tile:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.08), 0 16px 40px rgba(0,0,0,0.09);
+      transform: translateY(-2px);
+      border-color: rgba(229,37,27,0.30);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.08), 0 20px 40px rgba(229,37,27,0.14);
     }
+    .au-vid-tile:hover .au-vid-affordance { color: ${C.red}; }
+    .au-vid-tile.is-running { opacity: 0.78; cursor: wait; }
+    .au-vid-affordance {
+      display: inline-flex; align-items: center; gap: 4px;
+      font-size: 12px; font-weight: 700; color: ${C.text2};
+      letter-spacing: '-0.05px';
+      transition: color 0.15s;
+    }
+    .au-vid-affordance svg { transition: transform 0.18s; }
+    .au-vid-tile:hover .au-vid-affordance svg { transform: translateX(2px); }
   `
   document.head.appendChild(s)
 }
@@ -479,52 +492,79 @@ export default function Autopsy() {
         ) : (
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))',
-            gap: 12,
+            // Cap to 4 columns at desktop. minmax(280px, 1fr) keeps tiles
+            // breathing — the 8-per-row grid was claustrophobic. The
+            // hover-lifted card is the click affordance; we don't paint
+            // every tile red with a giant button.
+            gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
+            gap: 16,
+            maxWidth: 1280,
           }}>
-            {eligible.map(v => (
-              <div key={v.video_id} className="au-vid-tile" onClick={() => runAutopsy(v)}>
-                {v.thumbnail && (
-                  <img src={v.thumbnail} alt="" referrerPolicy="no-referrer"
-                    style={{ width: '100%', aspectRatio: '16/9', objectFit: 'cover', display: 'block' }} />
-                )}
-                <div style={{ padding: '12px 14px 14px',
-                  display: 'flex', flexDirection: 'column', flex: 1, gap: 8 }}>
-                  <p style={{ fontSize: 13.5, fontWeight: 700, color: C.text1,
-                    lineHeight: 1.4, letterSpacing: '-0.05px',
-                    overflow: 'hidden', textOverflow: 'ellipsis',
-                    display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
-                    {v.title}
-                  </p>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
-                    <span style={{ fontSize: 11, color: C.text3, fontWeight: 500 }}>
-                      {Number(v.views || 0).toLocaleString()} views · {v.age_days}d old
-                    </span>
-                    {v.has_autopsy && (
-                      <span style={{
-                        fontSize: 10, fontWeight: 700, color: C.green,
-                        background: C.greenBg, border: `1px solid ${C.greenBdr}`,
-                        borderRadius: 100, padding: '2px 8px', letterSpacing: '0.04em',
-                      }}>Last reviewed {relTime(v.last_autopsy_at)}</span>
-                    )}
-                  </div>
-                  <button
-                    onClick={(e) => { e.stopPropagation(); runAutopsy(v) }}
-                    disabled={running === v.video_id}
-                    className="au-btn-primary"
-                    style={{ marginTop: 4, alignSelf: 'flex-start',
-                      opacity: running === v.video_id ? 0.7 : 1 }}>
-                    {running === v.video_id
-                      ? (<><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor"
+            {eligible.map(v => {
+              const isRunning = running === v.video_id
+              return (
+                <div
+                  key={v.video_id}
+                  className={`au-vid-tile${isRunning ? ' is-running' : ''}`}
+                  onClick={() => !running && runAutopsy(v)}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => { if (e.key === 'Enter' && !running) runAutopsy(v) }}>
+                  {v.thumbnail && (
+                    <div style={{ position: 'relative' }}>
+                      <img src={v.thumbnail} alt="" referrerPolicy="no-referrer"
+                        style={{ width: '100%', aspectRatio: '16/9', objectFit: 'cover', display: 'block' }} />
+                      {v.has_autopsy && !isRunning && (
+                        <span style={{
+                          position: 'absolute', top: 8, left: 8,
+                          fontSize: 10, fontWeight: 800, color: '#ffffff',
+                          background: 'rgba(22,163,74,0.92)', backdropFilter: 'blur(4px)',
+                          borderRadius: 100, padding: '3px 8px', letterSpacing: '0.06em',
+                          textTransform: 'uppercase',
+                        }}>Reviewed {relTime(v.last_autopsy_at)}</span>
+                      )}
+                      {isRunning && (
+                        <div style={{
+                          position: 'absolute', inset: 0,
+                          background: 'rgba(255,255,255,0.86)',
+                          display: 'flex', alignItems: 'center', justifyContent: 'center',
+                          gap: 8, fontSize: 13, fontWeight: 700, color: C.red,
+                        }}>
+                          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor"
                             strokeWidth="2" style={{ animation: 'auSpin 0.8s linear infinite' }}>
-                            <path d="M7 1v2M7 11v2M1 7h2M11 7h2"/></svg> Analysing…</>)
-                      : (<>{v.has_autopsy ? 'Re-run' : 'Run autopsy'}
-                          <span style={{ fontSize: 11, fontWeight: 500, opacity: 0.7,
-                            marginLeft: 2 }}>· 1 credit</span></>)}
-                  </button>
+                            <path d="M7 1v2M7 11v2M1 7h2M11 7h2M2.93 2.93l1.41 1.41M9.66 9.66l1.41 1.41M2.93 11.07l1.41-1.41M9.66 4.34l1.41-1.41"/>
+                          </svg>
+                          Analysing…
+                        </div>
+                      )}
+                    </div>
+                  )}
+                  <div style={{ padding: '12px 14px 12px',
+                    display: 'flex', flexDirection: 'column', flex: 1, gap: 6 }}>
+                    <p style={{ fontSize: 13.5, fontWeight: 700, color: C.text1,
+                      lineHeight: 1.4, letterSpacing: '-0.05px',
+                      overflow: 'hidden', textOverflow: 'ellipsis',
+                      display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
+                      {v.title}
+                    </p>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                      gap: 8, marginTop: 'auto', paddingTop: 4 }}>
+                      <span style={{ fontSize: 11, color: C.text3, fontWeight: 500 }}>
+                        {Number(v.views || 0).toLocaleString()} views · {v.age_days}d
+                      </span>
+                      <span className="au-vid-affordance">
+                        {v.has_autopsy ? 'Re-run' : 'Run autopsy'}
+                        <span style={{ color: C.text3, fontWeight: 500 }}>· 1 credit</span>
+                        <svg width="11" height="11" viewBox="0 0 12 12" fill="none"
+                          stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                          <path d="M4 2l4 4-4 4"/>
+                        </svg>
+                      </span>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            ))}
+              )
+            })}
           </div>
         )}
       </>)}
