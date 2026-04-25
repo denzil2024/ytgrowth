@@ -120,31 +120,6 @@ if (typeof document !== 'undefined' && !document.getElementById('ytg-au-styles')
     .au-chip .val { font-size: 12px; font-weight: 700; color: ${C.text1}; }
     .au-chip .lbl { font-size: 11px; color: ${C.text3}; font-weight: 500; }
 
-    /* Eligible video tile — whole tile is the click target. No button:
-       the cursor + hover lift + bottom-right "run autopsy" affordance
-       carry the action so we don't paint every card red. */
-    .au-vid-tile {
-      background: #fff; border: 1px solid ${C.border}; border-radius: 14px;
-      overflow: hidden;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 4px 14px rgba(0,0,0,0.06);
-      transition: box-shadow 0.18s, transform 0.18s, border-color 0.18s;
-      cursor: pointer; display: flex; flex-direction: column;
-    }
-    .au-vid-tile:hover {
-      transform: translateY(-2px);
-      border-color: rgba(229,37,27,0.30);
-      box-shadow: 0 6px 16px rgba(0,0,0,0.08), 0 20px 40px rgba(229,37,27,0.14);
-    }
-    .au-vid-tile:hover .au-vid-affordance { color: ${C.red}; }
-    .au-vid-tile.is-running { opacity: 0.78; cursor: wait; }
-    .au-vid-affordance {
-      display: inline-flex; align-items: center; gap: 4px;
-      font-size: 12px; font-weight: 700; color: ${C.text2};
-      letter-spacing: '-0.05px';
-      transition: color 0.15s;
-    }
-    .au-vid-affordance svg { transition: transform 0.18s; }
-    .au-vid-tile:hover .au-vid-affordance svg { transform: translateX(2px); }
   `
   document.head.appendChild(s)
 }
@@ -336,26 +311,79 @@ function ReportCard({ data, video, onClose }) {
 }
 
 
-export default function Autopsy() {
+// ── Helpers — copied verbatim from Dashboard.jsx so the eligible grid uses
+// the exact same thumbnail-fallback ladder, time formatting and number
+// formatting as the Videos tab. Do not "improve" these. ────────────────────
+function ytMaxThumbUrl(videoId) {
+  return videoId ? `https://i.ytimg.com/vi/${videoId}/maxresdefault.jpg` : null
+}
+function _advanceThumb(target, videoId, fallbackUrl) {
+  const step = target.dataset.thumbStep || 'max'
+  if (step === 'max' && videoId) {
+    target.dataset.thumbStep = 'hq'
+    target.src = `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`
+  } else if (step !== 'done' && fallbackUrl) {
+    target.dataset.thumbStep = 'done'
+    target.src = fallbackUrl
+  }
+}
+function makeThumbOnError(videoId, fallbackUrl) {
+  return (e) => _advanceThumb(e.target, videoId, fallbackUrl)
+}
+function makeThumbOnLoad(videoId, fallbackUrl) {
+  return (e) => {
+    const step = e.target.dataset.thumbStep || 'max'
+    if (step === 'max' && e.target.naturalWidth === 120 && e.target.naturalHeight === 90) {
+      _advanceThumb(e.target, videoId, fallbackUrl)
+    }
+  }
+}
+function parseUTC(str) {
+  if (!str) return null
+  const s = str.endsWith('Z') || /[+-]\d{2}:?\d{2}$/.test(str) ? str : str + 'Z'
+  return new Date(s)
+}
+function relTimeLong(str) {
+  const d = parseUTC(str)
+  if (!d || isNaN(d)) return ''
+  const days = Math.floor((Date.now() - d.getTime()) / 86400000)
+  if (days < 1)   return 'today'
+  if (days === 1) return 'yesterday'
+  if (days < 7)   return `${days} days ago`
+  if (days < 30)  { const w = Math.floor(days / 7);  return w === 1 ? 'a week ago'  : `${w} weeks ago` }
+  if (days < 365) { const m = Math.floor(days / 30); return m === 1 ? 'a month ago' : `${m} months ago` }
+  const y = Math.floor(days / 365); return y === 1 ? 'a year ago' : `${y} years ago`
+}
+function fmtNum(n) {
+  if (n == null) return '—'
+  if (n >= 1e6) return (n / 1e6).toFixed(1) + 'M'
+  if (n >= 1e3) return (n / 1e3).toFixed(1) + 'K'
+  return n.toLocaleString()
+}
+
+export default function Autopsy({ videos = [], channelId = '' }) {
   const [activeTab, setActiveTab] = useState('new')
-  const [eligible, setEligible]   = useState([])
   const [reports,  setReports]    = useState([])
-  const [loadingEligible, setLoadingEligible] = useState(true)
   const [loadingReports,  setLoadingReports]  = useState(false)
   const [running,  setRunning]   = useState(null)  // video_id currently being analysed
   const [result,   setResult]    = useState(null)  // { id, video_id, video_title, thumbnail, result }
   const [error,    setError]     = useState('')
   const [creditsOut, setCreditsOut] = useState(false)
+  const [videoSort, setVideoSort] = useState('date')
 
-  async function fetchEligible() {
-    setLoadingEligible(true)
-    try {
-      const r = await fetch(`${API}/autopsy/eligible`, { credentials: 'include' })
-      if (!r.ok) return
-      const d = await r.json()
-      setEligible(d.videos || [])
-    } catch {} finally { setLoadingEligible(false) }
-  }
+  // Build "videos at least 7 days old" client-side from the same `videos`
+  // array the Videos tab uses — same data, same fields, same formatting.
+  const MIN_AGE_DAYS = 7
+  const eligible = (videos || []).filter(v => {
+    const d = parseUTC(v.published_at)
+    if (!d || isNaN(d)) return false
+    const age = Math.floor((Date.now() - d.getTime()) / 86400000)
+    return age >= MIN_AGE_DAYS
+  })
+
+  // Lookup table: which videos already have an autopsy on file?
+  const autopsyByVideo = {}
+  for (const r of reports) autopsyByVideo[r.video_id] = r
 
   async function fetchReports() {
     setLoadingReports(true)
@@ -367,7 +395,7 @@ export default function Autopsy() {
     } catch {} finally { setLoadingReports(false) }
   }
 
-  useEffect(() => { fetchEligible(); fetchReports() }, [])
+  useEffect(() => { fetchReports() }, [])
 
   async function runAutopsy(video) {
     if (running) return
@@ -385,8 +413,9 @@ export default function Autopsy() {
       if (!r.ok) { setError(d.error || 'Autopsy failed.'); return }
       setResult(d)
       window.dispatchEvent(new CustomEvent('ytg:credits-changed'))
-      // Refresh both lists in the background.
-      fetchEligible(); fetchReports()
+      // Refresh the reports list so the eligible cards know which have an
+      // autopsy on file (autopsyByVideo lookup keys off `reports`).
+      fetchReports()
       if (typeof window !== 'undefined') window.scrollTo({ top: 0, behavior: 'smooth' })
     } catch {
       setError('Could not reach the server.')
@@ -411,7 +440,6 @@ export default function Autopsy() {
     if (e) e.stopPropagation()
     setReports(prev => prev.filter(x => x.id !== reportId))
     try { await fetch(`${API}/autopsy/${reportId}`, { method: 'DELETE', credentials: 'include' }) } catch {}
-    fetchEligible()
   }
 
   return (
@@ -469,11 +497,7 @@ export default function Autopsy() {
           </p>
         </div>
 
-        {loadingEligible ? (
-          <div style={{ padding: '40px 0', textAlign: 'center', color: C.text3, fontSize: 13 }}>
-            Loading eligible videos…
-          </div>
-        ) : eligible.length === 0 ? (
+        {eligible.length === 0 ? (
           <div style={{
             padding: '48px 24px', textAlign: 'center',
             background: '#fff', border: `1px solid ${C.border}`, borderRadius: 16,
@@ -490,76 +514,94 @@ export default function Autopsy() {
             </p>
           </div>
         ) : (
-          <div style={{
-            display: 'grid',
-            // Cap to 4 columns at desktop. minmax(280px, 1fr) keeps tiles
-            // breathing — the 8-per-row grid was claustrophobic. The
-            // hover-lifted card is the click affordance; we don't paint
-            // every tile red with a giant button.
-            gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-            gap: 16,
-            maxWidth: 1280,
-          }}>
-            {eligible.map(v => {
-              const isRunning = running === v.video_id
+          // Card grid — copied verbatim from Dashboard.jsx Videos tab so
+          // Autopsy uses the exact same .ytg-card layout, thumbnail,
+          // metric footer and Optimise-style button. The ONLY changes:
+          // primary CTA text says "Run autopsy · 1 credit" (or "Re-run …"
+          // when there's already a saved autopsy on file), and the click
+          // handler runs the autopsy instead of opening the optimise panel.
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, minmax(0, 1fr))', gap: 14 }}>
+            {[...eligible].sort((a, b) => {
+              if (videoSort === 'views') return (b.views || 0) - (a.views || 0)
+              if (videoSort === 'likes') return (b.likes || 0) - (a.likes || 0)
+              return (parseUTC(b.published_at) || 0) - (parseUTC(a.published_at) || 0)
+            }).map((v, i) => {
+              const lr      = v.views > 0 ? (v.likes / v.views * 100).toFixed(1) : null
+              const lrN     = lr !== null ? parseFloat(lr) : null
+              const lrColor = lrN === null ? C.text3 : lrN >= 3 ? C.green : lrN >= 1 ? C.amber : C.red
+              const wtSecs    = typeof v.avg_duration_seconds === 'number' ? v.avg_duration_seconds : null
+              const wtDisplay = wtSecs !== null ? `${Math.floor(wtSecs / 60)}:${String(wtSecs % 60).padStart(2, '0')}` : '—'
+              const retN      = typeof v.avg_view_percent === 'number' ? v.avg_view_percent : null
+              const ytUrl   = v.video_id ? `https://www.youtube.com/watch?v=${v.video_id}` : null
+              const durMatch = (v.duration || '').match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/)
+              const durSecs  = durMatch ? (+durMatch[1]||0)*3600 + (+durMatch[2]||0)*60 + (+durMatch[3]||0) : 0
+              const durLabel = durSecs > 0 ? (durSecs <= 60 ? `${durSecs}s` : `${Math.floor(durSecs/60)}:${String(durSecs%60).padStart(2,'0')}`) : null
+              const isShort  = durSecs > 0 && durSecs <= 60
+              const hasAutopsy = !!autopsyByVideo[v.video_id]
+              const isRunning  = running === v.video_id
               return (
-                <div
-                  key={v.video_id}
-                  className={`au-vid-tile${isRunning ? ' is-running' : ''}`}
-                  onClick={() => !running && runAutopsy(v)}
-                  role="button"
-                  tabIndex={0}
-                  onKeyDown={(e) => { if (e.key === 'Enter' && !running) runAutopsy(v) }}>
-                  {v.thumbnail && (
-                    <div style={{ position: 'relative' }}>
-                      <img src={v.thumbnail} alt="" referrerPolicy="no-referrer"
-                        style={{ width: '100%', aspectRatio: '16/9', objectFit: 'cover', display: 'block' }} />
-                      {v.has_autopsy && !isRunning && (
-                        <span style={{
-                          position: 'absolute', top: 8, left: 8,
-                          fontSize: 10, fontWeight: 800, color: '#ffffff',
-                          background: 'rgba(22,163,74,0.92)', backdropFilter: 'blur(4px)',
-                          borderRadius: 100, padding: '3px 8px', letterSpacing: '0.06em',
-                          textTransform: 'uppercase',
-                        }}>Reviewed {relTime(v.last_autopsy_at)}</span>
-                      )}
-                      {isRunning && (
-                        <div style={{
-                          position: 'absolute', inset: 0,
-                          background: 'rgba(255,255,255,0.86)',
-                          display: 'flex', alignItems: 'center', justifyContent: 'center',
-                          gap: 8, fontSize: 13, fontWeight: 700, color: C.red,
-                        }}>
-                          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor"
-                            strokeWidth="2" style={{ animation: 'auSpin 0.8s linear infinite' }}>
-                            <path d="M7 1v2M7 11v2M1 7h2M11 7h2M2.93 2.93l1.41 1.41M9.66 9.66l1.41 1.41M2.93 11.07l1.41-1.41M9.66 4.34l1.41-1.41"/>
-                          </svg>
-                          Analysing…
-                        </div>
-                      )}
-                    </div>
-                  )}
-                  <div style={{ padding: '12px 14px 12px',
-                    display: 'flex', flexDirection: 'column', flex: 1, gap: 6 }}>
-                    <p style={{ fontSize: 13.5, fontWeight: 700, color: C.text1,
-                      lineHeight: 1.4, letterSpacing: '-0.05px',
-                      overflow: 'hidden', textOverflow: 'ellipsis',
-                      display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
-                      {v.title}
+                <div key={v.video_id || i} className="ytg-card" style={{ display: 'flex', flexDirection: 'column' }}>
+                  {/* Thumbnail */}
+                  <a href={ytUrl || '#'} target="_blank" rel="noopener noreferrer"
+                    style={{ display: 'block', position: 'relative', textDecoration: 'none', flexShrink: 0, borderRadius: '19px 19px 0 0', overflow: 'hidden' }}>
+                    {v.thumbnail || v.video_id
+                      ? <img
+                          src={v.video_id ? ytMaxThumbUrl(v.video_id) : v.thumbnail}
+                          alt=""
+                          style={{ width: '100%', aspectRatio: '16/9', objectFit: 'cover', display: 'block' }}
+                          onError={makeThumbOnError(v.video_id, v.thumbnail)}
+                          onLoad={makeThumbOnLoad(v.video_id, v.thumbnail)}
+                        />
+                      : <div style={{ width: '100%', aspectRatio: '16/9', background: '#ebebef' }}/>
+                    }
+                    {isShort && (
+                      <span style={{ position: 'absolute', top: 8, left: 8, background: '#111', color: '#fff', fontSize: 12, fontWeight: 800, padding: '2px 6px', borderRadius: 4, letterSpacing: '0.06em' }}>SHORT</span>
+                    )}
+                    {durLabel && (
+                      <span style={{ position: 'absolute', bottom: 8, right: 8, background: 'rgba(0,0,0,0.72)', color: '#fff', fontSize: 12, fontWeight: 700, padding: '2px 7px', borderRadius: 5, fontVariantNumeric: 'tabular-nums' }}>{durLabel}</span>
+                    )}
+                  </a>
+
+                  {/* Body */}
+                  <div style={{ padding: '20px 20px 20px', display: 'flex', flexDirection: 'column', flex: 1 }}>
+                    {/* Title */}
+                    <p style={{
+                      fontSize: 16, fontWeight: 700, color: C.text1, lineHeight: 1.45, marginBottom: 14, letterSpacing: '-0.3px',
+                      display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden',
+                    }}>{v.title}</p>
+
+                    {/* Meta line */}
+                    <p style={{ fontSize: 13.5, fontWeight: 500, color: C.text3, marginBottom: 14, lineHeight: 1.4 }}>
+                      <span style={{ color: C.text2, fontWeight: 600 }}>{fmtNum(v.views)}</span> views
+                      <span style={{ margin: '0 8px', color: '#d4d4dc' }}>·</span>
+                      <span style={{ color: C.text2, fontWeight: 600 }}>{fmtNum(v.likes)}</span> likes
+                      <span style={{ margin: '0 8px', color: '#d4d4dc' }}>·</span>
+                      {relTimeLong(v.published_at) || '—'}
                     </p>
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                      gap: 8, marginTop: 'auto', paddingTop: 4 }}>
-                      <span style={{ fontSize: 11, color: C.text3, fontWeight: 500 }}>
-                        {Number(v.views || 0).toLocaleString()} views · {v.age_days}d
-                      </span>
-                      <span className="au-vid-affordance">
-                        {v.has_autopsy ? 'Re-run' : 'Run autopsy'}
-                        <span style={{ color: C.text3, fontWeight: 500 }}>· 1 credit</span>
-                        <svg width="11" height="11" viewBox="0 0 12 12" fill="none"
-                          stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                          <path d="M4 2l4 4-4 4"/>
-                        </svg>
-                      </span>
+
+                    {/* Footer: Watch · Retention · Eng + Run-autopsy CTA */}
+                    <div style={{ marginTop: 'auto', paddingTop: 18, borderTop: `1px solid #eeeef3` }}>
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 12, marginBottom: 18 }}>
+                        {[
+                          { label: 'Watch',     display: wtDisplay,                                             color: C.text1,  tip: 'Average watch time per view (mm:ss). Longer is better relative to video length.' },
+                          { label: 'Retention', display: retN !== null ? `${retN.toFixed(0)}%` : '—',           color: C.text1,  tip: 'Average % of video watched. 50%+ strong, 30–50% avg, <30% weak.' },
+                          { label: 'Eng',       display: lrN !== null ? `${lr}%` : '—',                         color: lrColor,  tip: 'Engagement rate = likes ÷ views. 3%+ strong, 1–3% avg, <1% weak.' },
+                        ].map(m => (
+                          <div key={m.label} title={m.tip} style={{ cursor: 'help', textAlign: 'left' }}>
+                            <p style={{ fontSize: 10.5, fontWeight: 700, color: C.text3, letterSpacing: '0.09em', textTransform: 'uppercase', marginBottom: 7, lineHeight: 1 }}>{m.label}</p>
+                            <p style={{ fontSize: 17, fontWeight: 800, color: m.color, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.4px', lineHeight: 1 }}>{m.display}</p>
+                          </div>
+                        ))}
+                      </div>
+                      <button
+                        onClick={() => runAutopsy(v)}
+                        disabled={isRunning || !!running}
+                        className="ytg-optimise-btn"
+                        style={{ width: '100%', justifyContent: 'center', padding: '11px 16px', fontSize: 13.5, fontWeight: 700, opacity: isRunning ? 0.7 : 1 }}>
+                        {isRunning
+                          ? 'Analysing…'
+                          : <>{hasAutopsy ? 'Re-run' : 'Run autopsy'} <span style={{ fontSize: 11, fontWeight: 500, opacity: 0.7, marginLeft: 2 }}>· 1 credit</span></>}
+                      </button>
                     </div>
                   </div>
                 </div>

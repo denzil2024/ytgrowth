@@ -2756,7 +2756,7 @@ export default function Dashboard() {
 
           {nav === 'Outliers' && <Outliers channelData={data} onNavigate={setNav} plan={billingPlan} freeTierFeatures={freeTierFeatures} />}
 
-          {nav === 'Autopsy' && <Autopsy />}
+          {nav === 'Autopsy' && <Autopsy videos={videos} channelId={data?.channel?.channel_id} />}
 
           {/* ── SETTINGS ─────────────────────────────────────────────── */}
           {nav === 'Settings' && <Settings />}
