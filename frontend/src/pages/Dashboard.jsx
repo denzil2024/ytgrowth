@@ -1724,28 +1724,28 @@ export default function Dashboard() {
         {/* Nav */}
         <nav style={{ overflowY: 'auto', flex: 1, paddingTop: 8, paddingBottom: 8 }}>
 
-          {/* Section: OPTIMIZE */}
+          {/* Section: MY CHANNEL */}
           <div style={{ padding: '12px 22px 4px' }}>
-            <span style={{ fontSize: 10, fontWeight: 600, color: C.text1, textTransform: 'uppercase', letterSpacing: '0.09em' }}>Optimize</span>
+            <span style={{ fontSize: 10, fontWeight: 600, color: C.text1, textTransform: 'uppercase', letterSpacing: '0.09em' }}>My Channel</span>
           </div>
-          <NavBtn label="Overview"       active={nav === 'Overview'}       onClick={() => setNav('Overview')} />
-          <NavBtn label="Videos"         active={nav === 'Videos'}         onClick={() => setNav('Videos')} />
-          <NavBtn label="Outliers"       active={nav === 'Outliers'}       onClick={() => setNav('Outliers')} />
-          <NavBtn label="Autopsy"        active={nav === 'Autopsy'}        onClick={() => setNav('Autopsy')} />
-          <NavBtn label="Weekly Report"  active={nav === 'Weekly Report'}  onClick={() => setNav('Weekly Report')} />
+          <NavBtn label="Overview"            active={nav === 'Overview'}       onClick={() => setNav('Overview')} />
+          <NavBtn label="Videos"              active={nav === 'Videos'}         onClick={() => setNav('Videos')} />
+          <NavBtn label="Post-Publish Review" active={nav === 'Autopsy'}        onClick={() => setNav('Autopsy')} />
+          <NavBtn label="Weekly Report"       active={nav === 'Weekly Report'}  onClick={() => setNav('Weekly Report')} />
 
-          {/* Section: CREATE */}
+          {/* Section: OPTIMIZE A VIDEO */}
           <div style={{ padding: '20px 22px 4px' }}>
-            <span style={{ fontSize: 10, fontWeight: 600, color: C.text1, textTransform: 'uppercase', letterSpacing: '0.09em' }}>Create</span>
+            <span style={{ fontSize: 10, fontWeight: 600, color: C.text1, textTransform: 'uppercase', letterSpacing: '0.09em' }}>Optimize a Video</span>
           </div>
           <NavBtn label="SEO Studio"      active={nav === 'SEO Studio'}      onClick={() => setNav('SEO Studio')} />
           <NavBtn label="Thumbnail Score" active={nav === 'Thumbnail Score'} onClick={() => setNav('Thumbnail Score')} />
-          <NavBtn label="Video Ideas"     active={nav === 'Video Ideas'}     onClick={() => setNav('Video Ideas')} />
 
-          {/* Section: RESEARCH */}
+          {/* Section: IDEAS & RESEARCH */}
           <div style={{ padding: '20px 22px 4px' }}>
-            <span style={{ fontSize: 10, fontWeight: 600, color: C.text1, textTransform: 'uppercase', letterSpacing: '0.09em' }}>Research</span>
+            <span style={{ fontSize: 10, fontWeight: 600, color: C.text1, textTransform: 'uppercase', letterSpacing: '0.09em' }}>Ideas & Research</span>
           </div>
+          <NavBtn label="Video Ideas" active={nav === 'Video Ideas'} onClick={() => setNav('Video Ideas')} />
+          <NavBtn label="Outliers"    active={nav === 'Outliers'}    onClick={() => setNav('Outliers')} />
           <NavBtn label="Keywords"    active={nav === 'Keywords'}    onClick={() => setNav('Keywords')} />
           <NavBtn label="Competitors" active={nav === 'Competitors'} onClick={() => setNav('Competitors')} />
 
