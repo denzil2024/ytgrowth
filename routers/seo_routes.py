@@ -27,6 +27,7 @@ class DescriptionRequest(BaseModel):
     intent_analysis: dict = None
     keyword_scores: list = None
     current_year: int = 2026
+    autocomplete_terms: list = None
 
 
 def _locked_response(feature: str, reason: str = "locked"):
@@ -153,8 +154,31 @@ def analyze(body: TitleAnalyzeRequest, request: Request):
     gate = check_and_deduct(channel_id)
     if not gate["allowed"]:
         return JSONResponse({"error": gate["message"], "show_upgrade": True}, status_code=402)
+    # Build channel context from the session — gives Claude the creator's
+    # voice + viral history so suggestions aren't generic niche templates.
+    channel_context = None
+    if data:
+        ch = data.get("channel", {}) or {}
+        videos = data.get("videos", []) or []
+        viral_videos = [
+            {"title": v.get("title", ""), "views": int(v.get("views", 0) or 0)}
+            for v in sorted(videos, key=lambda v: v.get("views", 0) or 0, reverse=True)[:5]
+            if v.get("title")
+        ]
+        channel_context = {
+            "channel_name":     ch.get("channel_name", ""),
+            "channel_keywords": ch.get("keywords", ""),
+            "top_video_titles": [v["title"] for v in viral_videos],
+            "viral_videos":     viral_videos,
+        }
+
     try:
-        result = analyze_title(creds, body.title.strip(), confirmed_keyword=body.confirmed_keyword.strip())
+        result = analyze_title(
+            creds,
+            body.title.strip(),
+            confirmed_keyword=body.confirmed_keyword.strip(),
+            channel_context=channel_context,
+        )
     except Exception as e:
         refund_credit(channel_id)
         return JSONResponse({"error": "Analysis failed. Your credit has been refunded."}, status_code=500)
@@ -204,6 +228,7 @@ def generate_description(body: DescriptionRequest, request: Request):
             keyword_scores=body.keyword_scores,
             current_year=body.current_year,
             channel_context=channel_context,
+            autocomplete=body.autocomplete_terms,
         )
     except Exception as e:
         refund_credit(channel_id)

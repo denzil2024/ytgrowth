@@ -825,6 +825,7 @@ def generate_title_suggestions(
     autocomplete: list[str],
     context: str = "",
     primary_phrase: str = "",
+    channel_context: dict = None,
 ) -> tuple[list[dict], dict, str]:
     """
     3-phase prompt: analyse the live YouTube competitive data → find the gap →
@@ -866,6 +867,29 @@ def generate_title_suggestions(
 
     context_block = f"WHAT THE VIDEO IS ABOUT: {context}\n" if context else ""
 
+    # Channel viral history — what's worked for THIS creator. Crucial for
+    # titles that fit the channel's voice and recently-proven angles.
+    channel_block = ""
+    if channel_context:
+        ch_name    = channel_context.get("channel_name", "")
+        ch_kw      = channel_context.get("channel_keywords", "")
+        viral      = channel_context.get("viral_videos") or []
+        viral_lines = []
+        for v in viral[:5]:
+            vt = (v.get("title") or "").strip()
+            vv = v.get("views", 0)
+            if vt:
+                viral_lines.append(f'  • "{vt}" — {vv:,} views' if vv else f'  • "{vt}"')
+        parts = []
+        if ch_name:
+            parts.append(f"Channel: {ch_name}")
+        if ch_kw:
+            parts.append(f"Channel topics: {ch_kw[:240]}")
+        if viral_lines:
+            parts.append("Creator's top-performing past videos (use these to match their voice + lean into proven angles):\n" + "\n".join(viral_lines))
+        if parts:
+            channel_block = "\nTHIS CREATOR'S CHANNEL (use to anchor voice and avoid pitching topics they've already exhausted):\n" + "\n".join(parts) + "\n"
+
     vlog_note = ""
     if content_type == "personal_vlog":
         vlog_note = """
@@ -887,7 +911,7 @@ CONTENT TYPE: Personal vlog / lifestyle video.
 
 USER'S TITLE: "{title}"
 NICHE KEYWORD: "{niche}"
-{context_block}{vlog_note}
+{context_block}{vlog_note}{channel_block}
 {competitor_block}
 {ac_block}
 {kw_block}
@@ -1237,6 +1261,7 @@ def generate_description_suggestions(
     keyword_scores: list = None,
     current_year: int = 2026,
     channel_context: dict = None,
+    autocomplete: list = None,
 ) -> tuple[list[dict], list[str], str]:
     """
     Generate 3 YouTube description options for a given title.
@@ -1259,8 +1284,37 @@ def generate_description_suggestions(
     if not body_kw_phrases and niche:
         body_kw_phrases = [niche]
 
-    # Hashtags = first 3 of the body keyword set (the highest-scoring ones)
-    hashtag_kw_phrases = body_kw_phrases[:3]
+    # Hashtags: pick from phrases that ACTUALLY appear in real autocomplete
+    # data (Google Suggest + SerpAPI + Serper) — that's a proven search-demand
+    # signal. Falls back to top keyword_scores if autocomplete pool is empty.
+    # `_phrase_to_hashtag` is still pure string-massaging, so the value-add
+    # comes from picking a phrase someone actually types, not Claude inventing
+    # one. Caps at 3 hashtags (YouTube only counts 3 in search ranking).
+    ac_terms = [s for s in (autocomplete or []) if isinstance(s, str)]
+    hashtag_kw_phrases: list[str] = []
+    seen_hash: set[str] = set()
+    for p in ac_terms:
+        clean = re.sub(r"[^\w\s]", " ", p).strip().lower()
+        if not clean or len(clean) < 4 or len(clean) > 40:
+            continue
+        # Skip pure single-word generic queries — too thin for a hashtag
+        if len(clean.split()) < 2:
+            continue
+        if clean in seen_hash:
+            continue
+        seen_hash.add(clean)
+        hashtag_kw_phrases.append(clean)
+        if len(hashtag_kw_phrases) >= 3:
+            break
+    # Fallback: top keyword_scores if autocomplete didn't surface 3 candidates.
+    if len(hashtag_kw_phrases) < 3:
+        for p in body_kw_phrases:
+            if p.lower() in seen_hash:
+                continue
+            hashtag_kw_phrases.append(p)
+            seen_hash.add(p.lower())
+            if len(hashtag_kw_phrases) >= 3:
+                break
 
     hashtags_line = " ".join(_phrase_to_hashtag(p) for p in hashtag_kw_phrases)
     keywords_block = "\n".join(f"  {i+1}. {p}" for i, p in enumerate(body_kw_phrases))
@@ -1428,13 +1482,19 @@ def _filter_by_intent(niche_phrase: str, videos: list[dict]) -> list[dict]:
 
 # ─── Main entry point ──────────────────────────────────────────────────────────
 
-def analyze_title(credentials, title: str, confirmed_keyword: str = "") -> dict:
+def analyze_title(credentials, title: str, confirmed_keyword: str = "", channel_context: dict = None) -> dict:
     """
     Main analysis entry point.
 
     confirmed_keyword: if the user picked an intent option before running the analysis,
     this is their chosen search phrase (e.g. "home office cleaning vlog").
     When provided, we skip AI extraction and use it directly as the primary phrase.
+
+    channel_context: dict with keys
+        channel_name, channel_keywords, top_video_titles (list[str]),
+        viral_videos (list[{title, views}], sorted by views desc).
+    Threaded into the title prompt so suggestions reflect the creator's
+    own viral history — not just generic competitor data.
     """
     api_key = os.getenv("ANTHROPIC_API_KEY", "")
     client = _make_client() if api_key else None
@@ -1492,8 +1552,33 @@ def analyze_title(credentials, title: str, confirmed_keyword: str = "") -> dict:
                 tag_freq[tl] = tag_freq.get(tl, 0) + 1
     all_tags_flat = [t for t, _ in sorted(tag_freq.items(), key=lambda x: -x[1])]
 
-    # Step 4: Autocomplete for all search terms
-    autocomplete = get_autocomplete_suggestions(search_terms)
+    # Step 4: Autocomplete for all search terms — widened with Serper related
+    # searches + SerpAPI Google autocomplete in parallel. The Keywords route
+    # already does this; before, the title flow only used Google Suggest with
+    # 3 fixed prefixes — too narrow to surface real demand for niches like
+    # "grocery haul". `get_serper_keywords` and `get_serpapi_autocomplete`
+    # return [] when their API keys aren't set, so this is safe to call.
+    from app.keywords import get_serper_keywords, get_serpapi_autocomplete
+    from concurrent.futures import ThreadPoolExecutor
+    base_autocomplete = get_autocomplete_suggestions(search_terms)
+    try:
+        with ThreadPoolExecutor(max_workers=2) as pool:
+            f_serper  = pool.submit(get_serper_keywords, primary_phrase)
+            f_serpapi = pool.submit(get_serpapi_autocomplete, primary_phrase)
+            serper_kws    = f_serper.result()  or []
+            serpapi_terms = f_serpapi.result() or []
+    except Exception as _e:
+        serper_kws, serpapi_terms = [], []
+    # Dedup-merge while preserving order. Keep base first (YouTube-derived,
+    # most niche-relevant), then SerpAPI, then Serper.
+    seen = set()
+    autocomplete = []
+    for src in (base_autocomplete, serpapi_terms, serper_kws):
+        for term in src:
+            t = (term or "").strip().lower()
+            if t and t not in seen:
+                seen.add(t)
+                autocomplete.append(term)
 
     # Step 5: Keyword research — scored by volume + competition
     keyword_scores = research_keywords(search_terms, autocomplete, top_titles, all_tags_flat)
@@ -1509,7 +1594,8 @@ def analyze_title(credentials, title: str, confirmed_keyword: str = "") -> dict:
     scored_top = [v for v in scored_top if v["seo_score"] >= 35]
     scored_top.sort(key=lambda x: x["seo_score"], reverse=True)
 
-    # Step 8: Generate 3 AI titles using live YouTube data
+    # Step 8: Generate 3 AI titles using live YouTube data + creator's
+    # viral history (so titles reflect what's worked for THIS creator)
     if client:
         suggestions, intent_analysis, suggestion_error = generate_title_suggestions(
             title,
@@ -1519,6 +1605,7 @@ def analyze_title(credentials, title: str, confirmed_keyword: str = "") -> dict:
             keyword_scores,
             autocomplete,
             primary_phrase=primary_phrase,
+            channel_context=channel_context,
         )
     else:
         suggestions, intent_analysis, suggestion_error = [], {}, "ANTHROPIC_API_KEY is not set"

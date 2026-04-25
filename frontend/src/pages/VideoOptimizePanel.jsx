@@ -434,6 +434,8 @@ export default function VideoOptimizePanel({ video, onClose, onVideoUpdated, pla
             keyword_scores:
               titleResult?.keyword_scores || null,
             current_year: 2026,
+            autocomplete_terms:
+              titleResult?.autocomplete_terms || null,
           }),
         }
       )

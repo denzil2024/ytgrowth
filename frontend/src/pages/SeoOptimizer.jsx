@@ -739,6 +739,8 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures }) {
             keyword_scores:
               result?.keyword_scores || null,
             current_year: 2026,
+            autocomplete_terms:
+              result?.autocomplete_terms || null,
           }),
         }
       )
