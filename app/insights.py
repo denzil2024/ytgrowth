@@ -167,6 +167,122 @@ def _channel_aggregates(merged_videos, analytics):
     }
 
 
+def _youtube_algo_signals(merged_videos, traffic_sources, agg):
+    """
+    Pre-compute the derived metrics that map directly to YouTube's recommendation
+    levers — so Claude can reason on them as numbers instead of guessing.
+
+    What the algorithm actually rewards (ordered by weight):
+      1. Browse / Suggested traffic share — algorithmic endorsement (homepage push,
+         "up next" recommendations). If browse % is low the algo isn't pushing.
+      2. Session-keeping signals — APV × engagement (shares, comments). Videos
+         that extend the YouTube session get pushed harder.
+      3. Audience-builder signal — subs gained per 1k views. Videos that convert
+         viewers to subscribers tell the algo "this content grows the platform."
+      4. Retention normalised by duration — a 50% APV on a 10-min video beats
+         50% on a 4-min video. Without normalising you can't compare videos.
+
+    Returns a dict the prompt prints verbatim under "YOUTUBE ALGORITHM SIGNALS".
+    """
+    out = {}
+
+    # ── Traffic source share — algorithmic-push diagnostic ──────────────────
+    if traffic_sources:
+        total = sum((ts.get("views") or 0) for ts in traffic_sources) or 1
+        share = {}
+        for ts in traffic_sources:
+            src = (ts.get("source") or "").strip().upper()
+            v = ts.get("views") or 0
+            if not src:
+                continue
+            share[src] = share.get(src, 0) + (v / total * 100)
+        # Aliases YouTube returns under different labels across accounts
+        out["browse_pct"]    = round(share.get("YT_OTHER_PAGE", 0) + share.get("YT_CHANNEL", 0) + share.get("BROWSE", 0) + share.get("YT_SEARCH_PAGE", 0), 1)
+        out["suggested_pct"] = round(share.get("RELATED_VIDEO", 0) + share.get("SUGGESTED", 0), 1)
+        out["search_pct"]    = round(share.get("YT_SEARCH", 0) + share.get("SEARCH", 0), 1)
+        out["external_pct"]  = round(share.get("EXT_URL", 0) + share.get("EXTERNAL", 0), 1)
+        # Healthy mix benchmark: browse 25-40%, suggested 30-50%, search 10-25%
+        out["traffic_diagnosis"] = (
+            "weak algo push — browse + suggested combined under 40%"
+            if (out["browse_pct"] + out["suggested_pct"]) < 40
+            else "healthy algo push — recommendation traffic dominates"
+        )
+    else:
+        out["traffic_diagnosis"] = "traffic source data unavailable"
+
+    # ── Per-video efficiency metrics on the last 20 ─────────────────────────
+    by_video = []
+    for v in merged_videos or []:
+        views   = int(v.get("views") or 0)
+        if views < 50:  # too thin to draw conclusions
+            continue
+        shares_v   = int(v.get("shares") or 0)
+        comments   = int(v.get("comments") or 0)
+        subs       = int(v.get("subs_gained") or 0)
+        apv        = float(v.get("avg_view_percentage") or 0)
+        avd_sec    = float(v.get("avg_view_duration") or 0)
+        # video duration in seconds, parsed from ISO 8601 if present
+        dur_sec = 0
+        d = v.get("duration") or ""
+        m = re.match(r"PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?", str(d))
+        if m:
+            h, mi, s = (int(g or 0) for g in m.groups())
+            dur_sec = h * 3600 + mi * 60 + s
+        by_video.append({
+            "title": v.get("title", ""),
+            "views": views,
+            "shares_per_1k":   round(shares_v   / views * 1000, 2),
+            "comments_per_1k": round(comments   / views * 1000, 2),
+            "subs_per_1k":     round(subs       / views * 1000, 2),
+            "apv_pct":         round(apv, 1),
+            "avd_sec":         round(avd_sec, 1),
+            "dur_sec":         dur_sec,
+            # Session score: retention × shares-per-1k. Both must be high to score.
+            "session_score":   round(apv * (shares_v / views * 1000) if views else 0, 2),
+        })
+
+    # ── Channel-wide normalised metrics ─────────────────────────────────────
+    if by_video:
+        total_views = sum(v["views"] for v in by_video) or 1
+        out["shares_per_1k_views"]   = round(sum(v["shares_per_1k"] * v["views"] for v in by_video) / total_views, 2)
+        out["comments_per_1k_views"] = round(sum(v["comments_per_1k"] * v["views"] for v in by_video) / total_views, 2)
+        out["subs_per_1k_views"]     = round(sum(v["subs_per_1k"] * v["views"] for v in by_video) / total_views, 2)
+
+        # Top session-keeper: APV high AND shares high. This is what the algo
+        # rewards most aggressively in 2025 (session watch time signal).
+        top_session = max(by_video, key=lambda v: v["session_score"])
+        if top_session["session_score"] > 0:
+            out["top_session_keeper"] = (
+                f'"{top_session["title"]}" — APV {top_session["apv_pct"]}%, '
+                f'{top_session["shares_per_1k"]} shares/1k views '
+                f'(session_score {top_session["session_score"]})'
+            )
+
+        # Top audience-builder: highest subs gained per 1k views. Make more like this.
+        top_builder = max(by_video, key=lambda v: v["subs_per_1k"])
+        if top_builder["subs_per_1k"] > 0:
+            out["top_audience_builder"] = (
+                f'"{top_builder["title"]}" — {top_builder["subs_per_1k"]} subs gained per 1k views'
+            )
+
+        # Retention vs duration: APV is more impressive on longer videos. Flag
+        # the video with the highest APV × duration combo (true watch-time king).
+        watch_kings = sorted(
+            (v for v in by_video if v["dur_sec"] > 0),
+            key=lambda v: v["apv_pct"] * v["dur_sec"],
+            reverse=True,
+        )
+        if watch_kings:
+            wk = watch_kings[0]
+            mins = int(wk["dur_sec"] // 60)
+            out["top_watch_time_king"] = (
+                f'"{wk["title"]}" — {wk["apv_pct"]}% APV on a {mins}-min video '
+                f'(true watch-time leader; algo loves this combo)'
+            )
+
+    return out
+
+
 def analyze_channel(
     stats, videos,
     analytics=None,
@@ -211,6 +327,10 @@ def analyze_channel(
     merged = _merge_video_data(videos, video_analytics)
     posting = _posting_behavior(videos)
     agg = _channel_aggregates(merged, analytics)
+    # Pre-compute the metrics that map to YouTube's recommendation levers
+    # (browse share, session signals, audience-builder ratio). Claude reasons
+    # on these as numbers — better than asking it to estimate them.
+    algo_signals = _youtube_algo_signals(merged, traffic_sources, agg)
 
     channel_overview = f"""--- CHANNEL OVERVIEW ---
 Channel name: {stats.get('channel_name', 'N/A')}
@@ -291,6 +411,38 @@ Total shares: {shares_val}
 Total dislikes: {dislikes_val}
 Videos added to playlists: {playlist_val}"""
 
+    # ── YouTube algorithm signals — derived metrics that map directly to ──
+    # what the recommendation engine actually rewards. Pre-computed so Claude
+    # reasons on real numbers, not vibes.
+    if algo_signals:
+        algo_lines = ["--- YOUTUBE ALGORITHM SIGNALS (derived) ---"]
+        if "browse_pct" in algo_signals:
+            algo_lines.append(
+                f"Traffic mix: Browse {algo_signals['browse_pct']}%  "
+                f"Suggested {algo_signals['suggested_pct']}%  "
+                f"Search {algo_signals['search_pct']}%  "
+                f"External {algo_signals['external_pct']}%"
+            )
+            algo_lines.append(f"Algorithmic-push diagnosis: {algo_signals['traffic_diagnosis']}")
+        else:
+            algo_lines.append(f"Algorithmic-push diagnosis: {algo_signals['traffic_diagnosis']}")
+        if "shares_per_1k_views" in algo_signals:
+            algo_lines.append(
+                f"Channel-wide engagement per 1k views: "
+                f"{algo_signals['shares_per_1k_views']} shares · "
+                f"{algo_signals['comments_per_1k_views']} comments · "
+                f"{algo_signals['subs_per_1k_views']} subs gained"
+            )
+        if algo_signals.get("top_session_keeper"):
+            algo_lines.append(f"Top session-keeper video: {algo_signals['top_session_keeper']}")
+        if algo_signals.get("top_audience_builder"):
+            algo_lines.append(f"Top audience-builder video: {algo_signals['top_audience_builder']}")
+        if algo_signals.get("top_watch_time_king"):
+            algo_lines.append(f"Top watch-time leader: {algo_signals['top_watch_time_king']}")
+        algo_section = "\n".join(algo_lines)
+    else:
+        algo_section = "--- YOUTUBE ALGORITHM SIGNALS (derived) ---\nInsufficient data to compute"
+
     if not competitor_analyses:
         competitor_section = "--- STORED COMPETITOR INTELLIGENCE ---\nNo competitor data stored yet. User has not run a competitor analysis."
     else:
@@ -350,6 +502,26 @@ Generate recommendations that say "Competitor X averages Y views while you avera
 If no competitor data exists, skip this category entirely and do not mention it."""
 
     analysis_instructions = f"""## YOUR ANALYSIS INSTRUCTIONS
+
+You are auditing a YouTube channel for a creator who wants the algorithm to push their work harder. Your job is NOT to list everything that's slightly off — it's to surface the highest-leverage moves YouTube's recommendation engine actually rewards.
+
+## HOW YOUTUBE ACTUALLY REWARDS CHANNELS (the levers your priority actions MUST address)
+
+The "YOUTUBE ALGORITHM SIGNALS (derived)" block above is computed from this user's real data. Read those numbers FIRST and let them drive every priority action. The signals, in order of weight:
+
+1. **Browse + Suggested traffic share** — this is the algorithm endorsing the channel. If Browse + Suggested combined < 40%, YouTube isn't pushing. The fix is almost always **packaging (title + thumbnail)** and **early-video retention**, in that order. Do not blame "needs more SEO" if the diagnosis is weak algo push — search traffic is a separate funnel.
+2. **Session-keeping signals** — high APV combined with high shares-per-1k-views. Videos that extend a viewer's YouTube session get pushed harder than videos with great retention alone. The "Top session-keeper video" above is the format the algorithm wants more of.
+3. **Audience-builder ratio** — subs gained per 1k views. The "Top audience-builder video" above tells you which content type converts viewers to subscribers. Make more like it.
+4. **Retention normalised by duration** — APV on a 10-min video beats the same APV on a 4-min video. The "Top watch-time leader" above is the channel's true winner; mid-APV-but-short videos are not winners.
+5. **Niche clarity** — the algorithm classifies channels by topic. Scattered topics dilute homepage push.
+
+## RULES FOR PRIORITY ACTIONS
+
+- Each priority action MUST cite a specific number from the data above. No vague advice.
+- At least one of the top 3 actions must address algorithmic push (browse %, session-keeping, or audience-builder pattern). If the data shows weak algo push, that's priority #1.
+- Reference the user's own winning videos by name — "Make more like 'X' which earned Y subs/1k views" beats "post more engaging content."
+- Do not invent metrics. If the data section says "unavailable", do not pretend you have it.
+- Avoid generic SEO/posting-frequency advice unless the data clearly shows that's the bottleneck. Most channels' bottleneck is packaging + retention, not posting cadence.
 
 Perform a full deep audit across these categories. For each category, assign a score from 0 to 100 and write specific observations based on the actual data above — never give generic advice.
 
@@ -444,6 +616,8 @@ Return ONLY valid JSON. No markdown. No preamble. Return exactly {MAX_ACTIONS} p
 {demo_section}
 
 {engagement_section}
+
+{algo_section}
 
 {competitor_section}
 
