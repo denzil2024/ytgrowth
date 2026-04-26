@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useMemo } from 'react'
 import UpsellGate from '../components/UpsellGate'
 import CreditsEmptyModal from '../components/CreditsEmptyModal'
 
@@ -494,7 +494,33 @@ function DescriptionCard({ d, idx, copiedDesc, onCopy }) {
   )
 }
 
-export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures }) {
+export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, videos = [] }) {
+  // Featured hashtags = the first 3 hashtags YouTube auto-extracts from a description
+  // and shows above the title. We mirror that rule (regex on description, take first 3),
+  // aggregate across the user's recent videos, and rank by total views — surfacing
+  // the user's own historically successful hashtags. Pure stats, zero AI cost.
+  const featuredHashtags = useMemo(() => {
+    const map = new Map()
+    for (const v of (videos || [])) {
+      if (!v?.description) continue
+      const matches = v.description.match(/#[\p{L}0-9_]+/gu) || []
+      const seen = new Set()
+      for (const raw of matches) {
+        const tag = raw.toLowerCase()
+        if (seen.has(tag)) continue
+        seen.add(tag)
+        if (seen.size > 3) break
+        if (!map.has(tag)) map.set(tag, { tag: raw, count: 0, totalViews: 0 })
+        const e = map.get(tag)
+        e.count += 1
+        e.totalViews += (v.views || 0)
+      }
+    }
+    return Array.from(map.values())
+      .sort((a, b) => b.totalViews - a.totalViews || b.count - a.count)
+      .slice(0, 12)
+  }, [videos])
+
   // Free-tier: SEO Studio is fully gated. Flag computed up-front so hooks
   // below still run; the render-replace lives just before the main return.
   const seoGated = (plan || 'free') === 'free'
@@ -1990,6 +2016,55 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures }) {
                               <polyline points="1.5,6.5 5,10 10.5,2"/>
                             </svg>
                             {kw}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Featured hashtags — first 3 hashtags YouTube auto-features above the title,
+                      mined from this creator's recent videos and ranked by views. Same chip
+                      pattern as keywords, just with # symbol + click-to-copy. */}
+                  {featuredHashtags.length > 0 && (
+                    <div style={{ marginTop: 18, paddingTop: 16, borderTop: `1px solid ${C.border}` }}>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 4, gap: 10, flexWrap: 'wrap' }}>
+                        <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em', margin: 0 }}>
+                          Hashtags featured on your top videos
+                        </p>
+                        <button
+                          onClick={() => { navigator.clipboard.writeText(featuredHashtags.map(h => h.tag).join(' ')) }}
+                          style={{ fontSize: 11.5, fontWeight: 600, color: C.text3, background: 'transparent', border: 'none', cursor: 'pointer', fontFamily: 'inherit', padding: 0, letterSpacing: '-0.05px' }}
+                          onMouseEnter={e => { e.currentTarget.style.color = C.text1 }}
+                          onMouseLeave={e => { e.currentTarget.style.color = C.text3 }}>
+                          Copy all →
+                        </button>
+                      </div>
+                      <p style={{ fontSize: 12, color: C.text3, margin: '0 0 10px', lineHeight: 1.5 }}>
+                        These are the hashtags YouTube has been auto-featuring above your titles, ranked by the views they helped pull.
+                      </p>
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                        {featuredHashtags.map(h => (
+                          <span key={h.tag}
+                            role="button" tabIndex={0}
+                            onClick={() => navigator.clipboard.writeText(h.tag)}
+                            onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); navigator.clipboard.writeText(h.tag) } }}
+                            title={`Used on ${h.count} ${h.count === 1 ? 'video' : 'videos'} · ${h.totalViews.toLocaleString()} total views — click to copy`}
+                            style={{
+                              display: 'inline-flex', alignItems: 'center', gap: 6,
+                              fontSize: 12, fontWeight: 600, color: C.green,
+                              background: 'rgba(5,150,105,0.07)',
+                              border: '1px solid rgba(5,150,105,0.22)',
+                              padding: '5px 11px', borderRadius: 20,
+                              cursor: 'pointer',
+                              letterSpacing: '-0.05px',
+                              transition: 'all 0.15s',
+                            }}
+                            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(5,150,105,0.12)'; e.currentTarget.style.borderColor = 'rgba(5,150,105,0.40)' }}
+                            onMouseLeave={e => { e.currentTarget.style.background = 'rgba(5,150,105,0.07)'; e.currentTarget.style.borderColor = 'rgba(5,150,105,0.22)' }}>
+                            {h.tag}
+                            <span style={{ fontSize: 10.5, fontWeight: 600, color: C.text3, fontVariantNumeric: 'tabular-nums' }}>
+                              ×{h.count}
+                            </span>
                           </span>
                         ))}
                       </div>

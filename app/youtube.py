@@ -140,7 +140,8 @@ def get_recent_videos(credentials, max_results=20):
             "likes": int(s.get("likeCount", 0)),
             "comments": int(s.get("commentCount", 0)),
             "duration": duration,
-            "thumbnail": snippet.get("thumbnails", {}).get("medium", {}).get("url", "")
+            "thumbnail": snippet.get("thumbnails", {}).get("medium", {}).get("url", ""),
+            "description": snippet.get("description", "")
         })
     return videos
 
