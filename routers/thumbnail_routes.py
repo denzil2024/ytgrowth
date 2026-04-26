@@ -329,6 +329,7 @@ def analyze_thumbnail(body: AnalyzeBody, request: Request):
             image_bytes=raw_bytes,
         )
         if "error" in l2:
+            refund_credit(channel_id)
             return JSONResponse({"error": l2["error"]}, status_code=500)
 
         claude_score = l2.get("claude_score", 0)
