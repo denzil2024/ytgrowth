@@ -130,12 +130,16 @@ def analyze_competitor(channel_id: str, request: Request):
     try:
         ai_analysis = analyze_competitor_with_ai(data["channel"], videos, comp_data)
     except Exception as e:
-        refund_credit(my_channel_id_for_gate)
-        return JSONResponse({"error": f"AI analysis failed: {e}"}, status_code=500)
+        return JSONResponse(
+            {"error": "Something went wrong on our end. Email support@ytgrowth.io and we'll sort it out."},
+            status_code=500,
+        )
 
     if not isinstance(ai_analysis, dict):
-        refund_credit(my_channel_id_for_gate)
-        return JSONResponse({"error": f"AI analysis failed: {ai_analysis}"}, status_code=500)
+        return JSONResponse(
+            {"error": "Something went wrong on our end. Email support@ytgrowth.io and we'll sort it out."},
+            status_code=500,
+        )
 
     # Persist video ideas so the Video Ideas tab can pool them for free
     my_channel_id = data["channel"]["channel_id"]

@@ -60,12 +60,14 @@ def run_weekly_reports():
     connected_day. This spreads sends across 7 days and never exceeds
     Resend's 100/day free limit.
 
-    Paid plans only. Each send deducts 1 credit (refunded on failure).
-    Free plan users are skipped — the dashboard shows an upgrade nudge.
+    Paid plans only. Each send deducts 1 credit (NOT refunded on failure —
+    Anthropic still bills us; users email support@ytgrowth.io if a report
+    didn't arrive). Free plan users are skipped — the dashboard shows an
+    upgrade nudge.
     """
     from database.models import SessionLocal, UserSession, WeeklyReport, UserEmailPreferences, UserSubscription
     from app.weekly_report import generate_and_send_report, _week_start
-    from app.analysis_gate import check_and_deduct, refund_credit
+    from app.analysis_gate import check_and_deduct
 
     db = SessionLocal()
     try:
@@ -129,19 +131,18 @@ def run_weekly_reports():
                     print(f"[weekly_report] Skipping {channel_id[:8]} — out of credits")
                     continue
 
-                # Generate + send — refund the credit if anything fails
+                # Generate + send. Claude already ran once we hit this — credit
+                # stays consumed on failure; users email support@ytgrowth.io.
                 try:
                     success = generate_and_send_report(channel_id, email, user_data, db)
                 except Exception as gen_err:
-                    refund_credit(channel_id)
-                    print(f"[weekly_report] Generation failed for {channel_id[:8]}: {gen_err} — refunded")
+                    print(f"[weekly_report] Generation failed for {channel_id[:8]}: {gen_err}")
                     continue
 
                 if success:
                     sent_today += 1
                 else:
-                    refund_credit(channel_id)
-                    print(f"[weekly_report] Send failed for {channel_id[:8]} — refunded")
+                    print(f"[weekly_report] Send failed for {channel_id[:8]}")
 
             except Exception as e:
                 print(f"[weekly_report] Error for session {row.session_id[:8]}: {e}")

@@ -5,7 +5,7 @@ from app.seo import analyze_title, generate_description_suggestions, optimize_vi
 from app.keywords import generate_intent_options
 from routers.auth import get_session
 from database.models import SessionLocal, VideoOptimizeCache, SeoOptimization, SeoAnalysisCache
-from app.analysis_gate import check_and_deduct, refund_credit, check_free_tier_access
+from app.analysis_gate import check_and_deduct, check_free_tier_access
 import json, datetime
 
 router = APIRouter()
@@ -180,8 +180,10 @@ def analyze(body: TitleAnalyzeRequest, request: Request):
             channel_context=channel_context,
         )
     except Exception as e:
-        refund_credit(channel_id)
-        return JSONResponse({"error": "Analysis failed. Your credit has been refunded."}, status_code=500)
+        return JSONResponse(
+            {"error": "Something went wrong on our end. Email support@ytgrowth.io and we'll sort it out."},
+            status_code=500,
+        )
     result["_usage"] = {"warning": gate["warning"], "usage_pct": gate["usage_pct"]}
     # Persist to the Reports cache so this charged run shows up in the
     # Reports tab and can be reopened later.
@@ -231,12 +233,16 @@ def generate_description(body: DescriptionRequest, request: Request):
             autocomplete=body.autocomplete_terms,
         )
     except Exception as e:
-        refund_credit(channel_id)
-        return JSONResponse({"error": "Description generation failed. Your credit has been refunded."}, status_code=500)
+        return JSONResponse(
+            {"error": "Something went wrong on our end. Email support@ytgrowth.io and we'll sort it out."},
+            status_code=500,
+        )
 
     if error and not descriptions:
-        refund_credit(channel_id)
-        return JSONResponse({"error": error}, status_code=500)
+        return JSONResponse(
+            {"error": "Something went wrong on our end. Email support@ytgrowth.io and we'll sort it out."},
+            status_code=500,
+        )
     # Tag description output onto the most recent analysis row so it
     # rehydrates alongside the main report when the user reopens it.
     _update_description_cache(

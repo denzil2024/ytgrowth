@@ -23,7 +23,7 @@ from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
 from routers.auth import get_session
-from app.analysis_gate import check_and_deduct, refund_credit
+from app.analysis_gate import check_and_deduct
 from app.autopsy import analyze_video_autopsy
 from database.models import SessionLocal, VideoAutopsyCache
 
@@ -87,10 +87,9 @@ def analyze(body: AnalyzeBody, request: Request):
             traffic_sources=traffic_sources,
         )
     except Exception as e:
-        refund_credit(channel_id)
         print(f"[autopsy] analyze error: {e}")
         return JSONResponse(
-            {"error": "Autopsy generation failed. Your credit has been refunded."},
+            {"error": "Something went wrong on our end. Email support@ytgrowth.io and we'll sort it out."},
             status_code=500,
         )
 

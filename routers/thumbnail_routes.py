@@ -19,7 +19,7 @@ from pydantic import BaseModel
 
 from routers.auth import get_session
 from database.models import SessionLocal, ThumbnailAnalysis
-from app.analysis_gate import check_and_deduct, refund_credit, check_free_tier_access
+from app.analysis_gate import check_and_deduct, check_free_tier_access
 from app.thumbnail import (
     detect_format,
     get_size_bracket,
@@ -329,8 +329,10 @@ def analyze_thumbnail(body: AnalyzeBody, request: Request):
             image_bytes=raw_bytes,
         )
         if "error" in l2:
-            refund_credit(channel_id)
-            return JSONResponse({"error": l2["error"]}, status_code=500)
+            return JSONResponse(
+                {"error": "Something went wrong on our end. Email support@ytgrowth.io and we'll sort it out."},
+                status_code=500,
+            )
 
         claude_score = l2.get("claude_score", 0)
         final_score  = (row.algorithm_score or 0) + claude_score
@@ -353,9 +355,10 @@ def analyze_thumbnail(body: AnalyzeBody, request: Request):
     except Exception as e:
         import traceback
         print(f"[thumbnail] analyze error: {traceback.format_exc()}")
-        refund_credit(channel_id)
-        msg = "Analysis timed out. Your credit has been refunded." if "timeout" in str(e).lower() else str(e)
-        return JSONResponse({"error": msg}, status_code=500)
+        return JSONResponse(
+            {"error": "Something went wrong on our end. Email support@ytgrowth.io and we'll sort it out."},
+            status_code=500,
+        )
     finally:
         db.close()
 

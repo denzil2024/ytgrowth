@@ -91,49 +91,55 @@ def research_keywords(body: KeywordResearchRequest, request: Request):
     if not gate["allowed"]:
         return JSONResponse({"error": gate["message"], "show_upgrade": True}, status_code=402)
 
-    try:
-        with ThreadPoolExecutor(max_workers=3) as pool:
-            f_auto    = pool.submit(scrape_autocomplete, seed)
-            f_serper  = pool.submit(get_serper_keywords, seed)
-            f_serpapi = pool.submit(get_serpapi_autocomplete, seed)
-            autocomplete    = f_auto.result()
-            serper_keywords = f_serper.result() + f_serpapi.result()
+    # Pre-Claude external fetches (Serper / SerpAPI / autocomplete). If these
+    # return nothing, Claude was never called — refund is free for us.
+    with ThreadPoolExecutor(max_workers=3) as pool:
+        f_auto    = pool.submit(scrape_autocomplete, seed)
+        f_serper  = pool.submit(get_serper_keywords, seed)
+        f_serpapi = pool.submit(get_serpapi_autocomplete, seed)
+        autocomplete    = f_auto.result()
+        serper_keywords = f_serper.result() + f_serpapi.result()
 
-        if not autocomplete:
-            refund_credit(channel_id)
-            return JSONResponse({"error": "No autocomplete data returned. Try a different keyword."}, status_code=500)
-
-        result = analyze_keywords(seed, autocomplete, serper_keywords)
-        if "error" in result and len(result) == 1:
-            refund_credit(channel_id)
-            return JSONResponse(result, status_code=500)
-
-        # Real-data enrichment — replaces Claude's vibe score on the top 10
-        # with one derived from YouTube competition + Google Trends direction.
-        # Best-effort: any failure falls back to Claude's original score so
-        # the feature never breaks.
-        try:
-            result = enrich_keywords_with_real_data(result, autocomplete, top_n=10)
-        except Exception as e:
-            print(f"[keywords] enrichment error: {e}")
-
-        result["rawSuggestionsCount"] = len(autocomplete)
-        result["serperCount"] = len(serper_keywords)
-
-        # Persist to Reports cache so the charged run is always reopenable.
-        _save_keywords_cache(channel_id, body.keyword.strip(), body.confirmed_keyword.strip(), result)
-
-        return JSONResponse(result)
-
-    except Exception as e:
-        # Catch-all: any unhandled error after deduct refunds the credit so the
-        # user is never charged for a failed run.
-        print(f"[keywords] research error: {e}")
+    if not autocomplete:
+        # Pre-Claude failure — refund is free for us.
         refund_credit(channel_id)
         return JSONResponse(
-            {"error": "Keyword research failed. Your credit was refunded — please try again."},
+            {"error": "No autocomplete data returned. Try a different keyword. Your credit was refunded."},
             status_code=500,
         )
+
+    # From here on Claude has run — failures stay on the user's tab.
+    try:
+        result = analyze_keywords(seed, autocomplete, serper_keywords)
+    except Exception as e:
+        print(f"[keywords] research error: {e}")
+        return JSONResponse(
+            {"error": "Something went wrong on our end. Email support@ytgrowth.io and we'll sort it out."},
+            status_code=500,
+        )
+
+    if "error" in result and len(result) == 1:
+        return JSONResponse(
+            {"error": "Something went wrong on our end. Email support@ytgrowth.io and we'll sort it out."},
+            status_code=500,
+        )
+
+    # Real-data enrichment — replaces Claude's vibe score on the top 10
+    # with one derived from YouTube competition + Google Trends direction.
+    # Best-effort: any failure falls back to Claude's original score so
+    # the feature never breaks.
+    try:
+        result = enrich_keywords_with_real_data(result, autocomplete, top_n=10)
+    except Exception as e:
+        print(f"[keywords] enrichment error: {e}")
+
+    result["rawSuggestionsCount"] = len(autocomplete)
+    result["serperCount"] = len(serper_keywords)
+
+    # Persist to Reports cache so the charged run is always reopenable.
+    _save_keywords_cache(channel_id, body.keyword.strip(), body.confirmed_keyword.strip(), result)
+
+    return JSONResponse(result)
 
 
 # ─── Reports — list / open / delete ────────────────────────────────────────────

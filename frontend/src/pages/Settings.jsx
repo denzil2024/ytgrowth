@@ -529,7 +529,34 @@ export default function Settings() {
         </div>
       </div>
 
-      {/* ── Row 3: Danger Zone — full width ───────────────────────────────── */}
+      {/* ── Row 3: Support — full width ───────────────────────────────────── */}
+      <div style={{ marginBottom: 10 }}>
+        <SectionHeading>Support</SectionHeading>
+      </div>
+      <div style={{
+        ...CARD,
+        padding: '20px 24px', marginBottom: 24,
+        display: 'flex', alignItems: 'center', gap: 20,
+      }}>
+        <div style={{ flex: 1 }}>
+          <p style={{ fontSize: 14, fontWeight: 700, color: C.text1, letterSpacing: '-0.2px' }}>Contact support</p>
+          <p style={{ fontSize: 13, color: C.text2, marginTop: 5, lineHeight: 1.6 }}>
+            Failed run, billing question, or feature request? Email us and we'll get back to you.
+          </p>
+        </div>
+        <a
+          href="mailto:support@ytgrowth.io"
+          style={{
+            fontSize: 12, fontWeight: 700, cursor: 'pointer',
+            background: C.red, border: `1px solid ${C.red}`,
+            color: '#fff', borderRadius: 100, padding: '8px 16px',
+            fontFamily: 'inherit', flexShrink: 0,
+            textDecoration: 'none',
+          }}
+        >support@ytgrowth.io</a>
+      </div>
+
+      {/* ── Row 4: Danger Zone — full width ───────────────────────────────── */}
       <div style={{ marginBottom: 10 }}>
         <SectionHeading danger>Danger Zone</SectionHeading>
       </div>

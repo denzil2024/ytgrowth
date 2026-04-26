@@ -250,8 +250,10 @@ def _upsert_email_preferences(channel_id: str, email: str) -> None:
 
 def _run_analysis_in_background(session_id: str, stats: dict, videos: list, full_data: dict, plan: str = "free", charged: bool = False):
     """Run AI analysis after login and update session data when done.
-    If `charged=True`, the caller already spent 1 credit via check_and_deduct;
-    refund it if the Claude call fails so users aren't debited for our errors.
+    If `charged=True`, the caller already spent 1 credit via check_and_deduct.
+    Claude failures DO NOT refund — Anthropic still bills us on token use, so
+    refunding compounds the loss. Users can email support@ytgrowth.io for a
+    manual goodwill bump if a paid run failed.
     """
     channel_id = stats.get("channel_id") if stats else None
     try:
@@ -290,8 +292,9 @@ def _run_analysis_in_background(session_id: str, stats: dict, videos: list, full
                 print(f"Insights fan-out error: {fan_err}")
 
             # First report: generate immediately on channel connect — paid plans only,
-            # costs 1 credit (refunded on failure). Free plan shows an upgrade nudge
-            # in the Weekly Report tab instead.
+            # costs 1 credit (no refund on failure — Anthropic still bills us; users
+            # email support@ytgrowth.io for goodwill bumps). Free plan shows an
+            # upgrade nudge in the Weekly Report tab instead.
             channel_id = stats.get("channel_id")
             email = data.get("email", "")
             if channel_id and email:
@@ -306,7 +309,7 @@ def _run_analysis_in_background(session_id: str, stats: dict, videos: list, full
                         db.close()
 
                     if _plan != "free" and not existing:
-                        from app.analysis_gate import check_and_deduct, refund_credit
+                        from app.analysis_gate import check_and_deduct
                         gate = check_and_deduct(channel_id)
                         if gate.get("allowed"):
                             import time
@@ -314,12 +317,11 @@ def _run_analysis_in_background(session_id: str, stats: dict, videos: list, full
                             from app.weekly_report import generate_and_send_report
                             db2 = SessionLocal()
                             try:
-                                sent = generate_and_send_report(channel_id, email, data, db2)
-                                if not sent:
-                                    refund_credit(channel_id)
+                                generate_and_send_report(channel_id, email, data, db2)
                             except Exception as gen_err:
-                                refund_credit(channel_id)
-                                print(f"First report generation error: {gen_err} — refunded")
+                                # Claude already ran — credit stays consumed; users can
+                                # email support@ytgrowth.io if their report didn't arrive.
+                                print(f"First report generation error: {gen_err}")
                             finally:
                                 db2.close()
                         else:
@@ -332,13 +334,8 @@ def _run_analysis_in_background(session_id: str, stats: dict, videos: list, full
         import traceback
         print(f"Background analysis error: {e}")
         traceback.print_exc()
-        if charged and channel_id:
-            try:
-                from app.analysis_gate import refund_credit
-                refund_credit(channel_id)
-                print(f"Refunded analysis credit for {channel_id}")
-            except Exception as refund_err:
-                print(f"Refund failed after analysis error: {refund_err}")
+        # Claude already ran (or attempted) — credit stays consumed. Users
+        # can email support@ytgrowth.io for a manual goodwill bump.
 
 
 @router.get("/callback")
@@ -576,9 +573,9 @@ def callback(request: Request, background_tasks: BackgroundTasks):
         db.close()
 
         if needs_analysis:
-            # Charge 1 credit for the signup/login audit; refund in the
-            # background task on failure. If the user has no credits left
-            # (e.g. reconnecting an existing channel mid-cycle at 0), skip
+            # Charge 1 credit for the signup/login audit. No refund on Claude
+            # failures (Anthropic still bills us). If the user has no credits
+            # left (e.g. reconnecting an existing channel mid-cycle at 0), skip
             # the AI analysis silently — they still land on the dashboard.
             from app.analysis_gate import check_and_deduct
             gate = check_and_deduct(channel_id)
@@ -632,7 +629,8 @@ def refresh_analysis(request: Request, background_tasks: BackgroundTasks):
         return JSONResponse({"error": "Not logged in"}, status_code=401)
     channel_id = data["channel"]["channel_id"]
 
-    # Charge 1 credit up-front; refund in the background task on failure.
+    # Charge 1 credit up-front. No refund on Claude failures — Anthropic still
+    # bills us. Users email support@ytgrowth.io if a Re-Audit fails.
     from app.analysis_gate import check_and_deduct
     gate = check_and_deduct(channel_id)
     if not gate.get("allowed"):

@@ -14,7 +14,7 @@ from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
 from routers.auth import get_session
-from app.analysis_gate import check_and_deduct, refund_credit, check_free_tier_access
+from app.analysis_gate import check_and_deduct, check_free_tier_access
 from app.utils import make_anthropic_client
 from database.models import (
     SessionLocal,
@@ -635,11 +635,15 @@ Return ONLY valid JSON, no markdown:
 
     except json.JSONDecodeError as e:
         print(f"[video_ideas] JSON parse error: {e}")
-        refund_credit(channel_id)
-        return JSONResponse({"error": "AI returned invalid data. Your credit has been refunded."}, status_code=500)
+        return JSONResponse(
+            {"error": "Something went wrong on our end. Email support@ytgrowth.io and we'll sort it out."},
+            status_code=500,
+        )
     except Exception as e:
         print(f"[video_ideas] refresh error: {e}")
-        refund_credit(channel_id)
-        return JSONResponse({"error": "Failed to generate ideas. Your credit has been refunded."}, status_code=500)
+        return JSONResponse(
+            {"error": "Something went wrong on our end. Email support@ytgrowth.io and we'll sort it out."},
+            status_code=500,
+        )
     finally:
         db.close()

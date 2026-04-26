@@ -23,7 +23,7 @@ from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
 from routers.auth import get_session
-from app.analysis_gate import check_and_deduct, refund_credit, check_free_tier_access
+from app.analysis_gate import check_and_deduct, check_free_tier_access
 from app.outliers import search_outliers
 from app.keywords import generate_intent_options
 from app.competitors import extract_niche_keywords
@@ -102,19 +102,19 @@ def search(body: SearchBody, request: Request):
             confirmed_keyword = confirmed,
         )
     except Exception as e:
-        refund_credit(channel_id, amount=3)
         return JSONResponse(
-            {"error": "Search failed. Your credit has been refunded."},
+            {"error": "Something went wrong on our end. Email support@ytgrowth.io and we'll sort it out."},
             status_code=500,
         )
 
     if result.get("error"):
-        refund_credit(channel_id, amount=3)
-        return JSONResponse({"error": result["error"]}, status_code=500)
+        return JSONResponse(
+            {"error": "Something went wrong on our end. Email support@ytgrowth.io and we'll sort it out."},
+            status_code=500,
+        )
 
-    # Refund when the user got nothing useful (no videos, no channels).
+    # No useful results: still costs us — Claude / search ran. Don't refund.
     if not result.get("videos") and not result.get("channels"):
-        refund_credit(channel_id, amount=3)
         return JSONResponse({
             "videos":   [],
             "channels": [],
