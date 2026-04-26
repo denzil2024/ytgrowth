@@ -1471,6 +1471,7 @@ export default function Dashboard() {
   const [data,    setData]   = useState(null)
   const [videos,       setVideos]       = useState(null)
   const [videoSort,    setVideoSort]    = useState('date')   // 'date' | 'views' | 'likes'
+  const [videosTab,    setVideosTab]    = useState('all')    // 'all' | 'tracked'
   const [videoFlash,   setVideoFlash]   = useState(null)     // 'ok' | 'err' | null
   const [error,   setError]  = useState(null)
   const [loading, setLoad]   = useState(true)
@@ -2424,6 +2425,7 @@ export default function Dashboard() {
                     ))}
                   </div>
                 </div>
+                {videosTab === 'all' && (
                 <div style={{ display: 'flex', gap: 10, alignItems: 'center', flexShrink: 0 }}>
                   <div style={{
                     display: 'inline-flex', alignItems: 'center',
@@ -2502,11 +2504,44 @@ export default function Dashboard() {
                       : 'Refresh'}
                   </button>
                 </div>
+                )}
+              </div>
+
+              {/* ── Tabs — All videos vs. Tracked optimisations ─────────────────
+                  Mirrors the SEO Studio New/Reports tab pattern verbatim — same
+                  pill button, red-on-active, white-with-border-on-inactive. */}
+              <div style={{ display: 'flex', gap: 8, marginBottom: 20 }}>
+                {[
+                  { key: 'all',     label: 'All videos' },
+                  { key: 'tracked', label: optimizations.length > 0 ? `Tracked optimisations (${optimizations.length})` : 'Tracked optimisations' },
+                ].map(({ key, label }) => {
+                  const active = videosTab === key
+                  return (
+                    <button key={key}
+                      onClick={() => setVideosTab(key)}
+                      style={{
+                        fontSize: 12.5, fontWeight: 700, padding: '7px 16px',
+                        borderRadius: 100,
+                        border: active ? 'none' : `1px solid ${C.border}`,
+                        background: active ? C.red : '#ffffff',
+                        color: active ? '#ffffff' : C.text2,
+                        cursor: 'pointer', fontFamily: 'inherit',
+                        letterSpacing: '-0.1px',
+                        boxShadow: active ? '0 1px 3px rgba(229,37,27,0.28), 0 4px 14px rgba(229,37,27,0.22)' : 'none',
+                        transition: 'all 0.15s',
+                      }}
+                      onMouseEnter={e => { if (!active) { e.currentTarget.style.borderColor = C.text3; e.currentTarget.style.color = C.text1 } }}
+                      onMouseLeave={e => { if (!active) { e.currentTarget.style.borderColor = C.border;  e.currentTarget.style.color = C.text2 } }}
+                    >
+                      {label}
+                    </button>
+                  )
+                })}
               </div>
 
               {/* ── Your optimizations — each row is its own ytg-insight-card (same pattern as Overview's Priority Actions).
                     Green top border + green rank badge = "tracked/active", 3-col body grid with tinted views/likes/comments deltas. ── */}
-              {optimizations.length > 0 && (() => {
+              {videosTab === 'tracked' && optimizations.length > 0 && (() => {
                 const daysSince = (iso) => {
                   if (!iso) return null
                   const d = new Date(iso)
@@ -2557,7 +2592,7 @@ export default function Dashboard() {
                       Tracked updates · {optimizations.length} video{optimizations.length === 1 ? '' : 's'}
                     </p>
 
-                    {optimizations.slice(0, 8).map((o, i) => {
+                    {optimizations.map((o, i) => {
                       const days         = daysSince(o.optimized_at)
                       const vPct         = pct(o.before_views,    o.current_views)
                       const lPct         = pct(o.before_likes,    o.current_likes)
@@ -2608,6 +2643,24 @@ export default function Dashboard() {
                               <DeltaCell label="Likes"    before={o.before_likes}    current={o.current_likes}    pctVal={lPct} tint="white"/>
                               <DeltaCell label="Comments" before={o.before_comments} current={o.current_comments} pctVal={cPct} tint="green"/>
                             </div>
+
+                            {/* Cross-link to Post-Publish Review — different lens on the same video,
+                                surfaces the AI verdict on what worked / didn't. Tiny inline link, no
+                                duplicate content (autopsy has its own page). */}
+                            <div style={{ marginTop: 12, marginLeft: 46, display: 'flex', justifyContent: 'flex-end' }}>
+                              <button
+                                onClick={() => setNav('Autopsy')}
+                                style={{
+                                  fontSize: 11.5, fontWeight: 600, color: C.text3,
+                                  background: 'transparent', border: 'none', cursor: 'pointer',
+                                  fontFamily: 'inherit', padding: 0, letterSpacing: '-0.05px',
+                                }}
+                                onMouseEnter={e => { e.currentTarget.style.color = C.text1 }}
+                                onMouseLeave={e => { e.currentTarget.style.color = C.text3 }}
+                              >
+                                Run post-publish review on this video →
+                              </button>
+                            </div>
                           </div>
                         </div>
                       )
@@ -2616,7 +2669,20 @@ export default function Dashboard() {
                 )
               })()}
 
-              {/* Card grid */}
+              {/* Empty state for the Tracked tab when nothing's been optimised yet. */}
+              {videosTab === 'tracked' && optimizations.length === 0 && (
+                <div className="ytg-card" style={{ padding: '40px 32px', textAlign: 'center' }}>
+                  <p style={{ fontSize: 16, fontWeight: 700, color: C.text1, letterSpacing: '-0.2px', marginBottom: 8 }}>
+                    No tracked optimisations yet
+                  </p>
+                  <p style={{ fontSize: 13.5, color: C.text3, lineHeight: 1.6, maxWidth: 420, margin: '0 auto' }}>
+                    Open any video below and run an SEO optimisation. Once you publish the new title or description, the lift in views, likes, and comments shows up here.
+                  </p>
+                </div>
+              )}
+
+              {/* Card grid — All Videos tab only */}
+              {videosTab === 'all' && (
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, minmax(0, 1fr))', gap: 14 }}>
                 {[...videos].sort((a, b) => {
                   if (videoSort === 'views') return (b.views || 0) - (a.views || 0)
@@ -2701,6 +2767,7 @@ export default function Dashboard() {
                   )
                 })}
               </div>
+              )}
 
               {/* Optimise panel — modal overlay */}
               {selectedVideoId && (() => {
@@ -2841,7 +2908,7 @@ export default function Dashboard() {
 
           {nav === 'Outliers' && <Outliers channelData={data} onNavigate={setNav} plan={billingPlan} freeTierFeatures={freeTierFeatures} />}
 
-          {nav === 'Autopsy' && <Autopsy videos={videos} channelId={data?.channel?.channel_id} />}
+          {nav === 'Autopsy' && <Autopsy videos={videos} channelId={data?.channel?.channel_id} optimizations={optimizations} goToTracked={() => { setNav('Videos'); setVideosTab('tracked') }} />}
 
           {/* ── SETTINGS ─────────────────────────────────────────────── */}
           {nav === 'Settings' && <Settings />}

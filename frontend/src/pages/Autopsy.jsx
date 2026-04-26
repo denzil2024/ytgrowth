@@ -361,7 +361,11 @@ function fmtNum(n) {
   return n.toLocaleString()
 }
 
-export default function Autopsy({ videos = [], channelId = '' }) {
+export default function Autopsy({ videos = [], channelId = '', optimizations = [], goToTracked = null }) {
+  // Map video_id → boolean for fast lookup of "this video also has a tracked
+  // optimisation." Drives the small cross-link on each Reports row that lets
+  // the user jump to the deltas-view counterpart of the AI-verdict view.
+  const optimizedVideoIds = new Set((optimizations || []).map(o => o.video_id))
   const [activeTab, setActiveTab] = useState('new')
   const [reports,  setReports]    = useState([])
   const [loadingReports,  setLoadingReports]  = useState(false)
@@ -673,6 +677,21 @@ export default function Autopsy({ videos = [], channelId = '' }) {
                           <span style={{ fontSize: 12, color: C.text3, fontWeight: 500 }}>
                             · {relTime(r.updated_at)}
                           </span>
+                          {/* Cross-link to the tracked-deltas view of the same video. */}
+                          {optimizedVideoIds.has(r.video_id) && goToTracked && (
+                            <button
+                              onClick={e => { e.stopPropagation(); goToTracked() }}
+                              style={{
+                                fontSize: 11.5, fontWeight: 600, color: C.text3,
+                                background: 'transparent', border: 'none', cursor: 'pointer',
+                                fontFamily: 'inherit', padding: '0 0 0 4px', letterSpacing: '-0.05px',
+                              }}
+                              onMouseEnter={e => { e.currentTarget.style.color = C.text1 }}
+                              onMouseLeave={e => { e.currentTarget.style.color = C.text3 }}
+                            >
+                              · View tracked optimisation →
+                            </button>
+                          )}
                         </div>
                       </div>
                       <div style={{ flexShrink: 0, paddingRight: 28 }}>
