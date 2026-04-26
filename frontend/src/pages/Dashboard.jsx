@@ -11,6 +11,7 @@ import Autopsy from './Autopsy'
 import WeeklyReport from './WeeklyReport'
 import UsageBar from '../components/UsageBar'
 import CreditsEmptyModal from '../components/CreditsEmptyModal'
+import WelcomeModal from '../components/WelcomeModal'
 
 /* ─── Inject font + global styles once ─────────────────────────────────── */
 function useDashboardStyles() {
@@ -2155,7 +2156,55 @@ export default function Dashboard() {
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '50vh', gap: 14 }}>
               <div style={{ width: 32, height: 32, border: `2.5px solid ${C.border}`, borderTop: `2.5px solid ${C.red}`, borderRadius: '50%', animation: 'spin 0.7s linear infinite' }}/>
               <p style={{ fontSize: 14, fontWeight: 700, color: C.text1 }}>Running AI audit…</p>
-              <p style={{ fontSize: 14, color: C.text3, maxWidth: 320, textAlign: 'center', lineHeight: 1.6 }}>Claude is analyzing your last 20 videos, CTR, retention, and posting patterns. This takes about 20–30 seconds.</p>
+              <p style={{ fontSize: 14, color: C.text3, maxWidth: 320, textAlign: 'center', lineHeight: 1.6 }}>YTGrowth is analyzing your last 20 videos, CTR, retention, and posting patterns. This takes about 20–30 seconds.</p>
+            </div>
+          )}
+
+          {/* Start-here callout — visible when user has data but no audit yet
+              and isn't mid-analysis (e.g. first-time reconnect at 0 credits, or
+              background audit was skipped). Mirrors the existing .ytg-card
+              pattern used by audit result cards. */}
+          {data && nav === 'Overview' && !analyzingAI && !data.insights && (
+            <div className="ytg-card" style={{ padding: '28px 32px', marginTop: 32, marginBottom: 24, display: 'flex', alignItems: 'center', gap: 24 }}>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }}>Start here</p>
+                <h2 style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', marginBottom: 6 }}>Run your first audit</h2>
+                <p style={{ fontSize: 13.5, color: C.text2, lineHeight: 1.55, maxWidth: 520 }}>
+                  We need to analyse your channel before we can show Priority Actions, growth patterns, and milestone tracking. Costs 1 credit and takes about 30 seconds.
+                </p>
+              </div>
+              <button
+                className="ytg-dash-btn-primary"
+                disabled={analyzingAI}
+                onClick={() => {
+                  setReAuditError('')
+                  setAnalyzingAI(true)
+                  fetch('/auth/refresh-analysis', { method: 'POST', credentials: 'include' })
+                    .then(async r => {
+                      if (r.ok) {
+                        window.dispatchEvent(new CustomEvent('ytg:credits-changed'))
+                        return
+                      }
+                      setAnalyzingAI(false)
+                      if (r.status === 401) { window.location = '/'; return }
+                      if (r.status === 402) { setCreditsOut(true); return }
+                      const d = await r.json().catch(() => ({}))
+                      setReAuditError(d.error || "Something went wrong on our end. Email support@ytgrowth.io and we'll sort it out.")
+                      setTimeout(() => setReAuditError(''), 8000)
+                    })
+                    .catch(() => {
+                      setAnalyzingAI(false)
+                      setReAuditError("Couldn't reach our servers. Check your connection and try again.")
+                      setTimeout(() => setReAuditError(''), 8000)
+                    })
+                }}
+                style={{ flexShrink: 0 }}
+              >
+                <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+                  <path d="M11.5 2A6 6 0 1 0 12 6.5"/><path d="M11.5 2v3h-3"/>
+                </svg>
+                <span>Run audit</span><span style={{ fontSize: 11, fontWeight: 500, color: 'rgba(255,255,255,0.6)', marginLeft: 2 }}>· 1 credit</span>
+              </button>
             </div>
           )}
 
@@ -2828,6 +2877,17 @@ export default function Dashboard() {
         open={creditsOut}
         onClose={() => setCreditsOut(false)}
         featureName="channel audits"
+      />
+
+      <WelcomeModal
+        open={showWelcome}
+        onClose={() => {
+          setShowWelcome(false)
+          const cid = data?.channel?.channel_id
+          if (cid) {
+            try { localStorage.setItem(`ytg_welcomed_${cid}`, '1') } catch {}
+          }
+        }}
       />
     </div>
   )
