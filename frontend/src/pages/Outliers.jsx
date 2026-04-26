@@ -566,11 +566,12 @@ export default function Outliers({ channelData, onNavigate, plan, freeTierFeatur
         body: JSON.stringify({ query: q, confirmed_keyword: confirmedKeyword }),
       })
       if (myId !== reqIdRef.current) return
+      if (r.status === 401) { window.location = '/'; return }
       if (r.status === 402) { setCreditsOut(true); return }
       const d = await r.json()
       if (myId !== reqIdRef.current) return
       if (!r.ok) {
-        setError(d.error || 'Search failed.')
+        setError(d.error || "Something went wrong on our end. Email support@ytgrowth.io and we'll sort it out.")
       } else {
         setResult(d)
         window.dispatchEvent(new CustomEvent('ytg:credits-changed'))

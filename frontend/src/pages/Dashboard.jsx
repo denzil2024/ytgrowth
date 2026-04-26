@@ -1476,6 +1476,7 @@ export default function Dashboard() {
   const [nav,     setNav]    = useState('Overview')
   const [selectedVideoId, setSelectedVideoId] = useState(null)
   const [analyzingAI, setAnalyzingAI] = useState(false)
+  const [reAuditError, setReAuditError] = useState('')
   const [refreshingStats, setRefreshingStats] = useState(false)
   const [creditsOut, setCreditsOut] = useState(false)
   const [checked,  setChecked]  = useState({})
@@ -1500,7 +1501,12 @@ export default function Dashboard() {
 
   useEffect(() => {
     fetch('/auth/data', { credentials: 'include' })
-      .then(r => { if (!r.ok) throw new Error('No data'); return r.json() })
+      .then(r => {
+        // Auth expired — bounce to login rather than showing a broken dashboard.
+        if (r.status === 401) { window.location = '/'; throw new Error('Auth expired') }
+        if (!r.ok) throw new Error('No data')
+        return r.json()
+      })
       .then(d => {
         if (d.error) throw new Error(d.error)
         setData(d)
@@ -1865,21 +1871,33 @@ export default function Dashboard() {
                     disabled={analyzingAI}
                     onClick={() => {
                       const prevInsights = data?.insights
+                      setReAuditError('')
                       setAnalyzingAI(true)
                       setData(prev => ({ ...prev, insights: null }))
                       fetch('/auth/refresh-analysis', { method: 'POST', credentials: 'include' })
                         .then(async r => {
                           if (r.ok) {
                             window.dispatchEvent(new CustomEvent('ytg:credits-changed'))
-                          } else {
-                            setData(prev => ({ ...prev, insights: prevInsights }))
-                            setAnalyzingAI(false)
-                            if (r.status === 402) setCreditsOut(true)
+                            return
                           }
+                          // Failure: restore prior insights, surface a clear message
+                          setData(prev => ({ ...prev, insights: prevInsights }))
+                          setAnalyzingAI(false)
+                          if (r.status === 401) {
+                            // Auth expired — bounce back to login.
+                            window.location = '/'
+                            return
+                          }
+                          if (r.status === 402) { setCreditsOut(true); return }
+                          const d = await r.json().catch(() => ({}))
+                          setReAuditError(d.error || "Something went wrong on our end. Email support@ytgrowth.io and we'll sort it out.")
+                          setTimeout(() => setReAuditError(''), 8000)
                         })
                         .catch(() => {
                           setData(prev => ({ ...prev, insights: prevInsights }))
                           setAnalyzingAI(false)
+                          setReAuditError("Couldn't reach our servers. Check your connection and try again.")
+                          setTimeout(() => setReAuditError(''), 8000)
                         })
                     }}
                     style={{ opacity: analyzingAI ? 0.65 : 1 }}
@@ -1936,6 +1954,24 @@ export default function Dashboard() {
                   </button>
                 </div>
               </div>
+
+              {/* Re-Audit error message — surfaces backend errors / network drops so the user
+                  isn't left wondering why nothing happened after clicking Re-Audit. */}
+              {reAuditError && (
+                <div style={{
+                  marginBottom: 14,
+                  display: 'flex', alignItems: 'center', gap: 9,
+                  fontSize: 13, color: C.red,
+                  background: 'rgba(229,37,27,0.06)',
+                  border: '1px solid rgba(229,37,27,0.18)',
+                  borderRadius: 9, padding: '9px 13px',
+                }}>
+                  <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                    <circle cx="6.5" cy="6.5" r="5"/><path d="M6.5 4v3M6.5 9v.5"/>
+                  </svg>
+                  {reAuditError}
+                </div>
+              )}
 
               {/* Row 1 */}
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,minmax(0,1fr))', gap: 16, marginBottom: 16 }}>

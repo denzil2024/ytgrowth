@@ -408,9 +408,10 @@ export default function Autopsy({ videos = [], channelId = '' }) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ video_id: video.video_id }),
       })
+      if (r.status === 401) { window.location = '/'; return }
       if (r.status === 402) { setCreditsOut(true); return }
       const d = await r.json()
-      if (!r.ok) { setError(d.error || 'Autopsy failed.'); return }
+      if (!r.ok) { setError(d.error || "Something went wrong on our end. Email support@ytgrowth.io and we'll sort it out."); return }
       setResult(d)
       window.dispatchEvent(new CustomEvent('ytg:credits-changed'))
       // Refresh the reports list so the eligible cards know which have an

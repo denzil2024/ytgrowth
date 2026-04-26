@@ -614,6 +614,7 @@ export default function VideoIdeas({ onNavigate, plan, freeTierFeatures }) {
       const data = await res.json()
       if (!mountedRef.current) return
 
+      if (res.status === 401) { window.location = '/'; return }
       // 403 "locked" = free-tier refresh gate; swap to the upsell modal.
       if (res.status === 403 && (data.error === 'locked' || data.reason === 'locked')) {
         setRefreshGated(true)
@@ -624,7 +625,7 @@ export default function VideoIdeas({ onNavigate, plan, freeTierFeatures }) {
         return
       }
       if (!res.ok) {
-        setError(data.error || 'Failed to generate ideas. Please try again.')
+        setError(data.error || "Something went wrong on our end. Email support@ytgrowth.io and we'll sort it out.")
         return
       }
       setIdeas(data.ideas || [])
