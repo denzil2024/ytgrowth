@@ -74,6 +74,7 @@ def send_milestone_emails(
                 achieved_date=today_str,
                 dashboard_url=BASE_URL,
                 unsubscribe_url=unsubscribe_url,
+                base_url=BASE_URL,
             )
             verb = CATEGORY_VERB.get(category, "milestones")
             subject = f"You just hit {_fmt_num(tier)} {verb} on YouTube"
