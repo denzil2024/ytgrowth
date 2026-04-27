@@ -166,6 +166,7 @@ def run_reengagement_emails() -> None:
                     priority_actions_count=action_count or 5,
                     dashboard_url=f"{BASE_URL}/dashboard",
                     unsubscribe_url=unsubscribe_url,
+                    base_url=BASE_URL,
                 )
 
                 # Subject leads with the top action if we have it — high open rates

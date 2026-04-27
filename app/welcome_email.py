@@ -113,6 +113,7 @@ def send_welcome_email(
             top_action=top_action,
             dashboard_url=f"{BASE_URL}/dashboard",
             unsubscribe_url=unsubscribe_url,
+            base_url=BASE_URL,
         )
 
         try:
