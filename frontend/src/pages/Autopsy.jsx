@@ -495,10 +495,13 @@ export default function Autopsy({ videos = [], channelId = '', optimizations = [
           }}>{error}</div>
         )}
 
-        <div style={{ marginBottom: 12 }}>
+        <div style={{ marginBottom: 12, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
           <p style={{ fontSize: 11, fontWeight: 700, color: C.text3,
             letterSpacing: '0.08em', textTransform: 'uppercase' }}>
             Pick a video to autopsy
+          </p>
+          <p style={{ fontSize: 12, fontWeight: 500, color: C.text3, letterSpacing: '-0.05px' }}>
+            Each autopsy costs 1 credit.
           </p>
         </div>
 
@@ -602,10 +605,8 @@ export default function Autopsy({ videos = [], channelId = '', optimizations = [
                         onClick={() => runAutopsy(v)}
                         disabled={isRunning || !!running}
                         className="ytg-optimise-btn"
-                        style={{ width: '100%', justifyContent: 'center', padding: '11px 16px', fontSize: 13.5, fontWeight: 700, opacity: isRunning ? 0.7 : 1 }}>
-                        {isRunning
-                          ? 'Analysing…'
-                          : <>{hasAutopsy ? 'Re-run' : 'Run autopsy'} <span style={{ fontSize: 11, fontWeight: 500, opacity: 0.7, marginLeft: 2 }}>· 1 credit</span></>}
+                        style={{ width: '100%', justifyContent: 'center', padding: '11px 16px', fontSize: 13.5, fontWeight: 700, whiteSpace: 'nowrap', opacity: isRunning ? 0.7 : 1 }}>
+                        {isRunning ? 'Analysing…' : (hasAutopsy ? 'Re-run autopsy' : 'Autopsy')}
                       </button>
                     </div>
                   </div>
