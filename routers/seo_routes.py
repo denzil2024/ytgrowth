@@ -179,16 +179,21 @@ def analyze(body: TitleAnalyzeRequest, request: Request):
             confirmed_keyword=body.confirmed_keyword.strip(),
             channel_context=channel_context,
         )
+        result["_usage"] = {"warning": gate["warning"], "usage_pct": gate["usage_pct"]}
+        # Persist to the Reports cache so this charged run shows up in the
+        # Reports tab and can be reopened later.
+        _save_analysis_cache(channel_id, body.title, body.confirmed_keyword, result)
+        # Coerce any non-JSON-serialisable values (Decimal, datetime, numpy
+        # scalars from Serper/Trends enrichment) so JSONResponse never escapes
+        # the try/except as an unhandled TypeError.
+        return JSONResponse(json.loads(json.dumps(result, default=str)))
     except Exception as e:
+        import traceback
+        print(f"[seo/analyze] error: {traceback.format_exc()}")
         return JSONResponse(
             {"error": "Something went wrong on our end. Email support@ytgrowth.io and we'll sort it out."},
             status_code=500,
         )
-    result["_usage"] = {"warning": gate["warning"], "usage_pct": gate["usage_pct"]}
-    # Persist to the Reports cache so this charged run shows up in the
-    # Reports tab and can be reopened later.
-    _save_analysis_cache(channel_id, body.title, body.confirmed_keyword, result)
-    return JSONResponse(result)
 
 
 @router.post("/generate-description")
@@ -278,17 +283,25 @@ def optimize_video_route(body: OptimizeVideoRequest, request: Request):
         return _locked_response("video_optimize", feat.get("reason", "locked"))
     # Credit is charged by /seo/analyze which runs in parallel in the frontend.
     # optimize-video is the description/thumbnail half of the same operation — no double charge.
-    result = optimize_video(
-        creds,
-        body.video_id,
-        body.title,
-        body.thumbnail_url,
-        body.views,
-        body.likes,
-    )
-    if result.get("error") and not result.get("analysis"):
-        return JSONResponse({"error": result["error"]}, status_code=500)
-    return JSONResponse(result)
+    try:
+        result = optimize_video(
+            creds,
+            body.video_id,
+            body.title,
+            body.thumbnail_url,
+            body.views,
+            body.likes,
+        )
+        if result.get("error") and not result.get("analysis"):
+            return JSONResponse({"error": result["error"]}, status_code=500)
+        return JSONResponse(json.loads(json.dumps(result, default=str)))
+    except Exception as e:
+        import traceback
+        print(f"[seo/optimize-video] error: {traceback.format_exc()}")
+        return JSONResponse(
+            {"error": "Something went wrong on our end. Email support@ytgrowth.io and we'll sort it out."},
+            status_code=500,
+        )
 
 
 class UpdateVideoRequest(BaseModel):
