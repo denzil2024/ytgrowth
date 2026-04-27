@@ -120,6 +120,24 @@ if (typeof document !== 'undefined' && !document.getElementById('ytg-au-styles')
     .au-chip .val { font-size: 12px; font-weight: 700; color: ${C.text1}; }
     .au-chip .lbl { font-size: 11px; color: ${C.text3}; font-weight: 500; }
 
+    /* Eligible-videos grid — 5 cols on large desktops, 4 on laptop-sized
+       screens where the 5-col layout was overflowing the ENG metric and
+       clamping titles to 3 lines. Big monitors (1500px+) keep the 5-col
+       look that mirrors the Videos tab. */
+    .au-eligible-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 14px;
+    }
+    @media (max-width: 1500px) {
+      .au-eligible-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    }
+    @media (max-width: 900px) {
+      .au-eligible-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 560px) {
+      .au-eligible-grid { grid-template-columns: 1fr; }
+    }
   `
   document.head.appendChild(s)
 }
@@ -528,7 +546,7 @@ export default function Autopsy({ videos = [], channelId = '', optimizations = [
           // primary CTA text says "Run autopsy · 1 credit" (or "Re-run …"
           // when there's already a saved autopsy on file), and the click
           // handler runs the autopsy instead of opening the optimise panel.
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, minmax(0, 1fr))', gap: 14 }}>
+          <div className="au-eligible-grid">
             {[...eligible].sort((a, b) => {
               if (videoSort === 'views') return (b.views || 0) - (a.views || 0)
               if (videoSort === 'likes') return (b.likes || 0) - (a.likes || 0)

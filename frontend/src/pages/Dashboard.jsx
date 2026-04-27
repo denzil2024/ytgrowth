@@ -170,6 +170,24 @@ function useDashboardStyles() {
       .ytg-optimise-btn:hover {
         filter: brightness(1.1);
       }
+      /* Videos card grid — 5 cols on large desktops, 4 on laptop-sized
+         screens where the 5-col layout was overflowing the ENG metric and
+         clamping titles. Big monitors (1500px+) keep the 5-col look.
+         Mirrored verbatim by Autopsy.jsx for parity (see .au-eligible-grid). */
+      .ytg-videos-grid {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 14px;
+      }
+      @media (max-width: 1500px) {
+        .ytg-videos-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+      }
+      @media (max-width: 900px) {
+        .ytg-videos-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      }
+      @media (max-width: 560px) {
+        .ytg-videos-grid { grid-template-columns: 1fr; }
+      }
     `
     document.head.appendChild(style)
   }, [])
@@ -2683,7 +2701,7 @@ export default function Dashboard() {
 
               {/* Card grid — All Videos tab only */}
               {videosTab === 'all' && (
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, minmax(0, 1fr))', gap: 14 }}>
+              <div className="ytg-videos-grid">
                 {[...videos].sort((a, b) => {
                   if (videoSort === 'views') return (b.views || 0) - (a.views || 0)
                   if (videoSort === 'likes') return (b.likes || 0) - (a.likes || 0)
