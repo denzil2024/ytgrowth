@@ -303,6 +303,49 @@ function Logo({ size = 32 }) {
   )
 }
 
+/* ─── Per-card Monthly / Yearly toggle ─────────────────────────────────────
+   Lives INSIDE each pricing card (sibling-card pattern, à la Kitemaker /
+   Linear). 2-button segmented pill — never a dropdown. Active side fills
+   red to match the global tab pill (line 1429 of pricing tabs). */
+function CycleToggle({ value, onChange }) {
+  return (
+    <div style={{
+      display: 'inline-flex',
+      background: '#f4f4f6',
+      border: '1px solid rgba(10,10,15,0.06)',
+      borderRadius: 100,
+      padding: 3,
+      gap: 2,
+      marginBottom: 14,
+    }}>
+      {[
+        ['monthly', 'Monthly'],
+        ['yearly',  'Yearly'],
+      ].map(([val, label]) => (
+        <button
+          key={val}
+          onClick={() => onChange(val)}
+          style={{
+            padding: '5px 14px',
+            borderRadius: 100,
+            border: 'none',
+            cursor: 'pointer',
+            fontFamily: "'Inter', system-ui, sans-serif",
+            fontSize: 11.5,
+            fontWeight: 700,
+            background: value === val ? '#ff3b30' : 'transparent',
+            color: value === val ? '#fff' : 'var(--ytg-text-3)',
+            transition: 'all 0.15s',
+            letterSpacing: '-0.05px',
+          }}
+        >
+          {label}
+        </button>
+      ))}
+    </div>
+  )
+}
+
 /* ─── Check icon ────────────────────────────────────────────────────────── */
 function Check({ color = 'var(--ytg-check)' }) {
   return (
@@ -556,8 +599,16 @@ export default function Landing() {
   const [loggedIn, setLoggedIn] = useState(false)
   const [pricingTab, setPricingTab] = useState(() => {
     const tab = new URLSearchParams(window.location.search).get('tab')
-    return ['monthly','annual','lifetime','founder','packs'].includes(tab) ? tab : 'monthly'
+    // Backward compat: old links pointed at ?tab=monthly / ?tab=annual.
+    // Both now resolve to the consolidated Subscription tab; the per-card
+    // toggle decides cycle.
+    if (tab === 'monthly' || tab === 'annual') return 'subscription'
+    return ['subscription','lifetime','founder','packs'].includes(tab) ? tab : 'subscription'
   })
+  // Per-card billing cycle inside the Subscription tab. Each plan flips
+  // independently so the page only ever shows one toggle (the segmented
+  // pill inside that card), not a global one above the grid.
+  const [cycle, setCycle] = useState({ solo: 'monthly', growth: 'monthly', agency: 'monthly' })
   const [openFaq, setOpenFaq] = useState(0)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
@@ -1417,11 +1468,10 @@ export default function Landing() {
           <div style={{ overflowX: isMobile ? 'auto' : 'visible', marginBottom: isMobile ? 32 : 52, display: 'flex', justifyContent: isMobile ? 'flex-start' : 'center', WebkitOverflowScrolling: 'touch', scrollbarWidth: 'none', paddingLeft: isMobile ? 20 : 0 }}> {/* IMPROVED: paddingLeft on mobile to prevent first tab clip */}
             <div style={{ display: 'inline-flex', background: 'var(--ytg-card)', border: '1px solid var(--ytg-border)', borderRadius: 100, padding: 4, gap: 2, flexWrap: 'nowrap', flexShrink: 0, margin: isMobile ? '0 auto' : undefined }}>
               {[
-                ['monthly',  isMobile ? 'Monthly' : 'Monthly'],
-                ['annual',   isMobile ? 'Annual' : 'Annual · 2 months free'],
-                ['lifetime', 'Lifetime'],
-                ['founder',  isMobile ? 'Bundles' : 'Founder Bundles'],
-                ['packs',    isMobile ? 'Packs' : 'Analysis Packs'],
+                ['subscription', 'Subscription'],
+                ['lifetime',     'Lifetime'],
+                ['founder',      isMobile ? 'Bundles' : 'Founder Bundles'],
+                ['packs',        isMobile ? 'Packs' : 'Analysis Packs'],
               ].map(([val, label]) => (
                 <button key={val} onClick={() => setPricingTab(val)} style={{
                   padding: '9px 18px', borderRadius: 100, border: 'none', cursor: 'pointer',
@@ -1434,9 +1484,10 @@ export default function Landing() {
             </div>
           </div>
 
-          {/* ── MONTHLY ── */}
-          {pricingTab === 'monthly' && (
+          {/* ── SUBSCRIPTION ── (Monthly + Annual collapsed; cycle lives per-card) */}
+          {pricingTab === 'subscription' && (
             <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : isTablet ? 'repeat(2,1fr)' : 'repeat(4,1fr)', gap: 14, maxWidth: isMobile ? 480 : '100%', margin: '0 auto' }}>
+              {/* Free — no toggle (no cycle to choose) */}
               <div className="ytg-pricing-card">
                 <p style={{ fontSize: 12, fontWeight: 700, color: 'var(--ytg-text-3)', marginBottom: 10, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Free</p>
                 <p style={{ fontWeight: 800, fontSize: 46, letterSpacing: '-2px', color: 'var(--ytg-text)', lineHeight: 1, marginBottom: 4 }}>$0</p>
@@ -1451,115 +1502,99 @@ export default function Landing() {
                 <a href="/auth/login" className="ytg-btn-ghost" style={{ marginTop: 22, width: '100%', justifyContent: 'center', display: 'flex' }}>Start free</a>
               </div>
 
-              <div className="ytg-pricing-card">
-                <p style={{ fontSize: 12, fontWeight: 700, color: 'var(--ytg-text-3)', marginBottom: 10, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Solo</p>
-                <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, marginBottom: 4 }}>
-                  <p style={{ fontWeight: 800, fontSize: 46, letterSpacing: '-2px', color: 'var(--ytg-text)', lineHeight: 1 }}>$19</p>
-                  <p style={{ fontSize: 14, color: 'var(--ytg-text-3)', marginBottom: 7 }}>/mo</p>
-                </div>
-                <p style={{ fontSize: 14, color: 'var(--ytg-text-3)', marginBottom: 4 }}>20 analyses/month</p>
-                <p style={{ fontSize: 12, color: 'var(--ytg-text-4)', marginBottom: 22 }}>Built for solo creators who post consistently</p>
-                {['Full channel audit (up to 3 channels)', '20 AI analyses/month', 'SEO Studio (full)', 'Keyword Explorer (full)', 'Title Optimizer', 'Video Ideas', 'Competitor Analysis (up to 2 rivals)', 'Thumbnail IQ (standard credits)'].map((f, i) => (
-                  <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}><Check /><span style={{ fontSize: 14, color: 'var(--ytg-text-2)' }}>{f}</span></div>
-                ))}
-                <button onClick={() => openCheckout('solo_monthly')} className="ytg-btn-ghost" style={{ marginTop: 22, width: '100%', justifyContent: 'center', display: 'flex' }}>Get Solo</button>
-              </div>
+              {/* Solo — per-card cycle toggle */}
+              {(() => {
+                const yr = cycle.solo === 'yearly'
+                return (
+                  <div className="ytg-pricing-card">
+                    <p style={{ fontSize: 12, fontWeight: 700, color: 'var(--ytg-text-3)', marginBottom: 10, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Solo</p>
+                    <CycleToggle value={cycle.solo} onChange={v => setCycle(c => ({ ...c, solo: v }))} />
+                    <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, marginBottom: 2 }}>
+                      <p style={{ fontWeight: 800, fontSize: 46, letterSpacing: '-2px', color: 'var(--ytg-text)', lineHeight: 1 }}>{yr ? '$190' : '$19'}</p>
+                      <p style={{ fontSize: 14, color: 'var(--ytg-text-3)', marginBottom: 7 }}>{yr ? '/year' : '/mo'}</p>
+                    </div>
+                    {yr ? (
+                      <>
+                        <p style={{ fontSize: 14, color: 'var(--ytg-text-2)', marginBottom: 2 }}>$15.83 / month equivalent</p>
+                        <p style={{ fontSize: 12, fontWeight: 700, color: '#30d158', marginBottom: 22 }}>You save $38</p>
+                      </>
+                    ) : (
+                      <>
+                        <p style={{ fontSize: 14, color: 'var(--ytg-text-3)', marginBottom: 4 }}>20 analyses/month</p>
+                        <p style={{ fontSize: 12, color: 'var(--ytg-text-4)', marginBottom: 22 }}>Built for solo creators who post consistently</p>
+                      </>
+                    )}
+                    {['Full channel audit (up to 3 channels)', '20 AI analyses/month', 'SEO Studio (full)', 'Keyword Explorer (full)', 'Title Optimizer', 'Video Ideas', 'Competitor Analysis (up to 2 rivals)', 'Thumbnail IQ (standard credits)'].map((f, i) => (
+                      <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}><Check /><span style={{ fontSize: 14, color: 'var(--ytg-text-2)' }}>{f}</span></div>
+                    ))}
+                    <button onClick={() => openCheckout(yr ? 'solo_annual' : 'solo_monthly')} className="ytg-btn-ghost" style={{ marginTop: 22, width: '100%', justifyContent: 'center', display: 'flex' }}>{yr ? 'Commit to Solo' : 'Get Solo'}</button>
+                  </div>
+                )
+              })()}
 
-              <div className="ytg-pricing-card-featured">
-                <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 2, background: 'linear-gradient(90deg, var(--ytg-accent), #ff7a73)' }} />
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
-                  <p style={{ fontSize: 12, fontWeight: 700, color: 'var(--ytg-accent-text)', textTransform: 'uppercase', letterSpacing: '0.07em' }}>Growth</p>
-                  <span style={{ fontSize: 12, fontWeight: 700, background: 'var(--ytg-accent-light)', color: 'var(--ytg-accent-text)', border: '1px solid var(--ytg-accent-border)', padding: '3px 10px', borderRadius: 100, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Most popular</span>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, marginBottom: 4 }}>
-                  <p style={{ fontWeight: 800, fontSize: 46, letterSpacing: '-2px', color: 'var(--ytg-text)', lineHeight: 1 }}>$49</p>
-                  <p style={{ fontSize: 14, color: 'var(--ytg-text-3)', marginBottom: 7 }}>/mo</p>
-                </div>
-                <p style={{ fontSize: 14, color: 'var(--ytg-text-3)', marginBottom: 4 }}>50 analyses/month</p>
-                <p style={{ fontSize: 12, color: 'var(--ytg-text-4)', marginBottom: 22 }}>Built for creators serious about hitting 100k</p>
-                {['Full channel audit (up to 5 channels)', '50 AI analyses/month', 'SEO Studio (full)', 'Keyword Explorer (full)', 'Title Optimizer', 'Video Ideas', 'Competitor Analysis (up to 5 rivals)', 'Thumbnail IQ (increased credits)', 'Weekly report emails'].map((f, i) => (
-                  <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}><Check /><span style={{ fontSize: 14, color: 'var(--ytg-text)' }}>{f}</span></div>
-                ))}
-                <button onClick={() => openCheckout('growth_monthly')} className="ytg-btn-primary" style={{ marginTop: 22, width: '100%', justifyContent: 'center', display: 'flex' }}>Get Growth</button>
-              </div>
+              {/* Growth — featured, per-card cycle toggle */}
+              {(() => {
+                const yr = cycle.growth === 'yearly'
+                return (
+                  <div className="ytg-pricing-card-featured">
+                    <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 2, background: 'linear-gradient(90deg, var(--ytg-accent), #ff7a73)' }} />
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
+                      <p style={{ fontSize: 12, fontWeight: 700, color: 'var(--ytg-accent-text)', textTransform: 'uppercase', letterSpacing: '0.07em' }}>Growth</p>
+                      <span style={{ fontSize: 12, fontWeight: 700, background: 'var(--ytg-accent-light)', color: 'var(--ytg-accent-text)', border: '1px solid var(--ytg-accent-border)', padding: '3px 10px', borderRadius: 100, textTransform: 'uppercase', letterSpacing: '0.06em' }}>{yr ? 'Best value' : 'Most popular'}</span>
+                    </div>
+                    <CycleToggle value={cycle.growth} onChange={v => setCycle(c => ({ ...c, growth: v }))} />
+                    <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, marginBottom: 2 }}>
+                      <p style={{ fontWeight: 800, fontSize: 46, letterSpacing: '-2px', color: 'var(--ytg-text)', lineHeight: 1 }}>{yr ? '$490' : '$49'}</p>
+                      <p style={{ fontSize: 14, color: 'var(--ytg-text-3)', marginBottom: 7 }}>{yr ? '/year' : '/mo'}</p>
+                    </div>
+                    {yr ? (
+                      <>
+                        <p style={{ fontSize: 14, color: 'var(--ytg-text-2)', marginBottom: 2 }}>$40.83 / month equivalent</p>
+                        <p style={{ fontSize: 12, fontWeight: 700, color: '#30d158', marginBottom: 22 }}>You save $98</p>
+                      </>
+                    ) : (
+                      <>
+                        <p style={{ fontSize: 14, color: 'var(--ytg-text-3)', marginBottom: 4 }}>50 analyses/month</p>
+                        <p style={{ fontSize: 12, color: 'var(--ytg-text-4)', marginBottom: 22 }}>Built for creators serious about hitting 100k</p>
+                      </>
+                    )}
+                    {['Full channel audit (up to 5 channels)', '50 AI analyses/month', 'SEO Studio (full)', 'Keyword Explorer (full)', 'Title Optimizer', 'Video Ideas', 'Competitor Analysis (up to 5 rivals)', 'Thumbnail IQ (increased credits)', 'Weekly report emails'].map((f, i) => (
+                      <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}><Check /><span style={{ fontSize: 14, color: 'var(--ytg-text)' }}>{f}</span></div>
+                    ))}
+                    <button onClick={() => openCheckout(yr ? 'growth_annual' : 'growth_monthly')} className="ytg-btn-primary" style={{ marginTop: 22, width: '100%', justifyContent: 'center', display: 'flex' }}>{yr ? 'Commit to Growth' : 'Get Growth'}</button>
+                  </div>
+                )
+              })()}
 
-              <div className="ytg-pricing-card">
-                <p style={{ fontSize: 12, fontWeight: 700, color: 'var(--ytg-text-3)', marginBottom: 10, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Agency</p>
-                <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, marginBottom: 4 }}>
-                  <p style={{ fontWeight: 800, fontSize: 46, letterSpacing: '-2px', color: 'var(--ytg-text)', lineHeight: 1 }}>$149</p>
-                  <p style={{ fontSize: 14, color: 'var(--ytg-text-3)', marginBottom: 7 }}>/mo</p>
-                </div>
-                <p style={{ fontSize: 14, color: 'var(--ytg-text-3)', marginBottom: 4 }}>150 analyses/month</p>
-                <p style={{ fontSize: 12, color: 'var(--ytg-text-4)', marginBottom: 22 }}>Built for agencies and multi-channel operators</p>
-                {['Full channel audit (up to 10 channels, pooled)', '150 AI analyses/month', 'SEO Studio (full)', 'Keyword Explorer (full)', 'Title Optimizer', 'Video Ideas', 'Competitor Analysis (up to 10 rivals)', 'Thumbnail IQ (maximum credits)', 'Weekly reports + priority support'].map((f, i) => (
-                  <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}><Check /><span style={{ fontSize: 14, color: 'var(--ytg-text-2)' }}>{f}</span></div>
-                ))}
-                <button onClick={() => openCheckout('agency_monthly')} className="ytg-btn-ghost" style={{ marginTop: 22, width: '100%', justifyContent: 'center', display: 'flex' }}>Get Agency</button>
-              </div>
-            </div>
-          )}
-
-          {/* ── ANNUAL ── */}
-          {pricingTab === 'annual' && (
-            <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : isTablet ? 'repeat(2,1fr)' : 'repeat(4,1fr)', gap: 14, maxWidth: isMobile ? 480 : '100%', margin: '0 auto' }}>
-              <div className="ytg-pricing-card">
-                <p style={{ fontSize: 12, fontWeight: 700, color: 'var(--ytg-text-3)', marginBottom: 10, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Free</p>
-                <p style={{ fontWeight: 800, fontSize: 46, letterSpacing: '-2px', color: 'var(--ytg-text)', lineHeight: 1, marginBottom: 4 }}>$0</p>
-                <p style={{ fontSize: 14, color: 'var(--ytg-text-3)', marginBottom: 22 }}>Forever free</p>
-                {['Full channel audit (1 channel)', '3 lifetime AI analyses', 'SEO Studio (limited)', 'Keyword Explorer (view only)', 'Thumbnail IQ (limited credits)'].map((f, i) => (
-                  <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}><Check /><span style={{ fontSize: 14, color: 'var(--ytg-text-2)' }}>{f}</span></div>
-                ))}
-                <div style={{ borderTop: '1px solid rgba(10,10,15,0.07)', marginTop: 6, paddingTop: 12 }}>
-                  <p style={{ fontSize: 12, color: 'var(--ytg-text-4)', lineHeight: 1.6, margin: 0 }}>Not included: Competitor Analysis, Title Optimizer, Video Ideas, weekly reports.</p>
-                </div>
-                <a href="/auth/login" className="ytg-btn-ghost" style={{ marginTop: 22, width: '100%', justifyContent: 'center', display: 'flex' }}>Start free</a>
-              </div>
-
-              <div className="ytg-pricing-card">
-                <p style={{ fontSize: 12, fontWeight: 700, color: 'var(--ytg-text-3)', marginBottom: 10, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Solo — Annual</p>
-                <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, marginBottom: 2 }}>
-                  <p style={{ fontWeight: 800, fontSize: 46, letterSpacing: '-2px', color: 'var(--ytg-text)', lineHeight: 1 }}>$190</p>
-                  <p style={{ fontSize: 14, color: 'var(--ytg-text-3)', marginBottom: 7 }}>/year</p>
-                </div>
-                <p style={{ fontSize: 14, color: 'var(--ytg-text-2)', marginBottom: 2 }}>$15.83 / month equivalent</p>
-                <p style={{ fontSize: 12, fontWeight: 700, color: '#30d158', marginBottom: 22 }}>You save $38</p>
-                {['Full channel audit (up to 3 channels)', '20 AI analyses/month', 'SEO Studio (full)', 'Keyword Explorer (full)', 'Title Optimizer', 'Video Ideas', 'Competitor Analysis (up to 2 rivals)', 'Thumbnail IQ (standard credits)'].map((f, i) => (
-                  <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}><Check /><span style={{ fontSize: 14, color: 'var(--ytg-text-2)' }}>{f}</span></div>
-                ))}
-                <button onClick={() => openCheckout('solo_annual')} className="ytg-btn-ghost" style={{ marginTop: 22, width: '100%', justifyContent: 'center', display: 'flex' }}>Commit to Solo</button>
-              </div>
-
-              <div className="ytg-pricing-card-featured">
-                <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 2, background: 'linear-gradient(90deg, var(--ytg-accent), #ff7a73)' }} />
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
-                  <p style={{ fontSize: 12, fontWeight: 700, color: 'var(--ytg-accent-text)', textTransform: 'uppercase', letterSpacing: '0.07em' }}>Growth — Annual</p>
-                  <span style={{ fontSize: 12, fontWeight: 700, background: 'var(--ytg-accent-light)', color: 'var(--ytg-accent-text)', border: '1px solid var(--ytg-accent-border)', padding: '3px 10px', borderRadius: 100, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Best value</span>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, marginBottom: 2 }}>
-                  <p style={{ fontWeight: 800, fontSize: 46, letterSpacing: '-2px', color: 'var(--ytg-text)', lineHeight: 1 }}>$490</p>
-                  <p style={{ fontSize: 14, color: 'var(--ytg-text-3)', marginBottom: 7 }}>/year</p>
-                </div>
-                <p style={{ fontSize: 14, color: 'var(--ytg-text-2)', marginBottom: 2 }}>$40.83 / month equivalent</p>
-                <p style={{ fontSize: 12, fontWeight: 700, color: '#30d158', marginBottom: 22 }}>You save $98</p>
-                {['Full channel audit (up to 5 channels)', '50 AI analyses/month', 'SEO Studio (full)', 'Keyword Explorer (full)', 'Title Optimizer', 'Video Ideas', 'Competitor Analysis (up to 5 rivals)', 'Thumbnail IQ (increased credits)', 'Weekly report emails'].map((f, i) => (
-                  <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}><Check /><span style={{ fontSize: 14, color: 'var(--ytg-text)' }}>{f}</span></div>
-                ))}
-                <button onClick={() => openCheckout('growth_annual')} className="ytg-btn-primary" style={{ marginTop: 22, width: '100%', justifyContent: 'center', display: 'flex' }}>Commit to Growth</button>
-              </div>
-
-              <div className="ytg-pricing-card">
-                <p style={{ fontSize: 12, fontWeight: 700, color: 'var(--ytg-text-3)', marginBottom: 10, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Agency — Annual</p>
-                <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, marginBottom: 2 }}>
-                  <p style={{ fontWeight: 800, fontSize: 38, letterSpacing: '-2px', color: 'var(--ytg-text)', lineHeight: 1 }}>$1,490</p> {/* IMPROVED: 42→38px for 4-digit price */}
-                  <p style={{ fontSize: 14, color: 'var(--ytg-text-3)', marginBottom: 7 }}>/year</p>
-                </div>
-                <p style={{ fontSize: 14, color: 'var(--ytg-text-2)', marginBottom: 2 }}>$124.17 / month equivalent</p>
-                <p style={{ fontSize: 12, fontWeight: 700, color: '#30d158', marginBottom: 22 }}>You save $298</p>
-                {['Full channel audit (up to 10 channels, pooled)', '150 AI analyses/month', 'SEO Studio (full)', 'Keyword Explorer (full)', 'Title Optimizer', 'Video Ideas', 'Competitor Analysis (up to 10 rivals)', 'Thumbnail IQ (maximum credits)', 'Weekly reports + priority support'].map((f, i) => (
-                  <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}><Check /><span style={{ fontSize: 14, color: 'var(--ytg-text-2)' }}>{f}</span></div>
-                ))}
-                <button onClick={() => openCheckout('agency_annual')} className="ytg-btn-ghost" style={{ marginTop: 22, width: '100%', justifyContent: 'center', display: 'flex' }}>Commit to Agency</button>
-              </div>
+              {/* Agency — per-card cycle toggle */}
+              {(() => {
+                const yr = cycle.agency === 'yearly'
+                return (
+                  <div className="ytg-pricing-card">
+                    <p style={{ fontSize: 12, fontWeight: 700, color: 'var(--ytg-text-3)', marginBottom: 10, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Agency</p>
+                    <CycleToggle value={cycle.agency} onChange={v => setCycle(c => ({ ...c, agency: v }))} />
+                    <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, marginBottom: 2 }}>
+                      <p style={{ fontWeight: 800, fontSize: yr ? 38 : 46, letterSpacing: '-2px', color: 'var(--ytg-text)', lineHeight: 1 }}>{yr ? '$1,490' : '$149'}</p>
+                      <p style={{ fontSize: 14, color: 'var(--ytg-text-3)', marginBottom: 7 }}>{yr ? '/year' : '/mo'}</p>
+                    </div>
+                    {yr ? (
+                      <>
+                        <p style={{ fontSize: 14, color: 'var(--ytg-text-2)', marginBottom: 2 }}>$124.17 / month equivalent</p>
+                        <p style={{ fontSize: 12, fontWeight: 700, color: '#30d158', marginBottom: 22 }}>You save $298</p>
+                      </>
+                    ) : (
+                      <>
+                        <p style={{ fontSize: 14, color: 'var(--ytg-text-3)', marginBottom: 4 }}>150 analyses/month</p>
+                        <p style={{ fontSize: 12, color: 'var(--ytg-text-4)', marginBottom: 22 }}>Built for agencies and multi-channel operators</p>
+                      </>
+                    )}
+                    {['Full channel audit (up to 10 channels, pooled)', '150 AI analyses/month', 'SEO Studio (full)', 'Keyword Explorer (full)', 'Title Optimizer', 'Video Ideas', 'Competitor Analysis (up to 10 rivals)', 'Thumbnail IQ (maximum credits)', 'Weekly reports + priority support'].map((f, i) => (
+                      <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}><Check /><span style={{ fontSize: 14, color: 'var(--ytg-text-2)' }}>{f}</span></div>
+                    ))}
+                    <button onClick={() => openCheckout(yr ? 'agency_annual' : 'agency_monthly')} className="ytg-btn-ghost" style={{ marginTop: 22, width: '100%', justifyContent: 'center', display: 'flex' }}>{yr ? 'Commit to Agency' : 'Get Agency'}</button>
+                  </div>
+                )
+              })()}
             </div>
           )}
 
