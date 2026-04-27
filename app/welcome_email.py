@@ -120,7 +120,7 @@ def send_welcome_email(
             _resend.Emails.send({
                 "from":    "YTGrowth <hello@ytgrowth.io>",
                 "to":      [email],
-                "subject": "Your YTGrowth audit is ready",
+                "subject": "What we found on your channel",
                 "html":    html,
             })
             pref.welcome_email_sent_at = datetime.datetime.utcnow()

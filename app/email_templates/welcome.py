@@ -45,10 +45,19 @@ def build_email_html(
     <td align="center">
       <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="520" style="max-width:520px;">
 
-        <!-- Logo (real /favicon.svg, not a wordmark) -->
+        <!-- Logo + wordmark — same pattern as the dashboard footer. -->
         <tr>
           <td style="padding:0 0 28px 0;" align="left">
-            <img src="{base_url}/favicon.svg" width="28" height="28" alt="YTGrowth.io" style="display:block;border:0;outline:none;text-decoration:none;">
+            <table role="presentation" cellspacing="0" cellpadding="0" border="0">
+              <tr>
+                <td valign="middle" style="padding-right:9px;">
+                  <img src="{base_url}/favicon.svg" width="22" height="22" alt="" style="display:block;border:0;outline:none;text-decoration:none;">
+                </td>
+                <td valign="middle">
+                  <span style="font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;font-size:15px;font-weight:800;color:#0f0f13;letter-spacing:-0.3px;">YTGrowth</span>
+                </td>
+              </tr>
+            </table>
           </td>
         </tr>
 
@@ -59,12 +68,14 @@ def build_email_html(
           </td>
         </tr>
 
-        <!-- Body — single tight prose block. Channel name inline so we don't
-             need a separate avatar chip stacking the layout taller. -->
+        <!-- Body — opens with "Hi [channel name]," then a tight prose block. -->
         <tr>
           <td style="padding:0 0 18px 0;" align="left">
             <p style="font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;color:#0f0f13;line-height:1.7;letter-spacing:-0.05px;margin:0 0 14px 0;">
-              Hey there, we just finished analysing <strong style="font-weight:700;">{safe_name}</strong> — your last 20 videos, CTR, retention, posting cadence, and how YouTube is currently distributing your content.
+              Hi {safe_name},
+            </p>
+            <p style="font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;color:#0f0f13;line-height:1.7;letter-spacing:-0.05px;margin:0 0 14px 0;">
+              We just finished analysing your channel. We looked at your last 20 videos, CTR, retention, posting cadence, and how YouTube is currently distributing your content.
             </p>
             {priority_block}
             <p style="font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;color:#0f0f13;line-height:1.7;letter-spacing:-0.05px;margin:0;">
@@ -90,7 +101,7 @@ def build_email_html(
         <tr>
           <td style="padding:0 0 36px 0;" align="left">
             <p style="font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;color:#0f0f13;line-height:1.7;letter-spacing:-0.05px;margin:0 0 4px 0;">If you get stuck, just reply to this email.</p>
-            <p style="font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;color:#0f0f13;line-height:1.7;letter-spacing:-0.05px;margin:0;">— the YTGrowth.io team</p>
+            <p style="font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;color:#0f0f13;line-height:1.7;letter-spacing:-0.05px;margin:0;">The YTGrowth.io team</p>
           </td>
         </tr>
 

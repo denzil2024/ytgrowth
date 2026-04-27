@@ -22,18 +22,24 @@ def build_email_html(
     if top_action:
         body_paragraphs = f"""
             <p style="font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;color:#0f0f13;line-height:1.7;letter-spacing:-0.05px;margin:0 0 14px 0;">
-              Hey there, you ran an audit on <strong style="font-weight:700;">{safe_name}</strong> a few days ago and we found {priority_actions_count} things to fix.
+              Hi {safe_name},
+            </p>
+            <p style="font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;color:#0f0f13;line-height:1.7;letter-spacing:-0.05px;margin:0 0 14px 0;">
+              You ran an audit a few days ago and we found {priority_actions_count} things to fix on your channel.
             </p>
             <p style="font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;color:#0f0f13;line-height:1.7;letter-spacing:-0.05px;margin:0 0 14px 0;">
               <strong style="font-weight:700;">Start with this one.</strong> {safe_action}
             </p>
             <p style="font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;color:#0f0f13;line-height:1.7;letter-spacing:-0.05px;margin:0;">
-              The other {max(priority_actions_count - 1, 4)} are sitting in your dashboard — about 5 minutes to read through.
+              The other {max(priority_actions_count - 1, 4)} are sitting in your dashboard. About 5 minutes to read through.
             </p>"""
     else:
         body_paragraphs = f"""
+            <p style="font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;color:#0f0f13;line-height:1.7;letter-spacing:-0.05px;margin:0 0 14px 0;">
+              Hi {safe_name},
+            </p>
             <p style="font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;color:#0f0f13;line-height:1.7;letter-spacing:-0.05px;margin:0;">
-              Hey there, you ran an audit on <strong style="font-weight:700;">{safe_name}</strong> a few days ago but haven't been back. The 5 priority fixes, competitor gaps, and SEO suggestions are sitting in your dashboard — about 5 minutes to read through.
+              You ran an audit a few days ago but haven't been back. The 5 priority fixes, competitor gaps, and SEO suggestions are sitting in your dashboard. About 5 minutes to read through.
             </p>"""
 
     return f"""<!DOCTYPE html>
@@ -49,10 +55,19 @@ def build_email_html(
     <td align="center">
       <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="520" style="max-width:520px;">
 
-        <!-- Logo (real /favicon.svg) -->
+        <!-- Logo + wordmark (matches the dashboard footer pattern). -->
         <tr>
           <td style="padding:0 0 28px 0;" align="left">
-            <img src="{base_url}/favicon.svg" width="28" height="28" alt="YTGrowth.io" style="display:block;border:0;outline:none;text-decoration:none;">
+            <table role="presentation" cellspacing="0" cellpadding="0" border="0">
+              <tr>
+                <td valign="middle" style="padding-right:9px;">
+                  <img src="{base_url}/favicon.svg" width="22" height="22" alt="" style="display:block;border:0;outline:none;text-decoration:none;">
+                </td>
+                <td valign="middle">
+                  <span style="font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;font-size:15px;font-weight:800;color:#0f0f13;letter-spacing:-0.3px;">YTGrowth</span>
+                </td>
+              </tr>
+            </table>
           </td>
         </tr>
 
@@ -87,7 +102,7 @@ def build_email_html(
         <tr>
           <td style="padding:0 0 36px 0;" align="left">
             <p style="font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;color:#0f0f13;line-height:1.7;letter-spacing:-0.05px;margin:0 0 4px 0;">Reply to this email if you'd like a hand getting started.</p>
-            <p style="font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;color:#0f0f13;line-height:1.7;letter-spacing:-0.05px;margin:0;">— the YTGrowth.io team</p>
+            <p style="font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;color:#0f0f13;line-height:1.7;letter-spacing:-0.05px;margin:0;">The YTGrowth.io team</p>
           </td>
         </tr>
 

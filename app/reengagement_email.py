@@ -169,18 +169,11 @@ def run_reengagement_emails() -> None:
                     base_url=BASE_URL,
                 )
 
-                # Subject leads with the top action if we have it — high open rates
-                # come from specificity, not generic "we miss you" copy.
-                if top_action:
-                    short = top_action[:70].rstrip()
-                    subject = f"Your #1 fix: {short}{'…' if len(top_action) > 70 else ''}"
-                else:
-                    subject = "Your YTGrowth audit found things to fix"
-
+                # Short, urgent, high-open subject — same line for everyone.
                 _resend.Emails.send({
                     "from":    "YTGrowth <hello@ytgrowth.io>",
                     "to":      [email],
-                    "subject": subject,
+                    "subject": "Fix these NOW!",
                     "html":    html,
                 })
                 pref.reengagement_email_sent_at = now
