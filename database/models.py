@@ -359,12 +359,21 @@ if DATABASE_URL.startswith("postgres://"):
     DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
 
 engine = create_engine(DATABASE_URL)
-Base.metadata.create_all(engine)
 SessionLocal = sessionmaker(bind=engine)
+
+# Best-effort schema bootstrap. If Postgres is unreachable at boot (Railway host
+# outage, network blip), do NOT crash the import — let the app start so the
+# frontend, healthchecks, and non-DB endpoints stay up. DB-dependent endpoints
+# will return their own errors when they try SessionLocal().
+try:
+    Base.metadata.create_all(engine)
+except Exception as _e:
+    print(f"[boot] Base.metadata.create_all skipped (DB unreachable): {_e}")
 
 # ── Incremental migrations (idempotent) ───────────────────────────────────────
 from sqlalchemy import text as _text
-with engine.connect() as _conn:
+try:
+  with engine.connect() as _conn:
     for _stmt in [
         "ALTER TABLE thumbnail_analyses ADD COLUMN linked_video_idea TEXT",
         "ALTER TABLE weekly_reports ADD COLUMN opened BOOLEAN DEFAULT 0",
@@ -433,9 +442,12 @@ with engine.connect() as _conn:
             _conn.commit()
         except Exception:
             pass  # Column already exists or rename already done
+except Exception as _e:
+    print(f"[boot] incremental migrations skipped (DB unreachable): {_e}")
 
 # SQLite fallback: RENAME COLUMN is unsupported on older SQLite — add new columns and copy data
-with engine.connect() as _conn:
+try:
+  with engine.connect() as _conn:
     for _stmt in [
         "ALTER TABLE user_subscriptions ADD COLUMN paddle_subscription_id TEXT",
         "ALTER TABLE user_subscriptions ADD COLUMN paddle_customer_id TEXT",
@@ -454,12 +466,15 @@ with engine.connect() as _conn:
             _conn.commit()
         except Exception:
             pass  # lemonsqueezy_* columns don't exist (already renamed) — nothing to copy
+except Exception as _e:
+    print(f"[boot] paddle/lemonsqueezy backfill skipped (DB unreachable): {_e}")
 
 # Free-plan reset_date backfill — portable across SQLite/Postgres via bound param.
 # Runs once: any free user still on a lifetime model (reset_date IS NULL) gets
 # a 30-day forward reset anchored on today.
 import datetime as _dt
-with engine.connect() as _conn:
+try:
+  with engine.connect() as _conn:
     try:
         _conn.execute(
             _text("UPDATE user_subscriptions SET reset_date = :rd WHERE plan = 'free' AND reset_date IS NULL"),
@@ -468,3 +483,5 @@ with engine.connect() as _conn:
         _conn.commit()
     except Exception as _e:
         print(f"[migration] free-plan reset_date backfill skipped: {_e}")
+except Exception as _e:
+    print(f"[boot] free-plan reset_date backfill skipped (DB unreachable): {_e}")
