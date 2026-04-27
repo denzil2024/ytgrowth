@@ -804,6 +804,40 @@ export default function Landing() {
           </div>
         </div>
 
+        {/* Supademo interactive product demo — sits above the static dashboard
+            mockup so visitors can click through the real product before they
+            even sign up. Uses Supademo's recommended responsive shell. */}
+        <div style={{
+          maxWidth: isMobile ? '100%' : 1080,
+          margin: isMobile ? '40px 0 0' : '60px auto 0',
+          padding: isMobile ? '0 6px' : '0 32px',
+        }}>
+          <div style={{
+            position: 'relative',
+            boxSizing: 'content-box',
+            maxHeight: '80vh',
+            width: '100%',
+            aspectRatio: '2.80',
+            padding: '40px 0',
+          }}>
+            <iframe
+              src="https://app.supademo.com/embed/cmoh4lkvm212fza2isejyjche?embed_v=2&utm_source=embed"
+              loading="lazy"
+              title="See how YTGrowth.io optimises a YouTube channel"
+              allow="clipboard-write"
+              frameBorder="0"
+              allowFullScreen
+              style={{
+                position: 'absolute',
+                top: 0, left: 0,
+                width: '100%', height: '100%',
+                borderRadius: 16,
+                boxShadow: '0 2px 6px rgba(0,0,0,0.05), 0 24px 64px rgba(0,0,0,0.12)',
+              }}
+            />
+          </div>
+        </div>
+
         {/* Product mockup — premium white priority card with dimensional floating accents */}
         <div style={{
           maxWidth: isMobile ? '100%' : 1080,
