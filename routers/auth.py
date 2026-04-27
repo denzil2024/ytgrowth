@@ -291,6 +291,16 @@ def _run_analysis_in_background(session_id: str, stats: dict, videos: list, full
             except Exception as fan_err:
                 print(f"Insights fan-out error: {fan_err}")
 
+            # Welcome email — fires once per channel (idempotent via
+            # UserEmailPreferences.welcome_email_sent_at). Sent after the first
+            # audit completes so the email lands when the user has insights to
+            # see. Goes to free AND paid; honours the same unsubscribe flag.
+            try:
+                from app.welcome_email import send_welcome_email
+                send_welcome_email(channel_id, data)
+            except Exception as welcome_err:
+                print(f"Welcome email error: {welcome_err}")
+
             # First report: generate immediately on channel connect — paid plans only,
             # costs 1 credit (no refund on failure — Anthropic still bills us; users
             # email support@ytgrowth.io for goodwill bumps). Free plan shows an

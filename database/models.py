@@ -154,6 +154,10 @@ class UserEmailPreferences(Base):
     unsubscribe_token = Column(String, nullable=True, unique=True, index=True)
     unsubscribed_at   = Column(DateTime, nullable=True)
     resubscribed_at   = Column(DateTime, nullable=True)
+    # Lifecycle email state — null = never sent. Set on successful Resend
+    # delivery so the same channel never gets two welcomes / two re-engagements.
+    welcome_email_sent_at      = Column(DateTime, nullable=True)
+    reengagement_email_sent_at = Column(DateTime, nullable=True)
     created_at        = Column(DateTime, default=_now)
 
 
@@ -367,6 +371,8 @@ with engine.connect() as _conn:
         "ALTER TABLE weekly_reports ADD COLUMN unsubscribed BOOLEAN DEFAULT 0",
         "ALTER TABLE user_email_preferences ADD COLUMN unsubscribe_token TEXT",
         "ALTER TABLE user_email_preferences ADD COLUMN resubscribed_at DATETIME",
+        "ALTER TABLE user_email_preferences ADD COLUMN welcome_email_sent_at DATETIME",
+        "ALTER TABLE user_email_preferences ADD COLUMN reengagement_email_sent_at DATETIME",
         "ALTER TABLE user_sessions ADD COLUMN owner_email TEXT",
         "CREATE TABLE IF NOT EXISTS user_accounts (email TEXT PRIMARY KEY, google_id TEXT, display_name TEXT, profile_picture TEXT, created_at DATETIME)",
         "CREATE TABLE IF NOT EXISTS channel_registry (id INTEGER PRIMARY KEY AUTOINCREMENT, owner_email TEXT NOT NULL, channel_id TEXT NOT NULL, channel_name TEXT, channel_thumbnail TEXT, subscribers INTEGER, connected_at DATETIME, disconnected_at DATETIME, is_active BOOLEAN DEFAULT 1, last_audit_at DATETIME)",

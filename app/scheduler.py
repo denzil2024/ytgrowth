@@ -177,6 +177,28 @@ scheduler.add_job(
 )
 
 
+# ── Job 3: 3-day re-engagement emails (free users who never returned) ─────────
+
+def _run_reengagement_job():
+    """Daily wrapper — finds free signups from 3 days ago who never returned
+       and sends them a personalised nudge with their #1 priority action."""
+    try:
+        from app.reengagement_email import run_reengagement_emails
+        run_reengagement_emails()
+    except Exception as e:
+        print(f"[reengagement_job] Error: {e}")
+
+
+scheduler.add_job(
+    _run_reengagement_job,
+    trigger="cron",
+    hour=9,
+    minute=0,
+    id="reengagement_emails",
+    replace_existing=True,
+)
+
+
 # ── One-time backfill ─────────────────────────────────────────────────────────
 
 def _resolve_email(user_data: dict, creds_json_str: str, channel_id: str, db) -> str:
