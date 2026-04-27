@@ -1,9 +1,9 @@
-"""3-day re-engagement email — for free users who connected but never came back.
+"""3-day re-engagement email — Linear / Stripe / Notion style.
 
-Same email-safe shell as welcome.py / milestone_unlock.py: dark
-YTGrowth.io header, white card, red CTA, footer with unsubscribe link.
-Lead is the user's actual #1 priority action from their audit so the
-subject line and the headline both feel personalised, not blasted.
+Same minimalist shell as welcome.py: white background, single column,
+Inter, founder voice, one CTA. Lead with the user's actual #1 priority
+action so the email feels personal, not blasted. No callout boxes —
+the action is bolded inline.
 """
 
 
@@ -18,63 +18,82 @@ def build_email_html(
     safe_name   = (channel_name or "your channel").replace("<", "&lt;").replace(">", "&gt;")
     safe_action = (top_action or "").replace("<", "&lt;").replace(">", "&gt;")
 
-    # Hero block — show the actual #1 action when we have it; fall back to
-    # generic copy if for any reason it isn't available.
     if top_action:
-        hero_html = f"""
-            <div style="background:#fff7ed;border:1px solid #fed7aa;border-radius:12px;padding:22px 24px;margin:0 0 24px 0;">
-              <p style="font-size:11px;font-weight:800;color:#9a3412;letter-spacing:1px;text-transform:uppercase;margin:0 0 10px 0;">Your #1 priority</p>
-              <p style="font-size:15px;color:#0f0f13;line-height:1.6;margin:0;">{safe_action}</p>
-            </div>"""
-        body_lead = (
-            f"Your audit found {priority_actions_count} things to fix on {safe_name}. "
-            f"Here's the one to start with — the rest are waiting on your dashboard."
-        )
+        body_html = f"""
+            <p style="font-size:16px;color:#1a1a1f;line-height:1.65;margin:0 0 20px 0;">
+              Hey there,
+            </p>
+            <p style="font-size:16px;color:#1a1a1f;line-height:1.65;margin:0 0 20px 0;">
+              You ran an audit on <strong style="font-weight:600;">{safe_name}</strong> a few days ago, and we found {priority_actions_count} things to fix. Here's the one to start with:
+            </p>
+            <p style="font-size:16px;color:#1a1a1f;line-height:1.65;margin:0 0 24px 0;padding:0 0 0 16px;border-left:3px solid #e5251b;">
+              {safe_action}
+            </p>
+            <p style="font-size:16px;color:#1a1a1f;line-height:1.65;margin:0 0 28px 0;">
+              The other {max(priority_actions_count - 1, 4)} are sitting in your dashboard — about 5 minutes to read through.
+            </p>"""
     else:
-        hero_html = ""
-        body_lead = (
-            f"Your audit on {safe_name} is still waiting. The 5 priority fixes, "
-            f"competitor gaps, and SEO suggestions are sitting in your dashboard."
-        )
+        body_html = f"""
+            <p style="font-size:16px;color:#1a1a1f;line-height:1.65;margin:0 0 20px 0;">
+              Hey there,
+            </p>
+            <p style="font-size:16px;color:#1a1a1f;line-height:1.65;margin:0 0 28px 0;">
+              You ran an audit on <strong style="font-weight:600;">{safe_name}</strong> a few days ago but haven't been back since. The 5 priority fixes, competitor gaps, and SEO suggestions are still waiting for you in your dashboard — about 5 minutes to read through.
+            </p>"""
 
     return f"""<!DOCTYPE html>
 <html>
 <head>
 <meta charset="utf-8">
-<title>Your YTGrowth audit found things to fix</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Your audit is still waiting</title>
 </head>
-<body style="margin:0;padding:0;background:#f5f5f9;font-family:'Helvetica Neue',Arial,sans-serif;color:#0f0f13;">
-<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background:#f5f5f9;padding:32px 16px;">
+<body style="margin:0;padding:0;background:#ffffff;font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;color:#1a1a1f;-webkit-font-smoothing:antialiased;">
+<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background:#ffffff;padding:48px 16px;">
   <tr>
     <td align="center">
-      <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="560" style="background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 8px 30px rgba(0,0,0,0.08);max-width:560px;">
-        <!-- Dark header -->
+      <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="540" style="max-width:540px;">
+
+        <!-- Wordmark -->
         <tr>
-          <td align="center" style="background:#0a0a0f;padding:22px 0;">
-            <span style="font-size:22px;font-weight:800;color:#ffffff;letter-spacing:-0.6px;">YTGrowth<span style="color:#ff3b30;">.io</span></span>
+          <td style="padding:0 0 36px 0;">
+            <span style="font-size:18px;font-weight:700;color:#1a1a1f;letter-spacing:-0.4px;">YTGrowth<span style="color:#e5251b;">.io</span></span>
           </td>
         </tr>
+
         <!-- Body -->
         <tr>
-          <td style="padding:38px 44px 32px;">
-            <h1 style="font-size:24px;font-weight:900;color:#0f0f13;letter-spacing:-0.6px;margin:0 0 14px 0;line-height:1.25;">Your audit found things to fix.</h1>
-            <p style="font-size:14.5px;color:#6a6a78;line-height:1.7;margin:0 0 26px 0;">{body_lead}</p>
+          <td style="padding:0 0 8px 0;">
+            <h1 style="font-size:22px;font-weight:600;color:#1a1a1f;letter-spacing:-0.5px;line-height:1.3;margin:0 0 24px 0;">Your audit is still waiting.</h1>
 
-            {hero_html}
+            {body_html}
 
-            <div style="text-align:center;margin:8px 0 0 0;">
-              <a href="{dashboard_url}" style="display:inline-block;background:#e5251b;color:#ffffff;font-size:15px;font-weight:700;padding:14px 32px;border-radius:999px;text-decoration:none;letter-spacing:-0.1px;box-shadow:0 4px 14px rgba(229,37,27,0.35);">See all priorities</a>
-            </div>
-            <p style="font-size:12.5px;color:#9a9aa8;margin:18px 0 0 0;text-align:center;">Got a question? Email <a href="mailto:support@ytgrowth.io" style="color:#6a6a78;text-decoration:underline;">support@ytgrowth.io</a></p>
+            <!-- CTA -->
+            <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin:0 0 32px 0;">
+              <tr>
+                <td style="background:#e5251b;border-radius:8px;">
+                  <a href="{dashboard_url}" style="display:inline-block;color:#ffffff;font-size:15px;font-weight:600;padding:12px 22px;text-decoration:none;letter-spacing:-0.1px;">See all priorities →</a>
+                </td>
+              </tr>
+            </table>
+
+            <p style="font-size:15px;color:#1a1a1f;line-height:1.65;margin:0 0 8px 0;">
+              Reply to this email if you'd like a hand getting started.
+            </p>
+
+            <p style="font-size:15px;color:#1a1a1f;line-height:1.65;margin:0 0 0 0;">
+              — the YTGrowth.io team
+            </p>
           </td>
         </tr>
+
         <!-- Footer -->
         <tr>
-          <td style="padding:20px 44px 28px;border-top:1px solid #ececf2;text-align:center;">
-            <p style="font-size:12px;color:#9a9aa8;margin:0 0 6px 0;line-height:1.5;">You're getting this because you connected your channel to YTGrowth.io a few days ago.</p>
-            <p style="font-size:11px;color:#b8b8c2;margin:0;"><a href="{unsubscribe_url}" style="color:#b8b8c2;text-decoration:underline;">Unsubscribe from product emails</a></p>
+          <td style="padding:48px 0 0 0;">
+            <p style="font-size:12px;color:#9a9aa8;margin:0;line-height:1.5;">You're getting this because you connected your channel to YTGrowth.io a few days ago. <a href="{unsubscribe_url}" style="color:#9a9aa8;text-decoration:underline;">Unsubscribe</a></p>
           </td>
         </tr>
+
       </table>
     </td>
   </tr>
