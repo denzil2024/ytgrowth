@@ -146,7 +146,7 @@ const FAQ_ITEMS = [
   },
   {
     q: 'How long does the tracking cookie last?',
-    a: 'The cookie window is 60 days. That means anyone who clicks your referral link and completes a purchase within 60 days is attributed to you — even if they close the tab, switch devices, or come back days later. Lemon Squeezy handles the attribution, and their tracking is industry-standard.',
+    a: 'The cookie window is 30 days. That means anyone who clicks your referral link and completes a purchase within 30 days is attributed to you — even if they close the tab, switch devices, or come back later. Attribution is industry-standard and works across browsers and sessions.',
   },
   {
     q: 'Do I need to be a paying YTGrowth customer to join?',
@@ -154,15 +154,15 @@ const FAQ_ITEMS = [
   },
   {
     q: 'Is there an approval process or minimum audience size?',
-    a: 'No approval required and no minimum subscriber count. Sign up via Lemon Squeezy, get your link, and start sharing immediately. We do reserve the right to remove affiliates who use spam tactics, misleading claims, or paid ads that violate our policy — but for legitimate creators this is a non-issue.',
+    a: 'No approval required and no minimum subscriber count. Sign up at the YTGrowth affiliate portal, get your link, and start sharing immediately. We do reserve the right to remove affiliates who use spam tactics, misleading claims, or paid ads that violate our policy — but for legitimate creators this is a non-issue.',
   },
   {
     q: 'What happens if my referral cancels and resubscribes later?',
-    a: 'If they cancel and later return through your link again within the 60-day window, you earn the commission on their new subscription. If they return outside the 60-day window and do not click your link again, the new subscription is not attributed to you. This is standard behaviour across all major affiliate platforms.',
+    a: 'If they cancel and later return through your link again within the 30-day window, you earn the commission on their new subscription. If they return outside the 30-day window and do not click your link again, the new subscription is not attributed to you. This is standard behaviour across all major affiliate platforms.',
   },
   {
     q: 'How and when do I get paid?',
-    a: 'Lemon Squeezy processes payouts monthly, typically within the first two weeks of the following month. The minimum payout threshold is $10. You can receive payment via PayPal or direct bank transfer depending on your region. Everything is managed inside your Lemon Squeezy affiliate dashboard — we do not handle any payment details ourselves.',
+    a: 'Payouts are processed monthly, typically within the first two weeks of the following month. The minimum payout threshold is $50. You can receive payment via PayPal or direct bank transfer depending on your region. Everything is managed inside your YTGrowth affiliate dashboard.',
   },
   {
     q: 'Can I use paid advertising to promote my affiliate link?',
@@ -170,7 +170,7 @@ const FAQ_ITEMS = [
   },
   {
     q: 'How do I track my clicks, conversions, and earnings?',
-    a: 'Everything is tracked inside your Lemon Squeezy affiliate dashboard. You can see total clicks on your link, how many converted, your pending and paid earnings, and a full transaction history. Lemon Squeezy updates the dashboard in real time, so you can see exactly what is happening as it happens.',
+    a: 'Everything is tracked inside your YTGrowth affiliate dashboard. You can see total clicks on your link, how many converted, your pending and paid earnings, and a full transaction history. The dashboard updates in real time, so you can see exactly what is happening as it happens.',
   },
   {
     q: 'Does the 30% apply to one-time purchases and annual plans too?',
@@ -206,10 +206,10 @@ const TESTIMONIALS = [
 const COMPARE_ROWS = [
   { feature: 'Commission rate',            ytg: '30%',      vidiq: '15%',      tubebuddy: '20%' },
   { feature: 'Recurring commissions',      ytg: true,       vidiq: false,      tubebuddy: false },
-  { feature: 'Cookie duration',            ytg: '60 days',  vidiq: '30 days',  tubebuddy: '30 days' },
+  { feature: 'Cookie duration',            ytg: '30 days',  vidiq: '30 days',  tubebuddy: '30 days' },
   { feature: 'Instant link (no approval)', ytg: true,       vidiq: false,      tubebuddy: false },
   { feature: 'Annual plan commission',     ytg: true,       vidiq: true,       tubebuddy: true },
-  { feature: 'Payout minimum',             ytg: '$10',      vidiq: '$50',      tubebuddy: '$10' },
+  { feature: 'Payout minimum',             ytg: '$50',      vidiq: '$50',      tubebuddy: '$10' },
 ]
 
 function formatMoney(n) {
@@ -265,7 +265,7 @@ export default function Affiliate() {
         </a>
         <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
           {!isMobile && <a href="/" className="aff-nav-link">← Back to home</a>}
-          <a href="https://ytgrowth.lemonsqueezy.com/affiliates" target="_blank" rel="noopener noreferrer"
+          <a href="https://affiliates.ytgrowth.io" target="_blank" rel="noopener noreferrer"
             className="aff-btn"
             style={{ padding: isMobile ? '8px 18px' : '9px 22px', fontSize: isMobile ? 13 : 13, borderRadius: 100, whiteSpace: 'nowrap' }}>
             {isMobile ? 'Get link' : 'Get your link'}
@@ -291,7 +291,7 @@ export default function Affiliate() {
             Free to join. No approval wait. Link in under 2 minutes.
           </p>
           <div style={{ display: 'flex', gap: 14, justifyContent: 'center', flexWrap: 'wrap' }}>
-            <a href="https://ytgrowth.lemonsqueezy.com/affiliates" target="_blank" rel="noopener noreferrer" className="aff-btn aff-btn-lg">
+            <a href="https://affiliates.ytgrowth.io" target="_blank" rel="noopener noreferrer" className="aff-btn aff-btn-lg">
               Claim your affiliate link →
             </a>
             <a href="#aff-calculator"
@@ -313,8 +313,8 @@ export default function Affiliate() {
           <div className="aff-stats-inner" style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center', flexWrap: 'wrap', gap: 32 }}>
             {[
               { value: '30%',    label: 'Recurring commission',    sub: 'Every payment — not just the first' },
-              { value: '60 days', label: 'Cookie window',          sub: 'Industry-leading attribution' },
-              { value: '$10',    label: 'Payout minimum',          sub: 'Monthly via PayPal or bank' },
+              { value: '30 days', label: 'Cookie window',          sub: 'Standard attribution window' },
+              { value: '$50',    label: 'Payout minimum',          sub: 'Monthly via PayPal or bank' },
               { value: '∞',      label: 'Earnings cap',            sub: 'No limit, no ceiling, ever' },
             ].map((s, i) => (
               <div key={i} style={{ textAlign: 'center', minWidth: 160 }}>
@@ -422,7 +422,7 @@ export default function Affiliate() {
                 ))}
               </div>
 
-              <a href="https://ytgrowth.lemonsqueezy.com/affiliates" target="_blank" rel="noopener noreferrer"
+              <a href="https://affiliates.ytgrowth.io" target="_blank" rel="noopener noreferrer"
                 className="aff-btn aff-btn-full" style={{ padding: 17, fontSize: 14, borderRadius: 14 }}>
                 Start earning this month →
               </a>
@@ -444,7 +444,7 @@ export default function Affiliate() {
             {[
               {
                 n: '01', title: 'Sign up — instantly',
-                body: 'Visit the Lemon Squeezy affiliate portal, create a free account, and your unique tracking link is generated immediately. No application form, no waiting for approval, no minimum follower requirement.',
+                body: 'Visit the YTGrowth affiliate portal, create a free account, and your unique tracking link is generated immediately. No application form, no waiting for approval, no minimum follower requirement.',
               },
               {
                 n: '02', title: 'Share your link',
@@ -452,7 +452,7 @@ export default function Affiliate() {
               },
               {
                 n: '03', title: 'Earn every single month',
-                body: 'Whenever someone you referred pays their subscription — month after month, or in one annual lump — 30% lands in your Lemon Squeezy balance. Withdraw at any time once you clear $10.',
+                body: 'Whenever someone you referred pays their subscription — month after month, or in one annual lump — 30% lands in your affiliate balance. Withdraw at any time once you clear $50.',
               },
             ].map((step, i) => (
               <div key={i} style={{ background: 'var(--ytg-card)', borderRadius: 18, border: '1px solid var(--ytg-border)', boxShadow: 'var(--ytg-shadow-lg)', padding: 36 }}>
@@ -607,13 +607,13 @@ export default function Affiliate() {
               maxWidth: isMobile ? 280 : 'none',
               marginLeft: 'auto', marginRight: 'auto',
             }}>
-              {['30% recurring', '60-day cookie', 'Instant access', 'Monthly payouts'].map((t, i) => (
+              {['30% recurring', '30-day cookie', 'Instant access', 'Monthly payouts'].map((t, i) => (
                 <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 14, color: 'var(--ytg-text-3)' }}>
                   <Check /><span style={{ whiteSpace: 'nowrap' }}>{t}</span>
                 </div>
               ))}
             </div>
-            <a href="https://ytgrowth.lemonsqueezy.com/affiliates" target="_blank" rel="noopener noreferrer"
+            <a href="https://affiliates.ytgrowth.io" target="_blank" rel="noopener noreferrer"
               className={`aff-btn${isMobile ? ' aff-btn-full' : ' aff-btn-lg'}`}
               style={isMobile ? { borderRadius: 14, padding: '15px 24px', fontSize: 14 } : {}}>
               Join the Affiliate Program →
