@@ -9,6 +9,7 @@ import ThumbnailScore from './ThumbnailScore'
 import Outliers from './Outliers'
 import Autopsy from './Autopsy'
 import WeeklyReport from './WeeklyReport'
+import Referrals from './Referrals'
 import UsageBar from '../components/UsageBar'
 import CreditsEmptyModal from '../components/CreditsEmptyModal'
 import WelcomeModal from '../components/WelcomeModal'
@@ -1777,7 +1778,8 @@ export default function Dashboard() {
 
           <div style={{ height: 1, background: C.border, margin: '16px 20px 8px' }}/>
 
-          <NavBtn label="Settings" active={nav === 'Settings'} onClick={() => setNav('Settings')} />
+          <NavBtn label="Referrals" active={nav === 'Referrals'} onClick={() => setNav('Referrals')} />
+          <NavBtn label="Settings"  active={nav === 'Settings'}  onClick={() => setNav('Settings')} />
 
         </nav>
 
@@ -2927,6 +2929,9 @@ export default function Dashboard() {
           {nav === 'Outliers' && <Outliers channelData={data} onNavigate={setNav} plan={billingPlan} freeTierFeatures={freeTierFeatures} />}
 
           {nav === 'Autopsy' && <Autopsy videos={videos} channelId={data?.channel?.channel_id} optimizations={optimizations} goToTracked={() => { setNav('Videos'); setVideosTab('tracked') }} />}
+
+          {/* ── REFERRALS ────────────────────────────────────────────── */}
+          {nav === 'Referrals' && <Referrals />}
 
           {/* ── SETTINGS ─────────────────────────────────────────────── */}
           {nav === 'Settings' && <Settings />}
