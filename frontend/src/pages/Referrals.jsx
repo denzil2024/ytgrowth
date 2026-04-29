@@ -3,6 +3,8 @@ import { useEffect, useState } from 'react'
 /* ── Design tokens — strict palette matching Dashboard / Settings */
 const C = {
   red:     '#e5251b', redBg:   '#fff5f5', redBdr:   '#fecaca',
+  green:   '#16a34a', greenBg: '#f0fdf4', greenBdr: '#bbf7d0',
+  amber:   '#d97706', amberBg: '#fffbeb', amberBdr: '#fde68a',
   text1:   '#111114',
   text2:   '#52525b',
   text3:   '#9595a4',
@@ -38,6 +40,18 @@ function useReferralsStyles() {
   }, [])
 }
 
+const STATS = [
+  { value: '30%',    label: 'Recurring commission', sub: 'Every payment — not just the first' },
+  { value: '30 days', label: 'Cookie window',        sub: 'Standard attribution window' },
+  { value: '$50',    label: 'Payout minimum',       sub: 'Monthly via PayPal or bank' },
+]
+
+const STEPS = [
+  { n: '01', title: 'Copy your link',     body: 'Grab your unique referral link from the dashboard below — anyone who signs up through it is tied to your account.' },
+  { n: '02', title: 'Share it anywhere',  body: 'Drop it in a YouTube description, newsletter, tweet, community post, or pinned comment. Honest mentions convert best.' },
+  { n: '03', title: 'Get paid monthly',   body: '30% of every payment your referrals make lands in your balance — month after month. Withdraw once you clear $50.' },
+]
+
 export default function Referrals() {
   useReferralsStyles()
   const [token, setToken] = useState('')
@@ -70,13 +84,45 @@ export default function Referrals() {
 
   return (
     <div className="referrals-page">
+
       {/* ── Page heading ──────────────────────────────────────────────────── */}
-      <div style={{ marginBottom: 24 }}>
-        <h1 style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.6px', marginBottom: 4 }}>Referrals</h1>
-        <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.5 }}>Your referral link · stats · rewards · 30% recurring on every payment</p>
+      <div style={{ marginBottom: 20 }}>
+        <h1 style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.6px', marginBottom: 4 }}>Refer & earn</h1>
+        <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.5 }}>
+          Recommend YTGrowth to other creators and earn <span style={{ color: C.red, fontWeight: 700 }}>30% recurring commission</span> on every payment they make — for as long as they stay subscribed.
+        </p>
+      </div>
+
+      {/* ── Stats strip ───────────────────────────────────────────────────── */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 14, marginBottom: 22 }}>
+        {STATS.map(s => (
+          <div key={s.label} style={{ ...CARD, padding: '18px 20px' }}>
+            <p style={{ fontSize: 26, fontWeight: 800, color: C.red, letterSpacing: '-0.8px', lineHeight: 1.05, marginBottom: 6 }}>{s.value}</p>
+            <p style={{ fontSize: 13, fontWeight: 700, color: C.text1, letterSpacing: '-0.2px' }}>{s.label}</p>
+            <p style={{ fontSize: 12, color: C.text3, marginTop: 3, lineHeight: 1.45 }}>{s.sub}</p>
+          </div>
+        ))}
+      </div>
+
+      {/* ── How it works ──────────────────────────────────────────────────── */}
+      <div style={{ marginBottom: 10 }}>
+        <p style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', color: '#a0a0b0', marginBottom: 10 }}>How it works</p>
+      </div>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 14, marginBottom: 26 }}>
+        {STEPS.map(step => (
+          <div key={step.n} style={{ ...CARD, padding: '20px 22px' }}>
+            <p style={{ fontSize: 12, fontWeight: 800, color: C.red, letterSpacing: '0.06em', marginBottom: 12, fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace' }}>{step.n}</p>
+            <p style={{ fontSize: 14, fontWeight: 700, color: C.text1, letterSpacing: '-0.2px', marginBottom: 7 }}>{step.title}</p>
+            <p style={{ fontSize: 13, color: C.text2, lineHeight: 1.6 }}>{step.body}</p>
+          </div>
+        ))}
       </div>
 
       {/* ── Embed card ────────────────────────────────────────────────────── */}
+      <div style={{ marginBottom: 10, display: 'flex', alignItems: 'baseline', justifyContent: 'space-between' }}>
+        <p style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', color: '#a0a0b0' }}>Your dashboard</p>
+        <p style={{ fontSize: 12, color: C.text3 }}>Copy your link below to start sharing</p>
+      </div>
       <div style={{ ...CARD, overflow: 'hidden' }}>
         {loading && (
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: 600 }}>
@@ -105,6 +151,11 @@ export default function Referrals() {
           />
         )}
       </div>
+
+      {/* ── Footnote ──────────────────────────────────────────────────────── */}
+      <p style={{ fontSize: 12, color: C.text3, marginTop: 14, lineHeight: 1.65, textAlign: 'center' }}>
+        Full program details on the <a href="/affiliate" target="_blank" rel="noopener noreferrer" style={{ color: C.red, fontWeight: 600, textDecoration: 'none' }}>public affiliate page</a> — earnings calculator, FAQ, comparisons.
+      </p>
     </div>
   )
 }

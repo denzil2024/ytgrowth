@@ -1778,8 +1778,7 @@ export default function Dashboard() {
 
           <div style={{ height: 1, background: C.border, margin: '16px 20px 8px' }}/>
 
-          <NavBtn label="Referrals" active={nav === 'Referrals'} onClick={() => setNav('Referrals')} />
-          <NavBtn label="Settings"  active={nav === 'Settings'}  onClick={() => setNav('Settings')} />
+          <NavBtn label="Settings" active={nav === 'Settings'} onClick={() => setNav('Settings')} />
 
         </nav>
 
@@ -1800,11 +1799,26 @@ export default function Dashboard() {
           </div>
         )}
 
-        {/* Footer: Sign Out */}
-        <div style={{ padding: '10px 22px 16px', borderTop: `1px solid ${C.border}`, flexShrink: 0 }}>
+        {/* Footer: Refer & earn + Sign Out */}
+        <div style={{ padding: '10px 22px 16px', borderTop: `1px solid ${C.border}`, flexShrink: 0, display: 'flex', flexDirection: 'column', gap: 2 }}>
+          <button
+            onClick={() => setNav('Referrals')}
+            style={{
+              display: 'flex', alignItems: 'center', gap: 8, padding: '7px 9px', borderRadius: 8,
+              background: nav === 'Referrals' ? C.redBg : 'transparent',
+              border: 'none', cursor: 'pointer', textAlign: 'left',
+              fontSize: 13, fontWeight: 600, color: C.red, fontFamily: 'inherit',
+              transition: 'background 0.15s',
+            }}
+            onMouseEnter={e => { if (nav !== 'Referrals') e.currentTarget.style.background = C.redBg }}
+            onMouseLeave={e => { if (nav !== 'Referrals') e.currentTarget.style.background = 'transparent' }}
+          >
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"><rect x="1.5" y="5" width="11" height="7.5" rx="1"/><path d="M1 5h12v2H1z" fill="currentColor" fillOpacity="0.12" stroke="none"/><path d="M7 5v7.5"/><path d="M7 5c-1.5-2-4-1.5-4 0 0 .8.7 1.2 1.5 1.2H7M7 5c1.5-2 4-1.5 4 0 0 .8-.7 1.2-1.5 1.2H7"/></svg>
+            <span style={{ flex: 1 }}>Refer & earn 30%</span>
+          </button>
           <a
             href="/auth/logout"
-            style={{ display: 'flex', alignItems: 'center', gap: 7, color: C.text3, fontSize: 13, fontWeight: 500, textDecoration: 'none', padding: '6px 8px', borderRadius: 8, transition: 'color 0.15s, background 0.15s' }}
+            style={{ display: 'flex', alignItems: 'center', gap: 8, color: C.text3, fontSize: 13, fontWeight: 500, textDecoration: 'none', padding: '7px 9px', borderRadius: 8, transition: 'color 0.15s, background 0.15s' }}
             onMouseEnter={e => { e.currentTarget.style.color = C.text2; e.currentTarget.style.background = '#f4f4f8' }}
             onMouseLeave={e => { e.currentTarget.style.color = C.text3; e.currentTarget.style.background = 'transparent' }}
           >
