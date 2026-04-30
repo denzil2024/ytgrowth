@@ -1799,30 +1799,33 @@ export default function Dashboard() {
           </div>
         )}
 
-        {/* Footer: Refer & earn + Sign Out */}
-        <div style={{ padding: '10px 22px 16px', borderTop: `1px solid ${C.border}`, flexShrink: 0, display: 'flex', flexDirection: 'column', gap: 2 }}>
+        {/* Footer: Refer & earn + Sign Out — inline, both subtle */}
+        <div style={{ padding: '8px 14px 12px', borderTop: `1px solid ${C.border}`, flexShrink: 0, display: 'flex', alignItems: 'center', gap: 4 }}>
           <button
             onClick={() => setNav('Referrals')}
             style={{
-              display: 'flex', alignItems: 'center', gap: 8, padding: '7px 9px', borderRadius: 8,
-              background: nav === 'Referrals' ? C.redBg : 'transparent',
+              display: 'flex', alignItems: 'center', gap: 7, padding: '6px 9px', borderRadius: 8,
+              background: nav === 'Referrals' ? '#f4f4f8' : 'transparent',
               border: 'none', cursor: 'pointer', textAlign: 'left',
-              fontSize: 13, fontWeight: 600, color: C.red, fontFamily: 'inherit',
-              transition: 'background 0.15s',
+              fontSize: 12.5, fontWeight: 500,
+              color: nav === 'Referrals' ? C.text1 : C.text3,
+              fontFamily: 'inherit', flex: 1,
+              transition: 'color 0.15s, background 0.15s',
             }}
-            onMouseEnter={e => { if (nav !== 'Referrals') e.currentTarget.style.background = C.redBg }}
-            onMouseLeave={e => { if (nav !== 'Referrals') e.currentTarget.style.background = 'transparent' }}
+            onMouseEnter={e => { if (nav !== 'Referrals') { e.currentTarget.style.color = C.text2; e.currentTarget.style.background = '#f4f4f8' } }}
+            onMouseLeave={e => { if (nav !== 'Referrals') { e.currentTarget.style.color = C.text3; e.currentTarget.style.background = 'transparent' } }}
           >
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"><rect x="1.5" y="5" width="11" height="7.5" rx="1"/><path d="M1 5h12v2H1z" fill="currentColor" fillOpacity="0.12" stroke="none"/><path d="M7 5v7.5"/><path d="M7 5c-1.5-2-4-1.5-4 0 0 .8.7 1.2 1.5 1.2H7M7 5c1.5-2 4-1.5 4 0 0 .8-.7 1.2-1.5 1.2H7"/></svg>
-            <span style={{ flex: 1 }}>Refer & earn 30%</span>
+            <svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="6" width="10" height="6.5" rx="1"/><path d="M1 6h12v1.5H1z" fill="currentColor" fillOpacity="0.12" stroke="none"/><path d="M7 6v6.5"/><path d="M7 6c-1.2-1.6-3.5-1.2-3.5 0 0 .65.55 1 1.2 1H7M7 6c1.2-1.6 3.5-1.2 3.5 0 0 .65-.55 1-1.2 1H7"/></svg>
+            <span style={{ whiteSpace: 'nowrap' }}>Refer & earn</span>
           </button>
+          <div style={{ width: 1, height: 16, background: C.border, flexShrink: 0 }}/>
           <a
             href="/auth/logout"
-            style={{ display: 'flex', alignItems: 'center', gap: 8, color: C.text3, fontSize: 13, fontWeight: 500, textDecoration: 'none', padding: '7px 9px', borderRadius: 8, transition: 'color 0.15s, background 0.15s' }}
+            style={{ display: 'flex', alignItems: 'center', gap: 7, color: C.text3, fontSize: 12.5, fontWeight: 500, textDecoration: 'none', padding: '6px 9px', borderRadius: 8, transition: 'color 0.15s, background 0.15s', flex: 1 }}
             onMouseEnter={e => { e.currentTarget.style.color = C.text2; e.currentTarget.style.background = '#f4f4f8' }}
             onMouseLeave={e => { e.currentTarget.style.color = C.text3; e.currentTarget.style.background = 'transparent' }}
           >
-            <svg width="14" height="14" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"><path d="M5 2H2.5A1 1 0 0 0 1.5 3v7a1 1 0 0 0 1 1H5M9 9.5l3-3-3-3M12 6.5H5"/></svg>
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"><path d="M5 2H2.5A1 1 0 0 0 1.5 3v7a1 1 0 0 0 1 1H5M9 9.5l3-3-3-3M12 6.5H5"/></svg>
             Sign out
           </a>
         </div>
