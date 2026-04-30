@@ -2948,7 +2948,7 @@ export default function Dashboard() {
           {nav === 'Referrals' && <Referrals />}
 
           {/* ── SETTINGS ─────────────────────────────────────────────── */}
-          {nav === 'Settings' && <Settings />}
+          {nav === 'Settings' && <Settings channelData={data} />}
 
         </div>
       </div>

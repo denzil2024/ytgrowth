@@ -225,7 +225,7 @@ function ConfirmDialog({ title, body, confirmLabel, onConfirm, onCancel, require
 }
 
 /* ── Main component ───────────────────────────────────────────────────────── */
-export default function Settings() {
+export default function Settings({ channelData }) {
   useSettingsStyles()
   const [me, setMe] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -324,26 +324,25 @@ export default function Settings() {
       <div style={{ marginBottom: 10 }}>
         <SectionHeading>Account</SectionHeading>
       </div>
-      {(() => {
-        const accountName = me?.display_name
-          || (me?.email ? me.email.split('@')[0] : '')
-          || me?.channels?.[0]?.channel_name
-          || 'Your account'
-        const initial = (me?.display_name || me?.email || me?.channels?.[0]?.channel_name || '').trim()[0]
-        return (
       <div style={{ ...CARD, padding: '20px 24px', marginBottom: 24, display: 'flex', alignItems: 'center', gap: 20 }}>
-        {me?.profile_picture
-          ? <img src={me.profile_picture} alt="" style={{ width: 52, height: 52, borderRadius: '50%', objectFit: 'cover', flexShrink: 0, border: `1px solid ${C.border}` }} />
-          : initial
-            ? <div style={{ width: 52, height: 52, borderRadius: '50%', background: C.chipBg, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, fontWeight: 700, color: C.text1, flexShrink: 0, border: `1px solid ${C.border}` }}>
-                {initial.toUpperCase()}
-              </div>
-            : <div style={{ width: 52, height: 52, borderRadius: '50%', background: C.chipBg, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, border: `1px solid ${C.border}`, color: C.text3 }}>
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"/></svg>
-              </div>
-        }
+        {(() => {
+          // Avatar: Google profile picture → connected channel thumbnail → first letter
+          const pic = me?.profile_picture || channelData?.channel?.thumbnail || me?.channels?.[0]?.channel_thumbnail
+          const fallbackName = me?.display_name || channelData?.channel?.channel_name || me?.channels?.[0]?.channel_name || me?.email
+          if (pic) {
+            return <img src={pic} alt="" style={{ width: 52, height: 52, borderRadius: '50%', objectFit: 'cover', flexShrink: 0, border: `1px solid ${C.border}` }} />
+          }
+          const initial = (fallbackName || '').trim()[0]
+          return (
+            <div style={{ width: 52, height: 52, borderRadius: '50%', background: C.chipBg, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, fontWeight: 700, color: C.text1, flexShrink: 0, border: `1px solid ${C.border}` }}>
+              {initial ? initial.toUpperCase() : <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" style={{ color: C.text3 }}><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"/></svg>}
+            </div>
+          )
+        })()}
         <div style={{ flex: 1, minWidth: 0 }}>
-          <p style={{ fontSize: 16, fontWeight: 700, color: C.text1, letterSpacing: '-0.3px' }}>{accountName}</p>
+          <p style={{ fontSize: 16, fontWeight: 700, color: C.text1, letterSpacing: '-0.3px' }}>
+            {me?.display_name || channelData?.channel?.channel_name || me?.channels?.[0]?.channel_name || 'Account'}
+          </p>
           {me?.email && <p style={{ fontSize: 14, color: C.text2, marginTop: 3 }}>{me.email}</p>}
           {me?.member_since && (
             <p style={{ fontSize: 12, color: C.text3, marginTop: 3 }}>Member since {fmtMonthYear(me.member_since)}</p>
@@ -361,8 +360,6 @@ export default function Settings() {
           <p style={{ fontSize: 12, color: C.text3, marginTop: 6 }}>{billingCycleLabel(me)}</p>
         </div>
       </div>
-        )
-      })()}
 
       {/* ── Row 2: two columns ────────────────────────────────────────────── */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, marginBottom: 20 }}>
