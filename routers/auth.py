@@ -780,6 +780,22 @@ def get_me(request: Request):
 
     db = SessionLocal()
     try:
+        # Older sessions may have been persisted before email/display_name/picture
+        # were added to user_data. Repair from the session row + UserAccount table
+        # so the Settings card never falls back to "Account / ?".
+        if not google_email:
+            row = db.query(UserSession).filter_by(session_id=session_id).first()
+            if row and hasattr(row, "owner_email") and row.owner_email:
+                google_email = row.owner_email
+
+        display_name    = user_data.get("display_name", "")
+        profile_picture = user_data.get("profile_picture", "")
+        if google_email and (not display_name or not profile_picture):
+            acct = db.query(UserAccount).filter_by(email=google_email).first()
+            if acct:
+                display_name    = display_name    or (acct.display_name    or "")
+                profile_picture = profile_picture or (acct.profile_picture or "")
+
         # Subscription info — free users pool across sibling channels.
         from app.analysis_gate import _resolve_billing_channel
         billing_channel = _resolve_billing_channel(db, channel_id)
@@ -860,8 +876,8 @@ def get_me(request: Request):
 
         return JSONResponse({
             "email":                google_email,
-            "display_name":         user_data.get("display_name", ""),
-            "profile_picture":      user_data.get("profile_picture", ""),
+            "display_name":         display_name,
+            "profile_picture":      profile_picture,
             "google_id":            user_data.get("google_id", ""),
             "member_since":         member_since,
             "channels":             channels,
