@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { loginUrl } from '../utm.js'
 
 /* ── Design tokens — strict palette matching Dashboard/Keywords/Competitors */
 const C = {
@@ -256,7 +257,7 @@ export default function Settings({ channelData }) {
       .then(r => r.json())
       .then(d => {
         if (d.success) window.location.reload()
-        else if (d.needs_auth) window.location.href = '/auth/login'
+        else if (d.needs_auth) window.location.href = loginUrl()
       })
   }
 

@@ -10,6 +10,7 @@ import Outliers from './Outliers'
 import Autopsy from './Autopsy'
 import WeeklyReport from './WeeklyReport'
 import Referrals from './Referrals'
+import { loginUrl } from '../utm.js'
 import UsageBar from '../components/UsageBar'
 import CreditsEmptyModal from '../components/CreditsEmptyModal'
 import WelcomeModal from '../components/WelcomeModal'
@@ -1245,7 +1246,7 @@ function ChannelSwitcher({ channels, channelsAllowed, canAddMore, currentChannel
       .then(r => r.json())
       .then(d => {
         if (d.success) window.location.reload()
-        else if (d.needs_auth) window.location.href = '/auth/login'
+        else if (d.needs_auth) window.location.href = loginUrl()
       })
   }
 
@@ -1327,7 +1328,7 @@ function ChannelSwitcher({ channels, channelsAllowed, canAddMore, currentChannel
 
           {canAddMore
             ? <div
-                onClick={() => { setOpen(false); window.location.href = '/auth/login' }}
+                onClick={() => { setOpen(false); window.location.href = loginUrl() }}
                 style={{ padding: '8px 10px', borderRadius: 8, cursor: 'pointer', transition: 'background 0.15s' }}
                 onMouseEnter={e => { e.currentTarget.style.background = '#f9fafb' }}
                 onMouseLeave={e => { e.currentTarget.style.background = 'transparent' }}

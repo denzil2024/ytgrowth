@@ -169,6 +169,13 @@ class UserAccount(Base):
     display_name    = Column(String, nullable=True)
     profile_picture = Column(String, nullable=True)
     created_at      = Column(DateTime, default=_now)
+    # Acquisition attribution — captured from URL on the visit that produced the
+    # signup, persisted only on first account creation. Never overwritten.
+    utm_source      = Column(String, nullable=True)
+    utm_medium      = Column(String, nullable=True)
+    utm_campaign    = Column(String, nullable=True)
+    utm_content     = Column(String, nullable=True)
+    utm_term        = Column(String, nullable=True)
 
 
 class ChannelRegistry(Base):
@@ -384,6 +391,11 @@ try:
         "ALTER TABLE user_email_preferences ADD COLUMN reengagement_email_sent_at DATETIME",
         "ALTER TABLE user_sessions ADD COLUMN owner_email TEXT",
         "CREATE TABLE IF NOT EXISTS user_accounts (email TEXT PRIMARY KEY, google_id TEXT, display_name TEXT, profile_picture TEXT, created_at DATETIME)",
+        "ALTER TABLE user_accounts ADD COLUMN utm_source TEXT",
+        "ALTER TABLE user_accounts ADD COLUMN utm_medium TEXT",
+        "ALTER TABLE user_accounts ADD COLUMN utm_campaign TEXT",
+        "ALTER TABLE user_accounts ADD COLUMN utm_content TEXT",
+        "ALTER TABLE user_accounts ADD COLUMN utm_term TEXT",
         "CREATE TABLE IF NOT EXISTS channel_registry (id INTEGER PRIMARY KEY AUTOINCREMENT, owner_email TEXT NOT NULL, channel_id TEXT NOT NULL, channel_name TEXT, channel_thumbnail TEXT, subscribers INTEGER, connected_at DATETIME, disconnected_at DATETIME, is_active BOOLEAN DEFAULT 1, last_audit_at DATETIME)",
         "CREATE INDEX IF NOT EXISTS ix_channel_registry_channel_id ON channel_registry (channel_id)",
         "CREATE INDEX IF NOT EXISTS ix_channel_registry_owner_email ON channel_registry (owner_email)",

@@ -6,6 +6,7 @@ import os
 import uuid
 import json
 import datetime
+import threading
 from app.youtube import (
     get_channel_stats, get_recent_videos, get_video_metrics_map, merge_metrics_into_videos,
     get_full_channel_data, get_watch_minutes_365d)
@@ -209,6 +210,9 @@ def get_flow():
     return flow
 
 
+UTM_KEYS = ("utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term")
+
+
 @router.get("/login")
 def login(request: Request):
     # Assign a session ID if the user doesn't have one yet
@@ -216,6 +220,18 @@ def login(request: Request):
         request.session["session_id"] = str(uuid.uuid4())
 
     session_id = request.session["session_id"]
+
+    # Capture UTM params (if any) so we can persist them when the new
+    # UserAccount row is created in /callback. Survives the OAuth round-trip
+    # via the session cookie. Truncated to 255 chars per field to stay
+    # safe inside a TEXT column without abuse.
+    pending_utms = {}
+    for k in UTM_KEYS:
+        v = request.query_params.get(k)
+        if v:
+            pending_utms[k] = v[:255]
+    if pending_utms:
+        request.session["pending_utms"] = pending_utms
 
     flow = get_flow()
     auth_url, state = flow.authorization_url(
@@ -397,26 +413,60 @@ def callback(request: Request, background_tasks: BackgroundTasks):
         channel_id = stats["channel_id"]
 
         # ── Upsert user_accounts ──────────────────────────────────────────
+        is_new_signup    = False
+        signup_utms      = {}
         try:
             db = SessionLocal()
             account = db.query(UserAccount).filter_by(email=google_email).first()
             if not account:
+                # First time we've seen this Google account — pull any pending
+                # UTM attribution off the session and persist it.
+                pending_utms = request.session.pop("pending_utms", None) or {}
                 account = UserAccount(
                     email=google_email,
                     google_id=google_id,
                     display_name=display_name,
                     profile_picture=profile_picture,
+                    utm_source   = pending_utms.get("utm_source"),
+                    utm_medium   = pending_utms.get("utm_medium"),
+                    utm_campaign = pending_utms.get("utm_campaign"),
+                    utm_content  = pending_utms.get("utm_content"),
+                    utm_term     = pending_utms.get("utm_term"),
                 )
                 db.add(account)
+                is_new_signup = True
+                signup_utms   = pending_utms
             else:
                 account.display_name    = display_name
                 account.profile_picture = profile_picture
                 account.google_id       = google_id
+                # Drop any stale pending_utms so they don't leak to the next signup
+                request.session.pop("pending_utms", None)
             db.commit()
         except Exception as _e:
             print(f"UserAccount upsert error: {_e}")
         finally:
             db.close()
+
+        # ── Internal notification (new signups only) ─────────────────────
+        if is_new_signup and google_email:
+            try:
+                from app.signup_notification import notify_new_signup
+                threading.Thread(
+                    target=notify_new_signup,
+                    kwargs={
+                        "email":        google_email,
+                        "name":         display_name,
+                        "utm_source":   signup_utms.get("utm_source"),
+                        "utm_medium":   signup_utms.get("utm_medium"),
+                        "utm_campaign": signup_utms.get("utm_campaign"),
+                        "utm_content":  signup_utms.get("utm_content"),
+                        "utm_term":     signup_utms.get("utm_term"),
+                    },
+                    daemon=True,
+                ).start()
+            except Exception as _e:
+                print(f"[signup_notify] schedule error: {_e}")
 
         # ── Channel abuse prevention ──────────────────────────────────────
         if google_email:
