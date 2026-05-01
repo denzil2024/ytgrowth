@@ -187,7 +187,7 @@ function ScoreVisual() {
       <div style={{ flex: 1, minWidth: 220 }}>
         <p style={{ fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.45)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 10 }}>AI assessment · Sample</p>
         <p style={{ fontSize: 14.5, color: 'rgba(255,255,255,0.88)', lineHeight: 1.78 }}>
-          Your channel is publishing consistently and your last 5 videos hold retention above 50%, but Browse + Suggested traffic combined sits at 31% — YouTube isn&apos;t pushing you. The bottleneck is packaging, not content. Fixing thumbnail contrast on your next 3 uploads should move CTR from 3.4% to ~5%.
+          Your channel is publishing consistently and your last 5 videos hold retention above 50%, but Browse + Suggested traffic combined sits at 31% — YouTube isn’t pushing you. The bottleneck is packaging, not content. Fixing thumbnail contrast on your next 3 uploads should move CTR from 3.4% to ~5%.
         </p>
         <p style={{ fontSize: 11, fontWeight: 600, color: '#60a5fa', marginTop: 14, letterSpacing: '0.04em' }}>▲ +6 from last audit · 9 priority actions</p>
       </div>
@@ -210,7 +210,7 @@ function PriorityActionVisual() {
         <div style={{ flex: 1, minWidth: 0 }}>
           <p style={{ fontSize: 10, fontWeight: 700, color: '#ff3b30', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 5 }}>CTR Health</p>
           <p style={{ fontSize: 14.5, fontWeight: 700, color: '#0a0a0f', lineHeight: 1.55 }}>
-            Browse + Suggested traffic at 31%, well below the 40% threshold for healthy algo push. Your packaging (titles + thumbnails) isn&apos;t earning impressions.
+            Browse + Suggested traffic at 31%, well below the 40% threshold for healthy algo push. Your packaging (titles + thumbnails) isn’t earning impressions.
           </p>
         </div>
         <span style={{ fontSize: 10, fontWeight: 700, color: '#ff3b30', padding: '3px 9px', borderRadius: 20, letterSpacing: '0.06em', textTransform: 'uppercase', border: '1.5px solid #ff3b30', flexShrink: 0 }}>HIGH</span>
@@ -220,7 +220,7 @@ function PriorityActionVisual() {
       <div className="ca-grid-3" style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr 1fr', gap: 8, marginLeft: 46 }}>
         <div style={{ background: 'rgba(79,134,247,0.07)', border: '1px solid rgba(79,134,247,0.12)', borderRadius: 10, padding: '12px 14px' }}>
           <p style={{ fontSize: 10, fontWeight: 700, color: '#4a7cf7', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Why now</p>
-          <p style={{ fontSize: 13, color: '#0a0a0f', lineHeight: 1.7 }}>If browse + suggested stays under 40% for another 30 days, the algorithm classifies your videos as &ldquo;low-value&rdquo; and stops surfacing them entirely.</p>
+          <p style={{ fontSize: 13, color: '#0a0a0f', lineHeight: 1.7 }}>If browse + suggested stays under 40% for another 30 days, the algorithm classifies your videos as “low-value” and stops surfacing them entirely.</p>
         </div>
         <div style={{ background: '#fff', border: '1px solid rgba(10,10,15,0.09)', borderLeft: '3px solid #ff3b30', borderRadius: '0 10px 10px 0', padding: '12px 16px', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}>
           <p style={{ fontSize: 10, fontWeight: 700, color: '#ff3b30', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>Action</p>
@@ -239,9 +239,9 @@ function PriorityActionVisual() {
 const CATEGORIES = [
   { name: 'CTR Health',                weight: '20%', what: 'Click-through rate per video, scored against the 4–6% benchmark for established channels (2–4% for newer ones). Identifies which titles + thumbnails earn impressions and which kill them.' },
   { name: 'Audience Retention',        weight: '20%', what: 'Average view percentage across your last 20 uploads. Below 40% is a red flag; above 50% is strong. Surfaces which videos hold attention and what they share in common.' },
-  { name: 'Content Strategy',          weight: '15%', what: 'Whether your last 20 titles read like one channel or three. Identifies your highest-engagement topic clusters and flags scattered topics that dilute YouTube&apos;s niche classification.' },
-  { name: 'Posting Consistency',       weight: '15%', what: '90-day cadence — videos published, average gap, peak day + hour, Shorts vs long-form split. Flags irregular patterns and timing that misses your audience&apos;s active windows.' },
-  { name: 'Engagement Quality',        weight: '10%', what: 'Like-to-view, comment-to-view, and subs-gained-per-video ratios. Surfaces which content types drive subscribers vs which generate passive views that don&apos;t convert.' },
+  { name: 'Content Strategy',          weight: '15%', what: 'Whether your last 20 titles read like one channel or three. Identifies your highest-engagement topic clusters and flags scattered topics that dilute YouTube’s niche classification.' },
+  { name: 'Posting Consistency',       weight: '15%', what: '90-day cadence — videos published, average gap, peak day + hour, Shorts vs long-form split. Flags irregular patterns and timing that misses your audience’s active windows.' },
+  { name: 'Engagement Quality',        weight: '10%', what: 'Like-to-view, comment-to-view, and subs-gained-per-video ratios. Surfaces which content types drive subscribers vs which generate passive views that don’t convert.' },
   { name: 'SEO Discoverability',       weight: '10%', what: 'Channel keywords, title structure (primary keyword in first half, 50–70 chars), and description quality. Flags missing setup, weak titles, and untargeted descriptions.' },
   { name: 'Video Length',              weight: '5%',  what: 'Sweet-spot analysis comparing video duration against retention. Flags outliers that are too long for your audience to finish, or too short to capture session-watch-time signal.' },
   { name: 'Traffic Source Intelligence',weight: '5%', what: 'Where views come from — Browse, Suggested, Search, External. Diagnoses whether your problem is algorithmic push (packaging fix) or discovery (SEO fix). Flags over-reliance on one source.' },
@@ -253,22 +253,22 @@ const ALGO_LEVERS = [
   {
     name: 'Browse + Suggested traffic share',
     benchmark: 'Healthy: combined 40%+. Below 40% = weak algorithmic push.',
-    what: 'This is YouTube literally pushing your videos onto homepages and "Up Next" panels. If it&apos;s low, no amount of SEO will save you — the fix is packaging (titles + thumbnails) and early-video retention, in that order.',
+    what: 'This is YouTube literally pushing your videos onto homepages and "Up Next" panels. If it’s low, no amount of SEO will save you — the fix is packaging (titles + thumbnails) and early-video retention, in that order.',
   },
   {
     name: 'Session-keeping signal',
     benchmark: 'High APV × high shares-per-1k-views combined.',
-    what: 'YouTube rewards videos that extend a viewer&apos;s session more than videos with great retention alone. The audit identifies your top "session-keeper" video by name — the format YouTube actively wants more of from you.',
+    what: 'YouTube rewards videos that extend a viewer’s session more than videos with great retention alone. The audit identifies your top "session-keeper" video by name — the format YouTube actively wants more of from you.',
   },
   {
     name: 'Audience-builder ratio',
     benchmark: 'Subs gained per 1,000 views. Higher = the algorithm sees you growing the platform.',
-    what: 'Identifies which video types convert viewers to subscribers. If your &ldquo;Top audience-builder&rdquo; is a tutorial but you publish mostly reaction content, the algorithm is telling you what to make more of.',
+    what: 'Identifies which video types convert viewers to subscribers. If your “Top audience-builder” is a tutorial but you publish mostly reaction content, the algorithm is telling you what to make more of.',
   },
   {
     name: 'Retention normalised by duration',
     benchmark: '50% APV on a 10-min video > 50% APV on a 4-min video.',
-    what: 'Surfaces your true watch-time leader — the video that earns the most absolute minutes-watched per impression. This is the channel&apos;s real winner; long mid-APV videos beat short high-APV ones in the algorithm&apos;s ranking.',
+    what: 'Surfaces your true watch-time leader — the video that earns the most absolute minutes-watched per impression. This is the channel’s real winner; long mid-APV videos beat short high-APV ones in the algorithm’s ranking.',
   },
 ]
 
@@ -316,43 +316,43 @@ const PLAN_LIMITS = [
 const FAQS = [
   {
     q: 'How is the channel score actually calculated?',
-    a: <>It&apos;s a deterministic weighted formula across 8 categories — not an AI guess. CTR Health and Audience Retention each count 20%, Content Strategy and Posting Consistency each count 15%, Engagement Quality and SEO Discoverability each count 10%, Video Length and Traffic Source Intelligence each count 5%. The same data always produces the same score, so improvements between audits are real and measurable. Audience Profile and Content Shareability are scored too but kept informational — they&apos;re context for the actions, not part of the headline number.</>,
+    a: <>It’s a deterministic weighted formula across 8 categories — not an AI guess. CTR Health and Audience Retention each count 20%, Content Strategy and Posting Consistency each count 15%, Engagement Quality and SEO Discoverability each count 10%, Video Length and Traffic Source Intelligence each count 5%. The same data always produces the same score, so improvements between audits are real and measurable. Audience Profile and Content Shareability are scored too but kept informational — they’re context for the actions, not part of the headline number.</>,
   },
   {
-    q: 'What&apos;s the difference between Priority Actions and Quick Wins?',
-    a: <>Priority Actions are ranked, structured fixes — each with a specific problem, why-now urgency, the exact action to take, and the expected metric outcome. They&apos;re sized to take 1–4 hours of work each and they&apos;re what move your score. Quick Wins are smaller items you can fix in under 10 minutes (a missing description, a tag fix, a thumbnail re-crop) — they don&apos;t need the full structure because the action is obvious.</>,
+    q: 'What’s the difference between Priority Actions and Quick Wins?',
+    a: <>Priority Actions are ranked, structured fixes — each with a specific problem, why-now urgency, the exact action to take, and the expected metric outcome. They’re sized to take 1–4 hours of work each and they’re what move your score. Quick Wins are smaller items you can fix in under 10 minutes (a missing description, a tag fix, a thumbnail re-crop) — they don’t need the full structure because the action is obvious.</>,
   },
   {
     q: 'My Browse + Suggested traffic share is 31%. What does that mean?',
-    a: <>Below 40% combined means YouTube isn&apos;t actively recommending your videos — you&apos;re relying on people finding you through Search or External links. That&apos;s a packaging problem (titles + thumbnails), not a SEO problem. The audit explicitly flags this in the &ldquo;Algorithm-push diagnosis&rdquo; line and at least one of your top 3 priority actions will address it. Fixing packaging on your next 3 uploads typically moves browse + suggested above 40% within 2–3 weeks.</>,
+    a: <>Below 40% combined means YouTube isn’t actively recommending your videos — you’re relying on people finding you through Search or External links. That’s a packaging problem (titles + thumbnails), not a SEO problem. The audit explicitly flags this in the “Algorithm-push diagnosis” line and at least one of your top 3 priority actions will address it. Fixing packaging on your next 3 uploads typically moves browse + suggested above 40% within 2–3 weeks.</>,
   },
   {
     q: 'Why does my retention category score so low?',
-    a: <>Average View Percentage (APV) below 30% triggers a hard score penalty because YouTube stops recommending videos at that level — the algorithm reads it as &ldquo;not worth showing.&rdquo; Below 40% is a red flag; above 50% is strong; above 60% is exceptional. The audit pinpoints which specific videos drag your average down and what they share in common (length, intro pattern, topic), so the fix is concrete instead of &ldquo;improve retention.&rdquo;</>,
+    a: <>Average View Percentage (APV) below 30% triggers a hard score penalty because YouTube stops recommending videos at that level — the algorithm reads it as “not worth showing.” Below 40% is a red flag; above 50% is strong; above 60% is exceptional. The audit pinpoints which specific videos drag your average down and what they share in common (length, intro pattern, topic), so the fix is concrete instead of “improve retention.”</>,
   },
   {
     q: 'How often should I re-audit?',
-    a: <>After you&apos;ve actually changed something. Re-auditing without shipping new videos or updates won&apos;t move the score because the underlying data hasn&apos;t changed. The most useful pattern is: audit → work through priority actions → publish 2–3 new videos that apply the fixes → re-audit and watch the score delta. Most users see meaningful score movement after 4–6 weeks of consistent application. Free tier gets 3 lifetime audits, Solo gets 20/month, Growth gets 50/month, Agency gets 150/month.</>,
+    a: <>After you’ve actually changed something. Re-auditing without shipping new videos or updates won’t move the score because the underlying data hasn’t changed. The most useful pattern is: audit → work through priority actions → publish 2–3 new videos that apply the fixes → re-audit and watch the score delta. Most users see meaningful score movement after 4–6 weeks of consistent application. Free tier gets 3 lifetime audits, Solo gets 20/month, Growth gets 50/month, Agency gets 150/month.</>,
   },
   {
     q: 'Can I see what changed between audits?',
-    a: <>Yes — the score ring shows a delta arrow (▲ +6 from last audit) on the Overview tab once you&apos;ve run more than one. Category scores get the same treatment, so you can see which areas actually improved versus which regressed. Priority actions you marked done stay tracked, so the next audit knows what you already worked on and prioritizes new bottlenecks instead of repeating fixes.</>,
+    a: <>Yes — the score ring shows a delta arrow (▲ +6 from last audit) on the Overview tab once you’ve run more than one. Category scores get the same treatment, so you can see which areas actually improved versus which regressed. Priority actions you marked done stay tracked, so the next audit knows what you already worked on and prioritizes new bottlenecks instead of repeating fixes.</>,
   },
   {
     q: 'Does the audit work for Shorts-only channels?',
-    a: <>Yes, but with caveats. Shorts retention reads differently from long-form (people swipe at the title, not after a 15-second hook), so the audit splits the analysis when it sees Shorts in your last 20. CTR Health gets less weight for Shorts because YouTube doesn&apos;t expose CTR for them via the API. Audience Retention, Posting Consistency, and Algorithm signals (sub-builder ratio especially) work normally and are usually the most important categories for Shorts channels.</>,
+    a: <>Yes, but with caveats. Shorts retention reads differently from long-form (people swipe at the title, not after a 15-second hook), so the audit splits the analysis when it sees Shorts in your last 20. CTR Health gets less weight for Shorts because YouTube doesn’t expose CTR for them via the API. Audience Retention, Posting Consistency, and Algorithm signals (sub-builder ratio especially) work normally and are usually the most important categories for Shorts channels.</>,
   },
   {
     q: 'What if my channel is brand new?',
-    a: <>You need at least 5 published videos and roughly 30 days of channel history for the audit to be statistically meaningful. With less data, the AI can&apos;t separate noise from signal — it would pretend to know things it doesn&apos;t. We tell you upfront if your channel doesn&apos;t have enough data and let you wait until it does, instead of producing an audit that&apos;s mostly hallucination.</>,
+    a: <>You need at least 5 published videos and roughly 30 days of channel history for the audit to be statistically meaningful. With less data, the AI can’t separate noise from signal — it would pretend to know things it doesn’t. We tell you upfront if your channel doesn’t have enough data and let you wait until it does, instead of producing an audit that’s mostly hallucination.</>,
   },
   {
-    q: 'How is this different from VidIQ&apos;s &ldquo;score&rdquo; or YouTube Studio&apos;s analytics?',
-    a: <>YouTube Studio shows you what happened. VidIQ shows you a score on every video. Neither tells you what to do next, in what order, and why. YTGrowth&apos;s audit reads all of that data plus 90 days of traffic-source breakdown and demographic data, runs it through an AI tuned specifically on YouTube&apos;s 2025 ranking signals, and produces a ranked action list with specific numbers (&ldquo;CTR climbs from 3.4% to ~5%&rdquo;) instead of generic advice (&ldquo;improve your CTR&rdquo;).</>,
+    q: 'How is this different from VidIQ’s “score” or YouTube Studio’s analytics?',
+    a: <>YouTube Studio shows you what happened. VidIQ shows you a score on every video. Neither tells you what to do next, in what order, and why. YTGrowth’s audit reads all of that data plus 90 days of traffic-source breakdown and demographic data, runs it through an AI tuned specifically on YouTube’s 2025 ranking signals, and produces a ranked action list with specific numbers (“CTR climbs from 3.4% to ~5%”) instead of generic advice (“improve your CTR”).</>,
   },
   {
     q: 'Will the audit ever change anything on my channel?',
-    a: <>No. The audit is read-only. We pull your stats and analytics via the official YouTube Data API but we cannot upload, edit, comment on, or delete anything. The only place anything ever gets changed on YouTube is when you click &ldquo;Apply&rdquo; in SEO Studio after reviewing a title or description rewrite — and that&apos;s an explicit, per-video action.</>,
+    a: <>No. The audit is read-only. We pull your stats and analytics via the official YouTube Data API but we cannot upload, edit, comment on, or delete anything. The only place anything ever gets changed on YouTube is when you click “Apply” in SEO Studio after reviewing a title or description rewrite — and that’s an explicit, per-video action.</>,
   },
 ]
 
@@ -387,7 +387,7 @@ export default function ChannelAudit() {
             10 categories. <span style={{ color: 'var(--ytg-accent)' }}>One ranked list of fixes.</span><br/>No more guessing.
           </h1>
           <p style={{ fontSize: isMobile ? 16 : 18.5, color: 'var(--ytg-text-2)', lineHeight: 1.7, maxWidth: 700, margin: '0 auto 36px' }}>
-            YTGrowth pulls your full YouTube data, runs it through an AI tuned on the signals YouTube&apos;s recommendation engine actually rewards, and returns a prioritized list of fixes — each with the specific problem, why it matters now, the exact action to take, and the metric you&apos;ll see move.
+            YTGrowth pulls your full YouTube data, runs it through an AI tuned on the signals YouTube’s recommendation engine actually rewards, and returns a prioritized list of fixes — each with the specific problem, why it matters now, the exact action to take, and the metric you’ll see move.
           </p>
           <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
             <a href="/auth/login" className="ca-btn ca-btn-lg">Audit my channel free →</a>
@@ -406,7 +406,7 @@ export default function ChannelAudit() {
           <div>
             <span className="ca-eyebrow dark">What you get</span>
             <h2 className="ca-h2" style={{ fontSize: isMobile ? 30 : 42, color: '#fff', marginBottom: 18 }}>
-              A single weighted score, with the <span style={{ color: '#ff3b30' }}>actual reason it&apos;s where it is.</span>
+              A single weighted score, with the <span style={{ color: '#ff3b30' }}>actual reason it’s where it is.</span>
             </h2>
             <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.6)', lineHeight: 1.72, marginBottom: 24 }}>
               The deterministic formula means score changes between audits are real, not noise. The AI assessment paragraph is what most users read first — plain English, naming the specific lever holding the channel back.
@@ -438,7 +438,7 @@ export default function ChannelAudit() {
               Every dimension of channel health, <span style={{ color: 'var(--ytg-accent)' }}>weighted by what YouTube actually rewards.</span>
             </h2>
             <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.72 }}>
-              Eight categories carry weight in the headline score; two more (Audience Profile and Content Shareability) are scored for context but don&apos;t inflate or deflate the number. Weights aren&apos;t arbitrary — they reflect how heavily each lever moves the recommendation engine.
+              Eight categories carry weight in the headline score; two more (Audience Profile and Content Shareability) are scored for context but don’t inflate or deflate the number. Weights aren’t arbitrary — they reflect how heavily each lever moves the recommendation engine.
             </p>
           </div>
           <div className="ca-grid-2" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
@@ -472,12 +472,12 @@ export default function ChannelAudit() {
               Every fix is structured like <span style={{ color: '#ff3b30' }}>a real diagnosis.</span>
             </h2>
             <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.6)', lineHeight: 1.72, marginBottom: 26 }}>
-              Each priority action has four parts. You don&apos;t just learn what&apos;s wrong — you learn why it matters now, exactly what to do, and what number to watch. Check them off as you ship; the next audit measures the delta against what you actually completed.
+              Each priority action has four parts. You don’t just learn what’s wrong — you learn why it matters now, exactly what to do, and what number to watch. Check them off as you ship; the next audit measures the delta against what you actually completed.
             </p>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
               {[
                 { label: 'Problem',          color: '#ff3b30', body: 'The specific issue, with a real number from your data.' },
-                { label: 'Why now',          color: '#4a7cf7', body: 'What breaks if you don&apos;t fix it in the next 14–30 days.' },
+                { label: 'Why now',          color: '#4a7cf7', body: 'What breaks if you don’t fix it in the next 14–30 days.' },
                 { label: 'Action',           color: '#ffffff', body: 'The exact, do-able step. No vague advice.' },
                 { label: 'Expected outcome', color: '#4ade80', body: 'The metric that will move, and roughly by how much.' },
               ].map((p, i) => (
@@ -507,7 +507,7 @@ export default function ChannelAudit() {
             const steps = [
               { n: '01', t: 'Connect your channel', b: 'Sign in with the Google account that owns your YouTube channel. Read-only access via the official YouTube Data API — we never touch your videos, comments, or settings.' },
               { n: '02', t: 'Data pull begins',     b: 'Last 20 videos, 90 days of analytics, traffic sources, demographics, engagement signals — pulled in parallel. Takes 15–25 seconds.' },
-              { n: '03', t: 'Algorithm signals',    b: 'We compute the metrics YouTube&apos;s recommendation engine actually rewards — browse %, session-keeper, audience-builder ratio, watch-time leader.' },
+              { n: '03', t: 'Algorithm signals',    b: 'We compute the metrics YouTube’s recommendation engine actually rewards — browse %, session-keeper, audience-builder ratio, watch-time leader.' },
               { n: '04', t: 'AI runs the audit',    b: 'Claude Sonnet 4.6 reads the full data plus any stored competitor analyses and produces score, summary, and priority actions in ~30 seconds.' },
               { n: '05', t: 'You see the result',   b: 'Score ring + AI assessment, score breakdown across 8 weighted categories, priority actions you can check off as you ship them, plus quick wins.' },
             ]
@@ -568,10 +568,10 @@ export default function ChannelAudit() {
           <div style={{ textAlign: 'center', maxWidth: 760, margin: '0 auto 44px' }}>
             <span className="ca-eyebrow dark">Algorithm levers it surfaces</span>
             <h2 className="ca-h2" style={{ fontSize: isMobile ? 30 : 42, color: '#fff', marginBottom: 16 }}>
-              We pre-compute the metrics <span style={{ color: '#ff3b30' }}>YouTube&apos;s recommendation engine actually weights.</span>
+              We pre-compute the metrics <span style={{ color: '#ff3b30' }}>YouTube’s recommendation engine actually weights.</span>
             </h2>
             <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.6)', lineHeight: 1.72 }}>
-              Most YouTube tools score you on vanity metrics — views, likes, subs. The algorithm doesn&apos;t care about those directly. It cares about these four signals, in this order. The audit reads each one off your real data and builds priority actions specifically to move them.
+              Most YouTube tools score you on vanity metrics — views, likes, subs. The algorithm doesn’t care about those directly. It cares about these four signals, in this order. The audit reads each one off your real data and builds priority actions specifically to move them.
             </p>
           </div>
           <div className="ca-grid-2" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
@@ -638,7 +638,7 @@ export default function ChannelAudit() {
               Same audit. <span style={{ color: '#ff3b30' }}>More fixes per run as you scale.</span>
             </h2>
             <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.6)', lineHeight: 1.72 }}>
-              Higher tiers don&apos;t unlock different categories — every plan reads the same 10 dimensions. They unlock more depth: more priority actions returned per audit, more audits per month, more channels under one account.
+              Higher tiers don’t unlock different categories — every plan reads the same 10 dimensions. They unlock more depth: more priority actions returned per audit, more audits per month, more channels under one account.
             </p>
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr 1fr' : 'repeat(4, 1fr)', gap: 14 }}>
@@ -685,7 +685,7 @@ export default function ChannelAudit() {
               Questions about the audit, answered honestly.
             </h2>
             <p style={{ fontSize: 14.5, color: 'var(--ytg-text-2)', lineHeight: 1.7 }}>
-              Real answers from how the product actually behaves — including the unflattering ones (when it won&apos;t work, what it doesn&apos;t do, where the limits are).
+              Real answers from how the product actually behaves — including the unflattering ones (when it won’t work, what it doesn’t do, where the limits are).
             </p>
             <a href="/contact" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 13.5, color: 'var(--ytg-accent)', textDecoration: 'none', fontWeight: 600, marginTop: 16 }}>
               Still have questions? Email us →
