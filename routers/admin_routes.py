@@ -49,6 +49,16 @@ def admin_overview(request: Request):
     if not is_admin:
         return JSONResponse({"error": "Forbidden"}, status_code=403)
 
+    try:
+        return _build_overview()
+    except Exception as e:
+        import traceback
+        tb = traceback.format_exc()
+        print(f"[admin/overview] error: {e}\n{tb}")
+        return JSONResponse({"error": f"{type(e).__name__}: {e}"}, status_code=500)
+
+
+def _build_overview():
     db = SessionLocal()
     try:
         now             = datetime.datetime.utcnow()
