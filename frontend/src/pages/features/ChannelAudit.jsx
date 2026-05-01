@@ -170,7 +170,7 @@ function ScoreVisual() {
   const circumference = 2 * Math.PI * 50
   const offset = circumference - (score / 100) * circumference
   return (
-    <div style={{ background: '#111114', borderRadius: 22, border: '1px solid rgba(255,255,255,0.09)', boxShadow: '0 8px 48px rgba(0,0,0,0.6)', padding: 36, maxWidth: 720, margin: '0 auto', display: 'flex', alignItems: 'center', gap: 36, flexWrap: 'wrap' }}>
+    <div style={{ background: '#111114', borderRadius: 22, border: '1px solid rgba(255,255,255,0.09)', boxShadow: '0 8px 48px rgba(0,0,0,0.6)', padding: 32, display: 'flex', alignItems: 'center', gap: 28, flexWrap: 'wrap' }}>
       {/* Score ring */}
       <div style={{ flexShrink: 0, position: 'relative', width: 140, height: 140 }}>
         <svg width="140" height="140" viewBox="0 0 120 120">
@@ -198,7 +198,7 @@ function ScoreVisual() {
 /* ── Visual: Sample priority action card (dark) ────────────────────────── */
 function PriorityActionVisual() {
   return (
-    <div style={{ background: '#ffffff', borderRadius: 16, borderTop: '3px solid #ff3b30', boxShadow: '0 8px 48px rgba(0,0,0,0.6)', padding: '20px 24px 24px', maxWidth: 760, margin: '0 auto' }}>
+    <div style={{ background: '#ffffff', borderRadius: 16, borderTop: '3px solid #ff3b30', boxShadow: '0 8px 48px rgba(0,0,0,0.6)', padding: '20px 24px 24px' }}>
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: 14 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0, paddingTop: 2 }}>
@@ -272,16 +272,38 @@ const ALGO_LEVERS = [
   },
 ]
 
+const ICON_PATHS = {
+  stats:    'M3 12V8m4 4V6m4 6V4m4 8V9',
+  video:    'M2 4h10v8H2zM12 6l4-2v8l-4-2',
+  calendar: 'M2 3h12v11H2zM2 6h12M5 1v4M11 1v4',
+  traffic:  'M8 2v6l4 4',
+  globe:    'M8 1a7 7 0 1 1 0 14A7 7 0 0 1 8 1zM1 8h14M8 1c2 1.8 3 4.4 3 7s-1 5.2-3 7c-2-1.8-3-4.4-3-7s1-5.2 3-7z',
+  users:    'M5.5 7a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5zM10.5 7a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5zM1.5 14c0-2.5 1.8-4 4-4s4 1.5 4 4M14.5 14c0-2.5-1.5-3.7-4-4',
+  share:    'M11 5a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM5 10a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM11 15a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM6.7 7l2.6-1.5M6.7 9l2.6 1.5',
+  zap:      'M9 1L3 9h4l-1 6 6-8H8l1-6z',
+  eye:      'M1 8s2.5-5 7-5 7 5 7 5-2.5 5-7 5-7-5-7-5zM8 10.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z',
+}
+
+function DataIcon({ name, color = '#e5302a' }) {
+  return (
+    <div style={{ width: 38, height: 38, borderRadius: 10, background: 'var(--ytg-accent-light)', border: '1px solid rgba(229,48,42,0.16)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+      <svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke={color} strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
+        <path d={ICON_PATHS[name]}/>
+      </svg>
+    </div>
+  )
+}
+
 const DATA_INPUTS = [
-  { label: 'Channel stats',         body: 'Subscribers, total views, video count, channel age, channel keywords' },
-  { label: 'Last 20 videos',        body: 'Title, duration, views, CTR, impressions, avg view duration, retention %, likes, comments, subs gained' },
-  { label: 'Posting behavior',      body: 'Upload cadence, gaps, peak day + hour, Shorts vs long-form ratio (last 90 days)' },
-  { label: 'Traffic sources',       body: 'Browse / Suggested / Search / External / other — with % share and watch minutes' },
-  { label: 'Device + geography',    body: 'Mobile vs desktop vs TV split, top 5 countries with subs gained per country' },
-  { label: 'Audience demographics', body: 'Age and gender breakdown (when sample size is large enough)' },
-  { label: 'Engagement signals',    body: 'Total shares, dislikes, playlist adds (last 90 days)' },
-  { label: 'Algorithm-derived metrics', body: 'Browse %, suggested %, search %, external %, shares-per-1k, comments-per-1k, subs-per-1k, top session-keeper, top audience-builder, top watch-time leader' },
-  { label: 'Stored competitor data', body: 'If you&apos;ve run Competitor Analysis, the audit benchmarks you against up to 3 stored competitors — title patterns, view averages, content gaps.' },
+  { icon: 'stats',    label: 'Channel stats',         body: 'Subscribers, total views, video count, channel age, channel keywords.' },
+  { icon: 'video',    label: 'Last 20 videos',        body: 'Title, duration, views, CTR, impressions, average view duration, retention %, likes, comments, subs gained.' },
+  { icon: 'calendar', label: 'Posting behavior',      body: 'Upload cadence, gaps, peak day + hour, Shorts vs long-form ratio across the last 90 days.' },
+  { icon: 'traffic',  label: 'Traffic sources',       body: 'Browse, Suggested, Search, External and other sources — share % and watch minutes per source.' },
+  { icon: 'globe',    label: 'Device + geography',    body: 'Mobile vs desktop vs TV split, top 5 countries with subscribers gained per country.' },
+  { icon: 'users',    label: 'Audience demographics', body: 'Age and gender breakdown (when sample size is statistically meaningful).' },
+  { icon: 'share',    label: 'Engagement signals',    body: 'Total shares, dislikes, playlist adds across the last 90 days.' },
+  { icon: 'zap',      label: 'Algorithm metrics',     body: 'Browse %, suggested %, search %, external %, shares / 1k, comments / 1k, subs / 1k, top session-keeper, top audience-builder, top watch-time leader.' },
+  { icon: 'eye',      label: 'Competitor data',       body: 'If Competitor Analysis has run, the audit benchmarks you against your 3 most recent rivals — title patterns, view averages, content gaps.' },
 ]
 
 const PLAN_LIMITS = [
@@ -377,20 +399,33 @@ export default function ChannelAudit() {
         </div>
       </section>
 
-      {/* ════ 2. SCORE + ASSESSMENT VISUAL — dark ════════════════════════ */}
-      <section style={{ padding: isMobile ? '60px 20px' : '90px 40px', background: '#0d0d12', borderTop: '1px solid rgba(255,255,255,0.06)', borderBottom: '1px solid rgba(255,255,255,0.06)', position: 'relative', overflow: 'hidden' }}>
+      {/* ════ 2. SCORE + ASSESSMENT — dark, SPLIT layout (text L, visual R) ═ */}
+      <section style={{ padding: isMobile ? '64px 20px' : '100px 40px', background: '#0d0d12', borderTop: '1px solid rgba(255,255,255,0.06)', borderBottom: '1px solid rgba(255,255,255,0.06)', position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 900, height: 700, background: 'radial-gradient(ellipse, rgba(229,48,42,0.16) 0%, transparent 65%)', pointerEvents: 'none' }} />
-        <div style={{ maxWidth: 1080, margin: '0 auto', position: 'relative', zIndex: 1 }}>
-          <div style={{ textAlign: 'center', maxWidth: 720, margin: '0 auto 44px' }}>
+        <div className="ca-grid-2" style={{ maxWidth: 1160, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1.05fr', gap: 64, alignItems: 'center', position: 'relative', zIndex: 1 }}>
+          <div>
             <span className="ca-eyebrow dark">What you get</span>
-            <h2 className="ca-h2" style={{ fontSize: isMobile ? 30 : 42, color: '#fff', marginBottom: 16 }}>
+            <h2 className="ca-h2" style={{ fontSize: isMobile ? 30 : 42, color: '#fff', marginBottom: 18 }}>
               A single weighted score, with the <span style={{ color: '#ff3b30' }}>actual reason it&apos;s where it is.</span>
             </h2>
-            <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.6)', lineHeight: 1.72 }}>
-              The deterministic formula means improvements between audits are real, not noise. The AI assessment paragraph is what most users read first — it tells you, in plain English, exactly which lever is keeping your channel from compounding.
+            <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.6)', lineHeight: 1.72, marginBottom: 24 }}>
+              The deterministic formula means score changes between audits are real, not noise. The AI assessment paragraph is what most users read first — plain English, naming the specific lever holding the channel back.
             </p>
+            {[
+              'Weighted 0–100 score with delta vs your last audit',
+              '2–3 sentence assessment that names the bottleneck',
+              'Eight scored categories, each colour-coded by health',
+              'Updates instantly when you re-audit after shipping fixes',
+            ].map((b, i) => (
+              <div key={i} style={{ display: 'flex', gap: 10, alignItems: 'flex-start', marginBottom: 11 }}>
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#4ade80" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, marginTop: 4 }}><path d="M2.5 7.2 5.4 10l6.1-6"/></svg>
+                <span style={{ fontSize: 14, color: 'rgba(255,255,255,0.78)', lineHeight: 1.6 }}>{b}</span>
+              </div>
+            ))}
           </div>
-          <ScoreVisual />
+          <div>
+            <ScoreVisual />
+          </div>
         </div>
       </section>
 
@@ -422,60 +457,107 @@ export default function ChannelAudit() {
         </div>
       </section>
 
-      {/* ════ 4. PRIORITY ACTION ANATOMY — dark ═════════════════════════ */}
+      {/* ════ 4. PRIORITY ACTION ANATOMY — dark, SPLIT (visual L, text R) ══ */}
       <section style={{ padding: isMobile ? '64px 20px' : '100px 40px', background: '#0d0d12', borderTop: '1px solid rgba(255,255,255,0.06)', borderBottom: '1px solid rgba(255,255,255,0.06)', position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', top: '40%', left: '50%', transform: 'translate(-50%,-50%)', width: 900, height: 700, background: 'radial-gradient(ellipse, rgba(229,48,42,0.14) 0%, transparent 65%)', pointerEvents: 'none' }} />
-        <div style={{ maxWidth: 1120, margin: '0 auto', position: 'relative', zIndex: 1 }}>
-          <div style={{ textAlign: 'center', maxWidth: 760, margin: '0 auto 44px' }}>
+        <div className="ca-grid-2" style={{ maxWidth: 1180, margin: '0 auto', display: 'grid', gridTemplateColumns: '1.15fr 1fr', gap: 56, alignItems: 'center', position: 'relative', zIndex: 1 }}>
+          {/* Visual on left */}
+          <div style={{ order: isMobile ? 1 : 0 }}>
+            <PriorityActionVisual />
+          </div>
+          {/* Text on right */}
+          <div style={{ order: isMobile ? 0 : 1 }}>
             <span className="ca-eyebrow dark">Priority action anatomy</span>
-            <h2 className="ca-h2" style={{ fontSize: isMobile ? 30 : 42, color: '#fff', marginBottom: 16 }}>
+            <h2 className="ca-h2" style={{ fontSize: isMobile ? 30 : 42, color: '#fff', marginBottom: 18 }}>
               Every fix is structured like <span style={{ color: '#ff3b30' }}>a real diagnosis.</span>
             </h2>
-            <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.6)', lineHeight: 1.72 }}>
-              Each priority action carries four parts so you don&apos;t just know what&apos;s wrong, you know why it matters now, exactly what to do, and what number you&apos;re trying to move. Mark them done as you ship them — re-auditing later shows the score delta against the actions you completed.
+            <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.6)', lineHeight: 1.72, marginBottom: 26 }}>
+              Each priority action has four parts. You don&apos;t just learn what&apos;s wrong — you learn why it matters now, exactly what to do, and what number to watch. Check them off as you ship; the next audit measures the delta against what you actually completed.
             </p>
-          </div>
-          <PriorityActionVisual />
-          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr 1fr' : 'repeat(4, 1fr)', gap: 16, marginTop: 36, maxWidth: 760, marginLeft: 'auto', marginRight: 'auto' }}>
-            {[
-              { label: 'Problem',          color: '#ff3b30', body: 'The specific issue, with a real number from your data.' },
-              { label: 'Why now',          color: '#4a7cf7', body: 'What happens if you don&apos;t fix it in the next 14–30 days.' },
-              { label: 'Action',           color: '#fff',    body: 'The exact, do-able step. No vague advice.' },
-              { label: 'Expected outcome', color: '#4ade80', body: 'The metric that will move and roughly by how much.' },
-            ].map((p, i) => (
-              <div key={i} style={{ borderTop: `2px solid ${p.color}`, paddingTop: 12 }}>
-                <p style={{ fontSize: 11, fontWeight: 700, color: p.color, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>{p.label}</p>
-                <p style={{ fontSize: 12.5, color: 'rgba(255,255,255,0.55)', lineHeight: 1.6 }} dangerouslySetInnerHTML={{ __html: p.body }} />
-              </div>
-            ))}
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
+              {[
+                { label: 'Problem',          color: '#ff3b30', body: 'The specific issue, with a real number from your data.' },
+                { label: 'Why now',          color: '#4a7cf7', body: 'What breaks if you don&apos;t fix it in the next 14–30 days.' },
+                { label: 'Action',           color: '#ffffff', body: 'The exact, do-able step. No vague advice.' },
+                { label: 'Expected outcome', color: '#4ade80', body: 'The metric that will move, and roughly by how much.' },
+              ].map((p, i) => (
+                <div key={i} style={{ borderLeft: `2px solid ${p.color}`, paddingLeft: 12 }}>
+                  <p style={{ fontSize: 11, fontWeight: 700, color: p.color, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>{p.label}</p>
+                  <p style={{ fontSize: 12.5, color: 'rgba(255,255,255,0.6)', lineHeight: 1.6 }} dangerouslySetInnerHTML={{ __html: p.body }} />
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
 
-      {/* ════ 5. HOW IT WORKS — white ═══════════════════════════════════ */}
+      {/* ════ 5. HOW IT WORKS — white, with arrow connectors ════════════ */}
       <section id="how" style={{ padding: isMobile ? '64px 20px' : '100px 40px', background: '#ffffff' }}>
-        <div style={{ maxWidth: 1120, margin: '0 auto' }}>
+        <div style={{ maxWidth: 1240, margin: '0 auto' }}>
           <div style={{ textAlign: 'center', maxWidth: 720, margin: '0 auto 52px' }}>
             <span className="ca-eyebrow light">How it works</span>
             <h2 className="ca-h2" style={{ fontSize: isMobile ? 30 : 42 }}>
               One audit, ~60 seconds, end-to-end
             </h2>
+            <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.7, marginTop: 14, maxWidth: 580, margin: '14px auto 0' }}>
+              Five stages from sign-in to ranked action list. Steps 2–4 run in parallel, so most users see the result within 60 seconds.
+            </p>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(5, 1fr)', gap: 14 }}>
-            {[
+          {(() => {
+            const steps = [
               { n: '01', t: 'Connect your channel', b: 'Sign in with the Google account that owns your YouTube channel. Read-only access via the official YouTube Data API — we never touch your videos, comments, or settings.' },
               { n: '02', t: 'Data pull begins',     b: 'Last 20 videos, 90 days of analytics, traffic sources, demographics, engagement signals — pulled in parallel. Takes 15–25 seconds.' },
               { n: '03', t: 'Algorithm signals',    b: 'We compute the metrics YouTube&apos;s recommendation engine actually rewards — browse %, session-keeper, audience-builder ratio, watch-time leader.' },
-              { n: '04', t: 'AI runs the audit',    b: 'Claude Sonnet 4.6 reads the full data + your stored competitor analyses (if any) and produces the score, summary, and priority actions in ~30 seconds.' },
+              { n: '04', t: 'AI runs the audit',    b: 'Claude Sonnet 4.6 reads the full data plus any stored competitor analyses and produces score, summary, and priority actions in ~30 seconds.' },
               { n: '05', t: 'You see the result',   b: 'Score ring + AI assessment, score breakdown across 8 weighted categories, priority actions you can check off as you ship them, plus quick wins.' },
-            ].map((s, i) => (
-              <div key={i} style={{ background: 'var(--ytg-card)', borderRadius: 14, border: '1px solid var(--ytg-border)', boxShadow: 'var(--ytg-shadow-sm)', padding: '22px 22px 24px' }}>
-                <div style={{ fontSize: 12, fontWeight: 800, color: 'var(--ytg-accent)', letterSpacing: '0.04em', marginBottom: 14, fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace' }}>{s.n}</div>
+            ]
+            const Card = ({ s }) => (
+              <div style={{ background: 'var(--ytg-card)', borderRadius: 14, border: '1px solid var(--ytg-border)', boxShadow: 'var(--ytg-shadow-sm)', padding: '22px 22px 24px', flex: 1, minWidth: 0 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
+                  <div style={{ width: 28, height: 28, borderRadius: 8, background: 'var(--ytg-accent-light)', border: '1px solid rgba(229,48,42,0.18)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <span style={{ fontSize: 11, fontWeight: 800, color: 'var(--ytg-accent)', letterSpacing: 0, fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace' }}>{s.n}</span>
+                  </div>
+                </div>
                 <p style={{ fontSize: 14.5, fontWeight: 700, color: 'var(--ytg-text)', marginBottom: 10, letterSpacing: '-0.2px' }}>{s.t}</p>
                 <p style={{ fontSize: 13, color: 'var(--ytg-text-2)', lineHeight: 1.7 }} dangerouslySetInnerHTML={{ __html: s.b }} />
               </div>
-            ))}
-          </div>
+            )
+            const Arrow = () => (
+              <div style={{ flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', alignSelf: 'center', width: 26, height: 26, borderRadius: '50%', background: 'var(--ytg-card)', border: '1px solid var(--ytg-border)', boxShadow: 'var(--ytg-shadow-sm)', color: 'var(--ytg-accent)' }}>
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M2 6h8M7 3l3 3-3 3"/>
+                </svg>
+              </div>
+            )
+            const ArrowDown = () => (
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 26, height: 26, borderRadius: '50%', background: 'var(--ytg-card)', border: '1px solid var(--ytg-border)', boxShadow: 'var(--ytg-shadow-sm)', color: 'var(--ytg-accent)', margin: '8px auto' }}>
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M6 2v8M3 7l3 3 3-3"/>
+                </svg>
+              </div>
+            )
+            if (isMobile) {
+              return (
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                  {steps.map((s, i) => (
+                    <div key={i}>
+                      <Card s={s} />
+                      {i < steps.length - 1 && <ArrowDown />}
+                    </div>
+                  ))}
+                </div>
+              )
+            }
+            return (
+              <div style={{ display: 'flex', alignItems: 'stretch', gap: 8 }}>
+                {steps.flatMap((s, i) => {
+                  const items = [<Card key={`c${i}`} s={s} />]
+                  if (i < steps.length - 1) items.push(<Arrow key={`a${i}`} />)
+                  return items
+                })}
+              </div>
+            )
+          })()}
         </div>
       </section>
 
@@ -494,10 +576,17 @@ export default function ChannelAudit() {
           </div>
           <div className="ca-grid-2" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
             {ALGO_LEVERS.map((lever, i) => (
-              <div key={i} style={{ background: '#111114', borderRadius: 14, border: '1px solid rgba(255,255,255,0.09)', padding: '22px 24px' }}>
-                <p style={{ fontSize: 11, fontWeight: 700, color: '#ff3b30', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>Lever {i + 1}</p>
-                <p style={{ fontSize: 17, fontWeight: 700, color: '#fff', marginBottom: 10, letterSpacing: '-0.3px' }}>{lever.name}</p>
-                <p style={{ fontSize: 12.5, fontWeight: 600, color: '#4ade80', marginBottom: 12, letterSpacing: '-0.05px' }}>{lever.benchmark}</p>
+              <div key={i} style={{ background: '#111114', borderRadius: 16, border: '1px solid rgba(255,255,255,0.09)', padding: '24px 26px', display: 'flex', flexDirection: 'column', gap: 12 }}>
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: 14 }}>
+                  <div style={{ width: 34, height: 34, borderRadius: 10, background: 'rgba(229,48,42,0.12)', border: '1px solid rgba(229,48,42,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                    <span style={{ fontSize: 13, fontWeight: 800, color: '#ff3b30', letterSpacing: 0, fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace' }}>{String(i + 1).padStart(2, '0')}</span>
+                  </div>
+                  <p style={{ fontSize: 17, fontWeight: 700, color: '#fff', letterSpacing: '-0.3px', lineHeight: 1.3, marginTop: 4 }}>{lever.name}</p>
+                </div>
+                <div style={{ display: 'inline-flex', alignSelf: 'flex-start', alignItems: 'center', gap: 6, background: 'rgba(74,222,128,0.07)', border: '1px solid rgba(74,222,128,0.18)', borderRadius: 100, padding: '4px 11px' }}>
+                  <span style={{ width: 5, height: 5, borderRadius: '50%', background: '#4ade80' }} />
+                  <span style={{ fontSize: 11.5, fontWeight: 600, color: '#4ade80', letterSpacing: '-0.05px' }}>{lever.benchmark}</span>
+                </div>
                 <p style={{ fontSize: 13.5, color: 'rgba(255,255,255,0.6)', lineHeight: 1.72 }} dangerouslySetInnerHTML={{ __html: lever.what }} />
               </div>
             ))}
@@ -505,64 +594,104 @@ export default function ChannelAudit() {
         </div>
       </section>
 
-      {/* ════ 7. WHAT DATA FEEDS IT — light ═════════════════════════════ */}
+      {/* ════ 7. WHAT DATA FEEDS IT — light, 3-col icon grid ════════════ */}
       <section style={{ padding: isMobile ? '64px 20px' : '100px 40px', background: 'var(--ytg-bg-3)', borderTop: '1px solid var(--ytg-border)', borderBottom: '1px solid var(--ytg-border)' }}>
-        <div style={{ maxWidth: 920, margin: '0 auto' }}>
+        <div style={{ maxWidth: 1160, margin: '0 auto' }}>
           <div style={{ textAlign: 'center', maxWidth: 720, margin: '0 auto 44px' }}>
             <span className="ca-eyebrow light">Full transparency</span>
             <h2 className="ca-h2" style={{ fontSize: isMobile ? 30 : 42, marginBottom: 16 }}>
               Exactly what we pull from your channel
             </h2>
             <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.72 }}>
-              Read-only access via the official YouTube Data API. We never write, edit, or store anything outside our analytics tables.
+              Read-only access via the official YouTube Data API. Nine data sources feed every audit. We never write, edit, or store anything outside our analytics tables.
             </p>
           </div>
-          <div style={{ background: 'var(--ytg-card)', borderRadius: 18, border: '1px solid var(--ytg-border)', boxShadow: 'var(--ytg-shadow-lg)', padding: isMobile ? '24px 24px' : '32px 40px' }}>
+          <div className="ca-grid-3" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 14 }}>
             {DATA_INPUTS.map((d, i) => (
-              <div key={i} style={{ display: isMobile ? 'block' : 'grid', gridTemplateColumns: '220px 1fr', gap: 24, padding: '14px 0', borderBottom: i < DATA_INPUTS.length - 1 ? '1px solid var(--ytg-border)' : 'none', alignItems: 'baseline' }}>
-                <p style={{ fontSize: 13.5, fontWeight: 700, color: 'var(--ytg-text)', letterSpacing: '-0.2px', marginBottom: isMobile ? 6 : 0 }}>{d.label}</p>
-                <p style={{ fontSize: 13.5, color: 'var(--ytg-text-2)', lineHeight: 1.65 }} dangerouslySetInnerHTML={{ __html: d.body }} />
+              <div key={i} style={{ background: 'var(--ytg-card)', borderRadius: 16, border: '1px solid var(--ytg-border)', boxShadow: 'var(--ytg-shadow-sm)', padding: '22px 22px 24px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 14 }}>
+                  <DataIcon name={d.icon} />
+                  <p style={{ fontSize: 14.5, fontWeight: 700, color: 'var(--ytg-text)', letterSpacing: '-0.2px' }}>{d.label}</p>
+                </div>
+                <p style={{ fontSize: 13.5, color: 'var(--ytg-text-2)', lineHeight: 1.7 }} dangerouslySetInnerHTML={{ __html: d.body }} />
               </div>
             ))}
+          </div>
+          <div style={{ background: 'var(--ytg-card)', borderRadius: 14, border: '1px solid var(--ytg-border)', boxShadow: 'var(--ytg-shadow-sm)', padding: '14px 22px', marginTop: 18, display: 'flex', alignItems: 'center', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#16a34a" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+              <path d="M11 4.5v-1A2.5 2.5 0 0 0 8.5 1h-3A2.5 2.5 0 0 0 3 3.5v1M2 4.5h10v8H2zM7 7v3"/>
+            </svg>
+            <p style={{ fontSize: 13, color: 'var(--ytg-text-2)', letterSpacing: '-0.1px' }}>
+              <span style={{ fontWeight: 700, color: 'var(--ytg-text)' }}>Read-only OAuth scope.</span> Revoke access anytime from your Google account settings.
+            </p>
           </div>
         </div>
       </section>
 
-      {/* ════ 8. PLAN LIMITS — light ════════════════════════════════════ */}
-      <section style={{ padding: isMobile ? '64px 20px' : '90px 40px', background: 'var(--ytg-bg)' }}>
-        <div style={{ maxWidth: 980, margin: '0 auto' }}>
-          <div style={{ textAlign: 'center', maxWidth: 700, margin: '0 auto 36px' }}>
-            <span className="ca-eyebrow light">By plan</span>
-            <h2 className="ca-h2" style={{ fontSize: isMobile ? 28 : 36, marginBottom: 14 }}>
-              How many priority actions per audit
+      {/* ════ 8. PLAN LIMITS — dark ═════════════════════════════════════ */}
+      <section style={{ padding: isMobile ? '64px 20px' : '100px 40px', background: '#0d0d12', borderTop: '1px solid rgba(255,255,255,0.06)', borderBottom: '1px solid rgba(255,255,255,0.06)', position: 'relative', overflow: 'hidden' }}>
+        <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 900, height: 700, background: 'radial-gradient(ellipse, rgba(229,48,42,0.14) 0%, transparent 65%)', pointerEvents: 'none' }} />
+        <div style={{ maxWidth: 1080, margin: '0 auto', position: 'relative', zIndex: 1 }}>
+          <div style={{ textAlign: 'center', maxWidth: 720, margin: '0 auto 44px' }}>
+            <span className="ca-eyebrow dark">By plan</span>
+            <h2 className="ca-h2" style={{ fontSize: isMobile ? 30 : 42, color: '#fff', marginBottom: 16 }}>
+              Same audit. <span style={{ color: '#ff3b30' }}>More fixes per run as you scale.</span>
             </h2>
-            <p style={{ fontSize: 14.5, color: 'var(--ytg-text-2)', lineHeight: 1.7 }}>
-              Higher tiers don&apos;t unlock different categories — they unlock more depth. Free returns the top 5 fixes; Agency returns 15 so multi-channel operators see the full picture.
+            <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.6)', lineHeight: 1.72 }}>
+              Higher tiers don&apos;t unlock different categories — every plan reads the same 10 dimensions. They unlock more depth: more priority actions returned per audit, more audits per month, more channels under one account.
             </p>
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr 1fr' : 'repeat(4, 1fr)', gap: 14 }}>
-            {PLAN_LIMITS.map((p, i) => (
-              <div key={i} style={{ background: 'var(--ytg-card)', borderRadius: 14, border: '1px solid var(--ytg-border)', boxShadow: 'var(--ytg-shadow-sm)', padding: '22px 20px', textAlign: 'center' }}>
-                <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-text-3)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 10 }}>{p.plan}</p>
-                <p style={{ fontSize: 36, fontWeight: 800, color: 'var(--ytg-accent)', letterSpacing: '-1.4px', lineHeight: 1, marginBottom: 6 }}>{p.actions}</p>
-                <p style={{ fontSize: 12, color: 'var(--ytg-text-3)', marginBottom: 10 }}>priority actions</p>
-                <p style={{ fontSize: 12, color: 'var(--ytg-text-2)', lineHeight: 1.5 }}>{p.note}</p>
-              </div>
-            ))}
+            {PLAN_LIMITS.map((p, i) => {
+              const isAccent = p.plan === 'Growth'
+              return (
+                <div key={i} style={{
+                  background: isAccent ? '#1a1018' : '#111114',
+                  borderRadius: 16,
+                  border: isAccent ? '1px solid rgba(229,48,42,0.45)' : '1px solid rgba(255,255,255,0.09)',
+                  boxShadow: isAccent ? '0 8px 32px rgba(229,48,42,0.18)' : '0 2px 8px rgba(0,0,0,0.4)',
+                  padding: '24px 22px 22px',
+                  position: 'relative',
+                }}>
+                  {isAccent && (
+                    <span style={{ position: 'absolute', top: -10, right: 16, fontSize: 9, fontWeight: 800, color: '#fff', background: '#ff3b30', padding: '3px 10px', borderRadius: 100, letterSpacing: '0.08em', textTransform: 'uppercase' }}>Most popular</span>
+                  )}
+                  <p style={{ fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.45)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 12 }}>{p.plan}</p>
+                  <div style={{ display: 'flex', alignItems: 'baseline', gap: 6, marginBottom: 4 }}>
+                    <p style={{ fontSize: 38, fontWeight: 800, color: '#fff', letterSpacing: '-1.5px', lineHeight: 1 }}>{p.actions}</p>
+                    <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)' }}>priority actions</p>
+                  </div>
+                  <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', marginBottom: 14 }}>per audit</p>
+                  <div style={{ height: 1, background: 'rgba(255,255,255,0.08)', marginBottom: 12 }} />
+                  <p style={{ fontSize: 12.5, color: 'rgba(255,255,255,0.7)', lineHeight: 1.55 }}>{p.note}</p>
+                </div>
+              )
+            })}
           </div>
-          <p style={{ fontSize: 12.5, color: 'var(--ytg-text-3)', textAlign: 'center', marginTop: 20 }}>
-            All plans get the same 8-weighted + 2-informational scoring. The action count limits how many fixes are returned per audit.
-          </p>
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 8, marginTop: 22, flexWrap: 'wrap' }}>
+            <p style={{ fontSize: 12.5, color: 'rgba(255,255,255,0.45)' }}>Same scoring formula across all plans.</p>
+            <a href="/#pricing" style={{ fontSize: 12.5, color: '#ff3b30', textDecoration: 'none', fontWeight: 600 }}>See full pricing →</a>
+          </div>
         </div>
       </section>
 
       {/* ════ 9. FAQ — white ════════════════════════════════════════════ */}
-      <section style={{ padding: isMobile ? '64px 20px' : '100px 40px', background: '#ffffff' }}>
-        <div style={{ maxWidth: 800, margin: '0 auto' }}>
-          <div style={{ textAlign: 'center', marginBottom: 40 }}>
-            <span className="ca-eyebrow light">Questions</span>
-            <h2 className="ca-h2" style={{ fontSize: isMobile ? 28 : 38 }}>Frequently asked</h2>
+      <section style={{ padding: isMobile ? '64px 20px' : '110px 40px', background: '#ffffff' }}>
+        <div className="ca-grid-2" style={{ maxWidth: 1180, margin: '0 auto', display: 'grid', gridTemplateColumns: '0.7fr 1.3fr', gap: 56, alignItems: 'flex-start' }}>
+          {/* Left: heading panel */}
+          <div style={{ position: isMobile ? 'static' : 'sticky', top: 100 }}>
+            <span className="ca-eyebrow light">FAQ</span>
+            <h2 className="ca-h2" style={{ fontSize: isMobile ? 30 : 40, marginBottom: 16 }}>
+              Questions about the audit, answered honestly.
+            </h2>
+            <p style={{ fontSize: 14.5, color: 'var(--ytg-text-2)', lineHeight: 1.7 }}>
+              Real answers from how the product actually behaves — including the unflattering ones (when it won&apos;t work, what it doesn&apos;t do, where the limits are).
+            </p>
+            <a href="/contact" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 13.5, color: 'var(--ytg-accent)', textDecoration: 'none', fontWeight: 600, marginTop: 16 }}>
+              Still have questions? Email us →
+            </a>
           </div>
+          {/* Right: questions */}
           <div>
             {FAQS.map((item, i) => (
               <FaqItem key={i} q={item.q} a={item.a} />
