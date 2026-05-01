@@ -106,9 +106,123 @@ STATIC_DIR = Path(__file__).parent.parent / "static"
 STATIC_DIR.mkdir(exist_ok=True)
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 
+
+# ── Per-route SEO meta tags ──────────────────────────────────────────────────
+# The frontend is an SPA — every route serves the same index.html. For each
+# feature page to rank for its own keyword, we rewrite <title> and the
+# description / canonical / OG / Twitter tags in the served HTML based on the
+# requested route. The replacement is a simple in-memory string swap done on
+# every miss; cheap and avoids any build-time complexity.
+
+DEFAULT_META = {
+    "title":       "YTGrowth — AI-Powered YouTube Growth Tools",
+    "description": "AI-powered YouTube analytics. Channel audits, competitor analysis, SEO studio, thumbnail scoring, and keyword research — turning channel data into a prioritized action plan.",
+    "path":        "/",
+}
+
+ROUTE_META: dict[str, dict[str, str]] = {
+    "features/channel-audit": {
+        "title":       "AI YouTube Channel Audit Tool — YTGrowth",
+        "description": "10-dimension AI audit of your YouTube channel. Traffic sources, retention, CTR, audience, SEO, thumbnails — scored, benchmarked against your niche, with priority fixes.",
+    },
+    "features/competitor-analysis": {
+        "title":       "YouTube Competitor Analysis Tool — YTGrowth",
+        "description": "Track up to 10 YouTube competitors. AI surfaces winning title patterns, content gaps, and posting times you can take. Free to start.",
+    },
+    "features/seo-studio": {
+        "title":       "YouTube SEO Studio — Title & Description Optimizer | YTGrowth",
+        "description": "Score every YouTube title against search demand, keyword fit, and competitor patterns. Optimize descriptions for discovery. Apply via official YouTube API.",
+    },
+    "features/thumbnail-iq": {
+        "title":       "YouTube Thumbnail Score & Analyzer — YTGrowth",
+        "description": "Two-layer thumbnail scoring. Algorithm checks contrast, faces, composition. Vision AI compares against winning thumbnails in your niche.",
+    },
+    "features/keyword-research": {
+        "title":       "YouTube Keyword Research Tool — YTGrowth",
+        "description": "Search volume, competition, and ranking difficulty for any YouTube topic. Surfaces low-competition keywords creators in your niche are missing.",
+    },
+    "affiliate": {
+        "title":       "YTGrowth Affiliate Program — 30% Recurring Commission",
+        "description": "Earn 30% recurring commission on every payment for the lifetime of each customer you refer. 30-day cookie, $50 payout minimum, monthly via PayPal.",
+    },
+}
+
+
+def _render_index_with_meta(path: str) -> str:
+    """Read index.html and rewrite the title + meta description + canonical
+    + og:title + og:description + og:url + twitter:title + twitter:description
+    for the requested route. Cached read to avoid hitting disk on every hit.
+    """
+    global _index_template_cache
+    try:
+        if "_index_template_cache" not in globals() or _index_template_cache is None:
+            _index_template_cache = (DIST / "index.html").read_text(encoding="utf-8")
+        html = _index_template_cache
+    except Exception:
+        return None
+
+    norm = path.strip("/")
+    meta = ROUTE_META.get(norm, DEFAULT_META)
+    title       = meta["title"]
+    description = meta["description"]
+    canonical   = f"https://ytgrowth.io/{norm}" if norm else "https://ytgrowth.io/"
+
+    # Replace <title> ... </title>
+    import re as _re
+    html = _re.sub(r"<title>.*?</title>", f"<title>{title}</title>", html, count=1, flags=_re.S)
+    # name="description"
+    html = _re.sub(
+        r'<meta name="description" content="[^"]*"\s*/?>',
+        f'<meta name="description" content="{description}" />',
+        html, count=1,
+    )
+    # canonical
+    html = _re.sub(
+        r'<link rel="canonical" href="[^"]*"\s*/?>',
+        f'<link rel="canonical" href="{canonical}" />',
+        html, count=1,
+    )
+    # og:title / og:description / og:url
+    html = _re.sub(
+        r'<meta property="og:title"\s+content="[^"]*"\s*/?>',
+        f'<meta property="og:title" content="{title}" />',
+        html, count=1,
+    )
+    html = _re.sub(
+        r'<meta property="og:description"\s+content="[^"]*"\s*/?>',
+        f'<meta property="og:description" content="{description}" />',
+        html, count=1,
+    )
+    html = _re.sub(
+        r'<meta property="og:url"\s+content="[^"]*"\s*/?>',
+        f'<meta property="og:url" content="{canonical}" />',
+        html, count=1,
+    )
+    # twitter:title / twitter:description
+    html = _re.sub(
+        r'<meta name="twitter:title"\s+content="[^"]*"\s*/?>',
+        f'<meta name="twitter:title" content="{title}" />',
+        html, count=1,
+    )
+    html = _re.sub(
+        r'<meta name="twitter:description"\s+content="[^"]*"\s*/?>',
+        f'<meta name="twitter:description" content="{description}" />',
+        html, count=1,
+    )
+    return html
+
+
+_index_template_cache: str | None = None
+
+
 @app.get("/{full_path:path}")
 def serve_frontend(full_path: str):
     file = DIST / full_path
     if file.is_file():
         return FileResponse(file)
-    return FileResponse(DIST / "index.html")
+    # SPA fallback — inject route-specific SEO meta tags.
+    from fastapi.responses import HTMLResponse
+    rendered = _render_index_with_meta(full_path)
+    if rendered is None:
+        return FileResponse(DIST / "index.html")
+    return HTMLResponse(content=rendered)

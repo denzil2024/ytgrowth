@@ -6,6 +6,11 @@ import Privacy from './pages/Privacy'
 import Refund from './pages/Refund'
 import Affiliate from './pages/Affiliate'
 import Contact from './pages/Contact'
+import ChannelAudit from './pages/features/ChannelAudit'
+import CompetitorAnalysis from './pages/features/CompetitorAnalysis'
+import SeoStudio from './pages/features/SeoStudio'
+import ThumbnailIq from './pages/features/ThumbnailIq'
+import KeywordResearch from './pages/features/KeywordResearch'
 
 function App() {
   return (
@@ -18,6 +23,11 @@ function App() {
         <Route path="/refund" element={<Refund />} />
         <Route path="/affiliate" element={<Affiliate />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/features/channel-audit"        element={<ChannelAudit />} />
+        <Route path="/features/competitor-analysis"  element={<CompetitorAnalysis />} />
+        <Route path="/features/seo-studio"           element={<SeoStudio />} />
+        <Route path="/features/thumbnail-iq"         element={<ThumbnailIq />} />
+        <Route path="/features/keyword-research"     element={<KeywordResearch />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
