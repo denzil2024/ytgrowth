@@ -10,6 +10,7 @@ import Outliers from './Outliers'
 import Autopsy from './Autopsy'
 import WeeklyReport from './WeeklyReport'
 import Referrals from './Referrals'
+import Admin from './Admin'
 import { loginUrl } from '../utm.js'
 import UsageBar from '../components/UsageBar'
 import CreditsEmptyModal from '../components/CreditsEmptyModal'
@@ -1190,6 +1191,7 @@ const NAV_ICONS = {
   'Weekly Report':   <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"><rect x="1" y="2" width="12" height="10" rx="2"/><path d="M1 6h12M4 2v4M10 2v4"/></svg>,
   'Post-Publish Review': <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"><circle cx="5.8" cy="5.8" r="3.8"/><path d="M8.6 8.6l3.4 3.4"/><path d="M4.7 4.3l2.4 1.5-2.4 1.5z"/></svg>,
   Settings:          <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"><circle cx="6.5" cy="6.5" r="1.8"/><path d="M6.5 1v1.2M6.5 10.8V12M1 6.5h1.2M10.8 6.5H12M2.8 2.8l.85.85M9.35 9.35l.85.85M2.8 10.2l.85-.85M9.35 4.65l.85-.85"/></svg>,
+  Admin:             <svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"><path d="M2 11.5V9.5M5 11.5V6M8 11.5V8M11 11.5V3.5"/><path d="M1 12.5h12"/></svg>,
 }
 
 function NavBtn({ label, active, onClick, badge }) {
@@ -1508,6 +1510,7 @@ export default function Dashboard() {
   const [canAddMore, setCanAddMore] = useState(false)
   const [showWelcome, setShowWelcome] = useState(false)
   const [billingPlan, setBillingPlan] = useState(null)
+  const [isAdmin,     setIsAdmin]     = useState(false)
   // Free-tier per-feature gate status. Map of feature id → 'allowed' | 'locked' | 'used'.
   // Fetched from /auth/me on mount; empty {} for paid plans. Passed to gated
   // child pages so they can show the upsell modal on first render.
@@ -1520,6 +1523,16 @@ export default function Dashboard() {
   const [celebrateQueue, setCelebrateQueue] = useState([])   // [{ category, tier, achieved_at }]
   // Result tracking — videos the user optimized via /seo/update-video, fetched when Videos tab opens
   const [optimizations, setOptimizations] = useState([])
+
+  // Admin check — fire-and-forget. Determines whether the Admin nav item
+  // appears in the sidebar. Returns { is_admin: false } for everyone whose
+  // session email isn't in the ADMIN_EMAILS env var.
+  useEffect(() => {
+    fetch('/admin/me', { credentials: 'include' })
+      .then(r => r.ok ? r.json() : { is_admin: false })
+      .then(d => setIsAdmin(!!d.is_admin))
+      .catch(() => {})
+  }, [])
 
   useEffect(() => {
     fetch('/auth/data', { credentials: 'include' })
@@ -1779,6 +1792,7 @@ export default function Dashboard() {
 
           <div style={{ height: 1, background: C.border, margin: '16px 20px 8px' }}/>
 
+          {isAdmin && <NavBtn label="Admin" active={nav === 'Admin'} onClick={() => setNav('Admin')} />}
           <NavBtn label="Settings" active={nav === 'Settings'} onClick={() => setNav('Settings')} />
 
         </nav>
@@ -2950,6 +2964,9 @@ export default function Dashboard() {
 
           {/* ── REFERRALS ────────────────────────────────────────────── */}
           {nav === 'Referrals' && <Referrals />}
+
+          {/* ── ADMIN ────────────────────────────────────────────────── */}
+          {nav === 'Admin' && isAdmin && <Admin />}
 
           {/* ── SETTINGS ─────────────────────────────────────────────── */}
           {nav === 'Settings' && <Settings channelData={data} />}
