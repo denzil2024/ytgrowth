@@ -187,6 +187,57 @@ function FaqItem({ q, a }) {
   )
 }
 
+const FEATURE_NAV_ITEMS = [
+  { href: '/features/channel-audit',       label: 'Channel Audit',       desc: '10-dimension AI audit of your channel' },
+  { href: '/features/competitor-analysis', label: 'Competitor Analysis', desc: 'Track rivals, find their content gaps' },
+  { href: '/features/seo-studio',          label: 'SEO Studio',          desc: 'Score + rewrite titles and descriptions' },
+  { href: '/features/thumbnail-iq',        label: 'Thumbnail IQ',        desc: 'Two-layer thumbnail scoring vs your niche' },
+  { href: '/features/keyword-research',    label: 'Keyword Research',    desc: 'YouTube-native search volume + difficulty' },
+]
+
+function FeaturesNavDropdown() {
+  const [open, setOpen] = useState(false)
+  return (
+    <div
+      onMouseEnter={() => setOpen(true)}
+      onMouseLeave={() => setOpen(false)}
+      style={{ position: 'relative' }}
+    >
+      <a href="/#features" className="ftr-nav-link" style={{ display: 'inline-flex', alignItems: 'center', gap: 4, cursor: 'pointer' }}>
+        Features
+        <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" style={{ transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.18s' }}>
+          <path d="M2 3.5l3 3 3-3"/>
+        </svg>
+      </a>
+      {open && (
+        <>
+          <div style={{ position: 'absolute', top: '100%', left: -20, width: 360, height: 12 }} />
+          <div style={{
+            position: 'absolute', top: 'calc(100% + 8px)', left: -20, zIndex: 200,
+            background: '#ffffff', border: '1px solid var(--ytg-border)', borderRadius: 14,
+            boxShadow: 'var(--ytg-shadow-lg)',
+            padding: 8, minWidth: 340,
+            animation: 'fadeUp 0.16s ease both',
+          }}>
+            {FEATURE_NAV_ITEMS.map((item, i) => (
+              <a key={i} href={item.href} style={{
+                display: 'block', padding: '11px 14px', borderRadius: 9,
+                textDecoration: 'none', transition: 'background 0.12s',
+              }}
+                onMouseEnter={e => e.currentTarget.style.background = '#f6f6f9'}
+                onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+              >
+                <p style={{ fontSize: 14, fontWeight: 700, color: 'var(--ytg-text)', letterSpacing: '-0.2px', marginBottom: 2 }}>{item.label}</p>
+                <p style={{ fontSize: 12.5, color: 'var(--ytg-text-2)', lineHeight: 1.45 }}>{item.desc}</p>
+              </a>
+            ))}
+          </div>
+        </>
+      )}
+    </div>
+  )
+}
+
 export default function FeaturePage({
   heroLabel,
   heroHeadline,
@@ -219,8 +270,8 @@ export default function FeaturePage({
           <Logo size={28} />
           <span style={{ fontWeight: 800, fontSize: 14, color: 'var(--ytg-text)', letterSpacing: '-0.4px', whiteSpace: 'nowrap' }}>YTGrowth</span>
         </a>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 18 }}>
-          {!isMobile && <a href="/#features" className="ftr-nav-link">All features</a>}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 22 }}>
+          {!isMobile && <FeaturesNavDropdown />}
           {!isMobile && <a href="/#pricing" className="ftr-nav-link">Pricing</a>}
           <a href="/auth/login" className="ftr-btn"
             style={{ padding: isMobile ? '8px 18px' : '9px 22px', fontSize: 13, borderRadius: 100, whiteSpace: 'nowrap' }}>

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { openCheckout } from '../checkout'
+import LandingFooter from '../components/LandingFooter'
 
 /* ─── inject font + global styles into <head> once ─────────────────────── */
 function useGlobalStyles() {
@@ -396,6 +397,59 @@ function Arrow() {
   )
 }
 
+/* ─── Features dropdown ─ used in the desktop top nav ─────────────────── */
+const FEATURE_NAV_ITEMS = [
+  { href: '/features/channel-audit',       label: 'Channel Audit',       desc: '10-dimension AI audit of your channel' },
+  { href: '/features/competitor-analysis', label: 'Competitor Analysis', desc: 'Track rivals, find their content gaps' },
+  { href: '/features/seo-studio',          label: 'SEO Studio',          desc: 'Score + rewrite titles and descriptions' },
+  { href: '/features/thumbnail-iq',        label: 'Thumbnail IQ',        desc: 'Two-layer thumbnail scoring vs your niche' },
+  { href: '/features/keyword-research',    label: 'Keyword Research',    desc: 'YouTube-native search volume + difficulty' },
+]
+
+function FeaturesNavDropdown() {
+  const [open, setOpen] = useState(false)
+  return (
+    <div
+      onMouseEnter={() => setOpen(true)}
+      onMouseLeave={() => setOpen(false)}
+      style={{ position: 'relative' }}
+    >
+      <a href="#features" className="ytg-nav-link" style={{ display: 'inline-flex', alignItems: 'center', gap: 4, cursor: 'pointer' }}>
+        Features
+        <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" style={{ transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.18s' }}>
+          <path d="M2 3.5l3 3 3-3"/>
+        </svg>
+      </a>
+      {open && (
+        <>
+          {/* Hover bridge — keeps the dropdown open while moving from trigger to panel */}
+          <div style={{ position: 'absolute', top: '100%', left: -20, width: 360, height: 12 }} />
+          <div style={{
+            position: 'absolute', top: 'calc(100% + 8px)', left: -20,
+            background: '#ffffff', border: '1px solid rgba(10,10,15,0.09)', borderRadius: 14,
+            boxShadow: '0 4px 16px rgba(0,0,0,0.10), 0 24px 60px rgba(0,0,0,0.13)',
+            padding: 8, minWidth: 340,
+            animation: 'fadeUp 0.16s ease both',
+          }}>
+            {FEATURE_NAV_ITEMS.map((item, i) => (
+              <a key={i} href={item.href} style={{
+                display: 'block', padding: '11px 14px', borderRadius: 9,
+                textDecoration: 'none', transition: 'background 0.12s',
+              }}
+                onMouseEnter={e => e.currentTarget.style.background = '#f6f6f9'}
+                onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+              >
+                <p style={{ fontSize: 14, fontWeight: 700, color: '#0a0a0f', letterSpacing: '-0.2px', marginBottom: 2 }}>{item.label}</p>
+                <p style={{ fontSize: 12.5, color: 'rgba(10,10,15,0.55)', lineHeight: 1.45 }}>{item.desc}</p>
+              </a>
+            ))}
+          </div>
+        </>
+      )}
+    </div>
+  )
+}
+
 /* ─── Section badge ─────────────────────────────────────────────────────── */
 function Badge({ children }) {
   return (
@@ -693,8 +747,9 @@ export default function Landing() {
         </div>
 
         {!isMobile && (
-          <div style={{ display: 'flex', gap: 30 }}>
-            {['Features', 'How it works', 'Pricing', 'FAQ'].map((l, i) => (
+          <div style={{ display: 'flex', gap: 30, alignItems: 'center' }}>
+            <FeaturesNavDropdown />
+            {['How it works', 'Pricing', 'FAQ'].map((l, i) => (
               <a key={i} href={`#${l.toLowerCase().replace(/ /g, '-')}`} className="ytg-nav-link">{l}</a>
             ))}
             <a href="/affiliate" className="ytg-nav-link">Affiliates</a>
@@ -735,7 +790,17 @@ export default function Landing() {
 
       {/* Mobile menu overlay */}
       <div className={`ytg-mobile-menu${mobileMenuOpen ? ' open' : ''}`} style={{ top: 60 }}>
-        {['Features', 'How it works', 'Pricing', 'FAQ', 'Affiliates', 'Contact'].map((l, i) => (
+        {/* Features header + sub-list */}
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
+          <span style={{ fontSize: 18, fontWeight: 700, color: 'rgba(255,255,255,0.88)', letterSpacing: '-0.5px' }}>Features</span>
+          {FEATURE_NAV_ITEMS.map((item, i) => (
+            <a key={i} href={item.href} onClick={() => setMobileMenuOpen(false)}
+              style={{ fontSize: 14, fontWeight: 500, color: 'rgba(255,255,255,0.62)', textDecoration: 'none', letterSpacing: '-0.2px' }}>
+              {item.label}
+            </a>
+          ))}
+        </div>
+        {['How it works', 'Pricing', 'FAQ', 'Affiliates', 'Contact'].map((l, i) => (
           <a key={i}
             href={l === 'Affiliates' ? '/affiliate' : l === 'Contact' ? '/contact' : `#${l.toLowerCase().replace(/ /g, '-')}`}
             onClick={() => setMobileMenuOpen(false)}
@@ -1928,63 +1993,7 @@ export default function Landing() {
       </div>
 
       {/* ── FOOTER ──────────────────────────────────────────────────────── */}
-      <footer style={{ background: '#07070a', borderTop: '1px solid rgba(255,255,255,0.07)', padding: isMobile ? '34px 24px 24px' : '36px 64px' }}>
-        {isMobile ? (
-          <div style={{ maxWidth: 360, margin: '0 auto', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            {/* Brand block */}
-            <a href="/" style={{ textDecoration: 'none', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10, marginBottom: 10 }}>
-              <Logo size={36} />
-              <span style={{ fontWeight: 800, fontSize: 17, color: '#ffffff', letterSpacing: '-0.5px' }}>YTGrowth</span>
-            </a>
-            <p style={{ fontSize: 12.5, color: 'rgba(255,255,255,0.45)', textAlign: 'center', margin: 0, marginBottom: 22, lineHeight: 1.55 }}>
-              Built for creators serious about growth.
-            </p>
-            {/* Seam */}
-            <div style={{ height: 1, width: 48, background: 'rgba(255,255,255,0.10)', marginBottom: 16 }} />
-            {/* Links — single line with middot separators */}
-            <div style={{ fontSize: 12.5, textAlign: 'center', marginBottom: 18, lineHeight: 1.8 }}>
-              {[
-                { label: 'Privacy',    href: '/privacy' },
-                { label: 'Terms',      href: '/terms' },
-                { label: 'Refunds',    href: '/refund' },
-                { label: 'Affiliates', href: '/affiliate' },
-              ].map((l, i, arr) => (
-                <span key={i}>
-                  <a href={l.href} style={{ color: 'rgba(255,255,255,0.58)', textDecoration: 'none', transition: 'color 0.15s', fontFamily: "'Inter', system-ui, sans-serif", fontWeight: 500 }}
-                    onMouseEnter={e => e.currentTarget.style.color = '#ffffff'}
-                    onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.58)'}
-                  >{l.label}</a>
-                  {i < arr.length - 1 && <span aria-hidden="true" style={{ margin: '0 10px', color: 'rgba(255,255,255,0.22)' }}>·</span>}
-                </span>
-              ))}
-            </div>
-            <p style={{ fontSize: 11.5, color: 'rgba(255,255,255,0.28)', margin: 0, textAlign: 'center' }}>© 2026 YTGrowth. All rights reserved.</p>
-          </div>
-        ) : (
-          <div style={{ maxWidth: 1280, margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 0 }}>
-            <a href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 9 }}>
-              <Logo size={26} />
-              <span style={{ fontWeight: 800, fontSize: 14, color: '#ffffff', letterSpacing: '-0.4px' }}>YTGrowth</span>
-            </a>
-            <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.32)' }}>Built for creators serious about growth.</p>
-            <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.22)' }}>© 2026 YTGrowth. All rights reserved.</p>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 28, justifyContent: 'flex-end' }}>
-              {[
-                { label: 'Privacy policy',   href: '/privacy' },
-                { label: 'Terms of service', href: '/terms' },
-                { label: 'Refund policy',    href: '/refund' },
-                { label: 'Affiliates',       href: '/affiliate' },
-                { label: 'Log in',           href: '/auth/login' },
-              ].map((l, i) => (
-                <a key={i} href={l.href} style={{ fontSize: 14, color: 'rgba(255,255,255,0.38)', textDecoration: 'none', transition: 'color 0.15s', fontFamily: "'Inter', system-ui, sans-serif" }}
-                  onMouseEnter={e => e.currentTarget.style.color = 'rgba(255,255,255,0.72)'}
-                  onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.38)'}
-                >{l.label}</a>
-              ))}
-            </div>
-          </div>
-        )}
-      </footer>
+      <LandingFooter />
 
     </div>
   )
