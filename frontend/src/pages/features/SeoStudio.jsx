@@ -27,15 +27,15 @@ function useBreakpoint() {
 
 function useStyles() {
   useEffect(() => {
-    if (document.getElementById('seo-styles')) return
+    if (document.getElementById('sst-styles')) return
     const link = document.createElement('link')
-    link.id = 'seo-font'
+    link.id = 'sst-font'
     link.rel = 'stylesheet'
     link.href = 'https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700;800;900&family=Inter:wght@300;400;500;600;700;800&display=swap'
     document.head.appendChild(link)
 
     const style = document.createElement('style')
-    style.id = 'seo-styles'
+    style.id = 'sst-styles'
     style.textContent = `
       :root {
         --ytg-bg:           #f4f4f6;
@@ -65,41 +65,41 @@ function useStyles() {
 
       @keyframes fadeUp { from { opacity:0; transform:translateY(18px) } to { opacity:1; transform:translateY(0) } }
 
-      .seo-btn { display: inline-flex; align-items: center; gap: 8px; background: var(--ytg-accent); color: #fff; font-size: 15px; font-weight: 700; padding: 15px 30px; border-radius: 100px; border: none; cursor: pointer; text-decoration: none; letter-spacing: -0.2px; box-shadow: 0 1px 2px rgba(0,0,0,0.14), 0 4px 20px rgba(229,48,42,0.34); transition: filter 0.18s, transform 0.18s, box-shadow 0.18s; font-family: 'Inter', system-ui, sans-serif; }
-      .seo-btn:hover { filter: brightness(1.07); transform: translateY(-1px); box-shadow: 0 3px 8px rgba(0,0,0,0.16), 0 12px 36px rgba(229,48,42,0.42); }
-      .seo-btn-lg { font-size: 16px; padding: 17px 38px; }
-      .seo-btn-ghost { display: inline-flex; align-items: center; gap: 8px; background: var(--ytg-card); color: var(--ytg-text-2); font-size: 15px; font-weight: 600; padding: 14px 26px; border-radius: 100px; border: 1px solid var(--ytg-border); cursor: pointer; text-decoration: none; letter-spacing: -0.2px; box-shadow: var(--ytg-shadow-sm); transition: color 0.15s, box-shadow 0.18s; font-family: 'Inter', system-ui, sans-serif; }
-      .seo-btn-ghost:hover { color: var(--ytg-text); box-shadow: var(--ytg-shadow); }
+      .sst-btn { display: inline-flex; align-items: center; gap: 8px; background: var(--ytg-accent); color: #fff; font-size: 15px; font-weight: 700; padding: 15px 30px; border-radius: 100px; border: none; cursor: pointer; text-decoration: none; letter-spacing: -0.2px; box-shadow: 0 1px 2px rgba(0,0,0,0.14), 0 4px 20px rgba(229,48,42,0.34); transition: filter 0.18s, transform 0.18s, box-shadow 0.18s; font-family: 'Inter', system-ui, sans-serif; }
+      .sst-btn:hover { filter: brightness(1.07); transform: translateY(-1px); box-shadow: 0 3px 8px rgba(0,0,0,0.16), 0 12px 36px rgba(229,48,42,0.42); }
+      .sst-btn-lg { font-size: 16px; padding: 17px 38px; }
+      .sst-btn-ghost { display: inline-flex; align-items: center; gap: 8px; background: var(--ytg-card); color: var(--ytg-text-2); font-size: 15px; font-weight: 600; padding: 14px 26px; border-radius: 100px; border: 1px solid var(--ytg-border); cursor: pointer; text-decoration: none; letter-spacing: -0.2px; box-shadow: var(--ytg-shadow-sm); transition: color 0.15s, box-shadow 0.18s; font-family: 'Inter', system-ui, sans-serif; }
+      .sst-btn-ghost:hover { color: var(--ytg-text); box-shadow: var(--ytg-shadow); }
 
-      .seo-eyebrow {
+      .sst-eyebrow {
         display: inline-flex; align-items: center; gap: 8px;
         font-size: 11px; font-weight: 700;
         letter-spacing: 0.08em; text-transform: uppercase;
         padding: 5px 13px; border-radius: 100px; margin-bottom: 16px;
       }
-      .seo-eyebrow.light { color: var(--ytg-accent-text); background: var(--ytg-accent-light); }
-      .seo-eyebrow.dark  { color: rgba(255,255,255,0.7); background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); }
+      .sst-eyebrow.light { color: var(--ytg-accent-text); background: var(--ytg-accent-light); }
+      .sst-eyebrow.dark  { color: rgba(255,255,255,0.7); background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); }
 
-      .seo-h1 { font-family: 'DM Sans', system-ui, sans-serif; font-weight: 800; letter-spacing: -2px; line-height: 1.05; text-wrap: balance; }
-      .seo-h2 { font-family: 'DM Sans', system-ui, sans-serif; font-weight: 800; letter-spacing: -1.4px; line-height: 1.08; text-wrap: balance; }
+      .sst-h1 { font-family: 'DM Sans', system-ui, sans-serif; font-weight: 800; letter-spacing: -2px; line-height: 1.05; text-wrap: balance; }
+      .sst-h2 { font-family: 'DM Sans', system-ui, sans-serif; font-weight: 800; letter-spacing: -1.4px; line-height: 1.08; text-wrap: balance; }
 
-      .seo-nav-link { font-size: 14px; color: var(--ytg-text-3); font-weight: 500; text-decoration: none; transition: color 0.15s; letter-spacing: -0.1px; }
-      .seo-nav-link:hover { color: var(--ytg-text-2); }
+      .sst-nav-link { font-size: 14px; color: var(--ytg-text-3); font-weight: 500; text-decoration: none; transition: color 0.15s; letter-spacing: -0.1px; }
+      .sst-nav-link:hover { color: var(--ytg-text-2); }
 
-      .seo-faq-item { border-bottom: 1px solid var(--ytg-border); }
-      .seo-faq-q { background: none; border: none; cursor: pointer; width: 100%; text-align: left; padding: 22px 0; font-family: inherit; display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; font-size: 16.5px; font-weight: 700; color: var(--ytg-text); letter-spacing: -0.2px; line-height: 1.45; }
-      .seo-faq-q:hover { color: var(--ytg-accent); }
-      .seo-faq-icon { transition: transform 0.2s; flex-shrink: 0; color: var(--ytg-text-3); margin-top: 4px; }
-      .seo-faq-icon.open { transform: rotate(45deg); color: var(--ytg-accent); }
-      .seo-faq-a { font-size: 14.5px; color: var(--ytg-text-2); line-height: 1.78; padding: 0 0 22px 0; max-width: 760px; }
+      .sst-faq-item { border-bottom: 1px solid var(--ytg-border); }
+      .sst-faq-q { background: none; border: none; cursor: pointer; width: 100%; text-align: left; padding: 22px 0; font-family: inherit; display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; font-size: 16.5px; font-weight: 700; color: var(--ytg-text); letter-spacing: -0.2px; line-height: 1.45; }
+      .sst-faq-q:hover { color: var(--ytg-accent); }
+      .sst-faq-icon { transition: transform 0.2s; flex-shrink: 0; color: var(--ytg-text-3); margin-top: 4px; }
+      .sst-faq-icon.open { transform: rotate(45deg); color: var(--ytg-accent); }
+      .sst-faq-a { font-size: 14.5px; color: var(--ytg-text-2); line-height: 1.78; padding: 0 0 22px 0; max-width: 760px; }
 
       @media (max-width: 900px) {
-        .seo-grid-2 { grid-template-columns: 1fr !important; gap: 32px !important; }
-        .seo-grid-3 { grid-template-columns: 1fr !important; }
-        .seo-grid-4 { grid-template-columns: 1fr 1fr !important; }
+        .sst-grid-2 { grid-template-columns: 1fr !important; gap: 32px !important; }
+        .sst-grid-3 { grid-template-columns: 1fr !important; }
+        .sst-grid-4 { grid-template-columns: 1fr 1fr !important; }
       }
       @media (max-width: 600px) {
-        .seo-grid-4 { grid-template-columns: 1fr !important; }
+        .sst-grid-4 { grid-template-columns: 1fr !important; }
       }
     `
     document.head.appendChild(style)
@@ -128,7 +128,7 @@ function FeaturesDropdown() {
   const [open, setOpen] = useState(false)
   return (
     <div onMouseEnter={() => setOpen(true)} onMouseLeave={() => setOpen(false)} style={{ position: 'relative' }}>
-      <a href="/#features" className="seo-nav-link" style={{ display: 'inline-flex', alignItems: 'center', gap: 4, cursor: 'pointer' }}>
+      <a href="/#features" className="sst-nav-link" style={{ display: 'inline-flex', alignItems: 'center', gap: 4, cursor: 'pointer' }}>
         Features
         <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" style={{ transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.18s' }}>
           <path d="M2 3.5l3 3 3-3"/>
@@ -157,14 +157,14 @@ function FeaturesDropdown() {
 function FaqItem({ q, a }) {
   const [open, setOpen] = useState(false)
   return (
-    <div className="seo-faq-item">
-      <button className="seo-faq-q" onClick={() => setOpen(o => !o)}>
+    <div className="sst-faq-item">
+      <button className="sst-faq-q" onClick={() => setOpen(o => !o)}>
         <span style={{ flex: 1 }}>{q}</span>
-        <span className={`seo-faq-icon${open ? ' open' : ''}`}>
+        <span className={`sst-faq-icon${open ? ' open' : ''}`}>
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round"><path d="M8 2v12M2 8h12"/></svg>
         </span>
       </button>
-      {open && <div className="seo-faq-a">{a}</div>}
+      {open && <div className="sst-faq-a">{a}</div>}
     </div>
   )
 }
@@ -403,8 +403,8 @@ export default function SeoStudio() {
         </a>
         <div style={{ display: 'flex', alignItems: 'center', gap: 22 }}>
           {!isMobile && <FeaturesDropdown />}
-          {!isMobile && <a href="/#pricing" className="seo-nav-link">Pricing</a>}
-          <a href="/auth/login" className="seo-btn" style={{ padding: isMobile ? '8px 18px' : '9px 22px', fontSize: 13, borderRadius: 100, whiteSpace: 'nowrap', boxShadow: 'none' }}>
+          {!isMobile && <a href="/#pricing" className="sst-nav-link">Pricing</a>}
+          <a href="/auth/login" className="sst-btn" style={{ padding: isMobile ? '8px 18px' : '9px 22px', fontSize: 13, borderRadius: 100, whiteSpace: 'nowrap', boxShadow: 'none' }}>
             Score my next title
           </a>
         </div>
@@ -413,16 +413,16 @@ export default function SeoStudio() {
       {/* ════ 1. HERO — white ════════════════════════════════════════════ */}
       <section style={{ padding: isMobile ? '64px 20px 56px' : '110px 40px 80px', textAlign: 'center', background: '#ffffff' }}>
         <div style={{ maxWidth: 880, margin: '0 auto', animation: 'fadeUp 0.5s ease both' }}>
-          <span className="seo-eyebrow light">SEO Studio</span>
-          <h1 className="seo-h1" style={{ fontSize: isMobile ? 36 : 60, color: 'var(--ytg-text)', marginBottom: 22 }}>
+          <span className="sst-eyebrow light">SEO Studio</span>
+          <h1 className="sst-h1" style={{ fontSize: isMobile ? 36 : 60, color: 'var(--ytg-text)', marginBottom: 22 }}>
             Score every title against the live YouTube niche — <span style={{ color: 'var(--ytg-accent)' }}>then rewrite it to win.</span>
           </h1>
           <p style={{ fontSize: isMobile ? 16 : 18.5, color: 'var(--ytg-text-2)', lineHeight: 1.7, maxWidth: 720, margin: '0 auto 36px' }}>
             Paste a title. We pull the top 50 YouTube results for that niche, score your title on a 6-dimension rubric, surface the gap your competitors are missing, and hand back 3 AI rewrites — plus a 300-word description and 3 hashtags pulled from real search demand. One click pushes the new title and description back to YouTube.
           </p>
           <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
-            <a href="/auth/login" className="seo-btn seo-btn-lg">Score a title →</a>
-            <a href="#how" className="seo-btn-ghost" style={{ padding: '15px 26px', fontSize: 15 }}>See how it works</a>
+            <a href="/auth/login" className="sst-btn sst-btn-lg">Score a title →</a>
+            <a href="#how" className="sst-btn-ghost" style={{ padding: '15px 26px', fontSize: 15 }}>See how it works</a>
           </div>
           <p style={{ fontSize: 13, color: 'var(--ytg-text-3)', marginTop: 22 }}>
             Solo plan and above · ~30 seconds per run · one-click apply via official YouTube API
@@ -433,10 +433,10 @@ export default function SeoStudio() {
       {/* ════ 2. TITLE SCORECARD VISUAL — dark, SPLIT (text L, visual R) ═ */}
       <section style={{ padding: isMobile ? '64px 20px' : '100px 40px', background: '#0d0d12', borderTop: '1px solid rgba(255,255,255,0.06)', borderBottom: '1px solid rgba(255,255,255,0.06)', position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 900, height: 700, background: 'radial-gradient(ellipse, rgba(229,48,42,0.16) 0%, transparent 65%)', pointerEvents: 'none' }} />
-        <div className="seo-grid-2" style={{ maxWidth: 1180, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1.05fr', gap: 64, alignItems: 'center', position: 'relative', zIndex: 1 }}>
+        <div className="sst-grid-2" style={{ maxWidth: 1180, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1.05fr', gap: 64, alignItems: 'center', position: 'relative', zIndex: 1 }}>
           <div>
-            <span className="seo-eyebrow dark">Per-title scorecard</span>
-            <h2 className="seo-h2" style={{ fontSize: isMobile ? 30 : 42, color: '#fff', marginBottom: 18 }}>
+            <span className="sst-eyebrow dark">Per-title scorecard</span>
+            <h2 className="sst-h2" style={{ fontSize: isMobile ? 30 : 42, color: '#fff', marginBottom: 18 }}>
               The number first — then <span style={{ color: '#ff3b30' }}>the rewrite that earns a higher one.</span>
             </h2>
             <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.6)', lineHeight: 1.72, marginBottom: 24 }}>
@@ -464,15 +464,15 @@ export default function SeoStudio() {
       <section style={{ padding: isMobile ? '64px 20px' : '100px 40px', background: 'var(--ytg-bg)' }}>
         <div style={{ maxWidth: 1120, margin: '0 auto' }}>
           <div style={{ textAlign: 'center', maxWidth: 760, margin: '0 auto 48px' }}>
-            <span className="seo-eyebrow light">Six dimensions, one score</span>
-            <h2 className="seo-h2" style={{ fontSize: isMobile ? 30 : 42, marginBottom: 16 }}>
+            <span className="sst-eyebrow light">Six dimensions, one score</span>
+            <h2 className="sst-h2" style={{ fontSize: isMobile ? 30 : 42, marginBottom: 16 }}>
               We don’t guess at what makes a title work. <span style={{ color: 'var(--ytg-accent)' }}>We measure it.</span>
             </h2>
             <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.72 }}>
               The deterministic rubric is six dimensions, each weighted to reflect how YouTube’s recommendation engine actually ranks titles. Same rubric runs on your draft and on every AI rewrite, so the comparison is honest.
             </p>
           </div>
-          <div className="seo-grid-2" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
+          <div className="sst-grid-2" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
             {DIMENSIONS.map((d, i) => (
               <div key={i} style={{ background: 'var(--ytg-card)', borderRadius: 14, border: '1px solid var(--ytg-border)', boxShadow: 'var(--ytg-shadow-sm)', padding: '20px 22px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 10 }}>
@@ -491,13 +491,13 @@ export default function SeoStudio() {
       {/* ════ 4. DESCRIPTION REWRITE — dark, SPLIT (visual L, text R) ═══ */}
       <section style={{ padding: isMobile ? '64px 20px' : '100px 40px', background: '#0d0d12', borderTop: '1px solid rgba(255,255,255,0.06)', borderBottom: '1px solid rgba(255,255,255,0.06)', position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', top: '40%', left: '50%', transform: 'translate(-50%,-50%)', width: 900, height: 700, background: 'radial-gradient(ellipse, rgba(229,48,42,0.14) 0%, transparent 65%)', pointerEvents: 'none' }} />
-        <div className="seo-grid-2" style={{ maxWidth: 1180, margin: '0 auto', display: 'grid', gridTemplateColumns: '1.1fr 1fr', gap: 56, alignItems: 'center', position: 'relative', zIndex: 1 }}>
+        <div className="sst-grid-2" style={{ maxWidth: 1180, margin: '0 auto', display: 'grid', gridTemplateColumns: '1.1fr 1fr', gap: 56, alignItems: 'center', position: 'relative', zIndex: 1 }}>
           <div style={{ order: isMobile ? 1 : 0 }}>
             <DescriptionVisual />
           </div>
           <div style={{ order: isMobile ? 0 : 1 }}>
-            <span className="seo-eyebrow dark">Description rewrites</span>
-            <h2 className="seo-h2" style={{ fontSize: isMobile ? 30 : 42, color: '#fff', marginBottom: 18 }}>
+            <span className="sst-eyebrow dark">Description rewrites</span>
+            <h2 className="sst-h2" style={{ fontSize: isMobile ? 30 : 42, color: '#fff', marginBottom: 18 }}>
               Three descriptions — each <span style={{ color: '#ff3b30' }}>built for the first 150 characters.</span>
             </h2>
             <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.6)', lineHeight: 1.72, marginBottom: 22 }}>
@@ -524,8 +524,8 @@ export default function SeoStudio() {
       <section id="how" style={{ padding: isMobile ? '64px 20px' : '100px 40px', background: '#ffffff' }}>
         <div style={{ maxWidth: 1240, margin: '0 auto' }}>
           <div style={{ textAlign: 'center', maxWidth: 720, margin: '0 auto 52px' }}>
-            <span className="seo-eyebrow light">How it works</span>
-            <h2 className="seo-h2" style={{ fontSize: isMobile ? 30 : 42 }}>
+            <span className="sst-eyebrow light">How it works</span>
+            <h2 className="sst-h2" style={{ fontSize: isMobile ? 30 : 42 }}>
               From draft title to live YouTube edit in under 60 seconds
             </h2>
             <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.7, marginTop: 14, maxWidth: 580, margin: '14px auto 0' }}>
@@ -595,15 +595,15 @@ export default function SeoStudio() {
         <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 900, height: 700, background: 'radial-gradient(ellipse, rgba(229,48,42,0.14) 0%, transparent 65%)', pointerEvents: 'none' }} />
         <div style={{ maxWidth: 1180, margin: '0 auto', position: 'relative', zIndex: 1 }}>
           <div style={{ textAlign: 'center', maxWidth: 760, margin: '0 auto 44px' }}>
-            <span className="seo-eyebrow dark">Output structure</span>
-            <h2 className="seo-h2" style={{ fontSize: isMobile ? 30 : 42, color: '#fff', marginBottom: 16 }}>
+            <span className="sst-eyebrow dark">Output structure</span>
+            <h2 className="sst-h2" style={{ fontSize: isMobile ? 30 : 42, color: '#fff', marginBottom: 16 }}>
               Seven distinct output blocks. <span style={{ color: '#ff3b30' }}>Every one is publishable.</span>
             </h2>
             <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.6)', lineHeight: 1.72 }}>
               The studio doesn’t hand you a wall of text. Each block renders in its own card so you can scan, mark, and apply without re-reading — and the whole report rehydrates from the Reports tab whenever you want it back.
             </p>
           </div>
-          <div className="seo-grid-3" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 14 }}>
+          <div className="sst-grid-3" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 14 }}>
             {PIPELINE_OUTPUTS.map((p, i) => (
               <div key={i} style={{ background: '#111114', borderRadius: 14, border: '1px solid rgba(255,255,255,0.09)', padding: '22px 22px 24px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12 }}>
@@ -619,13 +619,13 @@ export default function SeoStudio() {
 
       {/* ════ 7. KEYWORD OPPORTUNITY — light, SPLIT (visual L, text R) ═══ */}
       <section style={{ padding: isMobile ? '64px 20px' : '100px 40px', background: 'var(--ytg-bg-3)', borderTop: '1px solid var(--ytg-border)', borderBottom: '1px solid var(--ytg-border)' }}>
-        <div className="seo-grid-2" style={{ maxWidth: 1180, margin: '0 auto', display: 'grid', gridTemplateColumns: '1.05fr 1fr', gap: 56, alignItems: 'center' }}>
+        <div className="sst-grid-2" style={{ maxWidth: 1180, margin: '0 auto', display: 'grid', gridTemplateColumns: '1.05fr 1fr', gap: 56, alignItems: 'center' }}>
           <div style={{ order: isMobile ? 1 : 0 }}>
             <KeywordPanelVisual />
           </div>
           <div style={{ order: isMobile ? 0 : 1 }}>
-            <span className="seo-eyebrow light">Keyword opportunity</span>
-            <h2 className="seo-h2" style={{ fontSize: isMobile ? 28 : 38, marginBottom: 16 }}>
+            <span className="sst-eyebrow light">Keyword opportunity</span>
+            <h2 className="sst-h2" style={{ fontSize: isMobile ? 28 : 38, marginBottom: 16 }}>
               Up to 15 phrases scored on <span style={{ color: 'var(--ytg-accent)' }}>real volume + real competition.</span>
             </h2>
             <p style={{ fontSize: 14.5, color: 'var(--ytg-text-2)', lineHeight: 1.72, marginBottom: 18 }}>
@@ -651,8 +651,8 @@ export default function SeoStudio() {
         <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 900, height: 700, background: 'radial-gradient(ellipse, rgba(229,48,42,0.14) 0%, transparent 65%)', pointerEvents: 'none' }} />
         <div style={{ maxWidth: 1080, margin: '0 auto', position: 'relative', zIndex: 1 }}>
           <div style={{ textAlign: 'center', maxWidth: 720, margin: '0 auto 44px' }}>
-            <span className="seo-eyebrow dark">By plan</span>
-            <h2 className="seo-h2" style={{ fontSize: isMobile ? 30 : 42, color: '#fff', marginBottom: 16 }}>
+            <span className="sst-eyebrow dark">By plan</span>
+            <h2 className="sst-h2" style={{ fontSize: isMobile ? 30 : 42, color: '#fff', marginBottom: 16 }}>
               How many SEO runs you get each month
             </h2>
             <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.6)', lineHeight: 1.72 }}>
@@ -697,10 +697,10 @@ export default function SeoStudio() {
 
       {/* ════ 9. FAQ — white ════════════════════════════════════════════ */}
       <section style={{ padding: isMobile ? '64px 20px' : '110px 40px', background: '#ffffff' }}>
-        <div className="seo-grid-2" style={{ maxWidth: 1180, margin: '0 auto', display: 'grid', gridTemplateColumns: '0.7fr 1.3fr', gap: 56, alignItems: 'flex-start' }}>
+        <div className="sst-grid-2" style={{ maxWidth: 1180, margin: '0 auto', display: 'grid', gridTemplateColumns: '0.7fr 1.3fr', gap: 56, alignItems: 'flex-start' }}>
           <div style={{ position: isMobile ? 'static' : 'sticky', top: 100 }}>
-            <span className="seo-eyebrow light">FAQ</span>
-            <h2 className="seo-h2" style={{ fontSize: isMobile ? 30 : 40, marginBottom: 16 }}>
+            <span className="sst-eyebrow light">FAQ</span>
+            <h2 className="sst-h2" style={{ fontSize: isMobile ? 30 : 40, marginBottom: 16 }}>
               Questions about the SEO engine, answered honestly.
             </h2>
             <p style={{ fontSize: 14.5, color: 'var(--ytg-text-2)', lineHeight: 1.7 }}>
@@ -722,13 +722,13 @@ export default function SeoStudio() {
       <section style={{ padding: isMobile ? '60px 20px 56px' : '110px 40px 80px', background: 'var(--ytg-bg)' }}>
         <div style={{ maxWidth: 860, margin: '0 auto', textAlign: 'center', background: 'var(--ytg-card)', border: '1px solid var(--ytg-border)', borderRadius: 24, boxShadow: 'var(--ytg-shadow-xl)', padding: isMobile ? '52px 24px' : '76px 60px', position: 'relative', overflow: 'hidden' }}>
           <div style={{ position: 'absolute', top: -80, left: '50%', transform: 'translateX(-50%)', width: 540, height: 260, background: 'radial-gradient(ellipse, rgba(229,48,42,0.10) 0%, transparent 70%)', pointerEvents: 'none' }} />
-          <h2 className="seo-h2" style={{ fontSize: isMobile ? 30 : 44, marginBottom: 16 }}>
+          <h2 className="sst-h2" style={{ fontSize: isMobile ? 30 : 44, marginBottom: 16 }}>
             Score your next title against the live niche
           </h2>
           <p style={{ fontSize: isMobile ? 15 : 17, color: 'var(--ytg-text-2)', maxWidth: 540, margin: '0 auto 28px', lineHeight: 1.7 }}>
             ~30 seconds per run. Solo gets 20 runs / month, Growth 50, Agency 150 pooled. Most users surface a measurably better title inside the first 3 runs.
           </p>
-          <a href="/auth/login" className="seo-btn seo-btn-lg">Score a title →</a>
+          <a href="/auth/login" className="sst-btn sst-btn-lg">Score a title →</a>
         </div>
       </section>
 
