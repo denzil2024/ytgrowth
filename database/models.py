@@ -453,7 +453,15 @@ try:
             _conn.execute(_text(_stmt))
             _conn.commit()
         except Exception:
-            pass  # Column already exists or rename already done
+            # Column already exists or rename already done.
+            # Postgres marks the whole transaction as aborted on any error and
+            # refuses every subsequent statement until rollback — without this,
+            # one early "column already exists" silently kills the rest of the
+            # migration list. Rollback so the next statement starts fresh.
+            try:
+                _conn.rollback()
+            except Exception:
+                pass
 except Exception as _e:
     print(f"[boot] incremental migrations skipped (DB unreachable): {_e}")
 

@@ -58,7 +58,32 @@ def admin_overview(request: Request):
         return JSONResponse({"error": f"{type(e).__name__}: {e}"}, status_code=500)
 
 
+def _ensure_utm_columns():
+    """Idempotently add the utm_* columns to user_accounts.
+
+    Belt-and-braces: the boot-time migration list does this too, but Postgres
+    will silently skip the rest of the migration list if any earlier statement
+    aborts the transaction. This makes the admin endpoint self-healing on the
+    first hit even if the boot migration failed.
+    """
+    from sqlalchemy import text
+    from database.models import engine
+    cols = ("utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term")
+    try:
+        with engine.connect() as conn:
+            for c in cols:
+                try:
+                    conn.execute(text(f"ALTER TABLE user_accounts ADD COLUMN {c} TEXT"))
+                    conn.commit()
+                except Exception:
+                    try: conn.rollback()
+                    except Exception: pass
+    except Exception as e:
+        print(f"[admin] _ensure_utm_columns skipped: {e}")
+
+
 def _build_overview():
+    _ensure_utm_columns()
     db = SessionLocal()
     try:
         now             = datetime.datetime.utcnow()
