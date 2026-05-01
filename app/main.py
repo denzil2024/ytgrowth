@@ -138,8 +138,12 @@ ROUTE_META: dict[str, dict[str, str]] = {
         "description": "Two-layer thumbnail scoring. Algorithm checks contrast, faces, composition. Vision AI compares against winning thumbnails in your niche.",
     },
     "features/keyword-research": {
-        "title":       "YouTube Keyword Research Tool — YTGrowth",
-        "description": "Search volume, competition, and ranking difficulty for any YouTube topic. Surfaces low-competition keywords creators in your niche are missing.",
+        "title":       "Free YouTube Keyword Research Tool — Real Competition Data | YTGrowth",
+        "description": "Find low-competition YouTube keywords with real ranking data. Score by competitor channel size, view ceiling, and content freshness. Free creators get one full search per cycle.",
+    },
+    "features/outliers": {
+        "title":       "YouTube Outlier Finder — Find Viral Videos in Your Niche | YTGrowth",
+        "description": "Find YouTube videos that hit 5x, 10x, even 50x their channel's normal views — in your exact niche. Outlier score, breakout channels, and thumbnail patterns from the top 8 in 30 seconds.",
     },
     "affiliate": {
         "title":       "YTGrowth Affiliate Program — 30% Recurring Commission",

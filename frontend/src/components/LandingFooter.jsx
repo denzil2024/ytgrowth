@@ -32,6 +32,7 @@ const FEATURES = [
   { label: 'SEO Studio',            href: '/features/seo-studio' },
   { label: 'Thumbnail IQ',          href: '/features/thumbnail-iq' },
   { label: 'Keyword Research',      href: '/features/keyword-research' },
+  { label: 'Outliers',              href: '/features/outliers' },
 ]
 
 const COMPANY = [

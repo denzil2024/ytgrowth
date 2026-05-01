@@ -118,6 +118,7 @@ const FEATURE_NAV = [
   { href: '/features/seo-studio',          label: 'SEO Studio',          desc: 'Score + rewrite titles and descriptions' },
   { href: '/features/thumbnail-iq',        label: 'Thumbnail IQ',        desc: 'Two-layer thumbnail scoring vs your niche' },
   { href: '/features/keyword-research',    label: 'Keyword Research',    desc: 'YouTube-native search volume + difficulty' },
+  { href: '/features/outliers',            label: 'Outliers',            desc: 'Find viral videos and breakout channels' },
 ]
 
 function FeaturesDropdown() {
