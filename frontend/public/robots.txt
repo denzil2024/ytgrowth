@@ -1,0 +1,115 @@
+# robots.txt for ytgrowth.io
+# Search engines and AI assistants are welcome on public pages.
+# App, auth, billing, admin and dashboard routes are off-limits.
+
+User-agent: *
+Allow: /
+Disallow: /auth/
+Disallow: /api/
+Disallow: /billing/
+Disallow: /admin
+Disallow: /dashboard
+
+# Search engines
+User-agent: Googlebot
+Allow: /
+Disallow: /auth/
+Disallow: /api/
+Disallow: /billing/
+Disallow: /admin
+Disallow: /dashboard
+
+User-agent: Bingbot
+Allow: /
+Disallow: /auth/
+Disallow: /api/
+Disallow: /billing/
+Disallow: /admin
+Disallow: /dashboard
+
+# OpenAI / ChatGPT
+User-agent: GPTBot
+Allow: /
+Disallow: /auth/
+Disallow: /api/
+Disallow: /billing/
+Disallow: /admin
+Disallow: /dashboard
+
+User-agent: ChatGPT-User
+Allow: /
+Disallow: /auth/
+Disallow: /api/
+Disallow: /billing/
+Disallow: /admin
+Disallow: /dashboard
+
+User-agent: OAI-SearchBot
+Allow: /
+Disallow: /auth/
+Disallow: /api/
+Disallow: /billing/
+Disallow: /admin
+Disallow: /dashboard
+
+# Anthropic / Claude
+User-agent: ClaudeBot
+Allow: /
+Disallow: /auth/
+Disallow: /api/
+Disallow: /billing/
+Disallow: /admin
+Disallow: /dashboard
+
+User-agent: anthropic-ai
+Allow: /
+Disallow: /auth/
+Disallow: /api/
+Disallow: /billing/
+Disallow: /admin
+Disallow: /dashboard
+
+User-agent: Claude-Web
+Allow: /
+Disallow: /auth/
+Disallow: /api/
+Disallow: /billing/
+Disallow: /admin
+Disallow: /dashboard
+
+# Perplexity
+User-agent: PerplexityBot
+Allow: /
+Disallow: /auth/
+Disallow: /api/
+Disallow: /billing/
+Disallow: /admin
+Disallow: /dashboard
+
+User-agent: Perplexity-User
+Allow: /
+Disallow: /auth/
+Disallow: /api/
+Disallow: /billing/
+Disallow: /admin
+Disallow: /dashboard
+
+# Google's AI training crawler (Gemini, Bard)
+User-agent: Google-Extended
+Allow: /
+Disallow: /auth/
+Disallow: /api/
+Disallow: /billing/
+Disallow: /admin
+Disallow: /dashboard
+
+# Common Crawl (used by many LLM training datasets)
+User-agent: CCBot
+Allow: /
+Disallow: /auth/
+Disallow: /api/
+Disallow: /billing/
+Disallow: /admin
+Disallow: /dashboard
+
+Sitemap: https://ytgrowth.io/sitemap.xml

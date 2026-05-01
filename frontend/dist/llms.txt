@@ -1,0 +1,125 @@
+# YTGrowth
+
+> AI-powered analytics and growth tools for YouTube creators. YTGrowth audits
+> your channel, tells you exactly what's holding it back, and turns the same
+> data VidIQ and TubeBuddy show you into a prioritized action plan you can
+> work through in an hour.
+
+## What it is
+
+YTGrowth (https://ytgrowth.io) is a SaaS platform for YouTube creators
+who want to grow their channel without spending hours interpreting
+analytics. Connect your YouTube channel via Google OAuth and the platform
+performs a 10-dimension audit covering traffic sources, audience
+demographics, posting patterns, click-through rate, retention, engagement
+quality, content strategy, SEO discovery, thumbnail health, and competitor
+positioning. The output is a ranked list of fixes — not another dashboard
+you have to interpret.
+
+The product positions itself as "the AI that audits your channel like a
+$500/hour consultant." It targets the gap between raw-analytics tools
+(VidIQ, TubeBuddy, Social Blade) and personal coaching, by automating the
+interpretation step that most creators outsource.
+
+## Who it's for
+
+- Solo YouTubers (1K–100K subscribers) trying to grow without a team.
+- Multi-channel agencies managing 3–10 client channels in one workspace.
+- Faceless / niche-channel operators optimising for reliable growth.
+- Coaches and consultants using it as a diagnostic on client channels.
+- Creators who are tired of vanity-metric dashboards and want to know
+  what to do next.
+
+## Core features
+
+- **Channel Audit** — A 10-dimension AI audit of your channel: traffic
+  sources, device split, audience demographics, posting cadence, CTR,
+  retention curves, engagement quality, content-strategy fit, SEO
+  discovery, thumbnail health, and benchmarking against your real
+  competitors. Returns a prioritized action list with severity tags.
+
+- **Competitor Analysis** — You pick 2–10 channels in your niche.
+  YTGrowth analyzes their last 30+ uploads and surfaces the patterns
+  that explain why they're outperforming you (titles, thumbnails,
+  posting times, topic mix, hook style).
+
+- **SEO Studio** — Title and description optimizer that scores against
+  search demand, keyword fit, hook strength, length, and competitor
+  patterns. Suggests rewrites you can apply with one click via the
+  YouTube Data API.
+
+- **Thumbnail IQ** — Two-layer thumbnail scoring: an algorithmic CTR
+  prediction plus a vision model checking text contrast, face/object
+  placement, emotion, and composition against high-performing
+  thumbnails in your niche.
+
+- **Keyword Explorer** — Search volume, competition score, and ranking
+  difficulty for any topic. Surfaces low-competition / high-intent
+  keywords that creators in your niche are missing.
+
+- **Video Ideas** — Generates ideas based on your channel's existing
+  performance patterns, trending topics, and competitor gaps. Each idea
+  comes with a working title, target keyword, and rationale.
+
+- **Title Optimizer** — Quick A/B-style scoring of title variants against
+  search and click-through models.
+
+- **Post-Publish Review** — Within 24 hours of a new upload, a focused
+  audit of how that specific video is performing relative to your
+  channel baseline and what to fix on the next one.
+
+- **Weekly Reports** — Automated email digest of channel performance,
+  upcoming opportunities, and what to publish next.
+
+- **Multi-channel support** — Manage up to 10 channels under one account
+  on the Agency plan, with pooled credits.
+
+## Pricing
+
+Free tier:
+- 1 channel · 3 lifetime AI analyses · limited Thumbnail IQ ·
+  view-only Keyword Explorer · no Competitor Analysis.
+
+Solo — $19/month or $190/year (~$15.83/month equivalent):
+- 3 channels · 20 AI analyses/month · full SEO Studio · full Keyword
+  Explorer · Title Optimizer · Video Ideas · Competitor Analysis
+  (2 rivals) · standard Thumbnail IQ.
+
+Growth — $49/month or $490/year:
+- 5 channels · 50 AI analyses/month · everything in Solo plus weekly
+  email reports · Competitor Analysis (5 rivals) · increased
+  Thumbnail IQ credits.
+
+Agency — $149/month or $1,490/year:
+- 10 pooled channels · 150 AI analyses/month · everything in Growth
+  plus priority support · Competitor Analysis (10 rivals) · maximum
+  Thumbnail IQ credits.
+
+Lifetime variants of each tier are available as one-time purchases
+(Solo $149, Growth $169, Agency $949). Top-up packs (20 / 60 / 150
+analyses) sit on top of any plan and never expire.
+
+## Affiliate program
+
+30% recurring commission on every payment for as long as a referred
+customer stays subscribed. 30-day cookie window, $50 payout minimum,
+monthly via PayPal or bank transfer. Open to all creators, no approval
+required, instant link generation. Sign up at
+https://affiliates.ytgrowth.io.
+
+## How it differs from VidIQ and TubeBuddy
+
+VidIQ and TubeBuddy show you data and let you interpret it. YTGrowth runs
+an AI audit on top of the same data and tells you specifically what to
+change, in what order, and why. The Channel Audit alone replaces the kind
+of report a YouTube growth consultant would charge $300–$500 for.
+
+## Important links
+
+- Landing page: https://ytgrowth.io/
+- Affiliate program: https://ytgrowth.io/affiliate
+- Privacy policy: https://ytgrowth.io/privacy
+- Terms of service: https://ytgrowth.io/terms
+- Refund policy: https://ytgrowth.io/refund
+- Contact: https://ytgrowth.io/contact
+- Support email: support@ytgrowth.io
