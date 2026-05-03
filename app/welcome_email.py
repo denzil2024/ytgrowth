@@ -102,26 +102,37 @@ def send_welcome_email(
         except Exception:
             pass
 
-        from app.email_templates.welcome import build_email_html
+        # Pull first_name off the user account for a personal greeting.
+        first_name = ""
+        try:
+            from database.models import UserAccount
+            account = db.query(UserAccount).filter_by(email=email).first()
+            if account and account.display_name:
+                first_name = account.display_name.split(" ", 1)[0].strip()
+        except Exception:
+            first_name = ""
+
+        from app.email_templates.welcome import build_email
         import resend as _resend
 
         _resend.api_key = os.environ.get("RESEND_API_KEY", "")
 
-        html = build_email_html(
+        text, html = build_email(
+            first_name=first_name,
             channel_name=channel_name or "",
-            channel_thumbnail=channel_thumbnail,
             top_action=top_action,
             dashboard_url=f"{BASE_URL}/dashboard",
             unsubscribe_url=unsubscribe_url,
-            base_url=BASE_URL,
         )
 
         try:
             _resend.Emails.send({
-                "from":    "YTGrowth <hello@ytgrowth.io>",
+                "from":    "Denzil from YTGrowth <hello@ytgrowth.io>",
                 "to":      [email],
                 "subject": "What we found on your channel",
                 "html":    html,
+                "text":    text,
+                "reply_to": "hello@ytgrowth.io",
             })
             pref.welcome_email_sent_at = datetime.datetime.utcnow()
             db.commit()

@@ -499,6 +499,28 @@ def callback(request: Request, background_tasks: BackgroundTasks):
             except Exception as _e:
                 print(f"[signup_notify] schedule error: {_e}")
 
+            # ── Immediate welcome email ──────────────────────────────────
+            # Fires now (before the audit completes) so users who hit audit
+            # errors still get welcomed. The audit-complete email in
+            # welcome_email.py still fires after the audit with the
+            # personalised "your top priority is X" hook. is_new_signup is
+            # the natural idempotency gate - it can only be True once per
+            # email since UserAccount is unique on email.
+            try:
+                from app.welcome_immediate import send_welcome_immediate
+                threading.Thread(
+                    target=send_welcome_immediate,
+                    kwargs={
+                        "email":        google_email,
+                        "display_name": display_name,
+                        "channel_id":   channel_id,
+                        "channel_name": stats.get("channel_name") if stats else None,
+                    },
+                    daemon=True,
+                ).start()
+            except Exception as _e:
+                print(f"[welcome_immediate] schedule error: {_e}")
+
         # ── Channel abuse prevention ──────────────────────────────────────
         if google_email:
             db = SessionLocal()
