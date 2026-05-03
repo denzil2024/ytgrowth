@@ -109,6 +109,7 @@ def _composite_ribbon_star_svg(category: str, tier: int) -> str:
     icon_color = cat["ink"]
     icon_scale = icon_size / 24
 
+    sf = f"sf-{category}"
     return f"""
     <svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" style="display:block;margin:0 auto;">
       <defs>
@@ -125,13 +126,16 @@ def _composite_ribbon_star_svg(category: str, tier: int) -> str:
           <stop offset="55%" stop-color="{cat['h2']}"/>
           <stop offset="100%" stop-color="{cat['h3']}"/>
         </radialGradient>
+        <filter id="{sf}" x="-30%" y="-30%" width="160%" height="160%">
+          <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000000" flood-opacity="0.22"/>
+        </filter>
       </defs>
       <!-- V-drape ribbon (top) -->
       <polygon points="56,0 98,0 112,112 90,128 78,112" fill="url(#{rL})"/>
       <polygon points="102,0 144,0 122,112 110,128 88,112" fill="url(#{rR})"/>
       <polygon points="92,118 108,118 100,134" fill="#5e0a04"/>
       <!-- Star badge (translated to overlap ribbon's lower half) -->
-      <g transform="translate(26 52)">
+      <g transform="translate(26 52)" filter="url(#{sf})">
         <polygon points="{star_pts}" fill="url(#{sg})" stroke="{cat['stroke']}" stroke-width="1.25" stroke-linejoin="round"/>
         <circle cx="{inner_cx:.2f}" cy="{inner_cy:.2f}" r="{inner_r:.2f}" fill="rgba(255,255,255,0.96)"/>
         <g transform="translate({icon_offset:.2f} {icon_offset:.2f}) scale({icon_scale:.4f})" fill="none" stroke="{icon_color}" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
@@ -223,28 +227,14 @@ def build_email_html(
     <td align="center">
       <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="600" style="max-width:600px;background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,0.22);border:1px solid #e8e8ee;">
 
-        <!-- Top dark band: pure CSS logo + wordmark (no external image, no SVG) -->
+        <!-- Top dark band: hosted SVG logo + wordmark -->
         <tr>
           <td align="center" style="background:#0a0a0f;background:linear-gradient(180deg,#15151c 0%,#0a0a0f 100%);padding:22px 0;">
             <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin:0 auto;">
               <tr>
                 <td valign="middle" style="padding-right:10px;">
-                  <!-- Red rounded square with CSS play triangle — matches in-app logo
-                       pixel-for-pixel without relying on external image loads -->
-                  <table role="presentation" cellspacing="0" cellpadding="0" border="0">
-                    <tr>
-                      <td width="34" height="34" align="center" valign="middle"
-                          style="width:34px;height:34px;background:#ff3b30;border-radius:8px;box-shadow:0 2px 10px rgba(255,59,48,0.45);">
-                        <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin:0 auto;">
-                          <tr>
-                            <td width="0" height="0"
-                                style="width:0;height:0;border-top:7px solid transparent;border-bottom:7px solid transparent;border-left:12px solid #ffffff;font-size:0;line-height:0;mso-line-height-rule:exactly;">
-                            </td>
-                          </tr>
-                        </table>
-                      </td>
-                    </tr>
-                  </table>
+                  <img src="{base_url}/email-assets/ytg-logo-mark.svg" width="34" height="34" alt="YTGrowth"
+                       style="display:block;border:0;outline:none;text-decoration:none;box-shadow:0 2px 10px rgba(255,59,48,0.45);">
                 </td>
                 <td valign="middle">
                   <span style="font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;font-size:22px;font-weight:800;color:#ffffff;letter-spacing:-0.6px;">YTGrowth<span style="color:#ff3b30;">.io</span></span>
@@ -341,7 +331,7 @@ def build_email_html(
                       </tr>
                     </table>
                   </div>
-                  <p style="font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;font-size:17px;font-weight:800;color:#0f0f13;letter-spacing:-0.3px;margin:28px 0 0 0;">{safe_name}</p>
+                  <p style="font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;font-size:17px;font-weight:800;color:#0f0f13;letter-spacing:-0.3px;margin:10px 0 0 0;">{safe_name}</p>
                 </td>
               </tr>
             </table>
