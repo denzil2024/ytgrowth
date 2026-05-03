@@ -673,7 +673,17 @@ export default function Landing() {
 
   useEffect(() => {
     fetch('/auth/data', { credentials: 'include' })
-      .then(r => { if (r.ok) setLoggedIn(true) })
+      .then(r => {
+        if (!r.ok) return
+        setLoggedIn(true)
+        // Resume a checkout the visitor started before logging in.
+        let pending = null
+        try { pending = sessionStorage.getItem('ytg_pending_plan') } catch {}
+        if (pending) {
+          try { sessionStorage.removeItem('ytg_pending_plan') } catch {}
+          openCheckout(pending)
+        }
+      })
       .catch(() => {})
   }, [])
 

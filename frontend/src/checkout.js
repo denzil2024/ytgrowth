@@ -28,6 +28,17 @@ export async function openCheckout(planKey) {
     const res = await fetch(`/billing/checkout?plan=${encodeURIComponent(planKey)}`, {
       credentials: 'include',
     })
+
+    // Unauthenticated visitors hit pricing buttons too — without this branch
+    // /billing/checkout returns 401 and the button silently does nothing,
+    // which reads as "broken" (especially on mobile where there's no console).
+    // Send them to log in; they can re-click the plan when they land back.
+    if (res.status === 401) {
+      try { sessionStorage.setItem('ytg_pending_plan', planKey) } catch {}
+      window.location.href = '/auth/login'
+      return
+    }
+
     const data = await res.json()
     if (!data.price_id) {
       console.error('[checkout] No price_id returned:', data)
