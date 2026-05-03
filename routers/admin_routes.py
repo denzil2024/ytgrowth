@@ -339,7 +339,37 @@ def admin_test_welcome(request: Request, to: str = "", kind: str = "immediate"):
             })
             return JSONResponse({"ok": True, "kind": "reengagement", "to": target})
 
-        return JSONResponse({"error": "kind must be 'immediate', 'audit', 'weekly', or 'reengagement'"}, status_code=400)
+        if kind == "milestone":
+            from app.email_templates.milestone_unlock import build_email_html, _fmt_num
+            import resend as _resend
+            import datetime
+            _resend.api_key = os.environ.get("RESEND_API_KEY", "")
+            base_url = os.environ.get("BASE_URL", "https://ytgrowth.io")
+            # Sample: 1,000 subscribers milestone
+            category = request.query_params.get("category", "subs")
+            tier     = int(request.query_params.get("tier", "1000"))
+            today    = datetime.datetime.utcnow().strftime("%-d %B %Y") if hasattr(datetime.datetime, "strftime") else "3 May 2026"
+            html = build_email_html(
+                channel_name="YTGrowth Test Channel",
+                channel_thumbnail=None,
+                category=category,
+                tier=tier,
+                achieved_date=today,
+                dashboard_url=f"{base_url}/dashboard",
+                unsubscribe_url=f"{base_url}/email/unsubscribe?token=test",
+                base_url=base_url,
+            )
+            verb_map = {"subs": "subscribers", "views": "total views", "watch_hours": "watch hours", "uploads": "uploads"}
+            verb = verb_map.get(category, "milestones")
+            _resend.Emails.send({
+                "from":    "YTGrowth <milestones@ytgrowth.io>",
+                "to":      [target],
+                "subject": f"You just hit {_fmt_num(tier)} {verb} on YouTube",
+                "html":    html,
+            })
+            return JSONResponse({"ok": True, "kind": "milestone", "category": category, "tier": tier, "to": target})
+
+        return JSONResponse({"error": "kind must be 'immediate', 'audit', 'weekly', 'reengagement', or 'milestone'"}, status_code=400)
     except Exception as e:
         import traceback
         tb = traceback.format_exc()
