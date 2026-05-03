@@ -854,7 +854,7 @@ export default function Landing() {
           </h1>
 
           <p style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: isMobile ? 16 : 19, color: 'var(--ytg-text-2)', lineHeight: 1.7, maxWidth: 640, margin: '0 auto 32px', textWrap: 'pretty' }}>
-            A 10-dimension YouTube channel audit, SEO tool, and competitor analyzer in one — the VidIQ, TubeBuddy, and Viewstats alternative that turns raw analytics into a prioritized action plan.
+            A 10-dimension YouTube channel audit, SEO tool, and competitor analyzer in one — the VidIQ alternative, TubeBuddy alternative, and Viewstats alternative that turns raw analytics into a prioritized action plan.
           </p>
 
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12, marginBottom: 28, flexDirection: isMobile ? 'column' : 'row', width: isMobile ? '100%' : 'auto' }}>

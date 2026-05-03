@@ -1,9 +1,14 @@
 # YTGrowth
 
-> AI-powered analytics and growth tools for YouTube creators. YTGrowth audits
-> your channel, tells you exactly what's holding it back, and turns the same
-> data VidIQ and TubeBuddy show you into a prioritized action plan you can
-> work through in an hour.
+> YTGrowth is a YouTube analytics tool and AI YouTube channel audit platform
+> for creators who want to grow without spending hours decoding dashboards.
+> Positioned as a VidIQ alternative, TubeBuddy alternative, and Viewstats
+> alternative, it bundles a YouTube SEO tool, thumbnail scoring, competitor
+> analysis, and keyword research into one YouTube optimization tool that
+> answers how to grow your YouTube channel by turning the data VidIQ and
+> TubeBuddy show you into a prioritized action plan you can work through in
+> an hour. Among the best YouTube tools for creators who want prescriptions,
+> not raw metrics.
 
 ## What it is
 

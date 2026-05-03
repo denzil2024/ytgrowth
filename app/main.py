@@ -123,8 +123,8 @@ app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 # every miss; cheap and avoids any build-time complexity.
 
 DEFAULT_META = {
-    "title":       "YTGrowth — AI-Powered YouTube Growth Tools",
-    "description": "AI-powered YouTube analytics. Channel audits, competitor analysis, SEO studio, thumbnail scoring, and keyword research — turning channel data into a prioritized action plan.",
+    "title":       "YTGrowth — YouTube Analytics Tool & AI Channel Audit | VidIQ Alternative",
+    "description": "The YouTube growth tool that turns analytics into action. Channel audits, SEO and thumbnail optimization, competitor analysis, and keyword research — a VidIQ alternative, TubeBuddy alternative, and Viewstats alternative built for creators who want a YouTube optimization tool that prescribes the next move, not just dashboards.",
     "path":        "/",
 }
 
