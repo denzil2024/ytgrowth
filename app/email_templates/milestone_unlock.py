@@ -181,7 +181,7 @@ def _date_ribbon_svg(date_str: str) -> str:
   <polygon points="0,0 {w},0 {w - notch_in},{mid} {w},{h} 0,{h} {notch_in},{mid}" fill="url(#dr)"/>
   <text x="{w / 2}" y="{mid + 5}" text-anchor="middle" dominant-baseline="middle"
         fill="#ffffff" font-family="'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif"
-        font-size="14" font-weight="800" letter-spacing="-0.1">{label}</text>
+        font-size="14" font-weight="700" letter-spacing="-0.1">{label}</text>
 </svg>"""
 
 
@@ -201,10 +201,10 @@ def build_email_html(
     verb  = CATEGORY_VERB.get(category, "")
     safe_name = (channel_name or "Your Channel").replace("<", "&lt;").replace(">", "&gt;")
 
-    # Body gradient — top tinted with cat.h1 at ~12% alpha, fading to white.
+    # Body gradient — hex 18 = 9.4% opacity, matching in-app's ${cat.h1}18 exactly.
     body_bg = (
         f"background:#ffffff;"
-        f"background:linear-gradient(180deg, {cat['h1']}1f 0%, #ffffff 38%, #ffffff 100%);"
+        f"background:linear-gradient(180deg, {cat['h1']}18 0%, #ffffff 38%, #ffffff 100%);"
     )
 
     # Channel avatar — inline-block so the badge can be placed in the same
@@ -226,13 +226,13 @@ def build_email_html(
             f'box-shadow:0 0 0 1.5px #e5e5ec, 0 4px 14px rgba(0,0,0,0.12);">'
             f'{initial}</div>'
         )
-    # Badge: inline-block, 30% inside / 70% outside the avatar corner.
+    # Badge: inline-block matching in-app bottom:-2px right:-2px exactly.
     # Avatar outer = 68px + 3px border × 2 = 74px. Badge outer = 22px + 2px border × 2 = 26px.
-    # 30% of 26px = 8px inside → badge-left = 74-8 = 66 → margin-left = -(74-66) = -8px
-    # 30% of 26px = 8px inside vertically → badge-top = 74-8 = 66 → margin-top = 66px
+    # Only 2px of badge outside avatar → margin-left = -(26-2) = -24px
+    # Badge top = 74 - 24 = 50px → margin-top = 50px
     youtube_badge = (
         '<div style="display:inline-block;vertical-align:top;'
-        'margin-left:-8px;margin-top:66px;'
+        'margin-left:-24px;margin-top:50px;'
         'width:22px;height:22px;background:#ff3b30;border-radius:5px;'
         'border:2px solid #ffffff;box-shadow:0 2px 5px rgba(0,0,0,0.2);">'
         '<div style="width:0;height:0;'
@@ -328,7 +328,9 @@ def build_email_html(
             </table>
 
             <!-- Channel identity — inline-block layout so the badge sits inside
-                 the avatar via negative margins (no position:absolute needed). -->
+                 the avatar via negative margins (no position:absolute needed).
+                 An 18px left spacer balances the badge's 18px right overhang so
+                 the avatar remains visually centered in the card. -->
             <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
               <tr>
                 <td align="center" style="padding-top:32px;font-size:0;line-height:0;">
@@ -336,7 +338,7 @@ def build_email_html(
                 </td>
               </tr>
               <tr>
-                <td align="center" style="padding-top:4px;">
+                <td align="center" style="padding-top:10px;">
                   <p style="font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;font-size:17px;font-weight:800;color:#0f0f13;letter-spacing:-0.3px;margin:0;">{safe_name}</p>
                 </td>
               </tr>
