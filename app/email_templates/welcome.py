@@ -1,12 +1,8 @@
-"""Audit-complete email, sent once per channel after the first 10-dimension
-audit finishes.
+"""Audit-complete email — sent once per channel after the first 10-dimension
+audit finishes. Personalised with the user's top priority action when
+available.
 
-Pairs with email_templates/welcome_immediate.py (sent on signup, before the
-audit). This one delivers the personalised hook: the user's top priority
-action from their actual audit.
-
-Plain text canonical, minimal HTML with NO inline styles so email clients
-render with native typography. Same structure as welcome_immediate.py.
+Pairs with welcome_immediate.py (sent on signup, before the audit).
 """
 
 
@@ -19,61 +15,77 @@ def build_email(
     unsubscribe_url: str,
 ) -> tuple[str, str]:
     name = (first_name or "there").strip()
-    channel_ref = (channel_name or "").strip() or "your channel"
 
     def esc(s: str) -> str:
         return (s or "").replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
 
-    # Priority block — only shown when the audit produced one
+    # Priority block — included only when the audit produced one
     if top_action:
         priority_text = (
-            f"Your top priority right now\n\n"
-            f"{top_action}\n\n"
-            f"That's the single highest-leverage move based on what we found in your last "
-            f"20 videos. Your full audit has the rest of the priority actions ranked.\n\n"
+            f"Start with the top items first. Those are the moves most likely to "
+            f"shift your numbers in the next 30 days.\n\n"
+            f"Your top priority: {top_action}\n\n"
         )
         priority_html = (
-            f"<p><strong>Your top priority right now</strong></p>"
-            f"<p>{esc(top_action)}</p>"
-            f"<p>That's the single highest-leverage move based on what we found in your "
-            f"last 20 videos. Your full audit has the rest of the priority actions "
-            f"ranked.</p>"
+            f"<p>Start with the top items first. Those are the moves most likely to "
+            f"shift your numbers in the next 30 days.</p>"
+            f"<p><strong>Your top priority:</strong> {esc(top_action)}</p>"
         )
     else:
-        priority_text = ""
-        priority_html = ""
+        priority_text = (
+            "Start with the top items first. Those are the moves most likely to "
+            "shift your numbers in the next 30 days.\n\n"
+        )
+        priority_html = (
+            "<p>Start with the top items first. Those are the moves most likely to "
+            "shift your numbers in the next 30 days.</p>"
+        )
 
     text = (
-        f"Hi {name},\n\n"
-        f"Your audit on {channel_ref} just finished.\n\n"
-        f"What we looked at\n\n"
-        f"Your last 20 videos, CTR, retention curves, posting cadence, traffic sources, "
-        f"and how YouTube is currently distributing your content.\n\n"
+        f"Hey {name},\n\n"
+        f"Your channel audit is ready.\n\n"
+        f"YTGrowth has analyzed your channel across 10 dimensions, including traffic "
+        f"sources, device types, geography, audience demographics, shares, dislikes, "
+        f"and playlist adds. Inside your dashboard, you'll find a prioritized list of "
+        f"actions ranked by impact.\n\n"
         f"{priority_text}"
+        f"A few things worth exploring once you're in:\n\n"
+        f"Competitor Analysis. See what's working for channels in your niche and find "
+        f"the gaps you can own.\n\n"
+        f"Thumbnail IQ. Get a score on your thumbnails based on what actually drives "
+        f"clicks.\n\n"
+        f"SEO Studio. Build titles and descriptions around real search intent, not "
+        f"guesswork.\n\n"
+        f"Video Ideas. Get content ideas pulled from competitor data and what your "
+        f"audience is already looking for.\n\n"
         f"{dashboard_url}\n\n"
-        f"Hit reply if anything doesn't make sense\n\n"
-        f"Audit results can be dense. If a recommendation feels off, or if you want me "
-        f"to walk through what something means, just reply to this email. This inbox "
-        f"comes straight to me.\n\n"
-        f"— Denzil\n"
+        f"This is your channel's new home base. Come back often.\n\n"
+        f"- Denzil\n"
         f"Founder of YTGrowth\n\n"
         f"---\n"
         f"Unsubscribe: {unsubscribe_url}\n"
     )
 
     html = (
-        f"<p>Hi {esc(name)},</p>"
-        f"<p>Your audit on {esc(channel_ref)} just finished.</p>"
-        f"<p><strong>What we looked at</strong></p>"
-        f"<p>Your last 20 videos, CTR, retention curves, posting cadence, traffic "
-        f"sources, and how YouTube is currently distributing your content.</p>"
+        f"<p>Hey {esc(name)},</p>"
+        f"<p>Your channel audit is ready.</p>"
+        f"<p>YTGrowth has analyzed your channel across 10 dimensions, including traffic "
+        f"sources, device types, geography, audience demographics, shares, dislikes, "
+        f"and playlist adds. Inside your dashboard, you'll find a prioritized list of "
+        f"actions ranked by impact.</p>"
         f"{priority_html}"
-        f"<p><a href=\"{dashboard_url}\">{dashboard_url}</a></p>"
-        f"<p><strong>Hit reply if anything doesn't make sense</strong></p>"
-        f"<p>Audit results can be dense. If a recommendation feels off, or if you want "
-        f"me to walk through what something means, just reply to this email. This inbox "
-        f"comes straight to me.</p>"
-        f"<p>&mdash; Denzil<br>Founder of YTGrowth</p>"
+        f"<p><strong>A few things worth exploring once you're in:</strong></p>"
+        f"<p><strong>Competitor Analysis.</strong> See what's working for channels in "
+        f"your niche and find the gaps you can own.</p>"
+        f"<p><strong>Thumbnail IQ.</strong> Get a score on your thumbnails based on "
+        f"what actually drives clicks.</p>"
+        f"<p><strong>SEO Studio.</strong> Build titles and descriptions around real "
+        f"search intent, not guesswork.</p>"
+        f"<p><strong>Video Ideas.</strong> Get content ideas pulled from competitor "
+        f"data and what your audience is already looking for.</p>"
+        f"<p><a href=\"{dashboard_url}\">Open your dashboard &rarr;</a></p>"
+        f"<p>This is your channel's new home base. Come back often.</p>"
+        f"<p>- Denzil<br>Founder of YTGrowth</p>"
         f"<hr>"
         f"<p><small><a href=\"{unsubscribe_url}\">Unsubscribe</a></small></p>"
     )

@@ -276,7 +276,7 @@ def admin_test_welcome(request: Request, to: str = "", kind: str = "immediate"):
             _resend.Emails.send({
                 "from":     "Denzil from YTGrowth <hello@ytgrowth.io>",
                 "to":       [target],
-                "subject":  "What we found on your channel",
+                "subject":  "Your YTGrowth audit is ready",
                 "html":     html,
                 "text":     text,
                 "reply_to": "hello@ytgrowth.io",
