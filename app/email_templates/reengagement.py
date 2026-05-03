@@ -1,12 +1,14 @@
 """Re-engagement email — sent 3 days after signup to users who haven't
 returned to the dashboard.
 
-Plain text canonical, minimal HTML mirror with no inline styles. Same
-design language as all other transactional emails. No em-dashes.
+Intentionally different from the audit-complete email. Instead of
+repeating 'your audit is waiting', this email:
 
-Includes a soft Product Hunt upvote + follow ask. The re-engagement
-window (someone who signed up but hasn't been back in 3 days) is a
-natural moment to make this ask without it feeling spammy.
+  1. Checks in with genuine curiosity about how they're finding the tool.
+  2. Gives a free YouTube insight from real channel data, no strings attached.
+  3. Includes a soft Product Hunt upvote ask.
+
+Plain text canonical, minimal HTML mirror with no inline styles. No em-dashes.
 """
 
 PRODUCT_HUNT_URL = "https://www.producthunt.com/products/ytgrowth"
@@ -22,43 +24,33 @@ def build_email(
     unsubscribe_url: str,
 ) -> tuple[str, str]:
     name = (first_name or "there").strip()
-    channel_ref = (channel_name or "").strip() or "your channel"
 
     def esc(s: str) -> str:
         return (s or "").replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
 
-    # Priority action block
-    if top_action:
-        priority_text = (
-            f"Your top priority: {top_action}\n\n"
-            f"There are {priority_actions_count} more actions waiting in your dashboard, "
-            f"ranked by impact. About 5 minutes to read through.\n\n"
-        )
-        priority_html = (
-            f"<p><strong>Your top priority:</strong> {esc(top_action)}</p>"
-            f"<p>There are {priority_actions_count} more actions waiting in your dashboard, "
-            f"ranked by impact. About 5 minutes to read through.</p>"
-        )
-    else:
-        priority_text = (
-            f"There are {priority_actions_count} priority actions waiting in your "
-            f"dashboard, ranked by impact. About 5 minutes to read through.\n\n"
-        )
-        priority_html = (
-            f"<p>There are {priority_actions_count} priority actions waiting in your "
-            f"dashboard, ranked by impact. About 5 minutes to read through.</p>"
-        )
-
     text = (
         f"Hey {name},\n\n"
-        f"Your {channel_ref} audit is done. The results are in your dashboard whenever "
-        f"you're ready to come back.\n\n"
-        f"{priority_text}"
+        f"You signed up a few days ago but haven't been back. Totally fine. "
+        f"I just wanted to check in.\n\n"
+        f"How are you finding YTGrowth so far?\n\n"
+        f"Are you still figuring out if it's right for you? Waiting for a good "
+        f"time to dig in? Looking for something we might not have yet? "
+        f"Hit reply and tell me. Takes 30 seconds and I genuinely read every "
+        f"message. It also helps us build the right things.\n\n"
+        f"Something worth knowing\n\n"
+        f"Here's one insight from the data we see across hundreds of channels: "
+        f"most YouTube channels stuck between 10K and 50K subscribers have the "
+        f"same problem. They're getting the majority of their views from Browse "
+        f"and Suggested, but almost nothing from Search. That's usually not a "
+        f"content quality issue. It's a title and keyword problem. If your "
+        f"channel is in that range, fixing your titles and descriptions is "
+        f"probably the highest-leverage move available to you right now. "
+        f"YTGrowth's SEO Studio is built exactly for that.\n\n"
         f"{dashboard_url}\n\n"
         f"One more thing\n\n"
-        f"If you've had a chance to try YTGrowth, we'd really appreciate an upvote and "
-        f"a follow on Product Hunt. It helps other creators find us, and it means a lot "
-        f"to a small team.\n\n"
+        f"If you've had a chance to look around and found YTGrowth useful, "
+        f"an upvote and a follow on Product Hunt means a lot to a small team. "
+        f"It helps other creators find us.\n\n"
         f"Give us an upvote and follow us: {PRODUCT_HUNT_URL}\n\n"
         f"- Denzil\n"
         f"Founder of YTGrowth\n\n"
@@ -68,14 +60,27 @@ def build_email(
 
     html = (
         f"<p>Hey {esc(name)},</p>"
-        f"<p>Your {esc(channel_ref)} audit is done. The results are in your dashboard "
-        f"whenever you're ready to come back.</p>"
-        f"{priority_html}"
-        f"<p><a href=\"{dashboard_url}\">Go to your dashboard &rarr;</a></p>"
+        f"<p>You signed up a few days ago but haven't been back. Totally fine. "
+        f"I just wanted to check in.</p>"
+        f"<p><strong>How are you finding YTGrowth so far?</strong></p>"
+        f"<p>Are you still figuring out if it's right for you? Waiting for a good "
+        f"time to dig in? Looking for something we might not have yet? "
+        f"Hit reply and tell me. Takes 30 seconds and I genuinely read every "
+        f"message. It also helps us build the right things.</p>"
+        f"<p><strong>Something worth knowing</strong></p>"
+        f"<p>Here's one insight from the data we see across hundreds of channels: "
+        f"most YouTube channels stuck between 10K and 50K subscribers have the "
+        f"same problem. They're getting the majority of their views from Browse "
+        f"and Suggested, but almost nothing from Search. That's usually not a "
+        f"content quality issue. It's a title and keyword problem. If your "
+        f"channel is in that range, fixing your titles and descriptions is "
+        f"probably the highest-leverage move available to you right now. "
+        f"YTGrowth's SEO Studio is built exactly for that.</p>"
+        f"<p><a href=\"{dashboard_url}\">Open SEO Studio in your dashboard &rarr;</a></p>"
         f"<p><strong>One more thing</strong></p>"
-        f"<p>If you've had a chance to try YTGrowth, we'd really appreciate an upvote "
-        f"and a follow on Product Hunt. It helps other creators find us, and it means a "
-        f"lot to a small team.</p>"
+        f"<p>If you've had a chance to look around and found YTGrowth useful, "
+        f"an upvote and a follow on Product Hunt means a lot to a small team. "
+        f"It helps other creators find us.</p>"
         f"<p><a href=\"{PRODUCT_HUNT_URL}\">Give us an upvote and follow us on Product Hunt &rarr;</a></p>"
         f"<p>- <strong>Denzil</strong><br>Founder of YTGrowth</p>"
         f"<hr>"
@@ -85,7 +90,6 @@ def build_email(
     return text, html
 
 
-# Backward-compat shim for any existing call sites using the old signature.
 def build_email_html(
     *,
     channel_name: str,
