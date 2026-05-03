@@ -187,7 +187,13 @@ def _fanout_insights_to_channel(channel_id: str, insights: dict, analyzed_at: st
         db.close()
 
 
-def get_flow():
+def get_flow(autogenerate_pkce: bool = True):
+    """Build a fresh OAuth Flow.
+
+    PKCE code_verifier is auto-generated when starting a new auth (login). On
+    callback we rebuild the flow with the verifier saved in the user's session
+    cookie, so we pass autogenerate_pkce=False there to avoid clobbering it.
+    """
     client_secret_env = os.environ.get("GOOGLE_CLIENT_SECRET_JSON")
     if client_secret_env:
         import tempfile
@@ -197,16 +203,17 @@ def get_flow():
         flow = Flow.from_client_secrets_file(
             tmp_path,
             scopes=SCOPES,
-            redirect_uri=f"{BACKEND_URL}/auth/callback"
+            redirect_uri=f"{BACKEND_URL}/auth/callback",
+            autogenerate_code_verifier=autogenerate_pkce,
         )
         os.unlink(tmp_path)
     else:
         flow = Flow.from_client_secrets_file(
             "client_secret.json",
             scopes=SCOPES,
-            redirect_uri=f"{BACKEND_URL}/auth/callback"
+            redirect_uri=f"{BACKEND_URL}/auth/callback",
+            autogenerate_code_verifier=autogenerate_pkce,
         )
-    flow.code_verifier = None
     return flow
 
 
@@ -233,11 +240,21 @@ def login(request: Request):
     if pending_utms:
         request.session["pending_utms"] = pending_utms
 
-    flow = get_flow()
+    flow = get_flow(autogenerate_pkce=True)
     auth_url, state = flow.authorization_url(
         prompt="consent",
         access_type="offline"
     )
+
+    # Persist the PKCE verifier + state in the SIGNED session cookie. The
+    # in-memory `_pending_flows` dict only works on single-worker deployments —
+    # on multi-worker hosts (Railway/Render autoscale) the callback can land on
+    # a different worker than /login, leaving _pending_flows empty and causing
+    # `InvalidGrantError: Invalid code verifier`. The session cookie is signed
+    # with SESSION_SECRET_KEY (identical across all workers) so it survives
+    # across processes and restarts.
+    request.session["oauth_state"]         = state
+    request.session["oauth_code_verifier"] = flow.code_verifier or ""
 
     _pending_flows[session_id] = {"flow": flow, "state": state}
     return RedirectResponse(auth_url)
@@ -371,13 +388,27 @@ def callback(request: Request, background_tasks: BackgroundTasks):
         return RedirectResponse(f"{BASE_URL}?error=no_code")
 
     session_id = request.session.get("session_id")
+
+    # Pull the PKCE verifier + state from the session cookie. Cookie is the
+    # authoritative source because it survives multi-worker deployments. Pop
+    # them so a stale verifier can't be reused on a retry.
+    saved_state    = request.session.pop("oauth_state", None)
+    saved_verifier = request.session.pop("oauth_code_verifier", None)
+
     pending = _pending_flows.pop(session_id, None) if session_id else None
 
-    if not pending:
+    if pending:
+        # Same-worker fast path: reuse the cached flow object.
+        flow = pending["flow"]
+    elif saved_verifier:
+        # Cross-worker / restart fallback: rebuild a fresh flow and inject the
+        # verifier we saved in the cookie at /login time.
+        flow = get_flow(autogenerate_pkce=False)
+        flow.code_verifier = saved_verifier
+    else:
         return RedirectResponse(f"{BASE_URL}?error=session_expired")
 
     try:
-        flow = pending["flow"]
         flow.fetch_token(code=code)
         credentials = flow.credentials
 

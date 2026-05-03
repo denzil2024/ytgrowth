@@ -38,11 +38,19 @@ from routers import admin_routes
 
 app = FastAPI(title="YTGrowth API", redirect_slashes=False, lifespan=lifespan)
 
+# Session secret must be stable across all workers and restarts — if it isn't,
+# the signed session cookie (which carries OAuth PKCE state) becomes unreadable
+# on the callback hop and signups silently fail. Loud warning if the env var
+# is missing in production so we catch a bad deploy fast.
+_SESSION_SECRET = os.environ.get("SESSION_SECRET_KEY", "ytgrowth-secret-change-in-prod")
+if _SESSION_SECRET == "ytgrowth-secret-change-in-prod" and os.environ.get("BASE_URL", "").startswith("https://"):
+    print("[main] WARNING: SESSION_SECRET_KEY env var is unset in production — using dev fallback. Set it in your host's env config.")
+
 # SessionMiddleware must be added before CORS so the session cookie is available
 # on every request, including the OAuth callback redirect.
 app.add_middleware(
     SessionMiddleware,
-    secret_key=os.environ.get("SESSION_SECRET_KEY", "ytgrowth-secret-change-in-prod"),
+    secret_key=_SESSION_SECRET,
     session_cookie="ytg_session",
     max_age=60 * 60 * 24 * 7,  # 7 days
     same_site="lax",
