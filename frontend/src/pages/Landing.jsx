@@ -284,8 +284,13 @@ function useGlobalStyles() {
 
 /* ─── Responsive hooks ──────────────────────────────────────────────────── */
 function useBreakpoint() {
-  const [width, setWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1280)
+  // Stable initial value (1280 = desktop) so server-pre-rendered HTML and the
+  // client's first render agree, avoiding hydration mismatches in React 19.
+  // The real viewport is read in useEffect below, so mobile users get the
+  // correct layout after first paint with no console warning.
+  const [width, setWidth] = useState(1280)
   useEffect(() => {
+    setWidth(window.innerWidth)
     const handler = () => setWidth(window.innerWidth)
     window.addEventListener('resize', handler)
     return () => window.removeEventListener('resize', handler)
