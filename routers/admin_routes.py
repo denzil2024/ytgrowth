@@ -227,3 +227,65 @@ def _build_overview():
         })
     finally:
         db.close()
+
+
+# ── Email send tester (admin-only) ──────────────────────────────────────────
+# Hit this from a browser after logging in as an admin to send yourself a
+# real welcome email through the live Resend integration. Useful for QA on
+# template changes without needing to create a brand-new Google account each
+# time.
+#
+#   GET /admin/test-welcome?to=you@example.com&kind=immediate
+#   GET /admin/test-welcome?to=you@example.com&kind=audit
+@router.get("/test-welcome")
+def admin_test_welcome(request: Request, to: str = "", kind: str = "immediate"):
+    is_admin, admin_email = _is_admin(request)
+    if not is_admin:
+        return JSONResponse({"error": "Forbidden"}, status_code=403)
+
+    target = (to or admin_email or "").strip()
+    if not target or "@" not in target:
+        return JSONResponse({"error": "missing or invalid 'to' query param"}, status_code=400)
+
+    try:
+        if kind == "immediate":
+            from app.welcome_immediate import send_welcome_immediate
+            send_welcome_immediate(
+                email=target,
+                display_name="Denzil Otieno",
+                channel_id=None,
+                channel_name="YTGrowth Test Channel",
+            )
+            return JSONResponse({"ok": True, "kind": "immediate", "to": target})
+
+        if kind == "audit":
+            # Inline send so we can use a synthetic top_action and bypass the
+            # idempotency guard in app/welcome_email.py (which is tied to a
+            # real channel_id). Mirrors the same sender for a faithful test.
+            from app.email_templates.welcome import build_email
+            import resend as _resend
+            _resend.api_key = os.environ.get("RESEND_API_KEY", "")
+            base_url = os.environ.get("BASE_URL", "https://ytgrowth.io")
+            text, html = build_email(
+                first_name="Denzil",
+                channel_name="YTGrowth Test Channel",
+                top_action="Move your Tuesday upload to before 10am - your last 3 best weeks all started that way.",
+                dashboard_url=f"{base_url}/dashboard",
+                unsubscribe_url=f"{base_url}/email/unsubscribe?token=test",
+            )
+            _resend.Emails.send({
+                "from":     "Denzil from YTGrowth <hello@ytgrowth.io>",
+                "to":       [target],
+                "subject":  "What we found on your channel",
+                "html":     html,
+                "text":     text,
+                "reply_to": "hello@ytgrowth.io",
+            })
+            return JSONResponse({"ok": True, "kind": "audit", "to": target})
+
+        return JSONResponse({"error": "kind must be 'immediate' or 'audit'"}, status_code=400)
+    except Exception as e:
+        import traceback
+        tb = traceback.format_exc()
+        print(f"[admin/test-welcome] error: {e}\n{tb}")
+        return JSONResponse({"error": f"{type(e).__name__}: {e}"}, status_code=500)
