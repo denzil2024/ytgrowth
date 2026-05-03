@@ -582,7 +582,7 @@ function Testimonials({ isMobile }) {
               )}
             </div>
           )}
-          <h2 style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontWeight: 800, fontSize: isMobile ? 32 : 48, letterSpacing: '-1.5px', color: '#0a0a0f', lineHeight: 1.06, marginBottom: 12, textWrap: 'balance' }}>The tool creators <span style={{ color: 'var(--ytg-accent)' }}>actually recommend.</span></h2>
+          <h2 style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontWeight: 800, fontSize: isMobile ? 32 : 48, letterSpacing: '-1.5px', color: '#0a0a0f', lineHeight: 1.06, marginBottom: 12, textWrap: 'balance' }}>The YouTube growth tool creators <span style={{ color: 'var(--ytg-accent)' }}>actually recommend.</span></h2>
           <p style={{ fontSize: 15, color: 'rgba(10,10,15,0.6)', lineHeight: 1.72 }}>Real channels. Real numbers.</p>
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)', gap: 20 }}>
@@ -846,15 +846,15 @@ export default function Landing() {
           {/* Live badge */}
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'var(--ytg-card)', border: '1px solid var(--ytg-border)', borderRadius: 100, padding: '7px 17px', marginBottom: 24, boxShadow: 'var(--ytg-shadow)' }}>
             <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#16a34a', animation: 'pulse 2s infinite', boxShadow: '0 0 0 3px rgba(22,163,74,0.15)' }} />
-            <span style={{ fontSize: 14, fontWeight: 500, color: 'var(--ytg-text-3)', letterSpacing: '-0.1px' }}>AI-Powered YouTube Intelligence</span>
+            <span style={{ fontSize: 14, fontWeight: 500, color: 'var(--ytg-text-3)', letterSpacing: '-0.1px' }}>The AI YouTube growth tool</span>
           </div>
 
           <h1 style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontWeight: 800, fontSize: isMobile ? 34 : isTablet ? 62 : 72, lineHeight: isMobile ? 1.1 : 1.02, letterSpacing: isMobile ? '-0.6px' : '-2.5px', color: 'var(--ytg-text)', marginBottom: 22, textWrap: 'balance' }}>
             The AI that audits your channel like a <span style={{ color: 'var(--ytg-accent)' }}>$500/hour consultant</span>
           </h1>
 
-          <p style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: isMobile ? 16 : 19, color: 'var(--ytg-text-2)', lineHeight: 1.7, maxWidth: 620, margin: '0 auto 32px', textWrap: 'pretty' }}>
-            10-dimension channel audit. Competitor gap analysis. Thumbnail scoring against real benchmarks. Weekly performance reports. Everything VidIQ shows you as data — YTGrowth tells you what to do with it.
+          <p style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: isMobile ? 16 : 19, color: 'var(--ytg-text-2)', lineHeight: 1.7, maxWidth: 640, margin: '0 auto 32px', textWrap: 'pretty' }}>
+            A 10-dimension YouTube channel audit, SEO tool, and competitor analyzer in one — the VidIQ, TubeBuddy, and Viewstats alternative that turns raw analytics into a prioritized action plan.
           </p>
 
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12, marginBottom: 28, flexDirection: isMobile ? 'column' : 'row', width: isMobile ? '100%' : 'auto' }}>
@@ -1225,7 +1225,7 @@ export default function Landing() {
           <div>
             <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.10)', borderRadius: 100, padding: '5px 12px 5px 10px', marginBottom: 16 }}>
               <span aria-hidden="true" style={{ width: 6, height: 6, borderRadius: '50%', background: '#ff3b30', boxShadow: '0 0 0 3px rgba(229,48,42,0.18)' }} />
-              <span style={{ fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.7)', textTransform: 'uppercase', letterSpacing: '0.09em' }}>Deep Channel Intelligence</span>
+              <span style={{ fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.7)', textTransform: 'uppercase', letterSpacing: '0.09em' }}>YouTube Channel Audit</span>
             </div>
             <h2 style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: isMobile ? 28 : 40, fontWeight: 800, letterSpacing: '-1.4px', lineHeight: 1.08, marginBottom: 20, color: '#ffffff', textWrap: 'balance' }}>10 dimensions. <span style={{ color: '#ff3b30' }}>One brutal honest assessment.</span></h2>
             <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.58)', lineHeight: 1.72, marginBottom: 28 }}>Most tools show you a score. YTGrowth shows you why — traffic sources, device breakdown, audience demographics, posting patterns, CTR health, retention, engagement quality, content strategy, SEO, and how you stack up against your actual competitors. All in one audit.</p>
@@ -1416,7 +1416,7 @@ export default function Landing() {
               <span style={{ fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.7)', textTransform: 'uppercase', letterSpacing: '0.09em' }}>How it works</span>
             </div>
             <h2 style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontWeight: 800, fontSize: isMobile ? 32 : 48, letterSpacing: '-1.5px', color: '#ffffff', lineHeight: 1.06, marginBottom: 16, textWrap: 'balance' }}>From zero to action plan<br /><span style={{ color: '#ff3b30' }}>in 30 seconds.</span></h2>
-            <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.58)', maxWidth: 620, margin: '0 auto', lineHeight: 1.72 }}>No setup, no configuration, no API keys. Just connect and go.</p>
+            <p style={{ fontSize: 16, color: 'rgba(255,255,255,0.58)', maxWidth: 620, margin: '0 auto', lineHeight: 1.72 }}>How to grow your YouTube channel without setup, configuration, or API keys. Just connect and go.</p>
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3,1fr)', gap: isMobile ? 18 : 14, maxWidth: isMobile ? 480 : '100%', margin: '0 auto' }}>
             {[
@@ -1553,7 +1553,7 @@ export default function Landing() {
               <span style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-text-2)', textTransform: 'uppercase', letterSpacing: '0.09em' }}>Pricing</span>
             </div>
             <h2 style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontWeight: 800, fontSize: isMobile ? 32 : 48, letterSpacing: '-1.5px', color: 'var(--ytg-text)', lineHeight: 1.06, marginBottom: 16, textWrap: 'balance' }}>One good video idea <span style={{ color: 'var(--ytg-accent)' }}>pays for a year.</span></h2>
-            <p style={{ fontSize: 16, color: 'var(--ytg-text-2)', lineHeight: 1.72, maxWidth: 620, margin: '0 auto' }}>AI-powered analysis across 5 tools — find what's working in your niche, then do more of it.</p>
+            <p style={{ fontSize: 16, color: 'var(--ytg-text-2)', lineHeight: 1.72, maxWidth: 640, margin: '0 auto' }}>The best YouTube tools for creators in one suite — AI-powered analysis across 5 tools that finds what's working in your niche, then tells you how to do more of it.</p>
           </div>
 
           {/* Tab switcher */}
