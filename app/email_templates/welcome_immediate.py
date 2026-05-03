@@ -54,7 +54,7 @@ def build_email(
         f"<p>If you have any questions, just reply to this email. I read every "
         f"message.</p>"
         f"<p>More soon.</p>"
-        f"<p>- Denzil<br>Founder of YTGrowth</p>"
+        f"<p>- <strong>Denzil</strong><br>Founder of YTGrowth</p>"
         f"<hr>"
         f"<p><small><a href=\"{unsubscribe_url}\">Unsubscribe</a></small></p>"
     )
