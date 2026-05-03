@@ -316,7 +316,30 @@ def admin_test_welcome(request: Request, to: str = "", kind: str = "immediate"):
             })
             return JSONResponse({"ok": True, "kind": "weekly", "to": target})
 
-        return JSONResponse({"error": "kind must be 'immediate', 'audit', or 'weekly'"}, status_code=400)
+        if kind == "reengagement":
+            from app.email_templates.reengagement import build_email
+            import resend as _resend
+            _resend.api_key = os.environ.get("RESEND_API_KEY", "")
+            base_url = os.environ.get("BASE_URL", "https://ytgrowth.io")
+            text, html = build_email(
+                first_name="Denzil",
+                channel_name="YTGrowth Test Channel",
+                top_action="Move your Tuesday upload to before 10am - your last 3 best weeks all started that way.",
+                priority_actions_count=5,
+                dashboard_url=f"{base_url}/dashboard",
+                unsubscribe_url=f"{base_url}/email/unsubscribe?token=test",
+            )
+            _resend.Emails.send({
+                "from":     "Denzil from YTGrowth <hello@ytgrowth.io>",
+                "to":       [target],
+                "subject":  "Your channel insights are waiting",
+                "html":     html,
+                "text":     text,
+                "reply_to": "hello@ytgrowth.io",
+            })
+            return JSONResponse({"ok": True, "kind": "reengagement", "to": target})
+
+        return JSONResponse({"error": "kind must be 'immediate', 'audit', 'weekly', or 'reengagement'"}, status_code=400)
     except Exception as e:
         import traceback
         tb = traceback.format_exc()

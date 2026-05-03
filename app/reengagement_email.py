@@ -156,25 +156,32 @@ def run_reengagement_emails() -> None:
                     if pref.unsubscribe_token else BASE_URL
                 )
 
-                from app.email_templates.reengagement import build_email_html
+                from app.email_templates.reengagement import build_email
                 import resend as _resend
                 _resend.api_key = os.environ.get("RESEND_API_KEY", "")
 
-                html = build_email_html(
+                # Pull first name from the user's Google display_name
+                first_name = ""
+                if user_data:
+                    dn = user_data.get("display_name", "") or ""
+                    first_name = dn.split()[0].strip() if dn else ""
+
+                text, html = build_email(
+                    first_name=first_name,
                     channel_name=reg.channel_name or "",
                     top_action=top_action,
                     priority_actions_count=action_count or 5,
                     dashboard_url=f"{BASE_URL}/dashboard",
                     unsubscribe_url=unsubscribe_url,
-                    base_url=BASE_URL,
                 )
 
-                # Short, urgent, high-open subject — same line for everyone.
                 _resend.Emails.send({
-                    "from":    "YTGrowth <hello@ytgrowth.io>",
-                    "to":      [email],
-                    "subject": "Fix these NOW!",
-                    "html":    html,
+                    "from":     "Denzil from YTGrowth <hello@ytgrowth.io>",
+                    "to":       [email],
+                    "subject":  "Your channel insights are waiting",
+                    "html":     html,
+                    "text":     text,
+                    "reply_to": "hello@ytgrowth.io",
                 })
                 pref.reengagement_email_sent_at = now
                 db.commit()
