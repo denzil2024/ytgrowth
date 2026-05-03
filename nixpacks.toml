@@ -1,8 +1,20 @@
+# Force Python-only build. Without this, nixpacks auto-detects
+# frontend/package.json and tacks on `npm install && npm run build`,
+# which (a) we don't need - frontend/dist/ is committed and served as
+# static files, and (b) breaks the deploy because npm run build now
+# includes a Puppeteer prerender step that needs libraries the Railway
+# build image doesn't have. Local build still does both vite + prerender;
+# Railway just serves the resulting dist/.
+providers = ["python"]
+
 [phases.setup]
 nixPkgs = ["tesseract"]
 
 [phases.install]
 cmds = ["pip install -r requirements.txt"]
+
+[phases.build]
+cmds = []
 
 [start]
 cmd = "uvicorn app.main:app --host 0.0.0.0 --port $PORT"
