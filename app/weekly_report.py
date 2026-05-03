@@ -312,18 +312,20 @@ def _ensure_unsubscribe_token(channel_id: str, email: str, db) -> str:
 
 def send_weekly_report(channel_id: str, email: str, report_data: dict,
                        unsubscribe_token: str) -> bool:
-    from app.email_templates.weekly_report import build_email_html
+    from app.email_templates.weekly_report import build_email
     import resend as _resend
 
     _resend.api_key = os.environ.get("RESEND_API_KEY", "")
-    html = build_email_html(report_data, unsubscribe_token, BASE_URL, LOGO_URL)
+    text, html = build_email(report_data, unsubscribe_token, BASE_URL, LOGO_URL)
 
     try:
         response = _resend.Emails.send({
-            "from":    "YTGrowth <reports@ytgrowth.io>",
-            "to":      [email],
-            "subject": report_data.get("reportTitle", "Your Weekly YouTube Report"),
-            "html":    html,
+            "from":     "Denzil from YTGrowth <reports@ytgrowth.io>",
+            "to":       [email],
+            "subject":  report_data.get("reportTitle", "Your weekly YouTube report"),
+            "html":     html,
+            "text":     text,
+            "reply_to": "hello@ytgrowth.io",
         })
         return bool(response and response.get("id"))
     except Exception as e:
@@ -399,6 +401,10 @@ def generate_and_send_report(channel_id: str, email: str, user_data: dict, db) -
 
     # Ensure unsubscribe token exists
     token = _ensure_unsubscribe_token(channel_id, email, db)
+
+    # Inject first_name so the greeting reads "Hey Denzil" not "Hey ChannelName"
+    display_name = user_data.get("display_name", "") or ""
+    report_data["firstName"] = display_name.split()[0].strip() if display_name else ""
 
     # Send email
     sent = send_weekly_report(channel_id, email, report_data, token)

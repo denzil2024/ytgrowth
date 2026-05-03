@@ -283,7 +283,40 @@ def admin_test_welcome(request: Request, to: str = "", kind: str = "immediate"):
             })
             return JSONResponse({"ok": True, "kind": "audit", "to": target})
 
-        return JSONResponse({"error": "kind must be 'immediate' or 'audit'"}, status_code=400)
+        if kind == "weekly":
+            from app.email_templates.weekly_report import build_email
+            import resend as _resend
+            _resend.api_key = os.environ.get("RESEND_API_KEY", "")
+            base_url = os.environ.get("BASE_URL", "https://ytgrowth.io")
+            sample = {
+                "channelName":       "YTGrowth Test Channel",
+                "reportTitle":       "Your week on YouTube — May 3",
+                "weeklySummary":     "Views were up this week, driven mostly by your Tuesday upload which is trending in the top 10% of your niche. Posting cadence stayed consistent at 3 videos.",
+                "biggestWin":        "Your tutorial on keyword research hit 8,200 views in 48 hours — 4x your weekly average. CTR was 6.1%, which is well above your channel baseline of 3.8%.",
+                "watchOut":          "Subscriber growth slowed compared to last week despite higher views. This usually means your CTAs are being skipped. Worth reviewing the end screen on your last 3 uploads.",
+                "priorityAction":    "Add a verbal CTA at the 40% mark of your next video. Your retention data shows viewers are dropping off at 38% before your current end-screen CTA appears.",
+                "motivationalClose": "Solid week overall. The data is pointing in the right direction. Keep going.",
+                "metrics": {
+                    "subscribers": {"value": 12400, "delta": 320,  "direction": "up"},
+                    "weeklyViews": {"value": 48200, "delta": 1200, "direction": "up"},
+                    "avgCtr":      {"value": 4.2,   "delta": 0.3,  "direction": "up"},
+                    "channelScore":{"value": 71,    "delta": 2,    "direction": "up"},
+                },
+            }
+            text, html = build_email(
+                sample, "test-token", base_url
+            )
+            _resend.Emails.send({
+                "from":     "Denzil from YTGrowth <reports@ytgrowth.io>",
+                "to":       [target],
+                "subject":  sample["reportTitle"],
+                "html":     html,
+                "text":     text,
+                "reply_to": "hello@ytgrowth.io",
+            })
+            return JSONResponse({"ok": True, "kind": "weekly", "to": target})
+
+        return JSONResponse({"error": "kind must be 'immediate', 'audit', or 'weekly'"}, status_code=400)
     except Exception as e:
         import traceback
         tb = traceback.format_exc()
