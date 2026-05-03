@@ -130,6 +130,15 @@ def medal_svg(category: str):
                     headers={"Cache-Control": "public, max-age=86400"})
 
 
+@app.get("/email-assets/date-ribbon.svg")
+def date_ribbon_svg(date: str = ""):
+    from app.email_templates.milestone_unlock import _date_ribbon_svg
+    from fastapi.responses import Response
+    svg = _date_ribbon_svg(date or "")
+    return Response(content=svg.strip(), media_type="image/svg+xml",
+                    headers={"Cache-Control": "public, max-age=3600"})
+
+
 @app.get("/email-assets/ytg-logo-mark.svg")
 def ytg_logo_mark():
     from fastapi.responses import Response

@@ -86,63 +86,79 @@ def _composite_ribbon_star_svg(category: str, tier: int) -> str:
     """Single 200×200 SVG containing the V-drape ribbon (top) AND the star
     badge (centered, overlapping the ribbon's lower half). Star is
     translated by (26, 52) so it sits at the bottom of the canvas while
-    the ribbon's V-tips meet behind its upper edge."""
+    the ribbon's V-tips meet behind its upper edge.
+
+    The card body gradient is baked into the SVG background so it renders
+    correctly whether or not the email client preserves SVG transparency.
+    """
     cat = CATEGORY_GRADIENT.get(category, CATEGORY_GRADIENT["subs"])
     rL = f"ribL-{category}-{tier}".replace(" ", "")
     rR = f"ribR-{category}-{tier}".replace(" ", "")
     sg = f"star-{category}-{tier}".replace(" ", "")
+    bg = f"bg-{category}"
 
     # Star polygon points scaled from the 120-unit master to 148px (factor 148/120).
     raw_pts = [
         (60, 8), (73, 44), (112, 44), (80, 68), (92, 104),
         (60, 82), (28, 104), (40, 68), (8, 44), (47, 44),
     ]
-    f = 148 / 120
-    star_pts = " ".join(f"{x * f:.2f},{y * f:.2f}" for x, y in raw_pts)
-    inner_cx = 148 / 2          # 74
-    inner_cy = (148 / 2) * 0.97 # ≈ 71.78
-    inner_r  = 148 * 0.19       # 28.12
-    icon_size = 148 * 0.26      # 38.48
-    icon_offset = (148 - icon_size) / 2  # ≈ 54.76 in star-local coords
+    fac = 148 / 120
+    star_pts = " ".join(f"{x * fac:.2f},{y * fac:.2f}" for x, y in raw_pts)
+    inner_cx = 148 / 2           # 74
+    inner_cy = (148 / 2) * 0.97  # ≈ 71.78
+    inner_r  = 148 * 0.19        # 28.12
+    icon_size   = 148 * 0.26     # 38.48
+    icon_x      = (148 - icon_size) / 2          # 54.76 — centred horizontally
+    # In-app: icon div has marginTop: -s*0.03 (= -4.44px) shifting it upward to
+    # align with the white circle centre (cy=71.78). Match that offset here.
+    icon_y      = (148 - icon_size) / 2 - (148 * 0.03)  # ≈ 50.32
+    icon_scale  = icon_size / 24
 
     icon_paths = _milestone_icon_paths(category)
     icon_color = cat["ink"]
-    icon_scale = icon_size / 24
-
     sf = f"sf-{category}"
-    return f"""
-    <svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" style="display:block;margin:0 auto;">
-      <defs>
-        <linearGradient id="{rL}" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#ff5246"/>
-          <stop offset="100%" stop-color="#c1150c"/>
-        </linearGradient>
-        <linearGradient id="{rR}" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#d31a10"/>
-          <stop offset="100%" stop-color="#8a0e07"/>
-        </linearGradient>
-        <radialGradient id="{sg}" cx="36%" cy="30%" r="72%">
-          <stop offset="0%" stop-color="{cat['h1']}"/>
-          <stop offset="55%" stop-color="{cat['h2']}"/>
-          <stop offset="100%" stop-color="{cat['h3']}"/>
-        </radialGradient>
-        <filter id="{sf}" x="-30%" y="-30%" width="160%" height="160%">
-          <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000000" flood-opacity="0.22"/>
-        </filter>
-      </defs>
-      <!-- V-drape ribbon (top) -->
-      <polygon points="56,0 98,0 112,112 90,128 78,112" fill="url(#{rL})"/>
-      <polygon points="102,0 144,0 122,112 110,128 88,112" fill="url(#{rR})"/>
-      <polygon points="92,118 108,118 100,134" fill="#5e0a04"/>
-      <!-- Star badge (translated to overlap ribbon's lower half) -->
-      <g transform="translate(26 52)" filter="url(#{sf})">
-        <polygon points="{star_pts}" fill="url(#{sg})" stroke="{cat['stroke']}" stroke-width="1.25" stroke-linejoin="round"/>
-        <circle cx="{inner_cx:.2f}" cy="{inner_cy:.2f}" r="{inner_r:.2f}" fill="rgba(255,255,255,0.96)"/>
-        <g transform="translate({icon_offset:.2f} {icon_offset:.2f}) scale({icon_scale:.4f})" fill="none" stroke="{icon_color}" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-          {icon_paths}
-        </g>
-      </g>
-    </svg>"""
+
+    return f"""<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Card body gradient baked in so email clients that don't preserve SVG
+         transparency still show the correct tinted background. -->
+    <linearGradient id="{bg}" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"   stop-color="{cat['h1']}" stop-opacity="0.094"/>
+      <stop offset="100%" stop-color="#ffffff"      stop-opacity="1"/>
+    </linearGradient>
+    <linearGradient id="{rL}" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"   stop-color="#ff5246"/>
+      <stop offset="100%" stop-color="#c1150c"/>
+    </linearGradient>
+    <linearGradient id="{rR}" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"   stop-color="#d31a10"/>
+      <stop offset="100%" stop-color="#8a0e07"/>
+    </linearGradient>
+    <radialGradient id="{sg}" cx="36%" cy="30%" r="72%">
+      <stop offset="0%"   stop-color="{cat['h1']}"/>
+      <stop offset="55%"  stop-color="{cat['h2']}"/>
+      <stop offset="100%" stop-color="{cat['h3']}"/>
+    </radialGradient>
+    <filter id="{sf}" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000000" flood-opacity="0.22"/>
+    </filter>
+  </defs>
+  <!-- Background gradient (matches card body) -->
+  <rect width="200" height="200" fill="url(#{bg})"/>
+  <!-- V-drape ribbon (top) — exact polygon coords from Dashboard.jsx -->
+  <polygon points="56,0 98,0 112,112 90,128 78,112" fill="url(#{rL})"/>
+  <polygon points="102,0 144,0 122,112 110,128 88,112" fill="url(#{rR})"/>
+  <polygon points="92,118 108,118 100,134" fill="#5e0a04"/>
+  <!-- Star badge — translated so it sits at flex-end of 200px container -->
+  <g transform="translate(26 52)" filter="url(#{sf})">
+    <polygon points="{star_pts}" fill="url(#{sg})" stroke="{cat['stroke']}" stroke-width="1.25" stroke-linejoin="round"/>
+    <circle cx="{inner_cx:.2f}" cy="{inner_cy:.2f}" r="{inner_r:.2f}" fill="rgba(255,255,255,0.96)"/>
+  </g>
+  <!-- Icon drawn separately (outside filter group) to avoid shadow on the icon itself -->
+  <g transform="translate({26 + icon_x:.2f} {52 + icon_y:.2f}) scale({icon_scale:.4f})" fill="none" stroke="{icon_color}" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+    {icon_paths}
+  </g>
+</svg>"""
 
 
 def _date_ribbon_svg(date_str: str) -> str:
@@ -210,9 +226,13 @@ def build_email_html(
     # Gmail strips inline <svg> tags but RENDERS svg referenced via <img src>.
     # We pre-generate one SVG file per category at build time and serve it as
     # a static asset so the medal actually shows up in the inbox.
-    medal_url = f"{base_url}/email-assets/medal-{category}.svg"
-    date_svg  = _date_ribbon_svg(achieved_date)
-    tier_str  = _fmt_num(tier)
+    import urllib.parse
+    medal_url      = f"{base_url}/email-assets/medal-{category}.svg"
+    date_ribbon_url = f"{base_url}/email-assets/date-ribbon.svg?date={urllib.parse.quote(achieved_date)}"
+    # Pre-compute ribbon width so the <img> has correct dimensions.
+    _date_label = f"Achieved {achieved_date}"
+    ribbon_w    = max(220, 14 + len(_date_label) * 8)
+    tier_str    = _fmt_num(tier)
 
     return f"""<!DOCTYPE html>
 <html>
@@ -278,28 +298,13 @@ def build_email_html(
               </tr>
             </table>
 
-            <!-- Date ribbon — 3-cell table with CSS border triangles replicating
-                 the in-app clipPath polygon notch. The transparent borders show
-                 the parent background, creating the pointed / notched ends. -->
+            <!-- Date ribbon — hosted SVG so the gradient covers the notched ends
+                 exactly as the in-app clipPath does (CSS triangles can't be gradient). -->
             <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
               <tr>
                 <td align="center" style="padding-top:30px;">
-                  <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin:0 auto;">
-                    <tr>
-                      <!-- Left notch: right-pointing triangle in ribbon colour -->
-                      <td width="0" height="0"
-                          style="width:0;height:0;border-top:18px solid transparent;border-bottom:18px solid transparent;border-right:16px solid #e5251b;font-size:0;line-height:0;mso-line-height-rule:exactly;">
-                      </td>
-                      <!-- Ribbon body -->
-                      <td style="background:#e5251b;background:linear-gradient(180deg,#ff4a3f 0%,#e5251b 100%);padding:0 28px;height:36px;vertical-align:middle;white-space:nowrap;">
-                        <span style="font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;font-weight:700;color:#ffffff;letter-spacing:-0.1px;">Achieved {achieved_date}</span>
-                      </td>
-                      <!-- Right notch: left-pointing triangle -->
-                      <td width="0" height="0"
-                          style="width:0;height:0;border-top:18px solid transparent;border-bottom:18px solid transparent;border-left:16px solid #e5251b;font-size:0;line-height:0;mso-line-height-rule:exactly;">
-                      </td>
-                    </tr>
-                  </table>
+                  <img src="{date_ribbon_url}" width="{ribbon_w}" height="44" alt="Achieved {achieved_date}"
+                       style="display:block;margin:0 auto;border:0;outline:none;text-decoration:none;">
                 </td>
               </tr>
             </table>
