@@ -205,23 +205,38 @@ def build_email_html(
         f"background:linear-gradient(180deg, {cat['h1']}1f 0%, #ffffff 38%, #ffffff 100%);"
     )
 
-    # Channel avatar — img if we have one, else red-circle initial.
+    # Channel avatar — inline-block so the badge can be placed in the same
+    # line box using negative margins (position:absolute is unreliable in Gmail).
+    # Avatar outer size = 68px content + 3px border × 2 = 74px.
     if channel_thumbnail:
         avatar_main = (
             f'<img src="{channel_thumbnail}" width="68" height="68" alt="" '
-            f'style="display:block;width:68px;height:68px;border-radius:50%;'
+            f'style="display:inline-block;vertical-align:top;width:68px;height:68px;border-radius:50%;'
             f'object-fit:cover;border:3px solid #ffffff;'
             f'box-shadow:0 0 0 1.5px #e5e5ec, 0 4px 14px rgba(0,0,0,0.12);">'
         )
     else:
         initial = (channel_name or "?")[0].upper()
         avatar_main = (
-            f'<div style="display:block;width:68px;height:68px;border-radius:50%;'
+            f'<div style="display:inline-block;vertical-align:top;width:68px;height:68px;border-radius:50%;'
             f'background:#ff3b30;color:#ffffff;font-size:28px;font-weight:800;'
             f'line-height:68px;text-align:center;border:3px solid #ffffff;'
             f'box-shadow:0 0 0 1.5px #e5e5ec, 0 4px 14px rgba(0,0,0,0.12);">'
             f'{initial}</div>'
         )
+    # Badge: inline-block placed immediately after the avatar in the same line box.
+    # margin-left:-24px  → shifts badge left so its right edge is 2px past avatar's right (74-24=50, 50+26=76=74+2)
+    # margin-top:50px    → badge top at 50px, bottom at 76px (= avatar 74px + 2px overflow)
+    youtube_badge = (
+        '<div style="display:inline-block;vertical-align:top;'
+        'margin-left:-24px;margin-top:50px;'
+        'width:22px;height:22px;background:#ff3b30;border-radius:5px;'
+        'border:2px solid #ffffff;box-shadow:0 2px 5px rgba(0,0,0,0.2);">'
+        '<div style="width:0;height:0;'
+        'border-top:5px solid transparent;border-bottom:5px solid transparent;'
+        'border-left:9px solid #ffffff;margin:6px 0 0 6px;font-size:0;line-height:0;"></div>'
+        '</div>'
+    )
 
     # Gmail strips inline <svg> tags but RENDERS svg referenced via <img src>.
     # We pre-generate one SVG file per category at build time and serve it as
@@ -309,19 +324,17 @@ def build_email_html(
               </tr>
             </table>
 
-            <!-- Channel identity -->
+            <!-- Channel identity — inline-block layout so the badge sits inside
+                 the avatar via negative margins (no position:absolute needed). -->
             <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
               <tr>
-                <td align="center" style="padding-top:32px;">
-                  <!-- position:relative div + position:absolute div (NOT table) for the badge.
-                       Gmail ignores position:absolute on <table> elements but honours it on <div>. -->
-                  <div style="position:relative;display:inline-block;width:68px;height:68px;">
-                    {avatar_main}
-                    <div style="position:absolute;bottom:-2px;right:-2px;width:22px;height:22px;background:#ff3b30;border-radius:5px;border:2px solid #ffffff;box-shadow:0 2px 5px rgba(0,0,0,0.2);">
-                      <div style="width:0;height:0;border-top:5px solid transparent;border-bottom:5px solid transparent;border-left:9px solid #ffffff;margin:6px 0 0 6px;font-size:0;line-height:0;"></div>
-                    </div>
-                  </div>
-                  <p style="font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;font-size:17px;font-weight:800;color:#0f0f13;letter-spacing:-0.3px;margin:10px 0 0 0;">{safe_name}</p>
+                <td align="center" style="padding-top:32px;font-size:0;line-height:0;">
+                  {avatar_main}{youtube_badge}
+                </td>
+              </tr>
+              <tr>
+                <td align="center" style="padding-top:10px;">
+                  <p style="font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;font-size:17px;font-weight:800;color:#0f0f13;letter-spacing:-0.3px;margin:0;">{safe_name}</p>
                 </td>
               </tr>
             </table>
