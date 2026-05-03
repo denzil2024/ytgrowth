@@ -115,6 +115,21 @@ STATIC_DIR.mkdir(exist_ok=True)
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 
 
+# ── Milestone medal SVGs ─────────────────────────────────────────────────────
+# The milestone email template references hosted SVGs via <img src> because
+# Gmail strips inline <svg> tags but renders external SVG images fine.
+# We generate the SVG on-demand per category so no build step is needed.
+@app.get("/email-assets/medal-{category}.svg")
+def medal_svg(category: str):
+    from app.email_templates.milestone_unlock import _composite_ribbon_star_svg, CATEGORY_GRADIENT
+    from fastapi.responses import Response
+    if category not in CATEGORY_GRADIENT:
+        category = "subs"
+    svg = _composite_ribbon_star_svg(category, 1000)
+    return Response(content=svg.strip(), media_type="image/svg+xml",
+                    headers={"Cache-Control": "public, max-age=86400"})
+
+
 # ── Per-route SEO meta tags ──────────────────────────────────────────────────
 # The frontend is an SPA — every route serves the same index.html. For each
 # feature page to rank for its own keyword, we rewrite <title> and the
