@@ -1,11 +1,11 @@
 """Immediate welcome email, sent the moment a new user finishes Google OAuth.
 
-Plain-text-first by design. Reads like a real one-to-one note from the
-founder, not a marketing template. No table layouts, no logo header, no big
-red CTA button. Just text, with a single inline link to the dashboard.
+Plain-text canonical, minimal HTML mirror with NO inline styles so email
+clients render the body with their native typography (same vibe as a normal
+1:1 email from the founder, not a marketing template).
 
-Pairs with email_templates/welcome.py, which still fires AFTER the audit
-completes with the personalised "your top priority is X" hook.
+Pairs with email_templates/welcome.py, which fires AFTER the audit completes
+with the personalised "your top priority is X" hook.
 """
 
 
@@ -16,36 +16,29 @@ def build_email(
     dashboard_url: str,
     unsubscribe_url: str,
 ) -> tuple[str, str]:
-    """Returns (text, html). Text is canonical; html is a minimal mirror so
-    HTML-only clients (Gmail web, Outlook) render the same content with native
-    typography instead of monospace.
-    """
     name = (first_name or "there").strip()
     channel_ref = (channel_name or "").strip() or "your channel"
 
-    # Escape user-controlled values for the HTML version
     def esc(s: str) -> str:
         return (s or "").replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
 
-    name_html        = esc(name)
-    channel_ref_html = esc(channel_ref)
-
     text = (
         f"Hi {name},\n\n"
-        f"I'm Denzil, the founder of YTGrowth. I just saw {channel_ref} connect, "
-        f"so I wanted to send a quick note personally to say thanks for trusting us with your channel.\n\n"
-        f"YTGrowth exists because I was tired of YouTube tools that hand you a wall of numbers and "
-        f"leave you to figure out what to do with them. So we built one that actually tells you the "
-        f"next move. That's the whole bet.\n\n"
-        f"Your first audit is already running in the background. You'll get a second email from me "
-        f"with your top priority action as soon as it lands, usually in a minute or two.\n\n"
-        f"In the meantime, your dashboard already has the rest of the toolkit open: full Channel "
-        f"Audit, Competitor Analysis, SEO Studio, Thumbnail IQ, Keyword Explorer, and Outliers. "
-        f"Have a poke around.\n\n"
+        f"Thanks for connecting {channel_ref}. Your first 10-dimension audit is running right "
+        f"now. As soon as it lands I'll send you a follow-up with your top priority action.\n\n"
+        f"Why we built this\n\n"
+        f"I got tired of YouTube tools that show you a wall of numbers and leave you to figure "
+        f"out what to do with them. So we built one that actually tells you the next move. "
+        f"That's the whole bet.\n\n"
+        f"What's already open in your dashboard\n\n"
+        f"While the audit runs, the rest of the toolkit is unlocked: Channel Audit, Competitor "
+        f"Analysis, SEO Studio, Thumbnail IQ, Keyword Explorer, and Outliers. Have a poke "
+        f"around.\n\n"
         f"{dashboard_url}\n\n"
-        f"If anything ever feels off, slow, or just plain wrong, please hit reply. This inbox "
-        f"comes straight to me, and I read every email. The product gets better because of users "
-        f"who tell me what's broken.\n\n"
+        f"One ask\n\n"
+        f"If anything ever feels off, slow, or just plain wrong, hit reply. This inbox comes "
+        f"straight to me and I read every email. The product gets better because of users who "
+        f"tell me what's broken.\n\n"
         f"Welcome aboard. Genuinely glad you're here.\n\n"
         f"— Denzil\n"
         f"Founder of YTGrowth\n\n"
@@ -53,34 +46,31 @@ def build_email(
         f"Unsubscribe: {unsubscribe_url}\n"
     )
 
+    # NO inline styles. Email client (Gmail / Outlook / Apple Mail) renders
+    # with its own typography, which is what makes the email feel like a
+    # real personal note instead of a marketing template.
     html = (
-        '<div style="font-family:-apple-system,BlinkMacSystemFont,\'Segoe UI\',Helvetica,Arial,sans-serif;'
-        'font-size:15px;line-height:1.6;color:#0f0f13;max-width:560px;">'
-        f'<p style="margin:0 0 14px 0;">Hi {name_html},</p>'
-        f'<p style="margin:0 0 14px 0;">I\'m Denzil, the founder of YTGrowth. I just saw '
-        f'{channel_ref_html} connect, so I wanted to send a quick note personally to say thanks for '
-        f'trusting us with your channel.</p>'
-        '<p style="margin:0 0 14px 0;">YTGrowth exists because I was tired of YouTube tools that '
-        'hand you a wall of numbers and leave you to figure out what to do with them. So we built '
-        'one that actually tells you the next move. That\'s the whole bet.</p>'
-        '<p style="margin:0 0 14px 0;">Your first audit is already running in the background. '
-        'You\'ll get a second email from me with your top priority action as soon as it lands, '
-        'usually in a minute or two.</p>'
-        '<p style="margin:0 0 14px 0;">In the meantime, your dashboard already has the rest of the '
-        'toolkit open: full Channel Audit, Competitor Analysis, SEO Studio, Thumbnail IQ, '
-        'Keyword Explorer, and Outliers. Have a poke around.</p>'
-        f'<p style="margin:0 0 14px 0;"><a href="{dashboard_url}" style="color:#e5251b;">'
-        f'{dashboard_url}</a></p>'
-        '<p style="margin:0 0 14px 0;">If anything ever feels off, slow, or just plain wrong, '
-        'please hit reply. This inbox comes straight to me, and I read every email. The product '
-        'gets better because of users who tell me what\'s broken.</p>'
-        '<p style="margin:0 0 14px 0;">Welcome aboard. Genuinely glad you\'re here.</p>'
-        '<p style="margin:0 0 6px 0;">&mdash; Denzil</p>'
-        '<p style="margin:0 0 24px 0;color:#5a5a6a;">Founder of YTGrowth</p>'
-        '<hr style="border:none;border-top:1px solid #eeeef3;margin:0 0 12px 0;">'
-        f'<p style="margin:0;font-size:12px;color:#9595a4;">'
-        f'<a href="{unsubscribe_url}" style="color:#9595a4;">Unsubscribe</a></p>'
-        '</div>'
+        f"<p>Hi {esc(name)},</p>"
+        f"<p>Thanks for connecting {esc(channel_ref)}. Your first 10-dimension audit is running "
+        f"right now. As soon as it lands I'll send you a follow-up with your top priority "
+        f"action.</p>"
+        f"<p><strong>Why we built this</strong></p>"
+        f"<p>I got tired of YouTube tools that show you a wall of numbers and leave you to "
+        f"figure out what to do with them. So we built one that actually tells you the next "
+        f"move. That's the whole bet.</p>"
+        f"<p><strong>What's already open in your dashboard</strong></p>"
+        f"<p>While the audit runs, the rest of the toolkit is unlocked: Channel Audit, "
+        f"Competitor Analysis, SEO Studio, Thumbnail IQ, Keyword Explorer, and Outliers. "
+        f"Have a poke around.</p>"
+        f"<p><a href=\"{dashboard_url}\">{dashboard_url}</a></p>"
+        f"<p><strong>One ask</strong></p>"
+        f"<p>If anything ever feels off, slow, or just plain wrong, hit reply. This inbox "
+        f"comes straight to me and I read every email. The product gets better because of "
+        f"users who tell me what's broken.</p>"
+        f"<p>Welcome aboard. Genuinely glad you're here.</p>"
+        f"<p>&mdash; Denzil<br>Founder of YTGrowth</p>"
+        f"<hr>"
+        f"<p><small><a href=\"{unsubscribe_url}\">Unsubscribe</a></small></p>"
     )
 
     return text, html
