@@ -223,22 +223,15 @@ def build_email_html(
     <td align="center">
       <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="600" style="max-width:600px;background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,0.22);border:1px solid #e8e8ee;">
 
-        <!-- Top dark band: red logo square + YTGrowth.io wordmark -->
+        <!-- Top dark band: favicon img + YTGrowth.io wordmark -->
         <tr>
           <td align="center" style="background:#0a0a0f;background:linear-gradient(180deg,#15151c 0%,#0a0a0f 100%);padding:22px 0;">
             <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin:0 auto;">
               <tr>
                 <td valign="middle" style="padding-right:10px;">
-                  <table role="presentation" cellspacing="0" cellpadding="0" border="0">
-                    <tr>
-                      <td align="center" valign="middle" style="width:34px;height:34px;background:#ff3b30;border-radius:8px;box-shadow:0 2px 10px rgba(255,59,48,0.45);text-align:center;">
-                        <svg width="20" height="20" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:block;margin:0 auto;">
-                          <path d="M23.2 11.6a2.1 2.1 0 0 0-1.48-1.48C20.55 9.8 16 9.8 16 9.8s-4.55 0-5.72.32A2.1 2.1 0 0 0 8.8 11.6 22 22 0 0 0 8.5 16a22 22 0 0 0 .3 4.4 2.1 2.1 0 0 0 1.48 1.48C11.45 22.2 16 22.2 16 22.2s4.55 0 5.72-.32a2.1 2.1 0 0 0 1.48-1.48A22 22 0 0 0 23.5 16a22 22 0 0 0-.3-4.4z" fill="#ffffff"/>
-                          <polygon points="13.5,19 19.5,16 13.5,13" fill="#ff3b30"/>
-                        </svg>
-                      </td>
-                    </tr>
-                  </table>
+                  <!-- favicon.svg is served as a static file — renders correctly
+                       in Gmail as an <img>, unlike inline SVG which is stripped. -->
+                  <img src="{base_url}/favicon.svg" width="34" height="34" alt="YTGrowth" style="display:block;border-radius:8px;border:0;outline:none;text-decoration:none;">
                 </td>
                 <td valign="middle">
                   <span style="font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;font-size:22px;font-weight:800;color:#ffffff;letter-spacing:-0.6px;">YTGrowth<span style="color:#ff3b30;">.io</span></span>
@@ -282,15 +275,13 @@ def build_email_html(
               </tr>
             </table>
 
-            <!-- Date ribbon — CSS-styled red pill (gradient + shadow). Inline
-                 SVG is stripped by Gmail, so the notched-end shape is dropped
-                 in favour of a rounded red ribbon-pill that renders everywhere. -->
+            <!-- Date ribbon — wide pill, email-safe (no inline SVG / clipPath) -->
             <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
               <tr>
                 <td align="center" style="padding-top:30px;">
                   <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin:0 auto;">
                     <tr>
-                      <td style="background:#e5251b;background:linear-gradient(180deg,#ff4a3f 0%,#e5251b 100%);color:#ffffff;font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;font-weight:700;letter-spacing:-0.1px;padding:11px 32px;border-radius:4px;box-shadow:0 3px 10px rgba(229,37,27,0.28);">
+                      <td style="background:#e5251b;background:linear-gradient(135deg,#ff4a3f 0%,#e5251b 100%);color:#ffffff;font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;font-weight:700;letter-spacing:0.02em;padding:10px 40px;border-radius:100px;box-shadow:0 4px 14px rgba(229,37,27,0.35);white-space:nowrap;">
                         Achieved {achieved_date}
                       </td>
                     </tr>
@@ -299,19 +290,30 @@ def build_email_html(
               </tr>
             </table>
 
-            <!-- Channel identity (avatar + YouTube play badge + name) -->
+            <!-- Channel identity — table-based layout, no position:absolute
+                 (Gmail partially breaks absolute positioning inside table cells,
+                 causing the badge to overlap the channel name text). -->
             <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
               <tr>
                 <td align="center" style="padding-top:32px;">
-                  <div style="position:relative;display:inline-block;width:68px;height:68px;line-height:0;">
-                    {avatar_main}
-                    <div style="position:absolute;bottom:-2px;right:-2px;width:26px;height:26px;border-radius:7px;background:#ff3b30;border:2px solid #ffffff;box-shadow:0 2px 5px rgba(0,0,0,0.2);text-align:center;line-height:22px;">
-                      <svg width="12" height="12" viewBox="0 0 24 24" fill="#ffffff" xmlns="http://www.w3.org/2000/svg" style="display:inline-block;vertical-align:middle;">
-                        <path d="M8 5v14l11-7z"/>
-                      </svg>
-                    </div>
-                  </div>
-                  <p style="font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;font-size:17px;font-weight:800;color:#0f0f13;letter-spacing:-0.3px;margin:14px 0 0 0;">{safe_name}</p>
+                  <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin:0 auto;">
+                    <tr>
+                      <td align="center" valign="bottom" width="68">
+                        {avatar_main}
+                      </td>
+                      <td valign="bottom" style="padding-left:0;padding-bottom:4px;">
+                        <!-- YouTube badge sits beside the avatar in the same row -->
+                        <table role="presentation" cellspacing="0" cellpadding="0" border="0">
+                          <tr>
+                            <td style="width:22px;height:22px;border-radius:6px;background:#ff3b30;border:2px solid #ffffff;box-shadow:0 2px 5px rgba(0,0,0,0.18);text-align:center;font-size:0;line-height:0;">
+                              <img src="{base_url}/favicon.svg" width="18" height="18" alt="" style="display:block;border-radius:4px;border:0;">
+                            </td>
+                          </tr>
+                        </table>
+                      </td>
+                    </tr>
+                  </table>
+                  <p style="font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;font-size:17px;font-weight:800;color:#0f0f13;letter-spacing:-0.3px;margin:12px 0 0 0;">{safe_name}</p>
                 </td>
               </tr>
             </table>
