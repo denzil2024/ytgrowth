@@ -207,32 +207,28 @@ def build_email_html(
         f"background:linear-gradient(180deg, {cat['h1']}18 0%, #ffffff 38%, #ffffff 100%);"
     )
 
-    # Channel avatar — inline-block so the badge can be placed in the same
-    # line box using negative margins (position:absolute is unreliable in Gmail).
-    # Avatar outer size = 68px content + 3px border × 2 = 74px.
+    # Avatar — 68px content + 3px border × 2 = 74px outer.
     if channel_thumbnail:
         avatar_main = (
             f'<img src="{channel_thumbnail}" width="68" height="68" alt="" '
-            f'style="display:inline-block;vertical-align:top;width:68px;height:68px;border-radius:50%;'
+            f'style="display:block;width:68px;height:68px;border-radius:50%;'
             f'object-fit:cover;border:3px solid #ffffff;'
             f'box-shadow:0 0 0 1.5px #e5e5ec, 0 4px 14px rgba(0,0,0,0.12);">'
         )
     else:
         initial = (channel_name or "?")[0].upper()
         avatar_main = (
-            f'<div style="display:inline-block;vertical-align:top;width:68px;height:68px;border-radius:50%;'
+            f'<div style="display:block;width:68px;height:68px;border-radius:50%;'
             f'background:#ff3b30;color:#ffffff;font-size:28px;font-weight:800;'
             f'line-height:68px;text-align:center;border:3px solid #ffffff;'
             f'box-shadow:0 0 0 1.5px #e5e5ec, 0 4px 14px rgba(0,0,0,0.12);">'
             f'{initial}</div>'
         )
-    # Badge: inline-block matching in-app bottom:-2px right:-2px exactly.
-    # Avatar outer = 68px + 3px border × 2 = 74px. Badge outer = 22px + 2px border × 2 = 26px.
-    # Only 2px of badge outside avatar → margin-left = -(26-2) = -24px
-    # Badge top = 74 - 24 = 50px → margin-top = 50px
+    # Badge: position:absolute inside a position:relative 74px container.
+    # Container is 74px (= avatar outer size) so bottom:-2px right:-2px places
+    # the badge exactly at the avatar corner, matching the in-app exactly.
     youtube_badge = (
-        '<div style="display:inline-block;vertical-align:top;'
-        'margin-left:-24px;margin-top:50px;'
+        '<div style="position:absolute;bottom:-2px;right:-2px;'
         'width:22px;height:22px;background:#ff3b30;border-radius:5px;'
         'border:2px solid #ffffff;box-shadow:0 2px 5px rgba(0,0,0,0.2);">'
         '<div style="width:0;height:0;'
@@ -327,19 +323,17 @@ def build_email_html(
               </tr>
             </table>
 
-            <!-- Channel identity — inline-block layout so the badge sits inside
-                 the avatar via negative margins (no position:absolute needed).
-                 An 18px left spacer balances the badge's 18px right overhang so
-                 the avatar remains visually centered in the card. -->
+            <!-- Channel identity -->
             <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
               <tr>
-                <td align="center" style="padding-top:32px;font-size:0;line-height:0;">
-                  {avatar_main}{youtube_badge}
-                </td>
-              </tr>
-              <tr>
-                <td align="center" style="padding-top:10px;">
-                  <p style="font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;font-size:17px;font-weight:800;color:#0f0f13;letter-spacing:-0.3px;margin:0;">{safe_name}</p>
+                <td align="center" style="padding-top:32px;">
+                  <!-- 74px container = avatar 68px + 3px border × 2.
+                       position:relative here lets position:absolute work on the badge. -->
+                  <div style="position:relative;width:74px;height:74px;margin:0 auto;">
+                    {avatar_main}
+                    {youtube_badge}
+                  </div>
+                  <p style="font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;font-size:17px;font-weight:800;color:#0f0f13;letter-spacing:-0.3px;margin:10px 0 0 0;">{safe_name}</p>
                 </td>
               </tr>
             </table>
