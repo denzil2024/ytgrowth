@@ -341,7 +341,7 @@ def build_email_html(
                       </tr>
                     </table>
                   </div>
-                  <p style="font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;font-size:17px;font-weight:800;color:#0f0f13;letter-spacing:-0.3px;margin:14px 0 0 0;">{safe_name}</p>
+                  <p style="font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;font-size:17px;font-weight:800;color:#0f0f13;letter-spacing:-0.3px;margin:28px 0 0 0;">{safe_name}</p>
                 </td>
               </tr>
             </table>
