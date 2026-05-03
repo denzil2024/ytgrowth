@@ -1,11 +1,8 @@
-"""Immediate welcome email, sent the moment a new user finishes Google OAuth.
+"""Immediate welcome email — sent the moment a new user finishes Google OAuth,
+before the first audit completes.
 
-Plain-text canonical, minimal HTML mirror with NO inline styles so email
-clients render the body with their native typography (same vibe as a normal
-1:1 email from the founder, not a marketing template).
-
-Pairs with email_templates/welcome.py, which fires AFTER the audit completes
-with the personalised "your top priority is X" hook.
+Pairs with welcome.py, which fires after the audit with the personalised
+priority action.
 """
 
 
@@ -17,58 +14,47 @@ def build_email(
     unsubscribe_url: str,
 ) -> tuple[str, str]:
     name = (first_name or "there").strip()
-    channel_ref = (channel_name or "").strip() or "your channel"
 
     def esc(s: str) -> str:
         return (s or "").replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
 
     text = (
-        f"Hi {name},\n\n"
-        f"Thanks for connecting {channel_ref}. Your first 10-dimension audit is running right "
-        f"now. As soon as it lands I'll send you a follow-up with your top priority action.\n\n"
-        f"Why we built this\n\n"
-        f"I got tired of YouTube tools that show you a wall of numbers and leave you to figure "
-        f"out what to do with them. So we built one that actually tells you the next move. "
-        f"That's the whole bet.\n\n"
-        f"What's already open in your dashboard\n\n"
-        f"While the audit runs, the rest of the toolkit is unlocked: Channel Audit, Competitor "
-        f"Analysis, SEO Studio, Thumbnail IQ, Keyword Explorer, and Outliers. Have a poke "
-        f"around.\n\n"
+        f"Hey {name},\n\n"
+        f"Welcome aboard. Really glad you're here.\n\n"
+        f"YTGrowth is now running a full audit of your channel, analyzing your traffic "
+        f"sources, audience demographics, content performance, and more across 10 "
+        f"dimensions. It usually takes just a few minutes.\n\n"
+        f"Once it's done, you'll get a clear picture of where your channel stands, along "
+        f"with a prioritized action plan to help you grow faster.\n\n"
+        f"While you wait, feel free to explore the dashboard. You can start tracking "
+        f"competitors, research keywords with the Keyword Explorer, or optimize your "
+        f"titles with the Title Optimizer.\n\n"
         f"{dashboard_url}\n\n"
-        f"One ask\n\n"
-        f"If anything ever feels off, slow, or just plain wrong, hit reply. This inbox comes "
-        f"straight to me and I read every email. The product gets better because of users who "
-        f"tell me what's broken.\n\n"
-        f"Welcome aboard. Genuinely glad you're here.\n\n"
-        f"— Denzil\n"
+        f"If you have any questions, just reply to this email. I read every message.\n\n"
+        f"More soon.\n\n"
+        f"- Denzil\n"
         f"Founder of YTGrowth\n\n"
         f"---\n"
         f"Unsubscribe: {unsubscribe_url}\n"
     )
 
-    # NO inline styles. Email client (Gmail / Outlook / Apple Mail) renders
-    # with its own typography, which is what makes the email feel like a
-    # real personal note instead of a marketing template.
     html = (
-        f"<p>Hi {esc(name)},</p>"
-        f"<p>Thanks for connecting {esc(channel_ref)}. Your first 10-dimension audit is running "
-        f"right now. As soon as it lands I'll send you a follow-up with your top priority "
-        f"action.</p>"
-        f"<p><strong>Why we built this</strong></p>"
-        f"<p>I got tired of YouTube tools that show you a wall of numbers and leave you to "
-        f"figure out what to do with them. So we built one that actually tells you the next "
-        f"move. That's the whole bet.</p>"
-        f"<p><strong>What's already open in your dashboard</strong></p>"
-        f"<p>While the audit runs, the rest of the toolkit is unlocked: Channel Audit, "
-        f"Competitor Analysis, SEO Studio, Thumbnail IQ, Keyword Explorer, and Outliers. "
-        f"Have a poke around.</p>"
-        f"<p><a href=\"{dashboard_url}\">{dashboard_url}</a></p>"
-        f"<p><strong>One ask</strong></p>"
-        f"<p>If anything ever feels off, slow, or just plain wrong, hit reply. This inbox "
-        f"comes straight to me and I read every email. The product gets better because of "
-        f"users who tell me what's broken.</p>"
-        f"<p>Welcome aboard. Genuinely glad you're here.</p>"
-        f"<p>&mdash; Denzil<br>Founder of YTGrowth</p>"
+        f"<p>Hey {esc(name)},</p>"
+        f"<p>Welcome aboard. Really glad you're here.</p>"
+        f"<p>YTGrowth is now running a full audit of your channel, analyzing your traffic "
+        f"sources, audience demographics, content performance, and more across 10 "
+        f"dimensions. It usually takes just a few minutes.</p>"
+        f"<p>Once it's done, you'll get a clear picture of where your channel stands, "
+        f"along with a prioritized action plan to help you grow faster.</p>"
+        f"<p>While you wait, feel free to explore the "
+        f"<a href=\"{dashboard_url}\">dashboard</a>. You can start tracking competitors, "
+        f"research keywords with the Keyword Explorer, or optimize your titles with the "
+        f"Title Optimizer.</p>"
+        f"<p><a href=\"{dashboard_url}\">Open your dashboard &rarr;</a></p>"
+        f"<p>If you have any questions, just reply to this email. I read every "
+        f"message.</p>"
+        f"<p>More soon.</p>"
+        f"<p>- Denzil<br>Founder of YTGrowth</p>"
         f"<hr>"
         f"<p><small><a href=\"{unsubscribe_url}\">Unsubscribe</a></small></p>"
     )

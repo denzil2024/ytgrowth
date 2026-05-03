@@ -91,7 +91,7 @@ def send_welcome_immediate(
         _resend.Emails.send({
             "from":     "Denzil from YTGrowth <hello@ytgrowth.io>",
             "to":       [email],
-            "subject":  "Welcome to YTGrowth",
+            "subject":  "Welcome to YTGrowth 🎉",
             "html":     html,
             "text":     text,
             "reply_to": "hello@ytgrowth.io",
