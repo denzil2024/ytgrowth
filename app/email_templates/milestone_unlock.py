@@ -162,25 +162,27 @@ def _composite_ribbon_star_svg(category: str, tier: int) -> str:
 
 
 def _date_ribbon_svg(date_str: str) -> str:
-    """Notched red ribbon with the achievement date — SVG polygon + <text>
-    because CSS clipPath isn't email-safe."""
+    """Notched red ribbon matching the in-app date ribbon exactly:
+    padding 11px 32px on 14px text = 36px total height, 4% side notch,
+    font-weight 800 (matches TierRibbon), gradient #ff4a3f → #e5251b."""
     safe_date = (date_str or "").replace("<", "&lt;").replace(">", "&gt;")
     label = f"Achieved {safe_date}"
-    # Width grows with text length so the ribbon never crops the date.
-    w = max(220, 14 + len(label) * 8)
-    h = 44
-    notch_in = 10  # how deep the side notches cut in
-    return f"""
-    <svg width="{w}" height="{h}" viewBox="0 0 {w} {h}" xmlns="http://www.w3.org/2000/svg" style="display:block;margin:0 auto;">
-      <defs>
-        <linearGradient id="dateRib-{w}" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#ff4a3f"/>
-          <stop offset="100%" stop-color="#e5251b"/>
-        </linearGradient>
-      </defs>
-      <polygon points="0,0 {w},0 {w - notch_in},{h / 2} {w},{h} 0,{h} {notch_in},{h / 2}" fill="url(#dateRib-{w})"/>
-      <text x="{w / 2}" y="{h / 2 + 5}" text-anchor="middle" fill="#ffffff" font-family="'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif" font-size="14" font-weight="700" letter-spacing="-0.1">{label}</text>
-    </svg>"""
+    w = max(220, 14 + len(label) * 9)  # slightly wider estimate for Inter Bold
+    h = 36                              # 11px padding top + 14px text + 11px padding bottom
+    notch_in = max(8, round(w * 0.04)) # in-app uses 4% clip-path notch
+    mid = h / 2
+    return f"""<svg width="{w}" height="{h}" viewBox="0 0 {w} {h}" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="dr" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ff4a3f"/>
+      <stop offset="100%" stop-color="#e5251b"/>
+    </linearGradient>
+  </defs>
+  <polygon points="0,0 {w},0 {w - notch_in},{mid} {w},{h} 0,{h} {notch_in},{mid}" fill="url(#dr)"/>
+  <text x="{w / 2}" y="{mid + 5}" text-anchor="middle" dominant-baseline="middle"
+        fill="#ffffff" font-family="'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif"
+        font-size="14" font-weight="800" letter-spacing="-0.1">{label}</text>
+</svg>"""
 
 
 def build_email_html(
@@ -224,12 +226,13 @@ def build_email_html(
             f'box-shadow:0 0 0 1.5px #e5e5ec, 0 4px 14px rgba(0,0,0,0.12);">'
             f'{initial}</div>'
         )
-    # Badge: inline-block placed immediately after the avatar in the same line box.
-    # margin-left:-24px  → shifts badge left so its right edge is 2px past avatar's right (74-24=50, 50+26=76=74+2)
-    # margin-top:50px    → badge top at 50px, bottom at 76px (= avatar 74px + 2px overflow)
+    # Badge: inline-block, 30% inside / 70% outside the avatar corner.
+    # Avatar outer = 68px + 3px border × 2 = 74px. Badge outer = 22px + 2px border × 2 = 26px.
+    # 30% of 26px = 8px inside → badge-left = 74-8 = 66 → margin-left = -(74-66) = -8px
+    # 30% of 26px = 8px inside vertically → badge-top = 74-8 = 66 → margin-top = 66px
     youtube_badge = (
         '<div style="display:inline-block;vertical-align:top;'
-        'margin-left:-24px;margin-top:50px;'
+        'margin-left:-8px;margin-top:66px;'
         'width:22px;height:22px;background:#ff3b30;border-radius:5px;'
         'border:2px solid #ffffff;box-shadow:0 2px 5px rgba(0,0,0,0.2);">'
         '<div style="width:0;height:0;'
@@ -318,7 +321,7 @@ def build_email_html(
             <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
               <tr>
                 <td align="center" style="padding-top:30px;">
-                  <img src="{date_ribbon_url}" width="{ribbon_w}" height="44" alt="Achieved {achieved_date}"
+                  <img src="{date_ribbon_url}" width="{ribbon_w}" height="36" alt="Achieved {achieved_date}"
                        style="display:block;margin:0 auto;border:0;outline:none;text-decoration:none;">
                 </td>
               </tr>
@@ -333,7 +336,7 @@ def build_email_html(
                 </td>
               </tr>
               <tr>
-                <td align="center" style="padding-top:10px;">
+                <td align="center" style="padding-top:4px;">
                   <p style="font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;font-size:17px;font-weight:800;color:#0f0f13;letter-spacing:-0.3px;margin:0;">{safe_name}</p>
                 </td>
               </tr>
