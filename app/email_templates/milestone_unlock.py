@@ -304,32 +304,17 @@ def build_email_html(
               </tr>
             </table>
 
-            <!-- Channel identity — position:relative wrapper with defined px
-                 dimensions keeps the absolute badge inside its box so it never
-                 bleeds over the channel name below. Gmail supports
-                 position:absolute when the parent has explicit width+height. -->
+            <!-- Channel identity -->
             <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
               <tr>
                 <td align="center" style="padding-top:32px;">
-                  <!-- 68px container: avatar + overlapping YouTube badge -->
-                  <div style="position:relative;width:68px;height:68px;margin:0 auto;">
+                  <!-- position:relative div + position:absolute div (NOT table) for the badge.
+                       Gmail ignores position:absolute on <table> elements but honours it on <div>. -->
+                  <div style="position:relative;display:inline-block;width:68px;height:68px;">
                     {avatar_main}
-                    <!-- YouTube badge: pure CSS circle + play triangle, no external image -->
-                    <table role="presentation" cellspacing="0" cellpadding="0" border="0"
-                           style="position:absolute;bottom:-2px;right:-2px;">
-                      <tr>
-                        <td width="26" height="26" align="center" valign="middle"
-                            style="width:26px;height:26px;background:#ff3b30;border-radius:7px;border:2px solid #ffffff;box-shadow:0 2px 5px rgba(0,0,0,0.2);">
-                          <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin:0 auto;">
-                            <tr>
-                              <td width="0" height="0"
-                                  style="width:0;height:0;border-top:5px solid transparent;border-bottom:5px solid transparent;border-left:9px solid #ffffff;font-size:0;line-height:0;mso-line-height-rule:exactly;">
-                              </td>
-                            </tr>
-                          </table>
-                        </td>
-                      </tr>
-                    </table>
+                    <div style="position:absolute;bottom:-2px;right:-2px;width:22px;height:22px;background:#ff3b30;border-radius:5px;border:2px solid #ffffff;box-shadow:0 2px 5px rgba(0,0,0,0.2);">
+                      <div style="width:0;height:0;border-top:5px solid transparent;border-bottom:5px solid transparent;border-left:9px solid #ffffff;margin:6px 0 0 6px;font-size:0;line-height:0;"></div>
+                    </div>
                   </div>
                   <p style="font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;font-size:17px;font-weight:800;color:#0f0f13;letter-spacing:-0.3px;margin:10px 0 0 0;">{safe_name}</p>
                 </td>
