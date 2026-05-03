@@ -179,9 +179,10 @@ def _date_ribbon_svg(date_str: str) -> str:
     </linearGradient>
   </defs>
   <polygon points="0,0 {w},0 {w - notch_in},{mid} {w},{h} 0,{h} {notch_in},{mid}" fill="url(#dr)"/>
-  <text x="{w / 2}" y="{mid + 5}" text-anchor="middle" dominant-baseline="middle"
-        fill="#ffffff" font-family="'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif"
-        font-size="14" font-weight="700" letter-spacing="-0.1">{label}</text>
+  <text x="{w / 2}" y="{mid + 5}" text-anchor="middle"
+        fill="#ffffff" style="fill:#ffffff;"
+        font-family="Inter,system-ui,-apple-system,sans-serif"
+        font-size="14" font-weight="700">{label}</text>
 </svg>"""
 
 
