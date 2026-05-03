@@ -12,6 +12,7 @@ import WeeklyReport from './WeeklyReport'
 import Referrals from './Referrals'
 import Admin from './Admin'
 import { loginUrl } from '../utm.js'
+import { openCheckout } from '../checkout'
 import UsageBar from '../components/UsageBar'
 import CreditsEmptyModal from '../components/CreditsEmptyModal'
 import WelcomeModal from '../components/WelcomeModal'
@@ -1547,6 +1548,16 @@ export default function Dashboard() {
         setData(d)
         setVideos(d.videos || [])
         setLoad(false)
+        // Resume checkout if the user picked a paid plan on the landing page
+        // before signing in. The plan key was stashed by openCheckout() before
+        // the redirect to /auth/login; consume it once and open Paddle now
+        // that they're authenticated.
+        let pending = null
+        try { pending = sessionStorage.getItem('ytg_pending_plan') } catch {}
+        if (pending) {
+          try { sessionStorage.removeItem('ytg_pending_plan') } catch {}
+          openCheckout(pending)
+        }
         if (d.insights === null) setAnalyzingAI(true)
         if (d.insights && d.channel?.channel_id) {
           const wKey = `ytg_welcomed_${d.channel.channel_id}`
