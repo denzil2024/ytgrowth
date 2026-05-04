@@ -403,9 +403,12 @@ try:
         "ALTER TABLE weekly_reports ADD COLUMN opened BOOLEAN DEFAULT 0",
         "ALTER TABLE weekly_reports ADD COLUMN unsubscribed BOOLEAN DEFAULT 0",
         "ALTER TABLE user_email_preferences ADD COLUMN unsubscribe_token TEXT",
-        "ALTER TABLE user_email_preferences ADD COLUMN resubscribed_at DATETIME",
-        "ALTER TABLE user_email_preferences ADD COLUMN welcome_email_sent_at DATETIME",
-        "ALTER TABLE user_email_preferences ADD COLUMN reengagement_email_sent_at DATETIME",
+        # TIMESTAMP not DATETIME — Postgres has no DATETIME type, ALTERs fail
+        # silently on prod and these columns never get created. SQLite accepts
+        # TIMESTAMP via type affinity, so this works on both.
+        "ALTER TABLE user_email_preferences ADD COLUMN resubscribed_at TIMESTAMP",
+        "ALTER TABLE user_email_preferences ADD COLUMN welcome_email_sent_at TIMESTAMP",
+        "ALTER TABLE user_email_preferences ADD COLUMN reengagement_email_sent_at TIMESTAMP",
         "ALTER TABLE user_sessions ADD COLUMN owner_email TEXT",
         "CREATE TABLE IF NOT EXISTS user_accounts (email TEXT PRIMARY KEY, google_id TEXT, display_name TEXT, profile_picture TEXT, created_at DATETIME)",
         "ALTER TABLE user_accounts ADD COLUMN utm_source TEXT",
