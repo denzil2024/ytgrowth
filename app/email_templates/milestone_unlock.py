@@ -208,34 +208,33 @@ def build_email_html(
         f"background:linear-gradient(180deg, {cat['h1']}18 0%, #ffffff 38%, #ffffff 100%);"
     )
 
-    # Avatar — 68px content + 3px border × 2 = 74px outer.
+    # Avatar — inline-block so it sits on the same line as the badge.
+    # vertical-align:top anchors both avatar and badge to the top of the line.
     if channel_thumbnail:
         avatar_main = (
             f'<img src="{channel_thumbnail}" width="68" height="68" alt="" '
-            f'style="display:block;width:68px;height:68px;border-radius:50%;'
+            f'style="display:inline-block;vertical-align:top;width:68px;height:68px;border-radius:50%;'
             f'object-fit:cover;border:3px solid #ffffff;'
             f'box-shadow:0 0 0 1.5px #e5e5ec, 0 4px 14px rgba(0,0,0,0.12);">'
         )
     else:
         initial = (channel_name or "?")[0].upper()
         avatar_main = (
-            f'<div style="display:block;width:68px;height:68px;border-radius:50%;'
+            f'<div style="display:inline-block;vertical-align:top;width:68px;height:68px;border-radius:50%;'
             f'background:#ff3b30;color:#ffffff;font-size:28px;font-weight:800;'
             f'line-height:68px;text-align:center;border:3px solid #ffffff;'
             f'box-shadow:0 0 0 1.5px #e5e5ec, 0 4px 14px rgba(0,0,0,0.12);">'
             f'{initial}</div>'
         )
-    # Badge: copied from Dashboard.jsx MilestoneShareCard line 533-544.
-    # In-app: position:absolute; bottom:-2; right:-2 on a 68px container.
-    # Gmail strips position:absolute, so we use negative margins instead:
-    #   avatar = 68px content + 3px border = 74px rendered height/width
-    #   badge top  = 74 - 30 = 44px  (matches bottom:-2 of 68px container → bottom at 70)
-    #   badge left = 44px             (matches right:-2 of 68px container → right at 70)
-    # In-app SVG play icon (fill:#fff) stripped by Gmail → CSS border triangle.
+    # Badge: inline-block on the SAME LINE as the avatar.
+    # Avatar is 74px wide (68 content + 3px border × 2). After the avatar the badge
+    # would start at x=74. margin-left:-30px pulls it back to x=44.
+    # margin-top:44px pushes it down to y=44 (badge bottom = 70, avatar bottom = 74 → 4px inside).
+    # white-space:nowrap on the container stops the badge wrapping to a new line.
     youtube_badge = (
-        '<div style="display:block;width:26px;height:26px;background:#ff3b30;border-radius:7px;'
-        'border:2px solid #ffffff;box-shadow:0 2px 5px rgba(0,0,0,0.2);'
-        'margin-top:-30px;margin-left:44px;">'
+        '<div style="display:inline-block;vertical-align:top;width:26px;height:26px;'
+        'background:#ff3b30;border-radius:7px;border:2px solid #ffffff;'
+        'box-shadow:0 2px 5px rgba(0,0,0,0.2);margin-left:-30px;margin-top:44px;">'
         '<div style="width:0;height:0;'
         'border-top:6px solid transparent;border-bottom:6px solid transparent;'
         'border-left:10px solid #ffffff;margin:5px 0 0 7px;font-size:0;line-height:0;"></div>'
@@ -249,34 +248,19 @@ def build_email_html(
     tier_str  = _fmt_num(tier)
     safe_date = achieved_date.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
 
-    # Date ribbon — pure HTML with CSS border-triangles for the notch ends.
-    # This guarantees white text in ALL email clients (Gmail, Apple Mail, Outlook).
-    # SVG <text> fill can be stripped by Gmail; HTML color:#ffffff is 100% reliable.
-    # Notch technique: two corner-triangles (upper + lower) in ribbon colors create
-    # the pointed V-cut on each side without CSS clip-path (which Gmail strips).
+    # Date ribbon — plain gradient rectangle. color:#ffffff on a <td> is 100%
+    # reliable in all email clients. No notch triangles (they rendered as outward
+    # arrows in Gmail, not inward V-cuts). Clean red gradient + white text matches
+    # the most important visual elements of the in-app ribbon.
     date_ribbon_html = (
         '<table role="presentation" cellspacing="0" cellpadding="0" border="0">'
         '<tr>'
-        # Left notch: upper-left tri (#ff4a3f) + lower-left tri (#e5251b)
-        '<td style="padding:0;vertical-align:top;font-size:0;line-height:0;">'
-        '<div style="width:0;height:0;border-top:18px solid #ff4a3f;'
-        'border-right:10px solid transparent;font-size:0;line-height:0;display:block;"></div>'
-        '<div style="width:0;height:0;border-bottom:18px solid #e5251b;'
-        'border-right:10px solid transparent;font-size:0;line-height:0;display:block;"></div>'
-        '</td>'
-        # Center: gradient + guaranteed-white text
         f'<td style="background:linear-gradient(180deg,#ff4a3f 0%,#e5251b 100%);'
         f'padding:11px 32px;'
         f'font-family:\'Inter\',-apple-system,BlinkMacSystemFont,\'Segoe UI\',Helvetica,Arial,sans-serif;'
-        f'font-size:14px;font-weight:700;color:#ffffff;letter-spacing:-0.1px;white-space:nowrap;">'
+        f'font-size:14px;font-weight:700;color:#ffffff;letter-spacing:-0.1px;white-space:nowrap;'
+        f'box-shadow:0 3px 10px rgba(229,37,27,0.28);">'
         f'Achieved {safe_date}'
-        '</td>'
-        # Right notch: upper-right tri + lower-right tri
-        '<td style="padding:0;vertical-align:top;font-size:0;line-height:0;">'
-        '<div style="width:0;height:0;border-top:18px solid #ff4a3f;'
-        'border-left:10px solid transparent;font-size:0;line-height:0;display:block;"></div>'
-        '<div style="width:0;height:0;border-bottom:18px solid #e5251b;'
-        'border-left:10px solid transparent;font-size:0;line-height:0;display:block;"></div>'
         '</td>'
         '</tr>'
         '</table>'
@@ -362,11 +346,11 @@ def build_email_html(
               <tr>
                 <td align="center" style="padding-top:32px;">
                   <!-- Container 74px = full rendered avatar size (68 content + 3px border × 2).
-                       font-size:0 line-height:0 kills whitespace gaps between block elements.
-                       Badge uses margin-top:-30px margin-left:44px to replicate
-                       position:absolute bottom:-2 right:-2 from Dashboard.jsx line 534
-                       (Gmail strips position:absolute; negative margins achieve same result). -->
-                  <div style="width:74px;margin:0 auto;font-size:0;line-height:0;">
+                       white-space:nowrap keeps avatar + badge on the same inline line.
+                       font-size:0 kills whitespace gaps between inline-block elements.
+                       Badge uses margin-left:-30px margin-top:44px so it sits on the
+                       same line as the avatar but pulled back to overlap its bottom-right corner. -->
+                  <div style="width:74px;margin:0 auto;font-size:0;line-height:0;white-space:nowrap;">
                     {avatar_main}
                     {youtube_badge}
                   </div>
