@@ -1756,16 +1756,24 @@ export default function Dashboard() {
                     currentChannelId={data.channel.channel_id}
                   />
                 </div>
-              : <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 14 }}>
+              : (() => {
+                  // Avatar ring caps at amber even when score is critical — a blood-red
+                  // ring around the user's own face reads as an error indicator. The
+                  // score number itself still goes red (that's informational).
+                  const ringClr = score >= 75 ? C.green : C.amber
+                  return (
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 14 }}>
                   {data.channel.thumbnail
-                    ? <img src={data.channel.thumbnail} alt="" style={{ width: 40, height: 40, borderRadius: '50%', objectFit: 'cover', flexShrink: 0, boxShadow: `0 0 0 2.5px #fff, 0 0 0 4.5px ${scoreColor(score)}, 0 0 14px ${scoreColor(score)}55` }}/>
-                    : <div style={{ width: 40, height: 40, borderRadius: '50%', background: C.redBg, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, fontWeight: 700, color: C.red, flexShrink: 0, boxShadow: `0 0 0 2.5px #fff, 0 0 0 4.5px ${scoreColor(score)}, 0 0 14px ${scoreColor(score)}55` }}>{data.channel.channel_name[0].toUpperCase()}</div>
+                    ? <img src={data.channel.thumbnail} alt="" style={{ width: 40, height: 40, borderRadius: '50%', objectFit: 'cover', flexShrink: 0, boxShadow: `0 0 0 2.5px #fff, 0 0 0 4.5px ${ringClr}, 0 0 14px ${ringClr}55` }}/>
+                    : <div style={{ width: 40, height: 40, borderRadius: '50%', background: C.redBg, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, fontWeight: 700, color: C.red, flexShrink: 0, boxShadow: `0 0 0 2.5px #fff, 0 0 0 4.5px ${ringClr}, 0 0 14px ${ringClr}55` }}>{data.channel.channel_name[0].toUpperCase()}</div>
                   }
                   <div style={{ minWidth: 0, flex: 1 }}>
                     <p style={{ fontSize: 14, fontWeight: 600, color: C.text1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', letterSpacing: '-0.2px' }}>{data.channel.channel_name}</p>
                     <p style={{ fontSize: 12, color: C.text3, marginTop: 2 }}>{fmtNum(data.channel.subscribers)} subs</p>
                   </div>
                 </div>
+                  )
+                })()
             }
             {/* Health score bar */}
             <div>
