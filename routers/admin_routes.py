@@ -59,16 +59,10 @@ def admin_overview(request: Request):
 
 
 def _ensure_utm_columns():
-    """Idempotently add the utm_* columns to user_accounts.
-
-    Belt-and-braces: the boot-time migration list does this too, but Postgres
-    will silently skip the rest of the migration list if any earlier statement
-    aborts the transaction. This makes the admin endpoint self-healing on the
-    first hit even if the boot migration failed.
-    """
+    """Idempotently add the utm_* + country columns to user_accounts."""
     from sqlalchemy import text
     from database.models import engine
-    cols = ("utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term")
+    cols = ("utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term", "country")
     try:
         with engine.connect() as conn:
             for c in cols:
@@ -152,6 +146,17 @@ def _build_overview():
         if direct_count:
             utm_breakdown.append({"source": "(direct)", "count": int(direct_count)})
 
+        # ── Country breakdown ────────────────────────────────────────────
+        country_rows = (
+            db.query(UserAccount.country, func.count(UserAccount.email))
+              .filter(UserAccount.country.isnot(None))
+              .filter(UserAccount.country != "")
+              .group_by(UserAccount.country)
+              .all()
+        )
+        country_breakdown = [{"country": c, "count": int(n)} for c, n in country_rows]
+        country_breakdown.sort(key=lambda r: -r["count"])
+
         # ── Recent signups ───────────────────────────────────────────────
         recent_rows = (
             db.query(UserAccount)
@@ -219,11 +224,12 @@ def _build_overview():
                 "signups_trend":    int(signups_7d) - int(signups_prev_7d),
                 "active_7d":        int(active_7d),
             },
-            "plan_breakdown": plan_breakdown,
-            "utm_breakdown":  utm_breakdown,
-            "recent_signups": recent_signups,
-            "top_users":      top_users,
-            "generated_at":   now.isoformat(),
+            "plan_breakdown":    plan_breakdown,
+            "utm_breakdown":     utm_breakdown,
+            "country_breakdown": country_breakdown,
+            "recent_signups":    recent_signups,
+            "top_users":         top_users,
+            "generated_at":      now.isoformat(),
         })
     finally:
         db.close()

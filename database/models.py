@@ -176,6 +176,8 @@ class UserAccount(Base):
     utm_campaign    = Column(String, nullable=True)
     utm_content     = Column(String, nullable=True)
     utm_term        = Column(String, nullable=True)
+    # Geographic data — resolved from signup IP via ip-api.com in background
+    country         = Column(String, nullable=True)
 
 
 class ChannelRegistry(Base):

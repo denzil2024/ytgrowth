@@ -76,6 +76,21 @@ def notify_new_signup(
 
     country, city = _lookup_country(ip_address)
     flag          = COUNTRY_FLAGS.get(country, "🌍")
+
+    # Persist country on the UserAccount row (fire-and-forget, already in bg thread)
+    if country and email:
+        try:
+            from database.models import SessionLocal, UserAccount
+            _db = SessionLocal()
+            try:
+                _acct = _db.query(UserAccount).filter_by(email=email).first()
+                if _acct and not _acct.country:
+                    _acct.country = country
+                    _db.commit()
+            finally:
+                _db.close()
+        except Exception as _ce:
+            print(f"[signup_notify] country save error: {_ce}")
     location_str  = ""
     if city and country:
         location_str = f"{city}, {country}"
