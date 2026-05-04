@@ -361,6 +361,21 @@ class FreeTierFeatureUsage(Base):
     used_at       = Column(DateTime, default=_now)
 
 
+class FeatureRequest(Base):
+    """User-submitted feature requests. Captured from Settings; surfaces in Admin
+    for triage. Status cycles new → planned → shipped (or declined). Never deleted."""
+    __tablename__ = "feature_requests"
+    id           = Column(Integer, primary_key=True, autoincrement=True)
+    email        = Column(String, nullable=False, index=True)
+    display_name = Column(String, nullable=True)
+    title        = Column(String, nullable=False)
+    description  = Column(Text,   nullable=False)
+    status       = Column(String, default="new")  # new | planned | shipped | declined
+    admin_note   = Column(Text,   nullable=True)
+    created_at   = Column(DateTime, default=_now)
+    updated_at   = Column(DateTime, default=_now, onupdate=_now)
+
+
 import os
 DATABASE_URL = os.environ.get("DATABASE_URL", "sqlite:///ytgrowth.db")
 # Railway provides postgres:// but SQLAlchemy needs postgresql://

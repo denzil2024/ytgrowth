@@ -705,6 +705,12 @@ def callback(request: Request, background_tasks: BackgroundTasks):
             else:
                 print(f"[callback] Skipping audit for {channel_id[:8]} — out of credits")
 
+        # If a share-link entry point (e.g. /feedback) stashed a destination
+        # before kicking off OAuth, honour it. One-shot — popped on use so it
+        # doesn't leak into subsequent logins.
+        post_login = request.session.pop("after_login_redirect", None)
+        if post_login and isinstance(post_login, str) and post_login.startswith("/"):
+            return RedirectResponse(f"{BASE_URL}{post_login}")
         return RedirectResponse(f"{BASE_URL}/dashboard")
 
     except Exception as e:

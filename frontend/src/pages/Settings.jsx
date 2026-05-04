@@ -234,6 +234,59 @@ export default function Settings({ channelData }) {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
   const [toggleWorking, setToggleWorking] = useState(false)
 
+  // ── Feature request state ──────────────────────────────────────────────
+  const [frTitle, setFrTitle]         = useState('')
+  const [frDesc, setFrDesc]           = useState('')
+  const [frSending, setFrSending]     = useState(false)
+  const [frError, setFrError]         = useState('')
+  const [frSuccess, setFrSuccess]     = useState(false)
+  const [frMine, setFrMine]           = useState([])
+  const [frShareCopied, setFrShareCopied] = useState(false)
+  const FR_TITLE_MAX = 120
+  const FR_DESC_MAX  = 2000
+
+  function loadFrMine() {
+    fetch('/feedback/mine', { credentials: 'include' })
+      .then(r => r.ok ? r.json() : { requests: [] })
+      .then(d => setFrMine(d.requests || []))
+      .catch(() => {})
+  }
+
+  function submitFeatureRequest() {
+    setFrError('')
+    if (!frTitle.trim() || !frDesc.trim()) {
+      setFrError('Both fields are required.')
+      return
+    }
+    setFrSending(true)
+    fetch('/feedback/submit', {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ title: frTitle.trim(), description: frDesc.trim() }),
+    })
+      .then(async r => {
+        const d = await r.json().catch(() => ({}))
+        if (!r.ok) throw new Error(d.error || 'Could not submit')
+        setFrTitle('')
+        setFrDesc('')
+        setFrSuccess(true)
+        setTimeout(() => setFrSuccess(false), 3500)
+        loadFrMine()
+      })
+      .catch(e => setFrError(e.message))
+      .finally(() => setFrSending(false))
+  }
+
+  function copyShareLink() {
+    const url = `${window.location.origin}/feedback`
+    try {
+      navigator.clipboard.writeText(url)
+      setFrShareCopied(true)
+      setTimeout(() => setFrShareCopied(false), 1800)
+    } catch {}
+  }
+
   function loadMe() {
     fetch('/auth/me', { credentials: 'include' })
       .then(r => r.json())
@@ -246,6 +299,25 @@ export default function Settings({ channelData }) {
     const refresh = () => loadMe()
     window.addEventListener('ytg:credits-changed', refresh)
     return () => window.removeEventListener('ytg:credits-changed', refresh)
+  }, [])
+
+  // Load existing feature requests + scroll to feedback when arriving via share link
+  useEffect(() => {
+    loadFrMine()
+    try {
+      const params = new URLSearchParams(window.location.search)
+      if (params.get('focus') === 'feedback') {
+        // Wait one frame for the section to render, then scroll it into view
+        setTimeout(() => {
+          const el = document.getElementById('feedback-section')
+          if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+          // Strip the param so refreshes don't keep re-scrolling
+          params.delete('focus')
+          const qs = params.toString()
+          window.history.replaceState({}, '', window.location.pathname + (qs ? `?${qs}` : ''))
+        }, 120)
+      }
+    } catch {}
   }, [])
 
   function handleSwitch(channelId) {
@@ -540,7 +612,135 @@ export default function Settings({ channelData }) {
         </div>
       </div>
 
-      {/* ── Row 3: Support — full width ───────────────────────────────────── */}
+      {/* ── Row 3: Feature requests — full width ──────────────────────────── */}
+      <div id="feedback-section" style={{ marginBottom: 10, display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 12 }}>
+        <SectionHeading>Feature requests</SectionHeading>
+        <button
+          onClick={copyShareLink}
+          style={{
+            display: 'inline-flex', alignItems: 'center', gap: 6,
+            fontSize: 11.5, fontWeight: 600, color: frShareCopied ? C.green : C.text3,
+            background: 'transparent', border: 'none', cursor: 'pointer',
+            fontFamily: 'inherit', padding: 0,
+            transition: 'color 0.15s',
+          }}
+          title="Copy a public link you can share via email"
+        >
+          {frShareCopied ? (
+            <>
+              <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="1.5,5.5 4.5,8.5 9.5,2.5"/></svg>
+              Link copied
+            </>
+          ) : (
+            <>
+              <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"><path d="M5 7.5L7 5.5M4.5 4.5L3 6a2 2 0 0 0 2.83 2.83L7 7.5M7.5 7.5L9 6a2 2 0 0 0-2.83-2.83L5 4.5"/></svg>
+              Copy share link
+            </>
+          )}
+        </button>
+      </div>
+      <div style={{ ...CARD, padding: '20px 24px', marginBottom: 24 }}>
+        <p style={{ fontSize: 14, fontWeight: 700, color: C.text1, letterSpacing: '-0.2px', marginBottom: 4 }}>Tell us what to build next</p>
+        <p style={{ fontSize: 13, color: C.text2, lineHeight: 1.6, marginBottom: 16 }}>
+          We read every request. Be specific — what's missing, who it's for, why it matters.
+        </p>
+
+        {/* Title */}
+        <label style={{ display: 'block', fontSize: 11, fontWeight: 600, color: C.text3, letterSpacing: '0.05em', textTransform: 'uppercase', marginBottom: 5 }}>
+          Title
+        </label>
+        <input
+          type="text"
+          value={frTitle}
+          onChange={e => setFrTitle(e.target.value.slice(0, FR_TITLE_MAX))}
+          placeholder="e.g. Bulk-edit video tags"
+          style={{
+            width: '100%', fontSize: 13.5, fontFamily: 'inherit', color: C.text1,
+            background: '#fafafb', border: `1px solid ${C.borderHex}`, borderRadius: 10,
+            padding: '10px 13px', outline: 'none',
+            transition: 'border-color 0.15s, background 0.15s',
+          }}
+          onFocus={e => { e.currentTarget.style.borderColor = C.text3; e.currentTarget.style.background = '#fff' }}
+          onBlur={e => { e.currentTarget.style.borderColor = C.borderHex; e.currentTarget.style.background = '#fafafb' }}
+        />
+
+        {/* Description */}
+        <label style={{ display: 'block', fontSize: 11, fontWeight: 600, color: C.text3, letterSpacing: '0.05em', textTransform: 'uppercase', margin: '14px 0 5px' }}>
+          What would you like to see?
+        </label>
+        <textarea
+          value={frDesc}
+          onChange={e => setFrDesc(e.target.value.slice(0, FR_DESC_MAX))}
+          rows={4}
+          placeholder="Describe the feature, the problem it solves, and how you'd use it."
+          style={{
+            width: '100%', fontSize: 13.5, fontFamily: 'inherit', color: C.text1,
+            background: '#fafafb', border: `1px solid ${C.borderHex}`, borderRadius: 10,
+            padding: '10px 13px', outline: 'none', resize: 'vertical', minHeight: 92,
+            lineHeight: 1.55,
+            transition: 'border-color 0.15s, background 0.15s',
+          }}
+          onFocus={e => { e.currentTarget.style.borderColor = C.text3; e.currentTarget.style.background = '#fff' }}
+          onBlur={e => { e.currentTarget.style.borderColor = C.borderHex; e.currentTarget.style.background = '#fafafb' }}
+        />
+
+        {/* Footer row — counter, error, submit */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, marginTop: 12 }}>
+          <div style={{ fontSize: 11.5, color: frError ? C.red : C.text3, fontVariantNumeric: 'tabular-nums' }}>
+            {frError
+              ? frError
+              : frSuccess
+                ? <span style={{ color: C.green, fontWeight: 600 }}>✓ Sent — thanks for the suggestion.</span>
+                : `${frDesc.length} / ${FR_DESC_MAX}`}
+          </div>
+          <button
+            onClick={submitFeatureRequest}
+            disabled={frSending || !frTitle.trim() || !frDesc.trim()}
+            style={{
+              fontSize: 12.5, fontWeight: 700, cursor: (frSending || !frTitle.trim() || !frDesc.trim()) ? 'not-allowed' : 'pointer',
+              background: C.red, border: `1px solid ${C.red}`, color: '#fff',
+              borderRadius: 100, padding: '8px 18px',
+              fontFamily: 'inherit', flexShrink: 0,
+              opacity: (frSending || !frTitle.trim() || !frDesc.trim()) ? 0.55 : 1,
+              transition: 'opacity 0.15s, transform 0.15s',
+            }}
+          >{frSending ? 'Sending…' : 'Send feature request'}</button>
+        </div>
+
+        {/* Past submissions */}
+        {frMine.length > 0 && (
+          <div style={{ marginTop: 22, paddingTop: 18, borderTop: `1px solid ${C.borderHex}` }}>
+            <p style={{ fontSize: 11, fontWeight: 600, color: C.text3, letterSpacing: '0.05em', textTransform: 'uppercase', marginBottom: 12 }}>
+              Your previous requests
+            </p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+              {frMine.map(r => {
+                const sty = (() => {
+                  if (r.status === 'shipped')  return { c: C.green, bg: C.greenBg, b: C.greenBdr, label: 'Shipped' }
+                  if (r.status === 'planned')  return { c: C.amber, bg: C.amberBg, b: C.amberBdr, label: 'Planned' }
+                  if (r.status === 'declined') return { c: C.text3, bg: C.chipBg,  b: C.borderHex, label: 'Declined' }
+                  return { c: C.text2, bg: C.chipBg, b: C.borderHex, label: 'Under review' }
+                })()
+                return (
+                  <div key={r.id} style={{ display: 'flex', alignItems: 'flex-start', gap: 12, padding: '10px 12px', background: '#fafafb', border: `1px solid ${C.borderHex}`, borderRadius: 10 }}>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <p style={{ fontSize: 13, fontWeight: 600, color: C.text1, letterSpacing: '-0.1px' }}>{r.title}</p>
+                      <p style={{ fontSize: 12, color: C.text3, marginTop: 2 }}>{fmtDate(r.created_at)}</p>
+                    </div>
+                    <span style={{
+                      fontSize: 10, fontWeight: 700, color: sty.c, background: sty.bg,
+                      border: `1px solid ${sty.b}`, padding: '3px 9px', borderRadius: 100,
+                      letterSpacing: '0.05em', textTransform: 'uppercase', flexShrink: 0,
+                    }}>{sty.label}</span>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* ── Row 4: Support — full width ───────────────────────────────────── */}
       <div style={{ marginBottom: 10 }}>
         <SectionHeading>Support</SectionHeading>
       </div>

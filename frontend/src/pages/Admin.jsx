@@ -245,6 +245,33 @@ export default function Admin() {
   const [refreshing, setRefreshing] = useState(false)
   const [signupPage, setSignupPage] = useState(0)
 
+  // Feature requests
+  const [frData,     setFrData]     = useState(null)
+  const [frFilter,   setFrFilter]   = useState('all')  // all|new|planned|shipped|declined
+  const [frExpanded, setFrExpanded] = useState(null)   // request id of opened body
+  const [frBusy,     setFrBusy]     = useState(null)   // request id currently saving
+
+  function loadFeatureRequests() {
+    fetch('/feedback/admin/list', { credentials: 'include' })
+      .then(r => r.ok ? r.json() : null)
+      .then(d => { if (d) setFrData(d) })
+      .catch(() => {})
+  }
+
+  function setFrStatus(id, status) {
+    setFrBusy(id)
+    fetch(`/feedback/admin/${id}/status`, {
+      method: 'POST', credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status }),
+    })
+      .then(r => r.ok ? r.json() : null)
+      .then(() => loadFeatureRequests())
+      .finally(() => setFrBusy(null))
+  }
+
+  useEffect(() => { loadFeatureRequests() }, [])
+
   function load(initial = false) {
     if (initial) setLoading(true); else setRefreshing(true)
     setError('')
@@ -504,6 +531,133 @@ export default function Admin() {
           }
         </div>
       </div>
+
+      {/* ── Feature requests ─────────────────────────────────────────────── */}
+      {frData && (() => {
+        const counts = frData.counts || {}
+        const all    = frData.requests || []
+        const filtered = frFilter === 'all' ? all : all.filter(r => r.status === frFilter)
+
+        const FILTERS = [
+          { key: 'all',      label: 'All',       count: all.length },
+          { key: 'new',      label: 'New',       count: counts.new      || 0 },
+          { key: 'planned',  label: 'Planned',   count: counts.planned  || 0 },
+          { key: 'shipped',  label: 'Shipped',   count: counts.shipped  || 0 },
+          { key: 'declined', label: 'Declined',  count: counts.declined || 0 },
+        ]
+
+        const statusStyle = (s) => {
+          if (s === 'shipped')  return { c: C.green, bg: '#ecfdf5', b: '#a7f3d0', label: 'Shipped' }
+          if (s === 'planned')  return { c: C.amber, bg: '#fffbeb', b: '#fde68a', label: 'Planned' }
+          if (s === 'declined') return { c: C.text3, bg: '#f4f4f6', b: C.border,  label: 'Declined' }
+          return                       { c: C.text2, bg: '#f4f4f6', b: C.border,  label: 'New' }
+        }
+
+        return (
+          <div style={{ marginBottom: 24 }}>
+            <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 12, gap: 12 }}>
+              <SectionLabel>Feature requests</SectionLabel>
+              <span style={{ fontSize: 11, color: C.text3, fontWeight: 500 }}>
+                Share link: <code style={{ background: '#f4f4f6', border: `1px solid ${C.border}`, padding: '1px 6px', borderRadius: 4, fontSize: 11 }}>/feedback</code>
+              </span>
+            </div>
+
+            {/* Filter chips */}
+            <div style={{ display: 'flex', gap: 7, marginBottom: 12, flexWrap: 'wrap' }}>
+              {FILTERS.map(f => {
+                const active = frFilter === f.key
+                return (
+                  <button
+                    key={f.key}
+                    onClick={() => setFrFilter(f.key)}
+                    style={{
+                      display: 'inline-flex', alignItems: 'center', gap: 6,
+                      padding: '6px 13px', borderRadius: 100,
+                      border: `1px solid ${active ? C.text2 : C.border}`,
+                      background: active ? C.text1 : C.surface,
+                      color: active ? '#fff' : C.text2,
+                      fontSize: 12, fontWeight: 600, fontFamily: 'inherit',
+                      cursor: 'pointer',
+                      transition: 'all 0.15s',
+                    }}
+                  >
+                    {f.label}
+                    <span style={{
+                      fontSize: 10.5, fontWeight: 700,
+                      background: active ? 'rgba(255,255,255,0.18)' : '#f4f4f6',
+                      color: active ? '#fff' : C.text3,
+                      padding: '1px 7px', borderRadius: 100,
+                    }}>{f.count}</span>
+                  </button>
+                )
+              })}
+            </div>
+
+            <div style={{ ...CARD, overflow: 'hidden' }}>
+              {filtered.length === 0 ? (
+                <div style={{ padding: '40px 24px', textAlign: 'center', fontSize: 13, color: C.text3 }}>
+                  {frFilter === 'all'
+                    ? 'No feature requests yet. Share the link to get the first one.'
+                    : `No requests with status "${frFilter}".`}
+                </div>
+              ) : (
+                filtered.map((r, i) => {
+                  const sty = statusStyle(r.status)
+                  const open = frExpanded === r.id
+                  const last = i === filtered.length - 1
+                  const NEXT_STATUS = { new: 'planned', planned: 'shipped', shipped: 'declined', declined: 'new' }
+                  return (
+                    <div key={r.id} style={{ borderBottom: last ? 'none' : `1px solid ${C.border}` }}>
+                      <div className="adm-row"
+                        onClick={() => setFrExpanded(open ? null : r.id)}
+                        style={{
+                          padding: '14px 24px', display: 'flex', alignItems: 'flex-start', gap: 14,
+                          cursor: 'pointer',
+                        }}>
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 9, marginBottom: 3 }}>
+                            <p style={{ fontSize: 13.5, fontWeight: 700, color: C.text1, letterSpacing: '-0.15px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{r.title}</p>
+                            <span style={{
+                              fontSize: 10, fontWeight: 700, color: sty.c, background: sty.bg,
+                              border: `1px solid ${sty.b}`, padding: '2px 8px', borderRadius: 100,
+                              letterSpacing: '0.05em', textTransform: 'uppercase', flexShrink: 0,
+                            }}>{sty.label}</span>
+                          </div>
+                          <p style={{ fontSize: 11.5, color: C.text3, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                            {r.display_name || r.email.split('@')[0]} · {r.email} · {relTime(r.created_at)}
+                          </p>
+                        </div>
+                        <button
+                          onClick={(e) => { e.stopPropagation(); setFrStatus(r.id, NEXT_STATUS[r.status] || 'new') }}
+                          disabled={frBusy === r.id}
+                          style={{
+                            padding: '5px 13px', borderRadius: 100,
+                            border: `1px solid ${C.border}`, background: C.surface,
+                            color: C.text2, fontSize: 11.5, fontWeight: 600,
+                            cursor: frBusy === r.id ? 'wait' : 'pointer', fontFamily: 'inherit',
+                            opacity: frBusy === r.id ? 0.55 : 1, flexShrink: 0,
+                            whiteSpace: 'nowrap',
+                          }}
+                          title={`Move to ${NEXT_STATUS[r.status] || 'new'}`}
+                        >
+                          → {NEXT_STATUS[r.status] || 'new'}
+                        </button>
+                      </div>
+                      {open && (
+                        <div style={{ padding: '0 24px 16px', display: 'flex', gap: 12 }}>
+                          <div style={{ flex: 1, padding: '13px 15px', background: '#fafafc', border: `1px solid ${C.border}`, borderRadius: 10, fontSize: 13, color: C.text2, lineHeight: 1.65, whiteSpace: 'pre-wrap' }}>
+                            {r.description}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )
+                })
+              )}
+            </div>
+          </div>
+        )
+      })()}
 
     </div>
   )

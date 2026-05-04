@@ -1600,6 +1600,21 @@ export default function Dashboard() {
       })
       .catch(() => {})
 
+    // ?nav=<Tab> deep link — used by share links like /feedback to land users
+    // on a specific tab. Settings reads its own ?focus param to scroll into view.
+    try {
+      const params = new URLSearchParams(window.location.search)
+      const navTarget = params.get('nav')
+      const VALID_NAV = ['Overview','Videos','Autopsy','Weekly Report','SEO Studio','Thumbnail Score','Video Ideas','Outliers','Keywords','Competitors','Settings','Referrals','Admin']
+      if (navTarget && VALID_NAV.includes(navTarget)) {
+        setNav(navTarget)
+        // Don't strip ?focus — Settings reads it on mount.
+        params.delete('nav')
+        const qs = params.toString()
+        window.history.replaceState({}, '', window.location.pathname + (qs ? `?${qs}` : ''))
+      }
+    } catch {}
+
     // DEV: ?preview_milestone=subs:1000 fires the celebration modal for testing. Safe to remove.
     try {
       const params = new URLSearchParams(window.location.search)

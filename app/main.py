@@ -35,6 +35,7 @@ from routers import outliers_routes
 from routers import autopsy_routes
 from routers import affiliate_routes
 from routers import admin_routes
+from routers import feedback_routes
 
 app = FastAPI(title="YTGrowth API", redirect_slashes=False, lifespan=lifespan)
 
@@ -84,6 +85,8 @@ app.include_router(outliers_routes.router,   prefix="/outliers")
 app.include_router(autopsy_routes.router,    prefix="/autopsy")
 app.include_router(affiliate_routes.router,  prefix="/api/affiliate")
 app.include_router(admin_routes.router,      prefix="/admin")
+# /feedback (share link, no prefix) + /feedback/* (submit, mine, admin)
+app.include_router(feedback_routes.router,    prefix="/feedback")
 
 
 
