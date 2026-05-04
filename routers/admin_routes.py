@@ -156,6 +156,8 @@ def _build_overview():
         )
         country_breakdown = [{"country": c, "count": int(n)} for c, n in country_rows]
         country_breakdown.sort(key=lambda r: -r["count"])
+        known_country_count = sum(r["count"] for r in country_breakdown)
+        unknown_country_count = max(0, int(total_users) - known_country_count)
 
         # ── Recent signups ───────────────────────────────────────────────
         recent_rows = (
@@ -193,7 +195,7 @@ def _build_overview():
             db.query(UserSubscription)
               .filter(UserSubscription.monthly_used > 0)
               .order_by(desc(UserSubscription.monthly_used))
-              .limit(15)
+              .limit(5)
               .all()
         )
         top_users = []
@@ -226,7 +228,8 @@ def _build_overview():
             },
             "plan_breakdown":    plan_breakdown,
             "utm_breakdown":     utm_breakdown,
-            "country_breakdown": country_breakdown,
+            "country_breakdown":         country_breakdown,
+            "unknown_country_count":     unknown_country_count,
             "recent_signups":    recent_signups,
             "top_users":         top_users,
             "generated_at":      now.isoformat(),
