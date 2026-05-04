@@ -225,29 +225,60 @@ def build_email_html(
             f'box-shadow:0 0 0 1.5px #e5e5ec, 0 4px 14px rgba(0,0,0,0.12);">'
             f'{initial}</div>'
         )
-    # Badge: position:absolute inside a position:relative 74px container.
-    # Container is 74px (= avatar outer size) so bottom:-2px right:-2px places
-    # the badge exactly at the avatar corner, matching the in-app exactly.
+    # Badge: 26×26 with border-radius:7, matching in-app exactly.
+    # Container is 68px (content-box) so the avatar (68px + 3px border = 74px rendered)
+    # OVERFLOWS the container by 3px. Badge at bottom:-2 right:-2 of the 68px
+    # container lands at 70px from left, just inside the avatar's 71px right border edge —
+    # giving the "slightly inside" look from the in-app card.
     youtube_badge = (
         '<div style="position:absolute;bottom:-2px;right:-2px;'
-        'width:22px;height:22px;background:#ff3b30;border-radius:5px;'
+        'width:26px;height:26px;background:#ff3b30;border-radius:7px;'
         'border:2px solid #ffffff;box-shadow:0 2px 5px rgba(0,0,0,0.2);">'
         '<div style="width:0;height:0;'
-        'border-top:5px solid transparent;border-bottom:5px solid transparent;'
-        'border-left:9px solid #ffffff;margin:6px 0 0 6px;font-size:0;line-height:0;"></div>'
+        'border-top:6px solid transparent;border-bottom:6px solid transparent;'
+        'border-left:11px solid #ffffff;margin:5px 0 0 7px;font-size:0;line-height:0;"></div>'
         '</div>'
     )
 
     # Gmail strips inline <svg> tags but RENDERS svg referenced via <img src>.
     # We pre-generate one SVG file per category at build time and serve it as
     # a static asset so the medal actually shows up in the inbox.
-    import urllib.parse
-    medal_url      = f"{base_url}/email-assets/medal-{category}.svg"
-    date_ribbon_url = f"{base_url}/email-assets/date-ribbon.svg?date={urllib.parse.quote(achieved_date)}"
-    # Pre-compute ribbon width so the <img> has correct dimensions.
-    _date_label = f"Achieved {achieved_date}"
-    ribbon_w    = max(220, 14 + len(_date_label) * 8)
-    tier_str    = _fmt_num(tier)
+    medal_url = f"{base_url}/email-assets/medal-{category}.svg"
+    tier_str  = _fmt_num(tier)
+    safe_date = achieved_date.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+
+    # Date ribbon — pure HTML with CSS border-triangles for the notch ends.
+    # This guarantees white text in ALL email clients (Gmail, Apple Mail, Outlook).
+    # SVG <text> fill can be stripped by Gmail; HTML color:#ffffff is 100% reliable.
+    # Notch technique: two corner-triangles (upper + lower) in ribbon colors create
+    # the pointed V-cut on each side without CSS clip-path (which Gmail strips).
+    date_ribbon_html = (
+        '<table role="presentation" cellspacing="0" cellpadding="0" border="0">'
+        '<tr>'
+        # Left notch: upper-left tri (#ff4a3f) + lower-left tri (#e5251b)
+        '<td style="padding:0;vertical-align:top;font-size:0;line-height:0;">'
+        '<div style="width:0;height:0;border-top:18px solid #ff4a3f;'
+        'border-right:10px solid transparent;font-size:0;line-height:0;display:block;"></div>'
+        '<div style="width:0;height:0;border-bottom:18px solid #e5251b;'
+        'border-right:10px solid transparent;font-size:0;line-height:0;display:block;"></div>'
+        '</td>'
+        # Center: gradient + guaranteed-white text
+        f'<td style="background:linear-gradient(180deg,#ff4a3f 0%,#e5251b 100%);'
+        f'padding:0 26px;height:36px;line-height:36px;vertical-align:middle;'
+        f'font-family:\'Inter\',-apple-system,BlinkMacSystemFont,\'Segoe UI\',Helvetica,Arial,sans-serif;'
+        f'font-size:14px;font-weight:700;color:#ffffff;letter-spacing:-0.1px;white-space:nowrap;">'
+        f'Achieved {safe_date}'
+        '</td>'
+        # Right notch: upper-right tri + lower-right tri
+        '<td style="padding:0;vertical-align:top;font-size:0;line-height:0;">'
+        '<div style="width:0;height:0;border-top:18px solid #ff4a3f;'
+        'border-left:10px solid transparent;font-size:0;line-height:0;display:block;"></div>'
+        '<div style="width:0;height:0;border-bottom:18px solid #e5251b;'
+        'border-left:10px solid transparent;font-size:0;line-height:0;display:block;"></div>'
+        '</td>'
+        '</tr>'
+        '</table>'
+    )
 
     return f"""<!DOCTYPE html>
 <html>
@@ -313,13 +344,13 @@ def build_email_html(
               </tr>
             </table>
 
-            <!-- Date ribbon — hosted SVG so the gradient covers the notched ends
-                 exactly as the in-app clipPath does (CSS triangles can't be gradient). -->
+            <!-- Date ribbon — pure HTML triangles for notch + gradient td for white text.
+                 CSS color:#ffffff on a <td> is reliable in all email clients.
+                 SVG <text> fill can be stripped by Gmail, so we don't use SVG here. -->
             <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
               <tr>
                 <td align="center" style="padding-top:30px;">
-                  <img src="{date_ribbon_url}" width="{ribbon_w}" height="36" alt="Achieved {achieved_date}"
-                       style="display:block;margin:0 auto;border:0;outline:none;text-decoration:none;">
+                  {date_ribbon_html}
                 </td>
               </tr>
             </table>
@@ -328,9 +359,11 @@ def build_email_html(
             <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
               <tr>
                 <td align="center" style="padding-top:32px;">
-                  <!-- 74px container = avatar 68px + 3px border × 2.
-                       position:relative here lets position:absolute work on the badge. -->
-                  <div style="position:relative;width:74px;height:74px;margin:0 auto;">
+                  <!-- 68px container = avatar content width only (NOT including border).
+                       Avatar border (3px) overflows, so right edge lands at 71px.
+                       Badge at bottom:-2 right:-2 → right edge at 70px, 1px inside avatar border.
+                       This replicates the in-app "slightly inside" badge position exactly. -->
+                  <div style="position:relative;width:68px;height:68px;margin:0 auto;">
                     {avatar_main}
                     {youtube_badge}
                   </div>
