@@ -225,18 +225,20 @@ def build_email_html(
             f'box-shadow:0 0 0 1.5px #e5e5ec, 0 4px 14px rgba(0,0,0,0.12);">'
             f'{initial}</div>'
         )
-    # Badge: 26×26 with border-radius:7, matching in-app exactly.
-    # Container is 68px (content-box) so the avatar (68px + 3px border = 74px rendered)
-    # OVERFLOWS the container by 3px. Badge at bottom:-2 right:-2 of the 68px
-    # container lands at 70px from left, just inside the avatar's 71px right border edge —
-    # giving the "slightly inside" look from the in-app card.
+    # Badge: copied from Dashboard.jsx MilestoneShareCard line 533-544.
+    # In-app: position:absolute; bottom:-2; right:-2 on a 68px container.
+    # Gmail strips position:absolute, so we use negative margins instead:
+    #   avatar = 68px content + 3px border = 74px rendered height/width
+    #   badge top  = 74 - 30 = 44px  (matches bottom:-2 of 68px container → bottom at 70)
+    #   badge left = 44px             (matches right:-2 of 68px container → right at 70)
+    # In-app SVG play icon (fill:#fff) stripped by Gmail → CSS border triangle.
     youtube_badge = (
-        '<div style="position:absolute;bottom:-2px;right:-2px;'
-        'width:26px;height:26px;background:#ff3b30;border-radius:7px;'
-        'border:2px solid #ffffff;box-shadow:0 2px 5px rgba(0,0,0,0.2);">'
+        '<div style="display:block;width:26px;height:26px;background:#ff3b30;border-radius:7px;'
+        'border:2px solid #ffffff;box-shadow:0 2px 5px rgba(0,0,0,0.2);'
+        'margin-top:-30px;margin-left:44px;">'
         '<div style="width:0;height:0;'
         'border-top:6px solid transparent;border-bottom:6px solid transparent;'
-        'border-left:11px solid #ffffff;margin:5px 0 0 7px;font-size:0;line-height:0;"></div>'
+        'border-left:10px solid #ffffff;margin:5px 0 0 7px;font-size:0;line-height:0;"></div>'
         '</div>'
     )
 
@@ -264,7 +266,7 @@ def build_email_html(
         '</td>'
         # Center: gradient + guaranteed-white text
         f'<td style="background:linear-gradient(180deg,#ff4a3f 0%,#e5251b 100%);'
-        f'padding:0 26px;height:36px;line-height:36px;vertical-align:middle;'
+        f'padding:11px 32px;'
         f'font-family:\'Inter\',-apple-system,BlinkMacSystemFont,\'Segoe UI\',Helvetica,Arial,sans-serif;'
         f'font-size:14px;font-weight:700;color:#ffffff;letter-spacing:-0.1px;white-space:nowrap;">'
         f'Achieved {safe_date}'
@@ -359,11 +361,12 @@ def build_email_html(
             <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
               <tr>
                 <td align="center" style="padding-top:32px;">
-                  <!-- 68px container = avatar content width only (NOT including border).
-                       Avatar border (3px) overflows, so right edge lands at 71px.
-                       Badge at bottom:-2 right:-2 → right edge at 70px, 1px inside avatar border.
-                       This replicates the in-app "slightly inside" badge position exactly. -->
-                  <div style="position:relative;width:68px;height:68px;margin:0 auto;">
+                  <!-- Container 74px = full rendered avatar size (68 content + 3px border × 2).
+                       font-size:0 line-height:0 kills whitespace gaps between block elements.
+                       Badge uses margin-top:-30px margin-left:44px to replicate
+                       position:absolute bottom:-2 right:-2 from Dashboard.jsx line 534
+                       (Gmail strips position:absolute; negative margins achieve same result). -->
+                  <div style="width:74px;margin:0 auto;font-size:0;line-height:0;">
                     {avatar_main}
                     {youtube_badge}
                   </div>
