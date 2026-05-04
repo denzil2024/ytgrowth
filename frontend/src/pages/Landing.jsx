@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { openCheckout } from '../checkout'
 import LandingFooter from '../components/LandingFooter'
+import AuthErrorModal from '../components/AuthErrorModal'
 
 /* ─── inject font + global styles into <head> once ─────────────────────── */
 function useGlobalStyles() {
@@ -649,15 +650,14 @@ function FounderPricingBand({ isMobile }) {
 }
 
 /* ─── Landing page ──────────────────────────────────────────────────────── */
-const AUTH_ERROR_MESSAGES = {
-  no_channel:      "We couldn't find a YouTube channel on your Google account. Create one at studio.youtube.com, or sign in with the Google account that owns your channel.",
-  channel_locked:  'This channel was recently connected to another account. You can connect it again after 30 days.',
-  channel_taken:   'This channel is already connected to another YTGrowth account.',
-  channel_limit:   'You have reached the channel limit for your plan. Upgrade to connect more channels.',
-  session_expired: 'Your sign-in session expired before we could finish. Please try again.',
-  no_code:         "Sign-in didn't complete. If you cancelled the Google prompt by accident, try again.",
-  analysis_failed: "Sign-in worked, but the first audit failed. Reload the dashboard or try a re-audit — we won't charge a credit for the failure.",
-}
+// Valid auth-error codes returned by routers/auth.py /callback. See
+// AuthErrorModal.jsx for the per-code copy & action wiring. Keep the
+// list in sync with routers/auth.py — every RedirectResponse(?error=...)
+// must have a matching key here, otherwise users see the generic fallback.
+const AUTH_ERROR_CODES = new Set([
+  'no_channel', 'channel_taken', 'channel_locked', 'channel_limit',
+  'no_code', 'session_expired', 'analysis_failed',
+])
 
 export default function Landing() {
   const [loggedIn, setLoggedIn] = useState(false)
@@ -699,12 +699,11 @@ export default function Landing() {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
     const err = params.get('error')
-    if (err && AUTH_ERROR_MESSAGES[err]) {
-      setAuthError(AUTH_ERROR_MESSAGES[err])
-      // Auto-dismiss after 14s for no_channel (longer message), 8s for others
-      const dismissAfter = err === 'no_channel' ? 14000 : 8000
-      setTimeout(() => setAuthError(null), dismissAfter)
-      // Strip ?error from URL so refresh / share doesn't keep re-firing the banner
+    if (err) {
+      // Show the modal for known codes, or fall back to 'generic' for anything
+      // unrecognised so users always get an explanation rather than a silent bounce.
+      setAuthError(AUTH_ERROR_CODES.has(err) ? err : 'generic')
+      // Strip ?error from URL so refresh / share doesn't keep re-firing the modal
       params.delete('error')
       const qs = params.toString()
       window.history.replaceState({}, '', window.location.pathname + (qs ? `?${qs}` : ''))
@@ -735,26 +734,13 @@ export default function Landing() {
   return (
     <div style={{ fontFamily: "'Inter', system-ui, sans-serif", background: 'var(--ytg-bg)', color: 'var(--ytg-text)', overflowX: 'hidden' }}>
 
-      {/* ── AUTH ERROR BANNER ────────────────────────────────────────────── */}
-      {authError && (
-        <div style={{
-          position: 'fixed', top: 16, left: '50%', transform: 'translateX(-50%)',
-          background: '#fff', border: '1px solid rgba(229,37,27,0.25)',
-          borderRadius: 10, padding: '14px 20px',
-          boxShadow: '0 4px 20px rgba(0,0,0,0.14)',
-          zIndex: 200, maxWidth: 480, width: '90%',
-          display: 'flex', alignItems: 'flex-start', gap: 12,
-          animation: 'fadeUp 0.3s ease',
-        }}>
-          <div style={{ width: 18, height: 18, borderRadius: '50%', background: '#fef2f2', border: '1px solid rgba(229,37,27,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 1 }}>
-            <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="#e5251b" strokeWidth="1.8" strokeLinecap="round"><line x1="5" y1="2" x2="5" y2="5.5"/><circle cx="5" cy="7.5" r="0.5" fill="#e5251b" stroke="none"/></svg>
-          </div>
-          <p style={{ fontSize: 14, color: '#374151', lineHeight: 1.6, flex: 1 }}>{authError}</p>
-          <button onClick={() => setAuthError(null)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#9ca3af', padding: 2, flexShrink: 0 }}>
-            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><line x1="2" y1="2" x2="10" y2="10"/><line x1="10" y1="2" x2="2" y2="10"/></svg>
-          </button>
-        </div>
-      )}
+      {/* ── AUTH ERROR — paywall-style modal, replaces the old toast ─────── */}
+      <AuthErrorModal
+        open={!!authError}
+        errorCode={authError}
+        onClose={() => setAuthError(null)}
+      />
+
 
       {/* ── NAV ─────────────────────────────────────────────────────────── */}
       <nav style={{
