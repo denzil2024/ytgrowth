@@ -483,11 +483,16 @@ def callback(request: Request, background_tasks: BackgroundTasks):
         if is_new_signup and google_email:
             try:
                 from app.signup_notification import notify_new_signup
+                ip = (
+                    request.headers.get("x-forwarded-for", "").split(",")[0].strip()
+                    or (request.client.host if request.client else "")
+                )
                 threading.Thread(
                     target=notify_new_signup,
                     kwargs={
                         "email":        google_email,
                         "name":         display_name,
+                        "ip_address":   ip,
                         "utm_source":   signup_utms.get("utm_source"),
                         "utm_medium":   signup_utms.get("utm_medium"),
                         "utm_campaign": signup_utms.get("utm_campaign"),
