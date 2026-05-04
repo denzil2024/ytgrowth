@@ -1738,7 +1738,14 @@ export default function Dashboard() {
 
         {/* Channel profile block */}
         {data && (
-          <div style={{ padding: '16px 22px 14px', borderBottom: `1px solid ${C.border}`, flexShrink: 0 }}>
+          <div style={{ padding: '16px 22px', flexShrink: 0 }}>
+           <div style={{
+             background: 'linear-gradient(180deg, #fafafc 0%, #f5f6f9 100%)',
+             border: '1px solid #ececf0',
+             borderRadius: 12,
+             padding: '13px 14px 12px',
+             boxShadow: '0 1px 2px rgba(0,0,0,0.025), inset 0 1px 0 rgba(255,255,255,0.7)',
+           }}>
             {/* Avatar + name */}
             {channels.length >= 2
               ? <div style={{ marginBottom: 14 }}>
@@ -1770,6 +1777,7 @@ export default function Dashboard() {
                 <div style={{ width: `${score}%`, height: '100%', background: scoreColor(score), borderRadius: 99, transition: 'width 1.2s cubic-bezier(0.34,1.56,0.64,1)' }}/>
               </div>
             </div>
+           </div>
           </div>
         )}
 
