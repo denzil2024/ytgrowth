@@ -650,9 +650,13 @@ function FounderPricingBand({ isMobile }) {
 
 /* ─── Landing page ──────────────────────────────────────────────────────── */
 const AUTH_ERROR_MESSAGES = {
-  channel_locked: 'This channel was recently connected to another account. You can connect it again after 30 days.',
-  channel_taken:  'This channel is already connected to another YTGrowth account.',
-  channel_limit:  'You have reached the channel limit for your plan. Upgrade to connect more channels.',
+  no_channel:      "We couldn't find a YouTube channel on your Google account. Create one at studio.youtube.com, or sign in with the Google account that owns your channel.",
+  channel_locked:  'This channel was recently connected to another account. You can connect it again after 30 days.',
+  channel_taken:   'This channel is already connected to another YTGrowth account.',
+  channel_limit:   'You have reached the channel limit for your plan. Upgrade to connect more channels.',
+  session_expired: 'Your sign-in session expired before we could finish. Please try again.',
+  no_code:         "Sign-in didn't complete. If you cancelled the Google prompt by accident, try again.",
+  analysis_failed: "Sign-in worked, but the first audit failed. Reload the dashboard or try a re-audit — we won't charge a credit for the failure.",
 }
 
 export default function Landing() {
@@ -697,7 +701,13 @@ export default function Landing() {
     const err = params.get('error')
     if (err && AUTH_ERROR_MESSAGES[err]) {
       setAuthError(AUTH_ERROR_MESSAGES[err])
-      setTimeout(() => setAuthError(null), 8000)
+      // Auto-dismiss after 14s for no_channel (longer message), 8s for others
+      const dismissAfter = err === 'no_channel' ? 14000 : 8000
+      setTimeout(() => setAuthError(null), dismissAfter)
+      // Strip ?error from URL so refresh / share doesn't keep re-firing the banner
+      params.delete('error')
+      const qs = params.toString()
+      window.history.replaceState({}, '', window.location.pathname + (qs ? `?${qs}` : ''))
     }
     if (params.get('tab')) {
       setTimeout(() => {
