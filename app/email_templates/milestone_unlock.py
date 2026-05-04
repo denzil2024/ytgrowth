@@ -248,19 +248,39 @@ def build_email_html(
     tier_str  = _fmt_num(tier)
     safe_date = achieved_date.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
 
-    # Date ribbon — plain gradient rectangle. color:#ffffff on a <td> is 100%
-    # reliable in all email clients. No notch triangles (they rendered as outward
-    # arrows in Gmail, not inward V-cuts). Clean red gradient + white text matches
-    # the most important visual elements of the in-app ribbon.
+    # Date ribbon — red gradient outer TD, white V-notch triangles INSIDE.
+    # The outer TD carries the red gradient. Inside, white right/left-pointing
+    # CSS triangles sit at the center of each edge, cutting V-notches into the
+    # ribbon from the inside — exactly like the in-app clipPath polygon.
+    # Text color is HTML color:#ffffff (not SVG fill) so it's 100% reliable.
     date_ribbon_html = (
         '<table role="presentation" cellspacing="0" cellpadding="0" border="0">'
         '<tr>'
-        f'<td style="background:linear-gradient(180deg,#ff4a3f 0%,#e5251b 100%);'
-        f'padding:11px 32px;'
-        f'font-family:\'Inter\',-apple-system,BlinkMacSystemFont,\'Segoe UI\',Helvetica,Arial,sans-serif;'
-        f'font-size:14px;font-weight:700;color:#ffffff;letter-spacing:-0.1px;white-space:nowrap;'
+        f'<td style="background:linear-gradient(180deg,#ff4a3f 0%,#e5251b 100%);padding:0;'
         f'box-shadow:0 3px 10px rgba(229,37,27,0.28);">'
+        # Inner table: [white▶] [text] [◀white]
+        '<table role="presentation" cellspacing="0" cellpadding="0" border="0">'
+        '<tr>'
+        # Left notch: white right-pointing triangle cuts into ribbon from left
+        '<td style="padding:0;vertical-align:middle;line-height:0;font-size:0;">'
+        '<div style="width:0;height:0;border-top:18px solid transparent;'
+        'border-bottom:18px solid transparent;border-left:10px solid #ffffff;'
+        'font-size:0;line-height:0;"></div>'
+        '</td>'
+        # Text — color:#ffffff on TD is 100% reliable in all email clients
+        f'<td style="padding:11px 22px;vertical-align:middle;'
+        f'font-family:\'Inter\',-apple-system,BlinkMacSystemFont,\'Segoe UI\',Helvetica,Arial,sans-serif;'
+        f'font-size:14px;font-weight:700;color:#ffffff;letter-spacing:-0.1px;white-space:nowrap;">'
         f'Achieved {safe_date}'
+        '</td>'
+        # Right notch: white left-pointing triangle
+        '<td style="padding:0;vertical-align:middle;line-height:0;font-size:0;">'
+        '<div style="width:0;height:0;border-top:18px solid transparent;'
+        'border-bottom:18px solid transparent;border-right:10px solid #ffffff;'
+        'font-size:0;line-height:0;"></div>'
+        '</td>'
+        '</tr>'
+        '</table>'
         '</td>'
         '</tr>'
         '</table>'
@@ -345,14 +365,8 @@ def build_email_html(
             <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
               <tr>
                 <td align="center" style="padding-top:32px;">
-                  <!-- Container 74px = full rendered avatar size (68 content + 3px border × 2).
-                       white-space:nowrap keeps avatar + badge on the same inline line.
-                       font-size:0 kills whitespace gaps between inline-block elements.
-                       Badge uses margin-left:-30px margin-top:44px so it sits on the
-                       same line as the avatar but pulled back to overlap its bottom-right corner. -->
-                  <div style="width:74px;margin:0 auto;font-size:0;line-height:0;white-space:nowrap;">
+                  <div style="margin:0 auto;display:inline-block;">
                     {avatar_main}
-                    {youtube_badge}
                   </div>
                   <p style="font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;font-size:17px;font-weight:800;color:#0f0f13;letter-spacing:-0.3px;margin:10px 0 0 0;">{safe_name}</p>
                 </td>
