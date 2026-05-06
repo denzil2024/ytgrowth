@@ -138,7 +138,7 @@ export default function LandingFooter() {
           <div>
             <a href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
               <Logo size={28} />
-              <span style={{ fontWeight: 800, fontSize: 15, color: '#ffffff', letterSpacing: '-0.4px' }}>YTGrowth</span>
+              <span style={{ fontWeight: 800, fontSize: 17, color: '#ffffff', letterSpacing: '-0.4px' }}>YTGrowth</span>
             </a>
             <p style={{ fontSize: 13.5, color: 'rgba(255,255,255,0.42)', maxWidth: 280, lineHeight: 1.65 }}>
               AI-powered YouTube analytics. Built for creators serious about growth.
