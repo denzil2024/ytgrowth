@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import LandingFooter from '../../components/LandingFooter'
 
-/* Outliers — fully custom landing page.
+/* Outliers. Fully custom landing page.
  *
  * Built around the *actual* product (see app/outliers.py + routers/
  * outliers_routes.py): a unified search that returns videos + breakout
@@ -207,7 +207,7 @@ function OutlierVideoVisual() {
       {/* Why worked */}
       <p style={{ fontSize: 10, fontWeight: 800, color: 'rgba(255,255,255,0.5)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Why it worked</p>
       <p style={{ fontSize: 12.5, color: 'rgba(255,255,255,0.78)', lineHeight: 1.65, marginBottom: 14 }}>
-        First-person quit story with a 30-day timeline plus the words "real numbers" — promises receipts, not motivational fluff.
+        First-person quit story with a 30-day timeline plus the words "real numbers". Promises receipts, not motivational fluff.
       </p>
       {/* Quick actions */}
       <p style={{ fontSize: 10, fontWeight: 800, color: 'rgba(255,255,255,0.5)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>Quick actions</p>
@@ -225,7 +225,7 @@ function OutlierVideoVisual() {
       <div style={{ borderLeft: '3px solid #f59e0b', background: 'rgba(245,158,11,0.07)', borderRadius: 8, padding: '10px 12px', marginTop: 14 }}>
         <p style={{ fontSize: 10, fontWeight: 800, color: '#f59e0b', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 4 }}>Why now</p>
         <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.78)', lineHeight: 1.55 }}>
-          The "quit my job" angle is climbing in the last 30 days — three other channels just shipped variants that hit 50K+ views.
+          The "quit my job" angle is climbing in the last 30 days. Three other channels just shipped variants that hit 50K+ views.
         </p>
       </div>
     </div>
@@ -266,18 +266,18 @@ function BreakoutChannelsVisual() {
 /* ── 3 tabs the unified search returns ─────────────────────────────────── */
 const RESULT_TABS = [
   { name: 'Outlier Videos',     count: 'top 8', what: 'Recent niche videos that pulled 1.8× the normal views-per-subscriber for the cohort. Each one carries an outlier score, an AI-written "why it worked", three quick actions you can ship today, and a "why now" tying it to a current momentum signal.' },
-  { name: 'Breakout Channels',  count: 'top 8', what: 'Channels in your niche whose recent uploads are systematically over-performing. The score is calculated the same way (views per sub vs cohort median), but at the channel level. Includes "what to do" — three moves you can borrow from their playbook.' },
-  { name: 'Thumbnail Patterns', count: 'top 8', what: 'Visual patterns shared across the winning thumbnails — common color palettes, face vs no-face split, text density bands, composition repeats. Tells you what the niche feed already looks like so your next thumbnail can lean into it or break it.' },
+  { name: 'Breakout Channels',  count: 'top 8', what: 'Channels in your niche whose recent uploads are systematically over-performing. The score is calculated the same way (views per sub vs cohort median), but at the channel level. Includes "what to do". Three moves you can borrow from their playbook.' },
+  { name: 'Thumbnail Patterns', count: 'top 8', what: 'Visual patterns shared across the winning thumbnails. Common color palettes, face vs no-face split, text density bands, composition repeats. Tells you what the niche feed already looks like so your next thumbnail can lean into it or break it.' },
 ]
 
 const PIPELINE_OUTPUTS = [
-  { icon: 'sparkle', title: 'Outlier score (1.8× minimum)',    body: 'Views-per-subscriber divided by the niche cohort median. Normalizes channel size — a 50K-view video on a 10K channel scores higher than a 200K-view video on a 2M channel. Hard floor at 1.8×.' },
-  { icon: 'why',     title: 'AI-written "why it worked"',       body: 'One sentence per video naming the exact hook, angle, or pattern that made it overperform. References specific title phrasing or format. Never generic — "first-person quit story with timeline" beats "good thumbnail".' },
+  { icon: 'sparkle', title: 'Outlier score (1.8× minimum)',    body: 'Views-per-subscriber divided by the niche cohort median. Normalizes channel size. A 50K-view video on a 10K channel scores higher than a 200K-view video on a 2M channel. Hard floor at 1.8×.' },
+  { icon: 'why',     title: 'AI-written "why it worked"',       body: 'One sentence per video naming the exact hook, angle, or pattern that made it overperform. References specific title phrasing or format. Never generic. "first-person quit story with timeline" beats "good thumbnail".' },
   { icon: 'play',    title: 'Three quick actions per video',    body: 'Imperative-voice steps you can ship today. Specific ("Open with a 3-second before/after shot") not vague ("make a better hook"). Each action ≤ 14 words so it fits in your daily checklist.' },
   { icon: 'pulse',   title: '"Why now" urgency tag',            body: 'A current-momentum signal explaining why acting on this is urgent right now. References recency, rising trends, seasonal timing, or audience gaps the data shows. Never "this is a hot topic".' },
   { icon: 'rocket',  title: 'Breakout channel report',          body: 'Top 8 niche channels whose recent uploads are systematically over-performing. Each comes with subscribers, average views, outlier score, and three "what to do" actions you can borrow from them.' },
-  { icon: 'palette', title: 'Thumbnail pattern analysis',       body: 'Visual patterns shared across the winning thumbnails — color palette, face presence, text density, composition repeats. Tells you what the niche feed actually looks like.' },
-  { icon: 'cache',   title: 'Saved per-channel — reopen anytime', body: 'Every search persists per channel and rehydrates with the full payload (videos + channels + thumbnails). Re-open a search week later, same data, no second credit charge.' },
+  { icon: 'palette', title: 'Thumbnail pattern analysis',       body: 'Visual patterns shared across the winning thumbnails. Color palette, face presence, text density, composition repeats. Tells you what the niche feed actually looks like.' },
+  { icon: 'cache',   title: 'Saved per-channel. Reopen anytime', body: 'Every search persists per channel and rehydrates with the full payload (videos + channels + thumbnails). Re-open a search week later, same data, no second credit charge.' },
 ]
 
 const ICON_PATHS = {
@@ -301,7 +301,7 @@ function OutputIcon({ name }) {
 }
 
 const PLAN_LIMITS = [
-  { plan: 'Free',    runs: '0',   note: 'Not included on free tier — Outliers is paid-only' },
+  { plan: 'Free',    runs: '0',   note: 'Not included on free tier. Outliers is paid-only' },
   { plan: 'Solo',    runs: '6',   note: 'Each search returns videos + channels + thumbnails (3 reports)' },
   { plan: 'Growth',  runs: '16',  note: '50 credits / month, 3 credits per Outliers search · 5 channels' },
   { plan: 'Agency',  runs: '50',  note: 'Pooled across 10 channels · 150 credits / month' },
@@ -310,11 +310,11 @@ const PLAN_LIMITS = [
 const FAQS = [
   {
     q: 'What exactly is an "outlier video"?',
-    a: <>A video that pulled significantly more views than normal for its channel size. Specifically: the outlier score is the video’s views-per-subscriber divided by the cohort median for the niche. So a 50K-view video on a 10K-subscriber channel hits 5.0× the cohort median — that’s a big outlier, signaling either a new trend, a fresh angle, or a thumbnail/title that’s breaking through. We only surface scores ≥ 1.8× and we drop the channel-size noise so a giant channel’s "okay" video doesn’t crowd the list.</>,
+    a: <>A video that pulled significantly more views than normal for its channel size. Specifically: the outlier score is the video’s views-per-subscriber divided by the cohort median for the niche. So a 50K-view video on a 10K-subscriber channel hits 5.0× the cohort median. That’s a big outlier, signaling either a new trend, a fresh angle, or a thumbnail/title that’s breaking through. We only surface scores ≥ 1.8× and we drop the channel-size noise so a giant channel’s "okay" video doesn’t crowd the list.</>,
   },
   {
     q: 'How is this different from "trending" or "most viewed" lists?',
-    a: <>Trending shows what’s big <i>everywhere</i>, dominated by mega-channels. Most-viewed is biased toward old viral hits and giant audiences. Outliers shows what’s overperforming <i>relative to channel size in your specific niche, in the last 12 months</i>. That’s the only signal that’s actionable — it surfaces angles and formats working for creators at your size, not formats that only work because the channel already has 5M subs to push them out.</>,
+    a: <>Trending shows what’s big <i>everywhere</i>, dominated by mega-channels. Most-viewed is biased toward old viral hits and giant audiences. Outliers shows what’s overperforming <i>relative to channel size in your specific niche, in the last 12 months</i>. That’s the only signal that’s actionable. It surfaces angles and formats working for creators at your size, not formats that only work because the channel already has 5M subs to push them out.</>,
   },
   {
     q: 'How does the "niche match" work?',
@@ -322,23 +322,23 @@ const FAQS = [
   },
   {
     q: 'Why three reports per search? Can I run just one?',
-    a: <>The three reports (videos, breakout channels, thumbnail patterns) come from one unified search — same YouTube fetch, same niche-matched candidate pool, same cohort. Splitting into separate searches would mean three times the API calls and three different result sets that don’t reconcile against each other. The unified pipeline is honest about that and bills accordingly: 3 credits per search, all three reports included. Most users find the channels report alone justifies the credits.</>,
+    a: <>The three reports (videos, breakout channels, thumbnail patterns) come from one unified search. Same YouTube fetch, same niche-matched candidate pool, same cohort. Splitting into separate searches would mean three times the API calls and three different result sets that don’t reconcile against each other. The unified pipeline is honest about that and bills accordingly: 3 credits per search, all three reports included. Most users find the channels report alone justifies the credits.</>,
   },
   {
     q: 'What does "why now" actually mean?',
-    a: <>Each video carries a one-sentence urgency tag explaining why acting on it is urgent right now — referencing recency ("this angle is climbing in the last 30 days"), seasonal timing ("Black Friday content cycle starts in 9 days"), rising momentum ("three other channels shipped variants this week"), or an audience gap the data shows. The instruction in the Claude prompt is "be concrete; never generic". If a video shows up with a vague why-now you can email support — that’s a prompt regression we want to know about.</>,
+    a: <>Each video carries a one-sentence urgency tag explaining why acting on it is urgent right now. Referencing recency ("this angle is climbing in the last 30 days"), seasonal timing ("Black Friday content cycle starts in 9 days"), rising momentum ("three other channels shipped variants this week"), or an audience gap the data shows. The instruction in the Claude prompt is "be concrete; never generic". If a video shows up with a vague why-now you can email support. That’s a prompt regression we want to know about.</>,
   },
   {
     q: 'Will this surface my own videos in the results?',
-    a: <>No — your channel is explicitly excluded from the candidate pool. The point is to find out what <i>other</i> creators in your niche are doing that’s working, not to feed your own data back to you (the Channel Audit covers that). If you happen to be the fastest-rising creator in your exact niche, the candidate pool will surface the next-tier creators below you instead.</>,
+    a: <>No. Your channel is explicitly excluded from the candidate pool. The point is to find out what <i>other</i> creators in your niche are doing that’s working, not to feed your own data back to you (the Channel Audit covers that). If you happen to be the fastest-rising creator in your exact niche, the candidate pool will surface the next-tier creators below you instead.</>,
   },
   {
     q: 'How fresh is the data?',
-    a: <>Real-time on every search — we don’t cache the YouTube fetch beyond the saved-search payload (which exists so you can reopen the same result without burning a second credit). The "last 12 months only" filter is hard. If you re-search the same query a month later you’ll get a fresh fetch, fresh cohort, and likely fresh outliers — niche velocity shifts fast.</>,
+    a: <>Real-time on every search. We don’t cache the YouTube fetch beyond the saved-search payload (which exists so you can reopen the same result without burning a second credit). The "last 12 months only" filter is hard. If you re-search the same query a month later you’ll get a fresh fetch, fresh cohort, and likely fresh outliers. Niche velocity shifts fast.</>,
   },
   {
     q: 'Can I search any keyword, or only ones related to my channel?',
-    a: <>Any keyword. The search is anchored to your channel for cohort math and niche-matching, but the seed keyword can be anything. Use this to scout a topic before pivoting into it — "is anyone overperforming on home espresso content right now?" — or to validate a video idea before you script it. The cohort is built around the actual top results for the keyword, so the math stays honest even on out-of-niche searches.</>,
+    a: <>Any keyword. The search is anchored to your channel for cohort math and niche-matching, but the seed keyword can be anything. Use this to scout a topic before pivoting into it. "is anyone overperforming on home espresso content right now?". Or to validate a video idea before you script it. The cohort is built around the actual top results for the keyword, so the math stays honest even on out-of-niche searches.</>,
   },
   {
     q: 'How long does a search take?',
@@ -346,15 +346,15 @@ const FAQS = [
   },
   {
     q: 'Why doesn’t my own channel’s niche match the keyword I searched?',
-    a: <>The niche match runs against the niche keywords your channel was tagged with at connect time — usually the YouTube channel keywords plus the topics extracted from your last 30 video titles. If those are stale (you pivoted, or YouTube’s keyword data was thin), the niche match will miss. Fix: head to Channel settings → re-extract keywords. Or, in Outliers, just add additional keywords as the seed — the niche match contributes to ranking but doesn’t block results.</>,
+    a: <>The niche match runs against the niche keywords your channel was tagged with at connect time. Usually the YouTube channel keywords plus the topics extracted from your last 30 video titles. If those are stale (you pivoted, or YouTube’s keyword data was thin), the niche match will miss. Fix: head to Channel settings → re-extract keywords. Or, in Outliers, just add additional keywords as the seed. The niche match contributes to ranking but doesn’t block results.</>,
   },
   {
     q: 'Why is there a 1.8× minimum outlier score?',
-    a: <>Below 1.8× isn’t really an outlier — it’s normal-or-slightly-better performance for the cohort. Including those in the result list pads the response with low-signal videos and hides the genuine over-performers. We applied the floor after seeing it improve the average "actionable insight per result" rate in beta. If the search would otherwise return fewer than 8 results, the system broadens the query and only then drops the floor as a fallback — so you always get a useful payload.</>,
+    a: <>Below 1.8× isn’t really an outlier. It’s normal-or-slightly-better performance for the cohort. Including those in the result list pads the response with low-signal videos and hides the genuine over-performers. We applied the floor after seeing it improve the average "actionable insight per result" rate in beta. If the search would otherwise return fewer than 8 results, the system broadens the query and only then drops the floor as a fallback. So you always get a useful payload.</>,
   },
   {
     q: 'Are searches saved? Can I reopen them?',
-    a: <>Yes. Every Outliers search persists per channel — the videos, breakout channels, thumbnail patterns, and the original seed keyword. Click any saved search to reopen the full payload without burning a credit. Re-running the same seed creates a fresh entry instead of overwriting, so you can compare how the niche has shifted month over month.</>,
+    a: <>Yes. Every Outliers search persists per channel. The videos, breakout channels, thumbnail patterns, and the original seed keyword. Click any saved search to reopen the full payload without burning a credit. Re-running the same seed creates a fresh entry instead of overwriting, so you can compare how the niche has shifted month over month.</>,
   },
 ]
 
@@ -381,7 +381,7 @@ export default function Outliers() {
         </div>
       </nav>
 
-      {/* ════ 1. HERO — white ════════════════════════════════════════════ */}
+      {/* ════ 1. HERO. White ════════════════════════════════════════════ */}
       <section style={{ padding: isMobile ? '64px 20px 56px' : '110px 40px 80px', textAlign: 'center', background: '#ffffff' }}>
         <div style={{ maxWidth: 880, margin: '0 auto', animation: 'fadeUp 0.5s ease both' }}>
           <span className="otl-eyebrow light">Outliers · viral video finder</span>
@@ -389,7 +389,7 @@ export default function Outliers() {
             Find the videos that hit <span style={{ color: 'var(--ytg-accent)' }}>5×, 10×, even 50× their channel’s normal views.</span>
           </h1>
           <p style={{ fontSize: isMobile ? 16 : 18.5, color: 'var(--ytg-text-2)', lineHeight: 1.7, maxWidth: 720, margin: '0 auto 36px' }}>
-            Outliers surfaces YouTube videos in your exact niche that overperformed their channel size — last 12 months only, with an AI-written "why it worked", three quick actions you can ship today, and a "why now" urgency tag. Plus a breakout-channels report and a thumbnail-patterns read across the winners. The closest you’ll get to a working playbook in 30 seconds.
+            Outliers surfaces YouTube videos in your exact niche that overperformed their channel size. Last 12 months only, with an AI-written "why it worked", three quick actions you can ship today, and a "why now" urgency tag. Plus a breakout-channels report and a thumbnail-patterns read across the winners. The closest you’ll get to a working playbook in 30 seconds.
           </p>
           <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
             <a href="/auth/login" className="otl-btn otl-btn-lg">Find a viral video →</a>
@@ -401,7 +401,7 @@ export default function Outliers() {
         </div>
       </section>
 
-      {/* ════ 2. OUTLIER VIDEO VISUAL — dark, SPLIT (text L, visual R) ══ */}
+      {/* ════ 2. OUTLIER VIDEO VISUAL. Dark, SPLIT (text L, visual R) ══ */}
       <section style={{ padding: isMobile ? '64px 20px' : '100px 40px', background: '#0d0d12', borderTop: '1px solid rgba(255,255,255,0.06)', borderBottom: '1px solid rgba(255,255,255,0.06)', position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 900, height: 700, background: 'radial-gradient(ellipse, rgba(229,48,42,0.16) 0%, transparent 65%)', pointerEvents: 'none' }} />
         <div className="otl-grid-2" style={{ maxWidth: 1180, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1.05fr', gap: 64, alignItems: 'center', position: 'relative', zIndex: 1 }}>
@@ -416,7 +416,7 @@ export default function Outliers() {
             {[
               'Score = views-per-sub vs niche cohort median',
               'AI explains what the title / hook / format did right',
-              'Three actions ≤ 14 words each — ship today',
+              'Three actions ≤ 14 words each. Ship today',
               '"Why now" tag tied to a real momentum signal',
             ].map((b, i) => (
               <div key={i} style={{ display: 'flex', gap: 10, alignItems: 'flex-start', marginBottom: 11 }}>
@@ -431,7 +431,7 @@ export default function Outliers() {
         </div>
       </section>
 
-      {/* ════ 3. THREE TABS — light ═════════════════════════════════════ */}
+      {/* ════ 3. THREE TABS. Light ═════════════════════════════════════ */}
       <section style={{ padding: isMobile ? '64px 20px' : '100px 40px', background: 'var(--ytg-bg)' }}>
         <div style={{ maxWidth: 1120, margin: '0 auto' }}>
           <div style={{ textAlign: 'center', maxWidth: 760, margin: '0 auto 48px' }}>
@@ -440,7 +440,7 @@ export default function Outliers() {
               One unified search. <span style={{ color: 'var(--ytg-accent)' }}>Three angles on the same niche.</span>
             </h2>
             <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.72 }}>
-              Every Outliers search returns three distinct reports — viral videos, breakout channels, and thumbnail patterns — built from the same niche-matched candidate pool so the views, channels, and visuals you see all reconcile against each other.
+              Every Outliers search returns three distinct reports. Viral videos, breakout channels, and thumbnail patterns. Built from the same niche-matched candidate pool so the views, channels, and visuals you see all reconcile against each other.
             </p>
           </div>
           <div className="otl-grid-3" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
@@ -457,7 +457,7 @@ export default function Outliers() {
         </div>
       </section>
 
-      {/* ════ 4. BREAKOUT CHANNELS — dark, SPLIT (visual L, text R) ═════ */}
+      {/* ════ 4. BREAKOUT CHANNELS. Dark, SPLIT (visual L, text R) ═════ */}
       <section style={{ padding: isMobile ? '64px 20px' : '100px 40px', background: '#0d0d12', borderTop: '1px solid rgba(255,255,255,0.06)', borderBottom: '1px solid rgba(255,255,255,0.06)', position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', top: '40%', left: '50%', transform: 'translate(-50%,-50%)', width: 900, height: 700, background: 'radial-gradient(ellipse, rgba(229,48,42,0.14) 0%, transparent 65%)', pointerEvents: 'none' }} />
         <div className="otl-grid-2" style={{ maxWidth: 1180, margin: '0 auto', display: 'grid', gridTemplateColumns: '1.1fr 1fr', gap: 56, alignItems: 'center', position: 'relative', zIndex: 1 }}>
@@ -470,7 +470,7 @@ export default function Outliers() {
               Find the creators in your niche <span style={{ color: '#ff3b30' }}>before they get big.</span>
             </h2>
             <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.6)', lineHeight: 1.72, marginBottom: 22 }}>
-              The same scoring math (views-per-sub vs cohort median) applied at the channel level. Surfaces creators in your niche whose recent uploads are systematically over-performing — the ones to study before they hit the trending tab. Each card carries an outlier score, why-this-channel summary, and three concrete moves you can borrow from their playbook.
+              The same scoring math (views-per-sub vs cohort median) applied at the channel level. Surfaces creators in your niche whose recent uploads are systematically over-performing. The ones to study before they hit the trending tab. Each card carries an outlier score, why-this-channel summary, and three concrete moves you can borrow from their playbook.
             </p>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
               {[
@@ -489,7 +489,7 @@ export default function Outliers() {
         </div>
       </section>
 
-      {/* ════ 5. HOW IT WORKS — white, with arrow connectors ════════════ */}
+      {/* ════ 5. HOW IT WORKS. White, with arrow connectors ════════════ */}
       <section id="how" style={{ padding: isMobile ? '64px 20px' : '100px 40px', background: '#ffffff' }}>
         <div style={{ maxWidth: 1240, margin: '0 auto' }}>
           <div style={{ textAlign: 'center', maxWidth: 720, margin: '0 auto 52px' }}>
@@ -503,7 +503,7 @@ export default function Outliers() {
           </div>
           {(() => {
             const steps = [
-              { n: '01', t: 'Seed query + intent',  b: 'Type a topic. The studio offers 3 keyword intent options so the search is anchored to the right viewer intent — same picker SEO Studio uses.' },
+              { n: '01', t: 'Seed query + intent',  b: 'Type a topic. The studio offers 3 keyword intent options so the search is anchored to the right viewer intent. Same picker SEO Studio uses.' },
               { n: '02', t: 'YouTube niche search', b: 'Top 50 results pulled via the official YouTube Data API. Drops your own channel. Filters to last 12 months only.' },
               { n: '03', t: 'Niche-match channels', b: 'For each candidate channel, fetch their last 15 video titles and check overlap against your channel’s niche keywords. Niche-matched channels rank higher.' },
               { n: '04', t: 'Cohort scoring',       b: 'Compute views-per-subscriber for every candidate. Score = video VPS / cohort median VPS. Apply 1.8× outlier floor and a niche-relative views floor.' },
@@ -559,7 +559,7 @@ export default function Outliers() {
         </div>
       </section>
 
-      {/* ════ 6. SEVEN OUTPUT BLOCKS — dark ══════════════════════════════ */}
+      {/* ════ 6. SEVEN OUTPUT BLOCKS. Dark ══════════════════════════════ */}
       <section style={{ padding: isMobile ? '64px 20px' : '100px 40px', background: '#0d0d12', borderTop: '1px solid rgba(255,255,255,0.06)', borderBottom: '1px solid rgba(255,255,255,0.06)', position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 900, height: 700, background: 'radial-gradient(ellipse, rgba(229,48,42,0.14) 0%, transparent 65%)', pointerEvents: 'none' }} />
         <div style={{ maxWidth: 1180, margin: '0 auto', position: 'relative', zIndex: 1 }}>
@@ -569,7 +569,7 @@ export default function Outliers() {
               Seven distinct output blocks. <span style={{ color: '#ff3b30' }}>Every viral hit comes with a playbook.</span>
             </h2>
             <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.6)', lineHeight: 1.72 }}>
-              The studio doesn’t hand you a list of trending videos and let you guess. Each output block is structured, named, and actionable — the Claude prompt explicitly forbids generic "make better hooks" advice.
+              The studio doesn’t hand you a list of trending videos and let you guess. Each output block is structured, named, and actionable. The Claude prompt explicitly forbids generic "make better hooks" advice.
             </p>
           </div>
           <div className="otl-grid-3" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 14 }}>
@@ -586,7 +586,7 @@ export default function Outliers() {
         </div>
       </section>
 
-      {/* ════ 7. WHAT POWERS IT — light grey, split ═════════════════════ */}
+      {/* ════ 7. WHAT POWERS IT. Light grey, split ═════════════════════ */}
       <section style={{ padding: isMobile ? '64px 20px' : '100px 40px', background: 'var(--ytg-bg-3)', borderTop: '1px solid var(--ytg-border)', borderBottom: '1px solid var(--ytg-border)' }}>
         <div className="otl-grid-2" style={{ maxWidth: 1140, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 56, alignItems: 'center' }}>
           <div>
@@ -595,7 +595,7 @@ export default function Outliers() {
               Real YouTube data. <span style={{ color: 'var(--ytg-accent)' }}>One AI pass.</span>
             </h2>
             <p style={{ fontSize: 14.5, color: 'var(--ytg-text-2)', lineHeight: 1.72 }}>
-              Public videos via the official YouTube Data API. Niche-match scan over each candidate channel’s recent uploads. Cohort-relative scoring math. One batched Claude Sonnet 4.6 call returns explanations for every video, every breakout channel, and the thumbnail pattern read in parallel — so you’re not waiting on three round-trips.
+              Public videos via the official YouTube Data API. Niche-match scan over each candidate channel’s recent uploads. Cohort-relative scoring math. One batched Claude Sonnet 4.6 call returns explanations for every video, every breakout channel, and the thumbnail pattern read in parallel. So you’re not waiting on three round-trips.
             </p>
           </div>
           <div style={{ background: 'var(--ytg-card)', border: '1px solid var(--ytg-border)', borderRadius: 16, boxShadow: 'var(--ytg-shadow-lg)', padding: '24px 28px' }}>
@@ -616,7 +616,7 @@ export default function Outliers() {
         </div>
       </section>
 
-      {/* ════ 8. PLAN LIMITS — dark ═════════════════════════════════════ */}
+      {/* ════ 8. PLAN LIMITS. Dark ═════════════════════════════════════ */}
       <section style={{ padding: isMobile ? '64px 20px' : '100px 40px', background: '#0d0d12', borderTop: '1px solid rgba(255,255,255,0.06)', borderBottom: '1px solid rgba(255,255,255,0.06)', position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 900, height: 700, background: 'radial-gradient(ellipse, rgba(229,48,42,0.14) 0%, transparent 65%)', pointerEvents: 'none' }} />
         <div style={{ maxWidth: 1080, margin: '0 auto', position: 'relative', zIndex: 1 }}>
@@ -665,7 +665,7 @@ export default function Outliers() {
         </div>
       </section>
 
-      {/* ════ 9. FAQ — white ════════════════════════════════════════════ */}
+      {/* ════ 9. FAQ. White ════════════════════════════════════════════ */}
       <section style={{ padding: isMobile ? '64px 20px' : '110px 40px', background: '#ffffff' }}>
         <div className="otl-grid-2" style={{ maxWidth: 1180, margin: '0 auto', display: 'grid', gridTemplateColumns: '0.7fr 1.3fr', gap: 56, alignItems: 'flex-start' }}>
           <div style={{ position: isMobile ? 'static' : 'sticky', top: 100 }}>
@@ -674,7 +674,7 @@ export default function Outliers() {
               Questions about the outlier engine, answered honestly.
             </h2>
             <p style={{ fontSize: 14.5, color: 'var(--ytg-text-2)', lineHeight: 1.7 }}>
-              Real answers from how the product behaves — the cohort math, the niche match, the credit cost, and what won’t work.
+              Real answers from how the product behaves. The cohort math, the niche match, the credit cost, and what won’t work.
             </p>
             <a href="/contact" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 13.5, color: 'var(--ytg-accent)', textDecoration: 'none', fontWeight: 600, marginTop: 16 }}>
               Still have questions? Email us →
@@ -688,7 +688,7 @@ export default function Outliers() {
         </div>
       </section>
 
-      {/* ════ 10. BOTTOM CTA — light ════════════════════════════════════ */}
+      {/* ════ 10. BOTTOM CTA. Light ════════════════════════════════════ */}
       <section style={{ padding: isMobile ? '60px 20px 56px' : '110px 40px 80px', background: 'var(--ytg-bg)' }}>
         <div style={{ maxWidth: 860, margin: '0 auto', textAlign: 'center', background: 'var(--ytg-card)', border: '1px solid var(--ytg-border)', borderRadius: 24, boxShadow: 'var(--ytg-shadow-xl)', padding: isMobile ? '52px 24px' : '76px 60px', position: 'relative', overflow: 'hidden' }}>
           <div style={{ position: 'absolute', top: -80, left: '50%', transform: 'translateX(-50%)', width: 540, height: 260, background: 'radial-gradient(ellipse, rgba(229,48,42,0.10) 0%, transparent 70%)', pointerEvents: 'none' }} />
@@ -696,7 +696,7 @@ export default function Outliers() {
             Find what’s already working in your niche
           </h2>
           <p style={{ fontSize: isMobile ? 15 : 17, color: 'var(--ytg-text-2)', maxWidth: 540, margin: '0 auto 28px', lineHeight: 1.7 }}>
-            Solo gets 6 Outliers searches per month, Growth 16, Agency 50 pooled. Each search returns videos + breakout channels + thumbnail patterns — three reports for the price of one search.
+            Solo gets 6 Outliers searches per month, Growth 16, Agency 50 pooled. Each search returns videos + breakout channels + thumbnail patterns. Three reports for the price of one search.
           </p>
           <a href="/auth/login" className="otl-btn otl-btn-lg">Find a viral video →</a>
         </div>

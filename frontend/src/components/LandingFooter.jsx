@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
 
 /* Shared landing-style footer. Used on every public page (Landing, Affiliate,
-   feature pages, Privacy/Terms/Refund/Contact). Multi-column on desktop —
-   brand + Features + Legal — for clean internal linking. Stacks on mobile. */
+   feature pages, Privacy/Terms/Refund/Contact). Multi-column on desktop , 
+   brand + Features + Legal. For clean internal linking. Stacks on mobile. */
 
 function Logo({ size = 32 }) {
   return (

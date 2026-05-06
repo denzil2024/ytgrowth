@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react'
 import LandingFooter from '../../components/LandingFooter'
 
-/* Keyword Research — fully custom landing page.
+/* Keyword Research. Fully custom landing page.
  *
  * Built around the *actual* product (see app/keywords.py + routers/
- * keyword_routes.py): a 4-stage pipeline — multi-source autocomplete fan-out
+ * keyword_routes.py): a 4-stage pipeline. Multi-source autocomplete fan-out
  * (YouTube Suggest + Google Suggest via SerpAPI + Google related searches via
  * Serper) → Claude Sonnet 4.6 intent filtering + clustering → real YouTube
  * competition enrichment (top-5 ranked-channel size, view ceiling, days
@@ -215,14 +215,14 @@ function KeywordTableVisual() {
   )
 }
 
-/* ── Visual: Score breakdown — feasibility / traffic / freshness ───────── */
+/* ── Visual: Score breakdown. Feasibility / traffic / freshness ───────── */
 function ScoreBreakdownVisual() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
       {[
-        { label: 'Feasibility',  weight: 45, score: 100, color: '#4ade80', body: 'Top-5 channels median &lt; 10K subs — easy to outrank.' },
-        { label: 'Traffic ceiling', weight: 30, score: 70, color: '#f59e0b', body: 'Top videos median 24K views — solid headroom for a small channel.' },
-        { label: 'Freshness',     weight: 25, score: 100, color: '#4ade80', body: 'Newest top-5 video posted 220 days ago — landscape is wide open.' },
+        { label: 'Feasibility',  weight: 45, score: 100, color: '#4ade80', body: 'Top-5 channels median &lt; 10K subs. Easy to outrank.' },
+        { label: 'Traffic ceiling', weight: 30, score: 70, color: '#f59e0b', body: 'Top videos median 24K views. Solid headroom for a small channel.' },
+        { label: 'Freshness',     weight: 25, score: 100, color: '#4ade80', body: 'Newest top-5 video posted 220 days ago. Landscape is wide open.' },
       ].map((d, i) => (
         <div key={i} style={{ background: '#111114', borderRadius: 14, border: '1px solid rgba(255,255,255,0.09)', borderLeft: `3px solid ${d.color}`, padding: '16px 18px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 6 }}>
@@ -253,23 +253,23 @@ function ScoreBreakdownVisual() {
   )
 }
 
-/* ── Score signals — what the opportunity score is built from ─────────── */
+/* ── Score signals. What the opportunity score is built from ─────────── */
 const SCORE_SIGNALS = [
-  { name: 'Feasibility (45% weight)',      what: 'Median subscriber count of the top 5 ranking channels. Below 10K subs scores 100 (easy to outrank). 10–100K = 75. 100K–1M = 45. Above 1M = 15 (brutal — incumbent dominates).' },
+  { name: 'Feasibility (45% weight)',      what: 'Median subscriber count of the top 5 ranking channels. Below 10K subs scores 100 (easy to outrank). 10–100K = 75. 100K–1M = 45. Above 1M = 15 (brutal. Incumbent dominates).' },
   { name: 'Traffic ceiling (30% weight)',  what: 'Median view count of the top 5 ranking videos. 100K+ = 100 (strong traffic to win). 10K–100K = 70 (decent). Below 10K = 45 (thin, may not be worth pursuing).' },
   { name: 'Freshness (25% weight)',        what: 'Days since the most recent top-5 video. Below 30 days = 40 (active competition). 30–180 days = 70 (normal). 180+ days = 100 (landscape stale, opportunity wide open).' },
-  { name: 'Intent match multiplier',       what: 'Exact intent = ×1.0. Strong = ×0.9. Partial = ×0.75. Off-intent drift gets scaled down even if the surface metrics look good — keeps the score honest about what your video would actually compete for.' },
+  { name: 'Intent match multiplier',       what: 'Exact intent = ×1.0. Strong = ×0.9. Partial = ×0.75. Off-intent drift gets scaled down even if the surface metrics look good. Keeps the score honest about what your video would actually compete for.' },
   { name: 'Autocomplete rank bonus',       what: 'Where the keyword appears in YouTube’s autocomplete pool. Position 0–4 adds +8. Position 5–14 adds +4. Earlier autocomplete position is the strongest single signal that real viewers type the phrase.' },
   { name: 'Momentum label',                what: 'Active (newest top-5 video &lt; 30 days), Steady (30–180 days), Unclaimed (180+ days). Cheap badge on every keyword so you can see at a glance whether competitors are actively shipping.' },
 ]
 
 const PIPELINE_OUTPUTS = [
-  { icon: 'gauge',  title: 'Opportunity score 0–100',     body: 'Weighted on feasibility (45%) + traffic ceiling (30%) + freshness (25%), with an intent multiplier and autocomplete-rank bonus. Same formula every keyword — explainable, repeatable.' },
+  { icon: 'gauge',  title: 'Opportunity score 0–100',     body: 'Weighted on feasibility (45%) + traffic ceiling (30%) + freshness (25%), with an intent multiplier and autocomplete-rank bonus. Same formula every keyword. Explainable, repeatable.' },
   { icon: 'fan',    title: '15–25 filtered keywords',     body: 'Claude reads 30+ raw suggestions, drops off-topic / branded / duplicate, keeps only those that match your seed intent. Each one tagged with content angle and intent strength.' },
   { icon: 'cluster',title: '3–5 named clusters',          body: 'Keywords grouped into thematic clusters (e.g. "Tutorial · cleaning routines", "Vlog · room makeovers"). Tells you what 3-month content arc you could ship from one search.' },
   { icon: 'pulse',  title: 'Momentum tag per keyword',    body: 'Active (creators ship weekly) · Steady (normal) · Unclaimed (top videos &gt; 6 months old). Lets you spot landscapes nobody is currently fighting over.' },
-  { icon: 'compass',title: 'Top pick + reason',           body: 'The single highest-opportunity keyword surfaced, with a one-sentence "why this one" — so you stop scrolling and start scripting.' },
-  { icon: 'tag',    title: 'Content angle per keyword',   body: 'Each kept keyword carries a one-sentence angle suggestion. Not a template — anchored to the intent and the niche, so the angle reads as a video idea you’d actually publish.' },
+  { icon: 'compass',title: 'Top pick + reason',           body: 'The single highest-opportunity keyword surfaced, with a one-sentence "why this one". So you stop scrolling and start scripting.' },
+  { icon: 'tag',    title: 'Content angle per keyword',   body: 'Each kept keyword carries a one-sentence angle suggestion. Not a template. Anchored to the intent and the niche, so the angle reads as a video idea you’d actually publish.' },
   { icon: 'gap',    title: 'Real competition snapshot',   body: 'For the top 10 by initial score: result count, top-5 median subs, top-5 median views, days since newest. Live YouTube data, not estimated. Your score is built on these numbers.' },
 ]
 
@@ -294,7 +294,7 @@ function OutputIcon({ name }) {
 }
 
 const PLAN_LIMITS = [
-  { plan: 'Free',    runs: '1',   note: 'One full keyword search per cycle — same engine as paid plans' },
+  { plan: 'Free',    runs: '1',   note: 'One full keyword search per cycle. Same engine as paid plans' },
   { plan: 'Solo',    runs: '20',  note: 'Search every video idea · 3 channels' },
   { plan: 'Growth',  runs: '50',  note: 'Same engine, higher monthly allowance · 5 channels' },
   { plan: 'Agency',  runs: '150', note: 'Pooled across 10 channels' },
@@ -303,51 +303,51 @@ const PLAN_LIMITS = [
 const FAQS = [
   {
     q: 'Where does the search-volume signal come from? You don’t have YouTube’s real volume API.',
-    a: <>Correct — YouTube doesn’t expose true search volume publicly. We use a multi-source proxy that’s genuinely close. We pull suggestions from YouTube’s own autocomplete (only surfaces high-volume queries by definition), Google’s autocomplete via SerpAPI, and Google’s "related searches" via Serper. The strongest signal is autocomplete rank — earlier positions correlate strongly with real query volume because that’s how Google ranks them. We’re not estimating an exact monthly number; we’re ranking phrases by relative demand using signals YouTube’s own ranking engine uses.</>,
+    a: <>Correct. YouTube doesn’t expose true search volume publicly. We use a multi-source proxy that’s genuinely close. We pull suggestions from YouTube’s own autocomplete (only surfaces high-volume queries by definition), Google’s autocomplete via SerpAPI, and Google’s "related searches" via Serper. The strongest signal is autocomplete rank. Earlier positions correlate strongly with real query volume because that’s how Google ranks them. We’re not estimating an exact monthly number; we’re ranking phrases by relative demand using signals YouTube’s own ranking engine uses.</>,
   },
   {
-    q: 'How is "competition" calculated — and why isn’t it just "search result count"?',
+    q: 'How is "competition" calculated. And why isn’t it just "search result count"?',
     a: <>Result count alone is misleading: 50K results dominated by one mega-channel is easier to break into than 5K results split across small channels. So for the top 10 keywords from your search, we hit the YouTube Data API and pull the real top 5 ranking videos, then look up <i>median subscriber count</i> across those channels. Below 10K = easy. 10–100K = fair. 100K–1M = hard. Above 1M = brutal. Plus median views on those top 5 (your traffic ceiling) and days since the newest one was published (the freshness signal). Three real numbers, not a vague difficulty label.</>,
   },
   {
     q: 'What’s the "momentum" label? Is that Google Trends?',
-    a: <>No — pytrends and the paid Trends API are unreliable for niche queries. We derive momentum from data we already have: <b>active</b> (newest top-5 video &lt; 30 days = creators are shipping right now), <b>steady</b> (30–180 days = normal cadence), <b>unclaimed</b> (180+ days = nobody is actively fighting for this keyword). Unclaimed keywords are the highest-leverage gaps because the search demand exists but no recent video is competing for it.</>,
+    a: <>No. Pytrends and the paid Trends API are unreliable for niche queries. We derive momentum from data we already have: <b>active</b> (newest top-5 video &lt; 30 days = creators are shipping right now), <b>steady</b> (30–180 days = normal cadence), <b>unclaimed</b> (180+ days = nobody is actively fighting for this keyword). Unclaimed keywords are the highest-leverage gaps because the search demand exists but no recent video is competing for it.</>,
   },
   {
-    q: 'How does the opportunity score work — what does 91/100 actually mean?',
-    a: <>Score = (feasibility × 0.45 + traffic × 0.30 + freshness × 0.25) × intent multiplier + autocomplete bonus. Each component is 0–100. Feasibility rewards low top-5 channel size. Traffic rewards a strong view ceiling. Freshness rewards stale (i.e. open) landscapes. Intent multiplier (exact / strong / partial) keeps off-topic drift from inflating the score. So a 91 means the top 5 ranking channels are small AND their videos pull strong views AND nobody’s posted recently AND your seed intent matches exactly — the highest-leverage combination.</>,
+    q: 'How does the opportunity score work. What does 91/100 actually mean?',
+    a: <>Score = (feasibility × 0.45 + traffic × 0.30 + freshness × 0.25) × intent multiplier + autocomplete bonus. Each component is 0–100. Feasibility rewards low top-5 channel size. Traffic rewards a strong view ceiling. Freshness rewards stale (i.e. open) landscapes. Intent multiplier (exact / strong / partial) keeps off-topic drift from inflating the score. So a 91 means the top 5 ranking channels are small AND their videos pull strong views AND nobody’s posted recently AND your seed intent matches exactly. The highest-leverage combination.</>,
   },
   {
     q: 'Why does Claude filter the keyword list before scoring?',
-    a: <>Raw autocomplete + related-search dumps are noisy — they include branded queries ("VidIQ alternative" when you searched "youtube growth"), off-intent drift ("youtube to mp3" on a creator-tools search), and obvious duplicates. Claude reads all 30+ raw suggestions in one pass, drops the noise, keeps the 15–25 phrases that genuinely match your seed intent, and tags each with a content angle. The competition enrichment then runs only on those — keeps API quota efficient and the final ranking clean.</>,
+    a: <>Raw autocomplete + related-search dumps are noisy. They include branded queries ("VidIQ alternative" when you searched "youtube growth"), off-intent drift ("youtube to mp3" on a creator-tools search), and obvious duplicates. Claude reads all 30+ raw suggestions in one pass, drops the noise, keeps the 15–25 phrases that genuinely match your seed intent, and tags each with a content angle. The competition enrichment then runs only on those. Keeps API quota efficient and the final ranking clean.</>,
   },
   {
     q: 'How is this different from VidIQ or TubeBuddy?',
-    a: <>Three differences worth knowing. First, our competition score uses real top-5 channel size + real view ceiling + real freshness — not a global difficulty estimate. Second, every kept keyword carries a Claude-written content angle so you don’t leave the tool wondering what to make. Third, the momentum label surfaces unclaimed niches (top videos &gt; 6 months old) that legacy tools don’t flag. We’re not trying to replace global volume estimates; we’re replacing vague difficulty scores with a real-data view of who you’d actually compete with.</>,
+    a: <>Three differences worth knowing. First, our competition score uses real top-5 channel size + real view ceiling + real freshness. Not a global difficulty estimate. Second, every kept keyword carries a Claude-written content angle so you don’t leave the tool wondering what to make. Third, the momentum label surfaces unclaimed niches (top videos &gt; 6 months old) that legacy tools don’t flag. We’re not trying to replace global volume estimates; we’re replacing vague difficulty scores with a real-data view of who you’d actually compete with.</>,
   },
   {
     q: 'Will this work for international / non-English niches?',
-    a: <>Mostly yes. The autocomplete sources (YouTube Suggest, SerpAPI, Serper) all return localized results when you seed in another language — so the keyword pool will be relevant. The Claude intent filtering works across languages. The competition enrichment is language-agnostic (it’s pulling raw API data). The one weak spot is the autocomplete-rank bonus, which calibrates best for English-language queries — for non-English the bonus contributes a smaller fraction of the final score. Still useful, just lean more on momentum + feasibility for non-English niches.</>,
+    a: <>Mostly yes. The autocomplete sources (YouTube Suggest, SerpAPI, Serper) all return localized results when you seed in another language. So the keyword pool will be relevant. The Claude intent filtering works across languages. The competition enrichment is language-agnostic (it’s pulling raw API data). The one weak spot is the autocomplete-rank bonus, which calibrates best for English-language queries. For non-English the bonus contributes a smaller fraction of the final score. Still useful, just lean more on momentum + feasibility for non-English niches.</>,
   },
   {
     q: 'How long does a search take, and what does it cost?',
-    a: <>~25–40 seconds end-to-end. Behind the scenes: YouTube Suggest scrape (parallel), SerpAPI autocomplete + Serper related-search (parallel), Claude Sonnet 4.6 intent filter + cluster, then YouTube Data API competition enrichment for the top 10 keywords (parallel, 5 workers). Each search is one credit on paid plans. Free creators get one full search per cycle — same engine, no feature differences. Re-running the same seed charges a new credit because the competition data is fetched fresh.</>,
+    a: <>~25–40 seconds end-to-end. Behind the scenes: YouTube Suggest scrape (parallel), SerpAPI autocomplete + Serper related-search (parallel), Claude Sonnet 4.6 intent filter + cluster, then YouTube Data API competition enrichment for the top 10 keywords (parallel, 5 workers). Each search is one credit on paid plans. Free creators get one full search per cycle. Same engine, no feature differences. Re-running the same seed charges a new credit because the competition data is fetched fresh.</>,
   },
   {
     q: 'Does the YouTube competition fetch use my OAuth quota?',
-    a: <>No — that’s deliberate. The competition enrichment uses an anonymous YouTube Data API key on our side, not your OAuth credential. So even if you run 50 keyword searches in a day, your channel’s OAuth quota is untouched and remains fully available for the SEO Studio analyses, channel audits, and competitor analyses that <i>do</i> need read access to your private data.</>,
+    a: <>No. That’s deliberate. The competition enrichment uses an anonymous YouTube Data API key on our side, not your OAuth credential. So even if you run 50 keyword searches in a day, your channel’s OAuth quota is untouched and remains fully available for the SEO Studio analyses, channel audits, and competitor analyses that <i>do</i> need read access to your private data.</>,
   },
   {
     q: 'Can I export the keyword list?',
-    a: <>The keyword table stays inside your YTGrowth dashboard for now — every search is saved per channel and reopens with full data + the original seed. PDF / CSV export is on the near-term roadmap; if it’s critical for an agency workflow email support and we’ll prioritize. The faster pattern most users find: copy the top 5 picks straight into the SEO Studio and run title rewrites against each one.</>,
+    a: <>The keyword table stays inside your YTGrowth dashboard for now. Every search is saved per channel and reopens with full data + the original seed. PDF / CSV export is on the near-term roadmap; if it’s critical for an agency workflow email support and we’ll prioritize. The faster pattern most users find: copy the top 5 picks straight into the SEO Studio and run title rewrites against each one.</>,
   },
   {
     q: 'Are searches saved? Can I reopen them later?',
-    a: <>Yes. Every search persists per channel and shows up in your search history with the seed keyword + timestamp. Click any past search to reopen the full table — keywords, scores, momentum tags, clusters, top pick, competition snapshots. Re-running an old seed creates a fresh entry instead of overwriting, so you can compare how a niche has shifted over time.</>,
+    a: <>Yes. Every search persists per channel and shows up in your search history with the seed keyword + timestamp. Click any past search to reopen the full table. Keywords, scores, momentum tags, clusters, top pick, competition snapshots. Re-running an old seed creates a fresh entry instead of overwriting, so you can compare how a niche has shifted over time.</>,
   },
   {
     q: 'Does Keyword Research feed into the other tools?',
-    a: <>Yes — the keyword data is shared infrastructure. The SEO Studio reuses the same intent-options + autocomplete fan-out for its title scoring. The Outliers feature uses the same intent picker for its viral video search. The clusters from Keyword Research can be sent straight into Competitor Analysis as the niche keyword set. Every tool gets sharper the more keyword searches you run.</>,
+    a: <>Yes. The keyword data is shared infrastructure. The SEO Studio reuses the same intent-options + autocomplete fan-out for its title scoring. The Outliers feature uses the same intent picker for its viral video search. The clusters from Keyword Research can be sent straight into Competitor Analysis as the niche keyword set. Every tool gets sharper the more keyword searches you run.</>,
   },
 ]
 
@@ -374,15 +374,15 @@ export default function KeywordResearch() {
         </div>
       </nav>
 
-      {/* ════ 1. HERO — white ════════════════════════════════════════════ */}
+      {/* ════ 1. HERO. White ════════════════════════════════════════════ */}
       <section style={{ padding: isMobile ? '64px 20px 56px' : '110px 40px 80px', textAlign: 'center', background: '#ffffff' }}>
         <div style={{ maxWidth: 880, margin: '0 auto', animation: 'fadeUp 0.5s ease both' }}>
           <span className="kwr-eyebrow light">YouTube Keyword Research</span>
           <h1 className="kwr-h1" style={{ fontSize: isMobile ? 36 : 60, color: 'var(--ytg-text)', marginBottom: 22 }}>
-            YouTube keyword research that uses <span style={{ color: 'var(--ytg-accent)' }}>real competition data — not vibes.</span>
+            YouTube keyword research that uses <span style={{ color: 'var(--ytg-accent)' }}>real competition data. Not vibes.</span>
           </h1>
           <p style={{ fontSize: isMobile ? 16 : 18.5, color: 'var(--ytg-text-2)', lineHeight: 1.7, maxWidth: 720, margin: '0 auto 36px' }}>
-            Type a seed. The studio fans out across YouTube Suggest, Google autocomplete, and Google related searches, filters with AI to keep only on-intent phrases, then scores each one against the real top 5 ranking channels — their median subscriber count, view ceiling, and how stale the landscape is. The keywords your niche is missing, surfaced in 30 seconds.
+            Type a seed. The studio fans out across YouTube Suggest, Google autocomplete, and Google related searches, filters with AI to keep only on-intent phrases, then scores each one against the real top 5 ranking channels. Their median subscriber count, view ceiling, and how stale the landscape is. The keywords your niche is missing, surfaced in 30 seconds.
           </p>
           <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
             <a href="/auth/login" className="kwr-btn kwr-btn-lg">Find a keyword →</a>
@@ -394,7 +394,7 @@ export default function KeywordResearch() {
         </div>
       </section>
 
-      {/* ════ 2. KEYWORD TABLE VISUAL — dark, SPLIT (text L, visual R) ══ */}
+      {/* ════ 2. KEYWORD TABLE VISUAL. Dark, SPLIT (text L, visual R) ══ */}
       <section style={{ padding: isMobile ? '64px 20px' : '100px 40px', background: '#0d0d12', borderTop: '1px solid rgba(255,255,255,0.06)', borderBottom: '1px solid rgba(255,255,255,0.06)', position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 900, height: 700, background: 'radial-gradient(ellipse, rgba(229,48,42,0.16) 0%, transparent 65%)', pointerEvents: 'none' }} />
         <div className="kwr-grid-2" style={{ maxWidth: 1180, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1.05fr', gap: 64, alignItems: 'center', position: 'relative', zIndex: 1 }}>
@@ -404,11 +404,11 @@ export default function KeywordResearch() {
               15–25 keywords <span style={{ color: '#ff3b30' }}>scored on what actually moves rankings.</span>
             </h2>
             <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.6)', lineHeight: 1.72, marginBottom: 24 }}>
-              Every kept phrase carries an opportunity score, momentum tag, difficulty pill, and the cluster it belongs to. Sortable, scannable, and grounded in real YouTube competition data — not a global difficulty estimate that doesn’t know what your channel is targeting.
+              Every kept phrase carries an opportunity score, momentum tag, difficulty pill, and the cluster it belongs to. Sortable, scannable, and grounded in real YouTube competition data. Not a global difficulty estimate that doesn’t know what your channel is targeting.
             </p>
             {[
               'Score weighted on real competitor channel size',
-              'Momentum tag — see unclaimed niches at a glance',
+              'Momentum tag. See unclaimed niches at a glance',
               'Difficulty pill from real top-5 channel medians',
               '3–5 thematic clusters surfaced from the same data',
             ].map((b, i) => (
@@ -424,7 +424,7 @@ export default function KeywordResearch() {
         </div>
       </section>
 
-      {/* ════ 3. SCORE SIGNALS — light ══════════════════════════════════ */}
+      {/* ════ 3. SCORE SIGNALS. Light ══════════════════════════════════ */}
       <section style={{ padding: isMobile ? '64px 20px' : '100px 40px', background: 'var(--ytg-bg)' }}>
         <div style={{ maxWidth: 1120, margin: '0 auto' }}>
           <div style={{ textAlign: 'center', maxWidth: 760, margin: '0 auto 48px' }}>
@@ -433,7 +433,7 @@ export default function KeywordResearch() {
               Six real signals. <span style={{ color: 'var(--ytg-accent)' }}>One opportunity score.</span>
             </h2>
             <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.72 }}>
-              The opportunity score isn’t a vibe — it’s a weighted formula. Three competition signals (feasibility, traffic, freshness), one intent multiplier, one autocomplete-rank bonus, and a momentum label. Same formula every keyword, so you can trust the comparison across searches.
+              The opportunity score isn’t a vibe. It’s a weighted formula. Three competition signals (feasibility, traffic, freshness), one intent multiplier, one autocomplete-rank bonus, and a momentum label. Same formula every keyword, so you can trust the comparison across searches.
             </p>
           </div>
           <div className="kwr-grid-2" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
@@ -452,7 +452,7 @@ export default function KeywordResearch() {
         </div>
       </section>
 
-      {/* ════ 4. SCORE BREAKDOWN — dark, SPLIT (visual L, text R) ═══════ */}
+      {/* ════ 4. SCORE BREAKDOWN. Dark, SPLIT (visual L, text R) ═══════ */}
       <section style={{ padding: isMobile ? '64px 20px' : '100px 40px', background: '#0d0d12', borderTop: '1px solid rgba(255,255,255,0.06)', borderBottom: '1px solid rgba(255,255,255,0.06)', position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', top: '40%', left: '50%', transform: 'translate(-50%,-50%)', width: 900, height: 700, background: 'radial-gradient(ellipse, rgba(229,48,42,0.14) 0%, transparent 65%)', pointerEvents: 'none' }} />
         <div className="kwr-grid-2" style={{ maxWidth: 1180, margin: '0 auto', display: 'grid', gridTemplateColumns: '1.1fr 1fr', gap: 56, alignItems: 'center', position: 'relative', zIndex: 1 }}>
@@ -465,13 +465,13 @@ export default function KeywordResearch() {
               You see the math. <span style={{ color: '#ff3b30' }}>So you trust the rank.</span>
             </h2>
             <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.6)', lineHeight: 1.72, marginBottom: 22 }}>
-              Click any keyword to expand the breakdown. Feasibility (45%) measures how dominant the top 5 channels are. Traffic ceiling (30%) measures the view headroom. Freshness (25%) measures whether anyone’s actively shipping in the niche. Multiplied by intent match. Plus a small autocomplete-rank bonus. No black box, no proprietary "DA-equivalent" — just the formula.
+              Click any keyword to expand the breakdown. Feasibility (45%) measures how dominant the top 5 channels are. Traffic ceiling (30%) measures the view headroom. Freshness (25%) measures whether anyone’s actively shipping in the niche. Multiplied by intent match. Plus a small autocomplete-rank bonus. No black box, no proprietary "DA-equivalent". Just the formula.
             </p>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
               {[
-                { label: 'Feasibility',   color: '#4ade80', body: 'Top-5 channels — smaller = higher score.' },
-                { label: 'Traffic',       color: '#f59e0b', body: 'Top-5 view ceiling — bigger = higher score.' },
-                { label: 'Freshness',     color: '#4a7cf7', body: 'Days since newest top-5 video — staler = higher.' },
+                { label: 'Feasibility',   color: '#4ade80', body: 'Top-5 channels. Smaller = higher score.' },
+                { label: 'Traffic',       color: '#f59e0b', body: 'Top-5 view ceiling. Bigger = higher score.' },
+                { label: 'Freshness',     color: '#4a7cf7', body: 'Days since newest top-5 video. Staler = higher.' },
                 { label: 'Intent × bonus', color: '#ff3b30', body: 'Exact / strong / partial. Plus autocomplete-rank lift.' },
               ].map((p, i) => (
                 <div key={i} style={{ borderLeft: `2px solid ${p.color}`, paddingLeft: 12 }}>
@@ -484,7 +484,7 @@ export default function KeywordResearch() {
         </div>
       </section>
 
-      {/* ════ 5. HOW IT WORKS — white, with arrow connectors ════════════ */}
+      {/* ════ 5. HOW IT WORKS. White, with arrow connectors ════════════ */}
       <section id="how" style={{ padding: isMobile ? '64px 20px' : '100px 40px', background: '#ffffff' }}>
         <div style={{ maxWidth: 1240, margin: '0 auto' }}>
           <div style={{ textAlign: 'center', maxWidth: 720, margin: '0 auto 52px' }}>
@@ -501,7 +501,7 @@ export default function KeywordResearch() {
               { n: '01', t: 'Seed keyword',         b: 'Type the broad topic you want to publish about. The studio uses your channel’s niche keywords as additional context to keep the suggestions on-brand.' },
               { n: '02', t: 'Multi-source fan-out', b: 'In parallel: YouTube Suggest scrape, SerpAPI Google autocomplete, Serper "related searches". 30+ raw suggestions in ~3 seconds.' },
               { n: '03', t: 'Claude intent filter', b: 'Sonnet 4.6 reads all 30+ suggestions, drops off-intent / branded / duplicates, keeps 15–25 phrases that match your seed intent. Tags content angle + intent strength on each.' },
-              { n: '04', t: 'Real competition fetch', b: 'For the top 10 by initial score: real YouTube top-5 results — channel size, view ceiling, days since newest. Parallel, anonymous API key, ~10 seconds.' },
+              { n: '04', t: 'Real competition fetch', b: 'For the top 10 by initial score: real YouTube top-5 results. Channel size, view ceiling, days since newest. Parallel, anonymous API key, ~10 seconds.' },
               { n: '05', t: 'Score + cluster',      b: 'Final score = feasibility×0.45 + traffic×0.30 + freshness×0.25, intent multiplier, autocomplete bonus. 3–5 thematic clusters surfaced. Top pick named.' },
             ]
             const Card = ({ s }) => (
@@ -554,7 +554,7 @@ export default function KeywordResearch() {
         </div>
       </section>
 
-      {/* ════ 6. SEVEN OUTPUT BLOCKS — dark ══════════════════════════════ */}
+      {/* ════ 6. SEVEN OUTPUT BLOCKS. Dark ══════════════════════════════ */}
       <section style={{ padding: isMobile ? '64px 20px' : '100px 40px', background: '#0d0d12', borderTop: '1px solid rgba(255,255,255,0.06)', borderBottom: '1px solid rgba(255,255,255,0.06)', position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 900, height: 700, background: 'radial-gradient(ellipse, rgba(229,48,42,0.14) 0%, transparent 65%)', pointerEvents: 'none' }} />
         <div style={{ maxWidth: 1180, margin: '0 auto', position: 'relative', zIndex: 1 }}>
@@ -564,7 +564,7 @@ export default function KeywordResearch() {
               Seven distinct output blocks. <span style={{ color: '#ff3b30' }}>Every keyword is publishable.</span>
             </h2>
             <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.6)', lineHeight: 1.72 }}>
-              You don’t leave the studio with a list of phrases. You leave with a ranked, scored, clustered, intent-filtered keyword set — each one carrying a content angle so the next step is "open SEO Studio", not "now what".
+              You don’t leave the studio with a list of phrases. You leave with a ranked, scored, clustered, intent-filtered keyword set. Each one carrying a content angle so the next step is "open SEO Studio", not "now what".
             </p>
           </div>
           <div className="kwr-grid-3" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 14 }}>
@@ -581,7 +581,7 @@ export default function KeywordResearch() {
         </div>
       </section>
 
-      {/* ════ 7. WHAT POWERS IT — light grey, split ═════════════════════ */}
+      {/* ════ 7. WHAT POWERS IT. Light grey, split ═════════════════════ */}
       <section style={{ padding: isMobile ? '64px 20px' : '100px 40px', background: 'var(--ytg-bg-3)', borderTop: '1px solid var(--ytg-border)', borderBottom: '1px solid var(--ytg-border)' }}>
         <div className="kwr-grid-2" style={{ maxWidth: 1140, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 56, alignItems: 'center' }}>
           <div>
@@ -590,7 +590,7 @@ export default function KeywordResearch() {
               Three live data sources. <span style={{ color: 'var(--ytg-accent)' }}>One AI judgement layer.</span>
             </h2>
             <p style={{ fontSize: 14.5, color: 'var(--ytg-text-2)', lineHeight: 1.72 }}>
-              Real autocomplete from YouTube and Google, real "related searches" from Google’s SERP, and real top-5 ranking data from the YouTube Data API. Claude Sonnet 4.6 sits in the middle as the intent filter and clustering layer — but every score component is grounded in numbers we actually fetched, not estimated.
+              Real autocomplete from YouTube and Google, real "related searches" from Google’s SERP, and real top-5 ranking data from the YouTube Data API. Claude Sonnet 4.6 sits in the middle as the intent filter and clustering layer. But every score component is grounded in numbers we actually fetched, not estimated.
             </p>
           </div>
           <div style={{ background: 'var(--ytg-card)', border: '1px solid var(--ytg-border)', borderRadius: 16, boxShadow: 'var(--ytg-shadow-lg)', padding: '24px 28px' }}>
@@ -611,7 +611,7 @@ export default function KeywordResearch() {
         </div>
       </section>
 
-      {/* ════ 8. PLAN LIMITS — dark ═════════════════════════════════════ */}
+      {/* ════ 8. PLAN LIMITS. Dark ═════════════════════════════════════ */}
       <section style={{ padding: isMobile ? '64px 20px' : '100px 40px', background: '#0d0d12', borderTop: '1px solid rgba(255,255,255,0.06)', borderBottom: '1px solid rgba(255,255,255,0.06)', position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 900, height: 700, background: 'radial-gradient(ellipse, rgba(229,48,42,0.14) 0%, transparent 65%)', pointerEvents: 'none' }} />
         <div style={{ maxWidth: 1080, margin: '0 auto', position: 'relative', zIndex: 1 }}>
@@ -621,7 +621,7 @@ export default function KeywordResearch() {
               How many keyword searches you get each month
             </h2>
             <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.6)', lineHeight: 1.72 }}>
-              Free creators get one full search per cycle so you can prove the engine on a real keyword. Paid plans charge one credit per search — same engine, no feature differences. Re-running an old seed creates a fresh entry so you can track how a niche shifts over time.
+              Free creators get one full search per cycle so you can prove the engine on a real keyword. Paid plans charge one credit per search. Same engine, no feature differences. Re-running an old seed creates a fresh entry so you can track how a niche shifts over time.
             </p>
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr 1fr' : 'repeat(4, 1fr)', gap: 14 }}>
@@ -658,7 +658,7 @@ export default function KeywordResearch() {
         </div>
       </section>
 
-      {/* ════ 9. FAQ — white ════════════════════════════════════════════ */}
+      {/* ════ 9. FAQ. White ════════════════════════════════════════════ */}
       <section style={{ padding: isMobile ? '64px 20px' : '110px 40px', background: '#ffffff' }}>
         <div className="kwr-grid-2" style={{ maxWidth: 1180, margin: '0 auto', display: 'grid', gridTemplateColumns: '0.7fr 1.3fr', gap: 56, alignItems: 'flex-start' }}>
           <div style={{ position: isMobile ? 'static' : 'sticky', top: 100 }}>
@@ -667,7 +667,7 @@ export default function KeywordResearch() {
               Questions about the keyword research engine, answered honestly.
             </h2>
             <p style={{ fontSize: 14.5, color: 'var(--ytg-text-2)', lineHeight: 1.7 }}>
-              Real answers from how the product behaves — the data sources, the score formula, the YouTube quota boundary, and what won’t work.
+              Real answers from how the product behaves. The data sources, the score formula, the YouTube quota boundary, and what won’t work.
             </p>
             <a href="/contact" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 13.5, color: 'var(--ytg-accent)', textDecoration: 'none', fontWeight: 600, marginTop: 16 }}>
               Still have questions? Email us →
@@ -681,7 +681,7 @@ export default function KeywordResearch() {
         </div>
       </section>
 
-      {/* ════ 10. BOTTOM CTA — light ════════════════════════════════════ */}
+      {/* ════ 10. BOTTOM CTA. Light ════════════════════════════════════ */}
       <section style={{ padding: isMobile ? '60px 20px 56px' : '110px 40px 80px', background: 'var(--ytg-bg)' }}>
         <div style={{ maxWidth: 860, margin: '0 auto', textAlign: 'center', background: 'var(--ytg-card)', border: '1px solid var(--ytg-border)', borderRadius: 24, boxShadow: 'var(--ytg-shadow-xl)', padding: isMobile ? '52px 24px' : '76px 60px', position: 'relative', overflow: 'hidden' }}>
           <div style={{ position: 'absolute', top: -80, left: '50%', transform: 'translateX(-50%)', width: 540, height: 260, background: 'radial-gradient(ellipse, rgba(229,48,42,0.10) 0%, transparent 70%)', pointerEvents: 'none' }} />

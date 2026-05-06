@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react'
 import LandingFooter from '../../components/LandingFooter'
 
-/* SEO Studio — fully custom landing page.
+/* SEO Studio. Fully custom landing page.
  *
  * Built around the *actual* product (see app/seo.py + routers/seo_routes.py):
- * a 3-stage pipeline — title scoring (deterministic SEO/CTR/Hook rubric) →
+ * a 3-stage pipeline. Title scoring (deterministic SEO/CTR/Hook rubric) →
  * 5-then-3 AI title rewrites (Claude Sonnet 4.6, with live YouTube competitor
  * data + creator's own viral history) → 3 rewritten descriptions with a
  * 3-hashtag CamelCase footer. Plus video-level critique (title + description +
@@ -185,7 +185,7 @@ function TitleScorecardVisual() {
         <span style={{ fontSize: 18, color: 'rgba(255,255,255,0.35)' }}>/100</span>
         <span style={{ marginLeft: 'auto', fontSize: 10, fontWeight: 800, color: '#f59e0b', background: 'rgba(245,158,11,0.12)', border: '1px solid rgba(245,158,11,0.3)', padding: '3px 9px', borderRadius: 100, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Needs work</span>
       </div>
-      {/* Rubric bars — same dimensions the deterministic rubric scores */}
+      {/* Rubric bars. Same dimensions the deterministic rubric scores */}
       {[
         { label: 'SEO · keyword overlap',   score: 72, color: '#4ade80' },
         { label: 'CTR · click-through pull', score: 58, color: '#f59e0b' },
@@ -202,7 +202,7 @@ function TitleScorecardVisual() {
           </div>
         </div>
       ))}
-      {/* AI rewrite — top of the 3 returned */}
+      {/* AI rewrite. Top of the 3 returned */}
       <div style={{ borderLeft: '3px solid #4ade80', background: 'rgba(74,222,128,0.07)', borderRadius: 8, padding: '13px 14px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
           <p style={{ fontSize: 10, fontWeight: 800, color: '#4ade80', textTransform: 'uppercase', letterSpacing: '0.08em' }}>AI rewrite · score 91</p>
@@ -219,7 +219,7 @@ function TitleScorecardVisual() {
   )
 }
 
-/* ── Visual: Description rewrite — opening + body + 3 hashtags (dark) ─── */
+/* ── Visual: Description rewrite. Opening + body + 3 hashtags (dark) ─── */
 function DescriptionVisual() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
@@ -233,7 +233,7 @@ function DescriptionVisual() {
           "Hey guys! Welcome back to my channel. In this video I'm going to show you how I doubled my YouTube views. Don't forget to like and subscribe! Hit the bell icon..."
         </p>
       </div>
-      {/* AFTER — opening visible above the fold */}
+      {/* AFTER. Opening visible above the fold */}
       <div style={{ background: '#111114', borderRadius: 14, border: '1px solid rgba(255,255,255,0.09)', borderLeft: '3px solid #4ade80', padding: '16px 18px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
           <p style={{ fontSize: 10, fontWeight: 800, color: '#4ade80', letterSpacing: '0.08em', textTransform: 'uppercase' }}>After · option 1 of 3</p>
@@ -241,11 +241,11 @@ function DescriptionVisual() {
         </div>
         <p style={{ fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.45)', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 6 }}>Visible before "Show more"</p>
         <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.92)', lineHeight: 1.65, fontWeight: 500, marginBottom: 12, paddingBottom: 12, borderBottom: '1px solid rgba(255,255,255,0.07)' }}>
-          The exact 3-strategy YouTube growth experiment that doubled my channel views in 30 days — full breakdown of what worked, what flopped, and the data behind every change.
+          The exact 3-strategy YouTube growth experiment that doubled my channel views in 30 days. Full breakdown of what worked, what flopped, and the data behind every change.
         </p>
         <p style={{ fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.45)', letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 6 }}>Body excerpt</p>
         <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.65)', lineHeight: 1.7, marginBottom: 12 }}>
-          I ran three different growth tactics over 30 days — keyword research, retention hooks, and end-screen optimization. Two of them moved the needle. One didn't. Here's the full breakdown so you can skip the dead ends...
+          I ran three different growth tactics over 30 days. Keyword research, retention hooks, and end-screen optimization. Two of them moved the needle. One didn't. Here's the full breakdown so you can skip the dead ends...
         </p>
         <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
           {['#YouTubeGrowth', '#YouTubeViews', '#YouTubeStrategy'].map((h, i) => (
@@ -257,7 +257,7 @@ function DescriptionVisual() {
   )
 }
 
-/* ── Visual: Keyword scoring panel — volume + competition like VidIQ ──── */
+/* ── Visual: Keyword scoring panel. Volume + competition like VidIQ ──── */
 function KeywordPanelVisual() {
   const rows = [
     { kw: 'youtube growth strategy', vol: 'HIGH', volColor: '#4ade80', comp: 'LOW',  compColor: '#4ade80', score: 92 },
@@ -293,19 +293,19 @@ function KeywordPanelVisual() {
 /* ── 6 dimensions the rubric scores (deterministic + AI hybrid) ────────── */
 const DIMENSIONS = [
   { name: 'Length & character count',   what: 'Your title scored against the 50–70 character sweet spot. Lengths outside that band lose CTR on mobile and get truncated on desktop search results.' },
-  { name: 'Keyword overlap (fuzzy stem)', what: 'How many words from the niche keyword actually appear in the title — using stem matching so "shop", "shopping", "shopped" all count. Anti-stuffing penalty applies above the threshold.' },
+  { name: 'Keyword overlap (fuzzy stem)', what: 'How many words from the niche keyword actually appear in the title. Using stem matching so "shop", "shopping", "shopped" all count. Anti-stuffing penalty applies above the threshold.' },
   { name: 'Front-loading',              what: 'Whether the first three words contain a power word, question starter, or number. Front-loaded titles win the scroll because YouTube truncates after the first ~30 characters on mobile.' },
   { name: 'Hook structure (pipe / brackets)', what: 'Detects whether the title uses YouTube’s proven structural patterns: pipe dividers, brackets, parens. These add a second-beat curiosity layer without spending more characters.' },
-  { name: 'Viral format match',         what: 'Pattern-matches against the proven viral title formats — listicle, transformation, contrast, journey, deep-dive. Anchors the title to a frame YouTube’s recommendation engine already understands.' },
+  { name: 'Viral format match',         what: 'Pattern-matches against the proven viral title formats. Listicle, transformation, contrast, journey, deep-dive. Anchors the title to a frame YouTube’s recommendation engine already understands.' },
   { name: 'Power words + numbers',      what: 'Power-word density and presence of any number. Strict caps so the title doesn’t feel templated; the rubric rewards naturally-placed words over keyword bingo.' },
 ]
 
 const PIPELINE_OUTPUTS = [
-  { icon: 'gauge',  title: 'Title score (0–100)',         body: 'Deterministic rubric across SEO, CTR, hook, and length — same numbers every time. Plus Claude’s subjective CTR + Hook scores so subjective qualities aren’t fudged with regex.' },
-  { icon: 'edit',   title: '3 AI title rewrites',           body: 'Claude generates 5, the system ranks them, you see the strongest 3. Each anchored to a gap_opportunity surfaced from the live competitor data — not generic templates.' },
+  { icon: 'gauge',  title: 'Title score (0–100)',         body: 'Deterministic rubric across SEO, CTR, hook, and length. Same numbers every time. Plus Claude’s subjective CTR + Hook scores so subjective qualities aren’t fudged with regex.' },
+  { icon: 'edit',   title: '3 AI title rewrites',           body: 'Claude generates 5, the system ranks them, you see the strongest 3. Each anchored to a gap_opportunity surfaced from the live competitor data. Not generic templates.' },
   { icon: 'gap',    title: 'Gap analysis from live data',   body: 'The AI reads the actual top YouTube results for your niche, names the angle every competitor shares (overused), and the angle every competitor misses (your wedge).' },
   { icon: 'layers', title: 'Keyword opportunity table',     body: 'Up to 15 keyword phrases scored on volume + competition. Volume from autocomplete frequency. Competition from how many top videos already target the exact phrase in their title.' },
-  { icon: 'pen',    title: '3 description rewrites',        body: '300–400 words each, opening hook above the fold, primary keywords woven naturally into the body, and 3 CamelCase hashtags pulled from real autocomplete data — not invented.' },
+  { icon: 'pen',    title: '3 description rewrites',        body: '300–400 words each, opening hook above the fold, primary keywords woven naturally into the body, and 3 CamelCase hashtags pulled from real autocomplete data. Not invented.' },
   { icon: 'eye',    title: 'Per-video critique (vision)',   body: 'On any uploaded video: title score, description verdict + rewrite, plus a Claude-vision read of the thumbnail (face, contrast, text-overlay, composition) with specific tips.' },
   { icon: 'apply',  title: 'One-click apply to YouTube',    body: 'Picked a rewrite? Push it back to YouTube with one click via the official Data API. We snapshot the before/after so you can track which optimizations actually moved views.' },
 ]
@@ -331,7 +331,7 @@ function OutputIcon({ name }) {
 }
 
 const PLAN_LIMITS = [
-  { plan: 'Free',    runs: '0',   note: 'Not included on free tier — SEO Studio is paid-only' },
+  { plan: 'Free',    runs: '0',   note: 'Not included on free tier. SEO Studio is paid-only' },
   { plan: 'Solo',    runs: '20',  note: 'Title + description + apply-to-YouTube · 3 channels' },
   { plan: 'Growth',  runs: '50',  note: 'Same engine, higher monthly allowance · 5 channels' },
   { plan: 'Agency',  runs: '150', note: 'Pooled across 10 channels · per-video critique included' },
@@ -339,52 +339,52 @@ const PLAN_LIMITS = [
 
 const FAQS = [
   {
-    q: 'How is the title score actually calculated — is it just a vibe check from AI?',
-    a: <>No. The score is a hybrid: the SEO component is fully deterministic (length, keyword overlap with fuzzy stem matching, anti-stuffing checks, pipe discipline, viral format detection) so it returns the same number every time. The CTR and Hook components come from Claude’s judgement against a rubric that’s embedded in the prompt — because regex can’t reliably score subjective qualities like emotional pull or opener strength. The combined score is what you see; the breakdown is shown so you can see exactly which dimensions cost you points.</>,
+    q: 'How is the title score actually calculated. Is it just a vibe check from AI?',
+    a: <>No. The score is a hybrid: the SEO component is fully deterministic (length, keyword overlap with fuzzy stem matching, anti-stuffing checks, pipe discipline, viral format detection) so it returns the same number every time. The CTR and Hook components come from Claude’s judgement against a rubric that’s embedded in the prompt. Because regex can’t reliably score subjective qualities like emotional pull or opener strength. The combined score is what you see; the breakdown is shown so you can see exactly which dimensions cost you points.</>,
   },
   {
     q: 'Why do you pick a "confirmed keyword" before running the analysis?',
-    a: <>Because most titles are ambiguous. A title like "My morning routine" could be a wellness video, a productivity video, or a parenting video — the search competition is wildly different in each case. Before the full analysis runs, the studio shows 3 keyword intent options and you pick the one that matches your actual video. That choice anchors the YouTube search, the keyword scoring, and the AI’s gap analysis. If you skip the picker, the AI will best-guess from the title alone — still useful, just less precise.</>,
+    a: <>Because most titles are ambiguous. A title like "My morning routine" could be a wellness video, a productivity video, or a parenting video. The search competition is wildly different in each case. Before the full analysis runs, the studio shows 3 keyword intent options and you pick the one that matches your actual video. That choice anchors the YouTube search, the keyword scoring, and the AI’s gap analysis. If you skip the picker, the AI will best-guess from the title alone. Still useful, just less precise.</>,
   },
   {
     q: 'Where do the AI title rewrites come from? Are they generic templates?',
-    a: <>No. Claude reads the live top 10 YouTube results for your niche keyword (titles + view counts), the YouTube autocomplete suggestions, the keyword opportunity table, and — critically — your channel’s own viral history. From that data it identifies the dominant pattern every competitor shares ("overused angle") and the angle nobody is using ("gap opportunity"), then writes 5 titles aimed at that gap, in your voice. The system ranks all 5 by combined score and surfaces the top 3.</>,
+    a: <>No. Claude reads the live top 10 YouTube results for your niche keyword (titles + view counts), the YouTube autocomplete suggestions, the keyword opportunity table, and. Critically. Your channel’s own viral history. From that data it identifies the dominant pattern every competitor shares ("overused angle") and the angle nobody is using ("gap opportunity"), then writes 5 titles aimed at that gap, in your voice. The system ranks all 5 by combined score and surfaces the top 3.</>,
   },
   {
-    q: 'What’s the deal with the hard rules — no colons, no em-dashes, no years?',
-    a: <>Those are non-negotiable rules baked into the prompt because we tested them against thousands of titles in our beta. Colons and em-dashes feel like marketing copy and tank CTR. Year-stamped titles (2024, 2025, 2026) decay fast — a "Best apps for 2025" video stops getting clicks the day 2026 starts. The required structure (one pipe, opening beat + closing beat) is the format that consistently wins for personal vlog and tutorial content. If Claude slips on any rule the post-processor cleans it up before you see the title.</>,
+    q: 'What’s the deal with the hard rules. No colons, no em-dashes, no years?',
+    a: <>Those are non-negotiable rules baked into the prompt because we tested them against thousands of titles in our beta. Colons and em-dashes feel like marketing copy and tank CTR. Year-stamped titles (2024, 2025, 2026) decay fast. A "Best apps for 2025" video stops getting clicks the day 2026 starts. The required structure (one pipe, opening beat + closing beat) is the format that consistently wins for personal vlog and tutorial content. If Claude slips on any rule the post-processor cleans it up before you see the title.</>,
   },
   {
-    q: 'How do you score keyword opportunity — do you actually have YouTube search volume data?',
-    a: <>YouTube doesn’t expose true search volume publicly. We use two strong proxies. <b>Volume:</b> how many YouTube autocomplete suggestions contain the phrase — autocomplete only surfaces high-volume queries, so this is a real demand signal. <b>Competition:</b> how many of the top 50 videos for the niche already target the exact phrase in their title plus how many tag it. The combined score weights low competition + decent volume, which is the same logic VidIQ’s "keyword opportunity" surface uses, but our pool is built from your actual niche search rather than an estimated global average.</>,
+    q: 'How do you score keyword opportunity. Do you actually have YouTube search volume data?',
+    a: <>YouTube doesn’t expose true search volume publicly. We use two strong proxies. <b>Volume:</b> how many YouTube autocomplete suggestions contain the phrase. Autocomplete only surfaces high-volume queries, so this is a real demand signal. <b>Competition:</b> how many of the top 50 videos for the niche already target the exact phrase in their title plus how many tag it. The combined score weights low competition + decent volume, which is the same logic VidIQ’s "keyword opportunity" surface uses, but our pool is built from your actual niche search rather than an estimated global average.</>,
   },
   {
     q: 'Can the description generator write something my audience won’t notice as AI?',
-    a: <>The output is intentionally not corporate. The prompt forbids generic openers ("Welcome to my channel"), bullet lists, sub-headers, emojis, fake CTAs ("SMASH that like button"), and stock keyword stuffing. It writes 2–3 flowing paragraphs in a conversational voice with the primary keyword woven into the opening (visible before "Show more"), the next 2 most important keywords once each in the body, and exactly 3 hashtags on the final line in CamelCase format. We strip em-dashes from every output as a safety net — they’re a common AI tell.</>,
+    a: <>The output is intentionally not corporate. The prompt forbids generic openers ("Welcome to my channel"), bullet lists, sub-headers, emojis, fake CTAs ("SMASH that like button"), and stock keyword stuffing. It writes 2–3 flowing paragraphs in a conversational voice with the primary keyword woven into the opening (visible before "Show more"), the next 2 most important keywords once each in the body, and exactly 3 hashtags on the final line in CamelCase format. We strip em-dashes from every output as a safety net. They’re a common AI tell.</>,
   },
   {
     q: 'How does the per-video critique differ from running an analysis on a draft title?',
-    a: <>The draft analyzer optimizes <b>before</b> you upload. The per-video critique runs <b>on already-uploaded videos</b> — it pulls the live title, current description, and thumbnail from your channel, scores all three, runs Claude vision on the thumbnail (face detection, contrast read, composition assessment, text-overlay check), and returns a rewritten description plus specific thumbnail tips. The point is to fix existing videos in your back-catalog that are underperforming relative to their topic.</>,
+    a: <>The draft analyzer optimizes <b>before</b> you upload. The per-video critique runs <b>on already-uploaded videos</b>. It pulls the live title, current description, and thumbnail from your channel, scores all three, runs Claude vision on the thumbnail (face detection, contrast read, composition assessment, text-overlay check), and returns a rewritten description plus specific thumbnail tips. The point is to fix existing videos in your back-catalog that are underperforming relative to their topic.</>,
   },
   {
     q: 'What does "apply to YouTube" actually do?',
-    a: <>It pushes the rewritten title and/or description back to YouTube via the official Data API — the same write endpoint the YouTube Studio app uses. The change is live within seconds. We snapshot the before/after view + like + comment counts at the moment of the apply so you can come back later and see whether the rewrite actually moved the numbers. Each apply is logged to your "Your optimizations" panel and the stats refresh lazily every 6 hours.</>,
+    a: <>It pushes the rewritten title and/or description back to YouTube via the official Data API. The same write endpoint the YouTube Studio app uses. The change is live within seconds. We snapshot the before/after view + like + comment counts at the moment of the apply so you can come back later and see whether the rewrite actually moved the numbers. Each apply is logged to your "Your optimizations" panel and the stats refresh lazily every 6 hours.</>,
   },
   {
     q: 'Will applying a new title hurt a video that’s already performing well?',
-    a: <>YouTube doesn’t penalize title changes by themselves. What hurts performance is changing a title in a way that breaks the search intent of the people who were already finding the video — e.g. swapping "How to grow basil" to "My garden tour" mid-flight. The AI rewrites are anchored to the same primary keyword as your original, so search ranking should hold or improve. We still recommend you only apply to videos where the original title is clearly underperforming — the studio will tell you when that’s the case.</>,
+    a: <>YouTube doesn’t penalize title changes by themselves. What hurts performance is changing a title in a way that breaks the search intent of the people who were already finding the video. E.g. swapping "How to grow basil" to "My garden tour" mid-flight. The AI rewrites are anchored to the same primary keyword as your original, so search ranking should hold or improve. We still recommend you only apply to videos where the original title is clearly underperforming. The studio will tell you when that’s the case.</>,
   },
   {
     q: 'Are past SEO analyses saved? Can I reopen them later?',
-    a: <>Yes. Every <code>/seo/analyze</code> run is persisted per channel and shows up in the Reports tab — newest first, up to 50 rows. Click any one to reopen the full analysis (score, rubric breakdown, AI rewrites, intent, gap, keyword scores, top videos for the niche). Re-running the same title updates the existing row instead of stacking duplicates, so the Reports list stays clean. Description outputs are tagged onto the most recent analysis row so the whole report rehydrates as one unit.</>,
+    a: <>Yes. Every <code>/seo/analyze</code> run is persisted per channel and shows up in the Reports tab. Newest first, up to 50 rows. Click any one to reopen the full analysis (score, rubric breakdown, AI rewrites, intent, gap, keyword scores, top videos for the niche). Re-running the same title updates the existing row instead of stacking duplicates, so the Reports list stays clean. Description outputs are tagged onto the most recent analysis row so the whole report rehydrates as one unit.</>,
   },
   {
     q: 'Does this work for Shorts?',
-    a: <>Title scoring works the same — the rubric isn’t format-aware because Shorts and long-form share the same ranking signals. The keyword research and competitor pool work better for long-form because Shorts thumbnails get less play in search and Shorts titles often get truncated to a few words. For Shorts-only content we recommend the title rewrites still, but pay less attention to the description critique — Shorts descriptions don’t carry meaningful SEO weight.</>,
+    a: <>Title scoring works the same. The rubric isn’t format-aware because Shorts and long-form share the same ranking signals. The keyword research and competitor pool work better for long-form because Shorts thumbnails get less play in search and Shorts titles often get truncated to a few words. For Shorts-only content we recommend the title rewrites still, but pay less attention to the description critique. Shorts descriptions don’t carry meaningful SEO weight.</>,
   },
   {
     q: 'How long does an analysis take, and how many credits does it cost?',
-    a: <>~25–40 seconds end-to-end. The analysis fans out: YouTube niche search (last 50 results), YouTube autocomplete + Serper related searches + SerpAPI Google autocomplete in parallel, n-gram extraction + scoring, then Claude Sonnet 4.6 for the gap analysis + 5 title rewrites. Each <code>/seo/analyze</code> run is one credit. The description generator is a separate one-credit charge (because it’s a separate Claude call producing 3 description options). Per-video critique is the description-side half of an analyze run — no double charge.</>,
+    a: <>~25–40 seconds end-to-end. The analysis fans out: YouTube niche search (last 50 results), YouTube autocomplete + Serper related searches + SerpAPI Google autocomplete in parallel, n-gram extraction + scoring, then Claude Sonnet 4.6 for the gap analysis + 5 title rewrites. Each <code>/seo/analyze</code> run is one credit. The description generator is a separate one-credit charge (because it’s a separate Claude call producing 3 description options). Per-video critique is the description-side half of an analyze run. No double charge.</>,
   },
 ]
 
@@ -411,15 +411,15 @@ export default function SeoStudio() {
         </div>
       </nav>
 
-      {/* ════ 1. HERO — white ════════════════════════════════════════════ */}
+      {/* ════ 1. HERO. White ════════════════════════════════════════════ */}
       <section style={{ padding: isMobile ? '64px 20px 56px' : '110px 40px 80px', textAlign: 'center', background: '#ffffff' }}>
         <div style={{ maxWidth: 880, margin: '0 auto', animation: 'fadeUp 0.5s ease both' }}>
           <span className="sst-eyebrow light">SEO Studio</span>
           <h1 className="sst-h1" style={{ fontSize: isMobile ? 36 : 60, color: 'var(--ytg-text)', marginBottom: 22 }}>
-            Score every title against the live YouTube niche — <span style={{ color: 'var(--ytg-accent)' }}>then rewrite it to win.</span>
+            Score every title against the live YouTube niche. <span style={{ color: 'var(--ytg-accent)' }}>then rewrite it to win.</span>
           </h1>
           <p style={{ fontSize: isMobile ? 16 : 18.5, color: 'var(--ytg-text-2)', lineHeight: 1.7, maxWidth: 720, margin: '0 auto 36px' }}>
-            Paste a title. We pull the top 50 YouTube results for that niche, score your title on a 6-dimension rubric, surface the gap your competitors are missing, and hand back 3 AI rewrites — plus a 300-word description and 3 hashtags pulled from real search demand. One click pushes the new title and description back to YouTube.
+            Paste a title. We pull the top 50 YouTube results for that niche, score your title on a 6-dimension rubric, surface the gap your competitors are missing, and hand back 3 AI rewrites. Plus a 300-word description and 3 hashtags pulled from real search demand. One click pushes the new title and description back to YouTube.
           </p>
           <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
             <a href="/auth/login" className="sst-btn sst-btn-lg">Score a title →</a>
@@ -431,22 +431,22 @@ export default function SeoStudio() {
         </div>
       </section>
 
-      {/* ════ 2. TITLE SCORECARD VISUAL — dark, SPLIT (text L, visual R) ═ */}
+      {/* ════ 2. TITLE SCORECARD VISUAL. Dark, SPLIT (text L, visual R) ═ */}
       <section style={{ padding: isMobile ? '64px 20px' : '100px 40px', background: '#0d0d12', borderTop: '1px solid rgba(255,255,255,0.06)', borderBottom: '1px solid rgba(255,255,255,0.06)', position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 900, height: 700, background: 'radial-gradient(ellipse, rgba(229,48,42,0.16) 0%, transparent 65%)', pointerEvents: 'none' }} />
         <div className="sst-grid-2" style={{ maxWidth: 1180, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1.05fr', gap: 64, alignItems: 'center', position: 'relative', zIndex: 1 }}>
           <div>
             <span className="sst-eyebrow dark">Per-title scorecard</span>
             <h2 className="sst-h2" style={{ fontSize: isMobile ? 30 : 42, color: '#fff', marginBottom: 18 }}>
-              The number first — then <span style={{ color: '#ff3b30' }}>the rewrite that earns a higher one.</span>
+              The number first. Then <span style={{ color: '#ff3b30' }}>the rewrite that earns a higher one.</span>
             </h2>
             <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.6)', lineHeight: 1.72, marginBottom: 24 }}>
-              Every title gets a 0–100 score on the deterministic rubric, then up to 3 AI rewrites scored against the same rubric. The breakdown is always visible so you can see exactly which dimensions are costing you points — keyword overlap, hook strength, length band, viral-format match.
+              Every title gets a 0–100 score on the deterministic rubric, then up to 3 AI rewrites scored against the same rubric. The breakdown is always visible so you can see exactly which dimensions are costing you points. Keyword overlap, hook strength, length band, viral-format match.
             </p>
             {[
-              'Hybrid scoring — deterministic SEO, AI-judged CTR + hook',
+              'Hybrid scoring. Deterministic SEO, AI-judged CTR + hook',
               'Same rubric applied to your title and the AI rewrites',
-              '5-then-3 generation — strongest titles only ever surface',
+              '5-then-3 generation. Strongest titles only ever surface',
               'Quality-floor retry if first pass isn’t strong enough',
             ].map((b, i) => (
               <div key={i} style={{ display: 'flex', gap: 10, alignItems: 'flex-start', marginBottom: 11 }}>
@@ -461,7 +461,7 @@ export default function SeoStudio() {
         </div>
       </section>
 
-      {/* ════ 3. THE 6 DIMENSIONS — light ════════════════════════════════ */}
+      {/* ════ 3. THE 6 DIMENSIONS. Light ════════════════════════════════ */}
       <section style={{ padding: isMobile ? '64px 20px' : '100px 40px', background: 'var(--ytg-bg)' }}>
         <div style={{ maxWidth: 1120, margin: '0 auto' }}>
           <div style={{ textAlign: 'center', maxWidth: 760, margin: '0 auto 48px' }}>
@@ -489,7 +489,7 @@ export default function SeoStudio() {
         </div>
       </section>
 
-      {/* ════ 4. DESCRIPTION REWRITE — dark, SPLIT (visual L, text R) ═══ */}
+      {/* ════ 4. DESCRIPTION REWRITE. Dark, SPLIT (visual L, text R) ═══ */}
       <section style={{ padding: isMobile ? '64px 20px' : '100px 40px', background: '#0d0d12', borderTop: '1px solid rgba(255,255,255,0.06)', borderBottom: '1px solid rgba(255,255,255,0.06)', position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', top: '40%', left: '50%', transform: 'translate(-50%,-50%)', width: 900, height: 700, background: 'radial-gradient(ellipse, rgba(229,48,42,0.14) 0%, transparent 65%)', pointerEvents: 'none' }} />
         <div className="sst-grid-2" style={{ maxWidth: 1180, margin: '0 auto', display: 'grid', gridTemplateColumns: '1.1fr 1fr', gap: 56, alignItems: 'center', position: 'relative', zIndex: 1 }}>
@@ -499,17 +499,17 @@ export default function SeoStudio() {
           <div style={{ order: isMobile ? 0 : 1 }}>
             <span className="sst-eyebrow dark">Description rewrites</span>
             <h2 className="sst-h2" style={{ fontSize: isMobile ? 30 : 42, color: '#fff', marginBottom: 18 }}>
-              Three descriptions — each <span style={{ color: '#ff3b30' }}>built for the first 150 characters.</span>
+              Three descriptions. Each <span style={{ color: '#ff3b30' }}>built for the first 150 characters.</span>
             </h2>
             <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.6)', lineHeight: 1.72, marginBottom: 22 }}>
-              YouTube only shows the first ~150 characters before "Show more" — that’s the part that has to earn the click into your description. We rewrite from scratch: opening hook with the primary keyword, body that weaves the next 2 most important keywords once each, real CTA, and exactly 3 CamelCase hashtags pulled from autocomplete data — not invented.
+              YouTube only shows the first ~150 characters before "Show more". That’s the part that has to earn the click into your description. We rewrite from scratch: opening hook with the primary keyword, body that weaves the next 2 most important keywords once each, real CTA, and exactly 3 CamelCase hashtags pulled from autocomplete data. Not invented.
             </p>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
               {[
-                { label: 'Length',    color: '#4ade80', body: '300–400 words — short ones lose search ranking.' },
+                { label: 'Length',    color: '#4ade80', body: '300–400 words. Short ones lose search ranking.' },
                 { label: 'Opening',   color: '#ff3b30', body: 'Primary keyword in the first 150 chars. No "Welcome to my channel".' },
                 { label: 'Body',      color: '#f59e0b', body: 'Flowing paragraphs. No bullets, no sub-headers, no emoji.' },
-                { label: 'Hashtags',  color: '#4a7cf7', body: 'Exactly 3 — CamelCase — derived from real autocomplete demand.' },
+                { label: 'Hashtags',  color: '#4a7cf7', body: 'Exactly 3. CamelCase. Derived from real autocomplete demand.' },
               ].map((p, i) => (
                 <div key={i} style={{ borderLeft: `2px solid ${p.color}`, paddingLeft: 12 }}>
                   <p style={{ fontSize: 11, fontWeight: 700, color: p.color, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>{p.label}</p>
@@ -521,7 +521,7 @@ export default function SeoStudio() {
         </div>
       </section>
 
-      {/* ════ 5. HOW IT WORKS — white, with arrow connectors ════════════ */}
+      {/* ════ 5. HOW IT WORKS. White, with arrow connectors ════════════ */}
       <section id="how" style={{ padding: isMobile ? '64px 20px' : '100px 40px', background: '#ffffff' }}>
         <div style={{ maxWidth: 1240, margin: '0 auto' }}>
           <div style={{ textAlign: 'center', maxWidth: 720, margin: '0 auto 52px' }}>
@@ -530,16 +530,16 @@ export default function SeoStudio() {
               From draft title to live YouTube edit in under 60 seconds
             </h2>
             <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.7, marginTop: 14, maxWidth: 580, margin: '14px auto 0' }}>
-              Five stages, all of them yours to interrupt or skip. Your title, your call — the studio just makes it the most-informed call you’ve ever made.
+              Five stages, all of them yours to interrupt or skip. Your title, your call. The studio just makes it the most-informed call you’ve ever made.
             </p>
           </div>
           {(() => {
             const steps = [
               { n: '01', t: 'Pick the keyword',      b: 'Paste your title. The studio offers 3 keyword intent options so you anchor the analysis to the right search intent before any data is fetched.' },
-              { n: '02', t: 'Live YouTube fetch',    b: 'Top 50 results pulled for your niche keyword via the official Data API — titles, view counts, channels, tags. Plus YouTube autocomplete + Serper + SerpAPI in parallel.' },
-              { n: '03', t: 'Score your title',      b: 'The deterministic rubric runs on your draft — length, keyword overlap with stem matching, front-loading, hook structure, viral format, power words.' },
+              { n: '02', t: 'Live YouTube fetch',    b: 'Top 50 results pulled for your niche keyword via the official Data API. Titles, view counts, channels, tags. Plus YouTube autocomplete + Serper + SerpAPI in parallel.' },
+              { n: '03', t: 'Score your title',      b: 'The deterministic rubric runs on your draft. Length, keyword overlap with stem matching, front-loading, hook structure, viral format, power words.' },
               { n: '04', t: 'AI gap + 5 rewrites',   b: 'Claude Sonnet 4.6 reads the live data and your channel’s viral history, names the angle every competitor shares, the one they all miss, and writes 5 titles aimed at the gap.' },
-              { n: '05', t: 'You see the result',    b: 'Score, rubric breakdown, top 3 rewrites, gap analysis, keyword opportunity table, and — if you ask for it — 3 ready-to-paste descriptions with hashtags.' },
+              { n: '05', t: 'You see the result',    b: 'Score, rubric breakdown, top 3 rewrites, gap analysis, keyword opportunity table, and. If you ask for it. 3 ready-to-paste descriptions with hashtags.' },
             ]
             const Card = ({ s }) => (
               <div style={{ background: 'var(--ytg-card)', borderRadius: 14, border: '1px solid var(--ytg-border)', boxShadow: 'var(--ytg-shadow-sm)', padding: '22px 22px 24px', flex: 1, minWidth: 0 }}>
@@ -591,7 +591,7 @@ export default function SeoStudio() {
         </div>
       </section>
 
-      {/* ════ 6. SEVEN OUTPUT BLOCKS — dark ══════════════════════════════ */}
+      {/* ════ 6. SEVEN OUTPUT BLOCKS. Dark ══════════════════════════════ */}
       <section style={{ padding: isMobile ? '64px 20px' : '100px 40px', background: '#0d0d12', borderTop: '1px solid rgba(255,255,255,0.06)', borderBottom: '1px solid rgba(255,255,255,0.06)', position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 900, height: 700, background: 'radial-gradient(ellipse, rgba(229,48,42,0.14) 0%, transparent 65%)', pointerEvents: 'none' }} />
         <div style={{ maxWidth: 1180, margin: '0 auto', position: 'relative', zIndex: 1 }}>
@@ -601,7 +601,7 @@ export default function SeoStudio() {
               Seven distinct output blocks. <span style={{ color: '#ff3b30' }}>Every one is publishable.</span>
             </h2>
             <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.6)', lineHeight: 1.72 }}>
-              The studio doesn’t hand you a wall of text. Each block renders in its own card so you can scan, mark, and apply without re-reading — and the whole report rehydrates from the Reports tab whenever you want it back.
+              The studio doesn’t hand you a wall of text. Each block renders in its own card so you can scan, mark, and apply without re-reading. And the whole report rehydrates from the Reports tab whenever you want it back.
             </p>
           </div>
           <div className="sst-grid-3" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 14 }}>
@@ -618,7 +618,7 @@ export default function SeoStudio() {
         </div>
       </section>
 
-      {/* ════ 7. KEYWORD OPPORTUNITY — light, SPLIT (visual L, text R) ═══ */}
+      {/* ════ 7. KEYWORD OPPORTUNITY. Light, SPLIT (visual L, text R) ═══ */}
       <section style={{ padding: isMobile ? '64px 20px' : '100px 40px', background: 'var(--ytg-bg-3)', borderTop: '1px solid var(--ytg-border)', borderBottom: '1px solid var(--ytg-border)' }}>
         <div className="sst-grid-2" style={{ maxWidth: 1180, margin: '0 auto', display: 'grid', gridTemplateColumns: '1.05fr 1fr', gap: 56, alignItems: 'center' }}>
           <div style={{ order: isMobile ? 1 : 0 }}>
@@ -630,12 +630,12 @@ export default function SeoStudio() {
               Up to 15 phrases scored on <span style={{ color: 'var(--ytg-accent)' }}>real volume + real competition.</span>
             </h2>
             <p style={{ fontSize: 14.5, color: 'var(--ytg-text-2)', lineHeight: 1.72, marginBottom: 18 }}>
-              Volume comes from how many YouTube autocomplete suggestions contain the phrase — autocomplete only surfaces high-volume queries, so it’s a real demand signal. Competition comes from how many of the top 50 videos for your niche already target the exact phrase. Score weights low competition + decent volume — the same opportunity logic VidIQ uses, sourced from your actual niche search.
+              Volume comes from how many YouTube autocomplete suggestions contain the phrase. Autocomplete only surfaces high-volume queries, so it’s a real demand signal. Competition comes from how many of the top 50 videos for your niche already target the exact phrase. Score weights low competition + decent volume. The same opportunity logic VidIQ uses, sourced from your actual niche search.
             </p>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
               {[
-                { l: 'Volume signal',  d: 'Autocomplete frequency — only surfaces queries people actually type.' },
-                { l: 'Competition signal', d: 'Top-video title hits — already-targeted phrases are harder to win.' },
+                { l: 'Volume signal',  d: 'Autocomplete frequency. Only surfaces queries people actually type.' },
+                { l: 'Competition signal', d: 'Top-video title hits. Already-targeted phrases are harder to win.' },
               ].map((c, i) => (
                 <div key={i} style={{ borderLeft: '2px solid var(--ytg-accent)', paddingLeft: 12 }}>
                   <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-accent-text)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>{c.l}</p>
@@ -647,7 +647,7 @@ export default function SeoStudio() {
         </div>
       </section>
 
-      {/* ════ 8. PLAN LIMITS — dark ═════════════════════════════════════ */}
+      {/* ════ 8. PLAN LIMITS. Dark ═════════════════════════════════════ */}
       <section style={{ padding: isMobile ? '64px 20px' : '100px 40px', background: '#0d0d12', borderTop: '1px solid rgba(255,255,255,0.06)', borderBottom: '1px solid rgba(255,255,255,0.06)', position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 900, height: 700, background: 'radial-gradient(ellipse, rgba(229,48,42,0.14) 0%, transparent 65%)', pointerEvents: 'none' }} />
         <div style={{ maxWidth: 1080, margin: '0 auto', position: 'relative', zIndex: 1 }}>
@@ -657,7 +657,7 @@ export default function SeoStudio() {
               How many SEO runs you get each month
             </h2>
             <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.6)', lineHeight: 1.72 }}>
-              Each title analysis is one credit. Each description rewrite is one credit. Per-video critique is the description-side half of an analyze run — no double charge. Allowances are per-channel; multi-channel Agency accounts pool credits across all channels.
+              Each title analysis is one credit. Each description rewrite is one credit. Per-video critique is the description-side half of an analyze run. No double charge. Allowances are per-channel; multi-channel Agency accounts pool credits across all channels.
             </p>
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr 1fr' : 'repeat(4, 1fr)', gap: 14 }}>
@@ -696,7 +696,7 @@ export default function SeoStudio() {
         </div>
       </section>
 
-      {/* ════ 9. FAQ — white ════════════════════════════════════════════ */}
+      {/* ════ 9. FAQ. White ════════════════════════════════════════════ */}
       <section style={{ padding: isMobile ? '64px 20px' : '110px 40px', background: '#ffffff' }}>
         <div className="sst-grid-2" style={{ maxWidth: 1180, margin: '0 auto', display: 'grid', gridTemplateColumns: '0.7fr 1.3fr', gap: 56, alignItems: 'flex-start' }}>
           <div style={{ position: isMobile ? 'static' : 'sticky', top: 100 }}>
@@ -705,7 +705,7 @@ export default function SeoStudio() {
               Questions about the SEO engine, answered honestly.
             </h2>
             <p style={{ fontSize: 14.5, color: 'var(--ytg-text-2)', lineHeight: 1.7 }}>
-              Real answers from how the product behaves — the rubric, the rewrite logic, the apply-to-YouTube boundaries, and what it won’t do.
+              Real answers from how the product behaves. The rubric, the rewrite logic, the apply-to-YouTube boundaries, and what it won’t do.
             </p>
             <a href="/contact" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 13.5, color: 'var(--ytg-accent)', textDecoration: 'none', fontWeight: 600, marginTop: 16 }}>
               Still have questions? Email us →
@@ -719,7 +719,7 @@ export default function SeoStudio() {
         </div>
       </section>
 
-      {/* ════ 10. BOTTOM CTA — light ════════════════════════════════════ */}
+      {/* ════ 10. BOTTOM CTA. Light ════════════════════════════════════ */}
       <section style={{ padding: isMobile ? '60px 20px 56px' : '110px 40px 80px', background: 'var(--ytg-bg)' }}>
         <div style={{ maxWidth: 860, margin: '0 auto', textAlign: 'center', background: 'var(--ytg-card)', border: '1px solid var(--ytg-border)', borderRadius: 24, boxShadow: 'var(--ytg-shadow-xl)', padding: isMobile ? '52px 24px' : '76px 60px', position: 'relative', overflow: 'hidden' }}>
           <div style={{ position: 'absolute', top: -80, left: '50%', transform: 'translateX(-50%)', width: 540, height: 260, background: 'radial-gradient(ellipse, rgba(229,48,42,0.10) 0%, transparent 70%)', pointerEvents: 'none' }} />

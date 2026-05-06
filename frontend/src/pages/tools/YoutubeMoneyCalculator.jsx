@@ -66,7 +66,7 @@ function useGlobalStyles() {
 
       @keyframes ymcFadeUp { from { opacity:0; transform:translateY(18px) } to { opacity:1; transform:translateY(0) } }
 
-      /* Buttons — Landing.jsx ytg-btn-primary parity */
+      /* Buttons. Landing.jsx ytg-btn-primary parity */
       .ymc-btn {
         display: inline-flex; align-items: center; gap: 8px;
         background: var(--ytg-accent); color: #fff;
@@ -82,7 +82,7 @@ function useGlobalStyles() {
       }
       .ymc-btn-lg { font-size: 16px; padding: 17px 36px; }
 
-      /* Eyebrow pill — Landing.jsx FAQ "Frequently asked" pattern */
+      /* Eyebrow pill. Landing.jsx FAQ "Frequently asked" pattern */
       .ymc-eyebrow {
         display: inline-flex; align-items: center; gap: 8px;
         background: #ffffff;
@@ -119,7 +119,7 @@ function useGlobalStyles() {
       }
       .ymc-input:focus { border-color: rgba(10,10,15,0.28); background: #fff; }
 
-      /* FAQ — Landing.jsx parity (animated grid-template-rows expansion) */
+      /* FAQ. Landing.jsx parity (animated grid-template-rows expansion) */
       .ymc-faq-answer {
         display: grid; grid-template-rows: 0fr; opacity: 0;
         transition: grid-template-rows 0.32s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease;
@@ -185,33 +185,33 @@ function fmtViews(n) {
 /* ── FAQ data ───────────────────────────────────────────────────────────── */
 const FAQS = [
   { q: 'How accurate is this YouTube money calculator?',
-    a: "The numbers are realistic estimates based on industry-reported RPM ranges by niche and audience country. Real earnings vary with watch time, mid-roll placement, ad blocker rates, season (Q4 ads pay roughly 30–40% more than Q1), the percentage of your viewers watching with YouTube Premium, and whether your videos qualify for skippable in-stream ads. Treat the output as a sensible range, not a precise paycheck — most channels land somewhere inside the low–high band shown, and some land outside it for niche-specific reasons." },
+    a: "The numbers are realistic estimates based on industry-reported RPM ranges by niche and audience country. Real earnings vary with watch time, mid-roll placement, ad blocker rates, season (Q4 ads pay roughly 30–40% more than Q1), the percentage of your viewers watching with YouTube Premium, and whether your videos qualify for skippable in-stream ads. Treat the output as a sensible range, not a precise paycheck. Most channels land somewhere inside the low–high band shown, and some land outside it for niche-specific reasons." },
   { q: 'What is RPM vs CPM, and which one matters?',
-    a: "CPM (Cost Per Mille) is what advertisers pay per 1,000 ad impressions — it's their cost, not your income. RPM (Revenue Per Mille) is what you actually take home per 1,000 video views, after YouTube's 45% cut, after the views that never saw an ad, after the videos that ran without monetization at all. RPM is always significantly lower than CPM — usually 30–50% of it. RPM is the only number you should care about as a creator, and it's what this calculator estimates." },
+    a: "CPM (Cost Per Mille) is what advertisers pay per 1,000 ad impressions. It's their cost, not your income. RPM (Revenue Per Mille) is what you actually take home per 1,000 video views, after YouTube's 45% cut, after the views that never saw an ad, after the videos that ran without monetization at all. RPM is always significantly lower than CPM. Usually 30–50% of it. RPM is the only number you should care about as a creator, and it's what this calculator estimates." },
   { q: "Why does my niche change the result so much?",
-    a: 'Advertisers bid wildly different amounts depending on the audience they want to reach. A finance viewer might be worth $40 to a credit card or brokerage advertiser because that viewer might sign up for a $200/month product. A kids-content viewer is worth a fraction of that — fewer advertisers compete for the slot, and the products being sold are lower-margin. Niche is the single biggest lever in YouTube earnings, often bigger than view count. A 100K/month finance channel can out-earn a 1M/month gaming channel.' },
+    a: 'Advertisers bid wildly different amounts depending on the audience they want to reach. A finance viewer might be worth $40 to a credit card or brokerage advertiser because that viewer might sign up for a $200/month product. A kids-content viewer is worth a fraction of that. Fewer advertisers compete for the slot, and the products being sold are lower-margin. Niche is the single biggest lever in YouTube earnings, often bigger than view count. A 100K/month finance channel can out-earn a 1M/month gaming channel.' },
   { q: "Why does audience country matter so much?",
-    a: 'Advertiser spending power varies dramatically by country. US, UK, Canada, and Australia have the highest ad spend on the planet. A view from a US viewer can be worth 4–5x a view from a tier-3 country, and 8–10x a view from India or parts of Africa. The same video, with the same niche, the same length, the same retention — earns wildly different amounts depending on who watches it. This is why creators producing English content for global audiences (rather than language-locked regional content) scale revenue so much faster.' },
+    a: 'Advertiser spending power varies dramatically by country. US, UK, Canada, and Australia have the highest ad spend on the planet. A view from a US viewer can be worth 4–5x a view from a tier-3 country, and 8–10x a view from India or parts of Africa. The same video, with the same niche, the same length, the same retention. Earns wildly different amounts depending on who watches it. This is why creators producing English content for global audiences (rather than language-locked regional content) scale revenue so much faster.' },
   { q: 'Do I have to be in the YouTube Partner Program (YPP) to earn from my videos?',
-    a: "Yes — to earn from ads on your videos you need to be in the YouTube Partner Program. The current eligibility thresholds are 1,000 subscribers + either 4,000 valid public watch hours in the last 12 months OR 10 million Shorts views in the last 90 days. Once accepted, you can monetize through ads, channel memberships, Super Chat, Super Thanks, and YouTube Premium revenue. You also need to live in a country where YPP is available and have an AdSense account in good standing." },
+    a: "Yes. To earn from ads on your videos you need to be in the YouTube Partner Program. The current eligibility thresholds are 1,000 subscribers + either 4,000 valid public watch hours in the last 12 months OR 10 million Shorts views in the last 90 days. Once accepted, you can monetize through ads, channel memberships, Super Chat, Super Thanks, and YouTube Premium revenue. You also need to live in a country where YPP is available and have an AdSense account in good standing." },
   { q: 'How much do YouTube Shorts pay?',
-    a: "Shorts pay much less per view than long-form. There are no mid-rolls, no skippable in-stream ads, and Shorts revenue comes from a shared pool funded by ads in the Shorts feed — not from ads on your specific Short. Typical Shorts RPM is $0.04–$0.10 per 1,000 views, vs $3–$30 for long-form. A Short with 10 million views might earn $400–$1,000, where a long-form video with the same view count in the right niche could earn $10,000–$40,000. Shorts are a discovery tool, not a revenue tool." },
+    a: "Shorts pay much less per view than long-form. There are no mid-rolls, no skippable in-stream ads, and Shorts revenue comes from a shared pool funded by ads in the Shorts feed. Not from ads on your specific Short. Typical Shorts RPM is $0.04–$0.10 per 1,000 views, vs $3–$30 for long-form. A Short with 10 million views might earn $400–$1,000, where a long-form video with the same view count in the right niche could earn $10,000–$40,000. Shorts are a discovery tool, not a revenue tool." },
   { q: 'How long do my videos need to be to run mid-roll ads?',
-    a: 'Videos must be at least 8 minutes long to qualify for mid-roll ads (the slots that play partway through the video). This is the single biggest "free" RPM upgrade available — going from 5-minute videos to 10-minute videos can roughly double your earnings per view, because each mid-roll slot is its own ad impression. Don\'t pad video length artificially (retention will tank) — but if you\'re routinely cutting at 6 minutes, consider whether the topic could justify 10–12 minutes of real content.' },
+    a: 'Videos must be at least 8 minutes long to qualify for mid-roll ads (the slots that play partway through the video). This is the single biggest "free" RPM upgrade available. Going from 5-minute videos to 10-minute videos can roughly double your earnings per view, because each mid-roll slot is its own ad impression. Don\'t pad video length artificially (retention will tank). But if you\'re routinely cutting at 6 minutes, consider whether the topic could justify 10–12 minutes of real content.' },
   { q: "Why do my actual earnings look lower than this calculator predicts?",
-    a: 'A few common reasons: (1) you have a high percentage of Shorts views, which pay almost nothing; (2) a chunk of your audience uses ad blockers, which removes those views from the monetizable pool; (3) your videos are flagged as "limited or no ads" due to controversial content, language, or copyrighted music; (4) you upload during a low ad-spend season (Q1 is brutal — Q4 is the gold rush); or (5) your audience country mix is more tier-3-heavy than you think. Check YouTube Studio → Analytics → Revenue → Geography to see your real audience country breakdown.' },
+    a: 'A few common reasons: (1) you have a high percentage of Shorts views, which pay almost nothing; (2) a chunk of your audience uses ad blockers, which removes those views from the monetizable pool; (3) your videos are flagged as "limited or no ads" due to controversial content, language, or copyrighted music; (4) you upload during a low ad-spend season (Q1 is brutal. Q4 is the gold rush); or (5) your audience country mix is more tier-3-heavy than you think. Check YouTube Studio → Analytics → Revenue → Geography to see your real audience country breakdown.' },
   { q: 'When do I get paid by YouTube?',
-    a: 'YouTube pays via Google AdSense on a monthly cycle. You need to hit a $100 minimum threshold in your AdSense account; once you cross it, payment is issued around the 21st–26th of the following month. So earnings from October typically arrive in late November. Payment methods depend on country — bank transfer (EFT), wire, check, and Western Union are the most common. Tax forms (W-9 in the US, W-8BEN internationally) must be on file or your earnings get withheld.' },
+    a: 'YouTube pays via Google AdSense on a monthly cycle. You need to hit a $100 minimum threshold in your AdSense account; once you cross it, payment is issued around the 21st–26th of the following month. So earnings from October typically arrive in late November. Payment methods depend on country. Bank transfer (EFT), wire, check, and Western Union are the most common. Tax forms (W-9 in the US, W-8BEN internationally) must be on file or your earnings get withheld.' },
   { q: 'Will I owe taxes on my YouTube earnings?',
-    a: "Yes. YouTube ad revenue is self-employment income for most creators and is taxed accordingly. In the US that means federal income tax + 15.3% self-employment tax (covering Social Security and Medicare). You'll receive a 1099 form from Google if you earn over $600/year. Outside the US, treatment varies — most countries treat YouTube income as freelance/self-employment, and YouTube also withholds 30% of US-derived earnings unless you've submitted a W-8BEN tax form claiming a treaty rate. Talk to an accountant once you cross $1,000/month — the structuring decisions (LLC, expenses, retirement contributions) start to matter." },
+    a: "Yes. YouTube ad revenue is self-employment income for most creators and is taxed accordingly. In the US that means federal income tax + 15.3% self-employment tax (covering Social Security and Medicare). You'll receive a 1099 form from Google if you earn over $600/year. Outside the US, treatment varies. Most countries treat YouTube income as freelance/self-employment, and YouTube also withholds 30% of US-derived earnings unless you've submitted a W-8BEN tax form claiming a treaty rate. Talk to an accountant once you cross $1,000/month. The structuring decisions (LLC, expenses, retirement contributions) start to matter." },
   { q: 'Beyond ad revenue, what other ways do YouTubers make money?',
-    a: "Most full-time creators have 4–6 income streams, not just ads: (1) brand sponsorships and integrations — often the biggest line item, paying roughly $20–$50 per 1,000 views in tier-1 niches; (2) affiliate marketing (Amazon, Skillshare, software referrals); (3) selling your own digital products (courses, templates, presets); (4) memberships via YouTube Channel Memberships or Patreon; (5) merchandise; (6) Super Chat, Super Thanks, Super Stickers during live streams. A channel earning $2,000/month from ads might be earning $8,000/month total once you count the rest." },
+    a: "Most full-time creators have 4–6 income streams, not just ads: (1) brand sponsorships and integrations. Often the biggest line item, paying roughly $20–$50 per 1,000 views in tier-1 niches; (2) affiliate marketing (Amazon, Skillshare, software referrals); (3) selling your own digital products (courses, templates, presets); (4) memberships via YouTube Channel Memberships or Patreon; (5) merchandise; (6) Super Chat, Super Thanks, Super Stickers during live streams. A channel earning $2,000/month from ads might be earning $8,000/month total once you count the rest." },
   { q: 'How do I increase my RPM without growing my view count?',
-    a: 'Three high-impact moves: (1) Lengthen your videos past 8 minutes so they qualify for mid-rolls — and add 2–3 mid-roll slots manually in YouTube Studio rather than relying on auto-placement; (2) Pivot your content angle toward higher-RPM topics within your existing niche (a beauty channel covering luxury skincare earns multiples more than one covering drugstore hauls); (3) Improve your audience country mix by creating English-first content with hooks that travel internationally rather than geo-locked references. None of these require more views — they just earn more from the views you already have.' },
+    a: 'Three high-impact moves: (1) Lengthen your videos past 8 minutes so they qualify for mid-rolls. And add 2–3 mid-roll slots manually in YouTube Studio rather than relying on auto-placement; (2) Pivot your content angle toward higher-RPM topics within your existing niche (a beauty channel covering luxury skincare earns multiples more than one covering drugstore hauls); (3) Improve your audience country mix by creating English-first content with hooks that travel internationally rather than geo-locked references. None of these require more views. They just earn more from the views you already have.' },
   { q: 'How do I actually grow these numbers?',
-    a: "Two levers: (1) get more views by ranking better in YouTube search and suggested, and (2) earn higher RPM through longer-form videos with strategic mid-rolls and a higher-paying niche pivot. YTGrowth's free AI audit looks at both — it tells you which of your videos are SEO-underperformers, which titles and thumbnails are losing the click war, and which video lengths are leaving ad slots on the table. It costs nothing to run on a free account." },
+    a: "Two levers: (1) get more views by ranking better in YouTube search and suggested, and (2) earn higher RPM through longer-form videos with strategic mid-rolls and a higher-paying niche pivot. YTGrowth's free AI audit looks at both. It tells you which of your videos are SEO-underperformers, which titles and thumbnails are losing the click war, and which video lengths are leaving ad slots on the table. It costs nothing to run on a free account." },
   { q: 'Is this calculator free? Will you sell my data?',
-    a: "Yes, free forever — and no data collection beyond what your browser sends to any website. The calculator runs entirely in your browser; no inputs are sent to our servers, no email required, no signup gate. We built it as a genuine free tool because creators deserve a realistic estimate before they pour months into a niche. If you want a real, personalised growth plan beyond just an earnings estimate, you can connect your channel for a free AI audit — but that's entirely optional." },
+    a: "Yes, free forever. And no data collection beyond what your browser sends to any website. The calculator runs entirely in your browser; no inputs are sent to our servers, no email required, no signup gate. We built it as a genuine free tool because creators deserve a realistic estimate before they pour months into a niche. If you want a real, personalised growth plan beyond just an earnings estimate, you can connect your channel for a free AI audit. But that's entirely optional." },
 ]
 
 /* ── Eyebrow component ──────────────────────────────────────────────────── */
@@ -252,7 +252,7 @@ export default function YoutubeMoneyCalculator() {
   return (
     <div style={{ fontFamily: "'Inter', system-ui, sans-serif", background: 'var(--ytg-bg)', color: 'var(--ytg-text)', overflowX: 'hidden' }}>
 
-      {/* ── NAV — Landing.jsx parity ─────────────────────────────────────── */}
+      {/* ── NAV. Landing.jsx parity ─────────────────────────────────────── */}
       <nav style={{ position: 'sticky', top: 0, zIndex: 100, borderBottom: '1px solid rgba(10,10,15,0.1)', padding: isMobile ? '0 20px' : '0 48px 0 80px', height: 60, display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'rgba(244,244,246,0.92)', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)' }}>
         <a href="/" style={{ display: 'flex', alignItems: 'center', gap: 9, textDecoration: 'none', minWidth: 0 }}>
           <Logo size={28} />
@@ -267,9 +267,9 @@ export default function YoutubeMoneyCalculator() {
         </div>
       </nav>
 
-      {/* ══ HERO — bg #ffffff, DM Sans, Landing scale (72/62/34) ══ */}
+      {/* ══ HERO. Bg #ffffff, DM Sans, Landing scale (72/62/34) ══ */}
       <section className="ymc-section-pad" style={{ position: 'relative', padding: isMobile ? '64px 24px 56px' : '110px 48px 84px', textAlign: 'center', background: '#ffffff', overflow: 'hidden' }}>
-        {/* Subtle red radial — mirrors Landing hero glow */}
+        {/* Subtle red radial. Mirrors Landing hero glow */}
         <div aria-hidden="true" style={{ position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)', width: '120vw', maxWidth: 1400, height: 620, background: 'radial-gradient(ellipse at center top, rgba(229,48,42,0.07) 0%, rgba(229,48,42,0.02) 40%, transparent 70%)', pointerEvents: 'none', zIndex: 0 }} />
 
         <div style={{ maxWidth: 1000, margin: '0 auto', position: 'relative', zIndex: 1, animation: 'ymcFadeUp 0.5s ease both' }}>
@@ -278,7 +278,7 @@ export default function YoutubeMoneyCalculator() {
             What does a YouTube channel <span style={{ color: 'var(--ytg-accent)' }}>actually earn?</span>
           </h1>
           <p style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: isMobile ? 16 : 19, color: 'var(--ytg-text-2)', lineHeight: 1.7, maxWidth: 640, margin: '0 auto 28px', textWrap: 'pretty' }}>
-            A realistic YouTube money calculator built on real RPM ranges by niche and audience country — not the inflated "potential earnings" most calculators show.
+            A realistic YouTube money calculator built on real RPM ranges by niche and audience country. Not the inflated "potential earnings" most calculators show.
           </p>
           <p style={{ fontSize: 13, color: 'var(--ytg-text-3)', fontWeight: 500 }}>
             No signup. No email. Free forever.
@@ -286,12 +286,12 @@ export default function YoutubeMoneyCalculator() {
         </div>
       </section>
 
-      {/* ══ CALCULATOR — bg var(--ytg-bg) #f4f4f6 ══ */}
+      {/* ══ CALCULATOR. Bg var(--ytg-bg) #f4f4f6 ══ */}
       <section id="calculator" className="ymc-section-pad" style={{ padding: isMobile ? '48px 20px 80px' : '72px 48px 110px', background: 'var(--ytg-bg)' }}>
         <div style={{ maxWidth: 1080, margin: '0 auto' }}>
           <div className="ymc-calc-grid">
 
-            {/* LEFT — inputs card */}
+            {/* LEFT. Inputs card */}
             <div style={{ background: 'var(--ytg-card)', borderRadius: 22, border: '1px solid var(--ytg-border)', boxShadow: 'var(--ytg-shadow-lg)', padding: isMobile ? 26 : 36 }}>
 
               <div style={{ marginBottom: 28 }}>
@@ -326,7 +326,7 @@ export default function YoutubeMoneyCalculator() {
               </p>
             </div>
 
-            {/* RIGHT — result column */}
+            {/* RIGHT. Result column */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
               <div style={{ background: 'var(--ytg-accent)', borderRadius: 22, color: '#fff', padding: isMobile ? 28 : 36, boxShadow: '0 4px 18px rgba(229,48,42,0.32), 0 24px 60px rgba(229,48,42,0.18)' }}>
                 <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', opacity: 0.78, marginBottom: 12 }}>
@@ -357,7 +357,7 @@ export default function YoutubeMoneyCalculator() {
                   An estimate is just a number. A growth plan moves it.
                 </p>
                 <p style={{ fontSize: 14, color: 'var(--ytg-text-2)', lineHeight: 1.65, marginBottom: 18 }}>
-                  YTGrowth's free AI audit looks at your last 20 videos, your CTR, and your retention curves — then tells you exactly which titles, thumbnails, and posting habits are leaving money on the table.
+                  YTGrowth's free AI audit looks at your last 20 videos, your CTR, and your retention curves. Then tells you exactly which titles, thumbnails, and posting habits are leaving money on the table.
                 </p>
                 <a href="/auth/login" className="ymc-btn" style={{ width: '100%', justifyContent: 'center', padding: 14, fontSize: 14, borderRadius: 14 }}>
                   Get my free audit →
@@ -371,7 +371,7 @@ export default function YoutubeMoneyCalculator() {
         </div>
       </section>
 
-      {/* ══ HOW EARNINGS WORK — bg var(--ytg-bg-2) #ecedf1 (Landing's stepped scale) ══ */}
+      {/* ══ HOW EARNINGS WORK. Bg var(--ytg-bg-2) #ecedf1 (Landing's stepped scale) ══ */}
       <section className="ymc-section-pad" style={{ padding: isMobile ? '72px 20px' : '110px 48px', background: 'var(--ytg-bg-2)', borderTop: '1px solid var(--ytg-border)', borderBottom: '1px solid var(--ytg-border)' }}>
         <div style={{ maxWidth: 1080, margin: '0 auto' }}>
           <div style={{ marginBottom: 48, maxWidth: 720 }}>
@@ -384,13 +384,13 @@ export default function YoutubeMoneyCalculator() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: 32 }}>
             {[
               { h: 'RPM is the only number that matters to your wallet',
-                p: "CPM is what advertisers pay per 1,000 ad impressions. RPM is what you receive per 1,000 video views — after YouTube's 45% cut, after the views that didn't see an ad, after the videos that ran without monetization at all. RPM is always lower than CPM. RPM is your number." },
+                p: "CPM is what advertisers pay per 1,000 ad impressions. RPM is what you receive per 1,000 video views. After YouTube's 45% cut, after the views that didn't see an ad, after the videos that ran without monetization at all. RPM is always lower than CPM. RPM is your number." },
               { h: 'Niche is a bigger lever than view count',
-                p: "A finance channel with 100K monthly views can out-earn a gaming channel with 1M monthly views. That's not an exaggeration — it's a 10x view gap that doesn't close the earnings gap. Advertisers will pay $30+ to put a credit card or brokerage ad in front of a finance viewer; they pay $3 for a gaming viewer. Pick your niche with this in mind, especially if you're starting from scratch." },
+                p: "A finance channel with 100K monthly views can out-earn a gaming channel with 1M monthly views. That's not an exaggeration. It's a 10x view gap that doesn't close the earnings gap. Advertisers will pay $30+ to put a credit card or brokerage ad in front of a finance viewer; they pay $3 for a gaming viewer. Pick your niche with this in mind, especially if you're starting from scratch." },
               { h: 'Audience country multiplies (or divides) everything',
                 p: "US, UK, Canada, and Australia viewers earn you the highest ad spend on the planet. The same video, with the same niche and view count, earns 4–5x more from a tier-1 audience than a tier-3 one. This is why creators producing English content for global niches scale revenue so much faster than language-locked channels." },
               { h: 'Long-form videos earn more per view',
-                p: "Videos over 8 minutes can run mid-roll ads — multiple ad slots inside a single view. A 20-minute video with 3 mid-rolls earns roughly 2–3x more per view than the same niche's 5-minute video. This is also why YouTube Shorts pay so little: no mid-rolls, ad share comes from the Shorts pool, not the standard model." },
+                p: "Videos over 8 minutes can run mid-roll ads. Multiple ad slots inside a single view. A 20-minute video with 3 mid-rolls earns roughly 2–3x more per view than the same niche's 5-minute video. This is also why YouTube Shorts pay so little: no mid-rolls, ad share comes from the Shorts pool, not the standard model." },
             ].map((row, i) => (
               <div key={i} style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '300px 1fr', gap: isMobile ? 12 : 56, paddingTop: i === 0 ? 0 : 28, borderTop: i === 0 ? 'none' : '1px solid var(--ytg-border)' }}>
                 <h3 style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: isMobile ? 20 : 22, fontWeight: 800, color: 'var(--ytg-text)', letterSpacing: '-0.5px', lineHeight: 1.25 }}>{row.h}</h3>
@@ -401,7 +401,7 @@ export default function YoutubeMoneyCalculator() {
         </div>
       </section>
 
-      {/* ══ HOW TO GROW — bg var(--ytg-bg) #f4f4f6 ══ */}
+      {/* ══ HOW TO GROW. Bg var(--ytg-bg) #f4f4f6 ══ */}
       <section className="ymc-section-pad" style={{ padding: isMobile ? '72px 20px' : '110px 48px', background: 'var(--ytg-bg)' }}>
         <div style={{ maxWidth: 1160, margin: '0 auto' }}>
           <div style={{ marginBottom: 44, textAlign: 'center', maxWidth: 720, marginLeft: 'auto', marginRight: 'auto' }}>
@@ -418,11 +418,11 @@ export default function YoutubeMoneyCalculator() {
             {[
               { label: 'AI Channel Audit',
                 title: 'Find what is broken',
-                body: 'YTGrowth runs a 10-dimension audit across your last 20 videos, CTR, retention, and posting cadence — and gives you a prioritized punch list of what to fix first.',
+                body: 'YTGrowth runs a 10-dimension audit across your last 20 videos, CTR, retention, and posting cadence. And gives you a prioritized punch list of what to fix first.',
                 href: '/features/channel-audit' },
               { label: 'SEO Studio',
                 title: 'Rank for searches that pay',
-                body: 'Score every title and description against the actual top-ranking videos in your niche — so the SEO work goes into keywords with real search volume, not guesses.',
+                body: 'Score every title and description against the actual top-ranking videos in your niche. So the SEO work goes into keywords with real search volume, not guesses.',
                 href: '/features/seo-studio' },
               { label: 'Thumbnail IQ',
                 title: 'Win the click war',
@@ -443,7 +443,7 @@ export default function YoutubeMoneyCalculator() {
         </div>
       </section>
 
-      {/* ══ CTA — dark band, mirrors Landing's final CTA ══ */}
+      {/* ══ CTA. Dark band, mirrors Landing's final CTA ══ */}
       <section className="ymc-section-pad ymc-cta-pad" style={{ padding: isMobile ? '88px 24px' : '120px 48px', background: '#0d0d12', borderTop: '1px solid rgba(255,255,255,0.07)', position: 'relative', overflow: 'hidden' }}>
         <div aria-hidden="true" style={{ position: 'absolute', top: '42%', left: '50%', transform: 'translate(-50%,-50%)', width: 1000, height: isMobile ? 600 : 800, background: 'radial-gradient(ellipse, rgba(229,48,42,0.20) 0%, transparent 65%)', pointerEvents: 'none' }} />
         <div style={{ maxWidth: 820, margin: '0 auto', textAlign: 'center', position: 'relative', zIndex: 1 }}>
@@ -455,7 +455,7 @@ export default function YoutubeMoneyCalculator() {
             Stop estimating. <span style={{ color: '#ff3b30' }}>Start growing.</span>
           </h2>
           <p style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: isMobile ? 16 : 19, color: 'rgba(255,255,255,0.68)', lineHeight: 1.7, marginBottom: 32, maxWidth: 560, marginLeft: 'auto', marginRight: 'auto' }}>
-            Connect your channel for a free AI audit and get a real, prioritized growth plan — not just a number.
+            Connect your channel for a free AI audit and get a real, prioritized growth plan. Not just a number.
           </p>
           <a href="/auth/login" className="ymc-btn ymc-btn-lg">Get my free audit →</a>
           <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.42)', marginTop: 16 }}>
@@ -464,7 +464,7 @@ export default function YoutubeMoneyCalculator() {
         </div>
       </section>
 
-      {/* ══ FAQ — Landing.jsx parity ══ */}
+      {/* ══ FAQ. Landing.jsx parity ══ */}
       <div style={{ background: '#f4f4f6', borderTop: '1px solid rgba(10,10,15,0.08)', borderBottom: '1px solid rgba(10,10,15,0.08)', padding: isMobile ? '60px 20px' : '110px 64px', position: 'relative', overflow: 'hidden' }}>
         <div aria-hidden="true" style={{ position: 'absolute', top: '-10%', left: '-5%', width: 700, height: 600, background: 'radial-gradient(ellipse, rgba(229,48,42,0.06) 0%, transparent 60%)', pointerEvents: 'none' }} />
         <div style={{ maxWidth: 1160, margin: '0 auto', position: 'relative', zIndex: 1, display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '340px 1fr', gap: isMobile ? 40 : 88, alignItems: 'start' }}>

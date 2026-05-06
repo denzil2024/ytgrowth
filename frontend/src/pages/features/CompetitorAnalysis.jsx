@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import LandingFooter from '../../components/LandingFooter'
 
-/* Competitor Analysis — fully custom landing page.
+/* Competitor Analysis. Fully custom landing page.
  *
  * Built around the *actual* product (see app/competitors.py): a 7-dimension
  * AI competitive analysis powered by Claude Sonnet 4.6 with output in
@@ -184,7 +184,7 @@ function CompetitorCardVisual() {
       {/* Summary */}
       <p style={{ fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.45)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>AI assessment</p>
       <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.85)', lineHeight: 1.7, marginBottom: 18 }}>
-        TechCreator Pro publishes twice the cadence you do, but their topic mix is narrow — they ignore tutorials entirely, and that&apos;s where 64% of search volume in your shared niche actually lives. They&apos;re beatable on tutorial content within 60 days.
+        TechCreator Pro publishes twice the cadence you do, but their topic mix is narrow. They ignore tutorials entirely, and that&apos;s where 64% of search volume in your shared niche actually lives. They&apos;re beatable on tutorial content within 60 days.
       </p>
       {/* Stats row */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10, marginBottom: 16 }}>
@@ -221,13 +221,13 @@ function CompetitorCardVisual() {
 function GapVisual() {
   const gaps = [
     {
-      gap: 'Tutorial content — 0 videos in last 90 days',
+      gap: 'Tutorial content. 0 videos in last 90 days',
       action: 'Ship a 6-part "How to X in 2026" series. Their audience is searching for these terms but landing on smaller channels.',
       impact: 'HIGH',
       impactColor: '#ff3b30',
     },
     {
-      gap: 'Posting Tuesday 4pm — 2.3x their average CTR',
+      gap: 'Posting Tuesday 4pm-2.3x their average CTR',
       action: 'Match the slot for your next 3 uploads. Their audience is conditioned to watch on Tuesday.',
       impact: 'MED',
       impactColor: '#f59e0b',
@@ -254,14 +254,14 @@ function GapVisual() {
   )
 }
 
-/* ── 7 dimensions analysed — straight from the prompt in app/competitors.py ── */
+/* ── 7 dimensions analysed. Straight from the prompt in app/competitors.py ── */
 const DIMENSIONS = [
   { name: 'Content topics',         what: 'Which topic clusters dominate their channel and which ones drive their highest-view videos. Surfaces the topics they’ve never covered that their audience clearly wants.' },
   { name: 'Title & SEO strategy',   what: 'Title patterns, dominant formats, top keywords, and power words used. Identifies high-volume keywords they rank for that you aren’t targeting yet.' },
-  { name: 'Posting frequency & timing', what: 'How often and when they post. Pinpoints the day-and-hour windows their audience converts in — sometimes worth matching, sometimes worth deliberately avoiding.' },
+  { name: 'Posting frequency & timing', what: 'How often and when they post. Pinpoints the day-and-hour windows their audience converts in. Sometimes worth matching, sometimes worth deliberately avoiding.' },
   { name: 'Video length patterns',  what: 'Their duration sweet spot scored against their own retention. Flags format gaps you can exploit (e.g. they don’t do longform, you do).' },
   { name: 'Engagement patterns',    what: 'Like-to-view and comment-to-view ratios across their last 30. Identifies whether their audience is engaged or passive and which topics drive the most comments.' },
-  { name: 'Thumbnail style',        what: 'Visual patterns repeated across their thumbnails — palette, text density, faces, composition. Tells you exactly how to stand out in the same recommendation feed.' },
+  { name: 'Thumbnail style',        what: 'Visual patterns repeated across their thumbnails. Palette, text density, faces, composition. Tells you exactly how to stand out in the same recommendation feed.' },
   { name: 'Content gaps',           what: 'Topics the competitor has never covered but their audience is clearly asking for. The shortest path to videos that already have demand and no incumbent.' },
 ]
 
@@ -272,7 +272,7 @@ const OUTPUT_PARTS = [
   { icon: 'gap',     title: 'Gaps to exploit',        body: 'A ranked list of opportunities. Each gap comes with an exact "how to capture" action and an estimated impact tag (low / med / high).' },
   { icon: 'film',    title: 'Top videos to study',    body: 'Their top 5 by views with the AI’s explanation of "why it worked". Use it as a deconstruct cheat sheet before you ship something similar.' },
   { icon: 'idea',    title: 'Ready-to-use video ideas', body: 'Working titles you can publish, each with the angle ("how this steals or counters") and target keyword. The shortest path from analysis to your next upload.' },
-  { icon: 'sword',   title: 'Winning moves',          body: 'Tactical, specific recommendations the AI surfaces from the data. Not "post more" generic advice — moves like "match their Tuesday 4pm slot for next 3 uploads".' },
+  { icon: 'sword',   title: 'Winning moves',          body: 'Tactical, specific recommendations the AI surfaces from the data. Not "post more" generic advice. Moves like "match their Tuesday 4pm slot for next 3 uploads".' },
 ]
 
 const ICON_PATHS = {
@@ -305,15 +305,15 @@ const PLAN_LIMITS = [
 const FAQS = [
   {
     q: 'Do I need permission from a competitor to analyze their channel?',
-    a: <>No. We only read public data — what is on their channel page and what the YouTube API exposes about videos that are already published. We never scrape private analytics, never pretend to be them, and never contact them. Anyone visiting their channel can see the same numbers; we just structure them and run an AI competitive analysis on top.</>,
+    a: <>No. We only read public data. What is on their channel page and what the YouTube API exposes about videos that are already published. We never scrape private analytics, never pretend to be them, and never contact them. Anyone visiting their channel can see the same numbers; we just structure them and run an AI competitive analysis on top.</>,
   },
   {
     q: 'How fresh is the competitor data?',
-    a: <>Real-time on the first analysis. After that, the data is re-fetched on demand whenever you re-run the analysis on that competitor — which spends one credit. Most users don&apos;t need daily refresh; the patterns the AI surfaces are stable over weeks. If a competitor has a viral moment you can manually re-run to capture the new data.</>,
+    a: <>Real-time on the first analysis. After that, the data is re-fetched on demand whenever you re-run the analysis on that competitor. Which spends one credit. Most users don&apos;t need daily refresh; the patterns the AI surfaces are stable over weeks. If a competitor has a viral moment you can manually re-run to capture the new data.</>,
   },
   {
     q: 'How many competitors should I track?',
-    a: <>Start with 2–3 of your closest direct rivals. More dilutes your attention. The AI is very good at finding gaps in any channel, but those insights only matter if you actually use them — and you can&apos;t act on findings from 10 competitors. Most users find 3 well-chosen competitors generate more publishable ideas than 10 loosely-related ones.</>,
+    a: <>Start with 2–3 of your closest direct rivals. More dilutes your attention. The AI is very good at finding gaps in any channel, but those insights only matter if you actually use them. And you can&apos;t act on findings from 10 competitors. Most users find 3 well-chosen competitors generate more publishable ideas than 10 loosely-related ones.</>,
   },
   {
     q: 'What counts as a "high threat" competitor?',
@@ -325,23 +325,23 @@ const FAQS = [
   },
   {
     q: 'How is the gap analysis different from just watching their videos myself?',
-    a: <>You&apos;d need to watch all 30 of their recent uploads, log titles, dates, durations, view counts, then look up search volume for missing keywords, then cross-reference against what your channel covers, then prioritize. That&apos;s a 6–10 hour exercise per competitor. The AI does it in 60 seconds with the same rigor — and structures the output so each gap comes with a specific "how to capture" action and an impact tag, not just observations.</>,
+    a: <>You&apos;d need to watch all 30 of their recent uploads, log titles, dates, durations, view counts, then look up search volume for missing keywords, then cross-reference against what your channel covers, then prioritize. That&apos;s a 6–10 hour exercise per competitor. The AI does it in 60 seconds with the same rigor. And structures the output so each gap comes with a specific "how to capture" action and an impact tag, not just observations.</>,
   },
   {
     q: 'Will the audit benchmark my channel against their stats?',
-    a: <>Yes. Every analysis carries your channel context (subs, avg views, posting cadence) into the prompt, so insights are framed relative to where you actually are. "Their avg views are 4.2K, yours are 1.8K — these 3 of their topics consistently outperform that gap" is what you get, not "they get 4.2K average views" with no context.</>,
+    a: <>Yes. Every analysis carries your channel context (subs, avg views, posting cadence) into the prompt, so insights are framed relative to where you actually are. "Their avg views are 4.2K, yours are 1.8K. These 3 of their topics consistently outperform that gap" is what you get, not "they get 4.2K average views" with no context.</>,
   },
   {
     q: 'Are the "video ideas" generated by AI safe to publish?',
-    a: <>They&apos;re titles + angles + target keywords. Not scripts. Treat them as starting points — your voice and execution still need to do the work. The angle is what&apos;s valuable: it explains how the idea takes a slice of the competitor&apos;s audience that they&apos;re currently not serving. The AI won&apos;t write the video for you, and that&apos;s on purpose.</>,
+    a: <>They&apos;re titles + angles + target keywords. Not scripts. Treat them as starting points. Your voice and execution still need to do the work. The angle is what&apos;s valuable: it explains how the idea takes a slice of the competitor&apos;s audience that they&apos;re currently not serving. The AI won&apos;t write the video for you, and that&apos;s on purpose.</>,
   },
   {
     q: 'What if the competitor I want to analyze has fewer than 30 videos?',
-    a: <>The analysis works with whatever public history exists. 10 videos give a rougher pattern read than 30, and the AI flags that explicitly in the summary ("limited data — patterns may not generalize"). Below 5 videos there&apos;s genuinely not enough signal to analyze; we tell you upfront and don&apos;t spend the credit.</>,
+    a: <>The analysis works with whatever public history exists. 10 videos give a rougher pattern read than 30, and the AI flags that explicitly in the summary ("limited data. Patterns may not generalize"). Below 5 videos there&apos;s genuinely not enough signal to analyze; we tell you upfront and don&apos;t spend the credit.</>,
   },
   {
     q: 'Can I export the analysis or share it with a client?',
-    a: <>The analysis stays inside your YTGrowth dashboard for now — every result is saved per channel and can be re-opened anytime, and it feeds into your next channel audit as additional context (the audit becomes more useful the more competitors you&apos;ve analyzed). PDF / shareable-link export is on the roadmap; if it&apos;s a deal-breaker for your agency workflow, email support and we&apos;ll prioritize.</>,
+    a: <>The analysis stays inside your YTGrowth dashboard for now. Every result is saved per channel and can be re-opened anytime, and it feeds into your next channel audit as additional context (the audit becomes more useful the more competitors you&apos;ve analyzed). PDF / shareable-link export is on the roadmap; if it&apos;s a deal-breaker for your agency workflow, email support and we&apos;ll prioritize.</>,
   },
 ]
 
@@ -368,15 +368,15 @@ export default function CompetitorAnalysis() {
         </div>
       </nav>
 
-      {/* ════ 1. HERO — white ════════════════════════════════════════════ */}
+      {/* ════ 1. HERO. White ════════════════════════════════════════════ */}
       <section style={{ padding: isMobile ? '64px 20px 56px' : '110px 40px 80px', textAlign: 'center', background: '#ffffff' }}>
         <div style={{ maxWidth: 880, margin: '0 auto', animation: 'fadeUp 0.5s ease both' }}>
           <span className="cmp-eyebrow light">Competitor Analysis</span>
           <h1 className="cmp-h1" style={{ fontSize: isMobile ? 36 : 60, color: 'var(--ytg-text)', marginBottom: 22 }}>
-            See exactly what your rivals are doing right — <span style={{ color: 'var(--ytg-accent)' }}>and where they&apos;re leaving openings.</span>
+            See exactly what your rivals are doing right. <span style={{ color: 'var(--ytg-accent)' }}>and where they&apos;re leaving openings.</span>
           </h1>
           <p style={{ fontSize: isMobile ? 16 : 18.5, color: 'var(--ytg-text-2)', lineHeight: 1.7, maxWidth: 720, margin: '0 auto 36px' }}>
-            Pick 2–10 channels in your niche. YTGrowth pulls their last 30 uploads, runs a 7-dimension AI analysis, and returns a ranked list of content gaps, winning patterns, and ready-to-publish video ideas — with a threat level for each rival so you know which ones to focus on.
+            Pick 2–10 channels in your niche. YTGrowth pulls their last 30 uploads, runs a 7-dimension AI analysis, and returns a ranked list of content gaps, winning patterns, and ready-to-publish video ideas. With a threat level for each rival so you know which ones to focus on.
           </p>
           <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
             <a href="/auth/login" className="cmp-btn cmp-btn-lg">Analyze a competitor →</a>
@@ -388,17 +388,17 @@ export default function CompetitorAnalysis() {
         </div>
       </section>
 
-      {/* ════ 2. COMPETITOR SUMMARY VISUAL — dark, SPLIT (text L, visual R) ═ */}
+      {/* ════ 2. COMPETITOR SUMMARY VISUAL. Dark, SPLIT (text L, visual R) ═ */}
       <section style={{ padding: isMobile ? '64px 20px' : '100px 40px', background: '#0d0d12', borderTop: '1px solid rgba(255,255,255,0.06)', borderBottom: '1px solid rgba(255,255,255,0.06)', position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 900, height: 700, background: 'radial-gradient(ellipse, rgba(229,48,42,0.16) 0%, transparent 65%)', pointerEvents: 'none' }} />
         <div className="cmp-grid-2" style={{ maxWidth: 1180, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1.05fr', gap: 64, alignItems: 'center', position: 'relative', zIndex: 1 }}>
           <div>
             <span className="cmp-eyebrow dark">What you get per competitor</span>
             <h2 className="cmp-h2" style={{ fontSize: isMobile ? 30 : 42, color: '#fff', marginBottom: 18 }}>
-              A complete read on every rival — <span style={{ color: '#ff3b30' }}>not just their numbers, but their playbook.</span>
+              A complete read on every rival. <span style={{ color: '#ff3b30' }}>not just their numbers, but their playbook.</span>
             </h2>
             <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.6)', lineHeight: 1.72, marginBottom: 24 }}>
-              Each competitor returns a structured report: a threat-level tag, a 2–3 sentence AI assessment naming the actual opportunity against them, their headline stats, and the top 5 videos worth deconstructing — each with a "why it worked" one-liner.
+              Each competitor returns a structured report: a threat-level tag, a 2–3 sentence AI assessment naming the actual opportunity against them, their headline stats, and the top 5 videos worth deconstructing. Each with a "why it worked" one-liner.
             </p>
             {[
               'Threat level scored from subscriber overlap + topic match + posting velocity',
@@ -418,7 +418,7 @@ export default function CompetitorAnalysis() {
         </div>
       </section>
 
-      {/* ════ 3. THE 7 DIMENSIONS — light ═══════════════════════════════ */}
+      {/* ════ 3. THE 7 DIMENSIONS. Light ═══════════════════════════════ */}
       <section style={{ padding: isMobile ? '64px 20px' : '100px 40px', background: 'var(--ytg-bg)' }}>
         <div style={{ maxWidth: 1120, margin: '0 auto' }}>
           <div style={{ textAlign: 'center', maxWidth: 760, margin: '0 auto 48px' }}>
@@ -427,7 +427,7 @@ export default function CompetitorAnalysis() {
               We don&apos;t just count their videos. <span style={{ color: 'var(--ytg-accent)' }}>We map their playbook.</span>
             </h2>
             <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.72 }}>
-              Every competitor analysis runs the same seven dimensions over their last 30 uploads. The AI cross-references each one against your channel&apos;s context — so the output isn&apos;t a description of them, it&apos;s a list of moves you can actually take.
+              Every competitor analysis runs the same seven dimensions over their last 30 uploads. The AI cross-references each one against your channel&apos;s context. So the output isn&apos;t a description of them, it&apos;s a list of moves you can actually take.
             </p>
           </div>
           <div className="cmp-grid-2" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
@@ -446,7 +446,7 @@ export default function CompetitorAnalysis() {
         </div>
       </section>
 
-      {/* ════ 4. GAPS TO EXPLOIT — dark, SPLIT (visual L, text R) ═══════ */}
+      {/* ════ 4. GAPS TO EXPLOIT. Dark, SPLIT (visual L, text R) ═══════ */}
       <section style={{ padding: isMobile ? '64px 20px' : '100px 40px', background: '#0d0d12', borderTop: '1px solid rgba(255,255,255,0.06)', borderBottom: '1px solid rgba(255,255,255,0.06)', position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', top: '40%', left: '50%', transform: 'translate(-50%,-50%)', width: 900, height: 700, background: 'radial-gradient(ellipse, rgba(229,48,42,0.14) 0%, transparent 65%)', pointerEvents: 'none' }} />
         <div className="cmp-grid-2" style={{ maxWidth: 1180, margin: '0 auto', display: 'grid', gridTemplateColumns: '1.1fr 1fr', gap: 56, alignItems: 'center', position: 'relative', zIndex: 1 }}>
@@ -459,13 +459,13 @@ export default function CompetitorAnalysis() {
               Every gap comes with the <span style={{ color: '#ff3b30' }}>exact action to take.</span>
             </h2>
             <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.6)', lineHeight: 1.72, marginBottom: 22 }}>
-              The gap report is the highest-leverage output. Each entry names a specific opening — a topic they ignore, a slot they don&apos;t cover, a keyword they&apos;ve never used — paired with the move you should make and an impact tag (low / med / high). No vague advice; this is what you publish next.
+              The gap report is the highest-leverage output. Each entry names a specific opening. A topic they ignore, a slot they don&apos;t cover, a keyword they&apos;ve never used. Paired with the move you should make and an impact tag (low / med / high). No vague advice; this is what you publish next.
             </p>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
               {[
                 { label: 'Gap',           color: '#ff3b30', body: 'The specific opening, named with their data.' },
                 { label: 'How to capture', color: '#4ade80', body: 'The exact action to take. Specific, not generic.' },
-                { label: 'Impact',        color: '#f59e0b', body: 'Low / med / high — based on the size of the opening.' },
+                { label: 'Impact',        color: '#f59e0b', body: 'Low / med / high. Based on the size of the opening.' },
                 { label: 'Re-runnable',   color: '#4a7cf7', body: 'Re-analyze anytime to refresh against their newest uploads.' },
               ].map((p, i) => (
                 <div key={i} style={{ borderLeft: `2px solid ${p.color}`, paddingLeft: 12 }}>
@@ -478,7 +478,7 @@ export default function CompetitorAnalysis() {
         </div>
       </section>
 
-      {/* ════ 5. HOW IT WORKS — white, with arrow connectors ════════════ */}
+      {/* ════ 5. HOW IT WORKS. White, with arrow connectors ════════════ */}
       <section id="how" style={{ padding: isMobile ? '64px 20px' : '100px 40px', background: '#ffffff' }}>
         <div style={{ maxWidth: 1240, margin: '0 auto' }}>
           <div style={{ textAlign: 'center', maxWidth: 720, margin: '0 auto 52px' }}>
@@ -495,7 +495,7 @@ export default function CompetitorAnalysis() {
               { n: '01', t: 'Add a competitor',   b: 'Paste their channel URL or handle. Or search by keyword and pick from the matches we surface.' },
               { n: '02', t: 'Public data fetch',  b: 'Last 30 uploads pulled via the official YouTube Data API: titles, durations, dates, view counts, like counts, comment counts.' },
               { n: '03', t: 'Pattern derivation', b: 'We compute their posting cadence, top day + hour, average title length, top 5 by views, and engagement ratios.' },
-              { n: '04', t: 'AI runs 7 dimensions', b: 'Claude Sonnet 4.6 analyzes content topics, SEO strategy, length, engagement, thumbnail style, and the gaps you can exploit — with your channel as context.' },
+              { n: '04', t: 'AI runs 7 dimensions', b: 'Claude Sonnet 4.6 analyzes content topics, SEO strategy, length, engagement, thumbnail style, and the gaps you can exploit. With your channel as context.' },
               { n: '05', t: 'You see the result',  b: 'Threat level, summary, top topics, title patterns, ranked gaps with how-to-capture moves, top videos to study, and ready-to-publish ideas.' },
             ]
             const Card = ({ s }) => (
@@ -548,7 +548,7 @@ export default function CompetitorAnalysis() {
         </div>
       </section>
 
-      {/* ════ 6. SEVEN OUTPUT PARTS — dark ═══════════════════════════════ */}
+      {/* ════ 6. SEVEN OUTPUT PARTS. Dark ═══════════════════════════════ */}
       <section style={{ padding: isMobile ? '64px 20px' : '100px 40px', background: '#0d0d12', borderTop: '1px solid rgba(255,255,255,0.06)', borderBottom: '1px solid rgba(255,255,255,0.06)', position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 900, height: 700, background: 'radial-gradient(ellipse, rgba(229,48,42,0.14) 0%, transparent 65%)', pointerEvents: 'none' }} />
         <div style={{ maxWidth: 1180, margin: '0 auto', position: 'relative', zIndex: 1 }}>
@@ -575,7 +575,7 @@ export default function CompetitorAnalysis() {
         </div>
       </section>
 
-      {/* ════ 7. WHAT POWERS IT — light ═════════════════════════════════ */}
+      {/* ════ 7. WHAT POWERS IT. Light ═════════════════════════════════ */}
       <section style={{ padding: isMobile ? '64px 20px' : '100px 40px', background: 'var(--ytg-bg-3)', borderTop: '1px solid var(--ytg-border)', borderBottom: '1px solid var(--ytg-border)' }}>
         <div className="cmp-grid-2" style={{ maxWidth: 1140, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 56, alignItems: 'center' }}>
           <div>
@@ -584,7 +584,7 @@ export default function CompetitorAnalysis() {
               Public data only. <span style={{ color: 'var(--ytg-accent)' }}>Read-only API.</span> No scraping.
             </h2>
             <p style={{ fontSize: 14.5, color: 'var(--ytg-text-2)', lineHeight: 1.72 }}>
-              We use the official YouTube Data API to read public information — the same data anyone visiting the channel can see. No private analytics, no impersonation, no terms-of-service grey areas. Each analysis costs one credit and the data is saved per channel so it feeds your channel audit context too.
+              We use the official YouTube Data API to read public information. The same data anyone visiting the channel can see. No private analytics, no impersonation, no terms-of-service grey areas. Each analysis costs one credit and the data is saved per channel so it feeds your channel audit context too.
             </p>
           </div>
           <div style={{ background: 'var(--ytg-card)', border: '1px solid var(--ytg-border)', borderRadius: 16, boxShadow: 'var(--ytg-shadow-lg)', padding: '24px 28px' }}>
@@ -605,7 +605,7 @@ export default function CompetitorAnalysis() {
         </div>
       </section>
 
-      {/* ════ 8. PLAN LIMITS — dark ═════════════════════════════════════ */}
+      {/* ════ 8. PLAN LIMITS. Dark ═════════════════════════════════════ */}
       <section style={{ padding: isMobile ? '64px 20px' : '100px 40px', background: '#0d0d12', borderTop: '1px solid rgba(255,255,255,0.06)', borderBottom: '1px solid rgba(255,255,255,0.06)', position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 900, height: 700, background: 'radial-gradient(ellipse, rgba(229,48,42,0.14) 0%, transparent 65%)', pointerEvents: 'none' }} />
         <div style={{ maxWidth: 1080, margin: '0 auto', position: 'relative', zIndex: 1 }}>
@@ -654,7 +654,7 @@ export default function CompetitorAnalysis() {
         </div>
       </section>
 
-      {/* ════ 9. FAQ — white ════════════════════════════════════════════ */}
+      {/* ════ 9. FAQ. White ════════════════════════════════════════════ */}
       <section style={{ padding: isMobile ? '64px 20px' : '110px 40px', background: '#ffffff' }}>
         <div className="cmp-grid-2" style={{ maxWidth: 1180, margin: '0 auto', display: 'grid', gridTemplateColumns: '0.7fr 1.3fr', gap: 56, alignItems: 'flex-start' }}>
           <div style={{ position: isMobile ? 'static' : 'sticky', top: 100 }}>
@@ -663,7 +663,7 @@ export default function CompetitorAnalysis() {
               Questions about competitive intelligence, answered honestly.
             </h2>
             <p style={{ fontSize: 14.5, color: 'var(--ytg-text-2)', lineHeight: 1.7 }}>
-              Real answers from how the product behaves — including the limits, the privacy boundaries, and what it won&apos;t do.
+              Real answers from how the product behaves. Including the limits, the privacy boundaries, and what it won&apos;t do.
             </p>
             <a href="/contact" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 13.5, color: 'var(--ytg-accent)', textDecoration: 'none', fontWeight: 600, marginTop: 16 }}>
               Still have questions? Email us →
@@ -677,7 +677,7 @@ export default function CompetitorAnalysis() {
         </div>
       </section>
 
-      {/* ════ 10. BOTTOM CTA — light ════════════════════════════════════ */}
+      {/* ════ 10. BOTTOM CTA. Light ════════════════════════════════════ */}
       <section style={{ padding: isMobile ? '60px 20px 56px' : '110px 40px 80px', background: 'var(--ytg-bg)' }}>
         <div style={{ maxWidth: 860, margin: '0 auto', textAlign: 'center', background: 'var(--ytg-card)', border: '1px solid var(--ytg-border)', borderRadius: 24, boxShadow: 'var(--ytg-shadow-xl)', padding: isMobile ? '52px 24px' : '76px 60px', position: 'relative', overflow: 'hidden' }}>
           <div style={{ position: 'absolute', top: -80, left: '50%', transform: 'translateX(-50%)', width: 540, height: 260, background: 'radial-gradient(ellipse, rgba(229,48,42,0.10) 0%, transparent 70%)', pointerEvents: 'none' }} />

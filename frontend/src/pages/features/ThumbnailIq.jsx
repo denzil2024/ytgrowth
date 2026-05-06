@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react'
 import LandingFooter from '../../components/LandingFooter'
 
-/* Thumbnail IQ — fully custom landing page.
+/* Thumbnail IQ. Fully custom landing page.
  *
  * Built around the *actual* product (see app/thumbnail.py + routers/
- * thumbnail_routes.py): a two-layer scorer — Layer 1 is deterministic CV
+ * thumbnail_routes.py): a two-layer scorer. Layer 1 is deterministic CV
  * (OpenCV face detection, pytesseract OCR, WCAG contrast, k-means dominant
  * colors, HSV vibrancy) producing 60 algorithm points across 7 components.
  * Layer 2 is Claude Sonnet 4.6 vision against the user's thumbnail + the
@@ -286,11 +286,11 @@ function BenchmarkVisual() {
 
 /* ── 13 scoring components (7 algorithm + 6 vision) ────────────────────── */
 const ALGORITHM_DIMENSIONS = [
-  { name: 'Dimensions',           weight: 5,  what: 'Full credit at 1280×720 (YouTube’s recommended resolution). Partial at any 16:9 ratio. Zero off-ratio — those get cropped or letterboxed in feeds and tank CTR.' },
+  { name: 'Dimensions',           weight: 5,  what: 'Full credit at 1280×720 (YouTube’s recommended resolution). Partial at any 16:9 ratio. Zero off-ratio. Those get cropped or letterboxed in feeds and tank CTR.' },
   { name: 'File size',            weight: 5,  what: 'Full credit under 2 MB. Partial under 4 MB. Zero above 4 MB (loads slow on mobile data, hurts the first-frame impression).' },
-  { name: 'Contrast (stddev)',    weight: 15, what: 'Greyscale standard deviation across the whole image. >80 wins full credit — high contrast separates from feed neighbours. <30 means the thumbnail looks washed out.' },
+  { name: 'Contrast (stddev)',    weight: 15, what: 'Greyscale standard deviation across the whole image. >80 wins full credit. High contrast separates from feed neighbours. <30 means the thumbnail looks washed out.' },
   { name: 'Face presence',        weight: 10, what: 'Haar cascade face detection. >20% of image area = full credit (faces drive CTR). 10–20% = partial. Detected at all = base credit. Zero faces is OK if vision Layer 2 says the scene compensates.' },
-  { name: 'Text presence',        weight: 10, what: '10–30% of image covered by text wins full credit (sweet spot — readable on mobile, doesn’t crowd the visual). >30% feels cluttered, gets capped.' },
+  { name: 'Text presence',        weight: 10, what: '10–30% of image covered by text wins full credit (sweet spot. Readable on mobile, doesn’t crowd the visual). >30% feels cluttered, gets capped.' },
   { name: 'Text readability (WCAG)', weight: 10, what: 'Real WCAG luminance-contrast ratio between text and its background. >7:1 wins full credit (AAA). >4.5:1 is partial. Below 3 reads as a smear at 200px.' },
   { name: 'Color vibrancy',       weight: 5,  what: 'Mean HSV saturation. >120 wins full credit (vivid). Plus k-means dominant color extraction so Layer 2 can compare against the niche palette.' },
 ]
@@ -300,16 +300,16 @@ const VISION_DIMENSIONS = [
   { name: 'Text psychology',         weight: 10, what: 'Does the text create curiosity tension without revealing the answer? Does it complement or contradict the image? Bold enough for mobile? If no text, scored against whether the visual is strong enough alone.' },
   { name: 'Color psychology',        weight: 10, what: 'Are colors emotionally congruent with the topic? Is there a single dominant color that separates this in the feed? Compared directly against the benchmark color palette.' },
   { name: 'Composition & visual hierarchy', weight: 10, what: 'Where does the eye go first? Is there visual tension? Is the most important element in a rule-of-thirds power zone? Mobile-first read, since most YouTube viewing is mobile.' },
-  { name: 'Title-thumbnail relationship', weight: 10, what: 'Do the title and thumbnail tell DIFFERENT parts of the same story (the gold standard) — or is the thumbnail just illustrating the title? Scored zero if no title was provided.' },
-  { name: 'Feed distinctiveness',    weight: 10, what: 'Compared against the actual top 3 benchmark thumbnails for your niche. Would this stand out, blend in, or disappear? Names the single most distinctive element — or explains exactly why it blends.' },
+  { name: 'Title-thumbnail relationship', weight: 10, what: 'Do the title and thumbnail tell DIFFERENT parts of the same story (the gold standard). Or is the thumbnail just illustrating the title? Scored zero if no title was provided.' },
+  { name: 'Feed distinctiveness',    weight: 10, what: 'Compared against the actual top 3 benchmark thumbnails for your niche. Would this stand out, blend in, or disappear? Names the single most distinctive element. Or explains exactly why it blends.' },
 ]
 
 const PIPELINE_OUTPUTS = [
   { icon: 'gauge',  title: 'Combined score 0–100',         body: 'Layer 1 contributes up to 60 (deterministic CV). Layer 2 contributes up to 40 (Claude vision). Same scale every time so you can track improvement across versions.' },
-  { icon: 'eye',    title: 'Niche-aware vision read',       body: 'Claude scores against the actual top 3 benchmark thumbnails for your keyword + format + size bracket — not generic best practices. Feed distinctiveness is real.' },
-  { icon: 'pulse',  title: 'Per-dimension verdict + fix',   body: 'Each of the 13 dimensions returns a one-sentence verdict referencing exact visual elements, plus one concrete fix when the score is below 8 — names colors, words, positions.' },
+  { icon: 'eye',    title: 'Niche-aware vision read',       body: 'Claude scores against the actual top 3 benchmark thumbnails for your keyword + format + size bracket. Not generic best practices. Feed distinctiveness is real.' },
+  { icon: 'pulse',  title: 'Per-dimension verdict + fix',   body: 'Each of the 13 dimensions returns a one-sentence verdict referencing exact visual elements, plus one concrete fix when the score is below 8. Names colors, words, positions.' },
   { icon: 'sword',  title: 'Biggest win + biggest fix',     body: 'The single strongest element to keep. The single highest-impact change to make. Plus an emotion label, feed-position tag, and click-through prediction vs niche average.' },
-  { icon: 'gap',    title: 'Niche benchmark comparison',    body: 'Your face %, text %, vibrancy, contrast each plotted against the niche average. Same metrics from the same algorithm — apples to apples.' },
+  { icon: 'gap',    title: 'Niche benchmark comparison',    body: 'Your face %, text %, vibrancy, contrast each plotted against the niche average. Same metrics from the same algorithm. Apples to apples.' },
   { icon: 'percent',title: 'Percentile vs peers',           body: 'Where your thumbnail ranks among every other Thumbnail IQ analysis run for this exact keyword + format + size bracket. So you know whether 78/100 is good for THIS niche.' },
   { icon: 'history',title: 'Version history',               body: 'Re-upload a revised version and the score is tracked side by side. The history panel shows which iteration moved which dimension and how close you are to the niche top.' },
 ]
@@ -335,7 +335,7 @@ function OutputIcon({ name }) {
 }
 
 const PLAN_LIMITS = [
-  { plan: 'Free',    runs: '1',   note: 'One thumbnail score per cycle — full two-layer analysis' },
+  { plan: 'Free',    runs: '1',   note: 'One thumbnail score per cycle. Full two-layer analysis' },
   { plan: 'Solo',    runs: '20',  note: 'Score every iteration · 3 channels' },
   { plan: 'Growth',  runs: '50',  note: 'Same engine, higher monthly allowance · 5 channels' },
   { plan: 'Agency',  runs: '150', note: 'Pooled across 10 channels · per-version history' },
@@ -344,7 +344,7 @@ const PLAN_LIMITS = [
 const FAQS = [
   {
     q: 'Why two layers? Isn’t the AI smart enough on its own?',
-    a: <>Vision models are good at semantic reads (emotion, composition, psychology) but unreliable at measurements. Asking Claude "what’s the contrast ratio of this text?" gets a confident guess. Layer 1 measures the things that should be measured — actual pixel stddev for contrast, real Haar-cascade face detection, OCR for text coverage, WCAG luminance ratios for readability, k-means for dominant colors. Layer 2 then judges what only judgment can judge — does the emotion match the topic, does the composition lead the eye, does this stand out against the actual niche feed. The split is the whole point.</>,
+    a: <>Vision models are good at semantic reads (emotion, composition, psychology) but unreliable at measurements. Asking Claude "what’s the contrast ratio of this text?" gets a confident guess. Layer 1 measures the things that should be measured. Actual pixel stddev for contrast, real Haar-cascade face detection, OCR for text coverage, WCAG luminance ratios for readability, k-means for dominant colors. Layer 2 then judges what only judgment can judge. Does the emotion match the topic, does the composition lead the eye, does this stand out against the actual niche feed. The split is the whole point.</>,
   },
   {
     q: 'How is the niche benchmark built? Where does the comparison come from?',
@@ -352,31 +352,31 @@ const FAQS = [
   },
   {
     q: 'What does "channel size bracket" actually do?',
-    a: <>Comparing a 5K-sub thumbnail against MrBeast’s feed is useless. The benchmark pool only includes top performers in <i>your</i> size bracket (nano / micro / mid / macro), so the score reflects what actually wins among channels that real viewers see alongside yours. A 78 on Thumbnail IQ for a nano channel means the thumbnail beats the average top-performing nano thumbnail in your niche — a target you can actually hit.</>,
+    a: <>Comparing a 5K-sub thumbnail against MrBeast’s feed is useless. The benchmark pool only includes top performers in <i>your</i> size bracket (nano / micro / mid / macro), so the score reflects what actually wins among channels that real viewers see alongside yours. A 78 on Thumbnail IQ for a nano channel means the thumbnail beats the average top-performing nano thumbnail in your niche. A target you can actually hit.</>,
   },
   {
-    q: 'How accurate is the face detection — can it tell emotion?',
-    a: <>Layer 1 uses OpenCV’s Haar cascade for detection (presence, count, position, coverage percentage). Detection is reliable for forward-facing faces; it misses heavy profile shots and partial faces. <b>Emotion</b> is a Layer 2 read — Claude vision describes the specific emotion ("intense focus", "barely-suppressed laugh") and judges whether it’s readable at 200px. If Layer 1 misses your face but Layer 2 sees it, the vision score still credits you; nothing is double-penalized.</>,
+    q: 'How accurate is the face detection. Can it tell emotion?',
+    a: <>Layer 1 uses OpenCV’s Haar cascade for detection (presence, count, position, coverage percentage). Detection is reliable for forward-facing faces; it misses heavy profile shots and partial faces. <b>Emotion</b> is a Layer 2 read. Claude vision describes the specific emotion ("intense focus", "barely-suppressed laugh") and judges whether it’s readable at 200px. If Layer 1 misses your face but Layer 2 sees it, the vision score still credits you; nothing is double-penalized.</>,
   },
   {
     q: 'What if my thumbnail has no text?',
-    a: <>Text presence scores zero in Layer 1. Layer 2’s text-psychology dimension also scores 0 — UNLESS the visual is exceptionally strong, in which case Claude is allowed to flag it as an intentional choice (some niches like ASMR or cinematic vlogs win without text). The combined score will still come out reasonable if the rest of the thumbnail compensates. We don’t hand back "ADD TEXT" as the universal fix; the suggestion is contextual to your niche.</>,
+    a: <>Text presence scores zero in Layer 1. Layer 2’s text-psychology dimension also scores 0. UNLESS the visual is exceptionally strong, in which case Claude is allowed to flag it as an intentional choice (some niches like ASMR or cinematic vlogs win without text). The combined score will still come out reasonable if the rest of the thumbnail compensates. We don’t hand back "ADD TEXT" as the universal fix; the suggestion is contextual to your niche.</>,
   },
   {
     q: 'Can I score a thumbnail before I publish the video?',
-    a: <>Yes, that’s the primary use case. Upload the image, paste your draft title, pick the keyword you’re targeting. The studio runs both layers, compares against the niche pool, returns the score and the per-dimension fixes. Iterate, re-upload, score again — every version is tracked in the history panel so you can see exactly which change moved the score, and by how much.</>,
+    a: <>Yes, that’s the primary use case. Upload the image, paste your draft title, pick the keyword you’re targeting. The studio runs both layers, compares against the niche pool, returns the score and the per-dimension fixes. Iterate, re-upload, score again. Every version is tracked in the history panel so you can see exactly which change moved the score, and by how much.</>,
   },
   {
     q: 'Do you compare thumbnails to the same competitors my SEO Studio analyzes?',
-    a: <>Often, yes — both surfaces use YouTube’s niche-search results as the source of truth for "who’s winning here". The benchmark pool for thumbnails additionally filters by channel-size bracket and format, so the comparison set is sharper than what SEO Studio uses for title rewrites. If you’ve linked a video idea from competitor research, Thumbnail IQ explicitly references the competitor gap that idea exploits — and judges whether your thumbnail can win against those exact channels.</>,
+    a: <>Often, yes. Both surfaces use YouTube’s niche-search results as the source of truth for "who’s winning here". The benchmark pool for thumbnails additionally filters by channel-size bracket and format, so the comparison set is sharper than what SEO Studio uses for title rewrites. If you’ve linked a video idea from competitor research, Thumbnail IQ explicitly references the competitor gap that idea exploits. And judges whether your thumbnail can win against those exact channels.</>,
   },
   {
     q: 'How does the percentile work?',
-    a: <>For every Thumbnail IQ analysis run on your same keyword + format + size bracket (across all users, since most niches have multiple creators using the tool), we compute the average algorithm score. Your percentile is "how many of those analyses scored below yours". A 78/100 might be 92nd percentile in some niches and 60th in others — the percentile is what tells you whether your number is competitive. New niches with no peers yet show 50th percentile by default until enough data accumulates.</>,
+    a: <>For every Thumbnail IQ analysis run on your same keyword + format + size bracket (across all users, since most niches have multiple creators using the tool), we compute the average algorithm score. Your percentile is "how many of those analyses scored below yours". A 78/100 might be 92nd percentile in some niches and 60th in others. The percentile is what tells you whether your number is competitive. New niches with no peers yet show 50th percentile by default until enough data accumulates.</>,
   },
   {
     q: 'Will Thumbnail IQ work for Shorts thumbnails?',
-    a: <>Layer 1 works the same — pixel measurements don’t care about the platform. Layer 2 currently judges against the standard 16:9 long-form benchmark pool, so feed-distinctiveness scoring for vertical Shorts thumbnails is approximate. Shorts get less play from the thumbnail itself (most plays start before the thumbnail loads), so this is intentionally not the top priority right now. If your Shorts thumbnails are critical to your funnel, email support and we’ll prioritize the Shorts pool build.</>,
+    a: <>Layer 1 works the same. Pixel measurements don’t care about the platform. Layer 2 currently judges against the standard 16:9 long-form benchmark pool, so feed-distinctiveness scoring for vertical Shorts thumbnails is approximate. Shorts get less play from the thumbnail itself (most plays start before the thumbnail loads), so this is intentionally not the top priority right now. If your Shorts thumbnails are critical to your funnel, email support and we’ll prioritize the Shorts pool build.</>,
   },
   {
     q: 'How long does an analysis take, and what does it cost?',
@@ -384,11 +384,11 @@ const FAQS = [
   },
   {
     q: 'Are my thumbnails stored? Can other users see them?',
-    a: <>Your uploaded thumbnail is stored on our infrastructure so the analysis can rehydrate when you reopen it later, and so the version-history panel can compare iterations. It is never shown to other users and never used as benchmark data for other channels. The benchmark pool only ever contains <i>public</i> thumbnails from the YouTube API — videos that are already published and ranking. You can permanently clear an upload from the analysis history at any time.</>,
+    a: <>Your uploaded thumbnail is stored on our infrastructure so the analysis can rehydrate when you reopen it later, and so the version-history panel can compare iterations. It is never shown to other users and never used as benchmark data for other channels. The benchmark pool only ever contains <i>public</i> thumbnails from the YouTube API. Videos that are already published and ranking. You can permanently clear an upload from the analysis history at any time.</>,
   },
   {
     q: 'What does "feed distinctiveness" actually measure?',
-    a: <>It’s the highest-impact Layer 2 dimension. We show Claude your thumbnail alongside the actual top 3 benchmark thumbnails (by view velocity) for your exact niche, format, and size bracket — and ask: would this stand out, blend in, or disappear in that feed? The score is anchored to the visual context a real viewer would see your thumbnail in, which is the only honest way to judge "click-worthiness" — generic best-practice advice can’t do this.</>,
+    a: <>It’s the highest-impact Layer 2 dimension. We show Claude your thumbnail alongside the actual top 3 benchmark thumbnails (by view velocity) for your exact niche, format, and size bracket. And ask: would this stand out, blend in, or disappear in that feed? The score is anchored to the visual context a real viewer would see your thumbnail in, which is the only honest way to judge "click-worthiness". Generic best-practice advice can’t do this.</>,
   },
 ]
 
@@ -415,7 +415,7 @@ export default function ThumbnailIq() {
         </div>
       </nav>
 
-      {/* ════ 1. HERO — white ════════════════════════════════════════════ */}
+      {/* ════ 1. HERO. White ════════════════════════════════════════════ */}
       <section style={{ padding: isMobile ? '64px 20px 56px' : '110px 40px 80px', textAlign: 'center', background: '#ffffff' }}>
         <div style={{ maxWidth: 880, margin: '0 auto', animation: 'fadeUp 0.5s ease both' }}>
           <span className="tiq-eyebrow light">Thumbnail IQ</span>
@@ -435,7 +435,7 @@ export default function ThumbnailIq() {
         </div>
       </section>
 
-      {/* ════ 2. SCORECARD VISUAL — dark, SPLIT (text L, visual R) ══════ */}
+      {/* ════ 2. SCORECARD VISUAL. Dark, SPLIT (text L, visual R) ══════ */}
       <section style={{ padding: isMobile ? '64px 20px' : '100px 40px', background: '#0d0d12', borderTop: '1px solid rgba(255,255,255,0.06)', borderBottom: '1px solid rgba(255,255,255,0.06)', position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 900, height: 700, background: 'radial-gradient(ellipse, rgba(229,48,42,0.16) 0%, transparent 65%)', pointerEvents: 'none' }} />
         <div className="tiq-grid-2" style={{ maxWidth: 1180, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1.05fr', gap: 64, alignItems: 'center', position: 'relative', zIndex: 1 }}>
@@ -445,12 +445,12 @@ export default function ThumbnailIq() {
               One number that fuses pixel measurements <span style={{ color: '#ff3b30' }}>with niche-aware judgement.</span>
             </h2>
             <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.6)', lineHeight: 1.72, marginBottom: 24 }}>
-              Layer 1 contributes up to 60 deterministic points (contrast, face, text, readability, vibrancy, dimensions, file size). Layer 2 contributes up to 40 vision points (emotion, text psychology, color psychology, composition, title-thumbnail fit, feed distinctiveness). Same scale every time — so an 81 next month is genuinely better than tonight’s 78.
+              Layer 1 contributes up to 60 deterministic points (contrast, face, text, readability, vibrancy, dimensions, file size). Layer 2 contributes up to 40 vision points (emotion, text psychology, color psychology, composition, title-thumbnail fit, feed distinctiveness). Same scale every time. So an 81 next month is genuinely better than tonight’s 78.
             </p>
             {[
-              'Layer 1 — pixel measurements that should be measured',
-              'Layer 2 — judgements that only judgement can make',
-              'Same scale every run — track improvement across versions',
+              'Layer 1. Pixel measurements that should be measured',
+              'Layer 2. Judgements that only judgement can make',
+              'Same scale every run. Track improvement across versions',
               'Compared against your niche, not generic best practice',
             ].map((b, i) => (
               <div key={i} style={{ display: 'flex', gap: 10, alignItems: 'flex-start', marginBottom: 11 }}>
@@ -465,13 +465,13 @@ export default function ThumbnailIq() {
         </div>
       </section>
 
-      {/* ════ 3. THE 13 DIMENSIONS — light ══════════════════════════════ */}
+      {/* ════ 3. THE 13 DIMENSIONS. Light ══════════════════════════════ */}
       <section style={{ padding: isMobile ? '64px 20px' : '100px 40px', background: 'var(--ytg-bg)' }}>
         <div style={{ maxWidth: 1180, margin: '0 auto' }}>
           <div style={{ textAlign: 'center', maxWidth: 760, margin: '0 auto 48px' }}>
             <span className="tiq-eyebrow light">Thirteen scoring dimensions</span>
             <h2 className="tiq-h2" style={{ fontSize: isMobile ? 30 : 42, marginBottom: 16 }}>
-              We measure what should be measured — <span style={{ color: 'var(--ytg-accent)' }}>and judge what should be judged.</span>
+              We measure what should be measured. <span style={{ color: 'var(--ytg-accent)' }}>and judge what should be judged.</span>
             </h2>
             <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.72 }}>
               Seven Layer 1 components run pixel-level computer vision (60 points). Six Layer 2 dimensions run Claude Sonnet 4.6 vision against your niche feed (40 points). Each one returns a score, a one-sentence verdict referencing exact visual elements, and a concrete fix when below 8.
@@ -522,7 +522,7 @@ export default function ThumbnailIq() {
         </div>
       </section>
 
-      {/* ════ 4. NICHE BENCHMARK COMPARISON — dark, SPLIT (visual L, text R) ═ */}
+      {/* ════ 4. NICHE BENCHMARK COMPARISON. Dark, SPLIT (visual L, text R) ═ */}
       <section style={{ padding: isMobile ? '64px 20px' : '100px 40px', background: '#0d0d12', borderTop: '1px solid rgba(255,255,255,0.06)', borderBottom: '1px solid rgba(255,255,255,0.06)', position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', top: '40%', left: '50%', transform: 'translate(-50%,-50%)', width: 900, height: 700, background: 'radial-gradient(ellipse, rgba(229,48,42,0.14) 0%, transparent 65%)', pointerEvents: 'none' }} />
         <div className="tiq-grid-2" style={{ maxWidth: 1180, margin: '0 auto', display: 'grid', gridTemplateColumns: '1.1fr 1fr', gap: 56, alignItems: 'center', position: 'relative', zIndex: 1 }}>
@@ -535,14 +535,14 @@ export default function ThumbnailIq() {
               Compared against the channels <span style={{ color: '#ff3b30' }}>you’ll actually be next to.</span>
             </h2>
             <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.6)', lineHeight: 1.72, marginBottom: 22 }}>
-              For every analysis we build a benchmark pool: top 50 niche videos → above-median velocity → last 12 months → &gt;10K views → format match → size-bracket match. The top 10 by velocity become the comparison set. Layer 1 runs on each of their thumbnails, the metrics are averaged, and your face %, text %, contrast, vibrancy are compared head-to-head. The pool is cached per-niche for 30 days and shared across users — so most runs hit a warm cache.
+              For every analysis we build a benchmark pool: top 50 niche videos → above-median velocity → last 12 months → &gt;10K views → format match → size-bracket match. The top 10 by velocity become the comparison set. Layer 1 runs on each of their thumbnails, the metrics are averaged, and your face %, text %, contrast, vibrancy are compared head-to-head. The pool is cached per-niche for 30 days and shared across users. So most runs hit a warm cache.
             </p>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
               {[
-                { label: 'Format-aware',     color: '#ff3b30', body: 'Tutorial / listicle / story / comparison / revelation — pulled separately.' },
-                { label: 'Size-bracketed',   color: '#4a7cf7', body: 'Nano / micro / mid / macro — your peers, not MrBeast.' },
-                { label: 'Velocity-ranked',  color: '#f59e0b', body: 'Views per day since publish — recent winners, not stale viral hits.' },
-                { label: 'Cached & shared',  color: '#4ade80', body: '30-day pool TTL across users — most runs hit a warm pool.' },
+                { label: 'Format-aware',     color: '#ff3b30', body: 'Tutorial / listicle / story / comparison / revelation. Pulled separately.' },
+                { label: 'Size-bracketed',   color: '#4a7cf7', body: 'Nano / micro / mid / macro. Your peers, not MrBeast.' },
+                { label: 'Velocity-ranked',  color: '#f59e0b', body: 'Views per day since publish. Recent winners, not stale viral hits.' },
+                { label: 'Cached & shared',  color: '#4ade80', body: '30-day pool TTL across users. Most runs hit a warm pool.' },
               ].map((p, i) => (
                 <div key={i} style={{ borderLeft: `2px solid ${p.color}`, paddingLeft: 12 }}>
                   <p style={{ fontSize: 11, fontWeight: 700, color: p.color, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>{p.label}</p>
@@ -554,7 +554,7 @@ export default function ThumbnailIq() {
         </div>
       </section>
 
-      {/* ════ 5. HOW IT WORKS — white, with arrow connectors ════════════ */}
+      {/* ════ 5. HOW IT WORKS. White, with arrow connectors ════════════ */}
       <section id="how" style={{ padding: isMobile ? '64px 20px' : '100px 40px', background: '#ffffff' }}>
         <div style={{ maxWidth: 1240, margin: '0 auto' }}>
           <div style={{ textAlign: 'center', maxWidth: 720, margin: '0 auto 52px' }}>
@@ -563,14 +563,14 @@ export default function ThumbnailIq() {
               From upload to scored verdict in under 30 seconds
             </h2>
             <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.7, marginTop: 14, maxWidth: 580, margin: '14px auto 0' }}>
-              Five stages. Re-upload a revised version anytime — the version-history panel tracks the score across iterations so you can see exactly what moved the needle.
+              Five stages. Re-upload a revised version anytime. The version-history panel tracks the score across iterations so you can see exactly what moved the needle.
             </p>
           </div>
           {(() => {
             const steps = [
               { n: '01', t: 'Upload + context',     b: 'Drop the image, paste the draft title, pick the keyword you’re targeting. Or pull the title and keyword from a video idea you generated in Competitor Analysis.' },
               { n: '02', t: 'Layer 1 measures',      b: 'OpenCV detects faces, pytesseract reads any text, WCAG luminance ratio scores readability, k-means extracts dominant colors, HSV measures vibrancy. 60 points.' },
-              { n: '03', t: 'Niche pool built',      b: 'Top 10 thumbnails for your keyword + format + size bracket are fetched + scored. Pool cached 30 days, shared across users — most runs hit a warm pool.' },
+              { n: '03', t: 'Niche pool built',      b: 'Top 10 thumbnails for your keyword + format + size bracket are fetched + scored. Pool cached 30 days, shared across users. Most runs hit a warm pool.' },
               { n: '04', t: 'Layer 2 vision call',   b: 'Claude Sonnet 4.6 sees your thumbnail alongside the top 3 benchmark thumbnails and scores 6 psychological dimensions in context. 40 points.' },
               { n: '05', t: 'Combined result',       b: 'Score 0–100, per-dimension verdict + fix, biggest win, biggest fix, emotion label, feed-position tag, percentile vs peers, version saved to history.' },
             ]
@@ -624,7 +624,7 @@ export default function ThumbnailIq() {
         </div>
       </section>
 
-      {/* ════ 6. SEVEN OUTPUT BLOCKS — dark ══════════════════════════════ */}
+      {/* ════ 6. SEVEN OUTPUT BLOCKS. Dark ══════════════════════════════ */}
       <section style={{ padding: isMobile ? '64px 20px' : '100px 40px', background: '#0d0d12', borderTop: '1px solid rgba(255,255,255,0.06)', borderBottom: '1px solid rgba(255,255,255,0.06)', position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 900, height: 700, background: 'radial-gradient(ellipse, rgba(229,48,42,0.14) 0%, transparent 65%)', pointerEvents: 'none' }} />
         <div style={{ maxWidth: 1180, margin: '0 auto', position: 'relative', zIndex: 1 }}>
@@ -634,7 +634,7 @@ export default function ThumbnailIq() {
               Seven distinct output blocks. <span style={{ color: '#ff3b30' }}>Every one is fixable.</span>
             </h2>
             <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.6)', lineHeight: 1.72 }}>
-              The studio doesn’t hand you a number and a vague verdict. Each block renders separately so you can scan, iterate, re-upload — and the history panel keeps every version side by side.
+              The studio doesn’t hand you a number and a vague verdict. Each block renders separately so you can scan, iterate, re-upload. And the history panel keeps every version side by side.
             </p>
           </div>
           <div className="tiq-grid-3" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 14 }}>
@@ -651,7 +651,7 @@ export default function ThumbnailIq() {
         </div>
       </section>
 
-      {/* ════ 7. WHAT POWERS IT — light grey, split ═════════════════════ */}
+      {/* ════ 7. WHAT POWERS IT. Light grey, split ═════════════════════ */}
       <section style={{ padding: isMobile ? '64px 20px' : '100px 40px', background: 'var(--ytg-bg-3)', borderTop: '1px solid var(--ytg-border)', borderBottom: '1px solid var(--ytg-border)' }}>
         <div className="tiq-grid-2" style={{ maxWidth: 1140, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 56, alignItems: 'center' }}>
           <div>
@@ -660,7 +660,7 @@ export default function ThumbnailIq() {
               Open-source CV + Sonnet 4.6 vision. <span style={{ color: 'var(--ytg-accent)' }}>Public data only.</span>
             </h2>
             <p style={{ fontSize: 14.5, color: 'var(--ytg-text-2)', lineHeight: 1.72 }}>
-              Layer 1 runs entirely on our infrastructure — no third-party scoring API, no per-image fees. Layer 2 calls Claude Sonnet 4.6 with your thumbnail and the top 3 benchmark images. Benchmark thumbnails come from the official YouTube Data API; the same public images anyone visiting those channels can see. Each analysis spends one credit on paid plans; free tier gets one full analysis per cycle.
+              Layer 1 runs entirely on our infrastructure. No third-party scoring API, no per-image fees. Layer 2 calls Claude Sonnet 4.6 with your thumbnail and the top 3 benchmark images. Benchmark thumbnails come from the official YouTube Data API; the same public images anyone visiting those channels can see. Each analysis spends one credit on paid plans; free tier gets one full analysis per cycle.
             </p>
           </div>
           <div style={{ background: 'var(--ytg-card)', border: '1px solid var(--ytg-border)', borderRadius: 16, boxShadow: 'var(--ytg-shadow-lg)', padding: '24px 28px' }}>
@@ -681,7 +681,7 @@ export default function ThumbnailIq() {
         </div>
       </section>
 
-      {/* ════ 8. PLAN LIMITS — dark ═════════════════════════════════════ */}
+      {/* ════ 8. PLAN LIMITS. Dark ═════════════════════════════════════ */}
       <section style={{ padding: isMobile ? '64px 20px' : '100px 40px', background: '#0d0d12', borderTop: '1px solid rgba(255,255,255,0.06)', borderBottom: '1px solid rgba(255,255,255,0.06)', position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 900, height: 700, background: 'radial-gradient(ellipse, rgba(229,48,42,0.14) 0%, transparent 65%)', pointerEvents: 'none' }} />
         <div style={{ maxWidth: 1080, margin: '0 auto', position: 'relative', zIndex: 1 }}>
@@ -691,7 +691,7 @@ export default function ThumbnailIq() {
               How many thumbnail scores you get each month
             </h2>
             <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.6)', lineHeight: 1.72 }}>
-              Free creators get one full two-layer analysis per cycle so you can try the engine on a real thumbnail. Paid plans charge one credit per run — the same engine, no feature differences. Each re-uploaded version is a fresh analysis and a fresh credit.
+              Free creators get one full two-layer analysis per cycle so you can try the engine on a real thumbnail. Paid plans charge one credit per run. The same engine, no feature differences. Each re-uploaded version is a fresh analysis and a fresh credit.
             </p>
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr 1fr' : 'repeat(4, 1fr)', gap: 14 }}>
@@ -728,7 +728,7 @@ export default function ThumbnailIq() {
         </div>
       </section>
 
-      {/* ════ 9. FAQ — white ════════════════════════════════════════════ */}
+      {/* ════ 9. FAQ. White ════════════════════════════════════════════ */}
       <section style={{ padding: isMobile ? '64px 20px' : '110px 40px', background: '#ffffff' }}>
         <div className="tiq-grid-2" style={{ maxWidth: 1180, margin: '0 auto', display: 'grid', gridTemplateColumns: '0.7fr 1.3fr', gap: 56, alignItems: 'flex-start' }}>
           <div style={{ position: isMobile ? 'static' : 'sticky', top: 100 }}>
@@ -737,7 +737,7 @@ export default function ThumbnailIq() {
               Questions about the scoring engine, answered honestly.
             </h2>
             <p style={{ fontSize: 14.5, color: 'var(--ytg-text-2)', lineHeight: 1.7 }}>
-              Real answers from how the product behaves — the two layers, the niche pool, the size brackets, version history, and what won’t work.
+              Real answers from how the product behaves. The two layers, the niche pool, the size brackets, version history, and what won’t work.
             </p>
             <a href="/contact" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 13.5, color: 'var(--ytg-accent)', textDecoration: 'none', fontWeight: 600, marginTop: 16 }}>
               Still have questions? Email us →
@@ -751,7 +751,7 @@ export default function ThumbnailIq() {
         </div>
       </section>
 
-      {/* ════ 10. BOTTOM CTA — light ════════════════════════════════════ */}
+      {/* ════ 10. BOTTOM CTA. Light ════════════════════════════════════ */}
       <section style={{ padding: isMobile ? '60px 20px 56px' : '110px 40px 80px', background: 'var(--ytg-bg)' }}>
         <div style={{ maxWidth: 860, margin: '0 auto', textAlign: 'center', background: 'var(--ytg-card)', border: '1px solid var(--ytg-border)', borderRadius: 24, boxShadow: 'var(--ytg-shadow-xl)', padding: isMobile ? '52px 24px' : '76px 60px', position: 'relative', overflow: 'hidden' }}>
           <div style={{ position: 'absolute', top: -80, left: '50%', transform: 'translateX(-50%)', width: 540, height: 260, background: 'radial-gradient(ellipse, rgba(229,48,42,0.10) 0%, transparent 70%)', pointerEvents: 'none' }} />
