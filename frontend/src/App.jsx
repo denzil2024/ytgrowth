@@ -12,6 +12,7 @@ import SeoStudio from './pages/features/SeoStudio'
 import ThumbnailIq from './pages/features/ThumbnailIq'
 import KeywordResearch from './pages/features/KeywordResearch'
 import Outliers from './pages/features/Outliers'
+import YoutubeMoneyCalculator from './pages/tools/YoutubeMoneyCalculator'
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
         <Route path="/features/thumbnail-iq"         element={<ThumbnailIq />} />
         <Route path="/features/keyword-research"     element={<KeywordResearch />} />
         <Route path="/features/outliers"             element={<Outliers />} />
+        <Route path="/tools/youtube-money-calculator" element={<YoutubeMoneyCalculator />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
