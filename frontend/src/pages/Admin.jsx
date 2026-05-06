@@ -184,6 +184,12 @@ function useAdminStyles() {
         .adm-sec-btn { transition:all 0.18s; }
         .adm-sec-btn:hover { border-color:rgba(0,0,0,0.18) !important; color:#0f0f13 !important; box-shadow:0 2px 8px rgba(0,0,0,0.10),0 8px 28px rgba(0,0,0,0.10) !important; transform:translateY(-1px); }
 
+        /* Red primary refresh button (matches ytg-dash-btn-primary on Dashboard) */
+        .adm-refresh-btn:hover:not(:disabled) {
+          filter:brightness(1.07); transform:translateY(-1px);
+          box-shadow:0 2px 8px rgba(0,0,0,0.15), 0 8px 28px rgba(229,37,27,0.42) !important;
+        }
+
         /* Empty state */
         .adm-empty { padding:48px 24px; text-align:center; }
         .adm-empty-icon {
@@ -705,27 +711,34 @@ export default function Admin() {
       {/* ── Page header ─────────────────────────────────────────────────── */}
       <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 28, gap: 16 }}>
         <div>
-          <h1 style={{ fontSize: 26, fontWeight: 800, color: C.text1, letterSpacing: '-0.7px', marginBottom: 8 }}>Admin</h1>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: C.text3 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 8 }}>
+            <h1 style={{ fontSize: 26, fontWeight: 800, color: C.text1, letterSpacing: '-0.7px' }}>Admin</h1>
+            <span style={{
+              fontSize: 10, fontWeight: 800, letterSpacing: '0.1em', textTransform: 'uppercase',
+              color: C.red, background: C.redBg, border: `1px solid ${C.redBdr}`,
+              padding: '3px 9px', borderRadius: 100,
+            }}>Internal</span>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13.5, color: C.text2, fontWeight: 500 }}>
             <span className="adm-live-dot" aria-hidden="true" />
             <span>{data.generated_at ? `Updated ${relTime(data.generated_at)}` : 'Live'}</span>
-            <span style={{ color: C.border }}>·</span>
-            <span style={{ color: C.text3, fontWeight: 500 }}>Internal · admin only</span>
           </div>
         </div>
         <button
-          className="adm-sec-btn"
+          className="adm-refresh-btn"
           disabled={refreshing}
           onClick={() => load(false)}
           style={{
             display: 'inline-flex', alignItems: 'center', gap: 8,
-            padding: '9px 20px', borderRadius: 100, border: '1px solid rgba(0,0,0,0.1)',
-            background: C.surface, color: C.text2, fontSize: 12.5, fontWeight: 600,
+            padding: '10px 22px', borderRadius: 100, border: 'none',
+            background: C.red, color: '#ffffff', fontSize: 13, fontWeight: 700,
             cursor: refreshing ? 'wait' : 'pointer', fontFamily: 'inherit',
-            boxShadow: '0 1px 3px rgba(0,0,0,0.07),0 4px 14px rgba(0,0,0,0.07)',
+            boxShadow: '0 1px 3px rgba(0,0,0,0.12), 0 4px 14px rgba(229,37,27,0.32)',
+            opacity: refreshing ? 0.65 : 1,
+            transition: 'filter 0.18s, transform 0.18s, box-shadow 0.18s',
           }}
         >
-          <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"
             style={{ animation: refreshing ? 'admSpin 0.7s linear infinite' : 'none' }}>
             <path d="M11 6.5a4.5 4.5 0 0 1-8 2.85M2 6.5a4.5 4.5 0 0 1 8-2.85"/>
             <path d="M11 1v3h-3M2 12V9h3"/>
@@ -914,18 +927,19 @@ export default function Admin() {
                     style={{
                       display: 'inline-flex', alignItems: 'center', gap: 6,
                       padding: '6px 13px', borderRadius: 100,
-                      border: `1px solid ${active ? C.text2 : C.border}`,
-                      background: active ? C.text1 : C.surface,
+                      border: active ? '1px solid transparent' : `1px solid ${C.border}`,
+                      background: active ? C.red : C.surface,
                       color: active ? '#fff' : C.text2,
-                      fontSize: 12, fontWeight: 600, fontFamily: 'inherit',
+                      fontSize: 12, fontWeight: 700, fontFamily: 'inherit',
                       cursor: 'pointer',
+                      boxShadow: active ? '0 1px 3px rgba(0,0,0,0.10), 0 4px 14px rgba(229,37,27,0.28)' : 'none',
                       transition: 'all 0.15s',
                     }}
                   >
                     {f.label}
                     <span style={{
                       fontSize: 10.5, fontWeight: 700,
-                      background: active ? 'rgba(255,255,255,0.18)' : '#f4f4f6',
+                      background: active ? 'rgba(255,255,255,0.22)' : '#f4f4f6',
                       color: active ? '#fff' : C.text3,
                       padding: '1px 7px', borderRadius: 100,
                     }}>{f.count}</span>
