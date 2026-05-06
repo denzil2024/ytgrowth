@@ -378,7 +378,32 @@ def admin_test_welcome(request: Request, to: str = "", kind: str = "immediate"):
             })
             return JSONResponse({"ok": True, "kind": "milestone", "category": category, "tier": tier, "to": target})
 
-        return JSONResponse({"error": "kind must be 'immediate', 'audit', 'weekly', 'reengagement', or 'milestone'"}, status_code=400)
+        if kind == "topup":
+            from app.email_templates.topup_offer import build_email
+            import resend as _resend
+            _resend.api_key = os.environ.get("RESEND_API_KEY", "")
+            base_url = os.environ.get("BASE_URL", "https://ytgrowth.io")
+            # Allow overriding usage via query params for visual QA
+            used      = int(request.query_params.get("used", "3"))
+            allowance = int(request.query_params.get("allowance", "3"))
+            text, html = build_email(
+                first_name="Denzil",
+                monthly_used=used,
+                monthly_allowance=allowance,
+                pricing_url=f"{base_url}/#pricing",
+                unsubscribe_url=f"{base_url}/email/unsubscribe?token=test",
+            )
+            _resend.Emails.send({
+                "from":     "Denzil from YTGrowth <hello@ytgrowth.io>",
+                "to":       [target],
+                "subject":  "30% off your first 2 months on YTGrowth",
+                "html":     html,
+                "text":     text,
+                "reply_to": "hello@ytgrowth.io",
+            })
+            return JSONResponse({"ok": True, "kind": "topup", "to": target, "used": used, "allowance": allowance})
+
+        return JSONResponse({"error": "kind must be 'immediate', 'audit', 'weekly', 'reengagement', 'milestone', or 'topup'"}, status_code=400)
     except Exception as e:
         import traceback
         tb = traceback.format_exc()
