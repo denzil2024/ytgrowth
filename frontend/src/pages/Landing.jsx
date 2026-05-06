@@ -241,14 +241,36 @@ function useGlobalStyles() {
 
       /* ── Mobile nav menu ─────────────────────────────────── */
       .ytg-mobile-menu {
-        display: flex; position: fixed; inset: 0; z-index: 99; /* IMPROVED: always flex, use opacity for transition */
-        background: var(--ytg-nav); backdrop-filter: blur(24px);
-        -webkit-backdrop-filter: blur(24px);
-        flex-direction: column; align-items: center; justify-content: center; gap: 24px;
-        border-bottom: 1px solid rgba(255,255,255,0.08);
-        opacity: 0; pointer-events: none; transition: opacity 0.2s ease; /* IMPROVED: fade-in animation */
+        display: flex; position: fixed; inset: 0; z-index: 99;
+        background: #0d0d12;
+        flex-direction: column; align-items: stretch; justify-content: flex-start;
+        padding: 32px 28px 28px;
+        overflow-y: auto;
+        opacity: 0; pointer-events: none; transition: opacity 0.2s ease;
       }
-      .ytg-mobile-menu.open { opacity: 1; pointer-events: auto; } /* IMPROVED: was display:flex */
+      .ytg-mobile-menu.open { opacity: 1; pointer-events: auto; }
+      .ytg-mm-section { margin-bottom: 32px; }
+      .ytg-mm-section:last-of-type { margin-bottom: 24px; }
+      .ytg-mm-label {
+        display: block; margin-bottom: 14px;
+        font-size: 11px; font-weight: 700;
+        letter-spacing: 0.12em; text-transform: uppercase;
+        color: rgba(255,255,255,0.38);
+      }
+      .ytg-mm-link {
+        display: block; padding: 6px 0;
+        font-size: 18px; font-weight: 600;
+        color: #ffffff; text-decoration: none;
+        letter-spacing: -0.3px; line-height: 1.35;
+        transition: color 0.15s;
+      }
+      .ytg-mm-link:hover { color: rgba(255,255,255,0.78); }
+      .ytg-mm-cta-row {
+        display: flex; flex-direction: column; gap: 10px;
+        padding-top: 18px;
+        border-top: 1px solid rgba(255,255,255,0.08);
+        margin-top: auto;
+      }
 
       /* ── Responsive card grids ───────────────────────────── */
       @media (max-width: 768px) {
@@ -801,31 +823,45 @@ export default function Landing() {
         </div>
       </nav>
 
-      {/* Mobile menu overlay */}
+      {/* Mobile menu overlay — proper section hierarchy */}
       <div className={`ytg-mobile-menu${mobileMenuOpen ? ' open' : ''}`} style={{ top: 60 }}>
-        {/* Features header + sub-list */}
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
-          <span style={{ fontSize: 18, fontWeight: 700, color: 'rgba(255,255,255,0.88)', letterSpacing: '-0.5px' }}>Features</span>
+
+        {/* Features */}
+        <div className="ytg-mm-section">
+          <span className="ytg-mm-label">Features</span>
           {FEATURE_NAV_ITEMS.map((item, i) => (
-            <a key={i} href={item.href} onClick={() => setMobileMenuOpen(false)}
-              style={{ fontSize: 14, fontWeight: 500, color: 'rgba(255,255,255,0.62)', textDecoration: 'none', letterSpacing: '-0.2px' }}>
+            <a key={i} href={item.href} onClick={() => setMobileMenuOpen(false)} className="ytg-mm-link">
               {item.label}
             </a>
           ))}
         </div>
-        {['Free tools', 'How it works', 'Pricing', 'FAQ', 'Affiliates', 'Contact'].map((l, i) => (
-          <a key={i}
-            href={
-              l === 'Affiliates' ? '/affiliate'
-              : l === 'Contact' ? '/contact'
-              : l === 'Free tools' ? '/tools/youtube-money-calculator'
-              : `#${l.toLowerCase().replace(/ /g, '-')}`}
-            onClick={() => setMobileMenuOpen(false)}
-            style={{ fontSize: 18, fontWeight: 700, color: 'rgba(255,255,255,0.88)', textDecoration: 'none', letterSpacing: '-0.5px' }}>
-            {l}
+
+        {/* Free tools */}
+        <div className="ytg-mm-section">
+          <span className="ytg-mm-label">Free tools</span>
+          <a href="/tools/youtube-money-calculator" onClick={() => setMobileMenuOpen(false)} className="ytg-mm-link">
+            YouTube Money Calculator
           </a>
-        ))}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 10, width: '100%', padding: '0 32px', alignItems: 'center' }}>
+        </div>
+
+        {/* Explore */}
+        <div className="ytg-mm-section">
+          <span className="ytg-mm-label">Explore</span>
+          {[
+            { label: 'How it works', href: '#how-it-works' },
+            { label: 'Pricing',      href: '#pricing' },
+            { label: 'FAQ',          href: '#faq' },
+            { label: 'Affiliates',   href: '/affiliate' },
+            { label: 'Contact',      href: '/contact' },
+          ].map((l, i) => (
+            <a key={i} href={l.href} onClick={() => setMobileMenuOpen(false)} className="ytg-mm-link">
+              {l.label}
+            </a>
+          ))}
+        </div>
+
+        {/* CTA — pinned at bottom */}
+        <div className="ytg-mm-cta-row">
           {loggedIn ? (
             <a href="/dashboard" className="ytg-btn-primary" style={{ width: '100%', justifyContent: 'center' }}>Dashboard</a>
           ) : (
