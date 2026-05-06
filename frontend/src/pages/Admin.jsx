@@ -62,22 +62,30 @@ function useAdminStyles() {
         .adm p,.adm span,.adm div,.adm h1,.adm h2,.adm h3 { margin:0; }
         .adm .num { font-variant-numeric:tabular-nums; }
 
-        /* Stat card with always-visible red top accent + branded icon */
+        /* Light stat card — subtle gradient bg + radial glow + accent line */
         .adm-stat-card {
-          background:#fff; border:1px solid #e6e6ec; border-radius:18px;
-          padding:22px 24px 20px;
-          box-shadow:0 1px 2px rgba(0,0,0,0.03),0 4px 14px rgba(0,0,0,0.05);
+          background:linear-gradient(165deg, #ffffff 0%, #fafafd 60%, #f6f5fa 100%);
+          border:1px solid #e6e6ec; border-radius:20px;
+          padding:24px 26px 22px;
+          box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 18px rgba(0,0,0,0.05);
           transition:box-shadow 0.22s,transform 0.22s,border-color 0.22s;
           cursor:default; position:relative; overflow:hidden;
         }
         .adm-stat-card::before {
           content:''; position:absolute; top:0; left:0; right:0; height:3px;
           background:linear-gradient(90deg, var(--adm-accent, #e5251b) 0%, var(--adm-accent, #e5251b) 55%, rgba(229,37,27,0) 100%);
-          opacity:0.85; transition:opacity 0.22s;
+          opacity:0.9; transition:opacity 0.22s;
+        }
+        /* Soft red glow blooming behind the icon corner — gives the card "life" */
+        .adm-stat-card::after {
+          content:''; position:absolute; top:-30px; right:-30px;
+          width:140px; height:140px; border-radius:50%;
+          background:radial-gradient(circle, rgba(229,37,27,0.10) 0%, rgba(229,37,27,0.04) 40%, transparent 70%);
+          pointer-events:none;
         }
         .adm-stat-card:hover {
-          box-shadow:0 4px 12px rgba(0,0,0,0.08),0 16px 40px rgba(0,0,0,0.10);
-          transform:translateY(-2px); border-color:#dadde3;
+          box-shadow:0 6px 18px rgba(0,0,0,0.07),0 24px 50px rgba(0,0,0,0.08);
+          transform:translateY(-3px); border-color:rgba(229,37,27,0.18);
         }
         .adm-stat-card:hover::before { opacity:1; }
 
@@ -98,17 +106,24 @@ function useAdminStyles() {
         /* Hero RED stat card — full gradient background (matches money calc result card + affiliate annual card) */
         .adm-stat-card-red {
           position:relative; overflow:hidden;
-          background:linear-gradient(180deg, #e5251b 0%, #a50f07 100%);
-          border:none; border-radius:18px;
-          padding:22px 24px 20px;
+          background:linear-gradient(160deg, #ff3b30 0%, #e5251b 45%, #a50f07 100%);
+          border:none; border-radius:20px;
+          padding:24px 26px 22px;
           color:#ffffff;
-          box-shadow:0 4px 18px rgba(229,37,27,0.32), 0 24px 60px rgba(229,37,27,0.18), inset 0 1px 0 rgba(255,255,255,0.14);
+          box-shadow:0 4px 18px rgba(229,37,27,0.34), 0 24px 60px rgba(229,37,27,0.20), inset 0 1px 0 rgba(255,255,255,0.18);
           transition:transform 0.22s, box-shadow 0.22s;
           cursor:default;
         }
+        /* Soft white sheen in corner — gives the red card movement */
+        .adm-stat-card-red::after {
+          content:''; position:absolute; top:-40px; right:-40px;
+          width:180px; height:180px; border-radius:50%;
+          background:radial-gradient(circle, rgba(255,255,255,0.16) 0%, rgba(255,255,255,0.06) 45%, transparent 70%);
+          pointer-events:none;
+        }
         .adm-stat-card-red:hover {
-          transform:translateY(-2px);
-          box-shadow:0 8px 24px rgba(229,37,27,0.4), 0 32px 80px rgba(229,37,27,0.24), inset 0 1px 0 rgba(255,255,255,0.18);
+          transform:translateY(-3px);
+          box-shadow:0 8px 24px rgba(229,37,27,0.42), 0 32px 80px rgba(229,37,27,0.28), inset 0 1px 0 rgba(255,255,255,0.22);
         }
         /* Icon inside the red card flips to a translucent white plate */
         .adm-stat-icon-red {
@@ -129,21 +144,29 @@ function useAdminStyles() {
           font-variant-numeric:tabular-nums; letter-spacing:-0.05px;
         }
 
-        /* Section title block (replaces SectionLabel) */
+        /* Section title block — bigger, bolder, with a real subhead "vibe" */
         .adm-section-title {
-          display:flex; align-items:center; gap:9px; margin-bottom:14px;
+          display:flex; align-items:center; gap:10px;
         }
         .adm-section-title h2 {
-          font-size:15.5px; font-weight:700; color:#0f0f13; letter-spacing:-0.25px;
+          font-size:18px; font-weight:800; color:#0f0f13; letter-spacing:-0.4px;
         }
         .adm-section-count {
-          font-size:11px; font-weight:700; color:#9595a4;
-          background:#f4f4f6; border:1px solid #ececef;
-          padding:2px 8px; border-radius:100px;
+          font-size:11.5px; font-weight:700; color:#e5251b;
+          background:#fff5f5; border:1px solid #fecaca;
+          padding:2px 9px; border-radius:100px;
           font-variant-numeric:tabular-nums;
         }
         .adm-section-sub {
-          font-size:12.5px; color:#9595a4; font-weight:500;
+          font-size:14px; color:#4a4a58; font-weight:500; line-height:1.55;
+          margin-top:5px;
+        }
+        /* Card-embedded section header sits at the top of a SectionCard */
+        .adm-section-cardhdr {
+          padding:20px 26px;
+          border-bottom:1px solid #e6e6ec;
+          display:flex; align-items:flex-start; justify-content:space-between; gap:14px;
+          background:linear-gradient(180deg, #ffffff 0%, #fafafc 100%);
         }
 
         /* Live indicator dot pulses softly */
@@ -262,28 +285,30 @@ function Avatar({ src, name, size = 30 }) {
 
 /* ── Stat card — solid red variant + light variant ──────────────────────── */
 function Stat({ label, value, sub, accent, alert, icon, delta, variant = 'light' }) {
-  // variant: 'light' (white card) | 'red' (full red gradient hero card)
+  // variant: 'light' (white gradient card) | 'red' (hero red gradient)
   if (variant === 'red') {
     return (
       <div className="adm-stat-card-red">
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 18 }}>
-          <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.09em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.78)' }}>{label}</p>
-          {icon && <div className="adm-stat-icon-red">{icon}</div>}
+        <div style={{ position: 'relative', zIndex: 1 }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 22 }}>
+            <p style={{ fontSize: 11.5, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.82)' }}>{label}</p>
+            {icon && <div className="adm-stat-icon-red">{icon}</div>}
+          </div>
+          <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, flexWrap: 'wrap' }}>
+            <p className="num" style={{ fontSize: 40, fontWeight: 800, letterSpacing: '-1.8px', color: '#fff', lineHeight: 1 }}>{value}</p>
+            {delta && (
+              <span className="adm-delta" style={{
+                color: '#fff',
+                background: 'rgba(255,255,255,0.18)',
+                border: '1px solid rgba(255,255,255,0.28)',
+              }}>
+                <span style={{ fontSize: 9 }}>{delta.tone === 'up' ? '▲' : delta.tone === 'down' ? '▼' : '·'}</span>
+                {delta.label}
+              </span>
+            )}
+          </div>
+          {sub && <p style={{ fontSize: 14.5, color: 'rgba(255,255,255,0.85)', fontWeight: 500, marginTop: 16, lineHeight: 1.5, letterSpacing: '-0.1px' }}>{sub}</p>}
         </div>
-        <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, flexWrap: 'wrap' }}>
-          <p className="num" style={{ fontSize: 36, fontWeight: 800, letterSpacing: '-1.6px', color: '#fff', lineHeight: 1 }}>{value}</p>
-          {delta && (
-            <span className="adm-delta" style={{
-              color: '#fff',
-              background: 'rgba(255,255,255,0.18)',
-              border: '1px solid rgba(255,255,255,0.28)',
-            }}>
-              <span style={{ fontSize: 9 }}>{delta.tone === 'up' ? '▲' : delta.tone === 'down' ? '▼' : '·'}</span>
-              {delta.label}
-            </span>
-          )}
-        </div>
-        {sub && <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.78)', fontWeight: 500, marginTop: 14, lineHeight: 1.55 }}>{sub}</p>}
       </div>
     )
   }
@@ -297,24 +322,26 @@ function Stat({ label, value, sub, accent, alert, icon, delta, variant = 'light'
         '--adm-accent': accentVar,
         ...(alert ? { borderColor: 'rgba(229,37,27,0.22)', background: '#fff8f8' } : {}),
       }}>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 18 }}>
-        <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.09em', textTransform: 'uppercase', color: C.text3 }}>{label}</p>
-        {icon && <div className="adm-stat-icon">{icon}</div>}
+      <div style={{ position: 'relative', zIndex: 1 }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 22 }}>
+          <p style={{ fontSize: 11.5, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: C.text3 }}>{label}</p>
+          {icon && <div className="adm-stat-icon">{icon}</div>}
+        </div>
+        <div style={{ display: 'flex', alignItems: 'baseline', gap: 9, flexWrap: 'wrap' }}>
+          <p className="num" style={{ fontSize: 36, fontWeight: 800, letterSpacing: '-1.6px', color: col, lineHeight: 1 }}>{value}</p>
+          {delta && (
+            <span className="adm-delta" style={{
+              color: delta.tone === 'up' ? C.green : delta.tone === 'down' ? C.red : C.text2,
+              background: delta.tone === 'up' ? C.greenBg : delta.tone === 'down' ? C.redBg : '#f4f4f6',
+              border: `1px solid ${delta.tone === 'up' ? C.greenBdr : delta.tone === 'down' ? C.redBdr : C.border}`,
+            }}>
+              <span style={{ fontSize: 9 }}>{delta.tone === 'up' ? '▲' : delta.tone === 'down' ? '▼' : '·'}</span>
+              {delta.label}
+            </span>
+          )}
+        </div>
+        {sub && <p style={{ fontSize: 14.5, color: alert ? C.red : C.text2, fontWeight: 500, marginTop: 14, lineHeight: 1.5, letterSpacing: '-0.1px' }}>{sub}</p>}
       </div>
-      <div style={{ display: 'flex', alignItems: 'baseline', gap: 9, flexWrap: 'wrap' }}>
-        <p className="num" style={{ fontSize: 32, fontWeight: 800, letterSpacing: '-1.4px', color: col, lineHeight: 1 }}>{value}</p>
-        {delta && (
-          <span className="adm-delta" style={{
-            color: delta.tone === 'up' ? C.green : delta.tone === 'down' ? C.red : C.text2,
-            background: delta.tone === 'up' ? C.greenBg : delta.tone === 'down' ? C.redBg : '#f4f4f6',
-            border: `1px solid ${delta.tone === 'up' ? C.greenBdr : delta.tone === 'down' ? C.redBdr : C.border}`,
-          }}>
-            <span style={{ fontSize: 9 }}>{delta.tone === 'up' ? '▲' : delta.tone === 'down' ? '▼' : '·'}</span>
-            {delta.label}
-          </span>
-        )}
-      </div>
-      {sub && <p style={{ fontSize: 13, color: alert ? C.red : C.text2, fontWeight: 500, marginTop: 12, lineHeight: 1.55 }}>{sub}</p>}
     </div>
   )
 }
@@ -338,6 +365,27 @@ function SectionHeader({ title, count, sub, right }) {
 /* Backwards-compat: keep SectionLabel as an alias mapping to SectionHeader title */
 function SectionLabel({ children }) {
   return <SectionHeader title={children} />
+}
+
+/* ── SectionCard — title sits INSIDE the card header, body below ────────── */
+function SectionCard({ title, count, sub, right, children, padBody = 0 }) {
+  return (
+    <div style={{ ...CARD, overflow: 'hidden' }}>
+      <div className="adm-section-cardhdr">
+        <div style={{ minWidth: 0 }}>
+          <div className="adm-section-title">
+            <h2>{title}</h2>
+            {count != null && <span className="adm-section-count">{count}</span>}
+          </div>
+          {sub && <p className="adm-section-sub">{sub}</p>}
+        </div>
+        {right && <div style={{ flexShrink: 0 }}>{right}</div>}
+      </div>
+      <div style={{ padding: padBody === 0 ? 0 : padBody }}>
+        {children}
+      </div>
+    </div>
+  )
 }
 
 /* ── Empty state ─────────────────────────────────────────────────────────── */
@@ -439,6 +487,114 @@ function ColHeader({ cols }) {
       {cols.map(c => (
         <div key={c.l} style={{ fontSize: 10.5, fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: C.text3, textAlign: c.r ? 'right' : 'left' }}>{c.l}</div>
       ))}
+    </div>
+  )
+}
+
+/* ── Tabbed Breakdowns card (plan / source / country in one widget) ────── */
+const BREAKDOWN_TABS = [
+  { key: 'plan',    label: 'Plan' },
+  { key: 'source',  label: 'Source' },
+  { key: 'country', label: 'Country' },
+]
+
+function BreakdownsCard({ plans, sources, countries, totalForPlan, totalForUtm, countryTotal, unknownCount, knownCountriesLen }) {
+  const [tab, setTab] = useState('plan')
+
+  const tabSubs = {
+    plan:    'Active subscriptions split by tier',
+    source:  'Where signups came from (UTM + direct)',
+    country: 'Resolved from signup IP at sign-up time',
+  }
+  const counts = {
+    plan: plans.length,
+    source: sources.length,
+    country: countries.filter(c => !c.unknown).length,
+  }
+
+  return (
+    <div style={{ ...CARD, overflow: 'hidden' }}>
+      <div className="adm-section-cardhdr">
+        <div style={{ minWidth: 0, flex: 1 }}>
+          <div className="adm-section-title">
+            <h2>Breakdown</h2>
+            <span className="adm-section-count">{counts[tab]}</span>
+          </div>
+          <p className="adm-section-sub">{tabSubs[tab]}</p>
+        </div>
+      </div>
+
+      {/* Tab strip */}
+      <div style={{ display: 'flex', gap: 6, padding: '12px 18px 0', borderBottom: `1px solid ${C.border}` }}>
+        {BREAKDOWN_TABS.map(t => {
+          const active = tab === t.key
+          return (
+            <button key={t.key} onClick={() => setTab(t.key)} style={{
+              padding: '8px 14px',
+              fontSize: 13, fontWeight: 600,
+              fontFamily: 'inherit',
+              color: active ? C.red : C.text3,
+              background: 'transparent', border: 'none', cursor: 'pointer',
+              borderBottom: `2px solid ${active ? C.red : 'transparent'}`,
+              marginBottom: -1,
+              transition: 'color 0.15s, border-color 0.15s',
+            }}>
+              {t.label}
+            </button>
+          )
+        })}
+      </div>
+
+      {/* Tab body */}
+      <div style={{ padding: '20px 24px' }}>
+        {tab === 'plan' && (
+          plans.length === 0
+            ? <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.6 }}>No subscriptions yet.</p>
+            : plans.map(row => (
+                <BarRow key={row.plan}
+                  label={planLabel(row.plan)}
+                  count={row.count}
+                  total={totalForPlan}
+                  accent={planBarAccent(row.plan)}
+                  muted={(row.plan || 'free') === 'free'}
+                />
+              ))
+        )}
+        {tab === 'source' && (
+          sources.length === 0
+            ? <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.6 }}>Nothing tracked yet. Share a UTM-tagged link to start collecting attribution.</p>
+            : sources.map((row, i) => (
+                <BarRow key={row.source}
+                  label={row.source}
+                  count={row.count}
+                  total={totalForUtm}
+                  accent={i % 2 === 0 ? C.green : C.amber}
+                />
+              ))
+        )}
+        {tab === 'country' && (
+          countryTotal === 0
+            ? <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.6 }}>Country data is collected automatically on each new signup.</p>
+            : <>
+                {countries.slice(0, 12).map(row => (
+                  <BarRow
+                    key={row.country}
+                    label={row.country}
+                    count={row.count}
+                    total={countryTotal}
+                    accent={C.red}
+                    prefix={row.unknown ? '🌍' : (COUNTRY_FLAGS[row.country] || '🌍')}
+                    muted={!!row.unknown}
+                  />
+                ))}
+                {unknownCount > 0 && knownCountriesLen > 0 && (
+                  <p style={{ fontSize: 11.5, color: C.text3, marginTop: 8, lineHeight: 1.55 }}>
+                    Country detection started recently. {unknownCount.toLocaleString()} existing {unknownCount === 1 ? 'user' : 'users'} signed up before tracking began.
+                  </p>
+                )}
+              </>
+        )}
+      </div>
     </div>
   )
 }
@@ -614,132 +770,67 @@ export default function Admin() {
         />
       </div>
 
-      {/* ── Two-column body ───────────────────────────────────────────────── */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1.65fr 1fr', gap: 20, marginBottom: 36 }}>
+      {/* ── Two-column body: Recent signups | Tabbed Breakdowns ────────── */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1.65fr 1fr', gap: 20, marginBottom: 40 }}>
 
-        {/* LEFT — Recent signups */}
-        <div>
-          <SectionHeader title="Recent signups" count={data.recent_signups.length} sub="The 40 most recent accounts" />
-          <div style={{ ...CARD, overflow: 'hidden' }}>
-            <ColHeader cols={SIGNUP_COLS} />
-
-            {data.recent_signups.length === 0
-              ? <EmptyState icon={Icons.users}>No signups yet. New accounts will appear here as soon as they OAuth in.</EmptyState>
-              : signupSlice.map((u, i) => {
-                  const name  = u.display_name || u.channel_name || u.email.split('@')[0]
-                  const pic   = u.profile_picture || u.channel_thumbnail
-                  const last  = i === signupSlice.length - 1
-                  return (
-                    <div key={u.email + i} className="adm-row" style={{
-                      display: 'grid', gridTemplateColumns: SIGNUP_COLS.map(c => c.w).join(' '),
-                      padding: '13px 24px', alignItems: 'center',
-                      borderBottom: last ? 'none' : `1px solid ${C.border}`,
-                    }}>
-                      {/* User cell */}
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 11, minWidth: 0 }}>
-                        <Avatar src={pic} name={name} size={30} />
-                        <div style={{ minWidth: 0 }}>
-                          <p style={{ fontSize: 13.5, fontWeight: 600, color: C.text1, letterSpacing: '-0.15px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{name}</p>
-                          <p style={{ fontSize: 11.5, color: C.text3, marginTop: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{u.email}</p>
-                        </div>
+        {/* LEFT — Recent signups, title now lives inside the card header */}
+        <SectionCard
+          title="Recent signups"
+          count={data.recent_signups.length}
+          sub="The 40 most recent accounts that completed sign-up"
+        >
+          <ColHeader cols={SIGNUP_COLS} />
+          {data.recent_signups.length === 0
+            ? <EmptyState icon={Icons.users}>No signups yet. New accounts will appear here as soon as they OAuth in.</EmptyState>
+            : signupSlice.map((u, i) => {
+                const name  = u.display_name || u.channel_name || u.email.split('@')[0]
+                const pic   = u.profile_picture || u.channel_thumbnail
+                const last  = i === signupSlice.length - 1
+                return (
+                  <div key={u.email + i} className="adm-row" style={{
+                    display: 'grid', gridTemplateColumns: SIGNUP_COLS.map(c => c.w).join(' '),
+                    padding: '13px 26px', alignItems: 'center',
+                    borderBottom: last ? 'none' : `1px solid ${C.border}`,
+                  }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 11, minWidth: 0 }}>
+                      <Avatar src={pic} name={name} size={30} />
+                      <div style={{ minWidth: 0 }}>
+                        <p style={{ fontSize: 13.5, fontWeight: 600, color: C.text1, letterSpacing: '-0.15px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{name}</p>
+                        <p style={{ fontSize: 11.5, color: C.text3, marginTop: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{u.email}</p>
                       </div>
-                      <div><PlanBadge plan={u.plan} /></div>
-                      <div style={{ fontSize: 12, color: u.utm_source ? C.text2 : C.text3, fontWeight: u.utm_source ? 500 : 400, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                        {u.utm_source || '(direct)'}
-                      </div>
-                      <div className="num" style={{ fontSize: 12, color: C.text3, textAlign: 'right' }}>{relTime(u.created_at)}</div>
                     </div>
-                  )
-                })
-            }
-            <Pager page={signupPage} total={data.recent_signups.length} onPage={setSignupPage} />
-          </div>
-        </div>
+                    <div><PlanBadge plan={u.plan} /></div>
+                    <div style={{ fontSize: 12, color: u.utm_source ? C.text2 : C.text3, fontWeight: u.utm_source ? 500 : 400, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                      {u.utm_source || '(direct)'}
+                    </div>
+                    <div className="num" style={{ fontSize: 12, color: C.text3, textAlign: 'right' }}>{relTime(u.created_at)}</div>
+                  </div>
+                )
+              })
+          }
+          <Pager page={signupPage} total={data.recent_signups.length} onPage={setSignupPage} />
+        </SectionCard>
 
-        {/* RIGHT — Plan + Source breakdowns */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-
-          {/* By plan */}
-          <div>
-            <SectionHeader title="By plan" sub="Active subscriptions split by tier" />
-            <div style={{ ...CARD, padding: '22px 24px' }}>
-              {data.plan_breakdown.length === 0
-                ? <p style={{ fontSize: 13, color: C.text3 }}>No subscriptions yet.</p>
-                : data.plan_breakdown.map(row => (
-                    <BarRow key={row.plan}
-                      label={planLabel(row.plan)}
-                      count={row.count}
-                      total={totalForPlan}
-                      accent={planBarAccent(row.plan)}
-                      muted={(row.plan || 'free') === 'free'}
-                    />
-                  ))
-              }
-            </div>
-          </div>
-
-          {/* By source */}
-          <div>
-            <SectionHeader title="By source" sub="Where signups came from (UTM-tagged + direct)" />
-            <div style={{ ...CARD, padding: '22px 24px' }}>
-              {data.utm_breakdown.length === 0
-                ? <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.6 }}>Nothing tracked yet. Share a UTM-tagged link to start collecting attribution.</p>
-                : data.utm_breakdown.map((row, i) => (
-                    <BarRow key={row.source}
-                      label={row.source}
-                      count={row.count}
-                      total={totalForUtm}
-                      accent={UTM_ACCENTS[i % UTM_ACCENTS.length]}
-                    />
-                  ))
-              }
-            </div>
-          </div>
-
-        </div>
-      </div>
-
-      {/* ── Country breakdown — always visible ───────────────────────────── */}
-      <div style={{ marginBottom: 36 }}>
-        <SectionHeader
-          title="Users by country"
-          count={(data.country_breakdown || []).length || null}
-          sub="Resolved from signup IP via ip-api.com"
+        {/* RIGHT — Tabbed Breakdowns (plan / source / country in one card) */}
+        <BreakdownsCard
+          plans={data.plan_breakdown}
+          sources={data.utm_breakdown}
+          countries={countryRows}
+          totalForPlan={totalForPlan}
+          totalForUtm={totalForUtm}
+          countryTotal={countryTotal}
+          unknownCount={unknownCount}
+          knownCountriesLen={knownCountries.length}
         />
-        <div style={{ ...CARD, padding: '22px 24px' }}>
-          {countryTotal === 0 ? (
-            <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.6 }}>Country data is collected automatically on each new signup.</p>
-          ) : (
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0 40px' }}>
-              {countryRows.map(row => (
-                <BarRow
-                  key={row.country}
-                  label={row.country}
-                  count={row.count}
-                  total={countryTotal}
-                  accent={C.green}
-                  prefix={row.unknown ? '🌍' : (COUNTRY_FLAGS[row.country] || '🌍')}
-                  muted={!!row.unknown}
-                />
-              ))}
-            </div>
-          )}
-          {unknownCount > 0 && knownCountries.length > 0 && (
-            <p style={{ fontSize: 11.5, color: C.text3, marginTop: 16, lineHeight: 1.6 }}>
-              ✦ Country detection started recently — {unknownCount.toLocaleString()} existing {unknownCount === 1 ? 'user' : 'users'} were signed up before tracking began.
-            </p>
-          )}
-        </div>
       </div>
 
       {/* ── Top users by monthly usage (top 10, 5 per page) ──────────────── */}
-      <div style={{ marginBottom: 36 }}>
-        <SectionHeader
+      <div style={{ marginBottom: 40 }}>
+        <SectionCard
           title="Top users this month"
           count={data.top_users.length}
           sub="Ranked by AI analyses run this billing cycle"
-        />
-        <div style={{ ...CARD, overflow: 'hidden' }}>
+        >
           <ColHeader cols={TOP_COLS} />
           {data.top_users.length === 0
             ? <EmptyState icon={Icons.bolt}>Nobody has run an analysis this month yet. The leaderboard fills as people use the product.</EmptyState>
@@ -750,7 +841,7 @@ export default function Admin() {
                 return (
                   <div key={u.channel_id + i} className="adm-row" style={{
                     display: 'grid', gridTemplateColumns: TOP_COLS.map(c => c.w).join(' '),
-                    padding: '13px 24px', alignItems: 'center',
+                    padding: '13px 26px', alignItems: 'center',
                     borderBottom: last ? 'none' : `1px solid ${C.border}`,
                   }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 11, minWidth: 0 }}>
@@ -775,7 +866,7 @@ export default function Admin() {
               })
           }
           <Pager page={topPage} total={data.top_users.length} onPage={setTopPage} pageSize={PAGE_SIZE_TOP} />
-        </div>
+        </SectionCard>
       </div>
 
       {/* ── Feature requests ─────────────────────────────────────────────── */}
@@ -801,19 +892,19 @@ export default function Admin() {
 
         return (
           <div style={{ marginBottom: 28 }}>
-            <SectionHeader
+            <SectionCard
               title="Feature requests"
               count={all.length}
               sub="Submitted via Settings or the /feedback share link"
               right={
-                <span style={{ fontSize: 11, color: C.text3, fontWeight: 500 }}>
-                  Share link: <code style={{ background: '#f4f4f6', border: `1px solid ${C.border}`, padding: '1px 6px', borderRadius: 4, fontSize: 11 }}>/feedback</code>
+                <span style={{ fontSize: 11.5, color: C.text3, fontWeight: 500 }}>
+                  Share link: <code style={{ background: '#f4f4f6', border: `1px solid ${C.border}`, padding: '2px 7px', borderRadius: 6, fontSize: 11.5, color: C.text2 }}>/feedback</code>
                 </span>
               }
-            />
+            >
 
             {/* Filter chips */}
-            <div style={{ display: 'flex', gap: 7, marginBottom: 12, flexWrap: 'wrap' }}>
+            <div style={{ display: 'flex', gap: 7, padding: '14px 24px', flexWrap: 'wrap', borderBottom: `1px solid ${C.border}`, background: '#fafafc' }}>
               {FILTERS.map(f => {
                 const active = frFilter === f.key
                 return (
@@ -843,7 +934,7 @@ export default function Admin() {
               })}
             </div>
 
-            <div style={{ ...CARD, overflow: 'hidden' }}>
+            <div>
               {filtered.length === 0 ? (
                 <EmptyState icon={Icons.inbox}>
                   {frFilter === 'all'
@@ -905,6 +996,7 @@ export default function Admin() {
                 })
               )}
             </div>
+            </SectionCard>
           </div>
         )
       })()}
