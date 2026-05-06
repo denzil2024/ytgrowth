@@ -468,6 +468,12 @@ const FREE_TOOL_GROUPS = [
     ],
   },
   {
+    label: 'Research',
+    items: [
+      { href: '/tools/youtube-channel-stats-checker', label: 'Channel Stats Checker', desc: 'Look up any channel\'s public stats' },
+    ],
+  },
+  {
     label: 'Thumbnails',
     items: [
       { href: '/tools/youtube-thumbnail-downloader', label: 'Thumbnail Downloader', desc: 'Download any YouTube thumbnail in HD' },
@@ -572,7 +578,7 @@ function FreeToolsNavDropdown() {
     <MegaMenu
       trigger="Free tools"
       groups={FREE_TOOL_GROUPS}
-      columns={2}
+      columns={3}
       viewAllHref="/tools/youtube-money-calculator"
       viewAllLabel="Browse the tool library"
     />
@@ -944,6 +950,9 @@ export default function Landing() {
           </a>
           <a href="/tools/youtube-subscriber-money-calculator" onClick={() => setMobileMenuOpen(false)} className="ytg-mm-link">
             Subscriber Money Calculator
+          </a>
+          <a href="/tools/youtube-channel-stats-checker" onClick={() => setMobileMenuOpen(false)} className="ytg-mm-link">
+            Channel Stats Checker
           </a>
           <a href="/tools/youtube-thumbnail-downloader" onClick={() => setMobileMenuOpen(false)} className="ytg-mm-link">
             YouTube Thumbnail Downloader

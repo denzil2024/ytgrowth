@@ -15,6 +15,7 @@ import Outliers from './pages/features/Outliers'
 import YoutubeMoneyCalculator from './pages/tools/YoutubeMoneyCalculator'
 import YoutubeThumbnailDownloader from './pages/tools/YoutubeThumbnailDownloader'
 import YoutubeSubscriberMoneyCalculator from './pages/tools/YoutubeSubscriberMoneyCalculator'
+import YoutubeChannelStatsChecker from './pages/tools/YoutubeChannelStatsChecker'
 
 function App() {
   return (
@@ -36,6 +37,7 @@ function App() {
         <Route path="/tools/youtube-money-calculator"            element={<YoutubeMoneyCalculator />} />
         <Route path="/tools/youtube-thumbnail-downloader"        element={<YoutubeThumbnailDownloader />} />
         <Route path="/tools/youtube-subscriber-money-calculator" element={<YoutubeSubscriberMoneyCalculator />} />
+        <Route path="/tools/youtube-channel-stats-checker"       element={<YoutubeChannelStatsChecker />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
