@@ -842,6 +842,9 @@ export default function Landing() {
           <a href="/tools/youtube-money-calculator" onClick={() => setMobileMenuOpen(false)} className="ytg-mm-link">
             YouTube Money Calculator
           </a>
+          <a href="/tools/youtube-thumbnail-downloader" onClick={() => setMobileMenuOpen(false)} className="ytg-mm-link">
+            YouTube Thumbnail Downloader
+          </a>
         </div>
 
         {/* Explore */}
