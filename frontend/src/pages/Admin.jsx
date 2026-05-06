@@ -62,7 +62,7 @@ function useAdminStyles() {
         .adm p,.adm span,.adm div,.adm h1,.adm h2,.adm h3 { margin:0; }
         .adm .num { font-variant-numeric:tabular-nums; }
 
-        /* Stat card with subtle gradient accent line at the top edge */
+        /* Stat card with always-visible red top accent + branded icon */
         .adm-stat-card {
           background:#fff; border:1px solid #e6e6ec; border-radius:18px;
           padding:22px 24px 20px;
@@ -72,23 +72,28 @@ function useAdminStyles() {
         }
         .adm-stat-card::before {
           content:''; position:absolute; top:0; left:0; right:0; height:3px;
-          background:linear-gradient(90deg, var(--adm-accent, #e5251b) 0%, var(--adm-accent, #e5251b) 40%, transparent 100%);
-          opacity:0.0; transition:opacity 0.22s;
+          background:linear-gradient(90deg, var(--adm-accent, #e5251b) 0%, var(--adm-accent, #e5251b) 55%, rgba(229,37,27,0) 100%);
+          opacity:0.85; transition:opacity 0.22s;
         }
         .adm-stat-card:hover {
-          box-shadow:0 4px 12px rgba(0,0,0,0.08),0 16px 40px rgba(0,0,0,0.08);
+          box-shadow:0 4px 12px rgba(0,0,0,0.08),0 16px 40px rgba(0,0,0,0.10);
           transform:translateY(-2px); border-color:#dadde3;
         }
-        .adm-stat-card:hover::before { opacity:0.85; }
+        .adm-stat-card:hover::before { opacity:1; }
 
-        /* Tiny corner-icon badge inside a stat card */
+        /* Branded red gradient icon badge (matches paywall + auth modal) */
         .adm-stat-icon {
-          width:30px; height:30px; border-radius:9px;
+          width:34px; height:34px; border-radius:10px;
           display:flex; align-items:center; justify-content:center;
-          background:#f4f4f7; color:#9595a4;
-          transition:background 0.18s, color 0.18s;
+          background:linear-gradient(180deg, #e5251b 0%, #a50f07 100%);
+          color:#ffffff;
+          box-shadow:0 4px 10px rgba(229,37,27,0.32), inset 0 1px 0 rgba(255,255,255,0.18);
+          transition:transform 0.18s, box-shadow 0.18s;
         }
-        .adm-stat-card:hover .adm-stat-icon { background:rgba(229,37,27,0.10); color:#e5251b; }
+        .adm-stat-card:hover .adm-stat-icon {
+          transform:scale(1.05);
+          box-shadow:0 6px 14px rgba(229,37,27,0.42), inset 0 1px 0 rgba(255,255,255,0.22);
+        }
 
         /* Delta chip — replaces inline trend text */
         .adm-delta {
@@ -295,7 +300,7 @@ function EmptyState({ icon, children }) {
 /* ── Stat-card icons ─────────────────────────────────────────────────────── */
 const Icons = {
   users: (
-    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.85" strokeLinecap="round" strokeLinejoin="round">
       <circle cx="5" cy="5" r="2.5"/>
       <path d="M1 12c0-2.2 1.8-4 4-4s4 1.8 4 4"/>
       <circle cx="10.5" cy="5.5" r="2"/>
@@ -303,20 +308,20 @@ const Icons = {
     </svg>
   ),
   paid: (
-    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.85" strokeLinecap="round" strokeLinejoin="round">
       <rect x="1.5" y="3" width="11" height="8" rx="1.5"/>
       <path d="M1.5 6h11"/>
       <path d="M3.5 9h2"/>
     </svg>
   ),
   trend: (
-    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.85" strokeLinecap="round" strokeLinejoin="round">
       <polyline points="1.5,9.5 5.5,5.5 8,8 12.5,3.5"/>
       <polyline points="9,3.5 12.5,3.5 12.5,7"/>
     </svg>
   ),
   bolt: (
-    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.85" strokeLinecap="round" strokeLinejoin="round">
       <path d="M7.5 1L2 8h4l-.5 5L11 6H7l.5-5z"/>
     </svg>
   ),

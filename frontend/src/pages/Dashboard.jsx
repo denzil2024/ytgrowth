@@ -47,10 +47,16 @@ function useDashboardStyles() {
         100% { opacity: 1; transform: scale(1); }
       }
 
-      ::-webkit-scrollbar       { width: 4px }
+      ::-webkit-scrollbar       { width: 12px; height: 12px }
       ::-webkit-scrollbar-track { background: transparent }
-      ::-webkit-scrollbar-thumb { background: #e0e0e6; border-radius: 4px }
-      ::-webkit-scrollbar-thumb:hover { background: #c8c8d0 }
+      ::-webkit-scrollbar-thumb {
+        background-color: rgba(10,10,15,0.28);
+        border-radius: 10px;
+        border: 3px solid transparent;
+        background-clip: content-box;
+        min-height: 48px;
+      }
+      ::-webkit-scrollbar-thumb:hover { background-color: rgba(10,10,15,0.48); background-clip: content-box; }
 
       .ytg-stat-card {
         background: #ffffff;
