@@ -479,6 +479,55 @@ function FeaturesNavDropdown() {
   )
 }
 
+/* ─── Free tools dropdown. Mirrors FeaturesNavDropdown ─────────────────── */
+const FREE_TOOL_NAV_ITEMS = [
+  { href: '/tools/youtube-money-calculator',     label: 'YouTube Money Calculator',     desc: 'Estimate channel earnings by niche + audience country' },
+  { href: '/tools/youtube-thumbnail-downloader', label: 'YouTube Thumbnail Downloader', desc: 'Download any video thumbnail in HD, SD, or low-res' },
+]
+
+function FreeToolsNavDropdown() {
+  const [open, setOpen] = useState(false)
+  return (
+    <div
+      onMouseEnter={() => setOpen(true)}
+      onMouseLeave={() => setOpen(false)}
+      style={{ position: 'relative' }}
+    >
+      <a href={FREE_TOOL_NAV_ITEMS[0].href} className="ytg-nav-link" style={{ display: 'inline-flex', alignItems: 'center', gap: 4, cursor: 'pointer' }}>
+        Free tools
+        <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" style={{ transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.18s' }}>
+          <path d="M2 3.5l3 3 3-3"/>
+        </svg>
+      </a>
+      {open && (
+        <>
+          <div style={{ position: 'absolute', top: '100%', left: -20, width: 360, height: 12 }} />
+          <div style={{
+            position: 'absolute', top: 'calc(100% + 8px)', left: -20,
+            background: '#ffffff', border: '1px solid rgba(10,10,15,0.09)', borderRadius: 14,
+            boxShadow: '0 4px 16px rgba(0,0,0,0.10), 0 24px 60px rgba(0,0,0,0.13)',
+            padding: 8, minWidth: 340,
+            animation: 'fadeUp 0.16s ease both',
+          }}>
+            {FREE_TOOL_NAV_ITEMS.map((item, i) => (
+              <a key={i} href={item.href} style={{
+                display: 'block', padding: '11px 14px', borderRadius: 9,
+                textDecoration: 'none', transition: 'background 0.12s',
+              }}
+                onMouseEnter={e => e.currentTarget.style.background = '#f6f6f9'}
+                onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+              >
+                <p style={{ fontSize: 14, fontWeight: 700, color: '#0a0a0f', letterSpacing: '-0.2px', marginBottom: 2 }}>{item.label}</p>
+                <p style={{ fontSize: 12.5, color: 'rgba(10,10,15,0.55)', lineHeight: 1.45 }}>{item.desc}</p>
+              </a>
+            ))}
+          </div>
+        </>
+      )}
+    </div>
+  )
+}
+
 /* ─── Section badge ─────────────────────────────────────────────────────── */
 function Badge({ children }) {
   return (
@@ -783,7 +832,7 @@ export default function Landing() {
         {!isMobile && (
           <div style={{ display: 'flex', gap: 30, alignItems: 'center' }}>
             <FeaturesNavDropdown />
-            <a href="/tools/youtube-money-calculator" className="ytg-nav-link">Free tools</a>
+            <FreeToolsNavDropdown />
             {['How it works', 'Pricing', 'FAQ'].map((l, i) => (
               <a key={i} href={`#${l.toLowerCase().replace(/ /g, '-')}`} className="ytg-nav-link">{l}</a>
             ))}
