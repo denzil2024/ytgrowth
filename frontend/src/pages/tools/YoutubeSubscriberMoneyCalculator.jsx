@@ -66,12 +66,16 @@ function useGlobalStyles() {
       }
       *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
       html { scroll-behavior: smooth; }
-      body { background: var(--ytg-bg); color: var(--ytg-text); font-family: 'Inter', system-ui, sans-serif; overflow-x: hidden; }
-      ::-webkit-scrollbar { width: 5px }
+      body { background: var(--ytg-bg); color: var(--ytg-text); font-family: 'Inter', system-ui, sans-serif; overflow-x: hidden;  scrollbar-width: auto; scrollbar-color: rgba(10,10,15,0.28) transparent; }
+      ::-webkit-scrollbar { width: 12px; height: 12px }
       ::-webkit-scrollbar-track { background: transparent }
-      ::-webkit-scrollbar-thumb { background: rgba(10,10,15,0.16); border-radius: 10px }
-
-      @keyframes smcFadeUp { from { opacity:0; transform:translateY(18px) } to { opacity:1; transform:translateY(0) } }
+      ::-webkit-scrollbar-thumb {
+        background-color: rgba(10,10,15,0.28);
+        border-radius: 10px;
+        border: 3px solid transparent;
+        background-clip: content-box;
+      }
+      ::-webkit-scrollbar-thumb:hover { background-color: rgba(10,10,15,0.48); background-clip: content-box; }@keyframes smcFadeUp { from { opacity:0; transform:translateY(18px) } to { opacity:1; transform:translateY(0) } }
 
       .smc-btn {
         display: inline-flex; align-items: center; justify-content: center; gap: 8px;

@@ -42,17 +42,23 @@ function useGlobalStyles() {
       }
       *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
       html { scroll-behavior: smooth; }
-      body { background: var(--ytg-bg); color: var(--ytg-text); font-family: 'Inter', system-ui, sans-serif; overflow-x: hidden; transition: background 0.3s, color 0.3s; }
+      body { background: var(--ytg-bg); color: var(--ytg-text); font-family: 'Inter', system-ui, sans-serif; overflow-x: hidden; transition: background 0.3s, color 0.3s;  scrollbar-width: auto; scrollbar-color: rgba(10,10,15,0.28) transparent; }
       @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.35} }
       @keyframes fadeUp { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:translateY(0)} }
       @keyframes floatA { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
       @keyframes floatB { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-7px)} }
       .section-animate { opacity: 0; transform: translateY(24px); transition: opacity 0.7s cubic-bezier(0.16,1,0.3,1), transform 0.7s cubic-bezier(0.16,1,0.3,1); }
       .section-animate.visible { opacity: 1; transform: translateY(0); }
-      ::-webkit-scrollbar { width: 8px }
-      ::-webkit-scrollbar-track { background: rgba(10,10,15,0.04) }
-      ::-webkit-scrollbar-thumb { background: rgba(10,10,15,0.18); border-radius: 10px; min-height: 48px }
-      ::-webkit-scrollbar-thumb:hover { background: rgba(10,10,15,0.28) }
+      ::-webkit-scrollbar { width: 12px; height: 12px }
+      ::-webkit-scrollbar-track { background: transparent }
+      ::-webkit-scrollbar-thumb {
+        background-color: rgba(10,10,15,0.28);
+        border-radius: 10px;
+        border: 3px solid transparent;
+        background-clip: content-box;
+        min-height: 48px;
+      }
+      ::-webkit-scrollbar-thumb:hover { background-color: rgba(10,10,15,0.48); background-clip: content-box; }
 
       .ytg-btn-primary {
         display: inline-flex; align-items: center; gap: 10px;
