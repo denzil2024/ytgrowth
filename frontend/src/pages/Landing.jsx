@@ -479,7 +479,8 @@ const FREE_TOOL_NAV_ITEMS = FREE_TOOL_GROUPS.flatMap(g => g.items)
 /* ─── Mega-menu component — VidIQ pattern: clean titles, no descriptions ─ */
 function MegaMenu({ trigger, groups, viewAllHref, viewAllLabel, columns = 3, panelLeft = -24 }) {
   const [open, setOpen] = useState(false)
-  const panelWidth = columns === 3 ? 540 : 380
+  // Generous widths so item titles never wrap — each column gets ~210px of real estate
+  const panelWidth = columns === 3 ? 780 : 540
   return (
     <div
       onMouseEnter={() => setOpen(true)}
@@ -505,12 +506,12 @@ function MegaMenu({ trigger, groups, viewAllHref, viewAllLabel, columns = 3, pan
             animation: 'fadeUp 0.16s ease both',
             zIndex: 110,
           }}>
-            <div style={{ display: 'grid', gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))`, gap: 32 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))`, gap: 36 }}>
               {groups.map((group, gi) => (
                 <div key={gi}>
                   <p style={{
                     fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase',
-                    color: 'rgba(10,10,15,0.38)', marginBottom: 14,
+                    color: 'rgba(10,10,15,0.38)', marginBottom: 14, whiteSpace: 'nowrap',
                   }}>{group.label}</p>
                   <div style={{ display: 'flex', flexDirection: 'column' }}>
                     {group.items.map((item, i) => (
@@ -522,6 +523,7 @@ function MegaMenu({ trigger, groups, viewAllHref, viewAllLabel, columns = 3, pan
                           fontSize: 14.5, fontWeight: 500,
                           color: '#0a0a0f', letterSpacing: '-0.15px',
                           textDecoration: 'none',
+                          whiteSpace: 'nowrap',
                           transition: 'color 0.13s',
                         }}
                         onMouseEnter={e => { e.currentTarget.style.color = 'var(--ytg-accent)' }}
