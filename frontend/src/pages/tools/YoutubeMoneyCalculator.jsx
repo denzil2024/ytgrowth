@@ -181,27 +181,59 @@ function fmtViews(n) {
 const FAQS = [
   {
     q: 'How accurate is this YouTube money calculator?',
-    a: "The numbers are realistic estimates based on industry-reported RPM ranges by niche and audience country. Real earnings vary with watch time, mid-roll placement, ad blocker rates, season (Q4 ads pay much more than Q1), and whether your channel runs YouTube Premium watch hours. Treat the output as a sensible range, not a precise paycheck.",
+    a: "The numbers are realistic estimates based on industry-reported RPM ranges by niche and audience country. Real earnings vary with watch time, mid-roll placement, ad blocker rates, season (Q4 ads pay roughly 30–40% more than Q1), the percentage of your viewers watching with YouTube Premium, and whether your videos qualify for skippable in-stream ads. Treat the output as a sensible range, not a precise paycheck — most channels land somewhere inside the low–high band shown, and some land outside it for niche-specific reasons.",
   },
   {
     q: 'What is RPM vs CPM, and which one matters?',
-    a: "CPM is what advertisers pay per 1,000 ad impressions. RPM is what you actually take home per 1,000 video views — it accounts for YouTube's 45% cut, videos without ads, and views that never see an ad. RPM is the number you should care about, and it's what this calculator estimates.",
+    a: "CPM (Cost Per Mille) is what advertisers pay per 1,000 ad impressions — it's their cost, not your income. RPM (Revenue Per Mille) is what you actually take home per 1,000 video views, after YouTube's 45% cut, after the views that never saw an ad, after the videos that ran without monetization at all. RPM is always significantly lower than CPM — usually 30–50% of it. RPM is the only number you should care about as a creator, and it's what this calculator estimates.",
   },
   {
     q: "Why does my niche change the result so much?",
-    a: 'Advertisers bid wildly different amounts depending on the audience an advertiser wants to reach. A finance viewer might be worth $40 to a credit-card advertiser; a kids-content viewer is worth a fraction of that. Niche is the single biggest lever in YouTube earnings — bigger than view count.',
+    a: 'Advertisers bid wildly different amounts depending on the audience they want to reach. A finance viewer might be worth $40 to a credit card or brokerage advertiser because that viewer might sign up for a $200/month product. A kids-content viewer is worth a fraction of that — fewer advertisers compete for the slot, and the products being sold are lower-margin. Niche is the single biggest lever in YouTube earnings, often bigger than view count. A 100K/month finance channel can out-earn a 1M/month gaming channel.',
   },
   {
-    q: "Why does audience country matter?",
-    a: 'Ad spend in the US, UK, Canada, and Australia is several times higher than in most of the rest of the world. A channel with 1M views from US viewers will out-earn a channel with 1M views from a tier-3 audience by 4–5x. This is why creators serving tier-1 audiences scale revenue so much faster.',
+    q: "Why does audience country matter so much?",
+    a: 'Advertiser spending power varies dramatically by country. US, UK, Canada, and Australia have the highest ad spend on the planet. A view from a US viewer can be worth 4–5x a view from a tier-3 country, and 8–10x a view from India or parts of Africa. The same video, with the same niche, the same length, the same retention — earns wildly different amounts depending on who watches it. This is why creators producing English content for global audiences (rather than language-locked regional content) scale revenue so much faster.',
+  },
+  {
+    q: 'Do I have to be in the YouTube Partner Program (YPP) to earn from my videos?',
+    a: "Yes — to earn from ads on your videos you need to be in the YouTube Partner Program. The current eligibility thresholds are 1,000 subscribers + either 4,000 valid public watch hours in the last 12 months OR 10 million Shorts views in the last 90 days. Once accepted, you can monetize through ads, channel memberships, Super Chat, Super Thanks, and YouTube Premium revenue. You also need to live in a country where YPP is available and have an AdSense account in good standing.",
+  },
+  {
+    q: 'How much do YouTube Shorts pay?',
+    a: "Shorts pay much less per view than long-form. There are no mid-rolls, no skippable in-stream ads, and Shorts revenue comes from a shared pool funded by ads in the Shorts feed — not from ads on your specific Short. Typical Shorts RPM is $0.04–$0.10 per 1,000 views, vs $3–$30 for long-form. A Short with 10 million views might earn $400–$1,000, where a long-form video with the same view count in the right niche could earn $10,000–$40,000. Shorts are a discovery tool, not a revenue tool.",
+  },
+  {
+    q: 'How long do my videos need to be to run mid-roll ads?',
+    a: 'Videos must be at least 8 minutes long to qualify for mid-roll ads (the slots that play partway through the video). This is the single biggest "free" RPM upgrade available — going from 5-minute videos to 10-minute videos can roughly double your earnings per view, because each mid-roll slot is its own ad impression. Don\'t pad video length artificially (retention will tank) — but if you\'re routinely cutting at 6 minutes, consider whether the topic could justify 10–12 minutes of real content.',
+  },
+  {
+    q: "Why do my actual earnings look lower than this calculator predicts?",
+    a: 'A few common reasons: (1) you have a high percentage of Shorts views, which pay almost nothing; (2) a chunk of your audience uses ad blockers, which removes those views from the monetizable pool; (3) your videos are flagged as "limited or no ads" due to controversial content, language, or copyrighted music; (4) you upload during a low ad-spend season (Q1 is brutal — Q4 is the gold rush); or (5) your audience country mix is more tier-3-heavy than you think. Check YouTube Studio → Analytics → Revenue → Geography to see your real audience country breakdown.',
+  },
+  {
+    q: 'When do I get paid by YouTube?',
+    a: 'YouTube pays via Google AdSense on a monthly cycle. You need to hit a $100 minimum threshold in your AdSense account; once you cross it, payment is issued around the 21st–26th of the following month. So earnings from October typically arrive in late November. Payment methods depend on country — bank transfer (EFT), wire, check, and Western Union are the most common. Tax forms (W-9 in the US, W-8BEN internationally) must be on file or your earnings get withheld.',
+  },
+  {
+    q: 'Will I owe taxes on my YouTube earnings?',
+    a: "Yes. YouTube ad revenue is self-employment income for most creators and is taxed accordingly. In the US that means federal income tax + 15.3% self-employment tax (covering Social Security and Medicare). You'll receive a 1099 form from Google if you earn over $600/year. Outside the US, treatment varies — most countries treat YouTube income as freelance/self-employment, and YouTube also withholds 30% of US-derived earnings unless you've submitted a W-8BEN tax form claiming a treaty rate. Talk to an accountant once you cross $1,000/month — the structuring decisions (LLC, expenses, retirement contributions) start to matter.",
+  },
+  {
+    q: 'Beyond ad revenue, what other ways do YouTubers make money?',
+    a: "Most full-time creators have 4–6 income streams, not just ads: (1) brand sponsorships and integrations — often the biggest line item, paying roughly $20–$50 per 1,000 views in tier-1 niches; (2) affiliate marketing (Amazon, Skillshare, software referrals); (3) selling your own digital products (courses, templates, presets); (4) memberships via YouTube Channel Memberships or Patreon; (5) merchandise; (6) Super Chat, Super Thanks, Super Stickers during live streams. A channel earning $2,000/month from ads might be earning $8,000/month total once you count the rest.",
+  },
+  {
+    q: 'How do I increase my RPM without growing my view count?',
+    a: 'Three high-impact moves: (1) Lengthen your videos past 8 minutes so they qualify for mid-rolls — and add 2–3 mid-roll slots manually in YouTube Studio rather than relying on auto-placement; (2) Pivot your content angle toward higher-RPM topics within your existing niche (a beauty channel covering luxury skincare earns multiples more than one covering drugstore hauls); (3) Improve your audience country mix by creating English-first content with hooks that travel internationally rather than geo-locked references. None of these require more views — they just earn more from the views you already have.',
   },
   {
     q: 'How do I actually grow these numbers?',
-    a: "Two levers: (1) get more views by ranking better in search and suggested, and (2) get higher RPM by increasing watch time and mid-roll placements. YTGrowth's free AI audit looks at both — it tells you which of your videos are SEO-underperformers and which video lengths are leaving ad slots on the table.",
+    a: "Two levers: (1) get more views by ranking better in YouTube search and suggested, and (2) earn higher RPM through longer-form videos with strategic mid-rolls and a higher-paying niche pivot. YTGrowth's free AI audit looks at both — it tells you which of your videos are SEO-underperformers, which titles and thumbnails are losing the click war, and which video lengths are leaving ad slots on the table. It costs nothing to run on a free account.",
   },
   {
-    q: 'Is this calculator free?',
-    a: "Yes. Always. We built it as a free tool to help creators get a realistic estimate before they sink months into a niche. If you want a real, personalised growth plan — not just an estimate — connect your channel for a free AI audit.",
+    q: 'Is this calculator free? Will you sell my data?',
+    a: "Yes, free forever — and no data collection beyond what your browser sends to any website. The calculator runs entirely in your browser; no inputs are sent to our servers, no email required, no signup gate. We built it as a genuine free tool because creators deserve a realistic estimate before they pour months into a niche. If you want a real, personalised growth plan beyond just an earnings estimate, you can connect your channel for a free AI audit — but that's entirely optional.",
   },
 ]
 
