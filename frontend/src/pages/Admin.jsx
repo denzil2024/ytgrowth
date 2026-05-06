@@ -95,6 +95,32 @@ function useAdminStyles() {
           box-shadow:0 6px 14px rgba(229,37,27,0.42), inset 0 1px 0 rgba(255,255,255,0.22);
         }
 
+        /* Hero RED stat card — full gradient background (matches money calc result card + affiliate annual card) */
+        .adm-stat-card-red {
+          position:relative; overflow:hidden;
+          background:linear-gradient(180deg, #e5251b 0%, #a50f07 100%);
+          border:none; border-radius:18px;
+          padding:22px 24px 20px;
+          color:#ffffff;
+          box-shadow:0 4px 18px rgba(229,37,27,0.32), 0 24px 60px rgba(229,37,27,0.18), inset 0 1px 0 rgba(255,255,255,0.14);
+          transition:transform 0.22s, box-shadow 0.22s;
+          cursor:default;
+        }
+        .adm-stat-card-red:hover {
+          transform:translateY(-2px);
+          box-shadow:0 8px 24px rgba(229,37,27,0.4), 0 32px 80px rgba(229,37,27,0.24), inset 0 1px 0 rgba(255,255,255,0.18);
+        }
+        /* Icon inside the red card flips to a translucent white plate */
+        .adm-stat-icon-red {
+          width:34px; height:34px; border-radius:10px;
+          display:flex; align-items:center; justify-content:center;
+          background:rgba(255,255,255,0.16);
+          border:1px solid rgba(255,255,255,0.22);
+          color:#ffffff;
+          backdrop-filter:blur(6px);
+          -webkit-backdrop-filter:blur(6px);
+        }
+
         /* Delta chip — replaces inline trend text */
         .adm-delta {
           display:inline-flex; align-items:center; gap:3px;
@@ -234,8 +260,35 @@ function Avatar({ src, name, size = 30 }) {
   )
 }
 
-/* ── Stat card — accent gradient on hover, icon corner, delta chip ─────── */
-function Stat({ label, value, sub, accent, alert, icon, delta }) {
+/* ── Stat card — solid red variant + light variant ──────────────────────── */
+function Stat({ label, value, sub, accent, alert, icon, delta, variant = 'light' }) {
+  // variant: 'light' (white card) | 'red' (full red gradient hero card)
+  if (variant === 'red') {
+    return (
+      <div className="adm-stat-card-red">
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 18 }}>
+          <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.09em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.78)' }}>{label}</p>
+          {icon && <div className="adm-stat-icon-red">{icon}</div>}
+        </div>
+        <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, flexWrap: 'wrap' }}>
+          <p className="num" style={{ fontSize: 36, fontWeight: 800, letterSpacing: '-1.6px', color: '#fff', lineHeight: 1 }}>{value}</p>
+          {delta && (
+            <span className="adm-delta" style={{
+              color: '#fff',
+              background: 'rgba(255,255,255,0.18)',
+              border: '1px solid rgba(255,255,255,0.28)',
+            }}>
+              <span style={{ fontSize: 9 }}>{delta.tone === 'up' ? '▲' : delta.tone === 'down' ? '▼' : '·'}</span>
+              {delta.label}
+            </span>
+          )}
+        </div>
+        {sub && <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.78)', fontWeight: 500, marginTop: 14, lineHeight: 1.55 }}>{sub}</p>}
+      </div>
+    )
+  }
+
+  // Light variant — white card with red accent
   const col = alert ? C.red : (accent || C.text1)
   const accentVar = accent || C.red
   return (
@@ -245,7 +298,7 @@ function Stat({ label, value, sub, accent, alert, icon, delta }) {
         ...(alert ? { borderColor: 'rgba(229,37,27,0.22)', background: '#fff8f8' } : {}),
       }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 18 }}>
-        <p style={{ fontSize: 11, fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: C.text3 }}>{label}</p>
+        <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.09em', textTransform: 'uppercase', color: C.text3 }}>{label}</p>
         {icon && <div className="adm-stat-icon">{icon}</div>}
       </div>
       <div style={{ display: 'flex', alignItems: 'baseline', gap: 9, flexWrap: 'wrap' }}>
@@ -261,7 +314,7 @@ function Stat({ label, value, sub, accent, alert, icon, delta }) {
           </span>
         )}
       </div>
-      {sub && <p style={{ fontSize: 12, color: alert ? C.red : C.text3, fontWeight: 500, marginTop: 12, lineHeight: 1.5 }}>{sub}</p>}
+      {sub && <p style={{ fontSize: 13, color: alert ? C.red : C.text2, fontWeight: 500, marginTop: 12, lineHeight: 1.55 }}>{sub}</p>}
     </div>
   )
 }
@@ -525,21 +578,22 @@ export default function Admin() {
         </button>
       </div>
 
-      {/* ── Stat row — accent gradients + icons + delta chips ─────────────── */}
+      {/* ── Stat row — 2 hero red cards + 2 white secondary cards ─────────── */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,minmax(0,1fr))', gap: 16, marginBottom: 36 }}>
         <Stat
+          variant="red"
           label="Total users"
           value={fmtNum(s.total_users)}
-          sub="All-time signups"
+          sub="All-time signups across the platform"
           icon={Icons.users}
         />
         <Stat
+          variant="red"
           label="Paid"
           value={fmtNum(s.paid_users)}
-          accent={C.green}
-          sub={`${fmtNum(s.free_users)} on free plan`}
+          sub={`${fmtNum(s.free_users)} still on free plan`}
           icon={Icons.paid}
-          delta={s.conversion_pct > 0 ? { tone: 'up', label: `${s.conversion_pct}%` } : null}
+          delta={s.conversion_pct > 0 ? { tone: 'up', label: `${s.conversion_pct}% conv` } : null}
         />
         <Stat
           label="Signups (7d)"
@@ -555,7 +609,7 @@ export default function Admin() {
         <Stat
           label="Active (7d)"
           value={fmtNum(s.active_7d)}
-          sub="Channels audited in last 7 days"
+          sub="Channels audited in the last 7 days"
           icon={Icons.bolt}
         />
       </div>
