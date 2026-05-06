@@ -481,8 +481,9 @@ function FeaturesNavDropdown() {
 
 /* ─── Free tools dropdown. Mirrors FeaturesNavDropdown ─────────────────── */
 const FREE_TOOL_NAV_ITEMS = [
-  { href: '/tools/youtube-money-calculator',     label: 'YouTube Money Calculator',     desc: 'Estimate channel earnings by niche + audience country' },
-  { href: '/tools/youtube-thumbnail-downloader', label: 'YouTube Thumbnail Downloader', desc: 'Download any video thumbnail in HD, SD, or low-res' },
+  { href: '/tools/youtube-money-calculator',            label: 'YouTube Money Calculator',            desc: 'Estimate channel earnings by niche + audience country' },
+  { href: '/tools/youtube-subscriber-money-calculator', label: 'Subscriber Money Calculator',         desc: 'How much your sub count earns + targets to hit' },
+  { href: '/tools/youtube-thumbnail-downloader',        label: 'YouTube Thumbnail Downloader',        desc: 'Download any video thumbnail in HD, SD, or low-res' },
 ]
 
 function FreeToolsNavDropdown() {
@@ -890,6 +891,9 @@ export default function Landing() {
           <span className="ytg-mm-label">Free tools</span>
           <a href="/tools/youtube-money-calculator" onClick={() => setMobileMenuOpen(false)} className="ytg-mm-link">
             YouTube Money Calculator
+          </a>
+          <a href="/tools/youtube-subscriber-money-calculator" onClick={() => setMobileMenuOpen(false)} className="ytg-mm-link">
+            Subscriber Money Calculator
           </a>
           <a href="/tools/youtube-thumbnail-downloader" onClick={() => setMobileMenuOpen(false)} className="ytg-mm-link">
             YouTube Thumbnail Downloader

@@ -36,8 +36,9 @@ const FEATURES = [
 ]
 
 const TOOLS = [
-  { label: 'YouTube Money Calculator',    href: '/tools/youtube-money-calculator' },
-  { label: 'YouTube Thumbnail Downloader', href: '/tools/youtube-thumbnail-downloader' },
+  { label: 'YouTube Money Calculator',            href: '/tools/youtube-money-calculator' },
+  { label: 'YouTube Subscriber Money Calculator', href: '/tools/youtube-subscriber-money-calculator' },
+  { label: 'YouTube Thumbnail Downloader',        href: '/tools/youtube-thumbnail-downloader' },
 ]
 
 const COMPANY = [

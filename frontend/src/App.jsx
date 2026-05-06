@@ -14,6 +14,7 @@ import KeywordResearch from './pages/features/KeywordResearch'
 import Outliers from './pages/features/Outliers'
 import YoutubeMoneyCalculator from './pages/tools/YoutubeMoneyCalculator'
 import YoutubeThumbnailDownloader from './pages/tools/YoutubeThumbnailDownloader'
+import YoutubeSubscriberMoneyCalculator from './pages/tools/YoutubeSubscriberMoneyCalculator'
 
 function App() {
   return (
@@ -32,8 +33,9 @@ function App() {
         <Route path="/features/thumbnail-iq"         element={<ThumbnailIq />} />
         <Route path="/features/keyword-research"     element={<KeywordResearch />} />
         <Route path="/features/outliers"             element={<Outliers />} />
-        <Route path="/tools/youtube-money-calculator"     element={<YoutubeMoneyCalculator />} />
-        <Route path="/tools/youtube-thumbnail-downloader" element={<YoutubeThumbnailDownloader />} />
+        <Route path="/tools/youtube-money-calculator"            element={<YoutubeMoneyCalculator />} />
+        <Route path="/tools/youtube-thumbnail-downloader"        element={<YoutubeThumbnailDownloader />} />
+        <Route path="/tools/youtube-subscriber-money-calculator" element={<YoutubeSubscriberMoneyCalculator />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
