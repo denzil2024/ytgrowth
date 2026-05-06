@@ -476,9 +476,10 @@ const FREE_TOOL_GROUPS = [
 ]
 const FREE_TOOL_NAV_ITEMS = FREE_TOOL_GROUPS.flatMap(g => g.items)
 
-/* ─── Generic mega-menu component (shared by Features + Free tools) ────── */
-function MegaMenu({ trigger, groups, viewAllHref, viewAllLabel, columns = 3, panelLeft = -20 }) {
+/* ─── Mega-menu component — VidIQ pattern: clean titles, no descriptions ─ */
+function MegaMenu({ trigger, groups, viewAllHref, viewAllLabel, columns = 3, panelLeft = -24 }) {
   const [open, setOpen] = useState(false)
+  const panelWidth = columns === 3 ? 540 : 380
   return (
     <div
       onMouseEnter={() => setOpen(true)}
@@ -494,34 +495,39 @@ function MegaMenu({ trigger, groups, viewAllHref, viewAllLabel, columns = 3, pan
       {open && (
         <>
           {/* Hover bridge so cursor can move from trigger to panel without closing */}
-          <div style={{ position: 'absolute', top: '100%', left: panelLeft, width: 700, height: 14 }} />
+          <div style={{ position: 'absolute', top: '100%', left: panelLeft, width: panelWidth + 48, height: 14 }} />
           <div style={{
             position: 'absolute', top: 'calc(100% + 10px)', left: panelLeft,
-            background: '#ffffff', border: '1px solid rgba(10,10,15,0.09)', borderRadius: 16,
-            boxShadow: '0 4px 16px rgba(0,0,0,0.10), 0 24px 60px rgba(0,0,0,0.13)',
-            padding: 22, minWidth: columns === 3 ? 680 : 480,
+            background: '#ffffff', border: '1px solid rgba(10,10,15,0.08)', borderRadius: 18,
+            boxShadow: '0 4px 16px rgba(0,0,0,0.08), 0 24px 64px rgba(0,0,0,0.13)',
+            padding: '32px 32px 22px',
+            width: panelWidth,
             animation: 'fadeUp 0.16s ease both',
             zIndex: 110,
           }}>
-            <div style={{ display: 'grid', gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))`, gap: 28 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))`, gap: 32 }}>
               {groups.map((group, gi) => (
                 <div key={gi}>
                   <p style={{
-                    fontSize: 11, fontWeight: 800, letterSpacing: '0.09em', textTransform: 'uppercase',
-                    color: 'rgba(10,10,15,0.42)', marginBottom: 12,
+                    fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase',
+                    color: 'rgba(10,10,15,0.38)', marginBottom: 14,
                   }}>{group.label}</p>
-                  <div>
+                  <div style={{ display: 'flex', flexDirection: 'column' }}>
                     {group.items.map((item, i) => (
-                      <a key={i} href={item.href} style={{
-                        display: 'block', padding: '8px 10px', borderRadius: 10,
-                        textDecoration: 'none', transition: 'background 0.12s',
-                        marginLeft: -10, marginRight: -10,
-                      }}
-                        onMouseEnter={e => e.currentTarget.style.background = '#f6f6f9'}
-                        onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+                      <a
+                        key={i} href={item.href}
+                        style={{
+                          display: 'block',
+                          padding: '8px 0',
+                          fontSize: 14.5, fontWeight: 500,
+                          color: '#0a0a0f', letterSpacing: '-0.15px',
+                          textDecoration: 'none',
+                          transition: 'color 0.13s',
+                        }}
+                        onMouseEnter={e => { e.currentTarget.style.color = 'var(--ytg-accent)' }}
+                        onMouseLeave={e => { e.currentTarget.style.color = '#0a0a0f' }}
                       >
-                        <p style={{ fontSize: 14, fontWeight: 700, color: '#0a0a0f', letterSpacing: '-0.2px', marginBottom: 2 }}>{item.label}</p>
-                        <p style={{ fontSize: 12.5, color: 'rgba(10,10,15,0.55)', lineHeight: 1.45 }}>{item.desc}</p>
+                        {item.label}
                       </a>
                     ))}
                   </div>
@@ -530,16 +536,13 @@ function MegaMenu({ trigger, groups, viewAllHref, viewAllLabel, columns = 3, pan
             </div>
 
             {viewAllHref && (
-              <div style={{ marginTop: 18, paddingTop: 14, borderTop: '1px solid rgba(10,10,15,0.07)' }}>
+              <div style={{ marginTop: 22, paddingTop: 16, borderTop: '1px solid rgba(10,10,15,0.07)' }}>
                 <a href={viewAllHref} style={{
-                  display: 'inline-flex', alignItems: 'center', gap: 6,
-                  fontSize: 13, fontWeight: 700, color: 'var(--ytg-accent)',
+                  display: 'inline-flex', alignItems: 'center', gap: 4,
+                  fontSize: 13.5, fontWeight: 600, color: 'var(--ytg-accent)',
                   textDecoration: 'none', letterSpacing: '-0.1px',
                 }}>
                   {viewAllLabel}
-                  <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M3 6h6"/><path d="M6.5 3l3 3-3 3"/>
-                  </svg>
                 </a>
               </div>
             )}
