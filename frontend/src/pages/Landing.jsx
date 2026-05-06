@@ -431,17 +431,53 @@ function Arrow() {
   )
 }
 
-/* ─── Features dropdown ─ used in the desktop top nav ─────────────────── */
-const FEATURE_NAV_ITEMS = [
-  { href: '/features/channel-audit',       label: 'Channel Audit',       desc: '10-dimension AI audit of your channel' },
-  { href: '/features/competitor-analysis', label: 'Competitor Analysis', desc: 'Track rivals, find their content gaps' },
-  { href: '/features/seo-studio',          label: 'SEO Studio',          desc: 'Score + rewrite titles and descriptions' },
-  { href: '/features/thumbnail-iq',        label: 'Thumbnail IQ',        desc: 'Two-layer thumbnail scoring vs your niche' },
-  { href: '/features/keyword-research',    label: 'Keyword Research',    desc: 'YouTube-native search volume + difficulty' },
-  { href: '/features/outliers',            label: 'Outliers',            desc: 'Find viral videos and breakout channels' },
+/* ─── Mega-menu data: Features grouped by category ─────────────────────── */
+const FEATURE_GROUPS = [
+  {
+    label: 'Audit & strategy',
+    items: [
+      { href: '/features/channel-audit', label: 'Channel Audit', desc: '10-dimension AI audit of your channel' },
+    ],
+  },
+  {
+    label: 'SEO & discovery',
+    items: [
+      { href: '/features/seo-studio',       label: 'SEO Studio',       desc: 'Score + rewrite titles and descriptions' },
+      { href: '/features/keyword-research', label: 'Keyword Research', desc: 'YouTube-native search volume + difficulty' },
+      { href: '/features/outliers',         label: 'Outliers',         desc: 'Find viral videos and breakout channels' },
+    ],
+  },
+  {
+    label: 'Compete & convert',
+    items: [
+      { href: '/features/competitor-analysis', label: 'Competitor Analysis', desc: 'Track rivals, find their content gaps' },
+      { href: '/features/thumbnail-iq',        label: 'Thumbnail IQ',        desc: 'Two-layer thumbnail scoring vs your niche' },
+    ],
+  },
 ]
+// Flat list — kept for the mobile menu and anywhere else that wants every item
+const FEATURE_NAV_ITEMS = FEATURE_GROUPS.flatMap(g => g.items)
 
-function FeaturesNavDropdown() {
+/* ─── Mega-menu data: Free tools grouped by category ───────────────────── */
+const FREE_TOOL_GROUPS = [
+  {
+    label: 'Calculators',
+    items: [
+      { href: '/tools/youtube-money-calculator',            label: 'YouTube Money Calculator',    desc: 'Estimate channel earnings by niche + country' },
+      { href: '/tools/youtube-subscriber-money-calculator', label: 'Subscriber Money Calculator', desc: 'How much your sub count earns + targets' },
+    ],
+  },
+  {
+    label: 'Thumbnails',
+    items: [
+      { href: '/tools/youtube-thumbnail-downloader', label: 'Thumbnail Downloader', desc: 'Download any YouTube thumbnail in HD' },
+    ],
+  },
+]
+const FREE_TOOL_NAV_ITEMS = FREE_TOOL_GROUPS.flatMap(g => g.items)
+
+/* ─── Generic mega-menu component (shared by Features + Free tools) ────── */
+function MegaMenu({ trigger, groups, viewAllHref, viewAllLabel, columns = 3, panelLeft = -20 }) {
   const [open, setOpen] = useState(false)
   return (
     <div
@@ -449,35 +485,64 @@ function FeaturesNavDropdown() {
       onMouseLeave={() => setOpen(false)}
       style={{ position: 'relative' }}
     >
-      <a href="#features" className="ytg-nav-link" style={{ display: 'inline-flex', alignItems: 'center', gap: 4, cursor: 'pointer' }}>
-        Features
+      <a href={groups[0].items[0].href} className="ytg-nav-link" style={{ display: 'inline-flex', alignItems: 'center', gap: 4, cursor: 'pointer' }}>
+        {trigger}
         <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" style={{ transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.18s' }}>
           <path d="M2 3.5l3 3 3-3"/>
         </svg>
       </a>
       {open && (
         <>
-          {/* Hover bridge. Keeps the dropdown open while moving from trigger to panel */}
-          <div style={{ position: 'absolute', top: '100%', left: -20, width: 360, height: 12 }} />
+          {/* Hover bridge so cursor can move from trigger to panel without closing */}
+          <div style={{ position: 'absolute', top: '100%', left: panelLeft, width: 700, height: 14 }} />
           <div style={{
-            position: 'absolute', top: 'calc(100% + 8px)', left: -20,
-            background: '#ffffff', border: '1px solid rgba(10,10,15,0.09)', borderRadius: 14,
+            position: 'absolute', top: 'calc(100% + 10px)', left: panelLeft,
+            background: '#ffffff', border: '1px solid rgba(10,10,15,0.09)', borderRadius: 16,
             boxShadow: '0 4px 16px rgba(0,0,0,0.10), 0 24px 60px rgba(0,0,0,0.13)',
-            padding: 8, minWidth: 340,
+            padding: 22, minWidth: columns === 3 ? 680 : 480,
             animation: 'fadeUp 0.16s ease both',
+            zIndex: 110,
           }}>
-            {FEATURE_NAV_ITEMS.map((item, i) => (
-              <a key={i} href={item.href} style={{
-                display: 'block', padding: '11px 14px', borderRadius: 9,
-                textDecoration: 'none', transition: 'background 0.12s',
-              }}
-                onMouseEnter={e => e.currentTarget.style.background = '#f6f6f9'}
-                onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
-              >
-                <p style={{ fontSize: 14, fontWeight: 700, color: '#0a0a0f', letterSpacing: '-0.2px', marginBottom: 2 }}>{item.label}</p>
-                <p style={{ fontSize: 12.5, color: 'rgba(10,10,15,0.55)', lineHeight: 1.45 }}>{item.desc}</p>
-              </a>
-            ))}
+            <div style={{ display: 'grid', gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))`, gap: 28 }}>
+              {groups.map((group, gi) => (
+                <div key={gi}>
+                  <p style={{
+                    fontSize: 11, fontWeight: 800, letterSpacing: '0.09em', textTransform: 'uppercase',
+                    color: 'rgba(10,10,15,0.42)', marginBottom: 12,
+                  }}>{group.label}</p>
+                  <div>
+                    {group.items.map((item, i) => (
+                      <a key={i} href={item.href} style={{
+                        display: 'block', padding: '8px 10px', borderRadius: 10,
+                        textDecoration: 'none', transition: 'background 0.12s',
+                        marginLeft: -10, marginRight: -10,
+                      }}
+                        onMouseEnter={e => e.currentTarget.style.background = '#f6f6f9'}
+                        onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+                      >
+                        <p style={{ fontSize: 14, fontWeight: 700, color: '#0a0a0f', letterSpacing: '-0.2px', marginBottom: 2 }}>{item.label}</p>
+                        <p style={{ fontSize: 12.5, color: 'rgba(10,10,15,0.55)', lineHeight: 1.45 }}>{item.desc}</p>
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {viewAllHref && (
+              <div style={{ marginTop: 18, paddingTop: 14, borderTop: '1px solid rgba(10,10,15,0.07)' }}>
+                <a href={viewAllHref} style={{
+                  display: 'inline-flex', alignItems: 'center', gap: 6,
+                  fontSize: 13, fontWeight: 700, color: 'var(--ytg-accent)',
+                  textDecoration: 'none', letterSpacing: '-0.1px',
+                }}>
+                  {viewAllLabel}
+                  <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M3 6h6"/><path d="M6.5 3l3 3-3 3"/>
+                  </svg>
+                </a>
+              </div>
+            )}
           </div>
         </>
       )}
@@ -485,53 +550,27 @@ function FeaturesNavDropdown() {
   )
 }
 
-/* ─── Free tools dropdown. Mirrors FeaturesNavDropdown ─────────────────── */
-const FREE_TOOL_NAV_ITEMS = [
-  { href: '/tools/youtube-money-calculator',            label: 'YouTube Money Calculator',            desc: 'Estimate channel earnings by niche + audience country' },
-  { href: '/tools/youtube-subscriber-money-calculator', label: 'Subscriber Money Calculator',         desc: 'How much your sub count earns + targets to hit' },
-  { href: '/tools/youtube-thumbnail-downloader',        label: 'YouTube Thumbnail Downloader',        desc: 'Download any video thumbnail in HD, SD, or low-res' },
-]
+function FeaturesNavDropdown() {
+  return (
+    <MegaMenu
+      trigger="Features"
+      groups={FEATURE_GROUPS}
+      columns={3}
+      viewAllHref="#features"
+      viewAllLabel="Explore all features"
+    />
+  )
+}
 
 function FreeToolsNavDropdown() {
-  const [open, setOpen] = useState(false)
   return (
-    <div
-      onMouseEnter={() => setOpen(true)}
-      onMouseLeave={() => setOpen(false)}
-      style={{ position: 'relative' }}
-    >
-      <a href={FREE_TOOL_NAV_ITEMS[0].href} className="ytg-nav-link" style={{ display: 'inline-flex', alignItems: 'center', gap: 4, cursor: 'pointer' }}>
-        Free tools
-        <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" style={{ transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.18s' }}>
-          <path d="M2 3.5l3 3 3-3"/>
-        </svg>
-      </a>
-      {open && (
-        <>
-          <div style={{ position: 'absolute', top: '100%', left: -20, width: 360, height: 12 }} />
-          <div style={{
-            position: 'absolute', top: 'calc(100% + 8px)', left: -20,
-            background: '#ffffff', border: '1px solid rgba(10,10,15,0.09)', borderRadius: 14,
-            boxShadow: '0 4px 16px rgba(0,0,0,0.10), 0 24px 60px rgba(0,0,0,0.13)',
-            padding: 8, minWidth: 340,
-            animation: 'fadeUp 0.16s ease both',
-          }}>
-            {FREE_TOOL_NAV_ITEMS.map((item, i) => (
-              <a key={i} href={item.href} style={{
-                display: 'block', padding: '11px 14px', borderRadius: 9,
-                textDecoration: 'none', transition: 'background 0.12s',
-              }}
-                onMouseEnter={e => e.currentTarget.style.background = '#f6f6f9'}
-                onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
-              >
-                <p style={{ fontSize: 14, fontWeight: 700, color: '#0a0a0f', letterSpacing: '-0.2px', marginBottom: 2 }}>{item.label}</p>
-                <p style={{ fontSize: 12.5, color: 'rgba(10,10,15,0.55)', lineHeight: 1.45 }}>{item.desc}</p>
-              </a>
-            ))}
-          </div>
-        </>
-      )}
-    </div>
+    <MegaMenu
+      trigger="Free tools"
+      groups={FREE_TOOL_GROUPS}
+      columns={2}
+      viewAllHref="/tools/youtube-money-calculator"
+      viewAllLabel="Browse the tool library"
+    />
   )
 }
 
