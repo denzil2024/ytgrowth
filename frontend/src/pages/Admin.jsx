@@ -20,7 +20,8 @@ const CARD = {
   boxShadow:    '0 1px 2px rgba(0,0,0,0.04), 0 4px 14px rgba(0,0,0,0.06)',
 }
 
-const PAGE_SIZE = 8
+const PAGE_SIZE_SIGNUPS = 8
+const PAGE_SIZE_TOP     = 5
 
 const COUNTRY_FLAGS = {
   "Afghanistan":"🇦🇫","Albania":"🇦🇱","Algeria":"🇩🇿","Argentina":"🇦🇷",
@@ -58,26 +59,93 @@ function useAdminStyles() {
       style.id = 'ytg-admin-styles'
       style.textContent = `
         .adm, .adm * { font-family:'Inter',system-ui,sans-serif; -webkit-font-smoothing:antialiased; box-sizing:border-box; }
-        .adm p,.adm span,.adm div,.adm h1,.adm h2 { margin:0; }
+        .adm p,.adm span,.adm div,.adm h1,.adm h2,.adm h3 { margin:0; }
         .adm .num { font-variant-numeric:tabular-nums; }
+
+        /* Stat card with subtle gradient accent line at the top edge */
         .adm-stat-card {
-          background:#fff; border:1px solid #e6e6ec; border-radius:16px;
-          padding:22px 24px;
-          box-shadow:0 1px 2px rgba(0,0,0,0.04),0 4px 14px rgba(0,0,0,0.06);
-          transition:box-shadow 0.2s,transform 0.2s; cursor:default;
+          background:#fff; border:1px solid #e6e6ec; border-radius:18px;
+          padding:22px 24px 20px;
+          box-shadow:0 1px 2px rgba(0,0,0,0.03),0 4px 14px rgba(0,0,0,0.05);
+          transition:box-shadow 0.22s,transform 0.22s,border-color 0.22s;
+          cursor:default; position:relative; overflow:hidden;
+        }
+        .adm-stat-card::before {
+          content:''; position:absolute; top:0; left:0; right:0; height:3px;
+          background:linear-gradient(90deg, var(--adm-accent, #e5251b) 0%, var(--adm-accent, #e5251b) 40%, transparent 100%);
+          opacity:0.0; transition:opacity 0.22s;
         }
         .adm-stat-card:hover {
-          box-shadow:0 4px 12px rgba(0,0,0,0.08),0 16px 40px rgba(0,0,0,0.09);
-          transform:translateY(-2px);
+          box-shadow:0 4px 12px rgba(0,0,0,0.08),0 16px 40px rgba(0,0,0,0.08);
+          transform:translateY(-2px); border-color:#dadde3;
         }
+        .adm-stat-card:hover::before { opacity:0.85; }
+
+        /* Tiny corner-icon badge inside a stat card */
+        .adm-stat-icon {
+          width:30px; height:30px; border-radius:9px;
+          display:flex; align-items:center; justify-content:center;
+          background:#f4f4f7; color:#9595a4;
+          transition:background 0.18s, color 0.18s;
+        }
+        .adm-stat-card:hover .adm-stat-icon { background:rgba(229,37,27,0.10); color:#e5251b; }
+
+        /* Delta chip — replaces inline trend text */
+        .adm-delta {
+          display:inline-flex; align-items:center; gap:3px;
+          padding:2px 8px; border-radius:100px;
+          font-size:11px; font-weight:700; line-height:1;
+          font-variant-numeric:tabular-nums; letter-spacing:-0.05px;
+        }
+
+        /* Section title block (replaces SectionLabel) */
+        .adm-section-title {
+          display:flex; align-items:center; gap:9px; margin-bottom:14px;
+        }
+        .adm-section-title h2 {
+          font-size:15.5px; font-weight:700; color:#0f0f13; letter-spacing:-0.25px;
+        }
+        .adm-section-count {
+          font-size:11px; font-weight:700; color:#9595a4;
+          background:#f4f4f6; border:1px solid #ececef;
+          padding:2px 8px; border-radius:100px;
+          font-variant-numeric:tabular-nums;
+        }
+        .adm-section-sub {
+          font-size:12.5px; color:#9595a4; font-weight:500;
+        }
+
+        /* Live indicator dot pulses softly */
+        .adm-live-dot {
+          width:7px; height:7px; border-radius:50%;
+          background:#16a34a; flex-shrink:0;
+          box-shadow:0 0 0 0 rgba(22,163,74,0.45);
+          animation:admPulse 2.2s ease-in-out infinite;
+        }
+
         .adm-row { transition:background 0.13s; }
-        .adm-row:hover { background:#f4f4f7 !important; }
+        .adm-row:hover { background:#f8f8fb !important; }
         .adm-pg-btn { transition:background 0.13s,color 0.13s,border-color 0.13s; }
         .adm-pg-btn:not(:disabled):hover { background:#f4f4f8 !important; border-color:rgba(0,0,0,0.18) !important; color:#0f0f13 !important; }
         .adm-sec-btn { transition:all 0.18s; }
         .adm-sec-btn:hover { border-color:rgba(0,0,0,0.18) !important; color:#0f0f13 !important; box-shadow:0 2px 8px rgba(0,0,0,0.10),0 8px 28px rgba(0,0,0,0.10) !important; transform:translateY(-1px); }
-        @keyframes admSpin { to{transform:rotate(360deg)} }
-        @keyframes admFade { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+
+        /* Empty state */
+        .adm-empty { padding:48px 24px; text-align:center; }
+        .adm-empty-icon {
+          width:44px; height:44px; border-radius:12px;
+          background:#f4f4f7; color:#9595a4;
+          display:flex; align-items:center; justify-content:center;
+          margin:0 auto 12px;
+        }
+        .adm-empty-text { font-size:13px; color:#9595a4; line-height:1.55; max-width:300px; margin:0 auto; }
+
+        @keyframes admSpin { to { transform:rotate(360deg) } }
+        @keyframes admPulse {
+          0%,100% { box-shadow:0 0 0 0 rgba(22,163,74,0.45) }
+          50%     { box-shadow:0 0 0 5px rgba(22,163,74,0) }
+        }
+        @keyframes admFade { from { opacity:0; transform:translateY(8px) } to { opacity:1; transform:translateY(0) } }
         .adm-fade { animation:admFade 0.3s ease both; }
       `
       document.head.appendChild(style)
@@ -161,22 +229,103 @@ function Avatar({ src, name, size = 30 }) {
   )
 }
 
-/* ── Stat card — matches Dashboard Stat exactly ─────────────────────────── */
-function Stat({ label, value, sub, accent, alert }) {
+/* ── Stat card — accent gradient on hover, icon corner, delta chip ─────── */
+function Stat({ label, value, sub, accent, alert, icon, delta }) {
   const col = alert ? C.red : (accent || C.text1)
+  const accentVar = accent || C.red
   return (
     <div className={`adm-stat-card${alert ? ' alert' : ''}`}
-      style={alert ? { borderColor: 'rgba(229,37,27,0.22)', background: '#fff8f8' } : {}}>
-      <p style={{ fontSize: 11, fontWeight: 500, letterSpacing: '0.05em', textTransform: 'uppercase', color: C.text3, marginBottom: 12 }}>{label}</p>
-      <p className="num" style={{ fontSize: 30, fontWeight: 800, letterSpacing: '-1.4px', color: col, lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{value}</p>
-      {sub && <p style={{ fontSize: 12, color: alert ? C.red : C.text3, fontWeight: 500, marginTop: 10 }}>{sub}</p>}
+      style={{
+        '--adm-accent': accentVar,
+        ...(alert ? { borderColor: 'rgba(229,37,27,0.22)', background: '#fff8f8' } : {}),
+      }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 18 }}>
+        <p style={{ fontSize: 11, fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', color: C.text3 }}>{label}</p>
+        {icon && <div className="adm-stat-icon">{icon}</div>}
+      </div>
+      <div style={{ display: 'flex', alignItems: 'baseline', gap: 9, flexWrap: 'wrap' }}>
+        <p className="num" style={{ fontSize: 32, fontWeight: 800, letterSpacing: '-1.4px', color: col, lineHeight: 1 }}>{value}</p>
+        {delta && (
+          <span className="adm-delta" style={{
+            color: delta.tone === 'up' ? C.green : delta.tone === 'down' ? C.red : C.text2,
+            background: delta.tone === 'up' ? C.greenBg : delta.tone === 'down' ? C.redBg : '#f4f4f6',
+            border: `1px solid ${delta.tone === 'up' ? C.greenBdr : delta.tone === 'down' ? C.redBdr : C.border}`,
+          }}>
+            <span style={{ fontSize: 9 }}>{delta.tone === 'up' ? '▲' : delta.tone === 'down' ? '▼' : '·'}</span>
+            {delta.label}
+          </span>
+        )}
+      </div>
+      {sub && <p style={{ fontSize: 12, color: alert ? C.red : C.text3, fontWeight: 500, marginTop: 12, lineHeight: 1.5 }}>{sub}</p>}
     </div>
   )
 }
 
-/* ── Section label — matches Dashboard h2 sub-label exactly ─────────────── */
+/* ── Section header (replaces SectionLabel) — title + count + optional sub */
+function SectionHeader({ title, count, sub, right }) {
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, marginBottom: 14 }}>
+      <div style={{ minWidth: 0 }}>
+        <div className="adm-section-title">
+          <h2>{title}</h2>
+          {count != null && <span className="adm-section-count">{count}</span>}
+        </div>
+        {sub && <p className="adm-section-sub">{sub}</p>}
+      </div>
+      {right}
+    </div>
+  )
+}
+
+/* Backwards-compat: keep SectionLabel as an alias mapping to SectionHeader title */
 function SectionLabel({ children }) {
-  return <p style={{ fontSize: 11, fontWeight: 500, letterSpacing: '0.06em', textTransform: 'uppercase', color: C.text3, marginBottom: 12 }}>{children}</p>
+  return <SectionHeader title={children} />
+}
+
+/* ── Empty state ─────────────────────────────────────────────────────────── */
+function EmptyState({ icon, children }) {
+  return (
+    <div className="adm-empty">
+      {icon && <div className="adm-empty-icon">{icon}</div>}
+      <p className="adm-empty-text">{children}</p>
+    </div>
+  )
+}
+
+/* ── Stat-card icons ─────────────────────────────────────────────────────── */
+const Icons = {
+  users: (
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="5" cy="5" r="2.5"/>
+      <path d="M1 12c0-2.2 1.8-4 4-4s4 1.8 4 4"/>
+      <circle cx="10.5" cy="5.5" r="2"/>
+      <path d="M13 11.5c0-1.7-1.1-3.1-2.5-3.45"/>
+    </svg>
+  ),
+  paid: (
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="1.5" y="3" width="11" height="8" rx="1.5"/>
+      <path d="M1.5 6h11"/>
+      <path d="M3.5 9h2"/>
+    </svg>
+  ),
+  trend: (
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+      <polyline points="1.5,9.5 5.5,5.5 8,8 12.5,3.5"/>
+      <polyline points="9,3.5 12.5,3.5 12.5,7"/>
+    </svg>
+  ),
+  bolt: (
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M7.5 1L2 8h4l-.5 5L11 6H7l.5-5z"/>
+    </svg>
+  ),
+  inbox: (
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M2 11l3-7h8l3 7"/>
+      <path d="M2 11h4l1 2h4l1-2h4v4a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1z"/>
+    </svg>
+  ),
 }
 
 /* ── Bar row — green/amber accent palette ────────────────────────────────── */
@@ -202,8 +351,8 @@ function BarRow({ label, count, total, accent, prefix, muted }) {
 }
 
 /* ── Pagination ─────────────────────────────────────────────────────────── */
-function Pager({ page, total, onPage }) {
-  const totalPages = Math.ceil(total / PAGE_SIZE)
+function Pager({ page, total, onPage, pageSize = PAGE_SIZE_SIGNUPS }) {
+  const totalPages = Math.ceil(total / pageSize)
   if (totalPages <= 1) return null
   const btnStyle = (disabled) => ({
     padding: '5px 16px', borderRadius: 100,
@@ -244,6 +393,7 @@ export default function Admin() {
   const [error,      setError]      = useState('')
   const [refreshing, setRefreshing] = useState(false)
   const [signupPage, setSignupPage] = useState(0)
+  const [topPage,    setTopPage]    = useState(0)
 
   // Feature requests
   const [frData,     setFrData]     = useState(null)
@@ -281,7 +431,7 @@ export default function Admin() {
         if (!r.ok) throw new Error(body.error || `Error ${r.status}`)
         return body
       })
-      .then(d => { setData(d); setLoading(false); setRefreshing(false); setSignupPage(0) })
+      .then(d => { setData(d); setLoading(false); setRefreshing(false); setSignupPage(0); setTopPage(0) })
       .catch(e => { setError(e.message); setLoading(false); setRefreshing(false) })
   }
 
@@ -315,7 +465,8 @@ export default function Admin() {
     ? [...knownCountries, { country: 'Not tracked yet', count: unknownCount, unknown: true }]
     : knownCountries
 
-  const signupSlice     = data.recent_signups.slice(signupPage * PAGE_SIZE, (signupPage + 1) * PAGE_SIZE)
+  const signupSlice     = data.recent_signups.slice(signupPage * PAGE_SIZE_SIGNUPS, (signupPage + 1) * PAGE_SIZE_SIGNUPS)
+  const topSlice        = data.top_users.slice(topPage * PAGE_SIZE_TOP, (topPage + 1) * PAGE_SIZE_TOP)
 
   /* Source bar accents — cycle green / amber for visual variety */
   const UTM_ACCENTS = [C.green, C.amber, C.green, C.amber, C.green, C.amber]
@@ -338,12 +489,15 @@ export default function Admin() {
     <div className="adm adm-fade">
 
       {/* ── Page header ─────────────────────────────────────────────────── */}
-      <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 24, gap: 16 }}>
+      <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 28, gap: 16 }}>
         <div>
-          <h1 style={{ fontSize: 24, fontWeight: 800, color: C.text1, letterSpacing: '-0.6px', marginBottom: 6 }}>Admin</h1>
-          <p style={{ fontSize: 13, color: C.text3 }}>
-            {data.generated_at ? `Last updated ${relTime(data.generated_at)}` : 'Live'}
-          </p>
+          <h1 style={{ fontSize: 26, fontWeight: 800, color: C.text1, letterSpacing: '-0.7px', marginBottom: 8 }}>Admin</h1>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: C.text3 }}>
+            <span className="adm-live-dot" aria-hidden="true" />
+            <span>{data.generated_at ? `Updated ${relTime(data.generated_at)}` : 'Live'}</span>
+            <span style={{ color: C.border }}>·</span>
+            <span style={{ color: C.text3, fontWeight: 500 }}>Internal · admin only</span>
+          </div>
         </div>
         <button
           className="adm-sec-btn"
@@ -366,28 +520,52 @@ export default function Admin() {
         </button>
       </div>
 
-      {/* ── Stat row — mirrors Dashboard Overview exactly ─────────────────── */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,minmax(0,1fr))', gap: 16, marginBottom: 32 }}>
-        <Stat label="Total users"  value={fmtNum(s.total_users)}  sub="All-time signups" />
-        <Stat label="Paid"         value={fmtNum(s.paid_users)}   accent={C.green}
-              sub={`${s.conversion_pct}% conversion · ${fmtNum(s.free_users)} free`} />
-        <Stat label="Signups (7d)" value={fmtNum(s.signups_7d)}
-              accent={s.signups_trend > 0 ? C.green : s.signups_trend < 0 ? C.red : C.amber}
-              sub={trendSub} />
-        <Stat label="Active (7d)"  value={fmtNum(s.active_7d)}    sub="Channels audited in last 7 days" />
+      {/* ── Stat row — accent gradients + icons + delta chips ─────────────── */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,minmax(0,1fr))', gap: 16, marginBottom: 36 }}>
+        <Stat
+          label="Total users"
+          value={fmtNum(s.total_users)}
+          sub="All-time signups"
+          icon={Icons.users}
+        />
+        <Stat
+          label="Paid"
+          value={fmtNum(s.paid_users)}
+          accent={C.green}
+          sub={`${fmtNum(s.free_users)} on free plan`}
+          icon={Icons.paid}
+          delta={s.conversion_pct > 0 ? { tone: 'up', label: `${s.conversion_pct}%` } : null}
+        />
+        <Stat
+          label="Signups (7d)"
+          value={fmtNum(s.signups_7d)}
+          accent={s.signups_trend > 0 ? C.green : s.signups_trend < 0 ? C.red : C.amber}
+          sub={trendSub}
+          icon={Icons.trend}
+          delta={s.signups_trend !== 0 ? {
+            tone: s.signups_trend > 0 ? 'up' : 'down',
+            label: `${s.signups_trend > 0 ? '+' : ''}${s.signups_trend}`,
+          } : null}
+        />
+        <Stat
+          label="Active (7d)"
+          value={fmtNum(s.active_7d)}
+          sub="Channels audited in last 7 days"
+          icon={Icons.bolt}
+        />
       </div>
 
       {/* ── Two-column body ───────────────────────────────────────────────── */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1.65fr 1fr', gap: 20, marginBottom: 32 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '1.65fr 1fr', gap: 20, marginBottom: 36 }}>
 
         {/* LEFT — Recent signups */}
         <div>
-          <SectionLabel>Recent signups</SectionLabel>
+          <SectionHeader title="Recent signups" count={data.recent_signups.length} sub="The 40 most recent accounts" />
           <div style={{ ...CARD, overflow: 'hidden' }}>
             <ColHeader cols={SIGNUP_COLS} />
 
             {data.recent_signups.length === 0
-              ? <div style={{ padding: '40px 24px', textAlign: 'center', fontSize: 13, color: C.text3 }}>No signups yet.</div>
+              ? <EmptyState icon={Icons.users}>No signups yet. New accounts will appear here as soon as they OAuth in.</EmptyState>
               : signupSlice.map((u, i) => {
                   const name  = u.display_name || u.channel_name || u.email.split('@')[0]
                   const pic   = u.profile_picture || u.channel_thumbnail
@@ -424,7 +602,7 @@ export default function Admin() {
 
           {/* By plan */}
           <div>
-            <SectionLabel>By plan</SectionLabel>
+            <SectionHeader title="By plan" sub="Active subscriptions split by tier" />
             <div style={{ ...CARD, padding: '22px 24px' }}>
               {data.plan_breakdown.length === 0
                 ? <p style={{ fontSize: 13, color: C.text3 }}>No subscriptions yet.</p>
@@ -443,7 +621,7 @@ export default function Admin() {
 
           {/* By source */}
           <div>
-            <SectionLabel>By source</SectionLabel>
+            <SectionHeader title="By source" sub="Where signups came from (UTM-tagged + direct)" />
             <div style={{ ...CARD, padding: '22px 24px' }}>
               {data.utm_breakdown.length === 0
                 ? <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.6 }}>Nothing tracked yet. Share a UTM-tagged link to start collecting attribution.</p>
@@ -463,8 +641,12 @@ export default function Admin() {
       </div>
 
       {/* ── Country breakdown — always visible ───────────────────────────── */}
-      <div style={{ marginBottom: 32 }}>
-        <SectionLabel>Users by country</SectionLabel>
+      <div style={{ marginBottom: 36 }}>
+        <SectionHeader
+          title="Users by country"
+          count={(data.country_breakdown || []).length || null}
+          sub="Resolved from signup IP via ip-api.com"
+        />
         <div style={{ ...CARD, padding: '22px 24px' }}>
           {countryTotal === 0 ? (
             <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.6 }}>Country data is collected automatically on each new signup.</p>
@@ -491,17 +673,21 @@ export default function Admin() {
         </div>
       </div>
 
-      {/* ── Top 5 users by monthly usage ─────────────────────────────────── */}
-      <div style={{ marginBottom: 24 }}>
-        <SectionLabel>Top users this month</SectionLabel>
+      {/* ── Top users by monthly usage (top 10, 5 per page) ──────────────── */}
+      <div style={{ marginBottom: 36 }}>
+        <SectionHeader
+          title="Top users this month"
+          count={data.top_users.length}
+          sub="Ranked by AI analyses run this billing cycle"
+        />
         <div style={{ ...CARD, overflow: 'hidden' }}>
           <ColHeader cols={TOP_COLS} />
           {data.top_users.length === 0
-            ? <div style={{ padding: '40px 24px', textAlign: 'center', fontSize: 13, color: C.text3 }}>Nobody has run an analysis this month yet.</div>
-            : data.top_users.map((u, i) => {
+            ? <EmptyState icon={Icons.bolt}>Nobody has run an analysis this month yet. The leaderboard fills as people use the product.</EmptyState>
+            : topSlice.map((u, i) => {
                 const usagePct = u.monthly_allowance > 0 ? Math.min(100, (u.monthly_used / u.monthly_allowance) * 100) : 0
                 const barClr   = usagePct > 80 ? C.red : usagePct > 55 ? C.amber : C.green
-                const last     = i === data.top_users.length - 1
+                const last     = i === topSlice.length - 1
                 return (
                   <div key={u.channel_id + i} className="adm-row" style={{
                     display: 'grid', gridTemplateColumns: TOP_COLS.map(c => c.w).join(' '),
@@ -529,6 +715,7 @@ export default function Admin() {
                 )
               })
           }
+          <Pager page={topPage} total={data.top_users.length} onPage={setTopPage} pageSize={PAGE_SIZE_TOP} />
         </div>
       </div>
 
@@ -554,13 +741,17 @@ export default function Admin() {
         }
 
         return (
-          <div style={{ marginBottom: 24 }}>
-            <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 12, gap: 12 }}>
-              <SectionLabel>Feature requests</SectionLabel>
-              <span style={{ fontSize: 11, color: C.text3, fontWeight: 500 }}>
-                Share link: <code style={{ background: '#f4f4f6', border: `1px solid ${C.border}`, padding: '1px 6px', borderRadius: 4, fontSize: 11 }}>/feedback</code>
-              </span>
-            </div>
+          <div style={{ marginBottom: 28 }}>
+            <SectionHeader
+              title="Feature requests"
+              count={all.length}
+              sub="Submitted via Settings or the /feedback share link"
+              right={
+                <span style={{ fontSize: 11, color: C.text3, fontWeight: 500 }}>
+                  Share link: <code style={{ background: '#f4f4f6', border: `1px solid ${C.border}`, padding: '1px 6px', borderRadius: 4, fontSize: 11 }}>/feedback</code>
+                </span>
+              }
+            />
 
             {/* Filter chips */}
             <div style={{ display: 'flex', gap: 7, marginBottom: 12, flexWrap: 'wrap' }}>
@@ -595,11 +786,11 @@ export default function Admin() {
 
             <div style={{ ...CARD, overflow: 'hidden' }}>
               {filtered.length === 0 ? (
-                <div style={{ padding: '40px 24px', textAlign: 'center', fontSize: 13, color: C.text3 }}>
+                <EmptyState icon={Icons.inbox}>
                   {frFilter === 'all'
-                    ? 'No feature requests yet. Share the link to get the first one.'
+                    ? 'No feature requests yet. Share the /feedback link in an email to seed the first one.'
                     : `No requests with status "${frFilter}".`}
-                </div>
+                </EmptyState>
               ) : (
                 filtered.map((r, i) => {
                   const sty = statusStyle(r.status)

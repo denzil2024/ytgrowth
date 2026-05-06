@@ -195,7 +195,7 @@ def _build_overview():
             db.query(UserSubscription)
               .filter(UserSubscription.monthly_used > 0)
               .order_by(desc(UserSubscription.monthly_used))
-              .limit(5)
+              .limit(10)
               .all()
         )
         top_users = []
