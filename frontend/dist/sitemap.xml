@@ -2,10 +2,12 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://ytgrowth.io/</loc>
-    <lastmod>2026-04-29</lastmod>
+    <lastmod>2026-05-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
+
+  <!-- Features -->
   <url>
     <loc>https://ytgrowth.io/features/channel-audit</loc>
     <lastmod>2026-04-29</lastmod>
@@ -42,6 +44,34 @@
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
+
+  <!-- Free tools — high-priority SEO targets -->
+  <url>
+    <loc>https://ytgrowth.io/tools/youtube-money-calculator</loc>
+    <lastmod>2026-05-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://ytgrowth.io/tools/youtube-subscriber-money-calculator</loc>
+    <lastmod>2026-05-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://ytgrowth.io/tools/youtube-thumbnail-downloader</loc>
+    <lastmod>2026-05-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://ytgrowth.io/tools/youtube-channel-stats-checker</loc>
+    <lastmod>2026-05-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Company -->
   <url>
     <loc>https://ytgrowth.io/affiliate</loc>
     <lastmod>2026-04-29</lastmod>
@@ -54,6 +84,8 @@
     <changefreq>yearly</changefreq>
     <priority>0.5</priority>
   </url>
+
+  <!-- Legal -->
   <url>
     <loc>https://ytgrowth.io/privacy</loc>
     <lastmod>2026-04-29</lastmod>
