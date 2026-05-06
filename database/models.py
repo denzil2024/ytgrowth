@@ -178,6 +178,8 @@ class UserAccount(Base):
     utm_term        = Column(String, nullable=True)
     # Geographic data — resolved from signup IP via ip-api.com in background
     country         = Column(String, nullable=True)
+    # One-shot tracking for the TOPUP30 campaign so we never double-send
+    topup_offer_sent_at = Column(DateTime, nullable=True)
 
 
 class ChannelRegistry(Base):
@@ -416,6 +418,7 @@ try:
         "ALTER TABLE user_accounts ADD COLUMN utm_campaign TEXT",
         "ALTER TABLE user_accounts ADD COLUMN utm_content TEXT",
         "ALTER TABLE user_accounts ADD COLUMN utm_term TEXT",
+        "ALTER TABLE user_accounts ADD COLUMN topup_offer_sent_at TIMESTAMP",
         "CREATE TABLE IF NOT EXISTS channel_registry (id INTEGER PRIMARY KEY AUTOINCREMENT, owner_email TEXT NOT NULL, channel_id TEXT NOT NULL, channel_name TEXT, channel_thumbnail TEXT, subscribers INTEGER, connected_at DATETIME, disconnected_at DATETIME, is_active BOOLEAN DEFAULT 1, last_audit_at DATETIME)",
         "CREATE INDEX IF NOT EXISTS ix_channel_registry_channel_id ON channel_registry (channel_id)",
         "CREATE INDEX IF NOT EXISTS ix_channel_registry_owner_email ON channel_registry (owner_email)",

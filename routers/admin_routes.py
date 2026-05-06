@@ -409,3 +409,184 @@ def admin_test_welcome(request: Request, to: str = "", kind: str = "immediate"):
         tb = traceback.format_exc()
         print(f"[admin/test-welcome] error: {e}\n{tb}")
         return JSONResponse({"error": f"{type(e).__name__}: {e}"}, status_code=500)
+
+
+# ── TOPUP30 campaign ───────────────────────────────────────────────────────
+# Targets free users at 2/3 or 3/3 monthly_used. Idempotent via
+# UserAccount.topup_offer_sent_at — we never send the same campaign twice
+# to the same email even if they bounce back to free later.
+#
+#   GET  /admin/topup-offer/preview          — count + sample of eligible users
+#   POST /admin/topup-offer/send             — fires the campaign in a background
+#                                              thread, returns the count we
+#                                              attempted
+
+def _topup_eligible(db) -> list:
+    """Return UserAccount rows that should receive the TOPUP30 offer:
+    on a free plan with monthly_used >= 2, and haven't been sent the offer."""
+    # Owners of any free sub at 2+ used
+    rows = (
+        db.query(ChannelRegistry, UserSubscription)
+          .join(UserSubscription, UserSubscription.channel_id == ChannelRegistry.channel_id)
+          .filter(
+              UserSubscription.plan == "free",
+              UserSubscription.monthly_used >= 2,
+              ChannelRegistry.is_active == True,  # noqa: E712
+              ChannelRegistry.owner_email.isnot(None),
+          )
+          .all()
+    )
+    # Highest monthly_used per email (so we know whether to say "2 of 3" or "all 3")
+    best_used: dict[str, int] = {}
+    for ch, sub in rows:
+        em = (ch.owner_email or "").lower()
+        if not em:
+            continue
+        prev = best_used.get(em, 0)
+        used = int(sub.monthly_used or 0)
+        if used > prev:
+            best_used[em] = used
+
+    if not best_used:
+        return []
+
+    accounts = (
+        db.query(UserAccount)
+          .filter(
+              UserAccount.email.in_(list(best_used.keys())),
+              UserAccount.topup_offer_sent_at.is_(None),
+          )
+          .all()
+    )
+    out = []
+    for acct in accounts:
+        out.append({
+            "account": acct,
+            "used": best_used.get((acct.email or "").lower(), 2),
+        })
+    return out
+
+
+@router.get("/topup-offer/preview")
+def topup_offer_preview(request: Request):
+    is_admin, _ = _is_admin(request)
+    if not is_admin:
+        return JSONResponse({"error": "Forbidden"}, status_code=403)
+
+    db = SessionLocal()
+    try:
+        eligible = _topup_eligible(db)
+        sample = [
+            {
+                "email":        e["account"].email,
+                "display_name": e["account"].display_name or "",
+                "used":         e["used"],
+            }
+            for e in eligible[:25]
+        ]
+        return JSONResponse({
+            "eligible_count": len(eligible),
+            "sample":         sample,
+            "note":           "POST /admin/topup-offer/send to fire. Idempotent — already-sent users are excluded automatically.",
+        })
+    finally:
+        db.close()
+
+
+def _send_topup_offer_to_user(account, used: int):
+    """Fire one email and mark UserAccount.topup_offer_sent_at on success."""
+    import os, datetime
+    try:
+        from app.email_templates.topup_offer import build_email
+        import resend as _resend
+        api_key = os.environ.get("RESEND_API_KEY", "")
+        if not api_key:
+            print(f"[topup_offer] no RESEND_API_KEY — skipping {account.email}")
+            return False
+        _resend.api_key = api_key
+        base_url = os.environ.get("BASE_URL", "https://ytgrowth.io")
+
+        first_name = (account.display_name or "").split(" ")[0] if account.display_name else ""
+        text, html = build_email(
+            first_name=first_name,
+            monthly_used=used,
+            monthly_allowance=3,
+            pricing_url=f"{base_url}/#pricing",
+            unsubscribe_url=f"{base_url}/email/unsubscribe?token=topup-{account.email}",
+        )
+        _resend.Emails.send({
+            "from":     "Denzil from YTGrowth <hello@ytgrowth.io>",
+            "to":       [account.email],
+            "subject":  "30% off your first 2 months on YTGrowth",
+            "html":     html,
+            "text":     text,
+            "reply_to": "hello@ytgrowth.io",
+        })
+
+        # Mark sent so we never double-fire
+        db = SessionLocal()
+        try:
+            row = db.query(UserAccount).filter_by(email=account.email).first()
+            if row:
+                row.topup_offer_sent_at = datetime.datetime.utcnow()
+                db.commit()
+        finally:
+            db.close()
+        return True
+    except Exception as e:
+        print(f"[topup_offer] send failed for {account.email}: {e}")
+        return False
+
+
+def _run_topup_campaign(targets: list):
+    """Sequentially fire emails. Resend's API allows ~10 RPS by default;
+    a small sleep keeps us comfortably under any rate limit."""
+    import time
+    sent, failed = 0, 0
+    for t in targets:
+        ok = _send_topup_offer_to_user(t["account"], t["used"])
+        if ok:
+            sent += 1
+        else:
+            failed += 1
+        time.sleep(0.15)  # ~6/s — safe for Resend free tier
+    print(f"[topup_offer] campaign done. sent={sent} failed={failed}")
+
+
+@router.post("/topup-offer/send")
+def topup_offer_send(request: Request):
+    is_admin, _ = _is_admin(request)
+    if not is_admin:
+        return JSONResponse({"error": "Forbidden"}, status_code=403)
+
+    db = SessionLocal()
+    try:
+        # Snapshot eligibility now; the background thread sends in batches
+        # using fresh DB sessions for each row.
+        eligible = _topup_eligible(db)
+    finally:
+        db.close()
+
+    if not eligible:
+        return JSONResponse({"ok": True, "queued": 0, "message": "No eligible users right now."})
+
+    # Detach SQLAlchemy objects we'll touch in the thread to avoid session issues
+    targets = []
+    for e in eligible:
+        a = e["account"]
+        targets.append({
+            "account": type("Acct", (), {
+                "email":        a.email,
+                "display_name": a.display_name,
+            })(),
+            "used": e["used"],
+        })
+
+    import threading
+    threading.Thread(target=_run_topup_campaign, args=(targets,), daemon=True).start()
+
+    return JSONResponse({
+        "ok":       True,
+        "queued":   len(targets),
+        "message":  f"Queued {len(targets)} emails. Sending in the background. Check Resend dashboard for delivery, or refresh /admin/topup-offer/preview to watch the count drop as recipients are marked sent.",
+    })
