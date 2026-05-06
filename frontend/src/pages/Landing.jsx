@@ -761,6 +761,7 @@ export default function Landing() {
         {!isMobile && (
           <div style={{ display: 'flex', gap: 30, alignItems: 'center' }}>
             <FeaturesNavDropdown />
+            <a href="/tools/youtube-money-calculator" className="ytg-nav-link">Free tools</a>
             {['How it works', 'Pricing', 'FAQ'].map((l, i) => (
               <a key={i} href={`#${l.toLowerCase().replace(/ /g, '-')}`} className="ytg-nav-link">{l}</a>
             ))}
@@ -812,9 +813,13 @@ export default function Landing() {
             </a>
           ))}
         </div>
-        {['How it works', 'Pricing', 'FAQ', 'Affiliates', 'Contact'].map((l, i) => (
+        {['Free tools', 'How it works', 'Pricing', 'FAQ', 'Affiliates', 'Contact'].map((l, i) => (
           <a key={i}
-            href={l === 'Affiliates' ? '/affiliate' : l === 'Contact' ? '/contact' : `#${l.toLowerCase().replace(/ /g, '-')}`}
+            href={
+              l === 'Affiliates' ? '/affiliate'
+              : l === 'Contact' ? '/contact'
+              : l === 'Free tools' ? '/tools/youtube-money-calculator'
+              : `#${l.toLowerCase().replace(/ /g, '-')}`}
             onClick={() => setMobileMenuOpen(false)}
             style={{ fontSize: 18, fontWeight: 700, color: 'rgba(255,255,255,0.88)', textDecoration: 'none', letterSpacing: '-0.5px' }}>
             {l}

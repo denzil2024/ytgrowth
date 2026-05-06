@@ -35,6 +35,10 @@ const FEATURES = [
   { label: 'Outliers',              href: '/features/outliers' },
 ]
 
+const TOOLS = [
+  { label: 'YouTube Money Calculator', href: '/tools/youtube-money-calculator' },
+]
+
 const COMPANY = [
   { label: 'Affiliates',       href: '/affiliate' },
   { label: 'Contact',          href: '/contact' },
@@ -91,23 +95,31 @@ export default function LandingFooter() {
           </p>
           <div style={{ height: 1, width: 48, background: 'rgba(255,255,255,0.10)', marginBottom: 22 }} />
 
-          {/* Mobile: collapse all sections into single-line link rows with separators */}
-          <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.35)', marginBottom: 10 }}>Features</p>
-          <div style={{ fontSize: 13, textAlign: 'center', marginBottom: 22, lineHeight: 1.85 }}>
-            {FEATURES.map((l, i, arr) => (
-              <span key={i}>
-                <a href={l.href} style={{ color: 'rgba(255,255,255,0.62)', textDecoration: 'none', fontFamily: "'Inter', system-ui, sans-serif", fontWeight: 500 }}>{l.label}</a>
-                {i < arr.length - 1 && <span style={{ margin: '0 8px', color: 'rgba(255,255,255,0.22)' }}>·</span>}
-              </span>
+          {/* Mobile: stack columns vertically (no more cramped dot-separated rows) */}
+          <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.35)', marginBottom: 12 }}>Features</p>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 28, alignItems: 'center' }}>
+            {FEATURES.map((l, i) => (
+              <a key={i} href={l.href} style={{ color: 'rgba(255,255,255,0.72)', textDecoration: 'none', fontFamily: "'Inter', system-ui, sans-serif", fontWeight: 500, fontSize: 15, letterSpacing: '-0.1px' }}>
+                {l.label}
+              </a>
             ))}
           </div>
 
-          <div style={{ fontSize: 12.5, textAlign: 'center', marginBottom: 18, lineHeight: 1.85 }}>
-            {[...COMPANY, ...LEGAL].map((l, i, arr) => (
-              <span key={i}>
-                <a href={l.href} style={{ color: 'rgba(255,255,255,0.5)', textDecoration: 'none', fontFamily: "'Inter', system-ui, sans-serif", fontWeight: 500 }}>{l.label}</a>
-                {i < arr.length - 1 && <span style={{ margin: '0 8px', color: 'rgba(255,255,255,0.22)' }}>·</span>}
-              </span>
+          <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.35)', marginBottom: 12 }}>Free tools</p>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 28, alignItems: 'center' }}>
+            {TOOLS.map((l, i) => (
+              <a key={i} href={l.href} style={{ color: 'rgba(255,255,255,0.72)', textDecoration: 'none', fontFamily: "'Inter', system-ui, sans-serif", fontWeight: 500, fontSize: 15, letterSpacing: '-0.1px' }}>
+                {l.label}
+              </a>
+            ))}
+          </div>
+
+          <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.35)', marginBottom: 12 }}>Company &amp; Legal</p>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 22, alignItems: 'center' }}>
+            {[...COMPANY, ...LEGAL].map((l, i) => (
+              <a key={i} href={l.href} style={{ color: 'rgba(255,255,255,0.62)', textDecoration: 'none', fontFamily: "'Inter', system-ui, sans-serif", fontWeight: 500, fontSize: 14.5, letterSpacing: '-0.1px' }}>
+                {l.label}
+              </a>
             ))}
           </div>
           <p style={{ fontSize: 11.5, color: 'rgba(255,255,255,0.28)', textAlign: 'center' }}>© 2026 YTGrowth. All rights reserved.</p>
@@ -119,7 +131,7 @@ export default function LandingFooter() {
   return (
     <footer style={{ background: '#07070a', borderTop: '1px solid rgba(255,255,255,0.07)', padding: '56px 64px 36px' }}>
       <div style={{ maxWidth: 1280, margin: '0 auto' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '1.4fr 1fr 1fr 1fr', gap: 40, marginBottom: 44 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1.4fr 1fr 1fr 1fr 1fr', gap: 36, marginBottom: 44 }}>
           {/* Brand block */}
           <div>
             <a href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
@@ -131,9 +143,10 @@ export default function LandingFooter() {
             </p>
           </div>
 
-          <Col heading="Features" links={FEATURES} />
-          <Col heading="Company"  links={COMPANY} />
-          <Col heading="Legal"    links={LEGAL} />
+          <Col heading="Features"   links={FEATURES} />
+          <Col heading="Free tools" links={TOOLS} />
+          <Col heading="Company"    links={COMPANY} />
+          <Col heading="Legal"      links={LEGAL} />
         </div>
 
         {/* Bottom strip */}
