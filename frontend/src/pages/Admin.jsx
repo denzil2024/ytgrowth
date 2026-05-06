@@ -621,6 +621,46 @@ export default function Admin() {
   const [frExpanded, setFrExpanded] = useState(null)   // request id of opened body
   const [frBusy,     setFrBusy]     = useState(null)   // request id currently saving
 
+  // TOPUP30 campaign
+  const [topupData,    setTopupData]    = useState(null)   // { eligible_count, sample[] }
+  const [topupSending, setTopupSending] = useState(false)
+  const [topupResult,  setTopupResult]  = useState(null)   // { queued, sent_at }
+  const [topupError,   setTopupError]   = useState('')
+
+  function loadTopupPreview() {
+    fetch('/admin/topup-offer/preview', { credentials: 'include' })
+      .then(r => r.ok ? r.json() : null)
+      .then(d => { if (d) setTopupData(d) })
+      .catch(() => {})
+  }
+
+  function fireTopupCampaign() {
+    if (!topupData || topupData.eligible_count === 0) return
+    const ok = window.confirm(
+      `Send the TOPUP30 offer email to ${topupData.eligible_count} ${topupData.eligible_count === 1 ? 'user' : 'users'}?\n\n` +
+      `This is idempotent — already-sent users are excluded.\n` +
+      `Emails fire in a background thread at ~6/sec.`
+    )
+    if (!ok) return
+    setTopupSending(true)
+    setTopupError('')
+    setTopupResult(null)
+    fetch('/admin/topup-offer/send', { method: 'POST', credentials: 'include' })
+      .then(async r => {
+        const body = await r.json().catch(() => ({}))
+        if (!r.ok) throw new Error(body.error || `Error ${r.status}`)
+        return body
+      })
+      .then(d => {
+        setTopupResult({ queued: d.queued, sentAt: Date.now() })
+        // Refresh preview after a few seconds so the count drops as the
+        // background thread marks recipients sent.
+        setTimeout(loadTopupPreview, 8000)
+      })
+      .catch(e => setTopupError(e.message || 'Send failed.'))
+      .finally(() => setTopupSending(false))
+  }
+
   function loadFeatureRequests() {
     fetch('/feedback/admin/list', { credentials: 'include' })
       .then(r => r.ok ? r.json() : null)
@@ -640,7 +680,7 @@ export default function Admin() {
       .finally(() => setFrBusy(null))
   }
 
-  useEffect(() => { loadFeatureRequests() }, [])
+  useEffect(() => { loadFeatureRequests(); loadTopupPreview() }, [])
 
   function load(initial = false) {
     if (initial) setLoading(true); else setRefreshing(true)
@@ -881,6 +921,105 @@ export default function Admin() {
           <Pager page={topPage} total={data.top_users.length} onPage={setTopPage} pageSize={PAGE_SIZE_TOP} />
         </SectionCard>
       </div>
+
+      {/* ── TOPUP30 campaign ─────────────────────────────────────────────── */}
+      {topupData && (
+        <div style={{ marginBottom: 36 }}>
+          <SectionCard
+            title="TOPUP30 campaign"
+            count={topupData.eligible_count}
+            sub="Free users who used 2 or 3 of 3 monthly analyses. Already-sent users are excluded automatically."
+            right={
+              <button
+                onClick={fireTopupCampaign}
+                disabled={topupSending || topupData.eligible_count === 0}
+                style={{
+                  display: 'inline-flex', alignItems: 'center', gap: 8,
+                  padding: '10px 22px', borderRadius: 100, border: 'none',
+                  background: topupData.eligible_count === 0 ? '#d1d1d8' : C.red,
+                  color: '#ffffff', fontSize: 13, fontWeight: 700,
+                  cursor: (topupSending || topupData.eligible_count === 0) ? 'not-allowed' : 'pointer',
+                  fontFamily: 'inherit', whiteSpace: 'nowrap',
+                  boxShadow: topupData.eligible_count === 0 ? 'none' : '0 1px 3px rgba(0,0,0,0.12), 0 4px 14px rgba(229,37,27,0.32)',
+                  opacity: topupSending ? 0.65 : 1,
+                  transition: 'filter 0.18s, transform 0.18s',
+                }}
+                onMouseEnter={e => { if (!topupSending && topupData.eligible_count > 0) { e.currentTarget.style.filter = 'brightness(1.07)'; e.currentTarget.style.transform = 'translateY(-1px)' } }}
+                onMouseLeave={e => { e.currentTarget.style.filter = 'none'; e.currentTarget.style.transform = 'translateY(0)' }}
+              >
+                <svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.85" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M2 7h10M8 3l4 4-4 4"/>
+                </svg>
+                {topupSending
+                  ? 'Sending…'
+                  : topupData.eligible_count === 0
+                    ? 'No eligible users'
+                    : `Send to ${topupData.eligible_count} ${topupData.eligible_count === 1 ? 'user' : 'users'}`
+                }
+              </button>
+            }
+          >
+            {/* Sample list of recipients */}
+            <div style={{ padding: '20px 26px' }}>
+              {topupData.eligible_count === 0 ? (
+                <p style={{ fontSize: 13.5, color: C.text2, lineHeight: 1.6, margin: 0 }}>
+                  Nobody's sitting at 2/3 or 3/3 right now. The list will repopulate as free users approach their monthly limit.
+                </p>
+              ) : (
+                <>
+                  <p style={{ fontSize: 12, fontWeight: 700, color: C.text3, letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 12 }}>
+                    Recipients ({topupData.sample.length} of {topupData.eligible_count} shown)
+                  </p>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                    {topupData.sample.map((u, i) => {
+                      const name = u.display_name || u.email.split('@')[0]
+                      return (
+                        <div key={u.email + i} style={{
+                          display: 'flex', alignItems: 'center', gap: 12,
+                          padding: '8px 12px', borderRadius: 10,
+                          background: '#fafafc', border: `1px solid ${C.border}`,
+                        }}>
+                          <Avatar name={name} size={28} />
+                          <div style={{ flex: 1, minWidth: 0 }}>
+                            <p style={{ fontSize: 13, fontWeight: 600, color: C.text1, letterSpacing: '-0.1px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{name}</p>
+                            <p style={{ fontSize: 11.5, color: C.text3, marginTop: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{u.email}</p>
+                          </div>
+                          <span style={{
+                            fontSize: 10.5, fontWeight: 700, letterSpacing: '0.05em', textTransform: 'uppercase',
+                            color: u.used >= 3 ? C.red : C.amber,
+                            background: u.used >= 3 ? C.redBg : C.amberBg,
+                            border: `1px solid ${u.used >= 3 ? C.redBdr : C.amberBdr}`,
+                            padding: '2px 8px', borderRadius: 100, flexShrink: 0,
+                          }}>
+                            {u.used} / 3 used
+                          </span>
+                        </div>
+                      )
+                    })}
+                  </div>
+                  {topupData.eligible_count > topupData.sample.length && (
+                    <p style={{ fontSize: 12, color: C.text3, marginTop: 14, textAlign: 'center' }}>
+                      … and {topupData.eligible_count - topupData.sample.length} more
+                    </p>
+                  )}
+                </>
+              )}
+
+              {/* Result / error feedback */}
+              {topupResult && (
+                <div style={{ marginTop: 18, padding: '12px 14px', background: C.greenBg, border: `1px solid ${C.greenBdr}`, borderRadius: 10, color: C.green, fontSize: 13, fontWeight: 600, lineHeight: 1.5 }}>
+                  ✓ Queued {topupResult.queued} {topupResult.queued === 1 ? 'email' : 'emails'}. Sending in the background — refresh in a few seconds to see the count drop as recipients are marked sent.
+                </div>
+              )}
+              {topupError && (
+                <div style={{ marginTop: 18, padding: '12px 14px', background: C.redBg, border: `1px solid ${C.redBdr}`, borderRadius: 10, color: C.red, fontSize: 13, fontWeight: 600, lineHeight: 1.5 }}>
+                  {topupError}
+                </div>
+              )}
+            </div>
+          </SectionCard>
+        </div>
+      )}
 
       {/* ── Feature requests ─────────────────────────────────────────────── */}
       {frData && (() => {
