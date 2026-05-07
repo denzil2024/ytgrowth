@@ -294,6 +294,37 @@ function useStyles() {
         margin: 2.8em 0;
       }
 
+      .bp-prose table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 2em 0;
+        font-size: 15px;
+        border: 1px solid var(--ytg-border);
+        border-radius: 14px;
+        overflow: hidden;
+        background: var(--ytg-card);
+        box-shadow: var(--ytg-shadow-sm);
+      }
+      .bp-prose thead {
+        background: var(--ytg-bg-2);
+      }
+      .bp-prose th {
+        padding: 14px 18px;
+        font-weight: 700;
+        text-align: left;
+        font-size: 11.5px;
+        letter-spacing: 0.07em;
+        text-transform: uppercase;
+        color: var(--ytg-text-2);
+        font-family: 'Inter', system-ui, sans-serif;
+      }
+      .bp-prose td {
+        padding: 16px 18px;
+        border-top: 1px solid var(--ytg-border);
+        vertical-align: top;
+        line-height: 1.6;
+      }
+
       /* RELATED POSTS */
       .bp-grid-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 22px; }
 
