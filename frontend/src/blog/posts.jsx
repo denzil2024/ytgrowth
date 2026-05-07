@@ -1278,7 +1278,7 @@ export const posts = [
   },
   {
     slug: 'youtube-partner-program',
-    title: 'How to Monetize Your YouTube Channel in 2026: A Strategic Roadmap From 0 to Your First Paycheck',
+    title: 'How to Monetize Your YouTube Channel in 2026',
     excerpt: 'Most monetization guides skip Tier 1 entirely. The two-tier YouTube Partner Program structure plus the Bridge Strategy gets you to your first paycheck faster than the standard approach.',
     date: '2026-05-07',
     category: CATEGORIES.monetization,

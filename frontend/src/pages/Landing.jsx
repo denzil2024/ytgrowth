@@ -458,29 +458,29 @@ const FEATURE_GROUPS = [
 // Flat list — kept for the mobile menu and anywhere else that wants every item
 const FEATURE_NAV_ITEMS = FEATURE_GROUPS.flatMap(g => g.items)
 
-/* ─── Mega-menu data: Free tools grouped by category ───────────────────── */
-const FREE_TOOL_GROUPS = [
+/* ─── Mega-menu data: Resources (Blog + Free tools combined) ──────────── */
+const RESOURCES_GROUPS = [
   {
-    label: 'Calculators',
+    label: 'Blog',
     items: [
-      { href: '/tools/youtube-money-calculator',            label: 'YouTube Money Calculator',    desc: 'Estimate channel earnings by niche + country' },
-      { href: '/tools/youtube-subscriber-money-calculator', label: 'Subscriber Money Calculator', desc: 'How much your sub count earns + targets' },
+      { href: '/blog',                                  label: 'All articles' },
+      { href: '/blog/youtube-shorts-algorithm',         label: 'YouTube Shorts algorithm' },
+      { href: '/blog/grow-youtube-channel',             label: 'Grow your channel' },
+      { href: '/blog/youtube-algorithm',                label: 'YouTube algorithm explained' },
+      { href: '/blog/seo-tools-for-youtube',            label: 'SEO tools comparison' },
     ],
   },
   {
-    label: 'Research',
+    label: 'Free tools',
     items: [
-      { href: '/tools/youtube-channel-stats-checker', label: 'Channel Stats Checker', desc: 'Look up any channel\'s public stats' },
-    ],
-  },
-  {
-    label: 'Thumbnails',
-    items: [
-      { href: '/tools/youtube-thumbnail-downloader', label: 'Thumbnail Downloader', desc: 'Download any YouTube thumbnail in HD' },
+      { href: '/tools/youtube-money-calculator',            label: 'YouTube Money Calculator' },
+      { href: '/tools/youtube-subscriber-money-calculator', label: 'Subscriber Money Calculator' },
+      { href: '/tools/youtube-channel-stats-checker',       label: 'Channel Stats Checker' },
+      { href: '/tools/youtube-thumbnail-downloader',        label: 'Thumbnail Downloader' },
     ],
   },
 ]
-const FREE_TOOL_NAV_ITEMS = FREE_TOOL_GROUPS.flatMap(g => g.items)
+const RESOURCES_NAV_ITEMS = RESOURCES_GROUPS.flatMap(g => g.items)
 
 /* ─── Mega-menu component — VidIQ pattern: clean titles, no descriptions ─ */
 function MegaMenu({ trigger, groups, viewAllHref, viewAllLabel, columns = 3, panelLeft = -24 }) {
@@ -573,14 +573,14 @@ function FeaturesNavDropdown() {
   )
 }
 
-function FreeToolsNavDropdown() {
+function ResourcesNavDropdown() {
   return (
     <MegaMenu
-      trigger="Free tools"
-      groups={FREE_TOOL_GROUPS}
-      columns={3}
-      viewAllHref="/tools/youtube-money-calculator"
-      viewAllLabel="Browse the tool library"
+      trigger="Resources"
+      groups={RESOURCES_GROUPS}
+      columns={2}
+      viewAllHref="/blog"
+      viewAllLabel="Read the latest from the blog →"
     />
   )
 }
@@ -889,7 +889,7 @@ export default function Landing() {
         {!isMobile && (
           <div style={{ display: 'flex', gap: 30, alignItems: 'center' }}>
             <FeaturesNavDropdown />
-            <FreeToolsNavDropdown />
+            <ResourcesNavDropdown />
             {['How it works', 'Pricing', 'FAQ'].map((l, i) => (
               <a key={i} href={`#${l.toLowerCase().replace(/ /g, '-')}`} className="ytg-nav-link">{l}</a>
             ))}
@@ -942,9 +942,12 @@ export default function Landing() {
           ))}
         </div>
 
-        {/* Free tools */}
+        {/* Resources */}
         <div className="ytg-mm-section">
-          <span className="ytg-mm-label">Free tools</span>
+          <span className="ytg-mm-label">Resources</span>
+          <a href="/blog" onClick={() => setMobileMenuOpen(false)} className="ytg-mm-link">
+            Blog
+          </a>
           <a href="/tools/youtube-money-calculator" onClick={() => setMobileMenuOpen(false)} className="ytg-mm-link">
             YouTube Money Calculator
           </a>

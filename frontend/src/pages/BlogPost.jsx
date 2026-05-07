@@ -32,38 +32,99 @@ function Logo({ size = 28 }) {
   )
 }
 
-const FEATURE_NAV = [
-  { href: '/features/channel-audit',       label: 'Channel Audit',       desc: '10-category AI audit of your channel' },
-  { href: '/features/competitor-analysis', label: 'Competitor Analysis', desc: 'Track rivals, find their content gaps' },
-  { href: '/features/seo-studio',          label: 'SEO Studio',          desc: 'Score + rewrite titles and descriptions' },
-  { href: '/features/thumbnail-iq',        label: 'Thumbnail IQ',        desc: 'Two-layer thumbnail scoring vs your niche' },
-  { href: '/features/keyword-research',    label: 'Keyword Research',    desc: 'YouTube-native search volume + difficulty' },
-  { href: '/features/outliers',            label: 'Outliers',            desc: 'Find viral videos and breakout channels' },
+/* Mega-menu data — mirrors the Landing page header exactly */
+const FEATURE_GROUPS = [
+  {
+    label: 'Audit & strategy',
+    items: [
+      { href: '/features/channel-audit', label: 'Channel Audit' },
+    ],
+  },
+  {
+    label: 'SEO & discovery',
+    items: [
+      { href: '/features/seo-studio',       label: 'SEO Studio' },
+      { href: '/features/keyword-research', label: 'Keyword Research' },
+      { href: '/features/outliers',         label: 'Outliers' },
+    ],
+  },
+  {
+    label: 'Compete & convert',
+    items: [
+      { href: '/features/competitor-analysis', label: 'Competitor Analysis' },
+      { href: '/features/thumbnail-iq',        label: 'Thumbnail IQ' },
+    ],
+  },
 ]
 
-function FeaturesDropdown() {
+const RESOURCES_GROUPS = [
+  {
+    label: 'Blog',
+    items: [
+      { href: '/blog',                          label: 'All articles' },
+      { href: '/blog/youtube-shorts-algorithm', label: 'YouTube Shorts algorithm' },
+      { href: '/blog/grow-youtube-channel',     label: 'Grow your channel' },
+      { href: '/blog/youtube-algorithm',        label: 'YouTube algorithm explained' },
+      { href: '/blog/seo-tools-for-youtube',    label: 'SEO tools comparison' },
+    ],
+  },
+  {
+    label: 'Free tools',
+    items: [
+      { href: '/tools/youtube-money-calculator',            label: 'YouTube Money Calculator' },
+      { href: '/tools/youtube-subscriber-money-calculator', label: 'Subscriber Money Calculator' },
+      { href: '/tools/youtube-channel-stats-checker',       label: 'Channel Stats Checker' },
+      { href: '/tools/youtube-thumbnail-downloader',        label: 'Thumbnail Downloader' },
+    ],
+  },
+]
+
+function MegaMenu({ trigger, groups, columns = 2, viewAllHref, viewAllLabel, panelLeft = -24 }) {
   const [open, setOpen] = useState(false)
+  const panelWidth = columns === 3 ? 780 : 540
   return (
     <div onMouseEnter={() => setOpen(true)} onMouseLeave={() => setOpen(false)} style={{ position: 'relative' }}>
-      <a href="/#features" className="bp-nav-link" style={{ display: 'inline-flex', alignItems: 'center', gap: 4, cursor: 'pointer' }}>
-        Features
+      <a href={groups[0].items[0].href} className="bp-nav-link" style={{ display: 'inline-flex', alignItems: 'center', gap: 4, cursor: 'pointer' }}>
+        {trigger}
         <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" style={{ transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.18s' }}>
           <path d="M2 3.5l3 3 3-3"/>
         </svg>
       </a>
       {open && (
         <>
-          <div style={{ position: 'absolute', top: '100%', left: -20, width: 360, height: 12 }} />
-          <div style={{ position: 'absolute', top: 'calc(100% + 8px)', left: -20, zIndex: 200, background: '#fff', border: '1px solid var(--ytg-border)', borderRadius: 14, boxShadow: 'var(--ytg-shadow-lg)', padding: 8, minWidth: 340, animation: 'fadeUp 0.16s ease both' }}>
-            {FEATURE_NAV.map((item, i) => (
-              <a key={i} href={item.href} style={{ display: 'block', padding: '11px 14px', borderRadius: 9, textDecoration: 'none', transition: 'background 0.12s' }}
-                onMouseEnter={e => e.currentTarget.style.background = '#f6f6f9'}
-                onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
-              >
-                <p style={{ fontSize: 14, fontWeight: 700, color: 'var(--ytg-text)', letterSpacing: '-0.2px', marginBottom: 2 }}>{item.label}</p>
-                <p style={{ fontSize: 12.5, color: 'var(--ytg-text-2)', lineHeight: 1.45 }}>{item.desc}</p>
-              </a>
-            ))}
+          <div style={{ position: 'absolute', top: '100%', left: panelLeft, width: panelWidth + 48, height: 14 }} />
+          <div style={{
+            position: 'absolute', top: 'calc(100% + 10px)', left: panelLeft,
+            background: '#ffffff', border: '1px solid rgba(10,10,15,0.08)', borderRadius: 18,
+            boxShadow: '0 4px 16px rgba(0,0,0,0.08), 0 24px 64px rgba(0,0,0,0.13)',
+            padding: '32px 32px 22px',
+            width: panelWidth,
+            animation: 'fadeUp 0.16s ease both',
+            zIndex: 110,
+          }}>
+            <div style={{ display: 'grid', gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))`, gap: 36 }}>
+              {groups.map((group, gi) => (
+                <div key={gi}>
+                  <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(10,10,15,0.38)', marginBottom: 14, whiteSpace: 'nowrap' }}>{group.label}</p>
+                  <div style={{ display: 'flex', flexDirection: 'column' }}>
+                    {group.items.map((item, i) => (
+                      <a key={i} href={item.href}
+                        style={{ display: 'block', padding: '8px 0', fontSize: 14.5, fontWeight: 500, color: '#0a0a0f', letterSpacing: '-0.15px', textDecoration: 'none', whiteSpace: 'nowrap', transition: 'color 0.13s' }}
+                        onMouseEnter={e => { e.currentTarget.style.color = 'var(--ytg-accent)' }}
+                        onMouseLeave={e => { e.currentTarget.style.color = '#0a0a0f' }}
+                      >{item.label}</a>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+            {viewAllHref && (
+              <div style={{ marginTop: 22, paddingTop: 16, borderTop: '1px solid rgba(10,10,15,0.07)' }}>
+                <a href={viewAllHref} style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 13.5, fontWeight: 600, color: 'var(--ytg-accent)', textDecoration: 'none', letterSpacing: '-0.1px' }}>
+                  {viewAllLabel}
+                </a>
+              </div>
+            )}
           </div>
         </>
       )}
@@ -714,18 +775,25 @@ export default function BlogPost() {
 
       <ScrollProgress />
 
-      {/* NAV */}
-      <nav style={{ position: 'sticky', top: 0, zIndex: 100, borderBottom: '1px solid var(--ytg-border)', padding: isMobile ? '0 20px' : '0 40px 0 64px', height: 60, display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'var(--ytg-nav)', backdropFilter: 'blur(16px)' }}>
+      {/* NAV — mirrors the Landing page header */}
+      <nav style={{ position: 'sticky', top: 0, zIndex: 100, borderBottom: '1px solid var(--ytg-border)', padding: isMobile ? '0 20px' : '0 48px 0 80px', height: 60, display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'var(--ytg-nav)', backdropFilter: 'blur(16px)' }}>
         <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: 9, textDecoration: 'none' }}>
           <Logo size={28} />
           <span style={{ fontWeight: 800, fontSize: 17, color: 'var(--ytg-text)', letterSpacing: '-0.4px' }}>YTGrowth</span>
         </Link>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 22 }}>
-          {!isMobile && <FeaturesDropdown />}
-          {!isMobile && <a href="/#pricing" className="bp-nav-link">Pricing</a>}
-          {!isMobile && <Link to="/blog" className="bp-nav-link">Blog</Link>}
+        {!isMobile && (
+          <div style={{ display: 'flex', gap: 30, alignItems: 'center' }}>
+            <MegaMenu trigger="Features"  groups={FEATURE_GROUPS}   columns={3} viewAllHref="/#features" viewAllLabel="Explore all features →" />
+            <MegaMenu trigger="Resources" groups={RESOURCES_GROUPS} columns={2} viewAllHref="/blog"      viewAllLabel="Read the latest from the blog →" />
+            <a href="/#pricing"  className="bp-nav-link">Pricing</a>
+            <a href="/affiliate" className="bp-nav-link">Affiliates</a>
+            <a href="/contact"   className="bp-nav-link">Contact</a>
+          </div>
+        )}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          {!isMobile && <a href="/auth/login" className="bp-nav-link">Log in</a>}
           <Link to="/dashboard" className="bp-btn" style={{ padding: isMobile ? '8px 18px' : '9px 22px', fontSize: 13, borderRadius: 100, whiteSpace: 'nowrap', boxShadow: 'none' }}>
-            {isMobile ? 'Try free' : 'Try YTGrowth'}
+            {isMobile ? 'Try free' : 'Get started free'}
           </Link>
         </div>
       </nav>

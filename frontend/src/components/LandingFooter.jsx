@@ -35,7 +35,8 @@ const FEATURES = [
   { label: 'Outliers',              href: '/features/outliers' },
 ]
 
-const TOOLS = [
+const RESOURCES = [
+  { label: 'Blog',                                href: '/blog' },
   { label: 'YouTube Money Calculator',            href: '/tools/youtube-money-calculator' },
   { label: 'YouTube Subscriber Money Calculator', href: '/tools/youtube-subscriber-money-calculator' },
   { label: 'YouTube Channel Stats Checker',       href: '/tools/youtube-channel-stats-checker' },
@@ -108,9 +109,9 @@ export default function LandingFooter() {
             ))}
           </div>
 
-          <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.35)', marginBottom: 12 }}>Free tools</p>
+          <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.35)', marginBottom: 12 }}>Resources</p>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 28, alignItems: 'center' }}>
-            {TOOLS.map((l, i) => (
+            {RESOURCES.map((l, i) => (
               <a key={i} href={l.href} style={{ color: 'rgba(255,255,255,0.72)', textDecoration: 'none', fontFamily: "'Inter', system-ui, sans-serif", fontWeight: 500, fontSize: 15, letterSpacing: '-0.1px' }}>
                 {l.label}
               </a>
@@ -146,10 +147,10 @@ export default function LandingFooter() {
             </p>
           </div>
 
-          <Col heading="Features"   links={FEATURES} />
-          <Col heading="Free tools" links={TOOLS} />
-          <Col heading="Company"    links={COMPANY} />
-          <Col heading="Legal"      links={LEGAL} />
+          <Col heading="Features"  links={FEATURES} />
+          <Col heading="Resources" links={RESOURCES} />
+          <Col heading="Company"   links={COMPANY} />
+          <Col heading="Legal"     links={LEGAL} />
         </div>
 
         {/* Bottom strip */}
