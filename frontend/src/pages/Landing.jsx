@@ -485,8 +485,8 @@ const RESOURCES_NAV_ITEMS = RESOURCES_GROUPS.flatMap(g => g.items)
 /* ─── Mega-menu component — VidIQ pattern: clean titles, no descriptions ─ */
 function MegaMenu({ trigger, groups, viewAllHref, viewAllLabel, columns = 3, panelLeft = -24 }) {
   const [open, setOpen] = useState(false)
-  // Generous widths so item titles never wrap — each column gets ~210px of real estate
-  const panelWidth = columns === 3 ? 780 : 540
+  // Generous widths so item titles never wrap and the panel doesn't feel boxy.
+  const panelWidth = columns === 3 ? 820 : 720
   return (
     <div
       onMouseEnter={() => setOpen(true)}
@@ -507,7 +507,7 @@ function MegaMenu({ trigger, groups, viewAllHref, viewAllLabel, columns = 3, pan
             position: 'absolute', top: 'calc(100% + 10px)', left: panelLeft,
             background: '#ffffff', border: '1px solid rgba(10,10,15,0.08)', borderRadius: 18,
             boxShadow: '0 4px 16px rgba(0,0,0,0.08), 0 24px 64px rgba(0,0,0,0.13)',
-            padding: '32px 32px 22px',
+            padding: '36px 40px 26px',
             width: panelWidth,
             animation: 'fadeUp 0.16s ease both',
             zIndex: 110,

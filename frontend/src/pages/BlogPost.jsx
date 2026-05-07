@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link, useParams, Navigate } from 'react-router-dom'
 import LandingFooter from '../components/LandingFooter'
+import SiteHeader from '../components/SiteHeader'
 import { getPostBySlug, getRelatedPosts, formatPostDate } from '../blog/posts.jsx'
 
 /* Single blog post. Same visual DNA as feature pages: white hero,
@@ -775,28 +776,8 @@ export default function BlogPost() {
 
       <ScrollProgress />
 
-      {/* NAV — mirrors the Landing page header */}
-      <nav style={{ position: 'sticky', top: 0, zIndex: 100, borderBottom: '1px solid var(--ytg-border)', padding: isMobile ? '0 20px' : '0 48px 0 80px', height: 60, display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'var(--ytg-nav)', backdropFilter: 'blur(16px)' }}>
-        <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: 9, textDecoration: 'none' }}>
-          <Logo size={28} />
-          <span style={{ fontWeight: 800, fontSize: 17, color: 'var(--ytg-text)', letterSpacing: '-0.4px' }}>YTGrowth</span>
-        </Link>
-        {!isMobile && (
-          <div style={{ display: 'flex', gap: 30, alignItems: 'center' }}>
-            <MegaMenu trigger="Features"  groups={FEATURE_GROUPS}   columns={3} viewAllHref="/#features" viewAllLabel="Explore all features →" />
-            <MegaMenu trigger="Resources" groups={RESOURCES_GROUPS} columns={2} viewAllHref="/blog"      viewAllLabel="Read the latest from the blog →" />
-            <a href="/#pricing"  className="bp-nav-link">Pricing</a>
-            <a href="/affiliate" className="bp-nav-link">Affiliates</a>
-            <a href="/contact"   className="bp-nav-link">Contact</a>
-          </div>
-        )}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          {!isMobile && <a href="/auth/login" className="bp-nav-link">Log in</a>}
-          <Link to="/dashboard" className="bp-btn" style={{ padding: isMobile ? '8px 18px' : '9px 22px', fontSize: 13, borderRadius: 100, whiteSpace: 'nowrap', boxShadow: 'none' }}>
-            {isMobile ? 'Try free' : 'Get started free'}
-          </Link>
-        </div>
-      </nav>
+      {/* NAV — shared SiteHeader */}
+      <SiteHeader />
 
       {/* 1 — HEADER. White */}
       <section style={{ padding: isMobile ? '24px 18px 0' : '56px 40px 0', textAlign: 'center', background: '#ffffff' }}>

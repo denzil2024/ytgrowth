@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import LandingFooter from '../../components/LandingFooter'
+import SiteHeader from '../../components/SiteHeader'
 
 /* Keyword Research. Fully custom landing page.
  *
@@ -363,20 +364,8 @@ export default function KeywordResearch() {
   return (
     <div style={{ background: 'var(--ytg-bg)', minHeight: '100vh' }}>
 
-      {/* ════ NAV ════════════════════════════════════════════════════════ */}
-      <nav style={{ position: 'sticky', top: 0, zIndex: 100, borderBottom: '1px solid var(--ytg-border)', padding: isMobile ? '0 20px' : '0 40px 0 64px', height: 60, display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'var(--ytg-nav)', backdropFilter: 'blur(16px)' }}>
-        <a href="/" style={{ display: 'flex', alignItems: 'center', gap: 9, textDecoration: 'none' }}>
-          <Logo size={28} />
-          <span style={{ fontWeight: 800, fontSize: 17, color: 'var(--ytg-text)', letterSpacing: '-0.4px' }}>YTGrowth</span>
-        </a>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 22 }}>
-          {!isMobile && <FeaturesDropdown />}
-          {!isMobile && <a href="/#pricing" className="kwr-nav-link">Pricing</a>}
-          <a href="/auth/login" className="kwr-btn" style={{ padding: isMobile ? '8px 18px' : '9px 22px', fontSize: 13, borderRadius: 100, whiteSpace: 'nowrap', boxShadow: 'none' }}>
-            Find a winning keyword
-          </a>
-        </div>
-      </nav>
+      {/* ════ NAV — shared SiteHeader ════════════════════════════════════ */}
+      <SiteHeader />
 
       {/* ════ 1. HERO. White ════════════════════════════════════════════ */}
       <section style={{ padding: isMobile ? '64px 20px 56px' : '110px 40px 80px', textAlign: 'center', background: '#ffffff' }}>

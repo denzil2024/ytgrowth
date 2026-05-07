@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import LandingFooter from '../components/LandingFooter'
+import SiteHeader from '../components/SiteHeader'
 
 function useBreakpoint() {
   const [width, setWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1280)
@@ -261,21 +262,8 @@ export default function Affiliate() {
 
       <ScrollProgress />
 
-      {/* ── NAV ── */}
-      <nav style={{ position: 'sticky', top: 0, zIndex: 100, borderBottom: '1px solid var(--ytg-border)', padding: isMobile ? '0 20px' : '0 40px 0 72px', height: 60, display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'var(--ytg-nav)', backdropFilter: 'blur(16px)' }}>
-        <a href="/" style={{ display: 'flex', alignItems: 'center', gap: 9, textDecoration: 'none', minWidth: 0 }}>
-          <Logo size={28} />
-          <span style={{ fontWeight: 800, fontSize: 17, color: 'var(--ytg-text)', letterSpacing: '-0.4px', whiteSpace: 'nowrap' }}>YTGrowth</span>
-        </a>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-          {!isMobile && <a href="/" className="aff-nav-link">← Back to home</a>}
-          <a href="https://affiliates.ytgrowth.io" target="_blank" rel="noopener noreferrer"
-            className="aff-btn"
-            style={{ padding: isMobile ? '8px 18px' : '9px 22px', fontSize: isMobile ? 13 : 13, borderRadius: 100, whiteSpace: 'nowrap' }}>
-            {isMobile ? 'Get link' : 'Get your link'}
-          </a>
-        </div>
-      </nav>
+      {/* ── NAV — shared SiteHeader ── */}
+      <SiteHeader />
 
       {/* ══════════════════════════════════════════════════════════
           SECTION 1 — HERO   bg: var(--ytg-bg)  #f4f4f6

@@ -1,5 +1,6 @@
 import { useEffect, useState, useMemo } from 'react'
 import LandingFooter from '../../components/LandingFooter'
+import SiteHeader from '../../components/SiteHeader'
 
 /* ─── Free SEO tool: YouTube Money Calculator ─────────────────────────────
    /tools/youtube-money-calculator. Targets the high-volume tool-intent
@@ -256,20 +257,8 @@ export default function YoutubeMoneyCalculator() {
   return (
     <div style={{ fontFamily: "'Inter', system-ui, sans-serif", background: 'var(--ytg-bg)', color: 'var(--ytg-text)', overflowX: 'hidden' }}>
 
-      {/* ── NAV. Landing.jsx parity ─────────────────────────────────────── */}
-      <nav style={{ position: 'sticky', top: 0, zIndex: 100, borderBottom: '1px solid rgba(10,10,15,0.1)', padding: isMobile ? '0 20px' : '0 48px 0 80px', height: 60, display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'rgba(244,244,246,0.92)', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)' }}>
-        <a href="/" style={{ display: 'flex', alignItems: 'center', gap: 9, textDecoration: 'none', minWidth: 0 }}>
-          <Logo size={28} />
-          <span style={{ fontWeight: 800, fontSize: 17, color: '#0a0a0f', letterSpacing: '-0.4px', whiteSpace: 'nowrap' }}>YTGrowth</span>
-        </a>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-          {!isMobile && <a href="/" className="ymc-nav-link">← Back to home</a>}
-          <a href="/auth/login" className="ymc-btn"
-            style={{ padding: isMobile ? '8px 18px' : '9px 22px', fontSize: 13, borderRadius: 100, whiteSpace: 'nowrap' }}>
-            {isMobile ? 'Try free' : 'Try YTGrowth free'}
-          </a>
-        </div>
-      </nav>
+      {/* ── NAV — shared SiteHeader ──────────────────────────────────────── */}
+      <SiteHeader />
 
       {/* ══ HERO. Bg #ffffff, DM Sans, Landing scale (72/62/34) ══ */}
       <section className="ymc-section-pad" style={{ position: 'relative', padding: isMobile ? '64px 24px 56px' : '110px 48px 84px', textAlign: 'center', background: '#ffffff', overflow: 'hidden' }}>
