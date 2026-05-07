@@ -201,6 +201,10 @@ function useStyles() {
         color: var(--ytg-text);
         text-wrap: balance;
         transition: color 0.18s;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
       }
       .bl-card:hover .bl-card-title { color: var(--ytg-accent); }
 
