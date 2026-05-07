@@ -58,7 +58,7 @@ export const posts = [
     excerpt: 'Subscriber generators get channels banned. Here is the six-step organic roadmap that actually works for new creators trying to cross the monetization threshold.',
     date: '2026-05-07',
     category: CATEGORIES.subscribers,
-    cover: null,
+    cover: '/blog/free-subs-on-youtube-cover.jpg',
     author: 'Denzil',
     readTime: '8 min read',
     content: () => (

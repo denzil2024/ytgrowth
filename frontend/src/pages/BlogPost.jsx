@@ -175,43 +175,46 @@ function useStyles() {
       .bp-nav-link { font-size: 14px; color: var(--ytg-text-3); font-weight: 500; text-decoration: none; transition: color 0.15s; letter-spacing: -0.1px; }
       .bp-nav-link:hover { color: var(--ytg-text-2); }
 
-      /* Byline — avatar circle (first letter of author name on a red
-         gradient) + stacked name and meta. Replaces the old single-line
-         "By X · Date · Read time" treatment. */
+      /* Byline — three editorial columns (Author / Published / Read time)
+         separated by thin vertical dividers. No avatar; reads like a
+         masthead detail block. */
       .bp-byline {
         display: inline-flex;
-        align-items: center;
-        gap: 12px;
-        text-align: left;
+        align-items: stretch;
+        gap: 0;
       }
-      .bp-byline-avatar {
-        width: 42px; height: 42px;
-        border-radius: 50%;
-        background: linear-gradient(135deg, var(--ytg-accent), #b91c1c);
-        color: #fff;
-        font-family: 'DM Sans', system-ui, sans-serif;
-        font-size: 17px;
+      .bp-byline-col {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        padding: 4px 32px;
+        text-align: center;
+        min-width: 110px;
+      }
+      .bp-byline-col:first-child { padding-left: 0; }
+      .bp-byline-col:last-child  { padding-right: 0; }
+      .bp-byline-label {
+        font-size: 10.5px;
         font-weight: 800;
-        letter-spacing: -0.5px;
-        display: flex; align-items: center; justify-content: center;
-        box-shadow: 0 2px 6px rgba(229,48,42,0.28);
-        flex-shrink: 0;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: var(--ytg-text-3);
       }
-      .bp-byline-stack {
-        display: flex; flex-direction: column; align-items: flex-start;
-        gap: 1px;
-      }
-      .bp-byline-author {
+      .bp-byline-value {
         font-size: 14px;
         font-weight: 700;
         color: var(--ytg-text);
         letter-spacing: -0.1px;
-        line-height: 1.3;
       }
-      .bp-byline-meta {
-        font-size: 13px;
-        color: var(--ytg-text-3);
-        line-height: 1.3;
+      .bp-byline-divider {
+        width: 1px;
+        background: var(--ytg-border);
+        align-self: stretch;
+      }
+      @media (max-width: 600px) {
+        .bp-byline-col { padding: 4px 18px; min-width: 0; }
+        .bp-byline-label { font-size: 9.5px; }
+        .bp-byline-value { font-size: 13px; }
       }
 
       /* HERO IMAGE — 16:9 (matches YouTube thumbnail ratio).
@@ -703,10 +706,19 @@ export default function BlogPost() {
           </p>
           <div style={{ display: 'flex', justifyContent: 'center' }}>
             <div className="bp-byline">
-              <div className="bp-byline-avatar">{(post.author || 'Y').trim()[0].toUpperCase()}</div>
-              <div className="bp-byline-stack">
-                <span className="bp-byline-author">{post.author}</span>
-                <span className="bp-byline-meta">{formatPostDate(post.date)} · {post.readTime}</span>
+              <div className="bp-byline-col">
+                <span className="bp-byline-label">Author</span>
+                <span className="bp-byline-value">{post.author}</span>
+              </div>
+              <div className="bp-byline-divider" />
+              <div className="bp-byline-col">
+                <span className="bp-byline-label">Published</span>
+                <span className="bp-byline-value">{formatPostDate(post.date)}</span>
+              </div>
+              <div className="bp-byline-divider" />
+              <div className="bp-byline-col">
+                <span className="bp-byline-label">Read Time</span>
+                <span className="bp-byline-value">{post.readTime}</span>
               </div>
             </div>
           </div>
