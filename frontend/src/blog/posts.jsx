@@ -140,6 +140,8 @@ export const posts = [
 
         <blockquote><strong>For Shorts, if more than 60 to 70% of people choose to watch rather than swipe, the video goes viral.</strong> That single ratio is the make-or-break metric for the entire Shorts feed.</blockquote>
 
+        <img src="/blog/youtube-algorithm-shorts.png" alt="The Shorts swipe-vs-watch ratio that drives algorithmic distribution" />
+
         <p><strong>Primary signal:</strong> View-to-swipe ratio and loop completion rate.</p>
 
         <p>The first three seconds of a Short determine everything. If the opening frame does not create an immediate reason to stay, the swipe-away rate climbs and distribution collapses. Shorts that loop, where the ending connects naturally back to the beginning, generate higher completion rates and stronger algorithmic signals than those with a hard stop. The <a href="/blog/free-subs-on-youtube">Value Loop framework</a> covers the structural pattern that drives both retention and subscriber conversion.</p>
