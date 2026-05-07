@@ -57,6 +57,198 @@ export const CATEGORIES = {
 
 export const posts = [
   {
+    slug: 'what-is-youtube-seo',
+    title: 'What is YouTube SEO? The Complete Guide to Ranking Videos in 2026',
+    excerpt: 'YouTube SEO is the discipline that turns good content into found content. The complete framework — keyword research, on-page metadata, engagement signals, and channel-level authority — for ranking videos in 2026.',
+    date: '2026-05-07',
+    category: CATEGORIES.seo,
+    cover: '/blog/what-is-youtube-seo-cover.jpg',
+    author: 'Denzil',
+    readTime: '10 min read',
+    content: () => (
+      <>
+        <p>Every day, thousands of videos get uploaded to YouTube and disappear without a single view from someone who was not already looking for them. The content is good. The editing is clean. But nobody finds it, and the creator has no idea why.</p>
+
+        <p>The answer is almost always the same. The video was never built to be found. It was built to be watched, which is a completely different thing. YouTube SEO is the discipline that bridges that gap, and without it, even the best content on the platform stays invisible.</p>
+
+        <p>An SEO-optimized video does not just perform on the day it goes live. It compounds. While a social media post burns out within 24 hours, a well-optimized video generates consistent traffic for months or even years after upload, pulling in viewers who are actively searching for exactly what it covers. That compounding effect is what separates channels that grow predictably from channels that depend entirely on luck.</p>
+
+        <p>Understanding what YouTube SEO is and how it works is the single highest-leverage investment a new creator can make, because every video you publish from this point forward benefits from getting it right.</p>
+
+        <h2>What is YouTube SEO? (And Why Your Channel is Invisible Without It)</h2>
+
+        <blockquote><strong>YouTube SEO is the practice of optimizing your videos, playlists, and channels to rank higher in YouTube search results and get recommended to more viewers organically.</strong> It is not a one-time upload checklist. It is the ongoing process of aligning your content with what the algorithm is designed to reward, which is viewer satisfaction, not keyword density.</blockquote>
+
+        <p>YouTube is the world's second-largest search engine, owned by Google, and uses a sophisticated algorithm to satisfy user queries the same way Google Search does. The algorithm operates on two distinct layers, and understanding both is what separates channels that rank from channels that stay invisible.</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Pillar</th>
+              <th>What It Covers</th>
+              <th>What It Signals</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Metadata (Relevance)</td><td>Titles, descriptions, tags, file names</td><td>What your video is about</td></tr>
+            <tr><td>User Engagement (Performance)</td><td>Watch time, retention, CTR, comments</td><td>Whether your video is worth watching</td></tr>
+          </tbody>
+        </table>
+
+        <p>Metadata gets your video indexed. It tells YouTube's crawler what your content covers and makes it eligible to appear in search results for relevant queries. But eligibility is not the same as ranking. The YouTube ranking factors that determine whether your video stays at the top are entirely performance-based, driven by how real viewers behave when they encounter your content.</p>
+
+        <blockquote><strong>Unlike social media posts that lose momentum within 24 hours, an SEO-optimized video can generate consistent views and leads for years after it was published.</strong></blockquote>
+
+        <p>This is the compounding advantage that makes a YouTube SEO strategy worth investing in seriously. Every video you optimize correctly becomes a long-term traffic asset, and the returns grow over time rather than expiring the moment you stop promoting it.</p>
+
+        <h2>Step 1: Conduct Keyword Research to Find Your Audience</h2>
+
+        <p>The biggest mistake beginner creators make is deciding what to make before checking whether anyone is searching for it. YouTube keyword research starts before the camera turns on, not after the video is edited. Finding the right terms first means every hour of production time is backed by evidence that an audience already exists for the content you are about to create.</p>
+
+        <p>Start with YouTube Suggest. Type your topic into the YouTube search bar and pay attention to the auto-fill suggestions that appear. These are pulled directly from real user searches, making them the most accurate free signal available for what your target audience is actively looking for right now.</p>
+
+        <blockquote><strong>Use YouTube Suggest by typing a word into the search bar and noting what auto-fills.</strong> Each suggestion represents a real search query with genuine demand behind it.</blockquote>
+
+        <p>From there, use <a href="/features/keyword-research">YTGrowth's Keyword Explorer</a> to validate volume and competition for the terms you found. It filters by intent and builds topic clusters around your seed keyword, so you are not just targeting isolated phrases but building content around subjects the algorithm already associates with each other.</p>
+
+        <p>Tools to use for YouTube keyword research:</p>
+
+        <ul>
+          <li><a href="/features/keyword-research">YTGrowth's Keyword Explorer</a> for intent-based filtering and topic clustering.</li>
+          <li>YouTube Suggest for real-time autocomplete data.</li>
+          <li>Google Trends with the YouTube Search filter for seasonal validation.</li>
+          <li>Ahrefs YouTube Keyword Tool for hard volume and difficulty scores.</li>
+        </ul>
+
+        <img src="/blog/what-is-youtube-seo-keywords.png" alt="YouTube keyword research workflow combining Suggest, Keyword Explorer, and Google Trends" />
+
+        <blockquote><strong>Pro Tip:</strong> Search your target keyword on Google. If Video results appear on the first page, that keyword triggers video intent on both platforms simultaneously, meaning a single well-optimized video can rank on YouTube and Google Search at the same time.</blockquote>
+
+        <p>Matching your content to keyword intent is the final step before hitting record. Educational keywords like "how to" and "what is" call for instructional content. Entertainment-driven keywords call for a completely different format and tone. Getting that match right from the start determines whether the viewers your keyword attracts actually stay to watch.</p>
+
+        <h2>Step 2: Master On-Page Optimization (The Metadata Layer)</h2>
+
+        <p>Metadata is the technical foundation of YouTube SEO in practice. It tells the algorithm what your content is about before a single person watches it, and getting each element right is what determines whether your video gets invited into the right search results in the first place. Think of it as the relevance signal. Without it, even the most watched video in your niche stays invisible to new audiences.</p>
+
+        <h3>Title</h3>
+
+        <p>Your title is the single most important metadata field on the page. Place your primary keyword within the first three words and keep the full title under 60 characters to prevent truncation in search results.</p>
+
+        <ul>
+          <li>Primary keyword in the first three words.</li>
+          <li>Under 60 characters total.</li>
+          <li>Written for humans first, algorithm second.</li>
+          <li>Avoid clickbait that does not deliver on its promise.</li>
+        </ul>
+
+        <img src="/blog/what-is-youtube-seo-title.png" alt="Title structure best practices for YouTube SEO" />
+
+        <h3>Description</h3>
+
+        <blockquote><strong>Write at least 200 words for your description and ensure your primary keyword appears naturally in the first two sentences,</strong> before the 'Show More' cutoff.</blockquote>
+
+        <p>The first two lines of your description are the only ones visible without clicking 'Show More,' which makes them the highest-value real estate in the entire field. Lead with a keyword-rich hook sentence, then expand into a full 200 word minimum body that naturally incorporates related terms and gives the crawler enough context to categorize your video accurately.</p>
+
+        <ul>
+          <li>Hook sentence with primary keyword before the fold.</li>
+          <li>200 or more words in the body.</li>
+          <li>Include related LSI keywords naturally throughout.</li>
+          <li>Add timestamps, links, and chapter markers below the fold.</li>
+        </ul>
+
+        <img src="/blog/what-is-youtube-seo-description.png" alt="YouTube description structure showing the 'Show More' fold and keyword placement" />
+
+        <h3>Tags</h3>
+
+        <p>Tags are a secondary signal, not a primary one. Start with your exact match keyword, then move outward to broader category terms and related phrases. Keep the list focused on the first 5 to 10 most relevant tags rather than padding it with loosely related terms.</p>
+
+        <ul>
+          <li>First tag: exact match keyword.</li>
+          <li>Following tags: related phrases and broad category terms.</li>
+          <li>Avoid keyword stuffing; relevance beats volume.</li>
+        </ul>
+
+        <h3>Closed Captions</h3>
+
+        <blockquote><strong>YouTube's bots crawl Closed Caption text to understand a video's full context,</strong> making accurate captions one of the most underleveraged indexing tools available to creators.</blockquote>
+
+        <p>Never rely on auto-generated captions. Upload a custom SRT file for every video to give the algorithm a clean, accurate transcript it can crawl in full. This strengthens keyword association across the entire video runtime, not just the metadata fields, and gives your content a meaningful indexing advantage over channels that skip this step entirely.</p>
+
+        <ul>
+          <li>Upload custom SRT files, never rely on auto-captions.</li>
+          <li>Accurate timestamps improve Chapter generation.</li>
+          <li>Clean transcripts expand keyword association across the full video.</li>
+        </ul>
+
+        <CtaCard
+          to="/features/seo-studio"
+          title="Run every title and description through SEO Studio first"
+          sub="Score against the live niche, get 3 AI rewrites, and push the winner back to YouTube with one click. Free to try."
+          button="Try SEO Studio →"
+        />
+
+        <h2>Step 3: Optimize for Engagement (The Performance Layer)</h2>
+
+        <p>Metadata gets your video indexed. What happens after the click determines everything else. The performance layer of how YouTube SEO works is driven entirely by viewer behavior, and no amount of technical optimization can compensate for content that loses its audience in the first thirty seconds.</p>
+
+        <ul>
+          <li><strong>Watch Time.</strong> Total minutes watched is the single most powerful signal of value YouTube receives from your content. It tells the algorithm not just that people clicked, but that they stayed. A video that accumulates high watch time gets pushed to more viewers automatically, creating a compounding distribution effect that grows with every view.</li>
+          <li><strong>Audience Retention.</strong> If people drop off in the first 30 seconds, your YouTube SEO ranking will fall regardless of how well your metadata is optimized. The retention curve in YouTube Analytics shows you exactly where viewers are leaving, and a sharp drop in the first half-minute is the clearest signal that your hook is not delivering on the promise your thumbnail and title made.</li>
+          <li><strong>CTR.</strong> Click-Through Rate is the gatekeeper that determines whether all other engagement metrics ever get a chance to register. A thumbnail and title combination that does not earn the click means the watch time, retention, and comment signals never accumulate. CTR and retention work as a pair, and weakness in either one limits what the other can achieve.</li>
+        </ul>
+
+        <img src="/blog/what-is-youtube-seo-engagement.png" alt="The engagement layer: Watch time, audience retention, and CTR signals" />
+
+        <blockquote><strong>Metadata gets you invited to the party. Engagement keeps you on the dance floor.</strong></blockquote>
+
+        <p>The Golden Thread that connects every element of this guide runs through that single idea. A perfectly optimized title gets the click. A well-structured hook keeps the viewer past thirty seconds. Strong retention builds watch time. Watch time drives distribution. Distribution brings more clicks. Each signal feeds the next, and YouTube ranking factors reward the channels that have engineered all of them to work together rather than treating each one as a separate task.</p>
+
+        <h2>Step 4: Build Channel Authority Through Structure</h2>
+
+        <p>Individual video optimization only takes you so far. The channels that dominate search results long-term are the ones that have built authority at the channel level, creating a structure that tells the algorithm exactly what they cover, who they serve, and why viewers keep coming back. Channel-level video optimization amplifies everything you do at the individual video level.</p>
+
+        <h3>Playlists</h3>
+
+        <blockquote><strong>Playlists appear in YouTube search results and keep users on your channel longer,</strong> directly increasing Session Watch Time and signaling to the algorithm that your channel is worth promoting further.</blockquote>
+
+        <p>Group your videos into tightly themed playlists with keyword-rich titles and descriptions. A viewer who finishes one video and automatically plays the next is extending their session on your channel, and that cumulative watch time is counted as a channel-level signal. The more playlists you build around specific topics, the more surface area your channel has in search results.</p>
+
+        <h3>Channel Page</h3>
+
+        <p>Your About section is indexed by YouTube's algorithm and needs to work as hard as any video description. Write it around the same keywords you are targeting in your content, lead with your value proposition, and be specific about who you help and what they will learn. A viewer who lands on your channel page and immediately understands your niche is far more likely to subscribe than one who reads a vague bio with no clear direction.</p>
+
+        <img src="/blog/what-is-youtube-seo-channel-page.png" alt="Channel page optimization with keyword-driven About section and value proposition" />
+
+        <blockquote><strong>Pro Tip:</strong> Connect your channel to your website and social profiles in the channel settings. External links signal legitimacy and authority to both YouTube and Google, contributing to the overall trust score your channel carries across both platforms.</blockquote>
+
+        <h2>Understanding the 'SEO Score': Metrics That Actually Matter</h2>
+
+        <p>The YouTube SEO score that third-party tools display is a useful starting point, but it is not a pass or fail grade. A score of 65 on a low-competition keyword can outrank a score of 90 on a saturated one. Context determines what a good score actually means for your specific video, and chasing a perfect number from a tool while ignoring your actual performance data is one of the most common mistakes beginner creators make.</p>
+
+        <p>The metrics that actually matter are inside YouTube Studio, and they are free:</p>
+
+        <ul>
+          <li><strong>Click-Through Rate vs. Impressions.</strong> High impressions with low CTR means YouTube is showing your video but viewers are not choosing it. The problem is almost always the thumbnail or title, not the keyword.</li>
+          <li><strong>Audience Retention Graph.</strong> This shows you exactly where viewers are dropping off. A sharp decline in the first 30 seconds points to a weak hook. A gradual decline is normal. Sudden drops mid-video indicate a specific moment where interest collapsed.</li>
+          <li><strong>Watch Time per Video.</strong> Total minutes watched tells you which videos are generating the most algorithmic value, not just the most views.</li>
+          <li><strong>Traffic Sources.</strong> The 'How viewers find your video' report shows whether your keyword targeting is working or whether traffic is coming from somewhere unexpected.</li>
+        </ul>
+
+        <p>Use external tools like <a href="/">YTGrowth</a> for keyword research and competitive intelligence, but always prioritize native YouTube Analytics for performance decisions. The best data on how your content is performing comes directly from the platform itself.</p>
+
+        <h2>Conclusion</h2>
+
+        <p>YouTube SEO is not a one-time optimization task. It is a compounding system that rewards creators who treat every upload as a data point and every analytics report as a brief for the next video.</p>
+
+        <p>The YouTube SEO strategy that works long-term is not complicated. Research the right keywords before you film. Optimize every metadata element before you publish. Engineer your content structure to hold attention past the first thirty seconds. Build channel-level authority through playlists and a clearly defined niche. Then go back into Analytics after every upload and refine based on what the data tells you.</p>
+
+        <p>The gap between a channel that grows and one that stalls is rarely talent. It is a process. The creators ranking at the top of your niche are not producing better content than you. They are producing content that is better aligned with what the algorithm rewards and what their audience actually wants to watch.</p>
+
+        <p>Now you know what YouTube SEO is and how it works from the ground up. Every video you optimize correctly becomes a long-term traffic asset. Start with one, apply the framework, measure the results, and repeat. That is the entire system, and <a href="/">YTGrowth</a> is built to support every stage of it. For the next layer, the <a href="/blog/youtube-seo-best-practices">2026 SEO blueprint</a> covers the CTR and retention engineering side; the <a href="/blog/seo-tools-for-youtube">5-pillar tool stack</a> walks through which specific tools serve each stage of the workflow.</p>
+      </>
+    ),
+  },
+  {
     slug: 'youtube-seo-best-practices',
     title: 'The 2026 YouTube SEO Blueprint: Engineering Retention and CTR to Dominate the Algorithm',
     excerpt: 'Cross a 6% CTR and 50% Average View Duration and YouTube starts pushing your video through Browse and Suggested. The technical playbook to engineer both — built for the 2026 algorithm.',
