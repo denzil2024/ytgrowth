@@ -88,6 +88,8 @@ export const posts = [
 
         <p>YouTube Shorts is the single most powerful free tool available to creators who want to grow fast. Unlike long-form videos, which take time to rank and build an audience, Shorts get distributed immediately to non-subscribers through a dedicated feed. The Subscribe button sits directly on the video as viewers watch, which means every Short you publish is a live conversion opportunity reaching people who have never heard of your channel.</p>
 
+        <img src="/blog/step-1.png" alt="YouTube Shorts dedicated feed and subscribe-on-video conversion path" />
+
         <h3>The Value Loop</h3>
 
         <p>The Value Loop is the creative framework that separates Shorts that gain subscribers from Shorts that just get views. The structure is straightforward: open with a question or a problem your target viewer already has, deliver the content in the middle, and hold the answer or payoff until the very end. This keeps viewers watching all the way through, and high retention tells the algorithm your content is worth pushing to a larger audience.</p>
@@ -115,6 +117,8 @@ export const posts = [
 
         <p>The goal is to find search terms that have a healthy volume of monthly searches but low enough competition that a newer channel can realistically rank for them. <a href="/features/keyword-research">YTGrowth's Keyword Explorer</a> is built specifically for this, surfacing low-competition, high-volume YouTube keywords so you can make targeting decisions based on data rather than guesswork.</p>
 
+        <img src="/blog/step-2.png" alt="YTGrowth Keyword Explorer surfacing low-competition YouTube keywords" />
+
         <p>The channels that reach 1,000 subscribers fastest are almost always the ones titling their videos around what people are searching for, not around what sounds creative.</p>
 
         <p>Tools to use for keyword research:</p>
@@ -133,6 +137,8 @@ export const posts = [
         <h2>Step 3: Master the 'Power CTA' to Convert Viewers Before They Leave</h2>
 
         <p>Most creators ask for subscribers in the wrong place. The standard approach is to drop a "don't forget to subscribe" at the end of the video, but by that point, 80% of viewers have already left. You are delivering your most important ask to the smallest possible slice of your audience, and the ones still watching are already your most loyal viewers anyway.</p>
+
+        <img src="/blog/step-3.png" alt="Where to place the subscribe CTA on a YouTube video timeline" />
 
         <blockquote><strong>YouTube Reports:</strong> 80% of viewers have already left by the end of the video. Place your CTA immediately after the first 'win,' not after the outro.</blockquote>
 
@@ -169,6 +175,8 @@ export const posts = [
 
         <p>You cannot get free YouTube subscribers without first getting views, and thumbnails are the primary driver of views. Before anyone decides to watch your video, they see your thumbnail. It is the first and sometimes only impression your content makes, and a weak one means your video never gets the chance to convert anyone into a subscriber.</p>
 
+        <img src="/blog/step-4.png" alt="Thumbnail design principles — high contrast and the curiosity gap" />
+
         <p>Thumbnail design rules to follow:</p>
 
         <ul>
@@ -197,6 +205,8 @@ export const posts = [
 
         <p>Every interaction you have with your existing audience sends a signal to the algorithm that your channel is worth introducing to a new one.</p>
 
+        <img src="/blog/step-5.png" alt="YouTube comment hearting and Community Tab engagement signals" />
+
         <ul>
           <li><strong>The Hearting Hack.</strong> When you Heart a comment on your video, YouTube sends that commenter a specific notification pulling them back to your channel. That return visit increases the likelihood of a subscription, and it costs you nothing but a single click.</li>
           <li><strong>The Question Reply Strategy.</strong> When someone leaves a comment, reply with a follow-up question instead of a simple thank you. This reopens the conversation, doubles the comment volume on that video, and tells the algorithm your content is generating genuine engagement worth amplifying.</li>
@@ -210,6 +220,8 @@ export const posts = [
         <h2>Step 6: Create 'Binge-Watching' Funnels With Power Playlists</h2>
 
         <p>Most creators upload videos as standalone pieces and hope viewers find more. Power Playlists flip that approach by organizing your content into tightly themed sequences that pull viewers from one video directly into the next, increasing session duration and giving the algorithm a much stronger signal to promote your channel.</p>
+
+        <img src="/blog/step-6.png" alt="Power Playlist binge-watching funnel pulling viewers from one video to the next" />
 
         <h3>The Strategy</h3>
 
