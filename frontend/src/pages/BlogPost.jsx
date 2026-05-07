@@ -301,23 +301,132 @@ function useStyles() {
         font-size: 0.95em;
       }
 
-      /* Callout / blockquote — neutral light grey card with dark accent line.
-         No more red background; reads as a quiet highlight, not an alarm. */
+      /* Callout — clean red left line, no background, label in red. Reads
+         as a quiet pull-quote, not a card. The bold prefix (Pro Tip:,
+         The Formula:, Warning:) inherits the accent so it scans first. */
       .bp-prose blockquote {
-        margin: 2em 0;
-        padding: 18px 24px;
-        background: var(--ytg-bg-2);
-        border: 1px solid var(--ytg-border);
-        border-left: 3px solid var(--ytg-text);
-        border-radius: 8px;
-        font-size: 15.5px;
+        margin: 1.8em 0;
+        padding: 2px 0 2px 22px;
+        background: transparent;
+        border: 0;
+        border-left: 3px solid var(--ytg-accent);
+        border-radius: 0;
+        font-size: 16px;
         font-style: normal;
         color: var(--ytg-text);
-        font-weight: 500;
-        line-height: 1.65;
+        font-weight: 400;
+        line-height: 1.7;
       }
       .bp-prose blockquote p { margin: 0; }
-      .bp-prose blockquote strong { color: var(--ytg-text); }
+      .bp-prose blockquote strong {
+        color: var(--ytg-accent);
+        font-weight: 700;
+      }
+
+      /* Inline CTA button — solid red pill that authors can drop into
+         the post body to drive to signup or any internal route. */
+      .bp-prose .bp-cta-inline {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: var(--ytg-accent) !important;
+        color: #fff !important;
+        padding: 10px 22px;
+        font-size: 14px;
+        font-weight: 700;
+        border-radius: 100px;
+        text-decoration: none !important;
+        background-image: none !important;
+        letter-spacing: -0.1px;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.10), 0 4px 16px rgba(229,48,42,0.30);
+        transition: filter 0.18s, transform 0.18s, box-shadow 0.18s;
+      }
+      .bp-prose .bp-cta-inline:hover {
+        filter: brightness(1.07);
+        transform: translateY(-1px);
+        box-shadow: 0 2px 4px rgba(0,0,0,0.12), 0 8px 24px rgba(229,48,42,0.40);
+        color: #fff !important;
+      }
+
+      /* CTA card — bigger row-style promo block. Title + sub-line on the
+         left, red pill button on the right. Drops into a post anywhere
+         to upsell a feature or push signups. */
+      .bp-prose .bp-cta-card-link {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 24px;
+        margin: 2.5em 0;
+        padding: 26px 30px;
+        background: var(--ytg-card) !important;
+        border: 1px solid var(--ytg-border);
+        border-radius: 16px;
+        box-shadow: var(--ytg-shadow-sm);
+        text-decoration: none !important;
+        background-image: none !important;
+        color: var(--ytg-text) !important;
+        position: relative;
+        overflow: hidden;
+        transition: box-shadow 0.22s, transform 0.22s, border-color 0.22s;
+      }
+      .bp-prose .bp-cta-card-link:hover {
+        box-shadow: var(--ytg-shadow-lg);
+        transform: translateY(-2px);
+        border-color: rgba(229,48,42,0.18);
+        color: var(--ytg-text) !important;
+      }
+      .bp-prose .bp-cta-card-link::before {
+        content: '';
+        position: absolute;
+        top: -50px; right: -50px;
+        width: 220px; height: 140px;
+        background: radial-gradient(ellipse, rgba(229,48,42,0.10) 0%, transparent 70%);
+        pointer-events: none;
+      }
+      .bp-cta-card-text { flex: 1; min-width: 0; position: relative; z-index: 1; }
+      .bp-cta-card-title {
+        font-family: 'DM Sans', system-ui, sans-serif;
+        font-size: 18px;
+        font-weight: 800;
+        letter-spacing: -0.3px;
+        color: var(--ytg-text);
+        margin: 0 0 4px 0 !important;
+        line-height: 1.3;
+      }
+      .bp-cta-card-sub {
+        font-size: 14px;
+        color: var(--ytg-text-2);
+        margin: 0 !important;
+        line-height: 1.55;
+      }
+      .bp-cta-card-pill {
+        flex-shrink: 0;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: var(--ytg-accent);
+        color: #fff;
+        padding: 11px 22px;
+        font-size: 14px;
+        font-weight: 700;
+        border-radius: 100px;
+        white-space: nowrap;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.10), 0 4px 14px rgba(229,48,42,0.32);
+        transition: filter 0.18s, transform 0.18s;
+        position: relative; z-index: 1;
+      }
+      .bp-prose .bp-cta-card-link:hover .bp-cta-card-pill {
+        filter: brightness(1.07);
+        transform: translateY(-1px);
+      }
+      @media (max-width: 720px) {
+        .bp-prose .bp-cta-card-link {
+          flex-direction: column;
+          align-items: flex-start;
+          padding: 22px 24px;
+          gap: 18px;
+        }
+      }
 
       .bp-prose img {
         width: 100%;

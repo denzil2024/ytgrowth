@@ -12,11 +12,35 @@
  *   - <a href="https://external.com" target="_blank">external link</a>
  *   - <img src="/blog/your-image.jpg" alt="..." />   (drop image in frontend/public/blog/)
  *
+ * Promo / upsell components for use inside post content:
+ *   - <CtaButton to="/dashboard">Try free</CtaButton>            — small inline pill
+ *   - <CtaCard to="/features/seo-studio"
+ *              title="..."  sub="..."  button="Try free →" />    — full-row promo card
+ *
  * Cover image specs: 16:9 aspect ratio, 1600x900 (preferred) or 1200x675.
  * Save to frontend/public/blog/your-slug-cover.jpg and set cover field.
  *
  * Headings are written in Title Case to match the main title.
  */
+
+/* Inline pill button — drop into the post body to drive a click. */
+export function CtaButton({ to = '/dashboard', children = 'Try free →' }) {
+  return <a href={to} className="bp-cta-inline">{children}</a>
+}
+
+/* Row-style promo card — title + sub on the left, red pill on the right.
+   Use to upsell a specific feature or surface a free tool inside a post. */
+export function CtaCard({ to = '/dashboard', title, sub, button = 'Try free →' }) {
+  return (
+    <a href={to} className="bp-cta-card-link">
+      <span className="bp-cta-card-text">
+        <span className="bp-cta-card-title">{title}</span>
+        {sub && <span className="bp-cta-card-sub">{sub}</span>}
+      </span>
+      <span className="bp-cta-card-pill">{button}</span>
+    </a>
+  )
+}
 
 export const CATEGORIES = {
   subscribers: { slug: 'subscribers', label: 'YouTube Subscribers' },
@@ -160,7 +184,14 @@ export const posts = [
 
         <p>The Curiosity Gap is the space between what the thumbnail shows and what the viewer needs to watch the video to find out. A thumbnail that creates a question in the viewer's mind that only the video can answer is doing its job correctly. If the thumbnail and the title together tell the full story, there is no reason to click.</p>
 
-        <p>A strong thumbnail does not describe the video. It interrupts the scroll, creates an open loop in the viewer's mind, and makes clicking feel like the only way to close it. That single principle is responsible for more organic views than any posting schedule or hashtag strategy ever will be. <a href="/features/thumbnail-iq">YTGrowth's Thumbnail IQ</a> analyzes your thumbnails against these exact principles, giving you data-backed feedback on what is working and what is costing you clicks.</p>
+        <p>A strong thumbnail does not describe the video. It interrupts the scroll, creates an open loop in the viewer's mind, and makes clicking feel like the only way to close it. That single principle is responsible for more organic views than any posting schedule or hashtag strategy ever will be.</p>
+
+        <CtaCard
+          to="/features/thumbnail-iq"
+          title="Score your next thumbnail in 30 seconds"
+          sub="Thumbnail IQ runs face detection, contrast checks, and a curiosity-gap read against your niche. Free to try."
+          button="Try Thumbnail IQ →"
+        />
 
         <h2>Step 5: Build a Community Signal Through Strategic Engagement</h2>
 
