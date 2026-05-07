@@ -577,17 +577,59 @@ function useStyles() {
       }
       .bp-related-card-meta-dot { width: 3px; height: 3px; border-radius: 50%; background: var(--ytg-text-3); }
 
+      /* Related cards mobile — tighter padding/font */
+      @media (max-width: 768px) {
+        .bp-related-card { border-radius: 14px; }
+        .bp-related-card-body { padding: 18px 18px 20px; gap: 6px; }
+        .bp-related-card-title { font-size: 16px; line-height: 1.25; }
+        .bp-related-card-cat { font-size: 10.5px; }
+        .bp-related-card-meta { font-size: 12px; padding-top: 10px; }
+      }
+
       @media (max-width: 1024px) {
         .bp-grid-3 { grid-template-columns: repeat(2,1fr); }
       }
       @media (max-width: 768px) {
         .bp-prose { font-size: 15.5px; line-height: 1.7; }
-        .bp-prose h2 { font-size: 22px; letter-spacing: -0.5px; }
-        .bp-prose h3 { font-size: 18px; }
-        .bp-prose blockquote { padding: 18px 20px; font-size: 15px; margin: 1.6em 0; }
+        .bp-prose > * + *  { margin-top: 1.4em; }
+        .bp-prose > p + p { margin-top: 1.5em; }
+        .bp-prose h2 { font-size: 21px; letter-spacing: -0.4px; margin-top: 1.7em !important; margin-bottom: 0.5em !important; }
+        .bp-prose h3 { font-size: 17px; margin-top: 1.45em !important; }
+        .bp-prose blockquote { padding: 2px 0 2px 18px; font-size: 14.5px; margin: 1.5em 0; line-height: 1.65; }
+        .bp-prose ul > li, .bp-prose ol > li { margin: 0.55em 0; }
+        .bp-prose img { margin: 1.6em 0; border-radius: 10px; }
+        .bp-prose table { font-size: 13px; }
+        .bp-prose th { padding: 10px 12px; font-size: 10.5px; }
+        .bp-prose td { padding: 12px 12px; }
         .bp-grid-3 { grid-template-columns: 1fr; }
-        .bp-section-pad { padding-left: 20px !important; padding-right: 20px !important; }
-        .bp-hero-image { border-radius: 16px; margin-top: 24px; }
+        .bp-section-pad { padding-left: 18px !important; padding-right: 18px !important; }
+        .bp-hero-image { border-radius: 14px; margin-top: 20px; box-shadow: var(--ytg-shadow); }
+
+        /* Category pill — slightly smaller, less margin on mobile */
+        .bp-category {
+          padding: 6px 14px;
+          font-size: 10.5px;
+          margin-bottom: 18px;
+        }
+
+        /* Byline tighter on mobile */
+        .bp-byline-rule { width: 28px; margin-bottom: 14px; }
+        .bp-byline-author { font-size: 15px; }
+        .bp-byline-meta { font-size: 12.5px; margin-top: 4px; }
+
+        /* CTA card mid-post — tighter padding/typography */
+        .bp-prose .bp-cta-card-link {
+          margin: 2em 0;
+          padding: 20px 20px;
+          gap: 16px;
+        }
+        .bp-cta-card-title { font-size: 16px; }
+        .bp-cta-card-sub { font-size: 13px; line-height: 1.5; }
+        .bp-cta-card-pill { padding: 10px 18px; font-size: 13px; width: 100%; justify-content: center; }
+      }
+      @media (max-width: 420px) {
+        .bp-prose { font-size: 15px; }
+        .bp-prose h2 { font-size: 20px; }
       }
     `
     document.head.appendChild(style)
@@ -685,13 +727,13 @@ export default function BlogPost() {
       </nav>
 
       {/* 1 — HEADER. White */}
-      <section style={{ padding: isMobile ? '36px 20px 0' : '56px 40px 0', textAlign: 'center', background: '#ffffff' }}>
+      <section style={{ padding: isMobile ? '24px 18px 0' : '56px 40px 0', textAlign: 'center', background: '#ffffff' }}>
         <div style={{ maxWidth: 880, margin: '0 auto', animation: 'fadeUp 0.5s ease both' }}>
           <Link to="/blog" className="bp-category">{post.category.label}</Link>
-          <h1 className="bp-h1" style={{ fontSize: isMobile ? 30 : 46, color: 'var(--ytg-text)', marginBottom: 22 }}>
+          <h1 className="bp-h1" style={{ fontSize: isMobile ? 26 : 46, color: 'var(--ytg-text)', marginBottom: isMobile ? 14 : 22, letterSpacing: isMobile ? '-0.8px' : '-2px', lineHeight: isMobile ? 1.18 : 1.05 }}>
             {post.title}
           </h1>
-          <p style={{ fontSize: isMobile ? 16 : 18.5, color: 'var(--ytg-text-2)', lineHeight: 1.7, maxWidth: 720, margin: '0 auto 32px' }}>
+          <p style={{ fontSize: isMobile ? 14.5 : 18.5, color: 'var(--ytg-text-2)', lineHeight: 1.6, maxWidth: 720, margin: isMobile ? '0 auto 22px' : '0 auto 32px' }}>
             {post.excerpt}
           </p>
           <div className="bp-byline">
@@ -712,7 +754,7 @@ export default function BlogPost() {
       </section>
 
       {/* 2 — POST BODY. Light bg, prose typography */}
-      <section className="bp-section-pad" style={{ padding: isMobile ? '48px 20px 72px' : '72px 40px 96px', background: '#ffffff' }}>
+      <section className="bp-section-pad" style={{ padding: isMobile ? '32px 18px 56px' : '72px 40px 96px', background: '#ffffff' }}>
         <article className="bp-prose">
           <Body />
         </article>
@@ -720,33 +762,33 @@ export default function BlogPost() {
 
       {/* 3 — BOTTOM CTA. Centered card, matches the rhythm of the
           feature/contact page bottom CTAs. */}
-      <section style={{ padding: isMobile ? '0 16px 0' : '0 40px 0', background: 'var(--ytg-bg)', borderTop: '1px solid var(--ytg-border)' }}>
-        <div style={{ maxWidth: 880, margin: '0 auto', paddingTop: isMobile ? 56 : 80, paddingBottom: isMobile ? 56 : 80 }}>
+      <section style={{ padding: isMobile ? '0 14px 0' : '0 40px 0', background: 'var(--ytg-bg)', borderTop: '1px solid var(--ytg-border)' }}>
+        <div style={{ maxWidth: 880, margin: '0 auto', paddingTop: isMobile ? 36 : 80, paddingBottom: isMobile ? 36 : 80 }}>
           <div style={{
-            borderRadius: isMobile ? 18 : 22,
+            borderRadius: isMobile ? 16 : 22,
             border: '1px solid var(--ytg-border)',
             boxShadow: 'var(--ytg-shadow-xl)',
-            padding: isMobile ? '40px 24px 36px' : '56px 48px 52px',
+            padding: isMobile ? '32px 20px 28px' : '56px 48px 52px',
             textAlign: 'center',
             background: 'var(--ytg-card)',
             position: 'relative', overflow: 'hidden',
           }}>
             <div style={{ position: 'absolute', top: -80, left: '50%', transform: 'translateX(-50%)', width: 460, height: 220, background: 'radial-gradient(ellipse, rgba(229,48,42,0.10) 0%, transparent 70%)', pointerEvents: 'none' }} />
-            <span className="bp-eyebrow" style={{ marginBottom: 18, position: 'relative' }}>
+            <span className="bp-eyebrow" style={{ marginBottom: isMobile ? 12 : 18, position: 'relative' }}>
               <span className="bp-eyebrow-dot" />
               <span className="bp-eyebrow-text">Try YTGrowth</span>
             </span>
-            <h2 className="bp-h2" style={{ fontSize: isMobile ? 26 : 32, marginBottom: 12, position: 'relative' }}>
+            <h2 className="bp-h2" style={{ fontSize: isMobile ? 22 : 32, marginBottom: isMobile ? 10 : 12, letterSpacing: isMobile ? '-0.6px' : '-1.2px', position: 'relative' }}>
               Don't just read the playbook.<br />
               <span style={{ color: 'var(--ytg-accent)' }}>Run it on your channel.</span>
             </h2>
-            <p style={{ fontSize: isMobile ? 14 : 15.5, color: 'var(--ytg-text-2)', lineHeight: 1.7, maxWidth: 560, margin: '0 auto 26px', position: 'relative' }}>
+            <p style={{ fontSize: isMobile ? 13.5 : 15.5, color: 'var(--ytg-text-2)', lineHeight: 1.6, maxWidth: 560, margin: isMobile ? '0 auto 20px' : '0 auto 26px', position: 'relative' }}>
               YTGrowth scores your titles, audits your channel against the live niche, and surfaces the gaps your competitors are missing. In 30 seconds.
             </p>
             <Link to="/dashboard" className={`bp-btn${isMobile ? '' : ' bp-btn-lg'}`} style={{ position: 'relative' }}>
               Try YTGrowth free →
             </Link>
-            <p style={{ fontSize: 12.5, color: 'var(--ytg-text-3)', marginTop: 14, position: 'relative' }}>
+            <p style={{ fontSize: 12, color: 'var(--ytg-text-3)', marginTop: isMobile ? 10 : 14, position: 'relative' }}>
               3 free analyses · No credit card required
             </p>
           </div>
@@ -755,14 +797,14 @@ export default function BlogPost() {
 
       {/* 4 — RELATED POSTS */}
       {related.length > 0 && (
-        <section className="bp-section-pad" style={{ padding: isMobile ? '0 20px 88px' : '0 40px 120px', background: 'var(--ytg-bg)' }}>
+        <section className="bp-section-pad" style={{ padding: isMobile ? '0 18px 56px' : '0 40px 120px', background: 'var(--ytg-bg)' }}>
           <div style={{ maxWidth: 1180, margin: '0 auto' }}>
-            <div style={{ marginBottom: 28 }}>
+            <div style={{ marginBottom: isMobile ? 18 : 28 }}>
               <span className="bp-eyebrow">
                 <span className="bp-eyebrow-dot" />
                 <span className="bp-eyebrow-text">Keep reading</span>
               </span>
-              <h2 className="bp-h2" style={{ fontSize: isMobile ? 26 : 32 }}>
+              <h2 className="bp-h2" style={{ fontSize: isMobile ? 22 : 32, letterSpacing: isMobile ? '-0.6px' : '-1.4px' }}>
                 More from the blog
               </h2>
             </div>

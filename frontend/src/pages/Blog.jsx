@@ -256,11 +256,18 @@ function useStyles() {
         .bl-grid-3 { grid-template-columns: repeat(2,1fr); }
       }
       @media (max-width: 768px) {
-        .bl-grid-3 { grid-template-columns: 1fr; gap: 18px; }
-        .bl-featured { grid-template-columns: 1fr; }
-        .bl-featured-body { padding: 28px 22px 32px; gap: 12px; }
-        .bl-featured-title { font-size: 26px; letter-spacing: -0.6px; }
-        .bl-section-pad { padding-left: 20px !important; padding-right: 20px !important; }
+        .bl-grid-3 { grid-template-columns: 1fr; gap: 16px; }
+        .bl-featured { grid-template-columns: 1fr; border-radius: 16px; margin-bottom: 32px; }
+        .bl-featured-cover { aspect-ratio: 16/10; }
+        .bl-featured-body { padding: 22px 22px 26px; gap: 10px; }
+        .bl-featured-title { font-size: 22px; letter-spacing: -0.4px; line-height: 1.18; }
+        .bl-featured-excerpt { font-size: 14.5px; line-height: 1.6; }
+        .bl-card { border-radius: 14px; }
+        .bl-card-body { padding: 20px 20px 22px; gap: 8px; }
+        .bl-card-title { font-size: 18px; line-height: 1.25; }
+        .bl-card-excerpt { font-size: 13.5px; -webkit-line-clamp: 2; }
+        .bl-card-cat-pill { font-size: 10px; padding: 3px 9px; top: 12px; left: 12px; }
+        .bl-section-pad { padding-left: 18px !important; padding-right: 18px !important; }
       }
     `
     document.head.appendChild(style)
@@ -374,31 +381,31 @@ export default function Blog() {
       </nav>
 
       {/* 1 — HERO. White */}
-      <section style={{ padding: isMobile ? '64px 20px 56px' : '110px 40px 72px', textAlign: 'center', background: '#ffffff' }}>
+      <section style={{ padding: isMobile ? '40px 18px 40px' : '110px 40px 72px', textAlign: 'center', background: '#ffffff' }}>
         <div style={{ maxWidth: 880, margin: '0 auto', animation: 'fadeUp 0.5s ease both' }}>
           <span className="bl-eyebrow">
             <span className="bl-eyebrow-dot" />
             <span className="bl-eyebrow-text">The blog</span>
           </span>
-          <h1 className="bl-h1" style={{ fontSize: isMobile ? 36 : 60, color: 'var(--ytg-text)', marginBottom: 22 }}>
+          <h1 className="bl-h1" style={{ fontSize: isMobile ? 32 : 60, color: 'var(--ytg-text)', marginBottom: isMobile ? 16 : 22, letterSpacing: isMobile ? '-1.2px' : '-2px' }}>
             YouTube growth, <span style={{ color: 'var(--ytg-accent)' }}>without the noise.</span>
           </h1>
-          <p style={{ fontSize: isMobile ? 16 : 18.5, color: 'var(--ytg-text-2)', lineHeight: 1.7, maxWidth: 680, margin: '0 auto' }}>
+          <p style={{ fontSize: isMobile ? 15 : 18.5, color: 'var(--ytg-text-2)', lineHeight: 1.65, maxWidth: 680, margin: '0 auto' }}>
             Tactics, channel deep-dives, and creator playbooks from the team behind YTGrowth. Written by humans, tested on real channels.
           </p>
         </div>
       </section>
 
       {/* 2 — FEATURED + GRID. Light bg */}
-      <section className="bl-section-pad" style={{ padding: isMobile ? '52px 20px 88px' : '80px 40px 120px', background: 'var(--ytg-bg)', borderTop: '1px solid var(--ytg-border)' }}>
+      <section className="bl-section-pad" style={{ padding: isMobile ? '36px 18px 56px' : '80px 40px 120px', background: 'var(--ytg-bg)', borderTop: '1px solid var(--ytg-border)' }}>
         <div style={{ maxWidth: 1180, margin: '0 auto' }}>
 
           {featured && <FeaturedPost post={featured} />}
 
           {rest.length > 0 && (
             <>
-              <div style={{ marginBottom: 24, marginTop: 16 }}>
-                <h2 className="bl-h2" style={{ fontSize: isMobile ? 26 : 32, color: 'var(--ytg-text)' }}>
+              <div style={{ marginBottom: isMobile ? 16 : 24, marginTop: isMobile ? 8 : 16 }}>
+                <h2 className="bl-h2" style={{ fontSize: isMobile ? 22 : 32, color: 'var(--ytg-text)', letterSpacing: isMobile ? '-0.6px' : '-1.4px' }}>
                   More from the blog
                 </h2>
               </div>
@@ -417,30 +424,30 @@ export default function Blog() {
       </section>
 
       {/* 3 — BOTTOM CTA. Stepped bg */}
-      <section style={{ padding: isMobile ? '0 16px 80px' : '0 40px 120px', background: 'var(--ytg-bg-2)', borderTop: '1px solid var(--ytg-border)' }}>
-        <div style={{ maxWidth: 1000, margin: '0 auto', paddingTop: isMobile ? 56 : 88 }}>
+      <section style={{ padding: isMobile ? '0 14px 56px' : '0 40px 120px', background: 'var(--ytg-bg-2)', borderTop: '1px solid var(--ytg-border)' }}>
+        <div style={{ maxWidth: 1000, margin: '0 auto', paddingTop: isMobile ? 36 : 88 }}>
           <div style={{
-            borderRadius: isMobile ? 18 : 24,
+            borderRadius: isMobile ? 16 : 24,
             border: '1px solid var(--ytg-border)',
             boxShadow: 'var(--ytg-shadow-xl)',
-            padding: isMobile ? '52px 24px 44px' : '80px 60px',
+            padding: isMobile ? '36px 20px 32px' : '80px 60px',
             textAlign: 'center',
             background: 'var(--ytg-card)',
             position: 'relative', overflow: 'hidden',
           }}>
             <div style={{ position: 'absolute', top: -80, left: '50%', transform: 'translateX(-50%)', width: 500, height: 240, background: 'radial-gradient(ellipse, rgba(229,48,42,0.10) 0%, transparent 70%)', pointerEvents: 'none' }} />
-            <span className="bl-eyebrow">
+            <span className="bl-eyebrow" style={{ position: 'relative' }}>
               <span className="bl-eyebrow-dot" />
               <span className="bl-eyebrow-text">Try YTGrowth</span>
             </span>
-            <h2 className="bl-h2" style={{ fontSize: isMobile ? 30 : 44, marginBottom: 14 }}>
+            <h2 className="bl-h2" style={{ fontSize: isMobile ? 26 : 44, marginBottom: isMobile ? 10 : 14, letterSpacing: isMobile ? '-0.8px' : '-1.4px', position: 'relative' }}>
               Reading is good.<br />
               <span style={{ color: 'var(--ytg-accent)' }}>Doing is better.</span>
             </h2>
-            <p style={{ fontSize: isMobile ? 14 : 16, color: 'var(--ytg-text-2)', maxWidth: 520, margin: '0 auto 28px', lineHeight: 1.75 }}>
+            <p style={{ fontSize: isMobile ? 14 : 16, color: 'var(--ytg-text-2)', maxWidth: 520, margin: '0 auto 22px', lineHeight: 1.65, position: 'relative' }}>
               Run your channel through YTGrowth and get a complete audit, SEO recommendations, and competitor breakdowns. Free to try.
             </p>
-            <Link to="/dashboard" className={`bl-btn${isMobile ? '' : ' bl-btn-lg'}`}>
+            <Link to="/dashboard" className={`bl-btn${isMobile ? '' : ' bl-btn-lg'}`} style={{ position: 'relative' }}>
               Try YTGrowth free →
             </Link>
           </div>
