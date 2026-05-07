@@ -696,8 +696,8 @@ export default function BlogPost() {
           </p>
           <div className="bp-byline">
             <div className="bp-byline-rule" />
-            <p className="bp-byline-author">Written by {post.author}</p>
-            <p className="bp-byline-meta">{formatPostDate(post.date)} · {post.readTime}</p>
+            <p className="bp-byline-author">Published by {post.author}</p>
+            <p className="bp-byline-meta">Updated {formatPostDate(post.updated || post.date)} · {post.readTime}</p>
           </div>
         </div>
 

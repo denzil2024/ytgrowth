@@ -3,6 +3,9 @@
  *
  * To add a new post, add an object to the `posts` array below. Required
  * fields: slug, title, excerpt, date, category, cover, readTime, content.
+ * Optional: updated (ISO date — if set, the byline shows "Updated {date}"
+ * with this value instead of the original publish date — keeps the post
+ * looking fresh after substantive edits).
  *
  * The `content` field is a JSX render function — write the body as JSX.
  * Inside it you can use:
