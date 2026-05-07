@@ -175,13 +175,44 @@ function useStyles() {
       .bp-nav-link { font-size: 14px; color: var(--ytg-text-3); font-weight: 500; text-decoration: none; transition: color 0.15s; letter-spacing: -0.1px; }
       .bp-nav-link:hover { color: var(--ytg-text-2); }
 
-      .bp-meta-row {
-        display: flex; align-items: center; gap: 12px;
-        font-size: 14px; color: var(--ytg-text-3);
-        flex-wrap: wrap; justify-content: center;
+      /* Byline — avatar circle (first letter of author name on a red
+         gradient) + stacked name and meta. Replaces the old single-line
+         "By X · Date · Read time" treatment. */
+      .bp-byline {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        text-align: left;
       }
-      .bp-meta-dot { width: 3px; height: 3px; border-radius: 50%; background: var(--ytg-text-3); }
-      .bp-author { color: var(--ytg-text-2); font-weight: 600; }
+      .bp-byline-avatar {
+        width: 42px; height: 42px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--ytg-accent), #b91c1c);
+        color: #fff;
+        font-family: 'DM Sans', system-ui, sans-serif;
+        font-size: 17px;
+        font-weight: 800;
+        letter-spacing: -0.5px;
+        display: flex; align-items: center; justify-content: center;
+        box-shadow: 0 2px 6px rgba(229,48,42,0.28);
+        flex-shrink: 0;
+      }
+      .bp-byline-stack {
+        display: flex; flex-direction: column; align-items: flex-start;
+        gap: 1px;
+      }
+      .bp-byline-author {
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--ytg-text);
+        letter-spacing: -0.1px;
+        line-height: 1.3;
+      }
+      .bp-byline-meta {
+        font-size: 13px;
+        color: var(--ytg-text-3);
+        line-height: 1.3;
+      }
 
       /* HERO IMAGE — 16:9 (matches YouTube thumbnail ratio).
          Recommended source size: 1600x900 (or 1200x675 lighter). */
@@ -383,17 +414,19 @@ function useStyles() {
         background: radial-gradient(ellipse, rgba(229,48,42,0.10) 0%, transparent 70%);
         pointer-events: none;
       }
-      .bp-cta-card-text { flex: 1; min-width: 0; position: relative; z-index: 1; }
+      .bp-cta-card-text { display: block; flex: 1; min-width: 0; position: relative; z-index: 1; }
       .bp-cta-card-title {
+        display: block;
         font-family: 'DM Sans', system-ui, sans-serif;
-        font-size: 18px;
+        font-size: 17px;
         font-weight: 800;
         letter-spacing: -0.3px;
         color: var(--ytg-text);
-        margin: 0 0 4px 0 !important;
+        margin: 0 0 6px 0 !important;
         line-height: 1.3;
       }
       .bp-cta-card-sub {
+        display: block;
         font-size: 14px;
         color: var(--ytg-text-2);
         margin: 0 !important;
@@ -665,15 +698,17 @@ export default function BlogPost() {
           <h1 className="bp-h1" style={{ fontSize: isMobile ? 30 : 46, color: 'var(--ytg-text)', marginBottom: 22 }}>
             {post.title}
           </h1>
-          <p style={{ fontSize: isMobile ? 16 : 18.5, color: 'var(--ytg-text-2)', lineHeight: 1.7, maxWidth: 720, margin: '0 auto 28px' }}>
+          <p style={{ fontSize: isMobile ? 16 : 18.5, color: 'var(--ytg-text-2)', lineHeight: 1.7, maxWidth: 720, margin: '0 auto 32px' }}>
             {post.excerpt}
           </p>
-          <div className="bp-meta-row">
-            <span className="bp-author">By {post.author}</span>
-            <span className="bp-meta-dot" />
-            <span>{formatPostDate(post.date)}</span>
-            <span className="bp-meta-dot" />
-            <span>{post.readTime}</span>
+          <div style={{ display: 'flex', justifyContent: 'center' }}>
+            <div className="bp-byline">
+              <div className="bp-byline-avatar">{(post.author || 'Y').trim()[0].toUpperCase()}</div>
+              <div className="bp-byline-stack">
+                <span className="bp-byline-author">{post.author}</span>
+                <span className="bp-byline-meta">{formatPostDate(post.date)} · {post.readTime}</span>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -694,37 +729,37 @@ export default function BlogPost() {
         </article>
       </section>
 
-      {/* 3 — INLINE CTA before related posts */}
+      {/* 3 — BOTTOM CTA. Centered card, matches the rhythm of the
+          feature/contact page bottom CTAs. */}
       <section style={{ padding: isMobile ? '0 16px 0' : '0 40px 0', background: 'var(--ytg-bg)', borderTop: '1px solid var(--ytg-border)' }}>
-        <div style={{ maxWidth: 1180, margin: '0 auto', paddingTop: isMobile ? 56 : 88, paddingBottom: isMobile ? 56 : 88 }}>
+        <div style={{ maxWidth: 880, margin: '0 auto', paddingTop: isMobile ? 56 : 80, paddingBottom: isMobile ? 56 : 80 }}>
           <div style={{
-            borderRadius: isMobile ? 18 : 24,
+            borderRadius: isMobile ? 18 : 22,
             border: '1px solid var(--ytg-border)',
-            boxShadow: 'var(--ytg-shadow-lg)',
-            padding: isMobile ? '40px 24px 36px' : '64px 60px',
+            boxShadow: 'var(--ytg-shadow-xl)',
+            padding: isMobile ? '40px 24px 36px' : '56px 48px 52px',
+            textAlign: 'center',
             background: 'var(--ytg-card)',
             position: 'relative', overflow: 'hidden',
-            display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1.5fr 1fr',
-            gap: isMobile ? 24 : 40, alignItems: 'center',
           }}>
-            <div style={{ position: 'absolute', top: -80, right: -80, width: 400, height: 240, background: 'radial-gradient(ellipse, rgba(229,48,42,0.10) 0%, transparent 70%)', pointerEvents: 'none' }} />
-            <div style={{ position: 'relative' }}>
-              <span className="bp-eyebrow">
-                <span className="bp-eyebrow-dot" />
-                <span className="bp-eyebrow-text">Try YTGrowth</span>
-              </span>
-              <h2 className="bp-h2" style={{ fontSize: isMobile ? 26 : 34, marginBottom: 12 }}>
-                Stop reading. <span style={{ color: 'var(--ytg-accent)' }}>Start optimizing.</span>
-              </h2>
-              <p style={{ fontSize: isMobile ? 14 : 15.5, color: 'var(--ytg-text-2)', lineHeight: 1.7 }}>
-                Run your channel through YTGrowth and get a complete audit, SEO recommendations, and competitor breakdowns. Free to try.
-              </p>
-            </div>
-            <div style={{ display: 'flex', justifyContent: isMobile ? 'flex-start' : 'flex-end', position: 'relative' }}>
-              <Link to="/dashboard" className={`bp-btn${isMobile ? '' : ' bp-btn-lg'}`}>
-                Try free →
-              </Link>
-            </div>
+            <div style={{ position: 'absolute', top: -80, left: '50%', transform: 'translateX(-50%)', width: 460, height: 220, background: 'radial-gradient(ellipse, rgba(229,48,42,0.10) 0%, transparent 70%)', pointerEvents: 'none' }} />
+            <span className="bp-eyebrow" style={{ marginBottom: 18, position: 'relative' }}>
+              <span className="bp-eyebrow-dot" />
+              <span className="bp-eyebrow-text">Try YTGrowth</span>
+            </span>
+            <h2 className="bp-h2" style={{ fontSize: isMobile ? 26 : 32, marginBottom: 12, position: 'relative' }}>
+              Don't just read the playbook.<br />
+              <span style={{ color: 'var(--ytg-accent)' }}>Run it on your channel.</span>
+            </h2>
+            <p style={{ fontSize: isMobile ? 14 : 15.5, color: 'var(--ytg-text-2)', lineHeight: 1.7, maxWidth: 560, margin: '0 auto 26px', position: 'relative' }}>
+              YTGrowth scores your titles, audits your channel against the live niche, and surfaces the gaps your competitors are missing. In 30 seconds.
+            </p>
+            <Link to="/dashboard" className={`bp-btn${isMobile ? '' : ' bp-btn-lg'}`} style={{ position: 'relative' }}>
+              Try YTGrowth free →
+            </Link>
+            <p style={{ fontSize: 12.5, color: 'var(--ytg-text-3)', marginTop: 14, position: 'relative' }}>
+              3 free analyses · No credit card required
+            </p>
           </div>
         </div>
       </section>
