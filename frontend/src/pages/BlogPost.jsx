@@ -175,46 +175,36 @@ function useStyles() {
       .bp-nav-link { font-size: 14px; color: var(--ytg-text-3); font-weight: 500; text-decoration: none; transition: color 0.15s; letter-spacing: -0.1px; }
       .bp-nav-link:hover { color: var(--ytg-text-2); }
 
-      /* Byline — three editorial columns (Author / Published / Read time)
-         separated by thin vertical dividers. No avatar; reads like a
-         masthead detail block. */
+      /* Byline — clean two-line stacked treatment. Big author name on
+         top in DM Sans, smaller meta line below in muted gray. No labels,
+         no dividers, no avatar — just the credit, the way Stripe or
+         Linear do it. */
       .bp-byline {
-        display: inline-flex;
-        align-items: stretch;
-        gap: 0;
-      }
-      .bp-byline-col {
-        display: flex;
-        flex-direction: column;
-        gap: 5px;
-        padding: 4px 32px;
         text-align: center;
-        min-width: 110px;
+        position: relative;
       }
-      .bp-byline-col:first-child { padding-left: 0; }
-      .bp-byline-col:last-child  { padding-right: 0; }
-      .bp-byline-label {
-        font-size: 10.5px;
-        font-weight: 800;
-        text-transform: uppercase;
-        letter-spacing: 0.1em;
-        color: var(--ytg-text-3);
+      .bp-byline-rule {
+        width: 32px;
+        height: 2px;
+        background: var(--ytg-accent);
+        border-radius: 2px;
+        margin: 0 auto 18px;
       }
-      .bp-byline-value {
-        font-size: 14px;
+      .bp-byline-author {
+        font-family: 'DM Sans', system-ui, sans-serif;
+        font-size: 17px;
         font-weight: 700;
         color: var(--ytg-text);
-        letter-spacing: -0.1px;
+        letter-spacing: -0.3px;
+        margin: 0;
+        line-height: 1.3;
       }
-      .bp-byline-divider {
-        width: 1px;
-        background: var(--ytg-border);
-        align-self: stretch;
-      }
-      @media (max-width: 600px) {
-        .bp-byline-col { padding: 4px 18px; min-width: 0; }
-        .bp-byline-label { font-size: 9.5px; }
-        .bp-byline-value { font-size: 13px; }
+      .bp-byline-meta {
+        font-size: 13.5px;
+        color: var(--ytg-text-3);
+        margin: 6px 0 0;
+        letter-spacing: -0.05px;
+        line-height: 1.4;
       }
 
       /* HERO IMAGE — 16:9 (matches YouTube thumbnail ratio).
@@ -704,23 +694,10 @@ export default function BlogPost() {
           <p style={{ fontSize: isMobile ? 16 : 18.5, color: 'var(--ytg-text-2)', lineHeight: 1.7, maxWidth: 720, margin: '0 auto 32px' }}>
             {post.excerpt}
           </p>
-          <div style={{ display: 'flex', justifyContent: 'center' }}>
-            <div className="bp-byline">
-              <div className="bp-byline-col">
-                <span className="bp-byline-label">Author</span>
-                <span className="bp-byline-value">{post.author}</span>
-              </div>
-              <div className="bp-byline-divider" />
-              <div className="bp-byline-col">
-                <span className="bp-byline-label">Published</span>
-                <span className="bp-byline-value">{formatPostDate(post.date)}</span>
-              </div>
-              <div className="bp-byline-divider" />
-              <div className="bp-byline-col">
-                <span className="bp-byline-label">Read Time</span>
-                <span className="bp-byline-value">{post.readTime}</span>
-              </div>
-            </div>
+          <div className="bp-byline">
+            <div className="bp-byline-rule" />
+            <p className="bp-byline-author">Written by {post.author}</p>
+            <p className="bp-byline-meta">{formatPostDate(post.date)} · {post.readTime}</p>
           </div>
         </div>
 
