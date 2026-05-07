@@ -146,6 +146,29 @@ function useStyles() {
         text-transform: uppercase; letter-spacing: 0.09em;
       }
 
+      /* Category pill — used at the top of single posts. Distinct from
+         the generic eyebrow: solid red, more presence, links to /blog. */
+      .bp-category {
+        display: inline-block;
+        padding: 8px 18px;
+        background: var(--ytg-accent);
+        color: #fff;
+        font-size: 11.5px;
+        font-weight: 800;
+        letter-spacing: 0.09em;
+        text-transform: uppercase;
+        border-radius: 100px;
+        text-decoration: none;
+        margin-bottom: 28px;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.10), 0 4px 16px rgba(229,48,42,0.32);
+        transition: filter 0.18s, transform 0.18s, box-shadow 0.18s;
+      }
+      .bp-category:hover {
+        filter: brightness(1.07);
+        transform: translateY(-1px);
+        box-shadow: 0 2px 4px rgba(0,0,0,0.12), 0 8px 24px rgba(229,48,42,0.40);
+      }
+
       .bp-h1 { font-family: 'DM Sans', system-ui, sans-serif; font-weight: 800; letter-spacing: -2px; line-height: 1.05; text-wrap: balance; }
       .bp-h2 { font-family: 'DM Sans', system-ui, sans-serif; font-weight: 800; letter-spacing: -1.4px; line-height: 1.08; text-wrap: balance; }
 
@@ -160,12 +183,13 @@ function useStyles() {
       .bp-meta-dot { width: 3px; height: 3px; border-radius: 50%; background: var(--ytg-text-3); }
       .bp-author { color: var(--ytg-text-2); font-weight: 600; }
 
-      /* HERO IMAGE — full bleed wide card with rounded corners */
+      /* HERO IMAGE — 16:9 (matches YouTube thumbnail ratio).
+         Recommended source size: 1600x900 (or 1200x675 lighter). */
       .bp-hero-image {
         max-width: 1080px;
         width: 100%;
         margin: 40px auto 0;
-        aspect-ratio: 16/8;
+        aspect-ratio: 16/9;
         background: linear-gradient(135deg, var(--ytg-bg-2), var(--ytg-bg-3));
         border-radius: 24px;
         overflow: hidden;
@@ -183,37 +207,41 @@ function useStyles() {
 
       /* PROSE — typography for the post body */
       .bp-prose {
-        max-width: 720px;
+        max-width: 780px;
         margin: 0 auto;
-        font-size: 17.5px;
-        line-height: 1.78;
+        font-size: 16px;
+        line-height: 1.72;
         color: var(--ytg-text);
         font-family: 'Inter', system-ui, sans-serif;
       }
-      .bp-prose > * + * { margin-top: 1.4em; }
+      /* Generous paragraph rhythm. Roughly one full line of empty
+         space between blocks so the body reads, not feels packed. */
+      .bp-prose > * + * { margin-top: 1.7em; }
+      .bp-prose > p + p { margin-top: 1.85em; }
       .bp-prose p { margin: 0; }
       .bp-prose strong { font-weight: 700; color: var(--ytg-text); }
       .bp-prose em { font-style: italic; }
 
       .bp-prose h2 {
         font-family: 'DM Sans', system-ui, sans-serif;
-        font-size: 30px; font-weight: 800; letter-spacing: -0.9px;
-        line-height: 1.18;
+        font-size: 26px; font-weight: 800; letter-spacing: -0.7px;
+        line-height: 1.2;
         color: var(--ytg-text);
-        margin-top: 2.2em !important;
-        margin-bottom: 0.6em !important;
+        margin-top: 2.6em !important;
+        margin-bottom: 0.7em !important;
         text-wrap: balance;
       }
-      .bp-prose h2 + p { margin-top: 0.4em; }
+      .bp-prose h2 + p { margin-top: 0.5em !important; }
 
       .bp-prose h3 {
         font-family: 'DM Sans', system-ui, sans-serif;
-        font-size: 22px; font-weight: 700; letter-spacing: -0.5px;
-        line-height: 1.28;
+        font-size: 19px; font-weight: 700; letter-spacing: -0.3px;
+        line-height: 1.32;
         color: var(--ytg-text);
-        margin-top: 1.8em !important;
-        margin-bottom: 0.5em !important;
+        margin-top: 2em !important;
+        margin-bottom: 0.6em !important;
       }
+      .bp-prose h3 + p { margin-top: 0.5em !important; }
 
       .bp-prose a {
         color: var(--ytg-accent);
@@ -380,13 +408,13 @@ function useStyles() {
         .bp-grid-3 { grid-template-columns: repeat(2,1fr); }
       }
       @media (max-width: 768px) {
-        .bp-prose { font-size: 16.5px; line-height: 1.74; }
-        .bp-prose h2 { font-size: 24px; letter-spacing: -0.6px; }
-        .bp-prose h3 { font-size: 19px; }
-        .bp-prose blockquote { padding: 18px 20px; font-size: 16px; margin: 1.8em 0; }
+        .bp-prose { font-size: 15.5px; line-height: 1.7; }
+        .bp-prose h2 { font-size: 22px; letter-spacing: -0.5px; }
+        .bp-prose h3 { font-size: 18px; }
+        .bp-prose blockquote { padding: 18px 20px; font-size: 15px; margin: 1.6em 0; }
         .bp-grid-3 { grid-template-columns: 1fr; }
         .bp-section-pad { padding-left: 20px !important; padding-right: 20px !important; }
-        .bp-hero-image { aspect-ratio: 16/9; border-radius: 16px; margin-top: 28px; }
+        .bp-hero-image { border-radius: 16px; margin-top: 24px; }
       }
     `
     document.head.appendChild(style)
@@ -484,13 +512,10 @@ export default function BlogPost() {
       </nav>
 
       {/* 1 — HEADER. White */}
-      <section style={{ padding: isMobile ? '52px 20px 0' : '88px 40px 0', textAlign: 'center', background: '#ffffff' }}>
+      <section style={{ padding: isMobile ? '36px 20px 0' : '56px 40px 0', textAlign: 'center', background: '#ffffff' }}>
         <div style={{ maxWidth: 880, margin: '0 auto', animation: 'fadeUp 0.5s ease both' }}>
-          <span className="bp-eyebrow">
-            <span className="bp-eyebrow-dot" />
-            <span className="bp-eyebrow-text">{post.category.label}</span>
-          </span>
-          <h1 className="bp-h1" style={{ fontSize: isMobile ? 32 : 52, color: 'var(--ytg-text)', marginBottom: 24 }}>
+          <Link to="/blog" className="bp-category">{post.category.label}</Link>
+          <h1 className="bp-h1" style={{ fontSize: isMobile ? 30 : 46, color: 'var(--ytg-text)', marginBottom: 22 }}>
             {post.title}
           </h1>
           <p style={{ fontSize: isMobile ? 16 : 18.5, color: 'var(--ytg-text-2)', lineHeight: 1.7, maxWidth: 720, margin: '0 auto 28px' }}>
