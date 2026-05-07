@@ -166,7 +166,7 @@ function useStyles() {
       .bl-card:hover { box-shadow: var(--ytg-shadow-lg); transform: translateY(-3px); }
 
       .bl-card-cover {
-        width: 100%; aspect-ratio: 16/10;
+        width: 100%; aspect-ratio: 16/9;
         background: linear-gradient(135deg, var(--ytg-bg-2), var(--ytg-bg-3));
         position: relative; overflow: hidden;
       }
@@ -235,7 +235,7 @@ function useStyles() {
       }
       .bl-featured:hover { box-shadow: var(--ytg-shadow-xl); transform: translateY(-3px); }
       .bl-featured-cover {
-        aspect-ratio: 16/11;
+        aspect-ratio: 16/9;
         background: linear-gradient(135deg, var(--ytg-bg-2), var(--ytg-bg-3));
         position: relative; overflow: hidden;
       }
@@ -258,7 +258,7 @@ function useStyles() {
       @media (max-width: 768px) {
         .bl-grid-3 { grid-template-columns: 1fr; gap: 16px; }
         .bl-featured { grid-template-columns: 1fr; border-radius: 16px; margin-bottom: 32px; }
-        .bl-featured-cover { aspect-ratio: 16/10; }
+        .bl-featured-cover { aspect-ratio: 16/9; }
         .bl-featured-body { padding: 22px 22px 26px; gap: 10px; }
         .bl-featured-title { font-size: 22px; letter-spacing: -0.4px; line-height: 1.18; }
         .bl-featured-excerpt { font-size: 14.5px; line-height: 1.6; }

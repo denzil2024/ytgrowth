@@ -542,7 +542,7 @@ function useStyles() {
       }
       .bp-related-card:hover { box-shadow: var(--ytg-shadow-lg); transform: translateY(-3px); }
       .bp-related-card-cover {
-        width: 100%; aspect-ratio: 16/10;
+        width: 100%; aspect-ratio: 16/9;
         background: linear-gradient(135deg, var(--ytg-bg-2), var(--ytg-bg-3));
         position: relative; overflow: hidden;
       }
