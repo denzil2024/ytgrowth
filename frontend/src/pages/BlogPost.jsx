@@ -207,7 +207,7 @@ function useStyles() {
 
       /* PROSE — typography for the post body */
       .bp-prose {
-        max-width: 780px;
+        max-width: 820px;
         margin: 0 auto;
         font-size: 16px;
         line-height: 1.72;
@@ -216,30 +216,29 @@ function useStyles() {
       }
       /* Generous paragraph rhythm. Roughly one full line of empty
          space between blocks so the body reads, not feels packed. */
-      .bp-prose > * + * { margin-top: 1.7em; }
-      .bp-prose > p + p { margin-top: 1.85em; }
+      .bp-prose > * + * { margin-top: 1.65em; }
+      .bp-prose > p + p { margin-top: 1.75em; }
       .bp-prose p { margin: 0; }
       .bp-prose strong { font-weight: 700; color: var(--ytg-text); }
       .bp-prose em { font-style: italic; }
 
       .bp-prose h2 {
         font-family: 'DM Sans', system-ui, sans-serif;
-        font-size: 26px; font-weight: 800; letter-spacing: -0.7px;
-        line-height: 1.2;
+        font-size: 24px; font-weight: 800; letter-spacing: -0.5px;
+        line-height: 1.22;
         color: var(--ytg-text);
-        margin-top: 2.6em !important;
-        margin-bottom: 0.7em !important;
-        text-wrap: balance;
+        margin-top: 2em !important;
+        margin-bottom: 0.6em !important;
       }
       .bp-prose h2 + p { margin-top: 0.5em !important; }
 
       .bp-prose h3 {
         font-family: 'DM Sans', system-ui, sans-serif;
-        font-size: 19px; font-weight: 700; letter-spacing: -0.3px;
+        font-size: 18px; font-weight: 700; letter-spacing: -0.2px;
         line-height: 1.32;
         color: var(--ytg-text);
-        margin-top: 2em !important;
-        margin-bottom: 0.6em !important;
+        margin-top: 1.7em !important;
+        margin-bottom: 0.5em !important;
       }
       .bp-prose h3 + p { margin-top: 0.5em !important; }
 
@@ -257,29 +256,68 @@ function useStyles() {
         background-image: linear-gradient(transparent calc(100% - 1px), var(--ytg-accent) 1px);
       }
 
-      .bp-prose ul, .bp-prose ol {
-        padding-left: 1.6em;
+      /* UNORDERED list — clear red dot markers, not the default invisible glyph */
+      .bp-prose ul {
+        padding-left: 1.5em;
+        list-style: none;
       }
-      .bp-prose ul li, .bp-prose ol li {
-        margin: 0.5em 0;
+      .bp-prose ul > li {
+        position: relative;
+        padding-left: 0.5em;
+        margin: 0.7em 0;
         line-height: 1.7;
       }
-      .bp-prose ul li::marker { color: var(--ytg-accent); }
-      .bp-prose ol li::marker { color: var(--ytg-accent); font-weight: 700; }
+      .bp-prose ul > li::before {
+        content: '';
+        position: absolute;
+        left: -0.85em;
+        top: 0.6em;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--ytg-text);
+      }
 
+      /* ORDERED list — red bold numerals */
+      .bp-prose ol {
+        padding-left: 1.6em;
+        list-style: none;
+        counter-reset: bp-list-counter;
+      }
+      .bp-prose ol > li {
+        position: relative;
+        padding-left: 0.4em;
+        margin: 0.7em 0;
+        line-height: 1.7;
+        counter-increment: bp-list-counter;
+      }
+      .bp-prose ol > li::before {
+        content: counter(bp-list-counter) '.';
+        position: absolute;
+        left: -1.5em;
+        top: 0;
+        color: var(--ytg-text);
+        font-weight: 700;
+        font-size: 0.95em;
+      }
+
+      /* Callout / blockquote — neutral light grey card with dark accent line.
+         No more red background; reads as a quiet highlight, not an alarm. */
       .bp-prose blockquote {
-        margin: 2.2em 0;
-        padding: 22px 26px;
-        border-left: 3px solid var(--ytg-accent);
-        background: var(--ytg-accent-light);
-        border-radius: 4px 14px 14px 4px;
-        font-size: 18px;
+        margin: 2em 0;
+        padding: 18px 24px;
+        background: var(--ytg-bg-2);
+        border: 1px solid var(--ytg-border);
+        border-left: 3px solid var(--ytg-text);
+        border-radius: 8px;
+        font-size: 15.5px;
         font-style: normal;
         color: var(--ytg-text);
         font-weight: 500;
-        line-height: 1.6;
+        line-height: 1.65;
       }
       .bp-prose blockquote p { margin: 0; }
+      .bp-prose blockquote strong { color: var(--ytg-text); }
 
       .bp-prose img {
         width: 100%;
