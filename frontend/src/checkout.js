@@ -1,6 +1,10 @@
 /**
  * Paddle checkout helper.
- * Paddle.js is loaded via index.html (cdn.paddle.com/paddle/v2/paddle.js).
+ *
+ * Paddle.js is no longer loaded eagerly via index.html. main.jsx exposes
+ * window.__paddleReady() which lazy-loads the script on first user
+ * interaction or after a short timeout, then resolves with the Paddle
+ * global. Both helpers below await it before touching Paddle.
  *
  * initPaddleRetain(customerId) — call once per authenticated page load
  * with the Paddle customer ID (ctm_...) so Retain can track the user.
@@ -10,13 +14,21 @@
 
 const PADDLE_TOKEN = 'live_2af860b645fca6f106c9d79f8d2'
 
+// main.jsx sets window.__paddleReady = loadPaddle. If for some reason
+// it isn't there (e.g., during a unit test), fall back to a no-op promise
+// so callers still resolve.
+function ensurePaddle() {
+  return window.__paddleReady ? window.__paddleReady() : Promise.resolve()
+}
+
 /**
  * Re-initialise Paddle with the logged-in customer's Paddle ID.
  * Call this once after /billing/usage resolves and returns a paddle_customer_id.
  * Safe to call multiple times — Paddle ignores repeat calls with the same ID.
  */
-export function initPaddleRetain(customerId) {
+export async function initPaddleRetain(customerId) {
   if (!customerId) return
+  await ensurePaddle()
   Paddle.Initialize({
     token: PADDLE_TOKEN,
     pwCustomer: { id: customerId },
@@ -25,6 +37,11 @@ export function initPaddleRetain(customerId) {
 
 export async function openCheckout(planKey) {
   try {
+    // Kick off Paddle load in parallel with the /billing/checkout fetch
+    // so the user doesn't pay the script-load cost serially. By the time
+    // the price_id comes back, Paddle is usually already ready.
+    const paddleReady = ensurePaddle()
+
     const res = await fetch(`/billing/checkout?plan=${encodeURIComponent(planKey)}`, {
       credentials: 'include',
     })
@@ -44,6 +61,8 @@ export async function openCheckout(planKey) {
       console.error('[checkout] No price_id returned:', data)
       return
     }
+
+    await paddleReady
 
     Paddle.Checkout.open({
       items: [{ priceId: data.price_id, quantity: 1 }],

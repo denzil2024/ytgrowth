@@ -157,11 +157,10 @@
     <link rel="preconnect" href="https://fonts.googleapis.com"/>
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
-    <!-- Paddle deferred so it doesn't block the parser. main.jsx is a
-         deferred ES module too, and deferred scripts execute in document
-         order, so Paddle.Initialize in main.jsx still sees the global. -->
-    <script defer src="https://cdn.paddle.com/paddle/v2/paddle.js"></script>
-    <script async defer src="https://cdn.affonso.io/js/pixel.min.js" data-affonso="cmoifufi500062qvcxewv6vqo" data-cookie_duration="30"></script>
+    <!-- Paddle and Affonso are loaded lazily from main.jsx, not on initial
+         parse, so they stop pulling profitwell.js + paddle.css onto the
+         critical path. They fire on first user interaction, OR a 2.5s
+         timeout, whichever comes first. See loadThirdParty() in main.jsx. -->
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=AW-10883831151"></script>
     <script>

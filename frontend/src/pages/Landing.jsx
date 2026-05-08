@@ -902,6 +902,8 @@ export default function Landing() {
           {isMobile ? (
             <button
               onClick={() => setMobileMenuOpen(o => !o)}
+              aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
+              aria-expanded={mobileMenuOpen}
               style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 6, color: '#0a0a0f', display: 'flex', flexDirection: 'column', gap: 4.5 }}
             >
               {mobileMenuOpen ? (
@@ -1108,7 +1110,8 @@ export default function Landing() {
                 boxShadow: isMobile ? '0 2px 6px rgba(229,37,27,0.2)' : '0 4px 12px rgba(229,37,27,0.25)',
               }}>
                 <img
-                  src="/avatars/sophie.jpg" alt=""
+                  src="/avatars/sophie.webp" alt=""
+                  width="80" height="80"
                   style={{
                     width: isMobile ? 44 : 54, height: isMobile ? 44 : 54,
                     borderRadius: '50%', objectFit: 'cover',

@@ -112,7 +112,23 @@ def health():
 # Serve React frontend — must be after all API routes
 DIST = Path(__file__).parent.parent / "frontend" / "dist"
 
-app.mount("/assets", StaticFiles(directory=DIST / "assets"), name="assets")
+
+# Vite hashes every file in /assets (e.g., index-CDvl2ezf.js). The hash
+# changes on every build, which means we can safely tell browsers to cache
+# the file forever. Without this, Lighthouse flags ~107 KiB of repeat-visit
+# bandwidth and Railway's default 4h TTL keeps recurring users re-downloading
+# the bundle every few hours. We override file_response on a StaticFiles
+# subclass instead of using a middleware so the header is only applied to
+# /assets, never to API responses or HTML.
+class HashedStaticFiles(StaticFiles):
+    async def get_response(self, path, scope):
+        response = await super().get_response(path, scope)
+        if response.status_code == 200:
+            response.headers["Cache-Control"] = "public, max-age=31536000, immutable"
+        return response
+
+
+app.mount("/assets", HashedStaticFiles(directory=DIST / "assets"), name="assets")
 
 # Static files (logo for emails, etc.)
 STATIC_DIR = Path(__file__).parent.parent / "static"
