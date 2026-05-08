@@ -282,7 +282,8 @@ function useGlobalStyles() {
       .vig-cat:hover { border-color: var(--ytg-text-3); color: var(--ytg-text); }
       .vig-cat.active { background: var(--ytg-accent); color: #fff; border-color: var(--ytg-accent); box-shadow: 0 1px 3px rgba(0,0,0,0.10), 0 4px 12px rgba(229,48,42,0.28); }
 
-      .vig-results-list { display: flex; flex-direction: column; gap: 8px; max-height: 580px; overflow-y: auto; padding-right: 6px; }
+      .vig-results-list { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; max-height: 620px; overflow-y: auto; padding-right: 6px; }
+      @media (max-width: 720px) { .vig-results-list { grid-template-columns: 1fr; } }
       .vig-results-list::-webkit-scrollbar { width: 8px }
       .vig-results-list::-webkit-scrollbar-thumb { background-color: rgba(10,10,15,0.18); border-radius: 8px; border: 2px solid transparent; background-clip: content-box; }
 
@@ -425,6 +426,7 @@ export default function YoutubeVideoIdeasGenerator() {
       {/* ══ TOOL ══ */}
       <section id="generator" className="vig-section-pad" style={{ padding: isMobile ? '48px 20px 80px' : '72px 48px 110px', background: 'var(--ytg-bg)' }}>
         <div style={{ maxWidth: 1080, margin: '0 auto' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
           <div className="vig-tool-grid">
 
             {/* LEFT — input card */}
@@ -457,68 +459,66 @@ export default function YoutubeVideoIdeasGenerator() {
               )}
             </div>
 
-            {/* RIGHT — result column */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
-              {showResults && featured ? (
-                <>
-                  <div style={{ background: 'var(--ytg-accent)', borderRadius: 22, color: '#fff', padding: isMobile ? 28 : 36, boxShadow: '0 4px 18px rgba(229,48,42,0.32), 0 24px 60px rgba(229,48,42,0.18)' }}>
-                    <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', opacity: 0.78, marginBottom: 14 }}>
-                      Top idea for {niche}
-                    </div>
-                    <div style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: isMobile ? 26 : 32, fontWeight: 800, letterSpacing: '-0.8px', lineHeight: 1.18, marginBottom: 14, wordBreak: 'break-word' }}>
-                      {featured.title}
-                    </div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 22 }}>
-                      <span style={{ fontSize: 10.5, fontWeight: 800, letterSpacing: '0.06em', textTransform: 'uppercase', padding: '3px 10px', borderRadius: 6, background: 'rgba(255,255,255,0.16)' }}>{CAT_LOOKUP[featured.category]?.label || featured.category}</span>
-                      <span style={{ fontSize: 13, opacity: 0.78 }}>{featured.length} characters</span>
-                    </div>
-                    <div style={{ height: 1, background: 'rgba(255,255,255,0.2)', margin: '0 0 22px' }} />
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 16, flexWrap: 'wrap' }}>
-                      <div>
-                        <div style={{ fontSize: 11, opacity: 0.74, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 4 }}>Total ideas</div>
-                        <div style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: 24, fontWeight: 800, letterSpacing: '-0.8px' }}>{ideas.length}</div>
-                      </div>
-                      <div>
-                        <div style={{ fontSize: 11, opacity: 0.74, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 4 }}>Categories</div>
-                        <div style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: 24, fontWeight: 800, letterSpacing: '-0.8px' }}>{catCount}</div>
-                      </div>
-                      <button onClick={() => navigator.clipboard?.writeText(featured.title)} style={{ background: '#fff', color: 'var(--ytg-accent)', border: 0, fontFamily: 'Inter, sans-serif', fontWeight: 700, fontSize: 13, padding: '11px 22px', borderRadius: 100, cursor: 'pointer', letterSpacing: '-0.1px' }}>
-                        Copy this idea
-                      </button>
-                    </div>
-                  </div>
-
-                  {rest.length > 0 && (
-                    <div style={{ background: 'var(--ytg-card)', borderRadius: 22, border: '1px solid var(--ytg-border)', boxShadow: 'var(--ytg-shadow)', padding: 22 }}>
-                      <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-accent-text)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 14 }}>{rest.length} more ideas</p>
-                      <div className="vig-results-list">
-                        {rest.map((it, i) => (
-                          <div key={i} className="vig-result-row">
-                            <div style={{ minWidth: 0, flex: 1 }}>
-                              <span className={`vig-cat-pill ${it.category}`}>{CAT_LOOKUP[it.category]?.label || it.category}</span>
-                              <div className="vig-result-title">{it.title}</div>
-                            </div>
-                            <CopyButton text={it.title} />
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </>
-              ) : (
-                <div style={{ background: 'var(--ytg-card)', borderRadius: 22, border: '2px dashed var(--ytg-border)', padding: isMobile ? 36 : 56, textAlign: 'center' }}>
-                  <div style={{ display: 'inline-flex', width: 56, height: 56, borderRadius: 16, background: 'var(--ytg-accent-light)', alignItems: 'center', justifyContent: 'center', marginBottom: 18 }}>
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#e5302a" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M9 12h6m-6-4h6m-6 8h3m6 6v-7m0-4V4M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/></svg>
-                  </div>
-                  <p style={{ fontSize: 17, fontWeight: 700, color: 'var(--ytg-text)', marginBottom: 8, fontFamily: "'DM Sans', system-ui, sans-serif", letterSpacing: '-0.3px' }}>
-                    Type a niche to get started
-                  </p>
-                  <p style={{ fontSize: 13.5, color: 'var(--ytg-text-3)', maxWidth: 320, margin: '0 auto', lineHeight: 1.6 }}>
-                    Ninety video ideas appear here the moment you type a single word.
-                  </p>
+            {/* RIGHT — top idea OR empty state */}
+            {showResults && featured ? (
+              <div style={{ background: 'var(--ytg-accent)', borderRadius: 22, color: '#fff', padding: isMobile ? 28 : 36, boxShadow: '0 4px 18px rgba(229,48,42,0.32), 0 24px 60px rgba(229,48,42,0.18)' }}>
+                <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', opacity: 0.78, marginBottom: 14 }}>
+                  Top idea for {niche}
                 </div>
-              )}
+                <div style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: isMobile ? 26 : 32, fontWeight: 800, letterSpacing: '-0.8px', lineHeight: 1.18, marginBottom: 14, wordBreak: 'break-word' }}>
+                  {featured.title}
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 22 }}>
+                  <span style={{ fontSize: 10.5, fontWeight: 800, letterSpacing: '0.06em', textTransform: 'uppercase', padding: '3px 10px', borderRadius: 6, background: 'rgba(255,255,255,0.16)' }}>{CAT_LOOKUP[featured.category]?.label || featured.category}</span>
+                  <span style={{ fontSize: 13, opacity: 0.78 }}>{featured.length} characters</span>
+                </div>
+                <div style={{ height: 1, background: 'rgba(255,255,255,0.2)', margin: '0 0 22px' }} />
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 16, flexWrap: 'wrap' }}>
+                  <div>
+                    <div style={{ fontSize: 11, opacity: 0.74, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 4 }}>Total ideas</div>
+                    <div style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: 24, fontWeight: 800, letterSpacing: '-0.8px' }}>{ideas.length}</div>
+                  </div>
+                  <div>
+                    <div style={{ fontSize: 11, opacity: 0.74, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 4 }}>Categories</div>
+                    <div style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: 24, fontWeight: 800, letterSpacing: '-0.8px' }}>{catCount}</div>
+                  </div>
+                  <button onClick={() => navigator.clipboard?.writeText(featured.title)} style={{ background: '#fff', color: 'var(--ytg-accent)', border: 0, fontFamily: 'Inter, sans-serif', fontWeight: 700, fontSize: 13, padding: '11px 22px', borderRadius: 100, cursor: 'pointer', letterSpacing: '-0.1px' }}>
+                    Copy this idea
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div style={{ background: 'var(--ytg-card)', borderRadius: 22, border: '2px dashed var(--ytg-border)', padding: isMobile ? 36 : 56, textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                <div style={{ display: 'inline-flex', width: 56, height: 56, borderRadius: 16, background: 'var(--ytg-accent-light)', alignItems: 'center', justifyContent: 'center', marginBottom: 18 }}>
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#e5302a" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M9 12h6m-6-4h6m-6 8h3m6 6v-7m0-4V4M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/></svg>
+                </div>
+                <p style={{ fontSize: 17, fontWeight: 700, color: 'var(--ytg-text)', marginBottom: 8, fontFamily: "'DM Sans', system-ui, sans-serif", letterSpacing: '-0.3px' }}>
+                  Type a niche to get started
+                </p>
+                <p style={{ fontSize: 13.5, color: 'var(--ytg-text-3)', maxWidth: 320, margin: '0 auto', lineHeight: 1.6 }}>
+                  Ninety video ideas appear here the moment you type a single word.
+                </p>
+              </div>
+            )}
+          </div>
+
+          {/* BOTTOM — full-width more ideas */}
+          {showResults && featured && rest.length > 0 && (
+            <div style={{ background: 'var(--ytg-card)', borderRadius: 22, border: '1px solid var(--ytg-border)', boxShadow: 'var(--ytg-shadow)', padding: isMobile ? 22 : 28 }}>
+              <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-accent-text)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 16 }}>{rest.length} more ideas</p>
+              <div className="vig-results-list">
+                {rest.map((it, i) => (
+                  <div key={i} className="vig-result-row">
+                    <div style={{ minWidth: 0, flex: 1 }}>
+                      <span className={`vig-cat-pill ${it.category}`}>{CAT_LOOKUP[it.category]?.label || it.category}</span>
+                      <div className="vig-result-title">{it.title}</div>
+                    </div>
+                    <CopyButton text={it.title} />
+                  </div>
+                ))}
+              </div>
             </div>
+          )}
           </div>
         </div>
       </section>

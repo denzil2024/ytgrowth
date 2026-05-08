@@ -214,7 +214,8 @@ function useGlobalStyles() {
       .cng-tone:hover { border-color: var(--ytg-text-3); color: var(--ytg-text); }
       .cng-tone.active { background: var(--ytg-accent); color: #fff; border-color: var(--ytg-accent); box-shadow: 0 1px 3px rgba(0,0,0,0.10), 0 4px 12px rgba(229,48,42,0.28); }
 
-      .cng-results-list { display: flex; flex-direction: column; gap: 8px; max-height: 520px; overflow-y: auto; padding-right: 6px; }
+      .cng-results-list { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; max-height: 560px; overflow-y: auto; padding-right: 6px; }
+      @media (max-width: 720px) { .cng-results-list { grid-template-columns: 1fr; } }
       .cng-results-list::-webkit-scrollbar { width: 8px }
       .cng-results-list::-webkit-scrollbar-thumb { background-color: rgba(10,10,15,0.18); border-radius: 8px; border: 2px solid transparent; background-clip: content-box; }
 
@@ -359,6 +360,7 @@ export default function YoutubeChannelNameGenerator() {
       {/* ══ TOOL ══ */}
       <section id="generator" className="cng-section-pad" style={{ padding: isMobile ? '48px 20px 80px' : '72px 48px 110px', background: 'var(--ytg-bg)' }}>
         <div style={{ maxWidth: 1080, margin: '0 auto' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
           <div className="cng-tool-grid">
 
             {/* LEFT — input card */}
@@ -395,71 +397,69 @@ export default function YoutubeChannelNameGenerator() {
               )}
             </div>
 
-            {/* RIGHT — result column */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
-              {showResults && featured ? (
-                <>
-                  <div style={{ background: 'var(--ytg-accent)', borderRadius: 22, color: '#fff', padding: isMobile ? 28 : 36, boxShadow: '0 4px 18px rgba(229,48,42,0.32), 0 24px 60px rgba(229,48,42,0.18)' }}>
-                    <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', opacity: 0.78, marginBottom: 14 }}>
-                      Top pick for {keyword}{second ? ` × ${second}` : ''}
-                    </div>
-                    <div style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: isMobile ? 36 : 46, fontWeight: 800, letterSpacing: '-1.6px', lineHeight: 1.05, marginBottom: 14, wordBreak: 'break-word' }}>
-                      {featured.name}
-                    </div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 22 }}>
-                      <span style={{ fontSize: 10.5, fontWeight: 800, letterSpacing: '0.06em', textTransform: 'uppercase', padding: '3px 10px', borderRadius: 6, background: 'rgba(255,255,255,0.16)' }}>{featured.tone}</span>
-                      <span style={{ fontSize: 13, opacity: 0.78 }}>{featured.length} characters</span>
-                    </div>
-                    <div style={{ height: 1, background: 'rgba(255,255,255,0.2)', margin: '0 0 22px' }} />
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 16, flexWrap: 'wrap' }}>
-                      <div>
-                        <div style={{ fontSize: 11, opacity: 0.74, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 4 }}>Total ideas</div>
-                        <div style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: 24, fontWeight: 800, letterSpacing: '-0.8px' }}>{names.length}</div>
-                      </div>
-                      <div>
-                        <div style={{ fontSize: 11, opacity: 0.74, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 4 }}>Vibes</div>
-                        <div style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: 24, fontWeight: 800, letterSpacing: '-0.8px' }}>{toneCount}</div>
-                      </div>
-                      <button onClick={() => navigator.clipboard?.writeText(featured.name)} style={{ background: '#fff', color: 'var(--ytg-accent)', border: 0, fontFamily: 'Inter, sans-serif', fontWeight: 700, fontSize: 13, padding: '11px 22px', borderRadius: 100, cursor: 'pointer', letterSpacing: '-0.1px' }}>
-                        Copy this name
-                      </button>
-                    </div>
-                  </div>
-
-                  {rest.length > 0 && (
-                    <div style={{ background: 'var(--ytg-card)', borderRadius: 22, border: '1px solid var(--ytg-border)', boxShadow: 'var(--ytg-shadow)', padding: 22 }}>
-                      <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-accent-text)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 14 }}>{rest.length} more options</p>
-                      <div className="cng-results-list">
-                        {rest.map((n, i) => (
-                          <div key={i} className="cng-result-row">
-                            <div style={{ minWidth: 0, flex: 1, display: 'flex', alignItems: 'center', flexWrap: 'wrap' }}>
-                              <span className={`cng-tone-pill ${n.tone}`}>{n.tone}</span>
-                              <span className="cng-result-name">{n.name}</span>
-                            </div>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexShrink: 0 }}>
-                              <span className="cng-result-meta">{n.length} ch</span>
-                              <CopyButton text={n.name} />
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </>
-              ) : (
-                <div style={{ background: 'var(--ytg-card)', borderRadius: 22, border: '2px dashed var(--ytg-border)', padding: isMobile ? 36 : 56, textAlign: 'center' }}>
-                  <div style={{ display: 'inline-flex', width: 56, height: 56, borderRadius: 16, background: 'var(--ytg-accent-light)', alignItems: 'center', justifyContent: 'center', marginBottom: 18 }}>
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#e5302a" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v6m0 10v6M4.22 4.22l4.24 4.24m7.08 7.08l4.24 4.24M1 12h6m10 0h6M4.22 19.78l4.24-4.24m7.08-7.08l4.24-4.24"/></svg>
-                  </div>
-                  <p style={{ fontSize: 17, fontWeight: 700, color: 'var(--ytg-text)', marginBottom: 8, fontFamily: "'DM Sans', system-ui, sans-serif", letterSpacing: '-0.3px' }}>
-                    Type a niche to get started
-                  </p>
-                  <p style={{ fontSize: 13.5, color: 'var(--ytg-text-3)', maxWidth: 320, margin: '0 auto', lineHeight: 1.6 }}>
-                    Sixty+ name ideas appear here the moment you type a single word.
-                  </p>
+            {/* RIGHT — top pick OR empty state */}
+            {showResults && featured ? (
+              <div style={{ background: 'var(--ytg-accent)', borderRadius: 22, color: '#fff', padding: isMobile ? 28 : 36, boxShadow: '0 4px 18px rgba(229,48,42,0.32), 0 24px 60px rgba(229,48,42,0.18)' }}>
+                <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', opacity: 0.78, marginBottom: 14 }}>
+                  Top pick for {keyword}{second ? ` × ${second}` : ''}
                 </div>
-              )}
+                <div style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: isMobile ? 36 : 46, fontWeight: 800, letterSpacing: '-1.6px', lineHeight: 1.05, marginBottom: 14, wordBreak: 'break-word' }}>
+                  {featured.name}
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 22 }}>
+                  <span style={{ fontSize: 10.5, fontWeight: 800, letterSpacing: '0.06em', textTransform: 'uppercase', padding: '3px 10px', borderRadius: 6, background: 'rgba(255,255,255,0.16)' }}>{featured.tone}</span>
+                  <span style={{ fontSize: 13, opacity: 0.78 }}>{featured.length} characters</span>
+                </div>
+                <div style={{ height: 1, background: 'rgba(255,255,255,0.2)', margin: '0 0 22px' }} />
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 16, flexWrap: 'wrap' }}>
+                  <div>
+                    <div style={{ fontSize: 11, opacity: 0.74, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 4 }}>Total ideas</div>
+                    <div style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: 24, fontWeight: 800, letterSpacing: '-0.8px' }}>{names.length}</div>
+                  </div>
+                  <div>
+                    <div style={{ fontSize: 11, opacity: 0.74, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 4 }}>Vibes</div>
+                    <div style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: 24, fontWeight: 800, letterSpacing: '-0.8px' }}>{toneCount}</div>
+                  </div>
+                  <button onClick={() => navigator.clipboard?.writeText(featured.name)} style={{ background: '#fff', color: 'var(--ytg-accent)', border: 0, fontFamily: 'Inter, sans-serif', fontWeight: 700, fontSize: 13, padding: '11px 22px', borderRadius: 100, cursor: 'pointer', letterSpacing: '-0.1px' }}>
+                    Copy this name
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div style={{ background: 'var(--ytg-card)', borderRadius: 22, border: '2px dashed var(--ytg-border)', padding: isMobile ? 36 : 56, textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                <div style={{ display: 'inline-flex', width: 56, height: 56, borderRadius: 16, background: 'var(--ytg-accent-light)', alignItems: 'center', justifyContent: 'center', marginBottom: 18 }}>
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#e5302a" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v6m0 10v6M4.22 4.22l4.24 4.24m7.08 7.08l4.24 4.24M1 12h6m10 0h6M4.22 19.78l4.24-4.24m7.08-7.08l4.24-4.24"/></svg>
+                </div>
+                <p style={{ fontSize: 17, fontWeight: 700, color: 'var(--ytg-text)', marginBottom: 8, fontFamily: "'DM Sans', system-ui, sans-serif", letterSpacing: '-0.3px' }}>
+                  Type a niche to get started
+                </p>
+                <p style={{ fontSize: 13.5, color: 'var(--ytg-text-3)', maxWidth: 320, margin: '0 auto', lineHeight: 1.6 }}>
+                  Sixty+ name ideas appear here the moment you type a single word.
+                </p>
+              </div>
+            )}
+          </div>
+
+          {/* BOTTOM — full-width more options */}
+          {showResults && featured && rest.length > 0 && (
+            <div style={{ background: 'var(--ytg-card)', borderRadius: 22, border: '1px solid var(--ytg-border)', boxShadow: 'var(--ytg-shadow)', padding: isMobile ? 22 : 28 }}>
+              <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-accent-text)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 16 }}>{rest.length} more options</p>
+              <div className="cng-results-list">
+                {rest.map((n, i) => (
+                  <div key={i} className="cng-result-row">
+                    <div style={{ minWidth: 0, flex: 1, display: 'flex', alignItems: 'center', flexWrap: 'wrap' }}>
+                      <span className={`cng-tone-pill ${n.tone}`}>{n.tone}</span>
+                      <span className="cng-result-name">{n.name}</span>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexShrink: 0 }}>
+                      <span className="cng-result-meta">{n.length} ch</span>
+                      <CopyButton text={n.name} />
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
+          )}
           </div>
         </div>
       </section>
