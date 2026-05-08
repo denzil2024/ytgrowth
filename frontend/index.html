@@ -108,6 +108,52 @@
     }
     </script>
 
+    <!-- JSON-LD: Organization + WebSite. Establishes a stable knowledge-graph
+         entity for "YTGrowth" so Google can confidently group brand searches
+         under a single host card with sitelinks. Both blocks share the same
+         @id so the SoftwareApplication.publisher above and any future schema
+         can reference one canonical Organization. -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Organization",
+          "@id": "https://ytgrowth.io/#organization",
+          "name": "YTGrowth",
+          "url": "https://ytgrowth.io",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://ytgrowth.io/favicon.svg",
+            "contentUrl": "https://ytgrowth.io/favicon.svg"
+          },
+          "description": "YTGrowth is a YouTube analytics tool and AI channel audit platform for creators who want to grow without spending hours decoding dashboards.",
+          "contactPoint": {
+            "@type": "ContactPoint",
+            "email": "support@ytgrowth.io",
+            "contactType": "customer support",
+            "availableLanguage": ["en"]
+          },
+          "sameAs": [
+            "https://www.linkedin.com/company/113100340/",
+            "https://x.com/ytgrowth_x",
+            "https://www.facebook.com/ytgrowthfb",
+            "https://www.producthunt.com/products/ytgrowth"
+          ]
+        },
+        {
+          "@type": "WebSite",
+          "@id": "https://ytgrowth.io/#website",
+          "url": "https://ytgrowth.io",
+          "name": "YTGrowth",
+          "description": "The YouTube growth tool that turns analytics into action. Channel audits, SEO, thumbnail and competitor analysis in one.",
+          "inLanguage": "en-US",
+          "publisher": { "@id": "https://ytgrowth.io/#organization" }
+        }
+      ]
+    }
+    </script>
+
     <link rel="preconnect" href="https://fonts.googleapis.com"/>
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>

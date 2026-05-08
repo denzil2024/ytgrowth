@@ -275,6 +275,15 @@ def serve_frontend(full_path: str):
     file = DIST / full_path
     if file.is_file():
         return FileResponse(file)
+    # Pre-rendered route. scripts/prerender.js writes dist/<path>/index.html
+    # for public, indexable pages (the landing page, /blog, every /blog/<slug>,
+    # every /features/*, every /tools/*, plus the legal/contact pages). That
+    # file already has fully-baked body content plus per-route canonical, OG,
+    # and Twitter tags, so we serve it directly. Crawlers see real HTML
+    # without needing to execute JS.
+    prerendered = file / "index.html"
+    if file.is_dir() and prerendered.is_file():
+        return FileResponse(prerendered)
     # SPA fallback — inject route-specific SEO meta tags.
     from fastapi.responses import HTMLResponse
     rendered = _render_index_with_meta(full_path)

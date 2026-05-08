@@ -133,10 +133,14 @@ function useFeatureStyles() {
       .ftr-faq-q:hover { color: var(--ytg-accent); }
       .ftr-faq-icon { transition: transform 0.2s; flex-shrink: 0; color: var(--ytg-text-3); }
       .ftr-faq-icon.open { transform: rotate(45deg); color: var(--ytg-accent); }
+      /* Answer is always rendered into the DOM (so prerender + crawlers see
+         it) and hidden via CSS when the accordion is collapsed. */
       .ftr-faq-a {
         font-size: 14.5px; color: var(--ytg-text-2); line-height: 1.78;
         padding: 0 0 22px 0; max-width: 720px;
+        display: none;
       }
+      .ftr-faq-a.open { display: block; }
 
       @media (max-width: 900px) {
         .ftr-grid-3 { grid-template-columns: 1fr; }
@@ -178,11 +182,11 @@ function FaqItem({ q, a }) {
   const [open, setOpen] = useState(false)
   return (
     <div className="ftr-faq-item">
-      <button className="ftr-faq-q" onClick={() => setOpen(o => !o)}>
+      <button className="ftr-faq-q" onClick={() => setOpen(o => !o)} aria-expanded={open}>
         <span style={{ flex: 1 }}>{q}</span>
         <span className={`ftr-faq-icon${open ? ' open' : ''}`}><Plus /></span>
       </button>
-      {open && <div className="ftr-faq-a">{a}</div>}
+      <div className={`ftr-faq-a${open ? ' open' : ''}`}>{a}</div>
     </div>
   )
 }

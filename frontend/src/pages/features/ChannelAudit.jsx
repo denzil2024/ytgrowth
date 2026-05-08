@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import LandingFooter from '../../components/LandingFooter'
 import SiteHeader from '../../components/SiteHeader'
+import { injectFaqJsonLd } from '../../utils/seo'
 
 /* Channel Audit. Fully custom landing page.
  *
@@ -91,7 +92,8 @@ function useStyles() {
       .ca-faq-q:hover { color: var(--ytg-accent); }
       .ca-faq-icon { transition: transform 0.2s; flex-shrink: 0; color: var(--ytg-text-3); margin-top: 4px; }
       .ca-faq-icon.open { transform: rotate(45deg); color: var(--ytg-accent); }
-      .ca-faq-a { font-size: 14.5px; color: var(--ytg-text-2); line-height: 1.78; padding: 0 0 22px 0; max-width: 760px; }
+      .ca-faq-a { font-size: 14.5px; color: var(--ytg-text-2); line-height: 1.78; padding: 0 0 22px 0; max-width: 760px; display: none; }
+      .ca-faq-a.open { display: block; }
 
       @media (max-width: 900px) {
         .ca-grid-2 { grid-template-columns: 1fr !important; gap: 32px !important; }
@@ -159,13 +161,13 @@ function FaqItem({ q, a }) {
   const [open, setOpen] = useState(false)
   return (
     <div className="ca-faq-item">
-      <button className="ca-faq-q" onClick={() => setOpen(o => !o)}>
+      <button className="ca-faq-q" onClick={() => setOpen(o => !o)} aria-expanded={open}>
         <span style={{ flex: 1 }}>{q}</span>
         <span className={`ca-faq-icon${open ? ' open' : ''}`}>
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round"><path d="M8 2v12M2 8h12"/></svg>
         </span>
       </button>
-      {open && <div className="ca-faq-a">{a}</div>}
+      <div className={`ca-faq-a${open ? ' open' : ''}`}>{a}</div>
     </div>
   )
 }
@@ -365,6 +367,7 @@ const FAQS = [
 /* ─── Page ─────────────────────────────────────────────────────────────── */
 export default function ChannelAudit() {
   useStyles()
+  useEffect(() => { injectFaqJsonLd(FAQS) }, [])
   const { isMobile } = useBreakpoint()
 
   return (

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import LandingFooter from '../../components/LandingFooter'
 import SiteHeader from '../../components/SiteHeader'
+import { injectFaqJsonLd } from '../../utils/seo'
 
 /* SEO Studio. Fully custom landing page.
  *
@@ -96,7 +97,8 @@ function useStyles() {
       .sst-faq-q:hover { color: var(--ytg-accent); }
       .sst-faq-icon { transition: transform 0.2s; flex-shrink: 0; color: var(--ytg-text-3); margin-top: 4px; }
       .sst-faq-icon.open { transform: rotate(45deg); color: var(--ytg-accent); }
-      .sst-faq-a { font-size: 14.5px; color: var(--ytg-text-2); line-height: 1.78; padding: 0 0 22px 0; max-width: 760px; }
+      .sst-faq-a { font-size: 14.5px; color: var(--ytg-text-2); line-height: 1.78; padding: 0 0 22px 0; max-width: 760px; display: none; }
+      .sst-faq-a.open { display: block; }
 
       @media (max-width: 900px) {
         .sst-grid-2 { grid-template-columns: 1fr !important; gap: 32px !important; }
@@ -164,13 +166,13 @@ function FaqItem({ q, a }) {
   const [open, setOpen] = useState(false)
   return (
     <div className="sst-faq-item">
-      <button className="sst-faq-q" onClick={() => setOpen(o => !o)}>
+      <button className="sst-faq-q" onClick={() => setOpen(o => !o)} aria-expanded={open}>
         <span style={{ flex: 1 }}>{q}</span>
         <span className={`sst-faq-icon${open ? ' open' : ''}`}>
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round"><path d="M8 2v12M2 8h12"/></svg>
         </span>
       </button>
-      {open && <div className="sst-faq-a">{a}</div>}
+      <div className={`sst-faq-a${open ? ' open' : ''}`}>{a}</div>
     </div>
   )
 }
@@ -396,6 +398,7 @@ const FAQS = [
 /* ─── Page ─────────────────────────────────────────────────────────────── */
 export default function SeoStudio() {
   useStyles()
+  useEffect(() => { injectFaqJsonLd(FAQS) }, [])
   const { isMobile } = useBreakpoint()
 
   return (

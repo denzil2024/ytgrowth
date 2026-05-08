@@ -763,6 +763,54 @@ export default function BlogPost() {
       const m = document.createElement('meta'); m.name = 'description'; document.head.appendChild(m); return m
     })()
     meta.content = post.excerpt
+
+    // BlogPosting + BreadcrumbList JSON-LD, packed into one @graph so a
+    // single <script> tag carries both. Baked into the prerendered HTML at
+    // build time (puppeteer waits for networkidle0, so this effect has run
+    // before the snapshot) and refreshed on client-side nav between posts.
+    // Reused via id so we never accumulate duplicates.
+    const ORIGIN = 'https://ytgrowth.io'
+    const canonical = `${ORIGIN}/blog/${post.slug}`
+    const image = post.cover ? `${ORIGIN}${post.cover}` : `${ORIGIN}/og-image.png`
+    const jsonLd = {
+      '@context': 'https://schema.org',
+      '@graph': [
+        {
+          '@type':          'BlogPosting',
+          headline:         post.title,
+          description:      post.excerpt,
+          image,
+          datePublished:    post.date,
+          dateModified:     post.updated || post.date,
+          author:           { '@type': 'Person', name: post.author },
+          publisher: {
+            '@type': 'Organization',
+            name:    'YTGrowth',
+            logo:    { '@type': 'ImageObject', url: `${ORIGIN}/favicon.svg` },
+          },
+          mainEntityOfPage: { '@type': 'WebPage', '@id': canonical },
+          articleSection:   post.category?.label,
+          url:              canonical,
+        },
+        {
+          '@type': 'BreadcrumbList',
+          itemListElement: [
+            { '@type': 'ListItem', position: 1, name: 'Home', item: `${ORIGIN}/` },
+            { '@type': 'ListItem', position: 2, name: 'Blog', item: `${ORIGIN}/blog` },
+            { '@type': 'ListItem', position: 3, name: post.title, item: canonical },
+          ],
+        },
+      ],
+    }
+    let script = document.getElementById('bp-jsonld')
+    if (!script) {
+      script = document.createElement('script')
+      script.id = 'bp-jsonld'
+      script.type = 'application/ld+json'
+      document.head.appendChild(script)
+    }
+    script.textContent = JSON.stringify(jsonLd)
+
     window.scrollTo({ top: 0, behavior: 'instant' })
   }, [post])
 
