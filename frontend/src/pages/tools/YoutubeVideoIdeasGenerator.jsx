@@ -166,12 +166,12 @@ const EXAMPLES = ['fitness', 'finance', 'cooking', 'tech reviews', 'productivity
 const FAQS = [
   { q: 'Are these video ideas AI-generated?',
     a: "No. They're built from a curated library of 90+ proven YouTube format templates — the same kinds of titles top creators use over and over because they work. The tool combines the formats with your niche keyword. No AI hallucinations, no nonsense outputs, no waiting for a model to respond. Pure pattern matching, instant results, zero cost to run." },
-  { q: 'How do I know which format will actually rank in my niche?',
+  { q: 'How do I know which format will rank in my niche?',
     a: "Format matters less than execution. A \"Top 5 mistakes\" video can flop or go viral depending on the thumbnail, the hook, and the retention curve. That said, formats with strong loss-aversion (\"mistakes\", \"wrong\", \"truth\"), high specificity (numbered lists, time-bound challenges), and curiosity gaps tend to outperform vague titles in nearly every niche. Once you have a candidate, run the title through SEO Studio to score it against the live niche before you commit to filming." },
   { q: 'Should I copy these titles word-for-word?',
     a: "No. Use them as starting structures, then customize them with the specifics that make YOUR version different. \"I tried [X] every day for 30 days\" is the proven format. Your version should be specific and personal: \"I tried cold plunges every morning for 30 days. Here's what changed.\" The format is the skeleton. The specifics — the number, the timeframe, the personal angle, the surprising result — are what earn the click." },
   { q: 'What if my niche needs a different angle that\'s not here?',
-    a: 'Filter by format category. If you\'re in finance, "Challenges" might feel forced but "Comparisons" and "Mistakes" will fit naturally. If you\'re a vlogger, "Stories" and "Personal" formats dominate. If you\'re in education, "Tutorials" and "Deep dives" are your bread and butter. Toggle off the categories that don\'t suit your style and the list narrows to formats that actually work for your content type.' },
+    a: 'Filter by format category. If you\'re in finance, "Challenges" might feel forced but "Comparisons" and "Mistakes" will fit naturally. If you\'re a vlogger, "Stories" and "Personal" formats dominate. If you\'re in education, "Tutorials" and "Deep dives" are your bread and butter. Toggle off the categories that don\'t suit your style and the list narrows to formats that fit your content type.' },
   { q: 'Does this work for YouTube Shorts?',
     a: 'Yes — there\'s a dedicated Shorts category. Those formats are designed for the swipe-or-watch decision, with hooks in the first 2 seconds and POV/save-this framings the Shorts algorithm rewards. Long-form formats can also be repurposed into Shorts: a 10-minute "5 mistakes" video can be split into 5 separate 30-second hooks, each one a standalone Short that funnels back to the long-form for the full breakdown.' },
   { q: 'How many videos a week should I publish from this list?',
@@ -184,7 +184,7 @@ const FAQS = [
     a: "Rotate, but anchor on 2-3 formats that work consistently. The algorithm benefits from variety in your topical signal, and viewers benefit from variety in their feed. But channels that publish 7+ different format types feel scattered. The pattern that works for most growing channels: pick 2 \"core\" formats (often listicles + tutorials) and rotate in 1 \"high-engagement\" format every 3-4 weeks (challenges, deep dives, or comparisons)." },
   { q: 'What format works best for a brand-new channel with no audience?',
     a: 'Search-driven formats — tutorials and listicles tied to specific keywords with proven search volume. New channels have zero algorithmic momentum; the only way viewers find you is through search results. A "How to X" or "5 X mistakes" video targeting a low-competition keyword will outperform a personal story or vlog every time when you have no subscribers. Once you cross 500-1000 subs, the algorithm starts surfacing your content in Browse and Suggested, and you can experiment more.' },
-  { q: 'How do I find what\'s actually trending in my niche?',
+  { q: 'How do I find what\'s trending in my niche right now?',
     a: "Two free methods. (1) YouTube search autocomplete — type your topic and note what auto-fills; those are real high-volume queries. (2) Google Trends with the YouTube Search filter (toggle from \"Web Search\") — shows seasonal demand and rising interest by topic. Combine both: pick a format from this generator, customize it with a trending sub-topic from autocomplete, validate the demand in Google Trends, then film." },
   { q: 'Should I pivot my whole channel if my videos aren\'t working?',
     a: "Not yet. First, fix one variable at a time: better thumbnails, then stronger hooks, then tighter editing, then more search-aligned titles. Most channels that stall are not broken — they just have one weak link. Pivoting your entire niche resets the algorithm's understanding of your channel and adds 3-6 months of recovery time. Only pivot if you've genuinely tried optimizing for 3+ months across 8+ videos with no movement, or if the niche itself is dying." },
@@ -561,7 +561,7 @@ export default function YoutubeVideoIdeasGenerator() {
               You picked an idea. <span style={{ color: 'var(--ytg-accent)' }}>Now make it rank.</span>
             </h2>
             <p style={{ fontSize: 16, color: 'var(--ytg-text-2)', lineHeight: 1.7 }}>
-              Three tools and features that turn a generated idea into an upload that actually performs.
+              Three tools and features that turn a generated idea into an upload that performs.
             </p>
           </div>
           <div className="vig-grid-3">

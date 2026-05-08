@@ -11,7 +11,7 @@
    Each error gets:
      - an icon that fits the cause (YouTube glyph for no_channel, etc.)
      - a clear title and explanation
-     - a primary action that actually moves the user forward
+     - a primary action that moves the user forward
      - optional secondary link
 
    Props:

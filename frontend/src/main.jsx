@@ -17,7 +17,7 @@ initUtm()
  *   2. Or after a 2.5s timeout if no interaction has happened
  * whichever comes first. By that point LCP has long resolved, so they
  * stop costing us perf score, while still being ready before any user
- * actually clicks a checkout CTA or scrolls past the hero.
+ * clicks a checkout CTA or scrolls past the hero.
  *
  * Behavioral safety:
  *  - openCheckout() and initPaddleRetain() in checkout.js await
@@ -25,7 +25,7 @@ initUtm()
  *    Paddle.Initialize, so the click flow works regardless of whether
  *    the script has loaded yet.
  *  - Affonso attribution still works for any session lasting >2.5s,
- *    which covers anyone who actually reads the hero or scrolls.
+ *    which covers anyone who reads the hero or scrolls.
  *  - During the prerender build, Puppeteer sets navigator.webdriver=true.
  *    We skip third-party loading so the Paddle/Affonso scripts never end
  *    up baked into the prerendered HTML snapshots.

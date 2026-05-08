@@ -45,44 +45,44 @@ const SITE_ORIGIN = 'https://ytgrowth.io'
  */
 const META_BY_ROUTE = {
   '/features/channel-audit': {
-    title:       'AI YouTube Channel Audit Tool — YTGrowth',
-    description: '10-dimension AI audit of your YouTube channel. Traffic sources, retention, CTR, audience, SEO, thumbnails — scored, benchmarked against your niche, with priority fixes.',
+    title:       'AI YouTube Channel Audit: Score and Priority Fixes',
+    description: '10-dimension AI YouTube channel audit covering traffic, retention, CTR, SEO, and thumbnails. Scored, benchmarked vs your niche, with priority fixes.',
   },
   '/features/competitor-analysis': {
-    title:       'YouTube Competitor Analysis Tool — YTGrowth',
-    description: 'Track up to 10 YouTube competitors. AI surfaces winning title patterns, content gaps, and posting times you can take. Free to start.',
+    title:       'YouTube Competitor Analysis: Track Up to 10 Channels',
+    description: 'Track up to 10 YouTube competitors. AI surfaces winning title patterns, content gaps, and posting times you can copy. Free to start.',
   },
   '/features/seo-studio': {
-    title:       'YouTube SEO Studio — Title & Description Optimizer | YTGrowth',
-    description: 'Score every YouTube title against search demand, keyword fit, and competitor patterns. Optimize descriptions for discovery. Apply via official YouTube API.',
+    title:       'YouTube SEO Tool: Title and Description Optimizer',
+    description: 'Score every YouTube title against search demand, keyword fit, and competitor patterns. Optimize descriptions for discovery. Apply via YouTube API.',
   },
   '/features/thumbnail-iq': {
-    title:       'YouTube Thumbnail Score & Analyzer — YTGrowth',
-    description: 'Two-layer thumbnail scoring. Algorithm checks contrast, faces, composition. Vision AI compares against winning thumbnails in your niche.',
+    title:       'YouTube Thumbnail Analyzer: AI Score + CTR Tips',
+    description: 'Two-layer YouTube thumbnail scoring. Algorithmic CTR check plus vision AI compared against winning thumbnails in your niche.',
   },
   '/features/keyword-research': {
-    title:       'Free YouTube Keyword Research Tool — Real Competition Data | YTGrowth',
-    description: 'Find low-competition YouTube keywords with real ranking data. Score by competitor channel size, view ceiling, and content freshness. Free creators get one full search per cycle.',
+    title:       'Free YouTube Keyword Research Tool with Real Data',
+    description: 'Find low-competition YouTube keywords with real ranking data. Score by competitor size, view ceiling, and content freshness. Free tier included.',
   },
   '/features/outliers': {
-    title:       'YouTube Outlier Finder — Find Viral Videos in Your Niche | YTGrowth',
-    description: "Find YouTube videos that hit 5x, 10x, even 50x their channel's normal views — in your exact niche. Outlier score, breakout channels, and thumbnail patterns from the top 8 in 30 seconds.",
+    title:       'YouTube Outlier Finder: Spot Viral Videos in Your Niche',
+    description: "Find YouTube videos that hit 5x, 10x, or 50x their channel's normal views in your niche. Outlier score, breakout channels, top thumbnails.",
   },
   '/tools/youtube-money-calculator': {
-    title:       'Free YouTube Money Calculator | YTGrowth',
-    description: 'Estimate YouTube ad revenue from views, niche, and engagement. Niche-specific RPM ranges, monthly and yearly earnings, and the math behind every estimate. Free, no login.',
+    title:       'Free YouTube Money Calculator: Estimate Channel Earnings',
+    description: 'Estimate YouTube ad revenue from views, niche, and engagement. Niche-specific RPM ranges, monthly and yearly earnings, full math behind every estimate.',
   },
   '/tools/youtube-subscriber-money-calculator': {
-    title:       'YouTube Subscriber Money Calculator | YTGrowth',
-    description: 'See how much your subscriber count is worth in monthly ad revenue. Real-world view-per-subscriber ratios, niche CPM, monthly and yearly revenue. Free, no login.',
+    title:       'YouTube Subscriber Money Calculator: How Much Subs Pay',
+    description: 'See how much your subscriber count is worth in ad revenue. View-per-subscriber ratios, niche CPM, monthly and yearly earnings. Free, no login.',
   },
   '/tools/youtube-channel-stats-checker': {
-    title:       'Free YouTube Channel Stats Checker | YTGrowth',
-    description: 'Look up subscriber count, total views, monthly upload cadence, and engagement for any public YouTube channel. Instant lookup, no login required.',
+    title:       'Free YouTube Channel Stats Checker: Subs, Views, CTR',
+    description: 'Look up subscriber count, total views, monthly uploads, and engagement for any public YouTube channel. Instant lookup, no login required.',
   },
   '/tools/youtube-thumbnail-downloader': {
-    title:       'Free YouTube Thumbnail Downloader | YTGrowth',
-    description: 'Download any YouTube video thumbnail in seconds. Maxres, HQ, MQ, SD sizes in JPG and PNG. No watermark, no login, instant.',
+    title:       'Free YouTube Thumbnail Downloader: HD, Max Res, JPG/PNG',
+    description: 'Download any YouTube video thumbnail in seconds. Max-res, HQ, MQ, SD sizes in JPG and PNG. No watermark, no login, instant.',
   },
 }
 

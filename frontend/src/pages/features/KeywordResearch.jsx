@@ -276,7 +276,7 @@ const PIPELINE_OUTPUTS = [
   { icon: 'cluster',title: '3–5 named clusters',          body: 'Keywords grouped into thematic clusters (e.g. "Tutorial · cleaning routines", "Vlog · room makeovers"). Tells you what 3-month content arc you could ship from one search.' },
   { icon: 'pulse',  title: 'Momentum tag per keyword',    body: 'Active (creators ship weekly) · Steady (normal) · Unclaimed (top videos &gt; 6 months old). Lets you spot landscapes nobody is currently fighting over.' },
   { icon: 'compass',title: 'Top pick + reason',           body: 'The single highest-opportunity keyword surfaced, with a one-sentence "why this one". So you stop scrolling and start scripting.' },
-  { icon: 'tag',    title: 'Content angle per keyword',   body: 'Each kept keyword carries a one-sentence angle suggestion. Not a template. Anchored to the intent and the niche, so the angle reads as a video idea you’d actually publish.' },
+  { icon: 'tag',    title: 'Content angle per keyword',   body: 'Each kept keyword carries a one-sentence angle suggestion. Not a template. Anchored to the intent and the niche, so the angle reads as a video idea you’d publish.' },
   { icon: 'gap',    title: 'Real competition snapshot',   body: 'For the top 10 by initial score: result count, top-5 median subs, top-5 median views, days since newest. Live YouTube data, not estimated. Your score is built on these numbers.' },
 ]
 

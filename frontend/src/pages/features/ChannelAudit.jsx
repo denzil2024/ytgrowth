@@ -340,7 +340,7 @@ const FAQS = [
   },
   {
     q: 'How often should I re-audit?',
-    a: <>After you’ve actually changed something. Re-auditing without shipping new videos or updates won’t move the score because the underlying data hasn’t changed. The most useful pattern is: audit → work through priority actions → publish 2–3 new videos that apply the fixes → re-audit and watch the score delta. Most users see meaningful score movement after 4–6 weeks of consistent application. Free tier gets 3 lifetime audits, Solo gets 20/month, Growth gets 50/month, Agency gets 150/month.</>,
+    a: <>After you’ve changed something. Re-auditing without shipping new videos or updates won’t move the score because the underlying data hasn’t changed. The most useful pattern is: audit → work through priority actions → publish 2–3 new videos that apply the fixes → re-audit and watch the score delta. Most users see meaningful score movement after 4–6 weeks of consistent application. Free tier gets 3 lifetime audits, Solo gets 20/month, Growth gets 50/month, Agency gets 150/month.</>,
   },
   {
     q: 'Can I see what changed between audits?',

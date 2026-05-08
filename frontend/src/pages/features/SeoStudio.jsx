@@ -300,7 +300,7 @@ function KeywordPanelVisual() {
 /* ── 6 dimensions the rubric scores (deterministic + AI hybrid) ────────── */
 const DIMENSIONS = [
   { name: 'Length & character count',   what: 'Your title scored against the 50–70 character sweet spot. Lengths outside that band lose CTR on mobile and get truncated on desktop search results.' },
-  { name: 'Keyword overlap (fuzzy stem)', what: 'How many words from the niche keyword actually appear in the title. Using stem matching so "shop", "shopping", "shopped" all count. Anti-stuffing penalty applies above the threshold.' },
+  { name: 'Keyword overlap (fuzzy stem)', what: 'How many words from the niche keyword appear in the title. Using stem matching so "shop", "shopping", "shopped" all count. Anti-stuffing penalty applies above the threshold.' },
   { name: 'Front-loading',              what: 'Whether the first three words contain a power word, question starter, or number. Front-loaded titles win the scroll because YouTube truncates after the first ~30 characters on mobile.' },
   { name: 'Hook structure (pipe / brackets)', what: 'Detects whether the title uses YouTube’s proven structural patterns: pipe dividers, brackets, parens. These add a second-beat curiosity layer without spending more characters.' },
   { name: 'Viral format match',         what: 'Pattern-matches against the proven viral title formats. Listicle, transformation, contrast, journey, deep-dive. Anchors the title to a frame YouTube’s recommendation engine already understands.' },

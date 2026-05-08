@@ -191,7 +191,7 @@ function CompetitorCardVisual() {
       {/* Summary */}
       <p style={{ fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.45)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>AI assessment</p>
       <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.85)', lineHeight: 1.7, marginBottom: 18 }}>
-        TechCreator Pro publishes twice the cadence you do, but their topic mix is narrow. They ignore tutorials entirely, and that&apos;s where 64% of search volume in your shared niche actually lives. They&apos;re beatable on tutorial content within 60 days.
+        TechCreator Pro publishes twice the cadence you do, but their topic mix is narrow. They ignore tutorials entirely, and that&apos;s where 64% of search volume in your shared niche lives. They&apos;re beatable on tutorial content within 60 days.
       </p>
       {/* Stats row */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10, marginBottom: 16 }}>
@@ -320,7 +320,7 @@ const FAQS = [
   },
   {
     q: 'How many competitors should I track?',
-    a: <>Start with 2–3 of your closest direct rivals. More dilutes your attention. The AI is very good at finding gaps in any channel, but those insights only matter if you actually use them. And you can&apos;t act on findings from 10 competitors. Most users find 3 well-chosen competitors generate more publishable ideas than 10 loosely-related ones.</>,
+    a: <>Start with 2–3 of your closest direct rivals. More dilutes your attention. The AI is very good at finding gaps in any channel, but those insights only matter if you use them. And you can&apos;t act on findings from 10 competitors. Most users find 3 well-chosen competitors generate more publishable ideas than 10 loosely-related ones.</>,
   },
   {
     q: 'What counts as a "high threat" competitor?',
