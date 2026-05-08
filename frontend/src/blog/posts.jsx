@@ -13,7 +13,7 @@
  *   - <table>, <thead>, <tbody>, <tr>, <th>, <td>
  *   - <a href="/internal/path">internal link</a>     (uses React Router)
  *   - <a href="https://external.com" target="_blank">external link</a>
- *   - <img src="/blog/your-image.jpg" alt="..." />   (drop image in frontend/public/blog/)
+ *   - <img src="/blog/your-image.webp" alt="..." />   (drop image in frontend/public/blog/)
  *
  * Promo / upsell components for use inside post content:
  *   - <CtaButton to="/dashboard">Try free</CtaButton>            — small inline pill
@@ -62,7 +62,7 @@ export const posts = [
     excerpt: 'Shorts is push-based, not pull-based. The Viewed vs. Swiped Away ratio decides whether a Short scales to thousands or dies at 47 views. The full framework — Hook-Body-Loop, technical specs, related-video funnel, and the testing cadence that earns wider distribution.',
     date: '2026-05-07',
     category: CATEGORIES.strategy,
-    cover: '/blog/youtube-shorts-algorithm-cover.jpg',
+    cover: '/blog/youtube-shorts-algorithm-cover.webp',
     author: 'Denzil',
     readTime: '11 min read',
     content: () => (
@@ -83,7 +83,7 @@ export const posts = [
 
         <blockquote><strong>The algorithm's primary goal is to keep users on the app by predicting what they will watch next based on the Viewed vs. Swiped Away ratio and Retention.</strong> Every distribution decision flows from those two signals.</blockquote>
 
-        <img src="/blog/youtube-shorts-algorithm-shorts-test.png" alt="The Shorts seed-audience test: how the algorithm decides distribution from the first viewers" />
+        <img src="/blog/youtube-shorts-algorithm-shorts-test.webp" alt="The Shorts seed-audience test: how the algorithm decides distribution from the first viewers" />
 
         <p>This is the Explore and Exploit mechanism. When you publish a Short, YouTube does not distribute it to your full audience immediately. It pushes the video to a small seed audience first, a group of viewers whose watch history suggests they might enjoy your content. If that seed group watches rather than swipes, the algorithm interprets that as a positive signal and expands distribution to a larger audience. If they swipe, distribution stops.</p>
 
@@ -109,7 +109,7 @@ export const posts = [
           <li>Avoid slow zooms, fade-ins, or any opening that requires the viewer to wait for something to happen.</li>
         </ul>
 
-        <img src="/blog/youtube-shorts-algorithm-opening.jpg" alt="The Shorts opening frame: high-contrast subject centered for the first 500ms decision" />
+        <img src="/blog/youtube-shorts-algorithm-opening.webp" alt="The Shorts opening frame: high-contrast subject centered for the first 500ms decision" />
 
         <h3>The Text Overlay</h3>
 
@@ -130,7 +130,7 @@ export const posts = [
           <li>Never open with context. Context can wait until after you have earned the watch.</li>
         </ul>
 
-        <img src="/blog/youtube-shorts-algorithm-curiosity.jpg" alt="The curiosity gap: showing the result before the process to create an open loop" />
+        <img src="/blog/youtube-shorts-algorithm-curiosity.webp" alt="The curiosity gap: showing the result before the process to create an open loop" />
 
         <h2>Step 2: Engineer High Retention With the Hook-Body-Loop Framework</h2>
 
@@ -171,7 +171,7 @@ export const posts = [
           <li>Use a slow fade or any transition that requires the viewer to wait.</li>
         </ul>
 
-        <img src="/blog/youtube-shorts-algorithm-hook.png" alt="The Hook in the first 2 seconds: pattern interrupt that prevents the conscious swipe decision" />
+        <img src="/blog/youtube-shorts-algorithm-hook.webp" alt="The Hook in the first 2 seconds: pattern interrupt that prevents the conscious swipe decision" />
 
         <h3>The Body (Value Delivery)</h3>
 
@@ -231,7 +231,7 @@ export const posts = [
           <li><strong>Audio.</strong> Use original audio or YouTube-licensed music. Third-party copyrighted audio triggers Content ID flags that limit distribution.</li>
         </ul>
 
-        <img src="/blog/youtube-shorts-algorithm-sweet-spot.png" alt="The 25-40 second sweet spot for Shorts virality plus the technical spec checklist" />
+        <img src="/blog/youtube-shorts-algorithm-sweet-spot.webp" alt="The 25-40 second sweet spot for Shorts virality plus the technical spec checklist" />
 
         <blockquote><strong>The sweet spot for virality is 25 to 40 seconds.</strong> Long enough to deliver genuine value, short enough to maintain the retention rates the algorithm requires for wider distribution.</blockquote>
 
@@ -257,7 +257,7 @@ export const posts = [
 
         <p>This is the primary ROI tool for any creator using Shorts as a discovery engine. A viewer who watched your 30-second Short and wants to go deeper is already primed to watch a 10-minute video on the same topic. The Related Video link removes every barrier between that intent and the action. Once you cross 1,000 subscribers, the same funnel feeds straight into <a href="/blog/youtube-partner-program">YouTube Partner Program</a> ad revenue.</p>
 
-        <img src="/blog/youtube-shorts-algorithm-related-video.png" alt="The Related Video link converting Shorts traffic into long-form watch time" />
+        <img src="/blog/youtube-shorts-algorithm-related-video.webp" alt="The Related Video link converting Shorts traffic into long-form watch time" />
 
         <p>Captions serve a dual purpose in the YouTube Shorts algorithm. They keep silent viewers watching, and they give the algorithm's AI a full text transcript to read and categorize. A Short with accurate captions is significantly easier for the system to match to the right seed audience than one without, which means captions are both a retention tool and a categorization asset simultaneously.</p>
 
@@ -267,7 +267,7 @@ export const posts = [
 
         <blockquote><strong>The Shorts algorithm rewards volume more than the long-form algorithm.</strong> Aim for 3 to 5 Shorts per week to give the system enough content to find your audience and build a reliable distribution pattern.</blockquote>
 
-        <img src="/blog/youtube-shorts-algorithm-testing.png" alt="High-volume testing cadence: 3-5 Shorts per week for reliable algorithmic data" />
+        <img src="/blog/youtube-shorts-algorithm-testing.webp" alt="High-volume testing cadence: 3-5 Shorts per week for reliable algorithmic data" />
 
         <p>The quality versus quantity debate does not apply to Shorts the same way it applies to long-form. A 30-second Short that takes two hours to produce and performs poorly still generates algorithmic data that informs your next upload. That data is valuable regardless of the view count, because it tells you exactly where your Viewed vs. Swiped ratio is breaking down and which hooks are failing to stop the scroll.</p>
 
@@ -301,7 +301,7 @@ export const posts = [
     excerpt: 'Channels that grow are not the most talented. They run a feedback loop: packaging that earns clicks, retention that satisfies the algorithm, and data that compounds into predictable growth. The full system, from niche selection to weekly review.',
     date: '2026-05-07',
     category: CATEGORIES.growth,
-    cover: '/blog/grow-youtube-channel-cover.jpg',
+    cover: '/blog/grow-youtube-channel-cover.webp',
     author: 'Denzil',
     readTime: '11 min read',
     content: () => (
@@ -326,7 +326,7 @@ export const posts = [
           <li>Use <a href="/features/competitor-analysis">YTGrowth's Competitor Analysis</a> to extract the keyword patterns, title structures, and content gaps behind their top-performing content, then build your first ten video ideas around the opportunities they have missed.</li>
         </ul>
 
-        <img src="/blog/grow-youtube-channel-competitors.png" alt="Competitor research workflow: studying top 10 videos across 5 channels in your sub-niche" />
+        <img src="/blog/grow-youtube-channel-competitors.webp" alt="Competitor research workflow: studying top 10 videos across 5 channels in your sub-niche" />
 
         <p>The early phase of YouTube channel growth is unglamorous. You are not creating viral content yet. You are building a data profile that the algorithm can use to find your audience, and that process requires patience and consistency before it produces results.</p>
 
@@ -346,7 +346,7 @@ export const posts = [
 
         <blockquote><strong>If your Impressions Click-Through Rate is below 4%, change your thumbnail and title immediately.</strong> A CTR below that threshold means the packaging is failing before the content ever gets a chance.</blockquote>
 
-        <img src="/blog/grow-youtube-channel-thumbnails.png" alt="The Rule of Three thumbnail framework: face, prop, and text overlay with high contrast" />
+        <img src="/blog/grow-youtube-channel-thumbnails.webp" alt="The Rule of Three thumbnail framework: face, prop, and text overlay with high contrast" />
 
         <h3>Titles: Hook Psychology</h3>
 
@@ -363,7 +363,7 @@ export const posts = [
           <li>Link to a relevant playlist in the description to extend session time immediately after the click.</li>
         </ul>
 
-        <img src="/blog/grow-youtube-channel-description.png" alt="Description SEO structure with keyword placement, chapters, and playlist link" />
+        <img src="/blog/grow-youtube-channel-description.webp" alt="Description SEO structure with keyword placement, chapters, and playlist link" />
 
         <h2>Step 2: The Retention Strategy (Keeping Viewers Watching)</h2>
 
@@ -374,7 +374,7 @@ export const posts = [
           <li><strong>The Open Loop Technique.</strong> Within the first thirty seconds, tease a revelation, result, or piece of information that only appears later in the video. "I will show you exactly how I went from zero to 10,000 subscribers, but the method I used in month three is the one nobody talks about, and I am saving it for the end." That unresolved tension keeps viewers watching through sections they might otherwise skip.</li>
         </ul>
 
-        <img src="/blog/grow-youtube-channel-retention.png" alt="Retention strategy: 5-second hook plus open loop tension to extend Average View Duration" />
+        <img src="/blog/grow-youtube-channel-retention.webp" alt="Retention strategy: 5-second hook plus open loop tension to extend Average View Duration" />
 
         <p>Pacing techniques to apply in every video:</p>
 
@@ -420,7 +420,7 @@ export const posts = [
 
         <blockquote><strong>Shorts are the fastest way to gain subscribers, while long-form builds revenue and authority.</strong> The 1:3 ratio keeps both engines running simultaneously.</blockquote>
 
-        <img src="/blog/grow-youtube-channel-shorts.png" alt="The 1:3 ratio: 3 Shorts for every 1 long-form video as a subscriber-to-watch-time funnel" />
+        <img src="/blog/grow-youtube-channel-shorts.webp" alt="The 1:3 ratio: 3 Shorts for every 1 long-form video as a subscriber-to-watch-time funnel" />
 
         <h3>The Bridge</h3>
 
@@ -450,7 +450,7 @@ export const posts = [
           <li>Rewrite titles using hook psychology rather than descriptive language and measure the CTR change over the following week.</li>
         </ul>
 
-        <img src="/blog/grow-youtube-channel-ctr.png" alt="CTR analysis: identifying underperforming thumbnails and titles in YouTube Studio" />
+        <img src="/blog/grow-youtube-channel-ctr.webp" alt="CTR analysis: identifying underperforming thumbnails and titles in YouTube Studio" />
 
         <h3>Retention Analysis</h3>
 
@@ -469,7 +469,7 @@ export const posts = [
 
         <blockquote><strong>Look for the dips in the Audience Retention Graph.</strong> If viewers leave at the 1-minute mark, analyze what caused the loss of interest and restructure that section in your next upload.</blockquote>
 
-        <img src="/blog/grow-youtube-channel-retention-analysis.png" alt="Retention graph dips: locating drop-off timestamps to inform the next script" />
+        <img src="/blog/grow-youtube-channel-retention-analysis.webp" alt="Retention graph dips: locating drop-off timestamps to inform the next script" />
 
         <h3>Audience Analysis</h3>
 
@@ -514,7 +514,7 @@ export const posts = [
     excerpt: 'The YouTube algorithm does not push videos out to audiences. It pulls them toward viewers most likely to finish them. The complete 2026 guide to the three discovery engines, the three metrics that move the needle, and the myths to stop chasing.',
     date: '2026-05-07',
     category: CATEGORIES.strategy,
-    cover: '/blog/youtube-algorithm-cover.jpg',
+    cover: '/blog/youtube-algorithm-cover.webp',
     author: 'Denzil',
     readTime: '10 min read',
     content: () => (
@@ -562,7 +562,7 @@ export const posts = [
 
         <p>Home and Suggested are where the majority of YouTube's views come from, and both are driven entirely by individual viewer behavior. YouTube studies what each user has watched, how long they watched it, what they searched for afterward, and which channels they return to repeatedly. It then uses those patterns to populate a feed that is unique to every single person on the platform.</p>
 
-        <img src="/blog/youtube-algorithm-home.png" alt="YouTube Home and Suggested feed personalization based on watch history" />
+        <img src="/blog/youtube-algorithm-home.webp" alt="YouTube Home and Suggested feed personalization based on watch history" />
 
         <blockquote><strong>YouTube uses 'co-visitation' signals:</strong> viewers who watched Video A also watched Video B. If your video consistently appears in the same sessions as established videos in your niche, YouTube begins treating it as relevant to that same audience.</blockquote>
 
@@ -592,7 +592,7 @@ export const posts = [
 
         <blockquote><strong>For Shorts, if more than 60 to 70% of people choose to watch rather than swipe, the video goes viral.</strong> That single ratio is the make-or-break metric for the entire Shorts feed.</blockquote>
 
-        <img src="/blog/youtube-algorithm-shorts.png" alt="The Shorts swipe-vs-watch ratio that drives algorithmic distribution" />
+        <img src="/blog/youtube-algorithm-shorts.webp" alt="The Shorts swipe-vs-watch ratio that drives algorithmic distribution" />
 
         <p><strong>Primary signal:</strong> View-to-swipe ratio and loop completion rate.</p>
 
@@ -623,7 +623,7 @@ export const posts = [
 
         <p>CTR is the first gate. It measures the percentage of viewers who saw your thumbnail and title in the feed and chose to click. If your CTR is below 4%, the packaging is failing, and no amount of content quality can compensate for a video that never gets watched. A weak thumbnail or a vague title sends viewers scrolling to the next option before your content ever gets a chance.</p>
 
-        <img src="/blog/youtube-algorithm-ctr.png" alt="CTR vs AVD relationship: how the algorithm reads packaging and content together" />
+        <img src="/blog/youtube-algorithm-ctr.webp" alt="CTR vs AVD relationship: how the algorithm reads packaging and content together" />
 
         <p>The relationship between CTR and AVD is where most creators get into trouble. A sensational thumbnail that overpromises drives clicks but destroys retention when the content does not deliver. YouTube tracks both signals together, and a pattern of high CTR with low AVD is one of the clearest signals of clickbait the algorithm penalizes over time.</p>
 
@@ -670,7 +670,7 @@ export const posts = [
 
         <blockquote><strong>If your video leads a user to watch another video, even a competitor's, it is a positive signal for the algorithm.</strong> YouTube rewards channels that contribute to longer platform sessions, not just longer individual views.</blockquote>
 
-        <img src="/blog/youtube-algorithm-session.png" alt="Session Watch Time: chaining videos to extend platform sessions" />
+        <img src="/blog/youtube-algorithm-session.webp" alt="Session Watch Time: chaining videos to extend platform sessions" />
 
         <ul>
           <li>Add End Screens linking to your most relevant playlist to keep viewers inside your content library.</li>
@@ -718,7 +718,7 @@ export const posts = [
     excerpt: 'YouTube SEO is the discipline that turns good content into found content. The complete framework — keyword research, on-page metadata, engagement signals, and channel-level authority — for ranking videos in 2026.',
     date: '2026-05-07',
     category: CATEGORIES.seo,
-    cover: '/blog/what-is-youtube-seo-cover.jpg',
+    cover: '/blog/what-is-youtube-seo-cover.webp',
     author: 'Denzil',
     readTime: '10 min read',
     content: () => (
@@ -778,7 +778,7 @@ export const posts = [
 
         <p>For a side-by-side breakdown of how each option compares against VidIQ and TubeBuddy, the <a href="/blog/seo-tools-for-youtube">5-pillar tool stack</a> walks through the trade-offs.</p>
 
-        <img src="/blog/what-is-youtube-seo-keywords.png" alt="YouTube keyword research workflow combining Suggest, Keyword Explorer, and Google Trends" />
+        <img src="/blog/what-is-youtube-seo-keywords.webp" alt="YouTube keyword research workflow combining Suggest, Keyword Explorer, and Google Trends" />
 
         <blockquote><strong>Pro Tip:</strong> Search your target keyword on Google. If Video results appear on the first page, that keyword triggers video intent on both platforms simultaneously, meaning a single well-optimized video can rank on YouTube and Google Search at the same time.</blockquote>
 
@@ -799,7 +799,7 @@ export const posts = [
           <li>Avoid clickbait that does not deliver on its promise.</li>
         </ul>
 
-        <img src="/blog/what-is-youtube-seo-title.png" alt="Title structure best practices for YouTube SEO" />
+        <img src="/blog/what-is-youtube-seo-title.webp" alt="Title structure best practices for YouTube SEO" />
 
         <h3>Description</h3>
 
@@ -814,7 +814,7 @@ export const posts = [
           <li>Add timestamps, links, and chapter markers below the fold.</li>
         </ul>
 
-        <img src="/blog/what-is-youtube-seo-description.png" alt="YouTube description structure showing the 'Show More' fold and keyword placement" />
+        <img src="/blog/what-is-youtube-seo-description.webp" alt="YouTube description structure showing the 'Show More' fold and keyword placement" />
 
         <h3>Tags</h3>
 
@@ -855,7 +855,7 @@ export const posts = [
           <li><strong>CTR.</strong> Click-Through Rate is the gatekeeper that determines whether all other engagement metrics ever get a chance to register. A thumbnail and title combination that does not earn the click means the watch time, retention, and comment signals never accumulate. CTR and retention work as a pair, and weakness in either one limits what the other can achieve. The <a href="/blog/youtube-seo-best-practices">2026 SEO blueprint</a> covers the specific 6% CTR and 50% AVD benchmarks that flip the algorithm into Suggested distribution.</li>
         </ul>
 
-        <img src="/blog/what-is-youtube-seo-engagement.png" alt="The engagement layer: Watch time, audience retention, and CTR signals" />
+        <img src="/blog/what-is-youtube-seo-engagement.webp" alt="The engagement layer: Watch time, audience retention, and CTR signals" />
 
         <blockquote><strong>Metadata gets you invited to the party. Engagement keeps you on the dance floor.</strong></blockquote>
 
@@ -875,7 +875,7 @@ export const posts = [
 
         <p>Your About section is indexed by YouTube's algorithm and needs to work as hard as any video description. Write it around the same keywords you are targeting in your content, lead with your value proposition, and be specific about who you help and what they will learn. A viewer who lands on your channel page and immediately understands your niche is far more likely to subscribe than one who reads a vague bio with no clear direction.</p>
 
-        <img src="/blog/what-is-youtube-seo-channel-page.png" alt="Channel page optimization with keyword-driven About section and value proposition" />
+        <img src="/blog/what-is-youtube-seo-channel-page.webp" alt="Channel page optimization with keyword-driven About section and value proposition" />
 
         <blockquote><strong>Pro Tip:</strong> Connect your channel to your website and social profiles in the channel settings. External links signal legitimacy and authority to both YouTube and Google, contributing to the overall trust score your channel carries across both platforms.</blockquote>
 
@@ -912,7 +912,7 @@ export const posts = [
     excerpt: 'Cross a 6% CTR and 50% Average View Duration and YouTube starts pushing your video through Browse and Suggested. The technical playbook to engineer both — built for the 2026 algorithm.',
     date: '2026-05-07',
     category: CATEGORIES.seo,
-    cover: '/blog/youtube-seo-best-practices-cover.jpg',
+    cover: '/blog/youtube-seo-best-practices-cover.webp',
     author: 'Denzil',
     readTime: '9 min read',
     content: () => (
@@ -931,7 +931,7 @@ export const posts = [
 
         <blockquote><strong>Pro Tip:</strong> If your CTR exceeds 6% and your Average View Duration surpasses 50%, YouTube will begin pushing your video to Suggested and Browse features automatically.</blockquote>
 
-        <img src="/blog/youtube-seo-best-practices-ctr.png" alt="The two-pillar system: CTR and Average View Duration benchmarks for the 2026 algorithm" />
+        <img src="/blog/youtube-seo-best-practices-ctr.webp" alt="The two-pillar system: CTR and Average View Duration benchmarks for the 2026 algorithm" />
 
         <p>Session Watch Time adds a third dimension that most creators overlook entirely. YouTube does not just want viewers to watch your video. It wants them to stay on the platform afterward, moving from your content to the next video in their session. Channels that contribute to longer platform sessions get rewarded with broader distribution, which is why linking to playlists and using End Screens strategically is an SEO decision, not just a retention one.</p>
 
@@ -960,7 +960,7 @@ export const posts = [
 
         <p>YouTube's search bar is the most accurate real-time data source available for free. Start typing your target topic and the autocomplete suggestions that appear are pulled directly from actual user queries. These are not estimated terms. They are what real people are typing right now, which makes them the highest-confidence starting point for any YouTube video SEO best practices keyword workflow.</p>
 
-        <img src="/blog/youtube-seo-best-practices-autocomplete.png" alt="YouTube autocomplete suggestions as a real-time keyword data source" />
+        <img src="/blog/youtube-seo-best-practices-autocomplete.webp" alt="YouTube autocomplete suggestions as a real-time keyword data source" />
 
         <h3>Competitor Research</h3>
 
@@ -974,7 +974,7 @@ export const posts = [
 
         <blockquote><strong>Tool Recommendation:</strong> <a href="/features/keyword-research">YTGrowth's Keyword Explorer</a> filters by search intent and builds topic clusters around your seed keyword, surfacing the low-competition, high-volume opportunities that standard research methods consistently miss. The <a href="/blog/seo-tools-for-youtube">5-pillar tool stack</a> compares it against VidIQ, TubeBuddy, Ahrefs, and the rest if you want the side-by-side.</blockquote>
 
-        <img src="/blog/youtube-seo-best-practices-keywords.png" alt="High-intent keyword research workflow with topic clustering" />
+        <img src="/blog/youtube-seo-best-practices-keywords.webp" alt="High-intent keyword research workflow with topic clustering" />
 
         <h2>Step 2: Optimize Metadata for Crawlers and Humans</h2>
 
@@ -1032,7 +1032,7 @@ export const posts = [
 
         <blockquote><strong>Emotional triggers like close-up faces or 'Before vs. After' compositions drive clicks through psychological curiosity</strong>, creating an open loop in the viewer's mind that only the video can close.</blockquote>
 
-        <img src="/blog/youtube-seo-best-practices-ctr-visuals.png" alt="High-CTR thumbnail principles: contrast, rule of thirds, faces, and brand consistency" />
+        <img src="/blog/youtube-seo-best-practices-ctr-visuals.webp" alt="High-CTR thumbnail principles: contrast, rule of thirds, faces, and brand consistency" />
 
         <p>Brand consistency compounds over time in a way that individual thumbnail optimization never will. A viewer who has watched three of your videos begins to recognize your visual style before they read the title, and that recognition converts to clicks at a significantly higher rate than cold traffic. Building a repeatable thumbnail template is not a shortcut. It is a long-term CTR asset that strengthens with every upload. Score every design against the top performers in your niche with <a href="/features/thumbnail-iq">Thumbnail IQ</a> before you publish.</p>
 
@@ -1050,7 +1050,7 @@ export const posts = [
 
         <blockquote><strong>Video Chapters allow your video to appear in Google's 'Key Moments' search results</strong>, increasing visibility in standard SERPs.</blockquote>
 
-        <img src="/blog/youtube-seo-best-practices-video-chapters.png" alt="Video Chapters appearing in Google Key Moments and the YouTube player" />
+        <img src="/blog/youtube-seo-best-practices-video-chapters.webp" alt="Video Chapters appearing in Google Key Moments and the YouTube player" />
 
         <p>Chapters are both a retention tool and an SEO asset. They give viewers a clear map of your content, reducing abandonment from people who are unsure whether the video covers what they need. Add timestamps manually in the description starting at 0:00, and YouTube will generate the Chapter markers automatically across both the video player and Google Search results.</p>
 
@@ -1089,7 +1089,7 @@ export const posts = [
     excerpt: 'Most creators are still optimizing YouTube like it is 2018. The right five-pillar tool stack handles keyword research, optimization, competitor intel, CTR, and analytics — all working together.',
     date: '2026-05-07',
     category: CATEGORIES.seo,
-    cover: '/blog/seo-tools-for-youtube-cover.jpg',
+    cover: '/blog/seo-tools-for-youtube-cover.webp',
     author: 'Denzil',
     readTime: '9 min read',
     content: () => (
@@ -1116,7 +1116,7 @@ export const posts = [
 
         <h3>VidIQ</h3>
 
-        <img src="/blog/seo-tools-for-youtube-vidiq.png" alt="VidIQ keyword search interface and Velocity metric" />
+        <img src="/blog/seo-tools-for-youtube-vidiq.webp" alt="VidIQ keyword search interface and Velocity metric" />
 
         <p>VidIQ's strongest feature is its Velocity metric, which tracks views per hour to identify topics gaining traction in real time. Its VidIQ keyword search functionality surfaces keyword scores that combine search volume and competition into a single actionable number, making it easier to prioritize which terms to target.</p>
 
@@ -1124,7 +1124,7 @@ export const posts = [
 
         <h3>TubeBuddy</h3>
 
-        <img src="/blog/seo-tools-for-youtube-tubebuddy.png" alt="TubeBuddy bulk processing and Thumbnail A/B testing dashboard" />
+        <img src="/blog/seo-tools-for-youtube-tubebuddy.webp" alt="TubeBuddy bulk processing and Thumbnail A/B testing dashboard" />
 
         <p>TubeBuddy SEO tools lean heavily toward productivity and testing. Its bulk processing features allow creators to update tags, descriptions, and cards across multiple videos simultaneously. Its Thumbnail A/B Testing tool, available on the Legend plan, is its most powerful differentiator.</p>
 
@@ -1134,7 +1134,7 @@ export const posts = [
 
         <h3>YTGrowth</h3>
 
-        <img src="/blog/seo-tools-for-youtube-ytgrowth.png" alt="YTGrowth focused growth intelligence dashboard" />
+        <img src="/blog/seo-tools-for-youtube-ytgrowth.webp" alt="YTGrowth focused growth intelligence dashboard" />
 
         <p>VidIQ and TubeBuddy give you data and leave you to figure out the rest. <a href="/">YTGrowth</a> was built to close that gap entirely. Every feature on the platform is designed to convert raw YouTube data into decisions a creator can act on immediately.</p>
 
@@ -1159,7 +1159,7 @@ export const posts = [
 
         <h3>Google Trends</h3>
 
-        <img src="/blog/seo-tools-for-youtube-google-trends.png" alt="Google Trends YouTube Search filter for platform-specific demand" />
+        <img src="/blog/seo-tools-for-youtube-google-trends.webp" alt="Google Trends YouTube Search filter for platform-specific demand" />
 
         <p>Google Trends is free, widely available, and significantly underused by most creators. The key is toggling from 'Web Search' to 'YouTube Search' inside the platform, which gives you platform-specific demand data rather than general web interest.</p>
 
@@ -1169,7 +1169,7 @@ export const posts = [
 
         <h3>Ahrefs YouTube Keyword Tool</h3>
 
-        <img src="/blog/seo-tools-for-youtube-ahrefs.png" alt="Ahrefs YouTube keyword difficulty and search volume report" />
+        <img src="/blog/seo-tools-for-youtube-ahrefs.webp" alt="Ahrefs YouTube keyword difficulty and search volume report" />
 
         <p>Ahrefs provides hard search volume data and keyword difficulty scores specifically for YouTube, making it one of the most reliable paid options for creators who want precision over estimation. It removes the guesswork from targeting by showing you exactly how competitive a keyword is before you build a video around it.</p>
 
@@ -1177,7 +1177,7 @@ export const posts = [
 
         <h3>KeywordTool.io</h3>
 
-        <img src="/blog/seo-tools-for-youtube-keyword-tool.png" alt="KeywordTool.io YouTube autocomplete keyword export" />
+        <img src="/blog/seo-tools-for-youtube-keyword-tool.webp" alt="KeywordTool.io YouTube autocomplete keyword export" />
 
         <p>KeywordTool.io mines YouTube's autocomplete data to surface long-tail keyword variations that most creators miss entirely. These are the phrases real people type into the search bar, and targeting them gives you access to highly specific intent that broader keywords cannot capture.</p>
 
@@ -1193,7 +1193,7 @@ export const posts = [
 
         <p><a href="/features/competitor-analysis">YTGrowth's Competitor Analysis</a> gives you that data instantly. Enter any competitor's channel URL and the platform pulls their last 30 videos, maps their growth patterns, and shows you exactly when and why their subscriber count moved.</p>
 
-        <img src="/blog/seo-tools-for-youtube-competitor.png" alt="YTGrowth Competitor Analysis growth pattern and content gap report" />
+        <img src="/blog/seo-tools-for-youtube-competitor.webp" alt="YTGrowth Competitor Analysis growth pattern and content gap report" />
 
         <blockquote><strong>Pro Tip:</strong> The real output is the content gap report. YTGrowth surfaces the topics your competitor's audience wants but they have never covered, and delivers them as ready-to-use video titles with target keywords attached.</blockquote>
 
@@ -1209,7 +1209,7 @@ export const posts = [
 
         <p>Generic AI tools work, but they are not optimized for YouTube's specific ranking signals. <a href="/features/seo-studio">YTGrowth's SEO Studio</a> scores every title against the actual click-through rates of top-ranking videos in your niche so you are not just generating "good copy," you are generating titles validated against the algorithm that decides who wins the impression.</p>
 
-        <img src="/blog/seo-tools-for-youtube-seo-studio.png" alt="YTGrowth SEO Studio title scorecard with rubric breakdown" />
+        <img src="/blog/seo-tools-for-youtube-seo-studio.webp" alt="YTGrowth SEO Studio title scorecard with rubric breakdown" />
 
         <p>What this looks like in practice:</p>
 
@@ -1227,7 +1227,7 @@ export const posts = [
 
         <p><strong>The catch:</strong> design alone tells you nothing about how the thumbnail will actually perform against the videos competing for the same impression. <a href="/features/thumbnail-iq">YTGrowth's Thumbnail IQ</a> scores your thumbnail against the top-ranking videos in your niche using both algorithmic signals (contrast, face presence, text density) and AI vision analysis so you know whether your design is competitive before you upload, not after the CTR data comes in three days later.</p>
 
-        <img src="/blog/seo-tools-for-youtube-thumbnail-iq.png" alt="YTGrowth Thumbnail IQ scorecard with contrast and face detection signals" />
+        <img src="/blog/seo-tools-for-youtube-thumbnail-iq.webp" alt="YTGrowth Thumbnail IQ scorecard with contrast and face detection signals" />
 
         <p>Use these design rules to start, then validate with a score:</p>
 
@@ -1282,7 +1282,7 @@ export const posts = [
     excerpt: 'Most monetization guides skip Tier 1 entirely. The two-tier YouTube Partner Program structure plus the Bridge Strategy gets you to your first paycheck faster than the standard approach.',
     date: '2026-05-07',
     category: CATEGORIES.monetization,
-    cover: '/blog/youtube-partner-program-cover.jpg',
+    cover: '/blog/youtube-partner-program-cover.webp',
     author: 'Denzil',
     readTime: '9 min read',
     content: () => (
@@ -1309,7 +1309,7 @@ export const posts = [
 
         <blockquote><strong>Pro Tip:</strong> Tier 1 requires 500 subscribers and 3,000 public YouTube watch hours in the last 365 days, or 3 million Shorts views in the last 90 days.</blockquote>
 
-        <img src="/blog/youtube-partner-program-step-1.png" alt="YouTube Partner Program Tier 1 eligibility requirements" />
+        <img src="/blog/youtube-partner-program-step-1.webp" alt="YouTube Partner Program Tier 1 eligibility requirements" />
 
         <p>Note the distinction between the two pathways. The watch hour window is 365 days, giving you a full year to accumulate. The Shorts views window is only 90 days, which means volume and consistency matter significantly more if you choose that route. If you are still building toward 500 subscribers, our <a href="/blog/free-subs-on-youtube">organic roadmap to your first 1,000 subs</a> covers exactly how to stack that growth.</p>
 
@@ -1351,7 +1351,7 @@ export const posts = [
 
         <p>This is the single most misunderstood aspect of the YouTube monetization requirements 2026, and it catches creators off guard when they assume their Shorts traction is accelerating their path to full ad revenue.</p>
 
-        <img src="/blog/youtube-partner-program-step-2.png" alt="YouTube Partner Program Tier 2 full ad revenue requirements" />
+        <img src="/blog/youtube-partner-program-step-2.webp" alt="YouTube Partner Program Tier 2 full ad revenue requirements" />
 
         <p>Once you clear Tier 2, YouTube's revenue sharing model activates on two fronts. Watch Page Ads generate income from pre-roll, mid-roll, and display ads running against your long-form videos. The YouTube Shorts monetization model pools ad revenue from the Shorts feed and distributes it based on each creator's share of total views. Both streams compound over time as your library grows.</p>
 
@@ -1388,7 +1388,7 @@ export const posts = [
 
         <blockquote><strong>Pro Tip 2:</strong> Use YouTube Shorts to gain subscribers and long-form videos to gain YouTube watch hours. The two formats are not interchangeable. They are complementary.</blockquote>
 
-        <img src="/blog/youtube-partner-program-step-3.png" alt="The Bridge Strategy: Shorts for subscribers, long-form for watch hours" />
+        <img src="/blog/youtube-partner-program-step-3.webp" alt="The Bridge Strategy: Shorts for subscribers, long-form for watch hours" />
 
         <p>The Bridge Strategy works because it stops treating monetization as a single finish line and starts treating it as two parallel races being run at the same time. Creators who understand this hit their YouTube monetization requirements 2026 significantly faster than those who do not.</p>
 
@@ -1413,7 +1413,7 @@ export const posts = [
 
         <blockquote><strong>Warning:</strong> Reused Content is the number one reason YPP applications get rejected. YouTube defines reused content as videos that repurpose clips from movies, other creators, or third-party sources without significant original commentary or transformation. Compilation channels, reaction videos with minimal input, and slideshow videos with no original narration all fall into this category. You cannot monetize low-effort content, and submitting an application with it on your channel will result in an immediate rejection.</blockquote>
 
-        <img src="/blog/youtube-partner-program-step-4.png" alt="YouTube Studio compliance check and YPP application path" />
+        <img src="/blog/youtube-partner-program-step-4.webp" alt="YouTube Studio compliance check and YPP application path" />
 
         <p>The other compliance factor to understand is the <strong>Yellow Dollar Sign</strong>. When YouTube's system flags a video as not advertiser-friendly, it replaces the green dollar sign in Studio with a yellow one, significantly limiting the ads shown against that video. Content involving strong language, controversial topics, or sensitive subjects triggers this flag most often. Keeping your content clean against the YouTube monetization rules from the start protects your revenue potential before you even reach Tier 2.</p>
 
@@ -1434,7 +1434,7 @@ export const posts = [
 
         <blockquote><strong>The CTR Formula:</strong> High-contrast thumbnail pairings plus Curiosity Gap titles. Your thumbnail stops the scroll. Your title closes the click. Both need to work together, not independently.</blockquote>
 
-        <img src="/blog/youtube-partner-program-step-5.png" alt="High-CPM niche optimization and the CTR formula for YouTube" />
+        <img src="/blog/youtube-partner-program-step-5.webp" alt="High-CPM niche optimization and the CTR formula for YouTube" />
 
         <p>The First 30 Seconds rule is where most creators lose money without realizing it. If a viewer clicks your video and leaves within the first half-minute, YouTube registers a low retention signal and limits how widely it distributes that video. A weak hook is not just a creative problem. It is a financial one, because reduced distribution means fewer views, lower watch time, and smaller ad revenue. The <a href="/blog/youtube-seo-best-practices">SEO blueprint</a> covers the 15-second hook structure that prevents most early drop-offs.</p>
 
@@ -1458,7 +1458,7 @@ export const posts = [
     excerpt: 'Subscriber generators get channels banned. Here is the six-step organic roadmap that actually works for new creators trying to cross the monetization threshold.',
     date: '2026-05-07',
     category: CATEGORIES.subscribers,
-    cover: '/blog/free-subs-on-youtube-cover.jpg',
+    cover: '/blog/free-subs-on-youtube-cover.webp',
     author: 'Denzil',
     readTime: '8 min read',
     content: () => (
@@ -1488,7 +1488,7 @@ export const posts = [
 
         <p>YouTube Shorts is the single most powerful free tool available to creators who want to grow fast. Unlike long-form videos, which take time to rank and build an audience, Shorts get distributed immediately to non-subscribers through a dedicated feed. The Subscribe button sits directly on the video as viewers watch, which means every Short you publish is a live conversion opportunity reaching people who have never heard of your channel.</p>
 
-        <img src="/blog/step-1.png" alt="YouTube Shorts dedicated feed and subscribe-on-video conversion path" />
+        <img src="/blog/step-1.webp" alt="YouTube Shorts dedicated feed and subscribe-on-video conversion path" />
 
         <h3>The Value Loop</h3>
 
@@ -1517,7 +1517,7 @@ export const posts = [
 
         <p>The goal is to find search terms that have a healthy volume of monthly searches but low enough competition that a newer channel can realistically rank for them. <a href="/features/keyword-research">YTGrowth's Keyword Explorer</a> is built specifically for this, surfacing low-competition, high-volume YouTube keywords so you can make targeting decisions based on data rather than guesswork.</p>
 
-        <img src="/blog/step-2.png" alt="YTGrowth Keyword Explorer surfacing low-competition YouTube keywords" />
+        <img src="/blog/step-2.webp" alt="YTGrowth Keyword Explorer surfacing low-competition YouTube keywords" />
 
         <p>The channels that reach 1,000 subscribers fastest are almost always the ones titling their videos around what people are searching for, not around what sounds creative.</p>
 
@@ -1538,7 +1538,7 @@ export const posts = [
 
         <p>Most creators ask for subscribers in the wrong place. The standard approach is to drop a "don't forget to subscribe" at the end of the video, but by that point, 80% of viewers have already left. You are delivering your most important ask to the smallest possible slice of your audience, and the ones still watching are already your most loyal viewers anyway.</p>
 
-        <img src="/blog/step-3.png" alt="Where to place the subscribe CTA on a YouTube video timeline" />
+        <img src="/blog/step-3.webp" alt="Where to place the subscribe CTA on a YouTube video timeline" />
 
         <blockquote><strong>YouTube Reports:</strong> 80% of viewers have already left by the end of the video. Place your CTA immediately after the first 'win,' not after the outro.</blockquote>
 
@@ -1575,7 +1575,7 @@ export const posts = [
 
         <p>You cannot get free YouTube subscribers without first getting views, and thumbnails are the primary driver of views. Before anyone decides to watch your video, they see your thumbnail. It is the first and sometimes only impression your content makes, and a weak one means your video never gets the chance to convert anyone into a subscriber. CTR is the gatekeeping metric here — the <a href="/blog/youtube-seo-best-practices">2026 SEO blueprint</a> covers the specific 6% threshold that flips the algorithm into Suggested distribution.</p>
 
-        <img src="/blog/step-4.png" alt="Thumbnail design principles — high contrast and the curiosity gap" />
+        <img src="/blog/step-4.webp" alt="Thumbnail design principles — high contrast and the curiosity gap" />
 
         <p>Thumbnail design rules to follow:</p>
 
@@ -1605,7 +1605,7 @@ export const posts = [
 
         <p>Every interaction you have with your existing audience sends a signal to the algorithm that your channel is worth introducing to a new one.</p>
 
-        <img src="/blog/step-5.png" alt="YouTube comment hearting and Community Tab engagement signals" />
+        <img src="/blog/step-5.webp" alt="YouTube comment hearting and Community Tab engagement signals" />
 
         <ul>
           <li><strong>The Hearting Hack.</strong> When you Heart a comment on your video, YouTube sends that commenter a specific notification pulling them back to your channel. That return visit increases the likelihood of a subscription, and it costs you nothing but a single click.</li>
@@ -1621,7 +1621,7 @@ export const posts = [
 
         <p>Most creators upload videos as standalone pieces and hope viewers find more. Power Playlists flip that approach by organizing your content into tightly themed sequences that pull viewers from one video directly into the next, increasing session duration and giving the algorithm a much stronger signal to promote your channel.</p>
 
-        <img src="/blog/step-6.png" alt="Power Playlist binge-watching funnel pulling viewers from one video to the next" />
+        <img src="/blog/step-6.webp" alt="Power Playlist binge-watching funnel pulling viewers from one video to the next" />
 
         <h3>The Strategy</h3>
 

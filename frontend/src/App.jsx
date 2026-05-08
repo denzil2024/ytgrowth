@@ -1,49 +1,68 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
-import Landing from './pages/Landing'
-import Dashboard from './pages/Dashboard'
-import Terms from './pages/Terms'
-import Privacy from './pages/Privacy'
-import Refund from './pages/Refund'
-import Affiliate from './pages/Affiliate'
-import Contact from './pages/Contact'
-import ChannelAudit from './pages/features/ChannelAudit'
-import CompetitorAnalysis from './pages/features/CompetitorAnalysis'
-import SeoStudio from './pages/features/SeoStudio'
-import ThumbnailIq from './pages/features/ThumbnailIq'
-import KeywordResearch from './pages/features/KeywordResearch'
-import Outliers from './pages/features/Outliers'
-import YoutubeMoneyCalculator from './pages/tools/YoutubeMoneyCalculator'
-import YoutubeThumbnailDownloader from './pages/tools/YoutubeThumbnailDownloader'
-import YoutubeSubscriberMoneyCalculator from './pages/tools/YoutubeSubscriberMoneyCalculator'
-import YoutubeChannelStatsChecker from './pages/tools/YoutubeChannelStatsChecker'
-import Blog from './pages/Blog'
-import BlogPost from './pages/BlogPost'
+import { Suspense, lazy } from 'react'
+
+/* Each route is its own JS chunk via React.lazy. The landing page no longer
+   ships dashboard / autopsy / SEO Studio code, dropping cold-load JS from
+   ~388 KB gzipped to ~60-100 KB depending on the entry route.
+
+   The prerender pipeline (scripts/prerender.js) still works: Puppeteer
+   waits for networkidle0 before snapshotting, which covers the lazy chunk
+   fetch. React 19 hydration keeps the prerendered HTML on screen while
+   the matching chunk loads, so users see no flash. */
+
+const Landing                          = lazy(() => import('./pages/Landing'))
+const Dashboard                        = lazy(() => import('./pages/Dashboard'))
+const Terms                            = lazy(() => import('./pages/Terms'))
+const Privacy                          = lazy(() => import('./pages/Privacy'))
+const Refund                           = lazy(() => import('./pages/Refund'))
+const Affiliate                        = lazy(() => import('./pages/Affiliate'))
+const Contact                          = lazy(() => import('./pages/Contact'))
+const ChannelAudit                     = lazy(() => import('./pages/features/ChannelAudit'))
+const CompetitorAnalysis               = lazy(() => import('./pages/features/CompetitorAnalysis'))
+const SeoStudio                        = lazy(() => import('./pages/features/SeoStudio'))
+const ThumbnailIq                      = lazy(() => import('./pages/features/ThumbnailIq'))
+const KeywordResearch                  = lazy(() => import('./pages/features/KeywordResearch'))
+const Outliers                         = lazy(() => import('./pages/features/Outliers'))
+const YoutubeMoneyCalculator           = lazy(() => import('./pages/tools/YoutubeMoneyCalculator'))
+const YoutubeThumbnailDownloader       = lazy(() => import('./pages/tools/YoutubeThumbnailDownloader'))
+const YoutubeSubscriberMoneyCalculator = lazy(() => import('./pages/tools/YoutubeSubscriberMoneyCalculator'))
+const YoutubeChannelStatsChecker       = lazy(() => import('./pages/tools/YoutubeChannelStatsChecker'))
+const Blog                             = lazy(() => import('./pages/Blog'))
+const BlogPost                         = lazy(() => import('./pages/BlogPost'))
 
 function App() {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Landing />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/terms" element={<Terms />} />
-        <Route path="/privacy" element={<Privacy />} />
-        <Route path="/refund" element={<Refund />} />
-        <Route path="/affiliate" element={<Affiliate />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/features/channel-audit"        element={<ChannelAudit />} />
-        <Route path="/features/competitor-analysis"  element={<CompetitorAnalysis />} />
-        <Route path="/features/seo-studio"           element={<SeoStudio />} />
-        <Route path="/features/thumbnail-iq"         element={<ThumbnailIq />} />
-        <Route path="/features/keyword-research"     element={<KeywordResearch />} />
-        <Route path="/features/outliers"             element={<Outliers />} />
-        <Route path="/tools/youtube-money-calculator"            element={<YoutubeMoneyCalculator />} />
-        <Route path="/tools/youtube-thumbnail-downloader"        element={<YoutubeThumbnailDownloader />} />
-        <Route path="/tools/youtube-subscriber-money-calculator" element={<YoutubeSubscriberMoneyCalculator />} />
-        <Route path="/tools/youtube-channel-stats-checker"       element={<YoutubeChannelStatsChecker />} />
-        <Route path="/blog"                                      element={<Blog />} />
-        <Route path="/blog/:slug"                                element={<BlogPost />} />
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
+      {/* Empty Suspense fallback. We never want to flash a spinner over
+          the prerendered HTML; React 19 keeps the existing DOM visible
+          while a lazy chunk loads, then hydrates in place. For client-side
+          navigation between routes, the brief blank state during chunk
+          fetch is acceptable on slow connections (and imperceptible on
+          desktop). */}
+      <Suspense fallback={null}>
+        <Routes>
+          <Route path="/" element={<Landing />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/terms" element={<Terms />} />
+          <Route path="/privacy" element={<Privacy />} />
+          <Route path="/refund" element={<Refund />} />
+          <Route path="/affiliate" element={<Affiliate />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/features/channel-audit"        element={<ChannelAudit />} />
+          <Route path="/features/competitor-analysis"  element={<CompetitorAnalysis />} />
+          <Route path="/features/seo-studio"           element={<SeoStudio />} />
+          <Route path="/features/thumbnail-iq"         element={<ThumbnailIq />} />
+          <Route path="/features/keyword-research"     element={<KeywordResearch />} />
+          <Route path="/features/outliers"             element={<Outliers />} />
+          <Route path="/tools/youtube-money-calculator"            element={<YoutubeMoneyCalculator />} />
+          <Route path="/tools/youtube-thumbnail-downloader"        element={<YoutubeThumbnailDownloader />} />
+          <Route path="/tools/youtube-subscriber-money-calculator" element={<YoutubeSubscriberMoneyCalculator />} />
+          <Route path="/tools/youtube-channel-stats-checker"       element={<YoutubeChannelStatsChecker />} />
+          <Route path="/blog"                                      element={<Blog />} />
+          <Route path="/blog/:slug"                                element={<BlogPost />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </Suspense>
     </BrowserRouter>
   )
 }
