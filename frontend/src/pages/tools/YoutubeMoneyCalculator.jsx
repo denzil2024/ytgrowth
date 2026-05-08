@@ -1,6 +1,7 @@
 import { useEffect, useState, useMemo } from 'react'
 import LandingFooter from '../../components/LandingFooter'
 import SiteHeader from '../../components/SiteHeader'
+import FaqSchema from '../../components/FaqSchema'
 
 /* ─── Free SEO tool: YouTube Money Calculator ─────────────────────────────
    /tools/youtube-money-calculator. Targets the high-volume tool-intent
@@ -259,6 +260,7 @@ export default function YoutubeMoneyCalculator() {
 
       {/* ── NAV — shared SiteHeader ──────────────────────────────────────── */}
       <SiteHeader />
+      <FaqSchema items={FAQS} />
 
       {/* ══ HERO. Bg #ffffff, DM Sans, Landing scale (72/62/34) ══ */}
       <section className="ymc-section-pad" style={{ position: 'relative', padding: isMobile ? '64px 24px 56px' : '110px 48px 84px', textAlign: 'center', background: '#ffffff', overflow: 'hidden' }}>

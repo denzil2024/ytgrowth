@@ -1,6 +1,7 @@
 import { useEffect, useState, useMemo } from 'react'
 import LandingFooter from '../../components/LandingFooter'
 import SiteHeader from '../../components/SiteHeader'
+import FaqSchema from '../../components/FaqSchema'
 
 /* ─── Free SEO tool: YouTube Subscriber Money Calculator ──────────────────
    /tools/youtube-subscriber-money-calculator. Targets "how many
@@ -291,6 +292,7 @@ export default function YoutubeSubscriberMoneyCalculator() {
 
       {/* ── NAV — shared SiteHeader ── */}
       <SiteHeader />
+      <FaqSchema items={FAQS} />
 
       {/* ══ HERO ══ */}
       <section className="smc-section-pad" style={{ position: 'relative', padding: isMobile ? '64px 24px 56px' : '110px 48px 84px', textAlign: 'center', background: '#ffffff', overflow: 'hidden' }}>

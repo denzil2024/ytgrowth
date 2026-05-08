@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef, useCallback, useMemo } from 'react'
 import LandingFooter from '../../components/LandingFooter'
 import SiteHeader from '../../components/SiteHeader'
+import FaqSchema from '../../components/FaqSchema'
 
 /* ─── Free SEO tool: YouTube Thumbnail Resizer ─────────────────────────────
    /tools/youtube-thumbnail-resizer.
@@ -525,6 +526,7 @@ export default function YoutubeThumbnailResizer() {
     <div style={{ background: 'var(--ytg-bg)', minHeight: '100vh' }}>
 
       <SiteHeader />
+      <FaqSchema items={FAQS} />
 
       {/* HERO */}
       <section className="ytr-section-pad" style={{ padding: isMobile ? '56px 24px 32px' : '88px 48px 48px', textAlign: 'center', background: '#ffffff' }}>

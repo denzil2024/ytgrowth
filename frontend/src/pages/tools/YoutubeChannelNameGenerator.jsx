@@ -1,6 +1,7 @@
 import { useEffect, useState, useMemo, useCallback } from 'react'
 import LandingFooter from '../../components/LandingFooter'
 import SiteHeader from '../../components/SiteHeader'
+import FaqSchema from '../../components/FaqSchema'
 
 /* ─── Free SEO tool: YouTube Channel Name Generator ────────────────────────
    /tools/youtube-channel-name-generator. Targets ~30K monthly searches.
@@ -10,7 +11,7 @@ import SiteHeader from '../../components/SiteHeader'
    result right), 4-row "how it works" deep-dive, 3-card feature grid,
    dark CTA band with red glow, 2-column numbered FAQ.
 
-   100% client-side. Pattern templates only — no AI calls. */
+   100% client-side. Pattern templates only, no AI calls. */
 
 const cap = (s) => s ? s.charAt(0).toUpperCase() + s.slice(1).toLowerCase() : ''
 
@@ -96,17 +97,17 @@ const EXAMPLES = ['fitness', 'finance', 'cooking', 'tech reviews', 'productivity
 
 const FAQS = [
   { q: 'Are these channel names actually available on YouTube?',
-    a: "This generator creates name ideas from pattern templates — it does not check real-time YouTube handle or display name availability. Once you find a name you like, copy it and check directly inside YouTube Studio (Settings → Channel → Basic info) where YouTube validates handles in real time. Note that the handle (@yourname) is what determines uniqueness, not the channel display name. Two channels can share the same display name, but every handle is globally unique." },
+    a: "This generator creates name ideas from pattern templates. It does not check real-time YouTube handle or display name availability. Once you find a name you like, copy it and check directly inside YouTube Studio (Settings → Channel → Basic info) where YouTube validates handles in real time. Note that the handle (@yourname) is what determines uniqueness, not the channel display name. Two channels can share the same display name, but every handle is globally unique." },
   { q: 'How do I pick the right name from this list?',
     a: "Three rules. One: easy to spell and easy to say out loud, because viewers will recommend you verbally and type your name into search. Two: related to your niche so the algorithm and viewers can categorize you instantly. Three: not too narrow. \"BeginnerYogaForRunners\" boxes you in if you ever pivot. \"FlowAcademy\" gives you room to expand. Pick a name you can grow into at 100K subscribers, not just one that fits where you are at zero." },
   { q: "What is the difference between channel name and handle?",
-    a: 'Your display name is what viewers see (e.g., "MrBeast"). It can be changed twice every 14 days, can include spaces, and does not have to be unique. Your handle is your @username (e.g., @MrBeast) — it must be globally unique, no spaces, 3-30 characters, and is used in your URL (youtube.com/@yourhandle). Pick a strong display name first, then claim a matching or close handle while it is still available.' },
+    a: 'Your display name is what viewers see (e.g., "MrBeast"). It can be changed twice every 14 days, can include spaces, and does not have to be unique. Your handle is your @username (e.g., @MrBeast). It must be globally unique, no spaces, 3-30 characters, and is used in your URL (youtube.com/@yourhandle). Pick a strong display name first, then claim a matching or close handle while it is still available.' },
   { q: 'Can I change my YouTube channel name later?',
     a: "Yes. YouTube lets you change both your display name and handle, though there are rate limits (typically 2 changes per 14 days). What you cannot easily do is rebuild brand recognition once you have grown an audience under one name. Pick something you would still be happy to keep at 100K subscribers, not just at zero. Frequent name changes also confuse the algorithm and dilute your channel's topical signal." },
   { q: "Do channel names matter for SEO?",
-    a: "Channel names are a relatively weak ranking signal compared to titles, descriptions, and retention. But a niche-aligned name does help — when YouTube's algorithm sees a viewer search for \"running tips\" and your channel is called \"Run Lab\", that's one more relevance hint. Don't keyword-stuff (\"Best Running Tips Channel For Beginners 2026\"). Just pick a name that hints at what you do, and let your titles and thumbnails do the heavy lifting on SEO." },
+    a: "Channel names are a relatively weak ranking signal compared to titles, descriptions, and retention. But a niche-aligned name does help. When YouTube's algorithm sees a viewer search for \"running tips\" and your channel is called \"Run Lab\", that's one more relevance hint. Don't keyword-stuff (\"Best Running Tips Channel For Beginners 2026\"). Just pick a name that hints at what you do, and let your titles and thumbnails do the heavy lifting on SEO." },
   { q: 'Why are the same patterns repeated across niches?',
-    a: "Because formats like \"X HQ\", \"X Lab\", \"Mr X\", and \"Project X\" work in any niche — they're proven patterns, not niche-specific inventions. Generating thousands of unique names per niche would just give you noise. The pattern templates are the signal: pick a tone, plug in your niche, and you have a name that follows a structure successful channels already use." },
+    a: "Because formats like \"X HQ\", \"X Lab\", \"Mr X\", and \"Project X\" work in any niche. They're proven patterns, not niche-specific inventions. Generating thousands of unique names per niche would just give you noise. The pattern templates are the signal: pick a tone, plug in your niche, and you have a name that follows a structure successful channels already use." },
   { q: "Should my channel name be my real name?",
     a: "Depends on your strategy. Real names work best if your channel is built around personal expertise, vlogs, lifestyle content, or anything where viewers are subscribing to YOU as much as the topic. Brand names (FlowAcademy, Run Lab) work better for faceless channels, multi-creator channels, or anything you might sell or hand off later. Hybrid approach: real name in the channel description, brand name on the channel itself." },
   { q: "How long should a YouTube channel name be?",
@@ -116,15 +117,15 @@ const FAQS = [
   { q: "Can I use trademarked words in my channel name?",
     a: "Avoid. YouTube takes down channels that include trademarked brand names without permission (Apple, Nike, Disney, etc.). Even if you get away with it for a while, your channel can be terminated retroactively and you lose all your subscribers. Pattern names like \"Apple Tips\" or \"NikeRunner\" are common takedown targets. Build your brand around a name you own. The free generator above avoids brand-trademark patterns entirely for this reason." },
   { q: "Should I include 'TV', 'Channel', or 'YouTube' in my name?",
-    a: "Generally no, on all three. \"X TV\" feels dated (it's a relic of when YouTube channels were trying to mimic broadcast TV). \"X Channel\" is redundant — viewers already know it's a channel. Including \"YouTube\" in your name is a guidelines violation and can trigger removal. The strongest names skip these entirely and just lean on the topic word plus a pattern (X Lab, Project X, Daily X)." },
+    a: "Generally no, on all three. \"X TV\" feels dated (it's a relic of when YouTube channels were trying to mimic broadcast TV). \"X Channel\" is redundant, since viewers already know it's a channel. Including \"YouTube\" in your name is a guidelines violation and can trigger removal. The strongest names skip these entirely and just lean on the topic word plus a pattern (X Lab, Project X, Daily X)." },
   { q: 'What is a good naming pattern for a faceless channel?',
     a: "Brand-style names work best for faceless content because they remove the personality dependency. Patterns like \"X Files\", \"X Academy\", \"Project X\", \"X Decoded\", or \"The X Report\" set the expectation that the channel is about the topic, not the creator. Avoid personal patterns (\"Mr X\", \"X With Me\") because they create a creator-identity gap viewers will notice. Pure brand names also make the channel easier to sell, license, or hand off to another team later." },
   { q: 'How do I check if a name is already taken on YouTube?',
     a: 'Two checks. (1) Display name: search for it on YouTube. If a popular channel already uses it, your channel will be hard to discover. (2) Handle: try to claim @yourname inside YouTube Studio → Settings → Channel → Handle. YouTube tells you in real time if the handle is available. If the handle is taken but the display name is free, consider a slight variation (@RunLabHQ, @TheRunLab) so your URL is still memorable.' },
   { q: 'Should my name reflect my niche or my personality?',
-    a: 'Both, ideally — but if you have to pick, niche wins for early-stage growth. The algorithm and new viewers need topical clues to know whether to recommend you. Personality-driven names work great once you have an audience, but they cost you discoverability when you are unknown. The best compromise: pick a name that hints at the niche but does not fully limit it (e.g., "FlowAcademy" hints at fitness/wellness without locking you into yoga forever).' },
+    a: 'Both, ideally. But if you have to pick, niche wins for early-stage growth. The algorithm and new viewers need topical clues to know whether to recommend you. Personality-driven names work great once you have an audience, but they cost you discoverability when you are unknown. The best compromise: pick a name that hints at the niche but does not fully limit it (e.g., "FlowAcademy" hints at fitness/wellness without locking you into yoga forever).' },
   { q: 'Is this generator free? Will you collect my data?',
-    a: "Yes, free forever. And no data collection. The generator runs entirely in your browser — no inputs sent to our servers, no email required, no signup gate, no analytics tied to the names you type. We built it as a genuine free tool because every new creator deserves a starting list of solid names without paying for one. If you want a full growth plan once you've launched, you can connect your channel for a free AI audit on the main app, but it is entirely optional." },
+    a: "Yes, free forever. And no data collection. The generator runs entirely in your browser, with no inputs sent to our servers, no email required, no signup gate, no analytics tied to the names you type. We built it as a genuine free tool because every new creator deserves a starting list of solid names without paying for one. If you want a full growth plan once you've launched, you can connect your channel for a free AI audit on the main app, but it is entirely optional." },
 ]
 
 function useBreakpoint() {
@@ -200,7 +201,7 @@ function useGlobalStyles() {
       }
       .cng-input:focus { border-color: rgba(10,10,15,0.28); background: #fff; }
 
-      /* Tool layout — mirrors ymc-calc-grid */
+      /* Tool layout, mirrors ymc-calc-grid */
       .cng-tool-grid { display: grid; grid-template-columns: 1fr 1.1fr; gap: 24px; align-items: start; }
       @media (max-width: 900px) { .cng-tool-grid { grid-template-columns: 1fr; } }
 
@@ -338,7 +339,7 @@ export default function YoutubeChannelNameGenerator() {
   const [openFaq, setOpenFaq] = useState(0)
 
   useEffect(() => {
-    document.title = 'Free YouTube Channel Name Generator (60+ ideas, any niche) — YTGrowth'
+    document.title = 'Free YouTube Channel Name Generator (60+ ideas, any niche) | YTGrowth'
     const meta = document.querySelector('meta[name="description"]') || (() => {
       const m = document.createElement('meta'); m.name = 'description'; document.head.appendChild(m); return m
     })()
@@ -365,6 +366,7 @@ export default function YoutubeChannelNameGenerator() {
     <div style={{ fontFamily: "'Inter', system-ui, sans-serif", background: 'var(--ytg-bg)', color: 'var(--ytg-text)', overflowX: 'hidden' }}>
 
       <SiteHeader />
+      <FaqSchema items={FAQS} />
 
       {/* ══ HERO ══ */}
       <section className="cng-section-pad" style={{ position: 'relative', padding: isMobile ? '64px 24px 56px' : '110px 48px 84px', textAlign: 'center', background: '#ffffff', overflow: 'hidden' }}>
@@ -389,7 +391,7 @@ export default function YoutubeChannelNameGenerator() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
           <div className="cng-tool-grid">
 
-            {/* LEFT — input card */}
+            {/* LEFT, input card */}
             <div style={{ background: 'var(--ytg-card)', borderRadius: 22, border: '1px solid var(--ytg-border)', boxShadow: 'var(--ytg-shadow-lg)', padding: isMobile ? 26 : 36 }}>
               <div style={{ marginBottom: 22 }}>
                 <label style={{ display: 'block', fontSize: 12, fontWeight: 700, color: 'var(--ytg-text-3)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 8 }}>Your niche</label>
@@ -423,7 +425,7 @@ export default function YoutubeChannelNameGenerator() {
               )}
             </div>
 
-            {/* RIGHT — top pick OR empty state */}
+            {/* RIGHT, top pick OR empty state */}
             {showResults && featured ? (
               <div style={{ background: 'var(--ytg-accent)', borderRadius: 22, color: '#fff', padding: isMobile ? 28 : 36, boxShadow: '0 4px 18px rgba(229,48,42,0.32), 0 24px 60px rgba(229,48,42,0.18)' }}>
                 <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', opacity: 0.78, marginBottom: 14 }}>
@@ -466,7 +468,7 @@ export default function YoutubeChannelNameGenerator() {
             )}
           </div>
 
-          {/* BOTTOM — full-width more options, grouped by vibe */}
+          {/* BOTTOM, full-width more options, grouped by vibe */}
           {showResults && featured && rest.length > 0 && (() => {
             const TONE_ORDER = ['pro', 'punchy', 'personal', 'creative']
             const grouped = TONE_ORDER
@@ -526,11 +528,11 @@ export default function YoutubeChannelNameGenerator() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: 32 }}>
             {[
               { h: 'Easy to say beats clever every time',
-                p: 'A channel name spreads when viewers can recommend it out loud. If your name has silent letters, unusual spellings, or inside jokes only your friends get, you just put a tax on every word-of-mouth referral. The biggest channels on the platform — MrBeast, Veritasium, Mark Rober, Ali Abdaal — all pass a simple test: read it aloud and your friend can spell it back without asking how.' },
+                p: 'A channel name spreads when viewers can recommend it out loud. If your name has silent letters, unusual spellings, or inside jokes only your friends get, you just put a tax on every word-of-mouth referral. The biggest channels on the platform (MrBeast, Veritasium, Mark Rober, Ali Abdaal) all pass a simple test: read it aloud and your friend can spell it back without asking how.' },
               { h: 'Niche signal beats personality signal early',
-                p: 'When you have zero subscribers, viewers and the algorithm both need a topical clue to know whether to engage with you. A name that hints at your niche ("Run Lab", "FlowAcademy", "TechDecoded") gives you that clue. A pure personal-brand name ("Sarah & Ben", "JustMike") wins later, once you have an audience that already knows what you do — but it costs you discoverability when you are unknown.' },
+                p: 'When you have zero subscribers, viewers and the algorithm both need a topical clue to know whether to engage with you. A name that hints at your niche ("Run Lab", "FlowAcademy", "TechDecoded") gives you that clue. A pure personal-brand name ("Sarah & Ben", "JustMike") wins later, once you have an audience that already knows what you do, but it costs you discoverability when you are unknown.' },
               { h: 'Specificity is a trap. Categories are an asset.',
-                p: 'A name like "BeginnerYogaForRunners" sounds focused but boxes you in. The day you want to cover meditation, mobility, or running form, your name fights you. Smart names pick a category you can grow inside — fitness, finance, photography — without locking you to one sub-topic. Pattern templates like "X Lab" and "Project X" deliberately keep that flexibility.' },
+                p: 'A name like "BeginnerYogaForRunners" sounds focused but boxes you in. The day you want to cover meditation, mobility, or running form, your name fights you. Smart names pick a category you can grow inside (fitness, finance, photography) without locking you to one sub-topic. Pattern templates like "X Lab" and "Project X" deliberately keep that flexibility.' },
               { h: 'The handle decision matters more than the display name',
                 p: 'Display names can be edited. Handles get sticky. Once people are sharing youtube.com/@yourname, sponsors are tagging it, and your own analytics are linked to it, changing the handle costs you traffic and brand recognition. Pick a handle you would still want at 100K subscribers, and pair it with a display name that can flex over time as your channel evolves.' },
             ].map((row, i) => (
@@ -543,7 +545,7 @@ export default function YoutubeChannelNameGenerator() {
         </div>
       </section>
 
-      {/* ══ GROW WITH FEATURES — 3-card grid ══ */}
+      {/* ══ GROW WITH FEATURES, 3-card grid ══ */}
       <section className="cng-section-pad" style={{ padding: isMobile ? '72px 20px' : '110px 48px', background: 'var(--ytg-bg)' }}>
         <div style={{ maxWidth: 1160, margin: '0 auto' }}>
           <div style={{ marginBottom: 44, textAlign: 'center', maxWidth: 720, marginLeft: 'auto', marginRight: 'auto' }}>
@@ -559,7 +561,7 @@ export default function YoutubeChannelNameGenerator() {
             {[
               { label: 'Video Ideas Generator', title: 'Find what to film first', body: 'Ninety+ proven YouTube format templates plug into your niche to surface a list of ideas with real CTR potential. Same browser-based, free, no signup model as this tool.', href: '/tools/youtube-video-ideas-generator' },
               { label: 'SEO Studio',             title: 'Score titles before you publish', body: 'Every title gets a 0–100 score against the live niche, plus 3 AI rewrites built around the top-ranking videos in your category. Stops you publishing weak titles.',                  href: '/features/seo-studio' },
-              { label: 'Thumbnail IQ',           title: 'Win the click war from day one',  body: 'Score every thumbnail against the top performers in your niche on contrast, face presence, and curiosity-gap signals — before the upload, not after the CTR data comes in.',                href: '/features/thumbnail-iq' },
+              { label: 'Thumbnail IQ',           title: 'Win the click war from day one',  body: 'Score every thumbnail against the top performers in your niche on contrast, face presence, and curiosity-gap signals, before the upload, not after the CTR data comes in.',                href: '/features/thumbnail-iq' },
             ].map((card, i) => (
               <a key={i} href={card.href}
                 style={{ display: 'block', background: 'var(--ytg-card)', border: '1px solid var(--ytg-border)', borderRadius: 22, padding: 30, boxShadow: 'var(--ytg-shadow-sm)', textDecoration: 'none', transition: 'transform 0.18s, box-shadow 0.18s, border-color 0.18s' }}

@@ -1,6 +1,7 @@
 import { useEffect, useState, useMemo, useCallback } from 'react'
 import LandingFooter from '../../components/LandingFooter'
 import SiteHeader from '../../components/SiteHeader'
+import FaqSchema from '../../components/FaqSchema'
 
 /* ─── Free SEO tool: YouTube Video Ideas Generator ──────────────────────────
    /tools/youtube-video-ideas-generator. Targets ~50K monthly searches.
@@ -73,7 +74,7 @@ const FORMATS = {
     'Trying every {x} method so you don\'t have to',
     'I copied a top {x} creator for 30 days',
     'I tried the most extreme {x} method',
-    'No-{x} for 30 days — what changed',
+    'No-{x} for 30 days, what changed',
     'I let AI plan my {x} for a month',
   ],
   mistakes: [
@@ -188,35 +189,35 @@ const EXAMPLES = ['fitness', 'finance', 'cooking', 'tech reviews', 'productivity
 
 const FAQS = [
   { q: 'Are these video ideas AI-generated?',
-    a: "No. They're built from a curated library of 90+ proven YouTube format templates — the same kinds of titles top creators use over and over because they work. The tool combines the formats with your niche keyword. No AI hallucinations, no nonsense outputs, no waiting for a model to respond. Pure pattern matching, instant results, zero cost to run." },
+    a: "No. They're built from a curated library of 90+ proven YouTube format templates, the same kinds of titles top creators use over and over because they work. The tool combines the formats with your niche keyword. No AI hallucinations, no nonsense outputs, no waiting for a model to respond. Pure pattern matching, instant results, zero cost to run." },
   { q: 'How do I know which format will rank in my niche?',
     a: "Format matters less than execution. A \"Top 5 mistakes\" video can flop or go viral depending on the thumbnail, the hook, and the retention curve. That said, formats with strong loss-aversion (\"mistakes\", \"wrong\", \"truth\"), high specificity (numbered lists, time-bound challenges), and curiosity gaps tend to outperform vague titles in nearly every niche. Once you have a candidate, run the title through SEO Studio to score it against the live niche before you commit to filming." },
   { q: 'Should I copy these titles word-for-word?',
-    a: "No. Use them as starting structures, then customize them with the specifics that make YOUR version different. \"I tried [X] every day for 30 days\" is the proven format. Your version should be specific and personal: \"I tried cold plunges every morning for 30 days. Here's what changed.\" The format is the skeleton. The specifics — the number, the timeframe, the personal angle, the surprising result — are what earn the click." },
+    a: "No. Use them as starting structures, then customize them with the specifics that make YOUR version different. \"I tried [X] every day for 30 days\" is the proven format. Your version should be specific and personal: \"I tried cold plunges every morning for 30 days. Here's what changed.\" The format is the skeleton. The specifics (the number, the timeframe, the personal angle, the surprising result) are what earn the click." },
   { q: 'What if my niche needs a different angle that\'s not here?',
     a: 'Filter by format category. If you\'re in finance, "Challenges" might feel forced but "Comparisons" and "Mistakes" will fit naturally. If you\'re a vlogger, "Stories" and "Personal" formats dominate. If you\'re in education, "Tutorials" and "Deep dives" are your bread and butter. Toggle off the categories that don\'t suit your style and the list narrows to formats that fit your content type.' },
   { q: 'Does this work for YouTube Shorts?',
-    a: 'Yes — there\'s a dedicated Shorts category. Those formats are designed for the swipe-or-watch decision, with hooks in the first 2 seconds and POV/save-this framings the Shorts algorithm rewards. Long-form formats can also be repurposed into Shorts: a 10-minute "5 mistakes" video can be split into 5 separate 30-second hooks, each one a standalone Short that funnels back to the long-form for the full breakdown.' },
+    a: 'Yes, there\'s a dedicated Shorts category. Those formats are designed for the swipe-or-watch decision, with hooks in the first 2 seconds and POV/save-this framings the Shorts algorithm rewards. Long-form formats can also be repurposed into Shorts: a 10-minute "5 mistakes" video can be split into 5 separate 30-second hooks, each one a standalone Short that funnels back to the long-form for the full breakdown.' },
   { q: 'How many videos a week should I publish from this list?',
-    a: "For long-form, 1-2 videos per week is the sustainable maximum for most creators producing solo. More than that and quality drops, retention falls, and the algorithm starts down-ranking your channel. For Shorts, 3-5 per week is the sweet spot — enough volume for the algorithm to test your content but not so much that you burn out. Quality videos consistently published always outperform daily uploads of weak content." },
+    a: "For long-form, 1-2 videos per week is the sustainable maximum for most creators producing solo. More than that and quality drops, retention falls, and the algorithm starts down-ranking your channel. For Shorts, 3-5 per week is the sweet spot, enough volume for the algorithm to test your content but not so much that you burn out. Quality videos consistently published always outperform daily uploads of weak content." },
   { q: 'What\'s a "high CTR" format vs a "high retention" format?',
-    a: "High-CTR formats earn the click: \"5 mistakes\", \"vs\", \"truth about\", \"why your X isn't working\" — they create curiosity gaps that demand resolution. High-retention formats hold attention once clicked: tutorials, deep dives, challenge documentation, and stories with clear narrative arcs. The best videos combine both — a high-CTR title attached to a high-retention format. This generator gives you both kinds; the category filters help you balance the mix." },
+    a: "High-CTR formats earn the click: \"5 mistakes\", \"vs\", \"truth about\", \"why your X isn't working\". They create curiosity gaps that demand resolution. High-retention formats hold attention once clicked: tutorials, deep dives, challenge documentation, and stories with clear narrative arcs. The best videos combine both, a high-CTR title attached to a high-retention format. This generator gives you both kinds; the category filters help you balance the mix." },
   { q: 'How do I validate an idea before I film it?',
     a: 'Three checks. (1) Type your customized title into the YouTube search bar. If autocomplete suggests similar phrases, real people are searching for it. (2) Look at the top 5 videos for that search and check their view counts. If the highest is 50K and the lowest is 5K, demand is steady; if everything is sub-1K, the keyword is dead. (3) Run the title through SEO Studio for a 0-100 score against the live niche. The format gives you the structure; validation tells you if anyone will watch.' },
   { q: 'Should I publish the same format every week or rotate?',
     a: "Rotate, but anchor on 2-3 formats that work consistently. The algorithm benefits from variety in your topical signal, and viewers benefit from variety in their feed. But channels that publish 7+ different format types feel scattered. The pattern that works for most growing channels: pick 2 \"core\" formats (often listicles + tutorials) and rotate in 1 \"high-engagement\" format every 3-4 weeks (challenges, deep dives, or comparisons)." },
   { q: 'What format works best for a brand-new channel with no audience?',
-    a: 'Search-driven formats — tutorials and listicles tied to specific keywords with proven search volume. New channels have zero algorithmic momentum; the only way viewers find you is through search results. A "How to X" or "5 X mistakes" video targeting a low-competition keyword will outperform a personal story or vlog every time when you have no subscribers. Once you cross 500-1000 subs, the algorithm starts surfacing your content in Browse and Suggested, and you can experiment more.' },
+    a: 'Search-driven formats: tutorials and listicles tied to specific keywords with proven search volume. New channels have zero algorithmic momentum; the only way viewers find you is through search results. A "How to X" or "5 X mistakes" video targeting a low-competition keyword will outperform a personal story or vlog every time when you have no subscribers. Once you cross 500-1000 subs, the algorithm starts surfacing your content in Browse and Suggested, and you can experiment more.' },
   { q: 'How do I find what\'s trending in my niche right now?',
-    a: "Two free methods. (1) YouTube search autocomplete — type your topic and note what auto-fills; those are real high-volume queries. (2) Google Trends with the YouTube Search filter (toggle from \"Web Search\") — shows seasonal demand and rising interest by topic. Combine both: pick a format from this generator, customize it with a trending sub-topic from autocomplete, validate the demand in Google Trends, then film." },
+    a: "Two free methods. (1) YouTube search autocomplete: type your topic and note what auto-fills; those are real high-volume queries. (2) Google Trends with the YouTube Search filter (toggle from \"Web Search\"), which shows seasonal demand and rising interest by topic. Combine both: pick a format from this generator, customize it with a trending sub-topic from autocomplete, validate the demand in Google Trends, then film." },
   { q: 'Should I pivot my whole channel if my videos aren\'t working?',
-    a: "Not yet. First, fix one variable at a time: better thumbnails, then stronger hooks, then tighter editing, then more search-aligned titles. Most channels that stall are not broken — they just have one weak link. Pivoting your entire niche resets the algorithm's understanding of your channel and adds 3-6 months of recovery time. Only pivot if you've genuinely tried optimizing for 3+ months across 8+ videos with no movement, or if the niche itself is dying." },
+    a: "Not yet. First, fix one variable at a time: better thumbnails, then stronger hooks, then tighter editing, then more search-aligned titles. Most channels that stall are not broken; they just have one weak link. Pivoting your entire niche resets the algorithm's understanding of your channel and adds 3-6 months of recovery time. Only pivot if you've genuinely tried optimizing for 3+ months across 8+ videos with no movement, or if the niche itself is dying." },
   { q: 'Why are some formats only suggested for certain niches?',
-    a: "They aren't — every format here works in every niche when customized correctly. \"Challenges\" might feel weird for a finance channel, but \"I tried 5 budgeting methods for 30 days\" is a finance challenge. \"Stories\" might feel off for a tech reviewer, but \"How I went from broke to building my dream studio\" is a tech-creator story. The category labels suggest natural fit, but creative customization can adapt any format to any niche." },
+    a: "They aren't. Every format here works in every niche when customized correctly. \"Challenges\" might feel weird for a finance channel, but \"I tried 5 budgeting methods for 30 days\" is a finance challenge. \"Stories\" might feel off for a tech reviewer, but \"How I went from broke to building my dream studio\" is a tech-creator story. The category labels suggest natural fit, but creative customization can adapt any format to any niche." },
   { q: 'Can I use these for my title or description?',
-    a: 'The formats are designed as title structures. Once you pick one and customize it, paste your full title into SEO Studio for a 0–100 score across SEO, CTR, hook, and length. SEO Studio also generates description rewrites built around your title\'s primary keyword — so you don\'t have to write the description from scratch. The Ideas Generator gets you to the title; SEO Studio gets you the click.' },
+    a: 'The formats are designed as title structures. Once you pick one and customize it, paste your full title into SEO Studio for a 0–100 score across SEO, CTR, hook, and length. SEO Studio also generates description rewrites built around your title\'s primary keyword, so you don\'t have to write the description from scratch. The Ideas Generator gets you to the title; SEO Studio gets you the click.' },
   { q: 'Is this generator free? Will you collect my data?',
-    a: "Yes, free forever. And no data collection beyond what your browser sends to any website. The generator runs entirely in your browser — no inputs sent to our servers, no email required, no signup gate. We built it as a genuine free tool because every creator deserves a starting list of ideas backed by proven formats. If you want a full growth plan once you've shipped, you can connect your channel for a free AI audit on the main app, but it is entirely optional." },
+    a: "Yes, free forever. And no data collection beyond what your browser sends to any website. The generator runs entirely in your browser, with no inputs sent to our servers, no email required, no signup gate. We built it as a genuine free tool because every creator deserves a starting list of ideas backed by proven formats. If you want a full growth plan once you've shipped, you can connect your channel for a free AI audit on the main app, but it is entirely optional." },
 ]
 
 function useBreakpoint() {
@@ -429,7 +430,7 @@ export default function YoutubeVideoIdeasGenerator() {
   const [openFaq, setOpenFaq]       = useState(0)
 
   useEffect(() => {
-    document.title = 'Free YouTube Video Ideas Generator (90+ proven formats) — YTGrowth'
+    document.title = 'Free YouTube Video Ideas Generator (90+ proven formats) | YTGrowth'
     const meta = document.querySelector('meta[name="description"]') || (() => {
       const m = document.createElement('meta'); m.name = 'description'; document.head.appendChild(m); return m
     })()
@@ -456,6 +457,7 @@ export default function YoutubeVideoIdeasGenerator() {
     <div style={{ fontFamily: "'Inter', system-ui, sans-serif", background: 'var(--ytg-bg)', color: 'var(--ytg-text)', overflowX: 'hidden' }}>
 
       <SiteHeader />
+      <FaqSchema items={FAQS} />
 
       {/* ══ HERO ══ */}
       <section className="vig-section-pad" style={{ position: 'relative', padding: isMobile ? '64px 24px 56px' : '110px 48px 84px', textAlign: 'center', background: '#ffffff', overflow: 'hidden' }}>
@@ -480,7 +482,7 @@ export default function YoutubeVideoIdeasGenerator() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
           <div className="vig-tool-grid">
 
-            {/* LEFT — input card */}
+            {/* LEFT, input card */}
             <div style={{ background: 'var(--ytg-card)', borderRadius: 22, border: '1px solid var(--ytg-border)', boxShadow: 'var(--ytg-shadow-lg)', padding: isMobile ? 26 : 36 }}>
               <div style={{ marginBottom: 22 }}>
                 <label style={{ display: 'block', fontSize: 12, fontWeight: 700, color: 'var(--ytg-text-3)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 8 }}>Your niche</label>
@@ -510,7 +512,7 @@ export default function YoutubeVideoIdeasGenerator() {
               )}
             </div>
 
-            {/* RIGHT — top idea OR empty state */}
+            {/* RIGHT, top idea OR empty state */}
             {showResults && featured ? (
               <div style={{ background: 'var(--ytg-accent)', borderRadius: 22, color: '#fff', padding: isMobile ? 28 : 36, boxShadow: '0 4px 18px rgba(229,48,42,0.32), 0 24px 60px rgba(229,48,42,0.18)' }}>
                 <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', opacity: 0.78, marginBottom: 14 }}>
@@ -553,7 +555,7 @@ export default function YoutubeVideoIdeasGenerator() {
             )}
           </div>
 
-          {/* BOTTOM — full-width more ideas, grouped by category */}
+          {/* BOTTOM, full-width more ideas, grouped by category */}
           {showResults && featured && rest.length > 0 && (() => {
             const grouped = CATEGORIES
               .map(cat => ({ ...cat, items: rest.filter(r => r.category === cat.id) }))
@@ -612,13 +614,13 @@ export default function YoutubeVideoIdeasGenerator() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: 32 }}>
             {[
               { h: 'A format gets you in the door, not over the line',
-                p: 'Every successful YouTube video uses a recognizable format because formats prime the viewer\'s expectation. "5 mistakes" tells me I\'m about to learn what to avoid. "I tried X for 30 days" tells me I\'m about to see a documented experiment with a verdict. The format is a contract with the viewer. But the format alone is a generic title. Specificity — your number, your timeframe, your unique angle, your surprising result — is what turns the format into a click.' },
+                p: 'Every successful YouTube video uses a recognizable format because formats prime the viewer\'s expectation. "5 mistakes" tells me I\'m about to learn what to avoid. "I tried X for 30 days" tells me I\'m about to see a documented experiment with a verdict. The format is a contract with the viewer. But the format alone is a generic title. Specificity (your number, your timeframe, your unique angle, your surprising result) is what turns the format into a click.' },
               { h: 'High-CTR formats and high-retention formats are different animals',
                 p: 'Loss-aversion formats ("mistakes", "wrong", "stop doing this") earn the highest click-through rates because they trigger an immediate "wait, am I doing this?" response. But they can struggle to hold attention if the content doesn\'t deliver fast. Long-form formats (tutorials, deep dives, challenge documentation) hold attention naturally because they have built-in narrative arcs. The strongest channels mix both: high-CTR titles attached to high-retention content.' },
               { h: 'Niche fit matters more than format originality',
                 p: 'A finance channel can technically use a "challenge" format ("I tracked every dollar for 30 days"), but loss-aversion and comparison formats fit naturally and deliver consistently. A vlog channel can technically use a "tutorial" format, but stories and personal-journey formats are where it wins. Filter the categories above to the formats that match your channel\'s natural voice. Forced formats read as forced and viewers feel it within the first 10 seconds.' },
               { h: 'The same format works in every niche when you customize',
-                p: '"5 mistakes" works for finance, fitness, photography, gaming, and pottery — every niche has 5 mistakes. The reason most generators feel useless is that creators copy the format verbatim instead of customizing it. "5 mistakes new YouTubers make" is generic. "5 thumbnail mistakes that killed my CTR (and how I fixed them)" is a specific video. Use the generator to find the structure. Use your own experience to write the title.' },
+                p: '"5 mistakes" works for finance, fitness, photography, gaming, and pottery; every niche has 5 mistakes. The reason most generators feel useless is that creators copy the format verbatim instead of customizing it. "5 mistakes new YouTubers make" is generic. "5 thumbnail mistakes that killed my CTR (and how I fixed them)" is a specific video. Use the generator to find the structure. Use your own experience to write the title.' },
             ].map((row, i) => (
               <div key={i} style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '300px 1fr', gap: isMobile ? 12 : 56, paddingTop: i === 0 ? 0 : 28, borderTop: i === 0 ? 'none' : '1px solid var(--ytg-border)' }}>
                 <h3 style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: isMobile ? 20 : 22, fontWeight: 800, color: 'var(--ytg-text)', letterSpacing: '-0.5px', lineHeight: 1.25 }}>{row.h}</h3>
@@ -644,7 +646,7 @@ export default function YoutubeVideoIdeasGenerator() {
           <div className="vig-grid-3">
             {[
               { label: 'SEO Studio', title: 'Score the title against the live niche', body: 'Every title gets a 0–100 score across SEO, CTR, hook, and length, plus 3 AI rewrites built around the top-ranking videos in your category. Stops you publishing weak titles.', href: '/features/seo-studio' },
-              { label: 'Thumbnail IQ', title: 'Win the click war from frame one', body: 'Score every thumbnail against the top performers in your niche on contrast, face presence, and curiosity-gap signals — before the upload, not after the CTR data comes in.', href: '/features/thumbnail-iq' },
+              { label: 'Thumbnail IQ', title: 'Win the click war from frame one', body: 'Score every thumbnail against the top performers in your niche on contrast, face presence, and curiosity-gap signals, before the upload, not after the CTR data comes in.', href: '/features/thumbnail-iq' },
               { label: 'Channel Audit', title: 'Find which formats already work for you', body: 'Connect your channel and YTGrowth audits your last 20 videos to surface which formats get your highest retention and CTR. Doubles down on what is working instead of guessing.', href: '/features/channel-audit' },
             ].map((card, i) => (
               <a key={i} href={card.href}

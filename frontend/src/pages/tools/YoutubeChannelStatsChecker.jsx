@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from 'react'
 import LandingFooter from '../../components/LandingFooter'
 import SiteHeader from '../../components/SiteHeader'
+import FaqSchema from '../../components/FaqSchema'
 
 /* ─── Free SEO tool: YouTube Channel Stats Checker ────────────────────────
    /tools/youtube-channel-stats-checker. Targets "youtube channel stats",
@@ -308,6 +309,7 @@ export default function YoutubeChannelStatsChecker() {
 
       {/* ── NAV — shared SiteHeader ── */}
       <SiteHeader />
+      <FaqSchema items={FAQS} />
 
       {/* ══ HERO + INPUT ══ */}
       <section className="csc-section-pad" style={{ position: 'relative', padding: isMobile ? '64px 24px 56px' : '110px 48px 84px', textAlign: 'center', background: '#ffffff', overflow: 'hidden' }}>
