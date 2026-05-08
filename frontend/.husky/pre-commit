@@ -1,0 +1,12 @@
+#!/usr/bin/env sh
+
+# Verify that every public route declared in scripts/prerender.js has a
+# matching prerendered HTML file in frontend/dist/. Catches the failure
+# mode where someone runs `vite build` (which cleans dist and skips
+# prerender) and then accidentally commits the half-empty result. This
+# is a hard block: if verification fails, the commit is refused.
+#
+# Bypass for emergencies only: `git commit --no-verify`.
+
+cd "$(dirname "$0")/.." || exit 1
+node scripts/verify-prerender.js

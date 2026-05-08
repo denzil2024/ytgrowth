@@ -6,9 +6,11 @@
   "scripts": {
     "dev": "vite",
     "build": "node scripts/build.js",
-    "build:nopr": "vite build",
+    "build:nopr": "vite build && echo \"\\n[WARN] build:nopr skipped prerender. Do NOT commit dist/ from this build.\"",
+    "verify": "node scripts/verify-prerender.js",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "prepare": "husky"
   },
   "dependencies": {
     "@paddle/paddle-js": "^1.6.2",
@@ -29,6 +31,7 @@
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.5.2",
     "globals": "^17.4.0",
+    "husky": "^9.1.7",
     "puppeteer": "^24.42.0",
     "sharp": "^0.34.5",
     "vite": "^8.0.1"

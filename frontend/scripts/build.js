@@ -34,3 +34,9 @@ console.log('[build] vite build')
 execSync('vite build', { stdio: 'inherit' })
 console.log('[build] prerender')
 execSync('node scripts/prerender.js', { stdio: 'inherit' })
+console.log('[build] verify')
+// Hard-fails the build if any expected route is missing from dist/. Without
+// this guard, a developer who accidentally runs `vite build` (which cleans
+// dist and skips prerender) can ship the SPA shell to crawlers without
+// noticing. Happened once; never again.
+execSync('node scripts/verify-prerender.js', { stdio: 'inherit' })

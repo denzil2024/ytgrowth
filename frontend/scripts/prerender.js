@@ -119,6 +119,8 @@ async function buildRoutes() {
     '/tools/youtube-channel-stats-checker',
     '/tools/youtube-thumbnail-downloader',
     '/tools/youtube-thumbnail-resizer',
+    '/tools/youtube-channel-name-generator',
+    '/tools/youtube-video-ideas-generator',
     '/contact',
     '/affiliate',
     '/terms',
