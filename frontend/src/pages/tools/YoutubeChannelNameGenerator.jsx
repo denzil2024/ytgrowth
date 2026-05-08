@@ -238,7 +238,10 @@ function useGlobalStyles() {
       .cng-section-blurb { font-size: 13px; color: var(--ytg-text-3); margin-left: auto; line-height: 1.5; text-align: right; max-width: 360px; }
       @media (max-width: 720px) {
         .cng-section-head { flex-wrap: wrap; }
-        .cng-section-blurb { margin-left: 0; text-align: left; max-width: 100%; flex-basis: 100%; padding-top: 4px; }
+        /* On mobile, push blurb to row 2 (full width) and keep the
+           Copy-all button inline with the label on row 1. */
+        .cng-section-blurb { order: 1; margin-left: 0; text-align: left; max-width: 100%; flex-basis: 100%; padding-top: 8px; }
+        .cng-copy-all { margin-left: auto; }
       }
 
       .cng-section-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 18px; }
@@ -280,6 +283,17 @@ function useGlobalStyles() {
       }
       .cng-copy-btn:hover { color: var(--ytg-accent); background: var(--ytg-accent-light); opacity: 1; }
       .cng-copy-btn.copied { color: #166534; background: rgba(74,222,128,0.12); opacity: 1; }
+
+      .cng-copy-all {
+        background: transparent; border: 1px solid var(--ytg-border); cursor: pointer; flex-shrink: 0;
+        font-family: inherit; font-size: 12px; font-weight: 700; letter-spacing: -0.1px;
+        color: var(--ytg-text-2);
+        padding: 6px 12px; border-radius: 100px;
+        display: inline-flex; align-items: center; gap: 6px;
+        transition: color 0.15s, background 0.15s, border-color 0.15s;
+      }
+      .cng-copy-all:hover { color: var(--ytg-accent); background: var(--ytg-accent-light); border-color: var(--ytg-accent-light); }
+      .cng-copy-all.copied { color: #166534; background: rgba(74,222,128,0.12); border-color: rgba(74,222,128,0.30); }
 
       .cng-grid-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 22px; }
       @media (max-width: 900px) { .cng-grid-3 { grid-template-columns: 1fr; } }
@@ -325,6 +339,25 @@ function CopyButton({ text }) {
         <><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 6.5l3 3 5-6"/></svg>Copied</>
       ) : (
         <><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><rect x="3.5" y="3.5" width="6" height="6" rx="1.2"/><path d="M2.5 8V2.5h5.5"/></svg>Copy</>
+      )}
+    </button>
+  )
+}
+
+function CopyAllButton({ names, label }) {
+  const [copied, setCopied] = useState(false)
+  const onClick = useCallback(async () => {
+    try {
+      await navigator.clipboard.writeText(names.join('\n'))
+      setCopied(true); setTimeout(() => setCopied(false), 1600)
+    } catch (_) {}
+  }, [names])
+  return (
+    <button onClick={onClick} className={`cng-copy-all${copied ? ' copied' : ''}`} aria-label={`Copy all ${names.length} ${label} names`}>
+      {copied ? (
+        <><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 6.5l3 3 5-6"/></svg>Copied {names.length}</>
+      ) : (
+        <><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><rect x="3.5" y="3.5" width="6" height="6" rx="1.2"/><path d="M2.5 8V2.5h5.5"/></svg>Copy all {names.length}</>
       )}
     </button>
   )
@@ -524,6 +557,7 @@ export default function YoutubeChannelNameGenerator() {
                         <span className="cng-section-label">{group.label}</span>
                         <span className="cng-section-count">{group.items.length} {group.items.length === 1 ? 'name' : 'names'}</span>
                         <span className="cng-section-blurb">{group.blurb}</span>
+                        <CopyAllButton names={group.items.map(n => n.name)} label={group.label.toLowerCase()} />
                       </div>
                       <div className="cng-section-grid">
                         {group.items.map((n, i) => (
