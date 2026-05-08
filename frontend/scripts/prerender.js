@@ -118,6 +118,7 @@ async function buildRoutes() {
     '/tools/youtube-subscriber-money-calculator',
     '/tools/youtube-channel-stats-checker',
     '/tools/youtube-thumbnail-downloader',
+    '/tools/youtube-thumbnail-resizer',
     '/contact',
     '/affiliate',
     '/terms',

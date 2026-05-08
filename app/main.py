@@ -182,8 +182,8 @@ def ytg_logo_mark():
 # every miss; cheap and avoids any build-time complexity.
 
 DEFAULT_META = {
-    "title":       "YTGrowth — YouTube Analytics Tool & AI Channel Audit | VidIQ Alternative",
-    "description": "The YouTube growth tool that turns analytics into action. Channel audits, SEO and thumbnail optimization, competitor analysis, and keyword research — a VidIQ alternative, TubeBuddy alternative, and Viewstats alternative built for creators who want a YouTube optimization tool that prescribes the next move, not just dashboards.",
+    "title":       "YTGrowth: VidIQ, TubeBuddy & Viewstats Alternative",
+    "description": "YouTube channel audit, SEO, and competitor analysis. A VidIQ alternative, TubeBuddy alternative, and Viewstats alternative that prescribes what to fix next.",
     "path":        "/",
 }
 
