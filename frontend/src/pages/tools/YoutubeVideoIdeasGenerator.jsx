@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo, useCallback } from 'react'
+import { useEffect, useState, useMemo, useCallback, useRef } from 'react'
 import LandingFooter from '../../components/LandingFooter'
 import SiteHeader from '../../components/SiteHeader'
 import FaqSchema from '../../components/FaqSchema'
@@ -425,9 +425,15 @@ function CopyButton({ text }) {
 export default function YoutubeVideoIdeasGenerator() {
   useGlobalStyles()
   const { isMobile, isTablet } = useBreakpoint()
+  /* Niche is mirrored to ?niche= so creators can bookmark or share a
+     generated list. Initial state is empty (matches prerendered HTML
+     for hydration), then we read the URL once on mount in the same
+     effect that handles ongoing sync. Filters + faq state stay out of
+     the URL to keep share links short. */
   const [niche, setNiche]           = useState('')
   const [activeCats, setActiveCats] = useState(['all'])
   const [openFaq, setOpenFaq]       = useState(0)
+  const urlInitRef = useRef(false)
 
   useEffect(() => {
     document.title = 'Free YouTube Video Ideas Generator (90+ proven formats) | YTGrowth'
@@ -436,6 +442,26 @@ export default function YoutubeVideoIdeasGenerator() {
     })()
     meta.content = 'Free YouTube video ideas generator. 90+ proven format templates across 9 categories. 100% browser-based, no AI hallucinations, no signup, instant results.'
   }, [])
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    if (!urlInitRef.current) {
+      urlInitRef.current = true
+      const fromUrl = new URLSearchParams(window.location.search).get('niche') || ''
+      if (fromUrl) setNiche(fromUrl)
+      return
+    }
+    /* Subsequent state changes: replaceState (not pushState) so the
+       back button doesn't walk every keystroke. */
+    const params = new URLSearchParams(window.location.search)
+    const trimmed = niche.trim()
+    if (trimmed) params.set('niche', trimmed)
+    else params.delete('niche')
+    const qs = params.toString()
+    const next = window.location.pathname + (qs ? '?' + qs : '') + window.location.hash
+    const curr = window.location.pathname + window.location.search + window.location.hash
+    if (next !== curr) window.history.replaceState(null, '', next)
+  }, [niche])
 
   const ideas = useMemo(() => generateIdeas(niche, activeCats), [niche, activeCats])
 

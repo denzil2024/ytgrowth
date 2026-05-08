@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo, useCallback } from 'react'
+import { useEffect, useState, useMemo, useCallback, useRef } from 'react'
 import LandingFooter from '../../components/LandingFooter'
 import SiteHeader from '../../components/SiteHeader'
 import FaqSchema from '../../components/FaqSchema'
@@ -333,10 +333,16 @@ function CopyButton({ text }) {
 export default function YoutubeChannelNameGenerator() {
   useGlobalStyles()
   const { isMobile, isTablet } = useBreakpoint()
+  /* Niche + second word are mirrored to ?niche=&second= so creators
+     can bookmark or share a generated list. Initial state is empty
+     (matches prerendered HTML for hydration), URL is read once on
+     mount in the same effect that handles ongoing sync. Vibe filters
+     stay out of the URL to keep share links short. */
   const [keyword, setKeyword] = useState('')
   const [second,  setSecond]  = useState('')
   const [tones,   setTones]   = useState(['all'])
   const [openFaq, setOpenFaq] = useState(0)
+  const urlInitRef = useRef(false)
 
   useEffect(() => {
     document.title = 'Free YouTube Channel Name Generator (60+ ideas, any niche) | YTGrowth'
@@ -345,6 +351,30 @@ export default function YoutubeChannelNameGenerator() {
     })()
     meta.content = 'Free YouTube channel name generator. 60+ name ideas across professional, punchy, personal, and creative tones. 100% browser-based, no signup, no AI hallucinations.'
   }, [])
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    if (!urlInitRef.current) {
+      urlInitRef.current = true
+      const params = new URLSearchParams(window.location.search)
+      const niche = params.get('niche') || ''
+      const sec   = params.get('second') || ''
+      if (niche) setKeyword(niche)
+      if (sec)   setSecond(sec)
+      return
+    }
+    /* Subsequent state changes: replaceState (not pushState) so the
+       back button doesn't walk every keystroke. */
+    const params = new URLSearchParams(window.location.search)
+    const k = keyword.trim()
+    const s = second.trim()
+    if (k) params.set('niche', k); else params.delete('niche')
+    if (s) params.set('second', s); else params.delete('second')
+    const qs = params.toString()
+    const next = window.location.pathname + (qs ? '?' + qs : '') + window.location.hash
+    const curr = window.location.pathname + window.location.search + window.location.hash
+    if (next !== curr) window.history.replaceState(null, '', next)
+  }, [keyword, second])
 
   const names = useMemo(() => generateNames(keyword, second, tones), [keyword, second, tones])
 
