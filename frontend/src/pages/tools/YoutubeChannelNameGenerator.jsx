@@ -214,19 +214,44 @@ function useGlobalStyles() {
       .cng-tone:hover { border-color: var(--ytg-text-3); color: var(--ytg-text); }
       .cng-tone.active { background: var(--ytg-accent); color: #fff; border-color: var(--ytg-accent); box-shadow: 0 1px 3px rgba(0,0,0,0.10), 0 4px 12px rgba(229,48,42,0.28); }
 
-      .cng-results-list { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; max-height: 560px; overflow-y: auto; padding-right: 6px; }
-      @media (max-width: 720px) { .cng-results-list { grid-template-columns: 1fr; } }
-      .cng-results-list::-webkit-scrollbar { width: 8px }
-      .cng-results-list::-webkit-scrollbar-thumb { background-color: rgba(10,10,15,0.18); border-radius: 8px; border: 2px solid transparent; background-clip: content-box; }
+      .cng-results-scroll { max-height: 720px; overflow-y: auto; padding-right: 6px; }
+      .cng-results-scroll::-webkit-scrollbar { width: 8px }
+      .cng-results-scroll::-webkit-scrollbar-thumb { background-color: rgba(10,10,15,0.18); border-radius: 8px; border: 2px solid transparent; background-clip: content-box; }
+
+      .cng-section { padding: 18px 0 22px; border-bottom: 1px solid var(--ytg-border); }
+      .cng-section:last-child { border-bottom: 0; padding-bottom: 6px; }
+      .cng-section:first-child { padding-top: 4px; }
+      .cng-section-head {
+        display: flex; align-items: center; gap: 14px;
+        padding: 0 0 14px 14px; position: relative;
+      }
+      .cng-section-head::before {
+        content: ''; position: absolute; left: 0; top: 2px; bottom: 14px;
+        width: 3px; border-radius: 3px; background: var(--ytg-accent);
+      }
+      .cng-section-label {
+        font-family: 'DM Sans', system-ui, sans-serif;
+        font-size: 17px; font-weight: 800; letter-spacing: -0.3px; color: var(--ytg-text);
+      }
+      .cng-section-count { font-size: 12px; font-weight: 700; color: var(--ytg-text-3); letter-spacing: 0.04em; }
+      .cng-section-blurb { font-size: 13px; color: var(--ytg-text-3); margin-left: auto; line-height: 1.5; text-align: right; max-width: 360px; }
+      @media (max-width: 720px) {
+        .cng-section-head { flex-wrap: wrap; }
+        .cng-section-blurb { margin-left: 0; text-align: left; max-width: 100%; flex-basis: 100%; padding-top: 4px; }
+      }
+
+      .cng-section-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 18px; }
+      @media (max-width: 720px) { .cng-section-grid { grid-template-columns: 1fr; } }
 
       .cng-result-row {
         display: flex; align-items: center; justify-content: space-between; gap: 12px;
-        padding: 12px 14px;
-        background: #fff; border: 1px solid var(--ytg-border); border-radius: 10px;
+        padding: 11px 12px 11px 14px;
+        background: transparent; border-radius: 8px;
         animation: cngPop 0.2s ease both;
-        transition: border-color 0.15s, transform 0.15s;
+        transition: background 0.15s;
       }
-      .cng-result-row:hover { border-color: var(--ytg-text-3); }
+      .cng-result-row:hover { background: var(--ytg-bg-2); }
+      .cng-result-row:hover .cng-copy-btn { opacity: 1; }
       .cng-result-name {
         font-family: 'DM Sans', system-ui, sans-serif;
         font-size: 16px; font-weight: 700; color: var(--ytg-text);
@@ -248,11 +273,12 @@ function useGlobalStyles() {
         background: transparent; border: 0; cursor: pointer; flex-shrink: 0;
         font-size: 11px; font-weight: 700; color: var(--ytg-text-3);
         padding: 6px 10px; border-radius: 8px;
-        transition: color 0.15s, background 0.15s;
+        opacity: 0.5;
+        transition: opacity 0.15s, color 0.15s, background 0.15s;
         display: inline-flex; align-items: center; gap: 5px;
       }
-      .cng-copy-btn:hover { color: var(--ytg-accent); background: var(--ytg-accent-light); }
-      .cng-copy-btn.copied { color: #166534; background: rgba(74,222,128,0.12); }
+      .cng-copy-btn:hover { color: var(--ytg-accent); background: var(--ytg-accent-light); opacity: 1; }
+      .cng-copy-btn.copied { color: #166534; background: rgba(74,222,128,0.12); opacity: 1; }
 
       .cng-grid-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 22px; }
       @media (max-width: 900px) { .cng-grid-3 { grid-template-columns: 1fr; } }
@@ -440,26 +466,50 @@ export default function YoutubeChannelNameGenerator() {
             )}
           </div>
 
-          {/* BOTTOM — full-width more options */}
-          {showResults && featured && rest.length > 0 && (
-            <div style={{ background: 'var(--ytg-card)', borderRadius: 22, border: '1px solid var(--ytg-border)', boxShadow: 'var(--ytg-shadow)', padding: isMobile ? 22 : 28 }}>
-              <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-accent-text)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 16 }}>{rest.length} more options</p>
-              <div className="cng-results-list">
-                {rest.map((n, i) => (
-                  <div key={i} className="cng-result-row">
-                    <div style={{ minWidth: 0, flex: 1, display: 'flex', alignItems: 'center', flexWrap: 'wrap' }}>
-                      <span className={`cng-tone-pill ${n.tone}`}>{n.tone}</span>
-                      <span className="cng-result-name">{n.name}</span>
-                    </div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexShrink: 0 }}>
-                      <span className="cng-result-meta">{n.length} ch</span>
-                      <CopyButton text={n.name} />
-                    </div>
+          {/* BOTTOM — full-width more options, grouped by vibe */}
+          {showResults && featured && rest.length > 0 && (() => {
+            const TONE_ORDER = ['pro', 'punchy', 'personal', 'creative']
+            const grouped = TONE_ORDER
+              .map(id => ({ id, label: TONE_LABELS[id], blurb: TONE_DESCRIPTIONS[id], items: rest.filter(r => r.tone === id) }))
+              .filter(g => g.items.length > 0)
+            return (
+              <div style={{ background: 'var(--ytg-card)', borderRadius: 22, border: '1px solid var(--ytg-border)', boxShadow: 'var(--ytg-shadow)', padding: isMobile ? 22 : 32 }}>
+                <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', flexWrap: 'wrap', gap: 8, marginBottom: 8, paddingBottom: 16, borderBottom: '1px solid var(--ytg-border)' }}>
+                  <div>
+                    <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-accent-text)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>More names</p>
+                    <h3 style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: 22, fontWeight: 800, letterSpacing: '-0.6px', color: 'var(--ytg-text)' }}>
+                      {rest.length} more, grouped by vibe
+                    </h3>
                   </div>
-                ))}
+                  <p style={{ fontSize: 13, color: 'var(--ytg-text-3)', maxWidth: 340 }}>
+                    Pick a vibe that matches the channel you actually want to run a year from now, not the one you have today.
+                  </p>
+                </div>
+                <div className="cng-results-scroll">
+                  {grouped.map(group => (
+                    <div key={group.id} className="cng-section">
+                      <div className="cng-section-head">
+                        <span className="cng-section-label">{group.label}</span>
+                        <span className="cng-section-count">{group.items.length} {group.items.length === 1 ? 'name' : 'names'}</span>
+                        <span className="cng-section-blurb">{group.blurb}</span>
+                      </div>
+                      <div className="cng-section-grid">
+                        {group.items.map((n, i) => (
+                          <div key={i} className="cng-result-row">
+                            <div style={{ minWidth: 0, flex: 1 }}>
+                              <div className="cng-result-name">{n.name}</div>
+                              <div style={{ fontSize: 11.5, color: 'var(--ytg-text-3)', marginTop: 2 }}>{n.length} characters</div>
+                            </div>
+                            <CopyButton text={n.name} />
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
-          )}
+            )
+          })()}
           </div>
         </div>
       </section>
