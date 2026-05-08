@@ -16,6 +16,29 @@ import SiteHeader from '../../components/SiteHeader'
 const cap = (s) => s ? s.charAt(0).toUpperCase() + s.slice(1).toLowerCase() : ''
 const lower = (s) => (s || '').toLowerCase()
 
+const TC_KEEP_LOWER = new Set([
+  'a','an','and','as','at','but','by','for','from','if','in','into','nor','of','off','on','or','so','the','to','up','via','vs','with',
+])
+function toTitleCase(str) {
+  if (!str) return str
+  const tokens = str.split(/(\s+)/)
+  let firstIdx = -1, lastIdx = -1
+  for (let i = 0; i < tokens.length; i++) if (/[A-Za-z]/.test(tokens[i])) { firstIdx = i; break }
+  for (let i = tokens.length - 1; i >= 0; i--) if (/[A-Za-z]/.test(tokens[i])) { lastIdx = i; break }
+  return tokens.map((tok, i) => {
+    if (!/[A-Za-z]/.test(tok)) return tok
+    const m = tok.match(/^([^A-Za-z]*)([A-Za-z][A-Za-z']*)(.*)$/)
+    if (!m) return tok
+    const [, lead, word, trail] = m
+    const isEdge = i === firstIdx || i === lastIdx
+    const startsClause = /[(\[{"]/.test(lead)
+    if (!isEdge && !startsClause && TC_KEEP_LOWER.has(word.toLowerCase())) {
+      return lead + word.toLowerCase() + trail
+    }
+    return lead + word.charAt(0).toUpperCase() + word.slice(1) + trail
+  }).join('')
+}
+
 const FORMATS = {
   listicle: [
     'Top 7 {X} mistakes new creators make',
@@ -154,7 +177,7 @@ function generateIdeas(niche, activeCats) {
   for (const cat of cats) {
     const list = FORMATS[cat] || []
     for (const t of list) {
-      const title = fillTemplate(t, n)
+      const title = toTitleCase(fillTemplate(t, n))
       out.push({ title, category: cat, length: title.length })
     }
   }
@@ -537,14 +560,14 @@ export default function YoutubeVideoIdeasGenerator() {
               .filter(g => g.items.length > 0)
             return (
               <div style={{ background: 'var(--ytg-card)', borderRadius: 22, border: '1px solid var(--ytg-border)', boxShadow: 'var(--ytg-shadow)', padding: isMobile ? 22 : 32 }}>
-                <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', flexWrap: 'wrap', gap: 8, marginBottom: 8, paddingBottom: 16, borderBottom: '1px solid var(--ytg-border)' }}>
+                <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12, marginBottom: 8, paddingBottom: 16, borderBottom: '1px solid var(--ytg-border)' }}>
                   <div>
                     <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-accent-text)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>More ideas</p>
-                    <h3 style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: 22, fontWeight: 800, letterSpacing: '-0.6px', color: 'var(--ytg-text)' }}>
+                    <h3 style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: isMobile ? 18 : 22, fontWeight: 800, letterSpacing: '-0.6px', color: 'var(--ytg-text)' }}>
                       {rest.length} more, grouped by format
                     </h3>
                   </div>
-                  <p style={{ fontSize: 13, color: 'var(--ytg-text-3)', maxWidth: 320 }}>
+                  <p style={{ fontSize: 13, color: 'var(--ytg-text-3)', maxWidth: isMobile ? '100%' : 320, lineHeight: 1.55 }}>
                     Pick the format that matches your channel’s rhythm. Each one comes with the exact angle creators are using right now.
                   </p>
                 </div>
@@ -666,7 +689,7 @@ export default function YoutubeVideoIdeasGenerator() {
           <div style={{ textAlign: isMobile ? 'center' : 'left' }}>
             <Eyebrow>Frequently asked</Eyebrow>
             <h2 style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontWeight: 800, fontSize: isMobile ? 32 : 48, letterSpacing: '-1.5px', color: 'var(--ytg-text)', lineHeight: 1.05, marginBottom: 14, textWrap: 'balance' }}>
-              Ideas, <span style={{ color: 'var(--ytg-accent)' }}>answered.</span>
+              Questions <span style={{ color: 'var(--ytg-accent)' }}>answered.</span>
             </h2>
             <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.7, margin: 0, maxWidth: isMobile ? 520 : 320, marginLeft: isMobile ? 'auto' : 0, marginRight: isMobile ? 'auto' : 0 }}>
               Everything creators ask before they pick their next video format. Still unsure? <a href="/contact" style={{ color: 'var(--ytg-accent)', fontWeight: 600, textDecoration: 'none' }}>Email us.</a>

@@ -825,7 +825,7 @@ export default function YoutubeThumbnailResizer() {
               <span className="ytr-eyebrow-text">Frequently asked</span>
             </span>
             <h2 className="ytr-h2" style={{ fontSize: isMobile ? 28 : 36, color: 'var(--ytg-text)' }}>
-              Thumbnail resizing, sorted.
+              Questions <span style={{ color: 'var(--ytg-accent)' }}>answered.</span>
             </h2>
           </div>
           <div>

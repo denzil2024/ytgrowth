@@ -474,15 +474,15 @@ export default function YoutubeChannelNameGenerator() {
               .filter(g => g.items.length > 0)
             return (
               <div style={{ background: 'var(--ytg-card)', borderRadius: 22, border: '1px solid var(--ytg-border)', boxShadow: 'var(--ytg-shadow)', padding: isMobile ? 22 : 32 }}>
-                <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', flexWrap: 'wrap', gap: 8, marginBottom: 8, paddingBottom: 16, borderBottom: '1px solid var(--ytg-border)' }}>
+                <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12, marginBottom: 8, paddingBottom: 16, borderBottom: '1px solid var(--ytg-border)' }}>
                   <div>
                     <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-accent-text)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>More names</p>
-                    <h3 style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: 22, fontWeight: 800, letterSpacing: '-0.6px', color: 'var(--ytg-text)' }}>
+                    <h3 style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: isMobile ? 18 : 22, fontWeight: 800, letterSpacing: '-0.6px', color: 'var(--ytg-text)' }}>
                       {rest.length} more, grouped by vibe
                     </h3>
                   </div>
-                  <p style={{ fontSize: 13, color: 'var(--ytg-text-3)', maxWidth: 340 }}>
-                    Pick a vibe that matches the channel you actually want to run a year from now, not the one you have today.
+                  <p style={{ fontSize: 13, color: 'var(--ytg-text-3)', maxWidth: isMobile ? '100%' : 340, lineHeight: 1.55 }}>
+                    Pick a vibe that matches the channel you want to run a year from now, not the one you have today.
                   </p>
                 </div>
                 <div className="cng-results-scroll">
@@ -603,7 +603,7 @@ export default function YoutubeChannelNameGenerator() {
           <div style={{ textAlign: isMobile ? 'center' : 'left' }}>
             <Eyebrow>Frequently asked</Eyebrow>
             <h2 style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontWeight: 800, fontSize: isMobile ? 32 : 48, letterSpacing: '-1.5px', color: 'var(--ytg-text)', lineHeight: 1.05, marginBottom: 14, textWrap: 'balance' }}>
-              Naming, <span style={{ color: 'var(--ytg-accent)' }}>answered.</span>
+              Questions <span style={{ color: 'var(--ytg-accent)' }}>answered.</span>
             </h2>
             <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.7, margin: 0, maxWidth: isMobile ? 520 : 320, marginLeft: isMobile ? 'auto' : 0, marginRight: isMobile ? 'auto' : 0 }}>
               Everything new creators ask before locking in a channel name. Still unsure? <a href="/contact" style={{ color: 'var(--ytg-accent)', fontWeight: 600, textDecoration: 'none' }}>Email us.</a>
