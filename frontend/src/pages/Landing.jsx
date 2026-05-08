@@ -458,46 +458,34 @@ const FEATURE_GROUPS = [
 // Flat list — kept for the mobile menu and anywhere else that wants every item
 const FEATURE_NAV_ITEMS = FEATURE_GROUPS.flatMap(g => g.items)
 
-/* ─── Mega-menu data: Resources (Blog + Free tools combined) ──────────── */
+/* ─── Mega-menu data: Resources — 3 verb-based columns, Windsor.ai pattern */
 const RESOURCES_GROUPS = [
   {
-    label: 'Blog',
+    label: 'Calculators',
+    blurb: 'Earnings, milestones, and growth math.',
     items: [
-      { href: '/blog',                                  label: 'All articles' },
-      { href: '/blog/youtube-shorts-algorithm',         label: 'YouTube Shorts algorithm' },
-      { href: '/blog/grow-youtube-channel',             label: 'Grow your channel' },
-      { href: '/blog/youtube-algorithm',                label: 'YouTube algorithm explained' },
-      { href: '/blog/seo-tools-for-youtube',            label: 'SEO tools comparison' },
+      { href: '/tools/youtube-money-calculator',            label: 'YouTube Money Calculator' },
+      { href: '/tools/youtube-subscriber-money-calculator', label: 'Subscriber Money Calculator' },
     ],
   },
   {
-    label: 'Free tools',
-    /* Sub-categorized inside the column with thin dividers between sections */
-    sections: [
-      {
-        label: 'Calculators',
-        items: [
-          { href: '/tools/youtube-money-calculator',            label: 'YouTube Money Calculator' },
-          { href: '/tools/youtube-subscriber-money-calculator', label: 'Subscriber Money Calculator' },
-        ],
-      },
-      {
-        label: 'Thumbnails',
-        items: [
-          { href: '/tools/youtube-thumbnail-resizer',    label: 'Thumbnail Resizer' },
-          { href: '/tools/youtube-thumbnail-downloader', label: 'Thumbnail Downloader' },
-        ],
-      },
-      {
-        label: 'Research',
-        items: [
-          { href: '/tools/youtube-channel-stats-checker', label: 'Channel Stats Checker' },
-        ],
-      },
+    label: 'Thumbnails',
+    blurb: 'Prepare and source thumbnail assets.',
+    items: [
+      { href: '/tools/youtube-thumbnail-resizer',    label: 'Thumbnail Resizer' },
+      { href: '/tools/youtube-thumbnail-downloader', label: 'Thumbnail Downloader' },
+    ],
+  },
+  {
+    label: 'Insights',
+    blurb: 'Research channels and read playbooks.',
+    items: [
+      { href: '/tools/youtube-channel-stats-checker', label: 'Channel Stats Checker' },
+      { href: '/blog',                                label: 'Blog' },
     ],
   },
 ]
-const RESOURCES_NAV_ITEMS = RESOURCES_GROUPS.flatMap(g => g.sections ? g.sections.flatMap(s => s.items) : (g.items || []))
+const RESOURCES_NAV_ITEMS = RESOURCES_GROUPS.flatMap(g => g.items || [])
 
 /* ─── Mega-menu component — VidIQ pattern: clean titles, no descriptions ─ */
 function MegaMenu({ trigger, groups, viewAllHref, viewAllLabel, columns = 3, panelLeft = -24 }) {
@@ -534,8 +522,11 @@ function MegaMenu({ trigger, groups, viewAllHref, viewAllLabel, columns = 3, pan
                 <div key={gi}>
                   <p style={{
                     fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase',
-                    color: 'rgba(10,10,15,0.38)', marginBottom: 14, whiteSpace: 'nowrap',
+                    color: 'rgba(10,10,15,0.38)', marginBottom: group.blurb ? 6 : 14, whiteSpace: 'nowrap',
                   }}>{group.label}</p>
+                  {group.blurb && (
+                    <p style={{ fontSize: 12.5, color: 'rgba(10,10,15,0.50)', lineHeight: 1.4, marginBottom: 12 }}>{group.blurb}</p>
+                  )}
                   {group.sections ? (
                     /* Sub-categorized column with dividers between sections */
                     <div style={{ display: 'flex', flexDirection: 'column' }}>
@@ -617,7 +608,7 @@ function ResourcesNavDropdown() {
     <MegaMenu
       trigger="Resources"
       groups={RESOURCES_GROUPS}
-      columns={2}
+      columns={3}
       viewAllHref="/blog"
       viewAllLabel="Read the latest from the blog →"
     />

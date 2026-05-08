@@ -32,42 +32,32 @@ const FEATURE_GROUPS = [
   },
 ]
 
+/* Resources — 3-column mega menu, verb-based categories (Windsor.ai
+   pattern). Each column has a small one-line description, then a flat
+   list of links. Blog is a single link, not a list of individual posts. */
 const RESOURCES_GROUPS = [
   {
-    label: 'Blog',
+    label: 'Calculators',
+    blurb: 'Earnings, milestones, and growth math.',
     items: [
-      { href: '/blog',                          label: 'All articles' },
-      { href: '/blog/youtube-shorts-algorithm', label: 'YouTube Shorts algorithm' },
-      { href: '/blog/grow-youtube-channel',     label: 'Grow your channel' },
-      { href: '/blog/youtube-algorithm',        label: 'YouTube algorithm explained' },
-      { href: '/blog/seo-tools-for-youtube',    label: 'SEO tools comparison' },
+      { href: '/tools/youtube-money-calculator',            label: 'YouTube Money Calculator' },
+      { href: '/tools/youtube-subscriber-money-calculator', label: 'Subscriber Money Calculator' },
     ],
   },
   {
-    label: 'Free tools',
-    /* Sub-sections render with their own labels and dividers between them.
-       Keeps the column scannable as we add more tools. */
-    sections: [
-      {
-        label: 'Calculators',
-        items: [
-          { href: '/tools/youtube-money-calculator',            label: 'YouTube Money Calculator' },
-          { href: '/tools/youtube-subscriber-money-calculator', label: 'Subscriber Money Calculator' },
-        ],
-      },
-      {
-        label: 'Thumbnails',
-        items: [
-          { href: '/tools/youtube-thumbnail-resizer',    label: 'Thumbnail Resizer' },
-          { href: '/tools/youtube-thumbnail-downloader', label: 'Thumbnail Downloader' },
-        ],
-      },
-      {
-        label: 'Research',
-        items: [
-          { href: '/tools/youtube-channel-stats-checker', label: 'Channel Stats Checker' },
-        ],
-      },
+    label: 'Thumbnails',
+    blurb: 'Prepare and source thumbnail assets.',
+    items: [
+      { href: '/tools/youtube-thumbnail-resizer',    label: 'Thumbnail Resizer' },
+      { href: '/tools/youtube-thumbnail-downloader', label: 'Thumbnail Downloader' },
+    ],
+  },
+  {
+    label: 'Insights',
+    blurb: 'Research channels and read playbooks.',
+    items: [
+      { href: '/tools/youtube-channel-stats-checker', label: 'Channel Stats Checker' },
+      { href: '/blog',                                label: 'Blog' },
     ],
   },
 ]
@@ -112,10 +102,11 @@ function MegaMenu({ trigger, groups, columns = 2, viewAllHref, viewAllLabel, pan
             <div style={{ display: 'grid', gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))`, gap: 36 }}>
               {groups.map((group, gi) => (
                 <div key={gi}>
-                  <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(10,10,15,0.38)', marginBottom: 14, whiteSpace: 'nowrap' }}>{group.label}</p>
+                  <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(10,10,15,0.38)', marginBottom: group.blurb ? 6 : 14, whiteSpace: 'nowrap' }}>{group.label}</p>
+                  {group.blurb && (
+                    <p style={{ fontSize: 12.5, color: 'rgba(10,10,15,0.50)', lineHeight: 1.4, marginBottom: 12 }}>{group.blurb}</p>
+                  )}
                   {group.sections ? (
-                    /* Sub-categorized column: render each sub-section with its
-                       own quiet label + a thin divider between sections. */
                     <div style={{ display: 'flex', flexDirection: 'column' }}>
                       {group.sections.map((section, si) => (
                         <div key={si} style={{
@@ -256,7 +247,7 @@ export default function SiteHeader() {
         {!isMobile && (
           <div style={{ display: 'flex', gap: 30, alignItems: 'center' }}>
             <MegaMenu trigger="Features"  groups={FEATURE_GROUPS}   columns={3} viewAllHref="/#features" viewAllLabel="Explore all features →" />
-            <MegaMenu trigger="Resources" groups={RESOURCES_GROUPS} columns={2} viewAllHref="/blog"      viewAllLabel="Read the latest from the blog →" />
+            <MegaMenu trigger="Resources" groups={RESOURCES_GROUPS} columns={3} viewAllHref="/blog"      viewAllLabel="Read the latest from the blog →" />
             <a href="/#pricing"  className="sh-link">Pricing</a>
             <a href="/affiliate" className="sh-link">Affiliates</a>
             <a href="/contact"   className="sh-link">Contact</a>
