@@ -108,8 +108,9 @@ const RESOURCES = [
   { label: 'Blog',                                href: '/blog' },
   { label: 'YouTube Money Calculator',            href: '/tools/youtube-money-calculator' },
   { label: 'YouTube Subscriber Money Calculator', href: '/tools/youtube-subscriber-money-calculator' },
-  { label: 'YouTube Channel Stats Checker',       href: '/tools/youtube-channel-stats-checker' },
+  { label: 'YouTube Thumbnail Resizer',           href: '/tools/youtube-thumbnail-resizer' },
   { label: 'YouTube Thumbnail Downloader',        href: '/tools/youtube-thumbnail-downloader' },
+  { label: 'YouTube Channel Stats Checker',       href: '/tools/youtube-channel-stats-checker' },
 ]
 
 const COMPANY = [

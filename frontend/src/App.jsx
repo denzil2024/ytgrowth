@@ -27,6 +27,7 @@ const YoutubeMoneyCalculator           = lazy(() => import('./pages/tools/Youtub
 const YoutubeThumbnailDownloader       = lazy(() => import('./pages/tools/YoutubeThumbnailDownloader'))
 const YoutubeSubscriberMoneyCalculator = lazy(() => import('./pages/tools/YoutubeSubscriberMoneyCalculator'))
 const YoutubeChannelStatsChecker       = lazy(() => import('./pages/tools/YoutubeChannelStatsChecker'))
+const YoutubeThumbnailResizer          = lazy(() => import('./pages/tools/YoutubeThumbnailResizer'))
 const Blog                             = lazy(() => import('./pages/Blog'))
 const BlogPost                         = lazy(() => import('./pages/BlogPost'))
 
@@ -58,6 +59,7 @@ function App() {
           <Route path="/tools/youtube-thumbnail-downloader"        element={<YoutubeThumbnailDownloader />} />
           <Route path="/tools/youtube-subscriber-money-calculator" element={<YoutubeSubscriberMoneyCalculator />} />
           <Route path="/tools/youtube-channel-stats-checker"       element={<YoutubeChannelStatsChecker />} />
+          <Route path="/tools/youtube-thumbnail-resizer"           element={<YoutubeThumbnailResizer />} />
           <Route path="/blog"                                      element={<Blog />} />
           <Route path="/blog/:slug"                                element={<BlogPost />} />
           <Route path="*" element={<Navigate to="/" replace />} />

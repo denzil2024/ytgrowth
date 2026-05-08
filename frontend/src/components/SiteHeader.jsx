@@ -45,11 +45,29 @@ const RESOURCES_GROUPS = [
   },
   {
     label: 'Free tools',
-    items: [
-      { href: '/tools/youtube-money-calculator',            label: 'YouTube Money Calculator' },
-      { href: '/tools/youtube-subscriber-money-calculator', label: 'Subscriber Money Calculator' },
-      { href: '/tools/youtube-channel-stats-checker',       label: 'Channel Stats Checker' },
-      { href: '/tools/youtube-thumbnail-downloader',        label: 'Thumbnail Downloader' },
+    /* Sub-sections render with their own labels and dividers between them.
+       Keeps the column scannable as we add more tools. */
+    sections: [
+      {
+        label: 'Calculators',
+        items: [
+          { href: '/tools/youtube-money-calculator',            label: 'YouTube Money Calculator' },
+          { href: '/tools/youtube-subscriber-money-calculator', label: 'Subscriber Money Calculator' },
+        ],
+      },
+      {
+        label: 'Thumbnails',
+        items: [
+          { href: '/tools/youtube-thumbnail-resizer',    label: 'Thumbnail Resizer' },
+          { href: '/tools/youtube-thumbnail-downloader', label: 'Thumbnail Downloader' },
+        ],
+      },
+      {
+        label: 'Research',
+        items: [
+          { href: '/tools/youtube-channel-stats-checker', label: 'Channel Stats Checker' },
+        ],
+      },
     ],
   },
 ]
@@ -95,15 +113,38 @@ function MegaMenu({ trigger, groups, columns = 2, viewAllHref, viewAllLabel, pan
               {groups.map((group, gi) => (
                 <div key={gi}>
                   <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(10,10,15,0.38)', marginBottom: 14, whiteSpace: 'nowrap' }}>{group.label}</p>
-                  <div style={{ display: 'flex', flexDirection: 'column' }}>
-                    {group.items.map((item, i) => (
-                      <a key={i} href={item.href}
-                        style={{ display: 'block', padding: '8px 0', fontSize: 14.5, fontWeight: 500, color: '#0a0a0f', letterSpacing: '-0.15px', textDecoration: 'none', whiteSpace: 'nowrap', transition: 'color 0.13s' }}
-                        onMouseEnter={e => { e.currentTarget.style.color = '#e5302a' }}
-                        onMouseLeave={e => { e.currentTarget.style.color = '#0a0a0f' }}
-                      >{item.label}</a>
-                    ))}
-                  </div>
+                  {group.sections ? (
+                    /* Sub-categorized column: render each sub-section with its
+                       own quiet label + a thin divider between sections. */
+                    <div style={{ display: 'flex', flexDirection: 'column' }}>
+                      {group.sections.map((section, si) => (
+                        <div key={si} style={{
+                          paddingTop: si === 0 ? 0 : 14,
+                          paddingBottom: si === group.sections.length - 1 ? 0 : 14,
+                          borderTop: si === 0 ? 'none' : '1px solid rgba(10,10,15,0.07)',
+                        }}>
+                          <p style={{ fontSize: 11, fontWeight: 600, color: 'rgba(10,10,15,0.45)', letterSpacing: '-0.05px', marginBottom: 6, whiteSpace: 'nowrap' }}>{section.label}</p>
+                          {section.items.map((item, i) => (
+                            <a key={i} href={item.href}
+                              style={{ display: 'block', padding: '6px 0', fontSize: 14.5, fontWeight: 500, color: '#0a0a0f', letterSpacing: '-0.15px', textDecoration: 'none', whiteSpace: 'nowrap', transition: 'color 0.13s' }}
+                              onMouseEnter={e => { e.currentTarget.style.color = '#e5302a' }}
+                              onMouseLeave={e => { e.currentTarget.style.color = '#0a0a0f' }}
+                            >{item.label}</a>
+                          ))}
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div style={{ display: 'flex', flexDirection: 'column' }}>
+                      {group.items.map((item, i) => (
+                        <a key={i} href={item.href}
+                          style={{ display: 'block', padding: '8px 0', fontSize: 14.5, fontWeight: 500, color: '#0a0a0f', letterSpacing: '-0.15px', textDecoration: 'none', whiteSpace: 'nowrap', transition: 'color 0.13s' }}
+                          onMouseEnter={e => { e.currentTarget.style.color = '#e5302a' }}
+                          onMouseLeave={e => { e.currentTarget.style.color = '#0a0a0f' }}
+                        >{item.label}</a>
+                      ))}
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
@@ -252,7 +293,10 @@ export default function SiteHeader() {
           </div>
           <div className="sh-mm-section">
             <span className="sh-mm-label">Resources</span>
-            {RESOURCES_GROUPS.flatMap(g => g.items).map((it, i) => (
+            {RESOURCES_GROUPS.flatMap(g => {
+              if (g.sections) return g.sections.flatMap(s => s.items)
+              return g.items
+            }).map((it, i) => (
               <a key={i} href={it.href} onClick={() => setMobileOpen(false)} className="sh-mm-link">{it.label}</a>
             ))}
           </div>

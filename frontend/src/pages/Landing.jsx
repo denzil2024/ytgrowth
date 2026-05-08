@@ -472,15 +472,32 @@ const RESOURCES_GROUPS = [
   },
   {
     label: 'Free tools',
-    items: [
-      { href: '/tools/youtube-money-calculator',            label: 'YouTube Money Calculator' },
-      { href: '/tools/youtube-subscriber-money-calculator', label: 'Subscriber Money Calculator' },
-      { href: '/tools/youtube-channel-stats-checker',       label: 'Channel Stats Checker' },
-      { href: '/tools/youtube-thumbnail-downloader',        label: 'Thumbnail Downloader' },
+    /* Sub-categorized inside the column with thin dividers between sections */
+    sections: [
+      {
+        label: 'Calculators',
+        items: [
+          { href: '/tools/youtube-money-calculator',            label: 'YouTube Money Calculator' },
+          { href: '/tools/youtube-subscriber-money-calculator', label: 'Subscriber Money Calculator' },
+        ],
+      },
+      {
+        label: 'Thumbnails',
+        items: [
+          { href: '/tools/youtube-thumbnail-resizer',    label: 'Thumbnail Resizer' },
+          { href: '/tools/youtube-thumbnail-downloader', label: 'Thumbnail Downloader' },
+        ],
+      },
+      {
+        label: 'Research',
+        items: [
+          { href: '/tools/youtube-channel-stats-checker', label: 'Channel Stats Checker' },
+        ],
+      },
     ],
   },
 ]
-const RESOURCES_NAV_ITEMS = RESOURCES_GROUPS.flatMap(g => g.items)
+const RESOURCES_NAV_ITEMS = RESOURCES_GROUPS.flatMap(g => g.sections ? g.sections.flatMap(s => s.items) : (g.items || []))
 
 /* ─── Mega-menu component — VidIQ pattern: clean titles, no descriptions ─ */
 function MegaMenu({ trigger, groups, viewAllHref, viewAllLabel, columns = 3, panelLeft = -24 }) {
@@ -519,26 +536,48 @@ function MegaMenu({ trigger, groups, viewAllHref, viewAllLabel, columns = 3, pan
                     fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase',
                     color: 'rgba(10,10,15,0.38)', marginBottom: 14, whiteSpace: 'nowrap',
                   }}>{group.label}</p>
-                  <div style={{ display: 'flex', flexDirection: 'column' }}>
-                    {group.items.map((item, i) => (
-                      <a
-                        key={i} href={item.href}
-                        style={{
-                          display: 'block',
-                          padding: '8px 0',
-                          fontSize: 14.5, fontWeight: 500,
-                          color: '#0a0a0f', letterSpacing: '-0.15px',
-                          textDecoration: 'none',
-                          whiteSpace: 'nowrap',
-                          transition: 'color 0.13s',
-                        }}
-                        onMouseEnter={e => { e.currentTarget.style.color = 'var(--ytg-accent)' }}
-                        onMouseLeave={e => { e.currentTarget.style.color = '#0a0a0f' }}
-                      >
-                        {item.label}
-                      </a>
-                    ))}
-                  </div>
+                  {group.sections ? (
+                    /* Sub-categorized column with dividers between sections */
+                    <div style={{ display: 'flex', flexDirection: 'column' }}>
+                      {group.sections.map((section, si) => (
+                        <div key={si} style={{
+                          paddingTop: si === 0 ? 0 : 14,
+                          paddingBottom: si === group.sections.length - 1 ? 0 : 14,
+                          borderTop: si === 0 ? 'none' : '1px solid rgba(10,10,15,0.07)',
+                        }}>
+                          <p style={{ fontSize: 11, fontWeight: 600, color: 'rgba(10,10,15,0.45)', letterSpacing: '-0.05px', marginBottom: 6, whiteSpace: 'nowrap' }}>{section.label}</p>
+                          {section.items.map((item, i) => (
+                            <a key={i} href={item.href}
+                              style={{ display: 'block', padding: '6px 0', fontSize: 14.5, fontWeight: 500, color: '#0a0a0f', letterSpacing: '-0.15px', textDecoration: 'none', whiteSpace: 'nowrap', transition: 'color 0.13s' }}
+                              onMouseEnter={e => { e.currentTarget.style.color = 'var(--ytg-accent)' }}
+                              onMouseLeave={e => { e.currentTarget.style.color = '#0a0a0f' }}
+                            >{item.label}</a>
+                          ))}
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div style={{ display: 'flex', flexDirection: 'column' }}>
+                      {group.items.map((item, i) => (
+                        <a
+                          key={i} href={item.href}
+                          style={{
+                            display: 'block',
+                            padding: '8px 0',
+                            fontSize: 14.5, fontWeight: 500,
+                            color: '#0a0a0f', letterSpacing: '-0.15px',
+                            textDecoration: 'none',
+                            whiteSpace: 'nowrap',
+                            transition: 'color 0.13s',
+                          }}
+                          onMouseEnter={e => { e.currentTarget.style.color = 'var(--ytg-accent)' }}
+                          onMouseLeave={e => { e.currentTarget.style.color = '#0a0a0f' }}
+                        >
+                          {item.label}
+                        </a>
+                      ))}
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
@@ -947,21 +986,12 @@ export default function Landing() {
         {/* Resources */}
         <div className="ytg-mm-section">
           <span className="ytg-mm-label">Resources</span>
-          <a href="/blog" onClick={() => setMobileMenuOpen(false)} className="ytg-mm-link">
-            Blog
-          </a>
-          <a href="/tools/youtube-money-calculator" onClick={() => setMobileMenuOpen(false)} className="ytg-mm-link">
-            YouTube Money Calculator
-          </a>
-          <a href="/tools/youtube-subscriber-money-calculator" onClick={() => setMobileMenuOpen(false)} className="ytg-mm-link">
-            Subscriber Money Calculator
-          </a>
-          <a href="/tools/youtube-channel-stats-checker" onClick={() => setMobileMenuOpen(false)} className="ytg-mm-link">
-            Channel Stats Checker
-          </a>
-          <a href="/tools/youtube-thumbnail-downloader" onClick={() => setMobileMenuOpen(false)} className="ytg-mm-link">
-            YouTube Thumbnail Downloader
-          </a>
+          <a href="/blog" onClick={() => setMobileMenuOpen(false)} className="ytg-mm-link">Blog</a>
+          <a href="/tools/youtube-money-calculator" onClick={() => setMobileMenuOpen(false)} className="ytg-mm-link">YouTube Money Calculator</a>
+          <a href="/tools/youtube-subscriber-money-calculator" onClick={() => setMobileMenuOpen(false)} className="ytg-mm-link">Subscriber Money Calculator</a>
+          <a href="/tools/youtube-thumbnail-resizer" onClick={() => setMobileMenuOpen(false)} className="ytg-mm-link">Thumbnail Resizer</a>
+          <a href="/tools/youtube-thumbnail-downloader" onClick={() => setMobileMenuOpen(false)} className="ytg-mm-link">Thumbnail Downloader</a>
+          <a href="/tools/youtube-channel-stats-checker" onClick={() => setMobileMenuOpen(false)} className="ytg-mm-link">Channel Stats Checker</a>
         </div>
 
         {/* Explore */}
