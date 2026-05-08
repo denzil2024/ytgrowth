@@ -32,15 +32,22 @@ const FEATURE_GROUPS = [
   },
 ]
 
-/* Resources — 3-column mega menu. Verb-based categories, clean labels,
-   no descriptions. Vertical dividers between columns. Same structural
-   pattern as the Features mega menu so the two read as a matched set. */
+/* Resources — 4-column mega menu. Verb-based categories, clean labels,
+   vertical dividers between columns. Same structural pattern as the
+   Features mega menu so the two read as a matched set. */
 const RESOURCES_GROUPS = [
   {
     label: 'Calculators',
     items: [
       { href: '/tools/youtube-money-calculator',            label: 'YouTube Money Calculator' },
       { href: '/tools/youtube-subscriber-money-calculator', label: 'Subscriber Money Calculator' },
+    ],
+  },
+  {
+    label: 'Brainstorm',
+    items: [
+      { href: '/tools/youtube-channel-name-generator', label: 'Channel Name Generator' },
+      { href: '/tools/youtube-video-ideas-generator',  label: 'Video Ideas Generator' },
     ],
   },
   {
@@ -71,10 +78,9 @@ function Logo({ size = 28 }) {
 
 function MegaMenu({ trigger, groups, columns = 2, viewAllHref, viewAllLabel, panelLeft = -24 }) {
   const [open, setOpen] = useState(false)
-  // Wider panels — 2-col was looking cramped at 540px. Both column layouts
-  // now give items plenty of horizontal room so the panel reads as a proper
-  // resource surface, not a small dropdown box.
-  const panelWidth = columns === 3 ? 820 : 720
+  // Panel width scales with column count. 4-col is wider to keep each
+  // column readable; 3-col tightens slightly so the menu doesn't sprawl.
+  const panelWidth = columns === 4 ? 980 : columns === 3 ? 820 : 720
   return (
     <div onMouseEnter={() => setOpen(true)} onMouseLeave={() => setOpen(false)} style={{ position: 'relative' }}>
       <a href={groups[0].items[0].href} className="sh-link" style={{ display: 'inline-flex', alignItems: 'center', gap: 4, cursor: 'pointer' }}>
@@ -249,7 +255,7 @@ export default function SiteHeader() {
         {!isMobile && (
           <div style={{ display: 'flex', gap: 30, alignItems: 'center' }}>
             <MegaMenu trigger="Features"  groups={FEATURE_GROUPS}   columns={3} viewAllHref="/#features" viewAllLabel="Explore all features →" />
-            <MegaMenu trigger="Resources" groups={RESOURCES_GROUPS} columns={3} viewAllHref="/blog"      viewAllLabel="Read the latest from the blog →" />
+            <MegaMenu trigger="Resources" groups={RESOURCES_GROUPS} columns={4} viewAllHref="/blog"      viewAllLabel="Read the latest from the blog →" />
             <a href="/#pricing"  className="sh-link">Pricing</a>
             <a href="/affiliate" className="sh-link">Affiliates</a>
             <a href="/contact"   className="sh-link">Contact</a>

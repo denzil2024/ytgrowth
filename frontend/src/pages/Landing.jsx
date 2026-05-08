@@ -458,7 +458,7 @@ const FEATURE_GROUPS = [
 // Flat list — kept for the mobile menu and anywhere else that wants every item
 const FEATURE_NAV_ITEMS = FEATURE_GROUPS.flatMap(g => g.items)
 
-/* ─── Mega-menu data: Resources — 3 verb-based columns. Clean labels, no
+/* ─── Mega-menu data: Resources — 4 verb-based columns. Clean labels, no
    descriptions, vertical dividers between columns (matches Features). */
 const RESOURCES_GROUPS = [
   {
@@ -466,6 +466,13 @@ const RESOURCES_GROUPS = [
     items: [
       { href: '/tools/youtube-money-calculator',            label: 'YouTube Money Calculator' },
       { href: '/tools/youtube-subscriber-money-calculator', label: 'Subscriber Money Calculator' },
+    ],
+  },
+  {
+    label: 'Brainstorm',
+    items: [
+      { href: '/tools/youtube-channel-name-generator', label: 'Channel Name Generator' },
+      { href: '/tools/youtube-video-ideas-generator',  label: 'Video Ideas Generator' },
     ],
   },
   {
@@ -488,8 +495,8 @@ const RESOURCES_NAV_ITEMS = RESOURCES_GROUPS.flatMap(g => g.items || [])
 /* ─── Mega-menu component — VidIQ pattern: clean titles, no descriptions ─ */
 function MegaMenu({ trigger, groups, viewAllHref, viewAllLabel, columns = 3, panelLeft = -24 }) {
   const [open, setOpen] = useState(false)
-  // Generous widths so item titles never wrap and the panel doesn't feel boxy.
-  const panelWidth = columns === 3 ? 820 : 720
+  // Panel width scales with column count.
+  const panelWidth = columns === 4 ? 980 : columns === 3 ? 820 : 720
   return (
     <div
       onMouseEnter={() => setOpen(true)}
@@ -590,7 +597,7 @@ function ResourcesNavDropdown() {
     <MegaMenu
       trigger="Resources"
       groups={RESOURCES_GROUPS}
-      columns={3}
+      columns={4}
       viewAllHref="/blog"
       viewAllLabel="Read the latest from the blog →"
     />
@@ -959,12 +966,14 @@ export default function Landing() {
         {/* Resources */}
         <div className="ytg-mm-section">
           <span className="ytg-mm-label">Resources</span>
-          <a href="/blog" onClick={() => setMobileMenuOpen(false)} className="ytg-mm-link">Blog</a>
           <a href="/tools/youtube-money-calculator" onClick={() => setMobileMenuOpen(false)} className="ytg-mm-link">YouTube Money Calculator</a>
           <a href="/tools/youtube-subscriber-money-calculator" onClick={() => setMobileMenuOpen(false)} className="ytg-mm-link">Subscriber Money Calculator</a>
+          <a href="/tools/youtube-channel-name-generator" onClick={() => setMobileMenuOpen(false)} className="ytg-mm-link">Channel Name Generator</a>
+          <a href="/tools/youtube-video-ideas-generator" onClick={() => setMobileMenuOpen(false)} className="ytg-mm-link">Video Ideas Generator</a>
           <a href="/tools/youtube-thumbnail-resizer" onClick={() => setMobileMenuOpen(false)} className="ytg-mm-link">Thumbnail Resizer</a>
           <a href="/tools/youtube-thumbnail-downloader" onClick={() => setMobileMenuOpen(false)} className="ytg-mm-link">Thumbnail Downloader</a>
           <a href="/tools/youtube-channel-stats-checker" onClick={() => setMobileMenuOpen(false)} className="ytg-mm-link">Channel Stats Checker</a>
+          <a href="/blog" onClick={() => setMobileMenuOpen(false)} className="ytg-mm-link">Blog</a>
         </div>
 
         {/* Explore */}
