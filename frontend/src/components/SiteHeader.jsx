@@ -184,23 +184,42 @@ function useStyles() {
         color: #0a0a0f;
         display: flex; flex-direction: column; gap: 4.5px;
       }
+      /* Mobile overlay — full-screen dark sheet to match the Landing
+         mobile menu so the brand surface stays consistent across the
+         site. White overlays read as "abandoned" against feature/tool
+         pages that already have light bg. */
       .sh-mobile-overlay {
-        position: fixed; top: 60px; left: 0; right: 0;
-        background: #ffffff; padding: 24px 24px 28px;
-        border-bottom: 1px solid rgba(10,10,15,0.09);
+        position: fixed; top: 60px; left: 0; right: 0; bottom: 0;
+        background: #0d0d12;
+        padding: 28px 24px 24px;
         z-index: 99;
-        max-height: calc(100vh - 60px);
         overflow-y: auto;
+        display: flex; flex-direction: column;
       }
-      .sh-mm-section { margin-bottom: 22px; }
+      .sh-mm-section { margin-bottom: 28px; }
+      .sh-mm-section:last-of-type { margin-bottom: 18px; }
       .sh-mm-label {
         display: block; font-size: 11px; font-weight: 700;
-        letter-spacing: 0.1em; text-transform: uppercase;
-        color: rgba(10,10,15,0.38); margin-bottom: 8px;
+        letter-spacing: 0.12em; text-transform: uppercase;
+        color: rgba(255,255,255,0.38); margin-bottom: 12px;
       }
       .sh-mm-link {
-        display: block; font-size: 16px; font-weight: 500;
-        color: #0a0a0f; text-decoration: none; padding: 7px 0;
+        display: block; font-size: 18px; font-weight: 600;
+        color: #ffffff; text-decoration: none; padding: 6px 0;
+        letter-spacing: -0.3px; line-height: 1.35;
+        transition: color 0.15s;
+      }
+      .sh-mm-link:hover { color: rgba(255,255,255,0.78); }
+      .sh-mm-cta-row {
+        display: flex; flex-direction: column; gap: 10px;
+        padding-top: 18px;
+        border-top: 1px solid rgba(255,255,255,0.08);
+        margin-top: auto;
+      }
+      .sh-mm-loginlink {
+        display: block; text-align: center; padding: 8px 0;
+        font-size: 14px; font-weight: 500; text-decoration: none;
+        color: rgba(255,255,255,0.62); letter-spacing: -0.1px;
       }
       @keyframes shFadeUp { from { opacity:0; transform:translateY(8px) } to { opacity:1; transform:translateY(0) } }
     `
@@ -280,9 +299,9 @@ export default function SiteHeader() {
             <a href="/affiliate" onClick={() => setMobileOpen(false)} className="sh-mm-link">Affiliates</a>
             <a href="/contact"   onClick={() => setMobileOpen(false)} className="sh-mm-link">Contact</a>
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: 16 }}>
-            <a href="/auth/login" className="sh-cta" style={{ justifyContent: 'center', padding: '12px 22px', fontSize: 14 }}>Get started free</a>
-            <a href="/auth/login" className="sh-link" style={{ textAlign: 'center', padding: '6px 0' }}>Log in</a>
+          <div className="sh-mm-cta-row">
+            <a href="/auth/login" className="sh-cta" style={{ justifyContent: 'center', padding: '13px 22px', fontSize: 14 }}>Get started free</a>
+            <a href="/auth/login" className="sh-mm-loginlink">Log in</a>
           </div>
         </div>
       )}

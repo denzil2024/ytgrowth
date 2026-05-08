@@ -41,23 +41,42 @@ import{n as e}from"./chunk-B3K2TuZy.js";import{n as t,t as n}from"./jsx-runtime-
         color: #0a0a0f;
         display: flex; flex-direction: column; gap: 4.5px;
       }
+      /* Mobile overlay — full-screen dark sheet to match the Landing
+         mobile menu so the brand surface stays consistent across the
+         site. White overlays read as "abandoned" against feature/tool
+         pages that already have light bg. */
       .sh-mobile-overlay {
-        position: fixed; top: 60px; left: 0; right: 0;
-        background: #ffffff; padding: 24px 24px 28px;
-        border-bottom: 1px solid rgba(10,10,15,0.09);
+        position: fixed; top: 60px; left: 0; right: 0; bottom: 0;
+        background: #0d0d12;
+        padding: 28px 24px 24px;
         z-index: 99;
-        max-height: calc(100vh - 60px);
         overflow-y: auto;
+        display: flex; flex-direction: column;
       }
-      .sh-mm-section { margin-bottom: 22px; }
+      .sh-mm-section { margin-bottom: 28px; }
+      .sh-mm-section:last-of-type { margin-bottom: 18px; }
       .sh-mm-label {
         display: block; font-size: 11px; font-weight: 700;
-        letter-spacing: 0.1em; text-transform: uppercase;
-        color: rgba(10,10,15,0.38); margin-bottom: 8px;
+        letter-spacing: 0.12em; text-transform: uppercase;
+        color: rgba(255,255,255,0.38); margin-bottom: 12px;
       }
       .sh-mm-link {
-        display: block; font-size: 16px; font-weight: 500;
-        color: #0a0a0f; text-decoration: none; padding: 7px 0;
+        display: block; font-size: 18px; font-weight: 600;
+        color: #ffffff; text-decoration: none; padding: 6px 0;
+        letter-spacing: -0.3px; line-height: 1.35;
+        transition: color 0.15s;
+      }
+      .sh-mm-link:hover { color: rgba(255,255,255,0.78); }
+      .sh-mm-cta-row {
+        display: flex; flex-direction: column; gap: 10px;
+        padding-top: 18px;
+        border-top: 1px solid rgba(255,255,255,0.08);
+        margin-top: auto;
+      }
+      .sh-mm-loginlink {
+        display: block; text-align: center; padding: 8px 0;
+        font-size: 14px; font-weight: 500; text-decoration: none;
+        color: rgba(255,255,255,0.62); letter-spacing: -0.1px;
       }
       @keyframes shFadeUp { from { opacity:0; transform:translateY(8px) } to { opacity:1; transform:translateY(0) } }
-    `,document.head.appendChild(e)},[])}function u(){l();let[e,t]=(0,r.useState)(typeof window<`u`?window.innerWidth<=768:!1),[n,u]=(0,r.useState)(!1);return(0,r.useEffect)(()=>{let e=()=>t(window.innerWidth<=768);return window.addEventListener(`resize`,e),()=>window.removeEventListener(`resize`,e)},[]),(0,i.jsxs)(i.Fragment,{children:[(0,i.jsxs)(`nav`,{className:`sh-nav`,children:[(0,i.jsxs)(`a`,{href:`/`,className:`sh-brand`,children:[(0,i.jsx)(s,{size:28}),(0,i.jsx)(`span`,{className:`sh-brand-name`,children:`YTGrowth`})]}),!e&&(0,i.jsxs)(`div`,{style:{display:`flex`,gap:30,alignItems:`center`},children:[(0,i.jsx)(c,{trigger:`Features`,groups:a,columns:3,viewAllHref:`/#features`,viewAllLabel:`Explore all features →`}),(0,i.jsx)(c,{trigger:`Resources`,groups:o,columns:3,viewAllHref:`/blog`,viewAllLabel:`Read the latest from the blog →`}),(0,i.jsx)(`a`,{href:`/#pricing`,className:`sh-link`,children:`Pricing`}),(0,i.jsx)(`a`,{href:`/affiliate`,className:`sh-link`,children:`Affiliates`}),(0,i.jsx)(`a`,{href:`/contact`,className:`sh-link`,children:`Contact`})]}),(0,i.jsxs)(`div`,{style:{display:`flex`,alignItems:`center`,gap:8},children:[!e&&(0,i.jsx)(`a`,{href:`/auth/login`,className:`sh-link`,children:`Log in`}),e?(0,i.jsx)(`button`,{onClick:()=>u(e=>!e),className:`sh-mobile-toggle`,"aria-label":`Toggle menu`,children:n?(0,i.jsx)(`svg`,{width:`18`,height:`18`,viewBox:`0 0 18 18`,fill:`none`,children:(0,i.jsx)(`path`,{d:`M2 2l14 14M16 2L2 16`,stroke:`currentColor`,strokeWidth:`2`,strokeLinecap:`round`})}):(0,i.jsxs)(i.Fragment,{children:[(0,i.jsx)(`span`,{style:{display:`block`,width:20,height:2,background:`#0a0a0f`,borderRadius:2}}),(0,i.jsx)(`span`,{style:{display:`block`,width:20,height:2,background:`#0a0a0f`,borderRadius:2}}),(0,i.jsx)(`span`,{style:{display:`block`,width:14,height:2,background:`#0a0a0f`,borderRadius:2}})]})}):(0,i.jsx)(`a`,{href:`/auth/login`,className:`sh-cta`,children:`Get started free`})]})]}),e&&n&&(0,i.jsxs)(`div`,{className:`sh-mobile-overlay`,children:[(0,i.jsxs)(`div`,{className:`sh-mm-section`,children:[(0,i.jsx)(`span`,{className:`sh-mm-label`,children:`Features`}),a.flatMap(e=>e.items).map((e,t)=>(0,i.jsx)(`a`,{href:e.href,onClick:()=>u(!1),className:`sh-mm-link`,children:e.label},t))]}),(0,i.jsxs)(`div`,{className:`sh-mm-section`,children:[(0,i.jsx)(`span`,{className:`sh-mm-label`,children:`Resources`}),o.flatMap(e=>e.sections?e.sections.flatMap(e=>e.items):e.items).map((e,t)=>(0,i.jsx)(`a`,{href:e.href,onClick:()=>u(!1),className:`sh-mm-link`,children:e.label},t))]}),(0,i.jsxs)(`div`,{className:`sh-mm-section`,children:[(0,i.jsx)(`span`,{className:`sh-mm-label`,children:`Explore`}),(0,i.jsx)(`a`,{href:`/#pricing`,onClick:()=>u(!1),className:`sh-mm-link`,children:`Pricing`}),(0,i.jsx)(`a`,{href:`/affiliate`,onClick:()=>u(!1),className:`sh-mm-link`,children:`Affiliates`}),(0,i.jsx)(`a`,{href:`/contact`,onClick:()=>u(!1),className:`sh-mm-link`,children:`Contact`})]}),(0,i.jsxs)(`div`,{style:{display:`flex`,flexDirection:`column`,gap:10,marginTop:16},children:[(0,i.jsx)(`a`,{href:`/auth/login`,className:`sh-cta`,style:{justifyContent:`center`,padding:`12px 22px`,fontSize:14},children:`Get started free`}),(0,i.jsx)(`a`,{href:`/auth/login`,className:`sh-link`,style:{textAlign:`center`,padding:`6px 0`},children:`Log in`})]})]})]})}export{u as t};
+    `,document.head.appendChild(e)},[])}function u(){l();let[e,t]=(0,r.useState)(typeof window<`u`?window.innerWidth<=768:!1),[n,u]=(0,r.useState)(!1);return(0,r.useEffect)(()=>{let e=()=>t(window.innerWidth<=768);return window.addEventListener(`resize`,e),()=>window.removeEventListener(`resize`,e)},[]),(0,i.jsxs)(i.Fragment,{children:[(0,i.jsxs)(`nav`,{className:`sh-nav`,children:[(0,i.jsxs)(`a`,{href:`/`,className:`sh-brand`,children:[(0,i.jsx)(s,{size:28}),(0,i.jsx)(`span`,{className:`sh-brand-name`,children:`YTGrowth`})]}),!e&&(0,i.jsxs)(`div`,{style:{display:`flex`,gap:30,alignItems:`center`},children:[(0,i.jsx)(c,{trigger:`Features`,groups:a,columns:3,viewAllHref:`/#features`,viewAllLabel:`Explore all features →`}),(0,i.jsx)(c,{trigger:`Resources`,groups:o,columns:3,viewAllHref:`/blog`,viewAllLabel:`Read the latest from the blog →`}),(0,i.jsx)(`a`,{href:`/#pricing`,className:`sh-link`,children:`Pricing`}),(0,i.jsx)(`a`,{href:`/affiliate`,className:`sh-link`,children:`Affiliates`}),(0,i.jsx)(`a`,{href:`/contact`,className:`sh-link`,children:`Contact`})]}),(0,i.jsxs)(`div`,{style:{display:`flex`,alignItems:`center`,gap:8},children:[!e&&(0,i.jsx)(`a`,{href:`/auth/login`,className:`sh-link`,children:`Log in`}),e?(0,i.jsx)(`button`,{onClick:()=>u(e=>!e),className:`sh-mobile-toggle`,"aria-label":`Toggle menu`,children:n?(0,i.jsx)(`svg`,{width:`18`,height:`18`,viewBox:`0 0 18 18`,fill:`none`,children:(0,i.jsx)(`path`,{d:`M2 2l14 14M16 2L2 16`,stroke:`currentColor`,strokeWidth:`2`,strokeLinecap:`round`})}):(0,i.jsxs)(i.Fragment,{children:[(0,i.jsx)(`span`,{style:{display:`block`,width:20,height:2,background:`#0a0a0f`,borderRadius:2}}),(0,i.jsx)(`span`,{style:{display:`block`,width:20,height:2,background:`#0a0a0f`,borderRadius:2}}),(0,i.jsx)(`span`,{style:{display:`block`,width:14,height:2,background:`#0a0a0f`,borderRadius:2}})]})}):(0,i.jsx)(`a`,{href:`/auth/login`,className:`sh-cta`,children:`Get started free`})]})]}),e&&n&&(0,i.jsxs)(`div`,{className:`sh-mobile-overlay`,children:[(0,i.jsxs)(`div`,{className:`sh-mm-section`,children:[(0,i.jsx)(`span`,{className:`sh-mm-label`,children:`Features`}),a.flatMap(e=>e.items).map((e,t)=>(0,i.jsx)(`a`,{href:e.href,onClick:()=>u(!1),className:`sh-mm-link`,children:e.label},t))]}),(0,i.jsxs)(`div`,{className:`sh-mm-section`,children:[(0,i.jsx)(`span`,{className:`sh-mm-label`,children:`Resources`}),o.flatMap(e=>e.sections?e.sections.flatMap(e=>e.items):e.items).map((e,t)=>(0,i.jsx)(`a`,{href:e.href,onClick:()=>u(!1),className:`sh-mm-link`,children:e.label},t))]}),(0,i.jsxs)(`div`,{className:`sh-mm-section`,children:[(0,i.jsx)(`span`,{className:`sh-mm-label`,children:`Explore`}),(0,i.jsx)(`a`,{href:`/#pricing`,onClick:()=>u(!1),className:`sh-mm-link`,children:`Pricing`}),(0,i.jsx)(`a`,{href:`/affiliate`,onClick:()=>u(!1),className:`sh-mm-link`,children:`Affiliates`}),(0,i.jsx)(`a`,{href:`/contact`,onClick:()=>u(!1),className:`sh-mm-link`,children:`Contact`})]}),(0,i.jsxs)(`div`,{className:`sh-mm-cta-row`,children:[(0,i.jsx)(`a`,{href:`/auth/login`,className:`sh-cta`,style:{justifyContent:`center`,padding:`13px 22px`,fontSize:14},children:`Get started free`}),(0,i.jsx)(`a`,{href:`/auth/login`,className:`sh-mm-loginlink`,children:`Log in`})]})]})]})}export{u as t};
