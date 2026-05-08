@@ -32,13 +32,12 @@ const FEATURE_GROUPS = [
   },
 ]
 
-/* Resources — 3-column mega menu, verb-based categories (Windsor.ai
-   pattern). Each column has a small one-line description, then a flat
-   list of links. Blog is a single link, not a list of individual posts. */
+/* Resources — 3-column mega menu. Verb-based categories, clean labels,
+   no descriptions. Vertical dividers between columns. Same structural
+   pattern as the Features mega menu so the two read as a matched set. */
 const RESOURCES_GROUPS = [
   {
     label: 'Calculators',
-    blurb: 'Earnings, milestones, and growth math.',
     items: [
       { href: '/tools/youtube-money-calculator',            label: 'YouTube Money Calculator' },
       { href: '/tools/youtube-subscriber-money-calculator', label: 'Subscriber Money Calculator' },
@@ -46,7 +45,6 @@ const RESOURCES_GROUPS = [
   },
   {
     label: 'Thumbnails',
-    blurb: 'Prepare and source thumbnail assets.',
     items: [
       { href: '/tools/youtube-thumbnail-resizer',    label: 'Thumbnail Resizer' },
       { href: '/tools/youtube-thumbnail-downloader', label: 'Thumbnail Downloader' },
@@ -54,7 +52,6 @@ const RESOURCES_GROUPS = [
   },
   {
     label: 'Insights',
-    blurb: 'Research channels and read playbooks.',
     items: [
       { href: '/tools/youtube-channel-stats-checker', label: 'Channel Stats Checker' },
       { href: '/blog',                                label: 'Blog' },
@@ -99,33 +96,19 @@ function MegaMenu({ trigger, groups, columns = 2, viewAllHref, viewAllLabel, pan
             animation: 'shFadeUp 0.16s ease both',
             zIndex: 110,
           }}>
-            <div style={{ display: 'grid', gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))`, gap: 36 }}>
-              {groups.map((group, gi) => (
-                <div key={gi}>
-                  <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(10,10,15,0.38)', marginBottom: group.blurb ? 6 : 14, whiteSpace: 'nowrap' }}>{group.label}</p>
-                  {group.blurb && (
-                    <p style={{ fontSize: 12.5, color: 'rgba(10,10,15,0.50)', lineHeight: 1.4, marginBottom: 12 }}>{group.blurb}</p>
-                  )}
-                  {group.sections ? (
-                    <div style={{ display: 'flex', flexDirection: 'column' }}>
-                      {group.sections.map((section, si) => (
-                        <div key={si} style={{
-                          paddingTop: si === 0 ? 0 : 14,
-                          paddingBottom: si === group.sections.length - 1 ? 0 : 14,
-                          borderTop: si === 0 ? 'none' : '1px solid rgba(10,10,15,0.07)',
-                        }}>
-                          <p style={{ fontSize: 11, fontWeight: 600, color: 'rgba(10,10,15,0.45)', letterSpacing: '-0.05px', marginBottom: 6, whiteSpace: 'nowrap' }}>{section.label}</p>
-                          {section.items.map((item, i) => (
-                            <a key={i} href={item.href}
-                              style={{ display: 'block', padding: '6px 0', fontSize: 14.5, fontWeight: 500, color: '#0a0a0f', letterSpacing: '-0.15px', textDecoration: 'none', whiteSpace: 'nowrap', transition: 'color 0.13s' }}
-                              onMouseEnter={e => { e.currentTarget.style.color = '#e5302a' }}
-                              onMouseLeave={e => { e.currentTarget.style.color = '#0a0a0f' }}
-                            >{item.label}</a>
-                          ))}
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
+            {/* Columns separated by thin vertical dividers — uses gap-as-divider
+                pattern: each column gets right padding and a right border, the
+                last one omits both. */}
+            <div style={{ display: 'grid', gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))`, gap: 0 }}>
+              {groups.map((group, gi) => {
+                const isLast = gi === groups.length - 1
+                return (
+                  <div key={gi} style={{
+                    paddingLeft: gi === 0 ? 0 : 28,
+                    paddingRight: isLast ? 0 : 28,
+                    borderRight: isLast ? 'none' : '1px solid rgba(10,10,15,0.08)',
+                  }}>
+                    <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(10,10,15,0.38)', marginBottom: 14, whiteSpace: 'nowrap' }}>{group.label}</p>
                     <div style={{ display: 'flex', flexDirection: 'column' }}>
                       {group.items.map((item, i) => (
                         <a key={i} href={item.href}
@@ -135,9 +118,9 @@ function MegaMenu({ trigger, groups, columns = 2, viewAllHref, viewAllLabel, pan
                         >{item.label}</a>
                       ))}
                     </div>
-                  )}
-                </div>
-              ))}
+                  </div>
+                )
+              })}
             </div>
             {viewAllHref && (
               <div style={{ marginTop: 22, paddingTop: 16, borderTop: '1px solid rgba(10,10,15,0.07)' }}>
