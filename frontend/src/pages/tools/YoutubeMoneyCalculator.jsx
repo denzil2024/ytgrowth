@@ -343,9 +343,10 @@ export default function YoutubeMoneyCalculator() {
 
             {/* RIGHT. Result column */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
-              {/* Headline — flex:1 + center its content so when RIGHT is the
-                  shorter side, the red card stretches without leaving a gap. */}
-              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', background: 'var(--ytg-accent)', borderRadius: 22, color: '#fff', padding: isMobile ? 28 : 36, boxShadow: '0 4px 18px rgba(229,48,42,0.32), 0 24px 60px rgba(229,48,42,0.18)' }}>
+              {/* Headline — flex:1 stretches it when LEFT column is taller.
+                  Footer block uses margin-top:auto to anchor at the bottom so
+                  the card fills cleanly whether it stretches or not. */}
+              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', background: 'var(--ytg-accent)', borderRadius: 22, color: '#fff', padding: isMobile ? 28 : 36, boxShadow: '0 4px 18px rgba(229,48,42,0.32), 0 24px 60px rgba(229,48,42,0.18)' }}>
                 <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', opacity: 0.78, marginBottom: 12 }}>
                   Estimated monthly earnings
                 </div>
@@ -366,6 +367,19 @@ export default function YoutubeMoneyCalculator() {
                     <div style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: 22, fontWeight: 800, letterSpacing: '-0.8px' }}>${result.lowRpm.toFixed(2)} – ${result.highRpm.toFixed(2)}</div>
                   </div>
                 </div>
+
+                {/* Footer block, pushed to bottom so the card never has dead space. */}
+                <div style={{ marginTop: 'auto', paddingTop: 28 }}>
+                  <div style={{ height: 1, background: 'rgba(255,255,255,0.2)', marginBottom: 18 }} />
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 16, flexWrap: 'wrap' }}>
+                    <div style={{ fontSize: 12.5, opacity: 0.82, lineHeight: 1.5, maxWidth: 360 }}>
+                      RPM is what hits your AdSense, after YouTube's 45% cut and unmonetized views.
+                    </div>
+                    <a href="#how-earnings-work" style={{ fontSize: 12.5, fontWeight: 700, color: '#fff', textDecoration: 'none', whiteSpace: 'nowrap', borderBottom: '1px solid rgba(255,255,255,0.45)', paddingBottom: 1 }}>
+                      See the math →
+                    </a>
+                  </div>
+                </div>
               </div>
 
             </div>
@@ -374,7 +388,7 @@ export default function YoutubeMoneyCalculator() {
       </section>
 
       {/* ══ HOW EARNINGS WORK. Bg var(--ytg-bg-2) #ecedf1 (Landing's stepped scale) ══ */}
-      <section className="ymc-section-pad" style={{ padding: isMobile ? '72px 20px' : '110px 48px', background: 'var(--ytg-bg-2)', borderTop: '1px solid var(--ytg-border)', borderBottom: '1px solid var(--ytg-border)' }}>
+      <section id="how-earnings-work" className="ymc-section-pad" style={{ padding: isMobile ? '72px 20px' : '110px 48px', background: 'var(--ytg-bg-2)', borderTop: '1px solid var(--ytg-border)', borderBottom: '1px solid var(--ytg-border)' }}>
         <div style={{ maxWidth: 1080, margin: '0 auto' }}>
           <div style={{ marginBottom: 48, maxWidth: 720 }}>
             <Eyebrow>How it works</Eyebrow>
