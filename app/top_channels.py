@@ -1,23 +1,26 @@
 """
-Top channels per category — real discovery, not editorial curation.
+Top channels per category (and optionally per country) — real discovery.
 
-Approach (v2): for each category, use YouTube's search.list with a tuned
-query, type=channel. Batch-fetch the public statistics for every result
-via channels.list, filter out anything below a minimum subscriber bar
-(skips random small channels that share a name with a popular one),
-sort by sub count DESC, take the actual top N.
+Approach: for each (category, region) pair, hit YouTube's search.list with
+a tuned niche query plus the region's regionCode. Batch-fetch public
+stats via channels.list, filter out anything below MIN_SUBS, sort by
+subscriber count DESC, take the actual top N.
 
-This means:
-  - No hand-curated handle list to maintain (the previous approach
-    silently mis-resolved handles like "drake" into 469-sub strangers).
-  - "Top" actually means top by subscribers, sourced from YouTube
-    itself rather than my guesses.
-  - New big channels appear automatically as YouTube's relevance
-    algorithm picks them up.
+`region` semantics:
+  - 'global'  → no regionCode passed; YouTube uses the requester's IP
+                 default (US-leaning but not strict). Powers the main
+                 /youtube-stats hub + per-category drilldowns.
+  - 'US' / 'GB' / 'CA' / 'AU' / 'IN' → regionCode passed to search.list.
+                 Powers the /youtube-stats/country/* pages.
 
-API quota: per refresh, 1 search.list (100 units) + 1 channels.list
-batch (1 unit) per category. 14 categories ≈ 1,414 units per daily
-refresh. Free quota is 10,000/day, so this is ~14% of headroom.
+Same channel can appear in multiple regions (a US-based MrBeast appears
+in global + US + UK + ...). Cache key is (category, region, channel_id).
+
+Quota math:
+  - 1 search.list = 100 units, 1 channels.list = 1 unit (per 50-id batch)
+  - Per (category, region): 100 + 1 = 101 units
+  - 14 categories × 6 regions = 84 pairs = ~8,484 units per full refresh
+  - Free quota: 10,000/day → fits with ~1.5K headroom for other features.
 """
 
 import os
@@ -45,12 +48,27 @@ CATEGORY_QUERIES = {
 
 CATEGORIES = list(CATEGORY_QUERIES.keys())
 
-# Minimum subscribers a channel needs to qualify for the top-10 list.
+# Regions to refresh. 'global' = no regionCode passed (YouTube default).
+# Country codes follow ISO 3166-1 alpha-2 to match YouTube's regionCode.
+# Display names are exposed via the /api response so the frontend doesn't
+# have to maintain its own code→name map.
+REGIONS = {
+    "global": "Global",
+    "US":     "United States",
+    "GB":     "United Kingdom",
+    "CA":     "Canada",
+    "AU":     "Australia",
+    "IN":     "India",
+}
+
+REGION_CODES = list(REGIONS.keys())
+
+# Minimum subscribers a channel needs to qualify for the leaderboard.
 # Filters out small same-named channels that show up in search results.
 MIN_SUBS = 500_000
 
-# Cap per category in the cache. Sized for the /youtube-stats category
-# pages, which show the full ranked list rather than a 10-card teaser.
+# Cap per (category, region) in the cache. Sized for the per-category and
+# per-country drilldown pages, which show the full ranked list.
 TOP_N    = 50
 
 
@@ -64,21 +82,27 @@ def _yt_client():
     return build("youtube", "v3", developerKey=api_key, cache_discovery=False)
 
 
-def _discover_category(yt, query: str) -> list[dict]:
-    """For a given category query: search → batch-stat → filter → sort.
-    Returns the top channels (raw channels.list item dicts) for the
-    category, sorted by subscribers DESC."""
+def _discover_category(yt, query: str, region_code: str | None = None) -> list[dict]:
+    """For a given (category query, region) pair: search → batch-stat →
+    filter → sort. Returns the top channels (raw channels.list item
+    dicts), sorted by subscribers DESC.
+
+    region_code=None means 'global' (no regionCode, YouTube uses caller IP).
+    """
     # 1. Search for channels matching the query (100 units, max 50 results).
+    search_kwargs = {
+        "part":       "snippet",
+        "q":          query,
+        "type":       "channel",
+        "maxResults": 50,
+        "order":      "relevance",
+    }
+    if region_code:
+        search_kwargs["regionCode"] = region_code
     try:
-        sr = yt.search().list(
-            part="snippet",
-            q=query,
-            type="channel",
-            maxResults=50,
-            order="relevance",
-        ).execute()
+        sr = yt.search().list(**search_kwargs).execute()
     except Exception as e:
-        print(f"[top_channels] search failed for '{query}': {e}")
+        print(f"[top_channels] search failed for q='{query}' region={region_code}: {e}")
         return []
 
     channel_ids = []
@@ -99,7 +123,7 @@ def _discover_category(yt, query: str) -> list[dict]:
         ).execute()
         items = cr.get("items") or []
     except Exception as e:
-        print(f"[top_channels] channels batch failed for '{query}': {e}")
+        print(f"[top_channels] channels batch failed for q='{query}' region={region_code}: {e}")
         return []
 
     # 3. Filter by min subs + skip channels that hide their sub count.
@@ -121,12 +145,13 @@ def _discover_category(yt, query: str) -> list[dict]:
     return [ch for _subs, ch in qualified]
 
 
-def _to_row(item: dict, category: str, rank: int) -> dict:
+def _to_row(item: dict, category: str, region: str, rank: int) -> dict:
     snippet = item.get("snippet") or {}
     stats   = item.get("statistics") or {}
     thumbs  = (snippet.get("thumbnails") or {})
     return {
         "category":    category,
+        "region":      region,
         "channel_id":  item.get("id") or "",
         "title":       snippet.get("title") or "",
         "handle":      (snippet.get("customUrl") or "").lstrip("@"),
@@ -140,31 +165,46 @@ def _to_row(item: dict, category: str, rank: int) -> dict:
     }
 
 
-def refresh_all() -> dict:
-    """Discover + persist the top channels for every category. Replaces
-    each category's rows wholesale (delete + insert) so departed
-    channels don't linger. Returns a small summary dict for logging."""
+def refresh_all(regions: list[str] | None = None) -> dict:
+    """Discover + persist the top channels for every (category, region)
+    pair. Replaces each pair's rows wholesale (delete + insert) so
+    departed channels don't linger.
+
+    regions=None refreshes every entry in REGIONS. Pass a subset to
+    refresh selectively (e.g. for a rotation schedule).
+
+    Returns a small summary dict keyed by region+category for logging."""
     from database.models import SessionLocal, TopChannelCache
 
     yt = _yt_client()
     if yt is None:
         return {"ok": False, "reason": "no_api_key"}
 
-    summary = {"ok": True, "per_category": {}}
+    target_regions = regions if regions is not None else REGION_CODES
+    summary = {"ok": True, "per_region": {}}
     db = SessionLocal()
     try:
         now = datetime.datetime.utcnow()
-        for category, query in CATEGORY_QUERIES.items():
-            items = _discover_category(yt, query)
-            top   = items[:TOP_N]
-            # Clear this category's cache and reinsert. Cheaper than
-            # diffing because the set is small (≤ TOP_N rows per cat).
-            db.query(TopChannelCache).filter_by(category=category).delete()
-            for idx, item in enumerate(top, start=1):
-                row = _to_row(item, category, idx)
-                db.add(TopChannelCache(**row, fetched_at=now))
-            summary["per_category"][category] = len(top)
-        db.commit()
+        for region in target_regions:
+            if region not in REGIONS:
+                print(f"[top_channels] skipping unknown region: {region}")
+                continue
+            region_code = None if region == "global" else region
+            per_cat = {}
+            for category, query in CATEGORY_QUERIES.items():
+                items = _discover_category(yt, query, region_code=region_code)
+                top   = items[:TOP_N]
+                # Clear this (category, region) cache and reinsert. Cheaper than
+                # diffing because the set is small (≤ TOP_N rows per pair).
+                db.query(TopChannelCache).filter_by(category=category, region=region).delete()
+                for idx, item in enumerate(top, start=1):
+                    row = _to_row(item, category, region, idx)
+                    db.add(TopChannelCache(**row, fetched_at=now))
+                per_cat[category] = len(top)
+            summary["per_region"][region] = per_cat
+            # Commit per-region so a failure mid-way still persists what
+            # was already discovered, instead of rolling everything back.
+            db.commit()
         return summary
     except Exception as e:
         db.rollback()
@@ -174,16 +214,20 @@ def refresh_all() -> dict:
         db.close()
 
 
-def fetch_grouped(top_n: int = 10) -> dict:
-    """Read the cache as { category: [rows...] }, sorted by subscribers
-    DESC within each category. Cap to top N (default 10) so the UI shows
-    a clean leaderboard."""
+def fetch_grouped(top_n: int = 10, region: str = "global") -> dict:
+    """Read the cache as { category: [rows...] }, filtered to a single
+    region, sorted by subscribers DESC within each category. Cap to top N
+    (default 10) so the UI shows a clean leaderboard.
+
+    Defaults to region='global' so existing callers (the main hub) get
+    the same data they did before the country dimension was added."""
     from database.models import SessionLocal, TopChannelCache
 
     db = SessionLocal()
     try:
         rows = (
             db.query(TopChannelCache)
+              .filter(TopChannelCache.region == region)
               .order_by(
                   TopChannelCache.category.asc(),
                   TopChannelCache.subscribers.desc().nullslast(),
@@ -214,6 +258,8 @@ def fetch_grouped(top_n: int = 10) -> dict:
 
         return {
             "categories":  CATEGORIES,
+            "region":      region,
+            "region_name": REGIONS.get(region, region),
             "groups":      out,
             "fetched_at":  latest.isoformat() if latest else None,
         }

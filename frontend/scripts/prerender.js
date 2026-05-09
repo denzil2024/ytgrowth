@@ -20,6 +20,7 @@ import { fileURLToPath } from 'node:url'
 import { dirname, join, resolve } from 'node:path'
 import puppeteer from 'puppeteer'
 import { CATEGORY_META } from '../src/data/youtubeStatsCategories.js'
+import { COUNTRY_META }  from '../src/data/youtubeStatsCountries.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname  = dirname(__filename)
@@ -101,6 +102,15 @@ for (const cat of CATEGORY_META) {
   }
 }
 
+/* /youtube-stats/country/:slug pages — same pattern, derived from the
+ * shared country metadata. */
+for (const country of COUNTRY_META) {
+  META_BY_ROUTE[`/youtube-stats/country/${country.id}`] = {
+    title:       `${country.seoTitle} | YTGrowth`,
+    description: country.seoDescription,
+  }
+}
+
 /* Discover blog slugs from the source data file. We slice from
  * `export const posts = [` so we never pick up the CATEGORIES `slug:` keys
  * that live above it. The line-anchored regex avoids matching slug strings
@@ -151,6 +161,11 @@ async function buildRoutes() {
     '/youtube-stats/sports',
     '/youtube-stats/entertainment',
     '/youtube-stats/news',
+    '/youtube-stats/country/united-states',
+    '/youtube-stats/country/united-kingdom',
+    '/youtube-stats/country/canada',
+    '/youtube-stats/country/australia',
+    '/youtube-stats/country/india',
     '/contact',
     '/affiliate',
     '/terms',

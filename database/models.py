@@ -208,10 +208,17 @@ class TopChannelCache(Base):
     __tablename__ = "top_channel_cache"
     id            = Column(Integer, primary_key=True, autoincrement=True)
     category      = Column(String, nullable=False, index=True)
+    # `region` is the YouTube search regionCode the discovery query ran
+    # against ('global' = no regionCode, otherwise 'US', 'GB', 'CA', etc).
+    # Same channel can appear in multiple regions, so the unique index is
+    # (category, region, channel_id), not (category, channel_id).
+    region        = Column(String, nullable=False, default='global', index=True)
     channel_id    = Column(String, nullable=False, index=True)
     title         = Column(String, nullable=True)
     handle        = Column(String, nullable=True)
     thumbnail     = Column(String, nullable=True)
+    # `country` is the channel's own declared country from snippet.country
+    # (often null, set by the channel owner). Distinct from `region` above.
     country       = Column(String, nullable=True)
     subscribers   = Column(BigInteger, nullable=True)
     total_views   = Column(BigInteger, nullable=True)
@@ -462,6 +469,16 @@ try:
         # column types so the no-op there is fine.
         "ALTER TABLE top_channel_cache ALTER COLUMN subscribers TYPE BIGINT",
         "ALTER TABLE top_channel_cache ALTER COLUMN total_views TYPE BIGINT",
+        # Phase 2b: per-country dimension. Same channel can show up in
+        # multiple regions (a US-based MrBeast appears in global + US + UK
+        # leaderboards), so add `region` and rebuild the unique index.
+        "ALTER TABLE top_channel_cache ADD COLUMN region TEXT DEFAULT 'global' NOT NULL",
+        "UPDATE top_channel_cache SET region='global' WHERE region IS NULL",
+        "CREATE INDEX IF NOT EXISTS ix_top_channel_cache_region ON top_channel_cache (region)",
+        # Replace the old unique (category, channel_id) — would now collide
+        # across regions — with (category, region, channel_id).
+        "DROP INDEX IF EXISTS uq_top_channel_cache_cat_channel",
+        "CREATE UNIQUE INDEX IF NOT EXISTS uq_top_channel_cache_cat_region_channel ON top_channel_cache (category, region, channel_id)",
         "CREATE TABLE IF NOT EXISTS milestones (id INTEGER PRIMARY KEY AUTOINCREMENT, channel_id TEXT NOT NULL, category TEXT NOT NULL, tier INTEGER NOT NULL, achieved_at DATETIME)",
         "CREATE INDEX IF NOT EXISTS ix_milestones_channel_id ON milestones (channel_id)",
         "CREATE UNIQUE INDEX IF NOT EXISTS uq_milestones_channel_cat_tier ON milestones (channel_id, category, tier)",

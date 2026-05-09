@@ -181,6 +181,38 @@
     <priority>0.85</priority>
   </url>
 
+  <!-- YouTube Stats per-country pages -->
+  <url>
+    <loc>https://ytgrowth.io/youtube-stats/country/united-states</loc>
+    <lastmod>2026-05-09</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://ytgrowth.io/youtube-stats/country/united-kingdom</loc>
+    <lastmod>2026-05-09</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://ytgrowth.io/youtube-stats/country/canada</loc>
+    <lastmod>2026-05-09</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://ytgrowth.io/youtube-stats/country/australia</loc>
+    <lastmod>2026-05-09</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://ytgrowth.io/youtube-stats/country/india</loc>
+    <lastmod>2026-05-09</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.85</priority>
+  </url>
+
   <!-- Blog -->
   <url>
     <loc>https://ytgrowth.io/blog</loc>

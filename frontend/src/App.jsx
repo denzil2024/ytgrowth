@@ -32,6 +32,7 @@ const YoutubeChannelNameGenerator      = lazy(() => import('./pages/tools/Youtub
 const YoutubeVideoIdeasGenerator       = lazy(() => import('./pages/tools/YoutubeVideoIdeasGenerator'))
 const YoutubeStats                     = lazy(() => import('./pages/YoutubeStats'))
 const YoutubeStatsCategory             = lazy(() => import('./pages/YoutubeStatsCategory'))
+const YoutubeStatsCountry              = lazy(() => import('./pages/YoutubeStatsCountry'))
 const Blog                             = lazy(() => import('./pages/Blog'))
 const BlogPost                         = lazy(() => import('./pages/BlogPost'))
 
@@ -67,6 +68,7 @@ function App() {
           <Route path="/tools/youtube-channel-name-generator"      element={<YoutubeChannelNameGenerator />} />
           <Route path="/tools/youtube-video-ideas-generator"       element={<YoutubeVideoIdeasGenerator />} />
           <Route path="/youtube-stats"                             element={<YoutubeStats />} />
+          <Route path="/youtube-stats/country/:slug"               element={<YoutubeStatsCountry />} />
           <Route path="/youtube-stats/:slug"                       element={<YoutubeStatsCategory />} />
           <Route path="/blog"                                      element={<Blog />} />
           <Route path="/blog/:slug"                                element={<BlogPost />} />

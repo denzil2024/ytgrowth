@@ -11,16 +11,23 @@ import os
 from fastapi import APIRouter, Request
 from fastapi.responses import JSONResponse
 
-from app.top_channels import fetch_grouped, refresh_all, TOP_CHANNELS_SEED
+from app.top_channels import fetch_grouped, refresh_all, TOP_CHANNELS_SEED, REGIONS
 
 router = APIRouter()
 
 
 @router.get("/api/top-channels")
-def get_top_channels():
-    """Returns:
+def get_top_channels(region: str = "global"):
+    """Returns top channels grouped by category, optionally filtered to a
+    specific region (regionCode that the underlying YouTube search.list
+    was run against — 'global', 'US', 'GB', 'CA', 'AU', 'IN'). Defaults
+    to 'global' so existing callers (the main hub) get unchanged data.
+
+    Returns:
     {
-      categories: ['gaming', 'tech', ...],
+      categories:  ['gaming', 'tech', ...],
+      region:      'global' | 'US' | 'GB' | ...,
+      region_name: 'Global' | 'United States' | ...,
       groups: { 'gaming': [ { channel_id, title, handle, thumbnail,
                               country, subscribers, total_views,
                               video_count, rank }, ... ], ... },
@@ -29,17 +36,21 @@ def get_top_channels():
                   YOUTUBE_API_KEY missing in env).
     }
     """
-    data = fetch_grouped()
+    # Reject unknown regions rather than silently returning empty data.
+    if region not in REGIONS:
+        return JSONResponse({"error": f"unknown region: {region}", "valid": list(REGIONS.keys())}, status_code=400)
+
+    data = fetch_grouped(region=region)
     if not data.get('groups'):
-        # Cache empty — populate inline so first hit shows real data.
-        # Slow (~5–10s) but only on the very first call after deploy;
-        # subsequent calls hit the cache instantly.
+        # Cache empty for this region — populate inline so first hit
+        # shows real data. Slow (5-10s per region) but only on the very
+        # first call; subsequent calls hit the cache instantly.
         try:
-            result = refresh_all()
-            print(f"[top_channels] inline refresh on first hit: {result}")
+            result = refresh_all(regions=[region])
+            print(f"[top_channels] inline refresh on first hit (region={region}): {result}")
         except Exception as e:
-            print(f"[top_channels] inline refresh failed: {e}")
-        data = fetch_grouped()
+            print(f"[top_channels] inline refresh failed (region={region}): {e}")
+        data = fetch_grouped(region=region)
     return JSONResponse(data)
 
 
