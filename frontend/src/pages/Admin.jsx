@@ -228,6 +228,41 @@ function useAdminStyles() {
           animation:admPulse 2.2s ease-in-out infinite;
         }
 
+        /* Today's pulse strip — sits above the 4-card stat row */
+        .adm-pulse-strip {
+          display:flex; align-items:center; gap:18px; flex-wrap:wrap;
+          padding:13px 22px; margin-bottom:16px;
+          background:linear-gradient(180deg, #ffffff 0%, #fafafc 100%);
+          border:1px solid #e6e6ec; border-radius:14px;
+          box-shadow:0 1px 2px rgba(0,0,0,0.03);
+        }
+        .adm-pulse-eyebrow {
+          display:flex; align-items:center; gap:8px; flex-shrink:0;
+          font-size:11px; font-weight:800; letter-spacing:0.11em;
+          text-transform:uppercase; color:#4a4a58;
+        }
+        .adm-pulse-divider {
+          width:1px; height:22px; background:#e6e6ec; flex-shrink:0;
+        }
+        .adm-pulse-metrics {
+          display:flex; gap:22px; flex-wrap:wrap; align-items:baseline;
+        }
+        .adm-pulse-metric {
+          display:inline-flex; align-items:baseline; gap:6px;
+        }
+        .adm-pulse-num {
+          font-size:18px; font-weight:800; color:#0f0f13;
+          letter-spacing:-0.4px; font-variant-numeric:tabular-nums;
+        }
+        .adm-pulse-num.dim { color:#9595a4; }
+        .adm-pulse-num.up  { color:#059669; }
+        .adm-pulse-label {
+          font-size:12px; color:#9595a4; font-weight:500;
+        }
+        .adm-pulse-quiet {
+          font-size:13px; color:#9595a4; font-weight:500;
+        }
+
         .adm-row { transition:background 0.13s; }
         .adm-row:hover { background:#f8f8fb !important; }
         .adm-pg-btn { transition:background 0.13s,color 0.13s,border-color 0.13s; }
@@ -884,6 +919,29 @@ export default function Admin() {
   })()
   const signupsToday = dayBuckets[dayBuckets.length - 1]
 
+  /* Today's pulse — derive from recent_signups by filtering created_at
+     to local-day. Conversions = users who signed up today AND are on a
+     paid plan. MRR added = sum of monthly prices for today's solo /
+     growth / agency signups. Lifetime + pack don't recur, so they
+     count as conversions but not as recurring revenue. */
+  const todayPulse = (() => {
+    const now = new Date()
+    const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+    let conversions = 0
+    let mrrAdded = 0
+    data.recent_signups.forEach(u => {
+      if (!u.created_at) return
+      const d = new Date(u.created_at)
+      if (d < startOfToday) return
+      const p = (u.plan || '').toLowerCase()
+      if (p === 'solo' || p === 'growth' || p === 'agency' || p.includes('lifetime') || p === 'pack') {
+        conversions += 1
+      }
+      if (PLAN_MONTHLY_PRICE[p]) mrrAdded += PLAN_MONTHLY_PRICE[p]
+    })
+    return { signups: signupsToday, conversions, mrrAdded }
+  })()
+
   /* Country — always show; append "not tracked" for existing users */
   const knownCountries  = data.country_breakdown || []
   const unknownCount    = data.unknown_country_count ?? 0
@@ -952,6 +1010,33 @@ export default function Admin() {
           </svg>
           {refreshing ? 'Refreshing…' : 'Refresh'}
         </button>
+      </div>
+
+      {/* ── Today's pulse — thin live strip above the stat row ──────────── */}
+      <div className="adm-pulse-strip">
+        <div className="adm-pulse-eyebrow">
+          <span className="adm-live-dot" />
+          <span>Today</span>
+        </div>
+        <div className="adm-pulse-divider" />
+        {(todayPulse.signups + todayPulse.conversions + todayPulse.mrrAdded) === 0 ? (
+          <span className="adm-pulse-quiet">Quiet so far. New activity will appear here as it lands.</span>
+        ) : (
+          <div className="adm-pulse-metrics">
+            <span className="adm-pulse-metric">
+              <span className={`adm-pulse-num${todayPulse.signups === 0 ? ' dim' : ''}`}>{todayPulse.signups}</span>
+              <span className="adm-pulse-label">signup{todayPulse.signups === 1 ? '' : 's'}</span>
+            </span>
+            <span className="adm-pulse-metric">
+              <span className={`adm-pulse-num${todayPulse.mrrAdded > 0 ? ' up' : ' dim'}`}>+${todayPulse.mrrAdded.toLocaleString()}</span>
+              <span className="adm-pulse-label">MRR added</span>
+            </span>
+            <span className="adm-pulse-metric">
+              <span className={`adm-pulse-num${todayPulse.conversions > 0 ? ' up' : ' dim'}`}>{todayPulse.conversions}</span>
+              <span className="adm-pulse-label">new paid</span>
+            </span>
+          </div>
+        )}
       </div>
 
       {/* ── Stat row — 2 hero red cards + 2 white secondary cards ─────────── */}
