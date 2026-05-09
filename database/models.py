@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Integer, Float, DateTime, Text, Boolean, create_engine
+from sqlalchemy import Column, String, Integer, BigInteger, Float, DateTime, Text, Boolean, create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 import datetime
@@ -200,7 +200,11 @@ class ChannelRegistry(Base):
 class TopChannelCache(Base):
     """Daily-refreshed cache of top YouTube channels per category. Curated
     handle seed lives in app/top_channels.py; the scheduler refreshes the
-    public stats once a day via the YouTube Data API."""
+    public stats once a day via the YouTube Data API.
+
+    BigInteger on the count columns: a popular channel can easily have
+    10B+ total views (PostgreSQL INT maxes at ~2.1B → overflow). Sub
+    counts already pushing past INT range for top YouTube channels."""
     __tablename__ = "top_channel_cache"
     id            = Column(Integer, primary_key=True, autoincrement=True)
     category      = Column(String, nullable=False, index=True)
@@ -209,8 +213,8 @@ class TopChannelCache(Base):
     handle        = Column(String, nullable=True)
     thumbnail     = Column(String, nullable=True)
     country       = Column(String, nullable=True)
-    subscribers   = Column(Integer, nullable=True)
-    total_views   = Column(Integer, nullable=True)
+    subscribers   = Column(BigInteger, nullable=True)
+    total_views   = Column(BigInteger, nullable=True)
     video_count   = Column(Integer, nullable=True)
     rank          = Column(Integer, nullable=True)
     fetched_at    = Column(DateTime, default=_now, index=True)
@@ -445,12 +449,19 @@ try:
         "CREATE TABLE IF NOT EXISTS competitor_analysis_cache (id INTEGER PRIMARY KEY AUTOINCREMENT, channel_id TEXT NOT NULL, competitor_id TEXT NOT NULL, result_json TEXT NOT NULL, analyzed_at DATETIME)",
         # Top channels per category — daily-refreshed cache. Curated handle
         # seed lives in app/top_channels.py; the scheduler refreshes stats
-        # via the YouTube Data API.
-        "CREATE TABLE IF NOT EXISTS top_channel_cache (id INTEGER PRIMARY KEY AUTOINCREMENT, category TEXT NOT NULL, channel_id TEXT NOT NULL, title TEXT, handle TEXT, thumbnail TEXT, country TEXT, subscribers INTEGER, total_views INTEGER, video_count INTEGER, rank INTEGER, fetched_at DATETIME)",
+        # via the YouTube Data API. BIGINT on count columns: top YouTube
+        # channels routinely exceed PostgreSQL INT max (~2.1B) on views.
+        "CREATE TABLE IF NOT EXISTS top_channel_cache (id INTEGER PRIMARY KEY AUTOINCREMENT, category TEXT NOT NULL, channel_id TEXT NOT NULL, title TEXT, handle TEXT, thumbnail TEXT, country TEXT, subscribers BIGINT, total_views BIGINT, video_count INTEGER, rank INTEGER, fetched_at DATETIME)",
         "CREATE INDEX IF NOT EXISTS ix_top_channel_cache_category ON top_channel_cache (category)",
         "CREATE INDEX IF NOT EXISTS ix_top_channel_cache_channel_id ON top_channel_cache (channel_id)",
         "CREATE INDEX IF NOT EXISTS ix_top_channel_cache_fetched_at ON top_channel_cache (fetched_at)",
         "CREATE UNIQUE INDEX IF NOT EXISTS uq_top_channel_cache_cat_channel ON top_channel_cache (category, channel_id)",
+        # Widen subscribers + total_views from INT to BIGINT for any
+        # already-deployed table (PostgreSQL: INT capped at ~2.1B; top
+        # channels easily exceed that on views). SQLite is lenient on
+        # column types so the no-op there is fine.
+        "ALTER TABLE top_channel_cache ALTER COLUMN subscribers TYPE BIGINT",
+        "ALTER TABLE top_channel_cache ALTER COLUMN total_views TYPE BIGINT",
         "CREATE TABLE IF NOT EXISTS milestones (id INTEGER PRIMARY KEY AUTOINCREMENT, channel_id TEXT NOT NULL, category TEXT NOT NULL, tier INTEGER NOT NULL, achieved_at DATETIME)",
         "CREATE INDEX IF NOT EXISTS ix_milestones_channel_id ON milestones (channel_id)",
         "CREATE UNIQUE INDEX IF NOT EXISTS uq_milestones_channel_cat_tier ON milestones (channel_id, category, tier)",
