@@ -139,18 +139,52 @@ function useAdminStyles() {
           color:var(--adm-axis, #b8b8c4);
         }
 
-        /* MRR breakdown strip — three little pills under the value */
-        .adm-mrr-split { display:flex; gap:14px; margin-top:18px; flex-wrap:wrap; }
-        .adm-mrr-split > div {
-          display:flex; flex-direction:column; gap:2px; min-width:0;
+        /* MRR breakdown bars — per-tier horizontal bars on the red hero card */
+        .adm-mrr-bars { display:flex; flex-direction:column; gap:9px; margin-top:18px; }
+        .adm-mrr-bar-row { display:grid; grid-template-columns: 58px 1fr 60px; align-items:center; gap:10px; }
+        .adm-mrr-bar-label {
+          font-size:10.5px; font-weight:800; letter-spacing:0.08em;
+          text-transform:uppercase; color:rgba(255,255,255,0.78);
         }
-        .adm-mrr-split-label {
-          font-size:10.5px; font-weight:700; letter-spacing:0.08em;
-          text-transform:uppercase; color:rgba(255,255,255,0.62);
+        .adm-mrr-bar-track {
+          height:6px; border-radius:99px; overflow:hidden;
+          background:rgba(255,255,255,0.14);
+          box-shadow: inset 0 1px 1px rgba(0,0,0,0.10);
         }
-        .adm-mrr-split-value {
-          font-size:14px; font-weight:700; color:rgba(255,255,255,0.95);
-          font-variant-numeric:tabular-nums; letter-spacing:-0.2px;
+        .adm-mrr-bar-fill {
+          height:100%; border-radius:99px;
+          background: linear-gradient(90deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.65) 100%);
+          box-shadow: 0 0 8px rgba(255,255,255,0.32), inset 0 1px 0 rgba(255,255,255,0.4);
+          transition: width 0.8s cubic-bezier(0.34,1.56,0.64,1);
+        }
+        .adm-mrr-bar-value {
+          font-size:12.5px; font-weight:700; color:#ffffff;
+          font-variant-numeric:tabular-nums; letter-spacing:-0.15px;
+          text-align:right;
+        }
+
+        /* Inline usage bar (Top users row) — gradient + subtle glow */
+        .adm-usage-track {
+          margin-top:5px; height:5px; border-radius:99px;
+          background:#f0f0f4; overflow:hidden;
+          box-shadow: inset 0 1px 1px rgba(0,0,0,0.04);
+        }
+        .adm-usage-fill {
+          height:100%; border-radius:99px;
+          transition: width 0.8s cubic-bezier(0.34,1.56,0.64,1);
+        }
+
+        /* Engagement bar — Active 7d card, single horizontal bar */
+        .adm-engage-track {
+          margin-top:14px; height:6px; border-radius:99px;
+          background:#eaeaef; overflow:hidden;
+          box-shadow: inset 0 1px 1px rgba(0,0,0,0.04);
+        }
+        .adm-engage-fill {
+          height:100%; border-radius:99px;
+          background: linear-gradient(90deg, #34d399 0%, #059669 100%);
+          box-shadow: 0 0 8px rgba(5,150,105,0.30), inset 0 1px 0 rgba(255,255,255,0.30);
+          transition: width 0.8s cubic-bezier(0.34,1.56,0.64,1);
         }
 
         /* Delta chip — replaces inline trend text */
@@ -166,7 +200,7 @@ function useAdminStyles() {
           display:flex; align-items:center; gap:10px;
         }
         .adm-section-title h2 {
-          font-size:18px; font-weight:800; color:#0f0f13; letter-spacing:-0.4px;
+          font-size:19px; font-weight:800; color:#0f0f13; letter-spacing:-0.5px;
         }
         .adm-section-count {
           font-size:11.5px; font-weight:700; color:#e5251b;
@@ -175,12 +209,12 @@ function useAdminStyles() {
           font-variant-numeric:tabular-nums;
         }
         .adm-section-sub {
-          font-size:14px; color:#4a4a58; font-weight:500; line-height:1.55;
+          font-size:13.5px; color:#4a4a58; font-weight:500; line-height:1.55;
           margin-top:5px;
         }
         /* Card-embedded section header sits at the top of a SectionCard */
         .adm-section-cardhdr {
-          padding:20px 26px;
+          padding:22px 28px;
           border-bottom:1px solid #e6e6ec;
           display:flex; align-items:flex-start; justify-content:space-between; gap:14px;
           background:linear-gradient(180deg, #ffffff 0%, #fafafc 100%);
@@ -208,14 +242,7 @@ function useAdminStyles() {
         }
 
         /* Empty state */
-        .adm-empty { padding:48px 24px; text-align:center; }
-        .adm-empty-icon {
-          width:44px; height:44px; border-radius:12px;
-          background:#f4f4f7; color:#9595a4;
-          display:flex; align-items:center; justify-content:center;
-          margin:0 auto 12px;
-        }
-        .adm-empty-text { font-size:13px; color:#9595a4; line-height:1.55; max-width:300px; margin:0 auto; }
+        .adm-empty { padding:64px 24px; text-align:center; }
 
         @keyframes admSpin { to { transform:rotate(360deg) } }
         @keyframes admPulse {
@@ -334,7 +361,7 @@ function Sparkline({ data, accent, axisColor }) {
 }
 
 /* ── Stat card — solid red variant + light variant ──────────────────────── */
-function Stat({ label, value, sub, accent, alert, delta, sparkline, breakdown, variant = 'light' }) {
+function Stat({ label, value, sub, accent, alert, delta, sparkline, breakdown, breakdownTotal, engagementPct, variant = 'light' }) {
   // variant: 'light' (white gradient card) | 'red' (hero red gradient)
   if (variant === 'red') {
     return (
@@ -355,14 +382,20 @@ function Stat({ label, value, sub, accent, alert, delta, sparkline, breakdown, v
             )}
           </div>
           {sub && <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.86)', fontWeight: 500, marginTop: 14, lineHeight: 1.5, letterSpacing: '-0.1px' }}>{sub}</p>}
-          {breakdown && (
-            <div className="adm-mrr-split">
-              {breakdown.map((b, i) => (
-                <div key={i}>
-                  <span className="adm-mrr-split-label">{b.label}</span>
-                  <span className="adm-mrr-split-value">{b.value}</span>
-                </div>
-              ))}
+          {breakdown && breakdownTotal > 0 && (
+            <div className="adm-mrr-bars">
+              {breakdown.map((b, i) => {
+                const pct = breakdownTotal > 0 ? (b.weight / breakdownTotal) * 100 : 0
+                return (
+                  <div key={i} className="adm-mrr-bar-row">
+                    <span className="adm-mrr-bar-label">{b.label}</span>
+                    <div className="adm-mrr-bar-track">
+                      <div className="adm-mrr-bar-fill" style={{ width: `${pct}%`, opacity: 0.55 + 0.45 * (pct / 100) }} />
+                    </div>
+                    <span className="adm-mrr-bar-value">{b.value}</span>
+                  </div>
+                )
+              })}
             </div>
           )}
           {sparkline && <Sparkline data={sparkline} accent="rgba(255,255,255,0.85)" axisColor="rgba(255,255,255,0.55)" />}
@@ -397,6 +430,11 @@ function Stat({ label, value, sub, accent, alert, delta, sparkline, breakdown, v
         </div>
         {sub && <p style={{ fontSize: 13.5, color: alert ? C.red : C.text2, fontWeight: 500, marginTop: 12, lineHeight: 1.5, letterSpacing: '-0.1px' }}>{sub}</p>}
         {sparkline && <Sparkline data={sparkline} accent={accentVar} />}
+        {engagementPct != null && (
+          <div className="adm-engage-track">
+            <div className="adm-engage-fill" style={{ width: `${Math.min(100, engagementPct)}%` }} />
+          </div>
+        )}
       </div>
     </div>
   )
@@ -530,49 +568,13 @@ function FunnelCard({ stats }) {
 }
 
 /* ── Empty state ─────────────────────────────────────────────────────────── */
-function EmptyState({ icon, children }) {
+function EmptyState({ eyebrow = 'Empty', children }) {
   return (
     <div className="adm-empty">
-      {icon && <div className="adm-empty-icon">{icon}</div>}
-      <p className="adm-empty-text">{children}</p>
+      <p style={{ fontSize: 10.5, fontWeight: 700, color: '#9595a4', letterSpacing: '0.11em', textTransform: 'uppercase', marginBottom: 10 }}>{eyebrow}</p>
+      <p style={{ fontSize: 14, color: '#4a4a58', lineHeight: 1.65, maxWidth: 360, margin: '0 auto', fontWeight: 500 }}>{children}</p>
     </div>
   )
-}
-
-/* ── Stat-card icons ─────────────────────────────────────────────────────── */
-const Icons = {
-  users: (
-    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.85" strokeLinecap="round" strokeLinejoin="round">
-      <circle cx="5" cy="5" r="2.5"/>
-      <path d="M1 12c0-2.2 1.8-4 4-4s4 1.8 4 4"/>
-      <circle cx="10.5" cy="5.5" r="2"/>
-      <path d="M13 11.5c0-1.7-1.1-3.1-2.5-3.45"/>
-    </svg>
-  ),
-  paid: (
-    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.85" strokeLinecap="round" strokeLinejoin="round">
-      <rect x="1.5" y="3" width="11" height="8" rx="1.5"/>
-      <path d="M1.5 6h11"/>
-      <path d="M3.5 9h2"/>
-    </svg>
-  ),
-  trend: (
-    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.85" strokeLinecap="round" strokeLinejoin="round">
-      <polyline points="1.5,9.5 5.5,5.5 8,8 12.5,3.5"/>
-      <polyline points="9,3.5 12.5,3.5 12.5,7"/>
-    </svg>
-  ),
-  bolt: (
-    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.85" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M7.5 1L2 8h4l-.5 5L11 6H7l.5-5z"/>
-    </svg>
-  ),
-  inbox: (
-    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M2 11l3-7h8l3 7"/>
-      <path d="M2 11h4l1 2h4l1-2h4v4a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1z"/>
-    </svg>
-  ),
 }
 
 /* ── Bar row — green/amber accent palette ────────────────────────────────── */
@@ -960,6 +962,7 @@ export default function Admin() {
           value={fmtNum(s.total_users)}
           sub={`${fmtNum(s.paid_users)} paid · ${fmtNum(s.free_users)} free`}
           delta={s.conversion_pct > 0 ? { tone: 'up', label: `${s.conversion_pct}% conv` } : null}
+          sparkline={dayBuckets}
         />
         <Stat
           variant="red"
@@ -967,10 +970,11 @@ export default function Admin() {
           value={`$${mrrTotal.toLocaleString()}`}
           sub={mrrTotal === 0 ? 'No paid subscriptions yet' : 'Estimate at full monthly rates'}
           breakdown={mrrTotal > 0 ? [
-            { label: 'Solo',   value: `$${mrrSolo.toLocaleString()}` },
-            { label: 'Growth', value: `$${mrrGrowth.toLocaleString()}` },
-            { label: 'Agency', value: `$${mrrAgency.toLocaleString()}` },
+            { label: 'Solo',   value: `$${mrrSolo.toLocaleString()}`,   weight: mrrSolo },
+            { label: 'Growth', value: `$${mrrGrowth.toLocaleString()}`, weight: mrrGrowth },
+            { label: 'Agency', value: `$${mrrAgency.toLocaleString()}`, weight: mrrAgency },
           ] : null}
+          breakdownTotal={mrrTotal}
         />
         <Stat
           label="Signups · 7d"
@@ -988,6 +992,7 @@ export default function Admin() {
           value={fmtNum(s.active_7d)}
           accent={C.green}
           sub={s.total_users > 0 ? `${Math.round((s.active_7d / s.total_users) * 100)}% of users audited a channel` : 'Channels audited in the last 7 days'}
+          engagementPct={s.total_users > 0 ? (s.active_7d / s.total_users) * 100 : 0}
         />
       </div>
 
@@ -1005,7 +1010,7 @@ export default function Admin() {
         >
           <ColHeader cols={SIGNUP_COLS} />
           {data.recent_signups.length === 0
-            ? <EmptyState icon={Icons.users}>No signups yet. New accounts will appear here as soon as they OAuth in.</EmptyState>
+            ? <EmptyState eyebrow="No signups">New accounts will appear here as soon as they OAuth in.</EmptyState>
             : signupSlice.map((u, i) => {
                 const name  = u.display_name || u.channel_name || u.email.split('@')[0]
                 const pic   = u.profile_picture || u.channel_thumbnail
@@ -1057,7 +1062,7 @@ export default function Admin() {
         >
           <ColHeader cols={TOP_COLS} />
           {data.top_users.length === 0
-            ? <EmptyState icon={Icons.bolt}>Nobody has run an analysis this month yet. The leaderboard fills as people use the product.</EmptyState>
+            ? <EmptyState eyebrow="Quiet month">Nobody has run an analysis this month yet. The leaderboard fills as people use the product.</EmptyState>
             : topSlice.map((u, i) => {
                 const usagePct = u.monthly_allowance > 0 ? Math.min(100, (u.monthly_used / u.monthly_allowance) * 100) : 0
                 const barClr   = usagePct > 80 ? C.red : usagePct > 55 ? C.amber : C.green
@@ -1079,8 +1084,16 @@ export default function Admin() {
                     <div style={{ textAlign: 'right' }}>
                       <span className="num" style={{ fontSize: 13, fontWeight: 700, color: C.text1 }}>{u.monthly_used}</span>
                       <span style={{ fontSize: 11, color: C.text3, fontWeight: 500 }}> / {u.monthly_allowance || '∞'}</span>
-                      <div style={{ marginTop: 5, height: 4, background: '#f0f0f4', borderRadius: 99, overflow: 'hidden' }}>
-                        <div style={{ width: `${usagePct}%`, height: '100%', background: barClr, borderRadius: 99 }} />
+                      <div className="adm-usage-track">
+                        <div className="adm-usage-fill" style={{
+                          width: `${usagePct}%`,
+                          background: usagePct > 80
+                            ? 'linear-gradient(90deg, #ff5048 0%, #e5251b 100%)'
+                            : usagePct > 55
+                              ? 'linear-gradient(90deg, #fbbf24 0%, #d97706 100%)'
+                              : 'linear-gradient(90deg, #34d399 0%, #059669 100%)',
+                          boxShadow: `0 0 6px ${barClr}55, inset 0 1px 0 rgba(255,255,255,0.30)`,
+                        }} />
                       </div>
                     </div>
                     <div className="num" style={{ fontSize: 12, color: C.text2, textAlign: 'right' }}>{fmtNum(u.subscribers)}</div>
@@ -1260,10 +1273,10 @@ export default function Admin() {
 
             <div>
               {filtered.length === 0 ? (
-                <EmptyState icon={Icons.inbox}>
+                <EmptyState eyebrow={frFilter === 'all' ? 'No requests' : `No "${frFilter}" requests`}>
                   {frFilter === 'all'
                     ? 'No feature requests yet. Share the /feedback link in an email to seed the first one.'
-                    : `No requests with status "${frFilter}".`}
+                    : `Nothing in this status right now. Try another filter or wait for new submissions.`}
                 </EmptyState>
               ) : (
                 filtered.map((r, i) => {
