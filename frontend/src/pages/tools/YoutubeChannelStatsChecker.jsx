@@ -525,7 +525,7 @@ export default function YoutubeChannelStatsChecker() {
       )}
 
       {/* ══ BROWSE TOP CHANNELS ══ */}
-      {topChannels && (topChannels.groups?.[topCat]?.length > 0) && (
+      {topChannels && (
         <section className="csc-section-pad" style={{ padding: isMobile ? '64px 20px 80px' : '88px 48px 110px', background: '#ffffff', borderTop: '1px solid var(--ytg-border)' }}>
           <div style={{ maxWidth: 1160, margin: '0 auto' }}>
             <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16, marginBottom: 28 }}>
@@ -545,9 +545,10 @@ export default function YoutubeChannelStatsChecker() {
               )}
             </div>
 
-            {/* Category tabs */}
+            {/* Category tabs — always render the seed categories so the
+                feature is visible even before the cache has populated. */}
             <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 24 }}>
-              {(topChannels.categories || []).filter(c => (topChannels.groups?.[c] || []).length > 0).map(cat => {
+              {(topChannels.categories || []).map(cat => {
                 const isActive = cat === topCat
                 return (
                   <button key={cat} onClick={() => setTopCat(cat)} style={{
@@ -564,32 +565,44 @@ export default function YoutubeChannelStatsChecker() {
               })}
             </div>
 
-            {/* Channel cards grid */}
-            <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : isTablet ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)', gap: 12 }}>
-              {(topChannels.groups[topCat] || []).map((c) => (
-                <button key={c.channel_id} onClick={() => loadTopChannel(c.handle)} style={{
-                  display: 'flex', alignItems: 'center', gap: 12, padding: '14px 16px',
-                  background: '#fff', border: '1px solid var(--ytg-border)', borderRadius: 14,
-                  boxShadow: 'var(--ytg-shadow-sm)',
-                  cursor: 'pointer', fontFamily: 'inherit', textAlign: 'left',
-                  transition: 'transform 0.15s, box-shadow 0.15s, border-color 0.15s',
-                }}
-                onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = 'var(--ytg-shadow)'; e.currentTarget.style.borderColor = 'rgba(229,48,42,0.30)' }}
-                onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'var(--ytg-shadow-sm)'; e.currentTarget.style.borderColor = 'var(--ytg-border)' }}
-                >
-                  {c.thumbnail
-                    ? <img src={c.thumbnail} alt="" style={{ width: 44, height: 44, borderRadius: '50%', objectFit: 'cover', flexShrink: 0 }} />
-                    : <div style={{ width: 44, height: 44, borderRadius: '50%', background: '#f0f0f4', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 17, fontWeight: 700, color: 'var(--ytg-text-2)' }}>{(c.title || '?').charAt(0).toUpperCase()}</div>
-                  }
-                  <div style={{ minWidth: 0, flex: 1 }}>
-                    <p style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: 14, fontWeight: 700, color: 'var(--ytg-text)', letterSpacing: '-0.2px', lineHeight: 1.25, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', marginBottom: 2 }}>{c.title}</p>
-                    <p style={{ fontSize: 11.5, color: 'var(--ytg-text-3)', fontWeight: 500, fontVariantNumeric: 'tabular-nums' }}>
-                      {c.subscribers >= 1e6 ? (c.subscribers / 1e6).toFixed(1) + 'M' : c.subscribers >= 1e3 ? (c.subscribers / 1e3).toFixed(1) + 'K' : c.subscribers} subs
-                    </p>
-                  </div>
-                </button>
-              ))}
-            </div>
+            {/* Channel cards grid OR empty state */}
+            {(topChannels.groups?.[topCat]?.length > 0) ? (
+              <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : isTablet ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)', gap: 12 }}>
+                {topChannels.groups[topCat].map((c) => (
+                  <button key={c.channel_id} onClick={() => loadTopChannel(c.handle)} style={{
+                    display: 'flex', alignItems: 'center', gap: 12, padding: '14px 16px',
+                    background: '#fff', border: '1px solid var(--ytg-border)', borderRadius: 14,
+                    boxShadow: 'var(--ytg-shadow-sm)',
+                    cursor: 'pointer', fontFamily: 'inherit', textAlign: 'left',
+                    transition: 'transform 0.15s, box-shadow 0.15s, border-color 0.15s',
+                  }}
+                  onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = 'var(--ytg-shadow)'; e.currentTarget.style.borderColor = 'rgba(229,48,42,0.30)' }}
+                  onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'var(--ytg-shadow-sm)'; e.currentTarget.style.borderColor = 'var(--ytg-border)' }}
+                  >
+                    {c.thumbnail
+                      ? <img src={c.thumbnail} alt="" style={{ width: 44, height: 44, borderRadius: '50%', objectFit: 'cover', flexShrink: 0 }} />
+                      : <div style={{ width: 44, height: 44, borderRadius: '50%', background: '#f0f0f4', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 17, fontWeight: 700, color: 'var(--ytg-text-2)' }}>{(c.title || '?').charAt(0).toUpperCase()}</div>
+                    }
+                    <div style={{ minWidth: 0, flex: 1 }}>
+                      <p style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: 14, fontWeight: 700, color: 'var(--ytg-text)', letterSpacing: '-0.2px', lineHeight: 1.25, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', marginBottom: 2 }}>{c.title}</p>
+                      <p style={{ fontSize: 11.5, color: 'var(--ytg-text-3)', fontWeight: 500, fontVariantNumeric: 'tabular-nums' }}>
+                        {c.subscribers >= 1e6 ? (c.subscribers / 1e6).toFixed(1) + 'M' : c.subscribers >= 1e3 ? (c.subscribers / 1e3).toFixed(1) + 'K' : c.subscribers} subs
+                      </p>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            ) : (
+              <div style={{ background: 'var(--ytg-bg-2)', border: '1px solid var(--ytg-border)', borderRadius: 16, padding: isMobile ? 28 : 36, textAlign: 'center' }}>
+                <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-text-3)', letterSpacing: '0.11em', textTransform: 'uppercase', marginBottom: 10 }}>First batch loading</p>
+                <p style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: isMobile ? 18 : 20, fontWeight: 800, color: 'var(--ytg-text)', letterSpacing: '-0.4px', marginBottom: 8, lineHeight: 1.25 }}>
+                  Top channels for this category land here within a day.
+                </p>
+                <p style={{ fontSize: 13.5, color: 'var(--ytg-text-3)', maxWidth: 440, margin: '0 auto', lineHeight: 1.6 }}>
+                  We refresh from the YouTube API once a day. Check back tomorrow, or paste any handle above to look up a specific channel right now.
+                </p>
+              </div>
+            )}
           </div>
         </section>
       )}
