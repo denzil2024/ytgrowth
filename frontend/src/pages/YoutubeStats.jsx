@@ -349,7 +349,11 @@ export default function YoutubeStats() {
                 onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = 'var(--ytg-shadow-sm)'; e.currentTarget.style.borderColor = 'rgba(229,48,42,0.30)' }}
                 onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; e.currentTarget.style.borderColor = 'var(--ytg-border)' }}
               >
-                <span aria-hidden="true" style={{ fontSize: 28, lineHeight: 1 }}>{c.flag}</span>
+                <img
+                  src={c.flagSrc} alt={`${c.label} flag`}
+                  width={36} height={27} loading="lazy"
+                  style={{ borderRadius: 4, boxShadow: '0 1px 3px rgba(10,10,15,0.15)', display: 'block' }}
+                />
                 <span style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: 13.5, fontWeight: 700, color: 'var(--ytg-text)', letterSpacing: '-0.2px', textAlign: 'center' }}>
                   {c.label}
                 </span>

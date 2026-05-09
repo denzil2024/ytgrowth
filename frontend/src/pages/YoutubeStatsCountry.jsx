@@ -256,7 +256,11 @@ export default function YoutubeStatsCountry() {
           </nav>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 20 }}>
-            <span aria-hidden="true" style={{ fontSize: isMobile ? 36 : 48, lineHeight: 1 }}>{country.flag}</span>
+            <img
+              src={country.flagSrc} alt={`${country.label} flag`}
+              width={isMobile ? 48 : 64} height={isMobile ? 36 : 48}
+              style={{ borderRadius: 4, boxShadow: '0 1px 3px rgba(10,10,15,0.18)', display: 'block' }}
+            />
             <Eyebrow>Top channels in {country.label}</Eyebrow>
           </div>
 
@@ -483,7 +487,10 @@ export default function YoutubeStatsCountry() {
           <div className="yts-related-grid">
             {related.map(r => (
               <a key={r.id} href={`/youtube-stats/country/${r.id}`} className="yts-related-card">
-                <div className="yts-related-label"><span aria-hidden="true" style={{ marginRight: 8 }}>{r.flag}</span>{r.label}</div>
+                <div className="yts-related-label" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <img src={r.flagSrc} alt="" width={20} height={15} style={{ borderRadius: 2, boxShadow: '0 1px 2px rgba(10,10,15,0.15)', flexShrink: 0 }} />
+                  <span>{r.label}</span>
+                </div>
                 <div className="yts-related-meta">Live rankings →</div>
               </a>
             ))}

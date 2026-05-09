@@ -1,14 +1,22 @@
 /* Shared country metadata for the /youtube-stats/country/:slug pages.
    Slug is what shows in the URL ('united-states'). `code` is the YouTube
    regionCode used to query the API ('US'). Keep this list in sync with
-   app/top_channels.py REGIONS. */
+   app/top_channels.py REGIONS.
+
+   Flag images come from flagcdn.com (free, no auth, served as SVG so they
+   scale crisply at any size). The `flag` emoji field is kept for fallback
+   and accessibility but flagSrc is what we actually render — emoji flags
+   don't render as flags on Windows browsers (they show as letter pairs). */
+
+const flagSrcFor = (code) => `https://flagcdn.com/${code.toLowerCase()}.svg`
 
 export const COUNTRY_META = [
   {
     id:    'united-states',
     code:  'US',
     label: 'United States',
-    flag:  '🇺🇸', // 🇺🇸
+    flag:  '🇺🇸',
+    flagSrc: flagSrcFor('US'),
     blurb: 'The largest YouTube market in the world by ad spend. Where the highest-RPM channels live.',
     seoTitle:       'Top YouTube Channels in the United States 2026: Live Rankings',
     seoDescription: "The top YouTube channels in the United States right now, by category, ranked by live subscriber count from YouTube's official API. Updated daily, free, no signup.",
@@ -39,7 +47,8 @@ export const COUNTRY_META = [
     id:    'united-kingdom',
     code:  'GB',
     label: 'United Kingdom',
-    flag:  '🇬🇧', // 🇬🇧
+    flag:  '🇬🇧',
+    flagSrc: flagSrcFor('GB'),
     blurb: 'High-RPM English-language market with a distinctive creator culture. Strong in vlogs, comedy, sports, gaming.',
     seoTitle:       'Top YouTube Channels in the United Kingdom 2026: Live Rankings',
     seoDescription: "The top YouTube channels in the United Kingdom, by category, ranked by live subscriber count from YouTube's official API. Updated daily, free, no signup.",
@@ -70,7 +79,8 @@ export const COUNTRY_META = [
     id:    'canada',
     code:  'CA',
     label: 'Canada',
-    flag:  '🇨🇦', // 🇨🇦
+    flag:  '🇨🇦',
+    flagSrc: flagSrcFor('CA'),
     blurb: 'Tier-1 RPM market with strong creator output in tech, gaming, fitness, and outdoor content.',
     seoTitle:       'Top YouTube Channels in Canada 2026: Live Subscriber Rankings',
     seoDescription: "The top YouTube channels in Canada, by category, ranked by live subscriber count from YouTube's official API. Updated daily, free, no signup.",
@@ -101,7 +111,8 @@ export const COUNTRY_META = [
     id:    'australia',
     code:  'AU',
     label: 'Australia',
-    flag:  '🇦🇺', // 🇦🇺
+    flag:  '🇦🇺',
+    flagSrc: flagSrcFor('AU'),
     blurb: 'Smallest tier-1 market by population but punches above its weight in lifestyle, fitness, food, and tech.',
     seoTitle:       'Top YouTube Channels in Australia 2026: Live Subscriber Rankings',
     seoDescription: "The top YouTube channels in Australia, by category, ranked by live subscriber count from YouTube's official API. Updated daily, free, no signup.",
@@ -132,7 +143,8 @@ export const COUNTRY_META = [
     id:    'india',
     code:  'IN',
     label: 'India',
-    flag:  '🇮🇳', // 🇮🇳
+    flag:  '🇮🇳',
+    flagSrc: flagSrcFor('IN'),
     blurb: 'Largest YouTube market by user count, dominated by Indian-language content. Lower per-view RPMs but enormous volume.',
     seoTitle:       'Top YouTube Channels in India 2026: Live Subscriber Rankings',
     seoDescription: "The top YouTube channels in India, by category, ranked by live subscriber count from YouTube's official API. Updated daily, free, no signup.",

@@ -194,6 +194,14 @@ def refresh_all(regions: list[str] | None = None) -> dict:
             for category, query in CATEGORY_QUERIES.items():
                 items = _discover_category(yt, query, region_code=region_code)
                 top   = items[:TOP_N]
+                # Don't wipe the cache when discovery returns empty (e.g.
+                # API quota exhausted, network blip, search returned no
+                # qualifying channels). Stale data is far more useful to
+                # users than an empty leaderboard.
+                if not top:
+                    print(f"[top_channels] no items for {category}/{region}, keeping cached rows")
+                    per_cat[category] = 0
+                    continue
                 # Clear this (category, region) cache and reinsert. Cheaper than
                 # diffing because the set is small (≤ TOP_N rows per pair).
                 db.query(TopChannelCache).filter_by(category=category, region=region).delete()
