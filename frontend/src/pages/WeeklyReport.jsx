@@ -155,55 +155,53 @@ function ReportBody({ rd, isLatest }) {
       {/* Weekly summary — bold statement (like Overview insight problem) */}
       {rd.weeklySummary && (
         <p style={{
-          fontSize: 14, fontWeight: 700,
+          fontSize: 14.5, fontWeight: 700,
           color: C.text1, lineHeight: 1.65,
-          marginBottom: 14,
+          letterSpacing: '-0.15px',
+          marginBottom: 18,
         }}>
           {rd.weeklySummary}
         </p>
       )}
 
-      {/* Divider before 3-column grid */}
-      {(rd.biggestWin || rd.watchOut || rd.priorityAction) && (
-        <div style={{ height: 1, background: C.border, marginBottom: 14 }}/>
-      )}
-
-      {/* 3-column grid — Overview priority-action pattern */}
+      {/* 3-column grid — Watch out / Priority / Biggest Win.
+         Unified shape language: same radius, same border weight, same
+         padding rhythm. Priority gets visual weight via a richer red
+         tint + glow shadow rather than an asymmetric border-radius. */}
       {(rd.biggestWin || rd.watchOut || rd.priorityAction) && (
         <div style={{
           display: 'grid',
           gridTemplateColumns: '1fr 1.4fr 1fr',
-          gap: 8,
+          gap: 10,
         }}>
-          {/* Watch out (amber — context/warning, like "Why now") */}
+          {/* Watch out (amber) */}
           {rd.watchOut
-            ? <div style={{ background: 'rgba(217,119,6,0.07)', border: '1px solid rgba(217,119,6,0.14)', borderRadius: 10, padding: '12px 14px' }}>
+            ? <div style={{ background: 'rgba(217,119,6,0.06)', border: '1px solid rgba(217,119,6,0.18)', borderRadius: 12, padding: '14px 16px' }}>
                 <ColLabel color={C.amber}>Watch out</ColLabel>
                 <p style={{ fontSize: 13.5, color: C.text1, lineHeight: 1.72 }}>{rd.watchOut}</p>
               </div>
             : <div />
           }
 
-          {/* Priority (hero — white with red left border + shadow, like "Action") */}
+          {/* Priority (red — the hero, slightly louder tint + glow) */}
           {rd.priorityAction
             ? <div style={{
-                background: '#ffffff',
-                border: `1px solid ${C.border}`,
-                borderLeft: `3px solid ${C.red}`,
-                borderRadius: '0 10px 10px 0',
-                padding: '12px 16px',
-                boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
+                background: 'linear-gradient(160deg, rgba(229,37,27,0.07) 0%, rgba(229,37,27,0.025) 100%)',
+                border: '1px solid rgba(229,37,27,0.22)',
+                borderRadius: 12,
+                padding: '14px 16px',
+                boxShadow: '0 1px 2px rgba(229,37,27,0.05), 0 8px 22px rgba(229,37,27,0.08)',
               }}>
-                <ColLabel color={C.red}>Your Priority</ColLabel>
+                <ColLabel color={C.red}>Your priority</ColLabel>
                 <p style={{ fontSize: 13.5, color: C.text1, lineHeight: 1.72 }}>{rd.priorityAction}</p>
               </div>
             : <div />
           }
 
-          {/* Biggest win (green — positive outcome, like "Expected outcome") */}
+          {/* Biggest win (green) */}
           {rd.biggestWin
-            ? <div style={{ background: 'rgba(5,150,105,0.07)', border: '1px solid rgba(5,150,105,0.14)', borderRadius: 10, padding: '12px 14px' }}>
-                <ColLabel color={C.green}>Biggest Win</ColLabel>
+            ? <div style={{ background: 'rgba(5,150,105,0.06)', border: '1px solid rgba(5,150,105,0.18)', borderRadius: 12, padding: '14px 16px' }}>
+                <ColLabel color={C.green}>Biggest win</ColLabel>
                 <p style={{ fontSize: 13.5, color: C.text1, lineHeight: 1.72 }}>{rd.biggestWin}</p>
               </div>
             : <div />
@@ -211,9 +209,9 @@ function ReportBody({ rd, isLatest }) {
         </div>
       )}
 
-      {/* Motivational close — muted, no italic */}
+      {/* Motivational close — muted, no divider line above (just spacing) */}
       {rd.motivationalClose && (
-        <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.65, marginTop: 18, paddingTop: 16, borderTop: `1px solid ${C.border}` }}>
+        <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.65, marginTop: 22 }}>
           {rd.motivationalClose}
         </p>
       )}
@@ -299,24 +297,9 @@ export default function WeeklyReport({ channelId, channelEmail, plan, channelSta
 
   const header = (
     <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 32, gap: 16, flexWrap: 'wrap' }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-        <span style={{
-          display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-          width: 44, height: 44, borderRadius: 11,
-          background: 'rgba(229,37,27,0.09)',
-          border: '1px solid rgba(229,37,27,0.18)',
-          flexShrink: 0,
-        }}>
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={C.red} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <rect x="4" y="5" width="16" height="16" rx="2"/>
-            <path d="M8 3v4M16 3v4M4 11h16"/>
-            <path d="M8 15h4"/>
-          </svg>
-        </span>
-        <div>
-          <h1 style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', marginBottom: 4, lineHeight: 1.1 }}>Weekly Report</h1>
-          <p style={{ fontSize: 14, color: C.text3, lineHeight: 1.3 }}>{subSubtitle}</p>
-        </div>
+      <div>
+        <h1 style={{ fontSize: 26, fontWeight: 800, color: C.text1, letterSpacing: '-0.7px', marginBottom: 6, lineHeight: 1.1 }}>Weekly Report</h1>
+        <p style={{ fontSize: 14, color: C.text3, lineHeight: 1.4 }}>{subSubtitle}</p>
       </div>
 
       {/* Email delivery toggle — paid only (free users have nothing to toggle) */}
@@ -389,10 +372,7 @@ export default function WeeklyReport({ channelId, channelEmail, plan, channelSta
             '4 AI reports delivered to your inbox every month.',
           ]}
           previewContent={
-            <div className="ytg-card" style={{
-              borderTop: `3px solid ${C.red}`,
-              padding: '28px 28px 30px',
-            }}>
+            <div className="ytg-card" style={{ padding: '30px 30px 32px' }}>
               <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, marginBottom: 24 }}>
                 <div>
                   <div style={{ fontSize: 18, fontWeight: 800, color: C.text1, letterSpacing: '-0.4px', marginBottom: 5 }}>
@@ -412,23 +392,27 @@ export default function WeeklyReport({ channelId, channelEmail, plan, channelSta
                 </span>
               </div>
 
-              <p style={{ fontSize: 14, fontWeight: 700, color: C.text1, lineHeight: 1.65, marginBottom: 14 }}>
+              <p style={{ fontSize: 14.5, fontWeight: 700, color: C.text1, lineHeight: 1.65, letterSpacing: '-0.15px', marginBottom: 18 }}>
                 {channelFirstName} grew 12% this week with strong retention on the house tour, but the 14-day posting gap is starting to hurt recommendation surfaces — here&rsquo;s what&rsquo;s working and what to focus on next.
               </p>
 
-              <div style={{ height: 1, background: C.border, marginBottom: 14 }}/>
-
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr 1fr', gap: 8 }}>
-                <div style={{ background: 'rgba(217,119,6,0.07)', border: '1px solid rgba(217,119,6,0.14)', borderRadius: 10, padding: '12px 14px' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr 1fr', gap: 10 }}>
+                <div style={{ background: 'rgba(217,119,6,0.06)', border: '1px solid rgba(217,119,6,0.18)', borderRadius: 12, padding: '14px 16px' }}>
                   <ColLabel color={C.amber}>Watch out</ColLabel>
                   <p style={{ fontSize: 13.5, color: C.text1, lineHeight: 1.72 }}>Posting frequency dropped to one video in 14 days and the algorithm is deprioritizing the channel.</p>
                 </div>
-                <div style={{ background: '#ffffff', border: `1px solid ${C.border}`, borderLeft: `3px solid ${C.red}`, borderRadius: '0 10px 10px 0', padding: '12px 16px', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}>
-                  <ColLabel color={C.red}>Your Priority</ColLabel>
+                <div style={{
+                  background: 'linear-gradient(160deg, rgba(229,37,27,0.07) 0%, rgba(229,37,27,0.025) 100%)',
+                  border: '1px solid rgba(229,37,27,0.22)',
+                  borderRadius: 12,
+                  padding: '14px 16px',
+                  boxShadow: '0 1px 2px rgba(229,37,27,0.05), 0 8px 22px rgba(229,37,27,0.08)',
+                }}>
+                  <ColLabel color={C.red}>Your priority</ColLabel>
                   <p style={{ fontSize: 13.5, color: C.text1, lineHeight: 1.72 }}>Film two shopping hauls this week — they are your repeatable winner, and a second one inside 7 days compounds the algorithm boost.</p>
                 </div>
-                <div style={{ background: 'rgba(5,150,105,0.07)', border: '1px solid rgba(5,150,105,0.14)', borderRadius: 10, padding: '12px 14px' }}>
-                  <ColLabel color={C.green}>Biggest Win</ColLabel>
+                <div style={{ background: 'rgba(5,150,105,0.06)', border: '1px solid rgba(5,150,105,0.18)', borderRadius: 12, padding: '14px 16px' }}>
+                  <ColLabel color={C.green}>Biggest win</ColLabel>
                   <p style={{ fontSize: 13.5, color: C.text1, lineHeight: 1.72 }}>The house tour hit 13,908 views and pulled in 25 new subs — your best single video this quarter.</p>
                 </div>
               </div>
@@ -475,15 +459,15 @@ export default function WeeklyReport({ channelId, channelEmail, plan, channelSta
       {!hasReports && (
         <div className="ytg-card" style={{
           display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-          padding: '80px 32px', textAlign: 'center',
+          padding: '88px 32px', textAlign: 'center',
         }}>
-          <svg width="48" height="48" viewBox="0 0 48 48" fill="none" stroke={C.text3} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ marginBottom: 16 }}>
-            <rect x="8" y="10" width="32" height="34" rx="4"/>
-            <path d="M16 6v8M32 6v8M8 22h32"/>
-            <path d="M16 30h8M16 36h16"/>
-          </svg>
-          <h2 style={{ fontSize: 18, fontWeight: 700, color: C.text1, marginBottom: 8, letterSpacing: '-0.3px' }}>Your first report is on its way</h2>
-          <p style={{ fontSize: 14, color: C.text3, maxWidth: 320, lineHeight: 1.7 }}>
+          <span style={{
+            fontSize: 10.5, fontWeight: 700, color: C.text3,
+            letterSpacing: '0.11em', textTransform: 'uppercase',
+            marginBottom: 14,
+          }}>Generating</span>
+          <h2 style={{ fontSize: 22, fontWeight: 800, color: C.text1, marginBottom: 10, letterSpacing: '-0.5px', lineHeight: 1.15 }}>Your first report is on its way</h2>
+          <p style={{ fontSize: 14, color: C.text3, maxWidth: 360, lineHeight: 1.7 }}>
             We generate your first weekly report right after your channel connects. Check back in a few minutes.
           </p>
         </div>
@@ -492,8 +476,7 @@ export default function WeeklyReport({ channelId, channelEmail, plan, channelSta
       {/* ── Latest report ───────────────────────────────────────────────── */}
       {latest && (
         <div className="ytg-card" style={{
-          borderTop: `3px solid ${C.red}`,
-          padding: '28px 28px 30px', marginBottom: 16,
+          padding: '30px 30px 32px', marginBottom: 16,
         }}>
           <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, marginBottom: 24 }}>
             <div style={{ minWidth: 0 }}>
