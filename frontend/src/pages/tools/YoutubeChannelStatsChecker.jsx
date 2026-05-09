@@ -524,51 +524,58 @@ export default function YoutubeChannelStatsChecker() {
         </section>
       )}
 
-      {/* ══ BROWSE TOP CHANNELS ══ */}
-      {topChannels && (
-        <section className="csc-section-pad" style={{ padding: isMobile ? '64px 20px 80px' : '88px 48px 110px', background: '#ffffff', borderTop: '1px solid var(--ytg-border)' }}>
-          <div style={{ maxWidth: 1160, margin: '0 auto' }}>
-            <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16, marginBottom: 28 }}>
-              <div>
-                <Eyebrow>Browse</Eyebrow>
-                <h2 style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontWeight: 800, fontSize: isMobile ? 30 : 42, letterSpacing: '-1.4px', color: 'var(--ytg-text)', lineHeight: 1.08, marginBottom: 10, textWrap: 'balance' }}>
-                  Top channels in your <span style={{ color: 'var(--ytg-accent)' }}>niche.</span>
-                </h2>
-                <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.6, maxWidth: 620 }}>
-                  Click any channel to pull their full stats. Refreshed daily from the YouTube Data API.
-                </p>
+      {/* ══ BROWSE TOP CHANNELS ══
+         Only renders when at least one category has data. Tabs filter to
+         categories with non-empty rows so a click never lands on an empty
+         tab. If the cache is fully empty, the entire section is hidden. */}
+      {(() => {
+        if (!topChannels) return null
+        const filledCats = (topChannels.categories || []).filter(c => (topChannels.groups?.[c] || []).length > 0)
+        if (filledCats.length === 0) return null
+        const activeCat = filledCats.includes(topCat) ? topCat : filledCats[0]
+        const cards = topChannels.groups[activeCat] || []
+        return (
+          <section className="csc-section-pad" style={{ padding: isMobile ? '64px 20px 80px' : '88px 48px 110px', background: '#ffffff', borderTop: '1px solid var(--ytg-border)' }}>
+            <div style={{ maxWidth: 1160, margin: '0 auto' }}>
+              <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16, marginBottom: 28 }}>
+                <div>
+                  <Eyebrow>Browse</Eyebrow>
+                  <h2 style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontWeight: 800, fontSize: isMobile ? 30 : 42, letterSpacing: '-1.4px', color: 'var(--ytg-text)', lineHeight: 1.08, marginBottom: 10, textWrap: 'balance' }}>
+                    Top channels in your <span style={{ color: 'var(--ytg-accent)' }}>niche.</span>
+                  </h2>
+                  <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.6, maxWidth: 620 }}>
+                    Click any channel to pull their full stats. Live data from the YouTube API.
+                  </p>
+                </div>
+                {topChannels.fetched_at && (
+                  <span style={{ fontSize: 12, color: 'var(--ytg-text-3)', fontWeight: 500 }}>
+                    Updated {new Date(topChannels.fetched_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                  </span>
+                )}
               </div>
-              {topChannels.fetched_at && (
-                <span style={{ fontSize: 12, color: 'var(--ytg-text-3)', fontWeight: 500 }}>
-                  Updated {new Date(topChannels.fetched_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
-                </span>
-              )}
-            </div>
 
-            {/* Category tabs — always render the seed categories so the
-                feature is visible even before the cache has populated. */}
-            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 24 }}>
-              {(topChannels.categories || []).map(cat => {
-                const isActive = cat === topCat
-                return (
-                  <button key={cat} onClick={() => setTopCat(cat)} style={{
-                    padding: '8px 16px', borderRadius: 100, border: '1.5px solid',
-                    borderColor: isActive ? 'var(--ytg-accent)' : 'var(--ytg-border)',
-                    background: isActive ? 'var(--ytg-accent)' : '#fff',
-                    color: isActive ? '#fff' : 'var(--ytg-text-2)',
-                    fontSize: 13, fontWeight: 600, fontFamily: 'inherit', cursor: 'pointer',
-                    letterSpacing: '-0.1px', textTransform: 'capitalize',
-                    boxShadow: isActive ? '0 1px 3px rgba(0,0,0,0.10), 0 4px 12px rgba(229,48,42,0.28)' : 'none',
-                    transition: 'all 0.15s',
-                  }}>{cat}</button>
-                )
-              })}
-            </div>
+              {/* Category tabs — only categories that actually have rows */}
+              <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 24 }}>
+                {filledCats.map(cat => {
+                  const isActive = cat === activeCat
+                  return (
+                    <button key={cat} onClick={() => setTopCat(cat)} style={{
+                      padding: '8px 16px', borderRadius: 100, border: '1.5px solid',
+                      borderColor: isActive ? 'var(--ytg-accent)' : 'var(--ytg-border)',
+                      background: isActive ? 'var(--ytg-accent)' : '#fff',
+                      color: isActive ? '#fff' : 'var(--ytg-text-2)',
+                      fontSize: 13, fontWeight: 600, fontFamily: 'inherit', cursor: 'pointer',
+                      letterSpacing: '-0.1px', textTransform: 'capitalize',
+                      boxShadow: isActive ? '0 1px 3px rgba(0,0,0,0.10), 0 4px 12px rgba(229,48,42,0.28)' : 'none',
+                      transition: 'all 0.15s',
+                    }}>{cat}</button>
+                  )
+                })}
+              </div>
 
-            {/* Channel cards grid OR empty state */}
-            {(topChannels.groups?.[topCat]?.length > 0) ? (
+              {/* Channel cards grid */}
               <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : isTablet ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)', gap: 12 }}>
-                {topChannels.groups[topCat].map((c) => (
+                {cards.map((c) => (
                   <button key={c.channel_id} onClick={() => loadTopChannel(c.handle)} style={{
                     display: 'flex', alignItems: 'center', gap: 12, padding: '14px 16px',
                     background: '#fff', border: '1px solid var(--ytg-border)', borderRadius: 14,
@@ -592,20 +599,10 @@ export default function YoutubeChannelStatsChecker() {
                   </button>
                 ))}
               </div>
-            ) : (
-              <div style={{ background: 'var(--ytg-bg-2)', border: '1px solid var(--ytg-border)', borderRadius: 16, padding: isMobile ? 28 : 36, textAlign: 'center' }}>
-                <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-text-3)', letterSpacing: '0.11em', textTransform: 'uppercase', marginBottom: 10 }}>First batch loading</p>
-                <p style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: isMobile ? 18 : 20, fontWeight: 800, color: 'var(--ytg-text)', letterSpacing: '-0.4px', marginBottom: 8, lineHeight: 1.25 }}>
-                  Top channels for this category land here within a day.
-                </p>
-                <p style={{ fontSize: 13.5, color: 'var(--ytg-text-3)', maxWidth: 440, margin: '0 auto', lineHeight: 1.6 }}>
-                  We refresh from the YouTube API once a day. Check back tomorrow, or paste any handle above to look up a specific channel right now.
-                </p>
-              </div>
-            )}
-          </div>
-        </section>
-      )}
+            </div>
+          </section>
+        )
+      })()}
 
       {/* ══ HOW IT WORKS ══ */}
       <section className="csc-section-pad" style={{ padding: isMobile ? '72px 20px' : '110px 48px', background: 'var(--ytg-bg-2)', borderTop: '1px solid var(--ytg-border)', borderBottom: '1px solid var(--ytg-border)' }}>

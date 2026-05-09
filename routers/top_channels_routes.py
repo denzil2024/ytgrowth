@@ -6,10 +6,12 @@ fired yet), trigger a synchronous refresh inline so the user sees real
 channels on the first request instead of an empty section.
 """
 
-from fastapi import APIRouter
+import os
+
+from fastapi import APIRouter, Request
 from fastapi.responses import JSONResponse
 
-from app.top_channels import fetch_grouped, refresh_all
+from app.top_channels import fetch_grouped, refresh_all, TOP_CHANNELS_SEED
 
 router = APIRouter()
 
@@ -39,3 +41,34 @@ def get_top_channels():
             print(f"[top_channels] inline refresh failed: {e}")
         data = fetch_grouped()
     return JSONResponse(data)
+
+
+@router.get("/admin/top-channels-debug")
+def debug_top_channels(request: Request):
+    """Admin-only diagnostic. Confirms env, lists seed config, runs a
+    fresh refresh, and reports exactly which handles resolved vs failed.
+    Use to debug why the cache might be empty in production."""
+    # Reuse the existing admin gate from admin_routes
+    from routers.admin_routes import _is_admin
+    is_admin, _email = _is_admin(request)
+    if not is_admin:
+        return JSONResponse({"error": "admin only"}, status_code=403)
+
+    api_key_set = bool(os.getenv("YOUTUBE_API_KEY"))
+    seed_total  = sum(len(v) for v in TOP_CHANNELS_SEED.values())
+
+    refresh_result = None
+    if api_key_set:
+        refresh_result = refresh_all()
+
+    cache = fetch_grouped()
+    cache_total = sum(len(v) for v in (cache.get("groups") or {}).values())
+
+    return JSONResponse({
+        "youtube_api_key_set": api_key_set,
+        "seed_categories":     list(TOP_CHANNELS_SEED.keys()),
+        "seed_total_handles":  seed_total,
+        "cache_total_rows":    cache_total,
+        "cache_fetched_at":    cache.get("fetched_at"),
+        "refresh_result":      refresh_result,
+    })

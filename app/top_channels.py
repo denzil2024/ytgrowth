@@ -17,39 +17,74 @@ import os
 import datetime
 
 # Curated seed list — handles only (without leading @). One day a future
-# admin UI can edit these without code; until then they live here.
+# admin UI can edit these without code; until then they live here. Bad
+# handles fail silently in refresh_all() — only channels that actually
+# resolve via the YouTube API end up in the cache, so the UX never shows
+# broken entries.
 TOP_CHANNELS_SEED = {
     "gaming": [
         "MrBeastGaming", "Markiplier", "jacksepticeye", "PewDiePie",
-        "DanTDM", "Ninja", "Valkyrae", "Pokimane",
+        "DanTDM", "Ninja", "Valkyrae", "Pokimane", "Dream",
+        "VanossGaming", "Jelly", "PrestonPlayz",
     ],
     "tech": [
         "mkbhd", "LinusTechTips", "UnboxTherapy", "Mrwhosetheboss",
-        "JerryRigEverything", "DaveLee", "AustinEvans",
+        "JerryRigEverything", "DaveLee", "AustinEvans", "iJustine",
+        "MrMobile", "TechLinked", "ShortCircuit",
     ],
     "beauty": [
-        "JeffreeStarOfficial", "jamescharles", "NikkieTutorials",
+        "jamescharles", "NikkieTutorials", "JeffreeStar",
         "TatiWestbrook", "patrickstarrr", "MichellePhan",
+        "RclBeauty101", "BretmanRock",
     ],
     "finance": [
         "GrahamStephan", "MeetKevin", "AndreiJikh", "ThePlainBagel",
-        "BiggerPocketsRealEstateInvesting",
+        "BiggerPockets", "MinorityMindset", "ProjectLifeMastery",
+        "TheRamseyShow",
     ],
     "cooking": [
         "bingingwithbabish", "joshuaweissman", "AdamRagusea",
-        "InternetShaquille", "AlmazanKitchen",
+        "InternetShaquille", "AlmazanKitchen", "Tasty",
+        "BonAppetit", "JamieOliver", "GordonRamsay",
     ],
     "fitness": [
         "athleanx", "JeffNippard", "ChloeTing", "ScottHermanFitness",
-        "BradleyMartynOnline",
+        "BradleyMartynOnline", "Calisthenicmovement", "BuffDudes",
+        "NimaiDelgado",
     ],
     "music": [
         "EminemMusic", "Beyonce", "TaylorSwift", "JustinBieber",
-        "BrunoMars", "TheWeeknd",
+        "BrunoMars", "TheWeeknd", "edsheeran", "ArianaGrande",
+        "drake", "ladygaga",
     ],
     "education": [
         "veritasium", "Vsauce", "kurzgesagt", "crashcourse",
-        "Numberphile", "TED",
+        "Numberphile", "TED", "TheRoyalInstitution", "SmarterEveryDay",
+        "MarkRober", "AsapSCIENCE",
+    ],
+    "vlogs": [
+        "emmachamberlain", "caseyneistat", "DavidDobrik", "Zoella",
+        "shanedawson", "LoganPaul", "JakePaul",
+    ],
+    "travel": [
+        "MarkWiens", "LostLeBlanc", "DrewBinsky", "FunForLouis",
+        "SailingLaVagabonde", "kara_and_nate",
+    ],
+    "comedy": [
+        "Smosh", "Lilly", "JennaMarbles", "danielhowell",
+        "AmazingPhil", "CodyKo", "KurtisConner",
+    ],
+    "sports": [
+        "DudePerfect", "F1", "NBA", "NFL", "uefa",
+        "premierleague", "Formula1",
+    ],
+    "entertainment": [
+        "MrBeast", "TheTryGuys", "BuzzFeedVideo", "VanityFair",
+        "WIRED", "JimmyKimmelLive", "TheTonightShow",
+    ],
+    "news": [
+        "VICENews", "vox", "BloombergQuicktake", "Reuters",
+        "BBCNews", "TheYoungTurks",
     ],
 }
 
@@ -67,8 +102,12 @@ def _yt_client():
 
 
 def _resolve_handle(yt, handle: str) -> dict | None:
-    """Resolve an @handle to a full channel record via channels.list. Returns
-    the raw item dict on success, None on failure."""
+    """Resolve an @handle to a full channel record. Tries forHandle first
+    (1 unit, exact match), falls back to a search-then-fetch (~101 units,
+    fuzzy match) so an outdated or slightly-off handle in the seed list
+    still produces a result. Returns the raw channels.list item dict on
+    success, None on failure."""
+    # Path 1: exact handle resolution (cheapest, 1 unit)
     try:
         resp = yt.channels().list(
             part="snippet,statistics",
@@ -76,9 +115,34 @@ def _resolve_handle(yt, handle: str) -> dict | None:
             maxResults=1,
         ).execute()
         items = resp.get("items") or []
-        return items[0] if items else None
+        if items:
+            return items[0]
     except Exception as e:
-        print(f"[top_channels] handle resolve failed for @{handle}: {e}")
+        print(f"[top_channels] forHandle failed for @{handle}: {e}")
+
+    # Path 2: search → channels.list fallback
+    try:
+        sr = yt.search().list(
+            part="snippet",
+            q=f"@{handle}",
+            type="channel",
+            maxResults=1,
+        ).execute()
+        s_items = sr.get("items") or []
+        if not s_items:
+            return None
+        ch_id = s_items[0].get("snippet", {}).get("channelId") or s_items[0].get("id", {}).get("channelId")
+        if not ch_id:
+            return None
+        cr = yt.channels().list(
+            part="snippet,statistics",
+            id=ch_id,
+            maxResults=1,
+        ).execute()
+        c_items = cr.get("items") or []
+        return c_items[0] if c_items else None
+    except Exception as e:
+        print(f"[top_channels] search fallback failed for @{handle}: {e}")
         return None
 
 
