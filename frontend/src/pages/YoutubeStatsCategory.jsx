@@ -4,6 +4,7 @@ import LandingFooter from '../components/LandingFooter'
 import SiteHeader from '../components/SiteHeader'
 import FaqSchema from '../components/FaqSchema'
 import { CATEGORY_META, getCategory } from '../data/youtubeStatsCategories'
+import { COUNTRY_META } from '../data/youtubeStatsCountries'
 
 /* ─── /youtube-stats/:slug drilldown page ───────────────────────────────
    Per-category landing page. Pulls the same /api/top-channels payload as
@@ -450,8 +451,47 @@ export default function YoutubeStatsCategory() {
         </div>
       </div>
 
+      {/* ══ FILTER BY COUNTRY — combo page links ══ */}
+      <section className="yts-section-pad" style={{ padding: isMobile ? '64px 20px 24px' : '96px 48px 32px', background: '#fff', borderTop: '1px solid var(--ytg-border)' }}>
+        <div style={{ maxWidth: 1080, margin: '0 auto' }}>
+          <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12, marginBottom: 18 }}>
+            <div>
+              <Eyebrow>Filter by country</Eyebrow>
+              <h2 style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontWeight: 800, fontSize: isMobile ? 22 : 28, letterSpacing: '-0.9px', color: 'var(--ytg-text)', lineHeight: 1.1 }}>
+                Top {category.label.toLowerCase()} channels by <span style={{ color: 'var(--ytg-accent)' }}>country.</span>
+              </h2>
+            </div>
+            <p style={{ fontSize: 13, color: 'var(--ytg-text-3)', maxWidth: 420, lineHeight: 1.55, margin: 0 }}>
+              Drill into the {category.label.toLowerCase()} leaderboard for one specific YouTube market.
+            </p>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(5, 1fr)', gap: 10 }}>
+            {COUNTRY_META.map(co => (
+              <a key={co.id} href={`/youtube-stats/country/${co.id}/${category.id}`}
+                style={{
+                  display: 'flex', flexDirection: 'column', alignItems: 'center',
+                  gap: 8, padding: '18px 12px',
+                  background: '#fff',
+                  border: '1px solid var(--ytg-border)',
+                  borderRadius: 14,
+                  textDecoration: 'none',
+                  transition: 'transform 0.15s, box-shadow 0.15s, border-color 0.15s',
+                }}
+                onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = 'var(--ytg-shadow-sm)'; e.currentTarget.style.borderColor = 'rgba(229,48,42,0.30)' }}
+                onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; e.currentTarget.style.borderColor = 'var(--ytg-border)' }}
+              >
+                <img src={co.flagSrc} alt="" width={36} height={27} loading="lazy" style={{ borderRadius: 4, boxShadow: '0 1px 3px rgba(10,10,15,0.15)', display: 'block' }} />
+                <span style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: 13.5, fontWeight: 700, color: 'var(--ytg-text)', letterSpacing: '-0.2px', textAlign: 'center' }}>
+                  {co.label}
+                </span>
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* ══ RELATED CATEGORIES ══ */}
-      <section className="yts-section-pad" style={{ padding: isMobile ? '64px 20px' : '96px 48px', background: '#fff', borderTop: '1px solid var(--ytg-border)' }}>
+      <section className="yts-section-pad" style={{ padding: isMobile ? '24px 20px 64px' : '32px 48px 96px', background: '#fff' }}>
         <div style={{ maxWidth: 1080, margin: '0 auto' }}>
           <div style={{ marginBottom: 28 }}>
             <Eyebrow>Browse other niches</Eyebrow>

@@ -339,7 +339,7 @@ export default function YoutubeStatsCountry() {
                     {meta.blurb}
                   </p>
                 </div>
-                <a href={`/youtube-stats/${meta.id}`} style={{
+                <a href={`/youtube-stats/country/${country.id}/${meta.id}`} style={{
                   display: 'inline-flex', alignItems: 'center', gap: 6,
                   fontSize: 13, fontWeight: 700, color: 'var(--ytg-accent)',
                   textDecoration: 'none', whiteSpace: 'nowrap',
@@ -350,7 +350,7 @@ export default function YoutubeStatsCountry() {
                 }}
                 onMouseEnter={e => { e.currentTarget.style.background = 'rgba(229,48,42,0.12)'; e.currentTarget.style.borderColor = 'rgba(229,48,42,0.35)' }}
                 onMouseLeave={e => { e.currentTarget.style.background = 'var(--ytg-accent-light)'; e.currentTarget.style.borderColor = 'rgba(229,48,42,0.18)' }}
-                >Global top 50 →</a>
+                >See full top 50 →</a>
               </div>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
