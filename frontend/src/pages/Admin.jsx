@@ -187,6 +187,46 @@ function useAdminStyles() {
           transition: width 0.8s cubic-bezier(0.34,1.56,0.64,1);
         }
 
+        /* Activity feed — vertical event ticker */
+        .adm-feed-scroll {
+          max-height: 480px; overflow-y: auto; padding: 4px 6px 4px 0;
+        }
+        .adm-feed-scroll::-webkit-scrollbar { width: 8px }
+        .adm-feed-scroll::-webkit-scrollbar-thumb {
+          background-color: rgba(10,10,15,0.18); border-radius: 8px;
+          border: 2px solid transparent; background-clip: content-box;
+        }
+        .adm-feed-row {
+          display: grid; grid-template-columns: 6px 26px 1fr auto;
+          align-items: center; gap: 10px;
+          padding: 11px 22px;
+          border-bottom: 1px solid #f0f0f4;
+          transition: background 0.13s;
+        }
+        .adm-feed-row:last-child { border-bottom: none; }
+        .adm-feed-row:hover { background: #f8f8fb; }
+        .adm-feed-dot {
+          width: 6px; height: 6px; border-radius: 50%;
+          flex-shrink: 0;
+        }
+        .adm-feed-dot.paid  { background: #059669; box-shadow: 0 0 0 3px rgba(5,150,105,0.18); }
+        .adm-feed-dot.free  { background: #b8b8c4; }
+        .adm-feed-dot.audit { background: #4a7cf7; box-shadow: 0 0 0 3px rgba(74,124,247,0.18); }
+        .adm-feed-name {
+          font-size: 13px; font-weight: 700; color: #0f0f13;
+          letter-spacing: -0.15px;
+          overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+        }
+        .adm-feed-action {
+          font-size: 11.5px; color: #9595a4; margin-top: 1px;
+          overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+        }
+        .adm-feed-time {
+          font-size: 11px; color: #b8b8c4; font-weight: 500;
+          font-variant-numeric: tabular-nums; flex-shrink: 0;
+          letter-spacing: -0.1px;
+        }
+
         /* Delta chip — replaces inline trend text */
         .adm-delta {
           display:inline-flex; align-items:center; gap:3px;
@@ -942,6 +982,39 @@ export default function Admin() {
     return { signups: signupsToday, conversions, mrrAdded }
   })()
 
+  /* Activity events — merge signups + audits, sort by time desc, take
+     top 20. Each event keeps avatar + name + plan + ts so the feed
+     row can render without back-references. */
+  const activityEvents = (() => {
+    const events = []
+    data.recent_signups.forEach(u => {
+      if (!u.created_at) return
+      const p = (u.plan || '').toLowerCase()
+      const isPaid = p === 'solo' || p === 'growth' || p === 'agency' || p.includes('lifetime') || p === 'pack'
+      events.push({
+        type:   isPaid ? 'paid' : 'free',
+        kind:   'signup',
+        ts:     new Date(u.created_at).getTime(),
+        name:   u.display_name || u.channel_name || u.email.split('@')[0],
+        plan:   u.plan,
+        avatar: u.profile_picture || u.channel_thumbnail,
+      })
+    })
+    data.top_users.forEach(u => {
+      if (!u.last_audit_at) return
+      events.push({
+        type:   'audit',
+        kind:   'audit',
+        ts:     new Date(u.last_audit_at).getTime(),
+        name:   u.channel_name || (u.owner_email || '').split('@')[0],
+        plan:   u.plan,
+        avatar: u.channel_thumbnail,
+      })
+    })
+    events.sort((a, b) => b.ts - a.ts)
+    return events.slice(0, 20)
+  })()
+
   /* Country — always show; append "not tracked" for existing users */
   const knownCountries  = data.country_breakdown || []
   const unknownCount    = data.unknown_country_count ?? 0
@@ -1138,8 +1211,8 @@ export default function Admin() {
         />
       </div>
 
-      {/* ── Top users by monthly usage (top 10, 5 per page) ──────────────── */}
-      <div style={{ marginBottom: 40 }}>
+      {/* ── Top users (left) + Activity feed (right) ─────────────────────── */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1.55fr 1fr', gap: 20, marginBottom: 40, alignItems: 'start' }}>
         <SectionCard
           title="Top users this month"
           count={data.top_users.length}
@@ -1188,6 +1261,38 @@ export default function Admin() {
               })
           }
           <Pager page={topPage} total={data.top_users.length} onPage={setTopPage} pageSize={PAGE_SIZE_TOP} />
+        </SectionCard>
+
+        {/* Activity feed — live ticker of signups + audits */}
+        <SectionCard
+          title="Activity"
+          count={activityEvents.length}
+          sub="Live stream of signups + audits across the platform"
+        >
+          {activityEvents.length === 0 ? (
+            <EmptyState eyebrow="No activity">Recent signups + audits will appear here as soon as they happen.</EmptyState>
+          ) : (
+            <div className="adm-feed-scroll">
+              {activityEvents.map((e, i) => {
+                const isAudit = e.kind === 'audit'
+                const dotCls = e.type === 'paid' ? 'paid' : e.type === 'audit' ? 'audit' : 'free'
+                const action = isAudit
+                  ? 'ran a channel audit'
+                  : e.type === 'paid' ? `signed up · ${planLabel(e.plan)}` : 'signed up'
+                return (
+                  <div key={`${e.kind}-${e.ts}-${i}`} className="adm-feed-row">
+                    <span className={`adm-feed-dot ${dotCls}`} />
+                    <Avatar src={e.avatar} name={e.name} size={26} />
+                    <div style={{ minWidth: 0 }}>
+                      <p className="adm-feed-name">{e.name}</p>
+                      <p className="adm-feed-action">{action}</p>
+                    </div>
+                    <span className="adm-feed-time">{relTime(new Date(e.ts).toISOString())}</span>
+                  </div>
+                )
+              })}
+            </div>
+          )}
         </SectionCard>
       </div>
 
