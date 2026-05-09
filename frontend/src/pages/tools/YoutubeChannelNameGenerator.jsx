@@ -215,6 +215,20 @@ function useGlobalStyles() {
       .cng-tone:hover { border-color: var(--ytg-text-3); color: var(--ytg-text); }
       .cng-tone.active { background: var(--ytg-accent); color: #fff; border-color: var(--ytg-accent); box-shadow: 0 1px 3px rgba(0,0,0,0.10), 0 4px 12px rgba(229,48,42,0.28); }
 
+      .cng-sample-row { display: flex; flex-wrap: wrap; gap: 6px; }
+      .cng-sample-chip {
+        background: #fff; border: 1px solid var(--ytg-border); color: var(--ytg-text-2);
+        font-size: 12px; font-weight: 600; letter-spacing: -0.05px;
+        padding: 5px 12px; border-radius: 100px;
+        cursor: pointer; font-family: inherit;
+        transition: border-color 0.15s, color 0.15s, background 0.15s;
+      }
+      .cng-sample-chip:hover {
+        border-color: rgba(229,48,42,0.32);
+        color: var(--ytg-accent);
+        background: var(--ytg-accent-light);
+      }
+
       .cng-results-scroll { max-height: 720px; overflow-y: auto; padding-right: 6px; }
       .cng-results-scroll::-webkit-scrollbar { width: 8px }
       .cng-results-scroll::-webkit-scrollbar-thumb { background-color: rgba(10,10,15,0.18); border-radius: 8px; border: 2px solid transparent; background-clip: content-box; }
@@ -479,12 +493,14 @@ export default function YoutubeChannelNameGenerator() {
               </div>
 
               {!showResults && (
-                <p style={{ fontSize: 12, color: 'var(--ytg-text-3)', marginTop: 22, lineHeight: 1.6 }}>
-                  Try one of these:&nbsp;
-                  {EXAMPLES.map((ex, i) => (
-                    <button key={i} onClick={() => setKeyword(ex)} style={{ background: 'transparent', border: 0, padding: '2px 6px', cursor: 'pointer', color: 'var(--ytg-accent)', fontSize: 12, fontWeight: 600 }}>{ex}{i < EXAMPLES.length - 1 ? ',' : ''}</button>
-                  ))}
-                </p>
+                <div style={{ marginTop: 22 }}>
+                  <label style={{ display: 'block', fontSize: 12, fontWeight: 700, color: 'var(--ytg-text-3)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 8 }}>Try a sample</label>
+                  <div className="cng-sample-row">
+                    {EXAMPLES.map(ex => (
+                      <button key={ex} onClick={() => setKeyword(ex)} className="cng-sample-chip">{ex}</button>
+                    ))}
+                  </div>
+                </div>
               )}
             </div>
 
