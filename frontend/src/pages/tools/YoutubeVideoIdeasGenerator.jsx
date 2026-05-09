@@ -293,7 +293,7 @@ function useGlobalStyles() {
       }
       .vig-input:focus { border-color: rgba(10,10,15,0.28); background: #fff; }
 
-      .vig-tool-grid { display: grid; grid-template-columns: 1fr 1.1fr; gap: 24px; align-items: start; }
+      .vig-tool-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: stretch; }
       @media (max-width: 900px) { .vig-tool-grid { grid-template-columns: 1fr; } }
 
       .vig-cat-row { display: flex; gap: 6px; flex-wrap: wrap; }

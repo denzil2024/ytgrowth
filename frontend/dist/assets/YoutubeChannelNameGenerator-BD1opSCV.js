@@ -51,7 +51,7 @@ import{n as e}from"./chunk-B3K2TuZy.js";import{n as t,t as n}from"./jsx-runtime-
       .cng-input:focus { border-color: rgba(10,10,15,0.28); background: #fff; }
 
       /* Tool layout, mirrors ymc-calc-grid */
-      .cng-tool-grid { display: grid; grid-template-columns: 1fr 1.1fr; gap: 24px; align-items: start; }
+      .cng-tool-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: stretch; }
       @media (max-width: 900px) { .cng-tool-grid { grid-template-columns: 1fr; } }
 
       .cng-tone-row { display: flex; gap: 8px; flex-wrap: wrap; }
