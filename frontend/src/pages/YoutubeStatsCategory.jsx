@@ -279,7 +279,7 @@ export default function YoutubeStatsCategory() {
             <span style={{ color: 'var(--ytg-text)', fontWeight: 600 }}>{category.label}</span>
           </nav>
 
-          <Eyebrow>Top {category.label} channels</Eyebrow>
+          <Eyebrow>Live rankings</Eyebrow>
           <h1 style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontWeight: 800, fontSize: isMobile ? 34 : 56, lineHeight: isMobile ? 1.1 : 1.04, letterSpacing: isMobile ? '-0.6px' : '-2px', color: 'var(--ytg-text)', marginBottom: 20, textWrap: 'balance' }}>
             Top 50 <span style={{ color: 'var(--ytg-accent)' }}>{category.label}</span> YouTube channels
           </h1>

@@ -255,17 +255,15 @@ export default function YoutubeStatsCountry() {
             <span style={{ color: 'var(--ytg-text)', fontWeight: 600 }}>{country.label}</span>
           </nav>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 20 }}>
-            <img
-              src={country.flagSrc} alt={`${country.label} flag`}
-              width={isMobile ? 48 : 64} height={isMobile ? 36 : 48}
-              style={{ borderRadius: 4, boxShadow: '0 1px 3px rgba(10,10,15,0.18)', display: 'block' }}
-            />
-            <Eyebrow>Top channels in {country.label}</Eyebrow>
-          </div>
+          <Eyebrow>Live rankings</Eyebrow>
 
-          <h1 style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontWeight: 800, fontSize: isMobile ? 32 : 54, lineHeight: isMobile ? 1.1 : 1.04, letterSpacing: isMobile ? '-0.6px' : '-2px', color: 'var(--ytg-text)', marginBottom: 20, textWrap: 'balance' }}>
-            Top YouTube channels in <span style={{ color: 'var(--ytg-accent)' }}>{country.label}</span>
+          <h1 style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontWeight: 800, fontSize: isMobile ? 32 : 54, lineHeight: isMobile ? 1.1 : 1.04, letterSpacing: isMobile ? '-0.6px' : '-2px', color: 'var(--ytg-text)', marginBottom: 20, textWrap: 'balance', display: 'flex', alignItems: 'center', gap: isMobile ? 12 : 18, flexWrap: 'wrap' }}>
+            <img
+              src={country.flagSrc} alt=""
+              width={isMobile ? 40 : 56} height={isMobile ? 30 : 42}
+              style={{ borderRadius: 4, boxShadow: '0 1px 3px rgba(10,10,15,0.18)', display: 'block', flexShrink: 0 }}
+            />
+            <span>Top YouTube channels in <span style={{ color: 'var(--ytg-accent)' }}>{country.label}</span></span>
           </h1>
 
           {country.intro.map((para, i) => (
