@@ -444,6 +444,91 @@ function SectionCard({ title, count, sub, right, children, padBody = 0 }) {
   )
 }
 
+/* ── Conversion funnel — Signups → Active → Paying ─────────────────────── */
+/* These three steps aren't strictly nested (a free user can be active,
+   a paid user can be inactive), but they're useful parallel slices of
+   the same total user base. The bars are scaled to total = 100%. */
+function FunnelCard({ stats }) {
+  const total = stats.total_users || 0
+  const steps = [
+    {
+      label:    'Signups',
+      sub:      'All-time accounts created',
+      count:    total,
+      barColor: 'linear-gradient(90deg, #c9c9d3 0%, #b8b8c4 100%)',
+      isTotal:  true,
+    },
+    {
+      label:    'Active this week',
+      sub:      'Audited a channel in the last 7 days',
+      count:    stats.active_7d || 0,
+      barColor: 'linear-gradient(90deg, #34d399 0%, #059669 100%)',
+      accent:   C.green,
+      drop:     Math.max(0, total - (stats.active_7d || 0)),
+      dropLabel:"haven't audited this week",
+    },
+    {
+      label:    'Paying customers',
+      sub:      `${stats.conversion_pct || 0}% conversion rate`,
+      count:    stats.paid_users || 0,
+      barColor: 'linear-gradient(90deg, #ff5048 0%, #e5251b 100%)',
+      accent:   C.red,
+      drop:     Math.max(0, total - (stats.paid_users || 0)),
+      dropLabel:'still on free plan',
+    },
+  ]
+
+  return (
+    <div style={{ ...CARD, marginBottom: 36, overflow: 'hidden' }}>
+      <div className="adm-section-cardhdr">
+        <div style={{ minWidth: 0 }}>
+          <div className="adm-section-title">
+            <h2>Conversion funnel</h2>
+          </div>
+          <p className="adm-section-sub">From sign-up to active to paying. Each bar is sized against total users.</p>
+        </div>
+      </div>
+      <div style={{ padding: '26px 28px 28px' }}>
+        {steps.map((step, i) => {
+          const pct = total > 0 ? (step.count / total) * 100 : 0
+          const valueColor = step.isTotal ? C.text1 : (step.accent || C.text1)
+          return (
+            <div key={i} style={{ marginBottom: i === steps.length - 1 ? 0 : 22 }}>
+              <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', gap: 16, marginBottom: 8 }}>
+                <div style={{ minWidth: 0 }}>
+                  <p style={{ fontSize: 14, fontWeight: 700, color: C.text1, letterSpacing: '-0.2px', lineHeight: 1.2 }}>{step.label}</p>
+                  <p style={{ fontSize: 12, color: C.text3, fontWeight: 500, marginTop: 3 }}>{step.sub}</p>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, flexShrink: 0 }}>
+                  <span className="num" style={{ fontSize: 26, fontWeight: 800, color: valueColor, letterSpacing: '-0.9px', lineHeight: 1 }}>{fmtNum(step.count)}</span>
+                  {!step.isTotal && (
+                    <span className="num" style={{ fontSize: 12.5, color: C.text3, fontWeight: 600 }}>{pct.toFixed(1)}%</span>
+                  )}
+                </div>
+              </div>
+              <div style={{ height: 10, background: '#f0f0f4', borderRadius: 99, overflow: 'hidden', position: 'relative' }}>
+                <div style={{
+                  width: `${pct}%`, height: '100%',
+                  background: step.barColor, borderRadius: 99,
+                  transition: 'width 0.8s cubic-bezier(0.34,1.56,0.64,1)',
+                  boxShadow: step.isTotal ? 'none' : 'inset 0 1px 0 rgba(255,255,255,0.25)',
+                }} />
+              </div>
+              {step.drop > 0 && (
+                <p style={{ fontSize: 11.5, color: C.text3, marginTop: 7, fontWeight: 500, display: 'flex', alignItems: 'center', gap: 5 }}>
+                  <span style={{ color: C.text3 }}>↓</span>
+                  <span className="num" style={{ color: C.text2, fontWeight: 700 }}>{fmtNum(step.drop)}</span>
+                  <span>{step.dropLabel}</span>
+                </p>
+              )}
+            </div>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
+
 /* ── Empty state ─────────────────────────────────────────────────────────── */
 function EmptyState({ icon, children }) {
   return (
@@ -905,6 +990,9 @@ export default function Admin() {
           sub={s.total_users > 0 ? `${Math.round((s.active_7d / s.total_users) * 100)}% of users audited a channel` : 'Channels audited in the last 7 days'}
         />
       </div>
+
+      {/* ── Conversion funnel ────────────────────────────────────────────── */}
+      <FunnelCard stats={s} />
 
       {/* ── Two-column body: Recent signups | Tabbed Breakdowns ────────── */}
       <div style={{ display: 'grid', gridTemplateColumns: '1.65fr 1fr', gap: 20, marginBottom: 40 }}>
