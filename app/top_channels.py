@@ -210,22 +210,35 @@ def refresh_all() -> dict:
         db.close()
 
 
-def fetch_grouped(min_per_category: int = 0) -> dict:
-    """Read the cache as { category: [rows...] }, sorted by rank. Used by the
-    public endpoint."""
+def fetch_grouped(top_n: int = 10) -> dict:
+    """Read the cache as { category: [rows...] }, sorted by subscribers
+    DESC within each category. Cap to top N (default 10) so the UI shows
+    a clean leaderboard rather than the full seed list. Stored `rank`
+    column is ignored — actual ranking comes from current sub counts."""
     from database.models import SessionLocal, TopChannelCache
 
     db = SessionLocal()
     try:
         rows = (
             db.query(TopChannelCache)
-              .order_by(TopChannelCache.category.asc(), TopChannelCache.rank.asc())
+              .order_by(
+                  TopChannelCache.category.asc(),
+                  TopChannelCache.subscribers.desc().nullslast(),
+              )
               .all()
         )
-        out = {}
+        # Group, then trim to top N + assign display rank
+        grouped_raw = {}
         latest = None
         for r in rows:
-            out.setdefault(r.category, []).append({
+            grouped_raw.setdefault(r.category, []).append(r)
+            if latest is None or (r.fetched_at and r.fetched_at > latest):
+                latest = r.fetched_at
+
+        out = {}
+        for cat, cat_rows in grouped_raw.items():
+            top = cat_rows[:top_n]
+            out[cat] = [{
                 "channel_id":  r.channel_id,
                 "title":       r.title,
                 "handle":      r.handle,
@@ -234,10 +247,9 @@ def fetch_grouped(min_per_category: int = 0) -> dict:
                 "subscribers": r.subscribers or 0,
                 "total_views": r.total_views or 0,
                 "video_count": r.video_count or 0,
-                "rank":        r.rank or 0,
-            })
-            if latest is None or (r.fetched_at and r.fetched_at > latest):
-                latest = r.fetched_at
+                "rank":        idx + 1,
+            } for idx, r in enumerate(top)]
+
         return {
             "categories":  CATEGORIES,
             "groups":      out,

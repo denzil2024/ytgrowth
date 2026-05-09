@@ -544,14 +544,23 @@ export default function YoutubeChannelStatsChecker() {
                     Top channels in your <span style={{ color: 'var(--ytg-accent)' }}>niche.</span>
                   </h2>
                   <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.6, maxWidth: 620 }}>
-                    Click any channel to pull their full stats. Live data from the YouTube API.
+                    Top 10 per category, ranked by subscribers. Live from YouTube&rsquo;s official API, refreshed every 24h. Click a card to pull the full breakdown.
                   </p>
                 </div>
-                {topChannels.fetched_at && (
-                  <span style={{ fontSize: 12, color: 'var(--ytg-text-3)', fontWeight: 500 }}>
-                    Updated {new Date(topChannels.fetched_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
-                  </span>
-                )}
+                {topChannels.fetched_at && (() => {
+                  const ago = Math.floor((Date.now() - new Date(topChannels.fetched_at).getTime()) / 1000)
+                  let label
+                  if (ago < 60)         label = 'just now'
+                  else if (ago < 3600)  label = `${Math.floor(ago / 60)}m ago`
+                  else if (ago < 86400) label = `${Math.floor(ago / 3600)}h ago`
+                  else                  label = `${Math.floor(ago / 86400)}d ago`
+                  return (
+                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 11.5, color: 'var(--ytg-text-3)', fontWeight: 600, background: '#fff', border: '1px solid var(--ytg-border)', borderRadius: 100, padding: '5px 11px' }}>
+                      <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#16a34a', boxShadow: '0 0 0 3px rgba(22,163,74,0.18)' }} />
+                      Updated {label}
+                    </span>
+                  )
+                })()}
               </div>
 
               {/* Category tabs — only categories that actually have rows */}
@@ -573,31 +582,49 @@ export default function YoutubeChannelStatsChecker() {
                 })}
               </div>
 
-              {/* Channel cards grid */}
-              <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : isTablet ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)', gap: 12 }}>
-                {cards.map((c) => (
-                  <button key={c.channel_id} onClick={() => loadTopChannel(c.handle)} style={{
-                    display: 'flex', alignItems: 'center', gap: 12, padding: '14px 16px',
-                    background: '#fff', border: '1px solid var(--ytg-border)', borderRadius: 14,
-                    boxShadow: 'var(--ytg-shadow-sm)',
-                    cursor: 'pointer', fontFamily: 'inherit', textAlign: 'left',
-                    transition: 'transform 0.15s, box-shadow 0.15s, border-color 0.15s',
-                  }}
-                  onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = 'var(--ytg-shadow)'; e.currentTarget.style.borderColor = 'rgba(229,48,42,0.30)' }}
-                  onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'var(--ytg-shadow-sm)'; e.currentTarget.style.borderColor = 'var(--ytg-border)' }}
-                  >
-                    {c.thumbnail
-                      ? <img src={c.thumbnail} alt="" style={{ width: 44, height: 44, borderRadius: '50%', objectFit: 'cover', flexShrink: 0 }} />
-                      : <div style={{ width: 44, height: 44, borderRadius: '50%', background: '#f0f0f4', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 17, fontWeight: 700, color: 'var(--ytg-text-2)' }}>{(c.title || '?').charAt(0).toUpperCase()}</div>
-                    }
-                    <div style={{ minWidth: 0, flex: 1 }}>
-                      <p style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: 14, fontWeight: 700, color: 'var(--ytg-text)', letterSpacing: '-0.2px', lineHeight: 1.25, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', marginBottom: 2 }}>{c.title}</p>
-                      <p style={{ fontSize: 11.5, color: 'var(--ytg-text-3)', fontWeight: 500, fontVariantNumeric: 'tabular-nums' }}>
-                        {c.subscribers >= 1e6 ? (c.subscribers / 1e6).toFixed(1) + 'M' : c.subscribers >= 1e3 ? (c.subscribers / 1e3).toFixed(1) + 'K' : c.subscribers} subs
-                      </p>
-                    </div>
-                  </button>
-                ))}
+              {/* Channel cards grid — 5 cols on desktop = 5×2 = clean rows
+                 of 10. Rank badge in the top-left corner makes the
+                 leaderboard order obvious at a glance. */}
+              <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : isTablet ? 'repeat(2, 1fr)' : 'repeat(5, 1fr)', gap: 12 }}>
+                {cards.map((c) => {
+                  const isTop3 = c.rank <= 3
+                  return (
+                    <button key={c.channel_id} onClick={() => loadTopChannel(c.handle)} style={{
+                      position: 'relative',
+                      display: 'flex', flexDirection: 'column', alignItems: 'center',
+                      gap: 10, padding: '20px 14px 16px',
+                      background: '#fff', border: '1px solid var(--ytg-border)', borderRadius: 14,
+                      boxShadow: 'var(--ytg-shadow-sm)',
+                      cursor: 'pointer', fontFamily: 'inherit', textAlign: 'center',
+                      transition: 'transform 0.15s, box-shadow 0.15s, border-color 0.15s',
+                    }}
+                    onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = 'var(--ytg-shadow)'; e.currentTarget.style.borderColor = 'rgba(229,48,42,0.30)' }}
+                    onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'var(--ytg-shadow-sm)'; e.currentTarget.style.borderColor = 'var(--ytg-border)' }}
+                    >
+                      {/* Rank badge */}
+                      <span style={{
+                        position: 'absolute', top: 10, left: 10,
+                        fontSize: 10.5, fontWeight: 800, letterSpacing: '-0.1px',
+                        fontVariantNumeric: 'tabular-nums',
+                        padding: '2px 7px', borderRadius: 100,
+                        color: isTop3 ? '#fff' : 'var(--ytg-text-3)',
+                        background: isTop3 ? 'var(--ytg-accent)' : '#f4f4f6',
+                        border: isTop3 ? '1px solid var(--ytg-accent)' : '1px solid var(--ytg-border)',
+                      }}>#{c.rank}</span>
+
+                      {c.thumbnail
+                        ? <img src={c.thumbnail} alt="" style={{ width: 56, height: 56, borderRadius: '50%', objectFit: 'cover', flexShrink: 0, marginTop: 6 }} />
+                        : <div style={{ width: 56, height: 56, borderRadius: '50%', background: '#f0f0f4', flexShrink: 0, marginTop: 6, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 21, fontWeight: 700, color: 'var(--ytg-text-2)' }}>{(c.title || '?').charAt(0).toUpperCase()}</div>
+                      }
+                      <div style={{ minWidth: 0, width: '100%' }}>
+                        <p style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: 13.5, fontWeight: 700, color: 'var(--ytg-text)', letterSpacing: '-0.2px', lineHeight: 1.25, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', marginBottom: 4 }}>{c.title}</p>
+                        <p style={{ fontSize: 11.5, color: 'var(--ytg-text-3)', fontWeight: 600, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.1px' }}>
+                          {c.subscribers >= 1e6 ? (c.subscribers / 1e6).toFixed(1) + 'M' : c.subscribers >= 1e3 ? (c.subscribers / 1e3).toFixed(1) + 'K' : c.subscribers} subs
+                        </p>
+                      </div>
+                    </button>
+                  )
+                })}
               </div>
             </div>
           </section>
