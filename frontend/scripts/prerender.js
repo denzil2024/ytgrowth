@@ -19,6 +19,7 @@ import { readFile, writeFile, stat, mkdir } from 'node:fs/promises'
 import { fileURLToPath } from 'node:url'
 import { dirname, join, resolve } from 'node:path'
 import puppeteer from 'puppeteer'
+import { CATEGORY_META } from '../src/data/youtubeStatsCategories.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname  = dirname(__filename)
@@ -90,6 +91,16 @@ const META_BY_ROUTE = {
   },
 }
 
+/* /youtube-stats/:slug pages — derived from the shared category metadata
+ * so the SEO title and meta description on each landing page match the
+ * runtime React page exactly. */
+for (const cat of CATEGORY_META) {
+  META_BY_ROUTE[`/youtube-stats/${cat.id}`] = {
+    title:       `${cat.seoTitle} | YTGrowth`,
+    description: cat.seoDescription,
+  }
+}
+
 /* Discover blog slugs from the source data file. We slice from
  * `export const posts = [` so we never pick up the CATEGORIES `slug:` keys
  * that live above it. The line-anchored regex avoids matching slug strings
@@ -126,6 +137,20 @@ async function buildRoutes() {
     '/tools/youtube-channel-name-generator',
     '/tools/youtube-video-ideas-generator',
     '/youtube-stats',
+    '/youtube-stats/gaming',
+    '/youtube-stats/tech',
+    '/youtube-stats/beauty',
+    '/youtube-stats/finance',
+    '/youtube-stats/cooking',
+    '/youtube-stats/fitness',
+    '/youtube-stats/music',
+    '/youtube-stats/education',
+    '/youtube-stats/vlogs',
+    '/youtube-stats/travel',
+    '/youtube-stats/comedy',
+    '/youtube-stats/sports',
+    '/youtube-stats/entertainment',
+    '/youtube-stats/news',
     '/contact',
     '/affiliate',
     '/terms',

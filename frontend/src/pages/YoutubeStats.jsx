@@ -2,34 +2,16 @@ import { useEffect, useMemo, useState } from 'react'
 import LandingFooter from '../components/LandingFooter'
 import SiteHeader from '../components/SiteHeader'
 import FaqSchema from '../components/FaqSchema'
+import { CATEGORY_META } from '../data/youtubeStatsCategories'
 
 /* ─── /youtube-stats hub ──────────────────────────────────────────────────
    Browse top YouTube channels by category, ranked by live subscriber
    count from YouTube's Data API. Each category section shows the top 15
-   channels; per-category drilldown pages and the country dimension land
-   in Phase 2.
+   channels here; the per-category drilldown pages (/youtube-stats/:slug)
+   show the full top-50 list with category-specific copy and FAQs.
 
    Data: GET /api/top-channels (cached server-side, refreshed daily).
 */
-
-const CATEGORY_META = [
-  { id: 'gaming',        label: 'Gaming',              blurb: 'The biggest gaming channels on YouTube. Esports, Let’s Plays, walkthroughs, and reaction streams.' },
-  { id: 'tech',          label: 'Tech & Reviews',      blurb: 'Reviewers, tear-downs, and software/hardware explainers. The channels brand sponsorships fight over.' },
-  { id: 'beauty',        label: 'Beauty & Makeup',     blurb: 'Tutorials, reviews, GRWMs, and brand collabs. Some of YouTube\'s longest-running creator empires.' },
-  { id: 'finance',       label: 'Finance & Investing', blurb: 'Personal finance, markets, real estate, and side-hustle channels. The highest-RPM corner of YouTube.' },
-  { id: 'cooking',       label: 'Cooking & Food',      blurb: 'Recipes, restaurant reviews, food science, and pro-chef teaching channels.' },
-  { id: 'fitness',       label: 'Fitness & Health',    blurb: 'Workouts, nutrition, mobility, and physique transformations across every training style.' },
-  { id: 'music',         label: 'Music',               blurb: 'Artists, labels, music video channels, and instrument-teaching channels with the biggest reach.' },
-  { id: 'education',     label: 'Education & Science', blurb: 'Explainers, lectures, and visualised science. The format that makes "edutainment" a real category.' },
-  { id: 'vlogs',         label: 'Vlogs',               blurb: 'Daily vlogs, family channels, and lifestyle creators with audiences that show up for every upload.' },
-  { id: 'travel',        label: 'Travel',              blurb: 'Trip vlogs, destination guides, gear reviews, and budget-travel channels for every type of traveller.' },
-  { id: 'comedy',        label: 'Comedy',              blurb: 'Sketches, parodies, stand-up, and reaction comedy. High velocity, high subscriber retention.' },
-  { id: 'sports',        label: 'Sports',              blurb: 'Highlights, analysis, athlete channels, and league-owned channels that pull seven-figure views per upload.' },
-  { id: 'entertainment', label: 'Entertainment',       blurb: 'Pop culture, TV, film, celebrity, and reaction channels. Where YouTube and traditional media collide.' },
-  { id: 'news',          label: 'News & Politics',     blurb: 'Daily news, talk shows, and political commentary. Some of the most-watched live streams on the platform.' },
-]
-
-const CATEGORY_LOOKUP = Object.fromEntries(CATEGORY_META.map(c => [c.id, c]))
 
 const FAQS = [
   { q: 'Where does this data come from?',
@@ -355,18 +337,32 @@ export default function YoutubeStats() {
           {sections.map(({ meta, rows }) => (
             <div key={meta.id} id={meta.id} style={{ scrollMarginTop: 84 }}>
               {/* Section header */}
-              <div style={{ marginBottom: 22 }}>
-                <div style={{ display: 'flex', alignItems: 'baseline', gap: 12, flexWrap: 'wrap', marginBottom: 8 }}>
-                  <h2 style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontWeight: 800, fontSize: isMobile ? 26 : 34, letterSpacing: '-1.1px', color: 'var(--ytg-text)', lineHeight: 1.1 }}>
-                    Top {meta.label} channels
-                  </h2>
-                  <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--ytg-text-3)', letterSpacing: '0.06em', textTransform: 'uppercase' }}>
-                    {rows.length} channels
-                  </span>
+              <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16, marginBottom: 22 }}>
+                <div style={{ flex: '1 1 auto', minWidth: 0 }}>
+                  <div style={{ display: 'flex', alignItems: 'baseline', gap: 12, flexWrap: 'wrap', marginBottom: 8 }}>
+                    <h2 style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontWeight: 800, fontSize: isMobile ? 26 : 34, letterSpacing: '-1.1px', color: 'var(--ytg-text)', lineHeight: 1.1 }}>
+                      Top {meta.label} channels
+                    </h2>
+                    <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--ytg-text-3)', letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+                      {rows.length} of 50
+                    </span>
+                  </div>
+                  <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.6, maxWidth: 700 }}>
+                    {meta.blurb}
+                  </p>
                 </div>
-                <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.6, maxWidth: 700 }}>
-                  {meta.blurb}
-                </p>
+                <a href={`/youtube-stats/${meta.id}`} style={{
+                  display: 'inline-flex', alignItems: 'center', gap: 6,
+                  fontSize: 13, fontWeight: 700, color: 'var(--ytg-accent)',
+                  textDecoration: 'none', whiteSpace: 'nowrap',
+                  padding: '8px 14px', borderRadius: 100,
+                  background: 'var(--ytg-accent-light)',
+                  border: '1px solid rgba(229,48,42,0.18)',
+                  transition: 'background 0.15s, border-color 0.15s',
+                }}
+                onMouseEnter={e => { e.currentTarget.style.background = 'rgba(229,48,42,0.12)'; e.currentTarget.style.borderColor = 'rgba(229,48,42,0.35)' }}
+                onMouseLeave={e => { e.currentTarget.style.background = 'var(--ytg-accent-light)'; e.currentTarget.style.borderColor = 'rgba(229,48,42,0.18)' }}
+                >See all 50 →</a>
               </div>
 
               {/* Channel rows */}
