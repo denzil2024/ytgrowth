@@ -163,24 +163,42 @@ export default function UpsellGate({
   if (!previewContent) return card
 
   // Preview → blur the mock content behind + overlay the card on a frosted
-  // gradient. Same pattern Weekly Report uses so gated features tease
-  // what the user is missing instead of showing a bare modal.
+  // wash. Same pattern Weekly Report uses so gated features tease what
+  // the user is missing instead of showing a bare modal.
+  //
+  // Layout: the blurred-preview layer is masked top + bottom so it
+  // dissolves into the page background (no visible container box). The
+  // overlay sits at uniform opacity (no gradient banding), and the card
+  // floats in a separate, unmasked layer above so it stays sharp.
+  const fadeMask = 'linear-gradient(180deg, transparent 0%, black 9%, black 91%, transparent 100%)'
   return (
-    <div style={{ position: 'relative', borderRadius: 16, overflow: 'hidden', minHeight: 520 }}>
+    <div style={{ position: 'relative', minHeight: 520 }}>
       <div aria-hidden="true" style={{
-        filter: 'blur(6px)',
-        pointerEvents: 'none', userSelect: 'none',
-        transform: 'scale(1.015)',  // hide blur halo at edges
+        position: 'absolute', inset: 0,
+        overflow: 'hidden',
+        pointerEvents: 'none',
+        WebkitMaskImage: fadeMask,
+        maskImage: fadeMask,
       }}>
-        {previewContent}
+        <div style={{
+          filter: 'blur(6px)',
+          transform: 'scale(1.015)',
+          userSelect: 'none',
+        }}>
+          {previewContent}
+        </div>
+        <div style={{
+          position: 'absolute', inset: 0,
+          background: 'rgba(245,245,249,0.55)',
+          backdropFilter: 'blur(2px)',
+          WebkitBackdropFilter: 'blur(2px)',
+        }} />
       </div>
       <div style={{
-        position: 'absolute', inset: 0,
-        background: 'linear-gradient(180deg, rgba(245,245,249,0.78) 0%, rgba(245,245,249,0.55) 30%, rgba(245,245,249,0.55) 70%, rgba(245,245,249,0.82) 100%)',
-        backdropFilter: 'blur(2px)',
-        WebkitBackdropFilter: 'blur(2px)',
+        position: 'relative',
+        minHeight: 520,
         display: 'flex', alignItems: 'center', justifyContent: 'center',
-        padding: 24,
+        padding: '40px 24px',
       }}>
         {card}
       </div>
