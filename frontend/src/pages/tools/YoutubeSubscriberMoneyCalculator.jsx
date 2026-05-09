@@ -370,8 +370,10 @@ export default function YoutubeSubscriberMoneyCalculator() {
               </p>
             </div>
 
-              {/* Grow CTA — sits under the inputs so the columns balance. */}
-              <div style={{ background: 'var(--ytg-card)', borderRadius: 22, border: '1px solid var(--ytg-border)', boxShadow: 'var(--ytg-shadow)', padding: 26 }}>
+              {/* Grow CTA — sits under the inputs so the columns balance.
+                  flex:1 so it stretches to fill the column when LEFT is the
+                  shorter of the two; otherwise it stays its natural size. */}
+              <div style={{ flex: 1, background: 'var(--ytg-card)', borderRadius: 22, border: '1px solid var(--ytg-border)', boxShadow: 'var(--ytg-shadow)', padding: 26 }}>
                 <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-accent-text)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 10 }}>Grow these numbers</p>
                 <p style={{ fontSize: 15, fontWeight: 600, color: 'var(--ytg-text)', lineHeight: 1.5, marginBottom: 8, letterSpacing: '-0.2px' }}>
                   Subscribers without engagement is just a vanity number.
@@ -415,8 +417,9 @@ export default function YoutubeSubscriberMoneyCalculator() {
                 </div>
               </div>
 
-              {/* Targets card */}
-              <div style={{ background: 'var(--ytg-card)', borderRadius: 22, border: '1px solid var(--ytg-border)', boxShadow: 'var(--ytg-shadow)', padding: isMobile ? 22 : 26 }}>
+              {/* Targets card — flex:1 so it fills the column when RIGHT is
+                  the shorter of the two and prevents a dead-space gap. */}
+              <div style={{ flex: 1, background: 'var(--ytg-card)', borderRadius: 22, border: '1px solid var(--ytg-border)', boxShadow: 'var(--ytg-shadow)', padding: isMobile ? 22 : 26 }}>
                 <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-accent-text)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 14 }}>To hit these targets</p>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                   {result.targetRows.map(row => {

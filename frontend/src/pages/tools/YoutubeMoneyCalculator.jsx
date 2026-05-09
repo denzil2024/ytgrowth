@@ -322,8 +322,9 @@ export default function YoutubeMoneyCalculator() {
               </p>
             </div>
 
-              {/* Grow CTA — sits under the inputs so the columns balance. */}
-              <div style={{ background: 'var(--ytg-card)', borderRadius: 22, border: '1px solid var(--ytg-border)', boxShadow: 'var(--ytg-shadow)', padding: 26 }}>
+              {/* Grow CTA — sits under the inputs so the columns balance.
+                  flex:1 so it stretches when LEFT is the shorter column. */}
+              <div style={{ flex: 1, background: 'var(--ytg-card)', borderRadius: 22, border: '1px solid var(--ytg-border)', boxShadow: 'var(--ytg-shadow)', padding: 26 }}>
                 <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-accent-text)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 10 }}>Grow these numbers</p>
                 <p style={{ fontSize: 15, fontWeight: 600, color: 'var(--ytg-text)', lineHeight: 1.5, marginBottom: 8, letterSpacing: '-0.2px' }}>
                   An estimate is just a number. A growth plan moves it.
@@ -342,7 +343,9 @@ export default function YoutubeMoneyCalculator() {
 
             {/* RIGHT. Result column */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
-              <div style={{ background: 'var(--ytg-accent)', borderRadius: 22, color: '#fff', padding: isMobile ? 28 : 36, boxShadow: '0 4px 18px rgba(229,48,42,0.32), 0 24px 60px rgba(229,48,42,0.18)' }}>
+              {/* Headline — flex:1 + center its content so when RIGHT is the
+                  shorter side, the red card stretches without leaving a gap. */}
+              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', background: 'var(--ytg-accent)', borderRadius: 22, color: '#fff', padding: isMobile ? 28 : 36, boxShadow: '0 4px 18px rgba(229,48,42,0.32), 0 24px 60px rgba(229,48,42,0.18)' }}>
                 <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', opacity: 0.78, marginBottom: 12 }}>
                   Estimated monthly earnings
                 </div>
