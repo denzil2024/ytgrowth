@@ -485,6 +485,7 @@ const RESOURCES_GROUPS = [
   {
     label: 'Insights',
     items: [
+      { href: '/youtube-stats',                       label: 'Top YouTube Channels' },
       { href: '/tools/youtube-channel-stats-checker', label: 'Channel Stats Checker' },
       { href: '/blog',                                label: 'Blog' },
     ],
