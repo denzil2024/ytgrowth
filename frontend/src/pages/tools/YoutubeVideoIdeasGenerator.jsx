@@ -600,15 +600,29 @@ export default function YoutubeVideoIdeasGenerator() {
                 </div>
               </div>
             ) : (
-              <div style={{ background: 'var(--ytg-card)', borderRadius: 22, border: '2px dashed var(--ytg-border)', padding: isMobile ? 36 : 56, textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-                <div style={{ display: 'inline-flex', width: 56, height: 56, borderRadius: 16, background: 'var(--ytg-accent-light)', alignItems: 'center', justifyContent: 'center', marginBottom: 18 }}>
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#e5302a" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d="M9 12h6m-6-4h6m-6 8h3m6 6v-7m0-4V4M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/></svg>
+              <div style={{ background: 'var(--ytg-bg-2)', border: '1px solid var(--ytg-border)', borderRadius: 22, padding: isMobile ? 26 : 32, display: 'flex', flexDirection: 'column', gap: 18 }}>
+                <div>
+                  <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-text-3)', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 8 }}>Sample preview</p>
+                  <p style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: isMobile ? 19 : 22, fontWeight: 800, color: 'var(--ytg-text)', letterSpacing: '-0.5px', lineHeight: 1.2 }}>
+                    Titles like these, for any niche
+                  </p>
                 </div>
-                <p style={{ fontSize: 17, fontWeight: 700, color: 'var(--ytg-text)', marginBottom: 8, fontFamily: "'DM Sans', system-ui, sans-serif", letterSpacing: '-0.3px' }}>
-                  Type a niche to get started
-                </p>
-                <p style={{ fontSize: 13.5, color: 'var(--ytg-text-3)', maxWidth: 320, margin: '0 auto', lineHeight: 1.6 }}>
-                  Ninety video ideas appear here the moment you type a single word.
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 7 }}>
+                  {[
+                    { title: 'Top 7 Fitness Mistakes New Creators Make',   cat: 'listicle' },
+                    { title: 'How to Start Cooking in 2026 (Complete Guide)', cat: 'tutorial' },
+                    { title: 'I Tried Productivity Every Day for 30 Days', cat: 'challenge' },
+                    { title: 'Why Your Finance Strategy Isn’t Working', cat: 'mistakes' },
+                    { title: 'Cheap vs Expensive: Does Tech Gear Matter?', cat: 'comparison' },
+                  ].map((s, i) => (
+                    <div key={i} style={{ display: 'flex', flexDirection: 'column', gap: 4, padding: '10px 12px', background: '#fff', border: '1px solid var(--ytg-border)', borderRadius: 10 }}>
+                      <span className={`vig-cat-pill ${s.cat}`} style={{ alignSelf: 'flex-start' }}>{CAT_LOOKUP[s.cat]?.label || s.cat}</span>
+                      <span style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: 14, fontWeight: 700, color: 'var(--ytg-text)', letterSpacing: '-0.2px', lineHeight: 1.4 }}>{s.title}</span>
+                    </div>
+                  ))}
+                </div>
+                <p style={{ fontSize: 12.5, color: 'var(--ytg-text-3)', lineHeight: 1.55, margin: 0 }}>
+                  Type any niche above to generate 90+ titles across 9 formats.
                 </p>
               </div>
             )}

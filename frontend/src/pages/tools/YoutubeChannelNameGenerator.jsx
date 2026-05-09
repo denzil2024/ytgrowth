@@ -517,15 +517,29 @@ export default function YoutubeChannelNameGenerator() {
                 </div>
               </div>
             ) : (
-              <div style={{ background: 'var(--ytg-card)', borderRadius: 22, border: '2px dashed var(--ytg-border)', padding: isMobile ? 36 : 56, textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-                <div style={{ display: 'inline-flex', width: 56, height: 56, borderRadius: 16, background: 'var(--ytg-accent-light)', alignItems: 'center', justifyContent: 'center', marginBottom: 18 }}>
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#e5302a" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v6m0 10v6M4.22 4.22l4.24 4.24m7.08 7.08l4.24 4.24M1 12h6m10 0h6M4.22 19.78l4.24-4.24m7.08-7.08l4.24-4.24"/></svg>
+              <div style={{ background: 'var(--ytg-bg-2)', border: '1px solid var(--ytg-border)', borderRadius: 22, padding: isMobile ? 26 : 32, display: 'flex', flexDirection: 'column', gap: 18 }}>
+                <div>
+                  <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-text-3)', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 8 }}>Sample preview</p>
+                  <p style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: isMobile ? 19 : 22, fontWeight: 800, color: 'var(--ytg-text)', letterSpacing: '-0.5px', lineHeight: 1.2 }}>
+                    Names like these, for any niche
+                  </p>
                 </div>
-                <p style={{ fontSize: 17, fontWeight: 700, color: 'var(--ytg-text)', marginBottom: 8, fontFamily: "'DM Sans', system-ui, sans-serif", letterSpacing: '-0.3px' }}>
-                  Type a niche to get started
-                </p>
-                <p style={{ fontSize: 13.5, color: 'var(--ytg-text-3)', maxWidth: 320, margin: '0 auto', lineHeight: 1.6 }}>
-                  Sixty+ name ideas appear here the moment you type a single word.
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 7 }}>
+                  {[
+                    { name: 'Fitness HQ',          tone: 'pro' },
+                    { name: 'Daily Finance',       tone: 'punchy' },
+                    { name: 'Coach Productivity',  tone: 'personal' },
+                    { name: 'Project Cooking',     tone: 'creative' },
+                    { name: 'TechDecoded',         tone: 'creative' },
+                  ].map((s, i) => (
+                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 12px', background: '#fff', border: '1px solid var(--ytg-border)', borderRadius: 10 }}>
+                      <span className={`cng-tone-pill ${s.tone}`}>{s.tone}</span>
+                      <span style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: 15, fontWeight: 700, color: 'var(--ytg-text)', letterSpacing: '-0.2px' }}>{s.name}</span>
+                    </div>
+                  ))}
+                </div>
+                <p style={{ fontSize: 12.5, color: 'var(--ytg-text-3)', lineHeight: 1.55, margin: 0 }}>
+                  Type any niche above to generate 60+ ideas across 4 vibes.
                 </p>
               </div>
             )}
