@@ -417,7 +417,7 @@ function Stat({ label, value, sub, accent, alert, delta, sparkline, breakdown, b
             )}
           </div>
           {sub && <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.86)', fontWeight: 500, marginTop: 14, lineHeight: 1.5, letterSpacing: '-0.1px' }}>{sub}</p>}
-          {breakdown && breakdownTotal > 0 && (
+          {breakdown && (
             <div className="adm-mrr-bars">
               {breakdown.map((b, i) => {
                 const pct = breakdownTotal > 0 ? (b.weight / breakdownTotal) * 100 : 0
@@ -425,9 +425,9 @@ function Stat({ label, value, sub, accent, alert, delta, sparkline, breakdown, b
                   <div key={i} className="adm-mrr-bar-row">
                     <span className="adm-mrr-bar-label">{b.label}</span>
                     <div className="adm-mrr-bar-track">
-                      <div className="adm-mrr-bar-fill" style={{ width: `${pct}%`, opacity: 0.55 + 0.45 * (pct / 100) }} />
+                      {pct > 0 && <div className="adm-mrr-bar-fill" style={{ width: `${pct}%`, opacity: 0.55 + 0.45 * (pct / 100) }} />}
                     </div>
-                    <span className="adm-mrr-bar-value">{b.value}</span>
+                    <span className="adm-mrr-bar-value" style={{ opacity: pct > 0 ? 1 : 0.55 }}>{b.value}</span>
                   </div>
                 )
               })}
@@ -1053,12 +1053,12 @@ export default function Admin() {
           variant="red"
           label="Monthly recurring"
           value={`$${mrrTotal.toLocaleString()}`}
-          sub={mrrTotal === 0 ? 'No paid subscriptions yet' : 'Estimate at full monthly rates'}
-          breakdown={mrrTotal > 0 ? [
+          sub={mrrTotal === 0 ? 'Tier breakdown will populate as paid users join' : 'Estimate at full monthly rates'}
+          breakdown={[
             { label: 'Solo',   value: `$${mrrSolo.toLocaleString()}`,   weight: mrrSolo },
             { label: 'Growth', value: `$${mrrGrowth.toLocaleString()}`, weight: mrrGrowth },
             { label: 'Agency', value: `$${mrrAgency.toLocaleString()}`, weight: mrrAgency },
-          ] : null}
+          ]}
           breakdownTotal={mrrTotal}
         />
         <Stat
