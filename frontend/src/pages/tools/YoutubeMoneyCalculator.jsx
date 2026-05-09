@@ -286,7 +286,8 @@ export default function YoutubeMoneyCalculator() {
         <div style={{ maxWidth: 1080, margin: '0 auto' }}>
           <div className="ymc-calc-grid">
 
-            {/* LEFT. Inputs card */}
+            {/* LEFT. Inputs + Grow CTA stacked. */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
             <div style={{ background: 'var(--ytg-card)', borderRadius: 22, border: '1px solid var(--ytg-border)', boxShadow: 'var(--ytg-shadow-lg)', padding: isMobile ? 26 : 36 }}>
 
               <div style={{ marginBottom: 28 }}>
@@ -321,6 +322,24 @@ export default function YoutubeMoneyCalculator() {
               </p>
             </div>
 
+              {/* Grow CTA — sits under the inputs so the columns balance. */}
+              <div style={{ background: 'var(--ytg-card)', borderRadius: 22, border: '1px solid var(--ytg-border)', boxShadow: 'var(--ytg-shadow)', padding: 26 }}>
+                <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-accent-text)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 10 }}>Grow these numbers</p>
+                <p style={{ fontSize: 15, fontWeight: 600, color: 'var(--ytg-text)', lineHeight: 1.5, marginBottom: 8, letterSpacing: '-0.2px' }}>
+                  An estimate is just a number. A growth plan moves it.
+                </p>
+                <p style={{ fontSize: 14, color: 'var(--ytg-text-2)', lineHeight: 1.65, marginBottom: 18 }}>
+                  YTGrowth's free AI audit looks at your last 20 videos, your CTR, and your retention curves. Then tells you exactly which titles, thumbnails, and posting habits are leaving money on the table.
+                </p>
+                <a href="/auth/login" className="ymc-btn" style={{ width: '100%', justifyContent: 'center', padding: 14, fontSize: 14, borderRadius: 14 }}>
+                  Get my free audit →
+                </a>
+                <p style={{ fontSize: 11.5, color: 'var(--ytg-text-3)', textAlign: 'center', marginTop: 10 }}>
+                  Free forever plan · 3 audits/month · no card
+                </p>
+              </div>
+            </div>
+
             {/* RIGHT. Result column */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
               <div style={{ background: 'var(--ytg-accent)', borderRadius: 22, color: '#fff', padding: isMobile ? 28 : 36, boxShadow: '0 4px 18px rgba(229,48,42,0.32), 0 24px 60px rgba(229,48,42,0.18)' }}>
@@ -346,21 +365,6 @@ export default function YoutubeMoneyCalculator() {
                 </div>
               </div>
 
-              <div style={{ background: 'var(--ytg-card)', borderRadius: 22, border: '1px solid var(--ytg-border)', boxShadow: 'var(--ytg-shadow)', padding: 26 }}>
-                <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-accent-text)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 10 }}>Grow these numbers</p>
-                <p style={{ fontSize: 15, fontWeight: 600, color: 'var(--ytg-text)', lineHeight: 1.5, marginBottom: 8, letterSpacing: '-0.2px' }}>
-                  An estimate is just a number. A growth plan moves it.
-                </p>
-                <p style={{ fontSize: 14, color: 'var(--ytg-text-2)', lineHeight: 1.65, marginBottom: 18 }}>
-                  YTGrowth's free AI audit looks at your last 20 videos, your CTR, and your retention curves. Then tells you exactly which titles, thumbnails, and posting habits are leaving money on the table.
-                </p>
-                <a href="/auth/login" className="ymc-btn" style={{ width: '100%', justifyContent: 'center', padding: 14, fontSize: 14, borderRadius: 14 }}>
-                  Get my free audit →
-                </a>
-                <p style={{ fontSize: 11.5, color: 'var(--ytg-text-3)', textAlign: 'center', marginTop: 10 }}>
-                  Free forever plan · 3 audits/month · no card
-                </p>
-              </div>
             </div>
           </div>
         </div>

@@ -317,7 +317,8 @@ export default function YoutubeSubscriberMoneyCalculator() {
         <div style={{ maxWidth: 1080, margin: '0 auto' }}>
           <div className="smc-calc-grid">
 
-            {/* LEFT. Inputs card */}
+            {/* LEFT. Inputs + Grow CTA stacked. */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
             <div style={{ background: 'var(--ytg-card)', borderRadius: 22, border: '1px solid var(--ytg-border)', boxShadow: 'var(--ytg-shadow-lg)', padding: isMobile ? 26 : 36 }}>
 
               {/* Subscribers */}
@@ -367,6 +368,24 @@ export default function YoutubeSubscriberMoneyCalculator() {
               <p style={{ fontSize: 11.5, color: 'var(--ytg-text-3)', marginTop: 22, lineHeight: 1.6 }}>
                 Estimates assume 13-32% of your subscribers watch each upload, with realistic RPM ranges by niche and audience country. Real earnings vary with watch time, mid-roll placement, and seasonal ad demand.
               </p>
+            </div>
+
+              {/* Grow CTA — sits under the inputs so the columns balance. */}
+              <div style={{ background: 'var(--ytg-card)', borderRadius: 22, border: '1px solid var(--ytg-border)', boxShadow: 'var(--ytg-shadow)', padding: 26 }}>
+                <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-accent-text)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 10 }}>Grow these numbers</p>
+                <p style={{ fontSize: 15, fontWeight: 600, color: 'var(--ytg-text)', lineHeight: 1.5, marginBottom: 8, letterSpacing: '-0.2px' }}>
+                  Subscribers without engagement is just a vanity number.
+                </p>
+                <p style={{ fontSize: 14, color: 'var(--ytg-text-2)', lineHeight: 1.65, marginBottom: 18 }}>
+                  YTGrowth's free AI audit looks at your actual reach coefficient, your CTR, and your retention curves. It tells you which videos are losing your existing subs and which titles are leaving discovery views on the table.
+                </p>
+                <a href="/auth/login" className="smc-btn" style={{ width: '100%', justifyContent: 'center', padding: 14, fontSize: 14, borderRadius: 14 }}>
+                  Get my free audit →
+                </a>
+                <p style={{ fontSize: 11.5, color: 'var(--ytg-text-3)', textAlign: 'center', marginTop: 10 }}>
+                  Free forever plan · 3 audits/month · no card
+                </p>
+              </div>
             </div>
 
             {/* RIGHT. Result column */}
@@ -436,23 +455,6 @@ export default function YoutubeSubscriberMoneyCalculator() {
                 </div>
                 <p style={{ fontSize: 11.5, color: 'var(--ytg-text-3)', marginTop: 14, lineHeight: 1.55 }}>
                   Targets assume your current upload cadence, niche, and audience country stay constant. Move any of those and the math changes.
-                </p>
-              </div>
-
-              {/* Grow CTA */}
-              <div style={{ background: 'var(--ytg-card)', borderRadius: 22, border: '1px solid var(--ytg-border)', boxShadow: 'var(--ytg-shadow)', padding: 26 }}>
-                <p style={{ fontSize: 11, fontWeight: 700, color: 'var(--ytg-accent-text)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 10 }}>Grow these numbers</p>
-                <p style={{ fontSize: 15, fontWeight: 600, color: 'var(--ytg-text)', lineHeight: 1.5, marginBottom: 8, letterSpacing: '-0.2px' }}>
-                  Subscribers without engagement is just a vanity number.
-                </p>
-                <p style={{ fontSize: 14, color: 'var(--ytg-text-2)', lineHeight: 1.65, marginBottom: 18 }}>
-                  YTGrowth's free AI audit looks at your actual reach coefficient, your CTR, and your retention curves. It tells you which videos are losing your existing subs and which titles are leaving discovery views on the table.
-                </p>
-                <a href="/auth/login" className="smc-btn" style={{ width: '100%', justifyContent: 'center', padding: 14, fontSize: 14, borderRadius: 14 }}>
-                  Get my free audit →
-                </a>
-                <p style={{ fontSize: 11.5, color: 'var(--ytg-text-3)', textAlign: 'center', marginTop: 10 }}>
-                  Free forever plan · 3 audits/month · no card
                 </p>
               </div>
             </div>
