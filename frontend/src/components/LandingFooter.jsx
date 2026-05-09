@@ -105,6 +105,7 @@ const FEATURES = [
 ]
 
 const RESOURCES = [
+  { label: 'Top YouTube Channels',                href: '/youtube-stats' },
   { label: 'Blog',                                href: '/blog' },
   { label: 'YouTube Money Calculator',            href: '/tools/youtube-money-calculator' },
   { label: 'YouTube Subscriber Money Calculator', href: '/tools/youtube-subscriber-money-calculator' },

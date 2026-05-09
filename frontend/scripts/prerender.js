@@ -84,6 +84,10 @@ const META_BY_ROUTE = {
     title:       'Free YouTube Thumbnail Downloader: HD, Max Res, JPG/PNG',
     description: 'Download any YouTube video thumbnail in seconds. Max-res, HQ, MQ, SD sizes in JPG and PNG. No watermark, no login, instant.',
   },
+  '/youtube-stats': {
+    title:       'Top YouTube Channels by Category 2026: Live Subscriber Rankings',
+    description: 'Browse top YouTube channels in 14 niches: gaming, tech, beauty, finance, fitness, music, and more. Ranked by live subscriber count from YouTube\'s official API. Updated daily, free, no signup.',
+  },
 }
 
 /* Discover blog slugs from the source data file. We slice from
@@ -121,6 +125,7 @@ async function buildRoutes() {
     '/tools/youtube-thumbnail-resizer',
     '/tools/youtube-channel-name-generator',
     '/tools/youtube-video-ideas-generator',
+    '/youtube-stats',
     '/contact',
     '/affiliate',
     '/terms',

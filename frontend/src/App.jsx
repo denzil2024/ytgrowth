@@ -30,6 +30,7 @@ const YoutubeChannelStatsChecker       = lazy(() => import('./pages/tools/Youtub
 const YoutubeThumbnailResizer          = lazy(() => import('./pages/tools/YoutubeThumbnailResizer'))
 const YoutubeChannelNameGenerator      = lazy(() => import('./pages/tools/YoutubeChannelNameGenerator'))
 const YoutubeVideoIdeasGenerator       = lazy(() => import('./pages/tools/YoutubeVideoIdeasGenerator'))
+const YoutubeStats                     = lazy(() => import('./pages/YoutubeStats'))
 const Blog                             = lazy(() => import('./pages/Blog'))
 const BlogPost                         = lazy(() => import('./pages/BlogPost'))
 
@@ -64,6 +65,7 @@ function App() {
           <Route path="/tools/youtube-thumbnail-resizer"           element={<YoutubeThumbnailResizer />} />
           <Route path="/tools/youtube-channel-name-generator"      element={<YoutubeChannelNameGenerator />} />
           <Route path="/tools/youtube-video-ideas-generator"       element={<YoutubeVideoIdeasGenerator />} />
+          <Route path="/youtube-stats"                             element={<YoutubeStats />} />
           <Route path="/blog"                                      element={<Blog />} />
           <Route path="/blog/:slug"                                element={<BlogPost />} />
           <Route path="*" element={<Navigate to="/" replace />} />

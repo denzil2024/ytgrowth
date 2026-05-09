@@ -49,9 +49,9 @@ CATEGORIES = list(CATEGORY_QUERIES.keys())
 # Filters out small same-named channels that show up in search results.
 MIN_SUBS = 500_000
 
-# Cap per category in the cache. Keep modestly above the UI display
-# count so re-sorts still have headroom.
-TOP_N    = 12
+# Cap per category in the cache. Sized for the /youtube-stats category
+# pages, which show the full ranked list rather than a 10-card teaser.
+TOP_N    = 50
 
 
 def _yt_client():
