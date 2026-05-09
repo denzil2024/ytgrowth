@@ -544,7 +544,7 @@ export default function YoutubeChannelStatsChecker() {
                     Top channels in your <span style={{ color: 'var(--ytg-accent)' }}>niche.</span>
                   </h2>
                   <p style={{ fontSize: 15, color: 'var(--ytg-text-2)', lineHeight: 1.6, maxWidth: 620 }}>
-                    Top 10 per category, ranked by subscribers. Live from YouTube&rsquo;s official API, refreshed every 24h. Click a card to pull the full breakdown.
+                    The actual top channels in each niche, ranked by live subscriber count from YouTube. Click any card to pull the full breakdown.
                   </p>
                 </div>
                 {topChannels.fetched_at && (() => {

@@ -1,94 +1,57 @@
 """
-Top channels per category — curated seed + daily refresh.
+Top channels per category — real discovery, not editorial curation.
 
-The CHANNEL LIST per category is editorially curated (handles below). The
-STATS (subs, views, videos) refresh once a day from the YouTube Data API
-so the figures readers see are real and current. Pattern matches what
-SocialBlade-style sites do — discovery surface that doesn't go stale.
+Approach (v2): for each category, use YouTube's search.list with a tuned
+query, type=channel. Batch-fetch the public statistics for every result
+via channels.list, filter out anything below a minimum subscriber bar
+(skips random small channels that share a name with a popular one),
+sort by sub count DESC, take the actual top N.
 
-Wire-up:
-  - Seed: TOP_CHANNELS_SEED below. Add/remove handles per category here.
-  - Refresh: refresh_all() resolves handles → channel IDs and pulls stats
-    via channels.list. Called daily by app/scheduler.py.
-  - Read:   routers/top_channels_routes.py exposes the cache.
+This means:
+  - No hand-curated handle list to maintain (the previous approach
+    silently mis-resolved handles like "drake" into 469-sub strangers).
+  - "Top" actually means top by subscribers, sourced from YouTube
+    itself rather than my guesses.
+  - New big channels appear automatically as YouTube's relevance
+    algorithm picks them up.
+
+API quota: per refresh, 1 search.list (100 units) + 1 channels.list
+batch (1 unit) per category. 14 categories ≈ 1,414 units per daily
+refresh. Free quota is 10,000/day, so this is ~14% of headroom.
 """
 
 import os
 import datetime
 
-# Curated seed list — handles only (without leading @). One day a future
-# admin UI can edit these without code; until then they live here. Bad
-# handles fail silently in refresh_all() — only channels that actually
-# resolve via the YouTube API end up in the cache, so the UX never shows
-# broken entries.
-TOP_CHANNELS_SEED = {
-    "gaming": [
-        "MrBeastGaming", "Markiplier", "jacksepticeye", "PewDiePie",
-        "DanTDM", "Ninja", "Valkyrae", "Pokimane", "Dream",
-        "VanossGaming", "Jelly", "PrestonPlayz",
-    ],
-    "tech": [
-        "mkbhd", "LinusTechTips", "UnboxTherapy", "Mrwhosetheboss",
-        "JerryRigEverything", "DaveLee", "AustinEvans", "iJustine",
-        "MrMobile", "TechLinked", "ShortCircuit",
-    ],
-    "beauty": [
-        "jamescharles", "NikkieTutorials", "JeffreeStar",
-        "TatiWestbrook", "patrickstarrr", "MichellePhan",
-        "RclBeauty101", "BretmanRock",
-    ],
-    "finance": [
-        "GrahamStephan", "MeetKevin", "AndreiJikh", "ThePlainBagel",
-        "BiggerPockets", "MinorityMindset", "ProjectLifeMastery",
-        "TheRamseyShow",
-    ],
-    "cooking": [
-        "bingingwithbabish", "joshuaweissman", "AdamRagusea",
-        "InternetShaquille", "AlmazanKitchen", "Tasty",
-        "BonAppetit", "JamieOliver", "GordonRamsay",
-    ],
-    "fitness": [
-        "athleanx", "JeffNippard", "ChloeTing", "ScottHermanFitness",
-        "BradleyMartynOnline", "Calisthenicmovement", "BuffDudes",
-        "NimaiDelgado",
-    ],
-    "music": [
-        "EminemMusic", "Beyonce", "TaylorSwift", "JustinBieber",
-        "BrunoMars", "TheWeeknd", "edsheeran", "ArianaGrande",
-        "drake", "ladygaga",
-    ],
-    "education": [
-        "veritasium", "Vsauce", "kurzgesagt", "crashcourse",
-        "Numberphile", "TED", "TheRoyalInstitution", "SmarterEveryDay",
-        "MarkRober", "AsapSCIENCE",
-    ],
-    "vlogs": [
-        "emmachamberlain", "caseyneistat", "DavidDobrik", "Zoella",
-        "shanedawson", "LoganPaul", "JakePaul",
-    ],
-    "travel": [
-        "MarkWiens", "LostLeBlanc", "DrewBinsky", "FunForLouis",
-        "SailingLaVagabonde", "kara_and_nate",
-    ],
-    "comedy": [
-        "Smosh", "Lilly", "JennaMarbles", "danielhowell",
-        "AmazingPhil", "CodyKo", "KurtisConner",
-    ],
-    "sports": [
-        "DudePerfect", "F1", "NBA", "NFL", "uefa",
-        "premierleague", "Formula1",
-    ],
-    "entertainment": [
-        "MrBeast", "TheTryGuys", "BuzzFeedVideo", "VanityFair",
-        "WIRED", "JimmyKimmelLive", "TheTonightShow",
-    ],
-    "news": [
-        "VICENews", "vox", "BloombergQuicktake", "Reuters",
-        "BBCNews", "TheYoungTurks",
-    ],
+# Search queries per category. Tuned to surface channels actually in the
+# niche rather than topic-tag matches. Tweak here when a category
+# returns junk — no DB migration needed.
+CATEGORY_QUERIES = {
+    "gaming":        "gaming youtube channel",
+    "tech":          "tech reviews",
+    "beauty":        "beauty makeup tutorials",
+    "finance":       "personal finance investing",
+    "cooking":       "cooking recipes food channel",
+    "fitness":       "fitness workout",
+    "music":         "music videos artist",
+    "education":     "science education explained",
+    "vlogs":         "daily vlog",
+    "travel":        "travel vlog",
+    "comedy":        "comedy sketches",
+    "sports":        "sports highlights",
+    "entertainment": "entertainment shows",
+    "news":          "news daily",
 }
 
-CATEGORIES = list(TOP_CHANNELS_SEED.keys())
+CATEGORIES = list(CATEGORY_QUERIES.keys())
+
+# Minimum subscribers a channel needs to qualify for the top-10 list.
+# Filters out small same-named channels that show up in search results.
+MIN_SUBS = 500_000
+
+# Cap per category in the cache. Keep modestly above the UI display
+# count so re-sorts still have headroom.
+TOP_N    = 12
 
 
 def _yt_client():
@@ -101,52 +64,64 @@ def _yt_client():
     return build("youtube", "v3", developerKey=api_key, cache_discovery=False)
 
 
-def _resolve_handle(yt, handle: str) -> dict | None:
-    """Resolve an @handle to a full channel record. Tries forHandle first
-    (1 unit, exact match), falls back to a search-then-fetch (~101 units,
-    fuzzy match) so an outdated or slightly-off handle in the seed list
-    still produces a result. Returns the raw channels.list item dict on
-    success, None on failure."""
-    # Path 1: exact handle resolution (cheapest, 1 unit)
-    try:
-        resp = yt.channels().list(
-            part="snippet,statistics",
-            forHandle=handle,
-            maxResults=1,
-        ).execute()
-        items = resp.get("items") or []
-        if items:
-            return items[0]
-    except Exception as e:
-        print(f"[top_channels] forHandle failed for @{handle}: {e}")
-
-    # Path 2: search → channels.list fallback
+def _discover_category(yt, query: str) -> list[dict]:
+    """For a given category query: search → batch-stat → filter → sort.
+    Returns the top channels (raw channels.list item dicts) for the
+    category, sorted by subscribers DESC."""
+    # 1. Search for channels matching the query (100 units, max 50 results).
     try:
         sr = yt.search().list(
             part="snippet",
-            q=f"@{handle}",
+            q=query,
             type="channel",
-            maxResults=1,
+            maxResults=50,
+            order="relevance",
         ).execute()
-        s_items = sr.get("items") or []
-        if not s_items:
-            return None
-        ch_id = s_items[0].get("snippet", {}).get("channelId") or s_items[0].get("id", {}).get("channelId")
-        if not ch_id:
-            return None
+    except Exception as e:
+        print(f"[top_channels] search failed for '{query}': {e}")
+        return []
+
+    channel_ids = []
+    for item in sr.get("items", []):
+        ch_id = (item.get("snippet") or {}).get("channelId") or (item.get("id") or {}).get("channelId")
+        if ch_id and ch_id not in channel_ids:
+            channel_ids.append(ch_id)
+    if not channel_ids:
+        return []
+
+    # 2. Batch-fetch stats for everything we found (1 unit per batch of 50).
+    items = []
+    try:
         cr = yt.channels().list(
             part="snippet,statistics",
-            id=ch_id,
-            maxResults=1,
+            id=",".join(channel_ids[:50]),
+            maxResults=50,
         ).execute()
-        c_items = cr.get("items") or []
-        return c_items[0] if c_items else None
+        items = cr.get("items") or []
     except Exception as e:
-        print(f"[top_channels] search fallback failed for @{handle}: {e}")
-        return None
+        print(f"[top_channels] channels batch failed for '{query}': {e}")
+        return []
+
+    # 3. Filter by min subs + skip channels that hide their sub count.
+    qualified = []
+    for ch in items:
+        stats = ch.get("statistics") or {}
+        if stats.get("hiddenSubscriberCount"):
+            continue
+        try:
+            subs = int(stats.get("subscriberCount") or 0)
+        except (TypeError, ValueError):
+            continue
+        if subs < MIN_SUBS:
+            continue
+        qualified.append((subs, ch))
+
+    # 4. Sort by subs DESC, return raw items.
+    qualified.sort(key=lambda x: x[0], reverse=True)
+    return [ch for _subs, ch in qualified]
 
 
-def _to_row(item: dict, category: str, handle: str, rank: int) -> dict:
+def _to_row(item: dict, category: str, rank: int) -> dict:
     snippet = item.get("snippet") or {}
     stats   = item.get("statistics") or {}
     thumbs  = (snippet.get("thumbnails") or {})
@@ -154,7 +129,7 @@ def _to_row(item: dict, category: str, handle: str, rank: int) -> dict:
         "category":    category,
         "channel_id":  item.get("id") or "",
         "title":       snippet.get("title") or "",
-        "handle":      handle,
+        "handle":      (snippet.get("customUrl") or "").lstrip("@"),
         "thumbnail":   (thumbs.get("medium", {}).get("url")
                         or thumbs.get("default", {}).get("url") or ""),
         "country":     snippet.get("country") or "",
@@ -166,42 +141,31 @@ def _to_row(item: dict, category: str, handle: str, rank: int) -> dict:
 
 
 def refresh_all() -> dict:
-    """Pull current stats for every seeded handle, upsert into cache. Returns
-    a small summary dict for logging."""
+    """Discover + persist the top channels for every category. Replaces
+    each category's rows wholesale (delete + insert) so departed
+    channels don't linger. Returns a small summary dict for logging."""
     from database.models import SessionLocal, TopChannelCache
 
     yt = _yt_client()
     if yt is None:
         return {"ok": False, "reason": "no_api_key"}
 
-    inserted = 0
-    updated  = 0
-    failed   = []
+    summary = {"ok": True, "per_category": {}}
     db = SessionLocal()
     try:
-        for category, handles in TOP_CHANNELS_SEED.items():
-            for rank, handle in enumerate(handles, start=1):
-                item = _resolve_handle(yt, handle)
-                if not item or not item.get("id"):
-                    failed.append(f"{category}/{handle}")
-                    continue
-                row = _to_row(item, category, handle, rank)
-                existing = (
-                    db.query(TopChannelCache)
-                      .filter_by(category=category, channel_id=row["channel_id"])
-                      .first()
-                )
-                now = datetime.datetime.utcnow()
-                if existing:
-                    for k, v in row.items():
-                        setattr(existing, k, v)
-                    existing.fetched_at = now
-                    updated += 1
-                else:
-                    db.add(TopChannelCache(**row, fetched_at=now))
-                    inserted += 1
+        now = datetime.datetime.utcnow()
+        for category, query in CATEGORY_QUERIES.items():
+            items = _discover_category(yt, query)
+            top   = items[:TOP_N]
+            # Clear this category's cache and reinsert. Cheaper than
+            # diffing because the set is small (≤ TOP_N rows per cat).
+            db.query(TopChannelCache).filter_by(category=category).delete()
+            for idx, item in enumerate(top, start=1):
+                row = _to_row(item, category, idx)
+                db.add(TopChannelCache(**row, fetched_at=now))
+            summary["per_category"][category] = len(top)
         db.commit()
-        return {"ok": True, "inserted": inserted, "updated": updated, "failed": failed}
+        return summary
     except Exception as e:
         db.rollback()
         print(f"[top_channels] refresh_all error: {e}")
@@ -213,8 +177,7 @@ def refresh_all() -> dict:
 def fetch_grouped(top_n: int = 10) -> dict:
     """Read the cache as { category: [rows...] }, sorted by subscribers
     DESC within each category. Cap to top N (default 10) so the UI shows
-    a clean leaderboard rather than the full seed list. Stored `rank`
-    column is ignored — actual ranking comes from current sub counts."""
+    a clean leaderboard."""
     from database.models import SessionLocal, TopChannelCache
 
     db = SessionLocal()
@@ -227,7 +190,6 @@ def fetch_grouped(top_n: int = 10) -> dict:
               )
               .all()
         )
-        # Group, then trim to top N + assign display rank
         grouped_raw = {}
         latest = None
         for r in rows:
@@ -257,3 +219,8 @@ def fetch_grouped(top_n: int = 10) -> dict:
         }
     finally:
         db.close()
+
+
+# Backwards-compat alias for the debug endpoint that imported the old
+# constant. Keeps /admin/top-channels-debug working without churn.
+TOP_CHANNELS_SEED = CATEGORY_QUERIES
