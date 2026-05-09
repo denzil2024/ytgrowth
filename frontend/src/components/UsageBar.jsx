@@ -88,7 +88,7 @@ export default function UsageBar({ channelId, email, dark = false, onPlan, onUsa
         : '0 1px 2px rgba(0,0,0,0.025), inset 0 1px 0 rgba(255,255,255,0.7)',
     }}>
       {/* Eyebrow with sparkle dot */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 7, marginBottom: 9 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 7, marginBottom: 10 }}>
         <span style={{
           width: 6, height: 6, borderRadius: '50%',
           background: accent,
@@ -96,24 +96,27 @@ export default function UsageBar({ channelId, email, dark = false, onPlan, onUsa
           flexShrink: 0,
         }} />
         <p style={{
-          fontSize: 10, fontWeight: 700, color: C.text3,
-          letterSpacing: '0.1em', textTransform: 'uppercase',
+          fontSize: 10.5, fontWeight: 700, color: C.text3,
+          letterSpacing: '0.11em', textTransform: 'uppercase',
         }}>
           AI analyses
         </p>
       </div>
 
-      {/* Main row — big "N" + "of M left" */}
-      <div style={{ display: 'flex', alignItems: 'baseline', gap: 6, marginBottom: 11 }}>
+      {/* Main row — big "N" + small "/M" + "left" */}
+      <div style={{ display: 'flex', alignItems: 'baseline', gap: 5, marginBottom: 12 }}>
         <span style={{
-          fontSize: 26, fontWeight: 800, color: accent,
-          letterSpacing: '-0.9px', lineHeight: 1,
+          fontSize: 30, fontWeight: 800, color: accent,
+          letterSpacing: '-1.1px', lineHeight: 0.95,
           fontVariantNumeric: 'tabular-nums',
         }}>
           {remaining}
         </span>
-        <span style={{ fontSize: 12.5, fontWeight: 500, color: C.text2 }}>
-          of {allowance} left
+        <span style={{ fontSize: 13, fontWeight: 600, color: C.text3, fontVariantNumeric: 'tabular-nums' }}>
+          / {allowance}
+        </span>
+        <span style={{ fontSize: 12.5, fontWeight: 500, color: C.text2, marginLeft: 4 }}>
+          left
         </span>
       </div>
 
