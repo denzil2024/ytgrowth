@@ -89,51 +89,16 @@ function useDashboardStyles() {
       }
 
       .ytg-nav-btn {
-        position: relative;
-        display: flex; align-items: center; gap: 11px;
-        padding: 9px 13px; border-radius: 9px; cursor: pointer; text-align: left;
+        display: flex; align-items: center; gap: 10px;
+        padding: 9px 13px; border-radius: 100px; cursor: pointer; text-align: left;
         font-size: 13.5px; font-family: 'Inter', system-ui, sans-serif;
-        color: #4a4a58; background: transparent;
-        transition: background 0.16s, color 0.16s, border-color 0.16s;
+        color: #4a4a58;
+        transition: background 0.15s, color 0.15s, border-color 0.15s;
         border: 1px solid transparent;
         box-shadow: none; outline: none; -webkit-appearance: none;
-        letter-spacing: -0.1px;
-      }
-      .ytg-nav-btn .ytg-nav-icon {
-        display: flex; flex-shrink: 0; color: #c0c0cc;
-        transition: color 0.16s, transform 0.16s;
       }
       .ytg-nav-btn:hover:not(.active) {
-        background: #f6f6f9; color: #0f0f13;
-      }
-      .ytg-nav-btn:hover:not(.active) .ytg-nav-icon { color: #4a4a58; }
-      .ytg-nav-btn.active {
-        background: linear-gradient(90deg, rgba(229,37,27,0.075) 0%, rgba(229,37,27,0.018) 100%);
-        color: #0f0f13; font-weight: 600;
-        border-color: rgba(229,37,27,0.12);
-      }
-      .ytg-nav-btn.active .ytg-nav-icon { color: #e5251b; }
-      /* Left-edge accent bar — sits at the sidebar edge, not the button edge.
-         margin on the parent button is 12px so left:-12px lands flush. */
-      .ytg-nav-btn.active::before {
-        content: ''; position: absolute;
-        left: -13px; top: 7px; bottom: 7px;
-        width: 3px; border-radius: 0 3px 3px 0;
-        background: #e5251b;
-        box-shadow: 0 0 10px rgba(229,37,27,0.55);
-      }
-      .ytg-nav-section {
-        font-size: 10.5px; font-weight: 700;
-        color: #9595a4; text-transform: uppercase;
-        letter-spacing: 0.1em;
-      }
-      .ytg-nav-badge {
-        background: #fffbeb; color: #d97706;
-        border: 1px solid #fde68a;
-        font-size: 10.5px; font-weight: 700;
-        padding: 1px 7px; border-radius: 20px;
-        min-width: 18px; text-align: center;
-        font-variant-numeric: tabular-nums;
+        background: #f4f4f8; color: #0f0f13;
       }
 
       .ytg-video-row { transition: background 0.15s; }
@@ -1241,11 +1206,23 @@ function NavBtn({ label, active, onClick, badge }) {
     <button
       className={`ytg-nav-btn${active ? ' active' : ''}`}
       onClick={onClick}
-      style={{ margin: '1px 13px', width: 'calc(100% - 26px)' }}
+      style={{
+        margin: '2px 12px',
+        width: 'calc(100% - 24px)',
+        background: active ? 'rgba(15,15,19,0.07)' : 'transparent',
+        color: active ? C.text1 : C.text2,
+        fontWeight: active ? 600 : 400,
+        letterSpacing: '-0.1px',
+        border: active ? '1px solid rgba(0,0,0,0.09)' : '1px solid transparent',
+      }}
+      onMouseEnter={e => { if (!active) { e.currentTarget.style.color = C.text1 } }}
+      onMouseLeave={e => { if (!active) { e.currentTarget.style.color = C.text2 } }}
     >
-      <span className="ytg-nav-icon">{NAV_ICONS[label]}</span>
-      <span style={{ flex: 1 }}>{label}</span>
-      {badge > 0 && <span className="ytg-nav-badge">{badge}</span>}
+      <span style={{ display: 'flex', flexShrink: 0, color: active ? C.text1 : '#c0c0cc' }}>{NAV_ICONS[label]}</span>
+      <span style={{ flex: 1, letterSpacing: '-0.1px' }}>{label}</span>
+      {badge > 0 && (
+        <span style={{ background: C.amberBg, color: C.amber, border: `1px solid ${C.amberBdr}`, fontSize: 11, fontWeight: 700, padding: '1px 6px', borderRadius: 20, minWidth: 18, textAlign: 'center' }}>{badge}</span>
+      )}
     </button>
   )
 }
@@ -1852,7 +1829,7 @@ export default function Dashboard() {
 
           {/* Section: MY CHANNEL */}
           <div style={{ padding: '12px 22px 4px' }}>
-            <span className="ytg-nav-section">My Channel</span>
+            <span style={{ fontSize: 10, fontWeight: 600, color: C.text1, textTransform: 'uppercase', letterSpacing: '0.09em' }}>My Channel</span>
           </div>
           <NavBtn label="Overview"            active={nav === 'Overview'}       onClick={() => setNav('Overview')} />
           <NavBtn label="Videos"              active={nav === 'Videos'}         onClick={() => setNav('Videos')} />
@@ -1861,14 +1838,14 @@ export default function Dashboard() {
 
           {/* Section: OPTIMIZE A VIDEO */}
           <div style={{ padding: '20px 22px 4px' }}>
-            <span className="ytg-nav-section">Optimize a Video</span>
+            <span style={{ fontSize: 10, fontWeight: 600, color: C.text1, textTransform: 'uppercase', letterSpacing: '0.09em' }}>Optimize a Video</span>
           </div>
           <NavBtn label="SEO Studio"      active={nav === 'SEO Studio'}      onClick={() => setNav('SEO Studio')} />
           <NavBtn label="Thumbnail Score" active={nav === 'Thumbnail Score'} onClick={() => setNav('Thumbnail Score')} />
 
           {/* Section: IDEAS & RESEARCH */}
           <div style={{ padding: '20px 22px 4px' }}>
-            <span className="ytg-nav-section">Ideas & Research</span>
+            <span style={{ fontSize: 10, fontWeight: 600, color: C.text1, textTransform: 'uppercase', letterSpacing: '0.09em' }}>Ideas & Research</span>
           </div>
           <NavBtn label="Video Ideas" active={nav === 'Video Ideas'} onClick={() => setNav('Video Ideas')} />
           <NavBtn label="Outliers"    active={nav === 'Outliers'}    onClick={() => setNav('Outliers')} />
