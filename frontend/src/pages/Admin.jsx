@@ -187,47 +187,6 @@ function useAdminStyles() {
           transition: width 0.8s cubic-bezier(0.34,1.56,0.64,1);
         }
 
-        /* Activity feed — single-line dense rows, mirrors signups table */
-        .adm-feed-row {
-          display: grid;
-          grid-template-columns: 6px 26px 1fr auto auto;
-          align-items: center; gap: 11px;
-          padding: 12px 22px;
-          border-bottom: 1px solid #f0f0f4;
-          transition: background 0.13s;
-        }
-        .adm-feed-row:last-child { border-bottom: none; }
-        .adm-feed-row:hover { background: #f8f8fb; }
-        .adm-feed-dot {
-          width: 6px; height: 6px; border-radius: 50%;
-          flex-shrink: 0;
-        }
-        .adm-feed-dot.paid  { background: #059669; box-shadow: 0 0 0 3px rgba(5,150,105,0.18); }
-        .adm-feed-dot.free  { background: #b8b8c4; }
-        .adm-feed-dot.audit { background: #4a7cf7; box-shadow: 0 0 0 3px rgba(74,124,247,0.18); }
-        .adm-feed-name {
-          font-size: 13px; font-weight: 700; color: #0f0f13;
-          letter-spacing: -0.15px;
-          overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-        }
-        .adm-feed-action {
-          font-size: 11.5px; color: #9595a4; margin-top: 1px;
-          overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-        }
-        .adm-feed-kind {
-          font-size: 9.5px; font-weight: 800; letter-spacing: 0.07em;
-          text-transform: uppercase;
-          padding: 2px 8px; border-radius: 100px;
-          font-variant-numeric: tabular-nums; white-space: nowrap;
-        }
-        .adm-feed-kind.signup-paid { color: #059669; background: #ecfdf5; border: 1px solid #a7f3d0; }
-        .adm-feed-kind.signup-free { color: #4a4a58; background: #f4f4f6; border: 1px solid #e6e6ec; }
-        .adm-feed-kind.audit       { color: #1e40af; background: rgba(74,124,247,0.10); border: 1px solid rgba(74,124,247,0.22); }
-        .adm-feed-time {
-          font-size: 11px; color: #b8b8c4; font-weight: 500;
-          font-variant-numeric: tabular-nums; white-space: nowrap;
-          letter-spacing: -0.1px;
-        }
 
         /* Delta chip — replaces inline trend text */
         .adm-delta {
@@ -828,7 +787,6 @@ export default function Admin() {
   const [refreshing, setRefreshing] = useState(false)
   const [signupPage, setSignupPage] = useState(0)
   const [topPage,    setTopPage]    = useState(0)
-  const [feedPage,   setFeedPage]   = useState(0)
 
   // Feature requests
   const [frData,     setFrData]     = useState(null)
@@ -906,7 +864,7 @@ export default function Admin() {
         if (!r.ok) throw new Error(body.error || `Error ${r.status}`)
         return body
       })
-      .then(d => { setData(d); setLoading(false); setRefreshing(false); setSignupPage(0); setTopPage(0); setFeedPage(0) })
+      .then(d => { setData(d); setLoading(false); setRefreshing(false); setSignupPage(0); setTopPage(0) })
       .catch(e => { setError(e.message); setLoading(false); setRefreshing(false) })
   }
 
@@ -985,40 +943,6 @@ export default function Admin() {
     return { signups: signupsToday, conversions, mrrAdded }
   })()
 
-  /* Activity events — merge signups + audits, sort by time desc, take
-     top 20. Each event keeps avatar + name + plan + ts so the feed
-     row can render without back-references. */
-  const activityEvents = (() => {
-    const events = []
-    data.recent_signups.forEach(u => {
-      if (!u.created_at) return
-      const p = (u.plan || '').toLowerCase()
-      const isPaid = p === 'solo' || p === 'growth' || p === 'agency' || p.includes('lifetime') || p === 'pack'
-      events.push({
-        type:   isPaid ? 'paid' : 'free',
-        kind:   'signup',
-        ts:     new Date(u.created_at).getTime(),
-        name:   u.display_name || u.channel_name || u.email.split('@')[0],
-        plan:   u.plan,
-        avatar: u.profile_picture || u.channel_thumbnail,
-      })
-    })
-    data.top_users.forEach(u => {
-      if (!u.last_audit_at) return
-      events.push({
-        type:   'audit',
-        kind:   'audit',
-        ts:     new Date(u.last_audit_at).getTime(),
-        name:   u.channel_name || (u.owner_email || '').split('@')[0],
-        plan:   u.plan,
-        avatar: u.channel_thumbnail,
-      })
-    })
-    events.sort((a, b) => b.ts - a.ts)
-    return events
-  })()
-  const PAGE_SIZE_FEED = 8
-  const feedSlice = activityEvents.slice(feedPage * PAGE_SIZE_FEED, (feedPage + 1) * PAGE_SIZE_FEED)
 
   /* Country — always show; append "not tracked" for existing users */
   const knownCountries  = data.country_breakdown || []
@@ -1216,8 +1140,8 @@ export default function Admin() {
         />
       </div>
 
-      {/* ── Top users (left) + Activity feed (right) ─────────────────────── */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1.55fr 1fr', gap: 20, marginBottom: 40, alignItems: 'start' }}>
+      {/* ── Top users by monthly usage (top 10, 5 per page) ──────────────── */}
+      <div style={{ marginBottom: 40 }}>
         <SectionCard
           title="Top users this month"
           count={data.top_users.length}
@@ -1266,40 +1190,6 @@ export default function Admin() {
               })
           }
           <Pager page={topPage} total={data.top_users.length} onPage={setTopPage} pageSize={PAGE_SIZE_TOP} />
-        </SectionCard>
-
-        {/* Activity feed — dense ticker of signups + audits, paginated */}
-        <SectionCard
-          title="Activity"
-          count={activityEvents.length}
-          sub="Recent signups + audits, newest first"
-        >
-          {activityEvents.length === 0 ? (
-            <EmptyState eyebrow="No activity">Recent signups + audits will appear here as soon as they happen.</EmptyState>
-          ) : (
-            <div>
-              {feedSlice.map((e, i) => {
-                const isAudit = e.kind === 'audit'
-                const dotCls  = e.type === 'paid' ? 'paid' : e.type === 'audit' ? 'audit' : 'free'
-                const action  = isAudit ? 'ran a channel audit' : 'signed up'
-                const kindCls = isAudit ? 'audit' : (e.type === 'paid' ? 'signup-paid' : 'signup-free')
-                const kindLbl = isAudit ? 'Audit' : (e.type === 'paid' ? planLabel(e.plan) : 'Signup')
-                return (
-                  <div key={`${e.kind}-${e.ts}-${i}`} className="adm-feed-row">
-                    <span className={`adm-feed-dot ${dotCls}`} />
-                    <Avatar src={e.avatar} name={e.name} size={26} />
-                    <div style={{ minWidth: 0 }}>
-                      <p className="adm-feed-name">{e.name}</p>
-                      <p className="adm-feed-action">{action}</p>
-                    </div>
-                    <span className={`adm-feed-kind ${kindCls}`}>{kindLbl}</span>
-                    <span className="adm-feed-time">{relTime(new Date(e.ts).toISOString())}</span>
-                  </div>
-                )
-              })}
-              <Pager page={feedPage} total={activityEvents.length} onPage={setFeedPage} pageSize={PAGE_SIZE_FEED} />
-            </div>
-          )}
         </SectionCard>
       </div>
 

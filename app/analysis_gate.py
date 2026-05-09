@@ -125,6 +125,18 @@ def check_and_deduct(channel_id: str, amount: int = 1) -> dict:
         if take_pack > 0:
             sub.pack_balance = max(0, (sub.pack_balance or 0) - take_pack)
 
+        # Stamp last_audit_at on the channel that was actually audited
+        # (not the billing_channel, which may be a free-tier sibling
+        # routing through this channel's bucket). Powers the admin
+        # "Last audit" column + the Active · 7d stat.
+        try:
+            from database.models import ChannelRegistry
+            reg = db.query(ChannelRegistry).filter_by(channel_id=channel_id).first()
+            if reg:
+                reg.last_audit_at = datetime.datetime.utcnow()
+        except Exception as e:
+            print(f"[analysis_gate] last_audit_at stamp failed for {channel_id}: {e}")
+
         db.commit()
 
         # Recalculate after deduction
