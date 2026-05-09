@@ -139,7 +139,7 @@ function useGlobalStyles() {
       .smc-faq-answer-inner { overflow: hidden; }
 
       .smc-grid-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 22px; }
-      .smc-calc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: start; }
+      .smc-calc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: stretch; }
 
       @media (max-width: 900px) {
         .smc-grid-3 { grid-template-columns: 1fr; }
