@@ -23,6 +23,11 @@ const CARD = {
 const PAGE_SIZE_SIGNUPS = 8
 const PAGE_SIZE_TOP     = 5
 
+/* Monthly subscription prices (USD). Annual subscribers show up under
+   the same plan name in the DB; using monthly price slightly inflates
+   the MRR estimate, but keeps the math obvious for the admin glance. */
+const PLAN_MONTHLY_PRICE = { solo: 19, growth: 49, agency: 149 }
+
 const COUNTRY_FLAGS = {
   "Afghanistan":"🇦🇫","Albania":"🇦🇱","Algeria":"🇩🇿","Argentina":"🇦🇷",
   "Australia":"🇦🇺","Austria":"🇦🇹","Bangladesh":"🇧🇩","Belgium":"🇧🇪",
@@ -62,11 +67,11 @@ function useAdminStyles() {
         .adm p,.adm span,.adm div,.adm h1,.adm h2,.adm h3 { margin:0; }
         .adm .num { font-variant-numeric:tabular-nums; }
 
-        /* Light stat card — subtle gradient bg + radial glow + accent line */
+        /* Light stat card. Subtle gradient + accent line. No icons. */
         .adm-stat-card {
           background:linear-gradient(165deg, #ffffff 0%, #fafafd 60%, #f6f5fa 100%);
           border:1px solid #e6e6ec; border-radius:20px;
-          padding:24px 26px 22px;
+          padding:26px 28px 24px;
           box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 18px rgba(0,0,0,0.05);
           transition:box-shadow 0.22s,transform 0.22s,border-color 0.22s;
           cursor:default; position:relative; overflow:hidden;
@@ -76,11 +81,11 @@ function useAdminStyles() {
           background:linear-gradient(90deg, var(--adm-accent, #e5251b) 0%, var(--adm-accent, #e5251b) 55%, rgba(229,37,27,0) 100%);
           opacity:0.9; transition:opacity 0.22s;
         }
-        /* Soft red glow blooming behind the icon corner — gives the card "life" */
+        /* Soft red glow blooming behind the corner — gives the card "life" */
         .adm-stat-card::after {
-          content:''; position:absolute; top:-30px; right:-30px;
-          width:140px; height:140px; border-radius:50%;
-          background:radial-gradient(circle, rgba(229,37,27,0.10) 0%, rgba(229,37,27,0.04) 40%, transparent 70%);
+          content:''; position:absolute; top:-40px; right:-40px;
+          width:160px; height:160px; border-radius:50%;
+          background:radial-gradient(circle, rgba(229,37,27,0.09) 0%, rgba(229,37,27,0.03) 40%, transparent 70%);
           pointer-events:none;
         }
         .adm-stat-card:hover {
@@ -89,51 +94,63 @@ function useAdminStyles() {
         }
         .adm-stat-card:hover::before { opacity:1; }
 
-        /* Branded red gradient icon badge (matches paywall + auth modal) */
-        .adm-stat-icon {
-          width:34px; height:34px; border-radius:10px;
-          display:flex; align-items:center; justify-content:center;
-          background:linear-gradient(180deg, #e5251b 0%, #a50f07 100%);
-          color:#ffffff;
-          box-shadow:0 4px 10px rgba(229,37,27,0.32), inset 0 1px 0 rgba(255,255,255,0.18);
-          transition:transform 0.18s, box-shadow 0.18s;
-        }
-        .adm-stat-card:hover .adm-stat-icon {
-          transform:scale(1.05);
-          box-shadow:0 6px 14px rgba(229,37,27,0.42), inset 0 1px 0 rgba(255,255,255,0.22);
-        }
-
-        /* Hero RED stat card — full gradient background (matches money calc result card + affiliate annual card) */
+        /* Hero RED stat card — full gradient background, dot-grid texture */
         .adm-stat-card-red {
           position:relative; overflow:hidden;
-          background:linear-gradient(160deg, #ff3b30 0%, #e5251b 45%, #a50f07 100%);
+          background:
+            radial-gradient(circle at 100% 0%, rgba(255,255,255,0.18) 0%, transparent 45%),
+            linear-gradient(160deg, #ff3b30 0%, #e5251b 45%, #a50f07 100%);
           border:none; border-radius:20px;
-          padding:24px 26px 22px;
+          padding:26px 28px 24px;
           color:#ffffff;
-          box-shadow:0 4px 18px rgba(229,37,27,0.34), 0 24px 60px rgba(229,37,27,0.20), inset 0 1px 0 rgba(255,255,255,0.18);
+          box-shadow:0 4px 18px rgba(229,37,27,0.34), 0 24px 60px rgba(229,37,27,0.20), inset 0 1px 0 rgba(255,255,255,0.20);
           transition:transform 0.22s, box-shadow 0.22s;
           cursor:default;
         }
-        /* Soft white sheen in corner — gives the red card movement */
+        /* Faint dot-grid pattern — gives the red card a tactile, premium texture */
+        .adm-stat-card-red::before {
+          content:''; position:absolute; inset:0;
+          background-image:radial-gradient(rgba(255,255,255,0.10) 1px, transparent 1px);
+          background-size:14px 14px; background-position:0 0;
+          pointer-events:none; opacity:0.55;
+        }
+        /* Soft white sheen in corner */
         .adm-stat-card-red::after {
-          content:''; position:absolute; top:-40px; right:-40px;
-          width:180px; height:180px; border-radius:50%;
-          background:radial-gradient(circle, rgba(255,255,255,0.16) 0%, rgba(255,255,255,0.06) 45%, transparent 70%);
+          content:''; position:absolute; top:-50px; right:-50px;
+          width:220px; height:220px; border-radius:50%;
+          background:radial-gradient(circle, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.05) 45%, transparent 70%);
           pointer-events:none;
         }
         .adm-stat-card-red:hover {
           transform:translateY(-3px);
-          box-shadow:0 8px 24px rgba(229,37,27,0.42), 0 32px 80px rgba(229,37,27,0.28), inset 0 1px 0 rgba(255,255,255,0.22);
+          box-shadow:0 8px 24px rgba(229,37,27,0.42), 0 32px 80px rgba(229,37,27,0.28), inset 0 1px 0 rgba(255,255,255,0.24);
         }
-        /* Icon inside the red card flips to a translucent white plate */
-        .adm-stat-icon-red {
-          width:34px; height:34px; border-radius:10px;
-          display:flex; align-items:center; justify-content:center;
-          background:rgba(255,255,255,0.16);
-          border:1px solid rgba(255,255,255,0.22);
-          color:#ffffff;
-          backdrop-filter:blur(6px);
-          -webkit-backdrop-filter:blur(6px);
+
+        /* 7-day sparkline. Thin bars, today on the right. */
+        .adm-spark { display:flex; align-items:flex-end; gap:3px; height:34px; margin-top:14px; }
+        .adm-spark-bar {
+          flex:1; min-height:3px; border-radius:2px 2px 1px 1px;
+          transition:height 0.35s cubic-bezier(0.34,1.56,0.64,1);
+        }
+        .adm-spark-axis { display:flex; justify-content:space-between; gap:3px; margin-top:6px; }
+        .adm-spark-tick {
+          flex:1; text-align:center;
+          font-size:9.5px; font-weight:600; letter-spacing:0.05em;
+          color:var(--adm-axis, #b8b8c4);
+        }
+
+        /* MRR breakdown strip — three little pills under the value */
+        .adm-mrr-split { display:flex; gap:14px; margin-top:18px; flex-wrap:wrap; }
+        .adm-mrr-split > div {
+          display:flex; flex-direction:column; gap:2px; min-width:0;
+        }
+        .adm-mrr-split-label {
+          font-size:10.5px; font-weight:700; letter-spacing:0.08em;
+          text-transform:uppercase; color:rgba(255,255,255,0.62);
+        }
+        .adm-mrr-split-value {
+          font-size:14px; font-weight:700; color:rgba(255,255,255,0.95);
+          font-variant-numeric:tabular-nums; letter-spacing:-0.2px;
         }
 
         /* Delta chip — replaces inline trend text */
@@ -289,19 +306,43 @@ function Avatar({ src, name, size = 30 }) {
   )
 }
 
+/* ── Sparkline — 7 mini bars, today on the right ───────────────────────── */
+function Sparkline({ data, accent, axisColor }) {
+  const max = Math.max(1, ...data)
+  return (
+    <>
+      <div className="adm-spark">
+        {data.map((v, i) => (
+          <div key={i} className="adm-spark-bar" style={{
+            height: `${Math.max(8, (v / max) * 100)}%`,
+            background: v > 0 ? accent : (axisColor || '#e6e6ec'),
+            opacity: v > 0 ? (0.55 + 0.45 * (v / max)) : 0.4,
+          }} />
+        ))}
+      </div>
+      <div className="adm-spark-axis" style={{ '--adm-axis': axisColor || '#b8b8c4' }}>
+        {data.map((_, i) => {
+          const isToday = i === data.length - 1
+          const dayLetters = ['M', 'T', 'W', 'T', 'F', 'S', 'S']
+          const d = new Date(); d.setDate(d.getDate() - (data.length - 1 - i))
+          const idx = (d.getDay() + 6) % 7  // Mon=0
+          return <span key={i} className="adm-spark-tick" style={{ opacity: isToday ? 1 : 0.7, fontWeight: isToday ? 800 : 600 }}>{dayLetters[idx]}</span>
+        })}
+      </div>
+    </>
+  )
+}
+
 /* ── Stat card — solid red variant + light variant ──────────────────────── */
-function Stat({ label, value, sub, accent, alert, icon, delta, variant = 'light' }) {
+function Stat({ label, value, sub, accent, alert, delta, sparkline, breakdown, variant = 'light' }) {
   // variant: 'light' (white gradient card) | 'red' (hero red gradient)
   if (variant === 'red') {
     return (
       <div className="adm-stat-card-red">
         <div style={{ position: 'relative', zIndex: 1 }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 22 }}>
-            <p style={{ fontSize: 11.5, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.82)' }}>{label}</p>
-            {icon && <div className="adm-stat-icon-red">{icon}</div>}
-          </div>
+          <p style={{ fontSize: 11.5, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.82)', marginBottom: 18 }}>{label}</p>
           <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, flexWrap: 'wrap' }}>
-            <p className="num" style={{ fontSize: 40, fontWeight: 800, letterSpacing: '-1.8px', color: '#fff', lineHeight: 1 }}>{value}</p>
+            <p className="num" style={{ fontSize: 48, fontWeight: 800, letterSpacing: '-2.2px', color: '#fff', lineHeight: 0.95 }}>{value}</p>
             {delta && (
               <span className="adm-delta" style={{
                 color: '#fff',
@@ -313,7 +354,18 @@ function Stat({ label, value, sub, accent, alert, icon, delta, variant = 'light'
               </span>
             )}
           </div>
-          {sub && <p style={{ fontSize: 14.5, color: 'rgba(255,255,255,0.85)', fontWeight: 500, marginTop: 16, lineHeight: 1.5, letterSpacing: '-0.1px' }}>{sub}</p>}
+          {sub && <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.86)', fontWeight: 500, marginTop: 14, lineHeight: 1.5, letterSpacing: '-0.1px' }}>{sub}</p>}
+          {breakdown && (
+            <div className="adm-mrr-split">
+              {breakdown.map((b, i) => (
+                <div key={i}>
+                  <span className="adm-mrr-split-label">{b.label}</span>
+                  <span className="adm-mrr-split-value">{b.value}</span>
+                </div>
+              ))}
+            </div>
+          )}
+          {sparkline && <Sparkline data={sparkline} accent="rgba(255,255,255,0.85)" axisColor="rgba(255,255,255,0.55)" />}
         </div>
       </div>
     )
@@ -329,12 +381,9 @@ function Stat({ label, value, sub, accent, alert, icon, delta, variant = 'light'
         ...(alert ? { borderColor: 'rgba(229,37,27,0.22)', background: '#fff8f8' } : {}),
       }}>
       <div style={{ position: 'relative', zIndex: 1 }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 22 }}>
-          <p style={{ fontSize: 11.5, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: C.text3 }}>{label}</p>
-          {icon && <div className="adm-stat-icon">{icon}</div>}
-        </div>
+        <p style={{ fontSize: 11.5, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: C.text3, marginBottom: 18 }}>{label}</p>
         <div style={{ display: 'flex', alignItems: 'baseline', gap: 9, flexWrap: 'wrap' }}>
-          <p className="num" style={{ fontSize: 36, fontWeight: 800, letterSpacing: '-1.6px', color: col, lineHeight: 1 }}>{value}</p>
+          <p className="num" style={{ fontSize: 44, fontWeight: 800, letterSpacing: '-1.9px', color: col, lineHeight: 0.95 }}>{value}</p>
           {delta && (
             <span className="adm-delta" style={{
               color: delta.tone === 'up' ? C.green : delta.tone === 'down' ? C.red : C.text2,
@@ -346,7 +395,8 @@ function Stat({ label, value, sub, accent, alert, icon, delta, variant = 'light'
             </span>
           )}
         </div>
-        {sub && <p style={{ fontSize: 14.5, color: alert ? C.red : C.text2, fontWeight: 500, marginTop: 14, lineHeight: 1.5, letterSpacing: '-0.1px' }}>{sub}</p>}
+        {sub && <p style={{ fontSize: 13.5, color: alert ? C.red : C.text2, fontWeight: 500, marginTop: 12, lineHeight: 1.5, letterSpacing: '-0.1px' }}>{sub}</p>}
+        {sparkline && <Sparkline data={sparkline} accent={accentVar} />}
       </div>
     </div>
   )
@@ -717,6 +767,36 @@ export default function Admin() {
   const totalForPlan  = data.plan_breakdown.reduce((a, r) => a + r.count, 0)
   const totalForUtm   = data.utm_breakdown.reduce((a, r) => a + r.count, 0)
 
+  /* MRR estimate from plan breakdown × monthly price. Lifetime / pack
+     plans don't recur, so they contribute $0. */
+  const planCount = (key) => {
+    const row = data.plan_breakdown.find(r => (r.plan || '').toLowerCase() === key)
+    return row ? row.count : 0
+  }
+  const mrrSolo   = planCount('solo')   * PLAN_MONTHLY_PRICE.solo
+  const mrrGrowth = planCount('growth') * PLAN_MONTHLY_PRICE.growth
+  const mrrAgency = planCount('agency') * PLAN_MONTHLY_PRICE.agency
+  const mrrTotal  = mrrSolo + mrrGrowth + mrrAgency
+
+  /* 7-day sparkline of signups, derived by bucketing recent_signups
+     into local-day buckets. recent_signups is already capped at 40 so
+     the bucketing is cheap. Today is the rightmost bar. */
+  const dayBuckets = (() => {
+    const days = 7
+    const buckets = Array(days).fill(0)
+    const now = new Date()
+    const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+    data.recent_signups.forEach(u => {
+      if (!u.created_at) return
+      const d = new Date(u.created_at)
+      const startOfThatDay = new Date(d.getFullYear(), d.getMonth(), d.getDate())
+      const dayDiff = Math.round((startOfToday - startOfThatDay) / 86400000)
+      if (dayDiff >= 0 && dayDiff < days) buckets[days - 1 - dayDiff]++
+    })
+    return buckets
+  })()
+  const signupsToday = dayBuckets[dayBuckets.length - 1]
+
   /* Country — always show; append "not tracked" for existing users */
   const knownCountries  = data.country_breakdown || []
   const unknownCount    = data.unknown_country_count ?? 0
@@ -793,33 +873,36 @@ export default function Admin() {
           variant="red"
           label="Total users"
           value={fmtNum(s.total_users)}
-          sub="All-time signups across the platform"
-          icon={Icons.users}
-        />
-        <Stat
-          variant="red"
-          label="Paid"
-          value={fmtNum(s.paid_users)}
-          sub={`${fmtNum(s.free_users)} still on free plan`}
-          icon={Icons.paid}
+          sub={`${fmtNum(s.paid_users)} paid · ${fmtNum(s.free_users)} free`}
           delta={s.conversion_pct > 0 ? { tone: 'up', label: `${s.conversion_pct}% conv` } : null}
         />
         <Stat
-          label="Signups (7d)"
+          variant="red"
+          label="Monthly recurring"
+          value={`$${mrrTotal.toLocaleString()}`}
+          sub={mrrTotal === 0 ? 'No paid subscriptions yet' : 'Estimate at full monthly rates'}
+          breakdown={mrrTotal > 0 ? [
+            { label: 'Solo',   value: `$${mrrSolo.toLocaleString()}` },
+            { label: 'Growth', value: `$${mrrGrowth.toLocaleString()}` },
+            { label: 'Agency', value: `$${mrrAgency.toLocaleString()}` },
+          ] : null}
+        />
+        <Stat
+          label="Signups · 7d"
           value={fmtNum(s.signups_7d)}
           accent={s.signups_trend > 0 ? C.green : s.signups_trend < 0 ? C.red : C.amber}
-          sub={trendSub}
-          icon={Icons.trend}
+          sub={signupsToday > 0 ? `${signupsToday} today · ${trendSub}` : trendSub}
           delta={s.signups_trend !== 0 ? {
             tone: s.signups_trend > 0 ? 'up' : 'down',
             label: `${s.signups_trend > 0 ? '+' : ''}${s.signups_trend}`,
           } : null}
+          sparkline={dayBuckets}
         />
         <Stat
-          label="Active (7d)"
+          label="Active · 7d"
           value={fmtNum(s.active_7d)}
-          sub="Channels audited in the last 7 days"
-          icon={Icons.bolt}
+          accent={C.green}
+          sub={s.total_users > 0 ? `${Math.round((s.active_7d / s.total_users) * 100)}% of users audited a channel` : 'Channels audited in the last 7 days'}
         />
       </div>
 
