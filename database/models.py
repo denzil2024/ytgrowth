@@ -197,6 +197,25 @@ class ChannelRegistry(Base):
     last_audit_at      = Column(DateTime, nullable=True)
 
 
+class TopChannelCache(Base):
+    """Daily-refreshed cache of top YouTube channels per category. Curated
+    handle seed lives in app/top_channels.py; the scheduler refreshes the
+    public stats once a day via the YouTube Data API."""
+    __tablename__ = "top_channel_cache"
+    id            = Column(Integer, primary_key=True, autoincrement=True)
+    category      = Column(String, nullable=False, index=True)
+    channel_id    = Column(String, nullable=False, index=True)
+    title         = Column(String, nullable=True)
+    handle        = Column(String, nullable=True)
+    thumbnail     = Column(String, nullable=True)
+    country       = Column(String, nullable=True)
+    subscribers   = Column(Integer, nullable=True)
+    total_views   = Column(Integer, nullable=True)
+    video_count   = Column(Integer, nullable=True)
+    rank          = Column(Integer, nullable=True)
+    fetched_at    = Column(DateTime, default=_now, index=True)
+
+
 class CompetitorAnalysisCache(Base):
     """Full analyze_competitor_with_ai() result per channel+competitor pair."""
     __tablename__ = "competitor_analysis_cache"
@@ -424,6 +443,14 @@ try:
         "CREATE INDEX IF NOT EXISTS ix_channel_registry_owner_email ON channel_registry (owner_email)",
         "CREATE UNIQUE INDEX IF NOT EXISTS uq_channel_registry_owner_channel ON channel_registry (owner_email, channel_id)",
         "CREATE TABLE IF NOT EXISTS competitor_analysis_cache (id INTEGER PRIMARY KEY AUTOINCREMENT, channel_id TEXT NOT NULL, competitor_id TEXT NOT NULL, result_json TEXT NOT NULL, analyzed_at DATETIME)",
+        # Top channels per category — daily-refreshed cache. Curated handle
+        # seed lives in app/top_channels.py; the scheduler refreshes stats
+        # via the YouTube Data API.
+        "CREATE TABLE IF NOT EXISTS top_channel_cache (id INTEGER PRIMARY KEY AUTOINCREMENT, category TEXT NOT NULL, channel_id TEXT NOT NULL, title TEXT, handle TEXT, thumbnail TEXT, country TEXT, subscribers INTEGER, total_views INTEGER, video_count INTEGER, rank INTEGER, fetched_at DATETIME)",
+        "CREATE INDEX IF NOT EXISTS ix_top_channel_cache_category ON top_channel_cache (category)",
+        "CREATE INDEX IF NOT EXISTS ix_top_channel_cache_channel_id ON top_channel_cache (channel_id)",
+        "CREATE INDEX IF NOT EXISTS ix_top_channel_cache_fetched_at ON top_channel_cache (fetched_at)",
+        "CREATE UNIQUE INDEX IF NOT EXISTS uq_top_channel_cache_cat_channel ON top_channel_cache (category, channel_id)",
         "CREATE TABLE IF NOT EXISTS milestones (id INTEGER PRIMARY KEY AUTOINCREMENT, channel_id TEXT NOT NULL, category TEXT NOT NULL, tier INTEGER NOT NULL, achieved_at DATETIME)",
         "CREATE INDEX IF NOT EXISTS ix_milestones_channel_id ON milestones (channel_id)",
         "CREATE UNIQUE INDEX IF NOT EXISTS uq_milestones_channel_cat_tier ON milestones (channel_id, category, tier)",

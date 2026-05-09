@@ -51,6 +51,38 @@ scheduler.add_job(
 )
 
 
+# ── Job: Refresh top-channels cache ───────────────────────────────────────────
+# Pulls current public stats for every curated channel handle in
+# app/top_channels.py.TOP_CHANNELS_SEED via the YouTube Data API. Runs once
+# a day, plus 60s after startup so the cache populates on first deploy.
+
+def _run_top_channels_refresh():
+    try:
+        from app.top_channels import refresh_all
+        result = refresh_all()
+        print(f"[top_channels] refresh: {result}")
+    except Exception as e:
+        print(f"[top_channels] refresh job failed: {e}")
+
+
+scheduler.add_job(
+    _run_top_channels_refresh,
+    trigger="cron",
+    hour=5, minute=30,  # daily 05:30 UTC, before most US/EU traffic
+    id="top_channels_refresh",
+    replace_existing=True,
+)
+# Initial run shortly after process startup so the cache populates without
+# waiting for the next 05:30 cron slot. Date trigger fires once.
+scheduler.add_job(
+    _run_top_channels_refresh,
+    trigger="date",
+    run_date=datetime.datetime.utcnow() + timedelta(seconds=60),
+    id="top_channels_refresh_initial",
+    replace_existing=True,
+)
+
+
 # ── Job 2: Weekly reports ─────────────────────────────────────────────────────
 
 def run_weekly_reports():
