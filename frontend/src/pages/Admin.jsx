@@ -187,19 +187,12 @@ function useAdminStyles() {
           transition: width 0.8s cubic-bezier(0.34,1.56,0.64,1);
         }
 
-        /* Activity feed — vertical event ticker */
-        .adm-feed-scroll {
-          max-height: 480px; overflow-y: auto; padding: 4px 6px 4px 0;
-        }
-        .adm-feed-scroll::-webkit-scrollbar { width: 8px }
-        .adm-feed-scroll::-webkit-scrollbar-thumb {
-          background-color: rgba(10,10,15,0.18); border-radius: 8px;
-          border: 2px solid transparent; background-clip: content-box;
-        }
+        /* Activity feed — single-line dense rows, mirrors signups table */
         .adm-feed-row {
-          display: grid; grid-template-columns: 6px 26px 1fr auto;
-          align-items: center; gap: 10px;
-          padding: 11px 22px;
+          display: grid;
+          grid-template-columns: 6px 26px 1fr auto auto;
+          align-items: center; gap: 11px;
+          padding: 12px 22px;
           border-bottom: 1px solid #f0f0f4;
           transition: background 0.13s;
         }
@@ -221,9 +214,18 @@ function useAdminStyles() {
           font-size: 11.5px; color: #9595a4; margin-top: 1px;
           overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
         }
+        .adm-feed-kind {
+          font-size: 9.5px; font-weight: 800; letter-spacing: 0.07em;
+          text-transform: uppercase;
+          padding: 2px 8px; border-radius: 100px;
+          font-variant-numeric: tabular-nums; white-space: nowrap;
+        }
+        .adm-feed-kind.signup-paid { color: #059669; background: #ecfdf5; border: 1px solid #a7f3d0; }
+        .adm-feed-kind.signup-free { color: #4a4a58; background: #f4f4f6; border: 1px solid #e6e6ec; }
+        .adm-feed-kind.audit       { color: #1e40af; background: rgba(74,124,247,0.10); border: 1px solid rgba(74,124,247,0.22); }
         .adm-feed-time {
           font-size: 11px; color: #b8b8c4; font-weight: 500;
-          font-variant-numeric: tabular-nums; flex-shrink: 0;
+          font-variant-numeric: tabular-nums; white-space: nowrap;
           letter-spacing: -0.1px;
         }
 
@@ -826,6 +828,7 @@ export default function Admin() {
   const [refreshing, setRefreshing] = useState(false)
   const [signupPage, setSignupPage] = useState(0)
   const [topPage,    setTopPage]    = useState(0)
+  const [feedPage,   setFeedPage]   = useState(0)
 
   // Feature requests
   const [frData,     setFrData]     = useState(null)
@@ -903,7 +906,7 @@ export default function Admin() {
         if (!r.ok) throw new Error(body.error || `Error ${r.status}`)
         return body
       })
-      .then(d => { setData(d); setLoading(false); setRefreshing(false); setSignupPage(0); setTopPage(0) })
+      .then(d => { setData(d); setLoading(false); setRefreshing(false); setSignupPage(0); setTopPage(0); setFeedPage(0) })
       .catch(e => { setError(e.message); setLoading(false); setRefreshing(false) })
   }
 
@@ -1012,8 +1015,10 @@ export default function Admin() {
       })
     })
     events.sort((a, b) => b.ts - a.ts)
-    return events.slice(0, 20)
+    return events
   })()
+  const PAGE_SIZE_FEED = 8
+  const feedSlice = activityEvents.slice(feedPage * PAGE_SIZE_FEED, (feedPage + 1) * PAGE_SIZE_FEED)
 
   /* Country — always show; append "not tracked" for existing users */
   const knownCountries  = data.country_breakdown || []
@@ -1263,22 +1268,22 @@ export default function Admin() {
           <Pager page={topPage} total={data.top_users.length} onPage={setTopPage} pageSize={PAGE_SIZE_TOP} />
         </SectionCard>
 
-        {/* Activity feed — live ticker of signups + audits */}
+        {/* Activity feed — dense ticker of signups + audits, paginated */}
         <SectionCard
           title="Activity"
           count={activityEvents.length}
-          sub="Live stream of signups + audits across the platform"
+          sub="Recent signups + audits, newest first"
         >
           {activityEvents.length === 0 ? (
             <EmptyState eyebrow="No activity">Recent signups + audits will appear here as soon as they happen.</EmptyState>
           ) : (
-            <div className="adm-feed-scroll">
-              {activityEvents.map((e, i) => {
+            <div>
+              {feedSlice.map((e, i) => {
                 const isAudit = e.kind === 'audit'
-                const dotCls = e.type === 'paid' ? 'paid' : e.type === 'audit' ? 'audit' : 'free'
-                const action = isAudit
-                  ? 'ran a channel audit'
-                  : e.type === 'paid' ? `signed up · ${planLabel(e.plan)}` : 'signed up'
+                const dotCls  = e.type === 'paid' ? 'paid' : e.type === 'audit' ? 'audit' : 'free'
+                const action  = isAudit ? 'ran a channel audit' : 'signed up'
+                const kindCls = isAudit ? 'audit' : (e.type === 'paid' ? 'signup-paid' : 'signup-free')
+                const kindLbl = isAudit ? 'Audit' : (e.type === 'paid' ? planLabel(e.plan) : 'Signup')
                 return (
                   <div key={`${e.kind}-${e.ts}-${i}`} className="adm-feed-row">
                     <span className={`adm-feed-dot ${dotCls}`} />
@@ -1287,10 +1292,12 @@ export default function Admin() {
                       <p className="adm-feed-name">{e.name}</p>
                       <p className="adm-feed-action">{action}</p>
                     </div>
+                    <span className={`adm-feed-kind ${kindCls}`}>{kindLbl}</span>
                     <span className="adm-feed-time">{relTime(new Date(e.ts).toISOString())}</span>
                   </div>
                 )
               })}
+              <Pager page={feedPage} total={activityEvents.length} onPage={setFeedPage} pageSize={PAGE_SIZE_FEED} />
             </div>
           )}
         </SectionCard>
