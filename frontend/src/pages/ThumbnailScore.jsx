@@ -416,8 +416,14 @@ function L1Row({ keyName, data, benchComp }) {
             <p style={{ fontSize: 13, color: C.text1, lineHeight: 1.7 }}>{explanation}</p>
           </div>
           {fix && (
-            /* Fix — white + 3px red bar, Priority-Actions "Action" pattern */
-            <div style={{ background: '#ffffff', border: `1px solid ${C.border}`, borderLeft: `3px solid ${C.red}`, borderRadius: '0 10px 10px 0', padding: '11px 14px', boxShadow: '0 2px 8px rgba(0,0,0,0.06)' }}>
+            /* Fix — symmetric red-tinted card, matches WeeklyReport priority pattern */
+            <div style={{
+              background: 'linear-gradient(160deg, rgba(229,37,27,0.07) 0%, rgba(229,37,27,0.025) 100%)',
+              border: '1px solid rgba(229,37,27,0.22)',
+              borderRadius: 12,
+              padding: '11px 14px',
+              boxShadow: '0 1px 2px rgba(229,37,27,0.05), 0 8px 22px rgba(229,37,27,0.08)',
+            }}>
               <p style={{ fontSize: 10, fontWeight: 700, color: C.red, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Fix</p>
               <p style={{ fontSize: 13, color: C.text1, lineHeight: 1.7 }}>{fix}</p>
             </div>
@@ -480,8 +486,12 @@ function L2Row({ dimKey, dim }) {
             </p>
           )}
           {hasFix && (
-            <div style={{ borderLeft: `3px solid ${C.amber}`, paddingLeft: 10, background: C.amberBg,
-                          borderRadius: '0 8px 8px 0', padding: '8px 10px 8px 12px' }}>
+            <div style={{
+              background: 'rgba(217,119,6,0.06)',
+              border: '1px solid rgba(217,119,6,0.18)',
+              borderRadius: 10,
+              padding: '10px 12px',
+            }}>
               <p style={{ fontSize: 12, fontWeight: 700, color: C.amber, marginBottom: 4,
                           letterSpacing: '0.06em', textTransform: 'uppercase' }}>Fix</p>
               <p style={{ fontSize: 12, color: C.text1, lineHeight: 1.6 }}>{dim.fix}</p>
@@ -761,11 +771,9 @@ function UploadPanel({ videoIdeas, hasIdeas, initialIdea, initialTopic, topicSou
 
   return (
     <div style={{ maxWidth: 640, margin: '0 auto', fontFamily: "'Inter', system-ui, sans-serif" }}>
-     {/* Elevated card with 3px amber top border — matches SEO Optimizer's seo-suggestion-card identity.
-         Font scoped explicitly so dropdown + inputs inherit Inter. */}
+     {/* Font scoped explicitly so dropdown + inputs inherit Inter. */}
      <div className="tiq-card" style={{
-       padding: '24px 26px',
-       borderTop: `3px solid ${C.amber}`,
+       padding: '26px 28px',
        fontFamily: "'Inter', system-ui, sans-serif",
      }}>
 
@@ -792,7 +800,7 @@ function UploadPanel({ videoIdeas, hasIdeas, initialIdea, initialTopic, topicSou
           />
 
           {selectedIdea && (
-            <div style={{ marginTop: 10, display: 'flex', flexDirection: 'column', gap: 3, background: C.greenBg, border: `1px solid ${C.greenBdr}`, borderLeft: `3px solid ${C.green}`, borderRadius: '0 10px 10px 0', padding: '10px 14px' }}>
+            <div style={{ marginTop: 10, display: 'flex', flexDirection: 'column', gap: 3, background: 'rgba(5,150,105,0.06)', border: '1px solid rgba(5,150,105,0.18)', borderRadius: 12, padding: '12px 14px' }}>
               <p style={{ fontSize: 12.5, color: C.green, fontWeight: 700, letterSpacing: '-0.1px' }}>
                 Using competitor-researched keyword: &quot;{selectedIdea.targetKeyword}&quot;
               </p>
@@ -1308,7 +1316,7 @@ export default function ThumbnailScore({ channelData, onNavigate, plan, freeTier
       <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 24, gap: 16, flexWrap: 'wrap' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
           <div>
-            <h1 style={{ fontSize: 24, fontWeight: 800, color: C.text1, letterSpacing: '-0.6px', marginBottom: 6, lineHeight: 1.1 }}>Thumbnail IQ</h1>
+            <h1 style={{ fontSize: 26, fontWeight: 800, color: C.text1, letterSpacing: '-0.7px', marginBottom: 6, lineHeight: 1.1 }}>Thumbnail IQ</h1>
             <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.4, display: 'flex', gap: 0, flexWrap: 'wrap' }}>
               <span>See how your thumbnail performs before you publish</span>
               <span style={{ marginLeft: 8 }}>· Benchmarked against real top-ranked channels</span>
@@ -1360,17 +1368,14 @@ export default function ThumbnailScore({ channelData, onNavigate, plan, freeTier
       {activeTab === 'previous' && (
         <div className="tiq-section">
           {history.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: '56px 24px' }}>
-              <div style={{ width: 44, height: 44, borderRadius: 13, background: '#f0f0f3',
-                            border: '1px solid rgba(0,0,0,0.09)', display: 'flex',
-                            alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#a0a0b0" strokeWidth="1.6" strokeLinecap="round">
-                  <rect x="2" y="2" width="16" height="12" rx="2"/>
-                  <path d="M6 18h8M10 14v4"/>
-                </svg>
-              </div>
-              <p style={{ fontWeight: 700, color: C.text2, marginBottom: 6, fontSize: 14 }}>No previous thumbnails</p>
-              <p style={{ fontSize: 14, color: C.text3, maxWidth: 300, margin: '0 auto' }}>
+            <div style={{ textAlign: 'center', padding: '72px 24px' }}>
+              <span style={{
+                fontSize: 10.5, fontWeight: 700, color: C.text3,
+                letterSpacing: '0.11em', textTransform: 'uppercase',
+                display: 'inline-block', marginBottom: 12,
+              }}>History</span>
+              <p style={{ fontSize: 20, fontWeight: 800, color: C.text1, letterSpacing: '-0.4px', marginBottom: 8, lineHeight: 1.2 }}>No previous thumbnails</p>
+              <p style={{ fontSize: 14, color: C.text3, maxWidth: 320, margin: '0 auto', lineHeight: 1.6 }}>
                 Upload a thumbnail to get started. It will be saved here automatically.
               </p>
             </div>
@@ -1511,13 +1516,19 @@ export default function ThumbnailScore({ channelData, onNavigate, plan, freeTier
                           {itemL2 && (itemL2.biggestWin || itemL2.biggestFix) && (
                             <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: 12 }}>
                               {itemL2.biggestWin && (
-                                <div className="tiq-card" style={{ borderTop: `3px solid ${C.green}`, padding: '12px 16px', background: '#fff' }}>
+                                <div style={{ background: 'rgba(5,150,105,0.06)', border: '1px solid rgba(5,150,105,0.18)', borderRadius: 12, padding: '12px 16px' }}>
                                   <p style={{ fontSize: 10, fontWeight: 700, color: C.green, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 5 }}>Biggest win</p>
                                   <p style={{ fontSize: 12, color: C.text1, lineHeight: 1.65 }}>{itemL2.biggestWin}</p>
                                 </div>
                               )}
                               {itemL2.biggestFix && (
-                                <div className="tiq-card" style={{ borderTop: `3px solid ${C.red}`, padding: '12px 16px', background: '#fff' }}>
+                                <div style={{
+                                  background: 'linear-gradient(160deg, rgba(229,37,27,0.07) 0%, rgba(229,37,27,0.025) 100%)',
+                                  border: '1px solid rgba(229,37,27,0.22)',
+                                  borderRadius: 12,
+                                  padding: '12px 16px',
+                                  boxShadow: '0 1px 2px rgba(229,37,27,0.05), 0 8px 22px rgba(229,37,27,0.08)',
+                                }}>
                                   <p style={{ fontSize: 10, fontWeight: 700, color: C.red, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 5 }}>Biggest fix</p>
                                   <p style={{ fontSize: 12, color: C.text1, lineHeight: 1.65 }}>{itemL2.biggestFix}</p>
                                 </div>
@@ -1527,8 +1538,8 @@ export default function ThumbnailScore({ channelData, onNavigate, plan, freeTier
                         </div>
                         {/* Right — Overview Channel-audit pattern: Summary → Technical breakdown → AI analysis → Win/Fix */}
                         <div>
-                          {/* Summary card — amber-topped, ScoreRing + divider + verdict text */}
-                          <div className="tiq-card" style={{ padding: '18px 20px', marginBottom: 10, borderTop: `3px solid ${C.amber}`, background: '#fff' }}>
+                          {/* Summary card — ScoreRing + divider + verdict text */}
+                          <div className="tiq-card" style={{ padding: '18px 20px', marginBottom: 10, background: '#fff' }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: 18 }}>
                               <div style={{ flexShrink: 0 }}>
                                 <ScoreRing score={score} max={max} label={max === 100 ? 'Thumbnail IQ' : 'Technical'} size={88} strokeW={7}/>
@@ -1669,13 +1680,19 @@ export default function ThumbnailScore({ channelData, onNavigate, plan, freeTier
               {state === 'ready2' && l2 && (l2.biggestWin || l2.biggestFix) && (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: 12 }}>
                   {l2.biggestWin && (
-                    <div className="tiq-card" style={{ borderTop: `3px solid ${C.green}`, padding: '14px 18px' }}>
+                    <div style={{ background: 'rgba(5,150,105,0.06)', border: '1px solid rgba(5,150,105,0.18)', borderRadius: 12, padding: '14px 18px' }}>
                       <p style={{ fontSize: 10, fontWeight: 700, color: C.green, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Biggest win</p>
                       <p style={{ fontSize: 13, color: C.text1, lineHeight: 1.65 }}>{l2.biggestWin}</p>
                     </div>
                   )}
                   {l2.biggestFix && (
-                    <div className="tiq-card" style={{ borderTop: `3px solid ${C.red}`, padding: '14px 18px' }}>
+                    <div style={{
+                      background: 'linear-gradient(160deg, rgba(229,37,27,0.07) 0%, rgba(229,37,27,0.025) 100%)',
+                      border: '1px solid rgba(229,37,27,0.22)',
+                      borderRadius: 12,
+                      padding: '14px 18px',
+                      boxShadow: '0 1px 2px rgba(229,37,27,0.05), 0 8px 22px rgba(229,37,27,0.08)',
+                    }}>
                       <p style={{ fontSize: 10, fontWeight: 700, color: C.red, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Biggest fix</p>
                       <p style={{ fontSize: 13, color: C.text1, lineHeight: 1.65 }}>{l2.biggestFix}</p>
                     </div>
@@ -1712,8 +1729,8 @@ export default function ThumbnailScore({ channelData, onNavigate, plan, freeTier
                 const isFinal      = state === 'ready2' && !!l2
                 return (
                   <>
-                    {/* ── 1. Summary card — amber-topped, ScoreRing + vertical divider + AI-assessment text (Dashboard.jsx:2076-2099 pattern) ── */}
-                    <div className="tiq-card" style={{ padding: '26px 28px', marginBottom: 14, borderTop: `3px solid ${C.amber}` }}>
+                    {/* ── 1. Summary card — ScoreRing + vertical divider + AI-assessment text ── */}
+                    <div className="tiq-card" style={{ padding: '26px 28px', marginBottom: 14 }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 28 }}>
                         <div style={{ flexShrink: 0 }}>
                           <ScoreRing score={currentScore} max={currentMax} label={isFinal ? 'Thumbnail IQ' : 'Technical'} size={120} strokeW={8}/>
