@@ -159,6 +159,88 @@
     ];
   }
 
+  // ── DOM scraper (fallback for when page-bridge can't read globals) ──
+  // YouTube serves stable SEO meta tags on every watch page. They give
+  // us title, description, channel, view count, publish date, duration,
+  // and category without needing any JS-side globals — meaning we work
+  // even when YouTube refactors its bundle to ES modules.
+  function getMeta(name) {
+    const el = document.querySelector(`meta[itemprop="${name}"], meta[name="${name}"], meta[property="${name}"]`);
+    return el ? (el.getAttribute("content") || "") : "";
+  }
+
+  function parseISODuration(iso) {
+    if (!iso || !iso.startsWith("PT")) return 0;
+    const m = iso.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
+    if (!m) return 0;
+    return (parseInt(m[1] || "0", 10) * 3600)
+         + (parseInt(m[2] || "0", 10) * 60)
+         +  parseInt(m[3] || "0", 10);
+  }
+
+  function scrapeLikeCount() {
+    const candidates = [
+      "like-button-view-model button",
+      "ytd-toggle-button-renderer[id='segmented-like-button']",
+      "ytd-menu-renderer button[aria-label*='like']",
+      "button[aria-label*='like this video']",
+      "button[aria-label*='I like this']",
+    ];
+    for (const sel of candidates) {
+      const el = document.querySelector(sel);
+      const aria = el && el.getAttribute("aria-label");
+      if (!aria) continue;
+      const m = aria.match(/([\d.,]+)\s*([KMB]?)/i);
+      if (!m) continue;
+      let n = parseFloat(m[1].replace(/,/g, ""));
+      if (Number.isNaN(n)) continue;
+      const suf = (m[2] || "").toUpperCase();
+      if (suf === "K") n *= 1_000;
+      else if (suf === "M") n *= 1_000_000;
+      else if (suf === "B") n *= 1_000_000_000;
+      const rounded = Math.round(n);
+      if (rounded > 0) return rounded;
+    }
+    return 0;
+  }
+
+  function scrapeChannel() {
+    const a = document.querySelector("ytd-channel-name a, #owner #channel-name a, #channel-name a, ytd-video-owner-renderer a");
+    const name = a?.textContent?.trim() || "";
+    let id = getMeta("channelId");
+    if (!id && a?.href) {
+      const m = a.href.match(/\/channel\/([^/?#]+)/);
+      if (m) id = m[1];
+    }
+    return { name, id };
+  }
+
+  function scrapeWatchPageData() {
+    if (!isWatchPage()) return null;
+    const videoId = getVideoId();
+    if (!videoId) return null;
+
+    const title = getMeta("name")
+               || getMeta("og:title")
+               || (document.title || "").replace(/ - YouTube$/, "");
+    if (!title) return null;
+
+    const description = getMeta("description") || getMeta("og:description") || "";
+    const ch = scrapeChannel();
+    const viewCount = parseInt(getMeta("interactionCount") || "0", 10) || 0;
+    const likeCount = scrapeLikeCount();
+    const publishDate = getMeta("datePublished") || getMeta("uploadDate") || "";
+    const lengthSec = parseISODuration(getMeta("duration"));
+    const category = getMeta("genre") || "";
+
+    return {
+      videoId, title, description,
+      channelTitle: ch.name, channelId: ch.id,
+      viewCount, likeCount, lengthSec, publishDate, category,
+      isLive: false,
+    };
+  }
+
   // ── Panel rendering ─────────────────────────────────────────────────
   function buildShell() {
     removePanel();
@@ -421,6 +503,18 @@
     handlePageData(msg.data);
   });
 
+  // Try the DOM scraper now, in 600ms, and in 1800ms. Late retries catch
+  // the like button (renders after main page) and any element that wasn't
+  // ready on the first pass. Each successful scrape replaces the previous
+  // render so the panel stays accurate.
+  function tryDOMScrape() {
+    if (!isWatchPage()) return;
+    const data = scrapeWatchPageData();
+    if (!data) return;
+    if (currentVideoId && data.videoId !== currentVideoId) return;
+    handlePageData(data);
+  }
+
   // ── SPA + boot ──────────────────────────────────────────────────────
   function initIfWatch() {
     if (isWatchPage()) {
@@ -429,9 +523,12 @@
         currentVideoId = vid;
         lastPageData   = null;
         renderInitialLoading();
-        // page-bridge.js fires its own send() shortly. If it doesn't
-        // arrive within 3s, the panel stays in skeleton state — better
-        // than rendering with nothing.
+        // Immediate scrape so the panel never sits empty waiting on the
+        // page-bridge — meta tags are present at document_idle. Retries
+        // pick up late-loading bits like the like count.
+        tryDOMScrape();
+        setTimeout(tryDOMScrape, 600);
+        setTimeout(tryDOMScrape, 1800);
       }
     } else {
       currentVideoId = null;
