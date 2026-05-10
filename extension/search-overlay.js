@@ -359,5 +359,5 @@
       lastHref = location.href;
       initIfSearch();
     }
-  }, 800);
+  }, 250);
 })();

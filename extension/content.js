@@ -590,16 +590,24 @@
     handlePageData(msg.data);
   });
 
-  // Try the DOM scraper now, in 600ms, and in 1800ms. Late retries catch
-  // the like button (renders after main page) and any element that wasn't
-  // ready on the first pass. Each successful scrape replaces the previous
-  // render so the panel stays accurate.
+  // Try the DOM scraper now and on a staircase of delays. YouTube's
+  // SPA navigation finishes the URL change instantly but the meta tags
+  // and like count don't all settle for ~2-3 seconds, so we keep
+  // retrying. Each successful scrape replaces the previous render.
   function tryDOMScrape() {
     if (!isWatchPage()) return;
     const data = scrapeWatchPageData();
     if (!data) return;
     if (currentVideoId && data.videoId !== currentVideoId) return;
     handlePageData(data);
+  }
+
+  function scheduleScrapes() {
+    tryDOMScrape();
+    setTimeout(tryDOMScrape, 250);
+    setTimeout(tryDOMScrape, 700);
+    setTimeout(tryDOMScrape, 1500);
+    setTimeout(tryDOMScrape, 3000);
   }
 
   // ── SPA + boot ──────────────────────────────────────────────────────
@@ -610,12 +618,11 @@
         currentVideoId = vid;
         lastPageData   = null;
         renderInitialLoading();
-        // Immediate scrape so the panel never sits empty waiting on the
-        // page-bridge — meta tags are present at document_idle. Retries
-        // pick up late-loading bits like the like count.
-        tryDOMScrape();
-        setTimeout(tryDOMScrape, 600);
-        setTimeout(tryDOMScrape, 1800);
+        scheduleScrapes();
+      } else if (!lastPageData) {
+        // Same video, but we never got data through. Keep trying so
+        // the panel doesn't sit stuck on a skeleton.
+        scheduleScrapes();
       }
     } else {
       currentVideoId = null;
@@ -625,6 +632,7 @@
   }
 
   initIfWatch();
+  document.addEventListener("yt-navigate-start", initIfWatch);
   document.addEventListener("yt-navigate-finish", initIfWatch);
 
   const themeObserver = new MutationObserver(() => {
@@ -633,11 +641,20 @@
   });
   themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ["dark"] });
 
+  // <title> updates the moment YouTube swaps the video. More reliable
+  // than yt-navigate-finish, which sometimes doesn't fire.
+  const titleEl = document.querySelector("title");
+  if (titleEl) {
+    new MutationObserver(() => initIfWatch()).observe(titleEl, { childList: true });
+  }
+
+  // Tight URL poll as a final safety net (was 800ms, dropped to 250ms
+  // so video swaps register within ~quarter second worst case).
   let lastHref = location.href;
   setInterval(() => {
     if (location.href !== lastHref) {
       lastHref = location.href;
       initIfWatch();
     }
-  }, 800);
+  }, 250);
 })();
