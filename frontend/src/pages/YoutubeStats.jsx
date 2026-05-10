@@ -245,11 +245,11 @@ export default function YoutubeStats() {
   const [openFaq, setOpenFaq] = useState(0)
 
   useEffect(() => {
-    document.title = 'Top YouTube Channels by Category 2026: Live Subscriber Rankings | YTGrowth'
+    document.title = 'Top YouTube Subscribers & Creators 2026: Live Channel Statistics | YTGrowth'
     const meta = document.querySelector('meta[name="description"]') || (() => {
       const m = document.createElement('meta'); m.name = 'description'; document.head.appendChild(m); return m
     })()
-    meta.content = 'Browse the top YouTube channels in 14 niches: gaming, tech, beauty, finance, fitness, music, and more. Ranked by live subscriber count from YouTube\'s official API. Updated daily, free, no signup.'
+    meta.content = 'Top YouTube channels and creators ranked by live subscriber count. 14 niches: gaming, tech, beauty, finance, fitness, music. Free statistics, updated daily, no signup.'
   }, [])
 
   useEffect(() => {
@@ -287,7 +287,7 @@ export default function YoutubeStats() {
         <div style={{ maxWidth: 1000, margin: '0 auto', position: 'relative', zIndex: 1, animation: 'ytsFadeUp 0.5s ease both' }}>
           <Eyebrow>Free resource</Eyebrow>
           <h1 style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontWeight: 800, fontSize: isMobile ? 34 : 60, lineHeight: isMobile ? 1.1 : 1.04, letterSpacing: isMobile ? '-0.6px' : '-2.2px', color: 'var(--ytg-text)', marginBottom: 22, textWrap: 'balance' }}>
-            Top YouTube channels, <span style={{ color: 'var(--ytg-accent)' }}>ranked by live data.</span>
+            Top YouTube subscribers, creators, <span style={{ color: 'var(--ytg-accent)' }}>ranked by live data.</span>
           </h1>
           <p style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontSize: isMobile ? 16 : 19, color: 'var(--ytg-text-2)', lineHeight: 1.7, maxWidth: 660, margin: '0 auto 28px', textWrap: 'pretty' }}>
             Browse the biggest channels in {CATEGORY_META.length} niches, pulled directly from YouTube's API and ranked by real subscriber count. Refreshed every 24 hours, free to read, no signup.

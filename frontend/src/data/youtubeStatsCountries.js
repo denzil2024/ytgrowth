@@ -18,8 +18,8 @@ export const COUNTRY_META = [
     flag:  '🇺🇸',
     flagSrc: flagSrcFor('US'),
     blurb: 'The largest YouTube market in the world by ad spend. Where the highest-RPM channels live.',
-    seoTitle:       'Top YouTube Channels in the United States 2026: Live Rankings',
-    seoDescription: "The top YouTube channels in the United States right now, by category, ranked by live subscriber count from YouTube's official API. Updated daily, free, no signup.",
+    seoTitle:       'Top YouTube Channels USA 2026: Subscribers, Creators, Stats',
+    seoDescription: "Top YouTube channels in the USA and United States, ranked by live subscriber count. Per-niche statistics for creators in gaming, tech, finance, music. Updated daily, free.",
     intro: [
       "The United States is YouTube's largest single market by advertising spend. Channels with US-heavy audiences earn the platform's highest effective RPMs because brand demand from US advertisers (finance, tech, software, healthcare, automotive) outbids almost every other geography per impression.",
       "The leaderboards here are filtered to channels that surface in YouTube's US regional search results. That captures both US-based creators and international channels with strong US viewership. Browse by category to see who's leading in gaming, tech, beauty, finance, and 10 other niches.",
@@ -146,8 +146,8 @@ export const COUNTRY_META = [
     flag:  '🇮🇳',
     flagSrc: flagSrcFor('IN'),
     blurb: 'Largest YouTube market by user count, dominated by Indian-language content. Lower per-view RPMs but enormous volume.',
-    seoTitle:       'Top YouTube Channels in India 2026: Live Subscriber Rankings',
-    seoDescription: "The top YouTube channels in India, by category, ranked by live subscriber count from YouTube's official API. Updated daily, free, no signup.",
+    seoTitle:       'Top YouTube Subscribers & Creators in India 2026: Live Rankings',
+    seoDescription: "Top YouTube subscribers and creators in India, ranked by live count from YouTube's API. Per-niche statistics across gaming, tech, music, comedy. Updated daily, free.",
     intro: [
       "India is YouTube's largest market by user count. Hundreds of millions of Indian users consume content daily across English, Hindi, Tamil, Telugu, Bengali, Punjabi, and dozens of other regional languages. Indian YouTube has produced channels that rank among the platform's largest globally, including T-Series at the very top of the subscriber leaderboard.",
       "Per-view RPMs are substantially lower in India than in tier-1 markets ($0.50-$2 per 1,000 views vs $4-$12 in the US), but volume more than compensates for the largest channels. Indian-language content has been the fastest-growing creator segment on YouTube globally over the past 5 years.",

@@ -81,8 +81,8 @@ const META_BY_ROUTE = {
     description: "Find YouTube videos that hit 5x, 10x, or 50x their channel's normal views in your niche. Outlier score, breakout channels, top thumbnails.",
   },
   '/tools/youtube-money-calculator': {
-    title:       'Free YouTube Money Calculator: Estimate Channel Earnings',
-    description: 'Estimate YouTube ad revenue from views, niche, and engagement. Niche-specific RPM ranges, monthly and yearly earnings, full math behind every estimate.',
+    title:       'YouTube Money Calculator 2026: Free Earnings & Revenue Estimator',
+    description: 'Free YouTube calculator for channel earnings and revenue. Niche-specific RPM, monthly and yearly money estimates from views. No signup.',
   },
   '/tools/youtube-subscriber-money-calculator': {
     title:       'YouTube Subscriber Money Calculator: How Much Subs Pay',
@@ -97,8 +97,8 @@ const META_BY_ROUTE = {
     description: 'Download any YouTube video thumbnail in seconds. Max-res, HQ, MQ, SD sizes in JPG and PNG. No watermark, no login, instant.',
   },
   '/youtube-stats': {
-    title:       'Top YouTube Channels by Category 2026: Live Subscriber Rankings',
-    description: 'Browse top YouTube channels in 14 niches: gaming, tech, beauty, finance, fitness, music, and more. Ranked by live subscriber count from YouTube\'s official API. Updated daily, free, no signup.',
+    title:       'Top YouTube Subscribers & Creators 2026: Live Channel Statistics',
+    description: 'Top YouTube channels and creators ranked by live subscriber count. 14 niches: gaming, tech, beauty, finance, fitness, music. Free statistics, updated daily, no signup.',
   },
 }
 

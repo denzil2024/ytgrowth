@@ -441,90 +441,131 @@
    on the watch-page panel being present. */
 
 #ytg-search-bar {
-  --ytg-accent: #e5302a;
   --ytg-bg: #ffffff;
-  --ytg-bg-soft: #f6f6f7;
+  --ytg-bg-tint: #ffffff;
   --ytg-text: #0f0f0f;
-  --ytg-text-soft: #5b5b5f;
-  --ytg-text-mute: #97979b;
+  --ytg-text-soft: #4a4a50;
+  --ytg-text-mute: #8a8a90;
   --ytg-border: rgba(0, 0, 0, 0.08);
 
-  --ytg-easy:   #1a9e5e;
-  --ytg-medium: #d6921f;
-  --ytg-hard:   #e5302a;
+  --ytg-tier: #d6921f;
+  --ytg-tier-soft: rgba(214, 146, 31, 0.10);
 
-  margin: 12px 0 16px;
-  padding: 0;
+  margin: 16px 0 20px;
   font-family: "Inter", "DM Sans", "Roboto", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   color: var(--ytg-text);
-  background: var(--ytg-bg);
+  background: var(--ytg-bg-tint);
   border: 1px solid var(--ytg-border);
-  border-radius: 14px;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.04);
   position: relative;
   overflow: hidden;
 }
 
 #ytg-search-bar[data-theme="dark"] {
-  --ytg-bg: #181818;
-  --ytg-bg-soft: #222;
+  --ytg-bg: #1a1a1a;
+  --ytg-bg-tint: #1a1a1a;
   --ytg-text: #f1f1f1;
-  --ytg-text-soft: #aaa;
-  --ytg-text-mute: #777;
+  --ytg-text-soft: #c4c4c4;
+  --ytg-text-mute: #888;
   --ytg-border: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.4);
 }
 
-#ytg-search-bar::before {
-  content: "";
+/* Tier-specific accents — give the bar a clear, scannable color identity */
+#ytg-search-bar[data-bucket="easy"]   { --ytg-tier: #1a9e5e; --ytg-tier-soft: rgba(26, 158, 94, 0.10);   --ytg-bg-tint: #f7fcf9; }
+#ytg-search-bar[data-bucket="medium"] { --ytg-tier: #d6921f; --ytg-tier-soft: rgba(214, 146, 31, 0.10); --ytg-bg-tint: #fffaf0; }
+#ytg-search-bar[data-bucket="hard"]   { --ytg-tier: #e5302a; --ytg-tier-soft: rgba(229, 48, 42, 0.10);   --ytg-bg-tint: #fff7f6; }
+
+#ytg-search-bar[data-theme="dark"][data-bucket="easy"]   { --ytg-bg-tint: #16221c; }
+#ytg-search-bar[data-theme="dark"][data-bucket="medium"] { --ytg-bg-tint: #221d14; }
+#ytg-search-bar[data-theme="dark"][data-bucket="hard"]   { --ytg-bg-tint: #221717; }
+
+/* Bold tier-colored vertical stripe down the left edge — the bar's main
+   visual signal that something important sits here. */
+#ytg-search-bar .ytg-sb-stripe {
   position: absolute;
-  left: 0; top: 0; right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, var(--ytg-accent) 0%, #ff6a4a 100%);
+  left: 0; top: 0; bottom: 0;
+  width: 5px;
+  background: var(--ytg-tier);
 }
 
-#ytg-search-bar .ytg-sb-inner {
-  padding: 16px 18px;
-}
-
-#ytg-search-bar .ytg-sb-row1 {
+#ytg-search-bar .ytg-sb-card {
   display: flex;
   align-items: center;
-  gap: 14px;
-  flex-wrap: wrap;
+  gap: 18px;
+  padding: 18px 22px 18px 27px; /* extra left padding for the stripe */
 }
 
-#ytg-search-bar .ytg-sb-pill {
-  display: inline-flex;
+/* Big square score badge — the visual anchor on the left. */
+#ytg-search-bar .ytg-sb-score-badge {
+  width: 76px;
+  height: 76px;
+  border-radius: 14px;
+  background: var(--ytg-tier);
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 8px;
-  padding: 6px 12px;
-  border-radius: 999px;
-  background: var(--ytg-bg-soft);
-  font-size: 12.5px;
-  font-weight: 600;
-  color: var(--ytg-text);
-  border: 1px solid var(--ytg-border);
+  justify-content: center;
+  flex-shrink: 0;
+  line-height: 1;
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--ytg-tier) 25%, transparent);
 }
 
-#ytg-search-bar .ytg-sb-pill[data-bucket="easy"]   { color: var(--ytg-easy);   border-color: rgba(26, 158, 94, 0.25); }
-#ytg-search-bar .ytg-sb-pill[data-bucket="medium"] { color: var(--ytg-medium); border-color: rgba(214, 146, 31, 0.30); }
-#ytg-search-bar .ytg-sb-pill[data-bucket="hard"]   { color: var(--ytg-hard);   border-color: rgba(229, 48, 42, 0.30); }
-
-#ytg-search-bar .ytg-sb-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  display: inline-block;
-  background: currentColor;
-  box-shadow: 0 0 0 3px color-mix(in srgb, currentColor 20%, transparent);
+#ytg-search-bar .ytg-sb-score-num {
+  font-size: 30px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
 }
 
-#ytg-search-bar .ytg-sb-label { font-weight: 700; }
-#ytg-search-bar .ytg-sb-score { color: var(--ytg-text); font-weight: 700; margin-left: 4px; font-variant-numeric: tabular-nums; }
-#ytg-search-bar .ytg-sb-of    { color: var(--ytg-text-mute); font-weight: 600; font-size: 11px; }
+#ytg-search-bar .ytg-sb-score-of {
+  font-size: 11px;
+  font-weight: 700;
+  opacity: 0.85;
+  margin-top: 3px;
+  letter-spacing: 0.02em;
+}
 
-#ytg-search-bar .ytg-sb-meta {
+#ytg-search-bar .ytg-sb-content {
   flex: 1;
+  min-width: 0;
+}
+
+#ytg-search-bar .ytg-sb-label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+
+#ytg-search-bar .ytg-sb-label {
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: var(--ytg-tier);
+}
+
+#ytg-search-bar .ytg-sb-brand {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ytg-text-mute);
+  white-space: nowrap;
+}
+
+#ytg-search-bar .ytg-sb-insight {
+  font-size: 13.5px;
+  color: var(--ytg-text);
+  line-height: 1.5;
+  font-weight: 500;
+  margin-bottom: 10px;
+}
+
+#ytg-search-bar .ytg-sb-stats {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -534,40 +575,31 @@
   font-weight: 500;
 }
 
-#ytg-search-bar .ytg-sb-meta strong {
+#ytg-search-bar .ytg-sb-stats strong {
   color: var(--ytg-text);
   font-weight: 700;
   font-variant-numeric: tabular-nums;
 }
 
-#ytg-search-bar .ytg-sb-sep { color: var(--ytg-text-mute); }
-
-#ytg-search-bar .ytg-sb-brand {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+#ytg-search-bar .ytg-sb-sep {
   color: var(--ytg-text-mute);
+  opacity: 0.6;
 }
 
-#ytg-search-bar .ytg-sb-brand-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--ytg-accent);
-}
-
-#ytg-search-bar .ytg-sb-insight {
-  margin-top: 12px;
-  padding-top: 12px;
-  border-top: 1px solid var(--ytg-border);
-  font-size: 13px;
-  color: var(--ytg-text-soft);
-  line-height: 1.5;
-  font-weight: 500;
+/* Narrow viewports — let the badge sit above the content rather than
+   forcing the whole row to squeeze. YouTube's results column gets quite
+   tight on smaller windows. */
+@media (max-width: 720px) {
+  #ytg-search-bar .ytg-sb-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+  }
+  #ytg-search-bar .ytg-sb-score-badge {
+    width: 64px;
+    height: 64px;
+  }
+  #ytg-search-bar .ytg-sb-score-num { font-size: 26px; }
 }
 
 /* Per-result tier pill */

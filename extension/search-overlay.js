@@ -158,15 +158,15 @@
     // Pick the most useful single insight in priority order.
     let insight = "";
     if (q && exactMatches < 3) {
-      insight = "Few top results target this exact phrase — there is a real gap to fill.";
+      insight = "Few top results target this exact phrase. Real gap to fill.";
     } else if (veryOld >= 6) {
       insight = "Most top results are 2+ years old. Fresh content has a real shot at the top.";
     } else if (recent >= 7) {
-      insight = "7+ recent uploads in the top 10 — this niche is trending right now.";
+      insight = "7+ recent uploads in the top 10. This niche is trending right now.";
     } else if (avgViews < 50_000) {
-      insight = "Top results don't pull big numbers — smaller audience, but easier to break in.";
+      insight = "Top results don't pull big numbers. Smaller audience but easier entry.";
     } else if (avgViews > 5_000_000) {
-      insight = "Top results pull millions of views — large audience, but very crowded.";
+      insight = "Top results pull millions of views. Large audience but very crowded.";
     } else if (medianViews > 1_000_000 && recent >= 3) {
       insight = "High-view recent uploads dominate. Compete on a sharper sub-angle.";
     }
@@ -205,25 +205,25 @@
 
     const hasInsight = !!comp.insight;
     bar.innerHTML = `
-      <div class="ytg-sb-inner">
-        <div class="ytg-sb-row1">
-          <div class="ytg-sb-pill" data-bucket="${comp.bucket}">
-            <span class="ytg-sb-dot"></span>
-            <span class="ytg-sb-label">${comp.label}</span>
-            <span class="ytg-sb-score">${comp.score}<span class="ytg-sb-of">/100</span></span>
+      <div class="ytg-sb-stripe"></div>
+      <div class="ytg-sb-card">
+        <div class="ytg-sb-score-badge">
+          <span class="ytg-sb-score-num">${comp.score}</span>
+          <span class="ytg-sb-score-of">/100</span>
+        </div>
+        <div class="ytg-sb-content">
+          <div class="ytg-sb-label-row">
+            <div class="ytg-sb-label">${comp.label}</div>
+            <div class="ytg-sb-brand">YTGrowth</div>
           </div>
-          <div class="ytg-sb-meta">
+          ${hasInsight ? `<div class="ytg-sb-insight">${escapeHtml(comp.insight)}</div>` : ``}
+          <div class="ytg-sb-stats">
             <span><strong>${fmtNum(comp.avgViews)}</strong> avg views</span>
             <span class="ytg-sb-sep">&middot;</span>
             <span><strong>${comp.recent}/${comp.total}</strong> in last 30 days</span>
             ${comp.exactMatches > 0 ? `<span class="ytg-sb-sep">&middot;</span><span><strong>${comp.exactMatches}/${comp.total}</strong> exact match</span>` : ``}
           </div>
-          <div class="ytg-sb-brand">
-            <span class="ytg-sb-brand-dot"></span>
-            <span>YTGrowth</span>
-          </div>
         </div>
-        ${hasInsight ? `<div class="ytg-sb-insight">${escapeHtml(comp.insight)}</div>` : ``}
       </div>
     `;
     return bar;
