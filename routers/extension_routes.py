@@ -29,7 +29,7 @@ router = APIRouter()
 # Redis/DB if we ever run multiple workers and the duplication starts
 # costing meaningful YouTube quota.
 _VIDEO_CACHE: dict[str, tuple[float, dict]] = {}
-_CACHE_TTL_SEC = 600  # 10 minutes
+_CACHE_TTL_SEC = 1800  # 30 minutes — view counts don't shift fast enough to refetch sooner
 
 
 def _yt_client():
@@ -236,21 +236,34 @@ def _cache_put(video_id: str, payload: dict):
     _VIDEO_CACHE[video_id] = (time.time(), payload)
 
 
+def _is_quota_error(err: Exception) -> bool:
+    """Detect YouTube quotaExceeded so we can surface a useful message
+    instead of a generic 'YouTube API error'."""
+    msg = str(err) or ""
+    return "quotaExceeded" in msg or "exceeded your" in msg.lower()
+
+
 @router.get("/video/{video_id}")
 def get_video(video_id: str, request: Request):
     """Returns lightweight insights for a YouTube video. Used by the
     Chrome extension panel on watch pages. Auth-gated to logged-in users
     so we don't get hammered as a public proxy.
+
+    Response shape: always 200 for known states, with {ok, error_code}
+    on failure. We avoid 5xx because Railway's proxy will replace the
+    body with its own HTML page, hiding the useful error code from
+    the client. 401 is the one exception (kept so the extension can
+    distinguish 'sign in needed' without parsing the body).
     """
-    # Reject obvious garbage video IDs cheaply.
     if not video_id or len(video_id) < 5 or len(video_id) > 32:
-        return JSONResponse({"error": "invalid video_id"}, status_code=400)
+        return JSONResponse({"ok": False, "error_code": "invalid_video_id"})
 
     data, _creds = get_session(request.session.get("session_id"))
     if not data:
-        # Distinct status so the extension can render a "Sign in to YTGrowth"
-        # CTA rather than a generic error.
-        return JSONResponse({"error": "not_authenticated"}, status_code=401)
+        return JSONResponse(
+            {"ok": False, "error_code": "not_authenticated"},
+            status_code=401,
+        )
 
     cached = _cache_get(video_id)
     if cached:
@@ -258,7 +271,7 @@ def get_video(video_id: str, request: Request):
 
     yt = _yt_client()
     if yt is None:
-        return JSONResponse({"error": "server_misconfig"}, status_code=500)
+        return JSONResponse({"ok": False, "error_code": "server_misconfig"})
 
     try:
         resp = yt.videos().list(
@@ -267,12 +280,15 @@ def get_video(video_id: str, request: Request):
             maxResults=1,
         ).execute()
     except Exception as e:
+        if _is_quota_error(e):
+            print(f"[extension/video] quota exhausted for {video_id}")
+            return JSONResponse({"ok": False, "error_code": "quota_exceeded"})
         print(f"[extension/video] YouTube API error for {video_id}: {e}")
-        return JSONResponse({"error": "youtube_api_error"}, status_code=502)
+        return JSONResponse({"ok": False, "error_code": "youtube_api_error"})
 
     items = resp.get("items") or []
     if not items:
-        return JSONResponse({"error": "video_not_found"}, status_code=404)
+        return JSONResponse({"ok": False, "error_code": "video_not_found"})
 
     payload = _build_video_payload(items[0])
     _cache_put(video_id, payload)

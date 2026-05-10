@@ -283,18 +283,22 @@
       renderAuthGate(root);
       return;
     }
-    if (!resp.ok || !resp.body || !resp.body.video) {
-      const errMap = {
-        "video_not_found":   "Video not found.",
-        "youtube_api_error": "YouTube API hiccup. Try again.",
-        "network_error":     "Network issue. Check your connection.",
-        "extension_error":   "Extension messaging failed.",
-      };
-      const code = (resp.body && resp.body.error) || resp.error || "";
-      renderError(root, errMap[code] || "Unexpected error.");
+    const body = resp.body || {};
+    if (body.ok && body.video) {
+      renderVideo(root, body.video);
       return;
     }
-    renderVideo(root, resp.body.video);
+    const errMap = {
+      "quota_exceeded":    "Daily YouTube data limit reached. Try again in a few hours.",
+      "video_not_found":   "Video not found.",
+      "youtube_api_error": "YouTube API hiccup. Try again.",
+      "invalid_video_id":  "Invalid video.",
+      "server_misconfig":  "Server misconfigured. We're on it.",
+      "network_error":     "Network issue. Check your connection.",
+      "extension_error":   "Extension messaging failed.",
+    };
+    const code = body.error_code || resp.error || "";
+    renderError(root, errMap[code] || "Unexpected error.");
   }
 
   // ── Init + SPA navigation ────────────────────────────────────────────
