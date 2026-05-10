@@ -93,8 +93,8 @@ const META_BY_ROUTE = {
     description: 'Look up subscriber count, total views, monthly uploads, and engagement for any public YouTube channel. Instant lookup, no login required.',
   },
   '/tools/youtube-thumbnail-downloader': {
-    title:       'Free YouTube Thumbnail Downloader: HD, Max Res, JPG/PNG',
-    description: 'Download any YouTube video thumbnail in seconds. Max-res, HQ, MQ, SD sizes in JPG and PNG. No watermark, no login, instant.',
+    title:       'YouTube Thumbnail Downloader 2026: Free HD Image Grabber & Saver',
+    description: 'Free YouTube thumbnail downloader and grabber. Download or get any thumbnail from a YouTube video URL in HD, Max Res, JPG, or PNG. No watermark, no signup.',
   },
   '/tools/youtube-thumbnail-resizer': {
     title:       'YouTube Thumbnail Resizer 2026: Free Image & Size Converter',
