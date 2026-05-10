@@ -61,6 +61,11 @@
   bottom: 20px;
   z-index: 2147483000;
   font-family: "Inter", "Inter var", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  /* Inter-specific OpenType features for the polished "this is Inter"
+     feel: tabular numbers, contextual ligatures, slashed-zero (ss01),
+     more distinct number shapes (cv11). */
+  font-feature-settings: "cv11", "ss01", "ss03", "tnum";
+  font-variant-ligatures: contextual;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
@@ -523,6 +528,8 @@
   margin: 16px 0 24px;
   padding: 22px 24px 20px;
   font-family: "Inter", "Inter var", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-feature-settings: "cv11", "ss01", "ss03", "tnum";
+  font-variant-ligatures: contextual;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: var(--ytg-text);

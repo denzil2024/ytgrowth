@@ -11,6 +11,20 @@
   const DASHBOARD_URL = "https://ytgrowth.io/dashboard";
   const LOGIN_URL     = "https://ytgrowth.io/auth/login";
 
+  // One-time confirmation that Inter actually loaded. document.fonts is
+  // page-scoped, so this resolves once the page (and our injected CSS)
+  // has finished loading the bundled woff2 files. If Inter fails to load
+  // we'll see the fallback warning in the console — easy to diagnose.
+  if (document.fonts && document.fonts.ready && !window.__ytgFontChecked__) {
+    window.__ytgFontChecked__ = true;
+    document.fonts.ready.then(() => {
+      try {
+        const ok = document.fonts.check('700 16px "Inter"');
+        console.info(`[YTGrowth] Inter font ${ok ? "loaded" : "NOT loaded (using fallback)"}.`);
+      } catch (_) {}
+    });
+  }
+
   function isWatchPage() {
     return location.pathname === "/watch" && new URLSearchParams(location.search).has("v");
   }
@@ -530,6 +544,13 @@
     `;
   }
 
+  // Render-state tracking so we don't restart animations on every retry
+  // or DOM scrape. The signature includes only fields that should actually
+  // trigger a visual change; minor DOM churn during an ad-to-video
+  // transition produces identical signatures and is silently skipped.
+  let lastRenderSig = null;
+  let lastRenderedVideoId = null;
+
   // Render with whatever we know so far. tagCount can be null (still
   // loading) or a number; tags array can be null (still loading), an
   // empty array (none), or populated.
@@ -537,6 +558,28 @@
     let root = document.getElementById(PANEL_ID);
     if (!root) root = buildShell();
     if (!root) return;
+
+    // Signature dedup. If nothing meaningful changed since the last
+    // render, bail out — keeps the bars from twitching every time
+    // YouTube mutates the DOM during ads or stat updates.
+    const sig = JSON.stringify({
+      v:  pageData.videoId,
+      t:  pageData.title,
+      vc: pageData.viewCount,
+      lc: pageData.likeCount,
+      pd: pageData.publishDate,
+      tl: (tagState && Array.isArray(tagState.tags)) ? tagState.tags.length : null,
+      te: (tagState && tagState.error) || null,
+    });
+    if (sig === lastRenderSig) return;
+    lastRenderSig = sig;
+
+    // First-render flag. We animate the gauge and bars from 0 only the
+    // first time we paint a given video. Subsequent renders (e.g. tags
+    // arriving, likes ticking up) paint the new values directly so the
+    // gauges don't wind back and forth.
+    const isFirstForVideo = lastRenderedVideoId !== pageData.videoId;
+    lastRenderedVideoId = pageData.videoId;
 
     const tags     = (tagState && Array.isArray(tagState.tags)) ? tagState.tags : null;
     const tagCount = tags ? tags.length : (tagState && typeof tagState.count === "number" ? tagState.count : null);
@@ -610,6 +653,7 @@
     const body = root.querySelector(".ytg-body");
     const factorsHTML = factors.map(f => {
       const pct = f.max > 0 ? Math.round((f.earned / f.max) * 100) : 0;
+      const initialFill = isFirstForVideo ? 0 : pct;
       return `
         <div class="ytg-factor" data-status="${f.status}">
           <div class="ytg-f-head">
@@ -618,7 +662,7 @@
             <span class="ytg-f-points"><strong>${f.earned}</strong>/${f.max}</span>
           </div>
           <div class="ytg-f-bar">
-            <span class="ytg-f-bar-fill" data-target-fill="${pct}" style="--bar-fill: 0"></span>
+            <span class="ytg-f-bar-fill" data-target-fill="${pct}" style="--bar-fill: ${initialFill}"></span>
           </div>
         </div>
       `;
@@ -648,11 +692,12 @@
       </div>
     ` : ``;
 
+    const initialScore = isFirstForVideo ? 0 : score;
     body.innerHTML = `
       <div class="ytg-hero">
-        <div class="ytg-score-ring" data-tier="${tier}" data-target-score="${score}" style="--score: 0">
+        <div class="ytg-score-ring" data-tier="${tier}" data-target-score="${score}" style="--score: ${initialScore}">
           <div class="ytg-score-inner">
-            <span class="ytg-score-num" data-target-num="${score}">0</span>
+            <span class="ytg-score-num" data-target-num="${score}">${initialScore}</span>
             <span class="ytg-score-cap">SEO</span>
           </div>
         </div>
@@ -711,26 +756,21 @@
       } catch (_) {}
     });
 
-    // Trigger the gauge + bar animations. Each element starts at --score: 0
-    // (or --bar-fill: 0), and we bump to the target on the next frame so
-    // the typed-property transition kicks in instead of jumping instantly.
-    requestAnimationFrame(() => {
-      const ring = body.querySelector(".ytg-score-ring");
-      if (ring) {
-        const target = Number(ring.dataset.targetScore) || 0;
-        ring.style.setProperty("--score", String(target));
-      }
-      // Count-up the visible score number in lockstep with the ring fill.
-      const num = body.querySelector(".ytg-score-num");
-      if (num) {
-        const target = Number(num.dataset.targetNum) || 0;
-        animateCount(num, target, 1100);
-      }
-      body.querySelectorAll(".ytg-f-bar-fill").forEach((el) => {
-        const target = Number(el.dataset.targetFill) || 0;
-        el.style.setProperty("--bar-fill", String(target));
+    // Only animate the gauge + bars on the FIRST render for this video.
+    // Re-renders (tag fetch returning, likes ticking up, etc.) paint the
+    // new values directly so the bars don't wind back to zero and refill
+    // every time YouTube nudges the DOM.
+    if (isFirstForVideo) {
+      requestAnimationFrame(() => {
+        const ring = body.querySelector(".ytg-score-ring");
+        if (ring) ring.style.setProperty("--score", String(Number(ring.dataset.targetScore) || 0));
+        const num = body.querySelector(".ytg-score-num");
+        if (num) animateCount(num, Number(num.dataset.targetNum) || 0, 1100);
+        body.querySelectorAll(".ytg-f-bar-fill").forEach((el) => {
+          el.style.setProperty("--bar-fill", String(Number(el.dataset.targetFill) || 0));
+        });
       });
-    });
+    }
   }
 
   // Easing match (cubic-bezier(.16,1,.3,1) approximation) for the count-up.
@@ -852,6 +892,7 @@
       if (vid !== currentVideoId) {
         currentVideoId = vid;
         lastPageData   = null;
+        lastRenderSig  = null; // new video => allow first re-render through
         renderInitialLoading();
         scheduleScrapes();
       } else if (!lastPageData) {
@@ -862,6 +903,7 @@
     } else {
       currentVideoId = null;
       lastPageData   = null;
+      lastRenderSig  = null;
       removePanel();
     }
   }
