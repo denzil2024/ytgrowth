@@ -1,8 +1,13 @@
-import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useEffect, useMemo, useState } from 'react'
+import { Link, useSearchParams } from 'react-router-dom'
 import LandingFooter from '../components/LandingFooter'
 import SiteHeader from '../components/SiteHeader'
 import { posts, formatPostDate } from '../blog/posts.jsx'
+
+/* Pagination tunables. POSTS_PER_PAGE counts grid cards on subsequent
+   pages and (featured + grid cards) on page 1, so page 1 is balanced
+   with later pages. Bump this if 12 starts feeling tight. */
+const POSTS_PER_PAGE = 12
 
 /* Blog index. Visual DNA matches the feature/tool pages exactly:
  * --ytg-accent #e5302a, DM Sans + Inter, eyebrow pill with red dot,
@@ -320,6 +325,41 @@ function useStyles() {
       .bl-featured:hover .bl-featured-title { color: var(--ytg-accent); }
       .bl-featured-excerpt { font-size: 16px; line-height: 1.7; color: var(--ytg-text-2); }
 
+      /* Pagination */
+      .bl-pagination {
+        display: flex; align-items: center; justify-content: center;
+        gap: 6px; margin-top: 56px;
+      }
+      .bl-page-btn {
+        min-width: 38px; height: 38px;
+        display: inline-flex; align-items: center; justify-content: center;
+        padding: 0 12px;
+        background: #fff; border: 1px solid var(--ytg-border);
+        border-radius: 100px;
+        font-family: 'Inter', system-ui, sans-serif;
+        font-size: 13.5px; font-weight: 600; color: var(--ytg-text-2);
+        text-decoration: none; cursor: pointer;
+        font-variant-numeric: tabular-nums;
+        letter-spacing: -0.1px;
+        transition: border-color 0.15s, color 0.15s, background 0.15s;
+      }
+      .bl-page-btn:hover { border-color: rgba(229,48,42,0.32); color: var(--ytg-accent); background: var(--ytg-accent-light); }
+      .bl-page-btn.active {
+        background: var(--ytg-accent); color: #fff;
+        border-color: var(--ytg-accent);
+        box-shadow: 0 1px 3px rgba(0,0,0,0.10), 0 4px 12px rgba(229,48,42,0.28);
+        cursor: default;
+      }
+      .bl-page-btn.active:hover { background: var(--ytg-accent); color: #fff; }
+      .bl-page-btn.disabled {
+        opacity: 0.35; cursor: not-allowed; pointer-events: none;
+      }
+      .bl-page-ellipsis {
+        min-width: 24px; height: 38px;
+        display: inline-flex; align-items: center; justify-content: center;
+        font-size: 13.5px; color: var(--ytg-text-3); font-weight: 600;
+      }
+
       @media (max-width: 1024px) {
         .bl-grid-3 { grid-template-columns: repeat(2,1fr); }
       }
@@ -414,19 +454,105 @@ function FeaturedPost({ post }) {
   )
 }
 
+/* Build a compact list of page numbers with ellipses for the pagination
+   strip. e.g. for current=5 of 10 pages: [1, '…', 4, 5, 6, '…', 10].
+   Always shows first/last and a window of 1 around current. */
+function buildPageList(current, total) {
+  if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1)
+  const pages = new Set([1, total, current - 1, current, current + 1])
+  const sorted = [...pages].filter(n => n >= 1 && n <= total).sort((a, b) => a - b)
+  const out = []
+  for (let i = 0; i < sorted.length; i++) {
+    out.push(sorted[i])
+    if (i < sorted.length - 1 && sorted[i + 1] - sorted[i] > 1) out.push('…')
+  }
+  return out
+}
+
+function Pagination({ current, total }) {
+  if (total <= 1) return null
+  const pages = buildPageList(current, total)
+  const hrefFor = (n) => n === 1 ? '/blog' : `/blog?page=${n}`
+  const prevDisabled = current <= 1
+  const nextDisabled = current >= total
+  return (
+    <nav className="bl-pagination" aria-label="Blog pagination">
+      <a href={hrefFor(current - 1)}
+         className={`bl-page-btn${prevDisabled ? ' disabled' : ''}`}
+         aria-label="Previous page" aria-disabled={prevDisabled}>← Prev</a>
+      {pages.map((p, i) =>
+        p === '…'
+          ? <span key={`e${i}`} className="bl-page-ellipsis" aria-hidden="true">…</span>
+          : <a key={p} href={hrefFor(p)}
+               className={`bl-page-btn${p === current ? ' active' : ''}`}
+               aria-current={p === current ? 'page' : undefined}>{p}</a>
+      )}
+      <a href={hrefFor(current + 1)}
+         className={`bl-page-btn${nextDisabled ? ' disabled' : ''}`}
+         aria-label="Next page" aria-disabled={nextDisabled}>Next →</a>
+    </nav>
+  )
+}
+
 export default function Blog() {
   useStyles()
+  const [searchParams] = useSearchParams()
+  const { isMobile } = useBreakpoint()
+
+  const sorted = useMemo(
+    () => [...posts].sort((a, b) => new Date(b.date) - new Date(a.date)),
+    [],
+  )
+
+  // Page 1: featured post + (POSTS_PER_PAGE - 1) grid cards = 12 visible.
+  // Page N>=2: POSTS_PER_PAGE grid cards each. Featured is page 1 only so
+  // it doesn't repeat across pages and steal SEO weight from itself.
+  const totalPages = Math.max(1, Math.ceil(sorted.length / POSTS_PER_PAGE))
+  const requested  = parseInt(searchParams.get('page') || '1', 10)
+  const page       = Number.isFinite(requested) ? Math.min(Math.max(1, requested), totalPages) : 1
+
+  const { featured, gridPosts } = useMemo(() => {
+    if (page === 1) {
+      const [first, ...rest] = sorted
+      return { featured: first || null, gridPosts: rest.slice(0, POSTS_PER_PAGE - 1) }
+    }
+    const startIdx = (page - 1) * POSTS_PER_PAGE
+    return { featured: null, gridPosts: sorted.slice(startIdx, startIdx + POSTS_PER_PAGE) }
+  }, [sorted, page])
+
+  // Title + description per page so paged URLs index distinctly without
+  // looking like duplicate content. Canonical points back to the current
+  // paginated URL (don't collapse to /blog — that would let Google
+  // ignore page 2+ entirely).
   useEffect(() => {
-    document.title = 'Blog — YTGrowth'
+    document.title = page === 1 ? 'Blog — YTGrowth' : `Blog (Page ${page}) — YTGrowth`
     const meta = document.querySelector('meta[name="description"]') || (() => {
       const m = document.createElement('meta'); m.name = 'description'; document.head.appendChild(m); return m
     })()
-    meta.content = 'YouTube growth tactics, channel deep-dives, and creator playbooks from the YTGrowth team.'
-  }, [])
-  const { isMobile } = useBreakpoint()
+    meta.content = page === 1
+      ? 'YouTube growth tactics, channel deep-dives, and creator playbooks from the YTGrowth team.'
+      : `More posts from the YTGrowth blog — page ${page} of ${totalPages}. YouTube growth tactics, channel deep-dives, and creator playbooks.`
+  }, [page, totalPages])
 
-  const sorted = [...posts].sort((a, b) => new Date(b.date) - new Date(a.date))
-  const [featured, ...rest] = sorted
+  // rel=prev/next link tags so search engines understand the paged
+  // sequence as one logical resource. Cleaned up on unmount/page change.
+  useEffect(() => {
+    const origin = window.location.origin
+    const href = (n) => n === 1 ? `${origin}/blog` : `${origin}/blog?page=${n}`
+    const set = (rel, url) => {
+      let tag = document.querySelector(`link[rel="${rel}"]`)
+      if (!url) { if (tag) tag.remove(); return }
+      if (!tag) { tag = document.createElement('link'); tag.rel = rel; document.head.appendChild(tag) }
+      tag.href = url
+    }
+    set('prev', page > 1 ? href(page - 1) : null)
+    set('next', page < totalPages ? href(page + 1) : null)
+    return () => { set('prev', null); set('next', null) }
+  }, [page, totalPages])
+
+  // Reset scroll on page change so users land at the top of the new
+  // grid rather than wherever the last page left them.
+  useEffect(() => { window.scrollTo({ top: 0, behavior: 'instant' }) }, [page])
 
   return (
     <div style={{ background: 'var(--ytg-bg)', minHeight: '100vh' }}>
@@ -458,18 +584,20 @@ export default function Blog() {
 
           {featured && <FeaturedPost post={featured} />}
 
-          {rest.length > 0 && (
+          {gridPosts.length > 0 && (
             <>
               <div style={{ marginBottom: isMobile ? 16 : 24, marginTop: isMobile ? 8 : 16 }}>
                 <h2 className="bl-h2" style={{ fontSize: isMobile ? 22 : 32, color: 'var(--ytg-text)', letterSpacing: isMobile ? '-0.6px' : '-1.4px' }}>
-                  More from the blog
+                  {page === 1 ? 'More from the blog' : `Page ${page} of ${totalPages}`}
                 </h2>
               </div>
               <div className="bl-grid-3">
-                {rest.map(p => <PostCard key={p.slug} post={p} />)}
+                {gridPosts.map(p => <PostCard key={p.slug} post={p} />)}
               </div>
             </>
           )}
+
+          <Pagination current={page} total={totalPages} />
 
           {posts.length === 0 && (
             <div style={{ textAlign: 'center', padding: '80px 20px', color: 'var(--ytg-text-3)' }}>
