@@ -1,9 +1,11 @@
 """
 Public read endpoint for the top-channels cache. Cache is populated by
-app/scheduler.py running app/top_channels.refresh_all() once a day.
+app/scheduler.py running app/top_channels.refresh_all() once a week.
 First-hit fallback: if the cache is empty (fresh deploy, cron hasn't
 fired yet), trigger a synchronous refresh inline so the user sees real
-channels on the first request instead of an empty section.
+channels on the first request instead of an empty section. The inline
+fallback is gated by YT_QUOTA_PAUSED so we can hard-stop quota burn
+during constrained periods (e.g. while a quota extension is pending).
 """
 
 import os
@@ -44,15 +46,18 @@ def get_top_channels(region: str = "global"):
     # slices to whatever it needs to show (15 on the hub, 50 on drilldowns).
     data = fetch_grouped(region=region, top_n=50)
     if not data.get('groups'):
-        # Cache empty for this region — populate inline so first hit
-        # shows real data. Slow (5-10s per region) but only on the very
-        # first call; subsequent calls hit the cache instantly.
-        try:
-            result = refresh_all(regions=[region])
-            print(f"[top_channels] inline refresh on first hit (region={region}): {result}")
-        except Exception as e:
-            print(f"[top_channels] inline refresh failed (region={region}): {e}")
-        data = fetch_grouped(region=region, top_n=50)
+        if os.getenv("YT_QUOTA_PAUSED", "0").strip() == "1":
+            print(f"[top_channels] inline refresh skipped (region={region}) — YT_QUOTA_PAUSED=1")
+        else:
+            # Cache empty for this region — populate inline so first hit
+            # shows real data. Slow (5-10s per region) but only on the very
+            # first call; subsequent calls hit the cache instantly.
+            try:
+                result = refresh_all(regions=[region])
+                print(f"[top_channels] inline refresh on first hit (region={region}): {result}")
+            except Exception as e:
+                print(f"[top_channels] inline refresh failed (region={region}): {e}")
+            data = fetch_grouped(region=region, top_n=50)
     return JSONResponse(data)
 
 

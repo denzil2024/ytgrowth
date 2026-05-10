@@ -7,12 +7,21 @@ Jobs:
 """
 
 import json
+import os
 import datetime
 from datetime import timedelta
 
 from apscheduler.schedulers.background import BackgroundScheduler
 
 scheduler = BackgroundScheduler(timezone="UTC")
+
+
+# Master kill-switch for YouTube Data API jobs that run automatically
+# (cron + startup). Set YT_QUOTA_PAUSED=1 in env when daily 10K free
+# quota is constrained, e.g. while the audited quota extension is under
+# review. Cached data still serves from the DB; only the refresh stops.
+def _quota_paused() -> bool:
+    return os.getenv("YT_QUOTA_PAUSED", "0").strip() == "1"
 
 
 # ── Job 1: Monthly credit resets ──────────────────────────────────────────────
@@ -52,11 +61,25 @@ scheduler.add_job(
 
 
 # ── Job: Refresh top-channels cache ───────────────────────────────────────────
-# Pulls current public stats for every curated channel handle in
-# app/top_channels.py.TOP_CHANNELS_SEED via the YouTube Data API. Runs once
-# a day, plus 60s after startup so the cache populates on first deploy.
+# Runs WEEKLY (Sunday 05:30 UTC) — a full refresh costs ~8,400 quota
+# units (14 categories × 6 regions × 100 units per search.list). Daily
+# was draining the 10K free daily quota and starving every other
+# YouTube-touching feature. Weekly stretches the same 8,400 across 7
+# days = ~1,200 quota/day, leaving headroom for the extension panel,
+# autopsy lookups, and SEO refreshes.
+#
+# Channel rankings shift slowly (top creators by subs), so a 7-day
+# cache is fine for the leaderboard UI. If a region needs a force-refresh
+# sooner, /admin/top-channels-debug triggers one ad hoc.
+#
+# We deliberately do NOT run on startup anymore. Each deploy used to
+# burn another 8,400 units, which combined with frequent iteration
+# was the primary cause of quota exhaustion.
 
 def _run_top_channels_refresh():
+    if _quota_paused():
+        print("[top_channels] refresh skipped — YT_QUOTA_PAUSED=1")
+        return
     try:
         from app.top_channels import refresh_all
         result = refresh_all()
@@ -68,17 +91,9 @@ def _run_top_channels_refresh():
 scheduler.add_job(
     _run_top_channels_refresh,
     trigger="cron",
-    hour=5, minute=30,  # daily 05:30 UTC, before most US/EU traffic
+    day_of_week="sun",
+    hour=5, minute=30,  # Sundays 05:30 UTC
     id="top_channels_refresh",
-    replace_existing=True,
-)
-# Initial run shortly after process startup so the cache populates without
-# waiting for the next 05:30 cron slot. Date trigger fires once.
-scheduler.add_job(
-    _run_top_channels_refresh,
-    trigger="date",
-    run_date=datetime.datetime.utcnow() + timedelta(seconds=60),
-    id="top_channels_refresh_initial",
     replace_existing=True,
 )
 
