@@ -206,6 +206,10 @@
   }
 
   // ── Render ──────────────────────────────────────────────────────────
+  // Inline SVG for the YTGrowth brand mark — matches the favicon and the
+  // watch-panel logo so the search overlay clearly reads as our tool.
+  const BRAND_SVG = `<svg viewBox="0 0 26 26" width="22" height="22" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect width="26" height="26" rx="7" fill="#e5251b"/><path d="M18.5 10.2a1.6 1.6 0 0 0-1.12-1.12C16.4 8.8 13 8.8 13 8.8s-3.4 0-4.38.3A1.6 1.6 0 0 0 7.5 10.2 17 17 0 0 0 7.2 13a17 17 0 0 0 .3 2.8 1.6 1.6 0 0 0 1.12 1.12C9.6 17.2 13 17.2 13 17.2s3.4 0 4.38-.3a1.6 1.6 0 0 0 1.12-1.12A17 17 0 0 0 18.8 13a17 17 0 0 0-.3-2.8z" fill="white"/><polygon points="11.2,16 16,13 11.2,10" fill="#e5251b"/></svg>`;
+
   function buildHeaderBar(query, comp) {
     const bar = document.createElement("div");
     bar.id = HEADER_ID;
@@ -224,7 +228,7 @@
         <div class="ytg-sb-content">
           <div class="ytg-sb-label-row">
             <div class="ytg-sb-label">${comp.label}</div>
-            <div class="ytg-sb-brand">YTGrowth</div>
+            <div class="ytg-sb-brand">${BRAND_SVG}<span>YTGrowth</span></div>
           </div>
           ${hasInsight ? `<div class="ytg-sb-insight">${escapeHtml(comp.insight)}</div>` : ``}
           <div class="ytg-sb-stats">

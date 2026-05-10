@@ -1,8 +1,14 @@
 {
   "manifest_version": 3,
   "name": "YTGrowth",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Live SEO score, hidden tags, view velocity, engagement, and revenue estimate on every YouTube video.",
+  "icons": {
+    "16":  "icon.svg",
+    "32":  "icon.svg",
+    "48":  "icon.svg",
+    "128": "icon.svg"
+  },
   "permissions": [
     "cookies"
   ],
@@ -28,7 +34,19 @@
       "run_at": "document_idle"
     }
   ],
+  "web_accessible_resources": [
+    {
+      "resources": ["fonts/*.woff2", "icon.svg"],
+      "matches": ["*://*.youtube.com/*"]
+    }
+  ],
   "action": {
-    "default_title": "YTGrowth"
+    "default_title": "YTGrowth",
+    "default_icon": {
+      "16":  "icon.svg",
+      "32":  "icon.svg",
+      "48":  "icon.svg",
+      "128": "icon.svg"
+    }
   }
 }

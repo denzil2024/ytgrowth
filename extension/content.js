@@ -599,17 +599,16 @@
       </div>
     `).join("");
 
-    const oppHTML = opp ? `
-      <div class="ytg-opp">
-        <div class="ytg-opp-row">
-          <span class="ytg-opp-icon" aria-hidden="true">↑</span>
-          <div class="ytg-opp-body">
-            <div class="ytg-opp-label">${escapeHtml(opp.label)}</div>
-            <div class="ytg-opp-detail">${escapeHtml(opp.detail)}</div>
-          </div>
-        </div>
-      </div>
-    ` : ``;
+    // Hero shows either the next action (when there's a clear
+    // opportunity) or the status summary (when the score is high
+    // enough that there's no obvious lever to pull).
+    const heroTitle = opp ? opp.label : summary;
+    const heroDetail = opp ? opp.detail : "";
+    const ageStr = fmtAge(pageData.publishDate);
+    const subParts = [];
+    if (tagsLabel) subParts.push(tagsLabel);
+    if (ageStr && ageStr !== "—") subParts.push(ageStr);
+    const heroSub = subParts.join(" · ");
 
     body.innerHTML = `
       <div class="ytg-hero">
@@ -620,12 +619,11 @@
           </div>
         </div>
         <div class="ytg-hero-meta">
-          <div class="ytg-hero-title">${escapeHtml(summary)}</div>
-          <div class="ytg-hero-sub">${tagsLabel} &middot; ${escapeHtml(fmtAge(pageData.publishDate))}</div>
+          <div class="ytg-hero-title">${escapeHtml(heroTitle)}</div>
+          ${heroDetail ? `<div class="ytg-hero-detail">${escapeHtml(heroDetail)}</div>` : ``}
+          ${heroSub ? `<div class="ytg-hero-sub">${heroSub}</div>` : ``}
         </div>
       </div>
-
-      ${oppHTML}
 
       <div class="ytg-rows">
         <div class="ytg-row">
