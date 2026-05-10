@@ -40,7 +40,9 @@ def get_top_channels(region: str = "global"):
     if region not in REGIONS:
         return JSONResponse({"error": f"unknown region: {region}", "valid": list(REGIONS.keys())}, status_code=400)
 
-    data = fetch_grouped(region=region)
+    # Return up to 50 per category (the actual TOP_N cached). The frontend
+    # slices to whatever it needs to show (15 on the hub, 50 on drilldowns).
+    data = fetch_grouped(region=region, top_n=50)
     if not data.get('groups'):
         # Cache empty for this region — populate inline so first hit
         # shows real data. Slow (5-10s per region) but only on the very
@@ -50,7 +52,7 @@ def get_top_channels(region: str = "global"):
             print(f"[top_channels] inline refresh on first hit (region={region}): {result}")
         except Exception as e:
             print(f"[top_channels] inline refresh failed (region={region}): {e}")
-        data = fetch_grouped(region=region)
+        data = fetch_grouped(region=region, top_n=50)
     return JSONResponse(data)
 
 

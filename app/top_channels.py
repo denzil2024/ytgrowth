@@ -64,8 +64,14 @@ REGIONS = {
 REGION_CODES = list(REGIONS.keys())
 
 # Minimum subscribers a channel needs to qualify for the leaderboard.
-# Filters out small same-named channels that show up in search results.
+# Tiered: try the strict 500K bar first; if a niche doesn't fill, fall
+# back to softer thresholds. Keeps high-quality results when available
+# (gaming, beauty, finance) and prevents near-empty leaderboards in
+# niches where YouTube's search returns mostly mid-size channels
+# (music, vlogs, entertainment for some regions).
 MIN_SUBS = 500_000
+MIN_SUBS_TIERS = [500_000, 250_000, 100_000, 50_000]
+TARGET_FILL = 30  # if we have at least this many at a tier, stop softening.
 
 # Cap per (category, region) in the cache. Sized for the per-category and
 # per-country drilldown pages, which show the full ranked list.
@@ -126,8 +132,9 @@ def _discover_category(yt, query: str, region_code: str | None = None) -> list[d
         print(f"[top_channels] channels batch failed for q='{query}' region={region_code}: {e}")
         return []
 
-    # 3. Filter by min subs + skip channels that hide their sub count.
-    qualified = []
+    # 3. Pull every candidate's sub count up front (excluding hidden-sub
+    #    channels), then filter via the tiered threshold below.
+    all_with_subs = []
     for ch in items:
         stats = ch.get("statistics") or {}
         if stats.get("hiddenSubscriberCount"):
@@ -136,11 +143,17 @@ def _discover_category(yt, query: str, region_code: str | None = None) -> list[d
             subs = int(stats.get("subscriberCount") or 0)
         except (TypeError, ValueError):
             continue
-        if subs < MIN_SUBS:
-            continue
-        qualified.append((subs, ch))
+        all_with_subs.append((subs, ch))
 
-    # 4. Sort by subs DESC, return raw items.
+    # 4. Tiered filter — start at 500K, soften progressively until we
+    #    either hit TARGET_FILL or exhaust the tiers.
+    qualified = []
+    for tier in MIN_SUBS_TIERS:
+        qualified = [(s, c) for (s, c) in all_with_subs if s >= tier]
+        if len(qualified) >= TARGET_FILL:
+            break
+
+    # 5. Sort by subs DESC, return raw items.
     qualified.sort(key=lambda x: x[0], reverse=True)
     return [ch for _subs, ch in qualified]
 
