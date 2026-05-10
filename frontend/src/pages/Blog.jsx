@@ -4,9 +4,10 @@ import LandingFooter from '../components/LandingFooter'
 import SiteHeader from '../components/SiteHeader'
 import { posts, formatPostDate } from '../blog/posts.jsx'
 
-/* Pagination tunables. POSTS_PER_PAGE counts grid cards on subsequent
-   pages and (featured + grid cards) on page 1, so page 1 is balanced
-   with later pages. Bump this if 12 starts feeling tight. */
+/* Pagination tunables. POSTS_PER_PAGE = grid cards per page. The
+   featured post is shown on page 1 in addition to the cards (so page 1
+   has 1 + POSTS_PER_PAGE visible) and is excluded from the pagination
+   math entirely — it doesn't eat into the page budget. */
 const POSTS_PER_PAGE = 12
 
 /* Blog index. Visual DNA matches the feature/tool pages exactly:
@@ -504,21 +505,21 @@ export default function Blog() {
     [],
   )
 
-  // Page 1: featured post + (POSTS_PER_PAGE - 1) grid cards = 12 visible.
-  // Page N>=2: POSTS_PER_PAGE grid cards each. Featured is page 1 only so
-  // it doesn't repeat across pages and steal SEO weight from itself.
-  const totalPages = Math.max(1, Math.ceil(sorted.length / POSTS_PER_PAGE))
-  const requested  = parseInt(searchParams.get('page') || '1', 10)
-  const page       = Number.isFinite(requested) ? Math.min(Math.max(1, requested), totalPages) : 1
+  // Featured = newest post, shown on page 1 only and outside pagination.
+  // Pagination is over `paginatable` (everything else). 12 cards/page.
+  const featuredPost = sorted[0] || null
+  const paginatable  = useMemo(() => sorted.slice(1), [sorted])
+  const totalPages   = Math.max(1, Math.ceil(paginatable.length / POSTS_PER_PAGE))
+  const requested    = parseInt(searchParams.get('page') || '1', 10)
+  const page         = Number.isFinite(requested) ? Math.min(Math.max(1, requested), totalPages) : 1
 
   const { featured, gridPosts } = useMemo(() => {
-    if (page === 1) {
-      const [first, ...rest] = sorted
-      return { featured: first || null, gridPosts: rest.slice(0, POSTS_PER_PAGE - 1) }
+    const start = (page - 1) * POSTS_PER_PAGE
+    return {
+      featured:  page === 1 ? featuredPost : null,
+      gridPosts: paginatable.slice(start, start + POSTS_PER_PAGE),
     }
-    const startIdx = (page - 1) * POSTS_PER_PAGE
-    return { featured: null, gridPosts: sorted.slice(startIdx, startIdx + POSTS_PER_PAGE) }
-  }, [sorted, page])
+  }, [featuredPost, paginatable, page])
 
   // Title + description per page so paged URLs index distinctly without
   // looking like duplicate content. Canonical points back to the current
