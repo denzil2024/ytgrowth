@@ -2,6 +2,21 @@
    to avoid colliding with YouTube's own styles. Light + dark variants
    are toggled via [data-theme]. */
 
+/* Register --score as a typed custom property so it can be smoothly
+   animated (untyped CSS variables jump instantly). Each render starts
+   the gauge at 0 and transitions to the target on the next frame,
+   giving the panel a confident "filling up" feel on every video. */
+@property --score {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 0;
+}
+@property --bar-fill {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 0;
+}
+
 /* Bundle Inter so every user sees the same typography as ytgrowth.io,
    not whatever their system font stack happens to fall through to.
    Three weights are enough for everything we render (400 body, 600
@@ -76,12 +91,20 @@
   width: 320px;
   max-height: calc(100vh - 60px);
   overflow-y: auto;
-  background: var(--ytg-bg);
+  /* Subtle vertical gradient adds depth without color flood — the top
+     reads slightly cooler than the bottom, like a Stripe card. */
+  background:
+    linear-gradient(180deg, #fcfcfd 0%, var(--ytg-bg) 60%);
   border: 1px solid var(--ytg-border);
   border-radius: var(--ytg-radius);
   box-shadow: var(--ytg-shadow);
   position: relative;
   scrollbar-width: thin;
+}
+
+#ytg-panel-root[data-theme="dark"] .ytg-panel {
+  background:
+    linear-gradient(180deg, #1d1e22 0%, var(--ytg-bg) 60%);
 }
 
 #ytg-panel-root .ytg-panel::-webkit-scrollbar {
@@ -187,19 +210,21 @@
 #ytg-panel-root .ytg-score-ring {
   --size: 64px;
   --thickness: 6px;
-  --pct: calc(var(--score, 0) * 1%);
   --ytg-score-color: #f59e0b; /* default amber, overridden by data-tier */
   width: var(--size);
   height: var(--size);
   border-radius: 50%;
   background:
-    conic-gradient(var(--ytg-score-color) var(--pct), var(--ytg-track) 0);
+    conic-gradient(var(--ytg-score-color) calc(var(--score, 0) * 1%), var(--ytg-track) 0);
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
   position: relative;
-  transition: background 240ms ease;
+  /* --score animates because it's @property-typed at the top of this
+     file. Spring-ish ease gives the gauge a confident "filling up" feel. */
+  transition: --score 1100ms cubic-bezier(.16, 1, .3, 1),
+              background-color 240ms ease;
 }
 
 /* Score ring color reflects quality, not brand. Reading 58 as 'red'
@@ -501,7 +526,9 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: var(--ytg-text);
-  background: var(--ytg-bg);
+  /* Same Stripe-style depth gradient as the watch panel — slightly
+     cooler at the top, fading to pure bg. */
+  background: linear-gradient(180deg, #fdfdfe 0%, var(--ytg-bg) 55%);
   border: 1px solid var(--ytg-border);
   border-radius: 18px;
   box-shadow:
@@ -528,6 +555,7 @@
   --ytg-text-mute: #888;
   --ytg-border: rgba(255, 255, 255, 0.08);
   --ytg-track: rgba(255, 255, 255, 0.08);
+  background: linear-gradient(180deg, #1d1e22 0%, var(--ytg-bg) 55%);
   box-shadow:
     0 1px 2px rgba(0, 0, 0, 0.5),
     0 8px 28px rgba(0, 0, 0, 0.4);
@@ -645,21 +673,22 @@
 }
 
 /* Score gauge — conic-gradient ring, tier color, big number in the
-   center. Replaces the flat colored badge. */
+   center. Replaces the flat colored badge. Animates from 0 to score
+   on mount via the @property-typed --score variable. */
 #ytg-search-bar .ytg-sb-score-ring {
   --size: 96px;
   --thickness: 9px;
-  --pct: calc(var(--score, 0) * 1%);
   width: var(--size);
   height: var(--size);
   border-radius: 50%;
-  background: conic-gradient(var(--ytg-tier) var(--pct), var(--ytg-track) 0);
+  background: conic-gradient(var(--ytg-tier) calc(var(--score, 0) * 1%), var(--ytg-track) 0);
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
   position: relative;
   box-shadow: 0 8px 24px color-mix(in srgb, var(--ytg-tier) 14%, transparent);
+  transition: --score 1100ms cubic-bezier(.16, 1, .3, 1);
 }
 
 #ytg-search-bar .ytg-sb-score-inner {
@@ -888,59 +917,88 @@ html[dark] .ytg-result-pill .ytg-rp-num { color: #0a0a0a; }
   margin-bottom: 10px;
 }
 
+/* Factor breakdown as a bar chart — each row shows what portion of its
+   max points was earned. A signature data-viz that VidIQ doesn't have. */
 #ytg-panel-root .ytg-factors {
-  padding: 14px 16px 10px;
+  padding: 14px 16px 12px;
   border-top: 1px solid var(--ytg-border);
 }
 
 #ytg-panel-root .ytg-factor {
-  display: grid;
-  grid-template-columns: 14px 1fr auto auto;
-  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--ytg-border);
+}
+
+#ytg-panel-root .ytg-factor:last-child {
+  border-bottom: 0;
+  padding-bottom: 2px;
+}
+
+#ytg-panel-root .ytg-f-head {
+  display: flex;
+  align-items: baseline;
   gap: 10px;
-  padding: 7px 0;
-  font-size: 12.5px;
-  border-bottom: 1px dashed transparent;
-}
-
-#ytg-panel-root .ytg-factor + .ytg-factor {
-  border-top: 1px solid var(--ytg-border);
-}
-
-#ytg-panel-root .ytg-f-icon {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  display: inline-block;
-  background: #f59e0b;
-  flex-shrink: 0;
-}
-
-#ytg-panel-root .ytg-factor[data-status="good"]    .ytg-f-icon { background: #16a34a; }
-#ytg-panel-root .ytg-factor[data-status="warn"]    .ytg-f-icon { background: #f59e0b; }
-#ytg-panel-root .ytg-factor[data-status="bad"]     .ytg-f-icon { background: #ef4444; }
-#ytg-panel-root .ytg-factor[data-status="loading"] .ytg-f-icon {
-  background: linear-gradient(90deg, var(--ytg-track) 0%, var(--ytg-bg-soft) 50%, var(--ytg-track) 100%);
-  background-size: 200% 100%;
-  animation: ytg-shimmer 1.4s infinite;
+  margin-bottom: 6px;
 }
 
 #ytg-panel-root .ytg-f-label {
-  font-weight: 600;
+  font-size: 12px;
+  font-weight: 700;
   color: var(--ytg-text);
+  flex: 0 0 auto;
 }
 
 #ytg-panel-root .ytg-f-value {
-  color: var(--ytg-text);
-  font-weight: 600;
+  flex: 1;
+  color: var(--ytg-text-soft);
+  font-size: 11.5px;
+  font-weight: 500;
   font-variant-numeric: tabular-nums;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-#ytg-panel-root .ytg-f-hint {
-  color: var(--ytg-text-mute);
+#ytg-panel-root .ytg-f-points {
   font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 0.01em;
+  font-weight: 600;
+  color: var(--ytg-text-mute);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+#ytg-panel-root .ytg-f-points strong {
+  color: var(--ytg-text);
+  font-weight: 800;
+  font-size: 12px;
+}
+
+#ytg-panel-root .ytg-f-bar {
+  height: 6px;
+  border-radius: 3px;
+  background: var(--ytg-track);
+  overflow: hidden;
+  position: relative;
+}
+
+#ytg-panel-root .ytg-f-bar-fill {
+  display: block;
+  height: 100%;
+  width: calc(var(--bar-fill, 0) * 1%);
+  border-radius: 3px;
+  background: #16a34a;
+  transition: --bar-fill 900ms cubic-bezier(.16, 1, .3, 1),
+              background 240ms ease;
+}
+
+#ytg-panel-root .ytg-factor[data-status="good"]    .ytg-f-bar-fill { background: #16a34a; }
+#ytg-panel-root .ytg-factor[data-status="warn"]    .ytg-f-bar-fill { background: #f59e0b; }
+#ytg-panel-root .ytg-factor[data-status="bad"]     .ytg-f-bar-fill { background: #ef4444; }
+#ytg-panel-root .ytg-factor[data-status="loading"] .ytg-f-bar-fill {
+  width: 100%;
+  background: linear-gradient(90deg, var(--ytg-track) 0%, var(--ytg-bg-soft) 50%, var(--ytg-track) 100%);
+  background-size: 200% 100%;
+  animation: ytg-shimmer 1.4s infinite;
+  transition: none;
 }
 
 /* Hero detail line — used when the hero title is showing an action

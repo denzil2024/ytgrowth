@@ -127,8 +127,9 @@
   }
 
   // Per-factor breakdown so creators see WHY the score landed where it
-  // did and what to actually change. Each factor returns a status of
-  // good/warn/bad/loading and a short hint shown after the value.
+  // did and what to actually change. Each factor now exposes BOTH the
+  // status indicator AND the points earned vs the maximum possible, so
+  // the panel can render a bar chart showing the breakdown.
   function buildFactors(pageData, tagState) {
     const tlen   = (pageData.title || "").length;
     const dwords = (pageData.description || "").split(/\s+/).filter(Boolean).length;
@@ -140,56 +141,59 @@
     if (tagState && Array.isArray(tagState.tags)) tagCount = tagState.tags.length;
     else if (tagState && tagState.error) tagCount = -1; // unknown / quota / auth
 
+    // Title — max 20 points, sweet spot 50-70 chars
+    let titlePts = 0;
+    if (tlen >= 50 && tlen <= 70) titlePts = 20;
+    else if ((tlen >= 40 && tlen < 50) || (tlen > 70 && tlen <= 80)) titlePts = 14;
+    else if (tlen >= 30) titlePts = 8;
+
+    // Description — max 25 points, sweet spot 250+ words
+    let descPts = 0;
+    if (dwords >= 250) descPts = 25;
+    else if (dwords >= 150) descPts = 18;
+    else if (dwords >= 50) descPts = 10;
+
+    // Tags — max 35 points (the highest-impact factor)
+    let tagsPts = 0;
+    if (tagCount === null) tagsPts = 0; // unknown while loading
+    else if (tagCount === -1) tagsPts = 0;
+    else if (tagCount >= 8 && tagCount <= 20) tagsPts = 35;
+    else if ((tagCount >= 4 && tagCount < 8) || (tagCount > 20 && tagCount <= 30)) tagsPts = 24;
+    else if (tagCount > 0) tagsPts = 12;
+
+    // Engagement — max 20 points
+    let engPts = 0;
+    if (eng >= 4) engPts = 20;
+    else if (eng >= 2) engPts = 14;
+    else if (eng >= 1) engPts = 8;
+
     return [
       {
         label: "Title",
         value: `${tlen} chars`,
-        status: (tlen >= 50 && tlen <= 70) ? "good"
-              : (tlen >= 30 && tlen <= 80) ? "warn"
-              : "bad",
-        hint:   (tlen >= 50 && tlen <= 70) ? "sweet spot"
-              : tlen < 30 ? "too short"
-              : tlen > 80 ? "too long"
-              : "ok",
+        earned: titlePts, max: 20,
+        status: titlePts === 20 ? "good" : titlePts >= 8 ? "warn" : "bad",
       },
       {
         label: "Description",
         value: `${dwords} words`,
-        status: dwords >= 250 ? "good"
-              : dwords >= 50  ? "warn"
-              : "bad",
-        hint:   dwords >= 250 ? "solid"
-              : dwords >= 150 ? "ok"
-              : dwords >= 50  ? "thin"
-              : "too thin",
+        earned: descPts, max: 25,
+        status: descPts >= 25 ? "good" : descPts >= 10 ? "warn" : "bad",
       },
       {
         label: "Tags",
-        value: tagCount === null ? "loading" : (tagCount === -1 ? "unavailable" : `${tagCount}`),
-        status: tagCount === null  ? "loading"
-              : tagCount === -1   ? "warn"
-              : tagCount === 0    ? "bad"
-              : (tagCount >= 8 && tagCount <= 20) ? "good"
-              : "warn",
-        hint:   tagCount === null ? ""
-              : tagCount === -1  ? "tap refresh"
-              : tagCount === 0   ? "none set"
-              : tagCount < 4     ? "too few"
-              : tagCount > 30    ? "too many"
-              : "good range",
+        value: tagCount === null ? "loading…" : (tagCount === -1 ? "unavailable" : `${tagCount} tags`),
+        earned: tagsPts, max: 35,
+        status: tagCount === null ? "loading"
+              : tagCount === -1 ? "warn"
+              : tagsPts === 35 ? "good"
+              : tagCount === 0 ? "bad" : "warn",
       },
       {
         label: "Engagement",
         value: `${eng.toFixed(2)}%`,
-        status: eng >= 4 ? "good"
-              : eng >= 2 ? "warn"
-              : eng >= 0.5 ? "warn"
-              : "bad",
-        hint:   eng >= 4 ? "strong"
-              : eng >= 2 ? "good"
-              : eng >= 1 ? "ok"
-              : eng > 0  ? "low"
-              : "—",
+        earned: engPts, max: 20,
+        status: engPts === 20 ? "good" : engPts >= 8 ? "warn" : "bad",
       },
     ];
   }
@@ -604,14 +608,21 @@
     const tagsLabel = tagCount === null ? "loading…" : `${tagCount} tag${tagCount === 1 ? "" : "s"}`;
 
     const body = root.querySelector(".ytg-body");
-    const factorsHTML = factors.map(f => `
-      <div class="ytg-factor" data-status="${f.status}">
-        <span class="ytg-f-icon" aria-hidden="true"></span>
-        <span class="ytg-f-label">${escapeHtml(f.label)}</span>
-        <span class="ytg-f-value">${escapeHtml(f.value)}</span>
-        <span class="ytg-f-hint">${escapeHtml(f.hint)}</span>
-      </div>
-    `).join("");
+    const factorsHTML = factors.map(f => {
+      const pct = f.max > 0 ? Math.round((f.earned / f.max) * 100) : 0;
+      return `
+        <div class="ytg-factor" data-status="${f.status}">
+          <div class="ytg-f-head">
+            <span class="ytg-f-label">${escapeHtml(f.label)}</span>
+            <span class="ytg-f-value">${escapeHtml(f.value)}</span>
+            <span class="ytg-f-points"><strong>${f.earned}</strong>/${f.max}</span>
+          </div>
+          <div class="ytg-f-bar">
+            <span class="ytg-f-bar-fill" data-target-fill="${pct}" style="--bar-fill: 0"></span>
+          </div>
+        </div>
+      `;
+    }).join("");
 
     // Hero shows either the next action (when there's a clear
     // opportunity) or the status summary (when the score is high
@@ -620,7 +631,13 @@
     const heroDetail = opp ? opp.detail : "";
     const ageStr = fmtAge(pageData.publishDate);
     const subParts = [];
-    if (tagsLabel) subParts.push(tagsLabel);
+    // Only show the tag count once it's actually resolved. Showing
+    // "loading…" in the same line as the publish age read as broken.
+    if (tags && tags.length > 0) {
+      subParts.push(`${tags.length} tag${tags.length === 1 ? "" : "s"}`);
+    } else if (tags && tags.length === 0) {
+      subParts.push("no tags");
+    }
     if (ageStr && ageStr !== "—") subParts.push(ageStr);
     const heroSub = subParts.join(" · ");
 
@@ -633,9 +650,9 @@
 
     body.innerHTML = `
       <div class="ytg-hero">
-        <div class="ytg-score-ring" data-tier="${tier}" style="--score: ${score}">
+        <div class="ytg-score-ring" data-tier="${tier}" data-target-score="${score}" style="--score: 0">
           <div class="ytg-score-inner">
-            <span class="ytg-score-num">${score}</span>
+            <span class="ytg-score-num" data-target-num="${score}">0</span>
             <span class="ytg-score-cap">SEO</span>
           </div>
         </div>
@@ -693,6 +710,45 @@
         }
       } catch (_) {}
     });
+
+    // Trigger the gauge + bar animations. Each element starts at --score: 0
+    // (or --bar-fill: 0), and we bump to the target on the next frame so
+    // the typed-property transition kicks in instead of jumping instantly.
+    requestAnimationFrame(() => {
+      const ring = body.querySelector(".ytg-score-ring");
+      if (ring) {
+        const target = Number(ring.dataset.targetScore) || 0;
+        ring.style.setProperty("--score", String(target));
+      }
+      // Count-up the visible score number in lockstep with the ring fill.
+      const num = body.querySelector(".ytg-score-num");
+      if (num) {
+        const target = Number(num.dataset.targetNum) || 0;
+        animateCount(num, target, 1100);
+      }
+      body.querySelectorAll(".ytg-f-bar-fill").forEach((el) => {
+        const target = Number(el.dataset.targetFill) || 0;
+        el.style.setProperty("--bar-fill", String(target));
+      });
+    });
+  }
+
+  // Easing match (cubic-bezier(.16,1,.3,1) approximation) for the count-up.
+  function animateCount(el, target, durationMs) {
+    const start = performance.now();
+    const startVal = 0;
+    function ease(t) {
+      // matches the cubic-bezier(.16, 1, .3, 1) feel closely enough
+      return 1 - Math.pow(1 - t, 3);
+    }
+    function tick(now) {
+      const t = Math.min(1, (now - start) / durationMs);
+      const v = Math.round(startVal + (target - startVal) * ease(t));
+      el.textContent = String(v);
+      if (t < 1) requestAnimationFrame(tick);
+      else el.textContent = String(target);
+    }
+    requestAnimationFrame(tick);
   }
 
   // ── Tag fetch (only async backend call) ─────────────────────────────

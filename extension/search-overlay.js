@@ -263,9 +263,9 @@
       </div>
 
       <div class="ytg-sb-body">
-        <div class="ytg-sb-score-ring" style="--score: ${comp.score}">
+        <div class="ytg-sb-score-ring" data-target-score="${comp.score}" style="--score: 0">
           <div class="ytg-sb-score-inner">
-            <span class="ytg-sb-score-num">${comp.score}</span>
+            <span class="ytg-sb-score-num" data-target-num="${comp.score}">0</span>
             <span class="ytg-sb-score-of">/100</span>
           </div>
         </div>
@@ -319,6 +319,28 @@
     } else {
       primary.insertBefore(bar, primary.firstChild);
     }
+
+    // Kick off the gauge + score-number animations on the next frame.
+    // The ring starts at --score: 0 and transitions to the target;
+    // the number counts up in lockstep.
+    requestAnimationFrame(() => {
+      const ring = bar.querySelector(".ytg-sb-score-ring");
+      if (ring) ring.style.setProperty("--score", String(Number(ring.dataset.targetScore) || 0));
+      const num = bar.querySelector(".ytg-sb-score-num");
+      if (num) animateCount(num, Number(num.dataset.targetNum) || 0, 1100);
+    });
+  }
+
+  function animateCount(el, target, durationMs) {
+    const start = performance.now();
+    function ease(t) { return 1 - Math.pow(1 - t, 3); }
+    function tick(now) {
+      const t = Math.min(1, (now - start) / durationMs);
+      el.textContent = String(Math.round(target * ease(t)));
+      if (t < 1) requestAnimationFrame(tick);
+      else el.textContent = String(target);
+    }
+    requestAnimationFrame(tick);
   }
 
   function removeHeaderBar() {
