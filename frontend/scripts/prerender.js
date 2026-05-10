@@ -81,8 +81,8 @@ const META_BY_ROUTE = {
     description: "Find YouTube videos that hit 5x, 10x, or 50x their channel's normal views in your niche. Outlier score, breakout channels, top thumbnails.",
   },
   '/tools/youtube-money-calculator': {
-    title:       'YouTube Money Calculator 2026: Free Earnings & Revenue Estimator',
-    description: 'Free YouTube calculator for channel earnings and revenue. Niche-specific RPM, monthly and yearly money estimates from views. No signup.',
+    title:       'Free YouTube Money Calculator: Estimate Channel Earnings',
+    description: 'Estimate YouTube ad revenue from views, niche, and engagement. Niche-specific RPM ranges, monthly and yearly earnings, full math behind every estimate.',
   },
   '/tools/youtube-subscriber-money-calculator': {
     title:       'YouTube Subscriber Money Calculator: How Much Subs Pay',
