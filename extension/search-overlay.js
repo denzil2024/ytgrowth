@@ -187,22 +187,51 @@
     };
   }
 
-  // Per-result tier: how anchored is THIS result in the field?
-  // Big-channel + recent + lots of views = "Hot" (hard to outrank).
-  // Old + low views = "Soft" (displaceable).
-  function classifyResult(r) {
-    const v = r.viewCount;
+  // Per-result Opportunity Score: 0-100, higher = easier opportunity to
+  // outrank. Combines age, view count, and view velocity. Numerical score
+  // beats VidIQ's binary Hot/Soft scheme because creators can rank
+  // results at a glance — green 80 is a much better target than green 65.
+  function scoreResult(r) {
+    let score = 50; // start at neutral
+    const v = r.viewCount || 0;
     const a = r.ageDays;
 
-    // "Hot": big and recent or massive
-    if (v >= 1_000_000 && (a >= 0 && a <= 60)) return "hot";
-    if (v >= 5_000_000) return "hot";
+    // Age: older results are more displaceable
+    if (a < 0) {
+      // unknown age — no adjustment
+    } else if (a >= 1825)      score += 28; // 5+ years
+    else if (a >= 1095)        score += 22; // 3+ years
+    else if (a >= 730)         score += 14; // 2+ years
+    else if (a >= 365)         score += 6;  // 1+ year
+    else if (a <= 14)          score -= 18; // very fresh, in momentum window
+    else if (a <= 60)          score -= 10;
 
-    // "Soft": small or very old
-    if (v < 50_000) return "soft";
-    if (a >= 0 && a > 1095 && v < 500_000) return "soft"; // 3+ years and modest views
+    // Absolute view count: tiny = vulnerable, giant = anchored
+    if (v >= 10_000_000)       score -= 35;
+    else if (v >= 2_000_000)   score -= 24;
+    else if (v >= 500_000)     score -= 12;
+    else if (v >= 100_000)     score -= 4;
+    else if (v < 5_000)        score += 22;
+    else if (v < 25_000)       score += 14;
+    else if (v < 75_000)       score += 6;
 
-    return "warm";
+    // View velocity: high recent velocity = it's currently winning,
+    // hard to displace. Low velocity = stagnant, easier target.
+    if (a > 0) {
+      const vpd = v / Math.max(1, a);
+      if (vpd > 50_000)        score -= 16;
+      else if (vpd > 10_000)   score -= 8;
+      else if (vpd > 2_000)    score -= 3;
+      else if (vpd < 50)       score += 8;
+    }
+
+    return Math.max(0, Math.min(100, Math.round(score)));
+  }
+
+  function tierForScore(s) {
+    if (s >= 70) return "good";
+    if (s >= 45) return "medium";
+    return "bad";
   }
 
   // ── Render ──────────────────────────────────────────────────────────
@@ -300,31 +329,33 @@
     if (!r.el || r.el.getAttribute(PROCESSED_ATTR) === "1") return;
     r.el.setAttribute(PROCESSED_ATTR, "1");
 
-    // Skip results with no usable data (avoids weird-looking pills on
-    // shorts shelves, ads, channel rows that slipped through).
     if (!r.viewCount && !r.ageText) return;
 
-    const tier = classifyResult(r);
-    const labels = { hot: "Hot", warm: "Mid", soft: "Soft" };
-    const titles = {
-      hot:  "High view count and/or recent — hard to outrank.",
-      warm: "Mid-tier competition.",
-      soft: "Older or low view count — potentially displaceable.",
-    };
+    const score = scoreResult(r);
+    const tier  = tierForScore(score);
+    const tierWord = tier === "good" ? "Open" : tier === "medium" ? "Mid" : "Anchored";
+    const reason = score >= 70
+      ? "Older or low-view: easier to outrank with strong content."
+      : score >= 45
+        ? "Mid-tier competition. Sharper angle could win."
+        : "High view count and/or in momentum window: hard to outrank.";
 
-    const pill = document.createElement("span");
-    pill.className = PILL_CLASS;
-    pill.dataset.tier = tier;
-    pill.title = titles[tier];
-    pill.innerHTML = `<span class="ytg-rp-dot"></span>${labels[tier]}`;
+    const badge = document.createElement("span");
+    badge.className = PILL_CLASS;
+    badge.dataset.tier = tier;
+    badge.title = `Opportunity ${score}/100 — ${reason}`;
+    badge.innerHTML = `
+      <span class="ytg-rp-num">${score}</span>
+      <span class="ytg-rp-sep"></span>
+      <span class="ytg-rp-word">${tierWord}</span>
+    `;
 
-    // Prefer the metadata line (sits next to view count + age).
     const metadataLine = r.el.querySelector("#metadata-line");
     if (metadataLine) {
-      metadataLine.appendChild(pill);
+      metadataLine.appendChild(badge);
     } else {
       const titleArea = r.el.querySelector("#title-wrapper, #meta");
-      titleArea?.appendChild(pill);
+      titleArea?.appendChild(badge);
     }
   }
 

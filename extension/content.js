@@ -559,6 +559,20 @@
     const factors = buildFactors(pageData, tagState);
     const opp     = topOpportunity(pageData, factors, score);
 
+    // Outlier detection: this video is performing exceptionally. Two
+    // signals — high engagement rate OR strong views/hour for its age.
+    // No channel context required, so this works on every video.
+    let outlier = null;
+    if (engPct >= 6) {
+      outlier = { label: "Outlier", note: "Likes/view rate is exceptional" };
+    } else if (engPct >= 4.5 && views >= 10_000) {
+      outlier = { label: "Outlier", note: "Engagement well above average" };
+    } else if (vph >= 5_000) {
+      outlier = { label: "Trending", note: "View velocity is in the top band" };
+    } else if (vph >= 1_000 && hours <= 168) {
+      outlier = { label: "Trending", note: "Strong velocity in the first week" };
+    }
+
     // Tag section content.
     let tagsHTML;
     if (tagLoading) {
@@ -610,6 +624,13 @@
     if (ageStr && ageStr !== "—") subParts.push(ageStr);
     const heroSub = subParts.join(" · ");
 
+    const outlierHTML = outlier ? `
+      <div class="ytg-outlier" title="${escapeHtml(outlier.note)}">
+        <span class="ytg-outlier-dot"></span>
+        <span>${escapeHtml(outlier.label)}</span>
+      </div>
+    ` : ``;
+
     body.innerHTML = `
       <div class="ytg-hero">
         <div class="ytg-score-ring" data-tier="${tier}" style="--score: ${score}">
@@ -619,7 +640,10 @@
           </div>
         </div>
         <div class="ytg-hero-meta">
-          <div class="ytg-hero-title">${escapeHtml(heroTitle)}</div>
+          <div class="ytg-hero-titlerow">
+            <div class="ytg-hero-title">${escapeHtml(heroTitle)}</div>
+            ${outlierHTML}
+          </div>
           ${heroDetail ? `<div class="ytg-hero-detail">${escapeHtml(heroDetail)}</div>` : ``}
           ${heroSub ? `<div class="ytg-hero-sub">${heroSub}</div>` : ``}
         </div>

@@ -803,48 +803,76 @@
   }
 }
 
-/* Per-result tier pill */
+/* Per-result Opportunity Score badge — beats VidIQ's flat color tiers by
+   showing the actual 0-100 score next to a one-word verdict. */
 .ytg-result-pill {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  font-family: "Inter", "Roboto", sans-serif;
+  gap: 6px;
+  font-family: "Inter", "Inter var", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.02em;
-  padding: 2px 8px;
+  letter-spacing: 0.01em;
+  padding: 3px 9px 3px 6px;
   border-radius: 999px;
   margin-left: 8px;
   vertical-align: middle;
   white-space: nowrap;
   border: 1px solid transparent;
   cursor: help;
+  line-height: 1;
 }
 
-.ytg-result-pill[data-tier="hot"] {
-  color: #e5302a;
-  background: rgba(229, 48, 42, 0.10);
-  border-color: rgba(229, 48, 42, 0.20);
+.ytg-result-pill[data-tier="good"] {
+  color: #0c7a44;
+  background: #e7f7ec;
+  border-color: rgba(21, 163, 106, 0.25);
 }
-.ytg-result-pill[data-tier="warm"] {
-  color: #b8740f;
-  background: rgba(214, 146, 31, 0.12);
-  border-color: rgba(214, 146, 31, 0.25);
+.ytg-result-pill[data-tier="medium"] {
+  color: #a85a04;
+  background: #fdf3da;
+  border-color: rgba(229, 148, 42, 0.30);
 }
-.ytg-result-pill[data-tier="soft"] {
-  color: #1a9e5e;
-  background: rgba(26, 158, 94, 0.10);
-  border-color: rgba(26, 158, 94, 0.22);
+.ytg-result-pill[data-tier="bad"] {
+  color: #b81c17;
+  background: #fde7e6;
+  border-color: rgba(229, 48, 42, 0.28);
 }
 
-html[dark] .ytg-result-pill[data-tier="warm"] { color: #f0b660; }
+html[dark] .ytg-result-pill[data-tier="good"]   { color: #4fd99a; background: rgba(21, 163, 106, 0.14); border-color: rgba(79, 217, 154, 0.30); }
+html[dark] .ytg-result-pill[data-tier="medium"] { color: #f0b660; background: rgba(229, 148, 42, 0.14); border-color: rgba(240, 182, 96, 0.30); }
+html[dark] .ytg-result-pill[data-tier="bad"]    { color: #ff7470; background: rgba(229, 48, 42, 0.14); border-color: rgba(255, 116, 112, 0.32); }
 
-.ytg-result-pill .ytg-rp-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
+.ytg-result-pill .ytg-rp-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 999px;
   background: currentColor;
-  display: inline-block;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+
+html[dark] .ytg-result-pill .ytg-rp-num { color: #0a0a0a; }
+
+.ytg-result-pill .ytg-rp-sep {
+  width: 1px;
+  height: 10px;
+  background: currentColor;
+  opacity: 0.25;
+}
+
+.ytg-result-pill .ytg-rp-word {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
 /* ── Score factor breakdown ───────────────────────────────────────────
@@ -924,4 +952,44 @@ html[dark] .ytg-result-pill[data-tier="warm"] { color: #f0b660; }
   font-weight: 500;
   color: var(--ytg-text-soft);
   line-height: 1.5;
+}
+
+/* Outlier / Trending badge — sits inline with the hero title. Quietly
+   announces when a video is over-performing on engagement or velocity.
+   Beats VidIQ's outlier badge because it explains WHY on hover. */
+#ytg-panel-root .ytg-hero-titlerow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+#ytg-panel-root .ytg-outlier {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #0c7a44;
+  background: #e7f7ec;
+  border: 1px solid rgba(21, 163, 106, 0.30);
+  padding: 3px 8px;
+  border-radius: 999px;
+  cursor: help;
+}
+
+#ytg-panel-root[data-theme="dark"] .ytg-outlier {
+  color: #4fd99a;
+  background: rgba(21, 163, 106, 0.14);
+  border-color: rgba(79, 217, 154, 0.30);
+}
+
+#ytg-panel-root .ytg-outlier-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  box-shadow: 0 0 0 3px color-mix(in srgb, currentColor 22%, transparent);
 }
