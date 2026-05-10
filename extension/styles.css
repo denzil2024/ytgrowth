@@ -115,18 +115,19 @@
 }
 
 #ytg-panel-root .ytg-logo {
-  width: 28px;
-  height: 28px;
+  width: 30px;
+  height: 30px;
   border-radius: 8px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
   flex-shrink: 0;
+  box-shadow: 0 2px 6px rgba(229, 37, 27, 0.22);
 }
 #ytg-panel-root .ytg-logo svg {
-  width: 28px;
-  height: 28px;
+  width: 30px;
+  height: 30px;
   display: block;
 }
 
@@ -484,77 +485,193 @@
 
 #ytg-search-bar {
   --ytg-bg: #ffffff;
-  --ytg-bg-tint: #ffffff;
+  --ytg-bg-soft: #f8f8f9;
   --ytg-text: #0f0f0f;
   --ytg-text-soft: #4a4a50;
   --ytg-text-mute: #8a8a90;
-  --ytg-border: rgba(0, 0, 0, 0.08);
+  --ytg-border: rgba(0, 0, 0, 0.06);
+  --ytg-track: rgba(0, 0, 0, 0.06);
 
   --ytg-tier: #d6921f;
-  --ytg-tier-soft: rgba(214, 146, 31, 0.10);
+  --ytg-tier-glow: rgba(214, 146, 31, 0.18);
 
-  margin: 16px 0 20px;
+  margin: 16px 0 24px;
+  padding: 22px 24px 20px;
   font-family: "Inter", "Inter var", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: var(--ytg-text);
-  background: var(--ytg-bg-tint);
+  background: var(--ytg-bg);
   border: 1px solid var(--ytg-border);
-  border-radius: 16px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.04);
+  border-radius: 18px;
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.04),
+    0 8px 24px rgba(0, 0, 0, 0.05),
+    0 24px 64px rgba(0, 0, 0, 0.04);
   position: relative;
   overflow: hidden;
+
+  opacity: 0;
+  transform: translateY(6px);
+  animation: ytg-sb-in 320ms cubic-bezier(.2, .8, .2, 1) forwards;
+}
+
+@keyframes ytg-sb-in {
+  to { opacity: 1; transform: translateY(0); }
 }
 
 #ytg-search-bar[data-theme="dark"] {
-  --ytg-bg: #1a1a1a;
-  --ytg-bg-tint: #1a1a1a;
+  --ytg-bg: #181818;
+  --ytg-bg-soft: #222;
   --ytg-text: #f1f1f1;
   --ytg-text-soft: #c4c4c4;
   --ytg-text-mute: #888;
   --ytg-border: rgba(255, 255, 255, 0.08);
-  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.4);
+  --ytg-track: rgba(255, 255, 255, 0.08);
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.5),
+    0 8px 28px rgba(0, 0, 0, 0.4);
 }
 
-/* Tier-specific accents — give the bar a clear, scannable color identity */
-#ytg-search-bar[data-bucket="easy"]   { --ytg-tier: #1a9e5e; --ytg-tier-soft: rgba(26, 158, 94, 0.10);   --ytg-bg-tint: #f7fcf9; }
-#ytg-search-bar[data-bucket="medium"] { --ytg-tier: #d6921f; --ytg-tier-soft: rgba(214, 146, 31, 0.10); --ytg-bg-tint: #fffaf0; }
-#ytg-search-bar[data-bucket="hard"]   { --ytg-tier: #e5302a; --ytg-tier-soft: rgba(229, 48, 42, 0.10);   --ytg-bg-tint: #fff7f6; }
+/* Tier-specific accent colors. The bar background stays neutral white;
+   the tier color sits in the gauge ring, headline, and stat bars. */
+#ytg-search-bar[data-bucket="easy"]   { --ytg-tier: #15a36a; --ytg-tier-glow: rgba(21, 163, 106, 0.18); }
+#ytg-search-bar[data-bucket="medium"] { --ytg-tier: #e5942a; --ytg-tier-glow: rgba(229, 148, 42, 0.18); }
+#ytg-search-bar[data-bucket="hard"]   { --ytg-tier: #e5302a; --ytg-tier-glow: rgba(229, 48, 42, 0.18); }
 
-#ytg-search-bar[data-theme="dark"][data-bucket="easy"]   { --ytg-bg-tint: #16221c; }
-#ytg-search-bar[data-theme="dark"][data-bucket="medium"] { --ytg-bg-tint: #221d14; }
-#ytg-search-bar[data-theme="dark"][data-bucket="hard"]   { --ytg-bg-tint: #221717; }
+/* Soft tier-colored glow blob in the top-right corner — gives the card
+   subtle visual depth and a hint of the tier color without flooding
+   the background. */
+#ytg-search-bar .ytg-sb-glow {
+  position: absolute;
+  top: -80px;
+  right: -80px;
+  width: 240px;
+  height: 240px;
+  border-radius: 50%;
+  background: radial-gradient(circle at center, var(--ytg-tier-glow) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
 
-/* Bold tier-colored vertical stripe down the left edge — the bar's main
-   visual signal that something important sits here. */
+/* Thin tier-colored bar across the very top of the card. */
 #ytg-search-bar .ytg-sb-stripe {
   position: absolute;
-  left: 0; top: 0; bottom: 0;
-  width: 5px;
-  background: var(--ytg-tier);
+  left: 0; top: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--ytg-tier) 0%, color-mix(in srgb, var(--ytg-tier) 60%, transparent) 100%);
 }
 
-#ytg-search-bar .ytg-sb-card {
+/* Top row: brand lockup left, bucket label right */
+#ytg-search-bar .ytg-sb-head {
+  position: relative;
+  z-index: 1;
   display: flex;
   align-items: center;
-  gap: 18px;
-  padding: 18px 22px 18px 27px; /* extra left padding for the stripe */
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 18px;
 }
 
-/* Big square score badge — the visual anchor on the left. */
-#ytg-search-bar .ytg-sb-score-badge {
-  width: 76px;
-  height: 76px;
-  border-radius: 14px;
-  background: var(--ytg-tier);
-  color: #ffffff;
+#ytg-search-bar .ytg-sb-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+#ytg-search-bar .ytg-sb-brand svg {
+  width: 26px;
+  height: 26px;
+  display: block;
+  border-radius: 7px;
+  box-shadow: 0 2px 6px rgba(229, 37, 27, 0.25);
+}
+
+#ytg-search-bar .ytg-sb-brand-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+}
+
+#ytg-search-bar .ytg-sb-brand-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ytg-text);
+  letter-spacing: -0.01em;
+}
+
+#ytg-search-bar .ytg-sb-brand-tag {
+  margin-top: 2px;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--ytg-text-mute);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+#ytg-search-bar .ytg-sb-bucket {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--ytg-tier) 10%, transparent);
+  color: var(--ytg-tier);
+  border: 1px solid color-mix(in srgb, var(--ytg-tier) 25%, transparent);
+}
+
+#ytg-search-bar .ytg-sb-bucket::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: currentColor;
+  box-shadow: 0 0 0 3px color-mix(in srgb, currentColor 22%, transparent);
+}
+
+/* Body: score gauge on the left, keyword + insight on the right */
+#ytg-search-bar .ytg-sb-body {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--ytg-border);
+  margin-bottom: 18px;
+}
+
+/* Score gauge — conic-gradient ring, tier color, big number in the
+   center. Replaces the flat colored badge. */
+#ytg-search-bar .ytg-sb-score-ring {
+  --size: 96px;
+  --thickness: 9px;
+  --pct: calc(var(--score, 0) * 1%);
+  width: var(--size);
+  height: var(--size);
+  border-radius: 50%;
+  background: conic-gradient(var(--ytg-tier) var(--pct), var(--ytg-track) 0);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  position: relative;
+  box-shadow: 0 8px 24px color-mix(in srgb, var(--ytg-tier) 14%, transparent);
+}
+
+#ytg-search-bar .ytg-sb-score-inner {
+  width: calc(var(--size) - var(--thickness) * 2);
+  height: calc(var(--size) - var(--thickness) * 2);
+  border-radius: 50%;
+  background: var(--ytg-bg);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  flex-shrink: 0;
   line-height: 1;
-  box-shadow: 0 4px 12px color-mix(in srgb, var(--ytg-tier) 25%, transparent);
 }
 
 #ytg-search-bar .ytg-sb-score-num {
@@ -562,14 +679,15 @@
   font-weight: 800;
   letter-spacing: -0.02em;
   font-variant-numeric: tabular-nums;
+  color: var(--ytg-text);
 }
 
 #ytg-search-bar .ytg-sb-score-of {
-  font-size: 11px;
-  font-weight: 700;
-  opacity: 0.85;
   margin-top: 3px;
-  letter-spacing: 0.02em;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--ytg-text-mute);
+  letter-spacing: 0.06em;
 }
 
 #ytg-search-bar .ytg-sb-content {
@@ -577,82 +695,112 @@
   min-width: 0;
 }
 
-#ytg-search-bar .ytg-sb-label-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  margin-bottom: 4px;
-}
-
-#ytg-search-bar .ytg-sb-label {
-  font-size: 16px;
-  font-weight: 800;
-  letter-spacing: -0.01em;
-  color: var(--ytg-tier);
-}
-
-#ytg-search-bar .ytg-sb-brand {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 13px;
+#ytg-search-bar .ytg-sb-headline {
+  font-size: 17px;
   font-weight: 700;
-  letter-spacing: -0.005em;
+  letter-spacing: -0.015em;
   color: var(--ytg-text);
-  white-space: nowrap;
-}
-
-#ytg-search-bar .ytg-sb-brand svg {
-  width: 22px;
-  height: 22px;
-  display: block;
-  border-radius: 6px;
+  margin-bottom: 6px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
 }
 
 #ytg-search-bar .ytg-sb-insight {
   font-size: 13.5px;
-  color: var(--ytg-text);
-  line-height: 1.5;
   font-weight: 500;
-  margin-bottom: 10px;
-}
-
-#ytg-search-bar .ytg-sb-stats {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
-  font-size: 12.5px;
   color: var(--ytg-text-soft);
-  font-weight: 500;
+  line-height: 1.55;
 }
 
-#ytg-search-bar .ytg-sb-stats strong {
-  color: var(--ytg-text);
+/* Stat cards — three columns of label + value + mini-bar. */
+#ytg-search-bar .ytg-sb-stats {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+#ytg-search-bar .ytg-sb-stat {
+  padding: 12px 14px;
+  background: var(--ytg-bg-soft);
+  border: 1px solid var(--ytg-border);
+  border-radius: 12px;
+  transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+}
+
+#ytg-search-bar .ytg-sb-stat:hover {
+  transform: translateY(-1px);
+  border-color: color-mix(in srgb, var(--ytg-tier) 25%, var(--ytg-border));
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+}
+
+#ytg-search-bar .ytg-sb-stat-label {
+  font-size: 10.5px;
   font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ytg-text-mute);
+  margin-bottom: 6px;
+}
+
+#ytg-search-bar .ytg-sb-stat-value {
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: -0.015em;
+  color: var(--ytg-text);
   font-variant-numeric: tabular-nums;
 }
 
-#ytg-search-bar .ytg-sb-sep {
+#ytg-search-bar .ytg-sb-stat-of {
+  font-size: 12px;
+  font-weight: 600;
   color: var(--ytg-text-mute);
-  opacity: 0.6;
+  margin-left: 2px;
 }
 
-/* Narrow viewports — let the badge sit above the content rather than
-   forcing the whole row to squeeze. YouTube's results column gets quite
-   tight on smaller windows. */
-@media (max-width: 720px) {
-  #ytg-search-bar .ytg-sb-card {
+#ytg-search-bar .ytg-sb-stat-bar {
+  margin-top: 8px;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--ytg-track);
+  overflow: hidden;
+}
+
+#ytg-search-bar .ytg-sb-stat-bar span {
+  display: block;
+  height: 100%;
+  background: var(--ytg-tier);
+  border-radius: 2px;
+  transition: width 600ms cubic-bezier(.2, .8, .2, 1);
+}
+
+/* Narrow viewports — stack stat cards vertically when the column is
+   too tight (YouTube can compress search results significantly). */
+@media (max-width: 760px) {
+  #ytg-search-bar { padding: 18px 18px 16px; }
+  #ytg-search-bar .ytg-sb-body {
     flex-direction: column;
     align-items: flex-start;
-    gap: 14px;
+    gap: 16px;
   }
-  #ytg-search-bar .ytg-sb-score-badge {
-    width: 64px;
-    height: 64px;
+  #ytg-search-bar .ytg-sb-score-ring {
+    --size: 84px;
+    --thickness: 8px;
   }
   #ytg-search-bar .ytg-sb-score-num { font-size: 26px; }
+  #ytg-search-bar .ytg-sb-stats {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 520px) {
+  #ytg-search-bar .ytg-sb-stats {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* Per-result tier pill */

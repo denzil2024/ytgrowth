@@ -208,7 +208,7 @@
   // ── Render ──────────────────────────────────────────────────────────
   // Inline SVG for the YTGrowth brand mark — matches the favicon and the
   // watch-panel logo so the search overlay clearly reads as our tool.
-  const BRAND_SVG = `<svg viewBox="0 0 26 26" width="22" height="22" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect width="26" height="26" rx="7" fill="#e5251b"/><path d="M18.5 10.2a1.6 1.6 0 0 0-1.12-1.12C16.4 8.8 13 8.8 13 8.8s-3.4 0-4.38.3A1.6 1.6 0 0 0 7.5 10.2 17 17 0 0 0 7.2 13a17 17 0 0 0 .3 2.8 1.6 1.6 0 0 0 1.12 1.12C9.6 17.2 13 17.2 13 17.2s3.4 0 4.38-.3a1.6 1.6 0 0 0 1.12-1.12A17 17 0 0 0 18.8 13a17 17 0 0 0-.3-2.8z" fill="white"/><polygon points="11.2,16 16,13 11.2,10" fill="#e5251b"/></svg>`;
+  const BRAND_SVG = `<svg viewBox="0 0 26 26" width="26" height="26" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect width="26" height="26" rx="7" fill="#e5251b"/><path d="M18.5 10.2a1.6 1.6 0 0 0-1.12-1.12C16.4 8.8 13 8.8 13 8.8s-3.4 0-4.38.3A1.6 1.6 0 0 0 7.5 10.2 17 17 0 0 0 7.2 13a17 17 0 0 0 .3 2.8 1.6 1.6 0 0 0 1.12 1.12C9.6 17.2 13 17.2 13 17.2s3.4 0 4.38-.3a1.6 1.6 0 0 0 1.12-1.12A17 17 0 0 0 18.8 13a17 17 0 0 0-.3-2.8z" fill="white"/><polygon points="11.2,16 16,13 11.2,10" fill="#e5251b"/></svg>`;
 
   function buildHeaderBar(query, comp) {
     const bar = document.createElement("div");
@@ -219,24 +219,47 @@
 
     const hasInsight = !!comp.insight;
     bar.innerHTML = `
+      <div class="ytg-sb-glow"></div>
       <div class="ytg-sb-stripe"></div>
-      <div class="ytg-sb-card">
-        <div class="ytg-sb-score-badge">
-          <span class="ytg-sb-score-num">${comp.score}</span>
-          <span class="ytg-sb-score-of">/100</span>
+
+      <div class="ytg-sb-head">
+        <div class="ytg-sb-brand">
+          ${BRAND_SVG}
+          <div class="ytg-sb-brand-text">
+            <span class="ytg-sb-brand-name">YTGrowth</span>
+            <span class="ytg-sb-brand-tag">Search Insights</span>
+          </div>
+        </div>
+        <div class="ytg-sb-bucket" data-bucket="${comp.bucket}">${comp.label}</div>
+      </div>
+
+      <div class="ytg-sb-body">
+        <div class="ytg-sb-score-ring" style="--score: ${comp.score}">
+          <div class="ytg-sb-score-inner">
+            <span class="ytg-sb-score-num">${comp.score}</span>
+            <span class="ytg-sb-score-of">/100</span>
+          </div>
         </div>
         <div class="ytg-sb-content">
-          <div class="ytg-sb-label-row">
-            <div class="ytg-sb-label">${comp.label}</div>
-            <div class="ytg-sb-brand">${BRAND_SVG}<span>YTGrowth</span></div>
-          </div>
+          <div class="ytg-sb-headline">${escapeHtml(query ? `"${query}"` : "This keyword")}</div>
           ${hasInsight ? `<div class="ytg-sb-insight">${escapeHtml(comp.insight)}</div>` : ``}
-          <div class="ytg-sb-stats">
-            <span><strong>${fmtNum(comp.avgViews)}</strong> avg views</span>
-            <span class="ytg-sb-sep">&middot;</span>
-            <span><strong>${comp.recent}/${comp.total}</strong> in last 30 days</span>
-            ${comp.exactMatches > 0 ? `<span class="ytg-sb-sep">&middot;</span><span><strong>${comp.exactMatches}/${comp.total}</strong> exact match</span>` : ``}
-          </div>
+        </div>
+      </div>
+
+      <div class="ytg-sb-stats">
+        <div class="ytg-sb-stat">
+          <div class="ytg-sb-stat-label">Avg views</div>
+          <div class="ytg-sb-stat-value">${fmtNum(comp.avgViews)}</div>
+        </div>
+        <div class="ytg-sb-stat">
+          <div class="ytg-sb-stat-label">Recent uploads</div>
+          <div class="ytg-sb-stat-value">${comp.recent}<span class="ytg-sb-stat-of">/${comp.total}</span></div>
+          <div class="ytg-sb-stat-bar"><span style="width: ${Math.min(100, Math.round((comp.recent / comp.total) * 100))}%"></span></div>
+        </div>
+        <div class="ytg-sb-stat">
+          <div class="ytg-sb-stat-label">Exact match</div>
+          <div class="ytg-sb-stat-value">${comp.exactMatches}<span class="ytg-sb-stat-of">/${comp.total}</span></div>
+          <div class="ytg-sb-stat-bar"><span style="width: ${Math.min(100, Math.round((comp.exactMatches / comp.total) * 100))}%"></span></div>
         </div>
       </div>
     `;
