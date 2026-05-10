@@ -105,13 +105,21 @@
   }
 
   function gatherResults() {
-    const nodes = document.querySelectorAll("ytd-video-renderer");
+    // ytd-video-renderer is the standard, but YouTube also uses
+    // ytd-rich-item-renderer (some shelves) and ytd-compact-video-renderer
+    // (related). Cast a wide net so we don't silently produce zero results
+    // when the layout changes.
+    const nodes = document.querySelectorAll(
+      "ytd-video-renderer, ytd-rich-item-renderer, ytd-compact-video-renderer"
+    );
     const out = [];
+    const seen = new Set();
     nodes.forEach((el) => {
       const r = parseResultElement(el);
-      // Filter out junk rows (shorts shelves, ads, livestream cards
-      // without view counts) — we want substantive video results.
-      if (r.title && r.viewCount >= 0) out.push(r);
+      if (!r.title) return;
+      if (r.link && seen.has(r.link)) return;
+      if (r.link) seen.add(r.link);
+      out.push(r);
     });
     return out;
   }
@@ -119,7 +127,9 @@
   // ── Heuristic ───────────────────────────────────────────────────────
   function computeCompetition(query, all) {
     const top = all.slice(0, 10);
-    if (top.length < 3) return null;
+    // Only need 1 result to show a useful header. Was 3, which silently
+    // hid the overlay any time a search returned a small result set.
+    if (top.length < 1) return null;
 
     const viewCounts = top.map(r => r.viewCount);
     const sumViews   = viewCounts.reduce((a, b) => a + b, 0);
@@ -234,18 +244,24 @@
       removeHeaderBar();
       return;
     }
-    const target =
-      document.querySelector("ytd-section-list-renderer #contents") ||
+
+    // Inject as the FIRST child of the search-results primary column so
+    // the bar sits clearly above the result list, not buried inside a
+    // section that might be hidden or reordered by YouTube.
+    const primary =
+      document.querySelector("ytd-search ytd-two-column-search-results-renderer #primary") ||
       document.querySelector("ytd-two-column-search-results-renderer #primary") ||
-      document.querySelector("ytd-search #primary");
-    if (!target) return;
+      document.querySelector("ytd-search #primary") ||
+      document.querySelector("ytd-search #container") ||
+      document.querySelector("#primary.ytd-search");
+    if (!primary) return;
 
     const existing = document.getElementById(HEADER_ID);
     const bar = buildHeaderBar(query, comp);
     if (existing) {
       existing.replaceWith(bar);
     } else {
-      target.parentElement?.insertBefore(bar, target);
+      primary.insertBefore(bar, primary.firstChild);
     }
   }
 
@@ -294,6 +310,7 @@
   // ── Run ────────────────────────────────────────────────────────────
   let lastQuery = "";
   let runScheduled = false;
+  let lastEmptyLog = null;
 
   function run() {
     runScheduled = false;
@@ -304,7 +321,15 @@
     }
     const q = getQuery();
     const results = gatherResults();
-    if (results.length === 0) return;
+    if (results.length === 0) {
+      // Logged once per query so user can see the script ran but no
+      // results were findable — points the finger at YouTube DOM changes.
+      if (q !== lastEmptyLog) {
+        console.info("[YTGrowth Search] running, no results detected yet", { query: q });
+        lastEmptyLog = q;
+      }
+      return;
+    }
 
     // Only recompute the header bar when the keyword changes or we
     // didn't have one yet. Otherwise just process newly-streamed results.

@@ -194,6 +194,74 @@
     ];
   }
 
+  // Distill the factor list into ONE actionable next step. Creators
+  // don't want to read four rows and triangulate the biggest miss; they
+  // want a single sentence telling them what to fix right now. Picks the
+  // highest-impact gap (tags are worth +35, description +25, title +20,
+  // engagement +20) and phrases it as a concrete action with the SEO
+  // points they'd recover.
+  function topOpportunity(pageData, factors, score) {
+    const tagF   = factors.find(f => f.label === "Tags");
+    const descF  = factors.find(f => f.label === "Description");
+    const titleF = factors.find(f => f.label === "Title");
+
+    if (tagF && (tagF.status === "bad")) {
+      return {
+        label: "Add 8 to 15 tags",
+        detail: "No tags set. Adding them is the single biggest win available here (~35 SEO points).",
+      };
+    }
+    if (descF && descF.status === "bad") {
+      return {
+        label: "Expand the description",
+        detail: "Description is too thin. Aim for 250+ words with keywords and context (~25 points).",
+      };
+    }
+    if (titleF && titleF.status === "bad") {
+      const tlen = (pageData.title || "").length;
+      const target = tlen < 30 ? "50-70" : "60-70";
+      return {
+        label: `Adjust title to ${target} chars`,
+        detail: `Currently ${tlen} chars. The sweet spot for search snippets is 50-70.`,
+      };
+    }
+    if (tagF && tagF.status === "warn" && typeof tagF.value === "string" && /^\d+$/.test(tagF.value)) {
+      const n = parseInt(tagF.value, 10);
+      if (n < 8) {
+        return {
+          label: `Add ${8 - n} to ${15 - n} more tags`,
+          detail: `${n} tags is light. 8-15 well-chosen tags is the sweet spot.`,
+        };
+      }
+      if (n > 20) {
+        return {
+          label: "Trim tags down to 15-20",
+          detail: `${n} tags dilutes the signal. Keep your strongest 15-20.`,
+        };
+      }
+    }
+    if (descF && descF.status === "warn") {
+      return {
+        label: "Make the description fuller",
+        detail: "Adding keywords, timestamps, and links can lift watch time and ranking.",
+      };
+    }
+    if (titleF && titleF.status === "warn") {
+      const tlen = (pageData.title || "").length;
+      return {
+        label: tlen < 50 ? "Stretch the title slightly" : "Tighten the title",
+        detail: `${tlen} chars now. 50-70 is the snippet-safe range.`,
+      };
+    }
+    if (score >= 85) {
+      return {
+        label: "Solid foundation. Focus elsewhere.",
+        detail: "Title, description, and tags are all in good shape. Thumbnail and hook are the bigger levers from here.",
+      };
+    }
+    return null;
+  }
+
   // YouTube category id -> [low RPM, high RPM] (creator's share, post-cut).
   const RPM_BY_CAT = {
     "27": [3.0, 12.0],
@@ -489,6 +557,7 @@
 
     const [revLow, revHigh] = estRevenue(views, pageData.category);
     const factors = buildFactors(pageData, tagState);
+    const opp     = topOpportunity(pageData, factors, score);
 
     // Tag section content.
     let tagsHTML;
@@ -530,6 +599,18 @@
       </div>
     `).join("");
 
+    const oppHTML = opp ? `
+      <div class="ytg-opp">
+        <div class="ytg-opp-row">
+          <span class="ytg-opp-icon" aria-hidden="true">↑</span>
+          <div class="ytg-opp-body">
+            <div class="ytg-opp-label">${escapeHtml(opp.label)}</div>
+            <div class="ytg-opp-detail">${escapeHtml(opp.detail)}</div>
+          </div>
+        </div>
+      </div>
+    ` : ``;
+
     body.innerHTML = `
       <div class="ytg-hero">
         <div class="ytg-score-ring" data-tier="${tier}" style="--score: ${score}">
@@ -543,6 +624,8 @@
           <div class="ytg-hero-sub">${tagsLabel} &middot; ${escapeHtml(fmtAge(pageData.publishDate))}</div>
         </div>
       </div>
+
+      ${oppHTML}
 
       <div class="ytg-rows">
         <div class="ytg-row">

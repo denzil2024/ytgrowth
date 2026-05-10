@@ -727,3 +727,62 @@ html[dark] .ytg-result-pill[data-tier="warm"] { color: #f0b660; }
   font-weight: 500;
   font-style: italic;
 }
+
+/* ── Top opportunity callout ──────────────────────────────────────────
+   The single most impactful next action distilled from the factors. Sits
+   between the score hero and the metric rows so it's the first thing
+   creators see after the score itself. */
+
+#ytg-panel-root .ytg-opp {
+  margin: 0 14px 4px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: var(--ytg-accent-soft);
+  border: 1px solid rgba(229, 48, 42, 0.18);
+}
+
+#ytg-panel-root[data-theme="dark"] .ytg-opp {
+  background: rgba(229, 48, 42, 0.10);
+  border-color: rgba(229, 48, 42, 0.25);
+}
+
+#ytg-panel-root .ytg-opp-row {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+#ytg-panel-root .ytg-opp-icon {
+  width: 20px;
+  height: 20px;
+  border-radius: 6px;
+  background: var(--ytg-accent);
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 13px;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+#ytg-panel-root .ytg-opp-body {
+  flex: 1;
+  min-width: 0;
+}
+
+#ytg-panel-root .ytg-opp-label {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--ytg-text);
+  letter-spacing: -0.005em;
+}
+
+#ytg-panel-root .ytg-opp-detail {
+  margin-top: 3px;
+  font-size: 11.5px;
+  font-weight: 500;
+  color: var(--ytg-text-soft);
+  line-height: 1.5;
+}
