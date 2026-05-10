@@ -409,11 +409,11 @@ export default function YoutubeThumbnailResizer() {
   const preset = useMemo(() => PRESETS.find(p => p.id === presetId) || PRESETS[0], [presetId])
 
   useEffect(() => {
-    document.title = 'Free YouTube Thumbnail Resizer — HD, Full HD, 4K (under 2MB) — YTGrowth'
+    document.title = 'YouTube Thumbnail Resizer 2026: Free Image & Size Converter | YTGrowth'
     const meta = document.querySelector('meta[name="description"]') || (() => {
       const m = document.createElement('meta'); m.name = 'description'; document.head.appendChild(m); return m
     })()
-    meta.content = 'Free YouTube thumbnail resizer with HD (1280x720), Full HD (1920x1080), and 4K (3840x2160) presets. Auto-fits under YouTube\'s 2MB cap. Runs entirely in your browser — image never leaves your device.'
+    meta.content = 'Free YouTube thumbnail resizer and size converter. Resize any image or photo to HD (1280x720), Full HD, or 4K. Auto-fits under YouTube\'s 2MB cap, runs in your browser.'
   }, [])
 
   const renderResult = useCallback(async (img, file, p, fmt, q, auto) => {

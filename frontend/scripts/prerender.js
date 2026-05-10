@@ -96,6 +96,10 @@ const META_BY_ROUTE = {
     title:       'Free YouTube Thumbnail Downloader: HD, Max Res, JPG/PNG',
     description: 'Download any YouTube video thumbnail in seconds. Max-res, HQ, MQ, SD sizes in JPG and PNG. No watermark, no login, instant.',
   },
+  '/tools/youtube-thumbnail-resizer': {
+    title:       'YouTube Thumbnail Resizer 2026: Free Image & Size Converter',
+    description: 'Free YouTube thumbnail resizer and size converter. Resize any image or photo to HD (1280x720), Full HD, or 4K. Auto-fits under YouTube\'s 2MB cap, runs in your browser.',
+  },
   '/youtube-stats': {
     title:       'Top YouTube Subscribers & Creators 2026: Live Channel Statistics',
     description: 'Top YouTube channels and creators ranked by live subscriber count. 14 niches: gaming, tech, beauty, finance, fitness, music. Free statistics, updated daily, no signup.',
