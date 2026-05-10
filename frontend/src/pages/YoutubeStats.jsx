@@ -233,7 +233,15 @@ export default function YoutubeStats() {
   useGlobalStyles()
   const { isMobile } = useBreakpoint()
 
-  const [data, setData]       = useState(null)
+  // Initial state reads from window.__INITIAL_STATS__ if scripts/prerender.js
+  // baked it in for this route. Lets the channel rows render into the static
+  // HTML for SEO and LLM crawlers. Falls back to null for normal client
+  // navigation, where the useEffect below fetches live data as before.
+  const [data, setData]       = useState(() => {
+    if (typeof window === 'undefined') return null
+    const i = window.__INITIAL_STATS__
+    return (i && i.region === 'global') ? i.data : null
+  })
   const [openFaq, setOpenFaq] = useState(0)
 
   useEffect(() => {

@@ -29,6 +29,16 @@ const POSTS_SRC  = resolve(__dirname, '..', 'src', 'blog', 'posts.jsx')
 const PORT       = 4173
 const SITE_ORIGIN = 'https://ytgrowth.io'
 
+/* Where to fetch the live channel cache from at build time so we can bake
+ * the leaderboard rows into the prerendered HTML for /youtube-stats/*.
+ * Defaults to a locally running FastAPI dev server. Override with
+ * BUILD_API_URL=https://ytgrowth.io if you want to fetch from production
+ * instead. If neither is reachable, the build still succeeds — the stats
+ * pages just prerender without channel rows (same as before this feature).
+ */
+const BUILD_API_URL = process.env.BUILD_API_URL || 'http://localhost:8000'
+const STATS_REGIONS = ['global', 'US', 'GB', 'CA', 'AU', 'IN']
+
 /* Per-route SEO meta, used when the React page does NOT set its own
  * document.title and meta description in a useEffect. Feature pages and
  * tool pages currently rely on the FastAPI catch-all to inject these via
@@ -363,9 +373,89 @@ function outputPathForRoute(route) {
   return join(DIST, trimmed, 'index.html')
 }
 
+/* Prefetch the channel cache once per region from the live API. We bake
+ * the result into the prerendered HTML for every /youtube-stats/* route so
+ * the channel leaderboard renders into static HTML for SEO and LLM
+ * crawlers, which currently see an empty list (the React component fetches
+ * /api/top-channels in a useEffect that the static-server prerender can't
+ * satisfy).
+ *
+ * Failure-tolerant: any region that fails returns null and we skip
+ * injection for routes that depend on it. The build still succeeds.
+ */
+async function prefetchStats() {
+  console.log(`[prerender] prefetching channel stats from ${BUILD_API_URL}`)
+  const out = {}
+  await Promise.all(STATS_REGIONS.map(async (code) => {
+    const url = code === 'global'
+      ? `${BUILD_API_URL}/api/top-channels`
+      : `${BUILD_API_URL}/api/top-channels?region=${code}`
+    try {
+      const ctrl = new AbortController()
+      const timer = setTimeout(() => ctrl.abort(), 8000)
+      const r = await fetch(url, { signal: ctrl.signal })
+      clearTimeout(timer)
+      if (!r.ok) {
+        console.warn(`[prerender] stats ${code}: HTTP ${r.status}, skipping injection`)
+        out[code] = null
+        return
+      }
+      const data = await r.json()
+      const groupCount = Object.keys(data?.groups || {}).length
+      out[code] = data
+      console.log(`[prerender] stats ${code}: ok (${groupCount} categories)`)
+    } catch (e) {
+      console.warn(`[prerender] stats ${code}: ${e.message}, skipping injection`)
+      out[code] = null
+    }
+  }))
+  const okCount = Object.values(out).filter(v => v != null).length
+  if (okCount === 0) {
+    console.warn(
+      `[prerender] no stats datasets fetched. /youtube-stats/* will prerender ` +
+      `without channel rows (the previous behaviour). Start FastAPI on :8000 ` +
+      `or set BUILD_API_URL to enable the channel-row injection.`,
+    )
+  } else {
+    console.log(`[prerender] fetched ${okCount}/${STATS_REGIONS.length} stats datasets`)
+  }
+  return out
+}
+
+/* Map a route to the region code whose dataset should be injected as
+ * window.__INITIAL_STATS__ for that route's prerender. Returns null for
+ * any non-stats route or any stats route we don't recognize.
+ */
+function regionForRoute(route) {
+  const m = route.match(/^\/youtube-stats\/country\/([^/]+)/)
+  if (m) {
+    const country = COUNTRY_META.find(c => c.id === m[1])
+    return country?.code || null
+  }
+  if (route === '/youtube-stats' || route.startsWith('/youtube-stats/')) {
+    return 'global'
+  }
+  return null
+}
+
+/* Build the <script> tag that re-installs window.__INITIAL_STATS__ on the
+ * client so React's hydrate sees the same initial state Puppeteer used.
+ * We embed the data via JSON.parse(stringLiteral) rather than as a JS
+ * literal so any "</script" or non-ASCII payload bytes can't break HTML
+ * parsing. The .replace defends against the (extremely unlikely) case of
+ * "</script" appearing literally inside a channel title.
+ */
+function statsInjectionScript(payload) {
+  const json = JSON.stringify(payload)
+  const literal = JSON.stringify(json).replace(/<\/script/gi, '<\\/script')
+  return `<script>window.__INITIAL_STATS__ = JSON.parse(${literal})</script>`
+}
+
 async function main() {
   const routes = await buildRoutes()
   console.log(`[prerender] ${routes.length} routes`)
+
+  const statsByRegion = await prefetchStats()
 
   console.log('[prerender] starting static server on :' + PORT)
   const server = await startServer()
@@ -383,6 +473,19 @@ async function main() {
       // Desktop viewport. Matches the SSR-safe default in useBreakpoint so
       // hydration on the client does not see a width mismatch on first paint.
       await page.setViewport({ width: 1280, height: 800 })
+
+      // For /youtube-stats/* routes, prime window.__INITIAL_STATS__ before
+      // any page script runs so the React component's lazy useState
+      // initializer reads it on first render and bakes the channel rows
+      // into the snapshot HTML.
+      const region = regionForRoute(route)
+      const initialStats = region ? statsByRegion[region] : null
+      if (initialStats) {
+        await page.evaluateOnNewDocument(
+          (data, regionCode) => { window.__INITIAL_STATS__ = { region: regionCode, data } },
+          initialStats, region,
+        )
+      }
 
       await page.goto(`http://localhost:${PORT}${route}`, {
         waitUntil: 'networkidle0',
@@ -407,7 +510,18 @@ async function main() {
         '<html lang="en">',
         '<html lang="en" data-prerendered="true">',
       )
-      const baked = bakeRouteMeta(stamped, route)
+      let baked = bakeRouteMeta(stamped, route)
+
+      // For stats routes that received an initialStats payload, inject the
+      // same payload as a script tag so client hydration reads matching
+      // initial state and produces identical markup. Without this, the
+      // useState initializer would return null on the client (no
+      // window.__INITIAL_STATS__) and React would throw a hydration
+      // mismatch and discard the server-rendered channel rows.
+      if (initialStats) {
+        const tag = statsInjectionScript({ region, data: initialStats })
+        baked = baked.replace('</head>', `${tag}\n  </head>`)
+      }
 
       const outPath = outputPathForRoute(route)
       await mkdir(dirname(outPath), { recursive: true })
