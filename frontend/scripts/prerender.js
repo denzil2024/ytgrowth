@@ -89,8 +89,8 @@ const META_BY_ROUTE = {
     description: 'See how much your subscriber count is worth in ad revenue. View-per-subscriber ratios, niche CPM, monthly and yearly earnings. Free, no login.',
   },
   '/tools/youtube-channel-stats-checker': {
-    title:       'Free YouTube Channel Stats Checker: Subs, Views, CTR',
-    description: 'Look up subscriber count, total views, monthly uploads, and engagement for any public YouTube channel. Instant lookup, no login required.',
+    title:       'YouTube Channel Stats Checker 2026: Free Live Statistics & Analytics',
+    description: 'Free YouTube channel stats and statistics checker. Live subscriber count, total views, monthly uploads, and engagement for any public YouTube channel. No login.',
   },
   '/tools/youtube-thumbnail-downloader': {
     title:       'YouTube Thumbnail Downloader 2026: Free HD Image Grabber & Saver',
