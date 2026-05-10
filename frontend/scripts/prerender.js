@@ -100,6 +100,10 @@ const META_BY_ROUTE = {
     title:       'YouTube Thumbnail Resizer 2026: Free Image & Size Converter',
     description: 'Free YouTube thumbnail resizer and size converter. Resize any image or photo to HD (1280x720), Full HD, or 4K. Auto-fits under YouTube\'s 2MB cap, runs in your browser.',
   },
+  '/tools/youtube-channel-name-generator': {
+    title:       'YouTube Name Generator 2026: Free Channel Name Ideas for YouTubers',
+    description: 'Free YouTube channel name generator and name ideas tool. 60+ creative name suggestions for YouTubers, vloggers, and gaming channels. No signup, no AI hallucinations.',
+  },
   '/youtube-stats': {
     title:       'Top YouTube Subscribers & Creators 2026: Live Channel Statistics',
     description: 'Top YouTube channels and creators ranked by live subscriber count. 14 niches: gaming, tech, beauty, finance, fitness, music. Free statistics, updated daily, no signup.',

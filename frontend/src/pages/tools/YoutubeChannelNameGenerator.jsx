@@ -392,11 +392,11 @@ export default function YoutubeChannelNameGenerator() {
   const urlInitRef = useRef(false)
 
   useEffect(() => {
-    document.title = 'Free YouTube Channel Name Generator (60+ ideas, any niche) | YTGrowth'
+    document.title = 'YouTube Name Generator 2026: Free Channel Name Ideas for YouTubers | YTGrowth'
     const meta = document.querySelector('meta[name="description"]') || (() => {
       const m = document.createElement('meta'); m.name = 'description'; document.head.appendChild(m); return m
     })()
-    meta.content = 'Free YouTube channel name generator. 60+ name ideas across professional, punchy, personal, and creative tones. 100% browser-based, no signup, no AI hallucinations.'
+    meta.content = 'Free YouTube channel name generator and name ideas tool. 60+ creative name suggestions for YouTubers, vloggers, and gaming channels. No signup, no AI hallucinations.'
   }, [])
 
   useEffect(() => {
