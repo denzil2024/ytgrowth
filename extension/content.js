@@ -27,8 +27,8 @@
     document.getElementById(PANEL_ID)?.remove();
   }
 
-  // Inline SVGs.
-  const ICON_LOGO = `<svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true"><path d="M21.6 7.2a2.5 2.5 0 0 0-1.76-1.76C18.27 5 12 5 12 5s-6.27 0-7.84.44A2.5 2.5 0 0 0 2.4 7.2 26 26 0 0 0 2 12a26 26 0 0 0 .4 4.8 2.5 2.5 0 0 0 1.76 1.76C5.73 19 12 19 12 19s6.27 0 7.84-.44a2.5 2.5 0 0 0 1.76-1.76A26 26 0 0 0 22 12a26 26 0 0 0-.4-4.8ZM10 15.02V8.98L15.5 12 10 15.02Z"/></svg>`;
+  // Brand logo (matches /static/logo.svg used elsewhere on ytgrowth.io).
+  const ICON_LOGO = `<svg viewBox="0 0 26 26" width="28" height="28" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect width="26" height="26" rx="7" fill="#e5251b"/><path d="M18.5 10.2a1.6 1.6 0 0 0-1.12-1.12C16.4 8.8 13 8.8 13 8.8s-3.4 0-4.38.3A1.6 1.6 0 0 0 7.5 10.2 17 17 0 0 0 7.2 13a17 17 0 0 0 .3 2.8 1.6 1.6 0 0 0 1.12 1.12C9.6 17.2 13 17.2 13 17.2s3.4 0 4.38-.3a1.6 1.6 0 0 0 1.12-1.12A17 17 0 0 0 18.8 13a17 17 0 0 0-.3-2.8z" fill="white"/><polygon points="11.2,16 16,13 11.2,10" fill="#e5251b"/></svg>`;
   const ICON_CLOSE = `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>`;
   const ICON_ARROW = `<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg>`;
   const ICON_COPY  = `<svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>`;
@@ -115,7 +115,83 @@
     else if (score >= 40) summary = "Needs work";
     else                  summary = "Significant gaps";
     if (notes.length) summary += ` (${notes.slice(0, 2).join(", ")})`;
-    return { score, summary };
+
+    // Three-bucket tier drives the ring color so 58 reads as "medium"
+    // (amber) rather than "bad" (brand red), which felt punitive.
+    let tier;
+    if (score >= 70)      tier = "good";
+    else if (score >= 40) tier = "medium";
+    else                  tier = "bad";
+
+    return { score, summary, tier };
+  }
+
+  // Per-factor breakdown so creators see WHY the score landed where it
+  // did and what to actually change. Each factor returns a status of
+  // good/warn/bad/loading and a short hint shown after the value.
+  function buildFactors(pageData, tagState) {
+    const tlen   = (pageData.title || "").length;
+    const dwords = (pageData.description || "").split(/\s+/).filter(Boolean).length;
+    const views  = Number(pageData.viewCount) || 0;
+    const likes  = Number(pageData.likeCount) || 0;
+    const eng    = views > 0 ? (likes / views) * 100 : 0;
+
+    let tagCount = null;
+    if (tagState && Array.isArray(tagState.tags)) tagCount = tagState.tags.length;
+    else if (tagState && tagState.error) tagCount = -1; // unknown / quota / auth
+
+    return [
+      {
+        label: "Title",
+        value: `${tlen} chars`,
+        status: (tlen >= 50 && tlen <= 70) ? "good"
+              : (tlen >= 30 && tlen <= 80) ? "warn"
+              : "bad",
+        hint:   (tlen >= 50 && tlen <= 70) ? "sweet spot"
+              : tlen < 30 ? "too short"
+              : tlen > 80 ? "too long"
+              : "ok",
+      },
+      {
+        label: "Description",
+        value: `${dwords} words`,
+        status: dwords >= 250 ? "good"
+              : dwords >= 50  ? "warn"
+              : "bad",
+        hint:   dwords >= 250 ? "solid"
+              : dwords >= 150 ? "ok"
+              : dwords >= 50  ? "thin"
+              : "too thin",
+      },
+      {
+        label: "Tags",
+        value: tagCount === null ? "loading" : (tagCount === -1 ? "unavailable" : `${tagCount}`),
+        status: tagCount === null  ? "loading"
+              : tagCount === -1   ? "warn"
+              : tagCount === 0    ? "bad"
+              : (tagCount >= 8 && tagCount <= 20) ? "good"
+              : "warn",
+        hint:   tagCount === null ? ""
+              : tagCount === -1  ? "tap refresh"
+              : tagCount === 0   ? "none set"
+              : tagCount < 4     ? "too few"
+              : tagCount > 30    ? "too many"
+              : "good range",
+      },
+      {
+        label: "Engagement",
+        value: `${eng.toFixed(2)}%`,
+        status: eng >= 4 ? "good"
+              : eng >= 2 ? "warn"
+              : eng >= 0.5 ? "warn"
+              : "bad",
+        hint:   eng >= 4 ? "strong"
+              : eng >= 2 ? "good"
+              : eng >= 1 ? "ok"
+              : eng > 0  ? "low"
+              : "—",
+      },
+    ];
   }
 
   // YouTube category id -> [low RPM, high RPM] (creator's share, post-cut).
@@ -327,7 +403,7 @@
     // Use known tag count if we have it, else assume worst-case 0 (we
     // re-render once tags arrive, so the score will refresh).
     const tcForScore = tagCount === null ? 0 : tagCount;
-    const { score, summary } = seoScore({
+    const { score, summary, tier } = seoScore({
       title: pageData.title,
       description: pageData.description,
       tagCount: tcForScore,
@@ -335,6 +411,7 @@
     });
 
     const [revLow, revHigh] = estRevenue(views, pageData.category);
+    const factors = buildFactors(pageData, tagState);
 
     // Tag section content.
     let tagsHTML;
@@ -367,9 +444,18 @@
     const tagsLabel = tagCount === null ? "loading…" : `${tagCount} tag${tagCount === 1 ? "" : "s"}`;
 
     const body = root.querySelector(".ytg-body");
+    const factorsHTML = factors.map(f => `
+      <div class="ytg-factor" data-status="${f.status}">
+        <span class="ytg-f-icon" aria-hidden="true"></span>
+        <span class="ytg-f-label">${escapeHtml(f.label)}</span>
+        <span class="ytg-f-value">${escapeHtml(f.value)}</span>
+        <span class="ytg-f-hint">${escapeHtml(f.hint)}</span>
+      </div>
+    `).join("");
+
     body.innerHTML = `
       <div class="ytg-hero">
-        <div class="ytg-score-ring" style="--score: ${score}">
+        <div class="ytg-score-ring" data-tier="${tier}" style="--score: ${score}">
           <div class="ytg-score-inner">
             <span class="ytg-score-num">${score}</span>
             <span class="ytg-score-cap">SEO</span>
@@ -391,13 +477,14 @@
           <span class="ytg-row-v">${engPct.toFixed(2)}%</span>
         </div>
         <div class="ytg-row">
-          <span class="ytg-row-k">Total views</span>
-          <span class="ytg-row-v">${fmtNum(views)}</span>
-        </div>
-        <div class="ytg-row">
           <span class="ytg-row-k">Est. revenue</span>
           <span class="ytg-row-v">${fmtMoney(revLow)}–${fmtMoney(revHigh)}</span>
         </div>
+      </div>
+
+      <div class="ytg-factors">
+        <div class="ytg-section-title">What's driving the score</div>
+        ${factorsHTML}
       </div>
 
       <div class="ytg-tags-section">

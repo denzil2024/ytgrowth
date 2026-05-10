@@ -89,11 +89,16 @@
   width: 28px;
   height: 28px;
   border-radius: 8px;
-  background: var(--ytg-accent-soft);
-  color: var(--ytg-accent);
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+#ytg-panel-root .ytg-logo svg {
+  width: 28px;
+  height: 28px;
+  display: block;
 }
 
 #ytg-panel-root .ytg-brand-text {
@@ -153,17 +158,26 @@
   --size: 64px;
   --thickness: 6px;
   --pct: calc(var(--score, 0) * 1%);
+  --ytg-score-color: #f59e0b; /* default amber, overridden by data-tier */
   width: var(--size);
   height: var(--size);
   border-radius: 50%;
   background:
-    conic-gradient(var(--ytg-accent) var(--pct), var(--ytg-track) 0);
+    conic-gradient(var(--ytg-score-color) var(--pct), var(--ytg-track) 0);
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
   position: relative;
+  transition: background 240ms ease;
 }
+
+/* Score ring color reflects quality, not brand. Reading 58 as 'red'
+   was punishing; amber for medium and green for good give honest
+   visual feedback. */
+#ytg-panel-root .ytg-score-ring[data-tier="good"]   { --ytg-score-color: #16a34a; }
+#ytg-panel-root .ytg-score-ring[data-tier="medium"] { --ytg-score-color: #f59e0b; }
+#ytg-panel-root .ytg-score-ring[data-tier="bad"]    { --ytg-score-color: #ef4444; }
 
 #ytg-panel-root .ytg-score-inner {
   width: calc(var(--size) - var(--thickness) * 2);
@@ -644,4 +658,72 @@ html[dark] .ytg-result-pill[data-tier="warm"] { color: #f0b660; }
   border-radius: 50%;
   background: currentColor;
   display: inline-block;
+}
+
+/* ── Score factor breakdown ───────────────────────────────────────────
+   Shows WHY the score landed where it did. Each row uses a colored dot
+   indicator (green/amber/red) so the bottleneck is scannable at a glance. */
+
+#ytg-panel-root .ytg-section-title {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ytg-text-mute);
+  margin-bottom: 10px;
+}
+
+#ytg-panel-root .ytg-factors {
+  padding: 14px 16px 10px;
+  border-top: 1px solid var(--ytg-border);
+}
+
+#ytg-panel-root .ytg-factor {
+  display: grid;
+  grid-template-columns: 14px 1fr auto auto;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 0;
+  font-size: 12.5px;
+  border-bottom: 1px dashed transparent;
+}
+
+#ytg-panel-root .ytg-factor + .ytg-factor {
+  border-top: 1px solid var(--ytg-border);
+}
+
+#ytg-panel-root .ytg-f-icon {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+  background: #f59e0b;
+  flex-shrink: 0;
+}
+
+#ytg-panel-root .ytg-factor[data-status="good"]    .ytg-f-icon { background: #16a34a; }
+#ytg-panel-root .ytg-factor[data-status="warn"]    .ytg-f-icon { background: #f59e0b; }
+#ytg-panel-root .ytg-factor[data-status="bad"]     .ytg-f-icon { background: #ef4444; }
+#ytg-panel-root .ytg-factor[data-status="loading"] .ytg-f-icon {
+  background: linear-gradient(90deg, var(--ytg-track) 0%, var(--ytg-bg-soft) 50%, var(--ytg-track) 100%);
+  background-size: 200% 100%;
+  animation: ytg-shimmer 1.4s infinite;
+}
+
+#ytg-panel-root .ytg-f-label {
+  font-weight: 600;
+  color: var(--ytg-text);
+}
+
+#ytg-panel-root .ytg-f-value {
+  color: var(--ytg-text);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+#ytg-panel-root .ytg-f-hint {
+  color: var(--ytg-text-mute);
+  font-size: 11.5px;
+  font-weight: 500;
+  font-style: italic;
 }

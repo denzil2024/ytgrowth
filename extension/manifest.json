@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "YTGrowth",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Live SEO score, hidden tags, view velocity, engagement, and revenue estimate on every YouTube video.",
   "permissions": [
     "cookies"
