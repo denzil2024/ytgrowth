@@ -281,14 +281,82 @@
   }
 
   function scrapeChannel() {
-    const a = document.querySelector("ytd-channel-name a, #owner #channel-name a, #channel-name a, ytd-video-owner-renderer a");
+    const a = document.querySelector("ytd-video-owner-renderer ytd-channel-name a, ytd-channel-name#channel-name a, #owner #channel-name a, #channel-name a, ytd-channel-name a");
     const name = a?.textContent?.trim() || "";
-    let id = getMeta("channelId");
-    if (!id && a?.href) {
+    let id = "";
+    if (a?.href) {
       const m = a.href.match(/\/channel\/([^/?#]+)/);
       if (m) id = m[1];
     }
+    if (!id) id = getMeta("channelId") || "";
     return { name, id };
+  }
+
+  // Pull view count from the visible counter ("1,234 views" or "1.2M views").
+  // Visible DOM updates reliably on SPA nav; the meta interactionCount tag
+  // sometimes lags behind by seconds, which was causing stale data.
+  function scrapeViewCount() {
+    const candidates = [
+      "ytd-watch-info-text",
+      "yt-formatted-string.view-count",
+      "ytd-video-view-count-renderer .view-count",
+      "#info ytd-video-view-count-renderer",
+      "#count #view-count",
+    ];
+    for (const sel of candidates) {
+      document.querySelectorAll(sel).forEach(() => {});
+      const els = document.querySelectorAll(sel);
+      for (const el of els) {
+        const text = (el.textContent || "").trim();
+        // Try raw first ("1,234,567 views")
+        const raw = text.match(/([\d,]+)\s*views?/i);
+        if (raw) {
+          const n = parseInt(raw[1].replace(/,/g, ""), 10);
+          if (n > 0) return n;
+        }
+        // Then abbreviated ("1.2M views")
+        const abv = text.match(/([\d.]+)\s*([KMB])\s*views?/i);
+        if (abv) {
+          let n = parseFloat(abv[1]);
+          const suf = abv[2].toUpperCase();
+          if (suf === "K") n *= 1_000;
+          else if (suf === "M") n *= 1_000_000;
+          else if (suf === "B") n *= 1_000_000_000;
+          if (n > 0) return Math.round(n);
+        }
+      }
+    }
+    // Fallback to the meta tag (may be stale during SPA transitions but
+    // better than zero).
+    return parseInt(getMeta("interactionCount") || "0", 10) || 0;
+  }
+
+  // Description from the visible expander, which re-renders on nav.
+  function scrapeDescription() {
+    const candidates = [
+      "ytd-text-inline-expander#description-inline-expander",
+      "#description-inline-expander",
+      "ytd-watch-metadata #description",
+      "#description",
+    ];
+    for (const sel of candidates) {
+      const el = document.querySelector(sel);
+      const text = el?.textContent?.trim();
+      if (text && text.length > 5) return text;
+    }
+    return getMeta("description") || getMeta("og:description") || "";
+  }
+
+  // Title from the visible h1 (re-rendered on every nav). Fall back to
+  // document.title (also reliable) and only then to meta tags. Returns ""
+  // if nothing usable — caller treats that as "page mid-transition".
+  function scrapeTitle() {
+    const h1 = document.querySelector("h1.ytd-watch-metadata yt-formatted-string, h1.title yt-formatted-string, h1.ytd-video-primary-info-renderer yt-formatted-string");
+    const fromH1 = h1?.textContent?.trim() || "";
+    if (fromH1 && fromH1 !== "YouTube") return fromH1;
+    const fromDocTitle = (document.title || "").replace(/\s+- YouTube\s*$/, "").trim();
+    if (fromDocTitle && fromDocTitle !== "YouTube") return fromDocTitle;
+    return getMeta("name") || getMeta("og:title") || "";
   }
 
   function scrapeWatchPageData() {
@@ -296,18 +364,27 @@
     const videoId = getVideoId();
     if (!videoId) return null;
 
-    const title = getMeta("name")
-               || getMeta("og:title")
-               || (document.title || "").replace(/ - YouTube$/, "");
-    if (!title) return null;
+    const title = scrapeTitle();
+    // No usable title means YouTube hasn't rendered the new video yet.
+    // Returning null keeps the skeleton on screen instead of flashing
+    // stale data from the previous video.
+    if (!title || title === "YouTube") return null;
 
-    const description = getMeta("description") || getMeta("og:description") || "";
-    const ch = scrapeChannel();
-    const viewCount = parseInt(getMeta("interactionCount") || "0", 10) || 0;
-    const likeCount = scrapeLikeCount();
+    // If we already rendered something for this video and the title we
+    // just read is still the PREVIOUS video's title, treat as stale.
+    if (lastPageData
+        && lastPageData.videoId !== videoId
+        && lastPageData.title === title) {
+      return null;
+    }
+
+    const description = scrapeDescription();
+    const ch          = scrapeChannel();
+    const viewCount   = scrapeViewCount();
+    const likeCount   = scrapeLikeCount();
     const publishDate = getMeta("datePublished") || getMeta("uploadDate") || "";
-    const lengthSec = parseISODuration(getMeta("duration"));
-    const category = getMeta("genre") || "";
+    const lengthSec   = parseISODuration(getMeta("duration"));
+    const category    = getMeta("genre") || "";
 
     return {
       videoId, title, description,
@@ -604,10 +681,7 @@
 
   function scheduleScrapes() {
     tryDOMScrape();
-    setTimeout(tryDOMScrape, 250);
-    setTimeout(tryDOMScrape, 700);
-    setTimeout(tryDOMScrape, 1500);
-    setTimeout(tryDOMScrape, 3000);
+    [100, 250, 500, 900, 1500, 2500, 4000].forEach(d => setTimeout(tryDOMScrape, d));
   }
 
   // ── SPA + boot ──────────────────────────────────────────────────────
@@ -641,12 +715,22 @@
   });
   themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ["dark"] });
 
-  // <title> updates the moment YouTube swaps the video. More reliable
-  // than yt-navigate-finish, which sometimes doesn't fire.
+  // Watch the <title> element AND poll document.title every 100ms.
+  // Both signal the moment YouTube finishes swapping the video; the
+  // poll is cheap and catches cases where the MutationObserver misses.
   const titleEl = document.querySelector("title");
   if (titleEl) {
-    new MutationObserver(() => initIfWatch()).observe(titleEl, { childList: true });
+    new MutationObserver(() => {
+      if (isWatchPage()) tryDOMScrape();
+    }).observe(titleEl, { childList: true, subtree: true, characterData: true });
   }
+  let lastDocTitle = document.title;
+  setInterval(() => {
+    if (document.title !== lastDocTitle) {
+      lastDocTitle = document.title;
+      if (isWatchPage()) tryDOMScrape();
+    }
+  }, 100);
 
   // Tight URL poll as a final safety net (was 800ms, dropped to 250ms
   // so video swaps register within ~quarter second worst case).
