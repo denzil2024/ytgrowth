@@ -104,6 +104,10 @@ const META_BY_ROUTE = {
     title:       'YouTube Name Generator 2026: Free Channel Name Ideas for YouTubers',
     description: 'Free YouTube channel name generator and name ideas tool. 60+ creative name suggestions for YouTubers, vloggers, and gaming channels. No signup, no AI hallucinations.',
   },
+  '/tools/youtube-video-ideas-generator': {
+    title:       'YouTube Video Ideas Generator 2026: Free Topic & Content Idea Tool',
+    description: 'Free YouTube video ideas generator and topic generator. 90+ proven content idea formats across 9 categories. No signup, no AI hallucinations, instant results.',
+  },
   '/youtube-stats': {
     title:       'Top YouTube Subscribers & Creators 2026: Live Channel Statistics',
     description: 'Top YouTube channels and creators ranked by live subscriber count. 14 niches: gaming, tech, beauty, finance, fitness, music. Free statistics, updated daily, no signup.',

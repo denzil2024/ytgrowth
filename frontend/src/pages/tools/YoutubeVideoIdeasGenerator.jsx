@@ -483,11 +483,11 @@ export default function YoutubeVideoIdeasGenerator() {
   const urlInitRef = useRef(false)
 
   useEffect(() => {
-    document.title = 'Free YouTube Video Ideas Generator (90+ proven formats) | YTGrowth'
+    document.title = 'YouTube Video Ideas Generator 2026: Free Topic & Content Idea Tool | YTGrowth'
     const meta = document.querySelector('meta[name="description"]') || (() => {
       const m = document.createElement('meta'); m.name = 'description'; document.head.appendChild(m); return m
     })()
-    meta.content = 'Free YouTube video ideas generator. 90+ proven format templates across 9 categories. 100% browser-based, no AI hallucinations, no signup, instant results.'
+    meta.content = 'Free YouTube video ideas generator and topic generator. 90+ proven content idea formats across 9 categories. No signup, no AI hallucinations, instant results.'
   }, [])
 
   useEffect(() => {
