@@ -643,6 +643,12 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://ytgrowth.io/blog/youtube-thumbnail-size</loc>
+    <lastmod>2026-05-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://ytgrowth.io/blog/youtube-watch-hours</loc>
     <lastmod>2026-05-10</lastmod>
     <changefreq>monthly</changefreq>
