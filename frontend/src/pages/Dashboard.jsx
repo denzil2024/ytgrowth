@@ -2147,6 +2147,7 @@ export default function Dashboard() {
                   blocking the rest of the Overview. */}
               <NicheHeroCard
                 channelId={data?.channel?.channel_id}
+                onNavigate={(target) => setNav(target)}
                 onOpenSeoStudio={(title, keyword) => {
                   try {
                     if (title) {
