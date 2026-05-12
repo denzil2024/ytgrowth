@@ -71,12 +71,31 @@ function relTime(iso) {
 export default function NicheHeroCard({ onOpenSeoStudio }) {
   const [state, setState] = useState({ loading: true, data: null, error: null })
 
+  // Initial fetch + polling while the niche is being generated server-side.
+  // The endpoint returns reason: 'generating_now' on the first hit if there's
+  // no cache yet, and a background refresh has been kicked off. We poll every
+  // 5s until ok: true (typically 10-30s) or until we hit the cap.
   useEffect(() => {
     let cancelled = false
-    fetch('/dashboard/niche-outlier', { credentials: 'include' })
-      .then(r => r.ok ? r.json() : Promise.reject(r))
-      .then(d => { if (!cancelled) setState({ loading: false, data: d, error: null }) })
-      .catch(() => { if (!cancelled) setState({ loading: false, data: null, error: 'fetch_failed' }) })
+    let pollCount = 0
+    const MAX_POLLS = 18  // 18 x 5s = 90s
+
+    async function fetchOnce() {
+      try {
+        const r = await fetch('/dashboard/niche-outlier', { credentials: 'include' })
+        if (!r.ok) throw new Error('fetch_failed')
+        const d = await r.json()
+        if (cancelled) return
+        setState({ loading: false, data: d, error: null })
+        if (!d.ok && d.reason === 'generating_now' && pollCount < MAX_POLLS) {
+          pollCount += 1
+          setTimeout(fetchOnce, 5000)
+        }
+      } catch {
+        if (!cancelled) setState({ loading: false, data: null, error: 'fetch_failed' })
+      }
+    }
+    fetchOnce()
     return () => { cancelled = true }
   }, [])
 
@@ -457,51 +476,163 @@ function HeroSkeleton() {
 }
 
 
-// ─── Empty state (niche cache hasn't been populated yet) ─────────────────────
+// ─── Empty state (niche is being generated right now, or generation failed) ──
 
 function HeroEmpty({ niche, reason }) {
   const label = NICHE_LABELS[niche] || niche || 'your niche'
-  const isWarming = reason === 'no_cache_yet'
+  const isGenerating = reason === 'generating_now' || reason === 'no_cache_yet'
+
   return (
-    <div style={{
-      background: 'linear-gradient(180deg, #fff5f5 0%, #ffffff 100%)',
-      border: '1px solid rgba(229,37,27,0.18)',
-      borderRadius: 20,
-      padding: '26px 28px',
-      marginBottom: 28,
-      position: 'relative',
-      overflow: 'hidden',
-      fontFamily: "'Inter', system-ui, sans-serif",
-      display: 'flex', alignItems: 'center', gap: 18,
-    }}>
-      <div style={{
-        width: 46, height: 46, borderRadius: 14,
-        background: 'linear-gradient(180deg, #e5251b 0%, #a50f07 100%)',
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
-        boxShadow: '0 6px 18px rgba(229,37,27,0.35), inset 0 1px 0 rgba(255,255,255,0.2)',
-        flexShrink: 0,
-      }}>
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M22 12c-2.5 0-3 2-5 2s-2.5-2-5-2-2.5 2-5 2-3-2-5-2"/>
-          <path d="M22 5c-2.5 0-3 2-5 2s-2.5-2-5-2-2.5 2-5 2-3-2-5-2"/>
-          <path d="M22 19c-2.5 0-3 2-5 2s-2.5-2-5-2-2.5 2-5 2-3-2-5-2"/>
-        </svg>
+    <div className="nh-gen">
+      <style>{`
+        .nh-gen {
+          position: relative;
+          background: linear-gradient(180deg, #ffffff 0%, #fafafb 100%);
+          border: 1px solid ${C.border};
+          border-radius: 20px;
+          box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 12px 32px rgba(0,0,0,0.06);
+          padding: 26px 30px;
+          margin-bottom: 28px;
+          font-family: 'Inter', system-ui, sans-serif;
+          overflow: hidden;
+          animation: nhRise 0.4s cubic-bezier(0.2, 0.7, 0.3, 1);
+        }
+        .nh-gen::before {
+          content: '';
+          position: absolute; top: 0; left: 0; right: 0; height: 3px;
+          background: linear-gradient(90deg, ${C.red} 0%, #fca5a5 50%, ${C.red} 100%);
+          background-size: 200% 100%;
+          opacity: 0.95;
+          animation: nhSlide 2s linear infinite;
+        }
+        @keyframes nhSlide { 0% { background-position: 200% 0 } 100% { background-position: -200% 0 } }
+        @keyframes nhRise  { from { opacity: 0; transform: translateY(8px) } to { opacity: 1; transform: none } }
+        @keyframes nhRingSpin { from { transform: rotate(0deg) } to { transform: rotate(360deg) } }
+        @keyframes nhDotBounce { 0%, 80%, 100% { transform: translateY(0); opacity: 0.45 } 40% { transform: translateY(-4px); opacity: 1 } }
+        .nh-gen-eyebrow {
+          display: inline-flex; align-items: center; gap: 7px;
+          font-size: 11px; font-weight: 700; letter-spacing: 0.08em;
+          text-transform: uppercase; color: ${C.red};
+          margin-bottom: 14px;
+        }
+        .nh-gen-row { display: flex; align-items: center; gap: 22px; }
+        @media (max-width: 720px) {
+          .nh-gen-row { flex-direction: column; align-items: flex-start; gap: 18px; }
+        }
+        .nh-gen-ring {
+          position: relative;
+          width: 56px; height: 56px;
+          border-radius: 50%;
+          flex-shrink: 0;
+        }
+        .nh-gen-ring::before {
+          content: '';
+          position: absolute; inset: 0;
+          border-radius: 50%;
+          background: conic-gradient(${C.red}, #fca5a5, transparent 70%, ${C.red});
+          animation: nhRingSpin 1.4s linear infinite;
+          mask: radial-gradient(circle, transparent 56%, black 58%);
+          -webkit-mask: radial-gradient(circle, transparent 56%, black 58%);
+        }
+        .nh-gen-ring-core {
+          position: absolute; inset: 8px;
+          background: #ffffff;
+          border-radius: 50%;
+          display: flex; align-items: center; justify-content: center;
+          box-shadow: inset 0 0 0 1px ${C.border};
+        }
+        .nh-gen-text { flex: 1; min-width: 0; }
+        .nh-gen-h2 {
+          font-size: 18px; font-weight: 800; color: ${C.text1};
+          letter-spacing: -0.3px; line-height: 1.3; margin-bottom: 6px;
+        }
+        .nh-gen-h2 .nh-niche-pill {
+          display: inline-flex; align-items: center;
+          font-size: 12.5px; font-weight: 700;
+          background: #fff5f5; color: ${C.red};
+          border: 1px solid rgba(229,37,27,0.18);
+          padding: 2px 9px; border-radius: 100px;
+          margin: 0 4px; vertical-align: middle;
+          letter-spacing: -0.05px;
+        }
+        .nh-gen-p {
+          font-size: 13px; color: ${C.text3}; line-height: 1.55;
+          display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+        }
+        .nh-gen-dots { display: inline-flex; gap: 3px; align-items: center; }
+        .nh-gen-dots span {
+          width: 4px; height: 4px; border-radius: 50%;
+          background: ${C.red};
+          animation: nhDotBounce 1.2s ease-in-out infinite;
+        }
+        .nh-gen-dots span:nth-child(2) { animation-delay: 0.15s }
+        .nh-gen-dots span:nth-child(3) { animation-delay: 0.3s }
+        .nh-gen-steps {
+          margin-top: 18px;
+          padding-top: 18px;
+          border-top: 1px solid ${C.borderSoft};
+          display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;
+        }
+        @media (max-width: 720px) {
+          .nh-gen-steps { grid-template-columns: 1fr; gap: 10px; }
+        }
+        .nh-gen-step {
+          display: flex; align-items: center; gap: 9px;
+          font-size: 12px; color: ${C.text2}; line-height: 1.4;
+        }
+        .nh-gen-step-num {
+          width: 18px; height: 18px; border-radius: 50%;
+          background: #f1f1f6; color: ${C.text3};
+          display: inline-flex; align-items: center; justify-content: center;
+          font-size: 10px; font-weight: 800;
+          flex-shrink: 0;
+        }
+      `}</style>
+
+      <div className="nh-gen-eyebrow">
+        <span>{isGenerating ? 'Discovering' : 'Just a moment'}</span>
       </div>
-      <div style={{ flex: 1, minWidth: 0 }}>
-        <p style={{
-          fontSize: 11, fontWeight: 700, letterSpacing: 0.08, textTransform: 'uppercase',
-          color: '#e5251b', marginBottom: 6,
-        }}>
-          {isWarming ? 'Warming up your niche' : 'Niche outlier coming soon'}
-        </p>
-        <p style={{ fontSize: 15, fontWeight: 700, color: '#0f0f13', letterSpacing: '-0.2px', lineHeight: 1.4, marginBottom: 4 }}>
-          We're picking the top {label} outlier of the week for you.
-        </p>
-        <p style={{ fontSize: 13, color: '#4a4a58', lineHeight: 1.55 }}>
-          {isWarming
-            ? 'This refreshes every Sunday. Check back shortly, or use the tools below to start growing right now.'
-            : 'Try again in a moment. If this keeps happening, email support@ytgrowth.io.'}
-        </p>
+      <div className="nh-gen-row">
+        <div className="nh-gen-ring">
+          <div className="nh-gen-ring-core">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={C.red} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="11" cy="11" r="7"/>
+              <line x1="20" y1="20" x2="16.65" y2="16.65"/>
+            </svg>
+          </div>
+        </div>
+        <div className="nh-gen-text">
+          <p className="nh-gen-h2">
+            Picking the top
+            <span className="nh-niche-pill">{label}</span>
+            outlier winning on YouTube right now
+          </p>
+          <p className="nh-gen-p">
+            {isGenerating
+              ? 'Usually takes 15 to 30 seconds. The card refreshes here automatically.'
+              : 'Try refreshing the page. If this keeps happening, email support@ytgrowth.io.'}
+            {isGenerating && (
+              <span className="nh-gen-dots">
+                <span /><span /><span />
+              </span>
+            )}
+          </p>
+        </div>
+      </div>
+
+      <div className="nh-gen-steps">
+        <div className="nh-gen-step">
+          <span className="nh-gen-step-num">1</span>
+          Scanning niche search results
+        </div>
+        <div className="nh-gen-step">
+          <span className="nh-gen-step-num">2</span>
+          Scoring views vs. channel subs
+        </div>
+        <div className="nh-gen-step">
+          <span className="nh-gen-step-num">3</span>
+          Writing your angle
+        </div>
       </div>
     </div>
   )

@@ -6,11 +6,17 @@ GET /dashboard/niche-outlier
   niche, refreshed weekly), so this is a single DB read with no Claude
   or YouTube calls in the hot path.
 
+  Lazy-generation: if the cache is empty for the inferred niche, kicks
+  off a background refresh once (per-niche lock) and returns a "generating"
+  status so the frontend can poll until it's ready. No manual seed needed.
+
 POST /dashboard/refresh-niche-outliers  (admin only)
   Triggers an on-demand refresh of one niche or all niches. Useful for
   the first seed of the cache and for manual reruns when output looks off.
 """
 from __future__ import annotations
+
+import threading
 
 from fastapi import APIRouter, Request
 from fastapi.responses import JSONResponse
@@ -26,6 +32,40 @@ from routers.admin_routes import _is_admin
 
 
 router = APIRouter()
+
+
+# Per-niche refresh locks. A niche only gets one in-flight refresh at a
+# time even when multiple creators in the same niche hit the dashboard
+# simultaneously. Keys live in memory; on multi-worker setups this just
+# means each worker can spawn one job per niche, which is still bounded.
+_refresh_locks: dict[str, threading.Lock] = {}
+_refresh_inflight: set[str] = set()
+
+
+def _try_kickoff_refresh(niche: str) -> bool:
+    """Returns True if this call started a refresh, False if one is already in
+    flight or the lock couldn't be acquired. Safe to call from a request hot
+    path: spawns a thread, returns immediately."""
+    lock = _refresh_locks.setdefault(niche, threading.Lock())
+    if not lock.acquire(blocking=False):
+        return False
+    try:
+        if niche in _refresh_inflight:
+            return False
+        _refresh_inflight.add(niche)
+    finally:
+        lock.release()
+
+    def _runner():
+        try:
+            refresh_niche(niche)
+        except Exception as e:
+            print(f"[dashboard] lazy refresh failed for {niche}: {e}")
+        finally:
+            _refresh_inflight.discard(niche)
+
+    threading.Thread(target=_runner, name=f"niche-refresh-{niche}", daemon=True).start()
+    return True
 
 
 @router.get("/niche-outlier")
@@ -48,11 +88,16 @@ def niche_outlier(request: Request):
     niche = infer_niche(channel_keywords, channel_title, recent_titles)
     payload = get_for_niche(niche)
     if not payload:
+        # Lazy generation: kick off a refresh in the background, tell the
+        # frontend to poll. Subsequent dashboard loads pick up the cached
+        # result. No user-visible "Warming up" dead end.
+        started = _try_kickoff_refresh(niche)
         return JSONResponse({
-            "ok":         False,
-            "reason":     "no_cache_yet",
-            "niche":      niche,
-            "creator":    channel.get("channel_name") or "",
+            "ok":      False,
+            "reason":  "generating_now" if started or niche in _refresh_inflight else "generation_failed",
+            "niche":   niche,
+            "creator": channel.get("channel_name") or "",
+            "eta_sec": 30,
         })
 
     return JSONResponse({
