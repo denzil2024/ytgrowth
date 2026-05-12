@@ -48,16 +48,44 @@
     return 0;
   }
 
+  function extractHashtags(text) {
+    if (!text) return [];
+    const out = [];
+    const seen = new Set();
+    const re = /(?:^|\s)#([\p{L}\p{N}_]{2,})/gu;
+    let m;
+    while ((m = re.exec(text)) !== null) {
+      const tag = m[1].toLowerCase();
+      if (!seen.has(tag)) { seen.add(tag); out.push(m[1]); }
+    }
+    return out;
+  }
+
+  function mergeTags(keywords, description) {
+    const seen = new Set();
+    const out = [];
+    const all = [
+      ...(Array.isArray(keywords) ? keywords : []),
+      ...extractHashtags(description),
+    ];
+    for (const t of all) {
+      const key = (t || "").toLowerCase();
+      if (key && !seen.has(key)) { seen.add(key); out.push(t); }
+    }
+    return out;
+  }
+
   function send() {
     try {
       const pr = window.ytInitialPlayerResponse;
       if (!pr || !pr.videoDetails) return;
       const vd = pr.videoDetails || {};
       const mf = ((pr.microformat || {}).playerMicroformatRenderer) || {};
+      const description = vd.shortDescription || mf.description?.simpleText || "";
       const data = {
         videoId:      vd.videoId || "",
         title:        vd.title || mf.title?.simpleText || "",
-        description:  vd.shortDescription || mf.description?.simpleText || "",
+        description,
         channelTitle: vd.author || mf.ownerChannelName || "",
         channelId:    vd.channelId || mf.externalChannelId || "",
         viewCount:    parseInt(vd.viewCount || mf.viewCount || "0", 10),
@@ -66,6 +94,10 @@
         isLive:       !!vd.isLiveContent,
         publishDate:  mf.publishDate || mf.uploadDate || "",
         category:     mf.category || "",
+        // Tags = upload-time keywords (often hidden via Data API but present
+        // in the page JSON) merged with description #hashtags. Modern creators
+        // rely heavily on hashtags, so we want both.
+        tags:         mergeTags(vd.keywords, description),
       };
       window.postMessage({ source: "ytg-bridge", data }, "*");
     } catch (e) {

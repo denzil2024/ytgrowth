@@ -445,6 +445,46 @@
     return getMeta("name") || getMeta("og:title") || "";
   }
 
+  // Pull #hashtags out of the description text. In 2026 many creators rely
+  // exclusively on description hashtags (visible above the title and used by
+  // YouTube discovery), without setting upload-time legacy tags. Treating
+  // them as tags matches how the YouTube algorithm actually uses them.
+  function extractHashtags(text) {
+    if (!text) return [];
+    const out = [];
+    const seen = new Set();
+    const re = /(?:^|\s)#([\p{L}\p{N}_]{2,})/gu;
+    let m;
+    while ((m = re.exec(text)) !== null) {
+      const tag = m[1].toLowerCase();
+      if (!seen.has(tag)) { seen.add(tag); out.push(m[1]); }
+    }
+    return out;
+  }
+
+  // Tags come from two places on a watch page:
+  //   1. <meta name="keywords"> — legacy upload-time tags. YouTube has been
+  //      progressively hiding these via the Data API but they still appear
+  //      in the rendered HTML for many videos.
+  //   2. #hashtags in the description — modern, visible, and what most
+  //      creators rely on now.
+  // We merge both into a deduped list so the panel reflects everything
+  // YouTube can plausibly use for discovery on this video.
+  function scrapeTags(description) {
+    const raw = getMeta("keywords");
+    const fromMeta = raw
+      ? raw.split(",").map(t => t.trim()).filter(Boolean)
+      : [];
+    const fromDesc = extractHashtags(description);
+    const seen = new Set();
+    const out = [];
+    for (const t of [...fromMeta, ...fromDesc]) {
+      const key = t.toLowerCase();
+      if (!seen.has(key)) { seen.add(key); out.push(t); }
+    }
+    return out;
+  }
+
   function scrapeWatchPageData() {
     if (!isWatchPage()) return null;
     const videoId = getVideoId();
@@ -471,11 +511,12 @@
     const publishDate = getMeta("datePublished") || getMeta("uploadDate") || "";
     const lengthSec   = parseISODuration(getMeta("duration"));
     const category    = getMeta("genre") || "";
+    const tags        = scrapeTags(description);
 
     return {
       videoId, title, description,
       channelTitle: ch.name, channelId: ch.id,
-      viewCount, likeCount, lengthSec, publishDate, category,
+      viewCount, likeCount, lengthSec, publishDate, category, tags,
       isLive: false,
     };
   }
@@ -516,9 +557,9 @@
       setTimeout(removePanel, 180);
     });
     root.querySelector(".ytg-refresh")?.addEventListener("click", () => {
-      // Force a tag refetch (re-derives the score with fresh tag count too).
-      pendingTagFetch = null;
-      fetchTags(currentVideoId, /* force */ true);
+      // Re-scrape the page (picks up tag/title/view changes since last render).
+      lastRenderSig = null;
+      scheduleScrapes();
     });
     return root;
   }
@@ -808,35 +849,6 @@
     });
   }
 
-  let pendingTagFetch = null;
-  async function fetchTags(videoId, force = false) {
-    if (!videoId) return;
-    if (!force && pendingTagFetch === videoId) return;
-    pendingTagFetch = videoId;
-
-    // Re-render with loading state for tags.
-    if (lastPageData && lastPageData.videoId === videoId) {
-      renderPanel(lastPageData, { /* loading */ });
-    }
-
-    const resp = await sendMessage({ type: "ytg:video", videoId });
-    // If we navigated away mid-fetch, abort.
-    if (currentVideoId !== videoId) return;
-    if (!lastPageData || lastPageData.videoId !== videoId) return;
-
-    if (resp.status === 401) {
-      renderPanel(lastPageData, { error: "not_authenticated" });
-      return;
-    }
-    const body = resp.body || {};
-    if (body.ok && body.video && Array.isArray(body.video.tags)) {
-      renderPanel(lastPageData, { tags: body.video.tags });
-      return;
-    }
-    const code = body.error_code || resp.error || "extension_error";
-    renderPanel(lastPageData, { error: code });
-  }
-
   // ── Page-bridge integration ─────────────────────────────────────────
   let currentVideoId = null;
   let lastPageData   = null;
@@ -846,19 +858,16 @@
     if (!isWatchPage()) return;
     if (data.videoId !== getVideoId()) return; // stale message after nav
 
-    const isFirstForThisVideo = currentVideoId !== data.videoId;
     currentVideoId = data.videoId;
     lastPageData   = data;
 
-    // Render immediately with whatever we have. Tag count unknown → null.
-    renderPanel(data, { /* tags loading */ });
-
-    // Kick off tag fetch only the first time per video. Subsequent
-    // bridge messages (e.g. for like-count refresh) re-render with the
-    // tags we already have, no extra API call.
-    if (isFirstForThisVideo) {
-      fetchTags(data.videoId);
-    }
+    // Tags now come straight from the page (videoDetails.keywords via the
+    // bridge, or <meta name="keywords"> via the DOM scraper). The Data API
+    // hides snippet.tags from non-owners, so the old backend round-trip
+    // returned empty arrays anyway. If neither source produced tags, render
+    // an empty list — the SEO panel correctly flags "no tags" as a gap.
+    const tags = Array.isArray(data.tags) ? data.tags : [];
+    renderPanel(data, { tags });
   }
 
   window.addEventListener("message", (ev) => {
