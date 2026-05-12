@@ -1,430 +1,98 @@
-"""Niche Outliers — the weekly "what YouTube is pushing in your niche right now"
-discovery engine that powers the dashboard hero card.
+"""Niche Outliers — pre-compute the dashboard hero pick per niche per week.
 
-Run server-side once per niche per week (not per user) so the Claude cost is
-flat regardless of user count:
-  - 14 niches x 1 refresh/week
-  - Per niche: 1 search.list (100 quota), 1 videos.list batch (1 quota),
-    1 channels.list batch (1 quota), 1 Haiku call (~$0.05)
-  - Total: ~$0.70/week in Claude + 1,400 YouTube quota units
+Uses the EXISTING app.outliers.search_outliers pipeline (same model the
+paid Outliers feature runs on). No parallel "fake" discovery logic. The
+only delta vs a normal user-triggered run is that this one passes
+credentials=None so the YouTube client falls back to the API key, and
+substitutes representative niche keywords for the user's personal niche.
 
-Discovery model:
-  1. search.list?q=<niche query>&type=video&publishedAfter=last 60 days,
-     ordered by viewCount. 50 candidates max.
-  2. videos.list to get full statistics + content details.
-  3. channels.list to get each candidate channel's subscriber count.
-  4. Score by views-per-subscriber-ratio (the canonical outlier signal).
-     A video with 1M views from a 100K-sub channel (10x ratio) ranks higher
-     than a 10M-view video from a 50M-sub channel (0.2x).
-  5. Pick the single highest-scoring outlier and ask Haiku for the
-     "why it's working" + "your angle" breakdown.
-
-Why Haiku not Sonnet: this runs unattended, the input is structured
-metadata (no nuance to reason over), and we want costs flat. Haiku is
-plenty for the templated output we need.
+Runtime: ~15-25 seconds per niche (the search_outliers thumbnail vision
+call is the slowest step). 14 niches per weekly refresh. Cost is bounded
+because this runs server-side once and all creators in the niche read
+from the same NicheOutlierCache row.
 """
 from __future__ import annotations
 
 import json
 import os
 import re
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timezone
 
-from googleapiclient.errors import HttpError
-
-from app.utils import make_anthropic_client
+from app.outliers import search_outliers
 from app.top_channels import CATEGORY_QUERIES, CATEGORIES
+from app.utils import make_anthropic_client
 from database.models import SessionLocal, NicheOutlierCache
 
 
-# Look-back window for the search. Tighter window = fresher results.
-_RECENCY_DAYS = 60
+# Representative niche keywords used when running search_outliers server-side
+# (no per-user niche to pass). These bias the niche-match scoring toward the
+# right cohort. Kept loose so we don't over-filter the candidate pool.
+NICHE_KEYWORDS = {
+    "gaming":        ["gaming", "gameplay", "game", "playthrough"],
+    "tech":          ["tech", "technology", "review", "gadget", "software"],
+    "beauty":        ["beauty", "makeup", "skincare", "tutorial"],
+    "finance":       ["finance", "investing", "money", "stocks"],
+    "cooking":       ["cooking", "recipe", "food", "kitchen"],
+    "fitness":       ["fitness", "workout", "training", "exercise"],
+    "music":         ["music", "song", "artist", "cover"],
+    "education":     ["education", "learning", "tutorial", "explained"],
+    "vlogs":         ["vlog", "daily", "lifestyle", "routine"],
+    "travel":        ["travel", "vlog", "adventure", "destination"],
+    "comedy":        ["comedy", "funny", "sketch", "humor"],
+    "sports":        ["sports", "highlights", "athlete"],
+    "entertainment": ["entertainment", "reaction", "celebrity"],
+    "news":          ["news", "current events", "report"],
+}
 
-# How many candidates to pull from search.list (max 50 per call).
-_CANDIDATE_POOL = 50
-
-# Minimum subs the surfaced channel needs. Stops a 100-view video from a
-# 10-sub channel surfacing as "1000x ratio" garbage.
-_MIN_SUBS = 5_000
-
-# Minimum views the candidate needs. Filters out fresh uploads that
-# haven't had time to be distributed.
-_MIN_VIEWS = 10_000
-
-# Floor on the sub-ratio shown in the UI so we don't trumpet "0.4x" as
-# an outlier. The "Top 18% in niche" copy assumes this is at least 1.5.
-_MIN_DISPLAY_RATIO = 1.5
-
-
-# ─── YouTube discovery ─────────────────────────────────────────────────────────
-
-def _yt_client():
-    api_key = os.getenv("YOUTUBE_API_KEY", "")
-    if not api_key:
-        return None
-    from googleapiclient.discovery import build
-    return build("youtube", "v3", developerKey=api_key, cache_discovery=False)
-
-
-def _iso_published_after_days(days: int) -> str:
-    return (datetime.now(timezone.utc) - timedelta(days=days)).isoformat().replace("+00:00", "Z")
-
-
-def _search_videos(yt, query: str) -> list[str]:
-    """Returns up to _CANDIDATE_POOL video IDs matching the niche query,
-    ordered by viewCount within the look-back window."""
-    try:
-        resp = yt.search().list(
-            part="snippet",
-            q=query,
-            type="video",
-            order="viewCount",
-            maxResults=_CANDIDATE_POOL,
-            publishedAfter=_iso_published_after_days(_RECENCY_DAYS),
-            videoDuration="medium",  # excludes shorts (< 4 min) and >20m
-        ).execute()
-    except HttpError as e:
-        print(f"[niche_outliers] search failed for q='{query}': {e}")
-        return []
-    out = []
-    for item in resp.get("items", []):
-        vid = (item.get("id") or {}).get("videoId")
-        if vid:
-            out.append(vid)
-    return out
-
-
-def _batch_videos(yt, video_ids: list[str]) -> list[dict]:
-    """Fetches snippet + statistics for up to 50 videos in one call."""
-    if not video_ids:
-        return []
-    try:
-        resp = yt.videos().list(
-            part="snippet,statistics,contentDetails",
-            id=",".join(video_ids[:50]),
-            maxResults=50,
-        ).execute()
-    except HttpError as e:
-        print(f"[niche_outliers] videos.list failed: {e}")
-        return []
-    return resp.get("items") or []
-
-
-def _batch_channels(yt, channel_ids: list[str]) -> dict[str, int]:
-    """Returns channel_id → subscriber_count for up to 50 channels in one call."""
-    if not channel_ids:
-        return {}
-    try:
-        resp = yt.channels().list(
-            part="statistics",
-            id=",".join(channel_ids[:50]),
-            maxResults=50,
-        ).execute()
-    except HttpError as e:
-        print(f"[niche_outliers] channels.list failed: {e}")
-        return {}
-    out: dict[str, int] = {}
-    for ch in resp.get("items") or []:
-        stats = ch.get("statistics") or {}
-        if (stats.get("hiddenSubscriberCount") or False):
-            continue
-        try:
-            subs = int(stats.get("subscriberCount") or 0)
-        except Exception:
-            subs = 0
-        out[ch["id"]] = subs
-    return out
-
-
-def _outlier_score(view_count: int, subs: int) -> tuple[float, int]:
-    """Returns (raw_ratio, score_0_100). The score is a calibrated 0-100
-    derived from the views/subs ratio with diminishing returns past 10x.
-    Mirrors the niche-relative scoring in app/outliers.py."""
-    if subs <= 0:
-        return 0.0, 0
-    ratio = view_count / subs
-    # Calibration: 1x → 50, 2x → 70, 5x → 85, 10x+ → 95+, log-shaped.
-    import math
-    score = min(99, int(50 + 15 * math.log10(max(ratio, 0.1)) + 5 * math.log10(max(view_count, 1) / 10_000)))
-    score = max(0, score)
-    return ratio, score
-
-
-def _pick_top_outlier(videos: list[dict], subs_by_channel: dict[str, int]) -> dict | None:
-    """Scores and returns the single best outlier from the candidate pool, or None
-    if nothing qualifies."""
-    scored = []
-    for v in videos:
-        snippet = v.get("snippet") or {}
-        stats   = v.get("statistics") or {}
-        channel_id = snippet.get("channelId") or ""
-        subs       = subs_by_channel.get(channel_id, 0)
-        try:
-            view_count = int(stats.get("viewCount") or 0)
-        except Exception:
-            view_count = 0
-        if subs < _MIN_SUBS:    continue
-        if view_count < _MIN_VIEWS: continue
-        ratio, score = _outlier_score(view_count, subs)
-        if ratio < _MIN_DISPLAY_RATIO: continue
-        scored.append({
-            "video_id":      v.get("id"),
-            "title":         snippet.get("title") or "",
-            "channel_title": snippet.get("channelTitle") or "",
-            "channel_id":    channel_id,
-            "thumbnail_url": ((snippet.get("thumbnails") or {}).get("high") or {}).get("url")
-                             or ((snippet.get("thumbnails") or {}).get("medium") or {}).get("url")
-                             or "",
-            "view_count":    view_count,
-            "sub_count":     subs,
-            "ratio":         ratio,
-            "score":         score,
-            "published_at":  snippet.get("publishedAt") or "",
-        })
-    if not scored:
-        return None
-    # Sort by score DESC, then ratio DESC. Top one wins.
-    scored.sort(key=lambda x: (-x["score"], -x["ratio"]))
-    return scored[0]
-
-
-# ─── Haiku breakdown ───────────────────────────────────────────────────────────
-
-_BREAKDOWN_SYSTEM = (
-    "You are a senior YouTube growth strategist. You write crisp, "
-    "founder-level breakdowns for creators. Every observation you make must "
-    "reference SPECIFIC, OBSERVABLE elements of the video (exact words from "
-    "the title, structural patterns, channel positioning). You never use "
-    "em-dashes, never use italics, never pad with filler. You think like "
-    "MrBeast's strategy team, not like a generic YouTube SEO blog. You "
-    "always respond with valid JSON, no markdown fences."
-)
-
-
-def _generate_breakdown(niche: str, outlier: dict) -> dict | None:
-    """One Sonnet call. Returns dict with 'why' (3 specific reasons),
-    'angle' (suggested title template), 'angle_reasoning' (why this angle
-    will work), and 'keyword' (search target). Returns None on failure;
-    caller falls back to a generic template.
-
-    Sonnet not Haiku: this drives the dashboard hero card across all
-    users in a niche. One call per niche per week, ~$0.05, so the
-    marginal cost is trivial and the output quality is much higher.
-    """
-    api_key = os.getenv("ANTHROPIC_API_KEY", "")
-    if not api_key:
-        return None
-    try:
-        client = make_anthropic_client()
-        prompt = f"""This YouTube video is outperforming its niche cohort right now:
-
-Niche: {niche}
-Title: "{outlier['title']}"
-Channel: {outlier['channel_title']} ({outlier['sub_count']:,} subscribers)
-Views: {outlier['view_count']:,}
-Sub ratio: {outlier['ratio']:.1f}x the channel's own subscriber count
-Outlier score: {outlier['score']}/100
-
-Your job is to teach another creator in the {niche} niche EXACTLY why YouTube's algorithm is pushing this video, in a way they can immediately copy.
-
-Return ONLY valid JSON with this shape:
-
-{{
-  "why": [
-    "Bullet 1, max 90 chars, referencing a SPECIFIC element of the title or framing",
-    "Bullet 2, max 90 chars, about the channel position or audience targeting",
-    "Bullet 3, max 90 chars, about the curiosity/transformation/payoff hook"
-  ],
-  "angle": "A working YouTube title (50-70 chars) another creator could ship. Adapts the same structural hook, NEVER copies the original phrasing. Feels like a real title, not a description.",
-  "angle_reasoning": "One sentence (max 140 chars) explaining what makes your angle echo the winning formula without being derivative.",
-  "keyword": "The 2-4 word YouTube search phrase someone would type to find this kind of video"
-}}
-
-Constraints:
-- Every 'why' bullet must point to a concrete, observable thing. Bad: "Great title". Good: "Numbered list in title (7 Routines) compresses curiosity into a quick promise".
-- The angle must feel ready to ship. No brackets, no placeholders, no "[YOUR NICHE]" templating.
-- No em-dashes anywhere in the output.
-"""
-        msg = client.messages.create(
-            model="claude-sonnet-4-6",
-            max_tokens=800,
-            system=_BREAKDOWN_SYSTEM,
-            messages=[{"role": "user", "content": prompt}],
-        )
-        raw = msg.content[0].text.strip()
-        raw = re.sub(r"^```[a-z]*\n?", "", raw)
-        raw = re.sub(r"\n?```$", "", raw).strip()
-        data = json.loads(raw)
-        why = data.get("why") or []
-        if not isinstance(why, list) or len(why) < 2:
-            return None
-        return {
-            "why":              [str(w)[:180] for w in why[:3]],
-            "angle":            str(data.get("angle") or "")[:180],
-            "angle_reasoning":  str(data.get("angle_reasoning") or "")[:200],
-            "keyword":          str(data.get("keyword") or "")[:80],
-        }
-    except Exception as e:
-        print(f"[niche_outliers] Sonnet breakdown failed for {niche}: {e}")
-        return None
-
-
-def personalize_angle(
-    niche: str,
-    channel_name: str,
-    channel_keywords: str,
-    recent_titles: list[str],
-) -> dict | None:
-    """Per-user angle personalization. Takes the cached niche outlier and
-    rewrites the suggested angle using the creator's own voice + niche
-    specifics. Returns {'angle': str, 'angle_reasoning': str, 'keyword': str}
-    or None on failure. Cheap (Haiku, ~$0.005/call) and runs at most
-    once per user per week (cached client-side)."""
-    payload = get_for_niche(niche)
-    if not payload:
-        return None
-    try:
-        recent_blob = "\n".join(f"- {t}" for t in (recent_titles or [])[:6] if t)
-        base_angle = payload.get("angle_template") or ""
-        base_keyword = payload.get("angle_keyword") or ""
-        outlier_title = payload.get("title") or ""
-
-        client = make_anthropic_client()
-        prompt = f"""A YouTube creator is studying this winning {niche} video this week:
-
-Winning video: "{outlier_title}"
-Generic angle suggestion: "{base_angle}"
-Target keyword: "{base_keyword}"
-
-Now adapt that angle SPECIFICALLY for this creator:
-
-Channel name: {channel_name or 'Unknown'}
-Channel niche keywords: {channel_keywords or 'not provided'}
-Their recent video titles:
-{recent_blob or '(none provided)'}
-
-Return ONLY valid JSON:
-
-{{
-  "angle": "A 50-70 char YouTube title tailored to this creator's voice and the topics in their recent uploads. Must echo the winning video's structural hook but use their language and audience.",
-  "angle_reasoning": "One sentence (max 140 chars) explaining why this specific angle fits THIS creator's channel.",
-  "keyword": "The 2-4 word YouTube search phrase this creator should target"
-}}
-
-Constraints:
-- The angle must feel like a title this creator would actually publish. Match their tone.
-- No em-dashes.
-- No brackets or placeholders.
-"""
-        msg = client.messages.create(
-            model="claude-haiku-4-5-20251001",
-            max_tokens=400,
-            system=_BREAKDOWN_SYSTEM,
-            messages=[{"role": "user", "content": prompt}],
-        )
-        raw = msg.content[0].text.strip()
-        raw = re.sub(r"^```[a-z]*\n?", "", raw)
-        raw = re.sub(r"\n?```$", "", raw).strip()
-        data = json.loads(raw)
-        return {
-            "angle":           str(data.get("angle") or "")[:180] or base_angle,
-            "angle_reasoning": str(data.get("angle_reasoning") or "")[:200],
-            "keyword":         str(data.get("keyword") or "")[:80] or base_keyword,
-        }
-    except Exception as e:
-        print(f"[niche_outliers] personalize_angle failed for {niche}: {e}")
-        return None
-
-
-# ─── Cache helpers ─────────────────────────────────────────────────────────────
-
-def _save(niche: str, outlier: dict, breakdown: dict) -> None:
-    db = SessionLocal()
-    try:
-        pub_dt = datetime.fromisoformat((outlier["published_at"] or "").replace("Z", "+00:00")) \
-                 if outlier["published_at"] else datetime.now(timezone.utc)
-        row = db.query(NicheOutlierCache).filter_by(niche=niche).first()
-        display_ratio = max(1, int(round(outlier["ratio"])))
-        # angle_reasoning is stored inside why_working JSON as a fourth bullet
-        # tagged with a special prefix so we don't need a schema migration.
-        # The frontend pulls it out separately to render under the angle.
-        why_bullets = list(breakdown["why"])
-        reasoning = (breakdown.get("angle_reasoning") or "").strip()
-        if reasoning:
-            why_bullets = why_bullets + [f"__reasoning__:{reasoning}"]
-        payload = dict(
-            video_id       = outlier["video_id"],
-            title          = outlier["title"],
-            channel_title  = outlier["channel_title"],
-            channel_id     = outlier["channel_id"],
-            thumbnail_url  = outlier["thumbnail_url"],
-            view_count     = outlier["view_count"],
-            sub_ratio      = display_ratio,
-            published_at   = pub_dt.replace(tzinfo=None) if pub_dt.tzinfo else pub_dt,
-            outlier_score  = outlier["score"],
-            why_working    = json.dumps(why_bullets),
-            angle_template = breakdown["angle"],
-            angle_keyword  = breakdown["keyword"] or None,
-        )
-        if row:
-            for k, v in payload.items():
-                setattr(row, k, v)
-        else:
-            db.add(NicheOutlierCache(niche=niche, **payload))
-        db.commit()
-        print(f"[niche_outliers] saved {niche}: {outlier['title'][:60]} (score {outlier['score']}, {display_ratio}x)")
-    except Exception as e:
-        db.rollback()
-        print(f"[niche_outliers] save failed for {niche}: {e}")
-    finally:
-        db.close()
-
+# Representative subscriber count used as the user-baseline in scoring.
+# search_outliers uses this only for niche-relative views floor logic;
+# per-video outlier scores are computed against each video's own channel,
+# so the exact value here is not load-bearing.
+_REPRESENTATIVE_SUBS = 10_000
 
 # ─── Public API ────────────────────────────────────────────────────────────────
 
 def refresh_niche(niche: str) -> dict | None:
-    """Refresh one niche's outlier pick. Returns the saved payload or None on
-    failure. Safe to call repeatedly; overwrites the existing row."""
+    """Refresh one niche by running the real Outliers pipeline server-side
+    with API-key auth. Stores the #1 outlier video into NicheOutlierCache.
+    Returns the saved payload or None on failure.
+    """
     if niche not in CATEGORY_QUERIES:
         print(f"[niche_outliers] unknown niche: {niche}")
         return None
-    yt = _yt_client()
-    if yt is None:
-        return None
 
     query = CATEGORY_QUERIES[niche]
-    video_ids = _search_videos(yt, query)
-    if not video_ids:
-        print(f"[niche_outliers] no candidates for {niche}")
+    niche_kw = NICHE_KEYWORDS.get(niche, [niche])
+
+    try:
+        result = search_outliers(
+            creds=None,             # build_youtube_client falls back to API key
+            query=query,
+            my_channel_id="",       # no exclusion
+            my_subscribers=_REPRESENTATIVE_SUBS,
+            my_niche_keywords=niche_kw,
+            confirmed_keyword="",   # let the intent classifier do its thing
+        )
+    except Exception as e:
+        print(f"[niche_outliers] search_outliers raised for {niche}: {e}")
         return None
 
-    videos = _batch_videos(yt, video_ids)
+    if not isinstance(result, dict) or result.get("error"):
+        print(f"[niche_outliers] search_outliers returned no usable result for {niche}: {result.get('error') if isinstance(result, dict) else result}")
+        return None
+
+    videos = result.get("videos") or []
     if not videos:
+        print(f"[niche_outliers] no videos returned for {niche}")
         return None
 
-    channel_ids = list({(v.get("snippet") or {}).get("channelId") for v in videos if (v.get("snippet") or {}).get("channelId")})
-    subs_by_channel = _batch_channels(yt, channel_ids)
-
-    outlier = _pick_top_outlier(videos, subs_by_channel)
-    if not outlier:
-        print(f"[niche_outliers] no qualifying outlier for {niche}")
-        return None
-
-    breakdown = _generate_breakdown(niche, outlier) or {
-        "why":     [
-            "Strong view-to-subscriber ratio in this niche",
-            "Title pattern is working with YouTube's recommendation engine",
-            "Topic has proven distribution beyond the channel's own audience",
-        ],
-        "angle":   outlier["title"],
-        "keyword": "",
-    }
-    _save(niche, outlier, breakdown)
+    top = videos[0]
+    _save_from_outlier(niche, top)
     return get_for_niche(niche)
 
 
 def refresh_all_niches() -> int:
-    """Refresh every niche. Returns number successfully refreshed."""
+    """Refresh every niche. Returns the count successfully refreshed."""
     ok = 0
     for niche in CATEGORIES:
         try:
@@ -436,7 +104,7 @@ def refresh_all_niches() -> int:
 
 
 def get_for_niche(niche: str) -> dict | None:
-    """Read the cached outlier for a niche. Returns frontend-ready dict or None."""
+    """Read the cached outlier for a niche, mapped to the frontend shape."""
     if not niche:
         return None
     db = SessionLocal()
@@ -477,12 +145,251 @@ def get_for_niche(niche: str) -> dict | None:
         db.close()
 
 
-# ─── Niche inference from a creator's channel ──────────────────────────────────
+# ─── Save helpers ──────────────────────────────────────────────────────────────
 
-# Crude keyword → niche mapping. Channel keywords are usually a free-form
-# comma-separated string the creator typed in YouTube Studio. We score each
-# niche's query terms against the creator's keywords and topic strings and
-# pick the highest scorer.
+def _save_from_outlier(niche: str, top: dict) -> None:
+    """Map a search_outliers video dict into the NicheOutlierCache row.
+
+    Fields available on `top` from app.outliers._score_videos +
+    Claude enrichment:
+      title, video_id, channel_title, channel_id, thumbnail_url,
+      view_count, sub_count, views_per_sub, outlier_score (float, e.g. 6.4),
+      published_at, why_worked (str), why_now (str), quick_actions (list).
+    """
+    db = SessionLocal()
+    try:
+        # search_outliers' outlier_score is a multiplier (views per sub /
+        # cohort median). Convert to a 0-100 display score the way the
+        # dashboard hero expects.
+        ratio = float(top.get("views_per_sub") or 0)
+        outlier_mult = float(top.get("outlier_score") or 0)
+        view_count = int(top.get("view_count") or 0)
+        sub_count  = int(top.get("sub_count") or 0)
+        ratio_display = max(1, int(round(ratio))) if ratio else 1
+
+        # Map outlier multiplier (1.0=cohort median, 10x=elite) onto 0-100.
+        # 1x -> 50, 2x -> 70, 5x -> 85, 10x+ -> 95+. Log-shaped, capped.
+        import math
+        score_0_100 = max(0, min(99, int(50 + 22 * math.log10(max(outlier_mult, 0.1)))))
+
+        pub_dt = _parse_iso(top.get("published_at"))
+
+        # Three "why it works" bullets from search_outliers' Claude output.
+        # why_worked is one paragraph; we split on bullet markers if present,
+        # otherwise wrap as a single bullet and append why_now + first
+        # quick_action so the card always shows 2-3 grounded reasons.
+        why_bullets = _extract_bullets(top.get("why_worked", ""))
+        if len(why_bullets) < 3:
+            extras = []
+            wn = (top.get("why_now") or "").strip()
+            if wn:
+                extras.append(wn)
+            qa = top.get("quick_actions") or []
+            if qa:
+                extras.append(str(qa[0]))
+            for ex in extras:
+                if len(why_bullets) >= 3:
+                    break
+                if ex and ex not in why_bullets:
+                    why_bullets.append(ex)
+        why_bullets = [str(b)[:180] for b in why_bullets[:3]]
+
+        # Generate a tailored angle template via a cheap Sonnet call. The
+        # search_outliers payload doesn't already produce a "title another
+        # creator should ship" — its quick_actions are operational steps
+        # ("rewrite the hook", "front-load the payoff") rather than a
+        # publishable title. Keep this dedicated angle call.
+        angle_pack = _generate_angle(niche, top) or {
+            "angle":   top.get("title", "")[:160],
+            "angle_reasoning": "Adapt the winning structure to your own voice and audience.",
+            "keyword": "",
+        }
+
+        # Stash angle_reasoning inside the why_working JSON so we don't need
+        # a schema migration. Frontend pulls it out separately.
+        stored_why = list(why_bullets)
+        if angle_pack.get("angle_reasoning"):
+            stored_why.append(f"__reasoning__:{angle_pack['angle_reasoning']}")
+
+        payload = dict(
+            video_id       = top.get("video_id") or "",
+            title          = (top.get("title") or "")[:500],
+            channel_title  = (top.get("channel_title") or "")[:200],
+            channel_id     = (top.get("channel_id") or "")[:120],
+            thumbnail_url  = (top.get("thumbnail_url") or "")[:500],
+            view_count     = view_count,
+            sub_ratio      = ratio_display,
+            published_at   = pub_dt.replace(tzinfo=None) if (pub_dt and pub_dt.tzinfo) else pub_dt,
+            outlier_score  = score_0_100,
+            why_working    = json.dumps(stored_why),
+            angle_template = (angle_pack.get("angle") or "")[:200],
+            angle_keyword  = (angle_pack.get("keyword") or "")[:120] or None,
+        )
+
+        row = db.query(NicheOutlierCache).filter_by(niche=niche).first()
+        if row:
+            for k, v in payload.items():
+                setattr(row, k, v)
+        else:
+            db.add(NicheOutlierCache(niche=niche, **payload))
+        db.commit()
+        print(f"[niche_outliers] saved {niche}: {payload['title'][:60]} (score {score_0_100}, {ratio_display}x)")
+    except Exception as e:
+        db.rollback()
+        print(f"[niche_outliers] save failed for {niche}: {e}")
+    finally:
+        db.close()
+
+
+def _parse_iso(s: str | None) -> datetime | None:
+    if not s:
+        return None
+    try:
+        return datetime.fromisoformat(str(s).replace("Z", "+00:00"))
+    except Exception:
+        return None
+
+
+def _extract_bullets(text: str) -> list[str]:
+    """Split an explanation paragraph into clean bullet strings.
+    Handles bullet-marker prefixes (-, *, •, 1., 1)) plus newlines, and
+    falls back to sentence-splitting when the text is a paragraph."""
+    if not text:
+        return []
+    raw = str(text).replace("\r", "")
+    # Bullet markers
+    parts = re.split(r"(?:^|\n)\s*(?:[-*•]|\d+[\.)])\s+", raw)
+    parts = [p.strip() for p in parts if p and p.strip()]
+    if len(parts) >= 2:
+        return parts
+    # Sentence split as a fallback
+    sentences = re.split(r"(?<=[.!?])\s+", raw.strip())
+    return [s.strip() for s in sentences if s.strip()]
+
+
+# ─── Angle generation (one cheap call per niche refresh) ──────────────────────
+
+_ANGLE_SYSTEM = (
+    "You are a senior YouTube growth strategist. Output crisp, ready-to-ship "
+    "video titles for creators. Never use em-dashes. Always return strict JSON."
+)
+
+
+def _generate_angle(niche: str, top: dict) -> dict | None:
+    """Produce a tailored title another creator could ship, plus the reason
+    it echoes the winner. ~$0.005 Haiku call. Skipped if ANTHROPIC_API_KEY
+    is missing."""
+    if not os.getenv("ANTHROPIC_API_KEY"):
+        return None
+    try:
+        client = make_anthropic_client()
+        prompt = f"""This {niche} video is significantly outperforming its cohort right now:
+
+Title: "{top.get('title', '')}"
+Channel: {top.get('channel_title', '')} ({int(top.get('sub_count') or 0):,} subs)
+Views: {int(top.get('view_count') or 0):,}
+Outlier multiplier: {top.get('outlier_score', 0):.1f}x cohort median
+
+A creator in the {niche} niche wants a ready-to-ship title that echoes the same structural hook but uses fresh phrasing.
+
+Return ONLY valid JSON:
+{{
+  "angle": "A 50-70 char YouTube title another creator in this niche could publish today. Mirror the winner's HOOK STRUCTURE, never copy its words. Feels like a real title, not a description. No brackets or placeholders.",
+  "angle_reasoning": "One sentence, max 140 chars, explaining what makes this angle a working echo of the winning formula.",
+  "keyword": "The 2-4 word YouTube search phrase the viewer would type"
+}}
+
+Strict rules:
+- No em-dashes anywhere.
+- No quotation marks inside the angle title.
+- The angle must work as a standalone YouTube title.
+"""
+        msg = client.messages.create(
+            model="claude-haiku-4-5-20251001",
+            max_tokens=400,
+            system=_ANGLE_SYSTEM,
+            messages=[{"role": "user", "content": prompt}],
+        )
+        raw = msg.content[0].text.strip()
+        raw = re.sub(r"^```[a-z]*\n?", "", raw)
+        raw = re.sub(r"\n?```$", "", raw).strip()
+        data = json.loads(raw)
+        return {
+            "angle":           str(data.get("angle") or "")[:180],
+            "angle_reasoning": str(data.get("angle_reasoning") or "")[:200],
+            "keyword":         str(data.get("keyword") or "")[:80],
+        }
+    except Exception as e:
+        print(f"[niche_outliers] angle generation failed for {niche}: {e}")
+        return None
+
+
+# ─── Per-user personalization (used by /dashboard/personalize-angle) ──────────
+
+def personalize_angle(
+    niche: str,
+    channel_name: str,
+    channel_keywords: str,
+    recent_titles: list[str],
+) -> dict | None:
+    """Per-user angle personalization. Takes the cached niche outlier and
+    rewrites the suggested angle using the creator's own voice + niche
+    specifics. Returns dict or None on failure. Cheap (~$0.005, Haiku)."""
+    payload = get_for_niche(niche)
+    if not payload:
+        return None
+    if not os.getenv("ANTHROPIC_API_KEY"):
+        return None
+    try:
+        recent_blob = "\n".join(f"- {t}" for t in (recent_titles or [])[:6] if t)
+        base_angle    = payload.get("angle_template") or ""
+        base_keyword  = payload.get("angle_keyword")  or ""
+        outlier_title = payload.get("title") or ""
+
+        client = make_anthropic_client()
+        prompt = f"""A YouTube creator is studying this winning {niche} video this week:
+
+Winning video: "{outlier_title}"
+Generic angle: "{base_angle}"
+
+Now tailor it for this specific creator:
+
+Channel name: {channel_name or 'Unknown'}
+Niche keywords: {channel_keywords or 'not provided'}
+Their recent video titles:
+{recent_blob or '(none provided)'}
+
+Return ONLY valid JSON:
+{{
+  "angle": "A 50-70 char YouTube title that fits THIS creator's voice + topics, mirroring the winner's hook structure. No brackets or placeholders.",
+  "angle_reasoning": "One sentence, max 140 chars, explaining why this fits THIS creator.",
+  "keyword": "2-4 word YouTube search phrase to target"
+}}
+
+No em-dashes. No quotation marks inside the angle.
+"""
+        msg = client.messages.create(
+            model="claude-haiku-4-5-20251001",
+            max_tokens=400,
+            system=_ANGLE_SYSTEM,
+            messages=[{"role": "user", "content": prompt}],
+        )
+        raw = msg.content[0].text.strip()
+        raw = re.sub(r"^```[a-z]*\n?", "", raw)
+        raw = re.sub(r"\n?```$", "", raw).strip()
+        data = json.loads(raw)
+        return {
+            "angle":           str(data.get("angle") or "")[:180] or base_angle,
+            "angle_reasoning": str(data.get("angle_reasoning") or "")[:200],
+            "keyword":         str(data.get("keyword") or "")[:80] or base_keyword,
+        }
+    except Exception as e:
+        print(f"[niche_outliers] personalize_angle failed for {niche}: {e}")
+        return None
+
+
+# ─── Niche inference (unchanged from previous version) ────────────────────────
+
 _NICHE_KEYWORD_HINTS = {
     "gaming":        ["gaming", "gameplay", "game", "minecraft", "fortnite", "esports", "twitch"],
     "tech":          ["tech", "technology", "review", "iphone", "android", "laptop", "gadget", "ai", "software"],
@@ -502,14 +409,8 @@ _NICHE_KEYWORD_HINTS = {
 
 
 def infer_niche(channel_keywords: str | list | None, channel_title: str = "", recent_titles: list[str] | None = None) -> str:
-    """Maps a creator's channel keywords / topic strings to one of the 14
-    niche categories. Returns 'education' as a safe default when nothing
-    matches (broad, well-populated category).
-
-    Scoring: each niche scored by how many of its hint terms appear in the
-    creator's keywords + channel title + top 10 recent video titles. Highest
-    score wins; ties broken by hint specificity.
-    """
+    """Map a creator's channel keywords + recent titles to one of the 14 niches.
+    Defaults to 'education' (broad, well-populated) when nothing matches."""
     haystack_parts: list[str] = []
     if isinstance(channel_keywords, str):
         haystack_parts.append(channel_keywords)

@@ -298,7 +298,8 @@ def search_top_videos(credentials, search_terms: list[str], max_results: int = 2
     order=relevance gives us what actually ranks for this query — the real competitive landscape.
     We fetch view counts so Claude can understand what's performing vs what's just ranking.
     """
-    youtube = build("youtube", "v3", credentials=credentials)
+    from app.utils import build_youtube_client
+    youtube = build_youtube_client(credentials)  # falls back to API key when credentials is None
     combined: dict[str, dict] = {}
 
     for term in search_terms:

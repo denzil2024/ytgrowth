@@ -13,7 +13,17 @@ def make_anthropic_client() -> anthropic.Anthropic:
     return anthropic.Anthropic(api_key=os.environ.get("ANTHROPIC_API_KEY", ""))
 
 
-def build_youtube_client(credentials):
+def build_youtube_client(credentials=None):
+    """YouTube Data API v3 client.
+
+    Pass OAuth credentials for per-user calls that need write or analytics
+    access. Pass None for read-only server-side jobs (e.g. weekly niche
+    discovery, public leaderboards), in which case we fall back to the
+    YOUTUBE_API_KEY env var. Public read endpoints (search, channels,
+    videos, playlistItems with public playlists) work with either."""
+    if credentials is None:
+        api_key = os.environ.get("YOUTUBE_API_KEY", "")
+        return build("youtube", "v3", developerKey=api_key)
     return build("youtube", "v3", credentials=credentials)
 
 
