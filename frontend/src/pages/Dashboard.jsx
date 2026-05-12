@@ -2109,6 +2109,7 @@ export default function Dashboard() {
                   from a cached endpoint so it appears instantly without
                   blocking the rest of the Overview. */}
               <NicheHeroCard
+                channelId={data?.channel?.channel_id}
                 onOpenSeoStudio={(title, keyword) => {
                   try {
                     if (title) {

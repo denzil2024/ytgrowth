@@ -26,6 +26,7 @@ from app.niche_outliers import (
     infer_niche,
     refresh_niche,
     refresh_all_niches,
+    personalize_angle,
 )
 from routers.auth import get_session
 from routers.admin_routes import _is_admin
@@ -105,6 +106,38 @@ def niche_outlier(request: Request):
         "niche":   niche,
         "creator": channel.get("channel_name") or "",
         "outlier": payload,
+    })
+
+
+@router.get("/personalize-angle")
+def personalize_angle_endpoint(request: Request):
+    """Returns an angle tailored to the signed-in creator's channel context.
+    Falls back to the niche's generic angle template if Haiku is unavailable.
+    Cheap (~$0.005/call). Frontend caches the result client-side for a week
+    so this only runs once per user per niche-refresh cycle."""
+    data, _ = get_session(request.session.get("session_id"))
+    if not data:
+        return JSONResponse({"ok": False, "reason": "not_authenticated"}, status_code=401)
+
+    channel = (data or {}).get("channel", {}) or {}
+    videos  = (data or {}).get("videos",  []) or []
+    channel_keywords = channel.get("keywords") or ""
+    channel_title    = channel.get("channel_name") or channel.get("title") or ""
+    recent_titles    = [v.get("title", "") for v in videos[:10] if v.get("title")]
+
+    niche = infer_niche(channel_keywords, channel_title, recent_titles)
+    base = get_for_niche(niche)
+    if not base:
+        return JSONResponse({"ok": False, "reason": "no_cache_yet", "niche": niche})
+
+    custom = personalize_angle(niche, channel_title, channel_keywords, recent_titles)
+    return JSONResponse({
+        "ok":      True,
+        "niche":   niche,
+        "angle":   (custom or {}).get("angle") or base.get("angle_template"),
+        "angle_reasoning": (custom or {}).get("angle_reasoning") or base.get("angle_reasoning") or "",
+        "keyword": (custom or {}).get("keyword") or base.get("angle_keyword") or "",
+        "personalized": bool(custom),
     })
 
 

@@ -191,43 +191,63 @@ def _pick_top_outlier(videos: list[dict], subs_by_channel: dict[str, int]) -> di
 # ─── Haiku breakdown ───────────────────────────────────────────────────────────
 
 _BREAKDOWN_SYSTEM = (
-    "You write crisp, founder-level breakdowns for YouTube creators. "
-    "You never use em-dashes, never use italics, and never pad with filler. "
-    "Output must be concise, specific, and immediately actionable. "
-    "You always respond with valid JSON, no markdown fences."
+    "You are a senior YouTube growth strategist. You write crisp, "
+    "founder-level breakdowns for creators. Every observation you make must "
+    "reference SPECIFIC, OBSERVABLE elements of the video (exact words from "
+    "the title, structural patterns, channel positioning). You never use "
+    "em-dashes, never use italics, never pad with filler. You think like "
+    "MrBeast's strategy team, not like a generic YouTube SEO blog. You "
+    "always respond with valid JSON, no markdown fences."
 )
 
 
 def _generate_breakdown(niche: str, outlier: dict) -> dict | None:
-    """One Haiku call. Returns dict with 'why' (3 bullet strings),
-    'angle' (suggested title template), and 'keyword' (search target).
-    Returns None on failure; caller falls back to a generic template."""
+    """One Sonnet call. Returns dict with 'why' (3 specific reasons),
+    'angle' (suggested title template), 'angle_reasoning' (why this angle
+    will work), and 'keyword' (search target). Returns None on failure;
+    caller falls back to a generic template.
+
+    Sonnet not Haiku: this drives the dashboard hero card across all
+    users in a niche. One call per niche per week, ~$0.05, so the
+    marginal cost is trivial and the output quality is much higher.
+    """
     api_key = os.getenv("ANTHROPIC_API_KEY", "")
     if not api_key:
         return None
     try:
         client = make_anthropic_client()
-        prompt = (
-            f"This YouTube video is outperforming its niche cohort:\n\n"
-            f"Niche: {niche}\n"
-            f"Title: \"{outlier['title']}\"\n"
-            f"Channel: {outlier['channel_title']} ({outlier['sub_count']:,} subs)\n"
-            f"Views: {outlier['view_count']:,} ({outlier['ratio']:.1f}x sub ratio)\n\n"
-            f"Return JSON with three keys:\n"
-            f"1. \"why\": array of EXACTLY 3 short bullets (max 80 chars each) "
-            f"explaining the specific reasons YouTube is distributing this video. "
-            f"Be concrete (e.g. \"Curiosity hook in first 4 words\", "
-            f"\"Transformation arc framing\"). No vague advice.\n"
-            f"2. \"angle\": ONE suggested video title another creator in this niche "
-            f"could adapt from this winning formula. 50-70 chars. Should feel like a "
-            f"working YouTube title, not a description. Avoid copying the original.\n"
-            f"3. \"keyword\": the 2-4 word YouTube search phrase a viewer would type "
-            f"to find this kind of video.\n\n"
-            f"Output ONLY the JSON object."
-        )
+        prompt = f"""This YouTube video is outperforming its niche cohort right now:
+
+Niche: {niche}
+Title: "{outlier['title']}"
+Channel: {outlier['channel_title']} ({outlier['sub_count']:,} subscribers)
+Views: {outlier['view_count']:,}
+Sub ratio: {outlier['ratio']:.1f}x the channel's own subscriber count
+Outlier score: {outlier['score']}/100
+
+Your job is to teach another creator in the {niche} niche EXACTLY why YouTube's algorithm is pushing this video, in a way they can immediately copy.
+
+Return ONLY valid JSON with this shape:
+
+{{
+  "why": [
+    "Bullet 1, max 90 chars, referencing a SPECIFIC element of the title or framing",
+    "Bullet 2, max 90 chars, about the channel position or audience targeting",
+    "Bullet 3, max 90 chars, about the curiosity/transformation/payoff hook"
+  ],
+  "angle": "A working YouTube title (50-70 chars) another creator could ship. Adapts the same structural hook, NEVER copies the original phrasing. Feels like a real title, not a description.",
+  "angle_reasoning": "One sentence (max 140 chars) explaining what makes your angle echo the winning formula without being derivative.",
+  "keyword": "The 2-4 word YouTube search phrase someone would type to find this kind of video"
+}}
+
+Constraints:
+- Every 'why' bullet must point to a concrete, observable thing. Bad: "Great title". Good: "Numbered list in title (7 Routines) compresses curiosity into a quick promise".
+- The angle must feel ready to ship. No brackets, no placeholders, no "[YOUR NICHE]" templating.
+- No em-dashes anywhere in the output.
+"""
         msg = client.messages.create(
-            model="claude-haiku-4-5-20251001",
-            max_tokens=400,
+            model="claude-sonnet-4-6",
+            max_tokens=800,
             system=_BREAKDOWN_SYSTEM,
             messages=[{"role": "user", "content": prompt}],
         )
@@ -239,12 +259,80 @@ def _generate_breakdown(niche: str, outlier: dict) -> dict | None:
         if not isinstance(why, list) or len(why) < 2:
             return None
         return {
-            "why":     [str(w)[:160] for w in why[:3]],
-            "angle":   str(data.get("angle") or "")[:160],
-            "keyword": str(data.get("keyword") or "")[:80],
+            "why":              [str(w)[:180] for w in why[:3]],
+            "angle":            str(data.get("angle") or "")[:180],
+            "angle_reasoning":  str(data.get("angle_reasoning") or "")[:200],
+            "keyword":          str(data.get("keyword") or "")[:80],
         }
     except Exception as e:
-        print(f"[niche_outliers] Haiku breakdown failed for {niche}: {e}")
+        print(f"[niche_outliers] Sonnet breakdown failed for {niche}: {e}")
+        return None
+
+
+def personalize_angle(
+    niche: str,
+    channel_name: str,
+    channel_keywords: str,
+    recent_titles: list[str],
+) -> dict | None:
+    """Per-user angle personalization. Takes the cached niche outlier and
+    rewrites the suggested angle using the creator's own voice + niche
+    specifics. Returns {'angle': str, 'angle_reasoning': str, 'keyword': str}
+    or None on failure. Cheap (Haiku, ~$0.005/call) and runs at most
+    once per user per week (cached client-side)."""
+    payload = get_for_niche(niche)
+    if not payload:
+        return None
+    try:
+        recent_blob = "\n".join(f"- {t}" for t in (recent_titles or [])[:6] if t)
+        base_angle = payload.get("angle_template") or ""
+        base_keyword = payload.get("angle_keyword") or ""
+        outlier_title = payload.get("title") or ""
+
+        client = make_anthropic_client()
+        prompt = f"""A YouTube creator is studying this winning {niche} video this week:
+
+Winning video: "{outlier_title}"
+Generic angle suggestion: "{base_angle}"
+Target keyword: "{base_keyword}"
+
+Now adapt that angle SPECIFICALLY for this creator:
+
+Channel name: {channel_name or 'Unknown'}
+Channel niche keywords: {channel_keywords or 'not provided'}
+Their recent video titles:
+{recent_blob or '(none provided)'}
+
+Return ONLY valid JSON:
+
+{{
+  "angle": "A 50-70 char YouTube title tailored to this creator's voice and the topics in their recent uploads. Must echo the winning video's structural hook but use their language and audience.",
+  "angle_reasoning": "One sentence (max 140 chars) explaining why this specific angle fits THIS creator's channel.",
+  "keyword": "The 2-4 word YouTube search phrase this creator should target"
+}}
+
+Constraints:
+- The angle must feel like a title this creator would actually publish. Match their tone.
+- No em-dashes.
+- No brackets or placeholders.
+"""
+        msg = client.messages.create(
+            model="claude-haiku-4-5-20251001",
+            max_tokens=400,
+            system=_BREAKDOWN_SYSTEM,
+            messages=[{"role": "user", "content": prompt}],
+        )
+        raw = msg.content[0].text.strip()
+        raw = re.sub(r"^```[a-z]*\n?", "", raw)
+        raw = re.sub(r"\n?```$", "", raw).strip()
+        data = json.loads(raw)
+        return {
+            "angle":           str(data.get("angle") or "")[:180] or base_angle,
+            "angle_reasoning": str(data.get("angle_reasoning") or "")[:200],
+            "keyword":         str(data.get("keyword") or "")[:80] or base_keyword,
+        }
+    except Exception as e:
+        print(f"[niche_outliers] personalize_angle failed for {niche}: {e}")
         return None
 
 
@@ -257,6 +345,13 @@ def _save(niche: str, outlier: dict, breakdown: dict) -> None:
                  if outlier["published_at"] else datetime.now(timezone.utc)
         row = db.query(NicheOutlierCache).filter_by(niche=niche).first()
         display_ratio = max(1, int(round(outlier["ratio"])))
+        # angle_reasoning is stored inside why_working JSON as a fourth bullet
+        # tagged with a special prefix so we don't need a schema migration.
+        # The frontend pulls it out separately to render under the angle.
+        why_bullets = list(breakdown["why"])
+        reasoning = (breakdown.get("angle_reasoning") or "").strip()
+        if reasoning:
+            why_bullets = why_bullets + [f"__reasoning__:{reasoning}"]
         payload = dict(
             video_id       = outlier["video_id"],
             title          = outlier["title"],
@@ -267,7 +362,7 @@ def _save(niche: str, outlier: dict, breakdown: dict) -> None:
             sub_ratio      = display_ratio,
             published_at   = pub_dt.replace(tzinfo=None) if pub_dt.tzinfo else pub_dt,
             outlier_score  = outlier["score"],
-            why_working    = json.dumps(breakdown["why"]),
+            why_working    = json.dumps(why_bullets),
             angle_template = breakdown["angle"],
             angle_keyword  = breakdown["keyword"] or None,
         )
@@ -350,24 +445,33 @@ def get_for_niche(niche: str) -> dict | None:
         if not row:
             return None
         try:
-            why = json.loads(row.why_working or "[]")
+            stored = json.loads(row.why_working or "[]")
         except Exception:
-            why = []
+            stored = []
+        why: list[str] = []
+        angle_reasoning = ""
+        for item in stored:
+            s = str(item)
+            if s.startswith("__reasoning__:"):
+                angle_reasoning = s[len("__reasoning__:"):].strip()
+            else:
+                why.append(s)
         return {
-            "niche":          row.niche,
-            "video_id":       row.video_id,
-            "title":          row.title,
-            "channel_title":  row.channel_title,
-            "channel_id":     row.channel_id,
-            "thumbnail_url":  row.thumbnail_url,
-            "view_count":     row.view_count,
-            "sub_ratio":      row.sub_ratio,
-            "published_at":   row.published_at.isoformat() if row.published_at else None,
-            "outlier_score":  row.outlier_score,
-            "why_working":    why,
-            "angle_template": row.angle_template,
-            "angle_keyword":  row.angle_keyword,
-            "refreshed_at":   row.refreshed_at.isoformat() if row.refreshed_at else None,
+            "niche":           row.niche,
+            "video_id":        row.video_id,
+            "title":           row.title,
+            "channel_title":   row.channel_title,
+            "channel_id":      row.channel_id,
+            "thumbnail_url":   row.thumbnail_url,
+            "view_count":      row.view_count,
+            "sub_ratio":       row.sub_ratio,
+            "published_at":    row.published_at.isoformat() if row.published_at else None,
+            "outlier_score":   row.outlier_score,
+            "why_working":     why,
+            "angle_template":  row.angle_template,
+            "angle_reasoning": angle_reasoning,
+            "angle_keyword":   row.angle_keyword,
+            "refreshed_at":    row.refreshed_at.isoformat() if row.refreshed_at else None,
         }
     finally:
         db.close()
