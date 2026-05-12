@@ -1075,8 +1075,45 @@ function Stat({ label, value, sub, alert, accent }) {
   return (
     <div className={`ytg-stat-card${alert ? ' alert' : ''}`}>
       <p style={{ fontSize: 11, fontWeight: 500, letterSpacing: '0.05em', textTransform: 'uppercase', color: C.text3, marginBottom: 12 }}>{label}</p>
-      <p style={{ fontSize: 30, fontWeight: 800, letterSpacing: '-1.4px', color: col, lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{value}</p>
+      <p style={{ fontSize: 26, fontWeight: 800, letterSpacing: '-1px', color: col, lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{value}</p>
       {sub && <p style={{ fontSize: 12, color: alert ? C.red : C.text3, fontWeight: 500, marginTop: 10 }}>{sub}</p>}
+    </div>
+  )
+}
+
+/* HeroTile — foundational metric. Larger than Stat, with optional delta chip. */
+function HeroTile({ label, value, sub, delta, deltaSuffix, deltaIsAbsolute }) {
+  const hasDelta = delta !== null && delta !== undefined && !Number.isNaN(Number(delta))
+  const deltaNum = hasDelta ? Number(delta) : 0
+  const deltaPositive = deltaNum >= 0
+  const deltaColor = !hasDelta ? C.text3 : deltaPositive ? C.green : C.red
+  const deltaBg    = !hasDelta ? 'transparent' : deltaPositive ? 'rgba(5,150,105,0.08)' : 'rgba(229,37,27,0.07)'
+  const deltaBdr   = !hasDelta ? 'transparent' : deltaPositive ? 'rgba(5,150,105,0.18)' : 'rgba(229,37,27,0.18)'
+  const deltaLabel = hasDelta
+    ? `${deltaPositive ? '+' : ''}${fmtNum(Math.abs(deltaNum)) }${deltaIsAbsolute ? '' : ''}`
+    : ''
+  return (
+    <div className="ytg-stat-card" style={{ padding: '20px 22px 22px' }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10, marginBottom: 14 }}>
+        <p style={{ fontSize: 11, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: C.text3 }}>{label}</p>
+        {hasDelta && (
+          <span style={{
+            display: 'inline-flex', alignItems: 'center', gap: 4,
+            fontSize: 11, fontWeight: 700, color: deltaColor,
+            background: deltaBg, border: `1px solid ${deltaBdr}`,
+            padding: '3px 9px', borderRadius: 100,
+            fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.1px',
+          }}>
+            <svg width="9" height="9" viewBox="0 0 10 10" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" style={{ transform: deltaPositive ? 'none' : 'rotate(180deg)' }}>
+              <path d="M5 8V2M2.5 4.5 5 2l2.5 2.5"/>
+            </svg>
+            {deltaLabel}
+            <span style={{ color: C.text3, fontWeight: 500, marginLeft: 2 }}>{deltaSuffix || ''}</span>
+          </span>
+        )}
+      </div>
+      <p style={{ fontSize: 44, fontWeight: 800, letterSpacing: '-2px', color: C.text1, lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{value}</p>
+      {sub && <p style={{ fontSize: 12.5, color: C.text3, fontWeight: 500, marginTop: 12 }}>{sub}</p>}
     </div>
   )
 }
@@ -2121,42 +2158,56 @@ export default function Dashboard() {
                 }}
               />
 
-              {/* Row 1 */}
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,minmax(0,1fr))', gap: 16, marginBottom: 16 }}>
-                <Stat label="Subscribers"  value={fmtNum(data.channel.subscribers)}  sub="All time" />
-                <Stat label="Total views"  value={fmtNum(data.channel.total_views)}  sub="All time" />
-                <Stat label="Avg views"    value={fmtNum(avgViews)} sub={avgViews < 500 ? 'Below average' : 'On track'} alert={avgViews < 500} />
-                <Stat label="Channel score" value={score} sub={score >= 75 ? 'Healthy' : score >= 50 ? 'Needs work' : 'Critical'} alert={score < 50} accent={scoreColor(score)} />
+              {/* Hero metric tiles — the two foundational numbers, big and bounded. */}
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 12 }}>
+                <HeroTile
+                  label="Subscribers"
+                  value={fmtNum(data.channel.subscribers)}
+                  sub="All time"
+                  delta={data.analytics?.net_subscribers_90d}
+                  deltaSuffix="last 90d"
+                />
+                <HeroTile
+                  label="Total views"
+                  value={fmtNum(data.channel.total_views)}
+                  sub="All time"
+                  delta={data.analytics?.views_90d}
+                  deltaSuffix="last 90d"
+                  deltaIsAbsolute
+                />
               </div>
 
-              {/* Row 2 */}
-              {data.analytics ? (
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,minmax(0,1fr))', gap: 16, marginBottom: 0 }}>
-                  <Stat label="Views (90d)"    value={fmtNum(data.analytics.views_90d)} />
-                  <Stat label="Avg retention"  value={`${data.analytics.avg_retention_percent}%`}
-                    sub={data.analytics.avg_retention_percent >= 50 ? 'Good' : 'Below 50% target'}
-                    alert={data.analytics.avg_retention_percent < 40}
-                    accent={data.analytics.avg_retention_percent >= 50 ? C.green : undefined}
-                  />
-                  <Stat label="Avg duration"   value={fmtSecs(data.analytics.avg_view_duration_seconds)}
-                    sub={data.analytics.avg_view_duration_seconds < 120 ? 'Critical — under 2 min' : 'Good'}
-                    alert={data.analytics.avg_view_duration_seconds < 120}
-                  />
-                  <Stat label="Net subs (90d)"
-                    value={data.analytics.net_subscribers_90d >= 0 ? `+${fmtNum(data.analytics.net_subscribers_90d)}` : fmtNum(data.analytics.net_subscribers_90d)}
-                    sub={data.analytics.net_subscribers_90d >= 0 ? 'Growing' : 'Losing subscribers'}
-                    alert={data.analytics.net_subscribers_90d < 0}
-                    accent={data.analytics.net_subscribers_90d >= 0 ? C.green : undefined}
-                  />
-                </div>
-              ) : (
-                <div style={{ display: 'flex', alignItems: 'center', gap: 12, background: C.amberBg, border: `1px solid ${C.amberBdr}`, borderLeft: `3px solid ${C.amber}`, borderRadius: '0 12px 12px 0', padding: '12px 18px', marginBottom: 0 }}>
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke={C.amber} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+              {/* Quick stats strip — the operational numbers, compact. */}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,minmax(0,1fr))', gap: 12, marginBottom: 0 }}>
+                <Stat label="Avg views"    value={fmtNum(avgViews)} sub={avgViews < 500 ? 'Below average' : 'On track'} alert={avgViews < 500} />
+                <Stat label="Channel score" value={score} sub={score >= 75 ? 'Healthy' : score >= 50 ? 'Needs work' : 'Critical'} alert={score < 50} accent={scoreColor(score)} />
+                {data.analytics ? (
+                  <>
+                    <Stat label="Avg retention"  value={`${data.analytics.avg_retention_percent}%`}
+                      sub={data.analytics.avg_retention_percent >= 50 ? 'Good' : 'Below 50%'}
+                      alert={data.analytics.avg_retention_percent < 40}
+                      accent={data.analytics.avg_retention_percent >= 50 ? C.green : undefined}
+                    />
+                    <Stat label="Avg duration"   value={fmtSecs(data.analytics.avg_view_duration_seconds)}
+                      sub={data.analytics.avg_view_duration_seconds < 120 ? 'Under 2 min' : 'Good'}
+                      alert={data.analytics.avg_view_duration_seconds < 120}
+                    />
+                  </>
+                ) : (
+                  <>
+                    <Stat label="Avg retention" value="—" sub="Analytics access needed" />
+                    <Stat label="Avg duration"  value="—" sub="Analytics access needed" />
+                  </>
+                )}
+              </div>
+
+              {!data.analytics && (
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12, background: C.amberBg, border: `1px solid ${C.amberBdr}`, borderLeft: `3px solid ${C.amber}`, borderRadius: '0 12px 12px 0', padding: '10px 16px', marginTop: 12 }}>
+                  <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke={C.amber} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
                     <circle cx="8" cy="8" r="6.5"/><line x1="8" y1="5" x2="8" y2="8.5"/><circle cx="8" cy="11" r="0.7" fill={C.amber} stroke="none"/>
                   </svg>
-                  <p style={{ fontSize: 13, color: C.text2, lineHeight: 1.6 }}>
-                    <strong style={{ color: C.text1, fontWeight: 600 }}>Retention, duration &amp; subscriber data unavailable.</strong>
-                    {' '}Grant <strong style={{ fontWeight: 600 }}>YouTube Analytics read access</strong> when connecting your channel to unlock these metrics.
+                  <p style={{ fontSize: 12.5, color: C.text2, lineHeight: 1.55 }}>
+                    Grant <strong style={{ fontWeight: 600 }}>YouTube Analytics read access</strong> on the next reconnect to unlock retention, duration, and 90-day subscriber data.
                   </p>
                 </div>
               )}

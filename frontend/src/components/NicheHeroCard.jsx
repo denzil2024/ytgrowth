@@ -1,32 +1,37 @@
-/* NicheHeroCard — a single insight card in the dashboard feed.
-   VidIQ-style restraint: one focused action, compact thumbnail, clean
-   typography, no decoration beyond the existing .ytg-card aesthetic.
+/* NicheHeroCard — "For you this week" two-card insight row.
+   Mirrors the Outliers feature page card DNA: 16:9 thumbnail, eyebrow chip,
+   bold title, channel byline, hairline + 3-metric footer (Outlier × / VPS / Age),
+   structured "Why it worked" list, and a sibling "Title Suggestion" card.
 
-   The card surfaces THIS WEEK'S outlier in the creator's niche with a
-   short "why" rationale and a tailored title angle they can ship.
-   Primary action: open in SEO Studio prefilled.
+   One backend fetch (/dashboard/niche-outlier) feeds both cards. Per-user
+   angle still lazy-loads from /dashboard/personalize-angle.
 
-   Data shape from /dashboard/niche-outlier:
-     { ok, niche, creator, outlier: { ... }  }
-   Personalized angle from /dashboard/personalize-angle:
-     { angle, angle_reasoning, keyword, personalized }
+   Default export NicheHeroCard intentionally renders the whole row so the
+   Dashboard import surface does not change.
 */
 
 import { useEffect, useState } from 'react'
 
 const C = {
-  card: '#ffffff',
-  border: '#e6e6ec',
-  borderSoft: '#f0f0f4',
-  text1: '#0f0f13',
-  text2: '#4a4a58',
-  text3: '#9595a4',
-  text4: '#b8b8c8',
-  red: '#e5251b',
-  redDeep: '#a50f07',
-  green: '#059669',
-  amber: '#d97706',
-  insetBg: '#fafafb',
+  card:        '#ffffff',
+  border:      '#e6e6ec',
+  borderSoft:  '#f0f0f4',
+  text1:       '#0a0a0f',
+  text2:       'rgba(10,10,15,0.62)',
+  text3:       'rgba(10,10,15,0.40)',
+  text4:       'rgba(10,10,15,0.30)',
+  red:         '#e5302a',
+  redDeep:     '#c22b25',
+  redTint:     'rgba(229,48,42,0.07)',
+  redBdr:      'rgba(229,48,42,0.18)',
+  green:       '#059669',
+  amber:       '#d97706',
+  amberTint:   'rgba(217,119,6,0.08)',
+  amberBdr:    'rgba(217,119,6,0.22)',
+  insetBg:     '#fafafb',
+  insetBdr:    'rgba(10,10,15,0.06)',
+  shadowSm:    '0 1px 3px rgba(0,0,0,0.06), 0 4px 14px rgba(0,0,0,0.06)',
+  shadowHover: '0 4px 14px rgba(0,0,0,0.09), 0 18px 42px rgba(0,0,0,0.10)',
 }
 
 const NICHE_LABELS = {
@@ -37,28 +42,22 @@ const NICHE_LABELS = {
   news: 'News',
 }
 
-function formatViews(n) {
+function fmtViews(n) {
   if (!n && n !== 0) return ''
   if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1).replace(/\.0$/, '')}M`
   if (n >= 1_000)     return `${(n / 1_000).toFixed(1).replace(/\.0$/, '')}K`
   return String(n)
 }
-
-function relTime(iso) {
+function ageDays(iso) {
   if (!iso) return ''
   const d = new Date(iso)
   if (isNaN(d.getTime())) return ''
-  const diffMs = Date.now() - d.getTime()
-  const sec = Math.floor(diffMs / 1000)
-  if (sec < 60) return 'just now'
-  const min = Math.floor(sec / 60)
-  if (min < 60) return `${min}m ago`
-  const hr = Math.floor(min / 60)
-  if (hr < 24) return `${hr}h ago`
-  const day = Math.floor(hr / 24)
-  if (day < 7)  return `${day}d ago`
-  if (day < 30) return `${Math.floor(day / 7)}w ago`
-  return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })
+  const days = Math.floor((Date.now() - d.getTime()) / 86400000)
+  if (days < 1)  return 'today'
+  if (days < 7)  return `${days}d`
+  if (days < 30) return `${Math.floor(days / 7)}w`
+  if (days < 365) return `${Math.floor(days / 30)}mo`
+  return `${Math.floor(days / 365)}y`
 }
 
 const PERSONALIZE_TTL_MS = 7 * 24 * 60 * 60 * 1000
@@ -80,16 +79,17 @@ function savePersonalized(niche, channelId, data) {
   } catch {}
 }
 
+
+// ─── Row container (default export) ──────────────────────────────────────
+
 export default function NicheHeroCard({ onOpenSeoStudio, channelId }) {
   const [state, setState] = useState({ loading: true, data: null })
   const [personalized, setPersonalized] = useState(null)
-  const [dismissed, setDismissed] = useState(false)
 
   useEffect(() => {
     let cancelled = false
     let pollCount = 0
     const MAX_POLLS = 18
-
     async function fetchOnce() {
       try {
         const r = await fetch('/dashboard/niche-outlier', { credentials: 'include' })
@@ -133,357 +133,473 @@ export default function NicheHeroCard({ onOpenSeoStudio, channelId }) {
     return () => { cancelled = true }
   }, [state.data?.ok, state.data?.niche, channelId])
 
-  if (dismissed) return null
-  if (state.loading) return <Skeleton />
-  if (!state.data?.ok) return <Empty niche={state.data?.niche} reason={state.data?.reason} />
-
-  const { niche, outlier } = state.data
-  const nicheLabel = NICHE_LABELS[niche] || niche
-  const why = Array.isArray(outlier.why_working) ? outlier.why_working : []
-  const angle          = personalized?.angle           || outlier.angle_template
-  const angleReasoning = personalized?.angle_reasoning || outlier.angle_reasoning || ''
-  const angleKeyword   = personalized?.keyword         || outlier.angle_keyword
-
   return (
-    <div className="ni-card">
+    <>
       <style>{styles}</style>
-
-      <div className="ni-top">
-        <span className="ni-eyebrow">
-          Niche outlier <span className="ni-sep">·</span> {nicheLabel}
-        </span>
-        <button className="ni-x" aria-label="Dismiss" onClick={() => setDismissed(true)}>
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
-            <line x1="2.5" y1="2.5" x2="9.5" y2="9.5"/>
-            <line x1="9.5" y1="2.5" x2="2.5" y2="9.5"/>
-          </svg>
-        </button>
-      </div>
-
-      <div className="ni-body">
-        <a
-          className="ni-thumb"
-          href={`https://www.youtube.com/watch?v=${outlier.video_id}`}
-          target="_blank" rel="noopener noreferrer"
-          aria-label="Watch on YouTube"
-        >
-          {outlier.thumbnail_url
-            ? <img src={outlier.thumbnail_url} alt="" loading="lazy" />
-            : <div className="ni-thumb-fallback" />}
-          <span className="ni-thumb-hover">
-            <svg width="11" height="11" viewBox="0 0 12 12" fill="currentColor"><polygon points="3,2 10,6 3,10"/></svg>
-            Watch
-          </span>
-        </a>
-
-        <div className="ni-meta">
-          <p className="ni-vid-title">{outlier.title}</p>
-          <p className="ni-vid-meta">
-            <span className="ni-ch">{outlier.channel_title}</span>
-            <span className="ni-dot-sep">·</span>
-            <span>{formatViews(outlier.view_count)} views</span>
-            <span className="ni-dot-sep">·</span>
-            <span>{outlier.sub_ratio}x sub ratio</span>
-            <span className="ni-dot-sep">·</span>
-            <span>{relTime(outlier.published_at)}</span>
+      <div className="fyw-header">
+        <div>
+          <span className="fyw-eyebrow">For you this week</span>
+          <p className="fyw-sub">
+            {state.data?.ok
+              ? `Top breakout from your ${(NICHE_LABELS[state.data.niche] || state.data.niche || '').toLowerCase()} niche, refreshed weekly.`
+              : 'Top breakout from your niche, refreshed weekly.'}
           </p>
         </div>
+      </div>
 
-        <div className="ni-score">
-          <span className="ni-score-num">{outlier.outlier_score}</span>
-          <span className="ni-score-label">Outlier</span>
+      <div className="fyw-grid">
+        {state.loading
+          ? (<><CardSkeleton /><CardSkeleton secondary /></>)
+          : !state.data?.ok
+            ? (<><EmptyOutlier niche={state.data?.niche} reason={state.data?.reason} /><EmptyTitle /></>)
+            : (
+              <>
+                <OutlierCard data={state.data} />
+                <TitleSuggestionCard
+                  data={state.data}
+                  personalized={personalized}
+                  onOpenSeoStudio={onOpenSeoStudio}
+                />
+              </>
+            )}
+      </div>
+    </>
+  )
+}
+
+
+// ─── Outlier card (left) ─────────────────────────────────────────────────
+
+function OutlierCard({ data }) {
+  const { niche, outlier } = data
+  const nicheLabel = NICHE_LABELS[niche] || niche
+  const why = Array.isArray(outlier.why_working) ? outlier.why_working : []
+
+  return (
+    <article className="fyw-card">
+      <div className="fyw-card-head">
+        <span className="fyw-chip fyw-chip-red">
+          <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M2 9l3.2-3.2 2.3 2.3L11 4"/><path d="M7.5 4H11v3.5"/></svg>
+          Niche outlier
+        </span>
+        <span className="fyw-niche-pill">{nicheLabel}</span>
+      </div>
+
+      <a
+        className="fyw-thumb"
+        href={`https://www.youtube.com/watch?v=${outlier.video_id}`}
+        target="_blank" rel="noopener noreferrer"
+        aria-label="Watch on YouTube"
+      >
+        {outlier.thumbnail_url
+          ? <img src={outlier.thumbnail_url} alt="" loading="lazy" />
+          : <div className="fyw-thumb-fallback" />}
+        <span className="fyw-thumb-overlay">
+          <span className="fyw-play">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor"><polygon points="4,2.5 11.5,7 4,11.5"/></svg>
+          </span>
+          Watch on YouTube
+        </span>
+      </a>
+
+      <h3 className="fyw-title">{outlier.title}</h3>
+      <p className="fyw-byline">
+        <span className="fyw-byline-ch">{outlier.channel_title}</span>
+        <span className="fyw-dot">·</span>
+        <span>{ageDays(outlier.published_at)} ago</span>
+      </p>
+
+      <div className="fyw-metrics">
+        <div className="fyw-metric">
+          <p className="fyw-metric-val fyw-metric-val--accent">{outlier.sub_ratio}×</p>
+          <p className="fyw-metric-lbl">Outlier</p>
+        </div>
+        <div className="fyw-metric">
+          <p className="fyw-metric-val">{fmtViews(outlier.view_count)}</p>
+          <p className="fyw-metric-lbl">Views</p>
+        </div>
+        <div className="fyw-metric">
+          <p className="fyw-metric-val">{outlier.outlier_score}</p>
+          <p className="fyw-metric-lbl">Score</p>
         </div>
       </div>
 
       {why.length > 0 && (
-        <ul className="ni-why">
-          {why.slice(0, 3).map((reason, i) => (
-            <li key={i}>{reason}</li>
-          ))}
-        </ul>
+        <>
+          <p className="fyw-section-eyebrow">Why it worked</p>
+          <ul className="fyw-why">
+            {why.slice(0, 3).map((reason, i) => (
+              <li key={i}>
+                <span className="fyw-why-n">{String(i + 1).padStart(2, '0')}</span>
+                <span className="fyw-why-text">{reason}</span>
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
+    </article>
+  )
+}
+
+
+// ─── Title suggestion card (right) ───────────────────────────────────────
+
+function TitleSuggestionCard({ data, personalized, onOpenSeoStudio }) {
+  const { outlier } = data
+  const angle          = personalized?.angle           || outlier.angle_template || ''
+  const angleReasoning = personalized?.angle_reasoning || outlier.angle_reasoning || ''
+  const angleKeyword   = personalized?.keyword         || outlier.angle_keyword || ''
+  const isPersonal     = !!personalized?.personalized
+
+  return (
+    <article className="fyw-card">
+      <div className="fyw-card-head">
+        <span className="fyw-chip fyw-chip-red">
+          <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M2 9V7M5 9V5M8 9V3M11 9V1"/></svg>
+          Title suggestion
+        </span>
+        {isPersonal && (
+          <span className="fyw-niche-pill">
+            <svg width="9" height="9" viewBox="0 0 12 12" fill="currentColor" style={{ marginRight: 4 }}><path d="M6 1l1.4 3.4 3.6.3-2.8 2.4.9 3.5L6 8.6 2.9 10.6l.9-3.5L1 4.7l3.6-.3z"/></svg>
+            Personalized
+          </span>
+        )}
+      </div>
+
+      <div className="fyw-angle-frame">
+        <p className="fyw-angle-mini-lbl">Suggested title for your channel</p>
+        <p className="fyw-angle-title">{angle || 'Generating your tailored title…'}</p>
+      </div>
+
+      {angleReasoning && (
+        <>
+          <p className="fyw-section-eyebrow">Why this works for you</p>
+          <p className="fyw-angle-reason">{angleReasoning}</p>
+        </>
       )}
 
-      <div className="ni-angle">
-        <p className="ni-angle-label">Suggested angle for your channel</p>
-        <p className="ni-angle-title">{angle}</p>
-        {angleReasoning && <p className="ni-angle-reason">{angleReasoning}</p>}
-        <div className="ni-angle-row">
-          {angleKeyword
-            ? <span className="ni-kw">Target: <strong>{angleKeyword}</strong></span>
-            : <span />}
-          <button
-            type="button"
-            className="ni-cta"
-            onClick={() => onOpenSeoStudio?.(angle, angleKeyword)}
-          >
-            Open in SEO Studio
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
-              <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
-            </svg>
-          </button>
+      {angleKeyword && (
+        <div className="fyw-kw-row">
+          <span className="fyw-kw-lbl">Target keyword</span>
+          <span className="fyw-kw-val">{angleKeyword}</span>
         </div>
-      </div>
-    </div>
+      )}
+
+      <div className="fyw-spacer" />
+
+      <button
+        type="button"
+        className="fyw-cta"
+        disabled={!angle}
+        onClick={() => onOpenSeoStudio?.(angle, angleKeyword)}
+      >
+        Open in Title &amp; Description
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+          <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+        </svg>
+      </button>
+    </article>
   )
 }
 
 
-// ─── Empty / Skeleton states — same restrained shell ────────────────────────
+// ─── Empty / Skeleton states ─────────────────────────────────────────────
 
-function Skeleton() {
+function CardSkeleton({ secondary }) {
   return (
-    <div className="ni-card ni-shell">
-      <style>{styles}</style>
-      <div className="ni-top">
-        <span className="ni-sk" style={{ width: 140, height: 11 }} />
+    <article className="fyw-card fyw-card-skeleton">
+      <div className="fyw-card-head">
+        <span className="fyw-sk" style={{ width: 110, height: 22, borderRadius: 100 }} />
       </div>
-      <div className="ni-body">
-        <div className="ni-sk" style={{ width: 160, height: 90, borderRadius: 10, flexShrink: 0 }} />
-        <div className="ni-meta">
-          <div className="ni-sk" style={{ width: '88%', height: 16, marginBottom: 8 }} />
-          <div className="ni-sk" style={{ width: '60%', height: 12 }} />
-        </div>
-      </div>
-      <div className="ni-sk" style={{ width: '100%', height: 12, marginTop: 16 }} />
-      <div className="ni-sk" style={{ width: '92%', height: 12, marginTop: 8 }} />
-      <div className="ni-sk" style={{ width: '78%', height: 12, marginTop: 8 }} />
-    </div>
+      {!secondary && <div className="fyw-sk" style={{ width: '100%', aspectRatio: '16/9', borderRadius: 10, marginBottom: 14 }} />}
+      <div className="fyw-sk" style={{ width: '92%', height: 18, marginBottom: 10 }} />
+      <div className="fyw-sk" style={{ width: '70%', height: 12, marginBottom: 18 }} />
+      <div className="fyw-sk" style={{ width: '100%', height: 60, marginBottom: 16, borderRadius: 10 }} />
+      <div className="fyw-sk" style={{ width: '95%', height: 12, marginBottom: 8 }} />
+      <div className="fyw-sk" style={{ width: '80%', height: 12 }} />
+    </article>
   )
 }
 
-function Empty({ niche, reason }) {
+function EmptyOutlier({ niche, reason }) {
   const label = NICHE_LABELS[niche] || niche || 'your niche'
   const isGenerating = reason === 'generating_now' || reason === 'no_cache_yet'
   return (
-    <div className="ni-card ni-shell">
-      <style>{styles}</style>
-      <div className="ni-top">
-        <span className="ni-eyebrow">Niche outlier <span className="ni-sep">·</span> {label}</span>
+    <article className="fyw-card fyw-card-empty">
+      <div className="fyw-card-head">
+        <span className="fyw-chip fyw-chip-red">Niche outlier</span>
       </div>
-      <div className="ni-empty-row">
-        <div className="ni-spin" />
-        <div>
-          <p className="ni-empty-title">
-            {isGenerating ? `Finding the top ${label.toLowerCase()} outlier of the week.` : 'Niche outlier coming soon.'}
-          </p>
-          <p className="ni-empty-sub">
-            {isGenerating
-              ? 'Usually takes 15 to 30 seconds. The card refreshes here automatically.'
-              : 'Try refreshing the page. If this keeps happening, email support@ytgrowth.io.'}
-          </p>
-        </div>
+      <div className="fyw-empty-body">
+        <div className="fyw-spin" />
+        <p className="fyw-empty-title">
+          {isGenerating ? `Finding the top ${label.toLowerCase()} outlier…` : 'Niche outlier coming soon'}
+        </p>
+        <p className="fyw-empty-sub">
+          {isGenerating
+            ? 'Usually takes 15 to 30 seconds. The card refreshes here automatically.'
+            : 'Try refreshing the page. If this keeps happening, email support@ytgrowth.io.'}
+        </p>
       </div>
-    </div>
+    </article>
+  )
+}
+
+function EmptyTitle() {
+  return (
+    <article className="fyw-card fyw-card-empty">
+      <div className="fyw-card-head">
+        <span className="fyw-chip fyw-chip-red">Title suggestion</span>
+      </div>
+      <div className="fyw-empty-body">
+        <div className="fyw-spin" />
+        <p className="fyw-empty-title">Tailoring a title for your channel…</p>
+        <p className="fyw-empty-sub">Appears the moment the outlier on the left is ready.</p>
+      </div>
+    </article>
   )
 }
 
 
-// ─── Styles ────────────────────────────────────────────────────────────────
-// Restraint by default. Matches the existing .ytg-card aesthetic exactly:
-// white background, 1px #e6e6ec border, 16px radius, subtle two-layer shadow.
-// Red is reserved for the primary CTA only.
+// ─── Styles ──────────────────────────────────────────────────────────────
 
 const styles = `
-.ni-card {
+.fyw-header {
+  display: flex; align-items: flex-end; justify-content: space-between;
+  gap: 16px; margin: 4px 0 14px 0;
+}
+.fyw-eyebrow {
+  display: inline-block;
+  font-size: 11px; font-weight: 700; letter-spacing: 0.08em;
+  text-transform: uppercase; color: ${C.text2};
+  background: ${C.redTint}; padding: 5px 12px;
+  border-radius: 100px; color: ${C.redDeep};
+  margin-bottom: 8px;
+}
+.fyw-sub {
+  font-size: 13px; color: ${C.text2}; line-height: 1.55;
+  letter-spacing: -0.05px; margin: 0;
+}
+
+.fyw-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 16px; margin-bottom: 16px;
+}
+@media (max-width: 980px) {
+  .fyw-grid { grid-template-columns: 1fr; }
+}
+
+.fyw-card {
   background: ${C.card};
   border: 1px solid ${C.border};
   border-radius: 16px;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 4px 14px rgba(0,0,0,0.06);
-  padding: 20px 24px 22px;
-  margin-bottom: 14px;
+  box-shadow: ${C.shadowSm};
+  padding: 18px 20px 18px;
+  display: flex; flex-direction: column;
+  transition: box-shadow 0.18s, transform 0.18s;
   font-family: 'Inter', system-ui, sans-serif;
-  transition: box-shadow 0.2s, transform 0.2s;
 }
-.ni-card.ni-shell { padding: 22px 24px; }
-.ni-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.08), 0 16px 40px rgba(0,0,0,0.09); }
+.fyw-card:hover { box-shadow: ${C.shadowHover}; transform: translateY(-1px); }
 
-.ni-top {
+.fyw-card-head {
   display: flex; align-items: center; justify-content: space-between;
-  margin-bottom: 14px;
+  gap: 8px; margin-bottom: 14px;
 }
-.ni-eyebrow {
-  font-size: 10.5px; font-weight: 700; letter-spacing: 0.08em;
-  text-transform: uppercase; color: ${C.text3};
+.fyw-chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 10.5px; font-weight: 800; letter-spacing: 0.08em;
+  text-transform: uppercase; padding: 5px 10px;
+  border-radius: 100px;
 }
-.ni-eyebrow .ni-sep { color: ${C.text4}; margin: 0 4px; }
-.ni-x {
-  width: 24px; height: 24px; border-radius: 6px;
-  border: none; background: transparent;
-  color: ${C.text3}; cursor: pointer;
-  display: inline-flex; align-items: center; justify-content: center;
-  transition: background 0.15s, color 0.15s;
+.fyw-chip-red { color: ${C.redDeep}; background: ${C.redTint}; border: 1px solid ${C.redBdr}; }
+.fyw-niche-pill {
+  display: inline-flex; align-items: center;
+  font-size: 11px; font-weight: 700; color: ${C.text2};
+  background: ${C.insetBg}; border: 1px solid ${C.insetBdr};
+  padding: 4px 10px; border-radius: 100px;
+  letter-spacing: -0.1px;
 }
-.ni-x:hover { background: #f4f4f6; color: ${C.text1}; }
 
-.ni-body {
-  display: flex; align-items: flex-start; gap: 16px;
-  margin-bottom: 16px;
-}
-.ni-thumb {
-  position: relative;
-  width: 160px; height: 90px;
-  border-radius: 10px;
-  overflow: hidden;
-  flex-shrink: 0;
-  background: #f0f0f4;
-  display: block;
+.fyw-thumb {
+  position: relative; display: block;
+  width: 100%; aspect-ratio: 16 / 9;
+  border-radius: 10px; overflow: hidden;
+  background: #eaeaef;
+  margin-bottom: 12px;
   text-decoration: none;
 }
-.ni-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.ni-thumb-fallback { width: 100%; height: 100%; background: #eaeaef; }
-.ni-thumb-hover {
+.fyw-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.fyw-thumb-fallback { width: 100%; height: 100%; background: #eaeaef; }
+.fyw-thumb-overlay {
   position: absolute; inset: 0;
-  display: flex; align-items: center; justify-content: center;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 8px;
+  font-size: 12px; font-weight: 700; color: #fff;
+  letter-spacing: -0.1px;
   background: rgba(0,0,0,0); opacity: 0;
-  color: ${C.text1}; font-size: 12px; font-weight: 700;
-  gap: 6px;
-  transition: opacity 0.15s, background 0.15s;
+  transition: opacity 0.18s, background 0.18s;
 }
-.ni-thumb-hover::before {
-  content: ''; position: absolute; inset: 0;
-  background: rgba(0,0,0,0.28);
-  z-index: -1;
+.fyw-thumb-overlay .fyw-play {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: ${C.red}; display: inline-flex;
+  align-items: center; justify-content: center;
+  box-shadow: 0 3px 10px rgba(229,48,42,0.5);
+  padding-left: 3px;
 }
-.ni-thumb-hover {
-  background: transparent;
-}
-.ni-thumb:hover .ni-thumb-hover {
-  opacity: 1;
-  background: rgba(0,0,0,0.32);
-  color: #ffffff;
+.fyw-thumb:hover .fyw-thumb-overlay {
+  opacity: 1; background: rgba(0,0,0,0.32);
 }
 
-.ni-meta { flex: 1; min-width: 0; }
-.ni-vid-title {
+.fyw-title {
   font-size: 16px; font-weight: 700; color: ${C.text1};
-  letter-spacing: -0.2px; line-height: 1.4;
-  margin: 0 0 6px 0;
+  letter-spacing: -0.25px; line-height: 1.35;
+  margin: 0 0 4px 0;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
-.ni-vid-meta {
-  font-size: 12.5px; color: ${C.text3}; font-weight: 500;
-  display: flex; flex-wrap: wrap; gap: 0 6px;
-  line-height: 1.5;
+.fyw-byline {
+  font-size: 12px; color: ${C.text3}; line-height: 1.5;
+  margin: 0 0 14px 0;
+  display: flex; flex-wrap: wrap; gap: 0 4px;
+}
+.fyw-byline-ch { color: ${C.text2}; font-weight: 600; }
+.fyw-dot { color: ${C.text4}; margin: 0 2px; }
+
+.fyw-metrics {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  border-top: 1px solid ${C.borderSoft};
+  border-bottom: 1px solid ${C.borderSoft};
+  padding: 12px 0;
+  margin-bottom: 16px;
+}
+.fyw-metric { text-align: center; }
+.fyw-metric + .fyw-metric { border-left: 1px solid ${C.borderSoft}; }
+.fyw-metric-val {
+  font-size: 20px; font-weight: 800; color: ${C.text1};
+  letter-spacing: -0.6px; line-height: 1;
+  font-variant-numeric: tabular-nums;
+  margin: 0 0 6px 0;
+}
+.fyw-metric-val--accent { color: ${C.red}; }
+.fyw-metric-lbl {
+  font-size: 9.5px; font-weight: 800; letter-spacing: 0.1em;
+  text-transform: uppercase; color: ${C.text3};
   margin: 0;
 }
-.ni-vid-meta .ni-ch { color: ${C.text2}; font-weight: 600; }
-.ni-vid-meta .ni-dot-sep { color: ${C.text4}; }
 
-.ni-score {
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  flex-shrink: 0;
-  padding: 8px 12px 6px;
-  border-left: 1px solid ${C.borderSoft};
-  margin-left: 4px;
-}
-.ni-score-num {
-  font-size: 22px; font-weight: 800; color: ${C.text1};
-  letter-spacing: -0.4px; line-height: 1; font-variant-numeric: tabular-nums;
-}
-.ni-score-label {
-  font-size: 9.5px; font-weight: 700; letter-spacing: 0.1em;
-  color: ${C.text3}; text-transform: uppercase;
-  margin-top: 4px;
+.fyw-section-eyebrow {
+  font-size: 10px; font-weight: 800; letter-spacing: 0.08em;
+  text-transform: uppercase; color: ${C.text3};
+  margin: 0 0 10px 0;
 }
 
-.ni-why {
-  list-style: none; padding: 0; margin: 0 0 16px 0;
-  border-top: 1px solid ${C.borderSoft};
-  padding-top: 16px;
+.fyw-why { list-style: none; padding: 0; margin: 0; }
+.fyw-why li {
+  display: flex; gap: 10px; align-items: flex-start;
+  margin-bottom: 8px;
+  font-size: 13px; color: ${C.text2}; line-height: 1.6;
 }
-.ni-why li {
-  position: relative;
-  padding-left: 14px;
-  font-size: 13.5px; color: ${C.text2}; line-height: 1.6;
-  margin-bottom: 6px;
+.fyw-why li:last-child { margin-bottom: 0; }
+.fyw-why-n {
+  font-size: 10px; font-weight: 800; color: ${C.green};
+  letter-spacing: 0.05em;
+  flex-shrink: 0; margin-top: 3px;
+  font-variant-numeric: tabular-nums;
 }
-.ni-why li:last-child { margin-bottom: 0; }
-.ni-why li::before {
-  content: ''; position: absolute;
-  left: 0; top: 9px;
-  width: 4px; height: 4px; border-radius: 50%;
-  background: ${C.text4};
-}
+.fyw-why-text { flex: 1; }
 
-.ni-angle {
+/* Title suggestion */
+.fyw-angle-frame {
   background: ${C.insetBg};
-  border: 1px solid ${C.borderSoft};
+  border: 1px solid ${C.insetBdr};
   border-radius: 12px;
-  padding: 14px 16px 12px;
+  padding: 14px 16px;
+  margin-bottom: 14px;
 }
-.ni-angle-label {
-  font-size: 10.5px; font-weight: 700; letter-spacing: 0.08em;
+.fyw-angle-mini-lbl {
+  font-size: 9.5px; font-weight: 800; letter-spacing: 0.1em;
   text-transform: uppercase; color: ${C.text3};
   margin: 0 0 8px 0;
 }
-.ni-angle-title {
-  font-size: 15px; font-weight: 700; color: ${C.text1};
-  letter-spacing: -0.15px; line-height: 1.45;
-  margin: 0 0 6px 0;
+.fyw-angle-title {
+  font-size: 16px; font-weight: 700; color: ${C.text1};
+  letter-spacing: -0.2px; line-height: 1.4;
+  margin: 0;
 }
-.ni-angle-reason {
-  font-size: 12.5px; color: ${C.text3}; line-height: 1.55;
-  margin: 0 0 12px 0;
+.fyw-angle-reason {
+  font-size: 13px; color: ${C.text2}; line-height: 1.65;
+  margin: 0 0 14px 0;
 }
-.ni-angle-row {
-  display: flex; align-items: center; justify-content: space-between;
-  gap: 12px; flex-wrap: wrap;
+.fyw-kw-row {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 12px;
+  background: ${C.amberTint};
+  border: 1px solid ${C.amberBdr};
+  border-radius: 10px;
+  margin-bottom: 14px;
 }
-.ni-kw {
-  font-size: 12px; color: ${C.text3}; font-weight: 500;
+.fyw-kw-lbl {
+  font-size: 10px; font-weight: 800; color: ${C.amber};
+  letter-spacing: 0.08em; text-transform: uppercase;
 }
-.ni-kw strong { color: ${C.text1}; font-weight: 700; }
-.ni-cta {
-  display: inline-flex; align-items: center; gap: 7px;
+.fyw-kw-val {
+  font-size: 12.5px; font-weight: 700; color: ${C.text1};
+  letter-spacing: -0.1px;
+}
+
+.fyw-spacer { flex: 1; min-height: 4px; }
+
+.fyw-cta {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  width: 100%;
   background: ${C.red};
   color: #ffffff;
   border: none;
-  padding: 9px 16px;
+  padding: 12px 18px;
   border-radius: 100px;
   font-family: 'Inter', system-ui, sans-serif;
-  font-size: 12.5px; font-weight: 700;
+  font-size: 13.5px; font-weight: 700;
   letter-spacing: -0.1px;
   cursor: pointer;
-  transition: background 0.15s, transform 0.15s;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.10), 0 4px 14px rgba(229,48,42,0.28);
+  transition: filter 0.15s, transform 0.15s, box-shadow 0.15s;
 }
-.ni-cta:hover { background: ${C.redDeep}; transform: translateY(-1px); }
+.fyw-cta:hover:not(:disabled) {
+  filter: brightness(1.07); transform: translateY(-1px);
+  box-shadow: 0 3px 8px rgba(0,0,0,0.13), 0 10px 28px rgba(229,48,42,0.34);
+}
+.fyw-cta:disabled { opacity: 0.55; cursor: progress; }
 
-/* Empty state */
-.ni-empty-row { display: flex; align-items: center; gap: 14px; }
-.ni-spin {
-  width: 28px; height: 28px; border-radius: 50%;
+/* Empty + skeleton */
+.fyw-card-empty .fyw-empty-body {
+  display: flex; flex-direction: column; align-items: center;
+  text-align: center; padding: 22px 4px 8px;
+  gap: 10px;
+}
+.fyw-spin {
+  width: 30px; height: 30px; border-radius: 50%;
   border: 2.5px solid ${C.border};
   border-top-color: ${C.red};
-  animation: niSpin 0.8s linear infinite;
-  flex-shrink: 0;
+  animation: fywSpin 0.8s linear infinite;
 }
-@keyframes niSpin { to { transform: rotate(360deg) } }
-.ni-empty-title {
+@keyframes fywSpin { to { transform: rotate(360deg) } }
+.fyw-empty-title {
   font-size: 14px; font-weight: 700; color: ${C.text1};
-  margin: 0 0 4px 0; line-height: 1.4;
+  line-height: 1.4; margin: 0;
 }
-.ni-empty-sub {
+.fyw-empty-sub {
   font-size: 12.5px; color: ${C.text3}; line-height: 1.55;
-  margin: 0;
+  max-width: 260px; margin: 0;
 }
 
-/* Skeleton */
-.ni-sk {
+.fyw-card-skeleton { min-height: 380px; }
+.fyw-sk {
   background: linear-gradient(90deg, #f4f4f6 0%, #ececef 50%, #f4f4f6 100%);
   background-size: 400px 100%;
-  animation: niShimmer 1.4s linear infinite;
+  animation: fywShimmer 1.4s linear infinite;
   border-radius: 6px;
   display: block;
 }
-@keyframes niShimmer { 0% { background-position: -200px 0 } 100% { background-position: 400px 0 } }
-
-@media (max-width: 640px) {
-  .ni-card { padding: 18px 18px 20px; }
-  .ni-body { flex-direction: column; gap: 12px; }
-  .ni-thumb { width: 100%; height: auto; aspect-ratio: 16 / 9; }
-  .ni-score { flex-direction: row; gap: 8px; border-left: none; border-top: 1px solid ${C.borderSoft}; margin: 0; padding: 10px 0 0; }
-}
+@keyframes fywShimmer { 0% { background-position: -200px 0 } 100% { background-position: 400px 0 } }
 `
