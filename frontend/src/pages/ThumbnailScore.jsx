@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import CreditsEmptyModal from '../components/CreditsEmptyModal'
+import UpsellModal from '../components/UpsellModal'
 
 // Load Inter once — SCOPED to this page (each page owns its font loading, never global)
 if (typeof document !== 'undefined' && !document.getElementById('thumb-iq-inter-font')) {
@@ -1849,12 +1850,26 @@ export default function ThumbnailScore({ channelData, onNavigate, plan, freeTier
         </div>
       )}
 
-      <CreditsEmptyModal
-        open={creditsOut}
-        onClose={() => setCreditsOut(false)}
-        featureName={gated ? 'Thumbnail Score' : 'thumbnail analyses'}
-        lockMode={gated}
-      />
+      {gated ? (
+        <UpsellModal
+          open={creditsOut}
+          onClose={() => setCreditsOut(false)}
+          title="You've used your free Thumbnail Score"
+          description="Free accounts can score one thumbnail per monthly cycle. Upgrade to keep scoring every thumbnail you upload, against the exact videos winning in your niche."
+          bullets={[
+            'Score unlimited thumbnails against your niche benchmark',
+            'Layer 2 AI critique, why it works and what to change',
+            "Full history across every thumbnail you've scored",
+          ]}
+          showPackLink={false}
+        />
+      ) : (
+        <CreditsEmptyModal
+          open={creditsOut}
+          onClose={() => setCreditsOut(false)}
+          featureName="thumbnail analyses"
+        />
+      )}
     </div>
   )
 }

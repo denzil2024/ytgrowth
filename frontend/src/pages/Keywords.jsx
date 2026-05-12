@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import CreditsEmptyModal from '../components/CreditsEmptyModal'
+import UpsellModal from '../components/UpsellModal'
 
 const API = import.meta.env.VITE_API_URL || ''
 const LS_KEY = 'ytg_keywords_v1'
@@ -1131,12 +1132,26 @@ export default function Keywords({ plan, freeTierFeatures }) {
         </div>
       )}
 
-      <CreditsEmptyModal
-        open={creditsOut}
-        onClose={() => setCreditsOut(false)}
-        featureName={gated ? 'Keyword Research' : 'keyword research runs'}
-        lockMode={gated}
-      />
+      {gated ? (
+        <UpsellModal
+          open={creditsOut}
+          onClose={() => setCreditsOut(false)}
+          title="You've used your free Keyword research"
+          description="Free accounts get one keyword research run per monthly cycle. Upgrade to keep researching, with YouTube autocomplete, related searches, and opportunity-ranked scoring every time."
+          bullets={[
+            'Unlimited keyword research runs every month',
+            'Real search volume and competition via YouTube + SerpAPI',
+            'Ranked by niche opportunity so you pick the strongest title',
+          ]}
+          showPackLink={false}
+        />
+      ) : (
+        <CreditsEmptyModal
+          open={creditsOut}
+          onClose={() => setCreditsOut(false)}
+          featureName="keyword research runs"
+        />
+      )}
     </div>
   )
 }

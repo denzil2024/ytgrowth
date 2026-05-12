@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import CreditsEmptyModal from '../components/CreditsEmptyModal'
+import UpsellModal from '../components/UpsellModal'
 
 // Load Inter once — SCOPED to this page (each page owns its font, never global)
 if (typeof document !== 'undefined' && !document.getElementById('outliers-inter-font')) {
@@ -1138,12 +1139,27 @@ export default function Outliers({ channelData, onNavigate, plan, freeTierFeatur
         </div>
       )}
 
-      <CreditsEmptyModal
-        open={creditsOut}
-        onClose={() => setCreditsOut(false)}
-        featureName={outliersGated ? 'Outliers' : 'Outliers searches'}
-        lockMode={outliersGated}
-      />
+      {outliersGated ? (
+        <UpsellModal
+          open={creditsOut}
+          onClose={() => setCreditsOut(false)}
+          title="Unlock Outlier Scoring"
+          description="See the thumbnails, titles, and channels actually winning in your niche right now, with a ranked outlier score so you know which to copy and which to ignore."
+          bullets={[
+            'Top outlier videos in your niche, ranked by performance vs. subs',
+            'Winning thumbnail patterns distilled into a reusable formula',
+            "Breakout channels and keyword opportunities you're missing",
+          ]}
+          note="Outlier Scoring requires 3 credits."
+          showPackLink={false}
+        />
+      ) : (
+        <CreditsEmptyModal
+          open={creditsOut}
+          onClose={() => setCreditsOut(false)}
+          featureName="Outliers searches"
+        />
+      )}
     </div>
   )
 }

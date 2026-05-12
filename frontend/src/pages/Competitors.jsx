@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import CreditsEmptyModal from '../components/CreditsEmptyModal'
+import UpsellModal from '../components/UpsellModal'
 
 // ─── persistence ──────────────────────────────────────────────────────────────
 const LS_KEY = 'ytgrowth_tracked_competitors'
@@ -1484,12 +1485,26 @@ export default function Competitors({ plan, freeTierFeatures }) {
         </div>
       )}
 
-      <CreditsEmptyModal
-        open={creditsOut}
-        onClose={() => setCreditsOut(false)}
-        featureName={gated ? 'Competitor Analysis' : 'competitor analyses'}
-        lockMode={gated}
-      />
+      {gated ? (
+        <UpsellModal
+          open={creditsOut}
+          onClose={() => setCreditsOut(false)}
+          title="You've used your free Competitor analysis"
+          description="Free accounts get one competitor deep-dive per monthly cycle. Upgrade to keep analysing channels, their posting cadence, their title patterns, and the video ideas their audience is asking for."
+          bullets={[
+            'Unlimited competitor deep-dives every month',
+            'Full AI breakdown, posting timing, title patterns, playbook',
+            'Video ideas pooled from every competitor you analyse',
+          ]}
+          showPackLink={false}
+        />
+      ) : (
+        <CreditsEmptyModal
+          open={creditsOut}
+          onClose={() => setCreditsOut(false)}
+          featureName="competitor analyses"
+        />
+      )}
     </div>
   )
 }

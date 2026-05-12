@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useMemo } from 'react'
 import CreditsEmptyModal from '../components/CreditsEmptyModal'
+import UpsellModal from '../components/UpsellModal'
 
 // Load Inter once — SCOPED to this page, not global (each page owns its own font loading)
 if (typeof document !== 'undefined' && !document.getElementById('seo-opt-inter-font')) {
@@ -2118,12 +2119,26 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
         </div>
       )}
 
-      <CreditsEmptyModal
-        open={creditsOut}
-        onClose={() => setCreditsOut(false)}
-        featureName={seoGated ? 'SEO Studio' : 'SEO analyses'}
-        lockMode={seoGated}
-      />
+      {seoGated ? (
+        <UpsellModal
+          open={creditsOut}
+          onClose={() => setCreditsOut(false)}
+          title="Unlock SEO Studio"
+          description="Rewrite your titles, descriptions, and tags against the videos actually winning in your niche, with AI-scored keywords and three direction-picked title suggestions."
+          bullets={[
+            'AI-scored title alternatives with SEO, CTR, and hook breakdowns',
+            'Description generator trained on your channel and your niche',
+            'Keyword research with real search volume and competition',
+          ]}
+          showPackLink={false}
+        />
+      ) : (
+        <CreditsEmptyModal
+          open={creditsOut}
+          onClose={() => setCreditsOut(false)}
+          featureName="SEO analyses"
+        />
+      )}
     </div>
   )
 }
