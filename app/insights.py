@@ -627,28 +627,90 @@ Return ONLY valid JSON. No markdown. No preamble. Return exactly {MAX_ACTIONS} p
 
     try:
         client = anthropic.Anthropic(api_key=os.environ.get("ANTHROPIC_API_KEY"))
+        # 8192 tokens covers a 15-action audit comfortably. 4096 was clipping
+        # responses for solo/growth/agency plans (MAX_ACTIONS 8/12/15) right
+        # in the middle of the JSON, sending every audit to fallback mode.
         message = client.messages.create(
             model="claude-sonnet-4-6",
-            max_tokens=4096,
+            max_tokens=8192,
             messages=[{"role": "user", "content": prompt}]
         )
         raw = message.content[0].text.strip()
+        stop_reason = getattr(message, "stop_reason", None)
         # Strip markdown code fences if present
         raw = re.sub(r'^```[a-z]*\n?', '', raw)
         raw = re.sub(r'\n?```$', '', raw).strip()
-        result = json.loads(raw)
+        try:
+            result = json.loads(raw)
+        except json.JSONDecodeError as parse_err:
+            # Last-ditch salvage: trim any trailing junk after the final
+            # balanced '}' so a partial-but-mostly-complete response can
+            # still produce a usable audit. Claude occasionally appends a
+            # closing prose line after the JSON which breaks json.loads.
+            salvaged = _trim_to_balanced_json(raw)
+            if salvaged is not None:
+                try:
+                    result = json.loads(salvaged)
+                    print(f"[insights] Recovered partial JSON ({len(raw)} -> {len(salvaged)} chars)")
+                except json.JSONDecodeError:
+                    print(f"[insights] JSON parse failed after salvage: {parse_err}")
+                    print(f"[insights] Stop reason: {stop_reason}")
+                    print(f"[insights] First 400 chars: {raw[:400]}")
+                    print(f"[insights] Last 400 chars:  {raw[-400:]}")
+                    return _fallback_analysis(stats, videos, analytics)
+            else:
+                print(f"[insights] JSON parse failed: {parse_err}")
+                print(f"[insights] Stop reason: {stop_reason}")
+                print(f"[insights] First 400 chars: {raw[:400]}")
+                print(f"[insights] Last 400 chars:  {raw[-400:]}")
+                return _fallback_analysis(stats, videos, analytics)
         # Override AI-guessed score with deterministic weighted formula
         if isinstance(result.get('categoryScores'), dict):
             result['channelScore'] = _compute_channel_score(result['categoryScores'])
         return result
-    except json.JSONDecodeError as e:
-        print(f"AI analysis JSON parse error: {e}")
-        return _fallback_analysis(stats, videos, analytics)
     except Exception as e:
         import traceback
-        print(f"AI analysis error: {e}")
+        print(f"[insights] AI analysis error: {e}")
         traceback.print_exc()
         return _fallback_analysis(stats, videos, analytics)
+
+
+def _trim_to_balanced_json(s: str) -> str | None:
+    """Best-effort: find the largest prefix of s that's a balanced JSON object.
+    Counts braces while respecting strings + escapes. Returns the substring up
+    to and including the matching outer '}' or None if no balanced object exists.
+
+    Solves the common case where Claude appends a closing line of prose after
+    the JSON (which would otherwise break json.loads on the whole string).
+    """
+    if not s:
+        return None
+    start = s.find("{")
+    if start < 0:
+        return None
+    depth = 0
+    in_string = False
+    escape = False
+    for i in range(start, len(s)):
+        ch = s[i]
+        if in_string:
+            if escape:
+                escape = False
+            elif ch == "\\":
+                escape = True
+            elif ch == "\"":
+                in_string = False
+            continue
+        if ch == "\"":
+            in_string = True
+            continue
+        if ch == "{":
+            depth += 1
+        elif ch == "}":
+            depth -= 1
+            if depth == 0:
+                return s[start:i + 1]
+    return None
 
 
 def _fallback_analysis(stats, videos, analytics):

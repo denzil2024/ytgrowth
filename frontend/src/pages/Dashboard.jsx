@@ -12,6 +12,7 @@ import WeeklyReport from './WeeklyReport'
 import Referrals from './Referrals'
 import Admin from './Admin'
 import NicheHeroCard from '../components/NicheHeroCard'
+import AuditProgress from '../components/AuditProgress'
 import { loginUrl } from '../utm.js'
 import { openCheckout } from '../checkout'
 import UsageBar from '../components/UsageBar'
@@ -1664,16 +1665,21 @@ export default function Dashboard() {
     return () => { cancelled = true; window.removeEventListener('focus', onFocus) }
   }, [])
 
-  // Poll for AI analysis completion when insights are still pending
+  // Poll for AI analysis completion when insights are still pending.
+  // When insights arrive we flip auditFinishing=true so AuditProgress can
+  // play its "Almost ready" outro before we tear it down via onDone.
+  const [auditFinishing, setAuditFinishing] = useState(false)
   useEffect(() => {
     if (!analyzingAI) return
+    let polledData = null
     const interval = setInterval(() => {
       fetch('/auth/data', { credentials: 'include' })
         .then(r => r.json())
         .then(d => {
           if (d.insights !== null) {
+            polledData = d
             setData(d)
-            setAnalyzingAI(false)
+            setAuditFinishing(true)
             clearInterval(interval)
           }
         })
@@ -2293,10 +2299,14 @@ export default function Dashboard() {
 
           {/* ── INSIGHTS ─────────────────────────────────────────────── */}
           {data && nav === 'Overview' && analyzingAI && (
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '50vh', gap: 14 }}>
-              <div style={{ width: 32, height: 32, border: `2.5px solid ${C.border}`, borderTop: `2.5px solid ${C.red}`, borderRadius: '50%', animation: 'spin 0.7s linear infinite' }}/>
-              <p style={{ fontSize: 14, fontWeight: 700, color: C.text1 }}>Running AI audit…</p>
-              <p style={{ fontSize: 14, color: C.text3, maxWidth: 320, textAlign: 'center', lineHeight: 1.6 }}>YTGrowth is analyzing your last 20 videos, CTR, retention, and posting patterns. This takes about 20–30 seconds.</p>
+            <div style={{ padding: '24px 0 36px' }}>
+              <AuditProgress
+                done={auditFinishing}
+                onDone={() => {
+                  setAnalyzingAI(false)
+                  setAuditFinishing(false)
+                }}
+              />
             </div>
           )}
 
