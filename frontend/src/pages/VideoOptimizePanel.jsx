@@ -304,6 +304,14 @@ export default function VideoOptimizePanel({ video, onClose, onVideoUpdated, pla
   // On mount: load from DB first, then fall back to fresh analysis
   useEffect(() => {
     async function init() {
+      // Free-tier gated: skip the auto-analysis entirely so we don't
+      // fire wasted network roundtrips. Backend gates block the Claude
+      // calls anyway, but no point hitting them.
+      if (videoOptimizeGated) {
+        setVideoLoading(false)
+        setTitleLoading(false)
+        return
+      }
       const cached = await loadDbCache(video.video_id)
       if (cached) {
         if (cached.videoResult) setVideoResult(cached.videoResult)
@@ -317,7 +325,7 @@ export default function VideoOptimizePanel({ video, onClose, onVideoUpdated, pla
       await runAnalysis()
     }
     init()
-  }, [video.video_id])
+  }, [video.video_id, videoOptimizeGated])
 
   async function runAnalysis() {
     setVideoLoading(true); setTitleLoading(true)

@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef } from 'react'
-import UpsellGate from '../components/UpsellGate'
 import CreditsEmptyModal from '../components/CreditsEmptyModal'
 
 // Load Inter once — SCOPED to this page (each page owns its font, never global)
@@ -514,6 +513,13 @@ export default function Outliers({ channelData, onNavigate, plan, freeTierFeatur
   async function handleSubmit() {
     const q = query.trim()
     if (!q || loading || loadingIntent) return
+    // Client-side short-circuit for free-tier locked users. Avoids the
+    // intent-options Haiku call entirely; backend also gates this endpoint
+    // (defense-in-depth) but we never want to even round-trip.
+    if (outliersGated) {
+      setCreditsOut(true)
+      return
+    }
     const myId = ++reqIdRef.current
     setLoadingIntent(true)
     setError('')
@@ -552,6 +558,12 @@ export default function Outliers({ channelData, onNavigate, plan, freeTierFeatur
   async function runSearch(confirmedKeyword = '', existingId) {
     const q = query.trim()
     if (!q) return
+    // Same client-side gate as handleSubmit. Catches the "type and hit
+    // enter" path that skips intent-options entirely.
+    if (outliersGated) {
+      setCreditsOut(true)
+      return
+    }
     const myId = existingId != null ? existingId : ++reqIdRef.current
     if (existingId == null && loading) return
     setLoading(true)
@@ -610,76 +622,9 @@ export default function Outliers({ channelData, onNavigate, plan, freeTierFeatur
   /* ─── Render ───────────────────────────────────────────────────────── */
 
   // Free-tier gate — replaces the entire page content with the shared upsell
-  // modal. Hooks above still run on every render; this just swaps the JSX.
-  // Reports tab escape: if the user has past paid reports, let them through
-  // to the tabs so they can still browse/reopen work they already paid for.
-  if (outliersGated && reports.length === 0) {
-    // Teaser preview — mock grid of outlier cards sitting behind the gate
-    // so free users see the shape of what they're missing (blurred).
-    const teaserCard = (i) => {
-      const titles = [
-        'I Tried 7 Morning Routines — This One Actually Worked',
-        'The $0 YouTube Growth Strategy Nobody Talks About',
-        'Why Your Retention Graph Looks Like a Cliff',
-        'I Ran a 30-Day Posting Sprint · Here\'s What Happened',
-      ]
-      const scores = [94, 87, 81, 76]
-      const colors = [C.green, C.green, C.amber, C.amber]
-      return (
-        <div key={i} style={{
-          background: '#ffffff', border: `1px solid ${C.border}`,
-          borderRadius: 12, overflow: 'hidden',
-          boxShadow: '0 1px 2px rgba(0,0,0,0.04), 0 4px 14px rgba(0,0,0,0.06)',
-        }}>
-          <div style={{
-            height: 120, background: `linear-gradient(135deg, ${['#fecaca', '#fde68a', '#bbf7d0', '#bfdbfe'][i]} 0%, #f4f4f6 100%)`,
-            position: 'relative',
-          }}>
-            <span style={{
-              position: 'absolute', top: 10, right: 10,
-              fontSize: 12, fontWeight: 800, color: '#fff',
-              background: colors[i], padding: '3px 9px',
-              borderRadius: 100, letterSpacing: '0.04em',
-            }}>
-              {scores[i]}
-            </span>
-          </div>
-          <div style={{ padding: '12px 14px' }}>
-            <p style={{ fontSize: 13, fontWeight: 700, color: C.text1, lineHeight: 1.4, marginBottom: 6 }}>{titles[i]}</p>
-            <p style={{ fontSize: 11, color: C.text3 }}>
-              {[248, 183, 142, 98][i]}K views · {[12, 8, 5, 3][i]}x sub ratio
-            </p>
-          </div>
-        </div>
-      )
-    }
-    const teaserPreview = (
-      <div style={{ padding: '12px 4px' }}>
-        <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 14 }}>
-          Top outliers · last 12 months
-        </p>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 12 }}>
-          {[0, 1, 2, 3].map(teaserCard)}
-        </div>
-      </div>
-    )
-    return (
-      <div style={{ width: '100%', fontFamily: "'Inter', system-ui, sans-serif" }}>
-        <UpsellGate
-          title="Unlock Outlier Scoring"
-          description="See the thumbnails, titles, and channels actually winning in your niche right now — with a ranked outlier score so you know which to copy and which to ignore."
-          bullets={[
-            'Top outlier videos in your niche, ranked by performance vs. subs',
-            'Winning thumbnail patterns distilled into a reusable formula',
-            "Breakout channels and keyword opportunities you're missing",
-          ]}
-          note="Outlier Scoring requires 3 credits."
-          showPackLink={false}
-          previewContent={teaserPreview}
-        />
-      </div>
-    )
-  }
+  // Intent-based paywall: render the normal page for everyone. Gated users
+  // see the full UI, type a query, and only hit the paywall modal when they
+  // actually click Run. Backend gate stays in place as defense-in-depth.
 
   return (
     <div style={{ width: '100%', fontFamily: "'Inter', system-ui, sans-serif", color: C.text1 }}>
@@ -1196,7 +1141,8 @@ export default function Outliers({ channelData, onNavigate, plan, freeTierFeatur
       <CreditsEmptyModal
         open={creditsOut}
         onClose={() => setCreditsOut(false)}
-        featureName="Outliers searches"
+        featureName={outliersGated ? 'Outliers' : 'Outliers searches'}
+        lockMode={outliersGated}
       />
     </div>
   )

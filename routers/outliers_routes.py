@@ -23,7 +23,7 @@ from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
 from routers.auth import get_session
-from app.analysis_gate import check_and_deduct, check_free_tier_access
+from app.analysis_gate import check_and_deduct, check_free_tier_access, peek_free_tier_access
 from app.outliers import search_outliers
 from app.keywords import generate_intent_options
 from app.competitors import extract_niche_keywords
@@ -38,11 +38,26 @@ class IntentBody(BaseModel):
 
 
 @router.post("/intent-options")
-def intent_options(body: IntentBody):
-    """Calls the SAME generate_intent_options() the SEO Optimizer uses."""
+def intent_options(body: IntentBody, request: Request):
+    """Calls the SAME generate_intent_options() the SEO Optimizer uses.
+
+    Gated for free users so a curious click never burns a Haiku call before
+    the user hits the paywall in /search. Defense-in-depth: the frontend
+    short-circuits gated users, but if that's bypassed we still pay nothing.
+    """
     q = (body.query or "").strip()
     if not q:
         return JSONResponse({"error": "Query cannot be empty."}, status_code=400)
+    data, _ = get_session(request.session.get("session_id"))
+    channel_id = (data or {}).get("channel", {}).get("channel_id", "")
+    # Read-only peek so a curious click on a gated page never burns a free run.
+    # The actual run is consumed in /search.
+    feat = peek_free_tier_access(channel_id, "outliers")
+    if not feat["allowed"]:
+        return JSONResponse(
+            {"error": "locked", "feature": "outliers", "reason": feat.get("reason", "locked")},
+            status_code=403,
+        )
     options, error = generate_intent_options(q)
     if error and not options:
         return JSONResponse({"error": error}, status_code=500)

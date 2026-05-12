@@ -40,6 +40,7 @@ export default function CreditsEmptyModal({
   featureName = 'analyses',
   resetDate = null,        // optional override; otherwise self-fetched
   packBalance = null,      // optional override; otherwise self-fetched
+  lockMode = false,        // true = "feature is locked, upgrade to use"; false = "out of credits"
 }) {
   // Self-fetch usage so callers don't have to plumb reset_date/pack balance.
   const [usage, setUsage] = useState(null)
@@ -140,10 +141,12 @@ export default function CreditsEmptyModal({
         </div>
 
         <h2 style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', marginBottom: 10 }}>
-          You're out of credits
+          {lockMode ? `${featureName} is a paid feature` : "You're out of credits"}
         </h2>
         <p style={{ fontSize: 14, color: C.text2, lineHeight: 1.6, marginBottom: 18, maxWidth: 400, marginLeft: 'auto', marginRight: 'auto' }}>
-          You've used all your monthly {featureName}. Your past reports stay available — upgrade your plan or grab a credit pack to keep running new ones.
+          {lockMode
+            ? `Upgrade to a paid plan to unlock ${featureName}. Plans start at $19/mo and include a monthly credit allowance.`
+            : `You've used all your monthly ${featureName}. Your past reports stay available, upgrade your plan or grab a credit pack to keep running new ones.`}
         </p>
 
         {/* Refill countdown pill */}
