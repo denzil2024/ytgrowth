@@ -158,6 +158,31 @@ async function discoverBlogSlugs() {
   return slugs
 }
 
+/* Discover the cover image for each blog post. Returns a Map keyed by route
+ * (e.g. `/blog/youtube-thumbnail-size`) so bakeRouteMeta can swap og:image and
+ * twitter:image to the post's own featured image instead of the default site
+ * og-image.png. We swap `.webp` covers to `.jpg` for OG because LinkedIn,
+ * WhatsApp, and a handful of email clients still mishandle WebP previews. The
+ * .jpg twin of every cover already exists in frontend/public/blog/.
+ */
+async function discoverBlogCovers() {
+  const src = await readFile(POSTS_SRC, 'utf-8')
+  const after = src.split(/export\s+const\s+posts\s*=\s*\[/)[1] || ''
+  // Pair each `slug: '...'` with the nearest following `cover: '...'`. The
+  // posts.jsx schema defines them in fixed slug→cover order per post, so a
+  // non-greedy lookahead is sufficient and resists picking up `cover` strings
+  // that might appear inside post bodies.
+  const re = /^\s*slug:\s*['"]([^'"]+)['"][\s\S]*?^\s*cover:\s*['"]([^'"]+)['"]/gm
+  const map = new Map()
+  let m
+  while ((m = re.exec(after)) !== null) {
+    const slug = m[1]
+    const cover = m[2].replace(/\.webp$/i, '.jpg')
+    map.set(`/blog/${slug}`, cover)
+  }
+  return map
+}
+
 /* Routes to pre-render. All public, indexable pages. Auth-required routes
  * (/dashboard, /settings, /auth/*) MUST NOT be added.
  */
@@ -324,8 +349,10 @@ function escapeAttr(s) {
  * React page wrote into the document via useEffect, which the snapshot
  * already contains. Either way we then sync canonical, og:url, og:title,
  * og:description, twitter:title, twitter:description so all of them agree.
+ * If a per-route cover image is provided (blog posts only), og:image and
+ * twitter:image are swapped to point at the cover instead of the site default.
  */
-function bakeRouteMeta(html, route) {
+function bakeRouteMeta(html, route, coverByRoute) {
   const docTitleMatch = html.match(/<title>([^<]*)<\/title>/i)
   const docDescMatch  = html.match(/<meta\s+name="description"\s+content="([^"]*)"\s*\/?>/i)
   const docTitle = docTitleMatch ? docTitleMatch[1] : ''
@@ -376,6 +403,32 @@ function bakeRouteMeta(html, route) {
       `<meta name="twitter:description" content="${escapeAttr(desc)}" />`,
     )
   }
+
+  // Per-blog-post cover image swap. Only applies if this route has a cover
+  // mapping (blog posts). All other routes keep the site-default og-image.png.
+  // Covers are 1600x900 (16:9) instead of the site default 1200x630, so the
+  // width/height tags get rewritten to match the actual file dimensions.
+  const cover = coverByRoute?.get(route)
+  if (cover) {
+    const absCover = `${SITE_ORIGIN}${cover}`
+    out = out.replace(
+      /<meta property="og:image"\s+content="[^"]*"\s*\/?>/i,
+      `<meta property="og:image" content="${escapeAttr(absCover)}" />`,
+    )
+    out = out.replace(
+      /<meta property="og:image:width"\s+content="[^"]*"\s*\/?>/i,
+      `<meta property="og:image:width" content="1600" />`,
+    )
+    out = out.replace(
+      /<meta property="og:image:height"\s+content="[^"]*"\s*\/?>/i,
+      `<meta property="og:image:height" content="900" />`,
+    )
+    out = out.replace(
+      /<meta name="twitter:image"\s+content="[^"]*"\s*\/?>/i,
+      `<meta name="twitter:image" content="${escapeAttr(absCover)}" />`,
+    )
+  }
+
   return out
 }
 
@@ -467,6 +520,9 @@ async function main() {
   const routes = await buildRoutes()
   console.log(`[prerender] ${routes.length} routes`)
 
+  const coverByRoute = await discoverBlogCovers()
+  console.log(`[prerender] ${coverByRoute.size} blog covers mapped for og:image swap`)
+
   const statsByRegion = await prefetchStats()
 
   console.log('[prerender] starting static server on :' + PORT)
@@ -522,7 +578,7 @@ async function main() {
         '<html lang="en">',
         '<html lang="en" data-prerendered="true">',
       )
-      let baked = bakeRouteMeta(stamped, route)
+      let baked = bakeRouteMeta(stamped, route, coverByRoute)
 
       // For stats routes that received an initialStats payload, inject the
       // same payload as a script tag so client hydration reads matching
