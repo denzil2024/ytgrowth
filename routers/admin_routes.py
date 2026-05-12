@@ -238,6 +238,50 @@ def _build_overview():
         db.close()
 
 
+# ── Plan toggle (admin-only) ────────────────────────────────────────────────
+# Flip a user's subscription plan from the browser for one-off paywall QA
+# without touching the database directly. Updates user_subscriptions.plan;
+# Paddle billing is unaffected (the plan column is local state only).
+#
+#   GET /admin/set-plan?email=user@example.com&plan=free
+#   GET /admin/set-plan?email=user@example.com&plan=pro
+#
+# Returns the row's previous and new plan so you can roll back.
+@router.get("/set-plan")
+def admin_set_plan(request: Request, email: str = "", plan: str = ""):
+    is_admin, _ = _is_admin(request)
+    if not is_admin:
+        return JSONResponse({"error": "Forbidden"}, status_code=403)
+    email = (email or "").strip().lower()
+    plan  = (plan or "").strip().lower()
+    if not email or not plan:
+        return JSONResponse({"error": "email and plan are required"}, status_code=400)
+
+    db = SessionLocal()
+    try:
+        rows = db.query(UserSubscription).filter(
+            func.lower(UserSubscription.email) == email,
+        ).all()
+        if not rows:
+            return JSONResponse({"error": f"No subscription found for {email}"}, status_code=404)
+        previous = [{"channel_id": r.channel_id, "plan": r.plan} for r in rows]
+        for r in rows:
+            r.plan = plan
+        db.commit()
+        return JSONResponse({
+            "ok": True,
+            "email": email,
+            "new_plan": plan,
+            "rows_updated": len(rows),
+            "previous": previous,
+        })
+    except Exception as e:
+        db.rollback()
+        return JSONResponse({"error": str(e)}, status_code=500)
+    finally:
+        db.close()
+
+
 # ── Email send tester (admin-only) ──────────────────────────────────────────
 # Hit this from a browser after logging in as an admin to send yourself a
 # real welcome email through the live Resend integration. Useful for QA on
