@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import UpsellGate from '../components/UpsellGate'
 import CreditsEmptyModal from '../components/CreditsEmptyModal'
 
 // ─── persistence ──────────────────────────────────────────────────────────────
@@ -1214,6 +1213,13 @@ export default function Competitors({ plan, freeTierFeatures }) {
 
   const handleAnalyze = (channelId) => {
     if (analyses.find(a => a.competitor.channel_id === channelId)) return
+    // Client-side short-circuit for free-tier one-run users who've already
+    // analysed once this cycle. Avoids the wasted backend call; backend
+    // still gates as defense-in-depth.
+    if (gated) {
+      setCreditsOut(true)
+      return
+    }
     setLoadingAnalyze(channelId)
     setAnalyzeError('')
     fetch(`/competitors/analyze/${channelId}`, { credentials: 'include' })
@@ -1223,6 +1229,7 @@ export default function Competitors({ plan, freeTierFeatures }) {
         // show an error banner.
         if (r.status === 403 && (d.error === 'locked' || d.reason === 'used' || d.reason === 'locked')) {
           setGated(true)
+          setCreditsOut(true)
           setLoadingAnalyze(null)
           return null
         }
@@ -1269,72 +1276,9 @@ export default function Competitors({ plan, freeTierFeatures }) {
     { key: 'tracked', label: analyses.length > 0 ? `Tracked (${analyses.length})` : 'Tracked' },
   ]
 
-  if (gated) {
-    // Teaser preview — mock competitor analysis card (channel header +
-    // playbook chips + video ideas) behind the gate.
-    const compTeaser = (
-      <div style={{
-        background: '#ffffff', border: '1px solid rgba(0,0,0,0.09)',
-        borderRadius: 16, padding: '22px 24px',
-        boxShadow: '0 1px 2px rgba(0,0,0,0.04), 0 4px 14px rgba(0,0,0,0.06)',
-      }}>
-        {/* Channel header */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 18 }}>
-          <div style={{
-            width: 48, height: 48, borderRadius: '50%',
-            background: 'linear-gradient(135deg, #e5251b 0%, #fca5a5 100%)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            color: '#fff', fontSize: 18, fontWeight: 800, flexShrink: 0,
-          }}>N</div>
-          <div style={{ flex: 1 }}>
-            <p style={{ fontSize: 15, fontWeight: 700, color: '#111114', letterSpacing: '-0.2px', marginBottom: 2 }}>Nairofey Vlogs</p>
-            <p style={{ fontSize: 12, color: '#9595a4' }}>248K subs · 4.2x ahead of you on avg views</p>
-          </div>
-          <span style={{ fontSize: 10, fontWeight: 800, color: '#d97706', background: '#fffbeb', border: '1px solid #fde68a', padding: '3px 9px', borderRadius: 100, letterSpacing: '0.07em', textTransform: 'uppercase' }}>Analysed</span>
-        </div>
-        {/* Playbook chips */}
-        <div style={{ marginBottom: 16 }}>
-          <p style={{ fontSize: 10, fontWeight: 700, color: '#9595a4', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>Their playbook</p>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-            {['Posts Tue + Fri 6pm', 'Titles avg 62 chars', 'Uses curiosity hook', 'Grocery haul format', 'Kenyan housewife niche'].map((chip, i) => (
-              <span key={i} style={{ fontSize: 11, fontWeight: 600, color: '#4a4a58', background: '#fafafb', border: '1px solid #e6e6ec', borderRadius: 20, padding: '4px 10px' }}>
-                {chip}
-              </span>
-            ))}
-          </div>
-        </div>
-        {/* Video ideas */}
-        <div style={{
-          background: 'rgba(5,150,105,0.07)', border: '1px solid rgba(5,150,105,0.14)',
-          borderRadius: 10, padding: '14px 16px',
-        }}>
-          <p style={{ fontSize: 10, fontWeight: 700, color: '#059669', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>Video ideas you can tackle</p>
-          {[
-            'I Copied Nairofey\'s Weekly Routine — Here\'s What Happened',
-            'The Kenyan Vlogger\'s Title Formula (Reverse-Engineered)',
-            'My Grocery Haul on a Ksh 3,000 Budget · Kenyan Student',
-          ].map((t, i) => (
-            <p key={i} style={{ fontSize: 12.5, fontWeight: 500, color: '#111114', lineHeight: 1.5, marginBottom: i === 2 ? 0 : 6 }}>• {t}</p>
-          ))}
-        </div>
-      </div>
-    )
-    return (
-      <div className="comp-page">
-        <UpsellGate
-          title="You've used your free Competitor analysis"
-          description="Free accounts get one competitor deep-dive per monthly cycle. Upgrade to keep analysing channels — their posting cadence, their title patterns, and the video ideas their audience is asking for."
-          bullets={[
-            'Unlimited competitor deep-dives every month',
-            'Full AI breakdown — posting timing, title patterns, playbook',
-            'Video ideas pooled from every competitor you analyse',
-          ]}
-          showPackLink={false}
-          previewContent={compTeaser}
-        />
-      </div>
-    )
-  }
+  // Intent-based paywall: the page always renders. Gated users can still
+  // browse Tracked analyses and search channels; clicking Analyze on a new
+  // channel triggers the upgrade modal.
 
   return (
     <div className="comp-page">
@@ -1543,7 +1487,8 @@ export default function Competitors({ plan, freeTierFeatures }) {
       <CreditsEmptyModal
         open={creditsOut}
         onClose={() => setCreditsOut(false)}
-        featureName="competitor analyses"
+        featureName={gated ? 'Competitor Analysis' : 'competitor analyses'}
+        lockMode={gated}
       />
     </div>
   )

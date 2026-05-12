@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef } from 'react'
-import UpsellGate from '../components/UpsellGate'
 import CreditsEmptyModal from '../components/CreditsEmptyModal'
 
 // Load Inter once — SCOPED to this page (each page owns its font loading, never global)
@@ -1088,6 +1087,11 @@ export default function ThumbnailScore({ channelData, onNavigate, plan, freeTier
   // ── Layer 2 handler ────────────────────────────────────────────────────────
   async function handleAnalyze() {
     if (!analysis?.id) return
+    // Client-side short-circuit for free-tier one-run users.
+    if (gated) {
+      setCreditsOut(true)
+      return
+    }
     setState('analyzing')
     setError('')
     const controller = new AbortController()
@@ -1106,6 +1110,7 @@ export default function ThumbnailScore({ channelData, onNavigate, plan, freeTier
         const d = await r.json().catch(() => ({}))
         if (d.error === 'locked' || d.reason === 'used' || d.reason === 'locked') {
           setGated(true)
+          setCreditsOut(true)
           setState('ready1')
           return
         }
@@ -1217,89 +1222,8 @@ export default function ThumbnailScore({ channelData, onNavigate, plan, freeTier
     { key: 'previous', label: history.length > 0 ? `Previous (${history.length})` : 'Previous' },
   ]
 
-  if (gated) {
-    // Teaser preview — mock thumbnail scorecard (thumbnail + score ring +
-    // breakdown bars) so free users see the shape of the Thumbnail IQ
-    // output blurred behind the gate.
-    const thumbnailTeaser = (
-      <div style={{
-        background: '#ffffff', border: `1px solid ${C.border}`,
-        borderRadius: 16, padding: '22px 24px',
-        boxShadow: '0 1px 2px rgba(0,0,0,0.04), 0 4px 14px rgba(0,0,0,0.06)',
-      }}>
-        <div style={{ display: 'flex', gap: 18, marginBottom: 18 }}>
-          {/* Mock thumbnail */}
-          <div style={{
-            width: 180, height: 102, borderRadius: 10, flexShrink: 0,
-            background: 'linear-gradient(135deg, #fde68a 0%, #fca5a5 50%, #bfdbfe 100%)',
-            position: 'relative', overflow: 'hidden',
-          }}>
-            <span style={{
-              position: 'absolute', top: 8, right: 8,
-              fontSize: 10, fontWeight: 800, color: '#fff',
-              background: C.red, padding: '3px 8px', borderRadius: 100,
-              letterSpacing: '0.05em', textTransform: 'uppercase',
-            }}>$80</span>
-          </div>
-          {/* Score ring */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <div style={{
-              width: 80, height: 80, borderRadius: '50%',
-              background: `conic-gradient(${C.green} 0deg 292deg, #eeeef3 292deg 360deg)`,
-              display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
-            }}>
-              <div style={{ width: 64, height: 64, borderRadius: '50%', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <span style={{ fontSize: 24, fontWeight: 800, color: C.green, letterSpacing: '-0.6px' }}>81</span>
-              </div>
-            </div>
-            <div>
-              <p style={{ fontSize: 11, fontWeight: 700, color: C.green, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 3 }}>Strong</p>
-              <p style={{ fontSize: 13, color: C.text2, lineHeight: 1.4 }}>Top 18% in niche</p>
-            </div>
-          </div>
-        </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 10 }}>
-          {[
-            ['Text clarity',  88, C.green],
-            ['Face presence', 76, C.amber],
-            ['Color contrast', 84, C.green],
-            ['Visual hierarchy', 69, C.amber],
-          ].map(([label, val, col]) => (
-            <div key={label}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
-                <span style={{ fontSize: 11, fontWeight: 600, color: C.text2 }}>{label}</span>
-                <span style={{ fontSize: 12, fontWeight: 700, color: col, fontVariantNumeric: 'tabular-nums' }}>{val}</span>
-              </div>
-              <div style={{ height: 4, background: '#eeeef3', borderRadius: 99 }}>
-                <div style={{ width: `${val}%`, height: '100%', background: col, borderRadius: 99 }}/>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    )
-    return (
-      <div style={{
-        margin: '-36px -40px -72px',
-        padding: '40px 40px',
-        background: '#ffffff',
-        minHeight: 'calc(100vh - 52px)',
-        fontFamily: "'Inter', system-ui, sans-serif",
-      }}>
-        <UpsellGate
-          title="You've used your free Thumbnail Score"
-          description="Free accounts can score one thumbnail per monthly cycle. Upgrade to keep scoring every thumbnail you upload — against the exact videos winning in your niche."
-          bullets={[
-            'Score unlimited thumbnails against your niche benchmark',
-            'Layer 2 AI critique — why it works and what to change',
-            'Full history across every thumbnail you\'ve scored',
-          ]}
-          showPackLink={false}
-          previewContent={thumbnailTeaser}
-        />
-      </div>
-    )
-  }
+  // Intent-based paywall: always render the page. Gated users see the modal
+  // when they hit Analyze. History remains browsable.
 
   return (
     <div style={{
@@ -1928,7 +1852,8 @@ export default function ThumbnailScore({ channelData, onNavigate, plan, freeTier
       <CreditsEmptyModal
         open={creditsOut}
         onClose={() => setCreditsOut(false)}
-        featureName="thumbnail analyses"
+        featureName={gated ? 'Thumbnail Score' : 'thumbnail analyses'}
+        lockMode={gated}
       />
     </div>
   )
