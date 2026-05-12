@@ -393,6 +393,32 @@ class FreeTierFeatureUsage(Base):
     used_at       = Column(DateTime, default=_now)
 
 
+class NicheOutlierCache(Base):
+    """One row per niche category — the current "Winning in your niche this week"
+    pick, refreshed by a weekly scheduler. Powers the dashboard hero card.
+
+    Stored as a structured payload: the winning video + a Haiku-generated
+    breakdown ("why it's working" + a templated angle the user can adapt).
+    Single shared cache across all creators in a niche keeps the cost flat
+    (one Haiku call per niche per week, not per user).
+    """
+    __tablename__ = "niche_outlier_cache"
+    niche          = Column(String, primary_key=True)  # one of CATEGORIES
+    video_id       = Column(String, nullable=False)
+    title          = Column(Text, nullable=False)
+    channel_title  = Column(String, nullable=False)
+    channel_id     = Column(String, nullable=False)
+    thumbnail_url  = Column(String, nullable=False)
+    view_count     = Column(BigInteger, nullable=False)
+    sub_ratio      = Column(Integer, nullable=False)   # views / channel subs, rounded
+    published_at   = Column(DateTime, nullable=False)
+    outlier_score  = Column(Integer, nullable=False)   # 0-100
+    why_working    = Column(Text, nullable=False)      # JSON list of 3 bullet strings
+    angle_template = Column(Text, nullable=False)      # Suggested title template
+    angle_keyword  = Column(String, nullable=True)     # Search keyword to target
+    refreshed_at   = Column(DateTime, default=_now, onupdate=_now)
+
+
 class FeatureRequest(Base):
     """User-submitted feature requests. Captured from Settings; surfaces in Admin
     for triage. Status cycles new → planned → shipped (or declined). Never deleted."""

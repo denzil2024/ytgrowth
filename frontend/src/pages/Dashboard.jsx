@@ -11,6 +11,7 @@ import Autopsy from './Autopsy'
 import WeeklyReport from './WeeklyReport'
 import Referrals from './Referrals'
 import Admin from './Admin'
+import NicheHeroCard from '../components/NicheHeroCard'
 import { loginUrl } from '../utm.js'
 import { openCheckout } from '../checkout'
 import UsageBar from '../components/UsageBar'
@@ -2096,6 +2097,22 @@ export default function Dashboard() {
                   {reAuditError}
                 </div>
               )}
+
+              {/* Hero card — "What's winning in your niche this week".
+                  This is the differentiation moment. Loads independently
+                  from a cached endpoint so it appears instantly without
+                  blocking the rest of the Overview. */}
+              <NicheHeroCard
+                onOpenSeoStudio={(title, keyword) => {
+                  try {
+                    if (title) {
+                      sessionStorage.setItem('seoOptimizer_prefilledTitle', title)
+                      if (keyword) sessionStorage.setItem('seoOptimizer_prefilledKeyword', keyword)
+                    }
+                  } catch {}
+                  setNav('SEO Studio')
+                }}
+              />
 
               {/* Row 1 */}
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,minmax(0,1fr))', gap: 16, marginBottom: 16 }}>

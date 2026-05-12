@@ -562,9 +562,22 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
   const titleInputRef = useRef(null)
   const [prefillBanner, setPrefillBanner] = useState(false)
 
-  // Pre-fill title from Video Ideas tab via localStorage
+  // Pre-fill title from Video Ideas tab (localStorage) or from the
+  // dashboard NicheHeroCard "Open in SEO Studio" handoff (sessionStorage).
   useEffect(() => {
     try {
+      const heroTitle = sessionStorage.getItem('seoOptimizer_prefilledTitle')
+      const heroKw    = sessionStorage.getItem('seoOptimizer_prefilledKeyword')
+      if (heroTitle) {
+        sessionStorage.removeItem('seoOptimizer_prefilledTitle')
+        sessionStorage.removeItem('seoOptimizer_prefilledKeyword')
+        setTitle(heroTitle)
+        if (heroKw) setSelectedKeyword(heroKw)
+        setPrefillBanner(true)
+        setTimeout(() => titleInputRef.current?.focus(), 80)
+        setTimeout(() => setPrefillBanner(false), 5000)
+        return
+      }
       const prefill = localStorage.getItem('ytg_prefill_title')
       if (prefill) {
         localStorage.removeItem('ytg_prefill_title')
