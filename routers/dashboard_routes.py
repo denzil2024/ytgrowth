@@ -63,7 +63,7 @@ def niche_outlier(request: Request):
     })
 
 
-@router.post("/refresh-niche-outliers")
+@router.get("/refresh-niche-outliers")
 def refresh_niche_outliers(request: Request, niche: str | None = None):
     """Admin-only on-demand refresh. Pass ?niche=tech to refresh one
     category; omit to refresh all 14. Useful for the initial seed and
