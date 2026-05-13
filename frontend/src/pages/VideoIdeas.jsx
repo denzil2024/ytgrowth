@@ -95,6 +95,42 @@ const C = {
 
 const API = ''
 
+/* ─── Thumbnail HD ladder (ported from Autopsy.jsx:333-358) ─────────────────
+   YouTube's data API only returns thumbnail entries for resolutions the
+   creator explicitly uploaded, so trusting the API URL leaves us with
+   320x180 mqdefault on many videos. Bypass it: request maxresdefault.jpg
+   straight from the CDN (served for nearly every video, even when the
+   API doesn't list it), detect the 120x90 placeholder via naturalWidth,
+   then fall back to hqdefault.jpg (always 480x360), and finally to the
+   API-provided URL as a last resort.
+   ──────────────────────────────────────────────────────────────────────── */
+function ytMaxThumbUrl(videoId) {
+  return videoId ? `https://i.ytimg.com/vi/${videoId}/maxresdefault.jpg` : null
+}
+function _advanceThumb(target, videoId, fallbackUrl) {
+  const step = target.dataset.thumbStep || 'max'
+  if (step === 'max' && videoId) {
+    target.dataset.thumbStep = 'hq'
+    target.src = `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`
+  } else if (step !== 'done' && fallbackUrl) {
+    target.dataset.thumbStep = 'done'
+    target.src = fallbackUrl
+  }
+}
+function makeThumbOnError(videoId, fallbackUrl) {
+  return (e) => _advanceThumb(e.target, videoId, fallbackUrl)
+}
+function makeThumbOnLoad(videoId, fallbackUrl) {
+  return (e) => {
+    const step = e.target.dataset.thumbStep || 'max'
+    // The CDN serves a 120x90 placeholder when maxres doesn't exist
+    // for the video (no HTTP error). Detect it and step down.
+    if (step === 'max' && e.target.naturalWidth === 120 && e.target.naturalHeight === 90) {
+      _advanceThumb(e.target, videoId, fallbackUrl)
+    }
+  }
+}
+
 /* ─── Sub-components ────────────────────────────────────────────────────── */
 
 function SpinIcon() {
@@ -446,11 +482,15 @@ function IdeaCard({ idea, done, onDone, onUseSeo }) {
                         background: '#ebebef',
                         overflow: 'hidden',
                       }}>
-                        {p.thumbnail && (
+                        {(p.video_id || p.thumbnail) && (
                           <img
-                            src={p.thumbnail}
+                            src={p.video_id ? ytMaxThumbUrl(p.video_id) : p.thumbnail}
                             alt=""
                             loading="lazy"
+                            referrerPolicy="no-referrer"
+                            data-thumb-step="max"
+                            onError={makeThumbOnError(p.video_id, p.thumbnail)}
+                            onLoad={makeThumbOnLoad(p.video_id, p.thumbnail)}
                             style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
                           />
                         )}

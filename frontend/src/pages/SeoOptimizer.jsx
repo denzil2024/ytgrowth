@@ -475,6 +475,37 @@ function LengthSweetSpot({ length, mounted }) {
   )
 }
 
+// HD thumbnail ladder — same approach as Autopsy.jsx:333-358 and the
+// Video Ideas page. The API URL on `video.thumbnail` is typically the
+// 320x180 medium variant, which renders soft at our 200-300px tile
+// width on retina. Request maxresdefault.jpg straight from the CDN,
+// detect the 120x90 placeholder via naturalWidth, fall to hqdefault,
+// then fall to the API URL only as a last resort.
+function _seoYtMax(videoId) {
+  return videoId ? `https://i.ytimg.com/vi/${videoId}/maxresdefault.jpg` : null
+}
+function _seoAdvanceThumb(target, videoId, fallbackUrl) {
+  const step = target.dataset.thumbStep || 'max'
+  if (step === 'max' && videoId) {
+    target.dataset.thumbStep = 'hq'
+    target.src = `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`
+  } else if (step !== 'done' && fallbackUrl) {
+    target.dataset.thumbStep = 'done'
+    target.src = fallbackUrl
+  }
+}
+function _seoThumbOnError(videoId, fallbackUrl) {
+  return (e) => _seoAdvanceThumb(e.target, videoId, fallbackUrl)
+}
+function _seoThumbOnLoad(videoId, fallbackUrl) {
+  return (e) => {
+    const step = e.target.dataset.thumbStep || 'max'
+    if (step === 'max' && e.target.naturalWidth === 120 && e.target.naturalHeight === 90) {
+      _seoAdvanceThumb(e.target, videoId, fallbackUrl)
+    }
+  }
+}
+
 // One winning-video tile in the WinnersStrip above the suggestions.
 // Thumbnail (16:9) with a view-count chip pinned bottom-right, channel
 // name below, and a relative-views bar so the trio reads as a tiny
@@ -485,7 +516,7 @@ function WinnerTile({ video, maxViews }) {
   // Top performer is green, mid is amber, lagging is grey. Visual sort
   // works without reading numbers.
   const barColor = pct >= 80 ? C.green : pct >= 45 ? C.amber : C.text4
-  const thumb = video.thumbnail || (video.video_id ? `https://i.ytimg.com/vi/${video.video_id}/mqdefault.jpg` : '')
+  const hasMedia = video.video_id || video.thumbnail
   return (
     <a
       href={video.video_id ? `https://www.youtube.com/watch?v=${video.video_id}` : '#'}
@@ -496,7 +527,18 @@ function WinnerTile({ video, maxViews }) {
         minWidth: 0,
       }}>
       <div style={{ position: 'relative', width: '100%', aspectRatio: '16 / 9', borderRadius: 9, overflow: 'hidden', background: '#0f0f13', boxShadow: '0 1px 3px rgba(0,0,0,0.10), 0 6px 18px rgba(0,0,0,0.12)' }}>
-        {thumb && <img src={thumb} alt="" referrerPolicy="no-referrer" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}/>}
+        {hasMedia && (
+          <img
+            src={video.video_id ? _seoYtMax(video.video_id) : video.thumbnail}
+            alt=""
+            referrerPolicy="no-referrer"
+            loading="lazy"
+            data-thumb-step="max"
+            onError={_seoThumbOnError(video.video_id, video.thumbnail)}
+            onLoad={_seoThumbOnLoad(video.video_id, video.thumbnail)}
+            style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+          />
+        )}
         {/* View chip (bottom-right) */}
         <div style={{
           position: 'absolute', right: 6, bottom: 6,
