@@ -548,26 +548,34 @@ def _score_keyword(
     Score a keyword phrase on two axes — like VidIQ:
 
     VOLUME  = how many people search for it
-              Proxy: how many autocomplete suggestions contain this phrase
-              (autocomplete only surfaces high-volume queries)
+              Proxy when autocomplete is available: autocomplete hit count
+              (autocomplete only surfaces high-volume queries).
+              Proxy when autocomplete is empty (SEO Studio's title-only
+              flow): tag frequency across the top 5 ranking videos. A
+              keyword appearing as a tag on multiple ranking videos is
+              one their creators bet on, which correlates with search
+              demand in that niche.
 
     COMPETITION = how hard is it to rank
-              Proxy: how many of the top videos already target this exact phrase
-              in their title (high title frequency = established competition)
+              Proxy: how many top-5 ranking videos already use this phrase
+              in their title (high title frequency = established competition).
 
     SCORE   = weighted combination favouring low competition + decent volume
     """
     p = phrase.lower()
-    ac_hits   = sum(1 for s in autocomplete if p in s.lower())
-    title_hits = sum(1 for t in titles    if p in t.lower())
-    tag_hits   = sum(1 for t in all_tags  if p in t.lower())
+    ac_hits    = sum(1 for s in autocomplete if p in s.lower())
+    title_hits = sum(1 for t in titles       if p in t.lower())
+    tag_hits   = sum(1 for t in all_tags     if p in t.lower())
 
-    # Volume: autocomplete is the strongest signal (real search demand)
-    # 1 hit = LOW, 2–3 = MED, 4+ = HIGH
-    volume_score = min(ac_hits * 30, 100)
+    # Volume: prefer the autocomplete signal when available; fall back to
+    # tag frequency when SEO Studio's title-only flow passes [].
+    if autocomplete:
+        volume_score = min(ac_hits * 30, 100)
+    else:
+        volume_score = min(tag_hits * 25, 100)
 
     # Competition: more top videos targeting it = harder to break in
-    # 0–2 videos = LOW competition (green), 3–5 = MED, 6+ = HIGH
+    # 0-2 videos = LOW competition (green), 3-5 = MED, 6+ = HIGH
     comp_score = min(title_hits * 18 + tag_hits * 8, 100)
 
     # Overall score rewards LOW competition + HIGH volume
@@ -1647,93 +1655,82 @@ def analyze_title(credentials, title: str, confirmed_keyword: str = "", channel_
     api_key = os.getenv("ANTHROPIC_API_KEY", "")
     client = _make_client() if api_key else None
 
-    # Step 1: Determine primary niche phrase
-    # Priority: user-confirmed keyword > AI extraction > fallback
+    # Step 1: Choose the YouTube search query — ONE search, no phrase
+    # extraction or related-variation expansion.
+    #
+    # Original SEO Studio design: search YouTube with the user's actual
+    # title (or their confirmed niche keyword if they picked one), let
+    # YouTube's relevance algorithm find the real competitive set, then
+    # harvest keywords from those top-ranking videos.
+    #
+    # The earlier AI-extracted-phrase flow drifted into Keyword Research
+    # territory: it generalised the title to a 2-3 word phrase, multi-
+    # searched related variations, and mixed in Serper/SerpAPI autocomplete.
+    # Net effect: 1-4 YouTube searches per click (~100-400 units) plus
+    # paid third-party API spend, and broader/less-niche-relevant keywords.
+    # Restoring the single-title-search design.
     if confirmed_keyword.strip():
         primary_phrase = confirmed_keyword.strip().lower()
-        # Build secondary search terms from the title to widen the pool
-        if client:
-            search_terms = [primary_phrase] + _extract_search_terms(client, title, "")[1:3]
-        else:
-            search_terms = [primary_phrase]
-        print(f"Using confirmed keyword: {primary_phrase!r}")
-    elif client:
-        search_terms = _extract_search_terms(client, title, "")
-        primary_phrase = search_terms[0] if search_terms else title[:60]
-        print(f"AI-extracted primary phrase: {primary_phrase!r}  |  All terms: {search_terms}")
+        search_query   = primary_phrase
+        print(f"SEO Studio: searching with confirmed keyword {primary_phrase!r}")
     else:
-        filler = _NGRAM_STOP | {"see", "come", "still"}
-        words = re.sub(r"[^\w\s]", " ", title.lower()).split()
-        meaningful = [w for w in words if w not in filler and len(w) > 3]
-        search_terms = [" ".join(meaningful[:4])] if meaningful else [title[:50]]
-        primary_phrase = search_terms[0]
+        primary_phrase = title.strip()
+        search_query   = title.strip()
+        print(f"SEO Studio: searching with full title {title!r}")
 
-    # Step 2: Search YouTube — primary niche phrase first (exact topic match),
-    #         then secondary keyword terms to broaden the pool.
-    # include_shorts=True so we can render a separate "Winning shorts" strip on
-    # the frontend. Long-form vs short-form is decided per-item via `is_short`,
-    # and only long-form items feed the title-scoring pipeline below.
+    search_terms = [search_query]  # Preserves downstream API shape
+
+    # Step 2: ONE YouTube search using the title (or confirmed keyword).
+    # max_results=50 still costs the same 100 quota units; we keep the
+    # full pool for the competitive-videos panel in the UI and use only
+    # the top 5 long-form for keyword extraction below.
     raw_all = search_top_videos(credentials, search_terms, max_results=50, include_shorts=True)
     raw_videos = [v for v in raw_all if not v.get("is_short")]
     raw_shorts = [v for v in raw_all if     v.get("is_short")]
 
-    # Step 2b: Filter to videos that match the niche phrase.
-    #
-    # When the user confirmed their keyword (confirmed_keyword is set), the YouTube
-    # search with order=relevance already filtered by intent — no need to filter further.
-    # Applying a strict word-filter on top would drop most results (e.g. "home office
-    # cleaning vlog" requires all 4 words in a video title, almost nothing passes).
-    #
-    # When the keyword was AI-extracted, we apply word-boundary filtering to remove
-    # false positives (e.g. "Kenya Moore" matching "house tour kenya").
-    if confirmed_keyword.strip():
-        intent_videos = raw_videos  # YouTube search already filtered by intent
-        top_videos = raw_videos
-    else:
-        intent_videos = _filter_by_intent(primary_phrase, raw_videos)
-        top_videos = intent_videos if intent_videos else raw_videos[:10]
+    # Step 2b: Trust YouTube's relevance ranking. The full-title search
+    # already returns the right competitive set — no further word-boundary
+    # filtering needed.
+    intent_videos = raw_videos
+    top_videos    = raw_videos
 
-    top_titles = [v["title"] for v in top_videos]
-    print(f"Videos found: {len(raw_videos)} long-form, {len(raw_shorts)} shorts, {len(intent_videos)} intent-matched")
+    # Top 5 long-form videos feed keyword extraction. The rest stay in the
+    # competitive-videos UI panel but don't influence keywords.
+    keyword_source_videos = top_videos[:5]
+    top_titles = [v["title"] for v in keyword_source_videos]
+    print(f"Videos found: {len(raw_videos)} long-form, {len(raw_shorts)} shorts. Keywords harvested from top {len(keyword_source_videos)}.")
 
-    # Step 3: Aggregate all tags (already ASCII-filtered in search_top_videos)
+    # Step 3: Aggregate tags from the top 5 ranking videos only.
     tag_freq: dict[str, int] = {}
-    for v in top_videos:
+    for v in keyword_source_videos:
         for tag in v.get("tags", []):
             tl = tag.lower().strip()
             if tl and len(tl) > 2:
                 tag_freq[tl] = tag_freq.get(tl, 0) + 1
     all_tags_flat = [t for t, _ in sorted(tag_freq.items(), key=lambda x: -x[1])]
 
-    # Step 4: Autocomplete for all search terms — widened with Serper related
-    # searches + SerpAPI Google autocomplete in parallel. The Keywords route
-    # already does this; before, the title flow only used Google Suggest with
-    # 3 fixed prefixes — too narrow to surface real demand for niches like
-    # "grocery haul". `get_serper_keywords` and `get_serpapi_autocomplete`
-    # return [] when their API keys aren't set, so this is safe to call.
-    from app.keywords import get_serper_keywords, get_serpapi_autocomplete
-    from concurrent.futures import ThreadPoolExecutor
-    base_autocomplete = get_autocomplete_suggestions(search_terms)
-    try:
-        with ThreadPoolExecutor(max_workers=2) as pool:
-            f_serper  = pool.submit(get_serper_keywords, primary_phrase)
-            f_serpapi = pool.submit(get_serpapi_autocomplete, primary_phrase)
-            serper_kws    = f_serper.result()  or []
-            serpapi_terms = f_serpapi.result() or []
-    except Exception as _e:
-        serper_kws, serpapi_terms = [], []
-    # Dedup-merge while preserving order. Keep base first (YouTube-derived,
-    # most niche-relevant), then SerpAPI, then Serper.
-    seen = set()
-    autocomplete = []
-    for src in (base_autocomplete, serpapi_terms, serper_kws):
-        for term in src:
-            t = (term or "").strip().lower()
-            if t and t not in seen:
-                seen.add(t)
-                autocomplete.append(term)
+    # Step 4: Keywords come ONLY from the top 5 ranking videos. No Serper,
+    # no SerpAPI, no Google autocomplete — that exploratory data belongs
+    # in the Keyword Research feature, not SEO Studio. SEO Studio's value
+    # is "what's actually ranking for MY video right now", and the answer
+    # is in the titles and tags of the top 5 ranking videos.
+    #
+    # We pass [] to research_keywords/score_keyword so the scoring layer
+    # falls back to tag_hits as its volume proxy — keeping the volume
+    # axis meaningful without external autocomplete data.
+    autocomplete: list[str] = []
 
-    # Step 5: Keyword research — scored by volume + competition
+    # For the frontend "click-to-use-as-your-title" chip strip (the field
+    # is still named autocomplete_terms in the API response for backward
+    # compatibility): show repeating 2-3 word phrases from the top-5
+    # titles. Each chip is a phrase a winning video already uses, so
+    # users get authentic title inspiration without paying for Serper/SerpAPI.
+    title_chip_suggestions = _extract_ngram_candidates(top_titles, [])[:15]
+
+    # Step 5: Keyword scoring from the top-5 pool. _score_keyword uses
+    # tag_hits as the volume proxy when autocomplete is empty, and
+    # title_hits as the competition proxy — both derived from the same
+    # 5 videos.
     keyword_scores = research_keywords(search_terms, autocomplete, top_titles, all_tags_flat)
 
     # Step 6: Score original title
@@ -1779,7 +1776,7 @@ def analyze_title(credentials, title: str, confirmed_keyword: str = "", channel_
         "videos_found":         len(raw_videos),
         "shorts_found":         len(raw_shorts),
         "intent_matched":       len(intent_videos),
-        "autocomplete_terms":   autocomplete[:10],
+        "autocomplete_terms":   title_chip_suggestions,
         "keyword_scores":       keyword_scores,
         "top_tags":             all_tags_flat[:15],
         "suggestions":          suggestions,
