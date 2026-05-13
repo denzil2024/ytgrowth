@@ -13,6 +13,10 @@
 */
 
 import { useEffect, useMemo, useState } from 'react'
+import {
+  VideoResultCard,
+  ChannelResultCard,
+} from './OutlierCards'
 
 const C = {
   card:        '#ffffff',
@@ -184,20 +188,17 @@ function InteractiveBundleCard({ bundle, channelId, onDismiss, onOpenSeoStudio, 
     tab === 'channel'   ? (bundle.channels   || []) : []
   )
 
-  const safeIdx = Math.max(0, Math.min(idx, currentList.length - 1))
-  const current = currentList[safeIdx]
+  // Top 3 cards across, matches the Outliers page's grid density.
+  const grid = currentList.slice(0, 3)
   const refreshedAge = relAge(bundle.refreshed_at) || 'this week'
 
   function switchTab(nextKey) {
     setTab(nextKey)
     setIdx(0)
   }
-  function step(delta) {
-    if (!currentList.length) return
-    setIdx((prev) => {
-      const next = (prev + delta + currentList.length) % currentList.length
-      return next
-    })
+
+  function openOutliers() {
+    onNavigate?.('Outliers')
   }
 
   return (
@@ -243,66 +244,53 @@ function InteractiveBundleCard({ bundle, channelId, onDismiss, onOpenSeoStudio, 
           )}
         </div>
 
-        {/* Featured slot */}
+        {/* Body: 3-up grid using the same VideoResultCard / ChannelResultCard
+            the paid Outliers page renders. Click any card -> open Outliers
+            so the user lands in the full detail experience. */}
         {isLockedTab ? (
           <LockedTeaser
             signal={tab}
-            onUpgrade={() => onNavigate?.('Outliers')}
+            onUpgrade={openOutliers}
           />
-        ) : current ? (
-          tab === 'channel'
-            ? <ChannelFeatured ch={current} />
-            : <VideoFeatured v={current} onOpenSeoStudio={onOpenSeoStudio} />
+        ) : grid.length > 0 ? (
+          <div className="nh-grid">
+            {tab === 'channel'
+              ? grid.map(item => (
+                  <ChannelResultCard
+                    key={item.channel_id || item.channel_name}
+                    item={item}
+                    onOpen={openOutliers}
+                  />
+                ))
+              : grid.map(item => (
+                  <VideoResultCard
+                    key={item.video_id}
+                    item={item}
+                    kind={tab}
+                    onOpen={openOutliers}
+                  />
+                ))
+            }
+          </div>
         ) : (
           <p className="nh-empty-sub" style={{ padding: '14px 0' }}>Nothing in this slot yet.</p>
         )}
 
-        {/* Pager + rail */}
-        {!isLockedTab && currentList.length > 1 && (
-          <>
-            <div className="nh-pager">
-              <button className="nh-pager-btn" onClick={() => step(-1)} aria-label="Previous">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-              </button>
-              <span className="nh-pager-count">{safeIdx + 1} of {currentList.length}</span>
-              <button className="nh-pager-btn" onClick={() => step(1)} aria-label="Next">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
-              </button>
-              <div className="nh-section-spacer" />
-              <button
-                type="button"
-                className="nh-ghost-cta"
-                onClick={() => onNavigate?.('Outliers')}
-              >
-                Open Outliers
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
-                  <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
-                </svg>
-              </button>
-            </div>
-
-            <div className="nh-rail">
-              {currentList.map((item, i) => (
-                <button
-                  key={(item.video_id || item.channel_id || i) + ':' + i}
-                  className={`nh-rail-thumb ${i === safeIdx ? 'nh-rail-thumb-active' : ''}`}
-                  onClick={() => setIdx(i)}
-                  type="button"
-                  title={item.title || item.channel_title || ''}
-                >
-                  {tab === 'channel'
-                    ? (item.channel_thumb
-                        ? <img src={item.channel_thumb} alt="" loading="lazy" />
-                        : <div className="nh-rail-fallback">{(item.channel_title || '?').slice(0,1)}</div>)
-                    : (item.thumbnail_url
-                        ? <img src={item.thumbnail_url} alt="" loading="lazy" />
-                        : <div className="nh-rail-fallback" />)
-                  }
-                  <span className="nh-rail-badge">{item.outlier_mult ? `${item.outlier_mult}x` : `${i+1}`}</span>
-                </button>
-              ))}
-            </div>
-          </>
+        {/* Footer link to the full Outliers page */}
+        {!isLockedTab && currentList.length > grid.length && (
+          <div className="nh-grid-foot">
+            <span className="nh-foot-hint">Showing the top {grid.length} of {currentList.length}.</span>
+            <button
+              type="button"
+              className="nh-ghost-cta"
+              onClick={openOutliers}
+            >
+              Open Outliers
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+              </svg>
+            </button>
+          </div>
         )}
       </article>
     </section>
@@ -763,7 +751,28 @@ const styles = `
 }
 .nh-query strong { color: ${C.text2}; font-weight: 700; }
 
-/* Featured slot */
+/* 3-up grid using shared Outliers cards */
+.nh-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 4px;
+}
+@media (max-width: 1100px) {
+  .nh-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 700px) {
+  .nh-grid { grid-template-columns: 1fr; }
+}
+
+.nh-grid-foot {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; flex-wrap: wrap;
+  margin-top: 18px; padding-top: 14px;
+  border-top: 1px solid ${C.borderSoft};
+}
+
+/* Featured slot (legacy, retained for the locked teaser layout below) */
 .nh-feat {
   display: flex; gap: 16px;
   margin-bottom: 4px;

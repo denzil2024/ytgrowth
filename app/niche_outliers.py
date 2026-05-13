@@ -169,9 +169,16 @@ def get_outlier_bundle_from_cache(channel_id: str) -> dict | None:
     if not raw:
         return None
 
-    videos = [_slim_video(v) for v in (raw.get("videos") or [])][:8]
-    thumbnails = [_slim_video(v) for v in (raw.get("thumbnails") or [])][:8]
-    channels = [_slim_channel(c) for c in (raw.get("channels") or [])][:6]
+    # Pass raw dicts through. The frontend cards (VideoResultCard /
+    # ChannelResultCard in components/OutlierCards.jsx) expect the exact
+    # field names search_outliers produces: channel_name, views, thumbnail,
+    # subscribers, handle, description, video_count, avg_views_per_video,
+    # outlier_score as a multiplier, views_per_sub, etc. Slimming was
+    # renaming fields and breaking the contract — that's why the home
+    # channel card was empty. Cap counts so we don't ship the full pool.
+    videos     = list(raw.get("videos")     or [])[:8]
+    thumbnails = list(raw.get("thumbnails") or [])[:8]
+    channels   = list(raw.get("channels")   or [])[:6]
 
     if not (videos or thumbnails or channels):
         return None
