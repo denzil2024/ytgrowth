@@ -290,13 +290,21 @@ def _search_youtube_once(youtube, query: str, max_results: int = 25, order: str 
     return results
 
 
-def search_top_videos(credentials, search_terms: list[str], max_results: int = 25) -> list[dict]:
+def search_top_videos(credentials, search_terms: list[str], max_results: int = 25, include_shorts: bool = False) -> list[dict]:
     """
     Multi-query YouTube search (order=relevance) → deduplicate → fetch details, view counts,
     and duration → filter Shorts.
 
     order=relevance gives us what actually ranks for this query — the real competitive landscape.
     We fetch view counts so Claude can understand what's performing vs what's just ranking.
+
+    include_shorts=False (default): drops Shorts from the result, preserving the historical
+    behaviour every caller depends on (Outliers, Thumbnail Score, the title scoring path that
+    only wants long-form patterns).
+
+    include_shorts=True: keeps Shorts in the result and tags each item with `is_short: bool`
+    so callers can split videos vs shorts client-side. Used by the SEO Studio analyze path
+    to render two separate strips ("Winning videos" + "Winning shorts").
     """
     from app.utils import build_youtube_client
     youtube = build_youtube_client(credentials)  # falls back to API key when credentials is None
@@ -318,7 +326,7 @@ def search_top_videos(credentials, search_terms: list[str], max_results: int = 2
             part="snippet,contentDetails,statistics",
             id=",".join(list(combined.keys())[:50]),
         ).execute()
-        non_shorts: dict[str, dict] = {}
+        kept: dict[str, dict] = {}
         for item in details_resp.get("items", []):
             vid_id = item["id"]
             if vid_id not in combined:
@@ -326,22 +334,24 @@ def search_top_videos(credentials, search_terms: list[str], max_results: int = 2
             duration_iso = item.get("contentDetails", {}).get("duration", "")
             duration_sec = _parse_duration_seconds(duration_iso)
             title = combined[vid_id]["title"]
-            if _is_short(title, duration_sec):
+            is_short = _is_short(title, duration_sec)
+            if is_short and not include_shorts:
                 continue
             raw_tags = item["snippet"].get("tags", [])
             combined[vid_id]["tags"] = [t for t in raw_tags if _is_ascii_english(t)][:20]
             combined[vid_id]["duration_seconds"] = duration_sec
+            combined[vid_id]["is_short"]         = is_short
             stats = item.get("statistics", {})
             combined[vid_id]["view_count"]    = int(stats.get("viewCount", 0))
             combined[vid_id]["like_count"]    = int(stats.get("likeCount", 0))
             combined[vid_id]["comment_count"] = int(stats.get("commentCount", 0))
             combined[vid_id]["published_at"]  = item["snippet"].get("publishedAt", "")[:10]
-            non_shorts[vid_id] = combined[vid_id]
+            kept[vid_id] = combined[vid_id]
     except Exception as e:
         print(f"Video details error: {e}")
-        non_shorts = combined
+        kept = combined
 
-    return list(non_shorts.values())
+    return list(kept.values())
 
 
 def get_autocomplete_suggestions(search_terms: list[str]) -> list[str]:
@@ -1522,8 +1532,13 @@ def analyze_title(credentials, title: str, confirmed_keyword: str = "", channel_
         primary_phrase = search_terms[0]
 
     # Step 2: Search YouTube — primary niche phrase first (exact topic match),
-    #         then secondary keyword terms to broaden the pool
-    raw_videos = search_top_videos(credentials, search_terms, max_results=50)
+    #         then secondary keyword terms to broaden the pool.
+    # include_shorts=True so we can render a separate "Winning shorts" strip on
+    # the frontend. Long-form vs short-form is decided per-item via `is_short`,
+    # and only long-form items feed the title-scoring pipeline below.
+    raw_all = search_top_videos(credentials, search_terms, max_results=50, include_shorts=True)
+    raw_videos = [v for v in raw_all if not v.get("is_short")]
+    raw_shorts = [v for v in raw_all if     v.get("is_short")]
 
     # Step 2b: Filter to videos that match the niche phrase.
     #
@@ -1542,7 +1557,7 @@ def analyze_title(credentials, title: str, confirmed_keyword: str = "", channel_
         top_videos = intent_videos if intent_videos else raw_videos[:10]
 
     top_titles = [v["title"] for v in top_videos]
-    print(f"Videos found: {len(raw_videos)} total, {len(intent_videos)} intent-matched")
+    print(f"Videos found: {len(raw_videos)} long-form, {len(raw_shorts)} shorts, {len(intent_videos)} intent-matched")
 
     # Step 3: Aggregate all tags (already ASCII-filtered in search_top_videos)
     tag_freq: dict[str, int] = {}
@@ -1611,6 +1626,11 @@ def analyze_title(credentials, title: str, confirmed_keyword: str = "", channel_
     else:
         suggestions, intent_analysis, suggestion_error = [], {}, "ANTHROPIC_API_KEY is not set"
 
+    # Step 9: Rank shorts by view count (no SEO scoring — shorts CTR rubric
+    # is title-pattern-different from long-form, and the frontend strip
+    # only needs view-ranked thumbs for the "Winning shorts" surface).
+    sorted_shorts = sorted(raw_shorts, key=lambda v: v.get("view_count", 0), reverse=True)
+
     return _strip_emdash({
         "score":                score_data["total"],
         "breakdown":            score_data["breakdown"],
@@ -1620,6 +1640,7 @@ def analyze_title(credentials, title: str, confirmed_keyword: str = "", channel_
         "primary_phrase":       primary_phrase,
         "search_terms_used":    search_terms,
         "videos_found":         len(raw_videos),
+        "shorts_found":         len(raw_shorts),
         "intent_matched":       len(intent_videos),
         "autocomplete_terms":   autocomplete[:10],
         "keyword_scores":       keyword_scores,
@@ -1628,6 +1649,7 @@ def analyze_title(credentials, title: str, confirmed_keyword: str = "", channel_
         "intent_analysis":      intent_analysis,
         "suggestion_error":     suggestion_error,
         "top_videos":           scored_top[:8],
+        "top_shorts":           sorted_shorts[:8],
     })
 
 
