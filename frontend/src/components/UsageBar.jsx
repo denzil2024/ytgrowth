@@ -74,8 +74,19 @@ export default function UsageBar({ channelId, email, dark = false, onPlan, onUsa
     cardBdr:dark ? 'rgba(255,255,255,0.08)' : '#ececf0',
   }
 
-  const accent    = atLimit ? C.red    : nearLimit ? C.amber    : C.green
-  const accentDim = atLimit ? C.redDim : nearLimit ? C.amberDim : C.greenDim
+  // Color logic: healthy is intentionally NEUTRAL so the UsageBar visually
+  // complements the brand-red What's New card above it instead of fighting
+  // it with a green-on-green stat block. State color is reserved for
+  // amber (near limit) and red (at limit), so when those DO show up they
+  // actually mean something.
+  //   accent = the dot + the number + the bar "in case of" color
+  //   numClr = the big "N" color (charcoal when healthy, state color otherwise)
+  //   barFrom / barTo = the gradient stops for the remaining-bar fill
+  const accent    = atLimit ? C.red    : nearLimit ? C.amber    : '#3a3a45'
+  const accentDim = atLimit ? C.redDim : nearLimit ? C.amberDim : '#5a5a6a'
+  const numClr    = atLimit ? C.red    : nearLimit ? C.amber    : C.text1
+  const barFrom   = atLimit ? C.redDim : nearLimit ? C.amberDim : 'rgba(229,37,27,0.20)'
+  const barTo     = atLimit ? C.red    : nearLimit ? C.amber    : 'rgba(229,37,27,0.42)'
 
   return (
     <div style={{
@@ -107,7 +118,7 @@ export default function UsageBar({ channelId, email, dark = false, onPlan, onUsa
         </span>
         <span style={{ display: 'inline-flex', alignItems: 'baseline', gap: 3, fontVariantNumeric: 'tabular-nums' }}>
           <span style={{
-            fontSize: 20, fontWeight: 800, color: accent,
+            fontSize: 20, fontWeight: 800, color: numClr,
             letterSpacing: '-0.6px', lineHeight: 1,
           }}>
             {remaining}
@@ -131,11 +142,11 @@ export default function UsageBar({ channelId, email, dark = false, onPlan, onUsa
         <div style={{
           width: `${remainingPct}%`,
           height: '100%',
-          background: `linear-gradient(90deg, ${accentDim} 0%, ${accent} 100%)`,
+          background: `linear-gradient(90deg, ${barFrom} 0%, ${barTo} 100%)`,
           borderRadius: 99,
           transition: 'width 0.8s ease, background 0.2s',
           position: 'relative',
-          boxShadow: `0 0 6px ${accent}50`,
+          boxShadow: (atLimit || nearLimit) ? `0 0 6px ${accent}50` : 'none',
         }}>
           <div style={{
             position: 'absolute', top: 0, left: 0, right: 0, height: 2,

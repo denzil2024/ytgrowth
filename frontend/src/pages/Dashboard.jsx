@@ -1535,7 +1535,7 @@ function WhatsNewCard({ channelId, onNavigate }) {
       background: 'linear-gradient(180deg, #ffffff 0%, #fafafc 100%)',
       border: '1px solid #ececf0',
       borderRadius: 11,
-      padding: '11px 12px 12px 12px',
+      padding: '13px 14px 14px 14px',
       boxShadow: '0 1px 2px rgba(0,0,0,0.025), inset 0 1px 0 rgba(255,255,255,0.7)',
       fontFamily: "'Inter', system-ui, sans-serif",
     }}>
@@ -1553,8 +1553,8 @@ function WhatsNewCard({ channelId, onNavigate }) {
         onClick={dismiss}
         aria-label="Dismiss"
         style={{
-          position: 'absolute', top: 7, right: 7,
-          width: 20, height: 20, borderRadius: 6,
+          position: 'absolute', top: 8, right: 8,
+          width: 22, height: 22, borderRadius: 6,
           border: 'none', background: 'transparent',
           color: 'rgba(10,10,15,0.40)',
           cursor: 'pointer',
@@ -1567,38 +1567,38 @@ function WhatsNewCard({ channelId, onNavigate }) {
         <XIcon size={12} strokeWidth={2} />
       </button>
 
-      <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10, paddingLeft: 6 }}>
+      <div style={{ display: 'flex', alignItems: 'flex-start', gap: 11, paddingLeft: 6 }}>
         {/* Sparkle icon in a brand-tinted circle */}
         <span style={{
           flexShrink: 0,
-          width: 26, height: 26, borderRadius: 8,
+          width: 28, height: 28, borderRadius: 8,
           display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
           background: 'rgba(229,37,27,0.08)',
           color: '#e5251b',
           marginTop: 1,
         }}>
-          <Sparkles size={14} strokeWidth={2} />
+          <Sparkles size={15} strokeWidth={2} />
         </span>
         <div style={{ minWidth: 0, flex: 1 }}>
           <p style={{
             fontSize: 9.5, fontWeight: 800, color: '#e5251b',
             letterSpacing: '0.11em', textTransform: 'uppercase',
-            marginBottom: 4,
+            marginBottom: 5,
           }}>
             What's new
           </p>
           <p style={{
-            fontSize: 12.5, fontWeight: 600, color: '#0a0a0f',
-            letterSpacing: '-0.01em', lineHeight: 1.35,
-            paddingRight: 20,  // clear the dismiss x
-            marginBottom: 4,
+            fontSize: 13.5, fontWeight: 700, color: '#0a0a0f',
+            letterSpacing: '-0.012em', lineHeight: 1.35,
+            paddingRight: 22,  // clear the dismiss x
+            marginBottom: 5,
           }}>
             {feature.headline}
           </p>
           <p style={{
-            fontSize: 11.5, fontWeight: 400, color: 'rgba(10,10,15,0.55)',
-            letterSpacing: '-0.01em', lineHeight: 1.5,
-            marginBottom: 8,
+            fontSize: 12.5, fontWeight: 450, color: 'rgba(10,10,15,0.58)',
+            letterSpacing: '-0.01em', lineHeight: 1.55,
+            marginBottom: 10,
           }}>
             {feature.body}
           </p>
@@ -1606,11 +1606,11 @@ function WhatsNewCard({ channelId, onNavigate }) {
             type="button"
             onClick={activate}
             style={{
-              display: 'inline-flex', alignItems: 'center', gap: 4,
+              display: 'inline-flex', alignItems: 'center', gap: 5,
               padding: 0, border: 'none', background: 'transparent',
               cursor: 'pointer',
               color: '#e5251b',
-              fontSize: 12, fontWeight: 700,
+              fontSize: 13, fontWeight: 700,
               letterSpacing: '-0.01em',
               fontFamily: 'inherit',
             }}
@@ -1618,7 +1618,7 @@ function WhatsNewCard({ channelId, onNavigate }) {
             onMouseLeave={e => { e.currentTarget.style.color = '#e5251b' }}
           >
             {feature.cta}
-            <ArrowRight size={12} strokeWidth={2.4} />
+            <ArrowRight size={13} strokeWidth={2.4} />
           </button>
         </div>
       </div>
