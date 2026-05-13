@@ -1494,9 +1494,12 @@ function IntentInsightRow({
         </div>
         <div style={{ flex: 1, minWidth: 0 }}>
           <p style={{ fontSize: 10, fontWeight: 700, color: eyebrowColor, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 5 }}>{eyebrowLabel}</p>
+          {/* Body weight 500. The eyebrow above (OPPORTUNITY / OVERUSED
+              ANGLE) carries the semantic emphasis; pushing the headline to
+              700 made it read like a stacked banner instead of prose. */}
           <p style={{
-            fontSize: 14.5, fontWeight: 700, color: C.text1,
-            lineHeight: 1.45, letterSpacing: '-0.15px', marginBottom: 10,
+            fontSize: 14.5, fontWeight: 500, color: C.text1,
+            lineHeight: 1.5, letterSpacing: '-0.1px', marginBottom: 10,
             display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden',
           }}>{cleanHeadline}</p>
           <SaturationDots
