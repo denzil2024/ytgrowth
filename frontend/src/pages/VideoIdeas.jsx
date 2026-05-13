@@ -28,19 +28,26 @@ if (typeof document !== 'undefined' && !document.getElementById('ytg-vi-styles')
        inline per-card, matching Dashboard Priority Actions. */
     .vi-idea-card {
       background: #ffffff;
-      border: 1px solid #e6e6ec;
-      border-radius: 14px;
+      border: 1px solid #ececf0;
+      border-radius: 12px;
       overflow: hidden;
-      margin-bottom: 8px;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 4px 14px rgba(0,0,0,0.06);
-      transition: box-shadow 0.2s, transform 0.2s, opacity 0.2s;
+      margin-bottom: 12px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 3px 10px rgba(0,0,0,0.05);
+      transition: box-shadow 0.18s ease, transform 0.18s ease, opacity 0.2s;
       animation: viFadeUp 0.26s ease both;
     }
     .vi-idea-card:hover {
-      box-shadow: 0 4px 12px rgba(0,0,0,0.08), 0 16px 40px rgba(0,0,0,0.09);
+      box-shadow: 0 4px 14px rgba(0,0,0,0.08), 0 14px 32px rgba(0,0,0,0.08);
       transform: translateY(-1px);
     }
     .vi-idea-card.done { opacity: 0.48; }
+    /* Severity stripe — 3px coloured line at the top edge of each card,
+       gives each idea a scannable visual entry point colour-keyed to its
+       opportunity score. Matches the Feed Priority Action cards. */
+    .vi-stripe {
+      height: 3px;
+      width: 100%;
+    }
 
     .vi-skeleton {
       background: linear-gradient(90deg, #f0f0f3 25%, #e8e8ec 50%, #f0f0f3 75%);
@@ -301,8 +308,14 @@ function IdeaCard({ idea, done, onDone, onUseSeo }) {
     return String(n)
   }
 
+  // Severity stripe color for the 3px top accent.
+  const stripeColor = done
+    ? 'rgba(15,15,19,0.08)'
+    : (score >= 75 ? C.green : score >= 60 ? C.amber : C.red)
+
   return (
     <div className={`vi-idea-card${done ? ' done' : ''}`}>
+      <div className="vi-stripe" style={{ background: stripeColor }}/>
       <div style={{ padding: 18 }}>
 
         {/* ── Eyebrow row. Typography scale:
@@ -357,14 +370,15 @@ function IdeaCard({ idea, done, onDone, onUseSeo }) {
           />
         </div>
 
-        {/* ── Title (single bold line). Standardized at 16/700, matches
-            the Feed card title scale (PriorityActionCard, MilestoneFeedCard
-            etc all use 15-16/700). ── */}
+        {/* ── Title (single bold line). 17/700 to anchor the card as the
+            hero element, slightly larger than Feed cards (which are 15-16)
+            because this page is title-focused — every card IS a proposed
+            title, so the typography should make that the star. ── */}
         <h3 style={{
-          fontSize: 16, fontWeight: 700,
+          fontSize: 17, fontWeight: 700,
           color: done ? 'rgba(10,10,15,0.40)' : C.text1,
-          letterSpacing: '-0.3px', lineHeight: 1.4,
-          marginBottom: done ? 0 : 16,
+          letterSpacing: '-0.35px', lineHeight: 1.35,
+          marginBottom: done ? 0 : 18,
           textDecoration: done ? 'line-through' : 'none',
           display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden',
         }}>{idea.title}</h3>
@@ -384,21 +398,24 @@ function IdeaCard({ idea, done, onDone, onUseSeo }) {
               <div style={{ marginBottom: 16 }}>
                 <div style={{
                   display: 'flex', alignItems: 'center', gap: 10,
-                  marginBottom: 10,
+                  marginBottom: 12, flexWrap: 'wrap',
                 }}>
                   <span style={{
                     fontSize: 11, fontWeight: 700, color: 'rgba(10,10,15,0.55)',
                     letterSpacing: '0.10em', textTransform: 'uppercase',
-                  }}>Top videos ranking for this now</span>
+                  }}>Currently ranking</span>
+                  <div style={{ flex: 1 }}/>
+                  {/* Softer "Best" stat. No tinted background, no border —
+                      just an inline metric with a small green dot. Reads
+                      as data, not as a chip competing with the eyebrow. */}
                   <span style={{
-                    display: 'inline-flex', alignItems: 'center', gap: 4,
-                    fontSize: 11, fontWeight: 700, color: C.green,
-                    background: 'rgba(22,163,74,0.08)', border: '1px solid rgba(22,163,74,0.22)',
-                    padding: '3px 8px', borderRadius: 100,
-                    letterSpacing: '0.04em',
-                    fontVariantNumeric: 'tabular-nums',
+                    display: 'inline-flex', alignItems: 'center', gap: 6,
+                    fontSize: 11.5, fontWeight: 600, color: 'rgba(10,10,15,0.62)',
+                    letterSpacing: '-0.01em', fontVariantNumeric: 'tabular-nums',
                   }}>
-                    Best: {fmtViews(topViews)} views
+                    <span style={{ width: 6, height: 6, borderRadius: 99, background: C.green }}/>
+                    Top performer{' '}
+                    <strong style={{ color: C.text1, fontWeight: 700 }}>{fmtViews(topViews)} views</strong>
                   </span>
                 </div>
                 <div style={{
@@ -486,11 +503,12 @@ function IdeaCard({ idea, done, onDone, onUseSeo }) {
               </div>
             )}
 
-            {/* ── Action row. Typography: meta line 12/500, buttons 12.5/700. ── */}
+            {/* ── Action row. Meta line is tight and data-first; buttons
+                use the standard 12.5/700 Feed CTA scale. ── */}
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
               <span style={{ fontSize: 12, fontWeight: 500, color: 'rgba(10,10,15,0.50)', letterSpacing: '-0.01em' }}>
                 {hasProof
-                  ? `${proof.length} competing video${proof.length === 1 ? '' : 's'} from the last 12 months`
+                  ? `${proof.length} ranking · last 12 months`
                   : 'Evidence loading'}
                 {idea.thumbnail_ready && (
                   <>{' · '}<span style={{ color: C.green, fontWeight: 700 }}>Thumbnail ready</span></>
@@ -827,52 +845,54 @@ export default function VideoIdeas({ onNavigate, plan, freeTierFeatures }) {
           NOTE: every feature page wraps content in maxWidth 1040 centered,
           matching the Feed redesign. Do not break this without
           coordinating with the Feed column. */}
-      <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 18, gap: 16, flexWrap: 'wrap' }}>
+      <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 22, gap: 16, flexWrap: 'wrap' }}>
         <div>
           <h1 style={{ fontSize: 24, fontWeight: 800, color: C.text1, letterSpacing: '-0.6px', marginBottom: 6, lineHeight: 1.1 }}>
             Video Ideas
           </h1>
-          <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.4, display: 'flex', gap: 0, flexWrap: 'wrap', margin: 0 }}>
-            <span>Ready-to-use video titles ranked by opportunity</span>
-            {lastUpdated && !loading && <span style={{ marginLeft: 8 }}>· Last updated {lastUpdated}</span>}
-            {sourceLabel && !loading && <span style={{ marginLeft: 8 }}>· {sourceLabel}</span>}
-            {isFreePlan && !loading && <span style={{ marginLeft: 8 }}>· Free plan: 5 idea cap</span>}
+          <p style={{
+            fontSize: 13, color: C.text3, lineHeight: 1.45,
+            margin: 0, letterSpacing: '-0.01em',
+          }}>
+            Ready-to-use titles ranked by opportunity
+            {lastUpdated && !loading && <>{' · '}Updated {lastUpdated}</>}
+            {sourceLabel && !loading && <>{' · '}{sourceLabel}</>}
+            {isFreePlan && !loading && <>{' · '}Free plan: 5 idea cap</>}
           </p>
         </div>
 
-        {/* Refresh — red pill, matches Overview/Videos/Outliers CTA shape.
-            Opens a confirmation modal (1 credit cost + approach summary)
-            instead of running immediately. Hidden for free users; backend
-            also blocks the refresh endpoint with a 403. */}
+        {/* Refresh — tightened pill, matches Feed card CTA scale.
+            Opens a confirmation modal (1 credit cost). Hidden for free
+            users; backend also blocks the endpoint with a 403. */}
         {!isFreePlan && (
           <div style={{ textAlign: 'right', flexShrink: 0 }}>
             <button
               onClick={() => setConfirmOpen(true)}
               disabled={refreshing}
               style={{
-                display: 'inline-flex', alignItems: 'center', gap: 7,
-                padding: '10px 18px', borderRadius: 100, border: 'none',
-                fontSize: 13.5, fontWeight: 700, fontFamily: 'inherit',
-                letterSpacing: '0.01em',
+                display: 'inline-flex', alignItems: 'center', gap: 6,
+                padding: '8px 15px', borderRadius: 100, border: 'none',
+                fontSize: 12.5, fontWeight: 700, fontFamily: 'inherit',
+                letterSpacing: '-0.01em',
                 background: refreshing ? '#e0e0e6' : C.red,
                 color: refreshing ? '#a0a0b0' : '#fff',
                 cursor: refreshing ? 'not-allowed' : 'pointer',
-                transition: 'filter 0.15s',
+                boxShadow: refreshing ? 'none' : '0 1px 3px rgba(229,37,27,0.28)',
+                transition: 'filter 0.15s, transform 0.15s',
               }}
-              onMouseEnter={e => { if (!refreshing) e.currentTarget.style.filter = 'brightness(1.1)' }}
-              onMouseLeave={e => { e.currentTarget.style.filter = 'none' }}
+              onMouseEnter={e => { if (!refreshing) { e.currentTarget.style.filter = 'brightness(1.08)'; e.currentTarget.style.transform = 'translateY(-1px)' } }}
+              onMouseLeave={e => { if (!refreshing) { e.currentTarget.style.filter = 'none'; e.currentTarget.style.transform = 'translateY(0)' } }}
             >
               {refreshing ? <><SpinIcon /> Generating</> : <>
-                <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                <svg width="12" height="12" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
                   <path d="M11 6.5A4.5 4.5 0 1 1 6.5 2a4.5 4.5 0 0 1 3.18 1.32"/>
                   <path d="M9.5 1v2.8H12.3"/>
                 </svg>
                 Refresh ideas
               </>}
             </button>
-            <div style={{ fontSize: 11.5, color: C.text3, marginTop: 6, fontWeight: 500 }}>
-              1 AI analysis
-              {credits != null && <span> · {credits} credits left</span>}
+            <div style={{ fontSize: 11, color: C.text3, marginTop: 5, fontWeight: 500, letterSpacing: '-0.01em' }}>
+              1 AI analysis{credits != null && <> · {credits} left</>}
             </div>
           </div>
         )}
