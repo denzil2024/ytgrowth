@@ -807,11 +807,9 @@ function NicheHeatCard({ videos, shorts, primaryPhrase }) {
 
   return (
     <div className="seo-suggestion-card" style={{
-      // Charcoal stripe, not red. The Overused Angle card directly above this
-      // one is red (warning), so a second red stripe here used to read as one
-      // continuous section. Niche Heat is data, not a warning; the red flame
-      // icon + LIVE pill carry plenty of heat signal already.
-      borderTop: `3px solid ${C.text1}`,
+      // No coloured top stripe. The page-wide cleanup keeps card edges
+      // uniform; the red flame icon + LIVE pill in the header still carry
+      // the niche-heat signal at a glance.
       marginBottom: 18,
     }}>
       <div style={{ padding: '20px 24px 22px' }}>
@@ -1089,22 +1087,16 @@ function SuggestionRow({ s, i, isSelected, isCopied, onCopy, onSelect, primaryPh
   // as "videos this title would compete with."
   const competitors = pickSimilarCompetitors(s.title, nicheVideos, 2)
 
-  // Strong cards drop the green top stripe specifically — amber (Solid) and
-  // red (Weak) stripes stay because they're useful at-a-glance warnings.
-  // Strong doesn't need a green frame around the card to communicate "good";
-  // the green score chip on the eyebrow + the green bar fills inside the
-  // quality chart do that already. The Strong chip itself stays intact.
-  const stripeForRow = avgScore >= 75 ? null : sevColor
   return (
+    // No coloured top stripe. Severity is conveyed by the score chip on the
+    // eyebrow + the bars inside the quality chart; the card edge no longer
+    // repeats it. Selected (user-picked) keeps a faint red side outline.
     <div className="seo-suggestion-card" style={{
       marginBottom: 0,
-      borderTop: stripeForRow ? `3px solid ${stripeForRow}` : `1px solid #e6e6ec`,
-      // No more green outline frame around the card when isCopied — the soft
-      // green-tinted background + the inline "✓ Copied" affordance on the
-      // button already mark the state.
       borderLeftColor:   isSelected ? 'rgba(229,37,27,0.30)' : '#e6e6ec',
       borderRightColor:  isSelected ? 'rgba(229,37,27,0.30)' : '#e6e6ec',
       borderBottomColor: isSelected ? 'rgba(229,37,27,0.30)' : '#e6e6ec',
+      borderTopColor:    isSelected ? 'rgba(229,37,27,0.30)' : '#e6e6ec',
       background: isSelected ? '#fff8f8' : isCopied ? '#f6fdf9' : '#ffffff',
     }}>
       <div style={{ padding: '18px 22px 20px' }}>
@@ -1362,7 +1354,6 @@ function DescriptionCard({ d, idx, copiedDesc, onCopy }) {
   return (
     <div className="seo-suggestion-card" style={{
       marginBottom: 10,
-      borderTop: `3px solid ${C.amber}`,
     }}>
       {/* Header — clickable. type pill | teaser | chevron */}
       <div
@@ -1404,13 +1395,12 @@ function DescriptionCard({ d, idx, copiedDesc, onCopy }) {
           <div style={{
             background: '#ffffff',
             border: `1px solid ${C.border}`,
-            borderLeft: `3px solid ${C.amber}`,
-            borderRadius: '0 10px 10px 0',
+            borderRadius: 10,
             padding: '12px 16px',
             boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
             display: 'flex', flexDirection: 'column',
           }}>
-            <p style={{ fontSize: 10, fontWeight: 700, color: C.amber, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>Full description</p>
+            <p style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>Full description</p>
             <pre style={{ fontSize: 12.5, color: C.text1, lineHeight: 1.75, whiteSpace: 'pre-wrap', fontFamily: "'Inter', system-ui, sans-serif", margin: 0 }}>
               {d.full}
             </pre>
@@ -1478,9 +1468,11 @@ function IntentInsightRow({
   // was duplicating the semantic. Prop kept on the signature for compatibility.
   void chipLabel
   return (
+    // Colored top stripe dropped — Opportunity and Overused Angle now read
+    // as standard hairline cards. The semantic signal lives in the eyebrow
+    // text colour + the tinted icon circle, which are still chipColor.
     <div className="seo-suggestion-card" style={{
       marginBottom: 10,
-      borderTop: `3px solid ${chipColor}`,
     }}>
       <div
         role="button" tabIndex={0}
@@ -1903,8 +1895,6 @@ function NicheMap({ keywords, onPick }) {
 
   const sorted = [...keywords].sort((a, b) => b.score - a.score)
   const visible = sorted.slice(0, 12)
-  const topScore = visible[0]?.score || 0
-  const stripeColor = topScore >= 75 ? C.green : topScore >= 50 ? C.amber : C.red
 
   // Volume / competition badge colors — match the score tier semantics. HIGH
   // volume + LOW competition reads green (good); HIGH competition reads red.
@@ -1912,8 +1902,9 @@ function NicheMap({ keywords, onPick }) {
   const compCol = c => c === 'LOW' ? C.green : c === 'MED' ? C.amber : C.red
 
   return (
+    // Top stripe dropped as part of the page-wide cleanup; severity now reads
+    // off the per-row score chips inside the card, not from a coloured edge.
     <div className="vi-idea-card" style={{ marginBottom: 12 }}>
-      <div className="vi-stripe" style={{ background: stripeColor }}/>
       <div style={{ padding: 18 }}>
         {/* Eyebrow row — small label + count + helper line on the right.
             Matches Video Ideas IdeaCard header DNA. */}
@@ -3077,7 +3068,6 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
               <NicheMap keywords={result.keyword_scores} onPick={setTitle}/>
 
               <div className="seo-suggestion-card" style={{
-                borderTop: `3px solid ${C.amber}`,
                 marginBottom: 24,
               }}>
                 <div style={{ padding: '18px 22px 20px' }}>
@@ -3136,9 +3126,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 24 }}>
                 {/* Block 1 — Keywords (phrases from ranking video titles) */}
                 {result.autocomplete_terms?.length > 0 && (
-                  <div className="seo-suggestion-card" style={{
-                    borderTop: `3px solid ${C.amber}`,
-                  }}>
+                  <div className="seo-suggestion-card">
                     <div style={{ padding: '18px 22px 20px' }}>
                       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16, marginBottom: 14 }}>
                         <div style={{ minWidth: 0 }}>
@@ -3182,9 +3170,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
 
                 {/* Block 2 — Suggested tags */}
                 {result.top_tags?.length > 0 && (
-                  <div className="seo-suggestion-card" style={{
-                    borderTop: `3px solid ${C.amber}`,
-                  }}>
+                  <div className="seo-suggestion-card">
                     <div style={{ padding: '18px 22px 20px' }}>
                       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16, marginBottom: 14 }}>
                         <div style={{ minWidth: 0 }}>
