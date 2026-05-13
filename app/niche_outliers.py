@@ -121,6 +121,124 @@ def refresh_all_niches() -> int:
 
 # ─── Read from the user's existing Outliers result (paid feature output) ─────
 
+def _read_cached_outliers_blob(channel_id: str) -> tuple[dict | None, str, object]:
+    """Pull raw result_json from OutliersSearchCache, falling back to the
+    newest OutliersReport. Returns (parsed_dict, query, updated_at) or
+    (None, "", None). Centralised so both the single-pick and the bundle
+    readers stay consistent."""
+    if not channel_id:
+        return None, "", None
+    db = SessionLocal()
+    try:
+        row = db.query(OutliersSearchCache).filter_by(channel_id=channel_id).first()
+        result_json = row.result_json if row else None
+        query_used = row.query if row else ""
+        updated_at = row.updated_at if row else None
+
+        if not result_json:
+            rep = (
+                db.query(OutliersReport)
+                  .filter_by(channel_id=channel_id)
+                  .order_by(OutliersReport.updated_at.desc())
+                  .first()
+            )
+            if rep:
+                result_json = rep.result_json
+                query_used = rep.query
+                updated_at = rep.updated_at
+
+        if not result_json:
+            return None, "", None
+        try:
+            return json.loads(result_json), query_used or "", updated_at
+        except Exception:
+            return None, "", None
+    finally:
+        db.close()
+
+
+def get_outlier_bundle_from_cache(channel_id: str) -> dict | None:
+    """The full multi-signal bundle for the interactive Home card. Returns
+    arrays for videos, thumbnails, and channels from the user's most recent
+    paid Outliers search, in the shape NicheHeroCard renders.
+
+    Free auto-runs (built later) will only populate the videos array and
+    leave thumbnails/channels empty so the front-end can render locked
+    teasers in their slots."""
+    raw, query_used, updated_at = _read_cached_outliers_blob(channel_id)
+    if not raw:
+        return None
+
+    videos = [_slim_video(v) for v in (raw.get("videos") or [])][:8]
+    thumbnails = [_slim_video(v) for v in (raw.get("thumbnails") or [])][:8]
+    channels = [_slim_channel(c) for c in (raw.get("channels") or [])][:6]
+
+    if not (videos or thumbnails or channels):
+        return None
+
+    refreshed_iso = None
+    if updated_at:
+        try:
+            refreshed_iso = updated_at.isoformat()
+        except Exception:
+            refreshed_iso = None
+
+    return {
+        "source":       "outliers_cache",
+        "query_used":   query_used,
+        "refreshed_at": refreshed_iso,
+        "videos":       videos,
+        "thumbnails":   thumbnails,
+        "channels":     channels,
+    }
+
+
+def _slim_video(v: dict) -> dict:
+    """Frontend-shape projection of a search_outliers video dict."""
+    import math
+    ratio = float(v.get("views_per_sub") or 0)
+    outlier_mult = float(v.get("outlier_score") or 0)
+    ratio_display = max(1, int(round(ratio))) if ratio else 1
+    score_0_100 = max(0, min(99, int(50 + 22 * math.log10(max(outlier_mult, 0.1)))))
+    why = _extract_bullets(v.get("why_worked", ""))
+    if len(why) < 3:
+        wn = (v.get("why_now") or "").strip()
+        if wn and wn not in why:
+            why.append(wn)
+        qa = v.get("quick_actions") or []
+        if qa and str(qa[0]) not in why:
+            why.append(str(qa[0]))
+    why = [str(b)[:200] for b in why[:3]]
+    return {
+        "video_id":      v.get("video_id") or "",
+        "title":         (v.get("title") or "")[:300],
+        "channel_title": (v.get("channel_name") or v.get("channel_title") or "")[:200],
+        "channel_id":    (v.get("channel_id") or "")[:120],
+        "thumbnail_url": (v.get("thumbnail") or v.get("thumbnail_url") or "")[:500],
+        "view_count":    int(v.get("views") or v.get("view_count") or 0),
+        "sub_ratio":     ratio_display,
+        "outlier_score": score_0_100,
+        "outlier_mult":  round(outlier_mult, 1),
+        "published_at":  v.get("published_at") or "",
+        "why_working":   why,
+        "quick_actions": [str(x)[:200] for x in (v.get("quick_actions") or [])[:3]],
+    }
+
+
+def _slim_channel(c: dict) -> dict:
+    """Frontend-shape projection of a search_outliers channel dict."""
+    return {
+        "channel_id":      (c.get("channel_id") or "")[:120],
+        "channel_title":   (c.get("channel_name") or c.get("channel_title") or "")[:200],
+        "channel_thumb":   (c.get("channel_thumbnail") or "")[:500],
+        "subscribers":     int(c.get("subscribers") or 0),
+        "videos_in_search": int(c.get("videos_in_search") or 0),
+        "why_this_channel": str(c.get("why_this_channel") or c.get("explanation") or "")[:400],
+        "what_to_do":      [str(x)[:200] for x in (c.get("what_to_do") or [])[:3]],
+        "why_now":         str(c.get("why_now") or "")[:300],
+    }
+
+
 def get_from_outliers_cache(channel_id: str) -> dict | None:
     """If the creator has run the paid Outliers feature, surface the strongest
     video outlier from their saved result. This is the cleanest source: the

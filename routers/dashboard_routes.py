@@ -28,6 +28,7 @@ from fastapi.responses import JSONResponse
 from app.niche_outliers import (
     get_for_channel,
     get_from_outliers_cache,
+    get_outlier_bundle_from_cache,
     refresh_for_channel,
     is_stale,
     personalize_angle,
@@ -93,23 +94,22 @@ def niche_outlier(request: Request):
     if not channel_id:
         return JSONResponse({"ok": False, "reason": "no_channel"})
 
-    # Preferred source: the user's own Outliers search result. They typed the
-    # query, search_outliers ran with their real channel context, the result
-    # is curated. Always more relevant than anything we auto-pick.
-    payload = get_from_outliers_cache(channel_id)
-    if payload:
+    # Preferred source: the user's own Outliers search result. Return the
+    # FULL multi-signal bundle (videos / thumbnails / channels) so the
+    # frontend can power the interactive pill + pager UI from one fetch.
+    bundle = get_outlier_bundle_from_cache(channel_id)
+    if bundle:
         return JSONResponse({
             "ok":      True,
-            "niche":   payload.get("niche") or "",
             "creator": channel.get("channel_name") or "",
             "source":  "outliers_cache",
-            "outlier": payload,
+            "bundle":  bundle,
         })
 
-    # Fallback: a cached auto-pick from the (currently flawed) one-word seed
-    # pipeline. Kept in place so we don't regress users who already have a
-    # ChannelNicheOutlierCache row, but new users will land in the
-    # "no_outliers_yet" empty state below instead.
+    # Legacy single-pick fallback: an old auto-pick row from the (flawed)
+    # one-word seed pipeline. Returned in the old shape so users who already
+    # have a ChannelNicheOutlierCache row still see something, but no new
+    # rows are written and the frontend renders this as a legacy single-card.
     payload = get_for_channel(channel_id)
     if payload:
         if is_stale(payload):
@@ -122,9 +122,6 @@ def niche_outlier(request: Request):
             "outlier": payload,
         })
 
-    # No source yet. Frontend renders a "Run Outliers to unlock this card"
-    # nudge instead of auto-spawning a generic search (which gave irrelevant
-    # results, e.g. Australian budget reaction for a Kenyan lifestyle vlogger).
     return JSONResponse({
         "ok":      False,
         "reason":  "no_outliers_yet",

@@ -1,18 +1,18 @@
-/* NicheHeroCard — Home feed insights, VidIQ-style vertical sections.
+/* NicheHeroCard — interactive Home outlier card.
 
-   Each insight is its own labelled section with a dot + title + age header
-   and a content card below. Stacks vertically, full-width within the
-   content column, no side-by-side void.
+   Data comes from /dashboard/niche-outlier. When source is "outliers_cache"
+   the endpoint returns a bundle: {videos:[], thumbnails:[], channels:[]}
+   computed from the user's own paid Outliers search result. The card
+   exposes all three signal types via a pill row, lets the user step through
+   positions within each type, and persists their last view (type + index)
+   in localStorage so a reload keeps them where they were.
 
-   One backend fetch (/dashboard/niche-outlier) feeds two sections:
-     1. Niche Outlier        — the breakout reference
-     2. Title Suggestion     — the tailored angle action
-
-   Default export NicheHeroCard intentionally renders both sections so the
-   Dashboard import surface does not change.
+   Legacy "auto_pick" source returns a single payload and is rendered as a
+   single-shot fallback. New "no_outliers_yet" source renders a CTA to run
+   the paid Outliers feature.
 */
 
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 const C = {
   card:        '#ffffff',
@@ -27,23 +27,10 @@ const C = {
   redTint:     'rgba(229,37,27,0.07)',
   redBdr:      'rgba(229,37,27,0.18)',
   green:       '#059669',
-  greenTint:   'rgba(5,150,105,0.07)',
-  greenBdr:    'rgba(5,150,105,0.18)',
-  amber:       '#d97706',
-  amberBg:     '#fffbeb',
-  amberBdr:    '#fde68a',
   insetBg:     '#fafafb',
   insetBdr:    'rgba(10,10,15,0.06)',
   shadowSm:    '0 1px 3px rgba(0,0,0,0.06), 0 4px 14px rgba(0,0,0,0.06)',
   shadowHover: '0 4px 14px rgba(0,0,0,0.09), 0 18px 42px rgba(0,0,0,0.10)',
-}
-
-const NICHE_LABELS = {
-  gaming: 'Gaming', tech: 'Tech', beauty: 'Beauty', finance: 'Finance',
-  cooking: 'Cooking', fitness: 'Fitness', music: 'Music',
-  education: 'Education', vlogs: 'Vlogs', travel: 'Travel',
-  comedy: 'Comedy', sports: 'Sports', entertainment: 'Entertainment',
-  news: 'News',
 }
 
 function fmtViews(n) {
@@ -66,56 +53,26 @@ function relAge(iso) {
   return `${Math.floor(day / 365)}y ago`
 }
 
-const PERSONALIZE_TTL_MS = 7 * 24 * 60 * 60 * 1000
-function loadPersonalized(niche, channelId) {
+const VIEW_STATE_KEY = (channelId) => `nh_view_v1:${channelId || 'unknown'}`
+function loadViewState(channelId) {
   try {
-    const raw = localStorage.getItem(`nh_personalized_v3:${niche}:${channelId}`)
+    const raw = localStorage.getItem(VIEW_STATE_KEY(channelId))
     if (!raw) return null
-    const obj = JSON.parse(raw)
-    if (!obj || !obj.ts || Date.now() - obj.ts > PERSONALIZE_TTL_MS) return null
-    return obj
+    return JSON.parse(raw)
   } catch { return null }
 }
-function savePersonalized(niche, channelId, data) {
+function saveViewState(channelId, state) {
   try {
-    localStorage.setItem(
-      `nh_personalized_v3:${niche}:${channelId}`,
-      JSON.stringify({ ...data, ts: Date.now() }),
-    )
+    localStorage.setItem(VIEW_STATE_KEY(channelId), JSON.stringify(state))
   } catch {}
 }
 
 
-// ─── Section header ──────────────────────────────────────────────────────
-
-function SectionHeader({ dotColor, title, age, onDismiss }) {
-  return (
-    <div className="nh-section-head">
-      <span className="nh-section-title">
-        <span className="nh-dot" style={{ background: dotColor }} />
-        {title}
-      </span>
-      {age && <span className="nh-section-age">· {age}</span>}
-      <div className="nh-section-spacer" />
-      {onDismiss && (
-        <button className="nh-x" aria-label="Dismiss" onClick={onDismiss}>
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
-            <line x1="2.5" y1="2.5" x2="9.5" y2="9.5"/>
-            <line x1="9.5" y1="2.5" x2="2.5" y2="9.5"/>
-          </svg>
-        </button>
-      )}
-    </div>
-  )
-}
-
-
-// ─── Default export: vertical insight feed ───────────────────────────────
+// ─── Default export ──────────────────────────────────────────────────────
 
 export default function NicheHeroCard({ onOpenSeoStudio, onNavigate, channelId }) {
   const [state, setState] = useState({ loading: true, data: null })
-  const [personalized, setPersonalized] = useState(null)
-  const [dismissed, setDismissed] = useState({ outlier: false, title: false })
+  const [dismissed, setDismissed] = useState(false)
 
   useEffect(() => {
     let cancelled = false
@@ -140,35 +97,13 @@ export default function NicheHeroCard({ onOpenSeoStudio, onNavigate, channelId }
     return () => { cancelled = true }
   }, [])
 
-  useEffect(() => {
-    if (!state.data?.ok) return
-    const niche = state.data.niche
-    if (!niche) return
-    const cached = loadPersonalized(niche, channelId || 'unknown')
-    if (cached) { setPersonalized(cached); return }
-    let cancelled = false
-    fetch('/dashboard/personalize-angle', { credentials: 'include' })
-      .then(r => r.ok ? r.json() : null)
-      .then(d => {
-        if (cancelled || !d?.ok) return
-        const next = {
-          angle:           d.angle || '',
-          angle_reasoning: d.angle_reasoning || '',
-          keyword:         d.keyword || '',
-          personalized:    !!d.personalized,
-        }
-        setPersonalized(next)
-        savePersonalized(niche, channelId || 'unknown', next)
-      })
-      .catch(() => {})
-    return () => { cancelled = true }
-  }, [state.data?.ok, state.data?.niche, channelId])
+  if (dismissed) return null
 
   if (state.loading) {
     return (
       <>
         <style>{styles}</style>
-        <SectionSkeleton title="Niche Outlier" />
+        <SectionSkeleton />
       </>
     )
   }
@@ -178,7 +113,6 @@ export default function NicheHeroCard({ onOpenSeoStudio, onNavigate, channelId }
       <>
         <style>{styles}</style>
         <EmptyOutlier
-          niche={state.data?.niche}
           reason={state.data?.reason}
           onNavigate={onNavigate}
         />
@@ -186,186 +120,361 @@ export default function NicheHeroCard({ onOpenSeoStudio, onNavigate, channelId }
     )
   }
 
-  const refreshedAge = relAge(state.data.outlier.refreshed_at) || 'this week'
-  const headerTitle = state.data.niche
-    ? `Niche Outlier · ${NICHE_LABELS[state.data.niche] || state.data.niche}`
-    : 'Niche Outlier'
+  // Source dispatcher. Newer interactive bundle vs legacy single payload.
+  const source = state.data.source
+  if (source === 'outliers_cache' && state.data.bundle) {
+    return (
+      <>
+        <style>{styles}</style>
+        <InteractiveBundleCard
+          bundle={state.data.bundle}
+          channelId={channelId}
+          onDismiss={() => setDismissed(true)}
+          onOpenSeoStudio={onOpenSeoStudio}
+          onNavigate={onNavigate}
+        />
+      </>
+    )
+  }
 
-  // Title Suggestion only renders when an angle exists. The outliers-cache
-  // source (the strongest path) doesn't ship an angle today; we'll add
-  // Haiku-derived angles for that path in a follow-up commit.
-  const hasAngle = !!(
-    (personalized && personalized.angle) ||
-    state.data.outlier?.angle_template
-  )
-
+  // Legacy single-payload fallback (auto_pick).
   return (
     <>
       <style>{styles}</style>
-
-      {!dismissed.outlier && (
-        <section className="nh-section">
-          <SectionHeader
-            dotColor={C.red}
-            title={headerTitle}
-            age={refreshedAge}
-            onDismiss={() => setDismissed(p => ({ ...p, outlier: true }))}
-          />
-          <OutlierCard data={state.data} onNavigate={onNavigate} />
-        </section>
-      )}
-
-      {hasAngle && !dismissed.title && (
-        <section className="nh-section">
-          <SectionHeader
-            dotColor={C.green}
-            title="Title Suggestion"
-            age={personalized?.personalized ? 'personalized for your channel' : refreshedAge}
-            onDismiss={() => setDismissed(p => ({ ...p, title: true }))}
-          />
-          <TitleCard data={state.data} personalized={personalized} onOpenSeoStudio={onOpenSeoStudio} />
-        </section>
-      )}
+      <LegacySingleCard
+        data={state.data}
+        onDismiss={() => setDismissed(true)}
+        onNavigate={onNavigate}
+      />
     </>
   )
 }
 
 
-// ─── Niche outlier card ──────────────────────────────────────────────────
+// ─── Interactive bundle card ─────────────────────────────────────────────
 
-function OutlierCard({ data, onNavigate }) {
-  const { outlier } = data
-  const why = Array.isArray(outlier.why_working) ? outlier.why_working : []
-  const nicheLabel = NICHE_LABELS[data.niche] || data.niche || 'your niche'
+function InteractiveBundleCard({ bundle, channelId, onDismiss, onOpenSeoStudio, onNavigate }) {
+  const tabs = useMemo(() => {
+    const t = []
+    if (bundle.videos?.length)     t.push({ key: 'video',     label: 'Videos',     count: bundle.videos.length })
+    if (bundle.thumbnails?.length) t.push({ key: 'thumbnail', label: 'Thumbnails', count: bundle.thumbnails.length })
+    if (bundle.channels?.length)   t.push({ key: 'channel',   label: 'Channels',   count: bundle.channels.length })
+    return t
+  }, [bundle])
+
+  const persisted = loadViewState(channelId) || {}
+  const initialTab = tabs.find(t => t.key === persisted.tab) ? persisted.tab : tabs[0]?.key
+  const [tab, setTab] = useState(initialTab)
+  const [idx, setIdx] = useState(() => {
+    const i = Number.isInteger(persisted.idx) ? persisted.idx : 0
+    return i
+  })
+
+  useEffect(() => {
+    saveViewState(channelId, { tab, idx })
+  }, [tab, idx, channelId])
+
+  const currentList =
+    tab === 'video'     ? (bundle.videos     || []) :
+    tab === 'thumbnail' ? (bundle.thumbnails || []) :
+    tab === 'channel'   ? (bundle.channels   || []) : []
+
+  const safeIdx = Math.max(0, Math.min(idx, currentList.length - 1))
+  const current = currentList[safeIdx]
+  const refreshedAge = relAge(bundle.refreshed_at) || 'this week'
+
+  function switchTab(nextKey) {
+    setTab(nextKey)
+    setIdx(0)
+  }
+  function step(delta) {
+    if (!currentList.length) return
+    setIdx((prev) => {
+      const next = (prev + delta + currentList.length) % currentList.length
+      return next
+    })
+  }
 
   return (
-    <article className="nh-card">
-      <div className="nh-outlier-top">
-        <a
-          className="nh-thumb"
-          href={`https://www.youtube.com/watch?v=${outlier.video_id}`}
-          target="_blank" rel="noopener noreferrer"
-          aria-label="Watch on YouTube"
-        >
-          {outlier.thumbnail_url
-            ? <img src={outlier.thumbnail_url} alt="" loading="lazy" />
-            : <div className="nh-thumb-fallback" />}
-          <span className="nh-thumb-overlay">
-            <span className="nh-play">
-              <svg width="13" height="13" viewBox="0 0 14 14" fill="currentColor"><polygon points="4,2.5 11.5,7 4,11.5"/></svg>
-            </span>
-          </span>
-        </a>
-
-        <div className="nh-outlier-info">
-          <h3 className="nh-title">{outlier.title}</h3>
-          <p className="nh-byline">
-            <span className="nh-byline-ch">{outlier.channel_title}</span>
-            <span className="nh-byline-dot">·</span>
-            <span>{relAge(outlier.published_at)}</span>
-            <span className="nh-byline-dot">·</span>
-            <span>{fmtViews(outlier.view_count)} views</span>
-          </p>
-          <div className="nh-chip-row">
-            <span className="nh-chip nh-chip-red">
-              <strong>{outlier.sub_ratio}×</strong> outlier
-            </span>
-            <span className="nh-chip nh-chip-soft">
-              <strong>{outlier.outlier_score}</strong> score
-            </span>
-          </div>
-        </div>
-      </div>
-
-      {why.length > 0 && (
-        <>
-          <p className="nh-eyebrow">Why it worked</p>
-          <ul className="nh-why">
-            {why.slice(0, 3).map((reason, i) => (
-              <li key={i}>
-                <span className="nh-why-n">{String(i + 1).padStart(2, '0')}</span>
-                <span className="nh-why-text">{reason}</span>
-              </li>
-            ))}
-          </ul>
-        </>
-      )}
-
-      <div className="nh-card-foot">
-        <p className="nh-foot-hint">Want eight more like this in {nicheLabel.toLowerCase()}?</p>
-        <button
-          type="button"
-          className="nh-ghost-cta"
-          onClick={() => onNavigate?.('Outliers')}
-        >
-          Open Outliers
-          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
-            <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+    <section className="nh-section">
+      {/* Header row */}
+      <div className="nh-section-head">
+        <span className="nh-section-title">
+          <span className="nh-dot" style={{ background: C.red }} />
+          Niche Outlier
+        </span>
+        <span className="nh-section-age">· {refreshedAge}</span>
+        <div className="nh-section-spacer" />
+        <button className="nh-x" aria-label="Dismiss" onClick={onDismiss}>
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
+            <line x1="2.5" y1="2.5" x2="9.5" y2="9.5"/>
+            <line x1="9.5" y1="2.5" x2="2.5" y2="9.5"/>
           </svg>
         </button>
       </div>
-    </article>
+
+      <article className="nh-card">
+        {/* Pill row */}
+        <div className="nh-pills">
+          {tabs.map(t => (
+            <button
+              key={t.key}
+              className={`nh-pill ${t.key === tab ? 'nh-pill-active' : ''}`}
+              onClick={() => switchTab(t.key)}
+              type="button"
+            >
+              {t.label}
+              <span className="nh-pill-count">{t.count}</span>
+            </button>
+          ))}
+          {bundle.query_used && (
+            <span className="nh-query">from your search: <strong>{bundle.query_used}</strong></span>
+          )}
+        </div>
+
+        {/* Featured slot */}
+        {current ? (
+          tab === 'channel'
+            ? <ChannelFeatured ch={current} />
+            : <VideoFeatured v={current} onOpenSeoStudio={onOpenSeoStudio} />
+        ) : (
+          <p className="nh-empty-sub" style={{ padding: '14px 0' }}>Nothing in this slot yet.</p>
+        )}
+
+        {/* Pager + rail */}
+        {currentList.length > 1 && (
+          <>
+            <div className="nh-pager">
+              <button className="nh-pager-btn" onClick={() => step(-1)} aria-label="Previous">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+              </button>
+              <span className="nh-pager-count">{safeIdx + 1} of {currentList.length}</span>
+              <button className="nh-pager-btn" onClick={() => step(1)} aria-label="Next">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+              </button>
+              <div className="nh-section-spacer" />
+              <button
+                type="button"
+                className="nh-ghost-cta"
+                onClick={() => onNavigate?.('Outliers')}
+              >
+                Open Outliers
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+                </svg>
+              </button>
+            </div>
+
+            <div className="nh-rail">
+              {currentList.map((item, i) => (
+                <button
+                  key={(item.video_id || item.channel_id || i) + ':' + i}
+                  className={`nh-rail-thumb ${i === safeIdx ? 'nh-rail-thumb-active' : ''}`}
+                  onClick={() => setIdx(i)}
+                  type="button"
+                  title={item.title || item.channel_title || ''}
+                >
+                  {tab === 'channel'
+                    ? (item.channel_thumb
+                        ? <img src={item.channel_thumb} alt="" loading="lazy" />
+                        : <div className="nh-rail-fallback">{(item.channel_title || '?').slice(0,1)}</div>)
+                    : (item.thumbnail_url
+                        ? <img src={item.thumbnail_url} alt="" loading="lazy" />
+                        : <div className="nh-rail-fallback" />)
+                  }
+                  <span className="nh-rail-badge">{item.outlier_mult ? `${item.outlier_mult}x` : `${i+1}`}</span>
+                </button>
+              ))}
+            </div>
+          </>
+        )}
+      </article>
+    </section>
   )
 }
 
 
-// ─── Title suggestion card ───────────────────────────────────────────────
+// ─── Featured slot variants ──────────────────────────────────────────────
 
-function TitleCard({ data, personalized, onOpenSeoStudio }) {
-  const { outlier } = data
-  const angle          = personalized?.angle           || outlier.angle_template || ''
-  const angleReasoning = personalized?.angle_reasoning || outlier.angle_reasoning || ''
-  const angleKeyword   = personalized?.keyword         || outlier.angle_keyword || ''
-
+function VideoFeatured({ v, onOpenSeoStudio }) {
+  const why = Array.isArray(v.why_working) ? v.why_working : []
   return (
-    <article className="nh-card">
-      <div className="nh-title-box">
-        <p className="nh-eyebrow">Suggested title for your channel</p>
-        <p className="nh-suggested-title">{angle || 'Tailoring a title for you…'}</p>
-      </div>
-
-      {angleReasoning && (
-        <>
-          <p className="nh-eyebrow">Why this works for you</p>
-          <p className="nh-reason">{angleReasoning}</p>
-        </>
-      )}
-
-      <div className="nh-bottom-row">
-        {angleKeyword ? (
-          <span className="nh-kw-chip">
-            <span className="nh-kw-lbl">Target</span>
-            <span className="nh-kw-val">{angleKeyword}</span>
+    <div className="nh-feat">
+      <a
+        className="nh-thumb"
+        href={`https://www.youtube.com/watch?v=${v.video_id}`}
+        target="_blank" rel="noopener noreferrer"
+        aria-label="Watch on YouTube"
+      >
+        {v.thumbnail_url
+          ? <img src={v.thumbnail_url} alt="" loading="lazy" />
+          : <div className="nh-thumb-fallback" />}
+        <span className="nh-thumb-overlay">
+          <span className="nh-play">
+            <svg width="13" height="13" viewBox="0 0 14 14" fill="currentColor"><polygon points="4,2.5 11.5,7 4,11.5"/></svg>
           </span>
-        ) : <span />}
-        <button
-          type="button"
-          className="nh-cta"
-          disabled={!angle}
-          onClick={() => onOpenSeoStudio?.(angle, angleKeyword)}
-        >
-          Open in Title &amp; Description
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
-            <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+        </span>
+        {v.outlier_mult > 1 && (
+          <span className="nh-overlay-badge">{v.outlier_mult}x</span>
+        )}
+      </a>
+
+      <div className="nh-feat-info">
+        <h3 className="nh-title">{v.title}</h3>
+        <p className="nh-byline">
+          <span className="nh-byline-ch">{v.channel_title}</span>
+          <span className="nh-byline-dot">·</span>
+          <span>{relAge(v.published_at)}</span>
+          <span className="nh-byline-dot">·</span>
+          <span>{fmtViews(v.view_count)} views</span>
+        </p>
+        <div className="nh-chip-row">
+          <span className="nh-chip nh-chip-red">
+            <strong>{v.outlier_mult || v.sub_ratio}×</strong> outlier
+          </span>
+          <span className="nh-chip nh-chip-soft">
+            <strong>{v.outlier_score}</strong> score
+          </span>
+        </div>
+
+        {why.length > 0 && (
+          <div className="nh-why-wrap">
+            <p className="nh-eyebrow">Why it worked</p>
+            <ul className="nh-why">
+              {why.slice(0, 3).map((reason, i) => (
+                <li key={i}>
+                  <span className="nh-why-n">{String(i + 1).padStart(2, '0')}</span>
+                  <span className="nh-why-text">{reason}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {v.title && onOpenSeoStudio && (
+          <div className="nh-feat-cta">
+            <button
+              type="button"
+              className="nh-cta"
+              onClick={() => onOpenSeoStudio(v.title, '')}
+            >
+              Adapt this title for me
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+              </svg>
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+function ChannelFeatured({ ch }) {
+  const todo = Array.isArray(ch.what_to_do) ? ch.what_to_do : []
+  return (
+    <div className="nh-feat">
+      <a
+        className="nh-thumb nh-thumb-ch"
+        href={ch.channel_id ? `https://www.youtube.com/channel/${ch.channel_id}` : '#'}
+        target="_blank" rel="noopener noreferrer"
+        aria-label="Open channel on YouTube"
+      >
+        {ch.channel_thumb
+          ? <img src={ch.channel_thumb} alt="" loading="lazy" />
+          : <div className="nh-thumb-fallback nh-thumb-fallback-ch">{(ch.channel_title || '?').slice(0,1).toUpperCase()}</div>}
+      </a>
+
+      <div className="nh-feat-info">
+        <h3 className="nh-title">{ch.channel_title}</h3>
+        <p className="nh-byline">
+          <span>{fmtViews(ch.subscribers)} subs</span>
+          {ch.videos_in_search > 0 && (
+            <>
+              <span className="nh-byline-dot">·</span>
+              <span>{ch.videos_in_search} hit videos in your niche</span>
+            </>
+          )}
+        </p>
+
+        {ch.why_this_channel && (
+          <div className="nh-why-wrap">
+            <p className="nh-eyebrow">Why this channel</p>
+            <p className="nh-reason">{ch.why_this_channel}</p>
+          </div>
+        )}
+
+        {todo.length > 0 && (
+          <div className="nh-why-wrap">
+            <p className="nh-eyebrow">What to do</p>
+            <ul className="nh-why">
+              {todo.slice(0, 3).map((step, i) => (
+                <li key={i}>
+                  <span className="nh-why-n">{String(i + 1).padStart(2, '0')}</span>
+                  <span className="nh-why-text">{step}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+
+// ─── Legacy single-payload (auto_pick) card ──────────────────────────────
+
+function LegacySingleCard({ data, onDismiss, onNavigate }) {
+  const v = data.outlier || {}
+  return (
+    <section className="nh-section">
+      <div className="nh-section-head">
+        <span className="nh-section-title">
+          <span className="nh-dot" style={{ background: C.red }} />
+          Niche Outlier
+        </span>
+        <span className="nh-section-age">· {relAge(v.refreshed_at) || 'this week'}</span>
+        <div className="nh-section-spacer" />
+        <button className="nh-x" aria-label="Dismiss" onClick={onDismiss}>
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
+            <line x1="2.5" y1="2.5" x2="9.5" y2="9.5"/>
+            <line x1="9.5" y1="2.5" x2="2.5" y2="9.5"/>
           </svg>
         </button>
       </div>
-    </article>
+      <article className="nh-card">
+        <VideoFeatured v={{ ...v, outlier_mult: v.outlier_mult || v.sub_ratio }} onOpenSeoStudio={null} />
+        <div className="nh-card-foot">
+          <p className="nh-foot-hint">Want more? Run a targeted search.</p>
+          <button
+            type="button"
+            className="nh-ghost-cta"
+            onClick={() => onNavigate?.('Outliers')}
+          >
+            Open Outliers
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+            </svg>
+          </button>
+        </div>
+      </article>
+    </section>
   )
 }
 
 
 // ─── Skeleton / empty ────────────────────────────────────────────────────
 
-function SectionSkeleton({ title }) {
+function SectionSkeleton() {
   return (
     <section className="nh-section">
       <div className="nh-section-head">
         <span className="nh-sk" style={{ width: 180, height: 14, borderRadius: 6 }} />
       </div>
       <article className="nh-card">
-        <div className="nh-outlier-top">
-          <div className="nh-sk" style={{ width: 180, aspectRatio: '16/9', borderRadius: 10, flexShrink: 0 }} />
+        <div className="nh-feat">
+          <div className="nh-sk" style={{ width: 220, aspectRatio: '16/9', borderRadius: 10, flexShrink: 0 }} />
           <div style={{ flex: 1 }}>
             <div className="nh-sk" style={{ width: '92%', height: 17, marginBottom: 9 }} />
             <div className="nh-sk" style={{ width: '60%', height: 12, marginBottom: 14 }} />
@@ -375,16 +484,12 @@ function SectionSkeleton({ title }) {
             </div>
           </div>
         </div>
-        <div className="nh-sk" style={{ width: '90%', height: 12, marginTop: 18, marginBottom: 8 }} />
-        <div className="nh-sk" style={{ width: '78%', height: 12, marginBottom: 8 }} />
-        <div className="nh-sk" style={{ width: '62%', height: 12 }} />
       </article>
     </section>
   )
 }
 
-function EmptyOutlier({ niche, reason, onNavigate }) {
-  const label = NICHE_LABELS[niche] || niche || 'your niche'
+function EmptyOutlier({ reason, onNavigate }) {
   const isGenerating = reason === 'generating_now' || reason === 'no_cache_yet'
   const noOutliersYet = reason === 'no_outliers_yet'
 
@@ -400,12 +505,12 @@ function EmptyOutlier({ niche, reason, onNavigate }) {
         <article className="nh-card">
           <p className="nh-eyebrow">Unlock this card</p>
           <p className="nh-suggested-title" style={{ fontSize: 15, marginBottom: 10 }}>
-            Run Outliers once and we will pin the strongest video, thumbnail, or breakout
-            channel from your niche to this card.
+            Run Outliers once and we will pin the strongest videos, thumbnails, and breakout
+            channels from your niche to this card, with a built-in switcher.
           </p>
           <p className="nh-reason">
-            We do not auto-pick a query for you here, an auto-pick gives off-niche results.
-            Type the topic you actually want to study and the result lands here.
+            We do not auto-pick a query for you here. Auto-picks land on off-niche results.
+            Type the topic you actually want to study and the full set lands here.
           </p>
           <div className="nh-bottom-row">
             <span />
@@ -438,7 +543,7 @@ function EmptyOutlier({ niche, reason, onNavigate }) {
           <div className="nh-spin" />
           <div>
             <p className="nh-empty-title">
-              {isGenerating ? `Finding the top ${label.toLowerCase()} outlier of the week.` : 'Niche outlier coming soon.'}
+              {isGenerating ? 'Finding the top outlier of the week.' : 'Niche outlier coming soon.'}
             </p>
             <p className="nh-empty-sub">
               {isGenerating
@@ -497,14 +602,54 @@ const styles = `
 }
 .nh-card:hover { box-shadow: ${C.shadowHover}; }
 
-/* Outlier card */
-.nh-outlier-top {
+/* Pills */
+.nh-pills {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 6px;
+  margin-bottom: 14px;
+}
+.nh-pill {
+  display: inline-flex; align-items: center; gap: 7px;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 12.5px; font-weight: 600;
+  padding: 7px 13px; border-radius: 100px;
+  border: 1px solid ${C.insetBdr};
+  background: #fff; color: ${C.text2};
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s, box-shadow 0.15s;
+  letter-spacing: -0.1px;
+}
+.nh-pill:hover { color: ${C.text1}; border-color: rgba(0,0,0,0.18); }
+.nh-pill-active {
+  background: ${C.red}; color: #fff; border-color: ${C.red};
+  box-shadow: 0 1px 3px rgba(229,37,27,0.30);
+}
+.nh-pill-active:hover { color: #fff; border-color: ${C.red}; }
+.nh-pill-count {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 18px; height: 18px; padding: 0 5px;
+  border-radius: 100px;
+  font-size: 10.5px; font-weight: 800;
+  background: rgba(255,255,255,0.22);
+}
+.nh-pill:not(.nh-pill-active) .nh-pill-count {
+  background: ${C.insetBg};
+  color: ${C.text3};
+}
+.nh-query {
+  margin-left: auto;
+  font-size: 11.5px; color: ${C.text3};
+  letter-spacing: -0.1px;
+}
+.nh-query strong { color: ${C.text2}; font-weight: 700; }
+
+/* Featured slot */
+.nh-feat {
   display: flex; gap: 16px;
-  margin-bottom: 16px;
+  margin-bottom: 4px;
 }
 .nh-thumb {
   position: relative;
-  width: 200px; flex-shrink: 0;
+  width: 220px; flex-shrink: 0;
   aspect-ratio: 16 / 9;
   border-radius: 10px;
   overflow: hidden;
@@ -512,8 +657,13 @@ const styles = `
   text-decoration: none;
   display: block;
 }
+.nh-thumb-ch { aspect-ratio: 1 / 1; width: 140px; border-radius: 14px; }
 .nh-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .nh-thumb-fallback { width: 100%; height: 100%; background: #eaeaef; }
+.nh-thumb-fallback-ch {
+  display: flex; align-items: center; justify-content: center;
+  font-size: 36px; font-weight: 800; color: #c4c4cd;
+}
 .nh-thumb-overlay {
   position: absolute; inset: 0;
   display: flex; align-items: center; justify-content: center;
@@ -530,8 +680,15 @@ const styles = `
 .nh-thumb:hover .nh-thumb-overlay {
   opacity: 1; background: rgba(0,0,0,0.32);
 }
+.nh-overlay-badge {
+  position: absolute; top: 8px; left: 8px;
+  background: ${C.red}; color: #fff;
+  font-size: 11px; font-weight: 800; letter-spacing: -0.1px;
+  padding: 4px 9px; border-radius: 100px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+}
 
-.nh-outlier-info { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.nh-feat-info { flex: 1; min-width: 0; display: flex; flex-direction: column; }
 .nh-title {
   font-size: 16px; font-weight: 700; color: ${C.text1};
   letter-spacing: -0.25px; line-height: 1.4;
@@ -549,7 +706,6 @@ const styles = `
 
 .nh-chip-row {
   display: flex; flex-wrap: wrap; gap: 6px;
-  margin-top: auto;
 }
 .nh-chip {
   display: inline-flex; align-items: center; gap: 5px;
@@ -574,7 +730,7 @@ const styles = `
   text-transform: uppercase; color: ${C.text3};
   margin: 0 0 10px 0;
 }
-
+.nh-why-wrap { margin-top: 16px; }
 .nh-why { list-style: none; padding: 0; margin: 0; }
 .nh-why li {
   display: flex; gap: 12px; align-items: flex-start;
@@ -588,51 +744,19 @@ const styles = `
   flex-shrink: 0; margin-top: 4px;
   font-variant-numeric: tabular-nums;
 }
+.nh-reason { font-size: 13px; color: ${C.text2}; line-height: 1.6; margin: 0; }
 
-/* Title card */
-.nh-title-box {
-  background: ${C.insetBg};
-  border: 1px solid ${C.insetBdr};
-  border-radius: 11px;
-  padding: 14px 16px;
-  margin-bottom: 16px;
-}
-.nh-title-box .nh-eyebrow { margin-bottom: 8px; }
-.nh-suggested-title {
-  font-size: 17px; font-weight: 700; color: ${C.text1};
-  letter-spacing: -0.3px; line-height: 1.4;
-  margin: 0;
-}
-.nh-reason {
-  font-size: 13.5px; color: ${C.text2}; line-height: 1.6;
-  margin: 0 0 16px 0;
-}
-
-.nh-bottom-row {
-  display: flex; align-items: center; justify-content: space-between;
-  gap: 12px; flex-wrap: wrap;
-}
-.nh-kw-chip {
-  display: inline-flex; align-items: center; gap: 8px;
-  font-size: 12px; padding: 6px 12px;
-  border-radius: 100px;
-  background: ${C.amberBg}; border: 1px solid ${C.amberBdr};
-}
-.nh-kw-lbl {
-  font-size: 9.5px; font-weight: 800; color: ${C.amber};
-  letter-spacing: 0.08em; text-transform: uppercase;
-}
-.nh-kw-val { font-size: 12.5px; font-weight: 700; color: ${C.text1}; letter-spacing: -0.1px; }
+.nh-feat-cta { margin-top: 16px; }
 
 .nh-cta {
   display: inline-flex; align-items: center; gap: 7px;
   background: ${C.red};
   color: #ffffff;
   border: none;
-  padding: 10px 18px;
+  padding: 9px 16px;
   border-radius: 100px;
   font-family: 'Inter', system-ui, sans-serif;
-  font-size: 13px; font-weight: 700;
+  font-size: 12.5px; font-weight: 700;
   letter-spacing: -0.1px;
   cursor: pointer;
   box-shadow: 0 1px 2px rgba(0,0,0,0.10), 0 4px 14px rgba(229,37,27,0.26);
@@ -642,18 +766,30 @@ const styles = `
   filter: brightness(1.07); transform: translateY(-1px);
   box-shadow: 0 3px 8px rgba(0,0,0,0.13), 0 10px 28px rgba(229,37,27,0.32);
 }
-.nh-cta:disabled { opacity: 0.55; cursor: progress; }
+.nh-cta:disabled { opacity: 0.55; cursor: not-allowed; }
 
-.nh-card-foot {
-  display: flex; align-items: center; justify-content: space-between;
-  gap: 12px; flex-wrap: wrap;
-  margin-top: 16px; padding-top: 14px;
+/* Pager */
+.nh-pager {
+  margin-top: 18px;
+  display: flex; align-items: center; gap: 10px;
+  padding-top: 14px;
   border-top: 1px solid ${C.borderSoft};
 }
-.nh-foot-hint {
-  font-size: 12.5px; color: ${C.text3}; line-height: 1.5;
-  margin: 0; letter-spacing: -0.1px;
+.nh-pager-btn {
+  width: 30px; height: 30px; border-radius: 100px;
+  border: 1px solid ${C.insetBdr};
+  background: #fff; color: ${C.text2};
+  cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
 }
+.nh-pager-btn:hover { background: ${C.insetBg}; color: ${C.text1}; border-color: rgba(0,0,0,0.18); }
+.nh-pager-count {
+  font-size: 12px; color: ${C.text3}; font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.1px;
+}
+
 .nh-ghost-cta {
   display: inline-flex; align-items: center; gap: 6px;
   background: transparent;
@@ -673,7 +809,63 @@ const styles = `
   color: ${C.redDeep};
 }
 
-/* Empty + skeleton */
+/* Rail */
+.nh-rail {
+  margin-top: 14px;
+  display: flex; gap: 8px;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  padding-bottom: 4px;
+}
+.nh-rail::-webkit-scrollbar { height: 6px; }
+.nh-rail::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 100px; }
+.nh-rail-thumb {
+  position: relative;
+  flex-shrink: 0;
+  width: 110px; aspect-ratio: 16 / 9;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #eaeaef;
+  border: 2px solid transparent;
+  padding: 0; cursor: pointer;
+  transition: border-color 0.15s, transform 0.15s;
+}
+.nh-rail-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.nh-rail-fallback { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: #c4c4cd; font-size: 22px; font-weight: 800; }
+.nh-rail-thumb:hover { transform: translateY(-1px); }
+.nh-rail-thumb-active { border-color: ${C.red}; box-shadow: 0 4px 14px rgba(229,37,27,0.25); }
+.nh-rail-badge {
+  position: absolute; top: 4px; left: 4px;
+  background: rgba(0,0,0,0.72); color: #fff;
+  font-size: 10px; font-weight: 800; letter-spacing: -0.05em;
+  padding: 2px 6px; border-radius: 100px;
+}
+
+/* Legacy card foot */
+.nh-card-foot {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; flex-wrap: wrap;
+  margin-top: 16px; padding-top: 14px;
+  border-top: 1px solid ${C.borderSoft};
+}
+.nh-foot-hint {
+  font-size: 12.5px; color: ${C.text3}; line-height: 1.5;
+  margin: 0; letter-spacing: -0.1px;
+}
+
+/* Empty / suggested-title styling reused */
+.nh-suggested-title {
+  font-size: 17px; font-weight: 700; color: ${C.text1};
+  letter-spacing: -0.3px; line-height: 1.4;
+  margin: 0;
+}
+.nh-bottom-row {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; flex-wrap: wrap;
+  margin-top: 16px;
+}
+
+/* Skeleton + spinner */
 .nh-empty-row { display: flex; align-items: center; gap: 14px; }
 .nh-spin {
   width: 28px; height: 28px; border-radius: 50%;
@@ -696,9 +888,11 @@ const styles = `
 @keyframes nhShimmer { 0% { background-position: -200px 0 } 100% { background-position: 400px 0 } }
 
 @media (max-width: 700px) {
-  .nh-outlier-top { flex-direction: column; }
+  .nh-feat { flex-direction: column; }
   .nh-thumb { width: 100%; }
+  .nh-thumb-ch { width: 120px; align-self: center; }
   .nh-bottom-row { flex-direction: column; align-items: stretch; }
   .nh-cta { width: 100%; justify-content: center; }
+  .nh-query { margin-left: 0; }
 }
 `
