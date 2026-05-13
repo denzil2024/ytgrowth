@@ -20,8 +20,17 @@ from fastapi import APIRouter, Request
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
+import json
+
 from app.utils import make_anthropic_client
-from database.models import SessionLocal, ChatMessage, UserSubscription
+from database.models import (
+    SessionLocal,
+    ChatMessage,
+    UserSubscription,
+    CompetitorAnalysisCache,
+    SeoOptimization,
+    Milestone,
+)
 from routers.auth import get_session
 
 
@@ -36,9 +45,12 @@ HISTORY_TURNS_SENT = 8
 
 # ── Channel context builder ───────────────────────────────────────────────
 
-def _build_channel_context(data: dict) -> str:
+def _build_channel_context(data: dict, channel_id: str) -> str:
     """Render a compact channel context block for the system prompt.
-    Reads the session data dict (channel + videos + insights blob)."""
+    Pulls from the session (channel/videos/insights/analytics) AND from
+    the database (tracked competitors, optimization history, milestones).
+    The coach can't answer questions about data it can't see, so we
+    pull every relevant surface here."""
     channel = (data or {}).get("channel", {}) or {}
     videos  = (data or {}).get("videos",  []) or []
     insights = (data or {}).get("insights") or {}
@@ -122,6 +134,99 @@ def _build_channel_context(data: dict) -> str:
                 problem = (a.get("problem") or "")[:200]
                 lines.append(f"  - {problem}")
 
+    # Tracked competitors — pulled from CompetitorAnalysisCache. This is
+    # the data the user explicitly added through the Competitors feature,
+    # so the coach should reference these by name when relevant.
+    competitor_lines = []
+    if channel_id:
+        db = SessionLocal()
+        try:
+            rows = (
+                db.query(CompetitorAnalysisCache)
+                  .filter_by(channel_id=channel_id)
+                  .order_by(CompetitorAnalysisCache.analyzed_at.desc())
+                  .limit(8)
+                  .all()
+            )
+            seen = set()
+            for row in rows:
+                try:
+                    result = json.loads(row.result_json or "{}")
+                except Exception:
+                    continue
+                meta = result.get("_competitor_meta", {}) or {}
+                cname = meta.get("channel_name") or result.get("channel_name") or ""
+                if not cname or cname in seen:
+                    continue
+                seen.add(cname)
+                csubs = meta.get("subscribers") or result.get("subscribers") or 0
+                cavg  = result.get("avg_views_per_video") or 0
+                tagline = (result.get("contentStrategy") or result.get("strategy") or "")[:160]
+                line = f"- {cname} ({_fmtnum(csubs)} subs"
+                if cavg:
+                    line += f", {_fmtnum(cavg)} avg views/video"
+                line += ")"
+                if tagline:
+                    line += f": {tagline}"
+                competitor_lines.append(line)
+        finally:
+            db.close()
+    if competitor_lines:
+        lines.append("")
+        lines.append("# Tracked competitors (user's chosen rivals)")
+        lines.extend(competitor_lines)
+
+    # SEO Optimizer history — recent title/description changes. Useful
+    # for "did my last change work" type questions.
+    seo_lines = []
+    if channel_id:
+        db = SessionLocal()
+        try:
+            opt_rows = (
+                db.query(SeoOptimization)
+                  .filter_by(channel_id=channel_id)
+                  .order_by(SeoOptimization.optimized_at.desc())
+                  .limit(5)
+                  .all()
+            )
+            for r in opt_rows:
+                bv = r.before_views or 0
+                cv = r.current_views or 0
+                delta = cv - bv
+                pct = (delta / bv * 100) if bv > 0 else 0
+                seo_lines.append(
+                    f"- \"{(r.before_title or '')[:80]}\" -> \"{(r.after_title or '')[:80]}\" "
+                    f"({_fmtnum(bv)} -> {_fmtnum(cv)} views, {pct:+.1f}%)"
+                )
+        finally:
+            db.close()
+    if seo_lines:
+        lines.append("")
+        lines.append("# Recent SEO Optimizer edits")
+        lines.extend(seo_lines)
+
+    # Earned milestones — context for celebrating wins.
+    ms_lines = []
+    if channel_id:
+        db = SessionLocal()
+        try:
+            ms_rows = (
+                db.query(Milestone)
+                  .filter_by(channel_id=channel_id)
+                  .order_by(Milestone.achieved_at.desc())
+                  .limit(4)
+                  .all()
+            )
+            for m in ms_rows:
+                cat = (m.category or "").replace("_", " ")
+                ms_lines.append(f"- {_fmtnum(m.tier)} {cat}")
+        finally:
+            db.close()
+    if ms_lines:
+        lines.append("")
+        lines.append("# Recent milestones earned")
+        lines.extend(ms_lines)
+
     return "\n".join(lines)
 
 
@@ -132,19 +237,61 @@ def _system_prompt(channel_context: str) -> list[dict]:
     persona = (
         "You are a YouTube growth coach for the creator using YTGrowth. "
         "You give concise, specific, data-backed advice. Always reference "
-        "the creator's actual channel data when relevant. "
-        "Avoid generic YouTube tips — they're not paying for that. "
-        "If you don't have the data to answer a question, say so plainly "
-        "and recommend which YTGrowth feature to run to get it. "
+        "the creator's actual channel data when relevant, including their "
+        "tracked competitors by name. "
+        "Avoid generic YouTube tips, they are not paying for that. "
+        "If a question needs data that is NOT in the channel context below, "
+        "say so plainly and recommend which YTGrowth feature to run to get "
+        "it (Competitors, Outliers, Keywords, SEO Studio, Thumbnail Score, "
+        "or a fresh Audit). "
         "Keep answers under 200 words unless the user asks for depth. "
         "Use plain prose, not bullet lists, unless the answer is genuinely a list. "
-        "Never use em-dashes — write with commas, colons, or sentence breaks. "
-        "Never mention you are an AI or a language model. You are the coach."
+        "Never use em-dashes. Write with commas, colons, or sentence breaks. "
+        "Never mention you are an AI or a language model. You are the coach. "
+        "Avoid asterisks for emphasis in your responses, they render as raw "
+        "characters in the chat UI."
     )
     return [
         {"type": "text", "text": persona, "cache_control": {"type": "ephemeral"}},
         {"type": "text", "text": channel_context, "cache_control": {"type": "ephemeral"}},
     ]
+
+
+def _summarize_sources(data: dict, channel_id: str) -> list[str]:
+    """Return a short human-readable list of which data sources are
+    populated for this channel. Shown in the UI so the user can SEE the
+    coach is reading real data, not generic tips."""
+    sources: list[str] = []
+    channel = (data or {}).get("channel", {}) or {}
+    videos  = (data or {}).get("videos",  []) or []
+    insights = (data or {}).get("insights") or {}
+    analytics = (data or {}).get("analytics") or {}
+
+    if channel.get("channel_name"):
+        sources.append("Channel stats")
+    if videos:
+        sources.append(f"{len(videos)} recent videos")
+    if analytics:
+        sources.append("90d analytics")
+    if insights:
+        sources.append("Audit")
+
+    if channel_id:
+        db = SessionLocal()
+        try:
+            comp_count = db.query(CompetitorAnalysisCache).filter_by(channel_id=channel_id).count()
+            if comp_count > 0:
+                sources.append(f"{comp_count} competitor{'s' if comp_count != 1 else ''}")
+            seo_count = db.query(SeoOptimization).filter_by(channel_id=channel_id).count()
+            if seo_count > 0:
+                sources.append(f"{seo_count} SEO edit{'s' if seo_count != 1 else ''}")
+            ms_count = db.query(Milestone).filter_by(channel_id=channel_id).count()
+            if ms_count > 0:
+                sources.append(f"{ms_count} milestone{'s' if ms_count != 1 else ''}")
+        finally:
+            db.close()
+
+    return sources
 
 
 # ── Endpoints ─────────────────────────────────────────────────────────────
@@ -193,6 +340,7 @@ def chat_state(request: Request):
             "used":      int(sub.chat_used or 0),
             "remaining": max(0, int(sub.chat_allowance or 0) - int(sub.chat_used or 0)),
             "plan":      sub.plan or "free",
+            "sources":   _summarize_sources(data, channel_id),
         })
     finally:
         db.close()
@@ -255,9 +403,12 @@ def chat_send(body: SendBody, request: Request):
         api_messages = [{"role": m.role, "content": m.content} for m in history_to_send]
         api_messages.append({"role": "user", "content": user_text})
 
-        # System prompt with cached channel context
-        ctx_block = _build_channel_context(data)
+        # System prompt with cached channel context. Pulls from session +
+        # multiple DB tables (competitors, SEO edits, milestones) so the
+        # coach always answers from real data the user can verify.
+        ctx_block = _build_channel_context(data, channel_id)
         system_blocks = _system_prompt(ctx_block)
+        sources_used = _summarize_sources(data, channel_id)
 
         # Call Claude Haiku 4.5
         client = make_anthropic_client()
@@ -302,10 +453,12 @@ def chat_send(body: SendBody, request: Request):
                 "role":       "assistant",
                 "content":    assistant_text,
                 "created_at": assistant_row.created_at.isoformat() if assistant_row.created_at else None,
+                "sources":    sources_used,
             },
             "allowance": allowance,
             "used":      sub.chat_used,
             "remaining": max(0, allowance - sub.chat_used),
+            "sources":   sources_used,
         })
     finally:
         db.close()

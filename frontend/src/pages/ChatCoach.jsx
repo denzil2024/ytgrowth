@@ -19,7 +19,8 @@
 
 import { useEffect, useRef, useState } from 'react'
 import {
-  Sparkles,        // Coach avatar
+  Bot,             // Coach avatar — less generic than Sparkles, less awkward on tint
+  Database,        // Data sources indicator
   Send,            // Composer send button
   Plus,            // New chat
   ArrowRight,      // CTA
@@ -38,6 +39,12 @@ const C = {
   redBdr:     'rgba(229,37,27,0.20)',
   green:      '#059669',
   amber:      '#d97706',
+  // Neutral avatar tint. Charcoal soft + 1px charcoal-soft border. Used
+  // on both the header avatar and per-message coach avatar so the icon
+  // doesn't read as a red alert badge.
+  avatarBg:   'rgba(15,15,19,0.06)',
+  avatarBdr:  'rgba(15,15,19,0.10)',
+  avatarFg:   '#0a0a0f',
 }
 
 const STARTER_PROMPTS = [
@@ -85,6 +92,7 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
   const [allowance, setAllowance] = useState(0)
   const [used, setUsed] = useState(0)
   const [plan, setPlan] = useState('free')
+  const [availableSources, setAvailableSources] = useState([])
   const [input, setInput] = useState('')
   const [sending, setSending] = useState(false)
   const [sendError, setSendError] = useState(null)
@@ -105,6 +113,7 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
         setAllowance(d.allowance || 0)
         setUsed(d.used || 0)
         setPlan(d.plan || 'free')
+        setAvailableSources(d.sources || [])
         setState({ loading: false, error: null })
       })
       .catch(err => {
@@ -155,6 +164,7 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
       setMessages(prev => [...prev, d.message])
       setAllowance(d.allowance ?? allowance)
       setUsed(d.used ?? (used + 1))
+      if (d.sources) setAvailableSources(d.sources)
     } catch (e) {
       setMessages(prev => prev.slice(0, -1))
       setSendError("Couldn't reach the coach. Check your connection and try again.")
@@ -197,18 +207,20 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
           <span style={{
             display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
             width: 36, height: 36, borderRadius: 10,
-            background: C.redSoft,
-            border: `1px solid ${C.redBdr}`,
-            color: C.red, flexShrink: 0,
+            background: C.avatarBg,
+            border: `1px solid ${C.avatarBdr}`,
+            color: C.avatarFg, flexShrink: 0,
           }}>
-            <Sparkles size={18} strokeWidth={2} />
+            <Bot size={18} strokeWidth={1.9} />
           </span>
           <div>
             <h1 style={{ fontSize: 20, fontWeight: 800, color: C.text1, letterSpacing: '-0.4px', lineHeight: 1.15 }}>
               AI Coach
             </h1>
             <p style={{ fontSize: 12, color: C.text3, fontWeight: 500, marginTop: 2, letterSpacing: '-0.01em' }}>
-              Trained on your channel data, ready when you are
+              {availableSources.length > 0
+                ? `Reading ${availableSources.join(' · ')}`
+                : 'Trained on your channel data, ready when you are'}
             </p>
           </div>
         </div>
@@ -293,7 +305,7 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
             {messages.map((m, i) => (
-              <MessageBubble key={i} role={m.role} content={m.content} createdAt={m.created_at} />
+              <MessageBubble key={i} role={m.role} content={m.content} sources={m.sources} />
             ))}
             {sending && (
               <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
@@ -301,17 +313,28 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
                   flexShrink: 0,
                   width: 32, height: 32, borderRadius: 10,
                   display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-                  background: C.redSoft, border: `1px solid ${C.redBdr}`, color: C.red,
+                  background: C.avatarBg, border: `1px solid ${C.avatarBdr}`, color: C.avatarFg,
                 }}>
-                  <Sparkles size={15} strokeWidth={2} />
+                  <Bot size={15} strokeWidth={1.9} />
                 </span>
                 <div style={{
                   background: '#fff', border: `1px solid ${C.border}`,
-                  borderRadius: 14, padding: '12px 16px',
+                  borderRadius: '4px 14px 14px 14px',
+                  padding: '12px 16px',
                   boxShadow: '0 1px 2px rgba(0,0,0,0.03)',
-                  display: 'inline-flex', alignItems: 'center', gap: 6,
+                  display: 'inline-flex', alignItems: 'center', gap: 10, flexWrap: 'wrap',
                 }}>
-                  <Dot delay="0s"/><Dot delay="0.15s"/><Dot delay="0.30s"/>
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5 }}>
+                    <Dot delay="0s"/><Dot delay="0.15s"/><Dot delay="0.30s"/>
+                  </span>
+                  {availableSources.length > 0 && (
+                    <span style={{
+                      fontSize: 11.5, color: C.text3, fontWeight: 500, letterSpacing: '-0.01em',
+                    }}>
+                      Reading {availableSources.slice(0, 3).join(', ')}
+                      {availableSources.length > 3 ? `, +${availableSources.length - 3} more` : ''}
+                    </span>
+                  )}
                 </div>
               </div>
             )}
@@ -438,16 +461,17 @@ function EmptyState({ onPick }) {
       display: 'flex', flexDirection: 'column', alignItems: 'center',
       paddingTop: 40, paddingBottom: 20,
     }}>
-      {/* Big avatar */}
+      {/* Big avatar — neutral charcoal so it reads as a Coach mark,
+          not a notification badge. */}
       <div style={{
         width: 56, height: 56, borderRadius: 16,
         display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-        background: `linear-gradient(135deg, ${C.redSoft} 0%, rgba(229,37,27,0.02) 100%)`,
-        border: `1px solid ${C.redBdr}`,
-        color: C.red, marginBottom: 16,
-        boxShadow: '0 8px 24px rgba(229,37,27,0.10)',
+        background: 'linear-gradient(135deg, rgba(15,15,19,0.07) 0%, rgba(15,15,19,0.02) 100%)',
+        border: '1px solid rgba(15,15,19,0.10)',
+        color: C.text1, marginBottom: 16,
+        boxShadow: '0 8px 24px rgba(15,15,19,0.06)',
       }}>
-        <Sparkles size={28} strokeWidth={1.9} />
+        <Bot size={28} strokeWidth={1.8} />
       </div>
 
       <h2 style={{
@@ -500,7 +524,7 @@ function EmptyState({ onPick }) {
 
 
 /* ─── Message bubble ───────────────────────────────────────────────── */
-function MessageBubble({ role, content, createdAt }) {
+function MessageBubble({ role, content, sources }) {
   if (role === 'user') {
     return (
       <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
@@ -525,18 +549,30 @@ function MessageBubble({ role, content, createdAt }) {
         flexShrink: 0,
         width: 32, height: 32, borderRadius: 10,
         display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-        background: C.redSoft, border: `1px solid ${C.redBdr}`, color: C.red,
+        background: C.avatarBg, border: `1px solid ${C.avatarBdr}`, color: C.avatarFg,
       }}>
-        <Sparkles size={15} strokeWidth={2} />
+        <Bot size={15} strokeWidth={1.9} />
       </span>
-      <div style={{
-        flex: 1, minWidth: 0,
-        background: '#fff', border: `1px solid ${C.border}`,
-        borderRadius: '4px 14px 14px 14px',
-        padding: '12px 16px',
-        boxShadow: '0 1px 2px rgba(0,0,0,0.03)',
-      }}>
-        <AssistantBody text={content} />
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <div style={{
+          background: '#fff', border: `1px solid ${C.border}`,
+          borderRadius: '4px 14px 14px 14px',
+          padding: '12px 16px',
+          boxShadow: '0 1px 2px rgba(0,0,0,0.03)',
+        }}>
+          <AssistantBody text={content} />
+        </div>
+        {sources && sources.length > 0 && (
+          <div style={{
+            display: 'inline-flex', alignItems: 'center', gap: 6,
+            marginTop: 8, marginLeft: 4,
+            fontSize: 10.5, color: C.text3, fontWeight: 600,
+            letterSpacing: '0.03em',
+          }}>
+            <Database size={10} strokeWidth={2} />
+            <span>Pulled from: {sources.join(' · ')}</span>
+          </div>
+        )}
       </div>
     </div>
   )
