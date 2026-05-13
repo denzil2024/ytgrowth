@@ -2141,23 +2141,15 @@ export default function Dashboard() {
                 </div>
               )}
 
-              {/* Hero card — "What's winning in your niche this week".
-                  This is the differentiation moment. Loads independently
-                  from a cached endpoint so it appears instantly without
-                  blocking the rest of the Overview. */}
-              <NicheHeroCard
-                channelId={data?.channel?.channel_id}
-                onNavigate={(target) => setNav(target)}
-                onOpenSeoStudio={(title, keyword) => {
-                  try {
-                    if (title) {
-                      sessionStorage.setItem('seoOptimizer_prefilledTitle', title)
-                      if (keyword) sessionStorage.setItem('seoOptimizer_prefilledKeyword', keyword)
-                    }
-                  } catch {}
-                  setNav('SEO Studio')
-                }}
-              />
+              {/* Niche outlier hero card is hidden during the Home rebuild.
+                  It was returning videos auto-chosen from a single keyword
+                  seed (extract_niche_keywords -> first word -> YouTube
+                  search), which let off-niche outliers through (e.g. a
+                  Kenyan vlogger getting an Australian budget reaction).
+                  In the rebuild it returns as a proper action card with a
+                  Haiku-derived smart query and a relevance confidence
+                  check before display. Hidden, not removed: the backend
+                  cache + endpoint still work for the rebuild to consume. */}
 
               {/* Hero metric tiles — the two foundational numbers, big and bounded. */}
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 12 }}>
