@@ -18,6 +18,10 @@ import {
   Flame,            // Streak indicator
   Clock,            // Best Time to Publish category
   TrendingUp,       // Tracked Optimization Lift category
+  Lightbulb,        // Daily Ideas category
+  Users,            // Competitor Activity category
+  RefreshCw,        // Refresh Ideas button
+  ExternalLink,     // External link arrow for competitor uploads
   ChevronDown,      // Collapse toggle on Channel Health
   RefreshCcw,       // Refresh stats (compact topbar)
   RotateCcw,        // Re-Audit (compact topbar)
@@ -2945,6 +2949,371 @@ function TrackedLiftCard({ win, moreCount, onOpenAll, onDismiss }) {
 }
 
 
+// Daily Ideas card. Three fresh video idea concepts the user can act on
+// today. Reads from the existing /video-ideas cache so the data flow
+// matches the standalone Video Ideas page. Each idea row shows the
+// title + angle + a single CTA that drops the title into SEO Studio so
+// the user can start writing in one click.
+function DailyIdeasCard({ ideas, lastUpdated, isStale, isFree, refreshing, onRefresh, onUse, onOpenAll, onDismiss }) {
+  const [open, setOpen] = useState(false)
+  const top3 = (ideas || []).slice(0, 3)
+  if (top3.length === 0) return null
+
+  // Subline pulled from the most recent data point. "today" feels active;
+  // anything older nudges a refresh.
+  const subline = isStale
+    ? 'These look stale, hit refresh for fresh angles'
+    : lastUpdated === 'today' ? 'Fresh ideas, generated today'
+    : `Last refreshed ${lastUpdated || 'recently'}`
+
+  return (
+    <FeedCard
+      Icon={Lightbulb}
+      iconColor={C.amber}
+      iconBg="rgba(217,119,6,0.10)"
+      category="Daily Ideas"
+      onDismiss={onDismiss}
+      rightSlot={
+        <span style={{
+          display: 'inline-flex', alignItems: 'center', gap: 4,
+          fontSize: 10.5, fontWeight: 700, color: C.amber,
+          background: 'rgba(217,119,6,0.08)', border: '1px solid rgba(217,119,6,0.22)',
+          padding: '3px 8px', borderRadius: 100,
+          letterSpacing: '0.05em', textTransform: 'uppercase',
+        }}>
+          {top3.length} ready
+        </span>
+      }
+    >
+      <div style={{ display: 'flex', alignItems: 'baseline', gap: 12, flexWrap: 'wrap', marginBottom: 14 }}>
+        <h3 style={{
+          fontSize: 16, fontWeight: 700, color: C.text1,
+          letterSpacing: '-0.3px', lineHeight: 1.25,
+        }}>Start writing one of these today</h3>
+        <span style={{
+          fontSize: 12, fontWeight: 500, color: isStale ? C.amber : C.text3,
+          letterSpacing: '-0.01em',
+        }}>{subline}</span>
+      </div>
+
+      {/* Idea rows. Each row: rank dot + title + angle + Use CTA. */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 12 }}>
+        {top3.map((idea, i) => {
+          const score = idea.opportunityScore != null
+            ? idea.opportunityScore
+            : Math.max(65, 85 - i * 4)
+          const scoreClr = score >= 80 ? C.green : score >= 65 ? C.amber : C.text3
+          return (
+            <div
+              key={i}
+              style={{
+                display: 'flex', alignItems: 'flex-start', gap: 12,
+                padding: '12px 14px',
+                background: '#fafafb',
+                border: '1px solid #ececf0',
+                borderRadius: 10,
+                transition: 'background 0.14s ease, border-color 0.14s ease, transform 0.14s ease',
+              }}
+              onMouseEnter={e => { e.currentTarget.style.background = '#fff'; e.currentTarget.style.borderColor = '#d6d6dc'; e.currentTarget.style.transform = 'translateY(-1px)' }}
+              onMouseLeave={e => { e.currentTarget.style.background = '#fafafb'; e.currentTarget.style.borderColor = '#ececf0'; e.currentTarget.style.transform = 'translateY(0)' }}
+            >
+              {/* Rank badge */}
+              <div style={{
+                flexShrink: 0,
+                width: 28, height: 28, borderRadius: 8,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                background: 'rgba(217,119,6,0.08)',
+                border: '1px solid rgba(217,119,6,0.22)',
+                fontSize: 12, fontWeight: 800, color: C.amber,
+                letterSpacing: '-0.3px',
+                fontVariantNumeric: 'tabular-nums',
+              }}>{i + 1}</div>
+
+              <div style={{ flex: 1, minWidth: 0 }}>
+                {/* Title */}
+                <p style={{
+                  fontSize: 13.5, fontWeight: 700, color: C.text1,
+                  letterSpacing: '-0.2px', lineHeight: 1.35,
+                  marginBottom: 4,
+                  display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical',
+                  overflow: 'hidden',
+                }}>{idea.title}</p>
+                {/* Angle (one-line truncated) */}
+                {idea.angle && (
+                  <p style={{
+                    fontSize: 11.5, fontWeight: 500, color: C.text3,
+                    letterSpacing: '-0.01em', lineHeight: 1.45,
+                    display: '-webkit-box', WebkitLineClamp: 1, WebkitBoxOrient: 'vertical',
+                    overflow: 'hidden',
+                  }}>{idea.angle}</p>
+                )}
+                {/* Meta: keyword + score */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 6 }}>
+                  {idea.targetKeyword && (
+                    <span style={{
+                      fontSize: 10, fontWeight: 600, color: C.text3,
+                      letterSpacing: '0.04em',
+                      display: 'inline-flex', alignItems: 'center', gap: 4,
+                    }}>
+                      <span style={{ width: 4, height: 4, borderRadius: 99, background: C.text3 }}/>
+                      {idea.targetKeyword}
+                    </span>
+                  )}
+                  <span style={{
+                    fontSize: 10, fontWeight: 700, color: scoreClr,
+                    letterSpacing: '0.04em',
+                    fontVariantNumeric: 'tabular-nums',
+                  }}>
+                    Score {score}
+                  </span>
+                </div>
+              </div>
+
+              {/* Use CTA */}
+              <button
+                type="button"
+                onClick={() => onUse?.(idea)}
+                style={{
+                  flexShrink: 0, alignSelf: 'center',
+                  display: 'inline-flex', alignItems: 'center', gap: 5,
+                  padding: '7px 13px', borderRadius: 100,
+                  border: 'none', cursor: 'pointer',
+                  background: C.red, color: '#fff',
+                  fontFamily: 'inherit',
+                  fontSize: 11.5, fontWeight: 700, letterSpacing: '-0.01em',
+                  boxShadow: '0 1px 3px rgba(229,37,27,0.28)',
+                  transition: 'filter 0.14s ease, transform 0.14s ease',
+                }}
+                onMouseEnter={e => { e.currentTarget.style.filter = 'brightness(1.08)'; e.currentTarget.style.transform = 'translateY(-1px)' }}
+                onMouseLeave={e => { e.currentTarget.style.filter = 'none'; e.currentTarget.style.transform = 'translateY(0)' }}
+              >
+                Use idea
+                <ArrowRight size={11} strokeWidth={2.4} />
+              </button>
+            </div>
+          )
+        })}
+      </div>
+
+      {/* Bottom row: refresh + open full ideas */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', paddingTop: 12, borderTop: '1px solid #f1f1f4' }}>
+        <span style={{ fontSize: 11.5, fontWeight: 500, color: C.text3, letterSpacing: '-0.01em' }}>
+          {isFree ? 'Free plan shows top 3, upgrade for the full feed' : 'Full feed in Video Ideas'}
+        </span>
+        <div style={{ flex: 1 }}/>
+        {onRefresh && (
+          <button
+            type="button"
+            onClick={onRefresh}
+            disabled={refreshing}
+            style={{
+              display: 'inline-flex', alignItems: 'center', gap: 5,
+              padding: '6px 11px', borderRadius: 100,
+              border: '1px solid #e6e6ec',
+              background: refreshing ? '#f6f6f9' : '#fff',
+              color: refreshing ? C.text3 : C.text2,
+              fontFamily: 'inherit',
+              fontSize: 11.5, fontWeight: 600, letterSpacing: '-0.01em',
+              cursor: refreshing ? 'wait' : 'pointer',
+              transition: 'background 0.14s ease, color 0.14s ease, border-color 0.14s ease',
+            }}
+            onMouseEnter={e => { if (!refreshing) { e.currentTarget.style.background = 'rgba(15,15,19,0.04)'; e.currentTarget.style.color = C.text1; e.currentTarget.style.borderColor = '#d0d0d8' } }}
+            onMouseLeave={e => { if (!refreshing) { e.currentTarget.style.background = '#fff'; e.currentTarget.style.color = C.text2; e.currentTarget.style.borderColor = '#e6e6ec' } }}
+          >
+            <RefreshCw size={11} strokeWidth={2.4} style={{ animation: refreshing ? 'spin 0.8s linear infinite' : 'none' }}/>
+            {refreshing ? 'Refreshing…' : 'Refresh ideas'}
+          </button>
+        )}
+        {onOpenAll && (
+          <button
+            type="button"
+            onClick={onOpenAll}
+            style={{
+              display: 'inline-flex', alignItems: 'center', gap: 5,
+              padding: '7px 13px', borderRadius: 100,
+              border: 'none', cursor: 'pointer',
+              background: C.text1, color: '#fff',
+              fontFamily: 'inherit',
+              fontSize: 12, fontWeight: 700, letterSpacing: '-0.01em',
+              boxShadow: '0 1px 3px rgba(0,0,0,0.18)',
+              transition: 'filter 0.14s ease, transform 0.14s ease',
+            }}
+            onMouseEnter={e => { e.currentTarget.style.filter = 'brightness(1.10)'; e.currentTarget.style.transform = 'translateY(-1px)' }}
+            onMouseLeave={e => { e.currentTarget.style.filter = 'none'; e.currentTarget.style.transform = 'translateY(0)' }}
+          >
+            Open Video Ideas
+            <ArrowRight size={12} strokeWidth={2.4} />
+          </button>
+        )}
+      </div>
+    </FeedCard>
+  )
+}
+
+// Competitor Activity card. Shows recent uploads from the channels the
+// user tracks via the Competitors feature. Habit-forming surface: every
+// time a competitor posts, this card updates. Three uploads shown as a
+// row of mini cards (thumbnail + title + competitor name + views + age).
+// Click any to open the video on YouTube.
+function CompetitorActivityCard({ items, refreshing, onRefresh, onOpen, onOpenAll, onDismiss }) {
+  const top3 = (items || []).slice(0, 3)
+  if (top3.length === 0) return null
+
+  return (
+    <FeedCard
+      Icon={Users}
+      iconColor={C.text1}
+      iconBg="rgba(15,15,19,0.06)"
+      category="Competitor Moves · last 7 days"
+      onDismiss={onDismiss}
+      rightSlot={
+        <span style={{
+          display: 'inline-flex', alignItems: 'center', gap: 4,
+          fontSize: 10.5, fontWeight: 700, color: C.text2,
+          background: 'rgba(15,15,19,0.04)', border: '1px solid rgba(15,15,19,0.10)',
+          padding: '3px 8px', borderRadius: 100,
+          letterSpacing: '0.05em', textTransform: 'uppercase',
+        }}>
+          {top3.length} new
+        </span>
+      }
+    >
+      <h3 style={{
+        fontSize: 16, fontWeight: 700, color: C.text1,
+        letterSpacing: '-0.3px', lineHeight: 1.25,
+        marginBottom: 14,
+      }}>What your competition just posted</h3>
+
+      {/* 3-up grid of recent uploads */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12, marginBottom: 12 }}>
+        {top3.map((item, i) => (
+          <a
+            key={i}
+            href={item.video_id ? `https://www.youtube.com/watch?v=${item.video_id}` : '#'}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={(e) => { if (onOpen) { e.preventDefault(); onOpen(item) } }}
+            style={{
+              display: 'block',
+              background: '#fafafb',
+              border: '1px solid #ececf0',
+              borderRadius: 10,
+              overflow: 'hidden',
+              textDecoration: 'none',
+              transition: 'background 0.14s ease, border-color 0.14s ease, transform 0.14s ease, box-shadow 0.14s ease',
+            }}
+            onMouseEnter={e => { e.currentTarget.style.background = '#fff'; e.currentTarget.style.borderColor = '#d6d6dc'; e.currentTarget.style.transform = 'translateY(-1px)'; e.currentTarget.style.boxShadow = '0 4px 14px rgba(0,0,0,0.08)' }}
+            onMouseLeave={e => { e.currentTarget.style.background = '#fafafb'; e.currentTarget.style.borderColor = '#ececf0'; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none' }}
+          >
+            {/* Thumbnail */}
+            <div style={{ position: 'relative', aspectRatio: '16/9', background: '#ebebef', overflow: 'hidden' }}>
+              {item.thumbnail && (
+                <img src={item.thumbnail} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}/>
+              )}
+              {/* Channel avatar overlay (bottom-left of thumb) */}
+              {item.channel_thumbnail && (
+                <div style={{
+                  position: 'absolute', left: 8, bottom: 8,
+                  width: 26, height: 26, borderRadius: '50%',
+                  overflow: 'hidden',
+                  boxShadow: '0 0 0 2px #fff, 0 2px 8px rgba(0,0,0,0.30)',
+                }}>
+                  <img src={item.channel_thumbnail} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}/>
+                </div>
+              )}
+              {/* External link badge top-right */}
+              <div style={{
+                position: 'absolute', top: 8, right: 8,
+                background: 'rgba(0,0,0,0.65)', backdropFilter: 'blur(4px)',
+                color: '#fff', width: 22, height: 22, borderRadius: 6,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+              }}>
+                <ExternalLink size={11} strokeWidth={2.4}/>
+              </div>
+            </div>
+
+            {/* Title + meta */}
+            <div style={{ padding: '10px 12px' }}>
+              <p style={{
+                fontSize: 12.5, fontWeight: 700, color: C.text1,
+                letterSpacing: '-0.15px', lineHeight: 1.35,
+                marginBottom: 6,
+                display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical',
+                overflow: 'hidden',
+                minHeight: 34,
+              }}>{item.title}</p>
+              <p style={{
+                fontSize: 10.5, fontWeight: 600, color: C.text2,
+                letterSpacing: '-0.05px', lineHeight: 1.3,
+                marginBottom: 4,
+                whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
+              }}>{item.channel_name}</p>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 10.5, fontWeight: 500, color: C.text3, fontVariantNumeric: 'tabular-nums' }}>
+                <span>{fmtNum(item.views || 0)} views</span>
+                <span style={{ color: '#dcdde3' }}>·</span>
+                <span>{item.age_label || ''}</span>
+              </div>
+            </div>
+          </a>
+        ))}
+      </div>
+
+      {/* Bottom row */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', paddingTop: 12, borderTop: '1px solid #f1f1f4' }}>
+        <span style={{ fontSize: 11.5, fontWeight: 500, color: C.text3, letterSpacing: '-0.01em' }}>
+          From the channels you track
+        </span>
+        <div style={{ flex: 1 }}/>
+        {onRefresh && (
+          <button
+            type="button"
+            onClick={onRefresh}
+            disabled={refreshing}
+            style={{
+              display: 'inline-flex', alignItems: 'center', gap: 5,
+              padding: '6px 11px', borderRadius: 100,
+              border: '1px solid #e6e6ec',
+              background: refreshing ? '#f6f6f9' : '#fff',
+              color: refreshing ? C.text3 : C.text2,
+              fontFamily: 'inherit',
+              fontSize: 11.5, fontWeight: 600, letterSpacing: '-0.01em',
+              cursor: refreshing ? 'wait' : 'pointer',
+              transition: 'background 0.14s ease, color 0.14s ease, border-color 0.14s ease',
+            }}
+            onMouseEnter={e => { if (!refreshing) { e.currentTarget.style.background = 'rgba(15,15,19,0.04)'; e.currentTarget.style.color = C.text1; e.currentTarget.style.borderColor = '#d0d0d8' } }}
+            onMouseLeave={e => { if (!refreshing) { e.currentTarget.style.background = '#fff'; e.currentTarget.style.color = C.text2; e.currentTarget.style.borderColor = '#e6e6ec' } }}
+          >
+            <RefreshCw size={11} strokeWidth={2.4} style={{ animation: refreshing ? 'spin 0.8s linear infinite' : 'none' }}/>
+            {refreshing ? 'Refreshing…' : 'Refresh'}
+          </button>
+        )}
+        {onOpenAll && (
+          <button
+            type="button"
+            onClick={onOpenAll}
+            style={{
+              display: 'inline-flex', alignItems: 'center', gap: 5,
+              padding: '7px 13px', borderRadius: 100,
+              border: 'none', cursor: 'pointer',
+              background: C.text1, color: '#fff',
+              fontFamily: 'inherit',
+              fontSize: 12, fontWeight: 700, letterSpacing: '-0.01em',
+              boxShadow: '0 1px 3px rgba(0,0,0,0.18)',
+              transition: 'filter 0.14s ease, transform 0.14s ease',
+            }}
+            onMouseEnter={e => { e.currentTarget.style.filter = 'brightness(1.10)'; e.currentTarget.style.transform = 'translateY(-1px)' }}
+            onMouseLeave={e => { e.currentTarget.style.filter = 'none'; e.currentTarget.style.transform = 'translateY(0)' }}
+          >
+            Open Competitors
+            <ArrowRight size={12} strokeWidth={2.4} />
+          </button>
+        )}
+      </div>
+    </FeedCard>
+  )
+}
+
+
 /* ─── Insight card (legacy, still used by collapsed audit detail) ────────── */
 function categoryToNav(category, problem) {
   const c = (category || '').toLowerCase()
@@ -3744,6 +4113,12 @@ export default function Dashboard() {
   // the user is on the Overview. Null while loading or when there's no
   // meaningful win to surface yet.
   const [trackedLift, setTrackedLift] = useState(null)
+  // Daily Ideas (Video Ideas top 3 surfaced on the Feed).
+  const [dailyIdeas, setDailyIdeas] = useState(null)
+  const [refreshingIdeas, setRefreshingIdeas] = useState(false)
+  // Competitor Activity (recent uploads from tracked competitors).
+  const [competitorActivity, setCompetitorActivity] = useState(null)
+  const [refreshingCompActivity, setRefreshingCompActivity] = useState(false)
   const setFeedFilterPersist = (k) => {
     setFeedFilter(k)
     try { localStorage.setItem('ytg_feed_filter', k) } catch {}
@@ -3856,6 +4231,21 @@ export default function Dashboard() {
     fetch('/dashboard/tracked-lift', { credentials: 'include' })
       .then(r => r.ok ? r.json() : null)
       .then(d => { if (d && !d.error && d.top) setTrackedLift(d) })
+      .catch(() => {})
+
+    // Load Daily Ideas (top 3 from the channel's video idea cache). The
+    // backend pools ideas from competitor analyses + AI generations.
+    fetch('/video-ideas', { credentials: 'include' })
+      .then(r => r.ok ? r.json() : null)
+      .then(d => { if (d && !d.error) setDailyIdeas(d) })
+      .catch(() => {})
+
+    // Load Competitor Activity (recent uploads from tracked competitors).
+    // The endpoint reads CompetitorAnalysisCache for the tracked list and
+    // fetches their latest videos via the YouTube Data API.
+    fetch('/dashboard/competitor-activity', { credentials: 'include' })
+      .then(r => r.ok ? r.json() : null)
+      .then(d => { if (d && !d.error && d.items?.length) setCompetitorActivity(d) })
       .catch(() => {})
 
     // Load plan + per-feature gate state (for free-tier gating on child pages).
@@ -4658,6 +5048,76 @@ export default function Dashboard() {
                       if (patterns.bestVideo.video_id) setSelectedVideoId(patterns.bestVideo.video_id)
                       else setNav('Videos')
                     }}
+                    onDismiss={() => {
+                      try { localStorage.setItem(dismissKey, '1') } catch {}
+                      setChecked(prev => ({ ...prev }))
+                    }}
+                  />
+                )
+              })()}
+
+              {/* Daily Ideas — Actions. Three fresh video idea concepts
+                  from the channel's idea pool. Refreshing pulls a new
+                  batch from competitor analyses. Each row routes the
+                  user into SEO Studio with the title pre-filled so they
+                  can start writing in one click. */}
+              {(feedFilter === 'all' || feedFilter === 'actions') && dailyIdeas?.ideas?.length > 0 && (() => {
+                const dismissKey = `ytg_daily_ideas_dismissed:${data?.channel?.channel_id || 'x'}`
+                try { if (localStorage.getItem(dismissKey)) return null } catch {}
+                return (
+                  <DailyIdeasCard
+                    ideas={dailyIdeas.ideas}
+                    lastUpdated={dailyIdeas.last_updated}
+                    isStale={dailyIdeas.stale}
+                    isFree={dailyIdeas.free_capped}
+                    refreshing={refreshingIdeas}
+                    onUse={(idea) => {
+                      try {
+                        if (idea.title) sessionStorage.setItem('seoOptimizer_prefilledTitle', idea.title)
+                        if (idea.targetKeyword) sessionStorage.setItem('seoOptimizer_prefilledKeyword', idea.targetKeyword)
+                      } catch {}
+                      setNav('SEO Studio')
+                    }}
+                    onRefresh={() => {
+                      if (refreshingIdeas) return
+                      setRefreshingIdeas(true)
+                      fetch('/video-ideas/refresh', { method: 'POST', credentials: 'include' })
+                        .then(r => r.ok ? r.json() : null)
+                        .then(d => { if (d && !d.error) setDailyIdeas(d) })
+                        .catch(() => {})
+                        .finally(() => setRefreshingIdeas(false))
+                    }}
+                    onOpenAll={() => setNav('Video Ideas')}
+                    onDismiss={() => {
+                      try { localStorage.setItem(dismissKey, '1') } catch {}
+                      setChecked(prev => ({ ...prev }))
+                    }}
+                  />
+                )
+              })()}
+
+              {/* Competitor Activity — Insights. Recent uploads from the
+                  channels the user tracks via the Competitors feature.
+                  Habit-forming surface: every time a competitor posts,
+                  this card refreshes. Click any tile to open the video
+                  on YouTube. */}
+              {(feedFilter === 'all' || feedFilter === 'insights') && competitorActivity?.items?.length > 0 && (() => {
+                const dismissKey = `ytg_competitor_activity_dismissed:${data?.channel?.channel_id || 'x'}`
+                try { if (localStorage.getItem(dismissKey)) return null } catch {}
+                return (
+                  <CompetitorActivityCard
+                    items={competitorActivity.items}
+                    refreshing={refreshingCompActivity}
+                    onRefresh={() => {
+                      if (refreshingCompActivity) return
+                      setRefreshingCompActivity(true)
+                      fetch('/dashboard/competitor-activity?force=1', { credentials: 'include' })
+                        .then(r => r.ok ? r.json() : null)
+                        .then(d => { if (d && !d.error) setCompetitorActivity(d) })
+                        .catch(() => {})
+                        .finally(() => setRefreshingCompActivity(false))
+                    }}
+                    onOpenAll={() => setNav('Competitors')}
                     onDismiss={() => {
                       try { localStorage.setItem(dismissKey, '1') } catch {}
                       setChecked(prev => ({ ...prev }))

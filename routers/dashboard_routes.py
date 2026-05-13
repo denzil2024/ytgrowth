@@ -26,6 +26,8 @@ from fastapi import APIRouter, Request
 from fastapi.responses import JSONResponse
 
 import datetime
+import json
+import time
 
 from app.niche_outliers import (
     get_for_channel,
@@ -36,7 +38,7 @@ from app.niche_outliers import (
     is_stale,
     personalize_angle,
 )
-from database.models import SessionLocal, SeoOptimization
+from database.models import SessionLocal, SeoOptimization, CompetitorAnalysisCache
 from routers.auth import get_session
 from routers.admin_routes import _is_admin
 
@@ -348,3 +350,186 @@ def tracked_lift(request: Request):
         })
     finally:
         db.close()
+
+
+# ── Competitor Activity ───────────────────────────────────────────────────
+# Shows recent uploads from the channels this user tracks via the
+# Competitors feature. Habit-forming surface: every time a competitor
+# posts, this card refreshes. Reads tracked competitors from
+# CompetitorAnalysisCache, then fetches each one's most recent uploads
+# from the YouTube Data API, filters to the last 7 days, and returns
+# the top 5 globally.
+#
+# Quota math per refresh: 1 channels.list (free since we derive the
+# uploads playlist from channel_id) + N playlistItems.list + 1
+# videos.list batch ≈ N+1 units. For 10 tracked competitors, ~11 units.
+# In-memory cache with 6h TTL keeps repeat Feed mounts cheap.
+
+_competitor_activity_cache: dict[str, tuple[dict, float]] = {}
+_COMP_ACTIVITY_TTL = 6 * 3600  # seconds
+
+
+def _uploads_playlist_from_channel_id(channel_id: str) -> str | None:
+    """YouTube's documented trick: a channel's uploads playlist ID is the
+    channel ID with the leading 'UC' replaced by 'UU'. Saves a
+    channels.list call per competitor."""
+    if not channel_id or not channel_id.startswith("UC"):
+        return None
+    return "UU" + channel_id[2:]
+
+
+def _age_label(published_dt: datetime.datetime) -> str:
+    now = datetime.datetime.now(datetime.timezone.utc)
+    secs = (now - published_dt).total_seconds()
+    if secs < 3600:
+        m = max(1, int(secs / 60))
+        return f"{m}m ago"
+    if secs < 86400:
+        h = int(secs / 3600)
+        return f"{h}h ago"
+    d = int(secs / 86400)
+    return f"{d}d ago"
+
+
+def _fetch_competitor_recent_uploads(creds, competitors: list[dict], lookback_days: int = 7) -> list[dict]:
+    """For each competitor, fetch the most recent uploads from YouTube
+    and return a flat list filtered to the lookback window, sorted by
+    published_at desc."""
+    if not competitors or not creds:
+        return []
+    try:
+        from googleapiclient.discovery import build
+        youtube = build("youtube", "v3", credentials=creds)
+    except Exception as e:
+        print(f"competitor-activity build error: {e}")
+        return []
+
+    cutoff = datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(days=lookback_days)
+    meta_by_channel = {c["channel_id"]: c for c in competitors if c.get("channel_id")}
+
+    # Step 1: per-channel playlistItems.list to get recent uploads.
+    video_to_channel: dict[str, str] = {}
+    all_video_ids: list[str] = []
+    for cid in meta_by_channel.keys():
+        playlist_id = _uploads_playlist_from_channel_id(cid)
+        if not playlist_id:
+            continue
+        try:
+            pl_resp = youtube.playlistItems().list(
+                part="snippet",
+                playlistId=playlist_id,
+                maxResults=5,
+            ).execute()
+            for it in pl_resp.get("items", []):
+                vid = it.get("snippet", {}).get("resourceId", {}).get("videoId")
+                if vid:
+                    all_video_ids.append(vid)
+                    video_to_channel[vid] = cid
+        except Exception as e:
+            print(f"competitor-activity playlistItems error for {cid}: {e}")
+
+    if not all_video_ids:
+        return []
+
+    # Step 2: batch videos.list for snippet + stats. 50 per call.
+    out: list[dict] = []
+    for i in range(0, len(all_video_ids), 50):
+        batch = all_video_ids[i:i+50]
+        try:
+            v_resp = youtube.videos().list(
+                part="snippet,statistics",
+                id=",".join(batch),
+            ).execute()
+        except Exception as e:
+            print(f"competitor-activity videos.list error: {e}")
+            continue
+        for v in v_resp.get("items", []):
+            vsnippet = v.get("snippet", {})
+            published_str = vsnippet.get("publishedAt", "")
+            try:
+                published = datetime.datetime.fromisoformat(published_str.replace("Z", "+00:00"))
+            except Exception:
+                continue
+            if published < cutoff:
+                continue
+
+            channel_id = video_to_channel.get(v["id"], "")
+            meta = meta_by_channel.get(channel_id, {})
+            thumbs = vsnippet.get("thumbnails", {})
+            thumb_url = (thumbs.get("medium") or thumbs.get("high") or thumbs.get("default") or {}).get("url", "")
+
+            out.append({
+                "video_id":          v["id"],
+                "title":             vsnippet.get("title", ""),
+                "thumbnail":         thumb_url,
+                "channel_id":        channel_id,
+                "channel_name":      meta.get("channel_name") or vsnippet.get("channelTitle", ""),
+                "channel_thumbnail": meta.get("thumbnail", ""),
+                "views":             int(v.get("statistics", {}).get("viewCount", 0)),
+                "published_at":      published_str,
+                "age_label":         _age_label(published),
+            })
+
+    out.sort(key=lambda x: x["published_at"], reverse=True)
+    return out
+
+
+@router.get("/competitor-activity")
+def competitor_activity(request: Request, force: int = 0):
+    """Returns recent uploads from the channels the user tracks via
+    Competitors. Cached for 6h in memory; ?force=1 bypasses cache."""
+    data, creds = get_session(request.session.get("session_id"))
+    if not data:
+        return JSONResponse({"error": "Not authenticated."}, status_code=401)
+
+    channel_id = (data or {}).get("channel", {}).get("channel_id", "") or (data or {}).get("channel_id", "")
+    if not channel_id:
+        return JSONResponse({"items": [], "competitor_count": 0})
+
+    # In-memory cache
+    now = time.time()
+    if not force:
+        cached = _competitor_activity_cache.get(channel_id)
+        if cached and (now - cached[1]) < _COMP_ACTIVITY_TTL:
+            return JSONResponse(cached[0])
+
+    # Load tracked competitors from DB. Cap at 10 most recent.
+    db = SessionLocal()
+    try:
+        rows = (
+            db.query(CompetitorAnalysisCache)
+              .filter_by(channel_id=channel_id)
+              .order_by(CompetitorAnalysisCache.analyzed_at.desc())
+              .all()
+        )
+        seen: set[str] = set()
+        competitors: list[dict] = []
+        for row in rows:
+            try:
+                result = json.loads(row.result_json)
+            except Exception:
+                continue
+            meta = result.get("_competitor_meta", {})
+            comp_id = meta.get("channel_id") or row.competitor_id
+            if not comp_id or comp_id in seen:
+                continue
+            seen.add(comp_id)
+            competitors.append({
+                "channel_id":   comp_id,
+                "channel_name": meta.get("channel_name", ""),
+                "thumbnail":    meta.get("thumbnail", ""),
+            })
+            if len(competitors) >= 10:
+                break
+    finally:
+        db.close()
+
+    if not competitors:
+        result = {"items": [], "competitor_count": 0}
+        _competitor_activity_cache[channel_id] = (result, now)
+        return JSONResponse(result)
+
+    items = _fetch_competitor_recent_uploads(creds, competitors, lookback_days=7)
+    result = {"items": items[:5], "competitor_count": len(competitors)}
+    _competitor_activity_cache[channel_id] = (result, now)
+    return JSONResponse(result)
