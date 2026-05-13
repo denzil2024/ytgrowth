@@ -1500,21 +1500,15 @@ function FeedCard({
   )
 }
 
-// Priority Action card. Collapsed first: headline + impact bar + meta +
-// CTAs. The action prose and why-it-matters live behind a Detail chevron.
-// Tick / dismiss live in the eyebrow's right slot so the body stays clean.
+// Priority Action card. Collapsed first: lighter headline + meta + CTAs.
+// The impact pill in the eyebrow already signals weight, so no redundant
+// impact bar. Prose lives behind Detail.
 function PriorityActionCard({ action, rank, total, impact, onAct, onDone, onDismiss, ctaLabel }) {
   const [open, setOpen] = useState(false)
   const impactKey = (impact || 'med').toLowerCase()
   const impactClr = impactKey === 'high' ? C.red : impactKey === 'low' ? C.text3 : C.amber
   const impactBg  = impactKey === 'high' ? 'rgba(229,37,27,0.07)' : impactKey === 'low' ? 'rgba(15,15,19,0.04)' : 'rgba(217,119,6,0.08)'
   const impactBdr = impactKey === 'high' ? 'rgba(229,37,27,0.18)' : impactKey === 'low' ? 'rgba(15,15,19,0.10)' : 'rgba(217,119,6,0.18)'
-  const impactPct = impactKey === 'high' ? 85 : impactKey === 'low' ? 30 : 58
-  const impactFill = impactKey === 'high'
-    ? 'linear-gradient(90deg, rgba(229,37,27,0.55) 0%, #e5251b 100%)'
-    : impactKey === 'low'
-      ? 'linear-gradient(90deg, rgba(60,60,75,0.35) 0%, rgba(60,60,75,0.55) 100%)'
-      : 'linear-gradient(90deg, rgba(217,119,6,0.55) 0%, #d97706 100%)'
 
   const cat = action.category || categoryToNav(action.category, action.problem)
 
@@ -1527,42 +1521,31 @@ function PriorityActionCard({ action, rank, total, impact, onAct, onDone, onDism
       onDismiss={onDismiss}
       rightSlot={
         <span style={{
-          fontSize: 9.5, fontWeight: 800, color: impactClr,
+          fontSize: 9.5, fontWeight: 700, color: impactClr,
           background: impactBg, border: `1px solid ${impactBdr}`,
           padding: '3px 8px', borderRadius: 100,
           letterSpacing: '0.08em', textTransform: 'uppercase',
         }}>{impactKey} impact</span>
       }
     >
-      {/* Headline only — single bold line */}
+      {/* Headline — lighter weight so the Actions tab doesn't read like a
+          wall of bold. The eyebrow chip already signals the weight. */}
       <h3 style={{
-        fontSize: 15, fontWeight: 700, color: C.text1,
-        letterSpacing: '-0.25px', lineHeight: 1.35,
-        marginBottom: 12,
+        fontSize: 13.5, fontWeight: 600, color: C.text1,
+        letterSpacing: '-0.15px', lineHeight: 1.45,
+        marginBottom: 10,
       }}>{action.problem || action.action || 'Action'}</h3>
-
-      {/* Visual band: impact bar */}
-      <div style={{ marginBottom: 12 }}>
-        <div style={{
-          position: 'relative',
-          background: '#eef0f4', borderRadius: 99, height: 6,
-          overflow: 'hidden',
-        }}>
-          <div style={{
-            width: `${impactPct}%`, height: '100%',
-            background: impactFill,
-            borderRadius: 99,
-            transition: 'width 0.8s cubic-bezier(0.34,1.56,0.64,1)',
-          }}/>
-        </div>
-      </div>
 
       {/* Meta row + CTAs + Detail chevron */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
         <span style={{
-          fontSize: 11.5, fontWeight: 500, color: C.text3,
+          display: 'inline-flex', alignItems: 'center', gap: 5,
+          fontSize: 11, fontWeight: 500, color: C.text3,
           letterSpacing: '-0.01em',
-        }}>{cat}</span>
+        }}>
+          <span style={{ width: 5, height: 5, borderRadius: 99, background: impactClr }}/>
+          {cat}
+        </span>
 
         <div style={{ flex: 1 }}/>
 
@@ -2148,51 +2131,143 @@ function computePostingStats(videos) {
   }
 }
 
-// Posting Consistency card. The 28-day upload calendar a creator
-// instantly recognises. Each square = one day. Empty squares mean no
-// upload that day. Filled squares scale opacity to upload count. The
-// stats on the right (count, weekly pace, current streak, longest)
-// give numerical context. Streak chip in the eyebrow celebrates.
+// Posting timeline chart. Real SVG cumulative line chart, not a tile of
+// squares. Shows the climb each upload day with soft red area fill, white
+// dots at each upload event, and real date labels along the bottom.
+function PostingTimeline({ uploadDays }) {
+  const width = 720
+  const height = 110
+  const padX = 6
+  const padTop = 8
+  const padBot = 22 // room for date labels
+  const usableW = width - padX * 2
+  const usableH = height - padTop - padBot
+
+  // Cumulative uploads array (28 entries).
+  const cumulative = []
+  let total = 0
+  for (const c of uploadDays) { total += c; cumulative.push(total) }
+
+  // If zero uploads, render a flat baseline with "no activity" label.
+  if (total === 0) {
+    return (
+      <svg width="100%" viewBox={`0 0 ${width} ${height}`} preserveAspectRatio="none" style={{ display: 'block' }}>
+        <line x1={padX} y1={height - padBot} x2={width - padX} y2={height - padBot} stroke="#eef0f4" strokeWidth="1.2"/>
+        <text x={width / 2} y={height / 2} textAnchor="middle" fontSize="12" fontWeight="600" fill="rgba(10,10,15,0.40)">No uploads in this window</text>
+      </svg>
+    )
+  }
+
+  const maxY = Math.max(total, 1)
+  const points = cumulative.map((v, i) => {
+    const x = padX + (i / (cumulative.length - 1)) * usableW
+    const y = padTop + (1 - v / maxY) * usableH
+    return [x, y]
+  })
+  const uploadIdxes = uploadDays.reduce((acc, c, i) => (c > 0 ? [...acc, i] : acc), [])
+
+  const pathLine = points.map(([x, y], i) => `${i === 0 ? 'M' : 'L'}${x.toFixed(2)} ${y.toFixed(2)}`).join(' ')
+  const pathArea = `${pathLine} L${points[points.length - 1][0]} ${height - padBot} L${points[0][0]} ${height - padBot} Z`
+
+  // Date labels: 5 points across (today, ~week ago, ~2wk ago, ~3wk ago, 28d ago).
+  const today = new Date(); today.setHours(0, 0, 0, 0)
+  const labelIdxes = [0, 7, 14, 21, 27]
+  const labels = labelIdxes.map(idx => {
+    const d = new Date(today.getTime() - (27 - idx) * 86400000)
+    const x = padX + (idx / 27) * usableW
+    return {
+      x,
+      label: idx === 27 ? 'Today' : d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+      anchor: idx === 0 ? 'start' : idx === 27 ? 'end' : 'middle',
+    }
+  })
+
+  // Y-axis tick marks (faint horizontal guides) at quartiles.
+  const guides = [0.25, 0.5, 0.75].map(p => padTop + (1 - p) * usableH)
+
+  const gradId = `posting_grad_${Math.random().toString(36).slice(2, 8)}`
+
+  return (
+    <svg width="100%" viewBox={`0 0 ${width} ${height}`} preserveAspectRatio="none" style={{ display: 'block' }}>
+      <defs>
+        <linearGradient id={gradId} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="rgba(229,37,27,0.22)"/>
+          <stop offset="100%" stopColor="rgba(229,37,27,0)"/>
+        </linearGradient>
+      </defs>
+
+      {/* Faint horizontal guides */}
+      {guides.map((y, i) => (
+        <line key={i} x1={padX} y1={y} x2={width - padX} y2={y} stroke="#f1f1f4" strokeWidth="1" strokeDasharray="2 4"/>
+      ))}
+
+      {/* Baseline */}
+      <line x1={padX} y1={height - padBot} x2={width - padX} y2={height - padBot} stroke="#e6e6ec" strokeWidth="1"/>
+
+      {/* Area + line */}
+      <path d={pathArea} fill={`url(#${gradId})`}/>
+      <path d={pathLine} fill="none" stroke="#e5251b" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+
+      {/* Upload-day dots */}
+      {uploadIdxes.map(i => (
+        <circle key={i} cx={points[i][0]} cy={points[i][1]} r="3.6" fill="#fff" stroke="#e5251b" strokeWidth="2"/>
+      ))}
+
+      {/* X-axis date labels */}
+      {labels.map((l, i) => (
+        <text
+          key={i}
+          x={l.x}
+          y={height - 6}
+          textAnchor={l.anchor}
+          fontSize="9.5"
+          fontWeight="600"
+          fill="rgba(10,10,15,0.40)"
+          letterSpacing="0.04em"
+        >{l.label}</text>
+      ))}
+    </svg>
+  )
+}
+
+// Small stat tile used in card-bottom strips. Tight, uppercase label,
+// chunky value, single-line hint underneath.
+function StatTile({ label, value, hint, valueColor }) {
+  return (
+    <div>
+      <p style={{ fontSize: 9.5, fontWeight: 700, color: 'rgba(10,10,15,0.40)', letterSpacing: '0.11em', textTransform: 'uppercase', marginBottom: 5 }}>{label}</p>
+      <p style={{ fontSize: 17, fontWeight: 700, color: valueColor || '#0a0a0f', letterSpacing: '-0.4px', lineHeight: 1, fontVariantNumeric: 'tabular-nums', marginBottom: 4 }}>{value}</p>
+      {hint && <p style={{ fontSize: 10.5, fontWeight: 500, color: 'rgba(10,10,15,0.40)', letterSpacing: '-0.01em' }}>{hint}</p>}
+    </div>
+  )
+}
+
+// Posting Consistency card v2. Real SaaS chart (cumulative line) as the
+// primary visual, 4-stat strip across the bottom. The legacy 28-day
+// heatmap lives in Detail-expanded state for users who want the
+// per-day breakdown.
 function PostingConsistencyCard({ videos, onDismiss }) {
   const [open, setOpen] = useState(false)
   const stats = computePostingStats(videos)
   const { count, pacePerWeek, currentStreak, longestStreak, gridOldestFirst } = stats
 
-  // Card only renders when we have at least one upload in the window.
-  // No uploads in 28d is an empty state we'll design separately.
   if (count === 0) return null
 
-  const paceMsg = pacePerWeek >= 3 ? 'Above average for your size'
+  const verdict = pacePerWeek >= 3 ? 'Strong pace for your size'
     : pacePerWeek >= 1 ? 'Healthy weekly cadence'
-    : pacePerWeek > 0  ? 'Posting irregularly'
+    : pacePerWeek > 0 ? 'Posting irregularly'
     : 'No recent uploads'
-  const paceClr = pacePerWeek >= 3 ? C.green
+  const verdictClr = pacePerWeek >= 3 ? C.green
     : pacePerWeek >= 1 ? C.text2
     : C.amber
 
-  // Headline reflects whichever signal is strongest.
-  const headline = currentStreak >= 3
-    ? `You're on a ${currentStreak}-day posting streak`
-    : count >= 8
-      ? `You posted ${count} videos in the last 28 days`
-      : pacePerWeek >= 1
-        ? `Posting ${pacePerWeek}× per week`
-        : 'Your posting cadence'
+  const headline = currentStreak >= 7 ? `${currentStreak}-day posting streak`
+    : currentStreak >= 3 ? `On a ${currentStreak}-day streak`
+    : count >= 8 ? `${count} videos in 28 days`
+    : pacePerWeek >= 1 ? `Posting ${pacePerWeek}× per week`
+    : `${count} ${count === 1 ? 'video' : 'videos'} in 28 days`
 
-  // The day labels above the grid. Grid renders rows = weeks (oldest top,
-  // newest bottom), columns = days of week. We compute the column label
-  // for each grid index by walking back 28 days from today and reading
-  // the weekday. Simpler: derive day labels by walking the grid.
-  const dayLabels = []
-  const start = new Date()
-  start.setHours(0, 0, 0, 0)
-  start.setDate(start.getDate() - 27) // 28 days ago
-  for (let i = 0; i < 7; i++) {
-    const d = new Date(start.getTime() + i * 86400000)
-    dayLabels.push(d.toLocaleDateString('en-US', { weekday: 'narrow' }))
-  }
-
-  // Color for a cell given its upload count.
+  // Cell color for the (now collapsed) detail heatmap.
   const cellColor = (n) => {
     if (n === 0) return '#eef0f4'
     if (n === 1) return 'rgba(229,37,27,0.40)'
@@ -2205,7 +2280,7 @@ function PostingConsistencyCard({ videos, onDismiss }) {
       Icon={CalendarDays}
       iconColor={C.text1}
       iconBg="rgba(15,15,19,0.06)"
-      category="Posting Consistency"
+      category="Posting Consistency · 28 days"
       onDismiss={onDismiss}
       rightSlot={currentStreak >= 2 && (
         <span style={{
@@ -2220,90 +2295,109 @@ function PostingConsistencyCard({ videos, onDismiss }) {
         </span>
       )}
     >
-      <h3 style={{
-        fontSize: 15, fontWeight: 700, color: C.text1,
-        letterSpacing: '-0.25px', lineHeight: 1.35,
-        marginBottom: 14,
-      }}>{headline}</h3>
+      {/* Headline + verdict on one row */}
+      <div style={{ display: 'flex', alignItems: 'baseline', gap: 12, flexWrap: 'wrap', marginBottom: 14 }}>
+        <h3 style={{
+          fontSize: 18, fontWeight: 700, color: C.text1,
+          letterSpacing: '-0.4px', lineHeight: 1.2,
+        }}>{headline}</h3>
+        <span style={{
+          fontSize: 12, fontWeight: 500, color: verdictClr, letterSpacing: '-0.01em',
+        }}>{verdict}</span>
+      </div>
 
-      {/* Calendar grid + side stats */}
-      <div style={{ display: 'flex', alignItems: 'flex-start', gap: 22, flexWrap: 'wrap' }}>
-        <div style={{ flexShrink: 0 }}>
-          {/* Day-of-week labels (Mon Tue Wed Thu Fri Sat Sun). The first
-              column corresponds to the weekday 28 days ago. */}
-          <div style={{
-            display: 'grid', gridTemplateColumns: 'repeat(7, 16px)', gap: 3,
-            marginBottom: 4,
-          }}>
-            {dayLabels.map((d, i) => (
-              <div key={i} style={{
-                fontSize: 9, fontWeight: 700, color: C.text3,
-                textAlign: 'center', letterSpacing: '0.04em',
-              }}>{d}</div>
+      {/* The chart */}
+      <div style={{ marginBottom: 16 }}>
+        <PostingTimeline uploadDays={gridOldestFirst} />
+      </div>
+
+      {/* Stat strip — 4 tiles edge to edge across the card */}
+      <div style={{
+        display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16,
+        paddingTop: 14, borderTop: '1px solid #f1f1f4',
+      }}>
+        <StatTile
+          label="Uploads"
+          value={count}
+          hint="in 28 days"
+        />
+        <StatTile
+          label="Pace"
+          value={`${pacePerWeek}/wk`}
+          hint={pacePerWeek >= 1 ? 'weekly cadence' : 'below weekly'}
+          valueColor={verdictClr}
+        />
+        <StatTile
+          label="Streak"
+          value={`${currentStreak}d`}
+          hint={currentStreak >= 3 ? 'active now' : 'inactive'}
+          valueColor={currentStreak >= 3 ? C.red : null}
+        />
+        <StatTile
+          label="Best run"
+          value={`${longestStreak}d`}
+          hint="in window"
+        />
+      </div>
+
+      {/* Detail toggle */}
+      <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 12 }}>
+        <button
+          type="button"
+          onClick={() => setOpen(o => !o)}
+          aria-label={open ? 'Hide heatmap' : 'Show daily heatmap'}
+          style={{
+            display: 'inline-flex', alignItems: 'center', gap: 4,
+            padding: '6px 11px', borderRadius: 100,
+            border: '1px solid #e6e6ec',
+            background: '#fff', color: C.text2,
+            fontFamily: 'inherit',
+            fontSize: 11.5, fontWeight: 600, letterSpacing: '-0.01em',
+            cursor: 'pointer',
+            transition: 'background 0.14s ease, color 0.14s ease, border-color 0.14s ease',
+          }}
+          onMouseEnter={e => { e.currentTarget.style.background = 'rgba(15,15,19,0.04)'; e.currentTarget.style.color = C.text1; e.currentTarget.style.borderColor = '#d0d0d8' }}
+          onMouseLeave={e => { e.currentTarget.style.background = '#fff'; e.currentTarget.style.color = C.text2; e.currentTarget.style.borderColor = '#e6e6ec' }}
+        >
+          {open ? 'Hide heatmap' : 'Daily heatmap'}
+          <ChevronDown size={11} strokeWidth={2.4} style={{ transform: open ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s ease' }}/>
+        </button>
+      </div>
+
+      {/* Daily heatmap inside the detail expansion */}
+      {open && (
+        <div style={{ marginTop: 14, paddingTop: 14, borderTop: '1px solid #f1f1f4' }}>
+          <p style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 12 }}>
+            Daily uploads — last 28 days
+          </p>
+          {/* Horizontal strip: 28 cells in a single row */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(28, 1fr)', gap: 4 }}>
+            {gridOldestFirst.map((c, i) => (
+              <div
+                key={i}
+                title={c === 0 ? 'No upload' : c === 1 ? '1 upload' : `${c} uploads`}
+                style={{
+                  aspectRatio: '1 / 1',
+                  borderRadius: 4,
+                  background: cellColor(c),
+                  border: c === 0 ? '1px solid rgba(15,15,19,0.04)' : '1px solid rgba(229,37,27,0.10)',
+                }}
+              />
             ))}
           </div>
-
-          {/* The 4×7 grid. Rows = weeks oldest to newest. */}
-          <div style={{ display: 'grid', gridTemplateRows: 'repeat(4, 16px)', gap: 3 }}>
-            {[0, 1, 2, 3].map(weekIdx => (
-              <div key={weekIdx} style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 16px)', gap: 3 }}>
-                {[0, 1, 2, 3, 4, 5, 6].map(dayIdx => {
-                  const gridIdx = weekIdx * 7 + dayIdx
-                  const c = gridOldestFirst[gridIdx] || 0
-                  return (
-                    <div
-                      key={dayIdx}
-                      title={c === 0 ? 'No upload' : c === 1 ? '1 upload' : `${c} uploads`}
-                      style={{
-                        width: 16, height: 16, borderRadius: 4,
-                        background: cellColor(c),
-                        border: c === 0 ? '1px solid rgba(15,15,19,0.04)' : '1px solid rgba(229,37,27,0.10)',
-                      }}
-                    />
-                  )
-                })}
-              </div>
-            ))}
-          </div>
-
-          {/* Tiny legend */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 4, marginTop: 8 }}>
-            <span style={{ fontSize: 9.5, color: C.text3, fontWeight: 600, letterSpacing: '0.04em', marginRight: 2 }}>Less</span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 5, marginTop: 10 }}>
+            <span style={{ fontSize: 10, color: C.text3, fontWeight: 600, letterSpacing: '0.04em', marginRight: 4 }}>Less</span>
             {[0, 1, 2, 3].map(n => (
               <span key={n} style={{
-                width: 10, height: 10, borderRadius: 2.5,
+                width: 11, height: 11, borderRadius: 3,
                 background: cellColor(n),
                 border: n === 0 ? '1px solid rgba(15,15,19,0.04)' : '1px solid rgba(229,37,27,0.10)',
               }}/>
             ))}
-            <span style={{ fontSize: 9.5, color: C.text3, fontWeight: 600, letterSpacing: '0.04em', marginLeft: 2 }}>More</span>
+            <span style={{ fontSize: 10, color: C.text3, fontWeight: 600, letterSpacing: '0.04em', marginLeft: 4 }}>More</span>
           </div>
         </div>
-
-        {/* Side stats column */}
-        <div style={{ flex: 1, minWidth: 180 }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px 20px', marginBottom: 14 }}>
-            <div>
-              <p style={{ fontSize: 9.5, fontWeight: 700, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 4 }}>Uploads</p>
-              <p style={{ fontSize: 20, fontWeight: 800, color: C.text1, letterSpacing: '-0.6px', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{count}</p>
-              <p style={{ fontSize: 10.5, fontWeight: 500, color: C.text3, marginTop: 4 }}>in 28 days</p>
-            </div>
-            <div>
-              <p style={{ fontSize: 9.5, fontWeight: 700, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 4 }}>Pace</p>
-              <p style={{ fontSize: 20, fontWeight: 800, color: paceClr, letterSpacing: '-0.6px', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{pacePerWeek}<span style={{ fontSize: 12, fontWeight: 700, color: C.text3, marginLeft: 2 }}>/wk</span></p>
-              <p style={{ fontSize: 10.5, fontWeight: 500, color: C.text3, marginTop: 4 }}>{paceMsg}</p>
-            </div>
-            <div>
-              <p style={{ fontSize: 9.5, fontWeight: 700, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 4 }}>Current streak</p>
-              <p style={{ fontSize: 20, fontWeight: 800, color: currentStreak >= 3 ? C.red : C.text1, letterSpacing: '-0.6px', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{currentStreak}<span style={{ fontSize: 12, fontWeight: 700, color: C.text3, marginLeft: 2 }}>{currentStreak === 1 ? 'day' : 'days'}</span></p>
-            </div>
-            <div>
-              <p style={{ fontSize: 9.5, fontWeight: 700, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 4 }}>Best run</p>
-              <p style={{ fontSize: 20, fontWeight: 800, color: C.text1, letterSpacing: '-0.6px', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{longestStreak}<span style={{ fontSize: 12, fontWeight: 700, color: C.text3, marginLeft: 2 }}>{longestStreak === 1 ? 'day' : 'days'}</span></p>
-            </div>
-          </div>
-        </div>
-      </div>
+      )}
     </FeedCard>
   )
 }
