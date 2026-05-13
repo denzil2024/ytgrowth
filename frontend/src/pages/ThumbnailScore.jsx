@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import { ChevronDown, Upload, Lightbulb } from 'lucide-react'
 import CreditsEmptyModal from '../components/CreditsEmptyModal'
 import UpsellModal from '../components/UpsellModal'
 
@@ -50,11 +51,18 @@ if (typeof document !== 'undefined' && !document.getElementById('thumb-iq-styles
     /* ── Previous tab accordion (mirrors Competitors design) ── */
     .tiq-acc-wrapper { margin-bottom: 12px; position: relative; }
 
+    /* 3px severity stripe at the top of each history accordion card. Sits flush above the header so the
+       top corners are rounded by the stripe (header drops its own top radius below). */
+    .tiq-stripe {
+      height: 3px;
+      border-radius: 16px 16px 0 0;
+    }
+
     .tiq-acc-header {
       background: #ffffff;
       border: 1px solid #e6e6ec;
       box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 4px 14px rgba(0,0,0,0.06);
-      padding: 16px 20px;
+      padding: 14px 20px;
       display: flex;
       align-items: center;
       gap: 16px;
@@ -66,8 +74,8 @@ if (typeof document !== 'undefined' && !document.getElementById('thumb-iq-styles
       box-shadow: 0 4px 12px rgba(0,0,0,0.08), 0 16px 40px rgba(0,0,0,0.09);
       border-color: rgba(0,0,0,0.14);
     }
-    .tiq-acc-header.closed { border-radius: 16px; }
-    .tiq-acc-header.open   { border-radius: 16px 16px 0 0; border-bottom-color: rgba(0,0,0,0.07); }
+    .tiq-acc-header.closed { border-radius: 0 0 16px 16px; border-top: none; }
+    .tiq-acc-header.open   { border-radius: 0; border-top: none; border-bottom-color: rgba(0,0,0,0.07); }
 
     .tiq-acc-body {
       border: 1px solid #e6e6ec;
@@ -105,50 +113,43 @@ if (typeof document !== 'undefined' && !document.getElementById('thumb-iq-styles
       color: #e5251b;
     }
 
-    /* "Open report" button — red background (as requested) */
+    /* "Open report" button — red pill matching the Video Ideas Refresh CTA scale */
     .tiq-btn-report {
       background: #e5251b;
       color: #fff;
       border: none;
       border-radius: 100px;
-      padding: 8px 18px;
+      padding: 8px 15px;
       font-size: 12.5px;
-      font-weight: 600;
+      font-weight: 700;
       font-family: inherit;
       cursor: pointer;
       white-space: nowrap;
-      transition: all 0.18s;
+      transition: filter 0.15s, background 0.15s;
       display: flex;
       align-items: center;
       gap: 6px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 4px 14px rgba(229,37,27,0.32);
+      box-shadow: 0 1px 2px rgba(229,37,27,0.18);
       letter-spacing: -0.1px;
     }
     .tiq-btn-report:hover {
       filter: brightness(1.07);
-      box-shadow: 0 2px 8px rgba(0,0,0,0.15), 0 8px 28px rgba(229,37,27,0.42);
-      transform: translateY(-1px);
     }
     .tiq-btn-report.open {
       background: #c01e15;
       box-shadow: none;
     }
-    .tiq-btn-report.open:hover {
-      filter: brightness(1.06);
-      transform: none;
-    }
   `
   document.head.appendChild(s)
 }
 
-/* ─── Design tokens — match Dashboard/SeoOptimizer C object exactly. No
-       orange tier (canonical palette is red/amber/green with blue for
-       reasoning context). ────────────────────────────────────────────── */
+/* ─── Design tokens — match Dashboard/SeoOptimizer C object exactly. Brand palette
+       is red/amber/green + charcoal text tiers; no blue, no orange. Reasoning
+       context goes neutral so red can stay semantic for action. ─────────── */
 const C = {
   red:     '#e5251b', redBg:  '#fff5f5', redBdr: '#fecaca',
   green:   '#059669', greenBg:'#f0fdf4', greenBdr:'#bbf7d0',
   amber:   '#d97706', amberBg:'#fffbeb', amberBdr:'#fde68a',
-  blue:    '#2563eb', blueBg: '#eff6ff', blueBdr: '#bfdbfe',
   text1:   '#0f0f13', text2: '#4a4a58', text3: '#9595a4',
   border:  '#e6e6ec',
 }
@@ -404,16 +405,16 @@ function L1Row({ keyName, data, benchComp }) {
           </div>
         )}
         {hasContent && (
-          <span style={{ fontSize: 12, color: C.text3, flexShrink: 0 }}>{open ? '▲' : '▼'}</span>
+          <ChevronDown size={14} color={C.text3} style={{ flexShrink: 0, transition: 'transform 0.2s', transform: open ? 'rotate(180deg)' : 'none' }}/>
         )}
       </button>
 
       {open && explanation && (
         <div style={{ paddingBottom: 14, display: 'grid', gridTemplateColumns: fix ? '1fr 1fr' : '1fr', gap: 8 }}>
-          {/* Why — blue tint, Priority-Actions "Why now" pattern */}
-          <div style={{ background: 'rgba(79,134,247,0.07)', border: '1px solid rgba(79,134,247,0.12)', borderRadius: 10, padding: '11px 13px' }}>
-            <p style={{ fontSize: 10, fontWeight: 700, color: '#4a7cf7', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Why</p>
-            <p style={{ fontSize: 13, color: C.text1, lineHeight: 1.7 }}>{explanation}</p>
+          {/* Why — charcoal-neutral tint. Reasoning context goes neutral so red stays semantic for the actionable Fix. */}
+          <div style={{ background: 'rgba(15,15,19,0.04)', border: '1px solid rgba(15,15,19,0.08)', borderRadius: 10, padding: '11px 13px' }}>
+            <p style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Why</p>
+            <p style={{ fontSize: 13, color: C.text2, lineHeight: 1.7 }}>{explanation}</p>
           </div>
           {fix && (
             /* Fix — symmetric red-tinted card, matches WeeklyReport priority pattern */
@@ -470,7 +471,7 @@ function L2Row({ dimKey, dim }) {
             {score}/10
           </span>
         </div>
-        <span style={{ fontSize: 12, color: C.text3, flexShrink: 0 }}>{open ? '▲' : '▼'}</span>
+        <ChevronDown size={14} color={C.text3} style={{ flexShrink: 0, transition: 'transform 0.2s', transform: open ? 'rotate(180deg)' : 'none' }}/>
       </button>
 
       {open && (
@@ -508,24 +509,35 @@ function LinkedIdeaCard({ idea }) {
   if (!idea) return null
   return (
     <div style={{
-      background: C.blueBg, border: `1px solid ${C.blueBdr}`,
-      borderRadius: 10, padding: '12px 14px', marginBottom: 16,
+      background: 'rgba(15,15,19,0.035)',
+      border: '1px solid rgba(15,15,19,0.08)',
+      borderRadius: 12, padding: '12px 14px', marginBottom: 16,
+      display: 'flex', alignItems: 'flex-start', gap: 12,
     }}>
-      <p style={{ fontSize: 14, fontWeight: 700, color: C.text1, marginBottom: 4, letterSpacing: '-0.1px' }}>
-        Benchmarked for: {idea.title}
-      </p>
-      {idea.angle && (
-        <p style={{ fontSize: 13, color: C.text2, fontWeight: 400, marginBottom: 8, lineHeight: 1.5 }}>
-          {idea.angle}
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <p style={{ fontSize: 10.5, fontWeight: 700, color: C.text3, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 4 }}>
+          Benchmarked for
         </p>
-      )}
+        <p style={{ fontSize: 14, fontWeight: 700, color: C.text1, marginBottom: idea.angle ? 4 : 0, letterSpacing: '-0.1px', lineHeight: 1.35 }}>
+          {idea.title}
+        </p>
+        {idea.angle && (
+          <p style={{ fontSize: 12.5, color: C.text2, fontWeight: 400, lineHeight: 1.55 }}>
+            {idea.angle}
+          </p>
+        )}
+      </div>
       <span style={{
+        flexShrink: 0,
+        display: 'inline-flex', alignItems: 'center', gap: 5,
         fontSize: 11, fontWeight: 700, color: C.green,
         background: C.greenBg, border: `1px solid ${C.greenBdr}`,
-        borderRadius: 100, padding: '2px 9px',
-        letterSpacing: '0.06em', textTransform: 'uppercase',
+        borderRadius: 100, padding: '3px 9px',
+        letterSpacing: '0.04em',
+        fontVariantNumeric: 'tabular-nums',
       }}>
-        Competitor gap · {idea.opportunityScore}/100
+        <span style={{ width: 6, height: 6, borderRadius: 99, background: C.green }}/>
+        Gap · {idea.opportunityScore}/100
       </span>
     </div>
   )
@@ -853,21 +865,28 @@ function UploadPanel({ videoIdeas, hasIdeas, initialIdea, initialTopic, topicSou
         )}
       </div>
 
-      {/* Info banner when no video ideas */}
+      {/* Info banner when no video ideas — amber warning tint (no blue), Lightbulb in a soft tinted circle. */}
       {!hasIdeas && !bannerDismissed && (
         <div style={{
-          marginBottom: 14, background: C.blueBg, border: `1px solid ${C.blueBdr}`,
-          borderRadius: 12, padding: '12px 16px',
-          display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 8,
+          marginBottom: 14, background: C.amberBg, border: `1px solid ${C.amberBdr}`,
+          borderRadius: 12, padding: '12px 14px',
+          display: 'flex', alignItems: 'flex-start', gap: 12,
         }}>
-          <p style={{ fontSize: 12, color: '#1d4ed8', lineHeight: 1.65, margin: 0 }}>
-            Run Video Ideas first for the most accurate thumbnail benchmarks. Your ideas are built from real competitor research.{' '}
+          <div style={{
+            width: 28, height: 28, borderRadius: 99,
+            background: 'rgba(217,119,6,0.14)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            flexShrink: 0,
+          }}>
+            <Lightbulb size={14} color={C.amber}/>
+          </div>
+          <p style={{ flex: 1, fontSize: 12.5, color: C.text1, lineHeight: 1.6, margin: 0 }}>
+            Run <strong style={{ fontWeight: 700 }}>Video Ideas</strong> first for the most accurate thumbnail benchmarks. Your ideas are built from real competitor research.{' '}
             {onNavigate && (
               <button
                 onClick={() => onNavigate('Video Ideas')}
-                style={{ background: 'none', border: 'none', color: '#1d4ed8', cursor: 'pointer',
-                         fontWeight: 700, padding: 0, fontFamily: 'inherit', fontSize: 'inherit',
-                         textDecoration: 'underline' }}
+                style={{ background: 'none', border: 'none', color: C.red, cursor: 'pointer',
+                         fontWeight: 700, padding: 0, fontFamily: 'inherit', fontSize: 'inherit' }}
               >
                 Go to Video Ideas →
               </button>
@@ -878,7 +897,7 @@ function UploadPanel({ videoIdeas, hasIdeas, initialIdea, initialTopic, topicSou
               setBanner(true)
               localStorage.setItem('ytg_vi_banner_dismissed', '1')
             }}
-            style={{ background: 'none', border: 'none', color: '#93c5fd', cursor: 'pointer',
+            style={{ background: 'none', border: 'none', color: C.text3, cursor: 'pointer',
                      fontSize: 18, padding: '0 0 0 4px', flexShrink: 0, lineHeight: 1, fontFamily: 'inherit' }}
           >
             ×
@@ -910,10 +929,14 @@ function UploadPanel({ videoIdeas, hasIdeas, initialIdea, initialTopic, topicSou
           </div>
         ) : (
           <>
-            <svg width="44" height="44" viewBox="0 0 44 44" fill="none" style={{ margin: '0 auto 12px', display: 'block' }}>
-              <rect width="44" height="44" rx="12" fill="#fef2f2"/>
-              <path d="M22 14v16M14 22l8-8 8 8" stroke={C.red} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
+            <div style={{
+              width: 44, height: 44, borderRadius: 99,
+              background: 'rgba(229,37,27,0.08)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              margin: '0 auto 12px',
+            }}>
+              <Upload size={20} color={C.red} strokeWidth={2}/>
+            </div>
             <p style={{ fontSize: 14, fontWeight: 700, color: C.text1, marginBottom: 6 }}>
               Drop your thumbnail here or click to upload
             </p>
@@ -1236,18 +1259,19 @@ export default function ThumbnailScore({ channelData, onNavigate, plan, freeTier
       minHeight: 'calc(100vh - 52px)',
       fontFamily: "'Inter', system-ui, sans-serif",
     }}>
+     {/* 1040 centered column — every polished feature page (Video Ideas / SEO / Overview) wraps content
+         in this. Don't drop it; the 2fr/3fr results grid stretches without an upper bound otherwise. */}
+     <div style={{ maxWidth: 1040, margin: '0 auto' }}>
 
-      {/* Header — H1 24/800/-0.6 + meta line with · separators (Overview/SEO pattern) */}
+      {/* Header — H1 24/800/-0.6 + meta line with · separators (Overview/SEO/Video Ideas pattern) */}
       <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 24, gap: 16, flexWrap: 'wrap' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
           <div>
-            <h1 style={{ fontSize: 26, fontWeight: 800, color: C.text1, letterSpacing: '-0.7px', marginBottom: 6, lineHeight: 1.1 }}>Thumbnail IQ</h1>
-            <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.4, display: 'flex', gap: 0, flexWrap: 'wrap' }}>
-              <span>See how your thumbnail performs before you publish</span>
-              <span style={{ marginLeft: 8 }}>· Benchmarked against real top-ranked channels</span>
-              {history.length > 0 && (
-                <span style={{ marginLeft: 8 }}>· {history.length} saved</span>
-              )}
+            <h1 style={{ fontSize: 24, fontWeight: 800, color: C.text1, letterSpacing: '-0.6px', marginBottom: 6, lineHeight: 1.1 }}>Thumbnail IQ</h1>
+            <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.4 }}>
+              See how your thumbnail performs before you publish
+              <span> · Benchmarked against real top-ranked channels</span>
+              {history.length > 0 && <span> · {history.length} saved</span>}
             </p>
           </div>
         </div>
@@ -1325,6 +1349,9 @@ export default function ThumbnailScore({ channelData, onNavigate, plan, freeTier
                 </svg>
               )
 
+              // Severity stripe color — green ≥75 / amber ≥50 / red below (matches scoreColor thresholds).
+              const stripeColor = col
+
               return (
                 <div key={item.id} className="tiq-acc-wrapper">
 
@@ -1337,6 +1364,9 @@ export default function ThumbnailScore({ channelData, onNavigate, plan, freeTier
                       <path d="M2 3.5h10M5.5 3.5V2.5h3v1M5 5.5l.5 5M9 5.5l-.5 5M3 3.5l.7 8.5h6.6L11 3.5"/>
                     </svg>
                   </button>
+
+                  {/* 3px severity stripe — same DNA as the Video Ideas idea-card stripe. */}
+                  <div className="tiq-stripe" style={{ background: stripeColor }}/>
 
                   {/* Accordion header */}
                   <div className={`tiq-acc-header ${isOpen ? 'open' : 'closed'}`}
@@ -1366,11 +1396,11 @@ export default function ThumbnailScore({ channelData, onNavigate, plan, freeTier
                         )}
                       </div>
                       <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', alignItems: 'center' }}>
-                        {/* Score chip — tabular-nums, bolder value/max contrast (matches SEO Optimizer's scorecard style) */}
+                        {/* Score chip — tabular-nums, 12.5/800 to match Video Ideas card chip scale. */}
                         <span style={{ display: 'inline-flex', alignItems: 'baseline', gap: 2,
                                        background: '#fff', border: `1px solid ${col}30`,
-                                       borderRadius: 100, padding: '3px 10px', fontSize: 12, fontVariantNumeric: 'tabular-nums' }}>
-                          <span style={{ fontSize: 13, fontWeight: 800, color: col, letterSpacing: '-0.2px' }}>{score}</span>
+                                       borderRadius: 100, padding: '3px 10px', fontSize: 11.5, fontVariantNumeric: 'tabular-nums' }}>
+                          <span style={{ fontSize: 12.5, fontWeight: 800, color: col, letterSpacing: '-0.2px' }}>{score}</span>
                           <span style={{ color: C.text3, fontWeight: 500 }}>/{max}</span>
                         </span>
                         {/* Verdict pill — colored by score tier, mirrors the pills on Suggested Titles / Competitor set */}
@@ -1774,13 +1804,16 @@ export default function ThumbnailScore({ channelData, onNavigate, plan, freeTier
                       onClick={handleMarkReady}
                       disabled={markingReady}
                       style={{
-                        width: '100%', height: 44,
+                        width: '100%',
+                        padding: '11px 16px',
                         background: markingReady ? '#e0e0e6' : C.green,
-                        color: '#fff', border: 'none', borderRadius: 12,
-                        fontSize: 14, fontWeight: 700,
+                        color: '#fff', border: 'none', borderRadius: 100,
+                        fontSize: 13.5, fontWeight: 700,
                         cursor: markingReady ? 'not-allowed' : 'pointer',
-                        fontFamily: 'inherit', transition: 'all 0.15s',
+                        fontFamily: 'inherit', letterSpacing: '0.01em', transition: 'filter 0.15s',
                       }}
+                      onMouseEnter={e => { if (!markingReady) e.currentTarget.style.filter = 'brightness(1.08)' }}
+                      onMouseLeave={e => { e.currentTarget.style.filter = 'none' }}
                     >
                       {markingReady ? 'Saving…' : 'Mark idea as Thumbnail Ready →'}
                     </button>
@@ -1849,6 +1882,8 @@ export default function ThumbnailScore({ channelData, onNavigate, plan, freeTier
 
         </div>
       )}
+
+     </div>{/* /1040 column */}
 
       {gated ? (
         <UpsellModal
