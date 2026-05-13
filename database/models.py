@@ -95,6 +95,22 @@ class IdeaProofCache(Base):
     refreshed_at  = Column(DateTime, default=_now, index=True)
 
 
+class YoutubeSearchCache(Base):
+    """Generic cross-user cache for raw YouTube search.list responses.
+
+    Each row holds the processed search result for one (query, params) tuple
+    so a search costing 100 quota units is paid once per 24h, not once per
+    user. Used by SEO Studio's _search_youtube_once and (in future) Outliers,
+    Keyword Research, and Competitor search.
+
+    cache_key encodes the full query signature so different param sets don't
+    collide (e.g. same query at maxResults=25 vs 50 are separate rows)."""
+    __tablename__ = "youtube_search_cache"
+    cache_key   = Column(String,   primary_key=True)
+    result_json = Column(Text,     nullable=False)
+    cached_at   = Column(DateTime, default=_now, index=True)
+
+
 class CompetitorVideoIdeas(Base):
     """Raw videoIdeas extracted from each competitor analysis run."""
     __tablename__ = "competitor_video_ideas"
@@ -632,6 +648,10 @@ try:
         "CREATE TABLE IF NOT EXISTS idea_proof_cache (id INTEGER PRIMARY KEY AUTOINCREMENT, keyword_lower TEXT NOT NULL, keyword TEXT NOT NULL, result_json TEXT NOT NULL, refreshed_at DATETIME)",
         "CREATE UNIQUE INDEX IF NOT EXISTS uq_idea_proof_cache_keyword_lower ON idea_proof_cache (keyword_lower)",
         "CREATE INDEX IF NOT EXISTS ix_idea_proof_cache_refreshed_at ON idea_proof_cache (refreshed_at)",
+        # Generic cross-user YouTube search cache. Keyed by full query
+        # signature so SEO Studio + Outliers + Keyword Research share hits.
+        "CREATE TABLE IF NOT EXISTS youtube_search_cache (cache_key TEXT PRIMARY KEY, result_json TEXT NOT NULL, cached_at DATETIME)",
+        "CREATE INDEX IF NOT EXISTS ix_youtube_search_cache_cached_at ON youtube_search_cache (cached_at)",
     ]:
         try:
             _conn.execute(_text(_stmt))

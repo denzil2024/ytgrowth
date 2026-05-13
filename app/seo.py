@@ -253,12 +253,47 @@ def _is_short(title: str, duration_seconds: int) -> bool:
     return False
 
 
+_SEARCH_CACHE_TTL_HOURS = 24
+
+
 def _search_youtube_once(youtube, query: str, max_results: int = 25, order: str = "relevance") -> dict[str, dict]:
-    """Run a single YouTube search. Returns raw candidates (Shorts not yet filtered — done in batch)."""
+    """Run a single YouTube search. Returns raw candidates (Shorts not yet filtered — done in batch).
+
+    Cached cross-user in youtube_search_cache for 24h. One search.list call
+    (100 quota units) now serves every user who searches the same query
+    within the TTL — turns SEO Studio's 1,000-unit-per-run cost into
+    ~0 units once a niche has been warmed."""
     from app.utils import yt_quota_paused
     if yt_quota_paused():
         print(f"[seo] search skipped — YT_QUOTA_PAUSED=1 (query='{query}')")
         return {}
+
+    import json as _json
+    import datetime as _dt
+    from database.models import SessionLocal, YoutubeSearchCache
+
+    cache_key = f"seo:{query.strip().lower()}|{max_results}|{order}"
+
+    db = SessionLocal()
+    try:
+        row = db.query(YoutubeSearchCache).filter_by(cache_key=cache_key).first()
+        if row and row.cached_at:
+            cached_at = row.cached_at
+            if cached_at.tzinfo is None:
+                cached_at = cached_at.replace(tzinfo=_dt.timezone.utc)
+            age_hours = (_dt.datetime.now(_dt.timezone.utc) - cached_at).total_seconds() / 3600
+            if age_hours < _SEARCH_CACHE_TTL_HOURS:
+                try:
+                    cached = _json.loads(row.result_json) or {}
+                    print(f"[seo] cache HIT '{query}' (age {age_hours:.1f}h, saved 100 units)")
+                    return cached
+                except Exception:
+                    pass  # corrupt cache, refetch
+    except Exception as e:
+        print(f"[seo] cache read error: {e}")
+    finally:
+        db.close()
+
     try:
         resp = youtube.search().list(
             part="snippet",
@@ -291,6 +326,29 @@ def _search_youtube_once(youtube, query: str, max_results: int = 25, order: str 
             "tags":      [],
             "view_count": 0,
         }
+
+    db = SessionLocal()
+    try:
+        now = _dt.datetime.now(_dt.timezone.utc)
+        row = db.query(YoutubeSearchCache).filter_by(cache_key=cache_key).first()
+        payload = _json.dumps(results)
+        if row:
+            row.result_json = payload
+            row.cached_at = now
+        else:
+            db.add(YoutubeSearchCache(
+                cache_key=cache_key,
+                result_json=payload,
+                cached_at=now,
+            ))
+        db.commit()
+    except Exception as e:
+        print(f"[seo] cache write error: {e}")
+        try: db.rollback()
+        except Exception: pass
+    finally:
+        db.close()
+
     return results
 
 
