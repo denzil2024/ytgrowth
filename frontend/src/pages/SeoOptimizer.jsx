@@ -1597,8 +1597,69 @@ function useCountUp(target, duration = 850) {
 // "your title → best AI alternative" with the lift visualized in the middle.
 // Replaces the old 3-flat-tile hero. Arcs sweep, lift counts up, sub-score
 // bars stagger in. Brand palette only — red / amber / green / charcoal.
-function TitleComparisonHero({ userTitle, userScore, suggestions, onPick }) {
+// Derive crude SEO / CTR / Hook sub-scores for the USER's title from the
+// granular per-rule breakdown the backend returns. Three groups of ~35
+// points each, scaled to a 0-100 axis so they sit next to the AI's
+// rubric-scored sub-scores. Approximations, not the same model — used
+// only for the side-by-side breakdown disclosure to keep the math honest.
+function _userSubScoresFromBreakdown(b) {
+  if (!b) return { seo: 0, ctr: 0, hook: 0 }
+  const seoRaw  = (b.length || 0) + (b.keyword_relevance || 0)                       // 25 + 10
+  const ctrRaw  = (b.power_words || 0) + (b.numbers || 0) + (b.viral_format || 0)    // 15 + 10 + 10
+  const hookRaw = (b.front_loading || 0) + (b.question || 0) + (b.hook_format || 0)  // 15 + 10 + 10
+  return {
+    seo:  Math.round(Math.min(100, (seoRaw  / 35) * 100)),
+    ctr:  Math.round(Math.min(100, (ctrRaw  / 35) * 100)),
+    hook: Math.round(Math.min(100, (hookRaw / 35) * 100)),
+  }
+}
+
+// One sub-score block in the breakdown disclosure: label + delta chip on top,
+// then two stacked thin bars (You vs AI) with their numbers inline. Reads
+// as a vertical mini-chart so the gap between the two titles is the visual.
+function SubScoreBlock({ label, you, ai, mounted, delay }) {
+  const youCol = you >= 75 ? C.green : you >= 55 ? C.amber : C.red
+  const aiCol  = ai  >= 75 ? C.green : ai  >= 55 ? C.amber : C.red
+  const delta  = ai - you
+  const dPos   = delta >= 0
+  return (
+    <div style={{ marginBottom: 14 }}>
+      <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 8 }}>
+        <span style={{ fontSize: 11, fontWeight: 700, color: C.text2, letterSpacing: '-0.05px' }}>{label}</span>
+        <span style={{
+          fontSize: 11, fontWeight: 800, color: dPos ? C.green : C.red,
+          fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.05px',
+        }}>{dPos ? '+' : ''}{delta}</span>
+      </div>
+      {/* Your row */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 5 }}>
+        <span style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.06em', textTransform: 'uppercase', width: 30, flexShrink: 0 }}>You</span>
+        <div style={{ flex: 1, height: 5, background: '#eef0f4', borderRadius: 99, overflow: 'hidden' }}>
+          <div style={{
+            height: '100%', width: mounted ? `${you}%` : '0%', background: youCol, borderRadius: 99,
+            transition: `width 0.85s cubic-bezier(0.34,1.4,0.64,1) ${delay}ms`,
+          }}/>
+        </div>
+        <span style={{ fontSize: 11.5, fontWeight: 800, color: youCol, fontVariantNumeric: 'tabular-nums', width: 28, textAlign: 'right', letterSpacing: '-0.2px' }}>{you}</span>
+      </div>
+      {/* AI row */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+        <span style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.06em', textTransform: 'uppercase', width: 30, flexShrink: 0 }}>AI</span>
+        <div style={{ flex: 1, height: 5, background: '#eef0f4', borderRadius: 99, overflow: 'hidden' }}>
+          <div style={{
+            height: '100%', width: mounted ? `${ai}%` : '0%', background: aiCol, borderRadius: 99,
+            transition: `width 0.85s cubic-bezier(0.34,1.4,0.64,1) ${delay + 100}ms`,
+          }}/>
+        </div>
+        <span style={{ fontSize: 11.5, fontWeight: 800, color: aiCol, fontVariantNumeric: 'tabular-nums', width: 28, textAlign: 'right', letterSpacing: '-0.2px' }}>{ai}</span>
+      </div>
+    </div>
+  )
+}
+
+function TitleComparisonHero({ userTitle, userScore, userBreakdown, suggestions, nicheLabel, videosFound, onPick }) {
   const [mounted, setMounted] = useState(false)
+  const [breakdownOpen, setBreakdownOpen] = useState(false)
   useEffect(() => {
     let raf2 = 0
     const raf1 = requestAnimationFrame(() => {
@@ -1614,45 +1675,23 @@ function TitleComparisonHero({ userTitle, userScore, suggestions, onPick }) {
   const bestAvg = sugAvg(bestSug)
   const lift = bestAvg - userScore
 
-  const tierFor  = (s) => s >= 75 ? C.green : s >= 50 ? C.amber : C.red
-  const labelFor = (s) => s >= 75 ? 'Strong' : s >= 50 ? 'Solid' : 'Weak'
+  const tierFor = (s) => s >= 75 ? C.green : s >= 50 ? C.amber : C.red
   const userCol = tierFor(userScore)
   const bestCol = tierFor(bestAvg)
 
-  // Clean linear hero — two stacked rows comparing scores end-to-end. The bar
-  // width difference IS the lift; no novelty puck, no competing circles. Score
-  // numbers sit inline at the end of each bar so the eye reads them as one unit.
-  const ScoreRow = ({ label, title, score, col, isHero, delay }) => (
-    <div style={{
-      display: 'grid', gridTemplateColumns: '160px 1fr 64px', alignItems: 'center', gap: 16,
-      padding: '12px 0',
-    }}>
-      <div style={{ minWidth: 0 }}>
-        <p style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 4 }}>{label}</p>
-        <p style={{
-          fontSize: isHero ? 14 : 13,
-          fontWeight: isHero ? 700 : 500,
-          color: isHero ? C.text1 : C.text2,
-          lineHeight: 1.35, letterSpacing: '-0.15px',
-          whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
-        }}>{title}</p>
-      </div>
-      <div style={{ height: 10, background: '#eef0f4', borderRadius: 99, overflow: 'hidden' }}>
-        <div style={{
-          height: '100%',
-          width: mounted ? `${score}%` : '0%',
-          background: col,
-          borderRadius: 99,
-          transition: `width 0.95s cubic-bezier(0.34,1.4,0.64,1) ${delay}ms`,
-        }}/>
-      </div>
-      <span style={{
-        fontSize: isHero ? 22 : 18, fontWeight: 800, color: col,
-        fontVariantNumeric: 'tabular-nums', textAlign: 'right',
-        letterSpacing: '-0.5px',
-      }}>{score}</span>
-    </div>
-  )
+  // Lift chip colors — green for positive lift (you'd improve), red for negative
+  // (your title is already winning). Mirrors the rest of the page's tier rules.
+  const liftPositive = lift >= 0
+  const liftColor = liftPositive ? C.green : C.red
+  const liftBg    = liftPositive ? 'rgba(5,150,105,0.08)' : 'rgba(229,37,27,0.07)'
+  const liftBdr   = liftPositive ? 'rgba(5,150,105,0.25)' : 'rgba(229,37,27,0.22)'
+
+  const userSubs = _userSubScoresFromBreakdown(userBreakdown)
+  const aiSubs   = {
+    seo:  bestSug.seo_score  || 0,
+    ctr:  bestSug.ctr_score  || 0,
+    hook: bestSug.hook_score || 0,
+  }
 
   return (
     <div style={{
@@ -1660,85 +1699,167 @@ function TitleComparisonHero({ userTitle, userScore, suggestions, onPick }) {
       marginBottom: 20, overflow: 'hidden',
       boxShadow: '0 1px 2px rgba(0,0,0,0.04), 0 4px 14px rgba(0,0,0,0.06)',
     }}>
-      <div style={{ padding: '20px 24px 8px' }}>
-        <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 4 }}>
-          <p style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.12em', textTransform: 'uppercase' }}>Score comparison</p>
-          {lift !== 0 && (
-            <span style={{
-              fontSize: 12, fontWeight: 700, color: lift > 0 ? C.green : C.red,
-              fontVariantNumeric: 'tabular-nums',
-            }}>
-              {lift > 0 ? '+' : ''}{lift} points
-            </span>
+
+      {/* ── Eyebrow row: TITLE ANALYSIS · N niche videos · "{niche keyword}"
+            on the left, lift chip on the right. The keyword that used to be
+            hidden in the truncated title text now lives here, in the eyebrow,
+            always visible. ── */}
+      <div style={{
+        padding: '16px 22px',
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12,
+        flexWrap: 'wrap',
+        borderBottom: `1px solid ${C.borderLight}`,
+      }}>
+        <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, minWidth: 0, flexWrap: 'wrap' }}>
+          <span style={{ fontSize: 11, fontWeight: 700, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase' }}>Title analysis</span>
+          {videosFound > 0 && (
+            <>
+              <span style={{ color: C.text4 }}>·</span>
+              <span style={{ fontSize: 12, fontWeight: 500, color: C.text3, letterSpacing: '-0.05px' }}>
+                <span style={{ color: C.text2, fontWeight: 700 }}>{videosFound}</span> niche videos
+              </span>
+            </>
+          )}
+          {nicheLabel && (
+            <>
+              <span style={{ color: C.text4 }}>·</span>
+              <span style={{ fontSize: 12, fontWeight: 600, color: C.text2, letterSpacing: '-0.05px' }}>
+                &ldquo;{nicheLabel}&rdquo;
+              </span>
+            </>
           )}
         </div>
-
-        <ScoreRow
-          label="Your title"
-          title={userTitle ? `"${userTitle}"` : '(no title entered)'}
-          score={userScore}
-          col={userCol}
-          isHero={false}
-          delay={0}
-        />
-        <ScoreRow
-          label="Best AI alternative"
-          title={`"${bestSug.title}"`}
-          score={bestAvg}
-          col={bestCol}
-          isHero={true}
-          delay={180}
-        />
+        {lift !== 0 && (
+          <span style={{
+            padding: '5px 11px', borderRadius: 99,
+            background: liftBg, border: `1px solid ${liftBdr}`,
+            color: liftColor, fontSize: 11, fontWeight: 800,
+            fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.05px',
+            flexShrink: 0, whiteSpace: 'nowrap',
+          }}>
+            {liftPositive ? '+' : ''}{lift} points
+          </span>
+        )}
       </div>
 
-      {/* Sub-score breakdown — what drives the best AI score. */}
-      <div style={{ padding: '4px 24px 4px', borderTop: `1px solid ${C.borderLight}` }}>
-        <p style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.1em', textTransform: 'uppercase', margin: '14px 0 10px' }}>
-          What drives the lift
+      {/* ── Your title row: eyebrow + score on one line, full title below
+            (no truncation), full-width bar underneath. ── */}
+      <div style={{ padding: '18px 22px 12px' }}>
+        <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 6, gap: 12 }}>
+          <span style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase' }}>Your title</span>
+          <span style={{
+            fontSize: 28, fontWeight: 800, color: userCol,
+            fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.7px', lineHeight: 1, flexShrink: 0,
+          }}>{userScore}</span>
+        </div>
+        <p style={{
+          fontSize: 14.5, fontWeight: 600, color: C.text2,
+          letterSpacing: '-0.15px', lineHeight: 1.4, marginBottom: 10,
+        }}>
+          {userTitle || <span style={{ color: C.text4, fontWeight: 500 }}>(no title entered)</span>}
         </p>
-        {[
-          ['Keyword fit',      bestSug.seo_score  || 0, 0],
-          ['Click appeal',     bestSug.ctr_score  || 0, 100],
-          ['Opening strength', bestSug.hook_score || 0, 200],
-        ].map(([label, val, delay]) => {
-          const col = val >= 75 ? C.green : val >= 55 ? C.amber : C.red
-          return (
-            <div key={label} style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 10 }}>
-              <span style={{ fontSize: 12, color: C.text2, fontWeight: 500, flexShrink: 0, width: 144, letterSpacing: '-0.1px' }}>{label}</span>
-              <div style={{ flex: 1, height: 6, background: '#eef0f4', borderRadius: 99, overflow: 'hidden' }}>
-                <div style={{
-                  height: '100%',
-                  width: mounted ? `${val}%` : '0%',
-                  background: col,
-                  borderRadius: 99,
-                  transition: `width 0.95s cubic-bezier(0.34,1.4,0.64,1) ${delay}ms`,
-                }}/>
-              </div>
-              <span style={{
-                fontSize: 13, fontWeight: 800, color: col, fontVariantNumeric: 'tabular-nums',
-                minWidth: 30, textAlign: 'right', letterSpacing: '-0.3px',
-              }}>{val || '—'}</span>
-            </div>
-          )
-        })}
+        <div style={{ height: 6, background: '#eef0f4', borderRadius: 99, overflow: 'hidden' }}>
+          <div style={{
+            height: '100%', width: mounted ? `${Math.max(2, userScore)}%` : '0%',
+            background: userCol, borderRadius: 99,
+            transition: 'width 0.95s cubic-bezier(0.34,1.4,0.64,1)',
+          }}/>
+        </div>
       </div>
 
-      {/* CTA strip */}
+      {/* ── Best AI alternative row: same structure, AI title at 700 weight
+            and full color text1 to mark it as the recommended choice. ── */}
+      <div style={{ padding: '6px 22px 20px' }}>
+        <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 6, gap: 12 }}>
+          <span style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase' }}>Best AI alternative</span>
+          <span style={{
+            fontSize: 28, fontWeight: 800, color: bestCol,
+            fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.7px', lineHeight: 1, flexShrink: 0,
+          }}>{bestAvg}</span>
+        </div>
+        <p style={{
+          fontSize: 14.5, fontWeight: 700, color: C.text1,
+          letterSpacing: '-0.15px', lineHeight: 1.4, marginBottom: 10,
+        }}>
+          {bestSug.title}
+        </p>
+        <div style={{ height: 6, background: '#eef0f4', borderRadius: 99, overflow: 'hidden' }}>
+          <div style={{
+            height: '100%', width: mounted ? `${Math.max(2, bestAvg)}%` : '0%',
+            background: bestCol, borderRadius: 99,
+            transition: 'width 0.95s cubic-bezier(0.34,1.4,0.64,1) 180ms',
+          }}/>
+        </div>
+      </div>
+
+      {/* ── Footer row: short verdict line + Breakdown disclosure chip + Use CTA.
+            All controls 36px tall, same baseline. ── */}
       <div style={{
-        padding: '14px 24px 18px',
+        padding: '14px 22px',
         display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12,
+        flexWrap: 'wrap',
         borderTop: `1px solid ${C.borderLight}`,
       }}>
-        <p style={{ fontSize: 12, color: C.text3, fontWeight: 500, lineHeight: 1.5 }}>
-          Pick the best AI title to generate a matching description, or scroll to compare all 3.
+        <p style={{ fontSize: 13, fontWeight: 500, color: C.text2, letterSpacing: '-0.05px' }}>
+          {lift > 0
+            ? <>Pick this for <span style={{ fontWeight: 800, color: C.green }}>+{lift} points</span> over your title.</>
+            : lift < 0
+              ? <>Your title scores <span style={{ fontWeight: 800, color: C.red }}>{Math.abs(lift)} higher</span>. Stick with it.</>
+              : <>Tied with your title.</>
+          }
         </p>
-        <button
-          onClick={() => onPick(bestSug.title)}
-          className="seo-btn-primary"
-          style={{ fontSize: 12.5, padding: '10px 18px', flexShrink: 0 }}>
-          Use this title →
-        </button>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
+          <button
+            type="button"
+            onClick={() => setBreakdownOpen(o => !o)}
+            aria-expanded={breakdownOpen}
+            style={{
+              display: 'inline-flex', alignItems: 'center', gap: 6,
+              padding: '0 14px', height: 36, boxSizing: 'border-box',
+              borderRadius: 99,
+              background: breakdownOpen ? 'rgba(15,15,19,0.06)' : '#ffffff',
+              border: `1px solid ${breakdownOpen ? 'rgba(15,15,19,0.16)' : 'rgba(0,0,0,0.10)'}`,
+              color: C.text2, fontSize: 12, fontWeight: 600, letterSpacing: '-0.05px',
+              fontFamily: 'inherit', cursor: 'pointer',
+              transition: 'background 0.14s, border-color 0.14s, color 0.14s',
+            }}
+            onMouseEnter={e => { if (!breakdownOpen) { e.currentTarget.style.background = 'rgba(15,15,19,0.04)'; e.currentTarget.style.color = C.text1 } }}
+            onMouseLeave={e => { if (!breakdownOpen) { e.currentTarget.style.background = '#ffffff'; e.currentTarget.style.color = C.text2 } }}
+          >
+            {breakdownOpen ? 'Hide breakdown' : 'Score breakdown'}
+            <svg width="10" height="10" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" style={{ transition: 'transform 0.18s', transform: breakdownOpen ? 'rotate(180deg)' : 'none' }}>
+              <path d="M3 5l3.5 3.5L10 5"/>
+            </svg>
+          </button>
+          <button
+            onClick={() => onPick(bestSug.title)}
+            className="seo-btn-primary"
+            style={{ fontSize: 13, padding: '0 18px', height: 36, lineHeight: 1, flexShrink: 0 }}>
+            Use this title →
+          </button>
+        </div>
       </div>
+
+      {/* ── Breakdown disclosure: three sub-score blocks, each a tiny vertical
+            chart with the user's row on top and the AI's underneath. The
+            gap between the two bars IS the lift on that dimension. ── */}
+      {breakdownOpen && (
+        <div style={{
+          padding: '16px 22px 18px',
+          borderTop: `1px solid ${C.borderLight}`,
+          background: '#fafafb',
+        }}>
+          <p style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 12 }}>
+            Where the AI title wins
+          </p>
+          <SubScoreBlock label="Keyword fit"      you={userSubs.seo}  ai={aiSubs.seo}  mounted delay={0}/>
+          <SubScoreBlock label="Click appeal"     you={userSubs.ctr}  ai={aiSubs.ctr}  mounted delay={100}/>
+          <SubScoreBlock label="Opening strength" you={userSubs.hook} ai={aiSubs.hook} mounted delay={200}/>
+          <p style={{ fontSize: 11, fontWeight: 500, color: C.text4, letterSpacing: '-0.05px', marginTop: 4 }}>
+            Your sub-scores are derived from the same rubric, scaled to a 0–100 axis.
+          </p>
+        </div>
+      )}
     </div>
   )
 }
@@ -2748,34 +2869,24 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
       )}
 
       {result && (
-        <div className="seo-result-section">
-          {/* ── Section header — mirrors Overview "Channel audit" H2 (marginTop 40, Dashboard.jsx:2069) ───── */}
-          <div style={{ marginBottom: 20, marginTop: 40 }}>
-            <h2 style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', marginBottom: 4 }}>Title analysis</h2>
-            {result.primary_phrase ? (
-              <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.5 }}>
-                Analysed against{' '}
-                <span style={{ color: C.text2, fontWeight: 600 }}>{result.videos_found} live YouTube {result.videos_found === 1 ? 'video' : 'videos'}</span>{' '}
-                in the{' '}
-                <span style={{ color: C.text2, fontWeight: 600 }}>&ldquo;{result.primary_phrase}&rdquo;</span>{' '}
-                niche{result.intent_matched > 0 && result.intent_matched < result.videos_found ? ` · ${result.intent_matched} exact match` : ''}
-                {' — 3 titles written from the gap, not keyword formulas.'}
-              </p>
-            ) : (
-              <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.5 }}>AI suggestions for your title.</p>
-            )}
-          </div>
+        <div className="seo-result-section" style={{ marginTop: 40 }}>
+          {/* The old H2 "Title analysis" + 1-line paragraph above the card was
+              redundant: the card's own eyebrow now carries the niche keyword,
+              the videos-analysed count and the lift chip. Dropping the header
+              saves a row and stops repeating the same context twice. */}
 
-          {/* ── Title comparison hero — single storytelling panel.
-                Reads "your title → best AI alternative" with animated arcs and a
-                big lift number bridging the two. Inspired by speedometer
-                comparison patterns — one strong visual block instead of three
-                disconnected stat tiles. ── */}
+          {/* ── Title comparison hero — eyebrow + two title rows + footer
+                + breakdown disclosure. Replaces the old card that truncated
+                the titles, repeated the score breakdown's purpose, and
+                buried the niche keyword in the section header. ── */}
           {result.suggestions?.length > 0 && (
             <TitleComparisonHero
               userTitle={title}
               userScore={Number.isFinite(result.score) ? result.score : 0}
+              userBreakdown={result.breakdown}
               suggestions={result.suggestions}
+              nicheLabel={result.primary_phrase}
+              videosFound={result.videos_found}
               onPick={handleSelectTitle}
             />
           )}
