@@ -124,15 +124,15 @@ def search_outliers(
     / Channels) are just different views of the same result set.
 
     Pipeline:
-      1. YouTube search using the ORIGINAL title the user typed.
-      2. Intent-filter via confirmed_keyword.
-      3. Drop the user's own channel.
-      4. Keep only videos published in the last 12 months.
-      5. Niche-match each candidate channel against the user's niche keywords
+      1. ONE YouTube search using exactly what the user typed (or their
+         confirmed keyword if they picked an intent option).
+      2. Drop the user's own channel.
+      3. Keep only videos published in the last 12 months.
+      4. Niche-match each candidate channel against the user's niche keywords
          (scan recent uploads, same pattern as Competitors feature).
-      6. Apply a niche-relative views floor (beats % of niche-pool median).
-      7. Score by views-per-sub vs cohort median.
-      8. Broaden query / drop outlier floor only if needed to hit _MIN_RESULTS.
+      5. Apply a niche-relative views floor (beats % of niche-pool median).
+      6. Score by views-per-sub vs cohort median.
+      7. Broaden query / drop outlier floor only if needed to hit _MIN_RESULTS.
     """
     query = (query or "").strip()
     if not query:
@@ -168,7 +168,7 @@ def search_outliers(
 #
 # Relevance model:
 #   HARD constraints (always enforced) — the definition of "relevant":
-#     • intent filter (_filter_by_intent on confirmed_keyword)
+#     • YouTube's own relevance ranking on the user's exact query
 #     • recency (last 12 months only)
 #     • user's own channel excluded
 #     • niche-relative views floor (kills dead uploads)
@@ -194,9 +194,11 @@ def _run_unified_search(
     niche_keywords: list[str],
     videos_only: bool = False,
 ) -> dict:
-    # Build the search_terms list SEO-style: primary phrase + 2 AI-extracted
-    # secondaries from the original title. Three queries merged = way more
-    # channel diversity than a single search.
+    # One YouTube search using exactly what the user typed (or their
+    # confirmed keyword if they picked one). No phrase extraction, no
+    # multi-term expansion — matches SEO Studio's restored design. The
+    # broadening fallback below adds a second search only if the first
+    # returns too few results.
     search_terms = _build_search_terms(title, confirmed_keyword)
 
     # Classify the topic's vertical in PARALLEL with the YouTube fetch. The
@@ -497,42 +499,23 @@ def _classify_topic_vertical(query: str) -> dict:
 
 def _build_search_terms(title: str, confirmed_keyword: str) -> list[str]:
     """
-    Build the list of YouTube search phrases for this request — same pattern
-    SEO Optimizer uses in analyze_title. Primary phrase (confirmed_keyword if
-    the user picked one, otherwise the AI-extracted niche phrase) followed by
-    up to 2 AI-extracted secondary phrases from the original title. Three
-    searches merged gives us real channel diversity, not a single vlogger's
-    back catalog repeated.
+    Return a single-element list: exactly what the user typed (or their
+    confirmed niche keyword if they picked one).
+
+    Matches SEO Studio's restored design — we don't know whether the user
+    typed a keyword, a phrase, or a full title, so we respect their input
+    verbatim and let YouTube's relevance ranking find the right competitive
+    set. No AI phrase extraction, no multi-term expansion.
+
+    Cost: 1 search.list call per Outliers click (~100 quota units),
+    down from 1-3 calls (~100-300 units) under the previous flow.
     """
-    title = (title or "").strip()
     confirmed = (confirmed_keyword or "").strip().lower()
-    if not title and not confirmed:
+    raw_title = (title or "").strip()
+    primary   = confirmed or raw_title
+    if not primary:
         return []
-
-    primary = confirmed or title
-
-    # Try to AI-extract richer phrases; degrade gracefully if the key is missing.
-    import os
-    from app.utils import make_anthropic_client
-    if not os.getenv("ANTHROPIC_API_KEY", ""):
-        return [primary]
-    try:
-        client = make_anthropic_client()
-        extracted = _extract_search_terms(client, title, "") or []
-    except Exception as e:
-        print(f"[outliers] _extract_search_terms failed: {e}")
-        extracted = []
-
-    # Primary first, then 2 secondaries from the extracted list, deduped
-    # preserving order. This matches seo.py's: [primary] + extracted[1:3].
-    seen: set[str] = set()
-    terms: list[str] = []
-    for t in [primary] + list(extracted[1:3]):
-        key = (t or "").strip().lower()
-        if key and key not in seen:
-            seen.add(key)
-            terms.append(key)
-    return terms
+    return [primary]
 
 
 def _top_channels_by_pool_presence(
@@ -574,14 +557,18 @@ def _fetch_intent_filtered(
     creds, search_terms: list[str], confirmed_keyword: str, my_channel_id: str,
 ) -> tuple[list[dict], dict[str, dict]]:
     """
-    Multi-query YouTube search (same pattern SEO Optimizer uses) → intent filter
-    → own-channel drop → 12-month filter → channel-detail hydration.
+    YouTube search → own-channel drop → 12-month filter → channel-detail
+    hydration.
 
-    When confirmed_keyword is set we SKIP the word-boundary intent filter — the
-    YouTube search's own relevance ordering has already matched intent, and
-    layering _filter_by_intent on top drops most results (e.g. "home office
-    cleaning vlog" would require all 4 words in a title and almost nothing
-    survives). This mirrors seo.py's analyze_title behaviour.
+    We trust YouTube's relevance ranking — no word-boundary intent filter
+    is layered on top. Mirrors SEO Studio's restored single-search design:
+    if the user typed "home office cleaning vlog" we let YouTube decide
+    what's relevant, rather than requiring every result's title to contain
+    all 4 words verbatim (which drops almost everything for longer queries).
+
+    Typically one term in `search_terms` (the user's exact input). The
+    list parameter is preserved so the broadening fallback can pass a
+    shortened query through the same pipeline.
     """
     terms = [t for t in (search_terms or []) if t and t.strip()]
     if not terms:
@@ -590,11 +577,8 @@ def _fetch_intent_filtered(
     if not raw_videos:
         return [], {}
 
-    if confirmed_keyword:
-        # Skip word-boundary filter — YouTube relevance already handles intent.
-        intent_videos = raw_videos
-    else:
-        intent_videos = _filter_by_intent(terms[0], raw_videos) or raw_videos[:10]
+    # Trust YouTube's relevance ordering. No further word-boundary filter.
+    intent_videos = raw_videos
 
     # Drop user's own channel.
     if my_channel_id:
