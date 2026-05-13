@@ -202,6 +202,9 @@ Tasks — return ONLY valid JSON, no markdown:
 # their videos) and a Google Trends direction. Scoring then becomes a function
 # of actual numbers, not Claude's word-length heuristic.
 
+_KW_CACHE_TTL_HOURS = 24
+
+
 def _fetch_competition_for_keyword(keyword: str, yt_api_key: str) -> dict:
     """
     Query YouTube Data API (search.list, then videos.list + channels.list)
@@ -215,6 +218,11 @@ def _fetch_competition_for_keyword(keyword: str, yt_api_key: str) -> dict:
                            (>180 = stale landscape = opportunity)
     Uses an anonymous API key, NOT user OAuth, so this doesn't consume the
     creator's own YouTube quota.
+
+    Cached cross-user in youtube_search_cache (kw: prefix) for 24h. The
+    nightly warmer keeps popular keywords hot via the shared hit-count
+    signal — so the second user researching the same keyword today reads
+    from cache at 0 quota cost.
     """
     default = {"result_count": 0, "top_subs_median": 0, "top_views_median": 0, "days_since_newest": None}
     if not yt_api_key:
@@ -223,6 +231,48 @@ def _fetch_competition_for_keyword(keyword: str, yt_api_key: str) -> dict:
     if yt_quota_paused():
         print(f"[keywords] competition lookup skipped — YT_QUOTA_PAUSED=1 (keyword='{keyword}')")
         return default
+
+    # Reject junk before spending 102 units. Same filter SEO Studio uses.
+    from app.seo import _is_meaningful_query, _normalize_cache_query
+    if not _is_meaningful_query(keyword):
+        print(f"[keywords] junk keyword rejected: '{keyword}'")
+        return default
+
+    # 24h cache lookup. Different prefix from SEO Studio because we cache
+    # a different shape (competition dict vs. video list), but same
+    # normalisation so 'Fitness Tips' and 'fitness tips' share a row.
+    import json as _json
+    import datetime as _dt
+    from database.models import SessionLocal, YoutubeSearchCache
+    cache_key = f"kw:{_normalize_cache_query(keyword)}|5|relevance"
+
+    db = SessionLocal()
+    try:
+        row = db.query(YoutubeSearchCache).filter_by(cache_key=cache_key).first()
+        if row and row.cached_at:
+            cached_at = row.cached_at
+            if cached_at.tzinfo is None:
+                cached_at = cached_at.replace(tzinfo=_dt.timezone.utc)
+            age_hours = (_dt.datetime.now(_dt.timezone.utc) - cached_at).total_seconds() / 3600
+            if age_hours < _KW_CACHE_TTL_HOURS:
+                try:
+                    cached = _json.loads(row.result_json)
+                    try:
+                        row.hit_count = (row.hit_count or 0) + 1
+                        row.last_hit_at = _dt.datetime.now(_dt.timezone.utc)
+                        db.commit()
+                    except Exception:
+                        try: db.rollback()
+                        except Exception: pass
+                    print(f"[keywords] cache HIT '{keyword}' (hits={row.hit_count}, saved 102 units)")
+                    return cached
+                except Exception:
+                    pass  # corrupt cache, fall through and refetch
+    except Exception as e:
+        print(f"[keywords] cache read error: {e}")
+    finally:
+        db.close()
+
     try:
         yt = build("youtube", "v3", developerKey=yt_api_key, cache_discovery=False)
         search = yt.search().list(
@@ -262,23 +312,60 @@ def _fetch_competition_for_keyword(keyword: str, yt_api_key: str) -> dict:
                 newest = max(parsed)
                 days_since = (datetime.now(timezone.utc) - newest).days
 
-        return {
+        result = {
             "result_count":       search.get("pageInfo", {}).get("totalResults", len(items)),
             "top_subs_median":    median(sub_counts),
             "top_views_median":   median(view_counts),
             "days_since_newest":  days_since,
         }
+
+        # Persist to cache so the next user researching this keyword today
+        # gets it for free. First fetch counts as hit #1 so popularity
+        # ranking starts at 1, not 0.
+        db = SessionLocal()
+        try:
+            now = _dt.datetime.now(_dt.timezone.utc)
+            existing = db.query(YoutubeSearchCache).filter_by(cache_key=cache_key).first()
+            payload = _json.dumps(result)
+            if existing:
+                existing.result_json = payload
+                existing.cached_at = now
+                existing.hit_count = (existing.hit_count or 0) + 1
+                existing.last_hit_at = now
+                if not existing.original_query:
+                    existing.original_query = keyword
+            else:
+                db.add(YoutubeSearchCache(
+                    cache_key=cache_key,
+                    original_query=keyword,
+                    result_json=payload,
+                    cached_at=now,
+                    hit_count=1,
+                    last_hit_at=now,
+                ))
+            db.commit()
+        except Exception as e:
+            print(f"[keywords] cache write error: {e}")
+            try: db.rollback()
+            except Exception: pass
+        finally:
+            db.close()
+
+        return result
     except Exception as e:
         print(f"[keywords] competition fetch error for '{keyword}': {e}")
         return default
 
 
-def fetch_competition_signals(keywords: list[str], top_n: int = 10) -> dict[str, dict]:
+def fetch_competition_signals(keywords: list[str], top_n: int = 5) -> dict[str, dict]:
     """
     Enrich the top N keywords with YouTube competitive data in parallel.
-    top_n default is 10 to stay inside the daily search quota budget
-    (each keyword costs ~102 units: 100 for search + 1 videos + 1 channels;
-    10 keywords = ~1020 units per analysis, ~9 analyses/day headroom).
+
+    Default top_n is 5 (was 10). Each keyword costs ~102 units (100 search
+    + 1 videos + 1 channels), so 5 keywords = ~510 units/run on a cold
+    cache vs. ~1020 before. Combined with the 24h cross-user cache in
+    _fetch_competition_for_keyword, repeat keywords cost 0 units, so
+    real-world average drops far below 510.
     """
     yt_api_key = os.getenv("YOUTUBE_API_KEY", "")
     if not yt_api_key or not keywords:
@@ -367,7 +454,7 @@ def _score_with_real_data(kw: dict, comp: dict, autocomplete_rank: int | None) -
 def enrich_keywords_with_real_data(
     result: dict,
     autocomplete_results: list[str],
-    top_n: int = 10,
+    top_n: int = 5,
 ) -> dict:
     """
     Take the Claude-filtered keyword list and overwrite `opportunityScore`
