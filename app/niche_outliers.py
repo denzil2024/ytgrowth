@@ -29,6 +29,8 @@ from database.models import (
     SessionLocal,
     NicheOutlierCache,
     ChannelNicheOutlierCache,
+    OutliersSearchCache,
+    OutliersReport,
 )
 
 
@@ -117,7 +119,120 @@ def refresh_all_niches() -> int:
     return ok
 
 
-# ─── Per-channel pipeline (current hot path) ──────────────────────────────────
+# ─── Read from the user's existing Outliers result (paid feature output) ─────
+
+def get_from_outliers_cache(channel_id: str) -> dict | None:
+    """If the creator has run the paid Outliers feature, surface the strongest
+    video outlier from their saved result. This is the cleanest source: the
+    user typed their own query, the search ran with their real channel
+    context, and the result is already in OutliersSearchCache.
+
+    Returns the payload in the same shape NicheHeroCard expects, or None if
+    no cached Outliers result exists for this channel.
+
+    Falls back across:
+      1. OutliersSearchCache (single most recent paid search)
+      2. OutliersReport (history; pick the newest)
+    """
+    if not channel_id:
+        return None
+    db = SessionLocal()
+    try:
+        row = db.query(OutliersSearchCache).filter_by(channel_id=channel_id).first()
+        result_json = row.result_json if row else None
+        query_used = row.query if row else ""
+        updated_at = row.updated_at if row else None
+
+        if not result_json:
+            # Fall back to the most recent report in history.
+            rep = (
+                db.query(OutliersReport)
+                  .filter_by(channel_id=channel_id)
+                  .order_by(OutliersReport.updated_at.desc())
+                  .first()
+            )
+            if rep:
+                result_json = rep.result_json
+                query_used = rep.query
+                updated_at = rep.updated_at
+
+        if not result_json:
+            return None
+
+        try:
+            result = json.loads(result_json)
+        except Exception:
+            return None
+
+        videos = (result or {}).get("videos") or []
+        if not videos:
+            return None
+
+        # Pick the top video by outlier_score (already sorted by search_outliers
+        # but be defensive). search_outliers' outlier_score is a multiplier.
+        top = max(videos, key=lambda v: float(v.get("outlier_score") or 0))
+        return _build_payload_from_outlier_video(top, query_used or "", updated_at)
+    finally:
+        db.close()
+
+
+def _build_payload_from_outlier_video(top: dict, query_used: str, updated_at) -> dict:
+    """Map a video dict from OutliersSearchCache.result_json into the same
+    payload shape NicheHeroCard renders. Keeps the frontend contract stable."""
+    ratio = float(top.get("views_per_sub") or 0)
+    outlier_mult = float(top.get("outlier_score") or 0)
+    view_count = int(top.get("views") or top.get("view_count") or 0)
+    ratio_display = max(1, int(round(ratio))) if ratio else 1
+
+    import math
+    score_0_100 = max(0, min(99, int(50 + 22 * math.log10(max(outlier_mult, 0.1)))))
+
+    why_bullets = _extract_bullets(top.get("why_worked", ""))
+    if len(why_bullets) < 3:
+        extras = []
+        wn = (top.get("why_now") or "").strip()
+        if wn:
+            extras.append(wn)
+        qa = top.get("quick_actions") or []
+        if qa:
+            extras.append(str(qa[0]))
+        for ex in extras:
+            if len(why_bullets) >= 3:
+                break
+            if ex and ex not in why_bullets:
+                why_bullets.append(ex)
+    why_bullets = [str(b)[:180] for b in why_bullets[:3]]
+
+    refreshed_iso = None
+    if updated_at:
+        try:
+            refreshed_iso = updated_at.isoformat()
+        except Exception:
+            refreshed_iso = None
+
+    return {
+        "niche":           "",
+        "niche_keywords":  [],
+        "query_used":      query_used or "",
+        "video_id":        top.get("video_id") or "",
+        "title":           (top.get("title") or "")[:500],
+        "channel_title":   (top.get("channel_name") or top.get("channel_title") or "")[:200],
+        "channel_id":      (top.get("channel_id") or "")[:120],
+        "thumbnail_url":   (top.get("thumbnail") or top.get("thumbnail_url") or "")[:500],
+        "view_count":      view_count,
+        "sub_ratio":       ratio_display,
+        "published_at":    top.get("published_at"),
+        "outlier_score":   score_0_100,
+        "why_working":     why_bullets,
+        "angle_template":  "",
+        "angle_reasoning": "",
+        "angle_keyword":   "",
+        "refreshed_at":    refreshed_iso,
+        "source":          "outliers_cache",
+    }
+
+
+# ─── Per-channel pipeline (auto-pick fallback, currently disabled on Home) ────
 
 def refresh_for_channel(channel_id: str, channel: dict, videos: list) -> dict | None:
     """Refresh THIS creator's niche outlier card. Runs search_outliers with

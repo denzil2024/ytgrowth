@@ -2141,15 +2141,25 @@ export default function Dashboard() {
                 </div>
               )}
 
-              {/* Niche outlier hero card is hidden during the Home rebuild.
-                  It was returning videos auto-chosen from a single keyword
-                  seed (extract_niche_keywords -> first word -> YouTube
-                  search), which let off-niche outliers through (e.g. a
-                  Kenyan vlogger getting an Australian budget reaction).
-                  In the rebuild it returns as a proper action card with a
-                  Haiku-derived smart query and a relevance confidence
-                  check before display. Hidden, not removed: the backend
-                  cache + endpoint still work for the rebuild to consume. */}
+              {/* Niche outlier hero card. The endpoint now prefers the
+                  creator's own OutliersSearchCache (their paid Outliers
+                  search result), then falls back to the auto-pick cache,
+                  then to a "Run Outliers" CTA. If the creator has ever
+                  run Outliers, the card surfaces a relevant top video
+                  from THAT result — no more off-niche auto-picks. */}
+              <NicheHeroCard
+                channelId={data?.channel?.channel_id}
+                onNavigate={(target) => setNav(target)}
+                onOpenSeoStudio={(title, keyword) => {
+                  try {
+                    if (title) {
+                      sessionStorage.setItem('seoOptimizer_prefilledTitle', title)
+                      if (keyword) sessionStorage.setItem('seoOptimizer_prefilledKeyword', keyword)
+                    }
+                  } catch {}
+                  setNav('SEO Studio')
+                }}
+              />
 
               {/* Hero metric tiles — the two foundational numbers, big and bounded. */}
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 12 }}>

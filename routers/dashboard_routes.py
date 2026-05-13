@@ -27,6 +27,7 @@ from fastapi.responses import JSONResponse
 
 from app.niche_outliers import (
     get_for_channel,
+    get_from_outliers_cache,
     refresh_for_channel,
     is_stale,
     personalize_angle,
@@ -92,26 +93,42 @@ def niche_outlier(request: Request):
     if not channel_id:
         return JSONResponse({"ok": False, "reason": "no_channel"})
 
-    payload = get_for_channel(channel_id)
-
-    if not payload:
-        started = _try_kickoff_refresh(channel_id, channel, videos)
+    # Preferred source: the user's own Outliers search result. They typed the
+    # query, search_outliers ran with their real channel context, the result
+    # is curated. Always more relevant than anything we auto-pick.
+    payload = get_from_outliers_cache(channel_id)
+    if payload:
         return JSONResponse({
-            "ok":      False,
-            "reason":  "generating_now" if started or channel_id in _refresh_inflight else "generation_failed",
+            "ok":      True,
+            "niche":   payload.get("niche") or "",
             "creator": channel.get("channel_name") or "",
-            "eta_sec": 30,
+            "source":  "outliers_cache",
+            "outlier": payload,
         })
 
-    if is_stale(payload):
-        # Serve stale row, refresh in background.
-        _try_kickoff_refresh(channel_id, channel, videos)
+    # Fallback: a cached auto-pick from the (currently flawed) one-word seed
+    # pipeline. Kept in place so we don't regress users who already have a
+    # ChannelNicheOutlierCache row, but new users will land in the
+    # "no_outliers_yet" empty state below instead.
+    payload = get_for_channel(channel_id)
+    if payload:
+        if is_stale(payload):
+            _try_kickoff_refresh(channel_id, channel, videos)
+        return JSONResponse({
+            "ok":      True,
+            "niche":   payload.get("niche") or "",
+            "creator": channel.get("channel_name") or "",
+            "source":  "auto_pick",
+            "outlier": payload,
+        })
 
+    # No source yet. Frontend renders a "Run Outliers to unlock this card"
+    # nudge instead of auto-spawning a generic search (which gave irrelevant
+    # results, e.g. Australian budget reaction for a Kenyan lifestyle vlogger).
     return JSONResponse({
-        "ok":      True,
-        "niche":   payload.get("niche") or "",
+        "ok":      False,
+        "reason":  "no_outliers_yet",
         "creator": channel.get("channel_name") or "",
-        "outlier": payload,
     })
 
 

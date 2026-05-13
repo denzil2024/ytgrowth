@@ -177,12 +177,27 @@ export default function NicheHeroCard({ onOpenSeoStudio, onNavigate, channelId }
     return (
       <>
         <style>{styles}</style>
-        <EmptyOutlier niche={state.data?.niche} reason={state.data?.reason} />
+        <EmptyOutlier
+          niche={state.data?.niche}
+          reason={state.data?.reason}
+          onNavigate={onNavigate}
+        />
       </>
     )
   }
 
   const refreshedAge = relAge(state.data.outlier.refreshed_at) || 'this week'
+  const headerTitle = state.data.niche
+    ? `Niche Outlier · ${NICHE_LABELS[state.data.niche] || state.data.niche}`
+    : 'Niche Outlier'
+
+  // Title Suggestion only renders when an angle exists. The outliers-cache
+  // source (the strongest path) doesn't ship an angle today; we'll add
+  // Haiku-derived angles for that path in a follow-up commit.
+  const hasAngle = !!(
+    (personalized && personalized.angle) ||
+    state.data.outlier?.angle_template
+  )
 
   return (
     <>
@@ -192,7 +207,7 @@ export default function NicheHeroCard({ onOpenSeoStudio, onNavigate, channelId }
         <section className="nh-section">
           <SectionHeader
             dotColor={C.red}
-            title={`Niche Outlier · ${NICHE_LABELS[state.data.niche] || state.data.niche}`}
+            title={headerTitle}
             age={refreshedAge}
             onDismiss={() => setDismissed(p => ({ ...p, outlier: true }))}
           />
@@ -200,7 +215,7 @@ export default function NicheHeroCard({ onOpenSeoStudio, onNavigate, channelId }
         </section>
       )}
 
-      {!dismissed.title && (
+      {hasAngle && !dismissed.title && (
         <section className="nh-section">
           <SectionHeader
             dotColor={C.green}
@@ -368,9 +383,48 @@ function SectionSkeleton({ title }) {
   )
 }
 
-function EmptyOutlier({ niche, reason }) {
+function EmptyOutlier({ niche, reason, onNavigate }) {
   const label = NICHE_LABELS[niche] || niche || 'your niche'
   const isGenerating = reason === 'generating_now' || reason === 'no_cache_yet'
+  const noOutliersYet = reason === 'no_outliers_yet'
+
+  if (noOutliersYet) {
+    return (
+      <section className="nh-section">
+        <div className="nh-section-head">
+          <span className="nh-section-title">
+            <span className="nh-dot" style={{ background: C.red }} />
+            Niche Outlier
+          </span>
+        </div>
+        <article className="nh-card">
+          <p className="nh-eyebrow">Unlock this card</p>
+          <p className="nh-suggested-title" style={{ fontSize: 15, marginBottom: 10 }}>
+            Run Outliers once and we will pin the strongest video, thumbnail, or breakout
+            channel from your niche to this card.
+          </p>
+          <p className="nh-reason">
+            We do not auto-pick a query for you here, an auto-pick gives off-niche results.
+            Type the topic you actually want to study and the result lands here.
+          </p>
+          <div className="nh-bottom-row">
+            <span />
+            <button
+              type="button"
+              className="nh-cta"
+              onClick={() => onNavigate?.('Outliers')}
+            >
+              Open Outliers
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+              </svg>
+            </button>
+          </div>
+        </article>
+      </section>
+    )
+  }
+
   return (
     <section className="nh-section">
       <div className="nh-section-head">
