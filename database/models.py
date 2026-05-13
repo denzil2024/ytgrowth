@@ -60,7 +60,25 @@ class UserSubscription(Base):
     paddle_customer_id     = Column(String, nullable=True)
     channels_allowed  = Column(Integer, default=1)
     status            = Column(String,  default="free")   # free|active|canceled|past_due
+    # AI Coach chat allowance — separate bucket from analyses. Resets monthly
+    # on the same anniversary as monthly_used. Defaults to 10 (free).
+    # Paid plans get set in billing._activate. See plan caps:
+    #   Free=10, Solo=30, Growth=100, Agency=300.
+    chat_allowance    = Column(Integer, default=10)
+    chat_used         = Column(Integer, default=0)
     updated_at        = Column(DateTime, default=_now, onupdate=_now)
+
+
+class ChatMessage(Base):
+    """One row per turn in the AI Coach. One conversation per channel
+    for v1 — when the user clicks "New chat", we delete the existing
+    rows and start fresh. Role is 'user' or 'assistant'."""
+    __tablename__ = "chat_messages"
+    id            = Column(Integer, primary_key=True, autoincrement=True)
+    channel_id    = Column(String,   nullable=False, index=True)
+    role          = Column(String,   nullable=False)   # 'user' | 'assistant'
+    content       = Column(Text,     nullable=False)
+    created_at    = Column(DateTime, default=_now, index=True)
 
 
 class CompetitorVideoIdeas(Base):
@@ -582,6 +600,20 @@ try:
         # Rename lemonsqueezy_* → paddle_* (migrating back to Paddle)
         "ALTER TABLE user_subscriptions RENAME COLUMN lemonsqueezy_subscription_id TO paddle_subscription_id",
         "ALTER TABLE user_subscriptions RENAME COLUMN lemonsqueezy_customer_id TO paddle_customer_id",
+        # AI Coach chat allowance bucket. Separate from analyses so chat
+        # doesn't burn audit credits. Backfill defaults set per plan below.
+        "ALTER TABLE user_subscriptions ADD COLUMN chat_allowance INTEGER DEFAULT 10",
+        "ALTER TABLE user_subscriptions ADD COLUMN chat_used INTEGER DEFAULT 0",
+        # Plan-specific defaults: backfill rows that still have the schema
+        # default. Free=10 (already there), Solo=30, Growth=100, Agency=300.
+        # Lifetime variants mirror their non-lifetime tier.
+        "UPDATE user_subscriptions SET chat_allowance = 30  WHERE plan IN ('solo',   'lifetime_solo')   AND chat_allowance = 10",
+        "UPDATE user_subscriptions SET chat_allowance = 100 WHERE plan IN ('growth', 'lifetime_growth') AND chat_allowance = 10",
+        "UPDATE user_subscriptions SET chat_allowance = 300 WHERE plan IN ('agency', 'lifetime_agency') AND chat_allowance = 10",
+        # AI Coach conversation history. One row per message turn.
+        "CREATE TABLE IF NOT EXISTS chat_messages (id INTEGER PRIMARY KEY AUTOINCREMENT, channel_id TEXT NOT NULL, role TEXT NOT NULL, content TEXT NOT NULL, created_at DATETIME)",
+        "CREATE INDEX IF NOT EXISTS ix_chat_messages_channel_id ON chat_messages (channel_id)",
+        "CREATE INDEX IF NOT EXISTS ix_chat_messages_created_at ON chat_messages (created_at)",
     ]:
         try:
             _conn.execute(_text(_stmt))

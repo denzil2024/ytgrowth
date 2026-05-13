@@ -39,6 +39,7 @@ import WeeklyReport from './WeeklyReport'
 import Referrals from './Referrals'
 import Admin from './Admin'
 import NicheHeroCard from '../components/NicheHeroCard'
+import ChatCoach from './ChatCoach'
 import AuditProgress from '../components/AuditProgress'
 import { loginUrl } from '../utm.js'
 import { openCheckout } from '../checkout'
@@ -4564,7 +4565,7 @@ export default function Dashboard() {
             <NavSubBtn label="Competitors" active={nav === 'Competitors'} onClick={() => setNav('Competitors')} />
           </NavGroup>
 
-          <NavBtn label="Chat" active={nav === 'Chat'} onClick={() => setNav('Chat')} badge="Soon" />
+          <NavBtn label="Chat" active={nav === 'Chat'} onClick={() => setNav('Chat')} badge="New" />
 
           <div style={{ height: 18 }}/>
 
@@ -6194,30 +6195,9 @@ export default function Dashboard() {
           {/* ── ADMIN ────────────────────────────────────────────────── */}
           {nav === 'Admin' && isAdmin && <Admin />}
 
-          {/* ── CHAT (placeholder) ───────────────────────────────────── */}
+          {/* ── CHAT — AI Coach ──────────────────────────────────────── */}
           {nav === 'Chat' && (
-            <div style={{ maxWidth: 720, margin: '40px auto', padding: '40px 28px', textAlign: 'center' }}>
-              <div style={{
-                display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-                width: 56, height: 56, borderRadius: 14,
-                background: 'linear-gradient(135deg, rgba(229,37,27,0.10) 0%, rgba(229,37,27,0.04) 100%)',
-                border: '1px solid rgba(229,37,27,0.18)',
-                color: C.red,
-                marginBottom: 18,
-              }}>
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M4 7.5a2.5 2.5 0 0 1 2.5-2.5h11A2.5 2.5 0 0 1 20 7.5v6A2.5 2.5 0 0 1 17.5 16H10l-4 3v-3H6.5A2.5 2.5 0 0 1 4 13.5z"/></svg>
-              </div>
-              <h2 style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', marginBottom: 10 }}>Chat is coming soon</h2>
-              <p style={{ fontSize: 14, color: C.text2, lineHeight: 1.6, marginBottom: 22, maxWidth: 480, margin: '0 auto 22px' }}>
-                An AI coach that knows your channel and tells you what to work on next. Ask
-                anything from "what should my next video be" to "why did my last upload tank".
-                Plugs into every feature you have here.
-              </p>
-              <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontSize: 12, color: C.text3, fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase' }}>
-                <span style={{ width: 6, height: 6, borderRadius: '50%', background: C.amber }}/>
-                In development
-              </div>
-            </div>
+            <ChatCoach onNavigate={setNav} billingPlan={billingPlan} />
           )}
 
           {/* ── SETTINGS ─────────────────────────────────────────────── */}

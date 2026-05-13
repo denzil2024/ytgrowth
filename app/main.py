@@ -40,6 +40,7 @@ from routers import channel_stats_routes
 from routers import top_channels_routes
 from routers import extension_routes
 from routers import dashboard_routes
+from routers import chat_routes
 
 app = FastAPI(title="YTGrowth API", redirect_slashes=False, lifespan=lifespan)
 
@@ -95,6 +96,7 @@ app.include_router(channel_stats_routes.router, prefix="/api/channel-stats")
 app.include_router(top_channels_routes.router)   # /api/top-channels
 app.include_router(extension_routes.router,  prefix="/api/extension")
 app.include_router(dashboard_routes.router,  prefix="/dashboard")
+app.include_router(chat_routes.router,        prefix="/chat")
 
 
 

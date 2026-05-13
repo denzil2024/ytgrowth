@@ -62,6 +62,16 @@ def _verify_signature(raw_body: bytes, signature_header: str) -> bool:
         return False
 
 
+def _chat_allowance_for(plan: str) -> int:
+    """AI Coach message bucket per plan. Same caps confirmed with cost
+    modeling: Free=10, Solo=30, Growth=100, Agency=300. Lifetime
+    variants mirror their non-lifetime tier."""
+    if plan in ("solo", "lifetime_solo"):       return 30
+    if plan in ("growth", "lifetime_growth"):   return 100
+    if plan in ("agency", "lifetime_agency"):   return 300
+    return 10  # free + anything unknown
+
+
 def _activate(sub: UserSubscription, meta: dict, customer_id: str, subscription_id: str = None):
     """Apply plan metadata to a subscription row."""
     plan     = meta["plan"]
@@ -84,8 +94,10 @@ def _activate(sub: UserSubscription, meta: dict, customer_id: str, subscription_
 
     if billing in ("monthly", "annual", "lifetime"):
         # Reset the monthly counter and set next reset date
-        sub.monthly_used = 0
-        sub.reset_date   = next_reset_date()
+        sub.monthly_used   = 0
+        sub.chat_used      = 0
+        sub.chat_allowance = _chat_allowance_for(plan)
+        sub.reset_date     = next_reset_date()
 
     # Pack purchases just top up the balance
     if plan == "pack":
