@@ -176,6 +176,14 @@ def get_outlier_bundle_from_cache(channel_id: str) -> dict | None:
     if not (videos or thumbnails or channels):
         return None
 
+    # Free-peek runs explicitly leave thumbnails + channels empty. The frontend
+    # uses locked_signals to show teaser/upgrade UI on those pills instead of
+    # hiding them. Paid full runs have all three populated and lock nothing.
+    is_free_peek = bool(raw.get("free_peek"))
+    locked_signals: list[str] = []
+    if is_free_peek:
+        locked_signals = ["thumbnails", "channels"]
+
     refreshed_iso = None
     if updated_at:
         try:
@@ -184,12 +192,14 @@ def get_outlier_bundle_from_cache(channel_id: str) -> dict | None:
             refreshed_iso = None
 
     return {
-        "source":       "outliers_cache",
-        "query_used":   query_used,
-        "refreshed_at": refreshed_iso,
-        "videos":       videos,
-        "thumbnails":   thumbnails,
-        "channels":     channels,
+        "source":         "outliers_cache",
+        "free_peek":      is_free_peek,
+        "locked_signals": locked_signals,
+        "query_used":     query_used,
+        "refreshed_at":   refreshed_iso,
+        "videos":         videos,
+        "thumbnails":     thumbnails,
+        "channels":       channels,
     }
 
 
@@ -348,6 +358,111 @@ def _build_payload_from_outlier_video(top: dict, query_used: str, updated_at) ->
         "refreshed_at":    refreshed_iso,
         "source":          "outliers_cache",
     }
+
+
+# ─── Free-tier auto-peek (1 Claude call, zero credits charged) ────────────────
+
+def run_free_peek_for_channel(channel_id: str, channel: dict, videos: list) -> dict | None:
+    """Run a CHEAP one-Claude-call Outliers search for a creator who hasn't
+    run the paid feature themselves. Saves to OutliersSearchCache so the
+    Home card lights up.
+
+    Compared to the paid /outliers/search:
+      - videos_only=True flag on search_outliers (skips thumbnail vision +
+        channel-explanation Claude calls). Only _explain_video_outliers
+        runs, the cheapest of the three.
+      - No credit deduction. Our cost, the user's free teaser.
+      - Frontend renders the videos pill as unlocked. Thumbnails and
+        Channels render as locked teasers with an Upgrade CTA.
+
+    Returns the saved bundle payload, or None on failure.
+    """
+    if not channel_id:
+        return None
+
+    channel = channel or {}
+    videos = videos or []
+    channel_title = channel.get("channel_name") or channel.get("title") or ""
+    recent_titles = [v.get("title", "") for v in videos[:10] if v.get("title")]
+    subscribers = int(channel.get("subscribers", 0) or 0) or 1000
+
+    niche_kw = extract_niche_keywords(channel, videos) or []
+    if not niche_kw:
+        inferred = infer_niche(channel.get("keywords") or "", channel_title, recent_titles)
+        niche_kw = NICHE_KEYWORDS.get(inferred, [inferred or "vlog"])
+
+    query = niche_kw[0] if niche_kw else (channel_title or "vlog")
+
+    try:
+        result = search_outliers(
+            creds=None,
+            query=query,
+            my_channel_id=channel_id,
+            my_subscribers=subscribers,
+            my_niche_keywords=niche_kw,
+            confirmed_keyword="",
+            videos_only=True,
+        )
+    except Exception as e:
+        print(f"[niche_outliers] free_peek search_outliers raised for {channel_id}: {e}")
+        return None
+
+    if not isinstance(result, dict) or result.get("error"):
+        err = result.get("error") if isinstance(result, dict) else result
+        print(f"[niche_outliers] free_peek search_outliers no usable result for {channel_id}: {err}")
+        return None
+
+    if not (result.get("videos") or []):
+        print(f"[niche_outliers] free_peek no videos for {channel_id}")
+        return None
+
+    # Persist into OutliersSearchCache so the existing get_outlier_bundle_from_cache
+    # path picks it up on the next /niche-outlier fetch. We mark it so the
+    # frontend knows the non-video pills are teaser-locked, by storing only
+    # the videos array. The bundle reader will pass empty arrays for the
+    # other two signals; the frontend renders locked teasers for those.
+    db = SessionLocal()
+    try:
+        payload = json.dumps({
+            "videos":     result.get("videos") or [],
+            "thumbnails": [],   # locked for free auto-peek
+            "channels":   [],   # locked for free auto-peek
+            "cohort":     result.get("cohort", {}),
+            "free_peek":  True,
+        })
+        row = db.query(OutliersSearchCache).filter_by(channel_id=channel_id).first()
+        if row:
+            # Only overwrite if there's no prior PAID result. A paid run is
+            # gold; never clobber it with a free auto-peek.
+            try:
+                existing = json.loads(row.result_json or "{}")
+            except Exception:
+                existing = {}
+            if existing.get("free_peek") or not (existing.get("thumbnails") or existing.get("channels")):
+                row.query = query
+                row.confirmed_keyword = ""
+                row.result_json = payload
+                db.commit()
+            else:
+                print(f"[niche_outliers] free_peek skipped overwrite of paid cache for {channel_id}")
+                db.rollback()
+        else:
+            db.add(OutliersSearchCache(
+                channel_id        = channel_id,
+                query             = query,
+                confirmed_keyword = "",
+                result_json       = payload,
+            ))
+            db.commit()
+        print(f"[niche_outliers] free_peek saved for {channel_id[:16]} kw={niche_kw[:3]}")
+    except Exception as e:
+        db.rollback()
+        print(f"[niche_outliers] free_peek save failed for {channel_id}: {e}")
+        return None
+    finally:
+        db.close()
+
+    return get_outlier_bundle_from_cache(channel_id)
 
 
 # ─── Per-channel pipeline (auto-pick fallback, currently disabled on Home) ────

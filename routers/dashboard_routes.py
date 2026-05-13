@@ -30,6 +30,7 @@ from app.niche_outliers import (
     get_from_outliers_cache,
     get_outlier_bundle_from_cache,
     refresh_for_channel,
+    run_free_peek_for_channel,
     is_stale,
     personalize_angle,
 )
@@ -73,6 +74,35 @@ def _try_kickoff_refresh(channel_id: str, channel: dict, videos: list) -> bool:
             _refresh_inflight.discard(channel_id)
 
     threading.Thread(target=_runner, name=f"channel-refresh-{channel_id[:10]}", daemon=True).start()
+    return True
+
+
+def _try_kickoff_free_peek(channel_id: str, channel: dict, videos: list) -> bool:
+    """One-shot free auto-peek. Runs search_outliers in videos_only mode
+    (single Claude call, zero credits charged) and writes the result to
+    OutliersSearchCache so subsequent dashboard loads hydrate the card."""
+    if not channel_id:
+        return False
+    lock = _refresh_locks.setdefault(f"peek:{channel_id}", threading.Lock())
+    if not lock.acquire(blocking=False):
+        return False
+    try:
+        key = f"peek:{channel_id}"
+        if key in _refresh_inflight:
+            return False
+        _refresh_inflight.add(key)
+    finally:
+        lock.release()
+
+    def _runner():
+        try:
+            run_free_peek_for_channel(channel_id, channel, videos)
+        except Exception as e:
+            print(f"[dashboard] free_peek failed for {channel_id}: {e}")
+        finally:
+            _refresh_inflight.discard(f"peek:{channel_id}")
+
+    threading.Thread(target=_runner, name=f"free-peek-{channel_id[:10]}", daemon=True).start()
     return True
 
 
@@ -120,6 +150,19 @@ def niche_outlier(request: Request):
             "creator": channel.get("channel_name") or "",
             "source":  "auto_pick",
             "outlier": payload,
+        })
+
+    # No cache yet. Kick off the free peek (1 Claude call, 0 credits) in the
+    # background, tell the frontend to poll. Next poll lands in the
+    # outliers_cache branch above.
+    peek_key = f"peek:{channel_id}"
+    started = _try_kickoff_free_peek(channel_id, channel, videos)
+    if started or peek_key in _refresh_inflight:
+        return JSONResponse({
+            "ok":      False,
+            "reason":  "generating_now",
+            "creator": channel.get("channel_name") or "",
+            "eta_sec": 30,
         })
 
     return JSONResponse({

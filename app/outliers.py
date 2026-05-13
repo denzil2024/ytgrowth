@@ -116,6 +116,7 @@ def search_outliers(
     my_subscribers: int,
     my_niche_keywords: list[str],
     confirmed_keyword: str = "",
+    videos_only: bool = False,
 ) -> dict:
     """
     Single unified search — runs once and returns videos + breakout channels +
@@ -144,6 +145,7 @@ def search_outliers(
         return _run_unified_search(
             creds, query, confirmed,
             my_channel_id, my_subscribers, niche_kw,
+            videos_only=videos_only,
         )
     except ssl.SSLError as e:
         print(f"[outliers] SSL error after retries: {e}")
@@ -190,6 +192,7 @@ def _run_unified_search(
     my_channel_id: str,
     my_subscribers: int,
     niche_keywords: list[str],
+    videos_only: bool = False,
 ) -> dict:
     # Build the search_terms list SEO-style: primary phrase + 2 AI-extracted
     # secondaries from the original title. Three queries merged = way more
@@ -329,16 +332,21 @@ def _run_unified_search(
     # tab can pick from a wider set than just the 8 Videos-tab picks.
     thumb_pool = capped[:16]
 
-    with ThreadPoolExecutor(max_workers=2) as pool:
-        futures: dict = {}
-        if thumb_pool:
-            futures["thumbs"]   = pool.submit(_analyze_thumbnail_patterns, title, thumb_pool)
-        if top_channels:
-            futures["channels"] = pool.submit(_explain_channel_outliers, title, top_channels, my_subscribers)
-        if "thumbs" in futures:
-            thumbnail_patterns   = futures["thumbs"].result()   or {}
-        if "channels" in futures:
-            channel_explanations = futures["channels"].result() or {}
+    # videos_only mode (free auto-runs): skip the two expensive Claude
+    # calls (thumbnail vision + channel explanations). Only the cheap
+    # _explain_video_outliers text call below runs. Cuts Claude spend by
+    # ~2/3 and removes the vision call entirely.
+    if not videos_only:
+        with ThreadPoolExecutor(max_workers=2) as pool:
+            futures: dict = {}
+            if thumb_pool:
+                futures["thumbs"]   = pool.submit(_analyze_thumbnail_patterns, title, thumb_pool)
+            if top_channels:
+                futures["channels"] = pool.submit(_explain_channel_outliers, title, top_channels, my_subscribers)
+            if "thumbs" in futures:
+                thumbnail_patterns   = futures["thumbs"].result()   or {}
+            if "channels" in futures:
+                channel_explanations = futures["channels"].result() or {}
 
     # Build top_thumbnails from vision's ranked_ids. If vision returns fewer
     # than _RESULTS_VIDEO picks (thin ranking, partial failure, etc.), pad

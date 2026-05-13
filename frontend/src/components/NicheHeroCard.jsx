@@ -154,16 +154,18 @@ export default function NicheHeroCard({ onOpenSeoStudio, onNavigate, channelId }
 // ─── Interactive bundle card ─────────────────────────────────────────────
 
 function InteractiveBundleCard({ bundle, channelId, onDismiss, onOpenSeoStudio, onNavigate }) {
-  const tabs = useMemo(() => {
-    const t = []
-    if (bundle.videos?.length)     t.push({ key: 'video',     label: 'Videos',     count: bundle.videos.length })
-    if (bundle.thumbnails?.length) t.push({ key: 'thumbnail', label: 'Thumbnails', count: bundle.thumbnails.length })
-    if (bundle.channels?.length)   t.push({ key: 'channel',   label: 'Channels',   count: bundle.channels.length })
-    return t
-  }, [bundle])
+  const locked = new Set(bundle.locked_signals || [])
+  // Always render all 3 pills. Empty-and-locked ones render as upgrade
+  // teasers (free auto-peek). Empty-and-not-locked just won't be available
+  // (paid full runs always populate all three).
+  const tabs = useMemo(() => ([
+    { key: 'video',     label: 'Videos',     count: bundle.videos?.length     || 0, locked: locked.has('videos') },
+    { key: 'thumbnail', label: 'Thumbnails', count: bundle.thumbnails?.length || 0, locked: locked.has('thumbnails') },
+    { key: 'channel',   label: 'Channels',   count: bundle.channels?.length   || 0, locked: locked.has('channels') },
+  ]), [bundle])
 
   const persisted = loadViewState(channelId) || {}
-  const initialTab = tabs.find(t => t.key === persisted.tab) ? persisted.tab : tabs[0]?.key
+  const initialTab = tabs.find(t => t.key === persisted.tab) ? persisted.tab : (tabs.find(t => !t.locked && t.count > 0)?.key || tabs[0].key)
   const [tab, setTab] = useState(initialTab)
   const [idx, setIdx] = useState(() => {
     const i = Number.isInteger(persisted.idx) ? persisted.idx : 0
@@ -174,10 +176,13 @@ function InteractiveBundleCard({ bundle, channelId, onDismiss, onOpenSeoStudio, 
     saveViewState(channelId, { tab, idx })
   }, [tab, idx, channelId])
 
-  const currentList =
+  const currentTab = tabs.find(t => t.key === tab) || tabs[0]
+  const isLockedTab = !!currentTab?.locked
+  const currentList = isLockedTab ? [] : (
     tab === 'video'     ? (bundle.videos     || []) :
     tab === 'thumbnail' ? (bundle.thumbnails || []) :
     tab === 'channel'   ? (bundle.channels   || []) : []
+  )
 
   const safeIdx = Math.max(0, Math.min(idx, currentList.length - 1))
   const current = currentList[safeIdx]
@@ -219,12 +224,18 @@ function InteractiveBundleCard({ bundle, channelId, onDismiss, onOpenSeoStudio, 
           {tabs.map(t => (
             <button
               key={t.key}
-              className={`nh-pill ${t.key === tab ? 'nh-pill-active' : ''}`}
+              className={`nh-pill ${t.key === tab ? 'nh-pill-active' : ''} ${t.locked ? 'nh-pill-locked' : ''}`}
               onClick={() => switchTab(t.key)}
               type="button"
             >
+              {t.locked && (
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: -2 }}>
+                  <rect x="4" y="11" width="16" height="10" rx="2"/>
+                  <path d="M8 11V8a4 4 0 0 1 8 0v3"/>
+                </svg>
+              )}
               {t.label}
-              <span className="nh-pill-count">{t.count}</span>
+              <span className="nh-pill-count">{t.locked ? 'Locked' : t.count}</span>
             </button>
           ))}
           {bundle.query_used && (
@@ -233,7 +244,12 @@ function InteractiveBundleCard({ bundle, channelId, onDismiss, onOpenSeoStudio, 
         </div>
 
         {/* Featured slot */}
-        {current ? (
+        {isLockedTab ? (
+          <LockedTeaser
+            signal={tab}
+            onUpgrade={() => onNavigate?.('Outliers')}
+          />
+        ) : current ? (
           tab === 'channel'
             ? <ChannelFeatured ch={current} />
             : <VideoFeatured v={current} onOpenSeoStudio={onOpenSeoStudio} />
@@ -242,7 +258,7 @@ function InteractiveBundleCard({ bundle, channelId, onDismiss, onOpenSeoStudio, 
         )}
 
         {/* Pager + rail */}
-        {currentList.length > 1 && (
+        {!isLockedTab && currentList.length > 1 && (
           <>
             <div className="nh-pager">
               <button className="nh-pager-btn" onClick={() => step(-1)} aria-label="Previous">
@@ -290,6 +306,49 @@ function InteractiveBundleCard({ bundle, channelId, onDismiss, onOpenSeoStudio, 
         )}
       </article>
     </section>
+  )
+}
+
+
+// ─── Locked teaser (free-peek pills that need an Outliers run to unlock) ─
+
+function LockedTeaser({ signal, onUpgrade }) {
+  const copy =
+    signal === 'thumbnail'
+      ? {
+          headline: 'Thumbnail patterns winning in your niche',
+          body:     'Run Outliers to see which thumbnail designs are pulling clicks for breakout videos right now.',
+        }
+      : {
+          headline: 'Breakout channels in your niche',
+          body:     'Run Outliers to find smaller channels in your niche that are punching above their weight, with the moves to copy.',
+        }
+  return (
+    <div className="nh-locked">
+      <div className="nh-locked-stack">
+        <div className="nh-locked-thumb nh-locked-thumb-3" />
+        <div className="nh-locked-thumb nh-locked-thumb-2" />
+        <div className="nh-locked-thumb nh-locked-thumb-1">
+          <div className="nh-locked-shield">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="4" y="11" width="16" height="10" rx="2"/>
+              <path d="M8 11V8a4 4 0 0 1 8 0v3"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+      <div className="nh-locked-info">
+        <p className="nh-eyebrow">Run Outliers to unlock</p>
+        <h3 className="nh-title" style={{ marginBottom: 8 }}>{copy.headline}</h3>
+        <p className="nh-reason" style={{ marginBottom: 14 }}>{copy.body}</p>
+        <button type="button" className="nh-cta" onClick={onUpgrade}>
+          Run Outliers
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+          </svg>
+        </button>
+      </div>
+    </div>
   )
 }
 
@@ -635,6 +694,68 @@ const styles = `
   background: ${C.insetBg};
   color: ${C.text3};
 }
+.nh-pill-locked {
+  color: ${C.text3};
+  background: ${C.insetBg};
+}
+.nh-pill-locked:hover { color: ${C.text1}; }
+.nh-pill-locked.nh-pill-active {
+  background: #1f1f2a; color: #fff; border-color: #1f1f2a;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.28);
+}
+.nh-pill-locked.nh-pill-active .nh-pill-count {
+  background: rgba(255,255,255,0.18);
+  color: #fff;
+}
+
+/* Locked teaser */
+.nh-locked {
+  display: flex; gap: 22px; align-items: center;
+  padding: 6px 0 4px;
+}
+.nh-locked-stack {
+  position: relative;
+  width: 240px; height: 150px; flex-shrink: 0;
+}
+.nh-locked-thumb {
+  position: absolute;
+  width: 200px; aspect-ratio: 16 / 9;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #d8d8df 0%, #b9b9c4 50%, #d8d8df 100%);
+  box-shadow: 0 4px 14px rgba(0,0,0,0.10);
+  filter: blur(0.6px);
+}
+.nh-locked-thumb-1 {
+  top: 0; left: 30px;
+  z-index: 3;
+  filter: none;
+  background:
+    linear-gradient(135deg, rgba(229,37,27,0.10) 0%, rgba(229,37,27,0.05) 60%, rgba(31,31,42,0.10) 100%),
+    linear-gradient(135deg, #e8e8ee 0%, #c9c9d3 50%, #e8e8ee 100%);
+  border: 1px solid rgba(255,255,255,0.4);
+  display: flex; align-items: center; justify-content: center;
+}
+.nh-locked-thumb-2 {
+  top: 14px; left: 14px;
+  z-index: 2;
+  transform: rotate(-3deg);
+  opacity: 0.7;
+}
+.nh-locked-thumb-3 {
+  top: 26px; left: 0;
+  z-index: 1;
+  transform: rotate(-6deg);
+  opacity: 0.45;
+}
+.nh-locked-shield {
+  width: 52px; height: 52px;
+  border-radius: 50%;
+  background: rgba(15,15,25,0.92);
+  color: #fff;
+  display: inline-flex; align-items: center; justify-content: center;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.30);
+}
+.nh-locked-info { flex: 1; min-width: 0; }
 .nh-query {
   margin-left: auto;
   font-size: 11.5px; color: ${C.text3};
@@ -894,5 +1015,7 @@ const styles = `
   .nh-bottom-row { flex-direction: column; align-items: stretch; }
   .nh-cta { width: 100%; justify-content: center; }
   .nh-query { margin-left: 0; }
+  .nh-locked { flex-direction: column; align-items: stretch; }
+  .nh-locked-stack { width: 100%; height: 130px; }
 }
 `
