@@ -2,7 +2,7 @@ import { useEffect, useState, useRef, forwardRef } from 'react'
 import {
   LayoutDashboard,  // Feed
   Sparkles,         // Optimize / promo card
-  Telescope,        // Research
+  Telescope,        // Research / Niche Outlier category
   MessageCircle,    // Chat
   Settings as SettingsIcon,
   ShieldCheck,      // Admin
@@ -10,6 +10,13 @@ import {
   LogOut,
   X as XIcon,
   ArrowRight,
+  Target,           // Priority Action category
+  Trophy,           // Milestone / Achievement category
+  BarChart3,        // Content Mix / Insight category
+  Activity,         // Channel Health category
+  ChevronDown,      // Collapse toggle on Channel Health
+  RefreshCcw,       // Refresh stats (compact topbar)
+  RotateCcw,        // Re-Audit (compact topbar)
 } from 'lucide-react'
 import Competitors from './Competitors'
 import Settings from './Settings'
@@ -1130,7 +1137,489 @@ function HeroTile({ label, value, sub, delta, deltaSuffix, deltaIsAbsolute }) {
   )
 }
 
-/* ─── Insight card ──────────────────────────────────────────────────────── */
+/* ─── Feed (Home) primitives ────────────────────────────────────────────────
+   Phase 1 of the Home rebuild. Replaces the giant audit wall with a card
+   stream organised by category. The card pattern: tinted-icon eyebrow row,
+   one headline, one body line, one primary CTA. Mirrors the What's New card
+   structure used in the sidebar so the design language is consistent.
+*/
+
+// Next round-number target for the milestone-progress bars in the stat
+// hero. Tiered so a 50-sub channel sees "100" not "1k", and a 50k channel
+// sees "100k" not "51k".
+function nextSubMilestone(n) {
+  if (n < 100)     return 100
+  if (n < 1_000)   return Math.ceil(n / 100) * 100
+  if (n < 10_000)  return Math.ceil(n / 1_000) * 1_000
+  if (n < 100_000) return Math.ceil(n / 10_000) * 10_000
+  if (n < 1_000_000) return Math.ceil(n / 100_000) * 100_000
+  return Math.ceil(n / 1_000_000) * 1_000_000
+}
+function nextViewMilestone(n) {
+  if (n < 1_000)    return 1_000
+  if (n < 10_000)   return Math.ceil(n / 1_000) * 1_000
+  if (n < 100_000)  return Math.ceil(n / 10_000) * 10_000
+  if (n < 1_000_000) return Math.ceil(n / 100_000) * 100_000
+  return Math.ceil(n / 1_000_000) * 1_000_000
+}
+
+// Hero tile with a milestone-progress bar. Matches VidIQ's two-tile pattern
+// at the top of their feed: big number, target on the right, a thin bar
+// showing distance to the next round milestone, optional delta chip below.
+function MilestoneHeroTile({ label, value, raw, kind, delta, deltaSuffix, deltaIsAbsolute }) {
+  const target = kind === 'subs' ? nextSubMilestone(raw || 0) : nextViewMilestone(raw || 0)
+  const pct    = target > 0 ? Math.max(2, Math.min(100, (raw / target) * 100)) : 0
+  const hasDelta = delta !== null && delta !== undefined && !Number.isNaN(Number(delta))
+  const deltaNum = hasDelta ? Number(delta) : 0
+  const deltaPositive = deltaNum >= 0
+  const deltaColor = !hasDelta ? C.text3 : deltaPositive ? C.green : C.red
+  const deltaBg    = !hasDelta ? 'transparent' : deltaPositive ? 'rgba(5,150,105,0.08)' : 'rgba(229,37,27,0.07)'
+  const deltaBdr   = !hasDelta ? 'transparent' : deltaPositive ? 'rgba(5,150,105,0.18)' : 'rgba(229,37,27,0.18)'
+
+  return (
+    <div className="ytg-stat-card" style={{ padding: '20px 22px 20px' }}>
+      <p style={{
+        fontSize: 11, fontWeight: 700, letterSpacing: '0.10em',
+        textTransform: 'uppercase', color: C.text3, marginBottom: 12,
+      }}>{label}</p>
+
+      <p style={{
+        fontSize: 44, fontWeight: 800, letterSpacing: '-2px',
+        color: C.text1, lineHeight: 1, fontVariantNumeric: 'tabular-nums',
+        marginBottom: 16,
+      }}>{value}</p>
+
+      {/* Milestone progress bar — soft track, brand-red gradient fill */}
+      <div style={{
+        position: 'relative',
+        background: '#eaeaef', borderRadius: 99, height: 5,
+        overflow: 'hidden',
+        boxShadow: 'inset 0 1px 1px rgba(0,0,0,0.04)',
+        marginBottom: 8,
+      }}>
+        <div style={{
+          width: `${pct}%`, height: '100%',
+          background: 'linear-gradient(90deg, rgba(229,37,27,0.55) 0%, #e5251b 100%)',
+          borderRadius: 99,
+          transition: 'width 0.8s cubic-bezier(0.34,1.56,0.64,1)',
+        }}/>
+      </div>
+
+      {/* Bottom row: current → next milestone, optional delta chip */}
+      <div style={{
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        gap: 10, fontVariantNumeric: 'tabular-nums',
+      }}>
+        <p style={{ fontSize: 11.5, fontWeight: 600, color: C.text3, letterSpacing: '-0.01em' }}>
+          Next: <span style={{ color: C.text1, fontWeight: 700 }}>{fmtNum(target)}</span>
+        </p>
+        {hasDelta && (
+          <span style={{
+            display: 'inline-flex', alignItems: 'center', gap: 4,
+            fontSize: 11, fontWeight: 700, color: deltaColor,
+            background: deltaBg, border: `1px solid ${deltaBdr}`,
+            padding: '2px 8px', borderRadius: 100,
+            letterSpacing: '-0.05px',
+          }}>
+            <svg width="9" height="9" viewBox="0 0 10 10" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" style={{ transform: deltaPositive ? 'none' : 'rotate(180deg)' }}>
+              <path d="M5 8V2M2.5 4.5 5 2l2.5 2.5"/>
+            </svg>
+            {deltaPositive ? '+' : ''}{fmtNum(Math.abs(deltaNum))}
+            <span style={{ color: C.text3, fontWeight: 500, marginLeft: 2 }}>{deltaSuffix || ''}</span>
+          </span>
+        )}
+      </div>
+    </div>
+  )
+}
+
+// Filter pills row. Same shape as the Outliers tab pills the user is used
+// to, but rendered as a feed filter rather than a tab switcher.
+function FeedFilterPills({ value, counts, onChange }) {
+  const TABS = [
+    { key: 'all',         label: 'All' },
+    { key: 'actions',     label: 'Actions' },
+    { key: 'insights',    label: 'Insights' },
+    { key: 'achievements', label: 'Achievements' },
+  ]
+  return (
+    <div style={{ display: 'flex', gap: 8, marginBottom: 18, flexWrap: 'wrap' }}>
+      {TABS.map(t => {
+        const active = value === t.key
+        const count = counts?.[t.key] ?? null
+        return (
+          <button
+            key={t.key}
+            type="button"
+            onClick={() => onChange?.(t.key)}
+            style={{
+              display: 'inline-flex', alignItems: 'center', gap: 7,
+              padding: '8px 14px', borderRadius: 100,
+              border: `1px solid ${active ? C.red : '#e6e6ec'}`,
+              background: active ? C.red : '#fff',
+              color: active ? '#fff' : C.text2,
+              fontFamily: "'Inter', system-ui, sans-serif",
+              fontSize: 13, fontWeight: 600, letterSpacing: '-0.01em',
+              cursor: 'pointer',
+              boxShadow: active
+                ? '0 1px 3px rgba(229,37,27,0.30)'
+                : '0 1px 2px rgba(0,0,0,0.04)',
+              transition: 'background 0.14s ease, color 0.14s ease, border-color 0.14s ease',
+            }}
+            onMouseEnter={e => { if (!active) { e.currentTarget.style.background = 'rgba(15,15,19,0.04)'; e.currentTarget.style.color = C.text1 } }}
+            onMouseLeave={e => { if (!active) { e.currentTarget.style.background = '#fff'; e.currentTarget.style.color = C.text2 } }}
+          >
+            {t.label}
+            {count != null && count > 0 && (
+              <span style={{
+                display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                minWidth: 18, height: 18, padding: '0 6px',
+                borderRadius: 100,
+                fontSize: 10.5, fontWeight: 800,
+                background: active ? 'rgba(255,255,255,0.22)' : '#fafafb',
+                color: active ? '#fff' : C.text3,
+              }}>{count}</span>
+            )}
+          </button>
+        )
+      })}
+    </div>
+  )
+}
+
+// Generic Feed card wrapper. Eyebrow row (tinted-circle Lucide icon +
+// category label + age) on top, body slot below, optional dismiss x.
+// Every card on the Feed shares this shell so the design language reads
+// as one system, not a pile of bespoke surfaces.
+function FeedCard({
+  Icon,                // Lucide icon component
+  iconColor = '#e5251b',
+  iconBg = 'rgba(229,37,27,0.08)',
+  category,
+  age,
+  onDismiss,
+  rightSlot,
+  children,
+}) {
+  return (
+    <article style={{
+      background: '#ffffff',
+      border: '1px solid #ececf0',
+      borderRadius: 14,
+      padding: '18px 20px 20px 20px',
+      boxShadow: '0 1px 2px rgba(0,0,0,0.04), 0 4px 14px rgba(0,0,0,0.06)',
+      marginBottom: 14,
+      fontFamily: "'Inter', system-ui, sans-serif",
+      transition: 'box-shadow 0.18s ease, transform 0.18s ease',
+    }}
+      onMouseEnter={e => {
+        e.currentTarget.style.boxShadow = '0 4px 14px rgba(0,0,0,0.09), 0 18px 42px rgba(0,0,0,0.10)'
+        e.currentTarget.style.transform = 'translateY(-1px)'
+      }}
+      onMouseLeave={e => {
+        e.currentTarget.style.boxShadow = '0 1px 2px rgba(0,0,0,0.04), 0 4px 14px rgba(0,0,0,0.06)'
+        e.currentTarget.style.transform = 'translateY(0)'
+      }}
+    >
+      <div style={{
+        display: 'flex', alignItems: 'center', gap: 10,
+        marginBottom: 14,
+      }}>
+        <span style={{
+          flexShrink: 0,
+          width: 28, height: 28, borderRadius: 8,
+          display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+          background: iconBg,
+          color: iconColor,
+        }}>
+          <Icon size={15} strokeWidth={2} />
+        </span>
+        <span style={{
+          fontSize: 10.5, fontWeight: 800, color: C.text3,
+          letterSpacing: '0.11em', textTransform: 'uppercase',
+        }}>{category}</span>
+        {age && (
+          <span style={{ fontSize: 11.5, color: C.text3, fontWeight: 500, letterSpacing: '-0.01em' }}>
+            · {age}
+          </span>
+        )}
+        <div style={{ flex: 1 }}/>
+        {rightSlot}
+        {onDismiss && (
+          <button
+            type="button"
+            onClick={onDismiss}
+            aria-label="Dismiss"
+            style={{
+              width: 24, height: 24, borderRadius: 6,
+              border: 'none', background: 'transparent',
+              color: 'rgba(10,10,15,0.40)',
+              cursor: 'pointer',
+              display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+              transition: 'background 0.14s ease, color 0.14s ease',
+            }}
+            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(15,15,19,0.06)'; e.currentTarget.style.color = '#0a0a0f' }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'rgba(10,10,15,0.40)' }}
+          >
+            <XIcon size={13} strokeWidth={2} />
+          </button>
+        )}
+      </div>
+      {children}
+    </article>
+  )
+}
+
+// Priority Action card. One open audit action, with an Impact badge and
+// the single CTA that maps to its category page. Tick / dismiss live in
+// the right slot of the eyebrow so the body stays focused on the action.
+function PriorityActionCard({ action, rank, total, impact, onAct, onDone, onDismiss, ctaLabel }) {
+  const impactKey = (impact || 'med').toLowerCase()
+  const impactClr = impactKey === 'high' ? C.red : impactKey === 'low' ? C.text3 : C.amber
+  const impactBg  = impactKey === 'high' ? 'rgba(229,37,27,0.07)' : impactKey === 'low' ? 'rgba(15,15,19,0.04)' : 'rgba(217,119,6,0.08)'
+  const impactBdr = impactKey === 'high' ? 'rgba(229,37,27,0.18)' : impactKey === 'low' ? 'rgba(15,15,19,0.10)' : 'rgba(217,119,6,0.18)'
+
+  return (
+    <FeedCard
+      Icon={Target}
+      iconColor={C.red}
+      iconBg="rgba(229,37,27,0.08)"
+      category={`Priority Action · ${rank} of ${total}`}
+      onDismiss={onDismiss}
+      rightSlot={
+        <span style={{
+          fontSize: 9.5, fontWeight: 800, color: impactClr,
+          background: impactBg, border: `1px solid ${impactBdr}`,
+          padding: '3px 8px', borderRadius: 100,
+          letterSpacing: '0.08em', textTransform: 'uppercase',
+        }}>{impactKey} impact</span>
+      }
+    >
+      <h3 style={{
+        fontSize: 16, fontWeight: 700, color: C.text1,
+        letterSpacing: '-0.3px', lineHeight: 1.35,
+        marginBottom: 8,
+      }}>{action.problem || action.action || 'Action'}</h3>
+
+      {action.action && action.action !== action.problem && (
+        <p style={{
+          fontSize: 13.5, fontWeight: 450, color: C.text2,
+          letterSpacing: '-0.01em', lineHeight: 1.55,
+          marginBottom: 14,
+        }}>{action.action}</p>
+      )}
+
+      {action.expected_outcome && (
+        <p style={{
+          fontSize: 12.5, fontWeight: 500, color: C.text3,
+          letterSpacing: '-0.01em', lineHeight: 1.5,
+          marginBottom: 14,
+        }}>
+          <span style={{ fontWeight: 700, color: C.text2 }}>Why:</span> {action.expected_outcome}
+        </p>
+      )}
+
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
+        <button
+          type="button"
+          onClick={onAct}
+          style={{
+            display: 'inline-flex', alignItems: 'center', gap: 6,
+            padding: '9px 16px', borderRadius: 100,
+            border: 'none', cursor: 'pointer',
+            background: C.red, color: '#fff',
+            fontFamily: 'inherit',
+            fontSize: 13, fontWeight: 700, letterSpacing: '-0.01em',
+            boxShadow: '0 1px 3px rgba(229,37,27,0.32), 0 4px 14px rgba(229,37,27,0.22)',
+            transition: 'filter 0.14s ease, transform 0.14s ease',
+          }}
+          onMouseEnter={e => { e.currentTarget.style.filter = 'brightness(1.08)'; e.currentTarget.style.transform = 'translateY(-1px)' }}
+          onMouseLeave={e => { e.currentTarget.style.filter = 'none'; e.currentTarget.style.transform = 'translateY(0)' }}
+        >
+          {ctaLabel || 'Open tool'}
+          <ArrowRight size={13} strokeWidth={2.4} />
+        </button>
+        <button
+          type="button"
+          onClick={onDone}
+          style={{
+            display: 'inline-flex', alignItems: 'center', gap: 6,
+            padding: '8px 14px', borderRadius: 100,
+            border: '1px solid #e6e6ec',
+            background: '#fff', color: C.text2,
+            fontFamily: 'inherit',
+            fontSize: 12.5, fontWeight: 600, letterSpacing: '-0.01em',
+            cursor: 'pointer',
+            transition: 'background 0.14s ease, color 0.14s ease, border-color 0.14s ease',
+          }}
+          onMouseEnter={e => { e.currentTarget.style.background = 'rgba(15,15,19,0.04)'; e.currentTarget.style.color = C.text1; e.currentTarget.style.borderColor = '#d0d0d8' }}
+          onMouseLeave={e => { e.currentTarget.style.background = '#fff'; e.currentTarget.style.color = C.text2; e.currentTarget.style.borderColor = '#e6e6ec' }}
+        >
+          Mark done
+        </button>
+      </div>
+    </FeedCard>
+  )
+}
+
+// Milestone Unlocked card. Trophy in an amber-tinted circle. Headline is
+// the achievement, body is a one-line celebratory note. CTAs route to the
+// existing milestone share / download modal so we reuse that logic.
+function MilestoneFeedCard({ milestone, onShare, onDownload, onDismiss }) {
+  return (
+    <FeedCard
+      Icon={Trophy}
+      iconColor={C.amber}
+      iconBg="rgba(217,119,6,0.10)"
+      category="Milestone Unlocked"
+      age={milestone.earned_age || ''}
+      onDismiss={onDismiss}
+    >
+      <h3 style={{
+        fontSize: 16, fontWeight: 700, color: C.text1,
+        letterSpacing: '-0.3px', lineHeight: 1.35,
+        marginBottom: 8,
+      }}>{milestone.headline}</h3>
+      {milestone.body && (
+        <p style={{
+          fontSize: 13.5, fontWeight: 450, color: C.text2,
+          letterSpacing: '-0.01em', lineHeight: 1.55,
+          marginBottom: 14,
+        }}>{milestone.body}</p>
+      )}
+      <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+        {onShare && (
+          <button
+            type="button"
+            onClick={onShare}
+            style={{
+              display: 'inline-flex', alignItems: 'center', gap: 6,
+              padding: '9px 16px', borderRadius: 100,
+              border: 'none', cursor: 'pointer',
+              background: C.red, color: '#fff',
+              fontFamily: 'inherit',
+              fontSize: 13, fontWeight: 700, letterSpacing: '-0.01em',
+              boxShadow: '0 1px 3px rgba(229,37,27,0.32)',
+              transition: 'filter 0.14s ease, transform 0.14s ease',
+            }}
+            onMouseEnter={e => { e.currentTarget.style.filter = 'brightness(1.08)'; e.currentTarget.style.transform = 'translateY(-1px)' }}
+            onMouseLeave={e => { e.currentTarget.style.filter = 'none'; e.currentTarget.style.transform = 'translateY(0)' }}
+          >
+            Share milestone
+            <ArrowRight size={13} strokeWidth={2.4} />
+          </button>
+        )}
+      </div>
+    </FeedCard>
+  )
+}
+
+// Content Mix card. Uses BarChart3 as the category icon. Body is the
+// AI-generated insight string from the existing patterns endpoint.
+function ContentMixFeedCard({ patterns, onDismiss }) {
+  if (!patterns) return null
+  return (
+    <FeedCard
+      Icon={BarChart3}
+      iconColor={C.text1}
+      iconBg="rgba(15,15,19,0.06)"
+      category="Content Mix"
+      onDismiss={onDismiss}
+    >
+      <h3 style={{
+        fontSize: 16, fontWeight: 700, color: C.text1,
+        letterSpacing: '-0.3px', lineHeight: 1.35,
+        marginBottom: 8,
+      }}>{patterns.headline || 'Your content mix'}</h3>
+      <p style={{
+        fontSize: 13.5, fontWeight: 450, color: C.text2,
+        letterSpacing: '-0.01em', lineHeight: 1.6,
+      }}>{patterns.body || patterns.text || ''}</p>
+    </FeedCard>
+  )
+}
+
+// Channel Health card with collapsible audit detail. Activity icon is
+// the category mark. The collapse is "See full audit ▾" — when expanded,
+// the body slot renders the legacy audit detail block (priority actions
+// checklist, category bars, quick wins, what's working, biggest risk).
+function ChannelHealthFeedCard({ score, weakest, children, open, onToggle }) {
+  const scoreClr =
+    score >= 75 ? C.green : score >= 50 ? C.amber : C.red
+  const scoreBdr =
+    score >= 75 ? 'rgba(5,150,105,0.25)' : score >= 50 ? 'rgba(217,119,6,0.22)' : 'rgba(229,37,27,0.22)'
+  const scoreBg =
+    score >= 75 ? 'rgba(5,150,105,0.06)' : score >= 50 ? 'rgba(217,119,6,0.06)' : 'rgba(229,37,27,0.05)'
+
+  return (
+    <FeedCard
+      Icon={Activity}
+      iconColor={scoreClr}
+      iconBg={scoreBg}
+      category="Channel Health"
+      rightSlot={
+        <span style={{
+          display: 'inline-flex', alignItems: 'baseline', gap: 2,
+          padding: '3px 10px', borderRadius: 100,
+          border: `1px solid ${scoreBdr}`,
+          background: scoreBg,
+          fontVariantNumeric: 'tabular-nums',
+        }}>
+          <span style={{ fontSize: 13, fontWeight: 800, color: scoreClr, letterSpacing: '-0.3px', lineHeight: 1 }}>{score}</span>
+          <span style={{ fontSize: 10, fontWeight: 600, color: C.text3 }}>/100</span>
+        </span>
+      }
+    >
+      {/* Health-state line */}
+      <p style={{
+        fontSize: 13.5, fontWeight: 450, color: C.text2,
+        letterSpacing: '-0.01em', lineHeight: 1.55,
+        marginBottom: 14,
+      }}>
+        {score >= 75 ? 'Your channel is healthy. Keep doing what works.'
+          : score >= 50 ? "Your channel is solid but has clear room to improve."
+          : 'Your channel is underperforming for its size. The full audit below has the fix list.'}
+        {weakest && weakest.length > 0 && (
+          <>{' '}<span style={{ fontWeight: 600, color: C.text1 }}>Weak:</span> {weakest.join(', ')}.</>
+        )}
+      </p>
+
+      {/* Toggle */}
+      <button
+        type="button"
+        onClick={onToggle}
+        style={{
+          display: 'inline-flex', alignItems: 'center', gap: 6,
+          padding: '7px 14px', borderRadius: 100,
+          border: '1px solid #e6e6ec',
+          background: '#fff', color: C.text2,
+          fontFamily: 'inherit',
+          fontSize: 12.5, fontWeight: 600, letterSpacing: '-0.01em',
+          cursor: 'pointer',
+          transition: 'background 0.14s ease, color 0.14s ease, border-color 0.14s ease',
+        }}
+        onMouseEnter={e => { e.currentTarget.style.background = 'rgba(15,15,19,0.04)'; e.currentTarget.style.color = C.text1; e.currentTarget.style.borderColor = '#d0d0d8' }}
+        onMouseLeave={e => { e.currentTarget.style.background = '#fff'; e.currentTarget.style.color = C.text2; e.currentTarget.style.borderColor = '#e6e6ec' }}
+      >
+        <span>{open ? 'Hide full audit' : 'See full audit'}</span>
+        <ChevronDown size={13} strokeWidth={2.4} style={{
+          transform: open ? 'rotate(180deg)' : 'rotate(0deg)',
+          transition: 'transform 0.2s ease',
+        }}/>
+      </button>
+
+      {/* Collapsed legacy detail */}
+      {open && (
+        <div style={{ marginTop: 18 }}>
+          {children}
+        </div>
+      )}
+    </FeedCard>
+  )
+}
+
+
+/* ─── Insight card (legacy, still used by collapsed audit detail) ────────── */
 function categoryToNav(category, problem) {
   const c = (category || '').toLowerCase()
   const p = (problem || '').toLowerCase()
@@ -1920,6 +2409,15 @@ export default function Dashboard() {
   // Sidebar live signals. Drive the nav badges so the sidebar reads as a
   // status surface, not just a list of links.
   const [freshOutlier, setFreshOutlier] = useState(false)
+  // Feed state.
+  const [feedFilter, setFeedFilter] = useState(() => {
+    try { return localStorage.getItem('ytg_feed_filter') || 'all' } catch { return 'all' }
+  })
+  const [auditOpen, setAuditOpen] = useState(false)
+  const setFeedFilterPersist = (k) => {
+    setFeedFilter(k)
+    try { localStorage.setItem('ytg_feed_filter', k) } catch {}
+  }
   // Free-tier per-feature gate status. Map of feature id → 'allowed' | 'locked' | 'used'.
   // Fetched from /auth/me on mount; empty {} for paid plans. Passed to gated
   // child pages so they can show the upsell modal on first render.
@@ -2592,71 +3090,34 @@ export default function Dashboard() {
                 </div>
               )}
 
-              {/* Niche outlier hero card. The endpoint now prefers the
-                  creator's own OutliersSearchCache (their paid Outliers
-                  search result), then falls back to the auto-pick cache,
-                  then to a "Run Outliers" CTA. If the creator has ever
-                  run Outliers, the card surfaces a relevant top video
-                  from THAT result — no more off-niche auto-picks. */}
-              <NicheHeroCard
-                channelId={data?.channel?.channel_id}
-                onNavigate={(target) => setNav(target)}
-                onOpenSeoStudio={(title, keyword) => {
-                  try {
-                    if (title) {
-                      sessionStorage.setItem('seoOptimizer_prefilledTitle', title)
-                      if (keyword) sessionStorage.setItem('seoOptimizer_prefilledKeyword', keyword)
-                    }
-                  } catch {}
-                  setNav('SEO Studio')
-                }}
-              />
-
-              {/* Hero metric tiles — the two foundational numbers, big and bounded. */}
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 12 }}>
-                <HeroTile
+              {/* Hero metric tiles — milestone-progress pattern. Each tile
+                  shows the big number plus distance to the next round
+                  milestone, with a soft brand-red gradient bar. The 90d
+                  delta sits as a chip on the bottom-right of the tile. */}
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 22 }}>
+                <MilestoneHeroTile
                   label="Subscribers"
                   value={fmtNum(data.channel.subscribers)}
-                  sub="All time"
+                  raw={data.channel.subscribers || 0}
+                  kind="subs"
                   delta={data.analytics?.net_subscribers_90d}
                   deltaSuffix="last 90d"
                 />
-                <HeroTile
+                <MilestoneHeroTile
                   label="Total views"
                   value={fmtNum(data.channel.total_views)}
-                  sub="All time"
+                  raw={data.channel.total_views || 0}
+                  kind="views"
                   delta={data.analytics?.views_90d}
                   deltaSuffix="last 90d"
                   deltaIsAbsolute
                 />
               </div>
 
-              {/* Quick stats strip — the operational numbers, compact. */}
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,minmax(0,1fr))', gap: 12, marginBottom: 0 }}>
-                <Stat label="Avg views"    value={fmtNum(avgViews)} sub={avgViews < 500 ? 'Below average' : 'On track'} alert={avgViews < 500} />
-                <Stat label="Channel score" value={score} sub={score >= 75 ? 'Healthy' : score >= 50 ? 'Needs work' : 'Critical'} alert={score < 50} accent={scoreColor(score)} />
-                {data.analytics ? (
-                  <>
-                    <Stat label="Avg retention"  value={`${data.analytics.avg_retention_percent}%`}
-                      sub={data.analytics.avg_retention_percent >= 50 ? 'Good' : 'Below 50%'}
-                      alert={data.analytics.avg_retention_percent < 40}
-                      accent={data.analytics.avg_retention_percent >= 50 ? C.green : undefined}
-                    />
-                    <Stat label="Avg duration"   value={fmtSecs(data.analytics.avg_view_duration_seconds)}
-                      sub={data.analytics.avg_view_duration_seconds < 120 ? 'Under 2 min' : 'Good'}
-                      alert={data.analytics.avg_view_duration_seconds < 120}
-                    />
-                  </>
-                ) : (
-                  <>
-                    <Stat label="Avg retention" value="—" sub="Analytics access needed" />
-                    <Stat label="Avg duration"  value="—" sub="Analytics access needed" />
-                  </>
-                )}
-              </div>
-
+              {/* Analytics-missing nudge — moved here from the quick-stats
+                  strip (the strip is gone in the Feed redesign). */}
               {!data.analytics && (
-                <div style={{ display: 'flex', alignItems: 'center', gap: 12, background: C.amberBg, border: `1px solid ${C.amberBdr}`, borderLeft: `3px solid ${C.amber}`, borderRadius: '0 12px 12px 0', padding: '10px 16px', marginTop: 12 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12, background: C.amberBg, border: `1px solid ${C.amberBdr}`, borderLeft: `3px solid ${C.amber}`, borderRadius: '0 12px 12px 0', padding: '10px 16px', marginBottom: 18 }}>
                   <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke={C.amber} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
                     <circle cx="8" cy="8" r="6.5"/><line x1="8" y1="5" x2="8" y2="8.5"/><circle cx="8" cy="11" r="0.7" fill={C.amber} stroke="none"/>
                   </svg>
@@ -2666,11 +3127,196 @@ export default function Dashboard() {
                 </div>
               )}
 
+              {/* Filter pills — All | Actions | Insights | Achievements.
+                  Counts populate from real data (open priority actions,
+                  recently-earned milestones). */}
+              {(() => {
+                const openPriorityCount = (() => {
+                  const all = data?.insights?.priorityActions || []
+                  let n = 0
+                  for (let i = 0; i < all.length; i++) {
+                    const a = all[i]
+                    const rank = a.rank ?? (i + 1)
+                    const k = `rank_${rank}`
+                    if (!checked[k] && !deleted[k]) n += 1
+                  }
+                  return n
+                })()
+                const recentMilestone = milestones?.earned?.[0] || null
+                const counts = {
+                  all: null,
+                  actions: openPriorityCount,
+                  insights: null,
+                  achievements: recentMilestone ? 1 : 0,
+                }
+                return (
+                  <FeedFilterPills
+                    value={feedFilter}
+                    counts={counts}
+                    onChange={setFeedFilterPersist}
+                  />
+                )
+              })()}
+
+              {/* ── FEED CARD STREAM ──────────────────────────────────────
+                  Niche Outlier first (the wedge), then Priority Action
+                  cards (top 3 open), then any recent Milestone, then
+                  Content Mix insight, then Channel Health which holds the
+                  legacy audit detail behind its "See full audit" collapse.
+                  Each card opts in/out of the active filter pill. */}
+
+              {/* Niche Outlier — Insights */}
+              {(feedFilter === 'all' || feedFilter === 'insights') && (
+                <NicheHeroCard
+                  channelId={data?.channel?.channel_id}
+                  onNavigate={(target) => setNav(target)}
+                  onOpenSeoStudio={(title, keyword) => {
+                    try {
+                      if (title) {
+                        sessionStorage.setItem('seoOptimizer_prefilledTitle', title)
+                        if (keyword) sessionStorage.setItem('seoOptimizer_prefilledKeyword', keyword)
+                      }
+                    } catch {}
+                    setNav('SEO Studio')
+                  }}
+                />
+              )}
+
+              {/* Priority Actions — Actions. Top 3 OPEN actions become
+                  their own cards. Done / dismissed state is shared with
+                  the legacy checklist inside the audit collapse, so
+                  ticking either updates the same localStorage. */}
+              {(feedFilter === 'all' || feedFilter === 'actions') && data.insights?.priorityActions && (() => {
+                const all = data.insights.priorityActions
+                const open = []
+                for (let i = 0; i < all.length; i++) {
+                  const a = all[i]
+                  const rank = a.rank ?? (i + 1)
+                  const k = `rank_${rank}`
+                  if (!checked[k] && !deleted[k]) open.push({ a, rank, k, idx: i })
+                  if (open.length >= 3) break
+                }
+                if (open.length === 0) return null
+                return open.map(({ a, rank, k, idx }) => {
+                  const impact = (a.impact || (idx === 0 ? 'high' : idx === 1 ? 'med' : 'low'))
+                  const target = categoryToNav(a.category, a.problem)
+                  const ctaLabel = target === 'SEO Studio' ? 'Open SEO Studio'
+                    : target === 'Thumbnail Score' ? 'Open Thumbnails'
+                    : target === 'Video Ideas' ? 'Open Video Ideas'
+                    : target === 'Outliers' ? 'Open Outliers'
+                    : target === 'Keywords' ? 'Open Keywords'
+                    : target === 'Competitors' ? 'Open Competitors'
+                    : 'See full audit'
+                  return (
+                    <PriorityActionCard
+                      key={`pa-${rank}`}
+                      action={a}
+                      rank={open.findIndex(x => x.rank === rank) + 1}
+                      total={all.length}
+                      impact={impact}
+                      ctaLabel={ctaLabel}
+                      onAct={() => target ? setNav(target) : setAuditOpen(true)}
+                      onDone={() => {
+                        const next = { ...checked, [k]: true }
+                        setChecked(next)
+                        if (data?.channel?.channel_id) {
+                          try { localStorage.setItem(`ytg_checked_${data.channel.channel_id}`, JSON.stringify(next)) } catch {}
+                        }
+                      }}
+                      onDismiss={() => {
+                        const next = { ...deleted, [k]: true }
+                        setDeleted(next)
+                        if (data?.channel?.channel_id) {
+                          try { localStorage.setItem(`ytg_deleted_${data.channel.channel_id}`, JSON.stringify(next)) } catch {}
+                        }
+                      }}
+                    />
+                  )
+                })
+              })()}
+
+              {/* Milestone Unlocked — Achievements. Surfaces the most
+                  recently earned milestone (within the last 30 days) so
+                  the user lands on the win. Dismiss persists per channel. */}
+              {(feedFilter === 'all' || feedFilter === 'achievements') && milestones?.earned?.[0] && (() => {
+                const m = milestones.earned[0]
+                const earnedAt = m.earned_at ? new Date(m.earned_at).getTime() : 0
+                const ageMs = Date.now() - earnedAt
+                const SHOW_FOR = 30 * 24 * 60 * 60 * 1000
+                if (!earnedAt || ageMs > SHOW_FOR) return null
+                const dismissKey = `ytg_milestone_dismissed:${data.channel?.channel_id || 'x'}:${m.category}:${m.tier}`
+                try { if (localStorage.getItem(dismissKey)) return null } catch {}
+                const labelCat = m.category === 'subs' ? 'subscribers'
+                  : m.category === 'views' ? 'total views'
+                  : m.category === 'watch_hours' ? 'watch hours'
+                  : m.category
+                const headline = `${fmtNum(m.threshold || m.value)} ${labelCat}`
+                const days = Math.floor(ageMs / 86400000)
+                return (
+                  <MilestoneFeedCard
+                    milestone={{
+                      headline,
+                      body: m.celebration || `You crossed ${fmtNum(m.threshold || m.value)} ${labelCat}. Worth a screenshot.`,
+                      earned_age: days === 0 ? 'today' : days === 1 ? 'yesterday' : `${days}d ago`,
+                    }}
+                    onShare={() => setShareMilestone(m)}
+                    onDismiss={() => {
+                      try { localStorage.setItem(dismissKey, '1') } catch {}
+                      // Force re-render. Cheapest way: bump checked state.
+                      setChecked(prev => ({ ...prev }))
+                    }}
+                  />
+                )
+              })()}
+
+              {/* Content Mix — Insights */}
+              {(feedFilter === 'all' || feedFilter === 'insights') && patterns && (
+                <ContentMixFeedCard
+                  patterns={{
+                    headline: patterns.headline || 'Your content mix',
+                    body: patterns.body || patterns.text || patterns.summary || '',
+                  }}
+                />
+              )}
+
+              {/* Channel Health — Insights. Holds the legacy big audit
+                  detail block under its "See full audit" collapse. */}
+              {(feedFilter === 'all' || feedFilter === 'insights') && data.insights && (() => {
+                const cs = data.insights.categoryScores || {}
+                const entries = [
+                  ['CTR health', cs.ctrHealth],
+                  ['Audience retention', cs.audienceRetention],
+                  ['Content strategy', cs.contentStrategy],
+                  ['Posting consistency', cs.postingConsistency],
+                  ['Engagement quality', cs.engagementQuality],
+                  ['SEO discoverability', cs.seoDiscoverability],
+                  ['Video length', cs.videoLength],
+                  ['Traffic source intel', cs.trafficSourceIntelligence],
+                ].filter(([, v]) => typeof v === 'number')
+                const weakest = entries
+                  .filter(([, v]) => v != null && v < 50)
+                  .sort((a, b) => a[1] - b[1])
+                  .slice(0, 2)
+                  .map(([k]) => k)
+                return (
+                  <ChannelHealthFeedCard
+                    score={score}
+                    weakest={weakest}
+                    open={auditOpen}
+                    onToggle={() => setAuditOpen(o => !o)}
+                  />
+                )
+              })()}
+
             </>
           )}
 
-          {/* ── MILESTONES ─────────────────────────────────────────────── */}
-          {data && nav === 'Overview' && milestones && (() => {
+          {/* ── MILESTONES (legacy grid) ────────────────────────────────
+              Hidden by default in the new Feed pattern. Recent milestone
+              now surfaces as a Feed card up above; the full grid (every
+              tier per category) only renders when the user expands the
+              Channel Health audit collapse. */}
+          {data && nav === 'Overview' && milestones && auditOpen && (() => {
             const cats = [
               { key: 'subs',        Title: 'Subscribers' },
               { key: 'views',       Title: 'Total Views' },
@@ -2864,7 +3510,12 @@ export default function Dashboard() {
             </div>
           )}
 
-          {data && nav === 'Overview' && data.insights && (
+          {/* ── AUDIT DETAIL (legacy block) ─────────────────────────────
+              Hidden by default. Renders only when the user expands the
+              new Channel Health Feed card's "See full audit" collapse.
+              The new PriorityActionCards on the Feed read from the same
+              checked/deleted state, so ticking either updates both. */}
+          {data && nav === 'Overview' && data.insights && auditOpen && (
             <>
               <div style={{ marginBottom: 20, marginTop: 44 }}>
                 <h2 style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', marginBottom: 4 }}>Channel audit</h2>
@@ -3452,8 +4103,11 @@ export default function Dashboard() {
             </>
           )}
 
-          {/* ── PATTERNS ─────────────────────────────────────────────── */}
-          {data && nav === 'Overview' && patterns && (
+          {/* ── PATTERNS (legacy block) ─────────────────────────────────
+              Hidden by default. The Content Mix insight surfaces as a
+              Feed card above; this detailed Shorts vs long-form breakdown
+              only renders when the user expands the audit collapse. */}
+          {data && nav === 'Overview' && patterns && auditOpen && (
             <>
               <div style={{ marginBottom: 20, marginTop: 44 }}>
                 <h2 style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', marginBottom: 4 }}>Content patterns</h2>
