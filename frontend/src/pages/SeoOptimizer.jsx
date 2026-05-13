@@ -2063,6 +2063,23 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
   const [copiedTags, setCopiedTags] = useState(false)
   const [copiedAutocomplete, setCopiedAutocomplete] = useState(false)
 
+  // Format-menu state. The "Try a format" chip in the title card opens a
+  // small dropdown of the six VIRAL_FORMATS; click any to populate the
+  // textarea. Outside-click closes via a document mousedown listener
+  // scoped to the formatMenuRef wrapper.
+  const [formatMenuOpen, setFormatMenuOpen] = useState(false)
+  const formatMenuRef = useRef(null)
+  useEffect(() => {
+    if (!formatMenuOpen) return
+    const onDown = (e) => {
+      if (formatMenuRef.current && !formatMenuRef.current.contains(e.target)) {
+        setFormatMenuOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', onDown)
+    return () => document.removeEventListener('mousedown', onDown)
+  }, [formatMenuOpen])
+
   // Description optimizer state
   const [selectedTitle, setSelectedTitle] = useState(saved.selectedTitle || null)
   const [currentDesc, setCurrentDesc]     = useState(saved.currentDesc || '')
@@ -2385,9 +2402,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
             <h1 style={{ fontSize: 24, fontWeight: 800, color: C.text1, letterSpacing: '-0.6px', marginBottom: 6, lineHeight: 1.1 }}>SEO Optimizer</h1>
             {/* Meta line with · separators, matches Overview's "Stats from Xh ago · Audited Xd ago" pattern */}
             <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.4, display: 'flex', gap: 0, flexWrap: 'wrap' }}>
-              <span>Your title against live competitor data</span>
-              <span style={{ marginLeft: 8 }}>· 3 AI alternatives</span>
-              <span style={{ marginLeft: 8 }}>· 1 matching description</span>
+              <span>Your title against live competitor data.</span>
               {lastSearchAt && (
                 <span style={{ marginLeft: 8 }}>· Last searched {relTime(lastSearchAt)}</span>
               )}
@@ -2442,19 +2457,40 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
       {/* Input area — hero input on top, then 2-col (Preview | Formats) */}
       <div style={{ marginBottom: 16 }}>
 
-        {/* ── Row 1: Your video title (full-width hero) ──────────────────── */}
-        <div className="seo-glass-card" style={{ padding: '22px 24px', marginBottom: 14 }}>
-          <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 14, gap: 8 }}>
-            <span style={{ fontSize: 11, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Your video title</span>
-            <span style={{
-              fontSize: 11, fontWeight: 500,
-              color: title.length > 70 ? C.red : title.length >= 50 ? C.green : C.text3,
-              fontVariantNumeric: 'tabular-nums', whiteSpace: 'nowrap',
-            }}>
-              {title.length} · {title.length >= 50 && title.length <= 70 ? 'ideal' : title.length > 70 ? 'too long' : 'aim 50–70'}
-            </span>
-          </div>
+        {/* ── Title input card — single source of truth for the title plus
+              its meta. Three optical rows inside: eyebrow + char count,
+              the textarea, then ONE action row carrying status + format
+              dropdown + Analyse. Spacing and chips mirror VideoIdeas
+              IdeaCard (frontend/src/pages/VideoIdeas.jsx:392-420) and
+              the Feed ytg-stat-card pattern (frontend/src/pages/
+              Dashboard.jsx:1140-1254). ── */}
+        <div className="seo-glass-card" style={{ padding: '22px', marginBottom: 14 }}>
 
+          {/* Row 1 — eyebrow + single char-count against the largest surface
+              cap. Drops the redundant per-surface breakdown that used to
+              repeat the same number three times. */}
+          {(() => {
+            const len = title.length
+            const cap = 70
+            const inIdeal = len >= 50 && len <= cap
+            const over    = len > cap
+            const ccColor = over ? C.red : inIdeal ? C.green : C.text3
+            return (
+              <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 12, gap: 8 }}>
+                <span style={{ fontSize: 11, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.10em' }}>Your video title</span>
+                <span style={{
+                  fontSize: 11, fontWeight: 700, color: ccColor,
+                  fontVariantNumeric: 'tabular-nums',
+                  letterSpacing: '-0.05px', whiteSpace: 'nowrap',
+                }}>
+                  {len}<span style={{ color: C.text4, fontWeight: 500 }}>/{cap}</span>
+                </span>
+              </div>
+            )
+          })()}
+
+          {/* Prefill banner — only when prefilled. Lives inside the card,
+              ABOVE the textarea so it doesn't crowd the action row. */}
           {prefillBanner && (
             <div style={{
               fontSize: 12, fontWeight: 500, color: C.text2,
@@ -2467,6 +2503,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
             </div>
           )}
 
+          {/* Row 2 — the textarea itself. Unchanged styling. */}
           <textarea ref={titleInputRef} value={title} onChange={e => setTitle(e.target.value)}
             onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSubmitTitle() } }}
             placeholder="e.g. How I grew my YouTube channel to 10k subscribers"
@@ -2475,78 +2512,6 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
             onFocus={e => { e.target.style.borderColor = 'rgba(0,0,0,0.25)'; e.target.style.boxShadow = '0 0 0 4px rgba(0,0,0,0.04)' }}
             onBlur={e => { e.target.style.borderColor = '#e6e6ec'; e.target.style.boxShadow = 'none' }} />
 
-          {/* ── Surface-fit meta line. Replaces the old full Preview card, which
-              was a half-empty box repeating three identical "fits" rows when
-              everything was within budget. Single inline row, surfaces colored
-              individually: green when the title fits, red with a tiny chip
-              when it cuts. Only renders once the user has typed something. ── */}
-          {title.trim() && (() => {
-            const surfaces = [
-              { label: 'Feed',    maxChars: 45 },
-              { label: 'Mobile',  maxChars: 55 },
-              { label: 'Desktop', maxChars: 70 },
-            ]
-            const fitCount = surfaces.filter(s => title.length <= s.maxChars).length
-            const headline = fitCount === 3
-              ? 'Fits all 3 YouTube surfaces'
-              : fitCount === 0
-                ? 'Cuts on every surface'
-                : `Fits ${fitCount} of 3 surfaces`
-            const headColor = fitCount === 3 ? C.green : fitCount === 0 ? C.red : C.amber
-            return (
-              <div style={{
-                marginTop: 10,
-                display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 10,
-                fontSize: 11.5, fontVariantNumeric: 'tabular-nums',
-              }}>
-                <span style={{ fontWeight: 700, color: headColor, letterSpacing: '-0.05px' }}>{headline}</span>
-                <span style={{ color: C.text4 }}>·</span>
-                {surfaces.map((s, idx) => {
-                  const cuts = title.length > s.maxChars
-                  return (
-                    <span key={s.label} style={{ display: 'inline-flex', alignItems: 'baseline', gap: 5 }}>
-                      <span style={{ fontWeight: 700, color: C.text3, letterSpacing: '0.06em', textTransform: 'uppercase', fontSize: 10 }}>{s.label}</span>
-                      <span style={{
-                        fontWeight: 700, color: cuts ? C.red : C.text1, letterSpacing: '-0.05px',
-                      }}>{title.length}<span style={{ color: C.text4, fontWeight: 500 }}>/{s.maxChars}</span></span>
-                      {idx < surfaces.length - 1 && <span style={{ color: C.text4, marginLeft: 5 }}>·</span>}
-                    </span>
-                  )
-                })}
-              </div>
-            )
-          })()}
-
-          {/* ── Format pill row. Replaces the old 6-card amber-headered grid
-              that wasted half a screen. Six neutral pills under the input,
-              click any to populate the textarea with that format's example. ── */}
-          <div style={{
-            marginTop: 12,
-            display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 6,
-          }}>
-            <span style={{ fontSize: 10.5, fontWeight: 700, color: C.text3, letterSpacing: '0.08em', textTransform: 'uppercase', marginRight: 4 }}>Try a format</span>
-            {VIRAL_FORMATS.map(fmt => (
-              <button
-                key={fmt.key}
-                type="button"
-                onClick={() => setTitle(fmt.example)}
-                title={fmt.example}
-                style={{
-                  padding: '5px 11px', borderRadius: 99,
-                  background: '#ffffff', border: '1px solid rgba(0,0,0,0.10)',
-                  color: C.text2, fontSize: 11.5, fontWeight: 600, letterSpacing: '-0.05px',
-                  fontFamily: 'inherit', cursor: 'pointer',
-                  transition: 'background 0.14s, border-color 0.14s, color 0.14s',
-                  whiteSpace: 'nowrap',
-                }}
-                onMouseEnter={e => { e.currentTarget.style.background = 'rgba(229,37,27,0.06)'; e.currentTarget.style.borderColor = 'rgba(229,37,27,0.35)'; e.currentTarget.style.color = C.red }}
-                onMouseLeave={e => { e.currentTarget.style.background = '#ffffff'; e.currentTarget.style.borderColor = 'rgba(0,0,0,0.10)'; e.currentTarget.style.color = C.text2 }}
-              >
-                {fmt.label.split(/[\/\s]/)[0]}
-              </button>
-            ))}
-          </div>
-
           {error && (
             <div style={{ marginTop: 12, display: 'flex', alignItems: 'flex-start', gap: 8, fontSize: 12.5, color: C.red, background: C.redBg, border: `1px solid ${C.redBdr}`, borderRadius: 9, padding: '9px 12px', lineHeight: 1.4 }}>
               <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" style={{ flexShrink: 0, marginTop: 2 }}><circle cx="6.5" cy="6.5" r="5"/><path d="M6.5 4v3M6.5 9v.5"/></svg>
@@ -2554,9 +2519,115 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
             </div>
           )}
 
-          <div style={{ marginTop: 10, display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 10 }}>
+          {/* Row 3 — single action row carrying status chip + format dropdown +
+              Analyse button. All three elements sit on the same optical
+              baseline (~36px tall) so the row reads as one band. */}
+          <div style={{ marginTop: 14, display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
+
+            {/* Surface-fit status chip. One verdict, native title= tooltip
+                carries the per-surface breakdown on hover so the page doesn't
+                permanently allocate three rows of repeated numbers. */}
+            {title.trim() && (() => {
+              const surfaces = [
+                { label: 'Feed',    maxChars: 45 },
+                { label: 'Mobile',  maxChars: 55 },
+                { label: 'Desktop', maxChars: 70 },
+              ]
+              const cuts = surfaces.filter(s => title.length > s.maxChars)
+              const allFit  = cuts.length === 0
+              const text    = allFit
+                ? 'Fits all 3 surfaces'
+                : `Cuts on ${cuts.map(s => s.label.toLowerCase()).join(' + ')}`
+              const color   = allFit ? C.green : C.red
+              const bg      = allFit ? 'rgba(5,150,105,0.07)'  : 'rgba(229,37,27,0.07)'
+              const bdr     = allFit ? 'rgba(5,150,105,0.22)' : 'rgba(229,37,27,0.22)'
+              const tooltip = surfaces.map(s => `${s.label} ${title.length}/${s.maxChars}`).join(' · ')
+              return (
+                <span title={tooltip} style={{
+                  display: 'inline-flex', alignItems: 'center', gap: 7,
+                  padding: '8px 12px', borderRadius: 99,
+                  background: bg, border: `1px solid ${bdr}`,
+                  color, fontSize: 11.5, fontWeight: 700,
+                  letterSpacing: '-0.05px',
+                  cursor: 'help',
+                  height: 36, boxSizing: 'border-box',
+                }}>
+                  <span style={{ width: 6, height: 6, borderRadius: 99, background: color, flexShrink: 0 }}/>
+                  {text}
+                </span>
+              )
+            })()}
+
+            {/* Format dropdown — single neutral chip + absolutely-positioned
+                menu of the six VIRAL_FORMATS. Replaces the row of 6 always-on
+                pills. Chevron rotates 180 on open. */}
+            <div ref={formatMenuRef} style={{ position: 'relative' }}>
+              <button
+                type="button"
+                onClick={() => setFormatMenuOpen(o => !o)}
+                aria-expanded={formatMenuOpen}
+                style={{
+                  display: 'inline-flex', alignItems: 'center', gap: 7,
+                  padding: '8px 14px', borderRadius: 99,
+                  background: formatMenuOpen ? 'rgba(229,37,27,0.06)' : '#ffffff',
+                  border: `1px solid ${formatMenuOpen ? 'rgba(229,37,27,0.35)' : 'rgba(0,0,0,0.10)'}`,
+                  color: formatMenuOpen ? C.red : C.text2,
+                  fontSize: 11.5, fontWeight: 600, letterSpacing: '-0.05px',
+                  fontFamily: 'inherit', cursor: 'pointer',
+                  transition: 'background 0.14s, border-color 0.14s, color 0.14s',
+                  height: 36, boxSizing: 'border-box', whiteSpace: 'nowrap',
+                }}
+                onMouseEnter={e => { if (!formatMenuOpen) { e.currentTarget.style.background = 'rgba(229,37,27,0.06)'; e.currentTarget.style.borderColor = 'rgba(229,37,27,0.35)'; e.currentTarget.style.color = C.red } }}
+                onMouseLeave={e => { if (!formatMenuOpen) { e.currentTarget.style.background = '#ffffff'; e.currentTarget.style.borderColor = 'rgba(0,0,0,0.10)'; e.currentTarget.style.color = C.text2 } }}
+              >
+                Try a format
+                <svg width="10" height="10" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" style={{ transition: 'transform 0.18s', transform: formatMenuOpen ? 'rotate(180deg)' : 'none' }}>
+                  <path d="M3 5l3.5 3.5L10 5"/>
+                </svg>
+              </button>
+              {formatMenuOpen && (
+                <div style={{
+                  position: 'absolute', top: 'calc(100% + 6px)', left: 0,
+                  width: 320, maxHeight: 360, overflow: 'auto',
+                  background: '#ffffff',
+                  border: '1px solid #e6e6ec', borderRadius: 12,
+                  boxShadow: '0 6px 24px rgba(0,0,0,0.10)',
+                  zIndex: 20, padding: 4,
+                }}>
+                  {VIRAL_FORMATS.map((fmt, idx) => (
+                    <button
+                      key={fmt.key}
+                      type="button"
+                      onClick={() => { setTitle(fmt.example); setFormatMenuOpen(false) }}
+                      style={{
+                        width: '100%', textAlign: 'left',
+                        padding: '10px 12px', borderRadius: 8,
+                        background: 'transparent', border: 'none',
+                        cursor: 'pointer', fontFamily: 'inherit',
+                        display: 'flex', flexDirection: 'column', gap: 4,
+                        transition: 'background 0.12s',
+                      }}
+                      onMouseEnter={e => { e.currentTarget.style.background = '#fafafb' }}
+                      onMouseLeave={e => { e.currentTarget.style.background = 'transparent' }}
+                    >
+                      <span style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+                        {fmt.label}
+                      </span>
+                      <span style={{ fontSize: 13, fontWeight: 500, color: C.text1, letterSpacing: '-0.05px', lineHeight: 1.4 }}>
+                        {fmt.example}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <div style={{ flex: 1 }}/>
+
+            {/* Analyse — primary CTA. Height matches the chips so the row is
+                one visual band. */}
             <button onClick={handleSubmitTitle} disabled={loading || loadingIntent || !title.trim()}
-              className="seo-btn-primary" style={{ fontSize: 13, padding: '11px 22px' }}>
+              className="seo-btn-primary" style={{ fontSize: 13, padding: '0 20px', height: 36, lineHeight: 1 }}>
               {loadingIntent ? (
                 <><SpinIcon /> Identifying intent…</>
               ) : loading ? (
@@ -2571,13 +2642,15 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
                 </>
               )}
             </button>
-            {/* Indeterminate progress bar — clearly signals "work in progress" during intent + analyze calls */}
-            {(loading || loadingIntent) && (
-              <div style={{ width: '100%', height: 3, background: 'rgba(229,37,27,0.12)', borderRadius: 99, overflow: 'hidden' }}>
-                <div style={{ width: '45%', height: '100%', background: C.red, borderRadius: 99, animation: 'seoLoadingSlide 1.4s ease-in-out infinite' }}/>
-              </div>
-            )}
           </div>
+
+          {/* Indeterminate progress bar — sits below the action row so it
+              doesn't disrupt the row's vertical rhythm. */}
+          {(loading || loadingIntent) && (
+            <div style={{ marginTop: 12, width: '100%', height: 3, background: 'rgba(229,37,27,0.12)', borderRadius: 99, overflow: 'hidden' }}>
+              <div style={{ width: '45%', height: '100%', background: C.red, borderRadius: 99, animation: 'seoLoadingSlide 1.4s ease-in-out infinite' }}/>
+            </div>
+          )}
         </div>
 
         {/* The old 2-column Preview + Format-templates block lived here. Both
