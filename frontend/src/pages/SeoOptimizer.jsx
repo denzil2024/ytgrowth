@@ -1089,13 +1089,22 @@ function SuggestionRow({ s, i, isSelected, isCopied, onCopy, onSelect, primaryPh
   // as "videos this title would compete with."
   const competitors = pickSimilarCompetitors(s.title, nicheVideos, 2)
 
+  // Strong cards drop the green top stripe specifically — amber (Solid) and
+  // red (Weak) stripes stay because they're useful at-a-glance warnings.
+  // Strong doesn't need a green frame around the card to communicate "good";
+  // the green score chip on the eyebrow + the green bar fills inside the
+  // quality chart do that already. The Strong chip itself stays intact.
+  const stripeForRow = avgScore >= 75 ? null : sevColor
   return (
     <div className="seo-suggestion-card" style={{
       marginBottom: 0,
-      borderTop: `3px solid ${sevColor}`,
-      borderLeftColor:   isSelected ? 'rgba(229,37,27,0.30)' : isCopied ? 'rgba(5,150,105,0.30)' : '#e6e6ec',
-      borderRightColor:  isSelected ? 'rgba(229,37,27,0.30)' : isCopied ? 'rgba(5,150,105,0.30)' : '#e6e6ec',
-      borderBottomColor: isSelected ? 'rgba(229,37,27,0.30)' : isCopied ? 'rgba(5,150,105,0.30)' : '#e6e6ec',
+      borderTop: stripeForRow ? `3px solid ${stripeForRow}` : `1px solid #e6e6ec`,
+      // No more green outline frame around the card when isCopied — the soft
+      // green-tinted background + the inline "✓ Copied" affordance on the
+      // button already mark the state.
+      borderLeftColor:   isSelected ? 'rgba(229,37,27,0.30)' : '#e6e6ec',
+      borderRightColor:  isSelected ? 'rgba(229,37,27,0.30)' : '#e6e6ec',
+      borderBottomColor: isSelected ? 'rgba(229,37,27,0.30)' : '#e6e6ec',
       background: isSelected ? '#fff8f8' : isCopied ? '#f6fdf9' : '#ffffff',
     }}>
       <div style={{ padding: '18px 22px 20px' }}>
