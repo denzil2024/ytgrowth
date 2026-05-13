@@ -3111,18 +3111,18 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
             </>
           )}
 
-          {/* ── Keyword discovery — autocomplete + competitor tags, unified ── */}
+          {/* ── Keyword discovery — keywords from titles + tags from metadata ── */}
           {(result.autocomplete_terms?.length > 0 || result.top_tags?.length > 0) && (
             <>
               <div style={{ marginBottom: 20, marginTop: 40 }}>
-                <h2 style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', marginBottom: 4 }}>Keyword discovery</h2>
+                <h2 style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', marginBottom: 4 }}>Keywords and tags</h2>
                 <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.5 }}>
-                  Real searches and competitor tags · borrow what's already working
+                  Pulled from the top 10 ranking videos · borrow what's already working
                 </p>
               </div>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 24 }}>
-                {/* Block 1 — YouTube autocomplete */}
+                {/* Block 1 — Keywords (phrases from ranking video titles) */}
                 {result.autocomplete_terms?.length > 0 && (
                   <div className="seo-suggestion-card" style={{
                     borderTop: `3px solid ${C.amber}`,
@@ -3130,8 +3130,8 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
                     <div style={{ padding: '18px 22px 20px' }}>
                       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16, marginBottom: 14 }}>
                         <div style={{ minWidth: 0 }}>
-                          <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 6 }}>YouTube autocomplete</p>
-                          <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.5 }}>Real searches people type · click to use as your title</p>
+                          <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 6 }}>Keywords</p>
+                          <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.5 }}>Phrases from ranking videos · click to use as your title</p>
                         </div>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 14, flexShrink: 0 }}>
                           <p style={{ fontSize: 26, fontWeight: 800, color: C.text1, letterSpacing: '-0.8px', fontVariantNumeric: 'tabular-nums', lineHeight: 1 }}>{result.autocomplete_terms.length}</p>
