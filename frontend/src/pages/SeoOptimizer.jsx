@@ -18,6 +18,7 @@ if (typeof document !== 'undefined' && !document.getElementById('seo-opt-styles'
   s.id = 'seo-opt-styles'
   s.textContent = `
   @keyframes spin { to { transform: rotate(360deg) } }
+  @keyframes seoPulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.55; transform: scale(0.85); } }
   @keyframes seoFadeUp { from { opacity:0; transform:translateY(8px) } to { opacity:1; transform:translateY(0) } }
   @keyframes seoArrowFlow {
     0%   { transform: translateX(0); opacity: 0.4; }
@@ -540,136 +541,249 @@ function _seoThumbOnLoad(videoId, fallbackUrl) {
   }
 }
 
-// One winning-video tile in the WinnersStrip above the suggestions.
-// Thumbnail (16:9) with a view-count chip pinned bottom-right, channel
-// name below, and a relative-views bar so the trio reads as a tiny
-// horizontal bar chart at a glance.
-function WinnerTile({ video, maxViews }) {
+// ── NicheHeatCard ──────────────────────────────────────────────────────────
+// Page-anchoring hero: a horizontal bar chart of the top 8 videos already
+// winning in the user's niche, with HD thumbnails, real view counts, age,
+// and a 4-tile stat strip across the bottom. Replaces the old text-heavy
+// "Competitor set" list that used to sit at the bottom of the page. Sits
+// directly above the suggestion stack so the user reads "here's what's
+// hot · here's how to compete" in one scroll.
+//
+// Visual DNA: PostingConsistencyCard (Dashboard.jsx:2383) for the
+// chart + StatTile strip pattern, Sparkline (Dashboard.jsx:1191) for
+// the gradient-fill on the bars.
+
+function _heatBarColor(rank, total) {
+  // Top 2 by views get the brand red, mid 3 amber, bottom rest charcoal-grey.
+  // Three-tier coloring keeps the chart visually sorted without reading numbers.
+  if (rank < 2) return C.red
+  if (rank < 5) return C.amber
+  return '#9595a4'
+}
+
+function _relTimeDays(iso) {
+  if (!iso) return null
+  const d = new Date(iso)
+  if (Number.isNaN(d.getTime())) return null
+  const days = Math.floor((Date.now() - d.getTime()) / 86400000)
+  if (days < 1)   return 'today'
+  if (days < 7)   return `${days}d ago`
+  if (days < 30)  return `${Math.floor(days / 7)}w ago`
+  if (days < 365) return `${Math.floor(days / 30)}mo ago`
+  const yrs = (days / 365).toFixed(1).replace(/\.0$/, '')
+  return `${yrs}y ago`
+}
+
+function _median(nums) {
+  if (!nums.length) return 0
+  const sorted = [...nums].sort((a, b) => a - b)
+  const mid = Math.floor(sorted.length / 2)
+  return sorted.length % 2 === 0 ? Math.round((sorted[mid - 1] + sorted[mid]) / 2) : sorted[mid]
+}
+
+function NicheHeatRow({ video, rank, maxViews, mounted }) {
   const views = video.view_count || video.views || 0
-  const pct   = maxViews ? Math.max(8, Math.round((views / maxViews) * 100)) : 0
-  // Top performer is green, mid is amber, lagging is grey. Visual sort
-  // works without reading numbers.
-  const barColor = pct >= 80 ? C.green : pct >= 45 ? C.amber : C.text4
-  const hasMedia = video.video_id || video.thumbnail
+  const pct   = maxViews ? Math.max(2, Math.round((views / maxViews) * 100)) : 0
+  const w     = mounted ? `${pct}%` : '0%'
+  const barColor = _heatBarColor(rank, 8)
+  const age = _relTimeDays(video.published_at || video.publishedAt)
   return (
     <a
       href={video.video_id ? `https://www.youtube.com/watch?v=${video.video_id}` : '#'}
       target="_blank" rel="noopener noreferrer"
       style={{
+        display: 'grid',
+        gridTemplateColumns: '24px 72px minmax(0, 1fr) 70px 64px',
+        alignItems: 'center', gap: 14,
+        padding: '10px 0',
+        borderBottom: rank < 7 ? `1px solid ${C.borderLight}` : 'none',
         textDecoration: 'none', color: 'inherit',
-        display: 'flex', flexDirection: 'column', gap: 8,
-        minWidth: 0,
-      }}>
-      <div style={{ position: 'relative', width: '100%', aspectRatio: '16 / 9', borderRadius: 9, overflow: 'hidden', background: '#0f0f13', boxShadow: '0 1px 3px rgba(0,0,0,0.10), 0 6px 18px rgba(0,0,0,0.12)' }}>
-        {hasMedia && (
+        cursor: 'pointer',
+        transition: 'background 0.14s',
+      }}
+      onMouseEnter={e => { e.currentTarget.style.background = '#fafafb' }}
+      onMouseLeave={e => { e.currentTarget.style.background = 'transparent' }}>
+      {/* Rank */}
+      <span style={{
+        fontSize: 11, fontWeight: 700, color: C.text4,
+        fontVariantNumeric: 'tabular-nums', textAlign: 'center', letterSpacing: '0.04em',
+      }}>{String(rank + 1).padStart(2, '0')}</span>
+
+      {/* HD thumbnail (16:9, 72x40) */}
+      <div style={{ width: 72, height: 40, borderRadius: 6, overflow: 'hidden', background: '#0f0f13', flexShrink: 0, boxShadow: '0 1px 2px rgba(0,0,0,0.10)' }}>
+        {(video.video_id || video.thumbnail) && (
           <img
             src={video.video_id ? _seoYtMax(video.video_id) : video.thumbnail}
             alt=""
-            referrerPolicy="no-referrer"
             loading="lazy"
+            referrerPolicy="no-referrer"
             data-thumb-step="max"
             onError={_seoThumbOnError(video.video_id, video.thumbnail)}
             onLoad={_seoThumbOnLoad(video.video_id, video.thumbnail)}
             style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
           />
         )}
-        {/* View chip (bottom-right) */}
-        <div style={{
-          position: 'absolute', right: 6, bottom: 6,
-          padding: '2px 7px', borderRadius: 5,
-          background: 'rgba(0,0,0,0.78)',
-          color: '#fff', fontSize: 11, fontWeight: 800, letterSpacing: '-0.2px',
-          fontVariantNumeric: 'tabular-nums',
-        }}>{fmtNum(views)}</div>
       </div>
-      <p style={{ fontSize: 12, color: C.text1, fontWeight: 600, lineHeight: 1.35, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', letterSpacing: '-0.1px' }}>
-        {video.title}
-      </p>
-      <p style={{ fontSize: 11, color: C.text3, fontWeight: 500, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-        {video.channel || '—'}
-      </p>
-      {/* Relative views bar */}
-      <div style={{ height: 4, background: '#eef0f4', borderRadius: 99, overflow: 'hidden' }}>
-        <div style={{ width: `${pct}%`, height: '100%', background: barColor, borderRadius: 99 }}/>
+
+      {/* Title + channel + bar */}
+      <div style={{ minWidth: 0 }}>
+        <p style={{
+          fontSize: 13, fontWeight: 600, color: C.text1, lineHeight: 1.3,
+          letterSpacing: '-0.1px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
+          marginBottom: 6,
+        }}>{video.title}</p>
+        {/* Bar — gradient fill, animates from 0 -> pct on mount */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <div style={{ flex: 1, height: 6, background: '#eef0f4', borderRadius: 99, overflow: 'hidden' }}>
+            <div style={{
+              width: w, height: '100%',
+              background: `linear-gradient(90deg, ${barColor}aa 0%, ${barColor} 100%)`,
+              borderRadius: 99,
+              transition: 'width 0.9s cubic-bezier(0.34,1.56,0.64,1)',
+            }}/>
+          </div>
+          <span style={{ fontSize: 11, fontWeight: 500, color: C.text3, whiteSpace: 'nowrap', maxWidth: 130, overflow: 'hidden', textOverflow: 'ellipsis' }}>
+            {video.channel || '—'}
+          </span>
+        </div>
+      </div>
+
+      {/* Views (right-aligned, tabular) */}
+      <div style={{ textAlign: 'right' }}>
+        <p style={{
+          fontSize: 14, fontWeight: 800, color: C.text1,
+          fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.3px', lineHeight: 1,
+        }}>{fmtNum(views)}</p>
+        <p style={{ fontSize: 10, fontWeight: 600, color: C.text3, marginTop: 3, letterSpacing: '0.08em', textTransform: 'uppercase' }}>views</p>
+      </div>
+
+      {/* Age */}
+      <div style={{ textAlign: 'right' }}>
+        <p style={{
+          fontSize: 12, fontWeight: 600, color: C.text2,
+          fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.1px',
+        }}>{age || '—'}</p>
       </div>
     </a>
   )
 }
 
-// Strip card above the suggestion list. Shows the top 3 winners we
-// learned from so the suggestions read as "based on these, not magic."
-// Trophy icon, eyebrow label, 3-up tile grid, footer line tying it
-// back to the suggestions.
-function WinnersStrip({ videos, primaryPhrase }) {
-  if (!videos || !videos.length) return null
-  const top3 = videos.slice(0, 3)
-  const maxViews = Math.max(...top3.map(v => v.view_count || v.views || 0), 1)
-  const totalViews = top3.reduce((s, v) => s + (v.view_count || v.views || 0), 0)
+function NicheStatTile({ label, value, hint, color }) {
+  return (
+    <div>
+      <p style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>{label}</p>
+      <p style={{
+        fontSize: 22, fontWeight: 800, color: color || C.text1,
+        letterSpacing: '-0.7px', lineHeight: 1, fontVariantNumeric: 'tabular-nums',
+      }}>{value}</p>
+      {hint && <p style={{ fontSize: 11, color: C.text3, fontWeight: 500, marginTop: 5, letterSpacing: '-0.01em' }}>{hint}</p>}
+    </div>
+  )
+}
+
+function NicheHeatCard({ videos, primaryPhrase }) {
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => {
+    let raf2 = 0
+    const raf1 = requestAnimationFrame(() => { raf2 = requestAnimationFrame(() => setMounted(true)) })
+    return () => { cancelAnimationFrame(raf1); cancelAnimationFrame(raf2) }
+  }, [])
+
+  if (!videos || videos.length === 0) return null
+  const top = videos.slice(0, 8)
+  const viewsArr = top.map(v => v.view_count || v.views || 0)
+  const maxViews = Math.max(...viewsArr, 1)
+  const total    = viewsArr.reduce((a, b) => a + b, 0)
+  const med      = _median(viewsArr)
+  const channels = new Set(top.map(v => v.channel).filter(Boolean))
+
   return (
     <div className="seo-suggestion-card" style={{
-      borderTop: `3px solid ${C.amber}`,
-      marginBottom: 14,
+      borderTop: `3px solid ${C.red}`,
+      marginBottom: 18,
     }}>
-      <div style={{ padding: '16px 22px 18px' }}>
-        {/* Eyebrow row — trophy icon + label + anchor stat */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, marginBottom: 14, flexWrap: 'wrap' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: 0 }}>
+      <div style={{ padding: '20px 24px 22px' }}>
+
+        {/* ── Header: flame icon + NICHE HEAT eyebrow + primary phrase + LIVE chip ── */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 6, flexWrap: 'wrap' }}>
+          <span style={{
+            width: 28, height: 28, borderRadius: 8,
+            background: 'rgba(229,37,27,0.10)',
+            display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+            flexShrink: 0,
+          }}>
+            {/* Flame */}
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={C.red} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/>
+            </svg>
+          </span>
+          <p style={{ fontSize: 11, fontWeight: 800, color: C.red, letterSpacing: '0.12em', textTransform: 'uppercase' }}>Niche heat</p>
+          {primaryPhrase && (
             <span style={{
-              width: 28, height: 28, borderRadius: 8,
-              background: 'rgba(217,119,6,0.10)',
-              display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-              flexShrink: 0,
+              display: 'inline-flex', alignItems: 'center', gap: 6,
+              fontSize: 12, fontWeight: 600, color: C.text2, letterSpacing: '-0.05px',
             }}>
-              {/* Inline trophy SVG — matches the existing inline-SVG icon convention on this page */}
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={C.amber} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/>
-                <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/>
-                <path d="M4 22h16"/>
-                <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/>
-                <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/>
-                <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/>
-              </svg>
+              <span style={{ width: 3, height: 3, borderRadius: 99, background: 'rgba(10,10,15,0.30)' }}/>
+              &ldquo;{primaryPhrase}&rdquo; niche
             </span>
-            <div style={{ minWidth: 0 }}>
-              <p style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 3 }}>Pattern source</p>
-              <p style={{ fontSize: 13, color: C.text2, fontWeight: 600, letterSpacing: '-0.1px' }}>
-                The titles below were extracted from these winners
-                {primaryPhrase ? <span style={{ color: C.text3, fontWeight: 500 }}>{` in the "${primaryPhrase}" niche`}</span> : null}
-              </p>
-            </div>
-          </div>
-          <p style={{ fontSize: 12, fontWeight: 600, color: C.text2, fontVariantNumeric: 'tabular-nums', flexShrink: 0 }}>
-            <span style={{ fontSize: 18, fontWeight: 800, color: C.text1, letterSpacing: '-0.4px' }}>{fmtNum(totalViews)}</span>
-            <span style={{ color: C.text3, fontWeight: 500 }}>{' views across top 3'}</span>
-          </p>
+          )}
+          <div style={{ flex: 1 }}/>
+          {/* Pulsing LIVE pill */}
+          <span style={{
+            display: 'inline-flex', alignItems: 'center', gap: 6,
+            fontSize: 10, fontWeight: 800, color: C.red,
+            background: 'rgba(229,37,27,0.07)', border: '1px solid rgba(229,37,27,0.20)',
+            padding: '3px 9px', borderRadius: 100,
+            letterSpacing: '0.10em', textTransform: 'uppercase',
+          }}>
+            <span style={{
+              width: 6, height: 6, borderRadius: 99, background: C.red,
+              animation: 'seoPulse 1.6s ease-in-out infinite',
+            }}/>
+            Live
+          </span>
+        </div>
+        <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.5, marginBottom: 18 }}>
+          The {top.length} videos already winning here · ranked by views
+        </p>
+
+        {/* ── Bar chart of top 8 videos ── */}
+        <div style={{ marginBottom: 18 }}>
+          {top.map((v, i) => (
+            <NicheHeatRow key={v.video_id || i} video={v} rank={i} maxViews={maxViews} mounted={mounted}/>
+          ))}
         </div>
 
-        {/* 3-up tile grid */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: 14 }}>
-          {top3.map(v => (
-            <WinnerTile key={v.video_id || v.title} video={v} maxViews={maxViews}/>
-          ))}
+        {/* ── 4-tile stat strip across the bottom ── */}
+        <div style={{
+          display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 18,
+          paddingTop: 16, borderTop: '1px solid #f1f1f4',
+        }}>
+          <NicheStatTile label="Total views"   value={fmtNum(total)} hint="combined across top 8"/>
+          <NicheStatTile label="Top performer" value={fmtNum(maxViews)} hint={top[0]?.channel ? `by ${top[0].channel}` : ''} color={C.red}/>
+          <NicheStatTile label="Median"        value={fmtNum(med)} hint="middle of the pack"/>
+          <NicheStatTile label="Active creators" value={channels.size} hint={`distinct channels in top ${top.length}`}/>
         </div>
       </div>
     </div>
   )
 }
 
-// One suggested title row. Collapse-first: the header alone is enough to scan
-// (rank + title + 3-dot sub-score sparkline + severity chip + chevron). Click
-// to expand the Why-it-works prose + quality chart + Algorithm angle. Keeps
-// the page scan-first instead of dumping three walls of analysis up front.
+// One suggested title card. VideoIdeas DNA: severity-colored 3px top stripe,
+// eyebrow row with rank + label + meta, bold title as the hero, always-visible
+// quality chart (3 bars) + length sweet-spot, inline italic notes for the
+// Why/Angle prose so it doesn't compete for attention with the chart, action
+// row at the bottom. No click-to-expand — every value-add is visible at first
+// glance, matching the "lure the user with proof" feedback memory.
 function SuggestionRow({ s, i, isSelected, isCopied, onCopy, onSelect, primaryPhrase }) {
-  const [open, setOpen] = useState(false)
   const [mounted, setMounted] = useState(false)
   useEffect(() => {
-    if (!open) return
     let raf2 = 0
     const raf1 = requestAnimationFrame(() => {
       raf2 = requestAnimationFrame(() => setMounted(true))
     })
     return () => { cancelAnimationFrame(raf1); cancelAnimationFrame(raf2) }
-  }, [open])
+  }, [])
 
   const eyebrow  = (s.primary_keyword || primaryPhrase || '').trim()
   const avgScore = Number.isFinite(s.score)
@@ -678,10 +792,6 @@ function SuggestionRow({ s, i, isSelected, isCopied, onCopy, onSelect, primaryPh
   const sevLabel = avgScore >= 75 ? 'Strong' : avgScore >= 60 ? 'Solid' : 'Weak'
   const sevColor = avgScore >= 75 ? C.green : avgScore >= 60 ? C.amber : C.red
   const sevBg    = avgScore >= 75 ? 'rgba(5,150,105,0.10)' : avgScore >= 60 ? 'rgba(217,119,6,0.10)' : 'rgba(229,37,27,0.08)'
-
-  // Sub-score sparkline — 3 dots filled by SEO / CTR / Hook tier.
-  const dotColor = v => v >= 75 ? C.green : v >= 55 ? C.amber : v > 0 ? C.red : '#dadae0'
-  const subs = [['SEO', s.seo_score || 0], ['CTR', s.ctr_score || 0], ['Hook', s.hook_score || 0]]
 
   return (
     <div className="seo-suggestion-card" style={{
@@ -692,112 +802,125 @@ function SuggestionRow({ s, i, isSelected, isCopied, onCopy, onSelect, primaryPh
       borderBottomColor: isSelected ? 'rgba(229,37,27,0.30)' : isCopied ? 'rgba(5,150,105,0.30)' : '#e6e6ec',
       background: isSelected ? '#fff8f8' : isCopied ? '#f6fdf9' : '#ffffff',
     }}>
-      {/* Header — clickable, toggles open. Compact one-row layout: rank | eyebrow+title | sparkline | severity | chevron. */}
-      <div
-        role="button" tabIndex={0}
-        onClick={() => setOpen(o => !o)}
-        onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setOpen(o => !o) } }}
-        style={{
-          padding: '14px 22px', display: 'flex', alignItems: 'center', gap: 12,
-          cursor: 'pointer', userSelect: 'none',
-        }}>
-        {/* Rank badge — severity-colored so the row reads as ONE color end-to-end. */}
-        <div style={{ width: 26, height: 26, borderRadius: 8, background: sevColor, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-          <span style={{ fontSize: 12, fontWeight: 900, color: '#fff', fontVariantNumeric: 'tabular-nums' }}>{i + 1}</span>
-        </div>
-        <div style={{ flex: 1, minWidth: 0 }}>
-          {eyebrow && (
-            <p style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 4 }}>Built around: {eyebrow}</p>
-          )}
-          <p style={{ fontSize: 14.5, fontWeight: 700, color: C.text1, lineHeight: 1.45, letterSpacing: '-0.2px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{s.title}</p>
-        </div>
+      <div style={{ padding: '18px 22px 20px' }}>
 
-        {/* Sub-score sparkline — 3 dots, labeled SEO / CTR / Hook on hover. Each dot
-            keeps its individual tier color so weakness is visible at a glance even
-            though the row's overall severity color is shown elsewhere. */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 5, flexShrink: 0, marginRight: 2 }}
-          title={subs.map(([k, v]) => `${k} ${v}`).join(' · ')}>
-          {subs.map(([k, v]) => (
-            <span key={k} style={{
-              width: 9, height: 9, borderRadius: 99, background: dotColor(v),
-            }}/>
-          ))}
-        </div>
-
-        <span style={{
-          fontSize: 11, fontWeight: 800, color: sevColor,
-          padding: '5px 11px', borderRadius: 99,
-          letterSpacing: '0.02em',
-          background: sevBg,
-          border: `1.5px solid ${sevColor}`,
-          flexShrink: 0,
-          display: 'inline-flex', alignItems: 'center', gap: 6,
-          fontVariantNumeric: 'tabular-nums',
-        }}>
-          <span style={{ textTransform: 'uppercase', letterSpacing: '0.06em' }}>{sevLabel}</span>
-          <span style={{ fontSize: 12, fontWeight: 900, letterSpacing: '-0.3px' }}>{avgScore}</span>
-        </span>
-
-        <svg width="13" height="13" viewBox="0 0 13 13" fill="none"
-          stroke={C.text3} strokeWidth="2" strokeLinecap="round"
-          style={{ flexShrink: 0, transition: 'transform 0.22s', transform: open ? 'rotate(180deg)' : 'none' }}>
-          <path d="M3 5l3.5 3.5L10 5"/>
-        </svg>
-      </div>
-
-      {open && (
-      <div style={{ padding: '0 22px 18px' }}>
-        {/* Divider aligned with title start */}
-        <div style={{ height: 1, background: C.border, marginBottom: 14, marginLeft: 38 }} />
-
-        {/* 3-col body — Why-it-works (neutral) | Title quality chart (amber-bar) | Algorithm angle (green). */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr 1fr', gap: 8, marginLeft: 38 }}>
-          {/* Col 1 — Why it works. Sentence-cased + keyword highlighted inline so the
-              user can see what the AI keyed on. */}
-          <div style={{ background: 'rgba(15,15,19,0.04)', border: '1px solid rgba(15,15,19,0.08)', borderRadius: 10, padding: '12px 14px' }}>
-            <p style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Why it works</p>
-            <p style={{ fontSize: 13, color: C.text2, lineHeight: 1.65 }}>
-              {highlightKeyword(sentenceCase(s.why_it_works || 'This framing gives the viewer a specific reason to click.'), eyebrow)}
-            </p>
+        {/* ── Eyebrow row: rank chip + label + keyword chip + (right) score chip ── */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12, flexWrap: 'wrap' }}>
+          <div style={{
+            flexShrink: 0,
+            width: 26, height: 26, borderRadius: 7,
+            display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+            background: 'rgba(217,119,6,0.10)',
+            border: '1px solid rgba(217,119,6,0.22)',
+          }}>
+            <span style={{ fontSize: 11.5, fontWeight: 800, color: C.amber, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.3px' }}>{i + 1}</span>
           </div>
+          <span style={{
+            fontSize: 11, fontWeight: 800, color: 'rgba(10,10,15,0.55)',
+            letterSpacing: '0.12em', textTransform: 'uppercase',
+          }}>Title Option</span>
+          {eyebrow && (
+            <span style={{
+              display: 'inline-flex', alignItems: 'center', gap: 5,
+              fontSize: 12, fontWeight: 500, color: 'rgba(10,10,15,0.55)',
+              letterSpacing: '-0.01em',
+              maxWidth: 280, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+            }}>
+              <span style={{ width: 3, height: 3, borderRadius: 99, background: 'rgba(10,10,15,0.30)', flexShrink: 0 }}/>
+              {eyebrow}
+            </span>
+          )}
+          <div style={{ flex: 1 }}/>
+          <span style={{
+            fontSize: 10.5, fontWeight: 700, color: sevColor,
+            background: sevBg, border: `1px solid ${sevColor}66`,
+            padding: '3px 10px', borderRadius: 100,
+            letterSpacing: '0.06em', textTransform: 'uppercase',
+            fontVariantNumeric: 'tabular-nums',
+            display: 'inline-flex', alignItems: 'center', gap: 6,
+            flexShrink: 0,
+          }}>
+            <span>{sevLabel}</span>
+            <span style={{ fontSize: 11, fontWeight: 900, letterSpacing: '-0.3px' }}>{avgScore}</span>
+          </span>
+        </div>
 
-          {/* Col 2 — Title quality micro-chart: 3 score bars + length sweet-spot.
-              Replaces the previous 3-huge-numbers block. Scans like a real
-              analytics widget instead of three disconnected numerals. */}
+        {/* ── Bold title — the hero. 17/700 to match VideoIdeas IdeaCard. ── */}
+        <h3 style={{
+          fontSize: 17, fontWeight: 700, color: C.text1,
+          letterSpacing: '-0.35px', lineHeight: 1.35,
+          marginBottom: 18,
+          display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden',
+        }}>{s.title}</h3>
+
+        {/* ── Quality + length chart row. Two columns: bars (left, wider) and
+            length sweet-spot (right). Both animate on mount. ── */}
+        <div style={{
+          display: 'grid', gridTemplateColumns: '1.1fr 1fr', gap: 14,
+          marginBottom: 14,
+        }}>
           <div style={{
             background: '#ffffff',
             border: `1px solid ${C.border}`,
             borderLeft: `3px solid ${C.amber}`,
             borderRadius: '0 10px 10px 0',
             padding: '14px 16px',
-            boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
+            boxShadow: '0 1px 2px rgba(0,0,0,0.04), 0 3px 10px rgba(0,0,0,0.04)',
           }}>
             <p style={{ fontSize: 10, fontWeight: 700, color: C.amber, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 12 }}>Title quality</p>
             <ScoreBars seo={s.seo_score} ctr={s.ctr_score} hook={s.hook_score} mounted={mounted}/>
-            <div style={{ height: 1, background: C.borderLight, margin: '14px 0 12px' }}/>
-            <LengthSweetSpot length={s.length} mounted={mounted}/>
           </div>
-
-          {/* Col 3 — Algorithm angle. Sentence-cased. */}
-          <div style={{ background: 'rgba(5,150,105,0.07)', border: '1px solid rgba(5,150,105,0.14)', borderRadius: 10, padding: '12px 14px' }}>
-            <p style={{ fontSize: 10, fontWeight: 700, color: C.green, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Algorithm angle</p>
-            <p style={{ fontSize: 13, color: C.text1, lineHeight: 1.65 }}>{sentenceCase(s.angle || 'Distributes on pattern interrupt within the niche.')}</p>
+          <div style={{
+            background: '#ffffff',
+            border: `1px solid ${C.border}`,
+            borderRadius: 10,
+            padding: '14px 16px',
+            boxShadow: '0 1px 2px rgba(0,0,0,0.04), 0 3px 10px rgba(0,0,0,0.04)',
+          }}>
+            <LengthSweetSpot length={s.length} mounted={mounted}/>
           </div>
         </div>
 
-        {/* Action row. stopPropagation so clicking a button doesn't also toggle the row open/closed. */}
-        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8, marginTop: 14, marginLeft: 38 }}>
-          <button onClick={e => { e.stopPropagation(); onCopy() }}
+        {/* ── Inline italic notes for Why-it-works + Algorithm angle.
+            Small, scannable, no big tinted boxes competing with the chart. ── */}
+        <div style={{
+          display: 'flex', flexDirection: 'column', gap: 6,
+          marginBottom: 14,
+          paddingLeft: 14, borderLeft: `2px solid ${C.borderLight}`,
+        }}>
+          {s.why_it_works && (
+            <p style={{ fontSize: 12.5, color: C.text2, lineHeight: 1.55, letterSpacing: '-0.01em' }}>
+              <span style={{ fontWeight: 700, color: C.text1 }}>Why it works · </span>
+              {highlightKeyword(sentenceCase(s.why_it_works), eyebrow)}
+            </p>
+          )}
+          {s.angle && (
+            <p style={{ fontSize: 12.5, color: C.text2, lineHeight: 1.55, letterSpacing: '-0.01em' }}>
+              <span style={{ fontWeight: 700, color: C.text1 }}>Distribution · </span>
+              {sentenceCase(s.angle)}
+            </p>
+          )}
+        </div>
+
+        {/* ── Action row: meta line on the left, Copy + primary CTA on the right ── */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
+          <span style={{ fontSize: 12, fontWeight: 500, color: 'rgba(10,10,15,0.50)', letterSpacing: '-0.01em' }}>
+            {s.length ? `${s.length} chars` : '—'}
+            {s.length >= 50 && s.length <= 70 && (
+              <>{' · '}<span style={{ color: C.green, fontWeight: 700 }}>in the sweet spot</span></>
+            )}
+          </span>
+          <div style={{ flex: 1 }}/>
+          <button onClick={onCopy}
             style={{ fontSize: 12.5, fontWeight: 600, color: isCopied ? C.green : C.text2, background: '#ffffff', border: `1px solid ${isCopied ? 'rgba(5,150,105,0.38)' : 'rgba(0,0,0,0.1)'}`, borderRadius: 100, padding: '8px 16px', cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.15s', whiteSpace: 'nowrap', boxShadow: '0 1px 3px rgba(0,0,0,0.07)' }}>
             {isCopied ? '✓ Copied' : 'Copy'}
           </button>
-          <button onClick={e => { e.stopPropagation(); onSelect() }}
-            style={{ fontSize: 12.5, fontWeight: 700, color: isSelected ? C.red : '#ffffff', background: isSelected ? 'rgba(229,37,27,0.08)' : '#e5251b', border: `1px solid ${isSelected ? 'rgba(229,37,27,0.25)' : 'transparent'}`, borderRadius: 100, padding: '8px 15px', cursor: 'pointer', fontFamily: 'inherit', transition: 'filter 0.15s, background 0.15s', boxShadow: isSelected ? 'none' : '0 1px 2px rgba(229,37,27,0.18)', whiteSpace: 'nowrap', letterSpacing: '-0.1px' }}>
+          <button onClick={onSelect}
+            style={{ fontSize: 12.5, fontWeight: 700, color: isSelected ? C.red : '#ffffff', background: isSelected ? 'rgba(229,37,27,0.08)' : '#e5251b', border: `1px solid ${isSelected ? 'rgba(229,37,27,0.25)' : 'transparent'}`, borderRadius: 100, padding: '8px 16px', cursor: 'pointer', fontFamily: 'inherit', transition: 'filter 0.15s, background 0.15s', boxShadow: isSelected ? 'none' : '0 1px 2px rgba(229,37,27,0.18)', whiteSpace: 'nowrap', letterSpacing: '-0.1px' }}>
             {isSelected ? '✓ Selected' : 'Use this title →'}
           </button>
         </div>
       </div>
-      )}
     </div>
   )
 }
@@ -2381,9 +2504,20 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
             )
           })()}
 
+          {/* Niche Heat — hero anchor above the suggestion stack. Big
+              horizontal-bar chart of the top 8 videos already winning in
+              the user's niche, HD thumbnails, 4-tile stat strip across
+              the bottom. Replaces the old text-heavy "Competitor set"
+              list that used to live at the bottom of the page. */}
+          {result.top_videos?.length > 0 && (
+            <div style={{ marginBottom: 28, marginTop: 24 }}>
+              <NicheHeatCard videos={result.top_videos} primaryPhrase={result.primary_phrase}/>
+            </div>
+          )}
+
           {/* AI-Suggested Titles — H2+subtitle header pattern (matches Overview). */}
           {result.suggestions?.length > 0 && (
-            <div style={{ marginBottom: 24, marginTop: 40 }}>
+            <div style={{ marginBottom: 24, marginTop: 32 }}>
               <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 20, gap: 16 }}>
                 <div>
                   <h2 style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', marginBottom: 4 }}>Suggested titles</h2>
@@ -2395,16 +2529,12 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
                   Use my original title →
                 </button>
               </div>
-              {/* Winners strip — top-3 videos already ranking in this niche.
-                  Closes the loop: "these are the patterns we extracted, the
-                  suggestions below are based on them." Real thumbnails,
-                  view counts, relative-views bar. */}
-              <WinnersStrip videos={result.top_videos} primaryPhrase={result.primary_phrase}/>
 
-              {/* Compact stacked cards. Each row owns its mount-animation
-                  state via SuggestionRow so the score bars + length marker
-                  sweep in on first paint. */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+              {/* Stacked suggestion cards. Each card is a self-contained
+                  micro-analytics widget: severity stripe, bold title hero,
+                  quality bars + length sweet-spot, inline notes. The
+                  shared thumbnail proof lives in NicheHeatCard above. */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                 {result.suggestions.map((s, i) => (
                   <SuggestionRow
                     key={i}
@@ -2610,95 +2740,11 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
             </>
           )}
 
-          {/* ── Competitor set — amber-topped card matching Keyword discovery pattern ── */}
-          {result.top_videos?.length > 0 && (
-            <>
-              <div style={{ marginBottom: 20, marginTop: 40 }}>
-                <h2 style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', marginBottom: 4 }}>Competitor set</h2>
-                <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.5 }}>
-                  The videos ranking for your niche · what's actually winning on YouTube right now
-                </p>
-              </div>
-
-              <div className="seo-suggestion-card" style={{
-                borderTop: `3px solid ${C.amber}`,
-                marginBottom: 24,
-              }}>
-                <div style={{ padding: '18px 22px 20px' }}>
-                  {/* Eyebrow header — Overview Content-patterns style (small uppercase label + big tabular count) */}
-                  <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16, marginBottom: 14 }}>
-                    <div style={{ minWidth: 0 }}>
-                      <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 6 }}>Videos analysed</p>
-                      <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.5 }}>
-                        {result.primary_phrase ? `"${result.primary_phrase}" niche` : 'Top-ranking videos for your topic'}
-                        {result.intent_matched > 0 && result.intent_matched < result.videos_found ? ` · ${result.intent_matched} exact match` : ''}
-                      </p>
-                    </div>
-                    <p style={{ fontSize: 26, fontWeight: 800, color: C.text1, letterSpacing: '-0.8px', fontVariantNumeric: 'tabular-nums', flexShrink: 0, lineHeight: 1 }}>{result.videos_found}</p>
-                  </div>
-
-                  <div style={{ height: 1, background: C.border, margin: '0 0 4px' }}/>
-
-                  {/* Ranked rows — 2-column grid with amber vertical divider between columns */}
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', columnGap: 0, rowGap: 0 }}>
-                    {result.top_videos.map((v, i) => {
-                      const sc      = v.seo_score
-                      const scColor = sc >= 75 ? C.green : sc >= 55 ? C.amber : C.red
-                      const views   = v.view_count || v.views || 0
-                      const likes   = v.like_count || v.likes || 0
-                      const comments= v.comment_count || v.comments || 0
-                      // In a 2-col grid, the last two items (bottom row) shouldn't have a bottom border
-                      const isLastRow  = i >= result.top_videos.length - 2
-                      const isRightCol = i % 2 === 1
-                      return (
-                        <a key={v.video_id}
-                          href={`https://www.youtube.com/watch?v=${v.video_id}`}
-                          target="_blank" rel="noopener noreferrer"
-                          style={{
-                            display: 'flex', alignItems: 'center', gap: 12,
-                            padding: isRightCol ? '12px 8px 12px 20px' : '12px 20px 12px 8px',
-                            borderBottom: isLastRow ? 'none' : `1px solid ${C.border}`,
-                            borderLeft: isRightCol ? `1px solid ${C.amberBdr}` : 'none',
-                            textDecoration: 'none', borderRadius: 8, transition: 'background 0.15s, transform 0.15s', cursor: 'pointer', minWidth: 0,
-                          }}
-                          onMouseEnter={e => { e.currentTarget.style.background = '#fafafb'; e.currentTarget.style.transform = 'translateX(2px)' }}
-                          onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.transform = 'none' }}>
-                          <span style={{ flexShrink: 0, width: 26, fontSize: 11, fontWeight: 700, color: C.text4, fontVariantNumeric: 'tabular-nums', letterSpacing: '0.04em', textAlign: 'center' }}>
-                            {String(i + 1).padStart(2, '0')}
-                          </span>
-                          <div style={{ flexShrink: 0 }}>
-                            {v.thumbnail && <img src={v.thumbnail} alt="" style={{ width: 72, height: 40, borderRadius: 7, objectFit: 'cover', display: 'block' }} />}
-                          </div>
-                          <div style={{ flex: 1, minWidth: 0 }}>
-                            <p style={{ fontSize: 14, fontWeight: 600, color: C.text1, lineHeight: 1.4, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', letterSpacing: '-0.1px' }}>{v.title}</p>
-                            <p style={{ fontSize: 12, color: C.text3, marginTop: 3, fontWeight: 500, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{v.channel}</p>
-                          </div>
-                          {/* Tabular stat columns — VIEWS / LIKES / COMMENTS / SCORE, all right-aligned, matching Overview's label-above-value pattern */}
-                          <div style={{ textAlign: 'right', flexShrink: 0, width: 58 }}>
-                            <p style={{ fontSize: 14, fontWeight: 700, color: C.text1, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.2px', lineHeight: 1 }}>{fmtNum(views)}</p>
-                            <p style={{ fontSize: 10, fontWeight: 600, color: C.text3, marginTop: 4, letterSpacing: '0.08em', textTransform: 'uppercase' }}>views</p>
-                          </div>
-                          <div style={{ textAlign: 'right', flexShrink: 0, width: 52 }}>
-                            <p style={{ fontSize: 14, fontWeight: 700, color: C.text1, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.2px', lineHeight: 1 }}>{fmtNum(likes)}</p>
-                            <p style={{ fontSize: 10, fontWeight: 600, color: C.text3, marginTop: 4, letterSpacing: '0.08em', textTransform: 'uppercase' }}>likes</p>
-                          </div>
-                          <div style={{ textAlign: 'right', flexShrink: 0, width: 62 }}>
-                            <p style={{ fontSize: 14, fontWeight: 700, color: C.text1, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.2px', lineHeight: 1 }}>{fmtNum(comments)}</p>
-                            <p style={{ fontSize: 10, fontWeight: 600, color: C.text3, marginTop: 4, letterSpacing: '0.08em', textTransform: 'uppercase' }}>comments</p>
-                          </div>
-                          <div style={{ textAlign: 'right', flexShrink: 0, width: 44 }}>
-                            <p style={{ fontSize: 17, fontWeight: 700, color: scColor, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.3px', lineHeight: 1 }}>{sc}</p>
-                            <p style={{ fontSize: 10, fontWeight: 600, color: C.text3, marginTop: 4, letterSpacing: '0.08em', textTransform: 'uppercase' }}>score</p>
-                          </div>
-                          <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke={C.text4} strokeWidth="1.5" strokeLinecap="round" style={{ flexShrink: 0 }}><path d="M2 11L10 3M10 3H5M10 3v5"/></svg>
-                        </a>
-                      )
-                    })}
-                  </div>
-                </div>
-              </div>
-            </>
-          )}
+          {/* The old "Competitor set" detail list lived here. It was
+              redundant with the new NicheHeatCard at the top of the
+              page, which is more visual (HD thumbnails + bar chart +
+              stat strip), so we removed the duplicate. The full table
+              view is still accessible inside the Reports tab. */}
 
           {/* ── Description Optimizer ── */}
           {selectedTitle && (
