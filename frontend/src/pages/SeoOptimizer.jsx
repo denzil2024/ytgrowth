@@ -946,24 +946,26 @@ function DescriptionCard({ d, idx, copiedDesc, onCopy }) {
   )
 }
 
-// Saturation dots — visual count of "how saturated is this angle" inside the
-// niche. Renders N small circles; the first `filled` are tinted, the rest are
-// open. Replaces a "73% saturated" prose stat with a visual the eye reads in
-// one glance.
+// Saturation indicator — a compact horizontal bar + "X of N · Label" text.
+// Replaces the childish-looking row of empty/filled dots. Same data, less
+// novelty: a tinted progress bar from 0 to total, color-matched to the row's
+// severity, with a clear "used by X of Y ranking videos · Wide open / Saturated".
 function SaturationDots({ total, filled, color, label }) {
-  const dots = Math.min(Math.max(total, 6), 14)
-  const ratio = dots > 0 ? filled / total : 0
-  const visibleFilled = Math.round(ratio * dots)
+  const ratio = total > 0 ? Math.min(1, filled / total) : 0
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-      <div style={{ display: 'flex', gap: 4 }}>
-        {Array.from({ length: dots }).map((_, i) => (
-          <span key={i} style={{
-            width: 8, height: 8, borderRadius: 99,
-            background: i < visibleFilled ? color : 'transparent',
-            border: `1.5px solid ${i < visibleFilled ? color : '#dadae0'}`,
-          }}/>
-        ))}
+      <span style={{
+        fontSize: 11.5, fontWeight: 600, color: C.text2,
+        fontVariantNumeric: 'tabular-nums', whiteSpace: 'nowrap',
+      }}>
+        <strong style={{ color: C.text1, fontWeight: 800 }}>{filled}</strong>
+        <span style={{ color: C.text3 }}> of {total} ranking videos</span>
+      </span>
+      <div style={{ flex: '0 1 120px', maxWidth: 140, height: 4, background: '#eef0f4', borderRadius: 99, overflow: 'hidden' }}>
+        <div style={{
+          width: `${ratio * 100}%`, height: '100%', background: color, borderRadius: 99,
+          transition: 'width 0.85s cubic-bezier(0.34,1.4,0.64,1)',
+        }}/>
       </div>
       <span style={{
         fontSize: 11, fontWeight: 700, color, letterSpacing: '0.07em',
@@ -1140,128 +1142,109 @@ function TitleComparisonHero({ userTitle, userScore, suggestions, onPick }) {
   const bestAvg = sugAvg(bestSug)
   const lift = bestAvg - userScore
 
-  const tierFor = (s) => s >= 75 ? C.green : s >= 50 ? C.amber : C.red
+  const tierFor  = (s) => s >= 75 ? C.green : s >= 50 ? C.amber : C.red
   const labelFor = (s) => s >= 75 ? 'Strong' : s >= 50 ? 'Solid' : 'Weak'
   const userCol = tierFor(userScore)
   const bestCol = tierFor(bestAvg)
-  const liftCol = lift > 15 ? C.green : lift > 0 ? C.amber : C.text3
-  const liftVerdict = lift > 15 ? 'Worth rewriting' : lift > 0 ? 'Marginal lift' : 'Already strong'
-  const liftCount = useCountUp(Math.abs(lift))
 
-  // Truncated, sentence-cased preview for each title — so the panel reads as
-  // a "before / after" pair without becoming a paragraph wall.
-  const userPreview = (userTitle || '').length > 70
-    ? (userTitle || '').slice(0, 67).trim() + '…'
-    : (userTitle || '')
-  const bestPreview = (bestSug.title || '').length > 70
-    ? (bestSug.title || '').slice(0, 67).trim() + '…'
-    : (bestSug.title || '')
+  // Clean linear hero — two stacked rows comparing scores end-to-end. The bar
+  // width difference IS the lift; no novelty puck, no competing circles. Score
+  // numbers sit inline at the end of each bar so the eye reads them as one unit.
+  const ScoreRow = ({ label, title, score, col, isHero, delay }) => (
+    <div style={{
+      display: 'grid', gridTemplateColumns: '160px 1fr 64px', alignItems: 'center', gap: 16,
+      padding: '12px 0',
+    }}>
+      <div style={{ minWidth: 0 }}>
+        <p style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 4 }}>{label}</p>
+        <p style={{
+          fontSize: isHero ? 14 : 13,
+          fontWeight: isHero ? 700 : 500,
+          color: isHero ? C.text1 : C.text2,
+          fontStyle: isHero ? 'normal' : 'italic',
+          lineHeight: 1.35, letterSpacing: '-0.15px',
+          whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
+        }}>{title}</p>
+      </div>
+      <div style={{ height: 10, background: '#eef0f4', borderRadius: 99, overflow: 'hidden' }}>
+        <div style={{
+          height: '100%',
+          width: mounted ? `${score}%` : '0%',
+          background: col,
+          borderRadius: 99,
+          transition: `width 0.95s cubic-bezier(0.34,1.4,0.64,1) ${delay}ms`,
+        }}/>
+      </div>
+      <span style={{
+        fontSize: isHero ? 22 : 18, fontWeight: 800, color: col,
+        fontVariantNumeric: 'tabular-nums', textAlign: 'right',
+        letterSpacing: '-0.5px',
+      }}>{score}</span>
+    </div>
+  )
 
   return (
     <div style={{
-      background: '#ffffff', border: `1px solid ${C.border}`, borderRadius: 18,
+      background: '#ffffff', border: `1px solid ${C.border}`, borderRadius: 16,
       marginBottom: 20, overflow: 'hidden',
       boxShadow: '0 1px 2px rgba(0,0,0,0.04), 0 4px 14px rgba(0,0,0,0.06)',
     }}>
-      {/* Eyebrow strip */}
-      <div style={{
-        padding: '14px 24px 0',
-        display: 'flex', alignItems: 'baseline', justifyContent: 'space-between',
-      }}>
-        <p style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.12em', textTransform: 'uppercase' }}>
-          Title comparison
-        </p>
-        <p style={{ fontSize: 11, color: C.text3, fontWeight: 500 }}>
-          weighted: keyword 30 · click 40 · hook 30
-        </p>
-      </div>
-
-      {/* 3-col story: Your title | Lift | Best AI alternative */}
-      <div style={{
-        display: 'grid', gridTemplateColumns: '1fr 0.7fr 1fr',
-        alignItems: 'stretch',
-        padding: '18px 24px 4px',
-      }}>
-        {/* LEFT — your title */}
-        <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 14 }}>
-          <p style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.1em', textTransform: 'uppercase' }}>Your title</p>
-          <AnimatedScoreArc value={userScore} color={userCol} tier={labelFor(userScore)}/>
-          <p style={{ fontSize: 12.5, color: C.text2, lineHeight: 1.45, fontStyle: 'italic', fontWeight: 500, maxWidth: 260, letterSpacing: '-0.05px' }}>
-            {userPreview ? `"${userPreview}"` : <span style={{ color: C.text4 }}>(no title entered)</span>}
-          </p>
-        </div>
-
-        {/* MIDDLE — lift bridge */}
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 12, position: 'relative' }}>
-          {/* Connecting line behind the lift puck */}
-          <div style={{
-            position: 'absolute', top: '40%', left: -4, right: -4, height: 2,
-            background: `linear-gradient(90deg, ${userCol} 0%, ${liftCol} 50%, ${bestCol} 100%)`,
-            opacity: 0.22, borderRadius: 2,
-          }}/>
-          <div style={{
-            position: 'relative',
-            width: 84, height: 84, borderRadius: '50%',
-            background: lift > 0 ? `radial-gradient(circle, ${liftCol}26 0%, ${liftCol}0d 60%, transparent 100%)` : 'rgba(15,15,19,0.04)',
-            display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-            border: `2px dashed ${liftCol}55`,
-          }}>
+      <div style={{ padding: '20px 24px 8px' }}>
+        <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 4 }}>
+          <p style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.12em', textTransform: 'uppercase' }}>Score comparison</p>
+          {lift !== 0 && (
             <span style={{
-              fontSize: 24, fontWeight: 900, color: liftCol,
-              letterSpacing: '-0.6px', fontVariantNumeric: 'tabular-nums',
-              display: 'inline-flex', alignItems: 'center', gap: 2, lineHeight: 1,
+              fontSize: 12, fontWeight: 700, color: lift > 0 ? C.green : C.red,
+              fontVariantNumeric: 'tabular-nums',
             }}>
-              {lift > 0 ? '▲' : lift < 0 ? '▼' : '–'}{liftCount}
+              {lift > 0 ? '+' : ''}{lift} points
             </span>
-            <span style={{
-              fontSize: 9, fontWeight: 800, color: liftCol, letterSpacing: '0.14em',
-              textTransform: 'uppercase', marginTop: 3,
-            }}>lift</span>
-          </div>
-          <p style={{ fontSize: 12, fontWeight: 700, color: liftCol, letterSpacing: '-0.1px', textAlign: 'center' }}>
-            {liftVerdict}
-          </p>
+          )}
         </div>
 
-        {/* RIGHT — best AI alternative */}
-        <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 14 }}>
-          <p style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.1em', textTransform: 'uppercase' }}>Best AI alternative</p>
-          <AnimatedScoreArc value={bestAvg} color={bestCol} tier={labelFor(bestAvg)}/>
-          <p style={{ fontSize: 13, color: C.text1, lineHeight: 1.45, fontWeight: 700, maxWidth: 260, letterSpacing: '-0.15px' }}>
-            "{bestPreview}"
-          </p>
-        </div>
+        <ScoreRow
+          label="Your title"
+          title={userTitle ? `"${userTitle}"` : '(no title entered)'}
+          score={userScore}
+          col={userCol}
+          isHero={false}
+          delay={0}
+        />
+        <ScoreRow
+          label="Best AI alternative"
+          title={`"${bestSug.title}"`}
+          score={bestAvg}
+          col={bestCol}
+          isHero={true}
+          delay={180}
+        />
       </div>
 
-      {/* Sub-score bars — staggered sweep on mount. Where the best AI score comes from. */}
-      <div style={{
-        margin: '8px 24px 0', padding: '16px 18px 4px',
-        borderTop: `1px solid ${C.border}`,
-      }}>
-        <p style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 12 }}>
+      {/* Sub-score breakdown — what drives the best AI score. */}
+      <div style={{ padding: '4px 24px 4px', borderTop: `1px solid ${C.borderLight}` }}>
+        <p style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.1em', textTransform: 'uppercase', margin: '14px 0 10px' }}>
           What drives the lift
         </p>
         {[
           ['Keyword fit',      bestSug.seo_score  || 0, 0],
-          ['Click appeal',     bestSug.ctr_score  || 0, 120],
-          ['Opening strength', bestSug.hook_score || 0, 240],
+          ['Click appeal',     bestSug.ctr_score  || 0, 100],
+          ['Opening strength', bestSug.hook_score || 0, 200],
         ].map(([label, val, delay]) => {
           const col = val >= 75 ? C.green : val >= 55 ? C.amber : C.red
           return (
             <div key={label} style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 10 }}>
-              <span style={{ fontSize: 12, color: C.text2, fontWeight: 500, flexShrink: 0, width: 140, letterSpacing: '-0.1px' }}>{label}</span>
-              <div style={{ flex: 1, height: 8, background: '#eef0f4', borderRadius: 99, overflow: 'hidden' }}>
+              <span style={{ fontSize: 12, color: C.text2, fontWeight: 500, flexShrink: 0, width: 144, letterSpacing: '-0.1px' }}>{label}</span>
+              <div style={{ flex: 1, height: 6, background: '#eef0f4', borderRadius: 99, overflow: 'hidden' }}>
                 <div style={{
                   height: '100%',
                   width: mounted ? `${val}%` : '0%',
-                  background: `linear-gradient(90deg, ${col} 0%, ${col}cc 100%)`,
+                  background: col,
                   borderRadius: 99,
                   transition: `width 0.95s cubic-bezier(0.34,1.4,0.64,1) ${delay}ms`,
-                  boxShadow: val >= 75 ? `0 0 0 2px ${col}1f` : 'none',
                 }}/>
               </div>
               <span style={{
-                fontSize: 14, fontWeight: 800, color: col, fontVariantNumeric: 'tabular-nums',
+                fontSize: 13, fontWeight: 800, color: col, fontVariantNumeric: 'tabular-nums',
                 minWidth: 30, textAlign: 'right', letterSpacing: '-0.3px',
               }}>{val || '—'}</span>
             </div>
@@ -1271,10 +1254,11 @@ function TitleComparisonHero({ userTitle, userScore, suggestions, onPick }) {
 
       {/* CTA strip */}
       <div style={{
-        padding: '12px 24px 18px',
+        padding: '14px 24px 18px',
         display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12,
+        borderTop: `1px solid ${C.borderLight}`,
       }}>
-        <p style={{ fontSize: 11.5, color: C.text3, fontWeight: 500, lineHeight: 1.5 }}>
+        <p style={{ fontSize: 12, color: C.text3, fontWeight: 500, lineHeight: 1.5 }}>
           Pick the best AI title to generate a matching description, or scroll to compare all 3.
         </p>
         <button
@@ -1288,12 +1272,124 @@ function TitleComparisonHero({ userTitle, userScore, suggestions, onPick }) {
   )
 }
 
-// Niche map — replaces the broken bubble grid. Each phrase is a labeled dot
-// positioned by competition (x) and volume (y), sized by score, colored by
-// tier. Beeswarm-style radial offset for dots in the same bucket so they
-// don't pile. The top 5 sweet-spot phrases get inline text labels next to
-// their dot. Below the SVG: a "Top 3 to use right now" clickable chip strip.
+// Niche keyword leaderboard — matches the Video Ideas card DNA exactly: 3px
+// severity stripe at top, hairline border, eyebrow row, then a clean ranked
+// list of phrases with score bars. Bubble chart removed — it was unreadable.
+// This is the same scan pattern as Video Ideas: rank · keyword · vol/comp
+// chips · score bar · score number. Click a row to use it as your title.
 function NicheMap({ keywords, onPick }) {
+  if (!keywords?.length) return null
+
+  const sorted = [...keywords].sort((a, b) => b.score - a.score)
+  const visible = sorted.slice(0, 12)
+  const topScore = visible[0]?.score || 0
+  const stripeColor = topScore >= 75 ? C.green : topScore >= 50 ? C.amber : C.red
+
+  // Volume / competition badge colors — match the score tier semantics. HIGH
+  // volume + LOW competition reads green (good); HIGH competition reads red.
+  const volCol  = v => v === 'HIGH' ? C.green : v === 'MED' ? C.amber : C.text3
+  const compCol = c => c === 'LOW' ? C.green : c === 'MED' ? C.amber : C.red
+
+  return (
+    <div className="vi-idea-card" style={{ marginBottom: 12 }}>
+      <div className="vi-stripe" style={{ background: stripeColor }}/>
+      <div style={{ padding: 18 }}>
+        {/* Eyebrow row — small label + count + helper line on the right.
+            Matches Video Ideas IdeaCard header DNA. */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14, flexWrap: 'wrap' }}>
+          <div style={{
+            flexShrink: 0,
+            width: 26, height: 26, borderRadius: 7,
+            display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+            background: 'rgba(217,119,6,0.10)',
+            border: '1px solid rgba(217,119,6,0.22)',
+          }}>
+            <span style={{ fontSize: 11.5, fontWeight: 800, color: C.amber, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.3px' }}>K</span>
+          </div>
+          <span style={{
+            fontSize: 11, fontWeight: 800, color: 'rgba(10,10,15,0.55)',
+            letterSpacing: '0.12em', textTransform: 'uppercase',
+          }}>Niche keywords</span>
+          <span style={{
+            display: 'inline-flex', alignItems: 'center', gap: 5,
+            fontSize: 12, fontWeight: 500, color: 'rgba(10,10,15,0.55)',
+            letterSpacing: '-0.01em',
+          }}>
+            <span style={{ width: 3, height: 3, borderRadius: 99, background: 'rgba(10,10,15,0.30)' }}/>
+            {sorted.length} phrases ranked
+          </span>
+          <div style={{ flex: 1 }}/>
+          <span style={{
+            fontSize: 11, fontWeight: 500, color: C.text3,
+            letterSpacing: '-0.01em',
+          }}>click any to use as title</span>
+        </div>
+
+        {/* Ranked list — 12 phrases max. Each row: rank · phrase · vol/comp
+            chips · score bar · score number. Consistent typography. */}
+        <div style={{
+          display: 'flex', flexDirection: 'column',
+          borderTop: `1px solid ${C.borderLight}`,
+        }}>
+          {visible.map((kw, i) => {
+            const col = kw.score >= 75 ? C.green : kw.score >= 50 ? C.amber : C.red
+            return (
+              <button key={kw.phrase}
+                onClick={() => onPick?.(kw.phrase)}
+                style={{
+                  display: 'grid', gridTemplateColumns: '22px 1fr 56px 56px 1.2fr 36px',
+                  alignItems: 'center', gap: 12,
+                  padding: '11px 0',
+                  background: 'transparent', border: 'none',
+                  borderBottom: i < visible.length - 1 ? `1px solid ${C.borderLight}` : 'none',
+                  cursor: 'pointer', fontFamily: 'inherit', textAlign: 'left',
+                  transition: 'background 0.12s',
+                }}
+                onMouseEnter={e => { e.currentTarget.style.background = '#fafafb' }}
+                onMouseLeave={e => { e.currentTarget.style.background = 'transparent' }}>
+                <span style={{
+                  fontSize: 11, fontWeight: 700, color: C.text4,
+                  fontVariantNumeric: 'tabular-nums', textAlign: 'center',
+                  letterSpacing: '0.04em',
+                }}>{String(i + 1).padStart(2, '0')}</span>
+                <span style={{
+                  fontSize: 13.5, fontWeight: 500, color: C.text1,
+                  letterSpacing: '-0.1px',
+                  whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
+                }}>{kw.phrase}</span>
+                <span style={{
+                  fontSize: 10, fontWeight: 700, color: volCol(kw.volume),
+                  letterSpacing: '0.08em', textTransform: 'uppercase',
+                  textAlign: 'right',
+                }}>{kw.volume === 'HIGH' ? '▲ HIGH' : kw.volume === 'MED' ? '· MED' : '▽ LOW'}</span>
+                <span style={{
+                  fontSize: 10, fontWeight: 700, color: compCol(kw.competition),
+                  letterSpacing: '0.08em', textTransform: 'uppercase',
+                  textAlign: 'right',
+                }}>{kw.competition === 'LOW' ? 'LOW' : kw.competition === 'MED' ? 'MED' : 'HIGH'}</span>
+                <div style={{ height: 6, background: '#eef0f4', borderRadius: 99, overflow: 'hidden' }}>
+                  <div style={{
+                    width: `${kw.score}%`, height: '100%', background: col, borderRadius: 99,
+                    transition: 'width 0.85s cubic-bezier(0.34,1.4,0.64,1)',
+                  }}/>
+                </div>
+                <span style={{
+                  fontSize: 14, fontWeight: 800, color: col,
+                  fontVariantNumeric: 'tabular-nums', textAlign: 'right',
+                  letterSpacing: '-0.3px',
+                }}>{kw.score}</span>
+              </button>
+            )
+          })}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// NicheMapOld kept here only to satisfy the previous SVG implementation;
+// not exported. Left as `function _NicheMapBubbleSvg` so future refs see it's deprecated.
+function _NicheMapBubbleSvg({ keywords, onPick }) {
   if (!keywords?.length) return null
 
   const volNum  = v => v === 'HIGH' ? 88 : v === 'MED' ? 55 : 22
@@ -1968,27 +2064,35 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
                   </p>
                 </div>
               ) : !anyCut ? (
-                // Compact "all fit" mode — one hero row + 3 small surface chips, no redundant title triple-print.
+                // Compact "all fit" mode — neutral white card, green only on the
+                // small check icon. Removes the full green-tinted container that
+                // visually competed with the amber-numbered format tiles next to it.
                 <div style={{
-                  background: C.greenBg,
-                  border: `1px solid ${C.greenBdr}`,
-                  borderLeft: `3px solid ${C.green}`,
-                  borderRadius: '0 12px 12px 0',
-                  padding: '16px 18px',
+                  background: '#ffffff',
+                  border: '1px solid #e6e6ec',
+                  borderRadius: 12,
+                  padding: '14px 16px',
                 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke={C.green} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
-                      <polyline points="3,8.5 6.5,12 13,4"/>
-                    </svg>
-                    <p style={{ fontSize: 13.5, fontWeight: 600, color: '#065f46', letterSpacing: '-0.1px', margin: 0 }}>
+                    <div style={{
+                      width: 22, height: 22, borderRadius: 99,
+                      background: 'rgba(5,150,105,0.10)',
+                      display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                      flexShrink: 0,
+                    }}>
+                      <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke={C.green} strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+                        <polyline points="3,8.5 6.5,12 13,4"/>
+                      </svg>
+                    </div>
+                    <p style={{ fontSize: 13.5, fontWeight: 700, color: C.text1, letterSpacing: '-0.1px', margin: 0 }}>
                       Fits all 3 YouTube surfaces
                     </p>
                   </div>
                   <div style={{ display: 'flex', gap: 18, flexWrap: 'wrap' }}>
                     {surfaces.map(s => (
                       <div key={s.label} style={{ display: 'flex', alignItems: 'baseline', gap: 6, fontSize: 11 }}>
-                        <span style={{ fontWeight: 700, color: C.green, textTransform: 'uppercase', letterSpacing: '0.06em' }}>{s.label}</span>
-                        <span style={{ color: C.text3, fontVariantNumeric: 'tabular-nums', fontWeight: 500 }}>{title.length}/{s.maxChars}</span>
+                        <span style={{ fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em' }}>{s.label}</span>
+                        <span style={{ color: C.text2, fontVariantNumeric: 'tabular-nums', fontWeight: 600 }}>{title.length}/{s.maxChars}</span>
                       </div>
                     ))}
                   </div>
