@@ -605,23 +605,21 @@ function WinnersStrip({ videos, primaryPhrase }) {
   )
 }
 
-// One suggested title row. Extracted so each row can own its mount
-// animation state (the bars + length marker sweep in on first paint).
-// All semantics derived inside: eyebrow / avgScore / severity. Props
-// stay narrow so this stays drop-in compatible with the existing map.
+// One suggested title row. Collapse-first: the header alone is enough to scan
+// (rank + title + 3-dot sub-score sparkline + severity chip + chevron). Click
+// to expand the Why-it-works prose + quality chart + Algorithm angle. Keeps
+// the page scan-first instead of dumping three walls of analysis up front.
 function SuggestionRow({ s, i, isSelected, isCopied, onCopy, onSelect, primaryPhrase }) {
+  const [open, setOpen] = useState(false)
   const [mounted, setMounted] = useState(false)
   useEffect(() => {
-    // Two-frame deferral so the initial 0% width paints first, then
-    // the real width transitions in. requestAnimationFrame alone fires
-    // before the browser commits the first paint in some webkit
-    // builds, which swallows the animation.
+    if (!open) return
     let raf2 = 0
     const raf1 = requestAnimationFrame(() => {
       raf2 = requestAnimationFrame(() => setMounted(true))
     })
     return () => { cancelAnimationFrame(raf1); cancelAnimationFrame(raf2) }
-  }, [])
+  }, [open])
 
   const eyebrow  = (s.primary_keyword || primaryPhrase || '').trim()
   const avgScore = Number.isFinite(s.score)
@@ -631,50 +629,76 @@ function SuggestionRow({ s, i, isSelected, isCopied, onCopy, onSelect, primaryPh
   const sevColor = avgScore >= 75 ? C.green : avgScore >= 60 ? C.amber : C.red
   const sevBg    = avgScore >= 75 ? 'rgba(5,150,105,0.10)' : avgScore >= 60 ? 'rgba(217,119,6,0.10)' : 'rgba(229,37,27,0.08)'
 
+  // Sub-score sparkline — 3 dots filled by SEO / CTR / Hook tier.
+  const dotColor = v => v >= 75 ? C.green : v >= 55 ? C.amber : v > 0 ? C.red : '#dadae0'
+  const subs = [['SEO', s.seo_score || 0], ['CTR', s.ctr_score || 0], ['Hook', s.hook_score || 0]]
+
   return (
     <div className="seo-suggestion-card" style={{
       marginBottom: 0,
-      // Top stripe now reflects severity instead of constant amber. Strong
-      // suggestions pop green, weak ones blush red, so the user can scan a
-      // stack of 3-5 cards and pick the winner without reading anything.
       borderTop: `3px solid ${sevColor}`,
       borderLeftColor:   isSelected ? 'rgba(229,37,27,0.30)' : isCopied ? 'rgba(5,150,105,0.30)' : '#e6e6ec',
       borderRightColor:  isSelected ? 'rgba(229,37,27,0.30)' : isCopied ? 'rgba(5,150,105,0.30)' : '#e6e6ec',
       borderBottomColor: isSelected ? 'rgba(229,37,27,0.30)' : isCopied ? 'rgba(5,150,105,0.30)' : '#e6e6ec',
       background: isSelected ? '#fff8f8' : isCopied ? '#f6fdf9' : '#ffffff',
     }}>
-      <div style={{ padding: '16px 22px 18px' }}>
-        {/* Header — rank + eyebrow + title + severity chip (now carries the score number inline) */}
-        <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: 14 }}>
-          <div style={{ width: 26, height: 26, borderRadius: 8, background: C.amber, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 2 }}>
-            <span style={{ fontSize: 12, fontWeight: 900, color: '#fff', fontVariantNumeric: 'tabular-nums' }}>{i + 1}</span>
-          </div>
-          <div style={{ flex: 1, minWidth: 0 }}>
-            {eyebrow && (
-              <p style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 5 }}>Built around: {eyebrow}</p>
-            )}
-            <p style={{ fontSize: 15, fontWeight: 700, color: C.text1, lineHeight: 1.5, letterSpacing: '-0.2px' }}>{s.title}</p>
-          </div>
-          <span style={{
-            fontSize: 11, fontWeight: 800, color: sevColor,
-            padding: '5px 11px', borderRadius: 99,
-            letterSpacing: '0.02em',
-            background: sevBg,
-            border: `1.5px solid ${sevColor}`,
-            flexShrink: 0,
-            display: 'inline-flex', alignItems: 'center', gap: 6,
-            fontVariantNumeric: 'tabular-nums',
-          }}>
-            <span style={{ textTransform: 'uppercase', letterSpacing: '0.06em' }}>{sevLabel}</span>
-            <span style={{ fontSize: 12, fontWeight: 900, letterSpacing: '-0.3px' }}>{avgScore}</span>
-          </span>
+      {/* Header — clickable, toggles open. Compact one-row layout: rank | eyebrow+title | sparkline | severity | chevron. */}
+      <div
+        role="button" tabIndex={0}
+        onClick={() => setOpen(o => !o)}
+        onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setOpen(o => !o) } }}
+        style={{
+          padding: '14px 22px', display: 'flex', alignItems: 'center', gap: 12,
+          cursor: 'pointer', userSelect: 'none',
+        }}>
+        <div style={{ width: 26, height: 26, borderRadius: 8, background: C.amber, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+          <span style={{ fontSize: 12, fontWeight: 900, color: '#fff', fontVariantNumeric: 'tabular-nums' }}>{i + 1}</span>
+        </div>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          {eyebrow && (
+            <p style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 4 }}>Built around: {eyebrow}</p>
+          )}
+          <p style={{ fontSize: 14.5, fontWeight: 700, color: C.text1, lineHeight: 1.45, letterSpacing: '-0.2px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{s.title}</p>
         </div>
 
+        {/* Sub-score sparkline — 3 dots, each tinted by its tier. Visual fingerprint of where the title is strong/weak. */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 5, flexShrink: 0, marginRight: 2 }}
+          title={subs.map(([k, v]) => `${k} ${v}`).join(' · ')}>
+          {subs.map(([k, v]) => (
+            <span key={k} style={{
+              width: 9, height: 9, borderRadius: 99, background: dotColor(v),
+              boxShadow: v >= 75 ? `0 0 0 2px ${dotColor(v)}22` : 'none',
+            }}/>
+          ))}
+        </div>
+
+        <span style={{
+          fontSize: 11, fontWeight: 800, color: sevColor,
+          padding: '5px 11px', borderRadius: 99,
+          letterSpacing: '0.02em',
+          background: sevBg,
+          border: `1.5px solid ${sevColor}`,
+          flexShrink: 0,
+          display: 'inline-flex', alignItems: 'center', gap: 6,
+          fontVariantNumeric: 'tabular-nums',
+        }}>
+          <span style={{ textTransform: 'uppercase', letterSpacing: '0.06em' }}>{sevLabel}</span>
+          <span style={{ fontSize: 12, fontWeight: 900, letterSpacing: '-0.3px' }}>{avgScore}</span>
+        </span>
+
+        <svg width="13" height="13" viewBox="0 0 13 13" fill="none"
+          stroke={C.text3} strokeWidth="2" strokeLinecap="round"
+          style={{ flexShrink: 0, transition: 'transform 0.22s', transform: open ? 'rotate(180deg)' : 'none' }}>
+          <path d="M3 5l3.5 3.5L10 5"/>
+        </svg>
+      </div>
+
+      {open && (
+      <div style={{ padding: '0 22px 18px' }}>
         {/* Divider aligned with title start */}
         <div style={{ height: 1, background: C.border, marginBottom: 14, marginLeft: 38 }} />
 
-        {/* 3-col body — Why-it-works (neutral) | Title quality chart (amber-bar) | Algorithm angle (green).
-            Reasoning context is charcoal-neutral so red/green stay semantic for action and outcome. */}
+        {/* 3-col body — Why-it-works (neutral) | Title quality chart (amber-bar) | Algorithm angle (green). */}
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr 1fr', gap: 8, marginLeft: 38 }}>
           {/* Col 1 — Why it works */}
           <div style={{ background: 'rgba(15,15,19,0.04)', border: '1px solid rgba(15,15,19,0.08)', borderRadius: 10, padding: '12px 14px' }}>
@@ -706,18 +730,19 @@ function SuggestionRow({ s, i, isSelected, isCopied, onCopy, onSelect, primaryPh
           </div>
         </div>
 
-        {/* Action row */}
+        {/* Action row. stopPropagation so clicking a button doesn't also toggle the row open/closed. */}
         <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8, marginTop: 14, marginLeft: 38 }}>
-          <button onClick={onCopy}
+          <button onClick={e => { e.stopPropagation(); onCopy() }}
             style={{ fontSize: 12.5, fontWeight: 600, color: isCopied ? C.green : C.text2, background: '#ffffff', border: `1px solid ${isCopied ? 'rgba(5,150,105,0.38)' : 'rgba(0,0,0,0.1)'}`, borderRadius: 100, padding: '8px 16px', cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.15s', whiteSpace: 'nowrap', boxShadow: '0 1px 3px rgba(0,0,0,0.07)' }}>
             {isCopied ? '✓ Copied' : 'Copy'}
           </button>
-          <button onClick={onSelect}
+          <button onClick={e => { e.stopPropagation(); onSelect() }}
             style={{ fontSize: 12.5, fontWeight: 700, color: isSelected ? C.red : '#ffffff', background: isSelected ? 'rgba(229,37,27,0.08)' : '#e5251b', border: `1px solid ${isSelected ? 'rgba(229,37,27,0.25)' : 'transparent'}`, borderRadius: 100, padding: '8px 15px', cursor: 'pointer', fontFamily: 'inherit', transition: 'filter 0.15s, background 0.15s', boxShadow: isSelected ? 'none' : '0 1px 2px rgba(229,37,27,0.18)', whiteSpace: 'nowrap', letterSpacing: '-0.1px' }}>
             {isSelected ? '✓ Selected' : 'Use this title →'}
           </button>
         </div>
       </div>
+      )}
     </div>
   )
 }
@@ -786,46 +811,60 @@ function TitlePreviewSimulator({ title }) {
   )
 }
 
+// Description card. Collapse-first: header row alone is scannable
+// (type pill + truncated 1-line preview + chevron). Expand for the
+// full body + Why-it-works + copy CTA.
 function DescriptionCard({ d, idx, copiedDesc, onCopy }) {
-  const [expanded, setExpanded] = useState(false)
+  const [open, setOpen] = useState(false)
   const tm = DESC_TYPE_META[d.type] || DESC_TYPE_META.value
   const isCopied = copiedDesc === idx
-  // Short category pill label
   const categoryShort = d.type === 'story' ? 'Story'
                       : d.type === 'value' ? 'Value'
                       : 'Keyword-first'
+  // First line of the preview, trimmed so the header is a single visual line.
+  const teaser = (d.preview || '').replace(/\s+/g, ' ').trim()
   return (
     <div className="seo-suggestion-card" style={{
       marginBottom: 10,
       borderTop: `3px solid ${C.amber}`,
     }}>
-      <div style={{ padding: '16px 22px 18px' }}>
-        {/* Header — amber rank badge + category eyebrow + preview title + category pill */}
-        <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: 14 }}>
-          <div style={{ width: 26, height: 26, borderRadius: 8, background: C.amber, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 2 }}>
-            <span style={{ fontSize: 12, fontWeight: 900, color: '#fff', fontVariantNumeric: 'tabular-nums' }}>{idx + 1}</span>
-          </div>
-          <div style={{ flex: 1, minWidth: 0 }}>
-            <p style={{ fontSize: 10, fontWeight: 700, color: tm.color, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 5 }}>{d.label}</p>
-            <p style={{ fontSize: 14, fontWeight: 700, color: C.text1, lineHeight: 1.55 }}>{d.preview}</p>
-          </div>
-          <span style={{ fontSize: 10, fontWeight: 700, color: tm.color, padding: '3px 9px', borderRadius: 20, letterSpacing: '0.06em', textTransform: 'uppercase', border: `1.5px solid ${tm.color}`, flexShrink: 0 }}>
-            {categoryShort}
-          </span>
+      {/* Header — clickable. type pill | teaser | chevron */}
+      <div
+        role="button" tabIndex={0}
+        onClick={() => setOpen(o => !o)}
+        onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setOpen(o => !o) } }}
+        style={{
+          padding: '14px 22px', display: 'flex', alignItems: 'center', gap: 12,
+          cursor: 'pointer', userSelect: 'none',
+        }}>
+        <div style={{ width: 26, height: 26, borderRadius: 8, background: C.amber, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+          <span style={{ fontSize: 12, fontWeight: 900, color: '#fff', fontVariantNumeric: 'tabular-nums' }}>{idx + 1}</span>
         </div>
+        <span style={{ fontSize: 10, fontWeight: 700, color: tm.color, padding: '3px 9px', borderRadius: 20, letterSpacing: '0.06em', textTransform: 'uppercase', border: `1.5px solid ${tm.color}`, flexShrink: 0 }}>
+          {categoryShort}
+        </span>
+        <p style={{ flex: 1, minWidth: 0, fontSize: 13.5, color: C.text2, fontWeight: 500, lineHeight: 1.45, letterSpacing: '-0.1px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+          {teaser}
+        </p>
+        <svg width="13" height="13" viewBox="0 0 13 13" fill="none"
+          stroke={C.text3} strokeWidth="2" strokeLinecap="round"
+          style={{ flexShrink: 0, transition: 'transform 0.22s', transform: open ? 'rotate(180deg)' : 'none' }}>
+          <path d="M3 5l3.5 3.5L10 5"/>
+        </svg>
+      </div>
 
-        {/* Divider aligned with content start — mirrors InsightCard (Dashboard.jsx:1082) */}
+      {open && (
+      <div style={{ padding: '0 22px 18px' }}>
+        {/* Divider aligned with content start */}
         <div style={{ height: 1, background: C.border, marginBottom: 14, marginLeft: 38 }} />
 
-        {/* 2-col body — Why it works (charcoal-neutral) + Description (white + amber left bar + shadow). */}
+        {/* 2-col body — Why it works (charcoal-neutral) + Full description (white + amber left bar + shadow). */}
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.6fr', gap: 8, marginLeft: 38 }}>
-          {/* Why it works — charcoal-neutral. Red/amber stay reserved for action + identity. */}
           <div style={{ background: 'rgba(15,15,19,0.04)', border: '1px solid rgba(15,15,19,0.08)', borderRadius: 10, padding: '12px 14px' }}>
             <p style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Why it works</p>
             <p style={{ fontSize: 13, color: C.text2, lineHeight: 1.65 }}>{d.why_it_works}</p>
           </div>
 
-          {/* Description — white + amber left bar + shadow, matches InsightCard's Action block */}
           <div style={{
             background: '#ffffff',
             border: `1px solid ${C.border}`,
@@ -835,27 +874,170 @@ function DescriptionCard({ d, idx, copiedDesc, onCopy }) {
             boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
             display: 'flex', flexDirection: 'column',
           }}>
-            <p style={{ fontSize: 10, fontWeight: 700, color: C.amber, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>
-              {expanded ? 'Full description' : 'Preview'}
-            </p>
-            {!expanded ? (
-              <p style={{ fontSize: 13, color: C.text1, lineHeight: 1.7, margin: 0 }}>{d.preview}</p>
-            ) : (
-              <pre style={{ fontSize: 12.5, color: C.text1, lineHeight: 1.75, whiteSpace: 'pre-wrap', fontFamily: "'Inter', system-ui, sans-serif", margin: 0 }}>
-                {d.full}
-              </pre>
-            )}
+            <p style={{ fontSize: 10, fontWeight: 700, color: C.amber, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>Full description</p>
+            <pre style={{ fontSize: 12.5, color: C.text1, lineHeight: 1.75, whiteSpace: 'pre-wrap', fontFamily: "'Inter', system-ui, sans-serif", margin: 0 }}>
+              {d.full}
+            </pre>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 14, justifyContent: 'flex-end' }}>
-              <button onClick={() => setExpanded(v => !v)} className="seo-btn">
-                {expanded ? '↑ Collapse' : '↓ Show full'}
-              </button>
-              <button onClick={() => onCopy(d.full, idx)} className="seo-btn-primary" style={{ fontSize: 12, padding: '9px 18px' }}>
+              <button onClick={e => { e.stopPropagation(); onCopy(d.full, idx) }} className="seo-btn-primary" style={{ fontSize: 12, padding: '9px 18px' }}>
                 {isCopied ? '✓ Copied' : 'Copy description'}
               </button>
             </div>
           </div>
         </div>
       </div>
+      )}
+    </div>
+  )
+}
+
+// Collapsible search-intent insight row. Used for both the Opportunity card and
+// the Overused-angle card so default-closed behaviour is consistent across both.
+// Header shows the rank badge + category eyebrow + one-line headline + severity
+// chip + chevron; the 3-col body (Why / Action / Outcome) only renders when open.
+function IntentInsightRow({
+  rank, eyebrowLabel, eyebrowColor, headline, chipLabel, chipColor,
+  whyLabel, whyText, actionLabel, actionText, actionColor, outcomeLabel, outcomeText, outcomeColor,
+}) {
+  const [open, setOpen] = useState(false)
+  return (
+    <div className="seo-suggestion-card" style={{
+      marginBottom: 10,
+      borderTop: `3px solid ${chipColor}`,
+    }}>
+      <div
+        role="button" tabIndex={0}
+        onClick={() => setOpen(o => !o)}
+        onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setOpen(o => !o) } }}
+        style={{
+          padding: '14px 22px', display: 'flex', alignItems: 'flex-start', gap: 12,
+          cursor: 'pointer', userSelect: 'none',
+        }}>
+        <div style={{ width: 26, height: 26, borderRadius: 8, background: chipColor, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 1 }}>
+          <span style={{ fontSize: 12, fontWeight: 900, color: '#fff', fontVariantNumeric: 'tabular-nums' }}>{rank}</span>
+        </div>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <p style={{ fontSize: 10, fontWeight: 700, color: eyebrowColor, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 4 }}>{eyebrowLabel}</p>
+          <p style={{ fontSize: 14, fontWeight: 700, color: C.text1, lineHeight: 1.45 }}>{headline}</p>
+        </div>
+        <span style={{ fontSize: 10, fontWeight: 700, color: chipColor, padding: '3px 9px', borderRadius: 20, letterSpacing: '0.06em', textTransform: 'uppercase', border: `1.5px solid ${chipColor}`, flexShrink: 0, marginTop: 3 }}>
+          {chipLabel}
+        </span>
+        <svg width="13" height="13" viewBox="0 0 13 13" fill="none"
+          stroke={C.text3} strokeWidth="2" strokeLinecap="round"
+          style={{ flexShrink: 0, marginTop: 7, transition: 'transform 0.22s', transform: open ? 'rotate(180deg)' : 'none' }}>
+          <path d="M3 5l3.5 3.5L10 5"/>
+        </svg>
+      </div>
+
+      {open && (
+      <div style={{ padding: '0 22px 18px' }}>
+        <div style={{ height: 1, background: C.border, marginBottom: 14, marginLeft: 38 }} />
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr 1fr', gap: 8, marginLeft: 38 }}>
+          <div style={{ background: 'rgba(15,15,19,0.04)', border: '1px solid rgba(15,15,19,0.08)', borderRadius: 10, padding: '12px 14px' }}>
+            <p style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>{whyLabel}</p>
+            <p style={{ fontSize: 13.5, color: C.text2, lineHeight: 1.72 }}>{whyText}</p>
+          </div>
+          <div style={{
+            background: '#ffffff',
+            border: `1px solid ${C.border}`,
+            borderLeft: `3px solid ${actionColor}`,
+            borderRadius: '0 10px 10px 0',
+            padding: '12px 16px',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
+            display: 'flex', flexDirection: 'column',
+          }}>
+            <p style={{ fontSize: 10, fontWeight: 700, color: actionColor, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>{actionLabel}</p>
+            <p style={{ fontSize: 13.5, color: C.text1, lineHeight: 1.72 }}>{actionText}</p>
+          </div>
+          <div style={{ background: 'rgba(5,150,105,0.07)', border: '1px solid rgba(5,150,105,0.14)', borderRadius: 10, padding: '12px 14px' }}>
+            <p style={{ fontSize: 10, fontWeight: 700, color: outcomeColor, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>{outcomeLabel}</p>
+            <p style={{ fontSize: 13.5, color: C.text1, lineHeight: 1.72 }}>{outcomeText}</p>
+          </div>
+        </div>
+      </div>
+      )}
+    </div>
+  )
+}
+
+// Keyword bubble grid — replaces the flat numbered list as the headline viz for
+// Keyword research. Each phrase becomes a dot positioned by competition (x) and
+// volume (y), sized by score, colored by tier. The list below stays for fallback
+// detail; this is the at-a-glance shape of the niche.
+function KeywordBubbleGrid({ keywords }) {
+  if (!keywords?.length) return null
+
+  const volScore  = v => v === 'HIGH' ? 88 : v === 'MED' ? 55 : 22
+  const compScore = c => c === 'HIGH' ? 88 : c === 'MED' ? 55 : 22
+
+  // Plot dimensions
+  const W = 600
+  const H = 220
+  const PAD_L = 56, PAD_R = 22, PAD_T = 16, PAD_B = 32
+  const innerW = W - PAD_L - PAD_R
+  const innerH = H - PAD_T - PAD_B
+
+  // Map keywords to plot coords. Same (v,c) bucket gets tiny jitter so dots don't pile.
+  const buckets = new Map()
+  const points = keywords.map((kw, i) => {
+    const v = volScore(kw.volume)
+    const c = compScore(kw.competition)
+    const key = `${v}-${c}`
+    const idx = buckets.get(key) || 0
+    buckets.set(key, idx + 1)
+    const jx = ((idx % 3) - 1) * 12
+    const jy = (Math.floor(idx / 3) - 1) * 12
+    const x = PAD_L + (c / 100) * innerW + jx
+    const y = PAD_T + (1 - v / 100) * innerH + jy
+    const r = 5 + (kw.score / 100) * 9
+    const col = kw.score >= 75 ? C.green : kw.score >= 50 ? C.amber : C.red
+    return { kw, x, y, r, col, i }
+  })
+
+  return (
+    <div style={{
+      background: '#ffffff',
+      border: `1px solid ${C.border}`, borderRadius: 14,
+      padding: '16px 20px', marginBottom: 12,
+      boxShadow: '0 1px 2px rgba(0,0,0,0.04), 0 4px 14px rgba(0,0,0,0.06)',
+    }}>
+      <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 8 }}>
+        <p style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.08em', textTransform: 'uppercase' }}>Volume × Competition</p>
+        <p style={{ fontSize: 11, color: C.text3, fontWeight: 500 }}>dot size = opportunity score</p>
+      </div>
+      <svg viewBox={`0 0 ${W} ${H}`} width="100%" style={{ display: 'block' }}>
+        {/* Quadrant grid */}
+        <line x1={PAD_L} x2={W - PAD_R} y1={PAD_T + innerH / 2} y2={PAD_T + innerH / 2} stroke="#eef0f4" strokeWidth="1"/>
+        <line x1={PAD_L + innerW / 2} x2={PAD_L + innerW / 2} y1={PAD_T} y2={PAD_T + innerH} stroke="#eef0f4" strokeWidth="1"/>
+        {/* Frame */}
+        <rect x={PAD_L} y={PAD_T} width={innerW} height={innerH} fill="none" stroke="#eef0f4" strokeWidth="1" rx="6"/>
+        {/* Y-axis labels (Volume) */}
+        <text x={PAD_L - 8} y={PAD_T + 10}              textAnchor="end" fontSize="9" fontWeight="700" fill="#9595a4" fontFamily="Inter,sans-serif" letterSpacing="0.06em">HIGH</text>
+        <text x={PAD_L - 8} y={PAD_T + innerH / 2 + 3}  textAnchor="end" fontSize="9" fontWeight="700" fill="#9595a4" fontFamily="Inter,sans-serif" letterSpacing="0.06em">MED</text>
+        <text x={PAD_L - 8} y={PAD_T + innerH - 2}      textAnchor="end" fontSize="9" fontWeight="700" fill="#9595a4" fontFamily="Inter,sans-serif" letterSpacing="0.06em">LOW</text>
+        <text x={PAD_L - 44} y={PAD_T + innerH / 2 + 3} fontSize="9" fontWeight="700" fill="#9595a4" fontFamily="Inter,sans-serif" letterSpacing="0.08em">VOLUME</text>
+        {/* X-axis labels (Competition) */}
+        <text x={PAD_L + 6}            y={H - 12} fontSize="9" fontWeight="700" fill="#9595a4" fontFamily="Inter,sans-serif" letterSpacing="0.06em">LOW COMP</text>
+        <text x={PAD_L + innerW / 2}   y={H - 12} textAnchor="middle" fontSize="9" fontWeight="700" fill="#9595a4" fontFamily="Inter,sans-serif" letterSpacing="0.06em">MED</text>
+        <text x={W - PAD_R}            y={H - 12} textAnchor="end" fontSize="9" fontWeight="700" fill="#9595a4" fontFamily="Inter,sans-serif" letterSpacing="0.06em">HIGH COMP</text>
+
+        {/* "Sweet spot" highlight — top-left quadrant (high vol, low comp) */}
+        <rect x={PAD_L} y={PAD_T} width={innerW / 2} height={innerH / 2}
+          fill="rgba(5,150,105,0.06)" rx="6"/>
+        <text x={PAD_L + 8} y={PAD_T + 22} fontSize="9" fontWeight="700" fill={C.green}
+          fontFamily="Inter,sans-serif" letterSpacing="0.08em" opacity="0.85">SWEET SPOT</text>
+
+        {/* Bubbles */}
+        {points.map(p => (
+          <g key={p.kw.phrase}>
+            <circle cx={p.x} cy={p.y} r={p.r}
+              fill={p.col} fillOpacity="0.22"
+              stroke={p.col} strokeWidth="1.5"/>
+            <title>{`${p.kw.phrase} — vol ${p.kw.volume} · comp ${p.kw.competition} · score ${p.kw.score}`}</title>
+          </g>
+        ))}
+      </svg>
     </div>
   )
 }
@@ -1602,87 +1784,119 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
             )}
           </div>
 
-          {/* ── Title Scorecard hero — ScoreRing + AI verdict, mirrors Overview's Summary card (Dashboard.jsx:2076) ── */}
+          {/* ── Lift hero — 3 stat tiles (Your score / Best alt / Lift) + best-alt breakdown bars.
+                Replaces the old one-ring "AI verdict" block. The page is now scan-first:
+                user sees the lift number before reading anything, then drills in. ── */}
           {result.suggestions?.length > 0 && (() => {
-            // Use the backend's weighted combined score (SEO*0.30 + CTR*0.40 + Hook*0.30) as single source of truth.
-            // Fallback to simple average only for older cached results that predate the principled rubric.
-            const sugAvg = (s) => Number.isFinite(s.score) ? s.score : Math.round(((s.seo_score || 0) + (s.ctr_score || 0) + (s.hook_score || 0)) / 3)
+            const sugAvg  = (s) => Number.isFinite(s.score) ? s.score : Math.round(((s.seo_score || 0) + (s.ctr_score || 0) + (s.hook_score || 0)) / 3)
             const bestSug = [...result.suggestions].sort((a, b) => sugAvg(b) - sugAvg(a))[0]
             const bestAvg = sugAvg(bestSug)
-            const compAvg = result.top_videos?.length
-              ? Math.round(result.top_videos.reduce((s, v) => s + (v.seo_score || 0), 0) / result.top_videos.length)
-              : null
-            const delta = compAvg != null ? bestAvg - compAvg : null
-            const strongEntry = [['SEO', bestSug.seo_score || 0], ['CTR appeal', bestSug.ctr_score || 0], ['hook', bestSug.hook_score || 0]]
-              .filter(([_, v]) => v > 0)
-              .sort((a, b) => b[1] - a[1])
-            const strongest = strongEntry[0]
-            const weakest = strongEntry[strongEntry.length - 1]
-            const beatVerdict = delta == null
-              ? ''
-              : delta > 0
-                ? `beating the competitor average of ${compAvg} by ${delta} points`
-                : delta < 0
-                  ? `trailing the competitor average of ${compAvg} by ${Math.abs(delta)} points`
-                  : `matching the competitor average of ${compAvg}`
-            return (
+            const userScore = Number.isFinite(result.score) ? result.score : 0
+            const lift = bestAvg - userScore
+
+            const userCol = userScore >= 75 ? C.green : userScore >= 50 ? C.amber : C.red
+            const userLbl = userScore >= 75 ? 'Strong' : userScore >= 50 ? 'Solid' : 'Weak'
+            const bestCol = bestAvg >= 75 ? C.green : bestAvg >= 50 ? C.amber : C.red
+            const bestLbl = bestAvg >= 75 ? 'Strong' : bestAvg >= 50 ? 'Solid' : 'Weak'
+            const liftCol = lift > 15 ? C.green : lift > 0 ? C.amber : C.text3
+            const liftLbl = lift > 15 ? 'Worth rewriting' : lift > 0 ? 'Marginal lift' : 'Title is already strong'
+
+            // Reusable mini-donut. Replaces the heavyweight 108px ScoreRing for the tile grid,
+            // and lets all 3 hero tiles share the exact same dimensions.
+            const Donut = ({ value, color }) => {
+              const r = 28, sw = 7, circ = 2 * Math.PI * r
+              const fill = Math.max(0, Math.min(100, value)) / 100 * circ
+              return (
+                <svg width="76" height="76" style={{ flexShrink: 0 }}>
+                  <circle cx="38" cy="38" r={r} fill="none" stroke="#f0f0f4" strokeWidth={sw}/>
+                  <circle cx="38" cy="38" r={r} fill="none" stroke={color} strokeWidth={sw}
+                    strokeDasharray={`${fill} ${circ}`} strokeLinecap="round"
+                    transform="rotate(-90 38 38)"
+                    style={{ transition: 'stroke-dasharray 0.85s cubic-bezier(0.34,1.56,0.64,1)' }}/>
+                  <text x="38" y="44" textAnchor="middle" fontSize="20" fontWeight="800"
+                    fill={color} fontFamily="Inter,sans-serif" letterSpacing="-0.6px"
+                    style={{ fontVariantNumeric: 'tabular-nums' }}>{value}</text>
+                </svg>
+              )
+            }
+
+            const Tile = ({ label, value, valueCol, verdict, sub, deltaArrow }) => (
               <div style={{
-                background: '#ffffff', border: '1px solid #e6e6ec', borderRadius: 16,
-                padding: '28px 32px', marginBottom: 20,
+                background: '#ffffff', border: `1px solid ${C.border}`,
+                borderRadius: 14, padding: '18px 20px',
                 boxShadow: '0 1px 2px rgba(0,0,0,0.04), 0 4px 14px rgba(0,0,0,0.06)',
+                display: 'flex', alignItems: 'center', gap: 16,
               }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 36 }}>
-                  {/* Ring — left */}
-                  <div style={{ flexShrink: 0, textAlign: 'center' }}>
-                    <ScoreRing score={bestAvg} />
-                    <p style={{ fontSize: 11, color: C.text3, fontWeight: 500, marginTop: 4, letterSpacing: '0.03em', textTransform: 'uppercase' }}>Title score</p>
-                    {delta != null && delta !== 0 && (
-                      <p style={{ fontSize: 11, fontWeight: 700, color: delta > 0 ? C.green : C.red, marginTop: 3 }}>
-                        {delta > 0 ? '▲' : '▼'} {Math.abs(delta)} vs competitor avg
-                      </p>
-                    )}
+                {deltaArrow ? (
+                  <div style={{
+                    width: 76, height: 76, flexShrink: 0,
+                    background: lift > 0 ? 'rgba(5,150,105,0.08)' : 'rgba(15,15,19,0.04)',
+                    borderRadius: 99,
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  }}>
+                    <span style={{
+                      fontSize: 24, fontWeight: 900, color: valueCol,
+                      letterSpacing: '-0.8px', fontVariantNumeric: 'tabular-nums',
+                      display: 'inline-flex', alignItems: 'center', gap: 2,
+                    }}>
+                      {lift > 0 ? '▲' : lift < 0 ? '▼' : '–'}
+                      {Math.abs(lift)}
+                    </span>
                   </div>
-                  {/* Divider — amber 3px, matches the Priority Actions Action-box left bar in Overview (Dashboard.jsx:1098) */}
-                  <div style={{ width: 3, alignSelf: 'stretch', background: C.amber, flexShrink: 0, borderRadius: 2 }}/>
-                  {/* Verdict text — middle */}
-                  <div style={{ flex: 1.3, minWidth: 0 }}>
-                    <p style={{ fontSize: 11, fontWeight: 600, color: C.text3, letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 10 }}>AI verdict</p>
-                    <p style={{ fontSize: 14, color: C.text1, lineHeight: 1.85 }}>
-                      Your strongest AI option scores <span style={{ fontWeight: 700, color: bestAvg >= 75 ? C.green : bestAvg >= 50 ? C.amber : C.red }}>{bestAvg}</span>
-                      {beatVerdict && <> — {beatVerdict}</>}.
-                      {strongest && weakest && strongest[0] !== weakest[0] && (
-                        <> Strongest on <span style={{ fontWeight: 700, color: C.text1 }}>{strongest[0].toLowerCase()}</span> ({strongest[1]}); room to grow on <span style={{ fontWeight: 700, color: C.text1 }}>{weakest[0].toLowerCase()}</span> ({weakest[1]}).</>
-                      )}
-                    </p>
-                  </div>
-                  {/* Second amber divider — visually separates verdict from the numeric breakdown */}
-                  <div style={{ width: 3, alignSelf: 'stretch', background: C.amber, flexShrink: 0, borderRadius: 2 }}/>
-                  {/* Score breakdown — right. Plain-English labels so scores explain themselves. Row pattern mirrors Overview's Category scores (Dashboard.jsx:2103-2110). */}
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <p style={{ fontSize: 11, fontWeight: 600, color: C.text3, letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 12 }}>Score breakdown</p>
-                    {[
-                      // Plain-English labels + weight. The scoring formula is: SEO*0.30 + CTR*0.40 + Hook*0.30.
-                      // SEO = structural (keyword fuzzy match + length + pipe discipline).
-                      // CTR + Hook = Claude-judged against a 40/60/75/90 rubric embedded in the title-gen prompt.
-                      ['Keyword fit',        bestSug.seo_score  || 0, '30%'],
-                      ['Click appeal',       bestSug.ctr_score  || 0, '40%'],
-                      ['Opening strength',   bestSug.hook_score || 0, '30%'],
-                    ].map(([label, val, weight]) => {
-                      const col = val >= 75 ? C.green : val >= 55 ? C.amber : C.red
-                      return (
-                        <div key={label} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
-                          <span style={{ fontSize: 11, fontWeight: 500, color: C.text3, flexShrink: 0, width: 30, textAlign: 'right' }}>{weight}</span>
-                          <span style={{ fontSize: 13, color: C.text2, fontWeight: 400, flexShrink: 0, width: 116 }}>{label}</span>
-                          <div style={{ flex: 1, height: 4, background: '#eeeef3', borderRadius: 99, overflow: 'hidden' }}>
-                            <div style={{ width: `${val}%`, height: '100%', background: col, borderRadius: 99, transition: 'width 0.8s cubic-bezier(0.34,1.56,0.64,1)' }}/>
-                          </div>
-                          <span style={{ fontSize: 13, fontWeight: 700, color: col, fontVariantNumeric: 'tabular-nums', minWidth: 26, textAlign: 'right' }}>{val || '—'}</span>
-                        </div>
-                      )
-                    })}
-                  </div>
+                ) : (
+                  <Donut value={value} color={valueCol}/>
+                )}
+                <div style={{ minWidth: 0 }}>
+                  <p style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 5 }}>{label}</p>
+                  <p style={{ fontSize: 15, fontWeight: 700, color: valueCol, letterSpacing: '-0.15px', marginBottom: 3 }}>{verdict}</p>
+                  <p style={{ fontSize: 11.5, color: C.text3, fontWeight: 500, lineHeight: 1.45 }}>{sub}</p>
                 </div>
               </div>
+            )
+
+            return (
+              <>
+                <div style={{
+                  display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
+                  gap: 12, marginBottom: 14,
+                }}>
+                  <Tile label="Your title" value={userScore} valueCol={userCol} verdict={userLbl} sub="Structural baseline"/>
+                  <Tile label="Best AI alternative" value={bestAvg} valueCol={bestCol} verdict={bestLbl} sub="AI rewrite, weighted score"/>
+                  <Tile label="Potential lift" valueCol={liftCol} verdict={liftLbl} sub="Δ vs your current title" deltaArrow/>
+                </div>
+
+                {/* Best-alt breakdown — 3 weighted bars showing where the lift comes from. */}
+                <div style={{
+                  background: '#ffffff', border: `1px solid ${C.border}`, borderRadius: 14,
+                  padding: '18px 22px', marginBottom: 20,
+                  boxShadow: '0 1px 2px rgba(0,0,0,0.04), 0 4px 14px rgba(0,0,0,0.06)',
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 14 }}>
+                    <p style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.08em', textTransform: 'uppercase' }}>Best alt — score breakdown</p>
+                    <p style={{ fontSize: 11, color: C.text3, fontWeight: 500 }}>weights: 30 · 40 · 30</p>
+                  </div>
+                  {[
+                    ['Keyword fit',      bestSug.seo_score  || 0, '30%'],
+                    ['Click appeal',     bestSug.ctr_score  || 0, '40%'],
+                    ['Opening strength', bestSug.hook_score || 0, '30%'],
+                  ].map(([label, val, weight]) => {
+                    const col = val >= 75 ? C.green : val >= 55 ? C.amber : C.red
+                    return (
+                      <div key={label} style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 11 }}>
+                        <span style={{ fontSize: 11, color: C.text3, flexShrink: 0, width: 36, textAlign: 'right', fontWeight: 500 }}>{weight}</span>
+                        <span style={{ fontSize: 13, color: C.text2, fontWeight: 500, flexShrink: 0, width: 130 }}>{label}</span>
+                        <div style={{ flex: 1, height: 6, background: '#eef0f4', borderRadius: 99, overflow: 'hidden' }}>
+                          <div style={{
+                            width: `${val}%`, height: '100%', background: col, borderRadius: 99,
+                            transition: 'width 0.85s cubic-bezier(0.34,1.56,0.64,1)',
+                          }}/>
+                        </div>
+                        <span style={{ fontSize: 14, fontWeight: 800, color: col, fontVariantNumeric: 'tabular-nums', minWidth: 30, textAlign: 'right', letterSpacing: '-0.3px' }}>{val || '—'}</span>
+                      </div>
+                    )
+                  })}
+                </div>
+              </>
             )
           })()}
 
@@ -1722,110 +1936,42 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
                   </p>
                 </div>
 
-                {/* ── Insight #1 — Opportunity (green border, info severity) ── */}
-                <div className="seo-suggestion-card" style={{
-                  marginBottom: 10,
-                  borderTop: `3px solid ${C.amber}`,
-                }}>
-                  <div style={{ padding: '16px 22px 18px' }}>
-                    {/* Header row — rank badge + category + problem title + severity pill */}
-                    <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: 14 }}>
-                      <div style={{ width: 26, height: 26, borderRadius: 8, background: C.amber, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 2 }}>
-                        <span style={{ fontSize: 12, fontWeight: 900, color: '#fff', fontVariantNumeric: 'tabular-nums' }}>1</span>
-                      </div>
-                      <div style={{ flex: 1, minWidth: 0 }}>
-                        <p style={{ fontSize: 10, fontWeight: 700, color: greenColor, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 5 }}>Opportunity</p>
-                        <p style={{ fontSize: 14, fontWeight: 700, color: C.text1, lineHeight: 1.55 }}>{gap}</p>
-                      </div>
-                      <span style={{ fontSize: 10, fontWeight: 700, color: greenColor, padding: '3px 9px', borderRadius: 20, letterSpacing: '0.06em', textTransform: 'uppercase', border: `1.5px solid ${greenColor}`, flexShrink: 0 }}>
-                        Act on this
-                      </span>
-                    </div>
+                {/* Insight #1 — Opportunity (default-collapsed; click to read the full Who's searching / Intent / Pull breakdown). */}
+                <IntentInsightRow
+                  rank={1}
+                  eyebrowLabel="Opportunity"
+                  eyebrowColor={greenColor}
+                  headline={gap}
+                  chipLabel="Act on this"
+                  chipColor={greenColor}
+                  whyLabel="Who's searching"
+                  whyText={viewerProfile}
+                  actionLabel="Search intent"
+                  actionText={searchIntent}
+                  actionColor={greenColor}
+                  outcomeLabel="Emotional pull"
+                  outcomeText={emotionalDrv}
+                  outcomeColor={C.green}
+                />
 
-                    {/* Divider aligned with content start — mirrors Dashboard.jsx:1082 */}
-                    <div style={{ height: 1, background: C.border, marginBottom: 14, marginLeft: 38 }} />
-
-                    {/* 3-col body — Priority-Actions pattern: Who's searching (charcoal-neutral) / Action (white+green bar) / Expected outcome (green) */}
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr 1fr', gap: 8, marginLeft: 38 }}>
-                      {/* Who's searching — charcoal-neutral context */}
-                      <div style={{ background: 'rgba(15,15,19,0.04)', border: '1px solid rgba(15,15,19,0.08)', borderRadius: 10, padding: '12px 14px' }}>
-                        <p style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Who's searching</p>
-                        <p style={{ fontSize: 13.5, color: C.text2, lineHeight: 1.72 }}>{viewerProfile}</p>
-                      </div>
-                      {/* Action — white bg + colored left bar + shadow */}
-                      <div style={{
-                        background: '#ffffff',
-                        border: `1px solid ${C.border}`,
-                        borderLeft: `3px solid ${greenColor}`,
-                        borderRadius: '0 10px 10px 0',
-                        padding: '12px 16px',
-                        boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
-                        display: 'flex', flexDirection: 'column',
-                      }}>
-                        <p style={{ fontSize: 10, fontWeight: 700, color: greenColor, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>Search intent</p>
-                        <p style={{ fontSize: 13.5, color: C.text1, lineHeight: 1.72 }}>{searchIntent}</p>
-                      </div>
-                      {/* Expected outcome — green tint */}
-                      <div style={{ background: 'rgba(5,150,105,0.07)', border: '1px solid rgba(5,150,105,0.14)', borderRadius: 10, padding: '12px 14px' }}>
-                        <p style={{ fontSize: 10, fontWeight: 700, color: C.green, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Emotional pull</p>
-                        <p style={{ fontSize: 13.5, color: C.text1, lineHeight: 1.72 }}>{emotionalDrv}</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* ── Insight #2 — Overused angle (red border, critical severity) ── */}
+                {/* Insight #2 — Overused angle (default-collapsed). */}
                 {hasOverused && (
-                  <div className="seo-suggestion-card" style={{
-                    marginBottom: 10,
-                    borderTop: `3px solid ${C.amber}`,
-                  }}>
-                    <div style={{ padding: '16px 22px 18px' }}>
-                      <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: 14 }}>
-                        <div style={{ width: 26, height: 26, borderRadius: 8, background: C.amber, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 2 }}>
-                          <span style={{ fontSize: 12, fontWeight: 900, color: '#fff', fontVariantNumeric: 'tabular-nums' }}>2</span>
-                        </div>
-                        <div style={{ flex: 1, minWidth: 0 }}>
-                          <p style={{ fontSize: 10, fontWeight: 700, color: redColor, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 5 }}>Overused angle</p>
-                          <p style={{ fontSize: 14, fontWeight: 700, color: C.text1, lineHeight: 1.55 }}>{overused}</p>
-                        </div>
-                        <span style={{ fontSize: 10, fontWeight: 700, color: redColor, padding: '3px 9px', borderRadius: 20, letterSpacing: '0.06em', textTransform: 'uppercase', border: `1.5px solid ${redColor}`, flexShrink: 0 }}>
-                          Avoid
-                        </span>
-                      </div>
-
-                      <div style={{ height: 1, background: C.border, marginBottom: 14, marginLeft: 38 }} />
-
-                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr 1fr', gap: 8, marginLeft: 38 }}>
-                        <div style={{ background: 'rgba(15,15,19,0.04)', border: '1px solid rgba(15,15,19,0.08)', borderRadius: 10, padding: '12px 14px' }}>
-                          <p style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Why it's saturated</p>
-                          <p style={{ fontSize: 13.5, color: C.text2, lineHeight: 1.72 }}>
-                            Most top-ranking titles in this niche already use this framing, so a new video starting from the same angle blends in instead of earning a click.
-                          </p>
-                        </div>
-                        <div style={{
-                          background: '#ffffff',
-                          border: `1px solid ${C.border}`,
-                          borderLeft: `3px solid ${redColor}`,
-                          borderRadius: '0 10px 10px 0',
-                          padding: '12px 16px',
-                          boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
-                          display: 'flex', flexDirection: 'column',
-                        }}>
-                          <p style={{ fontSize: 10, fontWeight: 700, color: redColor, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>Do instead</p>
-                          <p style={{ fontSize: 13.5, color: C.text1, lineHeight: 1.72 }}>
-                            Lead with the struggle, the choice, or the story behind the outcome — not the outcome itself. That is the gap above.
-                          </p>
-                        </div>
-                        <div style={{ background: 'rgba(5,150,105,0.07)', border: '1px solid rgba(5,150,105,0.14)', borderRadius: 10, padding: '12px 14px' }}>
-                          <p style={{ fontSize: 10, fontWeight: 700, color: C.green, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Expected lift</p>
-                          <p style={{ fontSize: 13.5, color: C.text1, lineHeight: 1.72 }}>
-                            Pattern-interrupt framings earn higher CTR on the suggested feed because they stand out from the wall of identical titles.
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                  <IntentInsightRow
+                    rank={2}
+                    eyebrowLabel="Overused angle"
+                    eyebrowColor={redColor}
+                    headline={overused}
+                    chipLabel="Avoid"
+                    chipColor={redColor}
+                    whyLabel="Why it's saturated"
+                    whyText="Most top-ranking titles in this niche already use this framing, so a new video starting from the same angle blends in instead of earning a click."
+                    actionLabel="Do instead"
+                    actionText="Lead with the struggle, the choice, or the story behind the outcome — not the outcome itself. That is the gap above."
+                    actionColor={redColor}
+                    outcomeLabel="Expected lift"
+                    outcomeText="Pattern-interrupt framings earn higher CTR on the suggested feed because they stand out from the wall of identical titles."
+                    outcomeColor={C.green}
+                  />
                 )}
 
               </div>
@@ -1881,12 +2027,15 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
           {/* ── Keyword research — amber-topped card matching Keyword discovery / Competitor set ── */}
           {result.keyword_scores?.length > 0 && (
             <>
-              <div style={{ marginBottom: 20, marginTop: 40 }}>
+              <div style={{ marginBottom: 16, marginTop: 40 }}>
                 <h2 style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', marginBottom: 4 }}>Keyword research</h2>
                 <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.5 }}>
                   Related phrases ranked by opportunity · click any to use as title
                 </p>
               </div>
+
+              {/* Headline viz — volume × competition bubble grid. Replaces the "26 phrases" stat as the at-a-glance shape of the niche. */}
+              <KeywordBubbleGrid keywords={result.keyword_scores}/>
 
               <div className="seo-suggestion-card" style={{
                 borderTop: `3px solid ${C.amber}`,
