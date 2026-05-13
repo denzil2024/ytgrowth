@@ -1415,7 +1415,7 @@ function FeedFilterPills({ value, counts, onChange }) {
     { key: 'achievements', label: 'Achievements' },
   ]
   return (
-    <div style={{ display: 'flex', gap: 8, marginBottom: 18, flexWrap: 'wrap' }}>
+    <div style={{ display: 'flex', gap: 8, marginBottom: 24, flexWrap: 'wrap' }}>
       {TABS.map(t => {
         const active = value === t.key
         const count = counts?.[t.key] ?? null
@@ -1643,30 +1643,67 @@ function PriorityActionCard({ action, rank, total, impact, onAct, onDone, onDism
         </button>
       </div>
 
-      {/* Detail (collapsed by default) */}
+      {/* Detail (collapsed by default). The Fix and Why blocks each get
+          a tinted card so they don't sit on plain white. Fix = red tint
+          (this is the action, matches the card's brand identity); Why =
+          green tint (the positive outcome). Mirrors the Insight Card
+          pattern in the legacy audit detail. */}
       {open && (
         <div style={{
           marginTop: 14, paddingTop: 14,
           borderTop: '1px solid #f1f1f4',
         }}>
-          {action.action && action.action !== action.problem && (
-            <p style={{
-              fontSize: 12.5, fontWeight: 500, color: C.text2,
-              letterSpacing: '-0.01em', lineHeight: 1.65,
-              marginBottom: action.expected_outcome ? 10 : 12,
-            }}>
-              <span style={{ fontWeight: 700, color: C.text1 }}>Fix:</span> {action.action}
-            </p>
-          )}
-          {action.expected_outcome && (
-            <p style={{
-              fontSize: 12.5, fontWeight: 500, color: C.text3,
-              letterSpacing: '-0.01em', lineHeight: 1.65,
-              marginBottom: 12,
-            }}>
-              <span style={{ fontWeight: 700, color: C.text2 }}>Why:</span> {action.expected_outcome}
-            </p>
-          )}
+          {(() => {
+            const showFix = action.action && action.action !== action.problem
+            const showWhy = !!action.expected_outcome
+            if (!showFix && !showWhy) return null
+            return (
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: showFix && showWhy ? '1fr 1fr' : '1fr',
+                gap: 10, marginBottom: 14,
+              }}>
+                {showFix && (
+                  <div style={{
+                    background: 'rgba(229,37,27,0.05)',
+                    border: '1px solid rgba(229,37,27,0.12)',
+                    borderLeft: `3px solid ${C.red}`,
+                    borderRadius: '0 10px 10px 0',
+                    padding: '11px 14px',
+                  }}>
+                    <p style={{
+                      fontSize: 9.5, fontWeight: 700, color: C.red,
+                      letterSpacing: '0.10em', textTransform: 'uppercase',
+                      marginBottom: 6,
+                    }}>Fix</p>
+                    <p style={{
+                      fontSize: 12.5, fontWeight: 500, color: C.text1,
+                      letterSpacing: '-0.01em', lineHeight: 1.65,
+                    }}>{action.action}</p>
+                  </div>
+                )}
+                {showWhy && (
+                  <div style={{
+                    background: 'rgba(5,150,105,0.06)',
+                    border: '1px solid rgba(5,150,105,0.14)',
+                    borderLeft: `3px solid ${C.green}`,
+                    borderRadius: '0 10px 10px 0',
+                    padding: '11px 14px',
+                  }}>
+                    <p style={{
+                      fontSize: 9.5, fontWeight: 700, color: C.green,
+                      letterSpacing: '0.10em', textTransform: 'uppercase',
+                      marginBottom: 6,
+                    }}>Why this works</p>
+                    <p style={{
+                      fontSize: 12.5, fontWeight: 500, color: C.text1,
+                      letterSpacing: '-0.01em', lineHeight: 1.65,
+                    }}>{action.expected_outcome}</p>
+                  </div>
+                )}
+              </div>
+            )
+          })()}
           <button
             type="button"
             onClick={onDone}
@@ -5029,74 +5066,98 @@ export default function Dashboard() {
                 </div>
               )}
 
-              {/* Priority actions */}
+              {/* Priority actions — same visual language as the Feed.
+                  Renders ALL open actions here (Feed only shows top 3).
+                  Mark done / Dismiss share state with the Feed cards via
+                  the same localStorage keys, so ticking either updates
+                  both surfaces. */}
               {data.insights.priorityActions?.length > 0 && (() => {
                 const allActions = data.insights.priorityActions
-                const actions = allActions.filter((a, i) => !deleted[`rank_${a.rank ?? (i + 1)}`])
-                const doneCount = actions.filter((a, i) => {
-                  const rank = a.rank ?? (allActions.indexOf(a) + 1)
-                  return checked[`rank_${rank}`]
-                }).length
-                const hasDone = doneCount > 0
-                return (
-                  <div style={{ marginBottom: 24 }}>
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                        <p style={{ fontSize: 20, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px' }}>Priority actions</p>
-                        <span style={{ fontSize: 11, fontWeight: 700, color: C.text3, background: '#f1f1f6', padding: '2px 8px', borderRadius: 20, border: '1px solid #e6e6ec' }}>{actions.length}</span>
-                      </div>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                        {hasDone && (
-                          <button
-                            onClick={() => {
-                              const nextDel = { ...deleted }
-                              const nextChk = { ...checked }
-                              actions.forEach(a => {
-                                const rank = a.rank ?? (allActions.indexOf(a) + 1)
-                                const k = `rank_${rank}`
-                                if (nextChk[k]) { nextDel[k] = true; delete nextChk[k] }
-                              })
-                              setDeleted(nextDel)
-                              setChecked(nextChk)
-                              if (data?.channel?.channel_id) {
-                                localStorage.setItem(`ytg_deleted_${data.channel.channel_id}`, JSON.stringify(nextDel))
-                                localStorage.setItem(`ytg_checked_${data.channel.channel_id}`, JSON.stringify(nextChk))
-                              }
-                            }}
-                            style={{ fontSize: 12, fontWeight: 600, color: C.red, background: C.redBg, border: `1px solid ${C.redBdr}`, borderRadius: 20, padding: '4px 12px', cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.15s' }}
-                          >
-                            Clear completed
-                          </button>
-                        )}
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
-                          <div style={{ width: 72, height: 4, background: '#ebebef', borderRadius: 2, overflow: 'hidden' }}>
-                            <div style={{ width: actions.length ? `${(doneCount / actions.length) * 100}%` : '0%', height: '100%', background: C.green, borderRadius: 2, transition: 'width 0.4s' }}/>
-                          </div>
-                          <span style={{ fontSize: 12, fontWeight: 600, color: doneCount > 0 && doneCount === actions.length ? C.green : C.text3, fontVariantNumeric: 'tabular-nums' }}>
-                            {doneCount}/{actions.length}
-                          </span>
+                const openActions = []
+                for (let i = 0; i < allActions.length; i++) {
+                  const a = allActions[i]
+                  const rank = a.rank ?? (i + 1)
+                  const k = `rank_${rank}`
+                  if (!checked[k] && !deleted[k]) openActions.push({ a, rank, k, idx: i })
+                }
+                const total = allActions.length
+                const doneCount = total - openActions.length
+
+                if (openActions.length === 0) {
+                  return (
+                    <div style={{ marginBottom: 24 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                          <p style={{ fontSize: 20, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px' }}>Priority actions</p>
+                          <span style={{ fontSize: 10, fontWeight: 700, color: C.green, background: C.greenBg, padding: '3px 9px', borderRadius: 100, border: `1px solid ${C.greenBdr}`, letterSpacing: '0.08em', textTransform: 'uppercase' }}>All clear</span>
                         </div>
                       </div>
-                    </div>
-                    {actions.length === 0 && (
-                      <div style={{ textAlign: 'center', padding: '32px 20px', background: C.greenBg, border: `1px solid ${C.greenBdr}`, borderRadius: 16 }}>
-                        <p style={{ fontSize: 22, marginBottom: 6 }}>✓</p>
-                        <p style={{ fontSize: 14, fontWeight: 700, color: C.green, marginBottom: 4 }}>All tasks cleared</p>
-                        <p style={{ fontSize: 14, color: '#166534' }}>Great work — you've handled every priority action.</p>
+                      <div style={{
+                        background: C.greenBg,
+                        border: `1px solid ${C.greenBdr}`,
+                        borderLeft: `3px solid ${C.green}`,
+                        borderRadius: '0 12px 12px 0',
+                        padding: '14px 18px',
+                      }}>
+                        <p style={{ fontSize: 13, color: C.text1, fontWeight: 600, marginBottom: 2 }}>You've handled every priority action.</p>
+                        <p style={{ fontSize: 12.5, color: C.text3 }}>Re-audit to surface new ones, or come back next month.</p>
                       </div>
-                    )}
-                    {actions.map((ins, i) => {
-                      const rank = ins.rank ?? (allActions.indexOf(ins) + 1)
-                      const key = `rank_${rank}`
+                    </div>
+                  )
+                }
+
+                return (
+                  <div style={{ marginBottom: 24 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16, flexWrap: 'wrap', gap: 12 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                        <p style={{ fontSize: 20, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px' }}>Priority actions</p>
+                        <span style={{ fontSize: 11, fontWeight: 700, color: C.text3, background: '#f1f1f6', padding: '3px 9px', borderRadius: 100, border: '1px solid #e6e6ec', fontVariantNumeric: 'tabular-nums' }}>{openActions.length} open</span>
+                      </div>
+                      {doneCount > 0 && (
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontVariantNumeric: 'tabular-nums' }}>
+                          <div style={{ width: 72, height: 3, background: '#eef0f4', borderRadius: 99, overflow: 'hidden' }}>
+                            <div style={{ width: `${(doneCount / total) * 100}%`, height: '100%', background: C.green, borderRadius: 99, transition: 'width 0.6s ease' }}/>
+                          </div>
+                          <span style={{ fontSize: 11.5, fontWeight: 600, color: C.text3 }}>
+                            {doneCount} of {total} done
+                          </span>
+                        </div>
+                      )}
+                    </div>
+
+                    {openActions.map(({ a, rank, k }, i) => {
+                      const impact = a.impact || (i === 0 ? 'high' : i === 1 ? 'med' : 'low')
+                      const target = categoryToNav(a.category, a.problem)
+                      const ctaLabel = target === 'SEO Studio' ? 'Open SEO Studio'
+                        : target === 'Thumbnail Score' ? 'Open Thumbnails'
+                        : target === 'Video Ideas' ? 'Open Video Ideas'
+                        : target === 'Outliers' ? 'Open Outliers'
+                        : target === 'Keywords' ? 'Open Keywords'
+                        : target === 'Competitors' ? 'Open Competitors'
+                        : 'Open tool'
                       return (
-                        <InsightCard
-                          key={rank}
-                          insight={ins}
-                          index={i}
-                          checked={!!checked[key]}
-                          onToggle={() => handleToggleCheck(key)}
-                          onDelete={() => handleDelete(key)}
-                          onNavigate={setNav}
+                        <PriorityActionCard
+                          key={`audit-pa-${rank}`}
+                          action={a}
+                          rank={i + 1}
+                          total={openActions.length}
+                          impact={impact}
+                          ctaLabel={ctaLabel}
+                          onAct={() => target ? setNav(target) : null}
+                          onDone={() => {
+                            const next = { ...checked, [k]: true }
+                            setChecked(next)
+                            if (data?.channel?.channel_id) {
+                              try { localStorage.setItem(`ytg_checked_${data.channel.channel_id}`, JSON.stringify(next)) } catch {}
+                            }
+                          }}
+                          onDismiss={() => {
+                            const next = { ...deleted, [k]: true }
+                            setDeleted(next)
+                            if (data?.channel?.channel_id) {
+                              try { localStorage.setItem(`ytg_deleted_${data.channel.channel_id}`, JSON.stringify(next)) } catch {}
+                            }
+                          }}
                         />
                       )
                     })}

@@ -211,12 +211,8 @@ function InteractiveBundleCard({ bundle, channelId, onDismiss, onOpenSeoStudio, 
         </span>
         <span className="nh-section-age">· {refreshedAge}</span>
         <div className="nh-section-spacer" />
-        <button className="nh-x" aria-label="Dismiss" onClick={onDismiss}>
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
-            <line x1="2.5" y1="2.5" x2="9.5" y2="9.5"/>
-            <line x1="9.5" y1="2.5" x2="2.5" y2="9.5"/>
-          </svg>
-        </button>
+        {/* No dismiss X — this is a core feature, not a notification. A
+            user can't dismiss it the way they dismiss a Priority Action. */}
       </div>
 
       <article className="nh-card">
@@ -483,12 +479,8 @@ function LegacySingleCard({ data, onDismiss, onNavigate }) {
         </span>
         <span className="nh-section-age">· {relAge(v.refreshed_at) || 'this week'}</span>
         <div className="nh-section-spacer" />
-        <button className="nh-x" aria-label="Dismiss" onClick={onDismiss}>
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
-            <line x1="2.5" y1="2.5" x2="9.5" y2="9.5"/>
-            <line x1="9.5" y1="2.5" x2="2.5" y2="9.5"/>
-          </svg>
-        </button>
+        {/* No dismiss X — Niche Outlier is a core feature, not a
+            notification users should be able to delete by accident. */}
       </div>
       <article className="nh-card">
         <VideoFeatured v={{ ...v, outlier_mult: v.outlier_mult || v.sub_ratio }} onOpenSeoStudio={null} />
