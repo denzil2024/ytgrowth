@@ -1977,75 +1977,73 @@ export default function Dashboard() {
           ) })()}
         </a>
 
-        {/* Channel profile block — compact row, no inline health bar.
-            The health score is a small ●NN chip next to the name; the full
-            score and category breakdown live on the Feed page where they
-            belong as the hero. Click the chip to jump to Feed. */}
+        {/* Channel profile block */}
         {data && (
-          <div style={{ padding: '14px 16px 6px', flexShrink: 0 }}>
-            {channels.length >= 2 ? (
-              <ChannelSwitcher
-                channels={channels}
-                channelsAllowed={channelsAllowed}
-                canAddMore={canAddMore}
-                currentChannelId={data.channel.channel_id}
-              />
-            ) : (() => {
-              const scoreClr = scoreColor(score)
-              return (
-                <div style={{
-                  display: 'flex', alignItems: 'center', gap: 10,
-                  padding: '6px 6px',
-                  borderRadius: 10,
-                  transition: 'background 0.14s ease',
-                  cursor: 'pointer',
-                }}
-                  onClick={() => setNav('Overview')}
-                  onMouseEnter={e => { e.currentTarget.style.background = 'rgba(15,15,19,0.035)' }}
-                  onMouseLeave={e => { e.currentTarget.style.background = 'transparent' }}
-                >
+          <div style={{ padding: '16px 22px', flexShrink: 0 }}>
+           <div style={{
+             background: 'linear-gradient(180deg, #fafafc 0%, #f5f6f9 100%)',
+             border: '1px solid #ececf0',
+             borderRadius: 12,
+             padding: '15px 16px 14px',
+             boxShadow: '0 1px 2px rgba(0,0,0,0.025), inset 0 1px 0 rgba(255,255,255,0.7)',
+           }}>
+            {/* Avatar + name */}
+            {channels.length >= 2
+              ? <div style={{ marginBottom: 14 }}>
+                  <ChannelSwitcher
+                    channels={channels}
+                    channelsAllowed={channelsAllowed}
+                    canAddMore={canAddMore}
+                    currentChannelId={data.channel.channel_id}
+                  />
+                </div>
+              : (() => {
+                  // Avatar ring caps at amber even when score is critical — a blood-red
+                  // ring around the user's own face reads as an error indicator. The
+                  // score number itself still goes red (that's informational).
+                  const ringClr = score >= 75 ? C.green : C.amber
+                  return (
+                <div style={{ display: 'flex', alignItems: 'center', gap: 13, marginBottom: 16 }}>
                   {data.channel.thumbnail
-                    ? <img src={data.channel.thumbnail} alt="" style={{
-                        width: 34, height: 34, borderRadius: '50%',
-                        objectFit: 'cover', flexShrink: 0,
-                        boxShadow: '0 0 0 1px rgba(15,15,19,0.06)',
-                      }}/>
-                    : <div style={{
-                        width: 34, height: 34, borderRadius: '50%',
-                        background: 'linear-gradient(135deg, #f0f0f4, #dedee5)',
-                        display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        fontSize: 14, fontWeight: 700, color: C.text2, flexShrink: 0,
-                      }}>{data.channel.channel_name[0].toUpperCase()}</div>
+                    ? <img src={data.channel.thumbnail} alt="" style={{ width: 42, height: 42, borderRadius: '50%', objectFit: 'cover', flexShrink: 0, boxShadow: `0 0 0 2.5px #fff, 0 0 0 4.5px ${ringClr}, 0 0 16px ${ringClr}55` }}/>
+                    : <div style={{ width: 42, height: 42, borderRadius: '50%', background: C.redBg, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, fontWeight: 700, color: C.red, flexShrink: 0, boxShadow: `0 0 0 2.5px #fff, 0 0 0 4.5px ${ringClr}, 0 0 16px ${ringClr}55` }}>{data.channel.channel_name[0].toUpperCase()}</div>
                   }
                   <div style={{ minWidth: 0, flex: 1 }}>
-                    <p style={{
-                      fontSize: 13.5, fontWeight: 600, color: C.text1,
-                      overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
-                      letterSpacing: '-0.01em', lineHeight: 1.25,
-                    }}>{data.channel.channel_name}</p>
-                    <p style={{
-                      display: 'flex', alignItems: 'center', gap: 6,
-                      fontSize: 11.5, color: C.text3, marginTop: 3,
-                      fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.01em',
-                    }}>
-                      <span>{fmtNum(data.channel.subscribers)} subs</span>
-                      <span style={{ color: 'rgba(15,15,19,0.18)' }}>·</span>
-                      <span style={{
-                        display: 'inline-flex', alignItems: 'center', gap: 4,
-                        color: scoreClr, fontWeight: 700,
-                      }}>
-                        <span style={{
-                          width: 5, height: 5, borderRadius: '50%',
-                          background: scoreClr,
-                          boxShadow: `0 0 0 3px ${scoreClr}1a`,
-                        }}/>
-                        {score}
-                      </span>
-                    </p>
+                    <p style={{ fontSize: 14.5, fontWeight: 700, color: C.text1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', letterSpacing: '-0.25px', lineHeight: 1.2 }}>{data.channel.channel_name}</p>
+                    <p style={{ fontSize: 12, color: C.text3, marginTop: 3, fontVariantNumeric: 'tabular-nums' }}>{fmtNum(data.channel.subscribers)} subs</p>
                   </div>
                 </div>
+                  )
+                })()
+            }
+            {/* Health score bar */}
+            {(() => {
+              const scoreGrad = score >= 75
+                ? 'linear-gradient(90deg, #34d399 0%, #059669 100%)'
+                : score >= 50
+                  ? 'linear-gradient(90deg, #fbbf24 0%, #d97706 100%)'
+                  : 'linear-gradient(90deg, #ff5048 0%, #e5251b 100%)'
+              const glowClr = score >= 75 ? 'rgba(5,150,105,0.35)' : score >= 50 ? 'rgba(217,119,6,0.32)' : 'rgba(229,37,27,0.36)'
+              return (
+              <div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 8 }}>
+                  <span style={{ fontSize: 10.5, fontWeight: 700, color: C.text3, letterSpacing: '0.09em', textTransform: 'uppercase' }}>Channel health</span>
+                  <span style={{ display: 'inline-flex', alignItems: 'baseline', gap: 2, fontVariantNumeric: 'tabular-nums' }}>
+                    <span style={{ fontSize: 16, fontWeight: 800, color: scoreColor(score), letterSpacing: '-0.4px', lineHeight: 1 }}>{score}</span>
+                    <span style={{ fontSize: 10.5, fontWeight: 600, color: 'rgba(149,149,164,0.6)' }}>/100</span>
+                  </span>
+                </div>
+                <div style={{ background: '#eaeaef', borderRadius: 99, height: 6, overflow: 'hidden', boxShadow: 'inset 0 1px 1px rgba(0,0,0,0.04)' }}>
+                  <div style={{
+                    width: `${score}%`, height: '100%', background: scoreGrad, borderRadius: 99,
+                    boxShadow: `0 0 8px ${glowClr}, inset 0 1px 0 rgba(255,255,255,0.30)`,
+                    transition: 'width 1.2s cubic-bezier(0.34,1.56,0.64,1)',
+                  }}/>
+                </div>
+              </div>
               )
             })()}
+           </div>
           </div>
         )}
 
