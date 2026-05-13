@@ -13,6 +13,15 @@ def make_anthropic_client() -> anthropic.Anthropic:
     return anthropic.Anthropic(api_key=os.environ.get("ANTHROPIC_API_KEY", ""))
 
 
+def yt_quota_paused() -> bool:
+    """Master kill-switch for YouTube Data API calls. Set YT_QUOTA_PAUSED=1
+    in env to make search.list-heavy paths short-circuit instead of throwing
+    403s when the daily 10K free quota is exhausted. Mirror of the check in
+    app/scheduler.py — kept here so user-facing routers can import it
+    without pulling in apscheduler."""
+    return os.getenv("YT_QUOTA_PAUSED", "0").strip() == "1"
+
+
 def build_youtube_client(credentials=None):
     """YouTube Data API v3 client.
 

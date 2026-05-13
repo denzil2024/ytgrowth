@@ -804,7 +804,7 @@ function FounderPricingBand({ isMobile }) {
 // must have a matching key here, otherwise users see the generic fallback.
 const AUTH_ERROR_CODES = new Set([
   'no_channel', 'channel_taken', 'channel_locked', 'channel_limit',
-  'no_code', 'session_expired', 'analysis_failed',
+  'no_code', 'session_expired', 'analysis_failed', 'quota_exceeded',
 ])
 
 export default function Landing() {

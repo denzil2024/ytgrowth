@@ -597,7 +597,7 @@ def callback(request: Request, background_tasks: BackgroundTasks):
             finally:
                 db.close()
 
-        videos = get_recent_videos(creds)
+        videos = get_recent_videos(creds, uploads_playlist_id=stats.get("uploads_playlist_id"))
         full_data = get_full_channel_data(creds, channel_id)
         try:
             metrics_map = get_video_metrics_map(creds, channel_id)
@@ -717,6 +717,11 @@ def callback(request: Request, background_tasks: BackgroundTasks):
         print(f"Callback error: {e}")
         import traceback
         traceback.print_exc()
+        # Classify quotaExceeded specially so users see "over capacity, try
+        # again later" instead of the misleading "audit failed" modal.
+        err_str = str(e).lower()
+        if "quotaexceeded" in err_str or ("quota" in err_str and "exceeded" in err_str):
+            return RedirectResponse(f"{BASE_URL}?error=quota_exceeded")
         return RedirectResponse(f"{BASE_URL}?error=analysis_failed")
 
 
@@ -804,7 +809,7 @@ def refresh_stats(request: Request):
 
     try:
         stats  = get_channel_stats(creds)
-        videos = get_recent_videos(creds)
+        videos = get_recent_videos(creds, uploads_playlist_id=stats.get("uploads_playlist_id") if stats else None)
     except Exception as e:
         return JSONResponse({"error": f"YouTube API error: {e}"}, status_code=500)
 

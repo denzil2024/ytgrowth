@@ -14,6 +14,10 @@ def parse_duration_seconds(iso_duration):
 
 
 def search_competitor_channels(credentials, query, max_results=5):
+    from app.utils import yt_quota_paused
+    if yt_quota_paused():
+        print(f"[competitors] search skipped — YT_QUOTA_PAUSED=1 (query='{query}')")
+        return []
     youtube = build_youtube_client(credentials)
     try:
         response = youtube.search().list(

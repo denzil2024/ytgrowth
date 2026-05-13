@@ -255,6 +255,10 @@ def _is_short(title: str, duration_seconds: int) -> bool:
 
 def _search_youtube_once(youtube, query: str, max_results: int = 25, order: str = "relevance") -> dict[str, dict]:
     """Run a single YouTube search. Returns raw candidates (Shorts not yet filtered — done in batch)."""
+    from app.utils import yt_quota_paused
+    if yt_quota_paused():
+        print(f"[seo] search skipped — YT_QUOTA_PAUSED=1 (query='{query}')")
+        return {}
     try:
         resp = youtube.search().list(
             part="snippet",

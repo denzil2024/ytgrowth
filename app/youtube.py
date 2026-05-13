@@ -7,8 +7,10 @@ from datetime import datetime, timedelta
 
 def get_channel_stats(credentials):
     youtube = build("youtube", "v3", credentials=credentials)
+    # contentDetails gives us the uploads playlist ID for free — used by
+    # get_recent_videos() to skip the 100-unit search.list call.
     request = youtube.channels().list(
-        part="snippet,statistics,brandingSettings",
+        part="snippet,statistics,brandingSettings,contentDetails",
         mine=True
     )
     response = request.execute()
@@ -25,6 +27,8 @@ def get_channel_stats(credentials):
     )
     branding = channel.get("brandingSettings", {})
     channel_details = branding.get("channel", {})
+    content_details = channel.get("contentDetails", {})
+    uploads_playlist_id = (content_details.get("relatedPlaylists") or {}).get("uploads", "")
     return {
         "channel_id": channel["id"],
         "channel_name": snippet["title"],
@@ -35,6 +39,7 @@ def get_channel_stats(credentials):
         "thumbnail": thumbnail_url,
         "description": snippet.get("description", ""),
         "keywords": channel_details.get("keywords", ""),
+        "uploads_playlist_id": uploads_playlist_id,
     }
 
 
@@ -109,29 +114,66 @@ def merge_metrics_into_videos(videos, metrics_map):
     return videos
 
 
-def get_recent_videos(credentials, max_results=20):
+def get_recent_videos(credentials, max_results=20, uploads_playlist_id=None):
+    """
+    Fetch the user's most recent uploads. Uses playlistItems.list on the
+    channel's uploads playlist (1 unit) instead of search.list with
+    forMine=True (100 units). 99% quota reduction per login.
+
+    `uploads_playlist_id` is returned by get_channel_stats(); pass it through
+    to skip the extra channels.list lookup. If omitted we resolve it ourselves
+    (still cheaper than search: 1 + 1 + 1 = 3 units vs. 101).
+    """
     youtube = build("youtube", "v3", credentials=credentials)
-    search_request = youtube.search().list(
-        part="snippet",
-        forMine=True,
-        type="video",
-        order="date",
-        maxResults=max_results
-    )
-    search_response = search_request.execute()
-    if not search_response.get("items"):
+
+    if not uploads_playlist_id:
+        try:
+            ch_resp = youtube.channels().list(
+                part="contentDetails",
+                mine=True,
+            ).execute()
+            items = ch_resp.get("items", [])
+            if not items:
+                return []
+            uploads_playlist_id = (
+                (items[0].get("contentDetails") or {})
+                .get("relatedPlaylists", {})
+                .get("uploads", "")
+            )
+        except Exception as e:
+            print(f"[get_recent_videos] uploads playlist lookup failed: {e}")
+            return []
+    if not uploads_playlist_id:
         return []
-    video_ids = [item["id"]["videoId"] for item in search_response["items"]]
-    stats_request = youtube.videos().list(
+
+    try:
+        pl_resp = youtube.playlistItems().list(
+            part="snippet",
+            playlistId=uploads_playlist_id,
+            maxResults=max_results,
+        ).execute()
+    except Exception as e:
+        print(f"[get_recent_videos] playlistItems.list failed: {e}")
+        return []
+
+    video_ids = [
+        (it.get("snippet") or {}).get("resourceId", {}).get("videoId", "")
+        for it in pl_resp.get("items", [])
+    ]
+    video_ids = [v for v in video_ids if v]
+    if not video_ids:
+        return []
+
+    stats_response = youtube.videos().list(
         part="statistics,contentDetails,snippet",
-        id=",".join(video_ids)
-    )
-    stats_response = stats_request.execute()
+        id=",".join(video_ids),
+    ).execute()
+
     videos = []
-    for video in stats_response["items"]:
-        s = video["statistics"]
-        snippet = video["snippet"]
-        duration = video["contentDetails"].get("duration", "PT0S")
+    for video in stats_response.get("items", []):
+        s = video.get("statistics", {})
+        snippet = video.get("snippet", {})
+        duration = (video.get("contentDetails") or {}).get("duration", "PT0S")
         videos.append({
             "video_id": video["id"],
             "title": snippet.get("title", ""),
@@ -141,7 +183,7 @@ def get_recent_videos(credentials, max_results=20):
             "comments": int(s.get("commentCount", 0)),
             "duration": duration,
             "thumbnail": snippet.get("thumbnails", {}).get("medium", {}).get("url", ""),
-            "description": snippet.get("description", "")
+            "description": snippet.get("description", ""),
         })
     return videos
 

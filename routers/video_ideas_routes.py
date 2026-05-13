@@ -231,6 +231,10 @@ def _fetch_proof_for_keyword(creds, keyword: str) -> list[dict]:
     Falls back to a 24-month window if the strict filter returns nothing."""
     if not keyword or not creds:
         return []
+    from app.utils import yt_quota_paused
+    if yt_quota_paused():
+        print(f"[video_ideas] proof skipped — YT_QUOTA_PAUSED=1 (keyword='{keyword}')")
+        return []
     try:
         from googleapiclient.discovery import build
         youtube = build("youtube", "v3", credentials=creds)

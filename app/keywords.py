@@ -219,6 +219,10 @@ def _fetch_competition_for_keyword(keyword: str, yt_api_key: str) -> dict:
     default = {"result_count": 0, "top_subs_median": 0, "top_views_median": 0, "days_since_newest": None}
     if not yt_api_key:
         return default
+    from app.utils import yt_quota_paused
+    if yt_quota_paused():
+        print(f"[keywords] competition lookup skipped — YT_QUOTA_PAUSED=1 (keyword='{keyword}')")
+        return default
     try:
         yt = build("youtube", "v3", developerKey=yt_api_key, cache_discovery=False)
         search = yt.search().list(

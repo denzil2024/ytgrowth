@@ -109,6 +109,13 @@ const ERRORS = {
     primary: { label: 'Open dashboard', href: '/dashboard' },
     secondary: { label: 'Email support if this keeps happening', href: 'mailto:support@ytgrowth.io' },
   },
+  quota_exceeded: {
+    icon: IconClock,
+    title: 'YTGrowth is temporarily at capacity',
+    body: "We've hit our YouTube API quota for the day. This resets at midnight Pacific Time. Please try signing in again in a few hours — your account is fine, nothing is lost.",
+    primary: { label: 'Try again', href: '/auth/login' },
+    secondary: { label: 'Email support if this keeps happening', href: 'mailto:support@ytgrowth.io' },
+  },
   generic: {
     icon: IconAlert,
     title: 'Something went wrong signing you in',
