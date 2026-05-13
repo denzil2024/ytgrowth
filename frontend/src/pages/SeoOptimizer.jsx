@@ -356,6 +356,345 @@ function ScoreRing({ score }) {
   )
 }
 
+// Sub-score color ladder. Matches the suggestion card chip thresholds so
+// chip + bars never disagree (75+ green, 55+ amber, else red).
+function _subColor(v) { return v >= 75 ? C.green : v >= 55 ? C.amber : C.red }
+
+// One horizontal bar in the score breakdown. Label on the left in fixed
+// tabular-aligned column, animated fill in the middle, tabular number on
+// the right. Width 0 -> value on mount so the bars sweep in.
+function ScoreBar({ label, value, mounted }) {
+  const v = Number.isFinite(value) ? value : 0
+  const color = _subColor(v)
+  const w = mounted ? `${Math.max(2, Math.min(100, v))}%` : '0%'
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+      <span style={{
+        fontSize: 10, fontWeight: 700, color: C.text3,
+        letterSpacing: '0.08em', textTransform: 'uppercase',
+        width: 44, flexShrink: 0,
+      }}>{label}</span>
+      <div style={{
+        flex: 1, height: 7, background: '#eef0f4',
+        borderRadius: 99, overflow: 'hidden', position: 'relative',
+      }}>
+        <div style={{
+          width: w, height: '100%', background: color, borderRadius: 99,
+          transition: 'width 0.85s cubic-bezier(0.34,1.56,0.64,1)',
+          boxShadow: v >= 75 ? `0 0 0 1px ${color}22` : 'none',
+        }}/>
+      </div>
+      <span style={{
+        fontSize: 13, fontWeight: 800, color: v ? color : C.text3,
+        fontVariantNumeric: 'tabular-nums',
+        width: 24, textAlign: 'right', flexShrink: 0, letterSpacing: '-0.3px',
+      }}>{v || '—'}</span>
+    </div>
+  )
+}
+
+// Stack of three sub-score bars (SEO / CTR / Hook). Replaces the old
+// "three huge numbers" block. Scan reads as a real micro-chart, not a
+// row of disconnected numerals.
+function ScoreBars({ seo, ctr, hook, mounted }) {
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+      <ScoreBar label="SEO"  value={seo}  mounted={mounted}/>
+      <ScoreBar label="CTR"  value={ctr}  mounted={mounted}/>
+      <ScoreBar label="Hook" value={hook} mounted={mounted}/>
+    </div>
+  )
+}
+
+// Title-length sweet-spot indicator. The full track is 0-100 chars; a
+// green "ideal zone" is highlighted between 50-70 (YouTube's CTR sweet
+// spot in our backend rubric), and a triangle marker drops on the
+// user's actual length. Replaces the "62 chars · ideal 50-70" plain
+// text line under each title.
+function LengthSweetSpot({ length, mounted }) {
+  const MAX = 100
+  const ZONE_LO = 50
+  const ZONE_HI = 70
+  const clamped = Math.max(0, Math.min(MAX, length || 0))
+  const inZone  = clamped >= ZONE_LO && clamped <= ZONE_HI
+  const markerColor = inZone ? C.green : clamped < ZONE_LO - 10 || clamped > ZONE_HI + 10 ? C.red : C.amber
+  const markerLeft  = mounted ? `${(clamped / MAX) * 100}%` : '0%'
+  const verdict     = inZone ? 'in the sweet spot' : clamped < ZONE_LO ? 'too short' : 'too long'
+  return (
+    <div>
+      <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 8 }}>
+        <span style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.08em', textTransform: 'uppercase' }}>Length</span>
+        <span style={{ fontSize: 11, fontWeight: 600, color: markerColor, fontVariantNumeric: 'tabular-nums' }}>
+          <span style={{ fontWeight: 800, color: C.text1 }}>{clamped}</span>
+          <span style={{ color: C.text3, fontWeight: 500 }}>{' / 100 chars · '}</span>
+          {verdict}
+        </span>
+      </div>
+      {/* Track + zone + marker */}
+      <div style={{ position: 'relative', height: 14 }}>
+        {/* Base track */}
+        <div style={{
+          position: 'absolute', left: 0, right: 0, top: 5, height: 4,
+          background: '#eef0f4', borderRadius: 99,
+        }}/>
+        {/* Ideal zone (50-70) */}
+        <div style={{
+          position: 'absolute',
+          left: `${(ZONE_LO / MAX) * 100}%`,
+          width: `${((ZONE_HI - ZONE_LO) / MAX) * 100}%`,
+          top: 5, height: 4,
+          background: 'rgba(5,150,105,0.55)',
+          borderRadius: 99,
+        }}/>
+        {/* Marker (triangle) */}
+        <div style={{
+          position: 'absolute', top: 0, left: markerLeft,
+          width: 0, height: 0, transform: 'translateX(-50%)',
+          borderLeft: '5px solid transparent',
+          borderRight: '5px solid transparent',
+          borderTop: `6px solid ${markerColor}`,
+          transition: 'left 0.85s cubic-bezier(0.34,1.56,0.64,1)',
+          filter: `drop-shadow(0 1px 2px ${markerColor}44)`,
+        }}/>
+        {/* Marker stem so triangle visually connects to the bar */}
+        <div style={{
+          position: 'absolute', top: 6, left: markerLeft,
+          width: 2, height: 6, background: markerColor, borderRadius: 1,
+          transform: 'translateX(-50%)',
+          transition: 'left 0.85s cubic-bezier(0.34,1.56,0.64,1)',
+        }}/>
+      </div>
+      {/* Scale labels */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 4, fontSize: 9, fontWeight: 600, color: C.text4, letterSpacing: '0.04em', fontVariantNumeric: 'tabular-nums' }}>
+        <span>0</span>
+        <span style={{ color: C.green }}>50</span>
+        <span style={{ color: C.green }}>70</span>
+        <span>100</span>
+      </div>
+    </div>
+  )
+}
+
+// One winning-video tile in the WinnersStrip above the suggestions.
+// Thumbnail (16:9) with a view-count chip pinned bottom-right, channel
+// name below, and a relative-views bar so the trio reads as a tiny
+// horizontal bar chart at a glance.
+function WinnerTile({ video, maxViews }) {
+  const views = video.view_count || video.views || 0
+  const pct   = maxViews ? Math.max(8, Math.round((views / maxViews) * 100)) : 0
+  // Top performer is green, mid is amber, lagging is grey. Visual sort
+  // works without reading numbers.
+  const barColor = pct >= 80 ? C.green : pct >= 45 ? C.amber : C.text4
+  const thumb = video.thumbnail || (video.video_id ? `https://i.ytimg.com/vi/${video.video_id}/mqdefault.jpg` : '')
+  return (
+    <a
+      href={video.video_id ? `https://www.youtube.com/watch?v=${video.video_id}` : '#'}
+      target="_blank" rel="noopener noreferrer"
+      style={{
+        textDecoration: 'none', color: 'inherit',
+        display: 'flex', flexDirection: 'column', gap: 8,
+        minWidth: 0,
+      }}>
+      <div style={{ position: 'relative', width: '100%', aspectRatio: '16 / 9', borderRadius: 9, overflow: 'hidden', background: '#0f0f13', boxShadow: '0 1px 3px rgba(0,0,0,0.10), 0 6px 18px rgba(0,0,0,0.12)' }}>
+        {thumb && <img src={thumb} alt="" referrerPolicy="no-referrer" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}/>}
+        {/* View chip (bottom-right) */}
+        <div style={{
+          position: 'absolute', right: 6, bottom: 6,
+          padding: '2px 7px', borderRadius: 5,
+          background: 'rgba(0,0,0,0.78)',
+          color: '#fff', fontSize: 11, fontWeight: 800, letterSpacing: '-0.2px',
+          fontVariantNumeric: 'tabular-nums',
+        }}>{fmtNum(views)}</div>
+      </div>
+      <p style={{ fontSize: 12, color: C.text1, fontWeight: 600, lineHeight: 1.35, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', letterSpacing: '-0.1px' }}>
+        {video.title}
+      </p>
+      <p style={{ fontSize: 11, color: C.text3, fontWeight: 500, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+        {video.channel || '—'}
+      </p>
+      {/* Relative views bar */}
+      <div style={{ height: 4, background: '#eef0f4', borderRadius: 99, overflow: 'hidden' }}>
+        <div style={{ width: `${pct}%`, height: '100%', background: barColor, borderRadius: 99 }}/>
+      </div>
+    </a>
+  )
+}
+
+// Strip card above the suggestion list. Shows the top 3 winners we
+// learned from so the suggestions read as "based on these, not magic."
+// Trophy icon, eyebrow label, 3-up tile grid, footer line tying it
+// back to the suggestions.
+function WinnersStrip({ videos, primaryPhrase }) {
+  if (!videos || !videos.length) return null
+  const top3 = videos.slice(0, 3)
+  const maxViews = Math.max(...top3.map(v => v.view_count || v.views || 0), 1)
+  const totalViews = top3.reduce((s, v) => s + (v.view_count || v.views || 0), 0)
+  return (
+    <div className="seo-suggestion-card" style={{
+      borderTop: `3px solid ${C.amber}`,
+      marginBottom: 14,
+    }}>
+      <div style={{ padding: '16px 22px 18px' }}>
+        {/* Eyebrow row — trophy icon + label + anchor stat */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, marginBottom: 14, flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: 0 }}>
+            <span style={{
+              width: 28, height: 28, borderRadius: 8,
+              background: 'rgba(217,119,6,0.10)',
+              display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+              flexShrink: 0,
+            }}>
+              {/* Inline trophy SVG — matches the existing inline-SVG icon convention on this page */}
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={C.amber} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/>
+                <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/>
+                <path d="M4 22h16"/>
+                <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/>
+                <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/>
+                <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/>
+              </svg>
+            </span>
+            <div style={{ minWidth: 0 }}>
+              <p style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 3 }}>Pattern source</p>
+              <p style={{ fontSize: 13, color: C.text2, fontWeight: 600, letterSpacing: '-0.1px' }}>
+                The titles below were extracted from these winners
+                {primaryPhrase ? <span style={{ color: C.text3, fontWeight: 500 }}>{` in the "${primaryPhrase}" niche`}</span> : null}
+              </p>
+            </div>
+          </div>
+          <p style={{ fontSize: 12, fontWeight: 600, color: C.text2, fontVariantNumeric: 'tabular-nums', flexShrink: 0 }}>
+            <span style={{ fontSize: 18, fontWeight: 800, color: C.text1, letterSpacing: '-0.4px' }}>{fmtNum(totalViews)}</span>
+            <span style={{ color: C.text3, fontWeight: 500 }}>{' views across top 3'}</span>
+          </p>
+        </div>
+
+        {/* 3-up tile grid */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: 14 }}>
+          {top3.map(v => (
+            <WinnerTile key={v.video_id || v.title} video={v} maxViews={maxViews}/>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// One suggested title row. Extracted so each row can own its mount
+// animation state (the bars + length marker sweep in on first paint).
+// All semantics derived inside: eyebrow / avgScore / severity. Props
+// stay narrow so this stays drop-in compatible with the existing map.
+function SuggestionRow({ s, i, isSelected, isCopied, onCopy, onSelect, primaryPhrase }) {
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => {
+    // Two-frame deferral so the initial 0% width paints first, then
+    // the real width transitions in. requestAnimationFrame alone fires
+    // before the browser commits the first paint in some webkit
+    // builds, which swallows the animation.
+    let raf2 = 0
+    const raf1 = requestAnimationFrame(() => {
+      raf2 = requestAnimationFrame(() => setMounted(true))
+    })
+    return () => { cancelAnimationFrame(raf1); cancelAnimationFrame(raf2) }
+  }, [])
+
+  const eyebrow  = (s.primary_keyword || primaryPhrase || '').trim()
+  const avgScore = Number.isFinite(s.score)
+    ? s.score
+    : Math.round(((s.seo_score || 0) + (s.ctr_score || 0) + (s.hook_score || 0)) / 3)
+  const sevLabel = avgScore >= 75 ? 'Strong' : avgScore >= 60 ? 'Solid' : 'Weak'
+  const sevColor = avgScore >= 75 ? C.green : avgScore >= 60 ? C.amber : C.red
+  const sevBg    = avgScore >= 75 ? 'rgba(5,150,105,0.10)' : avgScore >= 60 ? 'rgba(217,119,6,0.10)' : 'rgba(229,37,27,0.08)'
+
+  return (
+    <div className="seo-suggestion-card" style={{
+      marginBottom: 0,
+      // Top stripe now reflects severity instead of constant amber. Strong
+      // suggestions pop green, weak ones blush red, so the user can scan a
+      // stack of 3-5 cards and pick the winner without reading anything.
+      borderTop: `3px solid ${sevColor}`,
+      borderLeftColor:   isSelected ? 'rgba(229,37,27,0.30)' : isCopied ? 'rgba(5,150,105,0.30)' : '#e6e6ec',
+      borderRightColor:  isSelected ? 'rgba(229,37,27,0.30)' : isCopied ? 'rgba(5,150,105,0.30)' : '#e6e6ec',
+      borderBottomColor: isSelected ? 'rgba(229,37,27,0.30)' : isCopied ? 'rgba(5,150,105,0.30)' : '#e6e6ec',
+      background: isSelected ? '#fff8f8' : isCopied ? '#f6fdf9' : '#ffffff',
+    }}>
+      <div style={{ padding: '16px 22px 18px' }}>
+        {/* Header — rank + eyebrow + title + severity chip (now carries the score number inline) */}
+        <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: 14 }}>
+          <div style={{ width: 26, height: 26, borderRadius: 8, background: C.amber, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 2 }}>
+            <span style={{ fontSize: 12, fontWeight: 900, color: '#fff', fontVariantNumeric: 'tabular-nums' }}>{i + 1}</span>
+          </div>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            {eyebrow && (
+              <p style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 5 }}>Built around: {eyebrow}</p>
+            )}
+            <p style={{ fontSize: 15, fontWeight: 700, color: C.text1, lineHeight: 1.5, letterSpacing: '-0.2px' }}>{s.title}</p>
+          </div>
+          <span style={{
+            fontSize: 11, fontWeight: 800, color: sevColor,
+            padding: '5px 11px', borderRadius: 99,
+            letterSpacing: '0.02em',
+            background: sevBg,
+            border: `1.5px solid ${sevColor}`,
+            flexShrink: 0,
+            display: 'inline-flex', alignItems: 'center', gap: 6,
+            fontVariantNumeric: 'tabular-nums',
+          }}>
+            <span style={{ textTransform: 'uppercase', letterSpacing: '0.06em' }}>{sevLabel}</span>
+            <span style={{ fontSize: 12, fontWeight: 900, letterSpacing: '-0.3px' }}>{avgScore}</span>
+          </span>
+        </div>
+
+        {/* Divider aligned with title start */}
+        <div style={{ height: 1, background: C.border, marginBottom: 14, marginLeft: 38 }} />
+
+        {/* 3-col body — Why-it-works (blue) | Title quality chart (amber-bar) | Algorithm angle (green) */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr 1fr', gap: 8, marginLeft: 38 }}>
+          {/* Col 1 — Why it works */}
+          <div style={{ background: 'rgba(79,134,247,0.07)', border: '1px solid rgba(79,134,247,0.12)', borderRadius: 10, padding: '12px 14px' }}>
+            <p style={{ fontSize: 10, fontWeight: 700, color: '#4a7cf7', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Why it works</p>
+            <p style={{ fontSize: 13, color: C.text1, lineHeight: 1.65 }}>{s.why_it_works || 'This framing gives the viewer a specific reason to click.'}</p>
+          </div>
+
+          {/* Col 2 — Title quality micro-chart: 3 score bars + length sweet-spot.
+              Replaces the previous 3-huge-numbers block. Scans like a real
+              analytics widget instead of three disconnected numerals. */}
+          <div style={{
+            background: '#ffffff',
+            border: `1px solid ${C.border}`,
+            borderLeft: `3px solid ${C.amber}`,
+            borderRadius: '0 10px 10px 0',
+            padding: '14px 16px',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
+          }}>
+            <p style={{ fontSize: 10, fontWeight: 700, color: C.amber, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 12 }}>Title quality</p>
+            <ScoreBars seo={s.seo_score} ctr={s.ctr_score} hook={s.hook_score} mounted={mounted}/>
+            <div style={{ height: 1, background: C.borderLight, margin: '14px 0 12px' }}/>
+            <LengthSweetSpot length={s.length} mounted={mounted}/>
+          </div>
+
+          {/* Col 3 — Algorithm angle */}
+          <div style={{ background: 'rgba(5,150,105,0.07)', border: '1px solid rgba(5,150,105,0.14)', borderRadius: 10, padding: '12px 14px' }}>
+            <p style={{ fontSize: 10, fontWeight: 700, color: C.green, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Algorithm angle</p>
+            <p style={{ fontSize: 13, color: C.text1, lineHeight: 1.65 }}>{s.angle || 'Distributes on pattern interrupt within the niche.'}</p>
+          </div>
+        </div>
+
+        {/* Action row */}
+        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8, marginTop: 14, marginLeft: 38 }}>
+          <button onClick={onCopy}
+            style={{ fontSize: 12.5, fontWeight: 600, color: isCopied ? C.green : C.text2, background: '#ffffff', border: `1px solid ${isCopied ? 'rgba(5,150,105,0.38)' : 'rgba(0,0,0,0.1)'}`, borderRadius: 100, padding: '8px 16px', cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.15s', whiteSpace: 'nowrap', boxShadow: '0 1px 3px rgba(0,0,0,0.07)' }}>
+            {isCopied ? '✓ Copied' : 'Copy'}
+          </button>
+          <button onClick={onSelect}
+            style={{ fontSize: 12.5, fontWeight: 700, color: isSelected ? C.red : '#ffffff', background: isSelected ? 'rgba(229,37,27,0.08)' : '#e5251b', border: `1px solid ${isSelected ? 'rgba(229,37,27,0.25)' : 'transparent'}`, borderRadius: 100, padding: '8px 18px', cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.18s', boxShadow: isSelected ? 'none' : '0 1px 3px rgba(0,0,0,0.12), 0 4px 14px rgba(229,37,27,0.32)', whiteSpace: 'nowrap', letterSpacing: '-0.1px' }}>
+            {isSelected ? '✓ Selected' : 'Use this title →'}
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 
 function FormatTemplates({ onUse }) {
   const [open, setOpen] = useState(false)
@@ -1477,103 +1816,28 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
                   Use my original title →
                 </button>
               </div>
-              {/* Compact stacked cards — mirror Overview's InsightCard. One color per number: amber. */}
+              {/* Winners strip — top-3 videos already ranking in this niche.
+                  Closes the loop: "these are the patterns we extracted, the
+                  suggestions below are based on them." Real thumbnails,
+                  view counts, relative-views bar. */}
+              <WinnersStrip videos={result.top_videos} primaryPhrase={result.primary_phrase}/>
+
+              {/* Compact stacked cards. Each row owns its mount-animation
+                  state via SuggestionRow so the score bars + length marker
+                  sweep in on first paint. */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-                {result.suggestions.map((s, i) => {
-                  // New prompt returns primary_keyword + angle instead of a hook category.
-                  // Eyebrow shows what the title anchors on; "Why it works" now surfaces the angle line.
-                  const eyebrow = (s.primary_keyword || result.primary_phrase || '').trim()
-                  // Combined score from the backend's weighted rubric — single source of truth.
-                  const avgScore = Number.isFinite(s.score) ? s.score : Math.round(((s.seo_score || 0) + (s.ctr_score || 0) + (s.hook_score || 0)) / 3)
-                  const sevLabel = avgScore >= 75 ? 'Strong' : avgScore >= 60 ? 'Solid' : 'Weak'
-                  const sevColor = avgScore >= 75 ? C.green : avgScore >= 60 ? C.amber : C.red
-                  const isSelected = selectedTitle === s.title
-                  return (
-                    <div key={i} className="seo-suggestion-card" style={{
-                      marginBottom: 0,
-                      borderTop: `3px solid ${C.amber}`,
-                      // Use side-specific color props so the amber top stripe isn't wiped by the shorthand.
-                      borderLeftColor:   isSelected ? 'rgba(229,37,27,0.30)' : copied === i ? 'rgba(5,150,105,0.30)' : '#e6e6ec',
-                      borderRightColor:  isSelected ? 'rgba(229,37,27,0.30)' : copied === i ? 'rgba(5,150,105,0.30)' : '#e6e6ec',
-                      borderBottomColor: isSelected ? 'rgba(229,37,27,0.30)' : copied === i ? 'rgba(5,150,105,0.30)' : '#e6e6ec',
-                      background: isSelected ? '#fff8f8' : copied === i ? '#f6fdf9' : '#ffffff',
-                    }}>
-                      <div style={{ padding: '16px 22px 18px' }}>
-                        {/* Header — amber rank badge + "Built around" eyebrow + title + severity pill (matches InsightCard exactly) */}
-                        <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: 14 }}>
-                          <div style={{ width: 26, height: 26, borderRadius: 8, background: C.amber, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 2 }}>
-                            <span style={{ fontSize: 12, fontWeight: 900, color: '#fff', fontVariantNumeric: 'tabular-nums' }}>{i + 1}</span>
-                          </div>
-                          <div style={{ flex: 1, minWidth: 0 }}>
-                            {eyebrow && (
-                              <p style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 5 }}>Built around: {eyebrow}</p>
-                            )}
-                            <p style={{ fontSize: 14, fontWeight: 700, color: C.text1, lineHeight: 1.55 }}>{s.title}</p>
-                            <p style={{ fontSize: 11, color: C.text3, fontVariantNumeric: 'tabular-nums', fontWeight: 500, marginTop: 4 }}>
-                              {s.length} chars{s.length >= 50 && s.length <= 70 ? ' · ideal 50–70' : s.length > 70 ? ' · over 70' : ' · under 50'}
-                            </p>
-                          </div>
-                          <span style={{ fontSize: 10, fontWeight: 700, color: sevColor, padding: '3px 9px', borderRadius: 20, letterSpacing: '0.06em', textTransform: 'uppercase', border: `1.5px solid ${sevColor}`, flexShrink: 0 }}>
-                            {sevLabel}
-                          </span>
-                        </div>
-
-                        {/* Divider aligned with title start */}
-                        <div style={{ height: 1, background: C.border, marginBottom: 14, marginLeft: 38 }} />
-
-                        {/* 3-col body — EXACT InsightCard grid: blue Why-now | white+amber-bar Action | green Expected-outcome (Dashboard.jsx:1086) */}
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr 1fr', gap: 8, marginLeft: 38 }}>
-                          {/* Col 1 — Why it works (blue tint) */}
-                          <div style={{ background: 'rgba(79,134,247,0.07)', border: '1px solid rgba(79,134,247,0.12)', borderRadius: 10, padding: '12px 14px' }}>
-                            <p style={{ fontSize: 10, fontWeight: 700, color: '#4a7cf7', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Why it works</p>
-                            <p style={{ fontSize: 13, color: C.text1, lineHeight: 1.65 }}>{s.why_it_works || 'This framing gives the viewer a specific reason to click.'}</p>
-                          </div>
-
-                          {/* Col 2 — Scores (white + amber left bar + shadow, Action slot) */}
-                          <div style={{
-                            background: '#ffffff',
-                            border: `1px solid ${C.border}`,
-                            borderLeft: `3px solid ${C.amber}`,
-                            borderRadius: '0 10px 10px 0',
-                            padding: '12px 16px',
-                            boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
-                          }}>
-                            <p style={{ fontSize: 10, fontWeight: 700, color: C.amber, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 12 }}>Scores</p>
-                            <div style={{ display: 'flex', gap: 20, alignItems: 'baseline', flexWrap: 'wrap' }}>
-                              {[['SEO', s.seo_score], ['CTR', s.ctr_score], ['Hook', s.hook_score]].map(([label, val]) => {
-                                const vc = val >= 75 ? C.green : val >= 55 ? C.amber : C.red
-                                return (
-                                  <div key={label} style={{ display: 'flex', alignItems: 'baseline', gap: 7 }}>
-                                    <span style={{ fontSize: 11, fontWeight: 700, color: C.text3, letterSpacing: '0.08em', textTransform: 'uppercase' }}>{label}</span>
-                                    <span style={{ fontSize: 24, fontWeight: 800, color: val ? vc : C.text3, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.6px', lineHeight: 1 }}>{val || '—'}</span>
-                                  </div>
-                                )
-                              })}
-                            </div>
-                          </div>
-
-                          {/* Col 3 — Algorithm angle (green tint, Expected-outcome slot) */}
-                          <div style={{ background: 'rgba(5,150,105,0.07)', border: '1px solid rgba(5,150,105,0.14)', borderRadius: 10, padding: '12px 14px' }}>
-                            <p style={{ fontSize: 10, fontWeight: 700, color: C.green, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Algorithm angle</p>
-                            <p style={{ fontSize: 13, color: C.text1, lineHeight: 1.65 }}>{s.angle || 'Distributes on pattern interrupt within the niche.'}</p>
-                          </div>
-                        </div>
-
-                        {/* Action row — right-aligned */}
-                        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8, marginTop: 14, marginLeft: 38 }}>
-                          <button onClick={() => copyTitle(s.title, i)}
-                            style={{ fontSize: 12.5, fontWeight: 600, color: copied === i ? C.green : C.text2, background: '#ffffff', border: `1px solid ${copied === i ? 'rgba(5,150,105,0.38)' : 'rgba(0,0,0,0.1)'}`, borderRadius: 100, padding: '8px 16px', cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.15s', whiteSpace: 'nowrap', boxShadow: '0 1px 3px rgba(0,0,0,0.07)' }}>
-                            {copied === i ? '✓ Copied' : 'Copy'}
-                          </button>
-                          <button onClick={() => handleSelectTitle(s.title)}
-                            style={{ fontSize: 12.5, fontWeight: 700, color: isSelected ? C.red : '#ffffff', background: isSelected ? 'rgba(229,37,27,0.08)' : '#e5251b', border: `1px solid ${isSelected ? 'rgba(229,37,27,0.25)' : 'transparent'}`, borderRadius: 100, padding: '8px 18px', cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.18s', boxShadow: isSelected ? 'none' : '0 1px 3px rgba(0,0,0,0.12), 0 4px 14px rgba(229,37,27,0.32)', whiteSpace: 'nowrap', letterSpacing: '-0.1px' }}>
-                            {isSelected ? '✓ Selected' : 'Use this title →'}
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  )
-                })}
+                {result.suggestions.map((s, i) => (
+                  <SuggestionRow
+                    key={i}
+                    s={s}
+                    i={i}
+                    primaryPhrase={result.primary_phrase}
+                    isSelected={selectedTitle === s.title}
+                    isCopied={copied === i}
+                    onCopy={() => copyTitle(s.title, i)}
+                    onSelect={() => handleSelectTitle(s.title)}
+                  />
+                ))}
               </div>
             </div>
           )}

@@ -226,35 +226,62 @@ def _age_label(published_iso):
 
 def _fetch_proof_for_keyword(creds, keyword: str) -> list[dict]:
     """Call YouTube search.list for the keyword, then videos.list for stats.
-    Returns up to 3 tiles ready for rendering."""
+    Returns up to 3 tiles ready for rendering. Filters to the last 12
+    months so the user sees current evidence, not 4-year-old videos.
+    Falls back to a 24-month window if the strict filter returns nothing."""
     if not keyword or not creds:
         return []
     try:
         from googleapiclient.discovery import build
         youtube = build("youtube", "v3", credentials=creds)
-        # Step 1: search.list (100 units)
-        s_resp = youtube.search().list(
-            part="snippet",
-            q=keyword,
-            type="video",
-            maxResults=8,
-            order="relevance",
-        ).execute()
+
+        now = datetime.datetime.now(datetime.timezone.utc)
+        published_after_12mo = (now - timedelta(days=365)).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+        def _do_search(published_after):
+            return youtube.search().list(
+                part="snippet",
+                q=keyword,
+                type="video",
+                maxResults=10,
+                order="relevance",
+                publishedAfter=published_after,
+            ).execute()
+
+        # First attempt: strict 12-month window
+        s_resp = _do_search(published_after_12mo)
         items = s_resp.get("items", []) or []
+        # Fallback: relax to 24 months if 12 months returned nothing usable
+        if len(items) < 3:
+            published_after_24mo = (now - timedelta(days=730)).strftime("%Y-%m-%dT%H:%M:%SZ")
+            s_resp = _do_search(published_after_24mo)
+            items = s_resp.get("items", []) or []
+
         video_ids = [it.get("id", {}).get("videoId") for it in items if it.get("id", {}).get("videoId")]
         if not video_ids:
             return []
         # Step 2: videos.list for stats + duration (1 unit per batch)
         v_resp = youtube.videos().list(
             part="snippet,statistics,contentDetails",
-            id=",".join(video_ids[:8]),
+            id=",".join(video_ids[:10]),
         ).execute()
         out = []
         for v in v_resp.get("items", []) or []:
             snippet = v.get("snippet", {}) or {}
             stats   = v.get("statistics", {}) or {}
             thumbs  = snippet.get("thumbnails", {}) or {}
-            thumb_url = (thumbs.get("medium") or thumbs.get("high") or thumbs.get("default") or {}).get("url", "")
+            # Prefer the highest resolution available. maxres (1280x720)
+            # gives clean HD on retina screens; falls back through standard
+            # (640x480) and high (480x360) to medium (320x180) for the few
+            # videos that don't have HD thumbnails uploaded.
+            thumb_url = (
+                thumbs.get("maxres")
+                or thumbs.get("standard")
+                or thumbs.get("high")
+                or thumbs.get("medium")
+                or thumbs.get("default")
+                or {}
+            ).get("url", "")
             out.append({
                 "video_id":     v.get("id", ""),
                 "title":        snippet.get("title", ""),
@@ -275,11 +302,15 @@ def _fetch_proof_for_keyword(creds, keyword: str) -> list[dict]:
 def _get_or_fetch_proof(db, creds, keyword: str) -> list[dict]:
     """Returns the cached top-videos list for this keyword, refreshing if
     older than 7 days. Cache is shared across users since YouTube search
-    results don't depend on the caller."""
+    results don't depend on the caller.
+
+    The cache key is prefixed with 'v2:' so rows written by the
+    pre-date-filter version (which returned old 4-year-old videos) are
+    bypassed automatically. Old rows age out on their own."""
     if not keyword:
         return []
-    kw_lower = keyword.strip().lower()
-    if not kw_lower:
+    kw_lower = "v2:" + keyword.strip().lower()
+    if not kw_lower or kw_lower == "v2:":
         return []
 
     now = datetime.datetime.now(datetime.timezone.utc)

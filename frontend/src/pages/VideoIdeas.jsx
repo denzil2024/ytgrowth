@@ -305,28 +305,33 @@ function IdeaCard({ idea, done, onDone, onUseSeo }) {
     <div className={`vi-idea-card${done ? ' done' : ''}`}>
       <div style={{ padding: 18 }}>
 
-        {/* ── Eyebrow row ── */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10, flexWrap: 'wrap' }}>
+        {/* ── Eyebrow row. Typography scale:
+            - Rank badge number: 11.5/800 (slightly bumped for legibility)
+            - Eyebrow label: 11/800 uppercase 0.12em (was 10, too small)
+            - Keyword + meta:  12/500 (was 11, too small)
+            - Severity chip:   10.5/700 uppercase (was 9.5, too small)
+            One consistent scale, nothing under 10.5px. ── */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12, flexWrap: 'wrap' }}>
           <div style={{
             flexShrink: 0,
-            width: 24, height: 24, borderRadius: 7,
+            width: 26, height: 26, borderRadius: 7,
             display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
             background: done ? 'rgba(22,163,74,0.10)' : 'rgba(217,119,6,0.10)',
             border: done ? '1px solid rgba(22,163,74,0.22)' : '1px solid rgba(217,119,6,0.22)',
           }}>
             {done
-              ? <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke={C.green} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><polyline points="1.5,6.5 5,10 10.5,2"/></svg>
-              : <span style={{ fontSize: 11, fontWeight: 800, color: C.amber, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.3px' }}>{idea.rank}</span>
+              ? <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke={C.green} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><polyline points="1.5,6.5 5,10 10.5,2"/></svg>
+              : <span style={{ fontSize: 11.5, fontWeight: 800, color: C.amber, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.3px' }}>{idea.rank}</span>
             }
           </div>
           <span style={{
-            fontSize: 10, fontWeight: 800, color: 'rgba(10,10,15,0.50)',
+            fontSize: 11, fontWeight: 800, color: 'rgba(10,10,15,0.55)',
             letterSpacing: '0.12em', textTransform: 'uppercase',
           }}>Video Idea</span>
           {idea.targetKeyword && (
             <span style={{
               display: 'inline-flex', alignItems: 'center', gap: 5,
-              fontSize: 11, fontWeight: 500, color: 'rgba(10,10,15,0.50)',
+              fontSize: 12, fontWeight: 500, color: 'rgba(10,10,15,0.55)',
               letterSpacing: '-0.01em',
             }}>
               <span style={{ width: 3, height: 3, borderRadius: 99, background: 'rgba(10,10,15,0.30)' }}/>
@@ -336,9 +341,9 @@ function IdeaCard({ idea, done, onDone, onUseSeo }) {
           <div style={{ flex: 1 }}/>
           {!done && (
             <span style={{
-              fontSize: 9.5, fontWeight: 700, color: sevColor,
+              fontSize: 10.5, fontWeight: 700, color: sevColor,
               background: sevBg, border: `1px solid ${sevBdr}`,
-              padding: '3px 8px', borderRadius: 100,
+              padding: '3px 9px', borderRadius: 100,
               letterSpacing: '0.08em', textTransform: 'uppercase',
               fontVariantNumeric: 'tabular-nums',
             }}>{sevLabel} · {score}</span>
@@ -348,41 +353,48 @@ function IdeaCard({ idea, done, onDone, onUseSeo }) {
             checked={!!done}
             onChange={() => onDone(idea.title)}
             title="Mark as done"
-            style={{ width: 14, height: 14, accentColor: C.green, cursor: 'pointer', flexShrink: 0 }}
+            style={{ width: 15, height: 15, accentColor: C.green, cursor: 'pointer', flexShrink: 0 }}
           />
         </div>
 
-        {/* ── Title (single bold line) ── */}
+        {/* ── Title (single bold line). Standardized at 16/700, matches
+            the Feed card title scale (PriorityActionCard, MilestoneFeedCard
+            etc all use 15-16/700). ── */}
         <h3 style={{
-          fontSize: 17, fontWeight: 700,
+          fontSize: 16, fontWeight: 700,
           color: done ? 'rgba(10,10,15,0.40)' : C.text1,
-          letterSpacing: '-0.3px', lineHeight: 1.35,
-          marginBottom: done ? 0 : 14,
+          letterSpacing: '-0.3px', lineHeight: 1.4,
+          marginBottom: done ? 0 : 16,
           textDecoration: done ? 'line-through' : 'none',
           display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden',
         }}>{idea.title}</h3>
 
         {!done && (
           <>
-            {/* ── PROOF ROW: the actual evidence ────────────────────────
-                Three real YouTube videos ranking for this keyword today.
-                Click any tile to open the video. This is the "give me
-                reasons to believe" surface. */}
+            {/* ── PROOF ROW: real YouTube videos ranking for this keyword
+                in the last 12 months. Typography scale:
+                - Section eyebrow:   11/700 uppercase
+                - Best-chip:         11/700
+                - Tile title:        13/600 (was 11.5, too small)
+                - Tile channel/age:  11.5/600 (was 10, too small)
+                - View badge:        11/800
+                Tile titles are uniform across all three. Click a tile
+                to open the video on YouTube. ── */}
             {hasProof && (
-              <div style={{ marginBottom: 14 }}>
+              <div style={{ marginBottom: 16 }}>
                 <div style={{
-                  display: 'flex', alignItems: 'center', gap: 8,
+                  display: 'flex', alignItems: 'center', gap: 10,
                   marginBottom: 10,
                 }}>
                   <span style={{
-                    fontSize: 10, fontWeight: 700, color: 'rgba(10,10,15,0.55)',
+                    fontSize: 11, fontWeight: 700, color: 'rgba(10,10,15,0.55)',
                     letterSpacing: '0.10em', textTransform: 'uppercase',
                   }}>Top videos ranking for this now</span>
                   <span style={{
                     display: 'inline-flex', alignItems: 'center', gap: 4,
-                    fontSize: 10, fontWeight: 700, color: C.green,
+                    fontSize: 11, fontWeight: 700, color: C.green,
                     background: 'rgba(22,163,74,0.08)', border: '1px solid rgba(22,163,74,0.22)',
-                    padding: '2px 7px', borderRadius: 100,
+                    padding: '3px 8px', borderRadius: 100,
                     letterSpacing: '0.04em',
                     fontVariantNumeric: 'tabular-nums',
                   }}>
@@ -392,7 +404,7 @@ function IdeaCard({ idea, done, onDone, onUseSeo }) {
                 <div style={{
                   display: 'grid',
                   gridTemplateColumns: `repeat(${proof.length}, 1fr)`,
-                  gap: 10,
+                  gap: 12,
                 }}>
                   {proof.map((p, i) => (
                     <a
@@ -418,27 +430,33 @@ function IdeaCard({ idea, done, onDone, onUseSeo }) {
                         overflow: 'hidden',
                       }}>
                         {p.thumbnail && (
-                          <img src={p.thumbnail} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}/>
+                          <img
+                            src={p.thumbnail}
+                            alt=""
+                            loading="lazy"
+                            style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                          />
                         )}
                         <span style={{
-                          position: 'absolute', bottom: 6, right: 6,
-                          background: 'rgba(0,0,0,0.72)', color: '#fff',
-                          fontSize: 10, fontWeight: 800,
-                          padding: '2px 6px', borderRadius: 5,
+                          position: 'absolute', bottom: 7, right: 7,
+                          background: 'rgba(0,0,0,0.78)', color: '#fff',
+                          fontSize: 11, fontWeight: 800,
+                          padding: '3px 7px', borderRadius: 5,
                           fontVariantNumeric: 'tabular-nums',
                           letterSpacing: '-0.05px',
+                          backdropFilter: 'blur(2px)',
                         }}>{fmtViews(p.views)}</span>
                       </div>
-                      <div style={{ padding: '8px 10px 10px' }}>
+                      <div style={{ padding: '10px 12px 12px' }}>
                         <p style={{
-                          fontSize: 11.5, fontWeight: 600, color: C.text1,
-                          letterSpacing: '-0.1px', lineHeight: 1.35,
-                          marginBottom: 4,
+                          fontSize: 13, fontWeight: 600, color: C.text1,
+                          letterSpacing: '-0.15px', lineHeight: 1.4,
+                          marginBottom: 6,
                           display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden',
-                          minHeight: 30,
+                          minHeight: 36,
                         }}>{p.title}</p>
                         <p style={{
-                          fontSize: 10, fontWeight: 600, color: 'rgba(10,10,15,0.50)',
+                          fontSize: 11.5, fontWeight: 600, color: 'rgba(10,10,15,0.50)',
                           letterSpacing: '-0.05px',
                           whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
                         }}>{p.channel_name}{p.age_label ? ` · ${p.age_label}` : ''}</p>
@@ -468,11 +486,11 @@ function IdeaCard({ idea, done, onDone, onUseSeo }) {
               </div>
             )}
 
-            {/* ── Action row ── */}
+            {/* ── Action row. Typography: meta line 12/500, buttons 12.5/700. ── */}
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
-              <span style={{ fontSize: 11.5, fontWeight: 500, color: 'rgba(10,10,15,0.45)', letterSpacing: '-0.01em' }}>
+              <span style={{ fontSize: 12, fontWeight: 500, color: 'rgba(10,10,15,0.50)', letterSpacing: '-0.01em' }}>
                 {hasProof
-                  ? `${proof.length} competing video${proof.length === 1 ? '' : 's'} found`
+                  ? `${proof.length} competing video${proof.length === 1 ? '' : 's'} from the last 12 months`
                   : 'Evidence loading'}
                 {idea.thumbnail_ready && (
                   <>{' · '}<span style={{ color: C.green, fontWeight: 700 }}>Thumbnail ready</span></>
@@ -508,7 +526,7 @@ function IdeaCard({ idea, done, onDone, onUseSeo }) {
                     border: '1px solid #e6e6ec',
                     background: '#fff', color: 'rgba(10,10,15,0.62)',
                     fontFamily: 'inherit',
-                    fontSize: 11.5, fontWeight: 600, letterSpacing: '-0.01em',
+                    fontSize: 12, fontWeight: 600, letterSpacing: '-0.01em',
                     cursor: 'pointer',
                     transition: 'background 0.14s ease, color 0.14s ease, border-color 0.14s ease',
                   }}
