@@ -751,17 +751,17 @@ const styles = `
 }
 .nh-query strong { color: ${C.text2}; font-weight: 700; }
 
-/* 3-up grid using shared Outliers cards */
+/* Niche grid. We default to 2-up because the home Feed lives in a
+   centered 720px column — 3-up at that container width crams the
+   thumbnails and forces the title to wrap to 4-5 lines. 2-up gives
+   each card ~330px which matches the card's natural design. */
 .nh-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
   margin-top: 4px;
 }
-@media (max-width: 1100px) {
-  .nh-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-}
-@media (max-width: 700px) {
+@media (max-width: 560px) {
   .nh-grid { grid-template-columns: 1fr; }
 }
 
