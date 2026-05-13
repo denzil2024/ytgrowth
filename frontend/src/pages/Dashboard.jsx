@@ -1,4 +1,14 @@
 import { useEffect, useState, useRef, forwardRef } from 'react'
+import {
+  LayoutDashboard,  // Feed
+  Sparkles,         // Optimize
+  Telescope,        // Research
+  MessageCircle,    // Chat
+  Settings as SettingsIcon,
+  ShieldCheck,      // Admin
+  Gift,             // Refer
+  LogOut,
+} from 'lucide-react'
 import Competitors from './Competitors'
 import Settings from './Settings'
 import SeoOptimizer from './SeoOptimizer'
@@ -1225,109 +1235,129 @@ function InsightCard({ insight, index, checked, onToggle, onDelete, onNavigate }
 }
 
 /* ─── Nav icons ─────────────────────────────────────────────────────────── */
+// Lucide icons across the whole nav. Single visual language, consistent
+// stroke weight (1.75) and size (18px primary, 16px footer). Replaces the
+// previous hand-drawn 14px SVGs that read as amateur.
+const ICON_SIZE = 18
+const ICON_STROKE = 1.75
+
 const NAV_ICONS = {
-  // New verb-based primary nav
-  Feed:              <svg width="15" height="15" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"><rect x="1.5" y="2" width="11" height="3.2" rx="1"/><rect x="1.5" y="6.4" width="11" height="2.2" rx="1"/><rect x="1.5" y="9.8" width="7.5" height="2.2" rx="1"/></svg>,
-  Optimize:          <svg width="15" height="15" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"><path d="M2 8.5l3 3 7-9"/></svg>,
-  Research:          <svg width="15" height="15" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"><circle cx="6" cy="6" r="4"/><line x1="9.2" y1="9.2" x2="13" y2="13"/></svg>,
-  Chat:              <svg width="15" height="15" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"><path d="M2 4.5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H6l-2.5 2v-2H4a2 2 0 0 1-2-2z"/></svg>,
-  // Sub-items (existing pages — keep these because NavBtn lookups still hit here)
-  Home:              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"><rect x="1" y="1" width="5" height="5" rx="1.5"/><rect x="8" y="1" width="5" height="5" rx="1.5"/><rect x="1" y="8" width="5" height="5" rx="1.5"/><rect x="8" y="8" width="5" height="5" rx="1.5"/></svg>,
-  Videos:            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"><rect x="1" y="3" width="9" height="8" rx="1.5"/><path d="M10 5.5l3.5-2v7L10 8.5"/></svg>,
-  'My Videos':       <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"><rect x="1" y="3" width="9" height="8" rx="1.5"/><path d="M10 5.5l3.5-2v7L10 8.5"/></svg>,
-  Outliers:          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"><path d="M2 10.5l3.2-3.2 2.3 2.3L12 5"/><path d="M8.5 5H12v3.5"/></svg>,
-  'Title & Description': <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"><path d="M2 11V8M5 11V6M8 11V4M11 11V2"/></svg>,
-  'SEO Studio':      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"><path d="M2 11V8M5 11V6M8 11V4M11 11V2"/></svg>,
-  Thumbnails:        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"><rect x="1" y="3" width="12" height="8" rx="1.5"/><path d="M5 6l2 2 4-3"/></svg>,
-  'Video Ideas':     <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"><circle cx="7" cy="6" r="4"/><path d="M5 10.5h4M7 10.5v2.5"/><path d="M5.5 5.5l1.5 1 1.5-1"/></svg>,
-  Keywords:          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"><circle cx="6" cy="6" r="4"/><line x1="9.2" y1="9.2" x2="13" y2="13"/></svg>,
-  Competitors:       <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"><circle cx="5" cy="7" r="4"/><circle cx="9" cy="7" r="4"/></svg>,
-  'Weekly Report':   <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"><rect x="1" y="2" width="12" height="10" rx="2"/><path d="M1 6h12M4 2v4M10 2v4"/></svg>,
-  'Video Review':    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"><circle cx="5.8" cy="5.8" r="3.8"/><path d="M8.6 8.6l3.4 3.4"/><path d="M4.7 4.3l2.4 1.5-2.4 1.5z"/></svg>,
-  Settings:          <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"><circle cx="6.5" cy="6.5" r="1.8"/><path d="M6.5 1v1.2M6.5 10.8V12M1 6.5h1.2M10.8 6.5H12M2.8 2.8l.85.85M9.35 9.35l.85.85M2.8 10.2l.85-.85M9.35 4.65l.85-.85"/></svg>,
-  Admin:             <svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"><path d="M2 11.5V9.5M5 11.5V6M8 11.5V8M11 11.5V3.5"/><path d="M1 12.5h12"/></svg>,
+  Feed:     <LayoutDashboard size={ICON_SIZE} strokeWidth={ICON_STROKE} />,
+  Optimize: <Sparkles        size={ICON_SIZE} strokeWidth={ICON_STROKE} />,
+  Research: <Telescope       size={ICON_SIZE} strokeWidth={ICON_STROKE} />,
+  Chat:     <MessageCircle   size={ICON_SIZE} strokeWidth={ICON_STROKE} />,
+  Settings: <SettingsIcon    size={ICON_SIZE} strokeWidth={ICON_STROKE} />,
+  Admin:    <ShieldCheck     size={ICON_SIZE} strokeWidth={ICON_STROKE} />,
 }
 
-// Primary verb button. Sized slightly heavier than sub-items so the verbs
-// read as the spine of the nav, with the sub-items as context.
-function NavBtn({ label, active, onClick, badge, accent = false }) {
+// Shared geometry constants. The icon column is the visual spine of the
+// sidebar; sub-items align their leading dot to it so the nav reads as a
+// single column of items, not a ragged stack.
+const NAV_ICON_COL = 18     // matches ICON_SIZE
+const NAV_GUTTER   = 12     // outer horizontal gutter
+const NAV_PAD_X    = 12     // inner left padding inside the button
+const SUB_INDENT   = NAV_PAD_X + NAV_ICON_COL + 12  // 42, lines up with icon-text gap
+
+// Primary verb button.
+function NavBtn({ label, active, onClick, badge }) {
   return (
     <button
-      className={`ytg-nav-btn${active ? ' active' : ''}`}
       onClick={onClick}
       style={{
         position: 'relative',
-        margin: '1px 12px',
-        width: 'calc(100% - 24px)',
-        background: active ? 'rgba(229,37,27,0.06)' : 'transparent',
+        margin: `1px ${NAV_GUTTER}px`,
+        width: `calc(100% - ${NAV_GUTTER * 2}px)`,
+        background: active ? 'rgba(229,37,27,0.07)' : 'transparent',
         color: active ? C.text1 : C.text2,
-        fontWeight: active ? 600 : (accent ? 600 : 500),
-        fontSize: 13.5,
-        letterSpacing: '-0.1px',
-        border: '1px solid transparent',
+        fontWeight: active ? 600 : 500,
+        fontSize: 14,
+        letterSpacing: '-0.01em',
+        border: 'none',
+        padding: `9px ${NAV_PAD_X}px`,
+        borderRadius: 10,
+        textAlign: 'left',
+        cursor: 'pointer',
+        fontFamily: "'Inter', system-ui, sans-serif",
+        display: 'flex', alignItems: 'center', gap: 12,
+        transition: 'background 0.14s ease, color 0.14s ease',
       }}
-      onMouseEnter={e => { if (!active) { e.currentTarget.style.background = 'rgba(15,15,19,0.035)'; e.currentTarget.style.color = C.text1 } }}
+      onMouseEnter={e => { if (!active) { e.currentTarget.style.background = 'rgba(15,15,19,0.04)'; e.currentTarget.style.color = C.text1 } }}
       onMouseLeave={e => { if (!active) { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = C.text2 } }}
     >
       {active && (
-        <span style={{
-          position: 'absolute', left: 0, top: 7, bottom: 7,
+        <span aria-hidden style={{
+          position: 'absolute', left: -NAV_GUTTER, top: 8, bottom: 8,
           width: 3, borderRadius: 100,
           background: C.red,
         }}/>
       )}
-      <span style={{ display: 'flex', flexShrink: 0, color: active ? C.red : '#a5a5b2' }}>{NAV_ICONS[label]}</span>
-      <span style={{ flex: 1, letterSpacing: '-0.1px' }}>{label}</span>
-      {badge && typeof badge === 'string' && (
-        <span style={{ background: 'rgba(229,37,27,0.10)', color: C.red, fontSize: 9, fontWeight: 800, padding: '2px 7px', borderRadius: 20, letterSpacing: '0.06em', textTransform: 'uppercase' }}>{badge}</span>
+      <span style={{
+        display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+        width: NAV_ICON_COL, height: NAV_ICON_COL, flexShrink: 0,
+        color: active ? C.red : '#9da0aa',
+      }}>{NAV_ICONS[label]}</span>
+      <span style={{ flex: 1 }}>{label}</span>
+      {typeof badge === 'string' && badge && (
+        <span style={{
+          background: 'rgba(229,37,27,0.10)', color: C.red,
+          fontSize: 9.5, fontWeight: 800, padding: '2px 7px',
+          borderRadius: 20, letterSpacing: '0.08em', textTransform: 'uppercase',
+        }}>{badge}</span>
       )}
       {typeof badge === 'number' && badge > 0 && (
-        <span style={{ background: C.amberBg, color: C.amber, border: `1px solid ${C.amberBdr}`, fontSize: 11, fontWeight: 700, padding: '1px 6px', borderRadius: 20, minWidth: 18, textAlign: 'center' }}>{badge}</span>
+        <span style={{
+          background: C.amberBg, color: C.amber,
+          border: `1px solid ${C.amberBdr}`,
+          fontSize: 11, fontWeight: 700, padding: '1px 6px',
+          borderRadius: 20, minWidth: 18, textAlign: 'center',
+        }}>{badge}</span>
       )}
     </button>
   )
 }
 
-// Sub-item button. Smaller text, no icon (visually folded under the parent
-// verb), with a left guideline so the group reads as a structural unit.
+// Sub-item button. No icon. Indented under the parent verb, aligned to
+// the icon column so the visual gutter is consistent.
 function NavSubBtn({ label, active, onClick }) {
   return (
     <button
       onClick={onClick}
       style={{
         position: 'relative',
-        margin: '1px 12px 1px 34px',
-        width: 'calc(100% - 46px)',
+        margin: `1px ${NAV_GUTTER}px 1px ${NAV_GUTTER + SUB_INDENT}px`,
+        width: `calc(100% - ${NAV_GUTTER * 2 + SUB_INDENT}px)`,
         background: 'transparent',
         color: active ? C.text1 : C.text2,
-        fontWeight: active ? 600 : 400,
-        fontSize: 13,
-        letterSpacing: '-0.1px',
+        fontWeight: active ? 600 : 450,
+        fontSize: 13.5,
+        letterSpacing: '-0.01em',
         border: 'none',
-        padding: '7px 11px',
+        padding: '7px 10px 7px 12px',
         borderRadius: 8,
         textAlign: 'left',
         cursor: 'pointer',
         fontFamily: "'Inter', system-ui, sans-serif",
-        display: 'flex', alignItems: 'center', gap: 9,
-        transition: 'background 0.12s, color 0.12s',
+        display: 'flex', alignItems: 'center', gap: 10,
+        transition: 'background 0.14s ease, color 0.14s ease',
       }}
-      onMouseEnter={e => { if (!active) { e.currentTarget.style.background = 'rgba(15,15,19,0.035)'; e.currentTarget.style.color = C.text1 } }}
+      onMouseEnter={e => { if (!active) { e.currentTarget.style.background = 'rgba(15,15,19,0.04)'; e.currentTarget.style.color = C.text1 } }}
       onMouseLeave={e => { if (!active) { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = C.text2 } }}
     >
       <span style={{
-        width: 4, height: 4, borderRadius: '50%',
-        background: active ? C.red : '#c8c8d2',
+        width: 5, height: 5, borderRadius: '50%',
+        background: active ? C.red : '#cbcdd6',
         flexShrink: 0,
+        boxShadow: active ? `0 0 0 3px rgba(229,37,27,0.10)` : 'none',
+        transition: 'background 0.14s ease, box-shadow 0.14s ease',
       }}/>
       <span style={{ flex: 1 }}>{label}</span>
     </button>
   )
 }
 
-// Expandable verb group (Optimize / Research). Click the parent toggles
-// open. Open state persists in localStorage so the user's preferred
-// expansion state survives across sessions.
+// Expandable verb group (Optimize / Research). Click parent toggles open.
+// Open state persists in localStorage. Auto-opens when a child becomes
+// active so the user is never lost.
 function NavGroup({ label, children, anyChildActive, defaultOpen = true }) {
   const storageKey = `ytg_nav_group_open:${label}`
   const [open, setOpen] = useState(() => {
@@ -1338,8 +1368,6 @@ function NavGroup({ label, children, anyChildActive, defaultOpen = true }) {
     } catch {}
     return defaultOpen
   })
-  // When a child becomes active we force-open the group so the user always
-  // sees their current location, even if they had collapsed the group.
   useEffect(() => {
     if (anyChildActive && !open) setOpen(true)
   }, [anyChildActive])  // eslint-disable-line react-hooks/exhaustive-deps
@@ -1356,33 +1384,37 @@ function NavGroup({ label, children, anyChildActive, defaultOpen = true }) {
         onClick={toggle}
         style={{
           position: 'relative',
-          margin: '1px 12px',
-          width: 'calc(100% - 24px)',
+          margin: `1px ${NAV_GUTTER}px`,
+          width: `calc(100% - ${NAV_GUTTER * 2}px)`,
           background: 'transparent',
           color: anyChildActive ? C.text1 : C.text2,
           fontWeight: anyChildActive ? 600 : 500,
-          fontSize: 13.5,
-          letterSpacing: '-0.1px',
-          border: '1px solid transparent',
-          padding: '9px 13px',
-          borderRadius: 100,
+          fontSize: 14,
+          letterSpacing: '-0.01em',
+          border: 'none',
+          padding: `9px ${NAV_PAD_X}px`,
+          borderRadius: 10,
           textAlign: 'left',
           cursor: 'pointer',
           fontFamily: "'Inter', system-ui, sans-serif",
-          display: 'flex', alignItems: 'center', gap: 10,
-          transition: 'background 0.12s, color 0.12s',
+          display: 'flex', alignItems: 'center', gap: 12,
+          transition: 'background 0.14s ease, color 0.14s ease',
         }}
-        onMouseEnter={e => { e.currentTarget.style.background = 'rgba(15,15,19,0.035)'; e.currentTarget.style.color = C.text1 }}
+        onMouseEnter={e => { e.currentTarget.style.background = 'rgba(15,15,19,0.04)'; e.currentTarget.style.color = C.text1 }}
         onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = anyChildActive ? C.text1 : C.text2 }}
       >
-        <span style={{ display: 'flex', flexShrink: 0, color: anyChildActive ? C.red : '#a5a5b2' }}>{NAV_ICONS[label]}</span>
+        <span style={{
+          display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+          width: NAV_ICON_COL, height: NAV_ICON_COL, flexShrink: 0,
+          color: anyChildActive ? C.red : '#9da0aa',
+        }}>{NAV_ICONS[label]}</span>
         <span style={{ flex: 1 }}>{label}</span>
         <svg
-          width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round"
+          width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"
           style={{
-            color: '#a5a5b2',
+            color: '#9da0aa',
             transform: open ? 'rotate(180deg)' : 'rotate(0deg)',
-            transition: 'transform 0.18s ease',
+            transition: 'transform 0.2s ease',
           }}
         >
           <polyline points="6 9 12 15 18 9"/>
@@ -1390,11 +1422,13 @@ function NavGroup({ label, children, anyChildActive, defaultOpen = true }) {
       </button>
       {open && (
         <div style={{ position: 'relative', paddingTop: 2, paddingBottom: 4 }}>
-          {/* Vertical guideline that visually groups the children. Aligns
-              with the verb icon column. */}
+          {/* Vertical guideline that visually groups the children, aligned
+              to the icon column. */}
           <span aria-hidden style={{
-            position: 'absolute', left: 31, top: 4, bottom: 6,
-            width: 1, background: 'rgba(15,15,19,0.07)',
+            position: 'absolute',
+            left: NAV_GUTTER + NAV_PAD_X + (NAV_ICON_COL / 2),
+            top: 4, bottom: 6,
+            width: 1, background: 'rgba(15,15,19,0.08)',
           }}/>
           {children}
         </div>
@@ -2046,19 +2080,21 @@ export default function Dashboard() {
 
           <NavBtn label="Chat" active={nav === 'Chat'} onClick={() => setNav('Chat')} badge="Soon" />
 
-          <div style={{ height: 1, background: C.border, margin: '14px 20px 8px' }}/>
+          <div style={{ height: 18 }}/>
 
           {isAdmin && <NavBtn label="Admin" active={nav === 'Admin'} onClick={() => setNav('Admin')} />}
           <NavBtn label="Settings" active={nav === 'Settings'} onClick={() => setNav('Settings')} />
 
         </nav>
 
-        {/* Usage bar */}
+        {/* Sidebar footer — one tight block. Single divider, usage on top,
+            a low-contrast Refer | Sign out row underneath. */}
         {data && (
           <div style={{
-            padding: '16px 22px',
+            padding: '14px 16px 12px',
             borderTop: `1px solid ${C.border}`,
             flexShrink: 0,
+            display: 'flex', flexDirection: 'column', gap: 10,
           }}>
             <UsageBar
               channelId={data.channel?.channel_id}
@@ -2067,39 +2103,46 @@ export default function Dashboard() {
               onPlan={setBillingPlan}
               onUsage={setUsagePct}
             />
+            <div style={{
+              display: 'flex', alignItems: 'center',
+              fontFamily: "'Inter', system-ui, sans-serif",
+            }}>
+              <button
+                onClick={() => setNav('Referrals')}
+                style={{
+                  display: 'inline-flex', alignItems: 'center', gap: 6,
+                  padding: '5px 8px', borderRadius: 6,
+                  background: 'transparent', border: 'none', cursor: 'pointer',
+                  color: nav === 'Referrals' ? C.text1 : C.text3,
+                  fontSize: 12, fontWeight: 500, letterSpacing: '-0.01em',
+                  fontFamily: 'inherit',
+                  transition: 'color 0.14s ease, background 0.14s ease',
+                }}
+                onMouseEnter={e => { if (nav !== 'Referrals') { e.currentTarget.style.color = C.text2; e.currentTarget.style.background = 'rgba(15,15,19,0.04)' } }}
+                onMouseLeave={e => { if (nav !== 'Referrals') { e.currentTarget.style.color = C.text3; e.currentTarget.style.background = 'transparent' } }}
+              >
+                <Gift size={13} strokeWidth={1.75} />
+                <span>Refer</span>
+              </button>
+              <span style={{ color: '#d4d4dc', fontSize: 11, margin: '0 2px' }}>·</span>
+              <a
+                href="/auth/logout"
+                style={{
+                  display: 'inline-flex', alignItems: 'center', gap: 6,
+                  padding: '5px 8px', borderRadius: 6,
+                  color: C.text3, fontSize: 12, fontWeight: 500, letterSpacing: '-0.01em',
+                  textDecoration: 'none',
+                  transition: 'color 0.14s ease, background 0.14s ease',
+                }}
+                onMouseEnter={e => { e.currentTarget.style.color = C.text2; e.currentTarget.style.background = 'rgba(15,15,19,0.04)' }}
+                onMouseLeave={e => { e.currentTarget.style.color = C.text3; e.currentTarget.style.background = 'transparent' }}
+              >
+                <LogOut size={13} strokeWidth={1.75} />
+                <span>Sign out</span>
+              </a>
+            </div>
           </div>
         )}
-
-        {/* Footer: Refer & earn + Sign Out — inline, both subtle */}
-        <div style={{ padding: '8px 14px 12px', borderTop: `1px solid ${C.border}`, flexShrink: 0, display: 'flex', alignItems: 'center', gap: 4 }}>
-          <button
-            onClick={() => setNav('Referrals')}
-            style={{
-              display: 'flex', alignItems: 'center', gap: 7, padding: '6px 9px', borderRadius: 8,
-              background: nav === 'Referrals' ? '#f4f4f8' : 'transparent',
-              border: 'none', cursor: 'pointer', textAlign: 'left',
-              fontSize: 12.5, fontWeight: 500,
-              color: nav === 'Referrals' ? C.text1 : C.text3,
-              fontFamily: 'inherit', flex: 1,
-              transition: 'color 0.15s, background 0.15s',
-            }}
-            onMouseEnter={e => { if (nav !== 'Referrals') { e.currentTarget.style.color = C.text2; e.currentTarget.style.background = '#f4f4f8' } }}
-            onMouseLeave={e => { if (nav !== 'Referrals') { e.currentTarget.style.color = C.text3; e.currentTarget.style.background = 'transparent' } }}
-          >
-            <svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="6" width="10" height="6.5" rx="1"/><path d="M1 6h12v1.5H1z" fill="currentColor" fillOpacity="0.12" stroke="none"/><path d="M7 6v6.5"/><path d="M7 6c-1.2-1.6-3.5-1.2-3.5 0 0 .65.55 1 1.2 1H7M7 6c1.2-1.6 3.5-1.2 3.5 0 0 .65-.55 1-1.2 1H7"/></svg>
-            <span style={{ whiteSpace: 'nowrap' }}>Refer & earn</span>
-          </button>
-          <div style={{ width: 1, height: 16, background: C.border, flexShrink: 0 }}/>
-          <a
-            href="/auth/logout"
-            style={{ display: 'flex', alignItems: 'center', gap: 7, color: C.text3, fontSize: 12.5, fontWeight: 500, textDecoration: 'none', padding: '6px 9px', borderRadius: 8, transition: 'color 0.15s, background 0.15s', flex: 1 }}
-            onMouseEnter={e => { e.currentTarget.style.color = C.text2; e.currentTarget.style.background = '#f4f4f8' }}
-            onMouseLeave={e => { e.currentTarget.style.color = C.text3; e.currentTarget.style.background = 'transparent' }}
-          >
-            <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"><path d="M5 2H2.5A1 1 0 0 0 1.5 3v7a1 1 0 0 0 1 1H5M9 9.5l3-3-3-3M12 6.5H5"/></svg>
-            Sign out
-          </a>
-        </div>
       </aside>
 
       {/* ══ MAIN ═════════════════════════════════════════════════════════ */}
