@@ -410,6 +410,34 @@ def _run_unified_search(
         c["why_now"]          = ex.get("why_now", "")
         c["explanation"]      = ex.get("why_this_channel", "")
 
+    # Cross-outlier pattern synthesis — ONE Claude call on the top 5
+    # winnable videos. Returns the strategic pattern, per-video
+    # replicable/trending/lucky tags, and one concrete next move.
+    # Best-effort: if synthesis fails the UI still renders the video grid.
+    top_winnable_for_synthesis = sorted(
+        top_videos,
+        key=lambda v: v.get("winnable_score", 0),
+        reverse=True,
+    )[:5]
+    pattern_synthesis = _synthesize_outlier_pattern(
+        query=title,
+        top_winnable=top_winnable_for_synthesis,
+        my_subscribers=my_subscribers,
+        niche_keywords=niche_keywords,
+    )
+    # Attach the per-video tag back to each surfaced video so cards in
+    # both Videos and Thumbnails tabs can show the Replicable / Trending
+    # / Lucky chip.
+    video_tags = (pattern_synthesis or {}).get("video_tags") or {}
+    for v in top_videos:
+        tag = video_tags.get(v.get("video_id"))
+        if tag:
+            v["pattern_tag"] = tag
+    for v in top_thumbnails:
+        tag = video_tags.get(v.get("video_id"))
+        if tag:
+            v["pattern_tag"] = tag
+
     cohort_median_vps = statistics.median([s["views_per_sub"] for s in scored]) if scored else 0
     return {
         "videos":              top_videos,
@@ -421,6 +449,7 @@ def _run_unified_search(
         "top_tags":            all_tags_flat[:15],
         "intent_matched":      len(intent_videos),
         "primary_phrase":      primary_phrase,
+        "pattern_synthesis":   pattern_synthesis,
         "cohort": {
             "query":             title,
             "my_subscribers":    my_subscribers,
@@ -909,6 +938,111 @@ def _score_videos(videos: list[dict]) -> list[dict]:
         raw = v["views_per_sub"] / median_vps
         v["outlier_score"] = round(raw, 1)
     return videos
+
+
+def _synthesize_outlier_pattern(
+    query: str,
+    top_winnable: list[dict],
+    my_subscribers: int,
+    niche_keywords: list[str],
+) -> dict:
+    """
+    Cross-outlier pattern synthesis. One Claude call that looks at the top
+    winnable videos as a SET (not individually) and answers three questions
+    VidIQ can't:
+
+      1. The Pattern: what semantic structure do these videos share?
+         Narrative shape, hook structure, format choice. Not keyword counts.
+      2. Replicable vs Lucky vs Trending: per-video classification so the
+         user knows which patterns to copy and which to skip.
+      3. The Next Move: one concrete video to make, with title scaffold,
+         format spec, opening hook, and timing rationale.
+
+    Returns the parsed JSON dict, or an empty dict on any failure (the UI
+    falls back to showing the video grid without the synthesis card).
+    """
+    if not top_winnable:
+        return {}
+
+    slim = []
+    for v in top_winnable:
+        slim.append({
+            "id":         v.get("video_id"),
+            "title":      v.get("title", ""),
+            "channel":    v.get("channel_name", ""),
+            "subs":       v.get("channel_subscribers", 0),
+            "views":      v.get("views", 0),
+            "duration_s": v.get("duration_seconds", 0),
+            "outlier":    v.get("outlier_score", 0),
+            "winnable":   v.get("winnable_score", 0),
+            "published":  v.get("published_at", ""),
+        })
+
+    nk_str = ", ".join((niche_keywords or [])[:8]) or "(none provided)"
+    videos_json = json.dumps(slim, indent=2)
+
+    prompt = f"""You are analysing {len(slim)} over-performing YouTube videos in the niche "{query}".
+
+The user runs a channel with {my_subscribers:,} subscribers in this space.
+Their niche keywords: {nk_str}
+
+THE VIDEOS (sorted by how realistic each is for the user to capture):
+
+{videos_json}
+
+Your job: synthesise ACROSS these videos. Find the strategic insight, not the surface keywords.
+
+Return a JSON object with these keys:
+
+1. the_pattern (string, 2-3 sentences)
+   What do these videos SHARE that the average video in this niche does not? Focus on:
+   - Narrative shape (hook style, story arc, payoff structure)
+   - Format choice (duration, pacing, visual structure)
+   - Emotional driver (curiosity, status, fear, hope, validation)
+   Do NOT list keyword frequencies. Be specific. Reference concrete details from the titles.
+
+2. video_tags (object, one entry per video id)
+   For each video, label the outperformance source:
+   - "replicable": cracks a formula the user can copy. The pattern repeats.
+   - "trending": riding a specific trend, event, or news cycle. Time-bounded.
+   - "lucky": one-off virality unlikely to repeat. Algorithm gift.
+
+3. next_move (object)
+   ONE concrete video for the user to make. Be specific:
+   - title_scaffold: an exact title format with bracketed slots for the user to fill, e.g. "I tried [X] for 30 days and [unexpected result]"
+   - format_spec: duration range and structural notes (e.g. "9 to 12 minutes, before/after structure, no chapters")
+   - opening_hook: what the first 3 seconds should be
+   - why_now: one sentence on timing or saturation (why this works in the next 14 days, not later)
+
+Return ONLY valid JSON, no markdown, no preamble:
+
+{{
+  "the_pattern": "...",
+  "video_tags": {{
+    "<video_id>": "replicable|trending|lucky"
+  }},
+  "next_move": {{
+    "title_scaffold": "...",
+    "format_spec": "...",
+    "opening_hook": "...",
+    "why_now": "..."
+  }}
+}}"""
+
+    try:
+        client = make_anthropic_client()
+        msg = client.messages.create(
+            model="claude-sonnet-4-6",
+            max_tokens=1500,
+            messages=[{"role": "user", "content": prompt}],
+        )
+        raw = msg.content[0].text.strip()
+        raw = re.sub(r"^```[a-z]*\n?", "", raw)
+        raw = re.sub(r"\n?```$", "", raw.strip())
+        return json.loads(raw)
+    except Exception as e:
+        print(f"[outliers] pattern synthesis failed: {e}")
+        return {}
 
 
 def _compute_winnable_score(

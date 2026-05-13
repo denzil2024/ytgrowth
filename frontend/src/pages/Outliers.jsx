@@ -996,6 +996,13 @@ export default function Outliers({ channelData, onNavigate, plan, freeTierFeatur
         })
         return (
           <div className="out-section">
+            {/* Videos tab: cross-outlier strategic synthesis lives above the grid.
+                One Claude call extracted "the pattern" across the top-winnable
+                videos plus a concrete "your next move" recommendation. */}
+            {tab === 'video' && result.pattern_synthesis && (
+              <PatternSynthesisCard synthesis={result.pattern_synthesis} />
+            )}
+
             {/* Thumbnails tab: niche visual-pattern report lives above the grid */}
             {tab === 'thumbnail' && result.thumbnail_patterns && (
               <ThumbnailPatternsCard patterns={result.thumbnail_patterns} query={result.cohort?.query} />
@@ -1174,6 +1181,62 @@ export default function Outliers({ channelData, onNavigate, plan, freeTierFeatur
    Content adapted to Outliers: OUTLIER / VIEWS-PER-SUB / ENG rather than
    Watch / Retention / Eng (those only apply to the user's own videos).
    ──────────────────────────────────────────────────────────────────────── */
+/* ──────────────────────────────────────────────────────────────────────────
+   PatternSynthesisCard — the strategic insight that beats VidIQ.
+   VidIQ shows you a list of outliers and stops. We synthesise across the
+   top winnable subset and answer: what's the pattern, and what should you
+   make next. Data comes from backend pattern_synthesis (one Claude call).
+   ────────────────────────────────────────────────────────────────────────── */
+function PatternSynthesisCard({ synthesis }) {
+  if (!synthesis) return null
+  const pattern  = synthesis.the_pattern
+  const nextMove = synthesis.next_move
+  if (!pattern && !nextMove) return null
+  return (
+    <div className="out-card" style={{ padding: '26px 28px', marginBottom: 22 }}>
+      {pattern && (
+        <div style={{ marginBottom: nextMove ? 22 : 0 }}>
+          <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 10 }}>The pattern</p>
+          <p style={{ fontSize: 15, fontWeight: 500, color: C.text1, lineHeight: 1.6, letterSpacing: '-0.15px' }}>
+            {pattern}
+          </p>
+        </div>
+      )}
+      {nextMove && (
+        <div style={{ paddingTop: pattern ? 20 : 0, borderTop: pattern ? '1px solid #eeeef3' : 'none' }}>
+          <p style={{ fontSize: 11, fontWeight: 700, color: C.red, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 12 }}>Your next move</p>
+          {nextMove.title_scaffold && (
+            <p style={{ fontSize: 16, fontWeight: 700, color: C.text1, lineHeight: 1.45, marginBottom: 16, letterSpacing: '-0.3px' }}>
+              {nextMove.title_scaffold}
+            </p>
+          )}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: 18, marginBottom: nextMove.why_now ? 14 : 0 }}>
+            {nextMove.format_spec && (
+              <div>
+                <p style={{ fontSize: 10.5, fontWeight: 700, color: C.text3, letterSpacing: '0.09em', textTransform: 'uppercase', marginBottom: 6 }}>Format</p>
+                <p style={{ fontSize: 13, color: C.text2, lineHeight: 1.5 }}>{nextMove.format_spec}</p>
+              </div>
+            )}
+            {nextMove.opening_hook && (
+              <div>
+                <p style={{ fontSize: 10.5, fontWeight: 700, color: C.text3, letterSpacing: '0.09em', textTransform: 'uppercase', marginBottom: 6 }}>Opening hook</p>
+                <p style={{ fontSize: 13, color: C.text2, lineHeight: 1.5 }}>{nextMove.opening_hook}</p>
+              </div>
+            )}
+          </div>
+          {nextMove.why_now && (
+            <p style={{ fontSize: 12.5, color: C.text2, lineHeight: 1.5, paddingTop: 12, borderTop: '1px dashed #eeeef3' }}>
+              <span style={{ fontWeight: 700, color: C.amber, letterSpacing: '0.04em', textTransform: 'uppercase', fontSize: 11 }}>Why now: </span>
+              {nextMove.why_now}
+            </p>
+          )}
+        </div>
+      )}
+    </div>
+  )
+}
+
+
 function VideoResultCard({ item, kind, onOpen }) {
   const tier          = outlierTier(item.outlier_score)
   const views         = item.views || 0
@@ -1233,6 +1296,28 @@ function VideoResultCard({ item, kind, onOpen }) {
           fontSize: 16, fontWeight: 700, color: C.text1, lineHeight: 1.4, marginBottom: 12, letterSpacing: '-0.3px',
           display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden',
         }}>{item.title}</p>
+
+        {/* Pattern tag chip — replicable / trending / lucky. Set by the
+            cross-outlier synthesis (Claude). Tells the user whether to
+            copy this video's pattern or skip it. Only renders when the
+            synthesis returned a tag for this video id. */}
+        {item.pattern_tag && (() => {
+          const t = String(item.pattern_tag).toLowerCase()
+          const cfg = t === 'replicable' ? { label: 'Replicable', bg: 'rgba(5,150,105,0.10)', border: 'rgba(5,150,105,0.30)', color: C.green }
+                    : t === 'trending'   ? { label: 'Trending',   bg: 'rgba(217,119,6,0.10)', border: 'rgba(217,119,6,0.30)', color: C.amber }
+                    : t === 'lucky'      ? { label: 'Lucky',      bg: '#f4f4f6',              border: '#e6e6ec',              color: C.text3 }
+                    : null
+          if (!cfg) return null
+          return (
+            <span style={{
+              display: 'inline-flex', alignItems: 'center', alignSelf: 'flex-start',
+              fontSize: 10.5, fontWeight: 700, letterSpacing: '0.09em', textTransform: 'uppercase',
+              padding: '4px 9px', borderRadius: 100,
+              background: cfg.bg, border: `1px solid ${cfg.border}`, color: cfg.color,
+              marginBottom: 10,
+            }}>{cfg.label}</span>
+          )
+        })()}
 
         {/* Channel name — its own line under the title, slightly heavier weight
             than the meta line below so it reads as a byline ("who made this"),
