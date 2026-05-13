@@ -13,11 +13,60 @@ def parse_duration_seconds(iso_duration):
     return int(match.group(1) or 0) * 3600 + int(match.group(2) or 0) * 60 + int(match.group(3) or 0)
 
 
+_COMP_CACHE_TTL_HOURS = 24
+
+
 def search_competitor_channels(credentials, query, max_results=5):
+    """Find candidate competitor channels by name. Cached cross-user in
+    youtube_search_cache (comp: prefix) for 24h, same caching layer SEO
+    Studio + Keyword Research use. Two users searching "MrBeast" within
+    a day = one 100-unit YouTube call, not two."""
     from app.utils import yt_quota_paused
     if yt_quota_paused():
         print(f"[competitors] search skipped — YT_QUOTA_PAUSED=1 (query='{query}')")
         return []
+
+    # Reject junk before spending 100 units (same filter SEO Studio uses).
+    from app.seo import _is_meaningful_query, _normalize_cache_query
+    if not _is_meaningful_query(query):
+        print(f"[competitors] junk query rejected: '{query}'")
+        return []
+
+    # 24h cache lookup. comp: prefix because we cache a different shape
+    # than seo: (channel dicts vs video dicts) — but same normalisation
+    # so "MrBeast" and "mrbeast" share a row.
+    import json as _json
+    import datetime as _dt
+    from database.models import SessionLocal, YoutubeSearchCache
+    cache_key = f"comp:{_normalize_cache_query(query)}|{max_results}|relevance"
+
+    db = SessionLocal()
+    try:
+        row = db.query(YoutubeSearchCache).filter_by(cache_key=cache_key).first()
+        if row and row.cached_at:
+            cached_at = row.cached_at
+            if cached_at.tzinfo is None:
+                cached_at = cached_at.replace(tzinfo=_dt.timezone.utc)
+            age_hours = (_dt.datetime.now(_dt.timezone.utc) - cached_at).total_seconds() / 3600
+            if age_hours < _COMP_CACHE_TTL_HOURS:
+                try:
+                    cached = _json.loads(row.result_json) or []
+                    try:
+                        row.hit_count = (row.hit_count or 0) + 1
+                        row.last_hit_at = _dt.datetime.now(_dt.timezone.utc)
+                        db.commit()
+                    except Exception:
+                        try: db.rollback()
+                        except Exception: pass
+                    print(f"[competitors] cache HIT '{query}' (hits={row.hit_count}, saved 100 units)")
+                    return cached
+                except Exception:
+                    pass  # corrupt cache, fall through
+    except Exception as e:
+        print(f"[competitors] cache read error: {e}")
+    finally:
+        db.close()
+
     youtube = build_youtube_client(credentials)
     try:
         response = youtube.search().list(
@@ -35,6 +84,37 @@ def search_competitor_channels(credentials, query, max_results=5):
                 "description": item["snippet"].get("description", "")[:120],
                 "thumbnail": item["snippet"]["thumbnails"].get("default", {}).get("url", "")
             })
+
+        # Persist for the next user. First fetch counts as hit #1.
+        db = SessionLocal()
+        try:
+            now = _dt.datetime.now(_dt.timezone.utc)
+            existing = db.query(YoutubeSearchCache).filter_by(cache_key=cache_key).first()
+            payload = _json.dumps(channels)
+            if existing:
+                existing.result_json = payload
+                existing.cached_at = now
+                existing.hit_count = (existing.hit_count or 0) + 1
+                existing.last_hit_at = now
+                if not existing.original_query:
+                    existing.original_query = query
+            else:
+                db.add(YoutubeSearchCache(
+                    cache_key=cache_key,
+                    original_query=query,
+                    result_json=payload,
+                    cached_at=now,
+                    hit_count=1,
+                    last_hit_at=now,
+                ))
+            db.commit()
+        except Exception as e:
+            print(f"[competitors] cache write error: {e}")
+            try: db.rollback()
+            except Exception: pass
+        finally:
+            db.close()
+
         return channels
     except Exception as e:
         print(f"Search error: {e}")
