@@ -1226,10 +1226,18 @@ function InsightCard({ insight, index, checked, onToggle, onDelete, onNavigate }
 
 /* ─── Nav icons ─────────────────────────────────────────────────────────── */
 const NAV_ICONS = {
+  // New verb-based primary nav
+  Feed:              <svg width="15" height="15" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"><rect x="1.5" y="2" width="11" height="3.2" rx="1"/><rect x="1.5" y="6.4" width="11" height="2.2" rx="1"/><rect x="1.5" y="9.8" width="7.5" height="2.2" rx="1"/></svg>,
+  Optimize:          <svg width="15" height="15" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"><path d="M2 8.5l3 3 7-9"/></svg>,
+  Research:          <svg width="15" height="15" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"><circle cx="6" cy="6" r="4"/><line x1="9.2" y1="9.2" x2="13" y2="13"/></svg>,
+  Chat:              <svg width="15" height="15" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"><path d="M2 4.5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H6l-2.5 2v-2H4a2 2 0 0 1-2-2z"/></svg>,
+  // Sub-items (existing pages — keep these because NavBtn lookups still hit here)
   Home:              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"><rect x="1" y="1" width="5" height="5" rx="1.5"/><rect x="8" y="1" width="5" height="5" rx="1.5"/><rect x="1" y="8" width="5" height="5" rx="1.5"/><rect x="8" y="8" width="5" height="5" rx="1.5"/></svg>,
   Videos:            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"><rect x="1" y="3" width="9" height="8" rx="1.5"/><path d="M10 5.5l3.5-2v7L10 8.5"/></svg>,
+  'My Videos':       <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"><rect x="1" y="3" width="9" height="8" rx="1.5"/><path d="M10 5.5l3.5-2v7L10 8.5"/></svg>,
   Outliers:          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"><path d="M2 10.5l3.2-3.2 2.3 2.3L12 5"/><path d="M8.5 5H12v3.5"/></svg>,
   'Title & Description': <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"><path d="M2 11V8M5 11V6M8 11V4M11 11V2"/></svg>,
+  'SEO Studio':      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"><path d="M2 11V8M5 11V6M8 11V4M11 11V2"/></svg>,
   Thumbnails:        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"><rect x="1" y="3" width="12" height="8" rx="1.5"/><path d="M5 6l2 2 4-3"/></svg>,
   'Video Ideas':     <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"><circle cx="7" cy="6" r="4"/><path d="M5 10.5h4M7 10.5v2.5"/><path d="M5.5 5.5l1.5 1 1.5-1"/></svg>,
   Keywords:          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"><circle cx="6" cy="6" r="4"/><line x1="9.2" y1="9.2" x2="13" y2="13"/></svg>,
@@ -1240,29 +1248,158 @@ const NAV_ICONS = {
   Admin:             <svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"><path d="M2 11.5V9.5M5 11.5V6M8 11.5V8M11 11.5V3.5"/><path d="M1 12.5h12"/></svg>,
 }
 
-function NavBtn({ label, active, onClick, badge }) {
+// Primary verb button. Sized slightly heavier than sub-items so the verbs
+// read as the spine of the nav, with the sub-items as context.
+function NavBtn({ label, active, onClick, badge, accent = false }) {
   return (
     <button
       className={`ytg-nav-btn${active ? ' active' : ''}`}
       onClick={onClick}
       style={{
-        margin: '2px 12px',
+        position: 'relative',
+        margin: '1px 12px',
         width: 'calc(100% - 24px)',
-        background: active ? 'rgba(15,15,19,0.07)' : 'transparent',
+        background: active ? 'rgba(229,37,27,0.06)' : 'transparent',
         color: active ? C.text1 : C.text2,
-        fontWeight: active ? 600 : 400,
+        fontWeight: active ? 600 : (accent ? 600 : 500),
+        fontSize: 13.5,
         letterSpacing: '-0.1px',
-        border: active ? '1px solid rgba(0,0,0,0.09)' : '1px solid transparent',
+        border: '1px solid transparent',
       }}
-      onMouseEnter={e => { if (!active) { e.currentTarget.style.color = C.text1 } }}
-      onMouseLeave={e => { if (!active) { e.currentTarget.style.color = C.text2 } }}
+      onMouseEnter={e => { if (!active) { e.currentTarget.style.background = 'rgba(15,15,19,0.035)'; e.currentTarget.style.color = C.text1 } }}
+      onMouseLeave={e => { if (!active) { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = C.text2 } }}
     >
-      <span style={{ display: 'flex', flexShrink: 0, color: active ? C.text1 : '#c0c0cc' }}>{NAV_ICONS[label]}</span>
+      {active && (
+        <span style={{
+          position: 'absolute', left: 0, top: 7, bottom: 7,
+          width: 3, borderRadius: 100,
+          background: C.red,
+        }}/>
+      )}
+      <span style={{ display: 'flex', flexShrink: 0, color: active ? C.red : '#a5a5b2' }}>{NAV_ICONS[label]}</span>
       <span style={{ flex: 1, letterSpacing: '-0.1px' }}>{label}</span>
-      {badge > 0 && (
+      {badge && typeof badge === 'string' && (
+        <span style={{ background: 'rgba(229,37,27,0.10)', color: C.red, fontSize: 9, fontWeight: 800, padding: '2px 7px', borderRadius: 20, letterSpacing: '0.06em', textTransform: 'uppercase' }}>{badge}</span>
+      )}
+      {typeof badge === 'number' && badge > 0 && (
         <span style={{ background: C.amberBg, color: C.amber, border: `1px solid ${C.amberBdr}`, fontSize: 11, fontWeight: 700, padding: '1px 6px', borderRadius: 20, minWidth: 18, textAlign: 'center' }}>{badge}</span>
       )}
     </button>
+  )
+}
+
+// Sub-item button. Smaller text, no icon (visually folded under the parent
+// verb), with a left guideline so the group reads as a structural unit.
+function NavSubBtn({ label, active, onClick }) {
+  return (
+    <button
+      onClick={onClick}
+      style={{
+        position: 'relative',
+        margin: '1px 12px 1px 34px',
+        width: 'calc(100% - 46px)',
+        background: 'transparent',
+        color: active ? C.text1 : C.text2,
+        fontWeight: active ? 600 : 400,
+        fontSize: 13,
+        letterSpacing: '-0.1px',
+        border: 'none',
+        padding: '7px 11px',
+        borderRadius: 8,
+        textAlign: 'left',
+        cursor: 'pointer',
+        fontFamily: "'Inter', system-ui, sans-serif",
+        display: 'flex', alignItems: 'center', gap: 9,
+        transition: 'background 0.12s, color 0.12s',
+      }}
+      onMouseEnter={e => { if (!active) { e.currentTarget.style.background = 'rgba(15,15,19,0.035)'; e.currentTarget.style.color = C.text1 } }}
+      onMouseLeave={e => { if (!active) { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = C.text2 } }}
+    >
+      <span style={{
+        width: 4, height: 4, borderRadius: '50%',
+        background: active ? C.red : '#c8c8d2',
+        flexShrink: 0,
+      }}/>
+      <span style={{ flex: 1 }}>{label}</span>
+    </button>
+  )
+}
+
+// Expandable verb group (Optimize / Research). Click the parent toggles
+// open. Open state persists in localStorage so the user's preferred
+// expansion state survives across sessions.
+function NavGroup({ label, children, anyChildActive, defaultOpen = true }) {
+  const storageKey = `ytg_nav_group_open:${label}`
+  const [open, setOpen] = useState(() => {
+    try {
+      const raw = localStorage.getItem(storageKey)
+      if (raw === '0') return false
+      if (raw === '1') return true
+    } catch {}
+    return defaultOpen
+  })
+  // When a child becomes active we force-open the group so the user always
+  // sees their current location, even if they had collapsed the group.
+  useEffect(() => {
+    if (anyChildActive && !open) setOpen(true)
+  }, [anyChildActive])  // eslint-disable-line react-hooks/exhaustive-deps
+  function toggle() {
+    setOpen(o => {
+      const next = !o
+      try { localStorage.setItem(storageKey, next ? '1' : '0') } catch {}
+      return next
+    })
+  }
+  return (
+    <>
+      <button
+        onClick={toggle}
+        style={{
+          position: 'relative',
+          margin: '1px 12px',
+          width: 'calc(100% - 24px)',
+          background: 'transparent',
+          color: anyChildActive ? C.text1 : C.text2,
+          fontWeight: anyChildActive ? 600 : 500,
+          fontSize: 13.5,
+          letterSpacing: '-0.1px',
+          border: '1px solid transparent',
+          padding: '9px 13px',
+          borderRadius: 100,
+          textAlign: 'left',
+          cursor: 'pointer',
+          fontFamily: "'Inter', system-ui, sans-serif",
+          display: 'flex', alignItems: 'center', gap: 10,
+          transition: 'background 0.12s, color 0.12s',
+        }}
+        onMouseEnter={e => { e.currentTarget.style.background = 'rgba(15,15,19,0.035)'; e.currentTarget.style.color = C.text1 }}
+        onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = anyChildActive ? C.text1 : C.text2 }}
+      >
+        <span style={{ display: 'flex', flexShrink: 0, color: anyChildActive ? C.red : '#a5a5b2' }}>{NAV_ICONS[label]}</span>
+        <span style={{ flex: 1 }}>{label}</span>
+        <svg
+          width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round"
+          style={{
+            color: '#a5a5b2',
+            transform: open ? 'rotate(180deg)' : 'rotate(0deg)',
+            transition: 'transform 0.18s ease',
+          }}
+        >
+          <polyline points="6 9 12 15 18 9"/>
+        </svg>
+      </button>
+      {open && (
+        <div style={{ position: 'relative', paddingTop: 2, paddingBottom: 4 }}>
+          {/* Vertical guideline that visually groups the children. Aligns
+              with the verb icon column. */}
+          <span aria-hidden style={{
+            position: 'absolute', left: 31, top: 4, bottom: 6,
+            width: 1, background: 'rgba(15,15,19,0.07)',
+          }}/>
+          {children}
+        </div>
+      )}
+    </>
   )
 }
 
@@ -1876,35 +2013,40 @@ export default function Dashboard() {
           </div>
         )}
 
-        {/* Nav */}
-        <nav style={{ overflowY: 'auto', flex: 1, paddingTop: 8, paddingBottom: 8 }}>
+        {/* Nav — verbs first, features nested. Down from 14 flat items to
+            4 primary verbs + Settings. Optimize and Research expand to
+            show the existing feature pages; the verb itself is just the
+            group toggle for now (verb landing pages come in a later
+            commit). The 'nav' state values are unchanged so every
+            existing page render below still works. */}
+        <nav style={{ overflowY: 'auto', flex: 1, paddingTop: 12, paddingBottom: 8 }}>
 
-          {/* Section: MY CHANNEL */}
-          <div style={{ padding: '12px 22px 4px' }}>
-            <span style={{ fontSize: 10, fontWeight: 600, color: C.text1, textTransform: 'uppercase', letterSpacing: '0.09em' }}>My Channel</span>
-          </div>
-          <NavBtn label="Home"                active={nav === 'Overview'}       onClick={() => setNav('Overview')} />
-          <NavBtn label="Videos"              active={nav === 'Videos'}         onClick={() => setNav('Videos')} />
-          <NavBtn label="Video Review"        active={nav === 'Autopsy'}        onClick={() => setNav('Autopsy')} />
-          <NavBtn label="Weekly Report"       active={nav === 'Weekly Report'}  onClick={() => setNav('Weekly Report')} />
+          <NavBtn label="Feed"      active={nav === 'Overview'} onClick={() => setNav('Overview')} />
 
-          {/* Section: CREATE — every tool that helps you ship the next video */}
-          <div style={{ padding: '20px 22px 4px' }}>
-            <span style={{ fontSize: 10, fontWeight: 600, color: C.text1, textTransform: 'uppercase', letterSpacing: '0.09em' }}>Create</span>
-          </div>
-          <NavBtn label="Video Ideas"           active={nav === 'Video Ideas'}      onClick={() => setNav('Video Ideas')} />
-          <NavBtn label="Title & Description"   active={nav === 'SEO Studio'}       onClick={() => setNav('SEO Studio')} />
-          <NavBtn label="Thumbnails"            active={nav === 'Thumbnail Score'}  onClick={() => setNav('Thumbnail Score')} />
+          <NavGroup
+            label="Optimize"
+            anyChildActive={['SEO Studio','Thumbnail Score','Video Ideas','Videos','Autopsy','Weekly Report'].includes(nav)}
+          >
+            <NavSubBtn label="SEO Studio"    active={nav === 'SEO Studio'}       onClick={() => setNav('SEO Studio')} />
+            <NavSubBtn label="Thumbnails"    active={nav === 'Thumbnail Score'}  onClick={() => setNav('Thumbnail Score')} />
+            <NavSubBtn label="Video Ideas"   active={nav === 'Video Ideas'}      onClick={() => setNav('Video Ideas')} />
+            <NavSubBtn label="My Videos"     active={nav === 'Videos'}           onClick={() => setNav('Videos')} />
+            <NavSubBtn label="Video Review"  active={nav === 'Autopsy'}          onClick={() => setNav('Autopsy')} />
+            <NavSubBtn label="Weekly Report" active={nav === 'Weekly Report'}    onClick={() => setNav('Weekly Report')} />
+          </NavGroup>
 
-          {/* Section: RESEARCH — study the niche before you press record */}
-          <div style={{ padding: '20px 22px 4px' }}>
-            <span style={{ fontSize: 10, fontWeight: 600, color: C.text1, textTransform: 'uppercase', letterSpacing: '0.09em' }}>Research</span>
-          </div>
-          <NavBtn label="Outliers"    active={nav === 'Outliers'}    onClick={() => setNav('Outliers')} />
-          <NavBtn label="Keywords"    active={nav === 'Keywords'}    onClick={() => setNav('Keywords')} />
-          <NavBtn label="Competitors" active={nav === 'Competitors'} onClick={() => setNav('Competitors')} />
+          <NavGroup
+            label="Research"
+            anyChildActive={['Outliers','Keywords','Competitors'].includes(nav)}
+          >
+            <NavSubBtn label="Outliers"    active={nav === 'Outliers'}    onClick={() => setNav('Outliers')} />
+            <NavSubBtn label="Keywords"    active={nav === 'Keywords'}    onClick={() => setNav('Keywords')} />
+            <NavSubBtn label="Competitors" active={nav === 'Competitors'} onClick={() => setNav('Competitors')} />
+          </NavGroup>
 
-          <div style={{ height: 1, background: C.border, margin: '16px 20px 8px' }}/>
+          <NavBtn label="Chat" active={nav === 'Chat'} onClick={() => setNav('Chat')} badge="Soon" />
+
+          <div style={{ height: 1, background: C.border, margin: '14px 20px 8px' }}/>
 
           {isAdmin && <NavBtn label="Admin" active={nav === 'Admin'} onClick={() => setNav('Admin')} />}
           <NavBtn label="Settings" active={nav === 'Settings'} onClick={() => setNav('Settings')} />
@@ -3119,6 +3261,32 @@ export default function Dashboard() {
 
           {/* ── ADMIN ────────────────────────────────────────────────── */}
           {nav === 'Admin' && isAdmin && <Admin />}
+
+          {/* ── CHAT (placeholder) ───────────────────────────────────── */}
+          {nav === 'Chat' && (
+            <div style={{ maxWidth: 720, margin: '40px auto', padding: '40px 28px', textAlign: 'center' }}>
+              <div style={{
+                display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                width: 56, height: 56, borderRadius: 14,
+                background: 'linear-gradient(135deg, rgba(229,37,27,0.10) 0%, rgba(229,37,27,0.04) 100%)',
+                border: '1px solid rgba(229,37,27,0.18)',
+                color: C.red,
+                marginBottom: 18,
+              }}>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M4 7.5a2.5 2.5 0 0 1 2.5-2.5h11A2.5 2.5 0 0 1 20 7.5v6A2.5 2.5 0 0 1 17.5 16H10l-4 3v-3H6.5A2.5 2.5 0 0 1 4 13.5z"/></svg>
+              </div>
+              <h2 style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', marginBottom: 10 }}>Chat is coming soon</h2>
+              <p style={{ fontSize: 14, color: C.text2, lineHeight: 1.6, marginBottom: 22, maxWidth: 480, margin: '0 auto 22px' }}>
+                An AI coach that knows your channel and tells you what to work on next. Ask
+                anything from "what should my next video be" to "why did my last upload tank".
+                Plugs into every feature you have here.
+              </p>
+              <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontSize: 12, color: C.text3, fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+                <span style={{ width: 6, height: 6, borderRadius: '50%', background: C.amber }}/>
+                In development
+              </div>
+            </div>
+          )}
 
           {/* ── SETTINGS ─────────────────────────────────────────────── */}
           {nav === 'Settings' && <Settings channelData={data} />}
