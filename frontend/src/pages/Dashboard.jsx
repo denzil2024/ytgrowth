@@ -1259,7 +1259,7 @@ const NAV_PAD_X    = 12     // inner left padding inside the button
 const SUB_INDENT   = NAV_PAD_X + NAV_ICON_COL + 12  // 42, lines up with icon-text gap
 
 // Primary verb button.
-function NavBtn({ label, active, onClick, badge }) {
+function NavBtn({ label, active, onClick, badge, dot }) {
   return (
     <button
       onClick={onClick}
@@ -1306,11 +1306,20 @@ function NavBtn({ label, active, onClick, badge }) {
       )}
       {typeof badge === 'number' && badge > 0 && (
         <span style={{
-          background: C.amberBg, color: C.amber,
-          border: `1px solid ${C.amberBdr}`,
-          fontSize: 11, fontWeight: 700, padding: '1px 6px',
+          background: C.red, color: '#fff',
+          fontSize: 10.5, fontWeight: 800, padding: '1px 7px',
           borderRadius: 20, minWidth: 18, textAlign: 'center',
+          letterSpacing: '-0.01em', fontVariantNumeric: 'tabular-nums',
+          lineHeight: 1.45,
         }}>{badge}</span>
+      )}
+      {dot && (typeof badge === 'undefined' || badge === null || badge === '' || badge === 0) && (
+        <span aria-label="new" style={{
+          width: 7, height: 7, borderRadius: '50%',
+          background: C.red,
+          boxShadow: `0 0 0 3px rgba(229,37,27,0.16)`,
+          flexShrink: 0,
+        }}/>
       )}
     </button>
   )
@@ -1358,7 +1367,7 @@ function NavSubBtn({ label, active, onClick }) {
 // Expandable verb group (Optimize / Research). Click parent toggles open.
 // Open state persists in localStorage. Auto-opens when a child becomes
 // active so the user is never lost.
-function NavGroup({ label, children, anyChildActive, defaultOpen = true }) {
+function NavGroup({ label, children, anyChildActive, defaultOpen = true, badge, dot }) {
   const storageKey = `ytg_nav_group_open:${label}`
   const [open, setOpen] = useState(() => {
     try {
@@ -1409,6 +1418,23 @@ function NavGroup({ label, children, anyChildActive, defaultOpen = true }) {
           color: anyChildActive ? C.red : '#9da0aa',
         }}>{NAV_ICONS[label]}</span>
         <span style={{ flex: 1 }}>{label}</span>
+        {typeof badge === 'number' && badge > 0 && (
+          <span style={{
+            background: C.red, color: '#fff',
+            fontSize: 10.5, fontWeight: 800, padding: '1px 7px',
+            borderRadius: 20, minWidth: 18, textAlign: 'center',
+            letterSpacing: '-0.01em', fontVariantNumeric: 'tabular-nums',
+            lineHeight: 1.45,
+          }}>{badge}</span>
+        )}
+        {dot && (typeof badge === 'undefined' || badge === null || badge === 0) && (
+          <span aria-label="new" style={{
+            width: 7, height: 7, borderRadius: '50%',
+            background: C.red,
+            boxShadow: `0 0 0 3px rgba(229,37,27,0.16)`,
+            flexShrink: 0,
+          }}/>
+        )}
         <svg
           width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"
           style={{
@@ -1728,6 +1754,9 @@ export default function Dashboard() {
   const [showWelcome, setShowWelcome] = useState(false)
   const [billingPlan, setBillingPlan] = useState(null)
   const [isAdmin,     setIsAdmin]     = useState(false)
+  // Sidebar live signals. Drive the nav badges so the sidebar reads as a
+  // status surface, not just a list of links.
+  const [freshOutlier, setFreshOutlier] = useState(false)
   // Free-tier per-feature gate status. Map of feature id → 'allowed' | 'locked' | 'used'.
   // Fetched from /auth/me on mount; empty {} for paid plans. Passed to gated
   // child pages so they can show the upsell modal on first render.
@@ -1748,6 +1777,31 @@ export default function Dashboard() {
     fetch('/admin/me', { credentials: 'include' })
       .then(r => r.ok ? r.json() : { is_admin: false })
       .then(d => setIsAdmin(!!d.is_admin))
+      .catch(() => {})
+  }, [])
+
+  // Probe the niche-outlier bundle on mount so the Research nav can show
+  // a "● new" dot when this week's outlier is fresh and the user hasn't
+  // yet navigated to Outliers to see it. NicheHeroCard hits the same
+  // endpoint; the browser caches the response so this is effectively free.
+  useEffect(() => {
+    fetch('/dashboard/niche-outlier', { credentials: 'include' })
+      .then(r => r.ok ? r.json() : null)
+      .then(d => {
+        if (!d?.ok) return
+        const refreshed = d.bundle?.refreshed_at || d.outlier?.refreshed_at
+        if (!refreshed) return
+        const ageMs = Date.now() - new Date(refreshed).getTime()
+        const SEVEN_DAYS = 7 * 24 * 60 * 60 * 1000
+        if (!Number.isFinite(ageMs) || ageMs > SEVEN_DAYS) return
+        const channelId = d.outlier?.channel_id || d.creator || 'unknown'
+        // Suppress the dot once the user has visited Outliers since this
+        // outlier appeared. Keyed by the outlier's video_id or the
+        // refreshed_at so a fresh refresh resets the seen flag.
+        const seenKey = `ytg_outlier_seen:${channelId}:${d.bundle?.videos?.[0]?.video_id || d.outlier?.video_id || refreshed}`
+        try { if (localStorage.getItem(seenKey)) return } catch {}
+        setFreshOutlier(true)
+      })
       .catch(() => {})
   }, [])
 
@@ -1950,6 +2004,44 @@ export default function Dashboard() {
     { label: 'Competitors' },
   ]
 
+  // Sidebar live signals — derived, not stored.
+  const openPriorityCount = (() => {
+    const all = data?.insights?.priorityActions || []
+    if (!all.length) return 0
+    let open = 0
+    for (let i = 0; i < all.length; i++) {
+      const a = all[i]
+      const rank = a.rank ?? (i + 1)
+      const k = `rank_${rank}`
+      if (!checked[k] && !deleted[k]) open += 1
+    }
+    return open
+  })()
+
+  // Wrap setNav so navigating to Outliers also clears the "new" dot. We
+  // mark the current outlier as seen in localStorage so a refresh of the
+  // niche cache (new video_id) re-triggers the dot.
+  const navigateTo = (target) => {
+    if (target === 'Outliers' && freshOutlier) {
+      try {
+        // Fire-and-forget: read current outlier id, write seen flag.
+        fetch('/dashboard/niche-outlier', { credentials: 'include' })
+          .then(r => r.ok ? r.json() : null)
+          .then(d => {
+            if (!d?.ok) return
+            const channelId = d.outlier?.channel_id || data?.channel?.channel_id || 'unknown'
+            const refreshed = d.bundle?.refreshed_at || d.outlier?.refreshed_at || ''
+            const vid = d.bundle?.videos?.[0]?.video_id || d.outlier?.video_id || refreshed
+            const seenKey = `ytg_outlier_seen:${channelId}:${vid}`
+            try { localStorage.setItem(seenKey, '1') } catch {}
+          })
+          .catch(() => {})
+      } catch {}
+      setFreshOutlier(false)
+    }
+    setNav(target)
+  }
+
   return (
     <div style={{ display: 'flex', minHeight: '100vh', fontFamily: "'Inter', system-ui, sans-serif", background: C.bg }}>
 
@@ -2055,7 +2147,12 @@ export default function Dashboard() {
             existing page render below still works. */}
         <nav style={{ overflowY: 'auto', flex: 1, paddingTop: 12, paddingBottom: 8 }}>
 
-          <NavBtn label="Feed"      active={nav === 'Overview'} onClick={() => setNav('Overview')} />
+          <NavBtn
+            label="Feed"
+            active={nav === 'Overview'}
+            onClick={() => setNav('Overview')}
+            badge={openPriorityCount}
+          />
 
           <NavGroup
             label="Optimize"
@@ -2072,8 +2169,9 @@ export default function Dashboard() {
           <NavGroup
             label="Research"
             anyChildActive={['Outliers','Keywords','Competitors'].includes(nav)}
+            dot={freshOutlier}
           >
-            <NavSubBtn label="Outliers"    active={nav === 'Outliers'}    onClick={() => setNav('Outliers')} />
+            <NavSubBtn label="Outliers"    active={nav === 'Outliers'}    onClick={() => navigateTo('Outliers')} />
             <NavSubBtn label="Keywords"    active={nav === 'Keywords'}    onClick={() => setNav('Keywords')} />
             <NavSubBtn label="Competitors" active={nav === 'Competitors'} onClick={() => setNav('Competitors')} />
           </NavGroup>
