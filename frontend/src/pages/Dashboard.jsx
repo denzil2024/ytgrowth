@@ -2104,16 +2104,18 @@ export default function Dashboard() {
               onUsage={setUsagePct}
             />
             <div style={{
-              display: 'flex', alignItems: 'center',
+              display: 'flex', alignItems: 'center', justifyContent: 'space-between',
               fontFamily: "'Inter', system-ui, sans-serif",
+              marginTop: 2,
             }}>
               <button
                 onClick={() => setNav('Referrals')}
                 style={{
                   display: 'inline-flex', alignItems: 'center', gap: 6,
-                  padding: '5px 8px', borderRadius: 6,
-                  background: 'transparent', border: 'none', cursor: 'pointer',
-                  color: nav === 'Referrals' ? C.text1 : C.text3,
+                  padding: '6px 9px', borderRadius: 7,
+                  background: nav === 'Referrals' ? 'rgba(229,37,27,0.07)' : 'transparent',
+                  border: 'none', cursor: 'pointer',
+                  color: nav === 'Referrals' ? C.red : C.text3,
                   fontSize: 12, fontWeight: 500, letterSpacing: '-0.01em',
                   fontFamily: 'inherit',
                   transition: 'color 0.14s ease, background 0.14s ease',
@@ -2122,14 +2124,13 @@ export default function Dashboard() {
                 onMouseLeave={e => { if (nav !== 'Referrals') { e.currentTarget.style.color = C.text3; e.currentTarget.style.background = 'transparent' } }}
               >
                 <Gift size={13} strokeWidth={1.75} />
-                <span>Refer</span>
+                <span>Refer & earn</span>
               </button>
-              <span style={{ color: '#d4d4dc', fontSize: 11, margin: '0 2px' }}>·</span>
               <a
                 href="/auth/logout"
                 style={{
                   display: 'inline-flex', alignItems: 'center', gap: 6,
-                  padding: '5px 8px', borderRadius: 6,
+                  padding: '6px 9px', borderRadius: 7,
                   color: C.text3, fontSize: 12, fontWeight: 500, letterSpacing: '-0.01em',
                   textDecoration: 'none',
                   transition: 'color 0.14s ease, background 0.14s ease',
@@ -2137,8 +2138,8 @@ export default function Dashboard() {
                 onMouseEnter={e => { e.currentTarget.style.color = C.text2; e.currentTarget.style.background = 'rgba(15,15,19,0.04)' }}
                 onMouseLeave={e => { e.currentTarget.style.color = C.text3; e.currentTarget.style.background = 'transparent' }}
               >
-                <LogOut size={13} strokeWidth={1.75} />
                 <span>Sign out</span>
+                <LogOut size={13} strokeWidth={1.75} />
               </a>
             </div>
           </div>

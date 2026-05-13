@@ -81,49 +81,50 @@ export default function UsageBar({ channelId, email, dark = false, onPlan, onUsa
     <div style={{
       background: C.cardBg,
       border: `1px solid ${C.cardBdr}`,
-      borderRadius: 12,
-      padding: '13px 14px 12px',
+      borderRadius: 11,
+      padding: '10px 12px 11px',
       boxShadow: dark
         ? 'inset 0 1px 0 rgba(255,255,255,0.04)'
         : '0 1px 2px rgba(0,0,0,0.025), inset 0 1px 0 rgba(255,255,255,0.7)',
     }}>
-      {/* Eyebrow with sparkle dot */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 7, marginBottom: 10 }}>
-        <span style={{
-          width: 6, height: 6, borderRadius: '50%',
-          background: accent,
-          boxShadow: `0 0 0 3px ${accent}1f`,
-          flexShrink: 0,
-        }} />
-        <p style={{
-          fontSize: 10.5, fontWeight: 700, color: C.text3,
-          letterSpacing: '0.11em', textTransform: 'uppercase',
-        }}>
-          AI analyses
-        </p>
+      {/* Header row — eyebrow on left, big remaining number on right.
+          Tighter than before: the number lives inline with the label so the
+          card height drops by ~25% without losing the eyebrow + state-dot. */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, marginBottom: 8 }}>
+        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 7 }}>
+          <span style={{
+            width: 6, height: 6, borderRadius: '50%',
+            background: accent,
+            boxShadow: `0 0 0 3px ${accent}1f`,
+            flexShrink: 0,
+          }} />
+          <p style={{
+            fontSize: 10.5, fontWeight: 700, color: C.text3,
+            letterSpacing: '0.11em', textTransform: 'uppercase',
+          }}>
+            AI analyses
+          </p>
+        </span>
+        <span style={{ display: 'inline-flex', alignItems: 'baseline', gap: 3, fontVariantNumeric: 'tabular-nums' }}>
+          <span style={{
+            fontSize: 20, fontWeight: 800, color: accent,
+            letterSpacing: '-0.6px', lineHeight: 1,
+          }}>
+            {remaining}
+          </span>
+          <span style={{ fontSize: 12, fontWeight: 600, color: C.text3 }}>
+            / {allowance}
+          </span>
+          <span style={{ fontSize: 11, fontWeight: 500, color: C.text2, marginLeft: 3 }}>
+            left
+          </span>
+        </span>
       </div>
 
-      {/* Main row — big "N" + small "/M" + "left" */}
-      <div style={{ display: 'flex', alignItems: 'baseline', gap: 5, marginBottom: 12 }}>
-        <span style={{
-          fontSize: 30, fontWeight: 800, color: accent,
-          letterSpacing: '-1.1px', lineHeight: 0.95,
-          fontVariantNumeric: 'tabular-nums',
-        }}>
-          {remaining}
-        </span>
-        <span style={{ fontSize: 13, fontWeight: 600, color: C.text3, fontVariantNumeric: 'tabular-nums' }}>
-          / {allowance}
-        </span>
-        <span style={{ fontSize: 12.5, fontWeight: 500, color: C.text2, marginLeft: 4 }}>
-          left
-        </span>
-      </div>
-
-      {/* Remaining bar — gradient fill with subtle shimmer line on top */}
+      {/* Remaining bar — kept the gradient + shine; just a touch thinner. */}
       <div style={{
-        background: C.track, borderRadius: 99, height: 6,
-        overflow: 'hidden', marginBottom: 9,
+        background: C.track, borderRadius: 99, height: 5,
+        overflow: 'hidden', marginBottom: 8,
         boxShadow: dark ? 'none' : 'inset 0 1px 1px rgba(0,0,0,0.04)',
         position: 'relative',
       }}>
@@ -134,9 +135,8 @@ export default function UsageBar({ channelId, email, dark = false, onPlan, onUsa
           borderRadius: 99,
           transition: 'width 0.8s ease, background 0.2s',
           position: 'relative',
-          boxShadow: `0 0 8px ${accent}55`,
+          boxShadow: `0 0 6px ${accent}50`,
         }}>
-          {/* Top shine line */}
           <div style={{
             position: 'absolute', top: 0, left: 0, right: 0, height: 2,
             background: 'linear-gradient(180deg, rgba(255,255,255,0.45) 0%, rgba(255,255,255,0) 100%)',
@@ -145,9 +145,9 @@ export default function UsageBar({ channelId, email, dark = false, onPlan, onUsa
         </div>
       </div>
 
-      {/* Refill countdown + pack line */}
+      {/* Refill countdown + pack chip */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 8 }}>
-        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: 11, color: C.text3, fontWeight: 500 }}>
+        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: 10.5, color: C.text3, fontWeight: 500 }}>
           <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, opacity: 0.85 }}>
             <circle cx="6" cy="6" r="4.5"/><path d="M6 3.5v2.5l1.6 1"/>
           </svg>
@@ -155,10 +155,10 @@ export default function UsageBar({ channelId, email, dark = false, onPlan, onUsa
         </span>
         {hasPack && (
           <span style={{
-            fontSize: 10.5, fontWeight: 700, color: C.green,
+            fontSize: 10, fontWeight: 700, color: C.green,
             background: dark ? 'rgba(5,150,105,0.18)' : '#ecfdf5',
             border: `1px solid ${dark ? 'rgba(5,150,105,0.3)' : '#a7f3d0'}`,
-            padding: '2px 8px', borderRadius: 99,
+            padding: '1px 7px', borderRadius: 99,
             fontVariantNumeric: 'tabular-nums', letterSpacing: '0.02em',
           }}>
             +{usage.pack_balance} pack
@@ -166,14 +166,15 @@ export default function UsageBar({ channelId, email, dark = false, onPlan, onUsa
         )}
       </div>
 
-      {/* CTAs — only when near/at limit with no pack */}
+      {/* CTAs — only when near/at limit with no pack. Stay full-width so
+          the urgency lands; reduced vertical padding only. */}
       {showCTA && (
-        <div style={{ display: 'flex', gap: 7, marginTop: 12 }}>
+        <div style={{ display: 'flex', gap: 6, marginTop: 10 }}>
           <button
             onClick={() => window.location.href = '/?tab=monthly'}
             style={{
               flex: 1, fontSize: 12, fontWeight: 700,
-              padding: '7px 0', borderRadius: 100,
+              padding: '6px 0', borderRadius: 100,
               cursor: 'pointer', border: 'none',
               background: C.red, color: '#fff',
               fontFamily: 'inherit',
@@ -189,7 +190,7 @@ export default function UsageBar({ channelId, email, dark = false, onPlan, onUsa
             onClick={() => window.location.href = '/?tab=packs'}
             style={{
               flex: 1, fontSize: 12, fontWeight: 600,
-              padding: '7px 0', borderRadius: 100,
+              padding: '6px 0', borderRadius: 100,
               cursor: 'pointer',
               background: 'transparent',
               border: `1px solid ${dark ? 'rgba(255,255,255,0.18)' : '#e6e6ec'}`,
