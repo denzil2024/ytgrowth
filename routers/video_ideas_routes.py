@@ -22,6 +22,7 @@ from database.models import (
     ChannelVideoIdeas,
     CompetitorAnalysisCache,
     UserSubscription,
+    IdeaProofCache,
 )
 
 
@@ -183,6 +184,157 @@ def _time_ago(dt: datetime.datetime) -> str:
     return f"{months} month{'s' if months > 1 else ''} ago"
 
 
+# ── Idea proof: top YouTube videos already ranking for each idea ──────────
+# This is what turns the page from "trust this score" into "see the evidence
+# yourself." Each idea card surfaces 3 real video tiles ranking for its
+# keyword today, with thumbnails + view counts + channel names + age.
+#
+# Cache strategy: per-keyword shared cache (different ideas with the same
+# keyword reuse one search). TTL 7 days since YouTube's top results for a
+# niche query don't churn fast. Quota cost is 100 units per search call,
+# so the cache pays for itself after one repeat hit.
+
+PROOF_TTL_DAYS = 7
+
+
+def _fmtnum_short(n):
+    try:
+        n = int(n)
+    except Exception:
+        return str(n)
+    if n >= 1_000_000: return f"{n/1_000_000:.1f}M"
+    if n >= 1_000:     return f"{n/1_000:.1f}K"
+    return str(n)
+
+
+def _age_label(published_iso):
+    if not published_iso:
+        return ""
+    try:
+        d = datetime.datetime.fromisoformat(published_iso.replace("Z", "+00:00"))
+    except Exception:
+        return ""
+    secs = (datetime.datetime.now(datetime.timezone.utc) - d).total_seconds()
+    if secs < 3600:    return f"{int(secs/60)}m ago"
+    if secs < 86400:   return f"{int(secs/3600)}h ago"
+    days = int(secs/86400)
+    if days < 7:       return f"{days}d ago"
+    if days < 30:      return f"{int(days/7)}w ago"
+    if days < 365:     return f"{int(days/30)}mo ago"
+    return f"{int(days/365)}y ago"
+
+
+def _fetch_proof_for_keyword(creds, keyword: str) -> list[dict]:
+    """Call YouTube search.list for the keyword, then videos.list for stats.
+    Returns up to 3 tiles ready for rendering."""
+    if not keyword or not creds:
+        return []
+    try:
+        from googleapiclient.discovery import build
+        youtube = build("youtube", "v3", credentials=creds)
+        # Step 1: search.list (100 units)
+        s_resp = youtube.search().list(
+            part="snippet",
+            q=keyword,
+            type="video",
+            maxResults=8,
+            order="relevance",
+        ).execute()
+        items = s_resp.get("items", []) or []
+        video_ids = [it.get("id", {}).get("videoId") for it in items if it.get("id", {}).get("videoId")]
+        if not video_ids:
+            return []
+        # Step 2: videos.list for stats + duration (1 unit per batch)
+        v_resp = youtube.videos().list(
+            part="snippet,statistics,contentDetails",
+            id=",".join(video_ids[:8]),
+        ).execute()
+        out = []
+        for v in v_resp.get("items", []) or []:
+            snippet = v.get("snippet", {}) or {}
+            stats   = v.get("statistics", {}) or {}
+            thumbs  = snippet.get("thumbnails", {}) or {}
+            thumb_url = (thumbs.get("medium") or thumbs.get("high") or thumbs.get("default") or {}).get("url", "")
+            out.append({
+                "video_id":     v.get("id", ""),
+                "title":        snippet.get("title", ""),
+                "thumbnail":    thumb_url,
+                "channel_name": snippet.get("channelTitle", ""),
+                "views":        int(stats.get("viewCount", 0) or 0),
+                "published_at": snippet.get("publishedAt", ""),
+                "age_label":    _age_label(snippet.get("publishedAt", "")),
+            })
+        # Return top 3 by views (so the user sees what's working, not just relevance)
+        out.sort(key=lambda x: x["views"], reverse=True)
+        return out[:3]
+    except Exception as e:
+        print(f"[video-ideas] proof fetch error for {keyword!r}: {e}")
+        return []
+
+
+def _get_or_fetch_proof(db, creds, keyword: str) -> list[dict]:
+    """Returns the cached top-videos list for this keyword, refreshing if
+    older than 7 days. Cache is shared across users since YouTube search
+    results don't depend on the caller."""
+    if not keyword:
+        return []
+    kw_lower = keyword.strip().lower()
+    if not kw_lower:
+        return []
+
+    now = datetime.datetime.now(datetime.timezone.utc)
+    cutoff = now - timedelta(days=PROOF_TTL_DAYS)
+
+    row = db.query(IdeaProofCache).filter_by(keyword_lower=kw_lower).first()
+    if row:
+        rfresh = row.refreshed_at
+        if rfresh and (rfresh.tzinfo or rfresh.replace(tzinfo=timezone.utc) >= cutoff):
+            # Normalize timezone for comparison
+            rfresh_tz = rfresh if rfresh.tzinfo else rfresh.replace(tzinfo=timezone.utc)
+            if rfresh_tz >= cutoff:
+                try:
+                    return json.loads(row.result_json) or []
+                except Exception:
+                    pass  # fall through to refetch
+
+    # Stale or missing → fetch fresh
+    proof = _fetch_proof_for_keyword(creds, keyword)
+    if proof:
+        try:
+            if row:
+                row.result_json  = json.dumps(proof)
+                row.refreshed_at = now
+            else:
+                db.add(IdeaProofCache(
+                    keyword_lower=kw_lower,
+                    keyword=keyword,
+                    result_json=json.dumps(proof),
+                    refreshed_at=now,
+                ))
+            db.commit()
+        except Exception as e:
+            print(f"[video-ideas] proof cache write error: {e}")
+            try: db.rollback()
+            except Exception: pass
+    return proof
+
+
+def _attach_proof_to_ideas(ideas: list, db, creds) -> list:
+    """Walk the ideas list and attach top_competing_videos for each one
+    based on its targetKeyword (or falls back to a 3-word title slug)."""
+    if not ideas:
+        return ideas
+    for idea in ideas:
+        kw = (idea.get("targetKeyword") or "").strip()
+        if not kw:
+            # Fall back to first three words of the title so even ideas
+            # without a keyword get some evidence.
+            title = (idea.get("title") or "").strip()
+            kw = " ".join(title.split()[:4])
+        idea["top_competing_videos"] = _get_or_fetch_proof(db, creds, kw)
+    return ideas
+
+
 # ── GET /video-ideas ─────────────────────────────────────────────────────────
 
 @router.get("")
@@ -215,8 +367,13 @@ def get_video_ideas(request: Request, channel_id: str = ""):
                            else cached.last_updated.replace(tzinfo=datetime.timezone.utc))
                     ).days > 30
                 )
+                capped = _cap_for_free(ideas, is_free)
+                # Attach the evidence row: top YouTube videos ranking for
+                # each idea's keyword today. Cached 7d per keyword so this
+                # is cheap on repeat loads.
+                capped = _attach_proof_to_ideas(capped, db, creds)
                 return JSONResponse({
-                    "ideas":        _cap_for_free(ideas, is_free),
+                    "ideas":        capped,
                     "source":       cached.source,
                     "last_updated": _time_ago(cached.last_updated),
                     "stale":        is_stale,
@@ -231,8 +388,10 @@ def get_video_ideas(request: Request, channel_id: str = ""):
         # Cache the pooled result
         _save_ideas(db, channel_id, pooled, "competitor")
 
+        capped = _cap_for_free(pooled, is_free)
+        capped = _attach_proof_to_ideas(capped, db, creds)
         return JSONResponse({
-            "ideas":        _cap_for_free(pooled, is_free),
+            "ideas":        capped,
             "source":       "competitor",
             "last_updated": "today",
             "stale":        False,

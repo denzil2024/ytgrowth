@@ -271,10 +271,11 @@ function RefreshConfirmModal({ credits, onCancel, onConfirm }) {
    2-col body (blue Why-now / white+amber-bar Action), bottom action row
    with red primary CTA. Checkbox added to the rank cluster so this card
    also tracks completion like Priority Actions. */
-/* IdeaCard v3 — 2-col layout. Left: a 16:9 "thumbnail preview" box that
-   renders the proposed title in bold white on a score-tinted gradient,
-   making each idea actually look like a future video tile. Right: rank,
-   keyword, opportunity bar, CTAs, Detail toggle. Brand palette only. */
+/* IdeaCard v4 — proof-led layout. The cheesy gradient mockup is gone.
+   Now each idea shows REAL evidence: a row of 3 thumbnail tiles for the
+   top YouTube videos already ranking for this keyword today, with
+   actual view counts and channel names. Score chip moves to a small
+   indicator beside the eyebrow since the proof IS the score. */
 function IdeaCard({ idea, done, onDone, onUseSeo }) {
   const [open, setOpen] = useState(false)
   const score = idea.source === 'ai' && idea.opportunityScore
@@ -283,231 +284,261 @@ function IdeaCard({ idea, done, onDone, onUseSeo }) {
 
   const sevLabel = score >= 75 ? 'Strong' : score >= 60 ? 'Solid' : 'Weak'
   const sevColor = score >= 75 ? C.green : score >= 60 ? C.amber : C.red
-  const sevFill = score >= 75
-    ? 'linear-gradient(90deg, rgba(22,163,74,0.55) 0%, #16a34a 100%)'
-    : score >= 60
-      ? 'linear-gradient(90deg, rgba(217,119,6,0.55) 0%, #d97706 100%)'
-      : 'linear-gradient(90deg, rgba(229,37,27,0.55) 0%, #e5251b 100%)'
+  const sevBg    = score >= 75 ? 'rgba(22,163,74,0.08)' : score >= 60 ? 'rgba(217,119,6,0.08)' : 'rgba(229,37,27,0.07)'
+  const sevBdr   = score >= 75 ? 'rgba(22,163,74,0.22)' : score >= 60 ? 'rgba(217,119,6,0.22)' : 'rgba(229,37,27,0.18)'
 
-  // Thumbnail preview gradient. The card LOOKS like a video tile so the
-  // page reads as "future videos lined up for you" instead of "rows of
-  // text suggestions." Score colors the gradient: green for strong,
-  // amber for solid, brand-red for weak (the user fixes weak ones).
-  const thumbGrad = score >= 75
-    ? 'linear-gradient(135deg, #16a34a 0%, #064e2c 100%)'
-    : score >= 60
-      ? 'linear-gradient(135deg, #d97706 0%, #7c2d12 100%)'
-      : 'linear-gradient(135deg, #e5251b 0%, #7f0a02 100%)'
+  const proof = Array.isArray(idea.top_competing_videos) ? idea.top_competing_videos : []
+  const hasProof = proof.length > 0
+
+  // Surface the strongest "evidence" signal: max views among the
+  // proof tiles. This is the single number that tells the user the
+  // topic is hot.
+  const topViews = hasProof ? Math.max(...proof.map(p => p.views || 0)) : 0
+  const fmtViews = (n) => {
+    if (!n) return '0'
+    if (n >= 1_000_000) return `${(n/1_000_000).toFixed(1).replace(/\.0$/, '')}M`
+    if (n >= 1_000)     return `${(n/1_000).toFixed(1).replace(/\.0$/, '')}K`
+    return String(n)
+  }
 
   return (
     <div className={`vi-idea-card${done ? ' done' : ''}`}>
-      <div style={{ padding: 16, display: 'flex', gap: 16, alignItems: 'stretch' }}>
+      <div style={{ padding: 18 }}>
 
-        {/* ── Left: thumbnail preview (16:9). Renders the title in white
-            bold on a score-tinted gradient. Rank badge + play icon
-            overlay so the box reads as a future YouTube tile. ── */}
-        <div style={{
-          flexShrink: 0,
-          width: 240,
-          aspectRatio: '16 / 9',
-          borderRadius: 10,
-          background: done ? 'linear-gradient(135deg, #6b7280 0%, #1f2937 100%)' : thumbGrad,
-          position: 'relative',
-          overflow: 'hidden',
-          padding: '14px 16px',
-          display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
-          boxShadow: '0 1px 3px rgba(0,0,0,0.08), 0 6px 18px rgba(0,0,0,0.10)',
-          filter: done ? 'grayscale(0.6) opacity(0.7)' : 'none',
-        }}>
-          {/* Rank top-left */}
+        {/* ── Eyebrow row ── */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10, flexWrap: 'wrap' }}>
           <div style={{
-            position: 'absolute', top: 10, left: 10,
+            flexShrink: 0,
             width: 24, height: 24, borderRadius: 7,
             display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-            background: 'rgba(0,0,0,0.32)',
-            backdropFilter: 'blur(4px)',
-            color: '#fff',
-            fontSize: 11, fontWeight: 800, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.3px',
-          }}>{idea.rank}</div>
-
-          {/* Play triangle bottom-right */}
-          <div style={{
-            position: 'absolute', bottom: 10, right: 10,
-            width: 26, height: 26, borderRadius: '50%',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            background: 'rgba(255,255,255,0.20)',
-            backdropFilter: 'blur(4px)',
-            border: '1px solid rgba(255,255,255,0.35)',
+            background: done ? 'rgba(22,163,74,0.10)' : 'rgba(217,119,6,0.10)',
+            border: done ? '1px solid rgba(22,163,74,0.22)' : '1px solid rgba(217,119,6,0.22)',
           }}>
-            <svg width="9" height="11" viewBox="0 0 10 12" fill="#fff" style={{ marginLeft: 1 }}>
-              <path d="M1 0.5l8 5.5-8 5.5z"/>
-            </svg>
+            {done
+              ? <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke={C.green} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><polyline points="1.5,6.5 5,10 10.5,2"/></svg>
+              : <span style={{ fontSize: 11, fontWeight: 800, color: C.amber, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.3px' }}>{idea.rank}</span>
+            }
           </div>
-
-          {/* Title rendered as a thumbnail-style overlay text */}
-          <div style={{ flex: 1, display: 'flex', alignItems: 'center', padding: '14px 4px 0' }}>
-            <p style={{
-              fontSize: 13, fontWeight: 800, color: '#fff',
-              letterSpacing: '-0.2px', lineHeight: 1.3,
-              textShadow: '0 1px 2px rgba(0,0,0,0.30)',
-              display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden',
-              margin: 0,
-            }}>{idea.title}</p>
-          </div>
-        </div>
-
-        {/* ── Right: meta + score + CTAs ─────────────────────────────── */}
-        <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column' }}>
-
-          {/* Eyebrow row */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8, flexWrap: 'wrap' }}>
+          <span style={{
+            fontSize: 10, fontWeight: 800, color: 'rgba(10,10,15,0.50)',
+            letterSpacing: '0.12em', textTransform: 'uppercase',
+          }}>Video Idea</span>
+          {idea.targetKeyword && (
             <span style={{
-              fontSize: 10, fontWeight: 800, color: 'rgba(10,10,15,0.50)',
-              letterSpacing: '0.12em', textTransform: 'uppercase',
-            }}>Video Idea</span>
-            {idea.targetKeyword && (
-              <span style={{
-                display: 'inline-flex', alignItems: 'center', gap: 5,
-                fontSize: 11, fontWeight: 500, color: 'rgba(10,10,15,0.50)',
-                letterSpacing: '-0.01em',
-              }}>
-                <span style={{ width: 3, height: 3, borderRadius: 99, background: 'rgba(10,10,15,0.30)' }}/>
-                {idea.targetKeyword}
-              </span>
-            )}
-            <div style={{ flex: 1 }}/>
-            {!done && (
-              <span style={{
-                fontSize: 9.5, fontWeight: 700, color: sevColor,
-                background: sevColor === C.green ? 'rgba(22,163,74,0.08)' : sevColor === C.amber ? 'rgba(217,119,6,0.08)' : 'rgba(229,37,27,0.07)',
-                border: `1px solid ${sevColor === C.green ? 'rgba(22,163,74,0.22)' : sevColor === C.amber ? 'rgba(217,119,6,0.22)' : 'rgba(229,37,27,0.18)'}`,
-                padding: '3px 8px', borderRadius: 100,
-                letterSpacing: '0.08em', textTransform: 'uppercase',
-                fontVariantNumeric: 'tabular-nums',
-              }}>{sevLabel}</span>
-            )}
-            <input
-              type="checkbox"
-              checked={!!done}
-              onChange={() => onDone(idea.title)}
-              title="Mark as done"
-              style={{ width: 14, height: 14, accentColor: C.green, cursor: 'pointer', flexShrink: 0 }}
-            />
-          </div>
-
-          {/* Full title (clean serif-free, larger than the thumbnail overlay) */}
-          <h3 style={{
-            fontSize: 16, fontWeight: 700,
-            color: done ? 'rgba(10,10,15,0.40)' : C.text1,
-            letterSpacing: '-0.3px', lineHeight: 1.4,
-            marginBottom: done ? 0 : 14,
-            textDecoration: done ? 'line-through' : 'none',
-            display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden',
-          }}>{idea.title}</h3>
-
-          {!done && (
-            <>
-              {/* Opportunity bar with big number on the right */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 14 }}>
-                <div style={{ flex: 1, background: '#eef0f4', borderRadius: 99, height: 8, overflow: 'hidden' }}>
-                  <div style={{
-                    width: `${Math.max(4, score)}%`, height: '100%',
-                    background: sevFill,
-                    borderRadius: 99,
-                    transition: 'width 0.8s cubic-bezier(0.34,1.56,0.64,1)',
-                  }}/>
-                </div>
-                <span style={{
-                  flexShrink: 0,
-                  fontSize: 15, fontWeight: 800, color: sevColor,
-                  letterSpacing: '-0.3px', fontVariantNumeric: 'tabular-nums', lineHeight: 1,
-                }}>{score}<span style={{ fontSize: 10, fontWeight: 700, color: 'rgba(10,10,15,0.40)', marginLeft: 2 }}>/100</span></span>
-              </div>
-
-              {/* Action row, pinned to the bottom of the right column */}
-              <div style={{
-                display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap',
-                marginTop: 'auto',
-              }}>
-                <span style={{
-                  fontSize: 11.5, fontWeight: 500, color: 'rgba(10,10,15,0.45)', letterSpacing: '-0.01em',
-                }}>
-                  Opportunity to rank
-                  {idea.thumbnail_ready && (
-                    <>{' · '}<span style={{ color: C.green, fontWeight: 700 }}>Thumbnail ready</span></>
-                  )}
-                </span>
-
-                <div style={{ flex: 1 }}/>
-
-                <button
-                  onClick={() => onUseSeo(idea.title)}
-                  style={{
-                    display: 'inline-flex', alignItems: 'center', gap: 5,
-                    padding: '8px 14px', borderRadius: 100,
-                    border: 'none', cursor: 'pointer',
-                    background: C.red, color: '#fff',
-                    fontFamily: 'inherit',
-                    fontSize: 12.5, fontWeight: 700, letterSpacing: '-0.01em',
-                    boxShadow: '0 1px 3px rgba(229,37,27,0.30)',
-                    transition: 'filter 0.14s ease, transform 0.14s ease',
-                  }}
-                  onMouseEnter={e => { e.currentTarget.style.filter = 'brightness(1.08)'; e.currentTarget.style.transform = 'translateY(-1px)' }}
-                  onMouseLeave={e => { e.currentTarget.style.filter = 'none'; e.currentTarget.style.transform = 'translateY(0)' }}
-                >
-                  Use in SEO Studio
-                  <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round"><path d="M2 5.5h7M5.5 2l3.5 3.5L5.5 9"/></svg>
-                </button>
-
-                {idea.angle && (
-                  <button
-                    type="button"
-                    onClick={() => setOpen(o => !o)}
-                    aria-label={open ? 'Hide angle' : 'Show angle'}
-                    style={{
-                      display: 'inline-flex', alignItems: 'center', gap: 4,
-                      padding: '7px 12px', borderRadius: 100,
-                      border: '1px solid #e6e6ec',
-                      background: '#fff', color: 'rgba(10,10,15,0.62)',
-                      fontFamily: 'inherit',
-                      fontSize: 11.5, fontWeight: 600, letterSpacing: '-0.01em',
-                      cursor: 'pointer',
-                      transition: 'background 0.14s ease, color 0.14s ease, border-color 0.14s ease',
-                    }}
-                    onMouseEnter={e => { e.currentTarget.style.background = 'rgba(15,15,19,0.04)'; e.currentTarget.style.color = C.text1; e.currentTarget.style.borderColor = '#d0d0d8' }}
-                    onMouseLeave={e => { e.currentTarget.style.background = '#fff'; e.currentTarget.style.color = 'rgba(10,10,15,0.62)'; e.currentTarget.style.borderColor = '#e6e6ec' }}
-                  >
-                    Detail
-                    <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" style={{ transform: open ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s ease' }}><polyline points="3,4.5 6,7.5 9,4.5"/></svg>
-                  </button>
-                )}
-              </div>
-            </>
+              display: 'inline-flex', alignItems: 'center', gap: 5,
+              fontSize: 11, fontWeight: 500, color: 'rgba(10,10,15,0.50)',
+              letterSpacing: '-0.01em',
+            }}>
+              <span style={{ width: 3, height: 3, borderRadius: 99, background: 'rgba(10,10,15,0.30)' }}/>
+              {idea.targetKeyword}
+            </span>
           )}
+          <div style={{ flex: 1 }}/>
+          {!done && (
+            <span style={{
+              fontSize: 9.5, fontWeight: 700, color: sevColor,
+              background: sevBg, border: `1px solid ${sevBdr}`,
+              padding: '3px 8px', borderRadius: 100,
+              letterSpacing: '0.08em', textTransform: 'uppercase',
+              fontVariantNumeric: 'tabular-nums',
+            }}>{sevLabel} · {score}</span>
+          )}
+          <input
+            type="checkbox"
+            checked={!!done}
+            onChange={() => onDone(idea.title)}
+            title="Mark as done"
+            style={{ width: 14, height: 14, accentColor: C.green, cursor: 'pointer', flexShrink: 0 }}
+          />
         </div>
-      </div>
 
-      {/* Detail expanded — full-width strip below the 2-col body */}
-      {!done && open && idea.angle && (
-        <div style={{ padding: '0 16px 16px' }}>
-          <div style={{
-            background: 'rgba(217,119,6,0.05)',
-            border: '1px solid rgba(217,119,6,0.14)',
-            borderLeft: `3px solid ${C.amber}`,
-            borderRadius: '0 10px 10px 0',
-            padding: '12px 16px',
-          }}>
-            <p style={{
-              fontSize: 9.5, fontWeight: 700, color: C.amber,
-              letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 6,
-            }}>Why this works</p>
-            <p style={{
-              fontSize: 13, fontWeight: 500, color: C.text1,
-              letterSpacing: '-0.01em', lineHeight: 1.65,
-            }}>{idea.angle}</p>
-          </div>
-        </div>
-      )}
+        {/* ── Title (single bold line) ── */}
+        <h3 style={{
+          fontSize: 17, fontWeight: 700,
+          color: done ? 'rgba(10,10,15,0.40)' : C.text1,
+          letterSpacing: '-0.3px', lineHeight: 1.35,
+          marginBottom: done ? 0 : 14,
+          textDecoration: done ? 'line-through' : 'none',
+          display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden',
+        }}>{idea.title}</h3>
+
+        {!done && (
+          <>
+            {/* ── PROOF ROW: the actual evidence ────────────────────────
+                Three real YouTube videos ranking for this keyword today.
+                Click any tile to open the video. This is the "give me
+                reasons to believe" surface. */}
+            {hasProof && (
+              <div style={{ marginBottom: 14 }}>
+                <div style={{
+                  display: 'flex', alignItems: 'center', gap: 8,
+                  marginBottom: 10,
+                }}>
+                  <span style={{
+                    fontSize: 10, fontWeight: 700, color: 'rgba(10,10,15,0.55)',
+                    letterSpacing: '0.10em', textTransform: 'uppercase',
+                  }}>Top videos ranking for this now</span>
+                  <span style={{
+                    display: 'inline-flex', alignItems: 'center', gap: 4,
+                    fontSize: 10, fontWeight: 700, color: C.green,
+                    background: 'rgba(22,163,74,0.08)', border: '1px solid rgba(22,163,74,0.22)',
+                    padding: '2px 7px', borderRadius: 100,
+                    letterSpacing: '0.04em',
+                    fontVariantNumeric: 'tabular-nums',
+                  }}>
+                    Best: {fmtViews(topViews)} views
+                  </span>
+                </div>
+                <div style={{
+                  display: 'grid',
+                  gridTemplateColumns: `repeat(${proof.length}, 1fr)`,
+                  gap: 10,
+                }}>
+                  {proof.map((p, i) => (
+                    <a
+                      key={p.video_id || i}
+                      href={`https://www.youtube.com/watch?v=${p.video_id}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{
+                        display: 'block',
+                        textDecoration: 'none', color: 'inherit',
+                        borderRadius: 10, overflow: 'hidden',
+                        border: '1px solid #ececf0',
+                        background: '#fff',
+                        transition: 'transform 0.14s, box-shadow 0.14s, border-color 0.14s',
+                      }}
+                      onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-1px)'; e.currentTarget.style.boxShadow = '0 4px 14px rgba(0,0,0,0.10)'; e.currentTarget.style.borderColor = '#d6d6dc' }}
+                      onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; e.currentTarget.style.borderColor = '#ececf0' }}
+                    >
+                      <div style={{
+                        position: 'relative',
+                        aspectRatio: '16/9',
+                        background: '#ebebef',
+                        overflow: 'hidden',
+                      }}>
+                        {p.thumbnail && (
+                          <img src={p.thumbnail} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}/>
+                        )}
+                        <span style={{
+                          position: 'absolute', bottom: 6, right: 6,
+                          background: 'rgba(0,0,0,0.72)', color: '#fff',
+                          fontSize: 10, fontWeight: 800,
+                          padding: '2px 6px', borderRadius: 5,
+                          fontVariantNumeric: 'tabular-nums',
+                          letterSpacing: '-0.05px',
+                        }}>{fmtViews(p.views)}</span>
+                      </div>
+                      <div style={{ padding: '8px 10px 10px' }}>
+                        <p style={{
+                          fontSize: 11.5, fontWeight: 600, color: C.text1,
+                          letterSpacing: '-0.1px', lineHeight: 1.35,
+                          marginBottom: 4,
+                          display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden',
+                          minHeight: 30,
+                        }}>{p.title}</p>
+                        <p style={{
+                          fontSize: 10, fontWeight: 600, color: 'rgba(10,10,15,0.50)',
+                          letterSpacing: '-0.05px',
+                          whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
+                        }}>{p.channel_name}{p.age_label ? ` · ${p.age_label}` : ''}</p>
+                      </div>
+                    </a>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* ── Empty proof state: small inline note ── */}
+            {!hasProof && (
+              <div style={{
+                background: 'rgba(15,15,19,0.04)',
+                border: '1px dashed rgba(15,15,19,0.10)',
+                borderRadius: 10,
+                padding: '12px 14px',
+                marginBottom: 14,
+                display: 'flex', alignItems: 'center', gap: 8,
+              }}>
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="rgba(10,10,15,0.40)" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="7" cy="7" r="5.5"/><path d="M7 4v3.5l2 1.5"/>
+                </svg>
+                <p style={{ fontSize: 11.5, color: 'rgba(10,10,15,0.50)', fontWeight: 500, letterSpacing: '-0.01em' }}>
+                  Looking up videos ranking for this. Refresh in a moment.
+                </p>
+              </div>
+            )}
+
+            {/* ── Action row ── */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
+              <span style={{ fontSize: 11.5, fontWeight: 500, color: 'rgba(10,10,15,0.45)', letterSpacing: '-0.01em' }}>
+                {hasProof
+                  ? `${proof.length} competing video${proof.length === 1 ? '' : 's'} found`
+                  : 'Evidence loading'}
+                {idea.thumbnail_ready && (
+                  <>{' · '}<span style={{ color: C.green, fontWeight: 700 }}>Thumbnail ready</span></>
+                )}
+              </span>
+              <div style={{ flex: 1 }}/>
+              <button
+                onClick={() => onUseSeo(idea.title)}
+                style={{
+                  display: 'inline-flex', alignItems: 'center', gap: 5,
+                  padding: '8px 14px', borderRadius: 100,
+                  border: 'none', cursor: 'pointer',
+                  background: C.red, color: '#fff',
+                  fontFamily: 'inherit',
+                  fontSize: 12.5, fontWeight: 700, letterSpacing: '-0.01em',
+                  boxShadow: '0 1px 3px rgba(229,37,27,0.30)',
+                  transition: 'filter 0.14s ease, transform 0.14s ease',
+                }}
+                onMouseEnter={e => { e.currentTarget.style.filter = 'brightness(1.08)'; e.currentTarget.style.transform = 'translateY(-1px)' }}
+                onMouseLeave={e => { e.currentTarget.style.filter = 'none'; e.currentTarget.style.transform = 'translateY(0)' }}
+              >
+                Use in SEO Studio
+                <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round"><path d="M2 5.5h7M5.5 2l3.5 3.5L5.5 9"/></svg>
+              </button>
+              {idea.angle && (
+                <button
+                  type="button"
+                  onClick={() => setOpen(o => !o)}
+                  aria-label={open ? 'Hide angle' : 'Show angle'}
+                  style={{
+                    display: 'inline-flex', alignItems: 'center', gap: 4,
+                    padding: '7px 12px', borderRadius: 100,
+                    border: '1px solid #e6e6ec',
+                    background: '#fff', color: 'rgba(10,10,15,0.62)',
+                    fontFamily: 'inherit',
+                    fontSize: 11.5, fontWeight: 600, letterSpacing: '-0.01em',
+                    cursor: 'pointer',
+                    transition: 'background 0.14s ease, color 0.14s ease, border-color 0.14s ease',
+                  }}
+                  onMouseEnter={e => { e.currentTarget.style.background = 'rgba(15,15,19,0.04)'; e.currentTarget.style.color = C.text1; e.currentTarget.style.borderColor = '#d0d0d8' }}
+                  onMouseLeave={e => { e.currentTarget.style.background = '#fff'; e.currentTarget.style.color = 'rgba(10,10,15,0.62)'; e.currentTarget.style.borderColor = '#e6e6ec' }}
+                >
+                  Detail
+                  <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" style={{ transform: open ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s ease' }}><polyline points="3,4.5 6,7.5 9,4.5"/></svg>
+                </button>
+              )}
+            </div>
+
+            {/* ── Detail (collapsed) ── */}
+            {open && idea.angle && (
+              <div style={{ marginTop: 14, paddingTop: 14, borderTop: '1px solid #f1f1f4' }}>
+                <div style={{
+                  background: 'rgba(217,119,6,0.05)',
+                  border: '1px solid rgba(217,119,6,0.14)',
+                  borderLeft: `3px solid ${C.amber}`,
+                  borderRadius: '0 10px 10px 0',
+                  padding: '12px 16px',
+                }}>
+                  <p style={{ fontSize: 9.5, fontWeight: 700, color: C.amber, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 6 }}>Why this works</p>
+                  <p style={{ fontSize: 13, fontWeight: 500, color: C.text1, letterSpacing: '-0.01em', lineHeight: 1.65 }}>{idea.angle}</p>
+                </div>
+              </div>
+            )}
+          </>
+        )}
+      </div>
     </div>
   )
 }

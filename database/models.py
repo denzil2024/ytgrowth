@@ -81,6 +81,20 @@ class ChatMessage(Base):
     created_at    = Column(DateTime, default=_now, index=True)
 
 
+class IdeaProofCache(Base):
+    """Per-keyword cache of the top YouTube videos ranking for a given
+    Video Idea keyword. Powers the "Top videos already ranking for
+    this" evidence row inside each idea card. Cache key is keyword
+    lowercased so different idea titles using the same keyword share
+    one row. TTL 7 days."""
+    __tablename__ = "idea_proof_cache"
+    id            = Column(Integer, primary_key=True, autoincrement=True)
+    keyword_lower = Column(String,   nullable=False, unique=True, index=True)
+    keyword       = Column(String,   nullable=False)
+    result_json   = Column(Text,     nullable=False)
+    refreshed_at  = Column(DateTime, default=_now, index=True)
+
+
 class CompetitorVideoIdeas(Base):
     """Raw videoIdeas extracted from each competitor analysis run."""
     __tablename__ = "competitor_video_ideas"
@@ -614,6 +628,10 @@ try:
         "CREATE TABLE IF NOT EXISTS chat_messages (id INTEGER PRIMARY KEY AUTOINCREMENT, channel_id TEXT NOT NULL, role TEXT NOT NULL, content TEXT NOT NULL, created_at DATETIME)",
         "CREATE INDEX IF NOT EXISTS ix_chat_messages_channel_id ON chat_messages (channel_id)",
         "CREATE INDEX IF NOT EXISTS ix_chat_messages_created_at ON chat_messages (created_at)",
+        # Video Ideas proof cache. Top videos ranking for each idea keyword.
+        "CREATE TABLE IF NOT EXISTS idea_proof_cache (id INTEGER PRIMARY KEY AUTOINCREMENT, keyword_lower TEXT NOT NULL, keyword TEXT NOT NULL, result_json TEXT NOT NULL, refreshed_at DATETIME)",
+        "CREATE UNIQUE INDEX IF NOT EXISTS uq_idea_proof_cache_keyword_lower ON idea_proof_cache (keyword_lower)",
+        "CREATE INDEX IF NOT EXISTS ix_idea_proof_cache_refreshed_at ON idea_proof_cache (refreshed_at)",
     ]:
         try:
             _conn.execute(_text(_stmt))
