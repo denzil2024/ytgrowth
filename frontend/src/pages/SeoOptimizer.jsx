@@ -110,14 +110,12 @@ if (typeof document !== 'undefined' && !document.getElementById('seo-opt-styles'
     padding: 9px 20px; border-radius: 100px; border: none;
     font-family: 'Inter', system-ui, sans-serif; font-size: 12.5px; font-weight: 700;
     background: #e5251b; color: #ffffff; cursor: pointer;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 4px 14px rgba(229,37,27,0.32);
-    transition: all 0.18s;
+    box-shadow: 0 1px 2px rgba(229,37,27,0.18);
+    transition: filter 0.15s, background 0.15s;
     white-space: nowrap;
   }
   .seo-btn-primary:hover:not(:disabled) {
     filter: brightness(1.07);
-    box-shadow: 0 2px 8px rgba(0,0,0,0.15), 0 8px 28px rgba(229,37,27,0.42);
-    transform: translateY(-1px);
   }
   .seo-btn-primary:disabled {
     background: #e0e0e6; color: #ffffff; cursor: not-allowed;
@@ -168,14 +166,15 @@ if (typeof document !== 'undefined' && !document.getElementById('seo-opt-styles'
     color: #fff;
     border: 1px solid #e5251b;
     border-radius: 100px;
-    padding: 8px 18px;
+    padding: 8px 15px;
     font-size: 12.5px; font-weight: 700;
     font-family: 'Inter', system-ui, sans-serif;
     cursor: pointer;
     white-space: nowrap;
-    transition: filter 0.15s;
+    transition: filter 0.15s, background 0.15s;
     display: flex; align-items: center; gap: 6px;
-    box-shadow: 0 1px 3px rgba(229,37,27,0.20), 0 4px 14px rgba(229,37,27,0.25);
+    box-shadow: 0 1px 2px rgba(229,37,27,0.18);
+    letter-spacing: -0.1px;
   }
   .seo-report-cta:hover { filter: brightness(1.07); }
   .seo-report-chip {
@@ -208,7 +207,7 @@ function saveToDisk(state) {
 
 const API = ''
 
-// Palette matched to Dashboard.jsx exactly — red + green + amber + neutrals, no blue/purple/teal.
+// Brand palette — red + amber + green + charcoal neutrals. No blue / purple / teal / orange.
 const C = {
   bg: '#f5f5f9',
   card: '#ffffff',
@@ -228,21 +227,6 @@ const C = {
   amber: '#d97706',
   amberBg: '#fffbeb',
   amberBdr: '#fde68a',
-  // Kept as aliases so existing `C.blue` / `C.orange` / etc. references still resolve,
-  // but mapped onto the sanctioned Dashboard palette.
-  blue: '#4a4a58',
-  blueMid: '#4a4a58',
-  blueBg: '#f1f1f6',
-  blueBdr: '#e6e6ec',
-  orange: '#d97706',
-  orangeBg: '#fffbeb',
-  orangeBdr: '#fde68a',
-  purple: '#e5251b',
-  purpleBg: '#fff5f5',
-  purpleBdr: '#fecaca',
-  teal: '#059669',
-  tealBg: '#ecfdf5',
-  tealBdr: '#a7f3d0',
 }
 
 // Per-tile accent colors — scoped to this section ONLY, never reuse elsewhere.
@@ -689,12 +673,13 @@ function SuggestionRow({ s, i, isSelected, isCopied, onCopy, onSelect, primaryPh
         {/* Divider aligned with title start */}
         <div style={{ height: 1, background: C.border, marginBottom: 14, marginLeft: 38 }} />
 
-        {/* 3-col body — Why-it-works (blue) | Title quality chart (amber-bar) | Algorithm angle (green) */}
+        {/* 3-col body — Why-it-works (neutral) | Title quality chart (amber-bar) | Algorithm angle (green).
+            Reasoning context is charcoal-neutral so red/green stay semantic for action and outcome. */}
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr 1fr', gap: 8, marginLeft: 38 }}>
           {/* Col 1 — Why it works */}
-          <div style={{ background: 'rgba(79,134,247,0.07)', border: '1px solid rgba(79,134,247,0.12)', borderRadius: 10, padding: '12px 14px' }}>
-            <p style={{ fontSize: 10, fontWeight: 700, color: '#4a7cf7', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Why it works</p>
-            <p style={{ fontSize: 13, color: C.text1, lineHeight: 1.65 }}>{s.why_it_works || 'This framing gives the viewer a specific reason to click.'}</p>
+          <div style={{ background: 'rgba(15,15,19,0.04)', border: '1px solid rgba(15,15,19,0.08)', borderRadius: 10, padding: '12px 14px' }}>
+            <p style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Why it works</p>
+            <p style={{ fontSize: 13, color: C.text2, lineHeight: 1.65 }}>{s.why_it_works || 'This framing gives the viewer a specific reason to click.'}</p>
           </div>
 
           {/* Col 2 — Title quality micro-chart: 3 score bars + length sweet-spot.
@@ -728,7 +713,7 @@ function SuggestionRow({ s, i, isSelected, isCopied, onCopy, onSelect, primaryPh
             {isCopied ? '✓ Copied' : 'Copy'}
           </button>
           <button onClick={onSelect}
-            style={{ fontSize: 12.5, fontWeight: 700, color: isSelected ? C.red : '#ffffff', background: isSelected ? 'rgba(229,37,27,0.08)' : '#e5251b', border: `1px solid ${isSelected ? 'rgba(229,37,27,0.25)' : 'transparent'}`, borderRadius: 100, padding: '8px 18px', cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.18s', boxShadow: isSelected ? 'none' : '0 1px 3px rgba(0,0,0,0.12), 0 4px 14px rgba(229,37,27,0.32)', whiteSpace: 'nowrap', letterSpacing: '-0.1px' }}>
+            style={{ fontSize: 12.5, fontWeight: 700, color: isSelected ? C.red : '#ffffff', background: isSelected ? 'rgba(229,37,27,0.08)' : '#e5251b', border: `1px solid ${isSelected ? 'rgba(229,37,27,0.25)' : 'transparent'}`, borderRadius: 100, padding: '8px 15px', cursor: 'pointer', fontFamily: 'inherit', transition: 'filter 0.15s, background 0.15s', boxShadow: isSelected ? 'none' : '0 1px 2px rgba(229,37,27,0.18)', whiteSpace: 'nowrap', letterSpacing: '-0.1px' }}>
             {isSelected ? '✓ Selected' : 'Use this title →'}
           </button>
         </div>
@@ -832,12 +817,12 @@ function DescriptionCard({ d, idx, copiedDesc, onCopy }) {
         {/* Divider aligned with content start — mirrors InsightCard (Dashboard.jsx:1082) */}
         <div style={{ height: 1, background: C.border, marginBottom: 14, marginLeft: 38 }} />
 
-        {/* 2-col body — Why it works (blue tint) + Description (white + amber left bar + shadow). Amber left bar = ordinal identity, matching top border + rank badge. */}
+        {/* 2-col body — Why it works (charcoal-neutral) + Description (white + amber left bar + shadow). */}
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.6fr', gap: 8, marginLeft: 38 }}>
-          {/* Why it works — blue tint, matches InsightCard's Why now */}
-          <div style={{ background: 'rgba(79,134,247,0.07)', border: '1px solid rgba(79,134,247,0.12)', borderRadius: 10, padding: '12px 14px' }}>
-            <p style={{ fontSize: 10, fontWeight: 700, color: '#4a7cf7', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Why it works</p>
-            <p style={{ fontSize: 13, color: C.text1, lineHeight: 1.65 }}>{d.why_it_works}</p>
+          {/* Why it works — charcoal-neutral. Red/amber stay reserved for action + identity. */}
+          <div style={{ background: 'rgba(15,15,19,0.04)', border: '1px solid rgba(15,15,19,0.08)', borderRadius: 10, padding: '12px 14px' }}>
+            <p style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Why it works</p>
+            <p style={{ fontSize: 13, color: C.text2, lineHeight: 1.65 }}>{d.why_it_works}</p>
           </div>
 
           {/* Description — white + amber left bar + shadow, matches InsightCard's Action block */}
@@ -1222,6 +1207,9 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
       minHeight: 'calc(100vh - 52px)',
       fontFamily: "'Inter', system-ui, sans-serif",
     }}>
+     {/* 1040 centered column — every polished feature page (Video Ideas / Thumbnail / Overview) wraps content
+         in this. Don't drop it; the 2-col Preview/Formats grid stretches without an upper bound otherwise. */}
+     <div style={{ maxWidth: 1040, margin: '0 auto' }}>
 
       {/* Header — Overview pattern: H1 (24/800/-0.6) + meta line with · separators + action buttons on right.
           alignItems: flex-end so the H1 baseline aligns with the button bottom edge. */}
@@ -1757,12 +1745,12 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
                     {/* Divider aligned with content start — mirrors Dashboard.jsx:1082 */}
                     <div style={{ height: 1, background: C.border, marginBottom: 14, marginLeft: 38 }} />
 
-                    {/* 3-col body — EXACT Priority Actions pattern: Why now (blue) / Action (white+colored bar) / Expected outcome (green) */}
+                    {/* 3-col body — Priority-Actions pattern: Who's searching (charcoal-neutral) / Action (white+green bar) / Expected outcome (green) */}
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr 1fr', gap: 8, marginLeft: 38 }}>
-                      {/* Why now — blue tint */}
-                      <div style={{ background: 'rgba(79,134,247,0.07)', border: '1px solid rgba(79,134,247,0.12)', borderRadius: 10, padding: '12px 14px' }}>
-                        <p style={{ fontSize: 10, fontWeight: 700, color: '#4a7cf7', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Who's searching</p>
-                        <p style={{ fontSize: 13.5, color: C.text1, lineHeight: 1.72 }}>{viewerProfile}</p>
+                      {/* Who's searching — charcoal-neutral context */}
+                      <div style={{ background: 'rgba(15,15,19,0.04)', border: '1px solid rgba(15,15,19,0.08)', borderRadius: 10, padding: '12px 14px' }}>
+                        <p style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Who's searching</p>
+                        <p style={{ fontSize: 13.5, color: C.text2, lineHeight: 1.72 }}>{viewerProfile}</p>
                       </div>
                       {/* Action — white bg + colored left bar + shadow */}
                       <div style={{
@@ -1809,9 +1797,9 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
                       <div style={{ height: 1, background: C.border, marginBottom: 14, marginLeft: 38 }} />
 
                       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr 1fr', gap: 8, marginLeft: 38 }}>
-                        <div style={{ background: 'rgba(79,134,247,0.07)', border: '1px solid rgba(79,134,247,0.12)', borderRadius: 10, padding: '12px 14px' }}>
-                          <p style={{ fontSize: 10, fontWeight: 700, color: '#4a7cf7', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Why it's saturated</p>
-                          <p style={{ fontSize: 13.5, color: C.text1, lineHeight: 1.72 }}>
+                        <div style={{ background: 'rgba(15,15,19,0.04)', border: '1px solid rgba(15,15,19,0.08)', borderRadius: 10, padding: '12px 14px' }}>
+                          <p style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Why it's saturated</p>
+                          <p style={{ fontSize: 13.5, color: C.text2, lineHeight: 1.72 }}>
                             Most top-ranking titles in this niche already use this framing, so a new video starting from the same angle blends in instead of earning a click.
                           </p>
                         </div>
@@ -2437,6 +2425,8 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
           )}
         </div>
       )}
+
+     </div>{/* /1040 column */}
 
       {seoGated ? (
         <UpsellModal
