@@ -1431,9 +1431,11 @@ function SaturationDots({ total, filled, color, label }) {
         fontVariantNumeric: 'tabular-nums', whiteSpace: 'nowrap',
       }}>
         <strong style={{ color: C.text1, fontWeight: 800 }}>{filled}</strong>
-        <span style={{ color: C.text3 }}> of {total} ranking videos</span>
+        <span style={{ color: C.text3 }}> of {total} niche videos</span>
       </span>
-      <div style={{ flex: '0 1 120px', maxWidth: 140, height: 4, background: '#eef0f4', borderRadius: 99, overflow: 'hidden' }}>
+      {/* Slimmer 100px-max bar — the verdict chip on the right tells the
+          story; the bar is a visual support, not the headline. */}
+      <div style={{ flex: '0 1 100px', maxWidth: 100, height: 4, background: '#eef0f4', borderRadius: 99, overflow: 'hidden' }}>
         <div style={{
           width: `${ratio * 100}%`, height: '100%', background: color, borderRadius: 99,
           transition: 'width 0.85s cubic-bezier(0.34,1.4,0.64,1)',
@@ -1458,7 +1460,14 @@ function IntentInsightRow({
   whyLabel, whyText, actionLabel, actionText, outcomeLabel, outcomeText,
 }) {
   const [open, setOpen] = useState(false)
-  const cleanHeadline = firstClause(headline, 110)
+  // Cap raised to 200 so headlines stop terminating on commas. CSS line-clamp
+  // below catches anything genuinely long and wraps it cleanly into two lines
+  // instead of inserting a mid-sentence ellipsis.
+  const cleanHeadline = firstClause(headline, 200)
+  // chipLabel is intentionally unused — the eyebrow already names the insight
+  // ("OPPORTUNITY" / "OVERUSED ANGLE"), so a second outlined pill on the right
+  // was duplicating the semantic. Prop kept on the signature for compatibility.
+  void chipLabel
   return (
     <div className="seo-suggestion-card" style={{
       marginBottom: 10,
@@ -1469,21 +1478,27 @@ function IntentInsightRow({
         onClick={() => setOpen(o => !o)}
         onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setOpen(o => !o) } }}
         style={{
-          padding: '16px 22px', display: 'flex', alignItems: 'flex-start', gap: 14,
+          padding: '16px 22px', display: 'flex', alignItems: 'center', gap: 14,
           cursor: 'pointer', userSelect: 'none',
         }}>
-        {/* Tinted soft circle icon — communicates type at a glance */}
+        {/* Tinted soft circle icon — 28×28 to match the chip-weight tokens used
+            on the title card and suggestion-card eyebrows; the previous 34×34
+            made it the heaviest icon on the page. */}
         <div style={{
-          width: 34, height: 34, borderRadius: 99,
+          width: 28, height: 28, borderRadius: 99,
           background: `${chipColor}14`,
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          flexShrink: 0, marginTop: 1,
+          flexShrink: 0,
         }}>
-          <IconCmp size={16} color={chipColor} strokeWidth={2}/>
+          <IconCmp size={14} color={chipColor} strokeWidth={2}/>
         </div>
         <div style={{ flex: 1, minWidth: 0 }}>
-          <p style={{ fontSize: 10, fontWeight: 700, color: eyebrowColor, letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 5 }}>{eyebrowLabel}</p>
-          <p style={{ fontSize: 14.5, fontWeight: 700, color: C.text1, lineHeight: 1.45, letterSpacing: '-0.15px', marginBottom: 10 }}>{cleanHeadline}</p>
+          <p style={{ fontSize: 10, fontWeight: 700, color: eyebrowColor, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 5 }}>{eyebrowLabel}</p>
+          <p style={{
+            fontSize: 14.5, fontWeight: 700, color: C.text1,
+            lineHeight: 1.45, letterSpacing: '-0.15px', marginBottom: 10,
+            display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden',
+          }}>{cleanHeadline}</p>
           <SaturationDots
             total={totalVideos}
             filled={filledVideos}
@@ -1491,18 +1506,20 @@ function IntentInsightRow({
             label={filledVideos === 0 ? 'Wide open' : filledVideos >= totalVideos * 0.6 ? 'Saturated' : 'Some competition'}
           />
         </div>
-        <span style={{ fontSize: 10, fontWeight: 700, color: chipColor, padding: '3px 9px', borderRadius: 20, letterSpacing: '0.06em', textTransform: 'uppercase', border: `1.5px solid ${chipColor}`, flexShrink: 0, marginTop: 3 }}>
-          {chipLabel}
-        </span>
+        {/* Chevron only — outlined right-side chip removed (it was a duplicate
+            of the eyebrow). Centered vertically with the row via flex
+            alignItems:center on the parent. */}
         <svg width="13" height="13" viewBox="0 0 13 13" fill="none"
           stroke={C.text3} strokeWidth="2" strokeLinecap="round"
-          style={{ flexShrink: 0, marginTop: 12, transition: 'transform 0.22s', transform: open ? 'rotate(180deg)' : 'none' }}>
+          style={{ flexShrink: 0, transition: 'transform 0.22s', transform: open ? 'rotate(180deg)' : 'none' }}>
           <path d="M3 5l3.5 3.5L10 5"/>
         </svg>
       </div>
 
       {open && (
-      <div style={{ padding: '0 22px 18px', paddingLeft: 70 }}>
+      // Indent aligns the expanded content with the headline column:
+      // card padding 22 + icon 28 + gap 14 = 64.
+      <div style={{ padding: '0 22px 18px', paddingLeft: 64 }}>
         <div style={{ height: 1, background: C.border, marginBottom: 12 }} />
         {/* Q&A layout — definition list pattern. Each row is "label → value". */}
         {[
@@ -2923,7 +2940,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
                 <div style={{ marginBottom: 20 }}>
                   <h2 style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', marginBottom: 4 }}>Search intent analysis</h2>
                   <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.5 }}>
-                    2 insights · Overview priority-actions format
+                    What to chase, what to avoid in this niche · 2 insights
                   </p>
                 </div>
 
