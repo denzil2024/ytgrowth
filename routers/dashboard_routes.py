@@ -25,6 +25,8 @@ import threading
 from fastapi import APIRouter, Request
 from fastapi.responses import JSONResponse
 
+import datetime
+
 from app.niche_outliers import (
     get_for_channel,
     get_from_outliers_cache,
@@ -34,6 +36,7 @@ from app.niche_outliers import (
     is_stale,
     personalize_angle,
 )
+from database.models import SessionLocal, SeoOptimization
 from routers.auth import get_session
 from routers.admin_routes import _is_admin
 
@@ -228,3 +231,120 @@ def refresh_niche_outliers(request: Request):
     if not result:
         return JSONResponse({"ok": False, "reason": "refresh_failed"})
     return JSONResponse({"ok": True, "outlier": result})
+
+
+# ── Tracked Optimization Lift ─────────────────────────────────────────────
+# Proof loop: surfaces the user's best post-SEO-update win to the Feed.
+# Reads SeoOptimization rows where current_views meaningfully exceeds
+# before_views and the change is at least a few days old (so impact has
+# time to accumulate). Lazily refreshes stale rows from the YouTube API,
+# matching the /seo/optimizations behavior so the two surfaces agree.
+
+def _as_utc(dt):
+    if dt is None:
+        return datetime.datetime.min.replace(tzinfo=datetime.timezone.utc)
+    if dt.tzinfo is None:
+        return dt.replace(tzinfo=datetime.timezone.utc)
+    return dt
+
+
+@router.get("/tracked-lift")
+def tracked_lift(request: Request):
+    """
+    Returns the user's best SEO Optimizer win (if any), plus a count of
+    other meaningful wins. A "win" = current views >= before + 50 AND the
+    update was at least 4 days ago (some time for impact to show).
+    """
+    data, creds = get_session(request.session.get("session_id"))
+    if not data:
+        return JSONResponse({"error": "Not authenticated."}, status_code=401)
+    channel_id = (data or {}).get("channel", {}).get("channel_id", "") or (data or {}).get("channel_id", "")
+    if not channel_id:
+        return JSONResponse({"top": None, "count": 0})
+
+    db = SessionLocal()
+    try:
+        # All optimizations for the channel, newest first. Cap to a
+        # reasonable window so the lazy-refresh stays cheap.
+        rows = (
+            db.query(SeoOptimization)
+              .filter_by(channel_id=channel_id)
+              .order_by(SeoOptimization.optimized_at.desc())
+              .limit(30)
+              .all()
+        )
+        if not rows:
+            return JSONResponse({"top": None, "count": 0})
+
+        # Only consider rows that are >= 4 days old. Younger changes don't
+        # have enough watch time to prove anything.
+        now = datetime.datetime.now(datetime.timezone.utc)
+        min_age = now - datetime.timedelta(days=4)
+        eligible = [r for r in rows if _as_utc(r.optimized_at) <= min_age]
+        if not eligible:
+            return JSONResponse({"top": None, "count": 0})
+
+        # Lazy refresh stale rows (>6h old). Same pattern as /seo/optimizations.
+        stale_cutoff = now - datetime.timedelta(hours=6)
+        stale_rows = [r for r in eligible if _as_utc(r.stats_refreshed_at) < stale_cutoff]
+        if stale_rows and creds:
+            try:
+                from googleapiclient.discovery import build
+                youtube = build("youtube", "v3", credentials=creds)
+                stale_ids = [r.video_id for r in stale_rows]
+                for i in range(0, len(stale_ids), 50):
+                    batch = stale_ids[i:i+50]
+                    resp = youtube.videos().list(part="statistics", id=",".join(batch)).execute()
+                    stats_by_id = {
+                        item["id"]: item.get("statistics", {})
+                        for item in resp.get("items", [])
+                    }
+                    for r in stale_rows:
+                        if r.video_id in stats_by_id:
+                            s = stats_by_id[r.video_id]
+                            r.current_views    = int(s.get("viewCount", 0))
+                            r.current_likes    = int(s.get("likeCount", 0))
+                            r.current_comments = int(s.get("commentCount", 0))
+                            r.stats_refreshed_at = now
+                db.commit()
+            except Exception as e:
+                print(f"tracked-lift refresh error: {e}")
+
+        # Compute wins. A win needs meaningful absolute views AND a positive
+        # delta (>= +50 views or +5% whichever is larger). Title changes
+        # without a thumbnail change still count as wins.
+        wins = []
+        for r in eligible:
+            before_v = r.before_views or 0
+            current_v = r.current_views or 0
+            delta = current_v - before_v
+            pct = (delta / before_v * 100) if before_v > 0 else 0
+            threshold_abs = max(50, before_v * 0.05)
+            if delta >= threshold_abs:
+                wins.append({
+                    "video_id": r.video_id,
+                    "thumbnail_url": r.thumbnail_url,
+                    "before_title": r.before_title,
+                    "after_title": r.after_title,
+                    "before_views": before_v,
+                    "current_views": current_v,
+                    "delta_views": delta,
+                    "delta_pct": round(pct, 1),
+                    "before_likes": r.before_likes or 0,
+                    "current_likes": r.current_likes or 0,
+                    "before_comments": r.before_comments or 0,
+                    "current_comments": r.current_comments or 0,
+                    "optimized_at": r.optimized_at.isoformat() if r.optimized_at else None,
+                })
+
+        if not wins:
+            return JSONResponse({"top": None, "count": 0})
+
+        # Rank by absolute view gain (most impressive first).
+        wins.sort(key=lambda w: w["delta_views"], reverse=True)
+        return JSONResponse({
+            "top": wins[0],
+            "count": len(wins),
+        })
+    finally:
+        db.close()

@@ -16,6 +16,8 @@ import {
   Activity,         // Channel Health category
   CalendarDays,     // Posting Consistency category
   Flame,            // Streak indicator
+  Clock,            // Best Time to Publish category
+  TrendingUp,       // Tracked Optimization Lift category
   ChevronDown,      // Collapse toggle on Channel Health
   RefreshCcw,       // Refresh stats (compact topbar)
   RotateCcw,        // Re-Audit (compact topbar)
@@ -59,6 +61,22 @@ function useDashboardStyles() {
       @keyframes spin    { to { transform: rotate(360deg) } }
       @keyframes fadeUp  { from { opacity: 0; transform: translateY(10px) } to { opacity: 1; transform: translateY(0) } }
       @keyframes pulse   { 0%,100% { opacity: 1 } 50% { opacity: 0.35 } }
+      @keyframes ytgShimmer { 0% { background-position: -240px 0 } 100% { background-position: 240px 0 } }
+
+      /* Loading skeleton placeholder. Mirrors the real card shapes so the
+         Feed renders structure-first while data loads. */
+      .ytg-skel {
+        background:
+          linear-gradient(
+            90deg,
+            rgba(15,15,19,0.045) 0%,
+            rgba(15,15,19,0.085) 50%,
+            rgba(15,15,19,0.045) 100%
+          );
+        background-size: 240px 100%;
+        background-repeat: no-repeat;
+        animation: ytgShimmer 1.2s ease-in-out infinite;
+      }
       @keyframes confettiFall {
         0%   { transform: translate3d(0, -10vh, 0) rotate(0deg); opacity: 1; }
         85%  { opacity: 1; }
@@ -1284,10 +1302,34 @@ function HeroStatCard({ label, value, raw, kind, delta, deltaSuffix, series }) {
           </div>
         </div>
 
-        {/* Right: real 28-day sparkline */}
-        <div style={{ flexShrink: 0, alignSelf: 'stretch', display: 'flex', alignItems: 'flex-end', paddingBottom: 4 }}>
-          <Sparkline data={series} width={180} height={68} />
-        </div>
+        {/* Right: real 28-day sparkline. When analytics isn't connected
+            (no series), shows a soft prompt instead of a dead line so
+            the card doesn't look broken. */}
+        {series && series.length >= 2 ? (
+          <div style={{ flexShrink: 0, alignSelf: 'stretch', display: 'flex', alignItems: 'flex-end', paddingBottom: 4 }}>
+            <Sparkline data={series} width={180} height={68} />
+          </div>
+        ) : (
+          <div style={{
+            flexShrink: 0, alignSelf: 'stretch',
+            width: 180, minHeight: 68,
+            display: 'flex', flexDirection: 'column',
+            alignItems: 'center', justifyContent: 'center',
+            gap: 6, paddingBottom: 4,
+            background: 'rgba(15,15,19,0.025)',
+            border: '1px dashed rgba(15,15,19,0.08)',
+            borderRadius: 10,
+          }}>
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="rgba(10,10,15,0.30)" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M2 14l4-5 3 3 4-6 3 4"/>
+            </svg>
+            <p style={{
+              fontSize: 10, fontWeight: 700, color: 'rgba(10,10,15,0.40)',
+              letterSpacing: '0.08em', textTransform: 'uppercase', textAlign: 'center',
+              lineHeight: 1.3,
+            }}>Connect Analytics<br/>for 28d trend</p>
+          </div>
+        )}
       </div>
     </div>
   )
@@ -1430,6 +1472,9 @@ function FeedCard({
   onDismiss,
   rightSlot,
   children,
+  fillHeight = false,  // true when card lives in a 2-up grid row so both
+                       // cards match heights and the bottom action row
+                       // stays anchored to the card's bottom.
 }) {
   return (
     <article style={{
@@ -1441,6 +1486,9 @@ function FeedCard({
       marginBottom: 12,
       fontFamily: "'Inter', system-ui, sans-serif",
       transition: 'box-shadow 0.18s ease, transform 0.18s ease',
+      height: fillHeight ? '100%' : 'auto',
+      display: fillHeight ? 'flex' : 'block',
+      flexDirection: fillHeight ? 'column' : undefined,
     }}
       onMouseEnter={e => {
         e.currentTarget.style.boxShadow = '0 4px 14px rgba(0,0,0,0.08), 0 14px 32px rgba(0,0,0,0.08)'
@@ -1495,7 +1543,11 @@ function FeedCard({
           </button>
         )}
       </div>
-      {children}
+      {fillHeight ? (
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+          {children}
+        </div>
+      ) : children}
     </article>
   )
 }
@@ -1740,17 +1792,35 @@ function MilestoneFeedCard({ milestone, onShare, onDownload, onDismiss }) {
 }
 
 // Content Mix card. Collapsed first: headline + stacked Shorts-vs-Long
-// bar (visual) + counts. The AI insight prose lives behind Detail.
-function ContentMixFeedCard({ patterns, mix, onDismiss }) {
+// bar + a single-line recommendation. The AI insight prose lives behind
+// Detail. Uses fillHeight so it pairs cleanly with Channel Health in a
+// 2-up grid row.
+function ContentMixFeedCard({ patterns, mix, onDismiss, fillHeight = false }) {
   const [open, setOpen] = useState(false)
   if (!patterns) return null
-  // Mix is { shortsCount, longsCount } when available. Fall back to a
-  // neutral 50/50 split if the parent doesn't pass mix data.
   const sCount = mix?.shortsCount ?? null
   const lCount = mix?.longsCount ?? null
   const total = (sCount ?? 0) + (lCount ?? 0)
   const sPct = total > 0 ? Math.round(((sCount || 0) / total) * 100) : 50
   const lPct = 100 - sPct
+
+  // Short recommendation that fills the visual gap and tells the user what
+  // to do next. Picked from real signals (shorts vs long performance, or
+  // the mix balance if performance is unknown).
+  const shortAvg = patterns.shortAvg || 0
+  const longAvg  = patterns.longAvg  || 0
+  let recommendation
+  if (shortAvg > longAvg * 1.5) {
+    recommendation = 'Shorts are pulling new viewers. Add 2-3 per week.'
+  } else if (longAvg > shortAvg * 1.5) {
+    recommendation = 'Long-form is your strength. Keep building depth.'
+  } else if (sPct < 15 && total > 5) {
+    recommendation = 'Almost no Shorts. Test the format for discovery reach.'
+  } else if (sPct > 85 && total > 5) {
+    recommendation = 'Heavy on Shorts. Add long-form to deepen retention.'
+  } else {
+    recommendation = 'Healthy mix. Lean into whichever format wins this month.'
+  }
 
   return (
     <FeedCard
@@ -1759,6 +1829,7 @@ function ContentMixFeedCard({ patterns, mix, onDismiss }) {
       iconBg="rgba(15,15,19,0.06)"
       category="Content Mix"
       onDismiss={onDismiss}
+      fillHeight={fillHeight}
     >
       <h3 style={{
         fontSize: 15, fontWeight: 700, color: C.text1,
@@ -1766,11 +1837,10 @@ function ContentMixFeedCard({ patterns, mix, onDismiss }) {
         marginBottom: 12,
       }}>{patterns.headline || 'Your content mix'}</h3>
 
-      {/* Visual band: stacked Shorts vs Long bar — brand red + charcoal */}
-      <div style={{ marginBottom: 8 }}>
+      <div style={{ marginBottom: 10 }}>
         <div style={{
           display: 'flex',
-          background: '#eef0f4', borderRadius: 99, height: 6,
+          background: '#eef0f4', borderRadius: 99, height: 7,
           overflow: 'hidden',
         }}>
           <div style={{
@@ -1784,21 +1854,42 @@ function ContentMixFeedCard({ patterns, mix, onDismiss }) {
         </div>
       </div>
 
-      <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', marginBottom: 0 }}>
+      {/* Legend row */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 14, flexWrap: 'wrap', marginBottom: 14 }}>
         <span style={{
-          display: 'inline-flex', alignItems: 'center', gap: 5,
-          fontSize: 11.5, fontWeight: 500, color: C.text3, letterSpacing: '-0.01em',
+          display: 'inline-flex', alignItems: 'center', gap: 6,
+          fontSize: 11.5, fontWeight: 500, color: C.text2, letterSpacing: '-0.01em',
+          fontVariantNumeric: 'tabular-nums',
         }}>
-          <span style={{ width: 7, height: 7, borderRadius: 99, background: '#e5251b' }}/>
-          Shorts {sCount != null ? sCount : ''} {sCount != null ? '·' : ''} {sPct}%
+          <span style={{ width: 8, height: 8, borderRadius: 99, background: '#e5251b' }}/>
+          Shorts {sCount != null && (<><strong style={{ color: C.text1, fontWeight: 700 }}> {sCount}</strong> · {sPct}%</>)}
         </span>
         <span style={{
-          display: 'inline-flex', alignItems: 'center', gap: 5,
-          fontSize: 11.5, fontWeight: 500, color: C.text3, letterSpacing: '-0.01em',
+          display: 'inline-flex', alignItems: 'center', gap: 6,
+          fontSize: 11.5, fontWeight: 500, color: C.text2, letterSpacing: '-0.01em',
+          fontVariantNumeric: 'tabular-nums',
         }}>
-          <span style={{ width: 7, height: 7, borderRadius: 99, background: 'rgba(15,15,19,0.72)' }}/>
-          Long {lCount != null ? lCount : ''} {lCount != null ? '·' : ''} {lPct}%
+          <span style={{ width: 8, height: 8, borderRadius: 99, background: 'rgba(15,15,19,0.72)' }}/>
+          Long {lCount != null && (<><strong style={{ color: C.text1, fontWeight: 700 }}> {lCount}</strong> · {lPct}%</>)}
         </span>
+      </div>
+
+      {/* Recommendation line — fills the height gap with real signal */}
+      <p style={{
+        fontSize: 12.5, fontWeight: 500, color: C.text2,
+        letterSpacing: '-0.01em', lineHeight: 1.55,
+        marginBottom: 14,
+      }}>
+        <span style={{ fontWeight: 700, color: C.text1 }}>Recommendation: </span>
+        {recommendation}
+      </p>
+
+      {/* Action row — pinned to the bottom when fillHeight is on */}
+      <div style={{
+        display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap',
+        marginTop: fillHeight ? 'auto' : 0,
+        paddingTop: fillHeight ? 4 : 0,
+      }}>
         <div style={{ flex: 1 }}/>
         {(patterns.body || patterns.text) && (
           <button
@@ -1843,7 +1934,7 @@ function ContentMixFeedCard({ patterns, mix, onDismiss }) {
 // per-category score dots (visual), with the score chip on the right of
 // the eyebrow. The full audit (priority actions checklist, category bars,
 // quick wins, biggest risk) renders below when expanded.
-function ChannelHealthFeedCard({ score, categories, weakest, children, open, onToggle }) {
+function ChannelHealthFeedCard({ score, categories, weakest, children, open, onToggle, fillHeight = false }) {
   const scoreClr =
     score >= 75 ? C.green : score >= 50 ? C.amber : C.red
   const scoreBdr =
@@ -1868,6 +1959,7 @@ function ChannelHealthFeedCard({ score, categories, weakest, children, open, onT
       iconColor={scoreClr}
       iconBg={scoreBg}
       category="Channel Health"
+      fillHeight={fillHeight}
       rightSlot={
         <span style={{
           display: 'inline-flex', alignItems: 'baseline', gap: 2,
@@ -1915,7 +2007,11 @@ function ChannelHealthFeedCard({ score, categories, weakest, children, open, onT
         </div>
       )}
 
-      <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
+      <div style={{
+        display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap',
+        marginTop: fillHeight ? 'auto' : 0,
+        paddingTop: fillHeight ? 4 : 0,
+      }}>
         {weakest && weakest.length > 0 && (
           <span style={{ fontSize: 11.5, fontWeight: 500, color: C.text3, letterSpacing: '-0.01em' }}>
             Weakest: <span style={{ color: C.text2, fontWeight: 600 }}>{weakest.join(', ')}</span>
@@ -2398,6 +2494,415 @@ function PostingConsistencyCard({ videos, onDismiss }) {
           </div>
         </div>
       )}
+    </FeedCard>
+  )
+}
+
+
+// Compute per-hour and per-(day,hour) average views from the channel's
+// videos. Bins by upload time (published_at). Used by BestTimeCard to
+// surface the slot when the user's audience watches most.
+function computeBestTime(videos) {
+  if (!videos || videos.length < 5) return null
+
+  // Per-hour aggregate: views and count across all days.
+  const hourViews = new Array(24).fill(0)
+  const hourCount = new Array(24).fill(0)
+  // Per (dayOfWeek, hour) for the headline best slot.
+  const slotViews = {}
+  const slotCount = {}
+  // Per dayOfWeek aggregate so we can hint "your audience is most active
+  // on Sundays" even if hour-of-day data is thin.
+  const dayViews = new Array(7).fill(0)
+  const dayCount = new Array(7).fill(0)
+
+  for (const v of videos) {
+    if (!v.published_at) continue
+    const d = new Date(v.published_at)
+    if (Number.isNaN(d.getTime())) continue
+    const h = d.getHours()
+    const dow = d.getDay() // 0=Sun, 1=Mon...6=Sat
+    const views = v.views || 0
+    hourViews[h] += views
+    hourCount[h] += 1
+    dayViews[dow] += views
+    dayCount[dow] += 1
+    const key = `${dow}-${h}`
+    slotViews[key] = (slotViews[key] || 0) + views
+    slotCount[key] = (slotCount[key] || 0) + 1
+  }
+
+  const hourAvg = hourViews.map((v, i) => (hourCount[i] > 0 ? v / hourCount[i] : 0))
+  const dayAvg  = dayViews.map((v, i) => (dayCount[i] > 0 ? v / dayCount[i] : 0))
+
+  // Top slots: rank (day,hour) buckets with at least 1 video by avg views.
+  const slotEntries = Object.keys(slotViews).map(key => {
+    const [dow, h] = key.split('-').map(Number)
+    return {
+      dow, h,
+      avg: slotViews[key] / slotCount[key],
+      count: slotCount[key],
+    }
+  })
+  slotEntries.sort((a, b) => b.avg - a.avg)
+  const top = slotEntries[0] || null
+  const second = slotEntries.find(s => !(s.dow === top?.dow && s.h === top?.h)) || null
+  const worst = slotEntries.length > 2 ? slotEntries[slotEntries.length - 1] : null
+
+  return {
+    hourAvg,
+    dayAvg,
+    top,
+    second,
+    worst,
+    sampleSize: videos.length,
+  }
+}
+
+function formatHour12(h) {
+  const suf = h < 12 ? 'AM' : 'PM'
+  const hh  = h % 12 === 0 ? 12 : h % 12
+  return `${hh} ${suf}`
+}
+const DAYS_SHORT = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+const DAYS_LONG  = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+
+// Best Time to Publish card. Bins all the channel's videos by hour of
+// day and surfaces the slot with the highest avg views. The visual: a
+// 24-bar mini chart of avg views per hour with the peak bar highlighted
+// in brand red, plus three stat tiles below (Best, Runner-up, Avoid).
+function BestTimeCard({ videos, onDismiss }) {
+  const [open, setOpen] = useState(false)
+  const data = computeBestTime(videos)
+  if (!data || !data.top) return null
+
+  const { hourAvg, dayAvg, top, second, worst, sampleSize } = data
+  const peakHour = top.h
+  const maxBar = Math.max(...hourAvg, 1)
+
+  // Headline: best slot named in natural English.
+  const headline = `Audience peaks ${DAYS_LONG[top.dow]}s around ${formatHour12(top.h)}`
+
+  // Verdict line below the headline.
+  const verdict = `Based on ${sampleSize} uploads. ${
+    second
+      ? `Runner-up: ${DAYS_SHORT[second.dow]} ${formatHour12(second.h)}.`
+      : 'Need more uploads for a runner-up.'
+  }`
+
+  // 24-bar chart geometry.
+  const chartW = 720
+  const chartH = 90
+  const padX = 4
+  const padTop = 8
+  const padBot = 22
+  const barW = (chartW - padX * 2) / 24 - 2
+  const usableH = chartH - padTop - padBot
+
+  return (
+    <FeedCard
+      Icon={Clock}
+      iconColor={C.text1}
+      iconBg="rgba(15,15,19,0.06)"
+      category="Best Time To Publish · your data"
+      onDismiss={onDismiss}
+      rightSlot={
+        <span style={{
+          display: 'inline-flex', alignItems: 'center', gap: 4,
+          fontSize: 10.5, fontWeight: 800, color: C.red,
+          background: 'rgba(229,37,27,0.07)', border: '1px solid rgba(229,37,27,0.20)',
+          padding: '3px 8px', borderRadius: 100,
+          letterSpacing: '0.05em', textTransform: 'uppercase',
+        }}>
+          {DAYS_SHORT[top.dow]} · {formatHour12(top.h)}
+        </span>
+      }
+    >
+      <div style={{ display: 'flex', alignItems: 'baseline', gap: 12, flexWrap: 'wrap', marginBottom: 6 }}>
+        <h3 style={{
+          fontSize: 18, fontWeight: 700, color: C.text1,
+          letterSpacing: '-0.4px', lineHeight: 1.25,
+        }}>{headline}</h3>
+      </div>
+      <p style={{
+        fontSize: 12, fontWeight: 500, color: C.text3,
+        letterSpacing: '-0.01em', marginBottom: 16,
+      }}>{verdict}</p>
+
+      {/* 24-bar chart of avg views per hour-of-day */}
+      <div style={{ marginBottom: 16 }}>
+        <svg width="100%" viewBox={`0 0 ${chartW} ${chartH}`} preserveAspectRatio="none" style={{ display: 'block' }}>
+          {/* Baseline */}
+          <line x1={padX} y1={chartH - padBot} x2={chartW - padX} y2={chartH - padBot} stroke="#e6e6ec" strokeWidth="1"/>
+          {/* Bars */}
+          {hourAvg.map((v, h) => {
+            const heightPct = v / maxBar
+            const barH = Math.max(2, heightPct * usableH)
+            const x = padX + h * ((chartW - padX * 2) / 24) + 1
+            const y = chartH - padBot - barH
+            const isPeak = h === peakHour
+            return (
+              <rect
+                key={h}
+                x={x.toFixed(2)} y={y.toFixed(2)}
+                width={barW.toFixed(2)} height={barH.toFixed(2)}
+                rx="2" ry="2"
+                fill={isPeak ? '#e5251b' : 'rgba(15,15,19,0.12)'}
+              >
+                <title>{`${formatHour12(h)}: ${fmtNum(Math.round(v))} avg views`}</title>
+              </rect>
+            )
+          })}
+          {/* X-axis hour labels at 0, 6, 12, 18 */}
+          {[0, 6, 12, 18].map(h => {
+            const x = padX + h * ((chartW - padX * 2) / 24) + barW / 2 + 1
+            return (
+              <text key={h} x={x} y={chartH - 6} textAnchor="middle" fontSize="9.5" fontWeight="600" fill="rgba(10,10,15,0.40)" letterSpacing="0.04em">
+                {formatHour12(h).replace(' ', '')}
+              </text>
+            )
+          })}
+          <text x={chartW - padX} y={chartH - 6} textAnchor="end" fontSize="9.5" fontWeight="600" fill="rgba(10,10,15,0.40)" letterSpacing="0.04em">
+            11PM
+          </text>
+        </svg>
+      </div>
+
+      {/* Stat strip: Best, Runner-up, Avoid */}
+      <div style={{
+        display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16,
+        paddingTop: 14, borderTop: '1px solid #f1f1f4',
+      }}>
+        <div>
+          <p style={{ fontSize: 9.5, fontWeight: 700, color: C.red, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 5 }}>Best time</p>
+          <p style={{ fontSize: 16, fontWeight: 700, color: C.text1, letterSpacing: '-0.3px', lineHeight: 1.15, marginBottom: 4 }}>
+            {DAYS_SHORT[top.dow]} · {formatHour12(top.h)}
+          </p>
+          <p style={{ fontSize: 11, fontWeight: 500, color: C.text3, letterSpacing: '-0.01em', fontVariantNumeric: 'tabular-nums' }}>
+            {fmtNum(Math.round(top.avg))} avg views
+          </p>
+        </div>
+        <div>
+          <p style={{ fontSize: 9.5, fontWeight: 700, color: 'rgba(10,10,15,0.40)', letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 5 }}>Runner-up</p>
+          <p style={{ fontSize: 16, fontWeight: 700, color: C.text1, letterSpacing: '-0.3px', lineHeight: 1.15, marginBottom: 4 }}>
+            {second ? `${DAYS_SHORT[second.dow]} · ${formatHour12(second.h)}` : '—'}
+          </p>
+          <p style={{ fontSize: 11, fontWeight: 500, color: C.text3, letterSpacing: '-0.01em', fontVariantNumeric: 'tabular-nums' }}>
+            {second ? `${fmtNum(Math.round(second.avg))} avg views` : 'Need more uploads'}
+          </p>
+        </div>
+        <div>
+          <p style={{ fontSize: 9.5, fontWeight: 700, color: C.amber, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 5 }}>Avoid</p>
+          <p style={{ fontSize: 16, fontWeight: 700, color: C.text1, letterSpacing: '-0.3px', lineHeight: 1.15, marginBottom: 4 }}>
+            {worst ? `${DAYS_SHORT[worst.dow]} · ${formatHour12(worst.h)}` : '—'}
+          </p>
+          <p style={{ fontSize: 11, fontWeight: 500, color: C.text3, letterSpacing: '-0.01em', fontVariantNumeric: 'tabular-nums' }}>
+            {worst ? `${fmtNum(Math.round(worst.avg))} avg views` : 'Need more uploads'}
+          </p>
+        </div>
+      </div>
+
+      {/* Detail: per-day-of-week breakdown */}
+      <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 12 }}>
+        <button
+          type="button"
+          onClick={() => setOpen(o => !o)}
+          aria-label={open ? 'Hide weekly breakdown' : 'Show weekly breakdown'}
+          style={{
+            display: 'inline-flex', alignItems: 'center', gap: 4,
+            padding: '6px 11px', borderRadius: 100,
+            border: '1px solid #e6e6ec',
+            background: '#fff', color: C.text2,
+            fontFamily: 'inherit',
+            fontSize: 11.5, fontWeight: 600, letterSpacing: '-0.01em',
+            cursor: 'pointer',
+            transition: 'background 0.14s ease, color 0.14s ease, border-color 0.14s ease',
+          }}
+          onMouseEnter={e => { e.currentTarget.style.background = 'rgba(15,15,19,0.04)'; e.currentTarget.style.color = C.text1; e.currentTarget.style.borderColor = '#d0d0d8' }}
+          onMouseLeave={e => { e.currentTarget.style.background = '#fff'; e.currentTarget.style.color = C.text2; e.currentTarget.style.borderColor = '#e6e6ec' }}
+        >
+          {open ? 'Hide weekly view' : 'Weekly view'}
+          <ChevronDown size={11} strokeWidth={2.4} style={{ transform: open ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s ease' }}/>
+        </button>
+      </div>
+
+      {open && (
+        <div style={{ marginTop: 14, paddingTop: 14, borderTop: '1px solid #f1f1f4' }}>
+          <p style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 12 }}>
+            Avg views per upload by day of week
+          </p>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 6 }}>
+            {dayAvg.map((avg, i) => {
+              const maxDay = Math.max(...dayAvg, 1)
+              const heightPct = avg / maxDay
+              const isTop = i === top.dow
+              return (
+                <div key={i} style={{ textAlign: 'center' }}>
+                  <div style={{
+                    height: 60, display: 'flex', alignItems: 'flex-end', justifyContent: 'center',
+                    marginBottom: 6,
+                  }}>
+                    <div style={{
+                      width: '60%',
+                      height: `${Math.max(4, heightPct * 100)}%`,
+                      background: isTop ? '#e5251b' : 'rgba(15,15,19,0.12)',
+                      borderRadius: 3,
+                      transition: 'height 0.6s cubic-bezier(0.34,1.56,0.64,1)',
+                    }} title={`${DAYS_LONG[i]}: ${fmtNum(Math.round(avg))} avg views`}/>
+                  </div>
+                  <p style={{ fontSize: 10, fontWeight: 700, color: isTop ? C.red : C.text3, letterSpacing: '0.04em' }}>
+                    {DAYS_SHORT[i].slice(0, 1)}
+                  </p>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      )}
+    </FeedCard>
+  )
+}
+
+
+// Tracked Optimization Lift card. The proof loop: shows the user's best
+// SEO Optimizer win. Real thumbnail on the left, title-change diff on
+// the right, big +Δ views chip in the eyebrow. Single card per channel
+// surfaces the strongest win; the rest live on the SEO Studio page.
+function TrackedLiftCard({ win, moreCount, onOpenAll, onDismiss }) {
+  if (!win) return null
+  const beforeViews = win.before_views || 0
+  const currentViews = win.current_views || 0
+  const deltaViews = win.delta_views || 0
+  const deltaPct = win.delta_pct || 0
+
+  const titleChanged = win.before_title && win.after_title && win.before_title !== win.after_title
+
+  const ageDays = win.optimized_at
+    ? Math.floor((Date.now() - new Date(win.optimized_at).getTime()) / 86400000)
+    : null
+  const ageStr = ageDays == null ? '' : ageDays === 0 ? 'today' : ageDays === 1 ? 'yesterday' : `${ageDays}d ago`
+
+  return (
+    <FeedCard
+      Icon={TrendingUp}
+      iconColor={C.green}
+      iconBg="rgba(5,150,105,0.08)"
+      category="Tracked Lift · SEO Optimizer"
+      age={ageStr}
+      onDismiss={onDismiss}
+      rightSlot={
+        <span style={{
+          display: 'inline-flex', alignItems: 'center', gap: 4,
+          fontSize: 10.5, fontWeight: 800, color: C.green,
+          background: 'rgba(5,150,105,0.08)', border: '1px solid rgba(5,150,105,0.22)',
+          padding: '3px 8px', borderRadius: 100,
+          letterSpacing: '-0.05px', fontVariantNumeric: 'tabular-nums',
+        }}>
+          +{fmtNum(deltaViews)} views · +{deltaPct}%
+        </span>
+      }
+    >
+      <h3 style={{
+        fontSize: 16, fontWeight: 700, color: C.text1,
+        letterSpacing: '-0.3px', lineHeight: 1.3,
+        marginBottom: 14,
+      }}>Your update is outperforming the old version</h3>
+
+      <div style={{ display: 'flex', gap: 16, alignItems: 'stretch', marginBottom: 14 }}>
+        {/* Thumbnail */}
+        {win.thumbnail_url ? (
+          <div style={{
+            flexShrink: 0, width: 180, aspectRatio: '16/9',
+            borderRadius: 10, overflow: 'hidden',
+            background: '#ebebef',
+            boxShadow: '0 1px 3px rgba(0,0,0,0.06), 0 6px 18px rgba(0,0,0,0.08)',
+          }}>
+            <img
+              src={win.thumbnail_url}
+              alt=""
+              style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+            />
+          </div>
+        ) : (
+          <div style={{
+            flexShrink: 0, width: 180, aspectRatio: '16/9',
+            borderRadius: 10, background: '#ebebef',
+          }}/>
+        )}
+
+        {/* Diff + numbers */}
+        <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: 12 }}>
+          {/* Title diff */}
+          {titleChanged && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
+              <p style={{
+                fontSize: 10, fontWeight: 700, color: C.text3,
+                letterSpacing: '0.10em', textTransform: 'uppercase',
+              }}>Title change</p>
+              <p style={{
+                fontSize: 12, fontWeight: 500, color: C.text3,
+                letterSpacing: '-0.01em', lineHeight: 1.4,
+                textDecoration: 'line-through',
+                display: '-webkit-box', WebkitLineClamp: 1, WebkitBoxOrient: 'vertical',
+                overflow: 'hidden',
+              }}>{win.before_title}</p>
+              <p style={{
+                fontSize: 13, fontWeight: 700, color: C.text1,
+                letterSpacing: '-0.15px', lineHeight: 1.4,
+                display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical',
+                overflow: 'hidden',
+              }}>{win.after_title}</p>
+            </div>
+          )}
+
+          {/* Stat row: before -> after views */}
+          <div style={{
+            display: 'grid', gridTemplateColumns: 'auto auto 1fr', gap: 14, alignItems: 'flex-end',
+            marginTop: 'auto',
+          }}>
+            <div>
+              <p style={{ fontSize: 9.5, fontWeight: 700, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 4 }}>Before</p>
+              <p style={{ fontSize: 17, fontWeight: 700, color: C.text2, letterSpacing: '-0.4px', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{fmtNum(beforeViews)}</p>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', alignSelf: 'center', paddingTop: 14 }}>
+              <ArrowRight size={16} strokeWidth={2.4} color={C.text3} />
+            </div>
+            <div>
+              <p style={{ fontSize: 9.5, fontWeight: 700, color: C.green, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 4 }}>Now</p>
+              <p style={{ fontSize: 17, fontWeight: 700, color: C.text1, letterSpacing: '-0.4px', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{fmtNum(currentViews)}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Bottom row: more wins + CTA */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', paddingTop: 12, borderTop: '1px solid #f1f1f4' }}>
+        <span style={{ fontSize: 11.5, fontWeight: 500, color: C.text3, letterSpacing: '-0.01em' }}>
+          {moreCount > 0 ? `+ ${moreCount} more win${moreCount === 1 ? '' : 's'} this month` : 'Single tracked win'}
+        </span>
+        <div style={{ flex: 1 }}/>
+        {onOpenAll && (
+          <button
+            type="button"
+            onClick={onOpenAll}
+            style={{
+              display: 'inline-flex', alignItems: 'center', gap: 5,
+              padding: '7px 13px', borderRadius: 100,
+              border: 'none', cursor: 'pointer',
+              background: C.red, color: '#fff',
+              fontFamily: 'inherit',
+              fontSize: 12, fontWeight: 700, letterSpacing: '-0.01em',
+              boxShadow: '0 1px 3px rgba(229,37,27,0.30)',
+              transition: 'filter 0.14s ease, transform 0.14s ease',
+            }}
+            onMouseEnter={e => { e.currentTarget.style.filter = 'brightness(1.08)'; e.currentTarget.style.transform = 'translateY(-1px)' }}
+            onMouseLeave={e => { e.currentTarget.style.filter = 'none'; e.currentTarget.style.transform = 'translateY(0)' }}
+          >
+            See all wins
+            <ArrowRight size={12} strokeWidth={2.4} />
+          </button>
+        )}
+      </div>
     </FeedCard>
   )
 }
@@ -3198,6 +3703,10 @@ export default function Dashboard() {
     try { return localStorage.getItem('ytg_feed_filter') || 'all' } catch { return 'all' }
   })
   const [auditOpen, setAuditOpen] = useState(false)
+  // Tracked Optimization Lift — the proof loop card. Fetched on mount when
+  // the user is on the Overview. Null while loading or when there's no
+  // meaningful win to surface yet.
+  const [trackedLift, setTrackedLift] = useState(null)
   const setFeedFilterPersist = (k) => {
     setFeedFilter(k)
     try { localStorage.setItem('ytg_feed_filter', k) } catch {}
@@ -3303,6 +3812,13 @@ export default function Dashboard() {
     fetch('/auth/milestones', { credentials: 'include' })
       .then(r => r.ok ? r.json() : null)
       .then(d => { if (d && !d.error) setMilestones(d) })
+      .catch(() => {})
+
+    // Load tracked optimization lift (proof loop). Returns null when the
+    // user hasn't optimized any videos yet or no wins have materialized.
+    fetch('/dashboard/tracked-lift', { credentials: 'include' })
+      .then(r => r.ok ? r.json() : null)
+      .then(d => { if (d && !d.error && d.top) setTrackedLift(d) })
       .catch(() => {})
 
     // Load plan + per-feature gate state (for free-tier gating on child pages).
@@ -3722,11 +4238,40 @@ export default function Dashboard() {
         {/* Page */}
         <div style={{ padding: '36px 40px 72px', animation: 'fadeUp 0.25s ease' }}>
 
-          {/* Loading */}
+          {/* Loading — skeleton placeholders matching the real Feed layout
+              so the page doesn't feel like a blank spinner while data loads. */}
           {loading && (
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '60vh', gap: 14 }}>
-              <div style={{ width: 32, height: 32, border: `2.5px solid ${C.border}`, borderTop: `2.5px solid ${C.red}`, borderRadius: '50%', animation: 'spin 0.7s linear infinite' }}/>
-              <p style={{ color: C.text3, fontSize: 14, fontWeight: 500 }}>Analyzing your channel…</p>
+            <div style={{ maxWidth: 1040, margin: '0 auto' }}>
+              {/* Header row */}
+              <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 24 }}>
+                <div>
+                  <div className="ytg-skel" style={{ width: 280, height: 26, borderRadius: 6, marginBottom: 10 }}/>
+                  <div className="ytg-skel" style={{ width: 180, height: 14, borderRadius: 4 }}/>
+                </div>
+                <div style={{ display: 'flex', gap: 8 }}>
+                  <div className="ytg-skel" style={{ width: 130, height: 34, borderRadius: 100 }}/>
+                  <div className="ytg-skel" style={{ width: 130, height: 34, borderRadius: 100 }}/>
+                </div>
+              </div>
+              {/* Hero tiles */}
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, marginBottom: 20 }}>
+                <div className="ytg-skel" style={{ height: 140, borderRadius: 12 }}/>
+                <div className="ytg-skel" style={{ height: 140, borderRadius: 12 }}/>
+              </div>
+              {/* Filter pills */}
+              <div style={{ display: 'flex', gap: 8, marginBottom: 18 }}>
+                {[0, 1, 2, 3].map(i => (
+                  <div key={i} className="ytg-skel" style={{ width: 90, height: 32, borderRadius: 100 }}/>
+                ))}
+              </div>
+              {/* Card stream */}
+              {[0, 1, 2].map(i => (
+                <div key={i} className="ytg-skel" style={{ height: 140, borderRadius: 12, marginBottom: 12 }}/>
+              ))}
+              <p style={{
+                textAlign: 'center', color: C.text3, fontSize: 12, fontWeight: 500,
+                marginTop: 18, letterSpacing: '0.04em',
+              }}>Analyzing your channel…</p>
             </div>
           )}
 
@@ -4101,12 +4646,50 @@ export default function Dashboard() {
                 )
               })()}
 
+              {/* Best Time to Publish — Insights. Bins all the channel's
+                  videos by hour-of-day and surfaces the slot when the
+                  user's audience watches most. Renders only when there
+                  are enough uploads to make the signal meaningful. */}
+              {(feedFilter === 'all' || feedFilter === 'insights') && videos && videos.length >= 5 && (() => {
+                const dismissKey = `ytg_best_time_dismissed:${data?.channel?.channel_id || 'x'}`
+                try { if (localStorage.getItem(dismissKey)) return null } catch {}
+                return (
+                  <BestTimeCard
+                    videos={videos}
+                    onDismiss={() => {
+                      try { localStorage.setItem(dismissKey, '1') } catch {}
+                      setChecked(prev => ({ ...prev }))
+                    }}
+                  />
+                )
+              })()}
+
+              {/* Tracked Optimization Lift — Achievements. Proof loop:
+                  shows the user's best post-update win from SEO Optimizer.
+                  trackedLift state is fetched on Overview mount. */}
+              {(feedFilter === 'all' || feedFilter === 'achievements') && trackedLift && trackedLift.top && (() => {
+                const w = trackedLift.top
+                const dismissKey = `ytg_tracked_lift_dismissed:${data?.channel?.channel_id || 'x'}:${w.video_id}:${w.optimized_at}`
+                try { if (localStorage.getItem(dismissKey)) return null } catch {}
+                return (
+                  <TrackedLiftCard
+                    win={w}
+                    moreCount={trackedLift.count > 1 ? trackedLift.count - 1 : 0}
+                    onOpenAll={() => setNav('SEO Studio')}
+                    onDismiss={() => {
+                      try { localStorage.setItem(dismissKey, '1') } catch {}
+                      setChecked(prev => ({ ...prev }))
+                    }}
+                  />
+                )
+              })()}
+
               {/* Insights row — Content Mix + Channel Health sit side by
                   side at half width. Denser, less scroll, more loaded.
                   Expanded audit detail renders full-width below this
                   block via the auditOpen condition further down. */}
               {(feedFilter === 'all' || feedFilter === 'insights') && (patterns || data.insights) && (
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, alignItems: 'start' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, alignItems: 'stretch' }}>
                   {patterns && (
                     <ContentMixFeedCard
                       patterns={{
@@ -4124,11 +4707,14 @@ export default function Dashboard() {
                               ? `Long-form outperforms Shorts by ${fmtNum(patterns.longAvg - patterns.shortAvg)} views. Your audience wants depth.`
                               : 'Both formats are performing similarly on your channel.'
                         ),
+                        shortAvg: patterns.shortAvg,
+                        longAvg: patterns.longAvg,
                       }}
                       mix={{
                         shortsCount: patterns.shortsCount,
                         longsCount: patterns.longsCount,
                       }}
+                      fillHeight
                     />
                   )}
 
@@ -4163,6 +4749,7 @@ export default function Dashboard() {
                         weakest={weakest}
                         open={auditOpen}
                         onToggle={() => setAuditOpen(o => !o)}
+                        fillHeight
                       />
                     )
                   })()}
