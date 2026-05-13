@@ -394,13 +394,9 @@ class FreeTierFeatureUsage(Base):
 
 
 class NicheOutlierCache(Base):
-    """One row per niche category — the current "Winning in your niche this week"
-    pick, refreshed by a weekly scheduler. Powers the dashboard hero card.
-
-    Stored as a structured payload: the winning video + a Haiku-generated
-    breakdown ("why it's working" + a templated angle the user can adapt).
-    Single shared cache across all creators in a niche keeps the cost flat
-    (one Haiku call per niche per week, not per user).
+    """Legacy: one row per broad niche category — the previous "winning in your
+    niche" pick. Kept so existing rows aren't orphaned, but no longer read in
+    the hot path. Replaced by ChannelNicheOutlierCache (per-channel).
     """
     __tablename__ = "niche_outlier_cache"
     niche          = Column(String, primary_key=True)  # one of CATEGORIES
@@ -416,6 +412,40 @@ class NicheOutlierCache(Base):
     why_working    = Column(Text, nullable=False)      # JSON list of 3 bullet strings
     angle_template = Column(Text, nullable=False)      # Suggested title template
     angle_keyword  = Column(String, nullable=True)     # Search keyword to target
+    refreshed_at   = Column(DateTime, default=_now, onupdate=_now)
+
+
+class ChannelNicheOutlierCache(Base):
+    """One row per creator. The home dashboard's niche outlier card.
+
+    Runs the SAME app.outliers.search_outliers pipeline the paid Outliers
+    feature uses, with the creator's real channel_id, real subscriber count,
+    and niche keywords extracted from their own channel + recent titles
+    (extract_niche_keywords). The output is the #1 outlier video relevant to
+    this specific creator, not a shared "niche bucket" result.
+
+    Refresh policy: TTL 7 days. After expiry, callers serve the stale row
+    and kick a background refresh, so the UI never blocks once a creator
+    has a cached pick.
+    """
+    __tablename__ = "channel_niche_outlier_cache"
+    channel_id     = Column(String, primary_key=True)
+    detected_niche = Column(String, nullable=True)     # display label (gaming, beauty, ...)
+    niche_keywords = Column(Text, nullable=True)       # JSON list of the keywords used
+    query_used     = Column(Text, nullable=True)       # the search_outliers query string
+
+    video_id       = Column(String, nullable=False)
+    title          = Column(Text, nullable=False)
+    channel_title  = Column(String, nullable=False)
+    src_channel_id = Column(String, nullable=False)    # the outlier video's channel
+    thumbnail_url  = Column(String, nullable=False)
+    view_count     = Column(BigInteger, nullable=False)
+    sub_ratio      = Column(Integer, nullable=False)
+    published_at   = Column(DateTime, nullable=False)
+    outlier_score  = Column(Integer, nullable=False)   # 0-100
+    why_working    = Column(Text, nullable=False)      # JSON list (+ optional __reasoning__: prefix)
+    angle_template = Column(Text, nullable=False)
+    angle_keyword  = Column(String, nullable=True)
     refreshed_at   = Column(DateTime, default=_now, onupdate=_now)
 
 

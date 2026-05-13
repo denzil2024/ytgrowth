@@ -1,18 +1,22 @@
-"""Dashboard backend — feeds the hero card on the Overview tab.
+"""Dashboard backend — feeds the niche outlier hero card on the Overview tab.
 
 GET /dashboard/niche-outlier
-  Returns the current "winning in your niche this week" pick for the
-  signed-in creator's inferred niche. Cached server-side (one row per
-  niche, refreshed weekly), so this is a single DB read with no Claude
-  or YouTube calls in the hot path.
+  Returns the "winning in your niche this week" pick computed for THIS
+  creator. Runs the same app.outliers.search_outliers pipeline the paid
+  Outliers feature uses, with the creator's REAL channel_id, REAL sub
+  count, and niche keywords pulled from their own channel + recent titles.
 
-  Lazy-generation: if the cache is empty for the inferred niche, kicks
-  off a background refresh once (per-niche lock) and returns a "generating"
-  status so the frontend can poll until it's ready. No manual seed needed.
+  Cache: one row per channel_id, TTL 7 days. On first load we kick off a
+  background refresh and tell the frontend to poll. On subsequent loads
+  we serve the cached row instantly. On TTL expiry we serve the stale
+  row and kick a background refresh.
 
-POST /dashboard/refresh-niche-outliers  (admin only)
-  Triggers an on-demand refresh of one niche or all niches. Useful for
-  the first seed of the cache and for manual reruns when output looks off.
+GET /dashboard/personalize-angle
+  Cheap Haiku pass that rewrites the cached angle in the creator's voice.
+
+GET /dashboard/refresh-niche-outliers  (admin only)
+  Forces an on-demand refresh for the signed-in admin's channel. Used for
+  manual QA when output looks off.
 """
 from __future__ import annotations
 
@@ -22,10 +26,9 @@ from fastapi import APIRouter, Request
 from fastapi.responses import JSONResponse
 
 from app.niche_outliers import (
-    get_for_niche,
-    infer_niche,
-    refresh_niche,
-    refresh_all_niches,
+    get_for_channel,
+    refresh_for_channel,
+    is_stale,
     personalize_angle,
 )
 from routers.auth import get_session
@@ -35,75 +38,78 @@ from routers.admin_routes import _is_admin
 router = APIRouter()
 
 
-# Per-niche refresh locks. A niche only gets one in-flight refresh at a
-# time even when multiple creators in the same niche hit the dashboard
-# simultaneously. Keys live in memory; on multi-worker setups this just
-# means each worker can spawn one job per niche, which is still bounded.
+# Per-channel refresh locks. One in-flight refresh per channel; subsequent
+# polls from the same user during the refresh just see the "generating"
+# state. Keys live in memory; multi-worker setups can spawn one job per
+# channel per worker, still bounded.
 _refresh_locks: dict[str, threading.Lock] = {}
 _refresh_inflight: set[str] = set()
 
 
-def _try_kickoff_refresh(niche: str) -> bool:
-    """Returns True if this call started a refresh, False if one is already in
-    flight or the lock couldn't be acquired. Safe to call from a request hot
-    path: spawns a thread, returns immediately."""
-    lock = _refresh_locks.setdefault(niche, threading.Lock())
+def _try_kickoff_refresh(channel_id: str, channel: dict, videos: list) -> bool:
+    """Returns True if this call started a refresh, False if one is already
+    in flight. Safe to call from a request hot path: spawns a thread,
+    returns immediately."""
+    if not channel_id:
+        return False
+    lock = _refresh_locks.setdefault(channel_id, threading.Lock())
     if not lock.acquire(blocking=False):
         return False
     try:
-        if niche in _refresh_inflight:
+        if channel_id in _refresh_inflight:
             return False
-        _refresh_inflight.add(niche)
+        _refresh_inflight.add(channel_id)
     finally:
         lock.release()
 
     def _runner():
         try:
-            refresh_niche(niche)
+            refresh_for_channel(channel_id, channel, videos)
         except Exception as e:
-            print(f"[dashboard] lazy refresh failed for {niche}: {e}")
+            print(f"[dashboard] lazy refresh failed for {channel_id}: {e}")
         finally:
-            _refresh_inflight.discard(niche)
+            _refresh_inflight.discard(channel_id)
 
-    threading.Thread(target=_runner, name=f"niche-refresh-{niche}", daemon=True).start()
+    threading.Thread(target=_runner, name=f"channel-refresh-{channel_id[:10]}", daemon=True).start()
     return True
 
 
 @router.get("/niche-outlier")
 def niche_outlier(request: Request):
-    """Returns the user's niche outlier card payload, plus the niche we
-    inferred so the frontend can show "Detected niche: tech". Falls back
-    to {ok: false, reason: ...} when nothing's cached yet, so the
-    frontend can render a graceful empty state instead of a 404."""
+    """Returns the signed-in creator's niche outlier card. If no cached row
+    exists yet, kicks off a refresh and returns {ok: false, reason:
+    generating_now} so the frontend can poll. If a row exists but is past
+    its TTL, returns the stale row immediately AND kicks a refresh in the
+    background — UI never blocks once a creator has been seeded."""
     data, _ = get_session(request.session.get("session_id"))
     if not data:
         return JSONResponse({"ok": False, "reason": "not_authenticated"}, status_code=401)
 
     channel = (data or {}).get("channel", {}) or {}
     videos  = (data or {}).get("videos",  []) or []
+    channel_id = channel.get("channel_id") or ""
 
-    channel_keywords = channel.get("keywords") or ""
-    channel_title    = channel.get("channel_name") or channel.get("title") or ""
-    recent_titles    = [v.get("title", "") for v in videos[:10] if v.get("title")]
+    if not channel_id:
+        return JSONResponse({"ok": False, "reason": "no_channel"})
 
-    niche = infer_niche(channel_keywords, channel_title, recent_titles)
-    payload = get_for_niche(niche)
+    payload = get_for_channel(channel_id)
+
     if not payload:
-        # Lazy generation: kick off a refresh in the background, tell the
-        # frontend to poll. Subsequent dashboard loads pick up the cached
-        # result. No user-visible "Warming up" dead end.
-        started = _try_kickoff_refresh(niche)
+        started = _try_kickoff_refresh(channel_id, channel, videos)
         return JSONResponse({
             "ok":      False,
-            "reason":  "generating_now" if started or niche in _refresh_inflight else "generation_failed",
-            "niche":   niche,
+            "reason":  "generating_now" if started or channel_id in _refresh_inflight else "generation_failed",
             "creator": channel.get("channel_name") or "",
             "eta_sec": 30,
         })
 
+    if is_stale(payload):
+        # Serve stale row, refresh in background.
+        _try_kickoff_refresh(channel_id, channel, videos)
+
     return JSONResponse({
         "ok":      True,
-        "niche":   niche,
+        "niche":   payload.get("niche") or "",
         "creator": channel.get("channel_name") or "",
         "outlier": payload,
     })
@@ -112,28 +118,30 @@ def niche_outlier(request: Request):
 @router.get("/personalize-angle")
 def personalize_angle_endpoint(request: Request):
     """Returns an angle tailored to the signed-in creator's channel context.
-    Falls back to the niche's generic angle template if Haiku is unavailable.
-    Cheap (~$0.005/call). Frontend caches the result client-side for a week
-    so this only runs once per user per niche-refresh cycle."""
+    Reads the per-channel cache. Falls back to the base angle if Haiku is
+    unavailable. Frontend caches client-side for a week."""
     data, _ = get_session(request.session.get("session_id"))
     if not data:
         return JSONResponse({"ok": False, "reason": "not_authenticated"}, status_code=401)
 
     channel = (data or {}).get("channel", {}) or {}
     videos  = (data or {}).get("videos",  []) or []
+    channel_id      = channel.get("channel_id") or ""
     channel_keywords = channel.get("keywords") or ""
     channel_title    = channel.get("channel_name") or channel.get("title") or ""
     recent_titles    = [v.get("title", "") for v in videos[:10] if v.get("title")]
 
-    niche = infer_niche(channel_keywords, channel_title, recent_titles)
-    base = get_for_niche(niche)
-    if not base:
-        return JSONResponse({"ok": False, "reason": "no_cache_yet", "niche": niche})
+    if not channel_id:
+        return JSONResponse({"ok": False, "reason": "no_channel"})
 
-    custom = personalize_angle(niche, channel_title, channel_keywords, recent_titles)
+    base = get_for_channel(channel_id)
+    if not base:
+        return JSONResponse({"ok": False, "reason": "no_cache_yet"})
+
+    custom = personalize_angle(channel_id, channel_title, channel_keywords, recent_titles)
     return JSONResponse({
         "ok":      True,
-        "niche":   niche,
+        "niche":   base.get("niche") or "",
         "angle":   (custom or {}).get("angle") or base.get("angle_template"),
         "angle_reasoning": (custom or {}).get("angle_reasoning") or base.get("angle_reasoning") or "",
         "keyword": (custom or {}).get("keyword") or base.get("angle_keyword") or "",
@@ -142,19 +150,24 @@ def personalize_angle_endpoint(request: Request):
 
 
 @router.get("/refresh-niche-outliers")
-def refresh_niche_outliers(request: Request, niche: str | None = None):
-    """Admin-only on-demand refresh. Pass ?niche=tech to refresh one
-    category; omit to refresh all 14. Useful for the initial seed and
-    for re-runs after tuning the Haiku prompt."""
+def refresh_niche_outliers(request: Request):
+    """Admin-only on-demand refresh for the signed-in admin's own channel.
+    Useful for QA after tuning prompts."""
     is_admin, _ = _is_admin(request)
     if not is_admin:
         return JSONResponse({"error": "Forbidden"}, status_code=403)
 
-    if niche:
-        result = refresh_niche(niche)
-        if not result:
-            return JSONResponse({"ok": False, "niche": niche, "reason": "refresh_failed"})
-        return JSONResponse({"ok": True, "niche": niche, "outlier": result})
+    data, _ = get_session(request.session.get("session_id"))
+    if not data:
+        return JSONResponse({"ok": False, "reason": "not_authenticated"}, status_code=401)
 
-    refreshed = refresh_all_niches()
-    return JSONResponse({"ok": True, "refreshed_count": refreshed})
+    channel = (data or {}).get("channel", {}) or {}
+    videos  = (data or {}).get("videos",  []) or []
+    channel_id = channel.get("channel_id") or ""
+    if not channel_id:
+        return JSONResponse({"ok": False, "reason": "no_channel"})
+
+    result = refresh_for_channel(channel_id, channel, videos)
+    if not result:
+        return JSONResponse({"ok": False, "reason": "refresh_failed"})
+    return JSONResponse({"ok": True, "outlier": result})

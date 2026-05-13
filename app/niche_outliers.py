@@ -1,27 +1,41 @@
-"""Niche Outliers — pre-compute the dashboard hero pick per niche per week.
+"""Niche Outliers — dashboard hero pick, computed per creator.
 
-Uses the EXISTING app.outliers.search_outliers pipeline (same model the
-paid Outliers feature runs on). No parallel "fake" discovery logic. The
-only delta vs a normal user-triggered run is that this one passes
-credentials=None so the YouTube client falls back to the API key, and
-substitutes representative niche keywords for the user's personal niche.
+Runs the SAME app.outliers.search_outliers pipeline the paid Outliers
+feature uses, with each creator's REAL channel_id, REAL subscriber count,
+and niche keywords pulled from their own channel + recent titles via
+app.competitors.extract_niche_keywords (the helper Competitors uses).
 
-Runtime: ~15-25 seconds per niche (the search_outliers thumbnail vision
-call is the slowest step). 14 niches per weekly refresh. Cost is bounded
-because this runs server-side once and all creators in the niche read
-from the same NicheOutlierCache row.
+This replaces the previous per-broad-niche shared cache, which fed
+search_outliers hardcoded generic keywords like ["music", "song", "cover"]
+and a 10k baseline. That made every creator in a niche see the same
+outlier, often unrelated to their actual channel. Now the result is
+specific to the creator's own signal.
+
+Cache: one row per channel_id in ChannelNicheOutlierCache, TTL 7 days.
+On expiry, callers serve the stale row and kick a background refresh.
 """
 from __future__ import annotations
 
 import json
 import os
 import re
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 
+from app.competitors import extract_niche_keywords
 from app.outliers import search_outliers
 from app.top_channels import CATEGORY_QUERIES, CATEGORIES
 from app.utils import make_anthropic_client
-from database.models import SessionLocal, NicheOutlierCache
+from database.models import (
+    SessionLocal,
+    NicheOutlierCache,
+    ChannelNicheOutlierCache,
+)
+
+
+# TTL after which a cached row is considered stale. Callers may still serve
+# a stale row while a background refresh runs, so the UI never blocks once
+# the creator has been seeded.
+CACHE_TTL = timedelta(days=7)
 
 
 # Representative niche keywords used when running search_outliers server-side
@@ -101,6 +115,205 @@ def refresh_all_niches() -> int:
         except Exception as e:
             print(f"[niche_outliers] refresh_all error for {niche}: {e}")
     return ok
+
+
+# ─── Per-channel pipeline (current hot path) ──────────────────────────────────
+
+def refresh_for_channel(channel_id: str, channel: dict, videos: list) -> dict | None:
+    """Refresh THIS creator's niche outlier card. Runs search_outliers with
+    the same inputs the paid Outliers feature uses: real channel_id, real
+    subscriber count, niche keywords pulled from their own channel + recent
+    titles. Returns the saved payload or None on failure.
+    """
+    if not channel_id:
+        return None
+
+    channel = channel or {}
+    videos = videos or []
+    channel_title = channel.get("channel_name") or channel.get("title") or ""
+    recent_titles = [v.get("title", "") for v in videos[:10] if v.get("title")]
+    subscribers = int(channel.get("subscribers", 0) or 0) or 1000
+
+    niche_kw = extract_niche_keywords(channel, videos) or []
+    if not niche_kw:
+        # Fall back to inferred broad niche keywords so search has SOMETHING
+        # to anchor on. Better than returning no card.
+        inferred = infer_niche(channel.get("keywords") or "", channel_title, recent_titles)
+        niche_kw = NICHE_KEYWORDS.get(inferred, [inferred or "vlog"])
+
+    query = niche_kw[0] if niche_kw else (channel_title or "vlog")
+    detected_niche = infer_niche(channel.get("keywords") or "", channel_title, recent_titles)
+
+    try:
+        result = search_outliers(
+            creds=None,
+            query=query,
+            my_channel_id=channel_id,
+            my_subscribers=subscribers,
+            my_niche_keywords=niche_kw,
+            confirmed_keyword="",
+        )
+    except Exception as e:
+        print(f"[niche_outliers] search_outliers raised for {channel_id}: {e}")
+        return None
+
+    if not isinstance(result, dict) or result.get("error"):
+        err = result.get("error") if isinstance(result, dict) else result
+        print(f"[niche_outliers] search_outliers returned no usable result for {channel_id}: {err}")
+        return None
+
+    videos_out = result.get("videos") or []
+    if not videos_out:
+        print(f"[niche_outliers] no videos returned for {channel_id}")
+        return None
+
+    top = videos_out[0]
+    _save_for_channel(channel_id, detected_niche, niche_kw, query, top)
+    return get_for_channel(channel_id)
+
+
+def get_for_channel(channel_id: str) -> dict | None:
+    """Read the cached outlier for one creator. Returns None if no row.
+    Caller is responsible for checking freshness via `is_stale`.
+    """
+    if not channel_id:
+        return None
+    db = SessionLocal()
+    try:
+        row = db.query(ChannelNicheOutlierCache).filter_by(channel_id=channel_id).first()
+        if not row:
+            return None
+        try:
+            stored = json.loads(row.why_working or "[]")
+        except Exception:
+            stored = []
+        why: list[str] = []
+        angle_reasoning = ""
+        for item in stored:
+            s = str(item)
+            if s.startswith("__reasoning__:"):
+                angle_reasoning = s[len("__reasoning__:"):].strip()
+            else:
+                why.append(s)
+        try:
+            kw_list = json.loads(row.niche_keywords or "[]")
+        except Exception:
+            kw_list = []
+        return {
+            "niche":           row.detected_niche or "",
+            "niche_keywords":  kw_list,
+            "query_used":      row.query_used or "",
+            "video_id":        row.video_id,
+            "title":           row.title,
+            "channel_title":   row.channel_title,
+            "channel_id":      row.src_channel_id,
+            "thumbnail_url":   row.thumbnail_url,
+            "view_count":      row.view_count,
+            "sub_ratio":       row.sub_ratio,
+            "published_at":    row.published_at.isoformat() if row.published_at else None,
+            "outlier_score":   row.outlier_score,
+            "why_working":     why,
+            "angle_template":  row.angle_template,
+            "angle_reasoning": angle_reasoning,
+            "angle_keyword":   row.angle_keyword,
+            "refreshed_at":    row.refreshed_at.isoformat() if row.refreshed_at else None,
+        }
+    finally:
+        db.close()
+
+
+def is_stale(payload: dict | None) -> bool:
+    """True if the cached row is older than CACHE_TTL, or missing a timestamp."""
+    if not payload:
+        return True
+    ts = payload.get("refreshed_at")
+    if not ts:
+        return True
+    dt = _parse_iso(ts)
+    if not dt:
+        return True
+    if dt.tzinfo is None:
+        dt = dt.replace(tzinfo=timezone.utc)
+    return (datetime.now(timezone.utc) - dt) > CACHE_TTL
+
+
+def _save_for_channel(
+    channel_id: str,
+    detected_niche: str,
+    niche_keywords: list[str],
+    query_used: str,
+    top: dict,
+) -> None:
+    """Map a search_outliers video dict into a per-channel cache row."""
+    db = SessionLocal()
+    try:
+        ratio = float(top.get("views_per_sub") or 0)
+        outlier_mult = float(top.get("outlier_score") or 0)
+        view_count = int(top.get("view_count") or 0)
+        ratio_display = max(1, int(round(ratio))) if ratio else 1
+
+        import math
+        score_0_100 = max(0, min(99, int(50 + 22 * math.log10(max(outlier_mult, 0.1)))))
+
+        pub_dt = _parse_iso(top.get("published_at"))
+
+        why_bullets = _extract_bullets(top.get("why_worked", ""))
+        if len(why_bullets) < 3:
+            extras = []
+            wn = (top.get("why_now") or "").strip()
+            if wn:
+                extras.append(wn)
+            qa = top.get("quick_actions") or []
+            if qa:
+                extras.append(str(qa[0]))
+            for ex in extras:
+                if len(why_bullets) >= 3:
+                    break
+                if ex and ex not in why_bullets:
+                    why_bullets.append(ex)
+        why_bullets = [str(b)[:180] for b in why_bullets[:3]]
+
+        angle_pack = _generate_angle(detected_niche or "vlogs", top) or {
+            "angle":   top.get("title", "")[:160],
+            "angle_reasoning": "Adapt the winning structure to your own voice and audience.",
+            "keyword": "",
+        }
+
+        stored_why = list(why_bullets)
+        if angle_pack.get("angle_reasoning"):
+            stored_why.append(f"__reasoning__:{angle_pack['angle_reasoning']}")
+
+        payload = dict(
+            detected_niche = (detected_niche or "")[:60] or None,
+            niche_keywords = json.dumps(list(niche_keywords)[:6]),
+            query_used     = (query_used or "")[:200] or None,
+            video_id       = top.get("video_id") or "",
+            title          = (top.get("title") or "")[:500],
+            channel_title  = (top.get("channel_title") or "")[:200],
+            src_channel_id = (top.get("channel_id") or "")[:120],
+            thumbnail_url  = (top.get("thumbnail_url") or "")[:500],
+            view_count     = view_count,
+            sub_ratio      = ratio_display,
+            published_at   = pub_dt.replace(tzinfo=None) if (pub_dt and pub_dt.tzinfo) else pub_dt,
+            outlier_score  = score_0_100,
+            why_working    = json.dumps(stored_why),
+            angle_template = (angle_pack.get("angle") or "")[:200],
+            angle_keyword  = (angle_pack.get("keyword") or "")[:120] or None,
+        )
+
+        row = db.query(ChannelNicheOutlierCache).filter_by(channel_id=channel_id).first()
+        if row:
+            for k, v in payload.items():
+                setattr(row, k, v)
+        else:
+            db.add(ChannelNicheOutlierCache(channel_id=channel_id, **payload))
+        db.commit()
+        print(f"[niche_outliers] saved channel={channel_id[:16]} niche={detected_niche} kw={niche_keywords[:3]} title={payload['title'][:60]}")
+    except Exception as e:
+        db.rollback()
+        print(f"[niche_outliers] save_for_channel failed for {channel_id}: {e}")
+    finally:
+        db.close()
 
 
 def get_for_niche(niche: str) -> dict | None:
@@ -327,17 +540,21 @@ Strict rules:
 # ─── Per-user personalization (used by /dashboard/personalize-angle) ──────────
 
 def personalize_angle(
-    niche: str,
+    channel_id: str,
     channel_name: str,
     channel_keywords: str,
     recent_titles: list[str],
 ) -> dict | None:
-    """Per-user angle personalization. Takes the cached niche outlier and
-    rewrites the suggested angle using the creator's own voice + niche
-    specifics. Returns dict or None on failure. Cheap (~$0.005, Haiku)."""
-    payload = get_for_niche(niche)
+    """Per-user angle personalization. Reads THIS creator's cached niche
+    outlier and rewrites the suggested angle using their voice + niche.
+    Returns dict or None on failure. Cheap (~$0.005, Haiku).
+
+    The base outlier is already per-channel (search_outliers ran with the
+    creator's real signals), so this is mainly a voice/phrasing pass."""
+    payload = get_for_channel(channel_id)
     if not payload:
         return None
+    niche = payload.get("niche") or "vlogs"
     if not os.getenv("ANTHROPIC_API_KEY"):
         return None
     try:

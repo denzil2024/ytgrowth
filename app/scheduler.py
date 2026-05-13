@@ -98,33 +98,12 @@ scheduler.add_job(
 )
 
 
-# ── Job: Refresh niche outliers (powers the dashboard hero card) ──────────────
-# Runs WEEKLY (Sunday 06:00 UTC, 30 min after top_channels). Per niche:
-# 1 search.list (100 quota) + 1 videos.list batch (1) + 1 channels.list
-# batch (1) + 1 Haiku call (~$0.05). 14 niches × ~102 quota = ~1,400
-# YouTube quota/week. Claude: ~$0.70/week, $3/month, flat regardless of
-# user count.
-
-def _run_niche_outliers_refresh():
-    if _quota_paused():
-        print("[niche_outliers] refresh skipped — YT_QUOTA_PAUSED=1")
-        return
-    try:
-        from app.niche_outliers import refresh_all_niches
-        ok = refresh_all_niches()
-        print(f"[niche_outliers] weekly refresh: {ok} niches updated")
-    except Exception as e:
-        print(f"[niche_outliers] refresh job failed: {e}")
-
-
-scheduler.add_job(
-    _run_niche_outliers_refresh,
-    trigger="cron",
-    day_of_week="sun",
-    hour=6, minute=0,
-    id="niche_outliers_refresh",
-    replace_existing=True,
-)
+# ── Niche outliers: now lazy per-channel ──────────────────────────────────────
+# The dashboard hero card used to read from a shared per-niche cache that this
+# job refreshed weekly. We replaced that with a per-channel cache populated
+# on-demand by the /dashboard/niche-outlier endpoint, with stale-while-revalidate
+# at TTL 7 days. The endpoint kicks its own background refresh, so no scheduler
+# job is needed. The legacy weekly job is intentionally removed.
 
 
 # ── Job 2: Weekly reports ─────────────────────────────────────────────────────
