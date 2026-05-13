@@ -1,13 +1,15 @@
 import { useEffect, useState, useRef, forwardRef } from 'react'
 import {
   LayoutDashboard,  // Feed
-  Sparkles,         // Optimize
+  Sparkles,         // Optimize / promo card
   Telescope,        // Research
   MessageCircle,    // Chat
   Settings as SettingsIcon,
   ShieldCheck,      // Admin
   Gift,             // Refer
   LogOut,
+  X as XIcon,
+  ArrowRight,
 } from 'lucide-react'
 import Competitors from './Competitors'
 import Settings from './Settings'
@@ -1463,6 +1465,167 @@ function NavGroup({ label, children, anyChildActive, defaultOpen = true, badge, 
   )
 }
 
+/* ─── What's new promo card ─────────────────────────────────────────────────
+   Sells features the user hasn't dismissed, one card at a time. This is the
+   in-product feature-discovery surface — same role VidIQ's "vidIQ for
+   Instagram" launch card plays in their sidebar. Rotates among undismissed
+   features; when all are dismissed, nothing renders.
+*/
+const WHATS_NEW = [
+  {
+    id: 'niche-outlier-interactive',
+    headline: 'Your niche outlier card is now interactive',
+    body: 'Switch between Videos, Thumbnails, and Breakout Channels from one card.',
+    cta: 'See it on Feed',
+    target: 'Overview',
+  },
+  {
+    id: 'tracked-optimizations',
+    headline: 'We measure whether your changes worked',
+    body: 'Edit a title or thumbnail. We track the views delta and show the lift.',
+    cta: 'Open My Videos',
+    target: 'Videos',
+  },
+  {
+    id: 'thumbnail-score',
+    headline: 'Score your thumbnail before you ship',
+    body: 'Drop in your design, get a score against winning thumbnails in your niche.',
+    cta: 'Try Thumbnail Score',
+    target: 'Thumbnail Score',
+  },
+  {
+    id: 'video-review',
+    headline: 'See where viewers drop off',
+    body: 'Per-video retention curve + the exact second you lost the room.',
+    cta: 'Open Video Review',
+    target: 'Autopsy',
+  },
+]
+
+function WhatsNewCard({ channelId, onNavigate }) {
+  const storageKey = `ytg_whatsnew_dismissed:${channelId || 'unknown'}`
+  const [dismissed, setDismissedState] = useState(() => {
+    try {
+      const raw = localStorage.getItem(storageKey)
+      if (!raw) return {}
+      const parsed = JSON.parse(raw)
+      return parsed && typeof parsed === 'object' ? parsed : {}
+    } catch { return {} }
+  })
+
+  // Pick the first feature this user hasn't dismissed. Static order so a
+  // refresh doesn't surprise the user with a different card mid-session.
+  const feature = WHATS_NEW.find(f => !dismissed[f.id])
+  if (!feature) return null
+
+  function dismiss() {
+    const next = { ...dismissed, [feature.id]: Date.now() }
+    setDismissedState(next)
+    try { localStorage.setItem(storageKey, JSON.stringify(next)) } catch {}
+  }
+
+  function activate() {
+    onNavigate?.(feature.target)
+    dismiss()
+  }
+
+  return (
+    <div style={{
+      position: 'relative',
+      background: 'linear-gradient(180deg, #ffffff 0%, #fafafc 100%)',
+      border: '1px solid #ececf0',
+      borderRadius: 11,
+      padding: '11px 12px 12px 12px',
+      boxShadow: '0 1px 2px rgba(0,0,0,0.025), inset 0 1px 0 rgba(255,255,255,0.7)',
+      fontFamily: "'Inter', system-ui, sans-serif",
+    }}>
+      {/* Brand-tinted left accent rail so the card reads as a promo, not a
+          duplicate of the UsageBar below it. */}
+      <span aria-hidden style={{
+        position: 'absolute', left: 0, top: 12, bottom: 12,
+        width: 2, borderRadius: 100,
+        background: 'linear-gradient(180deg, #e5251b 0%, rgba(229,37,27,0.35) 100%)',
+      }}/>
+
+      {/* Dismiss × */}
+      <button
+        type="button"
+        onClick={dismiss}
+        aria-label="Dismiss"
+        style={{
+          position: 'absolute', top: 7, right: 7,
+          width: 20, height: 20, borderRadius: 6,
+          border: 'none', background: 'transparent',
+          color: 'rgba(10,10,15,0.40)',
+          cursor: 'pointer',
+          display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+          transition: 'background 0.14s ease, color 0.14s ease',
+        }}
+        onMouseEnter={e => { e.currentTarget.style.background = 'rgba(15,15,19,0.06)'; e.currentTarget.style.color = '#0a0a0f' }}
+        onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'rgba(10,10,15,0.40)' }}
+      >
+        <XIcon size={12} strokeWidth={2} />
+      </button>
+
+      <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10, paddingLeft: 6 }}>
+        {/* Sparkle icon in a brand-tinted circle */}
+        <span style={{
+          flexShrink: 0,
+          width: 26, height: 26, borderRadius: 8,
+          display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+          background: 'rgba(229,37,27,0.08)',
+          color: '#e5251b',
+          marginTop: 1,
+        }}>
+          <Sparkles size={14} strokeWidth={2} />
+        </span>
+        <div style={{ minWidth: 0, flex: 1 }}>
+          <p style={{
+            fontSize: 9.5, fontWeight: 800, color: '#e5251b',
+            letterSpacing: '0.11em', textTransform: 'uppercase',
+            marginBottom: 4,
+          }}>
+            What's new
+          </p>
+          <p style={{
+            fontSize: 12.5, fontWeight: 600, color: '#0a0a0f',
+            letterSpacing: '-0.01em', lineHeight: 1.35,
+            paddingRight: 20,  // clear the dismiss x
+            marginBottom: 4,
+          }}>
+            {feature.headline}
+          </p>
+          <p style={{
+            fontSize: 11.5, fontWeight: 400, color: 'rgba(10,10,15,0.55)',
+            letterSpacing: '-0.01em', lineHeight: 1.5,
+            marginBottom: 8,
+          }}>
+            {feature.body}
+          </p>
+          <button
+            type="button"
+            onClick={activate}
+            style={{
+              display: 'inline-flex', alignItems: 'center', gap: 4,
+              padding: 0, border: 'none', background: 'transparent',
+              cursor: 'pointer',
+              color: '#e5251b',
+              fontSize: 12, fontWeight: 700,
+              letterSpacing: '-0.01em',
+              fontFamily: 'inherit',
+            }}
+            onMouseEnter={e => { e.currentTarget.style.color = '#a50f07' }}
+            onMouseLeave={e => { e.currentTarget.style.color = '#e5251b' }}
+          >
+            {feature.cta}
+            <ArrowRight size={12} strokeWidth={2.4} />
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 /* ─── Channel switcher dropdown ─────────────────────────────────────────── */
 function ChannelSwitcher({ channels, channelsAllowed, canAddMore, currentChannelId }) {
   const [open, setOpen] = useState(false)
@@ -2185,8 +2348,8 @@ export default function Dashboard() {
 
         </nav>
 
-        {/* Sidebar footer — one tight block. Single divider, usage on top,
-            a low-contrast Refer | Sign out row underneath. */}
+        {/* Sidebar footer — one tight block. Single divider, then a
+            What's-new promo card, then UsageBar, then Refer | Sign out. */}
         {data && (
           <div style={{
             padding: '14px 16px 12px',
@@ -2194,6 +2357,10 @@ export default function Dashboard() {
             flexShrink: 0,
             display: 'flex', flexDirection: 'column', gap: 10,
           }}>
+            <WhatsNewCard
+              channelId={data.channel?.channel_id}
+              onNavigate={(target) => setNav(target)}
+            />
             <UsageBar
               channelId={data.channel?.channel_id}
               email={data.channel?.email}
