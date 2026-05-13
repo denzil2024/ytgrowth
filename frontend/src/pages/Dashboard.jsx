@@ -3966,7 +3966,7 @@ export default function Dashboard() {
                   )}
                 </div>
               </div>
-            </>
+            </div>
           )}
 
           {/* ── VIDEOS ───────────────────────────────────────────────── */}
@@ -4357,7 +4357,7 @@ export default function Dashboard() {
                   </div>
                 ) : null
               })()}
-            </div>
+            </>
           )}
 
           {/* ── PATTERNS (legacy block) ─────────────────────────────────
