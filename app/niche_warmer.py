@@ -1,15 +1,24 @@
 """
 Niche search pre-warmer.
 
-Goal: pre-populate `youtube_search_cache` with the raw YouTube search.list
-response for ~150 popular creator niches, so SEO Studio / Outliers /
-Thumbnail IQ user clicks land in cache at 0 quota cost instead of paying
-100 units per query.
+Goal: keep the queries your users *actually* run pre-cached, so SEO Studio /
+Outliers / Thumbnail IQ clicks land in cache at 0 quota cost instead of
+paying 100 units per query.
 
-Runs nightly via app/scheduler.py. Each run refreshes the N oldest entries
-(default 20 niches per run = ~2,000 units/night). A full pass covers the
-seed list in ~7 nights and naturally rotates as user-initiated searches
-add new entries.
+Strategy is popularity-driven, not guessed:
+  1. Every cache hit in app/seo._search_youtube_once increments hit_count
+     on the row. Over a day this gives us a real demand histogram.
+  2. The nightly warmer picks the top-N stale rows by hit_count and
+     refreshes them. So the cache stays hot for the queries your real
+     users run, automatically — no curation required.
+  3. For cold-start (empty cache, no usage data yet) it falls back to
+     NICHE_SEEDS, a hand-picked starter list. Over time this fades away
+     as real usage takes over.
+
+Runs nightly via app/scheduler.py at 04:00 UTC. Each run refreshes
+WARM_PER_RUN entries (default 20 = ~2,000 units/night). Skips anything
+fresher than SKIP_IF_FRESHER_THAN_HOURS hours so we never re-spend quota
+on something we just fetched.
 
 Respects YT_QUOTA_PAUSED. If the flag is set, the warmer skips silently —
 the cache stays whatever it already was and SEO Studio still degrades
@@ -112,44 +121,79 @@ def _yt_client_anon():
 
 
 def _pick_targets(db) -> list[str]:
-    """Pick WARM_PER_RUN niches to warm next: anything in NICHE_SEEDS whose
-    cache row is missing or older than SKIP_IF_FRESHER_THAN_HOURS hours.
+    """Pick the next batch of queries to warm.
 
-    Sorted oldest-first so the warmer naturally rotates through the list."""
+    Strategy (popularity-first, seeds as cold-start fallback):
+
+    1. Pull the top N stale cache rows ordered by hit_count DESC. These are
+       the queries your users *actually* run — refreshing them keeps the
+       most-loved cache entries hot.
+    2. If we have fewer than WARM_PER_RUN real-usage candidates (early
+       days, or a quiet period), fill the rest from NICHE_SEEDS that
+       aren't already fresh in the cache. This bootstraps the pool so
+       day-one users still get fast results.
+
+    "Stale" = older than SKIP_IF_FRESHER_THAN_HOURS hours, so we never
+    burn quota refreshing a row that's already fresh enough."""
     from database.models import YoutubeSearchCache
     from app.seo import _normalize_cache_query
 
-    # Build a map of cache_key → cached_at for all seeds in one query
-    seed_keys = [
-        f"seo:{_normalize_cache_query(n)}|50|relevance"
-        for n in NICHE_SEEDS
-    ]
-    rows = (
+    now    = datetime.datetime.now(datetime.timezone.utc)
+    cutoff = now - datetime.timedelta(hours=SKIP_IF_FRESHER_THAN_HOURS)
+
+    # ── Step 1: popular stale entries (real user demand) ──────────────────
+    popular_rows = (
         db.query(YoutubeSearchCache)
-          .filter(YoutubeSearchCache.cache_key.in_(seed_keys))
+          .filter(YoutubeSearchCache.cache_key.like("seo:%"))
+          .filter(YoutubeSearchCache.hit_count > 0)
+          .order_by(YoutubeSearchCache.hit_count.desc())
+          .limit(WARM_PER_RUN * 3)  # overscan so we have room to filter stale
           .all()
     )
-    by_key = {r.cache_key: r for r in rows}
-
-    cutoff = datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(
-        hours=SKIP_IF_FRESHER_THAN_HOURS
-    )
-    candidates: list[tuple[str, datetime.datetime | None]] = []
-    for niche in NICHE_SEEDS:
-        key = f"seo:{_normalize_cache_query(niche)}|50|relevance"
-        row = by_key.get(key)
-        if not row:
-            candidates.append((niche, None))  # missing → highest priority
-            continue
+    picks: list[str] = []
+    for row in popular_rows:
         cached_at = row.cached_at
         if cached_at and cached_at.tzinfo is None:
             cached_at = cached_at.replace(tzinfo=datetime.timezone.utc)
-        if not cached_at or cached_at < cutoff:
-            candidates.append((niche, cached_at))
+        if cached_at and cached_at >= cutoff:
+            continue  # still fresh, skip
+        # Prefer the original query the user typed; fall back to the
+        # normalised key tail if we don't have one stored yet.
+        query = row.original_query
+        if not query:
+            # cache_key format: "seo:<normalised>|<maxResults>|<order>"
+            try:
+                query = row.cache_key.split("seo:", 1)[1].split("|", 1)[0]
+            except Exception:
+                continue
+        if query and query not in picks:
+            picks.append(query)
+        if len(picks) >= WARM_PER_RUN:
+            break
 
-    # None (missing) sorts before any datetime — exactly what we want
-    candidates.sort(key=lambda x: (x[1] is not None, x[1] or datetime.datetime.min.replace(tzinfo=datetime.timezone.utc)))
-    return [n for n, _ in candidates[:WARM_PER_RUN]]
+    # ── Step 2: backfill from NICHE_SEEDS if popularity didn't fill it ───
+    if len(picks) < WARM_PER_RUN:
+        seed_keys = {
+            n: f"seo:{_normalize_cache_query(n)}|50|relevance"
+            for n in NICHE_SEEDS
+        }
+        existing_keys = set(
+            r.cache_key for r in
+            db.query(YoutubeSearchCache.cache_key)
+              .filter(YoutubeSearchCache.cache_key.in_(list(seed_keys.values())))
+              .filter(YoutubeSearchCache.cached_at >= cutoff)
+              .all()
+        )
+        for niche, key in seed_keys.items():
+            if key in existing_keys:
+                continue  # seed is already fresh
+            if niche in picks:
+                continue
+            picks.append(niche)
+            if len(picks) >= WARM_PER_RUN:
+                break
+
+    return picks
 
 
 def warm_pool():

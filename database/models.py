@@ -104,11 +104,21 @@ class YoutubeSearchCache(Base):
     Keyword Research, and Competitor search.
 
     cache_key encodes the full query signature so different param sets don't
-    collide (e.g. same query at maxResults=25 vs 50 are separate rows)."""
-    __tablename__ = "youtube_search_cache"
-    cache_key   = Column(String,   primary_key=True)
-    result_json = Column(Text,     nullable=False)
-    cached_at   = Column(DateTime, default=_now, index=True)
+    collide (e.g. same query at maxResults=25 vs 50 are separate rows).
+
+    `hit_count` + `last_hit_at` turn this table into a usage log too: the
+    nightly warmer reads the top-N most-hit stale entries and refreshes
+    those, so we pre-warm what users *actually* search, not a guess list.
+
+    `original_query` stores the un-normalised user query so admin tools
+    can show readable popularity reports."""
+    __tablename__   = "youtube_search_cache"
+    cache_key       = Column(String,   primary_key=True)
+    original_query  = Column(String,   nullable=True)
+    result_json     = Column(Text,     nullable=False)
+    cached_at       = Column(DateTime, default=_now, index=True)
+    hit_count       = Column(Integer,  default=0,    index=True)
+    last_hit_at     = Column(DateTime, nullable=True, index=True)
 
 
 class CompetitorVideoIdeas(Base):
@@ -650,8 +660,18 @@ try:
         "CREATE INDEX IF NOT EXISTS ix_idea_proof_cache_refreshed_at ON idea_proof_cache (refreshed_at)",
         # Generic cross-user YouTube search cache. Keyed by full query
         # signature so SEO Studio + Outliers + Keyword Research share hits.
+        # hit_count + last_hit_at let the nightly warmer pre-refresh the
+        # queries users actually run instead of a hardcoded guess list.
         "CREATE TABLE IF NOT EXISTS youtube_search_cache (cache_key TEXT PRIMARY KEY, result_json TEXT NOT NULL, cached_at DATETIME)",
         "CREATE INDEX IF NOT EXISTS ix_youtube_search_cache_cached_at ON youtube_search_cache (cached_at)",
+        # Backfill columns onto already-deployed tables. Each ALTER is
+        # idempotently retried; failures (column already exists) are
+        # silently swallowed by the migration runner below.
+        "ALTER TABLE youtube_search_cache ADD COLUMN original_query TEXT",
+        "ALTER TABLE youtube_search_cache ADD COLUMN hit_count INTEGER DEFAULT 0",
+        "ALTER TABLE youtube_search_cache ADD COLUMN last_hit_at DATETIME",
+        "CREATE INDEX IF NOT EXISTS ix_youtube_search_cache_hit_count ON youtube_search_cache (hit_count)",
+        "CREATE INDEX IF NOT EXISTS ix_youtube_search_cache_last_hit_at ON youtube_search_cache (last_hit_at)",
     ]:
         try:
             _conn.execute(_text(_stmt))

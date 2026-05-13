@@ -264,6 +264,47 @@ def admin_warm_niches(request: Request):
         return JSONResponse({"error": str(e)}, status_code=500)
 
 
+# ── Search popularity report (admin-only) ───────────────────────────────────
+# Show the top YouTube-search queries your users have actually run, ranked
+# by hit_count. Read-only — useful for understanding which niches matter,
+# and confirming the warmer is refreshing the right rows.
+#
+#   GET /admin/search-popularity?limit=50
+@router.get("/search-popularity")
+def admin_search_popularity(request: Request, limit: int = 50):
+    is_admin, _ = _is_admin(request)
+    if not is_admin:
+        return JSONResponse({"error": "Forbidden"}, status_code=403)
+
+    from database.models import YoutubeSearchCache
+    limit = max(1, min(int(limit or 50), 500))
+
+    db = SessionLocal()
+    try:
+        rows = (
+            db.query(YoutubeSearchCache)
+              .filter(YoutubeSearchCache.cache_key.like("seo:%"))
+              .order_by(YoutubeSearchCache.hit_count.desc())
+              .limit(limit)
+              .all()
+        )
+        out = []
+        for r in rows:
+            out.append({
+                "query":        r.original_query or r.cache_key,
+                "hit_count":    int(r.hit_count or 0),
+                "last_hit_at":  r.last_hit_at.isoformat() if r.last_hit_at else None,
+                "cached_at":    r.cached_at.isoformat() if r.cached_at else None,
+            })
+        return JSONResponse({
+            "total_rows":     db.query(YoutubeSearchCache).count(),
+            "showing":        len(out),
+            "top_searches":   out,
+        })
+    finally:
+        db.close()
+
+
 # ── Plan toggle (admin-only) ────────────────────────────────────────────────
 # Flip a user's subscription plan from the browser for one-off paywall QA
 # without touching the database directly. Updates user_subscriptions.plan;

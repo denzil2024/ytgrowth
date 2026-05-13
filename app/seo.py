@@ -312,7 +312,17 @@ def _search_youtube_once(youtube, query: str, max_results: int = 25, order: str 
             if age_hours < _SEARCH_CACHE_TTL_HOURS:
                 try:
                     cached = _json.loads(row.result_json) or {}
-                    print(f"[seo] cache HIT '{query}' (age {age_hours:.1f}h, saved 100 units)")
+                    # Bump popularity counter so the nightly warmer knows
+                    # this query is worth pre-refreshing. Best-effort —
+                    # never block on the write.
+                    try:
+                        row.hit_count = (row.hit_count or 0) + 1
+                        row.last_hit_at = _dt.datetime.now(_dt.timezone.utc)
+                        db.commit()
+                    except Exception:
+                        try: db.rollback()
+                        except Exception: pass
+                    print(f"[seo] cache HIT '{query}' (age {age_hours:.1f}h, hits={row.hit_count}, saved 100 units)")
                     return cached
                 except Exception:
                     pass  # corrupt cache, refetch
@@ -362,11 +372,20 @@ def _search_youtube_once(youtube, query: str, max_results: int = 25, order: str 
         if row:
             row.result_json = payload
             row.cached_at = now
+            # Count the live fetch itself as a hit so first-time queries
+            # don't have a 0 popularity score forever.
+            row.hit_count = (row.hit_count or 0) + 1
+            row.last_hit_at = now
+            if not row.original_query:
+                row.original_query = query
         else:
             db.add(YoutubeSearchCache(
                 cache_key=cache_key,
+                original_query=query,
                 result_json=payload,
                 cached_at=now,
+                hit_count=1,
+                last_hit_at=now,
             ))
         db.commit()
     except Exception as e:
