@@ -238,6 +238,32 @@ def _build_overview():
         db.close()
 
 
+# ── Niche pool warmer (admin-only) ──────────────────────────────────────────
+# Manually fire the SEO Studio cache pre-warmer outside its nightly cron.
+# Useful right after a quota bump lands so you can warm the pool immediately
+# instead of waiting for 04:00 UTC.
+#
+#   GET /admin/warm-niches            — fires a single batch (~20 niches, ~2K units)
+#
+# The warmer itself respects YT_QUOTA_PAUSED — if the kill-switch is on,
+# it logs and exits without spending quota.
+@router.get("/warm-niches")
+def admin_warm_niches(request: Request):
+    is_admin, _ = _is_admin(request)
+    if not is_admin:
+        return JSONResponse({"error": "Forbidden"}, status_code=403)
+    try:
+        from app.niche_warmer import warm_pool, WARM_PER_RUN
+        import threading
+        threading.Thread(target=warm_pool, daemon=True).start()
+        return JSONResponse({
+            "ok": True,
+            "message": f"Niche warmer started in background. Up to {WARM_PER_RUN} niches will refresh (~{WARM_PER_RUN * 100} units). Check Railway logs for [niche_warmer] entries.",
+        })
+    except Exception as e:
+        return JSONResponse({"error": str(e)}, status_code=500)
+
+
 # ── Plan toggle (admin-only) ────────────────────────────────────────────────
 # Flip a user's subscription plan from the browser for one-off paywall QA
 # without touching the database directly. Updates user_subscriptions.plan;

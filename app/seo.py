@@ -255,14 +255,41 @@ def _is_short(title: str, duration_seconds: int) -> bool:
 
 _SEARCH_CACHE_TTL_HOURS = 24
 
+# Minimal stopword set for cache-key normalisation. Kept tiny on purpose:
+# words like "fitness", "cooking", "best" are the actual discriminators
+# between niches and must NOT be stripped. Only language-glue words go here.
+_CACHE_STOPWORDS = {
+    "a", "an", "the", "and", "or", "but", "of", "to", "for", "in",
+    "on", "at", "with", "by", "from", "is", "are", "was", "were",
+    "be", "been", "being", "i", "me", "my", "you", "your",
+}
+
+
+def _normalize_cache_query(query: str) -> str:
+    """Normalise a search query so equivalent phrasings hit the same cache.
+
+    Lowercases, strips non-alphanumerics, drops minimal stopwords, then
+    sorts remaining tokens alphabetically. Collapses 'Best Fitness Tips!',
+    'fitness tips best', and 'the best fitness tips' all to 'best fitness
+    tips'. Empty result falls back to the raw lowered query so we still
+    cache *something*."""
+    raw = (query or "").strip().lower()
+    cleaned = re.sub(r"[^a-z0-9\s]", " ", raw)
+    tokens = [t for t in cleaned.split() if t and t not in _CACHE_STOPWORDS]
+    if not tokens:
+        return raw
+    tokens.sort()
+    return " ".join(tokens)
+
 
 def _search_youtube_once(youtube, query: str, max_results: int = 25, order: str = "relevance") -> dict[str, dict]:
     """Run a single YouTube search. Returns raw candidates (Shorts not yet filtered — done in batch).
 
-    Cached cross-user in youtube_search_cache for 24h. One search.list call
-    (100 quota units) now serves every user who searches the same query
-    within the TTL — turns SEO Studio's 1,000-unit-per-run cost into
-    ~0 units once a niche has been warmed."""
+    Cached cross-user in youtube_search_cache for 24h, keyed on a
+    normalised form of the query so 'Best Fitness Tips' and 'fitness tips'
+    share the same row. A background warmer (app/niche_warmer.py)
+    pre-populates the cache nightly for ~150 popular niches, so most user
+    clicks hit cache at 0 quota cost."""
     from app.utils import yt_quota_paused
     if yt_quota_paused():
         print(f"[seo] search skipped — YT_QUOTA_PAUSED=1 (query='{query}')")
@@ -272,7 +299,7 @@ def _search_youtube_once(youtube, query: str, max_results: int = 25, order: str 
     import datetime as _dt
     from database.models import SessionLocal, YoutubeSearchCache
 
-    cache_key = f"seo:{query.strip().lower()}|{max_results}|{order}"
+    cache_key = f"seo:{_normalize_cache_query(query)}|{max_results}|{order}"
 
     db = SessionLocal()
     try:

@@ -98,6 +98,33 @@ scheduler.add_job(
 )
 
 
+# ── Job: Niche search-cache warmer ────────────────────────────────────────────
+# Runs nightly at 04:00 UTC. Refreshes the next batch of stale niches from
+# app/niche_warmer.NICHE_SEEDS so SEO Studio / Outliers / Thumbnail IQ user
+# clicks land in cache at 0 quota cost. Costs ~2,000 units/night (20 niches
+# × 100 units) and skips entries refreshed in the last 36h, so steady-state
+# burn is well under the daily quota even on the free 10K tier.
+
+def _run_niche_warmer():
+    if _quota_paused():
+        print("[niche_warmer] run skipped — YT_QUOTA_PAUSED=1")
+        return
+    try:
+        from app.niche_warmer import warm_pool
+        warm_pool()
+    except Exception as e:
+        print(f"[niche_warmer] job failed: {e}")
+
+
+scheduler.add_job(
+    _run_niche_warmer,
+    trigger="cron",
+    hour=4, minute=0,  # Daily 04:00 UTC — outside the morning quota-reset
+    id="niche_warmer",
+    replace_existing=True,
+)
+
+
 # ── Niche outliers: now lazy per-channel ──────────────────────────────────────
 # The dashboard hero card used to read from a shared per-niche cache that this
 # job refreshed weekly. We replaced that with a per-channel cache populated
