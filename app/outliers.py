@@ -395,6 +395,14 @@ def _run_unified_search(
         r["why_now"]       = ex.get("why_now", "")
         r["explanation"]   = ex.get("why_worked", "")   # back-compat alias
 
+        # Personalised winnable score — how realistic is this opportunity
+        # FOR THIS USER given their channel size, niche overlap, and how
+        # fresh the wave is. Attached directly to the video dict so both
+        # the Videos and Thumbnails tabs see it (shared object refs).
+        ws, breakdown = _compute_winnable_score(r, my_subscribers, niche_keywords)
+        r["winnable_score"]     = ws
+        r["winnable_breakdown"] = breakdown
+
     for c in top_channels:
         ex = channel_explanations.get(c["channel_id"], {}) or {}
         c["why_this_channel"] = ex.get("why_this_channel", "")
@@ -901,6 +909,81 @@ def _score_videos(videos: list[dict]) -> list[dict]:
         raw = v["views_per_sub"] / median_vps
         v["outlier_score"] = round(raw, 1)
     return videos
+
+
+def _compute_winnable_score(
+    video: dict,
+    my_subscribers: int,
+    niche_keywords: list[str],
+) -> tuple[int, dict]:
+    """
+    How realistic is it for THIS user to capture this opportunity?
+
+    VidIQ shows everyone the same outlier multiplier. A 12k-sub creator and
+    a 800k-sub creator are looking at the same outlier and getting the same
+    score — useless for prioritisation. This score personalises the list.
+
+    Inputs (all derived from data already in the Outliers response):
+      • Channel size gap — outlier_subs vs my_subs. Dominant signal.
+      • Niche overlap — how many of my niche keywords appear in the title.
+      • Recency — fresher waves are catchable, old ones are saturated.
+      • Niche match flag — set earlier in the pipeline via channel-recent-
+        uploads scan. Boolean bonus.
+
+    Returns (score 0-10, breakdown dict). Breakdown is shown in the UI
+    tooltip so users can see WHY a video scored what it did.
+    """
+    # ─ Channel size gap (weight 50%) ──────────────────────────────────────
+    outlier_subs = max(int(video.get("channel_subscribers") or 0), 1)
+    my_subs      = max(int(my_subscribers or 0), 1)
+    ratio        = outlier_subs / my_subs
+    if   ratio <= 2:     size_score = 10
+    elif ratio <= 5:     size_score = 7
+    elif ratio <= 20:    size_score = 4
+    elif ratio <= 100:   size_score = 2
+    else:                size_score = 0
+
+    # ─ Niche overlap (weight 25%) ────────────────────────────────────────
+    title_lower = (video.get("title") or "").lower()
+    nk = [k.strip().lower() for k in (niche_keywords or []) if k and len(k.strip()) > 2]
+    overlap = sum(1 for k in nk if k in title_lower)
+    if   overlap >= 3:   niche_score = 10
+    elif overlap == 2:   niche_score = 7
+    elif overlap == 1:   niche_score = 5
+    else:                niche_score = 3
+
+    # ─ Recency (weight 15%) ──────────────────────────────────────────────
+    days_old = None
+    pub = video.get("published_at") or ""
+    if pub:
+        try:
+            dt = datetime.strptime(pub[:10], "%Y-%m-%d")
+            days_old = (datetime.utcnow() - dt).days
+        except Exception:
+            days_old = None
+    if   days_old is None:  recency_score = 5
+    elif days_old <= 30:    recency_score = 10
+    elif days_old <= 90:    recency_score = 7
+    elif days_old <= 180:   recency_score = 4
+    else:                   recency_score = 2
+
+    # ─ Niche match bonus (weight 10%) ────────────────────────────────────
+    match_score = 10 if video.get("is_niche_matched") else 4
+
+    # Weighted blend → 0-10 integer
+    raw = (size_score    * 0.50 +
+           niche_score   * 0.25 +
+           recency_score * 0.15 +
+           match_score   * 0.10)
+    score = max(0, min(10, round(raw)))
+
+    breakdown = {
+        "channel_size": {"score": size_score, "ratio": round(ratio, 1)},
+        "niche_overlap": {"score": niche_score, "matches": overlap},
+        "recency":       {"score": recency_score, "days_old": days_old},
+        "niche_match":   {"score": match_score, "matched": bool(video.get("is_niche_matched"))},
+    }
+    return score, breakdown
 
 
 # ─── Claude explanations (batched — one call per search) ──────────────────────

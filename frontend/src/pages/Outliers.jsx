@@ -1251,10 +1251,26 @@ function VideoResultCard({ item, kind, onOpen }) {
         </p>
 
         {/* Footer — metrics cluster LEFT (not spread across full width) so
-            the labels sit close to their values and don't feel stranded. */}
+            the labels sit close to their values and don't feel stranded.
+            Winnable is the personalised signal: 0-10 score for how realistic
+            this opportunity is for THIS user given their channel size,
+            niche overlap, and how fresh the wave is. Colour-coded so green
+            chips draw the eye to videos the user can actually catch. */}
+        {(() => {
+          const ws        = typeof item.winnable_score === 'number' ? item.winnable_score : null
+          const wsColor   = ws == null ? C.text3 : ws >= 7 ? C.green : ws >= 4 ? C.amber : C.red
+          const wsDisplay = ws == null ? '—' : `${ws}/10`
+          const wb        = item.winnable_breakdown || {}
+          const wsTip     = ws == null ? 'Winnable score not available for this video.'
+                          : `How realistic this is for your channel (size, niche overlap, freshness combined). ` +
+                            (wb.channel_size ? `Size ratio ${wb.channel_size.ratio}× yours. ` : '') +
+                            (wb.niche_overlap ? `${wb.niche_overlap.matches} niche-keyword match${wb.niche_overlap.matches === 1 ? '' : 'es'}. ` : '') +
+                            (wb.recency && wb.recency.days_old != null ? `Posted ${wb.recency.days_old}d ago.` : '')
+          return (
         <div style={{ marginTop: 'auto', paddingTop: 18, borderTop: '1px solid #eeeef3' }}>
           <div style={{ display: 'flex', gap: 28, marginBottom: 18, flexWrap: 'wrap' }}>
             {[
+              { label: 'Winnable', display: wsDisplay,                                                                     color: wsColor,    tip: wsTip },
               { label: 'Outlier', display: `${item.outlier_score}×`,                                                       color: tier.color, tip: 'How many times this video beat its niche cohort\'s median views-per-subscriber. 5×+ is breakout.' },
               { label: 'VPS',     display: vpsDisplay,                                                                     color: C.text1,    tip: 'Views per subscriber — normalises out raw channel size so small-channel wins show up.' },
               { label: 'Eng',     display: engPct != null ? `${engPct.toFixed(1)}%` : '—',                                  color: engColor,   tip: 'Engagement rate = likes ÷ views. 3%+ strong, 1–3% avg, <1% weak.' },
@@ -1282,6 +1298,8 @@ function VideoResultCard({ item, kind, onOpen }) {
             {ctaLabel}
           </button>
         </div>
+          )
+        })()}
       </div>
     </div>
   )
