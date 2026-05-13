@@ -606,6 +606,9 @@ function VideoTile({ video, baselineViews }) {
         display: 'flex', flexDirection: 'column', gap: 8,
         width: 200, flexShrink: 0,
       }}>
+      {/* Thumbnail — kept clean of overlays except the view chip, which sits in
+          the bottom-right where YouTube itself places duration so it never
+          collides with creator hooks (which always live top-left). */}
       <div style={{
         position: 'relative', width: '100%', aspectRatio: '16 / 9',
         borderRadius: 9, overflow: 'hidden', background: '#0f0f13',
@@ -623,18 +626,7 @@ function VideoTile({ video, baselineViews }) {
             style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
           />
         )}
-        {/* Multiplier pill (top-left) — only shown if this is actually an outlier */}
-        {mult && (
-          <div style={{
-            position: 'absolute', top: 7, left: 7,
-            padding: '2px 8px', borderRadius: 99,
-            background: C.red, color: '#fff',
-            fontSize: 11, fontWeight: 900, letterSpacing: '-0.3px',
-            fontVariantNumeric: 'tabular-nums',
-            boxShadow: '0 1px 3px rgba(229,37,27,0.45)',
-          }}>{mult}</div>
-        )}
-        {/* View chip (bottom-right) */}
+        {/* View chip (bottom-right, YouTube duration zone) */}
         <div style={{
           position: 'absolute', right: 7, bottom: 7,
           padding: '2px 7px', borderRadius: 5,
@@ -648,17 +640,35 @@ function VideoTile({ video, baselineViews }) {
         letterSpacing: '-0.1px',
         display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden',
       }}>{video.title}</p>
+      {/* Meta line: multiplier pill (only if outlier) inline with channel + age.
+          Pill lives below the thumbnail, not on top of it, so creator hooks stay
+          fully visible. */}
       <p style={{
         fontSize: 11, color: C.text3, fontWeight: 500,
-        whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
-      }}>{video.channel || '—'}{age ? <span style={{ color: C.text4 }}>{` · ${age}`}</span> : null}</p>
+        display: 'flex', alignItems: 'center', gap: 6,
+        whiteSpace: 'nowrap', overflow: 'hidden',
+      }}>
+        {mult && (
+          <span style={{
+            display: 'inline-flex', alignItems: 'center',
+            padding: '1px 6px', borderRadius: 99,
+            background: C.red, color: '#fff',
+            fontSize: 10, fontWeight: 900, letterSpacing: '-0.2px',
+            fontVariantNumeric: 'tabular-nums', flexShrink: 0,
+          }}>{mult}</span>
+        )}
+        <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>
+          {video.channel || '—'}{age ? ` · ${age}` : ''}
+        </span>
+      </p>
     </a>
   )
 }
 
 // ── Vertical tile (Winning shorts) ──
-// 9:16 thumbnail, multiplier pill top-left, view chip bottom-right.
-// Title (1 line) + channel below.
+// 9:16 thumbnail with the view chip bottom-right. Multiplier pill sits
+// INLINE with the channel name below the thumbnail (not on top of it),
+// so the creator's hook content stays fully visible.
 function ShortTile({ video, baselineViews }) {
   const views = video.view_count || video.views || 0
   const mult  = _fmtMultiplier(views, baselineViews)
@@ -688,16 +698,6 @@ function ShortTile({ video, baselineViews }) {
             style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
           />
         )}
-        {mult && (
-          <div style={{
-            position: 'absolute', top: 7, left: 7,
-            padding: '2px 7px', borderRadius: 99,
-            background: C.red, color: '#fff',
-            fontSize: 11, fontWeight: 900, letterSpacing: '-0.3px',
-            fontVariantNumeric: 'tabular-nums',
-            boxShadow: '0 1px 3px rgba(229,37,27,0.45)',
-          }}>{mult}</div>
-        )}
         <div style={{
           position: 'absolute', right: 6, bottom: 6,
           padding: '2px 6px', borderRadius: 5,
@@ -713,8 +713,22 @@ function ShortTile({ video, baselineViews }) {
       }}>{video.title}</p>
       <p style={{
         fontSize: 10.5, color: C.text3, fontWeight: 500,
-        whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
-      }}>{video.channel || '—'}</p>
+        display: 'flex', alignItems: 'center', gap: 5,
+        whiteSpace: 'nowrap', overflow: 'hidden',
+      }}>
+        {mult && (
+          <span style={{
+            display: 'inline-flex', alignItems: 'center',
+            padding: '1px 5px', borderRadius: 99,
+            background: C.red, color: '#fff',
+            fontSize: 9.5, fontWeight: 900, letterSpacing: '-0.2px',
+            fontVariantNumeric: 'tabular-nums', flexShrink: 0,
+          }}>{mult}</span>
+        )}
+        <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>
+          {video.channel || '—'}
+        </span>
+      </p>
     </a>
   )
 }
@@ -793,7 +807,11 @@ function NicheHeatCard({ videos, shorts, primaryPhrase }) {
 
   return (
     <div className="seo-suggestion-card" style={{
-      borderTop: `3px solid ${C.red}`,
+      // Charcoal stripe, not red. The Overused Angle card directly above this
+      // one is red (warning), so a second red stripe here used to read as one
+      // continuous section. Niche Heat is data, not a warning; the red flame
+      // icon + LIVE pill carry plenty of heat signal already.
+      borderTop: `3px solid ${C.text1}`,
       marginBottom: 18,
     }}>
       <div style={{ padding: '20px 24px 22px' }}>
@@ -890,12 +908,98 @@ function NicheHeatCard({ videos, shorts, primaryPhrase }) {
 // Why/Angle prose so it doesn't compete for attention with the chart, action
 // row at the bottom. No click-to-expand — every value-add is visible at first
 // glance, matching the "lure the user with proof" feedback memory.
-// ── TitleTileMockup ──
-// 16:9 dark tile rendering the proposed title overlaid in white bold type,
-// so each suggestion previews like a future YouTube thumbnail. Sits as the
-// visual hero of each suggestion card, replacing the standalone <h3> we
-// used before. Severity color tints the gradient corner so weak titles
-// blush red and strong ones glow green without prose.
+// Cheap text-similarity ranker used to pick which competing videos to show
+// next to each suggestion. Jaccard over lower-cased, stopword-stripped word
+// tokens of length 3+. Not perfect, but accurate enough that the 2 thumbs
+// next to a suggestion read as "videos this title would compete with."
+const _SUG_STOPWORDS = new Set([
+  'the','and','for','with','from','this','that','your','you','my','our','their',
+  'how','what','why','when','where','about','into','they','them','will','can',
+  'are','was','were','has','have','had','its','his','her','out','one','two',
+  'top','best','new','easy','quick','simple','vs',
+])
+function _tokenize(str) {
+  const set = new Set()
+  for (const word of (str || '').toLowerCase().replace(/[^a-z0-9\s]/g, ' ').split(/\s+/)) {
+    if (word.length >= 3 && !_SUG_STOPWORDS.has(word)) set.add(word)
+  }
+  return set
+}
+function _jaccard(a, b) {
+  if (!a.size || !b.size) return 0
+  let inter = 0
+  for (const t of a) if (b.has(t)) inter++
+  return inter / (a.size + b.size - inter)
+}
+function pickSimilarCompetitors(target, pool, n) {
+  if (!Array.isArray(pool) || pool.length === 0) return []
+  const targetTokens = _tokenize(target)
+  return pool
+    .map(v => ({ v, score: _jaccard(targetTokens, _tokenize(v.title || '')) }))
+    .sort((a, b) => (b.score - a.score) || ((b.v.view_count || b.v.views || 0) - (a.v.view_count || a.v.views || 0)))
+    .slice(0, n)
+    .map(r => r.v)
+}
+
+// ── CompetitorThumbTile ──
+// Mini landscape thumb used inside each suggestion card. Smaller than
+// VideoTile (which lives in the niche-wide strips), tuned for the
+// "Competing against" rail in SuggestionRow. View chip bottom-right.
+function CompetitorThumbTile({ video }) {
+  const views = video.view_count || video.views || 0
+  const age   = _relTimeDays(video.published_at || video.publishedAt)
+  return (
+    <a
+      href={video.video_id ? `https://www.youtube.com/watch?v=${video.video_id}` : '#'}
+      target="_blank" rel="noopener noreferrer"
+      style={{
+        textDecoration: 'none', color: 'inherit',
+        display: 'flex', flexDirection: 'column', gap: 7,
+        minWidth: 0,
+      }}>
+      <div style={{
+        position: 'relative', width: '100%', aspectRatio: '16 / 9',
+        borderRadius: 8, overflow: 'hidden', background: '#0f0f13',
+        boxShadow: '0 1px 2px rgba(0,0,0,0.08), 0 3px 10px rgba(0,0,0,0.06)',
+      }}>
+        {(video.video_id || video.thumbnail) && (
+          <img
+            src={video.video_id ? _seoYtMax(video.video_id) : video.thumbnail}
+            alt=""
+            loading="lazy"
+            referrerPolicy="no-referrer"
+            data-thumb-step="max"
+            onError={_seoThumbOnError(video.video_id, video.thumbnail)}
+            onLoad={_seoThumbOnLoad(video.video_id, video.thumbnail)}
+            style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+          />
+        )}
+        <div style={{
+          position: 'absolute', right: 6, bottom: 6,
+          padding: '2px 6px', borderRadius: 5,
+          background: 'rgba(0,0,0,0.78)',
+          color: '#fff', fontSize: 10.5, fontWeight: 800,
+          letterSpacing: '-0.2px', fontVariantNumeric: 'tabular-nums',
+        }}>{fmtNum(views)}</div>
+      </div>
+      <p style={{
+        fontSize: 12, fontWeight: 600, color: C.text1, lineHeight: 1.35,
+        letterSpacing: '-0.1px',
+        display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden',
+        minHeight: 32,
+      }}>{video.title}</p>
+      <p style={{
+        fontSize: 10.5, color: C.text3, fontWeight: 500,
+        whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
+      }}>{video.channel || '—'}{age ? <span style={{ color: C.text4 }}>{` · ${age}`}</span> : null}</p>
+    </a>
+  )
+}
+
+// Kept as a no-op for backwards compatibility — the dark mockup tile was
+// replaced by real competing thumbnails. If anything still references
+// TitleTileMockup it falls through to null instead of rendering the old
+// placeholder. Safe to delete once we've audited the rest of the page.
 function TitleTileMockup({ title, sevColor }) {
   return (
     <div style={{
@@ -960,7 +1064,7 @@ function TitleTileMockup({ title, sevColor }) {
   )
 }
 
-function SuggestionRow({ s, i, isSelected, isCopied, onCopy, onSelect, primaryPhrase }) {
+function SuggestionRow({ s, i, isSelected, isCopied, onCopy, onSelect, primaryPhrase, nicheVideos }) {
   const [mounted, setMounted] = useState(false)
   const [whyOpen, setWhyOpen] = useState(false)
   useEffect(() => {
@@ -980,6 +1084,11 @@ function SuggestionRow({ s, i, isSelected, isCopied, onCopy, onSelect, primaryPh
   const sevBg    = avgScore >= 75 ? 'rgba(5,150,105,0.10)' : avgScore >= 60 ? 'rgba(217,119,6,0.10)' : 'rgba(229,37,27,0.08)'
   const hasWhy   = !!(s.why_it_works || s.angle)
 
+  // Pick 2 real competing videos from the niche pool that look most like
+  // this specific suggestion. The list lives in the right rail of the card
+  // as "videos this title would compete with."
+  const competitors = pickSimilarCompetitors(s.title, nicheVideos, 2)
+
   return (
     <div className="seo-suggestion-card" style={{
       marginBottom: 0,
@@ -991,21 +1100,23 @@ function SuggestionRow({ s, i, isSelected, isCopied, onCopy, onSelect, primaryPh
     }}>
       <div style={{ padding: '18px 22px 20px' }}>
 
-        {/* ── Eyebrow row: rank chip + label + keyword chip + (right) score chip ── */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14, flexWrap: 'wrap' }}>
+        {/* ── Eyebrow row: neutral rank chip + label + keyword chip + (right) score chip ──
+            The rank chip is now a charcoal-on-tint neutral so amber is reserved
+            for the "Solid 68" severity tier and nothing else. */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12, flexWrap: 'wrap' }}>
           <div style={{
             flexShrink: 0,
-            width: 26, height: 26, borderRadius: 7,
+            width: 24, height: 24, borderRadius: 7,
             display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-            background: 'rgba(217,119,6,0.10)',
-            border: '1px solid rgba(217,119,6,0.22)',
+            background: 'rgba(15,15,19,0.06)',
+            border: '1px solid rgba(15,15,19,0.08)',
           }}>
-            <span style={{ fontSize: 11.5, fontWeight: 800, color: C.amber, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.3px' }}>{i + 1}</span>
+            <span style={{ fontSize: 11, fontWeight: 800, color: C.text1, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.3px' }}>{i + 1}</span>
           </div>
           <span style={{
             fontSize: 11, fontWeight: 800, color: 'rgba(10,10,15,0.55)',
             letterSpacing: '0.12em', textTransform: 'uppercase',
-          }}>Title Option</span>
+          }}>Title option</span>
           {eyebrow && (
             <span style={{
               display: 'inline-flex', alignItems: 'center', gap: 5,
@@ -1032,30 +1143,67 @@ function SuggestionRow({ s, i, isSelected, isCopied, onCopy, onSelect, primaryPh
           </span>
         </div>
 
-        {/* ── Hero body: YouTube-tile mockup on the left, quality chart + length
-            sweet-spot stacked on the right. Replaces the previous standalone
-            <h3>: the title now lives INSIDE its own future-thumbnail mockup
-            so the user previews how it would appear in YouTube search results. ── */}
+        {/* ── Bold title as the hero, full width. 17/700 mirrors VideoIdeas
+            IdeaCard. Replaces the previous dark YouTube-tile mockup which
+            was decoration. ── */}
+        <h3 style={{
+          fontSize: 17, fontWeight: 700, color: C.text1,
+          letterSpacing: '-0.35px', lineHeight: 1.35,
+          marginBottom: 16,
+          display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden',
+        }}>{s.title}</h3>
+
+        {/* ── Hero body: quality chart on the left, REAL competing thumbnails
+            on the right. Each suggestion gets its own 2 most-similar winners
+            from the niche pool, picked by token-overlap with the suggestion
+            title. The right rail is the proof: "if you ship this title,
+            these are the videos you'd land next to." ── */}
         <div style={{
-          display: 'grid', gridTemplateColumns: 'minmax(0, 1.05fr) minmax(0, 1fr)', gap: 16,
+          display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 1.25fr)', gap: 16,
           marginBottom: 14,
         }}>
-          <TitleTileMockup title={s.title} sevColor={sevColor}/>
+          {/* Left: quality chart card (bars + length sweet-spot) */}
           <div style={{
             background: '#ffffff',
             border: `1px solid ${C.border}`,
-            borderLeft: `3px solid ${C.amber}`,
-            borderRadius: '0 10px 10px 0',
+            borderRadius: 10,
             padding: '14px 16px',
             boxShadow: '0 1px 2px rgba(0,0,0,0.04), 0 3px 10px rgba(0,0,0,0.04)',
             display: 'flex', flexDirection: 'column', gap: 12,
           }}>
             <div>
-              <p style={{ fontSize: 10, fontWeight: 700, color: C.amber, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 12 }}>Title quality</p>
+              <p style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 12 }}>Title quality</p>
               <ScoreBars seo={s.seo_score} ctr={s.ctr_score} hook={s.hook_score} mounted={mounted}/>
             </div>
             <div style={{ height: 1, background: C.borderLight }}/>
             <LengthSweetSpot length={s.length} mounted={mounted}/>
+          </div>
+
+          {/* Right: 2 real competing thumbnails (or a soft empty state if the
+              niche pool wasn't loaded). */}
+          <div style={{
+            background: '#ffffff',
+            border: `1px solid ${C.border}`,
+            borderRadius: 10,
+            padding: '14px 16px',
+          }}>
+            <p style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 12 }}>Competing against</p>
+            {competitors.length > 0 ? (
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: 12 }}>
+                {competitors.map((v, k) => (
+                  <CompetitorThumbTile key={v.video_id || k} video={v}/>
+                ))}
+              </div>
+            ) : (
+              <div style={{
+                background: '#fafafb', border: '1px dashed #e6e6ec', borderRadius: 8,
+                padding: '24px 14px', textAlign: 'center',
+              }}>
+                <p style={{ fontSize: 12, color: C.text3, lineHeight: 1.5 }}>
+                  No niche-similar videos found for this suggestion.
+                </p>
+              </div>
+            )}
           </div>
         </div>
 
@@ -2327,6 +2475,78 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
             onFocus={e => { e.target.style.borderColor = 'rgba(0,0,0,0.25)'; e.target.style.boxShadow = '0 0 0 4px rgba(0,0,0,0.04)' }}
             onBlur={e => { e.target.style.borderColor = '#e6e6ec'; e.target.style.boxShadow = 'none' }} />
 
+          {/* ── Surface-fit meta line. Replaces the old full Preview card, which
+              was a half-empty box repeating three identical "fits" rows when
+              everything was within budget. Single inline row, surfaces colored
+              individually: green when the title fits, red with a tiny chip
+              when it cuts. Only renders once the user has typed something. ── */}
+          {title.trim() && (() => {
+            const surfaces = [
+              { label: 'Feed',    maxChars: 45 },
+              { label: 'Mobile',  maxChars: 55 },
+              { label: 'Desktop', maxChars: 70 },
+            ]
+            const fitCount = surfaces.filter(s => title.length <= s.maxChars).length
+            const headline = fitCount === 3
+              ? 'Fits all 3 YouTube surfaces'
+              : fitCount === 0
+                ? 'Cuts on every surface'
+                : `Fits ${fitCount} of 3 surfaces`
+            const headColor = fitCount === 3 ? C.green : fitCount === 0 ? C.red : C.amber
+            return (
+              <div style={{
+                marginTop: 10,
+                display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 10,
+                fontSize: 11.5, fontVariantNumeric: 'tabular-nums',
+              }}>
+                <span style={{ fontWeight: 700, color: headColor, letterSpacing: '-0.05px' }}>{headline}</span>
+                <span style={{ color: C.text4 }}>·</span>
+                {surfaces.map((s, idx) => {
+                  const cuts = title.length > s.maxChars
+                  return (
+                    <span key={s.label} style={{ display: 'inline-flex', alignItems: 'baseline', gap: 5 }}>
+                      <span style={{ fontWeight: 700, color: C.text3, letterSpacing: '0.06em', textTransform: 'uppercase', fontSize: 10 }}>{s.label}</span>
+                      <span style={{
+                        fontWeight: 700, color: cuts ? C.red : C.text1, letterSpacing: '-0.05px',
+                      }}>{title.length}<span style={{ color: C.text4, fontWeight: 500 }}>/{s.maxChars}</span></span>
+                      {idx < surfaces.length - 1 && <span style={{ color: C.text4, marginLeft: 5 }}>·</span>}
+                    </span>
+                  )
+                })}
+              </div>
+            )
+          })()}
+
+          {/* ── Format pill row. Replaces the old 6-card amber-headered grid
+              that wasted half a screen. Six neutral pills under the input,
+              click any to populate the textarea with that format's example. ── */}
+          <div style={{
+            marginTop: 12,
+            display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 6,
+          }}>
+            <span style={{ fontSize: 10.5, fontWeight: 700, color: C.text3, letterSpacing: '0.08em', textTransform: 'uppercase', marginRight: 4 }}>Try a format</span>
+            {VIRAL_FORMATS.map(fmt => (
+              <button
+                key={fmt.key}
+                type="button"
+                onClick={() => setTitle(fmt.example)}
+                title={fmt.example}
+                style={{
+                  padding: '5px 11px', borderRadius: 99,
+                  background: '#ffffff', border: '1px solid rgba(0,0,0,0.10)',
+                  color: C.text2, fontSize: 11.5, fontWeight: 600, letterSpacing: '-0.05px',
+                  fontFamily: 'inherit', cursor: 'pointer',
+                  transition: 'background 0.14s, border-color 0.14s, color 0.14s',
+                  whiteSpace: 'nowrap',
+                }}
+                onMouseEnter={e => { e.currentTarget.style.background = 'rgba(229,37,27,0.06)'; e.currentTarget.style.borderColor = 'rgba(229,37,27,0.35)'; e.currentTarget.style.color = C.red }}
+                onMouseLeave={e => { e.currentTarget.style.background = '#ffffff'; e.currentTarget.style.borderColor = 'rgba(0,0,0,0.10)'; e.currentTarget.style.color = C.text2 }}
+              >
+                {fmt.label.split(/[\/\s]/)[0]}
+              </button>
+            ))}
+          </div>
+
           {error && (
             <div style={{ marginTop: 12, display: 'flex', alignItems: 'flex-start', gap: 8, fontSize: 12.5, color: C.red, background: C.redBg, border: `1px solid ${C.redBdr}`, borderRadius: 9, padding: '9px 12px', lineHeight: 1.4 }}>
               <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" style={{ flexShrink: 0, marginTop: 2 }}><circle cx="6.5" cy="6.5" r="5"/><path d="M6.5 4v3M6.5 9v.5"/></svg>
@@ -2360,147 +2580,11 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
           </div>
         </div>
 
-        {/* ── Row 2: 2-col — Preview on YouTube | Start from a format ────── */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: 14 }}>
-
-          {/* Preview on YouTube — compact mode when everything fits (3 identical rows is noise); detailed rows kick in only when a surface actually cuts. */}
-          {(() => {
-            const surfaces = [
-              { label: 'Suggested feed', maxChars: 45 },
-              { label: 'Mobile search',  maxChars: 55 },
-              { label: 'Desktop search', maxChars: 70 },
-            ]
-            const anyCut = title.trim() && surfaces.some(s => title.length > s.maxChars)
-            return (
-          <div className="seo-glass-card" style={{ padding: '22px 24px' }}>
-            <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 14, gap: 8 }}>
-              <span style={{ fontSize: 11, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Preview on YouTube</span>
-              <span style={{ fontSize: 11, color: C.text3, whiteSpace: 'nowrap' }}>
-                3 surfaces · desktop, mobile, feed
-              </span>
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-              {!title.trim() ? (
-                <div style={{ padding: '44px 20px', background: '#fafafb', border: '1px dashed #e6e6ec', borderRadius: 12 }}>
-                  <p style={{ fontSize: 13, color: C.text3, textAlign: 'center', lineHeight: 1.6, margin: 0 }}>
-                    Type a title to see how it renders<br/>in Suggested feed, Mobile &amp; Desktop search.
-                  </p>
-                </div>
-              ) : !anyCut ? (
-                // Compact "all fit" mode — neutral white card, green only on the
-                // small check icon. Removes the full green-tinted container that
-                // visually competed with the amber-numbered format tiles next to it.
-                <div style={{
-                  background: '#ffffff',
-                  border: '1px solid #e6e6ec',
-                  borderRadius: 12,
-                  padding: '14px 16px',
-                }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
-                    <div style={{
-                      width: 22, height: 22, borderRadius: 99,
-                      background: 'rgba(5,150,105,0.10)',
-                      display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-                      flexShrink: 0,
-                    }}>
-                      <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke={C.green} strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
-                        <polyline points="3,8.5 6.5,12 13,4"/>
-                      </svg>
-                    </div>
-                    <p style={{ fontSize: 13.5, fontWeight: 700, color: C.text1, letterSpacing: '-0.1px', margin: 0 }}>
-                      Fits all 3 YouTube surfaces
-                    </p>
-                  </div>
-                  <div style={{ display: 'flex', gap: 18, flexWrap: 'wrap' }}>
-                    {surfaces.map(s => (
-                      <div key={s.label} style={{ display: 'flex', alignItems: 'baseline', gap: 6, fontSize: 11 }}>
-                        <span style={{ fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em' }}>{s.label}</span>
-                        <span style={{ color: C.text2, fontVariantNumeric: 'tabular-nums', fontWeight: 600 }}>{title.length}/{s.maxChars}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              ) : (
-                // Detailed mode — only when a surface actually truncates. Each row shows exactly how the title gets cut.
-                surfaces.map(({ label, maxChars }) => {
-                  const truncated = title.length > maxChars
-                  const display = truncated ? title.slice(0, maxChars - 1) + '…' : title
-                  const accent = truncated ? C.amber : C.green
-                  const accentBg = truncated ? C.amberBg : C.greenBg
-                  const accentBdr = truncated ? C.amberBdr : C.greenBdr
-                  return (
-                    <div key={label} style={{
-                      background: '#ffffff',
-                      border: '1px solid #e6e6ec',
-                      borderTop: `3px solid ${accent}`,
-                      borderRadius: 12,
-                      padding: '12px 14px 14px',
-                      boxShadow: '0 1px 2px rgba(0,0,0,0.03)',
-                    }}>
-                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8, gap: 10 }}>
-                        <span style={{ fontSize: 10, fontWeight: 700, color: accent, textTransform: 'uppercase', letterSpacing: '0.08em' }}>{label}</span>
-                        <span style={{
-                          fontSize: 10, fontWeight: 700, color: accent,
-                          letterSpacing: '0.06em', textTransform: 'uppercase',
-                          padding: '2px 9px', borderRadius: 20,
-                          border: `1.2px solid ${accentBdr}`, background: accentBg,
-                        }}>
-                          {truncated ? 'Cut' : 'Fits'}
-                        </span>
-                      </div>
-                      <p style={{ fontSize: 14, fontWeight: 500, color: truncated ? C.text2 : C.text1, lineHeight: 1.5, margin: 0, letterSpacing: '-0.1px' }}>{display}</p>
-                      {truncated && (
-                        <p style={{ fontSize: 12, color: C.amber, marginTop: 7, fontWeight: 500, letterSpacing: '-0.05px' }}>
-                          +{title.length - maxChars} chars over {maxChars}
-                        </p>
-                      )}
-                    </div>
-                  )
-                })
-              )}
-            </div>
-          </div>
-            )
-          })()}
-
-          {/* Start from a format — neutral tile; amber retained only on the numbered badge + label (one accent per tile, not three). */}
-          <div className="seo-glass-card" style={{ padding: '22px 24px' }}>
-            <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 14, gap: 8 }}>
-              <span style={{ fontSize: 11, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Start from a format</span>
-              <span style={{ fontSize: 11, color: C.text3, whiteSpace: 'nowrap' }}>6 patterns · click to use</span>
-            </div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: 10 }}>
-              {VIRAL_FORMATS.map((fmt, i) => (
-                <button key={fmt.key} onClick={() => setTitle(fmt.example)} className="seo-format-card"
-                  style={{
-                    textAlign: 'left',
-                    padding: '12px 14px 14px',
-                    background: '#ffffff',
-                    border: '1px solid #e6e6ec',
-                    borderRadius: 12,
-                    cursor: 'pointer',
-                    fontFamily: 'inherit',
-                    boxShadow: '0 1px 2px rgba(0,0,0,0.03)',
-                    transition: 'border-color 0.2s, box-shadow 0.2s, transform 0.2s',
-                  }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
-                    <div style={{
-                      width: 26, height: 26, borderRadius: 8,
-                      background: fmt.color,
-                      display: 'flex', alignItems: 'center', justifyContent: 'center',
-                      flexShrink: 0,
-                    }}>
-                      <span style={{ fontSize: 12, fontWeight: 900, color: '#ffffff', fontVariantNumeric: 'tabular-nums' }}>{i + 1}</span>
-                    </div>
-                    <span style={{ fontSize: 10, fontWeight: 700, color: fmt.color, textTransform: 'uppercase', letterSpacing: '0.08em', lineHeight: 1 }}>{fmt.label}</span>
-                  </div>
-                  <p style={{ fontSize: 13, color: C.text1, fontWeight: 500, lineHeight: 1.5, margin: 0, letterSpacing: '-0.1px' }}>{fmt.example}</p>
-                </button>
-              ))}
-            </div>
-          </div>
-
-        </div>
+        {/* The old 2-column Preview + Format-templates block lived here. Both
+            collapsed into a single inline meta line and a horizontal pill row
+            directly under the title input (just above this comment), so the
+            entire zone is now ~240px shorter and the page no longer opens with
+            half a screen of white empty card. */}
       </div>
 
       {/* Intent picker — "Three directions" moment. Cinematic header, 3 route tiles, amber route badges. */}
@@ -2747,6 +2831,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
                     s={s}
                     i={i}
                     primaryPhrase={result.primary_phrase}
+                    nicheVideos={result.top_videos}
                     isSelected={selectedTitle === s.title}
                     isCopied={copied === i}
                     onCopy={() => copyTitle(s.title, i)}
