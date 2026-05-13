@@ -14,6 +14,8 @@ import {
   Trophy,           // Milestone / Achievement category
   BarChart3,        // Content Mix / Insight category
   Activity,         // Channel Health category
+  CalendarDays,     // Posting Consistency category
+  Flame,            // Streak indicator
   ChevronDown,      // Collapse toggle on Channel Health
   RefreshCcw,       // Refresh stats (compact topbar)
   RotateCcw,        // Re-Audit (compact topbar)
@@ -2092,6 +2094,221 @@ function TopPerformerCard({ video, channelAvgViews, onOpen, onDismiss }) {
 }
 
 
+// Compute posting cadence stats from the channel's videos array. All
+// counts use the past 28 days. Returns the per-day upload grid (28
+// entries, oldest first), the current streak (consecutive days from
+// today backwards with at least one upload), the longest 28-day
+// streak, and the simple count + pace numbers.
+function computePostingStats(videos) {
+  const now = new Date()
+  now.setHours(0, 0, 0, 0)
+  const dayMs = 86400000
+  const daysBack = 28
+
+  // Bin uploads per day, keyed by days-ago (0 = today).
+  const perDay = new Array(daysBack).fill(0)
+  for (const v of videos || []) {
+    if (!v.published_at) continue
+    const t = new Date(v.published_at).getTime()
+    if (Number.isNaN(t)) continue
+    const daysAgo = Math.floor((now.getTime() - t) / dayMs)
+    if (daysAgo >= 0 && daysAgo < daysBack) perDay[daysAgo] += 1
+  }
+
+  const count = perDay.reduce((s, n) => s + n, 0)
+  const pacePerWeek = (count / (daysBack / 7))
+
+  // Current streak: walk back from today (allowing today to be empty).
+  let currentStreak = 0
+  for (let i = 0; i < daysBack; i++) {
+    if (perDay[i] > 0) currentStreak += 1
+    else if (i === 0) continue // skip today if empty so a yesterday-upload still counts as 1d streak
+    else break
+  }
+
+  // Longest streak inside the 28-day window.
+  let longestStreak = 0
+  let run = 0
+  for (let i = 0; i < daysBack; i++) {
+    if (perDay[i] > 0) { run += 1; longestStreak = Math.max(longestStreak, run) }
+    else run = 0
+  }
+
+  // Grid for rendering: oldest -> newest (left to right when 7 cols x 4 rows
+  // with rows = weeks). We return 28 entries in REVERSE of perDay so index 0
+  // is 27 days ago and index 27 is today.
+  const gridOldestFirst = perDay.slice().reverse()
+
+  return {
+    count,
+    pacePerWeek: Number(pacePerWeek.toFixed(1)),
+    currentStreak,
+    longestStreak,
+    gridOldestFirst,
+  }
+}
+
+// Posting Consistency card. The 28-day upload calendar a creator
+// instantly recognises. Each square = one day. Empty squares mean no
+// upload that day. Filled squares scale opacity to upload count. The
+// stats on the right (count, weekly pace, current streak, longest)
+// give numerical context. Streak chip in the eyebrow celebrates.
+function PostingConsistencyCard({ videos, onDismiss }) {
+  const [open, setOpen] = useState(false)
+  const stats = computePostingStats(videos)
+  const { count, pacePerWeek, currentStreak, longestStreak, gridOldestFirst } = stats
+
+  // Card only renders when we have at least one upload in the window.
+  // No uploads in 28d is an empty state we'll design separately.
+  if (count === 0) return null
+
+  const paceMsg = pacePerWeek >= 3 ? 'Above average for your size'
+    : pacePerWeek >= 1 ? 'Healthy weekly cadence'
+    : pacePerWeek > 0  ? 'Posting irregularly'
+    : 'No recent uploads'
+  const paceClr = pacePerWeek >= 3 ? C.green
+    : pacePerWeek >= 1 ? C.text2
+    : C.amber
+
+  // Headline reflects whichever signal is strongest.
+  const headline = currentStreak >= 3
+    ? `You're on a ${currentStreak}-day posting streak`
+    : count >= 8
+      ? `You posted ${count} videos in the last 28 days`
+      : pacePerWeek >= 1
+        ? `Posting ${pacePerWeek}× per week`
+        : 'Your posting cadence'
+
+  // The day labels above the grid. Grid renders rows = weeks (oldest top,
+  // newest bottom), columns = days of week. We compute the column label
+  // for each grid index by walking back 28 days from today and reading
+  // the weekday. Simpler: derive day labels by walking the grid.
+  const dayLabels = []
+  const start = new Date()
+  start.setHours(0, 0, 0, 0)
+  start.setDate(start.getDate() - 27) // 28 days ago
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(start.getTime() + i * 86400000)
+    dayLabels.push(d.toLocaleDateString('en-US', { weekday: 'narrow' }))
+  }
+
+  // Color for a cell given its upload count.
+  const cellColor = (n) => {
+    if (n === 0) return '#eef0f4'
+    if (n === 1) return 'rgba(229,37,27,0.40)'
+    if (n === 2) return 'rgba(229,37,27,0.70)'
+    return '#e5251b'
+  }
+
+  return (
+    <FeedCard
+      Icon={CalendarDays}
+      iconColor={C.text1}
+      iconBg="rgba(15,15,19,0.06)"
+      category="Posting Consistency"
+      onDismiss={onDismiss}
+      rightSlot={currentStreak >= 2 && (
+        <span style={{
+          display: 'inline-flex', alignItems: 'center', gap: 4,
+          fontSize: 10.5, fontWeight: 800, color: C.red,
+          background: 'rgba(229,37,27,0.07)', border: '1px solid rgba(229,37,27,0.20)',
+          padding: '3px 8px', borderRadius: 100,
+          letterSpacing: '-0.05px', fontVariantNumeric: 'tabular-nums',
+        }}>
+          <Flame size={10} strokeWidth={2.4} />
+          {currentStreak}d streak
+        </span>
+      )}
+    >
+      <h3 style={{
+        fontSize: 15, fontWeight: 700, color: C.text1,
+        letterSpacing: '-0.25px', lineHeight: 1.35,
+        marginBottom: 14,
+      }}>{headline}</h3>
+
+      {/* Calendar grid + side stats */}
+      <div style={{ display: 'flex', alignItems: 'flex-start', gap: 22, flexWrap: 'wrap' }}>
+        <div style={{ flexShrink: 0 }}>
+          {/* Day-of-week labels (Mon Tue Wed Thu Fri Sat Sun). The first
+              column corresponds to the weekday 28 days ago. */}
+          <div style={{
+            display: 'grid', gridTemplateColumns: 'repeat(7, 16px)', gap: 3,
+            marginBottom: 4,
+          }}>
+            {dayLabels.map((d, i) => (
+              <div key={i} style={{
+                fontSize: 9, fontWeight: 700, color: C.text3,
+                textAlign: 'center', letterSpacing: '0.04em',
+              }}>{d}</div>
+            ))}
+          </div>
+
+          {/* The 4×7 grid. Rows = weeks oldest to newest. */}
+          <div style={{ display: 'grid', gridTemplateRows: 'repeat(4, 16px)', gap: 3 }}>
+            {[0, 1, 2, 3].map(weekIdx => (
+              <div key={weekIdx} style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 16px)', gap: 3 }}>
+                {[0, 1, 2, 3, 4, 5, 6].map(dayIdx => {
+                  const gridIdx = weekIdx * 7 + dayIdx
+                  const c = gridOldestFirst[gridIdx] || 0
+                  return (
+                    <div
+                      key={dayIdx}
+                      title={c === 0 ? 'No upload' : c === 1 ? '1 upload' : `${c} uploads`}
+                      style={{
+                        width: 16, height: 16, borderRadius: 4,
+                        background: cellColor(c),
+                        border: c === 0 ? '1px solid rgba(15,15,19,0.04)' : '1px solid rgba(229,37,27,0.10)',
+                      }}
+                    />
+                  )
+                })}
+              </div>
+            ))}
+          </div>
+
+          {/* Tiny legend */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 4, marginTop: 8 }}>
+            <span style={{ fontSize: 9.5, color: C.text3, fontWeight: 600, letterSpacing: '0.04em', marginRight: 2 }}>Less</span>
+            {[0, 1, 2, 3].map(n => (
+              <span key={n} style={{
+                width: 10, height: 10, borderRadius: 2.5,
+                background: cellColor(n),
+                border: n === 0 ? '1px solid rgba(15,15,19,0.04)' : '1px solid rgba(229,37,27,0.10)',
+              }}/>
+            ))}
+            <span style={{ fontSize: 9.5, color: C.text3, fontWeight: 600, letterSpacing: '0.04em', marginLeft: 2 }}>More</span>
+          </div>
+        </div>
+
+        {/* Side stats column */}
+        <div style={{ flex: 1, minWidth: 180 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px 20px', marginBottom: 14 }}>
+            <div>
+              <p style={{ fontSize: 9.5, fontWeight: 700, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 4 }}>Uploads</p>
+              <p style={{ fontSize: 20, fontWeight: 800, color: C.text1, letterSpacing: '-0.6px', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{count}</p>
+              <p style={{ fontSize: 10.5, fontWeight: 500, color: C.text3, marginTop: 4 }}>in 28 days</p>
+            </div>
+            <div>
+              <p style={{ fontSize: 9.5, fontWeight: 700, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 4 }}>Pace</p>
+              <p style={{ fontSize: 20, fontWeight: 800, color: paceClr, letterSpacing: '-0.6px', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{pacePerWeek}<span style={{ fontSize: 12, fontWeight: 700, color: C.text3, marginLeft: 2 }}>/wk</span></p>
+              <p style={{ fontSize: 10.5, fontWeight: 500, color: C.text3, marginTop: 4 }}>{paceMsg}</p>
+            </div>
+            <div>
+              <p style={{ fontSize: 9.5, fontWeight: 700, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 4 }}>Current streak</p>
+              <p style={{ fontSize: 20, fontWeight: 800, color: currentStreak >= 3 ? C.red : C.text1, letterSpacing: '-0.6px', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{currentStreak}<span style={{ fontSize: 12, fontWeight: 700, color: C.text3, marginLeft: 2 }}>{currentStreak === 1 ? 'day' : 'days'}</span></p>
+            </div>
+            <div>
+              <p style={{ fontSize: 9.5, fontWeight: 700, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 4 }}>Best run</p>
+              <p style={{ fontSize: 20, fontWeight: 800, color: C.text1, letterSpacing: '-0.6px', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{longestStreak}<span style={{ fontSize: 12, fontWeight: 700, color: C.text3, marginLeft: 2 }}>{longestStreak === 1 ? 'day' : 'days'}</span></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </FeedCard>
+  )
+}
+
+
 /* ─── Insight card (legacy, still used by collapsed audit detail) ────────── */
 function categoryToNav(category, problem) {
   const c = (category || '').toLowerCase()
@@ -3765,6 +3982,23 @@ export default function Dashboard() {
                       if (patterns.bestVideo.video_id) setSelectedVideoId(patterns.bestVideo.video_id)
                       else setNav('Videos')
                     }}
+                    onDismiss={() => {
+                      try { localStorage.setItem(dismissKey, '1') } catch {}
+                      setChecked(prev => ({ ...prev }))
+                    }}
+                  />
+                )
+              })()}
+
+              {/* Posting Consistency — Insights. The 28-day calendar
+                  grid + four numeric stats. Genuinely unique to us:
+                  VidIQ doesn't surface a heatmap like this. */}
+              {(feedFilter === 'all' || feedFilter === 'insights') && videos && videos.length > 0 && (() => {
+                const dismissKey = `ytg_posting_consistency_dismissed:${data?.channel?.channel_id || 'x'}`
+                try { if (localStorage.getItem(dismissKey)) return null } catch {}
+                return (
+                  <PostingConsistencyCard
+                    videos={videos}
                     onDismiss={() => {
                       try { localStorage.setItem(dismissKey, '1') } catch {}
                       setChecked(prev => ({ ...prev }))
