@@ -282,14 +282,43 @@ def _normalize_cache_query(query: str) -> str:
     return " ".join(tokens)
 
 
+def _is_meaningful_query(query: str) -> bool:
+    """Reject obvious junk before we spend quota on it.
+
+    Filters out: empty/None, fewer than 3 chars, no alphabetic content,
+    or single-character spam ('aaaa', '1111'). Real niche queries always
+    have multiple distinct letters. Cheap front-line defense — the credit
+    gate on SEO Studio runs is the structural one, this just stops a
+    typo'd run from burning 100 units."""
+    if not query:
+        return False
+    q = query.strip()
+    if len(q) < 3:
+        return False
+    letters = [c for c in q.lower() if c.isalpha()]
+    if len(letters) < 2:
+        return False
+    # All same letter ('aaaa', 'bbb bbb') → junk
+    if len(set(letters)) < 2:
+        return False
+    return True
+
+
 def _search_youtube_once(youtube, query: str, max_results: int = 25, order: str = "relevance") -> dict[str, dict]:
     """Run a single YouTube search. Returns raw candidates (Shorts not yet filtered — done in batch).
 
     Cached cross-user in youtube_search_cache for 24h, keyed on a
     normalised form of the query so 'Best Fitness Tips' and 'fitness tips'
     share the same row. A background warmer (app/niche_warmer.py)
-    pre-populates the cache nightly for ~150 popular niches, so most user
-    clicks hit cache at 0 quota cost."""
+    pre-populates the cache nightly for the top-hit-count queries, so most
+    user clicks hit cache at 0 quota cost.
+
+    Junk queries are rejected up-front via _is_meaningful_query so a
+    typo'd or pasted-garbage title never burns quota."""
+    if not _is_meaningful_query(query):
+        print(f"[seo] junk query rejected: '{query}'")
+        return {}
+
     from app.utils import yt_quota_paused
     if yt_quota_paused():
         print(f"[seo] search skipped — YT_QUOTA_PAUSED=1 (query='{query}')")

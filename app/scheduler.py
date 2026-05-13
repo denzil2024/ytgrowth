@@ -125,6 +125,43 @@ scheduler.add_job(
 )
 
 
+# ── Job: Search cache cleanup ─────────────────────────────────────────────────
+# Weekly sweep of youtube_search_cache. Deletes rows that are >7 days old
+# AND have hit_count <= 2. Keeps the table lean over time so junk queries
+# (typos, single-use searches) don't accumulate forever, while preserving
+# anything with real demand. The warmer keeps high-hit rows fresh anyway,
+# so they'll never fall into this filter.
+
+def _run_search_cache_cleanup():
+    try:
+        from database.models import SessionLocal, YoutubeSearchCache
+        db = SessionLocal()
+        try:
+            cutoff = datetime.datetime.now(datetime.timezone.utc) - timedelta(days=7)
+            deleted = (
+                db.query(YoutubeSearchCache)
+                  .filter(YoutubeSearchCache.cached_at < cutoff)
+                  .filter(YoutubeSearchCache.hit_count <= 2)
+                  .delete(synchronize_session=False)
+            )
+            db.commit()
+            print(f"[search_cache_cleanup] removed {deleted} stale low-hit rows")
+        finally:
+            db.close()
+    except Exception as e:
+        print(f"[search_cache_cleanup] job failed: {e}")
+
+
+scheduler.add_job(
+    _run_search_cache_cleanup,
+    trigger="cron",
+    day_of_week="mon",
+    hour=3, minute=30,  # Mondays 03:30 UTC
+    id="search_cache_cleanup",
+    replace_existing=True,
+)
+
+
 # ── Niche outliers: now lazy per-channel ──────────────────────────────────────
 # The dashboard hero card used to read from a shared per-niche cache that this
 # job refreshed weekly. We replaced that with a per-channel cache populated
