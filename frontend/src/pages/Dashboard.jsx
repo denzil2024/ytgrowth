@@ -1163,6 +1163,134 @@ function nextViewMilestone(n) {
   return Math.ceil(n / 1_000_000) * 1_000_000
 }
 
+// Sparkline. Pure SVG mini line-chart for the Feed cards. No axes, no
+// labels — just the trend shape. Uses brand red by default with a soft
+// gradient fill below to give the line visual weight at small sizes.
+function Sparkline({
+  data,
+  width = 160,
+  height = 48,
+  stroke = '#e5251b',
+  fill = 'rgba(229,37,27,0.10)',
+  strokeWidth = 1.8,
+}) {
+  if (!data || data.length < 2) {
+    return (
+      <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} style={{ display: 'block' }}>
+        <line x1="0" y1={height - 1} x2={width} y2={height - 1} stroke="#eef0f4" strokeWidth="1"/>
+      </svg>
+    )
+  }
+  const min = Math.min(...data)
+  const max = Math.max(...data)
+  const range = max - min || 1
+  const stepX = width / (data.length - 1)
+  const padY = 4
+  const usableH = height - padY * 2
+  const points = data.map((v, i) => {
+    const x = i * stepX
+    const y = padY + (1 - (v - min) / range) * usableH
+    return [x, y]
+  })
+  const pathLine = points.map(([x, y], i) => `${i === 0 ? 'M' : 'L'}${x.toFixed(1)} ${y.toFixed(1)}`).join(' ')
+  const pathArea = `${pathLine} L${width} ${height} L0 ${height} Z`
+  const gradId = `sparkfill_${Math.random().toString(36).slice(2, 8)}`
+  return (
+    <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} style={{ display: 'block' }}>
+      <defs>
+        <linearGradient id={gradId} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor={fill} stopOpacity="1"/>
+          <stop offset="100%" stopColor={fill} stopOpacity="0"/>
+        </linearGradient>
+      </defs>
+      <path d={pathArea} fill={`url(#${gradId})`} />
+      <path d={pathLine} fill="none" stroke={stroke} strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round"/>
+      {/* End dot to anchor the line on the right */}
+      <circle cx={points[points.length - 1][0]} cy={points[points.length - 1][1]} r="2.5" fill={stroke}/>
+    </svg>
+  )
+}
+
+// Rich hero stat card. Replaces the small milestone tile pattern with one
+// roomier card per metric: label, big number, delta chip, distance to
+// next milestone, AND a real 28-day sparkline of the underlying series.
+// This is the "wow" surface — the page top should feel alive, not flat.
+function HeroStatCard({ label, value, raw, kind, delta, deltaSuffix, series }) {
+  const target = kind === 'subs' ? nextSubMilestone(raw || 0) : nextViewMilestone(raw || 0)
+  const pct    = target > 0 ? Math.max(2, Math.min(100, (raw / target) * 100)) : 0
+  const hasDelta = delta !== null && delta !== undefined && !Number.isNaN(Number(delta))
+  const deltaNum = hasDelta ? Number(delta) : 0
+  const deltaPositive = deltaNum >= 0
+  const deltaColor = !hasDelta ? C.text3 : deltaPositive ? C.green : C.red
+  const deltaBg    = !hasDelta ? 'transparent' : deltaPositive ? 'rgba(5,150,105,0.08)' : 'rgba(229,37,27,0.07)'
+  const deltaBdr   = !hasDelta ? 'transparent' : deltaPositive ? 'rgba(5,150,105,0.20)' : 'rgba(229,37,27,0.20)'
+
+  return (
+    <div className="ytg-stat-card" style={{ padding: '18px 20px 16px', position: 'relative', overflow: 'hidden' }}>
+      <div style={{ display: 'flex', alignItems: 'flex-start', gap: 16 }}>
+        {/* Left: number + meta */}
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+            <p style={{
+              fontSize: 10, fontWeight: 700, letterSpacing: '0.12em',
+              textTransform: 'uppercase', color: C.text3,
+            }}>{label}</p>
+            {hasDelta && (
+              <span style={{
+                display: 'inline-flex', alignItems: 'center', gap: 3,
+                fontSize: 10.5, fontWeight: 700, color: deltaColor,
+                background: deltaBg, border: `1px solid ${deltaBdr}`,
+                padding: '1px 7px', borderRadius: 100,
+                letterSpacing: '-0.05px',
+                fontVariantNumeric: 'tabular-nums',
+              }}>
+                <svg width="8" height="8" viewBox="0 0 10 10" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" style={{ transform: deltaPositive ? 'none' : 'rotate(180deg)' }}>
+                  <path d="M5 8V2M2.5 4.5 5 2l2.5 2.5"/>
+                </svg>
+                {deltaPositive ? '+' : ''}{fmtNum(Math.abs(deltaNum))}
+              </span>
+            )}
+          </div>
+
+          <p style={{
+            fontSize: 34, fontWeight: 800, letterSpacing: '-1.5px',
+            color: C.text1, lineHeight: 1, fontVariantNumeric: 'tabular-nums',
+            marginBottom: 14,
+          }}>{value}</p>
+
+          {/* Hairline progress + Next */}
+          <div style={{
+            background: '#eef0f4', borderRadius: 99, height: 3,
+            overflow: 'hidden', marginBottom: 6,
+          }}>
+            <div style={{
+              width: `${pct}%`, height: '100%',
+              background: 'linear-gradient(90deg, rgba(229,37,27,0.55) 0%, #e5251b 100%)',
+              borderRadius: 99,
+              transition: 'width 0.8s cubic-bezier(0.34,1.56,0.64,1)',
+            }}/>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10 }}>
+            <p style={{ fontSize: 10.5, fontWeight: 600, color: C.text3, letterSpacing: '-0.01em', fontVariantNumeric: 'tabular-nums' }}>
+              Next: <span style={{ color: C.text1, fontWeight: 700 }}>{fmtNum(target)}</span>
+            </p>
+            {hasDelta && (
+              <p style={{ fontSize: 10.5, fontWeight: 500, color: C.text3, letterSpacing: '-0.01em' }}>
+                {deltaSuffix || ''}
+              </p>
+            )}
+          </div>
+        </div>
+
+        {/* Right: real 28-day sparkline */}
+        <div style={{ flexShrink: 0, alignSelf: 'stretch', display: 'flex', alignItems: 'flex-end', paddingBottom: 4 }}>
+          <Sparkline data={series} width={180} height={68} />
+        </div>
+      </div>
+    </div>
+  )
+}
+
 // Hero tile with a milestone-progress bar. Matches VidIQ's two-tile pattern
 // at the top of their feed: big number, target on the right, a thin bar
 // showing distance to the next round milestone, optional delta chip below.
@@ -1653,7 +1781,7 @@ function ContentMixFeedCard({ patterns, mix, onDismiss }) {
         marginBottom: 12,
       }}>{patterns.headline || 'Your content mix'}</h3>
 
-      {/* Visual band: stacked Shorts vs Long bar */}
+      {/* Visual band: stacked Shorts vs Long bar — brand red + charcoal */}
       <div style={{ marginBottom: 8 }}>
         <div style={{
           display: 'flex',
@@ -1662,11 +1790,11 @@ function ContentMixFeedCard({ patterns, mix, onDismiss }) {
         }}>
           <div style={{
             width: `${sPct}%`, height: '100%',
-            background: 'linear-gradient(90deg, rgba(74,124,247,0.55) 0%, #4a7cf7 100%)',
+            background: 'linear-gradient(90deg, rgba(229,37,27,0.55) 0%, #e5251b 100%)',
           }}/>
           <div style={{
             width: `${lPct}%`, height: '100%',
-            background: 'linear-gradient(90deg, rgba(15,15,19,0.45) 0%, rgba(15,15,19,0.65) 100%)',
+            background: 'linear-gradient(90deg, rgba(15,15,19,0.45) 0%, rgba(15,15,19,0.72) 100%)',
           }}/>
         </div>
       </div>
@@ -1676,14 +1804,14 @@ function ContentMixFeedCard({ patterns, mix, onDismiss }) {
           display: 'inline-flex', alignItems: 'center', gap: 5,
           fontSize: 11.5, fontWeight: 500, color: C.text3, letterSpacing: '-0.01em',
         }}>
-          <span style={{ width: 7, height: 7, borderRadius: 99, background: '#4a7cf7' }}/>
+          <span style={{ width: 7, height: 7, borderRadius: 99, background: '#e5251b' }}/>
           Shorts {sCount != null ? sCount : ''} {sCount != null ? '·' : ''} {sPct}%
         </span>
         <span style={{
           display: 'inline-flex', alignItems: 'center', gap: 5,
           fontSize: 11.5, fontWeight: 500, color: C.text3, letterSpacing: '-0.01em',
         }}>
-          <span style={{ width: 7, height: 7, borderRadius: 99, background: 'rgba(15,15,19,0.65)' }}/>
+          <span style={{ width: 7, height: 7, borderRadius: 99, background: 'rgba(15,15,19,0.72)' }}/>
           Long {lCount != null ? lCount : ''} {lCount != null ? '·' : ''} {lPct}%
         </span>
         <div style={{ flex: 1 }}/>
@@ -1842,6 +1970,127 @@ function ChannelHealthFeedCard({ score, categories, weakest, children, open, onT
   )
 }
 
+// Top Performer card. Celebrates the user's strongest video this month
+// instead of only nagging about problems. Real thumbnail on the left, the
+// title + a "X.Xx your average" multiplier on the right. This is the
+// single most powerful retention card we ship: the user sees a win.
+function TopPerformerCard({ video, channelAvgViews, onOpen, onDismiss }) {
+  if (!video) return null
+  const multiplier = channelAvgViews > 0 ? (video.views / channelAvgViews) : 0
+  const mDisplay = multiplier >= 10 ? `${multiplier.toFixed(0)}x`
+    : multiplier >= 1 ? `${multiplier.toFixed(1)}x`
+    : null
+  const engagement = video.views > 0
+    ? Number(((video.likes || 0) / video.views * 100).toFixed(2))
+    : 0
+  const ageDays = video.published_at
+    ? Math.floor((Date.now() - new Date(video.published_at).getTime()) / 86400000)
+    : null
+  const ageStr = ageDays == null ? '' : ageDays === 0 ? 'today' : ageDays === 1 ? 'yesterday' : `${ageDays}d ago`
+
+  return (
+    <FeedCard
+      Icon={Trophy}
+      iconColor={C.green}
+      iconBg="rgba(5,150,105,0.08)"
+      category="Top Performer"
+      age={ageStr}
+      onDismiss={onDismiss}
+      rightSlot={mDisplay && (
+        <span style={{
+          display: 'inline-flex', alignItems: 'center', gap: 3,
+          fontSize: 10.5, fontWeight: 800, color: C.green,
+          background: 'rgba(5,150,105,0.08)', border: '1px solid rgba(5,150,105,0.22)',
+          padding: '3px 8px', borderRadius: 100,
+          letterSpacing: '-0.05px',
+          fontVariantNumeric: 'tabular-nums',
+        }}>
+          {mDisplay} your avg
+        </span>
+      )}
+    >
+      <div style={{ display: 'flex', gap: 16, alignItems: 'stretch' }}>
+        {/* Thumbnail */}
+        {video.thumbnail ? (
+          <div style={{
+            flexShrink: 0, width: 200, aspectRatio: '16/9',
+            borderRadius: 10, overflow: 'hidden',
+            background: '#ebebef',
+            boxShadow: '0 1px 3px rgba(0,0,0,0.06), 0 6px 18px rgba(0,0,0,0.08)',
+          }}>
+            <img
+              src={video.thumbnail}
+              alt=""
+              style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+            />
+          </div>
+        ) : (
+          <div style={{
+            flexShrink: 0, width: 200, aspectRatio: '16/9',
+            borderRadius: 10, background: '#ebebef',
+          }}/>
+        )}
+
+        {/* Right side: title + metrics */}
+        <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column' }}>
+          <h3 style={{
+            fontSize: 15, fontWeight: 700, color: C.text1,
+            letterSpacing: '-0.25px', lineHeight: 1.4,
+            marginBottom: 12,
+            display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical',
+            overflow: 'hidden',
+          }}>{video.title}</h3>
+
+          {/* Three-stat row */}
+          <div style={{ display: 'flex', gap: 22, marginBottom: 'auto', alignItems: 'flex-end' }}>
+            <div>
+              <p style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 5 }}>Views</p>
+              <p style={{ fontSize: 18, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{fmtNum(video.views || 0)}</p>
+            </div>
+            <div>
+              <p style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 5 }}>Likes</p>
+              <p style={{ fontSize: 18, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{fmtNum(video.likes || 0)}</p>
+            </div>
+            <div>
+              <p style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 5 }}>Engagement</p>
+              <p style={{ fontSize: 18, fontWeight: 800, color: engagement >= 3 ? C.green : C.text1, letterSpacing: '-0.5px', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{engagement}%</p>
+            </div>
+          </div>
+
+          {/* CTA row */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', marginTop: 14 }}>
+            <span style={{ fontSize: 11.5, fontWeight: 500, color: C.text3, letterSpacing: '-0.01em' }}>
+              Replicate this format
+            </span>
+            <div style={{ flex: 1 }}/>
+            {onOpen && (
+              <button
+                type="button"
+                onClick={onOpen}
+                style={{
+                  display: 'inline-flex', alignItems: 'center', gap: 5,
+                  padding: '7px 13px', borderRadius: 100,
+                  border: 'none', cursor: 'pointer',
+                  background: C.red, color: '#fff',
+                  fontFamily: 'inherit',
+                  fontSize: 12, fontWeight: 700, letterSpacing: '-0.01em',
+                  boxShadow: '0 1px 3px rgba(229,37,27,0.30)',
+                  transition: 'filter 0.14s ease, transform 0.14s ease',
+                }}
+                onMouseEnter={e => { e.currentTarget.style.filter = 'brightness(1.08)'; e.currentTarget.style.transform = 'translateY(-1px)' }}
+                onMouseLeave={e => { e.currentTarget.style.filter = 'none'; e.currentTarget.style.transform = 'translateY(0)' }}
+              >
+                Study video
+                <ArrowRight size={12} strokeWidth={2.4} />
+              </button>
+            )}
+          </div>
+        </div>
+      </div>
+    </FeedCard>
+  )
+}
+
 
 /* ─── Insight card (legacy, still used by collapsed audit detail) ────────── */
 function categoryToNav(category, problem) {
@@ -1914,8 +2163,8 @@ function InsightCard({ insight, index, checked, onToggle, onDelete, onNavigate }
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr 1fr', gap: 8, marginLeft: 46 }}>
 
             {/* Why now */}
-            <div style={{ background: 'rgba(79,134,247,0.07)', border: '1px solid rgba(79,134,247,0.12)', borderRadius: 10, padding: '12px 14px' }}>
-              <p style={{ fontSize: 10, fontWeight: 700, color: '#4a7cf7', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Why now</p>
+            <div style={{ background: 'rgba(15,15,19,0.04)', border: '1px solid rgba(15,15,19,0.08)', borderRadius: 10, padding: '12px 14px' }}>
+              <p style={{ fontSize: 10, fontWeight: 700, color: C.text2, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Why now</p>
               <p style={{ fontSize: 13.5, color: C.text1, lineHeight: 1.72 }}>{insight.whyNow || insight.cause}</p>
             </div>
 
@@ -2564,7 +2813,7 @@ function FirstTimeWelcome({ data, onDismiss, onNavigate }) {
                 <span style={{ background: s.bg, color: s.color, fontSize: 12, fontWeight: 700, padding: '4px 10px', borderRadius: 20, flexShrink: 0, textTransform: 'uppercase', letterSpacing: '0.07em', border: `1px solid ${s.bdr}` }}>{top.impact}</span>
               </div>
               {top.category && <p style={{ fontSize: 12, color: '#a0a0b0', marginTop: 3, marginBottom: 10 }}>{top.category}</p>}
-              <div style={{ background: 'rgba(79,134,247,0.07)', border: `1px solid rgba(79,134,247,0.12)`, borderLeft: `3px solid ${s.color}`, borderRadius: '0 10px 10px 0', padding: '12px 15px' }}>
+              <div style={{ background: 'rgba(15,15,19,0.04)', border: `1px solid rgba(15,15,19,0.08)`, borderLeft: `3px solid ${s.color}`, borderRadius: '0 10px 10px 0', padding: '12px 15px' }}>
                 <p style={{ fontSize: 10, fontWeight: 700, color: s.color, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Action</p>
                 <p style={{ fontSize: 13.5, color: C.text1, lineHeight: 1.72 }}>{top.action}</p>
               </div>
@@ -3187,7 +3436,7 @@ export default function Dashboard() {
               sidebar is untouched; the whitespace either side of the column
               is just the main area minus 720px. */}
           {data && nav === 'Overview' && (
-            <div style={{ maxWidth: 720, margin: '0 auto' }}>
+            <div style={{ maxWidth: 1040, margin: '0 auto' }}>
               <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 24 }}>
                 <div>
                   <h1 style={{ fontSize: 24, fontWeight: 800, color: C.text1, letterSpacing: '-0.6px', marginBottom: 6 }}>
@@ -3319,27 +3568,28 @@ export default function Dashboard() {
                 </div>
               )}
 
-              {/* Hero metric tiles — milestone-progress pattern. Each tile
-                  shows the big number plus distance to the next round
-                  milestone, with a soft brand-red gradient bar. The 90d
-                  delta sits as a chip on the top-right of the tile. */}
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 18 }}>
-                <MilestoneHeroTile
+              {/* Rich hero cards. One per metric, each with a real 28-day
+                  sparkline of the underlying series (when analytics is
+                  connected). Falls back to the milestone-progress hairline
+                  when timeseries data isn't available. */}
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, marginBottom: 20 }}>
+                <HeroStatCard
                   label="Subscribers"
                   value={fmtNum(data.channel.subscribers)}
                   raw={data.channel.subscribers || 0}
                   kind="subs"
                   delta={data.analytics?.net_subscribers_90d}
                   deltaSuffix="last 90d"
+                  series={data.analytics?.subs_series_28d}
                 />
-                <MilestoneHeroTile
+                <HeroStatCard
                   label="Total views"
                   value={fmtNum(data.channel.total_views)}
                   raw={data.channel.total_views || 0}
                   kind="views"
                   delta={data.analytics?.views_90d}
                   deltaSuffix="last 90d"
-                  deltaIsAbsolute
+                  series={data.analytics?.views_series_28d}
                 />
               </div>
 
@@ -3498,72 +3748,98 @@ export default function Dashboard() {
                 )
               })()}
 
-              {/* Content Mix — Insights. mix prop drives the stacked
-                  Shorts-vs-Long visual band on the card. */}
-              {(feedFilter === 'all' || feedFilter === 'insights') && patterns && (
-                <ContentMixFeedCard
-                  patterns={{
-                    headline: patterns.headline || (
-                      patterns.shortAvg > patterns.longAvg
-                        ? 'Shorts are outperforming your long-form'
-                        : patterns.longAvg > patterns.shortAvg
-                          ? 'Long-form is outperforming your Shorts'
-                          : 'Your content mix'
-                    ),
-                    body: patterns.body || patterns.text || patterns.summary || (
-                      patterns.shortAvg > patterns.longAvg
-                        ? `Shorts outperform long-form by ${fmtNum(patterns.shortAvg - patterns.longAvg)} views on average. Lean into Shorts for discovery.`
-                        : patterns.longAvg > patterns.shortAvg
-                          ? `Long-form outperforms Shorts by ${fmtNum(patterns.longAvg - patterns.shortAvg)} views. Your audience wants depth.`
-                          : 'Both formats are performing similarly on your channel.'
-                    ),
-                  }}
-                  mix={{
-                    shortsCount: patterns.shortsCount,
-                    longsCount: patterns.longsCount,
-                  }}
-                />
-              )}
-
-              {/* Channel Health — Insights. Surfaces 5 category dots as
-                  the visual band. The legacy audit detail expands from
-                  inside this card via the "See full audit" toggle. */}
-              {(feedFilter === 'all' || feedFilter === 'insights') && data.insights && (() => {
-                const cs = data.insights.categoryScores || {}
-                // The 5 categories surfaced as dots — the ones a creator
-                // recognises instantly. Drop unknowns silently.
-                const surfaced = [
-                  ['CTR',         cs.ctrHealth],
-                  ['Retention',   cs.audienceRetention],
-                  ['Strategy',    cs.contentStrategy],
-                  ['Consistency', cs.postingConsistency],
-                  ['Engagement',  cs.engagementQuality],
-                ].filter(([, v]) => typeof v === 'number')
-                const fullEntries = [
-                  ['CTR health', cs.ctrHealth],
-                  ['Audience retention', cs.audienceRetention],
-                  ['Content strategy', cs.contentStrategy],
-                  ['Posting consistency', cs.postingConsistency],
-                  ['Engagement quality', cs.engagementQuality],
-                  ['SEO discoverability', cs.seoDiscoverability],
-                  ['Video length', cs.videoLength],
-                  ['Traffic source intel', cs.trafficSourceIntelligence],
-                ].filter(([, v]) => typeof v === 'number')
-                const weakest = fullEntries
-                  .filter(([, v]) => v != null && v < 50)
-                  .sort((a, b) => a[1] - b[1])
-                  .slice(0, 2)
-                  .map(([k]) => k)
+              {/* Top Performer — Achievements. Celebrates the user's
+                  strongest video. The single best retention card we ship:
+                  every other surface nags about problems, this one shows
+                  a win. Computes "X.Xx your average" inline. */}
+              {(feedFilter === 'all' || feedFilter === 'achievements') && patterns?.bestVideo && (() => {
+                const totalV = videos?.reduce((s, v) => s + (v.views || 0), 0) || 0
+                const avgV = videos?.length > 0 ? totalV / videos.length : 0
+                const dismissKey = `ytg_top_perf_dismissed:${data?.channel?.channel_id || 'x'}:${patterns.bestVideo.video_id || patterns.bestVideo.title}`
+                try { if (localStorage.getItem(dismissKey)) return null } catch {}
                 return (
-                  <ChannelHealthFeedCard
-                    score={score}
-                    categories={surfaced}
-                    weakest={weakest}
-                    open={auditOpen}
-                    onToggle={() => setAuditOpen(o => !o)}
+                  <TopPerformerCard
+                    video={patterns.bestVideo}
+                    channelAvgViews={avgV}
+                    onOpen={() => {
+                      if (patterns.bestVideo.video_id) setSelectedVideoId(patterns.bestVideo.video_id)
+                      else setNav('Videos')
+                    }}
+                    onDismiss={() => {
+                      try { localStorage.setItem(dismissKey, '1') } catch {}
+                      setChecked(prev => ({ ...prev }))
+                    }}
                   />
                 )
               })()}
+
+              {/* Insights row — Content Mix + Channel Health sit side by
+                  side at half width. Denser, less scroll, more loaded.
+                  Expanded audit detail renders full-width below this
+                  block via the auditOpen condition further down. */}
+              {(feedFilter === 'all' || feedFilter === 'insights') && (patterns || data.insights) && (
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, alignItems: 'start' }}>
+                  {patterns && (
+                    <ContentMixFeedCard
+                      patterns={{
+                        headline: patterns.headline || (
+                          patterns.shortAvg > patterns.longAvg
+                            ? 'Shorts beat your long-form'
+                            : patterns.longAvg > patterns.shortAvg
+                              ? 'Long-form beats your Shorts'
+                              : 'Your content mix'
+                        ),
+                        body: patterns.body || patterns.text || patterns.summary || (
+                          patterns.shortAvg > patterns.longAvg
+                            ? `Shorts outperform long-form by ${fmtNum(patterns.shortAvg - patterns.longAvg)} views on average. Lean into Shorts for discovery.`
+                            : patterns.longAvg > patterns.shortAvg
+                              ? `Long-form outperforms Shorts by ${fmtNum(patterns.longAvg - patterns.shortAvg)} views. Your audience wants depth.`
+                              : 'Both formats are performing similarly on your channel.'
+                        ),
+                      }}
+                      mix={{
+                        shortsCount: patterns.shortsCount,
+                        longsCount: patterns.longsCount,
+                      }}
+                    />
+                  )}
+
+                  {data.insights && (() => {
+                    const cs = data.insights.categoryScores || {}
+                    const surfaced = [
+                      ['CTR',         cs.ctrHealth],
+                      ['Retention',   cs.audienceRetention],
+                      ['Strategy',    cs.contentStrategy],
+                      ['Consistency', cs.postingConsistency],
+                      ['Engagement',  cs.engagementQuality],
+                    ].filter(([, v]) => typeof v === 'number')
+                    const fullEntries = [
+                      ['CTR health', cs.ctrHealth],
+                      ['Audience retention', cs.audienceRetention],
+                      ['Content strategy', cs.contentStrategy],
+                      ['Posting consistency', cs.postingConsistency],
+                      ['Engagement quality', cs.engagementQuality],
+                      ['SEO discoverability', cs.seoDiscoverability],
+                      ['Video length', cs.videoLength],
+                      ['Traffic source intel', cs.trafficSourceIntelligence],
+                    ].filter(([, v]) => typeof v === 'number')
+                    const weakest = fullEntries
+                      .filter(([, v]) => v != null && v < 50)
+                      .sort((a, b) => a[1] - b[1])
+                      .slice(0, 2)
+                      .map(([k]) => k)
+                    return (
+                      <ChannelHealthFeedCard
+                        score={score}
+                        categories={surfaced}
+                        weakest={weakest}
+                        open={auditOpen}
+                        onToggle={() => setAuditOpen(o => !o)}
+                      />
+                    )
+                  })()}
+                </div>
+              )}
 
             </div>
           )}
@@ -3590,7 +3866,7 @@ export default function Dashboard() {
             })
             const totalEarned = perCat.filter(p => p.latestTier !== null).length
             return (
-              <div style={{ maxWidth: 720, margin: '40px auto 0' }}>
+              <div style={{ maxWidth: 1040, margin: '40px auto 0' }}>
                 <div style={{ marginBottom: 20 }}>
                   <h2 style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', marginBottom: 4 }}>Milestones</h2>
                   <p style={{ fontSize: 13, color: C.text3 }}>
@@ -3773,7 +4049,7 @@ export default function Dashboard() {
               The new PriorityActionCards on the Feed read from the same
               checked/deleted state, so ticking either updates both. */}
           {data && nav === 'Overview' && data.insights && auditOpen && (
-            <div style={{ maxWidth: 720, margin: '0 auto' }}>
+            <div style={{ maxWidth: 1040, margin: '0 auto' }}>
               <div style={{ marginBottom: 20, marginTop: 44 }}>
                 <h2 style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', marginBottom: 4 }}>Channel audit</h2>
                 <p style={{ fontSize: 13, color: C.text3 }}>{data.insights.priorityActions?.length ?? 0} priority actions{data.analyzed_at ? ` · Audited ${parseUTC(data.analyzed_at)?.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) ?? ''}` : ''}</p>
@@ -4116,11 +4392,11 @@ export default function Dashboard() {
                   return Math.round(((after - before) / before) * 100)
                 }
 
-                // Tinted delta cell — mirrors Priority Actions' 3-col body (blue/white/green tints).
-                // We use the same palette: Views=blue (info), Likes=white+bar (action), Comments=green (outcome).
+                // Tinted delta cell — palette is brand-only now: charcoal/white+green/green.
+                // Views=charcoal (info), Likes=white+green-bar (action), Comments=green (outcome).
                 const DeltaCell = ({ label, before, current, pctVal, tint }) => {
                   const tintMap = {
-                    blue:  { bg: 'rgba(79,134,247,0.07)', border: '1px solid rgba(79,134,247,0.12)', labelColor: '#4a7cf7' },
+                    blue:  { bg: 'rgba(15,15,19,0.04)', border: '1px solid rgba(15,15,19,0.08)', labelColor: C.text2 },
                     white: { bg: '#ffffff', border: `1px solid ${C.border}`, borderLeft: `3px solid ${C.green}`, borderRadius: '0 10px 10px 0', boxShadow: '0 2px 8px rgba(0,0,0,0.06)', labelColor: C.green },
                     green: { bg: 'rgba(5,150,105,0.07)', border: '1px solid rgba(5,150,105,0.14)', labelColor: C.green },
                   }[tint]
@@ -4365,7 +4641,7 @@ export default function Dashboard() {
               Feed card above; this detailed Shorts vs long-form breakdown
               only renders when the user expands the audit collapse. */}
           {data && nav === 'Overview' && patterns && auditOpen && (
-            <div style={{ maxWidth: 720, margin: '0 auto' }}>
+            <div style={{ maxWidth: 1040, margin: '0 auto' }}>
               <div style={{ marginBottom: 20, marginTop: 44 }}>
                 <h2 style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', marginBottom: 4 }}>Content patterns</h2>
                 <p style={{ fontSize: 13, color: C.text3 }}>What's working and what isn't</p>

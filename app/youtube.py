@@ -167,6 +167,20 @@ def get_analytics(credentials, channel_id):
         avg_retention = sum(r[4] for r in rows) / len(rows)
         subs_gained = sum(r[5] for r in rows)
         subs_lost = sum(r[6] for r in rows)
+
+        # Per-day series for sparkline charts on the Feed. Trim to last
+        # 28 days for hero tiles; full 90d available via *_90d totals.
+        last28 = rows[-28:] if len(rows) > 28 else rows
+        views_series = [int(r[1]) for r in last28]
+        # Net subscribers per day (gained - lost). The Feed hero plots
+        # the cumulative trend, not the raw daily delta.
+        net_subs_daily = [int(r[5]) - int(r[6]) for r in last28]
+        subs_cumulative = []
+        running = 0
+        for v in net_subs_daily:
+            running += v
+            subs_cumulative.append(running)
+
         return {
             "views_90d": int(total_views),
             "watch_minutes_90d": int(total_watch_minutes),
@@ -174,7 +188,9 @@ def get_analytics(credentials, channel_id):
             "avg_retention_percent": round(avg_retention, 1),
             "subscribers_gained_90d": int(subs_gained),
             "subscribers_lost_90d": int(subs_lost),
-            "net_subscribers_90d": int(subs_gained - subs_lost)
+            "net_subscribers_90d": int(subs_gained - subs_lost),
+            "views_series_28d": views_series,
+            "subs_series_28d": subs_cumulative,
         }
     except Exception as e:
         print(f"Analytics error: {e}")
