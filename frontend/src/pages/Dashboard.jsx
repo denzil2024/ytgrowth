@@ -1177,25 +1177,46 @@ function MilestoneHeroTile({ label, value, raw, kind, delta, deltaSuffix, deltaI
   const deltaBdr   = !hasDelta ? 'transparent' : deltaPositive ? 'rgba(5,150,105,0.18)' : 'rgba(229,37,27,0.18)'
 
   return (
-    <div className="ytg-stat-card" style={{ padding: '20px 22px 20px' }}>
-      <p style={{
-        fontSize: 11, fontWeight: 700, letterSpacing: '0.10em',
-        textTransform: 'uppercase', color: C.text3, marginBottom: 12,
-      }}>{label}</p>
+    <div className="ytg-stat-card" style={{ padding: '14px 16px 12px' }}>
+      {/* Top row: tiny label · optional delta chip */}
+      <div style={{
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        gap: 10, marginBottom: 6,
+      }}>
+        <p style={{
+          fontSize: 10, fontWeight: 700, letterSpacing: '0.11em',
+          textTransform: 'uppercase', color: C.text3,
+        }}>{label}</p>
+        {hasDelta && (
+          <span style={{
+            display: 'inline-flex', alignItems: 'center', gap: 3,
+            fontSize: 10.5, fontWeight: 700, color: deltaColor,
+            background: deltaBg, border: `1px solid ${deltaBdr}`,
+            padding: '1px 7px', borderRadius: 100,
+            letterSpacing: '-0.05px',
+            fontVariantNumeric: 'tabular-nums',
+          }}>
+            <svg width="8" height="8" viewBox="0 0 10 10" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" style={{ transform: deltaPositive ? 'none' : 'rotate(180deg)' }}>
+              <path d="M5 8V2M2.5 4.5 5 2l2.5 2.5"/>
+            </svg>
+            {deltaPositive ? '+' : ''}{fmtNum(Math.abs(deltaNum))}
+          </span>
+        )}
+      </div>
 
+      {/* Big number */}
       <p style={{
-        fontSize: 44, fontWeight: 800, letterSpacing: '-2px',
+        fontSize: 28, fontWeight: 800, letterSpacing: '-1.2px',
         color: C.text1, lineHeight: 1, fontVariantNumeric: 'tabular-nums',
-        marginBottom: 16,
+        marginBottom: 9,
       }}>{value}</p>
 
-      {/* Milestone progress bar — soft track, brand-red gradient fill */}
+      {/* Hairline progress to next milestone */}
       <div style={{
         position: 'relative',
-        background: '#eaeaef', borderRadius: 99, height: 5,
+        background: '#eef0f4', borderRadius: 99, height: 3,
         overflow: 'hidden',
-        boxShadow: 'inset 0 1px 1px rgba(0,0,0,0.04)',
-        marginBottom: 8,
+        marginBottom: 5,
       }}>
         <div style={{
           width: `${pct}%`, height: '100%',
@@ -1205,30 +1226,9 @@ function MilestoneHeroTile({ label, value, raw, kind, delta, deltaSuffix, deltaI
         }}/>
       </div>
 
-      {/* Bottom row: current → next milestone, optional delta chip */}
-      <div style={{
-        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        gap: 10, fontVariantNumeric: 'tabular-nums',
-      }}>
-        <p style={{ fontSize: 11.5, fontWeight: 600, color: C.text3, letterSpacing: '-0.01em' }}>
-          Next: <span style={{ color: C.text1, fontWeight: 700 }}>{fmtNum(target)}</span>
-        </p>
-        {hasDelta && (
-          <span style={{
-            display: 'inline-flex', alignItems: 'center', gap: 4,
-            fontSize: 11, fontWeight: 700, color: deltaColor,
-            background: deltaBg, border: `1px solid ${deltaBdr}`,
-            padding: '2px 8px', borderRadius: 100,
-            letterSpacing: '-0.05px',
-          }}>
-            <svg width="9" height="9" viewBox="0 0 10 10" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" style={{ transform: deltaPositive ? 'none' : 'rotate(180deg)' }}>
-              <path d="M5 8V2M2.5 4.5 5 2l2.5 2.5"/>
-            </svg>
-            {deltaPositive ? '+' : ''}{fmtNum(Math.abs(deltaNum))}
-            <span style={{ color: C.text3, fontWeight: 500, marginLeft: 2 }}>{deltaSuffix || ''}</span>
-          </span>
-        )}
-      </div>
+      <p style={{ fontSize: 10.5, fontWeight: 600, color: C.text3, letterSpacing: '-0.01em', fontVariantNumeric: 'tabular-nums' }}>
+        Next: <span style={{ color: C.text1, fontWeight: 700 }}>{fmtNum(target)}</span>
+      </p>
     </div>
   )
 }
@@ -1305,41 +1305,41 @@ function FeedCard({
     <article style={{
       background: '#ffffff',
       border: '1px solid #ececf0',
-      borderRadius: 14,
-      padding: '18px 20px 20px 20px',
-      boxShadow: '0 1px 2px rgba(0,0,0,0.04), 0 4px 14px rgba(0,0,0,0.06)',
-      marginBottom: 14,
+      borderRadius: 12,
+      padding: '14px 18px 16px 18px',
+      boxShadow: '0 1px 2px rgba(0,0,0,0.04), 0 3px 10px rgba(0,0,0,0.05)',
+      marginBottom: 12,
       fontFamily: "'Inter', system-ui, sans-serif",
       transition: 'box-shadow 0.18s ease, transform 0.18s ease',
     }}
       onMouseEnter={e => {
-        e.currentTarget.style.boxShadow = '0 4px 14px rgba(0,0,0,0.09), 0 18px 42px rgba(0,0,0,0.10)'
+        e.currentTarget.style.boxShadow = '0 4px 14px rgba(0,0,0,0.08), 0 14px 32px rgba(0,0,0,0.08)'
         e.currentTarget.style.transform = 'translateY(-1px)'
       }}
       onMouseLeave={e => {
-        e.currentTarget.style.boxShadow = '0 1px 2px rgba(0,0,0,0.04), 0 4px 14px rgba(0,0,0,0.06)'
+        e.currentTarget.style.boxShadow = '0 1px 2px rgba(0,0,0,0.04), 0 3px 10px rgba(0,0,0,0.05)'
         e.currentTarget.style.transform = 'translateY(0)'
       }}
     >
       <div style={{
-        display: 'flex', alignItems: 'center', gap: 10,
-        marginBottom: 14,
+        display: 'flex', alignItems: 'center', gap: 9,
+        marginBottom: 10,
       }}>
         <span style={{
           flexShrink: 0,
-          width: 28, height: 28, borderRadius: 8,
+          width: 24, height: 24, borderRadius: 7,
           display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
           background: iconBg,
           color: iconColor,
         }}>
-          <Icon size={15} strokeWidth={2} />
+          <Icon size={13} strokeWidth={2.1} />
         </span>
         <span style={{
-          fontSize: 10.5, fontWeight: 800, color: C.text3,
-          letterSpacing: '0.11em', textTransform: 'uppercase',
+          fontSize: 10, fontWeight: 800, color: C.text3,
+          letterSpacing: '0.12em', textTransform: 'uppercase',
         }}>{category}</span>
         {age && (
-          <span style={{ fontSize: 11.5, color: C.text3, fontWeight: 500, letterSpacing: '-0.01em' }}>
+          <span style={{ fontSize: 11, color: C.text3, fontWeight: 500, letterSpacing: '-0.01em' }}>
             · {age}
           </span>
         )}
@@ -1351,17 +1351,17 @@ function FeedCard({
             onClick={onDismiss}
             aria-label="Dismiss"
             style={{
-              width: 24, height: 24, borderRadius: 6,
+              width: 22, height: 22, borderRadius: 6,
               border: 'none', background: 'transparent',
-              color: 'rgba(10,10,15,0.40)',
+              color: 'rgba(10,10,15,0.36)',
               cursor: 'pointer',
               display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
               transition: 'background 0.14s ease, color 0.14s ease',
             }}
             onMouseEnter={e => { e.currentTarget.style.background = 'rgba(15,15,19,0.06)'; e.currentTarget.style.color = '#0a0a0f' }}
-            onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'rgba(10,10,15,0.40)' }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'rgba(10,10,15,0.36)' }}
           >
-            <XIcon size={13} strokeWidth={2} />
+            <XIcon size={12} strokeWidth={2.1} />
           </button>
         )}
       </div>
@@ -1370,14 +1370,23 @@ function FeedCard({
   )
 }
 
-// Priority Action card. One open audit action, with an Impact badge and
-// the single CTA that maps to its category page. Tick / dismiss live in
-// the right slot of the eyebrow so the body stays focused on the action.
+// Priority Action card. Collapsed first: headline + impact bar + meta +
+// CTAs. The action prose and why-it-matters live behind a Detail chevron.
+// Tick / dismiss live in the eyebrow's right slot so the body stays clean.
 function PriorityActionCard({ action, rank, total, impact, onAct, onDone, onDismiss, ctaLabel }) {
+  const [open, setOpen] = useState(false)
   const impactKey = (impact || 'med').toLowerCase()
   const impactClr = impactKey === 'high' ? C.red : impactKey === 'low' ? C.text3 : C.amber
   const impactBg  = impactKey === 'high' ? 'rgba(229,37,27,0.07)' : impactKey === 'low' ? 'rgba(15,15,19,0.04)' : 'rgba(217,119,6,0.08)'
   const impactBdr = impactKey === 'high' ? 'rgba(229,37,27,0.18)' : impactKey === 'low' ? 'rgba(15,15,19,0.10)' : 'rgba(217,119,6,0.18)'
+  const impactPct = impactKey === 'high' ? 85 : impactKey === 'low' ? 30 : 58
+  const impactFill = impactKey === 'high'
+    ? 'linear-gradient(90deg, rgba(229,37,27,0.55) 0%, #e5251b 100%)'
+    : impactKey === 'low'
+      ? 'linear-gradient(90deg, rgba(60,60,75,0.35) 0%, rgba(60,60,75,0.55) 100%)'
+      : 'linear-gradient(90deg, rgba(217,119,6,0.55) 0%, #d97706 100%)'
+
+  const cat = action.category || categoryToNav(action.category, action.problem)
 
   return (
     <FeedCard
@@ -1395,77 +1404,133 @@ function PriorityActionCard({ action, rank, total, impact, onAct, onDone, onDism
         }}>{impactKey} impact</span>
       }
     >
+      {/* Headline only — single bold line */}
       <h3 style={{
-        fontSize: 16, fontWeight: 700, color: C.text1,
-        letterSpacing: '-0.3px', lineHeight: 1.35,
-        marginBottom: 8,
+        fontSize: 15, fontWeight: 700, color: C.text1,
+        letterSpacing: '-0.25px', lineHeight: 1.35,
+        marginBottom: 12,
       }}>{action.problem || action.action || 'Action'}</h3>
 
-      {action.action && action.action !== action.problem && (
-        <p style={{
-          fontSize: 13.5, fontWeight: 450, color: C.text2,
-          letterSpacing: '-0.01em', lineHeight: 1.55,
-          marginBottom: 14,
-        }}>{action.action}</p>
-      )}
-
-      {action.expected_outcome && (
-        <p style={{
-          fontSize: 12.5, fontWeight: 500, color: C.text3,
-          letterSpacing: '-0.01em', lineHeight: 1.5,
-          marginBottom: 14,
+      {/* Visual band: impact bar */}
+      <div style={{ marginBottom: 12 }}>
+        <div style={{
+          position: 'relative',
+          background: '#eef0f4', borderRadius: 99, height: 6,
+          overflow: 'hidden',
         }}>
-          <span style={{ fontWeight: 700, color: C.text2 }}>Why:</span> {action.expected_outcome}
-        </p>
-      )}
+          <div style={{
+            width: `${impactPct}%`, height: '100%',
+            background: impactFill,
+            borderRadius: 99,
+            transition: 'width 0.8s cubic-bezier(0.34,1.56,0.64,1)',
+          }}/>
+        </div>
+      </div>
 
+      {/* Meta row + CTAs + Detail chevron */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
+        <span style={{
+          fontSize: 11.5, fontWeight: 500, color: C.text3,
+          letterSpacing: '-0.01em',
+        }}>{cat}</span>
+
+        <div style={{ flex: 1 }}/>
+
         <button
           type="button"
           onClick={onAct}
           style={{
-            display: 'inline-flex', alignItems: 'center', gap: 6,
-            padding: '9px 16px', borderRadius: 100,
+            display: 'inline-flex', alignItems: 'center', gap: 5,
+            padding: '7px 13px', borderRadius: 100,
             border: 'none', cursor: 'pointer',
             background: C.red, color: '#fff',
             fontFamily: 'inherit',
-            fontSize: 13, fontWeight: 700, letterSpacing: '-0.01em',
-            boxShadow: '0 1px 3px rgba(229,37,27,0.32), 0 4px 14px rgba(229,37,27,0.22)',
+            fontSize: 12, fontWeight: 700, letterSpacing: '-0.01em',
+            boxShadow: '0 1px 3px rgba(229,37,27,0.30)',
             transition: 'filter 0.14s ease, transform 0.14s ease',
           }}
           onMouseEnter={e => { e.currentTarget.style.filter = 'brightness(1.08)'; e.currentTarget.style.transform = 'translateY(-1px)' }}
           onMouseLeave={e => { e.currentTarget.style.filter = 'none'; e.currentTarget.style.transform = 'translateY(0)' }}
         >
           {ctaLabel || 'Open tool'}
-          <ArrowRight size={13} strokeWidth={2.4} />
+          <ArrowRight size={12} strokeWidth={2.4} />
         </button>
+
         <button
           type="button"
-          onClick={onDone}
+          onClick={() => setOpen(o => !o)}
+          aria-label={open ? 'Hide detail' : 'Show detail'}
           style={{
-            display: 'inline-flex', alignItems: 'center', gap: 6,
-            padding: '8px 14px', borderRadius: 100,
+            display: 'inline-flex', alignItems: 'center', gap: 4,
+            padding: '6px 11px', borderRadius: 100,
             border: '1px solid #e6e6ec',
             background: '#fff', color: C.text2,
             fontFamily: 'inherit',
-            fontSize: 12.5, fontWeight: 600, letterSpacing: '-0.01em',
+            fontSize: 11.5, fontWeight: 600, letterSpacing: '-0.01em',
             cursor: 'pointer',
             transition: 'background 0.14s ease, color 0.14s ease, border-color 0.14s ease',
           }}
           onMouseEnter={e => { e.currentTarget.style.background = 'rgba(15,15,19,0.04)'; e.currentTarget.style.color = C.text1; e.currentTarget.style.borderColor = '#d0d0d8' }}
           onMouseLeave={e => { e.currentTarget.style.background = '#fff'; e.currentTarget.style.color = C.text2; e.currentTarget.style.borderColor = '#e6e6ec' }}
         >
-          Mark done
+          Detail
+          <ChevronDown size={11} strokeWidth={2.4} style={{ transform: open ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s ease' }}/>
         </button>
       </div>
+
+      {/* Detail (collapsed by default) */}
+      {open && (
+        <div style={{
+          marginTop: 14, paddingTop: 14,
+          borderTop: '1px solid #f1f1f4',
+        }}>
+          {action.action && action.action !== action.problem && (
+            <p style={{
+              fontSize: 12.5, fontWeight: 500, color: C.text2,
+              letterSpacing: '-0.01em', lineHeight: 1.65,
+              marginBottom: action.expected_outcome ? 10 : 12,
+            }}>
+              <span style={{ fontWeight: 700, color: C.text1 }}>Fix:</span> {action.action}
+            </p>
+          )}
+          {action.expected_outcome && (
+            <p style={{
+              fontSize: 12.5, fontWeight: 500, color: C.text3,
+              letterSpacing: '-0.01em', lineHeight: 1.65,
+              marginBottom: 12,
+            }}>
+              <span style={{ fontWeight: 700, color: C.text2 }}>Why:</span> {action.expected_outcome}
+            </p>
+          )}
+          <button
+            type="button"
+            onClick={onDone}
+            style={{
+              display: 'inline-flex', alignItems: 'center', gap: 5,
+              padding: '6px 12px', borderRadius: 100,
+              border: '1px solid #e6e6ec',
+              background: '#fff', color: C.text2,
+              fontFamily: 'inherit',
+              fontSize: 11.5, fontWeight: 600, letterSpacing: '-0.01em',
+              cursor: 'pointer',
+              transition: 'background 0.14s ease, color 0.14s ease, border-color 0.14s ease',
+            }}
+            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(15,15,19,0.04)'; e.currentTarget.style.color = C.text1; e.currentTarget.style.borderColor = '#d0d0d8' }}
+            onMouseLeave={e => { e.currentTarget.style.background = '#fff'; e.currentTarget.style.color = C.text2; e.currentTarget.style.borderColor = '#e6e6ec' }}
+          >
+            Mark done
+          </button>
+        </div>
+      )}
     </FeedCard>
   )
 }
 
-// Milestone Unlocked card. Trophy in an amber-tinted circle. Headline is
-// the achievement, body is a one-line celebratory note. CTAs route to the
-// existing milestone share / download modal so we reuse that logic.
+// Milestone Unlocked card. Collapsed first: headline + a "100% bar" visual
+// confirming the threshold was crossed + Share CTA. The celebration line
+// lives behind a Detail chevron.
 function MilestoneFeedCard({ milestone, onShare, onDownload, onDismiss }) {
+  const [open, setOpen] = useState(false)
   return (
     <FeedCard
       Icon={Trophy}
@@ -1476,48 +1541,104 @@ function MilestoneFeedCard({ milestone, onShare, onDownload, onDismiss }) {
       onDismiss={onDismiss}
     >
       <h3 style={{
-        fontSize: 16, fontWeight: 700, color: C.text1,
-        letterSpacing: '-0.3px', lineHeight: 1.35,
-        marginBottom: 8,
+        fontSize: 15, fontWeight: 700, color: C.text1,
+        letterSpacing: '-0.25px', lineHeight: 1.35,
+        marginBottom: 12,
       }}>{milestone.headline}</h3>
-      {milestone.body && (
-        <p style={{
-          fontSize: 13.5, fontWeight: 450, color: C.text2,
-          letterSpacing: '-0.01em', lineHeight: 1.55,
-          marginBottom: 14,
-        }}>{milestone.body}</p>
-      )}
-      <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+
+      {/* Visual band: filled-to-100 bar in amber, signalling crossed */}
+      <div style={{ marginBottom: 12 }}>
+        <div style={{
+          position: 'relative',
+          background: '#eef0f4', borderRadius: 99, height: 6,
+          overflow: 'hidden',
+        }}>
+          <div style={{
+            width: '100%', height: '100%',
+            background: 'linear-gradient(90deg, rgba(217,119,6,0.55) 0%, #d97706 100%)',
+            borderRadius: 99,
+          }}/>
+        </div>
+      </div>
+
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
+        <span style={{
+          fontSize: 11.5, fontWeight: 500, color: C.text3, letterSpacing: '-0.01em',
+        }}>Achievement unlocked</span>
+        <div style={{ flex: 1 }}/>
         {onShare && (
           <button
             type="button"
             onClick={onShare}
             style={{
-              display: 'inline-flex', alignItems: 'center', gap: 6,
-              padding: '9px 16px', borderRadius: 100,
+              display: 'inline-flex', alignItems: 'center', gap: 5,
+              padding: '7px 13px', borderRadius: 100,
               border: 'none', cursor: 'pointer',
               background: C.red, color: '#fff',
               fontFamily: 'inherit',
-              fontSize: 13, fontWeight: 700, letterSpacing: '-0.01em',
-              boxShadow: '0 1px 3px rgba(229,37,27,0.32)',
+              fontSize: 12, fontWeight: 700, letterSpacing: '-0.01em',
+              boxShadow: '0 1px 3px rgba(229,37,27,0.30)',
               transition: 'filter 0.14s ease, transform 0.14s ease',
             }}
             onMouseEnter={e => { e.currentTarget.style.filter = 'brightness(1.08)'; e.currentTarget.style.transform = 'translateY(-1px)' }}
             onMouseLeave={e => { e.currentTarget.style.filter = 'none'; e.currentTarget.style.transform = 'translateY(0)' }}
           >
             Share milestone
-            <ArrowRight size={13} strokeWidth={2.4} />
+            <ArrowRight size={12} strokeWidth={2.4} />
+          </button>
+        )}
+        {milestone.body && (
+          <button
+            type="button"
+            onClick={() => setOpen(o => !o)}
+            aria-label={open ? 'Hide detail' : 'Show detail'}
+            style={{
+              display: 'inline-flex', alignItems: 'center', gap: 4,
+              padding: '6px 11px', borderRadius: 100,
+              border: '1px solid #e6e6ec',
+              background: '#fff', color: C.text2,
+              fontFamily: 'inherit',
+              fontSize: 11.5, fontWeight: 600, letterSpacing: '-0.01em',
+              cursor: 'pointer',
+              transition: 'background 0.14s ease, color 0.14s ease, border-color 0.14s ease',
+            }}
+            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(15,15,19,0.04)'; e.currentTarget.style.color = C.text1; e.currentTarget.style.borderColor = '#d0d0d8' }}
+            onMouseLeave={e => { e.currentTarget.style.background = '#fff'; e.currentTarget.style.color = C.text2; e.currentTarget.style.borderColor = '#e6e6ec' }}
+          >
+            Detail
+            <ChevronDown size={11} strokeWidth={2.4} style={{ transform: open ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s ease' }}/>
           </button>
         )}
       </div>
+
+      {open && milestone.body && (
+        <div style={{
+          marginTop: 14, paddingTop: 14,
+          borderTop: '1px solid #f1f1f4',
+        }}>
+          <p style={{
+            fontSize: 12.5, fontWeight: 500, color: C.text2,
+            letterSpacing: '-0.01em', lineHeight: 1.65,
+          }}>{milestone.body}</p>
+        </div>
+      )}
     </FeedCard>
   )
 }
 
-// Content Mix card. Uses BarChart3 as the category icon. Body is the
-// AI-generated insight string from the existing patterns endpoint.
-function ContentMixFeedCard({ patterns, onDismiss }) {
+// Content Mix card. Collapsed first: headline + stacked Shorts-vs-Long
+// bar (visual) + counts. The AI insight prose lives behind Detail.
+function ContentMixFeedCard({ patterns, mix, onDismiss }) {
+  const [open, setOpen] = useState(false)
   if (!patterns) return null
+  // Mix is { shortsCount, longsCount } when available. Fall back to a
+  // neutral 50/50 split if the parent doesn't pass mix data.
+  const sCount = mix?.shortsCount ?? null
+  const lCount = mix?.longsCount ?? null
+  const total = (sCount ?? 0) + (lCount ?? 0)
+  const sPct = total > 0 ? Math.round(((sCount || 0) / total) * 100) : 50
+  const lPct = 100 - sPct
+
   return (
     <FeedCard
       Icon={BarChart3}
@@ -1527,29 +1648,106 @@ function ContentMixFeedCard({ patterns, onDismiss }) {
       onDismiss={onDismiss}
     >
       <h3 style={{
-        fontSize: 16, fontWeight: 700, color: C.text1,
-        letterSpacing: '-0.3px', lineHeight: 1.35,
-        marginBottom: 8,
+        fontSize: 15, fontWeight: 700, color: C.text1,
+        letterSpacing: '-0.25px', lineHeight: 1.35,
+        marginBottom: 12,
       }}>{patterns.headline || 'Your content mix'}</h3>
-      <p style={{
-        fontSize: 13.5, fontWeight: 450, color: C.text2,
-        letterSpacing: '-0.01em', lineHeight: 1.6,
-      }}>{patterns.body || patterns.text || ''}</p>
+
+      {/* Visual band: stacked Shorts vs Long bar */}
+      <div style={{ marginBottom: 8 }}>
+        <div style={{
+          display: 'flex',
+          background: '#eef0f4', borderRadius: 99, height: 6,
+          overflow: 'hidden',
+        }}>
+          <div style={{
+            width: `${sPct}%`, height: '100%',
+            background: 'linear-gradient(90deg, rgba(74,124,247,0.55) 0%, #4a7cf7 100%)',
+          }}/>
+          <div style={{
+            width: `${lPct}%`, height: '100%',
+            background: 'linear-gradient(90deg, rgba(15,15,19,0.45) 0%, rgba(15,15,19,0.65) 100%)',
+          }}/>
+        </div>
+      </div>
+
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', marginBottom: 0 }}>
+        <span style={{
+          display: 'inline-flex', alignItems: 'center', gap: 5,
+          fontSize: 11.5, fontWeight: 500, color: C.text3, letterSpacing: '-0.01em',
+        }}>
+          <span style={{ width: 7, height: 7, borderRadius: 99, background: '#4a7cf7' }}/>
+          Shorts {sCount != null ? sCount : ''} {sCount != null ? '·' : ''} {sPct}%
+        </span>
+        <span style={{
+          display: 'inline-flex', alignItems: 'center', gap: 5,
+          fontSize: 11.5, fontWeight: 500, color: C.text3, letterSpacing: '-0.01em',
+        }}>
+          <span style={{ width: 7, height: 7, borderRadius: 99, background: 'rgba(15,15,19,0.65)' }}/>
+          Long {lCount != null ? lCount : ''} {lCount != null ? '·' : ''} {lPct}%
+        </span>
+        <div style={{ flex: 1 }}/>
+        {(patterns.body || patterns.text) && (
+          <button
+            type="button"
+            onClick={() => setOpen(o => !o)}
+            aria-label={open ? 'Hide detail' : 'Show detail'}
+            style={{
+              display: 'inline-flex', alignItems: 'center', gap: 4,
+              padding: '6px 11px', borderRadius: 100,
+              border: '1px solid #e6e6ec',
+              background: '#fff', color: C.text2,
+              fontFamily: 'inherit',
+              fontSize: 11.5, fontWeight: 600, letterSpacing: '-0.01em',
+              cursor: 'pointer',
+              transition: 'background 0.14s ease, color 0.14s ease, border-color 0.14s ease',
+            }}
+            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(15,15,19,0.04)'; e.currentTarget.style.color = C.text1; e.currentTarget.style.borderColor = '#d0d0d8' }}
+            onMouseLeave={e => { e.currentTarget.style.background = '#fff'; e.currentTarget.style.color = C.text2; e.currentTarget.style.borderColor = '#e6e6ec' }}
+          >
+            Detail
+            <ChevronDown size={11} strokeWidth={2.4} style={{ transform: open ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s ease' }}/>
+          </button>
+        )}
+      </div>
+
+      {open && (patterns.body || patterns.text) && (
+        <div style={{
+          marginTop: 14, paddingTop: 14,
+          borderTop: '1px solid #f1f1f4',
+        }}>
+          <p style={{
+            fontSize: 12.5, fontWeight: 500, color: C.text2,
+            letterSpacing: '-0.01em', lineHeight: 1.65,
+          }}>{patterns.body || patterns.text || ''}</p>
+        </div>
+      )}
     </FeedCard>
   )
 }
 
-// Channel Health card with collapsible audit detail. Activity icon is
-// the category mark. The collapse is "See full audit ▾" — when expanded,
-// the body slot renders the legacy audit detail block (priority actions
-// checklist, category bars, quick wins, what's working, biggest risk).
-function ChannelHealthFeedCard({ score, weakest, children, open, onToggle }) {
+// Channel Health card. Collapsed first: one bold line of state + a row of
+// per-category score dots (visual), with the score chip on the right of
+// the eyebrow. The full audit (priority actions checklist, category bars,
+// quick wins, biggest risk) renders below when expanded.
+function ChannelHealthFeedCard({ score, categories, weakest, children, open, onToggle }) {
   const scoreClr =
     score >= 75 ? C.green : score >= 50 ? C.amber : C.red
   const scoreBdr =
     score >= 75 ? 'rgba(5,150,105,0.25)' : score >= 50 ? 'rgba(217,119,6,0.22)' : 'rgba(229,37,27,0.22)'
   const scoreBg =
     score >= 75 ? 'rgba(5,150,105,0.06)' : score >= 50 ? 'rgba(217,119,6,0.06)' : 'rgba(229,37,27,0.05)'
+
+  // Map each category score to a dot color. We surface the 5 categories
+  // VidIQ users instantly recognise: CTR, retention, strategy,
+  // consistency, engagement. Hover reveals the label + score.
+  const dotFor = (v) => {
+    if (v == null) return { c: '#dcdde3', bdr: '#dcdde3' }
+    if (v >= 75) return { c: C.green, bdr: 'rgba(5,150,105,0.35)' }
+    if (v >= 50) return { c: C.amber, bdr: 'rgba(217,119,6,0.35)' }
+    return { c: C.red, bdr: 'rgba(229,37,27,0.30)' }
+  }
+  const dots = (categories || []).map(([label, value]) => ({ label, value, ...dotFor(value) }))
 
   return (
     <FeedCard
@@ -1570,45 +1768,71 @@ function ChannelHealthFeedCard({ score, weakest, children, open, onToggle }) {
         </span>
       }
     >
-      {/* Health-state line */}
-      <p style={{
-        fontSize: 13.5, fontWeight: 450, color: C.text2,
-        letterSpacing: '-0.01em', lineHeight: 1.55,
-        marginBottom: 14,
+      <h3 style={{
+        fontSize: 15, fontWeight: 700, color: C.text1,
+        letterSpacing: '-0.25px', lineHeight: 1.35,
+        marginBottom: 12,
       }}>
         {score >= 75 ? 'Your channel is healthy. Keep doing what works.'
-          : score >= 50 ? "Your channel is solid but has clear room to improve."
-          : 'Your channel is underperforming for its size. The full audit below has the fix list.'}
+          : score >= 50 ? "Solid, with clear room to improve."
+          : 'Underperforming for your size. Fix list below.'}
+      </h3>
+
+      {/* Visual band: per-category dots */}
+      {dots.length > 0 && (
+        <div style={{
+          display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap',
+          marginBottom: 12,
+        }}>
+          {dots.map(d => (
+            <span
+              key={d.label}
+              title={`${d.label}: ${d.value ?? '—'}`}
+              style={{
+                display: 'inline-flex', alignItems: 'center', gap: 6,
+              }}
+            >
+              <span style={{
+                width: 10, height: 10, borderRadius: 99,
+                background: d.c, border: `1px solid ${d.bdr}`,
+              }}/>
+              <span style={{ fontSize: 11.5, fontWeight: 500, color: C.text3, letterSpacing: '-0.01em' }}>{d.label}</span>
+            </span>
+          ))}
+        </div>
+      )}
+
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
         {weakest && weakest.length > 0 && (
-          <>{' '}<span style={{ fontWeight: 600, color: C.text1 }}>Weak:</span> {weakest.join(', ')}.</>
+          <span style={{ fontSize: 11.5, fontWeight: 500, color: C.text3, letterSpacing: '-0.01em' }}>
+            Weakest: <span style={{ color: C.text2, fontWeight: 600 }}>{weakest.join(', ')}</span>
+          </span>
         )}
-      </p>
+        <div style={{ flex: 1 }}/>
+        <button
+          type="button"
+          onClick={onToggle}
+          style={{
+            display: 'inline-flex', alignItems: 'center', gap: 4,
+            padding: '6px 11px', borderRadius: 100,
+            border: '1px solid #e6e6ec',
+            background: '#fff', color: C.text2,
+            fontFamily: 'inherit',
+            fontSize: 11.5, fontWeight: 600, letterSpacing: '-0.01em',
+            cursor: 'pointer',
+            transition: 'background 0.14s ease, color 0.14s ease, border-color 0.14s ease',
+          }}
+          onMouseEnter={e => { e.currentTarget.style.background = 'rgba(15,15,19,0.04)'; e.currentTarget.style.color = C.text1; e.currentTarget.style.borderColor = '#d0d0d8' }}
+          onMouseLeave={e => { e.currentTarget.style.background = '#fff'; e.currentTarget.style.color = C.text2; e.currentTarget.style.borderColor = '#e6e6ec' }}
+        >
+          {open ? 'Hide audit' : 'See full audit'}
+          <ChevronDown size={11} strokeWidth={2.4} style={{
+            transform: open ? 'rotate(180deg)' : 'rotate(0deg)',
+            transition: 'transform 0.2s ease',
+          }}/>
+        </button>
+      </div>
 
-      {/* Toggle */}
-      <button
-        type="button"
-        onClick={onToggle}
-        style={{
-          display: 'inline-flex', alignItems: 'center', gap: 6,
-          padding: '7px 14px', borderRadius: 100,
-          border: '1px solid #e6e6ec',
-          background: '#fff', color: C.text2,
-          fontFamily: 'inherit',
-          fontSize: 12.5, fontWeight: 600, letterSpacing: '-0.01em',
-          cursor: 'pointer',
-          transition: 'background 0.14s ease, color 0.14s ease, border-color 0.14s ease',
-        }}
-        onMouseEnter={e => { e.currentTarget.style.background = 'rgba(15,15,19,0.04)'; e.currentTarget.style.color = C.text1; e.currentTarget.style.borderColor = '#d0d0d8' }}
-        onMouseLeave={e => { e.currentTarget.style.background = '#fff'; e.currentTarget.style.color = C.text2; e.currentTarget.style.borderColor = '#e6e6ec' }}
-      >
-        <span>{open ? 'Hide full audit' : 'See full audit'}</span>
-        <ChevronDown size={13} strokeWidth={2.4} style={{
-          transform: open ? 'rotate(180deg)' : 'rotate(0deg)',
-          transition: 'transform 0.2s ease',
-        }}/>
-      </button>
-
-      {/* Collapsed legacy detail */}
       {open && (
         <div style={{ marginTop: 18 }}>
           {children}
@@ -2957,8 +3181,13 @@ export default function Dashboard() {
           )}
 
           {/* ── OVERVIEW ─────────────────────────────────────────────── */}
+          {/* Feed lives in a centered 720px column inside the main area. The
+              column stops cards from stretching edge to edge on wide screens
+              and gives the page the focused, scannable feel of VidIQ. The
+              sidebar is untouched; the whitespace either side of the column
+              is just the main area minus 720px. */}
           {data && nav === 'Overview' && (
-            <>
+            <div style={{ maxWidth: 720, margin: '0 auto' }}>
               <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 24 }}>
                 <div>
                   <h1 style={{ fontSize: 24, fontWeight: 800, color: C.text1, letterSpacing: '-0.6px', marginBottom: 6 }}>
@@ -3093,8 +3322,8 @@ export default function Dashboard() {
               {/* Hero metric tiles — milestone-progress pattern. Each tile
                   shows the big number plus distance to the next round
                   milestone, with a soft brand-red gradient bar. The 90d
-                  delta sits as a chip on the bottom-right of the tile. */}
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 22 }}>
+                  delta sits as a chip on the top-right of the tile. */}
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 18 }}>
                 <MilestoneHeroTile
                   label="Subscribers"
                   value={fmtNum(data.channel.subscribers)}
@@ -3269,21 +3498,48 @@ export default function Dashboard() {
                 )
               })()}
 
-              {/* Content Mix — Insights */}
+              {/* Content Mix — Insights. mix prop drives the stacked
+                  Shorts-vs-Long visual band on the card. */}
               {(feedFilter === 'all' || feedFilter === 'insights') && patterns && (
                 <ContentMixFeedCard
                   patterns={{
-                    headline: patterns.headline || 'Your content mix',
-                    body: patterns.body || patterns.text || patterns.summary || '',
+                    headline: patterns.headline || (
+                      patterns.shortAvg > patterns.longAvg
+                        ? 'Shorts are outperforming your long-form'
+                        : patterns.longAvg > patterns.shortAvg
+                          ? 'Long-form is outperforming your Shorts'
+                          : 'Your content mix'
+                    ),
+                    body: patterns.body || patterns.text || patterns.summary || (
+                      patterns.shortAvg > patterns.longAvg
+                        ? `Shorts outperform long-form by ${fmtNum(patterns.shortAvg - patterns.longAvg)} views on average. Lean into Shorts for discovery.`
+                        : patterns.longAvg > patterns.shortAvg
+                          ? `Long-form outperforms Shorts by ${fmtNum(patterns.longAvg - patterns.shortAvg)} views. Your audience wants depth.`
+                          : 'Both formats are performing similarly on your channel.'
+                    ),
+                  }}
+                  mix={{
+                    shortsCount: patterns.shortsCount,
+                    longsCount: patterns.longsCount,
                   }}
                 />
               )}
 
-              {/* Channel Health — Insights. Holds the legacy big audit
-                  detail block under its "See full audit" collapse. */}
+              {/* Channel Health — Insights. Surfaces 5 category dots as
+                  the visual band. The legacy audit detail expands from
+                  inside this card via the "See full audit" toggle. */}
               {(feedFilter === 'all' || feedFilter === 'insights') && data.insights && (() => {
                 const cs = data.insights.categoryScores || {}
-                const entries = [
+                // The 5 categories surfaced as dots — the ones a creator
+                // recognises instantly. Drop unknowns silently.
+                const surfaced = [
+                  ['CTR',         cs.ctrHealth],
+                  ['Retention',   cs.audienceRetention],
+                  ['Strategy',    cs.contentStrategy],
+                  ['Consistency', cs.postingConsistency],
+                  ['Engagement',  cs.engagementQuality],
+                ].filter(([, v]) => typeof v === 'number')
+                const fullEntries = [
                   ['CTR health', cs.ctrHealth],
                   ['Audience retention', cs.audienceRetention],
                   ['Content strategy', cs.contentStrategy],
@@ -3293,7 +3549,7 @@ export default function Dashboard() {
                   ['Video length', cs.videoLength],
                   ['Traffic source intel', cs.trafficSourceIntelligence],
                 ].filter(([, v]) => typeof v === 'number')
-                const weakest = entries
+                const weakest = fullEntries
                   .filter(([, v]) => v != null && v < 50)
                   .sort((a, b) => a[1] - b[1])
                   .slice(0, 2)
@@ -3301,6 +3557,7 @@ export default function Dashboard() {
                 return (
                   <ChannelHealthFeedCard
                     score={score}
+                    categories={surfaced}
                     weakest={weakest}
                     open={auditOpen}
                     onToggle={() => setAuditOpen(o => !o)}
@@ -3308,7 +3565,7 @@ export default function Dashboard() {
                 )
               })()}
 
-            </>
+            </div>
           )}
 
           {/* ── MILESTONES (legacy grid) ────────────────────────────────
@@ -3333,7 +3590,7 @@ export default function Dashboard() {
             })
             const totalEarned = perCat.filter(p => p.latestTier !== null).length
             return (
-              <div style={{ marginTop: 40 }}>
+              <div style={{ maxWidth: 720, margin: '40px auto 0' }}>
                 <div style={{ marginBottom: 20 }}>
                   <h2 style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', marginBottom: 4 }}>Milestones</h2>
                   <p style={{ fontSize: 13, color: C.text3 }}>
@@ -3516,7 +3773,7 @@ export default function Dashboard() {
               The new PriorityActionCards on the Feed read from the same
               checked/deleted state, so ticking either updates both. */}
           {data && nav === 'Overview' && data.insights && auditOpen && (
-            <>
+            <div style={{ maxWidth: 720, margin: '0 auto' }}>
               <div style={{ marginBottom: 20, marginTop: 44 }}>
                 <h2 style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', marginBottom: 4 }}>Channel audit</h2>
                 <p style={{ fontSize: 13, color: C.text3 }}>{data.insights.priorityActions?.length ?? 0} priority actions{data.analyzed_at ? ` · Audited ${parseUTC(data.analyzed_at)?.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) ?? ''}` : ''}</p>
@@ -4100,7 +4357,7 @@ export default function Dashboard() {
                   </div>
                 ) : null
               })()}
-            </>
+            </div>
           )}
 
           {/* ── PATTERNS (legacy block) ─────────────────────────────────
@@ -4108,7 +4365,7 @@ export default function Dashboard() {
               Feed card above; this detailed Shorts vs long-form breakdown
               only renders when the user expands the audit collapse. */}
           {data && nav === 'Overview' && patterns && auditOpen && (
-            <>
+            <div style={{ maxWidth: 720, margin: '0 auto' }}>
               <div style={{ marginBottom: 20, marginTop: 44 }}>
                 <h2 style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', marginBottom: 4 }}>Content patterns</h2>
                 <p style={{ fontSize: 13, color: C.text3 }}>What's working and what isn't</p>
@@ -4191,7 +4448,7 @@ export default function Dashboard() {
                   </div>
                 </div>
               </div>
-            </>
+            </div>
           )}
 
           {nav === 'Competitors' && <Competitors plan={billingPlan} freeTierFeatures={freeTierFeatures} />}
