@@ -51,7 +51,11 @@ if (typeof document !== 'undefined' && !document.getElementById('seo-opt-styles'
     border: 1px solid #e6e6ec !important;
     border-radius: 16px;
     box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 4px 14px rgba(0,0,0,0.06) !important;
-    transition: box-shadow 0.2s, transform 0.2s;
+    transition: box-shadow 0.18s ease, border-color 0.18s ease;
+  }
+  .seo-glass-card:hover {
+    border-color: rgba(15,15,19,0.16) !important;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.06), 0 10px 28px rgba(0,0,0,0.08) !important;
   }
   .seo-suggestion-card {
     background: #ffffff;
@@ -60,11 +64,14 @@ if (typeof document !== 'undefined' && !document.getElementById('seo-opt-styles'
     overflow: hidden;
     margin-bottom: 8px;
     box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 4px 14px rgba(0,0,0,0.06);
-    transition: box-shadow 0.2s, transform 0.2s;
+    transition: box-shadow 0.18s ease, border-color 0.18s ease;
   }
+  /* Subtle hover lift — no transform (no jumpy shift), just a softer
+     shadow deepening and a hairline darken. Matches the premium SaaS
+     hover pattern used by Stripe/Linear/Notion. */
   .seo-suggestion-card:hover {
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08), 0 16px 40px rgba(0,0,0,0.09);
-    transform: translateY(-1px);
+    border-color: rgba(15,15,19,0.16);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.06), 0 10px 28px rgba(0,0,0,0.08);
   }
   .seo-kw-row:hover .seo-kw-phrase { color: #0f0f13 !important; }
   .seo-format-card { outline: none; }
@@ -401,6 +408,14 @@ function ScoreRing({ score }) {
 // chip + bars never disagree (75+ green, 55+ amber, else red).
 function _subColor(v) { return v >= 75 ? C.green : v >= 55 ? C.amber : C.red }
 
+// Unified bar fill — every score / progress / saturation bar on the page
+// uses this so the visual language is consistent. Subtle left-to-right
+// gradient from a soft tint to the full tier color (Niche Heat already
+// used this pattern; the rest of the page now matches).
+function _barFill(color) {
+  return `linear-gradient(90deg, ${color}aa 0%, ${color} 100%)`
+}
+
 // One horizontal bar in the score breakdown. Label on the left in fixed
 // tabular-aligned column, animated fill in the middle, tabular number on
 // the right. Width 0 -> value on mount so the bars sweep in.
@@ -420,7 +435,7 @@ function ScoreBar({ label, value, mounted }) {
         borderRadius: 99, overflow: 'hidden', position: 'relative',
       }}>
         <div style={{
-          width: w, height: '100%', background: color, borderRadius: 99,
+          width: w, height: '100%', background: _barFill(color), borderRadius: 99,
           transition: 'width 0.85s cubic-bezier(0.34,1.56,0.64,1)',
           boxShadow: v >= 75 ? `0 0 0 1px ${color}22` : 'none',
         }}/>
@@ -826,7 +841,10 @@ function NicheHeatCard({ videos, shorts, primaryPhrase }) {
               <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/>
             </svg>
           </span>
-          <p style={{ fontSize: 11, fontWeight: 800, color: C.red, letterSpacing: '0.12em', textTransform: 'uppercase' }}>Niche heat</p>
+          {/* Eyebrow text neutralised — the flame icon to the left and the
+              red Live pill to the right already carry the red signal. Three
+              red moments in one row was over-stamping it. */}
+          <p style={{ fontSize: 11, fontWeight: 800, color: C.text1, letterSpacing: '0.12em', textTransform: 'uppercase' }}>Niche heat</p>
           {primaryPhrase && (
             <span style={{
               display: 'inline-flex', alignItems: 'center', gap: 6,
@@ -1088,16 +1106,17 @@ function SuggestionRow({ s, i, isSelected, isCopied, onCopy, onSelect, primaryPh
   const competitors = pickSimilarCompetitors(s.title, nicheVideos, 2)
 
   return (
-    // No coloured top stripe. Severity is conveyed by the score chip on the
-    // eyebrow + the bars inside the quality chart; the card edge no longer
-    // repeats it. Selected (user-picked) keeps a faint red side outline.
+    // No coloured top stripe and no tinted backgrounds. Card body stays pure
+    // white in every state; Selected keeps a faint red side outline as the
+    // only state cue, since the user wants the page to feel white with
+    // colour only where it carries a real signal.
     <div className="seo-suggestion-card" style={{
       marginBottom: 0,
       borderLeftColor:   isSelected ? 'rgba(229,37,27,0.30)' : '#e6e6ec',
       borderRightColor:  isSelected ? 'rgba(229,37,27,0.30)' : '#e6e6ec',
       borderBottomColor: isSelected ? 'rgba(229,37,27,0.30)' : '#e6e6ec',
       borderTopColor:    isSelected ? 'rgba(229,37,27,0.30)' : '#e6e6ec',
-      background: isSelected ? '#fff8f8' : isCopied ? '#f6fdf9' : '#ffffff',
+      background: '#ffffff',
     }}>
       <div style={{ padding: '18px 22px 20px' }}>
 
@@ -1436,7 +1455,7 @@ function SaturationDots({ total, filled, color, label }) {
           story; the bar is a visual support, not the headline. */}
       <div style={{ flex: '0 1 100px', maxWidth: 100, height: 4, background: '#eef0f4', borderRadius: 99, overflow: 'hidden' }}>
         <div style={{
-          width: `${ratio * 100}%`, height: '100%', background: color, borderRadius: 99,
+          width: `${ratio * 100}%`, height: '100%', background: _barFill(color), borderRadius: 99,
           transition: 'width 0.85s cubic-bezier(0.34,1.4,0.64,1)',
         }}/>
       </div>
@@ -1657,7 +1676,7 @@ function SubScoreBlock({ label, you, ai, mounted, delay }) {
         <span style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.06em', textTransform: 'uppercase', width: 30, flexShrink: 0 }}>You</span>
         <div style={{ flex: 1, height: 5, background: '#eef0f4', borderRadius: 99, overflow: 'hidden' }}>
           <div style={{
-            height: '100%', width: mounted ? `${you}%` : '0%', background: youCol, borderRadius: 99,
+            height: '100%', width: mounted ? `${you}%` : '0%', background: _barFill(youCol), borderRadius: 99,
             transition: `width 0.85s cubic-bezier(0.34,1.4,0.64,1) ${delay}ms`,
           }}/>
         </div>
@@ -1668,7 +1687,7 @@ function SubScoreBlock({ label, you, ai, mounted, delay }) {
         <span style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.06em', textTransform: 'uppercase', width: 30, flexShrink: 0 }}>AI</span>
         <div style={{ flex: 1, height: 5, background: '#eef0f4', borderRadius: 99, overflow: 'hidden' }}>
           <div style={{
-            height: '100%', width: mounted ? `${ai}%` : '0%', background: aiCol, borderRadius: 99,
+            height: '100%', width: mounted ? `${ai}%` : '0%', background: _barFill(aiCol), borderRadius: 99,
             transition: `width 0.85s cubic-bezier(0.34,1.4,0.64,1) ${delay + 100}ms`,
           }}/>
         </div>
@@ -1782,7 +1801,7 @@ function TitleComparisonHero({ userTitle, userScore, userBreakdown, suggestions,
         <div style={{ height: 6, background: '#eef0f4', borderRadius: 99, overflow: 'hidden' }}>
           <div style={{
             height: '100%', width: mounted ? `${Math.max(2, userScore)}%` : '0%',
-            background: userCol, borderRadius: 99,
+            background: _barFill(userCol), borderRadius: 99,
             transition: 'width 0.95s cubic-bezier(0.34,1.4,0.64,1)',
           }}/>
         </div>
@@ -1807,7 +1826,7 @@ function TitleComparisonHero({ userTitle, userScore, userBreakdown, suggestions,
         <div style={{ height: 6, background: '#eef0f4', borderRadius: 99, overflow: 'hidden' }}>
           <div style={{
             height: '100%', width: mounted ? `${Math.max(2, bestAvg)}%` : '0%',
-            background: bestCol, borderRadius: 99,
+            background: _barFill(bestCol), borderRadius: 99,
             transition: 'width 0.95s cubic-bezier(0.34,1.4,0.64,1) 180ms',
           }}/>
         </div>
@@ -1868,7 +1887,7 @@ function TitleComparisonHero({ userTitle, userScore, userBreakdown, suggestions,
         <div style={{
           padding: '16px 22px 18px',
           borderTop: `1px solid ${C.borderLight}`,
-          background: '#fafafb',
+          background: '#ffffff',
         }}>
           <p style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 12 }}>
             Where the AI title wins
@@ -2889,7 +2908,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
       )}
 
       {result && (
-        <div className="seo-result-section" style={{ marginTop: 40 }}>
+        <div className="seo-result-section" style={{ marginTop: 36 }}>
           {/* The old H2 "Title analysis" + 1-line paragraph above the card was
               redundant: the card's own eyebrow now carries the niche keyword,
               the videos-analysed count and the lift chip. Dropping the header
@@ -2939,7 +2958,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
             const redColor   = '#dc2626'
 
             return (
-              <div style={{ marginBottom: 24, marginTop: 40 }}>
+              <div style={{ marginBottom: 24, marginTop: 36 }}>
                 <div style={{ marginBottom: 20 }}>
                   <h2 style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', marginBottom: 4 }}>Search intent analysis</h2>
                   <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.5 }}>
@@ -3000,7 +3019,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
               "Competitor set" list and the earlier WinnersStrip
               experiment. */}
           {(result.top_videos?.length > 0 || result.top_shorts?.length > 0) && (
-            <div style={{ marginBottom: 28, marginTop: 24 }}>
+            <div style={{ marginBottom: 24, marginTop: 36 }}>
               <NicheHeatCard
                 videos={result.top_videos}
                 shorts={result.top_shorts}
@@ -3011,7 +3030,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
 
           {/* AI-Suggested Titles — H2+subtitle header pattern (matches Overview). */}
           {result.suggestions?.length > 0 && (
-            <div style={{ marginBottom: 24, marginTop: 32 }}>
+            <div style={{ marginBottom: 24, marginTop: 36 }}>
               <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 20, gap: 16 }}>
                 <div>
                   <h2 style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', marginBottom: 4 }}>Suggested titles</h2>
@@ -3055,7 +3074,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
           {/* ── Keyword research — amber-topped card matching Keyword discovery / Competitor set ── */}
           {result.keyword_scores?.length > 0 && (
             <>
-              <div style={{ marginBottom: 16, marginTop: 40 }}>
+              <div style={{ marginBottom: 20, marginTop: 36 }}>
                 <h2 style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', marginBottom: 4 }}>Keyword research</h2>
                 <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.5 }}>
                   Related phrases ranked by opportunity · click any to use as title
@@ -3101,7 +3120,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
                           }}>
                           <span className="seo-kw-phrase" style={{ fontSize: 13, color: C.text2, fontWeight: 400, width: 180, flexShrink: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', transition: 'color 0.12s' }}>{kw.phrase}</span>
                           <div style={{ flex: 1, height: 4, background: '#eeeef3', borderRadius: 99, overflow: 'hidden', minWidth: 40 }}>
-                            <div style={{ width: `${kw.score}%`, height: '100%', background: scColor, borderRadius: 99, transition: 'width 0.8s cubic-bezier(0.34,1.56,0.64,1)' }}/>
+                            <div style={{ width: `${kw.score}%`, height: '100%', background: _barFill(scColor), borderRadius: 99, transition: 'width 0.8s cubic-bezier(0.34,1.56,0.64,1)' }}/>
                           </div>
                           <span style={{ fontSize: 13, fontWeight: 700, color: scColor, fontVariantNumeric: 'tabular-nums', minWidth: 26, textAlign: 'right', flexShrink: 0 }}>{kw.score}</span>
                         </div>
@@ -3116,7 +3135,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
           {/* ── Keyword discovery — keywords from titles + tags from metadata ── */}
           {(result.autocomplete_terms?.length > 0 || result.top_tags?.length > 0) && (
             <>
-              <div style={{ marginBottom: 20, marginTop: 40 }}>
+              <div style={{ marginBottom: 20, marginTop: 36 }}>
                 <h2 style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', marginBottom: 4 }}>Keywords and tags</h2>
                 <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.5 }}>
                   Pulled from the top 10 ranking videos · borrow what's already working
@@ -3240,7 +3259,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
           {selectedTitle && (
             <>
               {/* Section header — mirrors Overview's "Channel audit" H2 pattern (H2 + 1-line muted subtitle) */}
-              <div ref={descRef} style={{ marginBottom: 20, marginTop: 40 }}>
+              <div ref={descRef} style={{ marginBottom: 20, marginTop: 36 }}>
                 <h2 style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', marginBottom: 4 }}>Description optimizer</h2>
                 <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.5 }}>
                   3 descriptions for your picked title — each opens with a different hook. Copy the one that fits.
