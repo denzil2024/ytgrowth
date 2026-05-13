@@ -51,158 +51,120 @@ export default function UsageBar({ channelId, email, dark = false, onPlan, onUsa
   const allowance    = usage.monthly_allowance ?? 0
   const used         = usage.monthly_used ?? 0
   const remaining    = Math.max(0, allowance - used)
-  const remainingPct = allowance > 0 ? (remaining / allowance) * 100 : 0
+  const usedPct      = allowance > 0 ? (used / allowance) * 100 : 0
 
   const atLimit   = remaining === 0
-  const nearLimit = !atLimit && remainingPct <= 20
+  const nearLimit = !atLimit && (remaining / Math.max(1, allowance)) <= 0.2
   const hasPack   = (usage.pack_balance ?? 0) > 0
   const showCTA   = (nearLimit || atLimit) && !hasPack
 
-  // Canonical palette — matches Dashboard C tokens.
+  // Canonical palette — matches Dashboard C tokens. Bar fills from left as
+  // credits get USED, in a state color: neutral when plenty left, amber
+  // when near limit, red at zero. No giant numbers, no green banner.
   const C = {
     red:    '#e5251b',
-    redDim: '#b91c1c',
     amber:  '#d97706',
-    amberDim:'#b45309',
-    green:  '#059669',
-    greenDim:'#047857',
     text1:  dark ? '#ffffff' : '#0f0f13',
     text2:  dark ? 'rgba(255,255,255,0.62)' : '#4a4a58',
     text3:  dark ? 'rgba(255,255,255,0.45)' : '#9595a4',
-    track:  dark ? 'rgba(255,255,255,0.10)' : '#eceef2',
-    cardBg: dark ? 'rgba(255,255,255,0.04)' : 'linear-gradient(180deg, #fafafc 0%, #f5f6f9 100%)',
-    cardBdr:dark ? 'rgba(255,255,255,0.08)' : '#ececf0',
+    track:  dark ? 'rgba(255,255,255,0.10)' : '#eaeaef',
   }
-
-  const accent    = atLimit ? C.red    : nearLimit ? C.amber    : C.green
-  const accentDim = atLimit ? C.redDim : nearLimit ? C.amberDim : C.greenDim
+  const fillClr = atLimit ? C.red : nearLimit ? C.amber : 'rgba(15,15,19,0.30)'
+  const valueClr = atLimit ? C.red : nearLimit ? C.amber : C.text1
 
   return (
     <div style={{
-      background: C.cardBg,
-      border: `1px solid ${C.cardBdr}`,
-      borderRadius: 12,
-      padding: '13px 14px 12px',
-      boxShadow: dark
-        ? 'inset 0 1px 0 rgba(255,255,255,0.04)'
-        : '0 1px 2px rgba(0,0,0,0.025), inset 0 1px 0 rgba(255,255,255,0.7)',
+      display: 'flex', flexDirection: 'column', gap: 6,
+      fontFamily: "'Inter', system-ui, sans-serif",
     }}>
-      {/* Eyebrow with sparkle dot */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 7, marginBottom: 10 }}>
+      {/* Single tight line: label + value */}
+      <div style={{
+        display: 'flex', alignItems: 'baseline', justifyContent: 'space-between',
+        gap: 8,
+      }}>
         <span style={{
-          width: 6, height: 6, borderRadius: '50%',
-          background: accent,
-          boxShadow: `0 0 0 3px ${accent}1f`,
-          flexShrink: 0,
-        }} />
-        <p style={{
-          fontSize: 10.5, fontWeight: 700, color: C.text3,
-          letterSpacing: '0.11em', textTransform: 'uppercase',
+          fontSize: 12, fontWeight: 500, color: C.text3,
+          letterSpacing: '-0.01em',
         }}>
-          AI analyses
-        </p>
-      </div>
-
-      {/* Main row — big "N" + small "/M" + "left" */}
-      <div style={{ display: 'flex', alignItems: 'baseline', gap: 5, marginBottom: 12 }}>
+          Credits
+        </span>
         <span style={{
-          fontSize: 30, fontWeight: 800, color: accent,
-          letterSpacing: '-1.1px', lineHeight: 0.95,
+          display: 'inline-flex', alignItems: 'baseline', gap: 3,
           fontVariantNumeric: 'tabular-nums',
         }}>
-          {remaining}
-        </span>
-        <span style={{ fontSize: 13, fontWeight: 600, color: C.text3, fontVariantNumeric: 'tabular-nums' }}>
-          / {allowance}
-        </span>
-        <span style={{ fontSize: 12.5, fontWeight: 500, color: C.text2, marginLeft: 4 }}>
-          left
+          <span style={{
+            fontSize: 13, fontWeight: 700, color: valueClr,
+            letterSpacing: '-0.01em',
+          }}>
+            {remaining}
+          </span>
+          <span style={{
+            fontSize: 11.5, fontWeight: 500, color: C.text3,
+          }}>
+            / {allowance}
+          </span>
         </span>
       </div>
 
-      {/* Remaining bar — gradient fill with subtle shimmer line on top */}
+      {/* Thin neutral bar — fills with USED credits from the left in a
+          state color. Solid fill, no glow, no shimmer. */}
       <div style={{
-        background: C.track, borderRadius: 99, height: 6,
-        overflow: 'hidden', marginBottom: 9,
-        boxShadow: dark ? 'none' : 'inset 0 1px 1px rgba(0,0,0,0.04)',
-        position: 'relative',
+        background: C.track, borderRadius: 99, height: 4,
+        overflow: 'hidden',
       }}>
         <div style={{
-          width: `${remainingPct}%`,
+          width: `${Math.max(2, usedPct)}%`,
           height: '100%',
-          background: `linear-gradient(90deg, ${accentDim} 0%, ${accent} 100%)`,
+          background: fillClr,
           borderRadius: 99,
-          transition: 'width 0.8s ease, background 0.2s',
-          position: 'relative',
-          boxShadow: `0 0 8px ${accent}55`,
-        }}>
-          {/* Top shine line */}
-          <div style={{
-            position: 'absolute', top: 0, left: 0, right: 0, height: 2,
-            background: 'linear-gradient(180deg, rgba(255,255,255,0.45) 0%, rgba(255,255,255,0) 100%)',
-            borderRadius: '99px 99px 0 0',
-          }} />
-        </div>
+          transition: 'width 0.6s ease, background 0.2s',
+        }}/>
       </div>
 
-      {/* Refill countdown + pack line */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 8 }}>
-        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: 11, color: C.text3, fontWeight: 500 }}>
-          <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, opacity: 0.85 }}>
-            <circle cx="6" cy="6" r="4.5"/><path d="M6 3.5v2.5l1.6 1"/>
-          </svg>
+      {/* Bottom line — refill date + optional pack chip */}
+      <div style={{
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        gap: 8, marginTop: 1,
+      }}>
+        <span style={{
+          fontSize: 11, color: C.text3, fontWeight: 500,
+          letterSpacing: '-0.01em',
+        }}>
           {refillLabel(usage.reset_date)}
         </span>
         {hasPack && (
           <span style={{
-            fontSize: 10.5, fontWeight: 700, color: C.green,
-            background: dark ? 'rgba(5,150,105,0.18)' : '#ecfdf5',
-            border: `1px solid ${dark ? 'rgba(5,150,105,0.3)' : '#a7f3d0'}`,
-            padding: '2px 8px', borderRadius: 99,
-            fontVariantNumeric: 'tabular-nums', letterSpacing: '0.02em',
+            fontSize: 10.5, fontWeight: 700, color: C.text2,
+            background: 'rgba(15,15,19,0.05)',
+            padding: '1px 7px', borderRadius: 99,
+            fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.01em',
           }}>
             +{usage.pack_balance} pack
           </span>
         )}
       </div>
 
-      {/* CTAs — only when near/at limit with no pack */}
+      {/* Upgrade CTA — only when near/at limit with no pack. Same scale as
+          the rest of the sidebar bottom, not a banner. */}
       {showCTA && (
-        <div style={{ display: 'flex', gap: 7, marginTop: 12 }}>
-          <button
-            onClick={() => window.location.href = '/?tab=monthly'}
-            style={{
-              flex: 1, fontSize: 12, fontWeight: 700,
-              padding: '7px 0', borderRadius: 100,
-              cursor: 'pointer', border: 'none',
-              background: C.red, color: '#fff',
-              fontFamily: 'inherit',
-              boxShadow: '0 1px 3px rgba(0,0,0,0.12), 0 4px 14px rgba(229,37,27,0.32)',
-              transition: 'filter 0.15s, transform 0.15s',
-            }}
-            onMouseEnter={e => { e.currentTarget.style.filter = 'brightness(1.08)'; e.currentTarget.style.transform = 'translateY(-1px)' }}
-            onMouseLeave={e => { e.currentTarget.style.filter = 'none'; e.currentTarget.style.transform = 'translateY(0)' }}
-          >
-            Upgrade
-          </button>
-          <button
-            onClick={() => window.location.href = '/?tab=packs'}
-            style={{
-              flex: 1, fontSize: 12, fontWeight: 600,
-              padding: '7px 0', borderRadius: 100,
-              cursor: 'pointer',
-              background: 'transparent',
-              border: `1px solid ${dark ? 'rgba(255,255,255,0.18)' : '#e6e6ec'}`,
-              color: C.text2,
-              fontFamily: 'inherit',
-              transition: 'background 0.15s, border-color 0.15s',
-            }}
-            onMouseEnter={e => { e.currentTarget.style.background = dark ? 'rgba(255,255,255,0.06)' : '#f4f4f8'; e.currentTarget.style.borderColor = dark ? 'rgba(255,255,255,0.28)' : '#d0d0d8' }}
-            onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.borderColor = dark ? 'rgba(255,255,255,0.18)' : '#e6e6ec' }}
-          >
-            + Pack
-          </button>
-        </div>
+        <button
+          onClick={() => window.location.href = '/?tab=monthly'}
+          style={{
+            marginTop: 4,
+            display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+            padding: '7px 12px', borderRadius: 8,
+            cursor: 'pointer', border: 'none',
+            background: C.red, color: '#fff',
+            fontFamily: 'inherit',
+            fontSize: 12, fontWeight: 700, letterSpacing: '-0.01em',
+            boxShadow: '0 1px 2px rgba(229,37,27,0.30)',
+            transition: 'filter 0.14s, transform 0.14s',
+          }}
+          onMouseEnter={e => { e.currentTarget.style.filter = 'brightness(1.08)'; e.currentTarget.style.transform = 'translateY(-1px)' }}
+          onMouseLeave={e => { e.currentTarget.style.filter = 'none'; e.currentTarget.style.transform = 'translateY(0)' }}
+        >
+          Upgrade for more credits
+        </button>
       )}
     </div>
   )
