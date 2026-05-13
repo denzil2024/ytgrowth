@@ -271,186 +271,199 @@ function RefreshConfirmModal({ credits, onCancel, onConfirm }) {
    2-col body (blue Why-now / white+amber-bar Action), bottom action row
    with red primary CTA. Checkbox added to the rank cluster so this card
    also tracks completion like Priority Actions. */
+/* IdeaCard v2 — collapsed-first matching the Feed design language.
+   Default state: rank + title + opportunity bar + Use CTA + Detail toggle.
+   Click Detail to reveal the angle prose and keyword/thumbnail chips.
+   Brand palette only: red CTAs, amber for opportunity tint, green for
+   strong/done states, charcoal for neutral. No blue. */
 function IdeaCard({ idea, done, onDone, onUseSeo }) {
+  const [open, setOpen] = useState(false)
   const score = idea.source === 'ai' && idea.opportunityScore
     ? idea.opportunityScore
     : Math.max(65, 85 - (idea.rank - 1) * 2)
 
-  // Severity thresholds match SEO Studio Suggested Titles exactly
-  // (SeoOptimizer.jsx:1267-1268) so the pill reads the same across the app.
   const sevLabel = score >= 75 ? 'Strong' : score >= 60 ? 'Solid' : 'Weak'
   const sevColor = score >= 75 ? C.green : score >= 60 ? C.amber : C.red
+  // Score bar fill gradient — matches Priority Action card pattern on the Feed.
+  const sevFill = score >= 75
+    ? 'linear-gradient(90deg, rgba(22,163,74,0.55) 0%, #16a34a 100%)'
+    : score >= 60
+      ? 'linear-gradient(90deg, rgba(217,119,6,0.55) 0%, #d97706 100%)'
+      : 'linear-gradient(90deg, rgba(229,37,27,0.55) 0%, #e5251b 100%)'
 
   return (
-    <div className={`vi-idea-card${done ? ' done' : ''}`} style={{
-      borderTop: `3px solid ${done ? C.border : C.amber}`,
-    }}>
-      <div style={{ padding: '16px 22px 18px' }}>
+    <div className={`vi-idea-card${done ? ' done' : ''}`}>
+      <div style={{ padding: '14px 18px 16px' }}>
 
-        {/* ── Header — checkbox + amber rank badge + eyebrow/title + severity pill ── */}
-        <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: done ? 0 : 14 }}>
+        {/* ── Eyebrow row: amber rank chip + Built around + severity chip + done ── */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10, flexWrap: 'wrap' }}>
+          <div style={{
+            flexShrink: 0,
+            width: 24, height: 24, borderRadius: 7,
+            display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+            background: done ? 'rgba(22,163,74,0.10)' : 'rgba(217,119,6,0.10)',
+            border: done ? '1px solid rgba(22,163,74,0.22)' : '1px solid rgba(217,119,6,0.22)',
+          }}>
+            {done
+              ? <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke={C.green} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><polyline points="1.5,6.5 5,10 10.5,2"/></svg>
+              : <span style={{ fontSize: 11, fontWeight: 800, color: C.amber, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.3px' }}>{idea.rank}</span>
+            }
+          </div>
 
-          {/* Checkbox + rank badge pair — 26×26, 8px radius, amber background with white 12/900 numeral */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0, paddingTop: 2 }}>
-            <input
-              type="checkbox"
-              checked={!!done}
-              onChange={() => onDone(idea.title)}
-              style={{ width: 15, height: 15, accentColor: C.green, cursor: 'pointer', flexShrink: 0 }}
-            />
-            <div style={{
-              width: 26, height: 26, borderRadius: 8,
-              background: done ? C.greenBg : C.amber,
-              display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+          <span style={{
+            fontSize: 10, fontWeight: 800, color: 'rgba(10,10,15,0.50)',
+            letterSpacing: '0.12em', textTransform: 'uppercase',
+          }}>Video Idea</span>
+
+          {idea.targetKeyword && !done && (
+            <span style={{
+              display: 'inline-flex', alignItems: 'center', gap: 5,
+              fontSize: 11, fontWeight: 500, color: 'rgba(10,10,15,0.50)',
+              letterSpacing: '-0.01em',
             }}>
-              {done
-                ? <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke={C.green} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><polyline points="1.5,6.5 5,10 10.5,2"/></svg>
-                : <span style={{ fontSize: 12, fontWeight: 900, color: '#fff', fontVariantNumeric: 'tabular-nums' }}>{idea.rank}</span>
-              }
-            </div>
-          </div>
+              <span style={{ width: 3, height: 3, borderRadius: 99, background: 'rgba(10,10,15,0.30)' }}/>
+              {idea.targetKeyword}
+            </span>
+          )}
 
-          {/* Eyebrow + title — "Built around: {keyword}" mirrors SEO Studio */}
-          <div style={{ flex: 1, minWidth: 0 }}>
-            {idea.targetKeyword && (
-              <p style={{
-                fontSize: 10, fontWeight: 700, color: C.text3,
-                letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 5,
-              }}>
-                Built around: {idea.targetKeyword}
-              </p>
-            )}
-            <p style={{
-              fontSize: 14, fontWeight: 700,
-              color: done ? C.text3 : C.text1,
-              lineHeight: 1.55,
-              textDecoration: done ? 'line-through' : 'none',
-            }}>{idea.title}</p>
-          </div>
+          <div style={{ flex: 1 }}/>
 
-          {/* Severity pill on the right — 10/700 uppercase, 1.5px border, scoreColor */}
           {!done && (
             <span style={{
-              fontSize: 10, fontWeight: 700, color: sevColor,
-              padding: '3px 9px', borderRadius: 20,
-              letterSpacing: '0.06em', textTransform: 'uppercase',
-              border: `1.5px solid ${sevColor}`, flexShrink: 0,
-            }}>
-              {sevLabel}
-            </span>
+              fontSize: 9.5, fontWeight: 700, color: sevColor,
+              background: sevColor === C.green ? 'rgba(22,163,74,0.08)' : sevColor === C.amber ? 'rgba(217,119,6,0.08)' : 'rgba(229,37,27,0.07)',
+              border: `1px solid ${sevColor === C.green ? 'rgba(22,163,74,0.22)' : sevColor === C.amber ? 'rgba(217,119,6,0.22)' : 'rgba(229,37,27,0.18)'}`,
+              padding: '3px 8px', borderRadius: 100,
+              letterSpacing: '0.08em', textTransform: 'uppercase',
+              fontVariantNumeric: 'tabular-nums',
+            }}>{sevLabel} · {score}</span>
+          )}
+
+          {!done && (
+            <input
+              type="checkbox"
+              checked={false}
+              onChange={() => onDone(idea.title)}
+              title="Mark as done"
+              style={{ width: 14, height: 14, accentColor: C.green, cursor: 'pointer', flexShrink: 0 }}
+            />
+          )}
+          {done && (
+            <input
+              type="checkbox"
+              checked
+              onChange={() => onDone(idea.title)}
+              style={{ width: 14, height: 14, accentColor: C.green, cursor: 'pointer', flexShrink: 0 }}
+            />
           )}
         </div>
 
-        {/* ── Body + action row — hidden when done ── */}
+        {/* ── Title — single bold line, slightly larger than meta ── */}
+        <h3 style={{
+          fontSize: 14, fontWeight: 700,
+          color: done ? 'rgba(10,10,15,0.40)' : C.text1,
+          letterSpacing: '-0.2px', lineHeight: 1.4,
+          marginBottom: done ? 0 : 12,
+          textDecoration: done ? 'line-through' : 'none',
+          display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden',
+        }}>{idea.title}</h3>
+
         {!done && (
           <>
-            {/* Hairline aligned with title start */}
-            <div style={{ height: 1, background: C.border, marginBottom: 14, marginLeft: 46 }} />
-
-            {/* 2-col body grid — blue Why-now | white+amber-bar Action. 3rd col
-                dropped since Video Ideas has no Expected-outcome facet (matches
-                InsightCard's pattern of rendering an empty placeholder when a
-                facet is missing). */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr', gap: 8, marginLeft: 46 }}>
-
-              {/* Col 1 — Why now (blue tint) */}
+            {/* ── Visual band: opportunity score bar ── */}
+            <div style={{ marginBottom: 12 }}>
               <div style={{
-                background: 'rgba(79,134,247,0.07)',
-                border: '1px solid rgba(79,134,247,0.12)',
-                borderRadius: 10, padding: '12px 14px',
+                background: '#eef0f4', borderRadius: 99, height: 6, overflow: 'hidden',
               }}>
-                <p style={{
-                  fontSize: 10, fontWeight: 700, color: '#4a7cf7',
-                  letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6,
-                }}>
-                  Why now
-                </p>
-                <p style={{ fontSize: 13, color: C.text1, lineHeight: 1.65 }}>
-                  {idea.angle || 'This topic is under-served in your niche right now.'}
-                </p>
-              </div>
-
-              {/* Col 2 — Opportunity score + target keyword (white + amber bar, Action slot) */}
-              <div style={{
-                background: '#ffffff',
-                border: `1px solid ${C.border}`,
-                borderLeft: `3px solid ${C.amber}`,
-                borderRadius: '0 10px 10px 0',
-                padding: '12px 16px',
-                boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
-                display: 'flex', flexDirection: 'column', gap: 12,
-              }}>
-                <div>
-                  <p style={{
-                    fontSize: 10, fontWeight: 700, color: C.amber,
-                    letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 10,
-                  }}>
-                    Opportunity
-                  </p>
-                  <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
-                    <span style={{
-                      fontSize: 28, fontWeight: 800, color: sevColor,
-                      fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.8px', lineHeight: 1,
-                    }}>
-                      {score}
-                    </span>
-                    <span style={{
-                      fontSize: 11, fontWeight: 600, color: C.text3,
-                      letterSpacing: '0.06em', textTransform: 'uppercase',
-                    }}>
-                      / 100 score
-                    </span>
-                  </div>
-                </div>
-
-                {(idea.targetKeyword || idea.thumbnail_ready) && (
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, alignItems: 'center' }}>
-                    <KeywordPill keyword={idea.targetKeyword} />
-                    {idea.thumbnail_ready && (
-                      <span style={{
-                        fontSize: 11, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase',
-                        color: C.green, background: C.greenBg,
-                        border: `1px solid ${C.greenBdr}`,
-                        borderRadius: 100, padding: '2px 9px', whiteSpace: 'nowrap',
-                      }}>
-                        Thumbnail ready · {idea.thumbnail_score}/100
-                      </span>
-                    )}
-                  </div>
-                )}
+                <div style={{
+                  width: `${Math.max(4, score)}%`, height: '100%',
+                  background: sevFill,
+                  borderRadius: 99,
+                  transition: 'width 0.8s cubic-bezier(0.34,1.56,0.64,1)',
+                }}/>
               </div>
             </div>
 
-            {/* Action row — single red primary CTA, right-aligned (mirrors
-                SeoOptimizer.jsx:1342-1351 action row) */}
-            <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 14, marginLeft: 46 }}>
+            {/* ── Meta row + CTAs + Detail toggle ── */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
+              <span style={{
+                fontSize: 11, fontWeight: 500, color: 'rgba(10,10,15,0.45)', letterSpacing: '-0.01em',
+              }}>
+                Opportunity {score}/100
+                {idea.thumbnail_ready && (
+                  <>{' · '}<span style={{ color: C.green, fontWeight: 700 }}>Thumbnail ready</span></>
+                )}
+              </span>
+
+              <div style={{ flex: 1 }}/>
+
               <button
                 onClick={() => onUseSeo(idea.title)}
                 style={{
-                  display: 'inline-flex', alignItems: 'center', gap: 7,
-                  padding: '9px 20px', borderRadius: 100, border: 'none',
-                  fontFamily: 'inherit', fontSize: 12.5, fontWeight: 700,
-                  background: C.red, color: '#fff', cursor: 'pointer',
-                  boxShadow: '0 1px 3px rgba(0,0,0,0.12), 0 4px 14px rgba(229,37,27,0.32)',
-                  transition: 'all 0.18s', letterSpacing: '-0.1px', whiteSpace: 'nowrap',
+                  display: 'inline-flex', alignItems: 'center', gap: 5,
+                  padding: '7px 13px', borderRadius: 100,
+                  border: 'none', cursor: 'pointer',
+                  background: C.red, color: '#fff',
+                  fontFamily: 'inherit',
+                  fontSize: 12, fontWeight: 700, letterSpacing: '-0.01em',
+                  boxShadow: '0 1px 3px rgba(229,37,27,0.30)',
+                  transition: 'filter 0.14s ease, transform 0.14s ease',
                 }}
-                onMouseEnter={e => {
-                  e.currentTarget.style.filter = 'brightness(1.07)'
-                  e.currentTarget.style.transform = 'translateY(-1px)'
-                  e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.15), 0 8px 28px rgba(229,37,27,0.42)'
-                }}
-                onMouseLeave={e => {
-                  e.currentTarget.style.filter = 'none'
-                  e.currentTarget.style.transform = 'translateY(0)'
-                  e.currentTarget.style.boxShadow = '0 1px 3px rgba(0,0,0,0.12), 0 4px 14px rgba(229,37,27,0.32)'
-                }}
+                onMouseEnter={e => { e.currentTarget.style.filter = 'brightness(1.08)'; e.currentTarget.style.transform = 'translateY(-1px)' }}
+                onMouseLeave={e => { e.currentTarget.style.filter = 'none'; e.currentTarget.style.transform = 'translateY(0)' }}
               >
                 Use in SEO Studio
-                <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                  <path d="M2 5.5h7M5.5 2l3.5 3.5L5.5 9"/>
-                </svg>
+                <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round"><path d="M2 5.5h7M5.5 2l3.5 3.5L5.5 9"/></svg>
               </button>
+
+              {idea.angle && (
+                <button
+                  type="button"
+                  onClick={() => setOpen(o => !o)}
+                  aria-label={open ? 'Hide angle' : 'Show angle'}
+                  style={{
+                    display: 'inline-flex', alignItems: 'center', gap: 4,
+                    padding: '6px 11px', borderRadius: 100,
+                    border: '1px solid #e6e6ec',
+                    background: '#fff', color: 'rgba(10,10,15,0.62)',
+                    fontFamily: 'inherit',
+                    fontSize: 11.5, fontWeight: 600, letterSpacing: '-0.01em',
+                    cursor: 'pointer',
+                    transition: 'background 0.14s ease, color 0.14s ease, border-color 0.14s ease',
+                  }}
+                  onMouseEnter={e => { e.currentTarget.style.background = 'rgba(15,15,19,0.04)'; e.currentTarget.style.color = C.text1; e.currentTarget.style.borderColor = '#d0d0d8' }}
+                  onMouseLeave={e => { e.currentTarget.style.background = '#fff'; e.currentTarget.style.color = 'rgba(10,10,15,0.62)'; e.currentTarget.style.borderColor = '#e6e6ec' }}
+                >
+                  Detail
+                  <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" style={{ transform: open ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s ease' }}><polyline points="3,4.5 6,7.5 9,4.5"/></svg>
+                </button>
+              )}
             </div>
+
+            {/* ── Detail — angle text in a tinted card, brand palette only ── */}
+            {open && idea.angle && (
+              <div style={{
+                marginTop: 14, paddingTop: 14,
+                borderTop: '1px solid #f1f1f4',
+              }}>
+                <div style={{
+                  background: 'rgba(217,119,6,0.05)',
+                  border: '1px solid rgba(217,119,6,0.14)',
+                  borderLeft: `3px solid ${C.amber}`,
+                  borderRadius: '0 10px 10px 0',
+                  padding: '11px 14px',
+                }}>
+                  <p style={{
+                    fontSize: 9.5, fontWeight: 700, color: C.amber,
+                    letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 6,
+                  }}>Why this works</p>
+                  <p style={{
+                    fontSize: 12.5, fontWeight: 500, color: C.text1,
+                    letterSpacing: '-0.01em', lineHeight: 1.65,
+                  }}>{idea.angle}</p>
+                </div>
+              </div>
+            )}
           </>
         )}
       </div>
