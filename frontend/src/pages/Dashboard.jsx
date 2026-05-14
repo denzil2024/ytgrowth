@@ -4462,11 +4462,10 @@ export default function Dashboard() {
         {data && (
           <div style={{ padding: '16px 22px', flexShrink: 0 }}>
            <div style={{
-             background: 'linear-gradient(180deg, #fafafc 0%, #f5f6f9 100%)',
+             background: '#fafafc',
              border: '1px solid #ececf0',
              borderRadius: 12,
              padding: '15px 16px 14px',
-             boxShadow: '0 1px 2px rgba(0,0,0,0.025), inset 0 1px 0 rgba(255,255,255,0.7)',
            }}>
             {/* Avatar + name */}
             {channels.length >= 2
@@ -4478,52 +4477,35 @@ export default function Dashboard() {
                     currentChannelId={data.channel.channel_id}
                   />
                 </div>
-              : (() => {
-                  // Avatar ring caps at amber even when score is critical — a blood-red
-                  // ring around the user's own face reads as an error indicator. The
-                  // score number itself still goes red (that's informational).
-                  const ringClr = score >= 75 ? C.green : C.amber
-                  return (
+              : (
                 <div style={{ display: 'flex', alignItems: 'center', gap: 13, marginBottom: 16 }}>
                   {data.channel.thumbnail
-                    ? <img src={data.channel.thumbnail} alt="" style={{ width: 42, height: 42, borderRadius: '50%', objectFit: 'cover', flexShrink: 0, boxShadow: `0 0 0 2.5px #fff, 0 0 0 4.5px ${ringClr}, 0 0 16px ${ringClr}55` }}/>
-                    : <div style={{ width: 42, height: 42, borderRadius: '50%', background: C.redBg, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, fontWeight: 700, color: C.red, flexShrink: 0, boxShadow: `0 0 0 2.5px #fff, 0 0 0 4.5px ${ringClr}, 0 0 16px ${ringClr}55` }}>{data.channel.channel_name[0].toUpperCase()}</div>
+                    ? <img src={data.channel.thumbnail} alt="" style={{ width: 42, height: 42, borderRadius: '50%', objectFit: 'cover', flexShrink: 0, boxShadow: '0 0 0 2px #ececf0' }}/>
+                    : <div style={{ width: 42, height: 42, borderRadius: '50%', background: C.redBg, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, fontWeight: 700, color: C.red, flexShrink: 0, boxShadow: '0 0 0 2px #ececf0' }}>{data.channel.channel_name[0].toUpperCase()}</div>
                   }
                   <div style={{ minWidth: 0, flex: 1 }}>
                     <p style={{ fontSize: 14.5, fontWeight: 700, color: C.text1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', letterSpacing: '-0.25px', lineHeight: 1.2 }}>{data.channel.channel_name}</p>
                     <p style={{ fontSize: 12, color: C.text3, marginTop: 3, fontVariantNumeric: 'tabular-nums' }}>{fmtNum(data.channel.subscribers)} subs</p>
                   </div>
                 </div>
-                  )
-                })()
+              )
             }
             {/* Health score bar */}
-            {(() => {
-              const scoreGrad = score >= 75
-                ? 'linear-gradient(90deg, #34d399 0%, #059669 100%)'
-                : score >= 50
-                  ? 'linear-gradient(90deg, #fbbf24 0%, #d97706 100%)'
-                  : 'linear-gradient(90deg, #ff5048 0%, #e5251b 100%)'
-              const glowClr = score >= 75 ? 'rgba(5,150,105,0.35)' : score >= 50 ? 'rgba(217,119,6,0.32)' : 'rgba(229,37,27,0.36)'
-              return (
-              <div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 8 }}>
-                  <span style={{ fontSize: 10.5, fontWeight: 700, color: C.text3, letterSpacing: '0.09em', textTransform: 'uppercase' }}>Channel health</span>
-                  <span style={{ display: 'inline-flex', alignItems: 'baseline', gap: 2, fontVariantNumeric: 'tabular-nums' }}>
-                    <span style={{ fontSize: 16, fontWeight: 800, color: scoreColor(score), letterSpacing: '-0.4px', lineHeight: 1 }}>{score}</span>
-                    <span style={{ fontSize: 10.5, fontWeight: 600, color: 'rgba(149,149,164,0.6)' }}>/100</span>
-                  </span>
-                </div>
-                <div style={{ background: '#eaeaef', borderRadius: 99, height: 6, overflow: 'hidden', boxShadow: 'inset 0 1px 1px rgba(0,0,0,0.04)' }}>
-                  <div style={{
-                    width: `${score}%`, height: '100%', background: scoreGrad, borderRadius: 99,
-                    boxShadow: `0 0 8px ${glowClr}, inset 0 1px 0 rgba(255,255,255,0.30)`,
-                    transition: 'width 1.2s cubic-bezier(0.34,1.56,0.64,1)',
-                  }}/>
-                </div>
+            <div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 8 }}>
+                <span style={{ fontSize: 10.5, fontWeight: 700, color: C.text3, letterSpacing: '0.09em', textTransform: 'uppercase' }}>Channel health</span>
+                <span style={{ display: 'inline-flex', alignItems: 'baseline', gap: 2, fontVariantNumeric: 'tabular-nums' }}>
+                  <span style={{ fontSize: 16, fontWeight: 800, color: scoreColor(score), letterSpacing: '-0.4px', lineHeight: 1 }}>{score}</span>
+                  <span style={{ fontSize: 10.5, fontWeight: 600, color: 'rgba(149,149,164,0.6)' }}>/100</span>
+                </span>
               </div>
-              )
-            })()}
+              <div style={{ background: '#eaeaef', borderRadius: 99, height: 6, overflow: 'hidden' }}>
+                <div style={{
+                  width: `${score}%`, height: '100%', background: scoreColor(score), borderRadius: 99,
+                  transition: 'width 1.2s cubic-bezier(0.34,1.56,0.64,1)',
+                }}/>
+              </div>
+            </div>
            </div>
           </div>
         )}
