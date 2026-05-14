@@ -35,7 +35,7 @@ const RESULT = {
     {
       keyword: 'budget cooking for one', opportunityScore: 78, intentMatch: 'exact', momentum: 'active',
       competition: {
-        top_subs_median: 180_000, top_views_median: 78_000, days_since_newest: 14,
+        top_subs_median: 180_000, top_views_median: 780_000, all_views_median: 65_000, days_since_newest: 14,
         top_videos: [
           { video_id: 'dQw4w9WgXcQ', title: '$20 Grocery Haul + 5 Easy Dinners for One', channel_title: 'SoloKitchen', published_at: new Date(Date.now() - 86400_000 * 6).toISOString(),  views: 412_000, thumbnail_url: 'https://i.ytimg.com/vi/dQw4w9WgXcQ/mqdefault.jpg' },
           { video_id: 'dQw4w9WgXcQ', title: 'I Cooked Every Meal for Myself for a Week — Here is the Cost', channel_title: 'BudgetEats', published_at: new Date(Date.now() - 86400_000 * 14).toISOString(), views: 287_000, thumbnail_url: 'https://i.ytimg.com/vi/dQw4w9WgXcQ/mqdefault.jpg' },

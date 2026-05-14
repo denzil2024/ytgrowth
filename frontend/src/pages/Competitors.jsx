@@ -421,6 +421,35 @@ function useCompetitorStyles() {
         overflow: hidden;
         text-overflow: ellipsis;
       }
+      .comp-thumb-chips {
+        display: flex; flex-wrap: wrap; gap: 8px;
+        margin-top: 10px;
+      }
+      .comp-thumb-chip {
+        display: inline-flex; align-items: center;
+        border: 1px solid;
+        border-radius: 100px;
+        padding: 3px 4px 3px 10px;
+        font-variant-numeric: tabular-nums;
+      }
+      .comp-thumb-chip-label {
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        opacity: 0.78;
+        margin-right: 6px;
+      }
+      .comp-thumb-chip-value {
+        font-size: 11px;
+        font-weight: 700;
+        color: #0a0a0f;
+        background: #ffffff;
+        border: 1px solid;
+        border-radius: 100px;
+        padding: 1px 8px;
+        letter-spacing: -0.01em;
+      }
 
       .comp-accordion-body {
         border: 1px solid rgba(10,10,15,0.07);
@@ -547,6 +576,57 @@ function fmtK(n) {
   if (n >= 1_000_000) return (n / 1_000_000).toFixed(1).replace(/\.0$/, '') + 'M'
   if (n >= 1_000)     return (n / 1_000).toFixed(1).replace(/\.0$/, '') + 'K'
   return String(n)
+}
+
+// Views-per-hour for a video. Returns null when the timestamp is missing
+// or the video is < 1h old (VPH would be misleadingly huge).
+function vphFor(views, publishedAtIso) {
+  if (!views || !publishedAtIso) return null
+  const hours = (Date.now() - new Date(publishedAtIso).getTime()) / 3_600_000
+  if (!isFinite(hours) || hours < 1) return null
+  return Math.round(views / hours)
+}
+
+// Outlier multiplier vs the channel's average recent-video views. Hidden
+// below 1.5x so the chip set stays focused on signal, not noise.
+function outlierFor(views, baseline) {
+  if (!views || !baseline) return null
+  const mult = views / baseline
+  if (!isFinite(mult) || mult < 1.5) return null
+  return Math.round(mult * 10) / 10
+}
+
+/* ─── CompVideoChips — labeled chips for a competitor video tile. Same
+       grammar as Keywords' VideoMetricsRow (uppercase label segment + bold
+       value pill) so the two pages read identically. */
+function CompVideoChips({ views, publishedAt, baselineViews }) {
+  const vph = vphFor(views, publishedAt)
+  const outlierMult = outlierFor(views, baselineViews)
+  if (!vph && !outlierMult) return null
+  const isStrong = outlierMult && outlierMult >= 3
+  const outlierColor = isStrong ? '#16a34a' : '#d97706'
+  const outlierBg    = isStrong ? '#f0fdf4' : '#fffbeb'
+  const outlierBdr   = isStrong ? '#bbf7d0' : '#fde68a'
+  const outlierLabel = isStrong ? 'Outlier' : 'Above avg'
+  return (
+    <div className="comp-thumb-chips">
+      {outlierMult && (() => {
+        const displayMult = outlierMult >= 10 ? '10×+' : `${outlierMult}×`
+        return (
+          <span className="comp-thumb-chip" style={{ color: outlierColor, background: outlierBg, borderColor: outlierBdr }}>
+            <span className="comp-thumb-chip-label">{outlierLabel}</span>
+            <span className="comp-thumb-chip-value" style={{ borderColor: `${outlierColor}40` }}>{displayMult}</span>
+          </span>
+        )
+      })()}
+      {vph && (
+        <span className="comp-thumb-chip" style={{ color: 'rgba(10,10,15,0.62)', background: '#f4f4f6', borderColor: 'rgba(0,0,0,0.09)' }}>
+          <span className="comp-thumb-chip-label">VPH</span>
+          <span className="comp-thumb-chip-value" style={{ borderColor: 'rgba(10,10,15,0.12)' }}>{fmtK(vph)}/hr</span>
+        </span>
+      )}
+    </div>
+  )
 }
 
 // ─── base card — amber 3px top border matches SEO Studio / Keywords pattern.
@@ -772,9 +852,13 @@ function AIAnalysis({ ai, comp, top5Videos, channelId, checkedIdeas, onToggleIde
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: `repeat(${cols}, 1fr)`, gap: 10 }}>
               {vids.map((v, i) => {
-                // Backend serializes as `thumbnail_url`; mock harness uses `thumbnail`.
-                // CDN fallback covers the case where neither is set but video_id is.
-                const thumb = v.thumbnail_url || v.thumbnail || (v.video_id ? `https://i.ytimg.com/vi/${v.video_id}/mqdefault.jpg` : null)
+                // maxresdefault.jpg = 1280x720 (HD). Falls back to hqdefault.jpg
+                // (480x360) when the video has no maxres asset (e.g. old or
+                // low-quality uploads). Backend's thumbnail_url is the final
+                // fallback if there's no video_id to construct from.
+                const thumbHigh = v.video_id ? `https://i.ytimg.com/vi/${v.video_id}/maxresdefault.jpg` : null
+                const thumbFallback = v.video_id ? `https://i.ytimg.com/vi/${v.video_id}/hqdefault.jpg` : (v.thumbnail_url || v.thumbnail || null)
+                const thumb = thumbHigh || thumbFallback
                 const ytUrl = v.video_id ? `https://www.youtube.com/watch?v=${v.video_id}` : null
                 return (
                   <a key={v.video_id || i}
@@ -782,12 +866,29 @@ function AIAnalysis({ ai, comp, top5Videos, channelId, checkedIdeas, onToggleIde
                     onClick={e => { if (!ytUrl) e.preventDefault() }}
                     className="comp-thumb-tile">
                     <div className="comp-thumb-img">
-                      {thumb && <img src={thumb} alt="" referrerPolicy="no-referrer" loading="lazy"/>}
+                      {thumb && (
+                        <img src={thumb} alt="" referrerPolicy="no-referrer" loading="lazy"
+                          data-fallback={thumbFallback || ''}
+                          onError={e => {
+                            const t = e.currentTarget
+                            const fb = t.getAttribute('data-fallback')
+                            if (fb && t.src !== fb) { t.src = fb; t.removeAttribute('data-fallback') }
+                          }}
+                          onLoad={e => {
+                            const t = e.currentTarget
+                            const fb = t.getAttribute('data-fallback')
+                            if (fb && t.naturalWidth > 0 && t.naturalWidth < 300) {
+                              t.src = fb
+                              t.removeAttribute('data-fallback')
+                            }
+                          }}/>
+                      )}
                       {v.views > 0 && <span className="comp-thumb-views">{fmtK(v.views)}</span>}
                     </div>
                     <div className="comp-thumb-text">
                       <p className="comp-thumb-title">{v.title}</p>
                       <p className="comp-thumb-meta">{v.published_at ? relTime(v.published_at) : ''}</p>
+                      <CompVideoChips views={v.views} publishedAt={v.published_at} baselineViews={comp?.avg_views_per_video || comp?.avg_views || 0} />
                     </div>
                   </a>
                 )
@@ -1709,10 +1810,13 @@ export default function Competitors({ plan, freeTierFeatures }) {
                           </div>
                           <div className="comp-thumb-grid">
                             {vids.map((v, vi) => {
-                              // Backend serializes as `thumbnail_url`; if missing,
-                              // construct from the YouTube CDN using video_id.
-                              const thumb = v.thumbnail_url || v.thumbnail
-                                || (v.video_id ? `https://i.ytimg.com/vi/${v.video_id}/mqdefault.jpg` : null)
+                              // maxresdefault.jpg = 1280x720 (HD). Falls back to
+                              // hqdefault.jpg (480x360) when the video has no
+                              // maxres asset, then to backend's thumbnail_url
+                              // if there's no video_id.
+                              const thumbHigh = v.video_id ? `https://i.ytimg.com/vi/${v.video_id}/maxresdefault.jpg` : null
+                              const thumbFallback = v.video_id ? `https://i.ytimg.com/vi/${v.video_id}/hqdefault.jpg` : (v.thumbnail_url || v.thumbnail || null)
+                              const thumb = thumbHigh || thumbFallback
                               const ytUrl = v.video_id ? `https://www.youtube.com/watch?v=${v.video_id}` : null
                               return (
                                 <a key={v.video_id || vi}
@@ -1722,7 +1826,21 @@ export default function Competitors({ plan, freeTierFeatures }) {
                                   className="comp-thumb-tile">
                                   <div className="comp-thumb-img">
                                     {thumb && (
-                                      <img src={thumb} alt="" referrerPolicy="no-referrer" loading="lazy" />
+                                      <img src={thumb} alt="" referrerPolicy="no-referrer" loading="lazy"
+                                        data-fallback={thumbFallback || ''}
+                                        onError={e => {
+                                          const t = e.currentTarget
+                                          const fb = t.getAttribute('data-fallback')
+                                          if (fb && t.src !== fb) { t.src = fb; t.removeAttribute('data-fallback') }
+                                        }}
+                                        onLoad={e => {
+                                          const t = e.currentTarget
+                                          const fb = t.getAttribute('data-fallback')
+                                          if (fb && t.naturalWidth > 0 && t.naturalWidth < 300) {
+                                            t.src = fb
+                                            t.removeAttribute('data-fallback')
+                                          }
+                                        }}/>
                                     )}
                                     {v.views > 0 && (
                                       <span className="comp-thumb-views">{fmtK(v.views)}</span>
@@ -1731,6 +1849,7 @@ export default function Competitors({ plan, freeTierFeatures }) {
                                   <div className="comp-thumb-text">
                                     <p className="comp-thumb-title">{v.title}</p>
                                     <p className="comp-thumb-meta">{fmtAge(v.published_at)}</p>
+                                    <CompVideoChips views={v.views} publishedAt={v.published_at} baselineViews={comp.avg_views_per_video || comp.avg_views || 0} />
                                   </div>
                                 </a>
                               )

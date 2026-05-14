@@ -146,13 +146,16 @@ def research_keywords(body: KeywordResearchRequest, request: Request):
 # ─── Reports — list / open / delete ────────────────────────────────────────────
 
 def _report_needs_video_backfill(result: dict) -> bool:
-    """A saved report was written before `competition.top_videos` existed
-    if any enriched keyword still lacks the field. Cheap check."""
+    """A saved report is stale-schema if any enriched keyword's competition
+    dict is missing any of the visual fields the current UI expects.
+    Triggers a refetch via the smart YT cache (free if the cache row was
+    already refreshed for another user, one roundtrip each otherwise)."""
     if not isinstance(result, dict):
         return False
+    REQUIRED = ("top_videos", "publishing_timeline", "all_views_median")
     for kw in (result.get("keywords") or []):
         comp = kw.get("competition")
-        if isinstance(comp, dict) and "top_videos" not in comp:
+        if isinstance(comp, dict) and any(f not in comp for f in REQUIRED):
             return True
     return False
 

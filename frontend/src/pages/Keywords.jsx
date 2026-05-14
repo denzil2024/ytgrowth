@@ -417,7 +417,11 @@ function KwDetailModal({ kw, C, onClose }) {
           {(comp.top_videos || []).length > 0 && (() => {
             const vids = comp.top_videos.slice(0, 3)
             const topViews = Math.max(...vids.map(v => v.views || 0))
-            const medianViews = comp.top_views_median || 0
+            // Outlier baseline = median of ALL 25 search results (not top-5
+            // median). Top-5 are already big videos, so using their median
+            // as baseline buries genuine outliers. all_views_median is the
+            // "typical video ranking for this keyword" reference.
+            const medianViews = comp.all_views_median || comp.top_views_median || 0
             const fmtAge = (iso) => {
               if (!iso) return ''
               const days = Math.floor((Date.now() - new Date(iso).getTime()) / 86400000)
@@ -674,47 +678,62 @@ function outlierFor(views, medianViews) {
   return Math.round(mult * 10) / 10
 }
 
-/* ─── VideoMetricsRow — small chips under each video card's channel line.
-       Shows VPH always (signal of velocity) and Outlier only when the
-       video is meaningfully above the keyword median. Two colors:
-         - amber (1.5-2.9x) "Above avg"
-         - green (3x+)      "Outlier"
-       Hidden entirely when there's nothing useful to show. */
+/* ─── VideoMetricsRow — labeled chips under each video card. Two segments
+       per chip (muted label + bold value) so the number has context.
+       Outlier chip only shows at >=1.5x the keyword median:
+         - amber  (1.5-2.9x) "Above avg"
+         - green  (3x+)      "Outlier"
+       VPH chip is always shown when we have enough data to compute it. */
 function VideoMetricsRow({ vph, outlierMult }) {
   if (!vph && !outlierMult) return null
-  const outlierTone = outlierMult && outlierMult >= 3
+  const isStrong = outlierMult && outlierMult >= 3
+  const outlierTone = isStrong
     ? { color: C.green, bg: C.greenBg, bdr: C.greenBdr, label: 'Outlier' }
     : { color: C.amber, bg: C.amberBg, bdr: C.amberBdr, label: 'Above avg' }
+
+  const chipBase = {
+    display: 'inline-flex', alignItems: 'center',
+    fontSize: 11, borderRadius: 100,
+    padding: '3px 4px 3px 10px',
+    fontVariantNumeric: 'tabular-nums',
+    border: '1px solid',
+  }
+  const labelStyle = {
+    fontSize: 10, fontWeight: 700,
+    letterSpacing: '0.08em', textTransform: 'uppercase',
+    opacity: 0.78, marginRight: 6,
+  }
+  const valuePill = (color) => ({
+    fontWeight: 700, color: '#0a0a0f',
+    background: '#fff', border: `1px solid ${color}40`,
+    borderRadius: 100, padding: '1px 8px',
+    fontSize: 11, letterSpacing: '-0.01em',
+  })
+
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 8, flexWrap: 'wrap' }}>
-      {outlierMult && (
-        <span style={{
-          display: 'inline-flex', alignItems: 'center', gap: 4,
-          fontSize: 10.5, fontWeight: 700,
-          color: outlierTone.color, background: outlierTone.bg,
-          border: `1px solid ${outlierTone.bdr}`,
-          borderRadius: 100, padding: '2px 8px',
-          letterSpacing: '0.04em',
-          fontVariantNumeric: 'tabular-nums',
-        }}>
-          <svg width="9" height="9" viewBox="0 0 10 10" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M5 8V2M2 5l3-3 3 3"/>
-          </svg>
-          {outlierMult}x {outlierTone.label}
-        </span>
-      )}
+    <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 10, flexWrap: 'wrap' }}>
+      {outlierMult && (() => {
+        // Cap display at "10×+" — when a top-ranking video is 30× the
+        // typical result, the exact ratio reads as silly. The label still
+        // tells the full story (Outlier vs Above avg).
+        const displayMult = outlierMult >= 10 ? '10×+' : `${outlierMult}×`
+        return (
+          <span style={{
+            ...chipBase,
+            color: outlierTone.color, background: outlierTone.bg, borderColor: outlierTone.bdr,
+          }}>
+            <span style={labelStyle}>{outlierTone.label}</span>
+            <span style={valuePill(outlierTone.color)}>{displayMult}</span>
+          </span>
+        )
+      })()}
       {vph && (
         <span style={{
-          display: 'inline-flex', alignItems: 'center', gap: 4,
-          fontSize: 10.5, fontWeight: 600,
-          color: 'rgba(10,10,15,0.62)', background: '#f4f4f6',
-          border: `1px solid ${C.border}`,
-          borderRadius: 100, padding: '2px 8px',
-          letterSpacing: '0.02em',
-          fontVariantNumeric: 'tabular-nums',
+          ...chipBase,
+          color: 'rgba(10,10,15,0.62)', background: '#f4f4f6', borderColor: C.border,
         }}>
-          <span style={{ width: 5, height: 5, borderRadius: 99, background: 'rgba(10,10,15,0.36)' }}/>
-          {fmtCompact(vph)}/hr
+          <span style={labelStyle}>VPH</span>
+          <span style={valuePill('rgba(10,10,15,0.20)')}>{fmtCompact(vph)}/hr</span>
         </span>
       )}
     </div>
@@ -1243,7 +1262,10 @@ export default function Keywords({ plan, freeTierFeatures }) {
               ? topPickKw
               : (allKws.find(k => k?.competition?.top_videos?.length > 0) || null)
             const topPickVideos = sourceKw?.competition?.top_videos || []
-            const medianViews = sourceKw?.competition?.top_views_median || 0
+            // Outlier baseline = median of ALL 25 search results (see top
+            // pick band above for why). Falls back to top-5 median when the
+            // newer field is missing (old reports pre-backfill).
+            const medianViews = sourceKw?.competition?.all_views_median || sourceKw?.competition?.top_views_median || 0
             if (topPickVideos.length === 0) return null
             const topPerformer = Math.max(...topPickVideos.map(v => v.views || 0))
             const fmtAge = (iso) => {

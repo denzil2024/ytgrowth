@@ -224,7 +224,7 @@ def _fetch_competition_for_keyword(keyword: str, yt_api_key: str) -> dict:
     signal — so the second user researching the same keyword today reads
     from cache at 0 quota cost.
     """
-    default = {"result_count": 0, "top_subs_median": 0, "top_views_median": 0, "days_since_newest": None, "top_videos": [], "publishing_timeline": []}
+    default = {"result_count": 0, "top_subs_median": 0, "top_views_median": 0, "all_views_median": 0, "days_since_newest": None, "top_videos": [], "publishing_timeline": []}
     if not yt_api_key:
         return default
     from app.utils import yt_quota_paused
@@ -262,8 +262,8 @@ def _fetch_competition_for_keyword(keyword: str, yt_api_key: str) -> dict:
                     # frontend now needs. Treat as a cache miss so we
                     # refetch and backfill. Only refetches entries that
                     # are actually stale-schema, no quota spike on fresh ones.
-                    if "top_videos" not in cached or "publishing_timeline" not in cached:
-                        print(f"[keywords] cache STALE-SCHEMA '{keyword}' (missing top_videos or publishing_timeline) — refetching")
+                    if "top_videos" not in cached or "publishing_timeline" not in cached or "all_views_median" not in cached:
+                        print(f"[keywords] cache STALE-SCHEMA '{keyword}' (missing top_videos / publishing_timeline / all_views_median) — refetching")
                     else:
                         try:
                             row.hit_count = (row.hit_count or 0) + 1
@@ -316,6 +316,7 @@ def _fetch_competition_for_keyword(keyword: str, yt_api_key: str) -> dict:
         views_by_id = {v.get("id"): int(v.get("statistics", {}).get("viewCount", 0) or 0) for v in vids.get("items", [])}
 
         view_counts = sorted(views_by_id.get(vid, 0) for vid in video_ids)  # top-5 view medians
+        all_view_counts = sorted(views_by_id.values())  # median of ALL 25 — outlier baseline
         sub_counts  = sorted(int(c.get("statistics", {}).get("subscriberCount", 0) or 0) for c in chs.get("items", []))
 
         def median(xs):
@@ -384,6 +385,7 @@ def _fetch_competition_for_keyword(keyword: str, yt_api_key: str) -> dict:
             "result_count":       search.get("pageInfo", {}).get("totalResults", len(items)),
             "top_subs_median":    median(sub_counts),
             "top_views_median":   median(view_counts),
+            "all_views_median":   median(all_view_counts),
             "days_since_newest":  days_since,
             "top_videos":         top_videos,
             "publishing_timeline": publishing_timeline,
