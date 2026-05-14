@@ -70,7 +70,7 @@ export default function UsageBar({ channelId, email, dark = false, onPlan, onUsa
     text2:  dark ? 'rgba(255,255,255,0.62)' : '#4a4a58',
     text3:  dark ? 'rgba(255,255,255,0.45)' : '#9595a4',
     track:  dark ? 'rgba(255,255,255,0.10)' : '#eceef2',
-    cardBg: dark ? 'rgba(255,255,255,0.04)' : 'linear-gradient(180deg, #fafafc 0%, #f5f6f9 100%)',
+    cardBg: dark ? 'rgba(255,255,255,0.04)' : '#ffffff',
     cardBdr:dark ? 'rgba(255,255,255,0.08)' : '#ececf0',
   }
 
@@ -94,36 +94,29 @@ export default function UsageBar({ channelId, email, dark = false, onPlan, onUsa
       border: `1px solid ${C.cardBdr}`,
       borderRadius: 11,
       padding: '10px 12px 11px',
-      boxShadow: dark
-        ? 'inset 0 1px 0 rgba(255,255,255,0.04)'
-        : '0 1px 2px rgba(0,0,0,0.025), inset 0 1px 0 rgba(255,255,255,0.7)',
+      boxShadow: dark ? 'inset 0 1px 0 rgba(255,255,255,0.04)' : 'none',
     }}>
-      {/* Header row — eyebrow on left, big remaining number on right.
-          Tighter than before: the number lives inline with the label so the
-          card height drops by ~25% without losing the eyebrow + state-dot. */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, marginBottom: 8 }}>
         <span style={{ display: 'inline-flex', alignItems: 'center', gap: 7 }}>
           <span style={{
             width: 6, height: 6, borderRadius: '50%',
             background: accent,
-            boxShadow: `0 0 0 3px ${accent}1f`,
             flexShrink: 0,
           }} />
           <p style={{
-            fontSize: 10.5, fontWeight: 700, color: C.text3,
-            letterSpacing: '0.11em', textTransform: 'uppercase',
+            fontSize: 11, fontWeight: 500, color: C.text2,
           }}>
             AI analyses
           </p>
         </span>
         <span style={{ display: 'inline-flex', alignItems: 'baseline', gap: 3, fontVariantNumeric: 'tabular-nums' }}>
           <span style={{
-            fontSize: 20, fontWeight: 800, color: numClr,
-            letterSpacing: '-0.6px', lineHeight: 1,
+            fontSize: 18, fontWeight: 600, color: numClr,
+            letterSpacing: '-0.3px', lineHeight: 1,
           }}>
             {remaining}
           </span>
-          <span style={{ fontSize: 12, fontWeight: 600, color: C.text3 }}>
+          <span style={{ fontSize: 12, fontWeight: 500, color: C.text3 }}>
             / {allowance}
           </span>
           <span style={{ fontSize: 11, fontWeight: 500, color: C.text2, marginLeft: 3 }}>
@@ -132,33 +125,23 @@ export default function UsageBar({ channelId, email, dark = false, onPlan, onUsa
         </span>
       </div>
 
-      {/* Remaining bar — kept the gradient + shine; just a touch thinner. */}
       <div style={{
-        background: C.track, borderRadius: 99, height: 5,
+        background: C.track, borderRadius: 99, height: 4,
         overflow: 'hidden', marginBottom: 8,
-        boxShadow: dark ? 'none' : 'inset 0 1px 1px rgba(0,0,0,0.04)',
         position: 'relative',
       }}>
         <div style={{
           width: `${remainingPct}%`,
           height: '100%',
-          background: `linear-gradient(90deg, ${barFrom} 0%, ${barTo} 100%)`,
+          background: barFrom,
           borderRadius: 99,
           transition: 'width 0.8s ease, background 0.2s',
-          position: 'relative',
-          boxShadow: (atLimit || nearLimit) ? `0 0 6px ${accent}50` : 'none',
-        }}>
-          <div style={{
-            position: 'absolute', top: 0, left: 0, right: 0, height: 2,
-            background: 'linear-gradient(180deg, rgba(255,255,255,0.45) 0%, rgba(255,255,255,0) 100%)',
-            borderRadius: '99px 99px 0 0',
-          }} />
-        </div>
+        }}/>
       </div>
 
       {/* Refill countdown + pack chip */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 8 }}>
-        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: 10.5, color: C.text3, fontWeight: 500 }}>
+        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: 11, color: C.text3, fontWeight: 500 }}>
           <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, opacity: 0.85 }}>
             <circle cx="6" cy="6" r="4.5"/><path d="M6 3.5v2.5l1.6 1"/>
           </svg>
