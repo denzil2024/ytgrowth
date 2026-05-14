@@ -74,19 +74,15 @@ export default function UsageBar({ channelId, email, dark = false, onPlan, onUsa
     cardBdr:dark ? 'rgba(255,255,255,0.08)' : '#ececf0',
   }
 
-  // Color logic: healthy is intentionally NEUTRAL so the UsageBar visually
-  // complements the brand-red What's New card above it instead of fighting
-  // it with a green-on-green stat block. State color is reserved for
-  // amber (near limit) and red (at limit), so when those DO show up they
-  // actually mean something.
-  //   accent = the dot + the number + the bar "in case of" color
-  //   numClr = the big "N" color (charcoal when healthy, state color otherwise)
-  //   barFrom / barTo = the gradient stops for the remaining-bar fill
-  const accent    = atLimit ? C.red    : nearLimit ? C.amber    : '#3a3a45'
-  const accentDim = atLimit ? C.redDim : nearLimit ? C.amberDim : '#5a5a6a'
-  const numClr    = atLimit ? C.red    : nearLimit ? C.amber    : C.text1
-  const barFrom   = atLimit ? C.redDim : nearLimit ? C.amberDim : '#3a3a45'
-  const barTo     = atLimit ? C.red    : nearLimit ? C.amber    : '#3a3a45'
+  // State colour: green when remaining > 50%, amber when ≤ 50%, red when ≤ 10%.
+  // Drives the accent dot, the big number, and the bar fill.
+  const stateColor = remainingPct > 50 ? C.green : remainingPct > 10 ? C.amber : C.red
+
+  const accent    = stateColor
+  const accentDim = stateColor
+  const numClr    = stateColor
+  const barFrom   = stateColor
+  const barTo     = stateColor
 
   return (
     <div style={{
