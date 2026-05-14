@@ -175,6 +175,20 @@ def _backfill_report_videos(result: dict, autocomplete: list = None) -> dict:
 
 @router.get("/reports")
 def list_keyword_reports(request: Request):
+    """Return saved Keyword Research reports for the current user, as-is from
+    the DB. No YouTube fetches happen here.
+
+    Previously this endpoint auto-backfilled stale-schema reports (those
+    saved before top_videos / publishing_timeline / all_views_median fields
+    were added). With N reports and M enriched keywords each, that meant
+    N*M YouTube search.list calls (100 units apiece) per /reports page
+    load. Combined with a 10K daily quota, two list views could exhaust
+    the whole day. The frontend already hides the momentum chart and
+    handles missing top_videos gracefully when those fields are absent,
+    so old reports degrade visibly but never break — and the user can
+    re-run Keyword Research on any keyword to get a fresh report with
+    the full data shape.
+    """
     data, _ = get_session(request.session.get("session_id"))
     channel_id = (data or {}).get("channel", {}).get("channel_id", "")
     if not channel_id:
@@ -187,49 +201,17 @@ def list_keyword_reports(request: Request):
               .order_by(KeywordsResearchCache.updated_at.desc())
               .all()
         )
-
-        # Backfill any reports that lack top_videos. Runs in parallel so
-        # listing N reports stays fast (each backfill is bounded by the
-        # YT cache; cached keywords return instantly).
-        rows_needing_backfill = []
-        parsed_results = {}
-        for r in rows:
-            try:
-                parsed_results[r.id] = json.loads(r.result_json)
-            except Exception:
-                parsed_results[r.id] = None
-            if _report_needs_video_backfill(parsed_results[r.id]):
-                rows_needing_backfill.append(r)
-
-        if rows_needing_backfill:
-            print(f"[keywords] backfilling {len(rows_needing_backfill)} stale-schema report(s)")
-            with ThreadPoolExecutor(max_workers=min(5, len(rows_needing_backfill))) as pool:
-                futures = {
-                    pool.submit(_backfill_report_videos, parsed_results[r.id]): r
-                    for r in rows_needing_backfill
-                }
-                for fut in futures:
-                    r = futures[fut]
-                    try:
-                        updated = fut.result()
-                        parsed_results[r.id] = updated
-                        r.result_json = json.dumps(updated)
-                    except Exception as e:
-                        print(f"[keywords] backfill task failed for report {r.id}: {e}")
-            try:
-                db.commit()
-            except Exception as e:
-                print(f"[keywords] backfill commit failed: {e}")
-                try: db.rollback()
-                except Exception: pass
-
         reports = []
         for r in rows:
+            try:
+                parsed = json.loads(r.result_json)
+            except Exception:
+                parsed = None
             reports.append({
                 "id": r.id,
                 "keyword": r.keyword,
                 "confirmed_keyword": r.confirmed_keyword or "",
-                "result": parsed_results.get(r.id),
+                "result": parsed,
                 "created_at": r.created_at.isoformat() if r.created_at else None,
                 "updated_at": r.updated_at.isoformat() if r.updated_at else None,
             })
