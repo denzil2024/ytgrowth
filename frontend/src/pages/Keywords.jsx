@@ -766,11 +766,23 @@ export default function Keywords({ plan, freeTierFeatures }) {
               ? result.topPick.opportunityScore
               : Math.max(0, ...(result.keywords || []).map(k => k.opportunityScore || 0))
             const scoreCol = oppColor(topScore)
+            // Drop the < 28 char filter — the intent breakdown was rendering
+            // single-row when the AI returned slightly longer labels. Show all
+            // three fields if present.
             const rows = [
               ['Primary intent', result.seedIntent?.primaryIntent],
               ['Content type',   result.seedIntent?.contentTypeExpected],
               ['Funnel stage',   result.seedIntent?.funnelStage],
-            ].filter(([, v]) => v && v.trim().length > 0 && v.trim().length <= 28)
+            ].filter(([, v]) => v && v.trim().length > 0)
+
+            // Top-3 ranking videos for the top-pick keyword. Backend already
+            // attaches this per keyword (keywords.py:_fetch_competition_for_keyword)
+            // so we look it up by keyword string. Visual proof that justifies the pick.
+            const topPickKw     = (result.keywords || []).find(k => k.keyword === result.topPick.keyword)
+            const topPickVideos = topPickKw?.competition?.top_videos || []
+            const topPerformer  = topPickVideos.length > 0
+              ? Math.max(...topPickVideos.map(v => v.views || 0))
+              : 0
 
             return (
               <div style={{
@@ -841,6 +853,107 @@ export default function Keywords({ plan, freeTierFeatures }) {
                     </div>
                   )}
                 </div>
+
+                {/* ── Top-ranking videos band — visual proof that justifies the
+                     score. 3 thumbnail tiles pulled from competition.top_videos
+                     on the top-pick keyword. Click tile → opens video on YouTube.
+                     Hidden when the backend response has no videos for this
+                     keyword (e.g. cached pre-backend-change or YT quota paused). */}
+                {topPickVideos.length > 0 && (
+                  <div style={{ marginTop: 24, paddingTop: 20, borderTop: `1px solid ${C.border}` }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12, flexWrap: 'wrap' }}>
+                      <span style={{
+                        fontSize: 11, fontWeight: 700, color: C.text3,
+                        letterSpacing: '0.10em', textTransform: 'uppercase',
+                      }}>
+                        Top-ranking videos right now
+                      </span>
+                      {topPerformer > 0 && (
+                        <span style={{
+                          marginLeft: 'auto',
+                          display: 'inline-flex', alignItems: 'center', gap: 7,
+                          fontSize: 12, fontWeight: 500, color: C.text2,
+                          letterSpacing: '-0.01em', fontVariantNumeric: 'tabular-nums',
+                        }}>
+                          <span style={{ width: 6, height: 6, borderRadius: 99, background: C.green, flexShrink: 0 }}/>
+                          Top performer{' '}
+                          <strong style={{ color: C.text1, fontWeight: 700 }}>{fmtCompact(topPerformer)} views</strong>
+                        </span>
+                      )}
+                    </div>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10 }}>
+                      {topPickVideos.map((v, i) => {
+                        // Backend serialises as thumbnail_url; CDN fallback covers
+                        // the case where the field is missing but video_id is.
+                        const thumb = v.thumbnail_url || (v.video_id ? `https://i.ytimg.com/vi/${v.video_id}/mqdefault.jpg` : null)
+                        const ytUrl = v.video_id ? `https://www.youtube.com/watch?v=${v.video_id}` : null
+                        // Compact "Xd ago" for the meta line under each tile.
+                        const fmtAge = (iso) => {
+                          if (!iso) return ''
+                          const days = Math.floor((Date.now() - new Date(iso).getTime()) / 86400000)
+                          if (days < 1)   return 'today'
+                          if (days < 7)   return `${days}d ago`
+                          if (days < 30)  return `${Math.floor(days / 7)}w ago`
+                          if (days < 365) return `${Math.floor(days / 30)}mo ago`
+                          return `${Math.floor(days / 365)}y ago`
+                        }
+                        return (
+                          <a key={v.video_id || i}
+                            href={ytUrl || '#'}
+                            target="_blank" rel="noopener noreferrer"
+                            onClick={e => { if (!ytUrl) e.preventDefault() }}
+                            style={{
+                              display: 'block', textDecoration: 'none', color: 'inherit',
+                              borderRadius: 10, overflow: 'hidden',
+                              border: '1px solid #ececf0', background: '#fff',
+                              transition: 'transform 140ms ease, box-shadow 140ms ease, border-color 140ms ease',
+                            }}
+                            onMouseEnter={e => {
+                              e.currentTarget.style.transform = 'translateY(-1px)'
+                              e.currentTarget.style.boxShadow = '0 4px 14px rgba(0,0,0,0.10)'
+                              e.currentTarget.style.borderColor = '#d6d6dc'
+                            }}
+                            onMouseLeave={e => {
+                              e.currentTarget.style.transform = 'translateY(0)'
+                              e.currentTarget.style.boxShadow = 'none'
+                              e.currentTarget.style.borderColor = '#ececf0'
+                            }}
+                          >
+                            <div style={{ position: 'relative', aspectRatio: '16 / 9', background: '#ebebef', overflow: 'hidden' }}>
+                              {thumb && <img src={thumb} alt="" referrerPolicy="no-referrer" loading="lazy" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}/>}
+                              {v.views > 0 && (
+                                <span style={{
+                                  position: 'absolute', bottom: 8, right: 8,
+                                  background: 'rgba(0,0,0,0.82)', color: '#fff',
+                                  fontSize: 11.5, fontWeight: 700,
+                                  padding: '3px 7px', borderRadius: 5,
+                                  fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.05px',
+                                  backdropFilter: 'blur(2px)',
+                                }}>{fmtCompact(v.views)}</span>
+                              )}
+                            </div>
+                            <div style={{ padding: '11px 13px 13px' }}>
+                              <p style={{
+                                fontSize: 13.5, fontWeight: 600, color: C.text1,
+                                letterSpacing: '-0.15px', lineHeight: 1.4,
+                                margin: '0 0 4px',
+                                display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical',
+                                overflow: 'hidden', minHeight: 38,
+                              }}>{v.title}</p>
+                              <p style={{
+                                fontSize: 12, fontWeight: 500, color: 'rgba(10,10,15,0.50)',
+                                letterSpacing: '-0.02px',
+                                whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
+                              }}>
+                                {v.channel_title}{v.published_at ? ` · ${fmtAge(v.published_at)}` : ''}
+                              </p>
+                            </div>
+                          </a>
+                        )
+                      })}
+                    </div>
+                  </div>
+                )}
               </div>
             )
           })()}

@@ -295,7 +295,10 @@ def _fetch_competition_for_keyword(keyword: str, yt_api_key: str) -> dict:
         vids = yt.videos().list(part="statistics", id=",".join(video_ids)).execute() if video_ids else {"items": []}
         chs  = yt.channels().list(part="statistics", id=",".join(channel_ids)).execute() if channel_ids else {"items": []}
 
-        view_counts = sorted(int(v.get("statistics", {}).get("viewCount", 0) or 0) for v in vids.get("items", []))
+        # Build a video_id -> views map for top_videos shortlist below.
+        views_by_id = {v.get("id"): int(v.get("statistics", {}).get("viewCount", 0) or 0) for v in vids.get("items", [])}
+
+        view_counts = sorted(views_by_id.values())
         sub_counts  = sorted(int(c.get("statistics", {}).get("subscriberCount", 0) or 0) for c in chs.get("items", []))
 
         def median(xs):
@@ -312,11 +315,35 @@ def _fetch_competition_for_keyword(keyword: str, yt_api_key: str) -> dict:
                 newest = max(parsed)
                 days_since = (datetime.now(timezone.utc) - newest).days
 
+        # Top-3 ranking videos for this keyword, ordered by view count.
+        # Surfaces as visual evidence on the Keywords page (Top Pick hero +
+        # detail modal). The data is already in hand from the search +
+        # videos.list calls above, so this adds zero quota cost.
+        top_videos = []
+        for it in items:
+            vid = it.get("id", {}).get("videoId")
+            if not vid:
+                continue
+            snip = it.get("snippet", {}) or {}
+            top_videos.append({
+                "video_id":      vid,
+                "title":         snip.get("title", ""),
+                "channel_title": snip.get("channelTitle", ""),
+                "published_at":  snip.get("publishedAt", ""),
+                "views":         views_by_id.get(vid, 0),
+                "thumbnail_url": (snip.get("thumbnails", {}).get("medium")
+                                  or snip.get("thumbnails", {}).get("default")
+                                  or {}).get("url", ""),
+            })
+        top_videos.sort(key=lambda v: v["views"], reverse=True)
+        top_videos = top_videos[:3]
+
         result = {
             "result_count":       search.get("pageInfo", {}).get("totalResults", len(items)),
             "top_subs_median":    median(sub_counts),
             "top_views_median":   median(view_counts),
             "days_since_newest":  days_since,
+            "top_videos":         top_videos,
         }
 
         # Persist to cache so the next user researching this keyword today
