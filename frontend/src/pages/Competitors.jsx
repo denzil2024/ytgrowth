@@ -146,12 +146,12 @@ function useCompetitorStyles() {
       }
 
       /* Remove (trash) icon — appears on row hover only, top-right
-         corner away from the chevron. */
+         corner of the identity row (not the wrapper center, since
+         cards now have a tall signal row below the identity strip). */
       .comp-remove-btn {
         position: absolute;
-        top: 50%;
-        right: 50px;
-        transform: translateY(-50%);
+        top: 18px;
+        right: 56px;
         width: 26px;
         height: 26px;
         border-radius: 7px;
@@ -273,19 +273,21 @@ function useCompetitorStyles() {
         padding: 16px 18px;
       }
 
-      /* accordion — same shadow grammar as other surfaces, hairline
-         black-alpha, soft lift on hover. */
+      /* Card — single flex-column surface with a colored stripe at the
+         top, an identity row (avatar + name + threat + chevron), and a
+         visual signal row (3 recent thumbs). Hairline border, system
+         elevation, soft lift on hover. */
       .comp-accordion-header {
         background: #ffffff;
         border: 1px solid rgba(10,10,15,0.07);
         box-shadow: 0 1px 2px rgba(15,15,25,0.04), inset 0 1px 0 rgba(255,255,255,0.7);
-        padding: 14px 18px;
+        padding: 0;
         display: flex;
-        align-items: center;
-        gap: 14px;
+        flex-direction: column;
         transition: box-shadow 200ms cubic-bezier(0.32, 0.72, 0, 1), border-color 200ms cubic-bezier(0.32, 0.72, 0, 1), transform 200ms cubic-bezier(0.32, 0.72, 0, 1);
         cursor: pointer;
         user-select: none;
+        overflow: hidden;
       }
       .comp-accordion-header:hover {
         box-shadow: 0 4px 16px rgba(15,15,25,0.06), inset 0 1px 0 rgba(255,255,255,0.7);
@@ -295,6 +297,129 @@ function useCompetitorStyles() {
       .comp-accordion-header.closed { border-radius: 14px; }
       .comp-accordion-header.open   { border-radius: 14px 14px 0 0; border-bottom-color: rgba(10,10,15,0.05); transform: none; }
       .comp-accordion-header.open:hover { transform: none; }
+
+      /* 3px colored stripe — threat color, top edge of the card. Visual
+         entry point that lets the user scan severity before reading. */
+      .comp-stripe {
+        height: 3px;
+        width: 100%;
+        flex-shrink: 0;
+      }
+
+      /* Identity row — avatar, name + threat label, meta line, chevron.
+         Still the click target for expand/collapse. */
+      .comp-identity-row {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 14px 18px;
+      }
+
+      /* Signal row — visual evidence. Eyebrow + top-performer stat on
+         top, 3-up thumbnail grid below. Shows by default (not behind a
+         disclosure) because the whole point is to put their work in
+         front of you, not a paragraph describing it. */
+      .comp-signal-row {
+        padding: 0 18px 16px;
+        border-top: 1px solid rgba(10,10,15,0.05);
+        padding-top: 14px;
+      }
+      .comp-signal-eyebrow {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 12px;
+        flex-wrap: wrap;
+      }
+      .comp-signal-eyebrow .label {
+        font-size: 11px;
+        font-weight: 700;
+        color: rgba(10,10,15,0.50);
+        letter-spacing: 0.10em;
+        text-transform: uppercase;
+      }
+      .comp-signal-eyebrow .perf {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 11.5px;
+        font-weight: 500;
+        color: rgba(10,10,15,0.62);
+        letter-spacing: -0.01em;
+        font-variant-numeric: tabular-nums;
+        margin-left: auto;
+      }
+      .comp-signal-eyebrow .perf strong { color: #0a0a0f; font-weight: 700; }
+      .comp-signal-eyebrow .perf .dot {
+        width: 6px; height: 6px; border-radius: 99px;
+        background: #16a34a; flex-shrink: 0;
+      }
+
+      .comp-thumb-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+      }
+      .comp-thumb-tile {
+        display: block;
+        text-decoration: none;
+        color: inherit;
+        border-radius: 10px;
+        overflow: hidden;
+        border: 1px solid #ececf0;
+        background: #fff;
+        transition: transform 140ms ease, box-shadow 140ms ease, border-color 140ms ease;
+      }
+      .comp-thumb-tile:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 14px rgba(0,0,0,0.10);
+        border-color: #d6d6dc;
+      }
+      .comp-thumb-img {
+        position: relative;
+        aspect-ratio: 16 / 9;
+        background: #ebebef;
+        overflow: hidden;
+      }
+      .comp-thumb-img img {
+        width: 100%; height: 100%; object-fit: cover; display: block;
+      }
+      .comp-thumb-views {
+        position: absolute;
+        bottom: 6px; right: 6px;
+        background: rgba(0,0,0,0.78);
+        color: #fff;
+        font-size: 10.5px;
+        font-weight: 700;
+        padding: 2px 6px;
+        border-radius: 5px;
+        font-variant-numeric: tabular-nums;
+        letter-spacing: -0.05px;
+        backdrop-filter: blur(2px);
+      }
+      .comp-thumb-text { padding: 8px 10px 10px; }
+      .comp-thumb-title {
+        font-size: 12px;
+        font-weight: 600;
+        color: #0a0a0f;
+        letter-spacing: -0.1px;
+        line-height: 1.4;
+        margin: 0 0 3px;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        min-height: 32px;
+      }
+      .comp-thumb-meta {
+        font-size: 11px;
+        font-weight: 500;
+        color: rgba(10,10,15,0.45);
+        letter-spacing: -0.03px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
 
       .comp-accordion-body {
         border: 1px solid rgba(10,10,15,0.07);
@@ -1444,69 +1569,126 @@ export default function Competitors({ plan, freeTierFeatures }) {
                     </svg>
                   </button>
 
-                  {/* ── accordion header. Row is the click target — single
-                       chevron on the right replaces the old red CTA button. */}
+                  {/* ── card. Stripe + identity row + visual signal row.
+                       Whole card is the click target for expand/collapse;
+                       thumbnail tiles stop propagation and open YouTube. */}
                   <div className={`comp-accordion-header ${isOpen ? 'open' : 'closed'}`}
                     onClick={() => setExpandedIdx(isOpen ? null : i)}>
 
-                    {comp.thumbnail && (
-                      <img src={comp.thumbnail} alt="" referrerPolicy="no-referrer"
-                        style={{ width: 44, height: 44, borderRadius: 10, objectFit: 'cover',
-                          flexShrink: 0, boxShadow: '0 1px 2px rgba(15,15,25,0.10)' }} />
-                    )}
+                    {/* 3px stripe — threat color (gray when no AI yet) */}
+                    <div className="comp-stripe"
+                      style={{ background: threatDot || 'rgba(10,10,15,0.10)' }} />
 
-                    {/* ── center: name + inline meta line ── */}
-                    <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-                        {threatDot && (
-                          <span aria-hidden="true" style={{
-                            flexShrink: 0,
-                            width: 8, height: 8, borderRadius: 99,
-                            background: threatDot,
-                            boxShadow: `0 0 0 3px ${threatDot}22`,
-                          }}/>
-                        )}
-                        <p style={{ fontWeight: 500, fontSize: 15, color: '#0a0a0f',
-                          letterSpacing: '-0.2px', whiteSpace: 'nowrap', overflow: 'hidden',
-                          textOverflow: 'ellipsis' }}>
-                          {comp.channel_name}
-                        </p>
-                        {threat && (
-                          <span style={{ flexShrink: 0, fontSize: 12.5, fontWeight: 600,
-                            color: threat.text, letterSpacing: '-0.05px' }}>
-                            <span style={{ color: 'rgba(10,10,15,0.18)', margin: '0 6px',
-                              fontWeight: 400 }}>·</span>
-                            {threat.label}
-                          </span>
-                        )}
+                    {/* Identity row */}
+                    <div className="comp-identity-row">
+                      {comp.thumbnail && (
+                        <img src={comp.thumbnail} alt="" referrerPolicy="no-referrer"
+                          style={{ width: 44, height: 44, borderRadius: 10, objectFit: 'cover',
+                            flexShrink: 0, boxShadow: '0 1px 2px rgba(15,15,25,0.10)' }} />
+                      )}
+
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
+                          {threatDot && (
+                            <span aria-hidden="true" style={{
+                              flexShrink: 0,
+                              width: 8, height: 8, borderRadius: 99,
+                              background: threatDot,
+                              boxShadow: `0 0 0 3px ${threatDot}22`,
+                            }}/>
+                          )}
+                          <p style={{ fontWeight: 500, fontSize: 15, color: '#0a0a0f',
+                            letterSpacing: '-0.2px', whiteSpace: 'nowrap', overflow: 'hidden',
+                            textOverflow: 'ellipsis' }}>
+                            {comp.channel_name}
+                          </p>
+                          {threat && (
+                            <span style={{ flexShrink: 0, fontSize: 12.5, fontWeight: 600,
+                              color: threat.text, letterSpacing: '-0.05px' }}>
+                              <span style={{ color: 'rgba(10,10,15,0.18)', margin: '0 6px',
+                                fontWeight: 400 }}>·</span>
+                              {threat.label}
+                            </span>
+                          )}
+                        </div>
+
+                        <div className="comp-meta-line">
+                          <span><span className="val">{fmtK(comp.subscribers)}</span> subs</span>
+                          <span className="sep">·</span>
+                          <span><span className="val">{fmtK(comp.avg_views_per_video)}</span> avg views</span>
+                          {ai && (
+                            <>
+                              <span className="sep">·</span>
+                              <span><span className="val">{ai.gapsToExploit?.length || 0}</span> gaps</span>
+                            </>
+                          )}
+                          {savedAt && (
+                            <>
+                              <span className="sep">·</span>
+                              <span>{savedAt}</span>
+                            </>
+                          )}
+                        </div>
                       </div>
 
-                      {/* Inline meta — single quiet line replacing 3 chips */}
-                      <div className="comp-meta-line">
-                        <span><span className="val">{fmtK(comp.subscribers)}</span> subs</span>
-                        <span className="sep">·</span>
-                        <span><span className="val">{fmtK(comp.avg_views_per_video)}</span> avg views</span>
-                        {ai && (
-                          <>
-                            <span className="sep">·</span>
-                            <span><span className="val">{ai.gapsToExploit?.length || 0}</span> gaps</span>
-                          </>
-                        )}
-                        {savedAt && (
-                          <>
-                            <span className="sep">·</span>
-                            <span>{savedAt}</span>
-                          </>
-                        )}
-                      </div>
+                      <button className={`comp-btn-report ${isOpen ? 'open' : ''}`}
+                        aria-label={isOpen ? 'Close report' : 'Open report'}
+                        onClick={e => { e.stopPropagation(); setExpandedIdx(isOpen ? null : i) }}>
+                        <Chevron />
+                      </button>
                     </div>
 
-                    {/* ── right: chevron only. Row click handles toggle. ── */}
-                    <button className={`comp-btn-report ${isOpen ? 'open' : ''}`}
-                      aria-label={isOpen ? 'Close report' : 'Open report'}
-                      onClick={e => { e.stopPropagation(); setExpandedIdx(isOpen ? null : i) }}>
-                      <Chevron />
-                    </button>
+                    {/* Visual signal row — 3 most-recent videos as real
+                         thumbnails. Show, not tell. Renders only when we
+                         actually have video data on the analysis. */}
+                    {(() => {
+                      const vids = Array.isArray(comp.top_5_videos) ? comp.top_5_videos.slice(0, 3) : []
+                      if (vids.length === 0) return null
+                      const topViews = Math.max(...vids.map(v => v.views || 0))
+                      const fmtAge = (iso) => {
+                        if (!iso) return ''
+                        const days = Math.floor((Date.now() - new Date(iso).getTime()) / 86400000)
+                        if (days < 1)  return 'today'
+                        if (days < 7)  return `${days}d ago`
+                        if (days < 30) return `${Math.floor(days/7)}w ago`
+                        if (days < 365) return `${Math.floor(days/30)}mo ago`
+                        return `${Math.floor(days/365)}y ago`
+                      }
+                      return (
+                        <div className="comp-signal-row">
+                          <div className="comp-signal-eyebrow">
+                            <span className="label">Recent uploads</span>
+                            {topViews > 0 && (
+                              <span className="perf">
+                                <span className="dot"/> Top performer <strong>{fmtK(topViews)} views</strong>
+                              </span>
+                            )}
+                          </div>
+                          <div className="comp-thumb-grid">
+                            {vids.map((v, vi) => (
+                              <a key={v.video_id || vi}
+                                href={v.video_id ? `https://www.youtube.com/watch?v=${v.video_id}` : '#'}
+                                target="_blank" rel="noopener noreferrer"
+                                onClick={e => e.stopPropagation()}
+                                className="comp-thumb-tile">
+                                <div className="comp-thumb-img">
+                                  {v.thumbnail && (
+                                    <img src={v.thumbnail} alt="" referrerPolicy="no-referrer" loading="lazy" />
+                                  )}
+                                  {v.views > 0 && (
+                                    <span className="comp-thumb-views">{fmtK(v.views)}</span>
+                                  )}
+                                </div>
+                                <div className="comp-thumb-text">
+                                  <p className="comp-thumb-title">{v.title}</p>
+                                  <p className="comp-thumb-meta">{fmtAge(v.published_at)}</p>
+                                </div>
+                              </a>
+                            ))}
+                          </div>
+                        </div>
+                      )
+                    })()}
                   </div>
 
                   {/* ── expanded report ── */}
