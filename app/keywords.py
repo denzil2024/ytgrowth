@@ -257,15 +257,23 @@ def _fetch_competition_for_keyword(keyword: str, yt_api_key: str) -> dict:
             if age_hours < _KW_CACHE_TTL_HOURS:
                 try:
                     cached = _json.loads(row.result_json)
-                    try:
-                        row.hit_count = (row.hit_count or 0) + 1
-                        row.last_hit_at = _dt.datetime.now(_dt.timezone.utc)
-                        db.commit()
-                    except Exception:
-                        try: db.rollback()
-                        except Exception: pass
-                    print(f"[keywords] cache HIT '{keyword}' (hits={row.hit_count}, saved 102 units)")
-                    return cached
+                    # Schema check: entries cached before the `top_videos`
+                    # field was added are missing the visual evidence the
+                    # frontend now needs. Treat as a cache miss so we
+                    # refetch and backfill. Only refetches entries that
+                    # are actually stale-schema, no quota spike on fresh ones.
+                    if "top_videos" not in cached:
+                        print(f"[keywords] cache STALE-SCHEMA '{keyword}' (missing top_videos) — refetching")
+                    else:
+                        try:
+                            row.hit_count = (row.hit_count or 0) + 1
+                            row.last_hit_at = _dt.datetime.now(_dt.timezone.utc)
+                            db.commit()
+                        except Exception:
+                            try: db.rollback()
+                            except Exception: pass
+                        print(f"[keywords] cache HIT '{keyword}' (hits={row.hit_count}, saved 102 units)")
+                        return cached
                 except Exception:
                     pass  # corrupt cache, fall through and refetch
     except Exception as e:
