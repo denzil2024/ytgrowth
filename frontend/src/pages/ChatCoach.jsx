@@ -19,6 +19,8 @@ import {
   Send,             // Composer send button
   Plus,             // New chat icon button
   ArrowRight,       // Upgrade CTA glyph
+  X,                // Delete icon on conversation rows
+  MessageSquare,    // Conversation glyph on rail rows
   // Starter-prompt icons. Eight imperative prompts, two rows.
   TrendingUp,
   TrendingDown,
@@ -307,6 +309,11 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
   const [input, setInput] = useState('')
   const [sending, setSending] = useState(false)
   const [sendError, setSendError] = useState(null)
+  // Conversation history. activeConversationId === null when the user
+  // has no conversations yet (truly first-time empty state).
+  const [conversations, setConversations] = useState([])
+  const [activeConversationId, setActiveConversationId] = useState(null)
+  const [switchingConv, setSwitchingConv] = useState(false)
   const scrollRef = useRef(null)
   const inputRef = useRef(null)
 
@@ -325,6 +332,8 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
         setUsed(d.used || 0)
         setPlan(d.plan || 'free')
         setAvailableSources(d.sources || [])
+        setConversations(d.conversations || [])
+        setActiveConversationId(d.conversation_id ?? null)
         setState({ loading: false, error: null })
       })
       .catch(() => {
@@ -333,6 +342,49 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
       })
     return () => { cancelled = true }
   }, [])
+
+  async function switchConversation(targetId) {
+    if (targetId === activeConversationId || sending || switchingConv) return
+    setSwitchingConv(true)
+    setSendError(null)
+    try {
+      const r = await fetch(`/chat/state?conversation_id=${targetId}`, { credentials: 'include' })
+      if (!r.ok) throw new Error('switch failed')
+      const d = await r.json()
+      setMessages(d.messages || [])
+      setActiveConversationId(d.conversation_id ?? targetId)
+      setConversations(d.conversations || conversations)
+      setAvailableSources(d.sources || availableSources)
+    } catch {
+      setSendError("Couldn't load that conversation. Try again.")
+    } finally {
+      setSwitchingConv(false)
+    }
+  }
+
+  async function deleteConversation(targetId) {
+    if (sending) return
+    try {
+      const r = await fetch(`/chat/conversations/${targetId}`, {
+        method: 'DELETE',
+        credentials: 'include',
+      })
+      if (!r.ok) return
+      const d = await r.json()
+      const next = d.conversations || conversations.filter(c => c.id !== targetId)
+      setConversations(next)
+      // If we deleted the active conversation, switch to the next one
+      // (most recent) or clear if none left.
+      if (targetId === activeConversationId) {
+        if (next.length > 0) {
+          await switchConversation(next[0].id)
+        } else {
+          setActiveConversationId(null)
+          setMessages([])
+        }
+      }
+    } catch {}
+  }
 
   // Scroll to bottom on new message
   useEffect(() => {
@@ -356,7 +408,13 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
         method: 'POST',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: text }),
+        body: JSON.stringify({
+          message: text,
+          // Pass active conversation_id so the backend writes to the
+          // same thread the user is viewing. Null means "use current
+          // or create one" on the backend.
+          conversation_id: activeConversationId,
+        }),
       })
       const d = await r.json()
       if (!r.ok) {
@@ -374,6 +432,11 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
       setAllowance(d.allowance ?? allowance)
       setUsed(d.used ?? (used + 1))
       if (d.sources) setAvailableSources(d.sources)
+      // Conversation id may have been created server-side (first send
+      // from a fresh state). Conversations list is refreshed so the
+      // rail picks up the new/updated title immediately.
+      if (d.conversation_id) setActiveConversationId(d.conversation_id)
+      if (Array.isArray(d.conversations)) setConversations(d.conversations)
     } catch (e) {
       setMessages(prev => prev.slice(0, -1))
       setSendError("Couldn't reach the coach. Check your connection and try again.")
@@ -384,12 +447,16 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
   }
 
   async function newChat() {
-    if (sending) return
-    if (messages.length === 0) return
+    if (sending || switchingConv) return
     try {
-      await fetch('/chat/new', { method: 'POST', credentials: 'include' })
+      const r = await fetch('/chat/new', { method: 'POST', credentials: 'include' })
+      if (!r.ok) return
+      const d = await r.json()
+      setActiveConversationId(d.conversation_id ?? null)
       setMessages([])
       setSendError(null)
+      if (Array.isArray(d.conversations)) setConversations(d.conversations)
+      setTimeout(() => inputRef.current?.focus(), 80)
     } catch {}
   }
 
@@ -563,30 +630,13 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
           </span>
         </div>
       )}
-      {messages.length > 0 && (
-        <button
-          type="button"
-          onClick={newChat}
-          disabled={sending}
-          aria-label="New chat"
-          title="New chat"
-          style={{
-            width: 34, height: 34, borderRadius: 10,
-            border: `1px solid ${C.hair}`,
-            background: C.surface, color: C.text2,
-            display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-            cursor: sending ? 'default' : 'pointer',
-            boxShadow: C.cardShadow,
-            transition: `background 180ms ${C.spring}, color 180ms ${C.spring}, border-color 180ms ${C.spring}`,
-          }}
-          onMouseEnter={e => { if (!sending) { e.currentTarget.style.background = C.surfaceLift; e.currentTarget.style.color = C.text1; e.currentTarget.style.borderColor = C.hairActive } }}
-          onMouseLeave={e => { if (!sending) { e.currentTarget.style.background = C.surface; e.currentTarget.style.color = C.text2; e.currentTarget.style.borderColor = C.hair } }}
-        >
-          <Plus size={15} strokeWidth={2} />
-        </button>
-      )}
+      {/* The floating top-right "+ New chat" is now hidden — the rail on
+          the left holds the only "+ New chat" entry. We keep the meter
+          chip up here because users need to see usage at all times. */}
     </div>
   )
+
+  const hasRail = conversations.length >= 1
 
   return (
     <div style={{
@@ -636,7 +686,26 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
             {state.error}
           </p>
         </div>
-      ) : messages.length === 0 ? (
+      ) : (
+        /* ── Body. Rail (when conversations exist) + content column. ── */
+        <div style={{ flex: 1, display: 'flex', minHeight: 0 }}>
+          {hasRail && (
+            <ConversationRail
+              conversations={conversations}
+              activeId={activeConversationId}
+              onSelect={switchConversation}
+              onNew={newChat}
+              onDelete={deleteConversation}
+              sending={sending}
+              switching={switchingConv}
+            />
+          )}
+          <div style={{
+            flex: 1, display: 'flex', flexDirection: 'column',
+            minWidth: 0, minHeight: 0,
+            paddingLeft: hasRail ? 16 : 0,
+          }}>
+        {messages.length === 0 ? (
         /* ── EMPTY STATE. Vertically centered hero + composer + pills.
               No header, no avatar, no chips. The whole top of the page
               breathes. ─────────────────────────────────────────────── */
@@ -788,6 +857,9 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
           </div>
         </>
       )}
+          </div>
+        </div>
+      )}
     </div>
   )
 }
@@ -851,6 +923,169 @@ function MessageBubble({ role, content, sources }) {
       </div>
     </div>
   )
+}
+
+
+/* ─── Conversation rail. Sidebar of past chats; only renders when the
+       channel has at least one conversation. Top button creates a new
+       conversation; each row switches to it on click; hover reveals a
+       delete X. Bottom-aligned via flex-end so short lists hug the
+       composer area. ─────────────────────────────────────────────── */
+function ConversationRail({
+  conversations,
+  activeId,
+  onSelect,
+  onNew,
+  onDelete,
+  sending,
+  switching,
+}) {
+  const groups = groupConversationsByRecency(conversations)
+  return (
+    <aside style={{
+      width: 240,
+      flexShrink: 0,
+      display: 'flex', flexDirection: 'column',
+      paddingRight: 12,
+      borderRight: `1px solid ${C.hair}`,
+      minHeight: 0,
+    }}>
+      {/* New chat button — top of rail, full-width, hairline */}
+      <button
+        type="button"
+        onClick={onNew}
+        disabled={sending || switching}
+        style={{
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          padding: '10px 12px', marginBottom: 14, marginRight: 4,
+          background: C.surface,
+          border: `1px solid ${C.hair}`,
+          borderRadius: 10,
+          color: C.text1,
+          fontFamily: 'inherit',
+          fontSize: 13, fontWeight: 600, letterSpacing: '-0.01em',
+          cursor: sending || switching ? 'default' : 'pointer',
+          boxShadow: C.cardShadow,
+          transition: `background 180ms ${C.spring}, border-color 180ms ${C.spring}, transform 180ms ${C.spring}`,
+        }}
+        onMouseEnter={e => { if (!(sending || switching)) { e.currentTarget.style.background = '#fff'; e.currentTarget.style.borderColor = C.hairActive; e.currentTarget.style.transform = 'translateY(-1px)' } }}
+        onMouseLeave={e => { if (!(sending || switching)) { e.currentTarget.style.background = C.surface; e.currentTarget.style.borderColor = C.hair; e.currentTarget.style.transform = 'translateY(0)' } }}
+      >
+        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+          <Plus size={14} strokeWidth={2} color={C.text2} />
+          New chat
+        </span>
+      </button>
+
+      {/* Conversation list, grouped by date */}
+      <div className="ytg-chat-scroll" style={{
+        flex: 1, overflowY: 'auto', overflowX: 'hidden',
+        paddingRight: 4,
+        minHeight: 0,
+      }}>
+        {groups.map(group => (
+          <div key={group.label} style={{ marginBottom: 14 }}>
+            <p style={{
+              fontSize: 10.5, fontWeight: 600, color: C.text4,
+              letterSpacing: '0.06em', textTransform: 'uppercase',
+              margin: '0 0 6px 4px',
+            }}>{group.label}</p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+              {group.items.map(c => (
+                <ConversationRow
+                  key={c.id}
+                  conversation={c}
+                  active={c.id === activeId}
+                  onSelect={() => onSelect(c.id)}
+                  onDelete={() => onDelete(c.id)}
+                  switching={switching}
+                />
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </aside>
+  )
+}
+
+function ConversationRow({ conversation, active, onSelect, onDelete, switching }) {
+  const [hover, setHover] = useState(false)
+  const title = conversation.title || 'New chat'
+  return (
+    <div
+      onClick={active || switching ? undefined : onSelect}
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+      style={{
+        position: 'relative',
+        display: 'flex', alignItems: 'center', gap: 9,
+        padding: '8px 10px 8px 12px',
+        borderRadius: 8,
+        background: active ? C.surface : (hover ? 'rgba(10,10,15,0.04)' : 'transparent'),
+        border: active ? `1px solid ${C.hair}` : '1px solid transparent',
+        boxShadow: active ? C.cardShadow : 'none',
+        cursor: active || switching ? 'default' : 'pointer',
+        transition: `background 140ms ${C.spring}, border-color 140ms ${C.spring}`,
+      }}
+    >
+      <span style={{
+        display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+        flexShrink: 0, width: 18, height: 18,
+        color: active ? C.text1 : C.text3,
+      }}>
+        <MessageSquare size={13} strokeWidth={1.8} />
+      </span>
+      <span style={{
+        flex: 1, minWidth: 0,
+        fontSize: 13, fontWeight: active ? 600 : 500,
+        color: active ? C.text1 : C.text2,
+        letterSpacing: '-0.01em',
+        whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
+      }}>{title}</span>
+      {hover && !active && (
+        <button
+          type="button"
+          onClick={(e) => { e.stopPropagation(); onDelete() }}
+          aria-label="Delete conversation"
+          title="Delete"
+          style={{
+            flexShrink: 0,
+            width: 22, height: 22, borderRadius: 6,
+            border: 'none', background: 'transparent',
+            color: C.text3,
+            display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+            cursor: 'pointer',
+            transition: `background 140ms ${C.spring}, color 140ms ${C.spring}`,
+          }}
+          onMouseEnter={e => { e.currentTarget.style.background = 'rgba(229,37,27,0.08)'; e.currentTarget.style.color = C.red }}
+          onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = C.text3 }}
+        >
+          <X size={12} strokeWidth={2} />
+        </button>
+      )}
+    </div>
+  )
+}
+
+function groupConversationsByRecency(conversations) {
+  const now = Date.now()
+  const DAY = 86400_000
+  const buckets = { today: [], yesterday: [], week: [], older: [] }
+  for (const c of conversations) {
+    const t = c.last_message_at ? new Date(c.last_message_at).getTime() : 0
+    const age = now - t
+    if (age < DAY)       buckets.today.push(c)
+    else if (age < 2*DAY) buckets.yesterday.push(c)
+    else if (age < 7*DAY) buckets.week.push(c)
+    else                  buckets.older.push(c)
+  }
+  const out = []
+  if (buckets.today.length)     out.push({ label: 'Today',         items: buckets.today })
+  if (buckets.yesterday.length) out.push({ label: 'Yesterday',     items: buckets.yesterday })
+  if (buckets.week.length)      out.push({ label: 'Last 7 days',   items: buckets.week })
+  if (buckets.older.length)     out.push({ label: 'Older',         items: buckets.older })
+  return out
 }
 
 

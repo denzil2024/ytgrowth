@@ -1,14 +1,15 @@
-"""AI Coach — conversational chat surface for the Chat verb on the Feed.
+"""AI Coach — conversational chat surface with multi-conversation support.
 
-GET  /chat/state    Returns conversation history + allowance/used counts.
-POST /chat/send     Body {message}. Burns 1 message from the chat quota.
-                    Returns the assistant's reply (non-streaming for v1).
-POST /chat/new      Clears the active conversation. Does not refund quota.
+GET  /chat/state                     Returns active conversation + quota + list.
+POST /chat/send                      Body {message, conversation_id?}. Sends to
+                                     a specific conversation, or the current one.
+POST /chat/new                       Creates a new conversation, returns its id.
+GET  /chat/conversations             Lists all conversations for the channel.
+DELETE /chat/conversations/{id}      Deletes a specific conversation + its messages.
 
 Model: Haiku 4.5 with prompt caching on the system prompt + channel
-context block. Context is rebuilt fresh on every send (so the latest
-audit / stats are always in the prompt) but the cache key is stable
-enough that 5-min repeat sends hit cache.
+context block. Titles are generated lazily on the first user message in
+a conversation with a tiny separate Haiku call (~50 tokens in / 10 out).
 
 Quota: separate bucket from analyses. Lives on
 UserSubscription.chat_allowance / chat_used. Resets on the same monthly
@@ -16,16 +17,19 @@ anniversary as analyses (billing._activate handles that).
 """
 from __future__ import annotations
 
+import datetime
+import json
+from typing import Optional
+
 from fastapi import APIRouter, Request
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
-
-import json
 
 from app.utils import make_anthropic_client
 from database.models import (
     SessionLocal,
     ChatMessage,
+    ChatConversation,
     UserSubscription,
     CompetitorAnalysisCache,
     SeoOptimization,
@@ -302,6 +306,118 @@ def _summarize_sources(data: dict, channel_id: str) -> list[str]:
     return sources
 
 
+# ── Conversation helpers ──────────────────────────────────────────────────
+
+def _now() -> datetime.datetime:
+    return datetime.datetime.utcnow()
+
+
+def _backfill_orphan_messages(db, channel_id: str) -> Optional[ChatConversation]:
+    """One-time backfill: any chat_messages for this channel with
+    conversation_id IS NULL get bundled into a single new ChatConversation
+    titled 'Earlier conversation'. Returns that conversation (or None if
+    no orphans existed)."""
+    orphans = (
+        db.query(ChatMessage)
+        .filter(ChatMessage.channel_id == channel_id)
+        .filter(ChatMessage.conversation_id.is_(None))
+        .order_by(ChatMessage.created_at.asc(), ChatMessage.id.asc())
+        .all()
+    )
+    if not orphans:
+        return None
+    latest = orphans[-1].created_at or _now()
+    conv = ChatConversation(
+        channel_id=channel_id,
+        title="Earlier conversation",
+        created_at=orphans[0].created_at or _now(),
+        last_message_at=latest,
+    )
+    db.add(conv)
+    db.flush()  # populate conv.id
+    for msg in orphans:
+        msg.conversation_id = conv.id
+    db.commit()
+    return conv
+
+
+def _current_conversation(db, channel_id: str) -> Optional[ChatConversation]:
+    """Return the most recently active conversation for the channel,
+    or None if the channel has none yet."""
+    return (
+        db.query(ChatConversation)
+        .filter_by(channel_id=channel_id)
+        .order_by(ChatConversation.last_message_at.desc(), ChatConversation.id.desc())
+        .first()
+    )
+
+
+def _conversations_payload(db, channel_id: str) -> list[dict]:
+    """Serialise all conversations for the sidebar rail (newest first)."""
+    rows = (
+        db.query(ChatConversation)
+        .filter_by(channel_id=channel_id)
+        .order_by(ChatConversation.last_message_at.desc(), ChatConversation.id.desc())
+        .all()
+    )
+    return [
+        {
+            "id":              r.id,
+            "title":           r.title or "New chat",
+            "created_at":      r.created_at.isoformat() if r.created_at else None,
+            "last_message_at": r.last_message_at.isoformat() if r.last_message_at else None,
+        }
+        for r in rows
+    ]
+
+
+def _generate_title(first_user_message: str) -> str:
+    """Tiny Haiku call to generate a 3-5 word title from the first user
+    message in a conversation. Falls back to a truncated message if the
+    API call fails. Cost: roughly 50 tokens in + 10 out, ~$0.00001."""
+    text = (first_user_message or "").strip()
+    if not text:
+        return "New chat"
+    try:
+        client = make_anthropic_client()
+        resp = client.messages.create(
+            model="claude-haiku-4-5-20251001",
+            max_tokens=24,
+            system=(
+                "Generate a 3 to 5 word title for a conversation that starts "
+                "with this user message. Plain prose, title case. No quotes, "
+                "no trailing punctuation, no emoji, no leading 'A'/'An'/'The'."
+            ),
+            messages=[{"role": "user", "content": text[:300]}],
+        )
+        title = "".join(
+            getattr(block, "text", "") for block in (resp.content or [])
+            if getattr(block, "type", "text") == "text"
+        ).strip().strip('"').strip("'").strip(".")
+        if not title:
+            return text[:40] + ("..." if len(text) > 40 else "")
+        # Cap length defensively in case the model overshoots.
+        if len(title) > 60:
+            title = title[:60].rstrip() + "..."
+        return title
+    except Exception as e:
+        print(f"[chat] title generation failed: {e}")
+        return text[:40] + ("..." if len(text) > 40 else "")
+
+
+def _resolve_conversation(db, channel_id: str, conversation_id: Optional[int]) -> Optional[ChatConversation]:
+    """Look up a specific conversation by id, scoped to the channel so a
+    user can't read another channel's history. Falls back to None if the
+    id doesn't belong to this channel."""
+    if not conversation_id:
+        return None
+    return (
+        db.query(ChatConversation)
+        .filter_by(id=conversation_id, channel_id=channel_id)
+        .first()
+    )
+
+
 # ── Endpoints ─────────────────────────────────────────────────────────────
 
 def _get_or_create_sub(db, channel_id: str, email: str = "") -> UserSubscription:
@@ -315,9 +431,11 @@ def _get_or_create_sub(db, channel_id: str, email: str = "") -> UserSubscription
 
 
 @router.get("/state")
-def chat_state(request: Request):
-    """Return the active conversation history + quota state. Frontend hits
-    this on mount to hydrate the Chat page."""
+def chat_state(request: Request, conversation_id: Optional[int] = None):
+    """Return an active conversation's messages + quota + list of all
+    conversations. If ?conversation_id=N is passed, that conversation
+    is the active one (and is validated to belong to the channel).
+    Otherwise the most recently active conversation is used."""
     data, _ = get_session(request.session.get("session_id"))
     if not data:
         return JSONResponse({"error": "Not authenticated."}, status_code=401)
@@ -328,40 +446,77 @@ def chat_state(request: Request):
     db = SessionLocal()
     try:
         sub = _get_or_create_sub(db, channel_id, (data or {}).get("channel", {}).get("email", ""))
-        rows = (
-            db.query(ChatMessage)
-              .filter_by(channel_id=channel_id)
-              .order_by(ChatMessage.created_at.asc(), ChatMessage.id.asc())
-              .all()
-        )
-        messages = [
-            {
-                "role": r.role,
-                "content": r.content,
-                "created_at": r.created_at.isoformat() if r.created_at else None,
-            }
-            for r in rows
-        ]
+
+        # One-time backfill: if this channel has orphan messages from the
+        # pre-history schema, bundle them into a single conversation so
+        # nothing is lost. Idempotent — returns None after the first run.
+        _backfill_orphan_messages(db, channel_id)
+
+        # Resolve the active conversation. Explicit id wins; otherwise
+        # use the most recent.
+        conv = _resolve_conversation(db, channel_id, conversation_id) or _current_conversation(db, channel_id)
+
+        messages: list[dict] = []
+        if conv:
+            rows = (
+                db.query(ChatMessage)
+                  .filter_by(channel_id=channel_id, conversation_id=conv.id)
+                  .order_by(ChatMessage.created_at.asc(), ChatMessage.id.asc())
+                  .all()
+            )
+            messages = [
+                {
+                    "role": r.role,
+                    "content": r.content,
+                    "created_at": r.created_at.isoformat() if r.created_at else None,
+                }
+                for r in rows
+            ]
+
         return JSONResponse({
-            "messages":  messages,
-            "allowance": int(sub.chat_allowance or 0),
-            "used":      int(sub.chat_used or 0),
-            "remaining": max(0, int(sub.chat_allowance or 0) - int(sub.chat_used or 0)),
-            "plan":      sub.plan or "free",
-            "sources":   _summarize_sources(data, channel_id),
+            "messages":         messages,
+            "conversation_id":  conv.id if conv else None,
+            "conversations":    _conversations_payload(db, channel_id),
+            "allowance":        int(sub.chat_allowance or 0),
+            "used":             int(sub.chat_used or 0),
+            "remaining":        max(0, int(sub.chat_allowance or 0) - int(sub.chat_used or 0)),
+            "plan":             sub.plan or "free",
+            "sources":          _summarize_sources(data, channel_id),
         })
+    finally:
+        db.close()
+
+
+@router.get("/conversations")
+def chat_conversations(request: Request):
+    """Lightweight list of all conversations for the rail. Used when the
+    rail needs to refresh without re-loading the active conversation."""
+    data, _ = get_session(request.session.get("session_id"))
+    if not data:
+        return JSONResponse({"error": "Not authenticated."}, status_code=401)
+    channel_id = (data or {}).get("channel", {}).get("channel_id", "") or (data or {}).get("channel_id", "")
+    if not channel_id:
+        return JSONResponse({"error": "No channel."}, status_code=400)
+
+    db = SessionLocal()
+    try:
+        _backfill_orphan_messages(db, channel_id)
+        return JSONResponse({"conversations": _conversations_payload(db, channel_id)})
     finally:
         db.close()
 
 
 class SendBody(BaseModel):
     message: str
+    conversation_id: Optional[int] = None
 
 
 @router.post("/send")
 def chat_send(body: SendBody, request: Request):
-    """Add the user message to history, call Claude, save the assistant
-    reply, decrement quota by 1. Returns the assistant message."""
+    """Add the user message to a conversation, call Claude, save the
+    assistant reply, decrement quota by 1. Auto-titles the conversation
+    on the first user message. If no conversation_id is supplied, the
+    most-recent conversation is used, or a new one is created."""
     data, _ = get_session(request.session.get("session_id"))
     if not data:
         return JSONResponse({"error": "Not authenticated."}, status_code=401)
@@ -391,18 +546,54 @@ def chat_send(body: SendBody, request: Request):
                 "plan": sub.plan or "free",
             }, status_code=402)
 
-        # Load prior conversation history. We only send the last
-        # HISTORY_TURNS_SENT * 2 messages (one user + one assistant per turn)
-        # to keep the prompt bounded.
+        # Backfill orphans before resolving the conversation, so a long-time
+        # user's pre-history messages don't disappear when they send for the
+        # first time after this schema rollout.
+        _backfill_orphan_messages(db, channel_id)
+
+        # Resolve which conversation the message belongs to. Explicit id
+        # wins, then most-recent, then create a fresh one.
+        conv = _resolve_conversation(db, channel_id, body.conversation_id)
+        if conv is None:
+            conv = _current_conversation(db, channel_id)
+        is_first_message_in_conversation = False
+        if conv is None:
+            conv = ChatConversation(
+                channel_id=channel_id,
+                title=None,
+                created_at=_now(),
+                last_message_at=_now(),
+            )
+            db.add(conv)
+            db.flush()  # populate conv.id before assigning to ChatMessage
+            is_first_message_in_conversation = True
+        else:
+            # First user message in an existing-but-empty conversation
+            # also triggers a title. Count messages in this conversation.
+            existing_count = (
+                db.query(ChatMessage)
+                  .filter_by(channel_id=channel_id, conversation_id=conv.id)
+                  .count()
+            )
+            if existing_count == 0:
+                is_first_message_in_conversation = True
+
+        # Load prior history scoped to THIS conversation only, then cap at
+        # the last N turns to bound prompt tokens.
         prior = (
             db.query(ChatMessage)
-              .filter_by(channel_id=channel_id)
+              .filter_by(channel_id=channel_id, conversation_id=conv.id)
               .order_by(ChatMessage.created_at.asc(), ChatMessage.id.asc())
               .all()
         )
         # Persist the user's new message before calling Claude so we don't
         # lose it on a network failure mid-call.
-        user_row = ChatMessage(channel_id=channel_id, role="user", content=user_text)
+        user_row = ChatMessage(
+            channel_id=channel_id,
+            conversation_id=conv.id,
+            role="user",
+            content=user_text,
+        )
         db.add(user_row)
         db.commit()
 
@@ -451,9 +642,22 @@ def chat_send(body: SendBody, request: Request):
             return JSONResponse({"error": "Empty response from the coach. Try rephrasing."}, status_code=503)
 
         # Persist assistant reply + decrement quota
-        assistant_row = ChatMessage(channel_id=channel_id, role="assistant", content=assistant_text)
+        assistant_row = ChatMessage(
+            channel_id=channel_id,
+            conversation_id=conv.id,
+            role="assistant",
+            content=assistant_text,
+        )
         db.add(assistant_row)
         sub.chat_used = used + 1
+        conv.last_message_at = _now()
+
+        # Auto-title on the first user message. Synchronous Haiku call —
+        # adds a sub-second to the first reply but keeps the title fresh
+        # by the time the response lands in the UI. Costs ~$0.00001 per.
+        if is_first_message_in_conversation and not conv.title:
+            conv.title = _generate_title(user_text)
+
         db.commit()
 
         return JSONResponse({
@@ -463,10 +667,13 @@ def chat_send(body: SendBody, request: Request):
                 "created_at": assistant_row.created_at.isoformat() if assistant_row.created_at else None,
                 "sources":    sources_used,
             },
-            "allowance": allowance,
-            "used":      sub.chat_used,
-            "remaining": max(0, allowance - sub.chat_used),
-            "sources":   sources_used,
+            "conversation_id":   conv.id,
+            "conversation_title": conv.title,
+            "conversations":     _conversations_payload(db, channel_id),
+            "allowance":         allowance,
+            "used":              sub.chat_used,
+            "remaining":         max(0, allowance - sub.chat_used),
+            "sources":           sources_used,
         })
     finally:
         db.close()
@@ -474,8 +681,10 @@ def chat_send(body: SendBody, request: Request):
 
 @router.post("/new")
 def chat_new(request: Request):
-    """Start a fresh conversation. Deletes existing history for this
-    channel. Does NOT refund quota."""
+    """Create a new (empty) conversation. Previous conversations are
+    preserved and remain accessible via the sidebar rail. The new
+    conversation has no title until the user sends the first message
+    (which fires the Haiku title generator)."""
     data, _ = get_session(request.session.get("session_id"))
     if not data:
         return JSONResponse({"error": "Not authenticated."}, status_code=401)
@@ -485,8 +694,70 @@ def chat_new(request: Request):
 
     db = SessionLocal()
     try:
-        db.query(ChatMessage).filter_by(channel_id=channel_id).delete()
+        # Backfill old orphans first so the rail picks them up.
+        _backfill_orphan_messages(db, channel_id)
+
+        # If the current conversation is already empty (user clicked New
+        # then immediately clicked New again), reuse it instead of
+        # creating a sibling that will sit empty too.
+        current = _current_conversation(db, channel_id)
+        if current:
+            msg_count = (
+                db.query(ChatMessage)
+                  .filter_by(channel_id=channel_id, conversation_id=current.id)
+                  .count()
+            )
+            if msg_count == 0 and not current.title:
+                return JSONResponse({
+                    "conversation_id":   current.id,
+                    "conversation_title": current.title,
+                    "conversations":     _conversations_payload(db, channel_id),
+                })
+
+        conv = ChatConversation(
+            channel_id=channel_id,
+            title=None,
+            created_at=_now(),
+            last_message_at=_now(),
+        )
+        db.add(conv)
         db.commit()
-        return JSONResponse({"ok": True})
+        return JSONResponse({
+            "conversation_id":   conv.id,
+            "conversation_title": conv.title,
+            "conversations":     _conversations_payload(db, channel_id),
+        })
+    finally:
+        db.close()
+
+
+@router.delete("/conversations/{conversation_id}")
+def chat_delete_conversation(conversation_id: int, request: Request):
+    """Delete a conversation and its messages. Does NOT refund quota."""
+    data, _ = get_session(request.session.get("session_id"))
+    if not data:
+        return JSONResponse({"error": "Not authenticated."}, status_code=401)
+    channel_id = (data or {}).get("channel", {}).get("channel_id", "") or (data or {}).get("channel_id", "")
+    if not channel_id:
+        return JSONResponse({"error": "No channel."}, status_code=400)
+
+    db = SessionLocal()
+    try:
+        conv = _resolve_conversation(db, channel_id, conversation_id)
+        if conv is None:
+            return JSONResponse({"error": "Conversation not found."}, status_code=404)
+
+        # Delete the messages first, then the conversation row.
+        db.query(ChatMessage).filter_by(
+            channel_id=channel_id,
+            conversation_id=conv.id,
+        ).delete()
+        db.delete(conv)
+        db.commit()
+
+        return JSONResponse({
+            "ok":             True,
+            "conversations":  _conversations_payload(db, channel_id),
+        })
     finally:
         db.close()

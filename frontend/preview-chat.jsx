@@ -1,13 +1,13 @@
 /*
  * Preview harness for ChatCoach. Mounts the component standalone with
- * mocked fetch responses so I can render the empty + active states in
- * isolation and screenshot via Playwright before shipping any design
- * change. Not shipped to production — only served by `vite dev` on the
- * preview-chat.html entry.
+ * mocked fetch responses so I can render every state in isolation and
+ * screenshot via Playwright before shipping any design change. Not
+ * served in production.
  *
  * Query params:
- *   ?state=empty   (default) — no messages, shows hero + composer + pills
- *   ?state=active           — pre-seeded conversation, scroll viewport
+ *   ?state=empty    (default) — no conversations, no messages
+ *   ?state=active            — pre-seeded active conversation, with a rail of past chats
+ *   ?state=rail              — empty active conversation but past chats in the rail
  */
 import React from 'react'
 import ReactDOM from 'react-dom/client'
@@ -25,6 +25,16 @@ const MOCK_SOURCES = [
   '1 SEO edit',
   '7 milestones',
 ]
+
+const ACTIVE_CONV_ID = 42
+
+const SEED_CONVERSATIONS = (stateMode === 'active' || stateMode === 'rail') ? [
+  { id: ACTIVE_CONV_ID, title: 'Why are my CTRs dropping?',     created_at: new Date(Date.now() - 3600_000).toISOString(),     last_message_at: new Date(Date.now() - 10_000).toISOString() },
+  { id: 41,             title: 'Thumbnail style review',         created_at: new Date(Date.now() - 86400_000).toISOString(),   last_message_at: new Date(Date.now() - 80000_000).toISOString() },
+  { id: 40,             title: 'Compare to Moureen Ngigi',       created_at: new Date(Date.now() - 86400_000 * 2).toISOString(), last_message_at: new Date(Date.now() - 86400_000 * 2 + 600_000).toISOString() },
+  { id: 39,             title: 'Best time to post on weekdays',  created_at: new Date(Date.now() - 86400_000 * 5).toISOString(), last_message_at: new Date(Date.now() - 86400_000 * 5).toISOString() },
+  { id: 38,             title: 'Why my long-form is stuck',      created_at: new Date(Date.now() - 86400_000 * 12).toISOString(), last_message_at: new Date(Date.now() - 86400_000 * 12).toISOString() },
+] : []
 
 const SEED_MESSAGES = stateMode === 'active' ? [
   { role: 'user', content: 'Why are my CTRs dropping?', created_at: new Date(Date.now() - 60000).toISOString() },
@@ -57,17 +67,31 @@ The view-to-subscriber ratio matters more than the raw numbers. Her ratio is **0
   },
 ] : []
 
-// Mock fetch for any /chat/* or /auth/* endpoints the component hits.
 const origFetch = window.fetch
 window.fetch = async (url, opts) => {
   const u = String(url)
   if (u.includes('/chat/state')) {
     return new Response(JSON.stringify({
-      messages:  SEED_MESSAGES,
-      allowance: 100,
-      used:      stateMode === 'active' ? 12 : 4,
-      plan:      'pro',
-      sources:   MOCK_SOURCES,
+      messages:        SEED_MESSAGES,
+      conversation_id: SEED_CONVERSATIONS.length ? ACTIVE_CONV_ID : null,
+      conversations:   SEED_CONVERSATIONS,
+      allowance:       100,
+      used:            stateMode === 'active' ? 12 : 4,
+      plan:            'pro',
+      sources:         MOCK_SOURCES,
+    }), { headers: { 'Content-Type': 'application/json' } })
+  }
+  if (u.includes('/chat/conversations') && (opts?.method === 'DELETE')) {
+    return new Response(JSON.stringify({ ok: true, conversations: SEED_CONVERSATIONS.slice(1) }), { headers: { 'Content-Type': 'application/json' } })
+  }
+  if (u.includes('/chat/conversations')) {
+    return new Response(JSON.stringify({ conversations: SEED_CONVERSATIONS }), { headers: { 'Content-Type': 'application/json' } })
+  }
+  if (u.includes('/chat/new')) {
+    return new Response(JSON.stringify({
+      conversation_id:    999,
+      conversation_title: null,
+      conversations:      [{ id: 999, title: null, created_at: new Date().toISOString(), last_message_at: new Date().toISOString() }, ...SEED_CONVERSATIONS],
     }), { headers: { 'Content-Type': 'application/json' } })
   }
   if (u.includes('/chat/send')) {
@@ -78,21 +102,19 @@ window.fetch = async (url, opts) => {
         created_at: new Date().toISOString(),
         sources: MOCK_SOURCES.slice(0, 3),
       },
-      allowance: 100,
-      used:      (stateMode === 'active' ? 12 : 4) + 1,
-      sources:   MOCK_SOURCES,
+      conversation_id:    ACTIVE_CONV_ID,
+      conversation_title: 'Why are my CTRs dropping?',
+      conversations:      SEED_CONVERSATIONS,
+      allowance:          100,
+      used:               (stateMode === 'active' ? 12 : 4) + 1,
+      sources:            MOCK_SOURCES,
     }), { headers: { 'Content-Type': 'application/json' } })
-  }
-  if (u.includes('/chat/new')) {
-    return new Response(JSON.stringify({ ok: true }), { headers: { 'Content-Type': 'application/json' } })
   }
   return origFetch(url, opts)
 }
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   React.createElement('div', {
-    // Approximate the app shell padding so the preview matches the real
-    // app layout (sidebar + topbar offsets are stripped in this harness).
     style: { padding: '36px 24px', height: '100vh', boxSizing: 'border-box', background: '#fafafb' }
   },
     React.createElement(ChatCoach, {
