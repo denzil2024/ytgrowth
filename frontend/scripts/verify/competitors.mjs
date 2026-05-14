@@ -59,13 +59,26 @@ const browser = await chromium.launch()
 try {
   const states = ['search-empty', 'search-results', 'tracked-empty', 'tracked', 'tracked-open']
   for (const state of states) {
-    const ctx = await browser.newContext({ viewport: VIEWPORT, deviceScaleFactor: 1 })
+    // Tracked-open expands to a tall report (KPI + videos + chart + title
+    // patterns + topics + disclosure). Use a taller viewport for that one
+    // state so I can review the whole layout in a single screenshot.
+    const vp = state === 'tracked-open' ? { width: 1440, height: 1900 } : VIEWPORT
+    const ctx = await browser.newContext({ viewport: vp, deviceScaleFactor: 1 })
     const page = await ctx.newPage()
     await page.goto(`http://localhost:${PORT}/preview-competitors.html?state=${state}`, { waitUntil: 'networkidle' })
     await page.evaluate(() => document.fonts ? document.fonts.ready : Promise.resolve())
     await page.waitForTimeout(800)
     const out = path.join(__dirname, `competitors-${state}.png`)
     await page.screenshot({ path: out, fullPage: false })
+    if (state === 'tracked') {
+      const m = await page.evaluate(() => {
+        const cp = document.querySelector('.comp-page')
+        if (!cp) return { error: 'no .comp-page' }
+        const r = cp.getBoundingClientRect()
+        return { left: Math.round(r.left), right: Math.round(r.right), width: Math.round(r.width), viewport: window.innerWidth }
+      })
+      console.log(`MEASURE comp-page: left=${m.left} right=${m.right} width=${m.width} viewport=${m.viewport}`)
+    }
     console.log(`OK: wrote ${out}`)
     await ctx.close()
   }

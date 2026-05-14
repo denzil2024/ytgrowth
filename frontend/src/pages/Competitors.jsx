@@ -572,6 +572,61 @@ function SectionTitle({ children, hint }) {
 }
 
 // small chip: bold number + dim label
+// ─── Disclosure — outlined pill button + revealable body. Pattern for
+// hiding prose-heavy sections by default. Open: tinted background +
+// dark text. Closed: white + soft text. Chevron rotates on open.
+function Disclosure({ label, count, children, defaultOpen = false }) {
+  const [open, setOpen] = useState(defaultOpen)
+  return (
+    <div>
+      <button
+        type="button"
+        onClick={() => setOpen(o => !o)}
+        style={{
+          display: 'inline-flex', alignItems: 'center', gap: 8,
+          padding: '9px 16px', borderRadius: 100,
+          border: '1px solid rgba(10,10,15,0.12)',
+          background: open ? 'rgba(10,10,15,0.04)' : '#ffffff',
+          color: open ? '#0a0a0f' : 'rgba(10,10,15,0.62)',
+          fontFamily: 'inherit',
+          fontSize: 12.5, fontWeight: 600, letterSpacing: '-0.01em',
+          cursor: 'pointer',
+          transition: 'background 140ms ease, color 140ms ease, border-color 140ms ease',
+        }}
+        onMouseEnter={e => {
+          if (open) return
+          e.currentTarget.style.background = 'rgba(15,15,19,0.03)'
+          e.currentTarget.style.color = '#0a0a0f'
+          e.currentTarget.style.borderColor = 'rgba(10,10,15,0.20)'
+        }}
+        onMouseLeave={e => {
+          if (open) return
+          e.currentTarget.style.background = '#ffffff'
+          e.currentTarget.style.color = 'rgba(10,10,15,0.62)'
+          e.currentTarget.style.borderColor = 'rgba(10,10,15,0.12)'
+        }}
+      >
+        {open ? 'Hide' : 'Show'} {label}
+        {count != null && (
+          <span style={{ fontSize: 11, fontWeight: 700, color: 'rgba(10,10,15,0.40)',
+            background: 'rgba(10,10,15,0.05)', padding: '2px 7px', borderRadius: 99,
+            border: '1px solid rgba(10,10,15,0.07)' }}>{count}</span>
+        )}
+        <svg width="11" height="11" viewBox="0 0 12 12" fill="none"
+          stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"
+          style={{ transform: open ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 200ms ease' }}>
+          <polyline points="3,4.5 6,7.5 9,4.5"/>
+        </svg>
+      </button>
+      {open && (
+        <div style={{ marginTop: 14, display: 'flex', flexDirection: 'column', gap: 14 }}>
+          {children}
+        </div>
+      )}
+    </div>
+  )
+}
+
 function StatChip({ value, label }) {
   return (
     <span className="comp-stat-chip">
@@ -639,7 +694,11 @@ function ChannelCard({ channel, onAnalyze, isAdded, loadingId }) {
 }
 
 // ─── AI analysis ──────────────────────────────────────────────────────────────
-function AIAnalysis({ ai, top5Videos, channelId, checkedIdeas, onToggleIdea }) {
+function AIAnalysis({ ai, comp, top5Videos, channelId, checkedIdeas, onToggleIdea }) {
+  // showProse gates the text-heavy sections (Intelligence summary,
+  // Channel insights, Winning moves bodies). Default closed so the
+  // expanded report opens visual-first; user clicks to read prose.
+  const [showProse, setShowProse] = useState(false)
   if (!ai) return null
   const threat   = THREAT[ai.threatLevel] || THREAT.medium
   const checksForChannel = (checkedIdeas && channelId) ? (checkedIdeas[channelId] || {}) : {}
@@ -654,14 +713,92 @@ function AIAnalysis({ ai, top5Videos, channelId, checkedIdeas, onToggleIdea }) {
     if (match?.video_id) whyMap[match.video_id] = aiVid.whyItWorked
   })
 
-  return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+  // KPI hero values (only render the strip if we have at least one)
+  const cs              = ai.postingBehavior?.consistencyScore
+  const consistencyCol  = cs == null ? '#0a0a0f' : cs >= 75 ? '#16a34a' : cs >= 55 ? '#d97706' : '#e5251b'
+  const avgGap          = ai.postingBehavior?.avgGapDays
+  const subs            = comp?.subscribers
+  const avgViews        = comp?.avg_views_per_video
+  const hasKpi          = subs != null || avgViews != null || avgGap != null || cs != null
 
-      {/* ── intelligence summary — paneled card (SeoOptimizer Title Scorecard pattern) ──
-           Two analytical panels separated by a 3px amber vertical bar, same as
-           SeoOptimizer.jsx:1015–1097. Left: competitor summary (what they do).
-           Right: threat reason (why it matters to Nthenya). No coloured top
-           border — the threat pill carries the severity signal on its own. */}
+  // Topics-to-tackle — pulled out of the old "Your playbook" 3-col card.
+  // Lives as a top-level visible section now; the prose angle is dropped
+  // from the visible list and moved into the per-row Disclosure below.
+  const ideas      = ai.videoIdeas || []
+  const doneCount  = ideas.filter(idea => !!checksForChannel[idea.title]).length
+  const ideasLeft  = ideas.length - doneCount
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 22 }}>
+
+      {/* ─── 1. KPI hero strip ──────────────────────────────────────────────
+           Four visual tiles at the top of every expanded report so the
+           user can scan the channel's size/cadence/discipline before
+           reading anything. Replaces the old "Posting timing" Card. */}
+      {hasKpi && (
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 10 }}>
+          {[
+            { label: 'Subscribers',    val: subs     != null ? fmtK(subs)         : '—', col: '#0a0a0f' },
+            { label: 'Avg views',      val: avgViews != null ? fmtK(avgViews)     : '—', col: '#0a0a0f' },
+            { label: 'Upload cadence', val: avgGap   != null ? `${avgGap}d`       : '—', col: '#0a0a0f' },
+            { label: 'Consistency',    val: cs       != null ? `${cs}/100`        : '—', col: consistencyCol },
+          ].map(({ label, val, col }) => (
+            <div key={label} className="comp-timing-pill">
+              <p style={{ fontSize: 20, fontWeight: 800, color: col, letterSpacing: '-0.5px', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{val}</p>
+              <p style={{ fontSize: 11, fontWeight: 600, color: '#9595a4', textTransform: 'uppercase', letterSpacing: '0.06em' }}>{label}</p>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* ─── 2. Top videos to study ─────────────────────────────────────────
+           Up-to-5 thumbnail grid, click to YouTube. The "why it worked"
+           prose is hidden under a per-tile disclosure if AI provided one,
+           keeping the row scannable by default. */}
+      {top5Videos?.length > 0 && (() => {
+        const vids = top5Videos.slice(0, 5)
+        const cols = vids.length
+        return (
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
+              <h2 style={{ fontSize: 18, fontWeight: 700, color: '#0a0a0f', letterSpacing: '-0.3px' }}>
+                Top videos to study
+              </h2>
+              <span style={{ fontSize: 11, fontWeight: 700, color: '#9595a4', background: '#f1f1f6',
+                padding: '2px 8px', borderRadius: 20, border: '1px solid #e6e6ec' }}>
+                {vids.length}
+              </span>
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: `repeat(${cols}, 1fr)`, gap: 10 }}>
+              {vids.map((v, i) => {
+                const thumb = v.thumbnail || v.thumbnail_url || (v.video_id ? `https://i.ytimg.com/vi/${v.video_id}/mqdefault.jpg` : null)
+                const ytUrl = v.video_id ? `https://www.youtube.com/watch?v=${v.video_id}` : null
+                return (
+                  <a key={v.video_id || i}
+                    href={ytUrl || '#'} target="_blank" rel="noopener noreferrer"
+                    onClick={e => { if (!ytUrl) e.preventDefault() }}
+                    className="comp-thumb-tile">
+                    <div className="comp-thumb-img">
+                      {thumb && <img src={thumb} alt="" referrerPolicy="no-referrer" loading="lazy"/>}
+                      {v.views > 0 && <span className="comp-thumb-views">{fmtK(v.views)}</span>}
+                    </div>
+                    <div className="comp-thumb-text">
+                      <p className="comp-thumb-title">{v.title}</p>
+                      <p className="comp-thumb-meta">{v.published_at ? relTime(v.published_at) : ''}</p>
+                    </div>
+                  </a>
+                )
+              })}
+            </div>
+          </div>
+        )
+      })()}
+
+      {/* ── intelligence summary — paneled card. Hidden by default; revealed
+           via the "Show full analysis" disclosure at the bottom of the
+           expanded report. Two analytical panels separated by a 3px amber
+           vertical bar (SeoOptimizer.jsx Title Scorecard pattern). */}
+      {showProse && (
       <Card topAccent={null}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, marginBottom: 18 }}>
           <SectionTitle>Intelligence summary</SectionTitle>
@@ -702,15 +839,11 @@ function AIAnalysis({ ai, top5Videos, channelId, checkedIdeas, onToggleIdea }) {
           </div>
         </div>
       </Card>
+      )}
 
-      {/* ── channel insights — same stacked-card pattern as Winning moves ────
-           Same pattern as the app's standard ranked suggestion cards
-           (Suggested Titles, DescriptionCard, etc): amber top border +
-           amber rank badge + amber category eyebrow (VIDEO LENGTH /
-           ENGAGEMENT / THUMBNAIL STYLE — competitor-specific labels) +
-           bold first-sentence headline + divider + blue "Why it works"
-           tile with the remaining analysis. */}
-      {(() => {
+      {/* ── channel insights — prose cards. Hidden by default; revealed
+           by the "Show full analysis" disclosure at the bottom. */}
+      {showProse && (() => {
         const insights = [
           { key: 'videoLengthInsight', label: 'Video length',    val: ai.videoLengthInsight },
           { key: 'engagementInsight',  label: 'Engagement',      val: ai.engagementInsight },
@@ -787,7 +920,7 @@ function AIAnalysis({ ai, top5Videos, channelId, checkedIdeas, onToggleIdea }) {
       {/* ── posting timing ── Consistency uses scoreColor (same thresholds as
            Overview's Score breakdown: ≥75 green, 55–74 amber, <55 red). Other
            three tiles are identity/timestamp values and stay neutral. */}
-      {ai.postingBehavior && (() => {
+      {false /* posting timing moved into KPI hero strip */ && ai.postingBehavior && (() => {
         const cs = ai.postingBehavior.consistencyScore ?? 0
         const consistencyColor = cs >= 75 ? '#059669' : cs >= 55 ? '#d97706' : '#e5251b'
         return (
@@ -825,8 +958,8 @@ function AIAnalysis({ ai, top5Videos, channelId, checkedIdeas, onToggleIdea }) {
         const BAR_COLOR = '#059669'
         return (
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-              <h2 style={{ fontSize: 20, fontWeight: 800, color: '#111114', letterSpacing: '-0.5px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
+              <h2 style={{ fontSize: 18, fontWeight: 700, color: '#0a0a0f', letterSpacing: '-0.3px' }}>
                 Top content topics
               </h2>
               <span style={{ fontSize: 11, fontWeight: 700, color: '#9595a4', background: '#f1f1f6',
@@ -834,9 +967,6 @@ function AIAnalysis({ ai, top5Videos, channelId, checkedIdeas, onToggleIdea }) {
                 {ai.topTopics.length}
               </span>
             </div>
-            <p style={{ fontSize: 13, color: '#9595a4', lineHeight: 1.5, marginBottom: 12 }}>
-              Their strongest content clusters · ranked by average views per video
-            </p>
 
             <div className="comp-card" style={{ borderTop: '3px solid #d97706' }}>
               <div style={{ padding: '18px 22px 20px' }}>
@@ -911,13 +1041,10 @@ function AIAnalysis({ ai, top5Videos, channelId, checkedIdeas, onToggleIdea }) {
         return (
           <div>
             <div style={{ marginBottom: 12 }}>
-              <h2 style={{ fontSize: 20, fontWeight: 800, color: '#111114',
-                letterSpacing: '-0.5px', marginBottom: 4 }}>
+              <h2 style={{ fontSize: 18, fontWeight: 700, color: '#0a0a0f',
+                letterSpacing: '-0.3px' }}>
                 Title patterns
               </h2>
-              <p style={{ fontSize: 13, color: '#9595a4', lineHeight: 1.5 }}>
-                What works across their recent titles · how they package ideas
-              </p>
             </div>
 
             <Card topAccent={null}>
@@ -1027,7 +1154,7 @@ function AIAnalysis({ ai, top5Videos, channelId, checkedIdeas, onToggleIdea }) {
            Body: 2-col grid (Why now + Action), the Expected-outcome slot is
            omitted — Winning moves only has 2 data fields.
            No checkbox (observations, not tickable tasks). */}
-      {ai.winningMoves?.length > 0 && (() => {
+      {showProse && ai.winningMoves?.length > 0 && (() => {
         const evenCount = Math.min(10, Math.floor(ai.winningMoves.length / 2) * 2)
         const moves = ai.winningMoves.slice(0, evenCount)
         if (moves.length === 0) return null
@@ -1127,186 +1254,98 @@ function AIAnalysis({ ai, top5Videos, channelId, checkedIdeas, onToggleIdea }) {
            Topics split BALANCED across cols 1 and 2 — ceil(N/2) | floor(N/2):
              6 ideas → 3+3 · 7 → 4+3 · 10 → 5+5
            No amber top border on the card — only the vertical dividers. */}
-      {(ai.videoIdeas?.length > 0 || top5Videos?.length > 0) && (() => {
-        const allIdeas  = ai.videoIdeas || []
-        const half      = Math.ceil(allIdeas.length / 2)
-        const col1Ideas = allIdeas.slice(0, half)
-        const col2Ideas = allIdeas.slice(half)
-        const doneCount = allIdeas.filter(idea => !!checksForChannel[idea.title]).length
-        const leftCount = allIdeas.length - doneCount
-        const hasTopics = col1Ideas.length > 0
-
-        const renderIdeaRow = (idea, i) => {
-          const isDone = !!checksForChannel[idea.title]
-          return (
-            <li key={i} className="comp-qw-row" style={{ opacity: isDone ? 0.5 : 1 }}>
-              <input
-                type="checkbox"
-                checked={isDone}
-                onChange={() => onToggleIdea && onToggleIdea(channelId, idea.title)}
-                style={{ width: 14, height: 14, accentColor: '#059669', cursor: 'pointer',
-                  flexShrink: 0, marginTop: 4 }}
-              />
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <p style={{ fontSize: 13, fontWeight: 600,
-                  color: isDone ? '#9595a4' : '#111114', lineHeight: 1.5,
-                  letterSpacing: '-0.1px',
-                  textDecoration: isDone ? 'line-through' : 'none' }}>
-                  {idea.title}
-                </p>
-                {idea.targetKeyword && (
-                  <div style={{ marginTop: 6 }}>
-                    <span className="comp-tag" style={{ background: '#d1fae5', color: '#059669',
-                      border: '1px solid #a7f3d0', whiteSpace: 'nowrap' }}>
-                      {idea.targetKeyword}
-                    </span>
-                  </div>
-                )}
-                <p style={{ fontSize: 12, color: '#9595a4', lineHeight: 1.55,
-                  fontWeight: 400, marginTop: 6 }}>
-                  {idea.angle}
-                </p>
-              </div>
-            </li>
-          )
-        }
-
-        // Matching row-height placeholder for col-2's missing header (so col-2
-        // rows align vertically with col-1 rows even without its own eyebrow).
-        const HEADER_SPACER_HEIGHT = 34
-
-        return (
-          <div>
-            <div style={{ marginBottom: 12 }}>
-              <h2 style={{ fontSize: 20, fontWeight: 800, color: '#111114',
-                letterSpacing: '-0.5px', marginBottom: 4 }}>
-                Your playbook
-              </h2>
-              <p style={{ fontSize: 13, color: '#9595a4', lineHeight: 1.5 }}>
-                Topics to tackle from their gaps · alongside their top performers to reference
-              </p>
-            </div>
-
-            <Card topAccent={null} style={{ background: '#ffffff' }}>
-            <div style={{ display: 'flex', alignItems: 'stretch', gap: 24 }}>
-
-              {/* ── Column 1: Topics to tackle (1–5) ── */}
-              {hasTopics && (
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                    marginBottom: 14, height: HEADER_SPACER_HEIGHT }}>
-                    <p style={{ fontSize: 11, fontWeight: 700, color: '#9595a4',
-                      letterSpacing: '0.07em', textTransform: 'uppercase' }}>
-                      Topics to tackle
-                    </p>
-                    <span style={{ fontSize: 11, fontWeight: 600, color: '#9595a4', background: '#f1f1f6',
-                      padding: '2px 7px', borderRadius: 20, border: '1px solid #e6e6ec' }}>
-                      {leftCount} left
-                    </span>
-                  </div>
-                  <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column',
-                    gap: 2, padding: 0, margin: 0 }}>
-                    {col1Ideas.map(renderIdeaRow)}
-                  </ul>
-                </div>
-              )}
-
-              {/* Amber divider between col 1 and col 2 */}
-              {hasTopics && col2Ideas.length > 0 && (
-                <div style={{ width: 3, alignSelf: 'stretch', background: '#d97706',
-                  flexShrink: 0, borderRadius: 2 }}/>
-              )}
-
-              {/* ── Column 2: Topics to tackle (6–10) ── */}
-              {col2Ideas.length > 0 && (
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  {/* Invisible spacer — matches col-1 header height so row 1 aligns */}
-                  <div style={{ height: HEADER_SPACER_HEIGHT, marginBottom: 14 }} aria-hidden="true" />
-                  <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column',
-                    gap: 2, padding: 0, margin: 0 }}>
-                    {col2Ideas.map((idea, i) => renderIdeaRow(idea, i + half))}
-                  </ul>
-                </div>
-              )}
-
-              {/* Amber divider between topics and top videos */}
-              {hasTopics && top5Videos?.length > 0 && (
-                <div style={{ width: 3, alignSelf: 'stretch', background: '#d97706',
-                  flexShrink: 0, borderRadius: 2 }}/>
-              )}
-
-              {/* ── Column 3: Top videos to study ── */}
-              {top5Videos?.length > 0 && (
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                    marginBottom: 14, height: HEADER_SPACER_HEIGHT }}>
-                    <p style={{ fontSize: 11, fontWeight: 700, color: '#9595a4',
-                      letterSpacing: '0.07em', textTransform: 'uppercase' }}>
-                      Top videos to study
-                    </p>
-                    <span style={{ fontSize: 11, fontWeight: 600, color: '#9595a4', background: '#f1f1f6',
-                      padding: '2px 7px', borderRadius: 20, border: '1px solid #e6e6ec' }}>
-                      {top5Videos.length}
-                    </span>
-                  </div>
-                  <div style={{ display: 'flex', flexDirection: 'column' }}>
-                    {top5Videos.map((v, i) => {
-                      const thumb  = v.video_id ? `https://i.ytimg.com/vi/${v.video_id}/mqdefault.jpg` : v.thumbnail_url || null
-                      const ytUrl  = v.video_id ? `https://www.youtube.com/watch?v=${v.video_id}` : null
-                      const why    = whyMap[v.video_id]
-                      const isLast = i === top5Videos.length - 1
-                      return (
-                        <a key={v.video_id || i}
-                          href={ytUrl || '#'} target="_blank" rel="noopener noreferrer"
-                          className="comp-video-row"
-                          style={{ borderBottom: isLast ? 'none' : '1px solid rgba(0,0,0,0.05)',
-                            gap: 10, padding: '8px 6px' }}>
-                          <div style={{ position: 'relative', flexShrink: 0 }}>
-                            {thumb
-                              ? <img src={thumb} alt="" style={{ width: 64, height: 38, borderRadius: 8,
-                                  objectFit: 'cover', display: 'block',
-                                  boxShadow: '0 2px 8px rgba(0,0,0,0.12)' }} />
-                              : <div style={{ width: 64, height: 38, borderRadius: 8,
-                                  background: 'rgba(0,0,0,0.07)', display: 'block' }} />
-                            }
-                            <div style={{ position: 'absolute', inset: 0, display: 'flex',
-                              alignItems: 'center', justifyContent: 'center', opacity: 0,
-                              transition: 'opacity 0.15s', background: 'rgba(0,0,0,0.42)',
-                              borderRadius: 8 }}
-                              onMouseEnter={e => { e.currentTarget.style.opacity = 1 }}
-                              onMouseLeave={e => { e.currentTarget.style.opacity = 0 }}>
-                              <svg width="14" height="14" viewBox="0 0 18 18" fill="white">
-                                <path d="M7 5.5l6 3.5-6 3.5V5.5z"/>
-                              </svg>
-                            </div>
-                          </div>
-                          <div style={{ flex: 1, minWidth: 0 }}>
-                            <p style={{ fontSize: 13, fontWeight: 600, color: '#111114', lineHeight: 1.45,
-                              whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
-                              marginBottom: 2, letterSpacing: '-0.1px' }}>
-                              {v.title}
-                            </p>
-                            <div style={{ display: 'flex', gap: 6, alignItems: 'center',
-                              fontSize: 11, color: '#9595a4', fontWeight: 500,
-                              fontVariantNumeric: 'tabular-nums' }}>
-                              <span><b style={{ color: '#52525b', fontWeight: 700 }}>{fmtK(v.views)}</b> views</span>
-                              {v.published_at && (
-                                <><span style={{ color: '#d0d0d8' }}>·</span>
-                                 <span>{relTime(v.published_at)}</span></>
-                              )}
-                            </div>
-                          </div>
-                        </a>
-                      )
-                    })}
-                  </div>
-                </div>
-              )}
-            </div>
-            </Card>
+      {/* ─── Topics to tackle ───────────────────────────────────────────────
+           Actionable list (the actionable verbatim ideas the user can
+           check off). Title + small target-keyword chip per row; the
+           AI angle paragraph that used to sit under each title is gone
+           (it was the page's biggest source of unread prose). */}
+      {ideas.length > 0 && (
+        <div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
+            <h2 style={{ fontSize: 18, fontWeight: 700, color: '#0a0a0f', letterSpacing: '-0.3px' }}>
+              Topics to tackle
+            </h2>
+            <span style={{ fontSize: 11, fontWeight: 700, color: '#9595a4', background: '#f1f1f6',
+              padding: '2px 8px', borderRadius: 20, border: '1px solid #e6e6ec' }}>
+              {ideasLeft} left
+            </span>
           </div>
-        )
-      })()}
+          <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column',
+            gap: 2, padding: 0, margin: 0 }}>
+            {ideas.map((idea, i) => {
+              const isDone = !!checksForChannel[idea.title]
+              return (
+                <li key={i} className="comp-qw-row" style={{ opacity: isDone ? 0.5 : 1 }}>
+                  <input
+                    type="checkbox"
+                    checked={isDone}
+                    onChange={() => onToggleIdea && onToggleIdea(channelId, idea.title)}
+                    style={{ width: 14, height: 14, accentColor: '#059669', cursor: 'pointer',
+                      flexShrink: 0, marginTop: 4 }}
+                  />
+                  <div style={{ flex: 1, minWidth: 0, display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
+                    <p style={{ fontSize: 13.5, fontWeight: 600,
+                      color: isDone ? '#9595a4' : '#0a0a0f', lineHeight: 1.5,
+                      letterSpacing: '-0.1px',
+                      textDecoration: isDone ? 'line-through' : 'none' }}>
+                      {idea.title}
+                    </p>
+                    {idea.targetKeyword && !isDone && (
+                      <span className="comp-tag" style={{ background: '#f4f4f6', color: '#52525b',
+                        border: '1px solid rgba(0,0,0,0.09)', whiteSpace: 'nowrap' }}>
+                        {idea.targetKeyword}
+                      </span>
+                    )}
+                  </div>
+                </li>
+              )
+            })}
+          </ul>
+        </div>
+      )}
+
+      {/* ─── Show full analysis ─────────────────────────────────────────────
+           Disclosure toggle. Closed by default. When opened, reveals the
+           three prose-heavy sections (Intelligence summary, Channel
+           insights, Winning moves) that were demoted from the default
+           visible layout. The toggle sits on its own row near the bottom
+           so the visual report is the dominant experience. */}
+      <div style={{ marginTop: 4 }}>
+        <button
+          type="button"
+          onClick={() => setShowProse(p => !p)}
+          style={{
+            display: 'inline-flex', alignItems: 'center', gap: 8,
+            padding: '9px 16px', borderRadius: 100,
+            border: '1px solid rgba(10,10,15,0.12)',
+            background: showProse ? 'rgba(10,10,15,0.04)' : '#ffffff',
+            color: showProse ? '#0a0a0f' : 'rgba(10,10,15,0.62)',
+            fontFamily: 'inherit',
+            fontSize: 12.5, fontWeight: 600, letterSpacing: '-0.01em',
+            cursor: 'pointer',
+            transition: 'background 140ms ease, color 140ms ease, border-color 140ms ease',
+          }}
+          onMouseEnter={e => {
+            if (showProse) return
+            e.currentTarget.style.background = 'rgba(15,15,19,0.03)'
+            e.currentTarget.style.color = '#0a0a0f'
+            e.currentTarget.style.borderColor = 'rgba(10,10,15,0.20)'
+          }}
+          onMouseLeave={e => {
+            if (showProse) return
+            e.currentTarget.style.background = '#ffffff'
+            e.currentTarget.style.color = 'rgba(10,10,15,0.62)'
+            e.currentTarget.style.borderColor = 'rgba(10,10,15,0.12)'
+          }}
+        >
+          {showProse ? 'Hide full analysis' : 'Show full analysis'}
+          <svg width="11" height="11" viewBox="0 0 12 12" fill="none"
+            stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"
+            style={{ transform: showProse ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 200ms ease' }}>
+            <polyline points="3,4.5 6,7.5 9,4.5"/>
+          </svg>
+        </button>
+      </div>
 
     </div>
   )
@@ -1696,6 +1735,7 @@ export default function Competitors({ plan, freeTierFeatures }) {
                     <div className="comp-accordion-body">
                       <AIAnalysis
                         ai={ai}
+                        comp={comp}
                         top5Videos={comp.top_5_videos}
                         channelId={comp.channel_id}
                         checkedIdeas={checkedIdeas}
