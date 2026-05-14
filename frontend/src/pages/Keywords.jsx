@@ -971,18 +971,18 @@ export default function Keywords({ plan, freeTierFeatures }) {
             )
           })()}
 
-          {/* ── Ranked keywords — EXACT SEO Studio "Keyword research" pattern.
-              One card, 2-col row grid inside with amber vertical divider. ── */}
+          {/* ── Ranked keywords — 2-col row grid inside one card. Each
+              row is clickable to open the playbook modal. ── */}
           {result.keywords?.length > 0 && (
             <>
-              <div style={{ marginBottom: 20, marginTop: 40 }}>
-                <h2 style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', marginBottom: 4 }}>Ranked keywords</h2>
-                <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.5 }}>
+              <div style={{ marginBottom: 14, marginTop: 32 }}>
+                <h2 style={{ fontSize: 18, fontWeight: 700, color: '#0a0a0f', letterSpacing: '-0.3px', marginBottom: 4 }}>Ranked keywords</h2>
+                <p style={{ fontSize: 13, color: 'rgba(10,10,15,0.50)', lineHeight: 1.5 }}>
                   Click any keyword for the playbook · <span style={{ color: C.green, fontWeight: 700 }}>ACTIVE</span> = rising · <span style={{ color: C.amber, fontWeight: 700 }}>OPEN</span> = underclaimed
                 </p>
               </div>
 
-              <div className="kw-card" style={{ borderTop: `3px solid ${C.amber}`, marginBottom: 24 }}>
+              <div className="kw-card" style={{ marginBottom: 24 }}>
                 <div style={{ padding: '18px 22px 20px' }}>
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, marginBottom: 14 }}>
                     <div style={{ minWidth: 0 }}>
@@ -1037,8 +1037,9 @@ export default function Keywords({ plan, freeTierFeatures }) {
                                 style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }}
                               >
                                 <span className="kw-row-phrase" style={{
-                                  fontSize: 13, color: C.text2, fontWeight: 400,
+                                  fontSize: 13.5, color: '#0a0a0f', fontWeight: 600,
                                   width: 260, flexShrink: 0,
+                                  letterSpacing: '-0.1px',
                                   overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
                                   transition: 'color 0.12s',
                                 }}>{kw.keyword}</span>
@@ -1063,15 +1064,14 @@ export default function Keywords({ plan, freeTierFeatures }) {
             </>
           )}
 
-          {/* ── Content clusters — matches SEO Studio pattern.
-              One amber-topped card per cluster, header row with rank badge
-              + name + big tabular count of keywords in the cluster, hairline,
-              chip body. Responsive grid of these cards. ───────────────── */}
+          {/* ── Content clusters — neutral cards, no amber stripe. Each
+              shows a theme name + keyword count badge + chip body + Copy
+              theme action at bottom. ───────────────────────────────────── */}
           {result.clusters?.length > 0 && (
             <>
-              <div style={{ marginBottom: 20, marginTop: 40 }}>
-                <h2 style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', marginBottom: 4 }}>Content clusters</h2>
-                <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.5 }}>
+              <div style={{ marginBottom: 14, marginTop: 32 }}>
+                <h2 style={{ fontSize: 18, fontWeight: 700, color: '#0a0a0f', letterSpacing: '-0.3px', marginBottom: 4 }}>Content clusters</h2>
+                <p style={{ fontSize: 13, color: 'rgba(10,10,15,0.50)', lineHeight: 1.5 }}>
                   Themes you can build a series around
                 </p>
               </div>
@@ -1084,29 +1084,23 @@ export default function Keywords({ plan, freeTierFeatures }) {
                 {result.clusters.map((cl, i) => {
                   const isCopied = copiedCluster === cl.clusterName
                   return (
-                    <div key={cl.clusterName} className="kw-card" style={{ borderTop: `3px solid ${C.amber}` }}>
+                    <div key={cl.clusterName} className="kw-card">
                       <div style={{ padding: '18px 22px 20px', display: 'flex', flexDirection: 'column', height: '100%' }}>
-                        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, marginBottom: 14 }}>
-                          <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10, minWidth: 0, flex: 1 }}>
-                            <span style={{
-                              width: 22, height: 22, borderRadius: 6,
-                              background: C.amber, color: '#fff',
-                              fontSize: 11, fontWeight: 900,
-                              display: 'flex', alignItems: 'center', justifyContent: 'center',
-                              flexShrink: 0, fontVariantNumeric: 'tabular-nums', marginTop: 2,
-                            }}>{i + 1}</span>
-                            <div style={{ minWidth: 0 }}>
-                              <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 5 }}>
-                                Theme
-                              </p>
-                              <p style={{ fontSize: 13.5, fontWeight: 700, color: C.text1, lineHeight: 1.4, letterSpacing: '-0.1px' }}>
-                                {cl.clusterName}
-                              </p>
-                            </div>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, marginBottom: 14 }}>
+                          <div style={{ minWidth: 0, flex: 1 }}>
+                            <p style={{ fontSize: 11, fontWeight: 700, color: 'rgba(10,10,15,0.50)', letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 4 }}>
+                              Theme
+                            </p>
+                            <p style={{ fontSize: 14, fontWeight: 700, color: '#0a0a0f', lineHeight: 1.4, letterSpacing: '-0.15px' }}>
+                              {cl.clusterName}
+                            </p>
                           </div>
-                          <p style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.6px', fontVariantNumeric: 'tabular-nums', flexShrink: 0, lineHeight: 1 }}>
-                            {cl.keywords?.length || 0}
-                          </p>
+                          <span style={{
+                            fontSize: 11, fontWeight: 700, color: '#9595a4',
+                            background: '#f1f1f6', padding: '2px 8px',
+                            borderRadius: 20, border: '1px solid #e6e6ec',
+                            flexShrink: 0, fontVariantNumeric: 'tabular-nums',
+                          }}>{cl.keywords?.length || 0}</span>
                         </div>
                         <div style={{ height: 1, background: C.border, margin: '0 0 14px' }}/>
                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 14 }}>
