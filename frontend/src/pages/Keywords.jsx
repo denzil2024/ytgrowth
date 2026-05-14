@@ -99,7 +99,7 @@ function useKwStyles() {
 
       .kw-btn-primary {
         background: linear-gradient(180deg, #ef3a31 0%, #e5251b 100%);
-        color: #fff; border: none; border-radius: 12px;
+        color: #fff; border: none; border-radius: 100px;
         padding: 12px 22px; font-size: 13px; font-weight: 600;
         font-family: 'Geist', 'Inter', system-ui, sans-serif;
         cursor: pointer; white-space: nowrap;
@@ -982,8 +982,14 @@ export default function Keywords({ plan, freeTierFeatures }) {
             // Top-3 ranking videos for the top-pick keyword. Backend already
             // attaches this per keyword (keywords.py:_fetch_competition_for_keyword)
             // so we look it up by keyword string. Visual proof that justifies the pick.
-            const topPickKw     = (result.keywords || []).find(k => k.keyword === result.topPick.keyword)
-            const topPickVideos = topPickKw?.competition?.top_videos || []
+            // Fallback: if the exact top-pick keyword wasn't in the top-5
+            // enriched set, scan the rest and use the first keyword with
+            // videos. Better than showing no band at all.
+            const allKws        = result.keywords || []
+            const topPickKw     = allKws.find(k => k.keyword === result.topPick.keyword)
+            const topPickVideos = (topPickKw?.competition?.top_videos?.length > 0)
+              ? topPickKw.competition.top_videos
+              : (allKws.find(k => k?.competition?.top_videos?.length > 0)?.competition?.top_videos || [])
             const topPerformer  = topPickVideos.length > 0
               ? Math.max(...topPickVideos.map(v => v.views || 0))
               : 0
@@ -1055,131 +1061,130 @@ export default function Keywords({ plan, freeTierFeatures }) {
                   )}
                 </div>
 
-                {/* ── Top-ranking videos band — visual proof that justifies the
-                     score. 3 thumbnail tiles pulled from competition.top_videos
-                     on the top-pick keyword. Click tile → opens video on YouTube.
-                     Hidden when the backend response has no videos for this
-                     keyword (e.g. cached pre-backend-change or YT quota paused). */}
-                {topPickVideos.length > 0 && (
-                  <div style={{ marginTop: 24, paddingTop: 20, borderTop: `1px solid ${C.border}` }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12, flexWrap: 'wrap' }}>
-                      <span style={{
-                        fontSize: 11, fontWeight: 700, color: 'rgba(10,10,15,0.50)',
-                        letterSpacing: '0.10em', textTransform: 'uppercase',
-                      }}>
-                        Top-ranking videos right now
-                      </span>
-                      {topPerformer > 0 && (
-                        <span style={{
-                          marginLeft: 'auto',
-                          display: 'inline-flex', alignItems: 'center', gap: 7,
-                          fontSize: 12, fontWeight: 500, color: C.text2,
-                          letterSpacing: '-0.01em', fontVariantNumeric: 'tabular-nums',
-                        }}>
-                          <span style={{ width: 6, height: 6, borderRadius: 99, background: C.green, flexShrink: 0 }}/>
-                          Top performer{' '}
-                          <strong style={{ color: C.text1, fontWeight: 700 }}>{fmtCompact(topPerformer)} views</strong>
-                        </span>
-                      )}
-                    </div>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10 }}>
-                      {topPickVideos.map((v, i) => {
-                        // Prefer maxresdefault (1280x720) when we have a video_id —
-                        // crisp on retina. Falls back to hqdefault (always 480x360)
-                        // via onError if YouTube returns the 120x90 placeholder.
-                        // Backend thumbnail_url is medium (320x180) and only used
-                        // as a last resort.
-                        const thumbHigh = v.video_id ? `https://i.ytimg.com/vi/${v.video_id}/maxresdefault.jpg` : null
-                        const thumbFallback = v.video_id ? `https://i.ytimg.com/vi/${v.video_id}/hqdefault.jpg` : (v.thumbnail_url || null)
-                        const thumb = thumbHigh || thumbFallback
-                        const ytUrl = v.video_id ? `https://www.youtube.com/watch?v=${v.video_id}` : null
-                        // Compact "Xd ago" for the meta line under each tile.
-                        const fmtAge = (iso) => {
-                          if (!iso) return ''
-                          const days = Math.floor((Date.now() - new Date(iso).getTime()) / 86400000)
-                          if (days < 1)   return 'today'
-                          if (days < 7)   return `${days}d ago`
-                          if (days < 30)  return `${Math.floor(days / 7)}w ago`
-                          if (days < 365) return `${Math.floor(days / 30)}mo ago`
-                          return `${Math.floor(days / 365)}y ago`
-                        }
-                        return (
-                          <a key={v.video_id || i}
-                            href={ytUrl || '#'}
-                            target="_blank" rel="noopener noreferrer"
-                            onClick={e => { if (!ytUrl) e.preventDefault() }}
-                            style={{
-                              display: 'block', textDecoration: 'none', color: 'inherit',
-                              borderRadius: 10, overflow: 'hidden',
-                              border: '1px solid #ececf0', background: '#fff',
-                              transition: 'transform 140ms ease, box-shadow 140ms ease, border-color 140ms ease',
-                            }}
-                            onMouseEnter={e => {
-                              e.currentTarget.style.transform = 'translateY(-1px)'
-                              e.currentTarget.style.boxShadow = '0 4px 14px rgba(0,0,0,0.10)'
-                              e.currentTarget.style.borderColor = '#d6d6dc'
-                            }}
-                            onMouseLeave={e => {
-                              e.currentTarget.style.transform = 'translateY(0)'
-                              e.currentTarget.style.boxShadow = 'none'
-                              e.currentTarget.style.borderColor = '#ececf0'
-                            }}
-                          >
-                            <div style={{ position: 'relative', aspectRatio: '16 / 9', background: '#ebebef', overflow: 'hidden' }}>
-                              {thumb && (
-                                <img src={thumb} alt="" referrerPolicy="no-referrer" loading="lazy"
-                                  data-fallback={thumbFallback || ''}
-                                  onError={e => {
-                                    // YouTube returns a 120x90 grey placeholder for
-                                    // videos without a maxres upload. Detect via
-                                    // naturalWidth and swap to hqdefault.
-                                    const t = e.currentTarget
-                                    const fb = t.getAttribute('data-fallback')
-                                    if (fb && t.src !== fb) { t.src = fb; t.removeAttribute('data-fallback') }
-                                  }}
-                                  onLoad={e => {
-                                    const t = e.currentTarget
-                                    const fb = t.getAttribute('data-fallback')
-                                    if (fb && t.naturalWidth > 0 && t.naturalWidth < 300) {
-                                      t.src = fb
-                                      t.removeAttribute('data-fallback')
-                                    }
-                                  }}
-                                  style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}/>
-                              )}
-                              {v.views > 0 && (
-                                <span style={{
-                                  position: 'absolute', bottom: 8, right: 8,
-                                  background: 'rgba(0,0,0,0.82)', color: '#fff',
-                                  fontSize: 11.5, fontWeight: 700,
-                                  padding: '3px 7px', borderRadius: 5,
-                                  fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.05px',
-                                  backdropFilter: 'blur(2px)',
-                                }}>{fmtCompact(v.views)}</span>
-                              )}
-                            </div>
-                            <div style={{ padding: '11px 13px 13px' }}>
-                              <p style={{
-                                fontSize: 13.5, fontWeight: 600, color: C.text1,
-                                letterSpacing: '-0.15px', lineHeight: 1.4,
-                                margin: '0 0 4px',
-                                display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical',
-                                overflow: 'hidden', minHeight: 38,
-                              }}>{v.title}</p>
-                              <p style={{
-                                fontSize: 12, fontWeight: 500, color: 'rgba(10,10,15,0.50)',
-                                letterSpacing: '-0.02px',
-                                whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
-                              }}>
-                                {v.channel_title}{v.published_at ? ` · ${fmtAge(v.published_at)}` : ''}
-                              </p>
-                            </div>
-                          </a>
-                        )
-                      })}
-                    </div>
-                  </div>
-                )}
+              </div>
+            )
+          })()}
+
+          {/* ── Top-ranking videos band — its own section BELOW the Top Pick
+               hero (was inside the hero card before; user wanted it as a
+               distinct band). Pulls from competition.top_videos on the
+               top-pick keyword, with fallback to any enriched keyword
+               that has videos. Hidden when the backend returns nothing. */}
+          {(() => {
+            const allKws = result.keywords || []
+            const topPickKw = allKws.find(k => k.keyword === result.topPick?.keyword)
+            const topPickVideos = (topPickKw?.competition?.top_videos?.length > 0)
+              ? topPickKw.competition.top_videos
+              : (allKws.find(k => k?.competition?.top_videos?.length > 0)?.competition?.top_videos || [])
+            if (topPickVideos.length === 0) return null
+            const topPerformer = Math.max(...topPickVideos.map(v => v.views || 0))
+            const fmtAge = (iso) => {
+              if (!iso) return ''
+              const days = Math.floor((Date.now() - new Date(iso).getTime()) / 86400000)
+              if (days < 1)   return 'today'
+              if (days < 7)   return `${days}d ago`
+              if (days < 30)  return `${Math.floor(days / 7)}w ago`
+              if (days < 365) return `${Math.floor(days / 30)}mo ago`
+              return `${Math.floor(days / 365)}y ago`
+            }
+            return (
+              <div style={{ marginTop: 24 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12, flexWrap: 'wrap' }}>
+                  <h2 style={{ fontSize: 18, fontWeight: 700, color: '#0a0a0f', letterSpacing: '-0.3px' }}>
+                    Top-ranking videos right now
+                  </h2>
+                  {topPerformer > 0 && (
+                    <span style={{
+                      marginLeft: 'auto',
+                      display: 'inline-flex', alignItems: 'center', gap: 7,
+                      fontSize: 12.5, fontWeight: 600, color: 'rgba(10,10,15,0.62)',
+                      letterSpacing: '-0.01em', fontVariantNumeric: 'tabular-nums',
+                    }}>
+                      <span style={{ width: 6, height: 6, borderRadius: 99, background: C.green, flexShrink: 0 }}/>
+                      Top performer{' '}
+                      <strong style={{ color: '#0a0a0f', fontWeight: 700 }}>{fmtCompact(topPerformer)} views</strong>
+                    </span>
+                  )}
+                </div>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10 }}>
+                  {topPickVideos.slice(0, 3).map((v, i) => {
+                    const thumbHigh = v.video_id ? `https://i.ytimg.com/vi/${v.video_id}/maxresdefault.jpg` : null
+                    const thumbFallback = v.video_id ? `https://i.ytimg.com/vi/${v.video_id}/hqdefault.jpg` : (v.thumbnail_url || null)
+                    const thumb = thumbHigh || thumbFallback
+                    const ytUrl = v.video_id ? `https://www.youtube.com/watch?v=${v.video_id}` : null
+                    return (
+                      <a key={v.video_id || i}
+                        href={ytUrl || '#'}
+                        target="_blank" rel="noopener noreferrer"
+                        onClick={e => { if (!ytUrl) e.preventDefault() }}
+                        style={{
+                          display: 'block', textDecoration: 'none', color: 'inherit',
+                          borderRadius: 12, overflow: 'hidden',
+                          border: '1px solid rgba(10,10,15,0.07)', background: '#fff',
+                          boxShadow: '0 1px 2px rgba(15,15,25,0.04)',
+                          transition: 'transform 140ms ease, box-shadow 140ms ease, border-color 140ms ease',
+                        }}
+                        onMouseEnter={e => {
+                          e.currentTarget.style.transform = 'translateY(-1px)'
+                          e.currentTarget.style.boxShadow = '0 4px 14px rgba(0,0,0,0.10)'
+                          e.currentTarget.style.borderColor = 'rgba(10,10,15,0.14)'
+                        }}
+                        onMouseLeave={e => {
+                          e.currentTarget.style.transform = 'translateY(0)'
+                          e.currentTarget.style.boxShadow = '0 1px 2px rgba(15,15,25,0.04)'
+                          e.currentTarget.style.borderColor = 'rgba(10,10,15,0.07)'
+                        }}
+                      >
+                        <div style={{ position: 'relative', aspectRatio: '16 / 9', background: '#ebebef', overflow: 'hidden' }}>
+                          {thumb && (
+                            <img src={thumb} alt="" referrerPolicy="no-referrer" loading="lazy"
+                              data-fallback={thumbFallback || ''}
+                              onError={e => {
+                                const t = e.currentTarget
+                                const fb = t.getAttribute('data-fallback')
+                                if (fb && t.src !== fb) { t.src = fb; t.removeAttribute('data-fallback') }
+                              }}
+                              onLoad={e => {
+                                const t = e.currentTarget
+                                const fb = t.getAttribute('data-fallback')
+                                if (fb && t.naturalWidth > 0 && t.naturalWidth < 300) {
+                                  t.src = fb
+                                  t.removeAttribute('data-fallback')
+                                }
+                              }}
+                              style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}/>
+                          )}
+                          {v.views > 0 && (
+                            <span style={{
+                              position: 'absolute', bottom: 8, right: 8,
+                              background: 'rgba(0,0,0,0.82)', color: '#fff',
+                              fontSize: 11.5, fontWeight: 700,
+                              padding: '3px 7px', borderRadius: 5,
+                              fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.05px',
+                              backdropFilter: 'blur(2px)',
+                            }}>{fmtCompact(v.views)}</span>
+                          )}
+                        </div>
+                        <div style={{ padding: '11px 13px 13px' }}>
+                          <p style={{
+                            fontSize: 13.5, fontWeight: 600, color: '#0a0a0f',
+                            letterSpacing: '-0.15px', lineHeight: 1.4,
+                            margin: '0 0 4px',
+                            display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical',
+                            overflow: 'hidden', minHeight: 38,
+                          }}>{v.title}</p>
+                          <p style={{
+                            fontSize: 12, fontWeight: 500, color: 'rgba(10,10,15,0.50)',
+                            letterSpacing: '-0.02px',
+                            whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
+                          }}>
+                            {v.channel_title}{v.published_at ? ` · ${fmtAge(v.published_at)}` : ''}
+                          </p>
+                        </div>
+                      </a>
+                    )
+                  })}
+                </div>
               </div>
             )
           })()}

@@ -224,7 +224,7 @@ def _fetch_competition_for_keyword(keyword: str, yt_api_key: str) -> dict:
     signal — so the second user researching the same keyword today reads
     from cache at 0 quota cost.
     """
-    default = {"result_count": 0, "top_subs_median": 0, "top_views_median": 0, "days_since_newest": None}
+    default = {"result_count": 0, "top_subs_median": 0, "top_views_median": 0, "days_since_newest": None, "top_videos": []}
     if not yt_api_key:
         return default
     from app.utils import yt_quota_paused
