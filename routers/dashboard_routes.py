@@ -366,7 +366,12 @@ def tracked_lift(request: Request):
 # In-memory cache with 6h TTL keeps repeat Feed mounts cheap.
 
 _competitor_activity_cache: dict[str, tuple[dict, float]] = {}
-_COMP_ACTIVITY_TTL = 6 * 3600  # seconds
+# Bumped 6h -> 24h. Competitor activity is "what did your competitors
+# upload recently" — once-a-day freshness is enough for the user's
+# experience (a competitor's daily upload still surfaces within 24h),
+# and it cuts dashboard-load quota burn 4x vs the 6h window. Same-user
+# repeat dashboard opens within the day cost 0 units.
+_COMP_ACTIVITY_TTL = 24 * 3600  # seconds (24h)
 
 
 def _uploads_playlist_from_channel_id(channel_id: str) -> str | None:
