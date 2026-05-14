@@ -28,12 +28,13 @@ import {
   Search,
 } from 'lucide-react'
 
-// Page-scoped Geist load. Geist Variable + Geist Mono.
-if (typeof document !== 'undefined' && !document.getElementById('ytg-chat-geist-font')) {
+// Page-scoped Inter load. Inter Variable for body, kept consistent with the
+// rest of the app. The earlier Geist experiment didn't earn its keep.
+if (typeof document !== 'undefined' && !document.getElementById('ytg-chat-inter-font')) {
   const link = document.createElement('link')
-  link.id = 'ytg-chat-geist-font'
+  link.id = 'ytg-chat-inter-font'
   link.rel = 'stylesheet'
-  link.href = 'https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Geist+Mono:wght@400..700&display=swap'
+  link.href = 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap'
   document.head.appendChild(link)
 }
 
@@ -70,8 +71,8 @@ if (typeof document !== 'undefined' && !document.getElementById('ytg-chat-scroll
   document.head.appendChild(s)
 }
 
-const FONT_STACK = "'Geist', 'Inter', system-ui, -apple-system, sans-serif"
-const FONT_MONO  = "'Geist Mono', ui-monospace, SFMono-Regular, monospace"
+const FONT_STACK = "'Inter', system-ui, -apple-system, sans-serif"
+const FONT_MONO  = "ui-monospace, SFMono-Regular, 'SF Mono', Menlo, monospace"
 
 /* ─── Light palette. Two surfaces (page wash + raised cards), neutral
        text stack, brand red as the only saturated colour. Hairlines are
@@ -356,35 +357,52 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
     </div>
   )
 
-  /* ─── Floating top-right cluster. The only chrome on the empty state.
-         New-chat icon button shows when there's a conversation to clear.
-         Low-quota chip only when the user is below 25% remaining. */
-  const showLowQuotaChip = allowance > 0 && (remaining < allowance * 0.25 || remaining === 0)
+  /* ─── Floating top-right cluster. Quota meter is ALWAYS visible when
+         the user has an allowance so usage is never hidden. New-chat
+         icon button shows when there's a conversation to clear. The
+         meter colour-shifts to red only when truly out. ──────────── */
+  const usedPct = allowance > 0 ? Math.min(100, (used / allowance) * 100) : 0
+  const meterEmpty = remaining === 0 && allowance > 0
   const topRightControls = (
     <div style={{
       position: 'absolute', top: 4, right: 2,
       display: 'flex', alignItems: 'center', gap: 8,
       zIndex: 3,
     }}>
-      {showLowQuotaChip && (
-        <span style={{
-          display: 'inline-flex', alignItems: 'center', gap: 6,
-          fontFamily: FONT_MONO,
-          fontSize: 11.5, fontWeight: 500,
-          color: remaining === 0 ? C.red : C.text2,
-          background: remaining === 0 ? C.redSoft : C.surface,
-          border: `1px solid ${remaining === 0 ? C.redBdr : C.hair}`,
-          padding: '5px 11px', borderRadius: 100,
+      {allowance > 0 && (
+        <div style={{
+          display: 'inline-flex', alignItems: 'center', gap: 10,
+          background: meterEmpty ? C.redSoft : C.surface,
+          border: `1px solid ${meterEmpty ? C.redBdr : C.hair}`,
+          padding: '6px 12px 6px 11px', borderRadius: 100,
           boxShadow: C.cardShadow,
-          letterSpacing: '-0.02em',
+          fontVariantNumeric: 'tabular-nums',
         }}>
           <span style={{
-            width: 5, height: 5, borderRadius: 99,
-            background: remaining === 0 ? C.red : C.text3,
-            animation: remaining > 0 ? 'ytgPulseSoft 2.2s ease-in-out infinite' : 'none',
-          }}/>
-          {used}/{allowance}
-        </span>
+            fontSize: 12, fontWeight: 600,
+            color: meterEmpty ? C.red : C.text1,
+            letterSpacing: '-0.02em',
+          }}>
+            <span>{used}</span>
+            <span style={{ color: C.text4, margin: '0 4px', fontWeight: 400 }}>/</span>
+            <span style={{ color: C.text3, fontWeight: 500 }}>{allowance}</span>
+          </span>
+          <div style={{
+            width: 56, height: 4,
+            background: 'rgba(10,10,15,0.07)',
+            borderRadius: 99, overflow: 'hidden',
+            boxShadow: 'inset 0 1px 0 rgba(0,0,0,0.04)',
+          }}>
+            <div style={{
+              width: `${usedPct}%`, height: '100%',
+              background: meterEmpty
+                ? `linear-gradient(90deg, ${C.red} 0%, ${C.redLo} 100%)`
+                : `linear-gradient(90deg, ${C.text2} 0%, ${C.text1} 100%)`,
+              borderRadius: 99,
+              transition: `width 0.8s ${C.spring}`,
+            }}/>
+          </div>
+        </div>
       )}
       {messages.length > 0 && (
         <button
