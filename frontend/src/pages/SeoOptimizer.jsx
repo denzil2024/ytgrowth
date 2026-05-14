@@ -17,6 +17,11 @@ if (typeof document !== 'undefined' && !document.getElementById('seo-opt-styles'
   const s = document.createElement('style')
   s.id = 'seo-opt-styles'
   s.textContent = `
+  /* Modern CSS: enables height: auto and other intrinsic-size keywords to
+     animate. Used by every disclosure expand/collapse on the page so they
+     smooth-resize instead of pop. Borrowed from the VidIQ playbook. */
+  :root { interpolate-size: allow-keywords; }
+
   @keyframes spin { to { transform: rotate(360deg) } }
   @keyframes seoPulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.55; transform: scale(0.85); } }
   @keyframes seoFadeUp { from { opacity:0; transform:translateY(8px) } to { opacity:1; transform:translateY(0) } }
@@ -308,7 +313,7 @@ const VIRAL_FORMAT_LABELS = Object.fromEntries(VIRAL_FORMATS.map(f => [f.key, f.
 
 const STRATEGY_META = {
   search: { label: 'Search', color: C.green, bg: C.greenBg, desc: 'Keyword-optimised to rank in YouTube search' },
-  browse: { label: 'Browse', color: C.amber, bg: C.amberBg, desc: 'Emotional hook for homepage & suggested feed' },
+  browse: { label: 'Browse', color: C.text2, bg: '#fafafb', desc: 'Emotional hook for homepage & suggested feed' },
   hybrid: { label: 'Hybrid', color: C.red,   bg: C.redBg,   desc: 'Keywords + emotion — ranks and gets clicked' },
 }
 
@@ -316,7 +321,7 @@ const STRATEGY_META = {
 const DESC_TYPE_META = {
   story:   { color: '#e5251b', bg: 'rgba(229,37,27,0.05)', bdr: 'rgba(229,37,27,0.14)' },
   value:   { color: '#059669', bg: 'rgba(5,150,105,0.05)',  bdr: 'rgba(5,150,105,0.16)'  },
-  keyword: { color: '#d97706', bg: 'rgba(217,119,6,0.05)',  bdr: 'rgba(217,119,6,0.16)'  },
+  keyword: { color: '#4a4a58', bg: 'rgba(15,15,19,0.04)',  bdr: 'rgba(15,15,19,0.10)'  },
 }
 
 function fmtNum(n) {
@@ -386,8 +391,8 @@ function ScoreRing({ score }) {
   const r = 42
   const circ = 2 * Math.PI * r
   const filled = (score / 100) * circ
-  const color = score >= 75 ? C.green : score >= 50 ? C.amber : C.red
-  const trackColor = score >= 75 ? '#dcfce7' : score >= 50 ? '#fef3c7' : '#fee2e2'
+  const color = score >= 75 ? C.green : score >= 50 ? C.text2 : C.red
+  const trackColor = score >= 75 ? '#dcfce7' : score >= 50 ? '#eef0f4' : '#fee2e2'
   return (
     <div style={{ position: 'relative', width: 108, height: 108, flexShrink: 0 }}>
       <svg width="108" height="108" style={{ transform: 'rotate(-90deg)' }}>
@@ -397,16 +402,18 @@ function ScoreRing({ score }) {
           style={{ transition: 'stroke-dasharray 0.8s cubic-bezier(0.34,1.56,0.64,1)' }} />
       </svg>
       <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-        <span style={{ fontSize: 28, fontWeight: 800, color, letterSpacing: '-1px', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{score}</span>
+        <span style={{ fontSize: 28, fontWeight: 700, color, letterSpacing: '-1px', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{score}</span>
         <span style={{ fontSize: 12, color: C.text3, fontWeight: 600, letterSpacing: '0.06em', marginTop: 2 }}>/100</span>
       </div>
     </div>
   )
 }
 
-// Sub-score color ladder. Matches the suggestion card chip thresholds so
-// chip + bars never disagree (75+ green, 55+ amber, else red).
-function _subColor(v) { return v >= 75 ? C.green : v >= 55 ? C.amber : C.red }
+// Sub-score color ladder. Strong = green, Solid = dark charcoal (text2),
+// Weak = red. Amber was retired across the page — too many warm moments
+// competed for attention in light mode. Charcoal in the middle reads as
+// "neutral, not bad" without adding a third semantic colour.
+function _subColor(v) { return v >= 75 ? C.green : v >= 55 ? C.text2 : C.red }
 
 // Unified bar fill — every score / progress / saturation bar on the page
 // uses this so the visual language is consistent. Subtle left-to-right
@@ -441,7 +448,7 @@ function ScoreBar({ label, value, mounted }) {
         }}/>
       </div>
       <span style={{
-        fontSize: 13, fontWeight: 800, color: v ? color : C.text3,
+        fontSize: 13, fontWeight: 700, color: v ? color : C.text3,
         fontVariantNumeric: 'tabular-nums',
         width: 24, textAlign: 'right', flexShrink: 0, letterSpacing: '-0.3px',
       }}>{v || '—'}</span>
@@ -473,7 +480,7 @@ function LengthSweetSpot({ length, mounted }) {
   const ZONE_HI = 70
   const clamped = Math.max(0, Math.min(MAX, length || 0))
   const inZone  = clamped >= ZONE_LO && clamped <= ZONE_HI
-  const markerColor = inZone ? C.green : clamped < ZONE_LO - 10 || clamped > ZONE_HI + 10 ? C.red : C.amber
+  const markerColor = inZone ? C.green : clamped < ZONE_LO - 10 || clamped > ZONE_HI + 10 ? C.red : C.text2
   const markerLeft  = mounted ? `${(clamped / MAX) * 100}%` : '0%'
   const verdict     = inZone ? 'in the sweet spot' : clamped < ZONE_LO ? 'too short' : 'too long'
   return (
@@ -481,7 +488,7 @@ function LengthSweetSpot({ length, mounted }) {
       <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 8 }}>
         <span style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.08em', textTransform: 'uppercase' }}>Length</span>
         <span style={{ fontSize: 11, fontWeight: 600, color: markerColor, fontVariantNumeric: 'tabular-nums' }}>
-          <span style={{ fontWeight: 800, color: C.text1 }}>{clamped}</span>
+          <span style={{ fontWeight: 700, color: C.text1 }}>{clamped}</span>
           <span style={{ color: C.text3, fontWeight: 500 }}>{' / 100 chars · '}</span>
           {verdict}
         </span>
@@ -646,7 +653,7 @@ function VideoTile({ video, baselineViews }) {
           position: 'absolute', right: 7, bottom: 7,
           padding: '2px 7px', borderRadius: 5,
           background: 'rgba(0,0,0,0.78)',
-          color: '#fff', fontSize: 11, fontWeight: 800,
+          color: '#fff', fontSize: 11, fontWeight: 700,
           letterSpacing: '-0.2px', fontVariantNumeric: 'tabular-nums',
         }}>{fmtNum(views)}</div>
       </div>
@@ -668,7 +675,7 @@ function VideoTile({ video, baselineViews }) {
             display: 'inline-flex', alignItems: 'center',
             padding: '1px 6px', borderRadius: 99,
             background: C.red, color: '#fff',
-            fontSize: 10, fontWeight: 900, letterSpacing: '-0.2px',
+            fontSize: 10, fontWeight: 700, letterSpacing: '-0.2px',
             fontVariantNumeric: 'tabular-nums', flexShrink: 0,
           }}>{mult}</span>
         )}
@@ -717,7 +724,7 @@ function ShortTile({ video, baselineViews }) {
           position: 'absolute', right: 6, bottom: 6,
           padding: '2px 6px', borderRadius: 5,
           background: 'rgba(0,0,0,0.78)',
-          color: '#fff', fontSize: 10.5, fontWeight: 800,
+          color: '#fff', fontSize: 10.5, fontWeight: 700,
           letterSpacing: '-0.2px', fontVariantNumeric: 'tabular-nums',
         }}>{fmtNum(views)}</div>
       </div>
@@ -736,7 +743,7 @@ function ShortTile({ video, baselineViews }) {
             display: 'inline-flex', alignItems: 'center',
             padding: '1px 5px', borderRadius: 99,
             background: C.red, color: '#fff',
-            fontSize: 9.5, fontWeight: 900, letterSpacing: '-0.2px',
+            fontSize: 9.5, fontWeight: 700, letterSpacing: '-0.2px',
             fontVariantNumeric: 'tabular-nums', flexShrink: 0,
           }}>{mult}</span>
         )}
@@ -791,7 +798,7 @@ function NicheStatTile({ label, value, hint, color }) {
     <div>
       <p style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>{label}</p>
       <p style={{
-        fontSize: 22, fontWeight: 800, color: color || C.text1,
+        fontSize: 22, fontWeight: 700, color: color || C.text1,
         letterSpacing: '-0.7px', lineHeight: 1, fontVariantNumeric: 'tabular-nums',
       }}>{value}</p>
       {hint && <p style={{ fontSize: 11, color: C.text3, fontWeight: 500, marginTop: 5, letterSpacing: '-0.01em' }}>{hint}</p>}
@@ -855,15 +862,18 @@ function NicheHeatCard({ videos, shorts, primaryPhrase }) {
             </span>
           )}
           <div style={{ flex: 1 }}/>
+          {/* LIVE pill: chrome neutralised (charcoal text on subtle grey
+              tint) so the only red moment is the pulsing dot itself.
+              Reduces the 3-red-elements-in-one-row pile-up we had before. */}
           <span style={{
             display: 'inline-flex', alignItems: 'center', gap: 6,
-            fontSize: 10, fontWeight: 800, color: C.red,
-            background: 'rgba(229,37,27,0.07)', border: '1px solid rgba(229,37,27,0.20)',
+            fontSize: 10, fontWeight: 700, color: C.text2,
+            background: 'rgba(15,15,19,0.04)', border: '1px solid rgba(15,15,19,0.08)',
             padding: '3px 9px', borderRadius: 100,
             letterSpacing: '0.10em', textTransform: 'uppercase',
           }}>
             <span style={{
-              width: 6, height: 6, borderRadius: 99, background: C.red,
+              width: 6, height: 6, borderRadius: 99, background: C.green,
               animation: 'seoPulse 1.6s ease-in-out infinite',
             }}/>
             Live
@@ -994,7 +1004,7 @@ function CompetitorThumbTile({ video }) {
           position: 'absolute', right: 6, bottom: 6,
           padding: '2px 6px', borderRadius: 5,
           background: 'rgba(0,0,0,0.78)',
-          color: '#fff', fontSize: 10.5, fontWeight: 800,
+          color: '#fff', fontSize: 10.5, fontWeight: 700,
           letterSpacing: '-0.2px', fontVariantNumeric: 'tabular-nums',
         }}>{fmtNum(views)}</div>
       </div>
@@ -1096,8 +1106,8 @@ function SuggestionRow({ s, i, isSelected, isCopied, onCopy, onSelect, primaryPh
     ? s.score
     : Math.round(((s.seo_score || 0) + (s.ctr_score || 0) + (s.hook_score || 0)) / 3)
   const sevLabel = avgScore >= 75 ? 'Strong' : avgScore >= 60 ? 'Solid' : 'Weak'
-  const sevColor = avgScore >= 75 ? C.green : avgScore >= 60 ? C.amber : C.red
-  const sevBg    = avgScore >= 75 ? 'rgba(5,150,105,0.10)' : avgScore >= 60 ? 'rgba(217,119,6,0.10)' : 'rgba(229,37,27,0.08)'
+  const sevColor = avgScore >= 75 ? C.green : avgScore >= 60 ? C.text2 : C.red
+  const sevBg    = avgScore >= 75 ? 'rgba(5,150,105,0.10)' : avgScore >= 60 ? 'rgba(15,15,19,0.05)' : 'rgba(229,37,27,0.08)'
   const hasWhy   = !!(s.why_it_works || s.angle)
 
   // Pick 2 real competing videos from the niche pool that look most like
@@ -1131,7 +1141,7 @@ function SuggestionRow({ s, i, isSelected, isCopied, onCopy, onSelect, primaryPh
             background: 'rgba(15,15,19,0.06)',
             border: '1px solid rgba(15,15,19,0.08)',
           }}>
-            <span style={{ fontSize: 11, fontWeight: 800, color: C.text1, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.3px' }}>{i + 1}</span>
+            <span style={{ fontSize: 11, fontWeight: 700, color: C.text1, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.3px' }}>{i + 1}</span>
           </div>
           <span style={{
             fontSize: 11, fontWeight: 800, color: 'rgba(10,10,15,0.55)',
@@ -1159,7 +1169,7 @@ function SuggestionRow({ s, i, isSelected, isCopied, onCopy, onSelect, primaryPh
             flexShrink: 0,
           }}>
             <span>{sevLabel}</span>
-            <span style={{ fontSize: 11, fontWeight: 900, letterSpacing: '-0.3px' }}>{avgScore}</span>
+            <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '-0.3px' }}>{avgScore}</span>
           </span>
         </div>
 
@@ -1344,12 +1354,12 @@ function TitlePreviewSimulator({ title }) {
             <div key={label} style={{ padding: '12px 14px', background: '#ffffff', borderRadius: 10, border: '1px solid #e6e6ec' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
                 <span style={{ fontSize: 10, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.08em' }}>{label}</span>
-                <span style={{ fontSize: 10, fontWeight: 700, color: truncated ? C.amber : C.green, letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+                <span style={{ fontSize: 10, fontWeight: 700, color: truncated ? C.red : C.green, letterSpacing: '0.06em', textTransform: 'uppercase' }}>
                   {truncated ? 'Cut' : 'Fits'}
                 </span>
               </div>
               <p style={{ fontSize: 12.5, fontWeight: 500, color: truncated ? C.text2 : C.text1, lineHeight: 1.45, margin: 0 }}>{display}</p>
-              {truncated && <p style={{ fontSize: 10.5, color: C.amber, marginTop: 5, fontWeight: 500 }}>{title.length - maxChars + 1} chars over {maxChars}</p>}
+              {truncated && <p style={{ fontSize: 10.5, color: C.red, marginTop: 5, fontWeight: 500 }}>{title.length - maxChars + 1} chars over {maxChars}</p>}
             </div>
           )
         })}
@@ -1383,8 +1393,8 @@ function DescriptionCard({ d, idx, copiedDesc, onCopy }) {
           padding: '14px 22px', display: 'flex', alignItems: 'center', gap: 12,
           cursor: 'pointer', userSelect: 'none',
         }}>
-        <div style={{ width: 26, height: 26, borderRadius: 8, background: C.amber, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-          <span style={{ fontSize: 12, fontWeight: 900, color: '#fff', fontVariantNumeric: 'tabular-nums' }}>{idx + 1}</span>
+        <div style={{ width: 26, height: 26, borderRadius: 8, background: C.text1, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+          <span style={{ fontSize: 12, fontWeight: 700, color: '#fff', fontVariantNumeric: 'tabular-nums' }}>{idx + 1}</span>
         </div>
         <span style={{ fontSize: 10, fontWeight: 700, color: tm.color, padding: '3px 9px', borderRadius: 20, letterSpacing: '0.06em', textTransform: 'uppercase', border: `1.5px solid ${tm.color}`, flexShrink: 0 }}>
           {categoryShort}
@@ -1448,7 +1458,7 @@ function SaturationDots({ total, filled, color, label }) {
         fontSize: 11.5, fontWeight: 600, color: C.text2,
         fontVariantNumeric: 'tabular-nums', whiteSpace: 'nowrap',
       }}>
-        <strong style={{ color: C.text1, fontWeight: 800 }}>{filled}</strong>
+        <strong style={{ color: C.text1, fontWeight: 700 }}>{filled}</strong>
         <span style={{ color: C.text3 }}> of {total} niche videos</span>
       </span>
       {/* Slimmer 100px-max bar — the verdict chip on the right tells the
@@ -1603,7 +1613,7 @@ function AnimatedScoreArc({ value, color, size = 108, tier }) {
         gap: 2,
       }}>
         <span style={{
-          fontSize: 30, fontWeight: 900, color, letterSpacing: '-1.4px',
+          fontSize: 30, fontWeight: 700, color, letterSpacing: '-1.4px',
           fontVariantNumeric: 'tabular-nums', lineHeight: 1,
         }}>{shown}</span>
         <span style={{
@@ -1658,8 +1668,8 @@ function _userSubScoresFromBreakdown(b) {
 // then two stacked thin bars (You vs AI) with their numbers inline. Reads
 // as a vertical mini-chart so the gap between the two titles is the visual.
 function SubScoreBlock({ label, you, ai, mounted, delay }) {
-  const youCol = you >= 75 ? C.green : you >= 55 ? C.amber : C.red
-  const aiCol  = ai  >= 75 ? C.green : ai  >= 55 ? C.amber : C.red
+  const youCol = you >= 75 ? C.green : you >= 55 ? C.text2 : C.red
+  const aiCol  = ai  >= 75 ? C.green : ai  >= 55 ? C.text2 : C.red
   const delta  = ai - you
   const dPos   = delta >= 0
   return (
@@ -1667,7 +1677,7 @@ function SubScoreBlock({ label, you, ai, mounted, delay }) {
       <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 8 }}>
         <span style={{ fontSize: 11, fontWeight: 700, color: C.text2, letterSpacing: '-0.05px' }}>{label}</span>
         <span style={{
-          fontSize: 11, fontWeight: 800, color: dPos ? C.green : C.red,
+          fontSize: 11, fontWeight: 700, color: dPos ? C.green : C.red,
           fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.05px',
         }}>{dPos ? '+' : ''}{delta}</span>
       </div>
@@ -1680,7 +1690,7 @@ function SubScoreBlock({ label, you, ai, mounted, delay }) {
             transition: `width 0.85s cubic-bezier(0.34,1.4,0.64,1) ${delay}ms`,
           }}/>
         </div>
-        <span style={{ fontSize: 11.5, fontWeight: 800, color: youCol, fontVariantNumeric: 'tabular-nums', width: 28, textAlign: 'right', letterSpacing: '-0.2px' }}>{you}</span>
+        <span style={{ fontSize: 11.5, fontWeight: 700, color: youCol, fontVariantNumeric: 'tabular-nums', width: 28, textAlign: 'right', letterSpacing: '-0.2px' }}>{you}</span>
       </div>
       {/* AI row */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
@@ -1691,7 +1701,7 @@ function SubScoreBlock({ label, you, ai, mounted, delay }) {
             transition: `width 0.85s cubic-bezier(0.34,1.4,0.64,1) ${delay + 100}ms`,
           }}/>
         </div>
-        <span style={{ fontSize: 11.5, fontWeight: 800, color: aiCol, fontVariantNumeric: 'tabular-nums', width: 28, textAlign: 'right', letterSpacing: '-0.2px' }}>{ai}</span>
+        <span style={{ fontSize: 11.5, fontWeight: 700, color: aiCol, fontVariantNumeric: 'tabular-nums', width: 28, textAlign: 'right', letterSpacing: '-0.2px' }}>{ai}</span>
       </div>
     </div>
   )
@@ -1715,7 +1725,7 @@ function TitleComparisonHero({ userTitle, userScore, userBreakdown, suggestions,
   const bestAvg = sugAvg(bestSug)
   const lift = bestAvg - userScore
 
-  const tierFor = (s) => s >= 75 ? C.green : s >= 50 ? C.amber : C.red
+  const tierFor = (s) => s >= 75 ? C.green : s >= 50 ? C.text2 : C.red
   const userCol = tierFor(userScore)
   const bestCol = tierFor(bestAvg)
 
@@ -1773,7 +1783,7 @@ function TitleComparisonHero({ userTitle, userScore, userBreakdown, suggestions,
           <span style={{
             padding: '5px 11px', borderRadius: 99,
             background: liftBg, border: `1px solid ${liftBdr}`,
-            color: liftColor, fontSize: 11, fontWeight: 800,
+            color: liftColor, fontSize: 11, fontWeight: 700,
             fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.05px',
             flexShrink: 0, whiteSpace: 'nowrap',
           }}>
@@ -1788,7 +1798,7 @@ function TitleComparisonHero({ userTitle, userScore, userBreakdown, suggestions,
         <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 6, gap: 12 }}>
           <span style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase' }}>Your title</span>
           <span style={{
-            fontSize: 28, fontWeight: 800, color: userCol,
+            fontSize: 28, fontWeight: 700, color: userCol,
             fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.7px', lineHeight: 1, flexShrink: 0,
           }}>{userScore}</span>
         </div>
@@ -1813,7 +1823,7 @@ function TitleComparisonHero({ userTitle, userScore, userBreakdown, suggestions,
         <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 6, gap: 12 }}>
           <span style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase' }}>Best AI alternative</span>
           <span style={{
-            fontSize: 28, fontWeight: 800, color: bestCol,
+            fontSize: 28, fontWeight: 700, color: bestCol,
             fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.7px', lineHeight: 1, flexShrink: 0,
           }}>{bestAvg}</span>
         </div>
@@ -1842,9 +1852,9 @@ function TitleComparisonHero({ userTitle, userScore, userBreakdown, suggestions,
       }}>
         <p style={{ fontSize: 13, fontWeight: 500, color: C.text2, letterSpacing: '-0.05px' }}>
           {lift > 0
-            ? <>Pick this for <span style={{ fontWeight: 800, color: C.green }}>+{lift} points</span> over your title.</>
+            ? <>Pick this for <span style={{ fontWeight: 700, color: C.green }}>+{lift} points</span> over your title.</>
             : lift < 0
-              ? <>Your title scores <span style={{ fontWeight: 800, color: C.red }}>{Math.abs(lift)} higher</span>. Stick with it.</>
+              ? <>Your title scores <span style={{ fontWeight: 700, color: C.red }}>{Math.abs(lift)} higher</span>. Stick with it.</>
               : <>Tied with your title.</>
           }
         </p>
@@ -1917,8 +1927,8 @@ function NicheMap({ keywords, onPick }) {
 
   // Volume / competition badge colors — match the score tier semantics. HIGH
   // volume + LOW competition reads green (good); HIGH competition reads red.
-  const volCol  = v => v === 'HIGH' ? C.green : v === 'MED' ? C.amber : C.text3
-  const compCol = c => c === 'LOW' ? C.green : c === 'MED' ? C.amber : C.red
+  const volCol  = v => v === 'HIGH' ? C.green : v === 'MED' ? C.text2 : C.text3
+  const compCol = c => c === 'LOW' ? C.green : c === 'MED' ? C.text2 : C.red
 
   return (
     // Top stripe dropped as part of the page-wide cleanup; severity now reads
@@ -1932,10 +1942,10 @@ function NicheMap({ keywords, onPick }) {
             flexShrink: 0,
             width: 26, height: 26, borderRadius: 7,
             display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-            background: 'rgba(217,119,6,0.10)',
-            border: '1px solid rgba(217,119,6,0.22)',
+            background: 'rgba(15,15,19,0.05)',
+            border: '1px solid rgba(15,15,19,0.10)',
           }}>
-            <span style={{ fontSize: 11.5, fontWeight: 800, color: C.amber, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.3px' }}>K</span>
+            <span style={{ fontSize: 11.5, fontWeight: 700, color: C.text1, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.3px' }}>K</span>
           </div>
           <span style={{
             fontSize: 11, fontWeight: 800, color: 'rgba(10,10,15,0.55)',
@@ -1963,7 +1973,7 @@ function NicheMap({ keywords, onPick }) {
           borderTop: `1px solid ${C.borderLight}`,
         }}>
           {visible.map((kw, i) => {
-            const col = kw.score >= 75 ? C.green : kw.score >= 50 ? C.amber : C.red
+            const col = kw.score >= 75 ? C.green : kw.score >= 50 ? C.text2 : C.red
             return (
               <button key={kw.phrase}
                 onClick={() => onPick?.(kw.phrase)}
@@ -2005,7 +2015,7 @@ function NicheMap({ keywords, onPick }) {
                   }}/>
                 </div>
                 <span style={{
-                  fontSize: 14, fontWeight: 800, color: col,
+                  fontSize: 14, fontWeight: 700, color: col,
                   fontVariantNumeric: 'tabular-nums', textAlign: 'right',
                   letterSpacing: '-0.3px',
                 }}>{kw.score}</span>
@@ -2049,7 +2059,7 @@ function _NicheMapBubbleSvg({ keywords, onPick }) {
     const baseX = PAD_L + (c / 100) * innerW
     const baseY = PAD_T + (1 - v / 100) * innerH
     const r = 6 + (kw.score / 100) * 8
-    const col = kw.score >= 75 ? C.green : kw.score >= 50 ? C.amber : C.red
+    const col = kw.score >= 75 ? C.green : kw.score >= 50 ? C.text2 : C.red
     return { kw, x: baseX + jx, y: baseY + jy, r, col }
   })
 
@@ -2139,8 +2149,8 @@ function _NicheMapBubbleSvg({ keywords, onPick }) {
       }}>
         <p style={{ fontSize: 10.5, fontWeight: 700, color: C.text3, letterSpacing: '0.08em', textTransform: 'uppercase', marginRight: 4 }}>Top opportunities</p>
         {topThree.map(kw => {
-          const col = kw.score >= 75 ? C.green : kw.score >= 50 ? C.amber : C.red
-          const bg  = kw.score >= 75 ? 'rgba(5,150,105,0.08)' : kw.score >= 50 ? 'rgba(217,119,6,0.08)' : 'rgba(229,37,27,0.06)'
+          const col = kw.score >= 75 ? C.green : kw.score >= 50 ? C.text2 : C.red
+          const bg  = kw.score >= 75 ? 'rgba(5,150,105,0.08)' : kw.score >= 50 ? 'rgba(15,15,19,0.05)' : 'rgba(229,37,27,0.06)'
           return (
             <button key={kw.phrase}
               onClick={() => onPick?.(kw.phrase)}
@@ -2158,7 +2168,7 @@ function _NicheMapBubbleSvg({ keywords, onPick }) {
               onMouseLeave={e => { e.currentTarget.style.borderColor = `${col}3a` }}>
               <span style={{ width: 6, height: 6, borderRadius: 99, background: col }}/>
               {kw.phrase}
-              <span style={{ color: col, fontWeight: 800, fontVariantNumeric: 'tabular-nums', marginLeft: 2 }}>{kw.score}</span>
+              <span style={{ color: col, fontWeight: 700, fontVariantNumeric: 'tabular-nums', marginLeft: 2 }}>{kw.score}</span>
             </button>
           )
         })}
@@ -2932,8 +2942,8 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
 
           {/* AI suggestion error */}
           {result.suggestion_error && !result.suggestions?.length && (
-            <div style={{ background: C.amberBg, border: `1px solid ${C.amberBdr}`, borderLeft: `3px solid ${C.amber}`, borderRadius: '0 12px 12px 0', padding: '14px 18px', marginBottom: 24 }}>
-              <p style={{ ...T.innerLabel, color: C.amber, marginBottom: 6 }}>AI suggestions unavailable</p>
+            <div style={{ background: C.redBg, border: `1px solid ${C.redBdr}`, borderLeft: `3px solid ${C.red}`, borderRadius: '0 12px 12px 0', padding: '14px 18px', marginBottom: 24 }}>
+              <p style={{ ...T.innerLabel, color: C.red, marginBottom: 6 }}>AI suggestions unavailable</p>
               <p style={T.innerText}>{result.suggestion_error}</p>
             </div>
           )}
@@ -3096,7 +3106,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
                       <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 6 }}>Related phrases</p>
                       <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.5 }}>Sorted by score · click any to use as your title</p>
                     </div>
-                    <p style={{ fontSize: 26, fontWeight: 800, color: C.text1, letterSpacing: '-0.8px', fontVariantNumeric: 'tabular-nums', flexShrink: 0, lineHeight: 1 }}>{result.keyword_scores.length}</p>
+                    <p style={{ fontSize: 26, fontWeight: 700, color: C.text1, letterSpacing: '-0.8px', fontVariantNumeric: 'tabular-nums', flexShrink: 0, lineHeight: 1 }}>{result.keyword_scores.length}</p>
                   </div>
 
                   <div style={{ height: 1, background: C.border, margin: '0 0 14px' }}/>
@@ -3104,7 +3114,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
                   {/* 2-col grid with amber vertical divider between columns (matches Competitor set) */}
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', columnGap: 0, rowGap: 14 }}>
                     {result.keyword_scores.map((kw, i) => {
-                      const scColor    = kw.score >= 75 ? C.green : kw.score >= 50 ? C.amber : C.red
+                      const scColor    = kw.score >= 75 ? C.green : kw.score >= 50 ? C.text2 : C.red
                       const isRightCol = i % 2 === 1
                       return (
                         <div key={kw.phrase} className="seo-kw-row"
@@ -3116,7 +3126,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
                             display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer',
                             paddingLeft:  isRightCol ? 20 : 0,
                             paddingRight: isRightCol ? 0 : 20,
-                            borderLeft: isRightCol ? `1px solid ${C.amberBdr}` : 'none',
+                            borderLeft: isRightCol ? `1px solid ${C.borderLight}` : 'none',
                           }}>
                           <span className="seo-kw-phrase" style={{ fontSize: 13, color: C.text2, fontWeight: 400, width: 180, flexShrink: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', transition: 'color 0.12s' }}>{kw.phrase}</span>
                           <div style={{ flex: 1, height: 4, background: '#eeeef3', borderRadius: 99, overflow: 'hidden', minWidth: 40 }}>
@@ -3153,7 +3163,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
                           <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.5 }}>Phrases from ranking videos · click to use as your title</p>
                         </div>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 14, flexShrink: 0 }}>
-                          <p style={{ fontSize: 26, fontWeight: 800, color: C.text1, letterSpacing: '-0.8px', fontVariantNumeric: 'tabular-nums', lineHeight: 1 }}>{result.autocomplete_terms.length}</p>
+                          <p style={{ fontSize: 26, fontWeight: 700, color: C.text1, letterSpacing: '-0.8px', fontVariantNumeric: 'tabular-nums', lineHeight: 1 }}>{result.autocomplete_terms.length}</p>
                           <button
                             onClick={() => {
                               navigator.clipboard.writeText(result.autocomplete_terms.join(', '))
@@ -3197,7 +3207,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
                           <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.5 }}>Pulled from ranking competitors · click one to copy</p>
                         </div>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 14, flexShrink: 0 }}>
-                          <p style={{ fontSize: 26, fontWeight: 800, color: C.text1, letterSpacing: '-0.8px', fontVariantNumeric: 'tabular-nums', lineHeight: 1 }}>{result.top_tags.length}</p>
+                          <p style={{ fontSize: 26, fontWeight: 700, color: C.text1, letterSpacing: '-0.8px', fontVariantNumeric: 'tabular-nums', lineHeight: 1 }}>{result.top_tags.length}</p>
                           <button
                             onClick={() => {
                               navigator.clipboard.writeText(result.top_tags.join(', '))
