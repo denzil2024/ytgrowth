@@ -3454,7 +3454,7 @@ function NavBtn({ label, active, onClick, badge, dot }) {
         position: 'relative',
         margin: `1px ${NAV_GUTTER}px`,
         width: `calc(100% - ${NAV_GUTTER * 2}px)`,
-        background: active ? 'rgba(15,15,19,0.06)' : 'transparent',
+        background: active ? 'rgba(229,37,27,0.07)' : 'transparent',
         color: active ? C.text1 : C.text2,
         fontWeight: active ? 600 : 500,
         fontSize: 14,
@@ -3471,23 +3471,30 @@ function NavBtn({ label, active, onClick, badge, dot }) {
       onMouseEnter={e => { if (!active) { e.currentTarget.style.background = 'rgba(15,15,19,0.04)'; e.currentTarget.style.color = C.text1 } }}
       onMouseLeave={e => { if (!active) { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = C.text2 } }}
     >
+      {active && (
+        <span aria-hidden style={{
+          position: 'absolute', left: -NAV_GUTTER, top: 8, bottom: 8,
+          width: 3, borderRadius: 100,
+          background: C.red,
+        }}/>
+      )}
       <span style={{
         display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
         width: NAV_ICON_COL, height: NAV_ICON_COL, flexShrink: 0,
-        color: active ? C.text1 : '#9da0aa',
+        color: active ? C.red : '#9da0aa',
       }}>{NAV_ICONS[label]}</span>
       <span style={{ flex: 1 }}>{label}</span>
       {typeof badge === 'string' && badge && (
         <span style={{
-          background: '#f1f1f6', color: '#4a4a58',
-          fontSize: 10.5, fontWeight: 600, padding: '2px 8px',
-          borderRadius: 20,
+          background: 'rgba(229,37,27,0.10)', color: C.red,
+          fontSize: 9.5, fontWeight: 800, padding: '2px 7px',
+          borderRadius: 20, letterSpacing: '0.08em', textTransform: 'uppercase',
         }}>{badge}</span>
       )}
       {typeof badge === 'number' && badge > 0 && (
         <span style={{
-          background: '#f1f1f6', color: '#4a4a58',
-          fontSize: 10.5, fontWeight: 600, padding: '1px 7px',
+          background: C.red, color: '#fff',
+          fontSize: 10.5, fontWeight: 800, padding: '1px 7px',
           borderRadius: 20, minWidth: 18, textAlign: 'center',
           letterSpacing: '-0.01em', fontVariantNumeric: 'tabular-nums',
           lineHeight: 1.45,
@@ -3495,8 +3502,9 @@ function NavBtn({ label, active, onClick, badge, dot }) {
       )}
       {dot && (typeof badge === 'undefined' || badge === null || badge === '' || badge === 0) && (
         <span aria-label="new" style={{
-          width: 6, height: 6, borderRadius: '50%',
+          width: 7, height: 7, borderRadius: '50%',
           background: C.red,
+          boxShadow: `0 0 0 3px rgba(229,37,27,0.16)`,
           flexShrink: 0,
         }}/>
       )}
@@ -3514,9 +3522,9 @@ function NavSubBtn({ label, active, onClick }) {
         position: 'relative',
         margin: `1px ${NAV_GUTTER}px 1px ${NAV_GUTTER + SUB_INDENT}px`,
         width: `calc(100% - ${NAV_GUTTER * 2 + SUB_INDENT}px)`,
-        background: active ? 'rgba(15,15,19,0.06)' : 'transparent',
+        background: 'transparent',
         color: active ? C.text1 : C.text2,
-        fontWeight: active ? 600 : 500,
+        fontWeight: active ? 600 : 450,
         fontSize: 13.5,
         letterSpacing: '-0.01em',
         border: 'none',
@@ -3529,13 +3537,14 @@ function NavSubBtn({ label, active, onClick }) {
         transition: 'background 0.14s ease, color 0.14s ease',
       }}
       onMouseEnter={e => { if (!active) { e.currentTarget.style.background = 'rgba(15,15,19,0.04)'; e.currentTarget.style.color = C.text1 } }}
-      onMouseLeave={e => { if (!active) { e.currentTarget.style.background = active ? 'rgba(15,15,19,0.06)' : 'transparent'; e.currentTarget.style.color = C.text2 } }}
+      onMouseLeave={e => { if (!active) { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = C.text2 } }}
     >
       <span style={{
-        width: 4, height: 4, borderRadius: '50%',
-        background: active ? C.text1 : '#cbcdd6',
+        width: 5, height: 5, borderRadius: '50%',
+        background: active ? C.red : '#cbcdd6',
         flexShrink: 0,
-        transition: 'background 0.14s ease',
+        boxShadow: active ? `0 0 0 3px rgba(229,37,27,0.10)` : 'none',
+        transition: 'background 0.14s ease, box-shadow 0.14s ease',
       }}/>
       <span style={{ flex: 1 }}>{label}</span>
     </button>
@@ -3593,13 +3602,13 @@ function NavGroup({ label, children, anyChildActive, defaultOpen = true, badge, 
         <span style={{
           display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
           width: NAV_ICON_COL, height: NAV_ICON_COL, flexShrink: 0,
-          color: anyChildActive ? C.text1 : '#9da0aa',
+          color: anyChildActive ? C.red : '#9da0aa',
         }}>{NAV_ICONS[label]}</span>
         <span style={{ flex: 1 }}>{label}</span>
         {typeof badge === 'number' && badge > 0 && (
           <span style={{
-            background: '#f1f1f6', color: '#4a4a58',
-            fontSize: 10.5, fontWeight: 600, padding: '1px 7px',
+            background: C.red, color: '#fff',
+            fontSize: 10.5, fontWeight: 800, padding: '1px 7px',
             borderRadius: 20, minWidth: 18, textAlign: 'center',
             letterSpacing: '-0.01em', fontVariantNumeric: 'tabular-nums',
             lineHeight: 1.45,
@@ -3607,8 +3616,9 @@ function NavGroup({ label, children, anyChildActive, defaultOpen = true, badge, 
         )}
         {dot && (typeof badge === 'undefined' || badge === null || badge === 0) && (
           <span aria-label="new" style={{
-            width: 6, height: 6, borderRadius: '50%',
+            width: 7, height: 7, borderRadius: '50%',
             background: C.red,
+            boxShadow: `0 0 0 3px rgba(229,37,27,0.16)`,
             flexShrink: 0,
           }}/>
         )}
@@ -4435,47 +4445,68 @@ export default function Dashboard() {
       }}>
 
         {/* Brand */}
-        <a href="/" style={{ padding: '22px 22px 18px', display: 'flex', alignItems: 'center', gap: 9, textDecoration: 'none', flexShrink: 0 }}>
+        <a href="/" style={{ padding: '22px 22px 18px', display: 'flex', alignItems: 'center', gap: 9, textDecoration: 'none', flexShrink: 0, borderBottom: `1px solid ${C.border}` }}>
           <Logo size={26} />
           <span style={{
-            fontSize: 16, fontWeight: 600, letterSpacing: '-0.45px', lineHeight: 1,
-            color: C.text1,
+            fontSize: 18, fontWeight: 800, letterSpacing: '-0.65px', lineHeight: 1,
+            background: 'linear-gradient(180deg, #0f0f13 0%, #2a2a35 100%)',
+            WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
+            backgroundClip: 'text', color: 'transparent',
           }}>YTGrowth</span>
           {(() => { const pb = planBadge(billingPlan); return (
-            <span style={{ marginLeft: 'auto', fontSize: 10.5, fontWeight: 500, color: '#4a4a58', background: '#f1f1f6', padding: '2px 8px', borderRadius: 20, flexShrink: 0 }}>{pb.label}</span>
+            <span style={{ marginLeft: 'auto', fontSize: 9, fontWeight: 700, color: pb.color, background: pb.bg, border: `1px solid ${pb.bdr}`, padding: '2px 8px', borderRadius: 20, letterSpacing: '0.07em', textTransform: 'uppercase', flexShrink: 0 }}>{pb.label}</span>
           ) })()}
         </a>
 
-        {/* Channel profile block — flat, no card surface, inline health chip */}
+        {/* Channel profile block */}
         {data && (
-          <div style={{ padding: '12px 16px 16px', flexShrink: 0 }}>
+          <div style={{ padding: '16px 22px', flexShrink: 0 }}>
+           <div style={{
+             background: '#fafafc',
+             border: '1px solid #ececf0',
+             borderRadius: 12,
+             padding: '15px 16px 14px',
+           }}>
+            {/* Avatar + name */}
             {channels.length >= 2
-              ? <ChannelSwitcher
-                  channels={channels}
-                  channelsAllowed={channelsAllowed}
-                  canAddMore={canAddMore}
-                  currentChannelId={data.channel.channel_id}
-                />
+              ? <div style={{ marginBottom: 14 }}>
+                  <ChannelSwitcher
+                    channels={channels}
+                    channelsAllowed={channelsAllowed}
+                    canAddMore={canAddMore}
+                    currentChannelId={data.channel.channel_id}
+                  />
+                </div>
               : (
-                <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 13, marginBottom: 16 }}>
                   {data.channel.thumbnail
-                    ? <img src={data.channel.thumbnail} alt="" style={{ width: 40, height: 40, borderRadius: '50%', objectFit: 'cover', flexShrink: 0, boxShadow: '0 0 0 2px #ececf0' }}/>
-                    : <div style={{ width: 40, height: 40, borderRadius: '50%', background: C.redBg, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 15, fontWeight: 600, color: C.red, flexShrink: 0, boxShadow: '0 0 0 2px #ececf0' }}>{data.channel.channel_name[0].toUpperCase()}</div>
+                    ? <img src={data.channel.thumbnail} alt="" style={{ width: 42, height: 42, borderRadius: '50%', objectFit: 'cover', flexShrink: 0, boxShadow: '0 0 0 2px #ececf0' }}/>
+                    : <div style={{ width: 42, height: 42, borderRadius: '50%', background: C.redBg, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, fontWeight: 700, color: C.red, flexShrink: 0, boxShadow: '0 0 0 2px #ececf0' }}>{data.channel.channel_name[0].toUpperCase()}</div>
                   }
                   <div style={{ minWidth: 0, flex: 1 }}>
-                    <p style={{ fontSize: 14, fontWeight: 600, color: C.text1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', letterSpacing: '-0.2px', lineHeight: 1.2 }}>{data.channel.channel_name}</p>
-                    <p style={{ fontSize: 12, fontWeight: 500, color: C.text3, marginTop: 3, fontVariantNumeric: 'tabular-nums', display: 'inline-flex', alignItems: 'center', gap: 7 }}>
-                      <span>{fmtNum(data.channel.subscribers)} subs</span>
-                      <span style={{ width: 3, height: 3, borderRadius: '50%', background: '#d4d4dc' }}/>
-                      <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
-                        <span style={{ width: 6, height: 6, borderRadius: '50%', background: scoreColor(score), flexShrink: 0 }}/>
-                        <span style={{ color: C.text2, fontWeight: 600 }}>{score}</span>
-                      </span>
-                    </p>
+                    <p style={{ fontSize: 14.5, fontWeight: 700, color: C.text1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', letterSpacing: '-0.25px', lineHeight: 1.2 }}>{data.channel.channel_name}</p>
+                    <p style={{ fontSize: 12, color: C.text3, marginTop: 3, fontVariantNumeric: 'tabular-nums' }}>{fmtNum(data.channel.subscribers)} subs</p>
                   </div>
                 </div>
               )
             }
+            {/* Health score bar */}
+            <div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 8 }}>
+                <span style={{ fontSize: 10.5, fontWeight: 700, color: C.text3, letterSpacing: '0.09em', textTransform: 'uppercase' }}>Channel health</span>
+                <span style={{ display: 'inline-flex', alignItems: 'baseline', gap: 2, fontVariantNumeric: 'tabular-nums' }}>
+                  <span style={{ fontSize: 16, fontWeight: 800, color: scoreColor(score), letterSpacing: '-0.4px', lineHeight: 1 }}>{score}</span>
+                  <span style={{ fontSize: 10.5, fontWeight: 600, color: 'rgba(149,149,164,0.6)' }}>/100</span>
+                </span>
+              </div>
+              <div style={{ background: '#eaeaef', borderRadius: 99, height: 6, overflow: 'hidden' }}>
+                <div style={{
+                  width: `${score}%`, height: '100%', background: scoreColor(score), borderRadius: 99,
+                  transition: 'width 1.2s cubic-bezier(0.34,1.56,0.64,1)',
+                }}/>
+              </div>
+            </div>
+           </div>
           </div>
         )}
 
