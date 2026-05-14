@@ -61,16 +61,19 @@ scheduler.add_job(
 
 
 # ── Job: Refresh top-channels cache ───────────────────────────────────────────
-# Runs WEEKLY (Sunday 05:30 UTC) — a full refresh costs ~8,400 quota
-# units (14 categories × 6 regions × 100 units per search.list). Daily
-# was draining the 10K free daily quota and starving every other
-# YouTube-touching feature. Weekly stretches the same 8,400 across 7
-# days = ~1,200 quota/day, leaving headroom for the extension panel,
-# autopsy lookups, and SEO refreshes.
+# Runs MONTHLY (1st of every month, 05:30 UTC). A full refresh costs
+# ~8,400 quota units (14 categories × 6 regions × 100 units per
+# search.list). Used to be weekly, which was unsustainable on the 10K
+# free daily quota — one weekly burst nearly equalled a whole day's
+# budget. Monthly averages to ~280 units/day across 30 days, leaving
+# almost the entire daily quota for user features.
 #
-# Channel rankings shift slowly (top creators by subs), so a 7-day
-# cache is fine for the leaderboard UI. If a region needs a force-refresh
-# sooner, /admin/top-channels-debug triggers one ad hoc.
+# Why monthly is fine: these pages back public /youtube-stats/* SEO
+# routes. Top creators by subscriber count don't shuffle ranks fast —
+# a 30-day cache is no worse than a 7-day one for visual purposes.
+# Visitors arrive from search, see the list, leave; they're not
+# refreshing daily to spot rank changes. When the Google quota bump
+# lands, switch back to weekly for fresher data.
 #
 # We deliberately do NOT run on startup anymore. Each deploy used to
 # burn another 8,400 units, which combined with frequent iteration
@@ -91,8 +94,8 @@ def _run_top_channels_refresh():
 scheduler.add_job(
     _run_top_channels_refresh,
     trigger="cron",
-    day_of_week="sun",
-    hour=5, minute=30,  # Sundays 05:30 UTC
+    day="1",
+    hour=5, minute=30,  # 1st of each month at 05:30 UTC
     id="top_channels_refresh",
     replace_existing=True,
 )
