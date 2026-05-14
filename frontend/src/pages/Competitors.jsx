@@ -1423,14 +1423,11 @@ export default function Competitors({ plan, freeTierFeatures }) {
                 </svg>
               )
 
-              // Threat dot — red for high, text3 for med/low. No chip,
-              // no pill, no traffic-light. The dot says "we've gauged
-              // this", the row's meta text says how.
-              const threatDot = ai ? (
-                ai.threatLevel === 'high' ? '#e5251b' :
-                ai.threatLevel === 'low'  ? 'rgba(10,10,15,0.26)' :
-                                            'rgba(10,10,15,0.36)'
-              ) : null
+              // Threat: saturated semantic dot (red/amber/green from THREAT)
+              // + small colored label next to the name. Previous version
+              // grayed-out medium/low so they were invisible at a glance;
+              // the whole point of the threat field is to scan it.
+              const threatDot = threat?.dot || null
 
               return (
                 <div key={comp.channel_id} className="comp-accordion-wrapper"
@@ -1463,11 +1460,9 @@ export default function Competitors({ plan, freeTierFeatures }) {
                         {threatDot && (
                           <span aria-hidden="true" style={{
                             flexShrink: 0,
-                            width: 7, height: 7, borderRadius: 99,
+                            width: 8, height: 8, borderRadius: 99,
                             background: threatDot,
-                            boxShadow: ai?.threatLevel === 'high'
-                              ? '0 0 0 3px rgba(229,37,27,0.14)'
-                              : '0 0 0 3px rgba(10,10,15,0.06)',
+                            boxShadow: `0 0 0 3px ${threatDot}22`,
                           }}/>
                         )}
                         <p style={{ fontWeight: 500, fontSize: 15, color: '#0a0a0f',
@@ -1475,6 +1470,14 @@ export default function Competitors({ plan, freeTierFeatures }) {
                           textOverflow: 'ellipsis' }}>
                           {comp.channel_name}
                         </p>
+                        {threat && (
+                          <span style={{ flexShrink: 0, fontSize: 12.5, fontWeight: 600,
+                            color: threat.text, letterSpacing: '-0.05px' }}>
+                            <span style={{ color: 'rgba(10,10,15,0.18)', margin: '0 6px',
+                              fontWeight: 400 }}>·</span>
+                            {threat.label}
+                          </span>
+                        )}
                       </div>
 
                       {/* Inline meta — single quiet line replacing 3 chips */}
