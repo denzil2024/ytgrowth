@@ -83,37 +83,53 @@ function useKwStyles() {
       @keyframes kwSlideIn { from { opacity: 0; transform: translateY(10px) scale(0.98) } to { opacity: 1; transform: none } }
 
       .kw-input {
-        flex: 1; padding: 11px 18px;
-        border-radius: 100px; border: 1px solid rgba(0,0,0,0.12);
-        background: #ffffff; font-size: 13.5px;
-        font-family: 'Inter', system-ui, sans-serif;
-        outline: none; transition: border-color 0.18s, box-shadow 0.18s; color: #111114;
+        flex: 1; padding: 12px 20px;
+        border-radius: 100px; border: 1px solid rgba(10,10,15,0.10);
+        background: #ffffff; font-size: 14px; font-weight: 500;
+        font-family: 'Geist', 'Inter', system-ui, sans-serif;
+        outline: none;
+        transition: border-color 200ms cubic-bezier(0.32, 0.72, 0, 1), box-shadow 200ms cubic-bezier(0.32, 0.72, 0, 1);
+        color: #0a0a0f; letter-spacing: -0.005em;
       }
-      .kw-input::placeholder { color: #a0a0b0; font-weight: 400; }
-      .kw-input:focus { border-color: rgba(0,0,0,0.3); box-shadow: 0 0 0 3px rgba(0,0,0,0.04); }
+      .kw-input::placeholder { color: rgba(10,10,15,0.40); font-weight: 500; }
+      .kw-input:focus {
+        border-color: rgba(229,37,27,0.30);
+        box-shadow: 0 0 0 4px rgba(229,37,27,0.06);
+      }
 
       .kw-btn-primary {
-        background: #e5251b; color: #fff; border: none; border-radius: 100px;
-        padding: 11px 20px; font-size: 13.5px; font-weight: 700;
-        font-family: 'Inter', system-ui, sans-serif;
+        background: linear-gradient(180deg, #ef3a31 0%, #e5251b 100%);
+        color: #fff; border: none; border-radius: 12px;
+        padding: 12px 22px; font-size: 13px; font-weight: 600;
+        font-family: 'Geist', 'Inter', system-ui, sans-serif;
         cursor: pointer; white-space: nowrap;
-        transition: filter 0.15s;
-        letter-spacing: 0.01em;
+        transition: filter 160ms cubic-bezier(0.32, 0.72, 0, 1), transform 160ms cubic-bezier(0.32, 0.72, 0, 1);
+        letter-spacing: -0.01em;
+        box-shadow: 0 1px 2px rgba(229,37,27,0.30), inset 0 1px 0 rgba(255,255,255,0.22);
         display: inline-flex; align-items: center; gap: 8px;
       }
-      .kw-btn-primary:hover:not(:disabled) { filter: brightness(1.1); }
-      .kw-btn-primary:disabled { background: #e0e0e6; color: #a0a0b0; cursor: not-allowed; }
+      .kw-btn-primary:hover:not(:disabled) { filter: brightness(1.06); transform: translateY(-1px); }
+      .kw-btn-primary:disabled {
+        background: rgba(10,10,15,0.06);
+        color: rgba(10,10,15,0.26);
+        cursor: default;
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.6);
+      }
 
       .kw-btn-ghost {
-        background: #fff; color: #e5251b;
-        border: 1px solid #e5251b; border-radius: 100px;
-        padding: 11px 18px; font-size: 13.5px; font-weight: 600;
-        font-family: 'Inter', system-ui, sans-serif;
+        background: #fff; color: rgba(10,10,15,0.62);
+        border: 1px solid rgba(10,10,15,0.12); border-radius: 100px;
+        padding: 11px 18px; font-size: 13px; font-weight: 600;
+        font-family: 'Geist', 'Inter', system-ui, sans-serif;
         cursor: pointer; white-space: nowrap;
-        transition: background 0.15s, border-color 0.15s;
-        letter-spacing: 0.01em;
+        transition: background 160ms cubic-bezier(0.32, 0.72, 0, 1), color 160ms cubic-bezier(0.32, 0.72, 0, 1), border-color 160ms cubic-bezier(0.32, 0.72, 0, 1);
+        letter-spacing: -0.01em;
       }
-      .kw-btn-ghost:hover { background: rgba(229,37,27,0.06); }
+      .kw-btn-ghost:hover {
+        background: rgba(10,10,15,0.03);
+        color: #0a0a0f;
+        border-color: rgba(10,10,15,0.20);
+      }
 
       /* Tab pills — quiet pill nav like Competitors. Active = soft gray
          tint, inactive = transparent. Brand red reserved for the page CTA
@@ -196,14 +212,51 @@ function useKwStyles() {
       .kw-report-chip .val { font-size: 12px; font-weight: 700; color: #0a0a0f; }
       .kw-report-chip .lbl { font-size: 11px; color: #d97706; font-weight: 600; }
 
-      /* Intent picker row — hairline card, hover bg change, no lift */
+      /* Intent picker row — hairline card, green-tinted hover that
+         signals "this is a selection moment". Subtle lift on hover. */
       .kw-intent-opt {
         display: flex; align-items: center; gap: 14px;
-        padding: 13px 16px; border: 1px solid rgba(0,0,0,0.09);
-        border-radius: 10px; cursor: pointer; background: #ffffff;
-        transition: background 0.15s, border-color 0.15s;
+        padding: 16px 18px;
+        border: 1px solid rgba(10,10,15,0.08);
+        border-radius: 12px;
+        cursor: pointer; background: #ffffff;
+        box-shadow: 0 1px 2px rgba(15,15,25,0.03);
+        transition: background 160ms cubic-bezier(0.32, 0.72, 0, 1),
+                    border-color 160ms cubic-bezier(0.32, 0.72, 0, 1),
+                    box-shadow 160ms cubic-bezier(0.32, 0.72, 0, 1),
+                    transform 160ms cubic-bezier(0.32, 0.72, 0, 1);
       }
-      .kw-intent-opt:hover { border-color: rgba(0,0,0,0.18); background: #f6f6f9; }
+      .kw-intent-opt:hover {
+        border-color: rgba(22,163,74,0.30);
+        background: rgba(22,163,74,0.04);
+        box-shadow: 0 4px 14px rgba(22,163,74,0.08);
+        transform: translateY(-1px);
+      }
+      .kw-intent-opt .arrow { color: rgba(10,10,15,0.32); transition: color 160ms ease, transform 160ms ease; }
+      .kw-intent-opt:hover .arrow { color: #16a34a; transform: translateX(3px); }
+
+      /* Quiet utility action under the intent picker — outlined pill,
+         no fill, brand red text. The intent options are the primary
+         choice; "Let YTGrowth decide" is the secondary escape hatch. */
+      .kw-intent-decide-btn {
+        display: inline-flex; align-items: center; gap: 6px;
+        margin-top: 16px;
+        padding: 7px 14px;
+        font-size: 12.5px; font-weight: 600;
+        font-family: 'Geist', 'Inter', system-ui, sans-serif;
+        letter-spacing: -0.01em;
+        color: rgba(10,10,15,0.55);
+        background: transparent;
+        border: 1px solid rgba(10,10,15,0.12);
+        border-radius: 100px;
+        cursor: pointer;
+        transition: background 160ms ease, color 160ms ease, border-color 160ms ease;
+      }
+      .kw-intent-decide-btn:hover {
+        background: rgba(10,10,15,0.03);
+        color: #0a0a0f;
+        border-color: rgba(10,10,15,0.20);
+      }
 
 
       /* Copy button — red brand pill. Matches SEO Studio's seo-btn-primary
@@ -298,11 +351,11 @@ function MomentumBadge({ momentum }) {
   return (
     <span style={{
       display: 'inline-flex', alignItems: 'center',
-      fontSize: 10, fontWeight: 700,
+      fontSize: 10.5, fontWeight: 700,
       color: config.color, background: config.bg,
       border: `1px solid ${config.bdr}`,
-      borderRadius: 100, padding: '1px 7px',
-      letterSpacing: '0.06em', textTransform: 'uppercase',
+      borderRadius: 100, padding: '2px 8px',
+      letterSpacing: '0.10em', textTransform: 'uppercase',
       flexShrink: 0,
     }}>{config.label}</span>
   )
@@ -339,11 +392,11 @@ function KwDetailModal({ kw, C, onClose }) {
           <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 20, paddingBottom: 20, borderBottom: `1px solid ${C.border}` }}>
             <div style={{ flex: 1, minWidth: 0 }}>
               <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 5 }}>Keyword playbook</p>
-              <p style={{ fontSize: 18, fontWeight: 800, color: C.text1, lineHeight: 1.3, letterSpacing: '-0.3px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{kw.keyword}</p>
+              <p style={{ fontSize: 18, fontWeight: 700, color: C.text1, lineHeight: 1.3, letterSpacing: '-0.3px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{kw.keyword}</p>
             </div>
             <div style={{ display: 'flex', gap: 8, flexShrink: 0, alignItems: 'center' }}>
               <MomentumBadge momentum={kw.momentum} />
-              <span style={{ fontSize: 13, fontWeight: 800, color: scColor, fontVariantNumeric: 'tabular-nums', padding: '3px 10px', border: `1px solid ${scColor}30`, borderRadius: 100 }}>
+              <span style={{ fontSize: 13, fontWeight: 700, color: scColor, fontVariantNumeric: 'tabular-nums', padding: '3px 10px', border: `1px solid ${scColor}30`, borderRadius: 100 }}>
                 {kw.opportunityScore}/100
               </span>
               <button onClick={copyKeyword}
@@ -477,36 +530,36 @@ function KwDetailModal({ kw, C, onClose }) {
 
           {/* 3-col playbook — exact Outliers pattern (blue / amber / green) */}
           <div style={{ background: '#fff', border: `1px solid ${C.border}`, borderRadius: 16, padding: '20px 22px' }}>
-            <p style={{ fontSize: 15, fontWeight: 700, color: C.text1, letterSpacing: '-0.3px', marginBottom: 16 }}>Keyword playbook</p>
+            <p style={{ fontSize: 18, fontWeight: 700, color: '#0a0a0f', letterSpacing: '-0.3px', marginBottom: 16 }}>Keyword playbook</p>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr 1fr', gap: 8 }}>
               {/* Blue — Why it works (numbered list, mirrors Quick actions) */}
               <div style={{ background: 'rgba(79,134,247,0.07)', border: '1px solid rgba(79,134,247,0.12)', borderRadius: 10, padding: '12px 14px' }}>
-                <p style={{ fontSize: 10, fontWeight: 700, color: '#4a7cf7', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Why it works</p>
+                <p style={{ fontSize: 11, fontWeight: 700, color: '#4a7cf7', letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 8 }}>Why it works</p>
                 <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 7, margin: 0, padding: 0 }}>
                   {buildWhyItWorks(kw).map((s, i) => (
                     <li key={i} style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
                       <span style={{ fontSize: 12, fontWeight: 700, color: '#4a7cf7', fontVariantNumeric: 'tabular-nums', lineHeight: 1.55, minWidth: 14 }}>{i + 1}.</span>
-                      <span style={{ fontSize: 13, color: C.text1, lineHeight: 1.6, flex: 1 }}>{s}</span>
+                      <span style={{ fontSize: 13, fontWeight: 500, color: '#0a0a0f', lineHeight: 1.6, flex: 1, letterSpacing: '-0.005em' }}>{s}</span>
                     </li>
                   ))}
                 </ul>
               </div>
               {/* Amber — Quick actions (numbered list) */}
               <div style={{ background: '#fff', border: `1px solid ${C.border}`, borderLeft: `3px solid ${C.amber}`, borderRadius: '0 10px 10px 0', padding: '12px 14px', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
-                <p style={{ fontSize: 10, fontWeight: 700, color: C.amber, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Quick actions</p>
+                <p style={{ fontSize: 11, fontWeight: 700, color: C.amber, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 8 }}>Quick actions</p>
                 <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 7, margin: 0, padding: 0 }}>
                   {actions.map((s, i) => (
                     <li key={i} style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
                       <span style={{ fontSize: 12, fontWeight: 700, color: C.amber, fontVariantNumeric: 'tabular-nums', lineHeight: 1.55, minWidth: 14 }}>{i + 1}.</span>
-                      <span style={{ fontSize: 13, color: C.text1, lineHeight: 1.6, flex: 1 }}>{s}</span>
+                      <span style={{ fontSize: 13, fontWeight: 500, color: '#0a0a0f', lineHeight: 1.6, flex: 1, letterSpacing: '-0.005em' }}>{s}</span>
                     </li>
                   ))}
                 </ul>
               </div>
               {/* Green — Why now */}
               <div style={{ background: 'rgba(5,150,105,0.07)', border: '1px solid rgba(5,150,105,0.14)', borderRadius: 10, padding: '12px 14px' }}>
-                <p style={{ fontSize: 10, fontWeight: 700, color: C.green, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Act on this because</p>
-                <p style={{ fontSize: 13, color: C.text1, lineHeight: 1.65 }}>{buildWhyNow(kw)}</p>
+                <p style={{ fontSize: 11, fontWeight: 700, color: C.green, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 8 }}>Act on this because</p>
+                <p style={{ fontSize: 13, fontWeight: 500, color: '#0a0a0f', lineHeight: 1.65, letterSpacing: '-0.005em' }}>{buildWhyNow(kw)}</p>
               </div>
             </div>
           </div>
@@ -836,45 +889,63 @@ export default function Keywords({ plan, freeTierFeatures }) {
         </div>
       )}
 
-      {/* Intent picker — amber 3px top border (identity/ranking moment),
-          neutral grey utility eyebrow. Strict red/amber/green palette. */}
+      {/* Intent picker — green top stripe (selection moment) + tighter
+          header with hierarchy, refined option rows. */}
       {intentOptions && !loading && (
-        <div className="kw-card kw-in" style={{ padding: 0, marginBottom: 16, borderTop: `3px solid ${C.amber}` }}>
-          <div style={{ padding: '16px 22px 18px' }}>
-            <p style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 5 }}>
-              Pick the niche
-            </p>
-            <p style={{ fontSize: 14, fontWeight: 700, color: C.text1, lineHeight: 1.55, marginBottom: 4, letterSpacing: '-0.1px' }}>
-              What niche is this keyword for?
-            </p>
-            <p style={{ fontSize: 13, color: C.text2, marginBottom: 14, lineHeight: 1.6 }}>
-              Pick the right audience so we search the correct space.
-            </p>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+        <div className="kw-card kw-in" style={{ padding: 0, marginBottom: 16, borderTop: `3px solid ${C.green}` }}>
+          <div style={{ padding: '20px 24px 22px' }}>
+            {/* Tightened header — single visual cluster instead of three
+                stacked labels. Eyebrow + heading sit together; subtitle
+                is the supporting line. */}
+            <div style={{ marginBottom: 16 }}>
+              <p style={{ fontSize: 11, fontWeight: 700, color: 'rgba(10,10,15,0.50)',
+                letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 6 }}>
+                Pick the niche
+              </p>
+              <p style={{ fontSize: 17, fontWeight: 700, color: '#0a0a0f',
+                lineHeight: 1.35, letterSpacing: '-0.3px', marginBottom: 4 }}>
+                What niche is this keyword for?
+              </p>
+              <p style={{ fontSize: 13, color: 'rgba(10,10,15,0.55)', lineHeight: 1.55 }}>
+                Pick the right audience so we search the correct space.
+              </p>
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
               {intentOptions.map((opt, i) => (
                 <div key={i} className="kw-intent-opt" onClick={() => runResearch(opt.keyword)}>
-                  <div style={{ flex: 1 }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 3, flexWrap: 'wrap' }}>
-                      <span style={{ fontSize: 13.5, fontWeight: 700, color: C.text1 }}>{opt.label}</span>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 5, flexWrap: 'wrap' }}>
+                      <span style={{ fontSize: 14.5, fontWeight: 700, color: '#0a0a0f',
+                        letterSpacing: '-0.15px' }}>{opt.label}</span>
+                      {/* Keyword variant chip — green tint to match the
+                          card's accent. The chip is data ("here's the
+                          exact search we'll run"), not a label. */}
                       <span style={{
-                        fontSize: 11, fontWeight: 700,
-                        color: C.text2, background: C.chipBg,
-                        border: `1px solid ${C.border}`,
-                        padding: '2px 9px', borderRadius: 100, letterSpacing: '0.04em',
+                        fontSize: 11, fontWeight: 600,
+                        color: C.green, background: C.greenBg,
+                        border: `1px solid ${C.greenBdr}`,
+                        padding: '2px 9px', borderRadius: 100,
+                        fontVariantNumeric: 'tabular-nums',
+                        letterSpacing: '-0.02em',
                       }}>{opt.keyword}</span>
                     </div>
-                    <p style={{ fontSize: 12.5, color: C.text3, lineHeight: 1.55 }}>{opt.description}</p>
+                    <p style={{ fontSize: 13, color: 'rgba(10,10,15,0.55)', lineHeight: 1.6 }}>{opt.description}</p>
                   </div>
-                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke={C.text4} strokeWidth="2" strokeLinecap="round"><path d="M5 3l4 4-4 4"/></svg>
+                  <svg className="arrow" width="16" height="16" viewBox="0 0 14 14" fill="none"
+                    stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M5 3l4 4-4 4"/>
+                  </svg>
                 </div>
               ))}
             </div>
-            <button onClick={() => runResearch('')} style={{
-              marginTop: 14, fontSize: 12.5, fontWeight: 600, color: C.text3,
-              background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'inherit',
-              padding: 0,
-            }}>
+
+            <button onClick={() => runResearch('')} className="kw-intent-decide-btn">
               Let YTGrowth decide
+              <svg width="11" height="11" viewBox="0 0 12 12" fill="none"
+                stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                <path d="M4 2l4 4-4 4"/>
+              </svg>
             </button>
           </div>
         </div>
@@ -928,10 +999,10 @@ export default function Keywords({ plan, freeTierFeatures }) {
                   {/* LEFT — ScoreRing + 'TOP PICK' label + keyword caption */}
                   <div style={{ flexShrink: 0, textAlign: 'center' }}>
                     <ScoreRing score={topScore} />
-                    <p style={{ fontSize: 11, color: C.text3, fontWeight: 500, marginTop: 6, letterSpacing: '0.03em', textTransform: 'uppercase' }}>
+                    <p style={{ fontSize: 11, color: 'rgba(10,10,15,0.50)', fontWeight: 700, marginTop: 8, letterSpacing: '0.10em', textTransform: 'uppercase' }}>
                       Top pick
                     </p>
-                    <p style={{ fontSize: 11, fontWeight: 700, color: C.text1, marginTop: 3, maxWidth: 140, lineHeight: 1.35, overflow: 'hidden', textOverflow: 'ellipsis', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
+                    <p style={{ fontSize: 12, fontWeight: 700, color: '#0a0a0f', marginTop: 4, maxWidth: 140, lineHeight: 1.35, letterSpacing: '-0.1px', overflow: 'hidden', textOverflow: 'ellipsis', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
                       {result.topPick.keyword}
                     </p>
                   </div>
@@ -941,11 +1012,11 @@ export default function Keywords({ plan, freeTierFeatures }) {
 
                   {/* MIDDLE — AI verdict paragraph */}
                   <div style={{ flex: 1.3, minWidth: 0 }}>
-                    <p style={{ fontSize: 11, fontWeight: 600, color: C.text3, letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 10 }}>
+                    <p style={{ fontSize: 11, fontWeight: 700, color: 'rgba(10,10,15,0.50)', letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 10 }}>
                       AI verdict
                     </p>
-                    <p style={{ fontSize: 14, color: C.text1, lineHeight: 1.85 }}>
-                      Your strongest keyword is <span style={{ fontWeight: 700, color: C.text1 }}>{result.topPick.keyword}</span> at <span style={{ fontWeight: 700, color: scoreCol }}>{topScore}/100</span>. {result.topPick.whyThisOne}
+                    <p style={{ fontSize: 14, fontWeight: 500, color: '#0a0a0f', lineHeight: 1.75, letterSpacing: '-0.005em' }}>
+                      Your strongest keyword is <span style={{ fontWeight: 700, color: '#0a0a0f' }}>{result.topPick.keyword}</span> at <span style={{ fontWeight: 700, color: scoreCol }}>{topScore}/100</span>. {result.topPick.whyThisOne}
                       {result.seedIntent?.intentSummary && <> {result.seedIntent.intentSummary}</>}
                     </p>
                   </div>
@@ -958,26 +1029,23 @@ export default function Keywords({ plan, freeTierFeatures }) {
                   {/* RIGHT — Intent breakdown rows */}
                   {rows.length > 0 && (
                     <div style={{ flex: 1, minWidth: 0 }}>
-                      <p style={{ fontSize: 11, fontWeight: 600, color: C.text3, letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 12 }}>
+                      <p style={{ fontSize: 11, fontWeight: 700, color: 'rgba(10,10,15,0.50)', letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 12 }}>
                         Intent breakdown
                       </p>
                       {rows.map(([label, val]) => {
-                        // 'Awareness' / 'Discovery' / top-of-funnel reads as a
-                        // green win (early-stage demand, less competition).
-                        // Keeps the strict red/amber/green palette semantic.
                         const isAwareness = /awareness|discover|explor/i.test(val)
                         const tone        = isAwareness ? C.green : C.text1
                         const toneBg      = isAwareness ? C.greenBg : C.chipBg
                         const toneBdr     = isAwareness ? C.greenBdr : C.border
                         return (
                           <div key={label} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
-                            <span style={{ fontSize: 12, color: C.text3, fontWeight: 500, flexShrink: 0, width: 100 }}>{label}</span>
+                            <span style={{ fontSize: 12.5, color: 'rgba(10,10,15,0.55)', fontWeight: 500, flexShrink: 0, width: 100, letterSpacing: '-0.01em' }}>{label}</span>
                             <span style={{
                               fontSize: 11, fontWeight: 700,
                               color: tone, background: toneBg,
                               border: `1px solid ${toneBdr}`,
                               borderRadius: 100, padding: '2px 10px',
-                              letterSpacing: '0.04em', textTransform: 'uppercase',
+                              letterSpacing: '0.08em', textTransform: 'uppercase',
                               overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
                             }}>{val}</span>
                           </div>
@@ -996,7 +1064,7 @@ export default function Keywords({ plan, freeTierFeatures }) {
                   <div style={{ marginTop: 24, paddingTop: 20, borderTop: `1px solid ${C.border}` }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12, flexWrap: 'wrap' }}>
                       <span style={{
-                        fontSize: 11, fontWeight: 700, color: C.text3,
+                        fontSize: 11, fontWeight: 700, color: 'rgba(10,10,15,0.50)',
                         letterSpacing: '0.10em', textTransform: 'uppercase',
                       }}>
                         Top-ranking videos right now
@@ -1137,7 +1205,7 @@ export default function Keywords({ plan, freeTierFeatures }) {
                         borderRadius: 20, border: '1px solid #e6e6ec',
                         fontVariantNumeric: 'tabular-nums',
                       }}>{result.keywords.length}</span>
-                      <p style={{ fontSize: 12.5, color: 'rgba(10,10,15,0.50)', lineHeight: 1.5 }}>
+                      <p style={{ fontSize: 13, fontWeight: 500, color: 'rgba(10,10,15,0.55)', lineHeight: 1.5, letterSpacing: '-0.01em' }}>
                         Score = volume signal + intent match + competition gap
                       </p>
                     </div>
@@ -1367,7 +1435,7 @@ export default function Keywords({ plan, freeTierFeatures }) {
                     </button>
                     <div className="kw-report-header" onClick={() => openReport(r)}>
                       <div style={{ flex: 1, minWidth: 0 }}>
-                        <p style={{ fontWeight: 800, fontSize: 14, color: '#111114',
+                        <p style={{ fontWeight: 700, fontSize: 15, color: '#0a0a0f',
                           letterSpacing: '-0.2px', whiteSpace: 'nowrap', overflow: 'hidden',
                           textOverflow: 'ellipsis', marginBottom: 8 }}>
                           {r.keyword}
