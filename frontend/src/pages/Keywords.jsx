@@ -143,21 +143,23 @@ function useKwStyles() {
         font-weight: 600;
       }
 
-      /* Reports list — mirrors Competitors tracked accordion */
-      .kw-report-wrapper { position: relative; margin-bottom: 12px; }
+      /* Reports list — quieter than the old SEO-Studio elevation. Hairline
+         border, single soft shadow, room between rows. */
+      .kw-report-wrapper { position: relative; margin-bottom: 14px; }
       .kw-report-header {
         background: #ffffff;
-        border: 1px solid #e6e6ec;
-        border-radius: 16px;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.06);
-        padding: 16px 20px;
+        border: 1px solid rgba(10,10,15,0.07);
+        border-radius: 14px;
+        box-shadow: 0 1px 2px rgba(15,15,25,0.04), inset 0 1px 0 rgba(255,255,255,0.7);
+        padding: 18px 22px;
         display: flex; align-items: center; gap: 16px;
-        transition: box-shadow 0.15s, border-color 0.15s;
+        transition: box-shadow 0.18s, border-color 0.18s, transform 0.18s;
         cursor: pointer; user-select: none;
       }
       .kw-report-header:hover {
-        box-shadow: 0 2px 6px rgba(0,0,0,0.06), 0 8px 24px rgba(0,0,0,0.08);
-        border-color: rgba(0,0,0,0.14);
+        box-shadow: 0 4px 16px rgba(15,15,25,0.06), inset 0 1px 0 rgba(255,255,255,0.7);
+        border-color: rgba(10,10,15,0.14);
+        transform: translateY(-1px);
       }
       .kw-report-remove {
         position: absolute; top: 12px; right: 12px;
@@ -187,12 +189,12 @@ function useKwStyles() {
       }
       .kw-report-cta:hover { filter: brightness(1.07); }
       .kw-report-chip {
-        display: inline-flex; align-items: baseline; gap: 4px;
-        background: #f4f4f6; border: 1px solid rgba(0,0,0,0.09);
-        border-radius: 8px; padding: 4px 10px;
+        display: inline-flex; align-items: baseline; gap: 5px;
+        background: #f4f4f6; border: 1px solid rgba(10,10,15,0.07);
+        border-radius: 100px; padding: 4px 12px;
       }
-      .kw-report-chip .val { font-size: 12px; font-weight: 700; color: #111114; }
-      .kw-report-chip .lbl { font-size: 11px; color: #9595a4; font-weight: 500; }
+      .kw-report-chip .val { font-size: 12px; font-weight: 700; color: #0a0a0f; }
+      .kw-report-chip .lbl { font-size: 11px; color: rgba(10,10,15,0.50); font-weight: 500; }
 
       /* Intent picker row — hairline card, hover bg change, no lift */
       .kw-intent-opt {
@@ -896,9 +898,14 @@ export default function Keywords({ plan, freeTierFeatures }) {
                     </div>
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10 }}>
                       {topPickVideos.map((v, i) => {
-                        // Backend serialises as thumbnail_url; CDN fallback covers
-                        // the case where the field is missing but video_id is.
-                        const thumb = v.thumbnail_url || (v.video_id ? `https://i.ytimg.com/vi/${v.video_id}/mqdefault.jpg` : null)
+                        // Prefer maxresdefault (1280x720) when we have a video_id —
+                        // crisp on retina. Falls back to hqdefault (always 480x360)
+                        // via onError if YouTube returns the 120x90 placeholder.
+                        // Backend thumbnail_url is medium (320x180) and only used
+                        // as a last resort.
+                        const thumbHigh = v.video_id ? `https://i.ytimg.com/vi/${v.video_id}/maxresdefault.jpg` : null
+                        const thumbFallback = v.video_id ? `https://i.ytimg.com/vi/${v.video_id}/hqdefault.jpg` : (v.thumbnail_url || null)
+                        const thumb = thumbHigh || thumbFallback
                         const ytUrl = v.video_id ? `https://www.youtube.com/watch?v=${v.video_id}` : null
                         // Compact "Xd ago" for the meta line under each tile.
                         const fmtAge = (iso) => {
@@ -933,7 +940,27 @@ export default function Keywords({ plan, freeTierFeatures }) {
                             }}
                           >
                             <div style={{ position: 'relative', aspectRatio: '16 / 9', background: '#ebebef', overflow: 'hidden' }}>
-                              {thumb && <img src={thumb} alt="" referrerPolicy="no-referrer" loading="lazy" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}/>}
+                              {thumb && (
+                                <img src={thumb} alt="" referrerPolicy="no-referrer" loading="lazy"
+                                  data-fallback={thumbFallback || ''}
+                                  onError={e => {
+                                    // YouTube returns a 120x90 grey placeholder for
+                                    // videos without a maxres upload. Detect via
+                                    // naturalWidth and swap to hqdefault.
+                                    const t = e.currentTarget
+                                    const fb = t.getAttribute('data-fallback')
+                                    if (fb && t.src !== fb) { t.src = fb; t.removeAttribute('data-fallback') }
+                                  }}
+                                  onLoad={e => {
+                                    const t = e.currentTarget
+                                    const fb = t.getAttribute('data-fallback')
+                                    if (fb && t.naturalWidth > 0 && t.naturalWidth < 300) {
+                                      t.src = fb
+                                      t.removeAttribute('data-fallback')
+                                    }
+                                  }}
+                                  style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}/>
+                              )}
                               {v.views > 0 && (
                                 <span style={{
                                   position: 'absolute', bottom: 8, right: 8,
@@ -985,15 +1012,18 @@ export default function Keywords({ plan, freeTierFeatures }) {
               <div className="kw-card" style={{ marginBottom: 24 }}>
                 <div style={{ padding: '18px 22px 20px' }}>
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, marginBottom: 14 }}>
-                    <div style={{ minWidth: 0 }}>
-                      <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.5 }}>
+                    <div style={{ minWidth: 0, display: 'flex', alignItems: 'center', gap: 8 }}>
+                      <span style={{
+                        fontSize: 11, fontWeight: 700, color: '#9595a4',
+                        background: '#f1f1f6', padding: '2px 8px',
+                        borderRadius: 20, border: '1px solid #e6e6ec',
+                        fontVariantNumeric: 'tabular-nums',
+                      }}>{result.keywords.length}</span>
+                      <p style={{ fontSize: 12.5, color: 'rgba(10,10,15,0.50)', lineHeight: 1.5 }}>
                         Score = volume signal + intent match + competition gap
                       </p>
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 14, flexShrink: 0 }}>
-                      <p style={{ fontSize: 26, fontWeight: 800, color: C.text1, letterSpacing: '-0.8px', fontVariantNumeric: 'tabular-nums', lineHeight: 1 }}>
-                        {result.keywords.length}
-                      </p>
                       <button className={`kw-copy-btn${copied ? ' copied' : ''}`} onClick={handleCopyKeywords}>
                         {copied ? 'Copied' : 'Copy all'}
                       </button>
@@ -1002,18 +1032,13 @@ export default function Keywords({ plan, freeTierFeatures }) {
 
                   <div style={{ height: 1, background: C.border, margin: '0 0 14px' }}/>
 
-                  {/* Two independent flex columns + a real full-height
-                      amber divider at 50%. This keeps each row's expanded
-                      dropdown inside its own column so content never
-                      crosses the divider. Columns can now grow to different
-                      heights when one side is expanded — intentional. */}
+                  {/* Two flex columns with a quiet hairline divider at 50%.
+                      Was a loud 2px amber bar; the page already carries enough
+                      red/green accent so this divider stays neutral. */}
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', position: 'relative' }}>
-                    {/* Continuous saturated amber vertical divider —
-                        matches the thickness/boldness of Priority Actions'
-                        Action-card left bar. Not a pale hairline. */}
                     <div style={{
-                      position: 'absolute', left: 'calc(50% - 1px)', top: 0, bottom: 0,
-                      width: 2, background: C.amber, borderRadius: 2, pointerEvents: 'none',
+                      position: 'absolute', left: 'calc(50% - 0.5px)', top: 0, bottom: 0,
+                      width: 1, background: 'rgba(10,10,15,0.07)', pointerEvents: 'none',
                     }}/>
                     {[0, 1].map(colIdx => {
                       const colKws = result.keywords.filter((_, i) => i % 2 === colIdx)
@@ -1078,7 +1103,11 @@ export default function Keywords({ plan, freeTierFeatures }) {
 
               <div style={{
                 display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+                // Fixed 3-col grid so card width is consistent across rows.
+                // Was auto-fit minmax(300, 1fr), which stretched the final
+                // card to fill the remaining width when count % 3 != 0,
+                // producing visually mismatched sizes (e.g. 3 + 1-wide-stretched).
+                gridTemplateColumns: 'repeat(3, 1fr)',
                 gap: 10, marginBottom: 24,
               }}>
                 {result.clusters.map((cl, i) => {
@@ -1106,7 +1135,7 @@ export default function Keywords({ plan, freeTierFeatures }) {
                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 14 }}>
                           {cl.keywords?.map(k => (
                             <span key={k} style={{
-                              background: C.chipBg, border: `1px solid ${C.border}`, color: C.text2,
+                              background: C.greenBg, border: `1px solid ${C.greenBdr}`, color: C.green,
                               padding: '3px 10px', borderRadius: 100,
                               fontSize: 11.5, fontWeight: 600, letterSpacing: '-0.05px',
                             }}>{k}</span>
@@ -1208,7 +1237,7 @@ export default function Keywords({ plan, freeTierFeatures }) {
                           textOverflow: 'ellipsis', marginBottom: 8 }}>
                           {r.keyword}
                         </p>
-                        <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', alignItems: 'center' }}>
+                        <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', alignItems: 'center' }}>
                           {r.confirmed_keyword && (
                             <span className="kw-report-chip">
                               <span className="val">{r.confirmed_keyword}</span>
@@ -1227,7 +1256,7 @@ export default function Keywords({ plan, freeTierFeatures }) {
                               <span className="lbl">cluster{clusterCount === 1 ? '' : 's'}</span>
                             </span>
                           )}
-                          <span style={{ fontSize: 12, color: '#9595a4', fontWeight: 500, marginLeft: 2 }}>
+                          <span style={{ fontSize: 12, color: 'rgba(10,10,15,0.45)', fontWeight: 500, marginLeft: 4 }}>
                             · {relTime(r.updated_at)}
                           </span>
                         </div>
