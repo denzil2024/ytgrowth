@@ -12,25 +12,26 @@ function saveToDisk(keyword, result) {
   try { localStorage.setItem(LS_KEY, JSON.stringify({ keyword, result })) } catch {}
 }
 
-/* ─── Inter loaded page-scoped ──────────────────────────────────────────── */
-if (typeof document !== 'undefined' && !document.getElementById('kw-inter-font')) {
+/* ─── Geist loaded page-scoped — matches Chat + Competitors. ──────────── */
+if (typeof document !== 'undefined' && !document.getElementById('kw-geist-font')) {
   const link = document.createElement('link')
-  link.id = 'kw-inter-font'
+  link.id = 'kw-geist-font'
   link.rel = 'stylesheet'
-  link.href = 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap'
+  link.href = 'https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Geist+Mono:wght@400..700&display=swap'
   document.head.appendChild(link)
 }
 
-/* ─── Styles — system elevation (0 1/3 + 0 4/16), no hover lifts, clean
-       hairline borders, 16px card radius. Matches Overview / Videos /
-       Outliers / Thumbnail IQ / Video Ideas. ─────────────────────────── */
+/* ─── Styles — system elevation, hairline borders, 14px card radius.
+       Matches the Competitors / Chat design grammar (Geist, centered
+       1040 column, quiet pill tabs, brand red reserved for the page CTA). */
 function useKwStyles() {
   useEffect(() => {
     if (document.getElementById('ytg-kw-styles')) return
     const style = document.createElement('style')
     style.id = 'ytg-kw-styles'
     style.textContent = `
-      .kw-page * { box-sizing: border-box; font-family: 'Inter', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+      .kw-page { max-width: 1040px; margin: 0 auto; }
+      .kw-page * { box-sizing: border-box; font-family: 'Geist', 'Inter', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
       .kw-page p, .kw-page span, .kw-page div { margin: 0; }
 
       @keyframes kwSpin { to { transform: rotate(360deg) } }
@@ -114,19 +115,32 @@ function useKwStyles() {
       }
       .kw-btn-ghost:hover { background: rgba(229,37,27,0.06); }
 
-      /* Tab pills — match Competitors pattern (comp-tab-btn). */
+      /* Tab pills — quiet pill nav like Competitors. Active = soft gray
+         tint, inactive = transparent. Brand red reserved for the page CTA
+         (Research) and threat/score accents, never tab chrome. */
       .kw-tab-btn {
-        background: #ffffff; color: #4a4a58;
-        border: 1px solid #e6e6ec; border-radius: 100px;
-        padding: 8px 18px; font-size: 13px; font-weight: 600;
-        font-family: 'Inter', system-ui, sans-serif;
-        cursor: pointer; white-space: nowrap;
-        transition: all 0.15s;
+        padding: 8px 16px;
+        border-radius: 100px;
+        font-size: 13px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background 180ms cubic-bezier(0.32, 0.72, 0, 1), color 180ms cubic-bezier(0.32, 0.72, 0, 1), border-color 180ms cubic-bezier(0.32, 0.72, 0, 1);
+        font-family: 'Geist', 'Inter', system-ui, sans-serif;
+        border: 1px solid transparent;
+        white-space: nowrap;
+        letter-spacing: -0.01em;
+        background: transparent;
+        color: rgba(10,10,15,0.55);
       }
-      .kw-tab-btn:hover { border-color: #e5251b; color: #e5251b; }
+      .kw-tab-btn:hover {
+        background: rgba(10,10,15,0.03);
+        color: #0a0a0f;
+      }
       .kw-tab-btn.active {
-        background: #e5251b; color: #fff; border-color: #e5251b;
-        box-shadow: 0 1px 3px rgba(229,37,27,0.25), 0 4px 14px rgba(229,37,27,0.25);
+        background: rgba(10,10,15,0.055);
+        color: #0a0a0f;
+        border-color: rgba(10,10,15,0.10);
+        font-weight: 600;
       }
 
       /* Reports list — mirrors Competitors tracked accordion */
@@ -628,16 +642,15 @@ export default function Keywords({ plan, freeTierFeatures }) {
   return (
     <div className="kw-page">
 
-      {/* Header — H1 24/800/-0.6 + meta line with · separators
-          (same pattern as Overview / SEO Optimizer / Thumbnail IQ) */}
-      <div style={{ marginBottom: 18 }}>
-        <h1 style={{ fontSize: 24, fontWeight: 800, color: C.text1, letterSpacing: '-0.6px', marginBottom: 6, lineHeight: 1.1 }}>
+      {/* Header — Geist 26/700 to anchor the page, subtitle slightly
+          darker so it doesn't disappear on light backgrounds. Matches
+          Competitors. */}
+      <div style={{ marginBottom: 26 }}>
+        <h1 style={{ fontSize: 26, fontWeight: 700, color: '#0a0a0f', letterSpacing: '-0.7px', marginBottom: 6, lineHeight: 1.1 }}>
           Keyword Research
         </h1>
-        <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.4, display: 'flex', gap: 0, flexWrap: 'wrap' }}>
-          <span>YouTube autocomplete + related searches</span>
-          <span style={{ marginLeft: 8 }}>· Filtered by intent</span>
-          <span style={{ marginLeft: 8 }}>· Ranked by opportunity</span>
+        <p style={{ fontSize: 14, color: 'rgba(10,10,15,0.55)', fontWeight: 500, letterSpacing: '-0.005em', lineHeight: 1.45 }}>
+          YouTube autocomplete and related searches, filtered by intent and ranked by opportunity
         </p>
       </div>
 
