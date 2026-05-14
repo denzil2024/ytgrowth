@@ -190,11 +190,11 @@ function useKwStyles() {
       .kw-report-cta:hover { filter: brightness(1.07); }
       .kw-report-chip {
         display: inline-flex; align-items: baseline; gap: 5px;
-        background: #f4f4f6; border: 1px solid rgba(10,10,15,0.07);
+        background: #fffbeb; border: 1px solid #fde68a;
         border-radius: 100px; padding: 4px 12px;
       }
       .kw-report-chip .val { font-size: 12px; font-weight: 700; color: #0a0a0f; }
-      .kw-report-chip .lbl { font-size: 11px; color: rgba(10,10,15,0.50); font-weight: 500; }
+      .kw-report-chip .lbl { font-size: 11px; color: #d97706; font-weight: 600; }
 
       /* Intent picker row — hairline card, hover bg change, no lift */
       .kw-intent-opt {
@@ -1207,9 +1207,11 @@ export default function Keywords({ plan, freeTierFeatures }) {
             </>
           )}
 
-          {/* ── Content clusters — neutral cards, no amber stripe. Each
-              shows a theme name + keyword count badge + chip body + Copy
-              theme action at bottom. ───────────────────────────────────── */}
+          {/* ── Content clusters — single card with N columns separated by
+              amber 3px vertical dividers. No empty bottom-row cells; every
+              theme gets its own equal-width column. Mirrors the Top Pick
+              hero's column layout. Keyword chips are neutral (was green
+              on green which read as a tinted block instead of as data). */}
           {result.clusters?.length > 0 && (
             <>
               <div style={{ marginBottom: 14, marginTop: 32 }}>
@@ -1219,71 +1221,85 @@ export default function Keywords({ plan, freeTierFeatures }) {
                 </p>
               </div>
 
-              <div style={{
-                display: 'grid',
-                // Fixed 3-col grid so card width is consistent across rows.
-                // Was auto-fit minmax(300, 1fr), which stretched the final
-                // card to fill the remaining width when count % 3 != 0,
-                // producing visually mismatched sizes (e.g. 3 + 1-wide-stretched).
-                gridTemplateColumns: 'repeat(3, 1fr)',
-                gap: 10, marginBottom: 24,
-              }}>
-                {result.clusters.map((cl, i) => {
-                  const isCopied = copiedCluster === cl.clusterName
-                  return (
-                    <div key={cl.clusterName} className="kw-card">
-                      <div style={{ padding: '18px 22px 20px', display: 'flex', flexDirection: 'column', height: '100%' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, marginBottom: 14 }}>
-                          <div style={{ minWidth: 0, flex: 1 }}>
-                            <p style={{ fontSize: 11, fontWeight: 700, color: 'rgba(10,10,15,0.50)', letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 4 }}>
-                              Theme
-                            </p>
-                            <p style={{ fontSize: 14, fontWeight: 700, color: '#0a0a0f', lineHeight: 1.4, letterSpacing: '-0.15px' }}>
+              <div className="kw-card" style={{ marginBottom: 24 }}>
+                <div style={{ display: 'flex', alignItems: 'stretch', padding: '20px 22px' }}>
+                  {result.clusters.map((cl, i) => {
+                    const isCopied = copiedCluster === cl.clusterName
+                    const isLast = i === result.clusters.length - 1
+                    return (
+                      <React.Fragment key={cl.clusterName}>
+                        <div style={{
+                          flex: 1, minWidth: 0,
+                          paddingLeft:  i === 0 ? 0 : 18,
+                          paddingRight: isLast ? 0 : 18,
+                          display: 'flex', flexDirection: 'column',
+                        }}>
+                          {/* Eyebrow + theme name */}
+                          <p style={{ fontSize: 11, fontWeight: 700, color: 'rgba(10,10,15,0.50)', letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 4 }}>
+                            Theme
+                          </p>
+                          <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 8, marginBottom: 14 }}>
+                            <p style={{ fontSize: 14, fontWeight: 700, color: '#0a0a0f', lineHeight: 1.35, letterSpacing: '-0.15px', flex: 1, minWidth: 0 }}>
                               {cl.clusterName}
                             </p>
+                            <span style={{
+                              fontSize: 11, fontWeight: 700, color: '#9595a4',
+                              background: '#f1f1f6', padding: '2px 8px',
+                              borderRadius: 20, border: '1px solid #e6e6ec',
+                              flexShrink: 0, fontVariantNumeric: 'tabular-nums',
+                            }}>{cl.keywords?.length || 0}</span>
                           </div>
-                          <span style={{
-                            fontSize: 11, fontWeight: 700, color: '#9595a4',
-                            background: '#f1f1f6', padding: '2px 8px',
-                            borderRadius: 20, border: '1px solid #e6e6ec',
-                            flexShrink: 0, fontVariantNumeric: 'tabular-nums',
-                          }}>{cl.keywords?.length || 0}</span>
+
+                          {/* Keyword chips — soft amber tint. Amber is the
+                              app's AI-accent semantic (used on AI-generated
+                              content cards across the system). Replaces the
+                              green-on-green tinted block + the pure neutral
+                              gray attempt; this version reads as data with
+                              warmth, blending into the page palette. */}
+                          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 16 }}>
+                            {cl.keywords?.map(k => (
+                              <span key={k} style={{
+                                background: '#fffbeb',
+                                border: '1px solid #fde68a',
+                                color: '#92400e',
+                                padding: '4px 11px', borderRadius: 100,
+                                fontSize: 11.5, fontWeight: 600, letterSpacing: '-0.05px',
+                              }}>{k}</span>
+                            ))}
+                          </div>
+
+                          {/* Copy theme action at the bottom of each column */}
+                          <div style={{ marginTop: 'auto', display: 'flex', justifyContent: 'flex-start' }}>
+                            <button
+                              className={`kw-ghost-btn${isCopied ? ' copied' : ''}`}
+                              onClick={() => handleCopyCluster(cl)}
+                            >
+                              {isCopied ? (
+                                <>
+                                  <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><polyline points="1.5,6 4.5,9 9.5,2"/></svg>
+                                  Copied
+                                </>
+                              ) : (
+                                <>
+                                  <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="6.5" height="6.5" rx="1"/><path d="M1.5 7.5V2A0.5 0.5 0 0 1 2 1.5h5.5"/></svg>
+                                  Copy theme
+                                </>
+                              )}
+                            </button>
+                          </div>
                         </div>
-                        <div style={{ height: 1, background: C.border, margin: '0 0 14px' }}/>
-                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 14 }}>
-                          {cl.keywords?.map(k => (
-                            <span key={k} style={{
-                              background: C.greenBg, border: `1px solid ${C.greenBdr}`, color: C.green,
-                              padding: '3px 10px', borderRadius: 100,
-                              fontSize: 11.5, fontWeight: 600, letterSpacing: '-0.05px',
-                            }}>{k}</span>
-                          ))}
-                        </div>
-                        {/* Per-cluster action — red brand pill, bottom-right
-                            of the card. Copies all keywords in this theme
-                            as a comma list. */}
-                        <div style={{ marginTop: 'auto', display: 'flex', justifyContent: 'flex-end' }}>
-                          <button
-                            className={`kw-ghost-btn${isCopied ? ' copied' : ''}`}
-                            onClick={() => handleCopyCluster(cl)}
-                          >
-                            {isCopied ? (
-                              <>
-                                <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><polyline points="1.5,6 4.5,9 9.5,2"/></svg>
-                                Copied
-                              </>
-                            ) : (
-                              <>
-                                <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="6.5" height="6.5" rx="1"/><path d="M1.5 7.5V2A0.5 0.5 0 0 1 2 1.5h5.5"/></svg>
-                                Copy theme
-                              </>
-                            )}
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  )
-                })}
+
+                        {/* Amber 3px vertical divider between columns */}
+                        {!isLast && (
+                          <div style={{
+                            width: 3, alignSelf: 'stretch',
+                            background: C.amber, flexShrink: 0, borderRadius: 2,
+                          }}/>
+                        )}
+                      </React.Fragment>
+                    )
+                  })}
+                </div>
               </div>
             </>
           )}
@@ -1379,22 +1395,17 @@ export default function Keywords({ plan, freeTierFeatures }) {
                           </span>
                         </div>
                       </div>
-                      {/* Chevron — the whole row is the click target, so this
-                          is purely a visual affordance. No button, no shadow,
-                          no loud red CTA pill. Mirrors the Competitors
-                          tracked-row pattern. */}
-                      <span aria-hidden="true" style={{
-                        flexShrink: 0,
-                        color: 'rgba(10,10,15,0.40)',
-                        display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-                        width: 28, height: 28,
-                        marginRight: 4,
-                      }}>
-                        <svg width="15" height="15" viewBox="0 0 15 15" fill="none"
-                          stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                          <path d="M5 3.5L9 7.5L5 11.5"/>
-                        </svg>
-                      </span>
+                      <div style={{ flexShrink: 0, borderLeft: '1px solid rgba(10,10,15,0.07)',
+                        paddingLeft: 16, marginLeft: 4, paddingRight: 12 }}>
+                        <button className="kw-report-cta"
+                          onClick={e => { e.stopPropagation(); openReport(r) }}>
+                          Open report
+                          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"
+                            stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                            <path d="M4 2l4 4-4 4"/>
+                          </svg>
+                        </button>
+                      </div>
                     </div>
                   </div>
                 )
