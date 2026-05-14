@@ -319,6 +319,21 @@ class CompetitorActivityCache(Base):
     cached_at   = Column(DateTime, default=_now, index=True)
 
 
+class PublicChannelStatsCache(Base):
+    """Public /tools/youtube-channel-stats-checker lookup cache.
+    Anonymous, no-auth endpoint that costs 3 YouTube units per lookup
+    (channels.list + playlistItems.list + videos.list). DB-persisted so
+    bots/scrapers can't drain the quota by hammering the endpoint after
+    each Railway restart wipes an in-memory cache.
+
+    cache_key is "<kind>:<value>" — e.g. "handle:@mrbeast" or
+    "id:UCxxx..."."""
+    __tablename__ = "public_channel_stats_cache"
+    cache_key   = Column(String,   primary_key=True)
+    result_json = Column(Text,     nullable=False)
+    cached_at   = Column(DateTime, default=_now, index=True)
+
+
 class OutliersSearchCache(Base):
     """
     One row per channel — the single most recent Outliers search the user ran.
@@ -596,6 +611,11 @@ try:
         # so the 24h TTL survives Railway restarts. One row per user channel.
         "CREATE TABLE IF NOT EXISTS competitor_activity_cache (channel_id TEXT PRIMARY KEY, result_json TEXT NOT NULL, cached_at DATETIME)",
         "CREATE INDEX IF NOT EXISTS ix_competitor_activity_cache_cached_at ON competitor_activity_cache (cached_at)",
+        # Public channel stats lookup cache — anonymous tool, bot-vulnerable.
+        # DB-backed so restarts don't wipe the cache and re-expose us to a
+        # flood of fresh API calls on the next 500 unique lookups.
+        "CREATE TABLE IF NOT EXISTS public_channel_stats_cache (cache_key TEXT PRIMARY KEY, result_json TEXT NOT NULL, cached_at DATETIME)",
+        "CREATE INDEX IF NOT EXISTS ix_public_channel_stats_cache_cached_at ON public_channel_stats_cache (cached_at)",
         # Top channels per category — daily-refreshed cache. Curated handle
         # seed lives in app/top_channels.py; the scheduler refreshes stats
         # via the YouTube Data API. BIGINT on count columns: top YouTube

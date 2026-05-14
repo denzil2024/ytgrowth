@@ -1,21 +1,27 @@
 """Public YouTube channel stats lookup. Backs the free /tools/youtube-channel-stats-checker
 front-end. Read-only — uses the server-side YOUTUBE_API_KEY against YouTube
 Data API v3 channels/videos endpoints. Cheap (3 quota units per lookup) and
-results are cached in-memory for an hour so repeat lookups don't burn quota.
+results are cached in the DB for an hour so repeat lookups don't burn quota.
+
+Cache lives in PublicChannelStatsCache (DB-backed) instead of an in-memory
+dict — bots / scrapers can hit this endpoint freely, and an in-memory cache
+got wiped on every Railway restart, re-exposing us to a fresh wave of
+3-unit lookups each deploy.
 """
 
+import datetime
+import json
 import os
 import re
 import time
 from fastapi import APIRouter, Query
 from fastapi.responses import JSONResponse
 
+from database.models import SessionLocal, PublicChannelStatsCache
+
 router = APIRouter()
 
-# In-memory cache. Key = "kind:value" (e.g. "handle:@mrbeast"), value = (timestamp, payload)
-_CACHE: dict[str, tuple[float, dict]] = {}
-_CACHE_TTL = 3600  # 1 hour
-_CACHE_MAX = 500   # rough cap so the dict doesn't grow forever
+_CACHE_TTL_SECONDS = 3600  # 1 hour. Channel stats move slowly; 1h freshness fine.
 
 
 def _parse_input(raw: str):
@@ -59,22 +65,55 @@ def _parse_input(raw: str):
 
 
 def _cache_get(key: str):
-    hit = _CACHE.get(key)
-    if not hit:
+    """DB-backed cache read. Returns the cached payload if fresher than
+    _CACHE_TTL_SECONDS, else None. Best-effort — any DB error treats as
+    a cache miss so the lookup falls through to a fresh fetch."""
+    db = SessionLocal()
+    try:
+        row = db.query(PublicChannelStatsCache).filter_by(cache_key=key).first()
+        if not row or not row.cached_at:
+            return None
+        cached_at = row.cached_at
+        if cached_at.tzinfo is None:
+            cached_at = cached_at.replace(tzinfo=datetime.timezone.utc)
+        age = (datetime.datetime.now(datetime.timezone.utc) - cached_at).total_seconds()
+        if age >= _CACHE_TTL_SECONDS:
+            return None
+        try:
+            return json.loads(row.result_json)
+        except Exception:
+            return None
+    except Exception as e:
+        print(f"[channel_stats] cache read error: {e}")
         return None
-    ts, payload = hit
-    if time.time() - ts > _CACHE_TTL:
-        _CACHE.pop(key, None)
-        return None
-    return payload
+    finally:
+        db.close()
 
 
 def _cache_put(key: str, payload: dict):
-    if len(_CACHE) >= _CACHE_MAX:
-        # Evict oldest
-        oldest = min(_CACHE.items(), key=lambda kv: kv[1][0])[0]
-        _CACHE.pop(oldest, None)
-    _CACHE[key] = (time.time(), payload)
+    """DB-backed cache upsert. Best-effort — a write failure leaves the
+    next caller to refetch."""
+    db = SessionLocal()
+    try:
+        now = datetime.datetime.now(datetime.timezone.utc)
+        row = db.query(PublicChannelStatsCache).filter_by(cache_key=key).first()
+        body = json.dumps(payload)
+        if row:
+            row.result_json = body
+            row.cached_at = now
+        else:
+            db.add(PublicChannelStatsCache(
+                cache_key=key,
+                result_json=body,
+                cached_at=now,
+            ))
+        db.commit()
+    except Exception as e:
+        print(f"[channel_stats] cache write error: {e}")
+        try: db.rollback()
+        except Exception: pass
+    finally:
+        db.close()
 
 
 def _fmt_iso(iso: str) -> str:
