@@ -77,6 +77,97 @@ If adding a Claude / Haiku call:
 - Reference real costs in plain numbers when proposing changes. Example: "this feature would cost 510 units per click on a cold cache" not "this might be expensive."
 - When in doubt about whether to ship a quota-touching change, surface the trade-off and wait for approval. The cost of pausing for a question is low; the cost of an unwanted quota burn is high.
 
-## TL;DR
+## TL;DR on quota
 
 Caching is the moat. Don't break it. Don't bypass it. Every new feature must answer "what's the per-use quota cost?" before it ships. If you can't answer that, you're not ready to write the code yet.
+
+
+---
+
+
+# How the user works (read before any conversation)
+
+These are durable preferences that apply across every session. They survive Claude account changes because they live here, in the repo.
+
+## Communication style
+
+- **No em-dashes.** Use commas, parens, colons, or split sentences. The user has corrected this repeatedly. Hyphens are fine; em-dashes are not.
+- **No italics.** No `<em>`, no `font-style: italic`, no italic emphasis in copy or code comments. Use bold or color for emphasis.
+- **Plain prose.** Do not narrate internal deliberation. State results and decisions directly.
+- **Be decisive.** Do not present multi-choice menus when there is an obvious next step. Pick and start. Reserve questions for real forks.
+- **Clarify "credits" vs "units" if it comes up.** Both refer to YouTube API quota units. The user has been frustrated by the conflation.
+- **Honest over optimistic.** If you don't know something for certain, say so. Past over-claims (e.g. "the cache will save you" when overlap is rare) have damaged trust. Verify before claiming.
+
+## Deployment workflow
+
+- **Every code change = commit + push to origin.** Railway auto-deploys on push. Never stop at a local commit.
+- **Stage specific files by name** (`git add path/to/file`) rather than `git add -A` or `git add .`. The repo has untracked artifacts (pycache, build dist) that should not be bundled.
+- **Pre-commit hooks must pass.** If a hook fails, fix the underlying issue. Never use `--no-verify` unless the user explicitly asks.
+
+## UI / design discipline
+
+- **Propose design before code for visible UI work.** Write out the design (ASCII / bullet wireframe / type and spacing notes) BEFORE coding. Wait for OK or redirect. Skipping this has caused expensive revert cycles.
+- **Match the existing aesthetic.** Mirror the existing color tokens, hover states, spacing. No foreign design (random borders, pills, novel rounded squares) unless the surrounding code already uses them.
+- **No emoji or generic icons.** Lucide only, semantic fit only. Pair with soft tinted circle backgrounds. One icon per category, no recycling.
+- **One section at a time.** UI redesigns ship one section per push, then wait for review. Do not bundle multiple sections.
+- **Verify before ship for UI changes.** Use the preview harness + Playwright screenshots if available. Read every screenshot before commit. Cap screenshots at 2000px/side (deviceScaleFactor ≤ 1.3).
+
+## Design references
+
+- **VidIQ Research / Explore** is the visual bar. Thumbnails over text, tabs, multiplier badges, dense tables. Specific patterns to borrow: semantic size names, numbered tokens, mask-fade borders, inset-shadow tints, single shadow + spring, container queries, interpolate-size, aria polish. North star: polished, restrained color, clean typography.
+- **The Competitors page in this repo** is the approved internal design north-star for future page rebuilds. 1040 centered, Geist, established type scale, show-don't-tell, card grammar. Do NOT reference Keywords (still being iterated on) or Dashboard.jsx inline sections.
+
+## Publishing workflow for new public routes
+
+When adding a new blog post or public route, do everything end-to-end in one push:
+1. Write the source page
+2. Add the route to `prerender.js` `buildRoutes()`
+3. Add to sitemap if applicable
+4. Run the build
+5. Commit and push
+
+Missing the prerender step ships an empty SPA shell to crawlers (broken SEO). The full workflow is non-negotiable.
+
+
+---
+
+
+# Future plans and context
+
+## Pending: Google YouTube Data API quota bump
+
+The user applied for a quota increase from the 10K daily Data API tier. As of writing, two acknowledgement emails have been received from Google's YouTube Compliance team, indicating active review. Until the bump lands, treat 10K as the operating budget and keep the quota discipline above.
+
+When the bump lands (typically 1M+ units/day for audited apps):
+- `top_n` in Keyword Research can move back up from 3 to 5 or higher
+- Top Channels refresh can move back from monthly to weekly
+- Some short-TTL caches can be relaxed without risk
+
+Do NOT make these changes preemptively. Wait for the user to confirm the bump arrived.
+
+## Pending: Smarter niche warmer
+
+`app/niche_warmer.py` currently uses a hardcoded ~150-niche seed list. It already tracks `hit_count` per cache row via `youtube_search_cache`. The next refinement is to replace the hardcoded seed with a query that pulls the top-N highest-hit-count entries from the cache itself. The warmer then refreshes what users actually research, not what was guessed.
+
+This is queued as a half-day refactor after the user confirms direction.
+
+## Pending: Resources hub page
+
+When the nav or footer feel crowded, build a `/resources` hub page listing all tools + features (Windsor.ai style). Trim the main nav to "Top tools" + "All resources →". Not urgent yet.
+
+## How to add a new important warning or suggestion
+
+This is the single source of truth for working-rules in this project. When the user gives durable feedback that should apply across future sessions, add it here under the right section above. Two patterns:
+
+1. **Hard rule** (must-follow): add under a numbered list with explicit "do NOT" or "MUST" language.
+2. **Preference / context** (should-follow): add as a paragraph in the relevant section.
+
+After adding, commit and push so it survives Claude account changes and accidental local-data deletions.
+
+
+---
+
+
+# Quick reference: the user's identity
+
+- Real email: `royalbluemedia.agency@gmail.com` (any other email shown in system context is stale and should be ignored)
