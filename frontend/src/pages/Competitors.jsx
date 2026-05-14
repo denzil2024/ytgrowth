@@ -14,178 +14,207 @@ function saveTracked(list) {
 // ─── inject font + styles once ────────────────────────────────────────────────
 function useCompetitorStyles() {
   useEffect(() => {
+    // Geist Variable load — page-scoped, same pattern as Chat. Geist
+    // sits cleaner on this design grammar than Inter; weights drop a
+    // tier across the page (500/600 max, never 700/800).
+    if (!document.getElementById('ytg-comp-geist-font')) {
+      const link = document.createElement('link')
+      link.id = 'ytg-comp-geist-font'
+      link.rel = 'stylesheet'
+      link.href = 'https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Geist+Mono:wght@400..700&display=swap'
+      document.head.appendChild(link)
+    }
+
     if (document.getElementById('ytg-comp-styles')) return
 
     const style = document.createElement('style')
     style.id = 'ytg-comp-styles'
     style.textContent = `
-      .comp-page * { box-sizing: border-box; font-family: 'Inter', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+      .comp-page * { box-sizing: border-box; font-family: 'Geist', 'Inter', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
       .comp-page p, .comp-page span, .comp-page div { margin: 0; }
 
-      /* ── cards — system elevation, no hover lift (matches Dashboard/Keywords/Outliers) ── */
+      /* ── cards — single soft shadow + iOS inner-light highlight ──
+         Matches the Chat-page design grammar: black-alpha hairline,
+         14px radius, one shadow at rest, inset 1px white highlight
+         along the top edge so white surfaces feel lit from above. */
       .comp-card {
         background: #ffffff;
-        border: 1px solid #e6e6ec;
-        border-radius: 16px;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.06);
+        border: 1px solid rgba(10,10,15,0.07);
+        border-radius: 14px;
+        box-shadow: 0 1px 2px rgba(15,15,25,0.04), inset 0 1px 0 rgba(255,255,255,0.7);
       }
 
       .comp-channel-card {
         background: #ffffff;
-        border: 1px solid #e6e6ec;
-        border-radius: 16px;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.06);
+        border: 1px solid rgba(10,10,15,0.07);
+        border-radius: 14px;
+        box-shadow: 0 1px 2px rgba(15,15,25,0.04), inset 0 1px 0 rgba(255,255,255,0.7);
         padding: 14px 18px;
         display: flex;
         align-items: center;
         gap: 14px;
-        margin-bottom: 8px;
-        transition: border-color 0.15s;
+        margin-bottom: 10px;
+        transition: border-color 180ms cubic-bezier(0.32, 0.72, 0, 1), box-shadow 180ms cubic-bezier(0.32, 0.72, 0, 1), transform 180ms cubic-bezier(0.32, 0.72, 0, 1);
       }
-      .comp-channel-card:hover { border-color: rgba(0,0,0,0.14); }
+      .comp-channel-card:hover {
+        border-color: rgba(10,10,15,0.18);
+        box-shadow: 0 4px 16px rgba(15,15,25,0.06), inset 0 1px 0 rgba(255,255,255,0.7);
+        transform: translateY(-1px);
+      }
 
-      /* ── tabs ── */
+      /* ── tabs — quiet pill nav (was chunky red filled with red glow).
+         Tabs are navigation, not the page's CTA, so they shouldn't be
+         the loudest element. Charcoal text, hairline border, subtle
+         inset tint when active. Brand red is reserved for the page's
+         actual CTA (Search) and the threat dot. ── */
       .comp-tab-btn {
-        padding: 9px 22px;
+        padding: 8px 16px;
         border-radius: 100px;
         font-size: 13px;
-        font-weight: 600;
+        font-weight: 500;
         cursor: pointer;
-        transition: color 0.15s, border-color 0.15s, background 0.15s;
-        font-family: 'Inter', system-ui, sans-serif;
+        transition: background 180ms cubic-bezier(0.32, 0.72, 0, 1), color 180ms cubic-bezier(0.32, 0.72, 0, 1), border-color 180ms cubic-bezier(0.32, 0.72, 0, 1);
+        font-family: 'Geist', 'Inter', system-ui, sans-serif;
         border: 1px solid transparent;
         white-space: nowrap;
-        letter-spacing: -0.1px;
+        letter-spacing: -0.01em;
       }
       .comp-tab-btn.active {
-        background: #e5251b;
-        color: #fff;
-        border-color: #e5251b;
-        box-shadow: 0 1px 3px rgba(229,37,27,0.18), 0 4px 14px rgba(229,37,27,0.22);
+        background: rgba(10,10,15,0.055);
+        color: #0a0a0f;
+        border-color: rgba(10,10,15,0.10);
+        font-weight: 600;
       }
       .comp-tab-btn.inactive {
-        background: #ffffff;
-        color: #52525b;
-        border-color: rgba(0,0,0,0.09);
-        box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+        background: transparent;
+        color: rgba(10,10,15,0.55);
+        border-color: transparent;
       }
       .comp-tab-btn.inactive:hover {
-        color: #e5251b;
-        border-color: #fecaca;
+        background: rgba(10,10,15,0.03);
+        color: #0a0a0f;
       }
 
-      /* ── inputs ── */
+      /* ── search input — matches the Chat composer treatment: hairline
+         at rest, soft red-alpha glow ring on focus. Glass effect is
+         dropped here because there's no atmospheric bg behind it. ── */
       .comp-input {
         flex: 1;
-        padding: 11px 20px;
-        border-radius: 100px;
-        border: 1px solid rgba(0,0,0,0.12);
+        padding: 12px 20px;
+        border-radius: 14px;
+        border: 1px solid rgba(10,10,15,0.10);
         background: #ffffff;
-        font-size: 13.5px;
-        font-family: 'Inter', system-ui, sans-serif;
+        font-size: 14px;
+        font-weight: 450;
+        font-family: 'Geist', 'Inter', system-ui, sans-serif;
         outline: none;
-        transition: border-color 0.18s, box-shadow 0.18s;
-        color: #111114;
+        transition: border-color 200ms cubic-bezier(0.32, 0.72, 0, 1), box-shadow 200ms cubic-bezier(0.32, 0.72, 0, 1);
+        color: #0a0a0f;
+        letter-spacing: -0.005em;
+        box-shadow: 0 1px 2px rgba(15,15,25,0.04), inset 0 1px 0 rgba(255,255,255,0.7);
       }
-      .comp-input::placeholder { color: #a0a0b0; font-weight: 400; }
-      .comp-input:focus { border-color: rgba(0,0,0,0.3); box-shadow: 0 0 0 3px rgba(0,0,0,0.04); }
+      .comp-input::placeholder { color: rgba(10,10,15,0.40); font-weight: 450; }
+      .comp-input:focus {
+        border-color: rgba(229,37,27,0.30);
+        box-shadow: 0 0 0 4px rgba(229,37,27,0.06), 0 1px 2px rgba(15,15,25,0.04), inset 0 1px 0 rgba(255,255,255,0.7);
+      }
 
-      /* ── primary red CTA — reserved for Search / Analyze ── */
+      /* ── primary red CTA — Search button. Vertical gradient + inset
+         highlight, same treatment as the Chat send button. ── */
       .comp-btn-primary {
-        background: #e5251b;
+        background: linear-gradient(180deg, #ef3a31 0%, #e5251b 100%);
         color: #fff;
         border: none;
-        border-radius: 100px;
-        padding: 11px 26px;
+        border-radius: 12px;
+        padding: 12px 22px;
         font-size: 13px;
-        font-weight: 700;
-        font-family: 'Inter', system-ui, sans-serif;
+        font-weight: 600;
+        font-family: 'Geist', 'Inter', system-ui, sans-serif;
         cursor: pointer;
         white-space: nowrap;
-        transition: filter 0.15s;
-        letter-spacing: -0.1px;
+        transition: filter 160ms cubic-bezier(0.32, 0.72, 0, 1), transform 160ms cubic-bezier(0.32, 0.72, 0, 1);
+        letter-spacing: -0.01em;
+        box-shadow: 0 1px 2px rgba(229,37,27,0.30), inset 0 1px 0 rgba(255,255,255,0.22);
       }
-      .comp-btn-primary:hover:not(:disabled) { filter: brightness(1.07); }
-      .comp-btn-primary:disabled { background: #e0e0e6; color: #a0a0b0; cursor: default; }
+      .comp-btn-primary:hover:not(:disabled) { filter: brightness(1.06); transform: translateY(-1px); }
+      .comp-btn-primary:disabled {
+        background: rgba(10,10,15,0.06);
+        color: rgba(10,10,15,0.26);
+        cursor: default;
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.6);
+      }
 
-      /* "Remove" — trash icon, appears on wrapper hover only */
+      /* Remove (trash) icon — appears on row hover only, top-right
+         corner away from the chevron. */
       .comp-remove-btn {
         position: absolute;
-        top: 12px;
-        right: 12px;
-        width: 28px;
-        height: 28px;
-        border-radius: 8px;
-        border: 1px solid transparent;
+        top: 50%;
+        right: 50px;
+        transform: translateY(-50%);
+        width: 26px;
+        height: 26px;
+        border-radius: 7px;
+        border: none;
         background: transparent;
-        color: #c4c4cc;
+        color: rgba(10,10,15,0.32);
         cursor: pointer;
         display: flex;
         align-items: center;
         justify-content: center;
         opacity: 0;
-        transition: opacity 0.18s, background 0.15s, color 0.15s, border-color 0.15s;
+        transition: opacity 160ms cubic-bezier(0.32, 0.72, 0, 1), background 160ms cubic-bezier(0.32, 0.72, 0, 1), color 160ms cubic-bezier(0.32, 0.72, 0, 1);
         z-index: 2;
         flex-shrink: 0;
       }
       .comp-accordion-wrapper:hover .comp-remove-btn { opacity: 1; }
       .comp-remove-btn:hover {
         background: rgba(229,37,27,0.08);
-        border-color: rgba(229,37,27,0.2);
         color: #e5251b;
       }
 
-      /* "Open report" — red CTA (buttons are always red; matches Dashboard's
-         primary action affordance). When open, switches to an outlined red
-         "Close" so it reads as toggled-on without competing with the body. */
+      /* "Open report" — was a red CTA pill; now reduced to a chevron-
+         only affordance on the right side of the accordion row. The row
+         itself is the click target. Brand red is reserved for the
+         actual page CTA (Search) and the threat dot. */
       .comp-btn-report {
-        background: #e5251b;
-        color: #fff;
-        border: 1px solid #e5251b;
-        border-radius: 100px;
-        padding: 8px 18px;
-        font-size: 12.5px;
-        font-weight: 700;
-        font-family: 'Inter', system-ui, sans-serif;
+        background: transparent;
+        color: rgba(10,10,15,0.42);
+        border: none;
+        border-radius: 8px;
+        padding: 6px;
         cursor: pointer;
         white-space: nowrap;
-        transition: filter 0.15s, background 0.15s, color 0.15s, box-shadow 0.15s;
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        letter-spacing: -0.1px;
-        box-shadow: 0 1px 3px rgba(229,37,27,0.18), 0 4px 12px rgba(229,37,27,0.18);
-      }
-      .comp-btn-report:hover { filter: brightness(1.07); }
-      .comp-btn-report.open {
-        background: #fff;
-        color: #e5251b;
-        border-color: #fecaca;
-        box-shadow: none;
-      }
-      .comp-btn-report.open:hover { background: #fff5f5; filter: none; }
-
-      /* stat chips inside accordion header */
-      .comp-stat-chip {
+        transition: color 160ms cubic-bezier(0.32, 0.72, 0, 1), background 160ms cubic-bezier(0.32, 0.72, 0, 1);
         display: inline-flex;
-        align-items: baseline;
-        gap: 4px;
-        background: #f4f4f6;
-        border: 1px solid rgba(0,0,0,0.09);
-        border-radius: 8px;
-        padding: 4px 10px;
+        align-items: center;
+        justify-content: center;
+        width: 28px;
+        height: 28px;
       }
-      .comp-stat-chip .val {
+      .comp-btn-report:hover { color: #0a0a0f; background: rgba(10,10,15,0.04); }
+      .comp-btn-report.open { color: #0a0a0f; }
+
+      /* Inline meta line — replaces the row of three boxy stat chips.
+         Subs · avg views · gaps · age, all in one quiet 12/500 text3
+         line. The numbers carry the weight on their own. */
+      .comp-meta-line {
+        display: inline-flex;
+        align-items: center;
+        gap: 0;
         font-size: 12.5px;
-        font-weight: 800;
-        color: #111114;
-        line-height: 1;
-      }
-      .comp-stat-chip .lbl {
-        font-size: 10.5px;
         font-weight: 500;
-        color: #a0a0b0;
-        line-height: 1;
+        color: rgba(10,10,15,0.55);
+        letter-spacing: -0.01em;
+        font-variant-numeric: tabular-nums;
+        flex-wrap: wrap;
+      }
+      .comp-meta-line .val {
+        color: #0a0a0f;
+        font-weight: 600;
+      }
+      .comp-meta-line .sep {
+        color: rgba(10,10,15,0.26);
+        margin: 0 7px;
       }
 
       /* Quick-wins row — direct copy of Dashboard.jsx's .ytg-qw-row so Topics
@@ -243,33 +272,36 @@ function useCompetitorStyles() {
         padding: 16px 18px;
       }
 
-      /* accordion */
+      /* accordion — same shadow grammar as other surfaces, hairline
+         black-alpha, soft lift on hover. */
       .comp-accordion-header {
         background: #ffffff;
-        border: 1px solid #e6e6ec;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.06);
-        padding: 16px 20px;
+        border: 1px solid rgba(10,10,15,0.07);
+        box-shadow: 0 1px 2px rgba(15,15,25,0.04), inset 0 1px 0 rgba(255,255,255,0.7);
+        padding: 14px 18px;
         display: flex;
         align-items: center;
-        gap: 16px;
-        transition: box-shadow 0.15s, border-color 0.15s;
+        gap: 14px;
+        transition: box-shadow 200ms cubic-bezier(0.32, 0.72, 0, 1), border-color 200ms cubic-bezier(0.32, 0.72, 0, 1), transform 200ms cubic-bezier(0.32, 0.72, 0, 1);
         cursor: pointer;
         user-select: none;
       }
       .comp-accordion-header:hover {
-        box-shadow: 0 2px 6px rgba(0,0,0,0.06), 0 8px 24px rgba(0,0,0,0.08);
-        border-color: rgba(0,0,0,0.14);
+        box-shadow: 0 4px 16px rgba(15,15,25,0.06), inset 0 1px 0 rgba(255,255,255,0.7);
+        border-color: rgba(10,10,15,0.14);
+        transform: translateY(-1px);
       }
-      .comp-accordion-header.closed { border-radius: 16px; }
-      .comp-accordion-header.open   { border-radius: 16px 16px 0 0; border-bottom-color: rgba(0,0,0,0.07); }
+      .comp-accordion-header.closed { border-radius: 14px; }
+      .comp-accordion-header.open   { border-radius: 14px 14px 0 0; border-bottom-color: rgba(10,10,15,0.05); transform: none; }
+      .comp-accordion-header.open:hover { transform: none; }
 
       .comp-accordion-body {
-        border: 1px solid #e6e6ec;
+        border: 1px solid rgba(10,10,15,0.07);
         border-top: none;
-        border-radius: 0 0 16px 16px;
-        background: #f8f8fb;
-        padding: 24px 20px 28px;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.06);
+        border-radius: 0 0 14px 14px;
+        background: rgba(10,10,15,0.018);
+        padding: 22px 18px 26px;
+        box-shadow: 0 1px 2px rgba(15,15,25,0.04);
       }
 
       /* section divider */
@@ -430,40 +462,50 @@ function ChannelCard({ channel, onAnalyze, isAdded, loadingId }) {
     <div className="comp-channel-card">
       {channel.thumbnail
         ? <img src={channel.thumbnail} alt="" referrerPolicy="no-referrer"
-            style={{ width: 46, height: 46, borderRadius: 12, objectFit: 'cover', flexShrink: 0,
-              boxShadow: '0 2px 10px rgba(0,0,0,0.13)' }} />
-        : <div style={{ width: 46, height: 46, background: 'linear-gradient(135deg,#e0e0e8,#c8c8d8)',
-            borderRadius: 12, flexShrink: 0, display: 'flex', alignItems: 'center',
-            justifyContent: 'center', fontWeight: 800, fontSize: 18, color: '#888' }}>
+            style={{ width: 44, height: 44, borderRadius: 10, objectFit: 'cover', flexShrink: 0,
+              boxShadow: '0 1px 2px rgba(15,15,25,0.10)' }} />
+        : <div style={{ width: 44, height: 44, background: 'linear-gradient(135deg,#e8e8ed,#d4d4dc)',
+            borderRadius: 10, flexShrink: 0, display: 'flex', alignItems: 'center',
+            justifyContent: 'center', fontWeight: 500, fontSize: 18, color: 'rgba(10,10,15,0.45)' }}>
             {channel.channel_name[0]}
           </div>
       }
       <div style={{ flex: 1, minWidth: 0 }}>
-        <p style={{ fontWeight: 700, fontSize: 14, color: '#111114', marginBottom: 3, letterSpacing: '-0.1px' }}>
+        <p style={{ fontWeight: 500, fontSize: 14.5, color: '#0a0a0f', marginBottom: 3, letterSpacing: '-0.15px' }}>
           {channel.channel_name}
         </p>
         {channel.description && (
-          <p style={{ fontSize: 12, color: '#9595a4', overflow: 'hidden', fontWeight: 400,
+          <p style={{ fontSize: 12.5, color: 'rgba(10,10,15,0.50)', overflow: 'hidden', fontWeight: 450,
+            letterSpacing: '-0.005em',
             textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{channel.description}</p>
         )}
       </div>
       {isAdded ? (
-        <span style={{ background: '#f0fdf4', color: '#16a34a',
-          border: '1px solid #bbf7d0', borderRadius: 100,
-          padding: '6px 14px', fontSize: 12, fontWeight: 700, flexShrink: 0,
-          display: 'flex', alignItems: 'center', gap: 5 }}>
-          <span style={{ fontSize: 12 }}>✓</span> Added
+        <span style={{
+          display: 'inline-flex', alignItems: 'center', gap: 6,
+          fontSize: 12, fontWeight: 500, color: '#15803d',
+          letterSpacing: '-0.005em',
+          flexShrink: 0,
+        }}>
+          <span style={{ width: 6, height: 6, borderRadius: 99, background: '#15803d', boxShadow: '0 0 0 3px rgba(22,163,74,0.16)' }}/>
+          Added
         </span>
       ) : loading ? (
-        <span style={{ background: '#f4f4f6', color: '#9595a4',
-          border: '1px solid rgba(0,0,0,0.09)', borderRadius: 100,
-          padding: '6px 14px', fontSize: 12, fontWeight: 600, flexShrink: 0 }}>
-          Analyzing…
+        <span style={{
+          display: 'inline-flex', alignItems: 'center', gap: 8,
+          padding: '6px 14px', borderRadius: 100,
+          background: 'rgba(10,10,15,0.04)',
+          color: 'rgba(10,10,15,0.55)',
+          fontSize: 12.5, fontWeight: 500, flexShrink: 0,
+          letterSpacing: '-0.005em',
+        }}>
+          Analyzing
         </span>
       ) : (
         <button className="comp-btn-primary" onClick={() => onAnalyze(channel.channel_id)}
-          style={{ padding: '9px 22px', fontSize: 13, flexShrink: 0 }}>
-          Analyze <span style={{ fontSize: 11, fontWeight: 500, opacity: 0.7, marginLeft: 2 }}>· 1 credit</span>
+          style={{ padding: '9px 18px', fontSize: 13, flexShrink: 0 }}>
+          Analyze
+          <span style={{ fontSize: 11, fontWeight: 450, opacity: 0.7, marginLeft: 6, letterSpacing: 0 }}>1 credit</span>
         </button>
       )}
     </div>
@@ -508,19 +550,15 @@ function AIAnalysis({ ai, top5Videos, channelId, checkedIdeas, onToggleIdea }) {
 
         <div style={{ display: 'flex', alignItems: 'stretch', gap: 24 }}>
 
-          {/* Left panel: Summary — wrapped in the blue Why-now tile style */}
+          {/* Left panel: Summary — plain text, no tile (symmetric with right) */}
           <div style={{ flex: 1, minWidth: 0 }}>
             <p style={{ fontSize: 11, fontWeight: 600, color: '#9595a4',
               letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 10 }}>
               Summary
             </p>
-            <div style={{ background: 'rgba(79,134,247,0.07)',
-              border: '1px solid rgba(79,134,247,0.12)',
-              borderRadius: 10, padding: '14px 16px' }}>
-              <p style={{ fontSize: 13.5, color: '#111114', lineHeight: 1.72, fontWeight: 400 }}>
-                {ai.competitorSummary}
-              </p>
-            </div>
+            <p style={{ fontSize: 14, color: '#111114', lineHeight: 1.78, fontWeight: 400 }}>
+              {ai.competitorSummary}
+            </p>
           </div>
 
           {/* Amber divider — 3px vertical bar, now centered since both panels are flex:1 */}
@@ -653,41 +691,36 @@ function AIAnalysis({ ai, top5Videos, channelId, checkedIdeas, onToggleIdea }) {
            + border-left amberBdr). Bar width + value colour both driven by
            scoreColor (relative-to-max here since topics aren't absolute scored). */}
       {ai.topTopics?.length > 0 && (() => {
-        // Rank-based colour (not threshold-based): only the lowest-performing
-        // topic is red, everything else is green. Bar width still scales
-        // relative to the strongest topic so the leader stays the only full bar.
+        // Single accent — all bars are "their strongest" so they get one
+        // consistent green. Previous version used red on the weakest, which
+        // read as an arbitrary alert color in a section about their wins.
         const viewVals = ai.topTopics.map(t => t.avgViews || 0)
         const maxViews = Math.max(...viewVals, 1)
-        const minViews = Math.min(...viewVals)
-        const hasVariance = new Set(viewVals).size > 1
-        const topicColor = (v) => (hasVariance && v === minViews) ? '#e5251b' : '#059669'
+        const BAR_COLOR = '#059669'
         return (
           <div>
-            <div style={{ marginBottom: 12 }}>
-              <h2 style={{ fontSize: 20, fontWeight: 800, color: '#111114', letterSpacing: '-0.5px', marginBottom: 4 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
+              <h2 style={{ fontSize: 20, fontWeight: 800, color: '#111114', letterSpacing: '-0.5px' }}>
                 Top content topics
               </h2>
-              <p style={{ fontSize: 13, color: '#9595a4', lineHeight: 1.5 }}>
-                Their strongest content clusters · ranked by average views per video
-              </p>
+              <span style={{ fontSize: 11, fontWeight: 700, color: '#9595a4', background: '#f1f1f6',
+                padding: '2px 8px', borderRadius: 20, border: '1px solid #e6e6ec' }}>
+                {ai.topTopics.length}
+              </span>
             </div>
+            <p style={{ fontSize: 13, color: '#9595a4', lineHeight: 1.5, marginBottom: 12 }}>
+              Their strongest content clusters · ranked by average views per video
+            </p>
 
             <div className="comp-card" style={{ borderTop: '3px solid #d97706' }}>
               <div style={{ padding: '18px 22px 20px' }}>
-                <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between',
-                  gap: 16, marginBottom: 14 }}>
-                  <div style={{ minWidth: 0 }}>
-                    <p style={{ fontSize: 11, fontWeight: 700, color: '#9595a4',
-                      letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 6 }}>
-                      Topics by reach
-                    </p>
-                    <p style={{ fontSize: 13, color: '#9595a4', lineHeight: 1.5 }}>
-                      Bar width shows each topic's pull relative to their strongest
-                    </p>
-                  </div>
-                  <p style={{ fontSize: 26, fontWeight: 800, color: '#111114', letterSpacing: '-0.8px',
-                    fontVariantNumeric: 'tabular-nums', flexShrink: 0, lineHeight: 1 }}>
-                    {ai.topTopics.length}
+                <div style={{ marginBottom: 14 }}>
+                  <p style={{ fontSize: 11, fontWeight: 700, color: '#9595a4',
+                    letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 6 }}>
+                    Topics by reach
+                  </p>
+                  <p style={{ fontSize: 13, color: '#9595a4', lineHeight: 1.5 }}>
+                    Bar width shows each topic's pull relative to their strongest
                   </p>
                 </div>
 
@@ -701,7 +734,7 @@ function AIAnalysis({ ai, top5Videos, channelId, checkedIdeas, onToggleIdea }) {
                     // bar length while the leader stays at 100%.
                     const ratio = (t.avgViews || 0) / maxViews
                     const pct   = Math.sqrt(ratio) * 100
-                    const col   = topicColor(t.avgViews || 0)
+                    const col   = BAR_COLOR
                     const isRightCol = i % 2 === 1
                     return (
                       <div key={i} style={{
@@ -1283,18 +1316,21 @@ export default function Competitors({ plan, freeTierFeatures }) {
 
   return (
     <div className="comp-page">
-      {/* ── header ── */}
-      <div style={{ marginBottom: 24 }}>
-        <h2 style={{ fontSize: 22, fontWeight: 800, color: '#111114', marginBottom: 4, letterSpacing: '-0.6px' }}>
-          Competitor Analysis
-        </h2>
-        <p style={{ fontSize: 14, color: '#a0a0b0', fontWeight: 400 }}>
-          Search channels in your niche · get a full AI-powered competitive intelligence report
+      {/* ── header. Confident-but-restrained: 24/500 Geist with looser
+            tracking. Subtitle reads as caption, not as a competing line. */}
+      <div style={{ marginBottom: 22 }}>
+        <h1 style={{ fontSize: 24, fontWeight: 500, color: '#0a0a0f', marginBottom: 6, letterSpacing: '-0.5px', lineHeight: 1.15 }}>
+          Competitors
+        </h1>
+        <p style={{ fontSize: 13.5, color: 'rgba(10,10,15,0.45)', fontWeight: 450, letterSpacing: '-0.005em' }}>
+          Track channels in your niche, get the full AI breakdown of what is working for them
         </p>
       </div>
 
-      {/* ── tabs ── */}
-      <div style={{ display: 'flex', gap: 8, marginBottom: 24 }}>
+      {/* ── tabs. Quiet pill-nav style. Active = soft tint background,
+            inactive = transparent. No red glow, no bold weight, no
+            elevation. ── */}
+      <div style={{ display: 'flex', gap: 4, marginBottom: 22 }}>
         {TABS.map(({ key, label }) => (
           <button key={key}
             className={`comp-tab-btn ${activeTab === key ? 'active' : 'inactive'}`}
@@ -1304,41 +1340,31 @@ export default function Competitors({ plan, freeTierFeatures }) {
         ))}
       </div>
 
-      {/* ══ search tab ══════════════════════════════════════════════════════ */}
+      {/* ══ search tab. Composer-style search input row at top, no
+             wrapping card — the input is the focal element by itself
+             with its own elevation. ══════════════════════════════════ */}
       {activeTab === 'search' && (
         <div>
-          <Card topAccent={null} style={{ marginBottom: 20 }}>
-            <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between',
-              marginBottom: 14, gap: 8 }}>
-              <p style={{ fontSize: 11, fontWeight: 700, color: '#9595a4',
-                letterSpacing: '0.07em', textTransform: 'uppercase' }}>
-                Find a competitor
-              </p>
-              <p style={{ fontSize: 12, color: '#9595a4', fontWeight: 500 }}>
-                Channel name or URL
-              </p>
-            </div>
-            <div style={{ display: 'flex', gap: 10 }}>
-              <input
-                className="comp-input"
-                value={searchQuery}
-                onChange={e => setSearchQuery(e.target.value)}
-                onKeyDown={e => e.key === 'Enter' && handleSearch()}
-                placeholder="e.g. MrBeast, TechWithTim, or paste channel URL…"
-              />
-              <button className="comp-btn-primary" onClick={handleSearch} disabled={loadingSearch}>
-                {loadingSearch ? 'Searching…' : 'Search'}
-              </button>
-            </div>
-          </Card>
+          <div style={{ display: 'flex', gap: 10, marginBottom: 22 }}>
+            <input
+              className="comp-input"
+              value={searchQuery}
+              onChange={e => setSearchQuery(e.target.value)}
+              onKeyDown={e => e.key === 'Enter' && handleSearch()}
+              placeholder="Search a channel by name or paste its URL"
+            />
+            <button className="comp-btn-primary" onClick={handleSearch} disabled={loadingSearch}>
+              {loadingSearch ? 'Searching' : 'Search'}
+            </button>
+          </div>
 
           {!searched && (
             <div className="comp-empty-state">
               <div style={{ width: 44, height: 44, borderRadius: 13, background: '#f0f0f3', border: '1px solid rgba(0,0,0,0.09)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#a0a0b0" strokeWidth="1.6" strokeLinecap="round"><circle cx="8.5" cy="8.5" r="5.5"/><line x1="13" y1="13" x2="17" y2="17"/></svg>
               </div>
-              <p style={{ fontWeight: 700, color: '#52525b', marginBottom: 6, fontSize: 14 }}>Search for a channel to compare</p>
-              <p style={{ fontSize: 14, color: '#a0a0b0' }}>Type any YouTube channel name above to get started</p>
+              <p style={{ fontWeight: 500, color: '#0a0a0f', marginBottom: 4, fontSize: 14, letterSpacing: '-0.01em' }}>Search for a channel to compare</p>
+              <p style={{ fontSize: 13, color: 'rgba(10,10,15,0.45)', fontWeight: 450, letterSpacing: '-0.005em' }}>Type any YouTube channel name above</p>
             </div>
           )}
 
@@ -1347,8 +1373,8 @@ export default function Competitors({ plan, freeTierFeatures }) {
               <div style={{ width: 44, height: 44, borderRadius: 13, background: '#f0f0f3', border: '1px solid rgba(0,0,0,0.09)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#a0a0b0" strokeWidth="1.6" strokeLinecap="round"><circle cx="8.5" cy="8.5" r="5.5"/><line x1="13" y1="13" x2="17" y2="17"/><line x1="6.5" y1="8.5" x2="10.5" y2="8.5"/></svg>
               </div>
-              <p style={{ fontWeight: 700, color: '#52525b', marginBottom: 6, fontSize: 14 }}>No channels found</p>
-              <p style={{ fontSize: 14, color: '#a0a0b0' }}>Try a different search term or paste the channel URL</p>
+              <p style={{ fontWeight: 500, color: '#0a0a0f', marginBottom: 4, fontSize: 14, letterSpacing: '-0.01em' }}>No channels found</p>
+              <p style={{ fontSize: 13, color: 'rgba(10,10,15,0.45)', fontWeight: 450, letterSpacing: '-0.005em' }}>Try a different name or paste the channel URL</p>
             </div>
           )}
 
@@ -1373,9 +1399,9 @@ export default function Competitors({ plan, freeTierFeatures }) {
               <div style={{ width: 44, height: 44, borderRadius: 13, background: '#f0f0f3', border: '1px solid rgba(0,0,0,0.09)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="#a0a0b0" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="10" width="3" height="7" rx="1"/><rect x="8.5" y="6" width="3" height="11" rx="1"/><rect x="14" y="3" width="3" height="14" rx="1"/></svg>
               </div>
-              <p style={{ fontWeight: 700, color: '#52525b', marginBottom: 6, fontSize: 14 }}>No competitors tracked yet</p>
-              <p style={{ fontSize: 14, color: '#a0a0b0', maxWidth: 300, margin: '0 auto' }}>
-                Go to Search, find a channel and click Analyze — it'll be saved here automatically
+              <p style={{ fontWeight: 500, color: '#0a0a0f', marginBottom: 4, fontSize: 14, letterSpacing: '-0.01em' }}>No competitors tracked yet</p>
+              <p style={{ fontSize: 13, color: 'rgba(10,10,15,0.45)', fontWeight: 450, letterSpacing: '-0.005em', maxWidth: 320, margin: '0 auto', lineHeight: 1.55 }}>
+                Search a channel and click Analyze. It saves here so you can dip back into the report later.
               </p>
             </div>
           ) : (
@@ -1388,20 +1414,29 @@ export default function Competitors({ plan, freeTierFeatures }) {
                 ? new Date(analysis.savedAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })
                 : ''
 
-              // chevron direction
+              // chevron direction — sole right-side affordance on the row
               const Chevron = () => (
-                <svg width="12" height="12" viewBox="0 0 12 12" fill="none"
-                  stroke="currentColor" strokeWidth="2" strokeLinecap="round"
-                  style={{ transition: 'transform 0.2s', transform: isOpen ? 'rotate(180deg)' : 'none' }}>
-                  <path d="M2 4l4 4 4-4"/>
+                <svg width="15" height="15" viewBox="0 0 15 15" fill="none"
+                  stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"
+                  style={{ transition: 'transform 200ms cubic-bezier(0.32, 0.72, 0, 1)', transform: isOpen ? 'rotate(180deg)' : 'none' }}>
+                  <path d="M4 6l3.5 3.5L11 6"/>
                 </svg>
               )
 
+              // Threat dot — red for high, text3 for med/low. No chip,
+              // no pill, no traffic-light. The dot says "we've gauged
+              // this", the row's meta text says how.
+              const threatDot = ai ? (
+                ai.threatLevel === 'high' ? '#e5251b' :
+                ai.threatLevel === 'low'  ? 'rgba(10,10,15,0.26)' :
+                                            'rgba(10,10,15,0.36)'
+              ) : null
+
               return (
                 <div key={comp.channel_id} className="comp-accordion-wrapper"
-                  style={{ marginBottom: 12, position: 'relative' }}>
+                  style={{ marginBottom: 10, position: 'relative' }}>
 
-                  {/* ── trash: appears on hover, far corner, away from report button ── */}
+                  {/* ── trash: appears on row hover, sits before the chevron ── */}
                   <button className="comp-remove-btn"
                     title="Remove competitor"
                     onClick={e => handleRemove(e, comp.channel_id)}>
@@ -1411,59 +1446,63 @@ export default function Competitors({ plan, freeTierFeatures }) {
                     </svg>
                   </button>
 
-                  {/* ── accordion header ── */}
+                  {/* ── accordion header. Row is the click target — single
+                       chevron on the right replaces the old red CTA button. */}
                   <div className={`comp-accordion-header ${isOpen ? 'open' : 'closed'}`}
                     onClick={() => setExpandedIdx(isOpen ? null : i)}>
 
                     {comp.thumbnail && (
                       <img src={comp.thumbnail} alt="" referrerPolicy="no-referrer"
-                        style={{ width: 46, height: 46, borderRadius: 12, objectFit: 'cover',
-                          flexShrink: 0, boxShadow: '0 2px 10px rgba(0,0,0,0.13)' }} />
+                        style={{ width: 44, height: 44, borderRadius: 10, objectFit: 'cover',
+                          flexShrink: 0, boxShadow: '0 1px 2px rgba(15,15,25,0.10)' }} />
                     )}
 
-                    {/* ── left: name + badges ── */}
+                    {/* ── center: name + inline meta line ── */}
                     <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-                        <p style={{ fontWeight: 800, fontSize: 14, color: '#111114',
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
+                        {threatDot && (
+                          <span aria-hidden="true" style={{
+                            flexShrink: 0,
+                            width: 7, height: 7, borderRadius: 99,
+                            background: threatDot,
+                            boxShadow: ai?.threatLevel === 'high'
+                              ? '0 0 0 3px rgba(229,37,27,0.14)'
+                              : '0 0 0 3px rgba(10,10,15,0.06)',
+                          }}/>
+                        )}
+                        <p style={{ fontWeight: 500, fontSize: 15, color: '#0a0a0f',
                           letterSpacing: '-0.2px', whiteSpace: 'nowrap', overflow: 'hidden',
                           textOverflow: 'ellipsis' }}>
                           {comp.channel_name}
                         </p>
-                        {threat && (
-                          <span style={{ background: threat.bg, color: threat.text,
-                            border: `1px solid ${threat.border}`, fontSize: 12, fontWeight: 700,
-                            padding: '3px 10px', borderRadius: 50, flexShrink: 0,
-                            display: 'inline-flex', alignItems: 'center', gap: 4, letterSpacing: '0.1px' }}>
-                            <span style={{ width: 5, height: 5, borderRadius: '50%', background: threat.dot,
-                              flexShrink: 0, boxShadow: `0 0 5px ${threat.dot}` }} />
-                            {threat.label}
-                          </span>
-                        )}
                       </div>
 
-                      {/* ── stat chips ── */}
-                      <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-                        <StatChip value={fmtK(comp.subscribers)} label="subs" />
-                        <StatChip value={fmtK(comp.avg_views_per_video)} label="avg views" />
-                        {ai && <StatChip value={ai.gapsToExploit?.length || 0} label="gaps" />}
+                      {/* Inline meta — single quiet line replacing 3 chips */}
+                      <div className="comp-meta-line">
+                        <span><span className="val">{fmtK(comp.subscribers)}</span> subs</span>
+                        <span className="sep">·</span>
+                        <span><span className="val">{fmtK(comp.avg_views_per_video)}</span> avg views</span>
+                        {ai && (
+                          <>
+                            <span className="sep">·</span>
+                            <span><span className="val">{ai.gapsToExploit?.length || 0}</span> gaps</span>
+                          </>
+                        )}
                         {savedAt && (
-                          <span style={{ fontSize: 12, color: '#9595a4', fontWeight: 500,
-                            alignSelf: 'center', marginLeft: 2 }}>
-                            · {savedAt}
-                          </span>
+                          <>
+                            <span className="sep">·</span>
+                            <span>{savedAt}</span>
+                          </>
                         )}
                       </div>
                     </div>
 
-                    {/* ── right: only the report toggle ── */}
-                    <div style={{ flexShrink: 0, borderLeft: '1px solid rgba(0,0,0,0.07)',
-                      paddingLeft: 16, marginLeft: 4, paddingRight: 28 }}>
-                      <button className={`comp-btn-report ${isOpen ? 'open' : ''}`}
-                        onClick={e => { e.stopPropagation(); setExpandedIdx(isOpen ? null : i) }}>
-                        {isOpen ? 'Close' : 'Open report'}
-                        <Chevron />
-                      </button>
-                    </div>
+                    {/* ── right: chevron only. Row click handles toggle. ── */}
+                    <button className={`comp-btn-report ${isOpen ? 'open' : ''}`}
+                      aria-label={isOpen ? 'Close report' : 'Open report'}
+                      onClick={e => { e.stopPropagation(); setExpandedIdx(isOpen ? null : i) }}>
+                      <Chevron />
+                    </button>
                   </div>
 
                   {/* ── expanded report ── */}
