@@ -2,27 +2,35 @@
 Niche search pre-warmer.
 
 Goal: keep the queries your users *actually* run pre-cached, so SEO Studio /
-Outliers / Thumbnail IQ clicks land in cache at 0 quota cost instead of
-paying 100 units per query.
+Outliers / Thumbnail IQ / Keyword Research clicks land in cache at 0 quota
+cost instead of paying 100+ units per query.
 
-Strategy is popularity-driven, not guessed:
-  1. Every cache hit in app/seo._search_youtube_once increments hit_count
-     on the row. Over a day this gives us a real demand histogram.
-  2. The nightly warmer picks the top-N stale rows by hit_count and
-     refreshes them. So the cache stays hot for the queries your real
-     users run, automatically — no curation required.
-  3. For cold-start (empty cache, no usage data yet) it falls back to
-     NICHE_SEEDS, a hand-picked starter list. Over time this fades away
-     as real usage takes over.
+Strategy is popularity-driven, not guessed. Two phases per nightly run:
 
-Runs nightly via app/scheduler.py at 04:00 UTC. Each run refreshes
-WARM_PER_RUN entries (default 20 = ~2,000 units/night). Skips anything
-fresher than SKIP_IF_FRESHER_THAN_HOURS hours so we never re-spend quota
-on something we just fetched.
+  Phase 1 — SEO Studio cache (seo: prefix):
+    - Every cache hit in app/seo._search_youtube_once increments hit_count.
+    - The warmer picks the top-N stale rows by hit_count and refreshes
+      them so popular niches stay warm.
+    - Cold-start fallback: if real-usage data is thin, fills the batch
+      from NICHE_SEEDS (a hand-picked starter list). Fades out as real
+      demand takes over.
+
+  Phase 2 — Keyword Research cache (kw: prefix):
+    - Same popularity-driven approach. _fetch_competition_for_keyword
+      writes kw: rows on user-initiated runs and increments hit_count
+      on cache hits.
+    - No seed-list fallback for kw: — when usage is light the phase has
+      nothing to do, which is fine.
+
+Runs nightly via app/scheduler.py at 04:00 UTC. Each run refreshes up to
+WARM_PER_RUN seo entries (~1,500 units) + WARM_KW_PER_RUN kw entries
+(~1,530 units) = ~3,000 units/night max. Skips anything fresher than
+SKIP_IF_FRESHER_THAN_HOURS hours so we never re-spend quota on something
+we just fetched. If real usage is light, the actual spend is lower.
 
 Respects YT_QUOTA_PAUSED. If the flag is set, the warmer skips silently —
-the cache stays whatever it already was and SEO Studio still degrades
-gracefully via the same env var checks downstream.
+the cache stays whatever it already was and the user-facing features still
+degrade gracefully via the same env var checks downstream.
 """
 
 import datetime
@@ -97,9 +105,17 @@ NICHE_SEEDS = [
     "mental health tips", "anxiety tips", "sleep tips", "intermittent fasting",
 ]
 
-# How many niches to refresh per nightly run. Each costs 100 quota units,
-# so 20 = 2,000 units. Full seed list (~140 entries) wraps in ~7 nights.
-WARM_PER_RUN = 20
+# How many SEO Studio (seo: prefix) niches to refresh per nightly run.
+# Each costs 100 quota units, so 15 = 1,500 units. Full seed list (~140
+# entries) wraps in ~10 nights when no real-user-demand candidates exist.
+WARM_PER_RUN = 15
+
+# How many Keyword Research (kw: prefix) queries to refresh per nightly
+# run. Each costs ~102 units (search 100 + videos 1 + channels 1). 15
+# = ~1,530 units. NOTE: kw: rows are written by user-initiated Keyword
+# Research runs, so without real usage there's nothing to warm — there
+# is no seed-list fallback for kw: (the seed list is SEO-shaped).
+WARM_KW_PER_RUN = 15
 
 # Skip re-warming entries refreshed in the last N hours. Stops the worker
 # burning quota on already-fresh rows.
@@ -118,6 +134,50 @@ def _yt_client_anon():
         return None
     from googleapiclient.discovery import build
     return build("youtube", "v3", developerKey=api_key, cache_discovery=False)
+
+
+def _pick_kw_targets(db) -> list[str]:
+    """Pick Keyword Research (kw: prefix) queries to warm next.
+
+    Same popularity-first strategy as the SEO Studio picker, but scoped
+    to kw: cache rows so we pre-refresh the keywords your users actually
+    research, not just the videos they search for. No seed-list fallback
+    because the seed list is SEO-shaped (full titles), not Keyword
+    Research-shaped (extracted niche terms) — and the kw: cache only
+    fills up from real user-initiated Keyword Research runs anyway, so
+    when usage is light the warmer simply has nothing to do (which is
+    fine: no usage = no waste)."""
+    from database.models import YoutubeSearchCache
+
+    now    = datetime.datetime.now(datetime.timezone.utc)
+    cutoff = now - datetime.timedelta(hours=SKIP_IF_FRESHER_THAN_HOURS)
+
+    popular_rows = (
+        db.query(YoutubeSearchCache)
+          .filter(YoutubeSearchCache.cache_key.like("kw:%"))
+          .filter(YoutubeSearchCache.hit_count > 0)
+          .order_by(YoutubeSearchCache.hit_count.desc())
+          .limit(WARM_KW_PER_RUN * 3)
+          .all()
+    )
+    picks: list[str] = []
+    for row in popular_rows:
+        cached_at = row.cached_at
+        if cached_at and cached_at.tzinfo is None:
+            cached_at = cached_at.replace(tzinfo=datetime.timezone.utc)
+        if cached_at and cached_at >= cutoff:
+            continue  # still fresh, skip
+        query = row.original_query
+        if not query:
+            try:
+                query = row.cache_key.split("kw:", 1)[1].split("|", 1)[0]
+            except Exception:
+                continue
+        if query and query not in picks:
+            picks.append(query)
+        if len(picks) >= WARM_KW_PER_RUN:
+            break
+    return picks
 
 
 def _pick_targets(db) -> list[str]:
@@ -291,4 +351,46 @@ def warm_pool():
         finally:
             db.close()
 
-    print(f"[niche_warmer] run complete — warmed {warmed}/{len(targets)} niches (~{warmed * 100} units spent)")
+    print(f"[niche_warmer] seo: phase complete — warmed {warmed}/{len(targets)} niches (~{warmed * 100} units spent)")
+
+    # ── Phase 2: Keyword Research (kw: prefix) ─────────────────────────────
+    # Pre-warm popular keywords so Keyword Research benefits from the same
+    # cache discipline that SEO Studio already gets. Reuses the existing
+    # _fetch_competition_for_keyword logic which writes to youtube_search_cache
+    # under the kw: prefix — same machinery user-facing calls hit.
+    db = SessionLocal()
+    try:
+        kw_targets = _pick_kw_targets(db)
+    finally:
+        db.close()
+
+    if not kw_targets:
+        print("[niche_warmer] kw: phase — no stale popular keywords to warm")
+        return
+
+    print(f"[niche_warmer] kw: phase warming {len(kw_targets)} keywords: {kw_targets[:3]}...")
+    api_key = os.getenv("YOUTUBE_API_KEY", "")
+    if not api_key:
+        print("[niche_warmer] kw: phase skipped — YOUTUBE_API_KEY not set")
+        return
+
+    from app.keywords import _fetch_competition_for_keyword
+    kw_warmed = 0
+    for keyword in kw_targets:
+        try:
+            # _fetch_competition_for_keyword reads/writes youtube_search_cache
+            # itself, applies the junk filter, and short-circuits on
+            # YT_QUOTA_PAUSED. We pre-call it so the row refreshes for the
+            # next real user before their search arrives.
+            result = _fetch_competition_for_keyword(keyword, api_key)
+            # The function returns the default dict on failure; treat any
+            # non-zero result_count as a successful warm.
+            if result and result.get("result_count"):
+                kw_warmed += 1
+        except Exception as e:
+            print(f"[niche_warmer] kw: '{keyword}' fetch failed: {e}")
+            if "quotaexceeded" in str(e).lower():
+                print("[niche_warmer] kw: quotaExceeded — aborting run")
+                break
+
+    print(f"[niche_warmer] kw: phase complete — warmed {kw_warmed}/{len(kw_targets)} keywords (~{kw_warmed * 102} units spent)")
