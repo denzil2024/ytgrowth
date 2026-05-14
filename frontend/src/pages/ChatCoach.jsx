@@ -17,7 +17,8 @@ import {
   Sparkles,         // Per-message assistant avatar (reads as "AI" clearly)
   Database,         // Source pill on assistant replies
   Send,             // Composer send button
-  Plus,             // New chat icon button
+  SquarePen,        // "New chat" icon — the ChatGPT/Linear compose glyph,
+                    // reads as "start fresh" not "generic add"
   ArrowRight,       // Upgrade CTA glyph
   X,                // Delete icon on conversation rows
   MessageSquare,    // Conversation glyph on rail rows
@@ -32,13 +33,17 @@ import {
   Search,
 } from 'lucide-react'
 
-// Page-scoped Inter load. Inter Variable for body, kept consistent with the
-// rest of the app. The earlier Geist experiment didn't earn its keep.
-if (typeof document !== 'undefined' && !document.getElementById('ytg-chat-inter-font')) {
+// Page-scoped Geist load. Geist Variable (Vercel's open-source UI typeface)
+// is the chosen face for this redesigned surface. Inter — the default
+// startup font — was reverted to once during the iteration, but Geist
+// sits cleaner on the structural moves we made (glass composer, centered
+// hero, light-weight headings) and Geist Mono gives us premium tabular
+// figures on the meter and any inline code in markdown messages.
+if (typeof document !== 'undefined' && !document.getElementById('ytg-chat-geist-font')) {
   const link = document.createElement('link')
-  link.id = 'ytg-chat-inter-font'
+  link.id = 'ytg-chat-geist-font'
   link.rel = 'stylesheet'
-  link.href = 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap'
+  link.href = 'https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Geist+Mono:wght@400..700&display=swap'
   document.head.appendChild(link)
 }
 
@@ -97,8 +102,8 @@ if (typeof document !== 'undefined' && !document.getElementById('ytg-chat-scroll
   document.head.appendChild(s)
 }
 
-const FONT_STACK = "'Inter', system-ui, -apple-system, sans-serif"
-const FONT_MONO  = "ui-monospace, SFMono-Regular, 'SF Mono', Menlo, monospace"
+const FONT_STACK = "'Geist', 'Inter', system-ui, -apple-system, sans-serif"
+const FONT_MONO  = "'Geist Mono', ui-monospace, SFMono-Regular, monospace"
 
 /* ─── Light palette. Two surfaces (page wash + raised cards), neutral
        text stack, brand red as the only saturated colour. Hairlines are
@@ -162,8 +167,11 @@ function fmtAge(iso) {
 function AssistantBody({ text }) {
   return (
     <div style={{
-      fontSize: 14.5, fontWeight: 500, color: C.text1,
-      letterSpacing: '-0.01em', lineHeight: 1.65,
+      // Tuned for Geist: 450 reads confident on Geist's geometric forms
+      // where the same weight on Inter would look thin. Tracking pulled
+      // in slightly because Geist runs a hair narrower than Inter.
+      fontSize: 14.5, fontWeight: 450, color: C.text1,
+      letterSpacing: '-0.005em', lineHeight: 1.65,
     }}>
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
@@ -506,8 +514,10 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
           border: 'none', outline: 'none',
           background: 'transparent',
           fontFamily: FONT_STACK,
-          fontSize: 15, fontWeight: 500, color: C.text1,
-          letterSpacing: '-0.01em', lineHeight: 1.55,
+          // Composer input: Geist 450 reads cleanly; 500 would feel
+          // heavy for placeholder + typed text alike.
+          fontSize: 15, fontWeight: 450, color: C.text1,
+          letterSpacing: '-0.005em', lineHeight: 1.55,
           resize: 'none',
           maxHeight: 160,
           paddingTop: 8, paddingBottom: 8,
@@ -722,11 +732,11 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
           gap: 28,
         }}>
           <h1 style={{
-            // 42/600 Inter with -0.6 tracking. Anchor of the screen.
-            // maxWidth bumped to keep the question on one line — "out?"
-            // alone on a second line was an ugly widow.
-            fontSize: 42, fontWeight: 600, color: C.text1,
-            letterSpacing: '-0.6px', lineHeight: 1.1,
+            // Tuned for Geist: 500 holds confidence at display size where
+            // 600 starts to feel chunky on Geist's geometric forms.
+            // Tracking loosened to -0.8 because Geist is narrower than Inter.
+            fontSize: 42, fontWeight: 500, color: C.text1,
+            letterSpacing: '-0.8px', lineHeight: 1.1,
             textAlign: 'center', maxWidth: 760,
             margin: 0,
           }}>What do you want to figure out?</h1>
@@ -760,7 +770,9 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
                     border: `1px solid ${C.hair}`,
                     color: C.text2,
                     fontFamily: 'inherit',
-                    fontSize: 13, fontWeight: 600, letterSpacing: '-0.01em',
+                    // Tuned for Geist: pills sit at 500 (Inter needed 600
+                    // to feel anchored, Geist holds at 500 cleanly).
+                    fontSize: 13, fontWeight: 500, letterSpacing: '-0.005em',
                     cursor: 'pointer',
                     boxShadow: '0 1px 2px rgba(15,15,25,0.04), 0 1px 0 rgba(255,255,255,0.9) inset',
                     transition: `background 200ms ${C.spring}, color 200ms ${C.spring}, border-color 200ms ${C.spring}, transform 200ms ${C.spring}, box-shadow 200ms ${C.spring}`,
@@ -885,7 +897,7 @@ function MessageBubble({ role, content, sources }) {
           padding: '12px 16px',
           boxShadow: '0 1px 2px rgba(229,37,27,0.28), inset 0 1px 0 rgba(255,255,255,0.22)',
           fontFamily: FONT_STACK,
-          fontSize: 14, fontWeight: 500, letterSpacing: '-0.01em', lineHeight: 1.5,
+          fontSize: 14, fontWeight: 450, letterSpacing: '-0.005em', lineHeight: 1.5,
           whiteSpace: 'pre-wrap',
         }}>{content}</div>
       </div>
@@ -992,7 +1004,7 @@ function ConversationRail({
           flexShrink: 0, width: 18, height: 18,
           color: C.text1,
         }}>
-          <Plus size={14} strokeWidth={2} />
+          <SquarePen size={14} strokeWidth={1.9} />
         </span>
         New chat
       </button>
