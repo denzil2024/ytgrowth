@@ -488,15 +488,16 @@ def force_fetch_top_videos(keyword: str) -> list[dict]:
         return []
 
 
-def fetch_competition_signals(keywords: list[str], top_n: int = 5) -> dict[str, dict]:
+def fetch_competition_signals(keywords: list[str], top_n: int = 3) -> dict[str, dict]:
     """
     Enrich the top N keywords with YouTube competitive data in parallel.
 
-    Default top_n is 5 (was 10). Each keyword costs ~102 units (100 search
-    + 1 videos + 1 channels), so 5 keywords = ~510 units/run on a cold
-    cache vs. ~1020 before. Combined with the 24h cross-user cache in
+    Default top_n is 3 (was 5, was 10). Each keyword costs ~102 units
+    (100 search + 1 videos + 1 channels), so 3 keywords = ~306 units/run
+    on a cold cache. Combined with the 24h cross-user cache in
     _fetch_competition_for_keyword, repeat keywords cost 0 units, so
-    real-world average drops far below 510.
+    real-world average drops far below 306. Bump back up once the
+    Google quota extension lands.
     """
     yt_api_key = os.getenv("YOUTUBE_API_KEY", "")
     if not yt_api_key or not keywords:
@@ -585,7 +586,7 @@ def _score_with_real_data(kw: dict, comp: dict, autocomplete_rank: int | None) -
 def enrich_keywords_with_real_data(
     result: dict,
     autocomplete_results: list[str],
-    top_n: int = 5,
+    top_n: int = 3,
 ) -> dict:
     """
     Take the Claude-filtered keyword list and overwrite `opportunityScore`

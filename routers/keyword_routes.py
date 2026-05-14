@@ -124,13 +124,14 @@ def research_keywords(body: KeywordResearchRequest, request: Request):
             status_code=500,
         )
 
-    # Real-data enrichment — replaces Claude's vibe score on the top 5
+    # Real-data enrichment — replaces Claude's vibe score on the top 3
     # with one derived from YouTube competition + Google Trends direction.
     # Best-effort: any failure falls back to Claude's original score so
-    # the feature never breaks. Halved from 10 → 5 to cut per-click cost
-    # from ~1020 to ~510 units; the 24h cache makes repeats free.
+    # the feature never breaks. Cut to 3 (from 10, then 5) to keep per-
+    # click cost at ~306 units on a 10K daily quota until the Google
+    # quota bump lands. Bump back up once headroom returns.
     try:
-        result = enrich_keywords_with_real_data(result, autocomplete, top_n=5)
+        result = enrich_keywords_with_real_data(result, autocomplete, top_n=3)
     except Exception as e:
         print(f"[keywords] enrichment error: {e}")
 
