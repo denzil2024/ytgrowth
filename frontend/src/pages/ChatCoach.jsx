@@ -26,6 +26,21 @@ import {
   ArrowRight,      // CTA
 } from 'lucide-react'
 
+// Page-scoped font load. Geist Variable (Vercel's open-source UI font) is a
+// premium step up from Inter for the look-and-feel we're targeting on Chat.
+// Loaded inside this file only so the swap is isolated to this page while we
+// evaluate it. Once approved, this same loader pattern moves to a global hook.
+if (typeof document !== 'undefined' && !document.getElementById('ytg-chat-geist-font')) {
+  const link = document.createElement('link')
+  link.id = 'ytg-chat-geist-font'
+  link.rel = 'stylesheet'
+  link.href = 'https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Geist+Mono:wght@400..700&display=swap'
+  document.head.appendChild(link)
+}
+
+const FONT_STACK = "'Geist', 'Inter', system-ui, -apple-system, sans-serif"
+const FONT_MONO  = "'Geist Mono', ui-monospace, SFMono-Regular, monospace"
+
 const C = {
   bg:         '#f5f5f9',
   surface:    '#ffffff',
@@ -197,6 +212,9 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
       display: 'flex', flexDirection: 'column',
       height: 'calc(100vh - 52px - 72px)', // topbar 52 + page paddingTop 36 + paddingBottom 36
       minHeight: 500,
+      // Geist takes over the whole Chat surface. Children that use
+      // fontFamily: 'inherit' pick this up automatically.
+      fontFamily: FONT_STACK,
     }}>
       {/* ── Header — quota meter + new chat ───────────────────────── */}
       <div style={{
@@ -408,7 +426,7 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
               flex: 1, minWidth: 0,
               border: 'none', outline: 'none',
               background: 'transparent',
-              fontFamily: "'Inter', system-ui, sans-serif",
+              fontFamily: FONT_STACK,
               fontSize: 14, fontWeight: 500, color: C.text1,
               letterSpacing: '-0.01em', lineHeight: 1.55,
               resize: 'none',
@@ -535,7 +553,7 @@ function MessageBubble({ role, content, sources }) {
           borderRadius: '14px 14px 4px 14px',
           padding: '11px 16px',
           boxShadow: '0 1px 3px rgba(229,37,27,0.25)',
-          fontFamily: "'Inter', system-ui, sans-serif",
+          fontFamily: FONT_STACK,
           fontSize: 14, fontWeight: 500, letterSpacing: '-0.01em', lineHeight: 1.5,
           whiteSpace: 'pre-wrap',
         }}>{content}</div>
