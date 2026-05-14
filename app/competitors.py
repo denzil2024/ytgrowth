@@ -269,6 +269,12 @@ def analyze_competitor_with_ai(user_channel, user_videos, competitor_data):
     """
     Run a Claude competitive intelligence analysis.
     Returns a structured JSON object with gaps, topics, title patterns, winning moves, etc.
+
+    Cached cross-user in ai_output_cache (7-day TTL). Cache key is built
+    from competitor_id + user-context fingerprint (keywords, size tier,
+    posting cadence bucket). Two creators in the same broad niche
+    analysing the same competitor get identical output and the second
+    one pays $0 for Claude. Different niches → different cache rows.
     """
     # Derive user upload gap from their video history
     user_avg_gap = "Unknown"
@@ -396,30 +402,71 @@ Return ONLY valid JSON, no markdown, no preamble:
   "winningMoves": ["string (specific tactic to steal or counter)"]
 }}"""
 
-    try:
-        client = make_anthropic_client()
-        message = client.messages.create(
-            model="claude-sonnet-4-6",
-            max_tokens=8192,
-            system=(
-                "You are an elite YouTube competitive intelligence analyst. "
-                "Your job is not to describe a competitor — your job is to find the exact gaps, "
-                "weaknesses, and opportunities the user can exploit to grow faster and outrank them. "
-                "Be brutally specific. Reference actual data points from the competitor's videos. "
-                "Never give generic advice."
-            ),
-            messages=[{"role": "user", "content": prompt}]
-        )
-        raw = message.content[0].text.strip()
-        raw = re.sub(r'^```[a-z]*\n?', '', raw)
-        raw = re.sub(r'\n?```$', '', raw).strip()
-        return json.loads(raw)
-    except json.JSONDecodeError as e:
-        print(f"Competitor AI analysis JSON parse error: {e}")
-        return f"JSON parse error: {e}"
-    except Exception as e:
-        print(f"Competitor AI analysis error: {e}")
-        return f"Error: {e}"
+    def _subs_tier(n: int) -> str:
+        if n < 10_000:    return "micro"
+        if n < 100_000:   return "small"
+        if n < 1_000_000: return "mid"
+        return "large"
+
+    def _gap_bucket(g) -> str:
+        try: gn = float(g)
+        except Exception: return "unknown"
+        if gn < 3: return "daily-ish"
+        if gn < 8: return "weekly"
+        if gn < 30: return "biweekly"
+        return "monthly"
+
+    from app.utils import cached_ai_output
+    cache_inputs = {
+        "competitor_id":   comp.get("channel_id", ""),
+        # Slim signature of the user context so creators with the same
+        # broad profile share cache rows but different niches don't.
+        "user_keywords":   sorted(
+            (k.strip().lower() for k in (user_channel.get("keywords") or "").split(",") if k.strip())
+        )[:6],
+        "user_subs_tier":  _subs_tier(int(user_channel.get("subscribers", 0) or 0)),
+        "user_gap_bucket": _gap_bucket(user_avg_gap),
+        "model":           "claude-sonnet-4-6",
+        "prompt_version":  "v1",
+    }
+
+    def _fetch():
+        try:
+            client = make_anthropic_client()
+            message = client.messages.create(
+                model="claude-sonnet-4-6",
+                max_tokens=8192,
+                system=(
+                    "You are an elite YouTube competitive intelligence analyst. "
+                    "Your job is not to describe a competitor — your job is to find the exact gaps, "
+                    "weaknesses, and opportunities the user can exploit to grow faster and outrank them. "
+                    "Be brutally specific. Reference actual data points from the competitor's videos. "
+                    "Never give generic advice."
+                ),
+                messages=[{"role": "user", "content": prompt}]
+            )
+            raw = message.content[0].text.strip()
+            raw = re.sub(r'^```[a-z]*\n?', '', raw)
+            raw = re.sub(r'\n?```$', '', raw).strip()
+            return json.loads(raw)
+        except json.JSONDecodeError as e:
+            print(f"Competitor AI analysis JSON parse error: {e}")
+            return {"_error": f"JSON parse error: {e}"}
+        except Exception as e:
+            print(f"Competitor AI analysis error: {e}")
+            return {"_error": f"Error: {e}"}
+
+    result = cached_ai_output(
+        function_name="analyze_competitor_with_ai",
+        inputs=cache_inputs,
+        ttl_hours=24 * 7,  # 7 days
+        fetch_fn=_fetch,
+    )
+    # Preserve the original error-string return contract for callers
+    # that branch on isinstance(result, str).
+    if isinstance(result, dict) and "_error" in result and len(result) == 1:
+        return result["_error"]
+    return result
 
 
 

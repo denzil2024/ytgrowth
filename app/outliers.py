@@ -960,7 +960,10 @@ def _synthesize_outlier_pattern(
 
     Returns the parsed JSON dict, or an empty dict on any failure (the UI
     falls back to showing the video grid without the synthesis card).
-    """
+
+    Cached cross-user in ai_output_cache (3-day TTL — shorter than the
+    per-video / per-channel explanations because the "your next move"
+    recommendation has timing relevance that ages faster)."""
     if not top_winnable:
         return {}
 
@@ -981,7 +984,24 @@ def _synthesize_outlier_pattern(
     nk_str = ", ".join((niche_keywords or [])[:8]) or "(none provided)"
     videos_json = json.dumps(slim, indent=2)
 
-    prompt = f"""You are analysing {len(slim)} over-performing YouTube videos in the niche "{query}".
+    def _subs_tier(n: int) -> str:
+        if n < 10_000:    return "micro"
+        if n < 100_000:   return "small"
+        if n < 1_000_000: return "mid"
+        return "large"
+
+    from app.utils import cached_ai_output
+    cache_inputs = {
+        "query":          (query or "").strip().lower(),
+        "video_ids":      sorted(v.get("video_id", "") for v in top_winnable),
+        "niche_kw":       sorted((k or "").strip().lower() for k in (niche_keywords or [])[:8]),
+        "subs_tier":      _subs_tier(int(my_subscribers or 0)),
+        "model":          "claude-sonnet-4-6",
+        "prompt_version": "v1",
+    }
+
+    def _fetch():
+        prompt = f"""You are analysing {len(slim)} over-performing YouTube videos in the niche "{query}".
 
 The user runs a channel with {my_subscribers:,} subscribers in this space.
 Their niche keywords: {nk_str}
@@ -1029,20 +1049,27 @@ Return ONLY valid JSON, no markdown, no preamble:
   }}
 }}"""
 
-    try:
-        client = make_anthropic_client()
-        msg = client.messages.create(
-            model="claude-sonnet-4-6",
-            max_tokens=1500,
-            messages=[{"role": "user", "content": prompt}],
-        )
-        raw = msg.content[0].text.strip()
-        raw = re.sub(r"^```[a-z]*\n?", "", raw)
-        raw = re.sub(r"\n?```$", "", raw.strip())
-        return json.loads(raw)
-    except Exception as e:
-        print(f"[outliers] pattern synthesis failed: {e}")
-        return {}
+        try:
+            client = make_anthropic_client()
+            msg = client.messages.create(
+                model="claude-sonnet-4-6",
+                max_tokens=1500,
+                messages=[{"role": "user", "content": prompt}],
+            )
+            raw = msg.content[0].text.strip()
+            raw = re.sub(r"^```[a-z]*\n?", "", raw)
+            raw = re.sub(r"\n?```$", "", raw.strip())
+            return json.loads(raw)
+        except Exception as e:
+            print(f"[outliers] pattern synthesis failed: {e}")
+            return {}
+
+    return cached_ai_output(
+        function_name="_synthesize_outlier_pattern",
+        inputs=cache_inputs,
+        ttl_hours=24 * 3,  # 3 days
+        fetch_fn=_fetch,
+    )
 
 
 def _compute_winnable_score(
@@ -1127,7 +1154,12 @@ def _compute_winnable_score(
 # specific + urgent — it's the Priority-Actions-style pressure line, not fluff.
 
 def _explain_video_outliers(query: str, videos: list[dict], my_subs: int) -> dict[str, dict]:
-    """One Claude call returns {video_id: {why_worked, quick_actions, why_now}}."""
+    """One Claude call returns {video_id: {why_worked, quick_actions, why_now}}.
+
+    Cached cross-user in ai_output_cache (7-day TTL). The video set
+    (titles, view counts, outlier scores) and the query are what shape
+    the Claude output; my_subs bucketed into broad tiers so similar-size
+    creators share the same cached explanations."""
     if not videos:
         return {}
     slim = [
@@ -1146,7 +1178,27 @@ def _explain_video_outliers(query: str, videos: list[dict], my_subs: int) -> dic
         for v in videos
     ]
 
-    prompt = f"""A YouTube creator with {my_subs:,} subscribers searched: "{query}"
+    # Bucket my_subs so the cache shares hits across creators in the
+    # same broad tier rather than treating "12,403" and "12,567" as
+    # different inputs. Tiers reflect how the explanation framing shifts:
+    # micro (under 10K), small (10K-100K), mid (100K-1M), large (1M+).
+    def _subs_tier(n: int) -> str:
+        if n < 10_000:    return "micro"
+        if n < 100_000:   return "small"
+        if n < 1_000_000: return "mid"
+        return "large"
+
+    from app.utils import cached_ai_output
+    cache_inputs = {
+        "query":          (query or "").strip().lower(),
+        "video_ids":      sorted(v["video_id"] for v in videos if v.get("video_id")),
+        "subs_tier":      _subs_tier(int(my_subs or 0)),
+        "model":          "claude-sonnet-4-6",
+        "prompt_version": "v1",
+    }
+
+    def _fetch():
+        prompt = f"""A YouTube creator with {my_subs:,} subscribers searched: "{query}"
 
 These recent videos over-performed their niche cohort. Each has an outlier
 score (how many times the niche median views-per-subscriber it hit).
@@ -1181,11 +1233,21 @@ Return ONLY valid JSON, no markdown:
     }}
   ]
 }}"""
-    return _run_claude_structured_batch(prompt, id_key="id")
+        return _run_claude_structured_batch(prompt, id_key="id")
+
+    return cached_ai_output(
+        function_name="_explain_video_outliers",
+        inputs=cache_inputs,
+        ttl_hours=24 * 7,  # 7 days
+        fetch_fn=_fetch,
+    )
 
 
 def _explain_channel_outliers(query: str, channels: list[dict], my_subs: int) -> dict[str, dict]:
-    """One Claude call returns {channel_id: {why_this_channel, what_to_do, why_now}}."""
+    """One Claude call returns {channel_id: {why_this_channel, what_to_do, why_now}}.
+
+    Cached cross-user in ai_output_cache (7-day TTL). Same channels +
+    same query + same creator-size tier = same cached explanations."""
     if not channels:
         return {}
     slim = [
@@ -1203,7 +1265,23 @@ def _explain_channel_outliers(query: str, channels: list[dict], my_subs: int) ->
         for c in channels
     ]
 
-    prompt = f"""A YouTube creator with {my_subs:,} subscribers searched: "{query}"
+    def _subs_tier(n: int) -> str:
+        if n < 10_000:    return "micro"
+        if n < 100_000:   return "small"
+        if n < 1_000_000: return "mid"
+        return "large"
+
+    from app.utils import cached_ai_output
+    cache_inputs = {
+        "query":          (query or "").strip().lower(),
+        "channel_ids":    sorted(c["channel_id"] for c in channels if c.get("channel_id")),
+        "subs_tier":      _subs_tier(int(my_subs or 0)),
+        "model":          "claude-sonnet-4-6",
+        "prompt_version": "v1",
+    }
+
+    def _fetch():
+        prompt = f"""A YouTube creator with {my_subs:,} subscribers searched: "{query}"
 
 These channels over-perform in the user's niche. Each has an outlier score
 (how many times the niche median views-per-subscriber it hits). They also
@@ -1240,7 +1318,14 @@ Return ONLY valid JSON, no markdown:
     }}
   ]
 }}"""
-    return _run_claude_structured_batch(prompt, id_key="id")
+        return _run_claude_structured_batch(prompt, id_key="id")
+
+    return cached_ai_output(
+        function_name="_explain_channel_outliers",
+        inputs=cache_inputs,
+        ttl_hours=24 * 7,  # 7 days
+        fetch_fn=_fetch,
+    )
 
 
 def _analyze_thumbnail_patterns(query: str, videos: list[dict]) -> dict:
@@ -1266,6 +1351,17 @@ def _analyze_thumbnail_patterns(query: str, videos: list[dict]) -> dict:
     if not thumbs:
         return {}
 
+    # Cross-user cache. Same query + same thumbnail set = same visual
+    # pattern verdict. The vision call is the most expensive Claude call
+    # in the product (~$0.10), so cache hits here save real money.
+    from app.utils import cached_ai_output
+    cache_inputs = {
+        "query":          (query or "").strip().lower(),
+        "video_ids":      sorted(v.get("video_id", "") for v in thumbs if v.get("video_id")),
+        "model":          "claude-sonnet-4-6",
+        "prompt_version": "v1",
+    }
+
     # Include the YouTube video_id in each line so Claude can reference a
     # stable identifier in `ranked_ids` (rather than a positional index
     # the model might drift on).
@@ -1274,7 +1370,8 @@ def _analyze_thumbnail_patterns(query: str, videos: list[dict]) -> dict:
         for i, v in enumerate(thumbs)
     )
 
-    prompt_text = f"""A YouTube creator searched: "{query}"
+    def _fetch():
+        prompt_text = f"""A YouTube creator searched: "{query}"
 
 I'm showing you the thumbnails of {len(thumbs)} videos that over-performed in
 this niche over the last 12 months. For context, here are their titles, view
@@ -1311,59 +1408,66 @@ Return ONLY valid JSON, no markdown:
 
 Be specific. Reference actual visual details you see. No generic advice."""
 
-    content_blocks: list[dict] = [{"type": "text", "text": prompt_text}]
-    for v in thumbs:
-        # hqdefault.jpg (480x360) is always present; stick with it for the
-        # backend vision call so we never 404. Frontend cascades to maxres.
-        vid = v.get("video_id")
-        url = f"https://i.ytimg.com/vi/{vid}/hqdefault.jpg" if vid else v.get("thumbnail")
-        if not url:
-            continue
-        content_blocks.append({
-            "type": "image",
-            "source": {"type": "url", "url": url},
-        })
+        content_blocks: list[dict] = [{"type": "text", "text": prompt_text}]
+        for v in thumbs:
+            # hqdefault.jpg (480x360) is always present; stick with it for the
+            # backend vision call so we never 404. Frontend cascades to maxres.
+            vid = v.get("video_id")
+            url = f"https://i.ytimg.com/vi/{vid}/hqdefault.jpg" if vid else v.get("thumbnail")
+            if not url:
+                continue
+            content_blocks.append({
+                "type": "image",
+                "source": {"type": "url", "url": url},
+            })
 
-    try:
-        client = make_anthropic_client()
-        msg = client.messages.create(
-            model="claude-sonnet-4-6",
-            max_tokens=1500,
-            system=(
-                "You are a YouTube thumbnail strategist. You look at real "
-                "thumbnails and name the exact visual mechanic that wins. "
-                "Always reference concrete details — faces, text size, colours, "
-                "layout — never generic advice."
-            ),
-            messages=[{"role": "user", "content": content_blocks}],
-        )
-        raw = msg.content[0].text.strip()
-        raw = re.sub(r"^```[a-z]*\n?", "", raw)
-        raw = re.sub(r"\n?```$", "", raw).strip()
-        parsed = json.loads(raw)
-        # Filter ranked_ids to only those we actually sent (model can hallucinate)
-        valid_ids = {v.get("video_id") for v in thumbs if v.get("video_id")}
-        ranked_ids = [
-            rid.strip() for rid in (parsed.get("ranked_ids") or [])
-            if isinstance(rid, str) and rid.strip() in valid_ids
-        ]
-        return {
-            "dominant_style":  (parsed.get("dominant_style") or "").strip(),
-            "text_overlay":    (parsed.get("text_overlay") or "").strip(),
-            "face_presence":   (parsed.get("face_presence") or "").strip(),
-            "color_palette":   (parsed.get("color_palette") or "").strip(),
-            "layout_pattern":  (parsed.get("layout_pattern") or "").strip(),
-            "recommendations": [
-                r.strip() for r in (parsed.get("recommendations") or [])
-                if isinstance(r, str) and r.strip()
-            ][:4],
-            "why_now":         (parsed.get("why_now") or "").strip(),
-            "sample_size":     len(thumbs),
-            "ranked_ids":      ranked_ids,
-        }
-    except Exception as e:
-        print(f"[outliers] thumbnail-pattern analysis error: {e}")
-        return {}
+        try:
+            client = make_anthropic_client()
+            msg = client.messages.create(
+                model="claude-sonnet-4-6",
+                max_tokens=1500,
+                system=(
+                    "You are a YouTube thumbnail strategist. You look at real "
+                    "thumbnails and name the exact visual mechanic that wins. "
+                    "Always reference concrete details — faces, text size, colours, "
+                    "layout — never generic advice."
+                ),
+                messages=[{"role": "user", "content": content_blocks}],
+            )
+            raw = msg.content[0].text.strip()
+            raw = re.sub(r"^```[a-z]*\n?", "", raw)
+            raw = re.sub(r"\n?```$", "", raw).strip()
+            parsed = json.loads(raw)
+            # Filter ranked_ids to only those we actually sent (model can hallucinate)
+            valid_ids = {v.get("video_id") for v in thumbs if v.get("video_id")}
+            ranked_ids = [
+                rid.strip() for rid in (parsed.get("ranked_ids") or [])
+                if isinstance(rid, str) and rid.strip() in valid_ids
+            ]
+            return {
+                "dominant_style":  (parsed.get("dominant_style") or "").strip(),
+                "text_overlay":    (parsed.get("text_overlay") or "").strip(),
+                "face_presence":   (parsed.get("face_presence") or "").strip(),
+                "color_palette":   (parsed.get("color_palette") or "").strip(),
+                "layout_pattern":  (parsed.get("layout_pattern") or "").strip(),
+                "recommendations": [
+                    r.strip() for r in (parsed.get("recommendations") or [])
+                    if isinstance(r, str) and r.strip()
+                ][:4],
+                "why_now":         (parsed.get("why_now") or "").strip(),
+                "sample_size":     len(thumbs),
+                "ranked_ids":      ranked_ids,
+            }
+        except Exception as e:
+            print(f"[outliers] thumbnail-pattern analysis error: {e}")
+            return {}
+
+    return cached_ai_output(
+        function_name="_analyze_thumbnail_patterns",
+        inputs=cache_inputs,
+        ttl_hours=24 * 7,  # 7 days
+        fetch_fn=_fetch,
+    )
 
 
 def _run_claude_structured_batch(prompt: str, id_key: str = "id") -> dict[str, dict]:

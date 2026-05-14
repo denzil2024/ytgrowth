@@ -58,19 +58,36 @@ def generate_intent_options(title: str) -> tuple[list[dict], str]:
     """
     Fast Haiku call — given a title, return 3 possible search keyword interpretations.
     The user picks one before the full analysis runs.
+
+    Cached cross-user in ai_output_cache (30-day TTL). A title's
+    intent interpretations are stable for weeks — "office cleaning"
+    means the same thing today as it did last month. The first user
+    to paste a title pays Haiku; everyone after them reads from cache.
     """
     import json as _json
+    from app.utils import cached_ai_output
 
     api_key = os.getenv("ANTHROPIC_API_KEY", "")
     if not api_key:
         return [], "ANTHROPIC_API_KEY is not set"
 
-    client = make_anthropic_client()
-    try:
-        msg = client.messages.create(
-            model="claude-haiku-4-5-20251001",
-            max_tokens=300,
-            messages=[{"role": "user", "content": f"""A YouTube creator wrote this title: "{title}"
+    title_norm = (title or "").strip().lower()
+    if not title_norm:
+        return [], ""
+
+    cache_inputs = {
+        "title":          title_norm,
+        "model":          "claude-haiku-4-5-20251001",
+        "prompt_version": "v1",
+    }
+
+    def _fetch():
+        client = make_anthropic_client()
+        try:
+            msg = client.messages.create(
+                model="claude-haiku-4-5-20251001",
+                max_tokens=300,
+                messages=[{"role": "user", "content": f"""A YouTube creator wrote this title: "{title}"
 
 The same words can mean very different things — e.g. "office cleaning" could be a personal home-office vlog OR a commercial cleaning business tutorial.
 
@@ -83,20 +100,28 @@ For each, return:
 
 Return ONLY a JSON array of 3 objects, no markdown:
 [{{"keyword":"...","label":"...","description":"..."}},{{"keyword":"...","label":"...","description":"..."}},{{"keyword":"...","label":"...","description":"..."}}]"""}]
-        )
-        raw = msg.content[0].text.strip()
-        if raw.startswith("```"):
-            raw = re.sub(r"^```[a-z]*\n?", "", raw)
-            raw = re.sub(r"\n?```$", "", raw.strip())
-        options = _json.loads(raw)
-        clean = [
-            {"keyword": o["keyword"], "label": o["label"], "description": o["description"]}
-            for o in options if o.get("keyword") and o.get("label")
-        ]
-        return clean[:3], ""
-    except Exception as e:
-        print(f"Intent options error: {e}")
-        return [], str(e)
+            )
+            raw = msg.content[0].text.strip()
+            if raw.startswith("```"):
+                raw = re.sub(r"^```[a-z]*\n?", "", raw)
+                raw = re.sub(r"\n?```$", "", raw.strip())
+            options = _json.loads(raw)
+            clean = [
+                {"keyword": o["keyword"], "label": o["label"], "description": o["description"]}
+                for o in options if o.get("keyword") and o.get("label")
+            ]
+            return {"options": clean[:3], "error": ""}
+        except Exception as e:
+            print(f"Intent options error: {e}")
+            return {"options": [], "error": str(e)}
+
+    cached = cached_ai_output(
+        function_name="generate_intent_options",
+        inputs=cache_inputs,
+        ttl_hours=24 * 30,  # 30 days
+        fetch_fn=_fetch,
+    )
+    return cached.get("options", []), cached.get("error", "")
 
 
 def get_serpapi_autocomplete(seed_keyword: str) -> list[str]:

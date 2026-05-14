@@ -47,14 +47,21 @@ def get_top_channels(region: str = "global"):
     data = fetch_grouped(region=region, top_n=50)
     if not data.get('groups'):
         if os.getenv("YT_QUOTA_PAUSED", "0").strip() == "1":
-            print(f"[top_channels] inline refresh skipped (region={region}) — YT_QUOTA_PAUSED=1")
+            print(f"[top_channels] inline refresh skipped (region={region}) — YT_QUOTA_PAUSED=1, 0 quota spent")
         else:
             # Cache empty for this region — populate inline so first hit
             # shows real data. Slow (5-10s per region) but only on the very
             # first call; subsequent calls hit the cache instantly.
             try:
                 result = refresh_all(regions=[region])
-                print(f"[top_channels] inline refresh on first hit (region={region}): {result}")
+                # Honest log: distinguish "actually fired" from "no-op exit"
+                # (no API key / quota paused / etc) so the terminal doesn't
+                # falsely imply quota was spent on every empty-cache hit.
+                if isinstance(result, dict) and result.get("ok") is False:
+                    reason = result.get("reason", "unknown")
+                    print(f"[top_channels] inline refresh no-op (region={region}, reason={reason}, 0 quota spent)")
+                else:
+                    print(f"[top_channels] inline refresh fired (region={region}): {result}")
             except Exception as e:
                 print(f"[top_channels] inline refresh failed (region={region}): {e}")
             data = fetch_grouped(region=region, top_n=50)
