@@ -307,6 +307,18 @@ class CompetitorAnalysisCache(Base):
     analyzed_at   = Column(DateTime, default=_now)
 
 
+class CompetitorActivityCache(Base):
+    """Dashboard 'recent competitor uploads' feed per user. One row per
+    user channel. Persisted to DB (was in-memory) so the 24h TTL survives
+    Railway restarts and active dev deploys. Without persistence, every
+    redeploy wiped the cache and the next dashboard load paid full price.
+    """
+    __tablename__ = "competitor_activity_cache"
+    channel_id  = Column(String,   primary_key=True)
+    result_json = Column(Text,     nullable=False)
+    cached_at   = Column(DateTime, default=_now, index=True)
+
+
 class OutliersSearchCache(Base):
     """
     One row per channel — the single most recent Outliers search the user ran.
@@ -580,6 +592,10 @@ try:
         "CREATE INDEX IF NOT EXISTS ix_channel_registry_owner_email ON channel_registry (owner_email)",
         "CREATE UNIQUE INDEX IF NOT EXISTS uq_channel_registry_owner_channel ON channel_registry (owner_email, channel_id)",
         "CREATE TABLE IF NOT EXISTS competitor_analysis_cache (id INTEGER PRIMARY KEY AUTOINCREMENT, channel_id TEXT NOT NULL, competitor_id TEXT NOT NULL, result_json TEXT NOT NULL, analyzed_at DATETIME)",
+        # Dashboard 'recent competitor uploads' feed — DB-persisted cache
+        # so the 24h TTL survives Railway restarts. One row per user channel.
+        "CREATE TABLE IF NOT EXISTS competitor_activity_cache (channel_id TEXT PRIMARY KEY, result_json TEXT NOT NULL, cached_at DATETIME)",
+        "CREATE INDEX IF NOT EXISTS ix_competitor_activity_cache_cached_at ON competitor_activity_cache (cached_at)",
         # Top channels per category — daily-refreshed cache. Curated handle
         # seed lives in app/top_channels.py; the scheduler refreshes stats
         # via the YouTube Data API. BIGINT on count columns: top YouTube

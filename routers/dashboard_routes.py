@@ -38,7 +38,7 @@ from app.niche_outliers import (
     is_stale,
     personalize_angle,
 )
-from database.models import SessionLocal, SeoOptimization, CompetitorAnalysisCache
+from database.models import SessionLocal, SeoOptimization, CompetitorAnalysisCache, CompetitorActivityCache
 from routers.auth import get_session
 from routers.admin_routes import _is_admin
 
@@ -365,12 +365,11 @@ def tracked_lift(request: Request):
 # videos.list batch ≈ N+1 units. For 10 tracked competitors, ~11 units.
 # In-memory cache with 6h TTL keeps repeat Feed mounts cheap.
 
-_competitor_activity_cache: dict[str, tuple[dict, float]] = {}
-# Bumped 6h -> 24h. Competitor activity is "what did your competitors
-# upload recently" — once-a-day freshness is enough for the user's
-# experience (a competitor's daily upload still surfaces within 24h),
-# and it cuts dashboard-load quota burn 4x vs the 6h window. Same-user
-# repeat dashboard opens within the day cost 0 units.
+# Competitor activity cache lives in the DB now (CompetitorActivityCache
+# table). 24h TTL — once-a-day freshness catches every daily upload
+# within a day of it going live, and same-user repeat dashboard opens
+# within the day cost 0 units. DB-backed so the cache survives Railway
+# restarts and active dev deploys.
 _COMP_ACTIVITY_TTL = 24 * 3600  # seconds (24h)
 
 
@@ -479,10 +478,53 @@ def _fetch_competitor_recent_uploads(creds, competitors: list[dict], lookback_da
     return out
 
 
+def _read_activity_cache(db, channel_id: str) -> dict | None:
+    """Return the cached payload if it's fresher than _COMP_ACTIVITY_TTL,
+    else None. Reads from the DB so the cache survives Railway restarts.
+    """
+    row = db.query(CompetitorActivityCache).filter_by(channel_id=channel_id).first()
+    if not row or not row.cached_at:
+        return None
+    cached_at = row.cached_at
+    if cached_at.tzinfo is None:
+        cached_at = cached_at.replace(tzinfo=datetime.timezone.utc)
+    age = (datetime.datetime.now(datetime.timezone.utc) - cached_at).total_seconds()
+    if age >= _COMP_ACTIVITY_TTL:
+        return None
+    try:
+        return json.loads(row.result_json)
+    except Exception:
+        return None
+
+
+def _write_activity_cache(db, channel_id: str, payload: dict) -> None:
+    """Upsert the user's competitor-activity payload. Best-effort — a
+    write failure leaves the next request to fetch fresh."""
+    try:
+        now = datetime.datetime.now(datetime.timezone.utc)
+        row = db.query(CompetitorActivityCache).filter_by(channel_id=channel_id).first()
+        body = json.dumps(payload)
+        if row:
+            row.result_json = body
+            row.cached_at = now
+        else:
+            db.add(CompetitorActivityCache(
+                channel_id=channel_id,
+                result_json=body,
+                cached_at=now,
+            ))
+        db.commit()
+    except Exception as e:
+        print(f"[competitor-activity] cache write error: {e}")
+        try: db.rollback()
+        except Exception: pass
+
+
 @router.get("/competitor-activity")
 def competitor_activity(request: Request, force: int = 0):
     """Returns recent uploads from the channels the user tracks via
-    Competitors. Cached for 6h in memory; ?force=1 bypasses cache."""
+    Competitors. Cached for 24h in the DB (survives Railway restarts);
+    ?force=1 bypasses cache."""
     data, creds = get_session(request.session.get("session_id"))
     if not data:
         return JSONResponse({"error": "Not authenticated."}, status_code=401)
@@ -491,16 +533,15 @@ def competitor_activity(request: Request, force: int = 0):
     if not channel_id:
         return JSONResponse({"items": [], "competitor_count": 0})
 
-    # In-memory cache
-    now = time.time()
-    if not force:
-        cached = _competitor_activity_cache.get(channel_id)
-        if cached and (now - cached[1]) < _COMP_ACTIVITY_TTL:
-            return JSONResponse(cached[0])
-
-    # Load tracked competitors from DB. Cap at 10 most recent.
     db = SessionLocal()
     try:
+        # DB-backed cache lookup (survives restarts).
+        if not force:
+            cached_payload = _read_activity_cache(db, channel_id)
+            if cached_payload is not None:
+                return JSONResponse(cached_payload)
+
+        # Load tracked competitors from DB. Cap at 10 most recent.
         rows = (
             db.query(CompetitorAnalysisCache)
               .filter_by(channel_id=channel_id)
@@ -526,15 +567,15 @@ def competitor_activity(request: Request, force: int = 0):
             })
             if len(competitors) >= 10:
                 break
+
+        if not competitors:
+            payload = {"items": [], "competitor_count": 0}
+            _write_activity_cache(db, channel_id, payload)
+            return JSONResponse(payload)
+
+        items = _fetch_competitor_recent_uploads(creds, competitors, lookback_days=7)
+        payload = {"items": items[:5], "competitor_count": len(competitors)}
+        _write_activity_cache(db, channel_id, payload)
+        return JSONResponse(payload)
     finally:
         db.close()
-
-    if not competitors:
-        result = {"items": [], "competitor_count": 0}
-        _competitor_activity_cache[channel_id] = (result, now)
-        return JSONResponse(result)
-
-    items = _fetch_competitor_recent_uploads(creds, competitors, lookback_days=7)
-    result = {"items": items[:5], "competitor_count": len(competitors)}
-    _competitor_activity_cache[channel_id] = (result, now)
-    return JSONResponse(result)
