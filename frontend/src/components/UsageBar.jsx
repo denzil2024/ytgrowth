@@ -85,8 +85,8 @@ export default function UsageBar({ channelId, email, dark = false, onPlan, onUsa
   const accent    = atLimit ? C.red    : nearLimit ? C.amber    : '#3a3a45'
   const accentDim = atLimit ? C.redDim : nearLimit ? C.amberDim : '#5a5a6a'
   const numClr    = atLimit ? C.red    : nearLimit ? C.amber    : C.text1
-  const barFrom   = atLimit ? C.redDim : nearLimit ? C.amberDim : 'rgba(229,37,27,0.20)'
-  const barTo     = atLimit ? C.red    : nearLimit ? C.amber    : 'rgba(229,37,27,0.42)'
+  const barFrom   = atLimit ? C.redDim : nearLimit ? C.amberDim : '#3a3a45'
+  const barTo     = atLimit ? C.red    : nearLimit ? C.amber    : '#3a3a45'
 
   return (
     <div style={{
