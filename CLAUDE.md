@@ -145,11 +145,90 @@ When the bump lands (typically 1M+ units/day for audited apps):
 
 Do NOT make these changes preemptively. Wait for the user to confirm the bump arrived.
 
-## Pending: Smarter niche warmer
+## Moat build-out (ordered queue — work through in this order, do not skip)
 
-`app/niche_warmer.py` currently uses a hardcoded ~150-niche seed list. It already tracks `hit_count` per cache row via `youtube_search_cache`. The next refinement is to replace the hardcoded seed with a query that pulls the top-N highest-hit-count entries from the cache itself. The warmer then refreshes what users actually research, not what was guessed.
+This is the strategic compounding-data work. Every cached query and Claude
+output is a brick in the moat. The product gets cheaper and smarter the
+more users it has, automatically. The order below is locked — do NOT
+re-prioritise without surfacing the trade-off.
 
-This is queued as a half-day refactor after the user confirms direction.
+### 1. Smarter niche warmer — DONE
+`app/niche_warmer.py` was extended to cover both the SEO Studio cache
+(seo: prefix) and the Keyword Research cache (kw: prefix). Both phases
+pick by hit_count, so the warmer refreshes what users actually research,
+not what was guessed. Total nightly burn: ~3,000 units. Commit:
+"Niche warmer: extend to Keyword Research cache (kw: prefix)".
+
+### 2. Trending dashboard — NEXT
+Admin-only endpoint + page that surfaces what the user base is researching
+most. Powers product decisions and a future "trending in your niche"
+widget for end users.
+
+Implementation sketch:
+- `GET /admin/trends` returning the top N queries by hit_count across
+  `youtube_search_cache` (broken down by seo: / kw: / comp: prefix).
+  Include hit_count, last_hit_at, original_query, function_name.
+- `GET /admin/ai-trends` for the AI side: top function_name groups
+  from `ai_output_cache` by hit_count.
+- Frontend: an `/admin/trends` page in `frontend/src/pages/Admin.jsx`
+  (or a dedicated component) rendering both as tables.
+- Half-day work.
+
+### 3. Time-series snapshots
+Daily cron that snapshots `youtube_search_cache.hit_count` and
+`ai_output_cache.hit_count` into a `cache_hit_snapshots` table with a
+date column. Without this, trend detection is impossible. Cheap insurance
+to add now; expensive to backfill later.
+
+Implementation sketch:
+- New table: `cache_hit_snapshots` (cache_key, hit_count, snapshot_date).
+- New scheduled job in `app/scheduler.py` running at 23:55 UTC daily.
+- One `INSERT INTO ... SELECT ...` copying all non-zero hit_count rows.
+- Half-day work.
+
+### 4. Public SEO pages from cached data
+Turn the `youtube_search_cache` data into search-engine-indexable pages.
+Each popular query gets a `/research/<slug>` page showing the top videos
+ranking for that keyword. Free traffic, zero per-page-load quota cost
+(reads from existing cache).
+
+Bigger work (1-2 weeks). Requires:
+- Slug routing in the SPA + prerender pipeline (see "Publishing workflow
+  for new public routes" above).
+- Page template.
+- Sitemap generation that lists every cached query above some hit_count
+  threshold.
+- Should respect content-quality gates (skip queries that returned
+  thin or off-topic results).
+
+### 5. Behavioural recommendations
+"Creators like you (same niche keywords, same channel size tier) also
+researched X." Uses `KeywordsResearchCache` joined to `ChannelRegistry`.
+
+Roughly a week of work. Requires:
+- Similarity function: niche-keyword overlap + sub-count tier matching.
+- Surface area: a card in the Dashboard or Keyword Research page.
+- Privacy consideration: never expose individual user identities, only
+  aggregated patterns.
+
+### 6. AI training data export
+Export `ai_output_cache` as JSONL: each row becomes a (prompt, completion)
+training example. Eventually fine-tune a smaller / cheaper model
+(Haiku or open-source) on it. Long-term cost reduction by replacing
+Sonnet for some functions.
+
+3-5 days of work. Requires:
+- Export endpoint or CLI script.
+- Quality filtering: skip rows with `_error` or known parse failures.
+- Prompt template versioning consideration (the `prompt_version` field
+  in cache inputs helps here).
+
+### Working principle for all moat items
+
+Do not ship a new feature using the moat data before the underlying
+caches have had time to accumulate. The flywheel needs weeks of usage
+before items 2-6 produce useful output. Until then, treat each item as
+infrastructure work — building the rails, not the train.
 
 ## Pending: Resources hub page
 
