@@ -1221,11 +1221,14 @@ export default function Keywords({ plan, freeTierFeatures }) {
                 </p>
               </div>
 
-              <div className="kw-card" style={{ marginBottom: 24 }}>
+              <div className="kw-card" style={{ marginBottom: 24, borderTop: `3px solid ${C.green}` }}>
                 <div style={{ display: 'flex', alignItems: 'stretch', padding: '20px 22px' }}>
-                  {result.clusters.map((cl, i) => {
+                  {/* Cap at 3 — three columns reads cleanly in the 1040
+                      column. More than 3 cramps the keyword chips and the
+                      Copy theme buttons into unreadable narrow slots. */}
+                  {result.clusters.slice(0, 3).map((cl, i, arr) => {
                     const isCopied = copiedCluster === cl.clusterName
-                    const isLast = i === result.clusters.length - 1
+                    const isLast = i === arr.length - 1
                     return (
                       <React.Fragment key={cl.clusterName}>
                         <div style={{
@@ -1250,18 +1253,16 @@ export default function Keywords({ plan, freeTierFeatures }) {
                             }}>{cl.keywords?.length || 0}</span>
                           </div>
 
-                          {/* Keyword chips — soft amber tint. Amber is the
-                              app's AI-accent semantic (used on AI-generated
-                              content cards across the system). Replaces the
-                              green-on-green tinted block + the pure neutral
-                              gray attempt; this version reads as data with
-                              warmth, blending into the page palette. */}
+                          {/* Keyword chips — clean green. Green is the
+                              app's "positive opportunity" semantic and pairs
+                              cleanly against the amber vertical dividers
+                              without competing for the same color slot. */}
                           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 16 }}>
                             {cl.keywords?.map(k => (
                               <span key={k} style={{
-                                background: '#fffbeb',
-                                border: '1px solid #fde68a',
-                                color: '#92400e',
+                                background: C.greenBg,
+                                border: `1px solid ${C.greenBdr}`,
+                                color: C.green,
                                 padding: '4px 11px', borderRadius: 100,
                                 fontSize: 11.5, fontWeight: 600, letterSpacing: '-0.05px',
                               }}>{k}</span>
