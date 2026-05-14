@@ -13,14 +13,18 @@ def parse_duration_seconds(iso_duration):
     return int(match.group(1) or 0) * 3600 + int(match.group(2) or 0) * 60 + int(match.group(3) or 0)
 
 
-_COMP_CACHE_TTL_HOURS = 24
+_COMP_CACHE_TTL_HOURS = 24 * 7  # 7 days
 
 
 def search_competitor_channels(credentials, query, max_results=5):
     """Find candidate competitor channels by name. Cached cross-user in
-    youtube_search_cache (comp: prefix) for 24h, same caching layer SEO
-    Studio + Keyword Research use. Two users searching "MrBeast" within
-    a day = one 100-unit YouTube call, not two."""
+    youtube_search_cache (comp: prefix) for 7 days, same caching layer
+    SEO Studio + Keyword Research use.
+
+    Why 7 days (longer than other caches): channel-name searches barely
+    change week to week. The top results for "MrBeast" or "fitness guru"
+    are the same today as last week. Stretching the TTL saves more
+    YouTube quota without any meaningful staleness hit."""
     from app.utils import yt_quota_paused
     if yt_quota_paused():
         print(f"[competitors] search skipped — YT_QUOTA_PAUSED=1 (query='{query}')")

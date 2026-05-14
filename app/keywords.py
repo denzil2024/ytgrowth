@@ -158,13 +158,37 @@ def analyze_keywords(seed_keyword: str, autocomplete_results: list[str], serper_
     """
     Claude receives autocomplete + Serper related searches, filters by intent,
     assigns content angles, clusters, and scores by keyword specificity.
+
+    Cross-user cached in ai_output_cache. Two users seeding the same
+    keyword (e.g. "fitness tips") feed identical Claude inputs and get
+    identical Claude outputs, so the second user reads from cache at
+    zero Anthropic spend. 7-day TTL because autocomplete suggestions
+    and Claude's keyword clustering drift slowly (the seed intent for
+    "fitness tips" doesn't change week-to-week).
     """
     import json as _json
-    client = make_anthropic_client()
+    from app.utils import cached_ai_output
 
-    all_suggestions = list(dict.fromkeys(autocomplete_results + serper_keywords))
+    # Normalise inputs so cache keys match for cosmetically-different
+    # but semantically-identical seeds (e.g. "Fitness Tips" vs "fitness
+    # tips"). The suggestion lists are sorted because order from
+    # autocomplete/Serper is non-deterministic but semantically the same.
+    seed_norm = (seed_keyword or "").strip().lower()
+    ac_norm   = sorted(set((a or "").strip().lower() for a in (autocomplete_results or []) if a))
+    sp_norm   = sorted(set((s or "").strip().lower() for s in (serper_keywords or []) if s))
 
-    user_prompt = f"""Seed keyword: "{seed_keyword}"
+    cache_inputs = {
+        "seed":            seed_norm,
+        "autocomplete":    ac_norm,
+        "serper":          sp_norm,
+        "model":           "claude-sonnet-4-6",
+        "prompt_version":  "v1",  # bump if the prompt changes
+    }
+
+    def _fetch():
+        client = make_anthropic_client()
+        all_suggestions = list(dict.fromkeys(autocomplete_results + serper_keywords))
+        user_prompt = f"""Seed keyword: "{seed_keyword}"
 
 Suggestions (YouTube autocomplete + Google related searches):
 {all_suggestions}
@@ -176,24 +200,31 @@ Tasks — return ONLY valid JSON, no markdown:
 4. topPick: best keyword + whyThisOne (1 sentence).
 
 {{"seedIntent":{{"primaryIntent":"","viewerProfile":"","contentTypeExpected":"","funnelStage":"","intentSummary":""}},"totalSuggestionsReceived":{len(all_suggestions)},"totalAfterIntentFilter":0,"keywords":[{{"keyword":"","contentAngle":"","intentMatch":"exact|strong|partial","opportunityScore":0}}],"clusters":[{{"clusterName":"","keywords":[]}}],"topPick":{{"keyword":"","whyThisOne":""}}}}"""
+        try:
+            resp = client.messages.create(
+                model="claude-sonnet-4-6",
+                max_tokens=2500,
+                system="You are a YouTube SEO analyst. Return only valid JSON, no markdown.",
+                messages=[{"role": "user", "content": user_prompt}],
+            )
+            raw = resp.content[0].text.strip()
+            if raw.startswith("```"):
+                raw = re.sub(r"^```[a-z]*\n?", "", raw)
+                raw = re.sub(r"\n?```$", "", raw)
+            result = _json.loads(raw)
+            if isinstance(result.get("keywords"), list):
+                result["keywords"].sort(key=lambda k: k.get("opportunityScore", 0), reverse=True)
+            return result
+        except Exception as e:
+            print(f"analyze_keywords error: {e}")
+            return {"error": str(e)}
 
-    try:
-        resp = client.messages.create(
-            model="claude-sonnet-4-6",
-            max_tokens=2500,
-            system="You are a YouTube SEO analyst. Return only valid JSON, no markdown.",
-            messages=[{"role": "user", "content": user_prompt}],
-        )
-        raw = resp.content[0].text.strip()
-        if raw.startswith("```"):
-            raw = re.sub(r"^```[a-z]*\n?", "", raw)
-            raw = re.sub(r"\n?```$", "", raw)
-        result = _json.loads(raw)
-        result["keywords"].sort(key=lambda k: k.get("opportunityScore", 0), reverse=True)
-        return result
-    except Exception as e:
-        print(f"analyze_keywords error: {e}")
-        return {"error": str(e)}
+    return cached_ai_output(
+        function_name="analyze_keywords",
+        inputs=cache_inputs,
+        ttl_hours=24 * 7,  # 7 days
+        fetch_fn=_fetch,
+    )
 
 
 # ─── Real competition + trend signals ─────────────────────────────────────────

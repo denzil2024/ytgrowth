@@ -319,6 +319,24 @@ class CompetitorActivityCache(Base):
     cached_at   = Column(DateTime, default=_now, index=True)
 
 
+class AIOutputCache(Base):
+    """Cross-user cache for Claude / Haiku outputs, keyed by input
+    fingerprint (SHA-256 of function name + sorted JSON of relevant
+    inputs). Two users feeding identical input to a Claude analysis
+    pay once: the first user fires the call and writes the row; every
+    subsequent user reads from this table at zero AI cost.
+
+    function_name is stored alongside the hash so we can debug, audit
+    spend per function, and invalidate by function family if a prompt
+    template changes."""
+    __tablename__ = "ai_output_cache"
+    input_hash    = Column(String,   primary_key=True)
+    function_name = Column(String,   nullable=False, index=True)
+    output_json   = Column(Text,     nullable=False)
+    cached_at     = Column(DateTime, default=_now, index=True)
+    hit_count     = Column(Integer,  default=0)
+
+
 class PublicChannelStatsCache(Base):
     """Public /tools/youtube-channel-stats-checker lookup cache.
     Anonymous, no-auth endpoint that costs 3 YouTube units per lookup
@@ -616,6 +634,13 @@ try:
         # flood of fresh API calls on the next 500 unique lookups.
         "CREATE TABLE IF NOT EXISTS public_channel_stats_cache (cache_key TEXT PRIMARY KEY, result_json TEXT NOT NULL, cached_at DATETIME)",
         "CREATE INDEX IF NOT EXISTS ix_public_channel_stats_cache_cached_at ON public_channel_stats_cache (cached_at)",
+        # Cross-user cache for Claude/Haiku outputs. One row per unique
+        # input fingerprint. Saves Anthropic spend when two users feed
+        # the same input to the same analysis (e.g. analyze_keywords on
+        # a popular seed like 'fitness tips').
+        "CREATE TABLE IF NOT EXISTS ai_output_cache (input_hash TEXT PRIMARY KEY, function_name TEXT NOT NULL, output_json TEXT NOT NULL, cached_at DATETIME, hit_count INTEGER DEFAULT 0)",
+        "CREATE INDEX IF NOT EXISTS ix_ai_output_cache_function_name ON ai_output_cache (function_name)",
+        "CREATE INDEX IF NOT EXISTS ix_ai_output_cache_cached_at ON ai_output_cache (cached_at)",
         # Top channels per category — daily-refreshed cache. Curated handle
         # seed lives in app/top_channels.py; the scheduler refreshes stats
         # via the YouTube Data API. BIGINT on count columns: top YouTube

@@ -22,6 +22,98 @@ def yt_quota_paused() -> bool:
     return os.getenv("YT_QUOTA_PAUSED", "0").strip() == "1"
 
 
+def cached_ai_output(function_name: str, inputs: dict, ttl_hours: int, fetch_fn):
+    """Cross-user cache for Claude / Haiku outputs.
+
+    Hashes (function_name + sorted JSON of `inputs`) into a stable key.
+    If a row exists in ai_output_cache for that key and is fresher than
+    `ttl_hours`, return its parsed output. Otherwise call `fetch_fn()`,
+    persist the result, and return it.
+
+    The first user fires the API call; every subsequent user feeding
+    the same inputs reads the row at zero Anthropic cost. Failures in
+    cache read/write degrade gracefully — we fall back to calling
+    fetch_fn() and skipping persistence, so a cache outage never breaks
+    a user-facing analysis.
+
+    Inputs must be JSON-serialisable. Use only the FIELDS THAT AFFECT
+    THE OUTPUT — including a user_id or channel_id would defeat the
+    cross-user reuse.
+    """
+    import datetime as _dt
+    import hashlib
+    import json as _json
+    from database.models import SessionLocal, AIOutputCache
+
+    try:
+        normalised = _json.dumps(inputs, sort_keys=True, default=str)
+    except Exception:
+        # If inputs aren't serialisable, bypass the cache entirely.
+        return fetch_fn()
+    digest = hashlib.sha256(
+        (function_name + "|" + normalised).encode("utf-8")
+    ).hexdigest()
+
+    # Cache read
+    db = SessionLocal()
+    try:
+        row = db.query(AIOutputCache).filter_by(input_hash=digest).first()
+        if row and row.cached_at:
+            cached_at = row.cached_at
+            if cached_at.tzinfo is None:
+                cached_at = cached_at.replace(tzinfo=_dt.timezone.utc)
+            age_hours = (_dt.datetime.now(_dt.timezone.utc) - cached_at).total_seconds() / 3600
+            if age_hours < ttl_hours:
+                try:
+                    output = _json.loads(row.output_json)
+                    try:
+                        row.hit_count = (row.hit_count or 0) + 1
+                        db.commit()
+                    except Exception:
+                        try: db.rollback()
+                        except Exception: pass
+                    print(f"[ai_cache] HIT {function_name} (hits={row.hit_count}, age {age_hours:.1f}h)")
+                    return output
+                except Exception:
+                    pass  # corrupt cache row, refetch
+    except Exception as e:
+        print(f"[ai_cache] read error: {e}")
+    finally:
+        db.close()
+
+    # Cache miss → call Claude / Haiku / whichever the fetch_fn wraps
+    output = fetch_fn()
+
+    # Cache write — best-effort
+    db = SessionLocal()
+    try:
+        now = _dt.datetime.now(_dt.timezone.utc)
+        row = db.query(AIOutputCache).filter_by(input_hash=digest).first()
+        payload = _json.dumps(output, default=str)
+        if row:
+            row.output_json   = payload
+            row.cached_at     = now
+            row.hit_count     = (row.hit_count or 0) + 1
+            row.function_name = function_name
+        else:
+            db.add(AIOutputCache(
+                input_hash=digest,
+                function_name=function_name,
+                output_json=payload,
+                cached_at=now,
+                hit_count=1,
+            ))
+        db.commit()
+    except Exception as e:
+        print(f"[ai_cache] write error: {e}")
+        try: db.rollback()
+        except Exception: pass
+    finally:
+        db.close()
+
+    return output
+
+
 def build_youtube_client(credentials=None):
     """YouTube Data API v3 client.
 

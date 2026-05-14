@@ -21,7 +21,12 @@ from database.models import SessionLocal, PublicChannelStatsCache
 
 router = APIRouter()
 
-_CACHE_TTL_SECONDS = 3600  # 1 hour. Channel stats move slowly; 1h freshness fine.
+_CACHE_TTL_SECONDS = 24 * 3600  # 24 hours. Subscriber counts and recent uploads
+                                # drift slowly; the visual difference between
+                                # "1.2M subscribers" today and "1.21M" tomorrow
+                                # is meaningless on this public lookup tool.
+                                # Stretching to 24h vs the prior 1h cuts repeat
+                                # bot/scraper traffic to ~24x less burn.
 
 
 def _parse_input(raw: str):
