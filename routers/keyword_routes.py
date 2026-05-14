@@ -145,6 +145,31 @@ def research_keywords(body: KeywordResearchRequest, request: Request):
 
 # ─── Reports — list / open / delete ────────────────────────────────────────────
 
+def _report_needs_video_backfill(result: dict) -> bool:
+    """A saved report was written before `competition.top_videos` existed
+    if any enriched keyword still lacks the field. Cheap check."""
+    if not isinstance(result, dict):
+        return False
+    for kw in (result.get("keywords") or []):
+        comp = kw.get("competition")
+        if isinstance(comp, dict) and "top_videos" not in comp:
+            return True
+    return False
+
+
+def _backfill_report_videos(result: dict, autocomplete: list = None) -> dict:
+    """Lazy re-enrichment for saved reports that pre-date the top_videos
+    field. Calls enrich_keywords_with_real_data which pulls from the
+    smart YT cache (free for keywords cached after the schema change,
+    one YT API roundtrip each for the rest). Returns the same dict
+    object back, mutated in place."""
+    try:
+        enrich_keywords_with_real_data(result, autocomplete or [], top_n=5)
+    except Exception as e:
+        print(f"[keywords] report backfill error: {e}")
+    return result
+
+
 @router.get("/reports")
 def list_keyword_reports(request: Request):
     data, _ = get_session(request.session.get("session_id"))
@@ -159,17 +184,49 @@ def list_keyword_reports(request: Request):
               .order_by(KeywordsResearchCache.updated_at.desc())
               .all()
         )
-        reports = []
+
+        # Backfill any reports that lack top_videos. Runs in parallel so
+        # listing N reports stays fast (each backfill is bounded by the
+        # YT cache; cached keywords return instantly).
+        rows_needing_backfill = []
+        parsed_results = {}
         for r in rows:
             try:
-                result = json.loads(r.result_json)
+                parsed_results[r.id] = json.loads(r.result_json)
             except Exception:
-                result = None
+                parsed_results[r.id] = None
+            if _report_needs_video_backfill(parsed_results[r.id]):
+                rows_needing_backfill.append(r)
+
+        if rows_needing_backfill:
+            print(f"[keywords] backfilling {len(rows_needing_backfill)} stale-schema report(s)")
+            with ThreadPoolExecutor(max_workers=min(5, len(rows_needing_backfill))) as pool:
+                futures = {
+                    pool.submit(_backfill_report_videos, parsed_results[r.id]): r
+                    for r in rows_needing_backfill
+                }
+                for fut in futures:
+                    r = futures[fut]
+                    try:
+                        updated = fut.result()
+                        parsed_results[r.id] = updated
+                        r.result_json = json.dumps(updated)
+                    except Exception as e:
+                        print(f"[keywords] backfill task failed for report {r.id}: {e}")
+            try:
+                db.commit()
+            except Exception as e:
+                print(f"[keywords] backfill commit failed: {e}")
+                try: db.rollback()
+                except Exception: pass
+
+        reports = []
+        for r in rows:
             reports.append({
                 "id": r.id,
                 "keyword": r.keyword,
                 "confirmed_keyword": r.confirmed_keyword or "",
-                "result": result,
+                "result": parsed_results.get(r.id),
                 "created_at": r.created_at.isoformat() if r.created_at else None,
                 "updated_at": r.updated_at.isoformat() if r.updated_at else None,
             })
