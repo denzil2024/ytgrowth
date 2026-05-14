@@ -30,11 +30,31 @@ const SEED_MESSAGES = stateMode === 'active' ? [
   { role: 'user', content: 'Why are my CTRs dropping?', created_at: new Date(Date.now() - 60000).toISOString() },
   {
     role: 'assistant',
-    content: "Looking at your last 20 uploads, your average CTR slipped from 5.8% in October to 3.2% in the last 30 days. The pattern fits a thumbnail-fatigue signal: you ran the same yellow-highlight visual style across six consecutive videos and the audience stopped clicking.\n\nThree concrete moves: tighten your title-thumbnail pair (the title should answer the visual question), test a fresh color palette on the next three thumbnails, and watch the first 24 hours of CTR closely. If the new style holds above 4%, keep going.",
+    content: `Your **average CTR slipped from 5.8% in October to 3.2%** over the last 30 days. That fits a thumbnail-fatigue signal: you ran the same yellow-highlight style across six uploads and the audience stopped clicking.
+
+### Three concrete moves
+
+1. **Tighten the title-thumbnail pair.** The title should answer the visual question. \`Why Your Intro Is Killing Retention\` works because the thumbnail shows a stopwatch.
+2. **Test a fresh palette.** Drop the yellow on the next three uploads, try a deep teal or charcoal background instead.
+3. **Watch the first 24 hours.** If the new style holds above 4% CTR, keep going. If it drops below 2.5%, the framing is off, not the colour.
+
+> The CTR drop is reversible. The next three uploads are the lever.`,
     created_at: new Date(Date.now() - 30000).toISOString(),
     sources: ['Channel stats', '20 recent videos', '90d analytics'],
   },
   { role: 'user', content: 'Compare me to my top competitor', created_at: new Date(Date.now() - 10000).toISOString() },
+  {
+    role: 'assistant',
+    content: `**Moureen Ngigi** is your closest tracked competitor by niche. Here's how you stack up:
+
+- **Subscribers:** she has 268K, you have 880.
+- **Avg views per video:** she pulls 56.3K, you pull around 1,450.
+- **Upload cadence:** she ships 2x per week, you ship 1x every 15 days.
+
+The view-to-subscriber ratio matters more than the raw numbers. Her ratio is **0.21** (good but not viral). Yours is **1.65** (algorithmically very strong for your size). YouTube is already pushing your videos hard, you just need more shots on goal.`,
+    created_at: new Date(Date.now() - 5000).toISOString(),
+    sources: ['Channel stats', '2 competitors'],
+  },
 ] : []
 
 // Mock fetch for any /chat/* or /auth/* endpoints the component hits.

@@ -69,16 +69,28 @@ class UserSubscription(Base):
     updated_at        = Column(DateTime, default=_now, onupdate=_now)
 
 
+class ChatConversation(Base):
+    """One conversation thread in the AI Coach. A channel can have many
+    conversations; the user can switch between them via the sidebar rail.
+    Title is auto-generated via Haiku from the first user message."""
+    __tablename__ = "chat_conversations"
+    id              = Column(Integer,  primary_key=True, autoincrement=True)
+    channel_id      = Column(String,   nullable=False, index=True)
+    title           = Column(String,   nullable=True)
+    created_at      = Column(DateTime, default=_now, index=True)
+    last_message_at = Column(DateTime, default=_now, index=True)
+
+
 class ChatMessage(Base):
-    """One row per turn in the AI Coach. One conversation per channel
-    for v1 — when the user clicks "New chat", we delete the existing
-    rows and start fresh. Role is 'user' or 'assistant'."""
+    """One row per turn in the AI Coach. Each message belongs to a
+    conversation. Role is 'user' or 'assistant'."""
     __tablename__ = "chat_messages"
-    id            = Column(Integer, primary_key=True, autoincrement=True)
-    channel_id    = Column(String,   nullable=False, index=True)
-    role          = Column(String,   nullable=False)   # 'user' | 'assistant'
-    content       = Column(Text,     nullable=False)
-    created_at    = Column(DateTime, default=_now, index=True)
+    id              = Column(Integer, primary_key=True, autoincrement=True)
+    channel_id      = Column(String,  nullable=False, index=True)
+    conversation_id = Column(Integer, nullable=True, index=True)  # nullable for migration safety
+    role            = Column(String,  nullable=False)   # 'user' | 'assistant'
+    content         = Column(Text,    nullable=False)
+    created_at      = Column(DateTime, default=_now, index=True)
 
 
 class IdeaProofCache(Base):
@@ -672,6 +684,13 @@ try:
         "ALTER TABLE youtube_search_cache ADD COLUMN last_hit_at DATETIME",
         "CREATE INDEX IF NOT EXISTS ix_youtube_search_cache_hit_count ON youtube_search_cache (hit_count)",
         "CREATE INDEX IF NOT EXISTS ix_youtube_search_cache_last_hit_at ON youtube_search_cache (last_hit_at)",
+        # Chat conversations — sidebar rail support. Each channel now has
+        # many conversations instead of one rolling thread.
+        "CREATE TABLE IF NOT EXISTS chat_conversations (id INTEGER PRIMARY KEY AUTOINCREMENT, channel_id TEXT NOT NULL, title TEXT, created_at DATETIME, last_message_at DATETIME)",
+        "CREATE INDEX IF NOT EXISTS ix_chat_conversations_channel_id ON chat_conversations (channel_id)",
+        "CREATE INDEX IF NOT EXISTS ix_chat_conversations_last_message_at ON chat_conversations (last_message_at)",
+        "ALTER TABLE chat_messages ADD COLUMN conversation_id INTEGER",
+        "CREATE INDEX IF NOT EXISTS ix_chat_messages_conversation_id ON chat_messages (conversation_id)",
     ]:
         try:
             _conn.execute(_text(_stmt))

@@ -11,6 +11,8 @@
 */
 
 import { useEffect, useRef, useState } from 'react'
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 import {
   Sparkles,         // Per-message assistant avatar (reads as "AI" clearly)
   Database,         // Source pill on assistant replies
@@ -66,6 +68,28 @@ if (typeof document !== 'undefined' && !document.getElementById('ytg-chat-scroll
     @keyframes ytgPulseSoft {
       0%, 100% { opacity: 0.55 }
       50%      { opacity: 1    }
+    }
+    /* Markdown list markers. react-markdown v10 dropped the per-li
+       'ordered' prop, so we infer from the parent class: ul = bullet,
+       ol = counter. Marker sits in the 22px left-pad gutter of each li
+       and uses tabular numerals so ordered markers line up cleanly. */
+    .md-list-ul > li::before {
+      content: '•';
+      position: absolute; left: 6px; top: 0;
+      font-size: 14.5px; font-weight: 600;
+      color: rgba(10,10,15,0.55);
+      line-height: inherit;
+    }
+    .md-list-ol > li {
+      counter-increment: mdlist;
+    }
+    .md-list-ol > li::before {
+      content: counter(mdlist) '.';
+      position: absolute; left: 0; top: 0;
+      font-size: 13.5px; font-weight: 600;
+      color: rgba(10,10,15,0.55);
+      font-variant-numeric: tabular-nums;
+      line-height: inherit;
     }
   `
   document.head.appendChild(s)
@@ -128,23 +152,148 @@ function fmtAge(iso) {
   return `${Math.floor(hr / 24)}d ago`
 }
 
-/* Assistant prose. Re-tuned for Inter (was Geist values): Inter at 500
-   reads more confident than at 450 because its humanist forms need
-   slightly more weight to feel anchored. Tracking pulls in a hair. */
+/* Assistant prose. Renders markdown via react-markdown + GFM. Each
+   element is styled to match the design system: charcoal text, Inter
+   weights tuned for legibility, lists with proper hanging indents,
+   inline code in tinted background, blockquotes with a left rail.
+   Bold is the visual emphasis (italics retire per design system). */
 function AssistantBody({ text }) {
-  const parts = (text || '').split(/\n{2,}/g)
   return (
-    <>
-      {parts.map((p, i) => (
-        <p key={i} style={{
-          margin: i === 0 ? 0 : '12px 0 0 0',
-          fontSize: 14.5, fontWeight: 500, color: C.text1,
-          letterSpacing: '-0.01em', lineHeight: 1.65,
-          whiteSpace: 'pre-wrap',
-        }}>{p}</p>
-      ))}
-    </>
+    <div style={{
+      fontSize: 14.5, fontWeight: 500, color: C.text1,
+      letterSpacing: '-0.01em', lineHeight: 1.65,
+    }}>
+      <ReactMarkdown
+        remarkPlugins={[remarkGfm]}
+        components={MARKDOWN_COMPONENTS}
+      >
+        {text || ''}
+      </ReactMarkdown>
+    </div>
   )
+}
+
+/* Markdown component overrides. Each element renders inline so the
+   surrounding bubble padding controls outer spacing; component-internal
+   spacing is tight. */
+const MARKDOWN_COMPONENTS = {
+  // Paragraphs: tight margin between, none on first / last.
+  p: ({ children }) => (
+    <p style={{
+      margin: '0 0 10px 0',
+      fontSize: 'inherit', fontWeight: 'inherit', color: 'inherit',
+      letterSpacing: 'inherit', lineHeight: 'inherit',
+    }}>{children}</p>
+  ),
+  // Bold: weight bumps to 700 (a real beat heavier than the 500 body)
+  // so emphasis lands without italics (italics are retired in our system).
+  strong: ({ children }) => (
+    <strong style={{ fontWeight: 700, color: '#000000' }}>{children}</strong>
+  ),
+  // Italics map to bold + subtle color shift so the reader still senses
+  // emphasis without using a font style we've banned in the system.
+  em: ({ children }) => (
+    <span style={{ fontWeight: 600, color: '#000000' }}>{children}</span>
+  ),
+  // Bullet list. Class drives the ::before marker (CSS) so we don't need
+  // react-markdown to pass an ordered prop (it dropped that in v10).
+  ul: ({ children }) => (
+    <ul className="md-list-ul" style={{
+      margin: '6px 0 12px 0',
+      padding: 0,
+      listStyle: 'none',
+      display: 'flex', flexDirection: 'column', gap: 6,
+    }}>{children}</ul>
+  ),
+  // Ordered list. counter-reset on the OL, counter-increment + content
+  // happen on the li via CSS.
+  ol: ({ children }) => (
+    <ol className="md-list-ol" style={{
+      margin: '6px 0 12px 0',
+      padding: 0,
+      listStyle: 'none',
+      counterReset: 'mdlist',
+      display: 'flex', flexDirection: 'column', gap: 6,
+    }}>{children}</ol>
+  ),
+  li: ({ children }) => (
+    <li style={{
+      position: 'relative',
+      paddingLeft: 22,
+    }}>{children}</li>
+  ),
+  // Inline code. Soft tinted background, monospace stack, tight padding.
+  code: ({ inline, children }) => {
+    if (inline === false) {
+      return (
+        <pre style={{
+          margin: '8px 0 12px 0',
+          padding: '12px 14px',
+          background: 'rgba(10,10,15,0.04)',
+          border: `1px solid ${C.hair}`,
+          borderRadius: 10,
+          fontSize: 13, fontFamily: FONT_MONO,
+          lineHeight: 1.55, color: C.text1,
+          overflow: 'auto',
+        }}><code>{children}</code></pre>
+      )
+    }
+    return (
+      <code style={{
+        background: 'rgba(10,10,15,0.05)',
+        padding: '1.5px 5px',
+        borderRadius: 4,
+        fontSize: '0.92em', fontFamily: FONT_MONO,
+        color: C.text1,
+      }}>{children}</code>
+    )
+  },
+  // Blockquote. Charcoal left rail, slightly muted text. Used when the
+  // assistant cites a stat directly.
+  blockquote: ({ children }) => (
+    <blockquote style={{
+      margin: '8px 0 12px 0',
+      padding: '4px 0 4px 14px',
+      borderLeft: `2px solid rgba(10,10,15,0.18)`,
+      color: C.text2,
+      fontWeight: 500,
+    }}>{children}</blockquote>
+  ),
+  // Headings. Three levels max; h3+ collapse to h3. Bold weight, slight
+  // top margin so they break sections cleanly.
+  h1: ({ children }) => (
+    <h3 style={{
+      margin: '14px 0 8px 0', fontSize: 15.5, fontWeight: 700, color: '#000000',
+      letterSpacing: '-0.015em', lineHeight: 1.3,
+    }}>{children}</h3>
+  ),
+  h2: ({ children }) => (
+    <h3 style={{
+      margin: '14px 0 8px 0', fontSize: 15, fontWeight: 700, color: '#000000',
+      letterSpacing: '-0.015em', lineHeight: 1.3,
+    }}>{children}</h3>
+  ),
+  h3: ({ children }) => (
+    <h3 style={{
+      margin: '12px 0 6px 0', fontSize: 14.5, fontWeight: 700, color: '#000000',
+      letterSpacing: '-0.01em', lineHeight: 1.3,
+    }}>{children}</h3>
+  ),
+  // Links. Brand red, no underline at rest, underline on hover.
+  a: ({ children, href }) => (
+    <a href={href} target="_blank" rel="noopener noreferrer"
+      style={{
+        color: C.red, textDecoration: 'none', fontWeight: 600,
+        borderBottom: `1px solid rgba(229,37,27,0.20)`,
+      }}>{children}</a>
+  ),
+  // Horizontal rule. Hairline, generous breathing room.
+  hr: () => (
+    <hr style={{
+      margin: '14px 0', border: 'none',
+      height: 1, background: C.hair,
+    }}/>
+  ),
 }
 
 
