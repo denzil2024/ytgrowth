@@ -29,7 +29,31 @@ import {
   TrendingDown,    // Starter prompt: "why are my CTRs dropping"
   Zap,             // Starter prompt: "biggest growth lever"
   GitCompare,      // Starter prompt: "compare to competitor"
+  BarChart3,       // Source chip: stats
+  Video,           // Source chip: videos
+  LineChart,       // Source chip: analytics
+  CheckCircle2,    // Source chip: audit
+  Users,           // Source chip: competitors
+  FileEdit,        // Source chip: SEO edits
+  Trophy,          // Source chip: milestones
+  CornerDownLeft,  // Keyboard hint glyph
 } from 'lucide-react'
+
+// Pick the right Lucide icon for a data-source label. The label comes from
+// the backend as plain text ("20 recent videos", "Audit", etc.) so we match
+// by keyword. Falls back to Database for anything we don't recognise so the
+// chip row always has icons.
+function sourceIconFor(label) {
+  const l = (label || '').toLowerCase()
+  if (l.includes('stat'))        return BarChart3
+  if (l.includes('video'))       return Video
+  if (l.includes('analytics'))   return LineChart
+  if (l.includes('audit'))       return CheckCircle2
+  if (l.includes('competitor'))  return Users
+  if (l.includes('seo'))         return FileEdit
+  if (l.includes('milestone'))   return Trophy
+  return Database
+}
 
 // Page-scoped font load. Geist Variable (Vercel's open-source UI font) is a
 // premium step up from Inter for the look-and-feel we're targeting on Chat.
@@ -111,7 +135,7 @@ function AssistantBody({ text }) {
       {parts.map((p, i) => (
         <p key={i} style={{
           margin: i === 0 ? 0 : '10px 0 0 0',
-          fontSize: 14, fontWeight: 400, color: C.text1,
+          fontSize: 14, fontWeight: 450, color: C.text1,
           letterSpacing: '-0.005em', lineHeight: 1.65,
           whiteSpace: 'pre-wrap',
         }}>{p}</p>
@@ -236,68 +260,117 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
       // Geist takes over the whole Chat surface. Children that use
       // fontFamily: 'inherit' pick this up automatically.
       fontFamily: FONT_STACK,
+      // Subtle warm wash. A near-invisible radial gradient at the top
+      // gives the page atmosphere — the difference between "premium" and
+      // "wireframe." Brand red at ~3% bleeds in from the top and dies
+      // before it reaches the conversation. Pointer-events none on the
+      // pseudo, so it's pure decoration.
+      position: 'relative',
+      background: 'radial-gradient(120% 60% at 50% -20%, rgba(229,37,27,0.035) 0%, rgba(229,37,27,0) 60%)',
     }}>
-      {/* ── Header. Avatar uses a softer charcoal tint than the v1 card,
-            and the H1 drops from 800 to 600 so the title sits as a label
-            for the surface rather than shouting at the user. ─────────── */}
+      {/* ── Header. The avatar gets a real moment now: a soft charcoal
+            gradient surface with an inset highlight, sized big enough to
+            anchor the screen. The H1 jumps to 24/600 so it reads as a
+            destination, not a sticker. The data sources line, which is
+            our biggest "we know you" differentiator, gets surfaced as a
+            row of icon-chips instead of a comma list — that one move
+            turns the most lifeless line on the page into the liveliest. */}
       <div style={{
-        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        gap: 14, padding: '6px 2px 22px', flexWrap: 'wrap',
+        display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between',
+        gap: 16, padding: '6px 2px 22px', flexWrap: 'wrap',
+        position: 'relative', zIndex: 1,
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 14, minWidth: 0 }}>
           <span style={{
             display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-            width: 38, height: 38, borderRadius: 11,
-            background: C.avatarBg,
+            width: 44, height: 44, borderRadius: 12,
+            background: 'linear-gradient(180deg, rgba(15,15,19,0.05) 0%, rgba(15,15,19,0.09) 100%)',
             border: `1px solid ${C.avatarBdr}`,
-            color: C.avatarFg, flexShrink: 0,
-            boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.6)',
+            color: C.text1, flexShrink: 0,
+            boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.85), 0 1px 2px rgba(15,15,25,0.05)',
           }}>
-            <Bot size={18} strokeWidth={1.7} />
+            <Bot size={20} strokeWidth={1.7} />
           </span>
-          <div>
+          <div style={{ minWidth: 0 }}>
             <h1 style={{
-              fontSize: 22, fontWeight: 600, color: C.text1,
-              letterSpacing: '-0.5px', lineHeight: 1.15,
+              fontSize: 24, fontWeight: 600, color: C.text1,
+              letterSpacing: '-0.55px', lineHeight: 1.1,
+              marginBottom: 8,
             }}>AI Coach</h1>
-            <p style={{
-              fontSize: 12.5, color: C.text3, fontWeight: 500,
-              marginTop: 3, letterSpacing: '-0.01em',
-            }}>
-              {availableSources.length > 0
-                ? `Reading ${availableSources.join(' · ')}`
-                : 'Trained on your channel data'}
-            </p>
+
+            {/* Source chips. Each backend source becomes a small pill
+                with an icon + the label, horizontal row, wraps to a
+                second line on small screens. Replaces the dead comma
+                string. */}
+            {availableSources.length > 0 ? (
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 2 }}>
+                {availableSources.map((s, i) => {
+                  const Icon = sourceIconFor(s)
+                  return (
+                    <span key={i} style={{
+                      display: 'inline-flex', alignItems: 'center', gap: 5,
+                      padding: '4px 10px 4px 8px', borderRadius: 100,
+                      background: 'rgba(255,255,255,0.7)',
+                      border: `1px solid ${C.border}`,
+                      color: C.text2,
+                      fontSize: 11.5, fontWeight: 500, letterSpacing: '-0.005em',
+                      boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.9)',
+                    }}>
+                      <Icon size={11} strokeWidth={1.9} color={C.text3} />
+                      {s}
+                    </span>
+                  )
+                })}
+              </div>
+            ) : (
+              <p style={{
+                fontSize: 13, color: C.text3, fontWeight: 500,
+                letterSpacing: '-0.01em',
+              }}>Trained on your channel data</p>
+            )}
           </div>
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
-          {/* Quota meter. The bar IS the meter, the number is the label.
-              No "messages" word, no amber state — both add noise. */}
+          {/* Quota meter. v2: the used count gets a confident size and
+              the bar grows from 3px to 5px with a gradient fill so it
+              actually registers as a UI element. A subtle glow sits at
+              the leading edge of the fill so the meter feels alive,
+              not like a debug stat. */}
           <div style={{
-            display: 'inline-flex', alignItems: 'center', gap: 12,
-            padding: '8px 14px', borderRadius: 100,
+            display: 'inline-flex', alignItems: 'center', gap: 14,
+            padding: '7px 16px 7px 14px', borderRadius: 100,
             background: '#fff',
             border: `1px solid ${C.border}`,
             boxShadow: C.cardShadow,
             fontVariantNumeric: 'tabular-nums',
           }}>
             <span style={{
-              fontSize: 12.5, fontWeight: 500, color: meterColor,
-              letterSpacing: '-0.02em',
+              fontFamily: FONT_MONO,
+              fontSize: 14, fontWeight: 500, letterSpacing: '-0.02em',
+              color: meterColor,
+              display: 'inline-flex', alignItems: 'baseline', gap: 0,
             }}>
-              <span style={{ color: meterColor }}>{used}</span>
-              <span style={{ color: C.text4, margin: '0 4px' }}>/</span>
-              <span style={{ color: C.text3 }}>{allowance}</span>
+              <span style={{ color: meterColor, fontWeight: 600 }}>{used}</span>
+              <span style={{ color: C.text4, margin: '0 5px', fontSize: 12, fontWeight: 400 }}>/</span>
+              <span style={{ color: C.text3, fontSize: 12, fontWeight: 500 }}>{allowance}</span>
             </span>
             <div style={{
-              width: 64, height: 3,
+              width: 72, height: 5,
               background: 'rgba(10,10,15,0.06)',
               borderRadius: 99, overflow: 'hidden',
+              position: 'relative',
+              boxShadow: 'inset 0 1px 0 rgba(0,0,0,0.04)',
             }}>
               <div style={{
                 width: `${usedPct}%`, height: '100%',
-                background: meterColor,
+                background: remaining === 0
+                  ? `linear-gradient(90deg, ${C.red} 0%, #b91c1c 100%)`
+                  : `linear-gradient(90deg, ${C.text2} 0%, ${C.text1} 100%)`,
+                borderRadius: 99,
+                boxShadow: usedPct > 4 && usedPct < 100
+                  ? `0 0 0 1.5px ${remaining === 0 ? 'rgba(229,37,27,0.18)' : 'rgba(10,10,15,0.10)'}`
+                  : 'none',
                 transition: `width 0.8s ${C.spring}`,
               }}/>
             </div>
@@ -380,7 +453,8 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
                   <Bot size={15} strokeWidth={1.7} />
                 </span>
                 <div style={{
-                  background: '#fff', border: `1px solid ${C.border}`,
+                  background: 'linear-gradient(180deg, #ffffff 0%, #fafafc 100%)',
+                  border: `1px solid ${C.border}`,
                   borderRadius: '4px 14px 14px 14px',
                   padding: '13px 16px',
                   boxShadow: C.cardShadow,
@@ -456,10 +530,16 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
           style={{
             display: 'flex', alignItems: 'flex-end', gap: 10,
             background: '#fff',
-            border: `1px solid ${input.length > 0 || sending ? C.borderActive : C.border}`,
+            border: `1px solid ${input.length > 0 || sending ? 'rgba(229,37,27,0.35)' : C.border}`,
             borderRadius: 14, padding: '10px 10px 10px 18px',
-            boxShadow: C.cardShadow,
-            transition: `border-color 200ms ${C.spring}`,
+            // The big "alive" tell: when there's input or we're sending,
+            // the composer wears a 4px-soft red glow ring. Removes the
+            // dead-input feeling without making the surface "noisy" the
+            // rest of the time.
+            boxShadow: input.length > 0 || sending
+              ? `0 0 0 4px rgba(229,37,27,0.08), 0 1px 2px rgba(15,15,25,0.04), inset 0 1px 0 rgba(255,255,255,0.7)`
+              : C.cardShadow,
+            transition: `border-color 200ms ${C.spring}, box-shadow 200ms ${C.spring}`,
           }}
         >
           <textarea
@@ -491,53 +571,63 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
               e.target.style.height = Math.min(e.target.scrollHeight, 140) + 'px'
             }}
           />
-          <button
-            type="submit"
-            disabled={sending || outOfMessages || input.trim().length === 0}
-            aria-label="Send"
-            style={{
-              flexShrink: 0,
-              width: 40, height: 40, borderRadius: 11,
-              border: 'none',
-              background: (sending || outOfMessages || input.trim().length === 0) ? 'rgba(10,10,15,0.05)' : C.red,
-              color: (sending || outOfMessages || input.trim().length === 0) ? C.text4 : '#fff',
-              cursor: (sending || outOfMessages || input.trim().length === 0) ? 'default' : 'pointer',
-              display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-              boxShadow: (sending || outOfMessages || input.trim().length === 0) ? 'none' : C.redShadow,
-              transition: `filter 160ms ${C.spring}, background 160ms ${C.spring}`,
-            }}
-            onMouseEnter={e => { if (!(sending || outOfMessages || input.trim().length === 0)) e.currentTarget.style.filter = 'brightness(1.06)' }}
-            onMouseLeave={e => { if (!(sending || outOfMessages || input.trim().length === 0)) e.currentTarget.style.filter = 'none' }}
-          >
-            <Send size={16} strokeWidth={2} />
-          </button>
+          {(() => {
+            const isOff = sending || outOfMessages || input.trim().length === 0
+            return (
+              <button
+                type="submit"
+                disabled={isOff}
+                aria-label="Send"
+                style={{
+                  flexShrink: 0,
+                  width: 40, height: 40, borderRadius: 11,
+                  border: 'none',
+                  // The disabled state stays red, just at low opacity. Reads
+                  // "armed and ready" instead of "broken." This is the move
+                  // that changes the whole bottom of the page from dead to
+                  // alive.
+                  background: isOff
+                    ? 'rgba(229,37,27,0.18)'
+                    : `linear-gradient(180deg, #ed3a31 0%, ${C.red} 100%)`,
+                  color: isOff ? 'rgba(255,255,255,0.85)' : '#fff',
+                  cursor: isOff ? 'default' : 'pointer',
+                  display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                  boxShadow: isOff
+                    ? 'inset 0 1px 0 rgba(255,255,255,0.18)'
+                    : '0 1px 2px rgba(229,37,27,0.32), inset 0 1px 0 rgba(255,255,255,0.22)',
+                  transition: `filter 160ms ${C.spring}, transform 160ms ${C.spring}`,
+                }}
+                onMouseEnter={e => { if (!isOff) { e.currentTarget.style.filter = 'brightness(1.06)'; e.currentTarget.style.transform = 'translateY(-1px)' } }}
+                onMouseLeave={e => { if (!isOff) { e.currentTarget.style.filter = 'none'; e.currentTarget.style.transform = 'translateY(0)' } }}
+              >
+                <Send size={16} strokeWidth={2} />
+              </button>
+            )
+          })()}
         </form>
 
+        {/* One chip, not three. Shift+Enter for newline is intuitive
+            enough to live as tribal knowledge. */}
         <p style={{
+          display: 'inline-flex', alignItems: 'center', gap: 6,
           fontSize: 11, color: C.text4, fontWeight: 500,
-          letterSpacing: '-0.005em', marginTop: 10, textAlign: 'center',
+          letterSpacing: '-0.005em',
+          marginTop: 10, marginLeft: 'auto', marginRight: 'auto',
+          width: 'fit-content', justifySelf: 'center',
         }}>
           <kbd style={{
-            background: 'rgba(10,10,15,0.045)',
+            display: 'inline-flex', alignItems: 'center', gap: 3,
+            background: 'rgba(10,10,15,0.04)',
             border: `1px solid ${C.border}`,
-            padding: '1px 6px', borderRadius: 4,
+            padding: '2px 6px', borderRadius: 5,
             fontFamily: FONT_MONO, fontSize: 10, fontWeight: 500,
             color: C.text2,
-          }}>Enter</kbd>{' '}to send,{' '}
-          <kbd style={{
-            background: 'rgba(10,10,15,0.045)',
-            border: `1px solid ${C.border}`,
-            padding: '1px 6px', borderRadius: 4,
-            fontFamily: FONT_MONO, fontSize: 10, fontWeight: 500,
-            color: C.text2,
-          }}>Shift</kbd>{' + '}
-          <kbd style={{
-            background: 'rgba(10,10,15,0.045)',
-            border: `1px solid ${C.border}`,
-            padding: '1px 6px', borderRadius: 4,
-            fontFamily: FONT_MONO, fontSize: 10, fontWeight: 500,
-            color: C.text2,
-          }}>Enter</kbd>{' '}for newline
+            boxShadow: 'inset 0 -1px 0 rgba(10,10,15,0.05)',
+          }}>
+            <CornerDownLeft size={9} strokeWidth={2} />
+            Enter
+          </kbd>
+          <span>to send</span>
         </p>
       </div>
     </div>
@@ -679,13 +769,16 @@ function MessageBubble({ role, content, sources }) {
       <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
         <div style={{
           maxWidth: '78%',
-          background: C.red,
+          // Vertical gradient on the red gives the pill dimension. The
+          // top edge picks up the inset highlight, the bottom edge is
+          // marginally darker, the eye reads it as a real object.
+          background: `linear-gradient(180deg, #ed3a31 0%, ${C.red} 60%, #d8201d 100%)`,
           color: '#fff',
           borderRadius: '14px 14px 4px 14px',
           padding: '12px 16px',
-          boxShadow: '0 1px 2px rgba(229,37,27,0.22), inset 0 1px 0 rgba(255,255,255,0.18)',
+          boxShadow: '0 1px 2px rgba(229,37,27,0.28), inset 0 1px 0 rgba(255,255,255,0.22)',
           fontFamily: FONT_STACK,
-          fontSize: 14, fontWeight: 400, letterSpacing: '-0.005em', lineHeight: 1.5,
+          fontSize: 14, fontWeight: 450, letterSpacing: '-0.005em', lineHeight: 1.5,
           whiteSpace: 'pre-wrap',
         }}>{content}</div>
       </div>
@@ -705,7 +798,11 @@ function MessageBubble({ role, content, sources }) {
       </span>
       <div style={{ flex: 1, minWidth: 0 }}>
         <div style={{
-          background: '#fff', border: `1px solid ${C.border}`,
+          // Subtle top-to-bottom gradient on the assistant bubble. The
+          // delta is tiny (#fff → #fafafc) but it stops the bubble
+          // sitting flat against the page wash — it now catches light.
+          background: 'linear-gradient(180deg, #ffffff 0%, #fafafc 100%)',
+          border: `1px solid ${C.border}`,
           borderRadius: '4px 14px 14px 14px',
           padding: '13px 18px',
           boxShadow: C.cardShadow,
