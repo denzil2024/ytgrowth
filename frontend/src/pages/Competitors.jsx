@@ -195,23 +195,22 @@ function useCompetitorStyles() {
       .comp-btn-report:hover { color: #0a0a0f; background: rgba(10,10,15,0.04); }
       .comp-btn-report.open { color: #0a0a0f; }
 
-      /* Inline meta line — replaces the row of three boxy stat chips.
-         Subs · avg views · gaps · age, all in one quiet 12/500 text3
-         line. The numbers carry the weight on their own. */
+      /* Inline meta line — subs · avg views · gaps · age, one quiet
+         line. Numbers carry weight via comp-meta-line .val. */
       .comp-meta-line {
         display: inline-flex;
         align-items: center;
         gap: 0;
-        font-size: 12.5px;
+        font-size: 13px;
         font-weight: 500;
-        color: rgba(10,10,15,0.55);
+        color: rgba(10,10,15,0.58);
         letter-spacing: -0.01em;
         font-variant-numeric: tabular-nums;
         flex-wrap: wrap;
       }
       .comp-meta-line .val {
         color: #0a0a0f;
-        font-weight: 600;
+        font-weight: 700;
       }
       .comp-meta-line .sep {
         color: rgba(10,10,15,0.26);
@@ -253,16 +252,18 @@ function useCompetitorStyles() {
       }
       .comp-video-row:hover { background: #f4f4f7; }
 
-      /* posting timing pills */
+      /* KPI tiles — bigger pad and tighter rhythm than before.
+         Used by the at-a-glance KPI strip at the top of every
+         expanded report (Subscribers / Avg views / Cadence / Consistency). */
       .comp-timing-pill {
         background: #f7f7fa;
         border: 1px solid rgba(0,0,0,0.07);
-        border-radius: 12px;
-        padding: 16px;
+        border-radius: 14px;
+        padding: 20px 18px;
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 6px;
+        gap: 8px;
       }
 
       /* insight mini-cards */
@@ -312,7 +313,7 @@ function useCompetitorStyles() {
         display: flex;
         align-items: center;
         gap: 14px;
-        padding: 14px 18px;
+        padding: 16px 20px;
       }
 
       /* Signal row — visual evidence. Eyebrow + top-performer stat on
@@ -332,18 +333,18 @@ function useCompetitorStyles() {
         flex-wrap: wrap;
       }
       .comp-signal-eyebrow .label {
-        font-size: 11px;
+        font-size: 11.5px;
         font-weight: 700;
-        color: rgba(10,10,15,0.50);
+        color: rgba(10,10,15,0.55);
         letter-spacing: 0.10em;
         text-transform: uppercase;
       }
       .comp-signal-eyebrow .perf {
         display: inline-flex;
         align-items: center;
-        gap: 6px;
-        font-size: 11.5px;
-        font-weight: 500;
+        gap: 7px;
+        font-size: 12.5px;
+        font-weight: 600;
         color: rgba(10,10,15,0.62);
         letter-spacing: -0.01em;
         font-variant-numeric: tabular-nums;
@@ -386,36 +387,36 @@ function useCompetitorStyles() {
       }
       .comp-thumb-views {
         position: absolute;
-        bottom: 6px; right: 6px;
-        background: rgba(0,0,0,0.78);
+        bottom: 8px; right: 8px;
+        background: rgba(0,0,0,0.82);
         color: #fff;
-        font-size: 10.5px;
+        font-size: 11.5px;
         font-weight: 700;
-        padding: 2px 6px;
+        padding: 3px 7px;
         border-radius: 5px;
         font-variant-numeric: tabular-nums;
         letter-spacing: -0.05px;
         backdrop-filter: blur(2px);
       }
-      .comp-thumb-text { padding: 8px 10px 10px; }
+      .comp-thumb-text { padding: 11px 13px 13px; }
       .comp-thumb-title {
-        font-size: 12px;
+        font-size: 13.5px;
         font-weight: 600;
         color: #0a0a0f;
-        letter-spacing: -0.1px;
+        letter-spacing: -0.15px;
         line-height: 1.4;
-        margin: 0 0 3px;
+        margin: 0 0 4px;
         display: -webkit-box;
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
         overflow: hidden;
-        min-height: 32px;
+        min-height: 38px;
       }
       .comp-thumb-meta {
-        font-size: 11px;
+        font-size: 12px;
         font-weight: 500;
-        color: rgba(10,10,15,0.45);
-        letter-spacing: -0.03px;
+        color: rgba(10,10,15,0.50);
+        letter-spacing: -0.02px;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -744,8 +745,8 @@ function AIAnalysis({ ai, comp, top5Videos, channelId, checkedIdeas, onToggleIde
             { label: 'Consistency',    val: cs       != null ? `${cs}/100`        : '—', col: consistencyCol },
           ].map(({ label, val, col }) => (
             <div key={label} className="comp-timing-pill">
-              <p style={{ fontSize: 20, fontWeight: 800, color: col, letterSpacing: '-0.5px', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{val}</p>
-              <p style={{ fontSize: 11, fontWeight: 600, color: '#9595a4', textTransform: 'uppercase', letterSpacing: '0.06em' }}>{label}</p>
+              <p style={{ fontSize: 24, fontWeight: 800, color: col, letterSpacing: '-0.7px', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{val}</p>
+              <p style={{ fontSize: 11.5, fontWeight: 700, color: 'rgba(10,10,15,0.50)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>{label}</p>
             </div>
           ))}
         </div>
@@ -771,7 +772,9 @@ function AIAnalysis({ ai, comp, top5Videos, channelId, checkedIdeas, onToggleIde
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: `repeat(${cols}, 1fr)`, gap: 10 }}>
               {vids.map((v, i) => {
-                const thumb = v.thumbnail || v.thumbnail_url || (v.video_id ? `https://i.ytimg.com/vi/${v.video_id}/mqdefault.jpg` : null)
+                // Backend serializes as `thumbnail_url`; mock harness uses `thumbnail`.
+                // CDN fallback covers the case where neither is set but video_id is.
+                const thumb = v.thumbnail_url || v.thumbnail || (v.video_id ? `https://i.ytimg.com/vi/${v.video_id}/mqdefault.jpg` : null)
                 const ytUrl = v.video_id ? `https://www.youtube.com/watch?v=${v.video_id}` : null
                 return (
                   <a key={v.video_id || i}
@@ -1481,13 +1484,14 @@ export default function Competitors({ plan, freeTierFeatures }) {
 
   return (
     <div className="comp-page">
-      {/* ── header. Confident-but-restrained: 24/500 Geist with looser
-            tracking. Subtitle reads as caption, not as a competing line. */}
-      <div style={{ marginBottom: 22 }}>
-        <h1 style={{ fontSize: 24, fontWeight: 500, color: '#0a0a0f', marginBottom: 6, letterSpacing: '-0.5px', lineHeight: 1.15 }}>
+      {/* ── header. Geist 700 anchors the page; 500 was reading as a
+            draft. Subtitle is one weight lower with slightly darker
+            color so it doesn't disappear on light backgrounds. */}
+      <div style={{ marginBottom: 26 }}>
+        <h1 style={{ fontSize: 26, fontWeight: 700, color: '#0a0a0f', marginBottom: 6, letterSpacing: '-0.7px', lineHeight: 1.1 }}>
           Competitors
         </h1>
-        <p style={{ fontSize: 13.5, color: 'rgba(10,10,15,0.45)', fontWeight: 450, letterSpacing: '-0.005em' }}>
+        <p style={{ fontSize: 14, color: 'rgba(10,10,15,0.55)', fontWeight: 500, letterSpacing: '-0.005em' }}>
           Track channels in your niche, get the full AI breakdown of what is working for them
         </p>
       </div>
@@ -1636,15 +1640,15 @@ export default function Competitors({ plan, freeTierFeatures }) {
                               boxShadow: `0 0 0 3px ${threatDot}22`,
                             }}/>
                           )}
-                          <p style={{ fontWeight: 500, fontSize: 15, color: '#0a0a0f',
-                            letterSpacing: '-0.2px', whiteSpace: 'nowrap', overflow: 'hidden',
+                          <p style={{ fontWeight: 700, fontSize: 16, color: '#0a0a0f',
+                            letterSpacing: '-0.25px', whiteSpace: 'nowrap', overflow: 'hidden',
                             textOverflow: 'ellipsis' }}>
                             {comp.channel_name}
                           </p>
                           {threat && (
-                            <span style={{ flexShrink: 0, fontSize: 12.5, fontWeight: 600,
+                            <span style={{ flexShrink: 0, fontSize: 13, fontWeight: 600,
                               color: threat.text, letterSpacing: '-0.05px' }}>
-                              <span style={{ color: 'rgba(10,10,15,0.18)', margin: '0 6px',
+                              <span style={{ color: 'rgba(10,10,15,0.20)', margin: '0 7px',
                                 fontWeight: 400 }}>·</span>
                               {threat.label}
                             </span>
@@ -1704,26 +1708,33 @@ export default function Competitors({ plan, freeTierFeatures }) {
                             )}
                           </div>
                           <div className="comp-thumb-grid">
-                            {vids.map((v, vi) => (
-                              <a key={v.video_id || vi}
-                                href={v.video_id ? `https://www.youtube.com/watch?v=${v.video_id}` : '#'}
-                                target="_blank" rel="noopener noreferrer"
-                                onClick={e => e.stopPropagation()}
-                                className="comp-thumb-tile">
-                                <div className="comp-thumb-img">
-                                  {v.thumbnail && (
-                                    <img src={v.thumbnail} alt="" referrerPolicy="no-referrer" loading="lazy" />
-                                  )}
-                                  {v.views > 0 && (
-                                    <span className="comp-thumb-views">{fmtK(v.views)}</span>
-                                  )}
-                                </div>
-                                <div className="comp-thumb-text">
-                                  <p className="comp-thumb-title">{v.title}</p>
-                                  <p className="comp-thumb-meta">{fmtAge(v.published_at)}</p>
-                                </div>
-                              </a>
-                            ))}
+                            {vids.map((v, vi) => {
+                              // Backend serializes as `thumbnail_url`; if missing,
+                              // construct from the YouTube CDN using video_id.
+                              const thumb = v.thumbnail_url || v.thumbnail
+                                || (v.video_id ? `https://i.ytimg.com/vi/${v.video_id}/mqdefault.jpg` : null)
+                              const ytUrl = v.video_id ? `https://www.youtube.com/watch?v=${v.video_id}` : null
+                              return (
+                                <a key={v.video_id || vi}
+                                  href={ytUrl || '#'}
+                                  target="_blank" rel="noopener noreferrer"
+                                  onClick={e => { e.stopPropagation(); if (!ytUrl) e.preventDefault() }}
+                                  className="comp-thumb-tile">
+                                  <div className="comp-thumb-img">
+                                    {thumb && (
+                                      <img src={thumb} alt="" referrerPolicy="no-referrer" loading="lazy" />
+                                    )}
+                                    {v.views > 0 && (
+                                      <span className="comp-thumb-views">{fmtK(v.views)}</span>
+                                    )}
+                                  </div>
+                                  <div className="comp-thumb-text">
+                                    <p className="comp-thumb-title">{v.title}</p>
+                                    <p className="comp-thumb-meta">{fmtAge(v.published_at)}</p>
+                                  </div>
+                                </a>
+                              )
+                            })}
                           </div>
                         </div>
                       )
