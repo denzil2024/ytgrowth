@@ -1,64 +1,34 @@
-/* ChatCoach — AI Coach surface for the Chat verb.
+/* ChatCoach — single-purpose chat surface for the AI Coach.
+
+   Layout reference: VidIQ's chat empty state — vertically centered hero
+   question, single big composer, pill prompts below, no chrome above.
+   Light surface. The chrome is the conversation itself.
 
    Plumbing:
    - GET  /chat/state  on mount → hydrates messages + allowance/used.
-   - POST /chat/send   sends a message, waits for the Haiku response,
-                       appends both turns to the local message list,
-                       updates the quota meter.
-   - POST /chat/new    clears the conversation server-side and locally.
-
-   UI:
-   - Centered 760px column inside the main area
-   - Sticky meter header (X / Y messages this month, plan, new chat)
-   - Empty state with 4 suggested prompts as clickable chips
-   - Streaming-style message list (user right, assistant left)
-   - Tinted-circle Lucide icon avatar on assistant messages
-   - Sticky composer at the bottom with Send button + Enter shortcut
-   - Inline upgrade pitch when the quota empties.
+   - POST /chat/send   sends a message, waits for the Haiku response.
+   - POST /chat/new    clears the conversation server-side.
 */
 
 import { useEffect, useRef, useState } from 'react'
 import {
-  Bot,             // Coach avatar in the header
-  Database,        // Data sources indicator
-  Send,            // Composer send button
-  Plus,            // New chat
-  ArrowRight,      // CTA
-  Sparkles,        // Empty-state hero mark, sits cleaner than Bot at large sizes
-  Calendar,        // Starter prompt: "what should I post"
-  TrendingDown,    // Starter prompt: "why are my CTRs dropping"
-  Zap,             // Starter prompt: "biggest growth lever"
-  GitCompare,      // Starter prompt: "compare to competitor"
-  BarChart3,       // Source chip: stats
-  Video,           // Source chip: videos
-  LineChart,       // Source chip: analytics
-  CheckCircle2,    // Source chip: audit
-  Users,           // Source chip: competitors
-  FileEdit,        // Source chip: SEO edits
-  Trophy,          // Source chip: milestones
-  CornerDownLeft,  // Keyboard hint glyph
+  Bot,              // Per-message assistant avatar
+  Database,         // Source pill on assistant replies
+  Send,             // Composer send button
+  Plus,             // New chat icon button
+  ArrowRight,       // Upgrade CTA glyph
+  // Starter-prompt icons. Eight imperative prompts, two rows.
+  TrendingUp,
+  TrendingDown,
+  CheckCircle2,
+  ImageIcon,
+  Lightbulb,
+  Type,
+  GitCompare,
+  Search,
 } from 'lucide-react'
 
-// Pick the right Lucide icon for a data-source label. The label comes from
-// the backend as plain text ("20 recent videos", "Audit", etc.) so we match
-// by keyword. Falls back to Database for anything we don't recognise so the
-// chip row always has icons.
-function sourceIconFor(label) {
-  const l = (label || '').toLowerCase()
-  if (l.includes('stat'))        return BarChart3
-  if (l.includes('video'))       return Video
-  if (l.includes('analytics'))   return LineChart
-  if (l.includes('audit'))       return CheckCircle2
-  if (l.includes('competitor'))  return Users
-  if (l.includes('seo'))         return FileEdit
-  if (l.includes('milestone'))   return Trophy
-  return Database
-}
-
-// Page-scoped font load. Geist Variable (Vercel's open-source UI font) is a
-// premium step up from Inter for the look-and-feel we're targeting on Chat.
-// Loaded inside this file only so the swap is isolated to this page while we
-// evaluate it. Once approved, this same loader pattern moves to a global hook.
+// Page-scoped Geist load. Geist Variable + Geist Mono.
 if (typeof document !== 'undefined' && !document.getElementById('ytg-chat-geist-font')) {
   const link = document.createElement('link')
   link.id = 'ytg-chat-geist-font'
@@ -67,50 +37,81 @@ if (typeof document !== 'undefined' && !document.getElementById('ytg-chat-geist-
   document.head.appendChild(link)
 }
 
+// Custom scrollbar — thin, near-invisible, no default chevrons.
+if (typeof document !== 'undefined' && !document.getElementById('ytg-chat-scrollbar')) {
+  const s = document.createElement('style')
+  s.id = 'ytg-chat-scrollbar'
+  s.textContent = `
+    .ytg-chat-scroll {
+      scrollbar-width: thin;
+      scrollbar-color: rgba(10,10,15,0.14) transparent;
+    }
+    .ytg-chat-scroll::-webkit-scrollbar { width: 6px; height: 6px }
+    .ytg-chat-scroll::-webkit-scrollbar-thumb {
+      background: rgba(10,10,15,0.14);
+      border-radius: 99px;
+    }
+    .ytg-chat-scroll::-webkit-scrollbar-thumb:hover {
+      background: rgba(10,10,15,0.22);
+    }
+    .ytg-chat-scroll::-webkit-scrollbar-track,
+    .ytg-chat-scroll::-webkit-scrollbar-button {
+      background: transparent;
+      display: none;
+    }
+    .ytg-chat-textarea::placeholder {
+      color: rgba(10,10,15,0.38);
+    }
+    @keyframes ytgPulseSoft {
+      0%, 100% { opacity: 0.55 }
+      50%      { opacity: 1    }
+    }
+  `
+  document.head.appendChild(s)
+}
+
 const FONT_STACK = "'Geist', 'Inter', system-ui, -apple-system, sans-serif"
 const FONT_MONO  = "'Geist Mono', ui-monospace, SFMono-Regular, monospace"
 
+/* ─── Light palette. Two surfaces (page wash + raised cards), neutral
+       text stack, brand red as the only saturated colour. Hairlines are
+       pure-black alpha so they sit ON the surface (the move that pushes
+       light cards from "drawn" to "physical"). ────────────────────── */
 const C = {
-  bg:         '#f5f5f9',
-  surface:    '#ffffff',
-  // Hairlines are pure-black alpha, not solid gray. Black-alpha sits on the
-  // surface; solid gray sits on top of it. Reads premium at one pixel.
-  border:     'rgba(10,10,15,0.07)',
-  borderSoft: 'rgba(10,10,15,0.04)',
-  borderActive: 'rgba(10,10,15,0.20)',
-  text1:      '#0a0a0f',
-  text2:      'rgba(10,10,15,0.62)',
-  text3:      'rgba(10,10,15,0.42)',
-  text4:      'rgba(10,10,15,0.28)',
-  // Single CTA color. The inset highlight on top of the pill is the trick
-  // that makes the button feel dimensional without adding a second color.
-  red:        '#e5251b',
-  redSoft:    'rgba(229,37,27,0.06)',
-  redBdr:     'rgba(229,37,27,0.16)',
-  redShadow:  '0 1px 2px rgba(229,37,27,0.22), inset 0 1px 0 rgba(255,255,255,0.16)',
-  // Forest green for the "healthy quota" state. Grass green reads retail,
-  // forest reads expensive.
-  green:      '#15803d',
-  // Neutral avatar tint, used by both the header avatar and per-message
-  // coach avatar so the icon doesn't read as a red alert badge.
-  avatarBg:   'rgba(15,15,19,0.05)',
-  avatarBdr:  'rgba(15,15,19,0.09)',
-  avatarFg:   '#0a0a0f',
-  // The one shadow stack the page uses. Outer drop is barely there; inner
-  // highlight is the iOS card trick that makes white surfaces feel lit.
+  bg:           '#fafafb',           // page wash, marginally off-white
+  surface:      '#ffffff',           // composer, pills, assistant bubble
+  surfaceLift:  '#f4f4f7',           // hover state on raised elements
+  hair:         'rgba(10,10,15,0.07)',
+  hairActive:   'rgba(10,10,15,0.20)',
+  text1:        '#0a0a0f',
+  text2:        'rgba(10,10,15,0.66)',
+  text3:        'rgba(10,10,15,0.42)',
+  text4:        'rgba(10,10,15,0.26)',
+  red:          '#e5251b',
+  redHi:        '#ef3a31',
+  redLo:        '#c81d14',
+  redSoft:      'rgba(229,37,27,0.06)',
+  redBdr:       'rgba(229,37,27,0.22)',
+  // Single soft elevation + the inner white highlight on the top edge
+  // (the iOS card trick). One shadow value used across every raised
+  // surface so the elevation system reads coherent.
   cardShadow:     '0 1px 2px rgba(15,15,25,0.04), inset 0 1px 0 rgba(255,255,255,0.7)',
-  cardShadowLift: '0 4px 18px rgba(15,15,25,0.06), inset 0 1px 0 rgba(255,255,255,0.7)',
+  cardShadowLift: '0 6px 24px rgba(15,15,25,0.07), inset 0 1px 0 rgba(255,255,255,0.7)',
   spring:         'cubic-bezier(0.32, 0.72, 0, 1)',
 }
 
-// Starter prompts pair semantically-fitting Lucide icons (never emoji) with
-// each suggestion. Icons render inside a soft charcoal-tinted circle so the
-// cards read as one design grammar with the header avatar.
+/* ─── Eight starter prompts. Imperative voice, two-row wrap layout,
+       semantic Lucide icons. Click sends the prompt straight through
+       the same pipeline as a typed message. ───────────────────────── */
 const STARTER_PROMPTS = [
-  { label: 'What should I post this week?',               Icon: Calendar     },
-  { label: 'Why are my CTRs dropping?',                   Icon: TrendingDown },
-  { label: 'What is my biggest growth lever right now?',  Icon: Zap          },
-  { label: 'Compare me to my top competitor',             Icon: GitCompare   },
+  { label: 'Get more views',       Icon: TrendingUp   },
+  { label: 'Review my CTR',        Icon: TrendingDown },
+  { label: 'Channel audit',        Icon: CheckCircle2 },
+  { label: 'Thumbnail tips',       Icon: ImageIcon    },
+  { label: 'Video ideas',          Icon: Lightbulb    },
+  { label: 'Better titles',        Icon: Type         },
+  { label: 'Compare competitor',   Icon: GitCompare   },
+  { label: 'Find keywords',        Icon: Search       },
 ]
 
 function fmtAge(iso) {
@@ -126,17 +127,17 @@ function fmtAge(iso) {
   return `${Math.floor(hr / 24)}d ago`
 }
 
-// Render assistant prose with paragraph breaks. The model is told to
-// avoid bullet lists, so plain newline → <br/> is enough.
+/* Assistant prose. Geist 450 + tight tracking + generous line-height
+   reads as editorial copy, not a chat dump. */
 function AssistantBody({ text }) {
   const parts = (text || '').split(/\n{2,}/g)
   return (
     <>
       {parts.map((p, i) => (
         <p key={i} style={{
-          margin: i === 0 ? 0 : '10px 0 0 0',
-          fontSize: 14, fontWeight: 450, color: C.text1,
-          letterSpacing: '-0.005em', lineHeight: 1.65,
+          margin: i === 0 ? 0 : '12px 0 0 0',
+          fontSize: 14.5, fontWeight: 450, color: C.text1,
+          letterSpacing: '-0.005em', lineHeight: 1.68,
           whiteSpace: 'pre-wrap',
         }}>{p}</p>
       ))}
@@ -175,14 +176,14 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
         setAvailableSources(d.sources || [])
         setState({ loading: false, error: null })
       })
-      .catch(err => {
+      .catch(() => {
         if (cancelled) return
         setState({ loading: false, error: 'Could not load your coach. Refresh the page.' })
       })
     return () => { cancelled = true }
   }, [])
 
-  // Scroll to bottom when a new message arrives
+  // Scroll to bottom on new message
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTo({ top: scrollRef.current.scrollHeight, behavior: 'smooth' })
@@ -196,7 +197,6 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
     setSendError(null)
     setSending(true)
 
-    // Optimistic user-message append
     const localUser = { role: 'user', content: text, created_at: new Date().toISOString() }
     setMessages(prev => [...prev, localUser])
 
@@ -209,7 +209,6 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
       })
       const d = await r.json()
       if (!r.ok) {
-        // Roll back the optimistic message on failure
         setMessages(prev => prev.slice(0, -1))
         if (d.error === 'out_of_messages') {
           setSendError(`You've used all ${d.allowance} messages this month. Upgrade to keep chatting.`)
@@ -229,7 +228,6 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
       setSendError("Couldn't reach the coach. Check your connection and try again.")
     } finally {
       setSending(false)
-      // Keep focus on the input so user can keep typing
       setTimeout(() => inputRef.current?.focus(), 60)
     }
   }
@@ -244,535 +242,369 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
     } catch {}
   }
 
-  // Meter is bichromatic: charcoal when there's quota left, red when truly
-  // empty. We deliberately don't introduce an amber "near empty" state —
-  // mid-tier alarm colors read as nagging and undercut the premium feel.
-  // The bar's own length already communicates urgency.
-  const meterColor = remaining === 0 ? C.red : C.text1
-  const usedPct = allowance > 0 ? Math.min(100, (used / allowance) * 100) : 0
+  /* ─── Composer. Shared between empty + active states. ~60px tall min,
+         rounded 16, white surface, hairline border that warms to soft red
+         when focused, integrated send button. The focal element on every
+         layout. ─────────────────────────────────────────────────────── */
+  const isOff = sending || outOfMessages || input.trim().length === 0
+  const composerForm = (
+    <form
+      onSubmit={(e) => { e.preventDefault(); send() }}
+      style={{
+        display: 'flex', alignItems: 'flex-end', gap: 10,
+        background: C.surface,
+        border: `1px solid ${input.length > 0 || sending ? C.redBdr : C.hair}`,
+        borderRadius: 16, padding: '12px 12px 12px 20px',
+        boxShadow: input.length > 0 || sending
+          ? `0 0 0 4px ${C.redSoft}, 0 1px 2px rgba(15,15,25,0.04), inset 0 1px 0 rgba(255,255,255,0.7)`
+          : C.cardShadow,
+        transition: `border-color 200ms ${C.spring}, box-shadow 200ms ${C.spring}`,
+        minHeight: 60,
+      }}
+    >
+      <textarea
+        ref={inputRef}
+        className="ytg-chat-textarea"
+        value={input}
+        onChange={(e) => setInput(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault()
+            send()
+          }
+        }}
+        disabled={sending || outOfMessages}
+        rows={1}
+        placeholder={outOfMessages ? 'You have used all messages this month' : 'How can I help you grow?'}
+        style={{
+          flex: 1, minWidth: 0,
+          border: 'none', outline: 'none',
+          background: 'transparent',
+          fontFamily: FONT_STACK,
+          fontSize: 15, fontWeight: 450, color: C.text1,
+          letterSpacing: '-0.005em', lineHeight: 1.55,
+          resize: 'none',
+          maxHeight: 160,
+          paddingTop: 8, paddingBottom: 8,
+        }}
+        onInput={(e) => {
+          e.target.style.height = 'auto'
+          e.target.style.height = Math.min(e.target.scrollHeight, 160) + 'px'
+        }}
+      />
+      <button
+        type="submit"
+        disabled={isOff}
+        aria-label="Send"
+        style={{
+          flexShrink: 0,
+          width: 38, height: 38, borderRadius: 11,
+          border: 'none',
+          background: isOff
+            ? 'rgba(229,37,27,0.20)'
+            : `linear-gradient(180deg, ${C.redHi} 0%, ${C.red} 100%)`,
+          color: isOff ? 'rgba(255,255,255,0.85)' : '#fff',
+          cursor: isOff ? 'default' : 'pointer',
+          display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+          boxShadow: isOff
+            ? 'inset 0 1px 0 rgba(255,255,255,0.20)'
+            : '0 1px 2px rgba(229,37,27,0.34), inset 0 1px 0 rgba(255,255,255,0.24)',
+          transition: `filter 160ms ${C.spring}, transform 160ms ${C.spring}`,
+        }}
+        onMouseEnter={e => { if (!isOff) { e.currentTarget.style.filter = 'brightness(1.06)'; e.currentTarget.style.transform = 'translateY(-1px)' } }}
+        onMouseLeave={e => { if (!isOff) { e.currentTarget.style.filter = 'none'; e.currentTarget.style.transform = 'translateY(0)' } }}
+      >
+        <Send size={15} strokeWidth={2} />
+      </button>
+    </form>
+  )
+
+  const errorBanner = sendError && (
+    <div style={{
+      display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12,
+      marginBottom: 12,
+      background: C.redSoft,
+      border: `1px solid ${C.redBdr}`,
+      borderRadius: 12, padding: '11px 14px',
+    }}>
+      <p style={{
+        fontSize: 12.5, color: C.red, fontWeight: 500,
+        flex: 1, lineHeight: 1.5, letterSpacing: '-0.005em',
+      }}>{sendError}</p>
+      {outOfMessages && (
+        <button
+          type="button"
+          onClick={() => onNavigate?.('Settings')}
+          style={{
+            display: 'inline-flex', alignItems: 'center', gap: 5,
+            padding: '7px 14px', borderRadius: 100,
+            border: 'none', cursor: 'pointer',
+            background: C.red, color: '#fff',
+            fontFamily: 'inherit',
+            fontSize: 12, fontWeight: 500, letterSpacing: '-0.01em',
+            boxShadow: '0 1px 2px rgba(229,37,27,0.30), inset 0 1px 0 rgba(255,255,255,0.20)',
+            flexShrink: 0,
+            transition: `filter 160ms ${C.spring}`,
+          }}
+          onMouseEnter={e => e.currentTarget.style.filter = 'brightness(1.06)'}
+          onMouseLeave={e => e.currentTarget.style.filter = 'none'}
+        >
+          Upgrade
+          <ArrowRight size={11} strokeWidth={2.2} />
+        </button>
+      )}
+    </div>
+  )
+
+  /* ─── Floating top-right cluster. The only chrome on the empty state.
+         New-chat icon button shows when there's a conversation to clear.
+         Low-quota chip only when the user is below 25% remaining. */
+  const showLowQuotaChip = allowance > 0 && (remaining < allowance * 0.25 || remaining === 0)
+  const topRightControls = (
+    <div style={{
+      position: 'absolute', top: 4, right: 2,
+      display: 'flex', alignItems: 'center', gap: 8,
+      zIndex: 3,
+    }}>
+      {showLowQuotaChip && (
+        <span style={{
+          display: 'inline-flex', alignItems: 'center', gap: 6,
+          fontFamily: FONT_MONO,
+          fontSize: 11.5, fontWeight: 500,
+          color: remaining === 0 ? C.red : C.text2,
+          background: remaining === 0 ? C.redSoft : C.surface,
+          border: `1px solid ${remaining === 0 ? C.redBdr : C.hair}`,
+          padding: '5px 11px', borderRadius: 100,
+          boxShadow: C.cardShadow,
+          letterSpacing: '-0.02em',
+        }}>
+          <span style={{
+            width: 5, height: 5, borderRadius: 99,
+            background: remaining === 0 ? C.red : C.text3,
+            animation: remaining > 0 ? 'ytgPulseSoft 2.2s ease-in-out infinite' : 'none',
+          }}/>
+          {used}/{allowance}
+        </span>
+      )}
+      {messages.length > 0 && (
+        <button
+          type="button"
+          onClick={newChat}
+          disabled={sending}
+          aria-label="New chat"
+          title="New chat"
+          style={{
+            width: 34, height: 34, borderRadius: 10,
+            border: `1px solid ${C.hair}`,
+            background: C.surface, color: C.text2,
+            display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+            cursor: sending ? 'default' : 'pointer',
+            boxShadow: C.cardShadow,
+            transition: `background 180ms ${C.spring}, color 180ms ${C.spring}, border-color 180ms ${C.spring}`,
+          }}
+          onMouseEnter={e => { if (!sending) { e.currentTarget.style.background = C.surfaceLift; e.currentTarget.style.color = C.text1; e.currentTarget.style.borderColor = C.hairActive } }}
+          onMouseLeave={e => { if (!sending) { e.currentTarget.style.background = C.surface; e.currentTarget.style.color = C.text2; e.currentTarget.style.borderColor = C.hair } }}
+        >
+          <Plus size={15} strokeWidth={2} />
+        </button>
+      )}
+    </div>
+  )
 
   return (
     <div style={{
-      maxWidth: 760, margin: '0 auto',
+      maxWidth: 1040, margin: '0 auto',
       display: 'flex', flexDirection: 'column',
-      height: 'calc(100vh - 52px - 72px)', // topbar 52 + page paddingTop 36 + paddingBottom 36
-      minHeight: 500,
-      // Geist takes over the whole Chat surface. Children that use
-      // fontFamily: 'inherit' pick this up automatically.
+      height: 'calc(100vh - 52px - 72px)',
+      minHeight: 540,
       fontFamily: FONT_STACK,
-      // Subtle warm wash. A near-invisible radial gradient at the top
-      // gives the page atmosphere — the difference between "premium" and
-      // "wireframe." Brand red at ~3% bleeds in from the top and dies
-      // before it reaches the conversation. Pointer-events none on the
-      // pseudo, so it's pure decoration.
       position: 'relative',
-      background: 'radial-gradient(120% 60% at 50% -20%, rgba(229,37,27,0.035) 0%, rgba(229,37,27,0) 60%)',
+      // Light surface with a near-invisible warm radial wash from the
+      // top. Brand red at ~3% bleeds down and dies before reaching the
+      // composer. Gives the page atmosphere without colour.
+      background: `${C.bg} radial-gradient(120% 60% at 50% -10%, rgba(229,37,27,0.035) 0%, rgba(229,37,27,0) 55%)`,
+      color: C.text1,
     }}>
-      {/* ── Header. The avatar gets a real moment now: a soft charcoal
-            gradient surface with an inset highlight, sized big enough to
-            anchor the screen. The H1 jumps to 24/600 so it reads as a
-            destination, not a sticker. The data sources line, which is
-            our biggest "we know you" differentiator, gets surfaced as a
-            row of icon-chips instead of a comma list — that one move
-            turns the most lifeless line on the page into the liveliest. */}
-      <div style={{
-        display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between',
-        gap: 16, padding: '6px 2px 22px', flexWrap: 'wrap',
-        position: 'relative', zIndex: 1,
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 14, minWidth: 0 }}>
-          <span style={{
-            display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-            width: 44, height: 44, borderRadius: 12,
-            background: 'linear-gradient(180deg, rgba(15,15,19,0.05) 0%, rgba(15,15,19,0.09) 100%)',
-            border: `1px solid ${C.avatarBdr}`,
-            color: C.text1, flexShrink: 0,
-            boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.85), 0 1px 2px rgba(15,15,25,0.05)',
-          }}>
-            <Bot size={20} strokeWidth={1.7} />
-          </span>
-          <div style={{ minWidth: 0 }}>
-            <h1 style={{
-              fontSize: 24, fontWeight: 600, color: C.text1,
-              letterSpacing: '-0.55px', lineHeight: 1.1,
-              marginBottom: 8,
-            }}>AI Coach</h1>
+      {topRightControls}
 
-            {/* Source chips. Each backend source becomes a small pill
-                with an icon + the label, horizontal row, wraps to a
-                second line on small screens. Replaces the dead comma
-                string. */}
-            {availableSources.length > 0 ? (
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 2 }}>
-                {availableSources.map((s, i) => {
-                  const Icon = sourceIconFor(s)
-                  return (
-                    <span key={i} style={{
-                      display: 'inline-flex', alignItems: 'center', gap: 5,
-                      padding: '4px 10px 4px 8px', borderRadius: 100,
-                      background: 'rgba(255,255,255,0.7)',
-                      border: `1px solid ${C.border}`,
-                      color: C.text2,
-                      fontSize: 11.5, fontWeight: 500, letterSpacing: '-0.005em',
-                      boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.9)',
-                    }}>
-                      <Icon size={11} strokeWidth={1.9} color={C.text3} />
-                      {s}
-                    </span>
-                  )
-                })}
-              </div>
-            ) : (
-              <p style={{
-                fontSize: 13, color: C.text3, fontWeight: 500,
-                letterSpacing: '-0.01em',
-              }}>Trained on your channel data</p>
-            )}
+      {state.loading ? (
+        <div style={{
+          flex: 1, display: 'flex', flexDirection: 'column',
+          alignItems: 'center', justifyContent: 'center',
+        }}>
+          <div style={{
+            width: 24, height: 24, marginBottom: 14,
+            border: `2px solid rgba(10,10,15,0.08)`,
+            borderTop: `2px solid ${C.text1}`,
+            borderRadius: '50%', animation: 'spin 0.8s linear infinite',
+          }}/>
+          <p style={{ fontSize: 12.5, color: C.text3, fontWeight: 500, letterSpacing: '-0.01em' }}>
+            Loading your coach
+          </p>
+        </div>
+      ) : state.error ? (
+        <div style={{
+          margin: 'auto', maxWidth: 420,
+          background: C.redSoft, border: `1px solid ${C.redBdr}`,
+          borderRadius: 12, padding: '14px 18px',
+        }}>
+          <p style={{ fontSize: 13, color: C.red, fontWeight: 500, letterSpacing: '-0.01em' }}>
+            {state.error}
+          </p>
+        </div>
+      ) : messages.length === 0 ? (
+        /* ── EMPTY STATE. Vertically centered hero + composer + pills.
+              No header, no avatar, no chips. The whole top of the page
+              breathes. ─────────────────────────────────────────────── */
+        <div style={{
+          flex: 1,
+          display: 'flex', flexDirection: 'column',
+          alignItems: 'center', justifyContent: 'center',
+          padding: '40px 24px',
+          gap: 32,
+        }}>
+          <h1 style={{
+            fontSize: 38, fontWeight: 500, color: C.text1,
+            letterSpacing: '-0.9px', lineHeight: 1.1,
+            textAlign: 'center', maxWidth: 560,
+            margin: 0,
+          }}>What do you want to figure out?</h1>
+
+          <div style={{ width: '100%', maxWidth: 660 }}>
+            {errorBanner}
+            {composerForm}
+          </div>
+
+          {/* Pill prompts. Two rows, wrap layout, 8 imperative prompts.
+              Each pill: white surface, hairline border, Lucide glyph
+              (text3) + label (text2). Hover lifts to surfaceLift. */}
+          <div style={{
+            display: 'flex', flexWrap: 'wrap',
+            gap: 8, justifyContent: 'center',
+            maxWidth: 660, width: '100%',
+          }}>
+            {STARTER_PROMPTS.map((p, i) => {
+              const Icon = p.Icon
+              return (
+                <button
+                  key={i}
+                  type="button"
+                  onClick={() => send(p.label)}
+                  style={{
+                    display: 'inline-flex', alignItems: 'center', gap: 8,
+                    padding: '9px 16px', borderRadius: 100,
+                    background: C.surface,
+                    border: `1px solid ${C.hair}`,
+                    color: C.text2,
+                    fontFamily: 'inherit',
+                    fontSize: 13, fontWeight: 500, letterSpacing: '-0.005em',
+                    cursor: 'pointer',
+                    boxShadow: C.cardShadow,
+                    transition: `background 200ms ${C.spring}, color 200ms ${C.spring}, border-color 200ms ${C.spring}, transform 200ms ${C.spring}`,
+                  }}
+                  onMouseEnter={e => {
+                    e.currentTarget.style.background = C.surfaceLift
+                    e.currentTarget.style.color = C.text1
+                    e.currentTarget.style.borderColor = C.hairActive
+                    e.currentTarget.style.transform = 'translateY(-1px)'
+                  }}
+                  onMouseLeave={e => {
+                    e.currentTarget.style.background = C.surface
+                    e.currentTarget.style.color = C.text2
+                    e.currentTarget.style.borderColor = C.hair
+                    e.currentTarget.style.transform = 'translateY(0)'
+                  }}
+                >
+                  <Icon size={13} strokeWidth={1.8} color={C.text3} />
+                  {p.label}
+                </button>
+              )
+            })}
           </div>
         </div>
-
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
-          {/* Quota meter. v2: the used count gets a confident size and
-              the bar grows from 3px to 5px with a gradient fill so it
-              actually registers as a UI element. A subtle glow sits at
-              the leading edge of the fill so the meter feels alive,
-              not like a debug stat. */}
-          <div style={{
-            display: 'inline-flex', alignItems: 'center', gap: 14,
-            padding: '7px 16px 7px 14px', borderRadius: 100,
-            background: '#fff',
-            border: `1px solid ${C.border}`,
-            boxShadow: C.cardShadow,
-            fontVariantNumeric: 'tabular-nums',
-          }}>
-            <span style={{
-              fontFamily: FONT_MONO,
-              fontSize: 14, fontWeight: 500, letterSpacing: '-0.02em',
-              color: meterColor,
-              display: 'inline-flex', alignItems: 'baseline', gap: 0,
-            }}>
-              <span style={{ color: meterColor, fontWeight: 600 }}>{used}</span>
-              <span style={{ color: C.text4, margin: '0 5px', fontSize: 12, fontWeight: 400 }}>/</span>
-              <span style={{ color: C.text3, fontSize: 12, fontWeight: 500 }}>{allowance}</span>
-            </span>
+      ) : (
+        /* ── ACTIVE CONVERSATION. Messages occupy the column.
+              Composer pinned to bottom. No header. ─────────────────── */
+        <>
+          <div
+            ref={scrollRef}
+            className="ytg-chat-scroll"
+            style={{
+              flex: 1, overflowY: 'auto',
+              padding: '52px 4px 18px',  // top padding clears the floating controls
+              scrollBehavior: 'smooth',
+            }}
+          >
             <div style={{
-              width: 72, height: 5,
-              background: 'rgba(10,10,15,0.06)',
-              borderRadius: 99, overflow: 'hidden',
-              position: 'relative',
-              boxShadow: 'inset 0 1px 0 rgba(0,0,0,0.04)',
+              display: 'flex', flexDirection: 'column', gap: 16,
+              maxWidth: 760, margin: '0 auto', padding: '0 8px',
             }}>
-              <div style={{
-                width: `${usedPct}%`, height: '100%',
-                background: remaining === 0
-                  ? `linear-gradient(90deg, ${C.red} 0%, #b91c1c 100%)`
-                  : `linear-gradient(90deg, ${C.text2} 0%, ${C.text1} 100%)`,
-                borderRadius: 99,
-                boxShadow: usedPct > 4 && usedPct < 100
-                  ? `0 0 0 1.5px ${remaining === 0 ? 'rgba(229,37,27,0.18)' : 'rgba(10,10,15,0.10)'}`
-                  : 'none',
-                transition: `width 0.8s ${C.spring}`,
-              }}/>
+              {messages.map((m, i) => (
+                <MessageBubble key={i} role={m.role} content={m.content} sources={m.sources} />
+              ))}
+              {sending && (
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
+                  <span style={{
+                    flexShrink: 0,
+                    width: 32, height: 32, borderRadius: 10,
+                    display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                    background: C.surface,
+                    border: `1px solid ${C.hair}`,
+                    color: C.text1,
+                    boxShadow: C.cardShadow,
+                  }}>
+                    <Bot size={15} strokeWidth={1.7} />
+                  </span>
+                  <div style={{
+                    background: C.surface,
+                    border: `1px solid ${C.hair}`,
+                    borderRadius: '4px 14px 14px 14px',
+                    padding: '13px 16px',
+                    boxShadow: C.cardShadow,
+                    display: 'inline-flex', alignItems: 'center', gap: 12, flexWrap: 'wrap',
+                  }}>
+                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5 }}>
+                      <Dot delay="0s"/><Dot delay="0.15s"/><Dot delay="0.30s"/>
+                    </span>
+                    {availableSources.length > 0 && (
+                      <span style={{
+                        fontSize: 12, color: C.text3, fontWeight: 500, letterSpacing: '-0.005em',
+                      }}>
+                        Reading {availableSources.slice(0, 3).join(', ')}
+                        {availableSources.length > 3 ? `, +${availableSources.length - 3} more` : ''}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 
-          {/* New chat. Same hairline + inset highlight as the meter so
-              the two pills read as siblings. */}
-          <button
-            type="button"
-            onClick={newChat}
-            disabled={sending || messages.length === 0}
-            style={{
-              display: 'inline-flex', alignItems: 'center', gap: 6,
-              padding: '8px 14px', borderRadius: 100,
-              border: `1px solid ${C.border}`,
-              background: messages.length === 0 || sending ? 'rgba(10,10,15,0.025)' : '#fff',
-              color: messages.length === 0 || sending ? C.text4 : C.text2,
-              fontFamily: 'inherit',
-              fontSize: 12.5, fontWeight: 500, letterSpacing: '-0.01em',
-              cursor: messages.length === 0 || sending ? 'default' : 'pointer',
-              boxShadow: messages.length === 0 || sending ? 'none' : C.cardShadow,
-              transition: `background 180ms ${C.spring}, color 180ms ${C.spring}, border-color 180ms ${C.spring}`,
-            }}
-            onMouseEnter={e => { if (!(messages.length === 0 || sending)) { e.currentTarget.style.background = 'rgba(15,15,19,0.03)'; e.currentTarget.style.color = C.text1; e.currentTarget.style.borderColor = C.borderActive } }}
-            onMouseLeave={e => { if (!(messages.length === 0 || sending)) { e.currentTarget.style.background = '#fff'; e.currentTarget.style.color = C.text2; e.currentTarget.style.borderColor = C.border } }}
-          >
-            <Plus size={13} strokeWidth={1.9} />
-            New chat
-          </button>
-        </div>
-      </div>
-
-      {/* ── Message stream ─────────────────────────────────────────── */}
-      <div
-        ref={scrollRef}
-        style={{
-          flex: 1, overflowY: 'auto',
-          padding: '4px 4px 14px',
-          scrollBehavior: 'smooth',
-        }}
-      >
-        {state.loading ? (
-          <div style={{ padding: '64px 0', textAlign: 'center' }}>
-            <div style={{
-              width: 24, height: 24, margin: '0 auto 14px',
-              border: `2px solid rgba(10,10,15,0.08)`,
-              borderTop: `2px solid ${C.text1}`,
-              borderRadius: '50%', animation: 'spin 0.8s linear infinite',
-            }}/>
-            <p style={{ fontSize: 12.5, color: C.text3, fontWeight: 500, letterSpacing: '-0.01em' }}>
-              Loading your coach
-            </p>
-          </div>
-        ) : state.error ? (
+          {/* Composer pinned to bottom */}
           <div style={{
-            background: C.redSoft,
-            border: `1px solid ${C.redBdr}`,
-            borderRadius: 12, padding: '14px 18px',
+            padding: '12px 8px 16px',
+            maxWidth: 776, width: '100%', margin: '0 auto',
           }}>
-            <p style={{ fontSize: 13, color: C.red, fontWeight: 500, letterSpacing: '-0.01em' }}>
-              {state.error}
-            </p>
+            {errorBanner}
+            {composerForm}
           </div>
-        ) : messages.length === 0 ? (
-          <EmptyState onPick={(text) => send(text)} />
-        ) : (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-            {messages.map((m, i) => (
-              <MessageBubble key={i} role={m.role} content={m.content} sources={m.sources} />
-            ))}
-            {sending && (
-              <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
-                <span style={{
-                  flexShrink: 0,
-                  width: 32, height: 32, borderRadius: 10,
-                  display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-                  background: C.avatarBg, border: `1px solid ${C.avatarBdr}`, color: C.avatarFg,
-                  boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.6)',
-                }}>
-                  <Bot size={15} strokeWidth={1.7} />
-                </span>
-                <div style={{
-                  background: 'linear-gradient(180deg, #ffffff 0%, #fafafc 100%)',
-                  border: `1px solid ${C.border}`,
-                  borderRadius: '4px 14px 14px 14px',
-                  padding: '13px 16px',
-                  boxShadow: C.cardShadow,
-                  display: 'inline-flex', alignItems: 'center', gap: 12, flexWrap: 'wrap',
-                }}>
-                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5 }}>
-                    <Dot delay="0s"/><Dot delay="0.15s"/><Dot delay="0.30s"/>
-                  </span>
-                  {availableSources.length > 0 && (
-                    <span style={{
-                      fontSize: 12, color: C.text3, fontWeight: 500, letterSpacing: '-0.01em',
-                    }}>
-                      Reading {availableSources.slice(0, 3).join(', ')}
-                      {availableSources.length > 3 ? `, +${availableSources.length - 3} more` : ''}
-                    </span>
-                  )}
-                </div>
-              </div>
-            )}
-          </div>
-        )}
-      </div>
-
-      {/* ── Composer (sticky bottom). Treated as a single tactile object:
-            hairline border, single soft shadow with inner highlight, focus
-            state darkens the border subtly without changing surface. ─── */}
-      <div style={{
-        marginTop: 4,
-        background: C.bg,
-        paddingTop: 10,
-      }}>
-        {/* Inline error. No alarm icon, no shouty weight — just the
-            tinted strip and the tone of voice the rest of the app uses. */}
-        {sendError && (
-          <div style={{
-            display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12,
-            marginBottom: 10,
-            background: C.redSoft,
-            border: `1px solid ${C.redBdr}`,
-            borderRadius: 12, padding: '11px 14px',
-          }}>
-            <p style={{
-              fontSize: 12.5, color: C.red, fontWeight: 500,
-              flex: 1, lineHeight: 1.5, letterSpacing: '-0.01em',
-            }}>{sendError}</p>
-            {outOfMessages && (
-              <button
-                type="button"
-                onClick={() => onNavigate?.('Settings')}
-                style={{
-                  display: 'inline-flex', alignItems: 'center', gap: 5,
-                  padding: '7px 14px', borderRadius: 100,
-                  border: 'none', cursor: 'pointer',
-                  background: C.red, color: '#fff',
-                  fontFamily: 'inherit',
-                  fontSize: 12, fontWeight: 600, letterSpacing: '-0.01em',
-                  boxShadow: C.redShadow,
-                  flexShrink: 0,
-                  transition: `filter 160ms ${C.spring}`,
-                }}
-                onMouseEnter={e => e.currentTarget.style.filter = 'brightness(1.06)'}
-                onMouseLeave={e => e.currentTarget.style.filter = 'none'}
-              >
-                Upgrade
-                <ArrowRight size={11} strokeWidth={2.2} />
-              </button>
-            )}
-          </div>
-        )}
-
-        <form
-          onSubmit={(e) => { e.preventDefault(); send() }}
-          style={{
-            display: 'flex', alignItems: 'flex-end', gap: 10,
-            background: '#fff',
-            border: `1px solid ${input.length > 0 || sending ? 'rgba(229,37,27,0.35)' : C.border}`,
-            borderRadius: 14, padding: '10px 10px 10px 18px',
-            // The big "alive" tell: when there's input or we're sending,
-            // the composer wears a 4px-soft red glow ring. Removes the
-            // dead-input feeling without making the surface "noisy" the
-            // rest of the time.
-            boxShadow: input.length > 0 || sending
-              ? `0 0 0 4px rgba(229,37,27,0.08), 0 1px 2px rgba(15,15,25,0.04), inset 0 1px 0 rgba(255,255,255,0.7)`
-              : C.cardShadow,
-            transition: `border-color 200ms ${C.spring}, box-shadow 200ms ${C.spring}`,
-          }}
-        >
-          <textarea
-            ref={inputRef}
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault()
-                send()
-              }
-            }}
-            disabled={sending || outOfMessages}
-            rows={1}
-            placeholder={outOfMessages ? 'You have used all messages this month' : 'Ask your coach anything'}
-            style={{
-              flex: 1, minWidth: 0,
-              border: 'none', outline: 'none',
-              background: 'transparent',
-              fontFamily: FONT_STACK,
-              fontSize: 14.5, fontWeight: 400, color: C.text1,
-              letterSpacing: '-0.005em', lineHeight: 1.55,
-              resize: 'none',
-              maxHeight: 140,
-              paddingTop: 7, paddingBottom: 7,
-            }}
-            onInput={(e) => {
-              e.target.style.height = 'auto'
-              e.target.style.height = Math.min(e.target.scrollHeight, 140) + 'px'
-            }}
-          />
-          {(() => {
-            const isOff = sending || outOfMessages || input.trim().length === 0
-            return (
-              <button
-                type="submit"
-                disabled={isOff}
-                aria-label="Send"
-                style={{
-                  flexShrink: 0,
-                  width: 40, height: 40, borderRadius: 11,
-                  border: 'none',
-                  // The disabled state stays red, just at low opacity. Reads
-                  // "armed and ready" instead of "broken." This is the move
-                  // that changes the whole bottom of the page from dead to
-                  // alive.
-                  background: isOff
-                    ? 'rgba(229,37,27,0.18)'
-                    : `linear-gradient(180deg, #ed3a31 0%, ${C.red} 100%)`,
-                  color: isOff ? 'rgba(255,255,255,0.85)' : '#fff',
-                  cursor: isOff ? 'default' : 'pointer',
-                  display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-                  boxShadow: isOff
-                    ? 'inset 0 1px 0 rgba(255,255,255,0.18)'
-                    : '0 1px 2px rgba(229,37,27,0.32), inset 0 1px 0 rgba(255,255,255,0.22)',
-                  transition: `filter 160ms ${C.spring}, transform 160ms ${C.spring}`,
-                }}
-                onMouseEnter={e => { if (!isOff) { e.currentTarget.style.filter = 'brightness(1.06)'; e.currentTarget.style.transform = 'translateY(-1px)' } }}
-                onMouseLeave={e => { if (!isOff) { e.currentTarget.style.filter = 'none'; e.currentTarget.style.transform = 'translateY(0)' } }}
-              >
-                <Send size={16} strokeWidth={2} />
-              </button>
-            )
-          })()}
-        </form>
-
-        {/* One chip, not three. Shift+Enter for newline is intuitive
-            enough to live as tribal knowledge. */}
-        <p style={{
-          display: 'inline-flex', alignItems: 'center', gap: 6,
-          fontSize: 11, color: C.text4, fontWeight: 500,
-          letterSpacing: '-0.005em',
-          marginTop: 10, marginLeft: 'auto', marginRight: 'auto',
-          width: 'fit-content', justifySelf: 'center',
-        }}>
-          <kbd style={{
-            display: 'inline-flex', alignItems: 'center', gap: 3,
-            background: 'rgba(10,10,15,0.04)',
-            border: `1px solid ${C.border}`,
-            padding: '2px 6px', borderRadius: 5,
-            fontFamily: FONT_MONO, fontSize: 10, fontWeight: 500,
-            color: C.text2,
-            boxShadow: 'inset 0 -1px 0 rgba(10,10,15,0.05)',
-          }}>
-            <CornerDownLeft size={9} strokeWidth={2} />
-            Enter
-          </kbd>
-          <span>to send</span>
-        </p>
-      </div>
+        </>
+      )}
     </div>
   )
 }
 
 
-/* ─── Empty state ──────────────────────────────────────────────────────
-   This is the conversion surface — what the user sees first when they
-   open Chat. The layout is deliberately typographic: a small eyebrow
-   sets context, an oversized question anchors the screen, a single line
-   of body explains the data scope, four polished prompt cards offer
-   one-tap entries. No gradients on the avatar, no double shadows, no
-   emoji icons. The cards earn their weight from spacing and the soft
-   tinted circle behind each Lucide glyph, not from chrome.
-   ────────────────────────────────────────────────────────────────── */
-function EmptyState({ onPick }) {
-  return (
-    <div style={{
-      display: 'flex', flexDirection: 'column', alignItems: 'center',
-      paddingTop: 52, paddingBottom: 24,
-    }}>
-      {/* Hero mark. A single Sparkles glyph in a soft tinted square sits
-          in for the bigger Bot. Sparkles is more "what should we make"
-          and less "robot assistant" — better tone for the coaching
-          frame the page is selling. */}
-      <div style={{
-        width: 52, height: 52, borderRadius: 14,
-        display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-        background: C.avatarBg,
-        border: `1px solid ${C.avatarBdr}`,
-        color: C.text1, marginBottom: 22,
-        boxShadow: C.cardShadow,
-      }}>
-        <Sparkles size={22} strokeWidth={1.6} />
-      </div>
-
-      {/* Eyebrow: tiny context label. Tracking opens it up so it reads
-          as a typographic flourish, not as shouty UI text. */}
-      <p style={{
-        fontSize: 10.5, fontWeight: 500,
-        color: C.text3, letterSpacing: '0.12em', textTransform: 'uppercase',
-        marginBottom: 10,
-      }}>AI Coach</p>
-
-      {/* Hero question. Big, soft weight, tight tracking — the move that
-          carries the whole screen. 28/600 is the new display token; the
-          old H2 was 22/800 which read as a heading, not a moment. */}
-      <h2 style={{
-        fontSize: 28, fontWeight: 600, color: C.text1,
-        letterSpacing: '-0.6px', lineHeight: 1.18, marginBottom: 10,
-        textAlign: 'center', maxWidth: 460,
-      }}>What do you want to figure out?</h2>
-
-      {/* Single-line subhead. The 4 data sources were spelled out before
-          (stats, videos, audit results, competitor data). That was 5
-          things stacked into one sentence — too much. The new line is
-          one beat: this knows you. */}
-      <p style={{
-        fontSize: 13.5, color: C.text3, fontWeight: 500,
-        letterSpacing: '-0.01em', lineHeight: 1.55, textAlign: 'center',
-        maxWidth: 380, marginBottom: 36,
-      }}>
-        Trained on your channel, audits, and tracked competitors.
-      </p>
-
-      {/* Starter prompts. Two columns, generous gap, each card is a
-          tactile object: hairline border, soft inset highlight at rest,
-          tile lifts 1px on hover with shadow growth + border darken.
-          The Lucide glyph sits in a soft charcoal-tinted circle so the
-          cards read as one coherent system, not coloured tags. */}
-      <div style={{
-        display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12,
-        width: '100%', maxWidth: 560,
-      }}>
-        {STARTER_PROMPTS.map((p, i) => {
-          const Icon = p.Icon
-          return (
-            <button
-              key={i}
-              type="button"
-              onClick={() => onPick(p.label)}
-              style={{
-                display: 'flex', alignItems: 'center', gap: 12,
-                padding: '14px 16px', borderRadius: 14,
-                background: '#fff',
-                border: `1px solid ${C.border}`,
-                color: C.text1,
-                fontFamily: 'inherit',
-                fontSize: 13.5, fontWeight: 500, letterSpacing: '-0.01em',
-                cursor: 'pointer',
-                textAlign: 'left',
-                boxShadow: C.cardShadow,
-                transition: `transform 200ms ${C.spring}, box-shadow 200ms ${C.spring}, border-color 200ms ${C.spring}`,
-              }}
-              onMouseEnter={e => {
-                e.currentTarget.style.transform = 'translateY(-1px)'
-                e.currentTarget.style.boxShadow = C.cardShadowLift
-                e.currentTarget.style.borderColor = C.borderActive
-              }}
-              onMouseLeave={e => {
-                e.currentTarget.style.transform = 'translateY(0)'
-                e.currentTarget.style.boxShadow = C.cardShadow
-                e.currentTarget.style.borderColor = C.border
-              }}
-            >
-              <span style={{
-                flexShrink: 0,
-                width: 32, height: 32, borderRadius: 9,
-                display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-                background: C.avatarBg,
-                border: `1px solid ${C.avatarBdr}`,
-                color: C.text1,
-              }}>
-                <Icon size={15} strokeWidth={1.7} />
-              </span>
-              <span style={{ flex: 1, lineHeight: 1.4, color: C.text1 }}>{p.label}</span>
-              <ArrowRight size={14} strokeWidth={1.9} color={C.text4} style={{ flexShrink: 0 }}/>
-            </button>
-          )
-        })}
-      </div>
-    </div>
-  )
-}
-
-
-/* ─── Message bubble ───────────────────────────────────────────────────
-   User bubble (right side): red surface with a subtle white inset
-   highlight along the top edge, the "glass" trick that gives the pill
-   dimension without adding a second color.
-   Assistant bubble (left side): white surface with hairline + the same
-   single-shadow + inset-highlight stack as the rest of the page, so all
-   white surfaces feel lit from above.
-   ────────────────────────────────────────────────────────────────── */
+/* ─── Message bubble. User bubble = brand red gradient with white inset
+       highlight (catches light). Assistant bubble = white surface with
+       hairline border. Both feel like real objects on the page. ───── */
 function MessageBubble({ role, content, sources }) {
   if (role === 'user') {
     return (
       <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
         <div style={{
           maxWidth: '78%',
-          // Vertical gradient on the red gives the pill dimension. The
-          // top edge picks up the inset highlight, the bottom edge is
-          // marginally darker, the eye reads it as a real object.
-          background: `linear-gradient(180deg, #ed3a31 0%, ${C.red} 60%, #d8201d 100%)`,
+          background: `linear-gradient(180deg, ${C.redHi} 0%, ${C.red} 60%, ${C.redLo} 100%)`,
           color: '#fff',
           borderRadius: '14px 14px 4px 14px',
           padding: '12px 16px',
@@ -784,27 +616,25 @@ function MessageBubble({ role, content, sources }) {
       </div>
     )
   }
-  // assistant
   return (
     <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
       <span style={{
         flexShrink: 0,
         width: 32, height: 32, borderRadius: 10,
         display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-        background: C.avatarBg, border: `1px solid ${C.avatarBdr}`, color: C.avatarFg,
-        boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.6)',
+        background: C.surface,
+        border: `1px solid ${C.hair}`,
+        color: C.text1,
+        boxShadow: C.cardShadow,
       }}>
         <Bot size={15} strokeWidth={1.7} />
       </span>
       <div style={{ flex: 1, minWidth: 0 }}>
         <div style={{
-          // Subtle top-to-bottom gradient on the assistant bubble. The
-          // delta is tiny (#fff → #fafafc) but it stops the bubble
-          // sitting flat against the page wash — it now catches light.
           background: 'linear-gradient(180deg, #ffffff 0%, #fafafc 100%)',
-          border: `1px solid ${C.border}`,
+          border: `1px solid ${C.hair}`,
           borderRadius: '4px 14px 14px 14px',
-          padding: '13px 18px',
+          padding: '14px 18px',
           boxShadow: C.cardShadow,
         }}>
           <AssistantBody text={content} />
@@ -826,14 +656,14 @@ function MessageBubble({ role, content, sources }) {
 }
 
 
-/* ─── Typing-indicator dot ─────────────────────────────────────────── */
+/* Typing-indicator dot. Charcoal on white — neutral, no alarm colour. */
 function Dot({ delay }) {
   return (
     <>
       <style>{`
         @keyframes ytgDotBounce {
           0%, 80%, 100% { transform: translateY(0); opacity: 0.4 }
-          40% { transform: translateY(-4px); opacity: 1 }
+          40%           { transform: translateY(-4px); opacity: 1 }
         }
       `}</style>
       <span style={{
