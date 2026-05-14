@@ -357,6 +357,124 @@ function KwDetailModal({ kw, C, onClose }) {
             </div>
           </div>
 
+          {/* Top-ranking videos for this keyword — visual evidence at the
+              top of the playbook. Pulled from competition.top_videos
+              (added by the backend in the same slice as the Top Pick band).
+              Rendered only when the field is populated. */}
+          {(comp.top_videos || []).length > 0 && (() => {
+            const vids = comp.top_videos.slice(0, 3)
+            const topViews = Math.max(...vids.map(v => v.views || 0))
+            const fmtAge = (iso) => {
+              if (!iso) return ''
+              const days = Math.floor((Date.now() - new Date(iso).getTime()) / 86400000)
+              if (days < 1)   return 'today'
+              if (days < 7)   return `${days}d ago`
+              if (days < 30)  return `${Math.floor(days / 7)}w ago`
+              if (days < 365) return `${Math.floor(days / 30)}mo ago`
+              return `${Math.floor(days / 365)}y ago`
+            }
+            return (
+              <div style={{ marginBottom: 20 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12, flexWrap: 'wrap' }}>
+                  <span style={{
+                    fontSize: 11, fontWeight: 700, color: C.text3,
+                    letterSpacing: '0.10em', textTransform: 'uppercase',
+                  }}>Top-ranking videos right now</span>
+                  {topViews > 0 && (
+                    <span style={{
+                      marginLeft: 'auto',
+                      display: 'inline-flex', alignItems: 'center', gap: 7,
+                      fontSize: 12, fontWeight: 500, color: C.text2,
+                      letterSpacing: '-0.01em', fontVariantNumeric: 'tabular-nums',
+                    }}>
+                      <span style={{ width: 6, height: 6, borderRadius: 99, background: C.green, flexShrink: 0 }}/>
+                      Top performer{' '}
+                      <strong style={{ color: C.text1, fontWeight: 700 }}>{fmtCompact(topViews)} views</strong>
+                    </span>
+                  )}
+                </div>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10 }}>
+                  {vids.map((v, i) => {
+                    const thumbHigh = v.video_id ? `https://i.ytimg.com/vi/${v.video_id}/maxresdefault.jpg` : null
+                    const thumbFallback = v.video_id ? `https://i.ytimg.com/vi/${v.video_id}/hqdefault.jpg` : (v.thumbnail_url || null)
+                    const thumb = thumbHigh || thumbFallback
+                    const ytUrl = v.video_id ? `https://www.youtube.com/watch?v=${v.video_id}` : null
+                    return (
+                      <a key={v.video_id || i}
+                        href={ytUrl || '#'}
+                        target="_blank" rel="noopener noreferrer"
+                        onClick={e => { if (!ytUrl) e.preventDefault() }}
+                        style={{
+                          display: 'block', textDecoration: 'none', color: 'inherit',
+                          borderRadius: 10, overflow: 'hidden',
+                          border: '1px solid #ececf0', background: '#fff',
+                          transition: 'transform 140ms ease, box-shadow 140ms ease, border-color 140ms ease',
+                        }}
+                        onMouseEnter={e => {
+                          e.currentTarget.style.transform = 'translateY(-1px)'
+                          e.currentTarget.style.boxShadow = '0 4px 14px rgba(0,0,0,0.10)'
+                          e.currentTarget.style.borderColor = '#d6d6dc'
+                        }}
+                        onMouseLeave={e => {
+                          e.currentTarget.style.transform = 'translateY(0)'
+                          e.currentTarget.style.boxShadow = 'none'
+                          e.currentTarget.style.borderColor = '#ececf0'
+                        }}
+                      >
+                        <div style={{ position: 'relative', aspectRatio: '16 / 9', background: '#ebebef', overflow: 'hidden' }}>
+                          {thumb && (
+                            <img src={thumb} alt="" referrerPolicy="no-referrer" loading="lazy"
+                              data-fallback={thumbFallback || ''}
+                              onError={e => {
+                                const t = e.currentTarget
+                                const fb = t.getAttribute('data-fallback')
+                                if (fb && t.src !== fb) { t.src = fb; t.removeAttribute('data-fallback') }
+                              }}
+                              onLoad={e => {
+                                const t = e.currentTarget
+                                const fb = t.getAttribute('data-fallback')
+                                if (fb && t.naturalWidth > 0 && t.naturalWidth < 300) {
+                                  t.src = fb
+                                  t.removeAttribute('data-fallback')
+                                }
+                              }}
+                              style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}/>
+                          )}
+                          {v.views > 0 && (
+                            <span style={{
+                              position: 'absolute', bottom: 8, right: 8,
+                              background: 'rgba(0,0,0,0.82)', color: '#fff',
+                              fontSize: 11.5, fontWeight: 700,
+                              padding: '3px 7px', borderRadius: 5,
+                              fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.05px',
+                              backdropFilter: 'blur(2px)',
+                            }}>{fmtCompact(v.views)}</span>
+                          )}
+                        </div>
+                        <div style={{ padding: '11px 13px 13px' }}>
+                          <p style={{
+                            fontSize: 13.5, fontWeight: 600, color: C.text1,
+                            letterSpacing: '-0.15px', lineHeight: 1.4,
+                            margin: '0 0 4px',
+                            display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical',
+                            overflow: 'hidden', minHeight: 38,
+                          }}>{v.title}</p>
+                          <p style={{
+                            fontSize: 12, fontWeight: 500, color: 'rgba(10,10,15,0.50)',
+                            letterSpacing: '-0.02px',
+                            whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
+                          }}>
+                            {v.channel_title}{v.published_at ? ` · ${fmtAge(v.published_at)}` : ''}
+                          </p>
+                        </div>
+                      </a>
+                    )
+                  })}
+                </div>
+              </div>
+            )
+          })()}
+
           {/* 3-col playbook — exact Outliers pattern (blue / amber / green) */}
           <div style={{ background: '#fff', border: `1px solid ${C.border}`, borderRadius: 16, padding: '20px 22px' }}>
             <p style={{ fontSize: 15, fontWeight: 700, color: C.text1, letterSpacing: '-0.3px', marginBottom: 16 }}>Keyword playbook</p>
@@ -1261,17 +1379,22 @@ export default function Keywords({ plan, freeTierFeatures }) {
                           </span>
                         </div>
                       </div>
-                      <div style={{ flexShrink: 0, borderLeft: '1px solid rgba(0,0,0,0.07)',
-                        paddingLeft: 16, marginLeft: 4, paddingRight: 28 }}>
-                        <button className="kw-report-cta"
-                          onClick={e => { e.stopPropagation(); openReport(r) }}>
-                          Open report
-                          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"
-                            stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                            <path d="M4 2l4 4-4 4"/>
-                          </svg>
-                        </button>
-                      </div>
+                      {/* Chevron — the whole row is the click target, so this
+                          is purely a visual affordance. No button, no shadow,
+                          no loud red CTA pill. Mirrors the Competitors
+                          tracked-row pattern. */}
+                      <span aria-hidden="true" style={{
+                        flexShrink: 0,
+                        color: 'rgba(10,10,15,0.40)',
+                        display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                        width: 28, height: 28,
+                        marginRight: 4,
+                      }}>
+                        <svg width="15" height="15" viewBox="0 0 15 15" fill="none"
+                          stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M5 3.5L9 7.5L5 11.5"/>
+                        </svg>
+                      </span>
                     </div>
                   </div>
                 )
