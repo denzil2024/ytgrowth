@@ -584,19 +584,21 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
     </div>
   )
 
-  /* ─── Floating top-right cluster. Quota meter is ALWAYS visible when
-         the user has an allowance so usage is never hidden. New-chat
-         icon button shows when there's a conversation to clear. The
-         meter colour-shifts to red only when truly out. ──────────── */
+  /* ─── Floating top-right cluster. Only renders when there's NO rail
+         (true first-time empty state). Once the rail exists, the meter
+         lives at the bottom of the rail instead — the ChatGPT sidebar
+         pattern. Keeps usage info anchored to a real UI element rather
+         than floating alone in the corner. ────────────────────────── */
   const usedPct = allowance > 0 ? Math.min(100, (used / allowance) * 100) : 0
   const meterEmpty = remaining === 0 && allowance > 0
+  const showFloatingMeter = conversations.length === 0 && allowance > 0
   const topRightControls = (
     <div style={{
       position: 'absolute', top: 4, right: 2,
       display: 'flex', alignItems: 'center', gap: 8,
       zIndex: 3,
     }}>
-      {allowance > 0 && (
+      {showFloatingMeter && (
         <div style={{
           // The number IS the meter. A tiny bar at the trailing edge was
           // just visual noise. Status dot + count is more legible.
@@ -698,6 +700,9 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
               onDelete={deleteConversation}
               sending={sending}
               switching={switchingConv}
+              used={used}
+              allowance={allowance}
+              remaining={remaining}
             />
           )}
           <div style={{
@@ -939,42 +944,57 @@ function ConversationRail({
   onDelete,
   sending,
   switching,
+  // Meter footer props — rail owns the meter when it's present.
+  used,
+  allowance,
+  remaining,
 }) {
   const groups = groupConversationsByRecency(conversations)
+  const meterEmpty = remaining === 0 && allowance > 0
+  const meterLow   = remaining > 0 && remaining < allowance * 0.25
+  const dotColor   = meterEmpty ? C.red : meterLow ? C.red : '#16a34a'
   return (
     <aside style={{
-      width: 240,
+      width: 232,
       flexShrink: 0,
       display: 'flex', flexDirection: 'column',
       paddingRight: 12,
       borderRight: `1px solid ${C.hair}`,
       minHeight: 0,
     }}>
-      {/* New chat button — top of rail, full-width, hairline */}
+      {/* New chat button — top of rail. Flush row rhythm matching the
+          conversation items below: same height, same horizontal padding,
+          same border-radius. Distinguished only by text weight + small
+          tinted background on hover. No card shadow. */}
       <button
         type="button"
         onClick={onNew}
         disabled={sending || switching}
         style={{
-          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-          padding: '10px 12px', marginBottom: 14, marginRight: 4,
-          background: C.surface,
-          border: `1px solid ${C.hair}`,
-          borderRadius: 10,
+          display: 'flex', alignItems: 'center', gap: 9,
+          padding: '8px 10px 8px 12px',
+          marginBottom: 10,
+          background: 'transparent',
+          border: 'none',
           color: C.text1,
           fontFamily: 'inherit',
           fontSize: 13, fontWeight: 600, letterSpacing: '-0.01em',
           cursor: sending || switching ? 'default' : 'pointer',
-          boxShadow: C.cardShadow,
-          transition: `background 180ms ${C.spring}, border-color 180ms ${C.spring}, transform 180ms ${C.spring}`,
+          borderRadius: 8,
+          textAlign: 'left',
+          transition: `background 140ms ${C.spring}`,
         }}
-        onMouseEnter={e => { if (!(sending || switching)) { e.currentTarget.style.background = '#fff'; e.currentTarget.style.borderColor = C.hairActive; e.currentTarget.style.transform = 'translateY(-1px)' } }}
-        onMouseLeave={e => { if (!(sending || switching)) { e.currentTarget.style.background = C.surface; e.currentTarget.style.borderColor = C.hair; e.currentTarget.style.transform = 'translateY(0)' } }}
+        onMouseEnter={e => { if (!(sending || switching)) e.currentTarget.style.background = 'rgba(10,10,15,0.04)' }}
+        onMouseLeave={e => { if (!(sending || switching)) e.currentTarget.style.background = 'transparent' }}
       >
-        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
-          <Plus size={14} strokeWidth={2} color={C.text2} />
-          New chat
+        <span style={{
+          display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+          flexShrink: 0, width: 18, height: 18,
+          color: C.text1,
+        }}>
+          <Plus size={14} strokeWidth={2} />
         </span>
+        New chat
       </button>
 
       {/* Conversation list, grouped by date */}
@@ -984,13 +1004,13 @@ function ConversationRail({
         minHeight: 0,
       }}>
         {groups.map(group => (
-          <div key={group.label} style={{ marginBottom: 14 }}>
+          <div key={group.label} style={{ marginBottom: 16 }}>
             <p style={{
-              fontSize: 10.5, fontWeight: 600, color: C.text4,
-              letterSpacing: '0.06em', textTransform: 'uppercase',
-              margin: '0 0 6px 4px',
+              fontSize: 10.5, fontWeight: 600, color: C.text3,
+              letterSpacing: '0.07em', textTransform: 'uppercase',
+              margin: '0 0 6px 12px',
             }}>{group.label}</p>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
               {group.items.map(c => (
                 <ConversationRow
                   key={c.id}
@@ -1005,6 +1025,44 @@ function ConversationRail({
           </div>
         ))}
       </div>
+
+      {/* Meter footer. Lives at the bottom of the rail (ChatGPT-style
+          sidebar pattern). Hairline divider above sets it off from the
+          scrolling conversation list. The full pill is built inline so
+          its anchor is locked to the rail bottom, not floating in the
+          page corner without context. */}
+      {allowance > 0 && (
+        <div style={{
+          marginTop: 10, paddingTop: 12,
+          borderTop: `1px solid ${C.hair}`,
+        }}>
+          <div style={{
+            display: 'inline-flex', alignItems: 'center', gap: 8,
+            padding: '7px 12px 7px 11px', borderRadius: 100,
+            background: meterEmpty ? C.redSoft : 'transparent',
+            border: meterEmpty ? `1px solid ${C.redBdr}` : '1px solid transparent',
+            fontVariantNumeric: 'tabular-nums',
+          }}>
+            <span style={{
+              width: 6, height: 6, borderRadius: 99,
+              background: dotColor,
+              boxShadow: `0 0 0 3px ${dotColor === C.red ? 'rgba(229,37,27,0.14)' : 'rgba(22,163,74,0.14)'}`,
+              animation: meterEmpty ? 'none' : 'ytgPulseSoft 2.4s ease-in-out infinite',
+              flexShrink: 0,
+            }}/>
+            <span style={{
+              fontSize: 12, fontWeight: 600,
+              color: meterEmpty ? C.red : C.text1,
+              letterSpacing: '-0.01em',
+            }}>
+              <span>{remaining}</span>
+              <span style={{ color: C.text3, fontWeight: 500, marginLeft: 5 }}>
+                {remaining === 1 ? 'message left' : 'messages left'}
+              </span>
+            </span>
+          </div>
+        </div>
+      )}
     </aside>
   )
 }
@@ -1012,6 +1070,14 @@ function ConversationRail({
 function ConversationRow({ conversation, active, onSelect, onDelete, switching }) {
   const [hover, setHover] = useState(false)
   const title = conversation.title || 'New chat'
+  // Active = subtle background tint (no border, no shadow — was reading
+  // as a card; should read as a list selection). Hover = even lighter
+  // tint. Inactive = transparent so the list breathes.
+  const bg = active
+    ? 'rgba(10,10,15,0.055)'
+    : hover
+      ? 'rgba(10,10,15,0.03)'
+      : 'transparent'
   return (
     <div
       onClick={active || switching ? undefined : onSelect}
@@ -1022,17 +1088,15 @@ function ConversationRow({ conversation, active, onSelect, onDelete, switching }
         display: 'flex', alignItems: 'center', gap: 9,
         padding: '8px 10px 8px 12px',
         borderRadius: 8,
-        background: active ? C.surface : (hover ? 'rgba(10,10,15,0.04)' : 'transparent'),
-        border: active ? `1px solid ${C.hair}` : '1px solid transparent',
-        boxShadow: active ? C.cardShadow : 'none',
+        background: bg,
         cursor: active || switching ? 'default' : 'pointer',
-        transition: `background 140ms ${C.spring}, border-color 140ms ${C.spring}`,
+        transition: `background 140ms ${C.spring}`,
       }}
     >
       <span style={{
         display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-        flexShrink: 0, width: 18, height: 18,
-        color: active ? C.text1 : C.text3,
+        flexShrink: 0, width: 16, height: 16,
+        color: active ? C.text2 : C.text3,
       }}>
         <MessageSquare size={13} strokeWidth={1.8} />
       </span>
