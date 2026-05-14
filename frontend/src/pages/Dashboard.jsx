@@ -3766,14 +3766,14 @@ function WhatsNewCard({ channelId, onNavigate }) {
         </span>
         <div style={{ minWidth: 0, flex: 1 }}>
           <p style={{
-            fontSize: 9.5, fontWeight: 800, color: '#e5251b',
+            fontSize: 9.5, fontWeight: 600, color: '#e5251b',
             letterSpacing: '0.11em', textTransform: 'uppercase',
             marginBottom: 5,
           }}>
             What's new
           </p>
           <p style={{
-            fontSize: 13.5, fontWeight: 700, color: '#0a0a0f',
+            fontSize: 13.5, fontWeight: 600, color: '#0a0a0f',
             letterSpacing: '-0.012em', lineHeight: 1.35,
             paddingRight: 22,  // clear the dismiss x
             marginBottom: 5,
@@ -3795,7 +3795,7 @@ function WhatsNewCard({ channelId, onNavigate }) {
               padding: 0, border: 'none', background: 'transparent',
               cursor: 'pointer',
               color: '#e5251b',
-              fontSize: 13, fontWeight: 700,
+              fontSize: 13, fontWeight: 600,
               letterSpacing: '-0.01em',
               fontFamily: 'inherit',
             }}
