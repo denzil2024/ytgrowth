@@ -41,6 +41,19 @@ const RESULT = {
           { video_id: 'dQw4w9WgXcQ', title: 'I Cooked Every Meal for Myself for a Week — Here is the Cost', channel_title: 'BudgetEats', published_at: new Date(Date.now() - 86400_000 * 14).toISOString(), views: 287_000, thumbnail_url: 'https://i.ytimg.com/vi/dQw4w9WgXcQ/mqdefault.jpg' },
           { video_id: 'dQw4w9WgXcQ', title: 'Honest Single-Person Meal Plan: 7 dinners under $4', channel_title: 'PennyPlate', published_at: new Date(Date.now() - 86400_000 * 28).toISOString(), views: 198_400, thumbnail_url: 'https://i.ytimg.com/vi/dQw4w9WgXcQ/mqdefault.jpg' },
         ],
+        // 12-week weekly bucket counts. Rising trend so the chart paints green
+        // and the caption reads "niche heating up".
+        publishing_timeline: (() => {
+          const counts = [2, 3, 1, 4, 3, 5, 4, 6, 5, 7, 8, 6]
+          const monday = new Date()
+          monday.setUTCHours(0, 0, 0, 0)
+          monday.setUTCDate(monday.getUTCDate() - monday.getUTCDay() + 1)
+          return counts.map((c, i) => {
+            const d = new Date(monday)
+            d.setUTCDate(monday.getUTCDate() - (11 - i) * 7)
+            return { week_start: d.toISOString().slice(0, 10), count: c }
+          })
+        })(),
       },
     },
     { keyword: 'cheap meals one person',         opportunityScore: 71, intentMatch: 'strong',  momentum: 'unclaimed', competition: { top_subs_median: 95_000,  top_views_median: 46_000,  days_since_newest: 210, top_videos: [] } },

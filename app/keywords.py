@@ -224,7 +224,7 @@ def _fetch_competition_for_keyword(keyword: str, yt_api_key: str) -> dict:
     signal — so the second user researching the same keyword today reads
     from cache at 0 quota cost.
     """
-    default = {"result_count": 0, "top_subs_median": 0, "top_views_median": 0, "days_since_newest": None, "top_videos": []}
+    default = {"result_count": 0, "top_subs_median": 0, "top_views_median": 0, "days_since_newest": None, "top_videos": [], "publishing_timeline": []}
     if not yt_api_key:
         return default
     from app.utils import yt_quota_paused
@@ -262,8 +262,8 @@ def _fetch_competition_for_keyword(keyword: str, yt_api_key: str) -> dict:
                     # frontend now needs. Treat as a cache miss so we
                     # refetch and backfill. Only refetches entries that
                     # are actually stale-schema, no quota spike on fresh ones.
-                    if "top_videos" not in cached:
-                        print(f"[keywords] cache STALE-SCHEMA '{keyword}' (missing top_videos) — refetching")
+                    if "top_videos" not in cached or "publishing_timeline" not in cached:
+                        print(f"[keywords] cache STALE-SCHEMA '{keyword}' (missing top_videos or publishing_timeline) — refetching")
                     else:
                         try:
                             row.hit_count = (row.hit_count or 0) + 1
@@ -283,11 +283,14 @@ def _fetch_competition_for_keyword(keyword: str, yt_api_key: str) -> dict:
 
     try:
         yt = build("youtube", "v3", developerKey=yt_api_key, cache_discovery=False)
+        # maxResults bumped 5 -> 25. search.list charges per call not per result,
+        # so cost stays at 100 units. The extra 20 results power the 12-week
+        # publishing_timeline below (visual momentum chart on the Keywords page).
         search = yt.search().list(
             part="snippet",
             q=keyword,
             type="video",
-            maxResults=5,
+            maxResults=25,
             order="relevance",
             relevanceLanguage="en",
         ).execute()
@@ -295,18 +298,24 @@ def _fetch_competition_for_keyword(keyword: str, yt_api_key: str) -> dict:
         if not items:
             return default
 
-        video_ids   = [it["id"]["videoId"]        for it in items if it.get("id", {}).get("videoId")]
-        channel_ids = list({it["snippet"]["channelId"] for it in items if it.get("snippet", {}).get("channelId")})
-        published   = [it["snippet"].get("publishedAt") for it in items if it.get("snippet", {}).get("publishedAt")]
+        # Medians stay calibrated to the top-5 (the scoring weights in
+        # _score_with_real_data were tuned against top-5 numbers). The extra
+        # 20 results power top_videos sorting + publishing_timeline only.
+        top5 = items[:5]
+        video_ids   = [it["id"]["videoId"]        for it in top5 if it.get("id", {}).get("videoId")]
+        channel_ids = list({it["snippet"]["channelId"] for it in top5 if it.get("snippet", {}).get("channelId")})
+        published   = [it["snippet"].get("publishedAt") for it in top5 if it.get("snippet", {}).get("publishedAt")]
 
-        # Batch fetch video stats + channel stats (cheap: 1 unit each)
-        vids = yt.videos().list(part="statistics", id=",".join(video_ids)).execute() if video_ids else {"items": []}
+        # Batch fetch video stats for ALL 25 results so top_videos has views
+        # for sorting. Channels stay top-5 (only used for the subs median).
+        all_video_ids = [it["id"]["videoId"] for it in items if it.get("id", {}).get("videoId")]
+        vids = yt.videos().list(part="statistics", id=",".join(all_video_ids)).execute() if all_video_ids else {"items": []}
         chs  = yt.channels().list(part="statistics", id=",".join(channel_ids)).execute() if channel_ids else {"items": []}
 
-        # Build a video_id -> views map for top_videos shortlist below.
+        # video_id -> views map (covers all 25 fetched results).
         views_by_id = {v.get("id"): int(v.get("statistics", {}).get("viewCount", 0) or 0) for v in vids.get("items", [])}
 
-        view_counts = sorted(views_by_id.values())
+        view_counts = sorted(views_by_id.get(vid, 0) for vid in video_ids)  # top-5 view medians
         sub_counts  = sorted(int(c.get("statistics", {}).get("subscriberCount", 0) or 0) for c in chs.get("items", []))
 
         def median(xs):
@@ -323,10 +332,9 @@ def _fetch_competition_for_keyword(keyword: str, yt_api_key: str) -> dict:
                 newest = max(parsed)
                 days_since = (datetime.now(timezone.utc) - newest).days
 
-        # Top-3 ranking videos for this keyword, ordered by view count.
-        # Surfaces as visual evidence on the Keywords page (Top Pick hero +
-        # detail modal). The data is already in hand from the search +
-        # videos.list calls above, so this adds zero quota cost.
+        # Top-3 ranking videos by view count across ALL 25 fetched results.
+        # The visual evidence band wants the strongest performers, not the
+        # first 3 relevance results.
         top_videos = []
         for it in items:
             vid = it.get("id", {}).get("videoId")
@@ -346,12 +354,39 @@ def _fetch_competition_for_keyword(keyword: str, yt_api_key: str) -> dict:
         top_videos.sort(key=lambda v: v["views"], reverse=True)
         top_videos = top_videos[:3]
 
+        # 12-week publishing_timeline — bucket the publishedAt of all 25
+        # results into weekly counts, oldest to newest. Powers the
+        # Competition Momentum line chart on the Keywords page. Each item:
+        # {week_start: ISO date string, count: int}.
+        from datetime import timedelta
+        now_utc = datetime.now(timezone.utc)
+        # Anchor "current week" to start on a Monday so the buckets are stable.
+        this_week_monday = (now_utc - timedelta(days=now_utc.weekday())).replace(hour=0, minute=0, second=0, microsecond=0)
+        week_buckets = []
+        for i in range(11, -1, -1):
+            week_start = this_week_monday - timedelta(weeks=i)
+            week_buckets.append({"week_start": week_start.date().isoformat(), "count": 0})
+        for it in items:
+            iso = it.get("snippet", {}).get("publishedAt", "")
+            if not iso:
+                continue
+            try:
+                dt = datetime.fromisoformat(iso.replace("Z", "+00:00"))
+            except Exception:
+                continue
+            weeks_ago = int((this_week_monday - dt).total_seconds() // (7 * 86400))
+            idx = 11 - weeks_ago
+            if 0 <= idx <= 11:
+                week_buckets[idx]["count"] += 1
+        publishing_timeline = week_buckets
+
         result = {
             "result_count":       search.get("pageInfo", {}).get("totalResults", len(items)),
             "top_subs_median":    median(sub_counts),
             "top_views_median":   median(view_counts),
             "days_since_newest":  days_since,
             "top_videos":         top_videos,
+            "publishing_timeline": publishing_timeline,
         }
 
         # Persist to cache so the next user researching this keyword today
@@ -390,6 +425,65 @@ def _fetch_competition_for_keyword(keyword: str, yt_api_key: str) -> dict:
     except Exception as e:
         print(f"[keywords] competition fetch error for '{keyword}': {e}")
         return default
+
+
+def force_fetch_top_videos(keyword: str) -> list[dict]:
+    """
+    Last-resort fetch for the 3 top-ranking videos for a keyword.
+    Bypasses both YT_QUOTA_PAUSED and the 24h cache because this runs only
+    when the normal enrichment path returned empty top_videos for a paid
+    user-facing research call. Cost is ~51 units (search.list + videos.list,
+    skip channels.list — we only need titles, views, thumbnails).
+
+    Returns [] on any failure; logs the reason loudly so Railway logs
+    surface the actual cause (missing API key, expired API key, 403
+    quotaExceeded, network error, etc.) rather than silently producing
+    an empty band on the frontend.
+    """
+    yt_api_key = os.getenv("YOUTUBE_API_KEY", "")
+    if not yt_api_key:
+        print(f"[keywords] force_fetch_top_videos: YOUTUBE_API_KEY missing (keyword='{keyword}')")
+        return []
+    try:
+        yt = build("youtube", "v3", developerKey=yt_api_key, cache_discovery=False)
+        search = yt.search().list(
+            part="snippet",
+            q=keyword,
+            type="video",
+            maxResults=5,
+            order="relevance",
+            relevanceLanguage="en",
+        ).execute()
+        items = search.get("items", []) or []
+        if not items:
+            print(f"[keywords] force_fetch_top_videos: YT returned 0 items for '{keyword}'")
+            return []
+        video_ids = [it["id"]["videoId"] for it in items if it.get("id", {}).get("videoId")]
+        vids = yt.videos().list(part="statistics", id=",".join(video_ids)).execute() if video_ids else {"items": []}
+        views_by_id = {v.get("id"): int(v.get("statistics", {}).get("viewCount", 0) or 0) for v in vids.get("items", [])}
+        out = []
+        for it in items:
+            vid = it.get("id", {}).get("videoId")
+            if not vid:
+                continue
+            snip = it.get("snippet", {}) or {}
+            out.append({
+                "video_id":      vid,
+                "title":         snip.get("title", ""),
+                "channel_title": snip.get("channelTitle", ""),
+                "published_at":  snip.get("publishedAt", ""),
+                "views":         views_by_id.get(vid, 0),
+                "thumbnail_url": (snip.get("thumbnails", {}).get("medium")
+                                  or snip.get("thumbnails", {}).get("default")
+                                  or {}).get("url", ""),
+            })
+        out.sort(key=lambda v: v["views"], reverse=True)
+        out = out[:3]
+        print(f"[keywords] force_fetch_top_videos OK '{keyword}' -> {len(out)} videos")
+        return out
+    except Exception as e:
+        print(f"[keywords] force_fetch_top_videos FAILED '{keyword}': {type(e).__name__}: {e}")
+        return []
 
 
 def fetch_competition_signals(keywords: list[str], top_n: int = 5) -> dict[str, dict]:

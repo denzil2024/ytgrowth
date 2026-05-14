@@ -417,6 +417,7 @@ function KwDetailModal({ kw, C, onClose }) {
           {(comp.top_videos || []).length > 0 && (() => {
             const vids = comp.top_videos.slice(0, 3)
             const topViews = Math.max(...vids.map(v => v.views || 0))
+            const medianViews = comp.top_views_median || 0
             const fmtAge = (iso) => {
               if (!iso) return ''
               const days = Math.floor((Date.now() - new Date(iso).getTime()) / 86400000)
@@ -519,6 +520,10 @@ function KwDetailModal({ kw, C, onClose }) {
                           }}>
                             {v.channel_title}{v.published_at ? ` · ${fmtAge(v.published_at)}` : ''}
                           </p>
+                          <VideoMetricsRow
+                            vph={vphFor(v.views, v.published_at)}
+                            outlierMult={outlierFor(v.views, medianViews)}
+                          />
                         </div>
                       </a>
                     )
@@ -648,6 +653,164 @@ function fmtCompact(n) {
   if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(n >= 10_000_000 ? 0 : 1)}M`
   if (n >= 1_000)     return `${(n / 1_000).toFixed(n >= 10_000 ? 0 : 1)}K`
   return String(n)
+}
+
+// Views-per-hour for a video. Returns null when the timestamp is missing
+// or the video is < 1h old (VPH would be misleadingly huge).
+function vphFor(views, publishedAtIso) {
+  if (!views || !publishedAtIso) return null
+  const hours = (Date.now() - new Date(publishedAtIso).getTime()) / 3_600_000
+  if (!isFinite(hours) || hours < 1) return null
+  return Math.round(views / hours)
+}
+
+// Outlier multiplier relative to the keyword's top-5 median views.
+// Returns null below the show-threshold so we don't crowd cards with
+// "0.8x" noise. Threshold 1.5x = "noticeably above average".
+function outlierFor(views, medianViews) {
+  if (!views || !medianViews) return null
+  const mult = views / medianViews
+  if (!isFinite(mult) || mult < 1.5) return null
+  return Math.round(mult * 10) / 10
+}
+
+/* ─── VideoMetricsRow — small chips under each video card's channel line.
+       Shows VPH always (signal of velocity) and Outlier only when the
+       video is meaningfully above the keyword median. Two colors:
+         - amber (1.5-2.9x) "Above avg"
+         - green (3x+)      "Outlier"
+       Hidden entirely when there's nothing useful to show. */
+function VideoMetricsRow({ vph, outlierMult }) {
+  if (!vph && !outlierMult) return null
+  const outlierTone = outlierMult && outlierMult >= 3
+    ? { color: C.green, bg: C.greenBg, bdr: C.greenBdr, label: 'Outlier' }
+    : { color: C.amber, bg: C.amberBg, bdr: C.amberBdr, label: 'Above avg' }
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 8, flexWrap: 'wrap' }}>
+      {outlierMult && (
+        <span style={{
+          display: 'inline-flex', alignItems: 'center', gap: 4,
+          fontSize: 10.5, fontWeight: 700,
+          color: outlierTone.color, background: outlierTone.bg,
+          border: `1px solid ${outlierTone.bdr}`,
+          borderRadius: 100, padding: '2px 8px',
+          letterSpacing: '0.04em',
+          fontVariantNumeric: 'tabular-nums',
+        }}>
+          <svg width="9" height="9" viewBox="0 0 10 10" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M5 8V2M2 5l3-3 3 3"/>
+          </svg>
+          {outlierMult}x {outlierTone.label}
+        </span>
+      )}
+      {vph && (
+        <span style={{
+          display: 'inline-flex', alignItems: 'center', gap: 4,
+          fontSize: 10.5, fontWeight: 600,
+          color: 'rgba(10,10,15,0.62)', background: '#f4f4f6',
+          border: `1px solid ${C.border}`,
+          borderRadius: 100, padding: '2px 8px',
+          letterSpacing: '0.02em',
+          fontVariantNumeric: 'tabular-nums',
+        }}>
+          <span style={{ width: 5, height: 5, borderRadius: 99, background: 'rgba(10,10,15,0.36)' }}/>
+          {fmtCompact(vph)}/hr
+        </span>
+      )}
+    </div>
+  )
+}
+
+/* ─── MomentumChart — 12-week SVG line chart of publishing_timeline.
+       Color encodes direction: green if the last 4 weeks summed beat the
+       previous 4 (niche heating up), amber otherwise. Fill under the line
+       at 0.07 alpha gives visual weight without being loud. */
+function MomentumChart({ timeline, height = 120 }) {
+  if (!Array.isArray(timeline) || timeline.length < 2) return null
+  const W = 1000
+  const H = height
+  const padL = 28, padR = 14, padT = 18, padB = 26
+  const innerW = W - padL - padR
+  const innerH = H - padT - padB
+  const counts = timeline.map(t => Number(t?.count || 0))
+  const maxCount = Math.max(1, ...counts)
+  const n = counts.length
+
+  // Direction: rising if back-half outscores front-half.
+  const half = Math.floor(n / 2)
+  const front = counts.slice(0, half).reduce((a, b) => a + b, 0)
+  const back  = counts.slice(half).reduce((a, b) => a + b, 0)
+  const rising = back >= front
+  const color = rising ? C.green : C.amber
+  const fillColor = rising ? 'rgba(22,163,74,0.10)' : 'rgba(217,119,6,0.10)'
+
+  const xFor = i => padL + (i * innerW) / (n - 1)
+  const yFor = c => padT + innerH - (c / maxCount) * innerH
+
+  const points = counts.map((c, i) => [xFor(i), yFor(c)])
+  const linePath = points.map((p, i) => (i === 0 ? `M ${p[0]} ${p[1]}` : `L ${p[0]} ${p[1]}`)).join(' ')
+  const fillPath = `${linePath} L ${xFor(n - 1)} ${padT + innerH} L ${xFor(0)} ${padT + innerH} Z`
+
+  // X labels — show every 3rd week, with "now" on the right edge.
+  const labels = timeline.map((t, i) => {
+    if (i === n - 1) return 'now'
+    if (i % 3 !== 0) return ''
+    const weeksAgo = n - 1 - i
+    return `${weeksAgo}w`
+  })
+
+  // Peak week annotation — finds the max bucket for the caption.
+  const peakIdx = counts.indexOf(maxCount)
+  const peakWeeksAgo = n - 1 - peakIdx
+  const peakLabel = peakIdx === n - 1 ? 'this week' : peakWeeksAgo === 1 ? 'last week' : `${peakWeeksAgo} weeks ago`
+
+  return (
+    <div>
+      <svg width="100%" viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" style={{ display: 'block' }}>
+        {/* Y gridlines — 3 quiet lines */}
+        {[0.25, 0.5, 0.75].map(p => (
+          <line key={p} x1={padL} x2={W - padR} y1={padT + innerH * p} y2={padT + innerH * p}
+            stroke="rgba(10,10,15,0.05)" strokeWidth="1" />
+        ))}
+        {/* Baseline */}
+        <line x1={padL} x2={W - padR} y1={padT + innerH} y2={padT + innerH}
+          stroke="rgba(10,10,15,0.10)" strokeWidth="1" />
+        {/* Filled area */}
+        <path d={fillPath} fill={fillColor} />
+        {/* Line */}
+        <path d={linePath} fill="none" stroke={color} strokeWidth="2.5"
+          strokeLinejoin="round" strokeLinecap="round" />
+        {/* Endpoint dot */}
+        <circle cx={xFor(n - 1)} cy={yFor(counts[n - 1])} r="5" fill="#fff" stroke={color} strokeWidth="2.5" />
+        {/* X labels */}
+        {labels.map((lbl, i) => lbl ? (
+          <text key={i} x={xFor(i)} y={H - 8}
+            fill="rgba(10,10,15,0.45)" fontSize="11" fontWeight="500"
+            textAnchor={i === n - 1 ? 'end' : 'middle'}
+            style={{ fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.01em' }}>
+            {lbl}
+          </text>
+        ) : null)}
+        {/* Y max label */}
+        <text x={padL - 6} y={padT + 4}
+          fill="rgba(10,10,15,0.45)" fontSize="11" fontWeight="500"
+          textAnchor="end" style={{ fontVariantNumeric: 'tabular-nums' }}>
+          {maxCount}
+        </text>
+        <text x={padL - 6} y={padT + innerH + 2}
+          fill="rgba(10,10,15,0.45)" fontSize="11" fontWeight="500"
+          textAnchor="end" style={{ fontVariantNumeric: 'tabular-nums' }}>
+          0
+        </text>
+      </svg>
+      <p style={{
+        marginTop: 6, fontSize: 12.5, fontWeight: 500,
+        color: 'rgba(10,10,15,0.55)', letterSpacing: '-0.01em',
+      }}>
+        Peak <strong style={{ color: '#0a0a0f', fontWeight: 700 }}>{maxCount} video{maxCount === 1 ? '' : 's'}</strong> {peakLabel} · {rising ? 'niche heating up' : 'niche cooling down'}
+      </p>
+    </div>
+  )
 }
 
 /* ─── ScoreRing — copied verbatim from SeoOptimizer.jsx:272 so the hero
@@ -818,7 +981,7 @@ export default function Keywords({ plan, freeTierFeatures }) {
       {/* Header — Geist 26/700 to anchor the page, subtitle slightly
           darker so it doesn't disappear on light backgrounds. Matches
           Competitors. */}
-      <div style={{ marginBottom: 26 }}>
+      <div style={{ marginBottom: 28 }}>
         <h1 style={{ fontSize: 26, fontWeight: 700, color: '#0a0a0f', letterSpacing: '-0.7px', marginBottom: 6, lineHeight: 1.1 }}>
           Keyword Research
         </h1>
@@ -997,7 +1160,7 @@ export default function Keywords({ plan, freeTierFeatures }) {
             return (
               <div style={{
                 background: '#ffffff', border: '1px solid #e6e6ec', borderRadius: 16,
-                padding: '28px 32px', marginBottom: 24,
+                padding: '28px 32px',
                 boxShadow: '0 1px 2px rgba(0,0,0,0.04), 0 4px 14px rgba(0,0,0,0.06)',
               }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 36 }}>
@@ -1008,7 +1171,7 @@ export default function Keywords({ plan, freeTierFeatures }) {
                     <p style={{ fontSize: 11, color: 'rgba(10,10,15,0.50)', fontWeight: 700, marginTop: 8, letterSpacing: '0.10em', textTransform: 'uppercase' }}>
                       Top pick
                     </p>
-                    <p style={{ fontSize: 12, fontWeight: 700, color: '#0a0a0f', marginTop: 4, maxWidth: 140, lineHeight: 1.35, letterSpacing: '-0.1px', overflow: 'hidden', textOverflow: 'ellipsis', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
+                    <p style={{ fontSize: 12, fontWeight: 600, color: '#0a0a0f', marginTop: 4, maxWidth: 140, lineHeight: 1.35, letterSpacing: '-0.1px', overflow: 'hidden', textOverflow: 'ellipsis', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
                       {result.topPick.keyword}
                     </p>
                   </div>
@@ -1073,9 +1236,14 @@ export default function Keywords({ plan, freeTierFeatures }) {
           {(() => {
             const allKws = result.keywords || []
             const topPickKw = allKws.find(k => k.keyword === result.topPick?.keyword)
-            const topPickVideos = (topPickKw?.competition?.top_videos?.length > 0)
-              ? topPickKw.competition.top_videos
-              : (allKws.find(k => k?.competition?.top_videos?.length > 0)?.competition?.top_videos || [])
+            // Resolve which keyword's data drives the band. Top pick first,
+            // then any enriched keyword with videos. The median is read from
+            // the SAME keyword so the outlier math stays internally consistent.
+            const sourceKw = (topPickKw?.competition?.top_videos?.length > 0)
+              ? topPickKw
+              : (allKws.find(k => k?.competition?.top_videos?.length > 0) || null)
+            const topPickVideos = sourceKw?.competition?.top_videos || []
+            const medianViews = sourceKw?.competition?.top_views_median || 0
             if (topPickVideos.length === 0) return null
             const topPerformer = Math.max(...topPickVideos.map(v => v.views || 0))
             const fmtAge = (iso) => {
@@ -1088,7 +1256,7 @@ export default function Keywords({ plan, freeTierFeatures }) {
               return `${Math.floor(days / 365)}y ago`
             }
             return (
-              <div style={{ marginTop: 24 }}>
+              <div style={{ marginTop: 32 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12, flexWrap: 'wrap' }}>
                   <h2 style={{ fontSize: 18, fontWeight: 700, color: '#0a0a0f', letterSpacing: '-0.3px' }}>
                     Top-ranking videos right now
@@ -1180,10 +1348,55 @@ export default function Keywords({ plan, freeTierFeatures }) {
                           }}>
                             {v.channel_title}{v.published_at ? ` · ${fmtAge(v.published_at)}` : ''}
                           </p>
+                          <VideoMetricsRow
+                            vph={vphFor(v.views, v.published_at)}
+                            outlierMult={outlierFor(v.views, medianViews)}
+                          />
                         </div>
                       </a>
                     )
                   })}
+                </div>
+              </div>
+            )
+          })()}
+
+          {/* ── Competition momentum — line chart of weekly top-ranking video
+               counts for the top pick keyword over the last 12 weeks.
+               Real data, derived from search.list publishedAt distribution
+               (no extra API cost). Shows whether the niche is heating up or
+               cooling down at a glance. Hidden when the timeline is empty
+               (old reports pre-backfill, or quota fully exhausted). */}
+          {(() => {
+            const allKws = result.keywords || []
+            const topPickKw = allKws.find(k => k.keyword === result.topPick?.keyword)
+            const sourceKw = (topPickKw?.competition?.publishing_timeline?.length > 0)
+              ? topPickKw
+              : (allKws.find(k => k?.competition?.publishing_timeline?.length > 0) || null)
+            const timeline = sourceKw?.competition?.publishing_timeline || []
+            if (timeline.length < 2) return null
+            const totalVideos = timeline.reduce((a, t) => a + (t.count || 0), 0)
+            if (totalVideos === 0) return null  // empty chart adds no value
+            return (
+              <div style={{ marginTop: 32 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12, flexWrap: 'wrap' }}>
+                  <h2 style={{ fontSize: 18, fontWeight: 700, color: '#0a0a0f', letterSpacing: '-0.3px' }}>
+                    Competition momentum
+                  </h2>
+                  <span style={{
+                    fontSize: 11, fontWeight: 700, color: 'rgba(10,10,15,0.50)',
+                    letterSpacing: '0.10em', textTransform: 'uppercase',
+                  }}>last 12 weeks</span>
+                  <span style={{
+                    marginLeft: 'auto',
+                    fontSize: 12.5, fontWeight: 500, color: 'rgba(10,10,15,0.55)',
+                    letterSpacing: '-0.01em', fontVariantNumeric: 'tabular-nums',
+                  }}>
+                    Top-ranking videos for <strong style={{ color: '#0a0a0f', fontWeight: 600 }}>{sourceKw.keyword}</strong>
+                  </span>
+                </div>
+                <div className="kw-card" style={{ padding: '18px 22px 16px' }}>
+                  <MomentumChart timeline={timeline} />
                 </div>
               </div>
             )
@@ -1200,7 +1413,7 @@ export default function Keywords({ plan, freeTierFeatures }) {
                 </p>
               </div>
 
-              <div className="kw-card" style={{ marginBottom: 24 }}>
+              <div className="kw-card">
                 <div style={{ padding: '18px 22px 20px' }}>
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, marginBottom: 14 }}>
                     <div style={{ minWidth: 0, display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -1253,7 +1466,7 @@ export default function Keywords({ plan, freeTierFeatures }) {
                                 style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }}
                               >
                                 <span className="kw-row-phrase" style={{
-                                  fontSize: 13.5, color: '#0a0a0f', fontWeight: 600,
+                                  fontSize: 13.5, color: '#0a0a0f', fontWeight: 500,
                                   width: 260, flexShrink: 0,
                                   letterSpacing: '-0.1px',
                                   overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
@@ -1294,7 +1507,7 @@ export default function Keywords({ plan, freeTierFeatures }) {
                 </p>
               </div>
 
-              <div className="kw-card" style={{ marginBottom: 24, borderTop: `3px solid ${C.green}` }}>
+              <div className="kw-card" style={{ borderTop: `3px solid ${C.green}` }}>
                 <div style={{ display: 'flex', alignItems: 'stretch', padding: '20px 22px' }}>
                   {/* Cap at 3 — three columns reads cleanly in the 1040
                       column. More than 3 cramps the keyword chips and the
@@ -1337,7 +1550,7 @@ export default function Keywords({ plan, freeTierFeatures }) {
                                 border: `1px solid ${C.greenBdr}`,
                                 color: C.green,
                                 padding: '4px 11px', borderRadius: 100,
-                                fontSize: 11.5, fontWeight: 600, letterSpacing: '-0.05px',
+                                fontSize: 11.5, fontWeight: 500, letterSpacing: '-0.05px',
                               }}>{k}</span>
                             ))}
                           </div>
