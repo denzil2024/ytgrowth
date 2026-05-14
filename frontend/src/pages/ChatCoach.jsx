@@ -12,7 +12,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import {
-  Bot,              // Per-message assistant avatar
+  Sparkles,         // Per-message assistant avatar (reads as "AI" clearly)
   Database,         // Source pill on assistant replies
   Send,             // Composer send button
   Plus,             // New chat icon button
@@ -128,8 +128,9 @@ function fmtAge(iso) {
   return `${Math.floor(hr / 24)}d ago`
 }
 
-/* Assistant prose. Geist 450 + tight tracking + generous line-height
-   reads as editorial copy, not a chat dump. */
+/* Assistant prose. Re-tuned for Inter (was Geist values): Inter at 500
+   reads more confident than at 450 because its humanist forms need
+   slightly more weight to feel anchored. Tracking pulls in a hair. */
 function AssistantBody({ text }) {
   const parts = (text || '').split(/\n{2,}/g)
   return (
@@ -137,8 +138,8 @@ function AssistantBody({ text }) {
       {parts.map((p, i) => (
         <p key={i} style={{
           margin: i === 0 ? 0 : '12px 0 0 0',
-          fontSize: 14.5, fontWeight: 450, color: C.text1,
-          letterSpacing: '-0.005em', lineHeight: 1.68,
+          fontSize: 14.5, fontWeight: 500, color: C.text1,
+          letterSpacing: '-0.01em', lineHeight: 1.65,
           whiteSpace: 'pre-wrap',
         }}>{p}</p>
       ))}
@@ -252,15 +253,22 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
     <form
       onSubmit={(e) => { e.preventDefault(); send() }}
       style={{
-        display: 'flex', alignItems: 'flex-end', gap: 10,
-        background: C.surface,
-        border: `1px solid ${input.length > 0 || sending ? C.redBdr : C.hair}`,
-        borderRadius: 16, padding: '12px 12px 12px 20px',
+        // Glass composer. Semi-transparent surface + backdrop blur gives
+        // the composer a real tactile quality on top of the atmospheric
+        // gradient background. This is the "$10k MacBook" tell that the
+        // page is missing — premium tools always have one element that
+        // catches light differently than the rest of the page. The
+        // composer is the right place for it here.
+        display: 'flex', alignItems: 'center', gap: 12,
+        background: 'rgba(255,255,255,0.72)',
+        backdropFilter: 'blur(24px) saturate(180%)',
+        WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+        border: `1px solid ${input.length > 0 || sending ? C.redBdr : 'rgba(10,10,15,0.10)'}`,
+        borderRadius: 20, padding: '16px 16px 16px 24px',
         boxShadow: input.length > 0 || sending
-          ? `0 0 0 4px ${C.redSoft}, 0 1px 2px rgba(15,15,25,0.04), inset 0 1px 0 rgba(255,255,255,0.7)`
-          : C.cardShadow,
-        transition: `border-color 200ms ${C.spring}, box-shadow 200ms ${C.spring}`,
-        minHeight: 60,
+          ? `0 0 0 4px ${C.redSoft}, 0 8px 32px rgba(15,15,25,0.08), 0 1px 2px rgba(15,15,25,0.05), inset 0 1px 0 rgba(255,255,255,0.95)`
+          : `0 8px 32px rgba(15,15,25,0.06), 0 1px 2px rgba(15,15,25,0.04), inset 0 1px 0 rgba(255,255,255,0.9)`,
+        transition: `border-color 220ms ${C.spring}, box-shadow 220ms ${C.spring}`,
       }}
     >
       <textarea
@@ -282,8 +290,8 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
           border: 'none', outline: 'none',
           background: 'transparent',
           fontFamily: FONT_STACK,
-          fontSize: 15, fontWeight: 450, color: C.text1,
-          letterSpacing: '-0.005em', lineHeight: 1.55,
+          fontSize: 15, fontWeight: 500, color: C.text1,
+          letterSpacing: '-0.01em', lineHeight: 1.55,
           resize: 'none',
           maxHeight: 160,
           paddingTop: 8, paddingBottom: 8,
@@ -299,23 +307,26 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
         aria-label="Send"
         style={{
           flexShrink: 0,
-          width: 38, height: 38, borderRadius: 11,
+          width: 44, height: 44, borderRadius: 14,
           border: 'none',
+          // Disabled state is neutral charcoal-tinted, NOT washed red.
+          // Red-at-low-opacity reads as pink and cheap; charcoal-tint
+          // reads as "off but present."
           background: isOff
-            ? 'rgba(229,37,27,0.20)'
+            ? 'rgba(10,10,15,0.06)'
             : `linear-gradient(180deg, ${C.redHi} 0%, ${C.red} 100%)`,
-          color: isOff ? 'rgba(255,255,255,0.85)' : '#fff',
+          color: isOff ? C.text4 : '#fff',
           cursor: isOff ? 'default' : 'pointer',
           display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
           boxShadow: isOff
-            ? 'inset 0 1px 0 rgba(255,255,255,0.20)'
+            ? 'inset 0 1px 0 rgba(255,255,255,0.6)'
             : '0 1px 2px rgba(229,37,27,0.34), inset 0 1px 0 rgba(255,255,255,0.24)',
-          transition: `filter 160ms ${C.spring}, transform 160ms ${C.spring}`,
+          transition: `filter 160ms ${C.spring}, transform 160ms ${C.spring}, background 200ms ${C.spring}`,
         }}
         onMouseEnter={e => { if (!isOff) { e.currentTarget.style.filter = 'brightness(1.06)'; e.currentTarget.style.transform = 'translateY(-1px)' } }}
         onMouseLeave={e => { if (!isOff) { e.currentTarget.style.filter = 'none'; e.currentTarget.style.transform = 'translateY(0)' } }}
       >
-        <Send size={15} strokeWidth={2} />
+        <Send size={17} strokeWidth={2} />
       </button>
     </form>
   )
@@ -371,37 +382,36 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
     }}>
       {allowance > 0 && (
         <div style={{
-          display: 'inline-flex', alignItems: 'center', gap: 10,
+          // The number IS the meter. A tiny bar at the trailing edge was
+          // just visual noise. Status dot + count is more legible.
+          display: 'inline-flex', alignItems: 'center', gap: 8,
           background: meterEmpty ? C.redSoft : C.surface,
           border: `1px solid ${meterEmpty ? C.redBdr : C.hair}`,
-          padding: '6px 12px 6px 11px', borderRadius: 100,
+          padding: '6px 14px', borderRadius: 100,
           boxShadow: C.cardShadow,
           fontVariantNumeric: 'tabular-nums',
         }}>
           <span style={{
-            fontSize: 12, fontWeight: 600,
+            width: 6, height: 6, borderRadius: 99,
+            background: meterEmpty ? C.red : remaining < allowance * 0.25 ? C.red : '#16a34a',
+            boxShadow: meterEmpty
+              ? '0 0 0 3px rgba(229,37,27,0.16)'
+              : remaining < allowance * 0.25
+                ? '0 0 0 3px rgba(229,37,27,0.12)'
+                : '0 0 0 3px rgba(22,163,74,0.16)',
+            animation: meterEmpty ? 'none' : 'ytgPulseSoft 2.4s ease-in-out infinite',
+            flexShrink: 0,
+          }}/>
+          <span style={{
+            fontSize: 12.5, fontWeight: 600,
             color: meterEmpty ? C.red : C.text1,
-            letterSpacing: '-0.02em',
+            letterSpacing: '-0.01em',
           }}>
-            <span>{used}</span>
-            <span style={{ color: C.text4, margin: '0 4px', fontWeight: 400 }}>/</span>
-            <span style={{ color: C.text3, fontWeight: 500 }}>{allowance}</span>
+            <span>{remaining}</span>
+            <span style={{ color: C.text3, fontWeight: 500, marginLeft: 5 }}>
+              {remaining === 1 ? 'message left' : 'messages left'}
+            </span>
           </span>
-          <div style={{
-            width: 56, height: 4,
-            background: 'rgba(10,10,15,0.07)',
-            borderRadius: 99, overflow: 'hidden',
-            boxShadow: 'inset 0 1px 0 rgba(0,0,0,0.04)',
-          }}>
-            <div style={{
-              width: `${usedPct}%`, height: '100%',
-              background: meterEmpty
-                ? `linear-gradient(90deg, ${C.red} 0%, ${C.redLo} 100%)`
-                : `linear-gradient(90deg, ${C.text2} 0%, ${C.text1} 100%)`,
-              borderRadius: 99,
-              transition: `width 0.8s ${C.spring}`,
-            }}/>
-          </div>
         </div>
       )}
       {messages.length > 0 && (
@@ -437,10 +447,17 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
       minHeight: 540,
       fontFamily: FONT_STACK,
       position: 'relative',
-      // Light surface with a near-invisible warm radial wash from the
-      // top. Brand red at ~3% bleeds down and dies before reaching the
-      // composer. Gives the page atmosphere without colour.
-      background: `${C.bg} radial-gradient(120% 60% at 50% -10%, rgba(229,37,27,0.035) 0%, rgba(229,37,27,0) 55%)`,
+      // Dual-radial atmosphere. A warm red wash bleeds from the top,
+      // a cool charcoal wash bleeds from the bottom-right. The two
+      // overlap subtly in the middle of the page where the composer
+      // sits, giving the surface real depth instead of looking like a
+      // flat printed page. The whole bg is built up in layered gradients
+      // on top of #ffffff so the white core stays clean.
+      background: `
+        radial-gradient(60% 50% at 50% -10%, rgba(229,37,27,0.06) 0%, rgba(229,37,27,0) 60%),
+        radial-gradient(50% 45% at 100% 105%, rgba(10,15,30,0.05) 0%, rgba(10,15,30,0) 60%),
+        linear-gradient(180deg, #ffffff 0%, #fafafc 100%)
+      `,
       color: C.text1,
     }}>
       {topRightControls}
@@ -478,13 +495,16 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
           flex: 1,
           display: 'flex', flexDirection: 'column',
           alignItems: 'center', justifyContent: 'center',
-          padding: '40px 24px',
-          gap: 32,
+          padding: '24px 24px 80px',  // slight bottom-weight so the hero sits visually centered (the eye reads upper-middle as "centered")
+          gap: 28,
         }}>
           <h1 style={{
-            fontSize: 38, fontWeight: 500, color: C.text1,
-            letterSpacing: '-0.9px', lineHeight: 1.1,
-            textAlign: 'center', maxWidth: 560,
+            // 42/600 Inter with -0.6 tracking. Anchor of the screen.
+            // maxWidth bumped to keep the question on one line — "out?"
+            // alone on a second line was an ugly widow.
+            fontSize: 42, fontWeight: 600, color: C.text1,
+            letterSpacing: '-0.6px', lineHeight: 1.1,
+            textAlign: 'center', maxWidth: 760,
             margin: 0,
           }}>What do you want to figure out?</h1>
 
@@ -510,27 +530,31 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
                   onClick={() => send(p.label)}
                   style={{
                     display: 'inline-flex', alignItems: 'center', gap: 8,
-                    padding: '9px 16px', borderRadius: 100,
-                    background: C.surface,
+                    padding: '10px 16px', borderRadius: 100,
+                    // Pills get a subtle gradient (top white → bottom soft
+                    // off-white) so they catch light like real objects.
+                    background: 'linear-gradient(180deg, #ffffff 0%, #f7f7fa 100%)',
                     border: `1px solid ${C.hair}`,
                     color: C.text2,
                     fontFamily: 'inherit',
-                    fontSize: 13, fontWeight: 500, letterSpacing: '-0.005em',
+                    fontSize: 13, fontWeight: 600, letterSpacing: '-0.01em',
                     cursor: 'pointer',
-                    boxShadow: C.cardShadow,
-                    transition: `background 200ms ${C.spring}, color 200ms ${C.spring}, border-color 200ms ${C.spring}, transform 200ms ${C.spring}`,
+                    boxShadow: '0 1px 2px rgba(15,15,25,0.04), 0 1px 0 rgba(255,255,255,0.9) inset',
+                    transition: `background 200ms ${C.spring}, color 200ms ${C.spring}, border-color 200ms ${C.spring}, transform 200ms ${C.spring}, box-shadow 200ms ${C.spring}`,
                   }}
                   onMouseEnter={e => {
-                    e.currentTarget.style.background = C.surfaceLift
+                    e.currentTarget.style.background = '#ffffff'
                     e.currentTarget.style.color = C.text1
                     e.currentTarget.style.borderColor = C.hairActive
-                    e.currentTarget.style.transform = 'translateY(-1px)'
+                    e.currentTarget.style.transform = 'translateY(-2px)'
+                    e.currentTarget.style.boxShadow = '0 6px 16px rgba(15,15,25,0.08), 0 1px 2px rgba(15,15,25,0.04), 0 1px 0 rgba(255,255,255,1) inset'
                   }}
                   onMouseLeave={e => {
-                    e.currentTarget.style.background = C.surface
+                    e.currentTarget.style.background = 'linear-gradient(180deg, #ffffff 0%, #f7f7fa 100%)'
                     e.currentTarget.style.color = C.text2
                     e.currentTarget.style.borderColor = C.hair
                     e.currentTarget.style.transform = 'translateY(0)'
+                    e.currentTarget.style.boxShadow = '0 1px 2px rgba(15,15,25,0.04), 0 1px 0 rgba(255,255,255,0.9) inset'
                   }}
                 >
                   <Icon size={13} strokeWidth={1.8} color={C.text3} />
@@ -551,11 +575,18 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
               flex: 1, overflowY: 'auto',
               padding: '52px 4px 18px',  // top padding clears the floating controls
               scrollBehavior: 'smooth',
+              display: 'flex', flexDirection: 'column',
             }}
           >
             <div style={{
               display: 'flex', flexDirection: 'column', gap: 16,
               maxWidth: 760, margin: '0 auto', padding: '0 8px',
+              width: '100%',
+              // marginTop: auto bottom-anchors the conversation. When
+              // there are few messages they sit just above the composer
+              // instead of floating at the top of the viewport — the
+              // standard chat UX (ChatGPT, iMessage, Telegram).
+              marginTop: 'auto',
             }}>
               {messages.map((m, i) => (
                 <MessageBubble key={i} role={m.role} content={m.content} sources={m.sources} />
@@ -571,7 +602,7 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
                     color: C.text1,
                     boxShadow: C.cardShadow,
                   }}>
-                    <Bot size={15} strokeWidth={1.7} />
+                    <Sparkles size={17} strokeWidth={1.8} />
                   </span>
                   <div style={{
                     background: C.surface,
@@ -628,7 +659,7 @@ function MessageBubble({ role, content, sources }) {
           padding: '12px 16px',
           boxShadow: '0 1px 2px rgba(229,37,27,0.28), inset 0 1px 0 rgba(255,255,255,0.22)',
           fontFamily: FONT_STACK,
-          fontSize: 14, fontWeight: 450, letterSpacing: '-0.005em', lineHeight: 1.5,
+          fontSize: 14, fontWeight: 500, letterSpacing: '-0.01em', lineHeight: 1.5,
           whiteSpace: 'pre-wrap',
         }}>{content}</div>
       </div>
@@ -645,7 +676,7 @@ function MessageBubble({ role, content, sources }) {
         color: C.text1,
         boxShadow: C.cardShadow,
       }}>
-        <Bot size={15} strokeWidth={1.7} />
+        <Sparkles size={17} strokeWidth={1.8} />
       </span>
       <div style={{ flex: 1, minWidth: 0 }}>
         <div style={{
