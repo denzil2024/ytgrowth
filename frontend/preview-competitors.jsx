@@ -161,9 +161,11 @@ setTimeout(() => {
   }
 }, 200)
 
+// Preview wrapper: gray bg + vertical padding only. No max-width here —
+// the Competitors page constrains itself via .comp-page (1040 max).
 ReactDOM.createRoot(document.getElementById('root')).render(
   React.createElement('div', {
-    style: { padding: '36px 24px', maxWidth: 1080, margin: '0 auto', boxSizing: 'border-box', background: '#fafafb', minHeight: '100vh' }
+    style: { padding: '36px 24px', boxSizing: 'border-box', background: '#fafafb', minHeight: '100vh' }
   },
     React.createElement(Competitors, {
       plan: 'pro',

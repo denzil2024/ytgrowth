@@ -30,6 +30,7 @@ function useCompetitorStyles() {
     const style = document.createElement('style')
     style.id = 'ytg-comp-styles'
     style.textContent = `
+      .comp-page { max-width: 1040px; margin: 0 auto; }
       .comp-page * { box-sizing: border-box; font-family: 'Geist', 'Inter', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
       .comp-page p, .comp-page span, .comp-page div { margin: 0; }
 
