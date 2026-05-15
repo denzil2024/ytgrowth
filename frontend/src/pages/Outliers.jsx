@@ -96,10 +96,12 @@ if (typeof document !== 'undefined' && !document.getElementById('outliers-styles
       color: #52525b;
       transition: all 0.18s;
     }
-    .out-sort-btn:hover:not(.active) { color: #111114; }
+    .out-sort-btn:hover:not(.active) { color: #111114; background: rgba(10,10,15,0.03); }
+    /* Sort active is quiet soft-grey (Competitors / Keywords pattern). Red
+       was competing with the New-search CTA and the top-level Search pill. */
     .out-sort-btn.active {
-      background: #e5251b; color: #fff;
-      box-shadow: 0 1px 3px rgba(229,37,27,0.35);
+      background: rgba(10,10,15,0.055); color: #0a0a0f;
+      border: 1px solid rgba(10,10,15,0.10);
     }
     .out-cta {
       display: inline-flex; align-items: center; justify-content: center; gap: 6px;
@@ -114,6 +116,21 @@ if (typeof document !== 'undefined' && !document.getElementById('outliers-styles
     .out-cta:hover {
       filter: brightness(1.08); transform: translateY(-1px);
       box-shadow: 0 2px 8px rgba(229,37,27,0.38), 0 8px 24px rgba(229,37,27,0.28);
+    }
+    /* Ghost variant — outlined neutral pill. Used for New-search alongside
+       the (already red) top Search/Reports pill so we don't stack reds. */
+    .out-cta-ghost {
+      display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+      padding: 9px 16px; border-radius: 100px;
+      border: 1px solid rgba(10,10,15,0.12);
+      background: #ffffff; color: rgba(10,10,15,0.62);
+      font-family: inherit; font-size: 13px; font-weight: 600;
+      cursor: pointer; letter-spacing: -0.01em;
+      transition: background 160ms ease, color 160ms ease, border-color 160ms ease;
+    }
+    .out-cta-ghost:hover {
+      background: rgba(10,10,15,0.03); color: #0a0a0f;
+      border-color: rgba(10,10,15,0.20);
     }
 
     .out-tab-btn {
@@ -707,6 +724,22 @@ export default function Outliers({ channelData, onNavigate, plan, freeTierFeatur
   // see the full UI, type a query, and only hit the paywall modal when they
   // actually click Run. Backend gate stays in place as defense-in-depth.
 
+  // Derived state used by both the header block and the tabs row below
+  // (sort + New-search). Declared here so both sites share one source of
+  // truth instead of duplicating the IIFE wrapper.
+  const hasResults    = result?.videos?.length > 0 || result?.channels?.length > 0
+  const sortOptions   = tab === 'channel'
+    ? [
+        { k: 'outlier', label: 'Top outliers' },
+        { k: 'subs',    label: 'Most subs'    },
+        { k: 'hits',    label: 'Most hits'    },
+      ]
+    : [
+        { k: 'outlier', label: 'Top outliers' },
+        { k: 'views',   label: 'Most views'   },
+        { k: 'newest',  label: 'Newest'       },
+      ]
+
   return (
     <div className="out-page" style={{ color: C.text1 }}>
 
@@ -745,89 +778,83 @@ export default function Outliers({ channelData, onNavigate, plan, freeTierFeatur
         </div>
       )}
 
-      {/* ══ Header — Videos-tab pattern: H2 + stat chips + sort group + primary CTA ═══ */}
+      {/* ══ Header — H2 + meta chips. Sort group + New-search live on the
+           tabs row below (lets the header breathe and removes a stacked row). */}
       {(() => {
-        const hasResults = result?.videos?.length > 0 || result?.channels?.length > 0
         const videosCount   = result?.videos?.length || 0
         const channelsCount = result?.channels?.length || 0
         const poolSize      = result?.cohort?.pool_size || 0
         const verticalLabel = result?.cohort?.vertical || ''
 
-        // Sort options are tab-aware — Channels has different facets from Videos/Thumbnails.
-        const sortOptions = tab === 'channel'
-          ? [
-              { k: 'outlier', label: 'Top outliers' },
-              { k: 'subs',    label: 'Most subs'    },
-              { k: 'hits',    label: 'Most hits'    },
-            ]
-          : [
-              { k: 'outlier', label: 'Top outliers' },
-              { k: 'views',   label: 'Most views'   },
-              { k: 'newest',  label: 'Newest'       },
-            ]
-
         return (
-          <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 24, gap: 16, flexWrap: 'wrap' }}>
-            <div style={{ flex: '1 1 auto', minWidth: 0 }}>
-              <h2 style={{ fontSize: 26, fontWeight: 700, color: C.text1, letterSpacing: '-0.7px', marginBottom: 10, lineHeight: 1.1 }}>Outliers</h2>
-              <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-                {hasResults ? (
-                  <>
-                    <MetaChip tint="red"     icon="target">{videosCount} outlier{videosCount === 1 ? '' : 's'}</MetaChip>
-                    <MetaChip tint="amber"   icon="trendingUp">{channelsCount} breakout channel{channelsCount === 1 ? '' : 's'}</MetaChip>
-                    <MetaChip tint="neutral" icon="layers">Niche pool · {poolSize}</MetaChip>
-                    {verticalLabel && <MetaChip tint="neutral" icon="compass">{verticalLabel}</MetaChip>}
-                    <MetaChip tint="neutral" icon="calendar">Last 12 months</MetaChip>
-                  </>
-                ) : (
-                  <>
-                    <MetaChip tint="red"     icon="target">Over-performing videos</MetaChip>
-                    <MetaChip tint="amber"   icon="trendingUp">Breakout channels</MetaChip>
-                    <MetaChip tint="neutral" icon="calendar">Last 12 months</MetaChip>
-                    <MetaChip tint="amber"   icon="zap">3 credits per search</MetaChip>
-                  </>
-                )}
-              </div>
+          <div style={{ marginBottom: 20 }}>
+            <h2 style={{ fontSize: 26, fontWeight: 700, color: C.text1, letterSpacing: '-0.7px', marginBottom: 10, lineHeight: 1.1 }}>Outliers</h2>
+            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+              {hasResults ? (
+                <>
+                  <MetaChip tint="red"     icon="target">{videosCount} outlier{videosCount === 1 ? '' : 's'}</MetaChip>
+                  <MetaChip tint="amber"   icon="trendingUp">{channelsCount} breakout channel{channelsCount === 1 ? '' : 's'}</MetaChip>
+                  <MetaChip tint="neutral" icon="layers">Niche pool · {poolSize}</MetaChip>
+                  {verticalLabel && <MetaChip tint="neutral" icon="compass">{verticalLabel}</MetaChip>}
+                </>
+              ) : (
+                <>
+                  <MetaChip tint="red"     icon="target">Over-performing videos</MetaChip>
+                  <MetaChip tint="amber"   icon="trendingUp">Breakout channels</MetaChip>
+                  <MetaChip tint="neutral" icon="calendar">Last 12 months</MetaChip>
+                  <MetaChip tint="amber"   icon="zap">3 credits per search</MetaChip>
+                </>
+              )}
             </div>
-            {hasResults && (
-              <div style={{ display: 'flex', gap: 10, alignItems: 'center', flexShrink: 0 }}>
-                <div className="out-sort-group">
-                  {sortOptions.map(opt => (
-                    <button
-                      key={opt.k}
-                      onClick={() => setSort(opt.k)}
-                      className={`out-sort-btn${sort === opt.k ? ' active' : ''}`}
-                    >
-                      {opt.label}
-                    </button>
-                  ))}
-                </div>
-                <button onClick={handleClear} className="out-cta" style={{ flexShrink: 0 }}>
-                  <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                    <circle cx="5.5" cy="5.5" r="3.5"/><path d="M10 10l-2-2"/>
-                  </svg>
-                  New search
-                </button>
-              </div>
-            )}
           </div>
         )
       })()}
 
-      {/* ══ Tabs ═════════════════════════════════════════════════════════════ */}
+      {/* ══ Tabs row — tabs on the LEFT, sort + New-search on the RIGHT.
+           Was previously a separate sort+CTA row above the tabs; merging them
+           drops a whole stacked row of chrome. The sort group is now quiet
+           soft-grey (was red, competing with the top Search pill and the
+           New-search CTA). New search itself is now a ghost outlined button
+           so the only loud red on the page is the top Search/Reports pill. */}
       <div style={{
-        display: 'inline-flex', gap: 4, padding: 4,
-        background: '#eeeef3', borderRadius: 100, marginBottom: 16,
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        gap: 12, marginBottom: 16, flexWrap: 'wrap',
       }}>
-        {TABS.map(t => (
-          <button
-            key={t.key}
-            onClick={() => setTab(t.key)}
-            className={`out-tab-btn${tab === t.key ? ' active' : ''}`}
-          >
-            {t.label}
-          </button>
-        ))}
+        <div style={{
+          display: 'inline-flex', gap: 4, padding: 4,
+          background: '#eeeef3', borderRadius: 100,
+        }}>
+          {TABS.map(t => (
+            <button
+              key={t.key}
+              onClick={() => setTab(t.key)}
+              className={`out-tab-btn${tab === t.key ? ' active' : ''}`}
+            >
+              {t.label}
+            </button>
+          ))}
+        </div>
+        {hasResults && (
+          <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexShrink: 0 }}>
+            <div className="out-sort-group">
+              {sortOptions.map(opt => (
+                <button
+                  key={opt.k}
+                  onClick={() => setSort(opt.k)}
+                  className={`out-sort-btn${sort === opt.k ? ' active' : ''}`}
+                >
+                  {opt.label}
+                </button>
+              ))}
+            </div>
+            <button onClick={handleClear} className="out-cta-ghost" style={{ flexShrink: 0 }}>
+              <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="5.5" cy="5.5" r="3.5"/><path d="M10 10l-2-2"/>
+              </svg>
+              New search
+            </button>
+          </div>
+        )}
       </div>
 
       {/* ══ Search bar ═══════════════════════════════════════════════════════ */}
@@ -1424,25 +1451,40 @@ function VideoResultCard({ item, kind, onOpen }) {
         {(() => {
           const ws        = typeof item.winnable_score === 'number' ? item.winnable_score : null
           const wsColor   = ws == null ? C.text3 : ws >= 7 ? C.green : ws >= 4 ? C.amber : C.red
-          const wsDisplay = ws == null ? '—' : `${ws}/10`
           const wb        = item.winnable_breakdown || {}
-          const wsTip     = ws == null ? 'Winnable score not available for this video.'
-                          : `How realistic this is for your channel (size, niche overlap, freshness combined). ` +
+          const wsTip     = `How realistic this is for your channel (size, niche overlap, freshness combined). ` +
                             (wb.channel_size ? `Size ratio ${wb.channel_size.ratio}× yours. ` : '') +
                             (wb.niche_overlap ? `${wb.niche_overlap.matches} niche-keyword match${wb.niche_overlap.matches === 1 ? '' : 'es'}. ` : '') +
                             (wb.recency && wb.recency.days_old != null ? `Posted ${wb.recency.days_old}d ago.` : '')
+          // Drop Winnable when the field is missing (old cached reports
+          // pre-date the winnable feature). Showing "—" on every card reads
+          // as broken; surfacing only the metrics that have data is clean.
+          const winnableMetric = ws != null
+            ? { label: 'For you', sub: '/10', display: String(ws), color: wsColor, tip: wsTip }
+            : null
+          const metrics = [
+            winnableMetric,
+            { label: 'Outlier', sub: '×', display: String(item.outlier_score),                              color: tier.color, tip: 'How many times this video beat its niche cohort\'s median views-per-subscriber. 5×+ is breakout.' },
+            { label: 'VPS',     sub: '',  display: vpsDisplay,                                              color: C.text1,    tip: 'Views per subscriber — normalises out raw channel size so small-channel wins show up.' },
+            { label: 'Eng',     sub: '',  display: engPct != null ? `${engPct.toFixed(1)}%` : '—',          color: engColor,   tip: 'Engagement rate = likes ÷ views. 3%+ strong, 1–3% avg, <1% weak.' },
+          ].filter(Boolean)
           return (
         <div style={{ marginTop: 'auto', paddingTop: 18, borderTop: '1px solid #eeeef3' }}>
-          <div style={{ display: 'flex', gap: 28, marginBottom: 18, flexWrap: 'wrap' }}>
-            {[
-              { label: 'Winnable', display: wsDisplay,                                                                     color: wsColor,    tip: wsTip },
-              { label: 'Outlier', display: `${item.outlier_score}×`,                                                       color: tier.color, tip: 'How many times this video beat its niche cohort\'s median views-per-subscriber. 5×+ is breakout.' },
-              { label: 'VPS',     display: vpsDisplay,                                                                     color: C.text1,    tip: 'Views per subscriber — normalises out raw channel size so small-channel wins show up.' },
-              { label: 'Eng',     display: engPct != null ? `${engPct.toFixed(1)}%` : '—',                                  color: engColor,   tip: 'Engagement rate = likes ÷ views. 3%+ strong, 1–3% avg, <1% weak.' },
-            ].map(m => (
+          {/* Even-gutter grid — 2 cols when 4 metrics, 3 cols when Winnable
+              is missing. Keeps consistent rhythm across cards even though
+              the metric count varies. */}
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: metrics.length === 4 ? 'repeat(2, 1fr)' : `repeat(${metrics.length}, 1fr)`,
+            columnGap: 12, rowGap: 16, marginBottom: 18,
+          }}>
+            {metrics.map(m => (
               <div key={m.label} title={m.tip} style={{ cursor: 'help', textAlign: 'left' }}>
-                <p style={{ fontSize: 10.5, fontWeight: 700, color: C.text3, letterSpacing: '0.09em', textTransform: 'uppercase', marginBottom: 7, lineHeight: 1 }}>{m.label}</p>
-                <p style={{ fontSize: 17, fontWeight: 800, color: m.color, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.4px', lineHeight: 1 }}>{m.display}</p>
+                <p style={{ fontSize: 10.5, fontWeight: 700, color: C.text3, letterSpacing: '0.09em', textTransform: 'uppercase', marginBottom: 6, lineHeight: 1 }}>{m.label}</p>
+                <p style={{ fontSize: 18, fontWeight: 800, color: m.color, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.4px', lineHeight: 1 }}>
+                  {m.display}
+                  {m.sub && <span style={{ fontSize: 11, fontWeight: 600, color: C.text3, marginLeft: 2, letterSpacing: 0 }}>{m.sub}</span>}
+                </p>
               </div>
             ))}
           </div>
@@ -1958,6 +2000,10 @@ function ThumbnailPatternsCard({ patterns, query }) {
   if (!patterns || (!patterns.dominant_style && !(patterns.recommendations || []).length)) {
     return null
   }
+  // Collapsed by default. The card sits above the result grid and was
+  // taking a lot of vertical space pre-scroll. Header click toggles.
+  const [open, setOpen] = useState(false)
+
   const traits = [
     ['Dominant style', patterns.dominant_style],
     ['Text overlay',   patterns.text_overlay],
@@ -1971,8 +2017,18 @@ function ThumbnailPatternsCard({ patterns, query }) {
     <div className="out-card" style={{ padding: 0, marginBottom: 16, borderTop: `3px solid ${C.amber}` }}>
       <div style={{ padding: '16px 22px 18px' }}>
 
-        {/* Header — same 3-column flex (badge | eyebrow+title | pill) as Priority Actions InsightCard */}
-        <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: 14 }}>
+        {/* Header — same 3-column flex (badge | eyebrow+title | pill) as Priority Actions InsightCard.
+            Whole row is now a button that toggles the body open/closed. */}
+        <button
+          type="button"
+          onClick={() => setOpen(v => !v)}
+          aria-expanded={open}
+          style={{
+            display: 'flex', alignItems: 'flex-start', gap: 12, width: '100%',
+            background: 'transparent', border: 'none', padding: 0, cursor: 'pointer',
+            textAlign: 'left', fontFamily: 'inherit', color: 'inherit',
+            marginBottom: open ? 14 : 0,
+          }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0, paddingTop: 2 }}>
             <div style={{ width: 26, height: 26, borderRadius: 8, background: C.amber, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#fff" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
@@ -1991,13 +2047,25 @@ function ThumbnailPatternsCard({ patterns, query }) {
             </p>
           </div>
           {patterns.sample_size ? (
-            <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexShrink: 0 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
               <span style={{ fontSize: 10, fontWeight: 700, color: C.amber, padding: '3px 9px', borderRadius: 20, letterSpacing: '0.06em', textTransform: 'uppercase', border: `1.5px solid ${C.amber}` }}>
                 {patterns.sample_size} analysed
               </span>
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke={C.text2} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+                style={{ transition: 'transform 180ms ease', transform: open ? 'rotate(180deg)' : 'rotate(0deg)', flexShrink: 0 }}>
+                <polyline points="3,5 7,9 11,5"/>
+              </svg>
             </div>
-          ) : null}
-        </div>
+          ) : (
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke={C.text2} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+              style={{ transition: 'transform 180ms ease', transform: open ? 'rotate(180deg)' : 'rotate(0deg)', flexShrink: 0, marginTop: 4 }}>
+              <polyline points="3,5 7,9 11,5"/>
+            </svg>
+          )}
+        </button>
+
+        {!open && null}
+        {open && (<>
 
         {/* Hairline — aligned with the title "What wins in your niche".
             Offset = icon badge (26px) + flex gap (12px) = 38px. (No checkbox
@@ -2057,6 +2125,7 @@ function ThumbnailPatternsCard({ patterns, query }) {
           ) : <div />}
 
         </div>
+        </>)}
       </div>
     </div>
   )
