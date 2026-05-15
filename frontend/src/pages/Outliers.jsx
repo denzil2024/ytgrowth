@@ -2,12 +2,12 @@ import { useState, useEffect, useRef } from 'react'
 import CreditsEmptyModal from '../components/CreditsEmptyModal'
 import UpsellModal from '../components/UpsellModal'
 
-// Load Inter once — SCOPED to this page (each page owns its font, never global)
-if (typeof document !== 'undefined' && !document.getElementById('outliers-inter-font')) {
+// Load Geist once — SCOPED to this page. Matches Chat / Competitors / Keywords.
+if (typeof document !== 'undefined' && !document.getElementById('outliers-geist-font')) {
   const link = document.createElement('link')
-  link.id = 'outliers-inter-font'
+  link.id = 'outliers-geist-font'
   link.rel = 'stylesheet'
-  link.href = 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap'
+  link.href = 'https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Geist+Mono:wght@400..700&display=swap'
   document.head.appendChild(link)
 }
 
@@ -16,6 +16,10 @@ if (typeof document !== 'undefined' && !document.getElementById('outliers-styles
   const s = document.createElement('style')
   s.id = 'outliers-styles'
   s.textContent = `
+    /* Centered 1040 column + Geist inheritance, matches Competitors / Keywords. */
+    .out-page { max-width: 1040px; margin: 0 auto; }
+    .out-page * { font-family: 'Geist', 'Inter', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+
     @keyframes outFadeUp   { from { opacity:0; transform:translateY(8px) } to { opacity:1; transform:translateY(0) } }
     @keyframes outFadeIn   { from { opacity:0 } to { opacity:1 } }
     @keyframes outSlideIn  { from { opacity:0; transform:translateY(12px) scale(0.98) } to { opacity:1; transform:translateY(0) scale(1) } }
@@ -23,50 +27,59 @@ if (typeof document !== 'undefined' && !document.getElementById('outliers-styles
 
     .out-section { animation: outFadeUp 0.28s ease both; }
 
+    /* Card grammar matches Competitors: hairline border, 14px radius, single
+       soft shadow + lit-from-above inset highlight, 200ms hover lift. */
     .out-card {
       background: #ffffff;
-      border: 1px solid #e6e6ec;
-      border-radius: 16px;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 4px 14px rgba(0,0,0,0.06);
-      transition: box-shadow 0.2s, transform 0.2s, border-color 0.2s;
+      border: 1px solid rgba(10,10,15,0.07);
+      border-radius: 14px;
+      box-shadow: 0 1px 2px rgba(15,15,25,0.04), inset 0 1px 0 rgba(255,255,255,0.7);
+      transition: box-shadow 200ms cubic-bezier(0.2,0.7,0.3,1), transform 200ms cubic-bezier(0.2,0.7,0.3,1), border-color 200ms cubic-bezier(0.2,0.7,0.3,1);
     }
     .out-result-card {
       background: #ffffff;
-      border: 1px solid #e6e6ec;
-      border-radius: 16px;
+      border: 1px solid rgba(10,10,15,0.07);
+      border-radius: 14px;
       padding: 16px;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 4px 14px rgba(0,0,0,0.06);
-      transition: box-shadow 0.2s, transform 0.2s, border-color 0.2s;
+      box-shadow: 0 1px 2px rgba(15,15,25,0.04), inset 0 1px 0 rgba(255,255,255,0.7);
+      transition: box-shadow 200ms cubic-bezier(0.2,0.7,0.3,1), transform 200ms cubic-bezier(0.2,0.7,0.3,1), border-color 200ms cubic-bezier(0.2,0.7,0.3,1);
       cursor: pointer;
       display: flex; gap: 16px; align-items: stretch;
       text-align: left; width: 100%;
       font-family: inherit;
     }
     .out-result-card:hover {
-      border-color: rgba(229,37,27,0.28);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.08), 0 16px 40px rgba(229,37,27,0.14);
+      border-color: rgba(10,10,15,0.14);
+      box-shadow: 0 4px 16px rgba(15,15,25,0.06), inset 0 1px 0 rgba(255,255,255,0.7);
       transform: translateY(-1px);
     }
 
     .out-grid-card {
       background: #ffffff;
-      border: 1px solid #e6e6ec;
-      border-radius: 16px;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 4px 14px rgba(0,0,0,0.06);
-      transition: box-shadow 0.2s, transform 0.2s;
+      border: 1px solid rgba(10,10,15,0.07);
+      border-radius: 14px;
+      box-shadow: 0 1px 2px rgba(15,15,25,0.04), inset 0 1px 0 rgba(255,255,255,0.7);
+      transition: box-shadow 200ms cubic-bezier(0.2,0.7,0.3,1), transform 200ms cubic-bezier(0.2,0.7,0.3,1), border-color 200ms cubic-bezier(0.2,0.7,0.3,1);
       display: flex; flex-direction: column;
       overflow: hidden;
     }
     .out-grid-card:hover {
-      box-shadow: 0 4px 12px rgba(0,0,0,0.08), 0 16px 40px rgba(0,0,0,0.09);
+      border-color: rgba(10,10,15,0.14);
+      box-shadow: 0 4px 16px rgba(15,15,25,0.06), inset 0 1px 0 rgba(255,255,255,0.7);
       transform: translateY(-1px);
     }
     .out-chip {
-      display: inline-flex; align-items: center; gap: 5px;
+      display: inline-flex; align-items: center; gap: 7px;
       font-size: 12.5px; font-weight: 600; color: #4a4a58;
-      background: #fff; border: 1px solid #e6e6ec;
-      border-radius: 100px; padding: 5px 12px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      background: #fff; border: 1px solid rgba(10,10,15,0.08);
+      border-radius: 100px; padding: 4px 12px 4px 4px;
+      box-shadow: 0 1px 2px rgba(15,15,25,0.04);
+      letter-spacing: -0.01em;
+    }
+    .out-chip-icon {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 20px; height: 20px; border-radius: 99px;
+      flex-shrink: 0;
     }
     .out-sort-group {
       display: inline-flex; align-items: center;
@@ -76,7 +89,7 @@ if (typeof document !== 'undefined' && !document.getElementById('outliers-styles
       padding: 3px; gap: 2px;
     }
     .out-sort-btn {
-      font-family: 'Inter', system-ui, sans-serif;
+      font-family: inherit;
       font-size: 12.5px; font-weight: 600;
       padding: 7px 14px; border-radius: 100px;
       border: none; cursor: pointer; background: transparent;
@@ -91,7 +104,7 @@ if (typeof document !== 'undefined' && !document.getElementById('outliers-styles
     .out-cta {
       display: inline-flex; align-items: center; justify-content: center; gap: 6px;
       padding: 10px 16px; border-radius: 100px; border: none;
-      font-family: 'Inter', system-ui, sans-serif;
+      font-family: inherit;
       font-size: 13px; font-weight: 700;
       background: #e5251b; color: #fff; cursor: pointer;
       transition: filter 0.15s, transform 0.15s, box-shadow 0.15s;
@@ -106,7 +119,7 @@ if (typeof document !== 'undefined' && !document.getElementById('outliers-styles
     .out-tab-btn {
       display: inline-flex; align-items: center; gap: 8px;
       padding: 9px 18px; border-radius: 100px;
-      font-family: 'Inter', system-ui, sans-serif;
+      font-family: inherit;
       font-size: 12.5px; font-weight: 600;
       background: transparent; color: #4a4a58;
       border: 1px solid transparent;
@@ -124,7 +137,7 @@ if (typeof document !== 'undefined' && !document.getElementById('outliers-styles
     .out-btn {
       display: inline-flex; align-items: center; justify-content: center; gap: 8px;
       padding: 9px 20px; border-radius: 100px; border: 1px solid #e5251b;
-      font-family: 'Inter', system-ui, sans-serif;
+      font-family: inherit;
       font-size: 12.5px; font-weight: 600;
       background: #ffffff; color: #e5251b; cursor: pointer;
       box-shadow: 0 1px 3px rgba(229,37,27,0.10), 0 4px 14px rgba(229,37,27,0.10);
@@ -141,7 +154,7 @@ if (typeof document !== 'undefined' && !document.getElementById('outliers-styles
     .out-btn-primary {
       display: inline-flex; align-items: center; justify-content: center; gap: 8px;
       padding: 9px 20px; border-radius: 100px; border: none;
-      font-family: 'Inter', system-ui, sans-serif;
+      font-family: inherit;
       font-size: 12.5px; font-weight: 700;
       background: #e5251b; color: #ffffff; cursor: pointer;
       box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 4px 14px rgba(229,37,27,0.32);
@@ -164,7 +177,7 @@ if (typeof document !== 'undefined' && !document.getElementById('outliers-styles
       background: #ffffff; color: #4a4a58;
       border: 1px solid #e6e6ec; border-radius: 100px;
       padding: 8px 18px; font-size: 13px; font-weight: 600;
-      font-family: 'Inter', system-ui, sans-serif;
+      font-family: inherit;
       cursor: pointer; white-space: nowrap;
       transition: all 0.15s;
     }
@@ -210,7 +223,7 @@ if (typeof document !== 'undefined' && !document.getElementById('outliers-styles
       background: #e5251b; color: #fff;
       border: 1px solid #e5251b; border-radius: 100px;
       padding: 8px 18px; font-size: 12.5px; font-weight: 700;
-      font-family: 'Inter', system-ui, sans-serif;
+      font-family: inherit;
       cursor: pointer; white-space: nowrap;
       transition: filter 0.15s;
       display: flex; align-items: center; gap: 6px;
@@ -397,6 +410,73 @@ const SpinIcon = () => (
     <path d="M11.5 6.5a5 5 0 1 0-5 5"/>
   </svg>
 )
+
+/* MetaChip — header meta pill with tinted-circle icon + label. Replaces the
+   emoji chips per the no-generic-icons rule (Lucide-style inline SVGs,
+   semantic fit, soft tinted circle backgrounds). */
+const META_CHIP_ICONS = {
+  // Target — concentric circles + center dot
+  target: (
+    <svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="7" cy="7" r="5.5"/>
+      <circle cx="7" cy="7" r="3"/>
+      <circle cx="7" cy="7" r="0.6" fill="currentColor"/>
+    </svg>
+  ),
+  // TrendingUp — line going up-right with arrowhead
+  trendingUp: (
+    <svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <polyline points="2,10 5.5,6.5 7.5,8.5 12,3.5"/>
+      <polyline points="9,3.5 12,3.5 12,6.5"/>
+    </svg>
+  ),
+  // Layers — stacked diamonds
+  layers: (
+    <svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+      <polygon points="7,2 12,5 7,8 2,5"/>
+      <polyline points="2,8 7,11 12,8"/>
+    </svg>
+  ),
+  // Compass — circle with needle
+  compass: (
+    <svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="7" cy="7" r="5.5"/>
+      <polygon points="9,5 6,8 5,9 8,6" fill="currentColor" stroke="none"/>
+    </svg>
+  ),
+  // Calendar — rectangle with header + 2 markers
+  calendar: (
+    <svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="2" y="3" width="10" height="9" rx="1.2"/>
+      <line x1="2" y1="6" x2="12" y2="6"/>
+      <line x1="5" y1="1.5" x2="5" y2="3.5"/>
+      <line x1="9" y1="1.5" x2="9" y2="3.5"/>
+    </svg>
+  ),
+  // Zap — lightning bolt
+  zap: (
+    <svg width="12" height="12" viewBox="0 0 14 14" fill="currentColor" stroke="none">
+      <polygon points="8.2,1 3,7.6 6.8,7.6 5.4,13 10.6,5.6 7,5.6"/>
+    </svg>
+  ),
+}
+const META_CHIP_TINTS = {
+  red:     { bg: '#fee2e2', fg: C.red },
+  amber:   { bg: C.amberBg, fg: C.amber },
+  green:   { bg: C.greenBg, fg: C.green },
+  neutral: { bg: '#eeeef3', fg: C.text2 },
+}
+function MetaChip({ tint = 'neutral', icon, children }) {
+  const tone = META_CHIP_TINTS[tint] || META_CHIP_TINTS.neutral
+  return (
+    <span className="out-chip">
+      <span className="out-chip-icon" style={{ background: tone.bg, color: tone.fg }}>
+        {META_CHIP_ICONS[icon] || META_CHIP_ICONS.target}
+      </span>
+      {children}
+    </span>
+  )
+}
 
 /* Persistence lives server-side now (outliers_search_cache table). We keep
    only the tab display preference in localStorage — results/query/intent come
@@ -628,7 +708,7 @@ export default function Outliers({ channelData, onNavigate, plan, freeTierFeatur
   // actually click Run. Backend gate stays in place as defense-in-depth.
 
   return (
-    <div style={{ width: '100%', fontFamily: "'Inter', system-ui, sans-serif", color: C.text1 }}>
+    <div className="out-page" style={{ color: C.text1 }}>
 
       {/* Top-level view switch — Search (default flow) vs Reports (past paid
           runs). Matches Competitors' tracked tab pattern. */}
@@ -689,22 +769,22 @@ export default function Outliers({ channelData, onNavigate, plan, freeTierFeatur
         return (
           <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 24, gap: 16, flexWrap: 'wrap' }}>
             <div style={{ flex: '1 1 auto', minWidth: 0 }}>
-              <h2 style={{ fontSize: 26, fontWeight: 800, color: C.text1, letterSpacing: '-0.7px', marginBottom: 10 }}>Outliers</h2>
+              <h2 style={{ fontSize: 26, fontWeight: 700, color: C.text1, letterSpacing: '-0.7px', marginBottom: 10, lineHeight: 1.1 }}>Outliers</h2>
               <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
                 {hasResults ? (
                   <>
-                    <span className="out-chip"><span>🎯</span>{videosCount} outlier{videosCount === 1 ? '' : 's'}</span>
-                    <span className="out-chip"><span>🏢</span>{channelsCount} breakout channel{channelsCount === 1 ? '' : 's'}</span>
-                    <span className="out-chip"><span>📊</span>Niche pool · {poolSize}</span>
-                    {verticalLabel && <span className="out-chip"><span>🧭</span>{verticalLabel}</span>}
-                    <span className="out-chip"><span>🗓</span>Last 12 months</span>
+                    <MetaChip tint="red"     icon="target">{videosCount} outlier{videosCount === 1 ? '' : 's'}</MetaChip>
+                    <MetaChip tint="amber"   icon="trendingUp">{channelsCount} breakout channel{channelsCount === 1 ? '' : 's'}</MetaChip>
+                    <MetaChip tint="neutral" icon="layers">Niche pool · {poolSize}</MetaChip>
+                    {verticalLabel && <MetaChip tint="neutral" icon="compass">{verticalLabel}</MetaChip>}
+                    <MetaChip tint="neutral" icon="calendar">Last 12 months</MetaChip>
                   </>
                 ) : (
                   <>
-                    <span className="out-chip"><span>🎯</span>Over-performing videos</span>
-                    <span className="out-chip"><span>🏢</span>Breakout channels</span>
-                    <span className="out-chip"><span>🗓</span>Last 12 months</span>
-                    <span className="out-chip"><span>⚡</span>3 credits per search</span>
+                    <MetaChip tint="red"     icon="target">Over-performing videos</MetaChip>
+                    <MetaChip tint="amber"   icon="trendingUp">Breakout channels</MetaChip>
+                    <MetaChip tint="neutral" icon="calendar">Last 12 months</MetaChip>
+                    <MetaChip tint="amber"   icon="zap">3 credits per search</MetaChip>
                   </>
                 )}
               </div>
@@ -813,7 +893,7 @@ export default function Outliers({ channelData, onNavigate, plan, freeTierFeatur
               </svg>
               <span style={{ fontSize: 10.5, fontWeight: 700, color: C.red, letterSpacing: '0.16em', textTransform: 'uppercase' }}>Three directions</span>
             </div>
-            <h2 style={{ fontSize: 24, fontWeight: 800, color: C.text1, letterSpacing: '-0.55px', lineHeight: 1.2, marginBottom: 10 }}>
+            <h2 style={{ fontSize: 24, fontWeight: 700, color: C.text1, letterSpacing: '-0.55px', lineHeight: 1.2, marginBottom: 10 }}>
               Your search could go <span style={{ color: C.red }}>3 ways</span>. Pick one.
             </h2>
             <p style={{ fontSize: 13.5, color: C.text3, lineHeight: 1.6, maxWidth: 540, margin: '0 auto' }}>
@@ -1046,7 +1126,7 @@ export default function Outliers({ channelData, onNavigate, plan, freeTierFeatur
       {view === 'reports' && (
         <div>
           <div style={{ marginBottom: 20 }}>
-            <h2 style={{ fontSize: 26, fontWeight: 800, color: C.text1, letterSpacing: '-0.7px', marginBottom: 6 }}>Reports</h2>
+            <h2 style={{ fontSize: 26, fontWeight: 700, color: C.text1, letterSpacing: '-0.7px', marginBottom: 6, lineHeight: 1.1 }}>Reports</h2>
             <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.4 }}>
               Every search you paid for · reopen anytime without being charged again
             </p>
@@ -1097,7 +1177,7 @@ export default function Outliers({ channelData, onNavigate, plan, freeTierFeatur
                     </button>
                     <div className="out-report-header" onClick={() => openReport(r)}>
                       <div style={{ flex: 1, minWidth: 0 }}>
-                        <p style={{ fontWeight: 800, fontSize: 14, color: '#111114',
+                        <p style={{ fontWeight: 700, fontSize: 14, color: '#111114',
                           letterSpacing: '-0.2px', whiteSpace: 'nowrap', overflow: 'hidden',
                           textOverflow: 'ellipsis', marginBottom: 8 }}>
                           {r.query}
@@ -1680,7 +1760,7 @@ function DetailModal({ kind, item, query, onClose, onNavigate }) {
           {/* Why Now hero — same "Fix first" card silhouette (white bg, red left-bar) */}
           {item.why_now && (
             <div style={{ background: '#fff', border: `1px solid ${C.border}`, borderLeft: `4px solid ${C.red}`, borderRadius: 12, padding: '14px 18px', marginBottom: 16, boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
-              <span style={{ fontSize: 10, fontWeight: 800, color: C.red, textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block', marginBottom: 6 }}>Why now</span>
+              <span style={{ fontSize: 10, fontWeight: 700, color: C.red, textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block', marginBottom: 6 }}>Why now</span>
               <p style={{ fontSize: 15, fontWeight: 700, color: C.text1, lineHeight: 1.55 }}>{item.why_now}</p>
             </div>
           )}
@@ -1697,7 +1777,7 @@ function DetailModal({ kind, item, query, onClose, onNavigate }) {
                 <OutlierRing score={item.outlier_score} color={verdict.color}/>
                 <span style={{ fontSize: 14, fontWeight: 700, color: verdict.color }}>{verdict.label}</span>
                 {query && (
-                  <span style={{ fontSize: 12, color: '#2563eb', background: '#eff6ff', padding: '3px 10px', borderRadius: 100, fontWeight: 600, border: '1px solid #bfdbfe' }}>
+                  <span style={{ fontSize: 12, color: C.text2, background: '#f4f4f6', padding: '3px 10px', borderRadius: 100, fontWeight: 600, border: `1px solid ${C.border}` }}>
                     {query}
                   </span>
                 )}
@@ -1724,9 +1804,11 @@ function DetailModal({ kind, item, query, onClose, onNavigate }) {
             </p>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr 1fr', gap: 8 }}>
 
-              {/* Blue — Why it worked / Why this channel */}
-              <div style={{ background: 'rgba(79,134,247,0.07)', border: '1px solid rgba(79,134,247,0.12)', borderRadius: 10, padding: '12px 14px' }}>
-                <p style={{ fontSize: 10, fontWeight: 700, color: '#4a7cf7', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>
+              {/* Amber-tinted — Why it worked / Why this channel. Was blue
+                  (off-palette). Amber doubles as the "AI/explainer" accent
+                  used elsewhere (Title Scorecard pattern). */}
+              <div style={{ background: C.amberBg, border: `1px solid ${C.amberBdr}`, borderRadius: 10, padding: '12px 14px' }}>
+                <p style={{ fontSize: 10, fontWeight: 700, color: C.amber, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>
                   {isChannel ? 'Why this channel' : 'Why it worked'}
                 </p>
                 <p style={{ fontSize: 13, color: C.text1, lineHeight: 1.65 }}>
@@ -1839,7 +1921,7 @@ function OutlierRing({ score, color }) {
 /* ─── Bar — copied from VideoOptimizePanel's BreakdownBar ─────────────────── */
 function OutlierBar({ label, score, tip }) {
   const [showWhy, setShowWhy] = useState(false)
-  const color = score >= 70 ? '#16a34a' : score >= 40 ? '#d97706' : '#e5251b'
+  const color = score >= 70 ? C.green : score >= 40 ? C.amber : C.red
   return (
     <div style={{ marginBottom: 9 }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 3 }}>
@@ -1928,9 +2010,11 @@ function ThumbnailPatternsCard({ patterns, query }) {
             slot). Same 1fr 1.4fr 1fr column weights as Priority Actions. */}
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr 1fr', gap: 8, marginLeft: 38 }}>
 
-          {/* Blue "Visual formula" — all 5 traits compacted into one tinted cell */}
-          <div style={{ background: 'rgba(79,134,247,0.07)', border: '1px solid rgba(79,134,247,0.12)', borderRadius: 10, padding: '12px 14px' }}>
-            <p style={{ fontSize: 10, fontWeight: 700, color: '#4a7cf7', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 10 }}>Visual formula</p>
+          {/* Neutral "Visual formula" — was off-palette blue. Sticks to
+              red/amber/green + neutral grey, with the amber "Next thumbnail"
+              tile carrying the chromatic anchor in the middle column. */}
+          <div style={{ background: '#f6f6f9', border: `1px solid ${C.border}`, borderRadius: 10, padding: '12px 14px' }}>
+            <p style={{ fontSize: 10, fontWeight: 700, color: C.text2, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 10 }}>Visual formula</p>
             {traits.map(([label, value], i) => (
               <div key={label} style={{ marginBottom: i === traits.length - 1 ? 0 : 10 }}>
                 <p style={{ fontSize: 9.5, fontWeight: 700, color: C.text3, letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 3 }}>{label}</p>
