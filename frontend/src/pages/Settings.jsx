@@ -74,12 +74,14 @@ function useSettingsStyles() {
         .set-content > * { animation: none; }
       }
 
+      /* H1 + subtitle match the shared standard across every redesigned
+         page (Competitors / Outliers / Keywords / Video Ideas / SEO). */
       .set-h1 {
-        font-size: 28px; font-weight: 600; color: ${C.ink};
-        letter-spacing: -0.02em; line-height: 1.15;
+        font-size: 26px; font-weight: 700; color: ${C.ink};
+        letter-spacing: -0.7px; line-height: 1.1;
       }
       .set-subtitle {
-        font-size: 14px; font-weight: 450; color: ${C.ink55};
+        font-size: 14px; font-weight: 500; color: ${C.ink55};
         margin-top: 6px !important; letter-spacing: -0.005em;
       }
 
@@ -94,7 +96,7 @@ function useSettingsStyles() {
       .set-card-hero {
         background: #ffffff;
         border: 1px solid ${C.hairline};
-        border-radius: 16px;
+        border-radius: 14px;
         box-shadow: 0 1px 2px rgba(15,15,25,0.05),
                     0 14px 36px -10px rgba(15,15,25,0.12),
                     inset 0 1px 0 rgba(255,255,255,0.85);
