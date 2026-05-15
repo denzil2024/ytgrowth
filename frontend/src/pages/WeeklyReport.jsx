@@ -1,6 +1,23 @@
 import { useEffect, useState } from 'react'
 import UpsellGate from '../components/UpsellGate'
 
+// Load Geist page-scoped — matches Chat / Competitors / Keywords / Outliers.
+if (typeof document !== 'undefined' && !document.getElementById('wr-geist-font')) {
+  const link = document.createElement('link')
+  link.id = 'wr-geist-font'
+  link.rel = 'stylesheet'
+  link.href = 'https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap'
+  document.head.appendChild(link)
+}
+if (typeof document !== 'undefined' && !document.getElementById('wr-styles')) {
+  const s = document.createElement('style')
+  s.id = 'wr-styles'
+  s.textContent = `
+    .wr-page * { font-family: 'Geist', 'Inter', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+  `
+  document.head.appendChild(s)
+}
+
 // Tokens match the canonical palette used by Dashboard.jsx and
 // SeoOptimizer.jsx (the benchmark pages). No drift, no extra tiers.
 const C = {
@@ -41,7 +58,7 @@ function DeltaBadge({ metric, unit, isScore }) {
 function MetricCard({ label, value, metric, unit, isScore, valueColor }) {
   return (
     <div className="ytg-stat-card" style={{ cursor: 'default' }}>
-      <p style={{ fontSize: 11, fontWeight: 500, letterSpacing: '0.05em', textTransform: 'uppercase', color: C.text3, marginBottom: 12 }}>{label}</p>
+      <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.10em', textTransform: 'uppercase', color: C.text3, marginBottom: 12 }}>{label}</p>
       <p style={{ fontSize: 30, fontWeight: 800, letterSpacing: '-1.4px', color: valueColor || C.text1, lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{value}</p>
       <div style={{ marginTop: 10 }}>
         <DeltaBadge metric={metric} unit={unit} isScore={isScore} />
@@ -61,8 +78,8 @@ function healthColor(n, { red, amber }) {
 function ColLabel({ color, children }) {
   return (
     <p style={{
-      fontSize: 10, fontWeight: 700, color,
-      letterSpacing: '0.08em', textTransform: 'uppercase',
+      fontSize: 10.5, fontWeight: 700, color,
+      letterSpacing: '0.10em', textTransform: 'uppercase',
       marginBottom: 6,
     }}>
       {children}
@@ -298,8 +315,8 @@ export default function WeeklyReport({ channelId, channelEmail, plan, channelSta
   const header = (
     <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 32, gap: 16, flexWrap: 'wrap' }}>
       <div>
-        <h1 style={{ fontSize: 26, fontWeight: 800, color: C.text1, letterSpacing: '-0.7px', marginBottom: 6, lineHeight: 1.1 }}>Weekly Report</h1>
-        <p style={{ fontSize: 14, color: C.text3, lineHeight: 1.4 }}>{subSubtitle}</p>
+        <h1 style={{ fontSize: 26, fontWeight: 700, color: C.text1, letterSpacing: '-0.7px', marginBottom: 6, lineHeight: 1.1 }}>Weekly Report</h1>
+        <p style={{ fontSize: 14, color: 'rgba(10,10,15,0.55)', fontWeight: 500, letterSpacing: '-0.005em', lineHeight: 1.45 }}>{subSubtitle}</p>
       </div>
 
       {/* Email delivery toggle — paid only (free users have nothing to toggle) */}
@@ -345,7 +362,7 @@ export default function WeeklyReport({ channelId, channelEmail, plan, channelSta
     const channelFirstName = (channelStats?.channel_name || 'your channel').split(' ')[0]
 
     return (
-      <div>
+      <div className="wr-page">
         {header}
 
         {/* Live metric snapshot */}
@@ -375,17 +392,17 @@ export default function WeeklyReport({ channelId, channelEmail, plan, channelSta
             <div className="ytg-card" style={{ padding: '30px 30px 32px' }}>
               <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, marginBottom: 24 }}>
                 <div>
-                  <div style={{ fontSize: 18, fontWeight: 800, color: C.text1, letterSpacing: '-0.4px', marginBottom: 5 }}>
+                  <div style={{ fontSize: 18, fontWeight: 700, color: C.text1, letterSpacing: '-0.3px', marginBottom: 5 }}>
                     Your Week on YouTube — Apr 13 – 19
                   </div>
                   <div style={{ fontSize: 12.5, color: C.text3 }}>2026-04-13 – 2026-04-19</div>
                 </div>
                 <span style={{
                   display: 'inline-flex', alignItems: 'center', gap: 6,
-                  fontSize: 11, fontWeight: 800, color: C.green,
+                  fontSize: 11, fontWeight: 700, color: C.green,
                   background: '#f0fdf4', border: '1px solid rgba(134,239,172,0.65)',
                   borderRadius: 999, padding: '4px 11px',
-                  letterSpacing: '0.08em', textTransform: 'uppercase',
+                  letterSpacing: '0.10em', textTransform: 'uppercase',
                 }}>
                   <span style={{ width: 6, height: 6, borderRadius: '50%', background: C.green }}/>
                   Latest
@@ -425,7 +442,7 @@ export default function WeeklyReport({ channelId, channelEmail, plan, channelSta
 
   // ── Paid plan ───────────────────────────────────────────────────────────
   return (
-    <div>
+    <div className="wr-page">
       {header}
 
       {/* Out-of-credits notice — paid plan with 0 credits available */}
@@ -462,11 +479,11 @@ export default function WeeklyReport({ channelId, channelEmail, plan, channelSta
           padding: '88px 32px', textAlign: 'center',
         }}>
           <span style={{
-            fontSize: 10.5, fontWeight: 700, color: C.text3,
-            letterSpacing: '0.11em', textTransform: 'uppercase',
+            fontSize: 11, fontWeight: 700, color: C.text3,
+            letterSpacing: '0.10em', textTransform: 'uppercase',
             marginBottom: 14,
           }}>Generating</span>
-          <h2 style={{ fontSize: 22, fontWeight: 800, color: C.text1, marginBottom: 10, letterSpacing: '-0.5px', lineHeight: 1.15 }}>Your first report is on its way</h2>
+          <h2 style={{ fontSize: 22, fontWeight: 700, color: C.text1, marginBottom: 10, letterSpacing: '-0.5px', lineHeight: 1.15 }}>Your first report is on its way</h2>
           <p style={{ fontSize: 14, color: C.text3, maxWidth: 360, lineHeight: 1.7 }}>
             We generate your first weekly report right after your channel connects. Check back in a few minutes.
           </p>
@@ -480,17 +497,17 @@ export default function WeeklyReport({ channelId, channelEmail, plan, channelSta
         }}>
           <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, marginBottom: 24 }}>
             <div style={{ minWidth: 0 }}>
-              <div style={{ fontSize: 18, fontWeight: 800, color: C.text1, letterSpacing: '-0.4px', marginBottom: 5 }}>
+              <div style={{ fontSize: 18, fontWeight: 700, color: C.text1, letterSpacing: '-0.3px', marginBottom: 5 }}>
                 {latest.reportData?.reportTitle || 'Weekly Report'}
               </div>
               <div style={{ fontSize: 12.5, color: C.text3, fontVariantNumeric: 'tabular-nums' }}>{latest.weekStart} – {latest.weekEnd}</div>
             </div>
             <span style={{
               display: 'inline-flex', alignItems: 'center', gap: 6,
-              fontSize: 11, fontWeight: 800, color: C.green,
+              fontSize: 11, fontWeight: 700, color: C.green,
               background: '#f0fdf4', border: '1px solid rgba(134,239,172,0.65)',
               borderRadius: 999, padding: '4px 11px',
-              letterSpacing: '0.08em', textTransform: 'uppercase',
+              letterSpacing: '0.10em', textTransform: 'uppercase',
               flexShrink: 0,
             }}>
               <span style={{ width: 6, height: 6, borderRadius: '50%', background: C.green, boxShadow: `0 0 8px ${C.green}` }}/>
@@ -504,7 +521,7 @@ export default function WeeklyReport({ channelId, channelEmail, plan, channelSta
       {/* ── Previous reports ────────────────────────────────────────────── */}
       {previous.length > 0 && (
         <>
-          <div style={{ fontSize: 12, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 10, marginTop: 8 }}>Previous Reports</div>
+          <div style={{ fontSize: 11, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.10em', marginBottom: 12, marginTop: 8 }}>Previous Reports</div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
             {previous.map((r, i) => (
               <ReportCard
