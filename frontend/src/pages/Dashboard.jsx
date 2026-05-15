@@ -1676,6 +1676,228 @@ function FeedCard({
 // Priority Action card. Collapsed first: lighter headline + meta + CTAs.
 // The impact pill in the eyebrow already signals weight, so no redundant
 // impact bar. Prose lives behind Detail.
+// One card, three compact rows. Replaces the wall of three stacked
+// PriorityActionCards that each rendered the full analytical `problem`
+// paragraph as a bold headline. Each row here shows ONE short action line
+// (action.action, falling back to a clamped problem). Click a row to expand
+// the diagnostic prose + "why this works"; otherwise nothing is shown.
+function ActionsRailCard({ items, totalCount }) {
+  const [openKey, setOpenKey] = useState(null)
+  if (!items || items.length === 0) return null
+
+  const impactDot = (impact) => {
+    const k = (impact || 'med').toLowerCase()
+    return k === 'high' ? '#e5251b' : k === 'low' ? 'rgba(10,10,15,0.35)' : '#d97706'
+  }
+  const impactLabel = (impact) => {
+    const k = (impact || 'med').toLowerCase()
+    return k === 'high' ? 'High' : k === 'low' ? 'Low' : 'Medium'
+  }
+
+  // Short, scannable one-liner. action.action is usually a verb phrase ("Add
+  // chapters to your three newest uploads"). If the API only sent a long
+  // `problem` diagnosis, take the first clause and clamp it - the whole
+  // paragraph belongs in the expander, not the always-visible row.
+  const headlineFor = (a) => {
+    const raw = (a.action && a.action.length > 8 ? a.action : a.problem) || ''
+    const clean = raw.replace(/\s+/g, ' ').trim()
+    if (clean.length <= 120) return clean
+    const cut = clean.slice(0, 117)
+    return cut.replace(/\s+\S*$/, '') + '…'
+  }
+
+  return (
+    <article style={{
+      background: '#ffffff',
+      border: '1px solid rgba(10,10,15,0.07)',
+      borderRadius: 14,
+      boxShadow: '0 1px 2px rgba(15,15,25,0.04), 0 6px 18px rgba(15,15,25,0.05), inset 0 1px 0 rgba(255,255,255,0.7)',
+      overflow: 'hidden',
+      marginBottom: 12,
+    }}>
+      {/* Header — single eyebrow line, no big bold paragraph */}
+      <div style={{
+        display: 'flex', alignItems: 'center', gap: 10,
+        padding: '12px 18px',
+        borderBottom: '1px solid rgba(10,10,15,0.06)',
+      }}>
+        <span style={{
+          fontSize: 11, fontWeight: 700, color: 'rgba(10,10,15,0.55)',
+          letterSpacing: '0.10em', textTransform: 'uppercase',
+        }}>Priority actions</span>
+        <span style={{
+          fontSize: 11, fontWeight: 600, color: 'rgba(10,10,15,0.45)',
+          background: 'rgba(10,10,15,0.04)', padding: '2px 8px', borderRadius: 99,
+          fontVariantNumeric: 'tabular-nums',
+        }}>{items.length} of {totalCount}</span>
+      </div>
+
+      {/* Rows */}
+      <div>
+        {items.map((it, i) => {
+          const isOpen = openKey === it.key
+          const dot = impactDot(it.impact)
+          const label = impactLabel(it.impact)
+          const showFix = it.action.action && it.action.action !== it.action.problem
+          const showWhy = !!it.action.expected_outcome
+          return (
+            <div key={it.key} style={{
+              borderTop: i === 0 ? 'none' : '1px solid rgba(10,10,15,0.06)',
+              transition: 'background 0.14s',
+              background: isOpen ? 'rgba(10,10,15,0.015)' : 'transparent',
+            }}>
+              {/* Row */}
+              <div
+                role="button" tabIndex={0}
+                onClick={() => setOpenKey(o => o === it.key ? null : it.key)}
+                onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setOpenKey(o => o === it.key ? null : it.key) } }}
+                style={{
+                  display: 'flex', alignItems: 'center', gap: 14,
+                  padding: '13px 18px', cursor: 'pointer', userSelect: 'none',
+                }}>
+                <span style={{
+                  flexShrink: 0, width: 22, height: 22, borderRadius: 7,
+                  display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                  background: 'rgba(10,10,15,0.05)',
+                  fontSize: 11, fontWeight: 700, color: '#0a0a0f',
+                  fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.2px',
+                }}>{i + 1}</span>
+
+                <span style={{
+                  flexShrink: 0, width: 7, height: 7, borderRadius: 99,
+                  background: dot,
+                }}/>
+
+                <p style={{
+                  flex: 1, minWidth: 0,
+                  fontSize: 13.5, fontWeight: 500, color: '#0a0a0f',
+                  letterSpacing: '-0.1px', lineHeight: 1.45,
+                  margin: 0,
+                  display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden',
+                }}>{headlineFor(it.action)}</p>
+
+                <span style={{
+                  flexShrink: 0,
+                  fontSize: 10.5, fontWeight: 600, color: dot,
+                  letterSpacing: '-0.05px',
+                  whiteSpace: 'nowrap',
+                }}>{label}</span>
+
+                <button
+                  type="button"
+                  onClick={(e) => { e.stopPropagation(); it.onAct() }}
+                  style={{
+                    flexShrink: 0,
+                    display: 'inline-flex', alignItems: 'center', gap: 5,
+                    padding: '7px 14px', borderRadius: 99,
+                    border: 'none', cursor: 'pointer',
+                    background: '#e5251b', color: '#fff',
+                    fontFamily: 'inherit',
+                    fontSize: 12, fontWeight: 600, letterSpacing: '-0.05px',
+                    boxShadow: '0 1px 3px rgba(229,37,27,0.30)',
+                    transition: 'filter 0.14s, transform 0.14s',
+                  }}
+                  onMouseEnter={e => { e.currentTarget.style.filter = 'brightness(1.08)'; e.currentTarget.style.transform = 'translateY(-1px)' }}
+                  onMouseLeave={e => { e.currentTarget.style.filter = 'none'; e.currentTarget.style.transform = 'translateY(0)' }}
+                >
+                  {it.ctaLabel}
+                  <ArrowRight size={11} strokeWidth={2.4}/>
+                </button>
+
+                <ChevronDown size={14} strokeWidth={2}
+                  style={{
+                    flexShrink: 0, color: 'rgba(10,10,15,0.40)',
+                    transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+                    transition: 'transform 0.2s',
+                  }}/>
+              </div>
+
+              {/* Expanded detail (per row) */}
+              {isOpen && (
+                <div style={{ padding: '0 18px 14px 60px' }}>
+                  {it.action.problem && (
+                    <p style={{
+                      fontSize: 12.5, fontWeight: 400, color: 'rgba(10,10,15,0.65)',
+                      lineHeight: 1.6, letterSpacing: '-0.02em',
+                      marginBottom: (showFix || showWhy) ? 10 : 8,
+                    }}>{it.action.problem}</p>
+                  )}
+                  {(showFix || showWhy) && (
+                    <div style={{
+                      display: 'grid',
+                      gridTemplateColumns: showFix && showWhy ? '1fr 1fr' : '1fr',
+                      gap: 8, marginBottom: 8,
+                    }}>
+                      {showFix && (
+                        <div style={{
+                          background: 'rgba(229,37,27,0.04)',
+                          border: '1px solid rgba(229,37,27,0.10)',
+                          borderLeft: '3px solid #e5251b',
+                          borderRadius: '0 8px 8px 0',
+                          padding: '8px 12px',
+                        }}>
+                          <p style={{ fontSize: 9.5, fontWeight: 700, color: '#e5251b', letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 4 }}>Fix</p>
+                          <p style={{ fontSize: 12, fontWeight: 500, color: '#0a0a0f', lineHeight: 1.55 }}>{it.action.action}</p>
+                        </div>
+                      )}
+                      {showWhy && (
+                        <div style={{
+                          background: 'rgba(5,150,105,0.04)',
+                          border: '1px solid rgba(5,150,105,0.12)',
+                          borderLeft: '3px solid #059669',
+                          borderRadius: '0 8px 8px 0',
+                          padding: '8px 12px',
+                        }}>
+                          <p style={{ fontSize: 9.5, fontWeight: 700, color: '#059669', letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 4 }}>Why this works</p>
+                          <p style={{ fontSize: 12, fontWeight: 500, color: '#0a0a0f', lineHeight: 1.55 }}>{it.action.expected_outcome}</p>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                  <div style={{ display: 'flex', gap: 8, marginTop: 4 }}>
+                    <button
+                      type="button"
+                      onClick={(e) => { e.stopPropagation(); it.onDone() }}
+                      style={{
+                        display: 'inline-flex', alignItems: 'center', gap: 5,
+                        padding: '6px 12px', borderRadius: 99,
+                        border: '1px solid rgba(10,10,15,0.10)',
+                        background: '#fff', color: 'rgba(10,10,15,0.65)',
+                        fontFamily: 'inherit',
+                        fontSize: 11.5, fontWeight: 600, letterSpacing: '-0.05px',
+                        cursor: 'pointer',
+                        transition: 'background 0.14s, color 0.14s',
+                      }}
+                      onMouseEnter={e => { e.currentTarget.style.background = 'rgba(10,10,15,0.04)'; e.currentTarget.style.color = '#0a0a0f' }}
+                      onMouseLeave={e => { e.currentTarget.style.background = '#fff'; e.currentTarget.style.color = 'rgba(10,10,15,0.65)' }}
+                    >Mark done</button>
+                    <button
+                      type="button"
+                      onClick={(e) => { e.stopPropagation(); it.onDismiss() }}
+                      style={{
+                        display: 'inline-flex', alignItems: 'center', gap: 5,
+                        padding: '6px 12px', borderRadius: 99,
+                        border: '1px solid rgba(10,10,15,0.10)',
+                        background: '#fff', color: 'rgba(10,10,15,0.55)',
+                        fontFamily: 'inherit',
+                        fontSize: 11.5, fontWeight: 600, letterSpacing: '-0.05px',
+                        cursor: 'pointer',
+                        transition: 'background 0.14s, color 0.14s',
+                      }}
+                      onMouseEnter={e => { e.currentTarget.style.background = 'rgba(10,10,15,0.04)'; e.currentTarget.style.color = '#0a0a0f' }}
+                      onMouseLeave={e => { e.currentTarget.style.background = '#fff'; e.currentTarget.style.color = 'rgba(10,10,15,0.55)' }}
+                    >Dismiss</button>
+                  </div>
+                </div>
+              )}
+            </div>
+          )
+        })}
+      </div>
+    </article>
+  )
+}
+
 function PriorityActionCard({ action, rank, total, impact, onAct, onDone, onDismiss, ctaLabel }) {
   const [open, setOpen] = useState(false)
   const impactKey = (impact || 'med').toLowerCase()
@@ -5167,6 +5389,12 @@ export default function Dashboard() {
                   block in the group will render. */}
               {(() => {
                 // ── WHAT TO DO NEXT blocks ──
+                // The 3 stacked PriorityActionCards (each rendering the full
+                // AI `problem` diagnosis as a bold paragraph headline) are
+                // replaced with ONE compact rail card holding 3 short rows.
+                // Each row shows just the action verb (action.action, ~1
+                // sentence) - the long analytical problem text is now only
+                // visible when the row is expanded.
                 const priorityActionsBlock = (feedFilter === 'all' || feedFilter === 'actions') && data.insights?.priorityActions ? (() => {
                   const all = data.insights.priorityActions
                   const open = []
@@ -5178,42 +5406,41 @@ export default function Dashboard() {
                     if (open.length >= 3) break
                   }
                   if (open.length === 0) return null
-                  return open.map(({ a, rank, k, idx }) => {
-                    const impact = (a.impact || (idx === 0 ? 'high' : idx === 1 ? 'med' : 'low'))
-                    const target = categoryToNav(a.category, a.problem)
-                    const ctaLabel = target === 'SEO Studio' ? 'Open SEO Studio'
-                      : target === 'Thumbnail Score' ? 'Open Thumbnails'
-                      : target === 'Video Ideas' ? 'Open Video Ideas'
-                      : target === 'Outliers' ? 'Open Outliers'
-                      : target === 'Keywords' ? 'Open Keywords'
-                      : target === 'Competitors' ? 'Open Competitors'
-                      : 'See full audit'
-                    return (
-                      <PriorityActionCard
-                        key={`pa-${rank}`}
-                        action={a}
-                        rank={open.findIndex(x => x.rank === rank) + 1}
-                        total={all.length}
-                        impact={impact}
-                        ctaLabel={ctaLabel}
-                        onAct={() => target ? setNav(target) : setAuditOpen(true)}
-                        onDone={() => {
-                          const next = { ...checked, [k]: true }
-                          setChecked(next)
-                          if (data?.channel?.channel_id) {
-                            try { localStorage.setItem(`ytg_checked_${data.channel.channel_id}`, JSON.stringify(next)) } catch {}
-                          }
-                        }}
-                        onDismiss={() => {
-                          const next = { ...deleted, [k]: true }
-                          setDeleted(next)
-                          if (data?.channel?.channel_id) {
-                            try { localStorage.setItem(`ytg_deleted_${data.channel.channel_id}`, JSON.stringify(next)) } catch {}
-                          }
-                        }}
-                      />
-                    )
-                  })
+                  return (
+                    <ActionsRailCard
+                      key="actions-rail"
+                      items={open.map(({ a, rank, k, idx }) => {
+                        const impact = (a.impact || (idx === 0 ? 'high' : idx === 1 ? 'med' : 'low'))
+                        const target = categoryToNav(a.category, a.problem)
+                        const ctaLabel = target === 'SEO Studio' ? 'SEO Studio'
+                          : target === 'Thumbnail Score' ? 'Thumbnails'
+                          : target === 'Video Ideas' ? 'Video Ideas'
+                          : target === 'Outliers' ? 'Outliers'
+                          : target === 'Keywords' ? 'Keywords'
+                          : target === 'Competitors' ? 'Competitors'
+                          : 'Audit'
+                        return {
+                          rank, key: k, action: a, impact, ctaLabel,
+                          onAct: () => target ? setNav(target) : setAuditOpen(true),
+                          onDone: () => {
+                            const next = { ...checked, [k]: true }
+                            setChecked(next)
+                            if (data?.channel?.channel_id) {
+                              try { localStorage.setItem(`ytg_checked_${data.channel.channel_id}`, JSON.stringify(next)) } catch {}
+                            }
+                          },
+                          onDismiss: () => {
+                            const next = { ...deleted, [k]: true }
+                            setDeleted(next)
+                            if (data?.channel?.channel_id) {
+                              try { localStorage.setItem(`ytg_deleted_${data.channel.channel_id}`, JSON.stringify(next)) } catch {}
+                            }
+                          },
+                        }
+                      })}
+                      totalCount={all.length}
+                    />
+                  )
                 })() : null
 
                 const dailyIdeasBlock = (feedFilter === 'all' || feedFilter === 'actions') && dailyIdeas?.ideas?.length > 0 ? (() => {
