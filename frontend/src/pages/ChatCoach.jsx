@@ -587,154 +587,137 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
     </div>
   )
 
-  /* ─── Floating top-right cluster. Only renders when there's NO rail
-         (true first-time empty state). Once the rail exists, the meter
-         lives at the bottom of the rail instead — the ChatGPT sidebar
-         pattern. Keeps usage info anchored to a real UI element rather
-         than floating alone in the corner. ────────────────────────── */
-  const usedPct = allowance > 0 ? Math.min(100, (used / allowance) * 100) : 0
   const meterEmpty = remaining === 0 && allowance > 0
-  const showFloatingMeter = conversations.length === 0 && allowance > 0
-  const topRightControls = (
-    <div style={{
-      position: 'absolute', top: 4, right: 2,
-      display: 'flex', alignItems: 'center', gap: 8,
-      zIndex: 3,
-    }}>
-      {showFloatingMeter && (
-        <div style={{
-          // The number IS the meter. A tiny bar at the trailing edge was
-          // just visual noise. Status dot + count is more legible.
-          display: 'inline-flex', alignItems: 'center', gap: 8,
-          background: meterEmpty ? C.redSoft : C.surface,
-          border: `1px solid ${meterEmpty ? C.redBdr : C.hair}`,
-          padding: '6px 14px', borderRadius: 100,
-          boxShadow: C.cardShadow,
-          fontVariantNumeric: 'tabular-nums',
-        }}>
-          <span style={{
-            width: 6, height: 6, borderRadius: 99,
-            background: meterEmpty ? C.red : remaining < allowance * 0.25 ? C.red : '#16a34a',
-            boxShadow: meterEmpty
-              ? '0 0 0 3px rgba(229,37,27,0.16)'
-              : remaining < allowance * 0.25
-                ? '0 0 0 3px rgba(229,37,27,0.12)'
-                : '0 0 0 3px rgba(22,163,74,0.16)',
-            animation: meterEmpty ? 'none' : 'ytgPulseSoft 2.4s ease-in-out infinite',
-            flexShrink: 0,
-          }}/>
-          <span style={{
-            fontSize: 12.5, fontWeight: 600,
-            color: meterEmpty ? C.red : C.text1,
-            letterSpacing: '-0.01em',
-          }}>
-            <span>{remaining}</span>
-            <span style={{ color: C.text3, fontWeight: 500, marginLeft: 5 }}>
-              {remaining === 1 ? 'message left' : 'messages left'}
-            </span>
-          </span>
-        </div>
-      )}
-      {/* The floating top-right "+ New chat" is now hidden — the rail on
-          the left holds the only "+ New chat" entry. We keep the meter
-          chip up here because users need to see usage at all times. */}
-    </div>
-  )
-
-  const hasRail = conversations.length >= 1
+  const meterLow   = !meterEmpty && remaining < allowance * 0.25
+  const hasRail    = conversations.length >= 1
 
   return (
-    <div style={{
-      maxWidth: 1040, margin: '0 auto',
-      display: 'flex', flexDirection: 'column',
-      height: 'calc(100vh - 52px - 72px)',
-      minHeight: 540,
-      fontFamily: FONT_STACK,
-      position: 'relative',
-      // Dual-radial atmosphere. A warm red wash bleeds from the top,
-      // a cool charcoal wash bleeds from the bottom-right. The two
-      // overlap subtly in the middle of the page where the composer
-      // sits, giving the surface real depth instead of looking like a
-      // flat printed page. The whole bg is built up in layered gradients
-      // on top of #ffffff so the white core stays clean.
-      background: `
-        radial-gradient(60% 50% at 50% -10%, rgba(229,37,27,0.06) 0%, rgba(229,37,27,0) 60%),
-        radial-gradient(50% 45% at 100% 105%, rgba(10,15,30,0.05) 0%, rgba(10,15,30,0) 60%),
-        linear-gradient(180deg, #ffffff 0%, #fafafc 100%)
-      `,
-      color: C.text1,
-    }}>
-      {topRightControls}
+    <div style={{ maxWidth: 1040, margin: '0 auto', fontFamily: FONT_STACK, color: C.text1 }}>
 
-      {state.loading ? (
-        <div style={{
-          flex: 1, display: 'flex', flexDirection: 'column',
-          alignItems: 'center', justifyContent: 'center',
-        }}>
+      {/* Standard page header — H1 + subtitle at the suite scale
+          (26/700/-0.7px, 14/500). Usage moves inline here, no floating
+          pill. Only shown when there's no rail; once the rail exists the
+          rail footer owns the meter (kept non-redundant). */}
+      <div style={{
+        marginTop: 24, marginBottom: 18,
+        display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16,
+      }}>
+        <div>
+          <h1 style={{ fontSize: 26, fontWeight: 700, color: C.text1, letterSpacing: '-0.7px', lineHeight: 1.1, margin: 0 }}>
+            AI Coach
+          </h1>
+          <p style={{ fontSize: 14, fontWeight: 500, color: 'rgba(10,10,15,0.55)', letterSpacing: '-0.005em', marginTop: 6 }}>
+            Ask anything about growing your channel.
+          </p>
+        </div>
+        {!hasRail && allowance > 0 && (
           <div style={{
-            width: 24, height: 24, marginBottom: 14,
-            border: `2px solid rgba(10,10,15,0.08)`,
-            borderTop: `2px solid ${C.text1}`,
-            borderRadius: '50%', animation: 'spin 0.8s linear infinite',
-          }}/>
-          <p style={{ fontSize: 12.5, color: C.text3, fontWeight: 500, letterSpacing: '-0.01em' }}>
-            Loading your coach
-          </p>
-        </div>
-      ) : state.error ? (
-        <div style={{
-          margin: 'auto', maxWidth: 420,
-          background: C.redSoft, border: `1px solid ${C.redBdr}`,
-          borderRadius: 12, padding: '14px 18px',
-        }}>
-          <p style={{ fontSize: 13, color: C.red, fontWeight: 500, letterSpacing: '-0.01em' }}>
-            {state.error}
-          </p>
-        </div>
-      ) : (
-        /* ── Body. Rail (when conversations exist) + content column. ── */
-        <div style={{ flex: 1, display: 'flex', minHeight: 0 }}>
-          {hasRail && (
-            <ConversationRail
-              conversations={conversations}
-              activeId={activeConversationId}
-              onSelect={switchConversation}
-              onNew={newChat}
-              onDelete={deleteConversation}
-              sending={sending}
-              switching={switchingConv}
-              used={used}
-              allowance={allowance}
-              remaining={remaining}
-            />
-          )}
+            display: 'inline-flex', alignItems: 'center', gap: 8,
+            background: meterEmpty ? C.redSoft : C.surface,
+            border: `1px solid ${meterEmpty ? C.redBdr : C.hair}`,
+            padding: '6px 14px', borderRadius: 100,
+            boxShadow: C.cardShadow,
+            fontVariantNumeric: 'tabular-nums', flexShrink: 0,
+          }}>
+            <span style={{
+              width: 6, height: 6, borderRadius: 99,
+              background: meterEmpty || meterLow ? C.red : '#16a34a',
+              boxShadow: meterEmpty
+                ? '0 0 0 3px rgba(229,37,27,0.16)'
+                : meterLow ? '0 0 0 3px rgba(229,37,27,0.12)' : '0 0 0 3px rgba(22,163,74,0.16)',
+              animation: meterEmpty ? 'none' : 'ytgPulseSoft 2.4s ease-in-out infinite',
+              flexShrink: 0,
+            }}/>
+            <span style={{ fontSize: 12.5, fontWeight: 600, color: meterEmpty ? C.red : C.text1, letterSpacing: '-0.01em' }}>
+              <span>{remaining}</span>
+              <span style={{ color: C.text3, fontWeight: 500, marginLeft: 5 }}>
+                {remaining === 1 ? 'message left' : 'messages left'}
+              </span>
+            </span>
+          </div>
+        )}
+      </div>
+
+      {/* Contained workspace card — Chat now sits in the same 1040 card
+          grammar as Settings / Competitors: clean white surface, hairline
+          border, 14px radius, single soft shadow. Rail + conversation
+          live inside it. */}
+      <div style={{
+        background: C.surface,
+        border: `1px solid ${C.hair}`,
+        borderRadius: 14,
+        boxShadow: C.cardShadow,
+        height: 'calc(100vh - 52px - 72px - 104px)',
+        minHeight: 460,
+        display: 'flex',
+        overflow: 'hidden',
+        position: 'relative',
+      }}>
+        {state.loading ? (
+          <div style={{
+            flex: 1, display: 'flex', flexDirection: 'column',
+            alignItems: 'center', justifyContent: 'center',
+          }}>
+            <div style={{
+              width: 24, height: 24, marginBottom: 14,
+              border: `2px solid rgba(10,10,15,0.08)`,
+              borderTop: `2px solid ${C.text1}`,
+              borderRadius: '50%', animation: 'spin 0.8s linear infinite',
+            }}/>
+            <p style={{ fontSize: 12.5, color: C.text3, fontWeight: 500, letterSpacing: '-0.01em' }}>
+              Loading your coach
+            </p>
+          </div>
+        ) : state.error ? (
+          <div style={{
+            margin: 'auto', maxWidth: 420,
+            background: C.redSoft, border: `1px solid ${C.redBdr}`,
+            borderRadius: 12, padding: '14px 18px',
+          }}>
+            <p style={{ fontSize: 13, color: C.red, fontWeight: 500, letterSpacing: '-0.01em' }}>
+              {state.error}
+            </p>
+          </div>
+        ) : (
+          <>
+            {hasRail && (
+              <ConversationRail
+                conversations={conversations}
+                activeId={activeConversationId}
+                onSelect={switchConversation}
+                onNew={newChat}
+                onDelete={deleteConversation}
+                sending={sending}
+                switching={switchingConv}
+                used={used}
+                allowance={allowance}
+                remaining={remaining}
+              />
+            )}
           <div style={{
             flex: 1, display: 'flex', flexDirection: 'column',
             minWidth: 0, minHeight: 0,
-            paddingLeft: hasRail ? 16 : 0,
           }}>
         {messages.length === 0 ? (
-        /* ── EMPTY STATE. Vertically centered hero + composer + pills.
-              No header, no avatar, no chips. The whole top of the page
-              breathes. ─────────────────────────────────────────────── */
+        /* ── EMPTY STATE. Composed inside the workspace card: a modest
+              prompt line (the page H1 above already owns the big title),
+              the composer as the focal element, then suggestion cards.
+              Vertically settled, not floating in a void. ───────────── */
         <div style={{
           flex: 1,
           display: 'flex', flexDirection: 'column',
           alignItems: 'center', justifyContent: 'center',
-          padding: '24px 24px 80px',  // slight bottom-weight so the hero sits visually centered (the eye reads upper-middle as "centered")
-          gap: 28,
+          padding: '28px 28px 36px',
+          gap: 22,
+          overflowY: 'auto',
         }}>
-          <h1 style={{
-            // Tuned for Geist: 500 holds confidence at display size where
-            // 600 starts to feel chunky on Geist's geometric forms.
-            // Tracking loosened to -0.8 because Geist is narrower than Inter.
-            fontSize: 42, fontWeight: 500, color: C.text1,
-            letterSpacing: '-0.8px', lineHeight: 1.1,
-            textAlign: 'center', maxWidth: 760,
-            margin: 0,
-          }}>What do you want to figure out?</h1>
+          <p style={{
+            fontSize: 20, fontWeight: 600, color: C.text1,
+            letterSpacing: '-0.3px', lineHeight: 1.2,
+            textAlign: 'center', margin: 0,
+          }}>What do you want to figure out?</p>
 
-          <div style={{ width: '100%', maxWidth: 660 }}>
+          <div style={{ width: '100%', maxWidth: 620 }}>
             {errorBanner}
             {composerForm}
           </div>
@@ -745,7 +728,7 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
               Hover lifts on the shared spring. */}
           <div style={{
             display: 'grid', gridTemplateColumns: '1fr 1fr',
-            gap: 10, maxWidth: 660, width: '100%',
+            gap: 10, maxWidth: 620, width: '100%',
           }}>
             {STARTER_PROMPTS.map((p, i) => {
               const Icon = p.Icon
@@ -805,14 +788,14 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
             className="ytg-chat-scroll"
             style={{
               flex: 1, overflowY: 'auto',
-              padding: '52px 4px 18px',  // top padding clears the floating controls
+              padding: '24px 8px 18px',
               scrollBehavior: 'smooth',
               display: 'flex', flexDirection: 'column',
             }}
           >
             <div style={{
               display: 'flex', flexDirection: 'column', gap: 16,
-              maxWidth: 760, margin: '0 auto', padding: '0 8px',
+              maxWidth: 720, margin: '0 auto', padding: '0 16px',
               width: '100%',
               // marginTop: auto bottom-anchors the conversation. When
               // there are few messages they sit just above the composer
@@ -861,19 +844,23 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
             </div>
           </div>
 
-          {/* Composer pinned to bottom */}
+          {/* Composer pinned to the card bottom, hairline divider above
+              so it reads as a fixed input region inside the card. */}
           <div style={{
-            padding: '12px 8px 16px',
-            maxWidth: 776, width: '100%', margin: '0 auto',
+            borderTop: `1px solid ${C.hair}`,
+            padding: '14px 16px 16px',
           }}>
-            {errorBanner}
-            {composerForm}
+            <div style={{ maxWidth: 720, width: '100%', margin: '0 auto' }}>
+              {errorBanner}
+              {composerForm}
+            </div>
           </div>
         </>
       )}
           </div>
-        </div>
-      )}
+          </>
+        )}
+      </div>
     </div>
   )
 }
@@ -964,11 +951,11 @@ function ConversationRail({
   const dotColor   = meterEmpty ? C.red : meterLow ? C.red : '#16a34a'
   return (
     <aside style={{
-      width: 232,
+      width: 248,
       flexShrink: 0,
       display: 'flex', flexDirection: 'column',
-      paddingRight: 14,
-      borderRight: `1px solid rgba(10,10,15,0.045)`,
+      padding: '18px 16px',
+      borderRight: `1px solid ${C.hair}`,
       minHeight: 0,
     }}>
       {/* New chat — its own affordance, not row zero of the list. Surface
