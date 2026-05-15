@@ -5697,30 +5697,13 @@ export default function Dashboard() {
 
           {/* ── VIDEOS ───────────────────────────────────────────────── */}
           {data && nav === 'Videos' && videos && (
-            <>
+            <div style={{ maxWidth: 1040, margin: '0 auto' }}>
               <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 24, gap: 16, flexWrap: 'wrap' }}>
                 <div>
                   <h1 style={{ fontSize: 26, fontWeight: 700, color: C.text1, letterSpacing: '-0.7px', marginBottom: 6, lineHeight: 1.1 }}>My Videos</h1>
-                  <p style={{ fontSize: 14, color: 'rgba(10,10,15,0.55)', fontWeight: 500, letterSpacing: '-0.005em', lineHeight: 1.45, marginBottom: 12 }}>
-                    Every video on your channel, ranked by what you ask for · {videos.length.toLocaleString()} total
+                  <p style={{ fontSize: 14, color: 'rgba(10,10,15,0.55)', fontWeight: 500, letterSpacing: '-0.005em', lineHeight: 1.45 }}>
+                    Every video on your channel · {videos.length.toLocaleString()} total · {fmtNum(videos.reduce((s, v) => s + (v.views || 0), 0))} views
                   </p>
-                  <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-                    {[
-                      { tint: { bg: '#fee2e2',         fg: C.red   }, path: <><circle cx="6" cy="7.5" r="3"/><path d="M9 5l3-1.5v8L9 10"/></>, label: `${videos.length} videos` },
-                      { tint: { bg: 'rgba(10,10,15,0.06)', fg: '#52525b' }, path: <><circle cx="7" cy="7" r="2.2"/><path d="M1.5 7s2-3.5 5.5-3.5S12.5 7 12.5 7 10.5 10.5 7 10.5 1.5 7 1.5 7Z"/></>, label: `${fmtNum(videos.reduce((s, v) => s + (v.views || 0), 0))} views` },
-                      { tint: { bg: '#fffbeb',         fg: C.amber }, path: <path d="M2 7.5l2.5 3.2 2-2.7 1.7 1L11.5 4 8.5 3 7 5.5 5 4.5 2 7.5z"/>, label: `${fmtNum(videos.reduce((s, v) => s + (v.likes || 0), 0))} likes` },
-                      { tint: { bg: '#f0fdf4',         fg: C.green }, path: <path d="M2 3.5h10v6H7.5L4.5 12V9.5H2z"/>,                                  label: `${fmtNum(videos.reduce((s, v) => s + (v.comments || 0), 0))} comments` },
-                    ].map(({ tint, path, label }) => (
-                      <span key={label} className="ytg-myvid-chip">
-                        <span className="ytg-myvid-chip-icon" style={{ background: tint.bg, color: tint.fg }}>
-                          <svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-                            {path}
-                          </svg>
-                        </span>
-                        {label}
-                      </span>
-                    ))}
-                  </div>
                 </div>
                 {videosTab === 'all' && (
                 <div style={{ display: 'flex', gap: 10, alignItems: 'center', flexShrink: 0 }}>
@@ -5800,18 +5783,17 @@ export default function Dashboard() {
                     <button key={key}
                       onClick={() => setVideosTab(key)}
                       style={{
-                        fontSize: 13, fontWeight: 600, padding: '8px 18px',
+                        fontSize: 13, fontWeight: active ? 600 : 500, padding: '8px 16px',
                         borderRadius: 100,
-                        border: active ? `1px solid ${C.red}` : '1px solid rgba(10,10,15,0.10)',
-                        background: active ? C.red : '#ffffff',
-                        color: active ? '#ffffff' : 'rgba(10,10,15,0.62)',
+                        border: active ? '1px solid rgba(10,10,15,0.10)' : '1px solid transparent',
+                        background: active ? 'rgba(10,10,15,0.055)' : 'transparent',
+                        color: active ? '#0a0a0f' : 'rgba(10,10,15,0.55)',
                         cursor: 'pointer', fontFamily: 'inherit',
                         letterSpacing: '-0.01em',
-                        boxShadow: active ? '0 1px 2px rgba(229,37,27,0.20), inset 0 1px 0 rgba(255,255,255,0.22)' : 'none',
-                        transition: 'background 160ms cubic-bezier(0.32,0.72,0,1), color 160ms cubic-bezier(0.32,0.72,0,1), border-color 160ms cubic-bezier(0.32,0.72,0,1)',
+                        transition: 'background 180ms cubic-bezier(0.32,0.72,0,1), color 180ms cubic-bezier(0.32,0.72,0,1), border-color 180ms cubic-bezier(0.32,0.72,0,1)',
                       }}
                       onMouseEnter={e => { if (!active) { e.currentTarget.style.background = 'rgba(10,10,15,0.03)'; e.currentTarget.style.color = '#0a0a0f' } }}
-                      onMouseLeave={e => { if (!active) { e.currentTarget.style.background = '#ffffff'; e.currentTarget.style.color = 'rgba(10,10,15,0.62)' } }}
+                      onMouseLeave={e => { if (!active) { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'rgba(10,10,15,0.55)' } }}
                     >
                       {label}
                     </button>
@@ -6065,7 +6047,7 @@ export default function Dashboard() {
                   </div>
                 ) : null
               })()}
-            </>
+            </div>
           )}
 
           {/* ── PATTERNS (legacy block) ─────────────────────────────────
