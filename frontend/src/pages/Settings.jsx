@@ -152,54 +152,35 @@ function useSettingsStyles() {
                       inset 0 1px 0 rgba(255,255,255,0.7);
         }
 
-        /* Channel TILE — used in a 2-col grid (replaces the stacked row
-           pattern). Active channel gets a green-tinted background + left
-           accent so the user instantly sees which one they're working on. */
-        .set-channel-card {
-          position: relative;
-          background: #ffffff;
-          border: 1px solid ${C.border};
-          border-radius: 14px;
-          padding: 16px 18px;
-          display: flex; flex-direction: column; gap: 12px;
-          transition: border-color 0.2s cubic-bezier(0.2,0.7,0.3,1),
-                      box-shadow 0.2s cubic-bezier(0.2,0.7,0.3,1),
-                      transform 0.2s cubic-bezier(0.2,0.7,0.3,1);
-          box-shadow: 0 1px 2px rgba(15,15,25,0.03), inset 0 1px 0 rgba(255,255,255,0.7);
+        /* Channel row — full-width inline row inside the channels card.
+           Each row is a single horizontal layout: avatar | identity | actions.
+           No internal hairlines inside the row, no active background tint,
+           no left stripe. The ACTIVE pill carries the current-channel signal
+           by itself. Hairline divider between rows. Works for 1 channel,
+           works for 10. */
+        .set-channel-row {
+          display: flex; align-items: center; gap: 14px;
+          padding: 14px 20px;
+          transition: background 0.14s;
         }
-        .set-channel-card:hover {
-          border-color: ${C.borderH};
-          box-shadow: 0 1px 2px rgba(15,15,25,0.04),
-                      0 6px 18px rgba(15,15,25,0.05),
-                      inset 0 1px 0 rgba(255,255,255,0.7);
-          transform: translateY(-1px);
-        }
-        .set-channel-card.active {
-          background: rgba(5,150,105,0.03);
-          border-color: rgba(5,150,105,0.20);
-        }
-        .set-channel-card.active::before {
-          content: '';
-          position: absolute; left: 0; top: 14px; bottom: 14px;
-          width: 3px; border-radius: 3px;
-          background: ${C.green};
-        }
-        .set-channel-card.active:hover { border-color: rgba(5,150,105,0.35); }
+        .set-channel-row + .set-channel-row { border-top: 1px solid ${C.border}; }
+        .set-channel-row:hover { background: rgba(10,10,15,0.015); }
 
-        /* "Connect another channel" tile — full-width below the grid */
-        .set-connect-tile {
+        /* "Connect another" sits as a dashed row at the bottom of the same
+           card — no separate floating tile. */
+        .set-connect-row {
           display: flex; align-items: center; justify-content: center;
           gap: 8px;
-          padding: 16px 18px; border-radius: 14px;
-          border: 1px dashed ${C.borderH};
+          padding: 14px 20px;
+          border-top: 1px dashed ${C.borderH};
           background: transparent;
           text-decoration: none;
           color: ${C.text2};
           font-size: 13.5px; font-weight: 600; letter-spacing: -0.05px;
-          transition: border-color 0.18s, color 0.18s, background 0.18s;
+          transition: color 0.18s, background 0.18s;
         }
-        .set-connect-tile:hover {
-          border-color: ${C.red}; color: ${C.red};
+        .set-connect-row:hover {
+          color: ${C.red};
           background: rgba(229,37,27,0.02);
         }
 
@@ -624,17 +605,15 @@ export default function Settings({ channelData }) {
           ]
           return (
             <div style={{
-              marginTop: 14, paddingTop: 14,
+              marginTop: 16, paddingTop: 14,
               borderTop: `1px solid ${C.border}`,
-              display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 0,
+              display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)',
+              gap: 24,
             }}>
-              {cells.map((c, i) => (
-                <div key={c.label} style={{
-                  paddingLeft: i === 0 ? 0 : 18,
-                  borderLeft: i === 0 ? 'none' : `1px solid ${C.border}`,
-                }}>
-                  <p style={{ fontSize: 10.5, fontWeight: 700, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 4 }}>{c.label}</p>
-                  <p style={{ fontSize: 17, fontWeight: 700, color: C.text1, letterSpacing: '-0.3px', fontVariantNumeric: 'tabular-nums', lineHeight: 1 }}>{c.value}</p>
+              {cells.map(c => (
+                <div key={c.label}>
+                  <p style={{ fontSize: 10.5, fontWeight: 700, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 5 }}>{c.label}</p>
+                  <p style={{ fontSize: 18, fontWeight: 700, color: C.text1, letterSpacing: '-0.3px', fontVariantNumeric: 'tabular-nums', lineHeight: 1 }}>{c.value}</p>
                 </div>
               ))}
             </div>
@@ -642,51 +621,46 @@ export default function Settings({ channelData }) {
         })()}
       </div>
 
-      {/* ── Connected channels ─ 2-col tile grid + full-width connect ── */}
+      {/* ── Connected channels ─ single-column list inside one card. Each
+            channel is a horizontal row (avatar + identity + actions). The
+            "Connect another" row sits at the bottom of the same card with
+            a dashed top border. Works for 1 channel or 10. ── */}
       <SectionHead title="Connected channels" Icon={Users} meta={`${activeChannels.length} of ${me?.channels_allowed ?? 1}`} />
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 12, marginBottom: 12 }}>
+      <div className="set-card" style={{ padding: 0, marginBottom: 24 }}>
         {activeChannels.map(ch => (
-          <div key={ch.channel_id} className={`set-channel-card ${ch.is_current ? 'active' : ''}`}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-              {ch.channel_thumbnail
-                ? <img src={ch.channel_thumbnail} alt="" style={{ width: 44, height: 44, borderRadius: '50%', objectFit: 'cover', flexShrink: 0, border: `1px solid ${C.border}` }} />
-                : <div style={{ width: 44, height: 44, borderRadius: '50%', background: C.chipBg, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 15, fontWeight: 600, color: C.text1, flexShrink: 0, border: `1px solid ${C.border}` }}>
-                    {(ch.channel_name || '?')[0].toUpperCase()}
-                  </div>
-              }
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
-                  <p style={{ fontSize: 14, fontWeight: 600, color: C.text1, letterSpacing: '-0.15px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{ch.channel_name}</p>
-                  {ch.is_current && (
-                    <span style={{ background: C.greenBg, color: C.green, border: `1px solid ${C.greenBdr}`, fontSize: 9.5, fontWeight: 700, letterSpacing: '0.10em', textTransform: 'uppercase', padding: '2px 7px', borderRadius: 100, flexShrink: 0 }}>Active</span>
-                  )}
+          <div key={ch.channel_id} className="set-channel-row">
+            {ch.channel_thumbnail
+              ? <img src={ch.channel_thumbnail} alt="" style={{ width: 40, height: 40, borderRadius: '50%', objectFit: 'cover', flexShrink: 0, border: `1px solid ${C.border}` }} />
+              : <div style={{ width: 40, height: 40, borderRadius: '50%', background: C.chipBg, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 600, color: C.text1, flexShrink: 0, border: `1px solid ${C.border}` }}>
+                  {(ch.channel_name || '?')[0].toUpperCase()}
                 </div>
-                <p style={{ fontSize: 12, color: C.text2, marginTop: 2, fontWeight: 500, fontVariantNumeric: 'tabular-nums' }}>
-                  {fmtSubs(ch.subscribers)} subscribers
-                </p>
-              </div>
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, paddingTop: 10, borderTop: `1px solid ${C.border}` }}>
-              <p style={{ fontSize: 11.5, color: C.text3, fontWeight: 500, letterSpacing: '-0.05px' }}>
-                Connected {fmtDate(ch.connected_at)}
-              </p>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                {!ch.is_current && (
-                  <button onClick={() => handleSwitch(ch.channel_id)} className="set-btn-ghost" style={{ padding: '5px 11px', fontSize: 11.5 }}>Switch</button>
+            }
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <p style={{ fontSize: 14, fontWeight: 600, color: C.text1, letterSpacing: '-0.15px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{ch.channel_name}</p>
+                {ch.is_current && (
+                  <span style={{ background: C.greenBg, color: C.green, border: `1px solid ${C.greenBdr}`, fontSize: 9.5, fontWeight: 700, letterSpacing: '0.10em', textTransform: 'uppercase', padding: '2px 7px', borderRadius: 100, flexShrink: 0 }}>Active</span>
                 )}
-                <button onClick={() => setDisconnectTarget(ch)} className="set-btn-link" style={{ padding: '5px 4px' }}>Disconnect</button>
               </div>
+              <p style={{ fontSize: 12, color: C.text2, marginTop: 2, fontWeight: 500, fontVariantNumeric: 'tabular-nums' }}>
+                {fmtSubs(ch.subscribers)} subscribers · Connected {fmtDate(ch.connected_at)}
+              </p>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexShrink: 0 }}>
+              {!ch.is_current && (
+                <button onClick={() => handleSwitch(ch.channel_id)} className="set-btn-ghost" style={{ padding: '6px 13px', fontSize: 12 }}>Switch</button>
+              )}
+              <button onClick={() => setDisconnectTarget(ch)} className="set-btn-link" style={{ padding: '6px 4px' }}>Disconnect</button>
             </div>
           </div>
         ))}
-      </div>
-      <div style={{ marginBottom: 28 }}>
+
         {canAddMore
-          ? <a href="/auth/login" className="set-connect-tile">
-              <span style={{ fontSize: 15, lineHeight: 1, fontWeight: 600, opacity: 0.85 }}>+</span>
+          ? <a href="/auth/login" className="set-connect-row">
+              <span style={{ fontSize: 15, lineHeight: 1, fontWeight: 600, opacity: 0.7 }}>+</span>
               Connect another channel
             </a>
-          : <div style={{ border: `1px solid ${C.border}`, borderRadius: 14, padding: '14px 18px', background: '#ffffff', display: 'flex', alignItems: 'center', gap: 12 }}>
+          : <div style={{ borderTop: `1px solid ${C.border}`, padding: '14px 20px', display: 'flex', alignItems: 'center', gap: 12 }}>
               <p style={{ flex: 1, fontSize: 13, color: C.text2, lineHeight: 1.55, fontWeight: 500 }}>
                 You've reached your channel limit. Upgrade to connect more.
               </p>
