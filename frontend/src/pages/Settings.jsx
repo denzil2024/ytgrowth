@@ -524,154 +524,145 @@ export default function Settings({ channelData }) {
         </div>
       </div>
 
-      {/* ── Two-column row ──────────────────────────────────────────────── */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 28, marginBottom: 32 }}>
-
-        {/* ── LEFT: Connected channels ──────────────────────────────── */}
+      {/* ── Connected channels ─────────────────────────────────────────── */}
+      <SectionHead title="Connected channels" meta={`${activeChannels.length} of ${me?.channels_allowed ?? 1}`} />
+      <div className="set-card" style={{ padding: '8px 24px 18px', marginBottom: 32 }}>
         <div>
-          <SectionHead title="Connected channels" meta={`${activeChannels.length} of ${me?.channels_allowed ?? 1}`} />
-          <div className="set-card" style={{ padding: '8px 20px 18px' }}>
-
-            <div>
-              {activeChannels.map(ch => (
-                <div key={ch.channel_id} className="set-channel-row">
-                  {ch.channel_thumbnail
-                    ? <img src={ch.channel_thumbnail} alt="" style={{ width: 36, height: 36, borderRadius: '50%', objectFit: 'cover', flexShrink: 0, border: `1px solid ${C.border}` }} />
-                    : <div style={{ width: 36, height: 36, borderRadius: '50%', background: C.chipBg, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13, fontWeight: 600, color: C.text1, flexShrink: 0, border: `1px solid ${C.border}` }}>
-                        {(ch.channel_name || '?')[0].toUpperCase()}
-                      </div>
-                  }
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                      <p style={{ fontSize: 14, fontWeight: 600, color: C.text1, letterSpacing: '-0.1px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{ch.channel_name}</p>
-                      {ch.is_current && (
-                        <span style={{ background: C.greenBg, color: C.green, border: `1px solid ${C.greenBdr}`, fontSize: 10, fontWeight: 700, letterSpacing: '0.10em', textTransform: 'uppercase', padding: '2px 8px', borderRadius: 100, flexShrink: 0 }}>Active</span>
-                      )}
-                    </div>
-                    <p style={{ fontSize: 12, color: C.text2, marginTop: 3, fontWeight: 500, fontVariantNumeric: 'tabular-nums' }}>
-                      {fmtSubs(ch.subscribers)} subscribers · Connected {fmtDate(ch.connected_at)}
-                    </p>
-                  </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
-                    {!ch.is_current && (
-                      <button onClick={() => handleSwitch(ch.channel_id)} className="set-btn-ghost">Switch</button>
-                    )}
-                    <button onClick={() => setDisconnectTarget(ch)} className="set-btn-link">Disconnect</button>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* Connect / upgrade */}
-            <div style={{ marginTop: 14 }}>
-              {canAddMore
-                ? <a href="/auth/login" className="set-connect-tile">
-                    <span style={{ fontSize: 14, lineHeight: 1, fontWeight: 600, opacity: 0.85 }}>+</span>
-                    Connect another channel
-                  </a>
-                : <div style={{ border: `1px solid ${C.border}`, borderRadius: 12, padding: '13px 16px', display: 'flex', alignItems: 'center', gap: 12 }}>
-                    <p style={{ flex: 1, fontSize: 12.5, color: C.text2, lineHeight: 1.55, fontWeight: 500 }}>
-                      You've reached your channel limit. Upgrade to connect more.
-                    </p>
-                    <a href="/?tab=monthly#pricing" className="set-btn-primary" style={{ textDecoration: 'none' }}>
-                      Upgrade plan
-                    </a>
+          {activeChannels.map(ch => (
+            <div key={ch.channel_id} className="set-channel-row">
+              {ch.channel_thumbnail
+                ? <img src={ch.channel_thumbnail} alt="" style={{ width: 36, height: 36, borderRadius: '50%', objectFit: 'cover', flexShrink: 0, border: `1px solid ${C.border}` }} />
+                : <div style={{ width: 36, height: 36, borderRadius: '50%', background: C.chipBg, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13, fontWeight: 600, color: C.text1, flexShrink: 0, border: `1px solid ${C.border}` }}>
+                    {(ch.channel_name || '?')[0].toUpperCase()}
                   </div>
               }
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <p style={{ fontSize: 14, fontWeight: 600, color: C.text1, letterSpacing: '-0.1px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{ch.channel_name}</p>
+                  {ch.is_current && (
+                    <span style={{ background: C.greenBg, color: C.green, border: `1px solid ${C.greenBdr}`, fontSize: 10, fontWeight: 700, letterSpacing: '0.10em', textTransform: 'uppercase', padding: '2px 8px', borderRadius: 100, flexShrink: 0 }}>Active</span>
+                  )}
+                </div>
+                <p style={{ fontSize: 12, color: C.text2, marginTop: 3, fontWeight: 500, fontVariantNumeric: 'tabular-nums' }}>
+                  {fmtSubs(ch.subscribers)} subscribers · Connected {fmtDate(ch.connected_at)}
+                </p>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
+                {!ch.is_current && (
+                  <button onClick={() => handleSwitch(ch.channel_id)} className="set-btn-ghost">Switch</button>
+                )}
+                <button onClick={() => setDisconnectTarget(ch)} className="set-btn-link">Disconnect</button>
+              </div>
             </div>
-          </div>
+          ))}
         </div>
 
-        {/* ── RIGHT: Plan + Email ──────────────────────────────────── */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 28 }}>
-
-          {/* Plan and credits */}
-          <div>
-            <SectionHead title="Plan and credits" />
-            <div className="set-card" style={{ padding: '20px 22px' }}>
-              {(() => {
-                const allowance    = me?.monthly_allowance ?? 3
-                const used         = me?.monthly_used ?? 0
-                const remaining    = Math.max(0, allowance - used)
-                const remainingPct = allowance > 0 ? (remaining / allowance) * 100 : 0
-                const atLimit      = remaining === 0
-                const nearLimit    = !atLimit && remainingPct <= 20
-                const accent       = atLimit ? C.red : nearLimit ? C.amber : C.green
-                return (
-                  <div style={{ marginBottom: 16, paddingBottom: 16, borderBottom: `1px solid ${C.border}` }}>
-                    <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 10 }}>
-                      AI analyses
-                    </p>
-                    <div style={{ display: 'flex', alignItems: 'baseline', gap: 10 }}>
-                      <span style={{ fontSize: 36, fontWeight: 700, color: accent, letterSpacing: '-1.4px', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>
-                        {remaining}
-                      </span>
-                      <span style={{ fontSize: 13.5, fontWeight: 500, color: C.text2 }}>
-                        of {allowance} left
-                      </span>
-                    </div>
-                    <RemainingBar remainingPct={remainingPct} accent={accent} />
-                    <p style={{ fontSize: 12, color: C.text3, marginTop: 8, fontWeight: 500 }}>
-                      {refillLabel(me?.reset_date, me?.is_lifetime)}
-                    </p>
-                  </div>
-                )
-              })()}
-
-              {/* Pack balance row */}
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 16, marginBottom: 18 }}>
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <p style={{ fontSize: 13.5, color: C.text1, fontWeight: 600, letterSpacing: '-0.1px' }}>Credit pack balance</p>
-                  <p style={{ fontSize: 12, color: C.text3, marginTop: 3, lineHeight: 1.5, fontWeight: 500 }}>Never expires — used after the monthly analyses run out</p>
-                </div>
-                <span style={{
-                  fontSize: 18, fontWeight: 700, color: (me?.pack_balance ?? 0) > 0 ? C.green : C.text1,
-                  fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.4px',
-                  flexShrink: 0,
-                }}>
-                  {me?.pack_balance ?? 0}
-                </span>
+        {/* Connect / upgrade */}
+        <div style={{ marginTop: 14 }}>
+          {canAddMore
+            ? <a href="/auth/login" className="set-connect-tile">
+                <span style={{ fontSize: 14, lineHeight: 1, fontWeight: 600, opacity: 0.85 }}>+</span>
+                Connect another channel
+              </a>
+            : <div style={{ border: `1px solid ${C.border}`, borderRadius: 12, padding: '13px 16px', display: 'flex', alignItems: 'center', gap: 12 }}>
+                <p style={{ flex: 1, fontSize: 12.5, color: C.text2, lineHeight: 1.55, fontWeight: 500 }}>
+                  You've reached your channel limit. Upgrade to connect more.
+                </p>
+                <a href="/?tab=monthly#pricing" className="set-btn-primary" style={{ textDecoration: 'none' }}>
+                  Upgrade plan
+                </a>
               </div>
-
-              {/* Action buttons */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
-                <button onClick={() => window.location.href = '/?tab=packs#pricing'} className="set-btn-ghost">
-                  Top up credits
-                </button>
-                {!isTopPlan && (
-                  <button onClick={() => window.location.href = '/?tab=monthly#pricing'} className="set-btn-primary">
-                    Upgrade plan
-                  </button>
-                )}
-                {hasActiveSub && (
-                  <a href="mailto:support@ytgrowth.io?subject=Manage%20billing" className="set-btn-link" style={{ textDecoration: 'none' }}>
-                    Manage billing
-                  </a>
-                )}
-              </div>
-            </div>
-          </div>
-
-          {/* Email preferences */}
-          <div>
-            <SectionHead title="Email" />
-            <div className="set-card" style={{ padding: '18px 22px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-                <div style={{ flex: 1 }}>
-                  <p style={{ fontSize: 13.5, fontWeight: 600, color: C.text1, letterSpacing: '-0.1px' }}>Weekly channel report</p>
-                  <p style={{ fontSize: 12, color: C.text2, marginTop: 4, fontWeight: 500, lineHeight: 1.55 }}>
-                    A summary of your channel performance sent every 7 days.
-                  </p>
-                </div>
-                <Toggle on={me?.weekly_report_enabled ?? true} onChange={handleToggleReport} />
-              </div>
-              {!(me?.weekly_report_enabled ?? true) && (
-                <p style={{ fontSize: 12, color: C.text3, marginTop: 12, fontWeight: 500 }}>You can resubscribe anytime.</p>
-              )}
-            </div>
-          </div>
-
+          }
         </div>
+      </div>
+
+      {/* ── Plan and credits ──────────────────────────────────────────── */}
+      <SectionHead title="Plan and credits" />
+      <div className="set-card" style={{ padding: '22px 26px', marginBottom: 32 }}>
+        {(() => {
+          const allowance    = me?.monthly_allowance ?? 3
+          const used         = me?.monthly_used ?? 0
+          const remaining    = Math.max(0, allowance - used)
+          const remainingPct = allowance > 0 ? (remaining / allowance) * 100 : 0
+          const atLimit      = remaining === 0
+          const nearLimit    = !atLimit && remainingPct <= 20
+          const accent       = atLimit ? C.red : nearLimit ? C.amber : C.green
+          return (
+            // Two-up inside the card: AI analyses on the left (hero number +
+            // bar + refill copy), pack balance on the right. Single card so
+            // the page reads as a list of preference sections, not a grid.
+            <div style={{ display: 'grid', gridTemplateColumns: '1.4fr 1fr', gap: 28, alignItems: 'start', marginBottom: 18 }}>
+              <div>
+                <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 10 }}>
+                  AI analyses
+                </p>
+                <div style={{ display: 'flex', alignItems: 'baseline', gap: 10 }}>
+                  <span style={{ fontSize: 36, fontWeight: 700, color: accent, letterSpacing: '-1.4px', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>
+                    {remaining}
+                  </span>
+                  <span style={{ fontSize: 13.5, fontWeight: 500, color: C.text2 }}>
+                    of {allowance} left
+                  </span>
+                </div>
+                <RemainingBar remainingPct={remainingPct} accent={accent} />
+                <p style={{ fontSize: 12, color: C.text3, marginTop: 8, fontWeight: 500 }}>
+                  {refillLabel(me?.reset_date, me?.is_lifetime)}
+                </p>
+              </div>
+              <div style={{ paddingLeft: 28, borderLeft: `1px solid ${C.border}` }}>
+                <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 10 }}>
+                  Credit pack balance
+                </p>
+                <div style={{ display: 'flex', alignItems: 'baseline', gap: 10 }}>
+                  <span style={{
+                    fontSize: 36, fontWeight: 700, color: (me?.pack_balance ?? 0) > 0 ? C.green : C.text1,
+                    fontVariantNumeric: 'tabular-nums', letterSpacing: '-1.4px', lineHeight: 1,
+                  }}>
+                    {me?.pack_balance ?? 0}
+                  </span>
+                  <span style={{ fontSize: 13.5, fontWeight: 500, color: C.text2 }}>credits</span>
+                </div>
+                <p style={{ fontSize: 12, color: C.text3, marginTop: 8, fontWeight: 500, lineHeight: 1.5 }}>
+                  Never expires — used after the monthly analyses run out.
+                </p>
+              </div>
+            </div>
+          )
+        })()}
+
+        {/* Action buttons */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', paddingTop: 18, borderTop: `1px solid ${C.border}` }}>
+          <button onClick={() => window.location.href = '/?tab=packs#pricing'} className="set-btn-ghost">
+            Top up credits
+          </button>
+          {!isTopPlan && (
+            <button onClick={() => window.location.href = '/?tab=monthly#pricing'} className="set-btn-primary">
+              Upgrade plan
+            </button>
+          )}
+          {hasActiveSub && (
+            <a href="mailto:support@ytgrowth.io?subject=Manage%20billing" className="set-btn-link" style={{ textDecoration: 'none' }}>
+              Manage billing
+            </a>
+          )}
+        </div>
+      </div>
+
+      {/* ── Email preferences ─────────────────────────────────────────── */}
+      <SectionHead title="Email" />
+      <div className="set-card" style={{ padding: '18px 24px', marginBottom: 32 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+          <div style={{ flex: 1 }}>
+            <p style={{ fontSize: 14, fontWeight: 600, color: C.text1, letterSpacing: '-0.15px' }}>Weekly channel report</p>
+            <p style={{ fontSize: 13, color: C.text2, marginTop: 4, fontWeight: 500, lineHeight: 1.55 }}>
+              A summary of your channel performance sent every 7 days.
+            </p>
+          </div>
+          <Toggle on={me?.weekly_report_enabled ?? true} onChange={handleToggleReport} />
+        </div>
+        {!(me?.weekly_report_enabled ?? true) && (
+          <p style={{ fontSize: 12, color: C.text3, marginTop: 12, fontWeight: 500 }}>You can resubscribe anytime.</p>
+        )}
       </div>
 
       {/* ── Feature requests ─────────────────────────────────────────── */}
