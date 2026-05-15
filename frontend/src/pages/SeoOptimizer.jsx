@@ -653,15 +653,15 @@ function VideoTile({ video, baselineViews }) {
       style={{
         textDecoration: 'none', color: 'inherit',
         display: 'flex', flexDirection: 'column', gap: 8,
-        width: 200, flexShrink: 0,
+        width: 232, flexShrink: 0,
       }}>
       {/* Thumbnail — kept clean of overlays except the view chip, which sits in
           the bottom-right where YouTube itself places duration so it never
           collides with creator hooks (which always live top-left). */}
       <div style={{
         position: 'relative', width: '100%', aspectRatio: '16 / 9',
-        borderRadius: 9, overflow: 'hidden', background: '#0f0f13',
-        boxShadow: '0 1px 3px rgba(0,0,0,0.10), 0 4px 14px rgba(0,0,0,0.08)',
+        borderRadius: 10, overflow: 'hidden', background: '#0f0f13',
+        boxShadow: '0 1px 3px rgba(0,0,0,0.10), 0 6px 18px rgba(0,0,0,0.08)',
       }}>
         {(video.video_id || video.thumbnail) && (
           <img
@@ -728,12 +728,12 @@ function ShortTile({ video, baselineViews }) {
       style={{
         textDecoration: 'none', color: 'inherit',
         display: 'flex', flexDirection: 'column', gap: 6,
-        width: 116, flexShrink: 0,
+        width: 128, flexShrink: 0,
       }}>
       <div style={{
         position: 'relative', width: '100%', aspectRatio: '9 / 16',
-        borderRadius: 10, overflow: 'hidden', background: '#0f0f13',
-        boxShadow: '0 1px 3px rgba(0,0,0,0.12), 0 6px 18px rgba(0,0,0,0.10)',
+        borderRadius: 11, overflow: 'hidden', background: '#0f0f13',
+        boxShadow: '0 1px 3px rgba(0,0,0,0.12), 0 8px 22px rgba(0,0,0,0.10)',
       }}>
         {(video.video_id || video.thumbnail) && (
           <img
@@ -783,38 +783,35 @@ function ShortTile({ video, baselineViews }) {
 }
 
 // One horizontal scrolling strip — section eyebrow + scrolling tile list.
-// Used for both the Videos and Shorts surfaces inside NicheHeatCard. The
+// Used inside NicheHeatCard for the unified winning-content strip. The
 // container hides the native scrollbar but keeps wheel + drag scrolling.
-function HeatStrip({ icon, label, count, Tile, items, baselineViews }) {
+function HeatStrip({ label, count, Tile, items, baselineViews }) {
   if (!items || !items.length) return null
   return (
     <div style={{ marginBottom: 18 }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
+        <p style={{ fontSize: 11, fontWeight: 700, color: 'rgba(10,10,15,0.55)', letterSpacing: '0.10em', textTransform: 'uppercase' }}>{label}</p>
         <span style={{
-          width: 24, height: 24, borderRadius: 7,
-          background: 'rgba(15,15,19,0.06)',
-          display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-          flexShrink: 0,
-        }}>{icon}</span>
-        <p style={{ fontSize: 12.5, fontWeight: 700, color: C.text1, letterSpacing: '-0.1px' }}>{label}</p>
-        <span style={{
-          fontSize: 11, fontWeight: 700, color: C.text3,
-          background: '#f1f1f6', padding: '2px 8px', borderRadius: 99,
+          fontSize: 11, fontWeight: 600, color: 'rgba(10,10,15,0.55)',
+          background: 'rgba(10,10,15,0.04)', padding: '2px 8px', borderRadius: 99,
           fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.05px',
         }}>{count}</span>
       </div>
       {/* Horizontal scroll. overflow-x auto + scrollbar hidden via inline style class trick. */}
       <div className="seo-heat-scroll" style={{
-        display: 'flex', gap: 12,
+        display: 'flex', gap: 14, alignItems: 'flex-start',
         overflowX: 'auto', overflowY: 'hidden',
         scrollSnapType: 'x proximity',
         paddingBottom: 4,
       }}>
-        {items.map((v, i) => (
-          <div key={v.video_id || i} style={{ scrollSnapAlign: 'start' }}>
-            <Tile video={v} baselineViews={baselineViews}/>
-          </div>
-        ))}
+        {items.map((v, i) => {
+          const Tile = v._isShort ? ShortTile : VideoTile
+          return (
+            <div key={v.video_id || i} style={{ scrollSnapAlign: 'start' }}>
+              <Tile video={v} baselineViews={v._baseline || baselineViews}/>
+            </div>
+          )
+        })}
       </div>
     </div>
   )
@@ -854,44 +851,35 @@ function NicheHeatCard({ videos, shorts, primaryPhrase }) {
   const topPerf    = Math.max(...allViews, 0)
   const channels   = new Set([...topV, ...topS].map(v => v.channel).filter(Boolean))
 
+  // Merge videos + shorts into ONE scrolling strip so a niche with 8 videos
+  // and 1 short doesn't get a giant empty second row. Each item carries its
+  // own _isShort flag and _baseline so the per-type multiplier stays correct.
+  const merged = [
+    ...topV.map(v => ({ ...v, _isShort: false, _baseline: baseV })),
+    ...topS.map(v => ({ ...v, _isShort: true,  _baseline: baseS })),
+  ]
+
   return (
     <div className="seo-suggestion-card" style={{
-      // No coloured top stripe. The page-wide cleanup keeps card edges
-      // uniform; the red flame icon + LIVE pill in the header still carry
-      // the niche-heat signal at a glance.
       marginBottom: 18,
     }}>
       <div style={{ padding: '20px 24px 22px' }}>
 
-        {/* ── Header: flame + NICHE HEAT + niche label + LIVE pill ── */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 6, flexWrap: 'wrap' }}>
-          <span style={{
-            width: 28, height: 28, borderRadius: 8,
-            background: 'rgba(229,37,27,0.10)',
-            display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-            flexShrink: 0,
-          }}>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={C.red} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/>
-            </svg>
-          </span>
-          {/* Eyebrow text neutralised — the flame icon to the left and the
-              red Live pill to the right already carry the red signal. Three
-              red moments in one row was over-stamping it. */}
+        {/* ── Header: NICHE HEAT + niche label + LIVE pill (flame icon removed
+              — eyebrow text and Live pill already carry the niche-heat
+              signal; the flame felt emoji-like). ── */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 18, flexWrap: 'wrap' }}>
           <p style={{ fontSize: 11, fontWeight: 700, color: C.text1, letterSpacing: '0.10em', textTransform: 'uppercase' }}>Niche heat</p>
           {primaryPhrase && (
             <span style={{
               display: 'inline-flex', alignItems: 'center', gap: 6,
-              fontSize: 12, fontWeight: 600, color: C.text2, letterSpacing: '-0.05px',
+              fontSize: 12, fontWeight: 500, color: 'rgba(10,10,15,0.55)', letterSpacing: '-0.05px',
             }}>
               <span style={{ width: 3, height: 3, borderRadius: 99, background: 'rgba(10,10,15,0.30)' }}/>
               &ldquo;{primaryPhrase}&rdquo;
             </span>
           )}
           <div style={{ flex: 1 }}/>
-          {/* LIVE pill: chrome neutralised (charcoal text on subtle grey
-              tint) so the only red moment is the pulsing dot itself.
-              Reduces the 3-red-elements-in-one-row pile-up we had before. */}
           <span style={{
             display: 'inline-flex', alignItems: 'center', gap: 6,
             fontSize: 10, fontWeight: 700, color: C.text2,
@@ -906,38 +894,15 @@ function NicheHeatCard({ videos, shorts, primaryPhrase }) {
             Live
           </span>
         </div>
-        <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.5, marginBottom: 20 }}>
-          What's already winning here · red pill = views vs the niche median
-        </p>
 
-        {/* ── Winning videos strip (16:9 landscape thumbs) ── */}
+        {/* ── Unified winning-content strip: videos + shorts in one scroll row.
+              Each tile picks its own VideoTile / ShortTile renderer from the
+              _isShort flag carried on the item. ── */}
         <HeatStrip
-          icon={
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke={C.text2} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <rect x="2" y="6" width="20" height="14" rx="2"/>
-              <path d="M10 11l5 3-5 3v-6z" fill={C.text2}/>
-            </svg>
-          }
-          label="Winning videos"
-          count={topV.length}
-          Tile={VideoTile}
-          items={topV}
+          label="Winning content"
+          count={merged.length}
+          items={merged}
           baselineViews={baseV}
-        />
-
-        {/* ── Winning shorts strip (9:16 vertical thumbs) ── */}
-        <HeatStrip
-          icon={
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke={C.text2} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <rect x="7" y="3" width="10" height="18" rx="2"/>
-              <path d="M11 8l3 2-3 2V8z" fill={C.text2}/>
-            </svg>
-          }
-          label="Winning shorts"
-          count={topS.length}
-          Tile={ShortTile}
-          items={topS}
-          baselineViews={baseS}
         />
 
         {/* ── 4-tile stat strip across the bottom ── */}
