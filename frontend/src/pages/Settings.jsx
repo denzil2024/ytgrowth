@@ -1,59 +1,215 @@
 import { useEffect, useState } from 'react'
 import { loginUrl } from '../utm.js'
 
-/* ── Design tokens — strict palette matching Dashboard/Keywords/Competitors */
+/* ── Design tokens ──────────────────────────────────────────────────────────
+   Aligned with the Competitors design north-star. Geist font, 1040 centered,
+   single-shadow + inset-from-above highlight cards, hairline
+   rgba(10,10,15,0.07) borders, 14px radius, 11/700/0.10em eyebrows, 800
+   reserved for big stat values only. */
 const C = {
-  red:     '#e5251b', redBg:   '#fff5f5', redBdr:   '#fecaca',
-  green:   '#16a34a', greenBg: '#f0fdf4', greenBdr: '#bbf7d0',
-  amber:   '#d97706', amberBg: '#fffbeb', amberBdr: '#fde68a',
-  text1:   '#111114',
-  text2:   '#52525b',
-  text3:   '#9595a4',
-  text4:   '#c0c0cc',
-  border:  'rgba(0,0,0,0.09)',
-  borderHex: '#e6e6ec',
-  chipBg:  '#f4f4f6',
+  red:      '#e5251b',
+  redLight: '#ef3a31',
+  redBg:    '#fff5f5',
+  redBdr:   '#fecaca',
+  green:    '#16a34a',
+  greenBg:  '#f0fdf4',
+  greenBdr: '#bbf7d0',
+  amber:    '#d97706',
+  amberBg:  '#fffbeb',
+  amberBdr: '#fde68a',
+  ink:      '#0a0a0f',
+  ink60:    'rgba(10,10,15,0.60)',
+  ink55:    'rgba(10,10,15,0.55)',
+  ink45:    'rgba(10,10,15,0.45)',
+  ink30:    'rgba(10,10,15,0.30)',
+  hairline: 'rgba(10,10,15,0.07)',
+  chipBg:   '#f4f4f6',
 }
 
-/* System elevation — matches Dashboard / Keywords / Competitors */
-const CARD = {
-  background:   '#ffffff',
-  border:       `1px solid ${C.borderHex}`,
-  borderRadius: 16,
-  boxShadow:    '0 1px 3px rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.06)',
-}
-
-/* Page-scoped Inter + font smoothing. Matches the pattern used by
-   Dashboard / Keywords / Competitors / Outliers — never loaded globally. */
+/* ── Page-scoped styles. Geist load, base typography, card grammar, button
+      styles, input styles. Same pattern as Competitors / Chat. ───────────── */
 function useSettingsStyles() {
   useEffect(() => {
-    if (document.getElementById('ytg-settings-fonts')) return
-    const link = document.createElement('link')
-    link.id = 'ytg-settings-fonts'
-    link.rel = 'stylesheet'
-    link.href = 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap'
-    document.head.appendChild(link)
-    if (document.getElementById('ytg-settings-styles')) return
+    if (!document.getElementById('ytg-set-geist-font')) {
+      const link = document.createElement('link')
+      link.id = 'ytg-set-geist-font'
+      link.rel = 'stylesheet'
+      link.href = 'https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap'
+      document.head.appendChild(link)
+    }
+    if (document.getElementById('ytg-set-styles-v2')) return
     const style = document.createElement('style')
-    style.id = 'ytg-settings-styles'
+    style.id = 'ytg-set-styles-v2'
     style.textContent = `
-      .settings-page, .settings-page * { font-family: 'Inter', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
-      .settings-page p, .settings-page span, .settings-page div, .settings-page h1 { margin: 0; }
+      .set-page { max-width: 1040px; margin: 0 auto; }
+      .set-page, .set-page * {
+        box-sizing: border-box;
+        font-family: 'Geist', 'Inter', system-ui, sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+      .set-page p, .set-page span, .set-page div, .set-page h1, .set-page label { margin: 0; }
+
+      .set-h1 {
+        font-size: 28px; font-weight: 600; color: ${C.ink};
+        letter-spacing: -0.02em; line-height: 1.15;
+      }
+      .set-subtitle {
+        font-size: 14px; font-weight: 450; color: ${C.ink55};
+        margin-top: 6px !important; letter-spacing: -0.005em;
+      }
+
+      .set-card {
+        background: #ffffff;
+        border: 1px solid ${C.hairline};
+        border-radius: 14px;
+        box-shadow: 0 1px 2px rgba(15,15,25,0.04), inset 0 1px 0 rgba(255,255,255,0.7);
+      }
+
+      .set-divider { height: 1px; background: ${C.hairline}; width: 100%; }
+
+      .set-eyebrow {
+        font-size: 11px; font-weight: 700;
+        letter-spacing: 0.10em; text-transform: uppercase;
+        color: ${C.ink45};
+      }
+
+      .set-card-title {
+        font-size: 15px; font-weight: 600; color: ${C.ink};
+        letter-spacing: -0.01em;
+      }
+      .set-card-sub {
+        font-size: 13px; font-weight: 450; color: ${C.ink55};
+        margin-top: 4px !important; line-height: 1.55;
+        letter-spacing: -0.005em;
+      }
+
+      /* ── Buttons ──────────────────────────────────────────────────────── */
+      .set-btn-primary {
+        background: linear-gradient(180deg, ${C.redLight} 0%, ${C.red} 100%);
+        color: #fff; border: none; border-radius: 100px;
+        padding: 8px 18px; font-size: 13px; font-weight: 600;
+        font-family: 'Geist', 'Inter', system-ui, sans-serif;
+        cursor: pointer; white-space: nowrap;
+        letter-spacing: -0.01em; text-decoration: none;
+        display: inline-flex; align-items: center; gap: 6px;
+        box-shadow: 0 1px 2px rgba(229,37,27,0.30), inset 0 1px 0 rgba(255,255,255,0.22);
+        transition: filter 160ms cubic-bezier(0.32,0.72,0,1), transform 160ms cubic-bezier(0.32,0.72,0,1);
+      }
+      .set-btn-primary:hover:not(:disabled) { filter: brightness(1.06); transform: translateY(-1px); }
+      .set-btn-primary:disabled { opacity: 0.55; cursor: not-allowed; }
+
+      .set-btn-secondary {
+        background: #ffffff; color: ${C.ink};
+        border: 1px solid rgba(10,10,15,0.10); border-radius: 100px;
+        padding: 7px 16px; font-size: 13px; font-weight: 600;
+        font-family: 'Geist', 'Inter', system-ui, sans-serif;
+        cursor: pointer; white-space: nowrap;
+        letter-spacing: -0.01em;
+        box-shadow: 0 1px 2px rgba(15,15,25,0.04), inset 0 1px 0 rgba(255,255,255,0.7);
+        transition: background 160ms cubic-bezier(0.32,0.72,0,1), border-color 160ms cubic-bezier(0.32,0.72,0,1);
+      }
+      .set-btn-secondary:hover { background: rgba(10,10,15,0.025); border-color: rgba(10,10,15,0.18); }
+
+      .set-btn-text {
+        background: transparent; color: ${C.ink55};
+        border: none; padding: 6px 4px;
+        font-size: 13px; font-weight: 500;
+        font-family: 'Geist', 'Inter', system-ui, sans-serif;
+        cursor: pointer; text-decoration: none;
+        letter-spacing: -0.01em;
+        display: inline-flex; align-items: center; gap: 5px;
+        transition: color 160ms cubic-bezier(0.32,0.72,0,1);
+      }
+      .set-btn-text:hover { color: ${C.ink}; }
+
+      .set-btn-danger-outline {
+        background: #ffffff; color: ${C.red};
+        border: 1px solid rgba(229,37,27,0.25); border-radius: 100px;
+        padding: 7px 16px; font-size: 13px; font-weight: 600;
+        font-family: 'Geist', 'Inter', system-ui, sans-serif;
+        cursor: pointer; white-space: nowrap;
+        letter-spacing: -0.01em;
+        box-shadow: 0 1px 2px rgba(229,37,27,0.06);
+        transition: background 160ms cubic-bezier(0.32,0.72,0,1), border-color 160ms cubic-bezier(0.32,0.72,0,1);
+      }
+      .set-btn-danger-outline:hover { background: rgba(229,37,27,0.04); border-color: rgba(229,37,27,0.40); }
+
+      .set-btn-row-disconnect {
+        background: transparent; color: ${C.red};
+        border: none; padding: 5px 6px;
+        font-size: 12.5px; font-weight: 600;
+        font-family: 'Geist', 'Inter', system-ui, sans-serif;
+        cursor: pointer; letter-spacing: -0.01em;
+        transition: color 160ms cubic-bezier(0.32,0.72,0,1);
+      }
+      .set-btn-row-disconnect:hover { color: ${C.redLight}; }
+
+      /* ── Inputs ───────────────────────────────────────────────────────── */
+      .set-input {
+        width: 100%; padding: 10px 14px;
+        background: #ffffff;
+        border: 1px solid rgba(10,10,15,0.10);
+        border-radius: 12px;
+        font-size: 13.5px; font-weight: 450; color: ${C.ink};
+        font-family: 'Geist', 'Inter', system-ui, sans-serif;
+        outline: none; letter-spacing: -0.005em;
+        box-shadow: 0 1px 2px rgba(15,15,25,0.03), inset 0 1px 0 rgba(255,255,255,0.7);
+        transition: border-color 180ms cubic-bezier(0.32,0.72,0,1), box-shadow 180ms cubic-bezier(0.32,0.72,0,1);
+      }
+      .set-input::placeholder { color: rgba(10,10,15,0.40); font-weight: 450; }
+      .set-input:focus {
+        border-color: rgba(229,37,27,0.30);
+        box-shadow: 0 0 0 4px rgba(229,37,27,0.06), 0 1px 2px rgba(15,15,25,0.03), inset 0 1px 0 rgba(255,255,255,0.7);
+      }
+
+      .set-textarea {
+        width: 100%; padding: 12px 14px;
+        background: #ffffff;
+        border: 1px solid rgba(10,10,15,0.10);
+        border-radius: 12px;
+        font-size: 13.5px; font-weight: 450; color: ${C.ink};
+        font-family: 'Geist', 'Inter', system-ui, sans-serif;
+        outline: none; letter-spacing: -0.005em; line-height: 1.55;
+        resize: vertical; min-height: 104px;
+        box-shadow: 0 1px 2px rgba(15,15,25,0.03), inset 0 1px 0 rgba(255,255,255,0.7);
+        transition: border-color 180ms cubic-bezier(0.32,0.72,0,1), box-shadow 180ms cubic-bezier(0.32,0.72,0,1);
+      }
+      .set-textarea::placeholder { color: rgba(10,10,15,0.40); font-weight: 450; }
+      .set-textarea:focus {
+        border-color: rgba(229,37,27,0.30);
+        box-shadow: 0 0 0 4px rgba(229,37,27,0.06), 0 1px 2px rgba(15,15,25,0.03), inset 0 1px 0 rgba(255,255,255,0.7);
+      }
+
+      /* Channel row hover lift — subtle, matches Competitors */
+      .set-channel-row {
+        display: flex; align-items: center; gap: 14px;
+        padding: 14px 0;
+        transition: opacity 160ms cubic-bezier(0.32,0.72,0,1);
+      }
+
+      /* Connect-another row — soft red text + tinted plus circle */
+      .set-connect-row {
+        display: flex; align-items: center; gap: 12px;
+        padding: 14px 0; text-decoration: none;
+        color: ${C.red}; font-size: 13.5px; font-weight: 500;
+        letter-spacing: -0.01em; cursor: pointer;
+        transition: opacity 160ms cubic-bezier(0.32,0.72,0,1);
+      }
+      .set-connect-row:hover { opacity: 0.78; }
+
       @keyframes settingsSpin { to { transform: rotate(360deg) } }
     `
     document.head.appendChild(style)
   }, [])
 }
 
-/* ── Helpers ──────────────────────────────────────────────────────────────── */
-/* Plan badge — mapped to strict red/amber/green + neutral palette.
-   Tier hierarchy: Free=neutral → Solo=amber → Growth=green → Agency=red. */
+/* ── Helpers ────────────────────────────────────────────────────────────── */
 function planBadgeStyle(plan) {
   const p = (plan || '').toLowerCase()
   if (p.includes('agency')) return { background: C.redBg,   color: C.red,   border: `1px solid ${C.redBdr}` }
   if (p.includes('growth')) return { background: C.greenBg, color: C.green, border: `1px solid ${C.greenBdr}` }
   if (p.includes('solo'))   return { background: C.amberBg, color: C.amber, border: `1px solid ${C.amberBdr}` }
-  return { background: C.chipBg, color: C.text2, border: `1px solid ${C.border}` }
+  return { background: C.chipBg, color: C.ink60, border: `1px solid ${C.hairline}` }
 }
 
 function planLabel(plan) {
@@ -88,45 +244,13 @@ function fmtSubs(n) {
   return n.toLocaleString()
 }
 
-function billingCycleLabel(me) {
+/* Right-column line under the plan pill. Short and confident. */
+function compactBillingLabel(me) {
   if (!me) return ''
-  if (me.is_lifetime) return 'Lifetime — never expires'
-  if (me.plan === 'free') return 'Free plan'
-  if (me.billing_cycle === 'monthly' && me.reset_date) return `Monthly · Renews ${fmtDate(me.reset_date)}`
-  if (me.billing_cycle === 'annual'  && me.reset_date) return `Annual · Renews ${fmtDate(me.reset_date)}`
-  return me.billing_cycle || ''
-}
-
-/* ── Small components ─────────────────────────────────────────────────────── */
-function SectionHeading({ children, danger }) {
-  return (
-    <p style={{
-      fontSize: 12, fontWeight: 700, letterSpacing: '0.06em',
-      textTransform: 'uppercase',
-      color: danger ? C.red : '#a0a0b0',
-      marginBottom: 10,
-    }}>{children}</p>
-  )
-}
-
-function ProgressBar({ pct }) {
-  const color = pct < 60 ? C.green : pct < 80 ? C.amber : C.red
-  return (
-    <div style={{ height: 4, background: '#eeeef3', borderRadius: 99, overflow: 'hidden', margin: '6px 0' }}>
-      <div style={{ width: `${Math.min(pct, 100)}%`, height: '100%', background: color, borderRadius: 99, transition: 'width 0.8s cubic-bezier(0.34,1.56,0.64,1)' }} />
-    </div>
-  )
-}
-
-/* Remaining-bar variant — fills from the left with the accent colour and
-   empties as the user spends credits. Matches the sidebar UsageBar so
-   "3/3 left" feels alive instead of dead-space. */
-function RemainingBar({ remainingPct, accent }) {
-  return (
-    <div style={{ height: 6, background: '#eeeef3', borderRadius: 99, overflow: 'hidden', margin: '10px 0 0' }}>
-      <div style={{ width: `${Math.min(Math.max(remainingPct, 0), 100)}%`, height: '100%', background: accent, borderRadius: 99, transition: 'width 0.8s cubic-bezier(0.34,1.56,0.64,1), background 0.2s' }} />
-    </div>
-  )
+  if (me.is_lifetime) return 'Lifetime plan'
+  if (me.plan === 'free') return ''
+  if (me.reset_date) return `Renews ${fmtDate(me.reset_date)}`
+  return ''
 }
 
 function daysUntilReset(iso) {
@@ -138,7 +262,7 @@ function daysUntilReset(iso) {
 }
 
 function refillLabel(iso, isLifetime) {
-  if (isLifetime) return 'Lifetime plan — monthly reset'
+  if (isLifetime) return 'Lifetime plan, monthly reset'
   const d = daysUntilReset(iso)
   if (d == null) return ''
   if (d === 0) return 'Refills today'
@@ -146,6 +270,7 @@ function refillLabel(iso, isLifetime) {
   return `Refills in ${d} days`
 }
 
+/* ── Small components ───────────────────────────────────────────────────── */
 function Toggle({ on, onChange }) {
   return (
     <button
@@ -180,44 +305,33 @@ function ConfirmDialog({ title, body, confirmLabel, onConfirm, onCancel, require
       zIndex: 1000,
     }}>
       <div style={{
-        background: '#fff', borderRadius: 16,
-        padding: '26px 28px', maxWidth: 400, width: '90%',
+        background: '#fff', borderRadius: 14,
+        padding: '24px 26px', maxWidth: 400, width: '90%',
         boxShadow: '0 8px 32px rgba(0,0,0,0.18)',
-        border: '1px solid rgba(0,0,0,0.08)',
+        border: `1px solid ${C.hairline}`,
       }}>
-        <p style={{ fontSize: 14, fontWeight: 600, color: C.text1, marginBottom: 8 }}>{title}</p>
-        <p style={{ fontSize: 14, color: C.text2, lineHeight: 1.65, marginBottom: requireTyping ? 16 : 22 }}>{body}</p>
+        <p style={{ fontSize: 15, fontWeight: 600, color: C.ink, letterSpacing: '-0.01em', marginBottom: 8 }}>{title}</p>
+        <p style={{ fontSize: 13.5, color: C.ink60, lineHeight: 1.6, marginBottom: requireTyping ? 16 : 22, letterSpacing: '-0.005em' }}>{body}</p>
         {requireTyping && (
           <div style={{ marginBottom: 20 }}>
-            <p style={{ fontSize: 12, color: C.text3, marginBottom: 6 }}>Type DELETE to confirm</p>
+            <p style={{ fontSize: 12, color: C.ink45, marginBottom: 6, letterSpacing: '-0.005em' }}>Type DELETE to confirm</p>
             <input
               autoFocus
               value={typed}
               onChange={e => setTyped(e.target.value)}
               placeholder="DELETE"
-              style={{
-                width: '100%', padding: '9px 14px',
-                border: `1px solid ${typed === 'DELETE' ? C.red : C.border}`,
-                borderRadius: 100, fontSize: 14, fontFamily: 'inherit',
-                outline: 'none', letterSpacing: '0.05em',
-              }}
+              className="set-input"
+              style={{ letterSpacing: '0.05em' }}
             />
           </div>
         )}
         <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end' }}>
-          <button onClick={onCancel} style={{ padding: '8px 18px', borderRadius: 100, border: `1px solid ${C.border}`, background: '#fff', color: C.text2, fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>
-            Cancel
-          </button>
+          <button onClick={onCancel} className="set-btn-secondary">Cancel</button>
           <button
             onClick={onConfirm}
             disabled={!canConfirm}
-            style={{
-              padding: '8px 18px', borderRadius: 100, border: 'none',
-              background: canConfirm ? C.red : '#e5e7eb',
-              color: canConfirm ? '#fff' : C.text3,
-              fontSize: 13, fontWeight: 700, cursor: canConfirm ? 'pointer' : 'not-allowed',
-              fontFamily: 'inherit',
-            }}
+            className="set-btn-primary"
+            style={!canConfirm ? { background: '#e5e7eb', color: C.ink45, boxShadow: 'none' } : {}}
           >{confirmLabel || 'Confirm'}</button>
         </div>
       </div>
@@ -225,7 +339,7 @@ function ConfirmDialog({ title, body, confirmLabel, onConfirm, onCancel, require
   )
 }
 
-/* ── Main component ───────────────────────────────────────────────────────── */
+/* ── Main component ─────────────────────────────────────────────────────── */
 export default function Settings({ channelData }) {
   useSettingsStyles()
   const [me, setMe] = useState(null)
@@ -234,13 +348,13 @@ export default function Settings({ channelData }) {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
   const [toggleWorking, setToggleWorking] = useState(false)
 
-  // ── Feature request state ──────────────────────────────────────────────
-  const [frTitle, setFrTitle]         = useState('')
-  const [frDesc, setFrDesc]           = useState('')
-  const [frSending, setFrSending]     = useState(false)
-  const [frError, setFrError]         = useState('')
-  const [frSuccess, setFrSuccess]     = useState(false)
-  const [frMine, setFrMine]           = useState([])
+  // Feature requests
+  const [frTitle, setFrTitle]   = useState('')
+  const [frDesc, setFrDesc]     = useState('')
+  const [frSending, setFrSending] = useState(false)
+  const [frError, setFrError]   = useState('')
+  const [frSuccess, setFrSuccess] = useState(false)
+  const [frMine, setFrMine]     = useState([])
   const [frShareCopied, setFrShareCopied] = useState(false)
   const FR_TITLE_MAX = 120
   const FR_DESC_MAX  = 2000
@@ -301,17 +415,14 @@ export default function Settings({ channelData }) {
     return () => window.removeEventListener('ytg:credits-changed', refresh)
   }, [])
 
-  // Load existing feature requests + scroll to feedback when arriving via share link
   useEffect(() => {
     loadFrMine()
     try {
       const params = new URLSearchParams(window.location.search)
       if (params.get('focus') === 'feedback') {
-        // Wait one frame for the section to render, then scroll it into view
         setTimeout(() => {
           const el = document.getElementById('feedback-section')
           if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
-          // Strip the param so refreshes don't keep re-scrolling
           params.delete('focus')
           const qs = params.toString()
           window.history.replaceState({}, '', window.location.pathname + (qs ? `?${qs}` : ''))
@@ -373,280 +484,313 @@ export default function Settings({ channelData }) {
 
   if (loading) {
     return (
-      <div className="settings-page" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '60vh' }}>
-        <div style={{ width: 28, height: 28, border: '2.5px solid #e5e7eb', borderTop: `2.5px solid ${C.red}`, borderRadius: '50%', animation: 'settingsSpin 0.7s linear infinite' }} />
+      <div className="set-page">
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '60vh' }}>
+          <div style={{ width: 28, height: 28, border: `2.5px solid #e5e7eb`, borderTop: `2.5px solid ${C.red}`, borderRadius: '50%', animation: 'settingsSpin 0.7s linear infinite' }} />
+        </div>
       </div>
     )
   }
 
   const activeChannels = me?.channels || []
-  const canAddMore = me?.can_add_more ?? false
-  const usagePct = me?.usage_pct ?? 0
-  const isTopPlan = me?.plan === 'agency' || me?.plan === 'lifetime_agency'
-  const hasActiveSub = me?.status === 'active' && !me?.is_lifetime
+  const canAddMore     = me?.can_add_more ?? false
+  const isTopPlan      = me?.plan === 'agency' || me?.plan === 'lifetime_agency'
+  const hasActiveSub   = me?.status === 'active' && !me?.is_lifetime
+
+  const allowance    = me?.monthly_allowance ?? 3
+  const used         = me?.monthly_used ?? 0
+  const remaining    = Math.max(0, allowance - used)
+  const remainingPct = allowance > 0 ? (remaining / allowance) * 100 : 0
+  const atLimit      = remaining === 0
+  const nearLimit    = !atLimit && remainingPct <= 20
+  const accent       = atLimit ? C.red : nearLimit ? C.amber : C.green
+
+  // Avatar: Google profile → connected channel thumb → first letter
+  const avatarPic    = me?.profile_picture || channelData?.channel?.thumbnail || me?.channels?.[0]?.channel_thumbnail
+  const displayName  = me?.display_name || channelData?.channel?.channel_name || me?.channels?.[0]?.channel_name || 'Account'
+  const initial      = (displayName || me?.email || '').trim()[0]?.toUpperCase() || ''
 
   return (
-    <div className="settings-page">
-      {/* ── Page heading ──────────────────────────────────────────────────── */}
-      <div style={{ marginBottom: 24 }}>
-        <h1 style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.6px', marginBottom: 4 }}>Settings</h1>
-        <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.5 }}>Account · plan · channels · preferences</p>
+    <div className="set-page">
+
+      {/* ── Page heading ────────────────────────────────────────────────── */}
+      <div style={{ marginTop: 24, marginBottom: 28 }}>
+        <h1 className="set-h1">Settings</h1>
+        <p className="set-subtitle">Account, channels, and notifications.</p>
       </div>
 
-      {/* ── Row 1: Account — full width ───────────────────────────────────── */}
-      <div style={{ marginBottom: 10 }}>
-        <SectionHeading>Account</SectionHeading>
-      </div>
-      <div style={{ ...CARD, padding: '20px 24px', marginBottom: 24, display: 'flex', alignItems: 'center', gap: 20 }}>
-        {(() => {
-          // Avatar: Google profile picture → connected channel thumbnail → first letter
-          const pic = me?.profile_picture || channelData?.channel?.thumbnail || me?.channels?.[0]?.channel_thumbnail
-          const fallbackName = me?.display_name || channelData?.channel?.channel_name || me?.channels?.[0]?.channel_name || me?.email
-          if (pic) {
-            return <img src={pic} alt="" style={{ width: 52, height: 52, borderRadius: '50%', objectFit: 'cover', flexShrink: 0, border: `1px solid ${C.border}` }} />
-          }
-          const initial = (fallbackName || '').trim()[0]
-          return (
-            <div style={{ width: 52, height: 52, borderRadius: '50%', background: C.chipBg, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, fontWeight: 700, color: C.text1, flexShrink: 0, border: `1px solid ${C.border}` }}>
-              {initial ? initial.toUpperCase() : <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" style={{ color: C.text3 }}><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"/></svg>}
-            </div>
-          )
-        })()}
-        <div style={{ flex: 1, minWidth: 0 }}>
-          <p style={{ fontSize: 16, fontWeight: 700, color: C.text1, letterSpacing: '-0.3px' }}>
-            {me?.display_name || channelData?.channel?.channel_name || me?.channels?.[0]?.channel_name || 'Account'}
-          </p>
-          {me?.email && <p style={{ fontSize: 14, color: C.text2, marginTop: 3 }}>{me.email}</p>}
-          {me?.member_since && (
-            <p style={{ fontSize: 12, color: C.text3, marginTop: 3 }}>Member since {fmtMonthYear(me.member_since)}</p>
-          )}
-        </div>
-        {/* Plan badge on the right of account card */}
-        <div style={{ flexShrink: 0, textAlign: 'right' }}>
-          <span style={{
-            ...planBadgeStyle(me?.plan),
-            fontSize: 11, fontWeight: 700,
-            letterSpacing: '0.06em', textTransform: 'uppercase',
-            padding: '4px 12px', borderRadius: 100,
-            display: 'inline-block',
-          }}>{planLabel(me?.plan)}</span>
-          <p style={{ fontSize: 12, color: C.text3, marginTop: 6 }}>{billingCycleLabel(me)}</p>
-        </div>
-      </div>
+      {/* ── Hero: identity + credits + actions, three shelves ───────────── */}
+      <div className="set-card" style={{ padding: '26px 28px', marginBottom: 16 }}>
 
-      {/* ── Row 2: two columns ────────────────────────────────────────────── */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, marginBottom: 20 }}>
-
-        {/* ── LEFT: Connected Channels ──────────────────────────────────── */}
-        <div>
-          <SectionHeading>Connected Channels</SectionHeading>
-          <div style={{ ...CARD, padding: '20px 22px' }}>
-            <p style={{ fontSize: 12, color: C.text3, marginBottom: 16 }}>
-              {activeChannels.length} of {me?.channels_allowed ?? 1} channels connected
-            </p>
-
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-              {activeChannels.map(ch => (
-                <div key={ch.channel_id} style={{
-                  background: '#f7f7fa',
-                  border: '1px solid rgba(0,0,0,0.07)',
-                  borderRadius: 12, padding: '12px 14px',
-                  display: 'flex', alignItems: 'center', gap: 12,
-                }}>
-                  {ch.channel_thumbnail
-                    ? <img src={ch.channel_thumbnail} alt="" style={{ width: 34, height: 34, borderRadius: '50%', objectFit: 'cover', flexShrink: 0, border: `1px solid ${C.border}` }} />
-                    : <div style={{ width: 34, height: 34, borderRadius: '50%', background: C.chipBg, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: 700, color: C.text1, flexShrink: 0, border: `1px solid ${C.border}` }}>
-                        {(ch.channel_name || '?')[0].toUpperCase()}
-                      </div>
-                  }
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
-                      <p style={{ fontSize: 14, fontWeight: 600, color: C.text1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{ch.channel_name}</p>
-                      {ch.is_current && (
-                        <span style={{ background: C.greenBg, color: C.green, border: `1px solid ${C.greenBdr}`, fontSize: 10, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', padding: '2px 8px', borderRadius: 100, flexShrink: 0 }}>Active</span>
-                      )}
-                    </div>
-                    <p style={{ fontSize: 12, color: C.text2, marginTop: 2 }}>{fmtSubs(ch.subscribers)} subscribers</p>
-                    <p style={{ fontSize: 12, color: C.text3, marginTop: 2 }}>Connected {fmtDate(ch.connected_at)}</p>
-                  </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
-                    {!ch.is_current && (
-                      <button
-                        onClick={() => handleSwitch(ch.channel_id)}
-                        style={{
-                          fontSize: 12, fontWeight: 600, cursor: 'pointer',
-                          border: `1px solid ${C.border}`, background: '#fff',
-                          color: C.text2, borderRadius: 100, padding: '6px 14px',
-                          fontFamily: 'inherit',
-                        }}
-                      >Switch</button>
-                    )}
-                    <button
-                      onClick={() => setDisconnectTarget(ch)}
-                      style={{ fontSize: 12, fontWeight: 600, cursor: 'pointer', background: 'transparent', border: 'none', color: C.red, fontFamily: 'inherit', padding: '6px 4px' }}
-                    >Disconnect</button>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* Connect / upgrade */}
-            <div style={{ marginTop: 14 }}>
-              {canAddMore
-                ? <a href="/auth/login" style={{
-                    display: 'block', textAlign: 'center',
-                    border: `1px dashed ${C.border}`, borderRadius: 12,
-                    padding: '13px 16px', textDecoration: 'none',
-                    transition: 'border-color 0.15s, background 0.15s',
-                  }}>
-                    <span style={{ fontSize: 13, color: C.red, fontWeight: 700 }}>+ Connect another channel</span>
-                  </a>
-                : <div style={{ background: '#f7f7fa', border: '1px solid rgba(0,0,0,0.07)', borderRadius: 12, padding: '13px 16px' }}>
-                    <p style={{ fontSize: 13, color: C.text2, lineHeight: 1.55, marginBottom: 10 }}>
-                      You have reached your channel limit. Upgrade your plan to connect more channels.
-                    </p>
-                    <a href="/?tab=monthly#pricing" style={{ display: 'inline-block', background: C.red, color: '#fff', fontSize: 12, fontWeight: 700, padding: '7px 16px', borderRadius: 100, textDecoration: 'none' }}>
-                      Upgrade Plan
-                    </a>
-                  </div>
-              }
-            </div>
-          </div>
-        </div>
-
-        {/* ── RIGHT: Plan & Credits + Email Prefs ───────────────────────── */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-
-          {/* Plan and Credits */}
-          <div>
-            <SectionHeading>Plan and Credits</SectionHeading>
-            <div style={{ ...CARD, padding: '20px 22px' }}>
-              {/* Credits inner block — remaining-centric treatment. Hero
-                  number = credits LEFT (not used), coloured by state
-                  (green / amber / red), above a remaining-bar + refill
-                  countdown. Matches the sidebar UsageBar pattern. */}
-              {(() => {
-                const allowance    = me?.monthly_allowance ?? 3
-                const used         = me?.monthly_used ?? 0
-                const remaining    = Math.max(0, allowance - used)
-                const remainingPct = allowance > 0 ? (remaining / allowance) * 100 : 0
-                const atLimit      = remaining === 0
-                const nearLimit    = !atLimit && remainingPct <= 20
-                const accent       = atLimit ? C.red : nearLimit ? C.amber : C.green
-                return (
-                  <div style={{ background: '#f7f7fa', border: '1px solid rgba(0,0,0,0.07)', borderRadius: 12, padding: '18px 20px', marginBottom: 16 }}>
-                    {/* Monthly analyses — hero block */}
-                    <div style={{ marginBottom: 16 }}>
-                      <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>
-                        AI analyses
-                      </p>
-                      <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
-                        <span style={{ fontSize: 34, fontWeight: 800, color: accent, letterSpacing: '-1.2px', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>
-                          {remaining}
-                        </span>
-                        <span style={{ fontSize: 14, fontWeight: 500, color: C.text2 }}>
-                          of {allowance} left
-                        </span>
-                      </div>
-                      <RemainingBar remainingPct={remainingPct} accent={accent} />
-                      <p style={{ fontSize: 12, color: C.text3, marginTop: 8 }}>
-                        {refillLabel(me?.reset_date, me?.is_lifetime)}
-                      </p>
-                    </div>
-
-                    {/* Pack balance row */}
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', paddingTop: 14, borderTop: '1px solid rgba(0,0,0,0.06)' }}>
-                      <div>
-                        <p style={{ fontSize: 14, color: C.text1, fontWeight: 500 }}>Credit pack balance</p>
-                        <p style={{ fontSize: 12, color: C.text3, marginTop: 3, lineHeight: 1.5 }}>Never expires — used after monthly analyses run out</p>
-                      </div>
-                      <span style={{ fontSize: 14, fontWeight: 700, color: (me?.pack_balance ?? 0) > 0 ? C.green : C.text1 }}>
-                        {me?.pack_balance ?? 0}
-                      </span>
-                    </div>
-                  </div>
-                )
-              })()}
-
-              {/* Action buttons */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
-                <button
-                  onClick={() => window.location.href = '/?tab=packs#pricing'}
-                  style={{ fontSize: 12, fontWeight: 700, cursor: 'pointer', border: `1px solid ${C.border}`, background: '#fff', color: C.text1, borderRadius: 100, padding: '7px 16px', fontFamily: 'inherit' }}
-                >Top up credits</button>
-                {!isTopPlan && (
-                  <button
-                    onClick={() => window.location.href = '/?tab=monthly#pricing'}
-                    style={{ fontSize: 12, fontWeight: 700, cursor: 'pointer', border: 'none', background: C.red, color: '#fff', borderRadius: 100, padding: '7px 16px', fontFamily: 'inherit' }}
-                  >Upgrade plan</button>
-                )}
-                {hasActiveSub && (
-                  <a
-                    href="mailto:support@ytgrowth.io?subject=Manage%20billing"
-                    style={{ fontSize: 12, fontWeight: 600, cursor: 'pointer', background: 'none', border: 'none', color: C.text2, padding: '7px 4px', fontFamily: 'inherit', textDecoration: 'underline' }}
-                  >Manage billing</a>
-                )}
-              </div>
-            </div>
-          </div>
-
-          {/* Email Preferences */}
-          <div>
-            <SectionHeading>Email Preferences</SectionHeading>
-            <div style={{ ...CARD, padding: '20px 22px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-                <div style={{ flex: 1 }}>
-                  <p style={{ fontSize: 14, fontWeight: 500, color: C.text1 }}>Weekly channel report</p>
-                  <p style={{ fontSize: 12, color: C.text2, marginTop: 4, lineHeight: 1.55 }}>
-                    A summary of your channel performance sent every 7 days
-                  </p>
-                </div>
-                <Toggle on={me?.weekly_report_enabled ?? true} onChange={handleToggleReport} />
-              </div>
-              {!(me?.weekly_report_enabled ?? true) && (
-                <p style={{ fontSize: 12, color: C.text3, marginTop: 12 }}>You can resubscribe anytime</p>
+        {/* Shelf 1: identity */}
+        <div style={{ display: 'flex', alignItems: 'flex-start', gap: 16 }}>
+          {avatarPic ? (
+            <img src={avatarPic} alt="" style={{
+              width: 40, height: 40, borderRadius: '50%',
+              objectFit: 'cover', flexShrink: 0,
+              border: `1px solid ${C.hairline}`,
+            }} />
+          ) : (
+            <div style={{
+              width: 40, height: 40, borderRadius: '50%',
+              background: C.chipBg, display: 'flex',
+              alignItems: 'center', justifyContent: 'center',
+              fontSize: 14, fontWeight: 700, color: C.ink,
+              flexShrink: 0, border: `1px solid ${C.hairline}`,
+            }}>
+              {initial || (
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" style={{ color: C.ink45 }}>
+                  <circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"/>
+                </svg>
               )}
             </div>
+          )}
+
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <p style={{ fontSize: 15, fontWeight: 600, color: C.ink, letterSpacing: '-0.01em' }}>
+              {displayName}
+            </p>
+            {me?.email && (
+              <p style={{ fontSize: 13.5, fontWeight: 450, color: C.ink60, marginTop: 3, letterSpacing: '-0.005em' }}>
+                {me.email}
+              </p>
+            )}
+            {me?.member_since && (
+              <p style={{ fontSize: 12, fontWeight: 450, color: C.ink45, marginTop: 3, letterSpacing: '-0.005em' }}>
+                Member since {fmtMonthYear(me.member_since)}
+              </p>
+            )}
           </div>
 
+          <div style={{ flexShrink: 0, textAlign: 'right' }}>
+            <span style={{
+              ...planBadgeStyle(me?.plan),
+              fontSize: 11, fontWeight: 600, letterSpacing: '0.06em',
+              textTransform: 'uppercase', padding: '4px 11px',
+              borderRadius: 100, display: 'inline-block',
+            }}>{planLabel(me?.plan)}</span>
+            {compactBillingLabel(me) && (
+              <p style={{ fontSize: 12, fontWeight: 450, color: C.ink55, marginTop: 7, letterSpacing: '-0.005em' }}>
+                {compactBillingLabel(me)}
+              </p>
+            )}
+          </div>
+        </div>
+
+        {/* Divider */}
+        <div className="set-divider" style={{ margin: '22px 0' }} />
+
+        {/* Shelf 2: AI analyses + pack balance */}
+        <div>
+          <p className="set-eyebrow">AI analyses</p>
+          <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, marginTop: 10 }}>
+            <span style={{
+              fontSize: 40, fontWeight: 700, color: accent,
+              letterSpacing: '-0.025em', lineHeight: 1,
+              fontVariantNumeric: 'tabular-nums',
+            }}>{remaining}</span>
+            <span style={{ fontSize: 14, fontWeight: 450, color: C.ink60, letterSpacing: '-0.005em' }}>
+              of {allowance} left
+            </span>
+          </div>
+
+          <div style={{
+            height: 6, background: '#eef0f3', borderRadius: 99,
+            overflow: 'hidden', marginTop: 14,
+          }}>
+            <div style={{
+              width: `${Math.min(Math.max(remainingPct, 0), 100)}%`,
+              height: '100%', background: accent, borderRadius: 99,
+              transition: 'width 0.8s cubic-bezier(0.34,1.56,0.64,1), background 0.2s',
+            }} />
+          </div>
+          <p style={{ fontSize: 12.5, fontWeight: 450, color: C.ink55, marginTop: 10, letterSpacing: '-0.005em' }}>
+            {refillLabel(me?.reset_date, me?.is_lifetime)}
+          </p>
+
+          {/* Pack balance row */}
+          <div style={{
+            display: 'flex', alignItems: 'flex-start',
+            justifyContent: 'space-between', gap: 16, marginTop: 22,
+          }}>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <p style={{ fontSize: 13.5, fontWeight: 500, color: C.ink, letterSpacing: '-0.005em' }}>
+                Credit pack balance
+              </p>
+              <p style={{ fontSize: 12, fontWeight: 450, color: C.ink55, marginTop: 4, lineHeight: 1.55, letterSpacing: '-0.005em' }}>
+                Never expires. Used after monthly analyses run out.
+              </p>
+            </div>
+            <span style={{
+              fontSize: 20, fontWeight: 700,
+              color: (me?.pack_balance ?? 0) > 0 ? C.green : C.ink,
+              fontVariantNumeric: 'tabular-nums',
+              letterSpacing: '-0.01em', flexShrink: 0,
+            }}>
+              {me?.pack_balance ?? 0}
+            </span>
+          </div>
+        </div>
+
+        {/* Divider */}
+        <div className="set-divider" style={{ margin: '22px 0' }} />
+
+        {/* Shelf 3: actions */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
+          {!isTopPlan && (
+            <button className="set-btn-primary" onClick={() => window.location.href = '/?tab=monthly#pricing'}>
+              Upgrade plan
+            </button>
+          )}
+          <button className="set-btn-secondary" onClick={() => window.location.href = '/?tab=packs#pricing'}>
+            Top up credits
+          </button>
+          {hasActiveSub && (
+            <a className="set-btn-text" href="mailto:support@ytgrowth.io?subject=Manage%20billing">
+              Manage billing
+              <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M3 6h6M7 3l3 3-3 3"/>
+              </svg>
+            </a>
+          )}
         </div>
       </div>
 
-      {/* ── Row 3: Feature requests — full width ──────────────────────────── */}
-      <div id="feedback-section" style={{ marginBottom: 10, display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 12 }}>
-        <SectionHeading>Feature requests</SectionHeading>
-        <button
-          onClick={copyShareLink}
-          style={{
-            display: 'inline-flex', alignItems: 'center', gap: 6,
-            fontSize: 11.5, fontWeight: 600, color: frShareCopied ? C.green : C.text3,
-            background: 'transparent', border: 'none', cursor: 'pointer',
-            fontFamily: 'inherit', padding: 0,
-            transition: 'color 0.15s',
-          }}
-          title="Copy a public link you can share via email"
-        >
-          {frShareCopied ? (
-            <>
-              <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="1.5,5.5 4.5,8.5 9.5,2.5"/></svg>
-              Link copied
-            </>
-          ) : (
-            <>
-              <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"><path d="M5 7.5L7 5.5M4.5 4.5L3 6a2 2 0 0 0 2.83 2.83L7 7.5M7.5 7.5L9 6a2 2 0 0 0-2.83-2.83L5 4.5"/></svg>
-              Copy share link
-            </>
-          )}
-        </button>
-      </div>
-      <div style={{ ...CARD, padding: '20px 24px', marginBottom: 24 }}>
-        <p style={{ fontSize: 14, fontWeight: 700, color: C.text1, letterSpacing: '-0.2px', marginBottom: 4 }}>Tell us what to build next</p>
-        <p style={{ fontSize: 13, color: C.text2, lineHeight: 1.6, marginBottom: 16 }}>
-          We read every request. Be specific — what's missing, who it's for, why it matters.
-        </p>
+      {/* ── Channels card ───────────────────────────────────────────────── */}
+      <div className="set-card" style={{ padding: '24px 28px 8px', marginBottom: 16 }}>
+        <div style={{ marginBottom: 4 }}>
+          <p className="set-card-title">Connected channels</p>
+          <p className="set-card-sub">{activeChannels.length} of {me?.channels_allowed ?? 1} connected</p>
+        </div>
 
-        {/* Title */}
-        <label style={{ display: 'block', fontSize: 11, fontWeight: 600, color: C.text3, letterSpacing: '0.05em', textTransform: 'uppercase', marginBottom: 5 }}>
+        <div style={{ marginTop: 18 }}>
+          {activeChannels.map((ch, idx) => (
+            <div key={ch.channel_id}>
+              {idx > 0 && <div className="set-divider" />}
+              <div className="set-channel-row">
+                {ch.channel_thumbnail ? (
+                  <img src={ch.channel_thumbnail} alt="" style={{
+                    width: 36, height: 36, borderRadius: '50%',
+                    objectFit: 'cover', flexShrink: 0,
+                    border: `1px solid ${C.hairline}`,
+                  }} />
+                ) : (
+                  <div style={{
+                    width: 36, height: 36, borderRadius: '50%',
+                    background: C.chipBg, display: 'flex',
+                    alignItems: 'center', justifyContent: 'center',
+                    fontSize: 13, fontWeight: 700, color: C.ink,
+                    flexShrink: 0, border: `1px solid ${C.hairline}`,
+                  }}>{(ch.channel_name || '?')[0].toUpperCase()}</div>
+                )}
+
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <p style={{
+                      fontSize: 14, fontWeight: 600, color: C.ink,
+                      letterSpacing: '-0.01em',
+                      overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+                    }}>{ch.channel_name}</p>
+                    {ch.is_current && (
+                      <span style={{
+                        background: C.greenBg, color: C.green,
+                        border: `1px solid ${C.greenBdr}`,
+                        fontSize: 10, fontWeight: 700, letterSpacing: '0.06em',
+                        textTransform: 'uppercase', padding: '2px 8px',
+                        borderRadius: 100, flexShrink: 0,
+                      }}>Active</span>
+                    )}
+                  </div>
+                  <p style={{
+                    fontSize: 12.5, fontWeight: 450,
+                    color: C.ink55, marginTop: 3, letterSpacing: '-0.005em',
+                  }}>
+                    {fmtSubs(ch.subscribers)} subscribers, connected {fmtDate(ch.connected_at)}
+                  </p>
+                </div>
+
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexShrink: 0 }}>
+                  {!ch.is_current && (
+                    <button
+                      className="set-btn-secondary"
+                      style={{ padding: '5px 13px', fontSize: 12 }}
+                      onClick={() => handleSwitch(ch.channel_id)}
+                    >Switch</button>
+                  )}
+                  <button className="set-btn-row-disconnect" onClick={() => setDisconnectTarget(ch)}>
+                    Disconnect
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
+
+          {/* Trailing row: + Connect another channel, or upgrade prompt */}
+          {activeChannels.length > 0 && <div className="set-divider" />}
+          {canAddMore ? (
+            <a href="/auth/login" className="set-connect-row">
+              <div style={{
+                width: 36, height: 36, borderRadius: '50%',
+                background: 'rgba(229,37,27,0.06)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                flexShrink: 0,
+              }}>
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="8" y1="3" x2="8" y2="13"/><line x1="3" y1="8" x2="13" y2="8"/>
+                </svg>
+              </div>
+              Connect another channel
+            </a>
+          ) : (
+            <div style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '14px 0' }}>
+              <div style={{ flex: 1 }}>
+                <p style={{ fontSize: 13.5, fontWeight: 450, color: C.ink60, lineHeight: 1.55, letterSpacing: '-0.005em' }}>
+                  You have reached your channel limit. Upgrade to connect more.
+                </p>
+              </div>
+              <button className="set-btn-primary" onClick={() => window.location.href = '/?tab=monthly#pricing'}>
+                Upgrade plan
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* ── Feature requests card ───────────────────────────────────────── */}
+      <div id="feedback-section" className="set-card" style={{ padding: '26px 28px', marginBottom: 16 }}>
+        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16, marginBottom: 20 }}>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <p className="set-card-title">Tell us what to build next</p>
+            <p className="set-card-sub">We read every request. Be specific: what's missing, who it's for, why it matters.</p>
+          </div>
+          <button
+            onClick={copyShareLink}
+            style={{
+              display: 'inline-flex', alignItems: 'center', gap: 6,
+              fontSize: 12, fontWeight: 500,
+              color: frShareCopied ? C.green : C.ink45,
+              background: 'transparent', border: 'none', cursor: 'pointer',
+              fontFamily: 'inherit', padding: '4px 0', flexShrink: 0,
+              letterSpacing: '-0.005em',
+              transition: 'color 0.15s',
+            }}
+            title="Copy a public link you can share via email"
+          >
+            {frShareCopied ? (
+              <>
+                <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="1.5,5.5 4.5,8.5 9.5,2.5"/></svg>
+                Link copied
+              </>
+            ) : (
+              <>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.72-1.71"/></svg>
+                Copy share link
+              </>
+            )}
+          </button>
+        </div>
+
+        <label className="set-eyebrow" style={{ display: 'block', marginBottom: 8 }}>
           Title
         </label>
         <input
@@ -654,18 +798,10 @@ export default function Settings({ channelData }) {
           value={frTitle}
           onChange={e => setFrTitle(e.target.value.slice(0, FR_TITLE_MAX))}
           placeholder="e.g. Bulk-edit video tags"
-          style={{
-            width: '100%', fontSize: 13.5, fontFamily: 'inherit', color: C.text1,
-            background: '#fafafb', border: `1px solid ${C.borderHex}`, borderRadius: 10,
-            padding: '10px 13px', outline: 'none',
-            transition: 'border-color 0.15s, background 0.15s',
-          }}
-          onFocus={e => { e.currentTarget.style.borderColor = C.text3; e.currentTarget.style.background = '#fff' }}
-          onBlur={e => { e.currentTarget.style.borderColor = C.borderHex; e.currentTarget.style.background = '#fafafb' }}
+          className="set-input"
         />
 
-        {/* Description */}
-        <label style={{ display: 'block', fontSize: 11, fontWeight: 600, color: C.text3, letterSpacing: '0.05em', textTransform: 'uppercase', margin: '14px 0 5px' }}>
+        <label className="set-eyebrow" style={{ display: 'block', marginBottom: 8, marginTop: 18 }}>
           What would you like to see?
         </label>
         <textarea
@@ -673,126 +809,109 @@ export default function Settings({ channelData }) {
           onChange={e => setFrDesc(e.target.value.slice(0, FR_DESC_MAX))}
           rows={4}
           placeholder="Describe the feature, the problem it solves, and how you'd use it."
-          style={{
-            width: '100%', fontSize: 13.5, fontFamily: 'inherit', color: C.text1,
-            background: '#fafafb', border: `1px solid ${C.borderHex}`, borderRadius: 10,
-            padding: '10px 13px', outline: 'none', resize: 'vertical', minHeight: 92,
-            lineHeight: 1.55,
-            transition: 'border-color 0.15s, background 0.15s',
-          }}
-          onFocus={e => { e.currentTarget.style.borderColor = C.text3; e.currentTarget.style.background = '#fff' }}
-          onBlur={e => { e.currentTarget.style.borderColor = C.borderHex; e.currentTarget.style.background = '#fafafb' }}
+          className="set-textarea"
         />
 
-        {/* Footer row — counter, error, submit */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, marginTop: 12 }}>
-          <div style={{ fontSize: 11.5, color: frError ? C.red : C.text3, fontVariantNumeric: 'tabular-nums' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, marginTop: 14 }}>
+          <div style={{ fontSize: 12, color: frError ? C.red : C.ink45, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.005em' }}>
             {frError
               ? frError
               : frSuccess
-                ? <span style={{ color: C.green, fontWeight: 600 }}>✓ Sent — thanks for the suggestion.</span>
+                ? <span style={{ color: C.green, fontWeight: 600 }}>Sent. Thanks for the suggestion.</span>
                 : `${frDesc.length} / ${FR_DESC_MAX}`}
           </div>
           <button
             onClick={submitFeatureRequest}
             disabled={frSending || !frTitle.trim() || !frDesc.trim()}
-            style={{
-              fontSize: 12.5, fontWeight: 700, cursor: (frSending || !frTitle.trim() || !frDesc.trim()) ? 'not-allowed' : 'pointer',
-              background: C.red, border: `1px solid ${C.red}`, color: '#fff',
-              borderRadius: 100, padding: '8px 18px',
-              fontFamily: 'inherit', flexShrink: 0,
-              opacity: (frSending || !frTitle.trim() || !frDesc.trim()) ? 0.55 : 1,
-              transition: 'opacity 0.15s, transform 0.15s',
-            }}
-          >{frSending ? 'Sending…' : 'Send feature request'}</button>
+            className="set-btn-primary"
+          >{frSending ? 'Sending' : 'Send feature request'}</button>
         </div>
 
-        {/* Past submissions */}
         {frMine.length > 0 && (
-          <div style={{ marginTop: 22, paddingTop: 18, borderTop: `1px solid ${C.borderHex}` }}>
-            <p style={{ fontSize: 11, fontWeight: 600, color: C.text3, letterSpacing: '0.05em', textTransform: 'uppercase', marginBottom: 12 }}>
+          <>
+            <div className="set-divider" style={{ marginTop: 22 }} />
+            <p className="set-eyebrow" style={{ marginTop: 18, marginBottom: 14 }}>
               Your previous requests
             </p>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-              {frMine.map(r => {
+            <div>
+              {frMine.map((r, idx) => {
                 const sty = (() => {
                   if (r.status === 'shipped')  return { c: C.green, bg: C.greenBg, b: C.greenBdr, label: 'Shipped' }
                   if (r.status === 'planned')  return { c: C.amber, bg: C.amberBg, b: C.amberBdr, label: 'Planned' }
-                  if (r.status === 'declined') return { c: C.text3, bg: C.chipBg,  b: C.borderHex, label: 'Declined' }
-                  return { c: C.text2, bg: C.chipBg, b: C.borderHex, label: 'Under review' }
+                  if (r.status === 'declined') return { c: C.ink55, bg: C.chipBg,  b: C.hairline,  label: 'Declined' }
+                  return { c: C.ink60, bg: C.chipBg, b: C.hairline, label: 'Under review' }
                 })()
                 return (
-                  <div key={r.id} style={{ display: 'flex', alignItems: 'flex-start', gap: 12, padding: '10px 12px', background: '#fafafb', border: `1px solid ${C.borderHex}`, borderRadius: 10 }}>
-                    <div style={{ flex: 1, minWidth: 0 }}>
-                      <p style={{ fontSize: 13, fontWeight: 600, color: C.text1, letterSpacing: '-0.1px' }}>{r.title}</p>
-                      <p style={{ fontSize: 12, color: C.text3, marginTop: 2 }}>{fmtDate(r.created_at)}</p>
+                  <div key={r.id}>
+                    {idx > 0 && <div className="set-divider" />}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 0' }}>
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <p style={{ fontSize: 13.5, fontWeight: 500, color: C.ink, letterSpacing: '-0.005em' }}>{r.title}</p>
+                        <p style={{ fontSize: 12, fontWeight: 450, color: C.ink45, marginTop: 3, letterSpacing: '-0.005em' }}>{fmtDate(r.created_at)}</p>
+                      </div>
+                      <span style={{
+                        fontSize: 10, fontWeight: 700, color: sty.c, background: sty.bg,
+                        border: `1px solid ${sty.b}`, padding: '3px 9px', borderRadius: 100,
+                        letterSpacing: '0.06em', textTransform: 'uppercase', flexShrink: 0,
+                      }}>{sty.label}</span>
                     </div>
-                    <span style={{
-                      fontSize: 10, fontWeight: 700, color: sty.c, background: sty.bg,
-                      border: `1px solid ${sty.b}`, padding: '3px 9px', borderRadius: 100,
-                      letterSpacing: '0.05em', textTransform: 'uppercase', flexShrink: 0,
-                    }}>{sty.label}</span>
                   </div>
                 )
               })}
             </div>
-          </div>
+          </>
         )}
       </div>
 
-      {/* ── Row 4: Support — full width ───────────────────────────────────── */}
-      <div style={{ marginBottom: 10 }}>
-        <SectionHeading>Support</SectionHeading>
-      </div>
-      <div style={{
-        ...CARD,
-        padding: '20px 24px', marginBottom: 24,
-        display: 'flex', alignItems: 'center', gap: 20,
-      }}>
-        <div style={{ flex: 1 }}>
-          <p style={{ fontSize: 14, fontWeight: 700, color: C.text1, letterSpacing: '-0.2px' }}>Contact support</p>
-          <p style={{ fontSize: 13, color: C.text2, marginTop: 5, lineHeight: 1.6 }}>
-            Failed run, billing question, or feature request? Email us and we'll get back to you.
+      {/* ── Notifications card ──────────────────────────────────────────── */}
+      <div className="set-card" style={{ padding: '20px 28px', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 16 }}>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <p style={{ fontSize: 14, fontWeight: 600, color: C.ink, letterSpacing: '-0.005em' }}>
+            Weekly channel report
+          </p>
+          <p style={{ fontSize: 12.5, fontWeight: 450, color: C.ink55, marginTop: 4, lineHeight: 1.55, letterSpacing: '-0.005em' }}>
+            Summary of your channel performance every 7 days.
           </p>
         </div>
-        <a
-          href="mailto:support@ytgrowth.io"
-          style={{
-            fontSize: 12, fontWeight: 700, cursor: 'pointer',
-            background: C.red, border: `1px solid ${C.red}`,
-            color: '#fff', borderRadius: 100, padding: '8px 16px',
-            fontFamily: 'inherit', flexShrink: 0,
-            textDecoration: 'none',
-          }}
-        >support@ytgrowth.io</a>
+        <Toggle on={me?.weekly_report_enabled ?? true} onChange={handleToggleReport} />
       </div>
 
-      {/* ── Row 4: Danger Zone — full width ───────────────────────────────── */}
-      <div style={{ marginBottom: 10 }}>
-        <SectionHeading danger>Danger Zone</SectionHeading>
-      </div>
-      <div style={{
-        ...CARD,
-        border: '1px solid rgba(0,0,0,0.07)',
-        background: '#f7f7fa',
-        padding: '20px 24px',
-        display: 'flex', alignItems: 'center', gap: 20,
-      }}>
-        <div style={{ flex: 1 }}>
-          <p style={{ fontSize: 14, fontWeight: 700, color: C.red }}>Delete account</p>
-          <p style={{ fontSize: 13, color: C.text2, marginTop: 5, lineHeight: 1.6 }}>
-            This will permanently delete your account, all channel data, analyses, and reports. This cannot be undone.
+      {/* ── Support card ────────────────────────────────────────────────── */}
+      <div className="set-card" style={{ padding: '20px 28px', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 16 }}>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <p style={{ fontSize: 14, fontWeight: 600, color: C.ink, letterSpacing: '-0.005em' }}>
+            Contact support
+          </p>
+          <p style={{ fontSize: 12.5, fontWeight: 450, color: C.ink55, marginTop: 4, lineHeight: 1.55, letterSpacing: '-0.005em' }}>
+            Failed run, billing question, or anything else.
           </p>
         </div>
-        <button
-          onClick={() => setShowDeleteDialog(true)}
-          style={{
-            fontSize: 12, fontWeight: 700, cursor: 'pointer',
-            background: '#fff', border: `1px solid ${C.redBdr}`,
-            color: C.red, borderRadius: 100, padding: '7px 16px',
-            fontFamily: 'inherit', flexShrink: 0,
-          }}
-        >Delete account</button>
+        <a href="mailto:support@ytgrowth.io" className="set-btn-primary">
+          support@ytgrowth.io
+        </a>
+      </div>
+
+      {/* ── Danger zone ─────────────────────────────────────────────────── */}
+      <div style={{
+        background: 'rgba(229,37,27,0.025)',
+        border: '1px solid rgba(229,37,27,0.10)',
+        borderRadius: 14,
+        boxShadow: '0 1px 2px rgba(15,15,25,0.04), inset 0 1px 0 rgba(255,255,255,0.7)',
+        padding: '20px 28px',
+        marginBottom: 48,
+        display: 'flex', alignItems: 'center', gap: 16,
+      }}>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <p style={{ fontSize: 14, fontWeight: 600, color: C.red, letterSpacing: '-0.005em' }}>
+            Delete account
+          </p>
+          <p style={{ fontSize: 12.5, fontWeight: 450, color: C.ink55, marginTop: 4, lineHeight: 1.55, letterSpacing: '-0.005em' }}>
+            Permanently deletes account, channels, analyses, and reports.
+          </p>
+        </div>
+        <button className="set-btn-danger-outline" onClick={() => setShowDeleteDialog(true)}>
+          Delete account
+        </button>
       </div>
 
       {/* Disconnect dialog */}
