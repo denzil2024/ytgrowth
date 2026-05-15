@@ -1684,9 +1684,9 @@ function ActionsRailCard({ items, totalCount }) {
   const [openKey, setOpenKey] = useState(null)
   if (!items || items.length === 0) return null
 
-  const impactDot = (impact) => {
+  const impactColor = (impact) => {
     const k = (impact || 'med').toLowerCase()
-    return k === 'high' ? '#e5251b' : k === 'low' ? 'rgba(10,10,15,0.35)' : '#d97706'
+    return k === 'high' ? '#e5251b' : k === 'low' ? 'rgba(10,10,15,0.45)' : '#d97706'
   }
   const impactLabel = (impact) => {
     const k = (impact || 'med').toLowerCase()
@@ -1735,7 +1735,6 @@ function ActionsRailCard({ items, totalCount }) {
       <div>
         {items.map((it, i) => {
           const isOpen = openKey === it.key
-          const dot = impactDot(it.impact)
           const label = impactLabel(it.impact)
           const showFix = it.action.action && it.action.action !== it.action.problem
           const showWhy = !!it.action.expected_outcome
@@ -1762,11 +1761,6 @@ function ActionsRailCard({ items, totalCount }) {
                   fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.2px',
                 }}>{i + 1}</span>
 
-                <span style={{
-                  flexShrink: 0, width: 7, height: 7, borderRadius: 99,
-                  background: dot,
-                }}/>
-
                 <p style={{
                   flex: 1, minWidth: 0,
                   fontSize: 13.5, fontWeight: 500, color: '#0a0a0f',
@@ -1777,7 +1771,7 @@ function ActionsRailCard({ items, totalCount }) {
 
                 <span style={{
                   flexShrink: 0,
-                  fontSize: 10.5, fontWeight: 600, color: dot,
+                  fontSize: 10.5, fontWeight: 600, color: impactColor(it.impact),
                   letterSpacing: '-0.05px',
                   whiteSpace: 'nowrap',
                 }}>{label}</span>
@@ -2085,7 +2079,7 @@ function MilestoneFeedCard({ milestone, onShare, onDownload, onDismiss }) {
       onDismiss={onDismiss}
     >
       <h3 style={{
-        fontSize: 15, fontWeight: 700, color: C.text1,
+        fontSize: 14, fontWeight: 600, color: C.text1,
         letterSpacing: '-0.25px', lineHeight: 1.35,
         marginBottom: 12,
       }}>{milestone.headline}</h3>
@@ -2211,7 +2205,7 @@ function ContentMixFeedCard({ patterns, mix, onDismiss, fillHeight = false }) {
       fillHeight={fillHeight}
     >
       <h3 style={{
-        fontSize: 15, fontWeight: 700, color: C.text1,
+        fontSize: 14, fontWeight: 600, color: C.text1,
         letterSpacing: '-0.25px', lineHeight: 1.35,
         marginBottom: 12,
       }}>{patterns.headline || 'Your content mix'}</h3>
@@ -2353,7 +2347,7 @@ function ChannelHealthFeedCard({ score, categories, weakest, children, open, onT
       }
     >
       <h3 style={{
-        fontSize: 15, fontWeight: 700, color: C.text1,
+        fontSize: 14, fontWeight: 600, color: C.text1,
         letterSpacing: '-0.25px', lineHeight: 1.35,
         marginBottom: 12,
       }}>
@@ -2494,7 +2488,7 @@ function TopPerformerCard({ video, channelAvgViews, onOpen, onDismiss }) {
         {/* Right side: title + metrics */}
         <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column' }}>
           <h3 style={{
-            fontSize: 15, fontWeight: 700, color: C.text1,
+            fontSize: 14, fontWeight: 600, color: C.text1,
             letterSpacing: '-0.25px', lineHeight: 1.4,
             marginBottom: 12,
             display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical',
@@ -3182,7 +3176,7 @@ function TrackedLiftCard({ win, moreCount, onOpenAll, onDismiss }) {
       }
     >
       <h3 style={{
-        fontSize: 16, fontWeight: 700, color: C.text1,
+        fontSize: 14, fontWeight: 600, color: C.text1,
         letterSpacing: '-0.3px', lineHeight: 1.3,
         marginBottom: 14,
       }}>Your update is outperforming the old version</h3>
@@ -3313,74 +3307,75 @@ function DailyIdeasCard({ ideas, lastUpdated, isStale, isFree, refreshing, onRef
       onDismiss={onDismiss}
       rightSlot={
         <span style={{
-          display: 'inline-flex', alignItems: 'center', gap: 4,
-          fontSize: 10.5, fontWeight: 700, color: C.amber,
-          background: 'rgba(217,119,6,0.08)', border: '1px solid rgba(217,119,6,0.22)',
-          padding: '3px 8px', borderRadius: 100,
-          letterSpacing: '0.05em', textTransform: 'uppercase',
+          display: 'inline-flex', alignItems: 'center', gap: 5,
+          fontSize: 10.5, fontWeight: 600, color: '#059669',
+          background: 'rgba(5,150,105,0.08)', border: '1px solid rgba(5,150,105,0.22)',
+          padding: '3px 9px', borderRadius: 100,
+          letterSpacing: '0.10em', textTransform: 'uppercase',
         }}>
+          <span style={{ width: 5, height: 5, borderRadius: 99, background: '#059669' }}/>
           {top3.length} ready
         </span>
       }
     >
       <div style={{ display: 'flex', alignItems: 'baseline', gap: 12, flexWrap: 'wrap', marginBottom: 14 }}>
         <h3 style={{
-          fontSize: 16, fontWeight: 700, color: C.text1,
-          letterSpacing: '-0.3px', lineHeight: 1.25,
-        }}>Start writing one of these today</h3>
+          fontSize: 14, fontWeight: 600, color: '#0a0a0f',
+          letterSpacing: '-0.15px', lineHeight: 1.3, margin: 0,
+        }}>Start shooting one of these today</h3>
         <span style={{
-          fontSize: 12, fontWeight: 500, color: isStale ? C.amber : C.text3,
-          letterSpacing: '-0.01em',
+          fontSize: 12, fontWeight: 500, color: isStale ? C.amber : 'rgba(10,10,15,0.55)',
+          letterSpacing: '-0.05px',
         }}>{subline}</span>
       </div>
 
-      {/* Idea rows. Each row: rank dot + title + angle + Use CTA. */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 12 }}>
+      {/* Idea rows. Each row: rank chip + title + angle + Use CTA. White
+          backgrounds + readable text (not faint) for legibility. */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 12 }}>
         {top3.map((idea, i) => {
           const score = idea.opportunityScore != null
             ? idea.opportunityScore
             : Math.max(65, 85 - i * 4)
-          const scoreClr = score >= 80 ? C.green : score >= 65 ? C.amber : C.text3
+          const scoreClr = score >= 80 ? '#059669' : score >= 65 ? '#d97706' : 'rgba(10,10,15,0.55)'
           return (
             <div
               key={i}
               style={{
                 display: 'flex', alignItems: 'flex-start', gap: 12,
                 padding: '12px 14px',
-                background: '#fafafb',
-                border: '1px solid #ececf0',
+                background: '#ffffff',
+                border: '1px solid rgba(10,10,15,0.08)',
                 borderRadius: 10,
-                transition: 'background 0.14s ease, border-color 0.14s ease, transform 0.14s ease',
+                transition: 'background 0.14s, border-color 0.14s, transform 0.14s',
               }}
-              onMouseEnter={e => { e.currentTarget.style.background = '#fff'; e.currentTarget.style.borderColor = '#d6d6dc'; e.currentTarget.style.transform = 'translateY(-1px)' }}
-              onMouseLeave={e => { e.currentTarget.style.background = '#fafafb'; e.currentTarget.style.borderColor = '#ececf0'; e.currentTarget.style.transform = 'translateY(0)' }}
+              onMouseEnter={e => { e.currentTarget.style.background = 'rgba(10,10,15,0.02)'; e.currentTarget.style.borderColor = 'rgba(10,10,15,0.14)'; e.currentTarget.style.transform = 'translateY(-1px)' }}
+              onMouseLeave={e => { e.currentTarget.style.background = '#ffffff'; e.currentTarget.style.borderColor = 'rgba(10,10,15,0.08)'; e.currentTarget.style.transform = 'translateY(0)' }}
             >
-              {/* Rank badge */}
+              {/* Rank badge — neutral charcoal, no amber tint */}
               <div style={{
                 flexShrink: 0,
-                width: 28, height: 28, borderRadius: 8,
+                width: 24, height: 24, borderRadius: 7,
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                background: 'rgba(217,119,6,0.08)',
-                border: '1px solid rgba(217,119,6,0.22)',
-                fontSize: 12, fontWeight: 800, color: C.amber,
-                letterSpacing: '-0.3px',
+                background: 'rgba(10,10,15,0.05)',
+                fontSize: 11.5, fontWeight: 700, color: '#0a0a0f',
+                letterSpacing: '-0.2px',
                 fontVariantNumeric: 'tabular-nums',
               }}>{i + 1}</div>
 
               <div style={{ flex: 1, minWidth: 0 }}>
                 {/* Title */}
                 <p style={{
-                  fontSize: 13.5, fontWeight: 700, color: C.text1,
-                  letterSpacing: '-0.2px', lineHeight: 1.35,
+                  fontSize: 13.5, fontWeight: 600, color: '#0a0a0f',
+                  letterSpacing: '-0.15px', lineHeight: 1.4,
                   marginBottom: 4,
                   display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical',
                   overflow: 'hidden',
                 }}>{idea.title}</p>
-                {/* Angle (one-line truncated) */}
+                {/* Angle (one-line truncated) — text2 for readability, not faint text3 */}
                 {idea.angle && (
                   <p style={{
-                    fontSize: 11.5, fontWeight: 500, color: C.text3,
-                    letterSpacing: '-0.01em', lineHeight: 1.45,
+                    fontSize: 12, fontWeight: 500, color: 'rgba(10,10,15,0.65)',
+                    letterSpacing: '-0.05px', lineHeight: 1.5,
                     display: '-webkit-box', WebkitLineClamp: 1, WebkitBoxOrient: 'vertical',
                     overflow: 'hidden',
                   }}>{idea.angle}</p>
@@ -3389,17 +3384,17 @@ function DailyIdeasCard({ ideas, lastUpdated, isStale, isFree, refreshing, onRef
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 6 }}>
                   {idea.targetKeyword && (
                     <span style={{
-                      fontSize: 10, fontWeight: 600, color: C.text3,
-                      letterSpacing: '0.04em',
-                      display: 'inline-flex', alignItems: 'center', gap: 4,
+                      fontSize: 10.5, fontWeight: 500, color: 'rgba(10,10,15,0.55)',
+                      letterSpacing: '-0.01em',
+                      display: 'inline-flex', alignItems: 'center', gap: 5,
                     }}>
-                      <span style={{ width: 4, height: 4, borderRadius: 99, background: C.text3 }}/>
+                      <span style={{ width: 4, height: 4, borderRadius: 99, background: 'rgba(10,10,15,0.35)' }}/>
                       {idea.targetKeyword}
                     </span>
                   )}
                   <span style={{
-                    fontSize: 10, fontWeight: 700, color: scoreClr,
-                    letterSpacing: '0.04em',
+                    fontSize: 10.5, fontWeight: 600, color: scoreClr,
+                    letterSpacing: '-0.05px',
                     fontVariantNumeric: 'tabular-nums',
                   }}>
                     Score {score}
@@ -3414,13 +3409,13 @@ function DailyIdeasCard({ ideas, lastUpdated, isStale, isFree, refreshing, onRef
                 style={{
                   flexShrink: 0, alignSelf: 'center',
                   display: 'inline-flex', alignItems: 'center', gap: 5,
-                  padding: '7px 13px', borderRadius: 100,
+                  padding: '7px 14px', borderRadius: 100,
                   border: 'none', cursor: 'pointer',
-                  background: C.red, color: '#fff',
+                  background: '#e5251b', color: '#fff',
                   fontFamily: 'inherit',
-                  fontSize: 11.5, fontWeight: 700, letterSpacing: '-0.01em',
+                  fontSize: 12, fontWeight: 600, letterSpacing: '-0.05px',
                   boxShadow: '0 1px 3px rgba(229,37,27,0.28)',
-                  transition: 'filter 0.14s ease, transform 0.14s ease',
+                  transition: 'filter 0.14s, transform 0.14s',
                 }}
                 onMouseEnter={e => { e.currentTarget.style.filter = 'brightness(1.08)'; e.currentTarget.style.transform = 'translateY(-1px)' }}
                 onMouseLeave={e => { e.currentTarget.style.filter = 'none'; e.currentTarget.style.transform = 'translateY(0)' }}
@@ -3517,7 +3512,7 @@ function CompetitorActivityCard({ items, refreshing, onRefresh, onOpen, onOpenAl
       }
     >
       <h3 style={{
-        fontSize: 16, fontWeight: 700, color: C.text1,
+        fontSize: 14, fontWeight: 600, color: C.text1,
         letterSpacing: '-0.3px', lineHeight: 1.25,
         marginBottom: 14,
       }}>What your competition just posted</h3>
