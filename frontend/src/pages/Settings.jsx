@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { User, Users, CreditCard, Sparkles, LifeBuoy, AlertTriangle } from 'lucide-react'
 import { loginUrl } from '../utm.js'
 
 /* ── Design tokens ───────────────────────────────────────────────────────── */
@@ -52,11 +53,31 @@ function useSettingsStyles() {
           border-color: rgba(229,37,27,0.12);
         }
 
-        /* Section header pattern */
+        /* Section header pattern. Icon in tinted square + H2 + optional
+           meta on the right. Tight 10px gap to the card below so the H2
+           reads as the card's title, not a floating label. */
         .set-section-head {
-          display: flex; align-items: baseline; justify-content: space-between;
+          display: flex; align-items: center; justify-content: space-between;
           gap: 12px; flex-wrap: wrap;
-          margin: 0 0 14px;
+          margin: 0 0 10px;
+        }
+        .set-section-head-left {
+          display: inline-flex; align-items: center; gap: 11px;
+          min-width: 0;
+        }
+        .set-section-head .set-section-icon {
+          width: 28px; height: 28px; border-radius: 8px;
+          display: inline-flex; align-items: center; justify-content: center;
+          flex-shrink: 0;
+          background: rgba(10,10,15,0.05);
+          color: ${C.text1};
+          border: 1px solid ${C.border};
+        }
+        .set-section-head h2.danger ~ * .set-section-icon,
+        .set-section-head-left.danger .set-section-icon {
+          background: rgba(229,37,27,0.07);
+          border-color: rgba(229,37,27,0.18);
+          color: ${C.red};
         }
         .set-section-head h2 {
           font-size: 22px; font-weight: 700; color: ${C.text1};
@@ -66,6 +87,8 @@ function useSettingsStyles() {
         .set-section-head .set-section-meta {
           font-size: 12px; font-weight: 500; color: ${C.text2};
           letter-spacing: -0.05px;
+          display: inline-flex; align-items: center; gap: 6px;
+          flex-shrink: 0;
         }
 
         /* Buttons */
@@ -129,30 +152,84 @@ function useSettingsStyles() {
                       inset 0 1px 0 rgba(255,255,255,0.7);
         }
 
-        /* Channel row — inline (no inner card-on-card) */
-        .set-channel-row {
-          display: flex; align-items: center; gap: 12px;
-          padding: 12px 4px;
-          border-bottom: 1px solid ${C.border};
-          transition: background 0.14s;
+        /* Channel TILE — used in a 2-col grid (replaces the stacked row
+           pattern). Active channel gets a green-tinted background + left
+           accent so the user instantly sees which one they're working on. */
+        .set-channel-card {
+          position: relative;
+          background: #ffffff;
+          border: 1px solid ${C.border};
+          border-radius: 14px;
+          padding: 16px 18px;
+          display: flex; flex-direction: column; gap: 12px;
+          transition: border-color 0.2s cubic-bezier(0.2,0.7,0.3,1),
+                      box-shadow 0.2s cubic-bezier(0.2,0.7,0.3,1),
+                      transform 0.2s cubic-bezier(0.2,0.7,0.3,1);
+          box-shadow: 0 1px 2px rgba(15,15,25,0.03), inset 0 1px 0 rgba(255,255,255,0.7);
         }
-        .set-channel-row:last-child { border-bottom: none; }
+        .set-channel-card:hover {
+          border-color: ${C.borderH};
+          box-shadow: 0 1px 2px rgba(15,15,25,0.04),
+                      0 6px 18px rgba(15,15,25,0.05),
+                      inset 0 1px 0 rgba(255,255,255,0.7);
+          transform: translateY(-1px);
+        }
+        .set-channel-card.active {
+          background: rgba(5,150,105,0.03);
+          border-color: rgba(5,150,105,0.20);
+        }
+        .set-channel-card.active::before {
+          content: '';
+          position: absolute; left: 0; top: 14px; bottom: 14px;
+          width: 3px; border-radius: 3px;
+          background: ${C.green};
+        }
+        .set-channel-card.active:hover { border-color: rgba(5,150,105,0.35); }
 
-        /* "Connect another channel" tile */
+        /* "Connect another channel" tile — full-width below the grid */
         .set-connect-tile {
           display: flex; align-items: center; justify-content: center;
-          gap: 6px;
-          padding: 13px 16px; border-radius: 12px;
+          gap: 8px;
+          padding: 16px 18px; border-radius: 14px;
           border: 1px dashed ${C.borderH};
           background: transparent;
           text-decoration: none;
           color: ${C.text2};
-          font-size: 13px; font-weight: 600; letter-spacing: -0.05px;
+          font-size: 13.5px; font-weight: 600; letter-spacing: -0.05px;
           transition: border-color 0.18s, color 0.18s, background 0.18s;
         }
         .set-connect-tile:hover {
           border-color: ${C.red}; color: ${C.red};
           background: rgba(229,37,27,0.02);
+        }
+
+        /* Slim row card — used for Support and Danger zone. One line tall,
+           icon + label/description + action button. Lighter visual weight
+           than a full card. */
+        .set-row {
+          display: flex; align-items: center; gap: 16px;
+          padding: 14px 18px;
+          background: #ffffff;
+          border: 1px solid ${C.border};
+          border-radius: 12px;
+          box-shadow: 0 1px 2px rgba(15,15,25,0.03), inset 0 1px 0 rgba(255,255,255,0.7);
+        }
+        .set-row.danger {
+          background: rgba(229,37,27,0.025);
+          border-color: rgba(229,37,27,0.14);
+        }
+        .set-row .set-row-icon {
+          width: 32px; height: 32px; border-radius: 9px;
+          display: inline-flex; align-items: center; justify-content: center;
+          flex-shrink: 0;
+          background: ${C.chipBg};
+          color: ${C.text2};
+          border: 1px solid ${C.border};
+        }
+        .set-row.danger .set-row-icon {
+          background: rgba(229,37,27,0.08);
+          border-color: rgba(229,37,27,0.18);
+          color: ${C.red};
         }
       `
       document.head.appendChild(style)
@@ -228,10 +305,17 @@ function refillLabel(iso, isLifetime) {
 }
 
 /* ── Small components ─────────────────────────────────────────────────────── */
-function SectionHead({ title, danger, meta, children }) {
+function SectionHead({ title, Icon, danger, meta, children }) {
   return (
     <div className="set-section-head">
-      <h2 className={danger ? 'danger' : ''}>{title}</h2>
+      <span className={`set-section-head-left ${danger ? 'danger' : ''}`}>
+        {Icon && (
+          <span className="set-section-icon">
+            <Icon size={14} strokeWidth={2.1} />
+          </span>
+        )}
+        <h2 className={danger ? 'danger' : ''}>{title}</h2>
+      </span>
       {meta && <span className="set-section-meta">{meta}</span>}
       {children}
     </div>
@@ -480,7 +564,7 @@ export default function Settings({ channelData }) {
     <div className="set-page" style={{ maxWidth: 1040, margin: '0 auto' }}>
 
       {/* ── Page heading ────────────────────────────────────────────────── */}
-      <div style={{ marginBottom: 32 }}>
+      <div style={{ marginBottom: 28 }}>
         <h1 style={{ fontSize: 26, fontWeight: 700, color: C.text1, letterSpacing: '-0.7px', marginBottom: 6, lineHeight: 1.1 }}>Settings</h1>
         <p style={{ fontSize: 13.5, color: C.text2, fontWeight: 500, letterSpacing: '-0.05px', lineHeight: 1.5 }}>
           Account, plan, channels, preferences.
@@ -488,8 +572,9 @@ export default function Settings({ channelData }) {
       </div>
 
       {/* ── Account ─────────────────────────────────────────────────────── */}
-      <SectionHead title="Account" />
-      <div className="set-card" style={{ padding: '20px 24px', marginBottom: 32, display: 'flex', alignItems: 'center', gap: 20 }}>
+      <SectionHead title="Account" Icon={User} />
+      <div className="set-card" style={{ padding: '18px 22px', marginBottom: 24 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 18 }}>
         {(() => {
           const pic = me?.profile_picture || channelData?.channel?.thumbnail || me?.channels?.[0]?.channel_thumbnail
           const fallbackName = me?.display_name || channelData?.channel?.channel_name || me?.channels?.[0]?.channel_name || me?.email
@@ -522,63 +607,104 @@ export default function Settings({ channelData }) {
           }}>{planLabel(me?.plan)}</span>
           <p style={{ fontSize: 12, color: C.text3, marginTop: 6, fontWeight: 500 }}>{billingCycleLabel(me)}</p>
         </div>
+        </div>
+
+        {/* Stat strip — channels count + tenure + this month's usage. Sits
+            on a hairline above so the card body has rhythm instead of one
+            single identity row. */}
+        {(() => {
+          const ch = activeChannels.length
+          const since = me?.member_since ? new Date(me.member_since) : null
+          const days = since ? Math.max(1, Math.floor((Date.now() - since.getTime()) / 86400000)) : null
+          const used = me?.monthly_used ?? 0
+          const cells = [
+            { label: 'Channels',     value: String(ch) },
+            { label: 'Member',       value: days == null ? '—' : days < 60 ? `${days}d` : `${Math.floor(days / 30)}mo` },
+            { label: 'This month',   value: `${used} runs` },
+          ]
+          return (
+            <div style={{
+              marginTop: 14, paddingTop: 14,
+              borderTop: `1px solid ${C.border}`,
+              display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 0,
+            }}>
+              {cells.map((c, i) => (
+                <div key={c.label} style={{
+                  paddingLeft: i === 0 ? 0 : 18,
+                  borderLeft: i === 0 ? 'none' : `1px solid ${C.border}`,
+                }}>
+                  <p style={{ fontSize: 10.5, fontWeight: 700, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 4 }}>{c.label}</p>
+                  <p style={{ fontSize: 17, fontWeight: 700, color: C.text1, letterSpacing: '-0.3px', fontVariantNumeric: 'tabular-nums', lineHeight: 1 }}>{c.value}</p>
+                </div>
+              ))}
+            </div>
+          )
+        })()}
       </div>
 
-      {/* ── Connected channels ─────────────────────────────────────────── */}
-      <SectionHead title="Connected channels" meta={`${activeChannels.length} of ${me?.channels_allowed ?? 1}`} />
-      <div className="set-card" style={{ padding: '8px 24px 18px', marginBottom: 32 }}>
-        <div>
-          {activeChannels.map(ch => (
-            <div key={ch.channel_id} className="set-channel-row">
+      {/* ── Connected channels ─ 2-col tile grid + full-width connect ── */}
+      <SectionHead title="Connected channels" Icon={Users} meta={`${activeChannels.length} of ${me?.channels_allowed ?? 1}`} />
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 12, marginBottom: 12 }}>
+        {activeChannels.map(ch => (
+          <div key={ch.channel_id} className={`set-channel-card ${ch.is_current ? 'active' : ''}`}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
               {ch.channel_thumbnail
-                ? <img src={ch.channel_thumbnail} alt="" style={{ width: 36, height: 36, borderRadius: '50%', objectFit: 'cover', flexShrink: 0, border: `1px solid ${C.border}` }} />
-                : <div style={{ width: 36, height: 36, borderRadius: '50%', background: C.chipBg, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13, fontWeight: 600, color: C.text1, flexShrink: 0, border: `1px solid ${C.border}` }}>
+                ? <img src={ch.channel_thumbnail} alt="" style={{ width: 44, height: 44, borderRadius: '50%', objectFit: 'cover', flexShrink: 0, border: `1px solid ${C.border}` }} />
+                : <div style={{ width: 44, height: 44, borderRadius: '50%', background: C.chipBg, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 15, fontWeight: 600, color: C.text1, flexShrink: 0, border: `1px solid ${C.border}` }}>
                     {(ch.channel_name || '?')[0].toUpperCase()}
                   </div>
               }
               <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <p style={{ fontSize: 14, fontWeight: 600, color: C.text1, letterSpacing: '-0.1px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{ch.channel_name}</p>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
+                  <p style={{ fontSize: 14, fontWeight: 600, color: C.text1, letterSpacing: '-0.15px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{ch.channel_name}</p>
                   {ch.is_current && (
-                    <span style={{ background: C.greenBg, color: C.green, border: `1px solid ${C.greenBdr}`, fontSize: 10, fontWeight: 700, letterSpacing: '0.10em', textTransform: 'uppercase', padding: '2px 8px', borderRadius: 100, flexShrink: 0 }}>Active</span>
+                    <span style={{ background: C.greenBg, color: C.green, border: `1px solid ${C.greenBdr}`, fontSize: 9.5, fontWeight: 700, letterSpacing: '0.10em', textTransform: 'uppercase', padding: '2px 7px', borderRadius: 100, flexShrink: 0 }}>Active</span>
                   )}
                 </div>
-                <p style={{ fontSize: 12, color: C.text2, marginTop: 3, fontWeight: 500, fontVariantNumeric: 'tabular-nums' }}>
-                  {fmtSubs(ch.subscribers)} subscribers · Connected {fmtDate(ch.connected_at)}
+                <p style={{ fontSize: 12, color: C.text2, marginTop: 2, fontWeight: 500, fontVariantNumeric: 'tabular-nums' }}>
+                  {fmtSubs(ch.subscribers)} subscribers
                 </p>
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
-                {!ch.is_current && (
-                  <button onClick={() => handleSwitch(ch.channel_id)} className="set-btn-ghost">Switch</button>
-                )}
-                <button onClick={() => setDisconnectTarget(ch)} className="set-btn-link">Disconnect</button>
               </div>
             </div>
-          ))}
-        </div>
-
-        {/* Connect / upgrade */}
-        <div style={{ marginTop: 14 }}>
-          {canAddMore
-            ? <a href="/auth/login" className="set-connect-tile">
-                <span style={{ fontSize: 14, lineHeight: 1, fontWeight: 600, opacity: 0.85 }}>+</span>
-                Connect another channel
-              </a>
-            : <div style={{ border: `1px solid ${C.border}`, borderRadius: 12, padding: '13px 16px', display: 'flex', alignItems: 'center', gap: 12 }}>
-                <p style={{ flex: 1, fontSize: 12.5, color: C.text2, lineHeight: 1.55, fontWeight: 500 }}>
-                  You've reached your channel limit. Upgrade to connect more.
-                </p>
-                <a href="/?tab=monthly#pricing" className="set-btn-primary" style={{ textDecoration: 'none' }}>
-                  Upgrade plan
-                </a>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, paddingTop: 10, borderTop: `1px solid ${C.border}` }}>
+              <p style={{ fontSize: 11.5, color: C.text3, fontWeight: 500, letterSpacing: '-0.05px' }}>
+                Connected {fmtDate(ch.connected_at)}
+              </p>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                {!ch.is_current && (
+                  <button onClick={() => handleSwitch(ch.channel_id)} className="set-btn-ghost" style={{ padding: '5px 11px', fontSize: 11.5 }}>Switch</button>
+                )}
+                <button onClick={() => setDisconnectTarget(ch)} className="set-btn-link" style={{ padding: '5px 4px' }}>Disconnect</button>
               </div>
-          }
-        </div>
+            </div>
+          </div>
+        ))}
+      </div>
+      <div style={{ marginBottom: 28 }}>
+        {canAddMore
+          ? <a href="/auth/login" className="set-connect-tile">
+              <span style={{ fontSize: 15, lineHeight: 1, fontWeight: 600, opacity: 0.85 }}>+</span>
+              Connect another channel
+            </a>
+          : <div style={{ border: `1px solid ${C.border}`, borderRadius: 14, padding: '14px 18px', background: '#ffffff', display: 'flex', alignItems: 'center', gap: 12 }}>
+              <p style={{ flex: 1, fontSize: 13, color: C.text2, lineHeight: 1.55, fontWeight: 500 }}>
+                You've reached your channel limit. Upgrade to connect more.
+              </p>
+              <a href="/?tab=monthly#pricing" className="set-btn-primary" style={{ textDecoration: 'none' }}>
+                Upgrade plan
+              </a>
+            </div>
+        }
       </div>
 
-      {/* ── Plan and credits ──────────────────────────────────────────── */}
-      <SectionHead title="Plan and credits" />
-      <div className="set-card" style={{ padding: '22px 26px', marginBottom: 32 }}>
+      {/* ── Plan, credits, billing & email — ONE card with 3 internal
+            sections separated by hairlines: 2-up scoreboard | actions row
+            | weekly-report toggle. Email is folded in here so the page
+            doesn't burn a whole card on a single toggle. ── */}
+      <SectionHead title="Plan and credits" Icon={CreditCard} />
+      <div className="set-card" style={{ padding: '0', marginBottom: 24 }}>
+
+        {/* 2-up scoreboard */}
         {(() => {
           const allowance    = me?.monthly_allowance ?? 3
           const used         = me?.monthly_used ?? 0
@@ -588,12 +714,9 @@ export default function Settings({ channelData }) {
           const nearLimit    = !atLimit && remainingPct <= 20
           const accent       = atLimit ? C.red : nearLimit ? C.amber : C.green
           return (
-            // Two-up inside the card: AI analyses on the left (hero number +
-            // bar + refill copy), pack balance on the right. Single card so
-            // the page reads as a list of preference sections, not a grid.
-            <div style={{ display: 'grid', gridTemplateColumns: '1.4fr 1fr', gap: 28, alignItems: 'start', marginBottom: 18 }}>
-              <div>
-                <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 10 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1.4fr 1fr', alignItems: 'stretch' }}>
+              <div style={{ padding: '20px 24px' }}>
+                <p style={{ fontSize: 10.5, fontWeight: 700, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 10 }}>
                   AI analyses
                 </p>
                 <div style={{ display: 'flex', alignItems: 'baseline', gap: 10 }}>
@@ -609,9 +732,9 @@ export default function Settings({ channelData }) {
                   {refillLabel(me?.reset_date, me?.is_lifetime)}
                 </p>
               </div>
-              <div style={{ paddingLeft: 28, borderLeft: `1px solid ${C.border}` }}>
-                <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 10 }}>
-                  Credit pack balance
+              <div style={{ padding: '20px 24px', borderLeft: `1px solid ${C.border}` }}>
+                <p style={{ fontSize: 10.5, fontWeight: 700, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 10 }}>
+                  Credit pack
                 </p>
                 <div style={{ display: 'flex', alignItems: 'baseline', gap: 10 }}>
                   <span style={{
@@ -623,15 +746,15 @@ export default function Settings({ channelData }) {
                   <span style={{ fontSize: 13.5, fontWeight: 500, color: C.text2 }}>credits</span>
                 </div>
                 <p style={{ fontSize: 12, color: C.text3, marginTop: 8, fontWeight: 500, lineHeight: 1.5 }}>
-                  Never expires — used after the monthly analyses run out.
+                  Never expires — used after monthly analyses run out.
                 </p>
               </div>
             </div>
           )
         })()}
 
-        {/* Action buttons */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', paddingTop: 18, borderTop: `1px solid ${C.border}` }}>
+        {/* Buttons row */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', padding: '16px 24px', borderTop: `1px solid ${C.border}` }}>
           <button onClick={() => window.location.href = '/?tab=packs#pricing'} className="set-btn-ghost">
             Top up credits
           </button>
@@ -641,33 +764,27 @@ export default function Settings({ channelData }) {
             </button>
           )}
           {hasActiveSub && (
-            <a href="mailto:support@ytgrowth.io?subject=Manage%20billing" className="set-btn-link" style={{ textDecoration: 'none' }}>
-              Manage billing
+            <a href="mailto:support@ytgrowth.io?subject=Manage%20billing" className="set-btn-link" style={{ textDecoration: 'none', marginLeft: 'auto' }}>
+              Manage billing →
             </a>
           )}
         </div>
-      </div>
 
-      {/* ── Email preferences ─────────────────────────────────────────── */}
-      <SectionHead title="Email" />
-      <div className="set-card" style={{ padding: '18px 24px', marginBottom: 32 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-          <div style={{ flex: 1 }}>
-            <p style={{ fontSize: 14, fontWeight: 600, color: C.text1, letterSpacing: '-0.15px' }}>Weekly channel report</p>
-            <p style={{ fontSize: 13, color: C.text2, marginTop: 4, fontWeight: 500, lineHeight: 1.55 }}>
-              A summary of your channel performance sent every 7 days.
+        {/* Weekly report toggle (Email folded in here) */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 16, padding: '16px 24px', borderTop: `1px solid ${C.border}` }}>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <p style={{ fontSize: 13.5, fontWeight: 600, color: C.text1, letterSpacing: '-0.1px' }}>Weekly channel report</p>
+            <p style={{ fontSize: 12, color: C.text2, marginTop: 2, fontWeight: 500, lineHeight: 1.5 }}>
+              A summary of your channel performance, every 7 days.
             </p>
           </div>
           <Toggle on={me?.weekly_report_enabled ?? true} onChange={handleToggleReport} />
         </div>
-        {!(me?.weekly_report_enabled ?? true) && (
-          <p style={{ fontSize: 12, color: C.text3, marginTop: 12, fontWeight: 500 }}>You can resubscribe anytime.</p>
-        )}
       </div>
 
       {/* ── Feature requests ─────────────────────────────────────────── */}
       <div id="feedback-section">
-        <SectionHead title="Feature requests">
+        <SectionHead title="Feature requests" Icon={Sparkles}>
           <button onClick={copyShareLink} className="set-btn-link"
             style={{ color: frShareCopied ? C.green : C.text2, display: 'inline-flex', alignItems: 'center', gap: 6 }}>
             {frShareCopied ? (
@@ -684,14 +801,13 @@ export default function Settings({ channelData }) {
           </button>
         </SectionHead>
       </div>
-      <div className="set-card" style={{ padding: '24px 26px', marginBottom: 32 }}>
-        <p style={{ fontSize: 14, fontWeight: 600, color: C.text1, letterSpacing: '-0.15px', marginBottom: 4 }}>Tell us what to build next</p>
-        <p style={{ fontSize: 13, color: C.text2, lineHeight: 1.6, fontWeight: 500, marginBottom: 18 }}>
+      <div className="set-card" style={{ padding: '20px 24px', marginBottom: 24 }}>
+        <p style={{ fontSize: 13.5, fontWeight: 600, color: C.text1, letterSpacing: '-0.1px', marginBottom: 2 }}>Tell us what to build next</p>
+        <p style={{ fontSize: 12.5, color: C.text2, lineHeight: 1.55, fontWeight: 500, marginBottom: 16 }}>
           We read every request. Be specific: what's missing, who it's for, why it matters.
         </p>
 
-        {/* Title */}
-        <label style={{ display: 'block', fontSize: 11, fontWeight: 700, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 6 }}>
+        <label style={{ display: 'block', fontSize: 10.5, fontWeight: 700, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 6 }}>
           Title
         </label>
         <input
@@ -702,8 +818,7 @@ export default function Settings({ channelData }) {
           className="set-input"
         />
 
-        {/* Description */}
-        <label style={{ display: 'block', fontSize: 11, fontWeight: 700, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase', margin: '16px 0 6px' }}>
+        <label style={{ display: 'block', fontSize: 10.5, fontWeight: 700, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase', margin: '14px 0 6px' }}>
           What would you like to see?
         </label>
         <textarea
@@ -714,8 +829,7 @@ export default function Settings({ channelData }) {
           className="set-textarea"
         />
 
-        {/* Footer row */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, marginTop: 14 }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, marginTop: 12 }}>
           <div style={{ fontSize: 12, color: frError ? C.red : C.text3, fontWeight: 500, fontVariantNumeric: 'tabular-nums' }}>
             {frError
               ? frError
@@ -730,14 +844,13 @@ export default function Settings({ channelData }) {
           >{frSending ? 'Sending…' : 'Send feature request'}</button>
         </div>
 
-        {/* Past submissions */}
         {frMine.length > 0 && (
-          <div style={{ marginTop: 24, paddingTop: 18, borderTop: `1px solid ${C.border}` }}>
-            <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 12 }}>
+          <div style={{ marginTop: 22, paddingTop: 16, borderTop: `1px solid ${C.border}` }}>
+            <p style={{ fontSize: 10.5, fontWeight: 700, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 10 }}>
               Your previous requests
             </p>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-              {frMine.map(r => {
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
+              {frMine.map((r, i) => {
                 const sty = (() => {
                   if (r.status === 'shipped')  return { c: C.green, bg: C.greenBg, b: C.greenBdr, label: 'Shipped' }
                   if (r.status === 'planned')  return { c: C.amber, bg: C.amberBg, b: C.amberBdr, label: 'Planned' }
@@ -745,10 +858,14 @@ export default function Settings({ channelData }) {
                   return { c: C.text2, bg: C.chipBg, b: C.border, label: 'Under review' }
                 })()
                 return (
-                  <div key={r.id} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '11px 14px', background: '#ffffff', border: `1px solid ${C.border}`, borderRadius: 10 }}>
+                  <div key={r.id} style={{
+                    display: 'flex', alignItems: 'center', gap: 12,
+                    padding: '10px 2px',
+                    borderTop: i === 0 ? 'none' : `1px solid ${C.border}`,
+                  }}>
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <p style={{ fontSize: 13, fontWeight: 600, color: C.text1, letterSpacing: '-0.1px' }}>{r.title}</p>
-                      <p style={{ fontSize: 12, color: C.text3, marginTop: 2, fontWeight: 500 }}>{fmtDate(r.created_at)}</p>
+                      <p style={{ fontSize: 11.5, color: C.text3, marginTop: 1, fontWeight: 500 }}>{fmtDate(r.created_at)}</p>
                     </div>
                     <span style={{
                       fontSize: 10, fontWeight: 700, color: sty.c, background: sty.bg,
@@ -763,33 +880,42 @@ export default function Settings({ channelData }) {
         )}
       </div>
 
-      {/* ── Support ─────────────────────────────────────────────────── */}
-      <SectionHead title="Support" />
-      <div className="set-card" style={{ padding: '20px 24px', marginBottom: 32, display: 'flex', alignItems: 'center', gap: 20, flexWrap: 'wrap' }}>
-        <div style={{ flex: 1, minWidth: 240 }}>
-          <p style={{ fontSize: 14, fontWeight: 600, color: C.text1, letterSpacing: '-0.15px' }}>Contact support</p>
-          <p style={{ fontSize: 13, color: C.text2, marginTop: 5, lineHeight: 1.6, fontWeight: 500 }}>
-            Failed run, billing question, or feature request? Email us and we'll get back to you.
-          </p>
+      {/* ── Slim rows for Support + Danger ─ Both are single-action
+            surfaces, so they read as compact rows instead of full-card
+            real estate. Same pattern, danger variant gets a soft red tint. ── */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+        <div className="set-row">
+          <span className="set-row-icon">
+            <LifeBuoy size={15} strokeWidth={2}/>
+          </span>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <p style={{ fontSize: 13.5, fontWeight: 600, color: C.text1, letterSpacing: '-0.1px' }}>Need a hand?</p>
+            <p style={{ fontSize: 12, color: C.text2, marginTop: 1, fontWeight: 500, lineHeight: 1.5 }}>
+              Failed run, billing question, anything else — we reply within a day.
+            </p>
+          </div>
+          <a href="mailto:support@ytgrowth.io" className="set-btn-primary" style={{ textDecoration: 'none' }}>
+            support@ytgrowth.io
+          </a>
         </div>
-        <a href="mailto:support@ytgrowth.io" className="set-btn-primary" style={{ textDecoration: 'none' }}>
-          support@ytgrowth.io
-        </a>
+
+        <div className="set-row danger">
+          <span className="set-row-icon">
+            <AlertTriangle size={15} strokeWidth={2}/>
+          </span>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <p style={{ fontSize: 13.5, fontWeight: 600, color: C.red, letterSpacing: '-0.1px' }}>Delete account</p>
+            <p style={{ fontSize: 12, color: C.text2, marginTop: 1, fontWeight: 500, lineHeight: 1.5 }}>
+              Permanently removes the account, all channel data, analyses, and reports. Can't be undone.
+            </p>
+          </div>
+          <button onClick={() => setShowDeleteDialog(true)} className="set-btn-ghost danger">
+            Delete account
+          </button>
+        </div>
       </div>
 
-      {/* ── Danger zone ─────────────────────────────────────────────── */}
-      <SectionHead title="Danger zone" danger />
-      <div className="set-card danger" style={{ padding: '20px 24px', marginBottom: 32, display: 'flex', alignItems: 'center', gap: 20, flexWrap: 'wrap' }}>
-        <div style={{ flex: 1, minWidth: 240 }}>
-          <p style={{ fontSize: 14, fontWeight: 600, color: C.red, letterSpacing: '-0.15px' }}>Delete account</p>
-          <p style={{ fontSize: 13, color: C.text2, marginTop: 5, lineHeight: 1.6, fontWeight: 500 }}>
-            This will permanently delete your account, all channel data, analyses, and reports. This cannot be undone.
-          </p>
-        </div>
-        <button onClick={() => setShowDeleteDialog(true)} className="set-btn-ghost danger">
-          Delete account
-        </button>
-      </div>
+      <div style={{ height: 24 }}/>
 
       {/* Disconnect dialog */}
       {disconnectTarget && (
