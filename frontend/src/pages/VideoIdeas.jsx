@@ -2,12 +2,13 @@ import { useState, useEffect, useRef } from 'react'
 import UpsellGate from '../components/UpsellGate'
 import CreditsEmptyModal from '../components/CreditsEmptyModal'
 
-// Inter loaded page-scoped (each page owns its font loading, never global)
-if (typeof document !== 'undefined' && !document.getElementById('vi-inter-font')) {
+// Geist loaded page-scoped — matches Chat / Competitors / Keywords / Outliers /
+// Video Review / Weekly Report / My Videos.
+if (typeof document !== 'undefined' && !document.getElementById('vi-geist-font')) {
   const link = document.createElement('link')
-  link.id = 'vi-inter-font'
+  link.id = 'vi-geist-font'
   link.rel = 'stylesheet'
-  link.href = 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap'
+  link.href = 'https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap'
   document.head.appendChild(link)
 }
 
@@ -18,6 +19,8 @@ if (typeof document !== 'undefined' && !document.getElementById('ytg-vi-styles')
   const s = document.createElement('style')
   s.id = 'ytg-vi-styles'
   s.textContent = `
+    .vi-page * { font-family: 'Geist', 'Inter', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+
     @keyframes viSpin    { to { transform: rotate(360deg) } }
     @keyframes viFadeUp  { from { opacity:0; transform:translateY(6px) } to { opacity:1; transform:translateY(0) } }
 
@@ -861,7 +864,7 @@ export default function VideoIdeas({ onNavigate, plan, freeTierFeatures }) {
       </div>
     )
     return (
-      <div style={{ width: '100%', fontFamily: "'Inter', system-ui, sans-serif" }}>
+      <div className="vi-page" style={{ width: '100%' }}>
         <UpsellGate
           title="Unlock Video Ideas refreshes"
           description="Free accounts see up to 5 video ideas from your competitor analyses. Upgrade to refresh with AI every month — fresh ideas tuned to your niche, trend signals, and current-year search queries."
@@ -878,7 +881,7 @@ export default function VideoIdeas({ onNavigate, plan, freeTierFeatures }) {
   }
 
   return (
-    <div style={{ maxWidth: 1040, margin: '0 auto', fontFamily: "'Inter', system-ui, sans-serif" }}>
+    <div className="vi-page" style={{ maxWidth: 1040, margin: '0 auto' }}>
 
       {/* Header — system H1 24/800/-0.6 + meta line with · separators (same
           pattern as Overview / SEO Optimizer / Thumbnail IQ).
@@ -887,12 +890,13 @@ export default function VideoIdeas({ onNavigate, plan, freeTierFeatures }) {
           coordinating with the Feed column. */}
       <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 22, gap: 16, flexWrap: 'wrap' }}>
         <div>
-          <h1 style={{ fontSize: 24, fontWeight: 800, color: C.text1, letterSpacing: '-0.6px', marginBottom: 6, lineHeight: 1.1 }}>
+          <h1 style={{ fontSize: 26, fontWeight: 700, color: C.text1, letterSpacing: '-0.7px', marginBottom: 6, lineHeight: 1.1 }}>
             Video Ideas
           </h1>
           <p style={{
-            fontSize: 13, color: C.text3, lineHeight: 1.45,
-            margin: 0, letterSpacing: '-0.01em',
+            fontSize: 14, color: 'rgba(10,10,15,0.55)', fontWeight: 500,
+            letterSpacing: '-0.005em', lineHeight: 1.45,
+            margin: 0,
           }}>
             Ready-to-use titles ranked by opportunity
             {lastUpdated && !loading && <>{' · '}Updated {lastUpdated}</>}
