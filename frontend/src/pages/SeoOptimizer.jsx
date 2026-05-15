@@ -3,12 +3,12 @@ import { Lightbulb, AlertTriangle, Target, Sparkles, TrendingUp } from 'lucide-r
 import CreditsEmptyModal from '../components/CreditsEmptyModal'
 import UpsellModal from '../components/UpsellModal'
 
-// Load Inter once — SCOPED to this page, not global (each page owns its own font loading)
-if (typeof document !== 'undefined' && !document.getElementById('seo-opt-inter-font')) {
+// Geist loaded page-scoped — matches every other redesigned page.
+if (typeof document !== 'undefined' && !document.getElementById('seo-opt-geist-font')) {
   const link = document.createElement('link')
-  link.id = 'seo-opt-inter-font'
+  link.id = 'seo-opt-geist-font'
   link.rel = 'stylesheet'
-  link.href = 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap'
+  link.href = 'https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap'
   document.head.appendChild(link)
 }
 
@@ -21,6 +21,10 @@ if (typeof document !== 'undefined' && !document.getElementById('seo-opt-styles'
      animate. Used by every disclosure expand/collapse on the page so they
      smooth-resize instead of pop. Borrowed from the VidIQ playbook. */
   :root { interpolate-size: allow-keywords; }
+
+  /* Page-scoped Geist inheritance — keeps every element on the canonical
+     font without dropping inline fontFamily on each component. */
+  .seo-page * { font-family: 'Geist', 'Inter', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
 
   @keyframes spin { to { transform: rotate(360deg) } }
   @keyframes seoPulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.55; transform: scale(0.85); } }
@@ -51,32 +55,33 @@ if (typeof document !== 'undefined' && !document.getElementById('seo-opt-styles'
   .seo-heat-scroll { scrollbar-width: none; -ms-overflow-style: none; }
   .seo-heat-scroll::-webkit-scrollbar { display: none; height: 0; }
 
+  /* Card grammar — matches Competitors: hairline rgba border, 14px radius,
+     single soft shadow + lit-from-above inset highlight, 200ms cubic-bezier
+     hover. */
   .seo-glass-card {
     background: #ffffff;
-    border: 1px solid #e6e6ec !important;
-    border-radius: 16px;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 4px 14px rgba(0,0,0,0.06) !important;
-    transition: box-shadow 0.18s ease, border-color 0.18s ease;
+    border: 1px solid rgba(10,10,15,0.07) !important;
+    border-radius: 14px;
+    box-shadow: 0 1px 2px rgba(15,15,25,0.04), inset 0 1px 0 rgba(255,255,255,0.7) !important;
+    transition: box-shadow 200ms cubic-bezier(0.2,0.7,0.3,1), border-color 200ms cubic-bezier(0.2,0.7,0.3,1);
   }
   .seo-glass-card:hover {
-    border-color: rgba(15,15,19,0.16) !important;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.06), 0 10px 28px rgba(0,0,0,0.08) !important;
+    border-color: rgba(10,10,15,0.14) !important;
+    box-shadow: 0 4px 16px rgba(15,15,25,0.06), inset 0 1px 0 rgba(255,255,255,0.7) !important;
   }
   .seo-suggestion-card {
     background: #ffffff;
-    border: 1px solid #e6e6ec;
+    border: 1px solid rgba(10,10,15,0.07);
     border-radius: 14px;
     overflow: hidden;
-    margin-bottom: 8px;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 4px 14px rgba(0,0,0,0.06);
-    transition: box-shadow 0.18s ease, border-color 0.18s ease;
+    margin-bottom: 10px;
+    box-shadow: 0 1px 2px rgba(15,15,25,0.04), inset 0 1px 0 rgba(255,255,255,0.7);
+    transition: box-shadow 200ms cubic-bezier(0.2,0.7,0.3,1), border-color 200ms cubic-bezier(0.2,0.7,0.3,1), transform 200ms cubic-bezier(0.2,0.7,0.3,1);
   }
-  /* Subtle hover lift — no transform (no jumpy shift), just a softer
-     shadow deepening and a hairline darken. Matches the premium SaaS
-     hover pattern used by Stripe/Linear/Notion. */
   .seo-suggestion-card:hover {
-    border-color: rgba(15,15,19,0.16);
-    box-shadow: 0 2px 6px rgba(0,0,0,0.06), 0 10px 28px rgba(0,0,0,0.08);
+    border-color: rgba(10,10,15,0.14);
+    box-shadow: 0 4px 16px rgba(15,15,25,0.06), inset 0 1px 0 rgba(255,255,255,0.7);
+    transform: translateY(-1px);
   }
   .seo-kw-row:hover .seo-kw-phrase { color: #0f0f13 !important; }
   .seo-format-card { outline: none; }
@@ -122,57 +127,59 @@ if (typeof document !== 'undefined' && !document.getElementById('seo-opt-styles'
   .seo-route-go { transition: color 0.2s, transform 0.2s; display: inline-flex; align-items: center; gap: 6px; color: #9595a4; }
   .seo-route-badge { transition: box-shadow 0.22s; }
 
-  /* Local button classes — mirror ytg-dash-btn / ytg-dash-btn-primary from Overview,
-     scoped to this page via .seo- prefix so we don't touch global styles. */
+  /* Local button classes — match the canonical button grammar (red CTA
+     with inset highlight + soft shadow, no dual-glow). */
   .seo-btn {
-    display: inline-flex; align-items: center; gap: 8px;
-    padding: 9px 20px; border-radius: 100px; border: 1px solid #e5251b;
-    font-family: 'Inter', system-ui, sans-serif; font-size: 12.5px; font-weight: 600;
-    background: #ffffff; color: #e5251b; cursor: pointer;
-    box-shadow: 0 1px 3px rgba(229,37,27,0.10), 0 4px 14px rgba(229,37,27,0.10);
-    transition: all 0.18s;
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 9px 18px; border-radius: 100px; border: 1px solid rgba(10,10,15,0.12);
+    font-family: inherit; font-size: 13px; font-weight: 600;
+    background: #ffffff; color: rgba(10,10,15,0.62); cursor: pointer;
+    transition: background 160ms cubic-bezier(0.32,0.72,0,1), color 160ms cubic-bezier(0.32,0.72,0,1), border-color 160ms cubic-bezier(0.32,0.72,0,1);
     white-space: nowrap;
+    letter-spacing: -0.01em;
   }
   .seo-btn:hover {
-    background: rgba(229,37,27,0.06);
-    box-shadow: 0 2px 8px rgba(229,37,27,0.14), 0 8px 28px rgba(229,37,27,0.14);
-    transform: translateY(-1px);
+    background: rgba(10,10,15,0.03);
+    color: #0a0a0f;
+    border-color: rgba(10,10,15,0.20);
   }
   .seo-btn-primary {
-    display: inline-flex; align-items: center; gap: 8px;
-    padding: 9px 20px; border-radius: 100px; border: none;
-    font-family: 'Inter', system-ui, sans-serif; font-size: 12.5px; font-weight: 700;
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 9px 18px; border-radius: 100px; border: none;
+    font-family: inherit; font-size: 13px; font-weight: 600;
     background: #e5251b; color: #ffffff; cursor: pointer;
-    box-shadow: 0 1px 2px rgba(229,37,27,0.18);
-    transition: filter 0.15s, background 0.15s;
+    box-shadow: 0 1px 2px rgba(229,37,27,0.20), inset 0 1px 0 rgba(255,255,255,0.22);
+    transition: filter 160ms cubic-bezier(0.32,0.72,0,1), transform 160ms cubic-bezier(0.32,0.72,0,1);
     white-space: nowrap;
+    letter-spacing: -0.01em;
   }
   .seo-btn-primary:hover:not(:disabled) {
-    filter: brightness(1.07);
+    filter: brightness(1.06); transform: translateY(-1px);
   }
   .seo-btn-primary:disabled {
-    background: #e0e0e6; color: #ffffff; cursor: not-allowed;
-    box-shadow: none; opacity: 0.92;
+    background: rgba(10,10,15,0.06); color: rgba(10,10,15,0.26); cursor: default;
+    box-shadow: none;
   }
 
-  /* ── Reports list — mirrors the Competitors tracked accordion pattern ── */
-  .seo-report-wrapper { position: relative; margin-bottom: 12px; }
+  /* ── Reports list — matches the Competitors tracked accordion grammar. */
+  .seo-report-wrapper { position: relative; margin-bottom: 14px; }
   .seo-report-header {
     background: #ffffff;
-    border: 1px solid #e6e6ec;
-    border-radius: 16px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.06);
-    padding: 16px 20px;
+    border: 1px solid rgba(10,10,15,0.07);
+    border-radius: 14px;
+    box-shadow: 0 1px 2px rgba(15,15,25,0.04), inset 0 1px 0 rgba(255,255,255,0.7);
+    padding: 18px 22px;
     display: flex;
     align-items: center;
     gap: 16px;
-    transition: box-shadow 0.15s, border-color 0.15s;
+    transition: box-shadow 200ms cubic-bezier(0.2,0.7,0.3,1), transform 200ms cubic-bezier(0.2,0.7,0.3,1), border-color 200ms cubic-bezier(0.2,0.7,0.3,1);
     cursor: pointer;
     user-select: none;
   }
   .seo-report-header:hover {
-    box-shadow: 0 2px 6px rgba(0,0,0,0.06), 0 8px 24px rgba(0,0,0,0.08);
-    border-color: rgba(0,0,0,0.14);
+    box-shadow: 0 4px 16px rgba(15,15,25,0.06), inset 0 1px 0 rgba(255,255,255,0.7);
+    border-color: rgba(10,10,15,0.14);
+    transform: translateY(-1px);
   }
   .seo-report-remove {
     position: absolute;
@@ -199,26 +206,26 @@ if (typeof document !== 'undefined' && !document.getElementById('seo-opt-styles'
     color: #fff;
     border: 1px solid #e5251b;
     border-radius: 100px;
-    padding: 8px 15px;
-    font-size: 12.5px; font-weight: 700;
-    font-family: 'Inter', system-ui, sans-serif;
+    padding: 8px 16px;
+    font-size: 12.5px; font-weight: 600;
+    font-family: inherit;
     cursor: pointer;
     white-space: nowrap;
-    transition: filter 0.15s, background 0.15s;
+    transition: filter 160ms cubic-bezier(0.32,0.72,0,1), transform 160ms cubic-bezier(0.32,0.72,0,1);
     display: flex; align-items: center; gap: 6px;
-    box-shadow: 0 1px 2px rgba(229,37,27,0.18);
-    letter-spacing: -0.1px;
+    box-shadow: 0 1px 2px rgba(229,37,27,0.20), inset 0 1px 0 rgba(255,255,255,0.22);
+    letter-spacing: -0.01em;
   }
-  .seo-report-cta:hover { filter: brightness(1.07); }
+  .seo-report-cta:hover { filter: brightness(1.06); transform: translateY(-1px); }
   .seo-report-chip {
-    display: inline-flex; align-items: baseline; gap: 4px;
-    background: #f4f4f6;
-    border: 1px solid rgba(0,0,0,0.09);
-    border-radius: 8px;
-    padding: 4px 10px;
+    display: inline-flex; align-items: baseline; gap: 5px;
+    background: #fffbeb;
+    border: 1px solid #fde68a;
+    border-radius: 100px;
+    padding: 4px 11px;
   }
-  .seo-report-chip .val { font-size: 12px; font-weight: 700; color: #111114; letter-spacing: '-0.1px'; }
-  .seo-report-chip .lbl { font-size: 11px; color: #9595a4; font-weight: 500; }
+  .seo-report-chip .val { font-size: 12px; font-weight: 700; color: #0a0a0f; letter-spacing: -0.01em; }
+  .seo-report-chip .lbl { font-size: 11px; color: #d97706; font-weight: 600; }
 `
   document.head.appendChild(s)
 }
@@ -269,9 +276,9 @@ const C = {
 //    the hierarchy Overview uses, don't flatten it. ──
 const T = {
   // Page + section headers (Overview: H1 24, H2 22, H3 20)
-  h1:           { fontSize: 24, fontWeight: 800, color: '#0f0f13', letterSpacing: '-0.6px', lineHeight: 1.1 },
-  h2:           { fontSize: 22, fontWeight: 800, color: '#0f0f13', letterSpacing: '-0.5px' },
-  h3:           { fontSize: 20, fontWeight: 800, color: '#0f0f13', letterSpacing: '-0.5px' },
+  h1:           { fontSize: 26, fontWeight: 700, color: '#0f0f13', letterSpacing: '-0.7px', lineHeight: 1.1 },
+  h2:           { fontSize: 22, fontWeight: 700, color: '#0f0f13', letterSpacing: '-0.5px', lineHeight: 1.2 },
+  h3:           { fontSize: 18, fontWeight: 700, color: '#0f0f13', letterSpacing: '-0.3px' },
 
   // Uppercase labels
   sectionLabel: { fontSize: 11, fontWeight: 600, color: '#9595a4', textTransform: 'uppercase', letterSpacing: '0.06em' },  // card-level label ("KEYWORD RESEARCH") — neutral grey (matches Overview); red is semantic only, don't spray it on utility eyebrows
@@ -851,7 +858,7 @@ function NicheHeatCard({ videos, shorts, primaryPhrase }) {
           {/* Eyebrow text neutralised — the flame icon to the left and the
               red Live pill to the right already carry the red signal. Three
               red moments in one row was over-stamping it. */}
-          <p style={{ fontSize: 11, fontWeight: 800, color: C.text1, letterSpacing: '0.12em', textTransform: 'uppercase' }}>Niche heat</p>
+          <p style={{ fontSize: 11, fontWeight: 700, color: C.text1, letterSpacing: '0.10em', textTransform: 'uppercase' }}>Niche heat</p>
           {primaryPhrase && (
             <span style={{
               display: 'inline-flex', alignItems: 'center', gap: 6,
@@ -1022,74 +1029,6 @@ function CompetitorThumbTile({ video }) {
   )
 }
 
-// Kept as a no-op for backwards compatibility — the dark mockup tile was
-// replaced by real competing thumbnails. If anything still references
-// TitleTileMockup it falls through to null instead of rendering the old
-// placeholder. Safe to delete once we've audited the rest of the page.
-function TitleTileMockup({ title, sevColor }) {
-  return (
-    <div style={{
-      position: 'relative',
-      width: '100%',
-      aspectRatio: '16 / 9',
-      borderRadius: 12,
-      overflow: 'hidden',
-      background: '#0f0f13',
-      boxShadow: '0 1px 3px rgba(0,0,0,0.14), 0 10px 30px rgba(0,0,0,0.16)',
-    }}>
-      {/* Gradient backdrop — neutral dark, with a soft severity tint
-          bleeding in from the top-left corner so the card has a subtle
-          accent without painting the whole tile. */}
-      <div style={{
-        position: 'absolute', inset: 0,
-        background: `radial-gradient(120% 80% at 0% 0%, ${sevColor}38 0%, rgba(15,15,19,0) 55%), linear-gradient(180deg, #1a1a22 0%, #0a0a10 100%)`,
-      }}/>
-      {/* Faint grid lines for texture (read as "frame") */}
-      <div style={{
-        position: 'absolute', inset: 0,
-        backgroundImage: 'linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px)',
-        backgroundSize: '24px 24px',
-        opacity: 0.5,
-      }}/>
-      {/* Title — centered, bold white, line-clamped to 3 */}
-      <div style={{
-        position: 'absolute', inset: 0,
-        padding: '20px 22px',
-        display: 'flex', alignItems: 'center', justifyContent: 'flex-start',
-      }}>
-        <p style={{
-          fontSize: 19, fontWeight: 800, color: '#ffffff',
-          letterSpacing: '-0.4px', lineHeight: 1.25,
-          textShadow: '0 2px 8px rgba(0,0,0,0.45)',
-          display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden',
-        }}>{title}</p>
-      </div>
-      {/* AI badge (top-right) — communicates "this is your future thumbnail" */}
-      <div style={{
-        position: 'absolute', top: 10, right: 10,
-        display: 'inline-flex', alignItems: 'center', gap: 5,
-        padding: '3px 8px', borderRadius: 99,
-        background: 'rgba(255,255,255,0.10)',
-        border: '1px solid rgba(255,255,255,0.18)',
-        backdropFilter: 'blur(4px)',
-        color: '#fff', fontSize: 10, fontWeight: 800,
-        letterSpacing: '0.10em', textTransform: 'uppercase',
-      }}>
-        <span style={{ width: 5, height: 5, borderRadius: 99, background: sevColor }}/>
-        AI title
-      </div>
-      {/* Duration placeholder (bottom-right) — reads as a YouTube tile */}
-      <div style={{
-        position: 'absolute', bottom: 10, right: 10,
-        padding: '2px 7px', borderRadius: 5,
-        background: 'rgba(0,0,0,0.78)',
-        color: '#fff', fontSize: 11, fontWeight: 800,
-        letterSpacing: '-0.2px', fontVariantNumeric: 'tabular-nums',
-      }}>--:--</div>
-    </div>
-  )
-}
-
 function SuggestionRow({ s, i, isSelected, isCopied, onCopy, onSelect, primaryPhrase, nicheVideos }) {
   const [mounted, setMounted] = useState(false)
   const [whyOpen, setWhyOpen] = useState(false)
@@ -1144,8 +1083,8 @@ function SuggestionRow({ s, i, isSelected, isCopied, onCopy, onSelect, primaryPh
             <span style={{ fontSize: 11, fontWeight: 700, color: C.text1, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.3px' }}>{i + 1}</span>
           </div>
           <span style={{
-            fontSize: 11, fontWeight: 800, color: 'rgba(10,10,15,0.55)',
-            letterSpacing: '0.12em', textTransform: 'uppercase',
+            fontSize: 11, fontWeight: 700, color: 'rgba(10,10,15,0.50)',
+            letterSpacing: '0.10em', textTransform: 'uppercase',
           }}>Title option</span>
           {eyebrow && (
             <span style={{
@@ -1304,69 +1243,6 @@ function SuggestionRow({ s, i, isSelected, isCopied, onCopy, onSelect, primaryPh
   )
 }
 
-
-function FormatTemplates({ onUse }) {
-  const [open, setOpen] = useState(false)
-  return (
-    <div>
-      <button onClick={() => setOpen(v => !v)}
-        style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: 0, background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'inherit', color: C.text2, fontSize: 13, fontWeight: 600, letterSpacing: '-0.1px' }}>
-        <svg width="12" height="12" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"
-          style={{ transform: open ? 'rotate(180deg)' : 'rotate(-90deg)', transition: 'transform 0.25s', flexShrink: 0 }}>
-          <path d="M2 4.5l4.5 4.5 4.5-4.5"/>
-        </svg>
-        Start from a proven format
-        <span style={{ color: C.text3, fontWeight: 400 }}>· 6 viral patterns</span>
-      </button>
-      {open && (
-        <div style={{ marginTop: 14, display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: 10 }}>
-          {VIRAL_FORMATS.map(fmt => (
-            <button key={fmt.key} onClick={() => onUse(fmt.example)} className="seo-format-card"
-              style={{ textAlign: 'left', padding: '14px 16px', border: '1px solid #e6e6ec', borderRadius: 12, cursor: 'pointer', background: '#ffffff', fontFamily: 'inherit', boxShadow: '0 1px 2px rgba(0,0,0,0.04)', transition: 'box-shadow 0.2s, transform 0.2s, border-color 0.2s' }}>
-              <p style={{ fontSize: 10.5, fontWeight: 700, color: C.text3, marginBottom: 6, textTransform: 'uppercase', letterSpacing: '0.08em', lineHeight: 1 }}>{fmt.label}</p>
-              <p style={{ fontSize: 13, color: C.text1, fontWeight: 500, lineHeight: 1.45, margin: 0, letterSpacing: '-0.1px' }}>{fmt.example}</p>
-            </button>
-          ))}
-        </div>
-      )}
-    </div>
-  )
-}
-
-function TitlePreviewSimulator({ title }) {
-  if (!title.trim()) return null
-  const surfaces = [
-    { label: 'Suggested feed', maxChars: 45 },
-    { label: 'Mobile search',  maxChars: 55 },
-    { label: 'Desktop search', maxChars: 70 },
-  ]
-  return (
-    <div style={{ marginTop: 16 }}>
-      <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 10 }}>
-        <p style={{ fontSize: 11, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Preview on YouTube</p>
-        <p style={{ fontSize: 11, color: C.text3 }}>How your title renders across surfaces</p>
-      </div>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: 10 }}>
-        {surfaces.map(({ label, maxChars }) => {
-          const truncated = title.length > maxChars
-          const display = truncated ? title.slice(0, maxChars - 1) + '…' : title
-          return (
-            <div key={label} style={{ padding: '12px 14px', background: '#ffffff', borderRadius: 10, border: '1px solid #e6e6ec' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
-                <span style={{ fontSize: 10, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.08em' }}>{label}</span>
-                <span style={{ fontSize: 10, fontWeight: 700, color: truncated ? C.red : C.green, letterSpacing: '0.06em', textTransform: 'uppercase' }}>
-                  {truncated ? 'Cut' : 'Fits'}
-                </span>
-              </div>
-              <p style={{ fontSize: 12.5, fontWeight: 500, color: truncated ? C.text2 : C.text1, lineHeight: 1.45, margin: 0 }}>{display}</p>
-              {truncated && <p style={{ fontSize: 10.5, color: C.red, marginTop: 5, fontWeight: 500 }}>{title.length - maxChars + 1} chars over {maxChars}</p>}
-            </div>
-          )
-        })}
-      </div>
-    </div>
-  )
-}
 
 // Description card. Collapse-first: header row alone is scannable
 // (type pill + truncated 1-line preview + chevron). Expand for the
@@ -1617,7 +1493,7 @@ function AnimatedScoreArc({ value, color, size = 108, tier }) {
           fontVariantNumeric: 'tabular-nums', lineHeight: 1,
         }}>{shown}</span>
         <span style={{
-          fontSize: 9.5, fontWeight: 800, color, letterSpacing: '0.14em',
+          fontSize: 10, fontWeight: 700, color, letterSpacing: '0.10em',
           textTransform: 'uppercase',
         }}>{tier}</span>
       </div>
@@ -1625,28 +1501,6 @@ function AnimatedScoreArc({ value, color, size = 108, tier }) {
   )
 }
 
-// Animated count-up — used for the lift number so it ticks from 0 → +35 on mount.
-function useCountUp(target, duration = 850) {
-  const [v, setV] = useState(0)
-  useEffect(() => {
-    let raf = 0
-    const start = performance.now()
-    const ease = t => 1 - Math.pow(1 - t, 3)
-    const tick = (now) => {
-      const t = Math.min(1, (now - start) / duration)
-      setV(Math.round(target * ease(t)))
-      if (t < 1) raf = requestAnimationFrame(tick)
-    }
-    raf = requestAnimationFrame(tick)
-    return () => cancelAnimationFrame(raf)
-  }, [target, duration])
-  return v
-}
-
-// Title comparison hero — single storytelling panel that bridges
-// "your title → best AI alternative" with the lift visualized in the middle.
-// Replaces the old 3-flat-tile hero. Arcs sweep, lift counts up, sub-score
-// bars stagger in. Brand palette only — red / amber / green / charcoal.
 // Derive crude SEO / CTR / Hook sub-scores for the USER's title from the
 // granular per-rule breakdown the backend returns. Three groups of ~35
 // points each, scaled to a 0-100 axis so they sit next to the AI's
@@ -1948,8 +1802,8 @@ function NicheMap({ keywords, onPick }) {
             <span style={{ fontSize: 11.5, fontWeight: 700, color: C.text1, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.3px' }}>K</span>
           </div>
           <span style={{
-            fontSize: 11, fontWeight: 800, color: 'rgba(10,10,15,0.55)',
-            letterSpacing: '0.12em', textTransform: 'uppercase',
+            fontSize: 11, fontWeight: 700, color: 'rgba(10,10,15,0.50)',
+            letterSpacing: '0.10em', textTransform: 'uppercase',
           }}>Niche keywords</span>
           <span style={{
             display: 'inline-flex', alignItems: 'center', gap: 5,
@@ -2023,155 +1877,6 @@ function NicheMap({ keywords, onPick }) {
             )
           })}
         </div>
-      </div>
-    </div>
-  )
-}
-
-// NicheMapOld kept here only to satisfy the previous SVG implementation;
-// not exported. Left as `function _NicheMapBubbleSvg` so future refs see it's deprecated.
-function _NicheMapBubbleSvg({ keywords, onPick }) {
-  if (!keywords?.length) return null
-
-  const volNum  = v => v === 'HIGH' ? 88 : v === 'MED' ? 55 : 22
-  const compNum = c => c === 'HIGH' ? 88 : c === 'MED' ? 55 : 22
-
-  const W = 720
-  const H = 260
-  const PAD_L = 68, PAD_R = 96, PAD_T = 28, PAD_B = 42
-  const innerW = W - PAD_L - PAD_R
-  const innerH = H - PAD_T - PAD_B
-
-  // Beeswarm-ish: dots in the same vol/comp bucket spread radially around
-  // the bucket center on a tightening spiral so neighbours never overlap.
-  const buckets = new Map()
-  const points = keywords.map((kw) => {
-    const v = volNum(kw.volume)
-    const c = compNum(kw.competition)
-    const key = `${v}-${c}`
-    const idx = buckets.get(key) || 0
-    buckets.set(key, idx + 1)
-    // Spiral offset around the bucket center: angle steps 137.5° (golden), radius grows slowly
-    const angle = idx * 137.5 * (Math.PI / 180)
-    const ringR = idx === 0 ? 0 : 11 + Math.sqrt(idx) * 5
-    const jx = Math.cos(angle) * ringR
-    const jy = Math.sin(angle) * ringR
-    const baseX = PAD_L + (c / 100) * innerW
-    const baseY = PAD_T + (1 - v / 100) * innerH
-    const r = 6 + (kw.score / 100) * 8
-    const col = kw.score >= 75 ? C.green : kw.score >= 50 ? C.text2 : C.red
-    return { kw, x: baseX + jx, y: baseY + jy, r, col }
-  })
-
-  // Top 5 by score get inline labels. To avoid overlapping labels, sort by y
-  // and offset each label a little vertically as needed.
-  const labeled = [...points]
-    .sort((a, b) => b.kw.score - a.kw.score)
-    .slice(0, 5)
-
-  // Top 3 sweet-spot phrases (highest score, ideally in the sweet-spot zone)
-  // — chip strip below the chart.
-  const topThree = [...keywords]
-    .sort((a, b) => b.score - a.score)
-    .slice(0, 3)
-
-  return (
-    <div style={{
-      background: '#ffffff',
-      border: `1px solid ${C.border}`, borderRadius: 14,
-      padding: '18px 22px 14px', marginBottom: 12,
-      boxShadow: '0 1px 2px rgba(0,0,0,0.04), 0 4px 14px rgba(0,0,0,0.06)',
-    }}>
-      <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 4 }}>
-        <p style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.1em', textTransform: 'uppercase' }}>Niche map</p>
-        <p style={{ fontSize: 11, color: C.text3, fontWeight: 500 }}>volume × competition · dot size = score</p>
-      </div>
-
-      <svg viewBox={`0 0 ${W} ${H}`} width="100%" style={{ display: 'block', overflow: 'visible' }}>
-        {/* Sweet-spot band — top-left quadrant only (high vol, low comp). */}
-        <rect x={PAD_L} y={PAD_T} width={innerW / 2} height={innerH / 2}
-          fill="rgba(5,150,105,0.07)" rx="8"/>
-        <text x={PAD_L + 10} y={PAD_T + 18} fontSize="10" fontWeight="800" fill={C.green}
-          fontFamily="Inter,sans-serif" letterSpacing="0.14em">SWEET SPOT</text>
-
-        {/* Frame + quadrant lines */}
-        <rect x={PAD_L} y={PAD_T} width={innerW} height={innerH} fill="none" stroke="#eef0f4" strokeWidth="1" rx="8"/>
-        <line x1={PAD_L} x2={W - PAD_R} y1={PAD_T + innerH / 2} y2={PAD_T + innerH / 2} stroke="#eef0f4" strokeWidth="1" strokeDasharray="2 3"/>
-        <line x1={PAD_L + innerW / 2} x2={PAD_L + innerW / 2} y1={PAD_T} y2={PAD_T + innerH} stroke="#eef0f4" strokeWidth="1" strokeDasharray="2 3"/>
-
-        {/* Y-axis (Volume) labels, with the axis title rotated on the far left */}
-        <text x={PAD_L - 10} y={PAD_T + 6}                textAnchor="end" fontSize="10" fontWeight="700" fill="#9595a4" fontFamily="Inter,sans-serif" letterSpacing="0.08em">HIGH</text>
-        <text x={PAD_L - 10} y={PAD_T + innerH / 2 + 3}   textAnchor="end" fontSize="10" fontWeight="700" fill="#9595a4" fontFamily="Inter,sans-serif" letterSpacing="0.08em">MED</text>
-        <text x={PAD_L - 10} y={PAD_T + innerH + 4}       textAnchor="end" fontSize="10" fontWeight="700" fill="#9595a4" fontFamily="Inter,sans-serif" letterSpacing="0.08em">LOW</text>
-        <text x={18} y={PAD_T + innerH / 2 + 3} fontSize="10" fontWeight="800" fill="#9595a4"
-          fontFamily="Inter,sans-serif" letterSpacing="0.14em"
-          transform={`rotate(-90 18 ${PAD_T + innerH / 2 + 3})`}>VOLUME</text>
-
-        {/* X-axis (Competition) labels */}
-        <text x={PAD_L}              y={H - 16} fontSize="10" fontWeight="700" fill="#9595a4" fontFamily="Inter,sans-serif" letterSpacing="0.08em">LOW COMP</text>
-        <text x={PAD_L + innerW / 2} y={H - 16} textAnchor="middle" fontSize="10" fontWeight="700" fill="#9595a4" fontFamily="Inter,sans-serif" letterSpacing="0.08em">MED</text>
-        <text x={W - PAD_R}          y={H - 16} textAnchor="end" fontSize="10" fontWeight="700" fill="#9595a4" fontFamily="Inter,sans-serif" letterSpacing="0.08em">HIGH COMP</text>
-
-        {/* Bubbles */}
-        {points.map(p => (
-          <g key={p.kw.phrase} style={{ cursor: 'pointer' }} onClick={() => onPick?.(p.kw.phrase)}>
-            <circle cx={p.x} cy={p.y} r={p.r}
-              fill={p.col} fillOpacity="0.18"
-              stroke={p.col} strokeWidth="1.5"/>
-            <title>{`${p.kw.phrase} — vol ${p.kw.volume} · comp ${p.kw.competition} · score ${p.kw.score}`}</title>
-          </g>
-        ))}
-
-        {/* Labels for the top 5 — render after bubbles so they sit on top.
-            Label sits to the right of the dot; if the dot is too close to the
-            right edge, render to the left instead. */}
-        {labeled.map((p) => {
-          const nearRight = p.x > PAD_L + innerW * 0.7
-          const anchor = nearRight ? 'end' : 'start'
-          const tx = nearRight ? p.x - p.r - 6 : p.x + p.r + 6
-          return (
-            <text key={`lbl-${p.kw.phrase}`}
-              x={tx} y={p.y + 3.5}
-              textAnchor={anchor}
-              fontSize="11" fontWeight="600" fill={C.text2}
-              fontFamily="Inter,sans-serif" letterSpacing="-0.1px"
-              style={{ pointerEvents: 'none' }}>
-              {p.kw.phrase.length > 22 ? p.kw.phrase.slice(0, 21) + '…' : p.kw.phrase}
-            </text>
-          )
-        })}
-      </svg>
-
-      {/* Top 3 chip strip — click to use as title */}
-      <div style={{
-        marginTop: 8, paddingTop: 12, borderTop: `1px solid ${C.borderLight}`,
-        display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap',
-      }}>
-        <p style={{ fontSize: 10.5, fontWeight: 700, color: C.text3, letterSpacing: '0.08em', textTransform: 'uppercase', marginRight: 4 }}>Top opportunities</p>
-        {topThree.map(kw => {
-          const col = kw.score >= 75 ? C.green : kw.score >= 50 ? C.text2 : C.red
-          const bg  = kw.score >= 75 ? 'rgba(5,150,105,0.08)' : kw.score >= 50 ? 'rgba(15,15,19,0.05)' : 'rgba(229,37,27,0.06)'
-          return (
-            <button key={kw.phrase}
-              onClick={() => onPick?.(kw.phrase)}
-              style={{
-                display: 'inline-flex', alignItems: 'center', gap: 6,
-                background: bg,
-                border: `1px solid ${col}3a`,
-                borderRadius: 100, padding: '5px 12px',
-                fontSize: 12.5, fontWeight: 600, color: C.text1,
-                fontFamily: 'inherit', cursor: 'pointer',
-                letterSpacing: '-0.1px',
-                transition: 'background 0.15s, border-color 0.15s',
-              }}
-              onMouseEnter={e => { e.currentTarget.style.borderColor = col }}
-              onMouseLeave={e => { e.currentTarget.style.borderColor = `${col}3a` }}>
-              <span style={{ width: 6, height: 6, borderRadius: 99, background: col }}/>
-              {kw.phrase}
-              <span style={{ color: col, fontWeight: 700, fontVariantNumeric: 'tabular-nums', marginLeft: 2 }}>{kw.score}</span>
-            </button>
-          )
-        })}
       </div>
     </div>
   )
@@ -2532,14 +2237,13 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
   // users only hit the upgrade modal when they click Run. No Claude burned.
 
   return (
-    <div style={{
+    <div className="seo-page" style={{
       // Negative margins cancel the Dashboard panel's 36/40/72 padding so the white bg extends to the scroll container edges.
       // Re-adding identical padding inside keeps content visually in the same place.
       margin: '-36px -40px -72px',
       padding: '36px 40px 72px',
       background: '#ffffff',
       minHeight: 'calc(100vh - 52px)',
-      fontFamily: "'Inter', system-ui, sans-serif",
     }}>
      {/* 1040 centered column — every polished feature page (Video Ideas / Thumbnail / Overview) wraps content
          in this. Don't drop it; the 2-col Preview/Formats grid stretches without an upper bound otherwise. */}
@@ -2566,21 +2270,16 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
         }
         const lastSearchAt = result?._searched_at || result?.analyzed_at
         return (
-      <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 24, gap: 16, flexWrap: 'wrap' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-          <div>
-            <h1 style={{ fontSize: 24, fontWeight: 800, color: C.text1, letterSpacing: '-0.6px', marginBottom: 6, lineHeight: 1.1 }}>SEO Optimizer</h1>
-            {/* Meta line with · separators, matches Overview's "Stats from Xh ago · Audited Xd ago" pattern */}
-            <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.4, display: 'flex', gap: 0, flexWrap: 'wrap' }}>
-              <span>Your title against live competitor data.</span>
-              {lastSearchAt && (
-                <span style={{ marginLeft: 8 }}>· Last searched {relTime(lastSearchAt)}</span>
-              )}
-            </p>
-          </div>
+      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 24, gap: 16, flexWrap: 'wrap' }}>
+        <div>
+          <h1 style={{ fontSize: 26, fontWeight: 700, color: C.text1, letterSpacing: '-0.7px', marginBottom: 6, lineHeight: 1.1 }}>SEO Studio</h1>
+          <p style={{ fontSize: 14, color: 'rgba(10,10,15,0.55)', fontWeight: 500, letterSpacing: '-0.005em', lineHeight: 1.45 }}>
+            Score your title against live competitor data
+            {lastSearchAt && <> · Last analysed {relTime(lastSearchAt)}</>}
+          </p>
         </div>
         {(title || result) && (
-          <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexShrink: 0, marginBottom: 2 }}>
+          <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexShrink: 0, marginTop: 4 }}>
             <button onClick={handleClear} className="seo-btn" style={{ flexShrink: 0 }}>
               Clear
             </button>
@@ -2590,10 +2289,10 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
         )
       })()}
 
-      {/* ── Tabs — "New analysis" vs. "Reports (N)" ─────────────────────────
-          Reports are past /seo/analyze runs persisted server-side
-          (SeoAnalysisCache). Clicking a report rehydrates the editor. */}
-      <div style={{ display: 'flex', gap: 8, marginBottom: 20 }}>
+      {/* ── Tabs — quiet soft-grey active pattern (Competitors / Keywords /
+           Outliers / Video Review / My Videos). Red is reserved for primary
+           CTAs only — never view-switch toggles. */}
+      <div style={{ display: 'flex', gap: 4, marginBottom: 20 }}>
         {[
           { key: 'new',     label: 'New analysis' },
           { key: 'reports', label: reports.length > 0 ? `Reports (${reports.length})` : 'Reports' },
@@ -2603,18 +2302,17 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
             <button key={key}
               onClick={() => setActiveTab(key)}
               style={{
-                fontSize: 12.5, fontWeight: 700, padding: '7px 16px',
+                fontSize: 13, fontWeight: active ? 600 : 500, padding: '8px 16px',
                 borderRadius: 100,
-                border: active ? 'none' : `1px solid ${C.border}`,
-                background: active ? C.red : '#ffffff',
-                color: active ? '#ffffff' : C.text2,
+                border: active ? '1px solid rgba(10,10,15,0.10)' : '1px solid transparent',
+                background: active ? 'rgba(10,10,15,0.055)' : 'transparent',
+                color: active ? '#0a0a0f' : 'rgba(10,10,15,0.55)',
                 cursor: 'pointer', fontFamily: 'inherit',
-                letterSpacing: '-0.1px',
-                boxShadow: active ? '0 1px 3px rgba(229,37,27,0.28), 0 4px 14px rgba(229,37,27,0.22)' : 'none',
-                transition: 'all 0.15s',
+                letterSpacing: '-0.01em',
+                transition: 'background 180ms cubic-bezier(0.32,0.72,0,1), color 180ms cubic-bezier(0.32,0.72,0,1), border-color 180ms cubic-bezier(0.32,0.72,0,1)',
               }}
-              onMouseEnter={e => { if (!active) { e.currentTarget.style.borderColor = C.text3; e.currentTarget.style.color = C.text1 } }}
-              onMouseLeave={e => { if (!active) { e.currentTarget.style.borderColor = C.border;  e.currentTarget.style.color = C.text2 } }}
+              onMouseEnter={e => { if (!active) { e.currentTarget.style.background = 'rgba(10,10,15,0.03)'; e.currentTarget.style.color = '#0a0a0f' } }}
+              onMouseLeave={e => { if (!active) { e.currentTarget.style.background = 'transparent';     e.currentTarget.style.color = 'rgba(10,10,15,0.55)' } }}
             >
               {label}
             </button>
@@ -2970,7 +2668,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
             return (
               <div style={{ marginBottom: 24, marginTop: 36 }}>
                 <div style={{ marginBottom: 20 }}>
-                  <h2 style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', marginBottom: 4 }}>Search intent analysis</h2>
+                  <h2 style={{ fontSize: 22, fontWeight: 700, color: C.text1, letterSpacing: '-0.5px', marginBottom: 4 }}>Search intent analysis</h2>
                   <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.5 }}>
                     What to chase, what to avoid in this niche · 2 insights
                   </p>
@@ -3043,7 +2741,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
             <div style={{ marginBottom: 24, marginTop: 36 }}>
               <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 20, gap: 16 }}>
                 <div>
-                  <h2 style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', marginBottom: 4 }}>Suggested titles</h2>
+                  <h2 style={{ fontSize: 22, fontWeight: 700, color: C.text1, letterSpacing: '-0.5px', marginBottom: 4 }}>Suggested titles</h2>
                   <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.5 }}>
                     {result.suggestions.length} AI alternatives · pick one to generate a matching description
                   </p>
@@ -3085,7 +2783,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
           {result.keyword_scores?.length > 0 && (
             <>
               <div style={{ marginBottom: 20, marginTop: 36 }}>
-                <h2 style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', marginBottom: 4 }}>Keyword research</h2>
+                <h2 style={{ fontSize: 22, fontWeight: 700, color: C.text1, letterSpacing: '-0.5px', marginBottom: 4 }}>Keyword research</h2>
                 <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.5 }}>
                   Related phrases ranked by opportunity · click any to use as title
                 </p>
@@ -3146,7 +2844,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
           {(result.autocomplete_terms?.length > 0 || result.top_tags?.length > 0) && (
             <>
               <div style={{ marginBottom: 20, marginTop: 36 }}>
-                <h2 style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', marginBottom: 4 }}>Keywords and tags</h2>
+                <h2 style={{ fontSize: 22, fontWeight: 700, color: C.text1, letterSpacing: '-0.5px', marginBottom: 4 }}>Keywords and tags</h2>
                 <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.5 }}>
                   Pulled from the top 10 ranking videos · borrow what's already working
                 </p>
@@ -3270,7 +2968,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
             <>
               {/* Section header — mirrors Overview's "Channel audit" H2 pattern (H2 + 1-line muted subtitle) */}
               <div ref={descRef} style={{ marginBottom: 20, marginTop: 36 }}>
-                <h2 style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', marginBottom: 4 }}>Description optimizer</h2>
+                <h2 style={{ fontSize: 22, fontWeight: 700, color: C.text1, letterSpacing: '-0.5px', marginBottom: 4 }}>Description optimizer</h2>
                 <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.5 }}>
                   3 descriptions for your picked title — each opens with a different hook. Copy the one that fits.
                 </p>
@@ -3495,9 +3193,9 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
                     <div className="seo-report-header" onClick={() => openReport(r)}>
                       <div style={{ flex: 1, minWidth: 0 }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-                          <p style={{ fontWeight: 800, fontSize: 14, color: '#111114',
-                            letterSpacing: '-0.2px', whiteSpace: 'nowrap', overflow: 'hidden',
-                            textOverflow: 'ellipsis' }}>
+                          <p style={{ fontWeight: 600, fontSize: 14.5, color: '#0a0a0f',
+                            letterSpacing: '-0.15px', whiteSpace: 'nowrap', overflow: 'hidden',
+                            textOverflow: 'ellipsis', lineHeight: 1.35 }}>
                             {r.title}
                           </p>
                         </div>
