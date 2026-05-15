@@ -1547,20 +1547,17 @@ function FeedFilterPills({ value, counts, onChange }) {
             onClick={() => onChange?.(t.key)}
             style={{
               display: 'inline-flex', alignItems: 'center', gap: 7,
-              padding: '8px 14px', borderRadius: 100,
-              border: `1px solid ${active ? C.red : '#e6e6ec'}`,
-              background: active ? C.red : '#fff',
-              color: active ? '#fff' : C.text2,
-              fontFamily: "'Inter', system-ui, sans-serif",
-              fontSize: 13, fontWeight: 600, letterSpacing: '-0.01em',
+              padding: '7px 14px', borderRadius: 100,
+              border: `1px solid ${active ? 'rgba(10,10,15,0.10)' : 'transparent'}`,
+              background: active ? 'rgba(10,10,15,0.055)' : 'transparent',
+              color: active ? '#0a0a0f' : 'rgba(10,10,15,0.55)',
+              fontSize: 13, fontWeight: active ? 600 : 500, letterSpacing: '-0.05px',
               cursor: 'pointer',
-              boxShadow: active
-                ? '0 1px 3px rgba(229,37,27,0.30)'
-                : '0 1px 2px rgba(0,0,0,0.04)',
-              transition: 'background 0.14s ease, color 0.14s ease, border-color 0.14s ease',
+              boxShadow: 'none',
+              transition: 'background 0.18s cubic-bezier(0.2,0.7,0.3,1), color 0.18s, border-color 0.18s',
             }}
-            onMouseEnter={e => { if (!active) { e.currentTarget.style.background = 'rgba(15,15,19,0.04)'; e.currentTarget.style.color = C.text1 } }}
-            onMouseLeave={e => { if (!active) { e.currentTarget.style.background = '#fff'; e.currentTarget.style.color = C.text2 } }}
+            onMouseEnter={e => { if (!active) { e.currentTarget.style.background = 'rgba(10,10,15,0.03)'; e.currentTarget.style.color = '#0a0a0f' } }}
+            onMouseLeave={e => { if (!active) { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'rgba(10,10,15,0.55)' } }}
           >
             {t.label}
             {count != null && count > 0 && (
@@ -1568,9 +1565,10 @@ function FeedFilterPills({ value, counts, onChange }) {
                 display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
                 minWidth: 18, height: 18, padding: '0 6px',
                 borderRadius: 100,
-                fontSize: 10.5, fontWeight: 800,
-                background: active ? 'rgba(255,255,255,0.22)' : '#fafafb',
-                color: active ? '#fff' : C.text3,
+                fontSize: 10.5, fontWeight: 600,
+                background: active ? 'rgba(10,10,15,0.10)' : 'rgba(10,10,15,0.05)',
+                color: active ? '#0a0a0f' : 'rgba(10,10,15,0.55)',
+                fontVariantNumeric: 'tabular-nums',
               }}>{count}</span>
             )}
           </button>
@@ -1600,24 +1598,25 @@ function FeedCard({
   return (
     <article style={{
       background: '#ffffff',
-      border: '1px solid #ececf0',
-      borderRadius: 12,
+      border: '1px solid rgba(10,10,15,0.07)',
+      borderRadius: 14,
       padding: '14px 18px 16px 18px',
-      boxShadow: '0 1px 2px rgba(0,0,0,0.04), 0 3px 10px rgba(0,0,0,0.05)',
+      boxShadow: '0 1px 2px rgba(15,15,25,0.04), 0 6px 18px rgba(15,15,25,0.05), inset 0 1px 0 rgba(255,255,255,0.7)',
       marginBottom: 12,
-      fontFamily: "'Inter', system-ui, sans-serif",
-      transition: 'box-shadow 0.18s ease, transform 0.18s ease',
+      transition: 'box-shadow 0.2s cubic-bezier(0.2,0.7,0.3,1), transform 0.2s cubic-bezier(0.2,0.7,0.3,1), border-color 0.2s',
       height: fillHeight ? '100%' : 'auto',
       display: fillHeight ? 'flex' : 'block',
       flexDirection: fillHeight ? 'column' : undefined,
     }}
       onMouseEnter={e => {
-        e.currentTarget.style.boxShadow = '0 4px 14px rgba(0,0,0,0.08), 0 14px 32px rgba(0,0,0,0.08)'
+        e.currentTarget.style.boxShadow = '0 2px 6px rgba(15,15,25,0.06), 0 12px 32px rgba(15,15,25,0.07), inset 0 1px 0 rgba(255,255,255,0.7)'
         e.currentTarget.style.transform = 'translateY(-1px)'
+        e.currentTarget.style.borderColor = 'rgba(10,10,15,0.10)'
       }}
       onMouseLeave={e => {
-        e.currentTarget.style.boxShadow = '0 1px 2px rgba(0,0,0,0.04), 0 3px 10px rgba(0,0,0,0.05)'
+        e.currentTarget.style.boxShadow = '0 1px 2px rgba(15,15,25,0.04), 0 6px 18px rgba(15,15,25,0.05), inset 0 1px 0 rgba(255,255,255,0.7)'
         e.currentTarget.style.transform = 'translateY(0)'
+        e.currentTarget.style.borderColor = 'rgba(10,10,15,0.07)'
       }}
     >
       <div style={{
@@ -1634,8 +1633,8 @@ function FeedCard({
           <Icon size={13} strokeWidth={2.1} />
         </span>
         <span style={{
-          fontSize: 10, fontWeight: 800, color: C.text3,
-          letterSpacing: '0.12em', textTransform: 'uppercase',
+          fontSize: 11, fontWeight: 700, color: 'rgba(10,10,15,0.55)',
+          letterSpacing: '0.10em', textTransform: 'uppercase',
         }}>{category}</span>
         {age && (
           <span style={{ fontSize: 11, color: C.text3, fontWeight: 500, letterSpacing: '-0.01em' }}>
