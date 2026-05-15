@@ -13,6 +13,7 @@ if (typeof document !== 'undefined' && !document.getElementById('wr-styles')) {
   const s = document.createElement('style')
   s.id = 'wr-styles'
   s.textContent = `
+    .wr-page { max-width: 1040px; margin: 0 auto; }
     .wr-page * { font-family: 'Geist', 'Inter', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
   `
   document.head.appendChild(s)
