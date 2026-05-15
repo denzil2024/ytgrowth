@@ -21,16 +21,11 @@ import {
                     // reads as "start fresh" not "generic add"
   ArrowRight,       // Upgrade CTA glyph
   X,                // Delete icon on conversation rows
-  MessageSquare,    // Conversation glyph on rail rows
-  // Starter-prompt icons. Eight imperative prompts, two rows.
+  // Starter-card icons. Four outcome-framed suggestion cards.
   TrendingUp,
   TrendingDown,
   CheckCircle2,
-  ImageIcon,
   Lightbulb,
-  Type,
-  GitCompare,
-  Search,
 } from 'lucide-react'
 
 // Page-scoped Geist load. Geist Variable (Vercel's open-source UI typeface)
@@ -135,15 +130,13 @@ const C = {
 /* ─── Eight starter prompts. Imperative voice, two-row wrap layout,
        semantic Lucide icons. Click sends the prompt straight through
        the same pipeline as a typed message. ───────────────────────── */
+/* Four outcome-framed starters. `prompt` is what gets sent (a fuller
+   question so the coach gets real context); title + sub are the card. */
 const STARTER_PROMPTS = [
-  { label: 'Get more views',       Icon: TrendingUp   },
-  { label: 'Review my CTR',        Icon: TrendingDown },
-  { label: 'Channel audit',        Icon: CheckCircle2 },
-  { label: 'Thumbnail tips',       Icon: ImageIcon    },
-  { label: 'Video ideas',          Icon: Lightbulb    },
-  { label: 'Better titles',        Icon: Type         },
-  { label: 'Compare competitor',   Icon: GitCompare   },
-  { label: 'Find keywords',        Icon: Search       },
+  { title: 'Get more views', sub: "What's capping my reach right now?",  prompt: "What's capping my reach right now, and what should I do about it?", Icon: TrendingUp },
+  { title: 'Fix my CTR',     sub: "Why aren't viewers clicking?",        prompt: "Why aren't viewers clicking my videos, and how do I fix my CTR?",   Icon: TrendingDown },
+  { title: 'Channel audit',  sub: 'Find my biggest growth lever',        prompt: 'Audit my channel and tell me my single biggest growth lever.',      Icon: CheckCircle2 },
+  { title: 'Video ideas',    sub: 'What should I make next?',            prompt: 'Give me video ideas that fit my channel, and tell me what to make next.', Icon: Lightbulb },
 ]
 
 function fmtAge(iso) {
@@ -746,13 +739,13 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
             {composerForm}
           </div>
 
-          {/* Pill prompts. Two rows, wrap layout, 8 imperative prompts.
-              Each pill: white surface, hairline border, Lucide glyph
-              (text3) + label (text2). Hover lifts to surfaceLift. */}
+          {/* Suggestion cards. 2x2 grid, in the file's own card grammar
+              (surface, hairline, 14px radius, cardShadow). Icon in a soft
+              neutral tint square, bold prompt title, grey outcome sub.
+              Hover lifts on the shared spring. */}
           <div style={{
-            display: 'flex', flexWrap: 'wrap',
-            gap: 8, justifyContent: 'center',
-            maxWidth: 660, width: '100%',
+            display: 'grid', gridTemplateColumns: '1fr 1fr',
+            gap: 10, maxWidth: 660, width: '100%',
           }}>
             {STARTER_PROMPTS.map((p, i) => {
               const Icon = p.Icon
@@ -760,40 +753,44 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
                 <button
                   key={i}
                   type="button"
-                  onClick={() => send(p.label)}
+                  onClick={() => send(p.prompt)}
                   style={{
-                    display: 'inline-flex', alignItems: 'center', gap: 8,
-                    padding: '10px 16px', borderRadius: 100,
-                    // Pills get a subtle gradient (top white → bottom soft
-                    // off-white) so they catch light like real objects.
-                    background: 'linear-gradient(180deg, #ffffff 0%, #f7f7fa 100%)',
+                    display: 'flex', alignItems: 'flex-start', gap: 12,
+                    textAlign: 'left',
+                    padding: '14px 16px', borderRadius: 14,
+                    background: C.surface,
                     border: `1px solid ${C.hair}`,
-                    color: C.text2,
-                    fontFamily: 'inherit',
-                    // Tuned for Geist: pills sit at 500 (Inter needed 600
-                    // to feel anchored, Geist holds at 500 cleanly).
-                    fontSize: 13, fontWeight: 500, letterSpacing: '-0.005em',
-                    cursor: 'pointer',
-                    boxShadow: '0 1px 2px rgba(15,15,25,0.04), 0 1px 0 rgba(255,255,255,0.9) inset',
-                    transition: `background 200ms ${C.spring}, color 200ms ${C.spring}, border-color 200ms ${C.spring}, transform 200ms ${C.spring}, box-shadow 200ms ${C.spring}`,
+                    boxShadow: C.cardShadow,
+                    cursor: 'pointer', fontFamily: 'inherit',
+                    transition: `transform 200ms ${C.spring}, box-shadow 200ms ${C.spring}, border-color 200ms ${C.spring}`,
                   }}
                   onMouseEnter={e => {
-                    e.currentTarget.style.background = '#ffffff'
-                    e.currentTarget.style.color = C.text1
-                    e.currentTarget.style.borderColor = C.hairActive
                     e.currentTarget.style.transform = 'translateY(-2px)'
-                    e.currentTarget.style.boxShadow = '0 6px 16px rgba(15,15,25,0.08), 0 1px 2px rgba(15,15,25,0.04), 0 1px 0 rgba(255,255,255,1) inset'
+                    e.currentTarget.style.boxShadow = C.cardShadowLift
+                    e.currentTarget.style.borderColor = C.hairActive
                   }}
                   onMouseLeave={e => {
-                    e.currentTarget.style.background = 'linear-gradient(180deg, #ffffff 0%, #f7f7fa 100%)'
-                    e.currentTarget.style.color = C.text2
-                    e.currentTarget.style.borderColor = C.hair
                     e.currentTarget.style.transform = 'translateY(0)'
-                    e.currentTarget.style.boxShadow = '0 1px 2px rgba(15,15,25,0.04), 0 1px 0 rgba(255,255,255,0.9) inset'
+                    e.currentTarget.style.boxShadow = C.cardShadow
+                    e.currentTarget.style.borderColor = C.hair
                   }}
                 >
-                  <Icon size={13} strokeWidth={1.8} color={C.text3} />
-                  {p.label}
+                  <span style={{
+                    display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                    flexShrink: 0, width: 30, height: 30, borderRadius: 9,
+                    background: 'rgba(10,10,15,0.05)',
+                    color: C.text2,
+                  }}>
+                    <Icon size={15} strokeWidth={1.9} />
+                  </span>
+                  <span style={{ display: 'flex', flexDirection: 'column', gap: 3, minWidth: 0 }}>
+                    <span style={{ fontSize: 14, fontWeight: 600, color: C.text1, letterSpacing: '-0.01em' }}>
+                      {p.title}
+                    </span>
+                    <span style={{ fontSize: 12.5, fontWeight: 450, color: C.text3, letterSpacing: '-0.005em', lineHeight: 1.4 }}>
+                      {p.sub}
+                    </span>
+                  </span>
                 </button>
               )
             })}
@@ -970,39 +967,40 @@ function ConversationRail({
       width: 232,
       flexShrink: 0,
       display: 'flex', flexDirection: 'column',
-      paddingRight: 12,
-      borderRight: `1px solid ${C.hair}`,
+      paddingRight: 14,
+      borderRight: `1px solid rgba(10,10,15,0.045)`,
       minHeight: 0,
     }}>
-      {/* New chat button — top of rail. Flush row rhythm matching the
-          conversation items below: same height, same horizontal padding,
-          same border-radius. Distinguished only by text weight + small
-          tinted background on hover. No card shadow. */}
+      {/* New chat — its own affordance, not row zero of the list. Surface
+          pill, hairline, soft card elevation. Reads clearly as "the
+          action" so the list below can be pure titles. */}
       <button
         type="button"
         onClick={onNew}
         disabled={sending || switching}
         style={{
           display: 'flex', alignItems: 'center', gap: 9,
-          padding: '8px 10px 8px 12px',
-          marginBottom: 10,
-          background: 'transparent',
-          border: 'none',
+          width: '100%',
+          padding: '9px 12px',
+          marginBottom: 16,
+          background: C.surface,
+          border: `1px solid ${C.hair}`,
+          boxShadow: C.cardShadow,
           color: C.text1,
           fontFamily: 'inherit',
           fontSize: 13, fontWeight: 600, letterSpacing: '-0.01em',
           cursor: sending || switching ? 'default' : 'pointer',
-          borderRadius: 8,
+          borderRadius: 10,
           textAlign: 'left',
-          transition: `background 140ms ${C.spring}`,
+          transition: `border-color 140ms ${C.spring}, box-shadow 140ms ${C.spring}`,
         }}
-        onMouseEnter={e => { if (!(sending || switching)) e.currentTarget.style.background = 'rgba(10,10,15,0.04)' }}
-        onMouseLeave={e => { if (!(sending || switching)) e.currentTarget.style.background = 'transparent' }}
+        onMouseEnter={e => { if (!(sending || switching)) { e.currentTarget.style.borderColor = C.hairActive; e.currentTarget.style.boxShadow = C.cardShadowLift } }}
+        onMouseLeave={e => { if (!(sending || switching)) { e.currentTarget.style.borderColor = C.hair; e.currentTarget.style.boxShadow = C.cardShadow } }}
       >
         <span style={{
           display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
           flexShrink: 0, width: 18, height: 18,
-          color: C.text1,
+          color: C.text2,
         }}>
           <SquarePen size={14} strokeWidth={1.9} />
         </span>
@@ -1018,8 +1016,8 @@ function ConversationRail({
         {groups.map(group => (
           <div key={group.label} style={{ marginBottom: 16 }}>
             <p style={{
-              fontSize: 10.5, fontWeight: 600, color: C.text3,
-              letterSpacing: '0.07em', textTransform: 'uppercase',
+              fontSize: 11, fontWeight: 600, color: C.text4,
+              letterSpacing: '-0.005em',
               margin: '0 0 6px 12px',
             }}>{group.label}</p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
@@ -1098,20 +1096,13 @@ function ConversationRow({ conversation, active, onSelect, onDelete, switching }
       style={{
         position: 'relative',
         display: 'flex', alignItems: 'center', gap: 9,
-        padding: '8px 10px 8px 12px',
+        padding: '7px 10px 7px 12px',
         borderRadius: 8,
         background: bg,
         cursor: active || switching ? 'default' : 'pointer',
         transition: `background 140ms ${C.spring}`,
       }}
     >
-      <span style={{
-        display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-        flexShrink: 0, width: 16, height: 16,
-        color: active ? C.text2 : C.text3,
-      }}>
-        <MessageSquare size={13} strokeWidth={1.8} />
-      </span>
       <span style={{
         flex: 1, minWidth: 0,
         fontSize: 13, fontWeight: active ? 600 : 500,
