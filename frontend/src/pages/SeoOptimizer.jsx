@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useMemo } from 'react'
-import { Lightbulb, AlertTriangle, Target, Sparkles, TrendingUp } from 'lucide-react'
+import { Lightbulb, AlertTriangle, Target, Sparkles, TrendingUp, Users } from 'lucide-react'
 import CreditsEmptyModal from '../components/CreditsEmptyModal'
 import UpsellModal from '../components/UpsellModal'
 
@@ -2783,9 +2783,10 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
             videosFound={result.videos_found}
           />
 
-          {/* ── Search intent analysis — copies Overview's Priority Actions InsightCard design exactly.
-                Stacked cards: 3px colored top border, solid rank badge, category eyebrow + problem title,
-                severity pill on the right, hairline divider, 3-col body grid (Why now blue / Action / Outcome green). ── */}
+          {/* ── Search intent — 3-up visual tile row. Replaces the prose-heavy
+                stacked Q&A IntentInsightRow cards. Each tile is one short
+                phrase + one visual element (saturation meter / chip cluster).
+                Data lives in result.intent_analysis already — no new API. ── */}
           {result.intent_analysis?.search_intent && (() => {
             const ia = result.intent_analysis
             const clean = s => typeof s === 'string'
@@ -2794,61 +2795,112 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
             const searchIntent   = clean(ia.search_intent)
             const viewerProfile  = clean(ia.viewer_profile)
             const emotionalDrv   = clean(ia.emotional_driver)
-            const gap            = clean(ia.gap_opportunity) || 'No single gap detected. Explore the keyword list below — each phrase is a different angle to own.'
+            const gap            = clean(ia.gap_opportunity) || 'No single gap detected'
             const overused       = clean(ia.overused_angle)
-            const hasOverused    = !!overused
+            const total          = result.videos_found || 10
+            const overusedFilled = Math.round(total * 0.7)
 
-            // Matches Dashboard SEV palette exactly (Dashboard.jsx:876-882).
-            const greenColor = '#059669'
-            const redColor   = '#dc2626'
+            const tileBase = {
+              position: 'relative',
+              borderRadius: 14,
+              padding: '16px 18px 18px',
+              display: 'flex', flexDirection: 'column', gap: 10,
+              minHeight: 152,
+            }
+            const eyebrowBase = {
+              fontSize: 10.5, fontWeight: 700, letterSpacing: '0.12em',
+              textTransform: 'uppercase', margin: 0,
+            }
+            const headlineBase = {
+              fontSize: 14, fontWeight: 600, lineHeight: 1.4,
+              color: '#0a0a0f', letterSpacing: '-0.1px', margin: 0, flex: 1,
+            }
 
             return (
-              <div style={{ marginBottom: 24, marginTop: 36 }}>
+              <div style={{ marginBottom: 28, marginTop: 36 }}>
                 <div style={{ marginBottom: 16 }}>
                   <h2 style={{ fontSize: 22, fontWeight: 700, color: C.text1, letterSpacing: '-0.5px', margin: 0 }}>Search intent</h2>
                 </div>
 
-                {/* Insight #1 — Opportunity. The gap by definition is unused, so the
-                    saturation row reads 0 / N ("Wide open"). Lucide Lightbulb anchors
-                    the row visually instead of a numbered amber badge. */}
-                <IntentInsightRow
-                  IconCmp={Lightbulb}
-                  eyebrowLabel="Opportunity"
-                  eyebrowColor={greenColor}
-                  headline={gap}
-                  chipLabel="Act on this"
-                  chipColor={greenColor}
-                  totalVideos={result.videos_found || 12}
-                  filledVideos={0}
-                  whyLabel="Who's searching"
-                  whyText={viewerProfile}
-                  actionLabel="Search intent"
-                  actionText={searchIntent}
-                  outcomeLabel="Emotional pull"
-                  outcomeText={emotionalDrv}
-                />
+                <div style={{ display: 'grid', gridTemplateColumns: overused ? '1fr 1fr 1fr' : '1fr 1fr', gap: 12 }}>
 
-                {/* Insight #2 — Overused angle. By definition most ranking videos use it,
-                    so the saturation row fills ~75% to communicate "Saturated". */}
-                {hasOverused && (
-                  <IntentInsightRow
-                    IconCmp={AlertTriangle}
-                    eyebrowLabel="Overused angle"
-                    eyebrowColor={redColor}
-                    headline={overused}
-                    chipLabel="Avoid"
-                    chipColor={redColor}
-                    totalVideos={result.videos_found || 12}
-                    filledVideos={Math.round((result.videos_found || 12) * 0.75)}
-                    whyLabel="Why it's saturated"
-                    whyText="Most top-ranking titles in this niche already use this framing, so a new video starting from the same angle blends in instead of earning a click."
-                    actionLabel="Do instead"
-                    actionText="Lead with the struggle, the choice, or the story behind the outcome, not the outcome itself. That is the gap above."
-                    outcomeLabel="Expected lift"
-                    outcomeText="Pattern-interrupt framings earn higher CTR on the suggested feed because they stand out from the wall of identical titles."
-                  />
-                )}
+                  {/* Tile 1 — Opportunity (green). Gap by definition = 0 use it. */}
+                  <div style={{
+                    ...tileBase,
+                    background: 'rgba(5,150,105,0.05)',
+                    border: '1px solid rgba(5,150,105,0.18)',
+                  }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                      <Lightbulb size={14} color="#059669" strokeWidth={2.2}/>
+                      <p style={{ ...eyebrowBase, color: '#059669' }}>Opportunity</p>
+                    </div>
+                    <p style={headlineBase}>{gap}</p>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 'auto' }}>
+                      <div style={{ flex: 1, height: 5, background: 'rgba(5,150,105,0.10)', borderRadius: 99, overflow: 'hidden' }}>
+                        <div style={{ width: '4%', height: '100%', background: '#059669', borderRadius: 99 }}/>
+                      </div>
+                      <span style={{ fontSize: 11.5, fontWeight: 600, color: '#059669', whiteSpace: 'nowrap', fontVariantNumeric: 'tabular-nums' }}>
+                        Wide open · 0/{total}
+                      </span>
+                    </div>
+                  </div>
 
+                  {/* Tile 2 — Overused angle (amber). Meter ~70% to signal saturation. */}
+                  {overused && (
+                    <div style={{
+                      ...tileBase,
+                      background: 'rgba(217,119,6,0.05)',
+                      border: '1px solid rgba(217,119,6,0.18)',
+                    }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                        <AlertTriangle size={14} color="#d97706" strokeWidth={2.2}/>
+                        <p style={{ ...eyebrowBase, color: '#d97706' }}>Overused angle</p>
+                      </div>
+                      <p style={headlineBase}>{overused}</p>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 'auto' }}>
+                        <div style={{ flex: 1, height: 5, background: 'rgba(217,119,6,0.10)', borderRadius: 99, overflow: 'hidden' }}>
+                          <div style={{ width: `${Math.round((overusedFilled / total) * 100)}%`, height: '100%', background: '#d97706', borderRadius: 99 }}/>
+                        </div>
+                        <span style={{ fontSize: 11.5, fontWeight: 600, color: '#d97706', whiteSpace: 'nowrap', fontVariantNumeric: 'tabular-nums' }}>
+                          Saturated · {overusedFilled}/{total}
+                        </span>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Tile 3 — Audience drivers (neutral). 3 quiet chips. */}
+                  <div style={{
+                    ...tileBase,
+                    background: 'rgba(10,10,15,0.025)',
+                    border: '1px solid rgba(10,10,15,0.07)',
+                  }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                      <Users size={14} color="rgba(10,10,15,0.55)" strokeWidth={2.2}/>
+                      <p style={{ ...eyebrowBase, color: 'rgba(10,10,15,0.55)' }}>Audience</p>
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginTop: 4 }}>
+                      {emotionalDrv && (
+                        <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
+                          <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.10em', textTransform: 'uppercase', color: 'rgba(10,10,15,0.45)', flexShrink: 0, width: 56 }}>Driver</span>
+                          <span style={{ fontSize: 12.5, fontWeight: 500, color: '#0a0a0f', lineHeight: 1.4 }}>{emotionalDrv}</span>
+                        </div>
+                      )}
+                      {searchIntent && (
+                        <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
+                          <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.10em', textTransform: 'uppercase', color: 'rgba(10,10,15,0.45)', flexShrink: 0, width: 56 }}>Intent</span>
+                          <span style={{ fontSize: 12.5, fontWeight: 500, color: '#0a0a0f', lineHeight: 1.4 }}>{searchIntent}</span>
+                        </div>
+                      )}
+                      {viewerProfile && (
+                        <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
+                          <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.10em', textTransform: 'uppercase', color: 'rgba(10,10,15,0.45)', flexShrink: 0, width: 56 }}>Viewer</span>
+                          <span style={{ fontSize: 12.5, fontWeight: 500, color: '#0a0a0f', lineHeight: 1.4 }}>{viewerProfile}</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                </div>
               </div>
             )
           })()}
