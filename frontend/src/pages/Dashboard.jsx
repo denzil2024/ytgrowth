@@ -226,23 +226,54 @@ function useDashboardStyles() {
       .ytg-optimise-btn:hover {
         filter: brightness(1.1);
       }
-      /* Videos card grid — 5 cols on large desktops, 4 on laptop-sized
-         screens where the 5-col layout was overflowing the ENG metric and
-         clamping titles. Big monitors (1500px+) keep the 5-col look.
-         Mirrored verbatim by Autopsy.jsx for parity (see .au-eligible-grid). */
+      /* Videos card grid — 4 cols default (consistent with Video Review).
+         Was 5 cols above 1500px which crammed the metrics; 4-up rhythm
+         across all desktop widths reads cleaner. */
       .ytg-videos-grid {
         display: grid;
-        grid-template-columns: repeat(5, minmax(0, 1fr));
+        grid-template-columns: repeat(4, minmax(0, 1fr));
         gap: 14px;
-      }
-      @media (max-width: 1500px) {
-        .ytg-videos-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
       }
       @media (max-width: 900px) {
         .ytg-videos-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       }
       @media (max-width: 560px) {
         .ytg-videos-grid { grid-template-columns: 1fr; }
+      }
+      /* Meta-chip in My Videos header — Lucide icon in tinted circle + label.
+         Replaces the emoji header chips per the no-generic-icons rule. */
+      .ytg-myvid-chip {
+        display: inline-flex; align-items: center; gap: 7px;
+        font-size: 12.5px; font-weight: 600; color: #4a4a58;
+        background: #fff; border: 1px solid rgba(10,10,15,0.08);
+        border-radius: 100px; padding: 4px 12px 4px 4px;
+        box-shadow: 0 1px 2px rgba(15,15,25,0.04);
+        letter-spacing: -0.01em;
+      }
+      .ytg-myvid-chip-icon {
+        display: inline-flex; align-items: center; justify-content: center;
+        width: 20px; height: 20px; border-radius: 99px;
+        flex-shrink: 0;
+      }
+      /* Quiet sort group for My Videos — soft-grey active, no red glow. */
+      .ytg-myvid-sort-grp {
+        display: inline-flex; gap: 4px; padding: 4px;
+        background: #eeeef3; border-radius: 100px;
+      }
+      .ytg-myvid-sort-btn {
+        padding: 7px 14px; border-radius: 100px;
+        font-family: inherit; font-size: 12.5px; font-weight: 500;
+        background: transparent; color: rgba(10,10,15,0.55);
+        border: 1px solid transparent;
+        cursor: pointer; letter-spacing: -0.01em;
+        transition: background 180ms cubic-bezier(0.32,0.72,0,1), color 180ms cubic-bezier(0.32,0.72,0,1);
+      }
+      .ytg-myvid-sort-btn:hover:not(.active) { background: rgba(10,10,15,0.03); color: #0a0a0f; }
+      .ytg-myvid-sort-btn.active {
+        background: #ffffff; color: #0a0a0f;
+        border-color: rgba(10,10,15,0.10);
+        box-shadow: 0 1px 2px rgba(15,15,25,0.04);
+        font-weight: 600;
       }
     `
     document.head.appendChild(style)
@@ -5667,31 +5698,33 @@ export default function Dashboard() {
           {/* ── VIDEOS ───────────────────────────────────────────────── */}
           {data && nav === 'Videos' && videos && (
             <>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 }}>
+              <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 24, gap: 16, flexWrap: 'wrap' }}>
                 <div>
-                  <h2 style={{ fontSize: 26, fontWeight: 800, color: C.text1, letterSpacing: '-0.7px', marginBottom: 10 }}>Video performance</h2>
+                  <h1 style={{ fontSize: 26, fontWeight: 700, color: C.text1, letterSpacing: '-0.7px', marginBottom: 6, lineHeight: 1.1 }}>My Videos</h1>
+                  <p style={{ fontSize: 14, color: 'rgba(10,10,15,0.55)', fontWeight: 500, letterSpacing: '-0.005em', lineHeight: 1.45, marginBottom: 12 }}>
+                    Every video on your channel, ranked by what you ask for · {videos.length.toLocaleString()} total
+                  </p>
                   <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
                     {[
-                      ['📹', `${videos.length} videos`],
-                      ['👁', `${fmtNum(videos.reduce((s, v) => s + (v.views || 0), 0))} total views`],
-                      ['👍', `${fmtNum(videos.reduce((s, v) => s + (v.likes || 0), 0))} total likes`],
-                      ['💬', `${fmtNum(videos.reduce((s, v) => s + (v.comments || 0), 0))} comments`],
-                    ].map(([icon, label]) => (
-                      <span key={label} style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: 12.5, fontWeight: 600, color: C.text2, background: '#fff', border: `1px solid ${C.border}`, borderRadius: 100, padding: '5px 12px', boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
-                        <span>{icon}</span>{label}
+                      { tint: { bg: '#fee2e2',         fg: C.red   }, path: <><circle cx="6" cy="7.5" r="3"/><path d="M9 5l3-1.5v8L9 10"/></>, label: `${videos.length} videos` },
+                      { tint: { bg: 'rgba(10,10,15,0.06)', fg: '#52525b' }, path: <><circle cx="7" cy="7" r="2.2"/><path d="M1.5 7s2-3.5 5.5-3.5S12.5 7 12.5 7 10.5 10.5 7 10.5 1.5 7 1.5 7Z"/></>, label: `${fmtNum(videos.reduce((s, v) => s + (v.views || 0), 0))} views` },
+                      { tint: { bg: '#fffbeb',         fg: C.amber }, path: <path d="M2 7.5l2.5 3.2 2-2.7 1.7 1L11.5 4 8.5 3 7 5.5 5 4.5 2 7.5z"/>, label: `${fmtNum(videos.reduce((s, v) => s + (v.likes || 0), 0))} likes` },
+                      { tint: { bg: '#f0fdf4',         fg: C.green }, path: <path d="M2 3.5h10v6H7.5L4.5 12V9.5H2z"/>,                                  label: `${fmtNum(videos.reduce((s, v) => s + (v.comments || 0), 0))} comments` },
+                    ].map(({ tint, path, label }) => (
+                      <span key={label} className="ytg-myvid-chip">
+                        <span className="ytg-myvid-chip-icon" style={{ background: tint.bg, color: tint.fg }}>
+                          <svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                            {path}
+                          </svg>
+                        </span>
+                        {label}
                       </span>
                     ))}
                   </div>
                 </div>
                 {videosTab === 'all' && (
                 <div style={{ display: 'flex', gap: 10, alignItems: 'center', flexShrink: 0 }}>
-                  <div style={{
-                    display: 'inline-flex', alignItems: 'center',
-                    background: '#fff', borderRadius: 100,
-                    border: '1px solid rgba(0,0,0,0.08)',
-                    boxShadow: '0 1px 3px rgba(0,0,0,0.06), 0 4px 14px rgba(0,0,0,0.06)',
-                    padding: 3, gap: 2,
-                  }}>
+                  <div className="ytg-myvid-sort-grp">
                     {[
                       { k: 'date',  label: 'Newest' },
                       { k: 'views', label: 'Most views' },
@@ -5702,18 +5735,7 @@ export default function Dashboard() {
                         <button
                           key={opt.k}
                           onClick={() => setVideoSort(opt.k)}
-                          style={{
-                            fontFamily: 'Inter, system-ui, sans-serif',
-                            fontSize: 12.5, fontWeight: 600,
-                            padding: '7px 14px', borderRadius: 100,
-                            border: 'none', cursor: 'pointer',
-                            background: active ? '#e5251b' : 'transparent',
-                            color: active ? '#fff' : '#52525b',
-                            boxShadow: active ? '0 1px 3px rgba(229,37,27,0.35)' : 'none',
-                            transition: 'all 0.18s',
-                          }}
-                          onMouseEnter={e => { if (!active) e.currentTarget.style.color = '#111114' }}
-                          onMouseLeave={e => { if (!active) e.currentTarget.style.color = '#52525b' }}
+                          className={`ytg-myvid-sort-btn${active ? ' active' : ''}`}
                         >
                           {opt.label}
                         </button>
@@ -5778,18 +5800,18 @@ export default function Dashboard() {
                     <button key={key}
                       onClick={() => setVideosTab(key)}
                       style={{
-                        fontSize: 12.5, fontWeight: 700, padding: '7px 16px',
+                        fontSize: 13, fontWeight: 600, padding: '8px 18px',
                         borderRadius: 100,
-                        border: active ? 'none' : `1px solid ${C.border}`,
+                        border: active ? `1px solid ${C.red}` : '1px solid rgba(10,10,15,0.10)',
                         background: active ? C.red : '#ffffff',
-                        color: active ? '#ffffff' : C.text2,
+                        color: active ? '#ffffff' : 'rgba(10,10,15,0.62)',
                         cursor: 'pointer', fontFamily: 'inherit',
-                        letterSpacing: '-0.1px',
-                        boxShadow: active ? '0 1px 3px rgba(229,37,27,0.28), 0 4px 14px rgba(229,37,27,0.22)' : 'none',
-                        transition: 'all 0.15s',
+                        letterSpacing: '-0.01em',
+                        boxShadow: active ? '0 1px 2px rgba(229,37,27,0.20), inset 0 1px 0 rgba(255,255,255,0.22)' : 'none',
+                        transition: 'background 160ms cubic-bezier(0.32,0.72,0,1), color 160ms cubic-bezier(0.32,0.72,0,1), border-color 160ms cubic-bezier(0.32,0.72,0,1)',
                       }}
-                      onMouseEnter={e => { if (!active) { e.currentTarget.style.borderColor = C.text3; e.currentTarget.style.color = C.text1 } }}
-                      onMouseLeave={e => { if (!active) { e.currentTarget.style.borderColor = C.border;  e.currentTarget.style.color = C.text2 } }}
+                      onMouseEnter={e => { if (!active) { e.currentTarget.style.background = 'rgba(10,10,15,0.03)'; e.currentTarget.style.color = '#0a0a0f' } }}
+                      onMouseLeave={e => { if (!active) { e.currentTarget.style.background = '#ffffff'; e.currentTarget.style.color = 'rgba(10,10,15,0.62)' } }}
                     >
                       {label}
                     </button>
@@ -5833,20 +5855,20 @@ export default function Dashboard() {
                       padding: '12px 14px',
                       boxShadow: tintMap.boxShadow,
                     }}>
-                      <p style={{ fontSize: 10, fontWeight: 700, color: tintMap.labelColor, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>{label}</p>
+                      <p style={{ fontSize: 10.5, fontWeight: 700, color: tintMap.labelColor, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 6 }}>{label}</p>
                       <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
-                        <p style={{ fontSize: 18, fontWeight: 800, color: C.text1, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.4px', lineHeight: 1 }}>{fmtNum(current)}</p>
-                        {showDelta && <p style={{ fontSize: 12, fontWeight: 700, color: col, fontVariantNumeric: 'tabular-nums', lineHeight: 1 }}>{sign}</p>}
+                        <p style={{ fontSize: 18, fontWeight: 700, color: C.text1, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.4px', lineHeight: 1 }}>{fmtNum(current)}</p>
+                        {showDelta && <p style={{ fontSize: 12, fontWeight: 600, color: col, fontVariantNumeric: 'tabular-nums', lineHeight: 1 }}>{sign}</p>}
                       </div>
-                      <p style={{ fontSize: 11, color: C.text3, marginTop: 4, fontWeight: 500 }}>was {fmtNum(before)}</p>
+                      <p style={{ fontSize: 11, color: 'rgba(10,10,15,0.45)', marginTop: 4, fontWeight: 500, letterSpacing: '-0.005em' }}>was {fmtNum(before)}</p>
                     </div>
                   )
                 }
 
                 return (
                   <div style={{ marginBottom: 28 }}>
-                    {/* Subtler secondary eyebrow — lets "Video performance" keep its H2 identity at the top */}
-                    <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 12 }}>
+                    {/* Subtler secondary eyebrow — lets "My Videos" keep its H1 identity at the top */}
+                    <p style={{ fontSize: 11, fontWeight: 700, color: 'rgba(10,10,15,0.50)', letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 12 }}>
                       Tracked updates · {optimizations.length} video{optimizations.length === 1 ? '' : 's'}
                     </p>
 
@@ -5858,65 +5880,60 @@ export default function Dashboard() {
                       const titleChanged = o.before_title && o.after_title && o.before_title !== o.after_title
                       const daysLabel    = days === 0 ? 'Today' : days === 1 ? '1 day ago' : `${days} days ago`
                       return (
-                        <div key={`${o.video_id}-${o.optimized_at}`} className="ytg-insight-card" style={{ marginBottom: 10, borderTop: `3px solid ${C.amber}` }}>
-                          <div style={{ padding: '16px 22px 18px' }}>
+                        <div key={`${o.video_id}-${o.optimized_at}`} className="ytg-insight-card" style={{ marginBottom: 12, borderTop: `3px solid ${C.amber}` }}>
+                          <div style={{ padding: '18px 22px 20px' }}>
 
-                            {/* Header — amber rank badge + category eyebrow + title diff + days pill.
-                                Thumbnail sized 100×56 so its height matches the 3-line text block (eyebrow + strike + new title),
-                                and alignSelf:center keeps it rooted to the text instead of hanging from the top. */}
-                            <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: 14 }}>
-                              <div style={{ width: 26, height: 26, borderRadius: 8, background: C.amber, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 2 }}>
-                                <span style={{ fontSize: 12, fontWeight: 900, color: '#fff', fontVariantNumeric: 'tabular-nums' }}>{i + 1}</span>
-                              </div>
-
+                            {/* Header — thumbnail + eyebrow + title diff + days pill.
+                                Dropped the filled amber 26x26 rank-badge tile (was carrying
+                                visual weight that the amber top stripe already provides).
+                                Cleaner: just the thumbnail + content + pill. */}
+                            <div style={{ display: 'flex', alignItems: 'flex-start', gap: 14, marginBottom: 14 }}>
                               {o.thumbnail_url && (
                                 <a href={`https://www.youtube.com/watch?v=${o.video_id}`} target="_blank" rel="noopener noreferrer" style={{ flexShrink: 0, lineHeight: 0, textDecoration: 'none', alignSelf: 'center' }}>
-                                  <img src={o.thumbnail_url} alt="" style={{ width: 100, height: 56, borderRadius: 7, objectFit: 'cover', display: 'block' }}/>
+                                  <img src={o.thumbnail_url} alt="" style={{ width: 100, height: 56, borderRadius: 8, objectFit: 'cover', display: 'block', border: '1px solid rgba(10,10,15,0.07)' }}/>
                                 </a>
                               )}
 
                               <div style={{ flex: 1, minWidth: 0 }}>
-                                <p style={{ fontSize: 10, fontWeight: 700, color: C.green, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 5 }}>Tracked update</p>
+                                <p style={{ fontSize: 11, fontWeight: 700, color: C.green, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 5 }}>Tracked update</p>
                                 {titleChanged ? (
                                   <>
-                                    <p style={{ fontSize: 12, color: C.text3, fontWeight: 500, lineHeight: 1.4, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', textDecoration: 'line-through', marginBottom: 3 }}>{o.before_title}</p>
-                                    <p style={{ fontSize: 14, fontWeight: 700, color: C.text1, lineHeight: 1.5, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', letterSpacing: '-0.1px' }}>{o.after_title}</p>
+                                    <p style={{ fontSize: 12, color: 'rgba(10,10,15,0.45)', fontWeight: 500, lineHeight: 1.4, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', textDecoration: 'line-through', marginBottom: 4, letterSpacing: '-0.005em' }}>{o.before_title}</p>
+                                    <p style={{ fontSize: 14.5, fontWeight: 600, color: C.text1, lineHeight: 1.45, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', letterSpacing: '-0.15px' }}>{o.after_title}</p>
                                   </>
                                 ) : (
-                                  <p style={{ fontSize: 14, fontWeight: 700, color: C.text1, lineHeight: 1.5, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', letterSpacing: '-0.1px' }}>{o.after_title || o.before_title}</p>
+                                  <p style={{ fontSize: 14.5, fontWeight: 600, color: C.text1, lineHeight: 1.45, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', letterSpacing: '-0.15px' }}>{o.after_title || o.before_title}</p>
                                 )}
                               </div>
 
-                              <span style={{ fontSize: 10, fontWeight: 700, color: C.green, padding: '3px 9px', borderRadius: 20, letterSpacing: '0.06em', textTransform: 'uppercase', border: `1.5px solid ${C.green}`, flexShrink: 0 }}>
+                              <span style={{ fontSize: 11, fontWeight: 700, color: C.green, padding: '3px 11px', borderRadius: 100, letterSpacing: '0.10em', textTransform: 'uppercase', border: `1px solid ${C.greenBdr}`, background: C.greenBg, flexShrink: 0 }}>
                                 {daysLabel}
                               </span>
                             </div>
 
-                            {/* Hairline divider — aligned with content start, same offset Priority Actions uses */}
-                            <div style={{ height: 1, background: C.border, marginBottom: 14, marginLeft: 46 }}/>
+                            {/* Hairline divider — aligned with the thumbnail edge (100 + 14 gap = 114) */}
+                            <div style={{ height: 1, background: 'rgba(10,10,15,0.06)', marginBottom: 14, marginLeft: 114 }}/>
 
-                            {/* 3-col body — Views (blue) / Likes (white+bar) / Comments (green), parallel stats in Priority Actions tint pattern */}
-                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr 1fr', gap: 8, marginLeft: 46 }}>
+                            {/* 3-col body — Views / Likes (amber bar centre) / Comments. Brand-only palette. */}
+                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr 1fr', gap: 8, marginLeft: 114 }}>
                               <DeltaCell label="Views"    before={o.before_views}    current={o.current_views}    pctVal={vPct} tint="blue"/>
                               <DeltaCell label="Likes"    before={o.before_likes}    current={o.current_likes}    pctVal={lPct} tint="white"/>
                               <DeltaCell label="Comments" before={o.before_comments} current={o.current_comments} pctVal={cPct} tint="green"/>
                             </div>
 
-                            {/* Cross-link to Post-Publish Review — different lens on the same video,
-                                surfaces the AI verdict on what worked / didn't. Tiny inline link, no
-                                duplicate content (autopsy has its own page). */}
-                            <div style={{ marginTop: 12, marginLeft: 46, display: 'flex', justifyContent: 'flex-end' }}>
+                            {/* Cross-link to Video Review — different lens on the same video. */}
+                            <div style={{ marginTop: 14, marginLeft: 114, display: 'flex', justifyContent: 'flex-end' }}>
                               <button
                                 onClick={() => setNav('Autopsy')}
                                 style={{
-                                  fontSize: 11.5, fontWeight: 600, color: C.text3,
+                                  fontSize: 12, fontWeight: 500, color: 'rgba(10,10,15,0.50)',
                                   background: 'transparent', border: 'none', cursor: 'pointer',
-                                  fontFamily: 'inherit', padding: 0, letterSpacing: '-0.05px',
+                                  fontFamily: 'inherit', padding: 0, letterSpacing: '-0.005em',
                                 }}
-                                onMouseEnter={e => { e.currentTarget.style.color = C.text1 }}
-                                onMouseLeave={e => { e.currentTarget.style.color = C.text3 }}
+                                onMouseEnter={e => { e.currentTarget.style.color = '#0a0a0f' }}
+                                onMouseLeave={e => { e.currentTarget.style.color = 'rgba(10,10,15,0.50)' }}
                               >
-                                Run post-publish review on this video →
+                                Run video review on this one →
                               </button>
                             </div>
                           </div>
@@ -5930,10 +5947,10 @@ export default function Dashboard() {
               {/* Empty state for the Tracked tab when nothing's been optimised yet. */}
               {videosTab === 'tracked' && optimizations.length === 0 && (
                 <div className="ytg-card" style={{ padding: '40px 32px', textAlign: 'center' }}>
-                  <p style={{ fontSize: 16, fontWeight: 700, color: C.text1, letterSpacing: '-0.2px', marginBottom: 8 }}>
+                  <p style={{ fontSize: 16, fontWeight: 600, color: C.text1, letterSpacing: '-0.2px', marginBottom: 8 }}>
                     No tracked optimisations yet
                   </p>
-                  <p style={{ fontSize: 13.5, color: C.text3, lineHeight: 1.6, maxWidth: 420, margin: '0 auto' }}>
+                  <p style={{ fontSize: 13.5, color: 'rgba(10,10,15,0.55)', fontWeight: 500, lineHeight: 1.6, maxWidth: 420, margin: '0 auto', letterSpacing: '-0.005em' }}>
                     Open any video below and run an SEO optimisation. Once you publish the new title or description, the lift in views, likes, and comments shows up here.
                   </p>
                 </div>
@@ -5963,7 +5980,7 @@ export default function Dashboard() {
                     <div key={v.video_id || i} className="ytg-card" style={{ display: 'flex', flexDirection: 'column' }}>
                       {/* Thumbnail */}
                       <a href={ytUrl || '#'} target="_blank" rel="noopener noreferrer"
-                        style={{ display: 'block', position: 'relative', textDecoration: 'none', flexShrink: 0, borderRadius: '19px 19px 0 0', overflow: 'hidden' }}>
+                        style={{ display: 'block', position: 'relative', textDecoration: 'none', flexShrink: 0, borderRadius: '16px 16px 0 0', overflow: 'hidden' }}>
                         {v.thumbnail || v.video_id
                           ? <img
                               src={v.video_id ? ytMaxThumbUrl(v.video_id) : v.thumbnail}
@@ -5975,48 +5992,44 @@ export default function Dashboard() {
                           : <div style={{ width: '100%', aspectRatio: '16/9', background: '#ebebef' }}/>
                         }
                         {isShort && (
-                          <span style={{ position: 'absolute', top: 8, left: 8, background: '#111', color: '#fff', fontSize: 12, fontWeight: 800, padding: '2px 6px', borderRadius: 4, letterSpacing: '0.06em' }}>SHORT</span>
+                          <span style={{ position: 'absolute', top: 8, left: 8, background: '#111', color: '#fff', fontSize: 11, fontWeight: 700, padding: '2px 7px', borderRadius: 4, letterSpacing: '0.10em' }}>SHORT</span>
                         )}
                         {durLabel && (
-                          <span style={{ position: 'absolute', bottom: 8, right: 8, background: 'rgba(0,0,0,0.72)', color: '#fff', fontSize: 12, fontWeight: 700, padding: '2px 7px', borderRadius: 5, fontVariantNumeric: 'tabular-nums' }}>{durLabel}</span>
+                          <span style={{ position: 'absolute', bottom: 8, right: 8, background: 'rgba(0,0,0,0.82)', color: '#fff', fontSize: 11.5, fontWeight: 700, padding: '3px 7px', borderRadius: 5, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.05px' }}>{durLabel}</span>
                         )}
                       </a>
 
                       {/* Body */}
-                      <div style={{ padding: '20px 20px 20px', display: 'flex', flexDirection: 'column', flex: 1 }}>
-                        {/* Title */}
+                      <div style={{ padding: '16px 18px 18px', display: 'flex', flexDirection: 'column', flex: 1 }}>
+                        {/* Title — 14.5/600 (was 16/700, too heavy at this card width) */}
                         <p style={{
-                          fontSize: 16, fontWeight: 700, color: C.text1, lineHeight: 1.45, marginBottom: 14, letterSpacing: '-0.3px',
-                          display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden',
+                          fontSize: 14.5, fontWeight: 600, color: C.text1, lineHeight: 1.4, marginBottom: 8, letterSpacing: '-0.15px',
+                          display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', minHeight: 41,
                         }}>{v.title}</p>
 
-                        {/* Meta line */}
-                        <p style={{ fontSize: 13.5, fontWeight: 500, color: C.text3, marginBottom: 14, lineHeight: 1.4 }}>
-                          <span style={{ color: C.text2, fontWeight: 600 }}>{fmtNum(v.views)}</span> views
-                          <span style={{ margin: '0 8px', color: '#d4d4dc' }}>·</span>
-                          <span style={{ color: C.text2, fontWeight: 600 }}>{fmtNum(v.likes)}</span> likes
-                          <span style={{ margin: '0 8px', color: '#d4d4dc' }}>·</span>
-                          {relTimeLong(v.published_at) || '—'}
+                        {/* Meta line — uniform 12/500 muted, no mid-weight spikes */}
+                        <p style={{ fontSize: 12, fontWeight: 500, color: 'rgba(10,10,15,0.50)', marginBottom: 14, lineHeight: 1.4, letterSpacing: '-0.005em', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                          {fmtNum(v.views)} views · {fmtNum(v.likes)} likes · {relTimeLong(v.published_at) || '—'}
                         </p>
 
                         {/* Footer: Watch · Retention · Eng + Optimise */}
-                        <div style={{ marginTop: 'auto', paddingTop: 18, borderTop: `1px solid #eeeef3` }}>
-                          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 12, marginBottom: 18 }}>
+                        <div style={{ marginTop: 'auto', paddingTop: 14, borderTop: '1px solid rgba(10,10,15,0.06)' }}>
+                          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 10, marginBottom: 14 }}>
                             {[
                               { label: 'Watch',     display: wtDisplay,                                             color: C.text1,  tip: 'Average watch time per view (mm:ss). Longer is better relative to video length.' },
                               { label: 'Retention', display: retN !== null ? `${retN.toFixed(0)}%` : '—',           color: C.text1,  tip: 'Average % of video watched. 50%+ strong, 30–50% avg, <30% weak.' },
                               { label: 'Eng',       display: lrN !== null ? `${lr}%` : '—',                         color: lrColor,  tip: 'Engagement rate = likes ÷ views. 3%+ strong, 1–3% avg, <1% weak.' },
                             ].map(m => (
                               <div key={m.label} title={m.tip} style={{ cursor: 'help', textAlign: 'left' }}>
-                                <p style={{ fontSize: 10.5, fontWeight: 700, color: C.text3, letterSpacing: '0.09em', textTransform: 'uppercase', marginBottom: 7, lineHeight: 1 }}>{m.label}</p>
-                                <p style={{ fontSize: 17, fontWeight: 800, color: m.color, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.4px', lineHeight: 1 }}>{m.display}</p>
+                                <p style={{ fontSize: 10.5, fontWeight: 700, color: 'rgba(10,10,15,0.45)', letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 5, lineHeight: 1 }}>{m.label}</p>
+                                <p style={{ fontSize: 16, fontWeight: 700, color: m.color, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.3px', lineHeight: 1 }}>{m.display}</p>
                               </div>
                             ))}
                           </div>
                           <button
                             onClick={() => setSelectedVideoId(v.video_id)}
                             className="ytg-optimise-btn"
-                            style={{ width: '100%', justifyContent: 'center', padding: '11px 16px', fontSize: 13.5, fontWeight: 700 }}>
+                            style={{ width: '100%', justifyContent: 'center', padding: '10px 16px', fontSize: 13, fontWeight: 600, letterSpacing: '-0.01em' }}>
                             Optimise
                           </button>
                         </div>
