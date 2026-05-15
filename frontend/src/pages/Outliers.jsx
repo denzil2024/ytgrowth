@@ -204,21 +204,24 @@ if (typeof document !== 'undefined' && !document.getElementById('outliers-styles
       box-shadow: 0 1px 3px rgba(229,37,27,0.25), 0 4px 14px rgba(229,37,27,0.25);
     }
 
-    /* Reports list — mirrors Competitors tracked accordion */
-    .out-report-wrapper { position: relative; margin-bottom: 12px; }
+    /* Reports list — matches Competitors tracked accordion grammar exactly:
+       hairline border, 14px radius, single soft shadow + inset highlight,
+       14px gap between rows so they breathe. */
+    .out-report-wrapper { position: relative; margin-bottom: 14px; }
     .out-report-header {
       background: #ffffff;
-      border: 1px solid #e6e6ec;
-      border-radius: 16px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.06);
-      padding: 16px 20px;
+      border: 1px solid rgba(10,10,15,0.07);
+      border-radius: 14px;
+      box-shadow: 0 1px 2px rgba(15,15,25,0.04), inset 0 1px 0 rgba(255,255,255,0.7);
+      padding: 18px 22px;
       display: flex; align-items: center; gap: 16px;
-      transition: box-shadow 0.15s, border-color 0.15s;
+      transition: box-shadow 200ms cubic-bezier(0.2,0.7,0.3,1), transform 200ms cubic-bezier(0.2,0.7,0.3,1), border-color 200ms cubic-bezier(0.2,0.7,0.3,1);
       cursor: pointer; user-select: none;
     }
     .out-report-header:hover {
-      box-shadow: 0 2px 6px rgba(0,0,0,0.06), 0 8px 24px rgba(0,0,0,0.08);
-      border-color: rgba(0,0,0,0.14);
+      box-shadow: 0 4px 16px rgba(15,15,25,0.06), inset 0 1px 0 rgba(255,255,255,0.7);
+      border-color: rgba(10,10,15,0.14);
+      transform: translateY(-1px);
     }
     .out-report-remove {
       position: absolute; top: 12px; right: 12px;
@@ -743,20 +746,55 @@ export default function Outliers({ channelData, onNavigate, plan, freeTierFeatur
   return (
     <div className="out-page" style={{ color: C.text1 }}>
 
-      {/* Top-level view switch — Search (default flow) vs Reports (past paid
-          runs). Matches Competitors' tracked tab pattern. */}
-      <div style={{ display: 'flex', gap: 8, marginBottom: 20 }}>
-        <button
-          className={`out-view-btn${view === 'search' ? ' active' : ''}`}
-          onClick={() => setView('search')}>
-          Search
-        </button>
-        <button
-          className={`out-view-btn${view === 'reports' ? ' active' : ''}`}
-          onClick={() => setView('reports')}>
-          {reports.length > 0 ? `Reports (${reports.length})` : 'Reports'}
-        </button>
-      </div>
+      {/* ══ Page header — H1 + subtitle on the LEFT, Reports toggle on the
+           RIGHT. One row, no separate Search/Reports tab pair (the Reports
+           pill toggles back to Search when active). Subtitle adapts based
+           on view. */}
+      {(() => {
+        const videosCount   = result?.videos?.length || 0
+        const channelsCount = result?.channels?.length || 0
+        const poolSize      = result?.cohort?.pool_size || 0
+        const verticalLabel = result?.cohort?.vertical || ''
+
+        const subtitle = view === 'reports'
+          ? 'Past searches you’ve paid for · reopen anytime without being charged again'
+          : hasResults
+            ? [
+                `${videosCount} over-performing video${videosCount === 1 ? '' : 's'}`,
+                channelsCount > 0 ? `${channelsCount} breakout channel${channelsCount === 1 ? '' : 's'}` : null,
+                verticalLabel ? `in ${verticalLabel}` : null,
+                poolSize > 0 ? `pool of ${poolSize}` : null,
+              ].filter(Boolean).join(' · ')
+            : 'Find what beats the niche in your size bracket · 3 credits per search'
+
+        const reportsActive = view === 'reports'
+        const reportsLabel  = reports.length > 0 ? `Reports (${reports.length})` : 'Reports'
+
+        return (
+          <div style={{
+            display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between',
+            gap: 16, marginBottom: 24, flexWrap: 'wrap',
+          }}>
+            <div style={{ flex: '1 1 auto', minWidth: 0 }}>
+              <h1 style={{ fontSize: 26, fontWeight: 700, color: C.text1, letterSpacing: '-0.7px', marginBottom: 6, lineHeight: 1.1 }}>
+                Outliers
+              </h1>
+              <p style={{ fontSize: 14, color: 'rgba(10,10,15,0.55)', fontWeight: 500, letterSpacing: '-0.005em', lineHeight: 1.45 }}>
+                {subtitle}
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => setView(reportsActive ? 'search' : 'reports')}
+              className={`out-view-btn${reportsActive ? ' active' : ''}`}
+              style={{ flexShrink: 0, marginTop: 4 }}
+              aria-pressed={reportsActive}
+            >
+              {reportsLabel}
+            </button>
+          </div>
+        )
+      })()}
 
       {view === 'search' && (<>
 
@@ -777,36 +815,6 @@ export default function Outliers({ channelData, onNavigate, plan, freeTierFeatur
           </button>
         </div>
       )}
-
-      {/* ══ Header — H2 + single subtitle line.
-           Was a row of 4 tinted-circle chips (counts + niche pool + vertical)
-           which read as cluttered. Counts are visible in the result grid;
-           the niche + pool context lives in one muted subtitle line so the
-           header stays calm and scannable. */}
-      {(() => {
-        const videosCount   = result?.videos?.length || 0
-        const channelsCount = result?.channels?.length || 0
-        const poolSize      = result?.cohort?.pool_size || 0
-        const verticalLabel = result?.cohort?.vertical || ''
-
-        const subtitle = hasResults
-          ? [
-              `${videosCount} over-performing video${videosCount === 1 ? '' : 's'}`,
-              channelsCount > 0 ? `${channelsCount} breakout channel${channelsCount === 1 ? '' : 's'}` : null,
-              verticalLabel ? `in ${verticalLabel}` : null,
-              poolSize > 0 ? `pool of ${poolSize}` : null,
-            ].filter(Boolean).join(' · ')
-          : 'Find what beats the niche in your size bracket · 3 credits per search'
-
-        return (
-          <div style={{ marginBottom: 20 }}>
-            <h2 style={{ fontSize: 26, fontWeight: 700, color: C.text1, letterSpacing: '-0.7px', marginBottom: 6, lineHeight: 1.1 }}>Outliers</h2>
-            <p style={{ fontSize: 14, color: 'rgba(10,10,15,0.55)', fontWeight: 500, letterSpacing: '-0.005em', lineHeight: 1.45 }}>
-              {subtitle}
-            </p>
-          </div>
-        )
-      })()}
 
       {/* ══ Tabs row — tabs LEFT, sort RIGHT. Both use the SAME segmented
            control pattern (soft-grey pill background + white active pill +
@@ -854,11 +862,11 @@ export default function Outliers({ channelData, onNavigate, plan, freeTierFeatur
 
       {/* ══ Search bar ═══════════════════════════════════════════════════════ */}
       <div className="out-card" style={{ padding: '20px 22px', marginBottom: 20 }}>
-        <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 12 }}>
-          <span style={{ fontSize: 11, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+        <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 12, gap: 12 }}>
+          <span style={{ fontSize: 11, fontWeight: 700, color: 'rgba(10,10,15,0.50)', textTransform: 'uppercase', letterSpacing: '0.10em' }}>
             Your video title
           </span>
-          <span style={{ fontSize: 11, fontWeight: 500, color: C.text3 }}>
+          <span style={{ fontSize: 12, fontWeight: 500, color: 'rgba(10,10,15,0.50)', letterSpacing: '-0.005em' }}>
             One search powers all three tabs · filtered by intent
           </span>
         </div>
@@ -976,7 +984,7 @@ export default function Outliers({ channelData, onNavigate, plan, freeTierFeatur
               Up to 160 chars of user-typed intent, used verbatim as confirmed_keyword. */}
           <div className="out-card" style={{ padding: '18px 20px', marginTop: 14 }}>
             <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 10, gap: 8 }}>
-              <span style={{ fontSize: 11, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+              <span style={{ fontSize: 11, fontWeight: 700, color: 'rgba(10,10,15,0.50)', textTransform: 'uppercase', letterSpacing: '0.10em' }}>
                 None of these? Type your own intent
               </span>
               <span style={{ fontSize: 11, fontWeight: 500, color: manualIntent.length > 160 ? C.red : C.text3, fontVariantNumeric: 'tabular-nums' }}>
@@ -1144,15 +1152,11 @@ export default function Outliers({ channelData, onNavigate, plan, freeTierFeatur
 
       </>)}
 
-      {/* ══ Reports view — past charged /outliers/search runs ═══════════════ */}
+      {/* ══ Reports view — past charged /outliers/search runs.
+           H1 + subtitle now live in the shared page header above; this view
+           just renders the report list directly. */}
       {view === 'reports' && (
         <div>
-          <div style={{ marginBottom: 20 }}>
-            <h2 style={{ fontSize: 26, fontWeight: 700, color: C.text1, letterSpacing: '-0.7px', marginBottom: 6, lineHeight: 1.1 }}>Reports</h2>
-            <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.4 }}>
-              Every search you paid for · reopen anytime without being charged again
-            </p>
-          </div>
           {reportsLoading ? (
             <div style={{ padding: '60px 0', textAlign: 'center', color: C.text3, fontSize: 13 }}>
               Loading reports…
