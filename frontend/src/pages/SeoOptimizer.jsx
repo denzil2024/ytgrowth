@@ -1680,7 +1680,6 @@ function SubScoreBlock({ label, you, ai, mounted, delay }) {
 
 function TitleComparisonHero({ userTitle, userScore, userBreakdown, suggestions, nicheLabel, videosFound, onPick }) {
   const [mounted, setMounted] = useState(false)
-  const [breakdownOpen, setBreakdownOpen] = useState(false)
   useEffect(() => {
     let raf2 = 0
     const raf1 = requestAnimationFrame(() => {
@@ -1714,37 +1713,56 @@ function TitleComparisonHero({ userTitle, userScore, userBreakdown, suggestions,
     hook: bestSug.hook_score || 0,
   }
 
-  return (
-    <div style={{
-      background: '#ffffff', border: `1px solid ${C.border}`, borderRadius: 16,
-      marginBottom: 20, overflow: 'hidden',
-      boxShadow: '0 1px 2px rgba(0,0,0,0.04), 0 4px 14px rgba(0,0,0,0.06)',
-    }}>
+  // Non-card scoreboard layout. The whole section sits directly on the page
+  // background — no border, no rounded card, no shadow. Two columns separated
+  // by a single hairline divider, with score numbers as the visual anchor.
+  // Breaks the wall-of-cards rhythm the user called out.
+  const sideLabel = {
+    fontSize: 10.5, fontWeight: 700, letterSpacing: '0.12em',
+    textTransform: 'uppercase', color: 'rgba(10,10,15,0.45)',
+    margin: 0,
+  }
+  const sideScore = {
+    fontSize: 44, fontWeight: 700, letterSpacing: '-1.4px', lineHeight: 1,
+    fontVariantNumeric: 'tabular-nums',
+  }
+  const sideTitle = {
+    fontSize: 13.5, fontWeight: 500, lineHeight: 1.45,
+    color: 'rgba(10,10,15,0.78)', letterSpacing: '-0.05px', margin: 0,
+  }
+  const subRow = {
+    display: 'flex', alignItems: 'baseline', gap: 14,
+    fontVariantNumeric: 'tabular-nums',
+  }
+  const subKey = { fontSize: 10, fontWeight: 700, letterSpacing: '0.10em', textTransform: 'uppercase', color: 'rgba(10,10,15,0.45)' }
+  const subVal = { fontSize: 13.5, fontWeight: 600, letterSpacing: '-0.2px' }
 
-      {/* ── Eyebrow row: TITLE ANALYSIS · N niche videos · "{niche keyword}"
-            on the left, lift chip on the right. The keyword that used to be
-            hidden in the truncated title text now lives here, in the eyebrow,
-            always visible. ── */}
+  return (
+    <div style={{ marginBottom: 28 }}>
+
+      {/* ── Eyebrow row: TITLE ANALYSIS · context · lift chip — no card, just
+            sits on the page background ── */}
       <div style={{
-        padding: '16px 22px',
         display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12,
         flexWrap: 'wrap',
-        borderBottom: `1px solid ${C.borderLight}`,
+        paddingBottom: 14,
+        borderBottom: '1px solid rgba(10,10,15,0.07)',
+        marginBottom: 22,
       }}>
         <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, minWidth: 0, flexWrap: 'wrap' }}>
-          <span style={{ fontSize: 11, fontWeight: 700, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase' }}>Title analysis</span>
+          <span style={{ fontSize: 11, fontWeight: 700, color: C.text1, letterSpacing: '0.10em', textTransform: 'uppercase' }}>Title analysis</span>
           {videosFound > 0 && (
             <>
-              <span style={{ color: C.text4 }}>·</span>
-              <span style={{ fontSize: 12, fontWeight: 500, color: C.text3, letterSpacing: '-0.05px' }}>
-                <span style={{ color: C.text2, fontWeight: 700 }}>{videosFound}</span> niche videos
+              <span style={{ color: 'rgba(10,10,15,0.30)' }}>·</span>
+              <span style={{ fontSize: 12, fontWeight: 500, color: 'rgba(10,10,15,0.55)', letterSpacing: '-0.05px' }}>
+                <span style={{ color: C.text1, fontWeight: 600 }}>{videosFound}</span> niche videos
               </span>
             </>
           )}
           {nicheLabel && (
             <>
-              <span style={{ color: C.text4 }}>·</span>
-              <span style={{ fontSize: 12, fontWeight: 600, color: C.text2, letterSpacing: '-0.05px' }}>
+              <span style={{ color: 'rgba(10,10,15,0.30)' }}>·</span>
+              <span style={{ fontSize: 12, fontWeight: 500, color: 'rgba(10,10,15,0.65)', letterSpacing: '-0.05px' }}>
                 &ldquo;{nicheLabel}&rdquo;
               </span>
             </>
@@ -1763,124 +1781,82 @@ function TitleComparisonHero({ userTitle, userScore, userBreakdown, suggestions,
         )}
       </div>
 
-      {/* ── Your title row: eyebrow + score on one line, full title below
-            (no truncation), full-width bar underneath. ── */}
-      <div style={{ padding: '18px 22px 12px' }}>
-        <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 6, gap: 12 }}>
-          <span style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase' }}>Your title</span>
-          <span style={{
-            fontSize: 28, fontWeight: 700, color: userCol,
-            fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.7px', lineHeight: 1, flexShrink: 0,
-          }}>{userScore}</span>
-        </div>
-        <p style={{
-          fontSize: 14.5, fontWeight: 600, color: C.text2,
-          letterSpacing: '-0.15px', lineHeight: 1.4, marginBottom: 10,
-        }}>
-          {userTitle || <span style={{ color: C.text4, fontWeight: 500 }}>(no title entered)</span>}
-        </p>
-        <div style={{ height: 6, background: '#eef0f4', borderRadius: 99, overflow: 'hidden' }}>
-          <div style={{
-            height: '100%', width: mounted ? `${Math.max(2, userScore)}%` : '0%',
-            background: _barFill(userCol), borderRadius: 99,
-            transition: 'width 0.95s cubic-bezier(0.34,1.4,0.64,1)',
-          }}/>
-        </div>
-      </div>
-
-      {/* ── Best AI alternative row: same structure, AI title at 700 weight
-            and full color text1 to mark it as the recommended choice. ── */}
-      <div style={{ padding: '6px 22px 20px' }}>
-        <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 6, gap: 12 }}>
-          <span style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase' }}>Best AI alternative</span>
-          <span style={{
-            fontSize: 28, fontWeight: 700, color: bestCol,
-            fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.7px', lineHeight: 1, flexShrink: 0,
-          }}>{bestAvg}</span>
-        </div>
-        <p style={{
-          fontSize: 14.5, fontWeight: 600, color: C.text1,
-          letterSpacing: '-0.15px', lineHeight: 1.4, marginBottom: 10,
-        }}>
-          {bestSug.title}
-        </p>
-        <div style={{ height: 6, background: '#eef0f4', borderRadius: 99, overflow: 'hidden' }}>
-          <div style={{
-            height: '100%', width: mounted ? `${Math.max(2, bestAvg)}%` : '0%',
-            background: _barFill(bestCol), borderRadius: 99,
-            transition: 'width 0.95s cubic-bezier(0.34,1.4,0.64,1) 180ms',
-          }}/>
-        </div>
-      </div>
-
-      {/* ── Footer row: short verdict line + Breakdown disclosure chip + Use CTA.
-            All controls 36px tall, same baseline. ── */}
+      {/* ── Two-column scoreboard. Single 1px vertical divider between sides,
+            no surrounding card. ── */}
       <div style={{
-        padding: '14px 22px',
+        display: 'grid',
+        gridTemplateColumns: '1fr 1px 1fr',
+        columnGap: 28,
+        rowGap: 0,
+      }}>
+
+        {/* ── LEFT: Your title ── */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+          <p style={sideLabel}>Your title</p>
+          <p style={{ ...sideScore, color: userCol }}>{userScore}</p>
+          <div style={{ height: 6, background: '#eef0f4', borderRadius: 99, overflow: 'hidden' }}>
+            <div style={{
+              height: '100%', width: mounted ? `${Math.max(2, userScore)}%` : '0%',
+              background: _barFill(userCol), borderRadius: 99,
+              transition: 'width 0.95s cubic-bezier(0.34,1.4,0.64,1)',
+            }}/>
+          </div>
+          <p style={sideTitle}>
+            {userTitle || <span style={{ color: 'rgba(10,10,15,0.35)' }}>(no title entered)</span>}
+          </p>
+          <div style={subRow}>
+            <span><span style={subKey}>SEO</span> <span style={{ ...subVal, color: C.text1 }}>{userSubs.seo}</span></span>
+            <span><span style={subKey}>CTR</span> <span style={{ ...subVal, color: C.text1 }}>{userSubs.ctr}</span></span>
+            <span><span style={subKey}>HOOK</span> <span style={{ ...subVal, color: C.text1 }}>{userSubs.hook}</span></span>
+          </div>
+        </div>
+
+        {/* ── DIVIDER ── */}
+        <div style={{ background: 'rgba(10,10,15,0.07)', alignSelf: 'stretch' }}/>
+
+        {/* ── RIGHT: AI's best pick ── */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+          <p style={sideLabel}>AI's best pick</p>
+          <p style={{ ...sideScore, color: bestCol }}>{bestAvg}</p>
+          <div style={{ height: 6, background: '#eef0f4', borderRadius: 99, overflow: 'hidden' }}>
+            <div style={{
+              height: '100%', width: mounted ? `${Math.max(2, bestAvg)}%` : '0%',
+              background: _barFill(bestCol), borderRadius: 99,
+              transition: 'width 0.95s cubic-bezier(0.34,1.4,0.64,1) 180ms',
+            }}/>
+          </div>
+          <p style={sideTitle}>{bestSug.title}</p>
+          <div style={subRow}>
+            <span><span style={subKey}>SEO</span> <span style={{ ...subVal, color: C.text1 }}>{aiSubs.seo}</span></span>
+            <span><span style={subKey}>CTR</span> <span style={{ ...subVal, color: C.text1 }}>{aiSubs.ctr}</span></span>
+            <span><span style={subKey}>HOOK</span> <span style={{ ...subVal, color: C.text1 }}>{aiSubs.hook}</span></span>
+          </div>
+        </div>
+
+      </div>
+
+      {/* ── Footer: verdict line + Use CTA, on the page (no card). ── */}
+      <div style={{
+        marginTop: 20, paddingTop: 16,
+        borderTop: '1px solid rgba(10,10,15,0.07)',
         display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12,
         flexWrap: 'wrap',
-        borderTop: `1px solid ${C.borderLight}`,
       }}>
-        <p style={{ fontSize: 13, fontWeight: 500, color: C.text2, letterSpacing: '-0.05px' }}>
+        <p style={{ fontSize: 13, fontWeight: 500, color: 'rgba(10,10,15,0.65)', letterSpacing: '-0.05px', margin: 0 }}>
           {lift > 0
-            ? <>Pick this for <span style={{ fontWeight: 700, color: C.green }}>+{lift} points</span> over your title.</>
+            ? <>Pick the AI version for <span style={{ fontWeight: 700, color: C.green }}>+{lift} points</span>.</>
             : lift < 0
-              ? <>Your title scores <span style={{ fontWeight: 700, color: C.red }}>{Math.abs(lift)} higher</span>. Stick with it.</>
+              ? <>Your title scores <span style={{ fontWeight: 700, color: C.red }}>{Math.abs(lift)} higher</span> — stick with it.</>
               : <>Tied with your title.</>
           }
         </p>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
-          <button
-            type="button"
-            onClick={() => setBreakdownOpen(o => !o)}
-            aria-expanded={breakdownOpen}
-            style={{
-              display: 'inline-flex', alignItems: 'center', gap: 6,
-              padding: '0 14px', height: 36, boxSizing: 'border-box',
-              borderRadius: 99,
-              background: breakdownOpen ? 'rgba(15,15,19,0.06)' : '#ffffff',
-              border: `1px solid ${breakdownOpen ? 'rgba(15,15,19,0.16)' : 'rgba(0,0,0,0.10)'}`,
-              color: C.text2, fontSize: 12, fontWeight: 600, letterSpacing: '-0.05px',
-              fontFamily: 'inherit', cursor: 'pointer',
-              transition: 'background 0.14s, border-color 0.14s, color 0.14s',
-            }}
-            onMouseEnter={e => { if (!breakdownOpen) { e.currentTarget.style.background = 'rgba(15,15,19,0.04)'; e.currentTarget.style.color = C.text1 } }}
-            onMouseLeave={e => { if (!breakdownOpen) { e.currentTarget.style.background = '#ffffff'; e.currentTarget.style.color = C.text2 } }}
-          >
-            {breakdownOpen ? 'Hide breakdown' : 'Score breakdown'}
-            <svg width="10" height="10" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" style={{ transition: 'transform 0.18s', transform: breakdownOpen ? 'rotate(180deg)' : 'none' }}>
-              <path d="M3 5l3.5 3.5L10 5"/>
-            </svg>
-          </button>
-          <button
-            onClick={() => onPick(bestSug.title)}
-            className="seo-btn-primary"
-            style={{ fontSize: 13, padding: '0 18px', height: 36, lineHeight: 1, flexShrink: 0 }}>
-            Use this title →
-          </button>
-        </div>
+        <button
+          onClick={() => onPick(bestSug.title)}
+          className="seo-btn-primary"
+          style={{ fontSize: 13, padding: '0 18px', height: 36, lineHeight: 1, flexShrink: 0 }}>
+          Use AI title →
+        </button>
       </div>
-
-      {/* ── Breakdown disclosure: three sub-score blocks, each a tiny vertical
-            chart with the user's row on top and the AI's underneath. The
-            gap between the two bars IS the lift on that dimension. ── */}
-      {breakdownOpen && (
-        <div style={{
-          padding: '16px 22px 18px',
-          borderTop: `1px solid ${C.borderLight}`,
-          background: '#ffffff',
-        }}>
-          <p style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 12 }}>
-            Where the AI title wins
-          </p>
-          <SubScoreBlock label="Keyword fit"      you={userSubs.seo}  ai={aiSubs.seo}  mounted delay={0}/>
-          <SubScoreBlock label="Click appeal"     you={userSubs.ctr}  ai={aiSubs.ctr}  mounted delay={100}/>
-          <SubScoreBlock label="Opening strength" you={userSubs.hook} ai={aiSubs.hook} mounted delay={200}/>
-          <p style={{ fontSize: 11, fontWeight: 500, color: C.text4, letterSpacing: '-0.05px', marginTop: 4 }}>
-            Your sub-scores are derived from the same rubric, scaled to a 0–100 axis.
-          </p>
-        </div>
-      )}
     </div>
   )
 }
@@ -2757,11 +2733,16 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
             const clean = s => typeof s === 'string'
               ? s.replace(/\s+[-–—]\s+/g, ', ').replace(/\s+,\s*/g, ', ').replace(/\s{2,}/g, ' ').trim()
               : s
-            const searchIntent   = clean(ia.search_intent)
-            const viewerProfile  = clean(ia.viewer_profile)
-            const emotionalDrv   = clean(ia.emotional_driver)
-            const gap            = clean(ia.gap_opportunity) || 'No single gap detected'
-            const overused       = clean(ia.overused_angle)
+            const fixCase = s => {
+              if (!s || typeof s !== 'string') return s
+              const t = s.trim()
+              return t.charAt(0).toUpperCase() + t.slice(1)
+            }
+            const searchIntent   = fixCase(clean(ia.search_intent))
+            const viewerProfile  = fixCase(clean(ia.viewer_profile))
+            const emotionalDrv   = fixCase(clean(ia.emotional_driver))
+            const gap            = fixCase(clean(ia.gap_opportunity)) || 'No single gap detected'
+            const overused       = fixCase(clean(ia.overused_angle))
             const total          = result.videos_found || 10
             const overusedFilled = Math.round(total * 0.7)
 
@@ -2777,8 +2758,8 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
               textTransform: 'uppercase', margin: 0,
             }
             const headlineBase = {
-              fontSize: 14, fontWeight: 600, lineHeight: 1.4,
-              color: '#0a0a0f', letterSpacing: '-0.1px', margin: 0, flex: 1,
+              fontSize: 13.5, fontWeight: 500, lineHeight: 1.5,
+              color: 'rgba(10,10,15,0.78)', letterSpacing: '-0.05px', margin: 0, flex: 1,
             }
 
             return (
