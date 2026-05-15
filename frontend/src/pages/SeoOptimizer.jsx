@@ -55,19 +55,20 @@ if (typeof document !== 'undefined' && !document.getElementById('seo-opt-styles'
   .seo-heat-scroll { scrollbar-width: none; -ms-overflow-style: none; }
   .seo-heat-scroll::-webkit-scrollbar { display: none; height: 0; }
 
-  /* Card grammar — matches Competitors: hairline rgba border, 14px radius,
-     single soft shadow + lit-from-above inset highlight, 200ms cubic-bezier
-     hover. */
+  /* Card grammar — hairline border, 14px radius, double-stage soft shadow
+     for a more elevated feel (page felt too flat). First stage at 2px is
+     the close shadow; second at 16px is the ambient lift. Still well within
+     restrained territory — no dual-glow red shadows. */
   .seo-glass-card {
     background: #ffffff;
     border: 1px solid rgba(10,10,15,0.07) !important;
     border-radius: 14px;
-    box-shadow: 0 1px 2px rgba(15,15,25,0.04), inset 0 1px 0 rgba(255,255,255,0.7) !important;
+    box-shadow: 0 1px 2px rgba(15,15,25,0.04), 0 6px 18px rgba(15,15,25,0.05), inset 0 1px 0 rgba(255,255,255,0.7) !important;
     transition: box-shadow 200ms cubic-bezier(0.2,0.7,0.3,1), border-color 200ms cubic-bezier(0.2,0.7,0.3,1);
   }
   .seo-glass-card:hover {
     border-color: rgba(10,10,15,0.14) !important;
-    box-shadow: 0 4px 16px rgba(15,15,25,0.06), inset 0 1px 0 rgba(255,255,255,0.7) !important;
+    box-shadow: 0 2px 6px rgba(15,15,25,0.05), 0 12px 32px rgba(15,15,25,0.08), inset 0 1px 0 rgba(255,255,255,0.7) !important;
   }
   .seo-suggestion-card {
     background: #ffffff;
@@ -75,12 +76,12 @@ if (typeof document !== 'undefined' && !document.getElementById('seo-opt-styles'
     border-radius: 14px;
     overflow: hidden;
     margin-bottom: 10px;
-    box-shadow: 0 1px 2px rgba(15,15,25,0.04), inset 0 1px 0 rgba(255,255,255,0.7);
+    box-shadow: 0 1px 2px rgba(15,15,25,0.04), 0 6px 18px rgba(15,15,25,0.05), inset 0 1px 0 rgba(255,255,255,0.7);
     transition: box-shadow 200ms cubic-bezier(0.2,0.7,0.3,1), border-color 200ms cubic-bezier(0.2,0.7,0.3,1), transform 200ms cubic-bezier(0.2,0.7,0.3,1);
   }
   .seo-suggestion-card:hover {
     border-color: rgba(10,10,15,0.14);
-    box-shadow: 0 4px 16px rgba(15,15,25,0.06), inset 0 1px 0 rgba(255,255,255,0.7);
+    box-shadow: 0 2px 6px rgba(15,15,25,0.05), 0 12px 32px rgba(15,15,25,0.08), inset 0 1px 0 rgba(255,255,255,0.7);
     transform: translateY(-1px);
   }
   .seo-kw-row:hover .seo-kw-phrase { color: #0f0f13 !important; }
@@ -94,38 +95,57 @@ if (typeof document !== 'undefined' && !document.getElementById('seo-opt-styles'
     border-color: rgba(229,37,27,0.45);
     box-shadow: 0 0 0 3px rgba(229,37,27,0.12);
   }
-  .seo-route-card {
-    position: relative;
-    display: flex; flex-direction: column;
-    text-align: left;
-    background: #ffffff;
-    border: 1px solid #e6e6ec;
-    border-radius: 16px;
-    padding: 22px 22px 20px;
-    cursor: pointer;
+  /* Intent picker row — hairline card, green-tinted hover that signals
+     "this is a selection moment". Matches the Keywords intent picker
+     pattern exactly: label + variant chip + 1-line description + arrow. */
+  .seo-intent-opt {
+    display: flex; align-items: center; gap: 14px;
+    width: 100%;
+    padding: 16px 18px;
+    border: 1px solid rgba(10,10,15,0.08);
+    border-radius: 12px;
+    cursor: pointer; background: #ffffff;
+    box-shadow: 0 1px 2px rgba(15,15,25,0.03);
     font-family: inherit;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 4px 14px rgba(0,0,0,0.06);
-    transition: transform 0.22s cubic-bezier(0.2, 0.7, 0.3, 1), box-shadow 0.22s, border-color 0.22s;
-    overflow: hidden;
+    text-align: left;
+    transition: background 160ms cubic-bezier(0.32, 0.72, 0, 1),
+                border-color 160ms cubic-bezier(0.32, 0.72, 0, 1),
+                box-shadow 160ms cubic-bezier(0.32, 0.72, 0, 1),
+                transform 160ms cubic-bezier(0.32, 0.72, 0, 1);
   }
-  .seo-route-card::before {
-    content: '';
-    position: absolute; inset: 0;
-    background: linear-gradient(180deg, rgba(229,37,27,0.05) 0%, transparent 60%);
-    opacity: 0;
-    transition: opacity 0.25s;
-    pointer-events: none;
+  .seo-intent-opt:hover {
+    border-color: rgba(22,163,74,0.30);
+    background: rgba(22,163,74,0.04);
+    box-shadow: 0 4px 14px rgba(22,163,74,0.08);
+    transform: translateY(-1px);
   }
-  .seo-route-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 6px 16px rgba(0,0,0,0.08), 0 20px 40px rgba(229,37,27,0.20);
-    border-color: rgba(229,37,27,0.40);
+  .seo-intent-opt .seo-intent-arrow {
+    color: rgba(10,10,15,0.32);
+    transition: color 160ms ease, transform 160ms ease;
   }
-  .seo-route-card:hover::before { opacity: 1; }
-  .seo-route-card:hover .seo-route-go { color: #e5251b; transform: translateX(3px); }
-  .seo-route-card:hover .seo-route-badge { box-shadow: 0 6px 16px rgba(229,37,27,0.55), inset 0 1px 0 rgba(255,255,255,0.35); }
-  .seo-route-go { transition: color 0.2s, transform 0.2s; display: inline-flex; align-items: center; gap: 6px; color: #9595a4; }
-  .seo-route-badge { transition: box-shadow 0.22s; }
+  .seo-intent-opt:hover .seo-intent-arrow {
+    color: #16a34a; transform: translateX(3px);
+  }
+  /* Outlined pill that escapes the intent picker — "Let AI decide". */
+  .seo-intent-decide-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    margin-top: 16px;
+    padding: 7px 14px;
+    font-size: 12.5px; font-weight: 600;
+    font-family: inherit;
+    letter-spacing: -0.01em;
+    color: rgba(10,10,15,0.55);
+    background: transparent;
+    border: 1px solid rgba(10,10,15,0.12);
+    border-radius: 100px;
+    cursor: pointer;
+    transition: background 160ms ease, color 160ms ease, border-color 160ms ease;
+  }
+  .seo-intent-decide-btn:hover {
+    background: rgba(10,10,15,0.03);
+    color: #0a0a0f;
+    border-color: rgba(10,10,15,0.20);
+  }
 
   /* Local button classes — match the canonical button grammar (red CTA
      with inset highlight + soft shadow, no dual-glow). */
@@ -1323,6 +1343,116 @@ function DescriptionCard({ d, idx, copiedDesc, onCopy }) {
 }
 
 // Saturation indicator — a compact horizontal bar + "X of N · Label" text.
+// NicheMomentumChart — 12-week SVG line chart of publishing momentum in
+// the niche. Bucket the publishedAt of top_videos + top_shorts into weekly
+// counts, line color encodes direction (green = back half > front half =
+// niche heating up, amber = cooling). Same pattern as the Keywords
+// momentum chart. Zero new YouTube API calls — data lives in payload.
+function NicheMomentumChart({ videos = [], shorts = [], primaryPhrase, videosFound }) {
+  const items = [...(videos || []), ...(shorts || [])]
+  // Bucket into 12 weekly buckets anchored on this week's Monday.
+  const now = new Date()
+  const monday = new Date(now)
+  monday.setUTCHours(0, 0, 0, 0)
+  // JS Sunday = 0, Monday = 1; we want a Monday anchor
+  const day = monday.getUTCDay() || 7
+  monday.setUTCDate(monday.getUTCDate() - day + 1)
+  const weekMs = 7 * 86400 * 1000
+  const buckets = new Array(12).fill(0)
+  for (const v of items) {
+    const iso = v?.published_at || v?.publishedAt
+    if (!iso) continue
+    const d = new Date(iso)
+    if (isNaN(d.getTime())) continue
+    const weeksAgo = Math.floor((monday.getTime() - d.getTime()) / weekMs)
+    const idx = 11 - weeksAgo
+    if (idx >= 0 && idx <= 11) buckets[idx] += 1
+  }
+  const total = buckets.reduce((a, b) => a + b, 0)
+  if (total === 0) return null
+  const maxCount = Math.max(1, ...buckets)
+  // Direction: back-half vs front-half.
+  const half = Math.floor(buckets.length / 2)
+  const front = buckets.slice(0, half).reduce((a, b) => a + b, 0)
+  const back  = buckets.slice(half).reduce((a, b) => a + b, 0)
+  const rising = back >= front
+  const color = rising ? C.green : C.amber
+  const fillColor = rising ? 'rgba(5,150,105,0.10)' : 'rgba(217,119,6,0.10)'
+
+  const W = 1000, H = 130
+  const padL = 28, padR = 14, padT = 18, padB = 26
+  const innerW = W - padL - padR
+  const innerH = H - padT - padB
+  const xFor = i => padL + (i * innerW) / (buckets.length - 1)
+  const yFor = c => padT + innerH - (c / maxCount) * innerH
+  const points = buckets.map((c, i) => [xFor(i), yFor(c)])
+  const linePath = points.map((p, i) => (i === 0 ? `M ${p[0]} ${p[1]}` : `L ${p[0]} ${p[1]}`)).join(' ')
+  const fillPath = `${linePath} L ${xFor(buckets.length - 1)} ${padT + innerH} L ${xFor(0)} ${padT + innerH} Z`
+  const peakIdx = buckets.indexOf(maxCount)
+  const peakWeeksAgo = buckets.length - 1 - peakIdx
+  const peakLabel = peakIdx === buckets.length - 1 ? 'this week' : peakWeeksAgo === 1 ? 'last week' : `${peakWeeksAgo} weeks ago`
+  const labels = buckets.map((_, i) => {
+    if (i === buckets.length - 1) return 'now'
+    if (i % 3 !== 0) return ''
+    return `${buckets.length - 1 - i}w`
+  })
+
+  return (
+    <div style={{ marginTop: 28, marginBottom: 24 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12, flexWrap: 'wrap' }}>
+        <h2 style={{ fontSize: 18, fontWeight: 700, color: '#0a0a0f', letterSpacing: '-0.3px', margin: 0 }}>
+          Niche momentum
+        </h2>
+        <span style={{
+          fontSize: 11, fontWeight: 700, color: 'rgba(10,10,15,0.50)',
+          letterSpacing: '0.10em', textTransform: 'uppercase',
+        }}>last 12 weeks</span>
+        {primaryPhrase && (
+          <span style={{
+            marginLeft: 'auto',
+            fontSize: 12.5, fontWeight: 500, color: 'rgba(10,10,15,0.55)',
+            letterSpacing: '-0.01em', fontVariantNumeric: 'tabular-nums',
+          }}>
+            Top-ranking activity for <strong style={{ color: '#0a0a0f', fontWeight: 600 }}>{primaryPhrase}</strong>
+          </span>
+        )}
+      </div>
+      <div className="seo-glass-card" style={{ padding: '18px 22px 16px' }}>
+        <svg width="100%" viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" style={{ display: 'block' }}>
+          {[0.25, 0.5, 0.75].map(p => (
+            <line key={p} x1={padL} x2={W - padR} y1={padT + innerH * p} y2={padT + innerH * p}
+              stroke="rgba(10,10,15,0.05)" strokeWidth="1" />
+          ))}
+          <line x1={padL} x2={W - padR} y1={padT + innerH} y2={padT + innerH}
+            stroke="rgba(10,10,15,0.10)" strokeWidth="1" />
+          <path d={fillPath} fill={fillColor} />
+          <path d={linePath} fill="none" stroke={color} strokeWidth="2.5"
+            strokeLinejoin="round" strokeLinecap="round" />
+          <circle cx={xFor(buckets.length - 1)} cy={yFor(buckets[buckets.length - 1])} r="5"
+            fill="#fff" stroke={color} strokeWidth="2.5" />
+          {labels.map((lbl, i) => lbl ? (
+            <text key={i} x={xFor(i)} y={H - 8}
+              fill="rgba(10,10,15,0.45)" fontSize="11" fontWeight="500"
+              textAnchor={i === buckets.length - 1 ? 'end' : 'middle'}
+              style={{ fontVariantNumeric: 'tabular-nums' }}>
+              {lbl}
+            </text>
+          ) : null)}
+          <text x={padL - 6} y={padT + 4} fill="rgba(10,10,15,0.45)" fontSize="11" fontWeight="500" textAnchor="end" style={{ fontVariantNumeric: 'tabular-nums' }}>{maxCount}</text>
+          <text x={padL - 6} y={padT + innerH + 2} fill="rgba(10,10,15,0.45)" fontSize="11" fontWeight="500" textAnchor="end" style={{ fontVariantNumeric: 'tabular-nums' }}>0</text>
+        </svg>
+        <p style={{
+          marginTop: 6, fontSize: 12.5, fontWeight: 500,
+          color: 'rgba(10,10,15,0.55)', letterSpacing: '-0.01em',
+        }}>
+          Peak <strong style={{ color: '#0a0a0f', fontWeight: 700 }}>{maxCount} video{maxCount === 1 ? '' : 's'}</strong> {peakLabel} · {rising ? 'niche heating up' : 'niche cooling down'}
+          {videosFound ? <span style={{ color: 'rgba(10,10,15,0.40)' }}> · {videosFound} ranking videos analysed</span> : null}
+        </p>
+      </div>
+    </div>
+  )
+}
+
 // Replaces the childish-looking row of empty/filled dots. Same data, less
 // novelty: a tinted progress bar from 0 to total, color-matched to the row's
 // severity, with a clear "used by X of Y ranking videos · Wide open / Saturated".
@@ -2528,88 +2658,62 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
             half a screen of white empty card. */}
       </div>
 
-      {/* Intent picker — "Three directions" moment. Cinematic header, 3 route tiles, amber route badges. */}
+      {/* Intent picker — compact rows on a single card with a green selection-
+           moment top stripe. Was a 3-tile cinematic grid with red-gradient
+           "Route 01/02/03" badges + 3 prose paragraphs — too marketing-page
+           for an analyst tool, and the page's worst text-heavy moment. */}
       {intentOptions && !loading && !result && (
-        <div style={{ marginBottom: 16, marginTop: 40 }}>
-          {/* Header — centered, feels like a beat in the flow */}
-          <div style={{ textAlign: 'center', marginBottom: 20 }}>
-            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
-              <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke={C.red} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M8 2v12M2 8h12M4 4l8 8M12 4l-8 8"/>
-              </svg>
-              <span style={{ fontSize: 10.5, fontWeight: 700, color: C.red, letterSpacing: '0.16em', textTransform: 'uppercase' }}>Three directions</span>
+        <div className="seo-glass-card" style={{ marginBottom: 20, marginTop: 20, borderTop: `3px solid ${C.green}`, padding: 0 }}>
+          <div style={{ padding: '20px 24px 22px' }}>
+            <div style={{ marginBottom: 16 }}>
+              <p style={{ fontSize: 11, fontWeight: 700, color: 'rgba(10,10,15,0.50)',
+                letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 6 }}>
+                Pick the niche
+              </p>
+              <p style={{ fontSize: 17, fontWeight: 700, color: '#0a0a0f',
+                lineHeight: 1.35, letterSpacing: '-0.3px', marginBottom: 4 }}>
+                What niche is this title for?
+              </p>
+              <p style={{ fontSize: 13, color: 'rgba(10,10,15,0.55)', lineHeight: 1.55 }}>
+                Pick the closest — that's the audience we'll score against.
+              </p>
             </div>
-            <h2 style={{ fontSize: 24, fontWeight: 800, color: C.text1, letterSpacing: '-0.55px', lineHeight: 1.2, marginBottom: 10 }}>
-              Your title could go <span style={{ color: C.red }}>3 ways</span>. Pick one.
-            </h2>
-            <p style={{ fontSize: 13.5, color: C.text3, lineHeight: 1.6, maxWidth: 540, margin: '0 auto' }}>
-              Same words, different worlds. Pick the closest — that's the audience we'll analyze.
-            </p>
-          </div>
 
-          {/* 3-tile route grid */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: 14 }}>
-            {intentOptions.map((opt, i) => (
-              <button key={i} className="seo-route-card" onClick={() => handleSelectIntent(opt.keyword)}>
-                {/* Route badge + eyebrow */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14, position: 'relative' }}>
-                  <div className="seo-route-badge" style={{
-                    width: 38, height: 38, borderRadius: 12,
-                    background: `linear-gradient(135deg, ${C.red} 0%, #b91c1c 100%)`,
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    boxShadow: `0 4px 10px rgba(229,37,27,0.40), inset 0 1px 0 rgba(255,255,255,0.30)`,
-                    flexShrink: 0,
-                  }}>
-                    <span style={{ fontSize: 13, fontWeight: 700, color: '#ffffff', fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.4px' }}>
-                      0{i + 1}
-                    </span>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+              {intentOptions.map((opt, i) => (
+                <button key={i} className="seo-intent-opt" onClick={() => handleSelectIntent(opt.keyword)}>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 5, flexWrap: 'wrap' }}>
+                      <span style={{ fontSize: 14.5, fontWeight: 700, color: '#0a0a0f', letterSpacing: '-0.15px' }}>
+                        {opt.label}
+                      </span>
+                      <span style={{
+                        fontSize: 11, fontWeight: 600,
+                        color: C.green, background: 'rgba(22,163,74,0.08)',
+                        border: '1px solid rgba(134,239,172,0.7)',
+                        padding: '2px 9px', borderRadius: 100,
+                        fontVariantNumeric: 'tabular-nums',
+                        letterSpacing: '-0.02em',
+                      }}>{opt.keyword}</span>
+                    </div>
+                    <p style={{ fontSize: 13, color: 'rgba(10,10,15,0.55)', lineHeight: 1.6 }}>
+                      {opt.description}
+                    </p>
                   </div>
-                  <span style={{ fontSize: 10, fontWeight: 700, color: C.red, letterSpacing: '0.14em', textTransform: 'uppercase' }}>
-                    Route 0{i + 1}
-                  </span>
-                </div>
+                  <svg className="seo-intent-arrow" width="16" height="16" viewBox="0 0 14 14" fill="none"
+                    stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M5 3l4 4-4 4"/>
+                  </svg>
+                </button>
+              ))}
+            </div>
 
-                {/* Niche title */}
-                <p style={{ fontSize: 16, fontWeight: 700, color: C.text1, letterSpacing: '-0.3px', lineHeight: 1.35, marginBottom: 10, position: 'relative' }}>
-                  {opt.label}
-                </p>
-
-                {/* Keyword as red-tinted pill */}
-                <span style={{
-                  alignSelf: 'flex-start',
-                  fontSize: 11.5, fontWeight: 600,
-                  color: '#9a1c16',
-                  background: 'rgba(229,37,27,0.08)',
-                  border: '1px solid rgba(229,37,27,0.22)',
-                  padding: '3px 10px', borderRadius: 999,
-                  marginBottom: 12,
-                  position: 'relative',
-                }}>
-                  {opt.keyword}
-                </span>
-
-                {/* Description */}
-                <p style={{ fontSize: 12.5, color: C.text3, lineHeight: 1.55, flex: 1, position: 'relative' }}>
-                  {opt.description}
-                </p>
-
-                {/* Go footer */}
-                <div style={{ marginTop: 16, paddingTop: 14, borderTop: `1px solid ${C.border}`, position: 'relative' }}>
-                  <span className="seo-route-go" style={{ fontSize: 12, fontWeight: 700, letterSpacing: '-0.1px' }}>
-                    Go this way
-                    <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
-                      <path d="M6 3l5 5-5 5"/>
-                    </svg>
-                  </span>
-                </div>
-              </button>
-            ))}
-          </div>
-
-          {/* Escape hatch — centered ghost pill */}
-          <div style={{ display: 'flex', justifyContent: 'center', marginTop: 16 }}>
-            <button onClick={() => runAnalysis('')} className="seo-btn">
-              None of these — let AI decide
+            <button onClick={() => runAnalysis('')} className="seo-intent-decide-btn">
+              Let AI decide
+              <svg width="11" height="11" viewBox="0 0 12 12" fill="none"
+                stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                <path d="M4 2l4 4-4 4"/>
+              </svg>
             </button>
           </div>
         </div>
@@ -2645,6 +2749,17 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
               <p style={T.innerText}>{result.suggestion_error}</p>
             </div>
           )}
+
+          {/* ── Niche momentum — line chart of publishing activity in the
+                niche over the last 12 weeks. Derived client-side from the
+                publishedAt of ranking videos already in the payload — no
+                new YouTube API calls. Hidden if no published_at data. ── */}
+          <NicheMomentumChart
+            videos={result.top_videos}
+            shorts={result.top_shorts}
+            primaryPhrase={result.primary_phrase}
+            videosFound={result.videos_found}
+          />
 
           {/* ── Search intent analysis — copies Overview's Priority Actions InsightCard design exactly.
                 Stacked cards: 3px colored top border, solid rank badge, category eyebrow + problem title,
