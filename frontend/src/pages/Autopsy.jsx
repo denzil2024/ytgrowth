@@ -71,15 +71,16 @@ if (typeof document !== 'undefined' && !document.getElementById('ytg-au-styles')
     }
 
     .au-btn-primary {
-      display: inline-flex; align-items: center; gap: 8px;
+      display: inline-flex; align-items: center; gap: 6px;
       padding: 9px 18px; border-radius: 100px; border: none;
-      font-size: 13px; font-weight: 700; color: #fff;
+      font-size: 13px; font-weight: 600; color: #fff;
       background: ${C.red}; cursor: pointer; white-space: nowrap;
-      box-shadow: 0 1px 3px rgba(229,37,27,0.20), 0 4px 14px rgba(229,37,27,0.25);
-      transition: filter 0.15s, transform 0.15s;
+      box-shadow: 0 1px 2px rgba(229,37,27,0.20), inset 0 1px 0 rgba(255,255,255,0.22);
+      transition: filter 160ms cubic-bezier(0.32,0.72,0,1), transform 160ms cubic-bezier(0.32,0.72,0,1);
+      letter-spacing: -0.01em;
     }
-    .au-btn-primary:hover:not(:disabled) { filter: brightness(1.07); transform: translateY(-1px); }
-    .au-btn-primary:disabled { background: #e0e0e6; cursor: not-allowed; box-shadow: none; }
+    .au-btn-primary:hover:not(:disabled) { filter: brightness(1.06); transform: translateY(-1px); }
+    .au-btn-primary:disabled { background: rgba(10,10,15,0.06); color: rgba(10,10,15,0.26); cursor: default; box-shadow: none; }
 
     .au-btn-outline {
       display: inline-flex; align-items: center; gap: 8px;
@@ -145,6 +146,35 @@ if (typeof document !== 'undefined' && !document.getElementById('ytg-au-styles')
     @media (max-width: 560px) {
       .au-eligible-grid { grid-template-columns: 1fr; }
     }
+
+    /* Video card — same card grammar as .au-card but flex column so the
+       footer (KPI strip + button) sticks to the bottom regardless of how
+       many lines the title takes. */
+    .au-video-card {
+      background: #fff;
+      border: 1px solid rgba(10,10,15,0.07);
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 1px 2px rgba(15,15,25,0.04), inset 0 1px 0 rgba(255,255,255,0.7);
+      transition: box-shadow 200ms cubic-bezier(0.2,0.7,0.3,1), transform 200ms cubic-bezier(0.2,0.7,0.3,1), border-color 200ms cubic-bezier(0.2,0.7,0.3,1);
+      display: flex; flex-direction: column;
+    }
+    .au-video-card:hover {
+      box-shadow: 0 4px 16px rgba(15,15,25,0.06), inset 0 1px 0 rgba(255,255,255,0.7);
+      border-color: rgba(10,10,15,0.14);
+      transform: translateY(-1px);
+    }
+    .au-video-cta {
+      display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+      width: 100%; padding: 11px 16px; border-radius: 100px;
+      font-size: 13px; font-weight: 600; letter-spacing: -0.01em;
+      background: ${C.red}; color: #fff; border: none; cursor: pointer;
+      box-shadow: 0 1px 2px rgba(229,37,27,0.20);
+      transition: filter 160ms cubic-bezier(0.32,0.72,0,1), transform 160ms cubic-bezier(0.32,0.72,0,1);
+      font-family: inherit; white-space: nowrap;
+    }
+    .au-video-cta:hover:not(:disabled) { filter: brightness(1.06); transform: translateY(-1px); }
+    .au-video-cta:disabled { background: rgba(10,10,15,0.06); color: rgba(10,10,15,0.26); cursor: default; box-shadow: none; }
   `
   document.head.appendChild(s)
 }
@@ -199,38 +229,39 @@ function ReportCard({ data, video, onClose }) {
   const m = data.metrics || {}
   return (
     <div className="au-in" style={{
-      background: '#fff', border: `1px solid ${C.border}`, borderRadius: 16,
+      background: '#fff', border: '1px solid rgba(10,10,15,0.07)', borderRadius: 14,
       borderTop: `3px solid ${scoreColor}`,
-      boxShadow: '0 1px 2px rgba(0,0,0,0.04), 0 4px 14px rgba(0,0,0,0.06)',
-      padding: '20px 22px 22px', marginBottom: 18,
+      boxShadow: '0 1px 2px rgba(15,15,25,0.04), inset 0 1px 0 rgba(255,255,255,0.7)',
+      padding: '24px 26px 24px', marginBottom: 20,
     }}>
-      <div style={{ display: 'flex', alignItems: 'flex-start', gap: 16, marginBottom: 16 }}>
+      <div style={{ display: 'flex', alignItems: 'flex-start', gap: 18, marginBottom: 18 }}>
         {video?.thumbnail && (
           <img src={video.thumbnail} alt="" referrerPolicy="no-referrer"
             style={{ width: 130, height: 73, objectFit: 'cover', borderRadius: 10, flexShrink: 0,
-              border: `1px solid ${C.border}` }} />
+              border: '1px solid rgba(10,10,15,0.07)' }} />
         )}
         <div style={{ flex: 1, minWidth: 0 }}>
-          <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, letterSpacing: '0.10em',
-            textTransform: 'uppercase', marginBottom: 4 }}>Video review</p>
-          <p style={{ fontSize: 16, fontWeight: 700, color: C.text1, letterSpacing: '-0.2px',
-            lineHeight: 1.35, marginBottom: 8,
+          <p style={{ fontSize: 11, fontWeight: 700, color: 'rgba(10,10,15,0.50)', letterSpacing: '0.10em',
+            textTransform: 'uppercase', marginBottom: 6 }}>Video review</p>
+          <p style={{ fontSize: 16, fontWeight: 600, color: C.text1, letterSpacing: '-0.2px',
+            lineHeight: 1.4, marginBottom: 10,
             overflow: 'hidden', textOverflow: 'ellipsis',
             display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
             {video?.title}
           </p>
           <span style={{
-            display: 'inline-block', fontSize: 12, fontWeight: 700,
+            display: 'inline-block', fontSize: 11, fontWeight: 700,
             color: v.color, background: v.bg, border: `1px solid ${v.bdr}`,
-            borderRadius: 100, padding: '3px 11px', letterSpacing: '0.04em',
+            borderRadius: 100, padding: '3px 11px', letterSpacing: '0.10em',
+            textTransform: 'uppercase',
           }}>{v.label}</span>
         </div>
         <ScoreRing score={data.score || 0} color={scoreColor} />
       </div>
 
       {data.headline && (
-        <p style={{ fontSize: 14, color: C.text1, fontWeight: 600,
-          lineHeight: 1.55, marginBottom: 18, letterSpacing: '-0.05px' }}>
+        <p style={{ fontSize: 14, color: C.text1, fontWeight: 500,
+          lineHeight: 1.65, marginBottom: 20, letterSpacing: '-0.005em' }}>
           {data.headline}
         </p>
       )}
@@ -299,23 +330,22 @@ function ReportCard({ data, video, onClose }) {
           <div style={{ display: 'grid', gap: 10 }}>
             {data.next_actions.map((a, i) => (
               <div key={i} style={{
-                background: '#fff', border: `1px solid ${C.border}`,
-                borderTop: `3px solid ${C.amber}`,
-                borderRadius: 12, padding: '12px 16px',
+                background: '#fff', border: '1px solid rgba(10,10,15,0.07)',
+                borderLeft: `3px solid ${C.amber}`,
+                borderRadius: '0 12px 12px 0', padding: '14px 16px',
                 display: 'flex', alignItems: 'flex-start', gap: 12,
+                boxShadow: '0 1px 2px rgba(15,15,25,0.03)',
               }}>
                 <span style={{
-                  width: 24, height: 24, borderRadius: 7,
-                  background: C.amber, color: '#fff',
-                  fontSize: 12, fontWeight: 900,
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  flexShrink: 0, fontVariantNumeric: 'tabular-nums', marginTop: 1,
-                }}>{i + 1}</span>
+                  fontSize: 12, fontWeight: 700,
+                  color: C.amber, fontVariantNumeric: 'tabular-nums',
+                  lineHeight: 1.55, minWidth: 18, flexShrink: 0,
+                }}>{i + 1}.</span>
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <p style={{ fontSize: 13.5, fontWeight: 700, color: C.text1,
-                    lineHeight: 1.45, marginBottom: 4, letterSpacing: '-0.05px' }}>{a.action}</p>
+                  <p style={{ fontSize: 13.5, fontWeight: 600, color: C.text1,
+                    lineHeight: 1.55, marginBottom: 4, letterSpacing: '-0.005em' }}>{a.action}</p>
                   {a.expectedOutcome && (
-                    <p style={{ fontSize: 12.5, color: C.green, fontWeight: 600, lineHeight: 1.5 }}>
+                    <p style={{ fontSize: 12.5, color: C.green, fontWeight: 500, lineHeight: 1.55, letterSpacing: '-0.005em' }}>
                       → {a.expectedOutcome}
                     </p>
                   )}
@@ -521,12 +551,12 @@ export default function Autopsy({ videos = [], channelId = '', optimizations = [
         )}
 
         <div style={{ marginBottom: 12, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
-          <p style={{ fontSize: 11, fontWeight: 700, color: C.text3,
+          <p style={{ fontSize: 11, fontWeight: 700, color: 'rgba(10,10,15,0.50)',
             letterSpacing: '0.10em', textTransform: 'uppercase' }}>
-            Pick a video to autopsy
+            Pick a video to review
           </p>
-          <p style={{ fontSize: 12, fontWeight: 500, color: C.text3, letterSpacing: '-0.05px' }}>
-            Each autopsy costs 1 credit.
+          <p style={{ fontSize: 12, fontWeight: 500, color: 'rgba(10,10,15,0.50)', letterSpacing: '-0.005em' }}>
+            Each review costs 1 credit
           </p>
         </div>
 
@@ -541,7 +571,7 @@ export default function Autopsy({ videos = [], channelId = '', optimizations = [
               No videos eligible yet
             </p>
             <p style={{ fontSize: 13, color: C.text3, maxWidth: 380, margin: '0 auto', lineHeight: 1.55 }}>
-              An autopsy needs a video to be at least 7 days old so the metrics
+              A review needs a video to be at least 7 days old so the metrics
               have stabilised. Come back when your most recent upload has had a
               week to breathe.
             </p>
@@ -573,10 +603,10 @@ export default function Autopsy({ videos = [], channelId = '', optimizations = [
               const hasAutopsy = !!autopsyByVideo[v.video_id]
               const isRunning  = running === v.video_id
               return (
-                <div key={v.video_id || i} className="ytg-card" style={{ display: 'flex', flexDirection: 'column' }}>
+                <div key={v.video_id || i} className="au-video-card">
                   {/* Thumbnail */}
                   <a href={ytUrl || '#'} target="_blank" rel="noopener noreferrer"
-                    style={{ display: 'block', position: 'relative', textDecoration: 'none', flexShrink: 0, borderRadius: '19px 19px 0 0', overflow: 'hidden' }}>
+                    style={{ display: 'block', position: 'relative', textDecoration: 'none', flexShrink: 0, borderRadius: '14px 14px 0 0', overflow: 'hidden' }}>
                     {v.thumbnail || v.video_id
                       ? <img
                           src={v.video_id ? ytMaxThumbUrl(v.video_id) : v.thumbnail}
@@ -588,50 +618,46 @@ export default function Autopsy({ videos = [], channelId = '', optimizations = [
                       : <div style={{ width: '100%', aspectRatio: '16/9', background: '#ebebef' }}/>
                     }
                     {isShort && (
-                      <span style={{ position: 'absolute', top: 8, left: 8, background: '#111', color: '#fff', fontSize: 12, fontWeight: 800, padding: '2px 6px', borderRadius: 4, letterSpacing: '0.06em' }}>SHORT</span>
+                      <span style={{ position: 'absolute', top: 8, left: 8, background: '#111', color: '#fff', fontSize: 11, fontWeight: 700, padding: '2px 7px', borderRadius: 4, letterSpacing: '0.10em' }}>SHORT</span>
                     )}
                     {durLabel && (
-                      <span style={{ position: 'absolute', bottom: 8, right: 8, background: 'rgba(0,0,0,0.72)', color: '#fff', fontSize: 12, fontWeight: 700, padding: '2px 7px', borderRadius: 5, fontVariantNumeric: 'tabular-nums' }}>{durLabel}</span>
+                      <span style={{ position: 'absolute', bottom: 8, right: 8, background: 'rgba(0,0,0,0.82)', color: '#fff', fontSize: 11.5, fontWeight: 700, padding: '3px 7px', borderRadius: 5, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.05px' }}>{durLabel}</span>
                     )}
                   </a>
 
                   {/* Body */}
-                  <div style={{ padding: '20px 20px 20px', display: 'flex', flexDirection: 'column', flex: 1 }}>
-                    {/* Title */}
+                  <div style={{ padding: '16px 18px 18px', display: 'flex', flexDirection: 'column', flex: 1 }}>
+                    {/* Title — 14.5/600 (was 16/700, too heavy at this card width) */}
                     <p style={{
-                      fontSize: 16, fontWeight: 700, color: C.text1, lineHeight: 1.45, marginBottom: 14, letterSpacing: '-0.3px',
-                      display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden',
+                      fontSize: 14.5, fontWeight: 600, color: C.text1, lineHeight: 1.4, marginBottom: 8, letterSpacing: '-0.15px',
+                      display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', minHeight: 41,
                     }}>{v.title}</p>
 
-                    {/* Meta line */}
-                    <p style={{ fontSize: 13.5, fontWeight: 500, color: C.text3, marginBottom: 14, lineHeight: 1.4 }}>
-                      <span style={{ color: C.text2, fontWeight: 600 }}>{fmtNum(v.views)}</span> views
-                      <span style={{ margin: '0 8px', color: '#d4d4dc' }}>·</span>
-                      <span style={{ color: C.text2, fontWeight: 600 }}>{fmtNum(v.likes)}</span> likes
-                      <span style={{ margin: '0 8px', color: '#d4d4dc' }}>·</span>
-                      {relTimeLong(v.published_at) || '—'}
+                    {/* Meta line — all 500, single muted color, no mid-weight spikes */}
+                    <p style={{ fontSize: 12, fontWeight: 500, color: 'rgba(10,10,15,0.50)', marginBottom: 14, lineHeight: 1.4, letterSpacing: '-0.005em', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                      {fmtNum(v.views)} views · {fmtNum(v.likes)} likes · {relTimeLong(v.published_at) || '—'}
                     </p>
 
-                    {/* Footer: Watch · Retention · Eng + Run-autopsy CTA */}
-                    <div style={{ marginTop: 'auto', paddingTop: 18, borderTop: `1px solid #eeeef3` }}>
-                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 12, marginBottom: 18 }}>
+                    {/* Footer: Watch · Retention · Eng + Run-review CTA */}
+                    <div style={{ marginTop: 'auto', paddingTop: 14, borderTop: '1px solid rgba(10,10,15,0.06)' }}>
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 10, marginBottom: 14 }}>
                         {[
                           { label: 'Watch',     display: wtDisplay,                                             color: C.text1,  tip: 'Average watch time per view (mm:ss). Longer is better relative to video length.' },
                           { label: 'Retention', display: retN !== null ? `${retN.toFixed(0)}%` : '—',           color: C.text1,  tip: 'Average % of video watched. 50%+ strong, 30–50% avg, <30% weak.' },
                           { label: 'Eng',       display: lrN !== null ? `${lr}%` : '—',                         color: lrColor,  tip: 'Engagement rate = likes ÷ views. 3%+ strong, 1–3% avg, <1% weak.' },
                         ].map(m => (
                           <div key={m.label} title={m.tip} style={{ cursor: 'help', textAlign: 'left' }}>
-                            <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 7, lineHeight: 1 }}>{m.label}</p>
-                            <p style={{ fontSize: 17, fontWeight: 800, color: m.color, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.4px', lineHeight: 1 }}>{m.display}</p>
+                            <p style={{ fontSize: 10.5, fontWeight: 700, color: 'rgba(10,10,15,0.45)', letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 5, lineHeight: 1 }}>{m.label}</p>
+                            <p style={{ fontSize: 16, fontWeight: 700, color: m.color, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.3px', lineHeight: 1 }}>{m.display}</p>
                           </div>
                         ))}
                       </div>
                       <button
                         onClick={() => runAutopsy(v)}
                         disabled={isRunning || !!running}
-                        className="ytg-optimise-btn"
-                        style={{ width: '100%', justifyContent: 'center', padding: '11px 16px', fontSize: 13.5, fontWeight: 700, whiteSpace: 'nowrap', opacity: isRunning ? 0.7 : 1 }}>
-                        {isRunning ? 'Analysing…' : (hasAutopsy ? 'Re-run autopsy' : 'Autopsy')}
+                        className="au-video-cta"
+                        style={{ opacity: isRunning ? 0.7 : 1 }}>
+                        {isRunning ? 'Analysing…' : (hasAutopsy ? 'Re-run review' : 'Run review')}
                       </button>
                     </div>
                   </div>
@@ -652,14 +678,14 @@ export default function Autopsy({ videos = [], channelId = '', optimizations = [
           ) : reports.length === 0 ? (
             <div style={{
               padding: '56px 24px', textAlign: 'center',
-              background: '#fff', border: `1px solid ${C.border}`, borderRadius: 16,
-              boxShadow: '0 1px 2px rgba(0,0,0,0.04), 0 4px 14px rgba(0,0,0,0.06)',
+              background: '#fff', border: '1px solid rgba(10,10,15,0.07)', borderRadius: 14,
+              boxShadow: '0 1px 2px rgba(15,15,25,0.04), inset 0 1px 0 rgba(255,255,255,0.7)',
             }}>
-              <p style={{ fontSize: 16, fontWeight: 700, color: C.text1,
+              <p style={{ fontSize: 16, fontWeight: 600, color: C.text1,
                 letterSpacing: '-0.2px', marginBottom: 8 }}>No reports yet</p>
-              <p style={{ fontSize: 13.5, color: C.text3,
-                maxWidth: 360, margin: '0 auto', lineHeight: 1.6 }}>
-                Run an autopsy on any of your eligible videos and it'll show up
+              <p style={{ fontSize: 13.5, color: 'rgba(10,10,15,0.55)', fontWeight: 500,
+                maxWidth: 360, margin: '0 auto', lineHeight: 1.6, letterSpacing: '-0.005em' }}>
+                Run a review on any of your eligible videos and it'll show up
                 here — so you can always come back to a report you've already
                 paid for.
               </p>
@@ -681,49 +707,57 @@ export default function Autopsy({ videos = [], channelId = '', optimizations = [
                     <div className="au-report-header" onClick={() => openReport(r)}>
                       {r.thumbnail && (
                         <img src={r.thumbnail} alt="" referrerPolicy="no-referrer"
-                          style={{ width: 88, height: 50, objectFit: 'cover',
-                            borderRadius: 8, flexShrink: 0, border: `1px solid ${C.border}` }} />
+                          style={{ width: 96, height: 54, objectFit: 'cover',
+                            borderRadius: 8, flexShrink: 0, border: '1px solid rgba(10,10,15,0.07)' }} />
                       )}
                       <div style={{ flex: 1, minWidth: 0 }}>
-                        <p style={{ fontWeight: 700, fontSize: 15, color: C.text1,
-                          letterSpacing: '-0.2px',
+                        <p style={{ fontWeight: 600, fontSize: 14.5, color: C.text1,
+                          letterSpacing: '-0.15px',
                           overflow: 'hidden', textOverflow: 'ellipsis',
                           display: '-webkit-box', WebkitLineClamp: 1, WebkitBoxOrient: 'vertical',
-                          marginBottom: 8 }}>
+                          marginBottom: 8, lineHeight: 1.35 }}>
                           {r.video_title}
                         </p>
-                        <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', alignItems: 'center' }}>
+                        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center' }}>
                           <span style={{
-                            fontSize: 11, fontWeight: 700, color: v.color,
-                            background: v.bg, border: `1px solid ${v.bdr}`,
-                            borderRadius: 100, padding: '2px 9px', letterSpacing: '0.04em',
+                            display: 'inline-flex', alignItems: 'center',
+                            fontSize: 11, borderRadius: 100,
+                            padding: '3px 4px 3px 10px',
+                            fontVariantNumeric: 'tabular-nums',
+                            border: `1px solid ${v.bdr}`,
+                            color: v.color, background: v.bg,
                           }}>
-                            {v.label} · {score}
+                            <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.10em', textTransform: 'uppercase', opacity: 0.78, marginRight: 6 }}>{v.label}</span>
+                            <span style={{
+                              fontSize: 11, fontWeight: 700, color: '#0a0a0f',
+                              background: '#fff', border: `1px solid ${v.color}40`,
+                              borderRadius: 100, padding: '1px 8px', letterSpacing: '-0.01em',
+                            }}>{score}/100</span>
                           </span>
-                          <span style={{ fontSize: 12, color: C.text3, fontWeight: 500 }}>
-                            · {relTime(r.updated_at)}
+                          <span style={{ fontSize: 12, color: 'rgba(10,10,15,0.50)', fontWeight: 500, letterSpacing: '-0.005em' }}>
+                            {relTime(r.updated_at)}
                           </span>
                           {/* Cross-link to the tracked-deltas view of the same video. */}
                           {optimizedVideoIds.has(r.video_id) && goToTracked && (
                             <button
                               onClick={e => { e.stopPropagation(); goToTracked() }}
                               style={{
-                                fontSize: 11.5, fontWeight: 600, color: C.text3,
+                                fontSize: 12, fontWeight: 500, color: 'rgba(10,10,15,0.50)',
                                 background: 'transparent', border: 'none', cursor: 'pointer',
-                                fontFamily: 'inherit', padding: '0 0 0 4px', letterSpacing: '-0.05px',
+                                fontFamily: 'inherit', padding: 0, letterSpacing: '-0.005em',
                               }}
-                              onMouseEnter={e => { e.currentTarget.style.color = C.text1 }}
-                              onMouseLeave={e => { e.currentTarget.style.color = C.text3 }}
+                              onMouseEnter={e => { e.currentTarget.style.color = '#0a0a0f' }}
+                              onMouseLeave={e => { e.currentTarget.style.color = 'rgba(10,10,15,0.50)' }}
                             >
                               · View tracked optimisation →
                             </button>
                           )}
                         </div>
                       </div>
-                      <div style={{ flexShrink: 0, paddingRight: 28 }}>
+                      <div style={{ flexShrink: 0, paddingRight: 24 }}>
                         <button className="au-btn-primary"
                           onClick={e => { e.stopPropagation(); openReport(r) }}
-                          style={{ padding: '7px 14px', fontSize: 12 }}>
+                          style={{ padding: '8px 16px', fontSize: 12.5, fontWeight: 600, letterSpacing: '-0.01em' }}>
                           Open report
                           <svg width="12" height="12" viewBox="0 0 12 12" fill="none"
                             stroke="currentColor" strokeWidth="2" strokeLinecap="round">
