@@ -979,19 +979,38 @@ def get_me(request: Request):
         # are locked / used-up so gated pages can render the upsell modal
         # on load without burning a free run. Non-free plans get an empty
         # map (frontend code keys off plan !== 'free' first anyway).
-        from app.analysis_gate import (
-            peek_free_tier_access,
-            FULLY_GATED_FEATURES,
-            ONE_RUN_FEATURES,
-        )
+        #
+        # Perf: previously this looped peek_free_tier_access() seven times,
+        # each opening its own SessionLocal and re-resolving the billing
+        # channel — ~35 SQL round-trips per Settings load. Now resolved
+        # inline against the already-open `db` + already-resolved
+        # billing_channel/sub, with a single batched FreeTierFeatureUsage
+        # query for the three ONE_RUN_FEATURES.
+        from app.analysis_gate import FULLY_GATED_FEATURES, ONE_RUN_FEATURES
         free_tier_features = {}
-        if (plan or "free") == "free" and channel_id:
-            for feat in sorted(FULLY_GATED_FEATURES | ONE_RUN_FEATURES):
-                res = peek_free_tier_access(channel_id, feat)
-                if res.get("allowed"):
-                    free_tier_features[feat] = "allowed"
-                else:
-                    free_tier_features[feat] = res.get("reason", "locked")
+        if (plan or "free") == "free" and channel_id and sub is not None:
+            # FULLY_GATED_FEATURES are always locked on free plan — no query needed.
+            for feat in FULLY_GATED_FEATURES:
+                free_tier_features[feat] = "locked"
+
+            # ONE_RUN_FEATURES: one query against FreeTierFeatureUsage for
+            # all three at once, scoped to the current cycle_reset.
+            from database.models import FreeTierFeatureUsage
+            cycle_reset = sub.reset_date
+            used_features: set[str] = set()
+            if cycle_reset:
+                used_rows = (
+                    db.query(FreeTierFeatureUsage.feature)
+                      .filter(
+                          FreeTierFeatureUsage.channel_id == billing_channel,
+                          FreeTierFeatureUsage.cycle_reset == cycle_reset,
+                          FreeTierFeatureUsage.feature.in_(ONE_RUN_FEATURES),
+                      )
+                      .all()
+                )
+                used_features = {r[0] for r in used_rows}
+            for feat in ONE_RUN_FEATURES:
+                free_tier_features[feat] = "used" if feat in used_features else "allowed"
 
         return JSONResponse({
             "email":                google_email,

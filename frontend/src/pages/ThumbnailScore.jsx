@@ -1094,23 +1094,31 @@ export default function ThumbnailScore({ channelData, onNavigate, plan, freeTier
       try { preloadRef.current = JSON.parse(scoreRaw) } catch {}
     }
 
-    // Fetch both in parallel; only transition to idle after both resolve
-    Promise.all([
-      fetch('/thumbnail/video-ideas', { credentials: 'include' }).then(r => r.json()).catch(() => ({})),
-      fetch('/thumbnail/history',     { credentials: 'include' }).then(r => r.json()).catch(() => ({})),
-    ]).then(([viData, histData]) => {
-      // Video ideas
-      if (viData.has_ideas && viData.ideas?.length) {
-        setVideoIdeas(viData.ideas)
-        setHasIdeas(true)
-      }
-      // History — always start on "New Thumbnail" tab in idle state
-      const analyses = histData.analyses || []
-      setHistory(analyses)
-      const topic = deriveTopicFromChannel()
-      setInitTopic(topic)
-      setState('idle')
-    })
+    // Render the page as soon as video-ideas resolves. History was previously
+    // blocked behind a Promise.all and could carry up to 5 full base64-encoded
+    // thumbnails (~1 MB of JSON) on a cold Postgres connection — that's what
+    // produced the ~20s spinner on Thumbnails. The user lands on "New Thumbnail"
+    // by default, so history can populate in the background and the Previous
+    // tab will light up when it's ready.
+    const topic = deriveTopicFromChannel()
+    setInitTopic(topic)
+
+    fetch('/thumbnail/video-ideas', { credentials: 'include' })
+      .then(r => r.json()).catch(() => ({}))
+      .then(viData => {
+        if (viData.has_ideas && viData.ideas?.length) {
+          setVideoIdeas(viData.ideas)
+          setHasIdeas(true)
+        }
+        setState('idle')
+      })
+
+    fetch('/thumbnail/history', { credentials: 'include' })
+      .then(r => r.json()).catch(() => ({}))
+      .then(histData => {
+        const analyses = histData.analyses || []
+        setHistory(analyses)
+      })
   }, []) // eslint-disable-line
 
   // ── Auto-trigger score_this preload ──────────────────────────────────────
