@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { MonitorPlay, Sparkles, Mail, LifeBuoy, Trash2, Zap, Plus, ArrowRight, Check, Link2 } from 'lucide-react'
+import { Plus, ArrowRight, Check, Link2 } from 'lucide-react'
 import { loginUrl } from '../utm.js'
 
 /* ── Design tokens ──────────────────────────────────────────────────────────
@@ -110,14 +110,16 @@ function useSettingsStyles() {
         color: ${C.ink45};
       }
 
+      /* SectionTitle grammar, identical to Competitors' SectionTitle:
+         15/700/-0.3px title, 12/#9595a4 hint, block marginBottom 14. */
+      .set-section { margin-bottom: 14px; }
       .set-card-title {
-        font-size: 15px; font-weight: 600; color: ${C.ink};
-        letter-spacing: -0.01em;
+        font-size: 15px; font-weight: 700; color: #111114;
+        letter-spacing: -0.3px;
       }
       .set-card-sub {
-        font-size: 13px; font-weight: 450; color: ${C.ink55};
-        margin-top: 4px !important; line-height: 1.55;
-        letter-spacing: -0.005em;
+        font-size: 12px; font-weight: 400; color: #9595a4;
+        margin-top: 3px !important; line-height: 1.5;
       }
 
       /* ── Buttons ──────────────────────────────────────────────────────── */
@@ -237,11 +239,11 @@ function useSettingsStyles() {
       .set-channel-row:hover { background: rgba(10,10,15,0.022); }
 
       .set-connect-row {
-        display: flex; align-items: center; gap: 13px;
+        display: flex; align-items: center; gap: 8px;
         padding: 13px 12px; margin: 0 -12px;
         border-radius: 11px;
         text-decoration: none;
-        color: ${C.red}; font-size: 13.5px; font-weight: 550;
+        color: ${C.red}; font-size: 13.5px; font-weight: 600;
         letter-spacing: -0.01em; cursor: pointer;
         transition: background 160ms cubic-bezier(0.32,0.72,0,1);
       }
@@ -321,18 +323,17 @@ function refillLabel(iso, isLifetime) {
 }
 
 /* ── Small components ───────────────────────────────────────────────────── */
-/* One semantic icon per card, in a soft tinted circle. Neutral by default,
-   red only for the destructive section (color discipline). */
-function SectionIcon({ icon: Icon, danger }) {
+/* Card header. Identical grammar to Competitors' SectionTitle: bold text
+   title, optional grey hint, no icon. Right slot holds an inline control
+   (Competitors puts the threat pill there). */
+function SectionTitle({ children, hint, right }) {
   return (
-    <div style={{
-      width: 34, height: 34, borderRadius: '50%',
-      background: danger ? 'rgba(229,37,27,0.08)' : 'rgba(10,10,15,0.05)',
-      display: 'flex', alignItems: 'center', justifyContent: 'center',
-      flexShrink: 0,
-      boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.6)',
-    }}>
-      <Icon size={16} strokeWidth={2} color={danger ? C.red : C.ink50} />
+    <div className="set-section" style={right ? { display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16 } : undefined}>
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <p className="set-card-title">{children}</p>
+        {hint && <p className="set-card-sub">{hint}</p>}
+      </div>
+      {right}
     </div>
   )
 }
@@ -586,7 +587,7 @@ export default function Settings({ channelData }) {
     <div className="set-page">
 
       {/* ── Page heading ────────────────────────────────────────────────── */}
-      <div style={{ marginTop: 24, marginBottom: 28 }}>
+      <div style={{ marginTop: 24, marginBottom: 26 }}>
         <h1 className="set-h1">Settings</h1>
         <p className="set-subtitle">Account, channels, and notifications.</p>
       </div>
@@ -594,7 +595,7 @@ export default function Settings({ channelData }) {
       <div className="set-content">
 
       {/* ── Hero: identity + credits + actions, three shelves ───────────── */}
-      <div className="set-card-hero" style={{ padding: '26px 28px', marginBottom: 16 }}>
+      <div className="set-card-hero" style={{ padding: '20px 24px', marginBottom: 16 }}>
 
         {/* Shelf 1: identity */}
         <div style={{ display: 'flex', alignItems: 'flex-start', gap: 16 }}>
@@ -658,10 +659,7 @@ export default function Settings({ channelData }) {
 
         {/* Shelf 2: AI analyses + pack balance */}
         <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
-            <Zap size={13} strokeWidth={2.6} color={accent.solid} />
-            <p className="set-eyebrow">AI analyses</p>
-          </div>
+          <p className="set-eyebrow">AI analyses</p>
           <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, marginTop: 11 }}>
             <span style={{
               fontSize: 42, fontWeight: 700, color: accent.solid,
@@ -737,16 +735,12 @@ export default function Settings({ channelData }) {
       </div>
 
       {/* ── Channels card ───────────────────────────────────────────────── */}
-      <div className="set-card" style={{ padding: '24px 28px 11px', marginBottom: 16 }}>
-        <div style={{ display: 'flex', alignItems: 'flex-start', gap: 13, marginBottom: 4 }}>
-          <SectionIcon icon={MonitorPlay} />
-          <div style={{ flex: 1, minWidth: 0 }}>
-            <p className="set-card-title">Connected channels</p>
-            <p className="set-card-sub">{activeChannels.length} of {me?.channels_allowed ?? 1} connected</p>
-          </div>
-        </div>
+      <div className="set-card" style={{ padding: '20px 24px 8px', marginBottom: 16 }}>
+        <SectionTitle hint={`${activeChannels.length} of ${me?.channels_allowed ?? 1} connected`}>
+          Connected channels
+        </SectionTitle>
 
-        <div style={{ marginTop: 14 }}>
+        <div>
           {activeChannels.map((ch, idx) => (
             <div key={ch.channel_id}>
               {idx > 0 && <div className="set-divider" />}
@@ -817,15 +811,7 @@ export default function Settings({ channelData }) {
           {activeChannels.length > 0 && <div className="set-divider" />}
           {canAddMore ? (
             <a href="/auth/login" className="set-connect-row">
-              <div style={{
-                width: 38, height: 38, borderRadius: '50%',
-                background: 'rgba(229,37,27,0.07)',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                flexShrink: 0,
-                boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.5)',
-              }}>
-                <Plus size={17} strokeWidth={2.4} color={C.red} />
-              </div>
+              <Plus size={15} strokeWidth={2.4} color={C.red} />
               Connect another channel
             </a>
           ) : (
@@ -844,33 +830,33 @@ export default function Settings({ channelData }) {
       </div>
 
       {/* ── Feature requests card ───────────────────────────────────────── */}
-      <div id="feedback-section" className="set-card" style={{ padding: '26px 28px', marginBottom: 16 }}>
-        <div style={{ display: 'flex', alignItems: 'flex-start', gap: 13, marginBottom: 20 }}>
-          <SectionIcon icon={Sparkles} />
-          <div style={{ flex: 1, minWidth: 0 }}>
-            <p className="set-card-title">Tell us what to build next</p>
-            <p className="set-card-sub">We read every request. Be specific: what's missing, who it's for, why it matters.</p>
-          </div>
-          <button
-            onClick={copyShareLink}
-            style={{
-              display: 'inline-flex', alignItems: 'center', gap: 6,
-              fontSize: 12, fontWeight: 500,
-              color: frShareCopied ? C.green : C.ink45,
-              background: 'transparent', border: 'none', cursor: 'pointer',
-              fontFamily: 'inherit', padding: '4px 0', flexShrink: 0,
-              letterSpacing: '-0.005em',
-              transition: 'color 0.15s',
-            }}
-            title="Copy a public link you can share via email"
-          >
-            {frShareCopied ? (
-              <><Check size={12} strokeWidth={2.4} /> Link copied</>
-            ) : (
-              <><Link2 size={12} strokeWidth={2} /> Copy share link</>
-            )}
-          </button>
-        </div>
+      <div id="feedback-section" className="set-card" style={{ padding: '20px 24px', marginBottom: 16 }}>
+        <SectionTitle
+          hint="We read every request. Be specific: what's missing, who it's for, why it matters."
+          right={
+            <button
+              onClick={copyShareLink}
+              style={{
+                display: 'inline-flex', alignItems: 'center', gap: 6,
+                fontSize: 12, fontWeight: 500,
+                color: frShareCopied ? C.green : C.ink45,
+                background: 'transparent', border: 'none', cursor: 'pointer',
+                fontFamily: 'inherit', padding: '2px 0', flexShrink: 0,
+                letterSpacing: '-0.005em',
+                transition: 'color 0.15s',
+              }}
+              title="Copy a public link you can share via email"
+            >
+              {frShareCopied ? (
+                <><Check size={12} strokeWidth={2.4} /> Link copied</>
+              ) : (
+                <><Link2 size={12} strokeWidth={2} /> Copy share link</>
+              )}
+            </button>
+          }
+        >
+          Tell us what to build next
+        </SectionTitle>
 
         <label className="set-eyebrow" style={{ display: 'block', marginBottom: 8 }}>
           Title
@@ -946,29 +932,19 @@ export default function Settings({ channelData }) {
       </div>
 
       {/* ── Notifications card ──────────────────────────────────────────── */}
-      <div className="set-card" style={{ padding: '18px 24px', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 14 }}>
-        <SectionIcon icon={Mail} />
+      <div className="set-card" style={{ padding: '20px 24px', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 16 }}>
         <div style={{ flex: 1, minWidth: 0 }}>
-          <p style={{ fontSize: 14, fontWeight: 600, color: C.ink, letterSpacing: '-0.005em' }}>
-            Weekly channel report
-          </p>
-          <p style={{ fontSize: 12.5, fontWeight: 450, color: C.ink55, marginTop: 4, lineHeight: 1.55, letterSpacing: '-0.005em' }}>
-            Summary of your channel performance every 7 days.
-          </p>
+          <p className="set-card-title">Weekly channel report</p>
+          <p className="set-card-sub">Summary of your channel performance every 7 days.</p>
         </div>
         <Toggle on={me?.weekly_report_enabled ?? true} onChange={handleToggleReport} />
       </div>
 
       {/* ── Support card ────────────────────────────────────────────────── */}
-      <div className="set-card" style={{ padding: '18px 24px', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 14 }}>
-        <SectionIcon icon={LifeBuoy} />
+      <div className="set-card" style={{ padding: '20px 24px', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 16 }}>
         <div style={{ flex: 1, minWidth: 0 }}>
-          <p style={{ fontSize: 14, fontWeight: 600, color: C.ink, letterSpacing: '-0.005em' }}>
-            Contact support
-          </p>
-          <p style={{ fontSize: 12.5, fontWeight: 450, color: C.ink55, marginTop: 4, lineHeight: 1.55, letterSpacing: '-0.005em' }}>
-            Failed run, billing question, or anything else.
-          </p>
+          <p className="set-card-title">Contact support</p>
+          <p className="set-card-sub">Failed run, billing question, or anything else.</p>
         </div>
         <a href="mailto:support@ytgrowth.io" className="set-btn-secondary">
           support@ytgrowth.io
@@ -981,18 +957,13 @@ export default function Settings({ channelData }) {
         border: '1px solid rgba(229,37,27,0.10)',
         borderRadius: 14,
         boxShadow: '0 1px 2px rgba(15,15,25,0.04), inset 0 1px 0 rgba(255,255,255,0.7)',
-        padding: '18px 24px',
+        padding: '20px 24px',
         marginBottom: 48,
-        display: 'flex', alignItems: 'center', gap: 14,
+        display: 'flex', alignItems: 'center', gap: 16,
       }}>
-        <SectionIcon icon={Trash2} danger />
         <div style={{ flex: 1, minWidth: 0 }}>
-          <p style={{ fontSize: 14, fontWeight: 600, color: C.red, letterSpacing: '-0.005em' }}>
-            Delete account
-          </p>
-          <p style={{ fontSize: 12.5, fontWeight: 450, color: C.ink55, marginTop: 4, lineHeight: 1.55, letterSpacing: '-0.005em' }}>
-            Permanently deletes account, channels, analyses, and reports.
-          </p>
+          <p className="set-card-title" style={{ color: C.red }}>Delete account</p>
+          <p className="set-card-sub">Permanently deletes account, channels, analyses, and reports.</p>
         </div>
         <button className="set-btn-danger-outline" onClick={() => setShowDeleteDialog(true)}>
           Delete account
