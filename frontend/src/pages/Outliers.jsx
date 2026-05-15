@@ -778,44 +778,44 @@ export default function Outliers({ channelData, onNavigate, plan, freeTierFeatur
         </div>
       )}
 
-      {/* ══ Header — H2 + meta chips. Sort group + New-search live on the
-           tabs row below (lets the header breathe and removes a stacked row). */}
+      {/* ══ Header — H2 + single subtitle line.
+           Was a row of 4 tinted-circle chips (counts + niche pool + vertical)
+           which read as cluttered. Counts are visible in the result grid;
+           the niche + pool context lives in one muted subtitle line so the
+           header stays calm and scannable. */}
       {(() => {
         const videosCount   = result?.videos?.length || 0
         const channelsCount = result?.channels?.length || 0
         const poolSize      = result?.cohort?.pool_size || 0
         const verticalLabel = result?.cohort?.vertical || ''
 
+        const subtitle = hasResults
+          ? [
+              `${videosCount} over-performing video${videosCount === 1 ? '' : 's'}`,
+              channelsCount > 0 ? `${channelsCount} breakout channel${channelsCount === 1 ? '' : 's'}` : null,
+              verticalLabel ? `in ${verticalLabel}` : null,
+              poolSize > 0 ? `pool of ${poolSize}` : null,
+            ].filter(Boolean).join(' · ')
+          : 'Find what beats the niche in your size bracket · 3 credits per search'
+
         return (
           <div style={{ marginBottom: 20 }}>
-            <h2 style={{ fontSize: 26, fontWeight: 700, color: C.text1, letterSpacing: '-0.7px', marginBottom: 10, lineHeight: 1.1 }}>Outliers</h2>
-            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-              {hasResults ? (
-                <>
-                  <MetaChip tint="red"     icon="target">{videosCount} outlier{videosCount === 1 ? '' : 's'}</MetaChip>
-                  <MetaChip tint="amber"   icon="trendingUp">{channelsCount} breakout channel{channelsCount === 1 ? '' : 's'}</MetaChip>
-                  <MetaChip tint="neutral" icon="layers">Niche pool · {poolSize}</MetaChip>
-                  {verticalLabel && <MetaChip tint="neutral" icon="compass">{verticalLabel}</MetaChip>}
-                </>
-              ) : (
-                <>
-                  <MetaChip tint="red"     icon="target">Over-performing videos</MetaChip>
-                  <MetaChip tint="amber"   icon="trendingUp">Breakout channels</MetaChip>
-                  <MetaChip tint="neutral" icon="calendar">Last 12 months</MetaChip>
-                  <MetaChip tint="amber"   icon="zap">3 credits per search</MetaChip>
-                </>
-              )}
-            </div>
+            <h2 style={{ fontSize: 26, fontWeight: 700, color: C.text1, letterSpacing: '-0.7px', marginBottom: 6, lineHeight: 1.1 }}>Outliers</h2>
+            <p style={{ fontSize: 14, color: 'rgba(10,10,15,0.55)', fontWeight: 500, letterSpacing: '-0.005em', lineHeight: 1.45 }}>
+              {subtitle}
+            </p>
           </div>
         )
       })()}
 
-      {/* ══ Tabs row — tabs on the LEFT, sort + New-search on the RIGHT.
-           Was previously a separate sort+CTA row above the tabs; merging them
-           drops a whole stacked row of chrome. The sort group is now quiet
-           soft-grey (was red, competing with the top Search pill and the
-           New-search CTA). New search itself is now a ghost outlined button
-           so the only loud red on the page is the top Search/Reports pill. */}
+      {/* ══ Tabs row — tabs LEFT, sort RIGHT. Both use the SAME segmented
+           control pattern (soft-grey pill background + white active pill +
+           .out-tab-btn class) so they look and behave identically. The
+           previous .out-sort-group / .out-sort-btn variant felt different
+           from the tabs (different padding, hairline border, no background
+           wrapper) which read as friction.
+           "New search" was dropped: the search input above is always
+           visible, so a separate Clear-and-restart CTA is redundant. */}
       <div style={{
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         gap: 12, marginBottom: 16, flexWrap: 'wrap',
@@ -835,24 +835,19 @@ export default function Outliers({ channelData, onNavigate, plan, freeTierFeatur
           ))}
         </div>
         {hasResults && (
-          <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexShrink: 0 }}>
-            <div className="out-sort-group">
-              {sortOptions.map(opt => (
-                <button
-                  key={opt.k}
-                  onClick={() => setSort(opt.k)}
-                  className={`out-sort-btn${sort === opt.k ? ' active' : ''}`}
-                >
-                  {opt.label}
-                </button>
-              ))}
-            </div>
-            <button onClick={handleClear} className="out-cta-ghost" style={{ flexShrink: 0 }}>
-              <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="5.5" cy="5.5" r="3.5"/><path d="M10 10l-2-2"/>
-              </svg>
-              New search
-            </button>
+          <div style={{
+            display: 'inline-flex', gap: 4, padding: 4,
+            background: '#eeeef3', borderRadius: 100, flexShrink: 0,
+          }}>
+            {sortOptions.map(opt => (
+              <button
+                key={opt.k}
+                onClick={() => setSort(opt.k)}
+                className={`out-tab-btn${sort === opt.k ? ' active' : ''}`}
+              >
+                {opt.label}
+              </button>
+            ))}
           </div>
         )}
       </div>

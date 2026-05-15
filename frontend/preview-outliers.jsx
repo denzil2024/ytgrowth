@@ -160,10 +160,12 @@ window.fetch = async (url, opts) => {
   const method = (opts && opts.method) || 'GET'
   if (u.includes('/outliers/cache')) {
     if (stateMode === 'results-videos' || stateMode === 'results-channels' || stateMode === 'detail-modal') {
-      return new Response(JSON.stringify({ cached: true, query: 'passive income product', result: RESULT, tab: stateMode === 'results-channels' ? 'channel' : 'video' }),
+      // Page expects { cached: <result-with-query> }. setResult(d.cached)
+      // and setQuery(d.cached.query) at Outliers.jsx ~577.
+      return new Response(JSON.stringify({ cached: { ...RESULT, query: 'passive income product' } }),
         { headers: { 'Content-Type': 'application/json' } })
     }
-    return new Response(JSON.stringify({ cached: false }), { headers: { 'Content-Type': 'application/json' } })
+    return new Response(JSON.stringify({ cached: null }), { headers: { 'Content-Type': 'application/json' } })
   }
   if (u.includes('/outliers/reports') && method !== 'DELETE') {
     return new Response(JSON.stringify({ reports: REPORTS }), { headers: { 'Content-Type': 'application/json' } })
