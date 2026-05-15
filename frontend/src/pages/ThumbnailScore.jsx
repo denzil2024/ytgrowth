@@ -3,12 +3,12 @@ import { ChevronDown, Upload, Lightbulb } from 'lucide-react'
 import CreditsEmptyModal from '../components/CreditsEmptyModal'
 import UpsellModal from '../components/UpsellModal'
 
-// Load Inter once — SCOPED to this page (each page owns its font loading, never global)
-if (typeof document !== 'undefined' && !document.getElementById('thumb-iq-inter-font')) {
+// Load Geist once — SCOPED to this page (each page owns its font loading, never global)
+if (typeof document !== 'undefined' && !document.getElementById('thumb-iq-geist-font')) {
   const link = document.createElement('link')
-  link.id = 'thumb-iq-inter-font'
+  link.id = 'thumb-iq-geist-font'
   link.rel = 'stylesheet'
-  link.href = 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap'
+  link.href = 'https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap'
   document.head.appendChild(link)
 }
 
@@ -19,19 +19,30 @@ if (typeof document !== 'undefined' && !document.getElementById('thumb-iq-styles
   s.textContent = `
     @keyframes thumbFadeUp { from { opacity:0; transform:translateY(8px) } to { opacity:1; transform:translateY(0) } }
     @keyframes thumbSpin    { to { transform: rotate(360deg) } }
+
+    /* Page-scoped Geist inheritance — every element inside .tiq-page picks up
+       Geist via the descendant universal selector. Other pages keep their own
+       font loaders untouched. */
+    .tiq-page, .tiq-page * {
+      font-family: 'Geist', 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
     .tiq-card {
       background: #fff;
-      border: 1px solid #e6e6ec;
-      border-radius: 16px;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 4px 14px rgba(0,0,0,0.06);
+      border: 1px solid rgba(10,10,15,0.07);
+      border-radius: 14px;
+      box-shadow: 0 1px 2px rgba(15,15,25,0.04),
+                  0 6px 18px rgba(15,15,25,0.05),
+                  inset 0 1px 0 rgba(255,255,255,0.7);
+      transition: box-shadow 0.2s cubic-bezier(0.2,0.7,0.3,1), border-color 0.2s cubic-bezier(0.2,0.7,0.3,1);
     }
     .tiq-section { animation: thumbFadeUp 0.28s ease both; }
     .tiq-upload-zone {
-      border: 2px dashed #d0d0da;
-      border-radius: 16px;
+      border: 2px dashed rgba(10,10,15,0.14);
+      border-radius: 14px;
       padding: 36px 32px;
       text-align: center;
-      transition: border-color 0.2s, background 0.2s;
+      transition: border-color 0.2s cubic-bezier(0.2,0.7,0.3,1), background 0.2s;
     }
     .tiq-upload-zone.clickable {
       cursor: pointer;
@@ -48,42 +59,75 @@ if (typeof document !== 'undefined' && !document.getElementById('thumb-iq-styles
       transition: width 0.8s cubic-bezier(0.34,1.56,0.64,1);
     }
 
-    /* ── Previous tab accordion (mirrors Competitors design) ── */
-    .tiq-acc-wrapper { margin-bottom: 12px; position: relative; }
-
-    /* 3px severity stripe at the top of each history accordion card. Sits flush above the header so the
-       top corners are rounded by the stripe (header drops its own top radius below). */
-    .tiq-stripe {
-      height: 3px;
-      border-radius: 16px 16px 0 0;
+    /* ── Tabs — quiet soft-grey active (NEVER red). Matches the
+         feedback-quiet-toggles rule used across every redesigned page. ── */
+    .tiq-tab-strip {
+      display: flex; gap: 4px;
+      margin-bottom: 24px;
+      padding: 4px;
+      background: rgba(10,10,15,0.025);
+      border: 1px solid rgba(10,10,15,0.06);
+      border-radius: 100px;
+      width: fit-content;
     }
+    .tiq-tab-btn {
+      padding: 7px 16px; border-radius: 100px;
+      border: 1px solid transparent;
+      background: transparent; color: rgba(10,10,15,0.55);
+      cursor: pointer; font-family: inherit;
+      font-size: 13px; font-weight: 500; letter-spacing: -0.05px;
+      transition: background 0.18s cubic-bezier(0.2,0.7,0.3,1),
+                  color 0.18s, border-color 0.18s;
+    }
+    .tiq-tab-btn:hover { background: rgba(10,10,15,0.03); color: #0a0a0f; }
+    .tiq-tab-btn.active {
+      background: #ffffff; color: #0a0a0f;
+      border-color: rgba(10,10,15,0.10);
+      font-weight: 600;
+      box-shadow: 0 1px 2px rgba(15,15,25,0.04);
+    }
+
+    /* ── Previous tab accordion ── */
+    .tiq-acc-wrapper { margin-bottom: 10px; position: relative; }
 
     .tiq-acc-header {
       background: #ffffff;
-      border: 1px solid #e6e6ec;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 4px 14px rgba(0,0,0,0.06);
+      border: 1px solid rgba(10,10,15,0.07);
+      border-radius: 14px;
+      box-shadow: 0 1px 2px rgba(15,15,25,0.04),
+                  0 6px 18px rgba(15,15,25,0.05),
+                  inset 0 1px 0 rgba(255,255,255,0.7);
       padding: 14px 20px;
       display: flex;
       align-items: center;
       gap: 16px;
-      transition: box-shadow 0.2s, border-color 0.2s;
+      transition: box-shadow 0.2s cubic-bezier(0.2,0.7,0.3,1),
+                  border-color 0.2s cubic-bezier(0.2,0.7,0.3,1),
+                  transform 0.2s cubic-bezier(0.2,0.7,0.3,1);
       cursor: pointer;
       user-select: none;
     }
     .tiq-acc-header:hover {
-      box-shadow: 0 4px 12px rgba(0,0,0,0.08), 0 16px 40px rgba(0,0,0,0.09);
-      border-color: rgba(0,0,0,0.14);
+      box-shadow: 0 2px 6px rgba(15,15,25,0.06),
+                  0 12px 32px rgba(15,15,25,0.07),
+                  inset 0 1px 0 rgba(255,255,255,0.7);
+      border-color: rgba(10,10,15,0.10);
+      transform: translateY(-1px);
     }
-    .tiq-acc-header.closed { border-radius: 0 0 16px 16px; border-top: none; }
-    .tiq-acc-header.open   { border-radius: 0; border-top: none; border-bottom-color: rgba(0,0,0,0.07); }
+    .tiq-acc-header.open {
+      border-radius: 14px 14px 0 0;
+      border-bottom-color: rgba(10,10,15,0.06);
+      transform: none;
+    }
 
     .tiq-acc-body {
-      border: 1px solid #e6e6ec;
+      border: 1px solid rgba(10,10,15,0.07);
       border-top: none;
-      border-radius: 0 0 16px 16px;
+      border-radius: 0 0 14px 14px;
       background: #ffffff;
       padding: 24px 20px 28px;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 4px 14px rgba(0,0,0,0.06);
+      box-shadow: 0 1px 2px rgba(15,15,25,0.04),
+                  0 6px 18px rgba(15,15,25,0.05);
     }
 
     /* Trash button — hidden until wrapper hovered */
@@ -91,12 +135,12 @@ if (typeof document !== 'undefined' && !document.getElementById('thumb-iq-styles
       position: absolute;
       top: 12px;
       right: 12px;
-      width: 28px;
-      height: 28px;
+      width: 26px;
+      height: 26px;
       border-radius: 8px;
       border: 1px solid transparent;
       background: transparent;
-      color: #c4c4cc;
+      color: rgba(10,10,15,0.35);
       cursor: pointer;
       display: flex;
       align-items: center;
@@ -113,7 +157,7 @@ if (typeof document !== 'undefined' && !document.getElementById('thumb-iq-styles
       color: #e5251b;
     }
 
-    /* "Open report" button — red pill matching the Video Ideas Refresh CTA scale */
+    /* "Open report" button — red pill, primary CTA */
     .tiq-btn-report {
       background: #e5251b;
       color: #fff;
@@ -121,23 +165,27 @@ if (typeof document !== 'undefined' && !document.getElementById('thumb-iq-styles
       border-radius: 100px;
       padding: 8px 15px;
       font-size: 12.5px;
-      font-weight: 700;
+      font-weight: 600;
       font-family: inherit;
+      letter-spacing: -0.05px;
       cursor: pointer;
       white-space: nowrap;
-      transition: filter 0.15s, background 0.15s;
+      transition: filter 0.18s cubic-bezier(0.2,0.7,0.3,1),
+                  transform 0.18s cubic-bezier(0.2,0.7,0.3,1),
+                  box-shadow 0.18s cubic-bezier(0.2,0.7,0.3,1);
       display: flex;
       align-items: center;
       gap: 6px;
-      box-shadow: 0 1px 2px rgba(229,37,27,0.18);
-      letter-spacing: -0.1px;
+      box-shadow: 0 1px 3px rgba(229,37,27,0.28);
     }
     .tiq-btn-report:hover {
-      filter: brightness(1.07);
+      filter: brightness(1.08);
+      transform: translateY(-1px);
     }
     .tiq-btn-report.open {
       background: #c01e15;
       box-shadow: none;
+      transform: none;
     }
   `
   document.head.appendChild(s)
@@ -633,7 +681,7 @@ function Dropdown({ value, onChange, options, placeholder }) {
   }, [open])
   const selected = options.find(o => o.value === value)
   return (
-    <div ref={wrapRef} style={{ position: 'relative', fontFamily: "'Inter', system-ui, sans-serif" }}>
+    <div ref={wrapRef} style={{ position: 'relative', fontFamily: 'inherit' }}>
       <button
         type="button"
         onClick={() => setOpen(o => !o)}
@@ -782,11 +830,11 @@ function UploadPanel({ videoIdeas, hasIdeas, initialIdea, initialTopic, topicSou
   ]
 
   return (
-    <div style={{ maxWidth: 640, margin: '0 auto', fontFamily: "'Inter', system-ui, sans-serif" }}>
+    <div style={{ maxWidth: 640, margin: '0 auto', fontFamily: 'inherit' }}>
      {/* Font scoped explicitly so dropdown + inputs inherit Inter. */}
      <div className="tiq-card" style={{
        padding: '26px 28px',
-       fontFamily: "'Inter', system-ui, sans-serif",
+       fontFamily: 'inherit',
      }}>
 
       {/* Card header — neutral grey eyebrow (red stays semantic for CTAs, not generic labels).
@@ -1257,41 +1305,34 @@ export default function ThumbnailScore({ channelData, onNavigate, plan, freeTier
       padding: '36px 40px 72px',
       background: '#ffffff',
       minHeight: 'calc(100vh - 52px)',
-      fontFamily: "'Inter', system-ui, sans-serif",
     }}>
      {/* 1040 centered column — every polished feature page (Video Ideas / SEO / Overview) wraps content
          in this. Don't drop it; the 2fr/3fr results grid stretches without an upper bound otherwise. */}
-     <div style={{ maxWidth: 1040, margin: '0 auto' }}>
+     <div className="tiq-page" style={{ maxWidth: 1040, margin: '0 auto' }}>
 
-      {/* Header — H1 24/800/-0.6 + meta line with · separators (Overview/SEO/Video Ideas pattern) */}
+      {/* Header — H1 26/700, matching every other redesigned page */}
       <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 24, gap: 16, flexWrap: 'wrap' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
           <div>
-            <h1 style={{ fontSize: 24, fontWeight: 800, color: C.text1, letterSpacing: '-0.6px', marginBottom: 6, lineHeight: 1.1 }}>Thumbnail IQ</h1>
-            <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.4 }}>
+            <h1 style={{ fontSize: 26, fontWeight: 700, color: '#0a0a0f', letterSpacing: '-0.7px', marginBottom: 6, lineHeight: 1.1 }}>Thumbnail IQ</h1>
+            <p style={{ fontSize: 13.5, color: 'rgba(10,10,15,0.55)', fontWeight: 500, lineHeight: 1.5, letterSpacing: '-0.05px' }}>
               See how your thumbnail performs before you publish
               <span> · Benchmarked against real top-ranked channels</span>
-              {history.length > 0 && <span> · {history.length} saved</span>}
+              {history.length > 0 && <span> · <span style={{ color: '#0a0a0f', fontWeight: 600 }}>{history.length}</span> saved</span>}
             </p>
           </div>
         </div>
       </div>
 
-      {/* Tabs */}
-      <div style={{ display: 'flex', gap: 0, marginBottom: 24,
-                    borderBottom: '1.5px solid rgba(0,0,0,0.08)' }}>
+      {/* Tabs — quiet soft-grey active (matches the feedback-quiet-toggles rule
+          used across every redesigned page; the red underline pattern violated it). */}
+      <div className="tiq-tab-strip">
         {TABS.map(tab => (
           <button
             key={tab.key}
+            type="button"
             onClick={() => setActiveTab(tab.key)}
-            style={{
-              padding: '9px 20px', background: 'none', border: 'none',
-              cursor: 'pointer', fontFamily: 'inherit',
-              fontSize: 14, fontWeight: activeTab === tab.key ? 700 : 500,
-              color: activeTab === tab.key ? C.red : C.text3,
-              borderBottom: activeTab === tab.key ? `2px solid ${C.red}` : '2px solid transparent',
-              marginBottom: -1.5, transition: 'color 0.15s',
-            }}
+            className={`tiq-tab-btn ${activeTab === tab.key ? 'active' : ''}`}
           >
             {tab.label}
           </button>
@@ -1319,12 +1360,12 @@ export default function ThumbnailScore({ channelData, onNavigate, plan, freeTier
           {history.length === 0 ? (
             <div style={{ textAlign: 'center', padding: '72px 24px' }}>
               <span style={{
-                fontSize: 10.5, fontWeight: 700, color: C.text3,
-                letterSpacing: '0.11em', textTransform: 'uppercase',
+                fontSize: 11, fontWeight: 700, color: 'rgba(10,10,15,0.50)',
+                letterSpacing: '0.10em', textTransform: 'uppercase',
                 display: 'inline-block', marginBottom: 12,
               }}>History</span>
-              <p style={{ fontSize: 20, fontWeight: 800, color: C.text1, letterSpacing: '-0.4px', marginBottom: 8, lineHeight: 1.2 }}>No previous thumbnails</p>
-              <p style={{ fontSize: 14, color: C.text3, maxWidth: 320, margin: '0 auto', lineHeight: 1.6 }}>
+              <p style={{ fontSize: 17, fontWeight: 600, color: '#0a0a0f', letterSpacing: '-0.3px', marginBottom: 8, lineHeight: 1.2 }}>No previous thumbnails</p>
+              <p style={{ fontSize: 13.5, color: 'rgba(10,10,15,0.55)', maxWidth: 340, margin: '0 auto', lineHeight: 1.6 }}>
                 Upload a thumbnail to get started. It will be saved here automatically.
               </p>
             </div>
@@ -1349,9 +1390,6 @@ export default function ThumbnailScore({ channelData, onNavigate, plan, freeTier
                 </svg>
               )
 
-              // Severity stripe color — green ≥75 / amber ≥50 / red below (matches scoreColor thresholds).
-              const stripeColor = col
-
               return (
                 <div key={item.id} className="tiq-acc-wrapper">
 
@@ -1365,57 +1403,58 @@ export default function ThumbnailScore({ channelData, onNavigate, plan, freeTier
                     </svg>
                   </button>
 
-                  {/* 3px severity stripe — same DNA as the Video Ideas idea-card stripe. */}
-                  <div className="tiq-stripe" style={{ background: stripeColor }}/>
+                  {/* The 3px severity stripe above each card was dropped - the
+                      score chip + verdict pill carry the tier signal cleanly. */}
 
                   {/* Accordion header */}
-                  <div className={`tiq-acc-header ${isOpen ? 'open' : 'closed'}`}
+                  <div className={`tiq-acc-header ${isOpen ? 'open' : ''}`}
                     onClick={() => setHistoryOpen(isOpen ? null : item.id)}>
 
                     {item.thumbnail_b64
                       ? <img src={`data:image/jpeg;base64,${item.thumbnail_b64}`} alt=""
                              style={{ width: 64, height: 36, borderRadius: 8, objectFit: 'cover',
-                                      flexShrink: 0, boxShadow: '0 2px 10px rgba(0,0,0,0.13)' }}/>
+                                      flexShrink: 0, boxShadow: '0 1px 3px rgba(15,15,25,0.08), 0 4px 12px rgba(15,15,25,0.08)' }}/>
                       : <div style={{ width: 64, height: 36, borderRadius: 8, background: '#ebebef', flexShrink: 0 }}/>
                     }
 
                     {/* Left: keyword + chips */}
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
-                        <p style={{ fontWeight: 800, fontSize: 14, color: '#0a0a0a',
-                                    letterSpacing: '-0.2px', overflow: 'hidden',
+                        <p style={{ fontWeight: 600, fontSize: 14, color: '#0a0a0f',
+                                    letterSpacing: '-0.15px', overflow: 'hidden',
                                     textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                           {item.confirmed_keyword || 'Untitled'}
                         </p>
                         {item.linked_video_idea?.thumbnail_ready && (
-                          <span style={{ fontSize: 12, fontWeight: 700, color: C.green,
+                          <span style={{ fontSize: 11, fontWeight: 600, color: C.green,
                                          background: C.greenBg, border: `1px solid ${C.greenBdr}`,
-                                         borderRadius: 100, padding: '2px 8px', flexShrink: 0 }}>
+                                         borderRadius: 100, padding: '2px 8px', flexShrink: 0, letterSpacing: '-0.05px' }}>
                             Thumbnail Ready
                           </span>
                         )}
                       </div>
                       <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', alignItems: 'center' }}>
-                        {/* Score chip — tabular-nums, 12.5/800 to match Video Ideas card chip scale. */}
+                        {/* Score chip — number is the data point, kept at 13/700 for emphasis (numbers are the one
+                            place 700 still earns its keep) but the chip chrome is neutral, not coloured-border. */}
                         <span style={{ display: 'inline-flex', alignItems: 'baseline', gap: 2,
-                                       background: '#fff', border: `1px solid ${col}30`,
-                                       borderRadius: 100, padding: '3px 10px', fontSize: 11.5, fontVariantNumeric: 'tabular-nums' }}>
-                          <span style={{ fontSize: 12.5, fontWeight: 800, color: col, letterSpacing: '-0.2px' }}>{score}</span>
-                          <span style={{ color: C.text3, fontWeight: 500 }}>/{max}</span>
+                                       background: '#fff', border: `1px solid ${col}33`,
+                                       borderRadius: 100, padding: '3px 10px', fontSize: 12, fontVariantNumeric: 'tabular-nums' }}>
+                          <span style={{ fontSize: 13, fontWeight: 700, color: col, letterSpacing: '-0.2px' }}>{score}</span>
+                          <span style={{ color: 'rgba(10,10,15,0.45)', fontWeight: 500 }}>/{max}</span>
                         </span>
-                        {/* Verdict pill — colored by score tier, mirrors the pills on Suggested Titles / Competitor set */}
-                        <span style={{ fontSize: 10, fontWeight: 700, color: col, letterSpacing: '0.08em', textTransform: 'uppercase', padding: '3px 9px', borderRadius: 100, border: `1.5px solid ${col}` }}>
+                        {/* Verdict pill */}
+                        <span style={{ fontSize: 10, fontWeight: 700, color: col, letterSpacing: '0.10em', textTransform: 'uppercase', padding: '3px 9px', borderRadius: 100, border: `1px solid ${col}55` }}>
                           {scoreLabel(score, max)}
                         </span>
                         {item.format && (
                           <span style={{ display: 'inline-flex', alignItems: 'baseline', gap: 3,
-                                         background: 'rgba(0,0,0,0.04)', border: '1px solid rgba(0,0,0,0.07)',
-                                         borderRadius: 100, padding: '3px 9px', fontSize: 11, color: C.text3, fontWeight: 500, letterSpacing: '-0.05px' }}>
+                                         background: 'rgba(10,10,15,0.04)', border: '1px solid rgba(10,10,15,0.07)',
+                                         borderRadius: 100, padding: '3px 9px', fontSize: 11, color: 'rgba(10,10,15,0.55)', fontWeight: 500, letterSpacing: '-0.05px' }}>
                             {item.format}
                           </span>
                         )}
                         {savedAt && (
-                          <span style={{ fontSize: 12, color: C.text3, fontWeight: 500, marginLeft: 2 }}>
+                          <span style={{ fontSize: 12, color: 'rgba(10,10,15,0.45)', fontWeight: 500, marginLeft: 2 }}>
                             · {savedAt}
                           </span>
                         )}
