@@ -1343,30 +1343,47 @@ function DescriptionCard({ d, idx, copiedDesc, onCopy }) {
 }
 
 // Saturation indicator — a compact horizontal bar + "X of N · Label" text.
-// NicheMomentumChart — 12-week SVG line chart of publishing momentum in
-// the niche. Bucket the publishedAt of top_videos + top_shorts into weekly
-// counts, line color encodes direction (green = back half > front half =
-// niche heating up, amber = cooling). Same pattern as the Keywords
-// momentum chart. Zero new YouTube API calls — data lives in payload.
+// NicheMomentumChart — SVG line chart of publishing momentum in the niche.
+// Bucket the publishedAt of top_videos + top_shorts into 12 equal time
+// segments that span from the oldest to the newest ranking video. Bucket
+// unit auto-scales: weeks (span <12w), months (<3y), or quarters (older).
+// Line color encodes direction (green = back half > front half = niche
+// heating up, amber = cooling). Zero new YouTube calls — payload-derived.
 function NicheMomentumChart({ videos = [], shorts = [], primaryPhrase, videosFound }) {
   const items = [...(videos || []), ...(shorts || [])]
-  // Bucket into 12 weekly buckets anchored on this week's Monday.
-  const now = new Date()
-  const monday = new Date(now)
-  monday.setUTCHours(0, 0, 0, 0)
-  // JS Sunday = 0, Monday = 1; we want a Monday anchor
-  const day = monday.getUTCDay() || 7
-  monday.setUTCDate(monday.getUTCDate() - day + 1)
-  const weekMs = 7 * 86400 * 1000
-  const buckets = new Array(12).fill(0)
+  // Collect valid timestamps.
+  const stamps = []
   for (const v of items) {
     const iso = v?.published_at || v?.publishedAt
     if (!iso) continue
     const d = new Date(iso)
-    if (isNaN(d.getTime())) continue
-    const weeksAgo = Math.floor((monday.getTime() - d.getTime()) / weekMs)
-    const idx = 11 - weeksAgo
-    if (idx >= 0 && idx <= 11) buckets[idx] += 1
+    if (!isNaN(d.getTime())) stamps.push(d.getTime())
+  }
+  if (stamps.length === 0) return null
+  const now = Date.now()
+  const minT = Math.min(...stamps)
+  // End the span at "now" so the rightmost bucket is always current time.
+  const dayMs = 86400 * 1000
+  const totalSpanMs = Math.max(now - minT, 14 * dayMs) // floor at 2 weeks
+  // Pick unit by span: weeks (<~12w), months (<~3y), quarters otherwise.
+  let unitMs, unitLabel, unitShort
+  if (totalSpanMs <= 12 * 7 * dayMs) {
+    unitMs = 7 * dayMs; unitLabel = 'week'; unitShort = 'w'
+  } else if (totalSpanMs <= 3 * 365 * dayMs) {
+    unitMs = 30 * dayMs; unitLabel = 'month'; unitShort = 'mo'
+  } else {
+    unitMs = 91 * dayMs; unitLabel = 'quarter'; unitShort = 'q'
+  }
+  const BUCKETS = 12
+  const stepMs = Math.max(unitMs, Math.ceil(totalSpanMs / BUCKETS))
+  const startT = now - BUCKETS * stepMs
+  const buckets = new Array(BUCKETS).fill(0)
+  for (const t of stamps) {
+    if (t < startT || t > now) continue
+    let idx = Math.floor((t - startT) / stepMs)
+    if (idx >= BUCKETS) idx = BUCKETS - 1
+    if (idx < 0) idx = 0
+    buckets[idx] += 1
   }
   const total = buckets.reduce((a, b) => a + b, 0)
   if (total === 0) return null
@@ -1389,13 +1406,18 @@ function NicheMomentumChart({ videos = [], shorts = [], primaryPhrase, videosFou
   const linePath = points.map((p, i) => (i === 0 ? `M ${p[0]} ${p[1]}` : `L ${p[0]} ${p[1]}`)).join(' ')
   const fillPath = `${linePath} L ${xFor(buckets.length - 1)} ${padT + innerH} L ${xFor(0)} ${padT + innerH} Z`
   const peakIdx = buckets.indexOf(maxCount)
-  const peakWeeksAgo = buckets.length - 1 - peakIdx
-  const peakLabel = peakIdx === buckets.length - 1 ? 'this week' : peakWeeksAgo === 1 ? 'last week' : `${peakWeeksAgo} weeks ago`
+  const peakUnitsAgo = buckets.length - 1 - peakIdx
+  const peakLabel = peakUnitsAgo === 0
+    ? `this ${unitLabel}`
+    : peakUnitsAgo === 1
+      ? `last ${unitLabel}`
+      : `${peakUnitsAgo} ${unitLabel}s ago`
   const labels = buckets.map((_, i) => {
     if (i === buckets.length - 1) return 'now'
     if (i % 3 !== 0) return ''
-    return `${buckets.length - 1 - i}w`
+    return `${buckets.length - 1 - i}${unitShort}`
   })
+  const rangeLabel = `last 12 ${unitLabel}s`
 
   return (
     <div style={{ marginTop: 28, marginBottom: 24 }}>
@@ -1406,7 +1428,7 @@ function NicheMomentumChart({ videos = [], shorts = [], primaryPhrase, videosFou
         <span style={{
           fontSize: 11, fontWeight: 700, color: 'rgba(10,10,15,0.50)',
           letterSpacing: '0.10em', textTransform: 'uppercase',
-        }}>last 12 weeks</span>
+        }}>{rangeLabel}</span>
         {primaryPhrase && (
           <span style={{
             marginLeft: 'auto',
@@ -1812,7 +1834,7 @@ function TitleComparisonHero({ userTitle, userScore, userBreakdown, suggestions,
           }}>{bestAvg}</span>
         </div>
         <p style={{
-          fontSize: 14.5, fontWeight: 700, color: C.text1,
+          fontSize: 14.5, fontWeight: 600, color: C.text1,
           letterSpacing: '-0.15px', lineHeight: 1.4, marginBottom: 10,
         }}>
           {bestSug.title}
@@ -2684,7 +2706,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
                 <button key={i} className="seo-intent-opt" onClick={() => handleSelectIntent(opt.keyword)}>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 5, flexWrap: 'wrap' }}>
-                      <span style={{ fontSize: 14.5, fontWeight: 700, color: '#0a0a0f', letterSpacing: '-0.15px' }}>
+                      <span style={{ fontSize: 14.5, fontWeight: 600, color: '#0a0a0f', letterSpacing: '-0.15px' }}>
                         {opt.label}
                       </span>
                       <span style={{
@@ -2782,11 +2804,8 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
 
             return (
               <div style={{ marginBottom: 24, marginTop: 36 }}>
-                <div style={{ marginBottom: 20 }}>
-                  <h2 style={{ fontSize: 22, fontWeight: 700, color: C.text1, letterSpacing: '-0.5px', marginBottom: 4 }}>Search intent analysis</h2>
-                  <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.5 }}>
-                    What to chase, what to avoid in this niche · 2 insights
-                  </p>
+                <div style={{ marginBottom: 16 }}>
+                  <h2 style={{ fontSize: 22, fontWeight: 700, color: C.text1, letterSpacing: '-0.5px', margin: 0 }}>Search intent</h2>
                 </div>
 
                 {/* Insight #1 — Opportunity. The gap by definition is unused, so the
@@ -2856,10 +2875,9 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
             <div style={{ marginBottom: 24, marginTop: 36 }}>
               <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 20, gap: 16 }}>
                 <div>
-                  <h2 style={{ fontSize: 22, fontWeight: 700, color: C.text1, letterSpacing: '-0.5px', marginBottom: 4 }}>Suggested titles</h2>
-                  <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.5 }}>
-                    {result.suggestions.length} AI alternatives · pick one to generate a matching description
-                  </p>
+                  <h2 style={{ fontSize: 22, fontWeight: 700, color: C.text1, letterSpacing: '-0.5px', margin: 0 }}>
+                    Suggested titles <span style={{ color: 'rgba(10,10,15,0.35)', fontSize: 14, fontWeight: 500, letterSpacing: '-0.2px', marginLeft: 8 }}>{result.suggestions.length}</span>
+                  </h2>
                 </div>
                 <button onClick={() => handleSelectTitle(title.trim())} className="seo-btn" style={{ flexShrink: 0 }}>
                   Use my original title →
@@ -2894,102 +2912,46 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
               Actions section (one card per concept, neat vertical rhythm).
               ═══════════════════════════════════════════════════════════════ */}
 
-          {/* ── Keyword research — amber-topped card matching Keyword discovery / Competitor set ── */}
+          {/* ── Keyword research — NicheMap visualisation only. The duplicate
+                "Related phrases" 2-col grid card was dropped (same data,
+                NicheMap already shows volume × competition × score with a
+                clickable Top-3 chip strip). ── */}
           {result.keyword_scores?.length > 0 && (
             <>
-              <div style={{ marginBottom: 20, marginTop: 36 }}>
-                <h2 style={{ fontSize: 22, fontWeight: 700, color: C.text1, letterSpacing: '-0.5px', marginBottom: 4 }}>Keyword research</h2>
-                <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.5 }}>
-                  Related phrases ranked by opportunity · click any to use as title
-                </p>
+              <div style={{ marginBottom: 16, marginTop: 36 }}>
+                <h2 style={{ fontSize: 22, fontWeight: 700, color: C.text1, letterSpacing: '-0.5px', margin: 0 }}>Keyword research</h2>
               </div>
-
-              {/* Niche map — labeled volume × competition viz. Top-5 phrases get inline labels,
-                  beeswarm-style jitter so dots don't pile, sweet-spot band in the top-left, and
-                  a Top-3 clickable chip strip below. Click any dot or chip to set as your title. */}
               <NicheMap keywords={result.keyword_scores} onPick={setTitle}/>
-
-              <div className="seo-suggestion-card" style={{
-                marginBottom: 24,
-              }}>
-                <div style={{ padding: '18px 22px 20px' }}>
-                  {/* Eyebrow + big tabular count — same pattern as Competitor set */}
-                  <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16, marginBottom: 14 }}>
-                    <div style={{ minWidth: 0 }}>
-                      <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 6 }}>Related phrases</p>
-                      <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.5 }}>Sorted by score · click any to use as your title</p>
-                    </div>
-                    <p style={{ fontSize: 26, fontWeight: 700, color: C.text1, letterSpacing: '-0.8px', fontVariantNumeric: 'tabular-nums', flexShrink: 0, lineHeight: 1 }}>{result.keyword_scores.length}</p>
-                  </div>
-
-                  <div style={{ height: 1, background: C.border, margin: '0 0 14px' }}/>
-
-                  {/* 2-col grid with amber vertical divider between columns (matches Competitor set) */}
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', columnGap: 0, rowGap: 14 }}>
-                    {result.keyword_scores.map((kw, i) => {
-                      const scColor    = kw.score >= 75 ? C.green : kw.score >= 50 ? C.text2 : C.red
-                      const isRightCol = i % 2 === 1
-                      return (
-                        <div key={kw.phrase} className="seo-kw-row"
-                          role="button" tabIndex={0}
-                          onClick={() => setTitle(kw.phrase)}
-                          onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setTitle(kw.phrase) } }}
-                          title={`Volume ${kw.volume} · Competition ${kw.competition} · Score ${kw.score} — click to use as title`}
-                          style={{
-                            display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer',
-                            paddingLeft:  isRightCol ? 20 : 0,
-                            paddingRight: isRightCol ? 0 : 20,
-                            borderLeft: isRightCol ? `1px solid ${C.borderLight}` : 'none',
-                          }}>
-                          <span className="seo-kw-phrase" style={{ fontSize: 13, color: C.text2, fontWeight: 400, width: 180, flexShrink: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', transition: 'color 0.12s' }}>{kw.phrase}</span>
-                          <div style={{ flex: 1, height: 4, background: '#eeeef3', borderRadius: 99, overflow: 'hidden', minWidth: 40 }}>
-                            <div style={{ width: `${kw.score}%`, height: '100%', background: _barFill(scColor), borderRadius: 99, transition: 'width 0.8s cubic-bezier(0.34,1.56,0.64,1)' }}/>
-                          </div>
-                          <span style={{ fontSize: 13, fontWeight: 700, color: scColor, fontVariantNumeric: 'tabular-nums', minWidth: 26, textAlign: 'right', flexShrink: 0 }}>{kw.score}</span>
-                        </div>
-                      )
-                    })}
-                  </div>
-                </div>
-              </div>
             </>
           )}
 
           {/* ── Keyword discovery — keywords from titles + tags from metadata ── */}
           {(result.autocomplete_terms?.length > 0 || result.top_tags?.length > 0) && (
             <>
-              <div style={{ marginBottom: 20, marginTop: 36 }}>
-                <h2 style={{ fontSize: 22, fontWeight: 700, color: C.text1, letterSpacing: '-0.5px', marginBottom: 4 }}>Keywords and tags</h2>
-                <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.5 }}>
-                  Pulled from the top 10 ranking videos · borrow what's already working
-                </p>
+              <div style={{ marginBottom: 16, marginTop: 36 }}>
+                <h2 style={{ fontSize: 22, fontWeight: 700, color: C.text1, letterSpacing: '-0.5px', margin: 0 }}>Keywords and tags</h2>
               </div>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 24 }}>
                 {/* Block 1 — Keywords (phrases from ranking video titles) */}
                 {result.autocomplete_terms?.length > 0 && (
                   <div className="seo-suggestion-card">
-                    <div style={{ padding: '18px 22px 20px' }}>
-                      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16, marginBottom: 14 }}>
-                        <div style={{ minWidth: 0 }}>
-                          <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 6 }}>Keywords</p>
-                          <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.5 }}>Phrases from ranking videos · click to use as your title</p>
-                        </div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 14, flexShrink: 0 }}>
-                          <p style={{ fontSize: 26, fontWeight: 700, color: C.text1, letterSpacing: '-0.8px', fontVariantNumeric: 'tabular-nums', lineHeight: 1 }}>{result.autocomplete_terms.length}</p>
-                          <button
-                            onClick={() => {
-                              navigator.clipboard.writeText(result.autocomplete_terms.join(', '))
-                              setCopiedAutocomplete(true)
-                              setTimeout(() => setCopiedAutocomplete(false), 1800)
-                            }}
-                            className="seo-btn-primary"
-                            style={{ fontSize: 12, padding: '9px 18px' }}>
-                            {copiedAutocomplete ? '✓ Copied all' : 'Copy all'}
-                          </button>
-                        </div>
+                    <div style={{ padding: '16px 22px 18px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, marginBottom: 12 }}>
+                        <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase', margin: 0 }}>
+                          Keywords <span style={{ color: 'rgba(10,10,15,0.35)', fontWeight: 600, marginLeft: 6 }}>{result.autocomplete_terms.length}</span>
+                        </p>
+                        <button
+                          onClick={() => {
+                            navigator.clipboard.writeText(result.autocomplete_terms.join(', '))
+                            setCopiedAutocomplete(true)
+                            setTimeout(() => setCopiedAutocomplete(false), 1800)
+                          }}
+                          className="seo-btn-primary"
+                          style={{ fontSize: 12, padding: '8px 16px' }}>
+                          {copiedAutocomplete ? '✓ Copied all' : 'Copy all'}
+                        </button>
                       </div>
-                      <div style={{ height: 1, background: C.border, margin: '0 0 16px' }}/>
                       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
                         {result.autocomplete_terms.map(t => (
                           <span key={t}
@@ -3013,27 +2975,22 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
                 {/* Block 2 — Suggested tags */}
                 {result.top_tags?.length > 0 && (
                   <div className="seo-suggestion-card">
-                    <div style={{ padding: '18px 22px 20px' }}>
-                      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16, marginBottom: 14 }}>
-                        <div style={{ minWidth: 0 }}>
-                          <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 6 }}>Suggested tags</p>
-                          <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.5 }}>Pulled from ranking competitors · click one to copy</p>
-                        </div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 14, flexShrink: 0 }}>
-                          <p style={{ fontSize: 26, fontWeight: 700, color: C.text1, letterSpacing: '-0.8px', fontVariantNumeric: 'tabular-nums', lineHeight: 1 }}>{result.top_tags.length}</p>
-                          <button
-                            onClick={() => {
-                              navigator.clipboard.writeText(result.top_tags.join(', '))
-                              setCopiedTags(true)
-                              setTimeout(() => setCopiedTags(false), 1800)
-                            }}
-                            className="seo-btn-primary"
-                            style={{ fontSize: 12, padding: '9px 18px' }}>
-                            {copiedTags ? '✓ Copied all' : 'Copy all'}
-                          </button>
-                        </div>
+                    <div style={{ padding: '16px 22px 18px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, marginBottom: 12 }}>
+                        <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase', margin: 0 }}>
+                          Suggested tags <span style={{ color: 'rgba(10,10,15,0.35)', fontWeight: 600, marginLeft: 6 }}>{result.top_tags.length}</span>
+                        </p>
+                        <button
+                          onClick={() => {
+                            navigator.clipboard.writeText(result.top_tags.join(', '))
+                            setCopiedTags(true)
+                            setTimeout(() => setCopiedTags(false), 1800)
+                          }}
+                          className="seo-btn-primary"
+                          style={{ fontSize: 12, padding: '8px 16px' }}>
+                          {copiedTags ? '✓ Copied all' : 'Copy all'}
+                        </button>
                       </div>
-                      <div style={{ height: 1, background: C.border, margin: '0 0 16px' }}/>
                       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
                         {result.top_tags.map(tag => {
                           const inTitle = title.toLowerCase().includes(tag.toLowerCase())
@@ -3082,11 +3039,8 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
           {selectedTitle && (
             <>
               {/* Section header — mirrors Overview's "Channel audit" H2 pattern (H2 + 1-line muted subtitle) */}
-              <div ref={descRef} style={{ marginBottom: 20, marginTop: 36 }}>
-                <h2 style={{ fontSize: 22, fontWeight: 700, color: C.text1, letterSpacing: '-0.5px', marginBottom: 4 }}>Description optimizer</h2>
-                <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.5 }}>
-                  3 descriptions for your picked title — each opens with a different hook. Copy the one that fits.
-                </p>
+              <div ref={descRef} style={{ marginBottom: 16, marginTop: 36 }}>
+                <h2 style={{ fontSize: 22, fontWeight: 700, color: C.text1, letterSpacing: '-0.5px', margin: 0 }}>Description optimizer</h2>
               </div>
 
               <div className="seo-glass-card" style={{ borderRadius: 16, padding: '22px 24px' }}>
@@ -3095,7 +3049,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
               <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 20, gap: 16 }}>
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <p style={{ ...T.sectionLabel, marginBottom: 8 }}>Picked title</p>
-                  <p style={{ fontSize: 14, color: C.text1, lineHeight: 1.55, fontWeight: 700, letterSpacing: '-0.1px' }}>&ldquo;{selectedTitle}&rdquo;</p>
+                  <p style={{ fontSize: 14, color: C.text1, lineHeight: 1.55, fontWeight: 600, letterSpacing: '-0.1px' }}>&ldquo;{selectedTitle}&rdquo;</p>
                 </div>
                 <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexShrink: 0 }}>
                   {descResult?.length > 0 && (
@@ -3269,7 +3223,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
             <div className="seo-glass-card" style={{
               padding: '56px 24px', textAlign: 'center',
             }}>
-              <p style={{ fontSize: 16, fontWeight: 700, color: C.text1, letterSpacing: '-0.2px', marginBottom: 8 }}>
+              <p style={{ fontSize: 16, fontWeight: 600, color: C.text1, letterSpacing: '-0.2px', marginBottom: 8 }}>
                 No reports yet
               </p>
               <p style={{ fontSize: 13.5, color: C.text3, maxWidth: 360, margin: '0 auto', lineHeight: 1.6 }}>
