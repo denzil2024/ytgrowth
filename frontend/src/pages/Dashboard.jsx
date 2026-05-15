@@ -57,6 +57,13 @@ function useDashboardStyles() {
     link.href = 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap'
     document.head.appendChild(link)
 
+    // Geist for the Overview/Feed page. Scoped to .ov-page so other
+    // Dashboard sections (Overview-redesign-in-progress) keep Inter.
+    const geist = document.createElement('link')
+    geist.rel = 'stylesheet'
+    geist.href = 'https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap'
+    document.head.appendChild(geist)
+
     const style = document.createElement('style')
     style.id = 'ytg-dash-styles'
     style.textContent = `
@@ -163,6 +170,84 @@ function useDashboardStyles() {
         box-shadow: 0 4px 12px rgba(0,0,0,0.08), 0 16px 40px rgba(0,0,0,0.09);
         transform: translateY(-1px);
       }
+
+      /* ── OVERVIEW (FEED) — page-scoped redesign ──────────────────────────
+         Migrates the Feed onto Geist + the Competitors design north-star
+         (hairline borders, single soft shadow + inset highlight, 14px
+         radius, 200ms cubic-bezier hover) without touching other pages
+         that still use the global card classes. */
+      .ov-page, .ov-page * {
+        font-family: 'Geist', 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        font-feature-settings: 'cv11', 'ss01', 'ss03';
+      }
+      .ov-page .ytg-card,
+      .ov-page .ytg-stat-card,
+      .ov-page .ytg-insight-card {
+        background: #ffffff;
+        border: 1px solid rgba(10,10,15,0.07);
+        border-radius: 14px;
+        box-shadow: 0 1px 2px rgba(15,15,25,0.04),
+                    0 6px 18px rgba(15,15,25,0.05),
+                    inset 0 1px 0 rgba(255,255,255,0.7);
+        transition: box-shadow 0.2s cubic-bezier(0.2,0.7,0.3,1), transform 0.2s cubic-bezier(0.2,0.7,0.3,1);
+      }
+      .ov-page .ytg-card:hover,
+      .ov-page .ytg-stat-card:hover,
+      .ov-page .ytg-insight-card:hover {
+        box-shadow: 0 2px 6px rgba(15,15,25,0.06),
+                    0 12px 32px rgba(15,15,25,0.07),
+                    inset 0 1px 0 rgba(255,255,255,0.7);
+        transform: translateY(-1px);
+        border-color: rgba(10,10,15,0.10);
+      }
+      .ov-page .ytg-stat-card.alert {
+        border-color: rgba(229,37,27,0.18);
+        background: #fff;
+      }
+
+      /* Hero tile (inline, no surrounding card). 4-up strip at top of Feed. */
+      .ov-hero-tile {
+        position: relative;
+        padding: 16px 18px 18px;
+        display: flex; flex-direction: column; gap: 10px;
+        background: transparent;
+      }
+      .ov-hero-strip {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        border: 1px solid rgba(10,10,15,0.07);
+        border-radius: 14px;
+        background: #ffffff;
+        box-shadow: 0 1px 2px rgba(15,15,25,0.04),
+                    0 6px 18px rgba(15,15,25,0.05),
+                    inset 0 1px 0 rgba(255,255,255,0.7);
+        overflow: hidden;
+        margin-bottom: 28px;
+      }
+      .ov-hero-strip > .ov-hero-tile + .ov-hero-tile {
+        border-left: 1px solid rgba(10,10,15,0.06);
+      }
+      @media (max-width: 740px) {
+        .ov-hero-strip { grid-template-columns: repeat(2, 1fr); }
+        .ov-hero-strip > .ov-hero-tile:nth-child(3) { border-left: none; border-top: 1px solid rgba(10,10,15,0.06); }
+        .ov-hero-strip > .ov-hero-tile:nth-child(4) { border-top: 1px solid rgba(10,10,15,0.06); }
+      }
+
+      .ov-section-head {
+        display: flex; align-items: baseline; justify-content: space-between;
+        gap: 12px; flex-wrap: wrap;
+        margin: 36px 0 16px;
+      }
+      .ov-section-head h2 {
+        font-size: 22px; font-weight: 700; color: #0a0a0f;
+        letter-spacing: -0.5px; line-height: 1.2; margin: 0;
+      }
+      .ov-section-head .ov-section-meta {
+        font-size: 12px; font-weight: 500; color: rgba(10,10,15,0.55);
+        letter-spacing: -0.05px;
+      }
+      .ov-section-head + * { margin-top: 0 !important; }
+      .ov-page .ov-stack > * + * { margin-top: 12px; }
       .ytg-inner-block {
         background: #f8f8fb;
         border: 1px solid #eeeef3;
@@ -4733,12 +4818,12 @@ export default function Dashboard() {
               sidebar is untouched; the whitespace either side of the column
               is just the main area minus 720px. */}
           {data && nav === 'Overview' && (
-            <div style={{ maxWidth: 1040, margin: '0 auto' }}>
-              <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 24 }}>
+            <div className="ov-page" style={{ maxWidth: 1040, margin: '0 auto' }}>
+              <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 28, gap: 16, flexWrap: 'wrap' }}>
                 <div>
-                  <h1 style={{ fontSize: 24, fontWeight: 800, color: C.text1, letterSpacing: '-0.6px', marginBottom: 6 }}>
-                    Good to see you{data.channel.channel_name ? <>, <span style={{ color: C.red }}>{data.channel.channel_name}</span></> : ''}.</h1>
-                  <p style={{ fontSize: 13, color: C.text3, display: 'flex', gap: 0, flexWrap: 'wrap' }}>
+                  <h1 style={{ fontSize: 26, fontWeight: 700, color: '#0a0a0f', letterSpacing: '-0.7px', marginBottom: 6, lineHeight: 1.1 }}>
+                    Good to see you{data.channel.channel_name ? <>, <span style={{ color: '#0a0a0f', fontWeight: 700 }}>{data.channel.channel_name}</span></> : ''}.</h1>
+                  <p style={{ fontSize: 13.5, color: 'rgba(10,10,15,0.55)', fontWeight: 500, display: 'flex', gap: 0, flexWrap: 'wrap', letterSpacing: '-0.05px' }}>
                     {data.stats_fetched_at && (
                       <span>Stats from {relTime(data.stats_fetched_at)}</span>
                     )}
@@ -4865,30 +4950,161 @@ export default function Dashboard() {
                 </div>
               )}
 
-              {/* Rich hero cards. One per metric, each with a real 28-day
-                  sparkline of the underlying series (when analytics is
-                  connected). Falls back to the milestone-progress hairline
-                  when timeseries data isn't available. */}
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, marginBottom: 20 }}>
-                <HeroStatCard
-                  label="Subscribers"
-                  value={fmtNum(data.channel.subscribers)}
-                  raw={data.channel.subscribers || 0}
-                  kind="subs"
-                  delta={data.analytics?.net_subscribers_90d}
-                  deltaSuffix="last 90d"
-                  series={data.analytics?.subs_series_28d}
-                />
-                <HeroStatCard
-                  label="Total views"
-                  value={fmtNum(data.channel.total_views)}
-                  raw={data.channel.total_views || 0}
-                  kind="views"
-                  delta={data.analytics?.views_90d}
-                  deltaSuffix="last 90d"
-                  series={data.analytics?.views_series_28d}
-                />
-              </div>
+              {/* ── HERO STRIP — 4 inline tiles separated by hairlines, no
+                    per-tile card border. One unified surface that reads as
+                    a scoreboard. Replaces the 2 fat HeroStatCards. ───── */}
+              {(() => {
+                const subs = data.channel.subscribers || 0
+                const tv   = data.channel.total_views || 0
+                const subTarget = nextSubMilestone(subs)
+                const viewTarget = nextViewMilestone(tv)
+                const subPct  = subTarget > 0 ? Math.max(2, Math.min(100, (subs / subTarget) * 100)) : 0
+                const viewPct = viewTarget > 0 ? Math.max(2, Math.min(100, (tv / viewTarget) * 100)) : 0
+                const subDelta  = data.analytics?.net_subscribers_90d
+                const viewDelta = data.analytics?.views_90d
+                const subsSeries = data.analytics?.subs_series_28d
+                const channelScore = data.insights?.channelScore
+                const haveScore = typeof channelScore === 'number'
+                const scoreColor = !haveScore ? 'rgba(10,10,15,0.45)'
+                  : channelScore >= 70 ? '#059669'
+                  : channelScore >= 50 ? 'rgba(10,10,15,0.78)'
+                  : '#dc2626'
+                const scoreLabel = !haveScore ? 'Awaiting audit'
+                  : channelScore >= 70 ? 'Strong'
+                  : channelScore >= 50 ? 'Steady'
+                  : 'Needs work'
+
+                const eyebrow = {
+                  fontSize: 11, fontWeight: 700, color: 'rgba(10,10,15,0.50)',
+                  letterSpacing: '0.10em', textTransform: 'uppercase', margin: 0,
+                }
+                const bigNum = {
+                  fontSize: 30, fontWeight: 700, color: '#0a0a0f',
+                  letterSpacing: '-1.0px', lineHeight: 1,
+                  fontVariantNumeric: 'tabular-nums',
+                }
+                const subMeta = {
+                  fontSize: 11.5, fontWeight: 500, color: 'rgba(10,10,15,0.55)',
+                  letterSpacing: '-0.05px', fontVariantNumeric: 'tabular-nums',
+                  margin: 0,
+                }
+                const renderDeltaChip = (d) => {
+                  if (d === null || d === undefined || Number.isNaN(Number(d))) return null
+                  const n = Number(d)
+                  const pos = n >= 0
+                  const color = pos ? '#059669' : '#dc2626'
+                  const bg    = pos ? 'rgba(5,150,105,0.08)' : 'rgba(229,37,27,0.07)'
+                  const bdr   = pos ? 'rgba(5,150,105,0.20)' : 'rgba(229,37,27,0.20)'
+                  return (
+                    <span style={{
+                      display: 'inline-flex', alignItems: 'center', gap: 3,
+                      fontSize: 10.5, fontWeight: 700, color,
+                      background: bg, border: `1px solid ${bdr}`,
+                      padding: '1px 7px', borderRadius: 100,
+                      letterSpacing: '-0.05px', fontVariantNumeric: 'tabular-nums',
+                    }}>
+                      <svg width="8" height="8" viewBox="0 0 10 10" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" style={{ transform: pos ? 'none' : 'rotate(180deg)' }}>
+                        <path d="M5 8V2M2.5 4.5 5 2l2.5 2.5"/>
+                      </svg>
+                      {pos ? '+' : ''}{fmtNum(Math.abs(n))}
+                    </span>
+                  )
+                }
+                const renderMilestoneBar = (pct) => (
+                  <div style={{
+                    height: 3, background: 'rgba(10,10,15,0.06)', borderRadius: 99, overflow: 'hidden',
+                  }}>
+                    <div style={{
+                      width: `${pct}%`, height: '100%',
+                      background: 'linear-gradient(90deg, rgba(229,37,27,0.55) 0%, #e5251b 100%)',
+                      borderRadius: 99,
+                      transition: 'width 0.8s cubic-bezier(0.34,1.56,0.64,1)',
+                    }}/>
+                  </div>
+                )
+
+                return (
+                  <div className="ov-hero-strip">
+
+                    {/* Tile 1: Subscribers + 90d delta + milestone bar */}
+                    <div className="ov-hero-tile">
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
+                        <p style={eyebrow}>Subscribers</p>
+                        {renderDeltaChip(subDelta)}
+                      </div>
+                      <p style={bigNum}>{fmtNum(subs)}</p>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: 5, marginTop: 'auto' }}>
+                        {renderMilestoneBar(subPct)}
+                        <p style={subMeta}>Next <span style={{ color: '#0a0a0f', fontWeight: 700 }}>{fmtNum(subTarget)}</span></p>
+                      </div>
+                    </div>
+
+                    {/* Tile 2: Total views + 90d delta + milestone bar */}
+                    <div className="ov-hero-tile">
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
+                        <p style={eyebrow}>Total views</p>
+                        {renderDeltaChip(viewDelta)}
+                      </div>
+                      <p style={bigNum}>{fmtNum(tv)}</p>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: 5, marginTop: 'auto' }}>
+                        {renderMilestoneBar(viewPct)}
+                        <p style={subMeta}>Next <span style={{ color: '#0a0a0f', fontWeight: 700 }}>{fmtNum(viewTarget)}</span></p>
+                      </div>
+                    </div>
+
+                    {/* Tile 3: 28-day momentum (real sparkline or analytics nudge) */}
+                    <div className="ov-hero-tile">
+                      <p style={eyebrow}>28-day momentum</p>
+                      {subsSeries && subsSeries.length >= 2 ? (
+                        <>
+                          <div style={{ marginTop: -2 }}>
+                            <Sparkline data={subsSeries} width={200} height={54} />
+                          </div>
+                          <p style={{ ...subMeta, marginTop: 'auto' }}>
+                            Daily subscriber net since {new Date(Date.now() - 27 * 86400000).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+                          </p>
+                        </>
+                      ) : (
+                        <>
+                          <p style={{ fontSize: 13, fontWeight: 500, color: 'rgba(10,10,15,0.55)', lineHeight: 1.4, margin: 0 }}>
+                            Connect YouTube Analytics on your next reconnect to unlock the 28-day trend line.
+                          </p>
+                          <p style={{ ...subMeta, marginTop: 'auto', color: 'rgba(10,10,15,0.40)' }}>Not connected</p>
+                        </>
+                      )}
+                    </div>
+
+                    {/* Tile 4: Channel health score */}
+                    <div className="ov-hero-tile">
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
+                        <p style={eyebrow}>Channel health</p>
+                        {haveScore && (
+                          <span style={{
+                            fontSize: 10.5, fontWeight: 700, color: scoreColor,
+                            background: channelScore >= 70 ? 'rgba(5,150,105,0.08)'
+                                      : channelScore >= 50 ? 'rgba(10,10,15,0.04)'
+                                      : 'rgba(229,37,27,0.07)',
+                            border: `1px solid ${channelScore >= 70 ? 'rgba(5,150,105,0.20)' : channelScore >= 50 ? 'rgba(10,10,15,0.10)' : 'rgba(229,37,27,0.20)'}`,
+                            padding: '1px 8px', borderRadius: 100, letterSpacing: '-0.05px',
+                          }}>{scoreLabel}</span>
+                        )}
+                      </div>
+                      <p style={{ ...bigNum, color: scoreColor }}>{haveScore ? channelScore : '—'}</p>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: 5, marginTop: 'auto' }}>
+                        <div style={{ height: 3, background: 'rgba(10,10,15,0.06)', borderRadius: 99, overflow: 'hidden' }}>
+                          <div style={{
+                            width: haveScore ? `${channelScore}%` : '0%', height: '100%',
+                            background: scoreColor, borderRadius: 99,
+                            transition: 'width 0.8s cubic-bezier(0.34,1.56,0.64,1)',
+                          }}/>
+                        </div>
+                        <p style={subMeta}>{haveScore ? <>Out of <span style={{ color: '#0a0a0f', fontWeight: 700 }}>100</span></> : 'Run an audit'}</p>
+                      </div>
+                    </div>
+
+                  </div>
+                )
+              })()}
 
               {/* Analytics-missing nudge — moved here from the quick-stats
                   strip (the strip is gone in the Feed redesign). */}
@@ -4935,337 +5151,385 @@ export default function Dashboard() {
               })()}
 
               {/* ── FEED CARD STREAM ──────────────────────────────────────
-                  Niche Outlier first (the wedge), then Priority Action
-                  cards (top 3 open), then any recent Milestone, then
-                  Content Mix insight, then Channel Health which holds the
-                  legacy audit detail behind its "See full audit" collapse.
-                  Each card opts in/out of the active filter pill. */}
+                  Restructured into 5 themed sections under H2 headers
+                  ("What to do next", "Recent wins", "Your niche", "How
+                  you publish", "Channel health"). Each card is rendered
+                  inside the section that matches its purpose, instead of
+                  one long mixed stream. Filter-pill behaviour is
+                  preserved per card. */}
 
-              {/* Niche Outlier — Insights */}
-              {(feedFilter === 'all' || feedFilter === 'insights') && (
-                <NicheHeroCard
-                  channelId={data?.channel?.channel_id}
-                  onNavigate={(target) => setNav(target)}
-                  onOpenSeoStudio={(title, keyword) => {
-                    try {
-                      if (title) {
-                        sessionStorage.setItem('seoOptimizer_prefilledTitle', title)
-                        if (keyword) sessionStorage.setItem('seoOptimizer_prefilledKeyword', keyword)
-                      }
-                    } catch {}
-                    setNav('SEO Studio')
-                  }}
-                />
-              )}
+              {/* All the per-card render blocks are computed up-front into
+                  variables so the JSX layout below can place them under
+                  themed H2 sections without losing any conditional logic,
+                  filter behaviour, or dismiss handlers. A `null` block
+                  means that card has no data / was dismissed / is filtered
+                  out — the section header only renders when at least one
+                  block in the group will render. */}
+              {(() => {
+                // ── WHAT TO DO NEXT blocks ──
+                const priorityActionsBlock = (feedFilter === 'all' || feedFilter === 'actions') && data.insights?.priorityActions ? (() => {
+                  const all = data.insights.priorityActions
+                  const open = []
+                  for (let i = 0; i < all.length; i++) {
+                    const a = all[i]
+                    const rank = a.rank ?? (i + 1)
+                    const k = `rank_${rank}`
+                    if (!checked[k] && !deleted[k]) open.push({ a, rank, k, idx: i })
+                    if (open.length >= 3) break
+                  }
+                  if (open.length === 0) return null
+                  return open.map(({ a, rank, k, idx }) => {
+                    const impact = (a.impact || (idx === 0 ? 'high' : idx === 1 ? 'med' : 'low'))
+                    const target = categoryToNav(a.category, a.problem)
+                    const ctaLabel = target === 'SEO Studio' ? 'Open SEO Studio'
+                      : target === 'Thumbnail Score' ? 'Open Thumbnails'
+                      : target === 'Video Ideas' ? 'Open Video Ideas'
+                      : target === 'Outliers' ? 'Open Outliers'
+                      : target === 'Keywords' ? 'Open Keywords'
+                      : target === 'Competitors' ? 'Open Competitors'
+                      : 'See full audit'
+                    return (
+                      <PriorityActionCard
+                        key={`pa-${rank}`}
+                        action={a}
+                        rank={open.findIndex(x => x.rank === rank) + 1}
+                        total={all.length}
+                        impact={impact}
+                        ctaLabel={ctaLabel}
+                        onAct={() => target ? setNav(target) : setAuditOpen(true)}
+                        onDone={() => {
+                          const next = { ...checked, [k]: true }
+                          setChecked(next)
+                          if (data?.channel?.channel_id) {
+                            try { localStorage.setItem(`ytg_checked_${data.channel.channel_id}`, JSON.stringify(next)) } catch {}
+                          }
+                        }}
+                        onDismiss={() => {
+                          const next = { ...deleted, [k]: true }
+                          setDeleted(next)
+                          if (data?.channel?.channel_id) {
+                            try { localStorage.setItem(`ytg_deleted_${data.channel.channel_id}`, JSON.stringify(next)) } catch {}
+                          }
+                        }}
+                      />
+                    )
+                  })
+                })() : null
 
-              {/* Priority Actions — Actions. Top 3 OPEN actions become
-                  their own cards. Done / dismissed state is shared with
-                  the legacy checklist inside the audit collapse, so
-                  ticking either updates the same localStorage. */}
-              {(feedFilter === 'all' || feedFilter === 'actions') && data.insights?.priorityActions && (() => {
-                const all = data.insights.priorityActions
-                const open = []
-                for (let i = 0; i < all.length; i++) {
-                  const a = all[i]
-                  const rank = a.rank ?? (i + 1)
-                  const k = `rank_${rank}`
-                  if (!checked[k] && !deleted[k]) open.push({ a, rank, k, idx: i })
-                  if (open.length >= 3) break
-                }
-                if (open.length === 0) return null
-                return open.map(({ a, rank, k, idx }) => {
-                  const impact = (a.impact || (idx === 0 ? 'high' : idx === 1 ? 'med' : 'low'))
-                  const target = categoryToNav(a.category, a.problem)
-                  const ctaLabel = target === 'SEO Studio' ? 'Open SEO Studio'
-                    : target === 'Thumbnail Score' ? 'Open Thumbnails'
-                    : target === 'Video Ideas' ? 'Open Video Ideas'
-                    : target === 'Outliers' ? 'Open Outliers'
-                    : target === 'Keywords' ? 'Open Keywords'
-                    : target === 'Competitors' ? 'Open Competitors'
-                    : 'See full audit'
+                const dailyIdeasBlock = (feedFilter === 'all' || feedFilter === 'actions') && dailyIdeas?.ideas?.length > 0 ? (() => {
+                  const dismissKey = `ytg_daily_ideas_dismissed:${data?.channel?.channel_id || 'x'}`
+                  try { if (localStorage.getItem(dismissKey)) return null } catch {}
                   return (
-                    <PriorityActionCard
-                      key={`pa-${rank}`}
-                      action={a}
-                      rank={open.findIndex(x => x.rank === rank) + 1}
-                      total={all.length}
-                      impact={impact}
-                      ctaLabel={ctaLabel}
-                      onAct={() => target ? setNav(target) : setAuditOpen(true)}
-                      onDone={() => {
-                        const next = { ...checked, [k]: true }
-                        setChecked(next)
-                        if (data?.channel?.channel_id) {
-                          try { localStorage.setItem(`ytg_checked_${data.channel.channel_id}`, JSON.stringify(next)) } catch {}
-                        }
+                    <DailyIdeasCard
+                      ideas={dailyIdeas.ideas}
+                      lastUpdated={dailyIdeas.last_updated}
+                      isStale={dailyIdeas.stale}
+                      isFree={dailyIdeas.free_capped}
+                      refreshing={refreshingIdeas}
+                      onUse={(idea) => {
+                        try {
+                          if (idea.title) sessionStorage.setItem('seoOptimizer_prefilledTitle', idea.title)
+                          if (idea.targetKeyword) sessionStorage.setItem('seoOptimizer_prefilledKeyword', idea.targetKeyword)
+                        } catch {}
+                        setNav('SEO Studio')
                       }}
+                      onRefresh={() => {
+                        if (refreshingIdeas) return
+                        setRefreshingIdeas(true)
+                        fetch('/video-ideas/refresh', { method: 'POST', credentials: 'include' })
+                          .then(r => r.ok ? r.json() : null)
+                          .then(d => { if (d && !d.error) setDailyIdeas(d) })
+                          .catch(() => {})
+                          .finally(() => setRefreshingIdeas(false))
+                      }}
+                      onOpenAll={() => setNav('Video Ideas')}
                       onDismiss={() => {
-                        const next = { ...deleted, [k]: true }
-                        setDeleted(next)
-                        if (data?.channel?.channel_id) {
-                          try { localStorage.setItem(`ytg_deleted_${data.channel.channel_id}`, JSON.stringify(next)) } catch {}
-                        }
+                        try { localStorage.setItem(dismissKey, '1') } catch {}
+                        setChecked(prev => ({ ...prev }))
                       }}
                     />
                   )
-                })
-              })()}
+                })() : null
 
-              {/* Milestone Unlocked — Achievements. Surfaces the most
-                  recently earned milestone (within the last 30 days) so
-                  the user lands on the win. Dismiss persists per channel. */}
-              {(feedFilter === 'all' || feedFilter === 'achievements') && milestones?.earned?.[0] && (() => {
-                const m = milestones.earned[0]
-                const earnedAt = m.earned_at ? new Date(m.earned_at).getTime() : 0
-                const ageMs = Date.now() - earnedAt
-                const SHOW_FOR = 30 * 24 * 60 * 60 * 1000
-                if (!earnedAt || ageMs > SHOW_FOR) return null
-                const dismissKey = `ytg_milestone_dismissed:${data.channel?.channel_id || 'x'}:${m.category}:${m.tier}`
-                try { if (localStorage.getItem(dismissKey)) return null } catch {}
-                const labelCat = m.category === 'subs' ? 'subscribers'
-                  : m.category === 'views' ? 'total views'
-                  : m.category === 'watch_hours' ? 'watch hours'
-                  : m.category
-                const headline = `${fmtNum(m.threshold || m.value)} ${labelCat}`
-                const days = Math.floor(ageMs / 86400000)
-                return (
-                  <MilestoneFeedCard
-                    milestone={{
-                      headline,
-                      body: m.celebration || `You crossed ${fmtNum(m.threshold || m.value)} ${labelCat}. Worth a screenshot.`,
-                      earned_age: days === 0 ? 'today' : days === 1 ? 'yesterday' : `${days}d ago`,
-                    }}
-                    onShare={() => setShareMilestone(m)}
-                    onDismiss={() => {
-                      try { localStorage.setItem(dismissKey, '1') } catch {}
-                      // Force re-render. Cheapest way: bump checked state.
-                      setChecked(prev => ({ ...prev }))
-                    }}
-                  />
-                )
-              })()}
+                // ── RECENT WINS blocks ──
+                const milestoneBlock = (feedFilter === 'all' || feedFilter === 'achievements') && milestones?.earned?.[0] ? (() => {
+                  const m = milestones.earned[0]
+                  const earnedAt = m.earned_at ? new Date(m.earned_at).getTime() : 0
+                  const ageMs = Date.now() - earnedAt
+                  const SHOW_FOR = 30 * 24 * 60 * 60 * 1000
+                  if (!earnedAt || ageMs > SHOW_FOR) return null
+                  const dismissKey = `ytg_milestone_dismissed:${data.channel?.channel_id || 'x'}:${m.category}:${m.tier}`
+                  try { if (localStorage.getItem(dismissKey)) return null } catch {}
+                  const labelCat = m.category === 'subs' ? 'subscribers'
+                    : m.category === 'views' ? 'total views'
+                    : m.category === 'watch_hours' ? 'watch hours'
+                    : m.category
+                  const headline = `${fmtNum(m.threshold || m.value)} ${labelCat}`
+                  const days = Math.floor(ageMs / 86400000)
+                  return (
+                    <MilestoneFeedCard
+                      milestone={{
+                        headline,
+                        body: m.celebration || `You crossed ${fmtNum(m.threshold || m.value)} ${labelCat}. Worth a screenshot.`,
+                        earned_age: days === 0 ? 'today' : days === 1 ? 'yesterday' : `${days}d ago`,
+                      }}
+                      onShare={() => setShareMilestone(m)}
+                      onDismiss={() => {
+                        try { localStorage.setItem(dismissKey, '1') } catch {}
+                        setChecked(prev => ({ ...prev }))
+                      }}
+                    />
+                  )
+                })() : null
 
-              {/* Top Performer — Achievements. Celebrates the user's
-                  strongest video. The single best retention card we ship:
-                  every other surface nags about problems, this one shows
-                  a win. Computes "X.Xx your average" inline. */}
-              {(feedFilter === 'all' || feedFilter === 'achievements') && patterns?.bestVideo && (() => {
-                const totalV = videos?.reduce((s, v) => s + (v.views || 0), 0) || 0
-                const avgV = videos?.length > 0 ? totalV / videos.length : 0
-                const dismissKey = `ytg_top_perf_dismissed:${data?.channel?.channel_id || 'x'}:${patterns.bestVideo.video_id || patterns.bestVideo.title}`
-                try { if (localStorage.getItem(dismissKey)) return null } catch {}
-                return (
-                  <TopPerformerCard
-                    video={patterns.bestVideo}
-                    channelAvgViews={avgV}
-                    onOpen={() => {
-                      if (patterns.bestVideo.video_id) setSelectedVideoId(patterns.bestVideo.video_id)
-                      else setNav('Videos')
-                    }}
-                    onDismiss={() => {
-                      try { localStorage.setItem(dismissKey, '1') } catch {}
-                      setChecked(prev => ({ ...prev }))
-                    }}
-                  />
-                )
-              })()}
+                const topPerformerBlock = (feedFilter === 'all' || feedFilter === 'achievements') && patterns?.bestVideo ? (() => {
+                  const totalV = videos?.reduce((s, v) => s + (v.views || 0), 0) || 0
+                  const avgV = videos?.length > 0 ? totalV / videos.length : 0
+                  const dismissKey = `ytg_top_perf_dismissed:${data?.channel?.channel_id || 'x'}:${patterns.bestVideo.video_id || patterns.bestVideo.title}`
+                  try { if (localStorage.getItem(dismissKey)) return null } catch {}
+                  return (
+                    <TopPerformerCard
+                      video={patterns.bestVideo}
+                      channelAvgViews={avgV}
+                      onOpen={() => {
+                        if (patterns.bestVideo.video_id) setSelectedVideoId(patterns.bestVideo.video_id)
+                        else setNav('Videos')
+                      }}
+                      onDismiss={() => {
+                        try { localStorage.setItem(dismissKey, '1') } catch {}
+                        setChecked(prev => ({ ...prev }))
+                      }}
+                    />
+                  )
+                })() : null
 
-              {/* Daily Ideas — Actions. Three fresh video idea concepts
-                  from the channel's idea pool. Refreshing pulls a new
-                  batch from competitor analyses. Each row routes the
-                  user into SEO Studio with the title pre-filled so they
-                  can start writing in one click. */}
-              {(feedFilter === 'all' || feedFilter === 'actions') && dailyIdeas?.ideas?.length > 0 && (() => {
-                const dismissKey = `ytg_daily_ideas_dismissed:${data?.channel?.channel_id || 'x'}`
-                try { if (localStorage.getItem(dismissKey)) return null } catch {}
-                return (
-                  <DailyIdeasCard
-                    ideas={dailyIdeas.ideas}
-                    lastUpdated={dailyIdeas.last_updated}
-                    isStale={dailyIdeas.stale}
-                    isFree={dailyIdeas.free_capped}
-                    refreshing={refreshingIdeas}
-                    onUse={(idea) => {
+                const trackedLiftBlock = (feedFilter === 'all' || feedFilter === 'achievements') && trackedLift && trackedLift.top ? (() => {
+                  const w = trackedLift.top
+                  const dismissKey = `ytg_tracked_lift_dismissed:${data?.channel?.channel_id || 'x'}:${w.video_id}:${w.optimized_at}`
+                  try { if (localStorage.getItem(dismissKey)) return null } catch {}
+                  return (
+                    <TrackedLiftCard
+                      win={w}
+                      moreCount={trackedLift.count > 1 ? trackedLift.count - 1 : 0}
+                      onOpenAll={() => setNav('SEO Studio')}
+                      onDismiss={() => {
+                        try { localStorage.setItem(dismissKey, '1') } catch {}
+                        setChecked(prev => ({ ...prev }))
+                      }}
+                    />
+                  )
+                })() : null
+
+                // ── YOUR NICHE blocks ──
+                const nicheHeroBlock = (feedFilter === 'all' || feedFilter === 'insights') ? (
+                  <NicheHeroCard
+                    key="nichehero"
+                    channelId={data?.channel?.channel_id}
+                    onNavigate={(target) => setNav(target)}
+                    onOpenSeoStudio={(title, keyword) => {
                       try {
-                        if (idea.title) sessionStorage.setItem('seoOptimizer_prefilledTitle', idea.title)
-                        if (idea.targetKeyword) sessionStorage.setItem('seoOptimizer_prefilledKeyword', idea.targetKeyword)
+                        if (title) {
+                          sessionStorage.setItem('seoOptimizer_prefilledTitle', title)
+                          if (keyword) sessionStorage.setItem('seoOptimizer_prefilledKeyword', keyword)
+                        }
                       } catch {}
                       setNav('SEO Studio')
                     }}
-                    onRefresh={() => {
-                      if (refreshingIdeas) return
-                      setRefreshingIdeas(true)
-                      fetch('/video-ideas/refresh', { method: 'POST', credentials: 'include' })
-                        .then(r => r.ok ? r.json() : null)
-                        .then(d => { if (d && !d.error) setDailyIdeas(d) })
-                        .catch(() => {})
-                        .finally(() => setRefreshingIdeas(false))
-                    }}
-                    onOpenAll={() => setNav('Video Ideas')}
-                    onDismiss={() => {
-                      try { localStorage.setItem(dismissKey, '1') } catch {}
-                      setChecked(prev => ({ ...prev }))
-                    }}
                   />
-                )
-              })()}
+                ) : null
 
-              {/* Competitor Activity — Insights. Recent uploads from the
-                  channels the user tracks via the Competitors feature.
-                  Habit-forming surface: every time a competitor posts,
-                  this card refreshes. Click any tile to open the video
-                  on YouTube. */}
-              {(feedFilter === 'all' || feedFilter === 'insights') && competitorActivity?.items?.length > 0 && (() => {
-                const dismissKey = `ytg_competitor_activity_dismissed:${data?.channel?.channel_id || 'x'}`
-                try { if (localStorage.getItem(dismissKey)) return null } catch {}
-                return (
-                  <CompetitorActivityCard
-                    items={competitorActivity.items}
-                    refreshing={refreshingCompActivity}
-                    onRefresh={() => {
-                      if (refreshingCompActivity) return
-                      setRefreshingCompActivity(true)
-                      fetch('/dashboard/competitor-activity?force=1', { credentials: 'include' })
-                        .then(r => r.ok ? r.json() : null)
-                        .then(d => { if (d && !d.error) setCompetitorActivity(d) })
-                        .catch(() => {})
-                        .finally(() => setRefreshingCompActivity(false))
-                    }}
-                    onOpenAll={() => setNav('Competitors')}
-                    onDismiss={() => {
-                      try { localStorage.setItem(dismissKey, '1') } catch {}
-                      setChecked(prev => ({ ...prev }))
-                    }}
-                  />
-                )
-              })()}
-
-              {/* Posting Consistency — Insights. The 28-day calendar
-                  grid + four numeric stats. Genuinely unique to us:
-                  VidIQ doesn't surface a heatmap like this. */}
-              {(feedFilter === 'all' || feedFilter === 'insights') && videos && videos.length > 0 && (() => {
-                const dismissKey = `ytg_posting_consistency_dismissed:${data?.channel?.channel_id || 'x'}`
-                try { if (localStorage.getItem(dismissKey)) return null } catch {}
-                return (
-                  <PostingConsistencyCard
-                    videos={videos}
-                    onDismiss={() => {
-                      try { localStorage.setItem(dismissKey, '1') } catch {}
-                      setChecked(prev => ({ ...prev }))
-                    }}
-                  />
-                )
-              })()}
-
-              {/* Best Time to Publish — Insights. Bins all the channel's
-                  videos by hour-of-day and surfaces the slot when the
-                  user's audience watches most. Renders only when there
-                  are enough uploads to make the signal meaningful. */}
-              {(feedFilter === 'all' || feedFilter === 'insights') && videos && videos.length >= 5 && (() => {
-                const dismissKey = `ytg_best_time_dismissed:${data?.channel?.channel_id || 'x'}`
-                try { if (localStorage.getItem(dismissKey)) return null } catch {}
-                return (
-                  <BestTimeCard
-                    videos={videos}
-                    onDismiss={() => {
-                      try { localStorage.setItem(dismissKey, '1') } catch {}
-                      setChecked(prev => ({ ...prev }))
-                    }}
-                  />
-                )
-              })()}
-
-              {/* Tracked Optimization Lift — Achievements. Proof loop:
-                  shows the user's best post-update win from SEO Optimizer.
-                  trackedLift state is fetched on Overview mount. */}
-              {(feedFilter === 'all' || feedFilter === 'achievements') && trackedLift && trackedLift.top && (() => {
-                const w = trackedLift.top
-                const dismissKey = `ytg_tracked_lift_dismissed:${data?.channel?.channel_id || 'x'}:${w.video_id}:${w.optimized_at}`
-                try { if (localStorage.getItem(dismissKey)) return null } catch {}
-                return (
-                  <TrackedLiftCard
-                    win={w}
-                    moreCount={trackedLift.count > 1 ? trackedLift.count - 1 : 0}
-                    onOpenAll={() => setNav('SEO Studio')}
-                    onDismiss={() => {
-                      try { localStorage.setItem(dismissKey, '1') } catch {}
-                      setChecked(prev => ({ ...prev }))
-                    }}
-                  />
-                )
-              })()}
-
-              {/* Insights row — Content Mix + Channel Health sit side by
-                  side at half width. Denser, less scroll, more loaded.
-                  Expanded audit detail renders full-width below this
-                  block via the auditOpen condition further down. */}
-              {(feedFilter === 'all' || feedFilter === 'insights') && (patterns || data.insights) && (
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, alignItems: 'stretch' }}>
-                  {patterns && (
-                    <ContentMixFeedCard
-                      patterns={{
-                        headline: patterns.headline || (
-                          patterns.shortAvg > patterns.longAvg
-                            ? 'Shorts beat your long-form'
-                            : patterns.longAvg > patterns.shortAvg
-                              ? 'Long-form beats your Shorts'
-                              : 'Your content mix'
-                        ),
-                        body: patterns.body || patterns.text || patterns.summary || (
-                          patterns.shortAvg > patterns.longAvg
-                            ? `Shorts outperform long-form by ${fmtNum(patterns.shortAvg - patterns.longAvg)} views on average. Lean into Shorts for discovery.`
-                            : patterns.longAvg > patterns.shortAvg
-                              ? `Long-form outperforms Shorts by ${fmtNum(patterns.longAvg - patterns.shortAvg)} views. Your audience wants depth.`
-                              : 'Both formats are performing similarly on your channel.'
-                        ),
-                        shortAvg: patterns.shortAvg,
-                        longAvg: patterns.longAvg,
+                const competitorActivityBlock = (feedFilter === 'all' || feedFilter === 'insights') && competitorActivity?.items?.length > 0 ? (() => {
+                  const dismissKey = `ytg_competitor_activity_dismissed:${data?.channel?.channel_id || 'x'}`
+                  try { if (localStorage.getItem(dismissKey)) return null } catch {}
+                  return (
+                    <CompetitorActivityCard
+                      items={competitorActivity.items}
+                      refreshing={refreshingCompActivity}
+                      onRefresh={() => {
+                        if (refreshingCompActivity) return
+                        setRefreshingCompActivity(true)
+                        fetch('/dashboard/competitor-activity?force=1', { credentials: 'include' })
+                          .then(r => r.ok ? r.json() : null)
+                          .then(d => { if (d && !d.error) setCompetitorActivity(d) })
+                          .catch(() => {})
+                          .finally(() => setRefreshingCompActivity(false))
                       }}
-                      mix={{
-                        shortsCount: patterns.shortsCount,
-                        longsCount: patterns.longsCount,
+                      onOpenAll={() => setNav('Competitors')}
+                      onDismiss={() => {
+                        try { localStorage.setItem(dismissKey, '1') } catch {}
+                        setChecked(prev => ({ ...prev }))
                       }}
-                      fillHeight
                     />
-                  )}
+                  )
+                })() : null
 
-                  {data.insights && (() => {
-                    const cs = data.insights.categoryScores || {}
-                    const surfaced = [
-                      ['CTR',         cs.ctrHealth],
-                      ['Retention',   cs.audienceRetention],
-                      ['Strategy',    cs.contentStrategy],
-                      ['Consistency', cs.postingConsistency],
-                      ['Engagement',  cs.engagementQuality],
-                    ].filter(([, v]) => typeof v === 'number')
-                    const fullEntries = [
-                      ['CTR health', cs.ctrHealth],
-                      ['Audience retention', cs.audienceRetention],
-                      ['Content strategy', cs.contentStrategy],
-                      ['Posting consistency', cs.postingConsistency],
-                      ['Engagement quality', cs.engagementQuality],
-                      ['SEO discoverability', cs.seoDiscoverability],
-                      ['Video length', cs.videoLength],
-                      ['Traffic source intel', cs.trafficSourceIntelligence],
-                    ].filter(([, v]) => typeof v === 'number')
-                    const weakest = fullEntries
-                      .filter(([, v]) => v != null && v < 50)
-                      .sort((a, b) => a[1] - b[1])
-                      .slice(0, 2)
-                      .map(([k]) => k)
-                    return (
-                      <ChannelHealthFeedCard
-                        score={score}
-                        categories={surfaced}
-                        weakest={weakest}
-                        open={auditOpen}
-                        onToggle={() => setAuditOpen(o => !o)}
+                // ── HOW YOU PUBLISH blocks ──
+                const postingConsistencyBlock = (feedFilter === 'all' || feedFilter === 'insights') && videos && videos.length > 0 ? (() => {
+                  const dismissKey = `ytg_posting_consistency_dismissed:${data?.channel?.channel_id || 'x'}`
+                  try { if (localStorage.getItem(dismissKey)) return null } catch {}
+                  return (
+                    <PostingConsistencyCard
+                      videos={videos}
+                      onDismiss={() => {
+                        try { localStorage.setItem(dismissKey, '1') } catch {}
+                        setChecked(prev => ({ ...prev }))
+                      }}
+                    />
+                  )
+                })() : null
+
+                const bestTimeBlock = (feedFilter === 'all' || feedFilter === 'insights') && videos && videos.length >= 5 ? (() => {
+                  const dismissKey = `ytg_best_time_dismissed:${data?.channel?.channel_id || 'x'}`
+                  try { if (localStorage.getItem(dismissKey)) return null } catch {}
+                  return (
+                    <BestTimeCard
+                      videos={videos}
+                      onDismiss={() => {
+                        try { localStorage.setItem(dismissKey, '1') } catch {}
+                        setChecked(prev => ({ ...prev }))
+                      }}
+                    />
+                  )
+                })() : null
+
+                // ── CHANNEL HEALTH block (full row) ──
+                const channelHealthBlock = (feedFilter === 'all' || feedFilter === 'insights') && (patterns || data.insights) ? (
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, alignItems: 'stretch' }}>
+                    {patterns && (
+                      <ContentMixFeedCard
+                        patterns={{
+                          headline: patterns.headline || (
+                            patterns.shortAvg > patterns.longAvg
+                              ? 'Shorts beat your long-form'
+                              : patterns.longAvg > patterns.shortAvg
+                                ? 'Long-form beats your Shorts'
+                                : 'Your content mix'
+                          ),
+                          body: patterns.body || patterns.text || patterns.summary || (
+                            patterns.shortAvg > patterns.longAvg
+                              ? `Shorts outperform long-form by ${fmtNum(patterns.shortAvg - patterns.longAvg)} views on average. Lean into Shorts for discovery.`
+                              : patterns.longAvg > patterns.shortAvg
+                                ? `Long-form outperforms Shorts by ${fmtNum(patterns.longAvg - patterns.shortAvg)} views. Your audience wants depth.`
+                                : 'Both formats are performing similarly on your channel.'
+                          ),
+                          shortAvg: patterns.shortAvg,
+                          longAvg: patterns.longAvg,
+                        }}
+                        mix={{
+                          shortsCount: patterns.shortsCount,
+                          longsCount: patterns.longsCount,
+                        }}
                         fillHeight
                       />
-                    )
-                  })()}
-                </div>
-              )}
+                    )}
+
+                    {data.insights && (() => {
+                      const cs = data.insights.categoryScores || {}
+                      const surfaced = [
+                        ['CTR',         cs.ctrHealth],
+                        ['Retention',   cs.audienceRetention],
+                        ['Strategy',    cs.contentStrategy],
+                        ['Consistency', cs.postingConsistency],
+                        ['Engagement',  cs.engagementQuality],
+                      ].filter(([, v]) => typeof v === 'number')
+                      const fullEntries = [
+                        ['CTR health', cs.ctrHealth],
+                        ['Audience retention', cs.audienceRetention],
+                        ['Content strategy', cs.contentStrategy],
+                        ['Posting consistency', cs.postingConsistency],
+                        ['Engagement quality', cs.engagementQuality],
+                        ['SEO discoverability', cs.seoDiscoverability],
+                        ['Video length', cs.videoLength],
+                        ['Traffic source intel', cs.trafficSourceIntelligence],
+                      ].filter(([, v]) => typeof v === 'number')
+                      const weakest = fullEntries
+                        .filter(([, v]) => v != null && v < 50)
+                        .sort((a, b) => a[1] - b[1])
+                        .slice(0, 2)
+                        .map(([k]) => k)
+                      return (
+                        <ChannelHealthFeedCard
+                          score={score}
+                          categories={surfaced}
+                          weakest={weakest}
+                          open={auditOpen}
+                          onToggle={() => setAuditOpen(o => !o)}
+                          fillHeight
+                        />
+                      )
+                    })()}
+                  </div>
+                ) : null
+
+                const hasWhatToDoNext = priorityActionsBlock || dailyIdeasBlock
+                const hasRecentWins = milestoneBlock || topPerformerBlock || trackedLiftBlock
+                const hasYourNiche = nicheHeroBlock || competitorActivityBlock
+                const hasHowYouPublish = postingConsistencyBlock || bestTimeBlock
+
+                return (
+                  <>
+                    {hasWhatToDoNext && (
+                      <>
+                        <div className="ov-section-head">
+                          <h2>What to do next</h2>
+                        </div>
+                        <div className="ov-stack">
+                          {priorityActionsBlock}
+                          {dailyIdeasBlock}
+                        </div>
+                      </>
+                    )}
+
+                    {hasRecentWins && (
+                      <>
+                        <div className="ov-section-head">
+                          <h2>Recent wins</h2>
+                        </div>
+                        <div className="ov-stack">
+                          {milestoneBlock}
+                          {topPerformerBlock}
+                          {trackedLiftBlock}
+                        </div>
+                      </>
+                    )}
+
+                    {hasYourNiche && (
+                      <>
+                        <div className="ov-section-head">
+                          <h2>Your niche</h2>
+                        </div>
+                        <div className="ov-stack">
+                          {nicheHeroBlock}
+                          {competitorActivityBlock}
+                        </div>
+                      </>
+                    )}
+
+                    {hasHowYouPublish && (
+                      <>
+                        <div className="ov-section-head">
+                          <h2>How you publish</h2>
+                          <span className="ov-section-meta">28-day rhythm</span>
+                        </div>
+                        <div className="ov-stack">
+                          {postingConsistencyBlock}
+                          {bestTimeBlock}
+                        </div>
+                      </>
+                    )}
+
+                    {channelHealthBlock && (
+                      <>
+                        <div className="ov-section-head">
+                          <h2>Channel health</h2>
+                          {data.insights && <span className="ov-section-meta">See full audit ↓</span>}
+                        </div>
+                        {channelHealthBlock}
+                      </>
+                    )}
+                  </>
+                )
+              })()}
 
             </div>
           )}
