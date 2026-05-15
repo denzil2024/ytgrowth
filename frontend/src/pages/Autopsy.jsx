@@ -53,21 +53,24 @@ if (typeof document !== 'undefined' && !document.getElementById('ytg-au-styles')
       transform: translateY(-1px);
     }
 
+    /* Quiet view-switch tabs (Competitors / Keywords / Outliers / My Videos
+       pattern). NEVER red active — red is for primary CTAs only. */
     .au-tab-btn {
-      background: #ffffff; color: ${C.text2};
-      border: 1px solid rgba(10,10,15,0.10); border-radius: 100px;
-      padding: 8px 18px; font-size: 13px; font-weight: 600;
+      background: transparent; color: rgba(10,10,15,0.55);
+      border: 1px solid transparent; border-radius: 100px;
+      padding: 8px 16px; font-size: 13px; font-weight: 500;
+      font-family: inherit;
       cursor: pointer; white-space: nowrap;
-      transition: background 160ms cubic-bezier(0.32, 0.72, 0, 1), color 160ms cubic-bezier(0.32, 0.72, 0, 1), border-color 160ms cubic-bezier(0.32, 0.72, 0, 1);
+      transition: background 180ms cubic-bezier(0.32, 0.72, 0, 1), color 180ms cubic-bezier(0.32, 0.72, 0, 1), border-color 180ms cubic-bezier(0.32, 0.72, 0, 1);
       letter-spacing: -0.01em;
     }
-    .au-tab-btn:hover {
+    .au-tab-btn:hover:not(.active) {
       background: rgba(10,10,15,0.03); color: #0a0a0f;
-      border-color: rgba(10,10,15,0.20);
     }
     .au-tab-btn.active {
-      background: ${C.red}; color: #fff; border-color: ${C.red};
-      box-shadow: 0 1px 3px rgba(229,37,27,0.25);
+      background: rgba(10,10,15,0.055); color: #0a0a0f;
+      border-color: rgba(10,10,15,0.10);
+      font-weight: 600;
     }
 
     .au-btn-primary {
