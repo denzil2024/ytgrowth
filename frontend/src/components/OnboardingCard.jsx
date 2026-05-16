@@ -199,10 +199,6 @@ export default function OnboardingCard({
                     <span style={{ fontSize: 12, fontWeight: 600, color: C.green, display: 'inline-flex', alignItems: 'center', gap: 5 }}>
                       <CheckIcon size={11} /> Done
                     </span>
-                  ) : isActive ? (
-                    <button onClick={() => onNavigate?.(s.target)} style={primaryBtn}>
-                      {s.cta}
-                    </button>
                   ) : (
                     <button
                       onClick={() => onNavigate?.(s.target)}
