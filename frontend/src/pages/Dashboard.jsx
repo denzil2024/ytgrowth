@@ -45,7 +45,7 @@ import { loginUrl } from '../utm.js'
 import { openCheckout } from '../checkout'
 import UsageBar from '../components/UsageBar'
 import CreditsEmptyModal from '../components/CreditsEmptyModal'
-import WelcomeModal from '../components/WelcomeModal'
+import OnboardingCard from '../components/OnboardingCard'
 
 /* ─── Inject font + global styles once ─────────────────────────────────── */
 function useDashboardStyles() {
@@ -4423,7 +4423,7 @@ export default function Dashboard() {
   const [channels, setChannels] = useState([])
   const [channelsAllowed, setChannelsAllowed] = useState(1)
   const [canAddMore, setCanAddMore] = useState(false)
-  const [showWelcome, setShowWelcome] = useState(false)
+  const [, setObVer] = useState(0)  // bump to re-derive onboarding flags from localStorage
   const [billingPlan, setBillingPlan] = useState(null)
   const [isAdmin,     setIsAdmin]     = useState(false)
   // Sidebar live signals. Drive the nav badges so the sidebar reads as a
@@ -4496,6 +4496,22 @@ export default function Dashboard() {
       .catch(() => {})
   }, [])
 
+  // Onboarding step signals: mark "optimized a video" / "found an idea"
+  // when the user actually visits those surfaces (by any path), so the
+  // getting-started flow checks them off. Bump obVer to re-derive.
+  useEffect(() => {
+    const cid = data?.channel?.channel_id
+    if (!cid) return
+    let changed = false
+    if (nav === 'SEO Studio' && localStorage.getItem(`ytg_ob_seo_${cid}`) !== '1') {
+      try { localStorage.setItem(`ytg_ob_seo_${cid}`, '1'); changed = true } catch {}
+    }
+    if ((nav === 'Video Ideas' || nav === 'Outliers') && localStorage.getItem(`ytg_ob_idea_${cid}`) !== '1') {
+      try { localStorage.setItem(`ytg_ob_idea_${cid}`, '1'); changed = true } catch {}
+    }
+    if (changed) setObVer(v => v + 1)
+  }, [nav, data])
+
   useEffect(() => {
     fetch('/auth/data', { credentials: 'include' })
       .then(r => {
@@ -4520,9 +4536,11 @@ export default function Dashboard() {
           openCheckout(pending)
         }
         if (d.insights === null) setAnalyzingAI(true)
-        if (d.insights && d.channel?.channel_id) {
-          const wKey = `ytg_welcomed_${d.channel.channel_id}`
-          if (!localStorage.getItem(wKey)) setShowWelcome(true)
+        // Mark genuinely new users (no audit yet) as in onboarding. Only
+        // they ever see the getting-started flow; established users never
+        // get the flag, so the flow never spams them.
+        if ((d.insights === null || d.insights === undefined) && d.channel?.channel_id) {
+          try { localStorage.setItem(`ytg_ob_started_${d.channel.channel_id}`, '1') } catch {}
         }
         if (d.channel?.channel_id) {
           const saved = localStorage.getItem(`ytg_checked_${d.channel.channel_id}`)
@@ -5027,6 +5045,70 @@ export default function Dashboard() {
               is just the main area minus 720px. */}
           {data && nav === 'Overview' && (
             <div className="ov-page" style={{ maxWidth: 1040, margin: '0 auto' }}>
+              {(() => {
+                const cid     = data.channel?.channel_id
+                const forceOb = new URLSearchParams(window.location.search).get('onboarding') === 'preview'
+                const ls      = (k) => { try { return cid && localStorage.getItem(`ytg_ob_${k}_${cid}`) === '1' } catch { return false } }
+                const showOnboarding = !ls('dismissed') && (forceOb || ls('started'))
+
+                const runFirstAudit = () => {
+                  setReAuditError('')
+                  setAnalyzingAI(true)
+                  fetch('/auth/refresh-analysis', { method: 'POST', credentials: 'include' })
+                    .then(async r => {
+                      if (r.ok) { window.dispatchEvent(new CustomEvent('ytg:credits-changed')); return }
+                      setAnalyzingAI(false)
+                      if (r.status === 401) { window.location = '/'; return }
+                      if (r.status === 402) { setCreditsOut(true); return }
+                      const d = await r.json().catch(() => ({}))
+                      setReAuditError(d.error || "Something went wrong on our end. Email support@ytgrowth.io and we'll sort it out.")
+                      setTimeout(() => setReAuditError(''), 8000)
+                    })
+                    .catch(() => {
+                      setAnalyzingAI(false)
+                      setReAuditError("Couldn't reach our servers. Check your connection and try again.")
+                      setTimeout(() => setReAuditError(''), 8000)
+                    })
+                }
+
+                if (showOnboarding) {
+                  return (
+                    <OnboardingCard
+                      channelName={data.channel?.channel_name}
+                      audited={forceOb ? false : !!data.insights}
+                      optimized={forceOb ? false : ls('seo')}
+                      exploredIdeas={forceOb ? false : ls('idea')}
+                      running={analyzingAI}
+                      onRunAudit={runFirstAudit}
+                      onNavigate={(t) => setNav(t)}
+                      onDismiss={() => {
+                        try { if (cid) localStorage.setItem(`ytg_ob_dismissed_${cid}`, '1') } catch {}
+                        setObVer(v => v + 1)
+                      }}
+                    />
+                  )
+                }
+                if (!analyzingAI && !data.insights) {
+                  return (
+                    <div className="ytg-card" style={{ padding: '28px 32px', marginBottom: 24, display: 'flex', alignItems: 'center', gap: 24 }}>
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }}>Start here</p>
+                        <h2 style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', marginBottom: 6 }}>Run your first audit</h2>
+                        <p style={{ fontSize: 13.5, color: C.text2, lineHeight: 1.55, maxWidth: 520 }}>
+                          We need to analyse your channel before we can show Priority Actions, growth patterns, and milestone tracking. Costs 1 credit and takes about 30 seconds.
+                        </p>
+                      </div>
+                      <button className="ytg-dash-btn-primary" disabled={analyzingAI} onClick={runFirstAudit} style={{ flexShrink: 0 }}>
+                        <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+                          <path d="M11.5 2A6 6 0 1 0 12 6.5"/><path d="M11.5 2v3h-3"/>
+                        </svg>
+                        <span>Run audit</span><span style={{ fontSize: 11, fontWeight: 500, color: 'rgba(255,255,255,0.6)', marginLeft: 2 }}>· 1 credit</span>
+                      </button>
+                    </div>
+                  )
+                }
+                return null
+              })()}
               <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 28, gap: 16, flexWrap: 'wrap' }}>
                 <div>
                   <h1 style={{ fontSize: 26, fontWeight: 700, color: '#0a0a0f', letterSpacing: '-0.7px', marginBottom: 6, lineHeight: 1.1 }}>
@@ -5898,53 +5980,6 @@ export default function Dashboard() {
             </div>
           )}
 
-          {/* Start-here callout — visible when user has data but no audit yet
-              and isn't mid-analysis (e.g. first-time reconnect at 0 credits, or
-              background audit was skipped). Mirrors the existing .ytg-card
-              pattern used by audit result cards. */}
-          {data && nav === 'Overview' && !analyzingAI && !data.insights && (
-            <div className="ytg-card" style={{ padding: '28px 32px', marginTop: 32, marginBottom: 24, display: 'flex', alignItems: 'center', gap: 24 }}>
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }}>Start here</p>
-                <h2 style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', marginBottom: 6 }}>Run your first audit</h2>
-                <p style={{ fontSize: 13.5, color: C.text2, lineHeight: 1.55, maxWidth: 520 }}>
-                  We need to analyse your channel before we can show Priority Actions, growth patterns, and milestone tracking. Costs 1 credit and takes about 30 seconds.
-                </p>
-              </div>
-              <button
-                className="ytg-dash-btn-primary"
-                disabled={analyzingAI}
-                onClick={() => {
-                  setReAuditError('')
-                  setAnalyzingAI(true)
-                  fetch('/auth/refresh-analysis', { method: 'POST', credentials: 'include' })
-                    .then(async r => {
-                      if (r.ok) {
-                        window.dispatchEvent(new CustomEvent('ytg:credits-changed'))
-                        return
-                      }
-                      setAnalyzingAI(false)
-                      if (r.status === 401) { window.location = '/'; return }
-                      if (r.status === 402) { setCreditsOut(true); return }
-                      const d = await r.json().catch(() => ({}))
-                      setReAuditError(d.error || "Something went wrong on our end. Email support@ytgrowth.io and we'll sort it out.")
-                      setTimeout(() => setReAuditError(''), 8000)
-                    })
-                    .catch(() => {
-                      setAnalyzingAI(false)
-                      setReAuditError("Couldn't reach our servers. Check your connection and try again.")
-                      setTimeout(() => setReAuditError(''), 8000)
-                    })
-                }}
-                style={{ flexShrink: 0 }}
-              >
-                <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
-                  <path d="M11.5 2A6 6 0 1 0 12 6.5"/><path d="M11.5 2v3h-3"/>
-                </svg>
-                <span>Run audit</span><span style={{ fontSize: 11, fontWeight: 500, color: 'rgba(255,255,255,0.6)', marginLeft: 2 }}>· 1 credit</span>
-              </button>
-            </div>
-          )}
 
           {/* ── AUDIT DETAIL (legacy block) ─────────────────────────────
               Hidden by default. Renders only when the user expands the
@@ -6688,17 +6723,6 @@ export default function Dashboard() {
         open={creditsOut}
         onClose={() => setCreditsOut(false)}
         featureName="channel audits"
-      />
-
-      <WelcomeModal
-        open={showWelcome}
-        onClose={() => {
-          setShowWelcome(false)
-          const cid = data?.channel?.channel_id
-          if (cid) {
-            try { localStorage.setItem(`ytg_welcomed_${cid}`, '1') } catch {}
-          }
-        }}
       />
     </div>
   )
