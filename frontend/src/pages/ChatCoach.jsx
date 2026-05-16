@@ -21,11 +21,15 @@ import {
                     // reads as "start fresh" not "generic add"
   ArrowRight,       // Upgrade CTA glyph
   X,                // Delete icon on conversation rows
-  // Starter-card icons. Four outcome-framed suggestion cards.
+  // Starter-pill icons. Eight quick options, wrap layout.
   TrendingUp,
   TrendingDown,
   CheckCircle2,
+  ImageIcon,
   Lightbulb,
+  Type,
+  GitCompare,
+  Search,
 } from 'lucide-react'
 
 // Page-scoped Geist load. Geist Variable (Vercel's open-source UI typeface)
@@ -134,13 +138,17 @@ const C = {
   spring:         'cubic-bezier(0.32, 0.72, 0, 1)',
 }
 
-/* ─── Four starter cards. `prompt` is what gets sent (a fuller question
-       so the coach gets real context); title + sub render the card. ─── */
+/* ─── Eight starter pills. Short option labels, semantic icon, wrap
+       layout. Click sends the label straight through the pipeline. ─── */
 const STARTER_PROMPTS = [
-  { title: 'Get more views', sub: "What's capping my reach right now?",  prompt: "What's capping my reach right now, and what should I do about it?", Icon: TrendingUp },
-  { title: 'Fix my CTR',     sub: "Why aren't viewers clicking?",        prompt: "Why aren't viewers clicking my videos, and how do I fix my CTR?",   Icon: TrendingDown },
-  { title: 'Channel audit',  sub: 'Find my biggest growth lever',        prompt: 'Audit my channel and tell me my single biggest growth lever.',      Icon: CheckCircle2 },
-  { title: 'Video ideas',    sub: 'What should I make next?',            prompt: 'Give me video ideas that fit my channel, and tell me what to make next.', Icon: Lightbulb },
+  { label: 'Get more views',      Icon: TrendingUp   },
+  { label: 'Fix my CTR',          Icon: TrendingDown },
+  { label: 'Channel audit',       Icon: CheckCircle2 },
+  { label: 'Thumbnail tips',      Icon: ImageIcon    },
+  { label: 'Video ideas',         Icon: Lightbulb    },
+  { label: 'Better titles',       Icon: Type         },
+  { label: 'Compare a competitor', Icon: GitCompare  },
+  { label: 'Find keywords',       Icon: Search       },
 ]
 
 function fmtAge(iso) {
@@ -783,12 +791,13 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
             {composerForm}
           </div>
 
-          {/* Suggestion cards. Suite card grammar (surface, hairline,
-              14px radius, cardShadow). Icon in a soft neutral tint
-              square, bold title, grey outcome line. Spring hover-lift. */}
+          {/* Starter pills. Light, fast to scan, eight options in a
+              centered wrap. Suite grammar: surface, hairline, soft
+              shadow, spring hover-lift. Secondary to the composer. */}
           <div className="ytg-fade-up" style={{
-            display: 'grid', gridTemplateColumns: '1fr 1fr',
-            gap: 10, maxWidth: 600, width: '100%',
+            display: 'flex', flexWrap: 'wrap',
+            gap: 8, justifyContent: 'center',
+            maxWidth: 600, width: '100%',
             animation: `ytgFadeUp 0.5s ${C.spring} both`,
             animationDelay: '150ms',
           }}>
@@ -798,44 +807,34 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
                 <button
                   key={i}
                   type="button"
-                  onClick={() => send(p.prompt)}
+                  onClick={() => send(p.label)}
                   style={{
-                    display: 'flex', alignItems: 'flex-start', gap: 12,
-                    textAlign: 'left',
-                    padding: '14px 16px', borderRadius: 14,
+                    display: 'inline-flex', alignItems: 'center', gap: 8,
+                    padding: '9px 15px', borderRadius: 100,
                     background: C.surface,
                     border: `1px solid ${C.hair}`,
                     boxShadow: C.cardShadow,
-                    cursor: 'pointer', fontFamily: 'inherit',
-                    transition: `transform 200ms ${C.spring}, box-shadow 200ms ${C.spring}, border-color 200ms ${C.spring}`,
+                    color: C.text2,
+                    fontFamily: 'inherit',
+                    fontSize: 13, fontWeight: 500, letterSpacing: '-0.005em',
+                    cursor: 'pointer', whiteSpace: 'nowrap',
+                    transition: `transform 200ms ${C.spring}, box-shadow 200ms ${C.spring}, border-color 200ms ${C.spring}, color 200ms ${C.spring}`,
                   }}
                   onMouseEnter={e => {
-                    e.currentTarget.style.transform = 'translateY(-2px)'
+                    e.currentTarget.style.transform = 'translateY(-1px)'
                     e.currentTarget.style.boxShadow = C.cardShadowLift
                     e.currentTarget.style.borderColor = C.hairActive
+                    e.currentTarget.style.color = C.text1
                   }}
                   onMouseLeave={e => {
                     e.currentTarget.style.transform = 'translateY(0)'
                     e.currentTarget.style.boxShadow = C.cardShadow
                     e.currentTarget.style.borderColor = C.hair
+                    e.currentTarget.style.color = C.text2
                   }}
                 >
-                  <span style={{
-                    display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-                    flexShrink: 0, width: 30, height: 30, borderRadius: 9,
-                    background: 'rgba(10,10,15,0.05)',
-                    color: C.text2,
-                  }}>
-                    <Icon size={15} strokeWidth={1.9} />
-                  </span>
-                  <span style={{ display: 'flex', flexDirection: 'column', gap: 3, minWidth: 0 }}>
-                    <span style={{ fontSize: 14, fontWeight: 600, color: C.text1, letterSpacing: '-0.01em' }}>
-                      {p.title}
-                    </span>
-                    <span style={{ fontSize: 12.5, fontWeight: 450, color: C.text3, letterSpacing: '-0.005em', lineHeight: 1.4 }}>
-                      {p.sub}
-                    </span>
-                  </span>
+                  <Icon size={14} strokeWidth={1.9} color={C.text3} />
+                  {p.label}
                 </button>
               )
             })}
