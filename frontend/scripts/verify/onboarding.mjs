@@ -51,7 +51,7 @@ try {
 
 const browser = await chromium.launch()
 try {
-  for (const state of ['fresh', 'running', 'audited', 'three', 'done']) {
+  for (const state of ['fresh', 'comp', 'seo', 'done']) {
     const ctx = await browser.newContext({ viewport: { width: 1280, height: 900 }, deviceScaleFactor: 1.25 })
     const page = await ctx.newPage()
     await page.goto(`http://localhost:${PORT}/preview-onboarding.html?state=${state}`, { waitUntil: 'networkidle' })

@@ -52,19 +52,17 @@ function ArrowIcon({ size = 13 }) {
 
 export default function OnboardingCard({
   channelName,
-  audited = false,
+  trackedCompetitor = false,
   optimized = false,
   exploredIdeas = false,
-  running = false,
-  onRunAudit,
   onNavigate,
   onDismiss,
 }) {
   const steps = [
-    { id: 'connect', title: 'Channel connected', body: 'Your YouTube channel is linked and ready.', trailing: channelName || 'Connected', done: true },
-    { id: 'audit',   title: 'Run your first audit', body: 'See your Priority Actions and channel health score.', cta: 'Run audit', ctaSub: '1 credit', done: audited },
-    { id: 'seo',     title: 'Optimize a video', body: 'SEO Studio rewrites a title and description that gets clicks.', cta: 'Open SEO Studio', target: 'SEO Studio', done: optimized },
-    { id: 'idea',    title: 'Find your next idea', body: "See what's working in your niche right now.", cta: 'Open Video Ideas', target: 'Video Ideas', done: exploredIdeas },
+    { id: 'connect',    title: 'Channel connected', body: 'Your YouTube channel is linked and ready.', trailing: channelName || 'Connected', done: true },
+    { id: 'competitor', title: 'Track a competitor', body: 'See exactly what is working for channels in your niche.', cta: 'Open Competitors', target: 'Competitors', done: trackedCompetitor },
+    { id: 'seo',        title: 'Optimize a video', body: 'SEO Studio rewrites a title and description that gets clicks.', cta: 'Open SEO Studio', target: 'SEO Studio', done: optimized },
+    { id: 'idea',       title: 'Find your next idea', body: "See what's working in your niche right now.", cta: 'Open Video Ideas', target: 'Video Ideas', done: exploredIdeas },
   ]
 
   const doneCount = steps.filter(s => s.done).length
@@ -202,19 +200,12 @@ export default function OnboardingCard({
                       <CheckIcon size={11} /> Done
                     </span>
                   ) : isActive ? (
-                    <button
-                      onClick={() => s.id === 'audit' ? onRunAudit?.() : onNavigate?.(s.target)}
-                      disabled={s.id === 'audit' && running}
-                      style={{ ...primaryBtn, opacity: (s.id === 'audit' && running) ? 0.65 : 1 }}
-                    >
-                      {s.id === 'audit' && running ? 'Running…' : s.cta}
-                      {!(s.id === 'audit' && running) && s.ctaSub && (
-                        <span style={{ fontSize: 11, fontWeight: 500, color: 'rgba(255,255,255,0.6)', marginLeft: 1 }}>· {s.ctaSub}</span>
-                      )}
+                    <button onClick={() => onNavigate?.(s.target)} style={primaryBtn}>
+                      {s.cta}
                     </button>
                   ) : (
                     <button
-                      onClick={() => s.id === 'audit' ? onRunAudit?.() : onNavigate?.(s.target)}
+                      onClick={() => onNavigate?.(s.target)}
                       style={{
                         background: 'transparent', border: 'none', cursor: 'pointer',
                         fontFamily: 'inherit', fontSize: 12.5, fontWeight: 600,

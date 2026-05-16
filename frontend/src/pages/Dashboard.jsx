@@ -4503,6 +4503,9 @@ export default function Dashboard() {
     const cid = data?.channel?.channel_id
     if (!cid) return
     let changed = false
+    if (nav === 'Competitors' && localStorage.getItem(`ytg_ob_comp_${cid}`) !== '1') {
+      try { localStorage.setItem(`ytg_ob_comp_${cid}`, '1'); changed = true } catch {}
+    }
     if (nav === 'SEO Studio' && localStorage.getItem(`ytg_ob_seo_${cid}`) !== '1') {
       try { localStorage.setItem(`ytg_ob_seo_${cid}`, '1'); changed = true } catch {}
     }
@@ -5075,11 +5078,9 @@ export default function Dashboard() {
                   return (
                     <OnboardingCard
                       channelName={data.channel?.channel_name}
-                      audited={forceOb ? false : !!data.insights}
+                      trackedCompetitor={forceOb ? false : ls('comp')}
                       optimized={forceOb ? false : ls('seo')}
                       exploredIdeas={forceOb ? false : ls('idea')}
-                      running={analyzingAI}
-                      onRunAudit={runFirstAudit}
                       onNavigate={(t) => setNav(t)}
                       onDismiss={() => {
                         try { if (cid) localStorage.setItem(`ytg_ob_dismissed_${cid}`, '1') } catch {}

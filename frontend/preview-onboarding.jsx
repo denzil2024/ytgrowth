@@ -6,9 +6,8 @@
  *
  * Query params (?state=):
  *   fresh   (default) — 1/4, only channel connected
- *   running           — 1/4, audit in progress (CTA shows Running…)
- *   audited           — 2/4, audit done, "Optimize a video" active
- *   three             — 3/4, only "Find your next idea" left
+ *   comp              — 2/4, competitor tracked, "Optimize a video" active
+ *   seo               — 3/4, only "Find your next idea" left
  *   done              — 4/4, collapsed "You're all set" state
  */
 import React from 'react'
@@ -18,11 +17,10 @@ import OnboardingCard from './src/components/OnboardingCard.jsx'
 const MODE = new URLSearchParams(window.location.search).get('state') || 'fresh'
 
 const SIG = {
-  fresh:   { audited: false, optimized: false, exploredIdeas: false, running: false },
-  running: { audited: false, optimized: false, exploredIdeas: false, running: true  },
-  audited: { audited: true,  optimized: false, exploredIdeas: false, running: false },
-  three:   { audited: true,  optimized: true,  exploredIdeas: false, running: false },
-  done:    { audited: true,  optimized: true,  exploredIdeas: true,  running: false },
+  fresh: { trackedCompetitor: false, optimized: false, exploredIdeas: false },
+  comp:  { trackedCompetitor: true,  optimized: false, exploredIdeas: false },
+  seo:   { trackedCompetitor: true,  optimized: true,  exploredIdeas: false },
+  done:  { trackedCompetitor: true,  optimized: true,  exploredIdeas: true  },
 }[MODE] || {}
 
 ReactDOM.createRoot(document.getElementById('root')).render(
@@ -34,11 +32,9 @@ ReactDOM.createRoot(document.getElementById('root')).render(
       React.createElement('div', { className: 'ov-page', style: { maxWidth: 1040, margin: '0 auto' } },
         React.createElement(OnboardingCard, {
           channelName: 'Royal Blue Media',
-          audited: SIG.audited,
+          trackedCompetitor: SIG.trackedCompetitor,
           optimized: SIG.optimized,
           exploredIdeas: SIG.exploredIdeas,
-          running: SIG.running,
-          onRunAudit: () => console.log('[preview] run audit'),
           onNavigate: (t) => console.log('[preview] navigate', t),
           onDismiss: () => console.log('[preview] dismiss'),
         }),
