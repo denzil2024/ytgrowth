@@ -5,11 +5,11 @@ const C = {
   red:      '#e5251b', redBg:    '#fff5f5', redBdr:    '#fecaca',
   green:    '#059669', greenBg:  '#ecfdf5', greenBdr:  '#a7f3d0',
   amber:    '#d97706', amberBg:  '#fffbeb', amberBdr:  '#fde68a',
-  text1:    '#0f0f13',
+  text1:    '#0a0a0f',
   text2:    '#4a4a58',
   text3:    '#9595a4',
-  border:   '#e6e6ec',
-  bg:       '#f5f5f9',
+  border:   'rgba(10,10,15,0.07)',
+  bg:       '#fafafb',
   surface:  '#ffffff',
 }
 
@@ -237,16 +237,16 @@ function useAdminStyles() {
         }
 
         .adm-row { transition:background 0.13s; }
-        .adm-row:hover { background:#f8f8fb !important; }
-        .adm-pg-btn { transition:background 0.13s,color 0.13s,border-color 0.13s; }
-        .adm-pg-btn:not(:disabled):hover { background:#f4f4f8 !important; border-color:rgba(0,0,0,0.18) !important; color:#0f0f13 !important; }
-        .adm-sec-btn { transition:all 0.18s; }
-        .adm-sec-btn:hover { border-color:rgba(0,0,0,0.18) !important; color:#0f0f13 !important; box-shadow:0 2px 8px rgba(0,0,0,0.10),0 8px 28px rgba(0,0,0,0.10) !important; transform:translateY(-1px); }
+        .adm-row:hover { background:rgba(10,10,15,0.022) !important; }
+        .adm-pg-btn { transition:background 0.15s,color 0.15s,border-color 0.15s; }
+        .adm-pg-btn:not(:disabled):hover { background:rgba(10,10,15,0.025) !important; border-color:rgba(10,10,15,0.18) !important; color:#0a0a0f !important; }
+        .adm-sec-btn { transition:border-color 0.16s,color 0.16s,box-shadow 0.16s,transform 0.16s; }
+        .adm-sec-btn:hover { border-color:rgba(10,10,15,0.18) !important; color:#0a0a0f !important; box-shadow:0 4px 16px rgba(15,15,25,0.06) !important; transform:translateY(-1px); }
 
         /* Red primary refresh button (matches ytg-dash-btn-primary on Dashboard) */
         .adm-refresh-btn:hover:not(:disabled) {
-          filter:brightness(1.07); transform:translateY(-1px);
-          box-shadow:0 2px 8px rgba(0,0,0,0.15), 0 8px 28px rgba(229,37,27,0.42) !important;
+          filter:brightness(1.06); transform:translateY(-1px);
+          box-shadow:0 1px 2px rgba(229,37,27,0.30), 0 8px 22px -6px rgba(229,37,27,0.45) !important;
         }
 
         /* Empty state */
@@ -612,12 +612,12 @@ function Pager({ page, total, onPage, pageSize = PAGE_SIZE_SIGNUPS }) {
   const totalPages = Math.ceil(total / pageSize)
   if (totalPages <= 1) return null
   const btnStyle = (disabled) => ({
-    padding: '5px 16px', borderRadius: 100,
-    border: '1px solid rgba(0,0,0,0.1)',
+    padding: '6px 16px', borderRadius: 100,
+    border: '1px solid rgba(10,10,15,0.10)',
     background: C.surface, color: disabled ? C.text3 : C.text2,
     fontSize: 12.5, fontWeight: 600, fontFamily: 'inherit',
     cursor: disabled ? 'default' : 'pointer', opacity: disabled ? 0.45 : 1,
-    boxShadow: '0 1px 3px rgba(0,0,0,0.07), 0 4px 14px rgba(0,0,0,0.07)',
+    boxShadow: '0 1px 2px rgba(15,15,25,0.04), inset 0 1px 0 rgba(255,255,255,0.7)',
   })
   return (
     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 24px', borderTop: `1px solid ${C.border}`, background: '#fafafc' }}>
@@ -675,20 +675,21 @@ function BreakdownsCard({ plans, sources, countries, totalForPlan, totalForUtm, 
         </div>
       </div>
 
-      {/* Tab strip */}
-      <div style={{ display: 'flex', gap: 6, padding: '12px 18px 0', borderBottom: `1px solid ${C.border}` }}>
+      {/* Tab strip — quiet soft-grey active pills (suite standard; red is
+          reserved for primary CTAs only). */}
+      <div style={{ display: 'flex', gap: 6, padding: '12px 18px', borderBottom: `1px solid ${C.border}` }}>
         {BREAKDOWN_TABS.map(t => {
           const active = tab === t.key
           return (
             <button key={t.key} onClick={() => setTab(t.key)} style={{
-              padding: '8px 14px',
-              fontSize: 13, fontWeight: 600,
-              fontFamily: 'inherit',
-              color: active ? C.red : C.text3,
-              background: 'transparent', border: 'none', cursor: 'pointer',
-              borderBottom: `2px solid ${active ? C.red : 'transparent'}`,
-              marginBottom: -1,
-              transition: 'color 0.15s, border-color 0.15s',
+              padding: '6px 14px', borderRadius: 100,
+              fontSize: 13, fontWeight: active ? 600 : 500,
+              fontFamily: 'inherit', letterSpacing: '-0.01em',
+              color: active ? C.text1 : C.text3,
+              background: active ? 'rgba(10,10,15,0.055)' : 'transparent',
+              border: `1px solid ${active ? 'rgba(10,10,15,0.10)' : 'transparent'}`,
+              cursor: 'pointer',
+              transition: 'color 0.15s, background 0.15s, border-color 0.15s',
             }}>
               {t.label}
             </button>
@@ -969,10 +970,12 @@ export default function Admin() {
           onClick={() => load(false)}
           style={{
             display: 'inline-flex', alignItems: 'center', gap: 8,
-            padding: '10px 22px', borderRadius: 100, border: 'none',
-            background: C.red, color: '#ffffff', fontSize: 13, fontWeight: 700,
+            padding: '9px 20px', borderRadius: 100, border: 'none',
+            background: 'linear-gradient(180deg, #ef3a31 0%, #e5251b 100%)',
+            color: '#ffffff', fontSize: 13, fontWeight: 600,
             cursor: refreshing ? 'wait' : 'pointer', fontFamily: 'inherit',
-            boxShadow: '0 1px 3px rgba(0,0,0,0.12), 0 4px 14px rgba(229,37,27,0.32)',
+            letterSpacing: '-0.01em',
+            boxShadow: '0 1px 2px rgba(229,37,27,0.30), inset 0 1px 0 rgba(255,255,255,0.22)',
             opacity: refreshing ? 0.65 : 1,
             transition: 'filter 0.18s, transform 0.18s, box-shadow 0.18s',
           }}
