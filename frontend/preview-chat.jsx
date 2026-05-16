@@ -113,13 +113,29 @@ window.fetch = async (url, opts) => {
   return origFetch(url, opts)
 }
 
+/* Faithful Dashboard shell. The real app renders every page inside:
+ *   scroll-shell (flex:1, overflow:auto, background #fafafb)
+ *     └ 52px topbar
+ *     └ content box  (padding: 36px 40px 72px)
+ *          └ <Page/>
+ * The old harness used `padding: 36px 24px; height: 100vh` with no
+ * topbar — which is exactly why Chat looked fine here while it
+ * overflowed and read as a slab in production. This now mirrors the
+ * real shell so screenshots reflect what the user actually sees. */
 ReactDOM.createRoot(document.getElementById('root')).render(
   React.createElement('div', {
-    style: { padding: '36px 24px', height: '100vh', boxSizing: 'border-box', background: '#fafafb' }
+    style: { height: '100vh', overflow: 'auto', background: '#fafafb', boxSizing: 'border-box' },
   },
-    React.createElement(ChatCoach, {
-      onNavigate: (target) => console.log('[preview] navigate to', target),
-      billingPlan: 'pro',
-    })
+    React.createElement('div', {
+      style: { height: 52, flexShrink: 0, borderBottom: '1px solid rgba(10,10,15,0.06)', background: '#ffffff' },
+    }),
+    React.createElement('div', {
+      style: { padding: '36px 40px 72px', boxSizing: 'border-box' },
+    },
+      React.createElement(ChatCoach, {
+        onNavigate: (target) => console.log('[preview] navigate to', target),
+        billingPlan: 'pro',
+      })
+    )
   )
 )

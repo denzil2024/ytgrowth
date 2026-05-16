@@ -22,15 +22,11 @@ import {
   ArrowRight,       // Upgrade CTA glyph
   X,                // Delete icon on conversation rows
   MessageSquare,    // Conversation glyph on rail rows
-  // Starter-prompt icons. Eight imperative prompts, two rows.
+  // Starter-card icons. Four outcome-framed suggestion cards.
   TrendingUp,
   TrendingDown,
   CheckCircle2,
-  ImageIcon,
   Lightbulb,
-  Type,
-  GitCompare,
-  Search,
 } from 'lucide-react'
 
 // Page-scoped Geist load. Geist Variable (Vercel's open-source UI typeface)
@@ -75,6 +71,13 @@ if (typeof document !== 'undefined' && !document.getElementById('ytg-chat-scroll
     @keyframes ytgPulseSoft {
       0%, 100% { opacity: 0.55 }
       50%      { opacity: 1    }
+    }
+    @keyframes ytgFadeUp {
+      from { opacity: 0; transform: translateY(10px) }
+      to   { opacity: 1; transform: none }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .ytg-fade-up { animation: none !important }
     }
     /* Markdown list markers. react-markdown v10 dropped the per-li
        'ordered' prop, so we infer from the parent class: ul = bullet,
@@ -132,18 +135,13 @@ const C = {
   spring:         'cubic-bezier(0.32, 0.72, 0, 1)',
 }
 
-/* ─── Eight starter prompts. Imperative voice, two-row wrap layout,
-       semantic Lucide icons. Click sends the prompt straight through
-       the same pipeline as a typed message. ───────────────────────── */
+/* ─── Four starter cards. `prompt` is what gets sent (a fuller question
+       so the coach gets real context); title + sub render the card. ─── */
 const STARTER_PROMPTS = [
-  { label: 'Get more views',       Icon: TrendingUp   },
-  { label: 'Review my CTR',        Icon: TrendingDown },
-  { label: 'Channel audit',        Icon: CheckCircle2 },
-  { label: 'Thumbnail tips',       Icon: ImageIcon    },
-  { label: 'Video ideas',          Icon: Lightbulb    },
-  { label: 'Better titles',        Icon: Type         },
-  { label: 'Compare competitor',   Icon: GitCompare   },
-  { label: 'Find keywords',        Icon: Search       },
+  { title: 'Get more views', sub: "What's capping my reach right now?",  prompt: "What's capping my reach right now, and what should I do about it?", Icon: TrendingUp },
+  { title: 'Fix my CTR',     sub: "Why aren't viewers clicking?",        prompt: "Why aren't viewers clicking my videos, and how do I fix my CTR?",   Icon: TrendingDown },
+  { title: 'Channel audit',  sub: 'Find my biggest growth lever',        prompt: 'Audit my channel and tell me my single biggest growth lever.',      Icon: CheckCircle2 },
+  { title: 'Video ideas',    sub: 'What should I make next?',            prompt: 'Give me video ideas that fit my channel, and tell me what to make next.', Icon: Lightbulb },
 ]
 
 function fmtAge(iso) {
@@ -654,24 +652,61 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
     <div style={{
       maxWidth: 1040, margin: '0 auto',
       display: 'flex', flexDirection: 'column',
-      height: 'calc(100vh - 52px - 72px)',
+      // 52 topbar + 36 content top-pad + 72 content bottom-pad. The old
+      // value missed the 36 top-pad, so the box overflowed its slot.
+      height: 'calc(100vh - 160px)',
       minHeight: 540,
       fontFamily: FONT_STACK,
-      position: 'relative',
-      // Dual-radial atmosphere. A warm red wash bleeds from the top,
-      // a cool charcoal wash bleeds from the bottom-right. The two
-      // overlap subtly in the middle of the page where the composer
-      // sits, giving the surface real depth instead of looking like a
-      // flat printed page. The whole bg is built up in layered gradients
-      // on top of #ffffff so the white core stays clean.
-      background: `
-        radial-gradient(60% 50% at 50% -10%, rgba(229,37,27,0.06) 0%, rgba(229,37,27,0) 60%),
-        radial-gradient(50% 45% at 100% 105%, rgba(10,15,30,0.05) 0%, rgba(10,15,30,0) 60%),
-        linear-gradient(180deg, #ffffff 0%, #fafafc 100%)
-      `,
       color: C.text1,
+      // No painted background. Transparent content on the app's neutral
+      // wash, exactly like every other page in the suite. The radial
+      // slab is what made Chat read as a foreign full-width panel.
     }}>
-      {topRightControls}
+      {/* Standard page header — same scale as the rest of the suite
+          (26/700/-0.7px + 14/500). Usage chip inline on the right,
+          shown only when there's no rail (the rail footer owns it once
+          a rail exists). Replaces the old floating absolute pill. */}
+      <div style={{
+        display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between',
+        gap: 16, marginBottom: 22, flexShrink: 0,
+      }}>
+        <div>
+          <h1 style={{ fontSize: 26, fontWeight: 700, color: C.text1, letterSpacing: '-0.7px', lineHeight: 1.1, margin: 0 }}>
+            AI Coach
+          </h1>
+          <p style={{ fontSize: 14, fontWeight: 500, color: C.text2, letterSpacing: '-0.005em', marginTop: 6 }}>
+            Ask anything about growing your channel.
+          </p>
+        </div>
+        {showFloatingMeter && (
+          <div style={{
+            display: 'inline-flex', alignItems: 'center', gap: 8,
+            background: meterEmpty ? C.redSoft : C.surface,
+            border: `1px solid ${meterEmpty ? C.redBdr : C.hair}`,
+            padding: '6px 14px', borderRadius: 100,
+            boxShadow: C.cardShadow,
+            fontVariantNumeric: 'tabular-nums', flexShrink: 0,
+          }}>
+            <span style={{
+              width: 6, height: 6, borderRadius: 99,
+              background: meterEmpty ? C.red : remaining < allowance * 0.25 ? C.red : '#16a34a',
+              boxShadow: meterEmpty
+                ? '0 0 0 3px rgba(229,37,27,0.16)'
+                : remaining < allowance * 0.25
+                  ? '0 0 0 3px rgba(229,37,27,0.12)'
+                  : '0 0 0 3px rgba(22,163,74,0.16)',
+              animation: meterEmpty ? 'none' : 'ytgPulseSoft 2.4s ease-in-out infinite',
+              flexShrink: 0,
+            }}/>
+            <span style={{ fontSize: 12.5, fontWeight: 600, color: meterEmpty ? C.red : C.text1, letterSpacing: '-0.01em' }}>
+              <span>{remaining}</span>
+              <span style={{ color: C.text3, fontWeight: 500, marginLeft: 5 }}>
+                {remaining === 1 ? 'message left' : 'messages left'}
+              </span>
+            </span>
+          </div>
+        )}
+      </div>
 
       {state.loading ? (
         <div style={{
@@ -721,38 +756,42 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
             paddingLeft: hasRail ? 16 : 0,
           }}>
         {messages.length === 0 ? (
-        /* ── EMPTY STATE. Vertically centered hero + composer + pills.
-              No header, no avatar, no chips. The whole top of the page
-              breathes. ─────────────────────────────────────────────── */
+        /* ── EMPTY STATE. Settled composition (the page H1 above owns the
+              title): a modest prompt line, the composer as the focal
+              element, then four suggestion cards. Each group fades up on
+              a short stagger so it arrives with life, not blunt. ─────── */
         <div style={{
           flex: 1,
           display: 'flex', flexDirection: 'column',
           alignItems: 'center', justifyContent: 'center',
-          padding: '24px 24px 80px',  // slight bottom-weight so the hero sits visually centered (the eye reads upper-middle as "centered")
-          gap: 28,
+          padding: '24px 24px 40px',
+          gap: 22,
         }}>
-          <h1 style={{
-            // Tuned for Geist: 500 holds confidence at display size where
-            // 600 starts to feel chunky on Geist's geometric forms.
-            // Tracking loosened to -0.8 because Geist is narrower than Inter.
-            fontSize: 42, fontWeight: 500, color: C.text1,
-            letterSpacing: '-0.8px', lineHeight: 1.1,
-            textAlign: 'center', maxWidth: 760,
-            margin: 0,
-          }}>What do you want to figure out?</h1>
+          <p className="ytg-fade-up" style={{
+            fontSize: 20, fontWeight: 600, color: C.text1,
+            letterSpacing: '-0.3px', lineHeight: 1.2,
+            textAlign: 'center', margin: 0,
+            animation: `ytgFadeUp 0.5s ${C.spring} both`,
+            animationDelay: '40ms',
+          }}>What do you want to figure out?</p>
 
-          <div style={{ width: '100%', maxWidth: 660 }}>
+          <div className="ytg-fade-up" style={{
+            width: '100%', maxWidth: 600,
+            animation: `ytgFadeUp 0.5s ${C.spring} both`,
+            animationDelay: '90ms',
+          }}>
             {errorBanner}
             {composerForm}
           </div>
 
-          {/* Pill prompts. Two rows, wrap layout, 8 imperative prompts.
-              Each pill: white surface, hairline border, Lucide glyph
-              (text3) + label (text2). Hover lifts to surfaceLift. */}
-          <div style={{
-            display: 'flex', flexWrap: 'wrap',
-            gap: 8, justifyContent: 'center',
-            maxWidth: 660, width: '100%',
+          {/* Suggestion cards. Suite card grammar (surface, hairline,
+              14px radius, cardShadow). Icon in a soft neutral tint
+              square, bold title, grey outcome line. Spring hover-lift. */}
+          <div className="ytg-fade-up" style={{
+            display: 'grid', gridTemplateColumns: '1fr 1fr',
+            gap: 10, maxWidth: 600, width: '100%',
+            animation: `ytgFadeUp 0.5s ${C.spring} both`,
+            animationDelay: '150ms',
           }}>
             {STARTER_PROMPTS.map((p, i) => {
               const Icon = p.Icon
@@ -760,40 +799,44 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
                 <button
                   key={i}
                   type="button"
-                  onClick={() => send(p.label)}
+                  onClick={() => send(p.prompt)}
                   style={{
-                    display: 'inline-flex', alignItems: 'center', gap: 8,
-                    padding: '10px 16px', borderRadius: 100,
-                    // Pills get a subtle gradient (top white → bottom soft
-                    // off-white) so they catch light like real objects.
-                    background: 'linear-gradient(180deg, #ffffff 0%, #f7f7fa 100%)',
+                    display: 'flex', alignItems: 'flex-start', gap: 12,
+                    textAlign: 'left',
+                    padding: '14px 16px', borderRadius: 14,
+                    background: C.surface,
                     border: `1px solid ${C.hair}`,
-                    color: C.text2,
-                    fontFamily: 'inherit',
-                    // Tuned for Geist: pills sit at 500 (Inter needed 600
-                    // to feel anchored, Geist holds at 500 cleanly).
-                    fontSize: 13, fontWeight: 500, letterSpacing: '-0.005em',
-                    cursor: 'pointer',
-                    boxShadow: '0 1px 2px rgba(15,15,25,0.04), 0 1px 0 rgba(255,255,255,0.9) inset',
-                    transition: `background 200ms ${C.spring}, color 200ms ${C.spring}, border-color 200ms ${C.spring}, transform 200ms ${C.spring}, box-shadow 200ms ${C.spring}`,
+                    boxShadow: C.cardShadow,
+                    cursor: 'pointer', fontFamily: 'inherit',
+                    transition: `transform 200ms ${C.spring}, box-shadow 200ms ${C.spring}, border-color 200ms ${C.spring}`,
                   }}
                   onMouseEnter={e => {
-                    e.currentTarget.style.background = '#ffffff'
-                    e.currentTarget.style.color = C.text1
-                    e.currentTarget.style.borderColor = C.hairActive
                     e.currentTarget.style.transform = 'translateY(-2px)'
-                    e.currentTarget.style.boxShadow = '0 6px 16px rgba(15,15,25,0.08), 0 1px 2px rgba(15,15,25,0.04), 0 1px 0 rgba(255,255,255,1) inset'
+                    e.currentTarget.style.boxShadow = C.cardShadowLift
+                    e.currentTarget.style.borderColor = C.hairActive
                   }}
                   onMouseLeave={e => {
-                    e.currentTarget.style.background = 'linear-gradient(180deg, #ffffff 0%, #f7f7fa 100%)'
-                    e.currentTarget.style.color = C.text2
-                    e.currentTarget.style.borderColor = C.hair
                     e.currentTarget.style.transform = 'translateY(0)'
-                    e.currentTarget.style.boxShadow = '0 1px 2px rgba(15,15,25,0.04), 0 1px 0 rgba(255,255,255,0.9) inset'
+                    e.currentTarget.style.boxShadow = C.cardShadow
+                    e.currentTarget.style.borderColor = C.hair
                   }}
                 >
-                  <Icon size={13} strokeWidth={1.8} color={C.text3} />
-                  {p.label}
+                  <span style={{
+                    display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                    flexShrink: 0, width: 30, height: 30, borderRadius: 9,
+                    background: 'rgba(10,10,15,0.05)',
+                    color: C.text2,
+                  }}>
+                    <Icon size={15} strokeWidth={1.9} />
+                  </span>
+                  <span style={{ display: 'flex', flexDirection: 'column', gap: 3, minWidth: 0 }}>
+                    <span style={{ fontSize: 14, fontWeight: 600, color: C.text1, letterSpacing: '-0.01em' }}>
+                      {p.title}
+                    </span>
+                    <span style={{ fontSize: 12.5, fontWeight: 450, color: C.text3, letterSpacing: '-0.005em', lineHeight: 1.4 }}>
+                      {p.sub}
+                    </span>
+                  </span>
                 </button>
               )
             })}

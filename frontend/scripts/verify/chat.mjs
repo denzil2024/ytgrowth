@@ -66,7 +66,7 @@ try {
 const browser = await chromium.launch()
 try {
   for (const mode of ['empty', 'active']) {
-    const ctx = await browser.newContext({ viewport: VIEWPORT, deviceScaleFactor: 2 })
+    const ctx = await browser.newContext({ viewport: VIEWPORT, deviceScaleFactor: 1.25 })
     const page = await ctx.newPage()
     const url = `http://localhost:${PORT}/preview-chat.html?state=${mode}`
     await page.goto(url, { waitUntil: 'networkidle' })
