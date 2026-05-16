@@ -15,9 +15,9 @@ const C = {
 
 const CARD = {
   background:   C.surface,
-  border:       `1px solid ${C.border}`,
-  borderRadius: 16,
-  boxShadow:    '0 1px 2px rgba(0,0,0,0.04), 0 4px 14px rgba(0,0,0,0.06)',
+  border:       '1px solid rgba(10,10,15,0.07)',
+  borderRadius: 14,
+  boxShadow:    '0 1px 2px rgba(15,15,25,0.04), inset 0 1px 0 rgba(255,255,255,0.7)',
 }
 
 const PAGE_SIZE_SIGNUPS = 8
@@ -205,17 +205,17 @@ function useAdminStyles() {
         .adm-pulse-strip {
           display:flex; align-items:center; gap:18px; flex-wrap:wrap;
           padding:13px 22px; margin-bottom:16px;
-          background:linear-gradient(180deg, #ffffff 0%, #fafafc 100%);
-          border:1px solid #e6e6ec; border-radius:14px;
-          box-shadow:0 1px 2px rgba(0,0,0,0.03);
+          background:#ffffff;
+          border:1px solid rgba(10,10,15,0.07); border-radius:14px;
+          box-shadow:0 1px 2px rgba(15,15,25,0.04), inset 0 1px 0 rgba(255,255,255,0.7);
         }
         .adm-pulse-eyebrow {
           display:flex; align-items:center; gap:8px; flex-shrink:0;
-          font-size:11px; font-weight:800; letter-spacing:0.11em;
-          text-transform:uppercase; color:#4a4a58;
+          font-size:11px; font-weight:700; letter-spacing:0.10em;
+          text-transform:uppercase; color:#9595a4;
         }
         .adm-pulse-divider {
-          width:1px; height:22px; background:#e6e6ec; flex-shrink:0;
+          width:1px; height:22px; background:rgba(10,10,15,0.07); flex-shrink:0;
         }
         .adm-pulse-metrics {
           display:flex; gap:22px; flex-wrap:wrap; align-items:baseline;
@@ -224,8 +224,8 @@ function useAdminStyles() {
           display:inline-flex; align-items:baseline; gap:6px;
         }
         .adm-pulse-num {
-          font-size:18px; font-weight:800; color:#0f0f13;
-          letter-spacing:-0.4px; font-variant-numeric:tabular-nums;
+          font-size:16px; font-weight:800; color:#0a0a0f;
+          letter-spacing:-0.3px; font-variant-numeric:tabular-nums;
         }
         .adm-pulse-num.dim { color:#9595a4; }
         .adm-pulse-num.up  { color:#059669; }
@@ -375,9 +375,9 @@ function Stat({ label, value, sub, accent, alert, delta, sparkline, breakdown, b
     return (
       <div className="adm-stat-card-red">
         <div style={{ position: 'relative', zIndex: 1 }}>
-          <p style={{ fontSize: 11.5, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.82)', marginBottom: 18 }}>{label}</p>
+          <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.82)', marginBottom: 12 }}>{label}</p>
           <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, flexWrap: 'wrap' }}>
-            <p className="num" style={{ fontSize: 48, fontWeight: 800, letterSpacing: '-2.2px', color: '#fff', lineHeight: 0.95 }}>{value}</p>
+            <p className="num" style={{ fontSize: 30, fontWeight: 800, letterSpacing: '-0.6px', color: '#fff', lineHeight: 1 }}>{value}</p>
             {delta && (
               <span className="adm-delta" style={{
                 color: '#fff',
@@ -422,9 +422,9 @@ function Stat({ label, value, sub, accent, alert, delta, sparkline, breakdown, b
         ...(alert ? { borderColor: 'rgba(229,37,27,0.22)', background: '#fff8f8' } : {}),
       }}>
       <div style={{ position: 'relative', zIndex: 1 }}>
-        <p style={{ fontSize: 11.5, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: C.text3, marginBottom: 18 }}>{label}</p>
+        <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: C.text3, marginBottom: 12 }}>{label}</p>
         <div style={{ display: 'flex', alignItems: 'baseline', gap: 9, flexWrap: 'wrap' }}>
-          <p className="num" style={{ fontSize: 44, fontWeight: 800, letterSpacing: '-1.9px', color: col, lineHeight: 0.95 }}>{value}</p>
+          <p className="num" style={{ fontSize: 30, fontWeight: 800, letterSpacing: '-0.6px', color: col, lineHeight: 1 }}>{value}</p>
           {delta && (
             <span className="adm-delta" style={{
               color: delta.tone === 'up' ? C.green : delta.tone === 'down' ? C.red : C.text2,
@@ -534,7 +534,7 @@ function FunnelCard({ stats }) {
           <p className="adm-section-sub">From sign-up to active to paying. Each bar is sized against total users.</p>
         </div>
       </div>
-      <div style={{ padding: '26px 28px 28px' }}>
+      <div style={{ padding: '20px 24px 24px' }}>
         {steps.map((step, i) => {
           const pct = total > 0 ? (step.count / total) * 100 : 0
           const valueColor = step.isTotal ? C.text1 : (step.accent || C.text1)
@@ -546,7 +546,7 @@ function FunnelCard({ stats }) {
                   <p style={{ fontSize: 12, color: C.text3, fontWeight: 500, marginTop: 3 }}>{step.sub}</p>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, flexShrink: 0 }}>
-                  <span className="num" style={{ fontSize: 26, fontWeight: 800, color: valueColor, letterSpacing: '-0.9px', lineHeight: 1 }}>{fmtNum(step.count)}</span>
+                  <span className="num" style={{ fontSize: 24, fontWeight: 800, color: valueColor, letterSpacing: '-0.5px', lineHeight: 1 }}>{fmtNum(step.count)}</span>
                   {!step.isTotal && (
                     <span className="num" style={{ fontSize: 12.5, color: C.text3, fontWeight: 600 }}>{pct.toFixed(1)}%</span>
                   )}
