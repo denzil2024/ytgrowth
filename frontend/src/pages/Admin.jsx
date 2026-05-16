@@ -1181,14 +1181,15 @@ export default function Admin() {
                 disabled={topupSending || topupData.eligible_count === 0}
                 style={{
                   display: 'inline-flex', alignItems: 'center', gap: 8,
-                  padding: '10px 22px', borderRadius: 100, border: 'none',
-                  background: topupData.eligible_count === 0 ? '#d1d1d8' : C.red,
-                  color: '#ffffff', fontSize: 13, fontWeight: 700,
+                  padding: '9px 20px', borderRadius: 100, border: 'none',
+                  background: topupData.eligible_count === 0 ? 'rgba(10,10,15,0.06)' : 'linear-gradient(180deg, #ef3a31 0%, #e5251b 100%)',
+                  color: topupData.eligible_count === 0 ? C.text3 : '#ffffff',
+                  fontSize: 13, fontWeight: 600, letterSpacing: '-0.01em',
                   cursor: (topupSending || topupData.eligible_count === 0) ? 'not-allowed' : 'pointer',
                   fontFamily: 'inherit', whiteSpace: 'nowrap',
-                  boxShadow: topupData.eligible_count === 0 ? 'none' : '0 1px 3px rgba(0,0,0,0.12), 0 4px 14px rgba(229,37,27,0.32)',
+                  boxShadow: topupData.eligible_count === 0 ? 'inset 0 1px 0 rgba(255,255,255,0.6)' : '0 1px 2px rgba(229,37,27,0.30), inset 0 1px 0 rgba(255,255,255,0.22)',
                   opacity: topupSending ? 0.65 : 1,
-                  transition: 'filter 0.18s, transform 0.18s',
+                  transition: 'filter 0.16s, transform 0.16s',
                 }}
                 onMouseEnter={e => { if (!topupSending && topupData.eligible_count > 0) { e.currentTarget.style.filter = 'brightness(1.07)'; e.currentTarget.style.transform = 'translateY(-1px)' } }}
                 onMouseLeave={e => { e.currentTarget.style.filter = 'none'; e.currentTarget.style.transform = 'translateY(0)' }}
@@ -1301,7 +1302,8 @@ export default function Admin() {
               }
             >
 
-            {/* Filter chips */}
+            {/* Filter chips — quiet soft-grey active (suite standard;
+                red reserved for primary CTAs only). */}
             <div style={{ display: 'flex', gap: 7, padding: '14px 24px', flexWrap: 'wrap', borderBottom: `1px solid ${C.border}`, background: '#fafafc' }}>
               {FILTERS.map(f => {
                 const active = frFilter === f.key
@@ -1312,21 +1314,21 @@ export default function Admin() {
                     style={{
                       display: 'inline-flex', alignItems: 'center', gap: 6,
                       padding: '6px 13px', borderRadius: 100,
-                      border: active ? '1px solid transparent' : `1px solid ${C.border}`,
-                      background: active ? C.red : C.surface,
-                      color: active ? '#fff' : C.text2,
-                      fontSize: 12, fontWeight: 700, fontFamily: 'inherit',
-                      cursor: 'pointer',
-                      boxShadow: active ? '0 1px 3px rgba(0,0,0,0.10), 0 4px 14px rgba(229,37,27,0.28)' : 'none',
-                      transition: 'all 0.15s',
+                      border: `1px solid ${active ? 'rgba(10,10,15,0.10)' : C.border}`,
+                      background: active ? 'rgba(10,10,15,0.055)' : C.surface,
+                      color: active ? C.text1 : C.text2,
+                      fontSize: 12, fontWeight: active ? 600 : 500, fontFamily: 'inherit',
+                      letterSpacing: '-0.01em', cursor: 'pointer',
+                      transition: 'background 0.15s, color 0.15s, border-color 0.15s',
                     }}
                   >
                     {f.label}
                     <span style={{
                       fontSize: 10.5, fontWeight: 700,
-                      background: active ? 'rgba(255,255,255,0.22)' : '#f4f4f6',
-                      color: active ? '#fff' : C.text3,
+                      background: active ? 'rgba(10,10,15,0.06)' : '#f1f1f6',
+                      color: active ? C.text2 : C.text3,
                       padding: '1px 7px', borderRadius: 100,
+                      fontVariantNumeric: 'tabular-nums',
                     }}>{f.count}</span>
                   </button>
                 )
