@@ -21,7 +21,6 @@ import {
                     // reads as "start fresh" not "generic add"
   ArrowRight,       // Upgrade CTA glyph
   X,                // Delete icon on conversation rows
-  MessageSquare,    // Conversation glyph on rail rows
   // Starter-card icons. Four outcome-framed suggestion cards.
   TrendingUp,
   TrendingDown,
@@ -851,12 +850,12 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
             className="ytg-chat-scroll"
             style={{
               flex: 1, overflowY: 'auto',
-              padding: '52px 4px 18px',  // top padding clears the floating controls
+              padding: '16px 4px 18px',  // header is above now; no floating controls to clear
               scrollBehavior: 'smooth',
               display: 'flex', flexDirection: 'column',
             }}
           >
-            <div style={{
+            <div className="ytg-fade-up" style={{
               display: 'flex', flexDirection: 'column', gap: 16,
               maxWidth: 760, margin: '0 auto', padding: '0 8px',
               width: '100%',
@@ -865,6 +864,7 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
               // instead of floating at the top of the viewport — the
               // standard chat UX (ChatGPT, iMessage, Telegram).
               marginTop: 'auto',
+              animation: `ytgFadeUp 0.5s ${C.spring} both`,
             }}>
               {messages.map((m, i) => (
                 <MessageBubble key={i} role={m.role} content={m.content} sources={m.sources} />
@@ -907,10 +907,10 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
             </div>
           </div>
 
-          {/* Composer pinned to bottom */}
+          {/* Composer pinned to bottom — width matches the message column */}
           <div style={{
             padding: '12px 8px 16px',
-            maxWidth: 776, width: '100%', margin: '0 auto',
+            maxWidth: 760, width: '100%', margin: '0 auto',
           }}>
             {errorBanner}
             {composerForm}
@@ -1017,35 +1017,36 @@ function ConversationRail({
       borderRight: `1px solid ${C.hair}`,
       minHeight: 0,
     }}>
-      {/* New chat button — top of rail. Flush row rhythm matching the
-          conversation items below: same height, same horizontal padding,
-          same border-radius. Distinguished only by text weight + small
-          tinted background on hover. No card shadow. */}
+      {/* New chat — its own affordance, not row zero of the list. Quiet
+          surface pill (hairline + soft card elevation) so it reads as
+          "the action" and the list below can be pure titles. */}
       <button
         type="button"
         onClick={onNew}
         disabled={sending || switching}
         style={{
           display: 'flex', alignItems: 'center', gap: 9,
-          padding: '8px 10px 8px 12px',
-          marginBottom: 10,
-          background: 'transparent',
-          border: 'none',
+          width: '100%',
+          padding: '9px 12px',
+          marginBottom: 16,
+          background: C.surface,
+          border: `1px solid ${C.hair}`,
+          boxShadow: C.cardShadow,
           color: C.text1,
           fontFamily: 'inherit',
           fontSize: 13, fontWeight: 600, letterSpacing: '-0.01em',
           cursor: sending || switching ? 'default' : 'pointer',
-          borderRadius: 8,
+          borderRadius: 10,
           textAlign: 'left',
-          transition: `background 140ms ${C.spring}`,
+          transition: `border-color 140ms ${C.spring}, box-shadow 140ms ${C.spring}`,
         }}
-        onMouseEnter={e => { if (!(sending || switching)) e.currentTarget.style.background = 'rgba(10,10,15,0.04)' }}
-        onMouseLeave={e => { if (!(sending || switching)) e.currentTarget.style.background = 'transparent' }}
+        onMouseEnter={e => { if (!(sending || switching)) { e.currentTarget.style.borderColor = C.hairActive; e.currentTarget.style.boxShadow = C.cardShadowLift } }}
+        onMouseLeave={e => { if (!(sending || switching)) { e.currentTarget.style.borderColor = C.hair; e.currentTarget.style.boxShadow = C.cardShadow } }}
       >
         <span style={{
           display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
           flexShrink: 0, width: 18, height: 18,
-          color: C.text1,
+          color: C.text2,
         }}>
           <SquarePen size={14} strokeWidth={1.9} />
         </span>
@@ -1061,8 +1062,8 @@ function ConversationRail({
         {groups.map(group => (
           <div key={group.label} style={{ marginBottom: 16 }}>
             <p style={{
-              fontSize: 10.5, fontWeight: 600, color: C.text3,
-              letterSpacing: '0.07em', textTransform: 'uppercase',
+              fontSize: 11, fontWeight: 600, color: C.text4,
+              letterSpacing: '-0.005em',
               margin: '0 0 6px 12px',
             }}>{group.label}</p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
@@ -1141,20 +1142,13 @@ function ConversationRow({ conversation, active, onSelect, onDelete, switching }
       style={{
         position: 'relative',
         display: 'flex', alignItems: 'center', gap: 9,
-        padding: '8px 10px 8px 12px',
+        padding: '7px 10px 7px 12px',
         borderRadius: 8,
         background: bg,
         cursor: active || switching ? 'default' : 'pointer',
         transition: `background 140ms ${C.spring}`,
       }}
     >
-      <span style={{
-        display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-        flexShrink: 0, width: 16, height: 16,
-        color: active ? C.text2 : C.text3,
-      }}>
-        <MessageSquare size={13} strokeWidth={1.8} />
-      </span>
       <span style={{
         flex: 1, minWidth: 0,
         fontSize: 13, fontWeight: active ? 600 : 500,
