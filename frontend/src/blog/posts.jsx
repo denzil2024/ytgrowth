@@ -67,7 +67,7 @@ export const posts = [
     readTime: '12 min read',
     content: () => (
       <>
-        <p>Click-through rate is the metric that determines whether YouTube's algorithm promotes your video or buries it. It is calculated before a single person watches a single second of your content, based entirely on one thing: whether your thumbnail earns the click.</p>
+        <p>Click-through rate is the metric that determines whether <a href="/blog/youtube-algorithm">YouTube's algorithm</a> promotes your video or buries it. It is calculated before a single person watches a single second of your content, based entirely on one thing: whether your thumbnail earns the click.</p>
 
         <p>Creators who struggle with low CTR despite strong content almost always have the same problem. Their thumbnails are technically acceptable but psychologically invisible. They blend into the feed rather than interrupting it, and on a platform where a viewer makes a scroll-or-click decision in under three seconds, blending in is the same as not showing up.</p>
 
@@ -196,7 +196,7 @@ export const posts = [
 
         <img src="/blog/youtube-maker-adobe.png" alt="Adobe Photoshop layer and export controls for pixel-perfect thumbnail precision" />
 
-        <p>Once the design is live, run it through YTGrowth's <a href="/features/thumbnail-iq">Thumbnail IQ</a> to benchmark it against the best thumbnail maker outputs from top performers in your niche.</p>
+        <p>Once the design is live, <a href="/features/thumbnail-iq">benchmark it against the top performers in your niche</a> to see how your packaging stacks up before you ever hit publish.</p>
 
         <h2>Test, Compare, and Optimize for the Algorithm</h2>
 
@@ -215,19 +215,19 @@ export const posts = [
 
         <blockquote><strong>Pro Tip:</strong> A 1% increase in CTR can result in thousands of additional views through the recommendation algorithm. On a video already receiving strong impressions, that single percentage point compounds into a meaningful difference in total reach within days.</blockquote>
 
-        <p>CTR and Average View Duration work together as a paired signal. A thumbnail that earns clicks but triggers immediate drop-offs tells the algorithm the content did not deliver on its visual promise. The goal is a thumbnail that attracts the right viewer, not just the most viewers.</p>
+        <p>CTR and <a href="/blog/youtube-watch-hours">Average View Duration</a> work together as a paired signal. A thumbnail that earns clicks but triggers immediate drop-offs tells the algorithm the content did not deliver on its visual promise. The goal is a thumbnail that attracts the right viewer, not just the most viewers.</p>
 
         <p>If a video is underperforming in the first 24 to 48 hours, the thumbnail is the first variable to change. Upload a new variation through the Test and Compare feature rather than replacing the original outright, so the data comparison remains intact.</p>
 
         <img src="/blog/youtube-maker-a-b-testing.png" alt="YouTube Studio Test and Compare feature running multiple thumbnail variations" />
 
-        <p>For a deeper read on whether your thumbnail is competitive before you even run a test, YTGrowth's <a href="/features/thumbnail-iq">Thumbnail IQ</a> scores your design against top performers in your niche on contrast, face presence, text density, and curiosity gap signals, giving you a data-backed starting point before the first impression is ever served.</p>
+        <p>For a deeper read on whether your thumbnail is competitive before you even run a test, <a href="/features/competitor-analysis">study the thumbnails winning in your niche</a> on contrast, face presence, text density, and curiosity gap signals, giving you a data-backed visual bar to clear before the first impression is ever served.</p>
 
         <h2>The Clickbait Trap: Why Honesty Protects Your Channel</h2>
 
         <p>Curiosity and deception are not the same thing. A thumbnail that creates genuine intrigue around real content drives clicks and watch time simultaneously. A thumbnail that overpromises or misrepresents what the video delivers earns the click and immediately loses the viewer, which is algorithmically worse than never earning the click at all.</p>
 
-        <p>A misleading thumbnail triggers early drop-offs. Early drop-offs destroy Average View Duration. Low AVD tells the algorithm the content failed to deliver, and the algorithm responds by pulling back distribution on that video and eventually on the channel as a whole.</p>
+        <p>A misleading thumbnail triggers early drop-offs. Early drop-offs destroy Average View Duration. Low AVD tells the algorithm the content failed to deliver, and the algorithm responds by pulling back distribution on that video and eventually on the channel as a whole. The <a href="/blog/youtube-seo-best-practices">2026 YouTube SEO blueprint</a> covers the CTR and retention thresholds the algorithm rewards once your packaging is honest.</p>
 
         <p>Three consequences no creator should accept:</p>
 
@@ -245,7 +245,7 @@ export const posts = [
 
         <p>The technical foundation keeps your thumbnail compliant. The 3-Second Rule makes it visible. The curiosity gap makes it irresistible. Testing confirms whether it works. None of those layers function independently, and skipping any one of them leaves clicks on the table that a more deliberate creator will earn instead. The <a href="/blog/youtube-thumbnail-size">YouTube thumbnail size guide</a> goes deeper on the technical specs and safe zones referenced here.</p>
 
-        <p>Start with the correct youtube thumbnail dimensions using YTGrowth's free <a href="/tools/youtube-thumbnail-resizer">Thumbnail Resizer</a>, build around mobile-first design principles, and use <a href="/features/thumbnail-iq">Thumbnail IQ</a> to benchmark your work against the top performers in your niche before every upload.</p>
+        <p>Start with the correct youtube thumbnail dimensions using YTGrowth's <a href="/tools/youtube-thumbnail-resizer">free Thumbnail Resizer</a>, build around mobile-first design principles, and treat every upload as an opportunity to close the distance between where your packaging is now and where your click-through rate needs to be.</p>
       </>
     ),
   },
