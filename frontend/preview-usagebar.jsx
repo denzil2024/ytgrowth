@@ -40,17 +40,23 @@ const C = { border: '#e6e6ec', text2: '#4a4a58', text3: '#9595a4' }
 /* Faithful sidebar footer. 320px white column; the footer block matches
  * Dashboard.jsx exactly: borderTop #e6e6ec, padding 14/16/12, gap 10,
  * with a What's-new placeholder above and Refer | Sign out below. */
+/* Mirrors the real WhatsNewCard's NEW flat styling (white, C.border, no
+   gradient, no red rail) so the footer composition screenshots true. */
 function WhatsNewPlaceholder() {
   return React.createElement('div', {
     style: {
-      border: `1px solid ${C.border}`, borderRadius: 11, padding: '11px 13px',
-      background: '#fff', display: 'flex', alignItems: 'center', gap: 10,
+      position: 'relative', background: '#ffffff', border: `1px solid ${C.border}`,
+      borderRadius: 11, padding: '13px 14px 14px 14px',
+      boxShadow: '0 1px 2px rgba(0,0,0,0.025), inset 0 1px 0 rgba(255,255,255,0.7)',
+      display: 'flex', alignItems: 'flex-start', gap: 11,
     },
   },
-    React.createElement('div', { style: { width: 30, height: 30, borderRadius: 8, background: '#f1f1f6', flexShrink: 0 } }),
-    React.createElement('div', { style: { minWidth: 0 } },
-      React.createElement('div', { style: { fontSize: 12.5, fontWeight: 700, color: '#0f0f13' } }, "What's new"),
-      React.createElement('div', { style: { fontSize: 11.5, color: C.text3, marginTop: 2 } }, 'Instagram tools just launched'),
+    React.createElement('span', { style: { flexShrink: 0, width: 28, height: 28, borderRadius: 8, background: 'rgba(229,37,27,0.08)', color: '#e5251b', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: 15, fontWeight: 700, marginTop: 1 } }, '✦'),
+    React.createElement('div', { style: { minWidth: 0, flex: 1 } },
+      React.createElement('div', { style: { fontSize: 9.5, fontWeight: 600, color: '#e5251b', letterSpacing: '0.11em', textTransform: 'uppercase', marginBottom: 5 } }, "What's new"),
+      React.createElement('div', { style: { fontSize: 13.5, fontWeight: 600, color: '#0a0a0f', lineHeight: 1.35, marginBottom: 5 } }, 'Instagram tools just launched'),
+      React.createElement('div', { style: { fontSize: 12.5, fontWeight: 450, color: 'rgba(10,10,15,0.58)', lineHeight: 1.55, marginBottom: 10 } }, 'Pull Reels ideas and hooks straight from your niche.'),
+      React.createElement('div', { style: { fontSize: 13, fontWeight: 600, color: '#e5251b' } }, 'Try it now →'),
     ),
   )
 }

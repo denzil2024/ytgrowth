@@ -4049,21 +4049,13 @@ function WhatsNewCard({ channelId, onNavigate }) {
   return (
     <div style={{
       position: 'relative',
-      background: 'linear-gradient(180deg, #ffffff 0%, #fafafc 100%)',
-      border: '1px solid #ececf0',
+      background: '#ffffff',
+      border: `1px solid ${C.border}`,
       borderRadius: 11,
       padding: '13px 14px 14px 14px',
       boxShadow: '0 1px 2px rgba(0,0,0,0.025), inset 0 1px 0 rgba(255,255,255,0.7)',
       fontFamily: "'Inter', system-ui, sans-serif",
     }}>
-      {/* Brand-tinted left accent rail so the card reads as a promo, not a
-          duplicate of the UsageBar below it. */}
-      <span aria-hidden style={{
-        position: 'absolute', left: 0, top: 12, bottom: 12,
-        width: 2, borderRadius: 100,
-        background: 'linear-gradient(180deg, #e5251b 0%, rgba(229,37,27,0.35) 100%)',
-      }}/>
-
       {/* Dismiss × */}
       <button
         type="button"
@@ -4084,7 +4076,7 @@ function WhatsNewCard({ channelId, onNavigate }) {
         <XIcon size={12} strokeWidth={2} />
       </button>
 
-      <div style={{ display: 'flex', alignItems: 'flex-start', gap: 11, paddingLeft: 6 }}>
+      <div style={{ display: 'flex', alignItems: 'flex-start', gap: 11 }}>
         {/* Sparkle icon in a brand-tinted circle */}
         <span style={{
           flexShrink: 0,
@@ -4795,7 +4787,7 @@ export default function Dashboard() {
           <div style={{ padding: '16px 22px', flexShrink: 0 }}>
            <div style={{
              background: '#fafafc',
-             border: '1px solid #ececf0',
+             border: `1px solid ${C.border}`,
              borderRadius: 12,
              padding: '15px 16px 14px',
            }}>
@@ -4812,8 +4804,8 @@ export default function Dashboard() {
               : (
                 <div style={{ display: 'flex', alignItems: 'center', gap: 13, marginBottom: 16 }}>
                   {data.channel.thumbnail
-                    ? <img src={data.channel.thumbnail} alt="" style={{ width: 42, height: 42, borderRadius: '50%', objectFit: 'cover', flexShrink: 0, boxShadow: '0 0 0 2px #ececf0' }}/>
-                    : <div style={{ width: 42, height: 42, borderRadius: '50%', background: C.redBg, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, fontWeight: 700, color: C.red, flexShrink: 0, boxShadow: '0 0 0 2px #ececf0' }}>{data.channel.channel_name[0].toUpperCase()}</div>
+                    ? <img src={data.channel.thumbnail} alt="" style={{ width: 42, height: 42, borderRadius: '50%', objectFit: 'cover', flexShrink: 0, boxShadow: `0 0 0 2px ${C.border}` }}/>
+                    : <div style={{ width: 42, height: 42, borderRadius: '50%', background: C.redBg, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, fontWeight: 700, color: C.red, flexShrink: 0, boxShadow: `0 0 0 2px ${C.border}` }}>{data.channel.channel_name[0].toUpperCase()}</div>
                   }
                   <div style={{ minWidth: 0, flex: 1 }}>
                     <p style={{ fontSize: 14.5, fontWeight: 700, color: C.text1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', letterSpacing: '-0.25px', lineHeight: 1.2 }}>{data.channel.channel_name}</p>
