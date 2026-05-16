@@ -52,78 +52,50 @@ const COUNTRY_FLAGS = {
 /* ── Styles ─────────────────────────────────────────────────────────────── */
 function useAdminStyles() {
   useEffect(() => {
-    if (!document.getElementById('ytg-admin-fonts')) {
+    if (!document.getElementById('ytg-admin-geist')) {
       const link = document.createElement('link')
-      link.id  = 'ytg-admin-fonts'
+      link.id  = 'ytg-admin-geist'
       link.rel = 'stylesheet'
-      link.href = 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap'
+      link.href = 'https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap'
       document.head.appendChild(link)
     }
-    if (!document.getElementById('ytg-admin-styles')) {
+    if (!document.getElementById('ytg-admin-styles-v2')) {
       const style = document.createElement('style')
-      style.id = 'ytg-admin-styles'
+      style.id = 'ytg-admin-styles-v2'
       style.textContent = `
-        .adm, .adm * { font-family:'Inter',system-ui,sans-serif; -webkit-font-smoothing:antialiased; box-sizing:border-box; }
+        .adm, .adm * { font-family:'Geist','Inter',system-ui,sans-serif; -webkit-font-smoothing:antialiased; box-sizing:border-box; }
+        /* Same 1040 centered measure as every other page in the suite. */
+        .adm { max-width:1040px; margin:0 auto; }
         .adm p,.adm span,.adm div,.adm h1,.adm h2,.adm h3 { margin:0; }
         .adm .num { font-variant-numeric:tabular-nums; }
 
-        /* Light stat card. Subtle gradient + accent line. No icons. */
+        /* Light stat card — suite card grammar: white, hairline, 14px,
+           single soft shadow + inset highlight. No pseudo textures. */
         .adm-stat-card {
-          background:linear-gradient(165deg, #ffffff 0%, #fafafd 60%, #f6f5fa 100%);
-          border:1px solid #e6e6ec; border-radius:20px;
-          padding:26px 28px 24px;
-          box-shadow:0 1px 2px rgba(0,0,0,0.03),0 6px 18px rgba(0,0,0,0.05);
-          transition:box-shadow 0.22s,transform 0.22s,border-color 0.22s;
+          background:#ffffff;
+          border:1px solid rgba(10,10,15,0.07); border-radius:14px;
+          padding:22px 24px;
+          box-shadow:0 1px 2px rgba(15,15,25,0.04), inset 0 1px 0 rgba(255,255,255,0.7);
           cursor:default; position:relative; overflow:hidden;
         }
-        .adm-stat-card::before {
-          content:''; position:absolute; top:0; left:0; right:0; height:3px;
-          background:linear-gradient(90deg, var(--adm-accent, #e5251b) 0%, var(--adm-accent, #e5251b) 55%, rgba(229,37,27,0) 100%);
-          opacity:0.9; transition:opacity 0.22s;
-        }
-        /* Soft red glow blooming behind the corner — gives the card "life" */
-        .adm-stat-card::after {
-          content:''; position:absolute; top:-40px; right:-40px;
-          width:160px; height:160px; border-radius:50%;
-          background:radial-gradient(circle, rgba(229,37,27,0.09) 0%, rgba(229,37,27,0.03) 40%, transparent 70%);
-          pointer-events:none;
-        }
-        .adm-stat-card:hover {
-          box-shadow:0 6px 18px rgba(0,0,0,0.07),0 24px 50px rgba(0,0,0,0.08);
-          transform:translateY(-3px); border-color:rgba(229,37,27,0.18);
-        }
-        .adm-stat-card:hover::before { opacity:1; }
 
-        /* Hero RED stat card — full gradient background, dot-grid texture */
+        /* Hero RED stat card — purposeful colour kept (the page's focal
+           anchor), but the dot-grid texture and triple shadow are gone.
+           One confident red shadow + a single soft top-edge sheen. */
         .adm-stat-card-red {
           position:relative; overflow:hidden;
-          background:
-            radial-gradient(circle at 100% 0%, rgba(255,255,255,0.18) 0%, transparent 45%),
-            linear-gradient(160deg, #ff3b30 0%, #e5251b 45%, #a50f07 100%);
-          border:none; border-radius:20px;
-          padding:26px 28px 24px;
+          background:linear-gradient(160deg, #ef3a31 0%, #e5251b 55%, #c81d14 100%);
+          border:none; border-radius:14px;
+          padding:22px 24px;
           color:#ffffff;
-          box-shadow:0 4px 18px rgba(229,37,27,0.34), 0 24px 60px rgba(229,37,27,0.20), inset 0 1px 0 rgba(255,255,255,0.20);
-          transition:transform 0.22s, box-shadow 0.22s;
+          box-shadow:0 1px 2px rgba(229,37,27,0.28), 0 12px 32px -10px rgba(229,37,27,0.45), inset 0 1px 0 rgba(255,255,255,0.22);
           cursor:default;
         }
-        /* Faint dot-grid pattern — gives the red card a tactile, premium texture */
-        .adm-stat-card-red::before {
-          content:''; position:absolute; inset:0;
-          background-image:radial-gradient(rgba(255,255,255,0.10) 1px, transparent 1px);
-          background-size:14px 14px; background-position:0 0;
-          pointer-events:none; opacity:0.55;
-        }
-        /* Soft white sheen in corner */
         .adm-stat-card-red::after {
-          content:''; position:absolute; top:-50px; right:-50px;
-          width:220px; height:220px; border-radius:50%;
-          background:radial-gradient(circle, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.05) 45%, transparent 70%);
+          content:''; position:absolute; top:-60px; right:-60px;
+          width:200px; height:200px; border-radius:50%;
+          background:radial-gradient(circle, rgba(255,255,255,0.14) 0%, transparent 65%);
           pointer-events:none;
-        }
-        .adm-stat-card-red:hover {
-          transform:translateY(-3px);
-          box-shadow:0 8px 24px rgba(229,37,27,0.42), 0 32px 80px rgba(229,37,27,0.28), inset 0 1px 0 rgba(255,255,255,0.24);
         }
 
         /* 7-day sparkline. Thin bars, today on the right. */
@@ -201,24 +173,24 @@ function useAdminStyles() {
           display:flex; align-items:center; gap:10px;
         }
         .adm-section-title h2 {
-          font-size:19px; font-weight:800; color:#0f0f13; letter-spacing:-0.5px;
+          font-size:17px; font-weight:700; color:#0a0a0f; letter-spacing:-0.3px;
         }
         .adm-section-count {
-          font-size:11.5px; font-weight:700; color:#e5251b;
-          background:#fff5f5; border:1px solid #fecaca;
+          font-size:11.5px; font-weight:700; color:#9595a4;
+          background:#f1f1f6; border:1px solid #e6e6ec;
           padding:2px 9px; border-radius:100px;
           font-variant-numeric:tabular-nums;
         }
         .adm-section-sub {
-          font-size:13.5px; color:#4a4a58; font-weight:500; line-height:1.55;
-          margin-top:5px;
+          font-size:13px; color:#9595a4; font-weight:450; line-height:1.5;
+          margin-top:4px;
         }
         /* Card-embedded section header sits at the top of a SectionCard */
         .adm-section-cardhdr {
-          padding:22px 28px;
-          border-bottom:1px solid #e6e6ec;
+          padding:20px 24px;
+          border-bottom:1px solid rgba(10,10,15,0.07);
           display:flex; align-items:flex-start; justify-content:space-between; gap:14px;
-          background:linear-gradient(180deg, #ffffff 0%, #fafafc 100%);
+          background:#ffffff;
         }
 
         /* Live indicator dot pulses softly */
@@ -978,15 +950,15 @@ export default function Admin() {
       {/* ── Page header ─────────────────────────────────────────────────── */}
       <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 28, gap: 16 }}>
         <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 8 }}>
-            <h1 style={{ fontSize: 26, fontWeight: 800, color: C.text1, letterSpacing: '-0.7px' }}>Admin</h1>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 6 }}>
+            <h1 style={{ fontSize: 26, fontWeight: 700, color: C.text1, letterSpacing: '-0.7px', lineHeight: 1.1 }}>Admin</h1>
             <span style={{
-              fontSize: 10, fontWeight: 800, letterSpacing: '0.1em', textTransform: 'uppercase',
-              color: C.red, background: C.redBg, border: `1px solid ${C.redBdr}`,
+              fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase',
+              color: '#9595a4', background: '#f1f1f6', border: '1px solid #e6e6ec',
               padding: '3px 9px', borderRadius: 100,
             }}>Internal</span>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13.5, color: C.text2, fontWeight: 500 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 14, color: 'rgba(10,10,15,0.55)', fontWeight: 500 }}>
             <span className="adm-live-dot" aria-hidden="true" />
             <span>{data.generated_at ? `Updated ${relTime(data.generated_at)}` : 'Live'}</span>
           </div>
