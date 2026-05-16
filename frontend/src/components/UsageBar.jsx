@@ -61,157 +61,142 @@ export default function UsageBar({ channelId, email, dark = false, onPlan, onUsa
   // Canonical palette — matches Dashboard C tokens.
   const C = {
     red:    '#e5251b',
-    redDim: '#b91c1c',
+    redHi:  '#ef3a31',
     amber:  '#d97706',
-    amberDim:'#b45309',
     green:  '#059669',
-    greenDim:'#047857',
     text1:  dark ? '#ffffff' : '#0f0f13',
     text2:  dark ? 'rgba(255,255,255,0.62)' : '#4a4a58',
     text3:  dark ? 'rgba(255,255,255,0.45)' : '#9595a4',
     track:  dark ? 'rgba(255,255,255,0.10)' : '#eceef2',
-    cardBg: dark ? 'rgba(255,255,255,0.04)' : 'linear-gradient(180deg, #fafafc 0%, #f5f6f9 100%)',
-    cardBdr:dark ? 'rgba(255,255,255,0.08)' : '#ececf0',
   }
 
-  // State colour: green when remaining > 50%, amber when ≤ 50%, red when ≤ 10%.
-  // Drives the accent dot, the big number, and the bar fill.
-  const stateColor = remainingPct > 50 ? C.green : remainingPct > 10 ? C.amber : C.red
+  // State colour: green healthy, amber as it drains, red when critical.
+  // Threshold aligned with nearLimit (20%) so colour and CTA agree.
+  const stateColor = remainingPct > 50 ? C.green : remainingPct > 20 ? C.amber : C.red
 
-  const accent    = stateColor
-  const accentDim = stateColor
-  const numClr    = stateColor
-  const barFrom   = stateColor
-  const barTo     = stateColor
+  const PackChip = hasPack ? (
+    <span style={{
+      fontSize: 10, fontWeight: 700, color: C.green,
+      background: dark ? 'rgba(5,150,105,0.18)' : '#ecfdf5',
+      border: `1px solid ${dark ? 'rgba(5,150,105,0.3)' : '#a7f3d0'}`,
+      padding: '1px 7px', borderRadius: 99,
+      fontVariantNumeric: 'tabular-nums', letterSpacing: '0.02em',
+      flexShrink: 0,
+    }}>
+      +{usage.pack_balance} pack
+    </span>
+  ) : null
+
+  /* ── Quiet mode (default). No card chrome — a borderless slim strip so
+        it recedes into the footer instead of stacking as a second box
+        next to the What's-new card. ──────────────────────────────────── */
+  if (!showCTA) {
+    return (
+      <div style={{ padding: '1px 2px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, marginBottom: 7 }}>
+          <span style={{
+            fontSize: 10, fontWeight: 700, color: C.text3,
+            letterSpacing: '0.10em', textTransform: 'uppercase',
+          }}>
+            AI analyses
+          </span>
+          <span style={{ fontVariantNumeric: 'tabular-nums' }}>
+            <span style={{ fontSize: 13, fontWeight: 700, color: stateColor }}>{remaining}</span>
+            <span style={{ fontSize: 12, fontWeight: 500, color: C.text3 }}> / {allowance}</span>
+          </span>
+        </div>
+        <div style={{ height: 4, background: C.track, borderRadius: 99, overflow: 'hidden' }}>
+          <div style={{
+            width: `${remainingPct}%`, height: '100%',
+            background: stateColor, borderRadius: 99,
+            transition: 'width 0.6s ease, background 0.2s',
+          }} />
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, marginTop: 6 }}>
+          <span style={{ fontSize: 10.5, color: C.text3, fontWeight: 500 }}>
+            {refillLabel(usage.reset_date)}
+          </span>
+          {PackChip}
+        </div>
+      </div>
+    )
+  }
+
+  /* ── Alert mode. Only when near/at limit with no pack fallback — i.e.
+        exactly when the space and the CTA are earned. A soft tinted card
+        (amber draining, red empty) that actually draws the eye, with the
+        shout removed: no glow drop-shadow on Upgrade. ─────────────────── */
+  const alertBg  = atLimit ? 'rgba(229,37,27,0.05)'  : 'rgba(217,119,6,0.06)'
+  const alertBdr = atLimit ? 'rgba(229,37,27,0.18)'  : 'rgba(217,119,6,0.20)'
 
   return (
     <div style={{
-      background: C.cardBg,
-      border: `1px solid ${C.cardBdr}`,
+      background: dark ? 'rgba(255,255,255,0.04)' : alertBg,
+      border: `1px solid ${dark ? 'rgba(255,255,255,0.10)' : alertBdr}`,
       borderRadius: 11,
       padding: '10px 12px 11px',
-      boxShadow: dark
-        ? 'inset 0 1px 0 rgba(255,255,255,0.04)'
-        : '0 1px 2px rgba(0,0,0,0.025), inset 0 1px 0 rgba(255,255,255,0.7)',
     }}>
-      {/* Header row — eyebrow on left, big remaining number on right.
-          Tighter than before: the number lives inline with the label so the
-          card height drops by ~25% without losing the eyebrow + state-dot. */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, marginBottom: 8 }}>
         <span style={{ display: 'inline-flex', alignItems: 'center', gap: 7 }}>
-          <span style={{
-            width: 6, height: 6, borderRadius: '50%',
-            background: accent,
-            boxShadow: `0 0 0 3px ${accent}1f`,
-            flexShrink: 0,
-          }} />
-          <p style={{
-            fontSize: 10.5, fontWeight: 700, color: C.text3,
-            letterSpacing: '0.11em', textTransform: 'uppercase',
-          }}>
+          <span style={{ width: 6, height: 6, borderRadius: '50%', background: stateColor, flexShrink: 0 }} />
+          <p style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase' }}>
             AI analyses
           </p>
         </span>
         <span style={{ display: 'inline-flex', alignItems: 'baseline', gap: 3, fontVariantNumeric: 'tabular-nums' }}>
-          <span style={{
-            fontSize: 20, fontWeight: 800, color: numClr,
-            letterSpacing: '-0.6px', lineHeight: 1,
-          }}>
+          <span style={{ fontSize: 19, fontWeight: 800, color: stateColor, letterSpacing: '-0.5px', lineHeight: 1 }}>
             {remaining}
           </span>
-          <span style={{ fontSize: 12, fontWeight: 600, color: C.text3 }}>
-            / {allowance}
-          </span>
-          <span style={{ fontSize: 11, fontWeight: 500, color: C.text2, marginLeft: 3 }}>
-            left
-          </span>
+          <span style={{ fontSize: 12, fontWeight: 600, color: C.text3 }}>/ {allowance}</span>
         </span>
       </div>
 
-      {/* Remaining bar — kept the gradient + shine; just a touch thinner. */}
-      <div style={{
-        background: C.track, borderRadius: 99, height: 5,
-        overflow: 'hidden', marginBottom: 8,
-        boxShadow: dark ? 'none' : 'inset 0 1px 1px rgba(0,0,0,0.04)',
-        position: 'relative',
-      }}>
+      <div style={{ background: C.track, borderRadius: 99, height: 5, overflow: 'hidden', marginBottom: 8 }}>
         <div style={{
-          width: `${remainingPct}%`,
-          height: '100%',
-          background: `linear-gradient(90deg, ${barFrom} 0%, ${barTo} 100%)`,
-          borderRadius: 99,
+          width: `${remainingPct}%`, height: '100%',
+          background: stateColor, borderRadius: 99,
           transition: 'width 0.8s ease, background 0.2s',
-          position: 'relative',
-          boxShadow: (atLimit || nearLimit) ? `0 0 6px ${accent}50` : 'none',
-        }}>
-          <div style={{
-            position: 'absolute', top: 0, left: 0, right: 0, height: 2,
-            background: 'linear-gradient(180deg, rgba(255,255,255,0.45) 0%, rgba(255,255,255,0) 100%)',
-            borderRadius: '99px 99px 0 0',
-          }} />
-        </div>
+        }} />
       </div>
 
-      {/* Refill countdown + pack chip */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 8 }}>
-        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: 10.5, color: C.text3, fontWeight: 500 }}>
-          <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, opacity: 0.85 }}>
-            <circle cx="6" cy="6" r="4.5"/><path d="M6 3.5v2.5l1.6 1"/>
-          </svg>
-          {refillLabel(usage.reset_date)}
-        </span>
-        {hasPack && (
-          <span style={{
-            fontSize: 10, fontWeight: 700, color: C.green,
-            background: dark ? 'rgba(5,150,105,0.18)' : '#ecfdf5',
-            border: `1px solid ${dark ? 'rgba(5,150,105,0.3)' : '#a7f3d0'}`,
-            padding: '1px 7px', borderRadius: 99,
-            fontVariantNumeric: 'tabular-nums', letterSpacing: '0.02em',
-          }}>
-            +{usage.pack_balance} pack
-          </span>
-        )}
+      <div style={{ fontSize: 10.5, color: C.text3, fontWeight: 500 }}>
+        {refillLabel(usage.reset_date)}
       </div>
 
-      {/* CTAs — only when near/at limit with no pack. Stay full-width so
-          the urgency lands; reduced vertical padding only. */}
-      {showCTA && (
-        <div style={{ display: 'flex', gap: 6, marginTop: 10 }}>
-          <button
-            onClick={() => window.location.href = '/?tab=monthly'}
-            style={{
-              flex: 1, fontSize: 12, fontWeight: 700,
-              padding: '6px 0', borderRadius: 100,
-              cursor: 'pointer', border: 'none',
-              background: C.red, color: '#fff',
-              fontFamily: 'inherit',
-              boxShadow: '0 1px 3px rgba(0,0,0,0.12), 0 4px 14px rgba(229,37,27,0.32)',
-              transition: 'filter 0.15s, transform 0.15s',
-            }}
-            onMouseEnter={e => { e.currentTarget.style.filter = 'brightness(1.08)'; e.currentTarget.style.transform = 'translateY(-1px)' }}
-            onMouseLeave={e => { e.currentTarget.style.filter = 'none'; e.currentTarget.style.transform = 'translateY(0)' }}
-          >
-            Upgrade
-          </button>
-          <button
-            onClick={() => window.location.href = '/?tab=packs'}
-            style={{
-              flex: 1, fontSize: 12, fontWeight: 600,
-              padding: '6px 0', borderRadius: 100,
-              cursor: 'pointer',
-              background: 'transparent',
-              border: `1px solid ${dark ? 'rgba(255,255,255,0.18)' : '#e6e6ec'}`,
-              color: C.text2,
-              fontFamily: 'inherit',
-              transition: 'background 0.15s, border-color 0.15s',
-            }}
-            onMouseEnter={e => { e.currentTarget.style.background = dark ? 'rgba(255,255,255,0.06)' : '#f4f4f8'; e.currentTarget.style.borderColor = dark ? 'rgba(255,255,255,0.28)' : '#d0d0d8' }}
-            onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.borderColor = dark ? 'rgba(255,255,255,0.18)' : '#e6e6ec' }}
-          >
-            + Pack
-          </button>
-        </div>
-      )}
+      <div style={{ display: 'flex', gap: 6, marginTop: 10 }}>
+        <button
+          onClick={() => window.location.href = '/?tab=monthly'}
+          style={{
+            flex: 1, fontSize: 12, fontWeight: 600,
+            padding: '7px 0', borderRadius: 100,
+            cursor: 'pointer', border: 'none',
+            background: 'linear-gradient(180deg, #ef3a31 0%, #e5251b 100%)',
+            color: '#fff', fontFamily: 'inherit',
+            boxShadow: '0 1px 2px rgba(229,37,27,0.28), inset 0 1px 0 rgba(255,255,255,0.20)',
+            transition: 'filter 0.15s',
+          }}
+          onMouseEnter={e => { e.currentTarget.style.filter = 'brightness(1.06)' }}
+          onMouseLeave={e => { e.currentTarget.style.filter = 'none' }}
+        >
+          Upgrade
+        </button>
+        <button
+          onClick={() => window.location.href = '/?tab=packs'}
+          style={{
+            flex: 1, fontSize: 12, fontWeight: 600,
+            padding: '7px 0', borderRadius: 100,
+            cursor: 'pointer',
+            background: dark ? 'transparent' : '#ffffff',
+            border: `1px solid ${dark ? 'rgba(255,255,255,0.18)' : '#e6e6ec'}`,
+            color: C.text2, fontFamily: 'inherit',
+            transition: 'background 0.15s, border-color 0.15s',
+          }}
+          onMouseEnter={e => { e.currentTarget.style.background = dark ? 'rgba(255,255,255,0.06)' : '#f7f7fa'; e.currentTarget.style.borderColor = dark ? 'rgba(255,255,255,0.28)' : '#d6d6de' }}
+          onMouseLeave={e => { e.currentTarget.style.background = dark ? 'transparent' : '#ffffff'; e.currentTarget.style.borderColor = dark ? 'rgba(255,255,255,0.18)' : '#e6e6ec' }}
+        >
+          + Pack
+        </button>
+      </div>
     </div>
   )
 }
