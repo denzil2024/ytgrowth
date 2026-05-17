@@ -57,6 +57,226 @@ export const CATEGORIES = {
 
 export const posts = [
   {
+    slug: 'shorts-tagging',
+    title: 'YouTube Shorts Tagging: How to Use Hashtags and Metadata for More Views',
+    excerpt: 'Zero views on a Short is usually a tagging problem, not a content one. The difference between visible hashtags and hidden metadata tags, the 3-tier hashtag framework (1 broad, 2 niche, 1 brand), the Tags field most creators never fill, and the four mistakes that suppress reach across every niche.',
+    date: '2026-05-17',
+    category: CATEGORIES.seo,
+    cover: '/blog/shorts-tagging-cover.jpg',
+    author: 'Denzil',
+    readTime: '9 min read',
+    content: () => (
+      <>
+        <p>Getting zero views on your Shorts is not always a content problem. Most of the time, it is a tagging problem.</p>
+
+        <p>YouTube uses <a href="/blog/video-tagging">metadata, including tags</a>, to understand the content and context of your video. Your youtube shorts tagging setup is what tells the algorithm which audience to serve your Short to. Without the right signals, even well-produced content gets ignored.</p>
+
+        <p><strong>Tags are not magic words. They are data points you feed the algorithm to trigger accurate categorization and distribution.</strong></p>
+
+        <p>By the end of this guide, you will know how to:</p>
+
+        <ul>
+          <li>Tell the difference between visible hashtags for youtube shorts and hidden metadata tags, and how to use both</li>
+          <li>Build a 3-tier tags for youtube shorts strategy that gives the algorithm a clear, consistent signal</li>
+          <li>Avoid the specific tagging mistakes that suppress reach across every niche</li>
+        </ul>
+
+        <h2>Tags vs. Hashtags: Clearing the Confusion</h2>
+
+        <p>Most creators use the terms tags and hashtags interchangeably. They are two different things, and confusing them is one of the main reasons youtube shorts tagging setups fail.</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Feature</th>
+              <th>Hashtags</th>
+              <th>Metadata Tags</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Visibility</td><td>Visible to viewers</td><td>Hidden, only in YouTube Studio</td></tr>
+            <tr><td>Placement</td><td>Video title or description</td><td>Tags field in upload settings</td></tr>
+            <tr><td>Function</td><td>Discovery in the Shorts feed</td><td>SEO and search ranking</td></tr>
+            <tr><td>Clickable</td><td>Yes, leads to similar content feed</td><td>No</td></tr>
+            <tr><td>Example</td><td>#Shorts, #GamingTips</td><td>"how to get views on shorts"</td></tr>
+          </tbody>
+        </table>
+
+        <p>Hashtags for youtube shorts appear directly in your video title or description and are clickable, leading viewers to a feed of similar content. They are a discovery tool, designed to pull in viewers who are browsing by topic or trend.</p>
+
+        <p>Metadata tags are added in the Tags field inside YouTube Studio during upload. They are invisible to viewers but are <a href="/blog/youtube-algorithm">read directly by the algorithm</a> to determine your content's topic, category, and search relevance. These are where you place long-tail keyword phrases that describe exactly what your video covers.</p>
+
+        <p>Both work together as part of a complete youtube shorts tagging strategy. Hashtags drive feed discovery. Metadata tags drive search ranking. Relying on one without the other leaves half your distribution potential unused.</p>
+
+        <blockquote><strong>One important clarification:</strong> #Shorts is a hashtag, not a metadata tag. It belongs in your description, not the Tags field. Its sole function is to signal to YouTube that the video should be classified and distributed as a Short.</blockquote>
+
+        <h2>The 3-Tier Hashtag Strategy for Discovery</h2>
+
+        <p>Random youtube shorts tagging produces random results. This 3-tier framework gives the algorithm three distinct signals in one description: what format the content is, who it is for, and who made it.</p>
+
+        <p>The Golden Ratio is 1 Broad tag, 2 Niche tags, 1 Brand tag. Four hashtags, each serving a specific purpose.</p>
+
+        <h3>Tier 1: Broad Discovery Tags</h3>
+
+        <p>Broad tags signal the content format to YouTube before anything else. The most important one is #Shorts. Using #Shorts is essential because it tells the YouTube system to classify and <a href="/blog/youtube-shorts-algorithm">distribute the video as a Short</a>, triggering the Shorts feed.</p>
+
+        <p>Without it, YouTube may index your vertical video as a standard upload and distribute it through the wrong feed entirely.</p>
+
+        <img src="/blog/shorts-tagging-shorts.png" alt="The #Shorts hashtag in a description signalling YouTube to distribute as a Short" />
+
+        <p>Keep Tier 1 to one or two tags maximum. Options include #Shorts, #Trending, and #Viral. More than two broad tags dilutes the signal without adding distribution value.</p>
+
+        <blockquote><strong>Pro Tip:</strong> Always place #Shorts in the description, not the title. Putting hashtags in the title makes it look cluttered and reduces click-through rate. Keep the title clean and clickable.</blockquote>
+
+        <h3>Tier 2: Niche-Specific Tags</h3>
+
+        <p>Niche tags are where trending hashtags for youtube shorts do their real work. These tags tell the algorithm exactly which audience segment your content belongs to, connecting your Short to viewers already watching similar content.</p>
+
+        <p>For a cooking channel, this means tags like #RecipeShorts or #QuickMeals. For gaming, it means #GamingTips or #PCGaming. The more specific the tag, the more accurate the audience match.</p>
+
+        <p>Use two niche tags per upload. One broad niche tag (e.g., #Gaming) and one specific sub-niche tag (e.g., #FPSGaming) gives the algorithm both a wide and a narrow categorization signal.</p>
+
+        <blockquote><strong>Pro Tip:</strong> Use YouTube's autocomplete to find youtube shorts trending hashtags in real time. Type your niche keyword into the YouTube search bar and note what appears. These are active, high-traffic tags already being used by your target audience.</blockquote>
+
+        <h3>Tier 3: Brand and Series Tags</h3>
+
+        <p>Brand tags group your content together and train the algorithm to recognize your channel as a consistent source within a specific niche. Use your channel name or a recurring series title as a hashtag.</p>
+
+        <p>For example, if your channel is TechWithJames, use #TechWithJames on every upload. Over time, YouTube begins associating that tag with your content category and viewer profile.</p>
+
+        <img src="/blog/shorts-tagging-brand.png" alt="A consistent brand hashtag grouping a channel's Shorts into a content library" />
+
+        <p>This tier also helps viewers find more of your content directly. Clicking a brand hashtag pulls up every Short you have tagged with it, functioning as a self-contained content library.</p>
+
+        <blockquote><strong>Pro Tip:</strong> Keep your brand tag consistent across every upload. Changing it between videos breaks the grouping signal and reduces its long-term SEO value.</blockquote>
+
+        <h2>Hidden Metadata: Optimizing the 'Tags' Field in YouTube Studio</h2>
+
+        <p>Most creators stop at hashtags and ignore the Tags field entirely. This is a missed SEO opportunity. The Tags field in YouTube Studio is where your youtube shorts tagging strategy gets its <a href="/blog/what-is-youtube-seo">search ranking power</a>.</p>
+
+        <p>Here is how to access and fill it correctly:</p>
+
+        <ol>
+          <li>Go to YouTube Studio and click Create, then Upload Video.</li>
+          <li>On the details page, scroll down and click More Options.</li>
+          <li>Locate the Tags field. This is where you add your hidden metadata tags.</li>
+          <li>Add your tags separated by commas. YouTube allows up to 500 characters in this field.</li>
+          <li>Click Save once your tags are in place before publishing.</li>
+        </ol>
+
+        <p>The screenshot below shows the Tags field sitting below the Language and Caption settings in the More Options panel. It is easy to miss on the first upload.</p>
+
+        <img src="/blog/shorts-tagging-hidden-meta-data.png" alt="The hidden Tags field in YouTube Studio's More Options panel" />
+
+        <h3>What to put in the Tags field</h3>
+
+        <p>Use long-tail keyword phrases that describe exactly what your video covers. For example, "how to get more views on youtube shorts", "youtube shorts hashtags for views", or "best settings for youtube shorts" are all valid metadata tags. These phrases match what viewers are actively searching for.</p>
+
+        <p>Also include common misspellings of your niche keywords. If your niche is "fitness," add "fitniss" or "fitnes" as tags. YouTube's algorithm cross-references these against search queries and uses them to surface your content in relevant results.</p>
+
+        <p>A youtube shorts tag generator tool like TunePocket or RyRob can help you identify high-volume keywords your competitors are already ranking for. Run your main topic through one of these tools before every upload to find tags you may have missed.</p>
+
+        <blockquote><strong>Warning:</strong> Do not stuff the Tags field with irrelevant keywords. Adding 500 characters of unrelated tags to chase trending topics is classified as misleading metadata by YouTube. This can result in a strike against your channel or suppressed distribution across all your content, not just the video in question.</blockquote>
+
+        <p>Keep your tags tightly relevant to the specific video. Ten accurate tags outperform fifty vague ones every time.</p>
+
+        <h2>Niche-Specific Viral Tags: Copy and Paste Starters</h2>
+
+        <p>These lists are starting points, not final answers. Use them to build your Tier 2 niche tags, then refine based on what is actually trending in your specific sub-niche. Trending hashtags for youtube shorts change seasonally, and event-based tags like #Christmas or #Challenge spike in short windows, so check the YouTube Explore page regularly to stay current.</p>
+
+        <h3>Gaming</h3>
+        <ul>
+          <li>#gaming</li>
+          <li>#pcgaming</li>
+          <li>#fps</li>
+          <li>#mobilegaming</li>
+          <li>#gamingshorts</li>
+          <li>#[GameName] (always include the specific game title you are playing)</li>
+        </ul>
+
+        <h3>Food and Cooking</h3>
+        <ul>
+          <li>#foodshorts</li>
+          <li>#recipeshorts</li>
+          <li>#quickmeals</li>
+          <li>#cookingvideo</li>
+          <li>#foodtiktok</li>
+          <li>#easyrecipes</li>
+        </ul>
+
+        <h3>Tech</h3>
+        <ul>
+          <li>#techtips</li>
+          <li>#techshorts</li>
+          <li>#gadgets</li>
+          <li>#howto</li>
+          <li>#techreview</li>
+          <li>#androidtips</li>
+        </ul>
+
+        <h3>Education and Tutorials</h3>
+        <ul>
+          <li>#learnontiktok</li>
+          <li>#edutok</li>
+          <li>#studytips</li>
+          <li>#didyouknow</li>
+          <li>#howtoplay</li>
+          <li>#tips</li>
+        </ul>
+
+        <h3>Comedy and Entertainment</h3>
+        <ul>
+          <li>#funny</li>
+          <li>#relatable</li>
+          <li>#comedy</li>
+          <li>#shortsfired</li>
+          <li>#funnyshorts</li>
+          <li>#trending</li>
+        </ul>
+
+        <p>These tags cover the broad and niche tiers. Your brand tag still needs to be added on top of whichever list you use.</p>
+
+        <p>For tags for youtube shorts gaming specifically, always pair a broad gaming tag with the exact game title. #Gaming alone puts you in a pool of millions. #Gaming + #WarzoneTips narrows the algorithm's categorization to a specific, high-intent audience.</p>
+
+        <p>The lists above are a foundation. To find what is working right now in your niche, use the <a href="/features/competitor-analysis">Competitor Analysis</a> feature in YTGrowth to see <a href="/blog/youtube-competitor-analysis">which tags and title patterns your top competitors are building content around</a>. That data is pulled from real channel performance, not guesswork.</p>
+
+        <h2>Common Tagging Mistakes That Kill Your Reach</h2>
+
+        <p>Bad youtube shorts tagging advice is everywhere, and most of it comes from creators who never tested what they recommend. These are the four mistakes that directly suppress distribution.</p>
+
+        <h3>Mistake: Stuffing hashtags into your video title</h3>
+
+        <p><strong>Fix:</strong> Keep your title clean and keyword-focused. Place all hashtags in the description instead. A title loaded with hashtags reads as spam to both the algorithm and the viewer, and it reduces click-through rate by making the title harder to read.</p>
+
+        <h3>Mistake: Using irrelevant trending tags to chase views</h3>
+
+        <p><strong>Fix:</strong> Only use tags that accurately describe your video. Over-tagging or adding irrelevant tags can trigger a misleading metadata strike from YouTube, which suppresses distribution across your entire channel, not just the video in question.</p>
+
+        <h3>Mistake: Ignoring the first three lines of your description</h3>
+
+        <p><strong>Fix:</strong> Place your most important youtube shorts hashtags within the first three lines of the description. On mobile, YouTube displays the first hashtag above the video title. That position is valuable real estate and most creators waste it with a generic caption.</p>
+
+        <h3>Mistake: Skipping YouTube Autocomplete for tag research</h3>
+
+        <p><strong>Fix:</strong> Type your topic into the YouTube search bar and use the autocomplete suggestions as tag ideas. These are real search queries from real viewers. They reflect current demand better than any static tag list.</p>
+
+        <p>For a deeper view of which keywords are driving traffic in your niche right now, the <a href="/features/keyword-research">Keyword Explorer</a> in YTGrowth pulls live search data so your youtube shorts hashtags for views are based on actual search volume, not guesswork.</p>
+
+        <h2>Final Thoughts: Tag With Intent, Not Volume</h2>
+
+        <p>Effective youtube shorts tagging is not about adding as many tags as possible. It is about giving the algorithm three clear signals: what format the content is, who it is for, and what it is about.</p>
+
+        <p>Use the 3-tier framework on every upload. Keep your hashtags for youtube shorts in the description, not the title. Fill the Tags field in YouTube Studio with specific long-tail phrases. And never use a tag your video does not directly relate to.</p>
+
+        <p>The creators getting consistent views on viral hashtags for youtube shorts are not guessing. They are researching what works in their niche, applying a repeatable system, and refining it upload by upload.</p>
+
+        <p>If you want to see exactly how your current tagging and SEO holds up against competing channels, the <a href="/features/seo-studio">SEO Studio</a> and Keyword Explorer in YTGrowth give you a full picture of where your discoverability stands and what to fix first.</p>
+
+        <p>Good tagging does not guarantee virality. It guarantees the algorithm has everything it needs to put your content in front of the right audience. That is where growth starts.</p>
+      </>
+    ),
+  },
+  {
     slug: 'video-tagging',
     title: 'Video Tagging Best Practices: How to Signal Relevance to YouTube and Google in One Workflow',
     excerpt: 'Tags are not a keyword dump at the bottom of an upload form. They are a structured signal system that tells two separate machines what your content is about: the YouTube algorithm and Google\'s index. The priority-order tag method, the 200-300 character discipline, and the VideoObject Schema layer that gets the same video discovered twice.',
