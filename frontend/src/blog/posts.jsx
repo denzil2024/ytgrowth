@@ -57,6 +57,239 @@ export const CATEGORIES = {
 
 export const posts = [
   {
+    slug: 'youtube-tags',
+    title: 'YouTube Tags for Views: The Best Tags to Use and How to Find Them',
+    excerpt: 'Tags are not a formality. They are the primary signal you send the algorithm about who should see your content. What makes a tag actually drive views (volume, competition, relevance), the best tag structures by niche, hashtags vs metadata tags, and the 15-tag system to apply on every upload.',
+    date: '2026-05-17',
+    category: CATEGORIES.seo,
+    cover: '/blog/youtube-tags-cover.jpg',
+    author: 'Denzil',
+    readTime: '11 min read',
+    content: () => (
+      <>
+        <p>Most creators treat youtube tags for views as a box to tick before hitting publish. They add a few obvious keywords, maybe copy what a competitor used, and move on. That approach is why most videos never get found.</p>
+
+        <p>Tags are not a formality. They are the primary signal you send to <a href="/blog/youtube-algorithm">the algorithm</a> about who should see your content. The algorithm does not watch your video before deciding where to distribute it. It reads your metadata first, and your tags are a core part of that metadata.</p>
+
+        <p>This guide breaks down what makes a tag actually drive views, how to find the most searched keyword on youtube in your niche, and how to build a complete tagging system you can apply to every upload consistently.</p>
+
+        <h2>What Makes a Tag Drive Views</h2>
+
+        <p>Not all tags for youtube videos perform equally. A tag only drives views when it has three qualities working together: real search volume, manageable competition, and direct relevance to your specific video.</p>
+
+        <p><strong>Search volume</strong> tells you how many people are actively typing that phrase into YouTube. A tag with no search volume does not connect your video to any active demand. It sits in your metadata doing nothing.</p>
+
+        <p><strong>Competition level</strong> tells you how many other videos are already targeting that same tag. High volume with high competition means established channels with large audiences will consistently outrank you. The sweet spot is a tag with solid search volume and a competition score low enough for a smaller channel to rank.</p>
+
+        <img src="/blog/youtube-tags-competition.png" alt="A tag's search volume measured against its competition score" />
+
+        <p><strong>Relevance</strong> is the most important of the three. YouTube cross-references your tags against your <a href="/blog/what-is-youtube-seo">title, description</a>, and video content. A tag that does not match your actual content confuses the algorithm and can trigger a misleading metadata flag.</p>
+
+        <blockquote><strong>Pro Tip:</strong> A specific long-tail tag like "how to get youtube tags for views as a small channel" will outperform a broad tag like "youtube tips" for a new channel every time. Broad tags put you in a pool of millions. Specific tags put you in front of the exact viewer looking for what you made.</blockquote>
+
+        <p>The goal is not to find the most popular tag. It is to find the most accurate tag with the highest realistic ranking potential for your channel size.</p>
+
+        <h2>The Best Tags for YouTube by Content Type</h2>
+
+        <p>The best tags for youtube videos are not universal. What works for a gaming channel will not work for a cooking channel. Tags need to match the content category because the algorithm uses them to place your video inside a specific <a href="/blog/video-tagging">content ecosystem</a>.</p>
+
+        <p>Here is a breakdown of high-performing tag structures by niche:</p>
+
+        <h3>Gaming</h3>
+        <ul>
+          <li>Specific game title (e.g., #Warzone, #Minecraft)</li>
+          <li>Gameplay format (e.g., #FPS, #OpenWorld)</li>
+          <li>Skill level (e.g., #GamingTips, #BeginnerGuide)</li>
+          <li>Platform (e.g., #PCGaming, #MobileGaming)</li>
+        </ul>
+
+        <h3>Education and Tutorials</h3>
+        <ul>
+          <li>Topic plus skill level (e.g., "python for beginners", "excel tutorial advanced")</li>
+          <li>Problem-based phrases (e.g., "how to fix", "how to set up")</li>
+          <li>Outcome-based phrases (e.g., "learn photoshop fast", "study tips for exams")</li>
+        </ul>
+
+        <h3>Food and Cooking</h3>
+        <ul>
+          <li>Dish name plus format (e.g., "easy pasta recipe", "quick breakfast ideas")</li>
+          <li>Dietary tags (e.g., "vegan meals", "high protein recipes")</li>
+          <li>Time-based tags (e.g., "15 minute dinner", "meal prep Sunday")</li>
+        </ul>
+
+        <h3>Commentary and Entertainment</h3>
+        <ul>
+          <li>Topic plus opinion signal (e.g., "youtube drama explained", "honest review")</li>
+          <li>Current event hooks (e.g., "reaction to", "responding to")</li>
+          <li>Audience tags (e.g., "relatable content", "funny moments")</li>
+        </ul>
+
+        <h3>How-To and DIY</h3>
+        <ul>
+          <li>Action plus subject (e.g., "how to build a PC", "how to start a podcast")</li>
+          <li>Tool or platform specific (e.g., "canva tutorial", "notion setup guide")</li>
+          <li>Result-focused (e.g., "fix slow wifi", "grow instagram fast")</li>
+        </ul>
+
+        <blockquote><strong>Pro Tip:</strong> Always include one tag that names your specific topic and one that names the format. For example, "pasta recipe" names the topic and "quick dinner ideas" names the format and intent. Together they give the algorithm two distinct categorization signals from one video.</blockquote>
+
+        <p>The best tags for youtube are the ones that accurately describe both what your video is about and who it is for. Niche specificity consistently outperforms broad category tags for channels under 100k subscribers.</p>
+
+        <h2>YouTube Hashtags vs Tags: Which Drives More Views</h2>
+
+        <p>Youtube hashtags and metadata tags are both part of your tagging strategy, but they drive views through completely different mechanisms. Conflating the two is one of the most common setup errors creators make.</p>
+
+        <p>Metadata tags are hidden inside YouTube Studio. They feed the algorithm directly, influencing search rankings and suggested video placements. Viewers never see them. Their job is purely algorithmic categorization.</p>
+
+        <p>Best <a href="/blog/shorts-tagging">youtube hashtags</a> are visible in your description and sometimes above your video title on mobile. They are clickable and lead viewers to a feed of similar content. Their job is feed discovery, pulling in viewers who are browsing by topic rather than searching for a specific phrase.</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th></th>
+              <th>Hashtags</th>
+              <th>Metadata Tags</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Visible to viewers</td><td>Yes</td><td>No</td></tr>
+            <tr><td>Drives search ranking</td><td>No</td><td>Yes</td></tr>
+            <tr><td>Drives feed discovery</td><td>Yes</td><td>No</td></tr>
+            <tr><td>Placement</td><td>Title or description</td><td>YouTube Studio Tags field</td></tr>
+            <tr><td>Clickable</td><td>Yes</td><td>No</td></tr>
+          </tbody>
+        </table>
+
+        <p>Both drive views but at different stages of the distribution process. Metadata tags get your video into search results. Youtube hashtags get your video in front of browsers already watching similar content.</p>
+
+        <img src="/blog/youtube-tags-tags-vs-hashtags.png" alt="Hashtags driving feed discovery versus metadata tags driving search ranking" />
+
+        <blockquote><strong>Pro Tip:</strong> Treat hashtags and metadata tags as two separate research tasks. Your hashtag list should reflect what is trending in your niche right now. Your metadata tag list should reflect what your target viewer is searching for consistently over time.</blockquote>
+
+        <p>Skipping either one leaves a gap in your distribution strategy. Use both on every upload.</p>
+
+        <h2>How to Find the Most Searched Keywords on YouTube</h2>
+
+        <p>The most searched keyword on youtube in your niche is not always the most obvious one. Finding it requires using the right research methods, not guessing based on what you think your audience searches for.</p>
+
+        <p>Here is the step by step process:</p>
+
+        <ol>
+          <li>Open YouTube and type your broad topic into the search bar. Do not press enter. The autocomplete suggestions that appear are real search queries from real viewers, ranked by search frequency.</li>
+          <li>Note every autocomplete suggestion that is relevant to your content. These are your starting keywords.</li>
+          <li>Add a letter after your topic to surface more variations. Typing "youtube tags a", "youtube tags b", and so on returns a different set of autocomplete suggestions each time.</li>
+          <li>Go to the YouTube Explore page and check the Trending section for your content category. Tags built around trending topics spike in search volume fast and can deliver short-term view bursts.</li>
+          <li>Run your shortlisted keywords through a youtube keyword research tool free option to check search volume and competition scores before committing to them.</li>
+        </ol>
+
+        <blockquote><strong>Pro Tip:</strong> Seasonal and event-based keywords are high-velocity but short-lived. A tag like "back to school study tips" spikes every August. Build a separate tag list for seasonal content and swap it in during the relevant window rather than using the same evergreen tags year-round.</blockquote>
+
+        <img src="/blog/youtube-tags-autocomplete.png" alt="YouTube autocomplete surfacing real search queries ranked by frequency" />
+
+        <p>For a faster and more complete view of which keywords are driving traffic in your niche right now, the <a href="/features/keyword-research">Keyword Explorer</a> in YTGrowth pulls live YouTube search data and surfaces high-volume, low-competition keyword opportunities your competitors may have missed. It removes the manual work of cycling through autocomplete variations one letter at a time.</p>
+
+        <p>What to prioritize in your keyword research:</p>
+
+        <ul>
+          <li>Phrases with consistent monthly search volume over spikes</li>
+          <li>Keywords that match the exact intent of your video</li>
+          <li>Long-tail variations with lower competition than the head term</li>
+          <li>Phrases your target viewer would type, not phrases you would use to describe your own content</li>
+        </ul>
+
+        <CtaCard
+          to="/features/keyword-research"
+          title="Skip the one-letter-at-a-time autocomplete grind"
+          sub="Keyword Explorer pulls live YouTube search volume and competition scores in one pass and flags the low-competition gaps your competitors left open. Free tier included."
+          button="Open Keyword Explorer →"
+        />
+
+        <h2>How to Build a Complete Tag List for Every Video</h2>
+
+        <p>A complete tag list for tags for youtube videos combines three layers: a primary keyword tag, supporting niche tags, and long-tail variations. Each layer serves a different part of the distribution system.</p>
+
+        <p>Here is the process for building one from scratch before every upload:</p>
+
+        <ol>
+          <li><strong>Identify your primary keyword:</strong> This is the single most accurate phrase describing your video's topic. It goes in your title, the first line of your description, and the Tags field.</li>
+          <li><strong>Find 3 to 5 supporting niche tags:</strong> These are related phrases that describe the sub-topic, format, or audience of your video. Use your <a href="/blog/youtube-tag-finder">keyword research</a> results from the previous section to pick these.</li>
+          <li><strong>Add 2 to 3 long-tail variations:</strong> These are specific phrases that match lower competition search queries. They may bring less volume individually but collectively drive consistent search traffic.</li>
+          <li><strong>Select your youtube hashtags for the description:</strong> Apply the 3-tier framework: one broad tag like #Shorts or #YouTube, two niche-specific tags, and one brand tag.</li>
+          <li><strong>Review the full list for consistency:</strong> Every tag should reinforce the same topic signal. Remove anything that does not directly relate to the specific video.</li>
+        </ol>
+
+        <blockquote><strong>Pro Tip:</strong> Build a master tag template for each content series you produce. If you post weekly tutorials on the same topic, 70% of your tags will be consistent across every video. Only the primary keyword and one or two specific tags need to change per upload. This saves research time and strengthens the algorithm's understanding of your channel's niche over time.</blockquote>
+
+        <img src="/blog/youtube-tags-list-tag.png" alt="A complete tag list layered from primary keyword to long-tail variations" />
+
+        <p>A complete tag list for one video should include:</p>
+
+        <ul>
+          <li>1 primary keyword tag</li>
+          <li>3 to 5 supporting niche tags</li>
+          <li>2 to 3 long-tail keyword variations</li>
+          <li>3 to 5 best youtube hashtags in the description</li>
+          <li>1 brand hashtag</li>
+        </ul>
+
+        <p>That is a maximum of 15 tags total across both the Tags field and the description. Enough to give the algorithm clear signals without crossing into over-tagging territory.</p>
+
+        <h2>Tags That Never Work and Why Creators Keep Using Them</h2>
+
+        <p>Bad tag advice spreads fast on YouTube. Most of it comes from creators who got lucky once and turned it into a system. These are the tag types that consistently fail to drive views, and the fix for each one.</p>
+
+        <h3>Mistake: Using single-word tags</h3>
+
+        <p><strong>Fix:</strong> Single-word tags like "gaming" or "food" place your video in a pool of millions with no specificity. Replace every single-word tag with a phrase of at least three words. "gaming tips for beginners" targets a specific audience and a specific intent. "gaming" targets no one in particular.</p>
+
+        <h3>Mistake: Copying a competitor's full tag list</h3>
+
+        <p><strong>Fix:</strong> Your competitor's tags are built around their channel size, audience, and content history. A tag that ranks well for a 500k subscriber channel will not rank the same way for a 2k subscriber channel.</p>
+
+        <img src="/blog/youtube-tags-copying.png" alt="Why copying a larger channel's tag list does not transfer to a smaller channel" />
+
+        <p>Use competitor research to identify tag opportunities they are missing, not to duplicate what they are already dominating. The <a href="/features/competitor-analysis">Competitor Analysis</a> feature in YTGrowth shows you exactly which topics and keywords competing channels are leaving open.</p>
+
+        <h3>Mistake: Adding irrelevant trending tags to chase volume</h3>
+
+        <p><strong>Fix:</strong> Using youtube tags to get views that have no connection to your video content is classified as misleading metadata by YouTube. It does not boost views. It triggers algorithmic suppression and can result in a strike against your channel. Only use tags your video directly relates to.</p>
+
+        <h3>Mistake: Using the same tag list on every video regardless of topic</h3>
+
+        <p><strong>Fix:</strong> A static tag list copied across every upload tells the algorithm nothing specific about individual videos. Each video needs a tag list built around its own primary keyword and specific topic. Your brand tags can stay consistent but everything else should be researched and refreshed per upload.</p>
+
+        <h2>Keeping Your Tags Current</h2>
+
+        <p>Youtube tags for views are not a set and forget system. Search behavior shifts, trends change, and keywords that drove traffic six months ago may have lost volume or gained too much competition to rank for today.</p>
+
+        <p>Here is how to keep your tag strategy current without rebuilding it from scratch every month:</p>
+
+        <ul>
+          <li><strong>Check your YouTube Studio analytics every 30 days:</strong> Look at the Search tab under Traffic Sources. If a tag that previously drove impressions has dropped off, it is time to replace it with a fresher keyword.</li>
+          <li><strong>Monitor the YouTube Explore page weekly:</strong> New trending topics in your niche are tag opportunities. Build a swipe file of emerging keywords and test them on your next upload.</li>
+          <li><strong>Revisit your top performing videos every quarter:</strong> If a video that used to rank well is losing search traffic, update the tags and description with freshly researched keywords. YouTube re-indexes <a href="/blog/youtube-seo-best-practices">updated metadata</a>.</li>
+          <li><strong>Track seasonal keywords on a calendar:</strong> Youtube tags to get views around events, holidays, and annual trends have predictable traffic windows. Prepare your seasonal tag lists two to three weeks before the peak period, not during it.</li>
+        </ul>
+
+        <blockquote><strong>Pro Tip:</strong> When you update tags on an older video, also update the first two lines of the description with the same primary keyword. Consistent signals across both placements strengthen the re-indexing signal and give the update a better chance of recovering lost search rankings.</blockquote>
+
+        <img src="/blog/youtube-tags-refresh-tags.png" alt="A quarterly schedule for auditing and refreshing tags on older videos" />
+
+        <p>The channels that maintain consistent search traffic are not just researching tags at upload. They are treating best tags for youtube videos as a living system that gets reviewed, tested, and refined on a regular schedule.</p>
+
+        <h2>Build a Tagging System, Not a Tag List</h2>
+
+        <p>Youtube tags for views are not about finding magic keywords. They are about building a consistent research and placement system that compounds over time.</p>
+
+        <p>Every video you upload is an opportunity to send the algorithm a clear, accurate signal about your content. The creators pulling consistent search traffic are not guessing. They research before they film, place tags deliberately across title, description, and the Tags field, and audit their performance regularly.</p>
+
+        <p>The difference between a channel that grows through search and one that relies entirely on luck comes down to process. Research your primary keyword before you record. Build your tag list around volume, competition, and relevance. Apply the same system on every upload without shortcuts.</p>
+
+        <p>If you want to run that process faster and with better data, the Keyword Explorer and Competitor Analysis tools in YTGrowth give you live search volume, competition scoring, and competitor keyword gaps in one place. Everything you need to turn youtube tags to get views from a guessing game into a repeatable growth system.</p>
+      </>
+    ),
+  },
+  {
     slug: 'youtube-tag-finder',
     title: 'YouTube Tag Finder: How to Find the Right Keywords for More Views',
     excerpt: 'Picking tags on what feels relevant leaves your video competing for the wrong audience or missing search traffic entirely. How a tag finder pulls real search data, the volume-and-competition filter that separates rankable keywords from dead ends, and the title-description-tags placement that turns research into reach.',
