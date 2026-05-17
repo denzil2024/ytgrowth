@@ -57,6 +57,127 @@ export const CATEGORIES = {
 
 export const posts = [
   {
+    slug: 'youtube-tag-finder',
+    title: 'YouTube Tag Finder: How to Find the Right Keywords for More Views',
+    excerpt: 'Picking tags on what feels relevant leaves your video competing for the wrong audience or missing search traffic entirely. How a tag finder pulls real search data, the volume-and-competition filter that separates rankable keywords from dead ends, and the title-description-tags placement that turns research into reach.',
+    date: '2026-05-17',
+    category: CATEGORIES.seo,
+    cover: '/blog/youtube-tag-finder-cover.jpg',
+    author: 'Denzil',
+    readTime: '8 min read',
+    content: () => (
+      <>
+        <p>A youtube tag finder is a research tool that tells you exactly which keywords viewers are typing into YouTube before they find a video like yours.</p>
+
+        <p>Most creators pick tags based on what feels relevant. That approach leaves your video competing for the wrong audience or missing search traffic entirely. The tags you add to your video are a direct input into how YouTube maps your content to the <a href="/blog/what-is-youtube-seo">search queries</a> and suggested feeds it appears in.</p>
+
+        <p>This guide covers how a youtube keyword tool works, how to use one correctly, and how to turn the results into a tagging system that improves discoverability on every upload.</p>
+
+        <h2>What Is a YouTube Tag Finder?</h2>
+
+        <p><strong>A youtube keyword search tool that specifically surfaces tag recommendations is what most creators refer to as a tag finder. It pulls real search data from YouTube and returns a list of keywords ranked by search volume, competition level, and relevance to your topic.</strong></p>
+
+        <p>The difference between using a tag finder and guessing is specificity. When you type a topic into a youtube keyword generator, it returns the exact phrases viewers are using, not variations you think they might use. Those are often two very different things.</p>
+
+        <p>A good <a href="/features/keyword-research">keyword research tool</a> will show you three things for every tag it suggests: how many people are searching for it, how many videos are already competing for it, and how closely it matches your video's topic. Without those three data points, you are adding tags blind.</p>
+
+        <p>Tag finders also surface long-tail keyword variations you would never think to include manually. A video about "budgeting tips" might have stronger reach potential under "how to budget your money for beginners" because that is the exact phrase with real search volume and lower competition.</p>
+
+        <h2>Why YouTube Keyword Research Matters</h2>
+
+        <p>YouTube is the second largest search engine in the world. Every search query typed into it is a signal of intent, and youtube keyword research is how you connect your content to those signals before you upload.</p>
+
+        <p>When you add tags to a video, you are not decorating it. You are telling <a href="/blog/youtube-algorithm">the algorithm</a> which search queries your content should appear in and which suggested feed placements it qualifies for. Inaccurate or missing tags mean YouTube has to guess your content's topic, and it will often guess wrong.</p>
+
+        <img src="/blog/youtube-tag-finder-keyword-research.png" alt="Keyword research surfacing the exact phrases viewers type into YouTube" />
+
+        <p>The creators consistently pulling search traffic are not more talented. They are doing keyword search for youtube before they film, not after. They know which phrases have volume, which have low competition, and which ones their target audience is actively using right now.</p>
+
+        <p>This is where most beginner creators lose ground to established channels. Established channels research first and create second. Their tags are not an afterthought, they are part of the video strategy from the start. The Keyword Explorer in YTGrowth is built specifically for this, pulling live YouTube search data so you can see exactly what your target audience is searching for before you hit record.</p>
+
+        <h2>How to Do a Keyword Search for YouTube</h2>
+
+        <p>A youtube keyword search starts with your core topic, not your video title. Enter the broadest version of your subject into a keyword tool and let the data show you which specific angles have the most search demand.</p>
+
+        <p>Here is the correct process:</p>
+
+        <ol>
+          <li>Enter your broad topic into your youtube keyword tool free or paid option of choice.</li>
+          <li>Filter results by search volume. Focus on keywords with consistent monthly searches, not one-time spikes.</li>
+          <li>Check the competition level. High volume with low competition is the target. High volume with high competition means established channels will outrank you.</li>
+          <li>Select 5 to 10 tags that are directly relevant to your specific video, not just your general niche.</li>
+          <li>Add your selected tags to the Tags field in YouTube Studio before publishing.</li>
+        </ol>
+
+        <blockquote><strong>Pro Tip:</strong> Do not just target the highest volume keyword. A video from a small channel ranks faster on a specific long-tail phrase like "youtube keyword research for beginners" than on a broad term like "youtube tips" where it competes against channels with millions of subscribers.</blockquote>
+
+        <img src="/blog/youtube-tag-finder-keyword-research-free.png" alt="Filtering keyword results by search volume and competition score" />
+
+        <p>What to look for in your results:</p>
+
+        <ul>
+          <li>Search volume above 1,000 monthly searches</li>
+          <li>Competition score below 50 out of 100</li>
+          <li>Keywords that match the exact topic of your video, not just your niche</li>
+          <li>Long-tail variations that include intent words like "how to", "best", "for beginners"</li>
+        </ul>
+
+        <blockquote><strong>Pro Tip:</strong> Run your top competitor's best-performing video through <a href="/features/competitor-analysis">Competitor Analysis</a> to see which keywords are driving their traffic. Build your tag list around the gaps they are leaving open, not the keywords they are already dominating.</blockquote>
+
+        <h2>Free vs Paid YouTube Keyword Tools</h2>
+
+        <p>A youtube keyword tool free option is a valid starting point, but it comes with limitations that affect the quality of your research the more seriously you take your channel.</p>
+
+        <p>Free tools typically give you:</p>
+
+        <ul>
+          <li>A limited number of searches per day</li>
+          <li>Basic search volume data with no competition scoring</li>
+          <li>No historical trend data to identify seasonal keywords</li>
+          <li>No competitor keyword analysis</li>
+        </ul>
+
+        <p>Paid tools give you the full picture. Full search volume, competition scoring, trend data, and the ability to research what keywords <a href="/blog/youtube-competitor-analysis">competing channels</a> are ranking for. That last point is where the gap between free and paid becomes most significant.</p>
+
+        <blockquote><strong>Pro Tip:</strong> If you are just starting out, use free tools to build your initial tag lists. Once you are uploading consistently and want to understand why some videos get search traffic and others do not, that is when a paid youtube keyword research tool free trial is worth running to see the difference in data depth.</blockquote>
+
+        <p>keyword tool io youtube is one of the more widely used free options. It pulls YouTube autocomplete data and organizes it into a usable list. The limitation is that it shows you what people search for but not how competitive those keywords are to rank for.</p>
+
+        <img src="/blog/youtube-tag-finder-keyword-tool.png" alt="A free keyword tool showing autocomplete data without competition scoring" />
+
+        <p>For a complete youtube keyword research tool that combines keyword data with channel audit insights and competitor analysis in one place, YTGrowth gives you the Keyword Explorer alongside every other growth tool your channel needs, without switching between five different platforms.</p>
+
+        <h2>How to Use Your Tags After Finding Them</h2>
+
+        <p>Finding the right keywords is only half the process. How you place them determines whether they actually improve your reach.</p>
+
+        <p>Once you have your tag list from a youtube keyword generator, distribute them across three places:</p>
+
+        <ul>
+          <li><strong>Video title:</strong> Include your primary keyword naturally. Do not stuff it. One clean placement in the title carries more weight than three forced ones.</li>
+          <li><strong>Description:</strong> Place your main youtube keyword search terms in the first two to three lines. YouTube reads the description as context for ranking, and the first lines carry the most weight.</li>
+          <li><strong>Tags field in YouTube Studio:</strong> Add your full list of 5 to 10 researched tags here as exact phrases, not single words.</li>
+        </ul>
+
+        <blockquote><strong>Pro Tip:</strong> Use your primary keyword in the title, a natural variation of it in the first line of the description, and the long-tail versions in the Tags field. This gives YouTube three consistent signals about your content's topic without repeating the same phrase verbatim across all three placements.</blockquote>
+
+        <img src="/blog/youtube-tag-finder-keyword-description.png" alt="Keyword placement across title, description first lines, and the Tags field" />
+
+        <p>If you have already read our guide on <a href="/blog/shorts-tagging">youtube shorts tagging</a>, you will recognise this as the same principle behind the 3-tier hashtag strategy. Broad tags signal format, niche tags signal audience, and your researched metadata tags signal search intent. All three work together as one system.</p>
+
+        <p>The goal is consistency. Every placement should reinforce the same topic signal. Conflicting signals across your title, description, and tags are one of the most common reasons well-researched keywords still fail to generate search traffic.</p>
+
+        <h2>Start Researching Before You Record</h2>
+
+        <p>A youtube tag finder is not a tool you use after your video is done. The best time to run your youtube keyword research is before you film, so your title, description, and tags are all built around phrases with proven search demand.</p>
+
+        <p>The process is straightforward. Find keywords with real volume and low competition, place them consistently across your title, description, and Tags field, and repeat the same system on every upload. Tags are not a one-time fix, they are a habit.</p>
+
+        <p>For creators who want keyword data, competitor insights, and <a href="/features/channel-audit">channel performance</a> all in one place, YTGrowth pulls live search data alongside every other growth tool your channel needs to move from invisible to discoverable.</p>
+      </>
+    ),
+  },
+  {
     slug: 'shorts-tagging',
     title: 'YouTube Shorts Tagging: How to Use Hashtags and Metadata for More Views',
     excerpt: 'Zero views on a Short is usually a tagging problem, not a content one. The difference between visible hashtags and hidden metadata tags, the 3-tier hashtag framework (1 broad, 2 niche, 1 brand), the Tags field most creators never fill, and the four mistakes that suppress reach across every niche.',
