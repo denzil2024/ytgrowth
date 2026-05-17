@@ -104,7 +104,7 @@ export const posts = [
 
         <p>Hashtags for youtube shorts appear directly in your video title or description and are clickable, leading viewers to a feed of similar content. They are a discovery tool, designed to pull in viewers who are browsing by topic or trend.</p>
 
-        <p>Metadata tags are added in the Tags field inside YouTube Studio during upload. They are invisible to viewers but are <a href="/blog/youtube-algorithm">read directly by the algorithm</a> to determine your content's topic, category, and search relevance. These are where you place long-tail keyword phrases that describe exactly what your video covers.</p>
+        <p>Metadata tags are added in the Tags field inside YouTube Studio during upload. They are invisible to viewers but are read directly by <a href="/blog/youtube-algorithm">the algorithm</a> to determine your content's topic, category, and search relevance. These are where you place long-tail keyword phrases that describe exactly what your video covers.</p>
 
         <p>Both work together as part of a complete youtube shorts tagging strategy. Hashtags drive feed discovery. Metadata tags drive search ranking. Relying on one without the other leaves half your distribution potential unused.</p>
 
@@ -118,7 +118,7 @@ export const posts = [
 
         <h3>Tier 1: Broad Discovery Tags</h3>
 
-        <p>Broad tags signal the content format to YouTube before anything else. The most important one is #Shorts. Using #Shorts is essential because it tells the YouTube system to classify and <a href="/blog/youtube-shorts-algorithm">distribute the video as a Short</a>, triggering the Shorts feed.</p>
+        <p>Broad tags signal the content format to YouTube before anything else. The most important one is #Shorts. Using #Shorts is essential because it tells the YouTube system to classify and distribute the video as a Short, triggering <a href="/blog/youtube-shorts-algorithm">the Shorts feed</a>.</p>
 
         <p>Without it, YouTube may index your vertical video as a standard upload and distribute it through the wrong feed entirely.</p>
 
@@ -130,7 +130,7 @@ export const posts = [
 
         <h3>Tier 2: Niche-Specific Tags</h3>
 
-        <p>Niche tags are where trending hashtags for youtube shorts do their real work. These tags tell the algorithm exactly which audience segment your content belongs to, connecting your Short to viewers already watching similar content.</p>
+        <p>Niche tags are where trending hashtags for youtube shorts do their real work. These tags tell the algorithm exactly which audience segment your content belongs to, connecting your Short to viewers already watching <a href="/blog/youtube-competitor-analysis">competitor content</a>.</p>
 
         <p>For a cooking channel, this means tags like #RecipeShorts or #QuickMeals. For gaming, it means #GamingTips or #PCGaming. The more specific the tag, the more accurate the audience match.</p>
 
@@ -238,7 +238,7 @@ export const posts = [
 
         <p>For tags for youtube shorts gaming specifically, always pair a broad gaming tag with the exact game title. #Gaming alone puts you in a pool of millions. #Gaming + #WarzoneTips narrows the algorithm's categorization to a specific, high-intent audience.</p>
 
-        <p>The lists above are a foundation. To find what is working right now in your niche, use the <a href="/features/competitor-analysis">Competitor Analysis</a> feature in YTGrowth to see <a href="/blog/youtube-competitor-analysis">which tags and title patterns your top competitors are building content around</a>. That data is pulled from real channel performance, not guesswork.</p>
+        <p>The lists above are a foundation. To find what is working right now in your niche, use the <a href="/features/competitor-analysis">Competitor Analysis</a> feature in YTGrowth to see which tags and title patterns your top competitors are building content around. That data is pulled from real channel performance, not guesswork.</p>
 
         <h2>Common Tagging Mistakes That Kill Your Reach</h2>
 
@@ -295,7 +295,7 @@ export const posts = [
 
         <h2>Why YouTube Tags Still Matter More Than Platforms Admit</h2>
 
-        <p>YouTube has publicly stated that youtube tags play a minimal role compared to <a href="/blog/youtube-seo-best-practices">titles and descriptions</a> in determining search rankings. That statement gets misread constantly as "tags do not matter." It does not say that.</p>
+        <p>YouTube has publicly stated that youtube tags play a minimal role compared to titles and descriptions in determining search rankings. That statement gets misread constantly as "tags do not matter." It does not say that.</p>
 
         <p>What it says is that tags are not the primary ranking signal for Search. They are however a primary signal for Suggested Video placement, which is where the majority of views on YouTube come from. A video with precise content tagging best practices applied correctly gets placed next to relevant content in the Suggested feed. A video with sloppy or generic tags does not.</p>
 
@@ -327,7 +327,7 @@ export const posts = [
 
         <p>Avoid the temptation to drift into unrelated territory at this stage. Tags 2 to 5 that stray too far from the first tag send a mixed signal to the algorithm and reduce the precision of Suggested Video placement. Every tag in this cluster should be something a viewer searching for the first tag would also plausibly search for.</p>
 
-        <blockquote><strong>Pro Tip:</strong> Run your primary keyword through a tool that surfaces <a href="/features/keyword-research">secondary keyword variations ranked by search volume and competition</a> before finalising tags 2 to 5, so you are targeting variations with actual search demand behind them.</blockquote>
+        <blockquote><strong>Pro Tip:</strong> Run your primary keyword through <a href="/features/keyword-research">keyword research</a> that ranks secondary variations by search volume and competition before finalising tags 2 to 5, so you are targeting variations with actual search demand behind them.</blockquote>
 
         <h2>3. Tags 6 to 10: Contextual and Topic Based Tags</h2>
 
@@ -341,7 +341,7 @@ export const posts = [
 
         <p>Getting this tier right has a compounding effect over time. A video correctly categorised through contextual tags gets placed next to established content in the same ecosystem, inheriting some of its audience relevance. That inherited relevance feeds into watch time signals, which feed back into broader distribution.</p>
 
-        <blockquote><strong>Pro Tip:</strong> Look at <a href="/blog/youtube-competitor-analysis">the tags used by the top performing videos in your niche</a> and note the contextual tags they share. Those shared tags define the neighborhood. Getting into that neighborhood is the goal of tags 6 to 10.</blockquote>
+        <blockquote><strong>Pro Tip:</strong> Look at the tags <a href="/blog/youtube-competitor-analysis">top competitors</a> in your niche use and note the contextual tags they share. Those shared tags define the neighborhood. Getting into that neighborhood is the goal of tags 6 to 10.</blockquote>
 
         <h2>4. The 200 to 300 Character Sweet Spot</h2>
 
@@ -349,7 +349,7 @@ export const posts = [
 
         <p>A tag set approaching 500 characters almost always contains weak, generic, or redundant tags that were added to fill space rather than signal intent. The algorithm does not reward volume. It rewards precision. A focused set of 8 to 10 well chosen tags sitting between 200 and 300 characters sends a cleaner, stronger signal than 25 tags sprawling toward the character limit.</p>
 
-        <p>The 200 to 300 character range forces a discipline that improves <a href="/blog/youtube-channel-optimization">the entire video metadata tagging process</a>. Every tag has to earn its place. If a tag cannot be justified as either a search query variation, a secondary keyword, or a contextual category signal, it does not belong in the set. That filter alone eliminates the generic filler tags that dilute metadata quality.</p>
+        <p>The 200 to 300 character range forces a discipline that improves <a href="/blog/youtube-channel-optimization">metadata optimization</a> across the channel. Every tag has to earn its place. If a tag cannot be justified as either a search query variation, a secondary keyword, or a contextual category signal, it does not belong in the set. That filter alone eliminates the generic filler tags that dilute metadata quality.</p>
 
         <img src="/blog/video-tagging-tag-characters.png" alt="The 200 to 300 character sweet spot for a focused YouTube tag set" />
 
@@ -379,7 +379,7 @@ export const posts = [
 
         <p>A VideoObject Schema markup only works if the required fields are complete. Google requires four mandatory fields before the markup qualifies for rich results: name, description, thumbnailUrl, and uploadDate. Missing any one of them and the entire markup is ignored.</p>
 
-        <p>The name field is the video title as it should appear in Google Search results. It does not need to match the YouTube title word for word but it should target the same primary keyword. A YouTube title optimised for click through rate and a Schema name field optimised for search ranking can work together rather than duplicating each other.</p>
+        <p>The name field is the video title as it should appear in Google Search results. It does not need to match the YouTube title word for word but it should target the same primary keyword. A YouTube title optimised for click through rate and a Schema name field optimised for <a href="/blog/youtube-seo-best-practices">search ranking</a> can work together rather than duplicating each other.</p>
 
         <p>The description field is a concise summary of the video content. This is not a copy paste of the YouTube description. Google uses this field for snippet generation in search results, so it needs to be tight and keyword focused. Two to three sentences covering what the video delivers is enough.</p>
 
