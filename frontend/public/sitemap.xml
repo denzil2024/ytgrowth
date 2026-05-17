@@ -638,9 +638,15 @@
   <!-- Blog -->
   <url>
     <loc>https://ytgrowth.io/blog</loc>
-    <lastmod>2026-05-16</lastmod>
+    <lastmod>2026-05-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://ytgrowth.io/blog/youtube-competitor-analysis</loc>
+    <lastmod>2026-05-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://ytgrowth.io/blog/youtube-thumbnail-ideas</loc>

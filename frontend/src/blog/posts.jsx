@@ -57,6 +57,226 @@ export const CATEGORIES = {
 
 export const posts = [
   {
+    slug: 'youtube-competitor-analysis',
+    title: 'The YouTube Competitor Analysis Method That Finds Algorithm Winners',
+    excerpt: 'Studying what rivals post is the surface layer. The real signal is which specific videos the algorithm chose to distribute, and why. Two forensic methods (the Outlier Audit and the Gap Map) plus View Velocity, VPH, the three rival types, and the Reddit cross-check that turns competitors into a list of videos to make.',
+    date: '2026-05-17',
+    category: CATEGORIES.strategy,
+    cover: '/blog/youtube-competitor-analysis-cover.jpg',
+    author: 'Denzil',
+    readTime: '13 min read',
+    content: () => (
+      <>
+        <p>A personal finance channel. 9,000 subscribers. One video sitting at 620,000 views. The upload schedule is inconsistent, the production is average, and nothing on the channel page explains why that video took off while the other 200 did not.</p>
+
+        <p>This is not luck. It is a signal. And every creator approaching competitor analysis on YouTube as a content-watching exercise walks straight past it.</p>
+
+        <p>The standard approach to competitive analysis for YouTube tells you to study what rivals are posting: their topics, their upload frequency, their thumbnails. That is the surface layer. The deeper question is which specific videos the algorithm has chosen to distribute, and why those and not the rest.</p>
+
+        <p>This article covers two methods built entirely around that question: the Outlier Audit and the Gap Map.</p>
+
+        <h2>Why YouTube Competitor Analytics Point You in the Wrong Direction</h2>
+
+        <p>Subscriber count is a historical record. It tells you how a channel has performed across its entire lifetime. It tells you nothing about what the algorithm is doing with that channel this month.</p>
+
+        <p>Here is a contrast worth sitting with. Channel A has 800,000 subscribers and averages 38,000 views per video. Channel B has 22,000 subscribers and averages 190,000 views per video. Standard youtube competitor analytics ranks Channel A as the dominant player. Channel B is the one worth studying.</p>
+
+        <p>Two metrics separate channels in active algorithmic growth from channels coasting on legacy momentum:</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Metric</th>
+              <th>What It Measures</th>
+              <th>What It Reveals</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>View Velocity</td><td>Monthly view trend over 90 days</td><td>Whether the algorithm is actively pushing the channel right now</td></tr>
+            <tr><td>Subscriber-to-View Ratio</td><td>Average video views divided by subscriber count</td><td>Whether the audience is engaged or accumulated and inactive</td></tr>
+          </tbody>
+        </table>
+
+        <p>A channel whose monthly views have dropped three consecutive months is running on old distribution. A channel climbing despite modest subscriber growth is being pushed into cold audiences right now. That is the rival that deserves attention in any youtube channel competitor analysis.</p>
+
+        <blockquote><strong>Quick Tip:</strong> A Subscriber-to-View Ratio above 50% signals an algorithmically active audience. Below 10% signals a dead one. A channel with a dead audience and strong keyword rankings is a channel that can be beaten with consistent, current content.</blockquote>
+
+        <p>Before spending anything on tools, open YouTube Studio and find the "Channels your audience watches" tab. It is the most overlooked asset in free youtube competitor analysis. It surfaces channels your existing audience is already watching that no keyword search would ever surface.</p>
+
+        <img src="/blog/youtube-competitor-analysis-your-audience.png" alt="YouTube Studio 'Channels your audience watches' tab revealing audience competitors" />
+
+        <p>These are audience competitors. They compete for watch time, not just rankings, and they are frequently more dangerous than search competitors. This tab is free and takes three minutes to read. It belongs at the start of every youtube competitive analysis.</p>
+
+        <p>Running View Velocity and Subscriber-to-View Ratio manually across five or six channels produces a snapshot, not a trend. YTGrowth's <a href="/features/channel-audit">Channel Audit</a> pulls velocity trends, ratio benchmarks, and upload frequency data across multiple competitors into one dashboard. It flags which competitors are in active algorithmic growth and which are stagnating before the forensic work begins.</p>
+
+        <h2>How to Run a YouTube Competitor Analysis That Finds Algorithm Winners</h2>
+
+        <p>The Outlier Audit has one purpose: find the specific videos on a competitor's channel that the algorithm has chosen to distribute far beyond what that channel's subscriber count would predict, and reverse-engineer exactly why.</p>
+
+        <p>The worked example below uses a fictional channel called FinanceFlow. 34,000 subscribers. 280 videos. Three years of uploads.</p>
+
+        <h3>Step 1: Find the Outliers</h3>
+
+        <p>Go to the FinanceFlow channel page and sort all videos by Most Popular. The top three videos sit at 880,000, 640,000, and 510,000 views. Everything else on the channel sits between 12,000 and 60,000.</p>
+
+        <p>The channel baseline is roughly 30,000 views. The outliers are performing at 17x to 29x that baseline. The algorithm did not treat those three videos the same way it treated the other 277. Something triggered a different distribution decision. <a href="/features/outliers">Surfacing the videos performing far above a channel's baseline</a> is what the audit automates, and finding what triggered them is the whole game.</p>
+
+        <h3>Step 2: Read the Traffic Source Split</h3>
+
+        <p>Each outlier needs to be examined for its primary traffic source. Two sources explain outsized performance:</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Traffic Source</th>
+              <th>How It Works</th>
+              <th>How to Replicate It</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Search</td><td>Video ranks for a keyword query</td><td>Better keyword targeting and stronger title structure</td></tr>
+            <tr><td>Suggested / Browse</td><td>Algorithm serves video to cold audiences</td><td>Higher CTR thumbnail and stronger audience retention</td></tr>
+          </tbody>
+        </table>
+
+        <p>These two sources require completely different replication strategies. A video winning on Search can be beaten with better data on <a href="/features/keyword-research">keyword gaps</a>. A video winning on Suggested cannot be beaten with SEO. It is winning on click-through rate and retention, not keywords.</p>
+
+        <p>Applying a Search strategy to a Suggested winner will fail every time. This is the distinction that standard guides to competitive analysis for YouTube skip entirely. YTGrowth's <a href="/features/competitor-analysis">Competitor Analysis</a> surfaces the traffic source profile of any competitor's top videos directly inside the dashboard.</p>
+
+        <h3>Step 3: Analyse the Outlier's Construction</h3>
+
+        <p>Four elements to examine on each outlier:</p>
+
+        <ul>
+          <li><strong>Title structure:</strong> keyword-forward titles win on Search. Curiosity-gap titles win on Suggested. The title structure should match the traffic source finding from Step 2, and the <a href="/blog/youtube-seo-best-practices">title and metadata mechanics that win Search</a> are a discipline of their own.</li>
+          <li><strong>Thumbnail:</strong> <a href="/blog/youtube-maker">a face with visible emotion drives higher CTR</a> in Browse contexts. A high-contrast graphic with text performs in Search contexts where the viewer already has intent.</li>
+          <li><strong>Hook structure:</strong> what happens in the first 30 seconds. Outlier videos winning on Suggested almost always establish a tension or problem before the 20-second mark.</li>
+          <li><strong>Content pillars:</strong> if the same topic category is generating all three outliers, that topic is algorithmically active in this niche right now.</li>
+        </ul>
+
+        <p>A youtube competitor analysis tool free option like TubeBuddy surfaces partial keyword data but does not connect the outlier to its traffic source split automatically. That connection is the link that determines the entire replication strategy. YTGrowth's competitor tooling runs this entire audit in one view: traffic source splits, outlier detection against channel baseline, keyword data, and thumbnail patterns across a competitor's best performers.</p>
+
+        <img src="/blog/youtube-competitor-analysis-outliers.png" alt="Outlier videos detected against a channel baseline with traffic source split" />
+
+        <h2>YouTube Channel Competitor Analysis: The Gap Map</h2>
+
+        <p>The Outlier Audit tells you what the algorithm is rewarding. The Gap Map tells you what to build next. Three techniques follow directly from the audit findings.</p>
+
+        <h3>The Comment Goldmine</h3>
+
+        <p>Open the outlier video's comment section and filter for questions. Any comment starting with "can you explain," "what about," or "I wish you covered" is a video title.</p>
+
+        <p>These are not content ideas. They are unanswered demand signals left in public on a video the algorithm is already distributing. A thorough youtube channel competitor analysis does not end at the video level. The comment section is where the audience reveals exactly what the content failed to deliver. That failure is the next video.</p>
+
+        <h3>The Updated Version Strategy</h3>
+
+        <p>Sort the competitor's top videos by upload date. Any outlier older than 18 months that is still pulling significant views is an open invitation.</p>
+
+        <p>The audience is still searching for this topic. The algorithm is still distributing the video. The channel that made it is probably not going to update it. The opportunity is straightforward: produce the current, deeper, better-structured version. The topic has proven demand. The gap is freshness and depth.</p>
+
+        <h3>The Production Gap</h3>
+
+        <p>Watch the first two minutes of each outlier with the sound off, then with the video off. Audio quality, pacing, and time-to-value are <a href="/blog/youtube-watch-hours">retention variables that feed directly into algorithmic distribution</a>.</p>
+
+        <p>If their outlier takes four minutes to reach the main point and your version reaches it in 45 seconds, that is a measurable retention advantage. These are not aesthetic preferences. They are competitive edges the original video left open.</p>
+
+        <img src="/blog/youtube-competitor-analysis-video-length.png" alt="Time-to-value comparison between a competitor outlier and a faster-paced version" />
+
+        <p>All three techniques above can be run manually as part of a free youtube competitor analysis workflow. YTGrowth's competitor tool surfaces comment data, content gaps, and top keyword opportunities from competitor outliers in the same dashboard so the output is a ready content plan, not a folder of research notes.</p>
+
+        <h2>The Three Rivals Every YouTube Competitive Analysis Must Identify</h2>
+
+        <p>Before running the Outlier Audit, the competitor list needs to be built correctly. Tracking the wrong channels produces the wrong intelligence, and a youtube competitive analysis built on a narrow competitor list will miss the rivals actually stealing audience attention.</p>
+
+        <p>There are three distinct types:</p>
+
+        <ol>
+          <li><strong>Direct Competitors</strong> are channels selling the same product or service to the same audience. These are the obvious ones most creators track. They are also the least interesting for growth intelligence because everyone in the niche is already watching them.</li>
+          <li><strong>Search Competitors</strong> are channels ranking for the same target keywords regardless of their business model or content category. A personal finance channel and a fintech software brand can be Search competitors without targeting the same customer. The keyword overlap is what makes them rivals, not the niche.</li>
+          <li><strong>Audience Competitors</strong> are the most dangerous and the most ignored. These are channels your existing viewers are already watching, surfaced through YouTube Studio's "Channels your audience watches" tab. They are not competing for your rankings. They are competing for the same two hours of daily watch time your audience has available.</li>
+        </ol>
+
+        <blockquote><strong>Quick Tip:</strong> Build a seed list of five to ten channels across all three types before any youtube channel competitor analysis begins. A list built only from Direct Competitors produces a picture with two thirds of the competitive landscape missing. The algorithm does not organise content by business model. It organises by watch time, and audience attention does not stay in neat niche boundaries.</blockquote>
+
+        <h2>Tracking Real-Time Momentum With Views Per Hour</h2>
+
+        <p>The Outlier Audit finds historical winners. Views Per Hour (VPH) finds what is winning right now.</p>
+
+        <p>VPH measures how fast a video accumulates views in its first 24 to 48 hours after upload. A competitor video hitting 8,000 views in its first six hours is being pushed aggressively into Browse and Suggested feeds. That is a real-time signal that the topic, title, or format has triggered algorithmic distribution before the video has built any SEO traction at all.</p>
+
+        <img src="/blog/youtube-competitor-analysis-vph.png" alt="Views Per Hour tracking flagging a competitor video gaining abnormal early traction" />
+
+        <p>Monitoring VPH across a competitor list over several weeks reveals patterns that static competitor analysis on YouTube never surfaces:</p>
+
+        <ul>
+          <li>Which topics consistently spike on upload day</li>
+          <li>Which formats earn immediate Browse distribution</li>
+          <li>Which upload days produce the strongest opening momentum</li>
+        </ul>
+
+        <p>These patterns are invisible in a single audit. They only emerge across time, which is why VPH monitoring needs to be ongoing, not a one-off exercise during a youtube competitor analysis. Tracking VPH manually means checking competitor videos repeatedly in the hours after upload.</p>
+
+        <p>YTGrowth's Competitor Analysis <a href="/features/competitor-analysis">monitors VPH across tracked competitor channels</a> and flags videos gaining abnormal early traction automatically. The signal is caught in real time rather than discovered two weeks later when the window to act on a trending topic has already closed.</p>
+
+        <h2>What Competitor CTAs and Pinned Comments Reveal</h2>
+
+        <p>The video is not the whole picture. What a competitor pins in their comment section and how they structure their calls to action tells you the strategy running behind the content.</p>
+
+        <p>A pinned comment pointing to a free download tells you the video is a lead generation asset. The channel is not optimising for views. It is optimising for email subscribers, and the content is built to serve that goal. A pinned comment driving to a paid product tells you something different: this channel has a buyer audience, not just a viewer audience.</p>
+
+        <p>These are strategic signals that a standard free youtube competitor analysis workflow ignores entirely. Three things to note on every outlier video during the audit:</p>
+
+        <ul>
+          <li>Where the pinned comment drives traffic: email list, product, community, or another video</li>
+          <li>Whether the CTA appears in the first 30 seconds of the video or only at the end</li>
+          <li>Whether the description reinforces the same CTA or points somewhere different</li>
+        </ul>
+
+        <img src="/blog/youtube-competitor-analysis-your-pinned-comments.png" alt="Competitor pinned comment and CTA structure revealing reach versus revenue intent" />
+
+        <p>The pattern across multiple outliers reveals whether the competitor is optimising for reach or for revenue. A channel optimising for reach and a channel optimising for revenue require completely different gap strategies.</p>
+
+        <p>Filling a reach gap means producing higher volume content on proven topics. Filling a revenue gap means producing content that targets buyers, not browsers.</p>
+
+        <p>A thorough youtube competitor analysis reads both layers: the video performance data and the conversion architecture sitting underneath it.</p>
+
+        <h2>Finding Pain Points Competitors Missed With GummySearch</h2>
+
+        <p>YouTube comments show what an audience thinks about existing content. Reddit shows what the audience is saying when no creator is listening.</p>
+
+        <p>GummySearch indexes Reddit conversations by subreddit and surfaces questions, frustrations, and repeated requests across a niche community. Running a competitor's core topics through GummySearch reveals the audience pain points the existing youtube competitive analysis landscape has not addressed.</p>
+
+        <p>A question appearing dozens of times in a subreddit with no strong YouTube answer attached to it is a content gap with a built-in audience already searching for the answer.</p>
+
+        <p>The process is straightforward:</p>
+
+        <ol>
+          <li>Take the content pillars identified in the Outlier Audit</li>
+          <li>Run each pillar through GummySearch against the two or three subreddits your audience uses</li>
+          <li>Flag any recurring question or frustration with no clear YouTube answer currently ranking</li>
+        </ol>
+
+        <p>The result is a shortlist of topics that have proven audience demand on Reddit but no strong competitor content on YouTube. These are not guesses. They are gaps the competitor analysis youtube process confirmed from the video side and Reddit confirmed from the audience side.</p>
+
+        <img src="/blog/youtube-competitor-analysis-your-playbook.png" alt="Reddit pain points mapped against algorithmically validated content pillars" />
+
+        <p>This technique sits at the end of the workflow for a reason. Running GummySearch before the Outlier Audit produces a list of random Reddit complaints. Running it after produces targeted opportunities mapped to topics the algorithm has already shown an appetite for in this niche.</p>
+
+        <p>A complete youtube competitor analysis uses both signals together: algorithmic validation from the Outlier Audit and audience validation from Reddit. One without the other is half a picture.</p>
+
+        <h2>Conclusion</h2>
+
+        <p>Competitors are not the enemy. They are a map.</p>
+
+        <p><a href="/blog/youtube-algorithm">The algorithm has already made its distribution decisions</a>. Outlier videos are the published results. The three competitor types tell you who to study. View Velocity and VPH tell you when to pay attention. The traffic source split tells you why a video is winning. The Gap Map, the Comment Goldmine, and Reddit tell you what to build next.</p>
+
+        <p>A youtube competitor analysis done at this level does not produce a list of channels to watch. It produces a list of videos to make, each one backed by a specific signal the algorithm has already validated in your niche.</p>
+
+        <p>That is the difference between imitating competitors and outgrowing them.</p>
+      </>
+    ),
+  },
+  {
     slug: 'youtube-thumbnail-ideas',
     title: 'Beyond the Red Arrow: 22+ YouTube Thumbnail Frameworks That Force the Click',
     excerpt: 'Low CTR on a strong video is rarely the algorithm. It is the thumbnail losing a two-second decision to a competitor. 22 click-forcing techniques across seven psychological frameworks (transformation, extreme emotion, conflict, numbers, social proof, mystery, color) plus niche-specific Do and Don\'t rules for gaming, finance, cooking, and tech.',
