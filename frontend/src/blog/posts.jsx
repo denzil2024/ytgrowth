@@ -124,6 +124,13 @@ export const posts = [
 
         <blockquote><strong>Pro Tip:</strong> Run your top competitor's best-performing video through <a href="/features/competitor-analysis">Competitor Analysis</a> to see which keywords are driving their traffic. Build your tag list around the gaps they are leaving open, not the keywords they are already dominating.</blockquote>
 
+        <CtaCard
+          to="/features/keyword-research"
+          title="Find low-competition keywords with real YouTube data"
+          sub="Keyword Explorer pulls live search volume and competition scores so your tags target phrases you can actually rank for, not ones you hope might work. Free tier included."
+          button="Open Keyword Explorer →"
+        />
+
         <h2>Free vs Paid YouTube Keyword Tools</h2>
 
         <p>A youtube keyword tool free option is a valid starting point, but it comes with limitations that affect the quality of your research the more seriously you take your channel.</p>
@@ -300,6 +307,13 @@ export const posts = [
         <blockquote><strong>Warning:</strong> Do not stuff the Tags field with irrelevant keywords. Adding 500 characters of unrelated tags to chase trending topics is classified as misleading metadata by YouTube. This can result in a strike against your channel or suppressed distribution across all your content, not just the video in question.</blockquote>
 
         <p>Keep your tags tightly relevant to the specific video. Ten accurate tags outperform fifty vague ones every time.</p>
+
+        <CtaCard
+          to="/features/keyword-research"
+          title="Research your Shorts tags with live search data"
+          sub="Keyword Explorer surfaces the long-tail phrases viewers actually type, scored by volume and competition, so your metadata tags are built on demand instead of guesswork."
+          button="Try Keyword Explorer →"
+        />
 
         <h2>Niche-Specific Viral Tags: Copy and Paste Starters</h2>
 
@@ -482,6 +496,13 @@ export const posts = [
 
         <p>One firm warning to close this section. Never add the names of popular YouTubers or unrelated trending topics to chase traffic. YouTube flags this as manipulative metadata and the consequence is a shadowban across both Search and Suggested. No short term view spike is worth that.</p>
 
+        <CtaCard
+          to="/features/seo-studio"
+          title="Score your titles, descriptions and tags before you publish"
+          sub="SEO Studio checks every metadata field against search demand and competitor patterns, then tells you exactly what to tighten. Free to start."
+          button="Open SEO Studio →"
+        />
+
         <h2>5. VideoObject Schema: Making Your YouTube Videos Discoverable on Google</h2>
 
         <p>Every YouTube video lives inside YouTube's ecosystem. But when that same video is embedded on a blog post, landing page, or website, it enters a second discovery system: Google Search. VideoObject Schema is the structured data that connects the two.</p>
@@ -639,6 +660,13 @@ export const posts = [
         <p>A youtube competitor analysis tool free option like TubeBuddy surfaces partial keyword data but does not connect the outlier to its traffic source split automatically. That connection is the link that determines the entire replication strategy. YTGrowth's competitor tooling runs this entire audit in one view: traffic source splits, outlier detection against channel baseline, keyword data, and thumbnail patterns across a competitor's best performers.</p>
 
         <img src="/blog/youtube-competitor-analysis-outliers.png" alt="Outlier videos detected against a channel baseline with traffic source split" />
+
+        <CtaCard
+          to="/features/competitor-analysis"
+          title="Run the Outlier Audit on any channel automatically"
+          sub="Competitor Analysis surfaces traffic-source splits, outlier videos against the channel baseline, and the content gaps to attack, in one dashboard. Track up to 10 rivals."
+          button="Try Competitor Analysis →"
+        />
 
         <h2>YouTube Channel Competitor Analysis: The Gap Map</h2>
 
@@ -1011,6 +1039,13 @@ export const posts = [
           <li>Ignore the emotional layer since even technical content converts better with a human face anchoring the design</li>
         </ul>
 
+        <CtaCard
+          to="/features/thumbnail-iq"
+          title="See how your framework-built thumbnail actually scores"
+          sub="Thumbnail IQ benchmarks your design against the top performers in your niche on contrast, face presence, text density, and curiosity gap. Data before you publish."
+          button="Try Thumbnail IQ →"
+        />
+
         <h2>Final Thoughts</h2>
 
         <p>A high-performing thumbnail is not a lucky creative decision. It is the deliberate application of a <a href="/blog/youtube-maker">psychological framework</a> to a specific audience at a specific moment in their scroll. The seven frameworks in this guide are not templates. They are strategic tools, and the creators who use them consistently outperform those who rely on instinct alone.</p>
@@ -1074,6 +1109,13 @@ export const posts = [
         <p>The practical advantage of Thumbnail IQ is that it connects thumbnail performance to the broader channel strategy. A weak contrast score on its own is useful. That same score sitting next to competitor thumbnails that consistently use high-contrast yellow and red is actionable. That is the difference between a rating and an insight.</p>
 
         <p>Run every thumbnail through <a href="/features/thumbnail-iq">niche-specific benchmarking</a> before moving to live testing. It is the most relevant starting point for any youtube thumbnail tester workflow built around real competitive data.</p>
+
+        <CtaCard
+          to="/features/thumbnail-iq"
+          title="Benchmark your thumbnail against your actual niche"
+          sub="Thumbnail IQ scores your design against the top-performing videos in your category, not a generic standard, so you know exactly where it stands before the first impression."
+          button="Try Thumbnail IQ →"
+        />
 
         <h2>2. TestMyThumbnails: The Gold Standard for Saliency and Heatmaps</h2>
 
