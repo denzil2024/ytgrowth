@@ -41,21 +41,22 @@ function useKwStyles() {
       /* Card — matches SEO Studio's .seo-suggestion-card exactly
          (SeoOptimizer.jsx:33). That's the benchmark the user wants. */
       .kw-card {
-        background: #ffffff;
-        border: 1px solid #e6e6ec;
+        background: ${C.card};
+        border: 1px solid ${C.hair};
         border-radius: 14px;
         overflow: hidden;
-        box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 4px 14px rgba(0,0,0,0.06);
-        transition: box-shadow 0.2s, transform 0.2s;
+        box-shadow: ${C.cardShadow};
+        transition: box-shadow 0.2s, transform 0.2s, border-color 0.2s;
       }
       .kw-card:hover {
-        box-shadow: 0 4px 12px rgba(0,0,0,0.08), 0 16px 40px rgba(0,0,0,0.09);
+        box-shadow: ${C.cardShadowLift};
+        border-color: ${C.hairHi};
         transform: translateY(-1px);
       }
 
       /* Keyword row — matches SEO Studio's .seo-kw-row exactly. Phrase
-         text darkens on hover. */
-      .kw-row-seo:hover .kw-row-phrase { color: #0f0f13; }
+         text brightens on hover. */
+      .kw-row-seo:hover .kw-row-phrase { color: ${C.text1}; }
 
       /* ── Detail modal (Outliers pattern) ───────────────────────────── */
       .kw-modal-overlay {
@@ -68,33 +69,33 @@ function useKwStyles() {
         padding: 32px 24px;
       }
       .kw-modal {
-        background: #f7f7fa;
-        border: 1px solid #e8e8ec;
+        background: ${C.bg};
+        border: 1px solid ${C.hair};
         border-radius: 20px;
-        box-shadow: 0 4px 16px rgba(0,0,0,0.08), 0 24px 64px rgba(0,0,0,0.10);
+        box-shadow: 0 24px 64px rgba(0,0,0,0.6);
         width: 100%; max-width: 1040px;
         max-height: calc(100vh - 64px);
         overflow: auto;
         animation: kwSlideIn 0.22s cubic-bezier(0.2, 0.7, 0.3, 1) both;
       }
       .kw-modal::-webkit-scrollbar { width: 4px }
-      .kw-modal::-webkit-scrollbar-thumb { background: #e0e0e6; border-radius: 4px }
+      .kw-modal::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.14); border-radius: 4px }
       @keyframes kwFadeIn  { from { opacity: 0 } to { opacity: 1 } }
       @keyframes kwSlideIn { from { opacity: 0; transform: translateY(10px) scale(0.98) } to { opacity: 1; transform: none } }
 
       .kw-input {
         flex: 1; padding: 12px 20px;
-        border-radius: 100px; border: 1px solid rgba(10,10,15,0.10);
-        background: #ffffff; font-size: 14px; font-weight: 500;
+        border-radius: 100px; border: 1px solid ${C.hair};
+        background: ${C.surfaceInput}; font-size: 14px; font-weight: 500;
         font-family: 'Geist', 'Inter', system-ui, sans-serif;
         outline: none;
         transition: border-color 200ms cubic-bezier(0.32, 0.72, 0, 1), box-shadow 200ms cubic-bezier(0.32, 0.72, 0, 1);
-        color: #0a0a0f; letter-spacing: -0.005em;
+        color: ${C.text1}; letter-spacing: -0.005em;
       }
-      .kw-input::placeholder { color: rgba(10,10,15,0.40); font-weight: 500; }
+      .kw-input::placeholder { color: rgba(255,255,255,0.30); font-weight: 500; }
       .kw-input:focus {
-        border-color: rgba(229,37,27,0.30);
-        box-shadow: 0 0 0 4px rgba(229,37,27,0.06);
+        border-color: rgba(229,37,27,0.45);
+        box-shadow: 0 0 0 4px rgba(229,37,27,0.10);
       }
 
       .kw-btn-primary {
@@ -110,15 +111,15 @@ function useKwStyles() {
       }
       .kw-btn-primary:hover:not(:disabled) { filter: brightness(1.06); transform: translateY(-1px); }
       .kw-btn-primary:disabled {
-        background: rgba(10,10,15,0.06);
-        color: rgba(10,10,15,0.26);
+        background: rgba(255,255,255,0.06);
+        color: ${C.text3};
         cursor: default;
-        box-shadow: inset 0 1px 0 rgba(255,255,255,0.6);
+        box-shadow: none;
       }
 
       .kw-btn-ghost {
-        background: #fff; color: rgba(10,10,15,0.62);
-        border: 1px solid rgba(10,10,15,0.12); border-radius: 100px;
+        background: ${C.card}; color: ${C.text2};
+        border: 1px solid ${C.hair}; border-radius: 100px;
         padding: 11px 18px; font-size: 13px; font-weight: 600;
         font-family: 'Geist', 'Inter', system-ui, sans-serif;
         cursor: pointer; white-space: nowrap;
@@ -126,9 +127,9 @@ function useKwStyles() {
         letter-spacing: -0.01em;
       }
       .kw-btn-ghost:hover {
-        background: rgba(10,10,15,0.03);
-        color: #0a0a0f;
-        border-color: rgba(10,10,15,0.20);
+        background: ${C.wash};
+        color: ${C.text1};
+        border-color: ${C.hairHi};
       }
 
       /* Tab pills — quiet pill nav like Competitors. Active = soft gray
@@ -146,16 +147,16 @@ function useKwStyles() {
         white-space: nowrap;
         letter-spacing: -0.01em;
         background: transparent;
-        color: rgba(10,10,15,0.55);
+        color: ${C.text2};
       }
       .kw-tab-btn:hover {
-        background: rgba(10,10,15,0.03);
-        color: #0a0a0f;
+        background: ${C.wash};
+        color: ${C.text1};
       }
       .kw-tab-btn.active {
-        background: rgba(10,10,15,0.055);
-        color: #0a0a0f;
-        border-color: rgba(10,10,15,0.10);
+        background: ${C.washActive};
+        color: ${C.text1};
+        border-color: ${C.hair};
         font-weight: 600;
       }
 
@@ -163,25 +164,25 @@ function useKwStyles() {
          border, single soft shadow, room between rows. */
       .kw-report-wrapper { position: relative; margin-bottom: 14px; }
       .kw-report-header {
-        background: #ffffff;
-        border: 1px solid rgba(10,10,15,0.07);
+        background: ${C.card};
+        border: 1px solid ${C.hair};
         border-radius: 14px;
-        box-shadow: 0 1px 2px rgba(15,15,25,0.04), inset 0 1px 0 rgba(255,255,255,0.7);
+        box-shadow: ${C.cardShadow};
         padding: 18px 22px;
         display: flex; align-items: center; gap: 16px;
         transition: box-shadow 0.18s, border-color 0.18s, transform 0.18s;
         cursor: pointer; user-select: none;
       }
       .kw-report-header:hover {
-        box-shadow: 0 4px 16px rgba(15,15,25,0.06), inset 0 1px 0 rgba(255,255,255,0.7);
-        border-color: rgba(10,10,15,0.14);
+        box-shadow: ${C.cardShadowLift};
+        border-color: ${C.hairHi};
         transform: translateY(-1px);
       }
       .kw-report-remove {
         position: absolute; top: 12px; right: 12px;
         width: 28px; height: 28px; border-radius: 8px;
         border: 1px solid transparent; background: transparent;
-        color: #c4c4cc; cursor: pointer;
+        color: ${C.text3}; cursor: pointer;
         display: flex; align-items: center; justify-content: center;
         opacity: 0;
         transition: opacity 0.15s, background 0.15s, color 0.15s, border-color 0.15s;
@@ -206,34 +207,34 @@ function useKwStyles() {
       .kw-report-cta:hover { filter: brightness(1.07); }
       .kw-report-chip {
         display: inline-flex; align-items: baseline; gap: 5px;
-        background: #fffbeb; border: 1px solid #fde68a;
+        background: ${C.amberBg}; border: 1px solid ${C.amberBdr};
         border-radius: 100px; padding: 4px 12px;
       }
-      .kw-report-chip .val { font-size: 12px; font-weight: 700; color: #0a0a0f; }
-      .kw-report-chip .lbl { font-size: 11px; color: #d97706; font-weight: 600; }
+      .kw-report-chip .val { font-size: 12px; font-weight: 700; color: ${C.text1}; }
+      .kw-report-chip .lbl { font-size: 11px; color: ${C.amberHi}; font-weight: 600; }
 
       /* Intent picker row — hairline card, green-tinted hover that
          signals "this is a selection moment". Subtle lift on hover. */
       .kw-intent-opt {
         display: flex; align-items: center; gap: 14px;
         padding: 16px 18px;
-        border: 1px solid rgba(10,10,15,0.08);
+        border: 1px solid ${C.hair};
         border-radius: 12px;
-        cursor: pointer; background: #ffffff;
-        box-shadow: 0 1px 2px rgba(15,15,25,0.03);
+        cursor: pointer; background: ${C.card};
+        box-shadow: ${C.cardShadow};
         transition: background 160ms cubic-bezier(0.32, 0.72, 0, 1),
                     border-color 160ms cubic-bezier(0.32, 0.72, 0, 1),
                     box-shadow 160ms cubic-bezier(0.32, 0.72, 0, 1),
                     transform 160ms cubic-bezier(0.32, 0.72, 0, 1);
       }
       .kw-intent-opt:hover {
-        border-color: rgba(22,163,74,0.30);
-        background: rgba(22,163,74,0.04);
-        box-shadow: 0 4px 14px rgba(22,163,74,0.08);
+        border-color: rgba(22,163,74,0.45);
+        background: rgba(22,163,74,0.10);
+        box-shadow: ${C.cardShadowLift};
         transform: translateY(-1px);
       }
-      .kw-intent-opt .arrow { color: rgba(10,10,15,0.32); transition: color 160ms ease, transform 160ms ease; }
-      .kw-intent-opt:hover .arrow { color: #16a34a; transform: translateX(3px); }
+      .kw-intent-opt .arrow { color: ${C.text3}; transition: color 160ms ease, transform 160ms ease; }
+      .kw-intent-opt:hover .arrow { color: ${C.greenHi}; transform: translateX(3px); }
 
       /* Quiet utility action under the intent picker — outlined pill,
          no fill, brand red text. The intent options are the primary
@@ -245,17 +246,17 @@ function useKwStyles() {
         font-size: 12.5px; font-weight: 600;
         font-family: 'Geist', 'Inter', system-ui, sans-serif;
         letter-spacing: -0.01em;
-        color: rgba(10,10,15,0.55);
+        color: ${C.text2};
         background: transparent;
-        border: 1px solid rgba(10,10,15,0.12);
+        border: 1px solid ${C.hair};
         border-radius: 100px;
         cursor: pointer;
         transition: background 160ms ease, color 160ms ease, border-color 160ms ease;
       }
       .kw-intent-decide-btn:hover {
-        background: rgba(10,10,15,0.03);
-        color: #0a0a0f;
-        border-color: rgba(10,10,15,0.20);
+        background: ${C.wash};
+        color: ${C.text1};
+        border-color: ${C.hairHi};
       }
 
 
@@ -273,8 +274,8 @@ function useKwStyles() {
       }
       .kw-copy-btn:hover { filter: brightness(1.1); }
       .kw-copy-btn.copied {
-        background: #f0fdf4; color: #16a34a;
-        border: 1px solid #bbf7d0;
+        background: ${C.greenBg}; color: ${C.greenHi};
+        border: 1px solid ${C.greenBdr};
         padding: 7px 15px; /* compensate for 1px border */
       }
 
@@ -287,23 +288,24 @@ function useKwStyles() {
         padding: 7px 15px; border-radius: 100px;
         font-size: 12px; font-weight: 700; letter-spacing: 0.01em;
         font-family: 'Inter', system-ui, sans-serif;
-        background: #ffffff; color: #111114;
-        border: 1px solid rgba(0,0,0,0.09); cursor: pointer;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.05);
-        transition: box-shadow 0.18s, transform 0.12s;
+        background: ${C.card}; color: ${C.text1};
+        border: 1px solid ${C.hair}; cursor: pointer;
+        box-shadow: ${C.cardShadow};
+        transition: box-shadow 0.18s, transform 0.12s, border-color 0.18s;
       }
       .kw-ghost-btn:hover {
-        box-shadow: 0 2px 6px rgba(0,0,0,0.07), 0 8px 20px rgba(0,0,0,0.08);
+        box-shadow: ${C.cardShadowLift};
+        border-color: ${C.hairHi};
         transform: translateY(-1px);
       }
       .kw-ghost-btn.copied {
-        background: #f0fdf4; color: #16a34a;
-        border-color: #bbf7d0;
+        background: ${C.greenBg}; color: ${C.greenHi};
+        border-color: ${C.greenBdr};
         box-shadow: none;
         transform: none;
       }
 
-      .kw-bar { height: 4px; border-radius: 4px; background: rgba(0,0,0,0.07); overflow: hidden; }
+      .kw-bar { height: 4px; border-radius: 4px; background: rgba(255,255,255,0.10); overflow: hidden; }
       .kw-bar-fill { height: 4px; border-radius: 4px; transition: width 0.5s ease; }
 
       .kw-spinner { width: 14px; height: 14px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: kwSpin 0.7s linear infinite; flex-shrink: 0; }
@@ -314,16 +316,33 @@ function useKwStyles() {
 
 /* ─── Design tokens — strict red/amber/green + neutrals, per the project
        palette rule. No blue/purple/teal anywhere. ───────────────────── */
+/* ─── C: dark palette for this page. Mirrors the shipped app-shell /
+       Competitors dark system (lit-gradient cards, white-alpha hairlines,
+       single soft shadow, quiet white-wash selection). Semantic
+       red/amber/green keep their hue; fill tints are re-tuned for dark
+       and *Hi variants give legible text on the dark tinted chips. ─── */
 const C = {
-  red:     '#e5251b', redBg:   '#fff5f5', redBdr:   '#fecaca',
-  green:   '#16a34a', greenBg: '#f0fdf4', greenBdr: '#bbf7d0',
-  amber:   '#d97706', amberBg: '#fffbeb', amberBdr: '#fde68a',
-  text1:   '#111114',
-  text2:   '#52525b',
-  text3:   '#a0a0b0',
-  text4:   '#c0c0cc',
-  border:  'rgba(0,0,0,0.09)',
-  chipBg:  '#f4f4f6',
+  red:     '#e5251b', redBg:   'rgba(229,37,27,0.13)', redBdr:   'rgba(229,37,27,0.32)',
+  green:   '#16a34a', greenBg: 'rgba(22,163,74,0.14)', greenBdr: 'rgba(22,163,74,0.34)',
+  amber:   '#d97706', amberBg: 'rgba(217,119,6,0.14)', amberBdr: 'rgba(217,119,6,0.34)',
+  redHi:   '#fb6a60', greenHi: '#34d27b', amberHi: '#f0a23b',
+  text1:   '#f4f4f5',
+  text2:   '#a1a1aa',
+  text3:   '#71717a',
+  text4:   'rgba(255,255,255,0.40)',
+  border:  'rgba(255,255,255,0.08)',
+  chipBg:  '#1c1c21',
+  // surface system (identical tokens to Competitors' D)
+  bg:             '#0e0e10',
+  card:           'linear-gradient(180deg, #1e1e24 0%, #18181c 100%)',
+  cardFlat:       '#1c1c21',
+  surfaceInput:   '#18181b',
+  hair:           'rgba(255,255,255,0.08)',
+  hairHi:         'rgba(255,255,255,0.16)',
+  wash:           'rgba(255,255,255,0.04)',
+  washActive:     'rgba(255,255,255,0.06)',
+  cardShadow:     '0 1px 3px rgba(0,0,0,0.4)',
+  cardShadowLift: '0 6px 20px rgba(0,0,0,0.55)',
 }
 
 // Intent matching — semantic mapping within the strict palette:
@@ -331,12 +350,12 @@ const C = {
 //   strong  -> amber  (secondary)
 //   partial -> neutral grey pill (utility label)
 const INTENT_TONE = {
-  exact:   { color: C.green, bg: C.greenBg, bdr: C.greenBdr },
-  strong:  { color: C.amber, bg: C.amberBg, bdr: C.amberBdr },
-  partial: { color: C.text2, bg: C.chipBg,  bdr: C.border   },
+  exact:   { color: C.greenHi, bg: C.greenBg, bdr: C.greenBdr },
+  strong:  { color: C.amberHi, bg: C.amberBg, bdr: C.amberBdr },
+  partial: { color: C.text2,   bg: C.chipBg,  bdr: C.border   },
 }
 
-function oppColor(s) { return s >= 70 ? C.green : s >= 45 ? C.amber : C.red }
+function oppColor(s) { return s >= 70 ? C.greenHi : s >= 45 ? C.amberHi : C.redHi }
 
 /* ─── MomentumBadge — derived from YouTube competition data we already
        fetched. No extra API calls. Three states:
@@ -346,8 +365,8 @@ function oppColor(s) { return s >= 70 ? C.green : s >= 45 ? C.amber : C.red }
 function MomentumBadge({ momentum }) {
   if (!momentum || momentum === 'steady') return null
   const config = momentum === 'active'
-    ? { color: C.green, bg: C.greenBg, bdr: C.greenBdr, label: 'Active' }
-    :                                                   { color: C.amber, bg: C.amberBg, bdr: C.amberBdr, label: 'Open' }
+    ? { color: C.greenHi, bg: C.greenBg, bdr: C.greenBdr, label: 'Active' }
+    :                                                     { color: C.amberHi, bg: C.amberBg, bdr: C.amberBdr, label: 'Open' }
   return (
     <span style={{
       display: 'inline-flex', alignItems: 'center',
@@ -400,11 +419,11 @@ function KwDetailModal({ kw, C, onClose }) {
                 {kw.opportunityScore}/100
               </span>
               <button onClick={copyKeyword}
-                style={{ fontSize: 12, color: copied ? C.green : C.text2, background: '#fff', border: `1px solid ${copied ? C.greenBdr : C.border}`, borderRadius: 100, padding: '6px 14px', cursor: 'pointer', fontFamily: 'inherit', fontWeight: 600, boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
+                style={{ fontSize: 12, color: copied ? C.green : C.text2, background: C.cardFlat, border: `1px solid ${copied ? C.greenBdr : C.border}`, borderRadius: 100, padding: '6px 14px', cursor: 'pointer', fontFamily: 'inherit', fontWeight: 600, boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
                 {copied ? 'Copied' : 'Copy keyword'}
               </button>
               <button onClick={onClose}
-                style={{ fontSize: 12, color: C.text3, background: '#fff', border: `1px solid ${C.border}`, borderRadius: 100, padding: '6px 14px', cursor: 'pointer', fontFamily: 'inherit', fontWeight: 600, boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
+                style={{ fontSize: 12, color: C.text3, background: C.cardFlat, border: `1px solid ${C.border}`, borderRadius: 100, padding: '6px 14px', cursor: 'pointer', fontFamily: 'inherit', fontWeight: 600, boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
                 Close ✕
               </button>
             </div>
@@ -465,7 +484,7 @@ function KwDetailModal({ kw, C, onClose }) {
                         style={{
                           display: 'block', textDecoration: 'none', color: 'inherit',
                           borderRadius: 10, overflow: 'hidden',
-                          border: '1px solid #ececf0', background: '#fff',
+                          border: '1px solid rgba(255,255,255,0.08)', background: C.cardFlat,
                           transition: 'transform 140ms ease, box-shadow 140ms ease, border-color 140ms ease',
                         }}
                         onMouseEnter={e => {
@@ -476,10 +495,10 @@ function KwDetailModal({ kw, C, onClose }) {
                         onMouseLeave={e => {
                           e.currentTarget.style.transform = 'translateY(0)'
                           e.currentTarget.style.boxShadow = 'none'
-                          e.currentTarget.style.borderColor = '#ececf0'
+                          e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'
                         }}
                       >
-                        <div style={{ position: 'relative', aspectRatio: '16 / 9', background: '#ebebef', overflow: 'hidden' }}>
+                        <div style={{ position: 'relative', aspectRatio: '16 / 9', background: '#26262b', overflow: 'hidden' }}>
                           {thumb && (
                             <img src={thumb} alt="" referrerPolicy="no-referrer" loading="lazy"
                               data-fallback={thumbFallback || ''}
@@ -518,7 +537,7 @@ function KwDetailModal({ kw, C, onClose }) {
                             overflow: 'hidden', minHeight: 38,
                           }}>{v.title}</p>
                           <p style={{
-                            fontSize: 12, fontWeight: 500, color: 'rgba(10,10,15,0.50)',
+                            fontSize: 12, fontWeight: 500, color: C.text3,
                             letterSpacing: '-0.02px',
                             whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
                           }}>
@@ -538,8 +557,8 @@ function KwDetailModal({ kw, C, onClose }) {
           })()}
 
           {/* 3-col playbook — exact Outliers pattern (blue / amber / green) */}
-          <div style={{ background: '#fff', border: `1px solid ${C.border}`, borderRadius: 16, padding: '20px 22px' }}>
-            <p style={{ fontSize: 18, fontWeight: 700, color: '#0a0a0f', letterSpacing: '-0.3px', marginBottom: 16 }}>Keyword playbook</p>
+          <div style={{ background: C.cardFlat, border: `1px solid ${C.border}`, borderRadius: 16, padding: '20px 22px' }}>
+            <p style={{ fontSize: 18, fontWeight: 700, color: C.text1, letterSpacing: '-0.3px', marginBottom: 16 }}>Keyword playbook</p>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr 1fr', gap: 8 }}>
               {/* Blue — Why it works (numbered list, mirrors Quick actions) */}
               <div style={{ background: 'rgba(79,134,247,0.07)', border: '1px solid rgba(79,134,247,0.12)', borderRadius: 10, padding: '12px 14px' }}>
@@ -548,19 +567,19 @@ function KwDetailModal({ kw, C, onClose }) {
                   {buildWhyItWorks(kw).map((s, i) => (
                     <li key={i} style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
                       <span style={{ fontSize: 12, fontWeight: 700, color: '#4a7cf7', fontVariantNumeric: 'tabular-nums', lineHeight: 1.55, minWidth: 14 }}>{i + 1}.</span>
-                      <span style={{ fontSize: 13, fontWeight: 500, color: '#0a0a0f', lineHeight: 1.6, flex: 1, letterSpacing: '-0.005em' }}>{s}</span>
+                      <span style={{ fontSize: 13, fontWeight: 500, color: C.text1, lineHeight: 1.6, flex: 1, letterSpacing: '-0.005em' }}>{s}</span>
                     </li>
                   ))}
                 </ul>
               </div>
               {/* Amber — Quick actions (numbered list) */}
-              <div style={{ background: '#fff', border: `1px solid ${C.border}`, borderLeft: `3px solid ${C.amber}`, borderRadius: '0 10px 10px 0', padding: '12px 14px', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
+              <div style={{ background: C.cardFlat, border: `1px solid ${C.border}`, borderLeft: `3px solid ${C.amber}`, borderRadius: '0 10px 10px 0', padding: '12px 14px', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
                 <p style={{ fontSize: 11, fontWeight: 700, color: C.amber, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 8 }}>Quick actions</p>
                 <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 7, margin: 0, padding: 0 }}>
                   {actions.map((s, i) => (
                     <li key={i} style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
                       <span style={{ fontSize: 12, fontWeight: 700, color: C.amber, fontVariantNumeric: 'tabular-nums', lineHeight: 1.55, minWidth: 14 }}>{i + 1}.</span>
-                      <span style={{ fontSize: 13, fontWeight: 500, color: '#0a0a0f', lineHeight: 1.6, flex: 1, letterSpacing: '-0.005em' }}>{s}</span>
+                      <span style={{ fontSize: 13, fontWeight: 500, color: C.text1, lineHeight: 1.6, flex: 1, letterSpacing: '-0.005em' }}>{s}</span>
                     </li>
                   ))}
                 </ul>
@@ -568,7 +587,7 @@ function KwDetailModal({ kw, C, onClose }) {
               {/* Green — Why now */}
               <div style={{ background: 'rgba(5,150,105,0.07)', border: '1px solid rgba(5,150,105,0.14)', borderRadius: 10, padding: '12px 14px' }}>
                 <p style={{ fontSize: 11, fontWeight: 700, color: C.green, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 8 }}>Act on this because</p>
-                <p style={{ fontSize: 13, fontWeight: 500, color: '#0a0a0f', lineHeight: 1.65, letterSpacing: '-0.005em' }}>{buildWhyNow(kw)}</p>
+                <p style={{ fontSize: 13, fontWeight: 500, color: C.text1, lineHeight: 1.65, letterSpacing: '-0.005em' }}>{buildWhyNow(kw)}</p>
               </div>
             </div>
           </div>
@@ -704,8 +723,8 @@ function VideoMetricsRow({ vph, outlierMult }) {
     opacity: 0.78, marginRight: 6,
   }
   const valuePill = (color) => ({
-    fontWeight: 700, color: '#0a0a0f',
-    background: '#fff', border: `1px solid ${color}40`,
+    fontWeight: 700, color: C.text1,
+    background: C.cardFlat, border: `1px solid ${color}40`,
     borderRadius: 100, padding: '1px 8px',
     fontSize: 11, letterSpacing: '-0.01em',
   })
@@ -730,10 +749,10 @@ function VideoMetricsRow({ vph, outlierMult }) {
       {vph && (
         <span style={{
           ...chipBase,
-          color: 'rgba(10,10,15,0.62)', background: '#f4f4f6', borderColor: C.border,
+          color: C.text2, background: '#1c1c21', borderColor: C.border,
         }}>
           <span style={labelStyle}>VPH</span>
-          <span style={valuePill('rgba(10,10,15,0.20)')}>{fmtCompact(vph)}/hr</span>
+          <span style={valuePill('rgba(255,255,255,0.16)')}>{fmtCompact(vph)}/hr</span>
         </span>
       )}
     </div>
@@ -789,11 +808,11 @@ function MomentumChart({ timeline, height = 120 }) {
         {/* Y gridlines — 3 quiet lines */}
         {[0.25, 0.5, 0.75].map(p => (
           <line key={p} x1={padL} x2={W - padR} y1={padT + innerH * p} y2={padT + innerH * p}
-            stroke="rgba(10,10,15,0.05)" strokeWidth="1" />
+            stroke="rgba(255,255,255,0.06)" strokeWidth="1" />
         ))}
         {/* Baseline */}
         <line x1={padL} x2={W - padR} y1={padT + innerH} y2={padT + innerH}
-          stroke="rgba(10,10,15,0.10)" strokeWidth="1" />
+          stroke="rgba(255,255,255,0.10)" strokeWidth="1" />
         {/* Filled area */}
         <path d={fillPath} fill={fillColor} />
         {/* Line */}
@@ -804,7 +823,7 @@ function MomentumChart({ timeline, height = 120 }) {
         {/* X labels */}
         {labels.map((lbl, i) => lbl ? (
           <text key={i} x={xFor(i)} y={H - 8}
-            fill="rgba(10,10,15,0.45)" fontSize="11" fontWeight="500"
+            fill="rgba(255,255,255,0.45)" fontSize="11" fontWeight="500"
             textAnchor={i === n - 1 ? 'end' : 'middle'}
             style={{ fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.01em' }}>
             {lbl}
@@ -812,21 +831,21 @@ function MomentumChart({ timeline, height = 120 }) {
         ) : null)}
         {/* Y max label */}
         <text x={padL - 6} y={padT + 4}
-          fill="rgba(10,10,15,0.45)" fontSize="11" fontWeight="500"
+          fill="rgba(255,255,255,0.45)" fontSize="11" fontWeight="500"
           textAnchor="end" style={{ fontVariantNumeric: 'tabular-nums' }}>
           {maxCount}
         </text>
         <text x={padL - 6} y={padT + innerH + 2}
-          fill="rgba(10,10,15,0.45)" fontSize="11" fontWeight="500"
+          fill="rgba(255,255,255,0.45)" fontSize="11" fontWeight="500"
           textAnchor="end" style={{ fontVariantNumeric: 'tabular-nums' }}>
           0
         </text>
       </svg>
       <p style={{
         marginTop: 6, fontSize: 12.5, fontWeight: 500,
-        color: 'rgba(10,10,15,0.55)', letterSpacing: '-0.01em',
+        color: C.text2, letterSpacing: '-0.01em',
       }}>
-        Peak <strong style={{ color: '#0a0a0f', fontWeight: 700 }}>{maxCount} video{maxCount === 1 ? '' : 's'}</strong> {peakLabel} · {rising ? 'niche heating up' : 'niche cooling down'}
+        Peak <strong style={{ color: C.text1, fontWeight: 700 }}>{maxCount} video{maxCount === 1 ? '' : 's'}</strong> {peakLabel} · {rising ? 'niche heating up' : 'niche cooling down'}
       </p>
     </div>
   )
@@ -1001,10 +1020,10 @@ export default function Keywords({ plan, freeTierFeatures }) {
           darker so it doesn't disappear on light backgrounds. Matches
           Competitors. */}
       <div style={{ marginBottom: 28 }}>
-        <h1 style={{ fontSize: 26, fontWeight: 700, color: '#0a0a0f', letterSpacing: '-0.7px', marginBottom: 6, lineHeight: 1.1 }}>
+        <h1 style={{ fontSize: 26, fontWeight: 700, color: C.text1, letterSpacing: '-0.7px', marginBottom: 6, lineHeight: 1.1 }}>
           Keyword Research
         </h1>
-        <p style={{ fontSize: 14, color: 'rgba(10,10,15,0.55)', fontWeight: 500, letterSpacing: '-0.005em', lineHeight: 1.45 }}>
+        <p style={{ fontSize: 14, color: C.text2, fontWeight: 500, letterSpacing: '-0.005em', lineHeight: 1.45 }}>
           YouTube autocomplete and related searches, filtered by intent and ranked by opportunity
         </p>
       </div>
@@ -1080,15 +1099,15 @@ export default function Keywords({ plan, freeTierFeatures }) {
                 stacked labels. Eyebrow + heading sit together; subtitle
                 is the supporting line. */}
             <div style={{ marginBottom: 16 }}>
-              <p style={{ fontSize: 11, fontWeight: 700, color: 'rgba(10,10,15,0.50)',
+              <p style={{ fontSize: 11, fontWeight: 700, color: C.text3,
                 letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 6 }}>
                 Pick the niche
               </p>
-              <p style={{ fontSize: 17, fontWeight: 700, color: '#0a0a0f',
+              <p style={{ fontSize: 17, fontWeight: 700, color: C.text1,
                 lineHeight: 1.35, letterSpacing: '-0.3px', marginBottom: 4 }}>
                 What niche is this keyword for?
               </p>
-              <p style={{ fontSize: 13, color: 'rgba(10,10,15,0.55)', lineHeight: 1.55 }}>
+              <p style={{ fontSize: 13, color: C.text2, lineHeight: 1.55 }}>
                 Pick the right audience so we search the correct space.
               </p>
             </div>
@@ -1098,7 +1117,7 @@ export default function Keywords({ plan, freeTierFeatures }) {
                 <div key={i} className="kw-intent-opt" onClick={() => runResearch(opt.keyword)}>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 5, flexWrap: 'wrap' }}>
-                      <span style={{ fontSize: 14.5, fontWeight: 700, color: '#0a0a0f',
+                      <span style={{ fontSize: 14.5, fontWeight: 700, color: C.text1,
                         letterSpacing: '-0.15px' }}>{opt.label}</span>
                       {/* Keyword variant chip — green tint to match the
                           card's accent. The chip is data ("here's the
@@ -1112,7 +1131,7 @@ export default function Keywords({ plan, freeTierFeatures }) {
                         letterSpacing: '-0.02em',
                       }}>{opt.keyword}</span>
                     </div>
-                    <p style={{ fontSize: 13, color: 'rgba(10,10,15,0.55)', lineHeight: 1.6 }}>{opt.description}</p>
+                    <p style={{ fontSize: 13, color: C.text2, lineHeight: 1.6 }}>{opt.description}</p>
                   </div>
                   <svg className="arrow" width="16" height="16" viewBox="0 0 14 14" fill="none"
                     stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -1178,7 +1197,7 @@ export default function Keywords({ plan, freeTierFeatures }) {
 
             return (
               <div style={{
-                background: '#ffffff', border: '1px solid #e6e6ec', borderRadius: 16,
+                background: C.cardFlat, border: '1px solid rgba(255,255,255,0.08)', borderRadius: 16,
                 padding: '28px 32px',
                 boxShadow: '0 1px 2px rgba(0,0,0,0.04), 0 4px 14px rgba(0,0,0,0.06)',
               }}>
@@ -1187,10 +1206,10 @@ export default function Keywords({ plan, freeTierFeatures }) {
                   {/* LEFT — ScoreRing + 'TOP PICK' label + keyword caption */}
                   <div style={{ flexShrink: 0, textAlign: 'center' }}>
                     <ScoreRing score={topScore} />
-                    <p style={{ fontSize: 11, color: 'rgba(10,10,15,0.50)', fontWeight: 700, marginTop: 8, letterSpacing: '0.10em', textTransform: 'uppercase' }}>
+                    <p style={{ fontSize: 11, color: C.text3, fontWeight: 700, marginTop: 8, letterSpacing: '0.10em', textTransform: 'uppercase' }}>
                       Top pick
                     </p>
-                    <p style={{ fontSize: 12, fontWeight: 600, color: '#0a0a0f', marginTop: 4, maxWidth: 140, lineHeight: 1.35, letterSpacing: '-0.1px', overflow: 'hidden', textOverflow: 'ellipsis', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
+                    <p style={{ fontSize: 12, fontWeight: 600, color: C.text1, marginTop: 4, maxWidth: 140, lineHeight: 1.35, letterSpacing: '-0.1px', overflow: 'hidden', textOverflow: 'ellipsis', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
                       {result.topPick.keyword}
                     </p>
                   </div>
@@ -1200,11 +1219,11 @@ export default function Keywords({ plan, freeTierFeatures }) {
 
                   {/* MIDDLE — AI verdict paragraph */}
                   <div style={{ flex: 1.3, minWidth: 0 }}>
-                    <p style={{ fontSize: 11, fontWeight: 700, color: 'rgba(10,10,15,0.50)', letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 10 }}>
+                    <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 10 }}>
                       AI verdict
                     </p>
-                    <p style={{ fontSize: 14, fontWeight: 500, color: '#0a0a0f', lineHeight: 1.75, letterSpacing: '-0.005em' }}>
-                      Your strongest keyword is <span style={{ fontWeight: 700, color: '#0a0a0f' }}>{result.topPick.keyword}</span> at <span style={{ fontWeight: 700, color: scoreCol }}>{topScore}/100</span>. {result.topPick.whyThisOne}
+                    <p style={{ fontSize: 14, fontWeight: 500, color: C.text1, lineHeight: 1.75, letterSpacing: '-0.005em' }}>
+                      Your strongest keyword is <span style={{ fontWeight: 700, color: C.text1 }}>{result.topPick.keyword}</span> at <span style={{ fontWeight: 700, color: scoreCol }}>{topScore}/100</span>. {result.topPick.whyThisOne}
                       {result.seedIntent?.intentSummary && <> {result.seedIntent.intentSummary}</>}
                     </p>
                   </div>
@@ -1217,7 +1236,7 @@ export default function Keywords({ plan, freeTierFeatures }) {
                   {/* RIGHT — Intent breakdown rows */}
                   {rows.length > 0 && (
                     <div style={{ flex: 1, minWidth: 0 }}>
-                      <p style={{ fontSize: 11, fontWeight: 700, color: 'rgba(10,10,15,0.50)', letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 12 }}>
+                      <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 12 }}>
                         Intent breakdown
                       </p>
                       {rows.map(([label, val]) => {
@@ -1227,7 +1246,7 @@ export default function Keywords({ plan, freeTierFeatures }) {
                         const toneBdr     = isAwareness ? C.greenBdr : C.border
                         return (
                           <div key={label} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
-                            <span style={{ fontSize: 12.5, color: 'rgba(10,10,15,0.55)', fontWeight: 500, flexShrink: 0, width: 100, letterSpacing: '-0.01em' }}>{label}</span>
+                            <span style={{ fontSize: 12.5, color: C.text2, fontWeight: 500, flexShrink: 0, width: 100, letterSpacing: '-0.01em' }}>{label}</span>
                             <span style={{
                               fontSize: 11, fontWeight: 700,
                               color: tone, background: toneBg,
@@ -1280,19 +1299,19 @@ export default function Keywords({ plan, freeTierFeatures }) {
             return (
               <div style={{ marginTop: 32 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12, flexWrap: 'wrap' }}>
-                  <h2 style={{ fontSize: 18, fontWeight: 700, color: '#0a0a0f', letterSpacing: '-0.3px' }}>
+                  <h2 style={{ fontSize: 18, fontWeight: 700, color: C.text1, letterSpacing: '-0.3px' }}>
                     Top-ranking videos right now
                   </h2>
                   {topPerformer > 0 && (
                     <span style={{
                       marginLeft: 'auto',
                       display: 'inline-flex', alignItems: 'center', gap: 7,
-                      fontSize: 12.5, fontWeight: 600, color: 'rgba(10,10,15,0.62)',
+                      fontSize: 12.5, fontWeight: 600, color: C.text2,
                       letterSpacing: '-0.01em', fontVariantNumeric: 'tabular-nums',
                     }}>
                       <span style={{ width: 6, height: 6, borderRadius: 99, background: C.green, flexShrink: 0 }}/>
                       Top performer{' '}
-                      <strong style={{ color: '#0a0a0f', fontWeight: 700 }}>{fmtCompact(topPerformer)} views</strong>
+                      <strong style={{ color: C.text1, fontWeight: 700 }}>{fmtCompact(topPerformer)} views</strong>
                     </span>
                   )}
                 </div>
@@ -1310,22 +1329,22 @@ export default function Keywords({ plan, freeTierFeatures }) {
                         style={{
                           display: 'block', textDecoration: 'none', color: 'inherit',
                           borderRadius: 12, overflow: 'hidden',
-                          border: '1px solid rgba(10,10,15,0.07)', background: '#fff',
+                          border: '1px solid rgba(255,255,255,0.08)', background: C.cardFlat,
                           boxShadow: '0 1px 2px rgba(15,15,25,0.04)',
                           transition: 'transform 140ms ease, box-shadow 140ms ease, border-color 140ms ease',
                         }}
                         onMouseEnter={e => {
                           e.currentTarget.style.transform = 'translateY(-1px)'
                           e.currentTarget.style.boxShadow = '0 4px 14px rgba(0,0,0,0.10)'
-                          e.currentTarget.style.borderColor = 'rgba(10,10,15,0.14)'
+                          e.currentTarget.style.borderColor = 'rgba(255,255,255,0.16)'
                         }}
                         onMouseLeave={e => {
                           e.currentTarget.style.transform = 'translateY(0)'
                           e.currentTarget.style.boxShadow = '0 1px 2px rgba(15,15,25,0.04)'
-                          e.currentTarget.style.borderColor = 'rgba(10,10,15,0.07)'
+                          e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'
                         }}
                       >
-                        <div style={{ position: 'relative', aspectRatio: '16 / 9', background: '#ebebef', overflow: 'hidden' }}>
+                        <div style={{ position: 'relative', aspectRatio: '16 / 9', background: '#26262b', overflow: 'hidden' }}>
                           {thumb && (
                             <img src={thumb} alt="" referrerPolicy="no-referrer" loading="lazy"
                               data-fallback={thumbFallback || ''}
@@ -1357,14 +1376,14 @@ export default function Keywords({ plan, freeTierFeatures }) {
                         </div>
                         <div style={{ padding: '11px 13px 13px' }}>
                           <p style={{
-                            fontSize: 13.5, fontWeight: 600, color: '#0a0a0f',
+                            fontSize: 13.5, fontWeight: 600, color: C.text1,
                             letterSpacing: '-0.15px', lineHeight: 1.4,
                             margin: '0 0 4px',
                             display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical',
                             overflow: 'hidden', minHeight: 38,
                           }}>{v.title}</p>
                           <p style={{
-                            fontSize: 12, fontWeight: 500, color: 'rgba(10,10,15,0.50)',
+                            fontSize: 12, fontWeight: 500, color: C.text3,
                             letterSpacing: '-0.02px',
                             whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
                           }}>
@@ -1402,19 +1421,19 @@ export default function Keywords({ plan, freeTierFeatures }) {
             return (
               <div style={{ marginTop: 32 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12, flexWrap: 'wrap' }}>
-                  <h2 style={{ fontSize: 18, fontWeight: 700, color: '#0a0a0f', letterSpacing: '-0.3px' }}>
+                  <h2 style={{ fontSize: 18, fontWeight: 700, color: C.text1, letterSpacing: '-0.3px' }}>
                     Competition momentum
                   </h2>
                   <span style={{
-                    fontSize: 11, fontWeight: 700, color: 'rgba(10,10,15,0.50)',
+                    fontSize: 11, fontWeight: 700, color: C.text3,
                     letterSpacing: '0.10em', textTransform: 'uppercase',
                   }}>last 12 weeks</span>
                   <span style={{
                     marginLeft: 'auto',
-                    fontSize: 12.5, fontWeight: 500, color: 'rgba(10,10,15,0.55)',
+                    fontSize: 12.5, fontWeight: 500, color: C.text2,
                     letterSpacing: '-0.01em', fontVariantNumeric: 'tabular-nums',
                   }}>
-                    Top-ranking videos for <strong style={{ color: '#0a0a0f', fontWeight: 600 }}>{sourceKw.keyword}</strong>
+                    Top-ranking videos for <strong style={{ color: C.text1, fontWeight: 600 }}>{sourceKw.keyword}</strong>
                   </span>
                 </div>
                 <div className="kw-card" style={{ padding: '18px 22px 16px' }}>
@@ -1429,8 +1448,8 @@ export default function Keywords({ plan, freeTierFeatures }) {
           {result.keywords?.length > 0 && (
             <>
               <div style={{ marginBottom: 14, marginTop: 32 }}>
-                <h2 style={{ fontSize: 18, fontWeight: 700, color: '#0a0a0f', letterSpacing: '-0.3px', marginBottom: 4 }}>Ranked keywords</h2>
-                <p style={{ fontSize: 13, color: 'rgba(10,10,15,0.50)', lineHeight: 1.5 }}>
+                <h2 style={{ fontSize: 18, fontWeight: 700, color: C.text1, letterSpacing: '-0.3px', marginBottom: 4 }}>Ranked keywords</h2>
+                <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.5 }}>
                   Click any keyword for the playbook · <span style={{ color: C.green, fontWeight: 700 }}>ACTIVE</span> = rising · <span style={{ color: C.amber, fontWeight: 700 }}>OPEN</span> = underclaimed
                 </p>
               </div>
@@ -1440,12 +1459,12 @@ export default function Keywords({ plan, freeTierFeatures }) {
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, marginBottom: 14 }}>
                     <div style={{ minWidth: 0, display: 'flex', alignItems: 'center', gap: 8 }}>
                       <span style={{
-                        fontSize: 11, fontWeight: 700, color: '#9595a4',
-                        background: '#f1f1f6', padding: '2px 8px',
-                        borderRadius: 20, border: '1px solid #e6e6ec',
+                        fontSize: 11, fontWeight: 700, color: C.text3,
+                        background: '#1c1c21', padding: '2px 8px',
+                        borderRadius: 20, border: '1px solid rgba(255,255,255,0.08)',
                         fontVariantNumeric: 'tabular-nums',
                       }}>{result.keywords.length}</span>
-                      <p style={{ fontSize: 13, fontWeight: 500, color: 'rgba(10,10,15,0.55)', lineHeight: 1.5, letterSpacing: '-0.01em' }}>
+                      <p style={{ fontSize: 13, fontWeight: 500, color: C.text2, lineHeight: 1.5, letterSpacing: '-0.01em' }}>
                         Score = volume signal + intent match + competition gap
                       </p>
                     </div>
@@ -1464,7 +1483,7 @@ export default function Keywords({ plan, freeTierFeatures }) {
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', position: 'relative' }}>
                     <div style={{
                       position: 'absolute', left: 'calc(50% - 0.5px)', top: 0, bottom: 0,
-                      width: 1, background: 'rgba(10,10,15,0.07)', pointerEvents: 'none',
+                      width: 1, background: 'rgba(255,255,255,0.08)', pointerEvents: 'none',
                     }}/>
                     {[0, 1].map(colIdx => {
                       const colKws = result.keywords.filter((_, i) => i % 2 === colIdx)
@@ -1488,14 +1507,14 @@ export default function Keywords({ plan, freeTierFeatures }) {
                                 style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }}
                               >
                                 <span className="kw-row-phrase" style={{
-                                  fontSize: 13.5, color: '#0a0a0f', fontWeight: 500,
+                                  fontSize: 13.5, color: C.text1, fontWeight: 500,
                                   width: 260, flexShrink: 0,
                                   letterSpacing: '-0.1px',
                                   overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
                                   transition: 'color 0.12s',
                                 }}>{kw.keyword}</span>
                                 <MomentumBadge momentum={kw.momentum} />
-                                <div style={{ flex: 1, height: 4, background: '#eeeef3', borderRadius: 99, overflow: 'hidden', minWidth: 40 }}>
+                                <div style={{ flex: 1, height: 4, background: 'rgba(255,255,255,0.08)', borderRadius: 99, overflow: 'hidden', minWidth: 40 }}>
                                   <div style={{ width: `${kw.opportunityScore}%`, height: '100%', background: scColor, borderRadius: 99, transition: 'width 0.8s cubic-bezier(0.34,1.56,0.64,1)' }}/>
                                 </div>
                                 <span style={{
@@ -1523,8 +1542,8 @@ export default function Keywords({ plan, freeTierFeatures }) {
           {result.clusters?.length > 0 && (
             <>
               <div style={{ marginBottom: 14, marginTop: 32 }}>
-                <h2 style={{ fontSize: 18, fontWeight: 700, color: '#0a0a0f', letterSpacing: '-0.3px', marginBottom: 4 }}>Content clusters</h2>
-                <p style={{ fontSize: 13, color: 'rgba(10,10,15,0.50)', lineHeight: 1.5 }}>
+                <h2 style={{ fontSize: 18, fontWeight: 700, color: C.text1, letterSpacing: '-0.3px', marginBottom: 4 }}>Content clusters</h2>
+                <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.5 }}>
                   Themes you can build a series around
                 </p>
               </div>
@@ -1546,17 +1565,17 @@ export default function Keywords({ plan, freeTierFeatures }) {
                           display: 'flex', flexDirection: 'column',
                         }}>
                           {/* Eyebrow + theme name */}
-                          <p style={{ fontSize: 11, fontWeight: 700, color: 'rgba(10,10,15,0.50)', letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 4 }}>
+                          <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 4 }}>
                             Theme
                           </p>
                           <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 8, marginBottom: 14 }}>
-                            <p style={{ fontSize: 14, fontWeight: 700, color: '#0a0a0f', lineHeight: 1.35, letterSpacing: '-0.15px', flex: 1, minWidth: 0 }}>
+                            <p style={{ fontSize: 14, fontWeight: 700, color: C.text1, lineHeight: 1.35, letterSpacing: '-0.15px', flex: 1, minWidth: 0 }}>
                               {cl.clusterName}
                             </p>
                             <span style={{
-                              fontSize: 11, fontWeight: 700, color: '#9595a4',
-                              background: '#f1f1f6', padding: '2px 8px',
-                              borderRadius: 20, border: '1px solid #e6e6ec',
+                              fontSize: 11, fontWeight: 700, color: C.text3,
+                              background: '#1c1c21', padding: '2px 8px',
+                              borderRadius: 20, border: '1px solid rgba(255,255,255,0.08)',
                               flexShrink: 0, fontVariantNumeric: 'tabular-nums',
                             }}>{cl.keywords?.length || 0}</span>
                           </div>
@@ -1636,7 +1655,7 @@ export default function Keywords({ plan, freeTierFeatures }) {
           ) : reports.length === 0 ? (
             <div style={{
               padding: '56px 24px', textAlign: 'center',
-              background: '#ffffff', border: `1px solid ${C.border}`, borderRadius: 16,
+              background: C.cardFlat, border: `1px solid ${C.border}`, borderRadius: 16,
               boxShadow: '0 1px 2px rgba(0,0,0,0.04), 0 4px 14px rgba(0,0,0,0.06)',
             }}>
               <p style={{ fontSize: 16, fontWeight: 700, color: C.text1, letterSpacing: '-0.2px', marginBottom: 8 }}>
@@ -1675,7 +1694,7 @@ export default function Keywords({ plan, freeTierFeatures }) {
                     </button>
                     <div className="kw-report-header" onClick={() => openReport(r)}>
                       <div style={{ flex: 1, minWidth: 0 }}>
-                        <p style={{ fontWeight: 700, fontSize: 15, color: '#0a0a0f',
+                        <p style={{ fontWeight: 700, fontSize: 15, color: C.text1,
                           letterSpacing: '-0.2px', whiteSpace: 'nowrap', overflow: 'hidden',
                           textOverflow: 'ellipsis', marginBottom: 8 }}>
                           {r.keyword}
@@ -1699,12 +1718,12 @@ export default function Keywords({ plan, freeTierFeatures }) {
                               <span className="lbl">cluster{clusterCount === 1 ? '' : 's'}</span>
                             </span>
                           )}
-                          <span style={{ fontSize: 12, color: 'rgba(10,10,15,0.45)', fontWeight: 500, marginLeft: 4 }}>
+                          <span style={{ fontSize: 12, color: C.text3, fontWeight: 500, marginLeft: 4 }}>
                             · {relTime(r.updated_at)}
                           </span>
                         </div>
                       </div>
-                      <div style={{ flexShrink: 0, borderLeft: '1px solid rgba(10,10,15,0.07)',
+                      <div style={{ flexShrink: 0, borderLeft: '1px solid rgba(255,255,255,0.08)',
                         paddingLeft: 16, marginLeft: 4, paddingRight: 12 }}>
                         <button className="kw-report-cta"
                           onClick={e => { e.stopPropagation(); openReport(r) }}>
