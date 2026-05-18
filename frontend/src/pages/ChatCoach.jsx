@@ -53,15 +53,15 @@ if (typeof document !== 'undefined' && !document.getElementById('ytg-chat-scroll
   s.textContent = `
     .ytg-chat-scroll {
       scrollbar-width: thin;
-      scrollbar-color: rgba(255,255,255,0.14) transparent;
+      scrollbar-color: rgba(255,255,255,0.10) transparent;
     }
-    .ytg-chat-scroll::-webkit-scrollbar { width: 6px; height: 6px }
+    .ytg-chat-scroll::-webkit-scrollbar { width: 5px; height: 5px }
     .ytg-chat-scroll::-webkit-scrollbar-thumb {
-      background: rgba(255,255,255,0.14);
+      background: rgba(255,255,255,0.10);
       border-radius: 99px;
     }
     .ytg-chat-scroll::-webkit-scrollbar-thumb:hover {
-      background: rgba(255,255,255,0.22);
+      background: rgba(255,255,255,0.18);
     }
     .ytg-chat-scroll::-webkit-scrollbar-track,
     .ytg-chat-scroll::-webkit-scrollbar-button {
@@ -69,7 +69,7 @@ if (typeof document !== 'undefined' && !document.getElementById('ytg-chat-scroll
       display: none;
     }
     .ytg-chat-textarea::placeholder {
-      color: rgba(255,255,255,0.30);
+      color: rgba(255,255,255,0.22);
     }
     @keyframes ytgPulseSoft {
       0%, 100% { opacity: 0.55 }
@@ -176,8 +176,8 @@ function AssistantBody({ text }) {
       // Tuned for Geist: 450 reads confident on Geist's geometric forms
       // where the same weight on Inter would look thin. Tracking pulled
       // in slightly because Geist runs a hair narrower than Inter.
-      fontSize: 14.5, fontWeight: 450, color: C.text1,
-      letterSpacing: '-0.005em', lineHeight: 1.65,
+      fontSize: 14.5, fontWeight: 400, color: '#e4e4e7',
+      letterSpacing: '-0.005em', lineHeight: 1.7,
     }}>
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
@@ -480,9 +480,19 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
          layout. ─────────────────────────────────────────────────────── */
   const isOff = sending || outOfMessages || input.trim().length === 0
   const composerForm = (
+    <div style={{ position: 'relative' }}>
+      {/* Atmospheric glow beneath the composer — lights it from below so
+          it reads as the grounded hero of the page, not a floating box. */}
+      <div aria-hidden style={{
+        position: 'absolute',
+        left: -24, right: -24, bottom: -56, height: 140,
+        background: 'radial-gradient(ellipse 70% 80% at 50% 100%, rgba(229,37,27,0.07) 0%, transparent 65%)',
+        pointerEvents: 'none', zIndex: 0,
+      }}/>
     <form
       onSubmit={(e) => { e.preventDefault(); send() }}
       style={{
+        position: 'relative', zIndex: 1,
         // Glass composer. Semi-transparent surface + backdrop blur gives
         // the composer a real tactile quality on top of the atmospheric
         // gradient background. This is the "$10k MacBook" tell that the
@@ -490,13 +500,13 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
         // catches light differently than the rest of the page. The
         // composer is the right place for it here.
         display: 'flex', alignItems: 'center', gap: 12,
-        background: 'rgba(34,34,38,0.72)',
+        background: 'rgba(20,20,24,0.85)',
         backdropFilter: 'blur(24px) saturate(180%)',
         WebkitBackdropFilter: 'blur(24px) saturate(180%)',
-        border: `1px solid ${input.length > 0 || sending ? C.redBdr : C.hair}`,
+        border: `1px solid ${input.length > 0 || sending ? 'rgba(229,37,27,0.35)' : 'rgba(255,255,255,0.09)'}`,
         borderRadius: 20, padding: '16px 16px 16px 24px',
         boxShadow: input.length > 0 || sending
-          ? `0 0 0 4px ${C.redSoft}, 0 1px 3px rgba(0,0,0,0.4)`
+          ? `0 0 0 3px rgba(229,37,27,0.08), 0 2px 12px rgba(0,0,0,0.5)`
           : `0 1px 3px rgba(0,0,0,0.4)`,
         transition: `border-color 220ms ${C.spring}, box-shadow 220ms ${C.spring}`,
       }}
@@ -522,8 +532,8 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
           fontFamily: FONT_STACK,
           // Composer input: Geist 450 reads cleanly; 500 would feel
           // heavy for placeholder + typed text alike.
-          fontSize: 15, fontWeight: 450, color: C.text1,
-          letterSpacing: '-0.005em', lineHeight: 1.55,
+          fontSize: 15.5, fontWeight: 400, color: C.text1,
+          letterSpacing: '-0.2px', lineHeight: 1.55,
           resize: 'none',
           maxHeight: 160,
           paddingTop: 8, paddingBottom: 8,
@@ -552,7 +562,7 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
           display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
           boxShadow: isOff
             ? '0 1px 3px rgba(0,0,0,0.4)'
-            : '0 1px 2px rgba(229,37,27,0.34), inset 0 1px 0 rgba(255,255,255,0.24)',
+            : '0 0 0 3px rgba(229,37,27,0.18), 0 2px 8px rgba(229,37,27,0.45), inset 0 1px 0 rgba(255,255,255,0.22)',
           transition: `filter 160ms ${C.spring}, transform 160ms ${C.spring}, background 200ms ${C.spring}`,
         }}
         onMouseEnter={e => { if (!isOff) { e.currentTarget.style.filter = 'brightness(1.06)'; e.currentTarget.style.transform = 'translateY(-1px)' } }}
@@ -561,6 +571,7 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
         <Send size={17} strokeWidth={2} />
       </button>
     </form>
+    </div>
   )
 
   const errorBanner = sendError && (
@@ -619,10 +630,10 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
           // The number IS the meter. A tiny bar at the trailing edge was
           // just visual noise. Status dot + count is more legible.
           display: 'inline-flex', alignItems: 'center', gap: 8,
-          background: meterEmpty ? C.redSoft : C.surface,
-          border: `1px solid ${meterEmpty ? C.redBdr : C.hair}`,
+          background: meterEmpty ? C.redSoft : 'transparent',
+          border: meterEmpty ? `1px solid ${C.redBdr}` : '1px solid transparent',
           padding: '6px 14px', borderRadius: 100,
-          boxShadow: C.cardShadow,
+          boxShadow: meterEmpty ? C.cardShadow : 'none',
           fontVariantNumeric: 'tabular-nums',
         }}>
           <span style={{
@@ -633,7 +644,7 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
               : remaining < allowance * 0.25
                 ? '0 0 0 3px rgba(229,37,27,0.12)'
                 : '0 0 0 3px rgba(22,163,74,0.16)',
-            animation: meterEmpty ? 'none' : 'ytgPulseSoft 2.4s ease-in-out infinite',
+            animation: meterEmpty ? 'none' : 'ytgPulseSoft 3s ease-in-out infinite',
             flexShrink: 0,
           }}/>
           <span style={{
@@ -666,12 +677,20 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
       minHeight: 540,
       fontFamily: FONT_STACK,
       color: C.text1,
-      // Dark-mode experiment: this page owns its base background so the
-      // conversion is actually visible. The rest of the app shell is
-      // still light, so the page column reads dark on a light gutter
-      // until/unless the dark theme is rolled out app-wide.
-      backgroundColor: C.bg,
+      // Atmospheric depth: a soft top-anchored radial wash instead of a
+      // flat fill, so the page reads as lit space rather than a painted
+      // wall. A faint noise layer (negative-z child below) adds material
+      // grain. The rest of the app shell is still light, so this column
+      // reads dark on a light gutter until the theme rolls out app-wide.
+      position: 'relative',
+      background: 'radial-gradient(ellipse 80% 60% at 50% 0%, #141418 0%, #0a0a0c 100%)',
     }}>
+      <div aria-hidden style={{
+        position: 'absolute', inset: 0, zIndex: -1, pointerEvents: 'none',
+        opacity: 0.025,
+        backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E")`,
+        backgroundSize: '120px 120px',
+      }}/>
       {/* Standard page header — same scale as the rest of the suite
           (26/700/-0.7px + 14/500). Usage chip inline on the right,
           shown only when there's no rail (the rail footer owns it once
@@ -681,20 +700,20 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
         gap: 16, marginBottom: 22, flexShrink: 0,
       }}>
         <div>
-          <h1 style={{ fontSize: 26, fontWeight: 700, color: C.text1, letterSpacing: '-0.7px', lineHeight: 1.1, margin: 0 }}>
+          <h1 style={{ fontSize: 32, fontWeight: 800, color: C.text1, letterSpacing: '-1.2px', lineHeight: 1.1, margin: 0 }}>
             AI Coach
           </h1>
-          <p style={{ fontSize: 14, fontWeight: 500, color: C.text2, letterSpacing: '-0.005em', marginTop: 6 }}>
+          <p style={{ fontSize: 14, fontWeight: 400, color: '#52525b', letterSpacing: 0, marginTop: 6 }}>
             Ask anything about growing your channel.
           </p>
         </div>
         {showFloatingMeter && (
           <div style={{
             display: 'inline-flex', alignItems: 'center', gap: 8,
-            background: meterEmpty ? C.redSoft : C.surface,
-            border: `1px solid ${meterEmpty ? C.redBdr : C.hair}`,
+            background: meterEmpty ? C.redSoft : 'transparent',
+            border: meterEmpty ? `1px solid ${C.redBdr}` : '1px solid transparent',
             padding: '6px 14px', borderRadius: 100,
-            boxShadow: C.cardShadow,
+            boxShadow: meterEmpty ? C.cardShadow : 'none',
             fontVariantNumeric: 'tabular-nums', flexShrink: 0,
           }}>
             <span style={{
@@ -705,7 +724,7 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
                 : remaining < allowance * 0.25
                   ? '0 0 0 3px rgba(229,37,27,0.12)'
                   : '0 0 0 3px rgba(22,163,74,0.16)',
-              animation: meterEmpty ? 'none' : 'ytgPulseSoft 2.4s ease-in-out infinite',
+              animation: meterEmpty ? 'none' : 'ytgPulseSoft 3s ease-in-out infinite',
               flexShrink: 0,
             }}/>
             <span style={{ fontSize: 12.5, fontWeight: 600, color: meterEmpty ? C.red : C.text1, letterSpacing: '-0.01em' }}>
@@ -774,12 +793,12 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
           flex: 1,
           display: 'flex', flexDirection: 'column',
           alignItems: 'center', justifyContent: 'center',
-          padding: '24px 24px 40px',
+          padding: '24px 24px 60px',
           gap: 22,
         }}>
           <p className="ytg-fade-up" style={{
-            fontSize: 20, fontWeight: 600, color: C.text1,
-            letterSpacing: '-0.3px', lineHeight: 1.2,
+            fontSize: 22, fontWeight: 700, color: C.text1,
+            letterSpacing: '-0.5px', lineHeight: 1.2,
             textAlign: 'center', margin: 0,
             animation: `ytgFadeUp 0.5s ${C.spring} both`,
             animationDelay: '40ms',
@@ -813,8 +832,8 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
                   onClick={() => send(p.label)}
                   style={{
                     display: 'inline-flex', alignItems: 'center', gap: 8,
-                    padding: '9px 15px', borderRadius: 100,
-                    background: C.surface,
+                    padding: '10px 16px', borderRadius: 100,
+                    background: 'rgba(255,255,255,0.04)',
                     border: `1px solid ${C.hair}`,
                     boxShadow: C.cardShadow,
                     color: C.text2,
@@ -826,14 +845,20 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
                   onMouseEnter={e => {
                     e.currentTarget.style.transform = 'translateY(-1px)'
                     e.currentTarget.style.boxShadow = C.cardShadowLift
-                    e.currentTarget.style.borderColor = C.hairActive
+                    e.currentTarget.style.background = 'rgba(255,255,255,0.07)'
+                    e.currentTarget.style.borderColor = 'rgba(255,255,255,0.14)'
                     e.currentTarget.style.color = C.text1
+                    const ic = e.currentTarget.querySelector('svg')
+                    if (ic) ic.style.color = C.text2
                   }}
                   onMouseLeave={e => {
                     e.currentTarget.style.transform = 'translateY(0)'
                     e.currentTarget.style.boxShadow = C.cardShadow
+                    e.currentTarget.style.background = 'rgba(255,255,255,0.04)'
                     e.currentTarget.style.borderColor = C.hair
                     e.currentTarget.style.color = C.text2
+                    const ic = e.currentTarget.querySelector('svg')
+                    if (ic) ic.style.color = C.text3
                   }}
                 >
                   <Icon size={14} strokeWidth={1.9} color={C.text3} />
@@ -877,19 +902,19 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
                     flexShrink: 0,
                     width: 32, height: 32, borderRadius: 10,
                     display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-                    background: C.surface,
-                    border: `1px solid ${C.hair}`,
-                    color: C.text1,
-                    boxShadow: C.cardShadow,
+                    background: 'linear-gradient(180deg, #222228 0%, #1c1c22 100%)',
+                    border: `1px solid rgba(255,255,255,0.10)`,
+                    color: 'rgba(229,37,27,0.7)',
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.4)',
                   }}>
                     <Sparkles size={17} strokeWidth={1.8} />
                   </span>
                   <div style={{
-                    background: C.surface,
+                    background: 'linear-gradient(180deg, #1e1e24 0%, #18181c 100%)',
                     border: `1px solid ${C.hair}`,
-                    borderRadius: '4px 14px 14px 14px',
+                    borderRadius: '4px 16px 16px 16px',
                     padding: '13px 16px',
-                    boxShadow: C.cardShadow,
+                    boxShadow: '0 1px 3px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.04)',
                     display: 'inline-flex', alignItems: 'center', gap: 12, flexWrap: 'wrap',
                   }}>
                     <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5 }}>
@@ -936,13 +961,13 @@ function MessageBubble({ role, content, sources }) {
       <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
         <div style={{
           maxWidth: '78%',
-          background: `linear-gradient(180deg, ${C.redHi} 0%, ${C.red} 60%, ${C.redLo} 100%)`,
+          background: 'linear-gradient(160deg, #ef3a31 0%, #e5251b 50%, #c81d14 100%)',
           color: '#fff',
-          borderRadius: '14px 14px 4px 14px',
-          padding: '12px 16px',
-          boxShadow: '0 1px 2px rgba(229,37,27,0.28), inset 0 1px 0 rgba(255,255,255,0.22)',
+          borderRadius: '16px 16px 4px 16px',
+          padding: '13px 18px',
+          boxShadow: '0 1px 2px rgba(229,37,27,0.28), inset 0 1px 0 rgba(255,255,255,0.18)',
           fontFamily: FONT_STACK,
-          fontSize: 14, fontWeight: 450, letterSpacing: '-0.005em', lineHeight: 1.5,
+          fontSize: 14, fontWeight: 500, letterSpacing: '-0.005em', lineHeight: 1.5,
           whiteSpace: 'pre-wrap',
         }}>{content}</div>
       </div>
@@ -954,20 +979,20 @@ function MessageBubble({ role, content, sources }) {
         flexShrink: 0,
         width: 32, height: 32, borderRadius: 10,
         display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-        background: C.surface,
-        border: `1px solid ${C.hair}`,
-        color: C.text1,
-        boxShadow: C.cardShadow,
+        background: 'linear-gradient(180deg, #222228 0%, #1c1c22 100%)',
+        border: `1px solid rgba(255,255,255,0.10)`,
+        color: 'rgba(229,37,27,0.7)',
+        boxShadow: '0 2px 8px rgba(0,0,0,0.4)',
       }}>
         <Sparkles size={17} strokeWidth={1.8} />
       </span>
       <div style={{ flex: 1, minWidth: 0 }}>
         <div style={{
-          background: 'linear-gradient(180deg, #1c1c1f 0%, #161618 100%)',
+          background: 'linear-gradient(180deg, #1e1e24 0%, #18181c 100%)',
           border: `1px solid ${C.hair}`,
-          borderRadius: '4px 14px 14px 14px',
+          borderRadius: '4px 16px 16px 16px',
           padding: '14px 18px',
-          boxShadow: C.cardShadow,
+          boxShadow: '0 1px 3px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.04)',
         }}>
           <AssistantBody text={content} />
         </div>
@@ -1012,11 +1037,12 @@ function ConversationRail({
   const dotColor   = meterEmpty ? C.red : meterLow ? C.red : '#22c55e'
   return (
     <aside style={{
-      width: 232,
+      width: 248,
       flexShrink: 0,
       display: 'flex', flexDirection: 'column',
       paddingRight: 12,
-      borderRight: `1px solid ${C.hair}`,
+      background: '#0c0c0e',
+      boxShadow: '1px 0 0 rgba(255,255,255,0.05)',
       minHeight: 0,
     }}>
       {/* New chat — its own affordance, not row zero of the list. Quiet
@@ -1031,8 +1057,8 @@ function ConversationRail({
           width: '100%',
           padding: '9px 12px',
           marginBottom: 16,
-          background: C.surface,
-          border: `1px solid ${C.hair}`,
+          background: 'linear-gradient(180deg, #222228 0%, #1a1a1e 100%)',
+          border: `1px solid rgba(255,255,255,0.10)`,
           boxShadow: C.cardShadow,
           color: C.text1,
           fontFamily: 'inherit',
@@ -1064,8 +1090,8 @@ function ConversationRail({
         {groups.map(group => (
           <div key={group.label} style={{ marginBottom: 16 }}>
             <p style={{
-              fontSize: 11, fontWeight: 600, color: C.text4,
-              letterSpacing: '-0.005em',
+              fontSize: 11, fontWeight: 600, color: C.text2,
+              letterSpacing: '0.06em', textTransform: 'uppercase',
               margin: '0 0 6px 12px',
             }}>{group.label}</p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
@@ -1105,7 +1131,7 @@ function ConversationRail({
               width: 6, height: 6, borderRadius: 99,
               background: dotColor,
               boxShadow: `0 0 0 3px ${dotColor === C.red ? 'rgba(229,37,27,0.14)' : 'rgba(22,163,74,0.14)'}`,
-              animation: meterEmpty ? 'none' : 'ytgPulseSoft 2.4s ease-in-out infinite',
+              animation: meterEmpty ? 'none' : 'ytgPulseSoft 3s ease-in-out infinite',
               flexShrink: 0,
             }}/>
             <span style={{
@@ -1151,6 +1177,12 @@ function ConversationRow({ conversation, active, onSelect, onDelete, switching }
         transition: `background 140ms ${C.spring}`,
       }}
     >
+      {active && (
+        <span aria-hidden style={{
+          position: 'absolute', left: 0, top: 6, bottom: 6,
+          width: 2, borderRadius: 2, background: C.red,
+        }}/>
+      )}
       <span style={{
         flex: 1, minWidth: 0,
         fontSize: 13, fontWeight: active ? 600 : 500,
