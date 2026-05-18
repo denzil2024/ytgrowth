@@ -23,7 +23,6 @@ import {
   Send,             // Composer send
   SquarePen,        // New chat (compose glyph)
   ArrowRight,       // Upgrade CTA glyph
-  Plus,             // Composer affordance (focuses input)
   X,                // Delete on a history row
   // Starter-prompt icons
   TrendingUp,
@@ -169,8 +168,8 @@ const MARKDOWN_COMPONENTS = {
     }
     return (
       <code style={{
-        background: 'rgba(255,255,255,0.05)', padding: '1.5px 5px',
-        borderRadius: 4, fontSize: '0.9em', fontFamily: FONT_MONO, color: C.t1,
+        fontFamily: FONT_MONO, fontSize: '0.86em', fontWeight: 500,
+        color: C.t1, letterSpacing: '-0.01em',
       }}>{children}</code>
     )
   },
@@ -410,22 +409,7 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
           e.target.style.height = Math.min(e.target.scrollHeight, 168) + 'px'
         }}
       />
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 10 }}>
-        <button
-          type="button"
-          onClick={() => inputRef.current?.focus()}
-          aria-label="Write a message"
-          style={{
-            display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-            width: 30, height: 30, borderRadius: 999,
-            border: `1px solid ${C.hair}`, background: 'transparent', cursor: 'pointer',
-            color: C.t5, transition: `color 140ms ${C.spring}, border-color 140ms ${C.spring}`,
-          }}
-          onMouseEnter={e => { e.currentTarget.style.color = C.t3; e.currentTarget.style.borderColor = C.hairStrong }}
-          onMouseLeave={e => { e.currentTarget.style.color = C.t5; e.currentTarget.style.borderColor = C.hair }}
-        >
-          <Plus size={15} strokeWidth={2} />
-        </button>
+      <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', marginTop: 10 }}>
         <div style={{ display: 'inline-flex', alignItems: 'center', gap: 14 }}>
           {allowance > 0 && !hasRail && (
             <span style={{
@@ -494,17 +478,17 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
 
   return (
     <div style={{
-      // The whole page is one dark workspace panel docked into the
-      // (untouched, light) app shell. Rounded, lifted off the page, and
-      // self-contained — a deliberate console, not an orphan column.
-      maxWidth: 1180, width: '100%', margin: '0 auto',
-      height: 'calc(100vh - 160px)', minHeight: 540,
+      // NOT a card. The dark area bleeds out of the shell's content
+      // padding (36/40/72, set by Dashboard — not edited here) so it
+      // fills the whole region under the light topbar edge to edge. No
+      // radius, no shadow, no float. The remaining light topbar goes
+      // away properly when the shell itself goes dark (next phase).
+      margin: '-36px -40px -72px -40px',
+      height: 'calc(100vh - 52px)', minHeight: 540,
       display: 'flex', flexDirection: 'column',
       fontFamily: FONT_STACK, color: C.t1,
       background: C.base,
-      border: `1px solid ${C.hair}`,
-      borderRadius: 16, overflow: 'hidden',
-      boxShadow: '0 1px 2px rgba(0,0,0,0.06), 0 18px 44px -16px rgba(0,0,0,0.22)',
+      overflow: 'hidden',
     }}>
       {state.loading ? (
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
