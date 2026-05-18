@@ -681,11 +681,12 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
 
   return (
     <div style={{
-      width: '100%', margin: 0,
+      // Contained surface centered inside the dark app shell. The shell
+      // (Dashboard) paints the full viewport #0e0e10 and the slim 48px
+      // dark topbar, so this stays a coherent rail+chat cluster instead
+      // of stranded elements edge-to-edge on a black void.
+      maxWidth: 1120, width: '100%', margin: '0 auto',
       display: 'flex', flexDirection: 'column',
-      // Full-bleed inside the dark app shell (the light sidebar is hidden
-      // on Chat; a slim 48px dark topbar sits above). One flat dark
-      // material, no page header — VidIQ-style.
       height: 'calc(100vh - 49px)',
       minHeight: 540,
       fontFamily: FONT_STACK,
@@ -737,7 +738,7 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
           <div style={{
             flex: 1, display: 'flex', flexDirection: 'column',
             minWidth: 0, minHeight: 0,
-            paddingLeft: hasRail ? 16 : 0,
+            paddingLeft: hasRail ? 28 : 0,
           }}>
         {messages.length === 0 ? (
         /* ── EMPTY STATE. Settled composition (the page H1 above owns the
@@ -977,12 +978,12 @@ function ConversationRail({
   const dotColor   = meterEmpty ? C.red : meterLow ? C.red : '#22c55e'
   return (
     <aside style={{
-      width: 220,
+      width: 232,
       flexShrink: 0,
       display: 'flex', flexDirection: 'column',
-      paddingRight: 12,
+      paddingLeft: 4, paddingRight: 16,
       background: '#080809',
-      boxShadow: '1px 0 0 rgba(255,255,255,0.04)',
+      borderRight: '1px solid rgba(255,255,255,0.08)',
       minHeight: 0,
     }}>
       {/* New chat — its own affordance, not row zero of the list. Quiet
