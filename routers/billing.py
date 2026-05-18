@@ -17,6 +17,13 @@ router = APIRouter()
 
 PADDLE_WEBHOOK_SECRET = os.environ.get("PADDLE_WEBHOOK_SECRET", "")
 
+# Server-side Paddle API key (secret — distinct from the webhook secret and
+# the public client token). Used to mint customer-portal sessions so paying
+# users can update their card / cancel / view invoices. Base is overridable
+# for sandbox; the live client token implies the live API by default.
+PADDLE_API_KEY  = os.environ.get("PADDLE_API_KEY", "")
+PADDLE_API_BASE = os.environ.get("PADDLE_API_BASE", "https://api.paddle.com").rstrip("/")
+
 # ── Price ID → plan metadata ──────────────────────────────────────────────────
 PRICE_META = {
     "pri_01kn91162qwft3tmwkenv19meq": {"plan": "solo",           "billing": "monthly",  "analyses": 20,  "channels": 3,  "is_lifetime": False, "bonus": 0},
@@ -322,3 +329,92 @@ def get_usage(request: Request):
         })
     finally:
         db.close()
+
+
+@router.get("/portal")
+def billing_portal(request: Request):
+    """Mint a Paddle customer-portal session and return its URL.
+
+    The Settings "Manage billing" button hits this and redirects the user
+    to Paddle's hosted portal (update card, view invoices, cancel). All of
+    that UI is Paddle's — we only generate the signed session link.
+
+    Failure modes return a clear error so the frontend can fall back to
+    the support email instead of dead-ending:
+      401 — not logged in
+      409 — no Paddle customer on file (free user / never paid)
+      503 — PADDLE_API_KEY not configured, or Paddle API unreachable
+    """
+    session_id = request.session.get("session_id")
+    user_data, _ = get_session(session_id)
+    if not user_data:
+        return JSONResponse({"error": "Not authenticated"}, status_code=401)
+
+    if not PADDLE_API_KEY:
+        return JSONResponse(
+            {"error": "Billing portal is temporarily unavailable. Email support@ytgrowth.io."},
+            status_code=503,
+        )
+
+    channel_id = user_data.get("channel", {}).get("channel_id", "")
+    db = SessionLocal()
+    try:
+        from app.analysis_gate import _resolve_billing_channel
+        billing_channel = _resolve_billing_channel(db, channel_id)
+        sub = db.query(UserSubscription).filter_by(channel_id=billing_channel).first()
+        customer_id = (sub.paddle_customer_id if sub else None) or ""
+        subscription_id = (sub.paddle_subscription_id if sub else None) or ""
+    finally:
+        db.close()
+
+    if not customer_id:
+        return JSONResponse(
+            {"error": "No billing account found. If you have a paid plan, email support@ytgrowth.io."},
+            status_code=409,
+        )
+
+    try:
+        import requests
+        body = {}
+        # Scoping to the subscription surfaces the cancel/update-payment
+        # deep links in the portal; omitting it still returns the general
+        # overview, so a missing subscription_id is non-fatal.
+        if subscription_id:
+            body["subscription_ids"] = [subscription_id]
+        resp = requests.post(
+            f"{PADDLE_API_BASE}/customers/{customer_id}/portal-sessions",
+            headers={
+                "Authorization": f"Bearer {PADDLE_API_KEY}",
+                "Content-Type": "application/json",
+            },
+            json=body,
+            timeout=12,
+        )
+    except Exception as e:
+        print(f"[billing/portal] Paddle request failed: {e}")
+        return JSONResponse(
+            {"error": "Billing portal is temporarily unavailable. Email support@ytgrowth.io."},
+            status_code=503,
+        )
+
+    if resp.status_code not in (200, 201):
+        print(f"[billing/portal] Paddle {resp.status_code}: {resp.text[:500]}")
+        return JSONResponse(
+            {"error": "Billing portal is temporarily unavailable. Email support@ytgrowth.io."},
+            status_code=503,
+        )
+
+    try:
+        urls = (resp.json() or {}).get("data", {}).get("urls", {})
+        portal_url = (urls.get("general") or {}).get("overview", "")
+    except Exception as e:
+        print(f"[billing/portal] Unexpected Paddle response shape: {e}")
+        portal_url = ""
+
+    if not portal_url:
+        return JSONResponse(
+            {"error": "Billing portal is temporarily unavailable. Email support@ytgrowth.io."},
+            status_code=503,
+        )
+
+    return JSONResponse({"url": portal_url})

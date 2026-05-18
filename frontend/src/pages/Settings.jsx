@@ -429,6 +429,7 @@ export default function Settings({ channelData }) {
   const [frSuccess, setFrSuccess] = useState(false)
   const [frMine, setFrMine]     = useState([])
   const [frShareCopied, setFrShareCopied] = useState(false)
+  const [billingBusy, setBillingBusy] = useState(false)
   const FR_TITLE_MAX = 120
   const FR_DESC_MAX  = 2000
 
@@ -570,7 +571,27 @@ export default function Settings({ channelData }) {
   const isTopPlan      = me?.plan === 'agency' || me?.plan === 'lifetime_agency'
   const hasActiveSub   = me?.status === 'active' && !me?.is_lifetime
 
-  const allowance    = me?.monthly_allowance ?? 3
+  // Manage billing → Paddle hosted customer portal. On any failure, fall
+  // back to the support mailto so the button never dead-ends.
+  async function openBillingPortal() {
+    if (billingBusy) return
+    setBillingBusy(true)
+    try {
+      const r = await fetch('/billing/portal', { credentials: 'include' })
+      const d = await r.json().catch(() => ({}))
+      if (r.ok && d.url) {
+        window.location.href = d.url
+        return
+      }
+      window.location.href = 'mailto:support@ytgrowth.io?subject=Manage%20billing'
+    } catch {
+      window.location.href = 'mailto:support@ytgrowth.io?subject=Manage%20billing'
+    } finally {
+      setBillingBusy(false)
+    }
+  }
+
+  const allowance    = me?.monthly_allowance ?? 5
   const used         = me?.monthly_used ?? 0
   const remaining    = Math.max(0, allowance - used)
   const remainingPct = allowance > 0 ? (remaining / allowance) * 100 : 0
@@ -726,10 +747,15 @@ export default function Settings({ channelData }) {
             Top up credits
           </button>
           {hasActiveSub && (
-            <a className="set-btn-text" href="mailto:support@ytgrowth.io?subject=Manage%20billing">
-              Manage billing
+            <button
+              className="set-btn-text"
+              onClick={openBillingPortal}
+              disabled={billingBusy}
+              style={{ background: 'none', border: 'none', cursor: billingBusy ? 'wait' : 'pointer' }}
+            >
+              {billingBusy ? 'Opening…' : 'Manage billing'}
               <ArrowRight size={13} strokeWidth={2} />
-            </a>
+            </button>
           )}
         </div>
       </div>
