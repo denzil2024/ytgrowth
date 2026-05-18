@@ -542,6 +542,138 @@ def admin_test_welcome(request: Request, to: str = "", kind: str = "immediate"):
         return JSONResponse({"error": f"{type(e).__name__}: {e}"}, status_code=500)
 
 
+@router.get("/broadcast-plan-change")
+def broadcast_plan_change(request: Request, dry_run: int = 1, limit: int = 0):
+    """One-off 2026-05-18 free-plan-change announcement.
+
+    SAFE BY DEFAULT: dry_run=1 (the default) sends nothing — it only
+    counts who would receive it. Pass dry_run=0 to actually send.
+
+    Recipients: free-plan users only, deduped by email, excluding anyone
+    unsubscribed or already sent (plan_change_email_sent_at). Idempotent —
+    re-running after a crash resumes without double-emailing.
+    """
+    is_admin, _ = _is_admin(request)
+    if not is_admin:
+        return JSONResponse({"error": "Forbidden"}, status_code=403)
+
+    import secrets
+    from database.models import UserEmailPreferences
+    base_url = os.environ.get("BASE_URL", "https://ytgrowth.io")
+
+    db = SessionLocal()
+    sent = 0
+    skipped_paid = 0
+    skipped_unsub = 0
+    skipped_already = 0
+    skipped_dupe = 0
+    failed = 0
+    sample: list[str] = []
+    seen_emails: set[str] = set()
+
+    try:
+        if not dry_run:
+            import resend as _resend
+            _resend.api_key = os.environ.get("RESEND_API_KEY", "")
+            from app.email_templates.plan_change import build_email
+
+        prefs = db.query(UserEmailPreferences).all()
+        for pref in prefs:
+            email = (pref.email or "").strip()
+            if not email or "@" not in email:
+                continue
+            email_l = email.lower()
+
+            # Plan gate — only users actually affected by the change.
+            sub = db.query(UserSubscription).filter_by(channel_id=pref.channel_id).first()
+            plan = (sub.plan if sub else "free") or "free"
+            if plan != "free":
+                skipped_paid += 1
+                continue
+
+            # Respect unsubscribe (unless they later resubscribed).
+            if pref.unsubscribed_at and not (
+                pref.resubscribed_at and pref.resubscribed_at > pref.unsubscribed_at
+            ):
+                skipped_unsub += 1
+                continue
+
+            # Idempotency — never send twice to the same person.
+            if pref.plan_change_email_sent_at:
+                skipped_already += 1
+                seen_emails.add(email_l)
+                continue
+            if email_l in seen_emails:
+                # Same person, another free channel — mark this row sent so
+                # future runs skip it, but don't email them again.
+                skipped_dupe += 1
+                if not dry_run:
+                    pref.plan_change_email_sent_at = datetime.datetime.utcnow()
+                    db.commit()
+                continue
+
+            if dry_run:
+                seen_emails.add(email_l)
+                sent += 1
+                if len(sample) < 10:
+                    u = email.split("@")
+                    sample.append((u[0][:3] + "***@" + u[1]) if len(u) == 2 else "***")
+                if limit and sent >= limit:
+                    break
+                continue
+
+            # ── real send ──
+            try:
+                if not pref.unsubscribe_token:
+                    pref.unsubscribe_token = secrets.token_urlsafe(32)
+                    db.commit()
+                acct = db.query(UserAccount).filter_by(email=email).first()
+                dn = (acct.display_name if acct else "") or ""
+                first_name = dn.split()[0].strip() if dn else ""
+                text, html = build_email(
+                    first_name=first_name,
+                    dashboard_url=f"{base_url}/dashboard",
+                    unsubscribe_url=f"{base_url}/email/unsubscribe?token={pref.unsubscribe_token}",
+                )
+                _resend.Emails.send({
+                    "from":     "Denzil from YTGrowth <hello@ytgrowth.io>",
+                    "to":       [email],
+                    "subject":  "A change to your free YTGrowth plan",
+                    "html":     html,
+                    "text":     text,
+                    "reply_to": "hello@ytgrowth.io",
+                })
+                pref.plan_change_email_sent_at = datetime.datetime.utcnow()
+                db.commit()
+                seen_emails.add(email_l)
+                sent += 1
+                if limit and sent >= limit:
+                    break
+            except Exception as e:
+                db.rollback()
+                failed += 1
+                print(f"[broadcast-plan-change] send failed for {email_l[:3]}***: {e}")
+                continue
+
+        return JSONResponse({
+            "dry_run":          bool(dry_run),
+            "would_send" if dry_run else "sent": sent,
+            "skipped_paid":     skipped_paid,
+            "skipped_unsub":    skipped_unsub,
+            "skipped_already":  skipped_already,
+            "skipped_dupe":     skipped_dupe,
+            "failed":           failed,
+            "sample":           sample if dry_run else [],
+        })
+    except Exception as e:
+        db.rollback()
+        import traceback
+        print(f"[broadcast-plan-change] fatal: {e}\n{traceback.format_exc()}")
+        return JSONResponse({"error": f"{type(e).__name__}: {e}"}, status_code=500)
+    finally:
+        db.close()
+
+
 # ── TOPUP30 campaign ───────────────────────────────────────────────────────
 # Targets free users at 2/3 or 3/3 monthly_used. Idempotent via
 # UserAccount.topup_offer_sent_at — we never send the same campaign twice

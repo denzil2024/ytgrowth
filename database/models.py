@@ -228,6 +228,10 @@ class UserEmailPreferences(Base):
     # delivery so the same channel never gets two welcomes / two re-engagements.
     welcome_email_sent_at      = Column(DateTime, nullable=True)
     reengagement_email_sent_at = Column(DateTime, nullable=True)
+    # One-off 2026-05-18 free-plan-change announcement. Null = not sent;
+    # set on successful Resend delivery so the broadcast is idempotent and
+    # a crash mid-run can resume without double-emailing anyone.
+    plan_change_email_sent_at  = Column(DateTime, nullable=True)
     created_at        = Column(DateTime, default=_now)
 
 
@@ -612,6 +616,7 @@ try:
         "ALTER TABLE user_email_preferences ADD COLUMN resubscribed_at TIMESTAMP",
         "ALTER TABLE user_email_preferences ADD COLUMN welcome_email_sent_at TIMESTAMP",
         "ALTER TABLE user_email_preferences ADD COLUMN reengagement_email_sent_at TIMESTAMP",
+        "ALTER TABLE user_email_preferences ADD COLUMN plan_change_email_sent_at TIMESTAMP",
         "ALTER TABLE user_sessions ADD COLUMN owner_email TEXT",
         "CREATE TABLE IF NOT EXISTS user_accounts (email TEXT PRIMARY KEY, google_id TEXT, display_name TEXT, profile_picture TEXT, created_at DATETIME)",
         "ALTER TABLE user_accounts ADD COLUMN utm_source TEXT",
