@@ -5135,7 +5135,7 @@ export default function Dashboard() {
           sits on a light gutter / under a white topbar band. Add a route
           here as it is converted to dark. */}
       {(() => {
-      const darkRoute = nav === 'Chat' || nav === 'Competitors' || nav === 'Keywords' || nav === 'Outliers'
+      const darkRoute = nav === 'Chat' || nav === 'Competitors' || nav === 'Keywords' || nav === 'Outliers' || nav === 'Weekly Report'
       // The dark topbar is #0e0e10. For non-Chat dark pages the page
       // ground is the SAME #0e0e10 so the topbar is seamless (no lighter
       // band), matching how Chat reads. Chat keeps its own tuned ground

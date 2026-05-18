@@ -9,24 +9,52 @@ if (typeof document !== 'undefined' && !document.getElementById('wr-geist-font')
   link.href = 'https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap'
   document.head.appendChild(link)
 }
+/* ─── C: dark palette for this page. Mirrors the shipped app-shell /
+       Competitors / Keywords / Outliers dark system. Defined ABOVE the
+       scoped-styles block so the injected stylesheet can interpolate
+       ${C.*} (it runs at module eval). Semantic red/green/amber keep
+       their hue; fill tints re-tuned for dark, *Hi variants give legible
+       text on the dark tinted chips. ─── */
+const C = {
+  red:   '#e5251b', redBg:   'rgba(229,37,27,0.13)', redBdr:   'rgba(229,37,27,0.32)', redHi:   '#fb6a60',
+  green: '#16a34a', greenBg: 'rgba(22,163,74,0.14)', greenBdr: 'rgba(22,163,74,0.34)', greenHi: '#34d27b',
+  amber: '#d97706', amberBg: 'rgba(217,119,6,0.14)', amberBdr: 'rgba(217,119,6,0.34)', amberHi: '#f0a23b',
+  text1: '#f4f4f5', text2: '#a1a1aa', text3: '#71717a',
+  border: 'rgba(255,255,255,0.08)',
+  card:           'linear-gradient(180deg, #1e1e24 0%, #18181c 100%)',
+  cardFlat:       '#1c1c21',
+  hair:           'rgba(255,255,255,0.08)',
+  hairHi:         'rgba(255,255,255,0.16)',
+  cardShadow:     '0 1px 3px rgba(0,0,0,0.4)',
+  cardShadowLift: '0 6px 20px rgba(0,0,0,0.55)',
+}
+
 if (typeof document !== 'undefined' && !document.getElementById('wr-styles')) {
   const s = document.createElement('style')
   s.id = 'wr-styles'
   s.textContent = `
     .wr-page { max-width: 1040px; margin: 0 auto; }
     .wr-page * { font-family: 'Geist', 'Inter', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+
+    /* WeeklyReport renders inside Dashboard, which injects light
+       .ytg-card / .ytg-stat-card. Scope-override them to the dark surface
+       system here so they only go dark on this page, not on Overview
+       (which targets .ov-page .ytg-stat-card). */
+    .wr-page .ytg-card, .wr-page .ytg-stat-card {
+      background: ${C.card};
+      border: 1px solid ${C.hair};
+      box-shadow: ${C.cardShadow};
+    }
+    .wr-page .ytg-card:hover, .wr-page .ytg-stat-card:hover {
+      box-shadow: ${C.cardShadowLift};
+      border-color: ${C.hairHi};
+    }
+    .wr-page .ytg-stat-card.alert {
+      border-color: ${C.redBdr};
+      background: ${C.redBg};
+    }
   `
   document.head.appendChild(s)
-}
-
-// Tokens match the canonical palette used by Dashboard.jsx and
-// SeoOptimizer.jsx (the benchmark pages). No drift, no extra tiers.
-const C = {
-  red: '#e5251b', redBg: '#fef2f2', redBdr: 'rgba(229,37,27,0.15)',
-  green: '#059669', greenBg: '#f0fdf4', greenBdr: 'rgba(134,239,172,0.7)',
-  amber: '#d97706', amberBg: '#fffbeb',
-  text1: '#0f0f13', text2: '#4a4a58', text3: '#9595a4',
-  border: '#e6e6ec',
 }
 
 function fmtNum(n) {
@@ -47,7 +75,7 @@ function DeltaBadge({ metric, unit, isScore }) {
     return <span style={{ fontSize: 12, color: C.text3, fontWeight: 500 }}>→ No change</span>
   }
   const up    = direction === 'up'
-  const color = up ? C.green : C.red
+  const color = up ? C.greenHi : C.redHi
   const arrow = up ? '↑' : '↓'
   let val
   if (isScore) val = `${up ? '+' : ''}${Math.round(delta)} pts`
@@ -71,9 +99,9 @@ function MetricCard({ label, value, metric, unit, isScore, valueColor }) {
 /* Health color for metric numbers — red when below healthy, amber mid, green good. */
 function healthColor(n, { red, amber }) {
   if (n == null) return null
-  if (n < red)   return C.red
-  if (n < amber) return C.amber
-  return C.green
+  if (n < red)   return C.redHi
+  if (n < amber) return C.amberHi
+  return C.greenHi
 }
 
 function ColLabel({ color, children }) {
@@ -113,7 +141,7 @@ function ReportCard({ report, expanded, onToggle }) {
           <div style={{ fontSize: 12, color: C.text3 }}>
             {report.weekStart} – {report.weekEnd}
             {m.channelScore?.delta != null && (
-              <span style={{ marginLeft: 10, color: m.channelScore.direction === 'up' ? C.green : C.red, fontWeight: 600 }}>
+              <span style={{ marginLeft: 10, color: m.channelScore.direction === 'up' ? C.greenHi : C.redHi, fontWeight: 600 }}>
                 {m.channelScore.direction === 'up' ? '↑' : '↓'} {Math.abs(m.channelScore.delta)} pts
               </span>
             )}
@@ -194,7 +222,7 @@ function ReportBody({ rd, isLatest }) {
         }}>
           {/* Watch out (amber) */}
           {rd.watchOut
-            ? <div style={{ background: 'rgba(217,119,6,0.06)', border: '1px solid rgba(217,119,6,0.18)', borderRadius: 12, padding: '14px 16px' }}>
+            ? <div style={{ background: C.amberBg, border: `1px solid ${C.amberBdr}`, borderRadius: 12, padding: '14px 16px' }}>
                 <ColLabel color={C.amber}>Watch out</ColLabel>
                 <p style={{ fontSize: 13.5, color: C.text1, lineHeight: 1.72 }}>{rd.watchOut}</p>
               </div>
@@ -204,8 +232,8 @@ function ReportBody({ rd, isLatest }) {
           {/* Priority (red — the hero, slightly louder tint + glow) */}
           {rd.priorityAction
             ? <div style={{
-                background: 'linear-gradient(160deg, rgba(229,37,27,0.07) 0%, rgba(229,37,27,0.025) 100%)',
-                border: '1px solid rgba(229,37,27,0.22)',
+                background: 'linear-gradient(160deg, rgba(229,37,27,0.16) 0%, rgba(229,37,27,0.06) 100%)',
+                border: `1px solid ${C.redBdr}`,
                 borderRadius: 12,
                 padding: '14px 16px',
                 boxShadow: '0 1px 2px rgba(229,37,27,0.05), 0 8px 22px rgba(229,37,27,0.08)',
@@ -218,7 +246,7 @@ function ReportBody({ rd, isLatest }) {
 
           {/* Biggest win (green) */}
           {rd.biggestWin
-            ? <div style={{ background: 'rgba(5,150,105,0.06)', border: '1px solid rgba(5,150,105,0.18)', borderRadius: 12, padding: '14px 16px' }}>
+            ? <div style={{ background: C.greenBg, border: `1px solid ${C.greenBdr}`, borderRadius: 12, padding: '14px 16px' }}>
                 <ColLabel color={C.green}>Biggest win</ColLabel>
                 <p style={{ fontSize: 13.5, color: C.text1, lineHeight: 1.72 }}>{rd.biggestWin}</p>
               </div>
@@ -300,7 +328,7 @@ export default function WeeklyReport({ channelId, channelEmail, plan, channelSta
   if (loading) {
     return (
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '40vh' }}>
-        <div style={{ width: 28, height: 28, border: `2.5px solid rgba(0,0,0,0.1)`, borderTop: `2.5px solid ${C.red}`, borderRadius: '50%', animation: 'spin 0.7s linear infinite' }}/>
+        <div style={{ width: 28, height: 28, border: `2.5px solid rgba(255,255,255,0.12)`, borderTop: `2.5px solid ${C.red}`, borderRadius: '50%', animation: 'spin 0.7s linear infinite' }}/>
       </div>
     )
   }
@@ -317,7 +345,7 @@ export default function WeeklyReport({ channelId, channelEmail, plan, channelSta
     <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 32, gap: 16, flexWrap: 'wrap' }}>
       <div>
         <h1 style={{ fontSize: 26, fontWeight: 700, color: C.text1, letterSpacing: '-0.7px', marginBottom: 6, lineHeight: 1.1 }}>Weekly Report</h1>
-        <p style={{ fontSize: 14, color: 'rgba(10,10,15,0.55)', fontWeight: 500, letterSpacing: '-0.005em', lineHeight: 1.45 }}>{subSubtitle}</p>
+        <p style={{ fontSize: 14, color: C.text2, fontWeight: 500, letterSpacing: '-0.005em', lineHeight: 1.45 }}>{subSubtitle}</p>
       </div>
 
       {/* Email delivery toggle — paid only (free users have nothing to toggle) */}
@@ -330,7 +358,7 @@ export default function WeeklyReport({ channelId, channelEmail, plan, channelSta
               disabled={toggling}
               style={{
                 width: 40, height: 22, borderRadius: 11, border: 'none', cursor: 'pointer',
-                background: emailOn ? C.red : '#d1d5db',
+                background: emailOn ? C.red : 'rgba(255,255,255,0.16)',
                 position: 'relative', transition: 'background 0.2s',
                 opacity: toggling ? 0.6 : 1,
               }}
@@ -400,8 +428,8 @@ export default function WeeklyReport({ channelId, channelEmail, plan, channelSta
                 </div>
                 <span style={{
                   display: 'inline-flex', alignItems: 'center', gap: 6,
-                  fontSize: 11, fontWeight: 700, color: C.green,
-                  background: '#f0fdf4', border: '1px solid rgba(134,239,172,0.65)',
+                  fontSize: 11, fontWeight: 700, color: C.greenHi,
+                  background: C.greenBg, border: `1px solid ${C.greenBdr}`,
                   borderRadius: 999, padding: '4px 11px',
                   letterSpacing: '0.10em', textTransform: 'uppercase',
                 }}>
@@ -415,13 +443,13 @@ export default function WeeklyReport({ channelId, channelEmail, plan, channelSta
               </p>
 
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr 1fr', gap: 10 }}>
-                <div style={{ background: 'rgba(217,119,6,0.06)', border: '1px solid rgba(217,119,6,0.18)', borderRadius: 12, padding: '14px 16px' }}>
+                <div style={{ background: C.amberBg, border: `1px solid ${C.amberBdr}`, borderRadius: 12, padding: '14px 16px' }}>
                   <ColLabel color={C.amber}>Watch out</ColLabel>
                   <p style={{ fontSize: 13.5, color: C.text1, lineHeight: 1.72 }}>Posting frequency dropped to one video in 14 days and the algorithm is deprioritizing the channel.</p>
                 </div>
                 <div style={{
-                  background: 'linear-gradient(160deg, rgba(229,37,27,0.07) 0%, rgba(229,37,27,0.025) 100%)',
-                  border: '1px solid rgba(229,37,27,0.22)',
+                  background: 'linear-gradient(160deg, rgba(229,37,27,0.16) 0%, rgba(229,37,27,0.06) 100%)',
+                  border: `1px solid ${C.redBdr}`,
                   borderRadius: 12,
                   padding: '14px 16px',
                   boxShadow: '0 1px 2px rgba(229,37,27,0.05), 0 8px 22px rgba(229,37,27,0.08)',
@@ -429,7 +457,7 @@ export default function WeeklyReport({ channelId, channelEmail, plan, channelSta
                   <ColLabel color={C.red}>Your priority</ColLabel>
                   <p style={{ fontSize: 13.5, color: C.text1, lineHeight: 1.72 }}>Film two shopping hauls this week — they are your repeatable winner, and a second one inside 7 days compounds the algorithm boost.</p>
                 </div>
-                <div style={{ background: 'rgba(5,150,105,0.06)', border: '1px solid rgba(5,150,105,0.18)', borderRadius: 12, padding: '14px 16px' }}>
+                <div style={{ background: C.greenBg, border: `1px solid ${C.greenBdr}`, borderRadius: 12, padding: '14px 16px' }}>
                   <ColLabel color={C.green}>Biggest win</ColLabel>
                   <p style={{ fontSize: 13.5, color: C.text1, lineHeight: 1.72 }}>The house tour hit 13,908 views and pulled in 25 new subs — your best single video this quarter.</p>
                 </div>
@@ -450,8 +478,8 @@ export default function WeeklyReport({ channelId, channelEmail, plan, channelSta
       {creditNotice && (
         <div style={{
           display: 'flex', alignItems: 'flex-start', gap: 12,
-          background: '#fffbeb',
-          border: '1px solid rgba(217,119,6,0.25)',
+          background: C.amberBg,
+          border: `1px solid ${C.amberBdr}`,
           borderLeft: `3px solid ${C.amber}`,
           borderRadius: 12,
           padding: '14px 18px',
@@ -467,7 +495,7 @@ export default function WeeklyReport({ channelId, channelEmail, plan, channelSta
             </p>
             <p style={{ fontSize: 13, color: C.text2, lineHeight: 1.6 }}>
               This week&rsquo;s report will be skipped. Top up or upgrade to resume weekly delivery.{' '}
-              <a href="/#pricing" style={{ color: C.red, fontWeight: 700, textDecoration: 'none' }}>Top up →</a>
+              <a href="/#pricing" style={{ color: C.redHi, fontWeight: 700, textDecoration: 'none' }}>Top up →</a>
             </p>
           </div>
         </div>
@@ -505,8 +533,8 @@ export default function WeeklyReport({ channelId, channelEmail, plan, channelSta
             </div>
             <span style={{
               display: 'inline-flex', alignItems: 'center', gap: 6,
-              fontSize: 11, fontWeight: 700, color: C.green,
-              background: '#f0fdf4', border: '1px solid rgba(134,239,172,0.65)',
+              fontSize: 11, fontWeight: 700, color: C.greenHi,
+              background: C.greenBg, border: `1px solid ${C.greenBdr}`,
               borderRadius: 999, padding: '4px 11px',
               letterSpacing: '0.10em', textTransform: 'uppercase',
               flexShrink: 0,
