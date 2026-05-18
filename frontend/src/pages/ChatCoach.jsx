@@ -20,6 +20,7 @@ import {
   SquarePen,        // "New chat" icon — the ChatGPT/Linear compose glyph,
                     // reads as "start fresh" not "generic add"
   ArrowRight,       // Upgrade CTA glyph
+  Plus,             // Composer toolbar affordance (focuses the input)
   X,                // Delete icon on conversation rows
   // Starter-pill icons. Eight quick options, wrap layout.
   TrendingUp,
@@ -177,7 +178,7 @@ function AssistantBody({ text }) {
       // where the same weight on Inter would look thin. Tracking pulled
       // in slightly because Geist runs a hair narrower than Inter.
       fontSize: 14.5, fontWeight: 400, color: '#e4e4e7',
-      letterSpacing: '-0.005em', lineHeight: 1.7,
+      letterSpacing: '-0.005em', lineHeight: 1.75,
     }}>
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
@@ -204,7 +205,7 @@ const MARKDOWN_COMPONENTS = {
   // Bold: weight bumps to 700 (a real beat heavier than the 500 body)
   // so emphasis lands without italics (italics are retired in our system).
   strong: ({ children }) => (
-    <strong style={{ fontWeight: 700, color: C.text1 }}>{children}</strong>
+    <strong style={{ fontWeight: 600, color: C.text1 }}>{children}</strong>
   ),
   // Italics map to bold + subtle color shift so the reader still senses
   // emphasis without using a font style we've banned in the system.
@@ -279,19 +280,19 @@ const MARKDOWN_COMPONENTS = {
   // top margin so they break sections cleanly.
   h1: ({ children }) => (
     <h3 style={{
-      margin: '14px 0 8px 0', fontSize: 15.5, fontWeight: 700, color: C.text1,
+      margin: '16px 0 8px 0', fontSize: 15, fontWeight: 700, color: C.text1,
       letterSpacing: '-0.015em', lineHeight: 1.3,
     }}>{children}</h3>
   ),
   h2: ({ children }) => (
     <h3 style={{
-      margin: '14px 0 8px 0', fontSize: 15, fontWeight: 700, color: C.text1,
+      margin: '16px 0 8px 0', fontSize: 15, fontWeight: 700, color: C.text1,
       letterSpacing: '-0.015em', lineHeight: 1.3,
     }}>{children}</h3>
   ),
   h3: ({ children }) => (
     <h3 style={{
-      margin: '12px 0 6px 0', fontSize: 14.5, fontWeight: 700, color: C.text1,
+      margin: '16px 0 8px 0', fontSize: 15, fontWeight: 700, color: C.text1,
       letterSpacing: '-0.01em', lineHeight: 1.3,
     }}>{children}</h3>
   ),
@@ -479,35 +480,21 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
          when focused, integrated send button. The focal element on every
          layout. ─────────────────────────────────────────────────────── */
   const isOff = sending || outOfMessages || input.trim().length === 0
+  // Active = user is typing or a send is in flight. Drives the red focus
+  // border + ring. Derived from existing state — no new state added.
+  const composerActive = input.length > 0 || sending
   const composerForm = (
-    <div style={{ position: 'relative' }}>
-      {/* Atmospheric glow beneath the composer — lights it from below so
-          it reads as the grounded hero of the page, not a floating box. */}
-      <div aria-hidden style={{
-        position: 'absolute',
-        left: -24, right: -24, bottom: -56, height: 140,
-        background: 'radial-gradient(ellipse 70% 80% at 50% 100%, rgba(229,37,27,0.07) 0%, transparent 65%)',
-        pointerEvents: 'none', zIndex: 0,
-      }}/>
     <form
       onSubmit={(e) => { e.preventDefault(); send() }}
       style={{
-        position: 'relative', zIndex: 1,
-        // Glass composer. Semi-transparent surface + backdrop blur gives
-        // the composer a real tactile quality on top of the atmospheric
-        // gradient background. This is the "$10k MacBook" tell that the
-        // page is missing — premium tools always have one element that
-        // catches light differently than the rest of the page. The
-        // composer is the right place for it here.
-        display: 'flex', alignItems: 'center', gap: 12,
-        background: 'rgba(20,20,24,0.85)',
-        backdropFilter: 'blur(24px) saturate(180%)',
-        WebkitBackdropFilter: 'blur(24px) saturate(180%)',
-        border: `1px solid ${input.length > 0 || sending ? 'rgba(229,37,27,0.35)' : 'rgba(255,255,255,0.09)'}`,
-        borderRadius: 20, padding: '16px 16px 16px 24px',
-        boxShadow: input.length > 0 || sending
-          ? `0 0 0 3px rgba(229,37,27,0.08), 0 2px 12px rgba(0,0,0,0.5)`
-          : `0 1px 3px rgba(0,0,0,0.4)`,
+        // One flat dark material. Textarea on top, a toolbar row beneath
+        // it carrying the compose affordance, the remaining-count, and
+        // the send button. The commanding element of the page.
+        display: 'flex', flexDirection: 'column',
+        background: '#111113',
+        border: `1px solid ${composerActive ? 'rgba(229,37,27,0.30)' : 'rgba(255,255,255,0.08)'}`,
+        borderRadius: 16, padding: '14px 16px 10px 20px',
+        boxShadow: composerActive ? '0 0 0 3px rgba(229,37,27,0.07)' : 'none',
         transition: `border-color 220ms ${C.spring}, box-shadow 220ms ${C.spring}`,
       }}
     >
@@ -526,52 +513,77 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
         rows={1}
         placeholder={outOfMessages ? 'You have used all messages this month' : 'How can I help you grow?'}
         style={{
-          flex: 1, minWidth: 0,
+          width: '100%',
           border: 'none', outline: 'none',
           background: 'transparent',
           fontFamily: FONT_STACK,
-          // Composer input: Geist 450 reads cleanly; 500 would feel
-          // heavy for placeholder + typed text alike.
           fontSize: 15.5, fontWeight: 400, color: C.text1,
           letterSpacing: '-0.2px', lineHeight: 1.55,
           resize: 'none',
           maxHeight: 160,
-          paddingTop: 8, paddingBottom: 8,
+          paddingTop: 2, paddingBottom: 2,
         }}
         onInput={(e) => {
           e.target.style.height = 'auto'
           e.target.style.height = Math.min(e.target.scrollHeight, 160) + 'px'
         }}
       />
-      <button
-        type="submit"
-        disabled={isOff}
-        aria-label="Send"
-        style={{
-          flexShrink: 0,
-          width: 44, height: 44, borderRadius: 14,
-          border: 'none',
-          // Disabled state is neutral charcoal-tinted, NOT washed red.
-          // Red-at-low-opacity reads as pink and cheap; charcoal-tint
-          // reads as "off but present."
-          background: isOff
-            ? 'rgba(255,255,255,0.06)'
-            : `linear-gradient(180deg, ${C.redHi} 0%, ${C.red} 100%)`,
-          color: isOff ? C.text4 : '#fff',
-          cursor: isOff ? 'default' : 'pointer',
-          display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-          boxShadow: isOff
-            ? '0 1px 3px rgba(0,0,0,0.4)'
-            : '0 0 0 3px rgba(229,37,27,0.18), 0 2px 8px rgba(229,37,27,0.45), inset 0 1px 0 rgba(255,255,255,0.22)',
-          transition: `filter 160ms ${C.spring}, transform 160ms ${C.spring}, background 200ms ${C.spring}`,
-        }}
-        onMouseEnter={e => { if (!isOff) { e.currentTarget.style.filter = 'brightness(1.06)'; e.currentTarget.style.transform = 'translateY(-1px)' } }}
-        onMouseLeave={e => { if (!isOff) { e.currentTarget.style.filter = 'none'; e.currentTarget.style.transform = 'translateY(0)' } }}
-      >
-        <Send size={17} strokeWidth={2} />
-      </button>
+      {/* Toolbar row inside the composer */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 10 }}>
+        <button
+          type="button"
+          onClick={() => inputRef.current?.focus()}
+          aria-label="Compose"
+          style={{
+            display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+            padding: 4, borderRadius: 6,
+            border: 'none', background: 'transparent', cursor: 'pointer',
+            color: '#52525b',
+            transition: `color 140ms ${C.spring}`,
+          }}
+          onMouseEnter={e => { e.currentTarget.style.color = '#a1a1aa' }}
+          onMouseLeave={e => { e.currentTarget.style.color = '#52525b' }}
+        >
+          <Plus size={16} strokeWidth={2} />
+        </button>
+        <div style={{ display: 'inline-flex', alignItems: 'center', gap: 14 }}>
+          {allowance > 0 && (
+            <span style={{
+              fontSize: 12, color: '#52525b', fontWeight: 500,
+              fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.01em',
+            }}>
+              {remaining} {remaining === 1 ? 'message left' : 'messages left'}
+            </span>
+          )}
+          <button
+            type="submit"
+            disabled={isOff}
+            aria-label="Send"
+            style={{
+              flexShrink: 0,
+              width: 38, height: 38, borderRadius: 10,
+              border: 'none',
+              // Disabled state is neutral, NOT washed red (red-at-low-
+              // opacity reads as cheap pink). Off but present.
+              background: isOff
+                ? 'rgba(255,255,255,0.06)'
+                : `linear-gradient(180deg, ${C.redHi} 0%, ${C.red} 100%)`,
+              color: isOff ? C.text4 : '#fff',
+              cursor: isOff ? 'default' : 'pointer',
+              display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+              boxShadow: isOff
+                ? '0 1px 3px rgba(0,0,0,0.4)'
+                : '0 0 0 3px rgba(229,37,27,0.18), 0 2px 8px rgba(229,37,27,0.45), inset 0 1px 0 rgba(255,255,255,0.22)',
+              transition: `filter 160ms ${C.spring}, transform 160ms ${C.spring}, background 200ms ${C.spring}`,
+            }}
+            onMouseEnter={e => { if (!isOff) { e.currentTarget.style.filter = 'brightness(1.06)'; e.currentTarget.style.transform = 'translateY(-1px)' } }}
+            onMouseLeave={e => { if (!isOff) { e.currentTarget.style.filter = 'none'; e.currentTarget.style.transform = 'translateY(0)' } }}
+          >
+            <Send size={16} strokeWidth={2} />
+          </button>
+        </div>
+      </div>
     </form>
-    </div>
   )
 
   const errorBanner = sendError && (
@@ -669,74 +681,17 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
 
   return (
     <div style={{
-      maxWidth: 1040, margin: '0 auto',
+      width: '100%', margin: 0,
       display: 'flex', flexDirection: 'column',
-      // 52 topbar + 36 content top-pad + 72 content bottom-pad. The old
-      // value missed the 36 top-pad, so the box overflowed its slot.
-      height: 'calc(100vh - 160px)',
+      // Full-bleed inside the dark app shell (the light sidebar is hidden
+      // on Chat; a slim 48px dark topbar sits above). One flat dark
+      // material, no page header — VidIQ-style.
+      height: 'calc(100vh - 49px)',
       minHeight: 540,
       fontFamily: FONT_STACK,
       color: C.text1,
-      // Atmospheric depth: a soft top-anchored radial wash instead of a
-      // flat fill, so the page reads as lit space rather than a painted
-      // wall. A faint noise layer (negative-z child below) adds material
-      // grain. The rest of the app shell is still light, so this column
-      // reads dark on a light gutter until the theme rolls out app-wide.
-      position: 'relative',
-      background: 'radial-gradient(ellipse 80% 60% at 50% 0%, #141418 0%, #0a0a0c 100%)',
+      background: '#0e0e10',
     }}>
-      <div aria-hidden style={{
-        position: 'absolute', inset: 0, zIndex: -1, pointerEvents: 'none',
-        opacity: 0.025,
-        backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E")`,
-        backgroundSize: '120px 120px',
-      }}/>
-      {/* Standard page header — same scale as the rest of the suite
-          (26/700/-0.7px + 14/500). Usage chip inline on the right,
-          shown only when there's no rail (the rail footer owns it once
-          a rail exists). Replaces the old floating absolute pill. */}
-      <div style={{
-        display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between',
-        gap: 16, marginBottom: 22, flexShrink: 0,
-      }}>
-        <div>
-          <h1 style={{ fontSize: 32, fontWeight: 800, color: C.text1, letterSpacing: '-1.2px', lineHeight: 1.1, margin: 0 }}>
-            AI Coach
-          </h1>
-          <p style={{ fontSize: 14, fontWeight: 400, color: '#52525b', letterSpacing: 0, marginTop: 6 }}>
-            Ask anything about growing your channel.
-          </p>
-        </div>
-        {showFloatingMeter && (
-          <div style={{
-            display: 'inline-flex', alignItems: 'center', gap: 8,
-            background: meterEmpty ? C.redSoft : 'transparent',
-            border: meterEmpty ? `1px solid ${C.redBdr}` : '1px solid transparent',
-            padding: '6px 14px', borderRadius: 100,
-            boxShadow: meterEmpty ? C.cardShadow : 'none',
-            fontVariantNumeric: 'tabular-nums', flexShrink: 0,
-          }}>
-            <span style={{
-              width: 6, height: 6, borderRadius: 99,
-              background: meterEmpty ? C.red : remaining < allowance * 0.25 ? C.red : '#22c55e',
-              boxShadow: meterEmpty
-                ? '0 0 0 3px rgba(229,37,27,0.16)'
-                : remaining < allowance * 0.25
-                  ? '0 0 0 3px rgba(229,37,27,0.12)'
-                  : '0 0 0 3px rgba(22,163,74,0.16)',
-              animation: meterEmpty ? 'none' : 'ytgPulseSoft 3s ease-in-out infinite',
-              flexShrink: 0,
-            }}/>
-            <span style={{ fontSize: 12.5, fontWeight: 600, color: meterEmpty ? C.red : C.text1, letterSpacing: '-0.01em' }}>
-              <span>{remaining}</span>
-              <span style={{ color: C.text3, fontWeight: 500, marginLeft: 5 }}>
-                {remaining === 1 ? 'message left' : 'messages left'}
-              </span>
-            </span>
-          </div>
-        )}
-      </div>
-
       {state.loading ? (
         <div style={{
           flex: 1, display: 'flex', flexDirection: 'column',
@@ -744,7 +699,7 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
         }}>
           <div style={{
             width: 24, height: 24, marginBottom: 14,
-            border: `2px solid rgba(255,255,255,0.10)`,
+            border: `2px solid rgba(255,255,255,0.08)`,
             borderTop: `2px solid ${C.text1}`,
             borderRadius: '50%', animation: 'spin 0.8s linear infinite',
           }}/>
@@ -793,19 +748,19 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
           flex: 1,
           display: 'flex', flexDirection: 'column',
           alignItems: 'center', justifyContent: 'center',
-          padding: '24px 24px 60px',
-          gap: 22,
+          padding: '24px 24px 80px',
+          gap: 0,
         }}>
           <p className="ytg-fade-up" style={{
-            fontSize: 22, fontWeight: 700, color: C.text1,
+            fontSize: 24, fontWeight: 600, color: '#f4f4f5',
             letterSpacing: '-0.5px', lineHeight: 1.2,
-            textAlign: 'center', margin: 0,
+            textAlign: 'center', margin: '0 0 32px',
             animation: `ytgFadeUp 0.5s ${C.spring} both`,
             animationDelay: '40ms',
-          }}>What do you want to figure out?</p>
+          }}>Where should we start?</p>
 
           <div className="ytg-fade-up" style={{
-            width: '100%', maxWidth: 600,
+            width: '100%', maxWidth: 660,
             animation: `ytgFadeUp 0.5s ${C.spring} both`,
             animationDelay: '90ms',
           }}>
@@ -819,7 +774,7 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
           <div className="ytg-fade-up" style={{
             display: 'flex', flexWrap: 'wrap',
             gap: 8, justifyContent: 'center',
-            maxWidth: 600, width: '100%',
+            maxWidth: 660, width: '100%', marginTop: 24,
             animation: `ytgFadeUp 0.5s ${C.spring} both`,
             animationDelay: '150ms',
           }}>
@@ -832,20 +787,20 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
                   onClick={() => send(p.label)}
                   style={{
                     display: 'inline-flex', alignItems: 'center', gap: 8,
-                    padding: '10px 16px', borderRadius: 100,
-                    background: 'rgba(255,255,255,0.04)',
+                    padding: '8px 14px', borderRadius: 100,
+                    background: 'rgba(255,255,255,0.03)',
                     border: `1px solid ${C.hair}`,
                     boxShadow: C.cardShadow,
                     color: C.text2,
                     fontFamily: 'inherit',
-                    fontSize: 13, fontWeight: 500, letterSpacing: '-0.005em',
+                    fontSize: 12.5, fontWeight: 500, letterSpacing: '-0.005em',
                     cursor: 'pointer', whiteSpace: 'nowrap',
                     transition: `transform 200ms ${C.spring}, box-shadow 200ms ${C.spring}, border-color 200ms ${C.spring}, color 200ms ${C.spring}`,
                   }}
                   onMouseEnter={e => {
                     e.currentTarget.style.transform = 'translateY(-1px)'
                     e.currentTarget.style.boxShadow = C.cardShadowLift
-                    e.currentTarget.style.background = 'rgba(255,255,255,0.07)'
+                    e.currentTarget.style.background = 'rgba(255,255,255,0.06)'
                     e.currentTarget.style.borderColor = 'rgba(255,255,255,0.14)'
                     e.currentTarget.style.color = C.text1
                     const ic = e.currentTarget.querySelector('svg')
@@ -854,7 +809,7 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
                   onMouseLeave={e => {
                     e.currentTarget.style.transform = 'translateY(0)'
                     e.currentTarget.style.boxShadow = C.cardShadow
-                    e.currentTarget.style.background = 'rgba(255,255,255,0.04)'
+                    e.currentTarget.style.background = 'rgba(255,255,255,0.03)'
                     e.currentTarget.style.borderColor = C.hair
                     e.currentTarget.style.color = C.text2
                     const ic = e.currentTarget.querySelector('svg')
@@ -877,20 +832,17 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
             className="ytg-chat-scroll"
             style={{
               flex: 1, overflowY: 'auto',
-              padding: '16px 4px 18px',  // header is above now; no floating controls to clear
+              padding: '24px 8px 32px',
               scrollBehavior: 'smooth',
               display: 'flex', flexDirection: 'column',
             }}
           >
             <div className="ytg-fade-up" style={{
-              display: 'flex', flexDirection: 'column', gap: 16,
-              maxWidth: 760, margin: '0 auto', padding: '0 8px',
+              display: 'flex', flexDirection: 'column', gap: 24,
+              maxWidth: 740, margin: '0 auto', padding: '0 16px',
               width: '100%',
-              // marginTop: auto bottom-anchors the conversation. When
-              // there are few messages they sit just above the composer
-              // instead of floating at the top of the viewport — the
-              // standard chat UX (ChatGPT, iMessage, Telegram).
-              marginTop: 'auto',
+              // Messages flow from the top naturally (VidIQ/Perplexity),
+              // not bottom-anchored.
               animation: `ytgFadeUp 0.5s ${C.spring} both`,
             }}>
               {messages.map((m, i) => (
@@ -902,20 +854,16 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
                     flexShrink: 0,
                     width: 32, height: 32, borderRadius: 10,
                     display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-                    background: 'linear-gradient(180deg, #222228 0%, #1c1c22 100%)',
-                    border: `1px solid rgba(255,255,255,0.10)`,
-                    color: 'rgba(229,37,27,0.7)',
-                    boxShadow: '0 2px 8px rgba(0,0,0,0.4)',
+                    background: 'linear-gradient(180deg, #1e1e24 0%, #18181c 100%)',
+                    border: `1px solid rgba(255,255,255,0.08)`,
+                    color: 'rgba(229,37,27,0.65)',
+                    boxShadow: '0 2px 6px rgba(0,0,0,0.4)',
                   }}>
                     <Sparkles size={17} strokeWidth={1.8} />
                   </span>
                   <div style={{
-                    background: 'linear-gradient(180deg, #1e1e24 0%, #18181c 100%)',
-                    border: `1px solid ${C.hair}`,
-                    borderRadius: '4px 16px 16px 16px',
-                    padding: '13px 16px',
-                    boxShadow: '0 1px 3px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.04)',
-                    display: 'inline-flex', alignItems: 'center', gap: 12, flexWrap: 'wrap',
+                    flex: 1, minWidth: 0, paddingTop: 2,
+                    display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap',
                   }}>
                     <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5 }}>
                       <Dot delay="0s"/><Dot delay="0.15s"/><Dot delay="0.30s"/>
@@ -936,8 +884,8 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
 
           {/* Composer pinned to bottom — width matches the message column */}
           <div style={{
-            padding: '12px 8px 16px',
-            maxWidth: 760, width: '100%', margin: '0 auto',
+            padding: '12px 16px 20px',
+            maxWidth: 740, width: '100%', margin: '0 auto',
           }}>
             {errorBanner}
             {composerForm}
@@ -960,11 +908,11 @@ function MessageBubble({ role, content, sources }) {
     return (
       <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
         <div style={{
-          maxWidth: '78%',
+          maxWidth: '72%',
           background: 'linear-gradient(160deg, #ef3a31 0%, #e5251b 50%, #c81d14 100%)',
           color: '#fff',
           borderRadius: '16px 16px 4px 16px',
-          padding: '13px 18px',
+          padding: '11px 16px',
           boxShadow: '0 1px 2px rgba(229,37,27,0.28), inset 0 1px 0 rgba(255,255,255,0.18)',
           fontFamily: FONT_STACK,
           fontSize: 14, fontWeight: 500, letterSpacing: '-0.005em', lineHeight: 1.5,
@@ -979,23 +927,15 @@ function MessageBubble({ role, content, sources }) {
         flexShrink: 0,
         width: 32, height: 32, borderRadius: 10,
         display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-        background: 'linear-gradient(180deg, #222228 0%, #1c1c22 100%)',
-        border: `1px solid rgba(255,255,255,0.10)`,
-        color: 'rgba(229,37,27,0.7)',
-        boxShadow: '0 2px 8px rgba(0,0,0,0.4)',
+        background: 'linear-gradient(180deg, #1e1e24 0%, #18181c 100%)',
+        border: `1px solid rgba(255,255,255,0.08)`,
+        color: 'rgba(229,37,27,0.65)',
+        boxShadow: '0 2px 6px rgba(0,0,0,0.4)',
       }}>
         <Sparkles size={17} strokeWidth={1.8} />
       </span>
-      <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{
-          background: 'linear-gradient(180deg, #1e1e24 0%, #18181c 100%)',
-          border: `1px solid ${C.hair}`,
-          borderRadius: '4px 16px 16px 16px',
-          padding: '14px 18px',
-          boxShadow: '0 1px 3px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.04)',
-        }}>
-          <AssistantBody text={content} />
-        </div>
+      <div style={{ flex: 1, minWidth: 0, paddingTop: 2 }}>
+        <AssistantBody text={content} />
         {sources && sources.length > 0 && (
           <div style={{
             display: 'inline-flex', alignItems: 'center', gap: 6,
@@ -1037,12 +977,12 @@ function ConversationRail({
   const dotColor   = meterEmpty ? C.red : meterLow ? C.red : '#22c55e'
   return (
     <aside style={{
-      width: 248,
+      width: 220,
       flexShrink: 0,
       display: 'flex', flexDirection: 'column',
       paddingRight: 12,
-      background: '#0c0c0e',
-      boxShadow: '1px 0 0 rgba(255,255,255,0.05)',
+      background: '#080809',
+      boxShadow: '1px 0 0 rgba(255,255,255,0.04)',
       minHeight: 0,
     }}>
       {/* New chat — its own affordance, not row zero of the list. Quiet
@@ -1057,12 +997,12 @@ function ConversationRail({
           width: '100%',
           padding: '9px 12px',
           marginBottom: 16,
-          background: 'linear-gradient(180deg, #222228 0%, #1a1a1e 100%)',
-          border: `1px solid rgba(255,255,255,0.10)`,
+          background: '#111113',
+          border: `1px solid rgba(255,255,255,0.08)`,
           boxShadow: C.cardShadow,
-          color: C.text1,
+          color: '#a1a1aa',
           fontFamily: 'inherit',
-          fontSize: 13, fontWeight: 600, letterSpacing: '-0.01em',
+          fontSize: 13, fontWeight: 500, letterSpacing: '-0.01em',
           cursor: sending || switching ? 'default' : 'pointer',
           borderRadius: 10,
           textAlign: 'left',
@@ -1090,7 +1030,7 @@ function ConversationRail({
         {groups.map(group => (
           <div key={group.label} style={{ marginBottom: 16 }}>
             <p style={{
-              fontSize: 11, fontWeight: 600, color: C.text2,
+              fontSize: 11, fontWeight: 600, color: '#3f3f46',
               letterSpacing: '0.06em', textTransform: 'uppercase',
               margin: '0 0 6px 12px',
             }}>{group.label}</p>
@@ -1185,8 +1125,8 @@ function ConversationRow({ conversation, active, onSelect, onDelete, switching }
       )}
       <span style={{
         flex: 1, minWidth: 0,
-        fontSize: 13, fontWeight: active ? 600 : 500,
-        color: active ? C.text1 : C.text2,
+        fontSize: 13, fontWeight: active ? 600 : 400,
+        color: active ? '#f4f4f5' : '#71717a',
         letterSpacing: '-0.01em',
         whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
       }}>{title}</span>
