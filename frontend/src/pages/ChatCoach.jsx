@@ -21,6 +21,7 @@ import {
   Sparkles,         // Assistant mark (reads as "AI")
   Database,         // Sources line on assistant replies
   Send,             // Composer send
+  SquarePen,        // New chat (compose) affordance on the page
   ArrowRight,       // Upgrade CTA glyph
   // Starter-prompt icons
   TrendingUp,
@@ -494,7 +495,28 @@ export default function ChatCoach({ onNavigate, billingPlan, chatMode, chatTarge
       fontFamily: FONT_STACK, color: C.t1,
       background: C.base,
       overflow: 'hidden',
+      position: 'relative',
     }}>
+      {!state.loading && !state.error && messages.length > 0 && (
+        <button
+          type="button"
+          onClick={newChat}
+          aria-label="New chat"
+          title="New chat"
+          style={{
+            position: 'absolute', top: 14, right: 18, zIndex: 5,
+            display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+            width: 32, height: 32, borderRadius: 9,
+            border: `1px solid ${C.hair}`, background: C.base, cursor: 'pointer',
+            color: C.t3,
+            transition: `color 140ms ${C.spring}, border-color 140ms ${C.spring}`,
+          }}
+          onMouseEnter={e => { e.currentTarget.style.color = C.t1; e.currentTarget.style.borderColor = C.hairStrong }}
+          onMouseLeave={e => { e.currentTarget.style.color = C.t3; e.currentTarget.style.borderColor = C.hair }}
+        >
+          <SquarePen size={16} strokeWidth={1.9} />
+        </button>
+      )}
       {state.loading ? (
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
           <div style={{

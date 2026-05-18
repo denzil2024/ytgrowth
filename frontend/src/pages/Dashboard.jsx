@@ -3982,6 +3982,108 @@ function NavGroup({ label, children, anyChildActive, defaultOpen = true, badge, 
   )
 }
 
+/* ─── Chat nav. Mirrors the verb-group grammar (same gutters, type,
+       hover, active red) but: clicking the row opens a NEW chat and
+       navigates to the Chat page; the caret alone toggles the list;
+       children are real conversations only, each with the message
+       icon. The dedicated "New chat" action lives on the Chat page. */
+function ChatNav({ nav, recent, activeId, onNew, onOpen }) {
+  const active = nav === 'Chat'
+  const storageKey = 'ytg_nav_group_open:Chat'
+  const [open, setOpen] = useState(() => {
+    try { const raw = localStorage.getItem(storageKey); if (raw === '0') return false; if (raw === '1') return true } catch {}
+    return false
+  })
+  useEffect(() => { if (active && !open) setOpen(true) }, [active])  // eslint-disable-line react-hooks/exhaustive-deps
+  function toggle(e) {
+    e.stopPropagation()
+    setOpen(o => { const n = !o; try { localStorage.setItem(storageKey, n ? '1' : '0') } catch {} ; return n })
+  }
+  return (
+    <>
+      <div
+        style={{
+          position: 'relative',
+          margin: `1px ${NAV_GUTTER}px`,
+          width: `calc(100% - ${NAV_GUTTER * 2}px)`,
+          display: 'flex', alignItems: 'center',
+          borderRadius: 10,
+          background: active ? 'rgba(229,37,27,0.07)' : 'transparent',
+          transition: 'background 0.14s ease',
+        }}
+        onMouseEnter={e => { if (!active) e.currentTarget.style.background = 'rgba(15,15,19,0.04)' }}
+        onMouseLeave={e => { if (!active) e.currentTarget.style.background = 'transparent' }}
+      >
+        {active && (
+          <span aria-hidden style={{ position: 'absolute', left: -NAV_GUTTER, top: 8, bottom: 8, width: 3, borderRadius: 100, background: C.red }}/>
+        )}
+        <button
+          onClick={onNew}
+          title="New chat"
+          style={{
+            flex: 1, minWidth: 0, display: 'flex', alignItems: 'center', gap: 12,
+            background: 'transparent', border: 'none', cursor: 'pointer',
+            padding: `9px 4px 9px ${NAV_PAD_X}px`,
+            color: active ? C.text1 : C.text2,
+            fontWeight: active ? 600 : 500, fontSize: 14, letterSpacing: '-0.01em',
+            fontFamily: "'Inter', system-ui, sans-serif", textAlign: 'left',
+          }}
+        >
+          <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: NAV_ICON_COL, height: NAV_ICON_COL, flexShrink: 0, color: active ? C.red : '#9da0aa' }}>{NAV_ICONS['Chat']}</span>
+          <span style={{ flex: 1 }}>Chat</span>
+        </button>
+        <button
+          onClick={toggle}
+          aria-label={open ? 'Collapse chats' : 'Expand chats'}
+          style={{
+            display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+            background: 'transparent', border: 'none', cursor: 'pointer',
+            padding: `9px ${NAV_PAD_X}px 9px 6px`, color: '#9da0aa',
+          }}
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" style={{ transform: open ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s ease' }}><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+      </div>
+      {open && (
+        <div style={{ position: 'relative', paddingTop: 2, paddingBottom: 4 }}>
+          <span aria-hidden style={{ position: 'absolute', left: NAV_GUTTER + NAV_PAD_X + (NAV_ICON_COL / 2), top: 4, bottom: 6, width: 1, background: 'rgba(15,15,19,0.08)' }}/>
+          {recent.length === 0 ? (
+            <p style={{ margin: `2px ${NAV_GUTTER}px 4px ${NAV_GUTTER + SUB_INDENT}px`, padding: '6px 10px', fontSize: 12.5, color: C.text3, fontFamily: "'Inter', system-ui, sans-serif" }}>No chats yet</p>
+          ) : recent.map(c => {
+            const on = nav === 'Chat' && c.id === activeId
+            return (
+              <button
+                key={c.id}
+                onClick={() => onOpen(c.id)}
+                style={{
+                  position: 'relative',
+                  margin: `1px ${NAV_GUTTER}px 1px ${NAV_GUTTER + SUB_INDENT}px`,
+                  width: `calc(100% - ${NAV_GUTTER * 2 + SUB_INDENT}px)`,
+                  background: on ? 'rgba(229,37,27,0.07)' : 'transparent',
+                  color: on ? C.text1 : C.text2,
+                  fontWeight: on ? 600 : 450, fontSize: 13.5, letterSpacing: '-0.01em',
+                  border: 'none', padding: '7px 10px', borderRadius: 8,
+                  textAlign: 'left', cursor: 'pointer',
+                  fontFamily: "'Inter', system-ui, sans-serif",
+                  display: 'flex', alignItems: 'center', gap: 9,
+                  transition: 'background 0.14s ease, color 0.14s ease',
+                }}
+                onMouseEnter={e => { if (!on) { e.currentTarget.style.background = 'rgba(15,15,19,0.04)'; e.currentTarget.style.color = C.text1 } }}
+                onMouseLeave={e => { if (!on) { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = C.text2 } }}
+              >
+                <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 16, height: 16, flexShrink: 0, color: on ? C.red : '#9da0aa' }}>
+                  <MessageCircle size={14} strokeWidth={1.9} />
+                </span>
+                <span style={{ flex: 1, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{c.title || 'Untitled chat'}</span>
+              </button>
+            )
+          })}
+        </div>
+      )}
+    </>
+  )
+}
+
 /* ─── What's new promo card ─────────────────────────────────────────────────
    Sells features the user hasn't dismissed, one card at a time. This is the
    in-product feature-discovery surface — same role VidIQ's "vidIQ for
@@ -4918,21 +5020,13 @@ export default function Dashboard() {
             <NavSubBtn label="Competitors" active={nav === 'Competitors'} onClick={() => setNav('Competitors')} />
           </NavGroup>
 
-          <NavGroup
-            label="Chat"
-            anyChildActive={nav === 'Chat'}
-            defaultOpen={false}
-          >
-            <NavSubBtn label="New chat" active={false} onClick={startNewChat} />
-            {recentChats.map(c => (
-              <NavSubBtn
-                key={c.id}
-                label={c.title || 'New chat'}
-                active={nav === 'Chat' && c.id === chatActiveId}
-                onClick={() => openChatConversation(c.id)}
-              />
-            ))}
-          </NavGroup>
+          <ChatNav
+            nav={nav}
+            recent={recentChats}
+            activeId={chatActiveId}
+            onNew={startNewChat}
+            onOpen={openChatConversation}
+          />
 
           <div style={{ height: 18 }}/>
 
