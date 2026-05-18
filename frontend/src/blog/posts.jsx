@@ -99,6 +99,8 @@ export const posts = [
 
         <blockquote><strong>Pro Tip:</strong> Never chase a single high-volume keyword. Pull five to ten candidate phrases, rank them by the competition score relative to each other, and pick the most winnable one for your channel size. The absolute numbers will be off. The ordering between options is the part worth trusting.</blockquote>
 
+        <img src="/blog/vidiq-review-keyword-research.webp" alt="vidIQ keyword research showing search volume, competition score, and a channel-size match rating" />
+
         <h3>Daily Ideas</h3>
 
         <p>Consistently rated vidIQ's single best feature. It is an AI feed that proposes specific video topics every day, generated from your channel history cross-referenced with current trends in your niche. For a creator whose hardest weekly problem is deciding what to film at all, this removes the blank page. Some users report channels moving from under 100 views a day to thousands by working this feed consistently, though results vary heavily by niche, execution, and how good the rest of the upload is.</p>
@@ -106,6 +108,8 @@ export const posts = [
         <p>The caveat is causality again: a topic suggestion is a starting point, not a guarantee. The feed tells you what is being searched. It does not film, title, or thumbnail the video for you.</p>
 
         <blockquote><strong>Pro Tip:</strong> Do not film every idea the feed hands you. Treat it as a shortlist. Cross-check the two or three that fit your channel against a quick search of who already ranks for them. An idea with demand and weak existing coverage is the one worth your week.</blockquote>
+
+        <img src="/blog/vidiq-review-daily-ideas.webp" alt="vidIQ Daily Ideas feed suggesting video topics based on channel history and niche trends" />
 
         <h3>Video Outliers</h3>
 
@@ -115,9 +119,13 @@ export const posts = [
 
         <blockquote><strong>Pro Tip:</strong> When you find a competitor outlier, do not copy the topic. Copy the structure: the title pattern, the thumbnail logic, and the angle that made it overperform. The topic was specific to their moment. The pattern is the part that transfers to yours.</blockquote>
 
+        <img src="/blog/vidiq-review-video-outliers.webp" alt="vidIQ Video Outliers highlighting uploads that massively overperformed a channel's own average" />
+
         <h3>Competitor Analysis</h3>
 
         <p>You can add rival channels and track their upload cadence, subscriber trajectory, and best-performing videos over time. Combined with the on-YouTube overlay, it gives a fast read on what is working in a niche. It is broad and convenient rather than deep: it tells you what competitors are doing, with less on the why and the structural patterns behind their wins.</p>
+
+        <img src="/blog/vidiq-review-competitor-analysis.webp" alt="vidIQ competitor analysis tracking rival channels' upload cadence and best-performing videos" />
 
         <h3>SEO Score and Video Optimization Checklist</h3>
 
@@ -208,8 +216,6 @@ export const posts = [
             <tr><td>Social Blade</td><td>Free public stats and ranking estimates</td><td>Surface-level, no optimisation or research tooling</td><td>Quick channel stat checks, not a workflow tool</td></tr>
           </tbody>
         </table>
-
-        <img src="/blog/seo-tools-for-youtube-tubebuddy.webp" alt="TubeBuddy's in-Studio workflow tools compared against vidIQ's research focus" />
 
         <p>The short version: vidIQ and TubeBuddy solve overlapping jobs with different emphases (vidIQ leans research and ideas, TubeBuddy leans Studio workflow), while Social Blade is a stats lookup, not a competitor to either on actual optimisation. None of the three removes the need for a strong thumbnail and hook.</p>
 
