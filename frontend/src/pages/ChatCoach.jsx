@@ -21,9 +21,7 @@ import {
   Sparkles,         // Assistant mark (reads as "AI")
   Database,         // Sources line on assistant replies
   Send,             // Composer send
-  SquarePen,        // New chat (compose glyph)
   ArrowRight,       // Upgrade CTA glyph
-  X,                // Delete on a history row
   // Starter-prompt icons
   TrendingUp,
   TrendingDown,
@@ -108,19 +106,6 @@ const STARTER_PROMPTS = [
   { label: 'Find keywords',        Icon: Search       },
 ]
 
-function fmtAge(iso) {
-  if (!iso) return ''
-  const t = new Date(iso).getTime()
-  if (Number.isNaN(t)) return ''
-  const sec = Math.floor((Date.now() - t) / 1000)
-  if (sec < 60) return 'just now'
-  const min = Math.floor(sec / 60)
-  if (min < 60) return `${min}m ago`
-  const hr = Math.floor(min / 60)
-  if (hr < 24) return `${hr}h ago`
-  return `${Math.floor(hr / 24)}d ago`
-}
-
 /* Assistant prose. Calm body: one regular weight, generous leading,
    soft-white on the dark base. Emphasis is weight, never italics. */
 function AssistantBody({ text }) {
@@ -198,7 +183,7 @@ const MARKDOWN_COMPONENTS = {
 }
 
 
-export default function ChatCoach({ onNavigate, billingPlan }) {
+export default function ChatCoach({ onNavigate, billingPlan, chatMode, chatTargetId, chatNonce, onChatState }) {
   const [state, setState] = useState({ loading: true, error: null })
   const [messages, setMessages] = useState([])
   const [allowance, setAllowance] = useState(0)
@@ -215,6 +200,7 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
   const [switchingConv, setSwitchingConv] = useState(false)
   const scrollRef = useRef(null)
   const inputRef = useRef(null)
+  const cmdConsumed = useRef(0)
 
   const remaining = Math.max(0, allowance - used)
   const outOfMessages = remaining === 0 && !state.loading
@@ -359,11 +345,30 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
     } catch {}
   }
 
+  // Report conversation state up so the sidebar Chat group stays in sync.
+  // Skipped while loading so the sidebar never flickers to an empty list.
+  useEffect(() => {
+    if (state.loading) return
+    onChatState?.({ conversations, activeConversationId })
+  }, [conversations, activeConversationId, state.loading])  // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Commands dispatched from the sidebar (open a recent chat / new chat).
+  // Runs after hydrate (state.loading false) so it never races the mount
+  // fetch, and once per nonce so it does not re-fire on re-render.
+  useEffect(() => {
+    if (state.loading || !chatNonce || cmdConsumed.current === chatNonce) return
+    cmdConsumed.current = chatNonce
+    if (chatMode === 'open' && chatTargetId != null && chatTargetId !== activeConversationId) {
+      switchConversation(chatTargetId)
+    } else if (chatMode === 'new') {
+      newChat()
+    }
+  }, [state.loading, chatNonce])  // eslint-disable-line react-hooks/exhaustive-deps
+
   /* ─── Composer. One raised surface: textarea, then a quiet utility row.
          The send button is the only red on the page. Disabled state is
          neutral, never washed red. ──────────────────────────────────── */
   const isOff = sending || outOfMessages || input.trim().length === 0
-  const hasRail = conversations.length >= 1
   const [composerFocus, setComposerFocus] = useState(false)
   const composerForm = (
     <form
@@ -411,7 +416,7 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
       />
       <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', marginTop: 10 }}>
         <div style={{ display: 'inline-flex', alignItems: 'center', gap: 14 }}>
-          {allowance > 0 && !hasRail && (
+          {allowance > 0 && (
             <span style={{
               fontSize: 12, color: C.t4, fontWeight: 400,
               fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.005em',
@@ -513,20 +518,6 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
           </p>
         </div>
       ) : (
-        <div style={{ flex: 1, display: 'flex', minHeight: 0 }}>
-          {hasRail && (
-            <ConversationRail
-              conversations={conversations}
-              activeId={activeConversationId}
-              onSelect={switchConversation}
-              onNew={newChat}
-              onDelete={deleteConversation}
-              sending={sending}
-              switching={switchingConv}
-              allowance={allowance}
-              remaining={remaining}
-            />
-          )}
           <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0, minHeight: 0 }}>
             {messages.length === 0 ? (
               /* ── Empty state. Calm centred composition, composer just
@@ -536,7 +527,7 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
                 alignItems: 'center', justifyContent: 'center',
                 padding: '32px 32px 104px',
               }}>
-                <div style={{ width: '100%', maxWidth: 640, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                <div style={{ width: '100%', maxWidth: 680, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                   <p className="ytg-fade-up" style={{
                     fontSize: 30, fontWeight: 600, color: '#f4f4f5',
                     letterSpacing: '-0.022em', lineHeight: 1.15,
@@ -559,15 +550,15 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
                   </div>
 
                   <p className="ytg-fade-up" style={{
-                    alignSelf: 'flex-start',
+                    alignSelf: 'center', textAlign: 'center',
                     fontSize: 11, fontWeight: 600, color: C.t4,
                     letterSpacing: '0.08em', textTransform: 'uppercase',
-                    margin: '26px 0 12px 2px',
+                    margin: '28px 0 14px',
                     animation: `ytgFadeUp 0.45s ${C.spring} both`, animationDelay: '160ms',
                   }}>Try asking</p>
                   <div className="ytg-fade-up" style={{
                     display: 'flex', flexWrap: 'wrap', gap: 8,
-                    width: '100%',
+                    width: '100%', justifyContent: 'center',
                     animation: `ytgFadeUp 0.45s ${C.spring} both`, animationDelay: '180ms',
                   }}>
                     {STARTER_PROMPTS.map((p, i) => {
@@ -579,7 +570,7 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
                           onClick={() => send(p.label)}
                           style={{
                             display: 'inline-flex', alignItems: 'center', gap: 7,
-                            padding: '8px 14px', borderRadius: 10,
+                            padding: '9px 16px', borderRadius: 999,
                             background: 'rgba(255,255,255,0.025)',
                             border: `1px solid ${C.hair}`,
                             color: C.t3, fontFamily: 'inherit',
@@ -624,7 +615,7 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
                 >
                   <div className="ytg-fade-up" style={{
                     display: 'flex', flexDirection: 'column', gap: 30,
-                    maxWidth: 720, width: '100%', margin: '0 auto', padding: '0 24px',
+                    maxWidth: 820, width: '100%', margin: '0 auto', padding: '0 24px',
                     animation: `ytgFadeUp 0.4s ${C.spring} both`,
                   }}>
                     {messages.map((m, i) => (
@@ -653,7 +644,7 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
                 </div>
 
                 <div style={{ flexShrink: 0, padding: '12px 8px 18px' }}>
-                  <div style={{ maxWidth: 720, width: '100%', margin: '0 auto', padding: '0 24px' }}>
+                  <div style={{ maxWidth: 820, width: '100%', margin: '0 auto', padding: '0 24px' }}>
                     {errorBanner}
                     {composerForm}
                   </div>
@@ -661,7 +652,6 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
               </>
             )}
           </div>
-        </div>
       )}
     </div>
   )
@@ -720,168 +710,6 @@ function Message({ role, content, sources }) {
       </div>
     </div>
   )
-}
-
-
-/* ─── History rail. Lives inside the dark panel (the app sidebar is
-       off-limits). Recency-grouped, scrolls when long. Active row gets
-       the one allowed red marker. ─────────────────────────────────── */
-function ConversationRail({
-  conversations, activeId, onSelect, onNew, onDelete,
-  sending, switching, allowance, remaining,
-}) {
-  const groups = groupConversationsByRecency(conversations)
-  const meterEmpty = remaining === 0 && allowance > 0
-  return (
-    <aside style={{
-      width: 244, flexShrink: 0,
-      display: 'flex', flexDirection: 'column',
-      background: C.rail,
-      borderRight: `1px solid ${C.hair}`,
-      minHeight: 0,
-    }}>
-      <div style={{ padding: '16px 12px 12px' }}>
-        <button
-          type="button"
-          onClick={onNew}
-          disabled={sending || switching}
-          style={{
-            display: 'flex', alignItems: 'center', gap: 9,
-            width: '100%', padding: '9px 10px',
-            background: 'transparent',
-            border: `1px solid ${C.hair}`,
-            color: C.t3, fontFamily: 'inherit',
-            fontSize: 13, fontWeight: 500, letterSpacing: '-0.01em',
-            cursor: sending || switching ? 'default' : 'pointer',
-            borderRadius: 10, textAlign: 'left',
-            transition: `background 140ms ${C.spring}, border-color 140ms ${C.spring}, color 140ms ${C.spring}`,
-          }}
-          onMouseEnter={e => { if (!(sending || switching)) { e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; e.currentTarget.style.borderColor = C.hairStrong; e.currentTarget.style.color = C.t1 } }}
-          onMouseLeave={e => { if (!(sending || switching)) { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.borderColor = C.hair; e.currentTarget.style.color = C.t3 } }}
-        >
-          <SquarePen size={14} strokeWidth={1.9} />
-          New chat
-        </button>
-      </div>
-
-      <div className="ytg-chat-scroll" style={{
-        flex: 1, overflowY: 'auto', overflowX: 'hidden',
-        padding: '4px 12px 10px', minHeight: 0,
-      }}>
-        {groups.map(group => (
-          <div key={group.label} style={{ marginBottom: 14 }}>
-            <p style={{
-              fontSize: 11, fontWeight: 600, color: C.t4,
-              letterSpacing: '0.08em', textTransform: 'uppercase',
-              margin: '0 0 5px 10px',
-            }}>{group.label}</p>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-              {group.items.map(c => (
-                <ConversationRow
-                  key={c.id}
-                  conversation={c}
-                  active={c.id === activeId}
-                  onSelect={() => onSelect(c.id)}
-                  onDelete={() => onDelete(c.id)}
-                  switching={switching}
-                />
-              ))}
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {allowance > 0 && (
-        <div style={{ flexShrink: 0, padding: '14px 12px 16px 22px', borderTop: `1px solid ${C.hair}` }}>
-          <span style={{
-            fontSize: 12, fontWeight: 400,
-            color: meterEmpty ? C.redText : C.t4,
-            fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.005em',
-          }}>
-            {remaining} {remaining === 1 ? 'message left' : 'messages left'} this month
-          </span>
-        </div>
-      )}
-    </aside>
-  )
-}
-
-function ConversationRow({ conversation, active, onSelect, onDelete, switching }) {
-  const [hover, setHover] = useState(false)
-  const title = conversation.title || 'New chat'
-  const bg = active
-    ? 'rgba(255,255,255,0.05)'
-    : hover ? 'rgba(255,255,255,0.03)' : 'transparent'
-  return (
-    <div
-      onClick={active || switching ? undefined : onSelect}
-      onMouseEnter={() => setHover(true)}
-      onMouseLeave={() => setHover(false)}
-      style={{
-        position: 'relative',
-        display: 'flex', alignItems: 'center', gap: 8,
-        padding: '7px 8px 7px 10px',
-        borderRadius: 8,
-        background: bg,
-        cursor: active || switching ? 'default' : 'pointer',
-        transition: `background 140ms ${C.spring}`,
-      }}
-    >
-      {active && (
-        <span aria-hidden style={{
-          position: 'absolute', left: 0, top: 7, bottom: 7,
-          width: 2, borderRadius: 2, background: C.red,
-        }}/>
-      )}
-      <span style={{
-        flex: 1, minWidth: 0,
-        fontSize: 13.5, fontWeight: active ? 600 : 400,
-        color: active ? C.t1 : C.t3,
-        letterSpacing: '-0.01em',
-        whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
-      }}>{title}</span>
-      {hover && !active && (
-        <button
-          type="button"
-          onClick={(e) => { e.stopPropagation(); onDelete() }}
-          aria-label="Delete conversation"
-          title="Delete"
-          style={{
-            flexShrink: 0,
-            width: 21, height: 21, borderRadius: 6,
-            border: 'none', background: 'transparent', color: C.t5,
-            display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-            cursor: 'pointer',
-            transition: `background 140ms ${C.spring}, color 140ms ${C.spring}`,
-          }}
-          onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; e.currentTarget.style.color = C.t2 }}
-          onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = C.t5 }}
-        >
-          <X size={12} strokeWidth={2} />
-        </button>
-      )}
-    </div>
-  )
-}
-
-function groupConversationsByRecency(conversations) {
-  const now = Date.now()
-  const DAY = 86400_000
-  const buckets = { today: [], yesterday: [], week: [], older: [] }
-  for (const c of conversations) {
-    const t = c.last_message_at ? new Date(c.last_message_at).getTime() : 0
-    const age = now - t
-    if (age < DAY)        buckets.today.push(c)
-    else if (age < 2*DAY) buckets.yesterday.push(c)
-    else if (age < 7*DAY) buckets.week.push(c)
-    else                  buckets.older.push(c)
-  }
-  const out = []
-  if (buckets.today.length)     out.push({ label: 'Today',       items: buckets.today })
-  if (buckets.yesterday.length) out.push({ label: 'Yesterday',   items: buckets.yesterday })
-  if (buckets.week.length)      out.push({ label: 'Last 7 days', items: buckets.week })
-  if (buckets.older.length)     out.push({ label: 'Older',       items: buckets.older })
-  return out
 }
 
 

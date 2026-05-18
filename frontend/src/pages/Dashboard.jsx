@@ -3878,7 +3878,7 @@ function NavSubBtn({ label, active, onClick }) {
         boxShadow: active ? `0 0 0 3px rgba(229,37,27,0.10)` : 'none',
         transition: 'background 0.14s ease, box-shadow 0.14s ease',
       }}/>
-      <span style={{ flex: 1 }}>{label}</span>
+      <span style={{ flex: 1, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{label}</span>
     </button>
   )
 }
@@ -4429,6 +4429,32 @@ export default function Dashboard() {
   // Sidebar live signals. Drive the nav badges so the sidebar reads as a
   // status surface, not just a list of links.
   const [freshOutlier, setFreshOutlier] = useState(false)
+  // Chat history, surfaced in the sidebar (Chat group). Dashboard seeds
+  // the list once from /chat/state (chat DB only, no YouTube quota);
+  // ChatCoach reports back via onChatState so the sidebar stays the
+  // single source of truth as chats are created / switched / deleted.
+  const [chatConvos, setChatConvos]   = useState([])
+  const [chatActiveId, setChatActiveId] = useState(null)
+  const [chatMode, setChatMode]       = useState(null)   // 'open' | 'new' | null
+  const [chatTargetId, setChatTargetId] = useState(null)
+  const [chatNonce, setChatNonce]     = useState(0)       // bump to dispatch a command
+  useEffect(() => {
+    let cancelled = false
+    fetch('/chat/state', { credentials: 'include' })
+      .then(r => r.ok ? r.json() : Promise.reject(r))
+      .then(d => { if (!cancelled) { setChatConvos(d.conversations || []); setChatActiveId(d.conversation_id ?? null) } })
+      .catch(() => {})
+    return () => { cancelled = true }
+  }, [])
+  const openChatConversation = (id) => { setChatMode('open'); setChatTargetId(id); setChatNonce(n => n + 1); setNav('Chat') }
+  const startNewChat = () => { setChatMode('new'); setChatTargetId(null); setChatNonce(n => n + 1); setNav('Chat') }
+  const onChatState = ({ conversations, activeConversationId }) => {
+    setChatConvos(conversations || [])
+    setChatActiveId(activeConversationId ?? null)
+  }
+  const recentChats = [...chatConvos]
+    .sort((a, b) => new Date(b.last_message_at || 0) - new Date(a.last_message_at || 0))
+    .slice(0, 7)
   // Feed state.
   const [feedFilter, setFeedFilter] = useState(() => {
     try { return localStorage.getItem('ytg_feed_filter') || 'all' } catch { return 'all' }
@@ -4892,7 +4918,21 @@ export default function Dashboard() {
             <NavSubBtn label="Competitors" active={nav === 'Competitors'} onClick={() => setNav('Competitors')} />
           </NavGroup>
 
-          <NavBtn label="Chat" active={nav === 'Chat'} onClick={() => setNav('Chat')} badge="New" />
+          <NavGroup
+            label="Chat"
+            anyChildActive={nav === 'Chat'}
+            defaultOpen={false}
+          >
+            <NavSubBtn label="New chat" active={false} onClick={startNewChat} />
+            {recentChats.map(c => (
+              <NavSubBtn
+                key={c.id}
+                label={c.title || 'New chat'}
+                active={nav === 'Chat' && c.id === chatActiveId}
+                onClick={() => openChatConversation(c.id)}
+              />
+            ))}
+          </NavGroup>
 
           <div style={{ height: 18 }}/>
 
@@ -6687,7 +6727,14 @@ export default function Dashboard() {
 
           {/* ── CHAT — AI Coach ──────────────────────────────────────── */}
           {nav === 'Chat' && (
-            <ChatCoach onNavigate={setNav} billingPlan={billingPlan} />
+            <ChatCoach
+              onNavigate={setNav}
+              billingPlan={billingPlan}
+              chatMode={chatMode}
+              chatTargetId={chatTargetId}
+              chatNonce={chatNonce}
+              onChatState={onChatState}
+            />
           )}
 
           {/* ── SETTINGS ─────────────────────────────────────────────── */}
