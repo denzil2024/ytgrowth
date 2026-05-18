@@ -85,13 +85,18 @@ export const posts = [
 
         <h2>What vidIQ Does Well</h2>
 
-        <p>A fair vidiq review has to start with the genuine strengths, because there are real ones.</p>
+        <p>A fair vidiq review has to start with the genuine strengths, because there are real ones. Here is what the platform actually does, feature by feature:</p>
 
-        <p>The free extension is the standout. Having views per hour, an SEO score, and a video's tags visible without leaving YouTube is genuinely fast for at-a-glance competitor checks. When you are scanning a niche to see which videos are overperforming right now, that overlay does save time.</p>
+        <ul>
+          <li><strong>Daily Ideas:</strong> An AI feed that suggests video topics every day based on your channel history and current trends. This is consistently rated vidIQ's single best feature. Used well, it removes the "what do I film this week" problem, which for most creators is the hardest part of staying consistent. Some users report channels going from under 100 views a day to thousands by working this feed, though results vary heavily by niche and execution.</li>
+          <li><strong>Keyword research:</strong> Search volume paired with a competition score, so you can target phrases realistic for your channel size instead of terms big channels already own.</li>
+          <li><strong>The extension overlay:</strong> SEO score, views per hour, and tags on every video without leaving YouTube. Genuinely fast for at-a-glance competitor checks while you browse a niche.</li>
+          <li><strong>Competitor tracking:</strong> Add rival channels and watch their upload cadence and best performers over time.</li>
+          <li><strong>AI optimisation:</strong> Title, description, and tag generation, plus thumbnail ideas and Shorts clipping on the higher tiers.</li>
+          <li><strong>Channel analytics:</strong> A scoring and trend-alert layer on top of YouTube Studio.</li>
+        </ul>
 
-        <p>The idea generation is high volume. The Daily Ideas feed and keyword suggestions give a new creator a constant stream of starting points, which matters when the hardest part of the week is deciding what to film at all.</p>
-
-        <p>It is also a mature, stable product. The vidiq plugin is updated regularly, works across the major browsers, and does not break every time YouTube changes its layout, which is more than can be said for some competitors.</p>
+        <p>It is also a mature, stable product. The vidiq plugin is updated regularly, works across the major browsers, and does not break every time YouTube changes its layout, which is more than can be said for some competitors. Of everything on that list, Daily Ideas and the speed of the in-browser overlay are the two features people genuinely miss when they cancel.</p>
 
         <h2>vidIQ Pricing in 2026</h2>
 
@@ -108,15 +113,17 @@ export const posts = [
             </tr>
           </thead>
           <tbody>
-            <tr><td>Free</td><td>$0/mo</td><td>The extension overlay plus a small monthly AI credit allowance. Heavily capped.</td></tr>
+            <tr><td>Free</td><td>$0/mo</td><td>The extension overlay plus a small monthly AI credit allowance. Capped hard, including only about 12 months of historical data.</td></tr>
             <tr><td>Pro</td><td>~$7.50/mo (billed yearly)</td><td>The entry paid tier. More keyword and competitor data, still limited.</td></tr>
-            <tr><td>Boost</td><td>~$39/mo</td><td>The real paid tier most upgrade prompts push toward. Higher AI credits, thumbnails, unlimited trends, AI coach.</td></tr>
+            <tr><td>Boost</td><td>~$39/mo monthly, ~$16.58/mo billed annually</td><td>The real paid tier most upgrade prompts push toward. Higher AI credits, thumbnails, unlimited trends, AI coach.</td></tr>
             <tr><td>Max</td><td>~$39 to $79/mo</td><td>Highest credits, more AI coach usage, clipping tools.</td></tr>
             <tr><td>Enterprise</td><td>Custom</td><td>Multi-channel teams.</td></tr>
           </tbody>
         </table>
 
-        <p>The honest read: the free tier is real but deliberately capped to push you toward Boost, and Boost is the plan that costs roughly the same as a full Adobe or streaming subscription every month. The vidiq prices are not unreasonable for an agency or a full-time creator. For a beginner channel with no revenue yet, that monthly figure is the friction point. If you want the wider context, we previously compared the <a href="/blog/seo-tools-for-youtube">main YouTube SEO tools</a> side by side.</p>
+        <p>The pricing gap between monthly and annual is the part vidIQ does not advertise loudly. Boost on a rolling monthly plan is roughly $39, but commit to a full year up front and the effective rate drops to around $16.58 a month. That is less a discount and more a lock-in: you save only by paying twelve months in advance, before you know whether the tool works for your channel.</p>
+
+        <p>The honest read: the free tier is real but deliberately capped to push you toward Boost, and Boost on the monthly plan costs roughly the same as a full Adobe or streaming subscription every month. The vidiq prices are not unreasonable for an agency or a full-time creator. For a beginner channel with no revenue yet, that figure is the friction point. If you want the wider context, we previously compared the <a href="/blog/seo-tools-for-youtube">main YouTube SEO tools</a> side by side.</p>
 
         <h2>Where vidIQ Frustrates People</h2>
 
@@ -125,6 +132,8 @@ export const posts = [
         <p><strong>Billing and cancellation.</strong> The single most common complaint is that cancelling is harder than signing up, with users reporting continued charges after they believed they had cancelled and difficulty getting refunds. This pattern shows up often enough across independent platforms that it is worth treating as a known risk, not an isolated incident. If you do subscribe, document your cancellation.</p>
 
         <p><strong>Data accuracy.</strong> Users frequently report that vidIQ's keyword volume and competition numbers do not match what they see in YouTube's own data. The scores are directional, not precise, and treating them as exact figures leads to bad decisions.</p>
+
+        <p><strong>The causality trap.</strong> This is the complaint underneath most of the negative reviews, and it is the one worth understanding before you blame the tool. vidIQ tells you what is being searched for. It cannot make your video rank for it. New creators conflate the two: they target a "green" keyword, the video does not take off, and they conclude the tool is broken. The data can be perfectly correct and the video can still fail, because a good thumbnail, a strong hook, and retention are what actually win the placement. No research tool, vidIQ or otherwise, replaces that.</p>
 
         <img src="/blog/thumbnail-tester-vidiq-thumbnails.webp" alt="vidIQ thumbnail tooling shown as one of several paywalled features" />
 
