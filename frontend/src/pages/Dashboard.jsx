@@ -25,7 +25,6 @@ import {
   ChevronDown,      // Collapse toggle on Channel Health
   RefreshCcw,       // Refresh stats (compact topbar)
   RotateCcw,        // Re-Audit (compact topbar)
-  ChevronLeft,      // Back-to-app affordance on the full-bleed Chat shell
 } from 'lucide-react'
 import Competitors from './Competitors'
 import Settings from './Settings'
@@ -4777,16 +4776,10 @@ export default function Dashboard() {
     setNav(target)
   }
 
-  // Chat (AI Coach) renders full-bleed dark: the light app sidebar is
-  // hidden and the topbar collapses to a minimal dark bar. Scoped to
-  // this page only so every other page keeps its working light design.
-  const chatFull = nav === 'Chat'
-
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', fontFamily: "'Inter', system-ui, sans-serif", background: chatFull ? '#0a0a0c' : C.bg }}>
+    <div style={{ display: 'flex', minHeight: '100vh', fontFamily: "'Inter', system-ui, sans-serif", background: C.bg }}>
 
-      {/* ══ SIDEBAR ══ (hidden on Chat for a full-bleed dark surface) ════ */}
-      {!chatFull && (
+      {/* ══ SIDEBAR ══════════════════════════════════════════════════════ */}
       <aside style={{
         width: 320, flexShrink: 0,
         background: '#ffffff',
@@ -4970,15 +4963,11 @@ export default function Dashboard() {
           </div>
         )}
       </aside>
-      )}
 
       {/* ══ MAIN ═════════════════════════════════════════════════════════ */}
-      <div style={{ flex: 1, overflow: 'auto', background: chatFull ? '#0e0e10' : C.bg }}>
+      <div style={{ flex: 1, overflow: 'auto', background: C.bg }}>
 
-        {/* Topbar — light for every page; a minimal dark bar on Chat that
-            also carries the only back-to-app affordance (the heavy light
-            sidebar is hidden there). */}
-        {!chatFull ? (
+        {/* Topbar */}
         <div style={{
           borderBottom: `1px solid ${C.border}`,
           background: 'rgba(241,241,246,0.95)',
@@ -5000,47 +4989,9 @@ export default function Dashboard() {
             <span style={{ fontSize: 12, color: C.text3, fontWeight: 600 }}>Connected</span>
           </div>
         </div>
-        ) : (
-        <div style={{
-          borderBottom: '1px solid rgba(255,255,255,0.06)',
-          background: '#0a0a0c',
-          padding: '0 20px', height: 48,
-          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-          position: 'sticky', top: 0, zIndex: 10,
-        }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <button
-              type="button"
-              onClick={() => setNav('Overview')}
-              aria-label="Back to app"
-              title="Back to app"
-              style={{
-                display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-                width: 28, height: 28, borderRadius: 999,
-                border: 'none', cursor: 'pointer',
-                background: 'rgba(255,255,255,0.05)', color: '#a1a1aa',
-                transition: 'background 140ms cubic-bezier(0.32,0.72,0,1), color 140ms cubic-bezier(0.32,0.72,0,1)',
-              }}
-              onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.09)'; e.currentTarget.style.color = '#f4f4f5' }}
-              onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.05)'; e.currentTarget.style.color = '#a1a1aa' }}
-            >
-              <ChevronLeft size={16} strokeWidth={2} />
-            </button>
-            <span style={{ fontSize: 13.5, fontWeight: 600, color: '#f4f4f5', letterSpacing: '-0.2px' }}>AI Coach</span>
-            {data && <>
-              <span style={{ color: 'rgba(255,255,255,0.18)', fontSize: 13 }}>·</span>
-              <span style={{ fontSize: 12.5, fontWeight: 400, color: '#71717a', letterSpacing: '-0.1px' }}>{data.channel?.channel_name}</span>
-            </>}
-          </div>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '5px 4px' }}>
-            <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#22c55e' }}/>
-            <span style={{ fontSize: 12, color: '#71717a', fontWeight: 500 }}>Connected</span>
-          </div>
-        </div>
-        )}
 
         {/* Page */}
-        <div style={{ padding: chatFull ? 0 : '36px 40px 72px', animation: 'fadeUp 0.25s ease' }}>
+        <div style={{ padding: '36px 40px 72px', animation: 'fadeUp 0.25s ease' }}>
 
           {/* Loading — skeleton placeholders matching the real Feed layout
               so the page doesn't feel like a blank spinner while data loads. */}
