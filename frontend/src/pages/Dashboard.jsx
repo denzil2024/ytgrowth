@@ -5007,28 +5007,41 @@ export default function Dashboard() {
       {/* ══ MAIN ═════════════════════════════════════════════════════════ */}
       <div style={{ flex: 1, overflow: 'auto', background: C.bg }}>
 
-        {/* Topbar */}
+        {/* Topbar — light everywhere; dark on the Chat route only, using
+            the locked shell shade #0a0a0c, so it does not sit as a white
+            band over the dark Chat page. Other pages are untouched. */}
+        {(() => {
+          const darkBar = nav === 'Chat'
+          return (
         <div style={{
-          borderBottom: `1px solid ${C.border}`,
-          background: 'rgba(241,241,246,0.95)',
-          backdropFilter: 'blur(20px)',
-          WebkitBackdropFilter: 'blur(20px)',
+          borderBottom: darkBar ? '1px solid rgba(255,255,255,0.06)' : `1px solid ${C.border}`,
+          background: darkBar ? '#0a0a0c' : 'rgba(241,241,246,0.95)',
+          backdropFilter: darkBar ? 'none' : 'blur(20px)',
+          WebkitBackdropFilter: darkBar ? 'none' : 'blur(20px)',
           padding: '0 32px', height: 52,
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
           position: 'sticky', top: 0, zIndex: 10,
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <span style={{ fontSize: 14, fontWeight: 700, color: C.text1, letterSpacing: '-0.3px' }}>{nav}</span>
+            <span style={{ fontSize: 14, fontWeight: 700, color: darkBar ? '#f4f4f5' : C.text1, letterSpacing: '-0.3px' }}>{nav}</span>
             {data && <>
-              <span style={{ color: C.border, fontSize: 14 }}>·</span>
-              <span style={{ fontSize: 13, fontWeight: 400, color: C.text3, letterSpacing: '-0.1px' }}>{data.channel?.channel_name}</span>
+              <span style={{ color: darkBar ? 'rgba(255,255,255,0.18)' : C.border, fontSize: 14 }}>·</span>
+              <span style={{ fontSize: 13, fontWeight: 400, color: darkBar ? '#71717a' : C.text3, letterSpacing: '-0.1px' }}>{data.channel?.channel_name}</span>
             </>}
           </div>
-          <div style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 100, padding: '5px 14px', display: 'flex', alignItems: 'center', gap: 6, boxShadow: '0 1px 3px rgba(0,0,0,0.05)' }}>
+          <div style={{
+            background: darkBar ? 'transparent' : C.surface,
+            border: darkBar ? '1px solid rgba(255,255,255,0.08)' : `1px solid ${C.border}`,
+            borderRadius: 100, padding: '5px 14px',
+            display: 'flex', alignItems: 'center', gap: 6,
+            boxShadow: darkBar ? 'none' : '0 1px 3px rgba(0,0,0,0.05)',
+          }}>
             <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#22c55e' }}/>
-            <span style={{ fontSize: 12, color: C.text3, fontWeight: 600 }}>Connected</span>
+            <span style={{ fontSize: 12, color: darkBar ? '#71717a' : C.text3, fontWeight: 600 }}>Connected</span>
           </div>
         </div>
+          )
+        })()}
 
         {/* Page */}
         <div style={{ padding: '36px 40px 72px', animation: 'fadeUp 0.25s ease' }}>
