@@ -5136,8 +5136,13 @@ export default function Dashboard() {
           here as it is converted to dark. */}
       {(() => {
       const darkRoute = nav === 'Chat' || nav === 'Competitors'
+      // The dark topbar is #0e0e10. For non-Chat dark pages the page
+      // ground is the SAME #0e0e10 so the topbar is seamless (no lighter
+      // band), matching how Chat reads. Chat keeps its own tuned ground
+      // (#0a0a0c) because ChatCoach paints its own surface on top.
+      const darkGround = nav === 'Chat' ? '#0a0a0c' : '#0e0e10'
       return (
-      <div style={{ flex: 1, overflow: 'auto', background: darkRoute ? '#0a0a0c' : C.bg }}>
+      <div style={{ flex: 1, overflow: 'auto', background: darkRoute ? darkGround : C.bg }}>
 
         {/* Topbar — light everywhere; dark on dark routes, using the
             locked shell shade so it does not sit as a white band over a

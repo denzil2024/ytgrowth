@@ -545,7 +545,7 @@ function useCompetitorStyles() {
        single soft shadow, quiet white-wash selection). Semantic
        red/amber/green stay; their fill tints are re-tuned for dark. ─── */
 const D = {
-  bg:             '#0a0a0c',                                       // page ground
+  bg:             '#0e0e10',                                       // page ground (= dark topbar, seamless)
   card:           'linear-gradient(180deg, #1e1e24 0%, #18181c 100%)',
   cardFlat:       '#1c1c21',                                       // KPI tile / chip / mini-card
   surfaceInput:   '#18181b',

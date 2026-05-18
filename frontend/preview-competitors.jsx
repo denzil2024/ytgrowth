@@ -185,7 +185,7 @@ setTimeout(() => {
 // the Competitors page constrains itself via .comp-page (1040 max).
 ReactDOM.createRoot(document.getElementById('root')).render(
   React.createElement('div', {
-    style: { padding: '36px 24px', boxSizing: 'border-box', background: '#0a0a0c', minHeight: '100vh' }
+    style: { padding: '36px 24px', boxSizing: 'border-box', background: '#0e0e10', minHeight: '100vh' }
   },
     React.createElement(Competitors, {
       plan: 'pro',
