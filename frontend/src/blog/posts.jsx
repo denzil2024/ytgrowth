@@ -57,12 +57,157 @@ export const CATEGORIES = {
 
 export const posts = [
   {
+    slug: 'vidiq-review',
+    title: 'vidIQ Review (2026): Is It Worth It, and the Free Alternative',
+    excerpt: 'An honest vidIQ review for 2026: what the Chrome extension actually does, what the paid plans cost, where users get frustrated with billing and data accuracy, and how to cover the same jobs with a free alternative.',
+    date: '2026-05-18',
+    category: CATEGORIES.seo,
+    cover: '/blog/vidiq-review-cover.webp',
+    author: 'Denzil',
+    readTime: '13 min read',
+    content: () => (
+      <>
+        <p>If you have searched for a vidiq review, you are almost certainly asking two questions: is the paid plan actually worth the money, and is there a way to get the same data without paying for it. This review answers both directly, without the affiliate-link spin that most "reviews" of this tool are built around.</p>
+
+        <p>vidIQ is one of the most widely used YouTube research tools on the market. It has a genuinely useful free Chrome extension and a paid platform that gets expensive fast. The honest verdict is that parts of it are excellent and parts of it frustrate a lot of people, and which side you land on depends entirely on what you actually need it for.</p>
+
+        <p>This is a measured look at what it does, what it costs in 2026, where users run into problems, and how to cover the same research jobs with a free alternative.</p>
+
+        <h2>What vidIQ Actually Is</h2>
+
+        <p>vidIQ has two parts that people often confuse. The first is the vidIQ Chrome extension, officially called vidIQ Vision for YouTube. It is a free browser plugin (Chrome, Firefox, and Edge) that overlays research data directly on top of YouTube while you browse: an SEO score, views per hour, tags, competition signals, and trend alerts on every video and channel you look at.</p>
+
+        <p>The second is the vidIQ web platform, which is where the paid features live: keyword research, competitor tracking, AI-generated ideas, thumbnail tools, and an AI coach. The free extension is the part most creators know. The paid platform is the part vidIQ wants you to upgrade into.</p>
+
+        <img src="/blog/seo-tools-for-youtube-vidiq.webp" alt="The vidIQ Chrome extension overlaying SEO score, views per hour, and tags on a YouTube video" />
+
+        <p>If the term itself is new to you, it helps to understand <a href="/blog/what-is-youtube-seo">what YouTube SEO is</a> before evaluating any tool built around it. The extension is essentially a YouTube SEO dashboard bolted onto the pages you already visit, which is why the vidiq chrome extension is the part of the product almost everyone starts with.</p>
+
+        <h2>What vidIQ Does Well</h2>
+
+        <p>A fair vidiq review has to start with the genuine strengths, because there are real ones.</p>
+
+        <p>The free extension is the standout. Having views per hour, an SEO score, and a video's tags visible without leaving YouTube is genuinely fast for at-a-glance competitor checks. When you are scanning a niche to see which videos are overperforming right now, that overlay does save time.</p>
+
+        <p>The idea generation is high volume. The Daily Ideas feed and keyword suggestions give a new creator a constant stream of starting points, which matters when the hardest part of the week is deciding what to film at all.</p>
+
+        <p>It is also a mature, stable product. The vidiq plugin is updated regularly, works across the major browsers, and does not break every time YouTube changes its layout, which is more than can be said for some competitors.</p>
+
+        <h2>vidIQ Pricing in 2026</h2>
+
+        <p>This is where most people start having second thoughts, so the vidiq price question deserves a clear answer.</p>
+
+        <p>vidIQ runs a tiered model, and the exact numbers move constantly because the company runs aggressive promotional discounts and prices differently by region and on-site experiment. Treat the figures below as the typical ballpark rather than a fixed rate card:</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Plan</th>
+              <th>Typical Price</th>
+              <th>What You Get</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Free</td><td>$0/mo</td><td>The extension overlay plus a small monthly AI credit allowance. Heavily capped.</td></tr>
+            <tr><td>Pro</td><td>~$7.50/mo (billed yearly)</td><td>The entry paid tier. More keyword and competitor data, still limited.</td></tr>
+            <tr><td>Boost</td><td>~$39/mo</td><td>The real paid tier most upgrade prompts push toward. Higher AI credits, thumbnails, unlimited trends, AI coach.</td></tr>
+            <tr><td>Max</td><td>~$39 to $79/mo</td><td>Highest credits, more AI coach usage, clipping tools.</td></tr>
+            <tr><td>Enterprise</td><td>Custom</td><td>Multi-channel teams.</td></tr>
+          </tbody>
+        </table>
+
+        <p>The honest read: the free tier is real but deliberately capped to push you toward Boost, and Boost is the plan that costs roughly the same as a full Adobe or streaming subscription every month. The vidiq prices are not unreasonable for an agency or a full-time creator. For a beginner channel with no revenue yet, that monthly figure is the friction point. If you want the wider context, we previously compared the <a href="/blog/seo-tools-for-youtube">main YouTube SEO tools</a> side by side.</p>
+
+        <h2>Where vidIQ Frustrates People</h2>
+
+        <p>An honest vidiq review cannot skip this part. On public review platforms like Trustpilot, Capterra, and the Better Business Bureau, a consistent set of complaints comes up repeatedly, and they are worth knowing before you put a card in.</p>
+
+        <p><strong>Billing and cancellation.</strong> The single most common complaint is that cancelling is harder than signing up, with users reporting continued charges after they believed they had cancelled and difficulty getting refunds. This pattern shows up often enough across independent platforms that it is worth treating as a known risk, not an isolated incident. If you do subscribe, document your cancellation.</p>
+
+        <p><strong>Data accuracy.</strong> Users frequently report that vidIQ's keyword volume and competition numbers do not match what they see in YouTube's own data. The scores are directional, not precise, and treating them as exact figures leads to bad decisions.</p>
+
+        <img src="/blog/thumbnail-tester-vidiq-thumbnails.webp" alt="vidIQ thumbnail tooling shown as one of several paywalled features" />
+
+        <p><strong>The good stuff is paywalled.</strong> The extension hooks you with visible-but-locked numbers. The keyword depth, competitor tracking, and AI tools that actually inform decisions sit behind Boost. A lot of the value you see is intentionally just out of reach until you pay.</p>
+
+        <p>None of this makes vidIQ a scam. It makes it a tool with an aggressive upgrade funnel and a billing experience that has annoyed a meaningful number of paying users. Go in with that expectation set.</p>
+
+        <CtaCard
+          to="/dashboard"
+          title="Get the same research jobs done without the monthly bill"
+          sub="Keyword research, competitor analysis, and an SEO studio in one place. Free to start, no card required."
+          button="Try the free alternative →"
+        />
+
+        <h2>The Free Alternative: How to Cover the Same Jobs</h2>
+
+        <p>If you strip vidIQ down, you are paying Boost-level pricing for four jobs: finding keywords, studying competitors, optimising titles and descriptions, and generating ideas. Each of those is a job, not a brand, and each can be done without a recurring subscription.</p>
+
+        <h3>Keyword Research</h3>
+
+        <p>The reason people pay vidIQ is to know what to make a video about. YTGrowth's <a href="/features/keyword-research">keyword research</a> pulls live search data and competition for the phrases you are considering, which is the same job the locked vidIQ keyword tab is doing, without the Boost paywall in front of it.</p>
+
+        <img src="/blog/seo-tools-for-youtube-keyword-tool.webp" alt="A keyword research view showing live search volume and competition for YouTube phrases" />
+
+        <h3>Competitor Analysis</h3>
+
+        <p>The vidIQ extension overlay is fast but shallow. A dedicated <a href="/features/competitor-analysis">competitor analysis</a> goes deeper: it pulls the actual upload patterns, outlier videos, and title structures from the channels you are up against, which is the research the overlay only hints at.</p>
+
+        <img src="/blog/youtube-competitor-analysis-outliers.webp" alt="A competitor analysis surfacing outlier videos and upload patterns from rival channels" />
+
+        <h3>Title and Description Optimisation</h3>
+
+        <p>vidIQ's in-extension keyword hints while you type are the feature people miss most when they cancel. The <a href="/features/seo-studio">SEO Studio</a> does the same job as a dedicated workspace: it scores your title and description against the keyword you are targeting and tells you what to change before you publish.</p>
+
+        <img src="/blog/seo-tools-for-youtube-seo-studio.webp" alt="An SEO studio scoring a video title and description against a target keyword" />
+
+        <p>That covers three of vidIQ's four core jobs without a monthly charge. The fourth, idea generation, is the one place a free ideas tool genuinely matches the paid feed for a beginner.</p>
+
+        <h2>Who vidIQ Is Still Right For</h2>
+
+        <p>This is not a hit piece. vidIQ is still the right call for a specific creator: someone running a monetised channel or an agency, who values the on-YouTube overlay enough to pay for it, and for whom $39 a month is a rounding error against their channel revenue. At that stage, the convenience of the overlay and the breadth of the platform can justify the cost.</p>
+
+        <p>If that is you, the one feature worth the upgrade is the speed of the in-browser data while you research. Pair it with disciplined <a href="/features/thumbnail-iq">thumbnail testing</a> and the tool earns its keep.</p>
+
+        <p>vidIQ is the wrong call for a creator who is pre-revenue, who only needs the data occasionally, or who got burned by the billing pattern and does not want to risk it again. For that creator, paying Boost pricing every month to access numbers they use twice a week is the wrong trade.</p>
+
+        <h2>The Verdict</h2>
+
+        <p>vidIQ in 2026 is a strong free extension attached to an expensive platform with an aggressive upgrade funnel and a billing reputation worth respecting. The extension is worth installing. The Boost subscription is worth it only if your channel already earns enough that the monthly cost is invisible to you.</p>
+
+        <img src="/blog/seo-tools-for-youtube-ytgrowth.webp" alt="The free alternative covering keyword research, competitor analysis, and SEO in one place" />
+
+        <p>For everyone else, especially creators who are still building toward their first revenue, the same four jobs (keywords, competitors, optimisation, ideas) are covered without a recurring bill. Running a free <a href="/features/channel-audit">channel audit</a> first will also tell you which of those jobs is actually your bottleneck, so you spend effort where it moves the channel rather than paying for features you will not use.</p>
+
+        <h2>vidIQ Review FAQ</h2>
+
+        <h3>Is vidIQ free?</h3>
+
+        <p>The vidIQ Chrome extension is free and genuinely useful on its own. The free tier of the platform exists but is heavily capped to push you toward the paid Boost plan. So vidIQ is free to start, not free to rely on at depth.</p>
+
+        <h3>Is vidIQ worth it in 2026?</h3>
+
+        <p>For a monetised channel or agency where $39 a month is negligible, the paid plan can be worth it for the on-YouTube overlay alone. For a pre-revenue creator, it usually is not, because the core jobs can be done without a subscription.</p>
+
+        <h3>Is the vidIQ Chrome extension safe?</h3>
+
+        <p>Yes. The vidiq extension is a mature, regularly updated product available through the official browser stores with millions of users. The complaints are about billing and data accuracy, not security.</p>
+
+        <h3>What is the best free vidIQ alternative?</h3>
+
+        <p>The strongest free alternative covers vidIQ's four core jobs (keyword research, competitor analysis, title optimisation, and ideas) without a recurring charge. Spotting <a href="/features/outliers">video outliers</a> in your niche is the highest-leverage of those jobs and the one most worth doing weekly.</p>
+
+        <p>The short version: install the free vidIQ extension, skip the Boost subscription unless your channel already pays for it without thinking, and run the same research jobs through a free alternative until your revenue makes the question irrelevant.</p>
+      </>
+    ),
+  },
+  {
     slug: 'youtube-video-ideas',
     title: 'YouTube Video Ideas for Beginners: 10 Ideas That Work With Zero Subscribers',
     excerpt: 'Reaction videos, collabs, and polls need an audience you do not have yet. The 10 formats that work from zero because they are search-driven, low-production, and evergreen, plus the research framework for finding your own ideas once the list runs out.',
     date: '2026-05-17',
     category: CATEGORIES.subscribers,
-    cover: '/blog/youtube-video-ideas-cover.jpg',
+    cover: '/blog/youtube-video-ideas-cover.webp',
     author: 'Denzil',
     readTime: '13 min read',
     content: () => (
@@ -91,7 +236,7 @@ export const posts = [
 
         <p>Keep it under two minutes. One clear promise beats a full life story. Tell the viewer exactly what type of content you will post, how often, and why you are the right person to make it. Specificity builds trust faster than a broad "I make content about everything" opener.</p>
 
-        <img src="/blog/youtube-video-ideas-intro-video.jpg" alt="A short channel introduction video pinned to the channel homepage" />
+        <img src="/blog/youtube-video-ideas-intro-video.webp" alt="A short channel introduction video pinned to the channel homepage" />
 
         <p>Once published, pin this video to your channel homepage. Every new visitor who lands on your channel page sees it first. It functions as a permanent first impression that works for you on every future upload.</p>
 
@@ -105,7 +250,7 @@ export const posts = [
 
         <p>The key is specificity. "How to lose weight" competes against thousands of established channels. "How to lose weight with a desk job and no gym access" targets a specific viewer with a specific problem and faces significantly less competition. The narrower the question, the higher your ranking potential as a new channel.</p>
 
-        <img src="/blog/youtube-video-ideas-how-to.jpg" alt="A specific, narrowly targeted how-to tutorial pulling search traffic" />
+        <img src="/blog/youtube-video-ideas-how-to.webp" alt="A specific, narrowly targeted how-to tutorial pulling search traffic" />
 
         <p>How-to videos are also evergreen by nature. A tutorial answering a question people will keep asking in two years is a traffic asset that compounds over time. One well-researched how-to video can drive consistent search traffic for months without a single new upload.</p>
 
@@ -117,7 +262,7 @@ export const posts = [
 
         <p>The most common beginner mistake with review content is waiting to buy new products before starting. You do not need to. Review products you already own. Your phone, your laptop, your headphones, your kitchen appliances. Every product you have used long enough to form a genuine opinion on is a video waiting to be made.</p>
 
-        <img src="/blog/youtube-video-ideas-product-reviews.jpg" alt="Reviewing products you already own as high purchase-intent search content" />
+        <img src="/blog/youtube-video-ideas-product-reviews.webp" alt="Reviewing products you already own as high purchase-intent search content" />
 
         <p>Comparison videos perform even better than standalone reviews for beginners. "Product A vs Product B" searches have high purchase intent and lower competition than single product reviews because fewer creators cover specific comparisons in depth. Pick two products in the same category that your target viewer is likely deciding between and give them a clear, specific verdict.</p>
 
@@ -131,7 +276,7 @@ export const posts = [
 
         <p>Viewers watch day in the life videos because they are curious about how people in specific roles, niches, or situations structure their time. A day in the life of a freelance designer, a nursing student, a remote worker, or a first-year teacher all target specific audiences actively searching for that content. The more specific the role or situation, the more directly it connects to a searchable viewer identity.</p>
 
-        <img src="/blog/youtube-video-ideas-vlogs.jpg" alt="A specific day-in-the-life format built on relatability rather than audience size" />
+        <img src="/blog/youtube-video-ideas-vlogs.webp" alt="A specific day-in-the-life format built on relatability rather than audience size" />
 
         <p>Routine videos follow the same principle. Morning routines, study routines, workout routines, and meal prep routines all have consistent search demand and low production barriers. Film what you already do and structure it into a watchable format.</p>
 
@@ -145,7 +290,7 @@ export const posts = [
 
         <p>This format works across every niche. A food creator filming their recipe testing process, a designer showing their client workflow, a fitness creator documenting their own training session, or a YouTube creator showing how they plan, film, and edit a video. The subject does not matter as much as the authenticity of the access.</p>
 
-        <img src="/blog/youtube-video-ideas-behind-the-scenes.jpg" alt="Behind the scenes footage captured while already working" />
+        <img src="/blog/youtube-video-ideas-behind-the-scenes.webp" alt="Behind the scenes footage captured while already working" />
 
         <p>Behind the scenes content also has a low production barrier by design. The footage is captured while you are already working. There is no separate concept to develop, no script to write, and no additional filming day required. The work itself is the content.</p>
 
@@ -159,7 +304,7 @@ export const posts = [
 
         <p>The format is also structurally simple. Each item on the list is a mini-segment with its own hook, explanation, and transition. That structure makes listicle videos easier to script, easier to film, and easier to edit than open-ended formats that require a stronger narrative to hold together.</p>
 
-        <img src="/blog/youtube-video-ideas-listicles.jpg" alt="A ranked listicle structured as discrete mini-segments" />
+        <img src="/blog/youtube-video-ideas-listicles.webp" alt="A ranked listicle structured as discrete mini-segments" />
 
         <p>The key for beginners is picking list topics with proven search demand rather than lists that feel interesting to make. A "Top 10 obscure facts about medieval architecture" video might be genuinely fascinating but has limited search volume. "Top 10 free tools for beginner video editors" targets a specific audience with a specific need and consistent monthly searches.</p>
 
@@ -173,7 +318,7 @@ export const posts = [
 
         <p>This format works particularly well for creators who are uncomfortable on camera. Screen recordings, voiceover, and simple graphics carry an explainer video without a single frame of face camera footage. Channels covering software tutorials, finance concepts, science topics, and business strategy all perform consistently well with this approach.</p>
 
-        <img src="/blog/youtube-video-ideas-explainers.jpg" alt="An explainer video built from screen recordings and voiceover, no face camera" />
+        <img src="/blog/youtube-video-ideas-explainers.webp" alt="An explainer video built from screen recordings and voiceover, no face camera" />
 
         <p>The topic selection is where most beginner explainers go wrong. Broad explainers like "how the stock market works" compete against established finance channels with years of SEO momentum. Narrow explainers like "how index funds work for someone with no investing experience" target a specific viewer at a specific knowledge level and face significantly less competition.</p>
 
@@ -187,7 +332,7 @@ export const posts = [
 
         <p>The format works because viewers do not just want to consume content. They want to know what other people think about it. A reaction video that adds genuine analysis, context, or a contrarian perspective gives the viewer something they cannot get from watching the original content alone. That added value is what separates reaction content that builds a channel from reaction content that gets ignored.</p>
 
-        <img src="/blog/youtube-video-ideas-commentary.jpg" alt="Commentary content adding analysis on top of a topic in the niche" />
+        <img src="/blog/youtube-video-ideas-commentary.webp" alt="Commentary content adding analysis on top of a topic in the niche" />
 
         <p>The legal boundary is important to understand before starting. Reacting to full videos or reproducing substantial portions of copyrighted content without transformation is a copyright violation. The fair use principle protects reaction and commentary content when you add meaningful commentary, criticism, or analysis on top of the original. Keep your own commentary longer than the clips you react to and focus on your analysis rather than the playback.</p>
 
@@ -201,7 +346,7 @@ export const posts = [
 
         <p>Every niche has a set of questions that beginners ask repeatedly across forums, comment sections, and search engines. Those recurring questions are your content calendar. A channel that systematically answers the most common questions in its niche builds a library of search-friendly videos that collectively cover every entry point a new viewer might have.</p>
 
-        <img src="/blog/youtube-video-ideas-faq.jpg" alt="An FAQ video answering recurring beginner questions in a niche" />
+        <img src="/blog/youtube-video-ideas-faq.webp" alt="An FAQ video answering recurring beginner questions in a niche" />
 
         <p>Finding the right questions requires looking in the right places. YouTube comments on popular videos in your niche surface questions that existing content has not answered well enough. Reddit threads in relevant subreddits show the exact language your target viewer uses when they are confused or researching. Google's "People Also Ask" section for your niche keywords surfaces the questions search engines are already associating with your topic.</p>
 
@@ -215,7 +360,7 @@ export const posts = [
 
         <p>The format works across more niches than most beginners realise. Fitness transformations are the most obvious application but the same principle applies to room makeovers, website redesigns, recipe improvements, budget overhauls, writing edits, photo retouching, and channel growth journeys. Any before state that can be visibly or measurably improved is a transformation video waiting to be made.</p>
 
-        <img src="/blog/youtube-video-ideas-before-and-after.jpg" alt="A before and after transformation video with the process shown in between" />
+        <img src="/blog/youtube-video-ideas-before-and-after.webp" alt="A before and after transformation video with the process shown in between" />
 
         <p>For beginners, this format solves a credibility problem that most early channels face. You do not need years of expertise to document a transformation. You need a starting point, a process, and an honest result. A beginner documenting their own 30-day fitness challenge, their first attempt at interior design, or their journey learning a new skill is more relatable to a new viewer than a polished expert demonstrating a result they achieved years ago.</p>
 
@@ -256,7 +401,7 @@ export const posts = [
           <li><strong>Which videos generated the most subscribers per view:</strong> Views are vanity at the early stage. Subscribers per view tells you which content is converting casual viewers into people who want more. That conversion rate is the metric that determines whether your channel compounds or stalls.</li>
         </ol>
 
-        <img src="/blog/youtube-video-ideas-playbook.png" alt="Reviewing the first ten uploads in YouTube Studio for search, retention, and conversion signals" />
+        <img src="/blog/youtube-video-ideas-playbook.webp" alt="Reviewing the first ten uploads in YouTube Studio for search, retention, and conversion signals" />
 
         <p>Use those three signals to build your next ten videos with a clearer direction than your first ten had. The first ten are for learning. The second ten are for applying what the data showed you.</p>
 
@@ -282,7 +427,7 @@ export const posts = [
     excerpt: 'Two channels with identical view counts can earn completely different revenue. The reason is CPM. What CPM is (and how it differs from RPM), the average rates by category, the niches that pay 10x more, and the levers that lift CPM without changing your niche.',
     date: '2026-05-17',
     category: CATEGORIES.monetization,
-    cover: '/blog/youtube-cpm-cover.jpg',
+    cover: '/blog/youtube-cpm-cover.webp',
     author: 'Denzil',
     readTime: '12 min read',
     content: () => (
@@ -353,7 +498,7 @@ export const posts = [
 
         <p>Location is one of the most underestimated CPM variables. The same video, the same niche, and the same view count will generate different revenue depending on where your audience is based. US viewers generate the highest advertiser demand on the platform.</p>
 
-        <img src="/blog/youtube-cpm-calculator.png" alt="YouTube CPM varying by niche, audience location, and season" />
+        <img src="/blog/youtube-cpm-calculator.webp" alt="YouTube CPM varying by niche, audience location, and season" />
 
         <p>Seasonality follows a predictable pattern every year. Youtube cpm rates drop in January and February as advertiser budgets reset after Q4 spending. They climb steadily through the year and peak between October and December when brands are competing aggressively for holiday shoppers.</p>
 
@@ -378,7 +523,7 @@ export const posts = [
 
         <p>As a creator you are on the receiving end of this formula. If advertisers spent $500 to serve ads across 100,000 impressions on your videos, your youtube cpm is $5.</p>
 
-        <img src="/blog/youtube-cpm-calculator-per-niche.png" alt="The CPM formula applied to creator ad impression data" />
+        <img src="/blog/youtube-cpm-calculator-per-niche.webp" alt="The CPM formula applied to creator ad impression data" />
 
         <blockquote><strong>Pro Tip:</strong> Check your CPM by traffic source, not just overall. Search traffic typically generates higher CPM than browse or suggested feed traffic because search viewers have higher purchase intent. A video pulling most of its views from search will often outperform a viral video on revenue despite having fewer total views.</blockquote>
 
@@ -424,7 +569,7 @@ export const posts = [
 
         <p>A viewer watching a video about choosing a financial advisor is worth more to an advertiser than a viewer watching a comedy sketch because the purchase intent signal is direct and immediate.</p>
 
-        <img src="/blog/youtube-cpm-mr-beast.png" alt="Advertiser demand driving CPM differences across content categories" />
+        <img src="/blog/youtube-cpm-mr-beast.webp" alt="Advertiser demand driving CPM differences across content categories" />
 
         <p><strong>Key observations from the data:</strong></p>
 
@@ -447,7 +592,7 @@ export const posts = [
 
         <p>This is the highest paying niche on YouTube without exception. Credit card companies, brokerage platforms, insurance providers, and wealth management firms all compete aggressively for the same audience.</p>
 
-        <img src="/blog/youtube-cpm-personal-finance.png" alt="Personal finance content commanding the highest CPM on YouTube" />
+        <img src="/blog/youtube-cpm-personal-finance.webp" alt="Personal finance content commanding the highest CPM on YouTube" />
 
         <p>A viewer watching a video about index funds is a direct target for a brokerage ad. That direct intent match drives CPM rates between $12 and $45 depending on the specific sub-topic.</p>
 
@@ -473,7 +618,7 @@ export const posts = [
 
         <p>This is the most underutilised high cpm niche youtube opportunity for creators with a professional or business audience. Software companies selling to businesses have high customer lifetime values and large marketing budgets.</p>
 
-        <img src="/blog/youtube-cpm-saas.png" alt="B2B SaaS advertisers paying premium CPM to reach business decision makers" />
+        <img src="/blog/youtube-cpm-saas.webp" alt="B2B SaaS advertisers paying premium CPM to reach business decision makers" />
 
         <p>A channel teaching creators or business owners how to use productivity, marketing, or operations software attracts SaaS advertisers willing to pay premium CPM rates to reach decision makers.</p>
 
@@ -495,7 +640,7 @@ export const posts = [
           <li><strong>Be patient with the transition period:</strong> YouTube's algorithm takes time to recategorize your channel when you introduce new content topics. CPM improvements from a niche shift typically take 60 to 90 days to reflect in your analytics as advertiser targeting adjusts to your new content mix.</li>
         </ol>
 
-        <img src="/blog/youtube-cpm-location.png" alt="Audience geography as a direct lever on CPM rates" />
+        <img src="/blog/youtube-cpm-location.webp" alt="Audience geography as a direct lever on CPM rates" />
 
         <blockquote><strong>Pro Tip:</strong> Before committing to a full niche shift, use the Competitor Analysis feature in YTGrowth to study channels already operating in your target high CPM niche. Identify which topics they cover, which title formats drive their highest view counts, and which gaps they are leaving open. Enter the niche where competition is weakest, not where the biggest channels already dominate.</blockquote>
 
@@ -507,7 +652,7 @@ export const posts = [
 
         <p>Videos over 8 minutes qualify for mid-roll ads. Mid-roll ads appear during the video rather than just at the start, which increases the total number of ad impressions per view. More impressions per view means more advertiser bids per video, which pushes your overall CPM higher.</p>
 
-        <img src="/blog/youtube-cpm-video-length.png" alt="Videos over 8 minutes qualifying for mid-roll ads and more impressions" />
+        <img src="/blog/youtube-cpm-video-length.webp" alt="Videos over 8 minutes qualifying for mid-roll ads and more impressions" />
 
         <p>Keep videos above 8 minutes where the content justifies it. Do not pad videos with unnecessary content purely to hit the threshold. Viewer retention drops with filler content and low retention signals reduce your video's distribution reach.</p>
 
@@ -519,7 +664,7 @@ export const posts = [
 
         <p>Average cpm for youtube peaks between October and December every year. Plan your highest quality uploads and any monetization-focused content series for Q4. A video published in November will generate higher CPM than the same video published in February purely due to seasonal advertiser demand.</p>
 
-        <img src="/blog/youtube-cpm-upload-timing.png" alt="CPM peaking in Q4 as advertiser budgets compete for holiday shoppers" />
+        <img src="/blog/youtube-cpm-upload-timing.webp" alt="CPM peaking in Q4 as advertiser budgets compete for holiday shoppers" />
 
         <h3>Audience retention</h3>
 
@@ -567,7 +712,7 @@ export const posts = [
     excerpt: 'Tags are not a formality. They are the primary signal you send the algorithm about who should see your content. What makes a tag actually drive views (volume, competition, relevance), the best tag structures by niche, hashtags vs metadata tags, and the 15-tag system to apply on every upload.',
     date: '2026-05-17',
     category: CATEGORIES.seo,
-    cover: '/blog/youtube-tags-cover.jpg',
+    cover: '/blog/youtube-tags-cover.webp',
     author: 'Denzil',
     readTime: '11 min read',
     content: () => (
@@ -586,7 +731,7 @@ export const posts = [
 
         <p><strong>Competition level</strong> tells you how many other videos are already targeting that same tag. High volume with high competition means established channels with large audiences will consistently outrank you. The sweet spot is a tag with solid search volume and a competition score low enough for a smaller channel to rank.</p>
 
-        <img src="/blog/youtube-tags-competition.png" alt="A tag's search volume measured against its competition score" />
+        <img src="/blog/youtube-tags-competition.webp" alt="A tag's search volume measured against its competition score" />
 
         <p><strong>Relevance</strong> is the most important of the three. YouTube cross-references your tags against your <a href="/blog/what-is-youtube-seo">title, description</a>, and video content. A tag that does not match your actual content confuses the algorithm and can trigger a misleading metadata flag.</p>
 
@@ -667,7 +812,7 @@ export const posts = [
 
         <p>Both drive views but at different stages of the distribution process. Metadata tags get your video into search results. Youtube hashtags get your video in front of browsers already watching similar content.</p>
 
-        <img src="/blog/youtube-tags-tags-vs-hashtags.png" alt="Hashtags driving feed discovery versus metadata tags driving search ranking" />
+        <img src="/blog/youtube-tags-tags-vs-hashtags.webp" alt="Hashtags driving feed discovery versus metadata tags driving search ranking" />
 
         <blockquote><strong>Pro Tip:</strong> Treat hashtags and metadata tags as two separate research tasks. Your hashtag list should reflect what is trending in your niche right now. Your metadata tag list should reflect what your target viewer is searching for consistently over time.</blockquote>
 
@@ -689,7 +834,7 @@ export const posts = [
 
         <blockquote><strong>Pro Tip:</strong> Seasonal and event-based keywords are high-velocity but short-lived. A tag like "back to school study tips" spikes every August. Build a separate tag list for seasonal content and swap it in during the relevant window rather than using the same evergreen tags year-round.</blockquote>
 
-        <img src="/blog/youtube-tags-autocomplete.png" alt="YouTube autocomplete surfacing real search queries ranked by frequency" />
+        <img src="/blog/youtube-tags-autocomplete.webp" alt="YouTube autocomplete surfacing real search queries ranked by frequency" />
 
         <p>For a faster and more complete view of which keywords are driving traffic in your niche right now, the <a href="/features/keyword-research">Keyword Explorer</a> in YTGrowth pulls live YouTube search data and surfaces high-volume, low-competition keyword opportunities your competitors may have missed. It removes the manual work of cycling through autocomplete variations one letter at a time.</p>
 
@@ -725,7 +870,7 @@ export const posts = [
 
         <blockquote><strong>Pro Tip:</strong> Build a master tag template for each content series you produce. If you post weekly tutorials on the same topic, 70% of your tags will be consistent across every video. Only the primary keyword and one or two specific tags need to change per upload. This saves research time and strengthens the algorithm's understanding of your channel's niche over time.</blockquote>
 
-        <img src="/blog/youtube-tags-list-tag.png" alt="A complete tag list layered from primary keyword to long-tail variations" />
+        <img src="/blog/youtube-tags-list-tag.webp" alt="A complete tag list layered from primary keyword to long-tail variations" />
 
         <p>A complete tag list for one video should include:</p>
 
@@ -751,7 +896,7 @@ export const posts = [
 
         <p><strong>Fix:</strong> Your competitor's tags are built around their channel size, audience, and content history. A tag that ranks well for a 500k subscriber channel will not rank the same way for a 2k subscriber channel.</p>
 
-        <img src="/blog/youtube-tags-copying.png" alt="Why copying a larger channel's tag list does not transfer to a smaller channel" />
+        <img src="/blog/youtube-tags-copying.webp" alt="Why copying a larger channel's tag list does not transfer to a smaller channel" />
 
         <p>Use competitor research to identify tag opportunities they are missing, not to duplicate what they are already dominating. The <a href="/features/competitor-analysis">Competitor Analysis</a> feature in YTGrowth shows you exactly which topics and keywords competing channels are leaving open.</p>
 
@@ -778,7 +923,7 @@ export const posts = [
 
         <blockquote><strong>Pro Tip:</strong> When you update tags on an older video, also update the first two lines of the description with the same primary keyword. Consistent signals across both placements strengthen the re-indexing signal and give the update a better chance of recovering lost search rankings.</blockquote>
 
-        <img src="/blog/youtube-tags-refresh-tags.png" alt="A quarterly schedule for auditing and refreshing tags on older videos" />
+        <img src="/blog/youtube-tags-refresh-tags.webp" alt="A quarterly schedule for auditing and refreshing tags on older videos" />
 
         <p>The channels that maintain consistent search traffic are not just researching tags at upload. They are treating best tags for youtube videos as a living system that gets reviewed, tested, and refined on a regular schedule.</p>
 
@@ -800,7 +945,7 @@ export const posts = [
     excerpt: 'Picking tags on what feels relevant leaves your video competing for the wrong audience or missing search traffic entirely. How a tag finder pulls real search data, the volume-and-competition filter that separates rankable keywords from dead ends, and the title-description-tags placement that turns research into reach.',
     date: '2026-05-17',
     category: CATEGORIES.seo,
-    cover: '/blog/youtube-tag-finder-cover.jpg',
+    cover: '/blog/youtube-tag-finder-cover.webp',
     author: 'Denzil',
     readTime: '8 min read',
     content: () => (
@@ -827,7 +972,7 @@ export const posts = [
 
         <p>When you add tags to a video, you are not decorating it. You are telling <a href="/blog/youtube-algorithm">the algorithm</a> which search queries your content should appear in and which suggested feed placements it qualifies for. Inaccurate or missing tags mean YouTube has to guess your content's topic, and it will often guess wrong.</p>
 
-        <img src="/blog/youtube-tag-finder-keyword-research.png" alt="Keyword research surfacing the exact phrases viewers type into YouTube" />
+        <img src="/blog/youtube-tag-finder-keyword-research.webp" alt="Keyword research surfacing the exact phrases viewers type into YouTube" />
 
         <p>The creators consistently pulling search traffic are not more talented. They are doing keyword search for youtube before they film, not after. They know which phrases have volume, which have low competition, and which ones their target audience is actively using right now.</p>
 
@@ -849,7 +994,7 @@ export const posts = [
 
         <blockquote><strong>Pro Tip:</strong> Do not just target the highest volume keyword. A video from a small channel ranks faster on a specific long-tail phrase like "youtube keyword research for beginners" than on a broad term like "youtube tips" where it competes against channels with millions of subscribers.</blockquote>
 
-        <img src="/blog/youtube-tag-finder-keyword-research-free.png" alt="Filtering keyword results by search volume and competition score" />
+        <img src="/blog/youtube-tag-finder-keyword-research-free.webp" alt="Filtering keyword results by search volume and competition score" />
 
         <p>What to look for in your results:</p>
 
@@ -888,7 +1033,7 @@ export const posts = [
 
         <p>keyword tool io youtube is one of the more widely used free options. It pulls YouTube autocomplete data and organizes it into a usable list. The limitation is that it shows you what people search for but not how competitive those keywords are to rank for.</p>
 
-        <img src="/blog/youtube-tag-finder-keyword-tool.png" alt="A free keyword tool showing autocomplete data without competition scoring" />
+        <img src="/blog/youtube-tag-finder-keyword-tool.webp" alt="A free keyword tool showing autocomplete data without competition scoring" />
 
         <p>For a complete youtube keyword research tool that combines keyword data with channel audit insights and competitor analysis in one place, YTGrowth gives you the Keyword Explorer alongside every other growth tool your channel needs, without switching between five different platforms.</p>
 
@@ -906,7 +1051,7 @@ export const posts = [
 
         <blockquote><strong>Pro Tip:</strong> Use your primary keyword in the title, a natural variation of it in the first line of the description, and the long-tail versions in the Tags field. This gives YouTube three consistent signals about your content's topic without repeating the same phrase verbatim across all three placements.</blockquote>
 
-        <img src="/blog/youtube-tag-finder-keyword-description.png" alt="Keyword placement across title, description first lines, and the Tags field" />
+        <img src="/blog/youtube-tag-finder-keyword-description.webp" alt="Keyword placement across title, description first lines, and the Tags field" />
 
         <p>If you have already read our guide on <a href="/blog/shorts-tagging">youtube shorts tagging</a>, you will recognise this as the same principle behind the 3-tier hashtag strategy. Broad tags signal format, niche tags signal audience, and your researched metadata tags signal search intent. All three work together as one system.</p>
 
@@ -928,7 +1073,7 @@ export const posts = [
     excerpt: 'Zero views on a Short is usually a tagging problem, not a content one. The difference between visible hashtags and hidden metadata tags, the 3-tier hashtag framework (1 broad, 2 niche, 1 brand), the Tags field most creators never fill, and the four mistakes that suppress reach across every niche.',
     date: '2026-05-17',
     category: CATEGORIES.seo,
-    cover: '/blog/shorts-tagging-cover.jpg',
+    cover: '/blog/shorts-tagging-cover.webp',
     author: 'Denzil',
     readTime: '9 min read',
     content: () => (
@@ -988,7 +1133,7 @@ export const posts = [
 
         <p>Without it, YouTube may index your vertical video as a standard upload and distribute it through the wrong feed entirely.</p>
 
-        <img src="/blog/shorts-tagging-shorts.png" alt="The #Shorts hashtag in a description signalling YouTube to distribute as a Short" />
+        <img src="/blog/shorts-tagging-shorts.webp" alt="The #Shorts hashtag in a description signalling YouTube to distribute as a Short" />
 
         <p>Keep Tier 1 to one or two tags maximum. Options include #Shorts, #Trending, and #Viral. More than two broad tags dilutes the signal without adding distribution value.</p>
 
@@ -1010,7 +1155,7 @@ export const posts = [
 
         <p>For example, if your channel is TechWithJames, use #TechWithJames on every upload. Over time, YouTube begins associating that tag with your content category and viewer profile.</p>
 
-        <img src="/blog/shorts-tagging-brand.png" alt="A consistent brand hashtag grouping a channel's Shorts into a content library" />
+        <img src="/blog/shorts-tagging-brand.webp" alt="A consistent brand hashtag grouping a channel's Shorts into a content library" />
 
         <p>This tier also helps viewers find more of your content directly. Clicking a brand hashtag pulls up every Short you have tagged with it, functioning as a self-contained content library.</p>
 
@@ -1032,7 +1177,7 @@ export const posts = [
 
         <p>The screenshot below shows the Tags field sitting below the Language and Caption settings in the More Options panel. It is easy to miss on the first upload.</p>
 
-        <img src="/blog/shorts-tagging-hidden-meta-data.png" alt="The hidden Tags field in YouTube Studio's More Options panel" />
+        <img src="/blog/shorts-tagging-hidden-meta-data.webp" alt="The hidden Tags field in YouTube Studio's More Options panel" />
 
         <h3>What to put in the Tags field</h3>
 
@@ -1155,7 +1300,7 @@ export const posts = [
     excerpt: 'Tags are not a keyword dump at the bottom of an upload form. They are a structured signal system that tells two separate machines what your content is about: the YouTube algorithm and Google\'s index. The priority-order tag method, the 200-300 character discipline, and the VideoObject Schema layer that gets the same video discovered twice.',
     date: '2026-05-17',
     category: CATEGORIES.seo,
-    cover: '/blog/video-tagging-cover.jpg',
+    cover: '/blog/video-tagging-cover.webp',
     author: 'Denzil',
     readTime: '11 min read',
     content: () => (
@@ -1180,7 +1325,7 @@ export const posts = [
 
         <p>Generic tags at this position are one of the most common mistakes in youtube tags best practices. A cooking channel uploading a video on homemade sourdough bread and opening with the tag "food" or "cooking" has told the algorithm almost nothing. The correct first tag is "homemade sourdough bread recipe" because that is the specific query the video is built to answer.</p>
 
-        <img src="/blog/video-tagging-keyword.png" alt="The first tag set to an exact target keyword as a viewer would type it" />
+        <img src="/blog/video-tagging-keyword.webp" alt="The first tag set to an exact target keyword as a viewer would type it" />
 
         <p>The exact match principle matters beyond Search. When the algorithm is deciding which videos to stack in the Suggested feed, it looks at the first tag as a primary categorisation signal. A precise first tag increases the probability that your video appears next to content targeting the same audience, which is where youtube tags for views actually come from for the majority of channels.</p>
 
@@ -1194,7 +1339,7 @@ export const posts = [
 
         <p>Using the sourdough example, if the first tag is "homemade sourdough bread recipe," tags 2 to 5 might include "sourdough bread from scratch," "sourdough starter recipe," "artisan bread at home," and "sourdough for beginners." Each one targets a slightly different search query from the same audience without contradicting the primary signal.</p>
 
-        <img src="/blog/video-tagging-secondary-keywords.png" alt="Tags 2 to 5 widening the net with secondary keyword variations" />
+        <img src="/blog/video-tagging-secondary-keywords.webp" alt="Tags 2 to 5 widening the net with secondary keyword variations" />
 
         <p>The logic behind this tier is that no single viewer segment searches the same way. One person types "homemade sourdough bread recipe." Another types "sourdough for beginners." Both are the same viewer at different points of the same journey. Tags 2 to 5 ensure the video surfaces for all of them as part of a coherent content tagging best practices strategy.</p>
 
@@ -1208,7 +1353,7 @@ export const posts = [
 
         <p>Where tags 1 to 5 target viewer search queries, tags 6 to 10 target algorithmic categorisation. A video on homemade sourdough bread might use "bread baking," "home cooking," "baking for beginners," and "kitchen skills" in this tier. None of these are queries the video is trying to rank for. They are context signals that place the video inside a broader content ecosystem.</p>
 
-        <img src="/blog/video-tagging-clusters.png" alt="Contextual tags placing a video inside a broader content neighborhood" />
+        <img src="/blog/video-tagging-clusters.webp" alt="Contextual tags placing a video inside a broader content neighborhood" />
 
         <p>This distinction is what separates a video tagging strategy from a keyword list. Keywords target humans searching for something specific. Contextual tags target the algorithm's categorisation system, which is what determines which audience segment gets the video served to them organically through Browse and Suggested feeds.</p>
 
@@ -1224,7 +1369,7 @@ export const posts = [
 
         <p>The 200 to 300 character range forces a discipline that improves <a href="/blog/youtube-channel-optimization">metadata optimization</a> across the channel. Every tag has to earn its place. If a tag cannot be justified as either a search query variation, a secondary keyword, or a contextual category signal, it does not belong in the set. That filter alone eliminates the generic filler tags that dilute metadata quality.</p>
 
-        <img src="/blog/video-tagging-tag-characters.png" alt="The 200 to 300 character sweet spot for a focused YouTube tag set" />
+        <img src="/blog/video-tagging-tag-characters.webp" alt="The 200 to 300 character sweet spot for a focused YouTube tag set" />
 
         <p>Checking character count before publishing takes thirty seconds and is one of the simplest quality checks in a video tagging best practices workflow. Most upload interfaces display the running character count in real time. Use it as a guardrail, not a progress bar.</p>
 
@@ -1247,7 +1392,7 @@ export const posts = [
 
         <p>Without it, Google has no direct signal for what the embedded YouTube video covers. It guesses from the surrounding page text. With VideoObject Schema implemented, Google reads a machine level declaration of the video's title, topic, thumbnail, and upload date, the same way YouTube's algorithm reads the tag box.</p>
 
-        <img src="/blog/video-tagging-tag-video-schema.png" alt="VideoObject Schema connecting an embedded YouTube video to Google Search" />
+        <img src="/blog/video-tagging-tag-video-schema.webp" alt="VideoObject Schema connecting an embedded YouTube video to Google Search" />
 
         <p>The payoff shows up in search results. A page with correctly implemented VideoObject Schema becomes eligible for video rich results: thumbnail previews, video carousels, and enhanced snippets. These pull significantly higher click through rates than standard links. A YouTube video embedded without Schema is invisible to all of these features.</p>
 
@@ -1263,7 +1408,7 @@ export const posts = [
 
         <p>The description field is a concise summary of the video content. This is not a copy paste of the YouTube description. Google uses this field for snippet generation in search results, so it needs to be tight and keyword focused. Two to three sentences covering what the video delivers is enough.</p>
 
-        <img src="/blog/video-tagging-tag-video-schema-fields.png" alt="The four mandatory VideoObject Schema fields: name, description, thumbnailUrl, uploadDate" />
+        <img src="/blog/video-tagging-tag-video-schema-fields.webp" alt="The four mandatory VideoObject Schema fields: name, description, thumbnailUrl, uploadDate" />
 
         <p>The thumbnailUrl field points Google to the image it should display in video rich results. The strongest approach is to use the same custom thumbnail uploaded to YouTube. A consistent thumbnail across YouTube and Google Search builds visual recognition and ensures the video looks professional in both ecosystems.</p>
 
@@ -1279,7 +1424,7 @@ export const posts = [
 
         <p>A YouTube video titled "I Tested Every Budget Camera Under $300" might sit on a blog post targeting "best budget cameras 2026." The iframe title attribute should reflect the page keyword, not just echo the YouTube title.</p>
 
-        <img src="/blog/video-tagging-tag-video-schema-html.png" alt="iframe title attribute rewritten to match the embedding page's target keyword" />
+        <img src="/blog/video-tagging-tag-video-schema-html.webp" alt="iframe title attribute rewritten to match the embedding page's target keyword" />
 
         <p>Alt text applies when a video fails to load or when a screen reader encounters the embed. From an accessibility standpoint it is a requirement. From an SEO standpoint it is another metadata field Google can index. A descriptive alt text containing the page keyword reinforces the same relevance signal the Schema and title attribute are already sending.</p>
 
@@ -1303,7 +1448,7 @@ export const posts = [
     excerpt: 'Studying what rivals post is the surface layer. The real signal is which specific videos the algorithm chose to distribute, and why. Two forensic methods (the Outlier Audit and the Gap Map) plus View Velocity, VPH, the three rival types, and the Reddit cross-check that turns competitors into a list of videos to make.',
     date: '2026-05-17',
     category: CATEGORIES.strategy,
-    cover: '/blog/youtube-competitor-analysis-cover.jpg',
+    cover: '/blog/youtube-competitor-analysis-cover.webp',
     author: 'Denzil',
     readTime: '13 min read',
     content: () => (
@@ -1344,7 +1489,7 @@ export const posts = [
 
         <p>Before spending anything on tools, open YouTube Studio and find the "Channels your audience watches" tab. It is the most overlooked asset in free youtube competitor analysis. It surfaces channels your existing audience is already watching that no keyword search would ever surface.</p>
 
-        <img src="/blog/youtube-competitor-analysis-your-audience.png" alt="YouTube Studio 'Channels your audience watches' tab revealing audience competitors" />
+        <img src="/blog/youtube-competitor-analysis-your-audience.webp" alt="YouTube Studio 'Channels your audience watches' tab revealing audience competitors" />
 
         <p>These are audience competitors. They compete for watch time, not just rankings, and they are frequently more dangerous than search competitors. This tab is free and takes three minutes to read. It belongs at the start of every youtube competitive analysis.</p>
 
@@ -1397,7 +1542,7 @@ export const posts = [
 
         <p>A youtube competitor analysis tool free option like TubeBuddy surfaces partial keyword data but does not connect the outlier to its traffic source split automatically. That connection is the link that determines the entire replication strategy. YTGrowth's competitor tooling runs this entire audit in one view: traffic source splits, outlier detection against channel baseline, keyword data, and thumbnail patterns across a competitor's best performers.</p>
 
-        <img src="/blog/youtube-competitor-analysis-outliers.png" alt="Outlier videos detected against a channel baseline with traffic source split" />
+        <img src="/blog/youtube-competitor-analysis-outliers.webp" alt="Outlier videos detected against a channel baseline with traffic source split" />
 
         <CtaCard
           to="/features/competitor-analysis"
@@ -1428,7 +1573,7 @@ export const posts = [
 
         <p>If their outlier takes four minutes to reach the main point and your version reaches it in 45 seconds, that is a measurable retention advantage. These are not aesthetic preferences. They are competitive edges the original video left open.</p>
 
-        <img src="/blog/youtube-competitor-analysis-video-length.png" alt="Time-to-value comparison between a competitor outlier and a faster-paced version" />
+        <img src="/blog/youtube-competitor-analysis-video-length.webp" alt="Time-to-value comparison between a competitor outlier and a faster-paced version" />
 
         <p>All three techniques above can be run manually as part of a free youtube competitor analysis workflow. YTGrowth's competitor tool surfaces comment data, content gaps, and top keyword opportunities from competitor outliers in the same dashboard so the output is a ready content plan, not a folder of research notes.</p>
 
@@ -1452,7 +1597,7 @@ export const posts = [
 
         <p>VPH measures how fast a video accumulates views in its first 24 to 48 hours after upload. A competitor video hitting 8,000 views in its first six hours is being pushed aggressively into Browse and Suggested feeds. That is a real-time signal that the topic, title, or format has triggered algorithmic distribution before the video has built any SEO traction at all.</p>
 
-        <img src="/blog/youtube-competitor-analysis-vph.png" alt="Views Per Hour tracking flagging a competitor video gaining abnormal early traction" />
+        <img src="/blog/youtube-competitor-analysis-vph.webp" alt="Views Per Hour tracking flagging a competitor video gaining abnormal early traction" />
 
         <p>Monitoring VPH across a competitor list over several weeks reveals patterns that static competitor analysis on YouTube never surfaces:</p>
 
@@ -1480,7 +1625,7 @@ export const posts = [
           <li>Whether the description reinforces the same CTA or points somewhere different</li>
         </ul>
 
-        <img src="/blog/youtube-competitor-analysis-your-pinned-comments.png" alt="Competitor pinned comment and CTA structure revealing reach versus revenue intent" />
+        <img src="/blog/youtube-competitor-analysis-your-pinned-comments.webp" alt="Competitor pinned comment and CTA structure revealing reach versus revenue intent" />
 
         <p>The pattern across multiple outliers reveals whether the competitor is optimising for reach or for revenue. A channel optimising for reach and a channel optimising for revenue require completely different gap strategies.</p>
 
@@ -1506,7 +1651,7 @@ export const posts = [
 
         <p>The result is a shortlist of topics that have proven audience demand on Reddit but no strong competitor content on YouTube. These are not guesses. They are gaps the competitor analysis youtube process confirmed from the video side and Reddit confirmed from the audience side.</p>
 
-        <img src="/blog/youtube-competitor-analysis-your-playbook.png" alt="Reddit pain points mapped against algorithmically validated content pillars" />
+        <img src="/blog/youtube-competitor-analysis-your-playbook.webp" alt="Reddit pain points mapped against algorithmically validated content pillars" />
 
         <p>This technique sits at the end of the workflow for a reason. Running GummySearch before the Outlier Audit produces a list of random Reddit complaints. Running it after produces targeted opportunities mapped to topics the algorithm has already shown an appetite for in this niche.</p>
 
@@ -1530,7 +1675,7 @@ export const posts = [
     excerpt: 'Low CTR on a strong video is rarely the algorithm. It is the thumbnail losing a two-second decision to a competitor. 22 click-forcing techniques across seven psychological frameworks (transformation, extreme emotion, conflict, numbers, social proof, mystery, color) plus niche-specific Do and Don\'t rules for gaming, finance, cooking, and tech.',
     date: '2026-05-16',
     category: CATEGORIES.thumbnails,
-    cover: '/blog/youtube-thumbnail-ideas-cover.jpg',
+    cover: '/blog/youtube-thumbnail-ideas-cover.webp',
     author: 'Denzil',
     readTime: '14 min read',
     content: () => (
@@ -1555,7 +1700,7 @@ export const posts = [
 
         <p>"Day 1 vs. Day 30" framing implies a documented transformation with receipts. It works because it signals that the creator has already done the work and captured the evidence, which makes the payoff feel guaranteed rather than promised.</p>
 
-        <img src="/blog/youtube-thumbnail-ideas-progress.jpg" alt="Day 1 vs Day 30 progress journey thumbnail framing a documented transformation" />
+        <img src="/blog/youtube-thumbnail-ideas-progress.webp" alt="Day 1 vs Day 30 progress journey thumbnail framing a documented transformation" />
 
         <h3>3. The Glow Up</h3>
 
@@ -1590,7 +1735,7 @@ export const posts = [
 
         <p>Overexaggerated surprise remains one of the highest-performing emotional expressions despite being widely used. The reason it still works is that genuine high-arousal emotion reads as authentic signal, not manipulation.</p>
 
-        <img src="/blog/youtube-thumbnail-ideas-shocked.jpg" alt="Overexaggerated shocked facial expression filling a YouTube thumbnail frame" />
+        <img src="/blog/youtube-thumbnail-ideas-shocked.webp" alt="Overexaggerated shocked facial expression filling a YouTube thumbnail frame" />
 
         <p>Viewers are not clicking because they believe the creator is actually shocked. They are clicking because the intensity of the expression signals that something genuinely unexpected is inside the video.</p>
 
@@ -1612,7 +1757,7 @@ export const posts = [
 
         <p>The green checkmark and red X combination is the most efficient visual shorthand on the platform. It communicates good versus bad, right versus wrong, and recommended versus avoid in a single glance without requiring a single word of text.</p>
 
-        <img src="/blog/youtube-thumbnail-ideas-vs.jpg" alt="Green checkmark versus red X visual shorthand on a comparison thumbnail" />
+        <img src="/blog/youtube-thumbnail-ideas-vs.webp" alt="Green checkmark versus red X visual shorthand on a comparison thumbnail" />
 
         <p>Finance, tech, and productivity channels use this format because their audience is actively making decisions and responds strongly to anything that promises to simplify that process.</p>
 
@@ -1638,7 +1783,7 @@ export const posts = [
 
         <p>Actual earnings, savings, or cost figures work because money is universally legible. "$0 to $10K" communicates a transformation and a scale simultaneously. The viewer does not need niche knowledge to understand the stakes, which makes dollar figure thumbnails effective across a wider audience than almost any other format.</p>
 
-        <img src="/blog/youtube-thumbnail-ideas-dollar.jpg" alt="Large dollar figure thumbnail communicating a financial transformation at a glance" />
+        <img src="/blog/youtube-thumbnail-ideas-dollar.webp" alt="Large dollar figure thumbnail communicating a financial transformation at a glance" />
 
         <h3>13. The Percentage Gain or Loss</h3>
 
@@ -1654,7 +1799,7 @@ export const posts = [
 
         <p>Showing a genuine audience response, a packed room, a viral comment screenshot, or a montage of viewer reactions, implies scale and validation simultaneously. It signals that the content already has an audience and that joining that audience is the correct decision.</p>
 
-        <img src="/blog/youtube-thumbnail-ideas-crowd-reaction.jpg" alt="Crowd reaction shot implying scale and social validation on a thumbnail" />
+        <img src="/blog/youtube-thumbnail-ideas-crowd-reaction.webp" alt="Crowd reaction shot implying scale and social validation on a thumbnail" />
 
         <p>These are among the strongest first youtube video thumbnail ideas for creators launching a new channel who want to signal credibility before they have built it organically.</p>
 
@@ -1678,7 +1823,7 @@ export const posts = [
 
         <p>Pixelating or obscuring the key element in a thumbnail forces the viewer to click to see what it is. The technique works because the brain cannot ignore incomplete visual information. It registers the blur as a question that demands resolution.</p>
 
-        <img src="/blog/youtube-thumbnail-ideas-blurred_object.jpg" alt="Blurred key object on a thumbnail forcing the click to resolve the question" />
+        <img src="/blog/youtube-thumbnail-ideas-blurred_object.webp" alt="Blurred key object on a thumbnail forcing the click to resolve the question" />
 
         <p>Finance, tech, and vlog thumbnail ideas all apply this format effectively by obscuring a result, a product, or a reveal that the title only partially explains.</p>
 
@@ -1700,7 +1845,7 @@ export const posts = [
 
         <p>Red, orange, and bright yellow trigger urgency and excitement. They are the highest-contrast colors against YouTube's interface across both light and dark mode, which is why they dominate the feed in finance, gaming, and news content. Used as backgrounds or accent colors, they force the eye to stop before the brain decides whether to engage.</p>
 
-        <img src="/blog/youtube-thumbnail-ideas-colors.jpg" alt="High-energy red, orange, and yellow thumbnail colors against the YouTube feed" />
+        <img src="/blog/youtube-thumbnail-ideas-colors.webp" alt="High-energy red, orange, and yellow thumbnail colors against the YouTube feed" />
 
         <h3>21. Trust and Authority Colors</h3>
 
@@ -1800,7 +1945,7 @@ export const posts = [
     excerpt: 'Thumbnail CTR prediction used to mean uploading and waiting. Six AI tools that simulate how viewers process a design before it goes live: what each one actually measures (saliency, cognitive load, niche benchmarking, mobile legibility) and the 4-step workflow that validates a thumbnail before a single impression is wasted.',
     date: '2026-05-16',
     category: CATEGORIES.thumbnails,
-    cover: '/blog/thumbnail-tester-cover.jpg',
+    cover: '/blog/thumbnail-tester-cover.webp',
     author: 'Denzil',
     readTime: '11 min read',
     content: () => (
@@ -1819,7 +1964,7 @@ export const posts = [
 
         <p>What those maps consistently reveal surprises most creators. Attention gravitates toward high-arousal emotional faces, high-contrast elements, and directional cues. It avoids cluttered backgrounds, low-contrast text, and anything placed in the bottom right corner where YouTube's timestamp sits.</p>
 
-        <img src="/blog/thumbnail-tester-click.jpg" alt="AI saliency heatmap showing where viewer attention lands on a YouTube thumbnail" />
+        <img src="/blog/thumbnail-tester-click.webp" alt="AI saliency heatmap showing where viewer attention lands on a YouTube thumbnail" />
 
         <p>CTR prediction through AI is not a replacement for live testing. It is a filter that eliminates the weakest design choices before they cost real impressions. A thumbnail that fails a saliency test will almost always underperform in the feed, and fixing it before upload costs nothing compared to fixing it after a video has already <a href="/blog/youtube-algorithm">lost algorithmic momentum</a>.</p>
 
@@ -1827,7 +1972,7 @@ export const posts = [
 
         <h2>1. YTGrowth Thumbnail IQ: Niche-Specific Benchmarking and AI Vision Analysis</h2>
 
-        <img src="/blog/thumbnail-tester-ytgrowth.png" alt="YTGrowth Thumbnail IQ scoring a thumbnail against top performers in the niche" />
+        <img src="/blog/thumbnail-tester-ytgrowth.webp" alt="YTGrowth Thumbnail IQ scoring a thumbnail against top performers in the niche" />
 
         <p>Most AI thumbnail analyzer tools score thumbnails in isolation. <a href="/features/thumbnail-iq">Thumbnail IQ</a> scores them in context, benchmarking your design against the top-performing videos in your specific niche rather than against a generic quality standard.</p>
 
@@ -1857,7 +2002,7 @@ export const posts = [
 
         <h2>2. TestMyThumbnails: The Gold Standard for Saliency and Heatmaps</h2>
 
-        <img src="/blog/thumbnail-tester-test-my-thumbnails.png" alt="TestMyThumbnails AI-generated saliency heatmap and CTR score" />
+        <img src="/blog/thumbnail-tester-test-my-thumbnails.webp" alt="TestMyThumbnails AI-generated saliency heatmap and CTR score" />
 
         <p>Where Thumbnail IQ benchmarks against competitors, TestMyThumbnails goes deeper into the neuroscience of visual attention. It uses AI vision models to simulate human eye movement across a thumbnail and returns a visual saliency map showing exactly where attention lands and where it does not.</p>
 
@@ -1880,7 +2025,7 @@ export const posts = [
 
         <h2>3. VidIQ: Historical Platform Data and Competitive Context</h2>
 
-        <img src="/blog/thumbnail-tester-vidiq-thumbnails.png" alt="VidIQ historical performance benchmarking for thumbnail prediction" />
+        <img src="/blog/thumbnail-tester-vidiq-thumbnails.webp" alt="VidIQ historical performance benchmarking for thumbnail prediction" />
 
         <p>VidIQ approaches CTR prediction from a different angle than saliency-based tools. Rather than simulating visual attention, it uses historical YouTube performance data to predict how a thumbnail is likely to perform based on what has already worked within your niche on the platform.</p>
 
@@ -1901,7 +2046,7 @@ export const posts = [
 
         <h2>4. Neurons: Enterprise-Grade Neuroscience for Cognitive Load</h2>
 
-        <img src="/blog/thumbnail-tester-neurons.png" alt="Neurons cognitive load and visual clutter analysis for a thumbnail" />
+        <img src="/blog/thumbnail-tester-neurons.webp" alt="Neurons cognitive load and visual clutter analysis for a thumbnail" />
 
         <p>Neurons operate at a different level than the other tools in this list. Where most AI thumbnail analyzer platforms focus on where attention lands, Neurons measure how hard the brain has to work to process what it sees. That measurement is called cognitive load, and it is one of the most overlooked variables in thumbnail design.</p>
 
@@ -1924,7 +2069,7 @@ export const posts = [
 
         <h2>5. ThumbsUp.tv: The Essential Reality Check for Multi-Device Scaling</h2>
 
-        <img src="/blog/thumbnail-tester-thumbsup-tv.png" alt="ThumbsUp.tv multi-device thumbnail preview across mobile, desktop, and TV" />
+        <img src="/blog/thumbnail-tester-thumbsup-tv.webp" alt="ThumbsUp.tv multi-device thumbnail preview across mobile, desktop, and TV" />
 
         <p>Every tool covered so far analyzes a thumbnail at full resolution. ThumbsUp.tv answers a different question entirely: what does this thumbnail actually look like on the devices where most viewers will encounter it?</p>
 
@@ -1947,7 +2092,7 @@ export const posts = [
 
         <h2>6. Thumbnail-AI and ThumbMagic: Fast Sanity Checks for Daily Uploads</h2>
 
-        <img src="/blog/thumbnail-tester-thumbnail-ai.png" alt="Thumbnail-AI rating, element breakdown, and improvement suggestions" />
+        <img src="/blog/thumbnail-tester-thumbnail-ai.webp" alt="Thumbnail-AI rating, element breakdown, and improvement suggestions" />
 
         <p>Not every upload warrants a full multi-tool analysis. For creators publishing frequently, Thumbnail-AI and ThumbMagic serve a different purpose in the youtube thumbnail tester workflow. They are fast, low-friction sanity checks that catch obvious problems without requiring a deep analysis session.</p>
 
@@ -2009,7 +2154,7 @@ export const posts = [
     excerpt: 'A technically acceptable thumbnail still gets ignored if it is psychologically invisible. The exact specs, the 3-second visual hierarchy rule, the curiosity-gap psychology, the tool tiers from Canva to AI, and the testing loop that turns a 1% CTR lift into thousands of extra views.',
     date: '2026-05-16',
     category: CATEGORIES.thumbnails,
-    cover: '/blog/youtube-maker-cover.jpg',
+    cover: '/blog/youtube-maker-cover.webp',
     author: 'Denzil',
     readTime: '12 min read',
     content: () => (
@@ -2036,7 +2181,7 @@ export const posts = [
 
         <p>The 16:9 youtube thumbnail aspect ratio is non-negotiable. Any image uploaded outside this ratio gets black bars added automatically, which signals poor production quality to every viewer who encounters it in search results or the suggested feed.</p>
 
-        <img src="/blog/youtube-maker-resize.png" alt="Resizing an image to the correct 1280 x 720 YouTube thumbnail dimensions" />
+        <img src="/blog/youtube-maker-resize.webp" alt="Resizing an image to the correct 1280 x 720 YouTube thumbnail dimensions" />
 
         <p>The 1280 x 720 youtube thumbnail size is the practical gold standard. It renders sharply across desktop, mobile, tablet, and connected TV without pushing file sizes toward the 2MB ceiling. Uploading at higher resolutions like 1920 x 1080 is possible but requires careful compression to stay within the limit without degrading visual quality.</p>
 
@@ -2056,7 +2201,7 @@ export const posts = [
 
         <p>YouTube's interface is predominantly white in light mode and dark gray in dark mode. High contrast colors like orange, lime green, and yellow naturally interrupt that background and stop the scroll. Low contrast colors like white, light gray, and pastels dissolve into the interface and disappear entirely.</p>
 
-        <img src="/blog/youtube-maker-color.jpg" alt="High-contrast thumbnail colors interrupting the YouTube feed versus low-contrast colors dissolving into it" />
+        <img src="/blog/youtube-maker-color.webp" alt="High-contrast thumbnail colors interrupting the YouTube feed versus low-contrast colors dissolving into it" />
 
         <p>Avoid white and light gray backgrounds. They reduce visibility across both interface modes and make your thumbnail invisible in exactly the placements that drive the most clicks.</p>
 
@@ -2100,7 +2245,7 @@ export const posts = [
 
         <p>Humans are hardwired to look at faces before anything else in a visual composition. A close-up face expressing surprise, intensity, or focus draws the eye faster than any graphic element. The eyes specifically are the anchor point.</p>
 
-        <img src="/blog/youtube-maker-human-face.jpg" alt="Close-up human face with sharp visible eyes drawing attention faster than graphic elements" />
+        <img src="/blog/youtube-maker-human-face.webp" alt="Close-up human face with sharp visible eyes drawing attention faster than graphic elements" />
 
         <p>Sharp, clearly visible eyes directed toward the viewer create an immediate human connection that generic thumbnails built around text and graphics simply cannot replicate.</p>
 
@@ -2118,7 +2263,7 @@ export const posts = [
 
         <p>Canva's Magic Studio adds AI-assisted background removal, which is useful for isolating faces and subjects against custom backgrounds without manual masking. Adobe Express offers similar functionality with tight integration into the broader Adobe ecosystem for creators already using those tools.</p>
 
-        <img src="/blog/youtube-maker-canva.png" alt="Canva YouTube thumbnail preset with AI-assisted background removal" />
+        <img src="/blog/youtube-maker-canva.webp" alt="Canva YouTube thumbnail preset with AI-assisted background removal" />
 
         <p>For getting the dimensions right before designing, YTGrowth's free <a href="/tools/youtube-thumbnail-resizer">Thumbnail Resizer</a> handles HD, Full HD, and 4K exports in one click, runs entirely in the browser, and auto-compresses under the 2MB cap on the HD preset automatically.</p>
 
@@ -2141,7 +2286,7 @@ export const posts = [
 
         <p>Before uploading any thumbnail regardless of which tool produced it, preview it at reduced size using ThumbsUp.tv, which renders your design across desktop, mobile, and TV displays simultaneously so you can catch readability issues before they cost you clicks.</p>
 
-        <img src="/blog/youtube-maker-adobe.png" alt="Adobe Photoshop layer and export controls for pixel-perfect thumbnail precision" />
+        <img src="/blog/youtube-maker-adobe.webp" alt="Adobe Photoshop layer and export controls for pixel-perfect thumbnail precision" />
 
         <p>Once the design is live, <a href="/features/thumbnail-iq">benchmark it against the top performers in your niche</a> to see how your packaging stacks up before you ever hit publish.</p>
 
@@ -2166,7 +2311,7 @@ export const posts = [
 
         <p>If a video is underperforming in the first 24 to 48 hours, the thumbnail is the first variable to change. Upload a new variation through the Test and Compare feature rather than replacing the original outright, so the data comparison remains intact.</p>
 
-        <img src="/blog/youtube-maker-a-b-testing.png" alt="YouTube Studio Test and Compare feature running multiple thumbnail variations" />
+        <img src="/blog/youtube-maker-a-b-testing.webp" alt="YouTube Studio Test and Compare feature running multiple thumbnail variations" />
 
         <p>For a deeper read on whether your thumbnail is competitive before you even run a test, <a href="/features/competitor-analysis">study the thumbnails winning in your niche</a> on contrast, face presence, text density, and curiosity gap signals, giving you a data-backed visual bar to clear before the first impression is ever served.</p>
 
