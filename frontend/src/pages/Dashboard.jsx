@@ -384,6 +384,36 @@ const C = {
   surface:  '#ffffff',
 }
 
+/* ─── SHELL: dark palette for the app shell only (sidebar + its nav /
+       footer sub-components). Pages stay on the light `C` palette. These
+       tokens mirror the ChatCoach dark surface that's already shipped, so
+       the rail and the Chat page read as one system. Every consumer of
+       SHELL is shell-only and never renders on a light page. ───────── */
+const SHELL = {
+  bg:        '#0c0c0e',                 // aside background (= ChatCoach rail)
+  surface:   '#18181b',                 // flat fallback (rarely used)
+  // Raised surfaces (profile card, What's-new, channel-switcher popover)
+  // use the SAME lit gradient + single soft shadow as every ChatCoach
+  // dark surface, so the rail and the Chat page read as one system.
+  cardBg:    'linear-gradient(180deg, #1e1e24 0%, #18181c 100%)',
+  cardShadow:'0 1px 3px rgba(0,0,0,0.4)',
+  popShadow: '0 12px 32px rgba(0,0,0,0.6)',
+  hair:      'rgba(255,255,255,0.08)',  // borders + dividers
+  hairLo:    'rgba(255,255,255,0.06)',
+  text1:     '#f4f4f5',
+  text2:     '#a1a1aa',
+  text3:     '#71717a',
+  iconIdle:  '#5b5b66',                 // idle nav icons / carets / sub-dots
+  // Quiet selection grammar, identical to the shipped ChatCoach rail:
+  // hover = faint white wash, active = slightly stronger white wash.
+  // Brand red stays an ACCENT only (the left stripe + icon), never a
+  // background wash — matches the "red is for CTAs, not toggles" rule.
+  hoverBg:   'rgba(255,255,255,0.035)',
+  activeBg:  'rgba(255,255,255,0.06)',
+  track:     'rgba(255,255,255,0.10)',  // health-bar track (= UsageBar dark)
+  red:       '#e5251b',
+}
+
 const MILESTONE_TIERS = {
   subs:        [100, 500, 1000, 5000, 10000, 50000, 100000, 1000000],
   views:       [10000, 50000, 100000, 1000000, 10000000],
@@ -3786,8 +3816,8 @@ function NavBtn({ label, active, onClick, badge, dot }) {
         position: 'relative',
         margin: `1px ${NAV_GUTTER}px`,
         width: `calc(100% - ${NAV_GUTTER * 2}px)`,
-        background: active ? 'rgba(229,37,27,0.07)' : 'transparent',
-        color: active ? C.text1 : C.text2,
+        background: active ? SHELL.activeBg : 'transparent',
+        color: active ? SHELL.text1 : SHELL.text2,
         fontWeight: active ? 600 : 500,
         fontSize: 14,
         letterSpacing: '-0.01em',
@@ -3800,8 +3830,8 @@ function NavBtn({ label, active, onClick, badge, dot }) {
         display: 'flex', alignItems: 'center', gap: 12,
         transition: 'background 0.14s ease, color 0.14s ease',
       }}
-      onMouseEnter={e => { if (!active) { e.currentTarget.style.background = 'rgba(15,15,19,0.04)'; e.currentTarget.style.color = C.text1 } }}
-      onMouseLeave={e => { if (!active) { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = C.text2 } }}
+      onMouseEnter={e => { if (!active) { e.currentTarget.style.background = SHELL.hoverBg; e.currentTarget.style.color = SHELL.text1 } }}
+      onMouseLeave={e => { if (!active) { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = SHELL.text2 } }}
     >
       {active && (
         <span aria-hidden style={{
@@ -3813,7 +3843,7 @@ function NavBtn({ label, active, onClick, badge, dot }) {
       <span style={{
         display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
         width: NAV_ICON_COL, height: NAV_ICON_COL, flexShrink: 0,
-        color: active ? C.red : '#9da0aa',
+        color: active ? C.red : SHELL.iconIdle,
       }}>{NAV_ICONS[label]}</span>
       <span style={{ flex: 1 }}>{label}</span>
       {typeof badge === 'string' && badge && (
@@ -3855,7 +3885,7 @@ function NavSubBtn({ label, active, onClick }) {
         margin: `1px ${NAV_GUTTER}px 1px ${NAV_GUTTER + SUB_INDENT}px`,
         width: `calc(100% - ${NAV_GUTTER * 2 + SUB_INDENT}px)`,
         background: 'transparent',
-        color: active ? C.text1 : C.text2,
+        color: active ? SHELL.text1 : SHELL.text2,
         fontWeight: active ? 600 : 450,
         fontSize: 13.5,
         letterSpacing: '-0.01em',
@@ -3868,12 +3898,12 @@ function NavSubBtn({ label, active, onClick }) {
         display: 'flex', alignItems: 'center', gap: 10,
         transition: 'background 0.14s ease, color 0.14s ease',
       }}
-      onMouseEnter={e => { if (!active) { e.currentTarget.style.background = 'rgba(15,15,19,0.04)'; e.currentTarget.style.color = C.text1 } }}
-      onMouseLeave={e => { if (!active) { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = C.text2 } }}
+      onMouseEnter={e => { if (!active) { e.currentTarget.style.background = SHELL.hoverBg; e.currentTarget.style.color = SHELL.text1 } }}
+      onMouseLeave={e => { if (!active) { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = SHELL.text2 } }}
     >
       <span style={{
         width: 5, height: 5, borderRadius: '50%',
-        background: active ? C.red : '#cbcdd6',
+        background: active ? C.red : SHELL.iconIdle,
         flexShrink: 0,
         boxShadow: active ? `0 0 0 3px rgba(229,37,27,0.10)` : 'none',
         transition: 'background 0.14s ease, box-shadow 0.14s ease',
@@ -3915,7 +3945,7 @@ function NavGroup({ label, children, anyChildActive, defaultOpen = true, badge, 
           margin: `1px ${NAV_GUTTER}px`,
           width: `calc(100% - ${NAV_GUTTER * 2}px)`,
           background: 'transparent',
-          color: anyChildActive ? C.text1 : C.text2,
+          color: anyChildActive ? SHELL.text1 : SHELL.text2,
           fontWeight: anyChildActive ? 600 : 500,
           fontSize: 14,
           letterSpacing: '-0.01em',
@@ -3928,13 +3958,13 @@ function NavGroup({ label, children, anyChildActive, defaultOpen = true, badge, 
           display: 'flex', alignItems: 'center', gap: 12,
           transition: 'background 0.14s ease, color 0.14s ease',
         }}
-        onMouseEnter={e => { e.currentTarget.style.background = 'rgba(15,15,19,0.04)'; e.currentTarget.style.color = C.text1 }}
-        onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = anyChildActive ? C.text1 : C.text2 }}
+        onMouseEnter={e => { e.currentTarget.style.background = SHELL.hoverBg; e.currentTarget.style.color = SHELL.text1 }}
+        onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = anyChildActive ? SHELL.text1 : SHELL.text2 }}
       >
         <span style={{
           display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
           width: NAV_ICON_COL, height: NAV_ICON_COL, flexShrink: 0,
-          color: anyChildActive ? C.red : '#9da0aa',
+          color: anyChildActive ? C.red : SHELL.iconIdle,
         }}>{NAV_ICONS[label]}</span>
         <span style={{ flex: 1 }}>{label}</span>
         {typeof badge === 'number' && badge > 0 && (
@@ -3957,7 +3987,7 @@ function NavGroup({ label, children, anyChildActive, defaultOpen = true, badge, 
         <svg
           width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"
           style={{
-            color: '#9da0aa',
+            color: SHELL.iconIdle,
             transform: open ? 'rotate(180deg)' : 'rotate(0deg)',
             transition: 'transform 0.2s ease',
           }}
@@ -3973,7 +4003,7 @@ function NavGroup({ label, children, anyChildActive, defaultOpen = true, badge, 
             position: 'absolute',
             left: NAV_GUTTER + NAV_PAD_X + (NAV_ICON_COL / 2),
             top: 4, bottom: 6,
-            width: 1, background: 'rgba(15,15,19,0.08)',
+            width: 1, background: SHELL.hair,
           }}/>
           {children}
         </div>
@@ -4008,10 +4038,10 @@ function ChatNav({ nav, recent, activeId, onNew, onOpen }) {
           width: `calc(100% - ${NAV_GUTTER * 2}px)`,
           display: 'flex', alignItems: 'center',
           borderRadius: 10,
-          background: active ? 'rgba(229,37,27,0.07)' : 'transparent',
+          background: active ? SHELL.activeBg : 'transparent',
           transition: 'background 0.14s ease',
         }}
-        onMouseEnter={e => { if (!active) e.currentTarget.style.background = 'rgba(15,15,19,0.04)' }}
+        onMouseEnter={e => { if (!active) e.currentTarget.style.background = SHELL.hoverBg }}
         onMouseLeave={e => { if (!active) e.currentTarget.style.background = 'transparent' }}
       >
         {active && (
@@ -4024,12 +4054,12 @@ function ChatNav({ nav, recent, activeId, onNew, onOpen }) {
             flex: 1, minWidth: 0, display: 'flex', alignItems: 'center', gap: 12,
             background: 'transparent', border: 'none', cursor: 'pointer',
             padding: `9px 4px 9px ${NAV_PAD_X}px`,
-            color: active ? C.text1 : C.text2,
+            color: active ? SHELL.text1 : SHELL.text2,
             fontWeight: active ? 600 : 500, fontSize: 14, letterSpacing: '-0.01em',
             fontFamily: "'Inter', system-ui, sans-serif", textAlign: 'left',
           }}
         >
-          <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: NAV_ICON_COL, height: NAV_ICON_COL, flexShrink: 0, color: active ? C.red : '#9da0aa' }}>{NAV_ICONS['Chat']}</span>
+          <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: NAV_ICON_COL, height: NAV_ICON_COL, flexShrink: 0, color: active ? C.red : SHELL.iconIdle }}>{NAV_ICONS['Chat']}</span>
           <span style={{ flex: 1 }}>Chat</span>
         </button>
         <button
@@ -4038,7 +4068,7 @@ function ChatNav({ nav, recent, activeId, onNew, onOpen }) {
           style={{
             display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
             background: 'transparent', border: 'none', cursor: 'pointer',
-            padding: `9px ${NAV_PAD_X}px 9px 6px`, color: '#9da0aa',
+            padding: `9px ${NAV_PAD_X}px 9px 6px`, color: SHELL.iconIdle,
           }}
         >
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" style={{ transform: open ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s ease' }}><polyline points="6 9 12 15 18 9"/></svg>
@@ -4046,9 +4076,9 @@ function ChatNav({ nav, recent, activeId, onNew, onOpen }) {
       </div>
       {open && (
         <div style={{ position: 'relative', paddingTop: 2, paddingBottom: 4 }}>
-          <span aria-hidden style={{ position: 'absolute', left: NAV_GUTTER + NAV_PAD_X + (NAV_ICON_COL / 2), top: 4, bottom: 6, width: 1, background: 'rgba(15,15,19,0.08)' }}/>
+          <span aria-hidden style={{ position: 'absolute', left: NAV_GUTTER + NAV_PAD_X + (NAV_ICON_COL / 2), top: 4, bottom: 6, width: 1, background: SHELL.hair }}/>
           {recent.length === 0 ? (
-            <p style={{ margin: `2px ${NAV_GUTTER}px 4px ${NAV_GUTTER + SUB_INDENT}px`, padding: '6px 10px', fontSize: 12.5, color: C.text3, fontFamily: "'Inter', system-ui, sans-serif" }}>No chats yet</p>
+            <p style={{ margin: `2px ${NAV_GUTTER}px 4px ${NAV_GUTTER + SUB_INDENT}px`, padding: '6px 10px', fontSize: 12.5, color: SHELL.text3, fontFamily: "'Inter', system-ui, sans-serif" }}>No chats yet</p>
           ) : recent.map(c => {
             const on = nav === 'Chat' && c.id === activeId
             return (
@@ -4059,8 +4089,8 @@ function ChatNav({ nav, recent, activeId, onNew, onOpen }) {
                   position: 'relative',
                   margin: `1px ${NAV_GUTTER}px 1px ${NAV_GUTTER + SUB_INDENT}px`,
                   width: `calc(100% - ${NAV_GUTTER * 2 + SUB_INDENT}px)`,
-                  background: on ? 'rgba(229,37,27,0.07)' : 'transparent',
-                  color: on ? C.text1 : C.text2,
+                  background: on ? SHELL.activeBg : 'transparent',
+                  color: on ? SHELL.text1 : SHELL.text2,
                   fontWeight: on ? 600 : 450, fontSize: 13.5, letterSpacing: '-0.01em',
                   border: 'none', padding: '7px 10px', borderRadius: 8,
                   textAlign: 'left', cursor: 'pointer',
@@ -4068,10 +4098,10 @@ function ChatNav({ nav, recent, activeId, onNew, onOpen }) {
                   display: 'flex', alignItems: 'center', gap: 9,
                   transition: 'background 0.14s ease, color 0.14s ease',
                 }}
-                onMouseEnter={e => { if (!on) { e.currentTarget.style.background = 'rgba(15,15,19,0.04)'; e.currentTarget.style.color = C.text1 } }}
-                onMouseLeave={e => { if (!on) { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = C.text2 } }}
+                onMouseEnter={e => { if (!on) { e.currentTarget.style.background = SHELL.hoverBg; e.currentTarget.style.color = SHELL.text1 } }}
+                onMouseLeave={e => { if (!on) { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = SHELL.text2 } }}
               >
-                <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 16, height: 16, flexShrink: 0, color: on ? C.red : '#9da0aa' }}>
+                <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 16, height: 16, flexShrink: 0, color: on ? C.red : SHELL.iconIdle }}>
                   <MessageCircle size={14} strokeWidth={1.9} />
                 </span>
                 <span style={{ flex: 1, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{c.title || 'Untitled chat'}</span>
@@ -4151,11 +4181,11 @@ function WhatsNewCard({ channelId, onNavigate }) {
   return (
     <div style={{
       position: 'relative',
-      background: '#ffffff',
-      border: `1px solid ${C.border}`,
+      background: SHELL.cardBg,
+      border: `1px solid ${SHELL.hair}`,
       borderRadius: 11,
       padding: '13px 14px 14px 14px',
-      boxShadow: '0 1px 2px rgba(0,0,0,0.025), inset 0 1px 0 rgba(255,255,255,0.7)',
+      boxShadow: SHELL.cardShadow,
       fontFamily: "'Inter', system-ui, sans-serif",
     }}>
       {/* Dismiss × */}
@@ -4167,13 +4197,13 @@ function WhatsNewCard({ channelId, onNavigate }) {
           position: 'absolute', top: 8, right: 8,
           width: 22, height: 22, borderRadius: 6,
           border: 'none', background: 'transparent',
-          color: 'rgba(10,10,15,0.40)',
+          color: SHELL.text3,
           cursor: 'pointer',
           display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
           transition: 'background 0.14s ease, color 0.14s ease',
         }}
-        onMouseEnter={e => { e.currentTarget.style.background = 'rgba(15,15,19,0.06)'; e.currentTarget.style.color = '#0a0a0f' }}
-        onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'rgba(10,10,15,0.40)' }}
+        onMouseEnter={e => { e.currentTarget.style.background = SHELL.hoverBg; e.currentTarget.style.color = SHELL.text1 }}
+        onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = SHELL.text3 }}
       >
         <XIcon size={12} strokeWidth={2} />
       </button>
@@ -4199,7 +4229,7 @@ function WhatsNewCard({ channelId, onNavigate }) {
             What's new
           </p>
           <p style={{
-            fontSize: 13.5, fontWeight: 600, color: '#0a0a0f',
+            fontSize: 13.5, fontWeight: 600, color: SHELL.text1,
             letterSpacing: '-0.012em', lineHeight: 1.35,
             paddingRight: 22,  // clear the dismiss x
             marginBottom: 5,
@@ -4207,7 +4237,7 @@ function WhatsNewCard({ channelId, onNavigate }) {
             {feature.headline}
           </p>
           <p style={{
-            fontSize: 12.5, fontWeight: 450, color: 'rgba(10,10,15,0.58)',
+            fontSize: 12.5, fontWeight: 450, color: SHELL.text2,
             letterSpacing: '-0.01em', lineHeight: 1.55,
             marginBottom: 10,
           }}>
@@ -4225,7 +4255,7 @@ function WhatsNewCard({ channelId, onNavigate }) {
               letterSpacing: '-0.01em',
               fontFamily: 'inherit',
             }}
-            onMouseEnter={e => { e.currentTarget.style.color = '#a50f07' }}
+            onMouseEnter={e => { e.currentTarget.style.color = '#ff5a4f' }}
             onMouseLeave={e => { e.currentTarget.style.color = '#e5251b' }}
           >
             {feature.cta}
@@ -4289,14 +4319,14 @@ function ChannelSwitcher({ channels, channelsAllowed, canAddMore, currentChannel
         }}
       >
         {current.channel_thumbnail
-          ? <img src={current.channel_thumbnail} alt="" style={{ width: 36, height: 36, borderRadius: '50%', objectFit: 'cover', flexShrink: 0, border: '1.5px solid rgba(0,0,0,0.08)' }} />
-          : <div style={{ width: 36, height: 36, borderRadius: '50%', background: '#fef2f2', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 600, color: '#e5251b', flexShrink: 0 }}>{(current.channel_name || '?')[0].toUpperCase()}</div>
+          ? <img src={current.channel_thumbnail} alt="" style={{ width: 36, height: 36, borderRadius: '50%', objectFit: 'cover', flexShrink: 0, border: `1.5px solid ${SHELL.hair}` }} />
+          : <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'rgba(229,37,27,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 600, color: '#e5251b', flexShrink: 0 }}>{(current.channel_name || '?')[0].toUpperCase()}</div>
         }
         <div style={{ minWidth: 0, flex: 1 }}>
-          <p style={{ fontSize: 14, fontWeight: 600, color: '#111114', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', letterSpacing: '-0.2px' }}>{current.channel_name}</p>
-          <p style={{ fontSize: 12, color: '#6b7280', marginTop: 2 }}>{fmtSubs(current.subscribers)} subscribers</p>
+          <p style={{ fontSize: 14, fontWeight: 600, color: SHELL.text1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', letterSpacing: '-0.2px' }}>{current.channel_name}</p>
+          <p style={{ fontSize: 12, color: SHELL.text2, marginTop: 2 }}>{fmtSubs(current.subscribers)} subscribers</p>
         </div>
-        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#9ca3af" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }}>
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke={SHELL.iconIdle} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }}>
           <polyline points="2,4 6,8 10,4" />
         </svg>
       </div>
@@ -4305,10 +4335,10 @@ function ChannelSwitcher({ channels, channelsAllowed, canAddMore, currentChannel
       {open && (
         <div style={{
           position: 'absolute', top: 'calc(100% + 8px)', left: 0, right: 0,
-          background: '#ffffff',
-          border: '0.5px solid rgba(0,0,0,0.1)',
+          background: SHELL.cardBg,
+          border: `0.5px solid ${SHELL.hair}`,
           borderRadius: 12,
-          boxShadow: '0 4px 16px rgba(0,0,0,0.12)',
+          boxShadow: SHELL.popShadow,
           padding: 6,
           zIndex: 100,
         }}>
@@ -4323,33 +4353,33 @@ function ChannelSwitcher({ channels, channelsAllowed, canAddMore, currentChannel
                 background: 'transparent',
                 transition: 'background 0.15s',
               }}
-              onMouseEnter={e => { if (!ch.is_current) e.currentTarget.style.background = '#f9fafb' }}
+              onMouseEnter={e => { if (!ch.is_current) e.currentTarget.style.background = SHELL.hoverBg }}
               onMouseLeave={e => { e.currentTarget.style.background = 'transparent' }}
             >
               {ch.channel_thumbnail
                 ? <img src={ch.channel_thumbnail} alt="" style={{ width: 28, height: 28, borderRadius: '50%', objectFit: 'cover', flexShrink: 0 }} />
-                : <div style={{ width: 28, height: 28, borderRadius: '50%', background: '#fef2f2', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: 600, color: '#e5251b', flexShrink: 0 }}>{(ch.channel_name || '?')[0].toUpperCase()}</div>
+                : <div style={{ width: 28, height: 28, borderRadius: '50%', background: 'rgba(229,37,27,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: 600, color: '#e5251b', flexShrink: 0 }}>{(ch.channel_name || '?')[0].toUpperCase()}</div>
               }
               <div style={{ flex: 1, minWidth: 0 }}>
-                <p style={{ fontSize: 14, fontWeight: 500, color: '#111114', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{ch.channel_name}</p>
-                <p style={{ fontSize: 12, color: '#9ca3af' }}>{fmtSubs(ch.subscribers)} subscribers</p>
+                <p style={{ fontSize: 14, fontWeight: 500, color: SHELL.text1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{ch.channel_name}</p>
+                <p style={{ fontSize: 12, color: SHELL.text2 }}>{fmtSubs(ch.subscribers)} subscribers</p>
               </div>
               {ch.is_current
                 ? <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#16a34a', flexShrink: 0 }} />
                 : ch.channel_score > 0
-                  ? <span style={{ fontSize: 12, fontWeight: 500, color: scoreColor(ch.channel_score), background: '#f9fafb', border: '0.5px solid rgba(0,0,0,0.08)', borderRadius: 20, padding: '2px 7px', flexShrink: 0 }}>{ch.channel_score}</span>
+                  ? <span style={{ fontSize: 12, fontWeight: 500, color: scoreColor(ch.channel_score), background: SHELL.hoverBg, border: `0.5px solid ${SHELL.hair}`, borderRadius: 20, padding: '2px 7px', flexShrink: 0 }}>{ch.channel_score}</span>
                   : null
               }
             </div>
           ))}
 
-          <div style={{ height: '0.5px', background: 'rgba(0,0,0,0.06)', margin: '4px 4px' }} />
+          <div style={{ height: '0.5px', background: SHELL.hair, margin: '4px 4px' }} />
 
           {canAddMore
             ? <div
                 onClick={() => { setOpen(false); window.location.href = loginUrl() }}
                 style={{ padding: '8px 10px', borderRadius: 8, cursor: 'pointer', transition: 'background 0.15s' }}
-                onMouseEnter={e => { e.currentTarget.style.background = '#f9fafb' }}
+                onMouseEnter={e => { e.currentTarget.style.background = SHELL.hoverBg }}
                 onMouseLeave={e => { e.currentTarget.style.background = 'transparent' }}
               >
                 <span style={{ fontSize: 14, color: '#e5251b', fontWeight: 500 }}>+ Connect another channel</span>
@@ -4357,10 +4387,10 @@ function ChannelSwitcher({ channels, channelsAllowed, canAddMore, currentChannel
             : <div
                 onClick={() => { setOpen(false); window.location.href = '/#pricing' }}
                 style={{ padding: '8px 10px', borderRadius: 8, cursor: 'pointer', transition: 'background 0.15s' }}
-                onMouseEnter={e => { e.currentTarget.style.background = '#f9fafb' }}
+                onMouseEnter={e => { e.currentTarget.style.background = SHELL.hoverBg }}
                 onMouseLeave={e => { e.currentTarget.style.background = 'transparent' }}
               >
-                <span style={{ fontSize: 14, color: '#9ca3af' }}>Upgrade to connect more channels</span>
+                <span style={{ fontSize: 14, color: SHELL.text2 }}>Upgrade to connect more channels</span>
               </div>
           }
         </div>
@@ -4910,19 +4940,19 @@ export default function Dashboard() {
       {/* ══ SIDEBAR ══════════════════════════════════════════════════════ */}
       <aside style={{
         width: 320, flexShrink: 0,
-        background: '#ffffff',
-        borderRight: `1px solid ${C.border}`,
+        background: SHELL.bg,
+        borderRight: `1px solid ${SHELL.hair}`,
         position: 'sticky', top: 0, height: '100vh',
         display: 'flex', flexDirection: 'column', overflow: 'hidden',
         zIndex: 10,
       }}>
 
         {/* Brand */}
-        <a href="/" style={{ padding: '22px 22px 18px', display: 'flex', alignItems: 'center', gap: 9, textDecoration: 'none', flexShrink: 0, borderBottom: `1px solid ${C.border}` }}>
+        <a href="/" style={{ padding: '22px 22px 18px', display: 'flex', alignItems: 'center', gap: 9, textDecoration: 'none', flexShrink: 0, borderBottom: `1px solid ${SHELL.hair}` }}>
           <Logo size={26} />
           <span style={{
             fontSize: 18, fontWeight: 800, letterSpacing: '-0.65px', lineHeight: 1,
-            background: 'linear-gradient(180deg, #0f0f13 0%, #2a2a35 100%)',
+            background: 'linear-gradient(180deg, #ffffff 0%, #c9c9d2 100%)',
             WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
             backgroundClip: 'text', color: 'transparent',
           }}>YTGrowth</span>
@@ -4935,10 +4965,11 @@ export default function Dashboard() {
         {data && (
           <div style={{ padding: '16px 22px', flexShrink: 0 }}>
            <div style={{
-             background: '#fafafc',
-             border: `1px solid ${C.border}`,
+             background: SHELL.cardBg,
+             border: `1px solid ${SHELL.hair}`,
              borderRadius: 12,
              padding: '15px 16px 14px',
+             boxShadow: SHELL.cardShadow,
            }}>
             {/* Avatar + name */}
             {channels.length >= 2
@@ -4953,12 +4984,12 @@ export default function Dashboard() {
               : (
                 <div style={{ display: 'flex', alignItems: 'center', gap: 13, marginBottom: 16 }}>
                   {data.channel.thumbnail
-                    ? <img src={data.channel.thumbnail} alt="" style={{ width: 42, height: 42, borderRadius: '50%', objectFit: 'cover', flexShrink: 0, boxShadow: `0 0 0 2px ${C.border}` }}/>
-                    : <div style={{ width: 42, height: 42, borderRadius: '50%', background: C.redBg, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, fontWeight: 700, color: C.red, flexShrink: 0, boxShadow: `0 0 0 2px ${C.border}` }}>{data.channel.channel_name[0].toUpperCase()}</div>
+                    ? <img src={data.channel.thumbnail} alt="" style={{ width: 42, height: 42, borderRadius: '50%', objectFit: 'cover', flexShrink: 0, boxShadow: `0 0 0 2px ${SHELL.hair}` }}/>
+                    : <div style={{ width: 42, height: 42, borderRadius: '50%', background: 'rgba(229,37,27,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, fontWeight: 700, color: C.red, flexShrink: 0, boxShadow: `0 0 0 2px ${SHELL.hair}` }}>{data.channel.channel_name[0].toUpperCase()}</div>
                   }
                   <div style={{ minWidth: 0, flex: 1 }}>
-                    <p style={{ fontSize: 14.5, fontWeight: 700, color: C.text1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', letterSpacing: '-0.25px', lineHeight: 1.2 }}>{data.channel.channel_name}</p>
-                    <p style={{ fontSize: 12, color: C.text3, marginTop: 3, fontVariantNumeric: 'tabular-nums' }}>{fmtNum(data.channel.subscribers)} subs</p>
+                    <p style={{ fontSize: 14.5, fontWeight: 700, color: SHELL.text1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', letterSpacing: '-0.25px', lineHeight: 1.2 }}>{data.channel.channel_name}</p>
+                    <p style={{ fontSize: 12, color: SHELL.text2, marginTop: 3, fontVariantNumeric: 'tabular-nums' }}>{fmtNum(data.channel.subscribers)} subs</p>
                   </div>
                 </div>
               )
@@ -4966,13 +4997,13 @@ export default function Dashboard() {
             {/* Health score bar */}
             <div>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 8 }}>
-                <span style={{ fontSize: 10.5, fontWeight: 700, color: C.text3, letterSpacing: '0.09em', textTransform: 'uppercase' }}>Channel health</span>
+                <span style={{ fontSize: 10.5, fontWeight: 700, color: SHELL.text2, letterSpacing: '0.09em', textTransform: 'uppercase' }}>Channel health</span>
                 <span style={{ display: 'inline-flex', alignItems: 'baseline', gap: 2, fontVariantNumeric: 'tabular-nums' }}>
                   <span style={{ fontSize: 16, fontWeight: 800, color: scoreColor(score), letterSpacing: '-0.4px', lineHeight: 1 }}>{score}</span>
-                  <span style={{ fontSize: 10.5, fontWeight: 600, color: 'rgba(149,149,164,0.6)' }}>/100</span>
+                  <span style={{ fontSize: 10.5, fontWeight: 600, color: SHELL.text3 }}>/100</span>
                 </span>
               </div>
-              <div style={{ background: '#eaeaef', borderRadius: 99, height: 6, overflow: 'hidden' }}>
+              <div style={{ background: SHELL.track, borderRadius: 99, height: 6, overflow: 'hidden' }}>
                 <div style={{
                   width: `${score}%`, height: '100%', background: scoreColor(score), borderRadius: 99,
                   transition: 'width 1.2s cubic-bezier(0.34,1.56,0.64,1)',
@@ -5040,7 +5071,7 @@ export default function Dashboard() {
         {data && (
           <div style={{
             padding: '14px 16px 12px',
-            borderTop: `1px solid ${C.border}`,
+            borderTop: `1px solid ${SHELL.hair}`,
             flexShrink: 0,
             display: 'flex', flexDirection: 'column', gap: 10,
           }}>
@@ -5051,7 +5082,7 @@ export default function Dashboard() {
             <UsageBar
               channelId={data.channel?.channel_id}
               email={data.channel?.email}
-              dark={false}
+              dark={true}
               onPlan={setBillingPlan}
               onUsage={setUsagePct}
             />
@@ -5065,15 +5096,15 @@ export default function Dashboard() {
                 style={{
                   display: 'inline-flex', alignItems: 'center', gap: 6,
                   padding: '6px 9px', borderRadius: 7,
-                  background: nav === 'Referrals' ? 'rgba(229,37,27,0.07)' : 'transparent',
+                  background: nav === 'Referrals' ? SHELL.activeBg : 'transparent',
                   border: 'none', cursor: 'pointer',
-                  color: nav === 'Referrals' ? C.red : C.text3,
+                  color: nav === 'Referrals' ? C.red : SHELL.text2,
                   fontSize: 12, fontWeight: 500, letterSpacing: '-0.01em',
                   fontFamily: 'inherit',
                   transition: 'color 0.14s ease, background 0.14s ease',
                 }}
-                onMouseEnter={e => { if (nav !== 'Referrals') { e.currentTarget.style.color = C.text2; e.currentTarget.style.background = 'rgba(15,15,19,0.04)' } }}
-                onMouseLeave={e => { if (nav !== 'Referrals') { e.currentTarget.style.color = C.text3; e.currentTarget.style.background = 'transparent' } }}
+                onMouseEnter={e => { if (nav !== 'Referrals') { e.currentTarget.style.color = SHELL.text1; e.currentTarget.style.background = SHELL.hoverBg } }}
+                onMouseLeave={e => { if (nav !== 'Referrals') { e.currentTarget.style.color = SHELL.text2; e.currentTarget.style.background = 'transparent' } }}
               >
                 <Gift size={13} strokeWidth={1.75} />
                 <span>Refer & earn</span>
@@ -5083,12 +5114,12 @@ export default function Dashboard() {
                 style={{
                   display: 'inline-flex', alignItems: 'center', gap: 6,
                   padding: '6px 9px', borderRadius: 7,
-                  color: C.text3, fontSize: 12, fontWeight: 500, letterSpacing: '-0.01em',
+                  color: SHELL.text2, fontSize: 12, fontWeight: 500, letterSpacing: '-0.01em',
                   textDecoration: 'none',
                   transition: 'color 0.14s ease, background 0.14s ease',
                 }}
-                onMouseEnter={e => { e.currentTarget.style.color = C.text2; e.currentTarget.style.background = 'rgba(15,15,19,0.04)' }}
-                onMouseLeave={e => { e.currentTarget.style.color = C.text3; e.currentTarget.style.background = 'transparent' }}
+                onMouseEnter={e => { e.currentTarget.style.color = SHELL.text1; e.currentTarget.style.background = SHELL.hoverBg }}
+                onMouseLeave={e => { e.currentTarget.style.color = SHELL.text2; e.currentTarget.style.background = 'transparent' }}
               >
                 <span>Sign out</span>
                 <LogOut size={13} strokeWidth={1.75} />
