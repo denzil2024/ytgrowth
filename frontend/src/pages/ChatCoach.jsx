@@ -78,7 +78,7 @@ const FONT_MONO  = "'Geist Mono', ui-monospace, SFMono-Regular, monospace"
        text ramp, and brand red used in exactly two places: the enabled
        send button and the active history-row marker. Nowhere else. ─── */
 const C = {
-  base:        '#0f0f11',                 // dark panel base
+  base:        '#0e0e10',                 // dark panel base (locked content shade)
   rail:        '#131316',                 // history rail (one step off base)
   raised:      '#18181b',                 // composer, user chip, avatar
   raisedHover: '#1f1f23',                 // hover on raised elements

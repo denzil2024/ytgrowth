@@ -5014,8 +5014,8 @@ export default function Dashboard() {
           const darkBar = nav === 'Chat'
           return (
         <div style={{
-          borderBottom: darkBar ? '1px solid rgba(255,255,255,0.06)' : `1px solid ${C.border}`,
-          background: darkBar ? '#0a0a0c' : 'rgba(241,241,246,0.95)',
+          borderBottom: darkBar ? 'none' : `1px solid ${C.border}`,
+          background: darkBar ? '#0e0e10' : 'rgba(241,241,246,0.95)',
           backdropFilter: darkBar ? 'none' : 'blur(20px)',
           WebkitBackdropFilter: darkBar ? 'none' : 'blur(20px)',
           padding: '0 32px', height: 52,
