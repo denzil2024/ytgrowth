@@ -404,7 +404,7 @@ export default function FeaturePage({
             {bottomHeadline || 'Ready to see what your channel is missing?'}
           </h2>
           <p style={{ fontSize: isMobile ? 14 : 16, color: 'var(--ytg-text-2)', maxWidth: 480, margin: '0 auto 26px', lineHeight: 1.7 }}>
-            {bottomSub || 'Free to start. No credit card. 3 lifetime AI analyses on the house.'}
+            {bottomSub || 'Free to start. No credit card. 5 free AI analyses on the house.'}
           </p>
           <a href="/auth/login" className="ftr-btn ftr-btn-lg">{primaryCta} →</a>
         </div>

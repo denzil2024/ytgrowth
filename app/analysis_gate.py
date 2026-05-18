@@ -87,9 +87,12 @@ def check_and_deduct(channel_id: str, amount: int = 1) -> dict:
         billing_channel = _resolve_billing_channel(db, channel_id)
         sub = get_or_create_subscription(db, billing_channel)
 
-        # Auto-reset if reset_date has passed (for subscriptions & lifetime)
+        # Auto-reset if reset_date has passed — PAID plans only. Free plan is
+        # a 5-credit lifetime trial with no refill (reset_date is NULL for
+        # free rows post-2026-05-18). The plan guard is belt-and-suspenders
+        # in case a legacy free row still carries a stale reset_date.
         now = datetime.datetime.now(datetime.timezone.utc)
-        if sub.reset_date:
+        if sub.reset_date and (sub.plan or "free") != "free":
             reset = sub.reset_date
             if reset.tzinfo is None:
                 reset = reset.replace(tzinfo=datetime.timezone.utc)
@@ -169,18 +172,40 @@ def check_and_deduct(channel_id: str, amount: int = 1) -> dict:
 # single run per monthly cycle (cycle = subscription.reset_date window).
 # ───────────────────────────────────────────────────────────────────────────
 
-# Features the free tier cannot access at all. Route returns 403 immediately.
-FULLY_GATED_FEATURES = {"outliers", "seo", "video_optimize", "video_ideas_refresh"}
+# Free trial model (2026-05-18):
+#
+# A free user gets a 5-credit lifetime pool (no monthly refill). Those
+# credits can ONLY be spent on the three converter features below. Spending
+# is enforced by check_and_deduct() in the route, NOT here — this gate only
+# decides "is this feature reachable on the free plan at all". Outliers
+# charges 3 of the 5, Competitors and SEO Studio charge 1 each.
+TRIAL_FEATURES = {"outliers", "seo", "competitors"}
 
-# Features the free tier can run exactly once per cycle. After the first
-# successful run, the route returns 403 until reset_date moves forward.
-ONE_RUN_FEATURES = {"thumbnail_score", "keywords", "competitors"}
+# Everything else is paid-only on the free plan. The route returns a
+# locked response immediately, no credit touched. Channel Audit is NOT in
+# either set — it is free, off-pool, and rate-limited separately in
+# routers/auth.py (signup + manual button, max once / 7 days).
+PAID_ONLY_FEATURES = {
+    "keywords", "thumbnail_score", "autopsy",
+    "video_optimize", "video_ideas_refresh",
+}
+
+# Back-compat aliases. Old callers / tests may still import these names.
+# Under the new model every non-trial gated feature is simply paid-only;
+# the per-cycle "one run" concept no longer exists.
+FULLY_GATED_FEATURES = PAID_ONLY_FEATURES
+ONE_RUN_FEATURES: set[str] = set()
 
 
 def _apply_reset_if_overdue(db, sub):
-    """Shared helper — rolls the subscription over if reset_date has passed."""
+    """Shared helper — rolls a PAID subscription over if reset_date passed.
+
+    Free plan is a no-refill lifetime trial, so it is never reset here. The
+    plan guard protects legacy free rows that may still carry a stale
+    reset_date from before the 2026-05-18 model change.
+    """
     now = datetime.datetime.now(datetime.timezone.utc)
-    if sub.reset_date:
+    if sub.reset_date and (sub.plan or "free") != "free":
         reset = sub.reset_date
         if reset.tzinfo is None:
             reset = reset.replace(tzinfo=datetime.timezone.utc)
@@ -195,22 +220,22 @@ def check_free_tier_access(channel_id: str, feature: str) -> dict:
     """
     Feature-level access control. Call this BEFORE any credit deduction.
 
-    Returns:
+    New trial model (2026-05-18):
       {"allowed": True}
-        — paid plan, or first run of a one-run feature this cycle
-        — side-effect for one-run features: records usage in
-          FreeTierFeatureUsage so subsequent calls return "used"
-      {"allowed": False, "reason": "locked",   "feature": ...}
-        — feature is fully gated on free tier
-      {"allowed": False, "reason": "used",     "feature": ...}
-        — one-run feature already used this cycle
+        — paid plan (pays via credits), OR
+        — free plan + a TRIAL feature (the 5-credit pool is enforced by the
+          route's subsequent check_and_deduct call, not here)
+      {"allowed": False, "reason": "locked", "feature": ...}
+        — free plan + a paid-only feature
+
+    No side effects. The old FreeTierFeatureUsage one-run bookkeeping is
+    gone: trial features are metered purely by the credit pool now.
     """
     if _BYPASS:
         return {"allowed": True}
 
     db = SessionLocal()
     try:
-        from database.models import FreeTierFeatureUsage
         # Pool free-tier state across all sibling channels on the same
         # Google account (see _resolve_billing_channel).
         billing_channel = _resolve_billing_channel(db, channel_id)
@@ -220,34 +245,14 @@ def check_free_tier_access(channel_id: str, feature: str) -> dict:
         if (sub.plan or "free") != "free":
             return {"allowed": True}
 
-        _apply_reset_if_overdue(db, sub)
-        cycle_reset = sub.reset_date
-
-        if feature in FULLY_GATED_FEATURES:
-            return {"allowed": False, "reason": "locked", "feature": feature}
-
-        if feature in ONE_RUN_FEATURES:
-            existing = (
-                db.query(FreeTierFeatureUsage)
-                  .filter(
-                      FreeTierFeatureUsage.channel_id == billing_channel,
-                      FreeTierFeatureUsage.feature == feature,
-                      FreeTierFeatureUsage.cycle_reset == cycle_reset,
-                  )
-                  .first()
-            )
-            if existing:
-                return {"allowed": False, "reason": "used", "feature": feature}
-
-            # Record the one-shot usage atomically with the allow.
-            db.add(FreeTierFeatureUsage(
-                channel_id=billing_channel,
-                feature=feature,
-                cycle_reset=cycle_reset,
-                used_at=datetime.datetime.now(datetime.timezone.utc),
-            ))
-            db.commit()
+        # Free plan.
+        if feature in TRIAL_FEATURES:
+            # Reachable. The route's check_and_deduct() enforces the
+            # 5-credit lifetime cap and charges (Outliers = 3, others = 1).
             return {"allowed": True}
+
+        if feature in PAID_ONLY_FEATURES:
+            return {"allowed": False, "reason": "locked", "feature": feature}
 
         # Unknown feature id — default open so misuse of this helper can't
         # accidentally block unrelated endpoints.
@@ -277,32 +282,20 @@ def peek_free_tier_access(channel_id: str, feature: str) -> dict:
 
     db = SessionLocal()
     try:
-        from database.models import FreeTierFeatureUsage
         billing_channel = _resolve_billing_channel(db, channel_id)
         sub = get_or_create_subscription(db, billing_channel)
 
         if (sub.plan or "free") != "free":
             return {"allowed": True}
 
-        _apply_reset_if_overdue(db, sub)
-        cycle_reset = sub.reset_date
-
-        if feature in FULLY_GATED_FEATURES:
-            return {"allowed": False, "reason": "locked", "feature": feature}
-
-        if feature in ONE_RUN_FEATURES:
-            existing = (
-                db.query(FreeTierFeatureUsage)
-                  .filter(
-                      FreeTierFeatureUsage.channel_id == billing_channel,
-                      FreeTierFeatureUsage.feature == feature,
-                      FreeTierFeatureUsage.cycle_reset == cycle_reset,
-                  )
-                  .first()
-            )
-            if existing:
-                return {"allowed": False, "reason": "used", "feature": feature}
+        # Free plan. Mirror check_free_tier_access exactly, minus side
+        # effects. Credit exhaustion is surfaced separately by the usage
+        # bar / the 402 from check_and_deduct, not by this map.
+        if feature in TRIAL_FEATURES:
             return {"allowed": True}
+
+        if feature in PAID_ONLY_FEATURES:
+            return {"allowed": False, "reason": "locked", "feature": feature}
 
         return {"allowed": True}
 

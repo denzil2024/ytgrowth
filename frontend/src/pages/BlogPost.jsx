@@ -890,7 +890,7 @@ export default function BlogPost() {
               Try YTGrowth free →
             </Link>
             <p style={{ fontSize: 12, color: 'var(--ytg-text-3)', marginTop: isMobile ? 10 : 14, position: 'relative' }}>
-              3 free analyses · No credit card required
+              5 free analyses · No credit card required
             </p>
           </div>
         </div>

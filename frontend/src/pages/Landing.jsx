@@ -1043,7 +1043,7 @@ export default function Landing() {
 
           {/* Trust row. Small green-check pills, mobile-wraps naturally */}
           <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: isMobile ? 10 : 18, rowGap: 10 }}>
-            {['No credit card required', '3 free analyses on signup', 'Cancel anytime'].map((t, i) => (
+            {['No credit card required', '5 free analyses on signup', 'Cancel anytime'].map((t, i) => (
               <div key={i} style={{ display: 'inline-flex', alignItems: 'center', gap: 7, fontSize: 12.5, fontWeight: 500, color: 'var(--ytg-text-3)', letterSpacing: '-0.1px' }}>
                 <svg width="13" height="13" viewBox="0 0 16 16" fill="none" style={{ flexShrink: 0 }}>
                   <circle cx="8" cy="8" r="7" fill="rgba(22,163,74,0.11)" stroke="rgba(22,163,74,0.28)" strokeWidth="1"/>
@@ -1759,13 +1759,13 @@ export default function Landing() {
               <div className="ytg-pricing-card">
                 <p style={{ fontSize: 12, fontWeight: 700, color: 'var(--ytg-text-3)', marginBottom: 10, textTransform: 'uppercase', letterSpacing: '0.07em' }}>Free</p>
                 <p style={{ fontWeight: 800, fontSize: 46, letterSpacing: '-2px', color: 'var(--ytg-text)', lineHeight: 1, marginBottom: 4 }}>$0</p>
-                <p style={{ fontSize: 14, color: 'var(--ytg-text-3)', marginBottom: 4 }}>Forever free</p>
-                <p style={{ fontSize: 12, color: 'var(--ytg-text-4)', marginBottom: 22 }}>For trying YTGrowth risk-free</p>
-                {['Full channel audit (1 channel)', '3 lifetime AI analyses', 'SEO Studio (limited)', 'Keyword Explorer (view only)', 'Thumbnail IQ (limited credits)'].map((f, i) => (
+                <p style={{ fontSize: 14, color: 'var(--ytg-text-3)', marginBottom: 4 }}>5 free analyses</p>
+                <p style={{ fontSize: 12, color: 'var(--ytg-text-4)', marginBottom: 22 }}>Full access to our best features, then upgrade</p>
+                {['Full channel audit (free, refresh weekly)', '5 analyses to spend on the tools below', 'Outliers — find proven winning videos', 'Competitor Analysis (1 rival)', 'SEO Studio (full)'].map((f, i) => (
                   <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}><Check /><span style={{ fontSize: 14, color: 'var(--ytg-text-2)' }}>{f}</span></div>
                 ))}
                 <div style={{ borderTop: '1px solid rgba(10,10,15,0.07)', marginTop: 6, paddingTop: 12 }}>
-                  <p style={{ fontSize: 12, color: 'var(--ytg-text-4)', lineHeight: 1.6, margin: 0 }}>Not included: Competitor Analysis, Title Optimizer, Video Ideas, weekly reports.</p>
+                  <p style={{ fontSize: 12, color: 'var(--ytg-text-4)', lineHeight: 1.6, margin: 0 }}>Paid only: Keyword Explorer, Thumbnail IQ, Title Optimizer, Video Ideas, Autopsy, weekly reports.</p>
                 </div>
                 <a href="/auth/login" className="ytg-btn-ghost" style={{ marginTop: 22, width: '100%', justifyContent: 'center', display: 'flex' }}>Start free</a>
               </div>

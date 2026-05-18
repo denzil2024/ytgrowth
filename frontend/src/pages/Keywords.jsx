@@ -1728,8 +1728,8 @@ export default function Keywords({ plan, freeTierFeatures }) {
         <UpsellModal
           open={creditsOut}
           onClose={() => setCreditsOut(false)}
-          title="You've used your free Keyword research"
-          description="Free accounts get one keyword research run per monthly cycle. Upgrade to keep researching, with YouTube autocomplete, related searches, and opportunity-ranked scoring every time."
+          title="Keyword research is a paid feature"
+          description="Keyword research isn't part of the free trial. Upgrade to unlock it, with YouTube autocomplete, related searches, and opportunity-ranked scoring every time."
           bullets={[
             'Unlimited keyword research runs every month',
             'Real search volume and competition via YouTube + SerpAPI',

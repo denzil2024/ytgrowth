@@ -157,11 +157,15 @@ def next_reset_date(from_dt: datetime.datetime = None) -> datetime.datetime:
 def get_or_create_subscription(db, channel_id: str, email: str = None) -> UserSubscription:
     sub = db.query(UserSubscription).filter_by(channel_id=channel_id).first()
     if not sub:
-        # Free plan defaults: 3 analyses per month, first reset 30 days out.
+        # Free plan = a 5-credit lifetime trial (2026-05-18). No monthly
+        # refill, so reset_date stays NULL. monthly_allowance defaults to 5
+        # at the column level. Paid activation (billing._activate) overrides
+        # allowance / used / reset_date explicitly, so seeding free here is
+        # safe for the upgrade path too.
         sub = UserSubscription(
             channel_id = channel_id,
             email      = email,
-            reset_date = next_reset_date(),
+            reset_date = None,
         )
         db.add(sub)
         db.flush()

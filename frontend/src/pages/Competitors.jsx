@@ -1884,8 +1884,8 @@ export default function Competitors({ plan, freeTierFeatures }) {
         <UpsellModal
           open={creditsOut}
           onClose={() => setCreditsOut(false)}
-          title="You've used your free Competitor analysis"
-          description="Free accounts get one competitor deep-dive per monthly cycle. Upgrade to keep analysing channels, their posting cadence, their title patterns, and the video ideas their audience is asking for."
+          title="You've used your free trial analyses"
+          description="Your free trial includes a limited number of analyses. Upgrade to keep analysing competitors, their posting cadence, their title patterns, and the video ideas their audience is asking for."
           bullets={[
             'Unlimited competitor deep-dives every month',
             'Full AI breakdown, posting timing, title patterns, playbook',

@@ -51,8 +51,8 @@ class UserSubscription(Base):
     email             = Column(String, nullable=True, index=True)
     plan              = Column(String,  default="free")   # free|solo|growth|agency|lifetime_solo|lifetime_growth|lifetime_agency
     billing_cycle     = Column(String,  default="none")   # monthly|annual|lifetime|none
-    monthly_allowance = Column(Integer, default=3)          # free tier: 3 analyses per month
-    monthly_used      = Column(Integer, default=0)        # resets on reset_date
+    monthly_allowance = Column(Integer, default=5)          # free tier: 5 lifetime trial credits (no refill)
+    monthly_used      = Column(Integer, default=0)        # paid: resets on reset_date; free: never resets
     pack_balance      = Column(Integer, default=0)        # never expires, stacks
     reset_date        = Column(DateTime, nullable=True)   # next monthly reset (set for free + paid)
     is_lifetime       = Column(Boolean,  default=False)
@@ -697,16 +697,22 @@ try:
         "CREATE INDEX IF NOT EXISTS ix_outliers_reports_channel_id ON outliers_reports (channel_id)",
         "CREATE INDEX IF NOT EXISTS ix_outliers_reports_query_lower ON outliers_reports (query_lower)",
         "CREATE UNIQUE INDEX IF NOT EXISTS uq_outliers_reports_channel_query_intent ON outliers_reports (channel_id, query_lower, confirmed_keyword_lower)",
-        "UPDATE user_subscriptions SET monthly_allowance = 5, monthly_used = 0 WHERE plan = 'free' AND monthly_allowance = 9999",
-        # Free plan change 2026-04-23: 5 lifetime → 3 per month with monthly reset
-        "UPDATE user_subscriptions SET monthly_allowance = 3 WHERE plan = 'free' AND monthly_allowance = 5",
-        # 2026-04-24: catch legacy free users whose plan string isn't literally
-        # 'free' (e.g. 'lifetime_free', 'trial', empty) but still sit on the
-        # old 5-allowance. Drop to 3 AND zero used so the UsageBar flips from
-        # stuck "5/5" → a fresh "0/3". Paid plans (solo/growth/agency +
-        # lifetime variants) all have much larger allowances, so this
-        # allowance=5 match is unique to legacy free rows.
-        "UPDATE user_subscriptions SET monthly_allowance = 3, monthly_used = 0 WHERE monthly_allowance = 5",
+        # Free plan change 2026-05-18: 3-per-month-with-reset → 5 lifetime,
+        # NO refill. Existing free users PRESERVE monthly_used (a user who
+        # spent 2 of 3 keeps 3 of 5 — deliberately not a fresh 5, that would
+        # cost real Anthropic money on a cohort that does not pay). Free is
+        # identified by allowance < 20: every paid tier (Solo 20, Growth 50,
+        # Agency 150, lifetime variants) sits at or above 20, so this is
+        # paid-safe and stays correct if new free-string values appear.
+        # Idempotent: once a free row is at allowance=5/reset_date=NULL it
+        # re-matches (5 < 20) and is set to the same values, monthly_used
+        # untouched. Replaces the contradictory 2026-04-23/24 lines that
+        # would otherwise flip allowance back to 3 and zero usage every boot.
+        "UPDATE user_subscriptions SET monthly_allowance = 5, reset_date = NULL WHERE monthly_allowance < 20",
+        # Clamp carried-over usage so a legacy heavy user (e.g. old 9999
+        # allowance, used 8) can't show a negative remaining. Floors the
+        # trial at "0 of 5 left", never below.
+        "UPDATE user_subscriptions SET monthly_used = 5 WHERE monthly_allowance = 5 AND monthly_used > 5",
         # Rename paddle_* → lemonsqueezy_* (legacy; kept idempotent)
         "ALTER TABLE user_subscriptions RENAME COLUMN paddle_subscription_id TO lemonsqueezy_subscription_id",
         "ALTER TABLE user_subscriptions RENAME COLUMN paddle_customer_id TO lemonsqueezy_customer_id",

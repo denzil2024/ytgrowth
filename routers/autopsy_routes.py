@@ -23,7 +23,7 @@ from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
 from routers.auth import get_session
-from app.analysis_gate import check_and_deduct
+from app.analysis_gate import check_and_deduct, check_free_tier_access
 from app.autopsy import analyze_video_autopsy
 from database.models import SessionLocal, VideoAutopsyCache
 
@@ -68,6 +68,16 @@ def analyze(body: AnalyzeBody, request: Request):
         return JSONResponse(
             {"error": f"Video must be at least {MIN_AGE_DAYS} days old before its metrics have stabilised."},
             status_code=400,
+        )
+
+    # Autopsy is paid-only on the free plan (2026-05-18 trial model). Free
+    # users get a locked response here, before any credit/Claude work. Paid
+    # users fall through to the credit gate as normal.
+    feat = check_free_tier_access(channel_id, "autopsy")
+    if not feat.get("allowed"):
+        return JSONResponse(
+            {"error": "locked", "feature": "autopsy", "reason": feat.get("reason", "locked")},
+            status_code=403,
         )
 
     # Charge 1 credit before the Claude call. Refund on any downstream failure.

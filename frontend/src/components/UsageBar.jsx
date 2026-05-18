@@ -58,6 +58,14 @@ export default function UsageBar({ channelId, email, dark = false, onPlan, onUsa
   const hasPack   = (usage.pack_balance ?? 0) > 0
   const showCTA   = (nearLimit || atLimit) && !hasPack
 
+  // Free plan is a 5-credit lifetime trial (no monthly refill), so the
+  // "Refills in N days" countdown is wrong for it — reset_date is NULL.
+  // Show trial-appropriate copy instead. Paid keeps the refill countdown.
+  const isFreePlan = (usage.plan || 'free') === 'free'
+  const refillText = isFreePlan
+    ? (atLimit ? 'Trial used up — upgrade for more' : 'Free trial · no monthly refill')
+    : refillLabel(usage.reset_date)
+
   // Canonical palette — matches Dashboard C tokens.
   const C = {
     red:    '#e5251b',
@@ -114,7 +122,7 @@ export default function UsageBar({ channelId, email, dark = false, onPlan, onUsa
         </div>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, marginTop: 6 }}>
           <span style={{ fontSize: 10.5, color: C.text3, fontWeight: 500 }}>
-            {refillLabel(usage.reset_date)}
+            {refillText}
           </span>
           {PackChip}
         </div>
@@ -160,7 +168,7 @@ export default function UsageBar({ channelId, email, dark = false, onPlan, onUsa
       </div>
 
       <div style={{ fontSize: 10.5, color: C.text3, fontWeight: 500 }}>
-        {refillLabel(usage.reset_date)}
+        {refillText}
       </div>
 
       <div style={{ display: 'flex', gap: 6, marginTop: 10 }}>
