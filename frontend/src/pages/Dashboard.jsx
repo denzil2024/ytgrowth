@@ -5130,13 +5130,20 @@ export default function Dashboard() {
       </aside>
 
       {/* ══ MAIN ═════════════════════════════════════════════════════════ */}
-      <div style={{ flex: 1, overflow: 'auto', background: C.bg }}>
+      {/* Dark routes: pages already on the dark design system. The main
+          column ground + topbar go dark for these so a dark page never
+          sits on a light gutter / under a white topbar band. Add a route
+          here as it is converted to dark. */}
+      {(() => {
+      const darkRoute = nav === 'Chat' || nav === 'Competitors'
+      return (
+      <div style={{ flex: 1, overflow: 'auto', background: darkRoute ? '#0a0a0c' : C.bg }}>
 
-        {/* Topbar — light everywhere; dark on the Chat route only, using
-            the locked shell shade #0a0a0c, so it does not sit as a white
-            band over the dark Chat page. Other pages are untouched. */}
+        {/* Topbar — light everywhere; dark on dark routes, using the
+            locked shell shade so it does not sit as a white band over a
+            dark page. Other pages are untouched. */}
         {(() => {
-          const darkBar = nav === 'Chat'
+          const darkBar = darkRoute
           return (
         <div style={{
           borderBottom: darkBar ? 'none' : `1px solid ${C.border}`,
@@ -6880,6 +6887,7 @@ export default function Dashboard() {
 
         </div>
       </div>
+      ) })()}
 
       {/* ── Milestone unlocked celebration (only when share modal isn't open) ── */}
       {celebrateQueue.length > 0 && !shareMilestone && (
