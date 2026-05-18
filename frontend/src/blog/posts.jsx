@@ -85,18 +85,65 @@ export const posts = [
 
         <h2>What vidIQ Does Well</h2>
 
-        <p>A fair vidiq review has to start with the genuine strengths, because there are real ones. Here is what the platform actually does, feature by feature:</p>
+        <p>A fair vidiq review has to start with the genuine strengths, because there are real ones. vidIQ is mature and stable. The plugin is updated regularly, works across Chrome, Firefox, and Edge, and does not break every time YouTube changes its layout, which is more than can be said for some competitors.</p>
 
-        <ul>
-          <li><strong>Daily Ideas:</strong> An AI feed that suggests video topics every day based on your channel history and current trends. This is consistently rated vidIQ's single best feature. Used well, it removes the "what do I film this week" problem, which for most creators is the hardest part of staying consistent. Some users report channels going from under 100 views a day to thousands by working this feed, though results vary heavily by niche and execution.</li>
-          <li><strong>Keyword research:</strong> Search volume paired with a competition score, so you can target phrases realistic for your channel size instead of terms big channels already own.</li>
-          <li><strong>The extension overlay:</strong> SEO score, views per hour, and tags on every video without leaving YouTube. Genuinely fast for at-a-glance competitor checks while you browse a niche.</li>
-          <li><strong>Competitor tracking:</strong> Add rival channels and watch their upload cadence and best performers over time.</li>
-          <li><strong>AI optimisation:</strong> Title, description, and tag generation, plus thumbnail ideas and Shorts clipping on the higher tiers.</li>
-          <li><strong>Channel analytics:</strong> A scoring and trend-alert layer on top of YouTube Studio.</li>
-        </ul>
+        <p>But "what does it do well" deserves a real answer, not a three-line summary. Below is the full feature surface, what each one actually does, how good it is, and the honest caveat, so you can judge it against what you specifically need.</p>
 
-        <p>It is also a mature, stable product. The vidiq plugin is updated regularly, works across the major browsers, and does not break every time YouTube changes its layout, which is more than can be said for some competitors. Of everything on that list, Daily Ideas and the speed of the in-browser overlay are the two features people genuinely miss when they cancel.</p>
+        <h2>vidIQ Features in Depth</h2>
+
+        <h3>Keyword Research</h3>
+
+        <p>This is the feature most people pay for. vidIQ pairs an estimated monthly search volume with a competition score and an overall "match" rating for your channel size, so you target phrases you can realistically rank for instead of terms large channels already own. You can search a seed keyword and get a list of related queries, each scored, plus the ability to save keywords into lists.</p>
+
+        <p>The honest caveat: the volume and competition numbers are estimates, not YouTube's own data, and creators regularly report mismatches. Treat the scores as a relative ranking between options, not absolute truth. As a way to compare ten possible topics and pick the most winnable, it works. As a precise traffic forecast, it does not.</p>
+
+        <h3>Daily Ideas</h3>
+
+        <p>Consistently rated vidIQ's single best feature. It is an AI feed that proposes specific video topics every day, generated from your channel history cross-referenced with current trends in your niche. For a creator whose hardest weekly problem is deciding what to film at all, this removes the blank page. Some users report channels moving from under 100 views a day to thousands by working this feed consistently, though results vary heavily by niche, execution, and how good the rest of the upload is.</p>
+
+        <p>The caveat is causality again: a topic suggestion is a starting point, not a guarantee. The feed tells you what is being searched. It does not film, title, or thumbnail the video for you.</p>
+
+        <h3>Video Outliers</h3>
+
+        <p>Outliers surface videos that massively overperformed a channel's own average: the one upload that did 10x the channel norm. This is one of the most genuinely useful research signals on the platform, because an outlier is a proven, validated topic and format that already beat expectations for a creator in your space. Studying a competitor's outliers tells you what their audience actually rewarded, not what the creator hoped would work.</p>
+
+        <p>It is a strong feature and one of the better reasons to look at vidIQ. The same job, finding the videos that broke a channel's pattern, is also exactly what a dedicated outliers view is built for, so it is worth knowing this is replicable elsewhere.</p>
+
+        <h3>Competitor Analysis</h3>
+
+        <p>You can add rival channels and track their upload cadence, subscriber trajectory, and best-performing videos over time. Combined with the on-YouTube overlay, it gives a fast read on what is working in a niche. It is broad and convenient rather than deep: it tells you what competitors are doing, with less on the why and the structural patterns behind their wins.</p>
+
+        <h3>SEO Score and Video Optimization Checklist</h3>
+
+        <p>For your own uploads, vidIQ generates an SEO score and a checklist: keyword in title, description length, tags, and similar on-page factors. It is a useful discipline tool that stops beginners shipping a video with an empty description or no keyword in the title. It is a checklist, not a strategy. A perfect SEO score on a video nobody wants to click still fails.</p>
+
+        <h3>Views Per Hour and Trend Alerts</h3>
+
+        <p>Views per hour (VPH) is the live momentum metric shown on every video in the overlay. It is the fastest way to spot a video that is heating up right now rather than one that accumulated views slowly over a year. Trend Alerts notify you when a topic starts moving in your niche. Both are genuinely useful for timing, and VPH in particular is one of the features people miss most after cancelling.</p>
+
+        <h3>AI Tools and AI Coach</h3>
+
+        <p>vidIQ bundles AI generation for titles, descriptions, and tags, plus an AI Coach that answers channel-strategy questions in plain language. The generators are a reasonable first draft accelerator. The honest read across reviews is that the AI output is generic without heavy editing: usable as a starting point, weak as a finished product. The AI Coach is pitched hard on the higher tiers and is the feature whose value is most debated by paying users.</p>
+
+        <h3>Thumbnails and Shorts</h3>
+
+        <p>Higher tiers include thumbnail generation and idea tools, plus Shorts clipping that auto-cuts long videos into short-form. These are convenience features rather than category leaders. Thumbnail testing in particular is an area where vidIQ is weaker than tools built specifically for it, which matters because the thumbnail is usually the single biggest lever on whether a video gets clicked at all.</p>
+
+        <h3>Channel Audit</h3>
+
+        <p>The channel audit scores your channel as a whole and flags weak spots: under-optimised videos, thin descriptions, low-CTR uploads. It is a sensible periodic health check rather than a daily tool, and it overlaps heavily with the SEO checklist applied across every video at once.</p>
+
+        <h3>Tags, Bulk Tools, and Productivity</h3>
+
+        <p>Rounding out the surface: tag suggestions and the ability to copy the tag set off any competitor video, bulk or mass editing of descriptions and cards across many videos at once, a "best time to post" suggestion, and a productivity scorecard with goals and streaks. These are the long tail of the platform. Few people subscribe for them, but the bulk editing is a real time-saver for channels with large back catalogues.</p>
+
+        <p>That is the honest full picture. Of everything above, Daily Ideas, video outliers, and the speed of the in-browser overlay are the features people genuinely miss when they cancel. Most of the rest is either replicable elsewhere or thinner than the marketing implies.</p>
+
+        <h2>What vidIQ Feels Like to Use</h2>
+
+        <p>The extension is the easy part. It installs in seconds and the overlay appears on YouTube with no setup, which is why most people's first impression of vidIQ is positive. The web platform is a heavier experience: a dense dashboard with a lot of panels, scores, and upsell prompts competing for attention at once. It is not hard to learn, but it is busy, and new creators often report spending the first few sessions figuring out which numbers actually matter versus which are there to push an upgrade.</p>
+
+        <p>The learning curve is short for the extension and moderate for the platform. None of it is technically difficult. The friction is volume of information, not complexity.</p>
 
         <h2>vidIQ Pricing in 2026</h2>
 
@@ -125,6 +172,28 @@ export const posts = [
 
         <p>The honest read: the free tier is real but deliberately capped to push you toward Boost, and Boost on the monthly plan costs roughly the same as a full Adobe or streaming subscription every month. The vidiq prices are not unreasonable for an agency or a full-time creator. For a beginner channel with no revenue yet, that figure is the friction point. If you want the wider context, we previously compared the <a href="/blog/seo-tools-for-youtube">main YouTube SEO tools</a> side by side.</p>
 
+        <h2>vidIQ vs TubeBuddy and Social Blade</h2>
+
+        <p>Almost nobody evaluates vidIQ in isolation. The two names that always come up in the same search are TubeBuddy and Social Blade, so here is the honest positioning of each:</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Tool</th>
+              <th>Strength</th>
+              <th>Weakness</th>
+              <th>Best For</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>vidIQ</td><td>Daily Ideas, fast on-YouTube overlay, broad feature set</td><td>Aggressive upsell, billing complaints, pricey at Boost</td><td>Creators who want ideas and research in one place</td></tr>
+            <tr><td>TubeBuddy</td><td>In-Studio workflow tools, bulk editing, A/B thumbnail testing</td><td>Less idea generation, similar paywall structure</td><td>Creators who live inside YouTube Studio editing</td></tr>
+            <tr><td>Social Blade</td><td>Free public stats and ranking estimates</td><td>Surface-level, no optimisation or research tooling</td><td>Quick channel stat checks, not a workflow tool</td></tr>
+          </tbody>
+        </table>
+
+        <p>The short version: vidIQ and TubeBuddy solve overlapping jobs with different emphases (vidIQ leans research and ideas, TubeBuddy leans Studio workflow), while Social Blade is a stats lookup, not a competitor to either on actual optimisation. None of the three removes the need for a strong thumbnail and hook.</p>
+
         <h2>Where vidIQ Frustrates People</h2>
 
         <p>An honest vidiq review cannot skip this part. On public review platforms like Trustpilot, Capterra, and the Better Business Bureau, a consistent set of complaints comes up repeatedly, and they are worth knowing before you put a card in.</p>
@@ -140,6 +209,12 @@ export const posts = [
         <p><strong>The good stuff is paywalled.</strong> The extension hooks you with visible-but-locked numbers. The keyword depth, competitor tracking, and AI tools that actually inform decisions sit behind Boost. A lot of the value you see is intentionally just out of reach until you pay.</p>
 
         <p>None of this makes vidIQ a scam. It makes it a tool with an aggressive upgrade funnel and a billing experience that has annoyed a meaningful number of paying users. Go in with that expectation set.</p>
+
+        <h2>vidIQ Customer Support</h2>
+
+        <p>Support is its own line item in most honest vidiq reviews, because it is where the billing complaints become real-world friction. vidIQ offers a Help Center, an in-app AI Coach, email, and live chat. Day-to-day product questions are handled reasonably well by the documentation and the AI assistant.</p>
+
+        <p>The weak point is account and billing support specifically. Users repeatedly report slow responses and chatbot-first handling exactly when the issue is a charge or a cancellation, which is the worst moment to be stuck in a queue. If you subscribe, do not rely on fast human support for a billing dispute. Cancel well before a renewal date rather than at it, and keep a record.</p>
 
         <CtaCard
           to="/dashboard"
