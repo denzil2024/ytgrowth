@@ -11,6 +11,34 @@ if (typeof document !== 'undefined' && !document.getElementById('outliers-geist-
   document.head.appendChild(link)
 }
 
+/* ─── C: dark palette for this page. Mirrors the shipped app-shell /
+       Competitors / Keywords dark system (lit-gradient cards, white-alpha
+       hairlines, single soft shadow, quiet white-wash selection). Defined
+       ABOVE the scoped-styles block so the injected stylesheet can
+       interpolate ${C.*} (the block runs at module eval). Semantic
+       red/green/amber keep their hue; fill tints re-tuned for dark and
+       *Hi variants give legible text on the dark tinted chips. ─── */
+const C = {
+  bg:          '#0e0e10',
+  card:        'linear-gradient(180deg, #1e1e24 0%, #18181c 100%)',
+  cardFlat:    '#1c1c21',
+  surfaceInput:'#18181b',
+  border:      'rgba(255,255,255,0.08)',
+  borderLight: 'rgba(255,255,255,0.06)',
+  hair:        'rgba(255,255,255,0.08)',
+  hairHi:      'rgba(255,255,255,0.16)',
+  wash:        'rgba(255,255,255,0.04)',
+  washActive:  'rgba(255,255,255,0.06)',
+  cardShadow:     '0 1px 3px rgba(0,0,0,0.4)',
+  cardShadowLift: '0 6px 20px rgba(0,0,0,0.55)',
+  text1:       '#f4f4f5',
+  text2:       '#a1a1aa',
+  text3:       '#71717a',
+  red:         '#e5251b', redBg:   'rgba(229,37,27,0.13)', redBdr:   'rgba(229,37,27,0.32)', redHi:   '#fb6a60',
+  green:       '#16a34a', greenBg: 'rgba(22,163,74,0.14)', greenBdr: 'rgba(22,163,74,0.34)', greenHi: '#34d27b',
+  amber:       '#d97706', amberBg: 'rgba(217,119,6,0.14)', amberBdr: 'rgba(217,119,6,0.34)', amberHi: '#f0a23b',
+}
+
 /* ─── Scoped styles ─────────────────────────────────────────────────────── */
 if (typeof document !== 'undefined' && !document.getElementById('outliers-styles')) {
   const s = document.createElement('style')
@@ -30,18 +58,18 @@ if (typeof document !== 'undefined' && !document.getElementById('outliers-styles
     /* Card grammar matches Competitors: hairline border, 14px radius, single
        soft shadow + lit-from-above inset highlight, 200ms hover lift. */
     .out-card {
-      background: #ffffff;
-      border: 1px solid rgba(10,10,15,0.07);
+      background: ${C.card};
+      border: 1px solid ${C.hair};
       border-radius: 14px;
-      box-shadow: 0 1px 2px rgba(15,15,25,0.04), inset 0 1px 0 rgba(255,255,255,0.7);
+      box-shadow: ${C.cardShadow};
       transition: box-shadow 200ms cubic-bezier(0.2,0.7,0.3,1), transform 200ms cubic-bezier(0.2,0.7,0.3,1), border-color 200ms cubic-bezier(0.2,0.7,0.3,1);
     }
     .out-result-card {
-      background: #ffffff;
-      border: 1px solid rgba(10,10,15,0.07);
+      background: ${C.card};
+      border: 1px solid ${C.hair};
       border-radius: 14px;
       padding: 16px;
-      box-shadow: 0 1px 2px rgba(15,15,25,0.04), inset 0 1px 0 rgba(255,255,255,0.7);
+      box-shadow: ${C.cardShadow};
       transition: box-shadow 200ms cubic-bezier(0.2,0.7,0.3,1), transform 200ms cubic-bezier(0.2,0.7,0.3,1), border-color 200ms cubic-bezier(0.2,0.7,0.3,1);
       cursor: pointer;
       display: flex; gap: 16px; align-items: stretch;
@@ -49,31 +77,31 @@ if (typeof document !== 'undefined' && !document.getElementById('outliers-styles
       font-family: inherit;
     }
     .out-result-card:hover {
-      border-color: rgba(10,10,15,0.14);
-      box-shadow: 0 4px 16px rgba(15,15,25,0.06), inset 0 1px 0 rgba(255,255,255,0.7);
+      border-color: ${C.hairHi};
+      box-shadow: ${C.cardShadowLift};
       transform: translateY(-1px);
     }
 
     .out-grid-card {
-      background: #ffffff;
-      border: 1px solid rgba(10,10,15,0.07);
+      background: ${C.card};
+      border: 1px solid ${C.hair};
       border-radius: 14px;
-      box-shadow: 0 1px 2px rgba(15,15,25,0.04), inset 0 1px 0 rgba(255,255,255,0.7);
+      box-shadow: ${C.cardShadow};
       transition: box-shadow 200ms cubic-bezier(0.2,0.7,0.3,1), transform 200ms cubic-bezier(0.2,0.7,0.3,1), border-color 200ms cubic-bezier(0.2,0.7,0.3,1);
       display: flex; flex-direction: column;
       overflow: hidden;
     }
     .out-grid-card:hover {
-      border-color: rgba(10,10,15,0.14);
-      box-shadow: 0 4px 16px rgba(15,15,25,0.06), inset 0 1px 0 rgba(255,255,255,0.7);
+      border-color: ${C.hairHi};
+      box-shadow: ${C.cardShadowLift};
       transform: translateY(-1px);
     }
     .out-chip {
       display: inline-flex; align-items: center; gap: 7px;
-      font-size: 12.5px; font-weight: 600; color: #4a4a58;
-      background: #fff; border: 1px solid rgba(10,10,15,0.08);
+      font-size: 12.5px; font-weight: 600; color: ${C.text2};
+      background: ${C.cardFlat}; border: 1px solid ${C.hair};
       border-radius: 100px; padding: 4px 12px 4px 4px;
-      box-shadow: 0 1px 2px rgba(15,15,25,0.04);
+      box-shadow: ${C.cardShadow};
       letter-spacing: -0.01em;
     }
     .out-chip-icon {
@@ -83,9 +111,9 @@ if (typeof document !== 'undefined' && !document.getElementById('outliers-styles
     }
     .out-sort-group {
       display: inline-flex; align-items: center;
-      background: #fff; border-radius: 100px;
-      border: 1px solid rgba(0,0,0,0.08);
-      box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 14px rgba(0,0,0,0.06);
+      background: ${C.cardFlat}; border-radius: 100px;
+      border: 1px solid ${C.hair};
+      box-shadow: ${C.cardShadow};
       padding: 3px; gap: 2px;
     }
     .out-sort-btn {
@@ -93,15 +121,15 @@ if (typeof document !== 'undefined' && !document.getElementById('outliers-styles
       font-size: 12.5px; font-weight: 600;
       padding: 7px 14px; border-radius: 100px;
       border: none; cursor: pointer; background: transparent;
-      color: #52525b;
+      color: ${C.text2};
       transition: all 0.18s;
     }
-    .out-sort-btn:hover:not(.active) { color: #111114; background: rgba(10,10,15,0.03); }
+    .out-sort-btn:hover:not(.active) { color: ${C.text1}; background: ${C.wash}; }
     /* Sort active is quiet soft-grey (Competitors / Keywords pattern). Red
        was competing with the New-search CTA and the top-level Search pill. */
     .out-sort-btn.active {
-      background: rgba(10,10,15,0.055); color: #0a0a0f;
-      border: 1px solid rgba(10,10,15,0.10);
+      background: ${C.washActive}; color: ${C.text1};
+      border: 1px solid ${C.hair};
     }
     .out-cta {
       display: inline-flex; align-items: center; justify-content: center; gap: 6px;
@@ -122,15 +150,15 @@ if (typeof document !== 'undefined' && !document.getElementById('outliers-styles
     .out-cta-ghost {
       display: inline-flex; align-items: center; justify-content: center; gap: 6px;
       padding: 9px 16px; border-radius: 100px;
-      border: 1px solid rgba(10,10,15,0.12);
-      background: #ffffff; color: rgba(10,10,15,0.62);
+      border: 1px solid ${C.hair};
+      background: transparent; color: ${C.text2};
       font-family: inherit; font-size: 13px; font-weight: 600;
       cursor: pointer; letter-spacing: -0.01em;
       transition: background 160ms ease, color 160ms ease, border-color 160ms ease;
     }
     .out-cta-ghost:hover {
-      background: rgba(10,10,15,0.03); color: #0a0a0f;
-      border-color: rgba(10,10,15,0.20);
+      background: ${C.wash}; color: ${C.text1};
+      border-color: ${C.hairHi};
     }
 
     .out-tab-btn {
@@ -138,17 +166,17 @@ if (typeof document !== 'undefined' && !document.getElementById('outliers-styles
       padding: 9px 18px; border-radius: 100px;
       font-family: inherit;
       font-size: 12.5px; font-weight: 600;
-      background: transparent; color: #4a4a58;
+      background: transparent; color: ${C.text2};
       border: 1px solid transparent;
       cursor: pointer;
       transition: all 0.18s;
       letter-spacing: -0.1px;
     }
-    .out-tab-btn:hover { color: #0f0f13; background: rgba(15,15,19,0.04); }
+    .out-tab-btn:hover { color: ${C.text1}; background: ${C.wash}; }
     .out-tab-btn.active {
-      background: #ffffff; color: #0f0f13;
-      border-color: rgba(0,0,0,0.09);
-      box-shadow: 0 1px 3px rgba(0,0,0,0.07), 0 4px 14px rgba(0,0,0,0.07);
+      background: ${C.washActive}; color: ${C.text1};
+      border-color: ${C.hair};
+      box-shadow: none;
     }
 
     .out-btn {
@@ -156,7 +184,7 @@ if (typeof document !== 'undefined' && !document.getElementById('outliers-styles
       padding: 9px 20px; border-radius: 100px; border: 1px solid #e5251b;
       font-family: inherit;
       font-size: 12.5px; font-weight: 600;
-      background: #ffffff; color: #e5251b; cursor: pointer;
+      background: ${C.card}; color: #e5251b; cursor: pointer;
       box-shadow: 0 1px 3px rgba(229,37,27,0.10), 0 4px 14px rgba(229,37,27,0.10);
       transition: all 0.18s;
       white-space: nowrap;
@@ -185,14 +213,14 @@ if (typeof document !== 'undefined' && !document.getElementById('outliers-styles
       transform: translateY(-1px);
     }
     .out-btn-primary:disabled {
-      background: #e0e0e6; color: #ffffff; cursor: not-allowed;
+      background: rgba(255,255,255,0.10); color: ${C.text3}; cursor: not-allowed;
       box-shadow: none; opacity: 0.92;
     }
 
     /* View tabs — Search / Reports top-level switch (Competitors pattern) */
     .out-view-btn {
-      background: #ffffff; color: #4a4a58;
-      border: 1px solid #e6e6ec; border-radius: 100px;
+      background: ${C.cardFlat}; color: ${C.text2};
+      border: 1px solid ${C.hair}; border-radius: 100px;
       padding: 8px 18px; font-size: 13px; font-weight: 600;
       font-family: inherit;
       cursor: pointer; white-space: nowrap;
@@ -209,25 +237,25 @@ if (typeof document !== 'undefined' && !document.getElementById('outliers-styles
        14px gap between rows so they breathe. */
     .out-report-wrapper { position: relative; margin-bottom: 14px; }
     .out-report-header {
-      background: #ffffff;
-      border: 1px solid rgba(10,10,15,0.07);
+      background: ${C.card};
+      border: 1px solid ${C.hair};
       border-radius: 14px;
-      box-shadow: 0 1px 2px rgba(15,15,25,0.04), inset 0 1px 0 rgba(255,255,255,0.7);
+      box-shadow: ${C.cardShadow};
       padding: 18px 22px;
       display: flex; align-items: center; gap: 16px;
       transition: box-shadow 200ms cubic-bezier(0.2,0.7,0.3,1), transform 200ms cubic-bezier(0.2,0.7,0.3,1), border-color 200ms cubic-bezier(0.2,0.7,0.3,1);
       cursor: pointer; user-select: none;
     }
     .out-report-header:hover {
-      box-shadow: 0 4px 16px rgba(15,15,25,0.06), inset 0 1px 0 rgba(255,255,255,0.7);
-      border-color: rgba(10,10,15,0.14);
+      box-shadow: ${C.cardShadowLift};
+      border-color: ${C.hairHi};
       transform: translateY(-1px);
     }
     .out-report-remove {
       position: absolute; top: 12px; right: 12px;
       width: 28px; height: 28px; border-radius: 8px;
       border: 1px solid transparent; background: transparent;
-      color: #c4c4cc; cursor: pointer;
+      color: ${C.text3}; cursor: pointer;
       display: flex; align-items: center; justify-content: center;
       opacity: 0;
       transition: opacity 0.15s, background 0.15s, color 0.15s, border-color 0.15s;
@@ -252,31 +280,32 @@ if (typeof document !== 'undefined' && !document.getElementById('outliers-styles
     .out-report-cta:hover { filter: brightness(1.07); }
     .out-report-chip {
       display: inline-flex; align-items: baseline; gap: 4px;
-      background: #f4f4f6; border: 1px solid rgba(0,0,0,0.09);
+      background: ${C.cardFlat}; border: 1px solid ${C.hair};
       border-radius: 8px; padding: 4px 10px;
     }
-    .out-report-chip .val { font-size: 12px; font-weight: 700; color: #111114; }
-    .out-report-chip .lbl { font-size: 11px; color: #9595a4; font-weight: 500; }
+    .out-report-chip .val { font-size: 12px; font-weight: 700; color: ${C.text1}; }
+    .out-report-chip .lbl { font-size: 11px; color: ${C.text3}; font-weight: 500; }
 
     .out-search-input {
       width: 100%;
       padding: 14px 16px;
       font-size: 15px;
-      border: 1px solid #e6e6ec;
+      border: 1px solid ${C.hair};
       border-radius: 12px;
       font-family: inherit;
       outline: none;
-      color: #0f0f13;
-      background: #ffffff;
+      color: ${C.text1};
+      background: ${C.surfaceInput};
       transition: border-color 0.18s, box-shadow 0.18s;
       letter-spacing: -0.1px;
       font-weight: 500;
       line-height: 1.4;
     }
     .out-search-input:focus {
-      border-color: rgba(0,0,0,0.25);
-      box-shadow: 0 0 0 4px rgba(0,0,0,0.04);
+      border-color: rgba(229,37,27,0.45);
+      box-shadow: 0 0 0 4px rgba(229,37,27,0.10);
     }
+    .out-search-input::placeholder { color: rgba(255,255,255,0.30); }
 
     .out-modal-overlay {
       position: fixed; inset: 0;
@@ -288,40 +317,23 @@ if (typeof document !== 'undefined' && !document.getElementById('outliers-styles
       padding: 32px 24px;
     }
     .out-modal {
-      background: #f7f7fa;
-      border: 1px solid #e8e8ec;
+      background: ${C.bg};
+      border: 1px solid ${C.hair};
       border-radius: 20px;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.08), 0 24px 64px rgba(0,0,0,0.10);
+      box-shadow: 0 24px 64px rgba(0,0,0,0.6);
       width: 100%; max-width: 1280px;
       max-height: calc(100vh - 64px);
       overflow: auto;
       animation: outSlideIn 0.22s cubic-bezier(0.2, 0.7, 0.3, 1) both;
     }
     .out-modal::-webkit-scrollbar { width: 4px }
-    .out-modal::-webkit-scrollbar-thumb { background: #e0e0e6; border-radius: 4px }
+    .out-modal::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.14); border-radius: 4px }
   `
   document.head.appendChild(s)
 }
 
-/* ─── Design tokens — matched to Dashboard.jsx + SeoOptimizer.jsx ────────── */
-const C = {
-  bg:          '#f5f5f9',
-  card:        '#ffffff',
-  border:      '#e6e6ec',
-  borderLight: '#f0f0f4',
-  text1:       '#0f0f13',
-  text2:       '#4a4a58',
-  text3:       '#9595a4',
-  red:         '#e5251b',
-  redBg:       '#fff5f5',
-  redBdr:      '#fecaca',
-  green:       '#059669',
-  greenBg:     '#ecfdf5',
-  greenBdr:    '#a7f3d0',
-  amber:       '#d97706',
-  amberBg:     '#fffbeb',
-  amberBdr:    '#fde68a',
-}
+/* ─── Design tokens: see the dark C palette defined above the scoped
+       styles block (it must precede that block for ${C.*} interpolation). ── */
 
 /* ─── Helpers ────────────────────────────────────────────────────────────── */
 function fmtNum(n) {
@@ -484,7 +496,7 @@ const META_CHIP_TINTS = {
   red:     { bg: '#fee2e2', fg: C.red },
   amber:   { bg: C.amberBg, fg: C.amber },
   green:   { bg: C.greenBg, fg: C.green },
-  neutral: { bg: '#eeeef3', fg: C.text2 },
+  neutral: { bg: C.hair, fg: C.text2 },
 }
 function MetaChip({ tint = 'neutral', icon, children }) {
   const tone = META_CHIP_TINTS[tint] || META_CHIP_TINTS.neutral
@@ -779,7 +791,7 @@ export default function Outliers({ channelData, onNavigate, plan, freeTierFeatur
               <h1 style={{ fontSize: 26, fontWeight: 700, color: C.text1, letterSpacing: '-0.7px', marginBottom: 6, lineHeight: 1.1 }}>
                 Outliers
               </h1>
-              <p style={{ fontSize: 14, color: 'rgba(10,10,15,0.55)', fontWeight: 500, letterSpacing: '-0.005em', lineHeight: 1.45 }}>
+              <p style={{ fontSize: 14, color: C.text2, fontWeight: 500, letterSpacing: '-0.005em', lineHeight: 1.45 }}>
                 {subtitle}
               </p>
             </div>
@@ -830,7 +842,7 @@ export default function Outliers({ channelData, onNavigate, plan, freeTierFeatur
       }}>
         <div style={{
           display: 'inline-flex', gap: 4, padding: 4,
-          background: '#eeeef3', borderRadius: 100,
+          background: C.hair, borderRadius: 100,
         }}>
           {TABS.map(t => (
             <button
@@ -845,7 +857,7 @@ export default function Outliers({ channelData, onNavigate, plan, freeTierFeatur
         {hasResults && (
           <div style={{
             display: 'inline-flex', gap: 4, padding: 4,
-            background: '#eeeef3', borderRadius: 100, flexShrink: 0,
+            background: C.hair, borderRadius: 100, flexShrink: 0,
           }}>
             {sortOptions.map(opt => (
               <button
@@ -863,10 +875,10 @@ export default function Outliers({ channelData, onNavigate, plan, freeTierFeatur
       {/* ══ Search bar ═══════════════════════════════════════════════════════ */}
       <div className="out-card" style={{ padding: '20px 22px', marginBottom: 20 }}>
         <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 12, gap: 12 }}>
-          <span style={{ fontSize: 11, fontWeight: 700, color: 'rgba(10,10,15,0.50)', textTransform: 'uppercase', letterSpacing: '0.10em' }}>
+          <span style={{ fontSize: 11, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.10em' }}>
             Your video title
           </span>
-          <span style={{ fontSize: 12, fontWeight: 500, color: 'rgba(10,10,15,0.50)', letterSpacing: '-0.005em' }}>
+          <span style={{ fontSize: 12, fontWeight: 500, color: C.text3, letterSpacing: '-0.005em' }}>
             One search powers all three tabs · filtered by intent
           </span>
         </div>
@@ -957,7 +969,7 @@ export default function Outliers({ channelData, onNavigate, plan, freeTierFeatur
                 <span style={{
                   alignSelf: 'flex-start',
                   fontSize: 11.5, fontWeight: 600,
-                  color: '#9a1c16',
+                  color: C.redHi,
                   background: 'rgba(229,37,27,0.08)',
                   border: '1px solid rgba(229,37,27,0.22)',
                   padding: '3px 10px', borderRadius: 999,
@@ -984,7 +996,7 @@ export default function Outliers({ channelData, onNavigate, plan, freeTierFeatur
               Up to 160 chars of user-typed intent, used verbatim as confirmed_keyword. */}
           <div className="out-card" style={{ padding: '18px 20px', marginTop: 14 }}>
             <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 10, gap: 8 }}>
-              <span style={{ fontSize: 11, fontWeight: 700, color: 'rgba(10,10,15,0.50)', textTransform: 'uppercase', letterSpacing: '0.10em' }}>
+              <span style={{ fontSize: 11, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.10em' }}>
                 None of these? Type your own intent
               </span>
               <span style={{ fontSize: 11, fontWeight: 500, color: manualIntent.length > 160 ? C.red : C.text3, fontVariantNumeric: 'tabular-nums' }}>
@@ -1164,7 +1176,7 @@ export default function Outliers({ channelData, onNavigate, plan, freeTierFeatur
           ) : reports.length === 0 ? (
             <div style={{
               padding: '56px 24px', textAlign: 'center',
-              background: '#ffffff', border: `1px solid ${C.border}`, borderRadius: 16,
+              background: C.card, border: `1px solid ${C.border}`, borderRadius: 16,
               boxShadow: '0 1px 2px rgba(0,0,0,0.04), 0 4px 14px rgba(0,0,0,0.06)',
             }}>
               <p style={{ fontSize: 16, fontWeight: 700, color: C.text1, letterSpacing: '-0.2px', marginBottom: 8 }}>
@@ -1203,7 +1215,7 @@ export default function Outliers({ channelData, onNavigate, plan, freeTierFeatur
                     </button>
                     <div className="out-report-header" onClick={() => openReport(r)}>
                       <div style={{ flex: 1, minWidth: 0 }}>
-                        <p style={{ fontWeight: 700, fontSize: 14, color: '#111114',
+                        <p style={{ fontWeight: 700, fontSize: 14, color: C.text1,
                           letterSpacing: '-0.2px', whiteSpace: 'nowrap', overflow: 'hidden',
                           textOverflow: 'ellipsis', marginBottom: 8 }}>
                           {r.query}
@@ -1227,7 +1239,7 @@ export default function Outliers({ channelData, onNavigate, plan, freeTierFeatur
                               <span className="lbl">channel{channelsCount === 1 ? '' : 's'}</span>
                             </span>
                           )}
-                          <span style={{ fontSize: 12, color: '#9595a4', fontWeight: 500, marginLeft: 2 }}>
+                          <span style={{ fontSize: 12, color: C.text3, fontWeight: 500, marginLeft: 2 }}>
                             · {relTime(r.updated_at)}
                           </span>
                         </div>
@@ -1309,7 +1321,7 @@ function PatternSynthesisCard({ synthesis }) {
         </div>
       )}
       {nextMove && (
-        <div style={{ paddingTop: pattern ? 20 : 0, borderTop: pattern ? '1px solid #eeeef3' : 'none' }}>
+        <div style={{ paddingTop: pattern ? 20 : 0, borderTop: pattern ? '1px solid rgba(255,255,255,0.08)' : 'none' }}>
           <p style={{ fontSize: 11, fontWeight: 700, color: C.red, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 12 }}>Your next move</p>
           {nextMove.title_scaffold && (
             <p style={{ fontSize: 16, fontWeight: 700, color: C.text1, lineHeight: 1.45, marginBottom: 16, letterSpacing: '-0.3px' }}>
@@ -1331,7 +1343,7 @@ function PatternSynthesisCard({ synthesis }) {
             )}
           </div>
           {nextMove.why_now && (
-            <p style={{ fontSize: 12.5, color: C.text2, lineHeight: 1.5, paddingTop: 12, borderTop: '1px dashed #eeeef3' }}>
+            <p style={{ fontSize: 12.5, color: C.text2, lineHeight: 1.5, paddingTop: 12, borderTop: '1px dashed rgba(255,255,255,0.08)' }}>
               <span style={{ fontWeight: 700, color: C.amber, letterSpacing: '0.04em', textTransform: 'uppercase', fontSize: 11 }}>Why now: </span>
               {nextMove.why_now}
             </p>
@@ -1381,7 +1393,7 @@ function VideoResultCard({ item, kind, onOpen }) {
               onError={makeThumbOnError(item.video_id, item.thumbnail)}
               onLoad={makeThumbOnLoad(item.video_id, item.thumbnail)}
             />
-          : <div style={{ width: '100%', aspectRatio: '16/9', background: '#ebebef' }}/>
+          : <div style={{ width: '100%', aspectRatio: '16/9', background: C.cardFlat }}/>
         }
         {/* SHORT / duration badges — identical to Videos tab. Outlier signal
             lives in the footer's OUTLIER metric, not on the thumbnail, so the
@@ -1411,7 +1423,7 @@ function VideoResultCard({ item, kind, onOpen }) {
           const t = String(item.pattern_tag).toLowerCase()
           const cfg = t === 'replicable' ? { label: 'Replicable', bg: 'rgba(5,150,105,0.10)', border: 'rgba(5,150,105,0.30)', color: C.green }
                     : t === 'trending'   ? { label: 'Trending',   bg: 'rgba(217,119,6,0.10)', border: 'rgba(217,119,6,0.30)', color: C.amber }
-                    : t === 'lucky'      ? { label: 'Lucky',      bg: '#f4f4f6',              border: '#e6e6ec',              color: C.text3 }
+                    : t === 'lucky'      ? { label: 'Lucky',      bg: C.cardFlat,              border: C.hair,              color: C.text3 }
                     : null
           if (!cfg) return null
           return (
@@ -1437,7 +1449,7 @@ function VideoResultCard({ item, kind, onOpen }) {
             name has its own line. Matches the Videos tab meta typography. */}
         <p style={{ fontSize: 13.5, fontWeight: 500, color: C.text3, marginBottom: 16, lineHeight: 1.4, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
           <span style={{ color: C.text2, fontWeight: 600 }}>{fmtNum(views)}</span> views
-          <span style={{ margin: '0 8px', color: '#d4d4dc' }}>·</span>
+          <span style={{ margin: '0 8px', color: C.text3 }}>·</span>
           {relPublished(item.published_at) || '—'}
         </p>
 
@@ -1468,7 +1480,7 @@ function VideoResultCard({ item, kind, onOpen }) {
             { label: 'Eng',     sub: '',  display: engPct != null ? `${engPct.toFixed(1)}%` : '—',          color: engColor,   tip: 'Engagement rate = likes ÷ views. 3%+ strong, 1–3% avg, <1% weak.' },
           ].filter(Boolean)
           return (
-        <div style={{ marginTop: 'auto', paddingTop: 18, borderTop: '1px solid #eeeef3' }}>
+        <div style={{ marginTop: 'auto', paddingTop: 18, borderTop: '1px solid rgba(255,255,255,0.08)' }}>
           {/* Even-gutter grid — 2 cols when 4 metrics, 3 cols when Winnable
               is missing. Keeps consistent rhythm across cards even though
               the metric count varies. */}
@@ -1608,12 +1620,12 @@ function ChannelResultCard({ item, onOpen }) {
         {/* Meta line — subs · videos, same typography as VideoResultCard meta */}
         <p style={{ fontSize: 13.5, fontWeight: 500, color: C.text3, marginBottom: 14, lineHeight: 1.4, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
           <span style={{ color: C.text2, fontWeight: 600 }}>{fmtNum(item.subscribers)}</span> subs
-          <span style={{ margin: '0 8px', color: '#d4d4dc' }}>·</span>
+          <span style={{ margin: '0 8px', color: C.text3 }}>·</span>
           <span style={{ color: C.text2, fontWeight: 600 }}>{fmtNum(item.video_count)}</span> videos
         </p>
 
         {/* Footer — identical to VideoResultCard: flex metrics + full-width red CTA */}
-        <div style={{ marginTop: 'auto', paddingTop: 18, borderTop: '1px solid #eeeef3' }}>
+        <div style={{ marginTop: 'auto', paddingTop: 18, borderTop: '1px solid rgba(255,255,255,0.08)' }}>
           <div style={{ display: 'flex', gap: 28, marginBottom: 18, flexWrap: 'wrap' }}>
             {[
               { label: 'Outlier',  display: `${item.outlier_score}×`,            color: tier.color, tip: 'Their best-performing video in this search beat the niche median by this multiple.' },
@@ -1781,18 +1793,18 @@ function DetailModal({ kind, item, query, onClose, onNavigate }) {
                   style={{ width: 96, height: 60, borderRadius: 8, objectFit: 'cover', flexShrink: 0, border: `1px solid ${C.border}` }}
                   onError={makeThumbOnError(headerVideoId, headerThumbLo)}
                   onLoad={makeThumbOnLoad(headerVideoId, headerThumbLo)}/>
-              : <div style={{ width: 96, height: 60, borderRadius: 8, background: '#eeeef3', flexShrink: 0, border: `1px solid ${C.border}` }}/>}
+              : <div style={{ width: 96, height: 60, borderRadius: 8, background: C.hair, flexShrink: 0, border: `1px solid ${C.border}` }}/>}
             <div style={{ flex: 1, minWidth: 0 }}>
               <p style={{ fontSize: 12, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 4 }}>{kindLabel}</p>
               <p style={{ fontSize: 16, fontWeight: 700, color: C.text1, lineHeight: 1.35, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{headerTitle}</p>
             </div>
             <div style={{ display: 'flex', gap: 8, flexShrink: 0 }}>
               <button onClick={openOnYouTube}
-                style={{ fontSize: 12, color: C.text2, background: '#fff', border: `1px solid ${C.border}`, borderRadius: 100, padding: '6px 14px', cursor: 'pointer', fontFamily: 'inherit', fontWeight: 600, boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
+                style={{ fontSize: 12, color: C.text2, background: C.card, border: `1px solid ${C.border}`, borderRadius: 100, padding: '6px 14px', cursor: 'pointer', fontFamily: 'inherit', fontWeight: 600, boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
                 Open on YouTube
               </button>
               <button onClick={onClose}
-                style={{ fontSize: 12, color: C.text3, background: '#fff', border: `1px solid ${C.border}`, borderRadius: 100, padding: '6px 14px', cursor: 'pointer', fontFamily: 'inherit', fontWeight: 600, boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
+                style={{ fontSize: 12, color: C.text3, background: C.card, border: `1px solid ${C.border}`, borderRadius: 100, padding: '6px 14px', cursor: 'pointer', fontFamily: 'inherit', fontWeight: 600, boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
                 Close ✕
               </button>
             </div>
@@ -1800,14 +1812,14 @@ function DetailModal({ kind, item, query, onClose, onNavigate }) {
 
           {/* Why Now hero — same "Fix first" card silhouette (white bg, red left-bar) */}
           {item.why_now && (
-            <div style={{ background: '#fff', border: `1px solid ${C.border}`, borderLeft: `4px solid ${C.red}`, borderRadius: 12, padding: '14px 18px', marginBottom: 16, boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
+            <div style={{ background: C.card, border: `1px solid ${C.border}`, borderLeft: `4px solid ${C.red}`, borderRadius: 12, padding: '14px 18px', marginBottom: 16, boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
               <span style={{ fontSize: 10, fontWeight: 700, color: C.red, textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block', marginBottom: 6 }}>Why now</span>
               <p style={{ fontSize: 15, fontWeight: 700, color: C.text1, lineHeight: 1.55 }}>{item.why_now}</p>
             </div>
           )}
 
           {/* Breakdown Section — same silhouette as "Title Analysis" */}
-          <div style={{ background: '#fff', border: `1px solid ${C.border}`, borderRadius: 16, padding: '20px 22px', marginBottom: 12 }}>
+          <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 16, padding: '20px 22px', marginBottom: 12 }}>
             <p style={{ fontSize: 15, fontWeight: 700, color: C.text1, letterSpacing: '-0.3px', marginBottom: 16 }}>
               {isChannel ? 'Channel breakdown' : 'Outlier breakdown'}
             </p>
@@ -1818,7 +1830,7 @@ function DetailModal({ kind, item, query, onClose, onNavigate }) {
                 <OutlierRing score={item.outlier_score} color={verdict.color}/>
                 <span style={{ fontSize: 14, fontWeight: 700, color: verdict.color }}>{verdict.label}</span>
                 {query && (
-                  <span style={{ fontSize: 12, color: C.text2, background: '#f4f4f6', padding: '3px 10px', borderRadius: 100, fontWeight: 600, border: `1px solid ${C.border}` }}>
+                  <span style={{ fontSize: 12, color: C.text2, background: C.cardFlat, padding: '3px 10px', borderRadius: 100, fontWeight: 600, border: `1px solid ${C.border}` }}>
                     {query}
                   </span>
                 )}
@@ -1839,7 +1851,7 @@ function DetailModal({ kind, item, query, onClose, onNavigate }) {
           </div>
 
           {/* 3-col intent grid — same silhouette as Search Intent / Competitor Gap / Emotional Driver */}
-          <div style={{ background: '#fff', border: `1px solid ${C.border}`, borderRadius: 16, padding: '20px 22px', marginBottom: 12 }}>
+          <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 16, padding: '20px 22px', marginBottom: 12 }}>
             <p style={{ fontSize: 15, fontWeight: 700, color: C.text1, letterSpacing: '-0.3px', marginBottom: 16 }}>
               {isChannel ? 'Channel playbook' : 'Outlier playbook'}
             </p>
@@ -1858,7 +1870,7 @@ function DetailModal({ kind, item, query, onClose, onNavigate }) {
               </div>
 
               {/* Amber — Quick actions / What to do (list) */}
-              <div style={{ background: '#fff', border: `1px solid ${C.border}`, borderLeft: `3px solid ${C.amber}`, borderRadius: '0 10px 10px 0', padding: '12px 14px', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
+              <div style={{ background: C.card, border: `1px solid ${C.border}`, borderLeft: `3px solid ${C.amber}`, borderRadius: '0 10px 10px 0', padding: '12px 14px', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
                 <p style={{ fontSize: 10, fontWeight: 700, color: C.amber, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>
                   {isChannel ? 'What to do' : 'Quick actions'}
                 </p>
@@ -1892,7 +1904,7 @@ function DetailModal({ kind, item, query, onClose, onNavigate }) {
           </div>
 
           {/* Actions Section — same card silhouette, full-width button row */}
-          <div style={{ background: '#fff', border: `1px solid ${C.border}`, borderRadius: 16, padding: '20px 22px' }}>
+          <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 16, padding: '20px 22px' }}>
             <p style={{ fontSize: 15, fontWeight: 700, color: C.text1, letterSpacing: '-0.3px', marginBottom: 16 }}>Shortcuts</p>
             <div style={{ display: 'grid', gridTemplateColumns: `repeat(${actionList.length}, minmax(0, 1fr))`, gap: 10 }}>
               {actionList.map((a, i) => (
@@ -1946,14 +1958,14 @@ function OutlierRing({ score, color }) {
   return (
     <div style={{ position: 'relative', width: 88, height: 88, flexShrink: 0 }}>
       <svg width="88" height="88" style={{ transform: 'rotate(-90deg)' }}>
-        <circle cx="44" cy="44" r={r} fill="none" stroke="#f0f0f4" strokeWidth="6" />
+        <circle cx="44" cy="44" r={r} fill="none" stroke="rgba(255,255,255,0.10)" strokeWidth="6" />
         <circle cx="44" cy="44" r={r} fill="none" stroke={color} strokeWidth="6"
           strokeDasharray={`${filled} ${circ}`} strokeLinecap="round"
           style={{ transition: 'stroke-dasharray 0.6s ease' }} />
       </svg>
       <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
         <span style={{ fontSize: 22, fontWeight: 800, color, letterSpacing: '-1px', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{val.toFixed(1)}</span>
-        <span style={{ fontSize: 9.5, color: '#9595a4', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.02em', marginTop: 3, lineHeight: 1 }}>× outlier</span>
+        <span style={{ fontSize: 9.5, color: C.text3, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.02em', marginTop: 3, lineHeight: 1 }}>× outlier</span>
       </div>
     </div>
   )
@@ -1967,20 +1979,20 @@ function OutlierBar({ label, score, tip }) {
     <div style={{ marginBottom: 9 }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 3 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
-          <span style={{ fontSize: 14, color: '#3a3a3c', fontWeight: 500 }}>{label}</span>
+          <span style={{ fontSize: 14, color: C.text2, fontWeight: 500 }}>{label}</span>
           {tip && (
             <button onClick={() => setShowWhy(v => !v)}
-              style={{ width: 15, height: 15, borderRadius: '50%', border: '1px solid #e8e8ec', background: 'transparent', cursor: 'pointer', fontSize: 12, fontWeight: 700, color: '#8e8e93', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 0 }}>?
+              style={{ width: 15, height: 15, borderRadius: '50%', border: '1px solid rgba(255,255,255,0.08)', background: 'transparent', cursor: 'pointer', fontSize: 12, fontWeight: 700, color: C.text3, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 0 }}>?
             </button>
           )}
         </div>
         <span style={{ fontSize: 12, color, fontWeight: 700, fontVariantNumeric: 'tabular-nums' }}>{score}/100</span>
       </div>
-      <div style={{ height: 5, background: '#f0f0f4', borderRadius: 4, overflow: 'hidden' }}>
+      <div style={{ height: 5, background: C.hair, borderRadius: 4, overflow: 'hidden' }}>
         <div style={{ height: '100%', width: `${score}%`, background: color, borderRadius: 4, transition: 'width 0.5s ease' }} />
       </div>
       {showWhy && tip && (
-        <p style={{ fontSize: 12, color: '#8e8e93', marginTop: 5, lineHeight: 1.5, paddingLeft: 8, borderLeft: '2px solid #e8e8ec' }}>
+        <p style={{ fontSize: 12, color: C.text3, marginTop: 5, lineHeight: 1.5, paddingLeft: 8, borderLeft: '2px solid rgba(255,255,255,0.16)' }}>
           {tip}
         </p>
       )}
@@ -2080,7 +2092,7 @@ function ThumbnailPatternsCard({ patterns, query }) {
           {/* Neutral "Visual formula" — was off-palette blue. Sticks to
               red/amber/green + neutral grey, with the amber "Next thumbnail"
               tile carrying the chromatic anchor in the middle column. */}
-          <div style={{ background: '#f6f6f9', border: `1px solid ${C.border}`, borderRadius: 10, padding: '12px 14px' }}>
+          <div style={{ background: C.cardFlat, border: `1px solid ${C.border}`, borderRadius: 10, padding: '12px 14px' }}>
             <p style={{ fontSize: 10, fontWeight: 700, color: C.text2, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 10 }}>Visual formula</p>
             {traits.map(([label, value], i) => (
               <div key={label} style={{ marginBottom: i === traits.length - 1 ? 0 : 10 }}>
@@ -2092,7 +2104,7 @@ function ThumbnailPatternsCard({ patterns, query }) {
 
           {/* Amber+bar "Next thumbnail" — the "Action" equivalent in Priority Actions */}
           <div style={{
-            background: '#fff',
+            background: C.card,
             border: `1px solid ${C.border}`,
             borderLeft: `3px solid ${C.amber}`,
             borderRadius: '0 10px 10px 0',
