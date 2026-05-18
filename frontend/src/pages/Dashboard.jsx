@@ -183,26 +183,22 @@ function useDashboardStyles() {
       .ov-page .ytg-card,
       .ov-page .ytg-stat-card,
       .ov-page .ytg-insight-card {
-        background: #ffffff;
-        border: 1px solid rgba(10,10,15,0.07);
+        background: ${SHELL.cardBg};
+        border: 1px solid ${SHELL.hair};
         border-radius: 14px;
-        box-shadow: 0 1px 2px rgba(15,15,25,0.04),
-                    0 6px 18px rgba(15,15,25,0.05),
-                    inset 0 1px 0 rgba(255,255,255,0.7);
-        transition: box-shadow 0.2s cubic-bezier(0.2,0.7,0.3,1), transform 0.2s cubic-bezier(0.2,0.7,0.3,1);
+        box-shadow: ${SHELL.cardShadow};
+        transition: box-shadow 0.2s cubic-bezier(0.2,0.7,0.3,1), transform 0.2s cubic-bezier(0.2,0.7,0.3,1), border-color 0.2s cubic-bezier(0.2,0.7,0.3,1);
       }
       .ov-page .ytg-card:hover,
       .ov-page .ytg-stat-card:hover,
       .ov-page .ytg-insight-card:hover {
-        box-shadow: 0 2px 6px rgba(15,15,25,0.06),
-                    0 12px 32px rgba(15,15,25,0.07),
-                    inset 0 1px 0 rgba(255,255,255,0.7);
+        box-shadow: ${SHELL.cardShadowLift};
         transform: translateY(-1px);
-        border-color: rgba(10,10,15,0.10);
+        border-color: ${SHELL.hair};
       }
       .ov-page .ytg-stat-card.alert {
-        border-color: rgba(229,37,27,0.18);
-        background: #fff;
+        border-color: rgba(229,37,27,0.32);
+        background: rgba(229,37,27,0.10);
       }
 
       /* Hero tile (inline, no surrounding card). 4-up strip at top of Feed. */
@@ -215,22 +211,20 @@ function useDashboardStyles() {
       .ov-hero-strip {
         display: grid;
         grid-template-columns: repeat(4, 1fr);
-        border: 1px solid rgba(10,10,15,0.07);
+        border: 1px solid ${SHELL.hair};
         border-radius: 14px;
-        background: #ffffff;
-        box-shadow: 0 1px 2px rgba(15,15,25,0.04),
-                    0 6px 18px rgba(15,15,25,0.05),
-                    inset 0 1px 0 rgba(255,255,255,0.7);
+        background: ${SHELL.cardBg};
+        box-shadow: ${SHELL.cardShadow};
         overflow: hidden;
         margin-bottom: 28px;
       }
       .ov-hero-strip > .ov-hero-tile + .ov-hero-tile {
-        border-left: 1px solid rgba(10,10,15,0.06);
+        border-left: 1px solid ${SHELL.hair};
       }
       @media (max-width: 740px) {
         .ov-hero-strip { grid-template-columns: repeat(2, 1fr); }
-        .ov-hero-strip > .ov-hero-tile:nth-child(3) { border-left: none; border-top: 1px solid rgba(10,10,15,0.06); }
-        .ov-hero-strip > .ov-hero-tile:nth-child(4) { border-top: 1px solid rgba(10,10,15,0.06); }
+        .ov-hero-strip > .ov-hero-tile:nth-child(3) { border-left: none; border-top: 1px solid ${SHELL.hair}; }
+        .ov-hero-strip > .ov-hero-tile:nth-child(4) { border-top: 1px solid ${SHELL.hair}; }
       }
 
       .ov-section-head {
@@ -239,11 +233,11 @@ function useDashboardStyles() {
         margin: 36px 0 16px;
       }
       .ov-section-head h2 {
-        font-size: 22px; font-weight: 700; color: #0a0a0f;
+        font-size: 22px; font-weight: 700; color: ${SHELL.text1};
         letter-spacing: -0.5px; line-height: 1.2; margin: 0;
       }
       .ov-section-head .ov-section-meta {
-        font-size: 12px; font-weight: 500; color: rgba(10,10,15,0.55);
+        font-size: 12px; font-weight: 500; color: ${SHELL.text2};
         letter-spacing: -0.05px;
       }
       .ov-section-head + * { margin-top: 0 !important; }
@@ -360,6 +354,50 @@ function useDashboardStyles() {
         box-shadow: 0 1px 2px rgba(15,15,25,0.04);
         font-weight: 600;
       }
+
+      /* ── Feed (.ov-page) dark overrides for the shared global .ytg-*
+         classes. Scoped to .ov-page so My Videos / other still-light
+         pages that share these globals are untouched. Mirrors the
+         shipped dark surface system (SHELL). ── */
+      .ov-page .ytg-inner-block {
+        background: ${SHELL.cardFlat};
+        border: 1px solid ${SHELL.hair};
+      }
+      .ov-page .ytg-qw-row:hover {
+        background: ${SHELL.hoverBg}; border-color: ${SHELL.hair};
+      }
+      .ov-page .ytg-del-btn {
+        background: rgba(229,37,27,0.12); border: 1px solid rgba(229,37,27,0.30);
+      }
+      .ov-page .ytg-del-btn:hover { background: rgba(229,37,27,0.20); }
+      .ov-page .ytg-dash-btn {
+        background: ${SHELL.cardBg}; color: ${SHELL.text2};
+        border: 1px solid ${SHELL.hair};
+        box-shadow: ${SHELL.cardShadow};
+      }
+      .ov-page .ytg-dash-btn:hover {
+        border-color: rgba(255,255,255,0.16); color: ${SHELL.text1};
+        box-shadow: ${SHELL.cardShadowLift};
+      }
+      .ov-page .ytg-myvid-chip {
+        color: ${SHELL.text2};
+        background: ${SHELL.cardBg}; border: 1px solid ${SHELL.hair};
+        box-shadow: ${SHELL.cardShadow};
+      }
+      .ov-page .ytg-myvid-sort-grp {
+        background: ${SHELL.cardFlat};
+      }
+      .ov-page .ytg-myvid-sort-btn {
+        color: ${SHELL.text2};
+      }
+      .ov-page .ytg-myvid-sort-btn:hover:not(.active) {
+        background: ${SHELL.hoverBg}; color: ${SHELL.text1};
+      }
+      .ov-page .ytg-myvid-sort-btn.active {
+        background: ${SHELL.activeBg}; color: ${SHELL.text1};
+        border-color: ${SHELL.hair};
+        box-shadow: none;
+      }
     `
     document.head.appendChild(style)
   }, [])
@@ -396,7 +434,9 @@ const SHELL = {
   // use the SAME lit gradient + single soft shadow as every ChatCoach
   // dark surface, so the rail and the Chat page read as one system.
   cardBg:    'linear-gradient(180deg, #1e1e24 0%, #18181c 100%)',
+  cardFlat:  '#1c1c21',                 // flat inner blocks / chips
   cardShadow:'0 1px 3px rgba(0,0,0,0.4)',
+  cardShadowLift: '0 6px 20px rgba(0,0,0,0.55)',
   popShadow: '0 12px 32px rgba(0,0,0,0.6)',
   hair:      'rgba(255,255,255,0.08)',  // borders + dividers
   hairLo:    'rgba(255,255,255,0.06)',
@@ -5135,7 +5175,7 @@ export default function Dashboard() {
           sits on a light gutter / under a white topbar band. Add a route
           here as it is converted to dark. */}
       {(() => {
-      const darkRoute = nav === 'Chat' || nav === 'Competitors' || nav === 'Keywords' || nav === 'Outliers' || nav === 'Weekly Report'
+      const darkRoute = nav === 'Chat' || nav === 'Competitors' || nav === 'Keywords' || nav === 'Outliers' || nav === 'Weekly Report' || nav === 'Overview'
       // The dark topbar is #0e0e10. For non-Chat dark pages the page
       // ground is the SAME #0e0e10 so the topbar is seamless (no lighter
       // band), matching how Chat reads. Chat keeps its own tuned ground
@@ -5283,9 +5323,9 @@ export default function Dashboard() {
                   return (
                     <div className="ytg-card" style={{ padding: '28px 32px', marginBottom: 24, display: 'flex', alignItems: 'center', gap: 24 }}>
                       <div style={{ flex: 1, minWidth: 0 }}>
-                        <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }}>Start here</p>
-                        <h2 style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', marginBottom: 6 }}>Run your first audit</h2>
-                        <p style={{ fontSize: 13.5, color: C.text2, lineHeight: 1.55, maxWidth: 520 }}>
+                        <p style={{ fontSize: 11, fontWeight: 700, color: SHELL.text3, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }}>Start here</p>
+                        <h2 style={{ fontSize: 22, fontWeight: 800, color: SHELL.text1, letterSpacing: '-0.5px', marginBottom: 6 }}>Run your first audit</h2>
+                        <p style={{ fontSize: 13.5, color: SHELL.text2, lineHeight: 1.55, maxWidth: 520 }}>
                           We need to analyse your channel before we can show Priority Actions, growth patterns, and milestone tracking. Costs 1 credit and takes about 30 seconds.
                         </p>
                       </div>
@@ -5302,9 +5342,9 @@ export default function Dashboard() {
               })()}
               <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 28, gap: 16, flexWrap: 'wrap' }}>
                 <div>
-                  <h1 style={{ fontSize: 26, fontWeight: 700, color: '#0a0a0f', letterSpacing: '-0.7px', marginBottom: 6, lineHeight: 1.1 }}>
-                    Good to see you{data.channel.channel_name ? <>, <span style={{ color: '#0a0a0f', fontWeight: 700 }}>{data.channel.channel_name}</span></> : ''}.</h1>
-                  <p style={{ fontSize: 13.5, color: 'rgba(10,10,15,0.55)', fontWeight: 500, display: 'flex', gap: 0, flexWrap: 'wrap', letterSpacing: '-0.05px' }}>
+                  <h1 style={{ fontSize: 26, fontWeight: 700, color: SHELL.text1, letterSpacing: '-0.7px', marginBottom: 6, lineHeight: 1.1 }}>
+                    Good to see you{data.channel.channel_name ? <>, <span style={{ color: SHELL.text1, fontWeight: 700 }}>{data.channel.channel_name}</span></> : ''}.</h1>
+                  <p style={{ fontSize: 13.5, color: SHELL.text2, fontWeight: 500, display: 'flex', gap: 0, flexWrap: 'wrap', letterSpacing: '-0.05px' }}>
                     {data.stats_fetched_at && (
                       <span>Stats from {relTime(data.stats_fetched_at)}</span>
                     )}
@@ -5319,7 +5359,7 @@ export default function Dashboard() {
                     const auditDate = parseUTC(data.analyzed_at)
                     const daysOld = auditDate ? (Date.now() - auditDate.getTime()) / 86400000 : 0
                     return daysOld > 7 && usagePct < 100 ? (
-                      <span style={{ fontSize: 11, fontWeight: 600, color: C.amber }}>Audit may be outdated</span>
+                      <span style={{ fontSize: 11, fontWeight: 600, color: '#f0a23b' }}>Audit may be outdated</span>
                     ) : null
                   })()}
 
@@ -5406,7 +5446,7 @@ export default function Dashboard() {
                     style={{ position: 'relative' }}
                   >
                     {refreshingStats ? 'Refreshing…'
-                      : statsFlash === 'ok'  ? <span style={{ color: C.green }}>Updated ✓</span>
+                      : statsFlash === 'ok'  ? <span style={{ color: '#34d27b' }}>Updated ✓</span>
                       : statsFlash === 'err' ? <span style={{ color: C.red }}>Failed ✕</span>
                       : 'Refresh stats'}
                   </button>
@@ -5446,9 +5486,9 @@ export default function Dashboard() {
                 const subsSeries = data.analytics?.subs_series_28d
                 const channelScore = data.insights?.channelScore
                 const haveScore = typeof channelScore === 'number'
-                const scoreColor = !haveScore ? 'rgba(10,10,15,0.45)'
+                const scoreColor = !haveScore ? SHELL.text3
                   : channelScore >= 70 ? '#059669'
-                  : channelScore >= 50 ? 'rgba(10,10,15,0.78)'
+                  : channelScore >= 50 ? SHELL.text1
                   : '#dc2626'
                 const scoreLabel = !haveScore ? 'Awaiting audit'
                   : channelScore >= 70 ? 'Strong'
@@ -5456,16 +5496,16 @@ export default function Dashboard() {
                   : 'Needs work'
 
                 const eyebrow = {
-                  fontSize: 11, fontWeight: 700, color: 'rgba(10,10,15,0.50)',
+                  fontSize: 11, fontWeight: 700, color: SHELL.text3,
                   letterSpacing: '0.10em', textTransform: 'uppercase', margin: 0,
                 }
                 const bigNum = {
-                  fontSize: 30, fontWeight: 700, color: '#0a0a0f',
+                  fontSize: 30, fontWeight: 700, color: SHELL.text1,
                   letterSpacing: '-1.0px', lineHeight: 1,
                   fontVariantNumeric: 'tabular-nums',
                 }
                 const subMeta = {
-                  fontSize: 11.5, fontWeight: 500, color: 'rgba(10,10,15,0.55)',
+                  fontSize: 11.5, fontWeight: 500, color: SHELL.text2,
                   letterSpacing: '-0.05px', fontVariantNumeric: 'tabular-nums',
                   margin: 0,
                 }
@@ -5474,8 +5514,8 @@ export default function Dashboard() {
                   const n = Number(d)
                   const pos = n >= 0
                   const color = pos ? '#059669' : '#dc2626'
-                  const bg    = pos ? 'rgba(5,150,105,0.08)' : 'rgba(229,37,27,0.07)'
-                  const bdr   = pos ? 'rgba(5,150,105,0.20)' : 'rgba(229,37,27,0.20)'
+                  const bg    = pos ? 'rgba(22,163,74,0.14)' : 'rgba(229,37,27,0.07)'
+                  const bdr   = pos ? 'rgba(22,163,74,0.34)' : 'rgba(229,37,27,0.20)'
                   return (
                     <span style={{
                       display: 'inline-flex', alignItems: 'center', gap: 3,
@@ -5493,7 +5533,7 @@ export default function Dashboard() {
                 }
                 const renderMilestoneBar = (pct) => (
                   <div style={{
-                    height: 3, background: 'rgba(10,10,15,0.06)', borderRadius: 99, overflow: 'hidden',
+                    height: 3, background: 'rgba(255,255,255,0.10)', borderRadius: 99, overflow: 'hidden',
                   }}>
                     <div style={{
                       width: `${pct}%`, height: '100%',
@@ -5516,7 +5556,7 @@ export default function Dashboard() {
                       <p style={bigNum}>{fmtNum(subs)}</p>
                       <div style={{ display: 'flex', flexDirection: 'column', gap: 5, marginTop: 'auto' }}>
                         {renderMilestoneBar(subPct)}
-                        <p style={subMeta}>Next <span style={{ color: '#0a0a0f', fontWeight: 700 }}>{fmtNum(subTarget)}</span></p>
+                        <p style={subMeta}>Next <span style={{ color: SHELL.text1, fontWeight: 700 }}>{fmtNum(subTarget)}</span></p>
                       </div>
                     </div>
 
@@ -5529,7 +5569,7 @@ export default function Dashboard() {
                       <p style={bigNum}>{fmtNum(tv)}</p>
                       <div style={{ display: 'flex', flexDirection: 'column', gap: 5, marginTop: 'auto' }}>
                         {renderMilestoneBar(viewPct)}
-                        <p style={subMeta}>Next <span style={{ color: '#0a0a0f', fontWeight: 700 }}>{fmtNum(viewTarget)}</span></p>
+                        <p style={subMeta}>Next <span style={{ color: SHELL.text1, fontWeight: 700 }}>{fmtNum(viewTarget)}</span></p>
                       </div>
                     </div>
 
@@ -5547,10 +5587,10 @@ export default function Dashboard() {
                         </>
                       ) : (
                         <>
-                          <p style={{ fontSize: 13, fontWeight: 500, color: 'rgba(10,10,15,0.55)', lineHeight: 1.4, margin: 0 }}>
+                          <p style={{ fontSize: 13, fontWeight: 500, color: SHELL.text2, lineHeight: 1.4, margin: 0 }}>
                             Connect YouTube Analytics on your next reconnect to unlock the 28-day trend line.
                           </p>
-                          <p style={{ ...subMeta, marginTop: 'auto', color: 'rgba(10,10,15,0.40)' }}>Not connected</p>
+                          <p style={{ ...subMeta, marginTop: 'auto', color: SHELL.text3 }}>Not connected</p>
                         </>
                       )}
                     </div>
@@ -5562,24 +5602,24 @@ export default function Dashboard() {
                         {haveScore && (
                           <span style={{
                             fontSize: 10.5, fontWeight: 700, color: scoreColor,
-                            background: channelScore >= 70 ? 'rgba(5,150,105,0.08)'
-                                      : channelScore >= 50 ? 'rgba(10,10,15,0.04)'
+                            background: channelScore >= 70 ? 'rgba(22,163,74,0.14)'
+                                      : channelScore >= 50 ? 'rgba(255,255,255,0.06)'
                                       : 'rgba(229,37,27,0.07)',
-                            border: `1px solid ${channelScore >= 70 ? 'rgba(5,150,105,0.20)' : channelScore >= 50 ? 'rgba(10,10,15,0.10)' : 'rgba(229,37,27,0.20)'}`,
+                            border: `1px solid ${channelScore >= 70 ? 'rgba(22,163,74,0.34)' : channelScore >= 50 ? 'rgba(255,255,255,0.12)' : 'rgba(229,37,27,0.20)'}`,
                             padding: '1px 8px', borderRadius: 100, letterSpacing: '-0.05px',
                           }}>{scoreLabel}</span>
                         )}
                       </div>
                       <p style={{ ...bigNum, color: scoreColor }}>{haveScore ? channelScore : '—'}</p>
                       <div style={{ display: 'flex', flexDirection: 'column', gap: 5, marginTop: 'auto' }}>
-                        <div style={{ height: 3, background: 'rgba(10,10,15,0.06)', borderRadius: 99, overflow: 'hidden' }}>
+                        <div style={{ height: 3, background: 'rgba(255,255,255,0.10)', borderRadius: 99, overflow: 'hidden' }}>
                           <div style={{
                             width: haveScore ? `${channelScore}%` : '0%', height: '100%',
                             background: scoreColor, borderRadius: 99,
                             transition: 'width 0.8s cubic-bezier(0.34,1.56,0.64,1)',
                           }}/>
                         </div>
-                        <p style={subMeta}>{haveScore ? <>Out of <span style={{ color: '#0a0a0f', fontWeight: 700 }}>100</span></> : 'Run an audit'}</p>
+                        <p style={subMeta}>{haveScore ? <>Out of <span style={{ color: SHELL.text1, fontWeight: 700 }}>100</span></> : 'Run an audit'}</p>
                       </div>
                     </div>
 
@@ -5590,11 +5630,11 @@ export default function Dashboard() {
               {/* Analytics-missing nudge — moved here from the quick-stats
                   strip (the strip is gone in the Feed redesign). */}
               {!data.analytics && (
-                <div style={{ display: 'flex', alignItems: 'center', gap: 12, background: C.amberBg, border: `1px solid ${C.amberBdr}`, borderLeft: `3px solid ${C.amber}`, borderRadius: '0 12px 12px 0', padding: '10px 16px', marginBottom: 18 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12, background: 'rgba(217,119,6,0.14)', border: `1px solid rgba(217,119,6,0.34)`, borderLeft: `3px solid ${C.amber}`, borderRadius: '0 12px 12px 0', padding: '10px 16px', marginBottom: 18 }}>
                   <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke={C.amber} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
                     <circle cx="8" cy="8" r="6.5"/><line x1="8" y1="5" x2="8" y2="8.5"/><circle cx="8" cy="11" r="0.7" fill={C.amber} stroke="none"/>
                   </svg>
-                  <p style={{ fontSize: 12.5, color: C.text2, lineHeight: 1.55 }}>
+                  <p style={{ fontSize: 12.5, color: SHELL.text2, lineHeight: 1.55 }}>
                     Grant <strong style={{ fontWeight: 600 }}>YouTube Analytics read access</strong> on the next reconnect to unlock retention, duration, and 90-day subscriber data.
                   </p>
                 </div>
@@ -6044,8 +6084,8 @@ export default function Dashboard() {
             return (
               <div style={{ maxWidth: 1040, margin: '40px auto 0' }}>
                 <div style={{ marginBottom: 20 }}>
-                  <h2 style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', marginBottom: 4 }}>Milestones</h2>
-                  <p style={{ fontSize: 13, color: C.text3 }}>
+                  <h2 style={{ fontSize: 22, fontWeight: 800, color: SHELL.text1, letterSpacing: '-0.5px', marginBottom: 4 }}>Milestones</h2>
+                  <p style={{ fontSize: 13, color: SHELL.text3 }}>
                     {totalEarned} of 3 categories started{perCat.some(p => p.upcoming) ? ' · progress to next tier below' : ''}
                   </p>
                 </div>
@@ -6077,12 +6117,12 @@ export default function Dashboard() {
 
                         {/* Tier value */}
                         <p style={{
-                          fontSize: 38, fontWeight: 800, color: C.text1,
+                          fontSize: 38, fontWeight: 800, color: SHELL.text1,
                           letterSpacing: '-1.5px', lineHeight: 1,
                           marginTop: 18, marginBottom: 6,
                           fontVariantNumeric: 'tabular-nums',
                         }}>{hasEarned ? fmtNum(p.latestTier) : '—'}</p>
-                        <p style={{ fontSize: 13, fontWeight: 600, color: C.text3, letterSpacing: '-0.1px' }}>
+                        <p style={{ fontSize: 13, fontWeight: 600, color: SHELL.text3, letterSpacing: '-0.1px' }}>
                           {hasEarned ? p.Title : 'Not yet earned'}
                         </p>
 
@@ -6090,7 +6130,7 @@ export default function Dashboard() {
                         {p.upcoming && (
                           <div style={{ alignSelf: 'stretch', marginTop: 22 }}>
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 7 }}>
-                              <span style={{ fontSize: 11, fontWeight: 700, color: C.text3, letterSpacing: '0.05em', textTransform: 'uppercase' }}>
+                              <span style={{ fontSize: 11, fontWeight: 700, color: SHELL.text3, letterSpacing: '0.05em', textTransform: 'uppercase' }}>
                                 Next: {fmtNum(p.upcoming.tier)}
                               </span>
                               <span style={{ fontSize: 11.5, fontWeight: 700, color: cat.h3, fontVariantNumeric: 'tabular-nums' }}>
@@ -6145,7 +6185,7 @@ export default function Dashboard() {
                             display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
                           }}>
                             <YTGLogo size={18}/>
-                            <span style={{ fontSize: 14, fontWeight: 800, color: C.text1, letterSpacing: '-0.3px' }}>
+                            <span style={{ fontSize: 14, fontWeight: 800, color: SHELL.text1, letterSpacing: '-0.3px' }}>
                               YTGrowth<span style={{ color: C.red }}>.io</span>
                             </span>
                           </div>
@@ -6180,8 +6220,8 @@ export default function Dashboard() {
           {data && nav === 'Overview' && data.insights && auditOpen && (
             <div style={{ maxWidth: 1040, margin: '0 auto' }}>
               <div style={{ marginBottom: 20, marginTop: 44 }}>
-                <h2 style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', marginBottom: 4 }}>Channel audit</h2>
-                <p style={{ fontSize: 13, color: C.text3 }}>{data.insights.priorityActions?.length ?? 0} priority actions{data.analyzed_at ? ` · Audited ${parseUTC(data.analyzed_at)?.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) ?? ''}` : ''}</p>
+                <h2 style={{ fontSize: 22, fontWeight: 800, color: SHELL.text1, letterSpacing: '-0.5px', marginBottom: 4 }}>Channel audit</h2>
+                <p style={{ fontSize: 13, color: SHELL.text3 }}>{data.insights.priorityActions?.length ?? 0} priority actions{data.analyzed_at ? ` · Audited ${parseUTC(data.analyzed_at)?.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) ?? ''}` : ''}</p>
               </div>
 
               {/* Summary + overall score */}
@@ -6191,7 +6231,7 @@ export default function Dashboard() {
                     {/* Score ring — left */}
                     <div style={{ flexShrink: 0, textAlign: 'center' }}>
                       <ScoreRing score={score} />
-                      <p style={{ fontSize: 11, color: C.text3, fontWeight: 500, marginTop: 4, letterSpacing: '0.03em', textTransform: 'uppercase' }}>Overall</p>
+                      <p style={{ fontSize: 11, color: SHELL.text3, fontWeight: 500, marginTop: 4, letterSpacing: '0.03em', textTransform: 'uppercase' }}>Overall</p>
                       {prevScore != null && prevScore !== score && (
                         <p style={{ fontSize: 11, fontWeight: 700, color: score > prevScore ? C.green : C.red, marginTop: 3 }}>
                           {score > prevScore ? '▲' : '▼'} {Math.abs(score - prevScore)} from last audit
@@ -6202,8 +6242,8 @@ export default function Dashboard() {
                     <div style={{ width: 1, alignSelf: 'stretch', background: C.border, flexShrink: 0 }}/>
                     {/* Summary text */}
                     <div style={{ flex: 1 }}>
-                      <p style={{ fontSize: 11, fontWeight: 600, color: C.text3, letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 10 }}>AI assessment</p>
-                      <p style={{ fontSize: 14, color: C.text1, lineHeight: 1.85 }}>{data.insights.channelSummary}</p>
+                      <p style={{ fontSize: 11, fontWeight: 600, color: SHELL.text3, letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 10 }}>AI assessment</p>
+                      <p style={{ fontSize: 14, color: SHELL.text1, lineHeight: 1.85 }}>{data.insights.channelSummary}</p>
                     </div>
                   </div>
                 </div>
@@ -6213,8 +6253,8 @@ export default function Dashboard() {
               {data.insights.categoryScores && (
                 <div className="ytg-card" style={{ padding: '24px 32px', marginBottom: 24 }}>
                   <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 20 }}>
-                    <p style={{ fontSize: 11, fontWeight: 600, color: C.text3, letterSpacing: '0.06em', textTransform: 'uppercase' }}>Score breakdown</p>
-                    <p style={{ fontSize: 11, color: C.text3 }}>Weighted formula · CTR &amp; retention count most</p>
+                    <p style={{ fontSize: 11, fontWeight: 600, color: SHELL.text3, letterSpacing: '0.06em', textTransform: 'uppercase' }}>Score breakdown</p>
+                    <p style={{ fontSize: 11, color: SHELL.text3 }}>Weighted formula · CTR &amp; retention count most</p>
                   </div>
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px 40px' }}>
                     {[
@@ -6230,8 +6270,8 @@ export default function Dashboard() {
                       const col = scoreColor(val)
                       return (
                         <div key={label} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                          <span style={{ fontSize: 11, fontWeight: 500, color: C.text3, flexShrink: 0, width: 36, textAlign: 'right' }}>{weight}</span>
-                          <span style={{ fontSize: 13, color: C.text2, fontWeight: 400, flexShrink: 0, width: 148 }}>{label}</span>
+                          <span style={{ fontSize: 11, fontWeight: 500, color: SHELL.text3, flexShrink: 0, width: 36, textAlign: 'right' }}>{weight}</span>
+                          <span style={{ fontSize: 13, color: SHELL.text2, fontWeight: 400, flexShrink: 0, width: 148 }}>{label}</span>
                           <div style={{ flex: 1, height: 4, background: '#eeeef3', borderRadius: 99, overflow: 'hidden' }}>
                             <div style={{ width: `${val ?? 0}%`, height: '100%', background: col, borderRadius: 99, transition: 'width 0.8s cubic-bezier(0.34,1.56,0.64,1)' }}/>
                           </div>
@@ -6265,8 +6305,8 @@ export default function Dashboard() {
                     <div style={{ marginBottom: 24 }}>
                       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                          <p style={{ fontSize: 20, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px' }}>Priority actions</p>
-                          <span style={{ fontSize: 10, fontWeight: 700, color: C.green, background: C.greenBg, padding: '3px 9px', borderRadius: 100, border: `1px solid ${C.greenBdr}`, letterSpacing: '0.08em', textTransform: 'uppercase' }}>All clear</span>
+                          <p style={{ fontSize: 20, fontWeight: 800, color: SHELL.text1, letterSpacing: '-0.5px' }}>Priority actions</p>
+                          <span style={{ fontSize: 10, fontWeight: 700, color: '#34d27b', background: C.greenBg, padding: '3px 9px', borderRadius: 100, border: `1px solid ${C.greenBdr}`, letterSpacing: '0.08em', textTransform: 'uppercase' }}>All clear</span>
                         </div>
                       </div>
                       <div style={{
@@ -6276,8 +6316,8 @@ export default function Dashboard() {
                         borderRadius: '0 12px 12px 0',
                         padding: '14px 18px',
                       }}>
-                        <p style={{ fontSize: 13, color: C.text1, fontWeight: 600, marginBottom: 2 }}>You've handled every priority action.</p>
-                        <p style={{ fontSize: 12.5, color: C.text3 }}>Re-audit to surface new ones, or come back next month.</p>
+                        <p style={{ fontSize: 13, color: SHELL.text1, fontWeight: 600, marginBottom: 2 }}>You've handled every priority action.</p>
+                        <p style={{ fontSize: 12.5, color: SHELL.text3 }}>Re-audit to surface new ones, or come back next month.</p>
                       </div>
                     </div>
                   )
@@ -6287,15 +6327,15 @@ export default function Dashboard() {
                   <div style={{ marginBottom: 24 }}>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16, flexWrap: 'wrap', gap: 12 }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                        <p style={{ fontSize: 20, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px' }}>Priority actions</p>
-                        <span style={{ fontSize: 11, fontWeight: 700, color: C.text3, background: '#f1f1f6', padding: '3px 9px', borderRadius: 100, border: '1px solid #e6e6ec', fontVariantNumeric: 'tabular-nums' }}>{openActions.length} open</span>
+                        <p style={{ fontSize: 20, fontWeight: 800, color: SHELL.text1, letterSpacing: '-0.5px' }}>Priority actions</p>
+                        <span style={{ fontSize: 11, fontWeight: 700, color: SHELL.text3, background: '#f1f1f6', padding: '3px 9px', borderRadius: 100, border: '1px solid #e6e6ec', fontVariantNumeric: 'tabular-nums' }}>{openActions.length} open</span>
                       </div>
                       {doneCount > 0 && (
                         <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontVariantNumeric: 'tabular-nums' }}>
                           <div style={{ width: 72, height: 3, background: '#eef0f4', borderRadius: 99, overflow: 'hidden' }}>
                             <div style={{ width: `${(doneCount / total) * 100}%`, height: '100%', background: C.green, borderRadius: 99, transition: 'width 0.6s ease' }}/>
                           </div>
-                          <span style={{ fontSize: 11.5, fontWeight: 600, color: C.text3 }}>
+                          <span style={{ fontSize: 11.5, fontWeight: 600, color: SHELL.text3 }}>
                             {doneCount} of {total} done
                           </span>
                         </div>
@@ -6349,8 +6389,8 @@ export default function Dashboard() {
                   return (
                     <div className="ytg-card" style={{ padding: '20px 22px' }}>
                       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
-                        <p style={{ fontSize: 11, fontWeight: 700, color: C.green, letterSpacing: '0.07em', textTransform: 'uppercase' }}>Quick wins</p>
-                        <span style={{ fontSize: 11, fontWeight: 600, color: C.text3, background: '#f1f1f6', padding: '2px 7px', borderRadius: 20, border: '1px solid #e6e6ec' }}>{wins.length} left</span>
+                        <p style={{ fontSize: 11, fontWeight: 700, color: '#34d27b', letterSpacing: '0.07em', textTransform: 'uppercase' }}>Quick wins</p>
+                        <span style={{ fontSize: 11, fontWeight: 600, color: SHELL.text3, background: '#f1f1f6', padding: '2px 7px', borderRadius: 20, border: '1px solid #e6e6ec' }}>{wins.length} left</span>
                       </div>
                       <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 2 }}>
                         {data.insights.quickWins.map((w, i) => {
@@ -6384,13 +6424,13 @@ export default function Dashboard() {
                   {data.insights.biggestRisk && (
                     <div>
                       <p style={{ fontSize: 11, fontWeight: 700, color: C.red, letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 8 }}>Biggest risk</p>
-                      <p style={{ fontSize: 14, color: C.text1, lineHeight: 1.7 }}>{data.insights.biggestRisk}</p>
+                      <p style={{ fontSize: 14, color: SHELL.text1, lineHeight: 1.7 }}>{data.insights.biggestRisk}</p>
                     </div>
                   )}
                   {data.insights.topPerformingPattern && (
                     <div style={{ paddingTop: data.insights.biggestRisk ? 16 : 0, borderTop: data.insights.biggestRisk ? `1px solid ${C.border}` : 'none' }}>
-                      <p style={{ fontSize: 11, fontWeight: 700, color: C.green, letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 8 }}>What's working</p>
-                      <p style={{ fontSize: 14, color: C.text1, lineHeight: 1.7 }}>{data.insights.topPerformingPattern}</p>
+                      <p style={{ fontSize: 11, fontWeight: 700, color: '#34d27b', letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 8 }}>What's working</p>
+                      <p style={{ fontSize: 14, color: SHELL.text1, lineHeight: 1.7 }}>{data.insights.topPerformingPattern}</p>
                     </div>
                   )}
                 </div>
@@ -6760,8 +6800,8 @@ export default function Dashboard() {
           {data && nav === 'Overview' && patterns && auditOpen && (
             <div style={{ maxWidth: 1040, margin: '0 auto' }}>
               <div style={{ marginBottom: 20, marginTop: 44 }}>
-                <h2 style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', marginBottom: 4 }}>Content patterns</h2>
-                <p style={{ fontSize: 13, color: C.text3 }}>What's working and what isn't</p>
+                <h2 style={{ fontSize: 22, fontWeight: 800, color: SHELL.text1, letterSpacing: '-0.5px', marginBottom: 4 }}>Content patterns</h2>
+                <p style={{ fontSize: 13, color: SHELL.text3 }}>What's working and what isn't</p>
               </div>
 
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,minmax(0,1fr))', gap: 16, marginBottom: 16 }}>
@@ -6771,14 +6811,14 @@ export default function Dashboard() {
                   { label: 'Avg engagement rate', value: `${patterns.likeRate}%`,   verdict: patterns.likeRate >= 3 ? 'Healthy' : patterns.likeRate >= 1 ? 'Average' : 'Below average', good: patterns.likeRate >= 3, hint: 'likes ÷ views — 3%+ is strong' },
                 ].map(p => (
                   <div key={p.label} className="ytg-card" title={p.hint || undefined} style={{ padding: '20px 22px', cursor: p.hint ? 'help' : 'default' }}>
-                    <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 10 }}>{p.label}</p>
-                    <p style={{ fontSize: 26, fontWeight: 800, color: C.text1, letterSpacing: '-0.8px', marginBottom: 10, fontVariantNumeric: 'tabular-nums' }}>{p.value}</p>
+                    <p style={{ fontSize: 11, fontWeight: 700, color: SHELL.text3, letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 10 }}>{p.label}</p>
+                    <p style={{ fontSize: 26, fontWeight: 800, color: SHELL.text1, letterSpacing: '-0.8px', marginBottom: 10, fontVariantNumeric: 'tabular-nums' }}>{p.value}</p>
                     <span style={{
                       fontSize: 11, fontWeight: 700,
                       color:   p.good ? C.green  : C.amber,
                       background: 'transparent',
                       padding: '3px 10px', borderRadius: 20,
-                      border: `1.5px solid ${p.good ? C.greenBdr : C.amberBdr}`,
+                      border: `1.5px solid ${p.good ? C.greenBdr : 'rgba(217,119,6,0.34)'}`,
                     }}>{p.verdict}</span>
                   </div>
                 ))}
@@ -6795,12 +6835,12 @@ export default function Dashboard() {
                       <>
                         <div style={{ display: 'flex', gap: 11, marginBottom: 13, alignItems: 'flex-start' }}>
                           {video.thumbnail && <img src={video.thumbnail} alt="" style={{ width: 68, height: 43, borderRadius: 7, objectFit: 'cover', flexShrink: 0 }}/>}
-                          <p style={{ fontSize: 14, fontWeight: 600, color: C.text1, lineHeight: 1.5 }}>{video.title}</p>
+                          <p style={{ fontSize: 14, fontWeight: 600, color: SHELL.text1, lineHeight: 1.5 }}>{video.title}</p>
                         </div>
                         <div style={{ display: 'flex', gap: 20, marginBottom: 12 }}>
                           {[['Views', fmtNum(video.views), isGood ? C.green : C.red], ['Likes', fmtNum(video.likes), C.text1]].map(([lbl, val, col]) => (
                             <div key={lbl}>
-                              <p style={{ fontSize: 12, color: C.text3, marginBottom: 3, textTransform: 'uppercase', letterSpacing: '0.07em', fontWeight: 700 }}>{lbl}</p>
+                              <p style={{ fontSize: 12, color: SHELL.text3, marginBottom: 3, textTransform: 'uppercase', letterSpacing: '0.07em', fontWeight: 700 }}>{lbl}</p>
                               <p style={{ fontSize: 21, fontWeight: 800, color: col, letterSpacing: '-0.8px', fontVariantNumeric: 'tabular-nums' }}>{val}</p>
                             </div>
                           ))}
@@ -6821,17 +6861,17 @@ export default function Dashboard() {
               </div>
 
               <div className="ytg-card" style={{ padding: '20px 22px' }}>
-                <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 16 }}>Content mix</p>
+                <p style={{ fontSize: 11, fontWeight: 700, color: SHELL.text3, letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 16 }}>Content mix</p>
                 <div style={{ display: 'flex', gap: 32, alignItems: 'flex-start' }}>
                   {[{ l: 'Shorts', v: patterns.shortsCount, s: '≤60s' }, { l: 'Long-form', v: patterns.longsCount, s: '>60s' }].map(p => (
                     <div key={p.l}>
-                      <p style={{ fontSize: 12, color: C.text3, marginBottom: 4, textTransform: 'uppercase', letterSpacing: '0.07em', fontWeight: 700 }}>{p.l}</p>
-                      <p style={{ fontSize: 26, fontWeight: 800, color: C.text1, letterSpacing: '-1px', fontVariantNumeric: 'tabular-nums' }}>{p.v}</p>
-                      <p style={{ fontSize: 12, color: C.text3, marginTop: 2 }}>{p.s}</p>
+                      <p style={{ fontSize: 12, color: SHELL.text3, marginBottom: 4, textTransform: 'uppercase', letterSpacing: '0.07em', fontWeight: 700 }}>{p.l}</p>
+                      <p style={{ fontSize: 26, fontWeight: 800, color: SHELL.text1, letterSpacing: '-1px', fontVariantNumeric: 'tabular-nums' }}>{p.v}</p>
+                      <p style={{ fontSize: 12, color: SHELL.text3, marginTop: 2 }}>{p.s}</p>
                     </div>
                   ))}
                   <div style={{ flex: 1, paddingLeft: 28, borderLeft: `1px solid #ebebef` }}>
-                    <p style={{ fontSize: 14, color: C.text2, lineHeight: 1.85 }}>
+                    <p style={{ fontSize: 14, color: SHELL.text2, lineHeight: 1.85 }}>
                       {patterns.shortAvg > patterns.longAvg
                         ? `Shorts outperform long-form by ${fmtNum(patterns.shortAvg - patterns.longAvg)} views on average. Lean into Shorts for discovery.`
                         : patterns.longAvg > patterns.shortAvg
