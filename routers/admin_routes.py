@@ -514,7 +514,27 @@ def admin_test_welcome(request: Request, to: str = "", kind: str = "immediate"):
             })
             return JSONResponse({"ok": True, "kind": "topup", "to": target, "used": used, "allowance": allowance})
 
-        return JSONResponse({"error": "kind must be 'immediate', 'audit', 'weekly', 'reengagement', 'milestone', or 'topup'"}, status_code=400)
+        if kind == "plan_change":
+            from app.email_templates.plan_change import build_email
+            import resend as _resend
+            _resend.api_key = os.environ.get("RESEND_API_KEY", "")
+            base_url = os.environ.get("BASE_URL", "https://ytgrowth.io")
+            text, html = build_email(
+                first_name="Denzil",
+                dashboard_url=f"{base_url}/dashboard",
+                unsubscribe_url=f"{base_url}/email/unsubscribe?token=test",
+            )
+            _resend.Emails.send({
+                "from":     "Denzil from YTGrowth <hello@ytgrowth.io>",
+                "to":       [target],
+                "subject":  "A change to your free YTGrowth plan",
+                "html":     html,
+                "text":     text,
+                "reply_to": "hello@ytgrowth.io",
+            })
+            return JSONResponse({"ok": True, "kind": "plan_change", "to": target})
+
+        return JSONResponse({"error": "kind must be 'immediate', 'audit', 'weekly', 'reengagement', 'milestone', 'topup', or 'plan_change'"}, status_code=400)
     except Exception as e:
         import traceback
         tb = traceback.format_exc()

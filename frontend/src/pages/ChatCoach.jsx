@@ -53,15 +53,15 @@ if (typeof document !== 'undefined' && !document.getElementById('ytg-chat-scroll
   s.textContent = `
     .ytg-chat-scroll {
       scrollbar-width: thin;
-      scrollbar-color: rgba(10,10,15,0.14) transparent;
+      scrollbar-color: rgba(255,255,255,0.14) transparent;
     }
     .ytg-chat-scroll::-webkit-scrollbar { width: 6px; height: 6px }
     .ytg-chat-scroll::-webkit-scrollbar-thumb {
-      background: rgba(10,10,15,0.14);
+      background: rgba(255,255,255,0.14);
       border-radius: 99px;
     }
     .ytg-chat-scroll::-webkit-scrollbar-thumb:hover {
-      background: rgba(10,10,15,0.22);
+      background: rgba(255,255,255,0.22);
     }
     .ytg-chat-scroll::-webkit-scrollbar-track,
     .ytg-chat-scroll::-webkit-scrollbar-button {
@@ -69,7 +69,7 @@ if (typeof document !== 'undefined' && !document.getElementById('ytg-chat-scroll
       display: none;
     }
     .ytg-chat-textarea::placeholder {
-      color: rgba(10,10,15,0.38);
+      color: rgba(255,255,255,0.30);
     }
     @keyframes ytgPulseSoft {
       0%, 100% { opacity: 0.55 }
@@ -90,7 +90,7 @@ if (typeof document !== 'undefined' && !document.getElementById('ytg-chat-scroll
       content: '•';
       position: absolute; left: 6px; top: 0;
       font-size: 14.5px; font-weight: 600;
-      color: rgba(10,10,15,0.55);
+      color: rgba(255,255,255,0.40);
       line-height: inherit;
     }
     .md-list-ol > li {
@@ -100,7 +100,7 @@ if (typeof document !== 'undefined' && !document.getElementById('ytg-chat-scroll
       content: counter(mdlist) '.';
       position: absolute; left: 0; top: 0;
       font-size: 13.5px; font-weight: 600;
-      color: rgba(10,10,15,0.55);
+      color: rgba(255,255,255,0.40);
       font-variant-numeric: tabular-nums;
       line-height: inherit;
     }
@@ -111,30 +111,31 @@ if (typeof document !== 'undefined' && !document.getElementById('ytg-chat-scroll
 const FONT_STACK = "'Geist', 'Inter', system-ui, -apple-system, sans-serif"
 const FONT_MONO  = "'Geist Mono', ui-monospace, SFMono-Regular, monospace"
 
-/* ─── Light palette. Two surfaces (page wash + raised cards), neutral
-       text stack, brand red as the only saturated colour. Hairlines are
-       pure-black alpha so they sit ON the surface (the move that pushes
-       light cards from "drawn" to "physical"). ────────────────────── */
+/* ─── Neutral dark palette (experiment). Two surfaces (page base + raised
+       cards) + an elevated step, light text stack, brand red as the only
+       saturated colour and only on CTAs / active / score. Hairlines are
+       white alpha so they sit ON the dark surface, barely visible, just
+       enough to separate planes. ────────────────────────────────────── */
 const C = {
-  bg:           '#fafafb',           // page wash, marginally off-white
-  surface:      '#ffffff',           // composer, pills, assistant bubble
-  surfaceLift:  '#f4f4f7',           // hover state on raised elements
-  hair:         'rgba(10,10,15,0.07)',
-  hairActive:   'rgba(10,10,15,0.20)',
-  text1:        '#0a0a0f',
-  text2:        'rgba(10,10,15,0.66)',
-  text3:        'rgba(10,10,15,0.42)',
-  text4:        'rgba(10,10,15,0.26)',
+  bg:           '#0e0e10',           // page base
+  surface:      '#18181b',           // composer, pills, assistant bubble
+  surfaceLift:  '#222226',           // hover / elevated raised elements
+  hair:         'rgba(255,255,255,0.08)',
+  hairActive:   'rgba(255,255,255,0.16)',
+  text1:        '#f4f4f5',
+  text2:        '#71717a',
+  text3:        '#3f3f46',
+  text4:        '#3f3f46',
   red:          '#e5251b',
   redHi:        '#ef3a31',
   redLo:        '#c81d14',
-  redSoft:      'rgba(229,37,27,0.06)',
-  redBdr:       'rgba(229,37,27,0.22)',
-  // Single soft elevation + the inner white highlight on the top edge
-  // (the iOS card trick). One shadow value used across every raised
-  // surface so the elevation system reads coherent.
-  cardShadow:     '0 1px 2px rgba(15,15,25,0.04), inset 0 1px 0 rgba(255,255,255,0.7)',
-  cardShadowLift: '0 6px 24px rgba(15,15,25,0.07), inset 0 1px 0 rgba(255,255,255,0.7)',
+  redSoft:      'rgba(229,37,27,0.12)',
+  redBdr:       'rgba(229,37,27,0.30)',
+  // Single dark elevation shadow used across every raised surface so the
+  // elevation system reads coherent. The light-mode inner-white-highlight
+  // trick is dropped (it reads as a seam on dark).
+  cardShadow:     '0 1px 3px rgba(0,0,0,0.4)',
+  cardShadowLift: '0 6px 20px rgba(0,0,0,0.55)',
   spring:         'cubic-bezier(0.32, 0.72, 0, 1)',
 }
 
@@ -203,12 +204,12 @@ const MARKDOWN_COMPONENTS = {
   // Bold: weight bumps to 700 (a real beat heavier than the 500 body)
   // so emphasis lands without italics (italics are retired in our system).
   strong: ({ children }) => (
-    <strong style={{ fontWeight: 700, color: '#000000' }}>{children}</strong>
+    <strong style={{ fontWeight: 700, color: C.text1 }}>{children}</strong>
   ),
   // Italics map to bold + subtle color shift so the reader still senses
   // emphasis without using a font style we've banned in the system.
   em: ({ children }) => (
-    <span style={{ fontWeight: 600, color: '#000000' }}>{children}</span>
+    <span style={{ fontWeight: 600, color: C.text1 }}>{children}</span>
   ),
   // Bullet list. Class drives the ::before marker (CSS) so we don't need
   // react-markdown to pass an ordered prop (it dropped that in v10).
@@ -244,7 +245,7 @@ const MARKDOWN_COMPONENTS = {
         <pre style={{
           margin: '8px 0 12px 0',
           padding: '12px 14px',
-          background: 'rgba(10,10,15,0.04)',
+          background: 'rgba(255,255,255,0.05)',
           border: `1px solid ${C.hair}`,
           borderRadius: 10,
           fontSize: 13, fontFamily: FONT_MONO,
@@ -255,7 +256,7 @@ const MARKDOWN_COMPONENTS = {
     }
     return (
       <code style={{
-        background: 'rgba(10,10,15,0.05)',
+        background: 'rgba(255,255,255,0.06)',
         padding: '1.5px 5px',
         borderRadius: 4,
         fontSize: '0.92em', fontFamily: FONT_MONO,
@@ -269,7 +270,7 @@ const MARKDOWN_COMPONENTS = {
     <blockquote style={{
       margin: '8px 0 12px 0',
       padding: '4px 0 4px 14px',
-      borderLeft: `2px solid rgba(10,10,15,0.18)`,
+      borderLeft: `2px solid rgba(255,255,255,0.18)`,
       color: C.text2,
       fontWeight: 500,
     }}>{children}</blockquote>
@@ -278,19 +279,19 @@ const MARKDOWN_COMPONENTS = {
   // top margin so they break sections cleanly.
   h1: ({ children }) => (
     <h3 style={{
-      margin: '14px 0 8px 0', fontSize: 15.5, fontWeight: 700, color: '#000000',
+      margin: '14px 0 8px 0', fontSize: 15.5, fontWeight: 700, color: C.text1,
       letterSpacing: '-0.015em', lineHeight: 1.3,
     }}>{children}</h3>
   ),
   h2: ({ children }) => (
     <h3 style={{
-      margin: '14px 0 8px 0', fontSize: 15, fontWeight: 700, color: '#000000',
+      margin: '14px 0 8px 0', fontSize: 15, fontWeight: 700, color: C.text1,
       letterSpacing: '-0.015em', lineHeight: 1.3,
     }}>{children}</h3>
   ),
   h3: ({ children }) => (
     <h3 style={{
-      margin: '12px 0 6px 0', fontSize: 14.5, fontWeight: 700, color: '#000000',
+      margin: '12px 0 6px 0', fontSize: 14.5, fontWeight: 700, color: C.text1,
       letterSpacing: '-0.01em', lineHeight: 1.3,
     }}>{children}</h3>
   ),
@@ -489,14 +490,14 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
         // catches light differently than the rest of the page. The
         // composer is the right place for it here.
         display: 'flex', alignItems: 'center', gap: 12,
-        background: 'rgba(255,255,255,0.72)',
+        background: 'rgba(34,34,38,0.72)',
         backdropFilter: 'blur(24px) saturate(180%)',
         WebkitBackdropFilter: 'blur(24px) saturate(180%)',
-        border: `1px solid ${input.length > 0 || sending ? C.redBdr : 'rgba(10,10,15,0.10)'}`,
+        border: `1px solid ${input.length > 0 || sending ? C.redBdr : C.hair}`,
         borderRadius: 20, padding: '16px 16px 16px 24px',
         boxShadow: input.length > 0 || sending
-          ? `0 0 0 4px ${C.redSoft}, 0 8px 32px rgba(15,15,25,0.08), 0 1px 2px rgba(15,15,25,0.05), inset 0 1px 0 rgba(255,255,255,0.95)`
-          : `0 8px 32px rgba(15,15,25,0.06), 0 1px 2px rgba(15,15,25,0.04), inset 0 1px 0 rgba(255,255,255,0.9)`,
+          ? `0 0 0 4px ${C.redSoft}, 0 1px 3px rgba(0,0,0,0.4)`
+          : `0 1px 3px rgba(0,0,0,0.4)`,
         transition: `border-color 220ms ${C.spring}, box-shadow 220ms ${C.spring}`,
       }}
     >
@@ -544,13 +545,13 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
           // Red-at-low-opacity reads as pink and cheap; charcoal-tint
           // reads as "off but present."
           background: isOff
-            ? 'rgba(10,10,15,0.06)'
+            ? 'rgba(255,255,255,0.06)'
             : `linear-gradient(180deg, ${C.redHi} 0%, ${C.red} 100%)`,
           color: isOff ? C.text4 : '#fff',
           cursor: isOff ? 'default' : 'pointer',
           display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
           boxShadow: isOff
-            ? 'inset 0 1px 0 rgba(255,255,255,0.6)'
+            ? '0 1px 3px rgba(0,0,0,0.4)'
             : '0 1px 2px rgba(229,37,27,0.34), inset 0 1px 0 rgba(255,255,255,0.24)',
           transition: `filter 160ms ${C.spring}, transform 160ms ${C.spring}, background 200ms ${C.spring}`,
         }}
@@ -626,7 +627,7 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
         }}>
           <span style={{
             width: 6, height: 6, borderRadius: 99,
-            background: meterEmpty ? C.red : remaining < allowance * 0.25 ? C.red : '#16a34a',
+            background: meterEmpty ? C.red : remaining < allowance * 0.25 ? C.red : '#22c55e',
             boxShadow: meterEmpty
               ? '0 0 0 3px rgba(229,37,27,0.16)'
               : remaining < allowance * 0.25
@@ -665,9 +666,11 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
       minHeight: 540,
       fontFamily: FONT_STACK,
       color: C.text1,
-      // No painted background. Transparent content on the app's neutral
-      // wash, exactly like every other page in the suite. The radial
-      // slab is what made Chat read as a foreign full-width panel.
+      // Dark-mode experiment: this page owns its base background so the
+      // conversion is actually visible. The rest of the app shell is
+      // still light, so the page column reads dark on a light gutter
+      // until/unless the dark theme is rolled out app-wide.
+      backgroundColor: C.bg,
     }}>
       {/* Standard page header — same scale as the rest of the suite
           (26/700/-0.7px + 14/500). Usage chip inline on the right,
@@ -696,7 +699,7 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
           }}>
             <span style={{
               width: 6, height: 6, borderRadius: 99,
-              background: meterEmpty ? C.red : remaining < allowance * 0.25 ? C.red : '#16a34a',
+              background: meterEmpty ? C.red : remaining < allowance * 0.25 ? C.red : '#22c55e',
               boxShadow: meterEmpty
                 ? '0 0 0 3px rgba(229,37,27,0.16)'
                 : remaining < allowance * 0.25
@@ -722,7 +725,7 @@ export default function ChatCoach({ onNavigate, billingPlan }) {
         }}>
           <div style={{
             width: 24, height: 24, marginBottom: 14,
-            border: `2px solid rgba(10,10,15,0.08)`,
+            border: `2px solid rgba(255,255,255,0.10)`,
             borderTop: `2px solid ${C.text1}`,
             borderRadius: '50%', animation: 'spin 0.8s linear infinite',
           }}/>
@@ -960,7 +963,7 @@ function MessageBubble({ role, content, sources }) {
       </span>
       <div style={{ flex: 1, minWidth: 0 }}>
         <div style={{
-          background: 'linear-gradient(180deg, #ffffff 0%, #fafafc 100%)',
+          background: 'linear-gradient(180deg, #1c1c1f 0%, #161618 100%)',
           border: `1px solid ${C.hair}`,
           borderRadius: '4px 14px 14px 14px',
           padding: '14px 18px',
@@ -1006,7 +1009,7 @@ function ConversationRail({
   const groups = groupConversationsByRecency(conversations)
   const meterEmpty = remaining === 0 && allowance > 0
   const meterLow   = remaining > 0 && remaining < allowance * 0.25
-  const dotColor   = meterEmpty ? C.red : meterLow ? C.red : '#16a34a'
+  const dotColor   = meterEmpty ? C.red : meterLow ? C.red : '#22c55e'
   return (
     <aside style={{
       width: 232,
@@ -1129,9 +1132,9 @@ function ConversationRow({ conversation, active, onSelect, onDelete, switching }
   // as a card; should read as a list selection). Hover = even lighter
   // tint. Inactive = transparent so the list breathes.
   const bg = active
-    ? 'rgba(10,10,15,0.055)'
+    ? 'rgba(255,255,255,0.06)'
     : hover
-      ? 'rgba(10,10,15,0.03)'
+      ? 'rgba(255,255,255,0.035)'
       : 'transparent'
   return (
     <div
