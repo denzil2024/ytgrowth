@@ -64,40 +64,40 @@ if (typeof document !== 'undefined' && !document.getElementById('seo-opt-styles'
      the close shadow; second at 16px is the ambient lift. Still well within
      restrained territory — no dual-glow red shadows. */
   .seo-glass-card {
-    background: #ffffff;
-    border: 1px solid rgba(10,10,15,0.07) !important;
+    background: linear-gradient(180deg,#1e1e24 0%,#18181c 100%);
+    border: 1px solid rgba(255,255,255,0.08) !important;
     border-radius: 14px;
-    box-shadow: 0 1px 2px rgba(15,15,25,0.04), 0 6px 18px rgba(15,15,25,0.05), inset 0 1px 0 rgba(255,255,255,0.7) !important;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.04) !important;
     transition: box-shadow 200ms cubic-bezier(0.2,0.7,0.3,1), border-color 200ms cubic-bezier(0.2,0.7,0.3,1);
   }
   .seo-glass-card:hover {
-    border-color: rgba(10,10,15,0.14) !important;
-    box-shadow: 0 2px 6px rgba(15,15,25,0.05), 0 12px 32px rgba(15,15,25,0.08), inset 0 1px 0 rgba(255,255,255,0.7) !important;
+    border-color: rgba(255,255,255,0.16) !important;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.05) !important;
   }
   .seo-suggestion-card {
-    background: #ffffff;
-    border: 1px solid rgba(10,10,15,0.07);
+    background: linear-gradient(180deg,#1e1e24 0%,#18181c 100%);
+    border: 1px solid rgba(255,255,255,0.08);
     border-radius: 14px;
     overflow: hidden;
     margin-bottom: 10px;
-    box-shadow: 0 1px 2px rgba(15,15,25,0.04), 0 6px 18px rgba(15,15,25,0.05), inset 0 1px 0 rgba(255,255,255,0.7);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.04);
     transition: box-shadow 200ms cubic-bezier(0.2,0.7,0.3,1), border-color 200ms cubic-bezier(0.2,0.7,0.3,1), transform 200ms cubic-bezier(0.2,0.7,0.3,1);
   }
   .seo-suggestion-card:hover {
-    border-color: rgba(10,10,15,0.14);
-    box-shadow: 0 2px 6px rgba(15,15,25,0.05), 0 12px 32px rgba(15,15,25,0.08), inset 0 1px 0 rgba(255,255,255,0.7);
+    border-color: rgba(255,255,255,0.16);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.05);
     transform: translateY(-1px);
   }
-  .seo-kw-row:hover .seo-kw-phrase { color: #0f0f13 !important; }
+  .seo-kw-row:hover .seo-kw-phrase { color: #f4f4f5 !important; }
   .seo-format-card { outline: none; }
   .seo-format-card:hover {
-    border-color: rgba(0,0,0,0.18);
-    box-shadow: 0 2px 8px rgba(0,0,0,0.06), 0 8px 22px rgba(0,0,0,0.07);
+    border-color: rgba(255,255,255,0.16);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.55);
     transform: translateY(-1px);
   }
   .seo-format-card:focus-visible {
-    border-color: rgba(229,37,27,0.45);
-    box-shadow: 0 0 0 3px rgba(229,37,27,0.12);
+    border-color: rgba(229,37,27,0.55);
+    box-shadow: 0 0 0 3px rgba(229,37,27,0.20);
   }
   /* Intent picker row — hairline card, green-tinted hover that signals
      "this is a selection moment". Matches the Keywords intent picker
@@ -106,10 +106,10 @@ if (typeof document !== 'undefined' && !document.getElementById('seo-opt-styles'
     display: flex; align-items: center; gap: 14px;
     width: 100%;
     padding: 16px 18px;
-    border: 1px solid rgba(10,10,15,0.08);
+    border: 1px solid rgba(255,255,255,0.08);
     border-radius: 12px;
-    cursor: pointer; background: #ffffff;
-    box-shadow: 0 1px 2px rgba(15,15,25,0.03);
+    cursor: pointer; background: #1c1c21;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.4);
     font-family: inherit;
     text-align: left;
     transition: background 160ms cubic-bezier(0.32, 0.72, 0, 1),
@@ -118,17 +118,17 @@ if (typeof document !== 'undefined' && !document.getElementById('seo-opt-styles'
                 transform 160ms cubic-bezier(0.32, 0.72, 0, 1);
   }
   .seo-intent-opt:hover {
-    border-color: rgba(22,163,74,0.30);
-    background: rgba(22,163,74,0.04);
-    box-shadow: 0 4px 14px rgba(22,163,74,0.08);
+    border-color: rgba(52,210,123,0.38);
+    background: rgba(22,163,74,0.12);
+    box-shadow: 0 4px 14px rgba(0,0,0,0.4);
     transform: translateY(-1px);
   }
   .seo-intent-opt .seo-intent-arrow {
-    color: rgba(10,10,15,0.32);
+    color: rgba(255,255,255,0.32);
     transition: color 160ms ease, transform 160ms ease;
   }
   .seo-intent-opt:hover .seo-intent-arrow {
-    color: #16a34a; transform: translateX(3px);
+    color: #34d27b; transform: translateX(3px);
   }
   /* Outlined pill that escapes the intent picker — "Let AI decide". */
   .seo-intent-decide-btn {
@@ -138,34 +138,34 @@ if (typeof document !== 'undefined' && !document.getElementById('seo-opt-styles'
     font-size: 12.5px; font-weight: 600;
     font-family: inherit;
     letter-spacing: -0.01em;
-    color: rgba(10,10,15,0.55);
+    color: rgba(255,255,255,0.55);
     background: transparent;
-    border: 1px solid rgba(10,10,15,0.12);
+    border: 1px solid rgba(255,255,255,0.14);
     border-radius: 100px;
     cursor: pointer;
     transition: background 160ms ease, color 160ms ease, border-color 160ms ease;
   }
   .seo-intent-decide-btn:hover {
-    background: rgba(10,10,15,0.03);
-    color: #0a0a0f;
-    border-color: rgba(10,10,15,0.20);
+    background: rgba(255,255,255,0.05);
+    color: #f4f4f5;
+    border-color: rgba(255,255,255,0.22);
   }
 
   /* Local button classes — match the canonical button grammar (red CTA
      with inset highlight + soft shadow, no dual-glow). */
   .seo-btn {
     display: inline-flex; align-items: center; gap: 6px;
-    padding: 9px 18px; border-radius: 100px; border: 1px solid rgba(10,10,15,0.12);
+    padding: 9px 18px; border-radius: 100px; border: 1px solid rgba(255,255,255,0.14);
     font-family: inherit; font-size: 13px; font-weight: 600;
-    background: #ffffff; color: rgba(10,10,15,0.62); cursor: pointer;
+    background: rgba(255,255,255,0.04); color: #a1a1aa; cursor: pointer;
     transition: background 160ms cubic-bezier(0.32,0.72,0,1), color 160ms cubic-bezier(0.32,0.72,0,1), border-color 160ms cubic-bezier(0.32,0.72,0,1);
     white-space: nowrap;
     letter-spacing: -0.01em;
   }
   .seo-btn:hover {
-    background: rgba(10,10,15,0.03);
-    color: #0a0a0f;
-    border-color: rgba(10,10,15,0.20);
+    background: rgba(255,255,255,0.07);
+    color: #f4f4f5;
+    border-color: rgba(255,255,255,0.22);
   }
   .seo-btn-primary {
     display: inline-flex; align-items: center; gap: 6px;
@@ -181,17 +181,17 @@ if (typeof document !== 'undefined' && !document.getElementById('seo-opt-styles'
     filter: brightness(1.06); transform: translateY(-1px);
   }
   .seo-btn-primary:disabled {
-    background: rgba(10,10,15,0.06); color: rgba(10,10,15,0.26); cursor: default;
+    background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.26); cursor: default;
     box-shadow: none;
   }
 
   /* ── Reports list — matches the Competitors tracked accordion grammar. */
   .seo-report-wrapper { position: relative; margin-bottom: 14px; }
   .seo-report-header {
-    background: #ffffff;
-    border: 1px solid rgba(10,10,15,0.07);
+    background: linear-gradient(180deg,#1e1e24 0%,#18181c 100%);
+    border: 1px solid rgba(255,255,255,0.08);
     border-radius: 14px;
-    box-shadow: 0 1px 2px rgba(15,15,25,0.04), inset 0 1px 0 rgba(255,255,255,0.7);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.04);
     padding: 18px 22px;
     display: flex;
     align-items: center;
@@ -201,8 +201,8 @@ if (typeof document !== 'undefined' && !document.getElementById('seo-opt-styles'
     user-select: none;
   }
   .seo-report-header:hover {
-    box-shadow: 0 4px 16px rgba(15,15,25,0.06), inset 0 1px 0 rgba(255,255,255,0.7);
-    border-color: rgba(10,10,15,0.14);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.05);
+    border-color: rgba(255,255,255,0.16);
     transform: translateY(-1px);
   }
   .seo-report-remove {
@@ -212,7 +212,7 @@ if (typeof document !== 'undefined' && !document.getElementById('seo-opt-styles'
     border-radius: 8px;
     border: 1px solid transparent;
     background: transparent;
-    color: #c4c4cc;
+    color: #71717a;
     cursor: pointer;
     display: flex; align-items: center; justify-content: center;
     opacity: 0;
@@ -221,9 +221,9 @@ if (typeof document !== 'undefined' && !document.getElementById('seo-opt-styles'
   }
   .seo-report-wrapper:hover .seo-report-remove { opacity: 1; }
   .seo-report-remove:hover {
-    background: rgba(229,37,27,0.08);
-    border-color: rgba(229,37,27,0.2);
-    color: #e5251b;
+    background: rgba(229,37,27,0.16);
+    border-color: rgba(229,37,27,0.36);
+    color: #fb6a60;
   }
   .seo-report-cta {
     background: #e5251b;
@@ -243,13 +243,13 @@ if (typeof document !== 'undefined' && !document.getElementById('seo-opt-styles'
   .seo-report-cta:hover { filter: brightness(1.06); transform: translateY(-1px); }
   .seo-report-chip {
     display: inline-flex; align-items: baseline; gap: 5px;
-    background: #fffbeb;
-    border: 1px solid #fde68a;
+    background: rgba(217,119,6,0.14);
+    border: 1px solid rgba(217,119,6,0.34);
     border-radius: 100px;
     padding: 4px 11px;
   }
-  .seo-report-chip .val { font-size: 12px; font-weight: 700; color: #0a0a0f; letter-spacing: -0.01em; }
-  .seo-report-chip .lbl { font-size: 11px; color: #d97706; font-weight: 600; }
+  .seo-report-chip .val { font-size: 12px; font-weight: 700; color: #f4f4f5; letter-spacing: -0.01em; }
+  .seo-report-chip .lbl { font-size: 11px; color: #f0a23b; font-weight: 600; }
 `
   document.head.appendChild(s)
 }
@@ -273,24 +273,24 @@ const API = ''
 
 // Brand palette — red + amber + green + charcoal neutrals. No blue / purple / teal / orange.
 const C = {
-  bg: '#f5f5f9',
-  card: '#ffffff',
-  cardHover: '#fafafb',
-  border: '#e6e6ec',
-  borderLight: '#f0f0f4',
-  text1: '#0f0f13',
-  text2: '#4a4a58',
-  text3: '#9595a4',
-  text4: '#b8b8c8',
-  red: '#e5251b',
-  redBg: '#fff5f5',
-  redBdr: '#fecaca',
-  green: '#059669',
-  greenBg: '#ecfdf5',
-  greenBdr: '#a7f3d0',
-  amber: '#d97706',
-  amberBg: '#fffbeb',
-  amberBdr: '#fde68a',
+  bg: '#0e0e10',
+  card: 'linear-gradient(180deg,#1e1e24 0%,#18181c 100%)',
+  cardHover: '#1c1c21',
+  border: 'rgba(255,255,255,0.08)',
+  borderLight: 'rgba(255,255,255,0.06)',
+  text1: '#f4f4f5',
+  text2: '#a1a1aa',
+  text3: '#71717a',
+  text4: '#52525b',
+  red: '#fb6a60',
+  redBg: 'rgba(229,37,27,0.13)',
+  redBdr: 'rgba(229,37,27,0.32)',
+  green: '#34d27b',
+  greenBg: 'rgba(22,163,74,0.14)',
+  greenBdr: 'rgba(22,163,74,0.34)',
+  amber: '#f0a23b',
+  amberBg: 'rgba(217,119,6,0.14)',
+  amberBdr: 'rgba(217,119,6,0.34)',
 }
 
 // Per-tile accent colors — scoped to this section ONLY, never reuse elsewhere.
@@ -300,59 +300,59 @@ const C = {
 //    the hierarchy Overview uses, don't flatten it. ──
 const T = {
   // Page + section headers (Overview: H1 24, H2 22, H3 20)
-  h1:           { fontSize: 26, fontWeight: 700, color: '#0f0f13', letterSpacing: '-0.7px', lineHeight: 1.1 },
-  h2:           { fontSize: 22, fontWeight: 700, color: '#0f0f13', letterSpacing: '-0.5px', lineHeight: 1.2 },
-  h3:           { fontSize: 18, fontWeight: 700, color: '#0f0f13', letterSpacing: '-0.3px' },
+  h1:           { fontSize: 26, fontWeight: 700, color: '#f4f4f5', letterSpacing: '-0.7px', lineHeight: 1.1 },
+  h2:           { fontSize: 22, fontWeight: 700, color: '#f4f4f5', letterSpacing: '-0.5px', lineHeight: 1.2 },
+  h3:           { fontSize: 18, fontWeight: 700, color: '#f4f4f5', letterSpacing: '-0.3px' },
 
   // Uppercase labels
-  sectionLabel: { fontSize: 11, fontWeight: 600, color: '#9595a4', textTransform: 'uppercase', letterSpacing: '0.10em' },  // card-level label ("KEYWORD RESEARCH") — neutral grey (matches Overview); red is semantic only, don't spray it on utility eyebrows
-  sectionHint:  { fontSize: 11, fontWeight: 500, color: '#9595a4' },                                                       // right-aligned hint text
+  sectionLabel: { fontSize: 11, fontWeight: 600, color: '#71717a', textTransform: 'uppercase', letterSpacing: '0.10em' },  // card-level label ("KEYWORD RESEARCH") — neutral grey (matches Overview); red is semantic only, don't spray it on utility eyebrows
+  sectionHint:  { fontSize: 11, fontWeight: 500, color: '#71717a' },                                                       // right-aligned hint text
   innerLabel:   { fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.10em' },                    // inside sub-blocks (needs + color)
-  statLabel:    { fontSize: 11, fontWeight: 500, color: '#9595a4', textTransform: 'uppercase', letterSpacing: '0.05em' },  // Overview Stat label
+  statLabel:    { fontSize: 11, fontWeight: 500, color: '#71717a', textTransform: 'uppercase', letterSpacing: '0.05em' },  // Overview Stat label
 
   // Descriptions
-  cardDesc:     { fontSize: 13, color: '#9595a4', lineHeight: 1.55 },
+  cardDesc:     { fontSize: 13, color: '#71717a', lineHeight: 1.55 },
 
   // Body text
-  bodyBold:     { fontSize: 14, fontWeight: 700, color: '#0f0f13', lineHeight: 1.55, letterSpacing: '-0.1px' },
-  body:         { fontSize: 13.5, fontWeight: 500, color: '#4a4a58', lineHeight: 1.65 },
-  innerText:    { fontSize: 13.5, fontWeight: 500, color: '#0f0f13', lineHeight: 1.72 },                                   // inside InsightCard-style sub-blocks
+  bodyBold:     { fontSize: 14, fontWeight: 700, color: '#f4f4f5', lineHeight: 1.55, letterSpacing: '-0.1px' },
+  body:         { fontSize: 13.5, fontWeight: 500, color: '#a1a1aa', lineHeight: 1.65 },
+  innerText:    { fontSize: 13.5, fontWeight: 500, color: '#f4f4f5', lineHeight: 1.72 },                                   // inside InsightCard-style sub-blocks
 
   // Pills / chips / badges
   pill:         { fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.10em' },                    // severity + vol/comp
-  countBadge:   { fontSize: 11, fontWeight: 700, color: '#9595a4', background: '#f1f1f6', padding: '2px 8px', borderRadius: 20, border: '1px solid #e6e6ec' },
-  chip:         { fontSize: 12, fontWeight: 500, color: '#4a4a58', background: '#fafafb', padding: '5px 11px', borderRadius: 20, border: '1px solid #e6e6ec', cursor: 'pointer', letterSpacing: '-0.05px', transition: 'all 0.15s', display: 'inline-block' },
+  countBadge:   { fontSize: 11, fontWeight: 700, color: '#a1a1aa', background: 'rgba(255,255,255,0.06)', padding: '2px 8px', borderRadius: 20, border: '1px solid rgba(255,255,255,0.08)' },
+  chip:         { fontSize: 12, fontWeight: 500, color: '#a1a1aa', background: 'rgba(255,255,255,0.04)', padding: '5px 11px', borderRadius: 20, border: '1px solid rgba(255,255,255,0.08)', cursor: 'pointer', letterSpacing: '-0.05px', transition: 'all 0.15s', display: 'inline-block' },
 
   // Numbers
   numberLg:     { fontSize: 14, fontWeight: 700, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.2px' },            // score numbers
 
   // Tables (Overview uses 10.5/600 in Score breakdown headers)
-  tableHeader:  { fontSize: 10.5, fontWeight: 600, color: '#9595a4', textTransform: 'uppercase', letterSpacing: '0.10em' },
-  keyword:      { fontSize: 13.5, fontWeight: 600, color: '#0f0f13', letterSpacing: '-0.1px' },
+  tableHeader:  { fontSize: 10.5, fontWeight: 600, color: '#71717a', textTransform: 'uppercase', letterSpacing: '0.10em' },
+  keyword:      { fontSize: 13.5, fontWeight: 600, color: '#f4f4f5', letterSpacing: '-0.1px' },
 }
 
 const VIRAL_FORMATS = [
-  { key: 'survival_challenge',  hook: 'curiosity',      color: '#d97706', label: 'Survival / Time Challenge', example: 'I Survived 24 Hours With [Person/Situation]',        why: 'Extreme curiosity + suspense.' },
-  { key: 'extreme_comparison',  hook: 'contrarian',     color: '#d97706', label: 'Extreme Comparison',        example: '$5 VS $500 [Subject]: Honest Review',                 why: 'Price contrast triggers value-seeking.' },
-  { key: 'authority_warning',   hook: 'curiosity',      color: '#d97706', label: 'Authority / Warning',       example: "Don't Buy [Subject] Until You See This",              why: 'Fear of mistake drives high CTR.' },
-  { key: 'listicle',            hook: 'transformation', color: '#d97706', label: 'Listicle / Structure',      example: '7 Things I Wish I Knew About [Subject]',             why: 'Numbers set clear expectations.' },
-  { key: 'curiosity_gap',       hook: 'curiosity',      color: '#d97706', label: 'Curiosity Gap',             example: "I Tested Every [Subject] So You Don't Have To",      why: 'Open loop viewer must click to close.' },
-  { key: 'aspirational',        hook: 'transformation', color: '#d97706', label: 'Aspirational / How I',      example: 'How I Grew [Subject] From 0 to [Number] in [Time]',  why: 'Transformation stories = highest retention.' },
+  { key: 'survival_challenge',  hook: 'curiosity',      color: '#f0a23b', label: 'Survival / Time Challenge', example: 'I Survived 24 Hours With [Person/Situation]',        why: 'Extreme curiosity + suspense.' },
+  { key: 'extreme_comparison',  hook: 'contrarian',     color: '#f0a23b', label: 'Extreme Comparison',        example: '$5 VS $500 [Subject]: Honest Review',                 why: 'Price contrast triggers value-seeking.' },
+  { key: 'authority_warning',   hook: 'curiosity',      color: '#f0a23b', label: 'Authority / Warning',       example: "Don't Buy [Subject] Until You See This",              why: 'Fear of mistake drives high CTR.' },
+  { key: 'listicle',            hook: 'transformation', color: '#f0a23b', label: 'Listicle / Structure',      example: '7 Things I Wish I Knew About [Subject]',             why: 'Numbers set clear expectations.' },
+  { key: 'curiosity_gap',       hook: 'curiosity',      color: '#f0a23b', label: 'Curiosity Gap',             example: "I Tested Every [Subject] So You Don't Have To",      why: 'Open loop viewer must click to close.' },
+  { key: 'aspirational',        hook: 'transformation', color: '#f0a23b', label: 'Aspirational / How I',      example: 'How I Grew [Subject] From 0 to [Number] in [Time]',  why: 'Transformation stories = highest retention.' },
 ]
 
 const VIRAL_FORMAT_LABELS = Object.fromEntries(VIRAL_FORMATS.map(f => [f.key, f.label]))
 
 const STRATEGY_META = {
   search: { label: 'Search', color: C.green, bg: C.greenBg, desc: 'Keyword-optimised to rank in YouTube search' },
-  browse: { label: 'Browse', color: C.text2, bg: '#fafafb', desc: 'Emotional hook for homepage & suggested feed' },
+  browse: { label: 'Browse', color: C.text2, bg: 'rgba(255,255,255,0.04)', desc: 'Emotional hook for homepage & suggested feed' },
   hybrid: { label: 'Hybrid', color: C.red,   bg: C.redBg,   desc: 'Keywords + emotion — ranks and gets clicked' },
 }
 
 
 const DESC_TYPE_META = {
-  story:   { color: '#e5251b', bg: 'rgba(229,37,27,0.05)', bdr: 'rgba(229,37,27,0.14)' },
-  value:   { color: '#059669', bg: 'rgba(5,150,105,0.05)',  bdr: 'rgba(5,150,105,0.16)'  },
-  keyword: { color: '#4a4a58', bg: 'rgba(15,15,19,0.04)',  bdr: 'rgba(15,15,19,0.10)'  },
+  story:   { color: '#fb6a60', bg: 'rgba(229,37,27,0.13)', bdr: 'rgba(229,37,27,0.32)' },
+  value:   { color: '#34d27b', bg: 'rgba(22,163,74,0.14)',  bdr: 'rgba(22,163,74,0.34)'  },
+  keyword: { color: '#a1a1aa', bg: 'rgba(255,255,255,0.04)',  bdr: 'rgba(255,255,255,0.08)'  },
 }
 
 function fmtNum(n) {
@@ -393,7 +393,7 @@ function highlightKeyword(text, keyword) {
   const parts = t.split(re)
   return parts.map((p, i) =>
     p.toLowerCase() === k.toLowerCase()
-      ? <span key={i} style={{ borderBottom: '1px solid rgba(229,37,27,0.45)', color: '#0f0f13', fontWeight: 600 }}>{p}</span>
+      ? <span key={i} style={{ borderBottom: '1px solid rgba(229,37,27,0.45)', color: '#f4f4f5', fontWeight: 600 }}>{p}</span>
       : p
   )
 }
@@ -404,8 +404,8 @@ function MiniStat({ label, value, sub, accent, alert }) {
   const col = alert ? C.red : (accent || C.text1)
   return (
     <div style={{
-      background: alert ? '#fff8f8' : '#ffffff',
-      border: `1px solid ${alert ? 'rgba(229,37,27,0.22)' : '#e6e6ec'}`,
+      background: alert ? 'rgba(229,37,27,0.10)' : '#1c1c21',
+      border: `1px solid ${alert ? 'rgba(229,37,27,0.22)' : 'rgba(255,255,255,0.08)'}`,
       borderRadius: 16,
       padding: '22px 24px',
       boxShadow: '0 1px 2px rgba(0,0,0,0.04), 0 4px 14px rgba(0,0,0,0.06)',
@@ -661,7 +661,7 @@ function _multTier(views, baseline) {
 const _MULT_PILL = {
   outlier: { bg: '#e5251b',                  color: '#ffffff',         border: 'transparent' },
   above:   { bg: 'rgba(10,10,15,0.78)',      color: '#ffffff',         border: 'transparent' },
-  below:   { bg: 'rgba(10,10,15,0.05)',      color: 'rgba(10,10,15,0.55)', border: 'rgba(10,10,15,0.10)' },
+  below:   { bg: 'rgba(255,255,255,0.05)',      color: 'rgba(255,255,255,0.55)', border: 'rgba(255,255,255,0.10)' },
 }
 
 function VideoTile({ video, baselineViews }) {
@@ -684,7 +684,7 @@ function VideoTile({ video, baselineViews }) {
           collides with creator hooks (which always live top-left). */}
       <div style={{
         position: 'relative', width: '100%', aspectRatio: '16 / 9',
-        borderRadius: 10, overflow: 'hidden', background: '#0f0f13',
+        borderRadius: 10, overflow: 'hidden', background: '#f4f4f5',
         boxShadow: '0 1px 3px rgba(0,0,0,0.10), 0 6px 18px rgba(0,0,0,0.08)',
       }}>
         {(video.video_id || video.thumbnail) && (
@@ -759,7 +759,7 @@ function ShortTile({ video, baselineViews }) {
       }}>
       <div style={{
         position: 'relative', width: '100%', aspectRatio: '9 / 16',
-        borderRadius: 11, overflow: 'hidden', background: '#0f0f13',
+        borderRadius: 11, overflow: 'hidden', background: '#f4f4f5',
         boxShadow: '0 1px 3px rgba(0,0,0,0.12), 0 8px 22px rgba(0,0,0,0.10)',
       }}>
         {(video.video_id || video.thumbnail) && (
@@ -818,10 +818,10 @@ function HeatStrip({ label, count, Tile, items, baselineViews }) {
   return (
     <div style={{ marginBottom: 18 }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
-        <p style={{ fontSize: 11, fontWeight: 700, color: 'rgba(10,10,15,0.55)', letterSpacing: '0.10em', textTransform: 'uppercase' }}>{label}</p>
+        <p style={{ fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.55)', letterSpacing: '0.10em', textTransform: 'uppercase' }}>{label}</p>
         <span style={{
-          fontSize: 11, fontWeight: 600, color: 'rgba(10,10,15,0.55)',
-          background: 'rgba(10,10,15,0.04)', padding: '2px 8px', borderRadius: 99,
+          fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.55)',
+          background: 'rgba(255,255,255,0.04)', padding: '2px 8px', borderRadius: 99,
           fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.05px',
         }}>{count}</span>
       </div>
@@ -979,7 +979,7 @@ function CompetitorThumbTile({ video }) {
       }}>
       <div style={{
         position: 'relative', width: '100%', aspectRatio: '16 / 9',
-        borderRadius: 8, overflow: 'hidden', background: '#0f0f13',
+        borderRadius: 8, overflow: 'hidden', background: '#f4f4f5',
         boxShadow: '0 1px 2px rgba(0,0,0,0.08), 0 3px 10px rgba(0,0,0,0.06)',
       }}>
         {(video.video_id || video.thumbnail) && (
@@ -1033,7 +1033,7 @@ function SuggestionRow({ s, i, isSelected, isCopied, onCopy, onSelect, primaryPh
     : Math.round(((s.seo_score || 0) + (s.ctr_score || 0) + (s.hook_score || 0)) / 3)
   const sevLabel = avgScore >= 75 ? 'Strong' : avgScore >= 60 ? 'Solid' : 'Weak'
   const sevColor = avgScore >= 75 ? C.green : avgScore >= 60 ? C.text2 : C.red
-  const sevBg    = avgScore >= 75 ? 'rgba(5,150,105,0.10)' : avgScore >= 60 ? 'rgba(15,15,19,0.05)' : 'rgba(229,37,27,0.08)'
+  const sevBg    = avgScore >= 75 ? 'rgba(5,150,105,0.10)' : avgScore >= 60 ? 'rgba(255,255,255,0.05)' : 'rgba(229,37,27,0.08)'
   const hasWhy   = !!(s.why_it_works || s.angle)
 
   // Pick 2 real competing videos from the niche pool that look most like
@@ -1048,11 +1048,11 @@ function SuggestionRow({ s, i, isSelected, isCopied, onCopy, onSelect, primaryPh
     // colour only where it carries a real signal.
     <div className="seo-suggestion-card" style={{
       marginBottom: 0,
-      borderLeftColor:   isSelected ? 'rgba(229,37,27,0.30)' : '#e6e6ec',
-      borderRightColor:  isSelected ? 'rgba(229,37,27,0.30)' : '#e6e6ec',
-      borderBottomColor: isSelected ? 'rgba(229,37,27,0.30)' : '#e6e6ec',
-      borderTopColor:    isSelected ? 'rgba(229,37,27,0.30)' : '#e6e6ec',
-      background: '#ffffff',
+      borderLeftColor:   isSelected ? 'rgba(229,37,27,0.30)' : 'rgba(255,255,255,0.08)',
+      borderRightColor:  isSelected ? 'rgba(229,37,27,0.30)' : 'rgba(255,255,255,0.08)',
+      borderBottomColor: isSelected ? 'rgba(229,37,27,0.30)' : 'rgba(255,255,255,0.08)',
+      borderTopColor:    isSelected ? 'rgba(229,37,27,0.30)' : 'rgba(255,255,255,0.08)',
+      background: '#1c1c21',
     }}>
       <div style={{ padding: '18px 22px 20px' }}>
 
@@ -1064,23 +1064,23 @@ function SuggestionRow({ s, i, isSelected, isCopied, onCopy, onSelect, primaryPh
             flexShrink: 0,
             width: 24, height: 24, borderRadius: 7,
             display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-            background: 'rgba(15,15,19,0.06)',
-            border: '1px solid rgba(15,15,19,0.08)',
+            background: 'rgba(255,255,255,0.06)',
+            border: '1px solid rgba(255,255,255,0.08)',
           }}>
             <span style={{ fontSize: 11, fontWeight: 700, color: C.text1, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.3px' }}>{i + 1}</span>
           </div>
           <span style={{
-            fontSize: 11, fontWeight: 700, color: 'rgba(10,10,15,0.50)',
+            fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.50)',
             letterSpacing: '0.10em', textTransform: 'uppercase',
           }}>Title option</span>
           {eyebrow && (
             <span style={{
               display: 'inline-flex', alignItems: 'center', gap: 5,
-              fontSize: 12, fontWeight: 500, color: 'rgba(10,10,15,0.55)',
+              fontSize: 12, fontWeight: 500, color: 'rgba(255,255,255,0.55)',
               letterSpacing: '-0.01em',
               maxWidth: 280, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
             }}>
-              <span style={{ width: 3, height: 3, borderRadius: 99, background: 'rgba(10,10,15,0.30)', flexShrink: 0 }}/>
+              <span style={{ width: 3, height: 3, borderRadius: 99, background: 'rgba(255,255,255,0.30)', flexShrink: 0 }}/>
               {eyebrow}
             </span>
           )}
@@ -1120,7 +1120,7 @@ function SuggestionRow({ s, i, isSelected, isCopied, onCopy, onSelect, primaryPh
         }}>
           {/* Left: quality chart card (bars + length sweet-spot) */}
           <div style={{
-            background: '#ffffff',
+            background: '#1c1c21',
             border: `1px solid ${C.border}`,
             borderRadius: 10,
             padding: '14px 16px',
@@ -1138,7 +1138,7 @@ function SuggestionRow({ s, i, isSelected, isCopied, onCopy, onSelect, primaryPh
           {/* Right: 2 real competing thumbnails (or a soft empty state if the
               niche pool wasn't loaded). */}
           <div style={{
-            background: '#ffffff',
+            background: '#1c1c21',
             border: `1px solid ${C.border}`,
             borderRadius: 10,
             padding: '14px 16px',
@@ -1152,7 +1152,7 @@ function SuggestionRow({ s, i, isSelected, isCopied, onCopy, onSelect, primaryPh
               </div>
             ) : (
               <div style={{
-                background: '#fafafb', border: '1px dashed #e6e6ec', borderRadius: 8,
+                background: 'rgba(255,255,255,0.04)', border: '1px dashed rgba(255,255,255,0.08)', borderRadius: 8,
                 padding: '24px 14px', textAlign: 'center',
               }}>
                 <p style={{ fontSize: 12, color: C.text3, lineHeight: 1.5 }}>
@@ -1165,7 +1165,7 @@ function SuggestionRow({ s, i, isSelected, isCopied, onCopy, onSelect, primaryPh
 
         {/* ── Action row: meta + Why-this-works disclosure + Copy + primary CTA ── */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
-          <span style={{ fontSize: 12, fontWeight: 500, color: 'rgba(10,10,15,0.50)', letterSpacing: '-0.01em' }}>
+          <span style={{ fontSize: 12, fontWeight: 500, color: 'rgba(255,255,255,0.50)', letterSpacing: '-0.01em' }}>
             {s.length ? `${s.length} chars` : '—'}
             {s.length >= 50 && s.length <= 70 && (
               <>{' · '}<span style={{ color: C.green, fontWeight: 700 }}>in the sweet spot</span></>
@@ -1178,14 +1178,14 @@ function SuggestionRow({ s, i, isSelected, isCopied, onCopy, onSelect, primaryPh
               style={{
                 display: 'inline-flex', alignItems: 'center', gap: 5,
                 padding: '5px 11px', borderRadius: 99,
-                background: whyOpen ? 'rgba(15,15,19,0.06)' : '#ffffff',
-                border: `1px solid ${whyOpen ? 'rgba(15,15,19,0.16)' : 'rgba(0,0,0,0.08)'}`,
+                background: whyOpen ? 'rgba(255,255,255,0.06)' : '#1c1c21',
+                border: `1px solid ${whyOpen ? 'rgba(255,255,255,0.16)' : 'rgba(255,255,255,0.12)'}`,
                 color: C.text2, fontSize: 11.5, fontWeight: 600, letterSpacing: '-0.01em',
                 fontFamily: 'inherit', cursor: 'pointer',
                 transition: 'background 0.14s, border-color 0.14s, color 0.14s',
               }}
-              onMouseEnter={e => { e.currentTarget.style.background = 'rgba(15,15,19,0.04)'; e.currentTarget.style.color = C.text1 }}
-              onMouseLeave={e => { e.currentTarget.style.background = whyOpen ? 'rgba(15,15,19,0.06)' : '#ffffff'; e.currentTarget.style.color = C.text2 }}
+              onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; e.currentTarget.style.color = C.text1 }}
+              onMouseLeave={e => { e.currentTarget.style.background = whyOpen ? 'rgba(255,255,255,0.06)' : '#1c1c21'; e.currentTarget.style.color = C.text2 }}
             >
               {whyOpen ? 'Hide why' : 'Why this works'}
               <svg width="11" height="11" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" style={{ transform: whyOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }}>
@@ -1195,7 +1195,7 @@ function SuggestionRow({ s, i, isSelected, isCopied, onCopy, onSelect, primaryPh
           )}
           <div style={{ flex: 1 }}/>
           <button onClick={onCopy}
-            style={{ fontSize: 12.5, fontWeight: 600, color: isCopied ? C.green : C.text2, background: '#ffffff', border: `1px solid ${isCopied ? 'rgba(5,150,105,0.38)' : 'rgba(0,0,0,0.1)'}`, borderRadius: 100, padding: '8px 16px', cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.15s', whiteSpace: 'nowrap', boxShadow: '0 1px 3px rgba(0,0,0,0.07)' }}>
+            style={{ fontSize: 12.5, fontWeight: 600, color: isCopied ? C.green : C.text2, background: '#1c1c21', border: `1px solid ${isCopied ? 'rgba(5,150,105,0.38)' : 'rgba(255,255,255,0.12)'}`, borderRadius: 100, padding: '8px 16px', cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.15s', whiteSpace: 'nowrap', boxShadow: '0 1px 3px rgba(0,0,0,0.07)' }}>
             {isCopied ? '✓ Copied' : 'Copy'}
           </button>
           <button onClick={onSelect}
@@ -1257,7 +1257,7 @@ function DescriptionCard({ d, idx, copiedDesc, onCopy }) {
           cursor: 'pointer', userSelect: 'none',
         }}>
         <div style={{ width: 26, height: 26, borderRadius: 8, background: C.text1, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-          <span style={{ fontSize: 12, fontWeight: 700, color: '#fff', fontVariantNumeric: 'tabular-nums' }}>{idx + 1}</span>
+          <span style={{ fontSize: 12, fontWeight: 700, color: '#0e0e10', fontVariantNumeric: 'tabular-nums' }}>{idx + 1}</span>
         </div>
         <span style={{ fontSize: 10, fontWeight: 700, color: tm.color, padding: '3px 9px', borderRadius: 20, letterSpacing: '0.10em', textTransform: 'uppercase', border: `1.5px solid ${tm.color}`, flexShrink: 0 }}>
           {categoryShort}
@@ -1279,13 +1279,13 @@ function DescriptionCard({ d, idx, copiedDesc, onCopy }) {
 
         {/* 2-col body — Why it works (charcoal-neutral) + Full description (white + amber left bar + shadow). */}
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.6fr', gap: 8, marginLeft: 38 }}>
-          <div style={{ background: 'rgba(15,15,19,0.04)', border: '1px solid rgba(15,15,19,0.08)', borderRadius: 10, padding: '12px 14px' }}>
+          <div style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 10, padding: '12px 14px' }}>
             <p style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 6 }}>Why it works</p>
             <p style={{ fontSize: 13, color: C.text2, lineHeight: 1.65 }}>{sentenceCase(d.why_it_works)}</p>
           </div>
 
           <div style={{
-            background: '#ffffff',
+            background: '#1c1c21',
             border: `1px solid ${C.border}`,
             borderRadius: 10,
             padding: '12px 16px',
@@ -1393,16 +1393,16 @@ function NicheMomentumChart({ videos = [], shorts = [], primaryPhrase, videosFou
           Niche momentum
         </h2>
         <span style={{
-          fontSize: 11, fontWeight: 700, color: 'rgba(10,10,15,0.50)',
+          fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.50)',
           letterSpacing: '0.10em', textTransform: 'uppercase',
         }}>{rangeLabel}</span>
         {primaryPhrase && (
           <span style={{
             marginLeft: 'auto',
-            fontSize: 12.5, fontWeight: 500, color: 'rgba(10,10,15,0.55)',
+            fontSize: 12.5, fontWeight: 500, color: 'rgba(255,255,255,0.55)',
             letterSpacing: '-0.01em', fontVariantNumeric: 'tabular-nums',
           }}>
-            Top-ranking activity for <strong style={{ color: '#0a0a0f', fontWeight: 600 }}>{primaryPhrase}</strong>
+            Top-ranking activity for <strong style={{ color: '#f4f4f5', fontWeight: 600 }}>{primaryPhrase}</strong>
           </span>
         )}
       </div>
@@ -1410,10 +1410,10 @@ function NicheMomentumChart({ videos = [], shorts = [], primaryPhrase, videosFou
         <svg width="100%" viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" style={{ display: 'block' }}>
           {[0.25, 0.5, 0.75].map(p => (
             <line key={p} x1={padL} x2={W - padR} y1={padT + innerH * p} y2={padT + innerH * p}
-              stroke="rgba(10,10,15,0.05)" strokeWidth="1" />
+              stroke="rgba(255,255,255,0.05)" strokeWidth="1" />
           ))}
           <line x1={padL} x2={W - padR} y1={padT + innerH} y2={padT + innerH}
-            stroke="rgba(10,10,15,0.10)" strokeWidth="1" />
+            stroke="rgba(255,255,255,0.10)" strokeWidth="1" />
           <path d={fillPath} fill={fillColor} />
           <path d={linePath} fill="none" stroke={color} strokeWidth="2.5"
             strokeLinejoin="round" strokeLinecap="round" />
@@ -1421,21 +1421,21 @@ function NicheMomentumChart({ videos = [], shorts = [], primaryPhrase, videosFou
             fill="#fff" stroke={color} strokeWidth="2.5" />
           {labels.map((lbl, i) => lbl ? (
             <text key={i} x={xFor(i)} y={H - 8}
-              fill="rgba(10,10,15,0.45)" fontSize="11" fontWeight="500"
+              fill="rgba(255,255,255,0.45)" fontSize="11" fontWeight="500"
               textAnchor={i === buckets.length - 1 ? 'end' : 'middle'}
               style={{ fontVariantNumeric: 'tabular-nums' }}>
               {lbl}
             </text>
           ) : null)}
-          <text x={padL - 6} y={padT + 4} fill="rgba(10,10,15,0.45)" fontSize="11" fontWeight="500" textAnchor="end" style={{ fontVariantNumeric: 'tabular-nums' }}>{maxCount}</text>
-          <text x={padL - 6} y={padT + innerH + 2} fill="rgba(10,10,15,0.45)" fontSize="11" fontWeight="500" textAnchor="end" style={{ fontVariantNumeric: 'tabular-nums' }}>0</text>
+          <text x={padL - 6} y={padT + 4} fill="rgba(255,255,255,0.45)" fontSize="11" fontWeight="500" textAnchor="end" style={{ fontVariantNumeric: 'tabular-nums' }}>{maxCount}</text>
+          <text x={padL - 6} y={padT + innerH + 2} fill="rgba(255,255,255,0.45)" fontSize="11" fontWeight="500" textAnchor="end" style={{ fontVariantNumeric: 'tabular-nums' }}>0</text>
         </svg>
         <p style={{
           marginTop: 6, fontSize: 12.5, fontWeight: 500,
-          color: 'rgba(10,10,15,0.55)', letterSpacing: '-0.01em',
+          color: 'rgba(255,255,255,0.55)', letterSpacing: '-0.01em',
         }}>
-          Peak <strong style={{ color: '#0a0a0f', fontWeight: 700 }}>{maxCount} video{maxCount === 1 ? '' : 's'}</strong> {peakLabel} · {rising ? 'niche heating up' : 'niche cooling down'}
-          {videosFound ? <span style={{ color: 'rgba(10,10,15,0.40)' }}> · {videosFound} ranking videos analysed</span> : null}
+          Peak <strong style={{ color: '#f4f4f5', fontWeight: 700 }}>{maxCount} video{maxCount === 1 ? '' : 's'}</strong> {peakLabel} · {rising ? 'niche heating up' : 'niche cooling down'}
+          {videosFound ? <span style={{ color: 'rgba(255,255,255,0.40)' }}> · {videosFound} ranking videos analysed</span> : null}
         </p>
       </div>
     </div>
@@ -1597,7 +1597,7 @@ function AnimatedScoreArc({ value, color, size = 108, tier }) {
         pointerEvents: 'none',
       }}/>
       <svg width={size} height={size} style={{ position: 'relative', display: 'block' }}>
-        <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="#f0f0f4" strokeWidth={sw}/>
+        <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth={sw}/>
         <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke={color} strokeWidth={sw}
           strokeDasharray={`${fill} ${circ}`} strokeLinecap="round"
           transform={`rotate(-90 ${size / 2} ${size / 2})`}/>
@@ -1721,7 +1721,7 @@ function TitleComparisonHero({ userTitle, userScore, userBreakdown, suggestions,
   // Breaks the wall-of-cards rhythm the user called out.
   const sideLabel = {
     fontSize: 10.5, fontWeight: 700, letterSpacing: '0.10em',
-    textTransform: 'uppercase', color: 'rgba(10,10,15,0.45)',
+    textTransform: 'uppercase', color: 'rgba(255,255,255,0.45)',
     margin: 0,
   }
   const sideScore = {
@@ -1730,13 +1730,13 @@ function TitleComparisonHero({ userTitle, userScore, userBreakdown, suggestions,
   }
   const sideTitle = {
     fontSize: 13.5, fontWeight: 500, lineHeight: 1.45,
-    color: 'rgba(10,10,15,0.78)', letterSpacing: '-0.05px', margin: 0,
+    color: '#a1a1aa', letterSpacing: '-0.05px', margin: 0,
   }
   const subRow = {
     display: 'flex', alignItems: 'baseline', gap: 14,
     fontVariantNumeric: 'tabular-nums',
   }
-  const subKey = { fontSize: 10, fontWeight: 700, letterSpacing: '0.10em', textTransform: 'uppercase', color: 'rgba(10,10,15,0.45)' }
+  const subKey = { fontSize: 10, fontWeight: 700, letterSpacing: '0.10em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.45)' }
   const subVal = { fontSize: 13.5, fontWeight: 600, letterSpacing: '-0.2px' }
 
   return (
@@ -1748,23 +1748,23 @@ function TitleComparisonHero({ userTitle, userScore, userBreakdown, suggestions,
         display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12,
         flexWrap: 'wrap',
         paddingBottom: 14,
-        borderBottom: '1px solid rgba(10,10,15,0.07)',
+        borderBottom: '1px solid rgba(255,255,255,0.07)',
         marginBottom: 22,
       }}>
         <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, minWidth: 0, flexWrap: 'wrap' }}>
           <span style={{ fontSize: 11, fontWeight: 700, color: C.text1, letterSpacing: '0.10em', textTransform: 'uppercase' }}>Title analysis</span>
           {videosFound > 0 && (
             <>
-              <span style={{ color: 'rgba(10,10,15,0.30)' }}>·</span>
-              <span style={{ fontSize: 12, fontWeight: 500, color: 'rgba(10,10,15,0.55)', letterSpacing: '-0.05px' }}>
+              <span style={{ color: 'rgba(255,255,255,0.30)' }}>·</span>
+              <span style={{ fontSize: 12, fontWeight: 500, color: 'rgba(255,255,255,0.55)', letterSpacing: '-0.05px' }}>
                 <span style={{ color: C.text1, fontWeight: 600 }}>{videosFound}</span> niche videos
               </span>
             </>
           )}
           {nicheLabel && (
             <>
-              <span style={{ color: 'rgba(10,10,15,0.30)' }}>·</span>
-              <span style={{ fontSize: 12, fontWeight: 500, color: 'rgba(10,10,15,0.65)', letterSpacing: '-0.05px' }}>
+              <span style={{ color: 'rgba(255,255,255,0.30)' }}>·</span>
+              <span style={{ fontSize: 12, fontWeight: 500, color: 'rgba(255,255,255,0.65)', letterSpacing: '-0.05px' }}>
                 &ldquo;{nicheLabel}&rdquo;
               </span>
             </>
@@ -1804,7 +1804,7 @@ function TitleComparisonHero({ userTitle, userScore, userBreakdown, suggestions,
             }}/>
           </div>
           <p style={sideTitle}>
-            {userTitle || <span style={{ color: 'rgba(10,10,15,0.35)' }}>(no title entered)</span>}
+            {userTitle || <span style={{ color: 'rgba(255,255,255,0.35)' }}>(no title entered)</span>}
           </p>
           <div style={subRow}>
             <span><span style={subKey}>SEO</span> <span style={{ ...subVal, color: C.text1 }}>{userSubs.seo}</span></span>
@@ -1814,7 +1814,7 @@ function TitleComparisonHero({ userTitle, userScore, userBreakdown, suggestions,
         </div>
 
         {/* ── DIVIDER ── */}
-        <div style={{ background: 'rgba(10,10,15,0.07)', alignSelf: 'stretch' }}/>
+        <div style={{ background: 'rgba(255,255,255,0.07)', alignSelf: 'stretch' }}/>
 
         {/* ── RIGHT: AI's best pick ── */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
@@ -1840,11 +1840,11 @@ function TitleComparisonHero({ userTitle, userScore, userBreakdown, suggestions,
       {/* ── Footer: verdict line + Use CTA, on the page (no card). ── */}
       <div style={{
         marginTop: 20, paddingTop: 16,
-        borderTop: '1px solid rgba(10,10,15,0.07)',
+        borderTop: '1px solid rgba(255,255,255,0.07)',
         display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12,
         flexWrap: 'wrap',
       }}>
-        <p style={{ fontSize: 13, fontWeight: 500, color: 'rgba(10,10,15,0.65)', letterSpacing: '-0.05px', margin: 0 }}>
+        <p style={{ fontSize: 13, fontWeight: 500, color: 'rgba(255,255,255,0.65)', letterSpacing: '-0.05px', margin: 0 }}>
           {lift > 0
             ? <>Pick the AI version for <span style={{ fontWeight: 700, color: C.green }}>+{lift} points</span>.</>
             : lift < 0
@@ -1891,21 +1891,21 @@ function NicheMap({ keywords, onPick }) {
             flexShrink: 0,
             width: 26, height: 26, borderRadius: 7,
             display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-            background: 'rgba(15,15,19,0.05)',
-            border: '1px solid rgba(15,15,19,0.10)',
+            background: 'rgba(255,255,255,0.05)',
+            border: '1px solid rgba(255,255,255,0.10)',
           }}>
             <span style={{ fontSize: 11.5, fontWeight: 700, color: C.text1, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.3px' }}>K</span>
           </div>
           <span style={{
-            fontSize: 11, fontWeight: 700, color: 'rgba(10,10,15,0.50)',
+            fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.50)',
             letterSpacing: '0.10em', textTransform: 'uppercase',
           }}>Niche keywords</span>
           <span style={{
             display: 'inline-flex', alignItems: 'center', gap: 5,
-            fontSize: 12, fontWeight: 500, color: 'rgba(10,10,15,0.55)',
+            fontSize: 12, fontWeight: 500, color: 'rgba(255,255,255,0.55)',
             letterSpacing: '-0.01em',
           }}>
-            <span style={{ width: 3, height: 3, borderRadius: 99, background: 'rgba(10,10,15,0.30)' }}/>
+            <span style={{ width: 3, height: 3, borderRadius: 99, background: 'rgba(255,255,255,0.30)' }}/>
             {sorted.length} phrases ranked
           </span>
           <div style={{ flex: 1 }}/>
@@ -1935,7 +1935,7 @@ function NicheMap({ keywords, onPick }) {
                   cursor: 'pointer', fontFamily: 'inherit', textAlign: 'left',
                   transition: 'background 0.12s',
                 }}
-                onMouseEnter={e => { e.currentTarget.style.background = '#fafafb' }}
+                onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.04)' }}
                 onMouseLeave={e => { e.currentTarget.style.background = 'transparent' }}>
                 <span style={{
                   fontSize: 11, fontWeight: 700, color: C.text4,
@@ -2337,7 +2337,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
       // Re-adding identical padding inside keeps content visually in the same place.
       margin: '-36px -40px -72px',
       padding: '36px 40px 72px',
-      background: '#ffffff',
+      background: 'transparent',
       minHeight: 'calc(100vh - 52px)',
     }}>
      {/* 1040 centered column — every polished feature page (Video Ideas / Thumbnail / Overview) wraps content
@@ -2368,7 +2368,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 24, gap: 16, flexWrap: 'wrap' }}>
         <div>
           <h1 style={{ fontSize: 26, fontWeight: 700, color: C.text1, letterSpacing: '-0.7px', marginBottom: 6, lineHeight: 1.1 }}>SEO Studio</h1>
-          <p style={{ fontSize: 14, color: 'rgba(10,10,15,0.55)', fontWeight: 500, letterSpacing: '-0.005em', lineHeight: 1.45 }}>
+          <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.55)', fontWeight: 500, letterSpacing: '-0.005em', lineHeight: 1.45 }}>
             Score your title against live competitor data
             {lastSearchAt && <> · Last analysed {relTime(lastSearchAt)}</>}
           </p>
@@ -2399,15 +2399,15 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
               style={{
                 fontSize: 13, fontWeight: active ? 600 : 500, padding: '8px 16px',
                 borderRadius: 100,
-                border: active ? '1px solid rgba(10,10,15,0.10)' : '1px solid transparent',
-                background: active ? 'rgba(10,10,15,0.055)' : 'transparent',
-                color: active ? '#0a0a0f' : 'rgba(10,10,15,0.55)',
+                border: active ? '1px solid rgba(255,255,255,0.10)' : '1px solid transparent',
+                background: active ? 'rgba(255,255,255,0.055)' : 'transparent',
+                color: active ? '#f4f4f5' : 'rgba(255,255,255,0.55)',
                 cursor: 'pointer', fontFamily: 'inherit',
                 letterSpacing: '-0.01em',
                 transition: 'background 180ms cubic-bezier(0.32,0.72,0,1), color 180ms cubic-bezier(0.32,0.72,0,1), border-color 180ms cubic-bezier(0.32,0.72,0,1)',
               }}
-              onMouseEnter={e => { if (!active) { e.currentTarget.style.background = 'rgba(10,10,15,0.03)'; e.currentTarget.style.color = '#0a0a0f' } }}
-              onMouseLeave={e => { if (!active) { e.currentTarget.style.background = 'transparent';     e.currentTarget.style.color = 'rgba(10,10,15,0.55)' } }}
+              onMouseEnter={e => { if (!active) { e.currentTarget.style.background = 'rgba(255,255,255,0.03)'; e.currentTarget.style.color = '#f4f4f5' } }}
+              onMouseLeave={e => { if (!active) { e.currentTarget.style.background = 'transparent';     e.currentTarget.style.color = 'rgba(255,255,255,0.55)' } }}
             >
               {label}
             </button>
@@ -2457,7 +2457,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
           {prefillBanner && (
             <div style={{
               fontSize: 12, fontWeight: 500, color: C.text2,
-              background: '#fafafb', border: '1px solid #e6e6ec',
+              background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)',
               borderRadius: 8, padding: '7px 12px', marginBottom: 12,
               display: 'inline-flex', alignItems: 'center', gap: 8,
             }}>
@@ -2478,14 +2478,14 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
               width: '100%',
               padding: '18px 20px',
               fontSize: 16,
-              border: '1px solid rgba(10,10,15,0.10)',
+              border: '1px solid rgba(255,255,255,0.10)',
               borderRadius: 14,
               fontFamily: 'inherit',
               outline: 'none',
-              color: '#0a0a0f',
-              background: '#ffffff',
+              color: '#f4f4f5',
+              background: '#1c1c21',
               boxSizing: 'border-box',
-              boxShadow: '0 1px 2px rgba(15,15,25,0.03), inset 0 1px 0 rgba(255,255,255,0.7)',
+              boxShadow: '0 1px 3px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.04)',
               transition: 'border-color 0.2s cubic-bezier(0.2,0.7,0.3,1), box-shadow 0.2s cubic-bezier(0.2,0.7,0.3,1)',
               letterSpacing: '-0.15px',
               fontWeight: 500,
@@ -2494,12 +2494,12 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
               minHeight: 76,
             }}
             onFocus={e => {
-              e.target.style.borderColor = 'rgba(10,10,15,0.30)'
-              e.target.style.boxShadow = '0 0 0 4px rgba(10,10,15,0.05), 0 1px 2px rgba(15,15,25,0.04), inset 0 1px 0 rgba(255,255,255,0.7)'
+              e.target.style.borderColor = 'rgba(255,255,255,0.30)'
+              e.target.style.boxShadow = '0 0 0 4px rgba(255,255,255,0.05), 0 1px 3px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.04)'
             }}
             onBlur={e => {
-              e.target.style.borderColor = 'rgba(10,10,15,0.10)'
-              e.target.style.boxShadow = '0 1px 2px rgba(15,15,25,0.03), inset 0 1px 0 rgba(255,255,255,0.7)'
+              e.target.style.borderColor = 'rgba(255,255,255,0.10)'
+              e.target.style.boxShadow = '0 1px 3px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.04)'
             }} />
 
           {error && (
@@ -2559,8 +2559,8 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
                 style={{
                   display: 'inline-flex', alignItems: 'center', gap: 7,
                   padding: '8px 14px', borderRadius: 99,
-                  background: formatMenuOpen ? 'rgba(229,37,27,0.06)' : '#ffffff',
-                  border: `1px solid ${formatMenuOpen ? 'rgba(229,37,27,0.35)' : 'rgba(0,0,0,0.10)'}`,
+                  background: formatMenuOpen ? 'rgba(229,37,27,0.06)' : '#1c1c21',
+                  border: `1px solid ${formatMenuOpen ? 'rgba(229,37,27,0.35)' : 'rgba(255,255,255,0.12)'}`,
                   color: formatMenuOpen ? C.red : C.text2,
                   fontSize: 11.5, fontWeight: 600, letterSpacing: '-0.05px',
                   fontFamily: 'inherit', cursor: 'pointer',
@@ -2568,7 +2568,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
                   height: 36, boxSizing: 'border-box', whiteSpace: 'nowrap',
                 }}
                 onMouseEnter={e => { if (!formatMenuOpen) { e.currentTarget.style.background = 'rgba(229,37,27,0.06)'; e.currentTarget.style.borderColor = 'rgba(229,37,27,0.35)'; e.currentTarget.style.color = C.red } }}
-                onMouseLeave={e => { if (!formatMenuOpen) { e.currentTarget.style.background = '#ffffff'; e.currentTarget.style.borderColor = 'rgba(0,0,0,0.10)'; e.currentTarget.style.color = C.text2 } }}
+                onMouseLeave={e => { if (!formatMenuOpen) { e.currentTarget.style.background = '#1c1c21'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.12)'; e.currentTarget.style.color = C.text2 } }}
               >
                 Try a format
                 <svg width="10" height="10" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" style={{ transition: 'transform 0.18s', transform: formatMenuOpen ? 'rotate(180deg)' : 'none' }}>
@@ -2579,8 +2579,8 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
                 <div style={{
                   position: 'absolute', top: 'calc(100% + 6px)', left: 0,
                   width: 320, maxHeight: 360, overflow: 'auto',
-                  background: '#ffffff',
-                  border: '1px solid #e6e6ec', borderRadius: 12,
+                  background: '#1c1c21',
+                  border: '1px solid rgba(255,255,255,0.08)', borderRadius: 12,
                   boxShadow: '0 6px 24px rgba(0,0,0,0.10)',
                   zIndex: 20, padding: 4,
                 }}>
@@ -2597,7 +2597,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
                         display: 'flex', flexDirection: 'column', gap: 4,
                         transition: 'background 0.12s',
                       }}
-                      onMouseEnter={e => { e.currentTarget.style.background = '#fafafb' }}
+                      onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.04)' }}
                       onMouseLeave={e => { e.currentTarget.style.background = 'transparent' }}
                     >
                       <span style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase' }}>
@@ -2658,15 +2658,15 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
         <div className="seo-glass-card" style={{ marginBottom: 20, marginTop: 20, borderTop: `3px solid ${C.green}`, padding: 0 }}>
           <div style={{ padding: '20px 24px 22px' }}>
             <div style={{ marginBottom: 16 }}>
-              <p style={{ fontSize: 11, fontWeight: 700, color: 'rgba(10,10,15,0.50)',
+              <p style={{ fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.50)',
                 letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 6 }}>
                 Pick the niche
               </p>
-              <p style={{ fontSize: 17, fontWeight: 700, color: '#0a0a0f',
+              <p style={{ fontSize: 17, fontWeight: 700, color: '#f4f4f5',
                 lineHeight: 1.35, letterSpacing: '-0.3px', marginBottom: 4 }}>
                 What niche is this title for?
               </p>
-              <p style={{ fontSize: 13, color: 'rgba(10,10,15,0.55)', lineHeight: 1.55 }}>
+              <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.55)', lineHeight: 1.55 }}>
                 Pick the closest — that's the audience we'll score against.
               </p>
             </div>
@@ -2676,7 +2676,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
                 <button key={i} className="seo-intent-opt" onClick={() => handleSelectIntent(opt.keyword)}>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 5, flexWrap: 'wrap' }}>
-                      <span style={{ fontSize: 14.5, fontWeight: 600, color: '#0a0a0f', letterSpacing: '-0.15px' }}>
+                      <span style={{ fontSize: 14.5, fontWeight: 600, color: '#f4f4f5', letterSpacing: '-0.15px' }}>
                         {opt.label}
                       </span>
                       <span style={{
@@ -2688,7 +2688,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
                         letterSpacing: '-0.02em',
                       }}>{opt.keyword}</span>
                     </div>
-                    <p style={{ fontSize: 13, color: 'rgba(10,10,15,0.55)', lineHeight: 1.6 }}>
+                    <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.55)', lineHeight: 1.6 }}>
                       {opt.description}
                     </p>
                   </div>
@@ -2788,7 +2788,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
             }
             const headlineBase = {
               fontSize: 13.5, fontWeight: 500, lineHeight: 1.5,
-              color: 'rgba(10,10,15,0.78)', letterSpacing: '-0.05px', margin: 0, flex: 1,
+              color: '#a1a1aa', letterSpacing: '-0.05px', margin: 0, flex: 1,
             }
 
             return (
@@ -2806,15 +2806,15 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
                     border: '1px solid rgba(5,150,105,0.18)',
                   }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                      <Lightbulb size={14} color="#059669" strokeWidth={2.2}/>
-                      <p style={{ ...eyebrowBase, color: '#059669' }}>Opportunity</p>
+                      <Lightbulb size={14} color="#34d27b" strokeWidth={2.2}/>
+                      <p style={{ ...eyebrowBase, color: '#34d27b' }}>Opportunity</p>
                     </div>
                     <p style={headlineBase}>{gap}</p>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 'auto' }}>
                       <div style={{ flex: 1, height: 5, background: 'rgba(5,150,105,0.10)', borderRadius: 99, overflow: 'hidden' }}>
-                        <div style={{ width: '4%', height: '100%', background: '#059669', borderRadius: 99 }}/>
+                        <div style={{ width: '4%', height: '100%', background: '#34d27b', borderRadius: 99 }}/>
                       </div>
-                      <span style={{ fontSize: 11.5, fontWeight: 600, color: '#059669', whiteSpace: 'nowrap', fontVariantNumeric: 'tabular-nums' }}>
+                      <span style={{ fontSize: 11.5, fontWeight: 600, color: '#34d27b', whiteSpace: 'nowrap', fontVariantNumeric: 'tabular-nums' }}>
                         Wide open · 0/{total}
                       </span>
                     </div>
@@ -2828,15 +2828,15 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
                       border: '1px solid rgba(217,119,6,0.18)',
                     }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                        <AlertTriangle size={14} color="#d97706" strokeWidth={2.2}/>
-                        <p style={{ ...eyebrowBase, color: '#d97706' }}>Overused angle</p>
+                        <AlertTriangle size={14} color="#f0a23b" strokeWidth={2.2}/>
+                        <p style={{ ...eyebrowBase, color: '#f0a23b' }}>Overused angle</p>
                       </div>
                       <p style={headlineBase}>{overused}</p>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 'auto' }}>
                         <div style={{ flex: 1, height: 5, background: 'rgba(217,119,6,0.10)', borderRadius: 99, overflow: 'hidden' }}>
-                          <div style={{ width: `${Math.round((overusedFilled / total) * 100)}%`, height: '100%', background: '#d97706', borderRadius: 99 }}/>
+                          <div style={{ width: `${Math.round((overusedFilled / total) * 100)}%`, height: '100%', background: '#f0a23b', borderRadius: 99 }}/>
                         </div>
-                        <span style={{ fontSize: 11.5, fontWeight: 600, color: '#d97706', whiteSpace: 'nowrap', fontVariantNumeric: 'tabular-nums' }}>
+                        <span style={{ fontSize: 11.5, fontWeight: 600, color: '#f0a23b', whiteSpace: 'nowrap', fontVariantNumeric: 'tabular-nums' }}>
                           Saturated · {overusedFilled}/{total}
                         </span>
                       </div>
@@ -2846,30 +2846,30 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
                   {/* Tile 3 — Audience drivers (neutral). 3 quiet chips. */}
                   <div style={{
                     ...tileBase,
-                    background: 'rgba(10,10,15,0.025)',
-                    border: '1px solid rgba(10,10,15,0.07)',
+                    background: 'rgba(255,255,255,0.025)',
+                    border: '1px solid rgba(255,255,255,0.07)',
                   }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                      <Users size={14} color="rgba(10,10,15,0.55)" strokeWidth={2.2}/>
-                      <p style={{ ...eyebrowBase, color: 'rgba(10,10,15,0.55)' }}>Audience</p>
+                      <Users size={14} color="rgba(255,255,255,0.55)" strokeWidth={2.2}/>
+                      <p style={{ ...eyebrowBase, color: 'rgba(255,255,255,0.55)' }}>Audience</p>
                     </div>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginTop: 4 }}>
                       {emotionalDrv && (
                         <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
-                          <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.10em', textTransform: 'uppercase', color: 'rgba(10,10,15,0.45)', flexShrink: 0, width: 56 }}>Driver</span>
-                          <span style={{ fontSize: 12.5, fontWeight: 500, color: '#0a0a0f', lineHeight: 1.4 }}>{emotionalDrv}</span>
+                          <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.10em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.45)', flexShrink: 0, width: 56 }}>Driver</span>
+                          <span style={{ fontSize: 12.5, fontWeight: 500, color: '#f4f4f5', lineHeight: 1.4 }}>{emotionalDrv}</span>
                         </div>
                       )}
                       {searchIntent && (
                         <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
-                          <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.10em', textTransform: 'uppercase', color: 'rgba(10,10,15,0.45)', flexShrink: 0, width: 56 }}>Intent</span>
-                          <span style={{ fontSize: 12.5, fontWeight: 500, color: '#0a0a0f', lineHeight: 1.4 }}>{searchIntent}</span>
+                          <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.10em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.45)', flexShrink: 0, width: 56 }}>Intent</span>
+                          <span style={{ fontSize: 12.5, fontWeight: 500, color: '#f4f4f5', lineHeight: 1.4 }}>{searchIntent}</span>
                         </div>
                       )}
                       {viewerProfile && (
                         <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
-                          <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.10em', textTransform: 'uppercase', color: 'rgba(10,10,15,0.45)', flexShrink: 0, width: 56 }}>Viewer</span>
-                          <span style={{ fontSize: 12.5, fontWeight: 500, color: '#0a0a0f', lineHeight: 1.4 }}>{viewerProfile}</span>
+                          <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.10em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.45)', flexShrink: 0, width: 56 }}>Viewer</span>
+                          <span style={{ fontSize: 12.5, fontWeight: 500, color: '#f4f4f5', lineHeight: 1.4 }}>{viewerProfile}</span>
                         </div>
                       )}
                     </div>
@@ -2897,9 +2897,9 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
                 {result.primary_phrase && (
                   <span style={{
                     display: 'inline-flex', alignItems: 'center', gap: 6,
-                    fontSize: 12.5, fontWeight: 500, color: 'rgba(10,10,15,0.55)', letterSpacing: '-0.05px',
+                    fontSize: 12.5, fontWeight: 500, color: 'rgba(255,255,255,0.55)', letterSpacing: '-0.05px',
                   }}>
-                    <span style={{ width: 3, height: 3, borderRadius: 99, background: 'rgba(10,10,15,0.30)' }}/>
+                    <span style={{ width: 3, height: 3, borderRadius: 99, background: 'rgba(255,255,255,0.30)' }}/>
                     &ldquo;{result.primary_phrase}&rdquo;
                   </span>
                 )}
@@ -2907,7 +2907,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
                 <span style={{
                   display: 'inline-flex', alignItems: 'center', gap: 6,
                   fontSize: 10, fontWeight: 700, color: C.text2,
-                  background: 'rgba(15,15,19,0.04)', border: '1px solid rgba(15,15,19,0.08)',
+                  background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)',
                   padding: '3px 9px', borderRadius: 100,
                   letterSpacing: '0.10em', textTransform: 'uppercase',
                 }}>
@@ -2929,7 +2929,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
               <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 20, gap: 16 }}>
                 <div>
                   <h2 style={{ fontSize: 22, fontWeight: 700, color: C.text1, letterSpacing: '-0.5px', margin: 0 }}>
-                    Suggested titles <span style={{ color: 'rgba(10,10,15,0.35)', fontSize: 14, fontWeight: 500, letterSpacing: '-0.2px', marginLeft: 8 }}>{result.suggestions.length}</span>
+                    Suggested titles <span style={{ color: 'rgba(255,255,255,0.35)', fontSize: 14, fontWeight: 500, letterSpacing: '-0.2px', marginLeft: 8 }}>{result.suggestions.length}</span>
                   </h2>
                 </div>
                 <button onClick={() => handleSelectTitle(title.trim())} className="seo-btn" style={{ flexShrink: 0 }}>
@@ -2992,7 +2992,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
                     <div style={{ padding: '16px 22px 18px' }}>
                       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, marginBottom: 12 }}>
                         <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase', margin: 0 }}>
-                          Keywords <span style={{ color: 'rgba(10,10,15,0.35)', fontWeight: 600, marginLeft: 6 }}>{result.autocomplete_terms.length}</span>
+                          Keywords <span style={{ color: 'rgba(255,255,255,0.35)', fontWeight: 600, marginLeft: 6 }}>{result.autocomplete_terms.length}</span>
                         </p>
                         <button
                           onClick={() => {
@@ -3012,8 +3012,8 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
                             onClick={() => setTitle(t)}
                             onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setTitle(t) } }}
                             style={{ ...T.chip, display: 'inline-flex', alignItems: 'center', gap: 6 }}
-                            onMouseEnter={e => { e.currentTarget.style.background = '#f1f1f6'; e.currentTarget.style.borderColor = 'rgba(229,37,27,0.25)'; e.currentTarget.style.color = C.text1 }}
-                            onMouseLeave={e => { e.currentTarget.style.background = '#fafafb'; e.currentTarget.style.borderColor = '#e6e6ec'; e.currentTarget.style.color = C.text2 }}>
+                            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; e.currentTarget.style.borderColor = 'rgba(229,37,27,0.25)'; e.currentTarget.style.color = C.text1 }}
+                            onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'; e.currentTarget.style.color = C.text2 }}>
                             <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" style={{ flexShrink: 0, opacity: 0.55 }}>
                               <circle cx="5" cy="5" r="3.2"/><path d="M7.3 7.3L10 10"/>
                             </svg>
@@ -3031,7 +3031,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
                     <div style={{ padding: '16px 22px 18px' }}>
                       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, marginBottom: 12 }}>
                         <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase', margin: 0 }}>
-                          Suggested tags <span style={{ color: 'rgba(10,10,15,0.35)', fontWeight: 600, marginLeft: 6 }}>{result.top_tags.length}</span>
+                          Suggested tags <span style={{ color: 'rgba(255,255,255,0.35)', fontWeight: 600, marginLeft: 6 }}>{result.top_tags.length}</span>
                         </p>
                         <button
                           onClick={() => {
@@ -3057,12 +3057,12 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
                                 ...T.chip,
                                 display: 'inline-flex', alignItems: 'center', gap: 6,
                                 color: inTitle ? C.green : C.text2,
-                                background: inTitle ? 'rgba(5,150,105,0.07)' : '#fafafb',
-                                border: `1px solid ${inTitle ? 'rgba(5,150,105,0.25)' : '#e6e6ec'}`,
+                                background: inTitle ? 'rgba(5,150,105,0.07)' : 'rgba(255,255,255,0.04)',
+                                border: `1px solid ${inTitle ? 'rgba(5,150,105,0.25)' : 'rgba(255,255,255,0.08)'}`,
                                 fontWeight: inTitle ? 600 : 500,
                               }}
                               onMouseEnter={e => { e.currentTarget.style.borderColor = inTitle ? 'rgba(5,150,105,0.45)' : '#d0d0d8' }}
-                              onMouseLeave={e => { e.currentTarget.style.borderColor = inTitle ? 'rgba(5,150,105,0.25)' : '#e6e6ec' }}>
+                              onMouseLeave={e => { e.currentTarget.style.borderColor = inTitle ? 'rgba(5,150,105,0.25)' : 'rgba(255,255,255,0.08)' }}>
                               {inTitle ? (
                                 <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
                                   <polyline points="1.5,6.5 5,10 10.5,2"/>
@@ -3127,9 +3127,9 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
                     <textarea value={currentDesc} onChange={e => setCurrentDesc(e.target.value)}
                       placeholder="Paste your existing description here…"
                       rows={4}
-                      style={{ width: '100%', padding: '12px 14px', fontSize: 13.5, border: '1px solid #e6e6ec', borderRadius: 10, fontFamily: 'inherit', outline: 'none', color: C.text1, background: '#ffffff', boxSizing: 'border-box', resize: 'vertical', lineHeight: 1.6, transition: 'border-color 0.18s, box-shadow 0.18s' }}
+                      style={{ width: '100%', padding: '12px 14px', fontSize: 13.5, border: '1px solid rgba(255,255,255,0.08)', borderRadius: 10, fontFamily: 'inherit', outline: 'none', color: C.text1, background: '#1c1c21', boxSizing: 'border-box', resize: 'vertical', lineHeight: 1.6, transition: 'border-color 0.18s, box-shadow 0.18s' }}
                       onFocus={e => { e.target.style.borderColor = 'rgba(0,0,0,0.25)'; e.target.style.boxShadow = '0 0 0 4px rgba(0,0,0,0.04)' }}
-                      onBlur={e => { e.target.style.borderColor = '#e6e6ec'; e.target.style.boxShadow = 'none' }}
+                      onBlur={e => { e.target.style.borderColor = 'rgba(255,255,255,0.08)'; e.target.style.boxShadow = 'none' }}
                     />
                   </div>
 
@@ -3315,7 +3315,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
                     <div className="seo-report-header" onClick={() => openReport(r)}>
                       <div style={{ flex: 1, minWidth: 0 }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-                          <p style={{ fontWeight: 600, fontSize: 14.5, color: '#0a0a0f',
+                          <p style={{ fontWeight: 600, fontSize: 14.5, color: '#f4f4f5',
                             letterSpacing: '-0.15px', whiteSpace: 'nowrap', overflow: 'hidden',
                             textOverflow: 'ellipsis', lineHeight: 1.35 }}>
                             {r.title}
@@ -3340,12 +3340,12 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
                               <span className="lbl">description</span>
                             </span>
                           )}
-                          <span style={{ fontSize: 12, color: '#9595a4', fontWeight: 500, marginLeft: 2 }}>
+                          <span style={{ fontSize: 12, color: '#71717a', fontWeight: 500, marginLeft: 2 }}>
                             · {relTime(r.updated_at)}
                           </span>
                         </div>
                       </div>
-                      <div style={{ flexShrink: 0, borderLeft: '1px solid rgba(0,0,0,0.07)',
+                      <div style={{ flexShrink: 0, borderLeft: '1px solid rgba(255,255,255,0.10)',
                         paddingLeft: 16, marginLeft: 4, paddingRight: 28 }}>
                         <button className="seo-report-cta"
                           onClick={e => { e.stopPropagation(); openReport(r) }}>
