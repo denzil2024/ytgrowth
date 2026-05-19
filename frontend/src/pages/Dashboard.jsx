@@ -1726,7 +1726,7 @@ function FeedCard({
               display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
               transition: 'background 0.14s ease, color 0.14s ease',
             }}
-            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; e.currentTarget.style.color = '#0a0a0f' }}
+            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; e.currentTarget.style.color = SHELL.text1 }}
             onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'rgba(255,255,255,0.36)' }}
           >
             <XIcon size={12} strokeWidth={2.1} />
@@ -1931,7 +1931,7 @@ function ActionsRailCard({ items, totalCount }) {
                         cursor: 'pointer',
                         transition: 'background 0.14s, color 0.14s',
                       }}
-                      onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; e.currentTarget.style.color = '#0a0a0f' }}
+                      onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; e.currentTarget.style.color = SHELL.text1 }}
                       onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; e.currentTarget.style.color = 'rgba(255,255,255,0.65)' }}
                     >Mark done</button>
                     <button
@@ -1947,7 +1947,7 @@ function ActionsRailCard({ items, totalCount }) {
                         cursor: 'pointer',
                         transition: 'background 0.14s, color 0.14s',
                       }}
-                      onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; e.currentTarget.style.color = '#0a0a0f' }}
+                      onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; e.currentTarget.style.color = SHELL.text1 }}
                       onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; e.currentTarget.style.color = 'rgba(255,255,255,0.55)' }}
                     >Dismiss</button>
                   </div>
@@ -6530,13 +6530,13 @@ export default function Dashboard() {
                         borderRadius: 100,
                         border: active ? '1px solid rgba(255,255,255,0.12)' : '1px solid transparent',
                         background: active ? 'rgba(255,255,255,0.06)' : 'transparent',
-                        color: active ? '#0a0a0f' : 'rgba(10,10,15,0.55)',
+                        color: active ? SHELL.text1 : SHELL.text2,
                         cursor: 'pointer', fontFamily: 'inherit',
                         letterSpacing: '-0.01em',
                         transition: 'background 180ms cubic-bezier(0.32,0.72,0,1), color 180ms cubic-bezier(0.32,0.72,0,1), border-color 180ms cubic-bezier(0.32,0.72,0,1)',
                       }}
-                      onMouseEnter={e => { if (!active) { e.currentTarget.style.background = 'rgba(255,255,255,0.05)'; e.currentTarget.style.color = '#0a0a0f' } }}
-                      onMouseLeave={e => { if (!active) { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'rgba(10,10,15,0.55)' } }}
+                      onMouseEnter={e => { if (!active) { e.currentTarget.style.background = 'rgba(255,255,255,0.05)'; e.currentTarget.style.color = SHELL.text1 } }}
+                      onMouseLeave={e => { if (!active) { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = SHELL.text2 } }}
                     >
                       {label}
                     </button>
@@ -6655,8 +6655,8 @@ export default function Dashboard() {
                                   background: 'transparent', border: 'none', cursor: 'pointer',
                                   fontFamily: 'inherit', padding: 0, letterSpacing: '-0.005em',
                                 }}
-                                onMouseEnter={e => { e.currentTarget.style.color = '#0a0a0f' }}
-                                onMouseLeave={e => { e.currentTarget.style.color = 'rgba(10,10,15,0.50)' }}
+                                onMouseEnter={e => { e.currentTarget.style.color = SHELL.text1 }}
+                                onMouseLeave={e => { e.currentTarget.style.color = SHELL.text3 }}
                               >
                                 Run video review on this one →
                               </button>
