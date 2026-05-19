@@ -145,7 +145,7 @@ export const posts = [
 
         <blockquote><strong>Pro Tip:</strong> Use the Related Queries rising filter specifically for video title angles, not just topic confirmation. A rising query like "AI video editing for beginners 2026" is not just a trend signal. It is a ready-made video title with proven search momentum behind it. Copy the exact phrasing from the rising queries list into your title and description for maximum relevance alignment.</blockquote>
 
-        <p>What Google Trends cannot tell you is the absolute search volume behind a keyword. It shows relative popularity on a scale of 0 to 100, not raw monthly searches. Use it alongside a <a href="/features/keyword-research">YouTube keyword research tool</a> to get both the momentum signal and the volume data before committing to a topic.</p>
+        <p>What Google Trends cannot tell you is the absolute search volume behind a keyword. It shows relative popularity on a scale of 0 to 100, not raw monthly searches. Use it alongside <a href="/features/keyword-research">keyword research</a> to get both the momentum signal and the volume data before committing to a topic.</p>
 
         <h2>YouTube Search Autocomplete and the Studio Research Tab</h2>
 
@@ -212,7 +212,7 @@ export const posts = [
 
         <p>YouTube Charts is a separate tool from the Trending tab that surfaces the most viewed and most searched content across music, podcasts, and video categories. Access it at <a href="https://charts.youtube.com" target="_blank" rel="noopener">charts.youtube.com</a>. It updates weekly and shows both current top performers and rising content, giving you a more structured view of YouTube trending topics than the Trending tab's real-time feed.</p>
 
-        <p>The most important insight from studying top searches is not copying what is already popular. It is identifying which rising categories align with your niche so you can position your content at the intersection of sustained demand and your existing authority.</p>
+        <p>The most important insight from studying top searches is not copying what is already popular. It is identifying which rising categories align with <a href="/blog/youtube-niche">your niche</a> so you can position your content at the intersection of sustained demand and your existing authority.</p>
 
         <blockquote><strong>Pro Tip:</strong> Cross-reference the rising categories in the table above with your YouTube Studio Research tab data. If a category is rising platform-wide and your specific audience is also searching for it, that overlap is your highest confidence content investment for the next 90 days.</blockquote>
 
@@ -274,6 +274,13 @@ export const posts = [
 
         <p>A trend video that ships today with a clear angle beats a perfect video that ships next week into a saturated topic every time.</p>
 
+        <CtaCard
+          to="/features/competitor-analysis"
+          title="See which trends your competitors are already winning"
+          sub="Competitor Analysis pulls the rising topics, title patterns, and content gaps from the channels beating you in your niche, so your next trend video starts with data instead of a guess. Free to try."
+          button="Try Competitor Analysis →"
+        />
+
         <h2>What's Trending on YouTube in 2026</h2>
 
         <p>YouTube trends in 2026 have shifted away from one-off viral moments toward sustained content formats that reflect how audiences now discover and consume video. The platform's biggest growth areas this year are structural changes in creator behavior rather than individual trending topics. Here are the six trends defining YouTube trending topics in 2026:</p>
@@ -331,13 +338,13 @@ export const posts = [
             <tr><td>Tuesday</td><td>Take Monday's strongest signals and type each into YouTube autocomplete using the letter-by-letter method. Record every specific phrase that appears.</td><td>YouTube search bar</td></tr>
             <tr><td>Wednesday</td><td>Open the YouTube Studio Research tab. Check whether Monday's topics appear in your audience's rising searches. Note any gap indicators.</td><td>YouTube Studio Analytics, Research tab</td></tr>
             <tr><td>Thursday</td><td>Check your Reddit, TikTok, and X monitoring list. Flag any topics from Monday now showing social traction. Two platform signals on the same topic crosses the confirmation threshold.</td><td>Reddit Rising tab, TikTok Discover, X Trending</td></tr>
-            <tr><td>Friday</td><td>Pick the single strongest validated trend. Script, film, and publish or schedule before end of day. Publish a Short on the same topic the same day.</td><td>YouTube Studio, <a href="/features/competitor-analysis">YTGrowth Video Ideas</a></td></tr>
+            <tr><td>Friday</td><td>Pick the single strongest validated trend. Script, film, and publish or schedule before end of day. Publish a Short on the same topic the same day.</td><td>YouTube Studio, <a href="/tools/youtube-video-ideas-generator">Video Ideas tool</a></td></tr>
           </tbody>
         </table>
 
         <p>The discipline of acting on one trend per week rather than researching ten and filming none is what separates creators who benefit from trend monitoring from those who treat it as a research exercise with no output.</p>
 
-        <blockquote><strong>Pro Tip:</strong> The <a href="/features/competitor-analysis">Video Ideas feature in YTGrowth</a> pulls trend-validated content suggestions directly from competitor performance data in your niche, surfacing the topics your competing channels are gaining traction on right now so you can identify gaps and act on them faster than the manual workflow alone allows.</blockquote>
+        <blockquote><strong>Pro Tip:</strong> The <a href="/features/competitor-analysis">Competitor Analysis</a> tool pulls trend-validated content suggestions directly from competitor performance data in your niche, surfacing the topics your competing channels are gaining traction on right now so you can identify gaps and act on them faster than the manual workflow alone allows.</blockquote>
 
         <h2>Frequently Asked Questions About YouTube Trends</h2>
 
@@ -367,7 +374,7 @@ export const posts = [
 
         <p>That four-step process applied consistently every week compounds into a channel that grows with trends rather than chasing them after the fact. The YouTube search trends that will drive your biggest videos over the next 90 days are rising right now. The question is whether you find them before or after your competitors do.</p>
 
-        <p>For a faster and more structured way to identify which trending topics your competing channels are already acting on, the <a href="/features/competitor-analysis">Video Ideas and Competitor Analysis tools in YTGrowth</a> surface those gaps in real time so your next trend video starts with data, not guesswork.</p>
+        <p>For a faster and more structured way to identify which trending topics your competing channels are already acting on, a structured <a href="/blog/youtube-competitor-analysis">competitor analysis</a> surfaces those gaps in real time so your next trend video starts with data, not guesswork.</p>
       </>
     ),
   },
