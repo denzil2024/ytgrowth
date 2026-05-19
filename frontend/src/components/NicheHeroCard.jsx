@@ -18,23 +18,25 @@ import {
   ChannelResultCard,
 } from './OutlierCards'
 
+/* Dark palette — mirrors the shipped app-shell / Competitors dark
+   system. NicheHeroCard is Feed-only, so darkening it wholesale is safe. */
 const C = {
-  card:        '#ffffff',
-  border:      '#e6e6ec',
-  borderSoft:  '#f0f0f4',
-  text1:       '#0a0a0f',
-  text2:       'rgba(10,10,15,0.62)',
-  text3:       'rgba(10,10,15,0.40)',
-  text4:       'rgba(10,10,15,0.30)',
+  card:        'linear-gradient(180deg, #1e1e24 0%, #18181c 100%)',
+  border:      'rgba(255,255,255,0.08)',
+  borderSoft:  'rgba(255,255,255,0.06)',
+  text1:       '#f4f4f5',
+  text2:       '#a1a1aa',
+  text3:       '#71717a',
+  text4:       'rgba(255,255,255,0.30)',
   red:         '#e5251b',
-  redDeep:     '#a50f07',
-  redTint:     'rgba(229,37,27,0.07)',
-  redBdr:      'rgba(229,37,27,0.18)',
-  green:       '#059669',
-  insetBg:     '#fafafb',
-  insetBdr:    'rgba(10,10,15,0.06)',
-  shadowSm:    '0 1px 3px rgba(0,0,0,0.06), 0 4px 14px rgba(0,0,0,0.06)',
-  shadowHover: '0 4px 14px rgba(0,0,0,0.09), 0 18px 42px rgba(0,0,0,0.10)',
+  redDeep:     '#fb6a60',
+  redTint:     'rgba(229,37,27,0.13)',
+  redBdr:      'rgba(229,37,27,0.32)',
+  green:       '#34d27b',
+  insetBg:     '#1c1c21',
+  insetBdr:    'rgba(255,255,255,0.08)',
+  shadowSm:    '0 1px 3px rgba(0,0,0,0.4)',
+  shadowHover: '0 6px 20px rgba(0,0,0,0.55)',
 }
 
 function fmtViews(n) {
@@ -628,7 +630,7 @@ const styles = `
   display: inline-flex; align-items: center; justify-content: center;
   transition: background 0.15s, color 0.15s;
 }
-.nh-x:hover { background: #ececef; color: ${C.text1}; }
+.nh-x:hover { background: rgba(255,255,255,0.08); color: ${C.text1}; }
 
 .nh-card {
   background: ${C.card};
@@ -652,12 +654,12 @@ const styles = `
   font-size: 12.5px; font-weight: 600;
   padding: 7px 13px; border-radius: 100px;
   border: 1px solid ${C.insetBdr};
-  background: #fff; color: ${C.text2};
+  background: #1c1c21; color: ${C.text2};
   cursor: pointer;
   transition: background 0.15s, color 0.15s, border-color 0.15s, box-shadow 0.15s;
   letter-spacing: -0.1px;
 }
-.nh-pill:hover { color: ${C.text1}; border-color: rgba(0,0,0,0.18); }
+.nh-pill:hover { color: ${C.text1}; border-color: rgba(255,255,255,0.18); }
 .nh-pill-active {
   background: ${C.red}; color: #fff; border-color: ${C.red};
   box-shadow: 0 1px 3px rgba(229,37,27,0.30);
@@ -701,7 +703,7 @@ const styles = `
   position: absolute;
   width: 200px; aspect-ratio: 16 / 9;
   border-radius: 10px;
-  background: linear-gradient(135deg, #d8d8df 0%, #b9b9c4 50%, #d8d8df 100%);
+  background: linear-gradient(135deg, #2a2a30 0%, #202024 50%, #2a2a30 100%);
   box-shadow: 0 4px 14px rgba(0,0,0,0.10);
   filter: blur(0.6px);
 }
@@ -711,7 +713,7 @@ const styles = `
   filter: none;
   background:
     linear-gradient(135deg, rgba(229,37,27,0.10) 0%, rgba(229,37,27,0.05) 60%, rgba(31,31,42,0.10) 100%),
-    linear-gradient(135deg, #e8e8ee 0%, #c9c9d3 50%, #e8e8ee 100%);
+    linear-gradient(135deg, #26262b 0%, #2a2a30 50%, #26262b 100%);
   border: 1px solid rgba(255,255,255,0.4);
   display: flex; align-items: center; justify-content: center;
 }
@@ -777,16 +779,16 @@ const styles = `
   aspect-ratio: 16 / 9;
   border-radius: 10px;
   overflow: hidden;
-  background: #eaeaef;
+  background: #26262b;
   text-decoration: none;
   display: block;
 }
 .nh-thumb-ch { aspect-ratio: 1 / 1; width: 140px; border-radius: 14px; }
 .nh-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.nh-thumb-fallback { width: 100%; height: 100%; background: #eaeaef; }
+.nh-thumb-fallback { width: 100%; height: 100%; background: #26262b; }
 .nh-thumb-fallback-ch {
   display: flex; align-items: center; justify-content: center;
-  font-size: 36px; font-weight: 800; color: #c4c4cd;
+  font-size: 36px; font-weight: 800; color: rgba(255,255,255,0.32);
 }
 .nh-thumb-overlay {
   position: absolute; inset: 0;
@@ -902,12 +904,12 @@ const styles = `
 .nh-pager-btn {
   width: 30px; height: 30px; border-radius: 100px;
   border: 1px solid ${C.insetBdr};
-  background: #fff; color: ${C.text2};
+  background: #1c1c21; color: ${C.text2};
   cursor: pointer;
   display: inline-flex; align-items: center; justify-content: center;
   transition: background 0.15s, color 0.15s, border-color 0.15s;
 }
-.nh-pager-btn:hover { background: ${C.insetBg}; color: ${C.text1}; border-color: rgba(0,0,0,0.18); }
+.nh-pager-btn:hover { background: ${C.insetBg}; color: ${C.text1}; border-color: rgba(255,255,255,0.18); }
 .nh-pager-count {
   font-size: 12px; color: ${C.text3}; font-weight: 600;
   font-variant-numeric: tabular-nums;
@@ -949,13 +951,13 @@ const styles = `
   width: 110px; aspect-ratio: 16 / 9;
   border-radius: 8px;
   overflow: hidden;
-  background: #eaeaef;
+  background: #26262b;
   border: 2px solid transparent;
   padding: 0; cursor: pointer;
   transition: border-color 0.15s, transform 0.15s;
 }
 .nh-rail-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.nh-rail-fallback { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: #c4c4cd; font-size: 22px; font-weight: 800; }
+.nh-rail-fallback { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.32); font-size: 22px; font-weight: 800; }
 .nh-rail-thumb:hover { transform: translateY(-1px); }
 .nh-rail-thumb-active { border-color: ${C.red}; box-shadow: 0 4px 14px rgba(229,37,27,0.25); }
 .nh-rail-badge {
@@ -1003,7 +1005,7 @@ const styles = `
 .nh-empty-sub   { font-size: 12.5px; color: ${C.text3}; line-height: 1.55; margin: 0; }
 
 .nh-sk {
-  background: linear-gradient(90deg, #f4f4f6 0%, #ececef 50%, #f4f4f6 100%);
+  background: linear-gradient(90deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.06) 100%);
   background-size: 400px 100%;
   animation: nhShimmer 1.4s linear infinite;
   border-radius: 6px;

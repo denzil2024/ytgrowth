@@ -55,7 +55,18 @@ window.fetch = async (url, opts) => {
     { title: 'I tried every budget-meal hack for 7 days', targetKeyword: 'budget meals', why: 'Rides your proven winner.' },
     { title: 'The real cost of living alone at 24', targetKeyword: 'cost of living', why: 'High search, low competition in your tier.' },
   ])
-  if (u.includes('/dashboard/niche-outlier')) return J({ ok: false })
+  if (u.includes('/dashboard/niche-outlier')) {
+    const vid = (id, sc, vw) => ({ video_id: id, thumbnail: `https://i.ytimg.com/vi/${id}/hqdefault.jpg`, outlier_score: sc, views: vw, likes: Math.round(vw*0.04), channel_subscribers: 5400, views_per_sub: +(vw/5400).toFixed(1), duration_seconds: 640, title: 'My Monthly Grocery Haul VLOG with JUST Ksh 12,000', channel_name: 'valentine mwangi' })
+    const ch = (id, name, h, sc, n) => ({ channel_id: id, channel_name: name, channel_title: name, handle: h, thumbnail: 'https://yt3.googleusercontent.com/ytc/AIdro_kMR-4cElBYJtJZW6jJ2v9G2YBOe2qj1y3WUJZxR4ldNw=s176-c-k-c0x00ffffff-no-rj', channel_thumb: 'https://yt3.googleusercontent.com/ytc/AIdro_kMR-4cElBYJtJZW6jJ2v9G2YBOe2qj1y3WUJZxR4ldNw=s176-c-k-c0x00ffffff-no-rj', outlier_score: sc, videos_in_search: n, subscribers: 5400 })
+    return J({ ok: true, source: 'outliers_cache', bundle: {
+      query_used: 'My Monthly Grocery Haul VLOG with JUST Ksh 12,000 In Kenya',
+      refreshed_at: new Date(Date.now() - 86400_000 * 2).toISOString(),
+      locked_signals: [],
+      videos:     [vid('dQw4w9WgXcQ', 5.9, 410000), vid('9bZkp7q19f0', 3.1, 287000), vid('kJQP7kiw5Fk', 2.0, 198000)],
+      thumbnails: [vid('JGwWNGJdvx8', 4.2, 156000), vid('OPf0YbXqDm0', 2.4, 124000), vid('3JZ_D3ELwOQ', 1.8, 98000)],
+      channels:   [ch('UCa', 'valentine mwangi', '@valentinemwangii', 5.9, 1), ch('UCb', 'Miss Eva', '@missevaspeaks', 3.1, 2), ch('UCc', 'sassyinkorea', '@sassyinkorea', 2.0, 1)],
+    } })
+  }
   if (u.includes('/chat/state')) return J({ conversations: [], conversation_id: null })
   if (u.includes('/dashboard/')) return J({})
   if (u.startsWith('http')) return origFetch(url, opts)
