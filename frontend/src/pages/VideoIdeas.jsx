@@ -12,6 +12,30 @@ if (typeof document !== 'undefined' && !document.getElementById('vi-geist-font')
   document.head.appendChild(link)
 }
 
+/* Dark — mirrors the shipped app-shell / Competitors dark system.
+   Defined above the injected stylesheet so it can interpolate ${C.*}.
+   Semantic hues kept; *Hi-bright text for the dark tinted chips. */
+const C = {
+  red:    '#e5251b', redBg:   'rgba(229,37,27,0.13)', redBdr:   'rgba(229,37,27,0.32)', redHi:   '#fb6a60',
+  green:  '#16a34a', greenBg: 'rgba(22,163,74,0.14)', greenBdr: 'rgba(22,163,74,0.34)', greenHi: '#34d27b',
+  amber:  '#d97706', amberBg: 'rgba(217,119,6,0.14)', amberBdr: 'rgba(217,119,6,0.34)', amberHi: '#f0a23b',
+  blue:   '#7aa2ff', blueBg:  'rgba(79,134,247,0.14)', blueBdr: 'rgba(79,134,247,0.34)',
+  text1:  '#f4f4f5',
+  text2:  '#a1a1aa',
+  text3:  '#71717a',
+  text4:  'rgba(255,255,255,0.30)',
+  border: 'rgba(255,255,255,0.08)',
+  card:        'linear-gradient(180deg, #1e1e24 0%, #18181c 100%)',
+  cardFlat:    '#1c1c21',
+  surfaceInput:'#18181b',
+  hair:        'rgba(255,255,255,0.08)',
+  hairHi:      'rgba(255,255,255,0.16)',
+  wash:        'rgba(255,255,255,0.04)',
+  washActive:  'rgba(255,255,255,0.06)',
+  cardShadow:     '0 1px 3px rgba(0,0,0,0.4)',
+  cardShadowLift: '0 6px 20px rgba(0,0,0,0.55)',
+}
+
 /* ─── Styles injected once — matches the Overview/Videos/Outliers design
        language: hairline borders, system-standard elevation (0 1/3 + 0 4/16),
        no hover-lift transforms. ───────────────────────────────────────── */
@@ -30,17 +54,18 @@ if (typeof document !== 'undefined' && !document.getElementById('ytg-vi-styles')
        (0 1/2 + 0 4/14), lift on hover. Amber 3px top stripe is applied
        inline per-card, matching Dashboard Priority Actions. */
     .vi-idea-card {
-      background: #ffffff;
-      border: 1px solid #ececf0;
+      background: ${C.card};
+      border: 1px solid ${C.hair};
       border-radius: 12px;
       overflow: hidden;
       margin-bottom: 12px;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 3px 10px rgba(0,0,0,0.05);
+      box-shadow: ${C.cardShadow};
       transition: box-shadow 0.18s ease, transform 0.18s ease, opacity 0.2s;
       animation: viFadeUp 0.26s ease both;
     }
     .vi-idea-card:hover {
-      box-shadow: 0 4px 14px rgba(0,0,0,0.08), 0 14px 32px rgba(0,0,0,0.08);
+      box-shadow: ${C.cardShadowLift};
+      border-color: ${C.hairHi};
       transform: translateY(-1px);
     }
     .vi-idea-card.done { opacity: 0.48; }
@@ -53,7 +78,7 @@ if (typeof document !== 'undefined' && !document.getElementById('ytg-vi-styles')
     }
 
     .vi-skeleton {
-      background: linear-gradient(90deg, #f0f0f3 25%, #e8e8ec 50%, #f0f0f3 75%);
+      background: linear-gradient(90deg, rgba(255,255,255,0.04) 25%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.04) 75%);
       background-size: 200% 100%;
       animation: viSkeleton 1.4s ease infinite;
       border-radius: 8px;
@@ -67,14 +92,14 @@ if (typeof document !== 'undefined' && !document.getElementById('ytg-vi-styles')
        app: backdrop blur + centered card with hairline + system elevation. */
     .vi-modal-backdrop {
       position: fixed; inset: 0; z-index: 200;
-      background: rgba(10,10,15,0.42); backdrop-filter: blur(4px);
+      background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);
       display: flex; align-items: center; justify-content: center;
       padding: 20px; animation: viFadeUp 0.2s ease both;
     }
     .vi-modal {
-      background: #fff; border-radius: 16px;
-      border: 1px solid rgba(0,0,0,0.09);
-      box-shadow: 0 10px 40px rgba(0,0,0,0.14);
+      background: ${C.card}; border-radius: 16px;
+      border: 1px solid ${C.hair};
+      box-shadow: 0 16px 48px rgba(0,0,0,0.6);
       width: 100%; max-width: 440px; overflow: hidden;
     }
   `
@@ -84,17 +109,7 @@ if (typeof document !== 'undefined' && !document.getElementById('ytg-vi-styles')
 /* ─── Design tokens — matches the shared dashboard palette (no purple; red
        is strictly semantic for CTAs/hero, amber covers AI-generated accent,
        green = completed/positive, blue = informational tint). ─────────── */
-const C = {
-  red:      '#e5251b', redBg:   '#fff5f5', redBdr:   '#fecaca',
-  green:    '#16a34a', greenBg: '#f0fdf4', greenBdr: '#bbf7d0',
-  amber:    '#d97706', amberBg: '#fffbeb', amberBdr: '#fde68a',
-  blue:     '#2563eb', blueBg:  '#eff6ff', blueBdr:  '#bfdbfe',
-  text1:    '#111114',
-  text2:    '#52525b',
-  text3:    '#a0a0b0',
-  text4:    '#c0c0cc',
-  border:   'rgba(0,0,0,0.09)',
-}
+/* (dark C palette defined above the injected stylesheet) */
 
 const API = ''
 
@@ -176,7 +191,7 @@ function SourceBadge({ source }) {
   // AI generated uses amber (the system's accent-worthy colour). Purple has
   // been removed from the strict red/amber/green palette.
   const tone = source === 'ai'
-    ? { color: C.amber, bg: C.amberBg, bdr: C.amberBdr, label: 'AI generated' }
+    ? { color: C.amberHi, bg: C.amberBg, bdr: C.amberBdr, label: 'AI generated' }
     : { color: C.blue,  bg: C.blueBg,  bdr: C.blueBdr,  label: 'Competitor gap' }
   return (
     <span style={{
@@ -194,7 +209,7 @@ function KeywordPill({ keyword }) {
     <span style={{
       display: 'inline-block',
       fontSize: 12, fontWeight: 500,
-      color: C.text2, background: '#fafafb',
+      color: C.text2, background: C.cardFlat,
       border: `1px solid ${C.border}`,
       borderRadius: 20, padding: '5px 11px',
     }}>
@@ -247,7 +262,7 @@ function RefreshConfirmModal({ credits, onCancel, onConfirm }) {
     <div className="vi-modal-backdrop" onClick={onCancel}>
       <div className="vi-modal" onClick={e => e.stopPropagation()}>
         <div style={{ padding: '22px 24px 20px' }}>
-          <p style={{ fontSize: 10, fontWeight: 700, color: C.amber, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>
+          <p style={{ fontSize: 10, fontWeight: 700, color: C.amberHi, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>
             Uses 1 credit
           </p>
           <h3 style={{ fontSize: 18, fontWeight: 800, color: C.text1, letterSpacing: '-0.3px', lineHeight: 1.3, marginBottom: 10 }}>
@@ -283,12 +298,12 @@ function RefreshConfirmModal({ credits, onCancel, onConfirm }) {
               onClick={onCancel}
               style={{
                 padding: '10px 18px', borderRadius: 100,
-                border: `1px solid ${C.border}`, background: '#fff', color: C.text2,
+                border: `1px solid ${C.border}`, background: C.cardFlat, color: C.text2,
                 fontSize: 13.5, fontWeight: 600, fontFamily: 'inherit', cursor: 'pointer',
                 transition: 'background 0.15s, border-color 0.15s',
               }}
               onMouseEnter={e => { e.currentTarget.style.background = '#f6f6f9' }}
-              onMouseLeave={e => { e.currentTarget.style.background = '#fff' }}
+              onMouseLeave={e => { e.currentTarget.style.background = C.cardFlat }}
             >Cancel</button>
             <button
               onClick={onConfirm}
@@ -349,7 +364,7 @@ function IdeaCard({ idea, done, onDone, onUseSeo }) {
 
   // Severity stripe color for the 3px top accent.
   const stripeColor = done
-    ? 'rgba(15,15,19,0.08)'
+    ? 'rgba(255,255,255,0.08)'
     : (score >= 75 ? C.green : score >= 60 ? C.amber : C.red)
 
   return (
@@ -373,20 +388,20 @@ function IdeaCard({ idea, done, onDone, onUseSeo }) {
           }}>
             {done
               ? <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke={C.green} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><polyline points="1.5,6.5 5,10 10.5,2"/></svg>
-              : <span style={{ fontSize: 11.5, fontWeight: 800, color: C.amber, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.3px' }}>{idea.rank}</span>
+              : <span style={{ fontSize: 11.5, fontWeight: 800, color: C.amberHi, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.3px' }}>{idea.rank}</span>
             }
           </div>
           <span style={{
-            fontSize: 11, fontWeight: 800, color: 'rgba(10,10,15,0.55)',
+            fontSize: 11, fontWeight: 800, color: C.text2,
             letterSpacing: '0.12em', textTransform: 'uppercase',
           }}>Video Idea</span>
           {idea.targetKeyword && (
             <span style={{
               display: 'inline-flex', alignItems: 'center', gap: 5,
-              fontSize: 12, fontWeight: 500, color: 'rgba(10,10,15,0.55)',
+              fontSize: 12, fontWeight: 500, color: C.text2,
               letterSpacing: '-0.01em',
             }}>
-              <span style={{ width: 3, height: 3, borderRadius: 99, background: 'rgba(10,10,15,0.30)' }}/>
+              <span style={{ width: 3, height: 3, borderRadius: 99, background: 'rgba(255,255,255,0.12)' }}/>
               {idea.targetKeyword}
             </span>
           )}
@@ -415,7 +430,7 @@ function IdeaCard({ idea, done, onDone, onUseSeo }) {
             title, so the typography should make that the star. ── */}
         <h3 style={{
           fontSize: 17, fontWeight: 700,
-          color: done ? 'rgba(10,10,15,0.40)' : C.text1,
+          color: done ? 'rgba(255,255,255,0.12)' : C.text1,
           letterSpacing: '-0.35px', lineHeight: 1.35,
           marginBottom: done ? 0 : 18,
           textDecoration: done ? 'line-through' : 'none',
@@ -440,7 +455,7 @@ function IdeaCard({ idea, done, onDone, onUseSeo }) {
                   marginBottom: 12, flexWrap: 'wrap',
                 }}>
                   <span style={{
-                    fontSize: 11, fontWeight: 700, color: 'rgba(10,10,15,0.55)',
+                    fontSize: 11, fontWeight: 700, color: C.text2,
                     letterSpacing: '0.10em', textTransform: 'uppercase',
                   }}>Currently ranking</span>
                   <div style={{ flex: 1 }}/>
@@ -449,7 +464,7 @@ function IdeaCard({ idea, done, onDone, onUseSeo }) {
                       as data, not as a chip competing with the eyebrow. */}
                   <span style={{
                     display: 'inline-flex', alignItems: 'center', gap: 6,
-                    fontSize: 11.5, fontWeight: 600, color: 'rgba(10,10,15,0.62)',
+                    fontSize: 11.5, fontWeight: 600, color: C.text2,
                     letterSpacing: '-0.01em', fontVariantNumeric: 'tabular-nums',
                   }}>
                     <span style={{ width: 6, height: 6, borderRadius: 99, background: C.green }}/>
@@ -472,17 +487,17 @@ function IdeaCard({ idea, done, onDone, onUseSeo }) {
                         display: 'block',
                         textDecoration: 'none', color: 'inherit',
                         borderRadius: 10, overflow: 'hidden',
-                        border: '1px solid #ececf0',
-                        background: '#fff',
+                        border: '1px solid rgba(255,255,255,0.08)',
+                        background: C.cardFlat,
                         transition: 'transform 0.14s, box-shadow 0.14s, border-color 0.14s',
                       }}
                       onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-1px)'; e.currentTarget.style.boxShadow = '0 4px 14px rgba(0,0,0,0.10)'; e.currentTarget.style.borderColor = '#d6d6dc' }}
-                      onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; e.currentTarget.style.borderColor = '#ececf0' }}
+                      onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)' }}
                     >
                       <div style={{
                         position: 'relative',
                         aspectRatio: '16/9',
-                        background: '#ebebef',
+                        background: '#26262b',
                         overflow: 'hidden',
                       }}>
                         {(p.video_id || p.thumbnail) && (
@@ -516,7 +531,7 @@ function IdeaCard({ idea, done, onDone, onUseSeo }) {
                           minHeight: 36,
                         }}>{p.title}</p>
                         <p style={{
-                          fontSize: 11.5, fontWeight: 600, color: 'rgba(10,10,15,0.50)',
+                          fontSize: 11.5, fontWeight: 600, color: C.text3,
                           letterSpacing: '-0.05px',
                           whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
                         }}>{p.channel_name}{p.age_label ? ` · ${p.age_label}` : ''}</p>
@@ -530,7 +545,7 @@ function IdeaCard({ idea, done, onDone, onUseSeo }) {
             {/* ── Empty proof state: small inline note ── */}
             {!hasProof && (
               <div style={{
-                background: 'rgba(15,15,19,0.04)',
+                background: 'rgba(255,255,255,0.04)',
                 border: '1px dashed rgba(15,15,19,0.10)',
                 borderRadius: 10,
                 padding: '12px 14px',
@@ -540,7 +555,7 @@ function IdeaCard({ idea, done, onDone, onUseSeo }) {
                 <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="rgba(10,10,15,0.40)" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
                   <circle cx="7" cy="7" r="5.5"/><path d="M7 4v3.5l2 1.5"/>
                 </svg>
-                <p style={{ fontSize: 11.5, color: 'rgba(10,10,15,0.50)', fontWeight: 500, letterSpacing: '-0.01em' }}>
+                <p style={{ fontSize: 11.5, color: C.text3, fontWeight: 500, letterSpacing: '-0.01em' }}>
                   Looking up videos ranking for this. Refresh in a moment.
                 </p>
               </div>
@@ -549,12 +564,12 @@ function IdeaCard({ idea, done, onDone, onUseSeo }) {
             {/* ── Action row. Meta line is tight and data-first; buttons
                 use the standard 12.5/700 Feed CTA scale. ── */}
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
-              <span style={{ fontSize: 12, fontWeight: 500, color: 'rgba(10,10,15,0.50)', letterSpacing: '-0.01em' }}>
+              <span style={{ fontSize: 12, fontWeight: 500, color: C.text3, letterSpacing: '-0.01em' }}>
                 {hasProof
                   ? `${proof.length} ranking · last 12 months`
                   : 'Evidence loading'}
                 {idea.thumbnail_ready && (
-                  <>{' · '}<span style={{ color: C.green, fontWeight: 700 }}>Thumbnail ready</span></>
+                  <>{' · '}<span style={{ color: C.greenHi, fontWeight: 700 }}>Thumbnail ready</span></>
                 )}
               </span>
               <div style={{ flex: 1 }}/>
@@ -584,15 +599,15 @@ function IdeaCard({ idea, done, onDone, onUseSeo }) {
                   style={{
                     display: 'inline-flex', alignItems: 'center', gap: 4,
                     padding: '7px 12px', borderRadius: 100,
-                    border: '1px solid #e6e6ec',
-                    background: '#fff', color: 'rgba(10,10,15,0.62)',
+                    border: '1px solid rgba(255,255,255,0.08)',
+                    background: C.cardFlat, color: C.text2,
                     fontFamily: 'inherit',
                     fontSize: 12, fontWeight: 600, letterSpacing: '-0.01em',
                     cursor: 'pointer',
                     transition: 'background 0.14s ease, color 0.14s ease, border-color 0.14s ease',
                   }}
-                  onMouseEnter={e => { e.currentTarget.style.background = 'rgba(15,15,19,0.04)'; e.currentTarget.style.color = C.text1; e.currentTarget.style.borderColor = '#d0d0d8' }}
-                  onMouseLeave={e => { e.currentTarget.style.background = '#fff'; e.currentTarget.style.color = 'rgba(10,10,15,0.62)'; e.currentTarget.style.borderColor = '#e6e6ec' }}
+                  onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; e.currentTarget.style.color = C.text1; e.currentTarget.style.borderColor = '#d0d0d8' }}
+                  onMouseLeave={e => { e.currentTarget.style.background = C.cardFlat; e.currentTarget.style.color = C.text2; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)' }}
                 >
                   Detail
                   <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" style={{ transform: open ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s ease' }}><polyline points="3,4.5 6,7.5 9,4.5"/></svg>
@@ -610,7 +625,7 @@ function IdeaCard({ idea, done, onDone, onUseSeo }) {
                   borderRadius: '0 10px 10px 0',
                   padding: '12px 16px',
                 }}>
-                  <p style={{ fontSize: 9.5, fontWeight: 700, color: C.amber, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 6 }}>Why this works</p>
+                  <p style={{ fontSize: 9.5, fontWeight: 700, color: C.amberHi, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 6 }}>Why this works</p>
                   <p style={{ fontSize: 13, fontWeight: 500, color: C.text1, letterSpacing: '-0.01em', lineHeight: 1.65 }}>{idea.angle}</p>
                 </div>
               </div>
@@ -826,7 +841,7 @@ export default function VideoIdeas({ onNavigate, plan, freeTierFeatures }) {
     // Teaser preview — mock ranked video-ideas list behind the gate.
     const viTeaser = (
       <div style={{
-        background: '#ffffff', border: `1px solid ${C.border}`,
+        background: C.cardFlat, border: `1px solid ${C.border}`,
         borderRadius: 16, padding: '22px 24px',
         boxShadow: '0 1px 2px rgba(0,0,0,0.04), 0 4px 14px rgba(0,0,0,0.06)',
       }}>
@@ -894,7 +909,7 @@ export default function VideoIdeas({ onNavigate, plan, freeTierFeatures }) {
             Video Ideas
           </h1>
           <p style={{
-            fontSize: 14, color: 'rgba(10,10,15,0.55)', fontWeight: 500,
+            fontSize: 14, color: C.text2, fontWeight: 500,
             letterSpacing: '-0.005em', lineHeight: 1.45,
             margin: 0,
           }}>
@@ -919,7 +934,7 @@ export default function VideoIdeas({ onNavigate, plan, freeTierFeatures }) {
                 fontSize: 12.5, fontWeight: 700, fontFamily: 'inherit',
                 letterSpacing: '-0.01em',
                 background: refreshing ? '#e0e0e6' : C.red,
-                color: refreshing ? '#a0a0b0' : '#fff',
+                color: refreshing ? C.text3 : '#fff',
                 cursor: refreshing ? 'not-allowed' : 'pointer',
                 boxShadow: refreshing ? 'none' : '0 1px 3px rgba(229,37,27,0.28)',
                 transition: 'filter 0.15s, transform 0.15s',
@@ -945,7 +960,7 @@ export default function VideoIdeas({ onNavigate, plan, freeTierFeatures }) {
       {/* Stale nudge — amber tint, same language as other banners in the app */}
       {stale && !loading && (
         <div style={{
-          fontSize: 13, color: C.amber, background: C.amberBg,
+          fontSize: 13, color: C.amberHi, background: C.amberBg,
           border: `1px solid ${C.amberBdr}`, borderRadius: 10,
           padding: '10px 14px', marginBottom: 14,
         }}>
@@ -984,7 +999,7 @@ export default function VideoIdeas({ onNavigate, plan, freeTierFeatures }) {
       {!loading && !refreshing && source === 'empty' && !error && (
         <div style={{
           textAlign: 'center', padding: '56px 24px',
-          background: '#ffffff', border: `1px solid ${C.border}`,
+          background: C.cardFlat, border: `1px solid ${C.border}`,
           borderRadius: 16, marginTop: 8,
           boxShadow: '0 1px 3px rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.06)',
         }}>
@@ -1058,13 +1073,13 @@ export default function VideoIdeas({ onNavigate, plan, freeTierFeatures }) {
               background: C.greenBg, border: `1px solid ${C.greenBdr}`,
               borderRadius: 10,
             }}>
-              <span style={{ fontSize: 12.5, color: C.green, fontWeight: 600 }}>
+              <span style={{ fontSize: 12.5, color: C.greenHi, fontWeight: 600 }}>
                 {doneCount} idea{doneCount > 1 ? 's' : ''} completed
               </span>
               <button
                 onClick={clearCompleted}
                 style={{
-                  fontSize: 12.5, fontWeight: 700, color: C.green,
+                  fontSize: 12.5, fontWeight: 700, color: C.greenHi,
                   background: 'none', border: 'none', cursor: 'pointer',
                   fontFamily: 'inherit', padding: '2px 0',
                 }}
