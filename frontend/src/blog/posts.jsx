@@ -57,6 +57,188 @@ export const CATEGORIES = {
 
 export const posts = [
   {
+    slug: 'google-adsense-youtube',
+    title: 'Google AdSense for YouTube: How It Works, Setup, and Getting Paid (2026)',
+    excerpt: 'Google AdSense is the account that pays you for YouTube ads. What it actually is, how to set it up and link it, when the money lands, and the payment rules that trip creators up.',
+    date: '2026-05-19',
+    category: CATEGORIES.monetization,
+    cover: '/blog/google-adsense-youtube-cover.webp',
+    author: 'Denzil',
+    readTime: '10 min read',
+    content: () => (
+      <>
+        <p><strong>Quick answer:</strong> Google AdSense is the payment account that pays you for the ads YouTube runs on your videos. You do not earn from it until your channel is accepted into the YouTube Partner Program. Once linked, YouTube keeps 45% of long-form ad revenue and pays you 55%, with a $100 minimum before any money is sent.</p>
+
+        <p>This guide covers what AdSense actually is, how to set it up, how to link it to your channel, and exactly when and how the money lands. It focuses on the mechanics, not CPM rates, which are covered separately.</p>
+
+        <h2>What Is Google AdSense for YouTube?</h2>
+
+        <p>Google AdSense is the system that collects money from advertisers and pays it out to you. It is the bank account layer, not the monetization decision itself.</p>
+
+        <p>People confuse two separate things, so be clear on this:</p>
+
+        <ul>
+          <li><strong>The YouTube Partner Program (YPP):</strong> the gate that decides whether your channel is allowed to run ads at all.</li>
+          <li><strong>Google AdSense:</strong> the linked account that receives the ad money YPP generates and pays it to your bank.</li>
+        </ul>
+
+        <p>You apply to <a href="/blog/youtube-partner-program">the Partner Program</a> inside YouTube Studio. AdSense is one required step inside that application, not a separate website you sign up at first.</p>
+
+        <blockquote><strong>Pro Tip:</strong> If you are searching "google adsense youtube" hoping to start earning today, the AdSense account is never your bottleneck. The eligibility threshold is. Set up AdSense in the same sitting you hit the requirement, not before, so the account is not sitting idle and flagged for inactivity.</blockquote>
+
+        <h2>Do You Need AdSense to Earn on YouTube?</h2>
+
+        <p>Yes. Every dollar of YouTube ad revenue is paid through an AdSense account. There is no alternative payout path for ad income.</p>
+
+        <p>But AdSense alone earns you nothing. You first have to clear the Partner Program thresholds:</p>
+
+        <ul>
+          <li><strong>Main ad-revenue tier:</strong> 1,000 subscribers plus 4,000 valid public <a href="/blog/youtube-watch-hours">watch hours</a> in 12 months, or 1,000 subscribers plus 10 million valid Shorts views in 90 days.</li>
+          <li><strong>Early-access tier:</strong> a lower bar (500 subscribers and lighter watch-time) that unlocks fan funding first, with ad revenue still requiring the main tier.</li>
+        </ul>
+
+        <p>Until you cross the main tier, an AdSense account just sits there. The account is not what earns; the accepted channel is.</p>
+
+        <h2>How to Set Up Google AdSense for Your YouTube Channel</h2>
+
+        <p>You do not create an AdSense account at adsense.com for YouTube. You create it through YouTube Studio so it links automatically as a hosted account.</p>
+
+        <p>The steps:</p>
+
+        <ol>
+          <li>In YouTube Studio, open <strong>Earn</strong> (it appears once you are eligible or applying).</li>
+          <li>Accept the Partner Program terms.</li>
+          <li>Click through to <strong>Sign up for Google AdSense</strong>.</li>
+          <li>Choose an existing AdSense account or create a new one with the same Google login.</li>
+          <li>Confirm your country and accept the AdSense terms.</li>
+        </ol>
+
+        <p>One Google account should map to one AdSense account. If you already have AdSense from a blog or another channel, link the existing one rather than creating a second.</p>
+
+        <blockquote><strong>Pro Tip:</strong> Use the same Google account that owns the channel. Creating AdSense under a different login is the single most common reason the link silently fails and earnings show as unlinked weeks later.</blockquote>
+
+        <h2>How to Link AdSense to YouTube Step by Step</h2>
+
+        <p>If the account already exists, linking is a short flow inside Studio:</p>
+
+        <ol>
+          <li>YouTube Studio, then <strong>Earn</strong>, then <strong>Get started</strong> on the AdSense step.</li>
+          <li>You are redirected to Google AdSense, signed in.</li>
+          <li>Approve the connection between the AdSense account and the YouTube channel.</li>
+          <li>You are returned to YouTube Studio with the step marked complete.</li>
+        </ol>
+
+        <p>Linking is usually instant. The status can take up to 24 hours to refresh in Studio, so a brief delay is normal, not a failure.</p>
+
+        <h2>Common AdSense Linking and Approval Problems</h2>
+
+        <p>Most "my AdSense is not working" cases are one of four issues:</p>
+
+        <ul>
+          <li><strong>Wrong Google account:</strong> the AdSense account is under a different login than the channel. Fix: link the channel-owning account.</li>
+          <li><strong>Existing AdSense not connecting:</strong> an old AdSense (often from a blog) needs to be associated, not recreated. Creating a second account causes a rejection.</li>
+          <li><strong>Address not verified:</strong> Google mails a PIN once you reach $10 in earnings. Payments are held until you enter it.</li>
+          <li><strong>Tax info missing:</strong> until tax forms are submitted, payments are paused even if you are over the threshold.</li>
+        </ul>
+
+        <p>None of these block you permanently. They delay the first payment, which is why you handle them early rather than at payout time.</p>
+
+        <blockquote><strong>Pro Tip:</strong> The moment AdSense links, go straight to the payments section and submit your tax info. Do not wait for earnings. Tax-form delay is the most common reason a creator hits $100 but sees no payment that month.</blockquote>
+
+        <h2>When and How Google AdSense Pays You</h2>
+
+        <p>AdSense runs on a fixed monthly cycle with a hard minimum. The mechanics:</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Stage</th>
+              <th>What happens</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Throughout the month</td><td>Estimated earnings accrue in YouTube Studio and AdSense</td></tr>
+            <tr><td>First days of next month</td><td>Previous month's earnings are finalized</td></tr>
+            <tr><td>Around the 21st to 26th</td><td>Payment is issued if your balance is at least $100</td></tr>
+            <tr><td>Below $100</td><td>Balance rolls over to the next month until it clears $100</td></tr>
+          </tbody>
+        </table>
+
+        <p>Two one-time gates apply before your first payment:</p>
+
+        <ul>
+          <li><strong>Address (PIN) verification:</strong> triggered at $10 in earnings, mailed to your address.</li>
+          <li><strong>Tax information:</strong> a W-9 (US) or W-8BEN (non-US) submitted in Google payments.</li>
+        </ul>
+
+        <blockquote><strong>Pro Tip:</strong> The $100 threshold is per AdSense account, not per channel. If you run several channels under one AdSense account, their earnings combine toward the same $100, so you reach payout faster than people expect.</blockquote>
+
+        <h2>How Much Does YouTube AdSense Pay?</h2>
+
+        <p>This guide is about the plumbing, not the rates, so the short version: you keep 55% of long-form ad revenue and roughly 45% of the Shorts ad pool. The rest goes to YouTube.</p>
+
+        <p>What you actually earn per 1,000 views swings massively by niche, audience country, and season. Finance and software pay many times what entertainment does.</p>
+
+        <p>For the full breakdown of rates and the highest-paying niches, see <a href="/blog/youtube-cpm">CPM by niche</a>. To estimate your own numbers, use the calculator below.</p>
+
+        <CtaCard
+          to="/tools/youtube-money-calculator"
+          title="Estimate your YouTube ad earnings"
+          sub="Plug in your views and niche to see a realistic AdSense revenue range. Free, no signup, runs in your browser."
+          button="Open the money calculator →"
+        />
+
+        <h2>How to Earn More From AdSense</h2>
+
+        <p>AdSense income is views times RPM. You raise it by lifting either side, not by touching AdSense settings.</p>
+
+        <p>The levers that actually move it:</p>
+
+        <ul>
+          <li><strong>Niche and audience country:</strong> the biggest factor by far. A finance viewer in the US is worth many times an entertainment viewer elsewhere.</li>
+          <li><strong>Watch time and mid-rolls:</strong> videos over 8 minutes can run mid-roll ads, which materially lifts revenue per view.</li>
+          <li><strong>Retention and CTR:</strong> more views from the same upload effort is the cleanest multiplier.</li>
+        </ul>
+
+        <p>The AdSense account itself has no "earn more" toggle. Strong <a href="/blog/youtube-seo-best-practices">SEO best practices</a> and better packaging do the work.</p>
+
+        <h2>Final Thoughts</h2>
+
+        <p>AdSense is the floor of YouTube income, not the ceiling. It is reliable, passive, and the first thing every creator turns on.</p>
+
+        <p>It is also the lowest-margin income a channel has. Treating ad revenue as the whole plan keeps most creators underpaid for their audience size.</p>
+
+        <p>Use AdSense as the baseline, then layer sponsorships, products, and affiliates on top. That is the difference between a channel and <a href="/blog/youtube-as-a-business">a real business</a>.</p>
+
+        <h2>Google AdSense for YouTube FAQ</h2>
+
+        <h3>Is Google AdSense free?</h3>
+
+        <p>Yes. Creating and linking AdSense costs nothing. It is a payment account, not a paid product.</p>
+
+        <h3>How long does AdSense approval take?</h3>
+
+        <p>The AdSense link itself is usually instant to 24 hours. The longer wait is Partner Program review, which typically runs a few weeks after you meet the threshold.</p>
+
+        <h3>Can one AdSense account serve multiple YouTube channels?</h3>
+
+        <p>Yes. Multiple channels can pay into one AdSense account, and their earnings combine toward the single $100 payout threshold.</p>
+
+        <h3>Do YouTube Shorts earn through AdSense?</h3>
+
+        <p>Yes. Shorts ad revenue is paid through the same AdSense account, but from the Shorts ad pool with a different split than long-form.</p>
+
+        <h3>What is the AdSense minimum payout?</h3>
+
+        <p>$100. Below that, your balance rolls forward each month until it clears the threshold.</p>
+
+        <h3>Why is AdSense not showing in YouTube Studio?</h3>
+
+        <p>Almost always a wrong-account link, missing tax info, or unverified address. Check that the AdSense login matches the channel owner first.</p>
+      </>
+    ),
+  },
+  {
     slug: 'vidiq-review',
     title: 'vidIQ Review (2026): Is It Worth It, and the Free Alternative',
     excerpt: 'An honest vidIQ review for 2026: what the Chrome extension actually does, what the paid plans cost, where users get frustrated with billing and data accuracy, and how to cover the same jobs with a free alternative.',
