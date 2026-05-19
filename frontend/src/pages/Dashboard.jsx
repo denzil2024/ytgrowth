@@ -180,23 +180,23 @@ function useDashboardStyles() {
         font-family: 'Geist', 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
         font-feature-settings: 'cv11', 'ss01', 'ss03';
       }
-      .ov-page .ytg-card,
-      .ov-page .ytg-stat-card,
-      .ov-page .ytg-insight-card {
+      .ytg-dark .ytg-card,
+      .ytg-dark .ytg-stat-card,
+      .ytg-dark .ytg-insight-card {
         background: ${SHELL.cardBg};
         border: 1px solid ${SHELL.hair};
         border-radius: 14px;
         box-shadow: ${SHELL.cardShadow};
         transition: box-shadow 0.2s cubic-bezier(0.2,0.7,0.3,1), transform 0.2s cubic-bezier(0.2,0.7,0.3,1), border-color 0.2s cubic-bezier(0.2,0.7,0.3,1);
       }
-      .ov-page .ytg-card:hover,
-      .ov-page .ytg-stat-card:hover,
-      .ov-page .ytg-insight-card:hover {
+      .ytg-dark .ytg-card:hover,
+      .ytg-dark .ytg-stat-card:hover,
+      .ytg-dark .ytg-insight-card:hover {
         box-shadow: ${SHELL.cardShadowLift};
         transform: translateY(-1px);
         border-color: ${SHELL.hair};
       }
-      .ov-page .ytg-stat-card.alert {
+      .ytg-dark .ytg-stat-card.alert {
         border-color: rgba(229,37,27,0.32);
         background: rgba(229,37,27,0.10);
       }
@@ -359,41 +359,41 @@ function useDashboardStyles() {
          classes. Scoped to .ov-page so My Videos / other still-light
          pages that share these globals are untouched. Mirrors the
          shipped dark surface system (SHELL). ── */
-      .ov-page .ytg-inner-block {
+      .ytg-dark .ytg-inner-block {
         background: ${SHELL.cardFlat};
         border: 1px solid ${SHELL.hair};
       }
-      .ov-page .ytg-qw-row:hover {
+      .ytg-dark .ytg-qw-row:hover {
         background: ${SHELL.hoverBg}; border-color: ${SHELL.hair};
       }
-      .ov-page .ytg-del-btn {
+      .ytg-dark .ytg-del-btn {
         background: rgba(229,37,27,0.12); border: 1px solid rgba(229,37,27,0.30);
       }
-      .ov-page .ytg-del-btn:hover { background: rgba(229,37,27,0.20); }
-      .ov-page .ytg-dash-btn {
+      .ytg-dark .ytg-del-btn:hover { background: rgba(229,37,27,0.20); }
+      .ytg-dark .ytg-dash-btn {
         background: ${SHELL.cardBg}; color: ${SHELL.text2};
         border: 1px solid ${SHELL.hair};
         box-shadow: ${SHELL.cardShadow};
       }
-      .ov-page .ytg-dash-btn:hover {
+      .ytg-dark .ytg-dash-btn:hover {
         border-color: rgba(255,255,255,0.16); color: ${SHELL.text1};
         box-shadow: ${SHELL.cardShadowLift};
       }
-      .ov-page .ytg-myvid-chip {
+      .ytg-dark .ytg-myvid-chip {
         color: ${SHELL.text2};
         background: ${SHELL.cardBg}; border: 1px solid ${SHELL.hair};
         box-shadow: ${SHELL.cardShadow};
       }
-      .ov-page .ytg-myvid-sort-grp {
+      .ytg-dark .ytg-myvid-sort-grp {
         background: ${SHELL.cardFlat};
       }
-      .ov-page .ytg-myvid-sort-btn {
+      .ytg-dark .ytg-myvid-sort-btn {
         color: ${SHELL.text2};
       }
-      .ov-page .ytg-myvid-sort-btn:hover:not(.active) {
+      .ytg-dark .ytg-myvid-sort-btn:hover:not(.active) {
         background: ${SHELL.hoverBg}; color: ${SHELL.text1};
       }
-      .ov-page .ytg-myvid-sort-btn.active {
+      .ytg-dark .ytg-myvid-sort-btn.active {
         background: ${SHELL.activeBg}; color: ${SHELL.text1};
         border-color: ${SHELL.hair};
         box-shadow: none;
@@ -1671,7 +1671,7 @@ function FeedCard({
       border: '1px solid rgba(255,255,255,0.08)',
       borderRadius: 14,
       padding: '14px 18px 16px 18px',
-      boxShadow: '0 1px 2px rgba(15,15,25,0.04), 0 6px 18px rgba(15,15,25,0.05), inset 0 1px 0 rgba(255,255,255,0.7)',
+      boxShadow: '0 1px 2px rgba(255,255,255,0.04), 0 6px 18px rgba(255,255,255,0.05), inset 0 1px 0 rgba(255,255,255,0.7)',
       marginBottom: 12,
       transition: 'box-shadow 0.2s cubic-bezier(0.2,0.7,0.3,1), transform 0.2s cubic-bezier(0.2,0.7,0.3,1), border-color 0.2s',
       height: fillHeight ? '100%' : 'auto',
@@ -1679,12 +1679,12 @@ function FeedCard({
       flexDirection: fillHeight ? 'column' : undefined,
     }}
       onMouseEnter={e => {
-        e.currentTarget.style.boxShadow = '0 2px 6px rgba(15,15,25,0.06), 0 12px 32px rgba(15,15,25,0.07), inset 0 1px 0 rgba(255,255,255,0.7)'
+        e.currentTarget.style.boxShadow = '0 2px 6px rgba(255,255,255,0.06), 0 12px 32px rgba(255,255,255,0.07), inset 0 1px 0 rgba(255,255,255,0.7)'
         e.currentTarget.style.transform = 'translateY(-1px)'
         e.currentTarget.style.borderColor = 'rgba(255,255,255,0.12)'
       }}
       onMouseLeave={e => {
-        e.currentTarget.style.boxShadow = '0 1px 2px rgba(15,15,25,0.04), 0 6px 18px rgba(15,15,25,0.05), inset 0 1px 0 rgba(255,255,255,0.7)'
+        e.currentTarget.style.boxShadow = '0 1px 2px rgba(255,255,255,0.04), 0 6px 18px rgba(255,255,255,0.05), inset 0 1px 0 rgba(255,255,255,0.7)'
         e.currentTarget.style.transform = 'translateY(0)'
         e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'
       }}
@@ -1721,13 +1721,13 @@ function FeedCard({
             style={{
               width: 22, height: 22, borderRadius: 6,
               border: 'none', background: 'transparent',
-              color: 'rgba(10,10,15,0.36)',
+              color: 'rgba(255,255,255,0.36)',
               cursor: 'pointer',
               display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
               transition: 'background 0.14s ease, color 0.14s ease',
             }}
-            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(15,15,19,0.06)'; e.currentTarget.style.color = '#0a0a0f' }}
-            onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'rgba(10,10,15,0.36)' }}
+            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; e.currentTarget.style.color = '#0a0a0f' }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'rgba(255,255,255,0.36)' }}
           >
             <XIcon size={12} strokeWidth={2.1} />
           </button>
@@ -1780,7 +1780,7 @@ function ActionsRailCard({ items, totalCount }) {
       background: SHELL.cardFlat,
       border: '1px solid rgba(255,255,255,0.08)',
       borderRadius: 14,
-      boxShadow: '0 1px 2px rgba(15,15,25,0.04), 0 6px 18px rgba(15,15,25,0.05), inset 0 1px 0 rgba(255,255,255,0.7)',
+      boxShadow: '0 1px 2px rgba(255,255,255,0.04), 0 6px 18px rgba(255,255,255,0.05), inset 0 1px 0 rgba(255,255,255,0.7)',
       overflow: 'hidden',
       marginBottom: 12,
     }}>
@@ -1812,7 +1812,7 @@ function ActionsRailCard({ items, totalCount }) {
             <div key={it.key} style={{
               borderTop: i === 0 ? 'none' : '1px solid rgba(255,255,255,0.10)',
               transition: 'background 0.14s',
-              background: isOpen ? 'rgba(10,10,15,0.015)' : 'transparent',
+              background: isOpen ? 'rgba(255,255,255,0.015)' : 'transparent',
             }}>
               {/* Row */}
               <div
@@ -1880,7 +1880,7 @@ function ActionsRailCard({ items, totalCount }) {
                 <div style={{ padding: '0 18px 14px 60px' }}>
                   {it.action.problem && (
                     <p style={{
-                      fontSize: 12.5, fontWeight: 400, color: 'rgba(10,10,15,0.65)',
+                      fontSize: 12.5, fontWeight: 400, color: 'rgba(255,255,255,0.65)',
                       lineHeight: 1.6, letterSpacing: '-0.02em',
                       marginBottom: (showFix || showWhy) ? 10 : 8,
                     }}>{it.action.problem}</p>
@@ -1925,14 +1925,14 @@ function ActionsRailCard({ items, totalCount }) {
                         display: 'inline-flex', alignItems: 'center', gap: 5,
                         padding: '6px 12px', borderRadius: 99,
                         border: '1px solid rgba(255,255,255,0.12)',
-                        background: SHELL.cardFlat, color: 'rgba(10,10,15,0.65)',
+                        background: SHELL.cardFlat, color: 'rgba(255,255,255,0.65)',
                         fontFamily: 'inherit',
                         fontSize: 11.5, fontWeight: 600, letterSpacing: '-0.05px',
                         cursor: 'pointer',
                         transition: 'background 0.14s, color 0.14s',
                       }}
                       onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; e.currentTarget.style.color = '#0a0a0f' }}
-                      onMouseLeave={e => { e.currentTarget.style.background = '#fff'; e.currentTarget.style.color = 'rgba(10,10,15,0.65)' }}
+                      onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; e.currentTarget.style.color = 'rgba(255,255,255,0.65)' }}
                     >Mark done</button>
                     <button
                       type="button"
@@ -1948,7 +1948,7 @@ function ActionsRailCard({ items, totalCount }) {
                         transition: 'background 0.14s, color 0.14s',
                       }}
                       onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; e.currentTarget.style.color = '#0a0a0f' }}
-                      onMouseLeave={e => { e.currentTarget.style.background = '#fff'; e.currentTarget.style.color = 'rgba(10,10,15,0.55)' }}
+                      onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; e.currentTarget.style.color = 'rgba(255,255,255,0.55)' }}
                     >Dismiss</button>
                   </div>
                 </div>
@@ -1964,9 +1964,9 @@ function ActionsRailCard({ items, totalCount }) {
 function PriorityActionCard({ action, rank, total, impact, onAct, onDone, onDismiss, ctaLabel }) {
   const [open, setOpen] = useState(false)
   const impactKey = (impact || 'med').toLowerCase()
-  const impactClr = impactKey === 'high' ? C.red : impactKey === 'low' ? C.text3 : C.amber
-  const impactBg  = impactKey === 'high' ? 'rgba(229,37,27,0.07)' : impactKey === 'low' ? 'rgba(15,15,19,0.04)' : 'rgba(217,119,6,0.08)'
-  const impactBdr = impactKey === 'high' ? 'rgba(229,37,27,0.18)' : impactKey === 'low' ? 'rgba(15,15,19,0.10)' : 'rgba(217,119,6,0.18)'
+  const impactClr = impactKey === 'high' ? C.red : impactKey === 'low' ? SHELL.text3 : '#f0a23b'
+  const impactBg  = impactKey === 'high' ? 'rgba(229,37,27,0.07)' : impactKey === 'low' ? 'rgba(255,255,255,0.04)' : 'rgba(217,119,6,0.08)'
+  const impactBdr = impactKey === 'high' ? 'rgba(229,37,27,0.18)' : impactKey === 'low' ? 'rgba(255,255,255,0.10)' : 'rgba(217,119,6,0.18)'
 
   const cat = action.category || categoryToNav(action.category, action.problem)
 
@@ -2041,8 +2041,8 @@ function PriorityActionCard({ action, rank, total, impact, onAct, onDone, onDism
             cursor: 'pointer',
             transition: 'background 0.14s ease, color 0.14s ease, border-color 0.14s ease',
           }}
-          onMouseEnter={e => { e.currentTarget.style.background = 'rgba(15,15,19,0.04)'; e.currentTarget.style.color = C.text1; e.currentTarget.style.borderColor = '#d0d0d8' }}
-          onMouseLeave={e => { e.currentTarget.style.background = '#fff'; e.currentTarget.style.color = C.text2; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)' }}
+          onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; e.currentTarget.style.color = SHELL.text1; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.16)' }}
+          onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; e.currentTarget.style.color = SHELL.text2; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)' }}
         >
           Detail
           <ChevronDown size={11} strokeWidth={2.4} style={{ transform: open ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s ease' }}/>
@@ -2057,7 +2057,7 @@ function PriorityActionCard({ action, rank, total, impact, onAct, onDone, onDism
       {open && (
         <div style={{
           marginTop: 14, paddingTop: 14,
-          borderTop: '1px solid #f1f1f4',
+          borderTop: '1px solid rgba(255,255,255,0.08)',
         }}>
           {(() => {
             const showFix = action.action && action.action !== action.problem
@@ -2092,7 +2092,7 @@ function PriorityActionCard({ action, rank, total, impact, onAct, onDone, onDism
                   <div style={{
                     background: 'rgba(22,163,74,0.14)',
                     border: '1px solid rgba(5,150,105,0.14)',
-                    borderLeft: `3px solid ${C.green}`,
+                    borderLeft: `3px solid ${'#34d27b'}`,
                     borderRadius: '0 10px 10px 0',
                     padding: '11px 14px',
                   }}>
@@ -2123,8 +2123,8 @@ function PriorityActionCard({ action, rank, total, impact, onAct, onDone, onDism
               cursor: 'pointer',
               transition: 'background 0.14s ease, color 0.14s ease, border-color 0.14s ease',
             }}
-            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(15,15,19,0.04)'; e.currentTarget.style.color = C.text1; e.currentTarget.style.borderColor = '#d0d0d8' }}
-            onMouseLeave={e => { e.currentTarget.style.background = '#fff'; e.currentTarget.style.color = C.text2; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)' }}
+            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; e.currentTarget.style.color = SHELL.text1; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.16)' }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; e.currentTarget.style.color = SHELL.text2; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)' }}
           >
             Mark done
           </button>
@@ -2142,7 +2142,7 @@ function MilestoneFeedCard({ milestone, onShare, onDownload, onDismiss }) {
   return (
     <FeedCard
       Icon={Trophy}
-      iconColor={C.amber}
+      iconColor={'#f0a23b'}
       iconBg="rgba(217,119,6,0.10)"
       category="Milestone Unlocked"
       age={milestone.earned_age || ''}
@@ -2158,7 +2158,7 @@ function MilestoneFeedCard({ milestone, onShare, onDownload, onDismiss }) {
       <div style={{ marginBottom: 12 }}>
         <div style={{
           position: 'relative',
-          background: '#eef0f4', borderRadius: 99, height: 6,
+          background: 'rgba(255,255,255,0.08)', borderRadius: 99, height: 6,
           overflow: 'hidden',
         }}>
           <div style={{
@@ -2210,8 +2210,8 @@ function MilestoneFeedCard({ milestone, onShare, onDownload, onDismiss }) {
               cursor: 'pointer',
               transition: 'background 0.14s ease, color 0.14s ease, border-color 0.14s ease',
             }}
-            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(15,15,19,0.04)'; e.currentTarget.style.color = C.text1; e.currentTarget.style.borderColor = '#d0d0d8' }}
-            onMouseLeave={e => { e.currentTarget.style.background = '#fff'; e.currentTarget.style.color = C.text2; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)' }}
+            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; e.currentTarget.style.color = SHELL.text1; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.16)' }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; e.currentTarget.style.color = SHELL.text2; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)' }}
           >
             Detail
             <ChevronDown size={11} strokeWidth={2.4} style={{ transform: open ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s ease' }}/>
@@ -2222,7 +2222,7 @@ function MilestoneFeedCard({ milestone, onShare, onDownload, onDismiss }) {
       {open && milestone.body && (
         <div style={{
           marginTop: 14, paddingTop: 14,
-          borderTop: '1px solid #f1f1f4',
+          borderTop: '1px solid rgba(255,255,255,0.08)',
         }}>
           <p style={{
             fontSize: 12.5, fontWeight: 500, color: SHELL.text2,
@@ -2268,8 +2268,8 @@ function ContentMixFeedCard({ patterns, mix, onDismiss, fillHeight = false }) {
   return (
     <FeedCard
       Icon={BarChart3}
-      iconColor={C.text1}
-      iconBg="rgba(15,15,19,0.06)"
+      iconColor={SHELL.text1}
+      iconBg="rgba(255,255,255,0.06)"
       category="Content Mix"
       onDismiss={onDismiss}
       fillHeight={fillHeight}
@@ -2283,7 +2283,7 @@ function ContentMixFeedCard({ patterns, mix, onDismiss, fillHeight = false }) {
       <div style={{ marginBottom: 10 }}>
         <div style={{
           display: 'flex',
-          background: '#eef0f4', borderRadius: 99, height: 7,
+          background: 'rgba(255,255,255,0.08)', borderRadius: 99, height: 7,
           overflow: 'hidden',
         }}>
           <div style={{
@@ -2292,7 +2292,7 @@ function ContentMixFeedCard({ patterns, mix, onDismiss, fillHeight = false }) {
           }}/>
           <div style={{
             width: `${lPct}%`, height: '100%',
-            background: 'linear-gradient(90deg, rgba(15,15,19,0.45) 0%, rgba(15,15,19,0.72) 100%)',
+            background: 'linear-gradient(90deg, rgba(255,255,255,0.45) 0%, rgba(255,255,255,0.72) 100%)',
           }}/>
         </div>
       </div>
@@ -2312,7 +2312,7 @@ function ContentMixFeedCard({ patterns, mix, onDismiss, fillHeight = false }) {
           fontSize: 11.5, fontWeight: 500, color: SHELL.text2, letterSpacing: '-0.01em',
           fontVariantNumeric: 'tabular-nums',
         }}>
-          <span style={{ width: 8, height: 8, borderRadius: 99, background: 'rgba(15,15,19,0.72)' }}/>
+          <span style={{ width: 8, height: 8, borderRadius: 99, background: 'rgba(255,255,255,0.72)' }}/>
           Long {lCount != null && (<><strong style={{ color: SHELL.text1, fontWeight: 700 }}> {lCount}</strong> · {lPct}%</>)}
         </span>
       </div>
@@ -2349,8 +2349,8 @@ function ContentMixFeedCard({ patterns, mix, onDismiss, fillHeight = false }) {
               cursor: 'pointer',
               transition: 'background 0.14s ease, color 0.14s ease, border-color 0.14s ease',
             }}
-            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(15,15,19,0.04)'; e.currentTarget.style.color = C.text1; e.currentTarget.style.borderColor = '#d0d0d8' }}
-            onMouseLeave={e => { e.currentTarget.style.background = '#fff'; e.currentTarget.style.color = C.text2; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)' }}
+            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; e.currentTarget.style.color = SHELL.text1; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.16)' }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; e.currentTarget.style.color = SHELL.text2; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)' }}
           >
             Detail
             <ChevronDown size={11} strokeWidth={2.4} style={{ transform: open ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s ease' }}/>
@@ -2361,7 +2361,7 @@ function ContentMixFeedCard({ patterns, mix, onDismiss, fillHeight = false }) {
       {open && (patterns.body || patterns.text) && (
         <div style={{
           marginTop: 14, paddingTop: 14,
-          borderTop: '1px solid #f1f1f4',
+          borderTop: '1px solid rgba(255,255,255,0.08)',
         }}>
           <p style={{
             fontSize: 12.5, fontWeight: 500, color: SHELL.text2,
@@ -2379,7 +2379,7 @@ function ContentMixFeedCard({ patterns, mix, onDismiss, fillHeight = false }) {
 // quick wins, biggest risk) renders below when expanded.
 function ChannelHealthFeedCard({ score, categories, weakest, children, open, onToggle, fillHeight = false }) {
   const scoreClr =
-    score >= 75 ? C.green : score >= 50 ? C.amber : C.red
+    score >= 75 ? '#34d27b' : score >= 50 ? '#f0a23b' : C.red
   const scoreBdr =
     score >= 75 ? 'rgba(5,150,105,0.25)' : score >= 50 ? 'rgba(217,119,6,0.22)' : 'rgba(229,37,27,0.22)'
   const scoreBg =
@@ -2389,9 +2389,9 @@ function ChannelHealthFeedCard({ score, categories, weakest, children, open, onT
   // VidIQ users instantly recognise: CTR, retention, strategy,
   // consistency, engagement. Hover reveals the label + score.
   const dotFor = (v) => {
-    if (v == null) return { c: '#dcdde3', bdr: '#dcdde3' }
-    if (v >= 75) return { c: C.green, bdr: 'rgba(5,150,105,0.35)' }
-    if (v >= 50) return { c: C.amber, bdr: 'rgba(217,119,6,0.35)' }
+    if (v == null) return { c: 'rgba(255,255,255,0.20)', bdr: 'rgba(255,255,255,0.20)' }
+    if (v >= 75) return { c: '#34d27b', bdr: 'rgba(5,150,105,0.35)' }
+    if (v >= 50) return { c: '#f0a23b', bdr: 'rgba(217,119,6,0.35)' }
     return { c: C.red, bdr: 'rgba(229,37,27,0.30)' }
   }
   const dots = (categories || []).map(([label, value]) => ({ label, value, ...dotFor(value) }))
@@ -2474,8 +2474,8 @@ function ChannelHealthFeedCard({ score, categories, weakest, children, open, onT
             cursor: 'pointer',
             transition: 'background 0.14s ease, color 0.14s ease, border-color 0.14s ease',
           }}
-          onMouseEnter={e => { e.currentTarget.style.background = 'rgba(15,15,19,0.04)'; e.currentTarget.style.color = C.text1; e.currentTarget.style.borderColor = '#d0d0d8' }}
-          onMouseLeave={e => { e.currentTarget.style.background = '#fff'; e.currentTarget.style.color = C.text2; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)' }}
+          onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; e.currentTarget.style.color = SHELL.text1; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.16)' }}
+          onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; e.currentTarget.style.color = SHELL.text2; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)' }}
         >
           {open ? 'Hide audit' : 'See full audit'}
           <ChevronDown size={11} strokeWidth={2.4} style={{
@@ -2515,7 +2515,7 @@ function TopPerformerCard({ video, channelAvgViews, onOpen, onDismiss }) {
   return (
     <FeedCard
       Icon={Trophy}
-      iconColor={C.green}
+      iconColor={'#34d27b'}
       iconBg="rgba(22,163,74,0.14)"
       category="Top Performer"
       age={ageStr}
@@ -2539,7 +2539,7 @@ function TopPerformerCard({ video, channelAvgViews, onOpen, onDismiss }) {
           <div style={{
             flexShrink: 0, width: 200, aspectRatio: '16/9',
             borderRadius: 10, overflow: 'hidden',
-            background: '#ebebef',
+            background: '#26262b',
             boxShadow: '0 1px 3px rgba(0,0,0,0.06), 0 6px 18px rgba(0,0,0,0.08)',
           }}>
             <img
@@ -2551,7 +2551,7 @@ function TopPerformerCard({ video, channelAvgViews, onOpen, onDismiss }) {
         ) : (
           <div style={{
             flexShrink: 0, width: 200, aspectRatio: '16/9',
-            borderRadius: 10, background: '#ebebef',
+            borderRadius: 10, background: '#26262b',
           }}/>
         )}
 
@@ -2577,7 +2577,7 @@ function TopPerformerCard({ video, channelAvgViews, onOpen, onDismiss }) {
             </div>
             <div>
               <p style={{ fontSize: 10, fontWeight: 700, color: SHELL.text3, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 5 }}>Engagement</p>
-              <p style={{ fontSize: 18, fontWeight: 800, color: engagement >= 3 ? C.green : SHELL.text1, letterSpacing: '-0.5px', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{engagement}%</p>
+              <p style={{ fontSize: 18, fontWeight: 800, color: engagement >= 3 ? '#34d27b' : SHELL.text1, letterSpacing: '-0.5px', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{engagement}%</p>
             </div>
           </div>
 
@@ -2691,8 +2691,8 @@ function PostingTimeline({ uploadDays }) {
   if (total === 0) {
     return (
       <svg width="100%" viewBox={`0 0 ${width} ${height}`} preserveAspectRatio="none" style={{ display: 'block' }}>
-        <line x1={padX} y1={height - padBot} x2={width - padX} y2={height - padBot} stroke="#eef0f4" strokeWidth="1.2"/>
-        <text x={width / 2} y={height / 2} textAnchor="middle" fontSize="12" fontWeight="600" fill="rgba(10,10,15,0.40)">No uploads in this window</text>
+        <line x1={padX} y1={height - padBot} x2={width - padX} y2={height - padBot} stroke="rgba(255,255,255,0.08)" strokeWidth="1.2"/>
+        <text x={width / 2} y={height / 2} textAnchor="middle" fontSize="12" fontWeight="600" fill="rgba(255,255,255,0.40)">No uploads in this window</text>
       </svg>
     )
   }
@@ -2737,11 +2737,11 @@ function PostingTimeline({ uploadDays }) {
 
       {/* Faint horizontal guides */}
       {guides.map((y, i) => (
-        <line key={i} x1={padX} y1={y} x2={width - padX} y2={y} stroke="#f1f1f4" strokeWidth="1" strokeDasharray="2 4"/>
+        <line key={i} x1={padX} y1={y} x2={width - padX} y2={y} stroke="rgba(255,255,255,0.08)" strokeWidth="1" strokeDasharray="2 4"/>
       ))}
 
       {/* Baseline */}
-      <line x1={padX} y1={height - padBot} x2={width - padX} y2={height - padBot} stroke="#e6e6ec" strokeWidth="1"/>
+      <line x1={padX} y1={height - padBot} x2={width - padX} y2={height - padBot} stroke="rgba(255,255,255,0.10)" strokeWidth="1"/>
 
       {/* Area + line */}
       <path d={pathArea} fill={`url(#${gradId})`}/>
@@ -2761,7 +2761,7 @@ function PostingTimeline({ uploadDays }) {
           textAnchor={l.anchor}
           fontSize="9.5"
           fontWeight="600"
-          fill="rgba(10,10,15,0.40)"
+          fill="rgba(255,255,255,0.40)"
           letterSpacing="0.04em"
         >{l.label}</text>
       ))}
@@ -2775,7 +2775,7 @@ function StatTile({ label, value, hint, valueColor }) {
   return (
     <div>
       <p style={{ fontSize: 9.5, fontWeight: 700, color: SHELL.text3, letterSpacing: '0.11em', textTransform: 'uppercase', marginBottom: 5 }}>{label}</p>
-      <p style={{ fontSize: 17, fontWeight: 700, color: valueColor || '#0a0a0f', letterSpacing: '-0.4px', lineHeight: 1, fontVariantNumeric: 'tabular-nums', marginBottom: 4 }}>{value}</p>
+      <p style={{ fontSize: 17, fontWeight: 700, color: valueColor || SHELL.text1, letterSpacing: '-0.4px', lineHeight: 1, fontVariantNumeric: 'tabular-nums', marginBottom: 4 }}>{value}</p>
       {hint && <p style={{ fontSize: 10.5, fontWeight: 500, color: SHELL.text3, letterSpacing: '-0.01em' }}>{hint}</p>}
     </div>
   )
@@ -2796,9 +2796,9 @@ function PostingConsistencyCard({ videos, onDismiss }) {
     : pacePerWeek >= 1 ? 'Healthy weekly cadence'
     : pacePerWeek > 0 ? 'Posting irregularly'
     : 'No recent uploads'
-  const verdictClr = pacePerWeek >= 3 ? C.green
-    : pacePerWeek >= 1 ? C.text2
-    : C.amber
+  const verdictClr = pacePerWeek >= 3 ? '#34d27b'
+    : pacePerWeek >= 1 ? SHELL.text2
+    : '#f0a23b'
 
   const headline = currentStreak >= 7 ? `${currentStreak}-day posting streak`
     : currentStreak >= 3 ? `On a ${currentStreak}-day streak`
@@ -2808,7 +2808,7 @@ function PostingConsistencyCard({ videos, onDismiss }) {
 
   // Cell color for the (now collapsed) detail heatmap.
   const cellColor = (n) => {
-    if (n === 0) return '#eef0f4'
+    if (n === 0) return 'rgba(255,255,255,0.08)'
     if (n === 1) return 'rgba(229,37,27,0.40)'
     if (n === 2) return 'rgba(229,37,27,0.70)'
     return '#e5251b'
@@ -2817,8 +2817,8 @@ function PostingConsistencyCard({ videos, onDismiss }) {
   return (
     <FeedCard
       Icon={CalendarDays}
-      iconColor={C.text1}
-      iconBg="rgba(15,15,19,0.06)"
+      iconColor={SHELL.text1}
+      iconBg="rgba(255,255,255,0.06)"
       category="Posting Consistency · 28 days"
       onDismiss={onDismiss}
       rightSlot={currentStreak >= 2 && (
@@ -2853,7 +2853,7 @@ function PostingConsistencyCard({ videos, onDismiss }) {
       {/* Stat strip — 4 tiles edge to edge across the card */}
       <div style={{
         display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16,
-        paddingTop: 14, borderTop: '1px solid #f1f1f4',
+        paddingTop: 14, borderTop: '1px solid rgba(255,255,255,0.08)',
       }}>
         <StatTile
           label="Uploads"
@@ -2895,8 +2895,8 @@ function PostingConsistencyCard({ videos, onDismiss }) {
             cursor: 'pointer',
             transition: 'background 0.14s ease, color 0.14s ease, border-color 0.14s ease',
           }}
-          onMouseEnter={e => { e.currentTarget.style.background = 'rgba(15,15,19,0.04)'; e.currentTarget.style.color = C.text1; e.currentTarget.style.borderColor = '#d0d0d8' }}
-          onMouseLeave={e => { e.currentTarget.style.background = '#fff'; e.currentTarget.style.color = C.text2; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)' }}
+          onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; e.currentTarget.style.color = SHELL.text1; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.16)' }}
+          onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; e.currentTarget.style.color = SHELL.text2; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)' }}
         >
           {open ? 'Hide heatmap' : 'Daily heatmap'}
           <ChevronDown size={11} strokeWidth={2.4} style={{ transform: open ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s ease' }}/>
@@ -2905,7 +2905,7 @@ function PostingConsistencyCard({ videos, onDismiss }) {
 
       {/* Daily heatmap inside the detail expansion */}
       {open && (
-        <div style={{ marginTop: 14, paddingTop: 14, borderTop: '1px solid #f1f1f4' }}>
+        <div style={{ marginTop: 14, paddingTop: 14, borderTop: '1px solid rgba(255,255,255,0.08)' }}>
           <p style={{ fontSize: 10, fontWeight: 700, color: SHELL.text3, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 12 }}>
             Daily uploads — last 28 days
           </p>
@@ -2919,7 +2919,7 @@ function PostingConsistencyCard({ videos, onDismiss }) {
                   aspectRatio: '1 / 1',
                   borderRadius: 4,
                   background: cellColor(c),
-                  border: c === 0 ? '1px solid rgba(15,15,19,0.04)' : '1px solid rgba(229,37,27,0.10)',
+                  border: c === 0 ? '1px solid rgba(255,255,255,0.04)' : '1px solid rgba(229,37,27,0.10)',
                 }}
               />
             ))}
@@ -2930,7 +2930,7 @@ function PostingConsistencyCard({ videos, onDismiss }) {
               <span key={n} style={{
                 width: 11, height: 11, borderRadius: 3,
                 background: cellColor(n),
-                border: n === 0 ? '1px solid rgba(15,15,19,0.04)' : '1px solid rgba(229,37,27,0.10)',
+                border: n === 0 ? '1px solid rgba(255,255,255,0.04)' : '1px solid rgba(229,37,27,0.10)',
               }}/>
             ))}
             <span style={{ fontSize: 10, color: SHELL.text3, fontWeight: 600, letterSpacing: '0.04em', marginLeft: 4 }}>More</span>
@@ -3045,8 +3045,8 @@ function BestTimeCard({ videos, onDismiss }) {
   return (
     <FeedCard
       Icon={Clock}
-      iconColor={C.text1}
-      iconBg="rgba(15,15,19,0.06)"
+      iconColor={SHELL.text1}
+      iconBg="rgba(255,255,255,0.06)"
       category="Best Time To Publish · your data"
       onDismiss={onDismiss}
       rightSlot={
@@ -3076,7 +3076,7 @@ function BestTimeCard({ videos, onDismiss }) {
       <div style={{ marginBottom: 16 }}>
         <svg width="100%" viewBox={`0 0 ${chartW} ${chartH}`} preserveAspectRatio="none" style={{ display: 'block' }}>
           {/* Baseline */}
-          <line x1={padX} y1={chartH - padBot} x2={chartW - padX} y2={chartH - padBot} stroke="#e6e6ec" strokeWidth="1"/>
+          <line x1={padX} y1={chartH - padBot} x2={chartW - padX} y2={chartH - padBot} stroke="rgba(255,255,255,0.10)" strokeWidth="1"/>
           {/* Bars */}
           {hourAvg.map((v, h) => {
             const heightPct = v / maxBar
@@ -3090,7 +3090,7 @@ function BestTimeCard({ videos, onDismiss }) {
                 x={x.toFixed(2)} y={y.toFixed(2)}
                 width={barW.toFixed(2)} height={barH.toFixed(2)}
                 rx="2" ry="2"
-                fill={isPeak ? '#e5251b' : 'rgba(15,15,19,0.12)'}
+                fill={isPeak ? '#e5251b' : 'rgba(255,255,255,0.12)'}
               >
                 <title>{`${formatHour12(h)}: ${fmtNum(Math.round(v))} avg views`}</title>
               </rect>
@@ -3100,12 +3100,12 @@ function BestTimeCard({ videos, onDismiss }) {
           {[0, 6, 12, 18].map(h => {
             const x = padX + h * ((chartW - padX * 2) / 24) + barW / 2 + 1
             return (
-              <text key={h} x={x} y={chartH - 6} textAnchor="middle" fontSize="9.5" fontWeight="600" fill="rgba(10,10,15,0.40)" letterSpacing="0.04em">
+              <text key={h} x={x} y={chartH - 6} textAnchor="middle" fontSize="9.5" fontWeight="600" fill="rgba(255,255,255,0.40)" letterSpacing="0.04em">
                 {formatHour12(h).replace(' ', '')}
               </text>
             )
           })}
-          <text x={chartW - padX} y={chartH - 6} textAnchor="end" fontSize="9.5" fontWeight="600" fill="rgba(10,10,15,0.40)" letterSpacing="0.04em">
+          <text x={chartW - padX} y={chartH - 6} textAnchor="end" fontSize="9.5" fontWeight="600" fill="rgba(255,255,255,0.40)" letterSpacing="0.04em">
             11PM
           </text>
         </svg>
@@ -3114,7 +3114,7 @@ function BestTimeCard({ videos, onDismiss }) {
       {/* Stat strip: Best, Runner-up, Avoid */}
       <div style={{
         display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16,
-        paddingTop: 14, borderTop: '1px solid #f1f1f4',
+        paddingTop: 14, borderTop: '1px solid rgba(255,255,255,0.08)',
       }}>
         <div>
           <p style={{ fontSize: 9.5, fontWeight: 700, color: '#fb6a60', letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 5 }}>Best time</p>
@@ -3161,8 +3161,8 @@ function BestTimeCard({ videos, onDismiss }) {
             cursor: 'pointer',
             transition: 'background 0.14s ease, color 0.14s ease, border-color 0.14s ease',
           }}
-          onMouseEnter={e => { e.currentTarget.style.background = 'rgba(15,15,19,0.04)'; e.currentTarget.style.color = C.text1; e.currentTarget.style.borderColor = '#d0d0d8' }}
-          onMouseLeave={e => { e.currentTarget.style.background = '#fff'; e.currentTarget.style.color = C.text2; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)' }}
+          onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; e.currentTarget.style.color = SHELL.text1; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.16)' }}
+          onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; e.currentTarget.style.color = SHELL.text2; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)' }}
         >
           {open ? 'Hide weekly view' : 'Weekly view'}
           <ChevronDown size={11} strokeWidth={2.4} style={{ transform: open ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s ease' }}/>
@@ -3170,7 +3170,7 @@ function BestTimeCard({ videos, onDismiss }) {
       </div>
 
       {open && (
-        <div style={{ marginTop: 14, paddingTop: 14, borderTop: '1px solid #f1f1f4' }}>
+        <div style={{ marginTop: 14, paddingTop: 14, borderTop: '1px solid rgba(255,255,255,0.08)' }}>
           <p style={{ fontSize: 10, fontWeight: 700, color: SHELL.text3, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 12 }}>
             Avg views per upload by day of week
           </p>
@@ -3188,7 +3188,7 @@ function BestTimeCard({ videos, onDismiss }) {
                     <div style={{
                       width: '60%',
                       height: `${Math.max(4, heightPct * 100)}%`,
-                      background: isTop ? '#e5251b' : 'rgba(15,15,19,0.12)',
+                      background: isTop ? '#e5251b' : 'rgba(255,255,255,0.12)',
                       borderRadius: 3,
                       transition: 'height 0.6s cubic-bezier(0.34,1.56,0.64,1)',
                     }} title={`${DAYS_LONG[i]}: ${fmtNum(Math.round(avg))} avg views`}/>
@@ -3228,7 +3228,7 @@ function TrackedLiftCard({ win, moreCount, onOpenAll, onDismiss }) {
   return (
     <FeedCard
       Icon={TrendingUp}
-      iconColor={C.green}
+      iconColor={'#34d27b'}
       iconBg="rgba(22,163,74,0.14)"
       category="Tracked Lift · SEO Optimizer"
       age={ageStr}
@@ -3257,7 +3257,7 @@ function TrackedLiftCard({ win, moreCount, onOpenAll, onDismiss }) {
           <div style={{
             flexShrink: 0, width: 180, aspectRatio: '16/9',
             borderRadius: 10, overflow: 'hidden',
-            background: '#ebebef',
+            background: '#26262b',
             boxShadow: '0 1px 3px rgba(0,0,0,0.06), 0 6px 18px rgba(0,0,0,0.08)',
           }}>
             <img
@@ -3269,7 +3269,7 @@ function TrackedLiftCard({ win, moreCount, onOpenAll, onDismiss }) {
         ) : (
           <div style={{
             flexShrink: 0, width: 180, aspectRatio: '16/9',
-            borderRadius: 10, background: '#ebebef',
+            borderRadius: 10, background: '#26262b',
           }}/>
         )}
 
@@ -3308,7 +3308,7 @@ function TrackedLiftCard({ win, moreCount, onOpenAll, onDismiss }) {
               <p style={{ fontSize: 17, fontWeight: 700, color: SHELL.text2, letterSpacing: '-0.4px', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{fmtNum(beforeViews)}</p>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', alignSelf: 'center', paddingTop: 14 }}>
-              <ArrowRight size={16} strokeWidth={2.4} color={C.text3} />
+              <ArrowRight size={16} strokeWidth={2.4} color={SHELL.text3} />
             </div>
             <div>
               <p style={{ fontSize: 9.5, fontWeight: 700, color: '#34d27b', letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 4 }}>Now</p>
@@ -3319,7 +3319,7 @@ function TrackedLiftCard({ win, moreCount, onOpenAll, onDismiss }) {
       </div>
 
       {/* Bottom row: more wins + CTA */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', paddingTop: 12, borderTop: '1px solid #f1f1f4' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', paddingTop: 12, borderTop: '1px solid rgba(255,255,255,0.08)' }}>
         <span style={{ fontSize: 11.5, fontWeight: 500, color: SHELL.text3, letterSpacing: '-0.01em' }}>
           {moreCount > 0 ? `+ ${moreCount} more win${moreCount === 1 ? '' : 's'} this month` : 'Single tracked win'}
         </span>
@@ -3371,7 +3371,7 @@ function DailyIdeasCard({ ideas, lastUpdated, isStale, isFree, refreshing, onRef
   return (
     <FeedCard
       Icon={Lightbulb}
-      iconColor={C.amber}
+      iconColor={'#f0a23b'}
       iconBg="rgba(217,119,6,0.10)"
       category="Daily Ideas"
       onDismiss={onDismiss}
@@ -3394,7 +3394,7 @@ function DailyIdeasCard({ ideas, lastUpdated, isStale, isFree, refreshing, onRef
           letterSpacing: '-0.15px', lineHeight: 1.3, margin: 0,
         }}>Start shooting one of these today</h3>
         <span style={{
-          fontSize: 12, fontWeight: 500, color: isStale ? C.amber : 'rgba(10,10,15,0.55)',
+          fontSize: 12, fontWeight: 500, color: isStale ? '#f0a23b' : 'rgba(255,255,255,0.55)',
           letterSpacing: '-0.05px',
         }}>{subline}</span>
       </div>
@@ -3406,7 +3406,7 @@ function DailyIdeasCard({ ideas, lastUpdated, isStale, isFree, refreshing, onRef
           const score = idea.opportunityScore != null
             ? idea.opportunityScore
             : Math.max(65, 85 - i * 4)
-          const scoreClr = score >= 80 ? '#059669' : score >= 65 ? '#d97706' : 'rgba(10,10,15,0.55)'
+          const scoreClr = score >= 80 ? '#059669' : score >= 65 ? '#d97706' : 'rgba(255,255,255,0.55)'
           return (
             <div
               key={i}
@@ -3418,7 +3418,7 @@ function DailyIdeasCard({ ideas, lastUpdated, isStale, isFree, refreshing, onRef
                 borderRadius: 10,
                 transition: 'background 0.14s, border-color 0.14s, transform 0.14s',
               }}
-              onMouseEnter={e => { e.currentTarget.style.background = 'rgba(10,10,15,0.02)'; e.currentTarget.style.borderColor = 'rgba(10,10,15,0.14)'; e.currentTarget.style.transform = 'translateY(-1px)' }}
+              onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.02)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.14)'; e.currentTarget.style.transform = 'translateY(-1px)' }}
               onMouseLeave={e => { e.currentTarget.style.background = '#ffffff'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'; e.currentTarget.style.transform = 'translateY(0)' }}
             >
               {/* Rank badge — neutral charcoal, no amber tint */}
@@ -3444,7 +3444,7 @@ function DailyIdeasCard({ ideas, lastUpdated, isStale, isFree, refreshing, onRef
                 {/* Angle (one-line truncated) — text2 for readability, not faint text3 */}
                 {idea.angle && (
                   <p style={{
-                    fontSize: 12, fontWeight: 500, color: 'rgba(10,10,15,0.65)',
+                    fontSize: 12, fontWeight: 500, color: 'rgba(255,255,255,0.65)',
                     letterSpacing: '-0.05px', lineHeight: 1.5,
                     display: '-webkit-box', WebkitLineClamp: 1, WebkitBoxOrient: 'vertical',
                     overflow: 'hidden',
@@ -3458,7 +3458,7 @@ function DailyIdeasCard({ ideas, lastUpdated, isStale, isFree, refreshing, onRef
                       letterSpacing: '-0.01em',
                       display: 'inline-flex', alignItems: 'center', gap: 5,
                     }}>
-                      <span style={{ width: 4, height: 4, borderRadius: 99, background: 'rgba(10,10,15,0.35)' }}/>
+                      <span style={{ width: 4, height: 4, borderRadius: 99, background: 'rgba(255,255,255,0.35)' }}/>
                       {idea.targetKeyword}
                     </span>
                   )}
@@ -3499,7 +3499,7 @@ function DailyIdeasCard({ ideas, lastUpdated, isStale, isFree, refreshing, onRef
       </div>
 
       {/* Bottom row: refresh + open full ideas */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', paddingTop: 12, borderTop: '1px solid #f1f1f4' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', paddingTop: 12, borderTop: '1px solid rgba(255,255,255,0.08)' }}>
         <span style={{ fontSize: 11.5, fontWeight: 500, color: SHELL.text3, letterSpacing: '-0.01em' }}>
           {isFree ? 'Free plan shows top 3, upgrade for the full feed' : 'Full feed in Video Ideas'}
         </span>
@@ -3513,15 +3513,15 @@ function DailyIdeasCard({ ideas, lastUpdated, isStale, isFree, refreshing, onRef
               display: 'inline-flex', alignItems: 'center', gap: 5,
               padding: '6px 11px', borderRadius: 100,
               border: '1px solid rgba(255,255,255,0.08)',
-              background: refreshing ? '#f6f6f9' : '#fff',
-              color: refreshing ? C.text3 : SHELL.text2,
+              background: refreshing ? 'rgba(255,255,255,0.05)' : 'rgba(255,255,255,0.02)',
+              color: refreshing ? SHELL.text3 : SHELL.text2,
               fontFamily: 'inherit',
               fontSize: 11.5, fontWeight: 600, letterSpacing: '-0.01em',
               cursor: refreshing ? 'wait' : 'pointer',
               transition: 'background 0.14s ease, color 0.14s ease, border-color 0.14s ease',
             }}
-            onMouseEnter={e => { if (!refreshing) { e.currentTarget.style.background = 'rgba(15,15,19,0.04)'; e.currentTarget.style.color = C.text1; e.currentTarget.style.borderColor = '#d0d0d8' } }}
-            onMouseLeave={e => { if (!refreshing) { e.currentTarget.style.background = '#fff'; e.currentTarget.style.color = C.text2; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)' } }}
+            onMouseEnter={e => { if (!refreshing) { e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; e.currentTarget.style.color = SHELL.text1; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.16)' } }}
+            onMouseLeave={e => { if (!refreshing) { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; e.currentTarget.style.color = SHELL.text2; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)' } }}
           >
             <RefreshCw size={11} strokeWidth={2.4} style={{ animation: refreshing ? 'spin 0.8s linear infinite' : 'none' }}/>
             {refreshing ? 'Refreshing…' : 'Refresh ideas'}
@@ -3535,7 +3535,7 @@ function DailyIdeasCard({ ideas, lastUpdated, isStale, isFree, refreshing, onRef
               display: 'inline-flex', alignItems: 'center', gap: 5,
               padding: '7px 13px', borderRadius: 100,
               border: 'none', cursor: 'pointer',
-              background: SHELL.text1, color: '#fff',
+              background: SHELL.text1, color: '#0e0e10',
               fontFamily: 'inherit',
               fontSize: 12, fontWeight: 700, letterSpacing: '-0.01em',
               boxShadow: '0 1px 3px rgba(0,0,0,0.18)',
@@ -3565,15 +3565,15 @@ function CompetitorActivityCard({ items, refreshing, onRefresh, onOpen, onOpenAl
   return (
     <FeedCard
       Icon={Users}
-      iconColor={C.text1}
-      iconBg="rgba(15,15,19,0.06)"
+      iconColor={SHELL.text1}
+      iconBg="rgba(255,255,255,0.06)"
       category="Competitor Moves · last 7 days"
       onDismiss={onDismiss}
       rightSlot={
         <span style={{
           display: 'inline-flex', alignItems: 'center', gap: 4,
           fontSize: 10.5, fontWeight: 700, color: SHELL.text2,
-          background: 'rgba(15,15,19,0.04)', border: '1px solid rgba(15,15,19,0.10)',
+          background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.10)',
           padding: '3px 8px', borderRadius: 100,
           letterSpacing: '0.05em', textTransform: 'uppercase',
         }}>
@@ -3598,18 +3598,18 @@ function CompetitorActivityCard({ items, refreshing, onRefresh, onOpen, onOpenAl
             onClick={(e) => { if (onOpen) { e.preventDefault(); onOpen(item) } }}
             style={{
               display: 'block',
-              background: '#fafafb',
-              border: '1px solid #ececf0',
+              background: SHELL.cardFlat,
+              border: '1px solid rgba(255,255,255,0.08)',
               borderRadius: 10,
               overflow: 'hidden',
               textDecoration: 'none',
               transition: 'background 0.14s ease, border-color 0.14s ease, transform 0.14s ease, box-shadow 0.14s ease',
             }}
-            onMouseEnter={e => { e.currentTarget.style.background = '#fff'; e.currentTarget.style.borderColor = '#d6d6dc'; e.currentTarget.style.transform = 'translateY(-1px)'; e.currentTarget.style.boxShadow = '0 4px 14px rgba(0,0,0,0.08)' }}
-            onMouseLeave={e => { e.currentTarget.style.background = '#fafafb'; e.currentTarget.style.borderColor = '#ececf0'; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none' }}
+            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.16)'; e.currentTarget.style.transform = 'translateY(-1px)'; e.currentTarget.style.boxShadow = '0 4px 14px rgba(0,0,0,0.08)' }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none' }}
           >
             {/* Thumbnail */}
-            <div style={{ position: 'relative', aspectRatio: '16/9', background: '#ebebef', overflow: 'hidden' }}>
+            <div style={{ position: 'relative', aspectRatio: '16/9', background: '#26262b', overflow: 'hidden' }}>
               {item.thumbnail && (
                 <img src={item.thumbnail} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}/>
               )}
@@ -3653,7 +3653,7 @@ function CompetitorActivityCard({ items, refreshing, onRefresh, onOpen, onOpenAl
               }}>{item.channel_name}</p>
               <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 10.5, fontWeight: 500, color: SHELL.text3, fontVariantNumeric: 'tabular-nums' }}>
                 <span>{fmtNum(item.views || 0)} views</span>
-                <span style={{ color: '#dcdde3' }}>·</span>
+                <span style={{ color: 'rgba(255,255,255,0.20)' }}>·</span>
                 <span>{item.age_label || ''}</span>
               </div>
             </div>
@@ -3662,7 +3662,7 @@ function CompetitorActivityCard({ items, refreshing, onRefresh, onOpen, onOpenAl
       </div>
 
       {/* Bottom row */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', paddingTop: 12, borderTop: '1px solid #f1f1f4' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', paddingTop: 12, borderTop: '1px solid rgba(255,255,255,0.08)' }}>
         <span style={{ fontSize: 11.5, fontWeight: 500, color: SHELL.text3, letterSpacing: '-0.01em' }}>
           From the channels you track
         </span>
@@ -3676,15 +3676,15 @@ function CompetitorActivityCard({ items, refreshing, onRefresh, onOpen, onOpenAl
               display: 'inline-flex', alignItems: 'center', gap: 5,
               padding: '6px 11px', borderRadius: 100,
               border: '1px solid rgba(255,255,255,0.08)',
-              background: refreshing ? '#f6f6f9' : '#fff',
-              color: refreshing ? C.text3 : SHELL.text2,
+              background: refreshing ? 'rgba(255,255,255,0.05)' : 'rgba(255,255,255,0.02)',
+              color: refreshing ? SHELL.text3 : SHELL.text2,
               fontFamily: 'inherit',
               fontSize: 11.5, fontWeight: 600, letterSpacing: '-0.01em',
               cursor: refreshing ? 'wait' : 'pointer',
               transition: 'background 0.14s ease, color 0.14s ease, border-color 0.14s ease',
             }}
-            onMouseEnter={e => { if (!refreshing) { e.currentTarget.style.background = 'rgba(15,15,19,0.04)'; e.currentTarget.style.color = C.text1; e.currentTarget.style.borderColor = '#d0d0d8' } }}
-            onMouseLeave={e => { if (!refreshing) { e.currentTarget.style.background = '#fff'; e.currentTarget.style.color = C.text2; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)' } }}
+            onMouseEnter={e => { if (!refreshing) { e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; e.currentTarget.style.color = SHELL.text1; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.16)' } }}
+            onMouseLeave={e => { if (!refreshing) { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; e.currentTarget.style.color = SHELL.text2; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)' } }}
           >
             <RefreshCw size={11} strokeWidth={2.4} style={{ animation: refreshing ? 'spin 0.8s linear infinite' : 'none' }}/>
             {refreshing ? 'Refreshing…' : 'Refresh'}
@@ -3698,7 +3698,7 @@ function CompetitorActivityCard({ items, refreshing, onRefresh, onOpen, onOpenAl
               display: 'inline-flex', alignItems: 'center', gap: 5,
               padding: '7px 13px', borderRadius: 100,
               border: 'none', cursor: 'pointer',
-              background: SHELL.text1, color: '#fff',
+              background: SHELL.text1, color: '#0e0e10',
               fontFamily: 'inherit',
               fontSize: 12, fontWeight: 700, letterSpacing: '-0.01em',
               boxShadow: '0 1px 3px rgba(0,0,0,0.18)',
@@ -3747,11 +3747,11 @@ function InsightCard({ insight, index, checked, onToggle, onDelete, onNavigate }
               type="checkbox"
               checked={!!checked}
               onChange={onToggle}
-              style={{ width: 15, height: 15, accentColor: C.green, cursor: 'pointer', flexShrink: 0 }}
+              style={{ width: 15, height: 15, accentColor: '#34d27b', cursor: 'pointer', flexShrink: 0 }}
             />
             <div style={{ width: 26, height: 26, borderRadius: 8, background: checked ? 'rgba(22,163,74,0.14)' : color, border: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
               {checked
-                ? <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke={C.green} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><polyline points="1.5,6.5 5,10 10.5,2"/></svg>
+                ? <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke={'#34d27b'} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><polyline points="1.5,6.5 5,10 10.5,2"/></svg>
                 : <span style={{ fontSize: 12, fontWeight: 900, color: '#fff', fontVariantNumeric: 'tabular-nums' }}>{insight.rank ?? index + 1}</span>
               }
             </div>
@@ -3760,9 +3760,9 @@ function InsightCard({ insight, index, checked, onToggle, onDelete, onNavigate }
           {/* Category label above problem */}
           <div style={{ flex: 1, minWidth: 0 }}>
             {insight.category && (
-              <p style={{ fontSize: 10, fontWeight: 700, color: checked ? C.text3 : color, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 5 }}>{insight.category}</p>
+              <p style={{ fontSize: 10, fontWeight: 700, color: checked ? SHELL.text3 : color, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 5 }}>{insight.category}</p>
             )}
-            <p style={{ fontSize: 14, fontWeight: 700, color: checked ? C.text3 : SHELL.text1, lineHeight: 1.55, textDecoration: checked ? 'line-through' : 'none' }}>{insight.problem}</p>
+            <p style={{ fontSize: 14, fontWeight: 700, color: checked ? SHELL.text3 : SHELL.text1, lineHeight: 1.55, textDecoration: checked ? 'line-through' : 'none' }}>{insight.problem}</p>
           </div>
 
           {/* Severity badge + delete */}
@@ -3788,7 +3788,7 @@ function InsightCard({ insight, index, checked, onToggle, onDelete, onNavigate }
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr 1fr', gap: 8, marginLeft: 46 }}>
 
             {/* Why now */}
-            <div style={{ background: 'rgba(15,15,19,0.04)', border: '1px solid rgba(15,15,19,0.08)', borderRadius: 10, padding: '12px 14px' }}>
+            <div style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 10, padding: '12px 14px' }}>
               <p style={{ fontSize: 10, fontWeight: 700, color: SHELL.text2, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Why now</p>
               <p style={{ fontSize: 13.5, color: SHELL.text1, lineHeight: 1.72 }}>{insight.whyNow || insight.cause}</p>
             </div>
@@ -4476,7 +4476,7 @@ function FirstTimeWelcome({ data, onDismiss, onNavigate }) {
     <div style={{
       position: 'relative',
       marginBottom: 20,
-      background: '#ffffff',
+      background: SHELL.cardFlat,
       border: '1px solid rgba(0,0,0,0.09)',
       borderRadius: 20,
       boxShadow: '0 2px 6px rgba(0,0,0,0.08), 0 12px 40px rgba(0,0,0,0.10)',
@@ -4504,16 +4504,16 @@ function FirstTimeWelcome({ data, onDismiss, onNavigate }) {
         <div style={{ flex: '0 0 auto', width: 200 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 16 }}>
             <div style={{ width: 6, height: 6, borderRadius: '50%', background: C.red, flexShrink: 0, animation: 'pulse 2s infinite' }}/>
-            <span style={{ fontSize: 12, fontWeight: 700, color: '#a0a0b0', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Your audit is ready</span>
+            <span style={{ fontSize: 12, fontWeight: 700, color: SHELL.text3, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Your audit is ready</span>
           </div>
           <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, lineHeight: 1 }}>
             <span style={{ fontSize: 56, fontWeight: 800, letterSpacing: '-2px', lineHeight: 1, color: scoreColor(score), fontVariantNumeric: 'tabular-nums' }}>{score}</span>
-            <span style={{ fontSize: 16, color: '#a0a0b0', fontWeight: 400, paddingBottom: 8 }}>/100</span>
+            <span style={{ fontSize: 16, color: SHELL.text3, fontWeight: 400, paddingBottom: 8 }}>/100</span>
           </div>
           <p style={{ fontSize: 14, fontWeight: 600, color: scoreColor(score), marginTop: 4 }}>{scoreLabel(score)}</p>
           {data.insights.channelSummary && (
             <p style={{
-              fontSize: 12, color: '#52525b', lineHeight: 1.7, marginTop: 10,
+              fontSize: 12, color: SHELL.text2, lineHeight: 1.7, marginTop: 10,
               display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden',
             }}>{data.insights.channelSummary}</p>
           )}
@@ -4524,21 +4524,21 @@ function FirstTimeWelcome({ data, onDismiss, onNavigate }) {
 
         {/* CENTER — top priority */}
         <div style={{ flex: 1 }}>
-          <p style={{ fontSize: 12, fontWeight: 700, color: '#a0a0b0', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 14 }}>Your #1 priority right now</p>
+          <p style={{ fontSize: 12, fontWeight: 700, color: SHELL.text3, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 14 }}>Your #1 priority right now</p>
           {top && s ? (
             <>
               <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10, marginBottom: 3 }}>
-                <p style={{ fontSize: 14, fontWeight: 700, color: '#111114', lineHeight: 1.4, flex: 1 }}>{top.problem}</p>
+                <p style={{ fontSize: 14, fontWeight: 700, color: SHELL.text1, lineHeight: 1.4, flex: 1 }}>{top.problem}</p>
                 <span style={{ background: s.bg, color: s.color, fontSize: 12, fontWeight: 700, padding: '4px 10px', borderRadius: 20, flexShrink: 0, textTransform: 'uppercase', letterSpacing: '0.07em', border: `1px solid ${s.bdr}` }}>{top.impact}</span>
               </div>
-              {top.category && <p style={{ fontSize: 12, color: '#a0a0b0', marginTop: 3, marginBottom: 10 }}>{top.category}</p>}
-              <div style={{ background: 'rgba(15,15,19,0.04)', border: `1px solid rgba(15,15,19,0.08)`, borderLeft: `3px solid ${s.color}`, borderRadius: '0 10px 10px 0', padding: '12px 15px' }}>
+              {top.category && <p style={{ fontSize: 12, color: SHELL.text3, marginTop: 3, marginBottom: 10 }}>{top.category}</p>}
+              <div style={{ background: 'rgba(255,255,255,0.04)', border: `1px solid rgba(255,255,255,0.08)`, borderLeft: `3px solid ${s.color}`, borderRadius: '0 10px 10px 0', padding: '12px 15px' }}>
                 <p style={{ fontSize: 10, fontWeight: 700, color: s.color, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Action</p>
-                <p style={{ fontSize: 13.5, color: C.text1, lineHeight: 1.72 }}>{top.action}</p>
+                <p style={{ fontSize: 13.5, color: SHELL.text1, lineHeight: 1.72 }}>{top.action}</p>
               </div>
             </>
           ) : (
-            <p style={{ fontSize: 14, color: '#a0a0b0' }}>No priority actions found.</p>
+            <p style={{ fontSize: 14, color: SHELL.text3 }}>No priority actions found.</p>
           )}
         </div>
 
@@ -4547,7 +4547,7 @@ function FirstTimeWelcome({ data, onDismiss, onNavigate }) {
 
         {/* RIGHT — CTA */}
         <div style={{ flex: '0 0 auto', width: 190, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 12 }}>
-          <p style={{ fontSize: 12, fontWeight: 700, color: '#a0a0b0', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 4 }}>Start here</p>
+          <p style={{ fontSize: 12, fontWeight: 700, color: SHELL.text3, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 4 }}>Start here</p>
           <button
             className="ytg-dash-btn-primary"
             onClick={() => { onNavigate(ctaNav); dismiss() }}
@@ -5182,7 +5182,7 @@ export default function Dashboard() {
       // (#0a0a0c) because ChatCoach paints its own surface on top.
       const darkGround = nav === 'Chat' ? '#0a0a0c' : '#0e0e10'
       return (
-      <div style={{ flex: 1, overflow: 'auto', background: darkRoute ? darkGround : C.bg }}>
+      <div className={darkRoute ? 'ytg-dark' : undefined} style={{ flex: 1, overflow: 'auto', background: darkRoute ? darkGround : C.bg }}>
 
         {/* Topbar — light everywhere; dark on dark routes, using the
             locked shell shade so it does not sit as a white band over a
@@ -5630,9 +5630,9 @@ export default function Dashboard() {
               {/* Analytics-missing nudge — moved here from the quick-stats
                   strip (the strip is gone in the Feed redesign). */}
               {!data.analytics && (
-                <div style={{ display: 'flex', alignItems: 'center', gap: 12, background: 'rgba(217,119,6,0.14)', border: `1px solid rgba(217,119,6,0.34)`, borderLeft: `3px solid ${C.amber}`, borderRadius: '0 12px 12px 0', padding: '10px 16px', marginBottom: 18 }}>
-                  <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke={C.amber} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
-                    <circle cx="8" cy="8" r="6.5"/><line x1="8" y1="5" x2="8" y2="8.5"/><circle cx="8" cy="11" r="0.7" fill={C.amber} stroke="none"/>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12, background: 'rgba(217,119,6,0.14)', border: `1px solid rgba(217,119,6,0.34)`, borderLeft: `3px solid ${'#f0a23b'}`, borderRadius: '0 12px 12px 0', padding: '10px 16px', marginBottom: 18 }}>
+                  <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke={'#f0a23b'} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+                    <circle cx="8" cy="8" r="6.5"/><line x1="8" y1="5" x2="8" y2="8.5"/><circle cx="8" cy="11" r="0.7" fill={'#f0a23b'} stroke="none"/>
                   </svg>
                   <p style={{ fontSize: 12.5, color: SHELL.text2, lineHeight: 1.55 }}>
                     Grant <strong style={{ fontWeight: 600 }}>YouTube Analytics read access</strong> on the next reconnect to unlock retention, duration, and 90-day subscriber data.
@@ -6233,13 +6233,13 @@ export default function Dashboard() {
                       <ScoreRing score={score} />
                       <p style={{ fontSize: 11, color: SHELL.text3, fontWeight: 500, marginTop: 4, letterSpacing: '0.03em', textTransform: 'uppercase' }}>Overall</p>
                       {prevScore != null && prevScore !== score && (
-                        <p style={{ fontSize: 11, fontWeight: 700, color: score > prevScore ? C.green : C.red, marginTop: 3 }}>
+                        <p style={{ fontSize: 11, fontWeight: 700, color: score > prevScore ? '#34d27b' : C.red, marginTop: 3 }}>
                           {score > prevScore ? '▲' : '▼'} {Math.abs(score - prevScore)} from last audit
                         </p>
                       )}
                     </div>
                     {/* Divider */}
-                    <div style={{ width: 1, alignSelf: 'stretch', background: C.border, flexShrink: 0 }}/>
+                    <div style={{ width: 1, alignSelf: 'stretch', background: SHELL.hair, flexShrink: 0 }}/>
                     {/* Summary text */}
                     <div style={{ flex: 1 }}>
                       <p style={{ fontSize: 11, fontWeight: 600, color: SHELL.text3, letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 10 }}>AI assessment</p>
@@ -6272,7 +6272,7 @@ export default function Dashboard() {
                         <div key={label} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                           <span style={{ fontSize: 11, fontWeight: 500, color: SHELL.text3, flexShrink: 0, width: 36, textAlign: 'right' }}>{weight}</span>
                           <span style={{ fontSize: 13, color: SHELL.text2, fontWeight: 400, flexShrink: 0, width: 148 }}>{label}</span>
-                          <div style={{ flex: 1, height: 4, background: '#eeeef3', borderRadius: 99, overflow: 'hidden' }}>
+                          <div style={{ flex: 1, height: 4, background: 'rgba(255,255,255,0.08)', borderRadius: 99, overflow: 'hidden' }}>
                             <div style={{ width: `${val ?? 0}%`, height: '100%', background: col, borderRadius: 99, transition: 'width 0.8s cubic-bezier(0.34,1.56,0.64,1)' }}/>
                           </div>
                           <span style={{ fontSize: 13, fontWeight: 700, color: col, fontVariantNumeric: 'tabular-nums', minWidth: 26, textAlign: 'right' }}>{val ?? '—'}</span>
@@ -6306,13 +6306,13 @@ export default function Dashboard() {
                       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                           <p style={{ fontSize: 20, fontWeight: 800, color: SHELL.text1, letterSpacing: '-0.5px' }}>Priority actions</p>
-                          <span style={{ fontSize: 10, fontWeight: 700, color: '#34d27b', background: C.greenBg, padding: '3px 9px', borderRadius: 100, border: `1px solid ${C.greenBdr}`, letterSpacing: '0.08em', textTransform: 'uppercase' }}>All clear</span>
+                          <span style={{ fontSize: 10, fontWeight: 700, color: '#34d27b', background: 'rgba(22,163,74,0.14)', padding: '3px 9px', borderRadius: 100, border: `1px solid ${'rgba(22,163,74,0.34)'}`, letterSpacing: '0.08em', textTransform: 'uppercase' }}>All clear</span>
                         </div>
                       </div>
                       <div style={{
-                        background: C.greenBg,
-                        border: `1px solid ${C.greenBdr}`,
-                        borderLeft: `3px solid ${C.green}`,
+                        background: 'rgba(22,163,74,0.14)',
+                        border: `1px solid ${'rgba(22,163,74,0.34)'}`,
+                        borderLeft: `3px solid ${'#34d27b'}`,
                         borderRadius: '0 12px 12px 0',
                         padding: '14px 18px',
                       }}>
@@ -6328,12 +6328,12 @@ export default function Dashboard() {
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16, flexWrap: 'wrap', gap: 12 }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                         <p style={{ fontSize: 20, fontWeight: 800, color: SHELL.text1, letterSpacing: '-0.5px' }}>Priority actions</p>
-                        <span style={{ fontSize: 11, fontWeight: 700, color: SHELL.text3, background: '#f1f1f6', padding: '3px 9px', borderRadius: 100, border: '1px solid #e6e6ec', fontVariantNumeric: 'tabular-nums' }}>{openActions.length} open</span>
+                        <span style={{ fontSize: 11, fontWeight: 700, color: SHELL.text3, background: '#f1f1f6', padding: '3px 9px', borderRadius: 100, border: '1px solid rgba(255,255,255,0.08)', fontVariantNumeric: 'tabular-nums' }}>{openActions.length} open</span>
                       </div>
                       {doneCount > 0 && (
                         <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontVariantNumeric: 'tabular-nums' }}>
-                          <div style={{ width: 72, height: 3, background: '#eef0f4', borderRadius: 99, overflow: 'hidden' }}>
-                            <div style={{ width: `${(doneCount / total) * 100}%`, height: '100%', background: C.green, borderRadius: 99, transition: 'width 0.6s ease' }}/>
+                          <div style={{ width: 72, height: 3, background: 'rgba(255,255,255,0.08)', borderRadius: 99, overflow: 'hidden' }}>
+                            <div style={{ width: `${(doneCount / total) * 100}%`, height: '100%', background: '#34d27b', borderRadius: 99, transition: 'width 0.6s ease' }}/>
                           </div>
                           <span style={{ fontSize: 11.5, fontWeight: 600, color: SHELL.text3 }}>
                             {doneCount} of {total} done
@@ -6390,7 +6390,7 @@ export default function Dashboard() {
                     <div className="ytg-card" style={{ padding: '20px 22px' }}>
                       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
                         <p style={{ fontSize: 11, fontWeight: 700, color: '#34d27b', letterSpacing: '0.07em', textTransform: 'uppercase' }}>Quick wins</p>
-                        <span style={{ fontSize: 11, fontWeight: 600, color: SHELL.text3, background: '#f1f1f6', padding: '2px 7px', borderRadius: 20, border: '1px solid #e6e6ec' }}>{wins.length} left</span>
+                        <span style={{ fontSize: 11, fontWeight: 600, color: SHELL.text3, background: '#f1f1f6', padding: '2px 7px', borderRadius: 20, border: '1px solid rgba(255,255,255,0.08)' }}>{wins.length} left</span>
                       </div>
                       <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 2 }}>
                         {data.insights.quickWins.map((w, i) => {
@@ -6403,9 +6403,9 @@ export default function Dashboard() {
                                 type="checkbox"
                                 checked={isDone}
                                 onChange={() => handleToggleCheck(key)}
-                                style={{ width: 14, height: 14, accentColor: C.green, cursor: 'pointer', flexShrink: 0, marginTop: 3 }}
+                                style={{ width: 14, height: 14, accentColor: '#34d27b', cursor: 'pointer', flexShrink: 0, marginTop: 3 }}
                               />
-                              <p style={{ fontSize: 14, color: isDone ? C.text3 : C.text2, lineHeight: 1.6, flex: 1, textDecoration: isDone ? 'line-through' : 'none' }}>{w}</p>
+                              <p style={{ fontSize: 14, color: isDone ? SHELL.text3 : SHELL.text2, lineHeight: 1.6, flex: 1, textDecoration: isDone ? 'line-through' : 'none' }}>{w}</p>
                               {isDone && (
                                 <button className="ytg-del-btn" onClick={() => handleDelete(key)} title="Remove">
                                   <svg width="9" height="9" viewBox="0 0 10 10" fill="none" stroke="#e5251b" strokeWidth="1.8" strokeLinecap="round">
@@ -6428,7 +6428,7 @@ export default function Dashboard() {
                     </div>
                   )}
                   {data.insights.topPerformingPattern && (
-                    <div style={{ paddingTop: data.insights.biggestRisk ? 16 : 0, borderTop: data.insights.biggestRisk ? `1px solid ${C.border}` : 'none' }}>
+                    <div style={{ paddingTop: data.insights.biggestRisk ? 16 : 0, borderTop: data.insights.biggestRisk ? `1px solid ${SHELL.hair}` : 'none' }}>
                       <p style={{ fontSize: 11, fontWeight: 700, color: '#34d27b', letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 8 }}>What's working</p>
                       <p style={{ fontSize: 14, color: SHELL.text1, lineHeight: 1.7 }}>{data.insights.topPerformingPattern}</p>
                     </div>
@@ -6815,10 +6815,10 @@ export default function Dashboard() {
                     <p style={{ fontSize: 26, fontWeight: 800, color: SHELL.text1, letterSpacing: '-0.8px', marginBottom: 10, fontVariantNumeric: 'tabular-nums' }}>{p.value}</p>
                     <span style={{
                       fontSize: 11, fontWeight: 700,
-                      color:   p.good ? C.green  : C.amber,
+                      color:   p.good ? '#34d27b'  : '#f0a23b',
                       background: 'transparent',
                       padding: '3px 10px', borderRadius: 20,
-                      border: `1.5px solid ${p.good ? C.greenBdr : 'rgba(217,119,6,0.34)'}`,
+                      border: `1.5px solid ${p.good ? 'rgba(22,163,74,0.34)' : 'rgba(217,119,6,0.34)'}`,
                     }}>{p.verdict}</span>
                   </div>
                 ))}
@@ -6830,7 +6830,7 @@ export default function Dashboard() {
                   { label: 'Worst performing', video: patterns.worstVideo, isGood: false },
                 ].map(({ label, video, isGood }) => (
                   <div key={label} className="ytg-card" style={{ padding: '20px 22px' }}>
-                    <p style={{ fontSize: 11, fontWeight: 700, color: isGood ? C.green : C.red, letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 14 }}>{label}</p>
+                    <p style={{ fontSize: 11, fontWeight: 700, color: isGood ? '#34d27b' : C.red, letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 14 }}>{label}</p>
                     {video && (
                       <>
                         <div style={{ display: 'flex', gap: 11, marginBottom: 13, alignItems: 'flex-start' }}>
@@ -6838,7 +6838,7 @@ export default function Dashboard() {
                           <p style={{ fontSize: 14, fontWeight: 600, color: SHELL.text1, lineHeight: 1.5 }}>{video.title}</p>
                         </div>
                         <div style={{ display: 'flex', gap: 20, marginBottom: 12 }}>
-                          {[['Views', fmtNum(video.views), isGood ? C.green : C.red], ['Likes', fmtNum(video.likes), C.text1]].map(([lbl, val, col]) => (
+                          {[['Views', fmtNum(video.views), isGood ? '#34d27b' : C.red], ['Likes', fmtNum(video.likes), SHELL.text1]].map(([lbl, val, col]) => (
                             <div key={lbl}>
                               <p style={{ fontSize: 12, color: SHELL.text3, marginBottom: 3, textTransform: 'uppercase', letterSpacing: '0.07em', fontWeight: 700 }}>{lbl}</p>
                               <p style={{ fontSize: 21, fontWeight: 800, color: col, letterSpacing: '-0.8px', fontVariantNumeric: 'tabular-nums' }}>{val}</p>
@@ -6846,8 +6846,8 @@ export default function Dashboard() {
                           ))}
                         </div>
                         <div style={{
-                          background: isGood ? C.greenBg : C.redBg,
-                          border: `1px solid ${isGood ? C.greenBdr : C.redBdr}`,
+                          background: isGood ? 'rgba(22,163,74,0.14)' : 'rgba(229,37,27,0.13)',
+                          border: `1px solid ${isGood ? 'rgba(22,163,74,0.34)' : 'rgba(229,37,27,0.32)'}`,
                           borderRadius: 10, padding: '9px 12px',
                         }}>
                           <p style={{ fontSize: 12, color: isGood ? '#166534' : '#991b1b', lineHeight: 1.7 }}>
@@ -6870,7 +6870,7 @@ export default function Dashboard() {
                       <p style={{ fontSize: 12, color: SHELL.text3, marginTop: 2 }}>{p.s}</p>
                     </div>
                   ))}
-                  <div style={{ flex: 1, paddingLeft: 28, borderLeft: `1px solid #ebebef` }}>
+                  <div style={{ flex: 1, paddingLeft: 28, borderLeft: `1px solid #26262b` }}>
                     <p style={{ fontSize: 14, color: SHELL.text2, lineHeight: 1.85 }}>
                       {patterns.shortAvg > patterns.longAvg
                         ? `Shorts outperform long-form by ${fmtNum(patterns.shortAvg - patterns.longAvg)} views on average. Lean into Shorts for discovery.`
