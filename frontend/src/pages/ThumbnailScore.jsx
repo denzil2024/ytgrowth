@@ -238,7 +238,7 @@ function ScoreRing({ score, max = 100, label, size = 120, strokeW = 8 }) {
         style={{ transition: 'stroke-dasharray 1s cubic-bezier(0.34,1.56,0.64,1)' }}
       />
       <text x={cx} y={cx - 6} textAnchor="middle" fill={col}
-        fontSize={size * 0.195} fontWeight="800" fontFamily="Geist,Inter,sans-serif"
+        fontSize={size * 0.195} fontWeight="700" fontFamily="Geist,Inter,sans-serif"
         style={{ fontVariantNumeric: 'tabular-nums' }}>{score}</text>
       <text x={cx} y={cx + 14} textAnchor="middle" fill={C.text3}
         fontSize="10" fontFamily="Geist,Inter,sans-serif">{label}</text>

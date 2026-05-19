@@ -681,7 +681,7 @@ export default function VideoOptimizePanel({ video, onClose, onVideoUpdated, pla
                           {/* Header row */}
                           <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10, padding: '14px 16px 12px' }}>
                             <div style={{ width: 26, height: 26, borderRadius: 8, background: hm.color, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 1 }}>
-                              <span style={{ fontSize: 12, fontWeight: 900, color: '#fff' }}>{i + 1}</span>
+                              <span style={{ fontSize: 12, fontWeight: 700, color: '#fff' }}>{i + 1}</span>
                             </div>
                             <div style={{ flex: 1, minWidth: 0 }}>
                               <p style={{ fontSize: 10, fontWeight: 600, color: hm.color, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 4 }}>{hm.label}</p>

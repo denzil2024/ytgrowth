@@ -688,7 +688,7 @@ const MilestoneShareCard = forwardRef(function MilestoneShareCard(
         {/* Headline */}
         <div style={{ textAlign: 'center', marginTop: 10 }}>
           <h1 style={{
-            fontSize: 34, fontWeight: 900, color: '#0f0f13',
+            fontSize: 34, fontWeight: 700, color: '#0f0f13',
             letterSpacing: '-1.1px', lineHeight: 1,
           }}>
             Congratulations!
@@ -705,7 +705,7 @@ const MilestoneShareCard = forwardRef(function MilestoneShareCard(
         {/* Hero stat */}
         <div style={{ textAlign: 'center', marginTop: 30 }}>
           <p style={{
-            fontSize: 84, fontWeight: 900, color: cat.h2,
+            fontSize: 84, fontWeight: 700, color: cat.h2,
             letterSpacing: '-3px', lineHeight: 0.95,
             fontVariantNumeric: 'tabular-nums',
           }}>
@@ -1267,7 +1267,7 @@ function ScoreRing({ score }) {
         style={{ transition: 'stroke-dasharray 1s cubic-bezier(0.34,1.56,0.64,1)' }}
       />
       <text x={cx} y={cy - 4} textAnchor="middle" fill={col}
-        fontSize="24" fontWeight="800" fontFamily="Geist, Inter, sans-serif"
+        fontSize="24" fontWeight="700" fontFamily="Geist, Inter, sans-serif"
         style={{ fontVariantNumeric: 'tabular-nums' }}>{score}</text>
       <text x={cx} y={cy + 13} textAnchor="middle" fill={C.text3}
         fontSize="10" fontFamily="Geist, Inter, sans-serif">{scoreLabel(score)}</text>
@@ -3752,7 +3752,7 @@ function InsightCard({ insight, index, checked, onToggle, onDelete, onNavigate }
             <div style={{ width: 26, height: 26, borderRadius: 8, background: checked ? 'rgba(22,163,74,0.14)' : color, border: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
               {checked
                 ? <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke={'#34d27b'} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><polyline points="1.5,6.5 5,10 10.5,2"/></svg>
-                : <span style={{ fontSize: 12, fontWeight: 900, color: '#fff', fontVariantNumeric: 'tabular-nums' }}>{insight.rank ?? index + 1}</span>
+                : <span style={{ fontSize: 12, fontWeight: 700, color: '#fff', fontVariantNumeric: 'tabular-nums' }}>{insight.rank ?? index + 1}</span>
               }
             </div>
           </div>

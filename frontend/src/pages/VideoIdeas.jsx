@@ -865,7 +865,7 @@ export default function VideoIdeas({ onNavigate, plan, freeTierFeatures }) {
               borderTop: i === 0 ? 'none' : `1px solid ${C.border}`,
             }}>
               <div style={{ width: 22, height: 22, borderRadius: 6, background: C.amber, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                <span style={{ fontSize: 10, fontWeight: 900, color: '#fff' }}>{i + 1}</span>
+                <span style={{ fontSize: 10, fontWeight: 700, color: '#fff' }}>{i + 1}</span>
               </div>
               <p style={{ flex: 1, fontSize: 13, fontWeight: 600, color: C.text1, lineHeight: 1.4 }}>{t}</p>
               <span style={{
