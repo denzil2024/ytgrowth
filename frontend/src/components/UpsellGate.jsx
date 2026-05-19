@@ -19,9 +19,9 @@
                       omitted, the card renders solo on the page background. */
 
 const C = {
-  red: '#e5251b', green: '#059669', amber: '#d97706',
-  text1: '#0f0f13', text2: '#4a4a58', text3: '#9595a4',
-  border: '#e6e6ec',
+  red: '#e5251b', green: '#34d27b', amber: '#f0a23b',
+  text1: '#f4f4f5', text2: '#a1a1aa', text3: '#71717a',
+  border: 'rgba(255,255,255,0.08)',
 }
 
 export default function UpsellGate({
@@ -35,10 +35,10 @@ export default function UpsellGate({
 }) {
   const card = (
     <div style={{
-      background: '#ffffff',
-      border: '1px solid rgba(229,37,27,0.2)',
+      background: 'linear-gradient(180deg,#1e1e24 0%,#18181c 100%)',
+      border: '1px solid rgba(229,37,27,0.32)',
       borderRadius: 20,
-      boxShadow: '0 20px 50px rgba(0,0,0,0.16)',
+      boxShadow: '0 20px 50px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.04)',
       padding: '30px 36px 28px',
       maxWidth: 540, width: '100%',
       textAlign: 'center',
@@ -142,7 +142,7 @@ export default function UpsellGate({
               alt=""
               style={{
                 width: 28, height: 28, borderRadius: '50%',
-                border: '2px solid #ffffff',
+                border: '2px solid #18181c',
                 marginLeft: i === 0 ? 0 : -9,
                 objectFit: 'cover',
                 boxShadow: '0 1px 4px rgba(0,0,0,0.15)',
@@ -189,7 +189,7 @@ export default function UpsellGate({
         </div>
         <div style={{
           position: 'absolute', inset: 0,
-          background: 'rgba(245,245,249,0.55)',
+          background: 'rgba(14,14,16,0.62)',
           backdropFilter: 'blur(2px)',
           WebkitBackdropFilter: 'blur(2px)',
         }} />

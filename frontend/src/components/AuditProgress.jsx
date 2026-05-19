@@ -20,9 +20,9 @@ import { useEffect, useRef, useState } from 'react'
 
 const C = {
   red: '#e5251b', redDeep: '#a50f07',
-  text1: '#0f0f13', text2: '#4a4a58', text3: '#9595a4',
-  border: '#e6e6ec', borderSoft: '#f0f0f4',
-  green: '#059669', greenSoft: '#ecfdf5',
+  text1: '#f4f4f5', text2: '#a1a1aa', text3: '#71717a',
+  border: 'rgba(255,255,255,0.08)', borderSoft: 'rgba(255,255,255,0.06)',
+  green: '#34d27b', greenSoft: 'rgba(22,163,74,0.16)',
 }
 
 const STAGES = [
@@ -122,10 +122,10 @@ export default function AuditProgress({ done = false, onDone }) {
       <style>{`
         .ap-wrap {
           position: relative;
-          background: linear-gradient(180deg, #ffffff 0%, #fafafb 100%);
+          background: linear-gradient(180deg,#1e1e24 0%,#18181c 100%);
           border: 1px solid ${C.border};
           border-radius: 22px;
-          box-shadow: 0 2px 8px rgba(0,0,0,0.04), 0 24px 60px rgba(0,0,0,0.10);
+          box-shadow: 0 1px 3px rgba(0,0,0,0.4), 0 24px 60px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.04);
           padding: 30px 34px 28px;
           font-family: 'Inter', system-ui, sans-serif;
           overflow: hidden;
@@ -171,7 +171,7 @@ export default function AuditProgress({ done = false, onDone }) {
         }
         .ap-track {
           height: 6px; border-radius: 100px;
-          background: #f1f1f6;
+          background: rgba(255,255,255,0.08);
           overflow: hidden;
           position: relative;
         }
@@ -215,7 +215,7 @@ export default function AuditProgress({ done = false, onDone }) {
           flex-shrink: 0;
           transition: background 0.3s, color 0.3s, transform 0.3s;
         }
-        .ap-stage[data-state="pending"] .ap-stage-ico { background: #f1f1f6; color: ${C.text3}; }
+        .ap-stage[data-state="pending"] .ap-stage-ico { background: rgba(255,255,255,0.06); color: ${C.text3}; }
         .ap-stage[data-state="active"]  .ap-stage-ico { background: ${C.red}; color: #ffffff; box-shadow: 0 4px 12px rgba(229,37,27,0.35); }
         .ap-stage[data-state="done"]    .ap-stage-ico { background: ${C.greenSoft}; color: ${C.green}; }
         .ap-stage[data-state="active"]  .ap-stage-ico-inner { animation: apSpin 1.8s linear infinite; transform-origin: center; }

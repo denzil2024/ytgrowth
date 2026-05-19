@@ -1,7 +1,7 @@
 /* OnboardingCard — the real getting-started flow for new signups.
    Lives at the top of the Feed (.ov-page) for new users only, in the
-   Feed's own card grammar (white, hairline rgba(10,10,15,0.07), 14px
-   radius, layered soft shadow + inset, Geist). Replaces the lone
+   Feed's own card grammar (dark SHELL gradient, hairline
+   rgba(255,255,255,0.08), 14px radius, soft shadow + inset). Replaces the lone
    "Run your first audit" card and the dismiss-and-forget WelcomeModal.
 
    Completion is derived from server-backed signals the app already
@@ -22,16 +22,16 @@
 import { useEffect, useState } from 'react'
 
 const C = {
-  ink:    '#0a0a0f',
-  sub:    'rgba(10,10,15,0.55)',
-  eyebrow:'rgba(10,10,15,0.45)',
-  hair:   'rgba(10,10,15,0.07)',
-  hair2:  'rgba(10,10,15,0.10)',
-  tint:   '#f8f8fb',
-  green:  '#16a34a',
+  ink:    '#f4f4f5',
+  sub:    '#a1a1aa',
+  eyebrow:'#71717a',
+  hair:   'rgba(255,255,255,0.08)',
+  hair2:  'rgba(255,255,255,0.14)',
+  tint:   'rgba(255,255,255,0.04)',
+  green:  '#34d27b',
   red:    '#e5251b',
   redHi:  '#ef3a31',
-  faint:  'rgba(10,10,15,0.35)',
+  faint:  '#71717a',
 }
 
 function CheckIcon({ size = 12 }) {
@@ -75,10 +75,10 @@ export default function OnboardingCard({
   useEffect(() => { const t = requestAnimationFrame(() => setShown(true)); return () => cancelAnimationFrame(t) }, [])
 
   const cardStyle = {
-    background: '#ffffff',
+    background: 'linear-gradient(180deg,#1e1e24 0%,#18181c 100%)',
     border: `1px solid ${C.hair}`,
     borderRadius: 14,
-    boxShadow: '0 1px 2px rgba(15,15,25,0.04), 0 6px 18px rgba(15,15,25,0.05), inset 0 1px 0 rgba(255,255,255,0.7)',
+    boxShadow: '0 1px 3px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.04)',
     marginTop: 32, marginBottom: 24,
     opacity: shown ? 1 : 0,
     transform: shown ? 'none' : 'translateY(8px)',
@@ -91,7 +91,7 @@ export default function OnboardingCard({
       <div className="ytg-card" style={{ ...cardStyle, padding: '18px 24px', display: 'flex', alignItems: 'center', gap: 16 }}>
         <span style={{
           flexShrink: 0, width: 30, height: 30, borderRadius: '50%',
-          background: 'rgba(22,163,74,0.10)', color: C.green,
+          background: 'rgba(22,163,74,0.16)', color: C.green,
           display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
         }}>
           <CheckIcon size={14} />
@@ -138,7 +138,7 @@ export default function OnboardingCard({
               onMouseLeave={e => { e.currentTarget.style.color = C.faint }}
             >Skip</button>
           </div>
-          <div style={{ width: 132, height: 4, background: 'rgba(10,10,15,0.06)', borderRadius: 99, overflow: 'hidden', marginTop: 9, marginLeft: 'auto' }}>
+          <div style={{ width: 132, height: 4, background: 'rgba(255,255,255,0.08)', borderRadius: 99, overflow: 'hidden', marginTop: 9, marginLeft: 'auto' }}>
             <div style={{
               width: `${(doneCount / total) * 100}%`, height: '100%',
               background: C.green, borderRadius: 99,
@@ -172,8 +172,8 @@ export default function OnboardingCard({
                   flexShrink: 0, marginTop: 1,
                   width: 22, height: 22, borderRadius: '50%',
                   display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-                  background: s.done ? 'rgba(22,163,74,0.12)' : isActive ? '#fff' : 'transparent',
-                  border: s.done ? 'none' : `1.5px solid ${isActive ? C.hair2 : 'rgba(10,10,15,0.14)'}`,
+                  background: s.done ? 'rgba(22,163,74,0.16)' : isActive ? '#1c1c21' : 'transparent',
+                  border: s.done ? 'none' : `1.5px solid ${isActive ? C.hair2 : 'rgba(255,255,255,0.16)'}`,
                   color: s.done ? C.green : isActive ? C.ink : C.faint,
                   fontSize: 11, fontWeight: 700, fontVariantNumeric: 'tabular-nums',
                 }}>
