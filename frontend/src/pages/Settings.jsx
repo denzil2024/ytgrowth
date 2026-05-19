@@ -3,37 +3,37 @@ import { Plus, ArrowRight, Check, Link2 } from 'lucide-react'
 import { loginUrl } from '../utm.js'
 
 /* ── Design tokens ──────────────────────────────────────────────────────────
-   Aligned with the Competitors design north-star. Geist font, 1040 centered,
-   single-shadow + inset-from-above highlight cards, hairline
-   rgba(10,10,15,0.07) borders, 14px radius, 11/700/0.10em eyebrows, 800
-   reserved for big stat values only. */
+   Aligned with the Competitors design north-star, dark theme. Geist font,
+   1040 centered, dark gradient cards + single shadow, hairline
+   rgba(255,255,255,0.08) borders, 14px radius, 11/600/0.10em eyebrows,
+   canonical dark text ramp, weights capped at 700 (headings 600). */
 const C = {
   red:      '#e5251b',
   redLight: '#ef3a31',
-  redBg:    '#fff5f5',
-  redBdr:   '#fecaca',
-  green:    '#16a34a',
-  greenBg:  '#f0fdf4',
-  greenBdr: '#bbf7d0',
-  amber:    '#d97706',
-  amberBg:  '#fffbeb',
-  amberBdr: '#fde68a',
-  ink:      '#0a0a0f',
-  ink60:    'rgba(10,10,15,0.60)',
-  ink55:    'rgba(10,10,15,0.55)',
-  ink50:    'rgba(10,10,15,0.50)',
-  ink45:    'rgba(10,10,15,0.45)',
-  ink30:    'rgba(10,10,15,0.30)',
-  hairline: 'rgba(10,10,15,0.07)',
-  chipBg:   '#f4f4f6',
+  redBg:    'rgba(229,37,27,0.13)',
+  redBdr:   'rgba(229,37,27,0.32)',
+  green:    '#34d27b',
+  greenBg:  'rgba(22,163,74,0.16)',
+  greenBdr: 'rgba(22,163,74,0.34)',
+  amber:    '#f0a23b',
+  amberBg:  'rgba(217,119,6,0.14)',
+  amberBdr: 'rgba(217,119,6,0.34)',
+  ink:      '#f4f4f5',
+  ink60:    '#cfd0d6',
+  ink55:    '#cfd0d6',
+  ink50:    '#b2b3bb',
+  ink45:    '#b2b3bb',
+  ink30:    '#87878f',
+  hairline: 'rgba(255,255,255,0.08)',
+  chipBg:   'rgba(255,255,255,0.06)',
 }
 
 /* Credit-state accent. Green when healthy, amber under 20%, red at zero.
    Each returns a solid, a lighter top-of-gradient, a glow and a soft tint. */
 function creditAccent(state) {
   if (state === 'empty') return { solid: '#e5251b', light: '#ef3a31', glow: 'rgba(229,37,27,0.30)' }
-  if (state === 'low')   return { solid: '#d97706', light: '#f59e0b', glow: 'rgba(217,119,6,0.28)' }
-  return                        { solid: '#16a34a', light: '#22c55e', glow: 'rgba(22,163,74,0.26)' }
+  if (state === 'low')   return { solid: '#f0a23b', light: '#f59e0b', glow: 'rgba(217,119,6,0.34)' }
+  return                        { solid: '#34d27b', light: '#22c55e', glow: 'rgba(22,163,74,0.32)' }
 }
 
 /* ── Page-scoped styles. Geist load, base typography, card grammar, button
@@ -77,7 +77,7 @@ function useSettingsStyles() {
       /* H1 + subtitle match the shared standard across every redesigned
          page (Competitors / Outliers / Keywords / Video Ideas / SEO). */
       .set-h1 {
-        font-size: 26px; font-weight: 700; color: ${C.ink};
+        font-size: 26px; font-weight: 600; color: ${C.ink};
         letter-spacing: -0.7px; line-height: 1.1;
       }
       .set-subtitle {
@@ -86,39 +86,39 @@ function useSettingsStyles() {
       }
 
       .set-card {
-        background: #ffffff;
+        background: linear-gradient(180deg,#1e1e24 0%,#18181c 100%);
         border: 1px solid ${C.hairline};
         border-radius: 14px;
-        box-shadow: 0 1px 2px rgba(15,15,25,0.04), inset 0 1px 0 rgba(255,255,255,0.7);
+        box-shadow: 0 1px 3px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.04);
       }
       /* Hero reads one tier above the rest: deeper layered shadow + a
          brighter inset sheen. Grammar unchanged, just more presence. */
       .set-card-hero {
-        background: #ffffff;
+        background: linear-gradient(180deg,#1e1e24 0%,#18181c 100%);
         border: 1px solid ${C.hairline};
         border-radius: 14px;
-        box-shadow: 0 1px 2px rgba(15,15,25,0.05),
-                    0 14px 36px -10px rgba(15,15,25,0.12),
-                    inset 0 1px 0 rgba(255,255,255,0.85);
+        box-shadow: 0 1px 3px rgba(0,0,0,0.4),
+                    0 14px 36px -10px rgba(0,0,0,0.55),
+                    inset 0 1px 0 rgba(255,255,255,0.05);
       }
 
       .set-divider { height: 1px; background: ${C.hairline}; width: 100%; }
 
       .set-eyebrow {
-        font-size: 11px; font-weight: 700;
+        font-size: 11px; font-weight: 600;
         letter-spacing: 0.10em; text-transform: uppercase;
         color: ${C.ink45};
       }
 
       /* SectionTitle grammar, identical to Competitors' SectionTitle:
-         15/700/-0.3px title, 12/#9595a4 hint, block marginBottom 14. */
+         15/700/-0.3px title, 12/#b2b3bb hint, block marginBottom 14. */
       .set-section { margin-bottom: 14px; }
       .set-card-title {
-        font-size: 15px; font-weight: 700; color: #111114;
+        font-size: 15px; font-weight: 600; color: #f4f4f5;
         letter-spacing: -0.3px;
       }
       .set-card-sub {
-        font-size: 12px; font-weight: 400; color: #9595a4;
+        font-size: 12px; font-weight: 400; color: #b2b3bb;
         margin-top: 3px !important; line-height: 1.5;
       }
 
@@ -139,16 +139,16 @@ function useSettingsStyles() {
       .set-btn-primary:disabled { opacity: 0.55; cursor: not-allowed; }
 
       .set-btn-secondary {
-        background: #ffffff; color: ${C.ink};
-        border: 1px solid rgba(10,10,15,0.10); border-radius: 100px;
+        background: rgba(255,255,255,0.04); color: ${C.ink};
+        border: 1px solid rgba(255,255,255,0.12); border-radius: 100px;
         padding: 7px 16px; font-size: 13px; font-weight: 600;
         font-family: 'Geist', 'Inter', system-ui, sans-serif;
         cursor: pointer; white-space: nowrap;
         letter-spacing: -0.01em;
-        box-shadow: 0 1px 2px rgba(15,15,25,0.04), inset 0 1px 0 rgba(255,255,255,0.7);
+        box-shadow: 0 1px 3px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.04);
         transition: background 160ms cubic-bezier(0.32,0.72,0,1), border-color 160ms cubic-bezier(0.32,0.72,0,1), transform 160ms cubic-bezier(0.32,0.72,0,1);
       }
-      .set-btn-secondary:hover { background: rgba(10,10,15,0.025); border-color: rgba(10,10,15,0.18); transform: translateY(-1px); }
+      .set-btn-secondary:hover { background: rgba(255,255,255,0.07); border-color: rgba(255,255,255,0.20); transform: translateY(-1px); }
       .set-btn-secondary:active { transform: translateY(0); }
 
       .set-btn-text {
@@ -164,16 +164,16 @@ function useSettingsStyles() {
       .set-btn-text:hover { color: ${C.ink}; gap: 7px; }
 
       .set-btn-danger-outline {
-        background: #ffffff; color: ${C.red};
-        border: 1px solid rgba(229,37,27,0.25); border-radius: 100px;
+        background: rgba(229,37,27,0.10); color: #fb6a60;
+        border: 1px solid rgba(229,37,27,0.32); border-radius: 100px;
         padding: 7px 16px; font-size: 13px; font-weight: 600;
         font-family: 'Geist', 'Inter', system-ui, sans-serif;
         cursor: pointer; white-space: nowrap;
         letter-spacing: -0.01em;
-        box-shadow: 0 1px 2px rgba(229,37,27,0.06);
+        box-shadow: 0 1px 3px rgba(0,0,0,0.4);
         transition: background 160ms cubic-bezier(0.32,0.72,0,1), border-color 160ms cubic-bezier(0.32,0.72,0,1), transform 160ms cubic-bezier(0.32,0.72,0,1);
       }
-      .set-btn-danger-outline:hover { background: rgba(229,37,27,0.04); border-color: rgba(229,37,27,0.40); transform: translateY(-1px); }
+      .set-btn-danger-outline:hover { background: rgba(229,37,27,0.18); border-color: rgba(229,37,27,0.48); transform: translateY(-1px); }
       .set-btn-danger-outline:active { transform: translateY(0); }
 
       .set-btn-row-disconnect {
@@ -195,37 +195,37 @@ function useSettingsStyles() {
       /* ── Inputs ───────────────────────────────────────────────────────── */
       .set-input {
         width: 100%; padding: 11px 14px;
-        background: #ffffff;
-        border: 1px solid rgba(10,10,15,0.10);
+        background: #1c1c21;
+        border: 1px solid rgba(255,255,255,0.12);
         border-radius: 12px;
         font-size: 13.5px; font-weight: 450; color: ${C.ink};
         font-family: 'Geist', 'Inter', system-ui, sans-serif;
         outline: none; letter-spacing: -0.005em;
-        box-shadow: 0 1px 2px rgba(15,15,25,0.03), inset 0 1px 0 rgba(255,255,255,0.7);
+        box-shadow: 0 1px 3px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03);
         transition: border-color 180ms cubic-bezier(0.32,0.72,0,1), box-shadow 180ms cubic-bezier(0.32,0.72,0,1);
       }
-      .set-input::placeholder { color: rgba(10,10,15,0.40); font-weight: 450; }
+      .set-input::placeholder { color: rgba(255,255,255,0.34); font-weight: 450; }
       .set-input:focus {
-        border-color: rgba(229,37,27,0.30);
-        box-shadow: 0 0 0 4px rgba(229,37,27,0.06), 0 1px 2px rgba(15,15,25,0.03), inset 0 1px 0 rgba(255,255,255,0.7);
+        border-color: rgba(229,37,27,0.45);
+        box-shadow: 0 0 0 4px rgba(229,37,27,0.14), 0 1px 3px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03);
       }
 
       .set-textarea {
         width: 100%; padding: 12px 14px;
-        background: #ffffff;
-        border: 1px solid rgba(10,10,15,0.10);
+        background: #1c1c21;
+        border: 1px solid rgba(255,255,255,0.12);
         border-radius: 12px;
         font-size: 13.5px; font-weight: 450; color: ${C.ink};
         font-family: 'Geist', 'Inter', system-ui, sans-serif;
         outline: none; letter-spacing: -0.005em; line-height: 1.55;
         resize: vertical; min-height: 104px;
-        box-shadow: 0 1px 2px rgba(15,15,25,0.03), inset 0 1px 0 rgba(255,255,255,0.7);
+        box-shadow: 0 1px 3px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03);
         transition: border-color 180ms cubic-bezier(0.32,0.72,0,1), box-shadow 180ms cubic-bezier(0.32,0.72,0,1);
       }
-      .set-textarea::placeholder { color: rgba(10,10,15,0.40); font-weight: 450; }
+      .set-textarea::placeholder { color: rgba(255,255,255,0.34); font-weight: 450; }
       .set-textarea:focus {
-        border-color: rgba(229,37,27,0.30);
-        box-shadow: 0 0 0 4px rgba(229,37,27,0.06), 0 1px 2px rgba(15,15,25,0.03), inset 0 1px 0 rgba(255,255,255,0.7);
+        border-color: rgba(229,37,27,0.45);
+        box-shadow: 0 0 0 4px rgba(229,37,27,0.14), 0 1px 3px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.03);
       }
 
       /* Channel row — hover wash bleeds into the card padding via the
@@ -236,7 +236,7 @@ function useSettingsStyles() {
         border-radius: 11px;
         transition: background 160ms cubic-bezier(0.32,0.72,0,1);
       }
-      .set-channel-row:hover { background: rgba(10,10,15,0.022); }
+      .set-channel-row:hover { background: rgba(255,255,255,0.04); }
 
       .set-connect-row {
         display: flex; align-items: center; gap: 8px;
@@ -247,7 +247,7 @@ function useSettingsStyles() {
         letter-spacing: -0.01em; cursor: pointer;
         transition: background 160ms cubic-bezier(0.32,0.72,0,1);
       }
-      .set-connect-row:hover { background: rgba(229,37,27,0.045); }
+      .set-connect-row:hover { background: rgba(229,37,27,0.12); }
 
       @keyframes settingsSpin { to { transform: rotate(360deg) } }
     `
@@ -345,7 +345,7 @@ function Toggle({ on, onChange }) {
       aria-pressed={on}
       style={{
         width: 46, height: 26, borderRadius: 100,
-        background: on ? 'linear-gradient(180deg,#22c55e 0%,#16a34a 100%)' : '#d8d8e0',
+        background: on ? 'linear-gradient(180deg,#22c55e 0%,#16a34a 100%)' : 'rgba(255,255,255,0.16)',
         border: 'none', cursor: 'pointer', position: 'relative',
         transition: 'background 0.25s cubic-bezier(0.32,0.72,0,1)',
         flexShrink: 0,
@@ -372,15 +372,15 @@ function ConfirmDialog({ title, body, confirmLabel, onConfirm, onCancel, require
   return (
     <div style={{
       position: 'fixed', inset: 0,
-      background: 'rgba(10,10,15,0.42)',
+      background: 'rgba(0,0,0,0.62)',
       backdropFilter: 'blur(2px)',
       display: 'flex', alignItems: 'center', justifyContent: 'center',
       zIndex: 1000,
     }}>
       <div style={{
-        background: '#fff', borderRadius: 16,
+        background: 'linear-gradient(180deg,#1e1e24 0%,#18181c 100%)', borderRadius: 16,
         padding: '24px 26px', maxWidth: 400, width: '90%',
-        boxShadow: '0 1px 2px rgba(15,15,25,0.06), 0 24px 56px -12px rgba(15,15,25,0.30), inset 0 1px 0 rgba(255,255,255,0.85)',
+        boxShadow: '0 1px 3px rgba(0,0,0,0.4), 0 24px 56px -12px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.05)',
         border: `1px solid ${C.hairline}`,
       }}>
         <p style={{ fontSize: 15, fontWeight: 600, color: C.ink, letterSpacing: '-0.01em', marginBottom: 8 }}>{title}</p>
@@ -624,16 +624,16 @@ export default function Settings({ channelData }) {
             <img src={avatarPic} alt="" style={{
               width: 44, height: 44, borderRadius: '50%',
               objectFit: 'cover', flexShrink: 0,
-              boxShadow: '0 0 0 1px rgba(10,10,15,0.06), 0 2px 8px rgba(10,10,15,0.10)',
+              boxShadow: '0 0 0 1px rgba(255,255,255,0.10), 0 2px 8px rgba(0,0,0,0.45)',
             }} />
           ) : (
             <div style={{
               width: 44, height: 44, borderRadius: '50%',
               background: C.chipBg, display: 'flex',
               alignItems: 'center', justifyContent: 'center',
-              fontSize: 15, fontWeight: 700, color: C.ink,
+              fontSize: 15, fontWeight: 600, color: C.ink,
               flexShrink: 0,
-              boxShadow: '0 0 0 1px rgba(10,10,15,0.06), 0 2px 8px rgba(10,10,15,0.10)',
+              boxShadow: '0 0 0 1px rgba(255,255,255,0.10), 0 2px 8px rgba(0,0,0,0.45)',
             }}>
               {initial || (
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" style={{ color: C.ink45 }}>
@@ -662,7 +662,7 @@ export default function Settings({ channelData }) {
           <div style={{ flexShrink: 0, textAlign: 'right' }}>
             <span style={{
               ...planBadgeStyle(me?.plan),
-              fontSize: 11, fontWeight: 700, letterSpacing: '0.06em',
+              fontSize: 11, fontWeight: 600, letterSpacing: '0.06em',
               textTransform: 'uppercase', padding: '4px 11px',
               borderRadius: 100, display: 'inline-block',
               boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.5)',
@@ -683,7 +683,7 @@ export default function Settings({ channelData }) {
           <p className="set-eyebrow">AI analyses</p>
           <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, marginTop: 11 }}>
             <span style={{
-              fontSize: 42, fontWeight: 700, color: accent.solid,
+              fontSize: 42, fontWeight: 600, color: accent.solid,
               letterSpacing: '-0.03em', lineHeight: 1,
               fontVariantNumeric: 'tabular-nums',
             }}>{remaining}</span>
@@ -693,9 +693,9 @@ export default function Settings({ channelData }) {
           </div>
 
           <div style={{
-            height: 7, background: 'rgba(10,10,15,0.06)', borderRadius: 99,
+            height: 7, background: 'rgba(255,255,255,0.10)', borderRadius: 99,
             overflow: 'hidden', marginTop: 14,
-            boxShadow: 'inset 0 1px 1.5px rgba(10,10,15,0.05)',
+            boxShadow: 'inset 0 1px 1.5px rgba(0,0,0,0.35)',
           }}>
             <div style={{
               width: `${Math.min(Math.max(remainingPct, 0), 100)}%`,
@@ -723,7 +723,7 @@ export default function Settings({ channelData }) {
               </p>
             </div>
             <span style={{
-              fontSize: 20, fontWeight: 700,
+              fontSize: 20, fontWeight: 600,
               color: packBalance > 0 ? C.green : C.ink,
               fontVariantNumeric: 'tabular-nums',
               letterSpacing: '-0.01em', flexShrink: 0,
@@ -775,15 +775,15 @@ export default function Settings({ channelData }) {
                   <img src={ch.channel_thumbnail} alt="" style={{
                     width: 38, height: 38, borderRadius: '50%',
                     objectFit: 'cover', flexShrink: 0,
-                    boxShadow: '0 0 0 1px rgba(10,10,15,0.06)',
+                    boxShadow: '0 0 0 1px rgba(255,255,255,0.10)',
                   }} />
                 ) : (
                   <div style={{
                     width: 38, height: 38, borderRadius: '50%',
                     background: C.chipBg, display: 'flex',
                     alignItems: 'center', justifyContent: 'center',
-                    fontSize: 14, fontWeight: 700, color: C.ink,
-                    flexShrink: 0, boxShadow: '0 0 0 1px rgba(10,10,15,0.06)',
+                    fontSize: 14, fontWeight: 600, color: C.ink,
+                    flexShrink: 0, boxShadow: '0 0 0 1px rgba(255,255,255,0.10)',
                   }}>{(ch.channel_name || '?')[0].toUpperCase()}</div>
                 )}
 
@@ -799,7 +799,7 @@ export default function Settings({ channelData }) {
                         display: 'inline-flex', alignItems: 'center', gap: 5,
                         background: C.greenBg, color: C.green,
                         border: `1px solid ${C.greenBdr}`,
-                        fontSize: 10, fontWeight: 700, letterSpacing: '0.06em',
+                        fontSize: 10, fontWeight: 600, letterSpacing: '0.06em',
                         textTransform: 'uppercase', padding: '2px 8px 2px 7px',
                         borderRadius: 100, flexShrink: 0,
                       }}>
@@ -944,7 +944,7 @@ export default function Settings({ channelData }) {
                         <p style={{ fontSize: 12, fontWeight: 450, color: C.ink45, marginTop: 3, letterSpacing: '-0.005em' }}>{fmtDate(r.created_at)}</p>
                       </div>
                       <span style={{
-                        fontSize: 10, fontWeight: 700, color: sty.c, background: sty.bg,
+                        fontSize: 10, fontWeight: 600, color: sty.c, background: sty.bg,
                         border: `1px solid ${sty.b}`, padding: '3px 9px', borderRadius: 100,
                         letterSpacing: '0.06em', textTransform: 'uppercase', flexShrink: 0,
                       }}>{sty.label}</span>
@@ -982,7 +982,7 @@ export default function Settings({ channelData }) {
         background: 'rgba(229,37,27,0.025)',
         border: '1px solid rgba(229,37,27,0.10)',
         borderRadius: 14,
-        boxShadow: '0 1px 2px rgba(15,15,25,0.04), inset 0 1px 0 rgba(255,255,255,0.7)',
+        boxShadow: '0 1px 2px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.04)',
         padding: '20px 24px',
         marginBottom: 48,
         display: 'flex', alignItems: 'center', gap: 16,

@@ -55,25 +55,22 @@ try {
 
 const browser = await chromium.launch()
 try {
-  const states = ['default', 'low']
-  for (const state of states) {
-    const ctx = await browser.newContext({ viewport: { width: 1400, height: 1200 }, deviceScaleFactor: 1.25 })
-    const page = await ctx.newPage()
-    await page.goto(`http://localhost:${PORT}/preview-settings.html?state=${state}`, { waitUntil: 'networkidle' })
-    await page.evaluate(() => document.fonts ? document.fonts.ready : Promise.resolve())
-    await page.waitForTimeout(900)
-    const out = path.join(__dirname, `settings-${state}.png`)
-    await page.screenshot({ path: out, fullPage: true })
-    const m = await page.evaluate(() => {
-      const sp = document.querySelector('.set-page')
-      if (!sp) return { error: 'no .set-page' }
-      const r = sp.getBoundingClientRect()
-      return { left: Math.round(r.left), right: Math.round(r.right), width: Math.round(r.width), viewport: window.innerWidth }
-    })
-    console.log(`MEASURE set-page: left=${m.left} right=${m.right} width=${m.width} viewport=${m.viewport}`)
-    console.log(`OK: wrote ${out}`)
-    await ctx.close()
-  }
+  const ctx = await browser.newContext({ viewport: { width: 1200, height: 1320 }, deviceScaleFactor: 1.3 })
+  const page = await ctx.newPage()
+  await page.goto(`http://localhost:${PORT}/preview-settings.html?state=default`, { waitUntil: 'networkidle' })
+  await page.evaluate(() => document.fonts ? document.fonts.ready : Promise.resolve())
+  await page.waitForTimeout(1000)
+  // Variant A (Geist) — top of page
+  let out = path.join(__dirname, 'settings-fontA.png')
+  await page.screenshot({ path: out })
+  console.log(`OK: wrote ${out}`)
+  // Variant B (DM Sans + Inter) — scroll the .font-landing block into view
+  await page.evaluate(() => document.querySelector('.font-landing').scrollIntoView({ block: 'start' }))
+  await page.waitForTimeout(500)
+  out = path.join(__dirname, 'settings-fontB.png')
+  await page.screenshot({ path: out })
+  console.log(`OK: wrote ${out}`)
+  await ctx.close()
 } finally {
   await browser.close()
   vite.kill()
