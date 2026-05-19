@@ -405,9 +405,13 @@ export const posts = [
 
         <p>Views per hour (VPH) is the live momentum metric shown on every video in the overlay. It is the fastest way to spot a video that is heating up right now rather than one that accumulated views slowly over a year. Trend Alerts notify you when a topic starts moving in your niche. Both are genuinely useful for timing, and VPH in particular is one of the features people miss most after cancelling.</p>
 
+        <img src="/blog/vidiq-review-trend-alerts.webp" alt="vidIQ Trend Alerts notifying when a topic starts moving in a niche" />
+
         <h3>AI Tools and AI Coach</h3>
 
         <p>vidIQ bundles AI generation for titles, descriptions, and tags, plus an AI Coach that answers channel-strategy questions in plain language. The generators are a reasonable first draft accelerator. The honest read across reviews is that the AI output is generic without heavy editing: usable as a starting point, weak as a finished product. The AI Coach is pitched hard on the higher tiers and is the feature whose value is most debated by paying users.</p>
+
+        <img src="/blog/vidiq-review-ai-coach.webp" alt="vidIQ AI Coach answering a channel-strategy question in plain language" />
 
         <h3>Thumbnails and Shorts</h3>
 
