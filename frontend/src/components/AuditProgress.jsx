@@ -127,7 +127,7 @@ export default function AuditProgress({ done = false, onDone }) {
           border-radius: 22px;
           box-shadow: 0 1px 3px rgba(0,0,0,0.4), 0 24px 60px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.04);
           padding: 30px 34px 28px;
-          font-family: 'Inter', system-ui, sans-serif;
+          font-family: 'Geist', 'Inter', system-ui, sans-serif;
           overflow: hidden;
           animation: apIn 0.4s cubic-bezier(0.2, 0.7, 0.3, 1);
           max-width: 640px; width: 100%;

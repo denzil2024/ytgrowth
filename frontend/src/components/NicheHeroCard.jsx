@@ -638,7 +638,7 @@ const styles = `
   border-radius: 14px;
   box-shadow: ${C.shadowSm};
   padding: 18px 20px;
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: 'Geist', 'Inter', system-ui, sans-serif;
   transition: box-shadow 0.18s;
 }
 .nh-card:hover { box-shadow: ${C.shadowHover}; }
@@ -650,7 +650,7 @@ const styles = `
 }
 .nh-pill {
   display: inline-flex; align-items: center; gap: 7px;
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: 'Geist', 'Inter', system-ui, sans-serif;
   font-size: 12.5px; font-weight: 600;
   padding: 7px 13px; border-radius: 100px;
   border: 1px solid ${C.insetBdr};
@@ -881,7 +881,7 @@ const styles = `
   border: none;
   padding: 9px 16px;
   border-radius: 100px;
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: 'Geist', 'Inter', system-ui, sans-serif;
   font-size: 12.5px; font-weight: 600;
   letter-spacing: -0.1px;
   cursor: pointer;
@@ -923,7 +923,7 @@ const styles = `
   border: 1px solid ${C.redBdr};
   padding: 7px 14px;
   border-radius: 100px;
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: 'Geist', 'Inter', system-ui, sans-serif;
   font-size: 12.5px; font-weight: 600;
   letter-spacing: -0.1px;
   cursor: pointer;

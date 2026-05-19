@@ -42,7 +42,7 @@ export default function UpsellGate({
       padding: '30px 36px 28px',
       maxWidth: 540, width: '100%',
       textAlign: 'center',
-      fontFamily: "'Inter', system-ui, sans-serif",
+      fontFamily: "'Geist', 'Inter', system-ui, sans-serif",
       margin: '0 auto',
     }}>
       {/* Lock icon — red gradient square */}

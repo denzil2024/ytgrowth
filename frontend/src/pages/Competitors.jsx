@@ -235,7 +235,7 @@ function useCompetitorStyles() {
         border-radius: 50px;
         font-size: 11px;
         font-weight: 600;
-        font-family: 'Inter', system-ui, sans-serif;
+        font-family: 'Geist', 'Inter', system-ui, sans-serif;
         letter-spacing: 0;
       }
 
@@ -494,7 +494,7 @@ function useCompetitorStyles() {
         padding: 9px 22px;
         font-size: 13px;
         font-weight: 600;
-        font-family: 'Inter', system-ui, sans-serif;
+        font-family: 'Geist', 'Inter', system-ui, sans-serif;
         cursor: pointer;
         white-space: nowrap;
         box-shadow: ${D.cardShadow};

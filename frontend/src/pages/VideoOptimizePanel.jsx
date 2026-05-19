@@ -251,7 +251,7 @@ function DescriptionCard({ d, idx, applyState, applyError, onApply }) {
             value={draft}
             onChange={e => setDraft(e.target.value)}
             rows={8}
-            style={{ width: '100%', fontSize: 12, color: C.text1, lineHeight: 1.7, background: C.surface, padding: '10px 12px', borderRadius: 8, marginBottom: 10, border: `1px solid ${C.border}`, fontFamily: "'Inter', system-ui, sans-serif", resize: 'vertical', outline: 'none', boxSizing: 'border-box' }}
+            style={{ width: '100%', fontSize: 12, color: C.text1, lineHeight: 1.7, background: C.surface, padding: '10px 12px', borderRadius: 8, marginBottom: 10, border: `1px solid ${C.border}`, fontFamily: "'Geist', 'Inter', system-ui, sans-serif", resize: 'vertical', outline: 'none', boxSizing: 'border-box' }}
           />
         )}
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>

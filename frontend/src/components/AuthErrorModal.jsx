@@ -152,7 +152,7 @@ export default function AuthErrorModal({ open, errorCode, onClose }) {
         backdropFilter: 'blur(4px)', WebkitBackdropFilter: 'blur(4px)',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
         padding: 24,
-        fontFamily: "'Inter', system-ui, sans-serif",
+        fontFamily: "'Geist', 'Inter', system-ui, sans-serif",
         animation: 'aem-fade 0.16s ease',
       }}>
       <style>{`

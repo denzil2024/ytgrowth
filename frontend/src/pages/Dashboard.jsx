@@ -68,7 +68,7 @@ function useDashboardStyles() {
     style.id = 'ytg-dash-styles'
     style.textContent = `
       *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-      html, body { background: #f5f5f9; color: #0f0f13; font-family: 'Inter', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+      html, body { background: #f5f5f9; color: #0f0f13; font-family: 'Geist', 'Inter', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
 
       @keyframes spin    { to { transform: rotate(360deg) } }
       @keyframes fadeUp  { from { opacity: 0; transform: translateY(10px) } to { opacity: 1; transform: translateY(0) } }
@@ -144,7 +144,7 @@ function useDashboardStyles() {
       .ytg-nav-btn {
         display: flex; align-items: center; gap: 10px;
         padding: 9px 13px; border-radius: 100px; cursor: pointer; text-align: left;
-        font-size: 13.5px; font-family: 'Inter', system-ui, sans-serif;
+        font-size: 13.5px; font-family: 'Geist', 'Inter', system-ui, sans-serif;
         color: #4a4a58;
         transition: background 0.15s, color 0.15s, border-color 0.15s;
         border: 1px solid transparent;
@@ -271,7 +271,7 @@ function useDashboardStyles() {
       .ytg-dash-btn {
         display: inline-flex; align-items: center; gap: 8px;
         padding: 9px 20px; border-radius: 100px; border: 1px solid rgba(0,0,0,0.1);
-        font-family: 'Inter', system-ui, sans-serif; font-size: 12.5px; font-weight: 600;
+        font-family: 'Geist', 'Inter', system-ui, sans-serif; font-size: 12.5px; font-weight: 600;
         background: #fff; color: #87878f; cursor: pointer;
         box-shadow: 0 1px 3px rgba(0,0,0,0.07), 0 4px 14px rgba(0,0,0,0.07);
         transition: all 0.18s;
@@ -284,7 +284,7 @@ function useDashboardStyles() {
       .ytg-dash-btn-primary {
         display: inline-flex; align-items: center; gap: 8px;
         padding: 9px 20px; border-radius: 100px; border: none;
-        font-family: 'Inter', system-ui, sans-serif; font-size: 12.5px; font-weight: 600;
+        font-family: 'Geist', 'Inter', system-ui, sans-serif; font-size: 12.5px; font-weight: 600;
         background: #e5251b; color: #fff; cursor: pointer;
         box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 4px 14px rgba(229,37,27,0.32);
         transition: all 0.18s;
@@ -297,7 +297,7 @@ function useDashboardStyles() {
         display: inline-flex; align-items: center; gap: 6px;
         padding: 6px 14px; border-radius: 100px;
         border: none;
-        font-family: 'Inter', system-ui, sans-serif; font-size: 11.5px; font-weight: 600;
+        font-family: 'Geist', 'Inter', system-ui, sans-serif; font-size: 11.5px; font-weight: 600;
         background: #e5251b;
         color: #fff; cursor: pointer; letter-spacing: 0.01em;
         transition: filter 0.15s;
@@ -616,7 +616,7 @@ const MilestoneShareCard = forwardRef(function MilestoneShareCard(
       style={{
         width: 600,
         background: '#ffffff',
-        fontFamily: "'Inter', system-ui, sans-serif",
+        fontFamily: "'Geist', 'Inter', system-ui, sans-serif",
         color: '#0f0f13',
         borderRadius: 16,
         overflow: 'hidden',
@@ -1267,10 +1267,10 @@ function ScoreRing({ score }) {
         style={{ transition: 'stroke-dasharray 1s cubic-bezier(0.34,1.56,0.64,1)' }}
       />
       <text x={cx} y={cy - 4} textAnchor="middle" fill={col}
-        fontSize="24" fontWeight="800" fontFamily="Inter, sans-serif"
+        fontSize="24" fontWeight="800" fontFamily="Geist, Inter, sans-serif"
         style={{ fontVariantNumeric: 'tabular-nums' }}>{score}</text>
       <text x={cx} y={cy + 13} textAnchor="middle" fill={C.text3}
-        fontSize="10" fontFamily="Inter, sans-serif">{scoreLabel(score)}</text>
+        fontSize="10" fontFamily="Geist, Inter, sans-serif">{scoreLabel(score)}</text>
     </svg>
   )
 }
@@ -3866,7 +3866,7 @@ function NavBtn({ label, active, onClick, badge, dot }) {
         borderRadius: 10,
         textAlign: 'left',
         cursor: 'pointer',
-        fontFamily: "'Inter', system-ui, sans-serif",
+        fontFamily: "'Geist', 'Inter', system-ui, sans-serif",
         display: 'flex', alignItems: 'center', gap: 12,
         transition: 'background 0.14s ease, color 0.14s ease',
       }}
@@ -3934,7 +3934,7 @@ function NavSubBtn({ label, active, onClick }) {
         borderRadius: 8,
         textAlign: 'left',
         cursor: 'pointer',
-        fontFamily: "'Inter', system-ui, sans-serif",
+        fontFamily: "'Geist', 'Inter', system-ui, sans-serif",
         display: 'flex', alignItems: 'center', gap: 10,
         transition: 'background 0.14s ease, color 0.14s ease',
       }}
@@ -3994,7 +3994,7 @@ function NavGroup({ label, children, anyChildActive, defaultOpen = true, badge, 
           borderRadius: 10,
           textAlign: 'left',
           cursor: 'pointer',
-          fontFamily: "'Inter', system-ui, sans-serif",
+          fontFamily: "'Geist', 'Inter', system-ui, sans-serif",
           display: 'flex', alignItems: 'center', gap: 12,
           transition: 'background 0.14s ease, color 0.14s ease',
         }}
@@ -4096,7 +4096,7 @@ function ChatNav({ nav, recent, activeId, onNew, onOpen }) {
             padding: `9px 4px 9px ${NAV_PAD_X}px`,
             color: active ? SHELL.text1 : SHELL.text2,
             fontWeight: active ? 600 : 500, fontSize: 14, letterSpacing: '-0.01em',
-            fontFamily: "'Inter', system-ui, sans-serif", textAlign: 'left',
+            fontFamily: "'Geist', 'Inter', system-ui, sans-serif", textAlign: 'left',
           }}
         >
           <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: NAV_ICON_COL, height: NAV_ICON_COL, flexShrink: 0, color: active ? C.red : SHELL.iconIdle }}>{NAV_ICONS['Chat']}</span>
@@ -4118,7 +4118,7 @@ function ChatNav({ nav, recent, activeId, onNew, onOpen }) {
         <div style={{ position: 'relative', paddingTop: 2, paddingBottom: 4 }}>
           <span aria-hidden style={{ position: 'absolute', left: NAV_GUTTER + NAV_PAD_X + (NAV_ICON_COL / 2), top: 4, bottom: 6, width: 1, background: SHELL.hair }}/>
           {recent.length === 0 ? (
-            <p style={{ margin: `2px ${NAV_GUTTER}px 4px ${NAV_GUTTER + SUB_INDENT}px`, padding: '6px 10px', fontSize: 12.5, color: SHELL.text3, fontFamily: "'Inter', system-ui, sans-serif" }}>No chats yet</p>
+            <p style={{ margin: `2px ${NAV_GUTTER}px 4px ${NAV_GUTTER + SUB_INDENT}px`, padding: '6px 10px', fontSize: 12.5, color: SHELL.text3, fontFamily: "'Geist', 'Inter', system-ui, sans-serif" }}>No chats yet</p>
           ) : recent.map(c => {
             const on = nav === 'Chat' && c.id === activeId
             return (
@@ -4134,7 +4134,7 @@ function ChatNav({ nav, recent, activeId, onNew, onOpen }) {
                   fontWeight: on ? 600 : 450, fontSize: 13.5, letterSpacing: '-0.01em',
                   border: 'none', padding: '7px 10px', borderRadius: 8,
                   textAlign: 'left', cursor: 'pointer',
-                  fontFamily: "'Inter', system-ui, sans-serif",
+                  fontFamily: "'Geist', 'Inter', system-ui, sans-serif",
                   display: 'flex', alignItems: 'center', gap: 9,
                   transition: 'background 0.14s ease, color 0.14s ease',
                 }}
@@ -4226,7 +4226,7 @@ function WhatsNewCard({ channelId, onNavigate }) {
       borderRadius: 11,
       padding: '13px 14px 14px 14px',
       boxShadow: SHELL.cardShadow,
-      fontFamily: "'Inter', system-ui, sans-serif",
+      fontFamily: "'Geist', 'Inter', system-ui, sans-serif",
     }}>
       {/* Dismiss × */}
       <button
@@ -4975,7 +4975,7 @@ export default function Dashboard() {
   }
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', fontFamily: "'Inter', system-ui, sans-serif", background: C.bg }}>
+    <div style={{ display: 'flex', minHeight: '100vh', fontFamily: "'Geist', 'Inter', system-ui, sans-serif", background: C.bg }}>
 
       {/* ══ SIDEBAR ══════════════════════════════════════════════════════ */}
       <aside style={{
@@ -5128,7 +5128,7 @@ export default function Dashboard() {
             />
             <div style={{
               display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-              fontFamily: "'Inter', system-ui, sans-serif",
+              fontFamily: "'Geist', 'Inter', system-ui, sans-serif",
               marginTop: 2,
             }}>
               <button

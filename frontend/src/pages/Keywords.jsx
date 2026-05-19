@@ -198,7 +198,7 @@ function useKwStyles() {
         background: #e5251b; color: #fff;
         border: 1px solid #e5251b; border-radius: 100px;
         padding: 8px 18px; font-size: 12.5px; font-weight: 600;
-        font-family: 'Inter', system-ui, sans-serif;
+        font-family: 'Geist', 'Inter', system-ui, sans-serif;
         cursor: pointer; white-space: nowrap;
         transition: filter 0.15s;
         display: flex; align-items: center; gap: 6px;
@@ -267,7 +267,7 @@ function useKwStyles() {
         display: inline-flex; align-items: center; gap: 6px;
         padding: 8px 16px; border-radius: 100px;
         font-size: 12px; font-weight: 600; letter-spacing: 0.01em;
-        font-family: 'Inter', system-ui, sans-serif;
+        font-family: 'Geist', 'Inter', system-ui, sans-serif;
         background: #e5251b; color: #fff;
         border: none; cursor: pointer;
         transition: filter 0.15s;
@@ -287,7 +287,7 @@ function useKwStyles() {
         display: inline-flex; align-items: center; gap: 6px;
         padding: 7px 15px; border-radius: 100px;
         font-size: 12px; font-weight: 600; letter-spacing: 0.01em;
-        font-family: 'Inter', system-ui, sans-serif;
+        font-family: 'Geist', 'Inter', system-ui, sans-serif;
         background: ${C.card}; color: ${C.text1};
         border: 1px solid ${C.hair}; cursor: pointer;
         box-shadow: ${C.cardShadow};

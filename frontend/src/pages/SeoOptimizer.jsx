@@ -1293,7 +1293,7 @@ function DescriptionCard({ d, idx, copiedDesc, onCopy }) {
             display: 'flex', flexDirection: 'column',
           }}>
             <p style={{ fontSize: 10, fontWeight: 600, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 8 }}>Full description</p>
-            <pre style={{ fontSize: 12.5, color: C.text1, lineHeight: 1.75, whiteSpace: 'pre-wrap', fontFamily: "'Inter', system-ui, sans-serif", margin: 0 }}>
+            <pre style={{ fontSize: 12.5, color: C.text1, lineHeight: 1.75, whiteSpace: 'pre-wrap', fontFamily: "'Geist', 'Inter', system-ui, sans-serif", margin: 0 }}>
               {d.full}
             </pre>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 14, justifyContent: 'flex-end' }}>
