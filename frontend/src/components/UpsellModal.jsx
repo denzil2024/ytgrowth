@@ -62,13 +62,13 @@ export default function UpsellModal({
             position: 'absolute', top: -8, right: -8, zIndex: 2,
             width: 32, height: 32, borderRadius: 10,
             border: '1px solid rgba(255,255,255,0.10)', background: '#1c1c21',
-            color: '#a1a1aa', cursor: 'pointer',
+            color: '#b8b8c0', cursor: 'pointer',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             boxShadow: '0 4px 12px rgba(0,0,0,0.5)',
             transition: 'background 0.15s, color 0.15s',
           }}
           onMouseEnter={e => { e.currentTarget.style.color = '#f4f4f5' }}
-          onMouseLeave={e => { e.currentTarget.style.color = '#a1a1aa' }}
+          onMouseLeave={e => { e.currentTarget.style.color = '#b8b8c0' }}
         >
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
             <path d="M3 3l8 8M11 3l-8 8"/>

@@ -272,7 +272,7 @@ function useDashboardStyles() {
         display: inline-flex; align-items: center; gap: 8px;
         padding: 9px 20px; border-radius: 100px; border: 1px solid rgba(0,0,0,0.1);
         font-family: 'Inter', system-ui, sans-serif; font-size: 12.5px; font-weight: 600;
-        background: #fff; color: #52525b; cursor: pointer;
+        background: #fff; color: #6b6b73; cursor: pointer;
         box-shadow: 0 1px 3px rgba(0,0,0,0.07), 0 4px 14px rgba(0,0,0,0.07);
         transition: all 0.18s;
       }
@@ -441,8 +441,8 @@ const SHELL = {
   hair:      'rgba(255,255,255,0.08)',  // borders + dividers
   hairLo:    'rgba(255,255,255,0.06)',
   text1:     '#f4f4f5',
-  text2:     '#a1a1aa',
-  text3:     '#71717a',
+  text2:     '#b8b8c0',
+  text3:     '#9a9aa3',
   iconIdle:  '#5b5b66',                 // idle nav icons / carets / sub-dots
   // Quiet selection grammar, identical to the shipped ChatCoach rail:
   // hover = faint white wash, active = slightly stronger white wash.
@@ -5203,7 +5203,7 @@ export default function Dashboard() {
             <span style={{ fontSize: 14, fontWeight: 700, color: darkBar ? '#f4f4f5' : C.text1, letterSpacing: '-0.3px' }}>{nav}</span>
             {data && <>
               <span style={{ color: darkBar ? 'rgba(255,255,255,0.18)' : C.border, fontSize: 14 }}>·</span>
-              <span style={{ fontSize: 13, fontWeight: 400, color: darkBar ? '#71717a' : C.text3, letterSpacing: '-0.1px' }}>{data.channel?.channel_name}</span>
+              <span style={{ fontSize: 13, fontWeight: 400, color: darkBar ? '#9a9aa3' : C.text3, letterSpacing: '-0.1px' }}>{data.channel?.channel_name}</span>
             </>}
           </div>
           <div style={{
@@ -5214,7 +5214,7 @@ export default function Dashboard() {
             boxShadow: darkBar ? 'none' : '0 1px 3px rgba(0,0,0,0.05)',
           }}>
             <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#22c55e' }}/>
-            <span style={{ fontSize: 12, color: darkBar ? '#71717a' : C.text3, fontWeight: 600 }}>Connected</span>
+            <span style={{ fontSize: 12, color: darkBar ? '#9a9aa3' : C.text3, fontWeight: 600 }}>Connected</span>
           </div>
         </div>
           )

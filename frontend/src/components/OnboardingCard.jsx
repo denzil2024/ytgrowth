@@ -23,15 +23,15 @@ import { useEffect, useState } from 'react'
 
 const C = {
   ink:    '#f4f4f5',
-  sub:    '#a1a1aa',
-  eyebrow:'#71717a',
+  sub:    '#b8b8c0',
+  eyebrow:'#9a9aa3',
   hair:   'rgba(255,255,255,0.08)',
   hair2:  'rgba(255,255,255,0.14)',
   tint:   'rgba(255,255,255,0.04)',
   green:  '#34d27b',
   red:    '#e5251b',
   redHi:  '#ef3a31',
-  faint:  '#71717a',
+  faint:  '#9a9aa3',
 }
 
 function CheckIcon({ size = 12 }) {

@@ -20,7 +20,7 @@ import { useEffect, useRef, useState } from 'react'
 
 const C = {
   red: '#e5251b', redDeep: '#a50f07',
-  text1: '#f4f4f5', text2: '#a1a1aa', text3: '#71717a',
+  text1: '#f4f4f5', text2: '#b8b8c0', text3: '#9a9aa3',
   border: 'rgba(255,255,255,0.08)', borderSoft: 'rgba(255,255,255,0.06)',
   green: '#34d27b', greenSoft: 'rgba(22,163,74,0.16)',
 }

@@ -19,7 +19,7 @@ const C = {
   red:   '#e5251b', redBg:   'rgba(229,37,27,0.13)', redBdr:   'rgba(229,37,27,0.32)', redHi:   '#fb6a60',
   green: '#16a34a', greenBg: 'rgba(22,163,74,0.14)', greenBdr: 'rgba(22,163,74,0.34)', greenHi: '#34d27b',
   amber: '#d97706', amberBg: 'rgba(217,119,6,0.14)', amberBdr: 'rgba(217,119,6,0.34)', amberHi: '#f0a23b',
-  text1: '#f4f4f5', text2: '#a1a1aa', text3: '#71717a',
+  text1: '#f4f4f5', text2: '#b8b8c0', text3: '#9a9aa3',
   border: 'rgba(255,255,255,0.08)',
   card:           'linear-gradient(180deg, #1e1e24 0%, #18181c 100%)',
   cardFlat:       '#1c1c21',

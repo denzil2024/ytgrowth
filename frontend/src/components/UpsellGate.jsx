@@ -20,7 +20,7 @@
 
 const C = {
   red: '#e5251b', green: '#34d27b', amber: '#f0a23b',
-  text1: '#f4f4f5', text2: '#a1a1aa', text3: '#71717a',
+  text1: '#f4f4f5', text2: '#b8b8c0', text3: '#9a9aa3',
   border: 'rgba(255,255,255,0.08)',
 }
 

@@ -157,7 +157,7 @@ if (typeof document !== 'undefined' && !document.getElementById('seo-opt-styles'
     display: inline-flex; align-items: center; gap: 6px;
     padding: 9px 18px; border-radius: 100px; border: 1px solid rgba(255,255,255,0.14);
     font-family: inherit; font-size: 13px; font-weight: 600;
-    background: rgba(255,255,255,0.04); color: #a1a1aa; cursor: pointer;
+    background: rgba(255,255,255,0.04); color: #b8b8c0; cursor: pointer;
     transition: background 160ms cubic-bezier(0.32,0.72,0,1), color 160ms cubic-bezier(0.32,0.72,0,1), border-color 160ms cubic-bezier(0.32,0.72,0,1);
     white-space: nowrap;
     letter-spacing: -0.01em;
@@ -212,7 +212,7 @@ if (typeof document !== 'undefined' && !document.getElementById('seo-opt-styles'
     border-radius: 8px;
     border: 1px solid transparent;
     background: transparent;
-    color: #71717a;
+    color: #9a9aa3;
     cursor: pointer;
     display: flex; align-items: center; justify-content: center;
     opacity: 0;
@@ -279,9 +279,9 @@ const C = {
   border: 'rgba(255,255,255,0.08)',
   borderLight: 'rgba(255,255,255,0.06)',
   text1: '#f4f4f5',
-  text2: '#a1a1aa',
-  text3: '#71717a',
-  text4: '#52525b',
+  text2: '#b8b8c0',
+  text3: '#9a9aa3',
+  text4: '#6b6b73',
   red: '#fb6a60',
   redBg: 'rgba(229,37,27,0.13)',
   redBdr: 'rgba(229,37,27,0.32)',
@@ -305,29 +305,29 @@ const T = {
   h3:           { fontSize: 18, fontWeight: 700, color: '#f4f4f5', letterSpacing: '-0.3px' },
 
   // Uppercase labels
-  sectionLabel: { fontSize: 11, fontWeight: 600, color: '#71717a', textTransform: 'uppercase', letterSpacing: '0.10em' },  // card-level label ("KEYWORD RESEARCH") — neutral grey (matches Overview); red is semantic only, don't spray it on utility eyebrows
-  sectionHint:  { fontSize: 11, fontWeight: 500, color: '#71717a' },                                                       // right-aligned hint text
+  sectionLabel: { fontSize: 11, fontWeight: 600, color: '#9a9aa3', textTransform: 'uppercase', letterSpacing: '0.10em' },  // card-level label ("KEYWORD RESEARCH") — neutral grey (matches Overview); red is semantic only, don't spray it on utility eyebrows
+  sectionHint:  { fontSize: 11, fontWeight: 500, color: '#9a9aa3' },                                                       // right-aligned hint text
   innerLabel:   { fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.10em' },                    // inside sub-blocks (needs + color)
-  statLabel:    { fontSize: 11, fontWeight: 500, color: '#71717a', textTransform: 'uppercase', letterSpacing: '0.05em' },  // Overview Stat label
+  statLabel:    { fontSize: 11, fontWeight: 500, color: '#9a9aa3', textTransform: 'uppercase', letterSpacing: '0.05em' },  // Overview Stat label
 
   // Descriptions
-  cardDesc:     { fontSize: 13, color: '#71717a', lineHeight: 1.55 },
+  cardDesc:     { fontSize: 13, color: '#9a9aa3', lineHeight: 1.55 },
 
   // Body text
   bodyBold:     { fontSize: 14, fontWeight: 700, color: '#f4f4f5', lineHeight: 1.55, letterSpacing: '-0.1px' },
-  body:         { fontSize: 13.5, fontWeight: 500, color: '#a1a1aa', lineHeight: 1.65 },
+  body:         { fontSize: 13.5, fontWeight: 500, color: '#b8b8c0', lineHeight: 1.65 },
   innerText:    { fontSize: 13.5, fontWeight: 500, color: '#f4f4f5', lineHeight: 1.72 },                                   // inside InsightCard-style sub-blocks
 
   // Pills / chips / badges
   pill:         { fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.10em' },                    // severity + vol/comp
-  countBadge:   { fontSize: 11, fontWeight: 700, color: '#a1a1aa', background: 'rgba(255,255,255,0.06)', padding: '2px 8px', borderRadius: 20, border: '1px solid rgba(255,255,255,0.08)' },
-  chip:         { fontSize: 12, fontWeight: 500, color: '#a1a1aa', background: 'rgba(255,255,255,0.04)', padding: '5px 11px', borderRadius: 20, border: '1px solid rgba(255,255,255,0.08)', cursor: 'pointer', letterSpacing: '-0.05px', transition: 'all 0.15s', display: 'inline-block' },
+  countBadge:   { fontSize: 11, fontWeight: 700, color: '#b8b8c0', background: 'rgba(255,255,255,0.06)', padding: '2px 8px', borderRadius: 20, border: '1px solid rgba(255,255,255,0.08)' },
+  chip:         { fontSize: 12, fontWeight: 500, color: '#b8b8c0', background: 'rgba(255,255,255,0.04)', padding: '5px 11px', borderRadius: 20, border: '1px solid rgba(255,255,255,0.08)', cursor: 'pointer', letterSpacing: '-0.05px', transition: 'all 0.15s', display: 'inline-block' },
 
   // Numbers
   numberLg:     { fontSize: 14, fontWeight: 700, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.2px' },            // score numbers
 
   // Tables (Overview uses 10.5/600 in Score breakdown headers)
-  tableHeader:  { fontSize: 10.5, fontWeight: 600, color: '#71717a', textTransform: 'uppercase', letterSpacing: '0.10em' },
+  tableHeader:  { fontSize: 10.5, fontWeight: 600, color: '#9a9aa3', textTransform: 'uppercase', letterSpacing: '0.10em' },
   keyword:      { fontSize: 13.5, fontWeight: 600, color: '#f4f4f5', letterSpacing: '-0.1px' },
 }
 
@@ -352,7 +352,7 @@ const STRATEGY_META = {
 const DESC_TYPE_META = {
   story:   { color: '#fb6a60', bg: 'rgba(229,37,27,0.13)', bdr: 'rgba(229,37,27,0.32)' },
   value:   { color: '#34d27b', bg: 'rgba(22,163,74,0.14)',  bdr: 'rgba(22,163,74,0.34)'  },
-  keyword: { color: '#a1a1aa', bg: 'rgba(255,255,255,0.04)',  bdr: 'rgba(255,255,255,0.08)'  },
+  keyword: { color: '#b8b8c0', bg: 'rgba(255,255,255,0.04)',  bdr: 'rgba(255,255,255,0.08)'  },
 }
 
 function fmtNum(n) {
@@ -1730,7 +1730,7 @@ function TitleComparisonHero({ userTitle, userScore, userBreakdown, suggestions,
   }
   const sideTitle = {
     fontSize: 13.5, fontWeight: 500, lineHeight: 1.45,
-    color: '#a1a1aa', letterSpacing: '-0.05px', margin: 0,
+    color: '#b8b8c0', letterSpacing: '-0.05px', margin: 0,
   }
   const subRow = {
     display: 'flex', alignItems: 'baseline', gap: 14,
@@ -2788,7 +2788,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
             }
             const headlineBase = {
               fontSize: 13.5, fontWeight: 500, lineHeight: 1.5,
-              color: '#a1a1aa', letterSpacing: '-0.05px', margin: 0, flex: 1,
+              color: '#b8b8c0', letterSpacing: '-0.05px', margin: 0, flex: 1,
             }
 
             return (
@@ -3340,7 +3340,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
                               <span className="lbl">description</span>
                             </span>
                           )}
-                          <span style={{ fontSize: 12, color: '#71717a', fontWeight: 500, marginLeft: 2 }}>
+                          <span style={{ fontSize: 12, color: '#9a9aa3', fontWeight: 500, marginLeft: 2 }}>
                             · {relTime(r.updated_at)}
                           </span>
                         </div>
