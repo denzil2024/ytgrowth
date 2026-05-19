@@ -5175,7 +5175,7 @@ export default function Dashboard() {
           sits on a light gutter / under a white topbar band. Add a route
           here as it is converted to dark. */}
       {(() => {
-      const darkRoute = nav === 'Chat' || nav === 'Competitors' || nav === 'Keywords' || nav === 'Outliers' || nav === 'Weekly Report' || nav === 'Overview' || nav === 'Autopsy'
+      const darkRoute = nav === 'Chat' || nav === 'Competitors' || nav === 'Keywords' || nav === 'Outliers' || nav === 'Weekly Report' || nav === 'Overview' || nav === 'Autopsy' || nav === 'Videos'
       // The dark topbar is #0e0e10. For non-Chat dark pages the page
       // ground is the SAME #0e0e10 so the topbar is seamless (no lighter
       // band), matching how Chat reads. Chat keeps its own tuned ground
@@ -6443,8 +6443,8 @@ export default function Dashboard() {
             <div style={{ maxWidth: 1040, margin: '0 auto' }}>
               <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 24, gap: 16, flexWrap: 'wrap' }}>
                 <div>
-                  <h1 style={{ fontSize: 26, fontWeight: 700, color: C.text1, letterSpacing: '-0.7px', marginBottom: 6, lineHeight: 1.1 }}>My Videos</h1>
-                  <p style={{ fontSize: 14, color: 'rgba(10,10,15,0.55)', fontWeight: 500, letterSpacing: '-0.005em', lineHeight: 1.45 }}>
+                  <h1 style={{ fontSize: 26, fontWeight: 700, color: SHELL.text1, letterSpacing: '-0.7px', marginBottom: 6, lineHeight: 1.1 }}>My Videos</h1>
+                  <p style={{ fontSize: 14, color: SHELL.text2, fontWeight: 500, letterSpacing: '-0.005em', lineHeight: 1.45 }}>
                     Every video on your channel · {videos.length.toLocaleString()} total · {fmtNum(videos.reduce((s, v) => s + (v.views || 0), 0))} views
                   </p>
                 </div>
@@ -6528,14 +6528,14 @@ export default function Dashboard() {
                       style={{
                         fontSize: 13, fontWeight: active ? 600 : 500, padding: '8px 16px',
                         borderRadius: 100,
-                        border: active ? '1px solid rgba(10,10,15,0.10)' : '1px solid transparent',
-                        background: active ? 'rgba(10,10,15,0.055)' : 'transparent',
+                        border: active ? '1px solid rgba(255,255,255,0.12)' : '1px solid transparent',
+                        background: active ? 'rgba(255,255,255,0.06)' : 'transparent',
                         color: active ? '#0a0a0f' : 'rgba(10,10,15,0.55)',
                         cursor: 'pointer', fontFamily: 'inherit',
                         letterSpacing: '-0.01em',
                         transition: 'background 180ms cubic-bezier(0.32,0.72,0,1), color 180ms cubic-bezier(0.32,0.72,0,1), border-color 180ms cubic-bezier(0.32,0.72,0,1)',
                       }}
-                      onMouseEnter={e => { if (!active) { e.currentTarget.style.background = 'rgba(10,10,15,0.03)'; e.currentTarget.style.color = '#0a0a0f' } }}
+                      onMouseEnter={e => { if (!active) { e.currentTarget.style.background = 'rgba(255,255,255,0.05)'; e.currentTarget.style.color = '#0a0a0f' } }}
                       onMouseLeave={e => { if (!active) { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'rgba(10,10,15,0.55)' } }}
                     >
                       {label}
@@ -6562,14 +6562,14 @@ export default function Dashboard() {
                 // Views=charcoal (info), Likes=white+green-bar (action), Comments=green (outcome).
                 const DeltaCell = ({ label, before, current, pctVal, tint }) => {
                   const tintMap = {
-                    blue:  { bg: 'rgba(15,15,19,0.04)', border: '1px solid rgba(15,15,19,0.08)', labelColor: C.text2 },
-                    white: { bg: '#ffffff', border: `1px solid ${C.border}`, borderLeft: `3px solid ${C.green}`, borderRadius: '0 10px 10px 0', boxShadow: '0 2px 8px rgba(0,0,0,0.06)', labelColor: C.green },
-                    green: { bg: 'rgba(5,150,105,0.07)', border: '1px solid rgba(5,150,105,0.14)', labelColor: C.green },
+                    blue:  { bg: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)', labelColor: SHELL.text2 },
+                    white: { bg: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderLeft: '3px solid #34d27b', borderRadius: '0 10px 10px 0', boxShadow: 'none', labelColor: '#34d27b' },
+                    green: { bg: 'rgba(22,163,74,0.14)', border: '1px solid rgba(22,163,74,0.34)', labelColor: '#34d27b' },
                   }[tint]
                   // Hide the delta label entirely when nothing has changed (pct is 0 or null).
                   // 0% everywhere is noise — we only show the badge when there's a real move.
                   const showDelta = pctVal != null && pctVal !== 0
-                  const col  = showDelta && pctVal > 0 ? C.green : showDelta && pctVal < 0 ? C.red : C.text3
+                  const col  = showDelta && pctVal > 0 ? '#34d27b' : showDelta && pctVal < 0 ? '#fb6a60' : SHELL.text3
                   const sign = showDelta ? (pctVal > 0 ? `+${pctVal}%` : `${pctVal}%`) : null
                   return (
                     <div style={{
@@ -6582,10 +6582,10 @@ export default function Dashboard() {
                     }}>
                       <p style={{ fontSize: 10.5, fontWeight: 700, color: tintMap.labelColor, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 6 }}>{label}</p>
                       <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
-                        <p style={{ fontSize: 18, fontWeight: 700, color: C.text1, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.4px', lineHeight: 1 }}>{fmtNum(current)}</p>
+                        <p style={{ fontSize: 18, fontWeight: 700, color: SHELL.text1, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.4px', lineHeight: 1 }}>{fmtNum(current)}</p>
                         {showDelta && <p style={{ fontSize: 12, fontWeight: 600, color: col, fontVariantNumeric: 'tabular-nums', lineHeight: 1 }}>{sign}</p>}
                       </div>
-                      <p style={{ fontSize: 11, color: 'rgba(10,10,15,0.45)', marginTop: 4, fontWeight: 500, letterSpacing: '-0.005em' }}>was {fmtNum(before)}</p>
+                      <p style={{ fontSize: 11, color: SHELL.text3, marginTop: 4, fontWeight: 500, letterSpacing: '-0.005em' }}>was {fmtNum(before)}</p>
                     </div>
                   )
                 }
@@ -6593,7 +6593,7 @@ export default function Dashboard() {
                 return (
                   <div style={{ marginBottom: 28 }}>
                     {/* Subtler secondary eyebrow — lets "My Videos" keep its H1 identity at the top */}
-                    <p style={{ fontSize: 11, fontWeight: 700, color: 'rgba(10,10,15,0.50)', letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 12 }}>
+                    <p style={{ fontSize: 11, fontWeight: 700, color: SHELL.text3, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 12 }}>
                       Tracked updates · {optimizations.length} video{optimizations.length === 1 ? '' : 's'}
                     </p>
 
@@ -6615,29 +6615,29 @@ export default function Dashboard() {
                             <div style={{ display: 'flex', alignItems: 'flex-start', gap: 14, marginBottom: 14 }}>
                               {o.thumbnail_url && (
                                 <a href={`https://www.youtube.com/watch?v=${o.video_id}`} target="_blank" rel="noopener noreferrer" style={{ flexShrink: 0, lineHeight: 0, textDecoration: 'none', alignSelf: 'center' }}>
-                                  <img src={o.thumbnail_url} alt="" style={{ width: 100, height: 56, borderRadius: 8, objectFit: 'cover', display: 'block', border: '1px solid rgba(10,10,15,0.07)' }}/>
+                                  <img src={o.thumbnail_url} alt="" style={{ width: 100, height: 56, borderRadius: 8, objectFit: 'cover', display: 'block', border: '1px solid rgba(255,255,255,0.08)' }}/>
                                 </a>
                               )}
 
                               <div style={{ flex: 1, minWidth: 0 }}>
-                                <p style={{ fontSize: 11, fontWeight: 700, color: C.green, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 5 }}>Tracked update</p>
+                                <p style={{ fontSize: 11, fontWeight: 700, color: '#34d27b', letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 5 }}>Tracked update</p>
                                 {titleChanged ? (
                                   <>
-                                    <p style={{ fontSize: 12, color: 'rgba(10,10,15,0.45)', fontWeight: 500, lineHeight: 1.4, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', textDecoration: 'line-through', marginBottom: 4, letterSpacing: '-0.005em' }}>{o.before_title}</p>
-                                    <p style={{ fontSize: 14.5, fontWeight: 600, color: C.text1, lineHeight: 1.45, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', letterSpacing: '-0.15px' }}>{o.after_title}</p>
+                                    <p style={{ fontSize: 12, color: SHELL.text3, fontWeight: 500, lineHeight: 1.4, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', textDecoration: 'line-through', marginBottom: 4, letterSpacing: '-0.005em' }}>{o.before_title}</p>
+                                    <p style={{ fontSize: 14.5, fontWeight: 600, color: SHELL.text1, lineHeight: 1.45, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', letterSpacing: '-0.15px' }}>{o.after_title}</p>
                                   </>
                                 ) : (
-                                  <p style={{ fontSize: 14.5, fontWeight: 600, color: C.text1, lineHeight: 1.45, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', letterSpacing: '-0.15px' }}>{o.after_title || o.before_title}</p>
+                                  <p style={{ fontSize: 14.5, fontWeight: 600, color: SHELL.text1, lineHeight: 1.45, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', letterSpacing: '-0.15px' }}>{o.after_title || o.before_title}</p>
                                 )}
                               </div>
 
-                              <span style={{ fontSize: 11, fontWeight: 700, color: C.green, padding: '3px 11px', borderRadius: 100, letterSpacing: '0.10em', textTransform: 'uppercase', border: `1px solid ${C.greenBdr}`, background: C.greenBg, flexShrink: 0 }}>
+                              <span style={{ fontSize: 11, fontWeight: 700, color: '#34d27b', padding: '3px 11px', borderRadius: 100, letterSpacing: '0.10em', textTransform: 'uppercase', border: `1px solid ${'rgba(22,163,74,0.34)'}`, background: 'rgba(22,163,74,0.14)', flexShrink: 0 }}>
                                 {daysLabel}
                               </span>
                             </div>
 
                             {/* Hairline divider — aligned with the thumbnail edge (100 + 14 gap = 114) */}
-                            <div style={{ height: 1, background: 'rgba(10,10,15,0.06)', marginBottom: 14, marginLeft: 114 }}/>
+                            <div style={{ height: 1, background: 'rgba(255,255,255,0.10)', marginBottom: 14, marginLeft: 114 }}/>
 
                             {/* 3-col body — Views / Likes (amber bar centre) / Comments. Brand-only palette. */}
                             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr 1fr', gap: 8, marginLeft: 114 }}>
@@ -6651,7 +6651,7 @@ export default function Dashboard() {
                               <button
                                 onClick={() => setNav('Autopsy')}
                                 style={{
-                                  fontSize: 12, fontWeight: 500, color: 'rgba(10,10,15,0.50)',
+                                  fontSize: 12, fontWeight: 500, color: SHELL.text3,
                                   background: 'transparent', border: 'none', cursor: 'pointer',
                                   fontFamily: 'inherit', padding: 0, letterSpacing: '-0.005em',
                                 }}
@@ -6672,10 +6672,10 @@ export default function Dashboard() {
               {/* Empty state for the Tracked tab when nothing's been optimised yet. */}
               {videosTab === 'tracked' && optimizations.length === 0 && (
                 <div className="ytg-card" style={{ padding: '40px 32px', textAlign: 'center' }}>
-                  <p style={{ fontSize: 16, fontWeight: 600, color: C.text1, letterSpacing: '-0.2px', marginBottom: 8 }}>
+                  <p style={{ fontSize: 16, fontWeight: 600, color: SHELL.text1, letterSpacing: '-0.2px', marginBottom: 8 }}>
                     No tracked optimisations yet
                   </p>
-                  <p style={{ fontSize: 13.5, color: 'rgba(10,10,15,0.55)', fontWeight: 500, lineHeight: 1.6, maxWidth: 420, margin: '0 auto', letterSpacing: '-0.005em' }}>
+                  <p style={{ fontSize: 13.5, color: SHELL.text2, fontWeight: 500, lineHeight: 1.6, maxWidth: 420, margin: '0 auto', letterSpacing: '-0.005em' }}>
                     Open any video below and run an SEO optimisation. Once you publish the new title or description, the lift in views, likes, and comments shows up here.
                   </p>
                 </div>
@@ -6728,25 +6728,25 @@ export default function Dashboard() {
                       <div style={{ padding: '16px 18px 18px', display: 'flex', flexDirection: 'column', flex: 1 }}>
                         {/* Title — 14.5/600 (was 16/700, too heavy at this card width) */}
                         <p style={{
-                          fontSize: 14.5, fontWeight: 600, color: C.text1, lineHeight: 1.4, marginBottom: 8, letterSpacing: '-0.15px',
+                          fontSize: 14.5, fontWeight: 600, color: SHELL.text1, lineHeight: 1.4, marginBottom: 8, letterSpacing: '-0.15px',
                           display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', minHeight: 41,
                         }}>{v.title}</p>
 
                         {/* Meta line — uniform 12/500 muted, no mid-weight spikes */}
-                        <p style={{ fontSize: 12, fontWeight: 500, color: 'rgba(10,10,15,0.50)', marginBottom: 14, lineHeight: 1.4, letterSpacing: '-0.005em', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                        <p style={{ fontSize: 12, fontWeight: 500, color: SHELL.text3, marginBottom: 14, lineHeight: 1.4, letterSpacing: '-0.005em', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                           {fmtNum(v.views)} views · {fmtNum(v.likes)} likes · {relTimeLong(v.published_at) || '—'}
                         </p>
 
                         {/* Footer: Watch · Retention · Eng + Optimise */}
-                        <div style={{ marginTop: 'auto', paddingTop: 14, borderTop: '1px solid rgba(10,10,15,0.06)' }}>
+                        <div style={{ marginTop: 'auto', paddingTop: 14, borderTop: '1px solid rgba(255,255,255,0.10)' }}>
                           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 10, marginBottom: 14 }}>
                             {[
-                              { label: 'Watch',     display: wtDisplay,                                             color: C.text1,  tip: 'Average watch time per view (mm:ss). Longer is better relative to video length.' },
-                              { label: 'Retention', display: retN !== null ? `${retN.toFixed(0)}%` : '—',           color: C.text1,  tip: 'Average % of video watched. 50%+ strong, 30–50% avg, <30% weak.' },
+                              { label: 'Watch',     display: wtDisplay,                                             color: SHELL.text1,  tip: 'Average watch time per view (mm:ss). Longer is better relative to video length.' },
+                              { label: 'Retention', display: retN !== null ? `${retN.toFixed(0)}%` : '—',           color: SHELL.text1,  tip: 'Average % of video watched. 50%+ strong, 30–50% avg, <30% weak.' },
                               { label: 'Eng',       display: lrN !== null ? `${lr}%` : '—',                         color: lrColor,  tip: 'Engagement rate = likes ÷ views. 3%+ strong, 1–3% avg, <1% weak.' },
                             ].map(m => (
                               <div key={m.label} title={m.tip} style={{ cursor: 'help', textAlign: 'left' }}>
-                                <p style={{ fontSize: 10.5, fontWeight: 700, color: 'rgba(10,10,15,0.45)', letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 5, lineHeight: 1 }}>{m.label}</p>
+                                <p style={{ fontSize: 10.5, fontWeight: 700, color: SHELL.text3, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 5, lineHeight: 1 }}>{m.label}</p>
                                 <p style={{ fontSize: 16, fontWeight: 700, color: m.color, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.3px', lineHeight: 1 }}>{m.display}</p>
                               </div>
                             ))}
