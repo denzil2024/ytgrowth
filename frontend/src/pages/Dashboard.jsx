@@ -3419,7 +3419,7 @@ function DailyIdeasCard({ ideas, lastUpdated, isStale, isFree, refreshing, onRef
                 transition: 'background 0.14s, border-color 0.14s, transform 0.14s',
               }}
               onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.02)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.14)'; e.currentTarget.style.transform = 'translateY(-1px)' }}
-              onMouseLeave={e => { e.currentTarget.style.background = '#ffffff'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'; e.currentTarget.style.transform = 'translateY(0)' }}
+              onMouseLeave={e => { e.currentTarget.style.background = SHELL.cardFlat; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'; e.currentTarget.style.transform = 'translateY(0)' }}
             >
               {/* Rank badge — neutral charcoal, no amber tint */}
               <div style={{
@@ -6100,7 +6100,7 @@ export default function Dashboard() {
                       <div key={p.key} className="ytg-card" style={{
                         padding: '26px 24px 22px',
                         display: 'flex', flexDirection: 'column', alignItems: 'center',
-                        background: `linear-gradient(180deg, ${cat.h1}12 0%, #ffffff 45%, #ffffff 100%)`,
+                        background: `linear-gradient(180deg, ${cat.h1}26 0%, #1c1c21 45%, #1c1c21 100%)`,
                         position: 'relative', overflow: 'hidden',
                       }}>
                         {/* Top category banner */}
@@ -6850,7 +6850,7 @@ export default function Dashboard() {
                           border: `1px solid ${isGood ? 'rgba(22,163,74,0.34)' : 'rgba(229,37,27,0.32)'}`,
                           borderRadius: 10, padding: '9px 12px',
                         }}>
-                          <p style={{ fontSize: 12, color: isGood ? '#166534' : '#991b1b', lineHeight: 1.7 }}>
+                          <p style={{ fontSize: 12, color: isGood ? '#34d27b' : '#fb6a60', lineHeight: 1.7 }}>
                             {isGood ? 'Study this — replicate its title style, length, and topic angle.' : 'Avoid this format or topic — it isn\'t connecting with your audience.'}
                           </p>
                         </div>
