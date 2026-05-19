@@ -19,7 +19,7 @@ const C = {
   red:   '#e5251b', redBg:   'rgba(229,37,27,0.13)', redBdr:   'rgba(229,37,27,0.32)', redHi:   '#fb6a60',
   green: '#16a34a', greenBg: 'rgba(22,163,74,0.14)', greenBdr: 'rgba(22,163,74,0.34)', greenHi: '#34d27b',
   amber: '#d97706', amberBg: 'rgba(217,119,6,0.14)', amberBdr: 'rgba(217,119,6,0.34)', amberHi: '#f0a23b',
-  text1: '#f4f4f5', text2: '#b8b8c0', text3: '#9a9aa3',
+  text1: '#f4f4f5', text2: '#cfd0d6', text3: '#b2b3bb',
   border: 'rgba(255,255,255,0.08)',
   card:           'linear-gradient(180deg, #1e1e24 0%, #18181c 100%)',
   cardFlat:       '#1c1c21',
@@ -87,8 +87,8 @@ function DeltaBadge({ metric, unit, isScore }) {
 function MetricCard({ label, value, metric, unit, isScore, valueColor }) {
   return (
     <div className="ytg-stat-card" style={{ cursor: 'default' }}>
-      <p style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.10em', textTransform: 'uppercase', color: C.text3, marginBottom: 12 }}>{label}</p>
-      <p style={{ fontSize: 30, fontWeight: 800, letterSpacing: '-1.4px', color: valueColor || C.text1, lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{value}</p>
+      <p style={{ fontSize: 11, fontWeight: 600, letterSpacing: '0.10em', textTransform: 'uppercase', color: C.text3, marginBottom: 12 }}>{label}</p>
+      <p style={{ fontSize: 30, fontWeight: 700, letterSpacing: '-1.4px', color: valueColor || C.text1, lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{value}</p>
       <div style={{ marginTop: 10 }}>
         <DeltaBadge metric={metric} unit={unit} isScore={isScore} />
       </div>
@@ -107,7 +107,7 @@ function healthColor(n, { red, amber }) {
 function ColLabel({ color, children }) {
   return (
     <p style={{
-      fontSize: 10.5, fontWeight: 700, color,
+      fontSize: 10.5, fontWeight: 600, color,
       letterSpacing: '0.10em', textTransform: 'uppercase',
       marginBottom: 6,
     }}>
@@ -135,7 +135,7 @@ function ReportCard({ report, expanded, onToggle }) {
         }}
       >
         <div style={{ minWidth: 0 }}>
-          <div style={{ fontSize: 14, fontWeight: 700, color: C.text1, letterSpacing: '-0.2px', marginBottom: 3 }}>
+          <div style={{ fontSize: 14, fontWeight: 600, color: C.text1, letterSpacing: '-0.2px', marginBottom: 3 }}>
             {rd.reportTitle || 'Weekly Report'}
           </div>
           <div style={{ fontSize: 12, color: C.text3 }}>
@@ -201,7 +201,7 @@ function ReportBody({ rd, isLatest }) {
       {/* Weekly summary — bold statement (like Overview insight problem) */}
       {rd.weeklySummary && (
         <p style={{
-          fontSize: 14.5, fontWeight: 700,
+          fontSize: 14.5, fontWeight: 600,
           color: C.text1, lineHeight: 1.65,
           letterSpacing: '-0.15px',
           marginBottom: 18,
@@ -344,7 +344,7 @@ export default function WeeklyReport({ channelId, channelEmail, plan, channelSta
   const header = (
     <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 32, gap: 16, flexWrap: 'wrap' }}>
       <div>
-        <h1 style={{ fontSize: 26, fontWeight: 700, color: C.text1, letterSpacing: '-0.7px', marginBottom: 6, lineHeight: 1.1 }}>Weekly Report</h1>
+        <h1 style={{ fontSize: 26, fontWeight: 600, color: C.text1, letterSpacing: '-0.7px', marginBottom: 6, lineHeight: 1.1 }}>Weekly Report</h1>
         <p style={{ fontSize: 14, color: C.text2, fontWeight: 500, letterSpacing: '-0.005em', lineHeight: 1.45 }}>{subSubtitle}</p>
       </div>
 
@@ -421,14 +421,14 @@ export default function WeeklyReport({ channelId, channelEmail, plan, channelSta
             <div className="ytg-card" style={{ padding: '30px 30px 32px' }}>
               <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, marginBottom: 24 }}>
                 <div>
-                  <div style={{ fontSize: 18, fontWeight: 700, color: C.text1, letterSpacing: '-0.3px', marginBottom: 5 }}>
+                  <div style={{ fontSize: 18, fontWeight: 600, color: C.text1, letterSpacing: '-0.3px', marginBottom: 5 }}>
                     Your Week on YouTube — Apr 13 – 19
                   </div>
                   <div style={{ fontSize: 12.5, color: C.text3 }}>2026-04-13 – 2026-04-19</div>
                 </div>
                 <span style={{
                   display: 'inline-flex', alignItems: 'center', gap: 6,
-                  fontSize: 11, fontWeight: 700, color: C.greenHi,
+                  fontSize: 11, fontWeight: 600, color: C.greenHi,
                   background: C.greenBg, border: `1px solid ${C.greenBdr}`,
                   borderRadius: 999, padding: '4px 11px',
                   letterSpacing: '0.10em', textTransform: 'uppercase',
@@ -438,7 +438,7 @@ export default function WeeklyReport({ channelId, channelEmail, plan, channelSta
                 </span>
               </div>
 
-              <p style={{ fontSize: 14.5, fontWeight: 700, color: C.text1, lineHeight: 1.65, letterSpacing: '-0.15px', marginBottom: 18 }}>
+              <p style={{ fontSize: 14.5, fontWeight: 600, color: C.text1, lineHeight: 1.65, letterSpacing: '-0.15px', marginBottom: 18 }}>
                 {channelFirstName} grew 12% this week with strong retention on the house tour, but the 14-day posting gap is starting to hurt recommendation surfaces — here&rsquo;s what&rsquo;s working and what to focus on next.
               </p>
 
@@ -490,12 +490,12 @@ export default function WeeklyReport({ channelId, channelEmail, plan, channelSta
             <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
           </svg>
           <div style={{ flex: 1, minWidth: 0 }}>
-            <p style={{ fontSize: 13.5, fontWeight: 700, color: C.text1, lineHeight: 1.5, marginBottom: 2 }}>
+            <p style={{ fontSize: 13.5, fontWeight: 600, color: C.text1, lineHeight: 1.5, marginBottom: 2 }}>
               You&rsquo;re out of credits
             </p>
             <p style={{ fontSize: 13, color: C.text2, lineHeight: 1.6 }}>
               This week&rsquo;s report will be skipped. Top up or upgrade to resume weekly delivery.{' '}
-              <a href="/#pricing" style={{ color: C.redHi, fontWeight: 700, textDecoration: 'none' }}>Top up →</a>
+              <a href="/#pricing" style={{ color: C.redHi, fontWeight: 600, textDecoration: 'none' }}>Top up →</a>
             </p>
           </div>
         </div>
@@ -508,11 +508,11 @@ export default function WeeklyReport({ channelId, channelEmail, plan, channelSta
           padding: '88px 32px', textAlign: 'center',
         }}>
           <span style={{
-            fontSize: 11, fontWeight: 700, color: C.text3,
+            fontSize: 11, fontWeight: 600, color: C.text3,
             letterSpacing: '0.10em', textTransform: 'uppercase',
             marginBottom: 14,
           }}>Generating</span>
-          <h2 style={{ fontSize: 22, fontWeight: 700, color: C.text1, marginBottom: 10, letterSpacing: '-0.5px', lineHeight: 1.15 }}>Your first report is on its way</h2>
+          <h2 style={{ fontSize: 22, fontWeight: 600, color: C.text1, marginBottom: 10, letterSpacing: '-0.5px', lineHeight: 1.15 }}>Your first report is on its way</h2>
           <p style={{ fontSize: 14, color: C.text3, maxWidth: 360, lineHeight: 1.7 }}>
             We generate your first weekly report right after your channel connects. Check back in a few minutes.
           </p>
@@ -526,14 +526,14 @@ export default function WeeklyReport({ channelId, channelEmail, plan, channelSta
         }}>
           <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, marginBottom: 24 }}>
             <div style={{ minWidth: 0 }}>
-              <div style={{ fontSize: 18, fontWeight: 700, color: C.text1, letterSpacing: '-0.3px', marginBottom: 5 }}>
+              <div style={{ fontSize: 18, fontWeight: 600, color: C.text1, letterSpacing: '-0.3px', marginBottom: 5 }}>
                 {latest.reportData?.reportTitle || 'Weekly Report'}
               </div>
               <div style={{ fontSize: 12.5, color: C.text3, fontVariantNumeric: 'tabular-nums' }}>{latest.weekStart} – {latest.weekEnd}</div>
             </div>
             <span style={{
               display: 'inline-flex', alignItems: 'center', gap: 6,
-              fontSize: 11, fontWeight: 700, color: C.greenHi,
+              fontSize: 11, fontWeight: 600, color: C.greenHi,
               background: C.greenBg, border: `1px solid ${C.greenBdr}`,
               borderRadius: 999, padding: '4px 11px',
               letterSpacing: '0.10em', textTransform: 'uppercase',
@@ -550,7 +550,7 @@ export default function WeeklyReport({ channelId, channelEmail, plan, channelSta
       {/* ── Previous reports ────────────────────────────────────────────── */}
       {previous.length > 0 && (
         <>
-          <div style={{ fontSize: 11, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.10em', marginBottom: 12, marginTop: 8 }}>Previous Reports</div>
+          <div style={{ fontSize: 11, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.10em', marginBottom: 12, marginTop: 8 }}>Previous Reports</div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
             {previous.map((r, i) => (
               <ReportCard

@@ -12,8 +12,8 @@ const C = {
   green:  '#16a34a', greenBg: 'rgba(22,163,74,0.14)', greenBdr: 'rgba(22,163,74,0.34)', greenHi: '#34d27b',
   amber:  '#d97706', amberBg: 'rgba(217,119,6,0.14)', amberBdr: 'rgba(217,119,6,0.34)', amberHi: '#f0a23b',
   text1:  '#f4f4f5',
-  text2:  '#b8b8c0',
-  text3:  '#9a9aa3',
+  text2:  '#cfd0d6',
+  text3:  '#b2b3bb',
   border: 'rgba(255,255,255,0.08)',
   card:   'linear-gradient(180deg, #1e1e24 0%, #18181c 100%)',
   cardFlat:    '#1c1c21',
@@ -100,7 +100,7 @@ if (typeof document !== 'undefined' && !document.getElementById('ytg-au-styles')
     .au-btn-outline {
       display: inline-flex; align-items: center; gap: 8px;
       padding: 9px 18px; border-radius: 100px;
-      font-size: 13px; font-weight: 700;
+      font-size: 13px; font-weight: 600;
       background: transparent; color: ${C.redHi}; border: 1px solid ${C.redBdr};
       cursor: pointer; white-space: nowrap;
       transition: background 0.15s;
@@ -144,7 +144,7 @@ if (typeof document !== 'undefined' && !document.getElementById('ytg-au-styles')
       background: ${C.cardFlat}; border: 1px solid ${C.hair};
       border-radius: 8px; padding: 4px 10px;
     }
-    .au-chip .val { font-size: 12px; font-weight: 700; color: ${C.text1}; }
+    .au-chip .val { font-size: 12px; font-weight: 600; color: ${C.text1}; }
     .au-chip .lbl { font-size: 11px; color: ${C.text3}; font-weight: 500; }
 
     /* Eligible-videos grid — 4 cols default (everything down to ~900px).
@@ -209,7 +209,7 @@ function ScoreRing({ score, color }) {
       </svg>
       <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column',
         alignItems: 'center', justifyContent: 'center' }}>
-        <span style={{ fontSize: 22, fontWeight: 800, color, letterSpacing: '-0.8px', lineHeight: 1 }}>{score}</span>
+        <span style={{ fontSize: 22, fontWeight: 700, color, letterSpacing: '-0.8px', lineHeight: 1 }}>{score}</span>
         <span style={{ fontSize: 10, color: C.text3, fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase' }}>/100</span>
       </div>
     </div>
@@ -256,7 +256,7 @@ function ReportCard({ data, video, onClose }) {
               border: '1px solid rgba(255,255,255,0.08)' }} />
         )}
         <div style={{ flex: 1, minWidth: 0 }}>
-          <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, letterSpacing: '0.10em',
+          <p style={{ fontSize: 11, fontWeight: 600, color: C.text3, letterSpacing: '0.10em',
             textTransform: 'uppercase', marginBottom: 6 }}>Video review</p>
           <p style={{ fontSize: 16, fontWeight: 600, color: C.text1, letterSpacing: '-0.2px',
             lineHeight: 1.4, marginBottom: 10,
@@ -265,7 +265,7 @@ function ReportCard({ data, video, onClose }) {
             {video?.title}
           </p>
           <span style={{
-            display: 'inline-block', fontSize: 11, fontWeight: 700,
+            display: 'inline-block', fontSize: 11, fontWeight: 600,
             color: v.color, background: v.bg, border: `1px solid ${v.bdr}`,
             borderRadius: 100, padding: '3px 11px', letterSpacing: '0.10em',
             textTransform: 'uppercase',
@@ -299,9 +299,9 @@ function ReportCard({ data, video, onClose }) {
             background: C.cardFlat, border: `1px solid ${C.border}`,
             borderRadius: 10, padding: '8px 11px',
           }}>
-            <p style={{ fontSize: 10, fontWeight: 700, color: C.text3,
+            <p style={{ fontSize: 10, fontWeight: 600, color: C.text3,
               letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 3 }}>{lbl}</p>
-            <p style={{ fontSize: 14, fontWeight: 800, color: C.text1,
+            <p style={{ fontSize: 14, fontWeight: 700, color: C.text1,
               fontVariantNumeric: 'tabular-nums' }}>{val}</p>
           </div>
         ))}
@@ -311,7 +311,7 @@ function ReportCard({ data, video, onClose }) {
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 18 }}>
         <div style={{ background: C.greenBg, border: `1px solid ${C.greenBdr}`,
           borderRadius: 12, padding: '12px 14px' }}>
-          <p style={{ fontSize: 10, fontWeight: 700, color: C.greenHi,
+          <p style={{ fontSize: 10, fontWeight: 600, color: C.greenHi,
             letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 8 }}>What worked</p>
           {(data.what_worked || []).map((b, i) => (
             <p key={i} style={{ fontSize: 13, color: C.text1, lineHeight: 1.5,
@@ -323,7 +323,7 @@ function ReportCard({ data, video, onClose }) {
         </div>
         <div style={{ background: C.redBg, border: `1px solid ${C.redBdr}`,
           borderRadius: 12, padding: '12px 14px' }}>
-          <p style={{ fontSize: 10, fontWeight: 700, color: C.red,
+          <p style={{ fontSize: 10, fontWeight: 600, color: C.red,
             letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 8 }}>What didn't</p>
           {(data.what_didnt || []).map((b, i) => (
             <p key={i} style={{ fontSize: 13, color: C.text1, lineHeight: 1.5,
@@ -338,7 +338,7 @@ function ReportCard({ data, video, onClose }) {
       {/* Next actions — amber top border (matches insight-card pattern) */}
       {(data.next_actions || []).length > 0 && (
         <div>
-          <p style={{ fontSize: 11, fontWeight: 700, color: C.text3,
+          <p style={{ fontSize: 11, fontWeight: 600, color: C.text3,
             letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 10 }}>
             Test on your next video
           </p>
@@ -352,7 +352,7 @@ function ReportCard({ data, video, onClose }) {
                 boxShadow: '0 1px 2px rgba(0,0,0,0.4)',
               }}>
                 <span style={{
-                  fontSize: 12, fontWeight: 700,
+                  fontSize: 12, fontWeight: 600,
                   color: C.amberHi, fontVariantNumeric: 'tabular-nums',
                   lineHeight: 1.55, minWidth: 18, flexShrink: 0,
                 }}>{i + 1}.</span>
@@ -524,7 +524,7 @@ export default function Autopsy({ videos = [], channelId = '', optimizations = [
           Competitors header rhythm: 26 / 700 / -0.7px with a 14 / 500 / muted
           subtitle on one line. */}
       <div style={{ marginBottom: 24 }}>
-        <h1 style={{ fontSize: 26, fontWeight: 700, color: C.text1,
+        <h1 style={{ fontSize: 26, fontWeight: 600, color: C.text1,
           letterSpacing: '-0.7px', marginBottom: 6, lineHeight: 1.1 }}>
           Video Review
         </h1>
@@ -566,7 +566,7 @@ export default function Autopsy({ videos = [], channelId = '', optimizations = [
         )}
 
         <div style={{ marginBottom: 12, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
-          <p style={{ fontSize: 11, fontWeight: 700, color: C.text3,
+          <p style={{ fontSize: 11, fontWeight: 600, color: C.text3,
             letterSpacing: '0.10em', textTransform: 'uppercase' }}>
             Pick a video to review
           </p>
@@ -581,7 +581,7 @@ export default function Autopsy({ videos = [], channelId = '', optimizations = [
             background: C.cardFlat, border: `1px solid ${C.border}`, borderRadius: 16,
             boxShadow: '0 1px 2px rgba(0,0,0,0.04), 0 4px 14px rgba(0,0,0,0.06)',
           }}>
-            <p style={{ fontSize: 15, fontWeight: 700, color: C.text1,
+            <p style={{ fontSize: 15, fontWeight: 600, color: C.text1,
               letterSpacing: '-0.2px', marginBottom: 6 }}>
               No videos eligible yet
             </p>
@@ -633,10 +633,10 @@ export default function Autopsy({ videos = [], channelId = '', optimizations = [
                       : <div style={{ width: '100%', aspectRatio: '16/9', background: '#ebebef' }}/>
                     }
                     {isShort && (
-                      <span style={{ position: 'absolute', top: 8, left: 8, background: '#111', color: '#fff', fontSize: 11, fontWeight: 700, padding: '2px 7px', borderRadius: 4, letterSpacing: '0.10em' }}>SHORT</span>
+                      <span style={{ position: 'absolute', top: 8, left: 8, background: '#111', color: '#fff', fontSize: 11, fontWeight: 600, padding: '2px 7px', borderRadius: 4, letterSpacing: '0.10em' }}>SHORT</span>
                     )}
                     {durLabel && (
-                      <span style={{ position: 'absolute', bottom: 8, right: 8, background: 'rgba(0,0,0,0.82)', color: '#fff', fontSize: 11.5, fontWeight: 700, padding: '3px 7px', borderRadius: 5, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.05px' }}>{durLabel}</span>
+                      <span style={{ position: 'absolute', bottom: 8, right: 8, background: 'rgba(0,0,0,0.82)', color: '#fff', fontSize: 11.5, fontWeight: 600, padding: '3px 7px', borderRadius: 5, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.05px' }}>{durLabel}</span>
                     )}
                   </a>
 
@@ -662,8 +662,8 @@ export default function Autopsy({ videos = [], channelId = '', optimizations = [
                           { label: 'Eng',       display: lrN !== null ? `${lr}%` : '—',                         color: lrColor,  tip: 'Engagement rate = likes ÷ views. 3%+ strong, 1–3% avg, <1% weak.' },
                         ].map(m => (
                           <div key={m.label} title={m.tip} style={{ cursor: 'help', textAlign: 'left' }}>
-                            <p style={{ fontSize: 10.5, fontWeight: 700, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 5, lineHeight: 1 }}>{m.label}</p>
-                            <p style={{ fontSize: 16, fontWeight: 700, color: m.color, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.3px', lineHeight: 1 }}>{m.display}</p>
+                            <p style={{ fontSize: 10.5, fontWeight: 600, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 5, lineHeight: 1 }}>{m.label}</p>
+                            <p style={{ fontSize: 16, fontWeight: 600, color: m.color, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.3px', lineHeight: 1 }}>{m.display}</p>
                           </div>
                         ))}
                       </div>
@@ -742,9 +742,9 @@ export default function Autopsy({ videos = [], channelId = '', optimizations = [
                             border: `1px solid ${v.bdr}`,
                             color: v.color, background: v.bg,
                           }}>
-                            <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.10em', textTransform: 'uppercase', opacity: 0.78, marginRight: 6 }}>{v.label}</span>
+                            <span style={{ fontSize: 10, fontWeight: 600, letterSpacing: '0.10em', textTransform: 'uppercase', opacity: 0.78, marginRight: 6 }}>{v.label}</span>
                             <span style={{
-                              fontSize: 11, fontWeight: 700, color: C.text1,
+                              fontSize: 11, fontWeight: 600, color: C.text1,
                               background: C.cardFlat, border: `1px solid ${v.color}40`,
                               borderRadius: 100, padding: '1px 8px', letterSpacing: '-0.01em',
                             }}>{score}/100</span>

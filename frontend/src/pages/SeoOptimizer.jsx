@@ -138,7 +138,7 @@ if (typeof document !== 'undefined' && !document.getElementById('seo-opt-styles'
     font-size: 12.5px; font-weight: 600;
     font-family: inherit;
     letter-spacing: -0.01em;
-    color: rgba(255,255,255,0.55);
+    color: rgba(255,255,255,0.78);
     background: transparent;
     border: 1px solid rgba(255,255,255,0.14);
     border-radius: 100px;
@@ -157,7 +157,7 @@ if (typeof document !== 'undefined' && !document.getElementById('seo-opt-styles'
     display: inline-flex; align-items: center; gap: 6px;
     padding: 9px 18px; border-radius: 100px; border: 1px solid rgba(255,255,255,0.14);
     font-family: inherit; font-size: 13px; font-weight: 600;
-    background: rgba(255,255,255,0.04); color: #b8b8c0; cursor: pointer;
+    background: rgba(255,255,255,0.04); color: #cfd0d6; cursor: pointer;
     transition: background 160ms cubic-bezier(0.32,0.72,0,1), color 160ms cubic-bezier(0.32,0.72,0,1), border-color 160ms cubic-bezier(0.32,0.72,0,1);
     white-space: nowrap;
     letter-spacing: -0.01em;
@@ -212,7 +212,7 @@ if (typeof document !== 'undefined' && !document.getElementById('seo-opt-styles'
     border-radius: 8px;
     border: 1px solid transparent;
     background: transparent;
-    color: #9a9aa3;
+    color: #b2b3bb;
     cursor: pointer;
     display: flex; align-items: center; justify-content: center;
     opacity: 0;
@@ -248,7 +248,7 @@ if (typeof document !== 'undefined' && !document.getElementById('seo-opt-styles'
     border-radius: 100px;
     padding: 4px 11px;
   }
-  .seo-report-chip .val { font-size: 12px; font-weight: 700; color: #f4f4f5; letter-spacing: -0.01em; }
+  .seo-report-chip .val { font-size: 12px; font-weight: 600; color: #f4f4f5; letter-spacing: -0.01em; }
   .seo-report-chip .lbl { font-size: 11px; color: #f0a23b; font-weight: 600; }
 `
   document.head.appendChild(s)
@@ -279,9 +279,9 @@ const C = {
   border: 'rgba(255,255,255,0.08)',
   borderLight: 'rgba(255,255,255,0.06)',
   text1: '#f4f4f5',
-  text2: '#b8b8c0',
-  text3: '#9a9aa3',
-  text4: '#6b6b73',
+  text2: '#cfd0d6',
+  text3: '#b2b3bb',
+  text4: '#87878f',
   red: '#fb6a60',
   redBg: 'rgba(229,37,27,0.13)',
   redBdr: 'rgba(229,37,27,0.32)',
@@ -300,34 +300,34 @@ const C = {
 //    the hierarchy Overview uses, don't flatten it. ──
 const T = {
   // Page + section headers (Overview: H1 24, H2 22, H3 20)
-  h1:           { fontSize: 26, fontWeight: 700, color: '#f4f4f5', letterSpacing: '-0.7px', lineHeight: 1.1 },
-  h2:           { fontSize: 22, fontWeight: 700, color: '#f4f4f5', letterSpacing: '-0.5px', lineHeight: 1.2 },
-  h3:           { fontSize: 18, fontWeight: 700, color: '#f4f4f5', letterSpacing: '-0.3px' },
+  h1:           { fontSize: 26, fontWeight: 600, color: '#f4f4f5', letterSpacing: '-0.7px', lineHeight: 1.1 },
+  h2:           { fontSize: 22, fontWeight: 600, color: '#f4f4f5', letterSpacing: '-0.5px', lineHeight: 1.2 },
+  h3:           { fontSize: 18, fontWeight: 600, color: '#f4f4f5', letterSpacing: '-0.3px' },
 
   // Uppercase labels
-  sectionLabel: { fontSize: 11, fontWeight: 600, color: '#9a9aa3', textTransform: 'uppercase', letterSpacing: '0.10em' },  // card-level label ("KEYWORD RESEARCH") — neutral grey (matches Overview); red is semantic only, don't spray it on utility eyebrows
-  sectionHint:  { fontSize: 11, fontWeight: 500, color: '#9a9aa3' },                                                       // right-aligned hint text
-  innerLabel:   { fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.10em' },                    // inside sub-blocks (needs + color)
-  statLabel:    { fontSize: 11, fontWeight: 500, color: '#9a9aa3', textTransform: 'uppercase', letterSpacing: '0.05em' },  // Overview Stat label
+  sectionLabel: { fontSize: 11, fontWeight: 600, color: '#b2b3bb', textTransform: 'uppercase', letterSpacing: '0.10em' },  // card-level label ("KEYWORD RESEARCH") — neutral grey (matches Overview); red is semantic only, don't spray it on utility eyebrows
+  sectionHint:  { fontSize: 11, fontWeight: 500, color: '#b2b3bb' },                                                       // right-aligned hint text
+  innerLabel:   { fontSize: 10, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.10em' },                    // inside sub-blocks (needs + color)
+  statLabel:    { fontSize: 11, fontWeight: 500, color: '#b2b3bb', textTransform: 'uppercase', letterSpacing: '0.05em' },  // Overview Stat label
 
   // Descriptions
-  cardDesc:     { fontSize: 13, color: '#9a9aa3', lineHeight: 1.55 },
+  cardDesc:     { fontSize: 13, color: '#b2b3bb', lineHeight: 1.55 },
 
   // Body text
-  bodyBold:     { fontSize: 14, fontWeight: 700, color: '#f4f4f5', lineHeight: 1.55, letterSpacing: '-0.1px' },
-  body:         { fontSize: 13.5, fontWeight: 500, color: '#b8b8c0', lineHeight: 1.65 },
+  bodyBold:     { fontSize: 14, fontWeight: 600, color: '#f4f4f5', lineHeight: 1.55, letterSpacing: '-0.1px' },
+  body:         { fontSize: 13.5, fontWeight: 500, color: '#cfd0d6', lineHeight: 1.65 },
   innerText:    { fontSize: 13.5, fontWeight: 500, color: '#f4f4f5', lineHeight: 1.72 },                                   // inside InsightCard-style sub-blocks
 
   // Pills / chips / badges
-  pill:         { fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.10em' },                    // severity + vol/comp
-  countBadge:   { fontSize: 11, fontWeight: 700, color: '#b8b8c0', background: 'rgba(255,255,255,0.06)', padding: '2px 8px', borderRadius: 20, border: '1px solid rgba(255,255,255,0.08)' },
-  chip:         { fontSize: 12, fontWeight: 500, color: '#b8b8c0', background: 'rgba(255,255,255,0.04)', padding: '5px 11px', borderRadius: 20, border: '1px solid rgba(255,255,255,0.08)', cursor: 'pointer', letterSpacing: '-0.05px', transition: 'all 0.15s', display: 'inline-block' },
+  pill:         { fontSize: 10, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.10em' },                    // severity + vol/comp
+  countBadge:   { fontSize: 11, fontWeight: 600, color: '#cfd0d6', background: 'rgba(255,255,255,0.06)', padding: '2px 8px', borderRadius: 20, border: '1px solid rgba(255,255,255,0.08)' },
+  chip:         { fontSize: 12, fontWeight: 500, color: '#cfd0d6', background: 'rgba(255,255,255,0.04)', padding: '5px 11px', borderRadius: 20, border: '1px solid rgba(255,255,255,0.08)', cursor: 'pointer', letterSpacing: '-0.05px', transition: 'all 0.15s', display: 'inline-block' },
 
   // Numbers
-  numberLg:     { fontSize: 14, fontWeight: 700, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.2px' },            // score numbers
+  numberLg:     { fontSize: 14, fontWeight: 600, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.2px' },            // score numbers
 
   // Tables (Overview uses 10.5/600 in Score breakdown headers)
-  tableHeader:  { fontSize: 10.5, fontWeight: 600, color: '#9a9aa3', textTransform: 'uppercase', letterSpacing: '0.10em' },
+  tableHeader:  { fontSize: 10.5, fontWeight: 600, color: '#b2b3bb', textTransform: 'uppercase', letterSpacing: '0.10em' },
   keyword:      { fontSize: 13.5, fontWeight: 600, color: '#f4f4f5', letterSpacing: '-0.1px' },
 }
 
@@ -352,7 +352,7 @@ const STRATEGY_META = {
 const DESC_TYPE_META = {
   story:   { color: '#fb6a60', bg: 'rgba(229,37,27,0.13)', bdr: 'rgba(229,37,27,0.32)' },
   value:   { color: '#34d27b', bg: 'rgba(22,163,74,0.14)',  bdr: 'rgba(22,163,74,0.34)'  },
-  keyword: { color: '#b8b8c0', bg: 'rgba(255,255,255,0.04)',  bdr: 'rgba(255,255,255,0.08)'  },
+  keyword: { color: '#cfd0d6', bg: 'rgba(255,255,255,0.04)',  bdr: 'rgba(255,255,255,0.08)'  },
 }
 
 function fmtNum(n) {
@@ -412,7 +412,7 @@ function MiniStat({ label, value, sub, accent, alert }) {
       transition: 'box-shadow 0.2s, transform 0.2s',
     }}>
       <p style={{ fontSize: 11, fontWeight: 500, letterSpacing: '0.05em', textTransform: 'uppercase', color: C.text3, marginBottom: 12 }}>{label}</p>
-      <p style={{ fontSize: 30, fontWeight: 800, letterSpacing: '-1.4px', color: col, lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{value}</p>
+      <p style={{ fontSize: 30, fontWeight: 700, letterSpacing: '-1.4px', color: col, lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{value}</p>
       {sub && <p style={{ fontSize: 12, color: alert ? C.red : C.text3, fontWeight: 500, marginTop: 10 }}>{sub}</p>}
     </div>
   )
@@ -433,7 +433,7 @@ function ScoreRing({ score }) {
           style={{ transition: 'stroke-dasharray 0.8s cubic-bezier(0.34,1.56,0.64,1)' }} />
       </svg>
       <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-        <span style={{ fontSize: 28, fontWeight: 700, color, letterSpacing: '-1px', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{score}</span>
+        <span style={{ fontSize: 28, fontWeight: 600, color, letterSpacing: '-1px', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{score}</span>
         <span style={{ fontSize: 12, color: C.text3, fontWeight: 600, letterSpacing: '0.10em', marginTop: 2 }}>/100</span>
       </div>
     </div>
@@ -464,7 +464,7 @@ function ScoreBar({ label, value, mounted }) {
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
       <span style={{
-        fontSize: 10, fontWeight: 700, color: C.text3,
+        fontSize: 10, fontWeight: 600, color: C.text3,
         letterSpacing: '0.10em', textTransform: 'uppercase',
         width: 44, flexShrink: 0,
       }}>{label}</span>
@@ -479,7 +479,7 @@ function ScoreBar({ label, value, mounted }) {
         }}/>
       </div>
       <span style={{
-        fontSize: 13, fontWeight: 700, color: v ? color : C.text3,
+        fontSize: 13, fontWeight: 600, color: v ? color : C.text3,
         fontVariantNumeric: 'tabular-nums',
         width: 24, textAlign: 'right', flexShrink: 0, letterSpacing: '-0.3px',
       }}>{v || '—'}</span>
@@ -517,9 +517,9 @@ function LengthSweetSpot({ length, mounted }) {
   return (
     <div>
       <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 8 }}>
-        <span style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase' }}>Length</span>
+        <span style={{ fontSize: 10, fontWeight: 600, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase' }}>Length</span>
         <span style={{ fontSize: 11, fontWeight: 600, color: markerColor, fontVariantNumeric: 'tabular-nums' }}>
-          <span style={{ fontWeight: 700, color: C.text1 }}>{clamped}</span>
+          <span style={{ fontWeight: 600, color: C.text1 }}>{clamped}</span>
           <span style={{ color: C.text3, fontWeight: 500 }}>{' / 100 chars · '}</span>
           {verdict}
         </span>
@@ -661,7 +661,7 @@ function _multTier(views, baseline) {
 const _MULT_PILL = {
   outlier: { bg: '#e5251b',                  color: '#ffffff',         border: 'transparent' },
   above:   { bg: 'rgba(10,10,15,0.78)',      color: '#ffffff',         border: 'transparent' },
-  below:   { bg: 'rgba(255,255,255,0.05)',      color: 'rgba(255,255,255,0.55)', border: 'rgba(255,255,255,0.10)' },
+  below:   { bg: 'rgba(255,255,255,0.05)',      color: 'rgba(255,255,255,0.78)', border: 'rgba(255,255,255,0.10)' },
 }
 
 function VideoTile({ video, baselineViews }) {
@@ -704,7 +704,7 @@ function VideoTile({ video, baselineViews }) {
           position: 'absolute', right: 7, bottom: 7,
           padding: '2px 7px', borderRadius: 5,
           background: 'rgba(0,0,0,0.78)',
-          color: '#fff', fontSize: 11, fontWeight: 700,
+          color: '#fff', fontSize: 11, fontWeight: 600,
           letterSpacing: '-0.2px', fontVariantNumeric: 'tabular-nums',
         }}>{fmtNum(views)}</div>
       </div>
@@ -727,7 +727,7 @@ function VideoTile({ video, baselineViews }) {
             padding: '1px 7px', borderRadius: 99,
             background: pill.bg, color: pill.color,
             border: `1px solid ${pill.border}`,
-            fontSize: 10, fontWeight: 700, letterSpacing: '-0.2px',
+            fontSize: 10, fontWeight: 600, letterSpacing: '-0.2px',
             fontVariantNumeric: 'tabular-nums', flexShrink: 0,
           }}>{mult}</span>
         )}
@@ -778,7 +778,7 @@ function ShortTile({ video, baselineViews }) {
           position: 'absolute', right: 6, bottom: 6,
           padding: '2px 6px', borderRadius: 5,
           background: 'rgba(0,0,0,0.78)',
-          color: '#fff', fontSize: 10.5, fontWeight: 700,
+          color: '#fff', fontSize: 10.5, fontWeight: 600,
           letterSpacing: '-0.2px', fontVariantNumeric: 'tabular-nums',
         }}>{fmtNum(views)}</div>
       </div>
@@ -798,7 +798,7 @@ function ShortTile({ video, baselineViews }) {
             padding: '1px 6px', borderRadius: 99,
             background: pill.bg, color: pill.color,
             border: `1px solid ${pill.border}`,
-            fontSize: 9.5, fontWeight: 700, letterSpacing: '-0.2px',
+            fontSize: 9.5, fontWeight: 600, letterSpacing: '-0.2px',
             fontVariantNumeric: 'tabular-nums', flexShrink: 0,
           }}>{mult}</span>
         )}
@@ -818,9 +818,9 @@ function HeatStrip({ label, count, Tile, items, baselineViews }) {
   return (
     <div style={{ marginBottom: 18 }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
-        <p style={{ fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.55)', letterSpacing: '0.10em', textTransform: 'uppercase' }}>{label}</p>
+        <p style={{ fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.78)', letterSpacing: '0.10em', textTransform: 'uppercase' }}>{label}</p>
         <span style={{
-          fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.55)',
+          fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.78)',
           background: 'rgba(255,255,255,0.04)', padding: '2px 8px', borderRadius: 99,
           fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.05px',
         }}>{count}</span>
@@ -848,9 +848,9 @@ function HeatStrip({ label, count, Tile, items, baselineViews }) {
 function NicheStatTile({ label, value, hint, color }) {
   return (
     <div>
-      <p style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 6 }}>{label}</p>
+      <p style={{ fontSize: 10, fontWeight: 600, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 6 }}>{label}</p>
       <p style={{
-        fontSize: 22, fontWeight: 700, color: color || C.text1,
+        fontSize: 22, fontWeight: 600, color: color || C.text1,
         letterSpacing: '-0.7px', lineHeight: 1, fontVariantNumeric: 'tabular-nums',
       }}>{value}</p>
       {hint && <p style={{ fontSize: 11, color: C.text3, fontWeight: 500, marginTop: 5, letterSpacing: '-0.01em' }}>{hint}</p>}
@@ -998,7 +998,7 @@ function CompetitorThumbTile({ video }) {
           position: 'absolute', right: 6, bottom: 6,
           padding: '2px 6px', borderRadius: 5,
           background: 'rgba(0,0,0,0.78)',
-          color: '#fff', fontSize: 10.5, fontWeight: 700,
+          color: '#fff', fontSize: 10.5, fontWeight: 600,
           letterSpacing: '-0.2px', fontVariantNumeric: 'tabular-nums',
         }}>{fmtNum(views)}</div>
       </div>
@@ -1067,16 +1067,16 @@ function SuggestionRow({ s, i, isSelected, isCopied, onCopy, onSelect, primaryPh
             background: 'rgba(255,255,255,0.06)',
             border: '1px solid rgba(255,255,255,0.08)',
           }}>
-            <span style={{ fontSize: 11, fontWeight: 700, color: C.text1, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.3px' }}>{i + 1}</span>
+            <span style={{ fontSize: 11, fontWeight: 600, color: C.text1, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.3px' }}>{i + 1}</span>
           </div>
           <span style={{
-            fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.50)',
+            fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.50)',
             letterSpacing: '0.10em', textTransform: 'uppercase',
           }}>Title option</span>
           {eyebrow && (
             <span style={{
               display: 'inline-flex', alignItems: 'center', gap: 5,
-              fontSize: 12, fontWeight: 500, color: 'rgba(255,255,255,0.55)',
+              fontSize: 12, fontWeight: 500, color: 'rgba(255,255,255,0.78)',
               letterSpacing: '-0.01em',
               maxWidth: 280, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
             }}>
@@ -1086,7 +1086,7 @@ function SuggestionRow({ s, i, isSelected, isCopied, onCopy, onSelect, primaryPh
           )}
           <div style={{ flex: 1 }}/>
           <span style={{
-            fontSize: 10.5, fontWeight: 700, color: sevColor,
+            fontSize: 10.5, fontWeight: 600, color: sevColor,
             background: sevBg, border: `1px solid ${sevColor}66`,
             padding: '3px 10px', borderRadius: 100,
             letterSpacing: '0.10em', textTransform: 'uppercase',
@@ -1095,7 +1095,7 @@ function SuggestionRow({ s, i, isSelected, isCopied, onCopy, onSelect, primaryPh
             flexShrink: 0,
           }}>
             <span>{sevLabel}</span>
-            <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '-0.3px' }}>{avgScore}</span>
+            <span style={{ fontSize: 11, fontWeight: 600, letterSpacing: '-0.3px' }}>{avgScore}</span>
           </span>
         </div>
 
@@ -1103,7 +1103,7 @@ function SuggestionRow({ s, i, isSelected, isCopied, onCopy, onSelect, primaryPh
             IdeaCard. Replaces the previous dark YouTube-tile mockup which
             was decoration. ── */}
         <h3 style={{
-          fontSize: 17, fontWeight: 700, color: C.text1,
+          fontSize: 17, fontWeight: 600, color: C.text1,
           letterSpacing: '-0.35px', lineHeight: 1.35,
           marginBottom: 16,
           display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden',
@@ -1128,7 +1128,7 @@ function SuggestionRow({ s, i, isSelected, isCopied, onCopy, onSelect, primaryPh
             display: 'flex', flexDirection: 'column', gap: 12,
           }}>
             <div>
-              <p style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 12 }}>Title quality</p>
+              <p style={{ fontSize: 10, fontWeight: 600, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 12 }}>Title quality</p>
               <ScoreBars seo={s.seo_score} ctr={s.ctr_score} hook={s.hook_score} mounted={mounted}/>
             </div>
             <div style={{ height: 1, background: C.borderLight }}/>
@@ -1143,7 +1143,7 @@ function SuggestionRow({ s, i, isSelected, isCopied, onCopy, onSelect, primaryPh
             borderRadius: 10,
             padding: '14px 16px',
           }}>
-            <p style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 12 }}>Competing against</p>
+            <p style={{ fontSize: 10, fontWeight: 600, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 12 }}>Competing against</p>
             {competitors.length > 0 ? (
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: 12 }}>
                 {competitors.map((v, k) => (
@@ -1168,7 +1168,7 @@ function SuggestionRow({ s, i, isSelected, isCopied, onCopy, onSelect, primaryPh
           <span style={{ fontSize: 12, fontWeight: 500, color: 'rgba(255,255,255,0.50)', letterSpacing: '-0.01em' }}>
             {s.length ? `${s.length} chars` : '—'}
             {s.length >= 50 && s.length <= 70 && (
-              <>{' · '}<span style={{ color: C.green, fontWeight: 700 }}>in the sweet spot</span></>
+              <>{' · '}<span style={{ color: C.green, fontWeight: 600 }}>in the sweet spot</span></>
             )}
           </span>
           {hasWhy && (
@@ -1199,7 +1199,7 @@ function SuggestionRow({ s, i, isSelected, isCopied, onCopy, onSelect, primaryPh
             {isCopied ? '✓ Copied' : 'Copy'}
           </button>
           <button onClick={onSelect}
-            style={{ fontSize: 12.5, fontWeight: 700, color: isSelected ? C.red : '#ffffff', background: isSelected ? 'rgba(229,37,27,0.08)' : '#e5251b', border: `1px solid ${isSelected ? 'rgba(229,37,27,0.25)' : 'transparent'}`, borderRadius: 100, padding: '8px 16px', cursor: 'pointer', fontFamily: 'inherit', transition: 'filter 0.15s, background 0.15s', boxShadow: isSelected ? 'none' : '0 1px 2px rgba(229,37,27,0.18)', whiteSpace: 'nowrap', letterSpacing: '-0.1px' }}>
+            style={{ fontSize: 12.5, fontWeight: 600, color: isSelected ? C.red : '#ffffff', background: isSelected ? 'rgba(229,37,27,0.08)' : '#e5251b', border: `1px solid ${isSelected ? 'rgba(229,37,27,0.25)' : 'transparent'}`, borderRadius: 100, padding: '8px 16px', cursor: 'pointer', fontFamily: 'inherit', transition: 'filter 0.15s, background 0.15s', boxShadow: isSelected ? 'none' : '0 1px 2px rgba(229,37,27,0.18)', whiteSpace: 'nowrap', letterSpacing: '-0.1px' }}>
             {isSelected ? '✓ Selected' : 'Use this title →'}
           </button>
         </div>
@@ -1213,13 +1213,13 @@ function SuggestionRow({ s, i, isSelected, isCopied, onCopy, onSelect, primaryPh
           }}>
             {s.why_it_works && (
               <p style={{ fontSize: 13, color: C.text2, lineHeight: 1.6, letterSpacing: '-0.01em' }}>
-                <span style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase', marginRight: 8 }}>Why it works</span>
+                <span style={{ fontSize: 10, fontWeight: 600, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase', marginRight: 8 }}>Why it works</span>
                 {highlightKeyword(sentenceCase(s.why_it_works), eyebrow)}
               </p>
             )}
             {s.angle && (
               <p style={{ fontSize: 13, color: C.text2, lineHeight: 1.6, letterSpacing: '-0.01em' }}>
-                <span style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase', marginRight: 8 }}>Distribution</span>
+                <span style={{ fontSize: 10, fontWeight: 600, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase', marginRight: 8 }}>Distribution</span>
                 {sentenceCase(s.angle)}
               </p>
             )}
@@ -1257,9 +1257,9 @@ function DescriptionCard({ d, idx, copiedDesc, onCopy }) {
           cursor: 'pointer', userSelect: 'none',
         }}>
         <div style={{ width: 26, height: 26, borderRadius: 8, background: C.text1, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-          <span style={{ fontSize: 12, fontWeight: 700, color: '#0e0e10', fontVariantNumeric: 'tabular-nums' }}>{idx + 1}</span>
+          <span style={{ fontSize: 12, fontWeight: 600, color: '#0e0e10', fontVariantNumeric: 'tabular-nums' }}>{idx + 1}</span>
         </div>
-        <span style={{ fontSize: 10, fontWeight: 700, color: tm.color, padding: '3px 9px', borderRadius: 20, letterSpacing: '0.10em', textTransform: 'uppercase', border: `1.5px solid ${tm.color}`, flexShrink: 0 }}>
+        <span style={{ fontSize: 10, fontWeight: 600, color: tm.color, padding: '3px 9px', borderRadius: 20, letterSpacing: '0.10em', textTransform: 'uppercase', border: `1.5px solid ${tm.color}`, flexShrink: 0 }}>
           {categoryShort}
         </span>
         <p style={{ flex: 1, minWidth: 0, fontSize: 13.5, color: C.text2, fontWeight: 500, lineHeight: 1.45, letterSpacing: '-0.1px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
@@ -1280,7 +1280,7 @@ function DescriptionCard({ d, idx, copiedDesc, onCopy }) {
         {/* 2-col body — Why it works (charcoal-neutral) + Full description (white + amber left bar + shadow). */}
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.6fr', gap: 8, marginLeft: 38 }}>
           <div style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 10, padding: '12px 14px' }}>
-            <p style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 6 }}>Why it works</p>
+            <p style={{ fontSize: 10, fontWeight: 600, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 6 }}>Why it works</p>
             <p style={{ fontSize: 13, color: C.text2, lineHeight: 1.65 }}>{sentenceCase(d.why_it_works)}</p>
           </div>
 
@@ -1292,7 +1292,7 @@ function DescriptionCard({ d, idx, copiedDesc, onCopy }) {
             boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
             display: 'flex', flexDirection: 'column',
           }}>
-            <p style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 8 }}>Full description</p>
+            <p style={{ fontSize: 10, fontWeight: 600, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 8 }}>Full description</p>
             <pre style={{ fontSize: 12.5, color: C.text1, lineHeight: 1.75, whiteSpace: 'pre-wrap', fontFamily: "'Inter', system-ui, sans-serif", margin: 0 }}>
               {d.full}
             </pre>
@@ -1389,17 +1389,17 @@ function NicheMomentumChart({ videos = [], shorts = [], primaryPhrase, videosFou
   return (
     <div style={{ marginTop: 28, marginBottom: 24 }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14, flexWrap: 'wrap' }}>
-        <h2 style={{ fontSize: 22, fontWeight: 700, color: C.text1, letterSpacing: '-0.5px', margin: 0 }}>
+        <h2 style={{ fontSize: 22, fontWeight: 600, color: C.text1, letterSpacing: '-0.5px', margin: 0 }}>
           Niche momentum
         </h2>
         <span style={{
-          fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.50)',
+          fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.50)',
           letterSpacing: '0.10em', textTransform: 'uppercase',
         }}>{rangeLabel}</span>
         {primaryPhrase && (
           <span style={{
             marginLeft: 'auto',
-            fontSize: 12.5, fontWeight: 500, color: 'rgba(255,255,255,0.55)',
+            fontSize: 12.5, fontWeight: 500, color: 'rgba(255,255,255,0.78)',
             letterSpacing: '-0.01em', fontVariantNumeric: 'tabular-nums',
           }}>
             Top-ranking activity for <strong style={{ color: '#f4f4f5', fontWeight: 600 }}>{primaryPhrase}</strong>
@@ -1432,9 +1432,9 @@ function NicheMomentumChart({ videos = [], shorts = [], primaryPhrase, videosFou
         </svg>
         <p style={{
           marginTop: 6, fontSize: 12.5, fontWeight: 500,
-          color: 'rgba(255,255,255,0.55)', letterSpacing: '-0.01em',
+          color: 'rgba(255,255,255,0.78)', letterSpacing: '-0.01em',
         }}>
-          Peak <strong style={{ color: '#f4f4f5', fontWeight: 700 }}>{maxCount} video{maxCount === 1 ? '' : 's'}</strong> {peakLabel} · {rising ? 'niche heating up' : 'niche cooling down'}
+          Peak <strong style={{ color: '#f4f4f5', fontWeight: 600 }}>{maxCount} video{maxCount === 1 ? '' : 's'}</strong> {peakLabel} · {rising ? 'niche heating up' : 'niche cooling down'}
           {videosFound ? <span style={{ color: 'rgba(255,255,255,0.40)' }}> · {videosFound} ranking videos analysed</span> : null}
         </p>
       </div>
@@ -1453,7 +1453,7 @@ function SaturationDots({ total, filled, color, label }) {
         fontSize: 11.5, fontWeight: 600, color: C.text2,
         fontVariantNumeric: 'tabular-nums', whiteSpace: 'nowrap',
       }}>
-        <strong style={{ color: C.text1, fontWeight: 700 }}>{filled}</strong>
+        <strong style={{ color: C.text1, fontWeight: 600 }}>{filled}</strong>
         <span style={{ color: C.text3 }}> of {total} niche videos</span>
       </span>
       {/* Slimmer 100px-max bar — the verdict chip on the right tells the
@@ -1465,7 +1465,7 @@ function SaturationDots({ total, filled, color, label }) {
         }}/>
       </div>
       <span style={{
-        fontSize: 11, fontWeight: 700, color, letterSpacing: '0.10em',
+        fontSize: 11, fontWeight: 600, color, letterSpacing: '0.10em',
         textTransform: 'uppercase', whiteSpace: 'nowrap',
       }}>{label}</span>
     </div>
@@ -1518,7 +1518,7 @@ function IntentInsightRow({
           <IconCmp size={14} color={chipColor} strokeWidth={2}/>
         </div>
         <div style={{ flex: 1, minWidth: 0 }}>
-          <p style={{ fontSize: 10, fontWeight: 700, color: eyebrowColor, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 5 }}>{eyebrowLabel}</p>
+          <p style={{ fontSize: 10, fontWeight: 600, color: eyebrowColor, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 5 }}>{eyebrowLabel}</p>
           {/* Body weight 500. The eyebrow above (OPPORTUNITY / OVERUSED
               ANGLE) carries the semantic emphasis; pushing the headline to
               700 made it read like a stacked banner instead of prose. */}
@@ -1556,7 +1556,7 @@ function IntentInsightRow({
           [outcomeLabel, outcomeText],
         ].map(([lbl, val], i) => (
           <div key={lbl} style={{ display: 'grid', gridTemplateColumns: '130px 1fr', gap: 14, padding: '9px 0', borderBottom: i < 2 ? `1px dashed ${C.borderLight}` : 'none' }}>
-            <p style={{ fontSize: 10.5, fontWeight: 700, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase', paddingTop: 2 }}>{lbl}</p>
+            <p style={{ fontSize: 10.5, fontWeight: 600, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase', paddingTop: 2 }}>{lbl}</p>
             <p style={{ fontSize: 13, color: C.text1, lineHeight: 1.65, fontWeight: 500 }}>{sentenceCase(val)}</p>
           </div>
         ))}
@@ -1608,11 +1608,11 @@ function AnimatedScoreArc({ value, color, size = 108, tier }) {
         gap: 2,
       }}>
         <span style={{
-          fontSize: 30, fontWeight: 700, color, letterSpacing: '-1.4px',
+          fontSize: 30, fontWeight: 600, color, letterSpacing: '-1.4px',
           fontVariantNumeric: 'tabular-nums', lineHeight: 1,
         }}>{shown}</span>
         <span style={{
-          fontSize: 10, fontWeight: 700, color, letterSpacing: '0.10em',
+          fontSize: 10, fontWeight: 600, color, letterSpacing: '0.10em',
           textTransform: 'uppercase',
         }}>{tier}</span>
       </div>
@@ -1648,33 +1648,33 @@ function SubScoreBlock({ label, you, ai, mounted, delay }) {
   return (
     <div style={{ marginBottom: 14 }}>
       <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 8 }}>
-        <span style={{ fontSize: 11, fontWeight: 700, color: C.text2, letterSpacing: '-0.05px' }}>{label}</span>
+        <span style={{ fontSize: 11, fontWeight: 600, color: C.text2, letterSpacing: '-0.05px' }}>{label}</span>
         <span style={{
-          fontSize: 11, fontWeight: 700, color: dPos ? C.green : C.red,
+          fontSize: 11, fontWeight: 600, color: dPos ? C.green : C.red,
           fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.05px',
         }}>{dPos ? '+' : ''}{delta}</span>
       </div>
       {/* Your row */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 5 }}>
-        <span style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase', width: 30, flexShrink: 0 }}>You</span>
+        <span style={{ fontSize: 10, fontWeight: 600, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase', width: 30, flexShrink: 0 }}>You</span>
         <div style={{ flex: 1, height: 5, background: '#eef0f4', borderRadius: 99, overflow: 'hidden' }}>
           <div style={{
             height: '100%', width: mounted ? `${you}%` : '0%', background: _barFill(youCol), borderRadius: 99,
             transition: `width 0.85s cubic-bezier(0.34,1.4,0.64,1) ${delay}ms`,
           }}/>
         </div>
-        <span style={{ fontSize: 11.5, fontWeight: 700, color: youCol, fontVariantNumeric: 'tabular-nums', width: 28, textAlign: 'right', letterSpacing: '-0.2px' }}>{you}</span>
+        <span style={{ fontSize: 11.5, fontWeight: 600, color: youCol, fontVariantNumeric: 'tabular-nums', width: 28, textAlign: 'right', letterSpacing: '-0.2px' }}>{you}</span>
       </div>
       {/* AI row */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-        <span style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase', width: 30, flexShrink: 0 }}>AI</span>
+        <span style={{ fontSize: 10, fontWeight: 600, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase', width: 30, flexShrink: 0 }}>AI</span>
         <div style={{ flex: 1, height: 5, background: '#eef0f4', borderRadius: 99, overflow: 'hidden' }}>
           <div style={{
             height: '100%', width: mounted ? `${ai}%` : '0%', background: _barFill(aiCol), borderRadius: 99,
             transition: `width 0.85s cubic-bezier(0.34,1.4,0.64,1) ${delay + 100}ms`,
           }}/>
         </div>
-        <span style={{ fontSize: 11.5, fontWeight: 700, color: aiCol, fontVariantNumeric: 'tabular-nums', width: 28, textAlign: 'right', letterSpacing: '-0.2px' }}>{ai}</span>
+        <span style={{ fontSize: 11.5, fontWeight: 600, color: aiCol, fontVariantNumeric: 'tabular-nums', width: 28, textAlign: 'right', letterSpacing: '-0.2px' }}>{ai}</span>
       </div>
     </div>
   )
@@ -1720,23 +1720,23 @@ function TitleComparisonHero({ userTitle, userScore, userBreakdown, suggestions,
   // by a single hairline divider, with score numbers as the visual anchor.
   // Breaks the wall-of-cards rhythm the user called out.
   const sideLabel = {
-    fontSize: 10.5, fontWeight: 700, letterSpacing: '0.10em',
+    fontSize: 10.5, fontWeight: 600, letterSpacing: '0.10em',
     textTransform: 'uppercase', color: 'rgba(255,255,255,0.45)',
     margin: 0,
   }
   const sideScore = {
-    fontSize: 44, fontWeight: 700, letterSpacing: '-1.4px', lineHeight: 1,
+    fontSize: 44, fontWeight: 600, letterSpacing: '-1.4px', lineHeight: 1,
     fontVariantNumeric: 'tabular-nums',
   }
   const sideTitle = {
     fontSize: 13.5, fontWeight: 500, lineHeight: 1.45,
-    color: '#b8b8c0', letterSpacing: '-0.05px', margin: 0,
+    color: '#cfd0d6', letterSpacing: '-0.05px', margin: 0,
   }
   const subRow = {
     display: 'flex', alignItems: 'baseline', gap: 14,
     fontVariantNumeric: 'tabular-nums',
   }
-  const subKey = { fontSize: 10, fontWeight: 700, letterSpacing: '0.10em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.45)' }
+  const subKey = { fontSize: 10, fontWeight: 600, letterSpacing: '0.10em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.45)' }
   const subVal = { fontSize: 13.5, fontWeight: 600, letterSpacing: '-0.2px' }
 
   return (
@@ -1752,11 +1752,11 @@ function TitleComparisonHero({ userTitle, userScore, userBreakdown, suggestions,
         marginBottom: 22,
       }}>
         <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, minWidth: 0, flexWrap: 'wrap' }}>
-          <span style={{ fontSize: 11, fontWeight: 700, color: C.text1, letterSpacing: '0.10em', textTransform: 'uppercase' }}>Title analysis</span>
+          <span style={{ fontSize: 11, fontWeight: 600, color: C.text1, letterSpacing: '0.10em', textTransform: 'uppercase' }}>Title analysis</span>
           {videosFound > 0 && (
             <>
               <span style={{ color: 'rgba(255,255,255,0.30)' }}>·</span>
-              <span style={{ fontSize: 12, fontWeight: 500, color: 'rgba(255,255,255,0.55)', letterSpacing: '-0.05px' }}>
+              <span style={{ fontSize: 12, fontWeight: 500, color: 'rgba(255,255,255,0.78)', letterSpacing: '-0.05px' }}>
                 <span style={{ color: C.text1, fontWeight: 600 }}>{videosFound}</span> niche videos
               </span>
             </>
@@ -1774,7 +1774,7 @@ function TitleComparisonHero({ userTitle, userScore, userBreakdown, suggestions,
           <span style={{
             padding: '5px 11px', borderRadius: 99,
             background: liftBg, border: `1px solid ${liftBdr}`,
-            color: liftColor, fontSize: 11, fontWeight: 700,
+            color: liftColor, fontSize: 11, fontWeight: 600,
             fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.05px',
             flexShrink: 0, whiteSpace: 'nowrap',
           }}>
@@ -1846,9 +1846,9 @@ function TitleComparisonHero({ userTitle, userScore, userBreakdown, suggestions,
       }}>
         <p style={{ fontSize: 13, fontWeight: 500, color: 'rgba(255,255,255,0.65)', letterSpacing: '-0.05px', margin: 0 }}>
           {lift > 0
-            ? <>Pick the AI version for <span style={{ fontWeight: 700, color: C.green }}>+{lift} points</span>.</>
+            ? <>Pick the AI version for <span style={{ fontWeight: 600, color: C.green }}>+{lift} points</span>.</>
             : lift < 0
-              ? <>Your title scores <span style={{ fontWeight: 700, color: C.red }}>{Math.abs(lift)} higher</span> — stick with it.</>
+              ? <>Your title scores <span style={{ fontWeight: 600, color: C.red }}>{Math.abs(lift)} higher</span> — stick with it.</>
               : <>Tied with your title.</>
           }
         </p>
@@ -1894,15 +1894,15 @@ function NicheMap({ keywords, onPick }) {
             background: 'rgba(255,255,255,0.05)',
             border: '1px solid rgba(255,255,255,0.10)',
           }}>
-            <span style={{ fontSize: 11.5, fontWeight: 700, color: C.text1, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.3px' }}>K</span>
+            <span style={{ fontSize: 11.5, fontWeight: 600, color: C.text1, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.3px' }}>K</span>
           </div>
           <span style={{
-            fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.50)',
+            fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.50)',
             letterSpacing: '0.10em', textTransform: 'uppercase',
           }}>Niche keywords</span>
           <span style={{
             display: 'inline-flex', alignItems: 'center', gap: 5,
-            fontSize: 12, fontWeight: 500, color: 'rgba(255,255,255,0.55)',
+            fontSize: 12, fontWeight: 500, color: 'rgba(255,255,255,0.78)',
             letterSpacing: '-0.01em',
           }}>
             <span style={{ width: 3, height: 3, borderRadius: 99, background: 'rgba(255,255,255,0.30)' }}/>
@@ -1938,7 +1938,7 @@ function NicheMap({ keywords, onPick }) {
                 onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.04)' }}
                 onMouseLeave={e => { e.currentTarget.style.background = 'transparent' }}>
                 <span style={{
-                  fontSize: 11, fontWeight: 700, color: C.text4,
+                  fontSize: 11, fontWeight: 600, color: C.text4,
                   fontVariantNumeric: 'tabular-nums', textAlign: 'center',
                   letterSpacing: '0.04em',
                 }}>{String(i + 1).padStart(2, '0')}</span>
@@ -1948,12 +1948,12 @@ function NicheMap({ keywords, onPick }) {
                   whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
                 }}>{kw.phrase}</span>
                 <span style={{
-                  fontSize: 10, fontWeight: 700, color: volCol(kw.volume),
+                  fontSize: 10, fontWeight: 600, color: volCol(kw.volume),
                   letterSpacing: '0.10em', textTransform: 'uppercase',
                   textAlign: 'right',
                 }}>{kw.volume === 'HIGH' ? '▲ HIGH' : kw.volume === 'MED' ? '· MED' : '▽ LOW'}</span>
                 <span style={{
-                  fontSize: 10, fontWeight: 700, color: compCol(kw.competition),
+                  fontSize: 10, fontWeight: 600, color: compCol(kw.competition),
                   letterSpacing: '0.10em', textTransform: 'uppercase',
                   textAlign: 'right',
                 }}>{kw.competition === 'LOW' ? 'LOW' : kw.competition === 'MED' ? 'MED' : 'HIGH'}</span>
@@ -1964,7 +1964,7 @@ function NicheMap({ keywords, onPick }) {
                   }}/>
                 </div>
                 <span style={{
-                  fontSize: 14, fontWeight: 700, color: col,
+                  fontSize: 14, fontWeight: 600, color: col,
                   fontVariantNumeric: 'tabular-nums', textAlign: 'right',
                   letterSpacing: '-0.3px',
                 }}>{kw.score}</span>
@@ -2367,8 +2367,8 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
         return (
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 24, gap: 16, flexWrap: 'wrap' }}>
         <div>
-          <h1 style={{ fontSize: 26, fontWeight: 700, color: C.text1, letterSpacing: '-0.7px', marginBottom: 6, lineHeight: 1.1 }}>SEO Studio</h1>
-          <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.55)', fontWeight: 500, letterSpacing: '-0.005em', lineHeight: 1.45 }}>
+          <h1 style={{ fontSize: 26, fontWeight: 600, color: C.text1, letterSpacing: '-0.7px', marginBottom: 6, lineHeight: 1.1 }}>SEO Studio</h1>
+          <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.78)', fontWeight: 500, letterSpacing: '-0.005em', lineHeight: 1.45 }}>
             Score your title against live competitor data
             {lastSearchAt && <> · Last analysed {relTime(lastSearchAt)}</>}
           </p>
@@ -2401,13 +2401,13 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
                 borderRadius: 100,
                 border: active ? '1px solid rgba(255,255,255,0.10)' : '1px solid transparent',
                 background: active ? 'rgba(255,255,255,0.055)' : 'transparent',
-                color: active ? '#f4f4f5' : 'rgba(255,255,255,0.55)',
+                color: active ? '#f4f4f5' : 'rgba(255,255,255,0.78)',
                 cursor: 'pointer', fontFamily: 'inherit',
                 letterSpacing: '-0.01em',
                 transition: 'background 180ms cubic-bezier(0.32,0.72,0,1), color 180ms cubic-bezier(0.32,0.72,0,1), border-color 180ms cubic-bezier(0.32,0.72,0,1)',
               }}
               onMouseEnter={e => { if (!active) { e.currentTarget.style.background = 'rgba(255,255,255,0.03)'; e.currentTarget.style.color = '#f4f4f5' } }}
-              onMouseLeave={e => { if (!active) { e.currentTarget.style.background = 'transparent';     e.currentTarget.style.color = 'rgba(255,255,255,0.55)' } }}
+              onMouseLeave={e => { if (!active) { e.currentTarget.style.background = 'transparent';     e.currentTarget.style.color = 'rgba(255,255,255,0.78)' } }}
             >
               {label}
             </button>
@@ -2440,9 +2440,9 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
             const ccColor = over ? C.red : inIdeal ? C.green : C.text3
             return (
               <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 12, gap: 8 }}>
-                <span style={{ fontSize: 11, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.10em' }}>Your video title</span>
+                <span style={{ fontSize: 11, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.10em' }}>Your video title</span>
                 <span style={{
-                  fontSize: 11, fontWeight: 700, color: ccColor,
+                  fontSize: 11, fontWeight: 600, color: ccColor,
                   fontVariantNumeric: 'tabular-nums',
                   letterSpacing: '-0.05px', whiteSpace: 'nowrap',
                 }}>
@@ -2537,7 +2537,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
                   display: 'inline-flex', alignItems: 'center', gap: 7,
                   padding: '8px 12px', borderRadius: 99,
                   background: bg, border: `1px solid ${bdr}`,
-                  color, fontSize: 11.5, fontWeight: 700,
+                  color, fontSize: 11.5, fontWeight: 600,
                   letterSpacing: '-0.05px',
                   cursor: 'help',
                   height: 36, boxSizing: 'border-box',
@@ -2600,7 +2600,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
                       onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.04)' }}
                       onMouseLeave={e => { e.currentTarget.style.background = 'transparent' }}
                     >
-                      <span style={{ fontSize: 10, fontWeight: 700, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase' }}>
+                      <span style={{ fontSize: 10, fontWeight: 600, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase' }}>
                         {fmt.label}
                       </span>
                       <span style={{ fontSize: 13, fontWeight: 500, color: C.text1, letterSpacing: '-0.05px', lineHeight: 1.4 }}>
@@ -2658,15 +2658,15 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
         <div className="seo-glass-card" style={{ marginBottom: 20, marginTop: 20, borderTop: `3px solid ${C.green}`, padding: 0 }}>
           <div style={{ padding: '20px 24px 22px' }}>
             <div style={{ marginBottom: 16 }}>
-              <p style={{ fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.50)',
+              <p style={{ fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.50)',
                 letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 6 }}>
                 Pick the niche
               </p>
-              <p style={{ fontSize: 17, fontWeight: 700, color: '#f4f4f5',
+              <p style={{ fontSize: 17, fontWeight: 600, color: '#f4f4f5',
                 lineHeight: 1.35, letterSpacing: '-0.3px', marginBottom: 4 }}>
                 What niche is this title for?
               </p>
-              <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.55)', lineHeight: 1.55 }}>
+              <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.78)', lineHeight: 1.55 }}>
                 Pick the closest — that's the audience we'll score against.
               </p>
             </div>
@@ -2688,7 +2688,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
                         letterSpacing: '-0.02em',
                       }}>{opt.keyword}</span>
                     </div>
-                    <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.55)', lineHeight: 1.6 }}>
+                    <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.78)', lineHeight: 1.6 }}>
                       {opt.description}
                     </p>
                   </div>
@@ -2783,18 +2783,18 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
               minHeight: 152,
             }
             const eyebrowBase = {
-              fontSize: 10.5, fontWeight: 700, letterSpacing: '0.10em',
+              fontSize: 10.5, fontWeight: 600, letterSpacing: '0.10em',
               textTransform: 'uppercase', margin: 0,
             }
             const headlineBase = {
               fontSize: 13.5, fontWeight: 500, lineHeight: 1.5,
-              color: '#b8b8c0', letterSpacing: '-0.05px', margin: 0, flex: 1,
+              color: '#cfd0d6', letterSpacing: '-0.05px', margin: 0, flex: 1,
             }
 
             return (
               <div style={{ marginBottom: 28, marginTop: 36 }}>
                 <div style={{ marginBottom: 16 }}>
-                  <h2 style={{ fontSize: 22, fontWeight: 700, color: C.text1, letterSpacing: '-0.5px', margin: 0 }}>Search intent</h2>
+                  <h2 style={{ fontSize: 22, fontWeight: 600, color: C.text1, letterSpacing: '-0.5px', margin: 0 }}>Search intent</h2>
                 </div>
 
                 <div style={{ display: 'grid', gridTemplateColumns: overused ? '1fr 1fr 1fr' : '1fr 1fr', gap: 12 }}>
@@ -2850,25 +2850,25 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
                     border: '1px solid rgba(255,255,255,0.07)',
                   }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                      <Users size={14} color="rgba(255,255,255,0.55)" strokeWidth={2.2}/>
-                      <p style={{ ...eyebrowBase, color: 'rgba(255,255,255,0.55)' }}>Audience</p>
+                      <Users size={14} color="rgba(255,255,255,0.78)" strokeWidth={2.2}/>
+                      <p style={{ ...eyebrowBase, color: 'rgba(255,255,255,0.78)' }}>Audience</p>
                     </div>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginTop: 4 }}>
                       {emotionalDrv && (
                         <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
-                          <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.10em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.45)', flexShrink: 0, width: 56 }}>Driver</span>
+                          <span style={{ fontSize: 10, fontWeight: 600, letterSpacing: '0.10em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.45)', flexShrink: 0, width: 56 }}>Driver</span>
                           <span style={{ fontSize: 12.5, fontWeight: 500, color: '#f4f4f5', lineHeight: 1.4 }}>{emotionalDrv}</span>
                         </div>
                       )}
                       {searchIntent && (
                         <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
-                          <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.10em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.45)', flexShrink: 0, width: 56 }}>Intent</span>
+                          <span style={{ fontSize: 10, fontWeight: 600, letterSpacing: '0.10em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.45)', flexShrink: 0, width: 56 }}>Intent</span>
                           <span style={{ fontSize: 12.5, fontWeight: 500, color: '#f4f4f5', lineHeight: 1.4 }}>{searchIntent}</span>
                         </div>
                       )}
                       {viewerProfile && (
                         <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
-                          <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.10em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.45)', flexShrink: 0, width: 56 }}>Viewer</span>
+                          <span style={{ fontSize: 10, fontWeight: 600, letterSpacing: '0.10em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.45)', flexShrink: 0, width: 56 }}>Viewer</span>
                           <span style={{ fontSize: 12.5, fontWeight: 500, color: '#f4f4f5', lineHeight: 1.4 }}>{viewerProfile}</span>
                         </div>
                       )}
@@ -2893,11 +2893,11 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
                   other H2 on the page (22/700) instead of an internal 11/700
                   eyebrow that read smaller. */}
               <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 14, flexWrap: 'wrap' }}>
-                <h2 style={{ fontSize: 22, fontWeight: 700, color: C.text1, letterSpacing: '-0.5px', margin: 0 }}>Niche heat</h2>
+                <h2 style={{ fontSize: 22, fontWeight: 600, color: C.text1, letterSpacing: '-0.5px', margin: 0 }}>Niche heat</h2>
                 {result.primary_phrase && (
                   <span style={{
                     display: 'inline-flex', alignItems: 'center', gap: 6,
-                    fontSize: 12.5, fontWeight: 500, color: 'rgba(255,255,255,0.55)', letterSpacing: '-0.05px',
+                    fontSize: 12.5, fontWeight: 500, color: 'rgba(255,255,255,0.78)', letterSpacing: '-0.05px',
                   }}>
                     <span style={{ width: 3, height: 3, borderRadius: 99, background: 'rgba(255,255,255,0.30)' }}/>
                     &ldquo;{result.primary_phrase}&rdquo;
@@ -2906,7 +2906,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
                 <div style={{ flex: 1 }}/>
                 <span style={{
                   display: 'inline-flex', alignItems: 'center', gap: 6,
-                  fontSize: 10, fontWeight: 700, color: C.text2,
+                  fontSize: 10, fontWeight: 600, color: C.text2,
                   background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)',
                   padding: '3px 9px', borderRadius: 100,
                   letterSpacing: '0.10em', textTransform: 'uppercase',
@@ -2928,7 +2928,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
             <div style={{ marginBottom: 24, marginTop: 36 }}>
               <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 20, gap: 16 }}>
                 <div>
-                  <h2 style={{ fontSize: 22, fontWeight: 700, color: C.text1, letterSpacing: '-0.5px', margin: 0 }}>
+                  <h2 style={{ fontSize: 22, fontWeight: 600, color: C.text1, letterSpacing: '-0.5px', margin: 0 }}>
                     Suggested titles <span style={{ color: 'rgba(255,255,255,0.35)', fontSize: 14, fontWeight: 500, letterSpacing: '-0.2px', marginLeft: 8 }}>{result.suggestions.length}</span>
                   </h2>
                 </div>
@@ -2972,7 +2972,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
           {result.keyword_scores?.length > 0 && (
             <>
               <div style={{ marginBottom: 16, marginTop: 36 }}>
-                <h2 style={{ fontSize: 22, fontWeight: 700, color: C.text1, letterSpacing: '-0.5px', margin: 0 }}>Keyword research</h2>
+                <h2 style={{ fontSize: 22, fontWeight: 600, color: C.text1, letterSpacing: '-0.5px', margin: 0 }}>Keyword research</h2>
               </div>
               <NicheMap keywords={result.keyword_scores} onPick={setTitle}/>
             </>
@@ -2982,7 +2982,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
           {(result.autocomplete_terms?.length > 0 || result.top_tags?.length > 0) && (
             <>
               <div style={{ marginBottom: 16, marginTop: 36 }}>
-                <h2 style={{ fontSize: 22, fontWeight: 700, color: C.text1, letterSpacing: '-0.5px', margin: 0 }}>Keywords and tags</h2>
+                <h2 style={{ fontSize: 22, fontWeight: 600, color: C.text1, letterSpacing: '-0.5px', margin: 0 }}>Keywords and tags</h2>
               </div>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 24 }}>
@@ -2991,7 +2991,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
                   <div className="seo-suggestion-card">
                     <div style={{ padding: '16px 22px 18px' }}>
                       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, marginBottom: 12 }}>
-                        <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase', margin: 0 }}>
+                        <p style={{ fontSize: 11, fontWeight: 600, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase', margin: 0 }}>
                           Keywords <span style={{ color: 'rgba(255,255,255,0.35)', fontWeight: 600, marginLeft: 6 }}>{result.autocomplete_terms.length}</span>
                         </p>
                         <button
@@ -3030,7 +3030,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
                   <div className="seo-suggestion-card">
                     <div style={{ padding: '16px 22px 18px' }}>
                       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, marginBottom: 12 }}>
-                        <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase', margin: 0 }}>
+                        <p style={{ fontSize: 11, fontWeight: 600, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase', margin: 0 }}>
                           Suggested tags <span style={{ color: 'rgba(255,255,255,0.35)', fontWeight: 600, marginLeft: 6 }}>{result.top_tags.length}</span>
                         </p>
                         <button
@@ -3093,7 +3093,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
             <>
               {/* Section header — mirrors Overview's "Channel audit" H2 pattern (H2 + 1-line muted subtitle) */}
               <div ref={descRef} style={{ marginBottom: 16, marginTop: 36 }}>
-                <h2 style={{ fontSize: 22, fontWeight: 700, color: C.text1, letterSpacing: '-0.5px', margin: 0 }}>Description optimizer</h2>
+                <h2 style={{ fontSize: 22, fontWeight: 600, color: C.text1, letterSpacing: '-0.5px', margin: 0 }}>Description optimizer</h2>
               </div>
 
               <div className="seo-glass-card" style={{ borderRadius: 16, padding: '22px 24px' }}>
@@ -3167,7 +3167,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
                   {descKeywords.length > 0 && (
                     <div style={{ marginTop: 18, paddingTop: 16, borderTop: `1px solid ${C.border}` }}>
                       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10, gap: 10, flexWrap: 'wrap' }}>
-                        <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.10em', margin: 0 }}>
+                        <p style={{ fontSize: 11, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.10em', margin: 0 }}>
                           Top {descKeywords.length} keywords used
                         </p>
                         <button
@@ -3213,7 +3213,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
                   {featuredHashtags.length > 0 && (
                     <div style={{ marginTop: 18, paddingTop: 16, borderTop: `1px solid ${C.border}` }}>
                       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 4, gap: 10, flexWrap: 'wrap' }}>
-                        <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.10em', margin: 0 }}>
+                        <p style={{ fontSize: 11, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.10em', margin: 0 }}>
                           Hashtags featured on your top videos
                         </p>
                         <button
@@ -3340,7 +3340,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
                               <span className="lbl">description</span>
                             </span>
                           )}
-                          <span style={{ fontSize: 12, color: '#9a9aa3', fontWeight: 500, marginLeft: 2 }}>
+                          <span style={{ fontSize: 12, color: '#b2b3bb', fontWeight: 500, marginLeft: 2 }}>
                             · {relTime(r.updated_at)}
                           </span>
                         </div>

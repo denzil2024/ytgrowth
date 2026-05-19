@@ -197,7 +197,7 @@ function useKwStyles() {
       .kw-report-cta {
         background: #e5251b; color: #fff;
         border: 1px solid #e5251b; border-radius: 100px;
-        padding: 8px 18px; font-size: 12.5px; font-weight: 700;
+        padding: 8px 18px; font-size: 12.5px; font-weight: 600;
         font-family: 'Inter', system-ui, sans-serif;
         cursor: pointer; white-space: nowrap;
         transition: filter 0.15s;
@@ -210,7 +210,7 @@ function useKwStyles() {
         background: ${C.amberBg}; border: 1px solid ${C.amberBdr};
         border-radius: 100px; padding: 4px 12px;
       }
-      .kw-report-chip .val { font-size: 12px; font-weight: 700; color: ${C.text1}; }
+      .kw-report-chip .val { font-size: 12px; font-weight: 600; color: ${C.text1}; }
       .kw-report-chip .lbl { font-size: 11px; color: ${C.amberHi}; font-weight: 600; }
 
       /* Intent picker row — hairline card, green-tinted hover that
@@ -266,7 +266,7 @@ function useKwStyles() {
       .kw-copy-btn {
         display: inline-flex; align-items: center; gap: 6px;
         padding: 8px 16px; border-radius: 100px;
-        font-size: 12px; font-weight: 700; letter-spacing: 0.01em;
+        font-size: 12px; font-weight: 600; letter-spacing: 0.01em;
         font-family: 'Inter', system-ui, sans-serif;
         background: #e5251b; color: #fff;
         border: none; cursor: pointer;
@@ -286,7 +286,7 @@ function useKwStyles() {
       .kw-ghost-btn {
         display: inline-flex; align-items: center; gap: 6px;
         padding: 7px 15px; border-radius: 100px;
-        font-size: 12px; font-weight: 700; letter-spacing: 0.01em;
+        font-size: 12px; font-weight: 600; letter-spacing: 0.01em;
         font-family: 'Inter', system-ui, sans-serif;
         background: ${C.card}; color: ${C.text1};
         border: 1px solid ${C.hair}; cursor: pointer;
@@ -327,8 +327,8 @@ const C = {
   amber:   '#d97706', amberBg: 'rgba(217,119,6,0.14)', amberBdr: 'rgba(217,119,6,0.34)',
   redHi:   '#fb6a60', greenHi: '#34d27b', amberHi: '#f0a23b',
   text1:   '#f4f4f5',
-  text2:   '#b8b8c0',
-  text3:   '#9a9aa3',
+  text2:   '#cfd0d6',
+  text3:   '#b2b3bb',
   text4:   'rgba(255,255,255,0.40)',
   border:  'rgba(255,255,255,0.08)',
   chipBg:  '#1c1c21',
@@ -370,7 +370,7 @@ function MomentumBadge({ momentum }) {
   return (
     <span style={{
       display: 'inline-flex', alignItems: 'center',
-      fontSize: 10.5, fontWeight: 700,
+      fontSize: 10.5, fontWeight: 600,
       color: config.color, background: config.bg,
       border: `1px solid ${config.bdr}`,
       borderRadius: 100, padding: '2px 8px',
@@ -410,12 +410,12 @@ function KwDetailModal({ kw, C, onClose }) {
           {/* Header */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 20, paddingBottom: 20, borderBottom: `1px solid ${C.border}` }}>
             <div style={{ flex: 1, minWidth: 0 }}>
-              <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 5 }}>Keyword playbook</p>
-              <p style={{ fontSize: 18, fontWeight: 700, color: C.text1, lineHeight: 1.3, letterSpacing: '-0.3px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{kw.keyword}</p>
+              <p style={{ fontSize: 11, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 5 }}>Keyword playbook</p>
+              <p style={{ fontSize: 18, fontWeight: 600, color: C.text1, lineHeight: 1.3, letterSpacing: '-0.3px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{kw.keyword}</p>
             </div>
             <div style={{ display: 'flex', gap: 8, flexShrink: 0, alignItems: 'center' }}>
               <MomentumBadge momentum={kw.momentum} />
-              <span style={{ fontSize: 13, fontWeight: 700, color: scColor, fontVariantNumeric: 'tabular-nums', padding: '3px 10px', border: `1px solid ${scColor}30`, borderRadius: 100 }}>
+              <span style={{ fontSize: 13, fontWeight: 600, color: scColor, fontVariantNumeric: 'tabular-nums', padding: '3px 10px', border: `1px solid ${scColor}30`, borderRadius: 100 }}>
                 {kw.opportunityScore}/100
               </span>
               <button onClick={copyKeyword}
@@ -454,7 +454,7 @@ function KwDetailModal({ kw, C, onClose }) {
               <div style={{ marginBottom: 20 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12, flexWrap: 'wrap' }}>
                   <span style={{
-                    fontSize: 11, fontWeight: 700, color: C.text3,
+                    fontSize: 11, fontWeight: 600, color: C.text3,
                     letterSpacing: '0.10em', textTransform: 'uppercase',
                   }}>Top-ranking videos right now</span>
                   {topViews > 0 && (
@@ -466,7 +466,7 @@ function KwDetailModal({ kw, C, onClose }) {
                     }}>
                       <span style={{ width: 6, height: 6, borderRadius: 99, background: C.green, flexShrink: 0 }}/>
                       Top performer{' '}
-                      <strong style={{ color: C.text1, fontWeight: 700 }}>{fmtCompact(topViews)} views</strong>
+                      <strong style={{ color: C.text1, fontWeight: 600 }}>{fmtCompact(topViews)} views</strong>
                     </span>
                   )}
                 </div>
@@ -521,7 +521,7 @@ function KwDetailModal({ kw, C, onClose }) {
                             <span style={{
                               position: 'absolute', bottom: 8, right: 8,
                               background: 'rgba(0,0,0,0.82)', color: '#fff',
-                              fontSize: 11.5, fontWeight: 700,
+                              fontSize: 11.5, fontWeight: 600,
                               padding: '3px 7px', borderRadius: 5,
                               fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.05px',
                               backdropFilter: 'blur(2px)',
@@ -558,15 +558,15 @@ function KwDetailModal({ kw, C, onClose }) {
 
           {/* 3-col playbook — exact Outliers pattern (blue / amber / green) */}
           <div style={{ background: C.cardFlat, border: `1px solid ${C.border}`, borderRadius: 16, padding: '20px 22px' }}>
-            <p style={{ fontSize: 18, fontWeight: 700, color: C.text1, letterSpacing: '-0.3px', marginBottom: 16 }}>Keyword playbook</p>
+            <p style={{ fontSize: 18, fontWeight: 600, color: C.text1, letterSpacing: '-0.3px', marginBottom: 16 }}>Keyword playbook</p>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr 1fr', gap: 8 }}>
               {/* Blue — Why it works (numbered list, mirrors Quick actions) */}
               <div style={{ background: 'rgba(79,134,247,0.07)', border: '1px solid rgba(79,134,247,0.12)', borderRadius: 10, padding: '12px 14px' }}>
-                <p style={{ fontSize: 11, fontWeight: 700, color: '#4a7cf7', letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 8 }}>Why it works</p>
+                <p style={{ fontSize: 11, fontWeight: 600, color: '#4a7cf7', letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 8 }}>Why it works</p>
                 <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 7, margin: 0, padding: 0 }}>
                   {buildWhyItWorks(kw).map((s, i) => (
                     <li key={i} style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
-                      <span style={{ fontSize: 12, fontWeight: 700, color: '#4a7cf7', fontVariantNumeric: 'tabular-nums', lineHeight: 1.55, minWidth: 14 }}>{i + 1}.</span>
+                      <span style={{ fontSize: 12, fontWeight: 600, color: '#4a7cf7', fontVariantNumeric: 'tabular-nums', lineHeight: 1.55, minWidth: 14 }}>{i + 1}.</span>
                       <span style={{ fontSize: 13, fontWeight: 500, color: C.text1, lineHeight: 1.6, flex: 1, letterSpacing: '-0.005em' }}>{s}</span>
                     </li>
                   ))}
@@ -574,11 +574,11 @@ function KwDetailModal({ kw, C, onClose }) {
               </div>
               {/* Amber — Quick actions (numbered list) */}
               <div style={{ background: C.cardFlat, border: `1px solid ${C.border}`, borderLeft: `3px solid ${C.amber}`, borderRadius: '0 10px 10px 0', padding: '12px 14px', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
-                <p style={{ fontSize: 11, fontWeight: 700, color: C.amber, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 8 }}>Quick actions</p>
+                <p style={{ fontSize: 11, fontWeight: 600, color: C.amber, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 8 }}>Quick actions</p>
                 <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 7, margin: 0, padding: 0 }}>
                   {actions.map((s, i) => (
                     <li key={i} style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
-                      <span style={{ fontSize: 12, fontWeight: 700, color: C.amber, fontVariantNumeric: 'tabular-nums', lineHeight: 1.55, minWidth: 14 }}>{i + 1}.</span>
+                      <span style={{ fontSize: 12, fontWeight: 600, color: C.amber, fontVariantNumeric: 'tabular-nums', lineHeight: 1.55, minWidth: 14 }}>{i + 1}.</span>
                       <span style={{ fontSize: 13, fontWeight: 500, color: C.text1, lineHeight: 1.6, flex: 1, letterSpacing: '-0.005em' }}>{s}</span>
                     </li>
                   ))}
@@ -586,7 +586,7 @@ function KwDetailModal({ kw, C, onClose }) {
               </div>
               {/* Green — Why now */}
               <div style={{ background: 'rgba(5,150,105,0.07)', border: '1px solid rgba(5,150,105,0.14)', borderRadius: 10, padding: '12px 14px' }}>
-                <p style={{ fontSize: 11, fontWeight: 700, color: C.green, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 8 }}>Act on this because</p>
+                <p style={{ fontSize: 11, fontWeight: 600, color: C.green, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 8 }}>Act on this because</p>
                 <p style={{ fontSize: 13, fontWeight: 500, color: C.text1, lineHeight: 1.65, letterSpacing: '-0.005em' }}>{buildWhyNow(kw)}</p>
               </div>
             </div>
@@ -718,12 +718,12 @@ function VideoMetricsRow({ vph, outlierMult }) {
     border: '1px solid',
   }
   const labelStyle = {
-    fontSize: 10, fontWeight: 700,
+    fontSize: 10, fontWeight: 600,
     letterSpacing: '0.08em', textTransform: 'uppercase',
     opacity: 0.78, marginRight: 6,
   }
   const valuePill = (color) => ({
-    fontWeight: 700, color: C.text1,
+    fontWeight: 600, color: C.text1,
     background: C.cardFlat, border: `1px solid ${color}40`,
     borderRadius: 100, padding: '1px 8px',
     fontSize: 11, letterSpacing: '-0.01em',
@@ -845,7 +845,7 @@ function MomentumChart({ timeline, height = 120 }) {
         marginTop: 6, fontSize: 12.5, fontWeight: 500,
         color: C.text2, letterSpacing: '-0.01em',
       }}>
-        Peak <strong style={{ color: C.text1, fontWeight: 700 }}>{maxCount} video{maxCount === 1 ? '' : 's'}</strong> {peakLabel} · {rising ? 'niche heating up' : 'niche cooling down'}
+        Peak <strong style={{ color: C.text1, fontWeight: 600 }}>{maxCount} video{maxCount === 1 ? '' : 's'}</strong> {peakLabel} · {rising ? 'niche heating up' : 'niche cooling down'}
       </p>
     </div>
   )
@@ -869,7 +869,7 @@ function ScoreRing({ score }) {
           style={{ transition: 'stroke-dasharray 0.8s cubic-bezier(0.34,1.56,0.64,1)' }} />
       </svg>
       <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-        <span style={{ fontSize: 28, fontWeight: 800, color, letterSpacing: '-1px', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{score}</span>
+        <span style={{ fontSize: 28, fontWeight: 700, color, letterSpacing: '-1px', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{score}</span>
         <span style={{ fontSize: 12, color: C.text3, fontWeight: 600, letterSpacing: '0.06em', marginTop: 2 }}>/100</span>
       </div>
     </div>
@@ -1020,7 +1020,7 @@ export default function Keywords({ plan, freeTierFeatures }) {
           darker so it doesn't disappear on light backgrounds. Matches
           Competitors. */}
       <div style={{ marginBottom: 28 }}>
-        <h1 style={{ fontSize: 26, fontWeight: 700, color: C.text1, letterSpacing: '-0.7px', marginBottom: 6, lineHeight: 1.1 }}>
+        <h1 style={{ fontSize: 26, fontWeight: 600, color: C.text1, letterSpacing: '-0.7px', marginBottom: 6, lineHeight: 1.1 }}>
           Keyword Research
         </h1>
         <p style={{ fontSize: 14, color: C.text2, fontWeight: 500, letterSpacing: '-0.005em', lineHeight: 1.45 }}>
@@ -1099,11 +1099,11 @@ export default function Keywords({ plan, freeTierFeatures }) {
                 stacked labels. Eyebrow + heading sit together; subtitle
                 is the supporting line. */}
             <div style={{ marginBottom: 16 }}>
-              <p style={{ fontSize: 11, fontWeight: 700, color: C.text3,
+              <p style={{ fontSize: 11, fontWeight: 600, color: C.text3,
                 letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 6 }}>
                 Pick the niche
               </p>
-              <p style={{ fontSize: 17, fontWeight: 700, color: C.text1,
+              <p style={{ fontSize: 17, fontWeight: 600, color: C.text1,
                 lineHeight: 1.35, letterSpacing: '-0.3px', marginBottom: 4 }}>
                 What niche is this keyword for?
               </p>
@@ -1117,7 +1117,7 @@ export default function Keywords({ plan, freeTierFeatures }) {
                 <div key={i} className="kw-intent-opt" onClick={() => runResearch(opt.keyword)}>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 5, flexWrap: 'wrap' }}>
-                      <span style={{ fontSize: 14.5, fontWeight: 700, color: C.text1,
+                      <span style={{ fontSize: 14.5, fontWeight: 600, color: C.text1,
                         letterSpacing: '-0.15px' }}>{opt.label}</span>
                       {/* Keyword variant chip — green tint to match the
                           card's accent. The chip is data ("here's the
@@ -1206,7 +1206,7 @@ export default function Keywords({ plan, freeTierFeatures }) {
                   {/* LEFT — ScoreRing + 'TOP PICK' label + keyword caption */}
                   <div style={{ flexShrink: 0, textAlign: 'center' }}>
                     <ScoreRing score={topScore} />
-                    <p style={{ fontSize: 11, color: C.text3, fontWeight: 700, marginTop: 8, letterSpacing: '0.10em', textTransform: 'uppercase' }}>
+                    <p style={{ fontSize: 11, color: C.text3, fontWeight: 600, marginTop: 8, letterSpacing: '0.10em', textTransform: 'uppercase' }}>
                       Top pick
                     </p>
                     <p style={{ fontSize: 12, fontWeight: 600, color: C.text1, marginTop: 4, maxWidth: 140, lineHeight: 1.35, letterSpacing: '-0.1px', overflow: 'hidden', textOverflow: 'ellipsis', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
@@ -1219,11 +1219,11 @@ export default function Keywords({ plan, freeTierFeatures }) {
 
                   {/* MIDDLE — AI verdict paragraph */}
                   <div style={{ flex: 1.3, minWidth: 0 }}>
-                    <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 10 }}>
+                    <p style={{ fontSize: 11, fontWeight: 600, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 10 }}>
                       AI verdict
                     </p>
                     <p style={{ fontSize: 14, fontWeight: 500, color: C.text1, lineHeight: 1.75, letterSpacing: '-0.005em' }}>
-                      Your strongest keyword is <span style={{ fontWeight: 700, color: C.text1 }}>{result.topPick.keyword}</span> at <span style={{ fontWeight: 700, color: scoreCol }}>{topScore}/100</span>. {result.topPick.whyThisOne}
+                      Your strongest keyword is <span style={{ fontWeight: 600, color: C.text1 }}>{result.topPick.keyword}</span> at <span style={{ fontWeight: 600, color: scoreCol }}>{topScore}/100</span>. {result.topPick.whyThisOne}
                       {result.seedIntent?.intentSummary && <> {result.seedIntent.intentSummary}</>}
                     </p>
                   </div>
@@ -1236,7 +1236,7 @@ export default function Keywords({ plan, freeTierFeatures }) {
                   {/* RIGHT — Intent breakdown rows */}
                   {rows.length > 0 && (
                     <div style={{ flex: 1, minWidth: 0 }}>
-                      <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 12 }}>
+                      <p style={{ fontSize: 11, fontWeight: 600, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 12 }}>
                         Intent breakdown
                       </p>
                       {rows.map(([label, val]) => {
@@ -1248,7 +1248,7 @@ export default function Keywords({ plan, freeTierFeatures }) {
                           <div key={label} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
                             <span style={{ fontSize: 12.5, color: C.text2, fontWeight: 500, flexShrink: 0, width: 100, letterSpacing: '-0.01em' }}>{label}</span>
                             <span style={{
-                              fontSize: 11, fontWeight: 700,
+                              fontSize: 11, fontWeight: 600,
                               color: tone, background: toneBg,
                               border: `1px solid ${toneBdr}`,
                               borderRadius: 100, padding: '2px 10px',
@@ -1299,7 +1299,7 @@ export default function Keywords({ plan, freeTierFeatures }) {
             return (
               <div style={{ marginTop: 32 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12, flexWrap: 'wrap' }}>
-                  <h2 style={{ fontSize: 18, fontWeight: 700, color: C.text1, letterSpacing: '-0.3px' }}>
+                  <h2 style={{ fontSize: 18, fontWeight: 600, color: C.text1, letterSpacing: '-0.3px' }}>
                     Top-ranking videos right now
                   </h2>
                   {topPerformer > 0 && (
@@ -1311,7 +1311,7 @@ export default function Keywords({ plan, freeTierFeatures }) {
                     }}>
                       <span style={{ width: 6, height: 6, borderRadius: 99, background: C.green, flexShrink: 0 }}/>
                       Top performer{' '}
-                      <strong style={{ color: C.text1, fontWeight: 700 }}>{fmtCompact(topPerformer)} views</strong>
+                      <strong style={{ color: C.text1, fontWeight: 600 }}>{fmtCompact(topPerformer)} views</strong>
                     </span>
                   )}
                 </div>
@@ -1367,7 +1367,7 @@ export default function Keywords({ plan, freeTierFeatures }) {
                             <span style={{
                               position: 'absolute', bottom: 8, right: 8,
                               background: 'rgba(0,0,0,0.82)', color: '#fff',
-                              fontSize: 11.5, fontWeight: 700,
+                              fontSize: 11.5, fontWeight: 600,
                               padding: '3px 7px', borderRadius: 5,
                               fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.05px',
                               backdropFilter: 'blur(2px)',
@@ -1421,11 +1421,11 @@ export default function Keywords({ plan, freeTierFeatures }) {
             return (
               <div style={{ marginTop: 32 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12, flexWrap: 'wrap' }}>
-                  <h2 style={{ fontSize: 18, fontWeight: 700, color: C.text1, letterSpacing: '-0.3px' }}>
+                  <h2 style={{ fontSize: 18, fontWeight: 600, color: C.text1, letterSpacing: '-0.3px' }}>
                     Competition momentum
                   </h2>
                   <span style={{
-                    fontSize: 11, fontWeight: 700, color: C.text3,
+                    fontSize: 11, fontWeight: 600, color: C.text3,
                     letterSpacing: '0.10em', textTransform: 'uppercase',
                   }}>last 12 weeks</span>
                   <span style={{
@@ -1448,9 +1448,9 @@ export default function Keywords({ plan, freeTierFeatures }) {
           {result.keywords?.length > 0 && (
             <>
               <div style={{ marginBottom: 14, marginTop: 32 }}>
-                <h2 style={{ fontSize: 18, fontWeight: 700, color: C.text1, letterSpacing: '-0.3px', marginBottom: 4 }}>Ranked keywords</h2>
+                <h2 style={{ fontSize: 18, fontWeight: 600, color: C.text1, letterSpacing: '-0.3px', marginBottom: 4 }}>Ranked keywords</h2>
                 <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.5 }}>
-                  Click any keyword for the playbook · <span style={{ color: C.green, fontWeight: 700 }}>ACTIVE</span> = rising · <span style={{ color: C.amber, fontWeight: 700 }}>OPEN</span> = underclaimed
+                  Click any keyword for the playbook · <span style={{ color: C.green, fontWeight: 600 }}>ACTIVE</span> = rising · <span style={{ color: C.amber, fontWeight: 600 }}>OPEN</span> = underclaimed
                 </p>
               </div>
 
@@ -1459,7 +1459,7 @@ export default function Keywords({ plan, freeTierFeatures }) {
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, marginBottom: 14 }}>
                     <div style={{ minWidth: 0, display: 'flex', alignItems: 'center', gap: 8 }}>
                       <span style={{
-                        fontSize: 11, fontWeight: 700, color: C.text3,
+                        fontSize: 11, fontWeight: 600, color: C.text3,
                         background: '#1c1c21', padding: '2px 8px',
                         borderRadius: 20, border: '1px solid rgba(255,255,255,0.08)',
                         fontVariantNumeric: 'tabular-nums',
@@ -1518,7 +1518,7 @@ export default function Keywords({ plan, freeTierFeatures }) {
                                   <div style={{ width: `${kw.opportunityScore}%`, height: '100%', background: scColor, borderRadius: 99, transition: 'width 0.8s cubic-bezier(0.34,1.56,0.64,1)' }}/>
                                 </div>
                                 <span style={{
-                                  fontSize: 13, fontWeight: 700, color: scColor,
+                                  fontSize: 13, fontWeight: 600, color: scColor,
                                   fontVariantNumeric: 'tabular-nums',
                                   minWidth: 26, textAlign: 'right', flexShrink: 0,
                                 }}>{kw.opportunityScore}</span>
@@ -1542,7 +1542,7 @@ export default function Keywords({ plan, freeTierFeatures }) {
           {result.clusters?.length > 0 && (
             <>
               <div style={{ marginBottom: 14, marginTop: 32 }}>
-                <h2 style={{ fontSize: 18, fontWeight: 700, color: C.text1, letterSpacing: '-0.3px', marginBottom: 4 }}>Content clusters</h2>
+                <h2 style={{ fontSize: 18, fontWeight: 600, color: C.text1, letterSpacing: '-0.3px', marginBottom: 4 }}>Content clusters</h2>
                 <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.5 }}>
                   Themes you can build a series around
                 </p>
@@ -1565,15 +1565,15 @@ export default function Keywords({ plan, freeTierFeatures }) {
                           display: 'flex', flexDirection: 'column',
                         }}>
                           {/* Eyebrow + theme name */}
-                          <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 4 }}>
+                          <p style={{ fontSize: 11, fontWeight: 600, color: C.text3, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 4 }}>
                             Theme
                           </p>
                           <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 8, marginBottom: 14 }}>
-                            <p style={{ fontSize: 14, fontWeight: 700, color: C.text1, lineHeight: 1.35, letterSpacing: '-0.15px', flex: 1, minWidth: 0 }}>
+                            <p style={{ fontSize: 14, fontWeight: 600, color: C.text1, lineHeight: 1.35, letterSpacing: '-0.15px', flex: 1, minWidth: 0 }}>
                               {cl.clusterName}
                             </p>
                             <span style={{
-                              fontSize: 11, fontWeight: 700, color: C.text3,
+                              fontSize: 11, fontWeight: 600, color: C.text3,
                               background: '#1c1c21', padding: '2px 8px',
                               borderRadius: 20, border: '1px solid rgba(255,255,255,0.08)',
                               flexShrink: 0, fontVariantNumeric: 'tabular-nums',
@@ -1658,7 +1658,7 @@ export default function Keywords({ plan, freeTierFeatures }) {
               background: C.cardFlat, border: `1px solid ${C.border}`, borderRadius: 16,
               boxShadow: '0 1px 2px rgba(0,0,0,0.04), 0 4px 14px rgba(0,0,0,0.06)',
             }}>
-              <p style={{ fontSize: 16, fontWeight: 700, color: C.text1, letterSpacing: '-0.2px', marginBottom: 8 }}>
+              <p style={{ fontSize: 16, fontWeight: 600, color: C.text1, letterSpacing: '-0.2px', marginBottom: 8 }}>
                 No reports yet
               </p>
               <p style={{ fontSize: 13.5, color: C.text3, maxWidth: 360, margin: '0 auto', lineHeight: 1.6 }}>
@@ -1694,7 +1694,7 @@ export default function Keywords({ plan, freeTierFeatures }) {
                     </button>
                     <div className="kw-report-header" onClick={() => openReport(r)}>
                       <div style={{ flex: 1, minWidth: 0 }}>
-                        <p style={{ fontWeight: 700, fontSize: 15, color: C.text1,
+                        <p style={{ fontWeight: 600, fontSize: 15, color: C.text1,
                           letterSpacing: '-0.2px', whiteSpace: 'nowrap', overflow: 'hidden',
                           textOverflow: 'ellipsis', marginBottom: 8 }}>
                           {r.keyword}

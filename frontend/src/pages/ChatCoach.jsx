@@ -55,7 +55,7 @@ if (typeof document !== 'undefined' && !document.getElementById('ytg-chat-scroll
     .ytg-chat-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.10); border-radius: 99px }
     .ytg-chat-scroll::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.18) }
     .ytg-chat-scroll::-webkit-scrollbar-track, .ytg-chat-scroll::-webkit-scrollbar-button { background: transparent; display: none }
-    .ytg-chat-textarea::placeholder { color: #6b6b73 }
+    .ytg-chat-textarea::placeholder { color: #87878f }
     @keyframes ytgFadeUp { from { opacity: 0; transform: translateY(8px) } to { opacity: 1; transform: none } }
     @media (prefers-reduced-motion: reduce) { .ytg-fade-up { animation: none !important } }
     .md-list-ul > li::before {
@@ -87,9 +87,9 @@ const C = {
   hairStrong:  'rgba(255,255,255,0.11)',  // focus / active hairline
   t1:          '#f4f4f5',                 // strong text
   t2:          '#d4d4d8',                 // body text
-  t3:          '#b8b8c0',                 // muted text
-  t4:          '#6b6b73',                 // faint (placeholder, footnotes)
-  t5:          '#6b6b73',                 // faintest (labels, idle icons)
+  t3:          '#cfd0d6',                 // muted text
+  t4:          '#87878f',                 // faint (placeholder, footnotes)
+  t5:          '#87878f',                 // faintest (labels, idle icons)
   red:         '#e5251b',                 // accent — send + active marker only
   redText:     '#f87171',                 // error copy on dark
   spring:      'cubic-bezier(0.32, 0.72, 0, 1)',

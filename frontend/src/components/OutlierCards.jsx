@@ -62,8 +62,8 @@ export const OC_C = {
   border:      'rgba(255,255,255,0.08)',
   borderLight: 'rgba(255,255,255,0.06)',
   text1:       '#f4f4f5',
-  text2:       '#b8b8c0',
-  text3:       '#9a9aa3',
+  text2:       '#cfd0d6',
+  text3:       '#b2b3bb',
   red:         '#e5251b',
   redBg:       'rgba(229,37,27,0.13)',
   redBdr:      'rgba(229,37,27,0.32)',
@@ -196,17 +196,17 @@ export function VideoResultCard({ item, kind, onOpen }) {
           : <div style={{ width: '100%', aspectRatio: '16/9', background: '#26262b' }}/>
         }
         {isShort && (
-          <span style={{ position: 'absolute', top: 8, left: 8, background: 'rgba(0,0,0,0.78)', color: '#fff', fontSize: 12, fontWeight: 800, padding: '2px 6px', borderRadius: 4, letterSpacing: '0.06em' }}>SHORT</span>
+          <span style={{ position: 'absolute', top: 8, left: 8, background: 'rgba(0,0,0,0.78)', color: '#fff', fontSize: 12, fontWeight: 700, padding: '2px 6px', borderRadius: 4, letterSpacing: '0.06em' }}>SHORT</span>
         )}
         {durLabel && (
-          <span style={{ position: 'absolute', bottom: 8, right: 8, background: 'rgba(0,0,0,0.72)', color: '#fff', fontSize: 12, fontWeight: 700, padding: '2px 7px', borderRadius: 5, fontVariantNumeric: 'tabular-nums' }}>{durLabel}</span>
+          <span style={{ position: 'absolute', bottom: 8, right: 8, background: 'rgba(0,0,0,0.72)', color: '#fff', fontSize: 12, fontWeight: 600, padding: '2px 7px', borderRadius: 5, fontVariantNumeric: 'tabular-nums' }}>{durLabel}</span>
         )}
       </a>
 
       {/* Body — title -> channel byline -> meta -> footer (metrics + CTA) */}
       <div style={{ padding: '20px 20px 20px', display: 'flex', flexDirection: 'column', flex: 1 }}>
         <p style={{
-          fontSize: 16, fontWeight: 700, color: C.text1, lineHeight: 1.4, marginBottom: 12, letterSpacing: '-0.3px',
+          fontSize: 16, fontWeight: 600, color: C.text1, lineHeight: 1.4, marginBottom: 12, letterSpacing: '-0.3px',
           display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden',
         }}>{item.title}</p>
 
@@ -229,8 +229,8 @@ export function VideoResultCard({ item, kind, onOpen }) {
               { label: 'Eng',     display: engPct != null ? `${engPct.toFixed(1)}%` : '—',                                 color: engColor,   tip: 'Engagement rate = likes ÷ views. 3%+ strong, 1–3% avg, <1% weak.' },
             ].map(m => (
               <div key={m.label} title={m.tip} style={{ cursor: 'help', textAlign: 'left' }}>
-                <p style={{ fontSize: 10.5, fontWeight: 700, color: C.text3, letterSpacing: '0.09em', textTransform: 'uppercase', marginBottom: 7, lineHeight: 1 }}>{m.label}</p>
-                <p style={{ fontSize: 17, fontWeight: 800, color: m.color, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.4px', lineHeight: 1 }}>{m.display}</p>
+                <p style={{ fontSize: 10.5, fontWeight: 600, color: C.text3, letterSpacing: '0.09em', textTransform: 'uppercase', marginBottom: 7, lineHeight: 1 }}>{m.label}</p>
+                <p style={{ fontSize: 17, fontWeight: 700, color: m.color, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.4px', lineHeight: 1 }}>{m.display}</p>
               </div>
             ))}
           </div>
@@ -238,7 +238,7 @@ export function VideoResultCard({ item, kind, onOpen }) {
             onClick={onOpen}
             style={{
               width: '100%', justifyContent: 'center',
-              padding: '11px 16px', fontSize: 13.5, fontWeight: 700,
+              padding: '11px 16px', fontSize: 13.5, fontWeight: 600,
               border: 'none', borderRadius: 100, cursor: 'pointer',
               background: C.red, color: '#fff',
               fontFamily: 'inherit', letterSpacing: '0.01em',
@@ -308,13 +308,13 @@ export function ChannelResultCard({ item, onOpen }) {
             : <span style={{
                 position: 'absolute', inset: 0,
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: 28, fontWeight: 700, color: C.red,
+                fontSize: 28, fontWeight: 600, color: C.red,
               }}>{initial}</span>
           }
         </div>
 
         <p style={{
-          fontSize: 16, fontWeight: 700, color: C.text1, lineHeight: 1.35, marginBottom: 3, letterSpacing: '-0.3px',
+          fontSize: 16, fontWeight: 600, color: C.text1, lineHeight: 1.35, marginBottom: 3, letterSpacing: '-0.3px',
           whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
         }}>{item.channel_name}</p>
 
@@ -347,8 +347,8 @@ export function ChannelResultCard({ item, onOpen }) {
               { label: 'Avg views', display: fmtNum(item.avg_views_per_video),   color: C.text1,    tip: 'Average views per video across this channel\'s entire catalog.' },
             ].map(m => (
               <div key={m.label} title={m.tip} style={{ cursor: 'help', textAlign: 'left' }}>
-                <p style={{ fontSize: 10.5, fontWeight: 700, color: C.text3, letterSpacing: '0.09em', textTransform: 'uppercase', marginBottom: 7, lineHeight: 1 }}>{m.label}</p>
-                <p style={{ fontSize: 17, fontWeight: 800, color: m.color, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.4px', lineHeight: 1 }}>{m.display}</p>
+                <p style={{ fontSize: 10.5, fontWeight: 600, color: C.text3, letterSpacing: '0.09em', textTransform: 'uppercase', marginBottom: 7, lineHeight: 1 }}>{m.label}</p>
+                <p style={{ fontSize: 17, fontWeight: 700, color: m.color, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.4px', lineHeight: 1 }}>{m.display}</p>
               </div>
             ))}
           </div>
@@ -356,7 +356,7 @@ export function ChannelResultCard({ item, onOpen }) {
             onClick={onOpen}
             style={{
               width: '100%', justifyContent: 'center',
-              padding: '11px 16px', fontSize: 13.5, fontWeight: 700,
+              padding: '11px 16px', fontSize: 13.5, fontWeight: 600,
               border: 'none', borderRadius: 100, cursor: 'pointer',
               background: C.red, color: '#fff',
               fontFamily: 'inherit', letterSpacing: '0.01em',

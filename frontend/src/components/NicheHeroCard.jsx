@@ -25,8 +25,8 @@ const C = {
   border:      'rgba(255,255,255,0.08)',
   borderSoft:  'rgba(255,255,255,0.06)',
   text1:       '#f4f4f5',
-  text2:       '#b8b8c0',
-  text3:       '#9a9aa3',
+  text2:       '#cfd0d6',
+  text3:       '#b2b3bb',
   text4:       'rgba(255,255,255,0.30)',
   red:         '#e5251b',
   redDeep:     '#fb6a60',
@@ -611,7 +611,7 @@ const styles = `
 }
 .nh-section-title {
   display: inline-flex; align-items: center; gap: 8px;
-  font-size: 13.5px; font-weight: 700; color: ${C.text1};
+  font-size: 13.5px; font-weight: 600; color: ${C.text1};
   letter-spacing: -0.2px;
 }
 .nh-dot {
@@ -669,7 +669,7 @@ const styles = `
   display: inline-flex; align-items: center; justify-content: center;
   min-width: 18px; height: 18px; padding: 0 5px;
   border-radius: 100px;
-  font-size: 10.5px; font-weight: 800;
+  font-size: 10.5px; font-weight: 700;
   background: rgba(255,255,255,0.22);
 }
 .nh-pill:not(.nh-pill-active) .nh-pill-count {
@@ -743,7 +743,7 @@ const styles = `
   font-size: 11.5px; color: ${C.text3};
   letter-spacing: -0.1px;
 }
-.nh-query strong { color: ${C.text2}; font-weight: 700; }
+.nh-query strong { color: ${C.text2}; font-weight: 600; }
 
 /* Niche grid. With the Feed column at 1040px, three cards fit on one
    row at ~310px each which matches the card's natural design. Drops
@@ -788,7 +788,7 @@ const styles = `
 .nh-thumb-fallback { width: 100%; height: 100%; background: #26262b; }
 .nh-thumb-fallback-ch {
   display: flex; align-items: center; justify-content: center;
-  font-size: 36px; font-weight: 800; color: rgba(255,255,255,0.32);
+  font-size: 36px; font-weight: 700; color: rgba(255,255,255,0.32);
 }
 .nh-thumb-overlay {
   position: absolute; inset: 0;
@@ -809,14 +809,14 @@ const styles = `
 .nh-overlay-badge {
   position: absolute; top: 8px; left: 8px;
   background: ${C.red}; color: #fff;
-  font-size: 11px; font-weight: 800; letter-spacing: -0.1px;
+  font-size: 11px; font-weight: 700; letter-spacing: -0.1px;
   padding: 4px 9px; border-radius: 100px;
   box-shadow: 0 2px 6px rgba(0,0,0,0.25);
 }
 
 .nh-feat-info { flex: 1; min-width: 0; display: flex; flex-direction: column; }
 .nh-title {
-  font-size: 16px; font-weight: 700; color: ${C.text1};
+  font-size: 16px; font-weight: 600; color: ${C.text1};
   letter-spacing: -0.25px; line-height: 1.4;
   margin: 0 0 6px 0;
   display: -webkit-box; -webkit-line-clamp: 2;
@@ -839,7 +839,7 @@ const styles = `
   padding: 5px 11px; border-radius: 100px;
   letter-spacing: -0.1px;
 }
-.nh-chip strong { font-weight: 800; }
+.nh-chip strong { font-weight: 700; }
 .nh-chip-red {
   color: ${C.redDeep};
   background: ${C.redTint};
@@ -852,7 +852,7 @@ const styles = `
 }
 
 .nh-eyebrow {
-  font-size: 10.5px; font-weight: 800; letter-spacing: 0.08em;
+  font-size: 10.5px; font-weight: 700; letter-spacing: 0.08em;
   text-transform: uppercase; color: ${C.text3};
   margin: 0 0 10px 0;
 }
@@ -865,7 +865,7 @@ const styles = `
 }
 .nh-why li:last-child { margin-bottom: 0; }
 .nh-why-n {
-  font-size: 10px; font-weight: 800; color: ${C.green};
+  font-size: 10px; font-weight: 700; color: ${C.green};
   letter-spacing: 0.04em;
   flex-shrink: 0; margin-top: 4px;
   font-variant-numeric: tabular-nums;
@@ -882,7 +882,7 @@ const styles = `
   padding: 9px 16px;
   border-radius: 100px;
   font-family: 'Inter', system-ui, sans-serif;
-  font-size: 12.5px; font-weight: 700;
+  font-size: 12.5px; font-weight: 600;
   letter-spacing: -0.1px;
   cursor: pointer;
   box-shadow: 0 1px 2px rgba(0,0,0,0.10), 0 4px 14px rgba(229,37,27,0.26);
@@ -924,7 +924,7 @@ const styles = `
   padding: 7px 14px;
   border-radius: 100px;
   font-family: 'Inter', system-ui, sans-serif;
-  font-size: 12.5px; font-weight: 700;
+  font-size: 12.5px; font-weight: 600;
   letter-spacing: -0.1px;
   cursor: pointer;
   transition: background 0.15s, border-color 0.15s, color 0.15s;
@@ -957,13 +957,13 @@ const styles = `
   transition: border-color 0.15s, transform 0.15s;
 }
 .nh-rail-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.nh-rail-fallback { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.32); font-size: 22px; font-weight: 800; }
+.nh-rail-fallback { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.32); font-size: 22px; font-weight: 700; }
 .nh-rail-thumb:hover { transform: translateY(-1px); }
 .nh-rail-thumb-active { border-color: ${C.red}; box-shadow: 0 4px 14px rgba(229,37,27,0.25); }
 .nh-rail-badge {
   position: absolute; top: 4px; left: 4px;
   background: rgba(0,0,0,0.72); color: #fff;
-  font-size: 10px; font-weight: 800; letter-spacing: -0.05em;
+  font-size: 10px; font-weight: 700; letter-spacing: -0.05em;
   padding: 2px 6px; border-radius: 100px;
 }
 
@@ -981,7 +981,7 @@ const styles = `
 
 /* Empty / suggested-title styling reused */
 .nh-suggested-title {
-  font-size: 17px; font-weight: 700; color: ${C.text1};
+  font-size: 17px; font-weight: 600; color: ${C.text1};
   letter-spacing: -0.3px; line-height: 1.4;
   margin: 0;
 }
@@ -1001,7 +1001,7 @@ const styles = `
   flex-shrink: 0;
 }
 @keyframes nhSpin { to { transform: rotate(360deg) } }
-.nh-empty-title { font-size: 14px; font-weight: 700; color: ${C.text1}; margin: 0 0 4px 0; line-height: 1.4; }
+.nh-empty-title { font-size: 14px; font-weight: 600; color: ${C.text1}; margin: 0 0 4px 0; line-height: 1.4; }
 .nh-empty-sub   { font-size: 12.5px; color: ${C.text3}; line-height: 1.55; margin: 0; }
 
 .nh-sk {

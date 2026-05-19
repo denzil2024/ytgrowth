@@ -20,7 +20,7 @@
 
 const C = {
   red: '#e5251b', green: '#34d27b', amber: '#f0a23b',
-  text1: '#f4f4f5', text2: '#b8b8c0', text3: '#9a9aa3',
+  text1: '#f4f4f5', text2: '#cfd0d6', text3: '#b2b3bb',
   border: 'rgba(255,255,255,0.08)',
 }
 
@@ -59,7 +59,7 @@ export default function UpsellGate({
         </svg>
       </div>
 
-      <h2 style={{ fontSize: 22, fontWeight: 800, color: C.text1, letterSpacing: '-0.5px', marginBottom: 10 }}>
+      <h2 style={{ fontSize: 22, fontWeight: 700, color: C.text1, letterSpacing: '-0.5px', marginBottom: 10 }}>
         {title}
       </h2>
       <p style={{ fontSize: 14, color: C.text2, lineHeight: 1.6, marginBottom: note ? 10 : 22, maxWidth: 400, marginLeft: 'auto', marginRight: 'auto' }}>
@@ -101,7 +101,7 @@ export default function UpsellGate({
           width: '100%', maxWidth: 360,
           background: `linear-gradient(180deg, ${C.red} 0%, #a50f07 100%)`,
           color: '#ffffff',
-          fontSize: 14, fontWeight: 700,
+          fontSize: 14, fontWeight: 600,
           padding: '13px 24px', borderRadius: 999,
           textDecoration: 'none', letterSpacing: '-0.1px',
           boxShadow: `0 8px 22px ${C.red}50, inset 0 1px 0 rgba(255,255,255,0.22)`,
@@ -113,7 +113,7 @@ export default function UpsellGate({
         </svg>
       </a>
       <div style={{ fontSize: 12.5, color: C.text3, fontWeight: 500, marginTop: 10, marginBottom: showPackLink ? 8 : 0 }}>
-        Plans from <span style={{ fontWeight: 700, color: C.text2 }}>$19/mo</span> · cancel anytime
+        Plans from <span style={{ fontWeight: 600, color: C.text2 }}>$19/mo</span> · cancel anytime
       </div>
 
       {/* Secondary pack link — only on Weekly Report (per product spec). */}

@@ -20,7 +20,7 @@ import { useEffect, useRef, useState } from 'react'
 
 const C = {
   red: '#e5251b', redDeep: '#a50f07',
-  text1: '#f4f4f5', text2: '#b8b8c0', text3: '#9a9aa3',
+  text1: '#f4f4f5', text2: '#cfd0d6', text3: '#b2b3bb',
   border: 'rgba(255,255,255,0.08)', borderSoft: 'rgba(255,255,255,0.06)',
   green: '#34d27b', greenSoft: 'rgba(22,163,74,0.16)',
 }
@@ -147,7 +147,7 @@ export default function AuditProgress({ done = false, onDone }) {
 
         .ap-eyebrow {
           display: inline-flex; align-items: center; gap: 8px;
-          font-size: 11px; font-weight: 700; letter-spacing: 0.1em;
+          font-size: 11px; font-weight: 600; letter-spacing: 0.1em;
           text-transform: uppercase; color: ${C.red};
           margin-bottom: 14px;
         }
@@ -157,7 +157,7 @@ export default function AuditProgress({ done = false, onDone }) {
           animation: apPulse 1.4s ease-in-out infinite;
         }
         .ap-title {
-          font-size: 22px; font-weight: 800; color: ${C.text1};
+          font-size: 22px; font-weight: 700; color: ${C.text1};
           letter-spacing: -0.45px; line-height: 1.25;
           margin-bottom: 6px;
         }
@@ -191,7 +191,7 @@ export default function AuditProgress({ done = false, onDone }) {
           letter-spacing: -0.1px;
         }
         .ap-track-pct {
-          font-size: 13px; color: ${C.text1}; font-weight: 800;
+          font-size: 13px; color: ${C.text1}; font-weight: 700;
           font-variant-numeric: tabular-nums;
           letter-spacing: -0.2px;
         }
@@ -222,7 +222,7 @@ export default function AuditProgress({ done = false, onDone }) {
 
         .ap-stage-text { flex: 1; min-width: 0; }
         .ap-stage-label {
-          font-size: 14px; font-weight: 700; color: ${C.text1};
+          font-size: 14px; font-weight: 600; color: ${C.text1};
           letter-spacing: -0.15px; line-height: 1.35; margin-bottom: 2px;
         }
         .ap-stage[data-state="pending"] .ap-stage-label { color: ${C.text2}; }
@@ -232,7 +232,7 @@ export default function AuditProgress({ done = false, onDone }) {
 
         .ap-stage-end {
           flex-shrink: 0;
-          font-size: 11px; font-weight: 700; letter-spacing: 0.05em;
+          font-size: 11px; font-weight: 600; letter-spacing: 0.05em;
           text-transform: uppercase;
           color: ${C.text3};
         }

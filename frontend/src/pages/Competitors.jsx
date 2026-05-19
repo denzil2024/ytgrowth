@@ -209,7 +209,7 @@ function useCompetitorStyles() {
       }
       .comp-meta-line .val {
         color: ${D.text1};
-        font-weight: 700;
+        font-weight: 600;
       }
       .comp-meta-line .sep {
         color: ${D.text3};
@@ -333,7 +333,7 @@ function useCompetitorStyles() {
       }
       .comp-signal-eyebrow .label {
         font-size: 11.5px;
-        font-weight: 700;
+        font-weight: 600;
         color: ${D.text2};
         letter-spacing: 0.10em;
         text-transform: uppercase;
@@ -349,7 +349,7 @@ function useCompetitorStyles() {
         font-variant-numeric: tabular-nums;
         margin-left: auto;
       }
-      .comp-signal-eyebrow .perf strong { color: ${D.text1}; font-weight: 700; }
+      .comp-signal-eyebrow .perf strong { color: ${D.text1}; font-weight: 600; }
       .comp-signal-eyebrow .perf .dot {
         width: 6px; height: 6px; border-radius: 99px;
         background: #16a34a; flex-shrink: 0;
@@ -390,7 +390,7 @@ function useCompetitorStyles() {
         background: rgba(0,0,0,0.82);
         color: #fff;
         font-size: 11.5px;
-        font-weight: 700;
+        font-weight: 600;
         padding: 3px 7px;
         border-radius: 5px;
         font-variant-numeric: tabular-nums;
@@ -433,7 +433,7 @@ function useCompetitorStyles() {
       }
       .comp-thumb-chip-label {
         font-size: 10px;
-        font-weight: 700;
+        font-weight: 600;
         letter-spacing: 0.08em;
         text-transform: uppercase;
         opacity: 0.78;
@@ -441,7 +441,7 @@ function useCompetitorStyles() {
       }
       .comp-thumb-chip-value {
         font-size: 11px;
-        font-weight: 700;
+        font-weight: 600;
         color: ${D.text1};
         background: ${D.cardFlat};
         border: 1px solid;
@@ -477,7 +477,7 @@ function useCompetitorStyles() {
       /* section title label above card */
       .comp-card-label {
         font-size: 10.5px;
-        font-weight: 700;
+        font-weight: 600;
         color: ${D.text3};
         text-transform: uppercase;
         letter-spacing: 0.06em;
@@ -493,7 +493,7 @@ function useCompetitorStyles() {
         border-radius: 100px;
         padding: 9px 22px;
         font-size: 13px;
-        font-weight: 700;
+        font-weight: 600;
         font-family: 'Inter', system-ui, sans-serif;
         cursor: pointer;
         white-space: nowrap;
@@ -556,8 +556,8 @@ const D = {
   cardShadow:     '0 1px 3px rgba(0,0,0,0.4)',
   cardShadowLift: '0 6px 20px rgba(0,0,0,0.55)',
   text1:          '#f4f4f5',
-  text2:          '#b8b8c0',
-  text3:          '#9a9aa3',
+  text2:          '#cfd0d6',
+  text3:          '#b2b3bb',
   text4:          'rgba(255,255,255,0.40)',
   red:   '#e5251b', redHi: '#ef3a31', amber: '#d97706',
   green: '#16a34a', greenHi: '#22c55e', blue: '#6b9bff',
@@ -670,7 +670,7 @@ function Card({ children, style, topAccent = '#d97706' }) {
 function SectionTitle({ children, hint }) {
   return (
     <div style={{ marginBottom: 14 }}>
-      <p style={{ fontSize: 15, fontWeight: 700, color: D.text1, letterSpacing: '-0.3px' }}>{children}</p>
+      <p style={{ fontSize: 15, fontWeight: 600, color: D.text1, letterSpacing: '-0.3px' }}>{children}</p>
       {hint && <p style={{ fontSize: 12, color: D.text2, marginTop: 3, lineHeight: 1.5 }}>{hint}</p>}
     </div>
   )
@@ -713,7 +713,7 @@ function Disclosure({ label, count, children, defaultOpen = false }) {
       >
         {open ? 'Hide' : 'Show'} {label}
         {count != null && (
-          <span style={{ fontSize: 11, fontWeight: 700, color: D.text3,
+          <span style={{ fontSize: 11, fontWeight: 600, color: D.text3,
             background: D.wash, padding: '2px 7px', borderRadius: 99,
             border: `1px solid ${D.hair}` }}>{count}</span>
         )}
@@ -849,8 +849,8 @@ function AIAnalysis({ ai, comp, top5Videos, channelId, checkedIdeas, onToggleIde
             { label: 'Consistency',    val: cs       != null ? `${cs}/100`        : '—', col: consistencyCol },
           ].map(({ label, val, col }) => (
             <div key={label} className="comp-timing-pill">
-              <p style={{ fontSize: 24, fontWeight: 800, color: col, letterSpacing: '-0.7px', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{val}</p>
-              <p style={{ fontSize: 11.5, fontWeight: 700, color: D.text3, textTransform: 'uppercase', letterSpacing: '0.08em' }}>{label}</p>
+              <p style={{ fontSize: 24, fontWeight: 700, color: col, letterSpacing: '-0.7px', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{val}</p>
+              <p style={{ fontSize: 11.5, fontWeight: 600, color: D.text3, textTransform: 'uppercase', letterSpacing: '0.08em' }}>{label}</p>
             </div>
           ))}
         </div>
@@ -866,10 +866,10 @@ function AIAnalysis({ ai, comp, top5Videos, channelId, checkedIdeas, onToggleIde
         return (
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
-              <h2 style={{ fontSize: 18, fontWeight: 700, color: D.text1, letterSpacing: '-0.3px' }}>
+              <h2 style={{ fontSize: 18, fontWeight: 600, color: D.text1, letterSpacing: '-0.3px' }}>
                 Top videos to study
               </h2>
-              <span style={{ fontSize: 11, fontWeight: 700, color: D.text2, background: D.cardFlat,
+              <span style={{ fontSize: 11, fontWeight: 600, color: D.text2, background: D.cardFlat,
                 padding: '2px 8px', borderRadius: 20, border: '1px solid rgba(255,255,255,0.08)' }}>
                 {vids.length}
               </span>
@@ -931,7 +931,7 @@ function AIAnalysis({ ai, comp, top5Videos, channelId, checkedIdeas, onToggleIde
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, marginBottom: 18 }}>
           <SectionTitle>Intelligence summary</SectionTitle>
           <span style={{ background: threat.bg, color: threat.text, border: `1px solid ${threat.border}`,
-            fontSize: 12, fontWeight: 700, padding: '5px 13px', borderRadius: 50, flexShrink: 0,
+            fontSize: 12, fontWeight: 600, padding: '5px 13px', borderRadius: 50, flexShrink: 0,
             display: 'inline-flex', alignItems: 'center', gap: 5, letterSpacing: '0.1px' }}>
             <span style={{ width: 6, height: 6, borderRadius: '50%', background: threat.dot,
               flexShrink: 0, boxShadow: `0 0 6px ${threat.dot}` }} />
@@ -981,10 +981,10 @@ function AIAnalysis({ ai, comp, top5Videos, channelId, checkedIdeas, onToggleIde
         return (
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
-              <p style={{ fontSize: 20, fontWeight: 800, color: D.text1, letterSpacing: '-0.5px' }}>
+              <p style={{ fontSize: 20, fontWeight: 700, color: D.text1, letterSpacing: '-0.5px' }}>
                 Channel insights
               </p>
-              <span style={{ fontSize: 11, fontWeight: 700, color: D.text2, background: D.cardFlat,
+              <span style={{ fontSize: 11, fontWeight: 600, color: D.text2, background: D.cardFlat,
                 padding: '2px 8px', borderRadius: 20, border: '1px solid rgba(255,255,255,0.08)' }}>
                 {insights.length}
               </span>
@@ -1013,11 +1013,11 @@ function AIAnalysis({ ai, comp, top5Videos, channelId, checkedIdeas, onToggleIde
                         </span>
                       </div>
                       <div style={{ flex: 1, minWidth: 0 }}>
-                        <p style={{ fontSize: 10, fontWeight: 700, color: '#d97706',
+                        <p style={{ fontSize: 10, fontWeight: 600, color: '#d97706',
                           letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 5 }}>
                           {label}
                         </p>
-                        <p style={{ fontSize: 14, fontWeight: 700, color: D.text1, lineHeight: 1.55 }}>
+                        <p style={{ fontSize: 14, fontWeight: 600, color: D.text1, lineHeight: 1.55 }}>
                           {headline}
                         </p>
                       </div>
@@ -1029,7 +1029,7 @@ function AIAnalysis({ ai, comp, top5Videos, channelId, checkedIdeas, onToggleIde
                         <div style={{ height: 1, background: D.hair, marginBottom: 14, marginLeft: 38 }} />
                         <div style={{ marginLeft: 38, background: 'rgba(79,134,247,0.07)',
                           border: '1px solid rgba(79,134,247,0.12)', borderRadius: 10, padding: '12px 14px' }}>
-                          <p style={{ fontSize: 10, fontWeight: 700, color: '#4a7cf7',
+                          <p style={{ fontSize: 10, fontWeight: 600, color: '#4a7cf7',
                             letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>
                             Why it works
                           </p>
@@ -1062,7 +1062,7 @@ function AIAnalysis({ ai, comp, top5Videos, channelId, checkedIdeas, onToggleIde
               { label: 'Consistency', val: `${cs}/100`,                         color: consistencyColor },
             ].map(({ label, val, color }) => (
               <div key={label} className="comp-timing-pill">
-                <p style={{ fontSize: 20, fontWeight: 800, color, letterSpacing: '-0.5px', lineHeight: 1 }}>{val}</p>
+                <p style={{ fontSize: 20, fontWeight: 700, color, letterSpacing: '-0.5px', lineHeight: 1 }}>{val}</p>
                 <p style={{ fontSize: 12, fontWeight: 600, color: D.text3, textTransform: 'uppercase', letterSpacing: '0.06em' }}>{label}</p>
               </div>
             ))}
@@ -1087,10 +1087,10 @@ function AIAnalysis({ ai, comp, top5Videos, channelId, checkedIdeas, onToggleIde
         return (
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
-              <h2 style={{ fontSize: 18, fontWeight: 700, color: D.text1, letterSpacing: '-0.3px' }}>
+              <h2 style={{ fontSize: 18, fontWeight: 600, color: D.text1, letterSpacing: '-0.3px' }}>
                 Top content topics
               </h2>
-              <span style={{ fontSize: 11, fontWeight: 700, color: D.text2, background: D.cardFlat,
+              <span style={{ fontSize: 11, fontWeight: 600, color: D.text2, background: D.cardFlat,
                 padding: '2px 8px', borderRadius: 20, border: '1px solid rgba(255,255,255,0.08)' }}>
                 {ai.topTopics.length}
               </span>
@@ -1099,7 +1099,7 @@ function AIAnalysis({ ai, comp, top5Videos, channelId, checkedIdeas, onToggleIde
             <div className="comp-card" style={{ borderTop: '3px solid #d97706' }}>
               <div style={{ padding: '18px 22px 20px' }}>
                 <div style={{ marginBottom: 14 }}>
-                  <p style={{ fontSize: 11, fontWeight: 700, color: D.text2,
+                  <p style={{ fontSize: 11, fontWeight: 600, color: D.text2,
                     letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 6 }}>
                     Topics by reach
                   </p>
@@ -1137,7 +1137,7 @@ function AIAnalysis({ ai, comp, top5Videos, channelId, checkedIdeas, onToggleIde
                           <div style={{ width: `${Math.max(pct, 2)}%`, height: '100%', background: col,
                             borderRadius: 99, transition: 'width 0.8s cubic-bezier(0.34,1.56,0.64,1)' }}/>
                         </div>
-                        <span style={{ fontSize: 13, fontWeight: 700, color: col,
+                        <span style={{ fontSize: 13, fontWeight: 600, color: col,
                           fontVariantNumeric: 'tabular-nums', minWidth: 52, textAlign: 'right',
                           flexShrink: 0 }}>
                           {fmtK(t.avgViews)}
@@ -1169,7 +1169,7 @@ function AIAnalysis({ ai, comp, top5Videos, channelId, checkedIdeas, onToggleIde
         return (
           <div>
             <div style={{ marginBottom: 12 }}>
-              <h2 style={{ fontSize: 18, fontWeight: 700, color: D.text1,
+              <h2 style={{ fontSize: 18, fontWeight: 600, color: D.text1,
                 letterSpacing: '-0.3px' }}>
                 Title patterns
               </h2>
@@ -1180,7 +1180,7 @@ function AIAnalysis({ ai, comp, top5Videos, channelId, checkedIdeas, onToggleIde
 
                 {/* LEFT — big avg length + label + delta (scoreColor by truncation risk) */}
                 <div style={{ flexShrink: 0, textAlign: 'center', minWidth: 120 }}>
-                  <p style={{ fontSize: 44, fontWeight: 800, color: lenCol,
+                  <p style={{ fontSize: 44, fontWeight: 700, color: lenCol,
                     letterSpacing: '-1.2px', lineHeight: 1 }}>
                     {len}
                     <span style={{ fontSize: 16, color: D.text2, fontWeight: 600,
@@ -1191,7 +1191,7 @@ function AIAnalysis({ ai, comp, top5Videos, channelId, checkedIdeas, onToggleIde
                     Avg title length
                   </p>
                   {capDelta !== 0 && (
-                    <p style={{ fontSize: 11, fontWeight: 700, color: deltaCol, marginTop: 3 }}>
+                    <p style={{ fontSize: 11, fontWeight: 600, color: deltaCol, marginTop: 3 }}>
                       {overCap ? '▲' : '▼'} {Math.abs(capDelta)} {overCap ? 'over' : 'under'} YT cap
                     </p>
                   )}
@@ -1212,7 +1212,7 @@ function AIAnalysis({ ai, comp, top5Videos, channelId, checkedIdeas, onToggleIde
                       display: 'flex', flexDirection: 'column', gap: 10 }}>
                       {ai.titlePatterns.dominantFormats.map((f, i) => (
                         <li key={i} style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
-                          <span style={{ fontSize: 11, fontWeight: 700, color: '#d97706',
+                          <span style={{ fontSize: 11, fontWeight: 600, color: '#d97706',
                             fontVariantNumeric: 'tabular-nums', flexShrink: 0, marginTop: 3,
                             minWidth: 14 }}>
                             {i + 1}
@@ -1290,10 +1290,10 @@ function AIAnalysis({ ai, comp, top5Videos, channelId, checkedIdeas, onToggleIde
         return (
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
-              <p style={{ fontSize: 20, fontWeight: 800, color: D.text1, letterSpacing: '-0.5px' }}>
+              <p style={{ fontSize: 20, fontWeight: 700, color: D.text1, letterSpacing: '-0.5px' }}>
                 Winning moves
               </p>
-              <span style={{ fontSize: 11, fontWeight: 700, color: D.text2, background: D.cardFlat,
+              <span style={{ fontSize: 11, fontWeight: 600, color: D.text2, background: D.cardFlat,
                 padding: '2px 8px', borderRadius: 20, border: '1px solid rgba(255,255,255,0.08)' }}>
                 {moves.length}
               </span>
@@ -1322,11 +1322,11 @@ function AIAnalysis({ ai, comp, top5Videos, channelId, checkedIdeas, onToggleIde
                           </span>
                         </div>
                         <div style={{ flex: 1, minWidth: 0 }}>
-                          <p style={{ fontSize: 10, fontWeight: 700, color: '#d97706',
+                          <p style={{ fontSize: 10, fontWeight: 600, color: '#d97706',
                             letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 5 }}>
                             Winning move
                           </p>
-                          <p style={{ fontSize: 14, fontWeight: 700, color: D.text1, lineHeight: 1.55 }}>
+                          <p style={{ fontSize: 14, fontWeight: 600, color: D.text1, lineHeight: 1.55 }}>
                             {action}
                           </p>
                         </div>
@@ -1342,7 +1342,7 @@ function AIAnalysis({ ai, comp, top5Videos, channelId, checkedIdeas, onToggleIde
                         <div style={{ background: 'rgba(79,134,247,0.07)',
                           border: '1px solid rgba(79,134,247,0.12)',
                           borderRadius: 10, padding: '12px 14px' }}>
-                          <p style={{ fontSize: 10, fontWeight: 700, color: '#4a7cf7',
+                          <p style={{ fontSize: 10, fontWeight: 600, color: '#4a7cf7',
                             letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>
                             Why now
                           </p>
@@ -1361,7 +1361,7 @@ function AIAnalysis({ ai, comp, top5Videos, channelId, checkedIdeas, onToggleIde
                           boxShadow: '0 1px 3px rgba(0,0,0,0.4)',
                           display: 'flex', flexDirection: 'column',
                         }}>
-                          <p style={{ fontSize: 10, fontWeight: 700, color: '#d97706',
+                          <p style={{ fontSize: 10, fontWeight: 600, color: '#d97706',
                             letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>
                             Action
                           </p>
@@ -1390,10 +1390,10 @@ function AIAnalysis({ ai, comp, top5Videos, channelId, checkedIdeas, onToggleIde
       {ideas.length > 0 && (
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
-            <h2 style={{ fontSize: 18, fontWeight: 700, color: D.text1, letterSpacing: '-0.3px' }}>
+            <h2 style={{ fontSize: 18, fontWeight: 600, color: D.text1, letterSpacing: '-0.3px' }}>
               Topics to tackle
             </h2>
-            <span style={{ fontSize: 11, fontWeight: 700, color: D.text2, background: D.cardFlat,
+            <span style={{ fontSize: 11, fontWeight: 600, color: D.text2, background: D.cardFlat,
               padding: '2px 8px', borderRadius: 20, border: '1px solid rgba(255,255,255,0.08)' }}>
               {ideasLeft} left
             </span>
@@ -1613,7 +1613,7 @@ export default function Competitors({ plan, freeTierFeatures }) {
             draft. Subtitle is one weight lower with slightly darker
             color so it doesn't disappear on light backgrounds. */}
       <div style={{ marginBottom: 26 }}>
-        <h1 style={{ fontSize: 26, fontWeight: 700, color: D.text1, marginBottom: 6, letterSpacing: '-0.7px', lineHeight: 1.1 }}>
+        <h1 style={{ fontSize: 26, fontWeight: 600, color: D.text1, marginBottom: 6, letterSpacing: '-0.7px', lineHeight: 1.1 }}>
           Competitors
         </h1>
         <p style={{ fontSize: 14, color: D.text2, fontWeight: 500, letterSpacing: '-0.005em' }}>
@@ -1765,7 +1765,7 @@ export default function Competitors({ plan, freeTierFeatures }) {
                               boxShadow: `0 0 0 3px ${threatDot}22`,
                             }}/>
                           )}
-                          <p style={{ fontWeight: 700, fontSize: 16, color: D.text1,
+                          <p style={{ fontWeight: 600, fontSize: 16, color: D.text1,
                             letterSpacing: '-0.25px', whiteSpace: 'nowrap', overflow: 'hidden',
                             textOverflow: 'ellipsis' }}>
                             {comp.channel_name}

@@ -32,8 +32,8 @@ const C = {
   cardShadow:     '0 1px 3px rgba(0,0,0,0.4)',
   cardShadowLift: '0 6px 20px rgba(0,0,0,0.55)',
   text1:       '#f4f4f5',
-  text2:       '#b8b8c0',
-  text3:       '#9a9aa3',
+  text2:       '#cfd0d6',
+  text3:       '#b2b3bb',
   red:         '#e5251b', redBg:   'rgba(229,37,27,0.13)', redBdr:   'rgba(229,37,27,0.32)', redHi:   '#fb6a60',
   green:       '#16a34a', greenBg: 'rgba(22,163,74,0.14)', greenBdr: 'rgba(22,163,74,0.34)', greenHi: '#34d27b',
   amber:       '#d97706', amberBg: 'rgba(217,119,6,0.14)', amberBdr: 'rgba(217,119,6,0.34)', amberHi: '#f0a23b',
@@ -135,7 +135,7 @@ if (typeof document !== 'undefined' && !document.getElementById('outliers-styles
       display: inline-flex; align-items: center; justify-content: center; gap: 6px;
       padding: 10px 16px; border-radius: 100px; border: none;
       font-family: inherit;
-      font-size: 13px; font-weight: 700;
+      font-size: 13px; font-weight: 600;
       background: #e5251b; color: #fff; cursor: pointer;
       transition: filter 0.15s, transform 0.15s, box-shadow 0.15s;
       box-shadow: 0 1px 3px rgba(229,37,27,0.32), 0 4px 14px rgba(229,37,27,0.22);
@@ -200,7 +200,7 @@ if (typeof document !== 'undefined' && !document.getElementById('outliers-styles
       display: inline-flex; align-items: center; justify-content: center; gap: 8px;
       padding: 9px 20px; border-radius: 100px; border: none;
       font-family: inherit;
-      font-size: 12.5px; font-weight: 700;
+      font-size: 12.5px; font-weight: 600;
       background: #e5251b; color: #ffffff; cursor: pointer;
       box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 4px 14px rgba(229,37,27,0.32);
       transition: all 0.18s;
@@ -270,7 +270,7 @@ if (typeof document !== 'undefined' && !document.getElementById('outliers-styles
     .out-report-cta {
       background: #e5251b; color: #fff;
       border: 1px solid #e5251b; border-radius: 100px;
-      padding: 8px 18px; font-size: 12.5px; font-weight: 700;
+      padding: 8px 18px; font-size: 12.5px; font-weight: 600;
       font-family: inherit;
       cursor: pointer; white-space: nowrap;
       transition: filter 0.15s;
@@ -283,7 +283,7 @@ if (typeof document !== 'undefined' && !document.getElementById('outliers-styles
       background: ${C.cardFlat}; border: 1px solid ${C.hair};
       border-radius: 8px; padding: 4px 10px;
     }
-    .out-report-chip .val { font-size: 12px; font-weight: 700; color: ${C.text1}; }
+    .out-report-chip .val { font-size: 12px; font-weight: 600; color: ${C.text1}; }
     .out-report-chip .lbl { font-size: 11px; color: ${C.text3}; font-weight: 500; }
 
     .out-search-input {
@@ -788,7 +788,7 @@ export default function Outliers({ channelData, onNavigate, plan, freeTierFeatur
             gap: 16, marginBottom: 24, flexWrap: 'wrap',
           }}>
             <div style={{ flex: '1 1 auto', minWidth: 0 }}>
-              <h1 style={{ fontSize: 26, fontWeight: 700, color: C.text1, letterSpacing: '-0.7px', marginBottom: 6, lineHeight: 1.1 }}>
+              <h1 style={{ fontSize: 26, fontWeight: 600, color: C.text1, letterSpacing: '-0.7px', marginBottom: 6, lineHeight: 1.1 }}>
                 Outliers
               </h1>
               <p style={{ fontSize: 14, color: C.text2, fontWeight: 500, letterSpacing: '-0.005em', lineHeight: 1.45 }}>
@@ -875,7 +875,7 @@ export default function Outliers({ channelData, onNavigate, plan, freeTierFeatur
       {/* ══ Search bar ═══════════════════════════════════════════════════════ */}
       <div className="out-card" style={{ padding: '20px 22px', marginBottom: 20 }}>
         <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 12, gap: 12 }}>
-          <span style={{ fontSize: 11, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.10em' }}>
+          <span style={{ fontSize: 11, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.10em' }}>
             Your video title
           </span>
           <span style={{ fontSize: 12, fontWeight: 500, color: C.text3, letterSpacing: '-0.005em' }}>
@@ -933,9 +933,9 @@ export default function Outliers({ channelData, onNavigate, plan, freeTierFeatur
               <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke={C.red} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M8 2v12M2 8h12M4 4l8 8M12 4l-8 8"/>
               </svg>
-              <span style={{ fontSize: 10.5, fontWeight: 700, color: C.red, letterSpacing: '0.16em', textTransform: 'uppercase' }}>Three directions</span>
+              <span style={{ fontSize: 10.5, fontWeight: 600, color: C.red, letterSpacing: '0.16em', textTransform: 'uppercase' }}>Three directions</span>
             </div>
-            <h2 style={{ fontSize: 24, fontWeight: 700, color: C.text1, letterSpacing: '-0.55px', lineHeight: 1.2, marginBottom: 10 }}>
+            <h2 style={{ fontSize: 24, fontWeight: 600, color: C.text1, letterSpacing: '-0.55px', lineHeight: 1.2, marginBottom: 10 }}>
               Your search could go <span style={{ color: C.red }}>3 ways</span>. Pick one.
             </h2>
             <p style={{ fontSize: 13.5, color: C.text3, lineHeight: 1.6, maxWidth: 540, margin: '0 auto' }}>
@@ -955,15 +955,15 @@ export default function Outliers({ channelData, onNavigate, plan, freeTierFeatur
                     boxShadow: `0 4px 10px rgba(229,37,27,0.40), inset 0 1px 0 rgba(255,255,255,0.30)`,
                     flexShrink: 0,
                   }}>
-                    <span style={{ fontSize: 13, fontWeight: 700, color: '#ffffff', fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.4px' }}>
+                    <span style={{ fontSize: 13, fontWeight: 600, color: '#ffffff', fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.4px' }}>
                       0{i + 1}
                     </span>
                   </div>
-                  <span style={{ fontSize: 10, fontWeight: 700, color: C.red, letterSpacing: '0.14em', textTransform: 'uppercase' }}>
+                  <span style={{ fontSize: 10, fontWeight: 600, color: C.red, letterSpacing: '0.14em', textTransform: 'uppercase' }}>
                     Route 0{i + 1}
                   </span>
                 </div>
-                <p style={{ fontSize: 16, fontWeight: 700, color: C.text1, letterSpacing: '-0.3px', lineHeight: 1.35, marginBottom: 10 }}>
+                <p style={{ fontSize: 16, fontWeight: 600, color: C.text1, letterSpacing: '-0.3px', lineHeight: 1.35, marginBottom: 10 }}>
                   {opt.label}
                 </p>
                 <span style={{
@@ -981,7 +981,7 @@ export default function Outliers({ channelData, onNavigate, plan, freeTierFeatur
                   {opt.description}
                 </p>
                 <div style={{ marginTop: 16, paddingTop: 14, borderTop: `1px solid ${C.border}` }}>
-                  <span style={{ fontSize: 12, fontWeight: 700, color: C.red, letterSpacing: '-0.1px', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+                  <span style={{ fontSize: 12, fontWeight: 600, color: C.red, letterSpacing: '-0.1px', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
                     Go this way
                     <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
                       <path d="M6 3l5 5-5 5"/>
@@ -996,7 +996,7 @@ export default function Outliers({ channelData, onNavigate, plan, freeTierFeatur
               Up to 160 chars of user-typed intent, used verbatim as confirmed_keyword. */}
           <div className="out-card" style={{ padding: '18px 20px', marginTop: 14 }}>
             <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 10, gap: 8 }}>
-              <span style={{ fontSize: 11, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.10em' }}>
+              <span style={{ fontSize: 11, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.10em' }}>
                 None of these? Type your own intent
               </span>
               <span style={{ fontSize: 11, fontWeight: 500, color: manualIntent.length > 160 ? C.red : C.text3, fontVariantNumeric: 'tabular-nums' }}>
@@ -1051,7 +1051,7 @@ export default function Outliers({ channelData, onNavigate, plan, freeTierFeatur
               <circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>
             </svg>
           </div>
-          <p style={{ fontSize: 16, fontWeight: 700, color: C.text1, letterSpacing: '-0.3px' }}>
+          <p style={{ fontSize: 16, fontWeight: 600, color: C.text1, letterSpacing: '-0.3px' }}>
             Find what's working in your size bracket
           </p>
           <p style={{ fontSize: 13, color: C.text2, maxWidth: 420, lineHeight: 1.6 }}>
@@ -1084,7 +1084,7 @@ export default function Outliers({ channelData, onNavigate, plan, freeTierFeatur
           padding: '40px 32px', textAlign: 'center',
           display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10,
         }}>
-          <p style={{ fontSize: 15, fontWeight: 700, color: C.text1, letterSpacing: '-0.3px' }}>
+          <p style={{ fontSize: 15, fontWeight: 600, color: C.text1, letterSpacing: '-0.3px' }}>
             No outliers found
           </p>
           <p style={{ fontSize: 13, color: C.text2, maxWidth: 380, lineHeight: 1.6 }}>
@@ -1179,7 +1179,7 @@ export default function Outliers({ channelData, onNavigate, plan, freeTierFeatur
               background: C.card, border: `1px solid ${C.border}`, borderRadius: 16,
               boxShadow: '0 1px 2px rgba(0,0,0,0.04), 0 4px 14px rgba(0,0,0,0.06)',
             }}>
-              <p style={{ fontSize: 16, fontWeight: 700, color: C.text1, letterSpacing: '-0.2px', marginBottom: 8 }}>
+              <p style={{ fontSize: 16, fontWeight: 600, color: C.text1, letterSpacing: '-0.2px', marginBottom: 8 }}>
                 No reports yet
               </p>
               <p style={{ fontSize: 13.5, color: C.text3, maxWidth: 360, margin: '0 auto', lineHeight: 1.6 }}>
@@ -1215,7 +1215,7 @@ export default function Outliers({ channelData, onNavigate, plan, freeTierFeatur
                     </button>
                     <div className="out-report-header" onClick={() => openReport(r)}>
                       <div style={{ flex: 1, minWidth: 0 }}>
-                        <p style={{ fontWeight: 700, fontSize: 14, color: C.text1,
+                        <p style={{ fontWeight: 600, fontSize: 14, color: C.text1,
                           letterSpacing: '-0.2px', whiteSpace: 'nowrap', overflow: 'hidden',
                           textOverflow: 'ellipsis', marginBottom: 8 }}>
                           {r.query}
@@ -1314,7 +1314,7 @@ function PatternSynthesisCard({ synthesis }) {
     <div className="out-card" style={{ padding: '26px 28px', marginBottom: 22 }}>
       {pattern && (
         <div style={{ marginBottom: nextMove ? 22 : 0 }}>
-          <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 10 }}>The pattern</p>
+          <p style={{ fontSize: 11, fontWeight: 600, color: C.text3, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 10 }}>The pattern</p>
           <p style={{ fontSize: 15, fontWeight: 500, color: C.text1, lineHeight: 1.6, letterSpacing: '-0.15px' }}>
             {pattern}
           </p>
@@ -1322,29 +1322,29 @@ function PatternSynthesisCard({ synthesis }) {
       )}
       {nextMove && (
         <div style={{ paddingTop: pattern ? 20 : 0, borderTop: pattern ? '1px solid rgba(255,255,255,0.08)' : 'none' }}>
-          <p style={{ fontSize: 11, fontWeight: 700, color: C.red, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 12 }}>Your next move</p>
+          <p style={{ fontSize: 11, fontWeight: 600, color: C.red, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 12 }}>Your next move</p>
           {nextMove.title_scaffold && (
-            <p style={{ fontSize: 16, fontWeight: 700, color: C.text1, lineHeight: 1.45, marginBottom: 16, letterSpacing: '-0.3px' }}>
+            <p style={{ fontSize: 16, fontWeight: 600, color: C.text1, lineHeight: 1.45, marginBottom: 16, letterSpacing: '-0.3px' }}>
               {nextMove.title_scaffold}
             </p>
           )}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: 18, marginBottom: nextMove.why_now ? 14 : 0 }}>
             {nextMove.format_spec && (
               <div>
-                <p style={{ fontSize: 10.5, fontWeight: 700, color: C.text3, letterSpacing: '0.09em', textTransform: 'uppercase', marginBottom: 6 }}>Format</p>
+                <p style={{ fontSize: 10.5, fontWeight: 600, color: C.text3, letterSpacing: '0.09em', textTransform: 'uppercase', marginBottom: 6 }}>Format</p>
                 <p style={{ fontSize: 13, color: C.text2, lineHeight: 1.5 }}>{nextMove.format_spec}</p>
               </div>
             )}
             {nextMove.opening_hook && (
               <div>
-                <p style={{ fontSize: 10.5, fontWeight: 700, color: C.text3, letterSpacing: '0.09em', textTransform: 'uppercase', marginBottom: 6 }}>Opening hook</p>
+                <p style={{ fontSize: 10.5, fontWeight: 600, color: C.text3, letterSpacing: '0.09em', textTransform: 'uppercase', marginBottom: 6 }}>Opening hook</p>
                 <p style={{ fontSize: 13, color: C.text2, lineHeight: 1.5 }}>{nextMove.opening_hook}</p>
               </div>
             )}
           </div>
           {nextMove.why_now && (
             <p style={{ fontSize: 12.5, color: C.text2, lineHeight: 1.5, paddingTop: 12, borderTop: '1px dashed rgba(255,255,255,0.08)' }}>
-              <span style={{ fontWeight: 700, color: C.amber, letterSpacing: '0.04em', textTransform: 'uppercase', fontSize: 11 }}>Why now: </span>
+              <span style={{ fontWeight: 600, color: C.amber, letterSpacing: '0.04em', textTransform: 'uppercase', fontSize: 11 }}>Why now: </span>
               {nextMove.why_now}
             </p>
           )}
@@ -1399,10 +1399,10 @@ function VideoResultCard({ item, kind, onOpen }) {
             lives in the footer's OUTLIER metric, not on the thumbnail, so the
             thumbnail stays as clean as the Videos tab's. */}
         {isShort && (
-          <span style={{ position: 'absolute', top: 8, left: 8, background: '#111', color: '#fff', fontSize: 12, fontWeight: 800, padding: '2px 6px', borderRadius: 4, letterSpacing: '0.06em' }}>SHORT</span>
+          <span style={{ position: 'absolute', top: 8, left: 8, background: '#111', color: '#fff', fontSize: 12, fontWeight: 700, padding: '2px 6px', borderRadius: 4, letterSpacing: '0.06em' }}>SHORT</span>
         )}
         {durLabel && (
-          <span style={{ position: 'absolute', bottom: 8, right: 8, background: 'rgba(0,0,0,0.72)', color: '#fff', fontSize: 12, fontWeight: 700, padding: '2px 7px', borderRadius: 5, fontVariantNumeric: 'tabular-nums' }}>{durLabel}</span>
+          <span style={{ position: 'absolute', bottom: 8, right: 8, background: 'rgba(0,0,0,0.72)', color: '#fff', fontSize: 12, fontWeight: 600, padding: '2px 7px', borderRadius: 5, fontVariantNumeric: 'tabular-nums' }}>{durLabel}</span>
         )}
       </a>
 
@@ -1411,7 +1411,7 @@ function VideoResultCard({ item, kind, onOpen }) {
       <div style={{ padding: '20px 20px 20px', display: 'flex', flexDirection: 'column', flex: 1 }}>
         {/* Title — same 16/700/-0.3ls/2-line clamp as Videos tab */}
         <p style={{
-          fontSize: 16, fontWeight: 700, color: C.text1, lineHeight: 1.4, marginBottom: 12, letterSpacing: '-0.3px',
+          fontSize: 16, fontWeight: 600, color: C.text1, lineHeight: 1.4, marginBottom: 12, letterSpacing: '-0.3px',
           display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden',
         }}>{item.title}</p>
 
@@ -1429,7 +1429,7 @@ function VideoResultCard({ item, kind, onOpen }) {
           return (
             <span style={{
               display: 'inline-flex', alignItems: 'center', alignSelf: 'flex-start',
-              fontSize: 10.5, fontWeight: 700, letterSpacing: '0.09em', textTransform: 'uppercase',
+              fontSize: 10.5, fontWeight: 600, letterSpacing: '0.09em', textTransform: 'uppercase',
               padding: '4px 9px', borderRadius: 100,
               background: cfg.bg, border: `1px solid ${cfg.border}`, color: cfg.color,
               marginBottom: 10,
@@ -1491,8 +1491,8 @@ function VideoResultCard({ item, kind, onOpen }) {
           }}>
             {metrics.map(m => (
               <div key={m.label} title={m.tip} style={{ cursor: 'help', textAlign: 'left' }}>
-                <p style={{ fontSize: 10.5, fontWeight: 700, color: C.text3, letterSpacing: '0.09em', textTransform: 'uppercase', marginBottom: 6, lineHeight: 1 }}>{m.label}</p>
-                <p style={{ fontSize: 18, fontWeight: 800, color: m.color, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.4px', lineHeight: 1 }}>
+                <p style={{ fontSize: 10.5, fontWeight: 600, color: C.text3, letterSpacing: '0.09em', textTransform: 'uppercase', marginBottom: 6, lineHeight: 1 }}>{m.label}</p>
+                <p style={{ fontSize: 18, fontWeight: 700, color: m.color, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.4px', lineHeight: 1 }}>
                   {m.display}
                   {m.sub && <span style={{ fontSize: 11, fontWeight: 600, color: C.text3, marginLeft: 2, letterSpacing: 0 }}>{m.sub}</span>}
                 </p>
@@ -1503,7 +1503,7 @@ function VideoResultCard({ item, kind, onOpen }) {
             onClick={onOpen}
             style={{
               width: '100%', justifyContent: 'center',
-              padding: '11px 16px', fontSize: 13.5, fontWeight: 700,
+              padding: '11px 16px', fontSize: 13.5, fontWeight: 600,
               border: 'none', borderRadius: 100, cursor: 'pointer',
               background: C.red, color: '#fff',
               fontFamily: 'inherit', letterSpacing: '0.01em',
@@ -1589,14 +1589,14 @@ function ChannelResultCard({ item, onOpen }) {
             : <span style={{
                 position: 'absolute', inset: 0,
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: 28, fontWeight: 700, color: C.red,
+                fontSize: 28, fontWeight: 600, color: C.red,
               }}>{initial}</span>
           }
         </div>
 
         {/* Channel name — same 16/700/-0.3ls as VideoResultCard title */}
         <p style={{
-          fontSize: 16, fontWeight: 700, color: C.text1, lineHeight: 1.35, marginBottom: 3, letterSpacing: '-0.3px',
+          fontSize: 16, fontWeight: 600, color: C.text1, lineHeight: 1.35, marginBottom: 3, letterSpacing: '-0.3px',
           whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
         }}>{item.channel_name}</p>
 
@@ -1633,8 +1633,8 @@ function ChannelResultCard({ item, onOpen }) {
               { label: 'Avg views', display: fmtNum(item.avg_views_per_video),    color: C.text1,    tip: 'Average views per video across this channel\'s entire catalog.' },
             ].map(m => (
               <div key={m.label} title={m.tip} style={{ cursor: 'help', textAlign: 'left' }}>
-                <p style={{ fontSize: 10.5, fontWeight: 700, color: C.text3, letterSpacing: '0.09em', textTransform: 'uppercase', marginBottom: 7, lineHeight: 1 }}>{m.label}</p>
-                <p style={{ fontSize: 17, fontWeight: 800, color: m.color, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.4px', lineHeight: 1 }}>{m.display}</p>
+                <p style={{ fontSize: 10.5, fontWeight: 600, color: C.text3, letterSpacing: '0.09em', textTransform: 'uppercase', marginBottom: 7, lineHeight: 1 }}>{m.label}</p>
+                <p style={{ fontSize: 17, fontWeight: 700, color: m.color, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.4px', lineHeight: 1 }}>{m.display}</p>
               </div>
             ))}
           </div>
@@ -1642,7 +1642,7 @@ function ChannelResultCard({ item, onOpen }) {
             onClick={onOpen}
             style={{
               width: '100%', justifyContent: 'center',
-              padding: '11px 16px', fontSize: 13.5, fontWeight: 700,
+              padding: '11px 16px', fontSize: 13.5, fontWeight: 600,
               border: 'none', borderRadius: 100, cursor: 'pointer',
               background: C.red, color: '#fff',
               fontFamily: 'inherit', letterSpacing: '0.01em',
@@ -1795,8 +1795,8 @@ function DetailModal({ kind, item, query, onClose, onNavigate }) {
                   onLoad={makeThumbOnLoad(headerVideoId, headerThumbLo)}/>
               : <div style={{ width: 96, height: 60, borderRadius: 8, background: C.hair, flexShrink: 0, border: `1px solid ${C.border}` }}/>}
             <div style={{ flex: 1, minWidth: 0 }}>
-              <p style={{ fontSize: 12, fontWeight: 700, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 4 }}>{kindLabel}</p>
-              <p style={{ fontSize: 16, fontWeight: 700, color: C.text1, lineHeight: 1.35, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{headerTitle}</p>
+              <p style={{ fontSize: 12, fontWeight: 600, color: C.text3, textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 4 }}>{kindLabel}</p>
+              <p style={{ fontSize: 16, fontWeight: 600, color: C.text1, lineHeight: 1.35, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{headerTitle}</p>
             </div>
             <div style={{ display: 'flex', gap: 8, flexShrink: 0 }}>
               <button onClick={openOnYouTube}
@@ -1813,14 +1813,14 @@ function DetailModal({ kind, item, query, onClose, onNavigate }) {
           {/* Why Now hero — same "Fix first" card silhouette (white bg, red left-bar) */}
           {item.why_now && (
             <div style={{ background: C.card, border: `1px solid ${C.border}`, borderLeft: `4px solid ${C.red}`, borderRadius: 12, padding: '14px 18px', marginBottom: 16, boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
-              <span style={{ fontSize: 10, fontWeight: 700, color: C.red, textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block', marginBottom: 6 }}>Why now</span>
-              <p style={{ fontSize: 15, fontWeight: 700, color: C.text1, lineHeight: 1.55 }}>{item.why_now}</p>
+              <span style={{ fontSize: 10, fontWeight: 600, color: C.red, textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block', marginBottom: 6 }}>Why now</span>
+              <p style={{ fontSize: 15, fontWeight: 600, color: C.text1, lineHeight: 1.55 }}>{item.why_now}</p>
             </div>
           )}
 
           {/* Breakdown Section — same silhouette as "Title Analysis" */}
           <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 16, padding: '20px 22px', marginBottom: 12 }}>
-            <p style={{ fontSize: 15, fontWeight: 700, color: C.text1, letterSpacing: '-0.3px', marginBottom: 16 }}>
+            <p style={{ fontSize: 15, fontWeight: 600, color: C.text1, letterSpacing: '-0.3px', marginBottom: 16 }}>
               {isChannel ? 'Channel breakdown' : 'Outlier breakdown'}
             </p>
 
@@ -1828,7 +1828,7 @@ function DetailModal({ kind, item, query, onClose, onNavigate }) {
               {/* Ring + verdict + niche pill */}
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
                 <OutlierRing score={item.outlier_score} color={verdict.color}/>
-                <span style={{ fontSize: 14, fontWeight: 700, color: verdict.color }}>{verdict.label}</span>
+                <span style={{ fontSize: 14, fontWeight: 600, color: verdict.color }}>{verdict.label}</span>
                 {query && (
                   <span style={{ fontSize: 12, color: C.text2, background: C.cardFlat, padding: '3px 10px', borderRadius: 100, fontWeight: 600, border: `1px solid ${C.border}` }}>
                     {query}
@@ -1852,7 +1852,7 @@ function DetailModal({ kind, item, query, onClose, onNavigate }) {
 
           {/* 3-col intent grid — same silhouette as Search Intent / Competitor Gap / Emotional Driver */}
           <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 16, padding: '20px 22px', marginBottom: 12 }}>
-            <p style={{ fontSize: 15, fontWeight: 700, color: C.text1, letterSpacing: '-0.3px', marginBottom: 16 }}>
+            <p style={{ fontSize: 15, fontWeight: 600, color: C.text1, letterSpacing: '-0.3px', marginBottom: 16 }}>
               {isChannel ? 'Channel playbook' : 'Outlier playbook'}
             </p>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr 1fr', gap: 8 }}>
@@ -1861,7 +1861,7 @@ function DetailModal({ kind, item, query, onClose, onNavigate }) {
                   (off-palette). Amber doubles as the "AI/explainer" accent
                   used elsewhere (Title Scorecard pattern). */}
               <div style={{ background: C.amberBg, border: `1px solid ${C.amberBdr}`, borderRadius: 10, padding: '12px 14px' }}>
-                <p style={{ fontSize: 10, fontWeight: 700, color: C.amber, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>
+                <p style={{ fontSize: 10, fontWeight: 600, color: C.amber, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>
                   {isChannel ? 'Why this channel' : 'Why it worked'}
                 </p>
                 <p style={{ fontSize: 13, color: C.text1, lineHeight: 1.65 }}>
@@ -1871,7 +1871,7 @@ function DetailModal({ kind, item, query, onClose, onNavigate }) {
 
               {/* Amber — Quick actions / What to do (list) */}
               <div style={{ background: C.card, border: `1px solid ${C.border}`, borderLeft: `3px solid ${C.amber}`, borderRadius: '0 10px 10px 0', padding: '12px 14px', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
-                <p style={{ fontSize: 10, fontWeight: 700, color: C.amber, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>
+                <p style={{ fontSize: 10, fontWeight: 600, color: C.amber, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>
                   {isChannel ? 'What to do' : 'Quick actions'}
                 </p>
                 {(() => {
@@ -1881,7 +1881,7 @@ function DetailModal({ kind, item, query, onClose, onNavigate }) {
                     <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 7 }}>
                       {list.map((s, i) => (
                         <li key={i} style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
-                          <span style={{ fontSize: 12, fontWeight: 700, color: C.amber, fontVariantNumeric: 'tabular-nums', lineHeight: 1.55, minWidth: 14 }}>{i + 1}.</span>
+                          <span style={{ fontSize: 12, fontWeight: 600, color: C.amber, fontVariantNumeric: 'tabular-nums', lineHeight: 1.55, minWidth: 14 }}>{i + 1}.</span>
                           <span style={{ fontSize: 13, color: C.text1, lineHeight: 1.6, flex: 1 }}>{s}</span>
                         </li>
                       ))}
@@ -1892,7 +1892,7 @@ function DetailModal({ kind, item, query, onClose, onNavigate }) {
 
               {/* Green — Why now (same text as hero; keeps the 3-col symmetry) */}
               <div style={{ background: 'rgba(5,150,105,0.07)', border: '1px solid rgba(5,150,105,0.14)', borderRadius: 10, padding: '12px 14px' }}>
-                <p style={{ fontSize: 10, fontWeight: 700, color: C.green, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>
+                <p style={{ fontSize: 10, fontWeight: 600, color: C.green, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>
                   Act on this because
                 </p>
                 <p style={{ fontSize: 13, color: C.text1, lineHeight: 1.65 }}>
@@ -1905,7 +1905,7 @@ function DetailModal({ kind, item, query, onClose, onNavigate }) {
 
           {/* Actions Section — same card silhouette, full-width button row */}
           <div style={{ background: C.card, border: `1px solid ${C.border}`, borderRadius: 16, padding: '20px 22px' }}>
-            <p style={{ fontSize: 15, fontWeight: 700, color: C.text1, letterSpacing: '-0.3px', marginBottom: 16 }}>Shortcuts</p>
+            <p style={{ fontSize: 15, fontWeight: 600, color: C.text1, letterSpacing: '-0.3px', marginBottom: 16 }}>Shortcuts</p>
             <div style={{ display: 'grid', gridTemplateColumns: `repeat(${actionList.length}, minmax(0, 1fr))`, gap: 10 }}>
               {actionList.map((a, i) => (
                 <button
@@ -1913,7 +1913,7 @@ function DetailModal({ kind, item, query, onClose, onNavigate }) {
                   onClick={a.onClick}
                   disabled={a.disabled}
                   style={{
-                    fontSize: 13, fontWeight: 700,
+                    fontSize: 13, fontWeight: 600,
                     padding: '11px 16px', borderRadius: 100,
                     background: a.success ? C.greenBg : C.red,
                     color: a.success ? C.green : '#fff',
@@ -1964,8 +1964,8 @@ function OutlierRing({ score, color }) {
           style={{ transition: 'stroke-dasharray 0.6s ease' }} />
       </svg>
       <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-        <span style={{ fontSize: 22, fontWeight: 800, color, letterSpacing: '-1px', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{val.toFixed(1)}</span>
-        <span style={{ fontSize: 9.5, color: C.text3, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.02em', marginTop: 3, lineHeight: 1 }}>× outlier</span>
+        <span style={{ fontSize: 22, fontWeight: 700, color, letterSpacing: '-1px', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{val.toFixed(1)}</span>
+        <span style={{ fontSize: 9.5, color: C.text3, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.02em', marginTop: 3, lineHeight: 1 }}>× outlier</span>
       </div>
     </div>
   )
@@ -1982,11 +1982,11 @@ function OutlierBar({ label, score, tip }) {
           <span style={{ fontSize: 14, color: C.text2, fontWeight: 500 }}>{label}</span>
           {tip && (
             <button onClick={() => setShowWhy(v => !v)}
-              style={{ width: 15, height: 15, borderRadius: '50%', border: '1px solid rgba(255,255,255,0.08)', background: 'transparent', cursor: 'pointer', fontSize: 12, fontWeight: 700, color: C.text3, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 0 }}>?
+              style={{ width: 15, height: 15, borderRadius: '50%', border: '1px solid rgba(255,255,255,0.08)', background: 'transparent', cursor: 'pointer', fontSize: 12, fontWeight: 600, color: C.text3, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 0 }}>?
             </button>
           )}
         </div>
-        <span style={{ fontSize: 12, color, fontWeight: 700, fontVariantNumeric: 'tabular-nums' }}>{score}/100</span>
+        <span style={{ fontSize: 12, color, fontWeight: 600, fontVariantNumeric: 'tabular-nums' }}>{score}/100</span>
       </div>
       <div style={{ height: 5, background: C.hair, borderRadius: 4, overflow: 'hidden' }}>
         <div style={{ height: '100%', width: `${score}%`, background: color, borderRadius: 4, transition: 'width 0.5s ease' }} />
@@ -2050,16 +2050,16 @@ function ThumbnailPatternsCard({ patterns, query }) {
             </div>
           </div>
           <div style={{ flex: 1, minWidth: 0 }}>
-            <p style={{ fontSize: 10, fontWeight: 700, color: C.amber, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 5 }}>
+            <p style={{ fontSize: 10, fontWeight: 600, color: C.amber, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 5 }}>
               Thumbnail pattern · last 12 months
             </p>
-            <p style={{ fontSize: 14, fontWeight: 700, color: C.text1, lineHeight: 1.55 }}>
+            <p style={{ fontSize: 14, fontWeight: 600, color: C.text1, lineHeight: 1.55 }}>
               What wins in your niche{query ? ` · "${query}"` : ''}
             </p>
           </div>
           {patterns.sample_size ? (
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
-              <span style={{ fontSize: 10, fontWeight: 700, color: C.amber, padding: '3px 9px', borderRadius: 20, letterSpacing: '0.06em', textTransform: 'uppercase', border: `1.5px solid ${C.amber}` }}>
+              <span style={{ fontSize: 10, fontWeight: 600, color: C.amber, padding: '3px 9px', borderRadius: 20, letterSpacing: '0.06em', textTransform: 'uppercase', border: `1.5px solid ${C.amber}` }}>
                 {patterns.sample_size} analysed
               </span>
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke={C.text2} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
@@ -2093,10 +2093,10 @@ function ThumbnailPatternsCard({ patterns, query }) {
               red/amber/green + neutral grey, with the amber "Next thumbnail"
               tile carrying the chromatic anchor in the middle column. */}
           <div style={{ background: C.cardFlat, border: `1px solid ${C.border}`, borderRadius: 10, padding: '12px 14px' }}>
-            <p style={{ fontSize: 10, fontWeight: 700, color: C.text2, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 10 }}>Visual formula</p>
+            <p style={{ fontSize: 10, fontWeight: 600, color: C.text2, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 10 }}>Visual formula</p>
             {traits.map(([label, value], i) => (
               <div key={label} style={{ marginBottom: i === traits.length - 1 ? 0 : 10 }}>
-                <p style={{ fontSize: 9.5, fontWeight: 700, color: C.text3, letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 3 }}>{label}</p>
+                <p style={{ fontSize: 9.5, fontWeight: 600, color: C.text3, letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 3 }}>{label}</p>
                 <p style={{ fontSize: 12.5, color: C.text1, lineHeight: 1.55 }}>{value}</p>
               </div>
             ))}
@@ -2112,14 +2112,14 @@ function ThumbnailPatternsCard({ patterns, query }) {
             boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
             display: 'flex', flexDirection: 'column',
           }}>
-            <p style={{ fontSize: 10, fontWeight: 700, color: C.amber, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 10 }}>Next thumbnail</p>
+            <p style={{ fontSize: 10, fontWeight: 600, color: C.amber, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 10 }}>Next thumbnail</p>
             {recs.length === 0 ? (
               <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.6 }}>—</p>
             ) : (
               <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 8 }}>
                 {recs.map((r, i) => (
                   <li key={i} style={{ display: 'flex', gap: 8, alignItems: 'flex-start' }}>
-                    <span style={{ fontSize: 12, fontWeight: 700, color: C.amber, fontVariantNumeric: 'tabular-nums', lineHeight: 1.55, minWidth: 14 }}>{i + 1}.</span>
+                    <span style={{ fontSize: 12, fontWeight: 600, color: C.amber, fontVariantNumeric: 'tabular-nums', lineHeight: 1.55, minWidth: 14 }}>{i + 1}.</span>
                     <span style={{ fontSize: 13, color: C.text1, lineHeight: 1.6, flex: 1 }}>{r}</span>
                   </li>
                 ))}
@@ -2130,7 +2130,7 @@ function ThumbnailPatternsCard({ patterns, query }) {
           {/* Green "Why now" — same Expected outcome tile in Priority Actions */}
           {patterns.why_now ? (
             <div style={{ background: 'rgba(5,150,105,0.07)', border: '1px solid rgba(5,150,105,0.14)', borderRadius: 10, padding: '12px 14px' }}>
-              <p style={{ fontSize: 10, fontWeight: 700, color: C.green, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Why now</p>
+              <p style={{ fontSize: 10, fontWeight: 600, color: C.green, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Why now</p>
               <p style={{ fontSize: 13, color: C.text1, lineHeight: 1.65 }}>{patterns.why_now}</p>
             </div>
           ) : <div />}

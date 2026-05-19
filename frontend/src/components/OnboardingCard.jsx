@@ -23,15 +23,15 @@ import { useEffect, useState } from 'react'
 
 const C = {
   ink:    '#f4f4f5',
-  sub:    '#b8b8c0',
-  eyebrow:'#9a9aa3',
+  sub:    '#cfd0d6',
+  eyebrow:'#b2b3bb',
   hair:   'rgba(255,255,255,0.08)',
   hair2:  'rgba(255,255,255,0.14)',
   tint:   'rgba(255,255,255,0.04)',
   green:  '#34d27b',
   red:    '#e5251b',
   redHi:  '#ef3a31',
-  faint:  '#9a9aa3',
+  faint:  '#b2b3bb',
 }
 
 function CheckIcon({ size = 12 }) {
@@ -97,7 +97,7 @@ export default function OnboardingCard({
           <CheckIcon size={14} />
         </span>
         <div style={{ flex: 1, minWidth: 0 }}>
-          <p style={{ fontSize: 15, fontWeight: 700, color: C.ink, letterSpacing: '-0.2px' }}>You're all set</p>
+          <p style={{ fontSize: 15, fontWeight: 600, color: C.ink, letterSpacing: '-0.2px' }}>You're all set</p>
           <p style={{ fontSize: 13, fontWeight: 450, color: C.sub, marginTop: 2 }}>Your channel is set up. Your Feed is below.</p>
         </div>
         <button onClick={onDismiss} style={primaryBtn}>
@@ -113,10 +113,10 @@ export default function OnboardingCard({
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16 }}>
         <div style={{ minWidth: 0 }}>
-          <p style={{ fontSize: 11, fontWeight: 700, color: C.eyebrow, letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 7 }}>
+          <p style={{ fontSize: 11, fontWeight: 600, color: C.eyebrow, letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 7 }}>
             Get started
           </p>
-          <h2 style={{ fontSize: 22, fontWeight: 700, color: C.ink, letterSpacing: '-0.5px', lineHeight: 1.2, margin: 0 }}>
+          <h2 style={{ fontSize: 22, fontWeight: 600, color: C.ink, letterSpacing: '-0.5px', lineHeight: 1.2, margin: 0 }}>
             Set up your channel
           </h2>
           <p style={{ fontSize: 13.5, fontWeight: 450, color: C.sub, marginTop: 6, lineHeight: 1.5 }}>
@@ -175,7 +175,7 @@ export default function OnboardingCard({
                   background: s.done ? 'rgba(22,163,74,0.16)' : isActive ? '#1c1c21' : 'transparent',
                   border: s.done ? 'none' : `1.5px solid ${isActive ? C.hair2 : 'rgba(255,255,255,0.16)'}`,
                   color: s.done ? C.green : isActive ? C.ink : C.faint,
-                  fontSize: 11, fontWeight: 700, fontVariantNumeric: 'tabular-nums',
+                  fontSize: 11, fontWeight: 600, fontVariantNumeric: 'tabular-nums',
                 }}>
                   {s.done ? <CheckIcon /> : i + 1}
                 </span>

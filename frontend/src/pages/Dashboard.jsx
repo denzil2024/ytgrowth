@@ -233,7 +233,7 @@ function useDashboardStyles() {
         margin: 36px 0 16px;
       }
       .ov-section-head h2 {
-        font-size: 22px; font-weight: 700; color: ${SHELL.text1};
+        font-size: 22px; font-weight: 600; color: ${SHELL.text1};
         letter-spacing: -0.5px; line-height: 1.2; margin: 0;
       }
       .ov-section-head .ov-section-meta {
@@ -272,7 +272,7 @@ function useDashboardStyles() {
         display: inline-flex; align-items: center; gap: 8px;
         padding: 9px 20px; border-radius: 100px; border: 1px solid rgba(0,0,0,0.1);
         font-family: 'Inter', system-ui, sans-serif; font-size: 12.5px; font-weight: 600;
-        background: #fff; color: #6b6b73; cursor: pointer;
+        background: #fff; color: #87878f; cursor: pointer;
         box-shadow: 0 1px 3px rgba(0,0,0,0.07), 0 4px 14px rgba(0,0,0,0.07);
         transition: all 0.18s;
       }
@@ -284,7 +284,7 @@ function useDashboardStyles() {
       .ytg-dash-btn-primary {
         display: inline-flex; align-items: center; gap: 8px;
         padding: 9px 20px; border-radius: 100px; border: none;
-        font-family: 'Inter', system-ui, sans-serif; font-size: 12.5px; font-weight: 700;
+        font-family: 'Inter', system-ui, sans-serif; font-size: 12.5px; font-weight: 600;
         background: #e5251b; color: #fff; cursor: pointer;
         box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 4px 14px rgba(229,37,27,0.32);
         transition: all 0.18s;
@@ -297,7 +297,7 @@ function useDashboardStyles() {
         display: inline-flex; align-items: center; gap: 6px;
         padding: 6px 14px; border-radius: 100px;
         border: none;
-        font-family: 'Inter', system-ui, sans-serif; font-size: 11.5px; font-weight: 700;
+        font-family: 'Inter', system-ui, sans-serif; font-size: 11.5px; font-weight: 600;
         background: #e5251b;
         color: #fff; cursor: pointer; letter-spacing: 0.01em;
         transition: filter 0.15s;
@@ -441,8 +441,8 @@ const SHELL = {
   hair:      'rgba(255,255,255,0.08)',  // borders + dividers
   hairLo:    'rgba(255,255,255,0.06)',
   text1:     '#f4f4f5',
-  text2:     '#b8b8c0',
-  text3:     '#9a9aa3',
+  text2:     '#cfd0d6',
+  text3:     '#b2b3bb',
   iconIdle:  '#5b5b66',                 // idle nav icons / carets / sub-dots
   // Quiet selection grammar, identical to the shipped ChatCoach rail:
   // hover = faint white wash, active = slightly stronger white wash.
@@ -553,7 +553,7 @@ function TierRibbon({ tier, metal }) {
       display: 'inline-flex', alignItems: 'center', gap: 7,
       background: `linear-gradient(180deg, ${metal.ribbon} 0%, ${metal.shadow} 100%)`,
       color: '#fff',
-      fontSize: 12.5, fontWeight: 800,
+      fontSize: 12.5, fontWeight: 700,
       padding: '5px 12px 5px 8px',
       borderRadius: 3,
       letterSpacing: '-0.1px',
@@ -642,7 +642,7 @@ const MilestoneShareCard = forwardRef(function MilestoneShareCard(
           </svg>
         </div>
         <span style={{
-          fontSize: 22, fontWeight: 800, color: '#ffffff',
+          fontSize: 22, fontWeight: 700, color: '#ffffff',
           letterSpacing: '-0.6px',
         }}>
           YTGrowth<span style={{ color: '#ff3b30' }}>.io</span>
@@ -712,7 +712,7 @@ const MilestoneShareCard = forwardRef(function MilestoneShareCard(
             {fmtNum(tier)}
           </p>
           <p style={{
-            fontSize: 13, fontWeight: 800,
+            fontSize: 13, fontWeight: 700,
             color: cat.h2,
             letterSpacing: '0.18em', textTransform: 'uppercase',
             marginTop: 12,
@@ -727,7 +727,7 @@ const MilestoneShareCard = forwardRef(function MilestoneShareCard(
             position: 'relative',
             background: 'linear-gradient(180deg, #ff4a3f 0%, #e5251b 100%)',
             color: '#ffffff',
-            fontSize: 14, fontWeight: 700,
+            fontSize: 14, fontWeight: 600,
             letterSpacing: '-0.1px',
             padding: '11px 32px',
             boxShadow: '0 3px 10px rgba(229,37,27,0.28)',
@@ -760,7 +760,7 @@ const MilestoneShareCard = forwardRef(function MilestoneShareCard(
                 width: 68, height: 68, borderRadius: '50%',
                 background: '#ff3b30', color: '#ffffff',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: 28, fontWeight: 800,
+                fontSize: 28, fontWeight: 700,
                 border: '3px solid #ffffff',
                 boxShadow: '0 0 0 1.5px #e5e5ec, 0 4px 14px rgba(0,0,0,0.12)',
               }}>
@@ -782,7 +782,7 @@ const MilestoneShareCard = forwardRef(function MilestoneShareCard(
             </div>
           </div>
           <p style={{
-            fontSize: 17, fontWeight: 800, color: '#0f0f13',
+            fontSize: 17, fontWeight: 700, color: '#0f0f13',
             letterSpacing: '-0.3px',
           }}>
             {channelName || 'Your Channel'}
@@ -796,7 +796,7 @@ const MilestoneShareCard = forwardRef(function MilestoneShareCard(
           display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
         }}>
           <span style={{
-            fontSize: 13, fontWeight: 800, color: '#0f0f13',
+            fontSize: 13, fontWeight: 700, color: '#0f0f13',
             letterSpacing: '-0.2px',
           }}>
             YTGrowth.io
@@ -902,7 +902,7 @@ function MilestoneShareModal({ milestone, channelName, channelThumbnail, onClose
               display: 'inline-flex', alignItems: 'center', gap: 7,
               background: 'linear-gradient(180deg, #ffffff 0%, #f1f1f6 100%)',
               color: '#0f0f13',
-              fontSize: 13, fontWeight: 700,
+              fontSize: 13, fontWeight: 600,
               padding: '9px 18px', borderRadius: 999,
               border: 'none', cursor: downloading ? 'wait' : 'pointer',
               opacity: downloading ? 0.7 : 1,
@@ -926,7 +926,7 @@ function MilestoneShareModal({ milestone, channelName, channelThumbnail, onClose
               display: 'inline-flex', alignItems: 'center', gap: 7,
               background: 'linear-gradient(180deg, #1a1a22 0%, #0a0a0f 100%)',
               color: '#ffffff',
-              fontSize: 13, fontWeight: 700,
+              fontSize: 13, fontWeight: 600,
               padding: '9px 18px', borderRadius: 999,
               border: '1px solid #2a2a33', cursor: 'pointer',
               letterSpacing: '-0.1px',
@@ -1042,7 +1042,7 @@ function MilestoneCelebrationModal({ milestone, channelName, channelThumbnail, o
           padding: '5px 14px 5px 11px', borderRadius: 999,
           background: `linear-gradient(90deg, ${cat.h2}33 0%, ${cat.h2}1a 100%)`,
           border: `1px solid ${cat.h2}55`,
-          color: '#ffffff', fontSize: 10.5, fontWeight: 800,
+          color: '#ffffff', fontSize: 10.5, fontWeight: 700,
           letterSpacing: '0.26em', textTransform: 'uppercase',
           boxShadow: `0 0 20px ${cat.h2}30`,
         }}>
@@ -1068,7 +1068,7 @@ function MilestoneCelebrationModal({ milestone, channelName, channelThumbnail, o
               display: 'inline-flex', alignItems: 'center', gap: 8,
               background: `linear-gradient(180deg, ${cat.h2} 0%, ${cat.h3} 100%)`,
               color: '#ffffff',
-              fontSize: 13.5, fontWeight: 700,
+              fontSize: 13.5, fontWeight: 600,
               padding: '11px 22px', borderRadius: 999,
               border: 'none', cursor: 'pointer',
               letterSpacing: '-0.1px',
@@ -1305,7 +1305,7 @@ function Stat({ label, value, sub, alert, accent }) {
   return (
     <div className={`ytg-stat-card${alert ? ' alert' : ''}`}>
       <p style={{ fontSize: 11, fontWeight: 500, letterSpacing: '0.05em', textTransform: 'uppercase', color: C.text3, marginBottom: 12 }}>{label}</p>
-      <p style={{ fontSize: 26, fontWeight: 800, letterSpacing: '-1px', color: col, lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{value}</p>
+      <p style={{ fontSize: 26, fontWeight: 700, letterSpacing: '-1px', color: col, lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{value}</p>
       {sub && <p style={{ fontSize: 12, color: alert ? C.red : C.text3, fontWeight: 500, marginTop: 10 }}>{sub}</p>}
     </div>
   )
@@ -1329,7 +1329,7 @@ function HeroTile({ label, value, sub, delta, deltaSuffix, deltaIsAbsolute }) {
         {hasDelta && (
           <span style={{
             display: 'inline-flex', alignItems: 'center', gap: 4,
-            fontSize: 11, fontWeight: 700, color: deltaColor,
+            fontSize: 11, fontWeight: 600, color: deltaColor,
             background: deltaBg, border: `1px solid ${deltaBdr}`,
             padding: '3px 9px', borderRadius: 100,
             fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.1px',
@@ -1342,7 +1342,7 @@ function HeroTile({ label, value, sub, delta, deltaSuffix, deltaIsAbsolute }) {
           </span>
         )}
       </div>
-      <p style={{ fontSize: 44, fontWeight: 800, letterSpacing: '-2px', color: C.text1, lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{value}</p>
+      <p style={{ fontSize: 44, fontWeight: 700, letterSpacing: '-2px', color: C.text1, lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{value}</p>
       {sub && <p style={{ fontSize: 12.5, color: C.text3, fontWeight: 500, marginTop: 12 }}>{sub}</p>}
     </div>
   )
@@ -1443,13 +1443,13 @@ function HeroStatCard({ label, value, raw, kind, delta, deltaSuffix, series }) {
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
             <p style={{
-              fontSize: 10, fontWeight: 700, letterSpacing: '0.12em',
+              fontSize: 10, fontWeight: 600, letterSpacing: '0.12em',
               textTransform: 'uppercase', color: C.text3,
             }}>{label}</p>
             {hasDelta && (
               <span style={{
                 display: 'inline-flex', alignItems: 'center', gap: 3,
-                fontSize: 10.5, fontWeight: 700, color: deltaColor,
+                fontSize: 10.5, fontWeight: 600, color: deltaColor,
                 background: deltaBg, border: `1px solid ${deltaBdr}`,
                 padding: '1px 7px', borderRadius: 100,
                 letterSpacing: '-0.05px',
@@ -1464,7 +1464,7 @@ function HeroStatCard({ label, value, raw, kind, delta, deltaSuffix, series }) {
           </div>
 
           <p style={{
-            fontSize: 34, fontWeight: 800, letterSpacing: '-1.5px',
+            fontSize: 34, fontWeight: 700, letterSpacing: '-1.5px',
             color: C.text1, lineHeight: 1, fontVariantNumeric: 'tabular-nums',
             marginBottom: 14,
           }}>{value}</p>
@@ -1483,7 +1483,7 @@ function HeroStatCard({ label, value, raw, kind, delta, deltaSuffix, series }) {
           </div>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10 }}>
             <p style={{ fontSize: 10.5, fontWeight: 600, color: C.text3, letterSpacing: '-0.01em', fontVariantNumeric: 'tabular-nums' }}>
-              Next: <span style={{ color: C.text1, fontWeight: 700 }}>{fmtNum(target)}</span>
+              Next: <span style={{ color: C.text1, fontWeight: 600 }}>{fmtNum(target)}</span>
             </p>
             {hasDelta && (
               <p style={{ fontSize: 10.5, fontWeight: 500, color: C.text3, letterSpacing: '-0.01em' }}>
@@ -1515,7 +1515,7 @@ function HeroStatCard({ label, value, raw, kind, delta, deltaSuffix, series }) {
               <path d="M2 14l4-5 3 3 4-6 3 4"/>
             </svg>
             <p style={{
-              fontSize: 10, fontWeight: 700, color: 'rgba(10,10,15,0.40)',
+              fontSize: 10, fontWeight: 600, color: 'rgba(10,10,15,0.40)',
               letterSpacing: '0.08em', textTransform: 'uppercase', textAlign: 'center',
               lineHeight: 1.3,
             }}>Connect Analytics<br/>for 28d trend</p>
@@ -1547,13 +1547,13 @@ function MilestoneHeroTile({ label, value, raw, kind, delta, deltaSuffix, deltaI
         gap: 10, marginBottom: 6,
       }}>
         <p style={{
-          fontSize: 10, fontWeight: 700, letterSpacing: '0.11em',
+          fontSize: 10, fontWeight: 600, letterSpacing: '0.11em',
           textTransform: 'uppercase', color: C.text3,
         }}>{label}</p>
         {hasDelta && (
           <span style={{
             display: 'inline-flex', alignItems: 'center', gap: 3,
-            fontSize: 10.5, fontWeight: 700, color: deltaColor,
+            fontSize: 10.5, fontWeight: 600, color: deltaColor,
             background: deltaBg, border: `1px solid ${deltaBdr}`,
             padding: '1px 7px', borderRadius: 100,
             letterSpacing: '-0.05px',
@@ -1569,7 +1569,7 @@ function MilestoneHeroTile({ label, value, raw, kind, delta, deltaSuffix, deltaI
 
       {/* Big number */}
       <p style={{
-        fontSize: 28, fontWeight: 800, letterSpacing: '-1.2px',
+        fontSize: 28, fontWeight: 700, letterSpacing: '-1.2px',
         color: C.text1, lineHeight: 1, fontVariantNumeric: 'tabular-nums',
         marginBottom: 9,
       }}>{value}</p>
@@ -1590,7 +1590,7 @@ function MilestoneHeroTile({ label, value, raw, kind, delta, deltaSuffix, deltaI
       </div>
 
       <p style={{ fontSize: 10.5, fontWeight: 600, color: C.text3, letterSpacing: '-0.01em', fontVariantNumeric: 'tabular-nums' }}>
-        Next: <span style={{ color: C.text1, fontWeight: 700 }}>{fmtNum(target)}</span>
+        Next: <span style={{ color: C.text1, fontWeight: 600 }}>{fmtNum(target)}</span>
       </p>
     </div>
   )
@@ -1703,7 +1703,7 @@ function FeedCard({
           <Icon size={13} strokeWidth={2.1} />
         </span>
         <span style={{
-          fontSize: 11, fontWeight: 700, color: SHELL.text2,
+          fontSize: 11, fontWeight: 600, color: SHELL.text2,
           letterSpacing: '0.10em', textTransform: 'uppercase',
         }}>{category}</span>
         {age && (
@@ -1791,7 +1791,7 @@ function ActionsRailCard({ items, totalCount }) {
         borderBottom: '1px solid rgba(255,255,255,0.10)',
       }}>
         <span style={{
-          fontSize: 11, fontWeight: 700, color: SHELL.text2,
+          fontSize: 11, fontWeight: 600, color: SHELL.text2,
           letterSpacing: '0.10em', textTransform: 'uppercase',
         }}>Priority actions</span>
         <span style={{
@@ -1827,7 +1827,7 @@ function ActionsRailCard({ items, totalCount }) {
                   flexShrink: 0, width: 22, height: 22, borderRadius: 7,
                   display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
                   background: 'rgba(255,255,255,0.06)',
-                  fontSize: 11, fontWeight: 700, color: SHELL.text1,
+                  fontSize: 11, fontWeight: 600, color: SHELL.text1,
                   fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.2px',
                 }}>{i + 1}</span>
 
@@ -1899,7 +1899,7 @@ function ActionsRailCard({ items, totalCount }) {
                           borderRadius: '0 8px 8px 0',
                           padding: '8px 12px',
                         }}>
-                          <p style={{ fontSize: 9.5, fontWeight: 700, color: '#e5251b', letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 4 }}>Fix</p>
+                          <p style={{ fontSize: 9.5, fontWeight: 600, color: '#e5251b', letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 4 }}>Fix</p>
                           <p style={{ fontSize: 12, fontWeight: 500, color: SHELL.text1, lineHeight: 1.55 }}>{it.action.action}</p>
                         </div>
                       )}
@@ -1911,7 +1911,7 @@ function ActionsRailCard({ items, totalCount }) {
                           borderRadius: '0 8px 8px 0',
                           padding: '8px 12px',
                         }}>
-                          <p style={{ fontSize: 9.5, fontWeight: 700, color: '#059669', letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 4 }}>Why this works</p>
+                          <p style={{ fontSize: 9.5, fontWeight: 600, color: '#059669', letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 4 }}>Why this works</p>
                           <p style={{ fontSize: 12, fontWeight: 500, color: SHELL.text1, lineHeight: 1.55 }}>{it.action.expected_outcome}</p>
                         </div>
                       )}
@@ -1948,7 +1948,7 @@ function ActionsRailCard({ items, totalCount }) {
                         transition: 'background 0.14s, color 0.14s',
                       }}
                       onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; e.currentTarget.style.color = SHELL.text1 }}
-                      onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; e.currentTarget.style.color = 'rgba(255,255,255,0.55)' }}
+                      onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; e.currentTarget.style.color = 'rgba(255,255,255,0.78)' }}
                     >Dismiss</button>
                   </div>
                 </div>
@@ -1979,7 +1979,7 @@ function PriorityActionCard({ action, rank, total, impact, onAct, onDone, onDism
       onDismiss={onDismiss}
       rightSlot={
         <span style={{
-          fontSize: 9.5, fontWeight: 700, color: impactClr,
+          fontSize: 9.5, fontWeight: 600, color: impactClr,
           background: impactBg, border: `1px solid ${impactBdr}`,
           padding: '3px 8px', borderRadius: 100,
           letterSpacing: '0.08em', textTransform: 'uppercase',
@@ -2016,7 +2016,7 @@ function PriorityActionCard({ action, rank, total, impact, onAct, onDone, onDism
             border: 'none', cursor: 'pointer',
             background: C.red, color: '#fff',
             fontFamily: 'inherit',
-            fontSize: 12, fontWeight: 700, letterSpacing: '-0.01em',
+            fontSize: 12, fontWeight: 600, letterSpacing: '-0.01em',
             boxShadow: '0 1px 3px rgba(229,37,27,0.30)',
             transition: 'filter 0.14s ease, transform 0.14s ease',
           }}
@@ -2078,7 +2078,7 @@ function PriorityActionCard({ action, rank, total, impact, onAct, onDone, onDism
                     padding: '11px 14px',
                   }}>
                     <p style={{
-                      fontSize: 9.5, fontWeight: 700, color: '#fb6a60',
+                      fontSize: 9.5, fontWeight: 600, color: '#fb6a60',
                       letterSpacing: '0.10em', textTransform: 'uppercase',
                       marginBottom: 6,
                     }}>Fix</p>
@@ -2097,7 +2097,7 @@ function PriorityActionCard({ action, rank, total, impact, onAct, onDone, onDism
                     padding: '11px 14px',
                   }}>
                     <p style={{
-                      fontSize: 9.5, fontWeight: 700, color: '#34d27b',
+                      fontSize: 9.5, fontWeight: 600, color: '#34d27b',
                       letterSpacing: '0.10em', textTransform: 'uppercase',
                       marginBottom: 6,
                     }}>Why this works</p>
@@ -2184,7 +2184,7 @@ function MilestoneFeedCard({ milestone, onShare, onDownload, onDismiss }) {
               border: 'none', cursor: 'pointer',
               background: C.red, color: '#fff',
               fontFamily: 'inherit',
-              fontSize: 12, fontWeight: 700, letterSpacing: '-0.01em',
+              fontSize: 12, fontWeight: 600, letterSpacing: '-0.01em',
               boxShadow: '0 1px 3px rgba(229,37,27,0.30)',
               transition: 'filter 0.14s ease, transform 0.14s ease',
             }}
@@ -2305,7 +2305,7 @@ function ContentMixFeedCard({ patterns, mix, onDismiss, fillHeight = false }) {
           fontVariantNumeric: 'tabular-nums',
         }}>
           <span style={{ width: 8, height: 8, borderRadius: 99, background: '#e5251b' }}/>
-          Shorts {sCount != null && (<><strong style={{ color: SHELL.text1, fontWeight: 700 }}> {sCount}</strong> · {sPct}%</>)}
+          Shorts {sCount != null && (<><strong style={{ color: SHELL.text1, fontWeight: 600 }}> {sCount}</strong> · {sPct}%</>)}
         </span>
         <span style={{
           display: 'inline-flex', alignItems: 'center', gap: 6,
@@ -2313,7 +2313,7 @@ function ContentMixFeedCard({ patterns, mix, onDismiss, fillHeight = false }) {
           fontVariantNumeric: 'tabular-nums',
         }}>
           <span style={{ width: 8, height: 8, borderRadius: 99, background: 'rgba(255,255,255,0.72)' }}/>
-          Long {lCount != null && (<><strong style={{ color: SHELL.text1, fontWeight: 700 }}> {lCount}</strong> · {lPct}%</>)}
+          Long {lCount != null && (<><strong style={{ color: SHELL.text1, fontWeight: 600 }}> {lCount}</strong> · {lPct}%</>)}
         </span>
       </div>
 
@@ -2323,7 +2323,7 @@ function ContentMixFeedCard({ patterns, mix, onDismiss, fillHeight = false }) {
         letterSpacing: '-0.01em', lineHeight: 1.55,
         marginBottom: 14,
       }}>
-        <span style={{ fontWeight: 700, color: SHELL.text1 }}>Recommendation: </span>
+        <span style={{ fontWeight: 600, color: SHELL.text1 }}>Recommendation: </span>
         {recommendation}
       </p>
 
@@ -2411,7 +2411,7 @@ function ChannelHealthFeedCard({ score, categories, weakest, children, open, onT
           background: scoreBg,
           fontVariantNumeric: 'tabular-nums',
         }}>
-          <span style={{ fontSize: 13, fontWeight: 800, color: scoreClr, letterSpacing: '-0.3px', lineHeight: 1 }}>{score}</span>
+          <span style={{ fontSize: 13, fontWeight: 700, color: scoreClr, letterSpacing: '-0.3px', lineHeight: 1 }}>{score}</span>
           <span style={{ fontSize: 10, fontWeight: 600, color: SHELL.text3 }}>/100</span>
         </span>
       }
@@ -2523,7 +2523,7 @@ function TopPerformerCard({ video, channelAvgViews, onOpen, onDismiss }) {
       rightSlot={mDisplay && (
         <span style={{
           display: 'inline-flex', alignItems: 'center', gap: 3,
-          fontSize: 10.5, fontWeight: 800, color: '#34d27b',
+          fontSize: 10.5, fontWeight: 700, color: '#34d27b',
           background: 'rgba(22,163,74,0.14)', border: '1px solid rgba(5,150,105,0.22)',
           padding: '3px 8px', borderRadius: 100,
           letterSpacing: '-0.05px',
@@ -2568,16 +2568,16 @@ function TopPerformerCard({ video, channelAvgViews, onOpen, onDismiss }) {
           {/* Three-stat row */}
           <div style={{ display: 'flex', gap: 22, marginBottom: 'auto', alignItems: 'flex-end' }}>
             <div>
-              <p style={{ fontSize: 10, fontWeight: 700, color: SHELL.text3, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 5 }}>Views</p>
-              <p style={{ fontSize: 18, fontWeight: 800, color: SHELL.text1, letterSpacing: '-0.5px', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{fmtNum(video.views || 0)}</p>
+              <p style={{ fontSize: 10, fontWeight: 600, color: SHELL.text3, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 5 }}>Views</p>
+              <p style={{ fontSize: 18, fontWeight: 700, color: SHELL.text1, letterSpacing: '-0.5px', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{fmtNum(video.views || 0)}</p>
             </div>
             <div>
-              <p style={{ fontSize: 10, fontWeight: 700, color: SHELL.text3, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 5 }}>Likes</p>
-              <p style={{ fontSize: 18, fontWeight: 800, color: SHELL.text1, letterSpacing: '-0.5px', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{fmtNum(video.likes || 0)}</p>
+              <p style={{ fontSize: 10, fontWeight: 600, color: SHELL.text3, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 5 }}>Likes</p>
+              <p style={{ fontSize: 18, fontWeight: 700, color: SHELL.text1, letterSpacing: '-0.5px', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{fmtNum(video.likes || 0)}</p>
             </div>
             <div>
-              <p style={{ fontSize: 10, fontWeight: 700, color: SHELL.text3, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 5 }}>Engagement</p>
-              <p style={{ fontSize: 18, fontWeight: 800, color: engagement >= 3 ? '#34d27b' : SHELL.text1, letterSpacing: '-0.5px', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{engagement}%</p>
+              <p style={{ fontSize: 10, fontWeight: 600, color: SHELL.text3, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 5 }}>Engagement</p>
+              <p style={{ fontSize: 18, fontWeight: 700, color: engagement >= 3 ? '#34d27b' : SHELL.text1, letterSpacing: '-0.5px', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{engagement}%</p>
             </div>
           </div>
 
@@ -2597,7 +2597,7 @@ function TopPerformerCard({ video, channelAvgViews, onOpen, onDismiss }) {
                   border: 'none', cursor: 'pointer',
                   background: C.red, color: '#fff',
                   fontFamily: 'inherit',
-                  fontSize: 12, fontWeight: 700, letterSpacing: '-0.01em',
+                  fontSize: 12, fontWeight: 600, letterSpacing: '-0.01em',
                   boxShadow: '0 1px 3px rgba(229,37,27,0.30)',
                   transition: 'filter 0.14s ease, transform 0.14s ease',
                 }}
@@ -2774,8 +2774,8 @@ function PostingTimeline({ uploadDays }) {
 function StatTile({ label, value, hint, valueColor }) {
   return (
     <div>
-      <p style={{ fontSize: 9.5, fontWeight: 700, color: SHELL.text3, letterSpacing: '0.11em', textTransform: 'uppercase', marginBottom: 5 }}>{label}</p>
-      <p style={{ fontSize: 17, fontWeight: 700, color: valueColor || SHELL.text1, letterSpacing: '-0.4px', lineHeight: 1, fontVariantNumeric: 'tabular-nums', marginBottom: 4 }}>{value}</p>
+      <p style={{ fontSize: 9.5, fontWeight: 600, color: SHELL.text3, letterSpacing: '0.11em', textTransform: 'uppercase', marginBottom: 5 }}>{label}</p>
+      <p style={{ fontSize: 17, fontWeight: 600, color: valueColor || SHELL.text1, letterSpacing: '-0.4px', lineHeight: 1, fontVariantNumeric: 'tabular-nums', marginBottom: 4 }}>{value}</p>
       {hint && <p style={{ fontSize: 10.5, fontWeight: 500, color: SHELL.text3, letterSpacing: '-0.01em' }}>{hint}</p>}
     </div>
   )
@@ -2824,7 +2824,7 @@ function PostingConsistencyCard({ videos, onDismiss }) {
       rightSlot={currentStreak >= 2 && (
         <span style={{
           display: 'inline-flex', alignItems: 'center', gap: 4,
-          fontSize: 10.5, fontWeight: 800, color: '#fb6a60',
+          fontSize: 10.5, fontWeight: 700, color: '#fb6a60',
           background: 'rgba(229,37,27,0.07)', border: '1px solid rgba(229,37,27,0.20)',
           padding: '3px 8px', borderRadius: 100,
           letterSpacing: '-0.05px', fontVariantNumeric: 'tabular-nums',
@@ -2837,7 +2837,7 @@ function PostingConsistencyCard({ videos, onDismiss }) {
       {/* Headline + verdict on one row */}
       <div style={{ display: 'flex', alignItems: 'baseline', gap: 12, flexWrap: 'wrap', marginBottom: 14 }}>
         <h3 style={{
-          fontSize: 18, fontWeight: 700, color: SHELL.text1,
+          fontSize: 18, fontWeight: 600, color: SHELL.text1,
           letterSpacing: '-0.4px', lineHeight: 1.2,
         }}>{headline}</h3>
         <span style={{
@@ -2906,7 +2906,7 @@ function PostingConsistencyCard({ videos, onDismiss }) {
       {/* Daily heatmap inside the detail expansion */}
       {open && (
         <div style={{ marginTop: 14, paddingTop: 14, borderTop: '1px solid rgba(255,255,255,0.08)' }}>
-          <p style={{ fontSize: 10, fontWeight: 700, color: SHELL.text3, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 12 }}>
+          <p style={{ fontSize: 10, fontWeight: 600, color: SHELL.text3, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 12 }}>
             Daily uploads — last 28 days
           </p>
           {/* Horizontal strip: 28 cells in a single row */}
@@ -3052,7 +3052,7 @@ function BestTimeCard({ videos, onDismiss }) {
       rightSlot={
         <span style={{
           display: 'inline-flex', alignItems: 'center', gap: 4,
-          fontSize: 10.5, fontWeight: 800, color: '#fb6a60',
+          fontSize: 10.5, fontWeight: 700, color: '#fb6a60',
           background: 'rgba(229,37,27,0.07)', border: '1px solid rgba(229,37,27,0.20)',
           padding: '3px 8px', borderRadius: 100,
           letterSpacing: '0.05em', textTransform: 'uppercase',
@@ -3063,7 +3063,7 @@ function BestTimeCard({ videos, onDismiss }) {
     >
       <div style={{ display: 'flex', alignItems: 'baseline', gap: 12, flexWrap: 'wrap', marginBottom: 6 }}>
         <h3 style={{
-          fontSize: 18, fontWeight: 700, color: SHELL.text1,
+          fontSize: 18, fontWeight: 600, color: SHELL.text1,
           letterSpacing: '-0.4px', lineHeight: 1.25,
         }}>{headline}</h3>
       </div>
@@ -3117,8 +3117,8 @@ function BestTimeCard({ videos, onDismiss }) {
         paddingTop: 14, borderTop: '1px solid rgba(255,255,255,0.08)',
       }}>
         <div>
-          <p style={{ fontSize: 9.5, fontWeight: 700, color: '#fb6a60', letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 5 }}>Best time</p>
-          <p style={{ fontSize: 16, fontWeight: 700, color: SHELL.text1, letterSpacing: '-0.3px', lineHeight: 1.15, marginBottom: 4 }}>
+          <p style={{ fontSize: 9.5, fontWeight: 600, color: '#fb6a60', letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 5 }}>Best time</p>
+          <p style={{ fontSize: 16, fontWeight: 600, color: SHELL.text1, letterSpacing: '-0.3px', lineHeight: 1.15, marginBottom: 4 }}>
             {DAYS_SHORT[top.dow]} · {formatHour12(top.h)}
           </p>
           <p style={{ fontSize: 11, fontWeight: 500, color: SHELL.text3, letterSpacing: '-0.01em', fontVariantNumeric: 'tabular-nums' }}>
@@ -3126,8 +3126,8 @@ function BestTimeCard({ videos, onDismiss }) {
           </p>
         </div>
         <div>
-          <p style={{ fontSize: 9.5, fontWeight: 700, color: SHELL.text3, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 5 }}>Runner-up</p>
-          <p style={{ fontSize: 16, fontWeight: 700, color: SHELL.text1, letterSpacing: '-0.3px', lineHeight: 1.15, marginBottom: 4 }}>
+          <p style={{ fontSize: 9.5, fontWeight: 600, color: SHELL.text3, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 5 }}>Runner-up</p>
+          <p style={{ fontSize: 16, fontWeight: 600, color: SHELL.text1, letterSpacing: '-0.3px', lineHeight: 1.15, marginBottom: 4 }}>
             {second ? `${DAYS_SHORT[second.dow]} · ${formatHour12(second.h)}` : '—'}
           </p>
           <p style={{ fontSize: 11, fontWeight: 500, color: SHELL.text3, letterSpacing: '-0.01em', fontVariantNumeric: 'tabular-nums' }}>
@@ -3135,8 +3135,8 @@ function BestTimeCard({ videos, onDismiss }) {
           </p>
         </div>
         <div>
-          <p style={{ fontSize: 9.5, fontWeight: 700, color: '#f0a23b', letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 5 }}>Avoid</p>
-          <p style={{ fontSize: 16, fontWeight: 700, color: SHELL.text1, letterSpacing: '-0.3px', lineHeight: 1.15, marginBottom: 4 }}>
+          <p style={{ fontSize: 9.5, fontWeight: 600, color: '#f0a23b', letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 5 }}>Avoid</p>
+          <p style={{ fontSize: 16, fontWeight: 600, color: SHELL.text1, letterSpacing: '-0.3px', lineHeight: 1.15, marginBottom: 4 }}>
             {worst ? `${DAYS_SHORT[worst.dow]} · ${formatHour12(worst.h)}` : '—'}
           </p>
           <p style={{ fontSize: 11, fontWeight: 500, color: SHELL.text3, letterSpacing: '-0.01em', fontVariantNumeric: 'tabular-nums' }}>
@@ -3171,7 +3171,7 @@ function BestTimeCard({ videos, onDismiss }) {
 
       {open && (
         <div style={{ marginTop: 14, paddingTop: 14, borderTop: '1px solid rgba(255,255,255,0.08)' }}>
-          <p style={{ fontSize: 10, fontWeight: 700, color: SHELL.text3, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 12 }}>
+          <p style={{ fontSize: 10, fontWeight: 600, color: SHELL.text3, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 12 }}>
             Avg views per upload by day of week
           </p>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 6 }}>
@@ -3193,7 +3193,7 @@ function BestTimeCard({ videos, onDismiss }) {
                       transition: 'height 0.6s cubic-bezier(0.34,1.56,0.64,1)',
                     }} title={`${DAYS_LONG[i]}: ${fmtNum(Math.round(avg))} avg views`}/>
                   </div>
-                  <p style={{ fontSize: 10, fontWeight: 700, color: isTop ? C.red : SHELL.text3, letterSpacing: '0.04em' }}>
+                  <p style={{ fontSize: 10, fontWeight: 600, color: isTop ? C.red : SHELL.text3, letterSpacing: '0.04em' }}>
                     {DAYS_SHORT[i].slice(0, 1)}
                   </p>
                 </div>
@@ -3236,7 +3236,7 @@ function TrackedLiftCard({ win, moreCount, onOpenAll, onDismiss }) {
       rightSlot={
         <span style={{
           display: 'inline-flex', alignItems: 'center', gap: 4,
-          fontSize: 10.5, fontWeight: 800, color: '#34d27b',
+          fontSize: 10.5, fontWeight: 700, color: '#34d27b',
           background: 'rgba(22,163,74,0.14)', border: '1px solid rgba(5,150,105,0.22)',
           padding: '3px 8px', borderRadius: 100,
           letterSpacing: '-0.05px', fontVariantNumeric: 'tabular-nums',
@@ -3279,7 +3279,7 @@ function TrackedLiftCard({ win, moreCount, onOpenAll, onDismiss }) {
           {titleChanged && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
               <p style={{
-                fontSize: 10, fontWeight: 700, color: SHELL.text3,
+                fontSize: 10, fontWeight: 600, color: SHELL.text3,
                 letterSpacing: '0.10em', textTransform: 'uppercase',
               }}>Title change</p>
               <p style={{
@@ -3290,7 +3290,7 @@ function TrackedLiftCard({ win, moreCount, onOpenAll, onDismiss }) {
                 overflow: 'hidden',
               }}>{win.before_title}</p>
               <p style={{
-                fontSize: 13, fontWeight: 700, color: SHELL.text1,
+                fontSize: 13, fontWeight: 600, color: SHELL.text1,
                 letterSpacing: '-0.15px', lineHeight: 1.4,
                 display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical',
                 overflow: 'hidden',
@@ -3304,15 +3304,15 @@ function TrackedLiftCard({ win, moreCount, onOpenAll, onDismiss }) {
             marginTop: 'auto',
           }}>
             <div>
-              <p style={{ fontSize: 9.5, fontWeight: 700, color: SHELL.text3, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 4 }}>Before</p>
-              <p style={{ fontSize: 17, fontWeight: 700, color: SHELL.text2, letterSpacing: '-0.4px', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{fmtNum(beforeViews)}</p>
+              <p style={{ fontSize: 9.5, fontWeight: 600, color: SHELL.text3, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 4 }}>Before</p>
+              <p style={{ fontSize: 17, fontWeight: 600, color: SHELL.text2, letterSpacing: '-0.4px', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{fmtNum(beforeViews)}</p>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', alignSelf: 'center', paddingTop: 14 }}>
               <ArrowRight size={16} strokeWidth={2.4} color={SHELL.text3} />
             </div>
             <div>
-              <p style={{ fontSize: 9.5, fontWeight: 700, color: '#34d27b', letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 4 }}>Now</p>
-              <p style={{ fontSize: 17, fontWeight: 700, color: SHELL.text1, letterSpacing: '-0.4px', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{fmtNum(currentViews)}</p>
+              <p style={{ fontSize: 9.5, fontWeight: 600, color: '#34d27b', letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 4 }}>Now</p>
+              <p style={{ fontSize: 17, fontWeight: 600, color: SHELL.text1, letterSpacing: '-0.4px', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{fmtNum(currentViews)}</p>
             </div>
           </div>
         </div>
@@ -3334,7 +3334,7 @@ function TrackedLiftCard({ win, moreCount, onOpenAll, onDismiss }) {
               border: 'none', cursor: 'pointer',
               background: C.red, color: '#fff',
               fontFamily: 'inherit',
-              fontSize: 12, fontWeight: 700, letterSpacing: '-0.01em',
+              fontSize: 12, fontWeight: 600, letterSpacing: '-0.01em',
               boxShadow: '0 1px 3px rgba(229,37,27,0.30)',
               transition: 'filter 0.14s ease, transform 0.14s ease',
             }}
@@ -3394,7 +3394,7 @@ function DailyIdeasCard({ ideas, lastUpdated, isStale, isFree, refreshing, onRef
           letterSpacing: '-0.15px', lineHeight: 1.3, margin: 0,
         }}>Start shooting one of these today</h3>
         <span style={{
-          fontSize: 12, fontWeight: 500, color: isStale ? '#f0a23b' : 'rgba(255,255,255,0.55)',
+          fontSize: 12, fontWeight: 500, color: isStale ? '#f0a23b' : 'rgba(255,255,255,0.78)',
           letterSpacing: '-0.05px',
         }}>{subline}</span>
       </div>
@@ -3406,7 +3406,7 @@ function DailyIdeasCard({ ideas, lastUpdated, isStale, isFree, refreshing, onRef
           const score = idea.opportunityScore != null
             ? idea.opportunityScore
             : Math.max(65, 85 - i * 4)
-          const scoreClr = score >= 80 ? '#059669' : score >= 65 ? '#d97706' : 'rgba(255,255,255,0.55)'
+          const scoreClr = score >= 80 ? '#059669' : score >= 65 ? '#d97706' : 'rgba(255,255,255,0.78)'
           return (
             <div
               key={i}
@@ -3427,7 +3427,7 @@ function DailyIdeasCard({ ideas, lastUpdated, isStale, isFree, refreshing, onRef
                 width: 24, height: 24, borderRadius: 7,
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 background: 'rgba(255,255,255,0.06)',
-                fontSize: 11.5, fontWeight: 700, color: SHELL.text1,
+                fontSize: 11.5, fontWeight: 600, color: SHELL.text1,
                 letterSpacing: '-0.2px',
                 fontVariantNumeric: 'tabular-nums',
               }}>{i + 1}</div>
@@ -3537,7 +3537,7 @@ function DailyIdeasCard({ ideas, lastUpdated, isStale, isFree, refreshing, onRef
               border: 'none', cursor: 'pointer',
               background: SHELL.text1, color: '#0e0e10',
               fontFamily: 'inherit',
-              fontSize: 12, fontWeight: 700, letterSpacing: '-0.01em',
+              fontSize: 12, fontWeight: 600, letterSpacing: '-0.01em',
               boxShadow: '0 1px 3px rgba(0,0,0,0.18)',
               transition: 'filter 0.14s ease, transform 0.14s ease',
             }}
@@ -3572,7 +3572,7 @@ function CompetitorActivityCard({ items, refreshing, onRefresh, onOpen, onOpenAl
       rightSlot={
         <span style={{
           display: 'inline-flex', alignItems: 'center', gap: 4,
-          fontSize: 10.5, fontWeight: 700, color: SHELL.text2,
+          fontSize: 10.5, fontWeight: 600, color: SHELL.text2,
           background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.10)',
           padding: '3px 8px', borderRadius: 100,
           letterSpacing: '0.05em', textTransform: 'uppercase',
@@ -3638,7 +3638,7 @@ function CompetitorActivityCard({ items, refreshing, onRefresh, onOpen, onOpenAl
             {/* Title + meta */}
             <div style={{ padding: '10px 12px' }}>
               <p style={{
-                fontSize: 12.5, fontWeight: 700, color: SHELL.text1,
+                fontSize: 12.5, fontWeight: 600, color: SHELL.text1,
                 letterSpacing: '-0.15px', lineHeight: 1.35,
                 marginBottom: 6,
                 display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical',
@@ -3700,7 +3700,7 @@ function CompetitorActivityCard({ items, refreshing, onRefresh, onOpen, onOpenAl
               border: 'none', cursor: 'pointer',
               background: SHELL.text1, color: '#0e0e10',
               fontFamily: 'inherit',
-              fontSize: 12, fontWeight: 700, letterSpacing: '-0.01em',
+              fontSize: 12, fontWeight: 600, letterSpacing: '-0.01em',
               boxShadow: '0 1px 3px rgba(0,0,0,0.18)',
               transition: 'filter 0.14s ease, transform 0.14s ease',
             }}
@@ -3760,14 +3760,14 @@ function InsightCard({ insight, index, checked, onToggle, onDelete, onNavigate }
           {/* Category label above problem */}
           <div style={{ flex: 1, minWidth: 0 }}>
             {insight.category && (
-              <p style={{ fontSize: 10, fontWeight: 700, color: checked ? SHELL.text3 : color, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 5 }}>{insight.category}</p>
+              <p style={{ fontSize: 10, fontWeight: 600, color: checked ? SHELL.text3 : color, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 5 }}>{insight.category}</p>
             )}
-            <p style={{ fontSize: 14, fontWeight: 700, color: checked ? SHELL.text3 : SHELL.text1, lineHeight: 1.55, textDecoration: checked ? 'line-through' : 'none' }}>{insight.problem}</p>
+            <p style={{ fontSize: 14, fontWeight: 600, color: checked ? SHELL.text3 : SHELL.text1, lineHeight: 1.55, textDecoration: checked ? 'line-through' : 'none' }}>{insight.problem}</p>
           </div>
 
           {/* Severity badge + delete */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexShrink: 0 }}>
-            <span style={{ fontSize: 10, fontWeight: 700, color, padding: '3px 9px', borderRadius: 20, letterSpacing: '0.06em', textTransform: 'uppercase', border: `1.5px solid ${color}` }}>
+            <span style={{ fontSize: 10, fontWeight: 600, color, padding: '3px 9px', borderRadius: 20, letterSpacing: '0.06em', textTransform: 'uppercase', border: `1.5px solid ${color}` }}>
               {insight.impact || insight.severity || 'issue'}
             </span>
             {checked && onDelete && (
@@ -3789,7 +3789,7 @@ function InsightCard({ insight, index, checked, onToggle, onDelete, onNavigate }
 
             {/* Why now */}
             <div style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 10, padding: '12px 14px' }}>
-              <p style={{ fontSize: 10, fontWeight: 700, color: SHELL.text2, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Why now</p>
+              <p style={{ fontSize: 10, fontWeight: 600, color: SHELL.text2, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Why now</p>
               <p style={{ fontSize: 13.5, color: SHELL.text1, lineHeight: 1.72 }}>{insight.whyNow || insight.cause}</p>
             </div>
 
@@ -3803,14 +3803,14 @@ function InsightCard({ insight, index, checked, onToggle, onDelete, onNavigate }
               boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
               display: 'flex', flexDirection: 'column',
             }}>
-              <p style={{ fontSize: 10, fontWeight: 700, color, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>Action</p>
+              <p style={{ fontSize: 10, fontWeight: 600, color, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>Action</p>
               <p style={{ fontSize: 13.5, color: SHELL.text1, lineHeight: 1.72 }}>{insight.action}</p>
             </div>
 
             {/* Expected outcome */}
             {insight.expectedOutcome
               ? <div style={{ background: 'rgba(5,150,105,0.07)', border: '1px solid rgba(5,150,105,0.14)', borderRadius: 10, padding: '12px 14px' }}>
-                  <p style={{ fontSize: 10, fontWeight: 700, color: '#34d27b', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Expected outcome</p>
+                  <p style={{ fontSize: 10, fontWeight: 600, color: '#34d27b', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Expected outcome</p>
                   <p style={{ fontSize: 13.5, color: SHELL.text1, lineHeight: 1.72 }}>{insight.expectedOutcome}</p>
                 </div>
               : <div />
@@ -3889,14 +3889,14 @@ function NavBtn({ label, active, onClick, badge, dot }) {
       {typeof badge === 'string' && badge && (
         <span style={{
           background: 'rgba(229,37,27,0.10)', color: C.red,
-          fontSize: 9.5, fontWeight: 800, padding: '2px 7px',
+          fontSize: 9.5, fontWeight: 700, padding: '2px 7px',
           borderRadius: 20, letterSpacing: '0.08em', textTransform: 'uppercase',
         }}>{badge}</span>
       )}
       {typeof badge === 'number' && badge > 0 && (
         <span style={{
           background: C.red, color: '#fff',
-          fontSize: 10.5, fontWeight: 800, padding: '1px 7px',
+          fontSize: 10.5, fontWeight: 700, padding: '1px 7px',
           borderRadius: 20, minWidth: 18, textAlign: 'center',
           letterSpacing: '-0.01em', fontVariantNumeric: 'tabular-nums',
           lineHeight: 1.45,
@@ -4010,7 +4010,7 @@ function NavGroup({ label, children, anyChildActive, defaultOpen = true, badge, 
         {typeof badge === 'number' && badge > 0 && (
           <span style={{
             background: C.red, color: '#fff',
-            fontSize: 10.5, fontWeight: 800, padding: '1px 7px',
+            fontSize: 10.5, fontWeight: 700, padding: '1px 7px',
             borderRadius: 20, minWidth: 18, textAlign: 'center',
             letterSpacing: '-0.01em', fontVariantNumeric: 'tabular-nums',
             lineHeight: 1.45,
@@ -4504,10 +4504,10 @@ function FirstTimeWelcome({ data, onDismiss, onNavigate }) {
         <div style={{ flex: '0 0 auto', width: 200 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 16 }}>
             <div style={{ width: 6, height: 6, borderRadius: '50%', background: C.red, flexShrink: 0, animation: 'pulse 2s infinite' }}/>
-            <span style={{ fontSize: 12, fontWeight: 700, color: SHELL.text3, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Your audit is ready</span>
+            <span style={{ fontSize: 12, fontWeight: 600, color: SHELL.text3, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Your audit is ready</span>
           </div>
           <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, lineHeight: 1 }}>
-            <span style={{ fontSize: 56, fontWeight: 800, letterSpacing: '-2px', lineHeight: 1, color: scoreColor(score), fontVariantNumeric: 'tabular-nums' }}>{score}</span>
+            <span style={{ fontSize: 56, fontWeight: 700, letterSpacing: '-2px', lineHeight: 1, color: scoreColor(score), fontVariantNumeric: 'tabular-nums' }}>{score}</span>
             <span style={{ fontSize: 16, color: SHELL.text3, fontWeight: 400, paddingBottom: 8 }}>/100</span>
           </div>
           <p style={{ fontSize: 14, fontWeight: 600, color: scoreColor(score), marginTop: 4 }}>{scoreLabel(score)}</p>
@@ -4524,16 +4524,16 @@ function FirstTimeWelcome({ data, onDismiss, onNavigate }) {
 
         {/* CENTER — top priority */}
         <div style={{ flex: 1 }}>
-          <p style={{ fontSize: 12, fontWeight: 700, color: SHELL.text3, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 14 }}>Your #1 priority right now</p>
+          <p style={{ fontSize: 12, fontWeight: 600, color: SHELL.text3, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 14 }}>Your #1 priority right now</p>
           {top && s ? (
             <>
               <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10, marginBottom: 3 }}>
-                <p style={{ fontSize: 14, fontWeight: 700, color: SHELL.text1, lineHeight: 1.4, flex: 1 }}>{top.problem}</p>
-                <span style={{ background: s.bg, color: s.color, fontSize: 12, fontWeight: 700, padding: '4px 10px', borderRadius: 20, flexShrink: 0, textTransform: 'uppercase', letterSpacing: '0.07em', border: `1px solid ${s.bdr}` }}>{top.impact}</span>
+                <p style={{ fontSize: 14, fontWeight: 600, color: SHELL.text1, lineHeight: 1.4, flex: 1 }}>{top.problem}</p>
+                <span style={{ background: s.bg, color: s.color, fontSize: 12, fontWeight: 600, padding: '4px 10px', borderRadius: 20, flexShrink: 0, textTransform: 'uppercase', letterSpacing: '0.07em', border: `1px solid ${s.bdr}` }}>{top.impact}</span>
               </div>
               {top.category && <p style={{ fontSize: 12, color: SHELL.text3, marginTop: 3, marginBottom: 10 }}>{top.category}</p>}
               <div style={{ background: 'rgba(255,255,255,0.04)', border: `1px solid rgba(255,255,255,0.08)`, borderLeft: `3px solid ${s.color}`, borderRadius: '0 10px 10px 0', padding: '12px 15px' }}>
-                <p style={{ fontSize: 10, fontWeight: 700, color: s.color, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Action</p>
+                <p style={{ fontSize: 10, fontWeight: 600, color: s.color, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Action</p>
                 <p style={{ fontSize: 13.5, color: SHELL.text1, lineHeight: 1.72 }}>{top.action}</p>
               </div>
             </>
@@ -4547,7 +4547,7 @@ function FirstTimeWelcome({ data, onDismiss, onNavigate }) {
 
         {/* RIGHT — CTA */}
         <div style={{ flex: '0 0 auto', width: 190, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 12 }}>
-          <p style={{ fontSize: 12, fontWeight: 700, color: SHELL.text3, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 4 }}>Start here</p>
+          <p style={{ fontSize: 12, fontWeight: 600, color: SHELL.text3, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 4 }}>Start here</p>
           <button
             className="ytg-dash-btn-primary"
             onClick={() => { onNavigate(ctaNav); dismiss() }}
@@ -4991,13 +4991,13 @@ export default function Dashboard() {
         <a href="/" style={{ padding: '22px 22px 18px', display: 'flex', alignItems: 'center', gap: 9, textDecoration: 'none', flexShrink: 0, borderBottom: `1px solid ${SHELL.hair}` }}>
           <Logo size={26} />
           <span style={{
-            fontSize: 18, fontWeight: 800, letterSpacing: '-0.65px', lineHeight: 1,
+            fontSize: 18, fontWeight: 700, letterSpacing: '-0.65px', lineHeight: 1,
             background: 'linear-gradient(180deg, #ffffff 0%, #c9c9d2 100%)',
             WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
             backgroundClip: 'text', color: 'transparent',
           }}>YTGrowth</span>
           {(() => { const pb = planBadge(billingPlan); return (
-            <span style={{ marginLeft: 'auto', fontSize: 9, fontWeight: 700, color: pb.color, background: pb.bg, border: `1px solid ${pb.bdr}`, padding: '2px 8px', borderRadius: 20, letterSpacing: '0.07em', textTransform: 'uppercase', flexShrink: 0 }}>{pb.label}</span>
+            <span style={{ marginLeft: 'auto', fontSize: 9, fontWeight: 600, color: pb.color, background: pb.bg, border: `1px solid ${pb.bdr}`, padding: '2px 8px', borderRadius: 20, letterSpacing: '0.07em', textTransform: 'uppercase', flexShrink: 0 }}>{pb.label}</span>
           ) })()}
         </a>
 
@@ -5025,10 +5025,10 @@ export default function Dashboard() {
                 <div style={{ display: 'flex', alignItems: 'center', gap: 13, marginBottom: 16 }}>
                   {data.channel.thumbnail
                     ? <img src={data.channel.thumbnail} alt="" style={{ width: 42, height: 42, borderRadius: '50%', objectFit: 'cover', flexShrink: 0, boxShadow: `0 0 0 2px ${SHELL.hair}` }}/>
-                    : <div style={{ width: 42, height: 42, borderRadius: '50%', background: 'rgba(229,37,27,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, fontWeight: 700, color: C.red, flexShrink: 0, boxShadow: `0 0 0 2px ${SHELL.hair}` }}>{data.channel.channel_name[0].toUpperCase()}</div>
+                    : <div style={{ width: 42, height: 42, borderRadius: '50%', background: 'rgba(229,37,27,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, fontWeight: 600, color: C.red, flexShrink: 0, boxShadow: `0 0 0 2px ${SHELL.hair}` }}>{data.channel.channel_name[0].toUpperCase()}</div>
                   }
                   <div style={{ minWidth: 0, flex: 1 }}>
-                    <p style={{ fontSize: 14.5, fontWeight: 700, color: SHELL.text1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', letterSpacing: '-0.25px', lineHeight: 1.2 }}>{data.channel.channel_name}</p>
+                    <p style={{ fontSize: 14.5, fontWeight: 600, color: SHELL.text1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', letterSpacing: '-0.25px', lineHeight: 1.2 }}>{data.channel.channel_name}</p>
                     <p style={{ fontSize: 12, color: SHELL.text2, marginTop: 3, fontVariantNumeric: 'tabular-nums' }}>{fmtNum(data.channel.subscribers)} subs</p>
                   </div>
                 </div>
@@ -5037,9 +5037,9 @@ export default function Dashboard() {
             {/* Health score bar */}
             <div>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 8 }}>
-                <span style={{ fontSize: 10.5, fontWeight: 700, color: SHELL.text2, letterSpacing: '0.09em', textTransform: 'uppercase' }}>Channel health</span>
+                <span style={{ fontSize: 10.5, fontWeight: 600, color: SHELL.text2, letterSpacing: '0.09em', textTransform: 'uppercase' }}>Channel health</span>
                 <span style={{ display: 'inline-flex', alignItems: 'baseline', gap: 2, fontVariantNumeric: 'tabular-nums' }}>
-                  <span style={{ fontSize: 16, fontWeight: 800, color: scoreColor(score), letterSpacing: '-0.4px', lineHeight: 1 }}>{score}</span>
+                  <span style={{ fontSize: 16, fontWeight: 700, color: scoreColor(score), letterSpacing: '-0.4px', lineHeight: 1 }}>{score}</span>
                   <span style={{ fontSize: 10.5, fontWeight: 600, color: SHELL.text3 }}>/100</span>
                 </span>
               </div>
@@ -5200,10 +5200,10 @@ export default function Dashboard() {
           position: 'sticky', top: 0, zIndex: 10,
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <span style={{ fontSize: 14, fontWeight: 700, color: darkBar ? '#f4f4f5' : C.text1, letterSpacing: '-0.3px' }}>{nav}</span>
+            <span style={{ fontSize: 14, fontWeight: 600, color: darkBar ? '#f4f4f5' : C.text1, letterSpacing: '-0.3px' }}>{nav}</span>
             {data && <>
               <span style={{ color: darkBar ? 'rgba(255,255,255,0.18)' : C.border, fontSize: 14 }}>·</span>
-              <span style={{ fontSize: 13, fontWeight: 400, color: darkBar ? '#9a9aa3' : C.text3, letterSpacing: '-0.1px' }}>{data.channel?.channel_name}</span>
+              <span style={{ fontSize: 13, fontWeight: 400, color: darkBar ? '#b2b3bb' : C.text3, letterSpacing: '-0.1px' }}>{data.channel?.channel_name}</span>
             </>}
           </div>
           <div style={{
@@ -5214,7 +5214,7 @@ export default function Dashboard() {
             boxShadow: darkBar ? 'none' : '0 1px 3px rgba(0,0,0,0.05)',
           }}>
             <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#22c55e' }}/>
-            <span style={{ fontSize: 12, color: darkBar ? '#9a9aa3' : C.text3, fontWeight: 600 }}>Connected</span>
+            <span style={{ fontSize: 12, color: darkBar ? '#b2b3bb' : C.text3, fontWeight: 600 }}>Connected</span>
           </div>
         </div>
           )
@@ -5264,7 +5264,7 @@ export default function Dashboard() {
           {!loading && error && (
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '60vh', gap: 12, textAlign: 'center' }}>
               <div style={{ width: 48, height: 48, borderRadius: 13, background: C.redBg, border: `1px solid ${C.redBdr}`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20 }}>⚠</div>
-              <p style={{ fontSize: 18, fontWeight: 700, color: C.text1, letterSpacing: '-0.4px' }}>No channel data</p>
+              <p style={{ fontSize: 18, fontWeight: 600, color: C.text1, letterSpacing: '-0.4px' }}>No channel data</p>
               <p style={{ fontSize: 14, color: C.text2, maxWidth: 280, lineHeight: 1.7 }}>Connect your YouTube channel to see your analytics.</p>
               <a href="/auth/login" className="ytg-dash-btn-primary" style={{ textDecoration: 'none', marginTop: 8 }}>Connect channel →</a>
             </div>
@@ -5323,8 +5323,8 @@ export default function Dashboard() {
                   return (
                     <div className="ytg-card" style={{ padding: '28px 32px', marginBottom: 24, display: 'flex', alignItems: 'center', gap: 24 }}>
                       <div style={{ flex: 1, minWidth: 0 }}>
-                        <p style={{ fontSize: 11, fontWeight: 700, color: SHELL.text3, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }}>Start here</p>
-                        <h2 style={{ fontSize: 22, fontWeight: 800, color: SHELL.text1, letterSpacing: '-0.5px', marginBottom: 6 }}>Run your first audit</h2>
+                        <p style={{ fontSize: 11, fontWeight: 600, color: SHELL.text3, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }}>Start here</p>
+                        <h2 style={{ fontSize: 22, fontWeight: 700, color: SHELL.text1, letterSpacing: '-0.5px', marginBottom: 6 }}>Run your first audit</h2>
                         <p style={{ fontSize: 13.5, color: SHELL.text2, lineHeight: 1.55, maxWidth: 520 }}>
                           We need to analyse your channel before we can show Priority Actions, growth patterns, and milestone tracking. Costs 1 credit and takes about 30 seconds.
                         </p>
@@ -5342,8 +5342,8 @@ export default function Dashboard() {
               })()}
               <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 28, gap: 16, flexWrap: 'wrap' }}>
                 <div>
-                  <h1 style={{ fontSize: 26, fontWeight: 700, color: SHELL.text1, letterSpacing: '-0.7px', marginBottom: 6, lineHeight: 1.1 }}>
-                    Good to see you{data.channel.channel_name ? <>, <span style={{ color: SHELL.text1, fontWeight: 700 }}>{data.channel.channel_name}</span></> : ''}.</h1>
+                  <h1 style={{ fontSize: 26, fontWeight: 600, color: SHELL.text1, letterSpacing: '-0.7px', marginBottom: 6, lineHeight: 1.1 }}>
+                    Good to see you{data.channel.channel_name ? <>, <span style={{ color: SHELL.text1, fontWeight: 600 }}>{data.channel.channel_name}</span></> : ''}.</h1>
                   <p style={{ fontSize: 13.5, color: SHELL.text2, fontWeight: 500, display: 'flex', gap: 0, flexWrap: 'wrap', letterSpacing: '-0.05px' }}>
                     {data.stats_fetched_at && (
                       <span>Stats from {relTime(data.stats_fetched_at)}</span>
@@ -5496,11 +5496,11 @@ export default function Dashboard() {
                   : 'Needs work'
 
                 const eyebrow = {
-                  fontSize: 11, fontWeight: 700, color: SHELL.text3,
+                  fontSize: 11, fontWeight: 600, color: SHELL.text3,
                   letterSpacing: '0.10em', textTransform: 'uppercase', margin: 0,
                 }
                 const bigNum = {
-                  fontSize: 30, fontWeight: 700, color: SHELL.text1,
+                  fontSize: 30, fontWeight: 600, color: SHELL.text1,
                   letterSpacing: '-1.0px', lineHeight: 1,
                   fontVariantNumeric: 'tabular-nums',
                 }
@@ -5519,7 +5519,7 @@ export default function Dashboard() {
                   return (
                     <span style={{
                       display: 'inline-flex', alignItems: 'center', gap: 3,
-                      fontSize: 10.5, fontWeight: 700, color,
+                      fontSize: 10.5, fontWeight: 600, color,
                       background: bg, border: `1px solid ${bdr}`,
                       padding: '1px 7px', borderRadius: 100,
                       letterSpacing: '-0.05px', fontVariantNumeric: 'tabular-nums',
@@ -5556,7 +5556,7 @@ export default function Dashboard() {
                       <p style={bigNum}>{fmtNum(subs)}</p>
                       <div style={{ display: 'flex', flexDirection: 'column', gap: 5, marginTop: 'auto' }}>
                         {renderMilestoneBar(subPct)}
-                        <p style={subMeta}>Next <span style={{ color: SHELL.text1, fontWeight: 700 }}>{fmtNum(subTarget)}</span></p>
+                        <p style={subMeta}>Next <span style={{ color: SHELL.text1, fontWeight: 600 }}>{fmtNum(subTarget)}</span></p>
                       </div>
                     </div>
 
@@ -5569,7 +5569,7 @@ export default function Dashboard() {
                       <p style={bigNum}>{fmtNum(tv)}</p>
                       <div style={{ display: 'flex', flexDirection: 'column', gap: 5, marginTop: 'auto' }}>
                         {renderMilestoneBar(viewPct)}
-                        <p style={subMeta}>Next <span style={{ color: SHELL.text1, fontWeight: 700 }}>{fmtNum(viewTarget)}</span></p>
+                        <p style={subMeta}>Next <span style={{ color: SHELL.text1, fontWeight: 600 }}>{fmtNum(viewTarget)}</span></p>
                       </div>
                     </div>
 
@@ -5601,7 +5601,7 @@ export default function Dashboard() {
                         <p style={eyebrow}>Channel health</p>
                         {haveScore && (
                           <span style={{
-                            fontSize: 10.5, fontWeight: 700, color: scoreColor,
+                            fontSize: 10.5, fontWeight: 600, color: scoreColor,
                             background: channelScore >= 70 ? 'rgba(22,163,74,0.14)'
                                       : channelScore >= 50 ? 'rgba(255,255,255,0.06)'
                                       : 'rgba(229,37,27,0.07)',
@@ -5619,7 +5619,7 @@ export default function Dashboard() {
                             transition: 'width 0.8s cubic-bezier(0.34,1.56,0.64,1)',
                           }}/>
                         </div>
-                        <p style={subMeta}>{haveScore ? <>Out of <span style={{ color: SHELL.text1, fontWeight: 700 }}>100</span></> : 'Run an audit'}</p>
+                        <p style={subMeta}>{haveScore ? <>Out of <span style={{ color: SHELL.text1, fontWeight: 600 }}>100</span></> : 'Run an audit'}</p>
                       </div>
                     </div>
 
@@ -6084,7 +6084,7 @@ export default function Dashboard() {
             return (
               <div style={{ maxWidth: 1040, margin: '40px auto 0' }}>
                 <div style={{ marginBottom: 20 }}>
-                  <h2 style={{ fontSize: 22, fontWeight: 800, color: SHELL.text1, letterSpacing: '-0.5px', marginBottom: 4 }}>Milestones</h2>
+                  <h2 style={{ fontSize: 22, fontWeight: 700, color: SHELL.text1, letterSpacing: '-0.5px', marginBottom: 4 }}>Milestones</h2>
                   <p style={{ fontSize: 13, color: SHELL.text3 }}>
                     {totalEarned} of 3 categories started{perCat.some(p => p.upcoming) ? ' · progress to next tier below' : ''}
                   </p>
@@ -6106,7 +6106,7 @@ export default function Dashboard() {
                         {/* Top category banner */}
                         <div style={{
                           alignSelf: 'stretch', textAlign: 'center', marginBottom: 14,
-                          fontSize: 10.5, fontWeight: 800, letterSpacing: '0.14em', textTransform: 'uppercase',
+                          fontSize: 10.5, fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase',
                           color: cat.h3,
                         }}>{p.Title}</div>
 
@@ -6117,7 +6117,7 @@ export default function Dashboard() {
 
                         {/* Tier value */}
                         <p style={{
-                          fontSize: 38, fontWeight: 800, color: SHELL.text1,
+                          fontSize: 38, fontWeight: 700, color: SHELL.text1,
                           letterSpacing: '-1.5px', lineHeight: 1,
                           marginTop: 18, marginBottom: 6,
                           fontVariantNumeric: 'tabular-nums',
@@ -6130,10 +6130,10 @@ export default function Dashboard() {
                         {p.upcoming && (
                           <div style={{ alignSelf: 'stretch', marginTop: 22 }}>
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 7 }}>
-                              <span style={{ fontSize: 11, fontWeight: 700, color: SHELL.text3, letterSpacing: '0.05em', textTransform: 'uppercase' }}>
+                              <span style={{ fontSize: 11, fontWeight: 600, color: SHELL.text3, letterSpacing: '0.05em', textTransform: 'uppercase' }}>
                                 Next: {fmtNum(p.upcoming.tier)}
                               </span>
-                              <span style={{ fontSize: 11.5, fontWeight: 700, color: cat.h3, fontVariantNumeric: 'tabular-nums' }}>
+                              <span style={{ fontSize: 11.5, fontWeight: 600, color: cat.h3, fontVariantNumeric: 'tabular-nums' }}>
                                 {fmtNum(current)} / {fmtNum(p.upcoming.tier)}
                               </span>
                             </div>
@@ -6161,7 +6161,7 @@ export default function Dashboard() {
                               display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 9,
                               background: `linear-gradient(180deg, ${cat.h2} 0%, ${cat.h3} 100%)`,
                               color: '#ffffff',
-                              fontSize: 13.5, fontWeight: 700,
+                              fontSize: 13.5, fontWeight: 600,
                               padding: '13px 20px', borderRadius: 999,
                               border: 'none', cursor: 'pointer',
                               letterSpacing: '-0.1px',
@@ -6185,7 +6185,7 @@ export default function Dashboard() {
                             display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
                           }}>
                             <YTGLogo size={18}/>
-                            <span style={{ fontSize: 14, fontWeight: 800, color: SHELL.text1, letterSpacing: '-0.3px' }}>
+                            <span style={{ fontSize: 14, fontWeight: 700, color: SHELL.text1, letterSpacing: '-0.3px' }}>
                               YTGrowth<span style={{ color: C.red }}>.io</span>
                             </span>
                           </div>
@@ -6220,7 +6220,7 @@ export default function Dashboard() {
           {data && nav === 'Overview' && data.insights && auditOpen && (
             <div style={{ maxWidth: 1040, margin: '0 auto' }}>
               <div style={{ marginBottom: 20, marginTop: 44 }}>
-                <h2 style={{ fontSize: 22, fontWeight: 800, color: SHELL.text1, letterSpacing: '-0.5px', marginBottom: 4 }}>Channel audit</h2>
+                <h2 style={{ fontSize: 22, fontWeight: 700, color: SHELL.text1, letterSpacing: '-0.5px', marginBottom: 4 }}>Channel audit</h2>
                 <p style={{ fontSize: 13, color: SHELL.text3 }}>{data.insights.priorityActions?.length ?? 0} priority actions{data.analyzed_at ? ` · Audited ${parseUTC(data.analyzed_at)?.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) ?? ''}` : ''}</p>
               </div>
 
@@ -6233,7 +6233,7 @@ export default function Dashboard() {
                       <ScoreRing score={score} />
                       <p style={{ fontSize: 11, color: SHELL.text3, fontWeight: 500, marginTop: 4, letterSpacing: '0.03em', textTransform: 'uppercase' }}>Overall</p>
                       {prevScore != null && prevScore !== score && (
-                        <p style={{ fontSize: 11, fontWeight: 700, color: score > prevScore ? '#34d27b' : C.red, marginTop: 3 }}>
+                        <p style={{ fontSize: 11, fontWeight: 600, color: score > prevScore ? '#34d27b' : C.red, marginTop: 3 }}>
                           {score > prevScore ? '▲' : '▼'} {Math.abs(score - prevScore)} from last audit
                         </p>
                       )}
@@ -6275,7 +6275,7 @@ export default function Dashboard() {
                           <div style={{ flex: 1, height: 4, background: 'rgba(255,255,255,0.08)', borderRadius: 99, overflow: 'hidden' }}>
                             <div style={{ width: `${val ?? 0}%`, height: '100%', background: col, borderRadius: 99, transition: 'width 0.8s cubic-bezier(0.34,1.56,0.64,1)' }}/>
                           </div>
-                          <span style={{ fontSize: 13, fontWeight: 700, color: col, fontVariantNumeric: 'tabular-nums', minWidth: 26, textAlign: 'right' }}>{val ?? '—'}</span>
+                          <span style={{ fontSize: 13, fontWeight: 600, color: col, fontVariantNumeric: 'tabular-nums', minWidth: 26, textAlign: 'right' }}>{val ?? '—'}</span>
                         </div>
                       )
                     })}
@@ -6305,8 +6305,8 @@ export default function Dashboard() {
                     <div style={{ marginBottom: 24 }}>
                       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                          <p style={{ fontSize: 20, fontWeight: 800, color: SHELL.text1, letterSpacing: '-0.5px' }}>Priority actions</p>
-                          <span style={{ fontSize: 10, fontWeight: 700, color: '#34d27b', background: 'rgba(22,163,74,0.14)', padding: '3px 9px', borderRadius: 100, border: `1px solid ${'rgba(22,163,74,0.34)'}`, letterSpacing: '0.08em', textTransform: 'uppercase' }}>All clear</span>
+                          <p style={{ fontSize: 20, fontWeight: 700, color: SHELL.text1, letterSpacing: '-0.5px' }}>Priority actions</p>
+                          <span style={{ fontSize: 10, fontWeight: 600, color: '#34d27b', background: 'rgba(22,163,74,0.14)', padding: '3px 9px', borderRadius: 100, border: `1px solid ${'rgba(22,163,74,0.34)'}`, letterSpacing: '0.08em', textTransform: 'uppercase' }}>All clear</span>
                         </div>
                       </div>
                       <div style={{
@@ -6327,8 +6327,8 @@ export default function Dashboard() {
                   <div style={{ marginBottom: 24 }}>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16, flexWrap: 'wrap', gap: 12 }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                        <p style={{ fontSize: 20, fontWeight: 800, color: SHELL.text1, letterSpacing: '-0.5px' }}>Priority actions</p>
-                        <span style={{ fontSize: 11, fontWeight: 700, color: SHELL.text3, background: '#f1f1f6', padding: '3px 9px', borderRadius: 100, border: '1px solid rgba(255,255,255,0.08)', fontVariantNumeric: 'tabular-nums' }}>{openActions.length} open</span>
+                        <p style={{ fontSize: 20, fontWeight: 700, color: SHELL.text1, letterSpacing: '-0.5px' }}>Priority actions</p>
+                        <span style={{ fontSize: 11, fontWeight: 600, color: SHELL.text3, background: '#f1f1f6', padding: '3px 9px', borderRadius: 100, border: '1px solid rgba(255,255,255,0.08)', fontVariantNumeric: 'tabular-nums' }}>{openActions.length} open</span>
                       </div>
                       {doneCount > 0 && (
                         <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontVariantNumeric: 'tabular-nums' }}>
@@ -6389,7 +6389,7 @@ export default function Dashboard() {
                   return (
                     <div className="ytg-card" style={{ padding: '20px 22px' }}>
                       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
-                        <p style={{ fontSize: 11, fontWeight: 700, color: '#34d27b', letterSpacing: '0.07em', textTransform: 'uppercase' }}>Quick wins</p>
+                        <p style={{ fontSize: 11, fontWeight: 600, color: '#34d27b', letterSpacing: '0.07em', textTransform: 'uppercase' }}>Quick wins</p>
                         <span style={{ fontSize: 11, fontWeight: 600, color: SHELL.text3, background: '#f1f1f6', padding: '2px 7px', borderRadius: 20, border: '1px solid rgba(255,255,255,0.08)' }}>{wins.length} left</span>
                       </div>
                       <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 2 }}>
@@ -6423,13 +6423,13 @@ export default function Dashboard() {
                 <div className="ytg-card" style={{ padding: '20px 22px', display: 'flex', flexDirection: 'column', gap: 16 }}>
                   {data.insights.biggestRisk && (
                     <div>
-                      <p style={{ fontSize: 11, fontWeight: 700, color: C.red, letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 8 }}>Biggest risk</p>
+                      <p style={{ fontSize: 11, fontWeight: 600, color: C.red, letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 8 }}>Biggest risk</p>
                       <p style={{ fontSize: 14, color: SHELL.text1, lineHeight: 1.7 }}>{data.insights.biggestRisk}</p>
                     </div>
                   )}
                   {data.insights.topPerformingPattern && (
                     <div style={{ paddingTop: data.insights.biggestRisk ? 16 : 0, borderTop: data.insights.biggestRisk ? `1px solid ${SHELL.hair}` : 'none' }}>
-                      <p style={{ fontSize: 11, fontWeight: 700, color: '#34d27b', letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 8 }}>What's working</p>
+                      <p style={{ fontSize: 11, fontWeight: 600, color: '#34d27b', letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 8 }}>What's working</p>
                       <p style={{ fontSize: 14, color: SHELL.text1, lineHeight: 1.7 }}>{data.insights.topPerformingPattern}</p>
                     </div>
                   )}
@@ -6443,7 +6443,7 @@ export default function Dashboard() {
             <div style={{ maxWidth: 1040, margin: '0 auto' }}>
               <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 24, gap: 16, flexWrap: 'wrap' }}>
                 <div>
-                  <h1 style={{ fontSize: 26, fontWeight: 700, color: SHELL.text1, letterSpacing: '-0.7px', marginBottom: 6, lineHeight: 1.1 }}>My Videos</h1>
+                  <h1 style={{ fontSize: 26, fontWeight: 600, color: SHELL.text1, letterSpacing: '-0.7px', marginBottom: 6, lineHeight: 1.1 }}>My Videos</h1>
                   <p style={{ fontSize: 14, color: SHELL.text2, fontWeight: 500, letterSpacing: '-0.005em', lineHeight: 1.45 }}>
                     Every video on your channel · {videos.length.toLocaleString()} total · {fmtNum(videos.reduce((s, v) => s + (v.views || 0), 0))} views
                   </p>
@@ -6580,9 +6580,9 @@ export default function Dashboard() {
                       padding: '12px 14px',
                       boxShadow: tintMap.boxShadow,
                     }}>
-                      <p style={{ fontSize: 10.5, fontWeight: 700, color: tintMap.labelColor, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 6 }}>{label}</p>
+                      <p style={{ fontSize: 10.5, fontWeight: 600, color: tintMap.labelColor, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 6 }}>{label}</p>
                       <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
-                        <p style={{ fontSize: 18, fontWeight: 700, color: SHELL.text1, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.4px', lineHeight: 1 }}>{fmtNum(current)}</p>
+                        <p style={{ fontSize: 18, fontWeight: 600, color: SHELL.text1, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.4px', lineHeight: 1 }}>{fmtNum(current)}</p>
                         {showDelta && <p style={{ fontSize: 12, fontWeight: 600, color: col, fontVariantNumeric: 'tabular-nums', lineHeight: 1 }}>{sign}</p>}
                       </div>
                       <p style={{ fontSize: 11, color: SHELL.text3, marginTop: 4, fontWeight: 500, letterSpacing: '-0.005em' }}>was {fmtNum(before)}</p>
@@ -6593,7 +6593,7 @@ export default function Dashboard() {
                 return (
                   <div style={{ marginBottom: 28 }}>
                     {/* Subtler secondary eyebrow — lets "My Videos" keep its H1 identity at the top */}
-                    <p style={{ fontSize: 11, fontWeight: 700, color: SHELL.text3, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 12 }}>
+                    <p style={{ fontSize: 11, fontWeight: 600, color: SHELL.text3, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 12 }}>
                       Tracked updates · {optimizations.length} video{optimizations.length === 1 ? '' : 's'}
                     </p>
 
@@ -6620,7 +6620,7 @@ export default function Dashboard() {
                               )}
 
                               <div style={{ flex: 1, minWidth: 0 }}>
-                                <p style={{ fontSize: 11, fontWeight: 700, color: '#34d27b', letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 5 }}>Tracked update</p>
+                                <p style={{ fontSize: 11, fontWeight: 600, color: '#34d27b', letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 5 }}>Tracked update</p>
                                 {titleChanged ? (
                                   <>
                                     <p style={{ fontSize: 12, color: SHELL.text3, fontWeight: 500, lineHeight: 1.4, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', textDecoration: 'line-through', marginBottom: 4, letterSpacing: '-0.005em' }}>{o.before_title}</p>
@@ -6631,7 +6631,7 @@ export default function Dashboard() {
                                 )}
                               </div>
 
-                              <span style={{ fontSize: 11, fontWeight: 700, color: '#34d27b', padding: '3px 11px', borderRadius: 100, letterSpacing: '0.10em', textTransform: 'uppercase', border: `1px solid ${'rgba(22,163,74,0.34)'}`, background: 'rgba(22,163,74,0.14)', flexShrink: 0 }}>
+                              <span style={{ fontSize: 11, fontWeight: 600, color: '#34d27b', padding: '3px 11px', borderRadius: 100, letterSpacing: '0.10em', textTransform: 'uppercase', border: `1px solid ${'rgba(22,163,74,0.34)'}`, background: 'rgba(22,163,74,0.14)', flexShrink: 0 }}>
                                 {daysLabel}
                               </span>
                             </div>
@@ -6717,10 +6717,10 @@ export default function Dashboard() {
                           : <div style={{ width: '100%', aspectRatio: '16/9', background: '#ebebef' }}/>
                         }
                         {isShort && (
-                          <span style={{ position: 'absolute', top: 8, left: 8, background: '#111', color: '#fff', fontSize: 11, fontWeight: 700, padding: '2px 7px', borderRadius: 4, letterSpacing: '0.10em' }}>SHORT</span>
+                          <span style={{ position: 'absolute', top: 8, left: 8, background: '#111', color: '#fff', fontSize: 11, fontWeight: 600, padding: '2px 7px', borderRadius: 4, letterSpacing: '0.10em' }}>SHORT</span>
                         )}
                         {durLabel && (
-                          <span style={{ position: 'absolute', bottom: 8, right: 8, background: 'rgba(0,0,0,0.82)', color: '#fff', fontSize: 11.5, fontWeight: 700, padding: '3px 7px', borderRadius: 5, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.05px' }}>{durLabel}</span>
+                          <span style={{ position: 'absolute', bottom: 8, right: 8, background: 'rgba(0,0,0,0.82)', color: '#fff', fontSize: 11.5, fontWeight: 600, padding: '3px 7px', borderRadius: 5, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.05px' }}>{durLabel}</span>
                         )}
                       </a>
 
@@ -6746,8 +6746,8 @@ export default function Dashboard() {
                               { label: 'Eng',       display: lrN !== null ? `${lr}%` : '—',                         color: lrColor,  tip: 'Engagement rate = likes ÷ views. 3%+ strong, 1–3% avg, <1% weak.' },
                             ].map(m => (
                               <div key={m.label} title={m.tip} style={{ cursor: 'help', textAlign: 'left' }}>
-                                <p style={{ fontSize: 10.5, fontWeight: 700, color: SHELL.text3, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 5, lineHeight: 1 }}>{m.label}</p>
-                                <p style={{ fontSize: 16, fontWeight: 700, color: m.color, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.3px', lineHeight: 1 }}>{m.display}</p>
+                                <p style={{ fontSize: 10.5, fontWeight: 600, color: SHELL.text3, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 5, lineHeight: 1 }}>{m.label}</p>
+                                <p style={{ fontSize: 16, fontWeight: 600, color: m.color, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.3px', lineHeight: 1 }}>{m.display}</p>
                               </div>
                             ))}
                           </div>
@@ -6800,7 +6800,7 @@ export default function Dashboard() {
           {data && nav === 'Overview' && patterns && auditOpen && (
             <div style={{ maxWidth: 1040, margin: '0 auto' }}>
               <div style={{ marginBottom: 20, marginTop: 44 }}>
-                <h2 style={{ fontSize: 22, fontWeight: 800, color: SHELL.text1, letterSpacing: '-0.5px', marginBottom: 4 }}>Content patterns</h2>
+                <h2 style={{ fontSize: 22, fontWeight: 700, color: SHELL.text1, letterSpacing: '-0.5px', marginBottom: 4 }}>Content patterns</h2>
                 <p style={{ fontSize: 13, color: SHELL.text3 }}>What's working and what isn't</p>
               </div>
 
@@ -6811,10 +6811,10 @@ export default function Dashboard() {
                   { label: 'Avg engagement rate', value: `${patterns.likeRate}%`,   verdict: patterns.likeRate >= 3 ? 'Healthy' : patterns.likeRate >= 1 ? 'Average' : 'Below average', good: patterns.likeRate >= 3, hint: 'likes ÷ views — 3%+ is strong' },
                 ].map(p => (
                   <div key={p.label} className="ytg-card" title={p.hint || undefined} style={{ padding: '20px 22px', cursor: p.hint ? 'help' : 'default' }}>
-                    <p style={{ fontSize: 11, fontWeight: 700, color: SHELL.text3, letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 10 }}>{p.label}</p>
-                    <p style={{ fontSize: 26, fontWeight: 800, color: SHELL.text1, letterSpacing: '-0.8px', marginBottom: 10, fontVariantNumeric: 'tabular-nums' }}>{p.value}</p>
+                    <p style={{ fontSize: 11, fontWeight: 600, color: SHELL.text3, letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 10 }}>{p.label}</p>
+                    <p style={{ fontSize: 26, fontWeight: 700, color: SHELL.text1, letterSpacing: '-0.8px', marginBottom: 10, fontVariantNumeric: 'tabular-nums' }}>{p.value}</p>
                     <span style={{
-                      fontSize: 11, fontWeight: 700,
+                      fontSize: 11, fontWeight: 600,
                       color:   p.good ? '#34d27b'  : '#f0a23b',
                       background: 'transparent',
                       padding: '3px 10px', borderRadius: 20,
@@ -6830,7 +6830,7 @@ export default function Dashboard() {
                   { label: 'Worst performing', video: patterns.worstVideo, isGood: false },
                 ].map(({ label, video, isGood }) => (
                   <div key={label} className="ytg-card" style={{ padding: '20px 22px' }}>
-                    <p style={{ fontSize: 11, fontWeight: 700, color: isGood ? '#34d27b' : C.red, letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 14 }}>{label}</p>
+                    <p style={{ fontSize: 11, fontWeight: 600, color: isGood ? '#34d27b' : C.red, letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 14 }}>{label}</p>
                     {video && (
                       <>
                         <div style={{ display: 'flex', gap: 11, marginBottom: 13, alignItems: 'flex-start' }}>
@@ -6840,8 +6840,8 @@ export default function Dashboard() {
                         <div style={{ display: 'flex', gap: 20, marginBottom: 12 }}>
                           {[['Views', fmtNum(video.views), isGood ? '#34d27b' : C.red], ['Likes', fmtNum(video.likes), SHELL.text1]].map(([lbl, val, col]) => (
                             <div key={lbl}>
-                              <p style={{ fontSize: 12, color: SHELL.text3, marginBottom: 3, textTransform: 'uppercase', letterSpacing: '0.07em', fontWeight: 700 }}>{lbl}</p>
-                              <p style={{ fontSize: 21, fontWeight: 800, color: col, letterSpacing: '-0.8px', fontVariantNumeric: 'tabular-nums' }}>{val}</p>
+                              <p style={{ fontSize: 12, color: SHELL.text3, marginBottom: 3, textTransform: 'uppercase', letterSpacing: '0.07em', fontWeight: 600 }}>{lbl}</p>
+                              <p style={{ fontSize: 21, fontWeight: 700, color: col, letterSpacing: '-0.8px', fontVariantNumeric: 'tabular-nums' }}>{val}</p>
                             </div>
                           ))}
                         </div>
@@ -6861,12 +6861,12 @@ export default function Dashboard() {
               </div>
 
               <div className="ytg-card" style={{ padding: '20px 22px' }}>
-                <p style={{ fontSize: 11, fontWeight: 700, color: SHELL.text3, letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 16 }}>Content mix</p>
+                <p style={{ fontSize: 11, fontWeight: 600, color: SHELL.text3, letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 16 }}>Content mix</p>
                 <div style={{ display: 'flex', gap: 32, alignItems: 'flex-start' }}>
                   {[{ l: 'Shorts', v: patterns.shortsCount, s: '≤60s' }, { l: 'Long-form', v: patterns.longsCount, s: '>60s' }].map(p => (
                     <div key={p.l}>
-                      <p style={{ fontSize: 12, color: SHELL.text3, marginBottom: 4, textTransform: 'uppercase', letterSpacing: '0.07em', fontWeight: 700 }}>{p.l}</p>
-                      <p style={{ fontSize: 26, fontWeight: 800, color: SHELL.text1, letterSpacing: '-1px', fontVariantNumeric: 'tabular-nums' }}>{p.v}</p>
+                      <p style={{ fontSize: 12, color: SHELL.text3, marginBottom: 4, textTransform: 'uppercase', letterSpacing: '0.07em', fontWeight: 600 }}>{p.l}</p>
+                      <p style={{ fontSize: 26, fontWeight: 700, color: SHELL.text1, letterSpacing: '-1px', fontVariantNumeric: 'tabular-nums' }}>{p.v}</p>
                       <p style={{ fontSize: 12, color: SHELL.text3, marginTop: 2 }}>{p.s}</p>
                     </div>
                   ))}

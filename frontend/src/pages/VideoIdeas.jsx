@@ -21,8 +21,8 @@ const C = {
   amber:  '#d97706', amberBg: 'rgba(217,119,6,0.14)', amberBdr: 'rgba(217,119,6,0.34)', amberHi: '#f0a23b',
   blue:   '#7aa2ff', blueBg:  'rgba(79,134,247,0.14)', blueBdr: 'rgba(79,134,247,0.34)',
   text1:  '#f4f4f5',
-  text2:  '#b8b8c0',
-  text3:  '#9a9aa3',
+  text2:  '#cfd0d6',
+  text3:  '#b2b3bb',
   text4:  'rgba(255,255,255,0.30)',
   border: 'rgba(255,255,255,0.08)',
   card:        'linear-gradient(180deg, #1e1e24 0%, #18181c 100%)',
@@ -177,7 +177,7 @@ function ScorePill({ score }) {
   const bdr   = score >= 75 ? C.greenBdr : score >= 55 ? C.amberBdr : C.redBdr
   return (
     <span style={{
-      fontSize: 14, fontWeight: 800, color,
+      fontSize: 14, fontWeight: 700, color,
       background: bg, border: `1px solid ${bdr}`,
       borderRadius: 8, padding: '4px 10px',
       whiteSpace: 'nowrap', fontVariantNumeric: 'tabular-nums',
@@ -195,7 +195,7 @@ function SourceBadge({ source }) {
     : { color: C.blue,  bg: C.blueBg,  bdr: C.blueBdr,  label: 'Competitor gap' }
   return (
     <span style={{
-      fontSize: 11, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase',
+      fontSize: 11, fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase',
       color: tone.color, background: tone.bg,
       border: `1px solid ${tone.bdr}`,
       borderRadius: 100, padding: '2px 9px',
@@ -262,10 +262,10 @@ function RefreshConfirmModal({ credits, onCancel, onConfirm }) {
     <div className="vi-modal-backdrop" onClick={onCancel}>
       <div className="vi-modal" onClick={e => e.stopPropagation()}>
         <div style={{ padding: '22px 24px 20px' }}>
-          <p style={{ fontSize: 10, fontWeight: 700, color: C.amberHi, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>
+          <p style={{ fontSize: 10, fontWeight: 600, color: C.amberHi, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>
             Uses 1 credit
           </p>
-          <h3 style={{ fontSize: 18, fontWeight: 800, color: C.text1, letterSpacing: '-0.3px', lineHeight: 1.3, marginBottom: 10 }}>
+          <h3 style={{ fontSize: 18, fontWeight: 700, color: C.text1, letterSpacing: '-0.3px', lineHeight: 1.3, marginBottom: 10 }}>
             Generate fresh video ideas?
           </h3>
           <p style={{ fontSize: 13.5, color: C.text2, lineHeight: 1.65, marginBottom: 14 }}>
@@ -310,7 +310,7 @@ function RefreshConfirmModal({ credits, onCancel, onConfirm }) {
               style={{
                 padding: '10px 20px', borderRadius: 100, border: 'none',
                 background: C.red, color: '#fff',
-                fontSize: 13.5, fontWeight: 700, fontFamily: 'inherit',
+                fontSize: 13.5, fontWeight: 600, fontFamily: 'inherit',
                 letterSpacing: '0.01em', cursor: 'pointer',
                 transition: 'filter 0.15s',
               }}
@@ -388,11 +388,11 @@ function IdeaCard({ idea, done, onDone, onUseSeo }) {
           }}>
             {done
               ? <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke={C.green} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><polyline points="1.5,6.5 5,10 10.5,2"/></svg>
-              : <span style={{ fontSize: 11.5, fontWeight: 800, color: C.amberHi, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.3px' }}>{idea.rank}</span>
+              : <span style={{ fontSize: 11.5, fontWeight: 700, color: C.amberHi, fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.3px' }}>{idea.rank}</span>
             }
           </div>
           <span style={{
-            fontSize: 11, fontWeight: 800, color: C.text2,
+            fontSize: 11, fontWeight: 700, color: C.text2,
             letterSpacing: '0.12em', textTransform: 'uppercase',
           }}>Video Idea</span>
           {idea.targetKeyword && (
@@ -408,7 +408,7 @@ function IdeaCard({ idea, done, onDone, onUseSeo }) {
           <div style={{ flex: 1 }}/>
           {!done && (
             <span style={{
-              fontSize: 10.5, fontWeight: 700, color: sevColor,
+              fontSize: 10.5, fontWeight: 600, color: sevColor,
               background: sevBg, border: `1px solid ${sevBdr}`,
               padding: '3px 9px', borderRadius: 100,
               letterSpacing: '0.08em', textTransform: 'uppercase',
@@ -429,7 +429,7 @@ function IdeaCard({ idea, done, onDone, onUseSeo }) {
             because this page is title-focused — every card IS a proposed
             title, so the typography should make that the star. ── */}
         <h3 style={{
-          fontSize: 17, fontWeight: 700,
+          fontSize: 17, fontWeight: 600,
           color: done ? 'rgba(255,255,255,0.12)' : C.text1,
           letterSpacing: '-0.35px', lineHeight: 1.35,
           marginBottom: done ? 0 : 18,
@@ -455,7 +455,7 @@ function IdeaCard({ idea, done, onDone, onUseSeo }) {
                   marginBottom: 12, flexWrap: 'wrap',
                 }}>
                   <span style={{
-                    fontSize: 11, fontWeight: 700, color: C.text2,
+                    fontSize: 11, fontWeight: 600, color: C.text2,
                     letterSpacing: '0.10em', textTransform: 'uppercase',
                   }}>Currently ranking</span>
                   <div style={{ flex: 1 }}/>
@@ -469,7 +469,7 @@ function IdeaCard({ idea, done, onDone, onUseSeo }) {
                   }}>
                     <span style={{ width: 6, height: 6, borderRadius: 99, background: C.green }}/>
                     Top performer{' '}
-                    <strong style={{ color: C.text1, fontWeight: 700 }}>{fmtViews(topViews)} views</strong>
+                    <strong style={{ color: C.text1, fontWeight: 600 }}>{fmtViews(topViews)} views</strong>
                   </span>
                 </div>
                 <div style={{
@@ -515,7 +515,7 @@ function IdeaCard({ idea, done, onDone, onUseSeo }) {
                         <span style={{
                           position: 'absolute', bottom: 7, right: 7,
                           background: 'rgba(0,0,0,0.78)', color: '#fff',
-                          fontSize: 11, fontWeight: 800,
+                          fontSize: 11, fontWeight: 700,
                           padding: '3px 7px', borderRadius: 5,
                           fontVariantNumeric: 'tabular-nums',
                           letterSpacing: '-0.05px',
@@ -569,7 +569,7 @@ function IdeaCard({ idea, done, onDone, onUseSeo }) {
                   ? `${proof.length} ranking · last 12 months`
                   : 'Evidence loading'}
                 {idea.thumbnail_ready && (
-                  <>{' · '}<span style={{ color: C.greenHi, fontWeight: 700 }}>Thumbnail ready</span></>
+                  <>{' · '}<span style={{ color: C.greenHi, fontWeight: 600 }}>Thumbnail ready</span></>
                 )}
               </span>
               <div style={{ flex: 1 }}/>
@@ -581,7 +581,7 @@ function IdeaCard({ idea, done, onDone, onUseSeo }) {
                   border: 'none', cursor: 'pointer',
                   background: C.red, color: '#fff',
                   fontFamily: 'inherit',
-                  fontSize: 12.5, fontWeight: 700, letterSpacing: '-0.01em',
+                  fontSize: 12.5, fontWeight: 600, letterSpacing: '-0.01em',
                   boxShadow: '0 1px 3px rgba(229,37,27,0.30)',
                   transition: 'filter 0.14s ease, transform 0.14s ease',
                 }}
@@ -625,7 +625,7 @@ function IdeaCard({ idea, done, onDone, onUseSeo }) {
                   borderRadius: '0 10px 10px 0',
                   padding: '12px 16px',
                 }}>
-                  <p style={{ fontSize: 9.5, fontWeight: 700, color: C.amberHi, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 6 }}>Why this works</p>
+                  <p style={{ fontSize: 9.5, fontWeight: 600, color: C.amberHi, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 6 }}>Why this works</p>
                   <p style={{ fontSize: 13, fontWeight: 500, color: C.text1, letterSpacing: '-0.01em', lineHeight: 1.65 }}>{idea.angle}</p>
                 </div>
               </div>
@@ -846,7 +846,7 @@ export default function VideoIdeas({ onNavigate, plan, freeTierFeatures }) {
         boxShadow: '0 1px 2px rgba(0,0,0,0.04), 0 4px 14px rgba(0,0,0,0.06)',
       }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 16 }}>
-          <p style={{ fontSize: 11, fontWeight: 700, color: C.text3, letterSpacing: '0.07em', textTransform: 'uppercase' }}>
+          <p style={{ fontSize: 11, fontWeight: 600, color: C.text3, letterSpacing: '0.07em', textTransform: 'uppercase' }}>
             Fresh ideas · ranked by opportunity
           </p>
           <span style={{ fontSize: 11, fontWeight: 600, color: C.text3, background: '#f1f1f6', border: `1px solid ${C.border}`, borderRadius: 100, padding: '2px 8px' }}>10 ranked</span>
@@ -869,7 +869,7 @@ export default function VideoIdeas({ onNavigate, plan, freeTierFeatures }) {
               </div>
               <p style={{ flex: 1, fontSize: 13, fontWeight: 600, color: C.text1, lineHeight: 1.4 }}>{t}</p>
               <span style={{
-                fontSize: 11, fontWeight: 800, color: col,
+                fontSize: 11, fontWeight: 700, color: col,
                 padding: '2px 8px', borderRadius: 100,
                 border: `1.5px solid ${col}`,
               }}>{score}</span>
@@ -905,7 +905,7 @@ export default function VideoIdeas({ onNavigate, plan, freeTierFeatures }) {
           coordinating with the Feed column. */}
       <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 22, gap: 16, flexWrap: 'wrap' }}>
         <div>
-          <h1 style={{ fontSize: 26, fontWeight: 700, color: C.text1, letterSpacing: '-0.7px', marginBottom: 6, lineHeight: 1.1 }}>
+          <h1 style={{ fontSize: 26, fontWeight: 600, color: C.text1, letterSpacing: '-0.7px', marginBottom: 6, lineHeight: 1.1 }}>
             Video Ideas
           </h1>
           <p style={{
@@ -931,7 +931,7 @@ export default function VideoIdeas({ onNavigate, plan, freeTierFeatures }) {
               style={{
                 display: 'inline-flex', alignItems: 'center', gap: 6,
                 padding: '8px 15px', borderRadius: 100, border: 'none',
-                fontSize: 12.5, fontWeight: 700, fontFamily: 'inherit',
+                fontSize: 12.5, fontWeight: 600, fontFamily: 'inherit',
                 letterSpacing: '-0.01em',
                 background: refreshing ? '#e0e0e6' : C.red,
                 color: refreshing ? C.text3 : '#fff',
@@ -1004,7 +1004,7 @@ export default function VideoIdeas({ onNavigate, plan, freeTierFeatures }) {
           boxShadow: '0 1px 3px rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.06)',
         }}>
           <div style={{ marginBottom: 14 }}><LightbulbIcon /></div>
-          <h3 style={{ fontSize: 16, fontWeight: 700, color: C.text1, marginBottom: 8, letterSpacing: '-0.2px' }}>No ideas yet</h3>
+          <h3 style={{ fontSize: 16, fontWeight: 600, color: C.text1, marginBottom: 8, letterSpacing: '-0.2px' }}>No ideas yet</h3>
           <p style={{ fontSize: 13.5, color: C.text3, maxWidth: 340, margin: '0 auto 22px', lineHeight: 1.6 }}>
             {isFreePlan
               ? 'Analyse a competitor to unlock up to 5 free video ideas tuned to their playbook.'
@@ -1016,7 +1016,7 @@ export default function VideoIdeas({ onNavigate, plan, freeTierFeatures }) {
               style={{
                 display: 'inline-flex', alignItems: 'center', gap: 8,
                 padding: '11px 22px', borderRadius: 100, border: 'none',
-                fontSize: 13.5, fontWeight: 700, fontFamily: 'inherit',
+                fontSize: 13.5, fontWeight: 600, fontFamily: 'inherit',
                 letterSpacing: '0.01em',
                 background: C.red, color: '#fff', cursor: 'pointer',
                 transition: 'filter 0.15s',
@@ -1033,7 +1033,7 @@ export default function VideoIdeas({ onNavigate, plan, freeTierFeatures }) {
               style={{
                 display: 'inline-flex', alignItems: 'center', gap: 8,
                 padding: '11px 22px', borderRadius: 100, border: 'none',
-                fontSize: 13.5, fontWeight: 700, fontFamily: 'inherit',
+                fontSize: 13.5, fontWeight: 600, fontFamily: 'inherit',
                 letterSpacing: '0.01em',
                 background: C.red, color: '#fff', cursor: 'pointer',
                 transition: 'filter 0.15s',
@@ -1079,7 +1079,7 @@ export default function VideoIdeas({ onNavigate, plan, freeTierFeatures }) {
               <button
                 onClick={clearCompleted}
                 style={{
-                  fontSize: 12.5, fontWeight: 700, color: C.greenHi,
+                  fontSize: 12.5, fontWeight: 600, color: C.greenHi,
                   background: 'none', border: 'none', cursor: 'pointer',
                   fontFamily: 'inherit', padding: '2px 0',
                 }}
