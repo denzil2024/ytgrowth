@@ -301,22 +301,22 @@ const C = {
 const T = {
   // Page + section headers (Overview: H1 24, H2 22, H3 20)
   h1:           { fontSize: 26, fontWeight: 600, color: '#f4f4f5', letterSpacing: '-0.7px', lineHeight: 1.1 },
-  h2:           { fontSize: 22, fontWeight: 600, color: '#f4f4f5', letterSpacing: '-0.5px', lineHeight: 1.2 },
-  h3:           { fontSize: 18, fontWeight: 600, color: '#f4f4f5', letterSpacing: '-0.3px' },
+  h2:           { fontSize: 16, fontWeight: 600, color: '#f4f4f5', letterSpacing: '-0.2px', lineHeight: 1.3 },
+  h3:           { fontSize: 16, fontWeight: 600, color: '#f4f4f5', letterSpacing: '-0.2px', lineHeight: 1.3 },
 
   // Uppercase labels
   sectionLabel: { fontSize: 11, fontWeight: 600, color: '#b2b3bb', textTransform: 'uppercase', letterSpacing: '0.10em' },  // card-level label ("KEYWORD RESEARCH") — neutral grey (matches Overview); red is semantic only, don't spray it on utility eyebrows
-  sectionHint:  { fontSize: 11, fontWeight: 500, color: '#b2b3bb' },                                                       // right-aligned hint text
+  sectionHint:  { fontSize: 12.5, fontWeight: 450, color: '#b2b3bb' },                                                     // right-aligned hint text
   innerLabel:   { fontSize: 10, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.10em' },                    // inside sub-blocks (needs + color)
   statLabel:    { fontSize: 11, fontWeight: 500, color: '#b2b3bb', textTransform: 'uppercase', letterSpacing: '0.05em' },  // Overview Stat label
 
   // Descriptions
-  cardDesc:     { fontSize: 13, color: '#b2b3bb', lineHeight: 1.55 },
+  cardDesc:     { fontSize: 12.5, fontWeight: 450, color: '#b2b3bb', lineHeight: 1.55 },
 
   // Body text
-  bodyBold:     { fontSize: 14, fontWeight: 600, color: '#f4f4f5', lineHeight: 1.55, letterSpacing: '-0.1px' },
-  body:         { fontSize: 13.5, fontWeight: 500, color: '#cfd0d6', lineHeight: 1.65 },
-  innerText:    { fontSize: 13.5, fontWeight: 500, color: '#f4f4f5', lineHeight: 1.72 },                                   // inside InsightCard-style sub-blocks
+  bodyBold:     { fontSize: 13.5, fontWeight: 600, color: '#f4f4f5', lineHeight: 1.55, letterSpacing: '-0.1px' },
+  body:         { fontSize: 13.5, fontWeight: 450, color: '#cfd0d6', lineHeight: 1.65 },
+  innerText:    { fontSize: 13.5, fontWeight: 450, color: '#f4f4f5', lineHeight: 1.72 },                                   // inside InsightCard-style sub-blocks
 
   // Pills / chips / badges
   pill:         { fontSize: 10, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.10em' },                    // severity + vol/comp
