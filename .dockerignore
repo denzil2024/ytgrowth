@@ -1,0 +1,39 @@
+# Exclusions from the Docker build context. Keep this tight so the
+# COPY . . step is fast and the final image stays small. Anything
+# excluded here is NOT shipped to Railway's builder.
+
+.git
+.gitignore
+.gitattributes
+
+# Local-only Claude config / memory. Never ship to prod.
+.claude
+
+# Python build artefacts.
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.venv
+venv
+env
+
+# Node / frontend tooling artefacts. We only need frontend/dist (the
+# already-built static bundle), not the source tooling.
+node_modules
+frontend/node_modules
+frontend/.vite
+
+# Verify screenshots — large PNGs used during local UI verification.
+# Not needed in the container.
+frontend/scripts/verify/*.png
+
+# OS / editor scratch.
+.DS_Store
+Thumbs.db
+.vscode
+.idea
+
+# Logs.
+*.log
+logs/
