@@ -201,41 +201,30 @@ function useDashboardStyles() {
         background: rgba(229,37,27,0.10);
       }
 
-      /* Hero stat: VidIQ-style two big stat cards at the top of the Feed
-         (Subscribers + Views), each its own card with milestone progress.
-         The two smaller tiles (28-day momentum + Channel health) sit
-         below in a secondary row so we keep the data without crowding
-         the top. */
-      .ov-hero-primary {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 14px;
-        margin-bottom: 14px;
-      }
-      .ov-hero-secondary {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 14px;
-        margin-bottom: 28px;
-      }
+      /* Hero tile (inline, no surrounding card). 4-up strip at top of Feed. */
       .ov-hero-tile {
         position: relative;
-        padding: 22px 24px 22px;
-        display: flex; flex-direction: column; gap: 14px;
-        background: ${SHELL.cardBg};
+        padding: 16px 18px 18px;
+        display: flex; flex-direction: column; gap: 10px;
+        background: transparent;
+      }
+      .ov-hero-strip {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
         border: 1px solid ${SHELL.hair};
         border-radius: 14px;
+        background: ${SHELL.cardBg};
         box-shadow: ${SHELL.cardShadow};
-        min-height: 134px;
+        overflow: hidden;
+        margin-bottom: 28px;
       }
-      .ov-hero-tile.is-secondary {
-        padding: 16px 20px 18px;
-        gap: 10px;
-        min-height: 0;
+      .ov-hero-strip > .ov-hero-tile + .ov-hero-tile {
+        border-left: 1px solid ${SHELL.hair};
       }
-      @media (max-width: 640px) {
-        .ov-hero-primary { grid-template-columns: 1fr; }
-        .ov-hero-secondary { grid-template-columns: 1fr; }
+      @media (max-width: 740px) {
+        .ov-hero-strip { grid-template-columns: repeat(2, 1fr); }
+        .ov-hero-strip > .ov-hero-tile:nth-child(3) { border-left: none; border-top: 1px solid ${SHELL.hair}; }
+        .ov-hero-strip > .ov-hero-tile:nth-child(4) { border-top: 1px solid ${SHELL.hair}; }
       }
 
       .ov-section-head {
@@ -5515,23 +5504,12 @@ export default function Dashboard() {
                   letterSpacing: '0.10em', textTransform: 'uppercase', margin: 0,
                 }
                 const bigNum = {
-                  fontSize: 44, fontWeight: 600, color: SHELL.text1,
-                  letterSpacing: '-1.6px', lineHeight: 1,
-                  fontVariantNumeric: 'tabular-nums', margin: 0,
-                }
-                const secondaryNum = {
-                  fontSize: 28, fontWeight: 600, color: SHELL.text1,
-                  letterSpacing: '-0.9px', lineHeight: 1,
-                  fontVariantNumeric: 'tabular-nums', margin: 0,
+                  fontSize: 30, fontWeight: 600, color: SHELL.text1,
+                  letterSpacing: '-1.0px', lineHeight: 1,
+                  fontVariantNumeric: 'tabular-nums',
                 }
                 const subMeta = {
-                  fontSize: 11.5, fontWeight: 500, color: SHELL.text3,
-                  letterSpacing: '-0.05px', fontVariantNumeric: 'tabular-nums',
-                  margin: 0,
-                }
-                const rangeRow = {
-                  display: 'flex', justifyContent: 'space-between',
-                  fontSize: 11.5, fontWeight: 500, color: SHELL.text3,
+                  fontSize: 11.5, fontWeight: 500, color: SHELL.text2,
                   letterSpacing: '-0.05px', fontVariantNumeric: 'tabular-nums',
                   margin: 0,
                 }
@@ -5571,100 +5549,85 @@ export default function Dashboard() {
                 )
 
                 return (
-                  <>
-                    {/* Primary stat row: two big stat cards, VidIQ-style.
-                        Each is its own card with a milestone progress bar
-                        and a from/to bracket below. Plenty of breathing
-                        room; the numbers are the hero. */}
-                    <div className="ov-hero-primary">
+                  <div className="ov-hero-strip">
 
-                      <div className="ov-hero-tile">
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
-                          <p style={eyebrow}>Subscribers</p>
-                          {renderDeltaChip(subDelta)}
-                        </div>
-                        <p style={bigNum}>{fmtNum(subs)}</p>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: 6, marginTop: 'auto' }}>
-                          {renderMilestoneBar(subPct)}
-                          <p style={rangeRow}>
-                            <span>{fmtNum(subs)}</span>
-                            <span>{fmtNum(subTarget)}</span>
-                          </p>
-                        </div>
+                    {/* Tile 1: Subscribers + 90d delta + milestone bar */}
+                    <div className="ov-hero-tile">
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
+                        <p style={eyebrow}>Subscribers</p>
+                        {renderDeltaChip(subDelta)}
                       </div>
-
-                      <div className="ov-hero-tile">
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
-                          <p style={eyebrow}>Views</p>
-                          {renderDeltaChip(viewDelta)}
-                        </div>
-                        <p style={bigNum}>{fmtNum(tv)}</p>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: 6, marginTop: 'auto' }}>
-                          {renderMilestoneBar(viewPct)}
-                          <p style={rangeRow}>
-                            <span>{fmtNum(tv)}</span>
-                            <span>{fmtNum(viewTarget)}</span>
-                          </p>
-                        </div>
+                      <p style={bigNum}>{fmtNum(subs)}</p>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: 5, marginTop: 'auto' }}>
+                        {renderMilestoneBar(subPct)}
+                        <p style={subMeta}>Next <span style={{ color: SHELL.text1, fontWeight: 600 }}>{fmtNum(subTarget)}</span></p>
                       </div>
-
                     </div>
 
-                    {/* Secondary row: 28-day momentum + Channel health.
-                        Smaller cards so they don't compete with the two
-                        hero stats above, but the data is preserved. */}
-                    <div className="ov-hero-secondary">
+                    {/* Tile 2: Total views + 90d delta + milestone bar */}
+                    <div className="ov-hero-tile">
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
+                        <p style={eyebrow}>Total views</p>
+                        {renderDeltaChip(viewDelta)}
+                      </div>
+                      <p style={bigNum}>{fmtNum(tv)}</p>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: 5, marginTop: 'auto' }}>
+                        {renderMilestoneBar(viewPct)}
+                        <p style={subMeta}>Next <span style={{ color: SHELL.text1, fontWeight: 600 }}>{fmtNum(viewTarget)}</span></p>
+                      </div>
+                    </div>
 
-                      <div className="ov-hero-tile is-secondary">
-                        <p style={eyebrow}>28-day momentum</p>
-                        {subsSeries && subsSeries.length >= 2 ? (
-                          <>
-                            <div style={{ marginTop: -2 }}>
-                              <Sparkline data={subsSeries} width={200} height={48} />
-                            </div>
-                            <p style={{ ...subMeta, marginTop: 'auto' }}>
-                              Daily subscriber net since {new Date(Date.now() - 27 * 86400000).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
-                            </p>
-                          </>
-                        ) : (
-                          <>
-                            <p style={{ fontSize: 12.5, fontWeight: 450, color: SHELL.text2, lineHeight: 1.5, margin: 0 }}>
-                              Connect YouTube Analytics on your next reconnect to unlock the 28-day trend line.
-                            </p>
-                            <p style={{ ...subMeta, marginTop: 'auto', color: SHELL.text3 }}>Not connected</p>
-                          </>
+                    {/* Tile 3: 28-day momentum (real sparkline or analytics nudge) */}
+                    <div className="ov-hero-tile">
+                      <p style={eyebrow}>28-day momentum</p>
+                      {subsSeries && subsSeries.length >= 2 ? (
+                        <>
+                          <div style={{ marginTop: -2 }}>
+                            <Sparkline data={subsSeries} width={200} height={54} />
+                          </div>
+                          <p style={{ ...subMeta, marginTop: 'auto' }}>
+                            Daily subscriber net since {new Date(Date.now() - 27 * 86400000).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+                          </p>
+                        </>
+                      ) : (
+                        <>
+                          <p style={{ fontSize: 13, fontWeight: 500, color: SHELL.text2, lineHeight: 1.4, margin: 0 }}>
+                            Connect YouTube Analytics on your next reconnect to unlock the 28-day trend line.
+                          </p>
+                          <p style={{ ...subMeta, marginTop: 'auto', color: SHELL.text3 }}>Not connected</p>
+                        </>
+                      )}
+                    </div>
+
+                    {/* Tile 4: Channel health score */}
+                    <div className="ov-hero-tile">
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
+                        <p style={eyebrow}>Channel health</p>
+                        {haveScore && (
+                          <span style={{
+                            fontSize: 10.5, fontWeight: 600, color: scoreColor,
+                            background: channelScore >= 70 ? 'rgba(22,163,74,0.14)'
+                                      : channelScore >= 50 ? 'rgba(255,255,255,0.06)'
+                                      : 'rgba(229,37,27,0.07)',
+                            border: `1px solid ${channelScore >= 70 ? 'rgba(22,163,74,0.34)' : channelScore >= 50 ? 'rgba(255,255,255,0.12)' : 'rgba(229,37,27,0.20)'}`,
+                            padding: '1px 8px', borderRadius: 100, letterSpacing: '-0.05px',
+                          }}>{scoreLabel}</span>
                         )}
                       </div>
-
-                      <div className="ov-hero-tile is-secondary">
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
-                          <p style={eyebrow}>Channel health</p>
-                          {haveScore && (
-                            <span style={{
-                              fontSize: 10.5, fontWeight: 600, color: scoreColor,
-                              background: channelScore >= 70 ? 'rgba(22,163,74,0.14)'
-                                        : channelScore >= 50 ? 'rgba(255,255,255,0.06)'
-                                        : 'rgba(229,37,27,0.07)',
-                              border: `1px solid ${channelScore >= 70 ? 'rgba(22,163,74,0.34)' : channelScore >= 50 ? 'rgba(255,255,255,0.12)' : 'rgba(229,37,27,0.20)'}`,
-                              padding: '1px 8px', borderRadius: 100, letterSpacing: '-0.05px',
-                            }}>{scoreLabel}</span>
-                          )}
+                      <p style={{ ...bigNum, color: scoreColor }}>{haveScore ? channelScore : '—'}</p>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: 5, marginTop: 'auto' }}>
+                        <div style={{ height: 3, background: 'rgba(255,255,255,0.10)', borderRadius: 99, overflow: 'hidden' }}>
+                          <div style={{
+                            width: haveScore ? `${channelScore}%` : '0%', height: '100%',
+                            background: scoreColor, borderRadius: 99,
+                            transition: 'width 0.8s cubic-bezier(0.34,1.56,0.64,1)',
+                          }}/>
                         </div>
-                        <p style={{ ...secondaryNum, color: scoreColor }}>{haveScore ? channelScore : '—'}</p>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: 6, marginTop: 'auto' }}>
-                          <div style={{ height: 3, background: 'rgba(255,255,255,0.10)', borderRadius: 99, overflow: 'hidden' }}>
-                            <div style={{
-                              width: haveScore ? `${channelScore}%` : '0%', height: '100%',
-                              background: scoreColor, borderRadius: 99,
-                              transition: 'width 0.8s cubic-bezier(0.34,1.56,0.64,1)',
-                            }}/>
-                          </div>
-                          <p style={subMeta}>{haveScore ? <>Out of <span style={{ color: SHELL.text1, fontWeight: 600 }}>100</span></> : 'Run an audit'}</p>
-                        </div>
+                        <p style={subMeta}>{haveScore ? <>Out of <span style={{ color: SHELL.text1, fontWeight: 600 }}>100</span></> : 'Run an audit'}</p>
                       </div>
-
                     </div>
-                  </>
+
+                  </div>
                 )
               })()}
 
