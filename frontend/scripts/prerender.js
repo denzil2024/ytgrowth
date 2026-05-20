@@ -529,9 +529,15 @@ async function main() {
   const server = await startServer()
 
   console.log('[prerender] launching headless Chromium')
+  // PUPPETEER_EXECUTABLE_PATH is set on Railway (points at the nixpkgs chromium)
+  // so Puppeteer skips its bundled binary and uses the system one. Locally it's
+  // unset, so the puppeteer npm package's own download is used.
   const browser = await puppeteer.launch({
     headless: true,
     args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    ...(process.env.PUPPETEER_EXECUTABLE_PATH
+      ? { executablePath: process.env.PUPPETEER_EXECUTABLE_PATH }
+      : {}),
   })
 
   try {
