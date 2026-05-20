@@ -79,7 +79,7 @@ export const posts = [
 
         <p>TubeBuddy is a post-publish optimization engine. It is built around the question: how do I make the content I have already published perform better? Its strongest features sit on the back end of content creation. A/B testing titles and thumbnails on live videos, bulk processing descriptions and tags across your entire library, and auditing individual video health after upload.</p>
 
-        <p><a href="/blog/vidiq-review">vidIQ</a> is a pre-publish research and discovery tool. It is built around the question: what should I be creating in the first place? Its strongest features sit at the front end of content creation. Keyword validation, competitor tracking, trending topic feeds, and AI-powered idea generation before you film a single frame.</p>
+        <p><a href="/blog/vidiq-review">vidIQ</a> is a pre-publish research and discovery tool. It is built around the question: what should I be creating in the first place? Its strongest features sit at the front end of content creation. Keyword validation, competitor tracking, <a href="/blog/youtube-trends">trending topic feeds</a>, and AI-powered idea generation before you film a single frame.</p>
 
         <table>
           <thead>
@@ -125,21 +125,21 @@ export const posts = [
 
         <h3>Keyword Research</h3>
 
-        <p>vidIQ returns more data per search including trend graphs, related keyword clusters, and competition scores. TubeBuddy's keyword explorer is functional but returns fewer data points per query. For creators making keyword decisions before filming, vidIQ or tubebuddy on this feature is not close.</p>
+        <p>vidIQ returns more data per search including trend graphs, related keyword clusters, and competition scores. TubeBuddy's keyword explorer is functional but returns fewer data points per query. For creators making <a href="/features/keyword-research">keyword decisions</a> before filming, vidIQ or tubebuddy on this feature is not close.</p>
 
         <img src="/blog/tubebuddy-vs-vidiq-keyword-vidiq.webp" alt="vidIQ keyword research showing trend graph, search volume, competition score, and related keywords" />
 
         <h3>SEO and Metadata</h3>
 
-        <p>TubeBuddy's SEO scorecard sits directly inside YouTube Studio and grades every video's metadata in real time during upload. It flags missing tags, weak descriptions, and title issues before you publish. vidIQ offers similar guidance but with less granular scoring at the video level.</p>
+        <p>TubeBuddy's SEO scorecard sits directly inside YouTube Studio and grades every video's <a href="/blog/what-is-youtube-seo">metadata</a> in real time during upload. It flags missing tags, weak descriptions, and title issues before you publish. vidIQ offers similar guidance but with less granular scoring at the video level.</p>
 
         <h3>Competitor Analysis</h3>
 
-        <p>vidIQ tracks competitor channels over time and surfaces which videos are gaining momentum by views per hour. That data tells you what is working in your niche before you commit to a topic. TubeBuddy's competitor tracking is channel-level only with no video-level momentum data.</p>
+        <p>vidIQ tracks <a href="/blog/youtube-competitor-analysis">competitor channels</a> over time and surfaces which videos are gaining momentum by views per hour. That data tells you what is working in your niche before you commit to a topic. TubeBuddy's competitor tracking is channel-level only with no video-level momentum data.</p>
 
         <h3>AI Features</h3>
 
-        <p>vidIQ's AI Daily Ideas generates personalized video topics based on your niche, current trends, and audience behavior. The AI coach pulls from your actual channel analytics to give specific optimization suggestions. TubeBuddy has added AI title and thumbnail generators but they feel less connected to your channel's specific data.</p>
+        <p>vidIQ's AI Daily Ideas generates personalized <a href="/tools/youtube-video-ideas-generator">video topics</a> based on your niche, current trends, and audience behavior. The AI coach pulls from your actual channel analytics to give specific optimization suggestions. TubeBuddy has added AI title and thumbnail generators but they feel less connected to your channel's specific data.</p>
 
         <img src="/blog/tubebuddy-vs-vidiq-ai-features-vidiq.webp" alt="vidIQ AI Daily Ideas surfacing personalized video topics from niche and trend data" />
 
@@ -257,10 +257,10 @@ export const posts = [
         <p><strong>Choose TubeBuddy if:</strong></p>
 
         <ol>
-          <li>You want to A/B test thumbnails and titles on live videos to find what drives the highest CTR. This is TubeBuddy's single most powerful feature and nothing else in this category matches it.</li>
+          <li>You want to <a href="/blog/thumbnail-tester">A/B test thumbnails</a> and titles on live videos to find what drives the highest CTR. This is TubeBuddy's single most powerful feature and nothing else in this category matches it.</li>
           <li>You have a large existing video library and need to update descriptions, tags, or thumbnails across multiple videos without doing it manually one by one.</li>
           <li>You are on a tight budget and need the most useful paid features at the lowest possible price point. TubeBuddy Pro at $3.60 per month, or $1.80 for channels under 1,000 subscribers, is the most affordable entry into paid YouTube optimization tools.</li>
-          <li>You want SEO guidance built directly into the upload flow. TubeBuddy's scorecard tells you what to fix before you publish rather than after the video has already lost its early distribution window.</li>
+          <li>You want <a href="/blog/youtube-seo-best-practices">SEO guidance</a> built directly into the upload flow. TubeBuddy's scorecard tells you what to fix before you publish rather than after the video has already lost its early distribution window.</li>
           <li>You are a beginner who wants a tool that tells you what to do rather than presenting raw data you have to interpret yourself.</li>
         </ol>
 
@@ -276,13 +276,13 @@ export const posts = [
 
         <img src="/blog/tubebuddy-vs-vidiq-vidiq.webp" alt="vidIQ extension surfacing competitor tracking, keyword scores, and AI idea generation" />
 
-        <p>vidIQ is the right tool for creators whose primary growth challenge is figuring out what to create before they film it. If you are publishing consistently but struggling to find topics with real demand, or if your videos are not getting picked up by search and suggested feeds, vidIQ's research and discovery tools address those problems more directly than TubeBuddy does.</p>
+        <p>vidIQ is the right tool for creators whose primary growth challenge is figuring out what to create before they film it. If you are publishing consistently but struggling to find <a href="/blog/youtube-video-ideas">topics with real demand</a>, or if your videos are not getting picked up by search and suggested feeds, vidIQ's research and discovery tools address those problems more directly than TubeBuddy does.</p>
 
         <p><strong>Choose vidIQ if:</strong></p>
 
         <ol>
           <li>You want AI-powered video idea generation that pulls from your niche, current trends, and what similar channels are publishing. The Daily Ideas feature removes the blank page problem for creators who struggle with consistent topic research.</li>
-          <li>You want to track competitor channels over time and see which of their videos are gaining momentum by views per hour. That data tells you what is working in your niche before you commit time and resources to a topic.</li>
+          <li>You want to <a href="/features/competitor-analysis">track competitor channels</a> over time and see which of their videos are gaining momentum by views per hour. That data tells you what is working in your niche before you commit time and resources to a topic.</li>
           <li>You want structured coaching alongside your tool access. vidIQ's Max plan includes live group coaching sessions and expert consultations that give you human guidance on top of the data the tool surfaces.</li>
           <li>You want deep keyword research with trend graphs, related keyword clusters, and competition scoring to validate topics before filming. vidIQ returns significantly more data per keyword search than TubeBuddy.</li>
           <li>You do research sessions independently of YouTube and need a fully functional web dashboard that works without the platform open.</li>
@@ -323,7 +323,7 @@ export const posts = [
 
         <h3>1. Neither tool gives you a comprehensive channel audit</h3>
 
-        <p>TubeBuddy audits individual video health at the metadata level. vidIQ surfaces channel-level analytics and competitor data. Neither connects your SEO performance, CTR, audience retention, traffic sources, demographic data, and competitor benchmarking into a single structured audit that tells you exactly where your channel stands and what to prioritize fixing first.</p>
+        <p>TubeBuddy audits individual video health at the metadata level. vidIQ surfaces channel-level analytics and competitor data. Neither connects your SEO performance, CTR, <a href="/blog/youtube-watch-hours">audience retention</a>, traffic sources, demographic data, and competitor benchmarking into a single structured audit that tells you exactly where your channel stands and what to prioritize fixing first.</p>
 
         <h3>2. Neither tool connects data to a prioritized action plan</h3>
 
