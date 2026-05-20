@@ -728,3 +728,134 @@ def suggested_competitors(request: Request):
         })
     finally:
         db.close()
+
+
+@router.get("/title-suggestion")
+def title_suggestion(request: Request):
+    """Scored title rewrites for one of the creator's recent under-performers.
+
+    Picks a video locally from the session (no YouTube quota): the most
+    recent video below the creator's recent-median views, falling back to
+    the most recent video if the channel is too small to have a meaningful
+    median.
+
+    Generates three alternatives via Claude, wrapped in `cached_ai_output`
+    so two creators with overlapping inputs (same original title + same
+    niche + same size tier) share the same result. 14d TTL — titles
+    don't go stale fast.
+
+    Returns video metadata + alternatives. The frontend opens SEO Studio
+    pre-filled with the chosen alt, so the actual title push goes through
+    the standard credit-spend path.
+    """
+    data, _ = get_session(request.session.get("session_id"))
+    if not data:
+        return JSONResponse({"ok": False, "reason": "not_authenticated"}, status_code=401)
+
+    channel = (data or {}).get("channel", {}) or {}
+    videos  = (data or {}).get("videos",  []) or []
+    if not videos:
+        return JSONResponse({"ok": True, "video": None, "alternatives": []})
+
+    from app.competitors import extract_niche_keywords
+    from app.insights import parse_duration_seconds
+
+    # Recent pool: last 90 days, has a title we can rewrite. Fall back to
+    # the most recent 15 if nothing falls in the 90d window (newer channels
+    # / dormant uploads).
+    cutoff = (datetime.datetime.now() - datetime.timedelta(days=90)).strftime("%Y-%m-%d")
+    recent = [v for v in videos if (v.get("published_at") or "")[:10] >= cutoff and v.get("title")]
+    if len(recent) < 3:
+        recent = [v for v in videos if v.get("title")][:15]
+    if not recent:
+        return JSONResponse({"ok": True, "video": None, "alternatives": []})
+
+    # Median over the recent pool. Under-performer = below median.
+    views_sorted = sorted(int(v.get("views", 0) or 0) for v in recent)
+    median_views = views_sorted[len(views_sorted) // 2] if views_sorted else 0
+    under = [v for v in recent if int(v.get("views", 0) or 0) < median_views]
+
+    if under:
+        pick = sorted(under, key=lambda v: (v.get("published_at") or ""), reverse=True)[0]
+        reason = "Below your recent median views"
+    else:
+        pick = sorted(recent, key=lambda v: (v.get("published_at") or ""), reverse=True)[0]
+        reason = "Your most recent video"
+
+    is_short = parse_duration_seconds(pick.get("duration", "PT0S")) <= 60
+    niche_kw = extract_niche_keywords(channel, videos) or []
+
+    def _subs_tier(n: int) -> str:
+        if n < 10_000:    return "micro"
+        if n < 100_000:   return "small"
+        if n < 1_000_000: return "mid"
+        return "large"
+
+    original_title = (pick.get("title") or "").strip()
+    cache_inputs = {
+        "original_title": original_title,
+        "niche_kw":       sorted((k or "").strip().lower() for k in niche_kw[:5]),
+        "subs_tier":      _subs_tier(int(channel.get("subscribers", 0) or 0)),
+        "is_short":       bool(is_short),
+        "model":          "claude-sonnet-4-6",
+        "prompt_version": "v1",
+    }
+
+    def _fetch():
+        from app.utils import make_anthropic_client
+        import re as _re
+        client = make_anthropic_client()
+        fmt_label = "Short (under 60s)" if is_short else "Long-form"
+        prompt = f"""You rewrite YouTube titles. The video below underperformed and the creator wants three sharper alternatives.
+
+Original title: "{original_title}"
+Format: {fmt_label}
+Creator size tier: {cache_inputs["subs_tier"]}
+Niche keywords the channel ranks for: {cache_inputs["niche_kw"]}
+
+Tasks - return ONLY valid JSON, no markdown:
+1. Three alternative titles. Each <=70 characters. Natural human phrasing, NOT clickbait. Vary the angle across the three (e.g. one curiosity-led, one specificity-led, one first-person-stake).
+2. For each: clickScore 0-100 (higher = stronger hook + clearer specificity vs original), why (one short sentence on what changed and why it should land harder).
+
+{{"alternatives":[{{"title":"","clickScore":0,"why":""}},{{"title":"","clickScore":0,"why":""}},{{"title":"","clickScore":0,"why":""}}]}}"""
+        try:
+            resp = client.messages.create(
+                model="claude-sonnet-4-6",
+                max_tokens=600,
+                system="You write YouTube titles. Return only valid JSON, no markdown.",
+                messages=[{"role": "user", "content": prompt}],
+            )
+            raw = resp.content[0].text.strip()
+            if raw.startswith("```"):
+                raw = _re.sub(r"^```[a-z]*\n?", "", raw)
+                raw = _re.sub(r"\n?```$", "", raw)
+            result = json.loads(raw)
+            alts = result.get("alternatives") or []
+            alts = [a for a in alts if (a or {}).get("title")]
+            alts.sort(key=lambda a: int(a.get("clickScore", 0) or 0), reverse=True)
+            return {"alternatives": alts[:3]}
+        except Exception as e:
+            print(f"[title-suggestion] Claude error: {e}")
+            return {"alternatives": [], "_error": str(e)}
+
+    from app.utils import cached_ai_output
+    out = cached_ai_output(
+        function_name="feed_title_suggestion",
+        inputs=cache_inputs,
+        ttl_hours=24 * 14,
+        fetch_fn=_fetch,
+    )
+
+    return JSONResponse({
+        "ok": True,
+        "video": {
+            "video_id":     pick.get("video_id", ""),
+            "title":        original_title,
+            "thumbnail":    pick.get("thumbnail", ""),
+            "views":        int(pick.get("views", 0) or 0),
+            "published_at": (pick.get("published_at") or "")[:10],
+            "is_short":     bool(is_short),
+        },
+        "alternatives": out.get("alternatives") or [],
+        "reason":       reason,
+    })

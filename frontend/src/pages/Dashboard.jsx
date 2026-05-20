@@ -21,6 +21,7 @@ import {
   Lightbulb,        // Daily Ideas category
   Users,            // Competitor Activity category
   UserPlus,         // Suggested Competitors category
+  Wand2,            // Title Suggestion category
   RefreshCw,        // Refresh Ideas button
   ExternalLink,     // External link arrow for competitor uploads
   ChevronDown,      // Collapse toggle on Channel Health
@@ -3569,6 +3570,184 @@ function DailyIdeasCard({ ideas, lastUpdated, isStale, isFree, refreshing, onRef
 // page, which reads the prefill and pre-runs the search. The user then
 // hits the actual Track button there (which IS the analyze call). This
 // avoids surprise credit burn from a one-click track on the Feed.
+function TitleSuggestionCard({ video, alternatives, reason, onUse, onOpenStudio, onDismiss }) {
+  const top = (alternatives || []).slice(0, 3)
+  if (!video || top.length < 2) return null
+
+  const viewsLabel = video.views > 0 ? `${fmtNum(video.views)} views` : ''
+  const dateLabel  = video.published_at ? video.published_at : ''
+  const meta       = [viewsLabel, dateLabel].filter(Boolean).join(' · ')
+
+  return (
+    <FeedCard
+      Icon={Wand2}
+      iconColor={'#fb6a60'}
+      iconBg="rgba(229,37,27,0.10)"
+      category="Title Suggestion"
+      onDismiss={onDismiss}
+      rightSlot={
+        <span style={{
+          display: 'inline-flex', alignItems: 'center', gap: 5,
+          fontSize: 10.5, fontWeight: 600, color: SHELL.text2,
+          background: 'rgba(255,255,255,0.05)',
+          border: '1px solid rgba(255,255,255,0.08)',
+          padding: '3px 9px', borderRadius: 100,
+          letterSpacing: '0.10em', textTransform: 'uppercase',
+        }}>
+          <span style={{ width: 5, height: 5, borderRadius: 99, background: 'rgba(255,255,255,0.45)' }}/>
+          {top.length} rewrites
+        </span>
+      }
+    >
+      <div style={{ display: 'flex', alignItems: 'baseline', gap: 12, flexWrap: 'wrap', marginBottom: 14 }}>
+        <h3 style={{
+          fontSize: 14, fontWeight: 600, color: SHELL.text1,
+          letterSpacing: '-0.15px', lineHeight: 1.3, margin: 0,
+        }}>Polish a recent title</h3>
+        <span style={{
+          fontSize: 12, fontWeight: 500, color: 'rgba(255,255,255,0.78)',
+          letterSpacing: '-0.05px',
+        }}>{reason || 'Worth a second pass'}</span>
+      </div>
+
+      {/* Source video row */}
+      <div style={{
+        display: 'flex', alignItems: 'center', gap: 12,
+        padding: '10px 12px',
+        background: SHELL.cardFlat,
+        border: '1px solid rgba(255,255,255,0.08)',
+        borderRadius: 10,
+        marginBottom: 12,
+      }}>
+        {video.thumbnail ? (
+          <img
+            src={video.thumbnail}
+            alt=""
+            loading="lazy"
+            onError={e => { e.currentTarget.style.visibility = 'hidden' }}
+            style={{
+              flexShrink: 0,
+              width: 64, height: 36, borderRadius: 6,
+              objectFit: 'cover',
+              background: 'rgba(255,255,255,0.06)',
+              border: '1px solid rgba(255,255,255,0.08)',
+            }}
+          />
+        ) : (
+          <div style={{
+            flexShrink: 0, width: 64, height: 36, borderRadius: 6,
+            background: 'rgba(255,255,255,0.06)',
+            border: '1px solid rgba(255,255,255,0.08)',
+          }}/>
+        )}
+        <div style={{ minWidth: 0, flex: 1 }}>
+          <p style={{
+            fontSize: 12.5, fontWeight: 600, color: SHELL.text1,
+            letterSpacing: '-0.1px', lineHeight: 1.35, margin: 0,
+            whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
+          }}>{video.title}</p>
+          {meta && (
+            <p style={{
+              fontSize: 11.5, fontWeight: 500, color: SHELL.text3,
+              letterSpacing: '-0.01em', lineHeight: 1.3,
+              margin: '3px 0 0',
+            }}>{meta}</p>
+          )}
+        </div>
+      </div>
+
+      {/* Alternatives — one row each, score chip left, title middle, Use right */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 12 }}>
+        {top.map((alt, i) => {
+          const score = Math.max(0, Math.min(100, Number(alt.clickScore || 0)))
+          return (
+            <div
+              key={i}
+              style={{
+                display: 'flex', alignItems: 'center', gap: 10,
+                padding: '10px 12px',
+                background: SHELL.cardFlat,
+                border: '1px solid rgba(255,255,255,0.08)',
+                borderRadius: 10,
+                transition: 'background 0.14s, border-color 0.14s, transform 0.14s',
+              }}
+              onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.02)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.14)'; e.currentTarget.style.transform = 'translateY(-1px)' }}
+              onMouseLeave={e => { e.currentTarget.style.background = SHELL.cardFlat; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'; e.currentTarget.style.transform = 'translateY(0)' }}
+            >
+              <span style={{
+                flexShrink: 0,
+                minWidth: 34,
+                padding: '4px 8px', borderRadius: 99,
+                background: 'rgba(255,255,255,0.05)',
+                border: '1px solid rgba(255,255,255,0.10)',
+                fontSize: 11.5, fontWeight: 600, color: SHELL.text1,
+                letterSpacing: '-0.02em',
+                textAlign: 'center',
+              }}>{score}</span>
+              <p style={{
+                flex: 1, minWidth: 0, margin: 0,
+                fontSize: 13, fontWeight: 600, color: SHELL.text1,
+                letterSpacing: '-0.15px', lineHeight: 1.35,
+              }}
+              title={alt.why || ''}
+              >{alt.title}</p>
+              <button
+                type="button"
+                onClick={() => onUse?.(alt, video)}
+                style={{
+                  flexShrink: 0,
+                  display: 'inline-flex', alignItems: 'center', gap: 5,
+                  padding: '6px 12px', borderRadius: 100,
+                  border: 'none', cursor: 'pointer',
+                  background: '#e5251b', color: '#fff',
+                  fontFamily: 'inherit',
+                  fontSize: 12, fontWeight: 600, letterSpacing: '-0.05px',
+                  boxShadow: '0 1px 3px rgba(229,37,27,0.28)',
+                  transition: 'filter 0.14s, transform 0.14s',
+                }}
+                onMouseEnter={e => { e.currentTarget.style.filter = 'brightness(1.08)'; e.currentTarget.style.transform = 'translateY(-1px)' }}
+                onMouseLeave={e => { e.currentTarget.style.filter = 'none'; e.currentTarget.style.transform = 'translateY(0)' }}
+              >
+                Use
+                <ArrowRight size={11} strokeWidth={2.4} />
+              </button>
+            </div>
+          )
+        })}
+      </div>
+
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', paddingTop: 12, borderTop: '1px solid rgba(255,255,255,0.08)' }}>
+        <span style={{ fontSize: 11.5, fontWeight: 500, color: SHELL.text3, letterSpacing: '-0.01em' }}>
+          Drafted from your video, no quota burned
+        </span>
+        <div style={{ flex: 1 }}/>
+        {onOpenStudio && (
+          <button
+            type="button"
+            onClick={onOpenStudio}
+            style={{
+              display: 'inline-flex', alignItems: 'center', gap: 5,
+              padding: '6px 11px', borderRadius: 100,
+              border: '1px solid rgba(255,255,255,0.08)',
+              background: 'rgba(255,255,255,0.02)',
+              color: SHELL.text2,
+              fontFamily: 'inherit',
+              fontSize: 11.5, fontWeight: 600, letterSpacing: '-0.05px',
+              cursor: 'pointer',
+              transition: 'background 0.14s, border-color 0.14s, color 0.14s',
+            }}
+            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.16)'; e.currentTarget.style.color = SHELL.text1 }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.02)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'; e.currentTarget.style.color = SHELL.text2 }}
+          >
+            Open SEO Studio
+            <ArrowRight size={11} strokeWidth={2.4} />
+          </button>
+        )}
+      </div>
+    </FeedCard>
+  )
+}
+
 function SuggestedCompetitorsCard({ suggestions, category, onTrack, onDismiss, onOpenAll }) {
   const top = (suggestions || []).slice(0, 4)
   if (top.length < 3) return null  // hide if signal is thin
@@ -4825,6 +5004,7 @@ export default function Dashboard() {
   // Daily Ideas (Video Ideas top 3 surfaced on the Feed).
   const [dailyIdeas, setDailyIdeas] = useState(null)
   const [suggestedCompetitors, setSuggestedCompetitors] = useState(null)
+  const [titleSuggestion, setTitleSuggestion] = useState(null)
   const [refreshingIdeas, setRefreshingIdeas] = useState(false)
   // Competitor Activity (recent uploads from tracked competitors).
   const [competitorActivity, setCompetitorActivity] = useState(null)
@@ -4985,6 +5165,14 @@ export default function Dashboard() {
     fetch('/dashboard/suggested-competitors', { credentials: 'include' })
       .then(r => r.ok ? r.json() : null)
       .then(d => { if (d && d.ok && d.suggestions?.length) setSuggestedCompetitors(d) })
+      .catch(() => {})
+
+    // Load Title Suggestion: picks a recent under-performer locally, asks
+    // Claude for three rewrites (cross-user cached, 14d TTL). Zero new
+    // YouTube quota. Card hides itself if fewer than 2 alts come back.
+    fetch('/dashboard/title-suggestion', { credentials: 'include' })
+      .then(r => r.ok ? r.json() : null)
+      .then(d => { if (d && d.ok && d.video && d.alternatives?.length) setTitleSuggestion(d) })
       .catch(() => {})
 
     // Load plan + per-feature gate state (for free-tier gating on child pages).
@@ -6059,6 +6247,38 @@ export default function Dashboard() {
                   />
                 ) : null
 
+                const titleSuggestionBlock = (feedFilter === 'all' || feedFilter === 'insights') && titleSuggestion?.video && (titleSuggestion?.alternatives?.length || 0) >= 2 ? (() => {
+                  const dismissKey = `ytg_title_suggestion_dismissed:${data?.channel?.channel_id || 'x'}:${titleSuggestion.video.video_id || 'x'}`
+                  try { if (localStorage.getItem(dismissKey)) return null } catch {}
+                  return (
+                    <TitleSuggestionCard
+                      key="title-suggestion"
+                      video={titleSuggestion.video}
+                      alternatives={titleSuggestion.alternatives}
+                      reason={titleSuggestion.reason}
+                      onUse={(alt) => {
+                        // Land in SEO Studio with the alt title + the video's
+                        // dominant niche keyword pre-filled. The actual title
+                        // push happens there, so credit-spend stays explicit.
+                        try {
+                          if (alt?.title) sessionStorage.setItem('seoOptimizer_prefilledTitle', alt.title)
+                        } catch {}
+                        setNav('SEO Studio')
+                      }}
+                      onOpenStudio={() => {
+                        try {
+                          if (titleSuggestion.video?.title) sessionStorage.setItem('seoOptimizer_prefilledTitle', titleSuggestion.video.title)
+                        } catch {}
+                        setNav('SEO Studio')
+                      }}
+                      onDismiss={() => {
+                        try { localStorage.setItem(dismissKey, '1') } catch {}
+                        setChecked(prev => ({ ...prev }))
+                      }}
+                    />
+                  )
+                })() : null
+
                 const suggestedCompetitorsBlock = (feedFilter === 'all' || feedFilter === 'insights') && suggestedCompetitors?.suggestions?.length >= 1 ? (() => {
                   const dismissKey = `ytg_suggested_competitors_dismissed:${data?.channel?.channel_id || 'x'}`
                   try { if (localStorage.getItem(dismissKey)) return null } catch {}
@@ -6212,7 +6432,7 @@ export default function Dashboard() {
 
                 const hasWhatToDoNext = priorityActionsBlock || dailyIdeasBlock
                 const hasRecentWins = milestoneBlock || topPerformerBlock || trackedLiftBlock
-                const hasYourNiche = nicheHeroBlock || suggestedCompetitorsBlock || competitorActivityBlock
+                const hasYourNiche = nicheHeroBlock || titleSuggestionBlock || suggestedCompetitorsBlock || competitorActivityBlock
                 const hasHowYouPublish = postingConsistencyBlock || bestTimeBlock
 
                 return (
@@ -6249,6 +6469,7 @@ export default function Dashboard() {
                         </div>
                         <div className="ov-stack">
                           {nicheHeroBlock}
+                          {titleSuggestionBlock}
                           {suggestedCompetitorsBlock}
                           {competitorActivityBlock}
                         </div>
