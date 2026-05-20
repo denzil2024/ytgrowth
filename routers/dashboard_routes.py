@@ -38,7 +38,7 @@ from app.niche_outliers import (
     is_stale,
     personalize_angle,
 )
-from database.models import SessionLocal, SeoOptimization, CompetitorAnalysisCache, CompetitorActivityCache
+from database.models import SessionLocal, SeoOptimization, CompetitorAnalysisCache, CompetitorActivityCache, TopChannelCache, YoutubeSearchCache
 from routers.auth import get_session
 from routers.admin_routes import _is_admin
 
@@ -577,5 +577,154 @@ def competitor_activity(request: Request, force: int = 0):
         payload = {"items": items[:5], "competitor_count": len(competitors)}
         _write_activity_cache(db, channel_id, payload)
         return JSONResponse(payload)
+    finally:
+        db.close()
+
+
+@router.get("/suggested-competitors")
+def suggested_competitors(request: Request):
+    """Auto-curated competitor suggestions for the Feed.
+
+    Pulls candidates from caches only — ZERO new YouTube quota:
+      1. top_channel_cache: cross-user curated leaderboards by category.
+         Already has sub counts, thumbnails, handles. Strong signal when
+         we can infer the user's category from their niche keywords.
+      2. youtube_search_cache (comp: prefix): channels surfaced in past
+         competitor-name searches by any user. Useful for users in narrow
+         niches that don't map cleanly to one of our 14 categories.
+
+    Filters out the user's own channel and any competitor they already
+    track. Returns up to 8, sorted by signal strength then sub count.
+    Card is intended to hide on the frontend when fewer than ~3 results.
+    """
+    data, _ = get_session(request.session.get("session_id"))
+    if not data:
+        return JSONResponse({"ok": False, "reason": "not_authenticated"}, status_code=401)
+
+    channel = (data or {}).get("channel", {}) or {}
+    videos  = (data or {}).get("videos",  []) or []
+    my_id   = channel.get("channel_id") or ""
+    if not my_id:
+        return JSONResponse({"ok": True, "suggestions": [], "category": None})
+
+    from app.competitors import extract_niche_keywords
+    from app.top_channels import CATEGORY_QUERIES
+    from app.seo import _normalize_cache_query
+
+    niche_kw = extract_niche_keywords(channel, videos) or []
+    niche_kw_lower = [str(k).lower() for k in niche_kw]
+
+    # Map this user's niche keywords to one of the 14 TopChannelCache
+    # categories by simple substring overlap with each category's seed
+    # query. If nothing matches, we skip the TopChannelCache pull and
+    # fall back to the comp: search cache (secondary source below).
+    best_cat = None
+    best_score = 0
+    for cat, query in CATEGORY_QUERIES.items():
+        terms = [t for t in query.lower().split() if len(t) > 2]
+        score = 0
+        for kw in niche_kw_lower:
+            for term in terms:
+                if term in kw or kw in term:
+                    score += 1
+        if score > best_score:
+            best_score = score
+            best_cat = cat
+
+    db = SessionLocal()
+    try:
+        # Already-tracked competitor channel_ids (so we don't re-suggest)
+        tracked_ids = {my_id}
+        try:
+            for row in db.query(CompetitorAnalysisCache).filter_by(channel_id=my_id).all():
+                try:
+                    result = json.loads(row.result_json)
+                    meta = result.get("_competitor_meta") or {}
+                    cid = meta.get("channel_id") or row.competitor_id
+                    if cid:
+                        tracked_ids.add(cid)
+                except Exception:
+                    pass
+        except Exception:
+            pass
+
+        candidates = {}  # channel_id -> dict
+
+        # Primary: TopChannelCache by inferred category (global region).
+        # Has subscribers, thumbnails, handles — the rich data needed for
+        # the VidIQ-style card.
+        if best_cat:
+            try:
+                rows = (
+                    db.query(TopChannelCache)
+                    .filter(
+                        TopChannelCache.category == best_cat,
+                        TopChannelCache.region == 'global',
+                    )
+                    .order_by(TopChannelCache.subscribers.desc())
+                    .limit(40)
+                    .all()
+                )
+                for r in rows:
+                    if not r.channel_id or r.channel_id in tracked_ids:
+                        continue
+                    candidates[r.channel_id] = {
+                        "channel_id":   r.channel_id,
+                        "channel_name": r.title or "",
+                        "handle":       r.handle or "",
+                        "thumbnail":    r.thumbnail or "",
+                        "subscribers":  int(r.subscribers or 0),
+                        "score":        2,  # strong signal: curated category leaderboard
+                    }
+            except Exception as e:
+                print(f"[suggested-competitors] top_channel_cache read error: {e}")
+
+        # Secondary: comp:<niche_kw> rows in youtube_search_cache.
+        # Sub counts aren't in the search-result payload, but channel_id
+        # + name + thumbnail are. We dedupe and bump score for channels
+        # that appear across multiple keyword searches.
+        for kw in niche_kw[:5]:
+            try:
+                prefix = f"comp:{_normalize_cache_query(kw)}"
+                rows = (
+                    db.query(YoutubeSearchCache)
+                    .filter(YoutubeSearchCache.cache_key.like(f"{prefix}|%"))
+                    .all()
+                )
+                for row in rows:
+                    try:
+                        chans = json.loads(row.result_json) or []
+                    except Exception:
+                        continue
+                    for c in chans[:5]:
+                        cid = (c or {}).get("channel_id") or ""
+                        if not cid or cid in tracked_ids:
+                            continue
+                        if cid in candidates:
+                            candidates[cid]["score"] += 1
+                        else:
+                            candidates[cid] = {
+                                "channel_id":   cid,
+                                "channel_name": c.get("channel_name", "") or "",
+                                "handle":       "",
+                                "thumbnail":    c.get("thumbnail", "") or "",
+                                "subscribers":  0,
+                                "score":        1,
+                            }
+            except Exception as e:
+                print(f"[suggested-competitors] comp-cache read error: {e}")
+
+        # Rank: score DESC (stronger signal first), then subscribers DESC.
+        ordered = sorted(
+            candidates.values(),
+            key=lambda x: (-x["score"], -x["subscribers"]),
+        )[:8]
+
+        return JSONResponse({
+            "ok":          True,
+            "suggestions": ordered,
+            "category":    best_cat,
+            "niche_keywords": niche_kw[:5],
+        })
     finally:
         db.close()

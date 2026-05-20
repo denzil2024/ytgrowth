@@ -1527,6 +1527,26 @@ export default function Competitors({ plan, freeTierFeatures }) {
       .catch(() => {})
   }, [])
 
+  // Prefill hook. The Feed's SuggestedCompetitorsCard sets this in
+  // sessionStorage on Track click, then navigates here. We consume it
+  // once on mount: switch to the Search tab, set the query, fire the
+  // search. Single-shot — the key is cleared so a tab re-mount doesn't
+  // refire it.
+  useEffect(() => {
+    let prefilled = ''
+    try { prefilled = sessionStorage.getItem('competitors_prefilledQuery') || '' } catch {}
+    if (!prefilled) return
+    try { sessionStorage.removeItem('competitors_prefilledQuery') } catch {}
+    setActiveTab('search')
+    setSearchQuery(prefilled)
+    setSearched(true)
+    setLoadingSearch(true)
+    fetch(`/competitors/search?q=${encodeURIComponent(prefilled)}`, { credentials: 'include' })
+      .then(r => r.json())
+      .then(d => { if (d.results) setSearchResults(d.results); setLoadingSearch(false) })
+      .catch(() => setLoadingSearch(false))
+  }, [])
+
   const handleSearch = () => {
     if (!searchQuery.trim()) return
     setLoadingSearch(true)

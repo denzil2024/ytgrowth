@@ -20,6 +20,7 @@ import {
   TrendingUp,       // Tracked Optimization Lift category
   Lightbulb,        // Daily Ideas category
   Users,            // Competitor Activity category
+  UserPlus,         // Suggested Competitors category
   RefreshCw,        // Refresh Ideas button
   ExternalLink,     // External link arrow for competitor uploads
   ChevronDown,      // Collapse toggle on Channel Health
@@ -3557,6 +3558,187 @@ function DailyIdeasCard({ ideas, lastUpdated, isStale, isFree, refreshing, onRef
   )
 }
 
+// Suggested Competitors card. Auto-curated discovery surface: pulls
+// channels from top_channel_cache (curated category leaderboards) and
+// from comp:<niche_kw> rows in the cross-user youtube_search_cache.
+// Zero new YouTube quota — everything comes from caches that were
+// already populated by other features.
+//
+// Each row: avatar + name + sub count + Track CTA. The Track CTA stashes
+// the channel name in sessionStorage and switches to the Competitors
+// page, which reads the prefill and pre-runs the search. The user then
+// hits the actual Track button there (which IS the analyze call). This
+// avoids surprise credit burn from a one-click track on the Feed.
+function SuggestedCompetitorsCard({ suggestions, category, onTrack, onDismiss, onOpenAll }) {
+  const top = (suggestions || []).slice(0, 4)
+  if (top.length < 3) return null  // hide if signal is thin
+
+  const subline = category
+    ? `Based on your top niche: ${category.replace(/-/g, ' ')}`
+    : 'Based on the keywords your channel ranks for'
+
+  return (
+    <FeedCard
+      Icon={UserPlus}
+      iconColor={'#fb6a60'}
+      iconBg="rgba(229,37,27,0.10)"
+      category="Suggested Competitors"
+      onDismiss={onDismiss}
+      rightSlot={
+        <span style={{
+          display: 'inline-flex', alignItems: 'center', gap: 5,
+          fontSize: 10.5, fontWeight: 600, color: SHELL.text2,
+          background: 'rgba(255,255,255,0.05)',
+          border: '1px solid rgba(255,255,255,0.08)',
+          padding: '3px 9px', borderRadius: 100,
+          letterSpacing: '0.10em', textTransform: 'uppercase',
+        }}>
+          <span style={{ width: 5, height: 5, borderRadius: 99, background: 'rgba(255,255,255,0.45)' }}/>
+          {top.length} picks
+        </span>
+      }
+    >
+      <div style={{ display: 'flex', alignItems: 'baseline', gap: 12, flexWrap: 'wrap', marginBottom: 14 }}>
+        <h3 style={{
+          fontSize: 14, fontWeight: 600, color: SHELL.text1,
+          letterSpacing: '-0.15px', lineHeight: 1.3, margin: 0,
+        }}>Channels in your niche worth tracking</h3>
+        <span style={{
+          fontSize: 12, fontWeight: 500, color: 'rgba(255,255,255,0.78)',
+          letterSpacing: '-0.05px',
+        }}>{subline}</span>
+      </div>
+
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fill, minmax(190px, 1fr))',
+        gap: 10,
+        marginBottom: 12,
+      }}>
+        {top.map((c, i) => {
+          const subs = Number(c.subscribers || 0)
+          const subsLabel = subs > 0 ? `${fmtNum(subs)} subs` : ''
+          const handle = c.handle ? (c.handle.startsWith('@') ? c.handle : `@${c.handle}`) : ''
+          return (
+            <div
+              key={c.channel_id || i}
+              style={{
+                display: 'flex', flexDirection: 'column', gap: 10,
+                padding: '14px 14px 12px',
+                background: SHELL.cardFlat,
+                border: '1px solid rgba(255,255,255,0.08)',
+                borderRadius: 10,
+                transition: 'background 0.14s, border-color 0.14s, transform 0.14s',
+              }}
+              onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.02)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.14)'; e.currentTarget.style.transform = 'translateY(-1px)' }}
+              onMouseLeave={e => { e.currentTarget.style.background = SHELL.cardFlat; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'; e.currentTarget.style.transform = 'translateY(0)' }}
+            >
+              {/* Avatar row */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                {c.thumbnail ? (
+                  <img
+                    src={c.thumbnail}
+                    alt=""
+                    loading="lazy"
+                    onError={e => { e.currentTarget.style.visibility = 'hidden' }}
+                    style={{
+                      flexShrink: 0,
+                      width: 36, height: 36, borderRadius: 99,
+                      objectFit: 'cover',
+                      background: 'rgba(255,255,255,0.06)',
+                      border: '1px solid rgba(255,255,255,0.08)',
+                    }}
+                  />
+                ) : (
+                  <div style={{
+                    flexShrink: 0,
+                    width: 36, height: 36, borderRadius: 99,
+                    background: 'rgba(255,255,255,0.06)',
+                    border: '1px solid rgba(255,255,255,0.08)',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    color: SHELL.text3,
+                  }}>
+                    <Users size={15} strokeWidth={2} />
+                  </div>
+                )}
+                <div style={{ minWidth: 0, flex: 1 }}>
+                  <p style={{
+                    fontSize: 13, fontWeight: 600, color: SHELL.text1,
+                    letterSpacing: '-0.15px', lineHeight: 1.25,
+                    margin: 0,
+                    whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
+                  }}>{c.channel_name || 'Unknown channel'}</p>
+                  {(subsLabel || handle) && (
+                    <p style={{
+                      fontSize: 11.5, fontWeight: 500, color: SHELL.text3,
+                      letterSpacing: '-0.01em', lineHeight: 1.3,
+                      margin: '3px 0 0',
+                      whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
+                    }}>
+                      {[subsLabel, handle].filter(Boolean).join(' · ')}
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              {/* Track CTA */}
+              <button
+                type="button"
+                onClick={() => onTrack?.(c)}
+                style={{
+                  display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 5,
+                  padding: '7px 14px', borderRadius: 100,
+                  border: 'none', cursor: 'pointer',
+                  background: '#e5251b', color: '#fff',
+                  fontFamily: 'inherit',
+                  fontSize: 12, fontWeight: 600, letterSpacing: '-0.05px',
+                  boxShadow: '0 1px 3px rgba(229,37,27,0.28)',
+                  transition: 'filter 0.14s, transform 0.14s',
+                }}
+                onMouseEnter={e => { e.currentTarget.style.filter = 'brightness(1.08)'; e.currentTarget.style.transform = 'translateY(-1px)' }}
+                onMouseLeave={e => { e.currentTarget.style.filter = 'none'; e.currentTarget.style.transform = 'translateY(0)' }}
+              >
+                Track
+                <ArrowRight size={11} strokeWidth={2.4} />
+              </button>
+            </div>
+          )
+        })}
+      </div>
+
+      {/* Bottom row: open Competitors */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', paddingTop: 12, borderTop: '1px solid rgba(255,255,255,0.08)' }}>
+        <span style={{ fontSize: 11.5, fontWeight: 500, color: SHELL.text3, letterSpacing: '-0.01em' }}>
+          Picked from caches, no new search burned
+        </span>
+        <div style={{ flex: 1 }}/>
+        {onOpenAll && (
+          <button
+            type="button"
+            onClick={onOpenAll}
+            style={{
+              display: 'inline-flex', alignItems: 'center', gap: 5,
+              padding: '6px 11px', borderRadius: 100,
+              border: '1px solid rgba(255,255,255,0.08)',
+              background: 'rgba(255,255,255,0.02)',
+              color: SHELL.text2,
+              fontFamily: 'inherit',
+              fontSize: 11.5, fontWeight: 600, letterSpacing: '-0.05px',
+              cursor: 'pointer',
+              transition: 'background 0.14s, border-color 0.14s, color 0.14s',
+            }}
+            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.16)'; e.currentTarget.style.color = SHELL.text1 }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.02)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'; e.currentTarget.style.color = SHELL.text2 }}
+          >
+            Open Competitors
+            <ArrowRight size={11} strokeWidth={2.4} />
+          </button>
+        )}
+      </div>
+    </FeedCard>
+  )
+}
+
 // Competitor Activity card. Shows recent uploads from the channels the
 // user tracks via the Competitors feature. Habit-forming surface: every
 // time a competitor posts, this card updates. Three uploads shown as a
@@ -4642,6 +4824,7 @@ export default function Dashboard() {
   const [trackedLift, setTrackedLift] = useState(null)
   // Daily Ideas (Video Ideas top 3 surfaced on the Feed).
   const [dailyIdeas, setDailyIdeas] = useState(null)
+  const [suggestedCompetitors, setSuggestedCompetitors] = useState(null)
   const [refreshingIdeas, setRefreshingIdeas] = useState(false)
   // Competitor Activity (recent uploads from tracked competitors).
   const [competitorActivity, setCompetitorActivity] = useState(null)
@@ -4794,6 +4977,14 @@ export default function Dashboard() {
     fetch('/dashboard/competitor-activity', { credentials: 'include' })
       .then(r => r.ok ? r.json() : null)
       .then(d => { if (d && !d.error && d.items?.length) setCompetitorActivity(d) })
+      .catch(() => {})
+
+    // Load Suggested Competitors (auto-curated from cross-user caches, zero
+    // new YouTube quota). Card hides itself when fewer than ~3 suggestions
+    // come back, so a low-signal response just means a quiet Feed.
+    fetch('/dashboard/suggested-competitors', { credentials: 'include' })
+      .then(r => r.ok ? r.json() : null)
+      .then(d => { if (d && d.ok && d.suggestions?.length) setSuggestedCompetitors(d) })
       .catch(() => {})
 
     // Load plan + per-feature gate state (for free-tier gating on child pages).
@@ -5868,6 +6059,34 @@ export default function Dashboard() {
                   />
                 ) : null
 
+                const suggestedCompetitorsBlock = (feedFilter === 'all' || feedFilter === 'insights') && suggestedCompetitors?.suggestions?.length >= 3 ? (() => {
+                  const dismissKey = `ytg_suggested_competitors_dismissed:${data?.channel?.channel_id || 'x'}`
+                  try { if (localStorage.getItem(dismissKey)) return null } catch {}
+                  return (
+                    <SuggestedCompetitorsCard
+                      key="suggested-competitors"
+                      suggestions={suggestedCompetitors.suggestions}
+                      category={suggestedCompetitors.category}
+                      onTrack={(c) => {
+                        // Stash the channel name and land the user on the
+                        // Competitors page's Search tab with that query
+                        // pre-run. They hit the actual Track (analyze)
+                        // button there — keeps the credit-spend explicit.
+                        try {
+                          const q = c.channel_name || c.handle || ''
+                          if (q) sessionStorage.setItem('competitors_prefilledQuery', q)
+                        } catch {}
+                        setNav('Competitors')
+                      }}
+                      onOpenAll={() => setNav('Competitors')}
+                      onDismiss={() => {
+                        try { localStorage.setItem(dismissKey, '1') } catch {}
+                        setChecked(prev => ({ ...prev }))
+                      }}
+                    />
+                  )
+                })() : null
+
                 const competitorActivityBlock = (feedFilter === 'all' || feedFilter === 'insights') && competitorActivity?.items?.length > 0 ? (() => {
                   const dismissKey = `ytg_competitor_activity_dismissed:${data?.channel?.channel_id || 'x'}`
                   try { if (localStorage.getItem(dismissKey)) return null } catch {}
@@ -5993,7 +6212,7 @@ export default function Dashboard() {
 
                 const hasWhatToDoNext = priorityActionsBlock || dailyIdeasBlock
                 const hasRecentWins = milestoneBlock || topPerformerBlock || trackedLiftBlock
-                const hasYourNiche = nicheHeroBlock || competitorActivityBlock
+                const hasYourNiche = nicheHeroBlock || suggestedCompetitorsBlock || competitorActivityBlock
                 const hasHowYouPublish = postingConsistencyBlock || bestTimeBlock
 
                 return (
@@ -6030,6 +6249,7 @@ export default function Dashboard() {
                         </div>
                         <div className="ov-stack">
                           {nicheHeroBlock}
+                          {suggestedCompetitorsBlock}
                           {competitorActivityBlock}
                         </div>
                       </>
