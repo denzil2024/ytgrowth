@@ -1,0 +1,29 @@
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" style="display:block;margin:0 auto;">
+      <defs>
+        <linearGradient id="ribL-watch_hours-0" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#ff5246"/>
+          <stop offset="100%" stop-color="#c1150c"/>
+        </linearGradient>
+        <linearGradient id="ribR-watch_hours-0" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#d31a10"/>
+          <stop offset="100%" stop-color="#8a0e07"/>
+        </linearGradient>
+        <radialGradient id="star-watch_hours-0" cx="36%" cy="30%" r="72%">
+          <stop offset="0%" stop-color="#ffe082"/>
+          <stop offset="55%" stop-color="#eab308"/>
+          <stop offset="100%" stop-color="#8a6400"/>
+        </radialGradient>
+      </defs>
+      <!-- V-drape ribbon (top) -->
+      <polygon points="56,0 98,0 112,112 90,128 78,112" fill="url(#ribL-watch_hours-0)"/>
+      <polygon points="102,0 144,0 122,112 110,128 88,112" fill="url(#ribR-watch_hours-0)"/>
+      <polygon points="92,118 108,118 100,134" fill="#5e0a04"/>
+      <!-- Star badge (translated to overlap ribbon's lower half) -->
+      <g transform="translate(26 52)">
+        <polygon points="74.00,9.87 90.03,54.27 138.13,54.27 98.67,83.87 113.47,128.27 74.00,101.13 34.53,128.27 49.33,83.87 9.87,54.27 57.97,54.27" fill="url(#star-watch_hours-0)" stroke="#4a3400" stroke-width="1.25" stroke-linejoin="round"/>
+        <circle cx="74.00" cy="71.78" r="28.12" fill="rgba(255,255,255,0.96)"/>
+        <g transform="translate(54.76 54.76) scale(1.6033)" fill="none" stroke="#4a3400" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+        </g>
+      </g>
+    </svg>
