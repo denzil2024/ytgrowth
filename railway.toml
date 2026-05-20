@@ -9,6 +9,10 @@ builder = "DOCKERFILE"
 dockerfilePath = "Dockerfile"
 
 [deploy]
-startCommand = "uvicorn app.main:app --host 0.0.0.0 --port $PORT"
+# startCommand intentionally NOT set here. Railway runs Dockerfile-builder
+# startCommands directly (no shell), so "$PORT" gets passed as a literal
+# string and uvicorn crashes with "Invalid value for '--port': '$PORT'".
+# The Dockerfile's CMD already wraps uvicorn in `sh -c "..."` so $PORT is
+# expanded properly — letting that CMD run is the correct path.
 restartPolicyType = "ON_FAILURE"
 restartPolicyMaxRetries = 3
