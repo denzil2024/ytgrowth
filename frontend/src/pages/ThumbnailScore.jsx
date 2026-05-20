@@ -1379,7 +1379,7 @@ export default function ThumbnailScore({ channelData, onNavigate, plan, freeTier
                 letterSpacing: '0.10em', textTransform: 'uppercase',
                 display: 'inline-block', marginBottom: 12,
               }}>History</span>
-              <p style={{ fontSize: 17, fontWeight: 600, color: C.text1, letterSpacing: '-0.3px', marginBottom: 8, lineHeight: 1.2 }}>No previous thumbnails</p>
+              <p style={{ fontSize: 16, fontWeight: 600, color: C.text1, letterSpacing: '-0.2px', marginBottom: 8, lineHeight: 1.3 }}>No previous thumbnails</p>
               <p style={{ fontSize: 13.5, color: C.text2, maxWidth: 340, margin: '0 auto', lineHeight: 1.6 }}>
                 Upload a thumbnail to get started. It will be saved here automatically.
               </p>

@@ -421,7 +421,7 @@ export default function WeeklyReport({ channelId, channelEmail, plan, channelSta
             <div className="ytg-card" style={{ padding: '30px 30px 32px' }}>
               <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, marginBottom: 24 }}>
                 <div>
-                  <div style={{ fontSize: 18, fontWeight: 600, color: C.text1, letterSpacing: '-0.3px', marginBottom: 5 }}>
+                  <div style={{ fontSize: 16, fontWeight: 600, color: C.text1, letterSpacing: '-0.2px', marginBottom: 5 }}>
                     Your Week on YouTube — Apr 13 – 19
                   </div>
                   <div style={{ fontSize: 12.5, color: C.text3 }}>2026-04-13 – 2026-04-19</div>
@@ -512,7 +512,7 @@ export default function WeeklyReport({ channelId, channelEmail, plan, channelSta
             letterSpacing: '0.10em', textTransform: 'uppercase',
             marginBottom: 14,
           }}>Generating</span>
-          <h2 style={{ fontSize: 22, fontWeight: 600, color: C.text1, marginBottom: 10, letterSpacing: '-0.5px', lineHeight: 1.15 }}>Your first report is on its way</h2>
+          <h2 style={{ fontSize: 16, fontWeight: 600, color: C.text1, marginBottom: 10, letterSpacing: '-0.2px', lineHeight: 1.3 }}>Your first report is on its way</h2>
           <p style={{ fontSize: 14, color: C.text3, maxWidth: 360, lineHeight: 1.7 }}>
             We generate your first weekly report right after your channel connects. Check back in a few minutes.
           </p>
@@ -526,7 +526,7 @@ export default function WeeklyReport({ channelId, channelEmail, plan, channelSta
         }}>
           <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, marginBottom: 24 }}>
             <div style={{ minWidth: 0 }}>
-              <div style={{ fontSize: 18, fontWeight: 600, color: C.text1, letterSpacing: '-0.3px', marginBottom: 5 }}>
+              <div style={{ fontSize: 16, fontWeight: 600, color: C.text1, letterSpacing: '-0.2px', marginBottom: 5 }}>
                 {latest.reportData?.reportTitle || 'Weekly Report'}
               </div>
               <div style={{ fontSize: 12.5, color: C.text3, fontVariantNumeric: 'tabular-nums' }}>{latest.weekStart} – {latest.weekEnd}</div>

@@ -265,7 +265,7 @@ function RefreshConfirmModal({ credits, onCancel, onConfirm }) {
           <p style={{ fontSize: 10, fontWeight: 600, color: C.amberHi, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>
             Uses 1 credit
           </p>
-          <h3 style={{ fontSize: 18, fontWeight: 700, color: C.text1, letterSpacing: '-0.3px', lineHeight: 1.3, marginBottom: 10 }}>
+          <h3 style={{ fontSize: 16, fontWeight: 600, color: C.text1, letterSpacing: '-0.2px', lineHeight: 1.3, marginBottom: 10 }}>
             Generate fresh video ideas?
           </h3>
           <p style={{ fontSize: 13.5, color: C.text2, lineHeight: 1.65, marginBottom: 14 }}>
@@ -429,9 +429,9 @@ function IdeaCard({ idea, done, onDone, onUseSeo }) {
             because this page is title-focused — every card IS a proposed
             title, so the typography should make that the star. ── */}
         <h3 style={{
-          fontSize: 17, fontWeight: 600,
+          fontSize: 16, fontWeight: 600,
           color: done ? 'rgba(255,255,255,0.12)' : C.text1,
-          letterSpacing: '-0.35px', lineHeight: 1.35,
+          letterSpacing: '-0.2px', lineHeight: 1.35,
           marginBottom: done ? 0 : 18,
           textDecoration: done ? 'line-through' : 'none',
           display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden',
