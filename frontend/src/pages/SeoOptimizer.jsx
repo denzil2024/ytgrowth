@@ -343,9 +343,9 @@ const VIRAL_FORMATS = [
 const VIRAL_FORMAT_LABELS = Object.fromEntries(VIRAL_FORMATS.map(f => [f.key, f.label]))
 
 const STRATEGY_META = {
-  search: { label: 'Search', color: C.green, bg: C.greenBg, desc: 'Keyword-optimised to rank in YouTube search' },
+  search: { label: 'Search', color: '#34d27b', bg: C.greenBg, desc: 'Keyword-optimised to rank in YouTube search' },
   browse: { label: 'Browse', color: C.text2, bg: 'rgba(255,255,255,0.04)', desc: 'Emotional hook for homepage & suggested feed' },
-  hybrid: { label: 'Hybrid', color: C.red,   bg: C.redBg,   desc: 'Keywords + emotion — ranks and gets clicked' },
+  hybrid: { label: 'Hybrid', color: '#fb6a60',   bg: C.redBg,   desc: 'Keywords + emotion — ranks and gets clicked' },
 }
 
 
@@ -561,8 +561,8 @@ function LengthSweetSpot({ length, mounted }) {
       {/* Scale labels */}
       <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 4, fontSize: 9, fontWeight: 600, color: C.text4, letterSpacing: '0.04em', fontVariantNumeric: 'tabular-nums' }}>
         <span>0</span>
-        <span style={{ color: C.green }}>50</span>
-        <span style={{ color: C.green }}>70</span>
+        <span style={{ color: '#34d27b' }}>50</span>
+        <span style={{ color: '#34d27b' }}>70</span>
         <span>100</span>
       </div>
     </div>
@@ -1168,7 +1168,7 @@ function SuggestionRow({ s, i, isSelected, isCopied, onCopy, onSelect, primaryPh
           <span style={{ fontSize: 12, fontWeight: 500, color: 'rgba(255,255,255,0.50)', letterSpacing: '-0.01em' }}>
             {s.length ? `${s.length} chars` : '—'}
             {s.length >= 50 && s.length <= 70 && (
-              <>{' · '}<span style={{ color: C.green, fontWeight: 600 }}>in the sweet spot</span></>
+              <>{' · '}<span style={{ color: '#34d27b', fontWeight: 600 }}>in the sweet spot</span></>
             )}
           </span>
           {hasWhy && (
@@ -1846,9 +1846,9 @@ function TitleComparisonHero({ userTitle, userScore, userBreakdown, suggestions,
       }}>
         <p style={{ fontSize: 13, fontWeight: 500, color: 'rgba(255,255,255,0.65)', letterSpacing: '-0.05px', margin: 0 }}>
           {lift > 0
-            ? <>Pick the AI version for <span style={{ fontWeight: 600, color: C.green }}>+{lift} points</span>.</>
+            ? <>Pick the AI version for <span style={{ fontWeight: 600, color: '#34d27b' }}>+{lift} points</span>.</>
             : lift < 0
-              ? <>Your title scores <span style={{ fontWeight: 600, color: C.red }}>{Math.abs(lift)} higher</span> — stick with it.</>
+              ? <>Your title scores <span style={{ fontWeight: 600, color: '#fb6a60' }}>{Math.abs(lift)} higher</span> — stick with it.</>
               : <>Tied with your title.</>
           }
         </p>
@@ -2681,7 +2681,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
                       </span>
                       <span style={{
                         fontSize: 11, fontWeight: 600,
-                        color: C.green, background: 'rgba(22,163,74,0.08)',
+                        color: '#34d27b', background: 'rgba(22,163,74,0.08)',
                         border: '1px solid rgba(134,239,172,0.7)',
                         padding: '2px 9px', borderRadius: 100,
                         fontVariantNumeric: 'tabular-nums',
@@ -2737,7 +2737,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
           {/* AI suggestion error */}
           {result.suggestion_error && !result.suggestions?.length && (
             <div style={{ background: C.redBg, border: `1px solid ${C.redBdr}`, borderLeft: `3px solid ${C.red}`, borderRadius: '0 12px 12px 0', padding: '14px 18px', marginBottom: 24 }}>
-              <p style={{ ...T.innerLabel, color: C.red, marginBottom: 6 }}>AI suggestions unavailable</p>
+              <p style={{ ...T.innerLabel, color: '#fb6a60', marginBottom: 6 }}>AI suggestions unavailable</p>
               <p style={T.innerText}>{result.suggestion_error}</p>
             </div>
           )}
@@ -3147,7 +3147,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
                   </button>
 
                   {descError && (
-                    <div style={{ marginTop: 12, display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: C.red, background: 'rgba(229,37,27,0.06)', border: '1px solid rgba(229,37,27,0.18)', borderRadius: 9, padding: '9px 13px' }}>
+                    <div style={{ marginTop: 12, display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: '#fb6a60', background: 'rgba(229,37,27,0.06)', border: '1px solid rgba(229,37,27,0.18)', borderRadius: 9, padding: '9px 13px' }}>
                       <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><circle cx="6.5" cy="6.5" r="5"/><path d="M6.5 4v3M6.5 9v.5"/></svg>
                       {descError}
                     </div>
@@ -3187,7 +3187,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
                             title="Click to copy"
                             style={{
                               display: 'inline-flex', alignItems: 'center', gap: 6,
-                              fontSize: 12, fontWeight: 600, color: C.green,
+                              fontSize: 12, fontWeight: 600, color: '#34d27b',
                               background: 'rgba(5,150,105,0.07)',
                               border: '1px solid rgba(5,150,105,0.22)',
                               padding: '5px 11px', borderRadius: 20,
@@ -3236,7 +3236,7 @@ export default function SeoOptimizer({ onNavigate, plan, freeTierFeatures, video
                             title={`Used on ${h.count} ${h.count === 1 ? 'video' : 'videos'} · ${h.totalViews.toLocaleString()} total views — click to copy`}
                             style={{
                               display: 'inline-flex', alignItems: 'center', gap: 6,
-                              fontSize: 12, fontWeight: 600, color: C.green,
+                              fontSize: 12, fontWeight: 600, color: '#34d27b',
                               background: 'rgba(5,150,105,0.07)',
                               border: '1px solid rgba(5,150,105,0.22)',
                               padding: '5px 11px', borderRadius: 20,

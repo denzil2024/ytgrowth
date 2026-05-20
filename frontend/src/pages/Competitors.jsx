@@ -1013,7 +1013,7 @@ function AIAnalysis({ ai, comp, top5Videos, channelId, checkedIdeas, onToggleIde
                         </span>
                       </div>
                       <div style={{ flex: 1, minWidth: 0 }}>
-                        <p style={{ fontSize: 10, fontWeight: 600, color: '#d97706',
+                        <p style={{ fontSize: 10, fontWeight: 600, color: '#f0a23b',
                           letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 5 }}>
                           {label}
                         </p>
@@ -1212,7 +1212,7 @@ function AIAnalysis({ ai, comp, top5Videos, channelId, checkedIdeas, onToggleIde
                       display: 'flex', flexDirection: 'column', gap: 10 }}>
                       {ai.titlePatterns.dominantFormats.map((f, i) => (
                         <li key={i} style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
-                          <span style={{ fontSize: 11, fontWeight: 600, color: '#d97706',
+                          <span style={{ fontSize: 11, fontWeight: 600, color: '#f0a23b',
                             fontVariantNumeric: 'tabular-nums', flexShrink: 0, marginTop: 3,
                             minWidth: 14 }}>
                             {i + 1}
@@ -1322,7 +1322,7 @@ function AIAnalysis({ ai, comp, top5Videos, channelId, checkedIdeas, onToggleIde
                           </span>
                         </div>
                         <div style={{ flex: 1, minWidth: 0 }}>
-                          <p style={{ fontSize: 10, fontWeight: 600, color: '#d97706',
+                          <p style={{ fontSize: 10, fontWeight: 600, color: '#f0a23b',
                             letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 5 }}>
                             Winning move
                           </p>
@@ -1361,7 +1361,7 @@ function AIAnalysis({ ai, comp, top5Videos, channelId, checkedIdeas, onToggleIde
                           boxShadow: '0 1px 3px rgba(0,0,0,0.4)',
                           display: 'flex', flexDirection: 'column',
                         }}>
-                          <p style={{ fontSize: 10, fontWeight: 600, color: '#d97706',
+                          <p style={{ fontSize: 10, fontWeight: 600, color: '#f0a23b',
                             letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>
                             Action
                           </p>

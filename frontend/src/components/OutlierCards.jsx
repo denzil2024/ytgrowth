@@ -308,7 +308,7 @@ export function ChannelResultCard({ item, onOpen }) {
             : <span style={{
                 position: 'absolute', inset: 0,
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: 28, fontWeight: 600, color: C.red,
+                fontSize: 28, fontWeight: 600, color: '#fb6a60',
               }}>{initial}</span>
           }
         </div>

@@ -68,7 +68,7 @@ export default function UpsellGate({
 
       {/* Optional note — small amber line, e.g. "Outlier Scoring requires 3 credits." */}
       {note && (
-        <p style={{ fontSize: 12.5, color: C.amber, fontWeight: 600, marginBottom: 22, letterSpacing: '-0.05px' }}>
+        <p style={{ fontSize: 12.5, color: '#f0a23b', fontWeight: 600, marginBottom: 22, letterSpacing: '-0.05px' }}>
           {note}
         </p>
       )}

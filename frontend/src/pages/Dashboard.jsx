@@ -1139,10 +1139,10 @@ function MilestoneIcon({ category, color = '#4a4a58', size = 26 }) {
 /* Severity palette — 3-color system: red critical, amber warnings, slate minor */
 const SEV = {
   critical: { color: '#dc2626', bg: '#fff5f5', bdr: '#fecaca' },
-  high:     { color: '#d97706', bg: '#fffbeb', bdr: '#fde68a' },
-  medium:   { color: '#d97706', bg: '#fffbeb', bdr: '#fde68a' },
+  high:     { color: '#f0a23b', bg: '#fffbeb', bdr: '#fde68a' },
+  medium:   { color: '#f0a23b', bg: '#fffbeb', bdr: '#fde68a' },
   low:      { color: '#6b7280', bg: '#f9fafb', bdr: '#e5e7eb' },
-  info:     { color: '#059669', bg: '#ecfdf5', bdr: '#a7f3d0' },
+  info:     { color: '#34d27b', bg: '#ecfdf5', bdr: '#a7f3d0' },
 }
 function sev(severity) { return SEV[severity] || SEV.critical }
 
@@ -1185,7 +1185,7 @@ function planBadge(plan) {
   const base   = isLife ? plan.replace('lifetime_', '') : plan
   const label  = base.charAt(0).toUpperCase() + base.slice(1) + (isLife ? ' ∞' : '')
   if (base === 'solo')   return { label, color: '#2563eb', bg: 'rgba(37,99,235,0.07)',   bdr: 'rgba(37,99,235,0.18)' }
-  if (base === 'growth') return { label, color: '#059669', bg: 'rgba(5,150,105,0.07)',   bdr: 'rgba(5,150,105,0.18)' }
+  if (base === 'growth') return { label, color: '#34d27b', bg: 'rgba(5,150,105,0.07)',   bdr: 'rgba(5,150,105,0.18)' }
   if (base === 'agency') return { label, color: '#7c3aed', bg: 'rgba(124,58,237,0.07)', bdr: 'rgba(124,58,237,0.18)' }
   return { label, color: '#6b7280', bg: 'rgba(107,114,128,0.08)', bdr: 'rgba(107,114,128,0.18)' }
 }
@@ -1756,7 +1756,11 @@ function ActionsRailCard({ items, totalCount }) {
 
   const impactColor = (impact) => {
     const k = (impact || 'med').toLowerCase()
-    return k === 'high' ? '#e5251b' : k === 'low' ? SHELL.text3 : '#d97706'
+    // Dark-mode text variants of the brand red/amber. The saturated brand
+    // values (#e5251b / #d97706) are reserved for CTA backgrounds; using
+    // them as small label text on dark shimmers/halates. #fb6a60 / #f0a23b
+    // are the canonical text-on-dark equivalents used elsewhere in the app.
+    return k === 'high' ? '#fb6a60' : k === 'low' ? SHELL.text3 : '#f0a23b'
   }
   const impactLabel = (impact) => {
     const k = (impact || 'med').toLowerCase()
@@ -1833,7 +1837,7 @@ function ActionsRailCard({ items, totalCount }) {
 
                 <p style={{
                   flex: 1, minWidth: 0,
-                  fontSize: 13.5, fontWeight: 500, color: SHELL.text1,
+                  fontSize: 13.5, fontWeight: 450, color: SHELL.text1,
                   letterSpacing: '-0.1px', lineHeight: 1.45,
                   margin: 0,
                   display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden',
@@ -1899,7 +1903,7 @@ function ActionsRailCard({ items, totalCount }) {
                           borderRadius: '0 8px 8px 0',
                           padding: '8px 12px',
                         }}>
-                          <p style={{ fontSize: 9.5, fontWeight: 600, color: '#e5251b', letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 4 }}>Fix</p>
+                          <p style={{ fontSize: 9.5, fontWeight: 600, color: '#fb6a60', letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 4 }}>Fix</p>
                           <p style={{ fontSize: 12, fontWeight: 500, color: SHELL.text1, lineHeight: 1.55 }}>{it.action.action}</p>
                         </div>
                       )}
@@ -1911,7 +1915,7 @@ function ActionsRailCard({ items, totalCount }) {
                           borderRadius: '0 8px 8px 0',
                           padding: '8px 12px',
                         }}>
-                          <p style={{ fontSize: 9.5, fontWeight: 600, color: '#059669', letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 4 }}>Why this works</p>
+                          <p style={{ fontSize: 9.5, fontWeight: 600, color: '#34d27b', letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 4 }}>Why this works</p>
                           <p style={{ fontSize: 12, fontWeight: 500, color: SHELL.text1, lineHeight: 1.55 }}>{it.action.expected_outcome}</p>
                         </div>
                       )}
@@ -1964,7 +1968,7 @@ function ActionsRailCard({ items, totalCount }) {
 function PriorityActionCard({ action, rank, total, impact, onAct, onDone, onDismiss, ctaLabel }) {
   const [open, setOpen] = useState(false)
   const impactKey = (impact || 'med').toLowerCase()
-  const impactClr = impactKey === 'high' ? C.red : impactKey === 'low' ? SHELL.text3 : '#f0a23b'
+  const impactClr = impactKey === 'high' ? '#fb6a60' : impactKey === 'low' ? SHELL.text3 : '#f0a23b'
   const impactBg  = impactKey === 'high' ? 'rgba(229,37,27,0.07)' : impactKey === 'low' ? 'rgba(255,255,255,0.04)' : 'rgba(217,119,6,0.08)'
   const impactBdr = impactKey === 'high' ? 'rgba(229,37,27,0.18)' : impactKey === 'low' ? 'rgba(255,255,255,0.10)' : 'rgba(217,119,6,0.18)'
 
@@ -1989,8 +1993,8 @@ function PriorityActionCard({ action, rank, total, impact, onAct, onDone, onDism
       {/* Headline — lighter weight so the Actions tab doesn't read like a
           wall of bold. The eyebrow chip already signals the weight. */}
       <h3 style={{
-        fontSize: 13.5, fontWeight: 600, color: SHELL.text1,
-        letterSpacing: '-0.15px', lineHeight: 1.45,
+        fontSize: 13.5, fontWeight: 450, color: SHELL.text1,
+        letterSpacing: '-0.1px', lineHeight: 1.5,
         marginBottom: 10,
       }}>{action.problem || action.action || 'Action'}</h3>
 
@@ -2083,7 +2087,7 @@ function PriorityActionCard({ action, rank, total, impact, onAct, onDone, onDism
                       marginBottom: 6,
                     }}>Fix</p>
                     <p style={{
-                      fontSize: 12.5, fontWeight: 500, color: SHELL.text1,
+                      fontSize: 12.5, fontWeight: 450, color: SHELL.text1,
                       letterSpacing: '-0.01em', lineHeight: 1.65,
                     }}>{action.action}</p>
                   </div>
@@ -2102,7 +2106,7 @@ function PriorityActionCard({ action, rank, total, impact, onAct, onDone, onDism
                       marginBottom: 6,
                     }}>Why this works</p>
                     <p style={{
-                      fontSize: 12.5, fontWeight: 500, color: SHELL.text1,
+                      fontSize: 12.5, fontWeight: 450, color: SHELL.text1,
                       letterSpacing: '-0.01em', lineHeight: 1.65,
                     }}>{action.expected_outcome}</p>
                   </div>
@@ -3378,12 +3382,12 @@ function DailyIdeasCard({ ideas, lastUpdated, isStale, isFree, refreshing, onRef
       rightSlot={
         <span style={{
           display: 'inline-flex', alignItems: 'center', gap: 5,
-          fontSize: 10.5, fontWeight: 600, color: '#059669',
+          fontSize: 10.5, fontWeight: 600, color: '#34d27b',
           background: 'rgba(22,163,74,0.14)', border: '1px solid rgba(5,150,105,0.22)',
           padding: '3px 9px', borderRadius: 100,
           letterSpacing: '0.10em', textTransform: 'uppercase',
         }}>
-          <span style={{ width: 5, height: 5, borderRadius: 99, background: '#059669' }}/>
+          <span style={{ width: 5, height: 5, borderRadius: 99, background: '#34d27b' }}/>
           {top3.length} ready
         </span>
       }
@@ -3406,7 +3410,7 @@ function DailyIdeasCard({ ideas, lastUpdated, isStale, isFree, refreshing, onRef
           const score = idea.opportunityScore != null
             ? idea.opportunityScore
             : Math.max(65, 85 - i * 4)
-          const scoreClr = score >= 80 ? '#059669' : score >= 65 ? '#d97706' : 'rgba(255,255,255,0.78)'
+          const scoreClr = score >= 80 ? '#34d27b' : score >= 65 ? '#f0a23b' : 'rgba(255,255,255,0.78)'
           return (
             <div
               key={i}
@@ -3435,8 +3439,8 @@ function DailyIdeasCard({ ideas, lastUpdated, isStale, isFree, refreshing, onRef
               <div style={{ flex: 1, minWidth: 0 }}>
                 {/* Title */}
                 <p style={{
-                  fontSize: 13.5, fontWeight: 600, color: SHELL.text1,
-                  letterSpacing: '-0.15px', lineHeight: 1.4,
+                  fontSize: 13.5, fontWeight: 450, color: SHELL.text1,
+                  letterSpacing: '-0.1px', lineHeight: 1.45,
                   marginBottom: 4,
                   display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical',
                   overflow: 'hidden',
@@ -3888,7 +3892,7 @@ function NavBtn({ label, active, onClick, badge, dot }) {
       <span style={{ flex: 1 }}>{label}</span>
       {typeof badge === 'string' && badge && (
         <span style={{
-          background: 'rgba(229,37,27,0.10)', color: C.red,
+          background: 'rgba(229,37,27,0.10)', color: '#fb6a60',
           fontSize: 9.5, fontWeight: 700, padding: '2px 7px',
           borderRadius: 20, letterSpacing: '0.08em', textTransform: 'uppercase',
         }}>{badge}</span>
@@ -4255,14 +4259,14 @@ function WhatsNewCard({ channelId, onNavigate }) {
           width: 28, height: 28, borderRadius: 8,
           display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
           background: 'rgba(229,37,27,0.08)',
-          color: '#e5251b',
+          color: '#fb6a60',
           marginTop: 1,
         }}>
           <Sparkles size={15} strokeWidth={2} />
         </span>
         <div style={{ minWidth: 0, flex: 1 }}>
           <p style={{
-            fontSize: 9.5, fontWeight: 600, color: '#e5251b',
+            fontSize: 9.5, fontWeight: 600, color: '#fb6a60',
             letterSpacing: '0.11em', textTransform: 'uppercase',
             marginBottom: 5,
           }}>
@@ -4290,7 +4294,7 @@ function WhatsNewCard({ channelId, onNavigate }) {
               display: 'inline-flex', alignItems: 'center', gap: 5,
               padding: 0, border: 'none', background: 'transparent',
               cursor: 'pointer',
-              color: '#e5251b',
+              color: '#fb6a60',
               fontSize: 13, fontWeight: 600,
               letterSpacing: '-0.01em',
               fontFamily: 'inherit',
@@ -4422,7 +4426,7 @@ function ChannelSwitcher({ channels, channelsAllowed, canAddMore, currentChannel
                 onMouseEnter={e => { e.currentTarget.style.background = SHELL.hoverBg }}
                 onMouseLeave={e => { e.currentTarget.style.background = 'transparent' }}
               >
-                <span style={{ fontSize: 14, color: '#e5251b', fontWeight: 500 }}>+ Connect another channel</span>
+                <span style={{ fontSize: 14, color: '#fb6a60', fontWeight: 500 }}>+ Connect another channel</span>
               </div>
             : <div
                 onClick={() => { setOpen(false); window.location.href = '/#pricing' }}
@@ -5447,7 +5451,7 @@ export default function Dashboard() {
                   >
                     {refreshingStats ? 'Refreshing…'
                       : statsFlash === 'ok'  ? <span style={{ color: '#34d27b' }}>Updated ✓</span>
-                      : statsFlash === 'err' ? <span style={{ color: C.red }}>Failed ✕</span>
+                      : statsFlash === 'err' ? <span style={{ color: '#fb6a60' }}>Failed ✕</span>
                       : 'Refresh stats'}
                   </button>
                 </div>
@@ -5459,7 +5463,7 @@ export default function Dashboard() {
                 <div style={{
                   marginBottom: 14,
                   display: 'flex', alignItems: 'center', gap: 9,
-                  fontSize: 13, color: C.red,
+                  fontSize: 13, color: '#fb6a60',
                   background: 'rgba(229,37,27,0.06)',
                   border: '1px solid rgba(229,37,27,0.18)',
                   borderRadius: 9, padding: '9px 13px',
@@ -6186,7 +6190,7 @@ export default function Dashboard() {
                           }}>
                             <YTGLogo size={18}/>
                             <span style={{ fontSize: 14, fontWeight: 700, color: SHELL.text1, letterSpacing: '-0.3px' }}>
-                              YTGrowth<span style={{ color: C.red }}>.io</span>
+                              YTGrowth<span style={{ color: '#fb6a60' }}>.io</span>
                             </span>
                           </div>
                         )}
@@ -6423,7 +6427,7 @@ export default function Dashboard() {
                 <div className="ytg-card" style={{ padding: '20px 22px', display: 'flex', flexDirection: 'column', gap: 16 }}>
                   {data.insights.biggestRisk && (
                     <div>
-                      <p style={{ fontSize: 11, fontWeight: 600, color: C.red, letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 8 }}>Biggest risk</p>
+                      <p style={{ fontSize: 11, fontWeight: 600, color: '#fb6a60', letterSpacing: '0.07em', textTransform: 'uppercase', marginBottom: 8 }}>Biggest risk</p>
                       <p style={{ fontSize: 14, color: SHELL.text1, lineHeight: 1.7 }}>{data.insights.biggestRisk}</p>
                     </div>
                   )}

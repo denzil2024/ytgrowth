@@ -91,7 +91,7 @@ export default function OnboardingCard({
       <div className="ytg-card" style={{ ...cardStyle, padding: '18px 24px', display: 'flex', alignItems: 'center', gap: 16 }}>
         <span style={{
           flexShrink: 0, width: 30, height: 30, borderRadius: '50%',
-          background: 'rgba(22,163,74,0.16)', color: C.green,
+          background: 'rgba(22,163,74,0.16)', color: '#34d27b',
           display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
         }}>
           <CheckIcon size={14} />
@@ -196,7 +196,7 @@ export default function OnboardingCard({
                 {/* Action */}
                 <div style={{ flexShrink: 0, alignSelf: 'center' }}>
                   {s.done ? (
-                    <span style={{ fontSize: 12, fontWeight: 600, color: C.green, display: 'inline-flex', alignItems: 'center', gap: 5 }}>
+                    <span style={{ fontSize: 12, fontWeight: 600, color: '#34d27b', display: 'inline-flex', alignItems: 'center', gap: 5 }}>
                       <CheckIcon size={11} /> Done
                     </span>
                   ) : (

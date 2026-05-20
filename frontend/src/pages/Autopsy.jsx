@@ -232,7 +232,7 @@ function verdictMeta(verdict, score) {
   if (verdict === 'winner' || score >= 85)
     return { label: 'Winner',          color: C.greenHi, bg: C.greenBg, bdr: C.greenBdr }
   if (verdict === 'underperformer' || score < 60)
-    return { label: 'Underperformer', color: C.red,   bg: C.redBg,   bdr: C.redBdr }
+    return { label: 'Underperformer', color: '#fb6a60',   bg: C.redBg,   bdr: C.redBdr }
   return    { label: 'Average',        color: C.amberHi, bg: C.amberBg, bdr: C.amberBdr }
 }
 
@@ -323,7 +323,7 @@ function ReportCard({ data, video, onClose }) {
         </div>
         <div style={{ background: C.redBg, border: `1px solid ${C.redBdr}`,
           borderRadius: 12, padding: '12px 14px' }}>
-          <p style={{ fontSize: 10, fontWeight: 600, color: C.red,
+          <p style={{ fontSize: 10, fontWeight: 600, color: '#fb6a60',
             letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 8 }}>What didn't</p>
           {(data.what_didnt || []).map((b, i) => (
             <p key={i} style={{ fontSize: 13, color: C.text1, lineHeight: 1.5,
@@ -561,7 +561,7 @@ export default function Autopsy({ videos = [], channelId = '', optimizations = [
         {error && (
           <div style={{
             background: C.redBg, border: `1px solid ${C.redBdr}`, borderRadius: 10,
-            padding: '10px 14px', marginBottom: 14, color: C.red, fontSize: 13.5,
+            padding: '10px 14px', marginBottom: 14, color: '#fb6a60', fontSize: 13.5,
           }}>{error}</div>
         )}
 

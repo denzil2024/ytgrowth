@@ -574,11 +574,11 @@ function KwDetailModal({ kw, C, onClose }) {
               </div>
               {/* Amber — Quick actions (numbered list) */}
               <div style={{ background: C.cardFlat, border: `1px solid ${C.border}`, borderLeft: `3px solid ${C.amber}`, borderRadius: '0 10px 10px 0', padding: '12px 14px', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
-                <p style={{ fontSize: 11, fontWeight: 600, color: C.amber, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 8 }}>Quick actions</p>
+                <p style={{ fontSize: 11, fontWeight: 600, color: '#f0a23b', letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 8 }}>Quick actions</p>
                 <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 7, margin: 0, padding: 0 }}>
                   {actions.map((s, i) => (
                     <li key={i} style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
-                      <span style={{ fontSize: 12, fontWeight: 600, color: C.amber, fontVariantNumeric: 'tabular-nums', lineHeight: 1.55, minWidth: 14 }}>{i + 1}.</span>
+                      <span style={{ fontSize: 12, fontWeight: 600, color: '#f0a23b', fontVariantNumeric: 'tabular-nums', lineHeight: 1.55, minWidth: 14 }}>{i + 1}.</span>
                       <span style={{ fontSize: 13, fontWeight: 500, color: C.text1, lineHeight: 1.6, flex: 1, letterSpacing: '-0.005em' }}>{s}</span>
                     </li>
                   ))}
@@ -586,7 +586,7 @@ function KwDetailModal({ kw, C, onClose }) {
               </div>
               {/* Green — Why now */}
               <div style={{ background: 'rgba(5,150,105,0.07)', border: '1px solid rgba(5,150,105,0.14)', borderRadius: 10, padding: '12px 14px' }}>
-                <p style={{ fontSize: 11, fontWeight: 600, color: C.green, letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 8 }}>Act on this because</p>
+                <p style={{ fontSize: 11, fontWeight: 600, color: '#34d27b', letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 8 }}>Act on this because</p>
                 <p style={{ fontSize: 13, fontWeight: 500, color: C.text1, lineHeight: 1.65, letterSpacing: '-0.005em' }}>{buildWhyNow(kw)}</p>
               </div>
             </div>
@@ -707,8 +707,8 @@ function VideoMetricsRow({ vph, outlierMult }) {
   if (!vph && !outlierMult) return null
   const isStrong = outlierMult && outlierMult >= 3
   const outlierTone = isStrong
-    ? { color: C.green, bg: C.greenBg, bdr: C.greenBdr, label: 'Outlier' }
-    : { color: C.amber, bg: C.amberBg, bdr: C.amberBdr, label: 'Above avg' }
+    ? { color: '#34d27b', bg: C.greenBg, bdr: C.greenBdr, label: 'Outlier' }
+    : { color: '#f0a23b', bg: C.amberBg, bdr: C.amberBdr, label: 'Above avg' }
 
   const chipBase = {
     display: 'inline-flex', alignItems: 'center',
@@ -1084,7 +1084,7 @@ export default function Keywords({ plan, freeTierFeatures }) {
       {error && (
         <div style={{
           background: C.redBg, border: `1px solid ${C.redBdr}`, borderRadius: 10,
-          padding: '10px 14px', marginBottom: 14, color: C.red, fontSize: 13.5,
+          padding: '10px 14px', marginBottom: 14, color: '#fb6a60', fontSize: 13.5,
         }}>
           {error}
         </div>
@@ -1450,7 +1450,7 @@ export default function Keywords({ plan, freeTierFeatures }) {
               <div style={{ marginBottom: 14, marginTop: 32 }}>
                 <h2 style={{ fontSize: 16, fontWeight: 600, color: C.text1, letterSpacing: '-0.2px', marginBottom: 4 }}>Ranked keywords</h2>
                 <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.5 }}>
-                  Click any keyword for the playbook · <span style={{ color: C.green, fontWeight: 600 }}>ACTIVE</span> = rising · <span style={{ color: C.amber, fontWeight: 600 }}>OPEN</span> = underclaimed
+                  Click any keyword for the playbook · <span style={{ color: '#34d27b', fontWeight: 600 }}>ACTIVE</span> = rising · <span style={{ color: '#f0a23b', fontWeight: 600 }}>OPEN</span> = underclaimed
                 </p>
               </div>
 
@@ -1589,7 +1589,7 @@ export default function Keywords({ plan, freeTierFeatures }) {
                               <span key={k} style={{
                                 background: C.greenBg,
                                 border: `1px solid ${C.greenBdr}`,
-                                color: C.green,
+                                color: '#34d27b',
                                 padding: '4px 11px', borderRadius: 100,
                                 fontSize: 11.5, fontWeight: 500, letterSpacing: '-0.05px',
                               }}>{k}</span>

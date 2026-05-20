@@ -428,7 +428,7 @@ function L1Row({ keyName, data, benchComp }) {
     const diff = bench.pct_diff ?? 0
     if (diff >= 0)       indicator = { icon: '✓', color: C.greenHi, label: `Niche avg: ${bench.benchmark}/${max}` }
     else if (diff > -20) indicator = { icon: '⚠', color: C.amberHi, label: `Niche avg: ${bench.benchmark}/${max}` }
-    else                 indicator = { icon: '✗', color: C.red,   label: `Niche avg: ${bench.benchmark}/${max}` }
+    else                 indicator = { icon: '✗', color: '#fb6a60',   label: `Niche avg: ${bench.benchmark}/${max}` }
   }
 
   return (
@@ -480,7 +480,7 @@ function L1Row({ keyName, data, benchComp }) {
               padding: '11px 14px',
               boxShadow: '0 1px 2px rgba(229,37,27,0.05), 0 8px 22px rgba(229,37,27,0.08)',
             }}>
-              <p style={{ fontSize: 10, fontWeight: 600, color: C.red, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Fix</p>
+              <p style={{ fontSize: 10, fontWeight: 600, color: '#fb6a60', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Fix</p>
               <p style={{ fontSize: 13, color: C.text1, lineHeight: 1.7 }}>{fix}</p>
             </div>
           )}
@@ -653,7 +653,7 @@ function HistoryPanel({ history, activeId, onSelect, onDelete }) {
                 {timeAgo(item.uploaded_at)}
               </span>
               {item.linked_video_idea?.thumbnail_ready && (
-                <span style={{ fontSize: 12, fontWeight: 500, color: '#16a34a',
+                <span style={{ fontSize: 12, fontWeight: 500, color: '#34d27b',
                                background: '#dcfce7', borderRadius: 20, padding: '2px 6px', flexShrink: 0 }}>
                   Ready
                 </span>
@@ -940,7 +940,7 @@ function UploadPanel({ videoIdeas, hasIdeas, initialIdea, initialTopic, topicSou
             {onNavigate && (
               <button
                 onClick={() => onNavigate('Video Ideas')}
-                style={{ background: 'none', border: 'none', color: C.red, cursor: 'pointer',
+                style={{ background: 'none', border: 'none', color: '#fb6a60', cursor: 'pointer',
                          fontWeight: 600, padding: 0, fontFamily: 'inherit', fontSize: 'inherit' }}
               >
                 Go to Video Ideas →
@@ -976,7 +976,7 @@ function UploadPanel({ videoIdeas, hasIdeas, initialIdea, initialTopic, topicSou
             </p>
             <button
               onClick={e => { e.stopPropagation(); setFile(null) }}
-              style={{ fontSize: 12, color: C.red, background: 'none', border: 'none',
+              style={{ fontSize: 12, color: '#fb6a60', background: 'none', border: 'none',
                        cursor: 'pointer', fontFamily: 'inherit', textDecoration: 'underline' }}
             >
               Remove
@@ -1357,7 +1357,7 @@ export default function ThumbnailScore({ channelData, onNavigate, plan, freeTier
       {/* Error banner */}
       {error && (
         <div style={{ background: C.redBg, border: `1px solid ${C.redBdr}`, borderRadius: 10,
-                      padding: '12px 16px', marginBottom: 20, fontSize: 14, color: C.red }}>
+                      padding: '12px 16px', marginBottom: 20, fontSize: 14, color: '#fb6a60' }}>
           {error}
         </div>
       )}
@@ -1538,7 +1538,7 @@ export default function ThumbnailScore({ channelData, onNavigate, plan, freeTier
                                   padding: '12px 16px',
                                   boxShadow: '0 1px 2px rgba(229,37,27,0.05), 0 8px 22px rgba(229,37,27,0.08)',
                                 }}>
-                                  <p style={{ fontSize: 10, fontWeight: 600, color: C.red, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 5 }}>Biggest fix</p>
+                                  <p style={{ fontSize: 10, fontWeight: 600, color: '#fb6a60', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 5 }}>Biggest fix</p>
                                   <p style={{ fontSize: 12, color: C.text1, lineHeight: 1.65 }}>{itemL2.biggestFix}</p>
                                 </div>
                               )}
@@ -1702,7 +1702,7 @@ export default function ThumbnailScore({ channelData, onNavigate, plan, freeTier
                       padding: '14px 18px',
                       boxShadow: '0 1px 2px rgba(229,37,27,0.05), 0 8px 22px rgba(229,37,27,0.08)',
                     }}>
-                      <p style={{ fontSize: 10, fontWeight: 600, color: C.red, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Biggest fix</p>
+                      <p style={{ fontSize: 10, fontWeight: 600, color: '#fb6a60', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Biggest fix</p>
                       <p style={{ fontSize: 13, color: C.text1, lineHeight: 1.65 }}>{l2.biggestFix}</p>
                     </div>
                   )}

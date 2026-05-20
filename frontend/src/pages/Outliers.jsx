@@ -404,10 +404,10 @@ function relPublished(iso) {
 }
 
 function outlierTier(score) {
-  if (score >= 10) return { label: '10× outlier',  color: C.red,   bg: C.redBg,   bdr: C.redBdr }
-  if (score >= 5)  return { label: `${score}× outlier`, color: C.red,   bg: C.redBg,   bdr: C.redBdr }
-  if (score >= 3)  return { label: `${score}× outlier`, color: C.amber, bg: C.amberBg, bdr: C.amberBdr }
-  return           { label: `${score}× outlier`, color: C.green, bg: C.greenBg, bdr: C.greenBdr }
+  if (score >= 10) return { label: '10× outlier',  color: '#fb6a60',   bg: C.redBg,   bdr: C.redBdr }
+  if (score >= 5)  return { label: `${score}× outlier`, color: '#fb6a60',   bg: C.redBg,   bdr: C.redBdr }
+  if (score >= 3)  return { label: `${score}× outlier`, color: '#f0a23b', bg: C.amberBg, bdr: C.amberBdr }
+  return           { label: `${score}× outlier`, color: '#34d27b', bg: C.greenBg, bdr: C.greenBdr }
 }
 
 /* ─── Tabs ──────────────────────────────────────────────────────────────── */
@@ -933,10 +933,10 @@ export default function Outliers({ channelData, onNavigate, plan, freeTierFeatur
               <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke={C.red} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M8 2v12M2 8h12M4 4l8 8M12 4l-8 8"/>
               </svg>
-              <span style={{ fontSize: 10.5, fontWeight: 600, color: C.red, letterSpacing: '0.16em', textTransform: 'uppercase' }}>Three directions</span>
+              <span style={{ fontSize: 10.5, fontWeight: 600, color: '#fb6a60', letterSpacing: '0.16em', textTransform: 'uppercase' }}>Three directions</span>
             </div>
             <h2 style={{ fontSize: 16, fontWeight: 600, color: C.text1, letterSpacing: '-0.2px', lineHeight: 1.3, marginBottom: 10 }}>
-              Your search could go <span style={{ color: C.red }}>3 ways</span>. Pick one.
+              Your search could go <span style={{ color: '#fb6a60' }}>3 ways</span>. Pick one.
             </h2>
             <p style={{ fontSize: 13.5, color: C.text3, lineHeight: 1.6, maxWidth: 540, margin: '0 auto' }}>
               Same words, different niches. Pick the closest — that's the outlier cohort we'll pull.
@@ -959,7 +959,7 @@ export default function Outliers({ channelData, onNavigate, plan, freeTierFeatur
                       0{i + 1}
                     </span>
                   </div>
-                  <span style={{ fontSize: 10, fontWeight: 600, color: C.red, letterSpacing: '0.14em', textTransform: 'uppercase' }}>
+                  <span style={{ fontSize: 10, fontWeight: 600, color: '#fb6a60', letterSpacing: '0.14em', textTransform: 'uppercase' }}>
                     Route 0{i + 1}
                   </span>
                 </div>
@@ -981,7 +981,7 @@ export default function Outliers({ channelData, onNavigate, plan, freeTierFeatur
                   {opt.description}
                 </p>
                 <div style={{ marginTop: 16, paddingTop: 14, borderTop: `1px solid ${C.border}` }}>
-                  <span style={{ fontSize: 12, fontWeight: 600, color: C.red, letterSpacing: '-0.1px', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+                  <span style={{ fontSize: 12, fontWeight: 600, color: '#fb6a60', letterSpacing: '-0.1px', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
                     Go this way
                     <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
                       <path d="M6 3l5 5-5 5"/>
@@ -1045,7 +1045,7 @@ export default function Outliers({ channelData, onNavigate, plan, freeTierFeatur
             width: 48, height: 48, borderRadius: 14,
             background: C.redBg, border: `1px solid ${C.redBdr}`,
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            color: C.red,
+            color: '#fb6a60',
           }}>
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>
@@ -1322,7 +1322,7 @@ function PatternSynthesisCard({ synthesis }) {
       )}
       {nextMove && (
         <div style={{ paddingTop: pattern ? 20 : 0, borderTop: pattern ? '1px solid rgba(255,255,255,0.08)' : 'none' }}>
-          <p style={{ fontSize: 11, fontWeight: 600, color: C.red, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 12 }}>Your next move</p>
+          <p style={{ fontSize: 11, fontWeight: 600, color: '#fb6a60', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 12 }}>Your next move</p>
           {nextMove.title_scaffold && (
             <p style={{ fontSize: 16, fontWeight: 600, color: C.text1, lineHeight: 1.45, marginBottom: 16, letterSpacing: '-0.3px' }}>
               {nextMove.title_scaffold}
@@ -1344,7 +1344,7 @@ function PatternSynthesisCard({ synthesis }) {
           </div>
           {nextMove.why_now && (
             <p style={{ fontSize: 12.5, color: C.text2, lineHeight: 1.5, paddingTop: 12, borderTop: '1px dashed rgba(255,255,255,0.08)' }}>
-              <span style={{ fontWeight: 600, color: C.amber, letterSpacing: '0.04em', textTransform: 'uppercase', fontSize: 11 }}>Why now: </span>
+              <span style={{ fontWeight: 600, color: '#f0a23b', letterSpacing: '0.04em', textTransform: 'uppercase', fontSize: 11 }}>Why now: </span>
               {nextMove.why_now}
             </p>
           )}
@@ -1421,8 +1421,8 @@ function VideoResultCard({ item, kind, onOpen }) {
             synthesis returned a tag for this video id. */}
         {item.pattern_tag && (() => {
           const t = String(item.pattern_tag).toLowerCase()
-          const cfg = t === 'replicable' ? { label: 'Replicable', bg: 'rgba(5,150,105,0.10)', border: 'rgba(5,150,105,0.30)', color: C.green }
-                    : t === 'trending'   ? { label: 'Trending',   bg: 'rgba(217,119,6,0.10)', border: 'rgba(217,119,6,0.30)', color: C.amber }
+          const cfg = t === 'replicable' ? { label: 'Replicable', bg: 'rgba(5,150,105,0.10)', border: 'rgba(5,150,105,0.30)', color: '#34d27b' }
+                    : t === 'trending'   ? { label: 'Trending',   bg: 'rgba(217,119,6,0.10)', border: 'rgba(217,119,6,0.30)', color: '#f0a23b' }
                     : t === 'lucky'      ? { label: 'Lucky',      bg: C.cardFlat,              border: C.hair,              color: C.text3 }
                     : null
           if (!cfg) return null
@@ -1589,7 +1589,7 @@ function ChannelResultCard({ item, onOpen }) {
             : <span style={{
                 position: 'absolute', inset: 0,
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: 28, fontWeight: 600, color: C.red,
+                fontSize: 28, fontWeight: 600, color: '#fb6a60',
               }}>{initial}</span>
           }
         </div>
@@ -1723,9 +1723,9 @@ function DetailModal({ kind, item, query, onClose, onNavigate }) {
   const likes   = item.likes || 0
   const engPct  = views > 0 ? (likes / views * 100) : 0
   const days    = item.published_at ? Math.max(0, (Date.now() - new Date(item.published_at).getTime()) / 86400000) : null
-  const verdict = item.outlier_score >= 5 ? { label: 'Strong',      color: C.red   }
-                 : item.outlier_score >= 3 ? { label: 'Notable',     color: C.amber }
-                 : item.outlier_score >= 1.8 ? { label: 'Over median', color: C.green }
+  const verdict = item.outlier_score >= 5 ? { label: 'Strong',      color: '#fb6a60'   }
+                 : item.outlier_score >= 3 ? { label: 'Notable',     color: '#f0a23b' }
+                 : item.outlier_score >= 1.8 ? { label: 'Over median', color: '#34d27b' }
                  : { label: 'Subtle', color: C.text3 }
 
   const outlierPct = Math.min(100, Math.round((item.outlier_score || 0) * 20))
@@ -1813,7 +1813,7 @@ function DetailModal({ kind, item, query, onClose, onNavigate }) {
           {/* Why Now hero — same "Fix first" card silhouette (white bg, red left-bar) */}
           {item.why_now && (
             <div style={{ background: C.card, border: `1px solid ${C.border}`, borderLeft: `4px solid ${C.red}`, borderRadius: 12, padding: '14px 18px', marginBottom: 16, boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
-              <span style={{ fontSize: 10, fontWeight: 600, color: C.red, textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block', marginBottom: 6 }}>Why now</span>
+              <span style={{ fontSize: 10, fontWeight: 600, color: '#fb6a60', textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block', marginBottom: 6 }}>Why now</span>
               <p style={{ fontSize: 15, fontWeight: 600, color: C.text1, lineHeight: 1.55 }}>{item.why_now}</p>
             </div>
           )}
@@ -1861,7 +1861,7 @@ function DetailModal({ kind, item, query, onClose, onNavigate }) {
                   (off-palette). Amber doubles as the "AI/explainer" accent
                   used elsewhere (Title Scorecard pattern). */}
               <div style={{ background: C.amberBg, border: `1px solid ${C.amberBdr}`, borderRadius: 10, padding: '12px 14px' }}>
-                <p style={{ fontSize: 10, fontWeight: 600, color: C.amber, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>
+                <p style={{ fontSize: 10, fontWeight: 600, color: '#f0a23b', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>
                   {isChannel ? 'Why this channel' : 'Why it worked'}
                 </p>
                 <p style={{ fontSize: 13, color: C.text1, lineHeight: 1.65 }}>
@@ -1871,7 +1871,7 @@ function DetailModal({ kind, item, query, onClose, onNavigate }) {
 
               {/* Amber — Quick actions / What to do (list) */}
               <div style={{ background: C.card, border: `1px solid ${C.border}`, borderLeft: `3px solid ${C.amber}`, borderRadius: '0 10px 10px 0', padding: '12px 14px', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
-                <p style={{ fontSize: 10, fontWeight: 600, color: C.amber, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>
+                <p style={{ fontSize: 10, fontWeight: 600, color: '#f0a23b', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>
                   {isChannel ? 'What to do' : 'Quick actions'}
                 </p>
                 {(() => {
@@ -1881,7 +1881,7 @@ function DetailModal({ kind, item, query, onClose, onNavigate }) {
                     <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 7 }}>
                       {list.map((s, i) => (
                         <li key={i} style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
-                          <span style={{ fontSize: 12, fontWeight: 600, color: C.amber, fontVariantNumeric: 'tabular-nums', lineHeight: 1.55, minWidth: 14 }}>{i + 1}.</span>
+                          <span style={{ fontSize: 12, fontWeight: 600, color: '#f0a23b', fontVariantNumeric: 'tabular-nums', lineHeight: 1.55, minWidth: 14 }}>{i + 1}.</span>
                           <span style={{ fontSize: 13, color: C.text1, lineHeight: 1.6, flex: 1 }}>{s}</span>
                         </li>
                       ))}
@@ -1892,7 +1892,7 @@ function DetailModal({ kind, item, query, onClose, onNavigate }) {
 
               {/* Green — Why now (same text as hero; keeps the 3-col symmetry) */}
               <div style={{ background: 'rgba(5,150,105,0.07)', border: '1px solid rgba(5,150,105,0.14)', borderRadius: 10, padding: '12px 14px' }}>
-                <p style={{ fontSize: 10, fontWeight: 600, color: C.green, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>
+                <p style={{ fontSize: 10, fontWeight: 600, color: '#34d27b', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>
                   Act on this because
                 </p>
                 <p style={{ fontSize: 13, color: C.text1, lineHeight: 1.65 }}>
@@ -2050,7 +2050,7 @@ function ThumbnailPatternsCard({ patterns, query }) {
             </div>
           </div>
           <div style={{ flex: 1, minWidth: 0 }}>
-            <p style={{ fontSize: 10, fontWeight: 600, color: C.amber, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 5 }}>
+            <p style={{ fontSize: 10, fontWeight: 600, color: '#f0a23b', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 5 }}>
               Thumbnail pattern · last 12 months
             </p>
             <p style={{ fontSize: 14, fontWeight: 600, color: C.text1, lineHeight: 1.55 }}>
@@ -2059,7 +2059,7 @@ function ThumbnailPatternsCard({ patterns, query }) {
           </div>
           {patterns.sample_size ? (
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
-              <span style={{ fontSize: 10, fontWeight: 600, color: C.amber, padding: '3px 9px', borderRadius: 20, letterSpacing: '0.06em', textTransform: 'uppercase', border: `1.5px solid ${C.amber}` }}>
+              <span style={{ fontSize: 10, fontWeight: 600, color: '#f0a23b', padding: '3px 9px', borderRadius: 20, letterSpacing: '0.06em', textTransform: 'uppercase', border: `1.5px solid ${C.amber}` }}>
                 {patterns.sample_size} analysed
               </span>
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke={C.text2} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
@@ -2112,14 +2112,14 @@ function ThumbnailPatternsCard({ patterns, query }) {
             boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
             display: 'flex', flexDirection: 'column',
           }}>
-            <p style={{ fontSize: 10, fontWeight: 600, color: C.amber, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 10 }}>Next thumbnail</p>
+            <p style={{ fontSize: 10, fontWeight: 600, color: '#f0a23b', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 10 }}>Next thumbnail</p>
             {recs.length === 0 ? (
               <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.6 }}>—</p>
             ) : (
               <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 8 }}>
                 {recs.map((r, i) => (
                   <li key={i} style={{ display: 'flex', gap: 8, alignItems: 'flex-start' }}>
-                    <span style={{ fontSize: 12, fontWeight: 600, color: C.amber, fontVariantNumeric: 'tabular-nums', lineHeight: 1.55, minWidth: 14 }}>{i + 1}.</span>
+                    <span style={{ fontSize: 12, fontWeight: 600, color: '#f0a23b', fontVariantNumeric: 'tabular-nums', lineHeight: 1.55, minWidth: 14 }}>{i + 1}.</span>
                     <span style={{ fontSize: 13, color: C.text1, lineHeight: 1.6, flex: 1 }}>{r}</span>
                   </li>
                 ))}
@@ -2130,7 +2130,7 @@ function ThumbnailPatternsCard({ patterns, query }) {
           {/* Green "Why now" — same Expected outcome tile in Priority Actions */}
           {patterns.why_now ? (
             <div style={{ background: 'rgba(5,150,105,0.07)', border: '1px solid rgba(5,150,105,0.14)', borderRadius: 10, padding: '12px 14px' }}>
-              <p style={{ fontSize: 10, fontWeight: 600, color: C.green, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Why now</p>
+              <p style={{ fontSize: 10, fontWeight: 600, color: '#34d27b', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>Why now</p>
               <p style={{ fontSize: 13, color: C.text1, lineHeight: 1.65 }}>{patterns.why_now}</p>
             </div>
           ) : <div />}

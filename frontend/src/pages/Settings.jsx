@@ -911,7 +911,7 @@ export default function Settings({ channelData }) {
             {frError
               ? frError
               : frSuccess
-                ? <span style={{ color: C.green, fontWeight: 600 }}>Sent. Thanks for the suggestion.</span>
+                ? <span style={{ color: '#34d27b', fontWeight: 600 }}>Sent. Thanks for the suggestion.</span>
                 : `${frDesc.length} / ${FR_DESC_MAX}`}
           </div>
           <button
@@ -988,7 +988,7 @@ export default function Settings({ channelData }) {
         display: 'flex', alignItems: 'center', gap: 16,
       }}>
         <div style={{ flex: 1, minWidth: 0 }}>
-          <p className="set-card-title" style={{ color: C.red }}>Delete account</p>
+          <p className="set-card-title" style={{ color: '#fb6a60' }}>Delete account</p>
           <p className="set-card-sub">Permanently deletes account, channels, analyses, and reports.</p>
         </div>
         <button className="set-btn-danger-outline" onClick={() => setShowDeleteDialog(true)}>
