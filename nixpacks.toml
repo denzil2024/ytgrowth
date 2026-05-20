@@ -1,20 +1,31 @@
-# Force Python-only build. Without this, nixpacks auto-detects
-# frontend/package.json and tacks on `npm install && npm run build`,
-# which (a) we don't need - frontend/dist/ is committed and served as
-# static files, and (b) breaks the deploy because npm run build now
-# includes a Puppeteer prerender step that needs libraries the Railway
-# build image doesn't have. Local build still does both vite + prerender;
-# Railway just serves the resulting dist/.
-providers = ["python"]
+# Railway builds everything on the box:
+#   - backend: pip install -r requirements.txt
+#   - frontend: npm ci + vite build + Puppeteer prerender (for SEO)
+#
+# Puppeteer's bundled Chromium needs system libs the nixpacks image doesn't
+# ship; we sidestep that by skipping its download (PUPPETEER_SKIP_DOWNLOAD)
+# and pointing it at the nixpkgs chromium (PUPPETEER_EXECUTABLE_PATH).
+# scripts/prerender.js honours PUPPETEER_EXECUTABLE_PATH when set.
+#
+# frontend/dist/ is gitignored and produced fresh on every deploy, so pushes
+# stay small and the snapshot phase is fast.
 
 [phases.setup]
-nixPkgs = ["tesseract"]
+nixPkgs = ["nodejs_20", "chromium", "tesseract"]
+
+[variables]
+PUPPETEER_SKIP_DOWNLOAD = "1"
 
 [phases.install]
-cmds = ["pip install -r requirements.txt"]
+cmds = [
+  "pip install -r requirements.txt",
+  "cd frontend && npm ci",
+]
 
 [phases.build]
-cmds = []
+cmds = [
+  "cd frontend && FORCE_BUILD=1 PUPPETEER_EXECUTABLE_PATH=$(command -v chromium) npm run build",
+]
 
 [start]
 cmd = "uvicorn app.main:app --host 0.0.0.0 --port $PORT"
