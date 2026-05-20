@@ -558,7 +558,7 @@ function KwDetailModal({ kw, C, onClose }) {
 
           {/* 3-col playbook — exact Outliers pattern (blue / amber / green) */}
           <div style={{ background: C.cardFlat, border: `1px solid ${C.border}`, borderRadius: 16, padding: '20px 22px' }}>
-            <p style={{ fontSize: 18, fontWeight: 600, color: C.text1, letterSpacing: '-0.3px', marginBottom: 16 }}>Keyword playbook</p>
+            <p style={{ fontSize: 16, fontWeight: 600, color: C.text1, letterSpacing: '-0.2px', marginBottom: 16 }}>Keyword playbook</p>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr 1fr', gap: 8 }}>
               {/* Blue — Why it works (numbered list, mirrors Quick actions) */}
               <div style={{ background: 'rgba(79,134,247,0.07)', border: '1px solid rgba(79,134,247,0.12)', borderRadius: 10, padding: '12px 14px' }}>
@@ -1103,7 +1103,7 @@ export default function Keywords({ plan, freeTierFeatures }) {
                 letterSpacing: '0.10em', textTransform: 'uppercase', marginBottom: 6 }}>
                 Pick the niche
               </p>
-              <p style={{ fontSize: 17, fontWeight: 600, color: C.text1,
+              <p style={{ fontSize: 16, fontWeight: 600, color: C.text1,
                 lineHeight: 1.35, letterSpacing: '-0.3px', marginBottom: 4 }}>
                 What niche is this keyword for?
               </p>
@@ -1299,7 +1299,7 @@ export default function Keywords({ plan, freeTierFeatures }) {
             return (
               <div style={{ marginTop: 32 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12, flexWrap: 'wrap' }}>
-                  <h2 style={{ fontSize: 18, fontWeight: 600, color: C.text1, letterSpacing: '-0.3px' }}>
+                  <h2 style={{ fontSize: 16, fontWeight: 600, color: C.text1, letterSpacing: '-0.2px' }}>
                     Top-ranking videos right now
                   </h2>
                   {topPerformer > 0 && (
@@ -1421,7 +1421,7 @@ export default function Keywords({ plan, freeTierFeatures }) {
             return (
               <div style={{ marginTop: 32 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12, flexWrap: 'wrap' }}>
-                  <h2 style={{ fontSize: 18, fontWeight: 600, color: C.text1, letterSpacing: '-0.3px' }}>
+                  <h2 style={{ fontSize: 16, fontWeight: 600, color: C.text1, letterSpacing: '-0.2px' }}>
                     Competition momentum
                   </h2>
                   <span style={{
@@ -1448,7 +1448,7 @@ export default function Keywords({ plan, freeTierFeatures }) {
           {result.keywords?.length > 0 && (
             <>
               <div style={{ marginBottom: 14, marginTop: 32 }}>
-                <h2 style={{ fontSize: 18, fontWeight: 600, color: C.text1, letterSpacing: '-0.3px', marginBottom: 4 }}>Ranked keywords</h2>
+                <h2 style={{ fontSize: 16, fontWeight: 600, color: C.text1, letterSpacing: '-0.2px', marginBottom: 4 }}>Ranked keywords</h2>
                 <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.5 }}>
                   Click any keyword for the playbook · <span style={{ color: C.green, fontWeight: 600 }}>ACTIVE</span> = rising · <span style={{ color: C.amber, fontWeight: 600 }}>OPEN</span> = underclaimed
                 </p>
@@ -1542,7 +1542,7 @@ export default function Keywords({ plan, freeTierFeatures }) {
           {result.clusters?.length > 0 && (
             <>
               <div style={{ marginBottom: 14, marginTop: 32 }}>
-                <h2 style={{ fontSize: 18, fontWeight: 600, color: C.text1, letterSpacing: '-0.3px', marginBottom: 4 }}>Content clusters</h2>
+                <h2 style={{ fontSize: 16, fontWeight: 600, color: C.text1, letterSpacing: '-0.2px', marginBottom: 4 }}>Content clusters</h2>
                 <p style={{ fontSize: 13, color: C.text3, lineHeight: 1.5 }}>
                   Themes you can build a series around
                 </p>

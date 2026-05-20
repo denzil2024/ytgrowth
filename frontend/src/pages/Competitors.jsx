@@ -866,7 +866,7 @@ function AIAnalysis({ ai, comp, top5Videos, channelId, checkedIdeas, onToggleIde
         return (
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
-              <h2 style={{ fontSize: 18, fontWeight: 600, color: D.text1, letterSpacing: '-0.3px' }}>
+              <h2 style={{ fontSize: 16, fontWeight: 600, color: D.text1, letterSpacing: '-0.2px' }}>
                 Top videos to study
               </h2>
               <span style={{ fontSize: 11, fontWeight: 600, color: D.text2, background: D.cardFlat,
@@ -981,7 +981,7 @@ function AIAnalysis({ ai, comp, top5Videos, channelId, checkedIdeas, onToggleIde
         return (
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
-              <p style={{ fontSize: 20, fontWeight: 700, color: D.text1, letterSpacing: '-0.5px' }}>
+              <p style={{ fontSize: 16, fontWeight: 600, color: D.text1, letterSpacing: '-0.2px' }}>
                 Channel insights
               </p>
               <span style={{ fontSize: 11, fontWeight: 600, color: D.text2, background: D.cardFlat,
@@ -1087,7 +1087,7 @@ function AIAnalysis({ ai, comp, top5Videos, channelId, checkedIdeas, onToggleIde
         return (
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
-              <h2 style={{ fontSize: 18, fontWeight: 600, color: D.text1, letterSpacing: '-0.3px' }}>
+              <h2 style={{ fontSize: 16, fontWeight: 600, color: D.text1, letterSpacing: '-0.2px' }}>
                 Top content topics
               </h2>
               <span style={{ fontSize: 11, fontWeight: 600, color: D.text2, background: D.cardFlat,
@@ -1169,7 +1169,7 @@ function AIAnalysis({ ai, comp, top5Videos, channelId, checkedIdeas, onToggleIde
         return (
           <div>
             <div style={{ marginBottom: 12 }}>
-              <h2 style={{ fontSize: 18, fontWeight: 600, color: D.text1,
+              <h2 style={{ fontSize: 16, fontWeight: 600, color: D.text1,
                 letterSpacing: '-0.3px' }}>
                 Title patterns
               </h2>
@@ -1290,7 +1290,7 @@ function AIAnalysis({ ai, comp, top5Videos, channelId, checkedIdeas, onToggleIde
         return (
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
-              <p style={{ fontSize: 20, fontWeight: 700, color: D.text1, letterSpacing: '-0.5px' }}>
+              <p style={{ fontSize: 16, fontWeight: 600, color: D.text1, letterSpacing: '-0.2px' }}>
                 Winning moves
               </p>
               <span style={{ fontSize: 11, fontWeight: 600, color: D.text2, background: D.cardFlat,
@@ -1390,7 +1390,7 @@ function AIAnalysis({ ai, comp, top5Videos, channelId, checkedIdeas, onToggleIde
       {ideas.length > 0 && (
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
-            <h2 style={{ fontSize: 18, fontWeight: 600, color: D.text1, letterSpacing: '-0.3px' }}>
+            <h2 style={{ fontSize: 16, fontWeight: 600, color: D.text1, letterSpacing: '-0.2px' }}>
               Topics to tackle
             </h2>
             <span style={{ fontSize: 11, fontWeight: 600, color: D.text2, background: D.cardFlat,

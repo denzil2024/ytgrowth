@@ -935,7 +935,7 @@ export default function Outliers({ channelData, onNavigate, plan, freeTierFeatur
               </svg>
               <span style={{ fontSize: 10.5, fontWeight: 600, color: C.red, letterSpacing: '0.16em', textTransform: 'uppercase' }}>Three directions</span>
             </div>
-            <h2 style={{ fontSize: 24, fontWeight: 600, color: C.text1, letterSpacing: '-0.55px', lineHeight: 1.2, marginBottom: 10 }}>
+            <h2 style={{ fontSize: 16, fontWeight: 600, color: C.text1, letterSpacing: '-0.2px', lineHeight: 1.3, marginBottom: 10 }}>
               Your search could go <span style={{ color: C.red }}>3 ways</span>. Pick one.
             </h2>
             <p style={{ fontSize: 13.5, color: C.text3, lineHeight: 1.6, maxWidth: 540, margin: '0 auto' }}>
