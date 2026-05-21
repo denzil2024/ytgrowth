@@ -802,7 +802,8 @@ def related_traffic(request: Request, force: int = 0):
             if cached is not None:
                 return JSONResponse(cached)
 
-        from app.youtube import get_related_traffic_source_videos, build_youtube_client
+        from app.youtube import get_related_traffic_source_videos
+        from app.utils import build_youtube_client
         from app.insights import parse_duration_seconds
 
         sources = get_related_traffic_source_videos(creds, channel_id, days=14, max_results=15)
