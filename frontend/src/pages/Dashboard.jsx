@@ -1244,9 +1244,18 @@ export default function Dashboard() {
               )}
 
               {/* Filter pills — All | Actions | Insights | Achievements.
-                  Counts populate from real data (open priority actions,
-                  recently-earned milestones). */}
+                  Each tab's count is the number of cards that will actually
+                  render under it (mirrors each block's data + dismiss
+                  check). Keep this in sync if you add or remove a card.
+                  topPerformerBlock is intentionally not counted: it was
+                  merged into Title Suggestion (see line ~1870) and no
+                  longer renders independently. */}
               {(() => {
+                const cid = data?.channel?.channel_id || 'x'
+                const isDismissed = (key) => {
+                  try { return !!localStorage.getItem(key) } catch { return false }
+                }
+
                 const openPriorityCount = (() => {
                   const all = data?.insights?.priorityActions || []
                   let n = 0
@@ -1258,12 +1267,42 @@ export default function Dashboard() {
                   }
                   return n
                 })()
-                const recentMilestone = milestones?.earned?.[0] || null
+
+                const m = milestones?.earned?.[0]
+                const SHOW_FOR = 30 * 24 * 60 * 60 * 1000
+                const milestoneFresh = !!m && m.earned_at && (Date.now() - new Date(m.earned_at).getTime() <= SHOW_FOR)
+                const tlw = trackedLift?.top
+
+                const actionsCards = [
+                  openPriorityCount > 0,
+                  !!(dailyIdeas?.ideas?.length > 0) && !isDismissed(`ytg_daily_ideas_dismissed:${cid}`),
+                  !!(unansweredComment?.comment && unansweredComment?.replies?.length) && !isDismissed(`ytg_unanswered_comment_dismissed:${cid}:${unansweredComment?.comment?.comment_id || 'x'}`),
+                  !!(titleSuggestion?.video && titleSuggestion?.suggestions?.length) && !isDismissed(`ytg_title_suggestion_dismissed_v5:${cid}:${titleSuggestion?.video?.video_id || 'x'}`),
+                  !!(missingTags?.video && missingTags?.tag_sets?.length) && !isDismissed(`ytg_missing_tags_dismissed:${cid}:${missingTags?.video?.video_id || 'x'}`),
+                  !!(missingDescription?.video && missingDescription?.drafts?.length) && !isDismissed(`ytg_missing_description_dismissed:${cid}:${missingDescription?.video?.video_id || 'x'}`),
+                ]
+
+                const insightsCards = [
+                  true, // NicheHeroCard always renders (skeleton / empty fallback)
+                  !!(suggestedCompetitors?.suggestions?.length >= 2) && !isDismissed(`ytg_suggested_competitors_dismissed:${cid}`),
+                  !!topSearchTerms?.items?.length && !isDismissed(`ytg_top_search_terms_dismissed:${cid}`),
+                  !!relatedTraffic && !isDismissed(`ytg_related_traffic_dismissed_v2:${cid}`),
+                  !!(competitorActivity?.items?.length > 0) && !isDismissed(`ytg_competitor_activity_dismissed:${cid}`),
+                  !!(videos && videos.length > 0) && !isDismissed(`ytg_posting_consistency_dismissed:${cid}`),
+                  !!(videos && videos.length >= 5) && !isDismissed(`ytg_best_time_dismissed:${cid}`),
+                  !!(patterns || data.insights), // ChannelHealth card (no dismiss)
+                ]
+
+                const achievementsCards = [
+                  milestoneFresh && !isDismissed(`ytg_milestone_dismissed:${cid}:${m?.category}:${m?.tier}`),
+                  !!tlw && !isDismissed(`ytg_tracked_lift_dismissed:${cid}:${tlw.video_id}:${tlw.optimized_at}`),
+                ]
+
                 const counts = {
                   all: null,
-                  actions: openPriorityCount,
-                  insights: null,
-                  achievements: recentMilestone ? 1 : 0,
+                  actions: actionsCards.filter(Boolean).length,
+                  insights: insightsCards.filter(Boolean).length,
+                  achievements: achievementsCards.filter(Boolean).length,
                 }
                 return (
                   <FeedFilterPills
@@ -1467,7 +1506,7 @@ export default function Dashboard() {
                   />
                 ) : null
 
-                const titleSuggestionBlock = (feedFilter === 'all' || feedFilter === 'insights') && titleSuggestion?.video && titleSuggestion?.suggestions?.length ? (() => {
+                const titleSuggestionBlock = (feedFilter === 'all' || feedFilter === 'actions') && titleSuggestion?.video && titleSuggestion?.suggestions?.length ? (() => {
                   const dismissKey = `ytg_title_suggestion_dismissed_v5:${data?.channel?.channel_id || 'x'}:${titleSuggestion.video.video_id || 'x'}`
                   try { if (localStorage.getItem(dismissKey)) return null } catch {}
                   return (
@@ -1560,7 +1599,7 @@ export default function Dashboard() {
                   )
                 })() : null
 
-                const missingTagsBlock = (feedFilter === 'all' || feedFilter === 'insights') && missingTags?.video && missingTags?.tag_sets?.length ? (() => {
+                const missingTagsBlock = (feedFilter === 'all' || feedFilter === 'actions') && missingTags?.video && missingTags?.tag_sets?.length ? (() => {
                   const dismissKey = `ytg_missing_tags_dismissed:${data?.channel?.channel_id || 'x'}:${missingTags.video.video_id || 'x'}`
                   try { if (localStorage.getItem(dismissKey)) return null } catch {}
                   return (
@@ -1603,7 +1642,7 @@ export default function Dashboard() {
                   )
                 })() : null
 
-                const missingDescriptionBlock = (feedFilter === 'all' || feedFilter === 'insights') && missingDescription?.video && missingDescription?.drafts?.length ? (() => {
+                const missingDescriptionBlock = (feedFilter === 'all' || feedFilter === 'actions') && missingDescription?.video && missingDescription?.drafts?.length ? (() => {
                   const dismissKey = `ytg_missing_description_dismissed:${data?.channel?.channel_id || 'x'}:${missingDescription.video.video_id || 'x'}`
                   try { if (localStorage.getItem(dismissKey)) return null } catch {}
                   return (
