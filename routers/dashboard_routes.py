@@ -900,13 +900,56 @@ def title_suggestion(request: Request):
     )
 
     fresh = _clean_suggestions(out.get("suggestions") or [])
-    if not fresh:
-        return JSONResponse({"ok": True, "video": None})
+    if fresh:
+        return JSONResponse({
+            "ok":          True,
+            "video":       video_payload,
+            "suggestions": fresh,
+            "age_label":   _age_label(pick.get("published_at", "")),
+            "source":      "feed_generated",
+        })
 
-    return JSONResponse({
-        "ok":          True,
-        "video":       video_payload,
-        "suggestions": fresh,
-        "age_label":   _age_label(pick.get("published_at", "")),
-        "source":      "feed_generated",
-    })
+    # Path 3 (safety net): the live Claude path failed or returned nothing.
+    # Walk ALL the user's videos newest-first and serve the first cached
+    # SEO Studio analysis we find. Guarantees the card never silently
+    # disappears as long as the user has run SEO Studio on ANY past video.
+    print(f"[title-suggestion] path 2 empty for video '{title[:60]}' (err={out.get('error', 'none')}), falling back to scan")
+    db2 = SessionLocal()
+    try:
+        for v in sorted(videos, key=lambda x: (x.get("published_at") or ""), reverse=True):
+            v_title = (v.get("title") or "").strip()
+            if not v_title:
+                continue
+            row = (
+                db2.query(SeoAnalysisCache)
+                .filter_by(channel_id=channel_id, title_lower=v_title.lower())
+                .first()
+            )
+            if not row or not row.result_json:
+                continue
+            try:
+                cached = (json.loads(row.result_json) or {}).get("suggestions") or []
+            except Exception:
+                continue
+            cleaned = _clean_suggestions(cached)
+            if not cleaned:
+                continue
+            v_is_short = parse_duration_seconds(v.get("duration", "PT0S")) <= 60
+            return JSONResponse({
+                "ok": True,
+                "video": {
+                    "video_id":     v.get("video_id", ""),
+                    "title":        v_title,
+                    "thumbnail":    v.get("thumbnail", ""),
+                    "views":        int(v.get("views", 0) or 0),
+                    "published_at": (v.get("published_at") or "")[:10],
+                    "is_short":     bool(v_is_short),
+                },
+                "suggestions": cleaned,
+                "age_label":   _age_label(v.get("published_at", "")),
+                "source":      "studio_cache_any",
+            })
+    finally:
+        db2.close()
+
+    return JSONResponse({"ok": True, "video": None})
