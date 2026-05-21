@@ -1245,11 +1245,12 @@ def missing_description(request: Request):
         "top_video_titles": top_titles,
     }
 
-    def _try_pick(pick):
+    def _try_pick(pick, diag_out=None):
         """Return a JSON-ready payload for `pick` if drafts can be sourced,
         else None. Tries SEO Studio cache first, then a cross-user-cached
         Claude call. Per-candidate so the outer loop can move on if a video
-        produces nothing usable."""
+        produces nothing usable. When diag_out is a dict, mutate it with
+        per-step outcomes so the caller can expose them via ?debug=1."""
         title        = (pick.get("title") or "").strip()
         is_short     = parse_duration_seconds(pick.get("duration", "PT0S")) <= 60
         current_desc = (pick.get("description") or "").strip()
@@ -1271,6 +1272,9 @@ def missing_description(request: Request):
                 .filter_by(channel_id=channel_id, title_lower=title.lower())
                 .first()
             )
+            if diag_out is not None:
+                diag_out["path1_row_found"] = bool(row)
+                diag_out["path1_has_desc_json"] = bool(row and row.desc_result_json)
             if row and row.desc_result_json:
                 try:
                     cached = json.loads(row.desc_result_json) or []
@@ -1278,11 +1282,6 @@ def missing_description(request: Request):
                     cached = []
                 drafts = []
                 for entry in cached[:3]:
-                    # generate_description_suggestions returns dicts shaped as
-                    # {"type", "label", "preview", "full", "why_it_works"}.
-                    # The full ready-to-publish text is in "full"; fall back
-                    # to "description" / "preview" / the dict-as-string if a
-                    # legacy row was written with a different shape.
                     if isinstance(entry, dict):
                         raw = entry.get("full") or entry.get("description") or entry.get("preview") or ""
                     else:
@@ -1290,6 +1289,11 @@ def missing_description(request: Request):
                     draft = _clean_description(raw)
                     if draft:
                         drafts.append(draft)
+                if diag_out is not None:
+                    diag_out["path1_cached_count"] = len(cached)
+                    diag_out["path1_drafts_extracted"] = len(drafts)
+                    if cached and isinstance(cached[0], dict):
+                        diag_out["path1_entry_keys"] = sorted(cached[0].keys())
                 if drafts:
                     return {
                         "ok":        True,
@@ -1307,7 +1311,7 @@ def missing_description(request: Request):
             "is_short":       bool(is_short),
             "channel_kw":     (channel.get("keywords", "") or "").lower()[:200],
             "subs_tier":      _subs_tier(int(channel.get("subscribers", 0) or 0)),
-            "prompt_version": "feed_desc_v1",
+            "prompt_version": "feed_desc_v2",  # bumped to invalidate any rows cached against the old buggy reader
         }
 
         def _fetch():
@@ -1333,13 +1337,26 @@ def missing_description(request: Request):
             fetch_fn=_fetch,
         )
 
+        # Read "full" from each dict — same shape returned by
+        # generate_description_suggestions (type/label/preview/full/why_it_works).
+        # This was the long-running bug: Path 2 used to read "description"
+        # which doesn't exist on those dicts, so it always extracted nothing.
         drafts = []
-        for entry in (out.get("descriptions") or [])[:3]:
-            draft = _clean_description(
-                entry.get("description") if isinstance(entry, dict) else str(entry)
-            )
+        descs = out.get("descriptions") or []
+        for entry in descs[:3]:
+            if isinstance(entry, dict):
+                raw = entry.get("full") or entry.get("description") or entry.get("preview") or ""
+            else:
+                raw = str(entry)
+            draft = _clean_description(raw)
             if draft:
                 drafts.append(draft)
+        if diag_out is not None:
+            diag_out["path2_descriptions_count"] = len(descs)
+            diag_out["path2_drafts_extracted"] = len(drafts)
+            diag_out["path2_error"] = (out.get("error") or "")[:200]
+            if descs and isinstance(descs[0], dict):
+                diag_out["path2_entry_keys"] = sorted(descs[0].keys())
         if drafts:
             return {
                 "ok":        True,
@@ -1353,21 +1370,28 @@ def missing_description(request: Request):
     # Walk candidates, return the first one that yields drafts.
     diag_walk = []
     for pick in candidates[:MAX_TRIES]:
+        per = {"video_id": pick.get("video_id", ""), "title": (pick.get("title") or "")[:60]}
         try:
-            result = _try_pick(pick)
+            result = _try_pick(pick, diag_out=per if debug else None)
         except Exception as e:
             import traceback as _tb
             err = str(e)
             tb = _tb.format_exc().splitlines()[-6:]
             print(f"[missing-description] _try_pick exception for '{(pick.get('title') or '')[:60]}': {err}")
-            diag_walk.append({"video_id": pick.get("video_id", ""), "title": (pick.get("title") or "")[:60], "outcome": "exception", "error": err, "trace": tb})
+            per["outcome"] = "exception"
+            per["error"] = err
+            per["trace"] = tb
+            diag_walk.append(per)
             continue
         if result:
             if debug:
-                result["_debug"] = {"candidates_total": len(candidates), "walk": diag_walk + [{"video_id": pick.get("video_id", ""), "title": (pick.get("title") or "")[:60], "outcome": "yielded_drafts", "source": result.get("source", "")}]}
+                per["outcome"] = "yielded_drafts"
+                per["source"] = result.get("source", "")
+                result["_debug"] = {"candidates_total": len(candidates), "walk": diag_walk + [per]}
                 return JSONResponse(result)
             return JSONResponse(result)
-        diag_walk.append({"video_id": pick.get("video_id", ""), "title": (pick.get("title") or "")[:60], "outcome": "no_drafts"})
+        per["outcome"] = "no_drafts"
+        diag_walk.append(per)
 
     print(f"[missing-description] no candidate among {len(candidates)} yielded drafts")
     if debug:
@@ -1509,10 +1533,14 @@ def _trending_keyword_impl(request: Request, debug: bool = False):
         # synthesise a keyword-shaped object per row so it flows through the
         # same _payload() helper. Score is derived from real competition data
         # (smaller channel size = higher score, fresher landscape = bonus).
+        # Order by hit_count only — prod Postgres for this table predates
+        # the model's last_hit_at column, and we can't rely on schema parity.
+        # The cached_at column is part of the original schema; use it as a
+        # secondary key so equally-popular rows still order deterministically.
         rows = (
             db.query(YoutubeSearchCache)
             .filter(YoutubeSearchCache.cache_key.like("kw:%"))
-            .order_by(YoutubeSearchCache.hit_count.desc(), YoutubeSearchCache.last_hit_at.desc())
+            .order_by(YoutubeSearchCache.hit_count.desc(), YoutubeSearchCache.cached_at.desc())
             .limit(120)
             .all()
         )
