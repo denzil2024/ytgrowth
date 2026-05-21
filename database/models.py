@@ -336,6 +336,18 @@ class RelatedTrafficCache(Base):
     cached_at   = Column(DateTime, default=_now, index=True)
 
 
+class SearchTermsCache(Base):
+    """Dashboard 'Top Search Terms' Feed card. Per-channel snapshot of the
+    search queries viewers actually typed to find this creator's videos
+    in the last N days, via YouTube Analytics insightTrafficSourceDetail
+    filtered to YT_SEARCH. 24h TTL. Analytics quota is separate from the
+    Data API budget, so this is free against the 10K daily quota."""
+    __tablename__ = "search_terms_cache"
+    channel_id  = Column(String,   primary_key=True)
+    result_json = Column(Text,     nullable=False)
+    cached_at   = Column(DateTime, default=_now, index=True)
+
+
 class AIOutputCache(Base):
     """Cross-user cache for Claude / Haiku outputs, keyed by input
     fingerprint (SHA-256 of function name + sorted JSON of relevant

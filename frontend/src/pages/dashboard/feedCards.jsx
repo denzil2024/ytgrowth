@@ -2457,6 +2457,144 @@ export function TrendingKeywordCard({ keyword, score, momentum, subsLabel, fresh
   )
 }
 
+// Top Search Terms card. Real YouTube Analytics data: the actual queries
+// viewers typed to find this creator's videos in the last 28 days. Each
+// row is a query + view count from that query. No AI, no scoring guesses
+// — just the raw signal. CTA opens Keyword Research with the top term
+// pre-filled so the user can act on the highest-volume query that's
+// already bringing them viewers.
+export function TopSearchTermsCard({ items, refreshedAt, onResearch, onDismiss }) {
+  if (!items || items.length < 1) return null
+  const visible = items.slice(0, 5)
+  const topTerm = visible[0]?.term || ''
+  const maxViews = Math.max(1, ...visible.map(it => Number(it.views) || 0))
+
+  let ageLabel = ''
+  try {
+    if (refreshedAt) {
+      const ts = new Date(refreshedAt).getTime()
+      const days = Math.max(0, Math.floor((Date.now() - ts) / 86400000))
+      ageLabel = days === 0 ? 'today' : days === 1 ? '1d ago' : `${days}d ago`
+    }
+  } catch {}
+
+  return (
+    <article style={{
+      background: SHELL.cardFlat,
+      border: '1px solid rgba(255,255,255,0.08)',
+      borderRadius: 14,
+      padding: '14px 18px 16px 18px',
+      boxShadow: '0 1px 2px rgba(255,255,255,0.04), 0 6px 18px rgba(255,255,255,0.05), inset 0 1px 0 rgba(255,255,255,0.7)',
+      marginBottom: 12,
+    }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
+        <h3 style={{
+          fontSize: 16, fontWeight: 600, color: SHELL.text1,
+          letterSpacing: '-0.2px', lineHeight: 1.3, margin: 0,
+        }}>Top Search Terms</h3>
+        <span style={{
+          fontSize: 12.5, fontWeight: 450, color: SHELL.text3,
+          letterSpacing: '-0.01em',
+        }}>· last 28 days{ageLabel ? ` · refreshed ${ageLabel}` : ''}</span>
+        <div style={{ flex: 1 }}/>
+        {onDismiss && (
+          <button
+            type="button"
+            onClick={onDismiss}
+            aria-label="Dismiss"
+            style={{
+              width: 28, height: 28, borderRadius: 8,
+              border: 'none', background: 'transparent',
+              color: 'rgba(255,255,255,0.36)',
+              cursor: 'pointer',
+              display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+              transition: 'background 0.14s, color 0.14s',
+            }}
+            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; e.currentTarget.style.color = SHELL.text1 }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'rgba(255,255,255,0.36)' }}
+          >
+            <XIcon size={14} strokeWidth={2} />
+          </button>
+        )}
+      </div>
+
+      <p style={{
+        margin: '0 0 12px 0', fontSize: 13.5, fontWeight: 450, color: SHELL.text2,
+        letterSpacing: '-0.05px', lineHeight: 1.45,
+      }}>
+        How viewers are finding you on YouTube search.
+      </p>
+
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 6, marginBottom: 14 }}>
+        {visible.map((it, i) => {
+          const views = Number(it.views) || 0
+          const pct = Math.max(4, Math.round((views / maxViews) * 100))
+          return (
+            <div key={`${it.term}-${i}`} style={{
+              position: 'relative',
+              padding: '9px 12px',
+              borderRadius: 10,
+              background: 'rgba(255,255,255,0.02)',
+              border: '1px solid rgba(255,255,255,0.06)',
+              overflow: 'hidden',
+            }}>
+              {/* Subtle volume bar behind the row, brand-red tinted */}
+              <div style={{
+                position: 'absolute', inset: 0,
+                width: `${pct}%`,
+                background: 'linear-gradient(90deg, rgba(229,37,27,0.10) 0%, rgba(229,37,27,0.03) 100%)',
+                pointerEvents: 'none',
+              }}/>
+              <div style={{
+                position: 'relative',
+                display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12,
+              }}>
+                <span style={{
+                  fontSize: 13.5, fontWeight: 500, color: SHELL.text1,
+                  letterSpacing: '-0.05px', lineHeight: 1.3,
+                  overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+                  flex: 1, minWidth: 0,
+                }}>{it.term}</span>
+                <span style={{
+                  fontSize: 12, fontWeight: 600, color: SHELL.text2,
+                  fontVariantNumeric: 'tabular-nums',
+                  letterSpacing: '-0.01em',
+                  flexShrink: 0,
+                }}>{views.toLocaleString()} views</span>
+              </div>
+            </div>
+          )
+        })}
+      </div>
+
+      {topTerm && (
+        <button
+          type="button"
+          onClick={() => onResearch?.(topTerm)}
+          style={{
+            width: '100%',
+            display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 7,
+            padding: '10px 14px', borderRadius: 100,
+            border: 'none',
+            background: '#e5251b',
+            color: '#fff',
+            fontFamily: 'inherit',
+            fontSize: 13, fontWeight: 600, letterSpacing: '-0.05px',
+            boxShadow: '0 1px 3px rgba(229,37,27,0.28)',
+            cursor: 'pointer',
+            transition: 'filter 0.14s, transform 0.14s',
+          }}
+          onMouseEnter={e => { e.currentTarget.style.filter = 'brightness(1.08)'; e.currentTarget.style.transform = 'translateY(-1px)' }}
+          onMouseLeave={e => { e.currentTarget.style.filter = 'none'; e.currentTarget.style.transform = 'translateY(0)' }}
+        >
+          Research top term: {topTerm.length > 32 ? topTerm.slice(0, 30) + '…' : topTerm}
+          <ArrowRight size={13} strokeWidth={2.1} />
+        </button>
+      )}
+    </article>
+  )
+}
+
 export function SuggestedCompetitorsCard({ suggestions, category, onTrack, onDismiss, onOpenAll }) {
   const top = (suggestions || []).slice(0, 4)
   if (top.length < 3) return null  // hide if signal is thin

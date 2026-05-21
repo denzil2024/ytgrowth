@@ -47,7 +47,7 @@ import {
   MilestoneFeedCard, ContentMixFeedCard, ChannelHealthFeedCard,
   TopPerformerCard, PostingConsistencyCard, BestTimeCard,
   TrackedLiftCard, DailyIdeasCard, TitleSuggestionCard,
-  MissingDescriptionCard, TrendingKeywordCard,
+  MissingDescriptionCard, TopSearchTermsCard,
   SuggestedCompetitorsCard, RelatedTrafficCard, CompetitorActivityCard,
 } from './dashboard/feedCards'
 import {
@@ -131,9 +131,11 @@ export default function Dashboard() {
   const [descPublishing, setDescPublishing] = useState(false)
   const [descPublished, setDescPublished] = useState(false)
   const [descPublishError, setDescPublishError] = useState('')
-  // Trending Keyword card. Surfaces one active-momentum keyword from cached
-  // research. Null = no candidate yet -> card hides.
-  const [trendingKeyword, setTrendingKeyword] = useState(null)
+  // Top Search Terms card. Real YouTube Analytics data — the queries
+  // viewers actually typed to find the user's videos in the last 28 days.
+  // Cached per-channel for 24h. Null while loading or when there's no
+  // search traffic.
+  const [topSearchTerms, setTopSearchTerms] = useState(null)
   const [relatedTraffic, setRelatedTraffic] = useState(null)
   const [refreshingIdeas, setRefreshingIdeas] = useState(false)
   // Competitor Activity (recent uploads from tracked competitors).
@@ -315,12 +317,13 @@ export default function Dashboard() {
       .then(d => { if (d && d.ok && d.video && d.drafts?.length) setMissingDescription(d) })
       .catch(() => {})
 
-    // Load Trending Keyword: backend pulls one active-momentum keyword from
-    // either the user's own KeywordsResearchCache or the cross-user niche
-    // pool. Zero new YouTube quota. Card hides if no candidate exists.
-    fetch('/dashboard/trending-keyword', { credentials: 'include' })
+    // Load Top Search Terms: backend hits YouTube Analytics for the
+    // queries viewers actually typed to find this channel's videos in
+    // the last 28 days. Cached per-channel for 24h. Card hides when
+    // there's no search traffic to surface.
+    fetch('/dashboard/top-search-terms', { credentials: 'include' })
       .then(r => r.ok ? r.json() : null)
-      .then(d => { if (d && d.ok && d.keyword) setTrendingKeyword(d) })
+      .then(d => { if (d && d.ok && d.items?.length) setTopSearchTerms(d) })
       .catch(() => {})
 
     // Load Related Traffic: YouTube Analytics detail of which OTHER
@@ -1530,22 +1533,17 @@ export default function Dashboard() {
                   )
                 })() : null
 
-                const trendingKeywordBlock = (feedFilter === 'all' || feedFilter === 'insights') && trendingKeyword?.keyword ? (() => {
-                  const dismissKey = `ytg_trending_keyword_dismissed:${data?.channel?.channel_id || 'x'}:${trendingKeyword.keyword || 'x'}`
+                const topSearchTermsBlock = (feedFilter === 'all' || feedFilter === 'insights') && topSearchTerms?.items?.length ? (() => {
+                  const dismissKey = `ytg_top_search_terms_dismissed:${data?.channel?.channel_id || 'x'}`
                   try { if (localStorage.getItem(dismissKey)) return null } catch {}
                   return (
-                    <TrendingKeywordCard
-                      key="trending-keyword"
-                      keyword={trendingKeyword.keyword}
-                      score={trendingKeyword.score}
-                      momentum={trendingKeyword.momentum}
-                      subsLabel={trendingKeyword.subs_label}
-                      freshLabel={trendingKeyword.fresh_label}
-                      ageLabel={trendingKeyword.age_label}
+                    <TopSearchTermsCard
+                      key="top-search-terms"
+                      items={topSearchTerms.items}
+                      refreshedAt={topSearchTerms.refreshed_at}
                       onResearch={(kw) => {
-                        // Stash the keyword for Keyword Research to pre-fill
-                        // its input. Same prefill-then-navigate pattern as
-                        // Suggested Competitors -> Competitors page.
+                        // Land user on Keyword Research with the term
+                        // pre-filled, same pattern as Suggested Competitors.
                         try { if (kw) sessionStorage.setItem('keywords_prefilledQuery', kw) } catch {}
                         setNav('Keywords')
                       }}
@@ -1734,7 +1732,7 @@ export default function Dashboard() {
                       {titleSuggestionBlock}
                       {missingDescriptionBlock}
                       {suggestedCompetitorsBlock}
-                      {trendingKeywordBlock}
+                      {topSearchTermsBlock}
                       {relatedTrafficBlock}
                       {competitorActivityBlock}
                     </div>

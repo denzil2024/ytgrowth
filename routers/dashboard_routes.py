@@ -38,7 +38,7 @@ from app.niche_outliers import (
     is_stale,
     personalize_angle,
 )
-from database.models import SessionLocal, SeoOptimization, SeoAnalysisCache, CompetitorAnalysisCache, CompetitorActivityCache, RelatedTrafficCache, TopChannelCache, YoutubeSearchCache, KeywordsResearchCache
+from database.models import SessionLocal, SeoOptimization, SeoAnalysisCache, CompetitorAnalysisCache, CompetitorActivityCache, RelatedTrafficCache, SearchTermsCache, TopChannelCache, YoutubeSearchCache, KeywordsResearchCache
 from routers.auth import get_session
 from routers.admin_routes import _is_admin
 
@@ -770,6 +770,90 @@ def _write_related_traffic_cache(db, channel_id, payload):
         print(f"[related-traffic] cache write error: {e}")
         try: db.rollback()
         except Exception: pass
+
+
+_SEARCH_TERMS_TTL_HOURS = 24
+
+
+def _read_search_terms_cache(db, channel_id):
+    try:
+        row = db.query(SearchTermsCache).filter_by(channel_id=channel_id).first()
+        if not row:
+            return None
+        cached_at = row.cached_at
+        if cached_at and cached_at.tzinfo is None:
+            cached_at = cached_at.replace(tzinfo=datetime.timezone.utc)
+        if not cached_at:
+            return None
+        age_h = (datetime.datetime.now(datetime.timezone.utc) - cached_at).total_seconds() / 3600
+        if age_h >= _SEARCH_TERMS_TTL_HOURS:
+            return None
+        try:
+            return json.loads(row.result_json)
+        except Exception:
+            return None
+    except Exception as e:
+        print(f"[top-search-terms] cache read error: {e}")
+        return None
+
+
+def _write_search_terms_cache(db, channel_id, payload):
+    try:
+        row = db.query(SearchTermsCache).filter_by(channel_id=channel_id).first()
+        body = json.dumps(payload, default=str)
+        now = datetime.datetime.now(datetime.timezone.utc)
+        if row:
+            row.result_json = body
+            row.cached_at   = now
+        else:
+            db.add(SearchTermsCache(channel_id=channel_id, result_json=body, cached_at=now))
+        db.commit()
+    except Exception as e:
+        print(f"[top-search-terms] cache write error: {e}")
+        try: db.rollback()
+        except Exception: pass
+
+
+@router.get("/top-search-terms")
+def top_search_terms(request: Request, force: int = 0):
+    """Feed card: "Top Search Terms" — the actual queries that brought
+    viewers to this creator's videos in the last 28 days, via YouTube
+    Analytics insightTrafficSourceDetail filtered to YT_SEARCH.
+
+    Cache: 24h per channel (SearchTermsCache). Analytics API quota is
+    separate from the 10K Data API budget, so refreshing is free against
+    quota math. force=1 bypasses the cache for manual refresh.
+    """
+    data, creds = get_session(request.session.get("session_id"))
+    if not data:
+        return JSONResponse({"ok": False, "reason": "not_authenticated"}, status_code=401)
+
+    channel = (data or {}).get("channel", {}) or {}
+    channel_id = channel.get("channel_id", "") or ""
+    if not channel_id:
+        return JSONResponse({"ok": True, "items": []})
+
+    db = SessionLocal()
+    try:
+        if not force:
+            cached = _read_search_terms_cache(db, channel_id)
+            if cached is not None:
+                return JSONResponse(cached)
+
+        from app.youtube import get_top_search_terms as _fetch_terms
+
+        terms = _fetch_terms(creds, channel_id, days=28, max_results=10)
+        now_iso = datetime.datetime.now(datetime.timezone.utc).isoformat()
+        if not terms:
+            payload = {"ok": False, "reason": "no_search_traffic", "items": [], "refreshed_at": now_iso}
+            _write_search_terms_cache(db, channel_id, payload)
+            return JSONResponse(payload)
+
+        payload = {"ok": True, "items": terms, "refreshed_at": now_iso}
+        _write_search_terms_cache(db, channel_id, payload)
+        return JSONResponse(payload)
+    finally:
+        db.close()
 
 
 @router.get("/related-traffic")

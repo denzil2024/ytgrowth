@@ -380,6 +380,43 @@ def get_related_traffic_source_videos(credentials, channel_id, days=14, max_resu
         return []
 
 
+def get_top_search_terms(credentials, channel_id, days=28, max_results=10):
+    """Top YouTube search queries that drove views to this channel in the
+    last N days. Returns a list of {term, views} dicts sorted by views desc.
+
+    Uses YouTube Analytics insightTrafficSourceDetail filtered to YT_SEARCH.
+    Analytics API has its own quota separate from the 10K Data API budget,
+    so this is free against the daily quota math. YouTube sometimes
+    anonymises low-volume queries as "(Other)" or similar; we keep those
+    out by skipping empty terms.
+    """
+    try:
+        analytics = build("youtubeAnalytics", "v2", credentials=credentials)
+        end_date = datetime.now().strftime("%Y-%m-%d")
+        start_date = (datetime.now() - timedelta(days=days)).strftime("%Y-%m-%d")
+        resp = analytics.reports().query(
+            ids=f"channel=={channel_id}",
+            startDate=start_date,
+            endDate=end_date,
+            metrics="views",
+            dimensions="insightTrafficSourceDetail",
+            filters="insightTrafficSourceType==YT_SEARCH",
+            sort="-views",
+            maxResults=max_results,
+        ).execute()
+        out = []
+        for r in resp.get("rows", []) or []:
+            term  = (r[0] or "").strip()
+            views = int(r[1] or 0)
+            if not term or views <= 0:
+                continue
+            out.append({"term": term, "views": views})
+        return out
+    except Exception as e:
+        print(f"[top-search-terms] error: {e}")
+        return []
+
+
 def get_shares(credentials, channel_id):
     try:
         analytics = build("youtubeAnalytics", "v2", credentials=credentials)
