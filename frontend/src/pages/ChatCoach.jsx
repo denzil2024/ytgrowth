@@ -705,26 +705,35 @@ export default function ChatCoach({ onNavigate, billingPlan, chatMode, chatTarge
 }
 
 
-/* ─── Assistant mark. Quiet raised circle, neutral icon. ──────────── */
+/* ─── Assistant mark. Subtle red tint so the assistant feels alive
+       instead of muted, but no solid red wash (that would scream). ─── */
 function Avatar() {
   return (
     <span style={{
       flexShrink: 0,
       width: 28, height: 28, borderRadius: 8,
       display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-      background: C.raised, border: `1px solid ${C.hair}`, color: C.t3,
+      background: 'rgba(251,106,96,0.10)',
+      border: `1px solid rgba(251,106,96,0.22)`,
+      color: '#fb6a60',
+      boxShadow: '0 1px 2px rgba(0,0,0,0.30)',
     }}>
-      <Sparkles size={15} strokeWidth={1.8} />
+      <Sparkles size={15} strokeWidth={1.9} />
     </span>
   )
 }
 
 /* ─── A turn. Assistant text sits directly on the surface (no bubble).
-       User text is a quiet neutral chip — never red. ───────────────── */
+       User text is a quiet neutral chip — never red. Both turns fade
+       up on mount (calm spring) so the conversation has motion without
+       being noisy. ──────────────────────────────────────────────── */
 function Message({ role, content, sources }) {
+  const fadeUp = {
+    animation: `ytgFadeUp 0.35s ${C.spring} both`,
+  }
   if (role === 'user') {
     return (
-      <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+      <div className="ytg-fade-up" style={{ display: 'flex', justifyContent: 'flex-end', ...fadeUp }}>
         <div style={{
           maxWidth: '76%',
           background: C.raised,
@@ -735,22 +744,27 @@ function Message({ role, content, sources }) {
           fontFamily: FONT_STACK,
           fontSize: 15, fontWeight: 400, letterSpacing: '-0.006em', lineHeight: 1.6,
           whiteSpace: 'pre-wrap',
+          boxShadow: '0 1px 2px rgba(0,0,0,0.30), inset 0 1px 0 rgba(255,255,255,0.04)',
         }}>{content}</div>
       </div>
     )
   }
   return (
-    <div style={{ display: 'flex', alignItems: 'flex-start', gap: 13 }}>
+    <div className="ytg-fade-up" style={{ display: 'flex', alignItems: 'flex-start', gap: 13, ...fadeUp }}>
       <Avatar />
       <div style={{ flex: 1, minWidth: 0, paddingTop: 3 }}>
         <AssistantBody text={content} />
         {sources && sources.length > 0 && (
           <div style={{
             display: 'inline-flex', alignItems: 'center', gap: 6,
-            marginTop: 10,
-            fontSize: 11.5, color: C.t4, fontWeight: 400, letterSpacing: '-0.005em',
+            marginTop: 12,
+            padding: '4px 10px',
+            background: 'rgba(255,255,255,0.04)',
+            border: `1px solid ${C.hair}`,
+            borderRadius: 100,
+            fontSize: 11.5, color: C.t3, fontWeight: 500, letterSpacing: '-0.005em',
           }}>
-            <Database size={11} strokeWidth={1.7} />
+            <Database size={11} strokeWidth={1.8} />
             <span>{sources.join('  ·  ')}</span>
           </div>
         )}
