@@ -229,6 +229,31 @@ export default function ChatCoach({ onNavigate, billingPlan, chatMode, chatTarge
     return () => { cancelled = true }
   }, [])
 
+  // Auto-send prefilled query from the Feed's pinned AI input. Runs once
+  // after state hydration finishes so allowance / outOfMessages are
+  // correct before we try to send. Reads + clears the sessionStorage
+  // key in the same tick so back-nav doesn't re-fire it.
+  const prefillFired = useRef(false)
+  useEffect(() => {
+    if (prefillFired.current) return
+    if (state.loading) return
+    let prefilled = ''
+    try {
+      prefilled = sessionStorage.getItem('chat_prefilledQuery') || ''
+      if (prefilled) sessionStorage.removeItem('chat_prefilledQuery')
+    } catch {}
+    prefilled = prefilled.trim()
+    if (!prefilled) { prefillFired.current = true; return }
+    prefillFired.current = true
+    if (outOfMessages) {
+      // Out of messages: surface the query in the input so the user
+      // sees what they came to ask and can upgrade / wait.
+      setInput(prefilled)
+      return
+    }
+    send(prefilled)
+  }, [state.loading, outOfMessages])
+
   async function switchConversation(targetId) {
     if (targetId === activeConversationId || sending || switchingConv) return
     setSwitchingConv(true)

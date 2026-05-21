@@ -48,6 +48,7 @@ import {
   TopPerformerCard, PostingConsistencyCard, BestTimeCard,
   TrackedLiftCard, DailyIdeasCard, TitleSuggestionCard,
   MissingDescriptionCard, MissingTagsCard, UnansweredCommentCard, TopSearchTermsCard,
+  PinnedAIInput,
   SuggestedCompetitorsCard, RelatedTrafficCard, CompetitorActivityCard,
 } from './dashboard/feedCards'
 import {
@@ -1875,6 +1876,16 @@ export default function Dashboard() {
                         {channelHealthBlock}
                       </div>
                     )}
+
+                    {/* Pinned AI input — sticky-bottom shortcut into ChatCoach.
+                        Always visible on the Feed regardless of filter so the
+                        user can ask the coach anything without leaving. */}
+                    <PinnedAIInput
+                      onAsk={(q) => {
+                        try { sessionStorage.setItem('chat_prefilledQuery', q) } catch {}
+                        setNav('Chat')
+                      }}
+                    />
                   </>
                 )
               })()}

@@ -2671,6 +2671,77 @@ export function MissingTagsCard({
   )
 }
 
+// Pinned AI input at the bottom of the Feed. Single line: text input +
+// brand-red Ask CTA. On submit, the consumer stashes the query in
+// sessionStorage and routes to Chat; ChatCoach reads it on mount and
+// auto-sends once its state has hydrated. Sticky-bottom inside .ov-page
+// so it stays visible as the user scrolls the Feed.
+export function PinnedAIInput({ onAsk }) {
+  const [value, setValue] = useState('')
+  const submit = () => {
+    const q = (value || '').trim()
+    if (!q) return
+    setValue('')
+    onAsk?.(q)
+  }
+  return (
+    <div style={{
+      position: 'sticky', bottom: 16, zIndex: 5,
+      marginTop: 18,
+      padding: '10px 12px',
+      background: 'linear-gradient(180deg, rgba(20,20,24,0.92) 0%, rgba(12,12,14,0.96) 100%)',
+      backdropFilter: 'blur(14px)',
+      border: '1px solid rgba(255,255,255,0.10)',
+      borderRadius: 14,
+      boxShadow: '0 4px 18px rgba(0,0,0,0.32), inset 0 1px 0 rgba(255,255,255,0.06)',
+      display: 'flex', alignItems: 'center', gap: 10,
+    }}>
+      <input
+        type="text"
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); submit() } }}
+        placeholder="How can I help you grow?"
+        aria-label="Ask the AI coach"
+        style={{
+          flex: 1,
+          background: 'transparent',
+          border: 'none', outline: 'none',
+          color: SHELL.text1,
+          fontFamily: 'inherit',
+          fontSize: 14, fontWeight: 450,
+          letterSpacing: '-0.05px',
+          padding: '6px 4px',
+        }}
+      />
+      <button
+        type="button"
+        onClick={submit}
+        disabled={!value.trim()}
+        style={{
+          display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+          padding: '8px 16px', borderRadius: 100,
+          border: 'none',
+          background: value.trim() ? '#e5251b' : 'rgba(255,255,255,0.08)',
+          color: '#fff',
+          fontFamily: 'inherit',
+          fontSize: 13, fontWeight: 600, letterSpacing: '-0.05px',
+          boxShadow: value.trim() ? '0 1px 3px rgba(229,37,27,0.28)' : 'none',
+          cursor: value.trim() ? 'pointer' : 'default',
+          opacity: value.trim() ? 1 : 0.6,
+          transition: 'filter 0.14s, transform 0.14s, background 0.2s, opacity 0.2s',
+          flexShrink: 0,
+        }}
+        onMouseEnter={(e) => { if (value.trim()) { e.currentTarget.style.filter = 'brightness(1.08)'; e.currentTarget.style.transform = 'translateY(-1px)' } }}
+        onMouseLeave={(e) => { e.currentTarget.style.filter = 'none'; e.currentTarget.style.transform = 'translateY(0)' }}
+      >
+        Ask
+        <ArrowRight size={13} strokeWidth={2.1} />
+      </button>
+    </div>
+  )
+}
+
 // Unanswered Comment card. Surfaces ONE real viewer comment from one of
 // the creator's recent videos that they haven't replied to, plus 3 AI
 // reply drafts. The "Post Reply" CTA hits /dashboard/post-comment-reply
