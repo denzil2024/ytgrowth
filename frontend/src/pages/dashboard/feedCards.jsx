@@ -3098,11 +3098,9 @@ export function TopSearchTermsCard({ items, refreshedAt, onResearch, onDismiss }
 }
 
 export function SuggestedCompetitorsCard({ suggestions, category, onTrack, onDismiss, onOpenAll }) {
-  // Show 2-3 suggestions. Lowered from "<3 -> hide" because for many
-  // creators (especially geographic or thin niches) the candidate pool
-  // is small after own-channel + already-tracked filtering. A single
-  // suggestion isn't enough to feel like a "list", but two is.
-  const top = (suggestions || []).slice(0, 3)
+  // Show up to 4 suggestions. Hide if fewer than 2 — a single tile feels
+  // empty and breaks the 4-up grid rhythm.
+  const top = (suggestions || []).slice(0, 4)
   if (top.length < 2) return null
 
   const subline = category
@@ -3141,97 +3139,97 @@ export function SuggestedCompetitorsCard({ suggestions, category, onTrack, onDis
         }}>{subline}</span>
       </div>
 
+      {/* 4-up vertical-tile grid: large circle avatar centered, channel
+          name + sub count below, Track button full-width at the bottom.
+          Drops to 2-up on tablet and 1-up on phone via auto-fit. */}
       <div style={{
         display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fill, minmax(190px, 1fr))',
-        gap: 10,
+        gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))',
+        gap: 12,
         marginBottom: 12,
       }}>
         {top.map((c, i) => {
           const subs = Number(c.subscribers || 0)
-          const subsLabel = subs > 0 ? `${fmtNum(subs)} subs` : ''
-          const handle = c.handle ? (c.handle.startsWith('@') ? c.handle : `@${c.handle}`) : ''
+          const subsLabel = subs > 0 ? `${fmtNum(subs)} subscribers` : ''
           return (
             <div
               key={c.channel_id || i}
               style={{
-                display: 'flex', flexDirection: 'column', gap: 10,
-                padding: '14px 14px 12px',
+                display: 'flex', flexDirection: 'column', alignItems: 'center',
+                gap: 10,
+                padding: '18px 12px 14px',
                 background: SHELL.cardFlat,
                 border: '1px solid rgba(255,255,255,0.08)',
-                borderRadius: 10,
+                borderRadius: 14,
                 transition: 'background 0.14s, border-color 0.14s, transform 0.14s',
               }}
               onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.02)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.14)'; e.currentTarget.style.transform = 'translateY(-1px)' }}
               onMouseLeave={e => { e.currentTarget.style.background = SHELL.cardFlat; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'; e.currentTarget.style.transform = 'translateY(0)' }}
             >
-              {/* Avatar row */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                {c.thumbnail ? (
-                  <img
-                    src={c.thumbnail}
-                    alt=""
-                    loading="lazy"
-                    onError={e => { e.currentTarget.style.visibility = 'hidden' }}
-                    style={{
-                      flexShrink: 0,
-                      width: 36, height: 36, borderRadius: 99,
-                      objectFit: 'cover',
-                      background: 'rgba(255,255,255,0.06)',
-                      border: '1px solid rgba(255,255,255,0.08)',
-                    }}
-                  />
-                ) : (
-                  <div style={{
-                    flexShrink: 0,
-                    width: 36, height: 36, borderRadius: 99,
+              {/* Large centered avatar */}
+              {c.thumbnail ? (
+                <img
+                  src={c.thumbnail}
+                  alt=""
+                  referrerPolicy="no-referrer"
+                  loading="lazy"
+                  onError={e => { e.currentTarget.style.visibility = 'hidden' }}
+                  style={{
+                    width: 72, height: 72, borderRadius: '50%',
+                    objectFit: 'cover',
                     background: 'rgba(255,255,255,0.06)',
-                    border: '1px solid rgba(255,255,255,0.08)',
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    color: SHELL.text3,
-                  }}>
-                    <Users size={15} strokeWidth={2} />
-                  </div>
-                )}
-                <div style={{ minWidth: 0, flex: 1 }}>
-                  <p style={{
-                    fontSize: 13, fontWeight: 600, color: SHELL.text1,
-                    letterSpacing: '-0.15px', lineHeight: 1.25,
-                    margin: 0,
-                    whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
-                  }}>{c.channel_name || 'Unknown channel'}</p>
-                  {(subsLabel || handle) && (
-                    <p style={{
-                      fontSize: 11.5, fontWeight: 500, color: SHELL.text3,
-                      letterSpacing: '-0.01em', lineHeight: 1.3,
-                      margin: '3px 0 0',
-                      whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
-                    }}>
-                      {[subsLabel, handle].filter(Boolean).join(' · ')}
-                    </p>
-                  )}
+                    border: '1px solid rgba(255,255,255,0.10)',
+                  }}
+                />
+              ) : (
+                <div style={{
+                  width: 72, height: 72, borderRadius: '50%',
+                  background: 'rgba(255,255,255,0.06)',
+                  border: '1px solid rgba(255,255,255,0.10)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  color: SHELL.text3,
+                }}>
+                  <Users size={28} strokeWidth={2} />
                 </div>
+              )}
+
+              {/* Name + sub count */}
+              <div style={{ width: '100%', minWidth: 0, textAlign: 'center' }}>
+                <p style={{
+                  fontSize: 14, fontWeight: 600, color: SHELL.text1,
+                  letterSpacing: '-0.15px', lineHeight: 1.25,
+                  margin: 0,
+                  overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+                }}>{c.channel_name || 'Unknown channel'}</p>
+                {subsLabel && (
+                  <p style={{
+                    fontSize: 12, fontWeight: 500, color: SHELL.text3,
+                    letterSpacing: '-0.01em', lineHeight: 1.3,
+                    margin: '4px 0 0',
+                  }}>{subsLabel}</p>
+                )}
               </div>
 
-              {/* Track CTA */}
+              {/* Full-width Track CTA at bottom */}
               <button
                 type="button"
                 onClick={() => onTrack?.(c)}
                 style={{
+                  width: '100%',
                   display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 5,
-                  padding: '7px 14px', borderRadius: 100,
+                  padding: '8px 14px', borderRadius: 100,
                   border: 'none', cursor: 'pointer',
                   background: '#e5251b', color: '#fff',
                   fontFamily: 'inherit',
-                  fontSize: 12, fontWeight: 600, letterSpacing: '-0.05px',
+                  fontSize: 12.5, fontWeight: 600, letterSpacing: '-0.05px',
                   boxShadow: '0 1px 3px rgba(229,37,27,0.28)',
                   transition: 'filter 0.14s, transform 0.14s',
+                  marginTop: 4,
                 }}
                 onMouseEnter={e => { e.currentTarget.style.filter = 'brightness(1.08)'; e.currentTarget.style.transform = 'translateY(-1px)' }}
                 onMouseLeave={e => { e.currentTarget.style.filter = 'none'; e.currentTarget.style.transform = 'translateY(0)' }}
               >
                 Track
-                <ArrowRight size={11} strokeWidth={2.4} />
               </button>
             </div>
           )

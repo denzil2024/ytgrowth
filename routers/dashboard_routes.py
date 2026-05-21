@@ -615,19 +615,13 @@ def suggested_competitors(request: Request):
     niche_kw = extract_niche_keywords(channel, videos) or []
     niche_kw_lower = [str(k).lower() for k in niche_kw]
 
-    # Build a WIDER pool of tokens to match against category seed terms.
-    # The original implementation only used the extracted niche_keywords,
-    # which for many channels are just "shorts/lifestyle/budget" — too
-    # generic to match any of the 14 curated categories. We now also
-    # consider:
-    #   - the channel name (e.g. "Life with Nthenya" -> ["life","nthenya"])
-    #   - the YouTube channel.keywords field (creator-declared niche)
-    #   - tokens from the user's top 5 videos by VIEWS (their actual hits)
-    # All deduped + lowercased + filtered to len > 3.
+    # Build a wider pool of tokens to match against category seed terms.
+    # Channel name + creator-declared channel.keywords + top 5 videos by
+    # VIEWS contribute alongside the extracted niche_keywords.
     import re as _re
     extra_tokens: set[str] = set()
     def _add(s: str):
-        for w in _re.split(r"[\s,/|·\-_:#@()\\[\\]]+", (s or "").lower()):
+        for w in _re.split(r"[\s,/|·\-_:#@()\[\]]+", (s or "").lower()):
             w = w.strip()
             if len(w) > 3 and not w.isdigit():
                 extra_tokens.add(w)
@@ -635,22 +629,54 @@ def suggested_competitors(request: Request):
     _add(channel.get("keywords") or "")
     for v in sorted(videos, key=lambda x: x.get("views", 0) or 0, reverse=True)[:5]:
         _add(v.get("title") or "")
-    match_tokens = list({*niche_kw_lower, *extra_tokens})
+    match_tokens = {*niche_kw_lower, *extra_tokens}
 
-    # Map this user's tokens to one of the 14 TopChannelCache categories
-    # by substring overlap with each category's seed query. If nothing
-    # scores, fall back to "vlogs" (broadest creator-style match) rather
-    # than returning empty — generic vlogger channels are still useful
-    # nudges for thin-niche channels.
+    # Generic words that appear in many seed queries but don't actually
+    # disambiguate the category (every YouTuber's metadata contains some
+    # of these). Strip them BEFORE scoring so e.g. "channel" or "youtube"
+    # in the user's keywords no longer drags them into Gaming.
+    _GENERIC_SEED_WORDS = {
+        "youtube", "channel", "videos", "video", "shows", "show",
+        "artist", "daily",  # "daily" appears in vlogs + news; ambiguous
+    }
+
+    # Category-specific terms with generic words stripped, plus an
+    # explicit alias map for niches whose dominant search phrasing
+    # doesn't appear in the original seed query. Lifestyle vloggers
+    # tend to put "lifestyle" / "vlog" / "tour" / "haul" in their
+    # metadata more than "daily" — add those to the vlogs aliases.
+    _CATEGORY_ALIASES = {
+        "vlogs":         ["vlog", "vlogger", "lifestyle", "haul", "tour", "apartment", "routine", "grwm"],
+        "cooking":       ["recipe", "kitchen", "meal", "dinner", "breakfast", "lunch"],
+        "beauty":        ["skincare", "lipstick", "eyeshadow", "foundation", "grwm"],
+        "travel":        ["vlog", "tour", "trip", "destination"],
+        "fitness":       ["gym", "training", "weightloss", "abs", "cardio"],
+        "tech":          ["review", "unboxing", "gadget", "smartphone", "laptop"],
+        "finance":       ["money", "stocks", "investing", "crypto", "budget"],
+        "gaming":        ["gamer", "gameplay", "playthrough", "speedrun"],
+        "comedy":        ["funny", "skit", "prank"],
+        "music":         ["song", "cover", "remix", "album"],
+        "education":     ["explained", "tutorial", "lesson", "course", "history"],
+        "sports":        ["highlight", "match", "league", "team"],
+        "entertainment": ["reaction", "interview", "celebrity"],
+        "news":          ["breaking", "headlines", "report"],
+    }
+
+    def _cat_terms(cat, query):
+        seed_terms = [t for t in query.lower().split() if len(t) > 2 and t not in _GENERIC_SEED_WORDS]
+        aliases    = _CATEGORY_ALIASES.get(cat, [])
+        return list({*seed_terms, *aliases})
+
+    # Word-equality match (not substring). "channel" in the user's
+    # tokens used to score for Gaming via substring; now it only scores
+    # if the user has an exact-word match like "gaming" or "gamer".
     best_cat = None
     best_score = 0
+    cat_scores = {}
     for cat, query in CATEGORY_QUERIES.items():
-        terms = [t for t in query.lower().split() if len(t) > 2]
-        score = 0
-        for kw in match_tokens:
-            for term in terms:
-                if term in kw or kw in term:
-                    score += 1
+        terms = _cat_terms(cat, query)
+        score = sum(1 for term in terms if term in match_tokens)
+        cat_scores[cat] = score
         if score > best_score:
             best_score = score
             best_cat = cat
@@ -746,12 +772,22 @@ def suggested_competitors(request: Request):
             key=lambda x: (-x["score"], -x["subscribers"]),
         )[:8]
 
-        return JSONResponse({
+        payload = {
             "ok":          True,
             "suggestions": ordered,
             "category":    best_cat,
             "niche_keywords": niche_kw[:5],
-        })
+        }
+        if request.query_params.get("debug") == "1":
+            payload["_debug"] = {
+                "channel_id_suffix": my_id[-10:] if my_id else "",
+                "extra_tokens":      sorted(extra_tokens)[:30],
+                "match_tokens":      sorted(match_tokens)[:40],
+                "cat_scores":        cat_scores,
+                "best_cat":          best_cat,
+                "best_score":        best_score,
+            }
+        return JSONResponse(payload)
     finally:
         db.close()
 
