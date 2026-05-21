@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import {
   Gift,
   LogOut,
@@ -1243,76 +1243,6 @@ export default function Dashboard() {
                 </div>
               )}
 
-              {/* Filter pills — All | Actions | Insights | Achievements.
-                  Each tab's count is the number of cards that will actually
-                  render under it (mirrors each block's data + dismiss
-                  check). Keep this in sync if you add or remove a card.
-                  topPerformerBlock is intentionally not counted: it was
-                  merged into Title Suggestion (see line ~1870) and no
-                  longer renders independently. */}
-              {(() => {
-                const cid = data?.channel?.channel_id || 'x'
-                const isDismissed = (key) => {
-                  try { return !!localStorage.getItem(key) } catch { return false }
-                }
-
-                const openPriorityCount = (() => {
-                  const all = data?.insights?.priorityActions || []
-                  let n = 0
-                  for (let i = 0; i < all.length; i++) {
-                    const a = all[i]
-                    const rank = a.rank ?? (i + 1)
-                    const k = `rank_${rank}`
-                    if (!checked[k] && !deleted[k]) n += 1
-                  }
-                  return n
-                })()
-
-                const m = milestones?.earned?.[0]
-                const SHOW_FOR = 30 * 24 * 60 * 60 * 1000
-                const milestoneFresh = !!m && m.earned_at && (Date.now() - new Date(m.earned_at).getTime() <= SHOW_FOR)
-                const tlw = trackedLift?.top
-
-                const actionsCards = [
-                  openPriorityCount > 0,
-                  !!(dailyIdeas?.ideas?.length > 0) && !isDismissed(`ytg_daily_ideas_dismissed:${cid}`),
-                  !!(unansweredComment?.comment && unansweredComment?.replies?.length) && !isDismissed(`ytg_unanswered_comment_dismissed:${cid}:${unansweredComment?.comment?.comment_id || 'x'}`),
-                  !!(titleSuggestion?.video && titleSuggestion?.suggestions?.length) && !isDismissed(`ytg_title_suggestion_dismissed_v5:${cid}:${titleSuggestion?.video?.video_id || 'x'}`),
-                  !!(missingTags?.video && missingTags?.tag_sets?.length) && !isDismissed(`ytg_missing_tags_dismissed:${cid}:${missingTags?.video?.video_id || 'x'}`),
-                  !!(missingDescription?.video && missingDescription?.drafts?.length) && !isDismissed(`ytg_missing_description_dismissed:${cid}:${missingDescription?.video?.video_id || 'x'}`),
-                ]
-
-                const insightsCards = [
-                  true, // NicheHeroCard always renders (skeleton / empty fallback)
-                  !!(suggestedCompetitors?.suggestions?.length >= 2) && !isDismissed(`ytg_suggested_competitors_dismissed:${cid}`),
-                  !!topSearchTerms?.items?.length && !isDismissed(`ytg_top_search_terms_dismissed:${cid}`),
-                  !!relatedTraffic && !isDismissed(`ytg_related_traffic_dismissed_v2:${cid}`),
-                  !!(competitorActivity?.items?.length > 0) && !isDismissed(`ytg_competitor_activity_dismissed:${cid}`),
-                  !!(videos && videos.length > 0) && !isDismissed(`ytg_posting_consistency_dismissed:${cid}`),
-                  !!(videos && videos.length >= 5) && !isDismissed(`ytg_best_time_dismissed:${cid}`),
-                  !!(patterns || data.insights), // ChannelHealth card (no dismiss)
-                ]
-
-                const achievementsCards = [
-                  milestoneFresh && !isDismissed(`ytg_milestone_dismissed:${cid}:${m?.category}:${m?.tier}`),
-                  !!tlw && !isDismissed(`ytg_tracked_lift_dismissed:${cid}:${tlw.video_id}:${tlw.optimized_at}`),
-                ]
-
-                const counts = {
-                  all: null,
-                  actions: actionsCards.filter(Boolean).length,
-                  insights: insightsCards.filter(Boolean).length,
-                  achievements: achievementsCards.filter(Boolean).length,
-                }
-                return (
-                  <FeedFilterPills
-                    value={feedFilter}
-                    counts={counts}
-                    onChange={setFeedFilterPersist}
-                  />
-                )
-              })()}
-
               {/* ── FEED CARD STREAM ──────────────────────────────────────
                   Restructured into 5 themed sections under H2 headers
                   ("What to do next", "Recent wins", "Your niche", "How
@@ -1336,7 +1266,7 @@ export default function Dashboard() {
                 // Each row shows just the action verb (action.action, ~1
                 // sentence) - the long analytical problem text is now only
                 // visible when the row is expanded.
-                const priorityActionsBlock = (feedFilter === 'all' || feedFilter === 'actions') && data.insights?.priorityActions ? (() => {
+                const priorityActionsBlock = data.insights?.priorityActions ? (() => {
                   const all = data.insights.priorityActions
                   const open = []
                   for (let i = 0; i < all.length; i++) {
@@ -1383,7 +1313,7 @@ export default function Dashboard() {
                   )
                 })() : null
 
-                const dailyIdeasBlock = (feedFilter === 'all' || feedFilter === 'actions') && dailyIdeas?.ideas?.length > 0 ? (() => {
+                const dailyIdeasBlock = dailyIdeas?.ideas?.length > 0 ? (() => {
                   const dismissKey = `ytg_daily_ideas_dismissed:${data?.channel?.channel_id || 'x'}`
                   try { if (localStorage.getItem(dismissKey)) return null } catch {}
                   return (
@@ -1419,7 +1349,7 @@ export default function Dashboard() {
                 })() : null
 
                 // ── RECENT WINS blocks ──
-                const milestoneBlock = (feedFilter === 'all' || feedFilter === 'achievements') && milestones?.earned?.[0] ? (() => {
+                const milestoneBlock = milestones?.earned?.[0] ? (() => {
                   const m = milestones.earned[0]
                   const earnedAt = m.earned_at ? new Date(m.earned_at).getTime() : 0
                   const ageMs = Date.now() - earnedAt
@@ -1449,7 +1379,7 @@ export default function Dashboard() {
                   )
                 })() : null
 
-                const topPerformerBlock = (feedFilter === 'all' || feedFilter === 'achievements') && patterns?.bestVideo ? (() => {
+                const topPerformerBlock = patterns?.bestVideo ? (() => {
                   const totalV = videos?.reduce((s, v) => s + (v.views || 0), 0) || 0
                   const avgV = videos?.length > 0 ? totalV / videos.length : 0
                   const dismissKey = `ytg_top_perf_dismissed:${data?.channel?.channel_id || 'x'}:${patterns.bestVideo.video_id || patterns.bestVideo.title}`
@@ -1470,7 +1400,7 @@ export default function Dashboard() {
                   )
                 })() : null
 
-                const trackedLiftBlock = (feedFilter === 'all' || feedFilter === 'achievements') && trackedLift && trackedLift.top ? (() => {
+                const trackedLiftBlock = trackedLift && trackedLift.top ? (() => {
                   const w = trackedLift.top
                   const dismissKey = `ytg_tracked_lift_dismissed:${data?.channel?.channel_id || 'x'}:${w.video_id}:${w.optimized_at}`
                   try { if (localStorage.getItem(dismissKey)) return null } catch {}
@@ -1488,7 +1418,7 @@ export default function Dashboard() {
                 })() : null
 
                 // ── YOUR NICHE blocks ──
-                const nicheHeroBlock = (feedFilter === 'all' || feedFilter === 'insights') ? (
+                const nicheHeroBlock = (
                   <NicheHeroCard
                     key="nichehero"
                     channelId={data?.channel?.channel_id}
@@ -1503,9 +1433,9 @@ export default function Dashboard() {
                       setNav('SEO Studio')
                     }}
                   />
-                ) : null
+                )
 
-                const titleSuggestionBlock = (feedFilter === 'all' || feedFilter === 'actions') && titleSuggestion?.video && titleSuggestion?.suggestions?.length ? (() => {
+                const titleSuggestionBlock = titleSuggestion?.video && titleSuggestion?.suggestions?.length ? (() => {
                   const dismissKey = `ytg_title_suggestion_dismissed_v5:${data?.channel?.channel_id || 'x'}:${titleSuggestion.video.video_id || 'x'}`
                   try { if (localStorage.getItem(dismissKey)) return null } catch {}
                   return (
@@ -1554,7 +1484,7 @@ export default function Dashboard() {
                   )
                 })() : null
 
-                const unansweredCommentBlock = (feedFilter === 'all' || feedFilter === 'actions') && unansweredComment?.comment && unansweredComment?.replies?.length ? (() => {
+                const unansweredCommentBlock = unansweredComment?.comment && unansweredComment?.replies?.length ? (() => {
                   const dismissKey = `ytg_unanswered_comment_dismissed:${data?.channel?.channel_id || 'x'}:${unansweredComment.comment.comment_id || 'x'}`
                   try { if (localStorage.getItem(dismissKey)) return null } catch {}
                   return (
@@ -1598,7 +1528,7 @@ export default function Dashboard() {
                   )
                 })() : null
 
-                const missingTagsBlock = (feedFilter === 'all' || feedFilter === 'actions') && missingTags?.video && missingTags?.tag_sets?.length ? (() => {
+                const missingTagsBlock = missingTags?.video && missingTags?.tag_sets?.length ? (() => {
                   const dismissKey = `ytg_missing_tags_dismissed:${data?.channel?.channel_id || 'x'}:${missingTags.video.video_id || 'x'}`
                   try { if (localStorage.getItem(dismissKey)) return null } catch {}
                   return (
@@ -1641,7 +1571,7 @@ export default function Dashboard() {
                   )
                 })() : null
 
-                const missingDescriptionBlock = (feedFilter === 'all' || feedFilter === 'actions') && missingDescription?.video && missingDescription?.drafts?.length ? (() => {
+                const missingDescriptionBlock = missingDescription?.video && missingDescription?.drafts?.length ? (() => {
                   const dismissKey = `ytg_missing_description_dismissed:${data?.channel?.channel_id || 'x'}:${missingDescription.video.video_id || 'x'}`
                   try { if (localStorage.getItem(dismissKey)) return null } catch {}
                   return (
@@ -1684,7 +1614,7 @@ export default function Dashboard() {
                   )
                 })() : null
 
-                const suggestedCompetitorsBlock = (feedFilter === 'all' || feedFilter === 'insights') && suggestedCompetitors?.suggestions?.length >= 2 ? (() => {
+                const suggestedCompetitorsBlock = suggestedCompetitors?.suggestions?.length >= 2 ? (() => {
                   const dismissKey = `ytg_suggested_competitors_dismissed:${data?.channel?.channel_id || 'x'}`
                   try { if (localStorage.getItem(dismissKey)) return null } catch {}
                   return (
@@ -1712,7 +1642,7 @@ export default function Dashboard() {
                   )
                 })() : null
 
-                const topSearchTermsBlock = (feedFilter === 'all' || feedFilter === 'insights') && topSearchTerms?.items?.length ? (() => {
+                const topSearchTermsBlock = topSearchTerms?.items?.length ? (() => {
                   const dismissKey = `ytg_top_search_terms_dismissed:${data?.channel?.channel_id || 'x'}`
                   try { if (localStorage.getItem(dismissKey)) return null } catch {}
                   return (
@@ -1734,7 +1664,7 @@ export default function Dashboard() {
                   )
                 })() : null
 
-                const relatedTrafficBlock = (feedFilter === 'all' || feedFilter === 'insights') && relatedTraffic ? (() => {
+                const relatedTrafficBlock = relatedTraffic ? (() => {
                   // Dismiss key bumped to v2 so any leftover dismissals
                   // from the previous render-only-when-populated version
                   // don't keep the new card hidden.
@@ -1768,7 +1698,7 @@ export default function Dashboard() {
                   )
                 })() : null
 
-                const competitorActivityBlock = (feedFilter === 'all' || feedFilter === 'insights') && competitorActivity?.items?.length > 0 ? (() => {
+                const competitorActivityBlock = competitorActivity?.items?.length > 0 ? (() => {
                   const dismissKey = `ytg_competitor_activity_dismissed:${data?.channel?.channel_id || 'x'}`
                   try { if (localStorage.getItem(dismissKey)) return null } catch {}
                   return (
@@ -1794,7 +1724,7 @@ export default function Dashboard() {
                 })() : null
 
                 // ── HOW YOU PUBLISH blocks ──
-                const postingConsistencyBlock = (feedFilter === 'all' || feedFilter === 'insights') && videos && videos.length > 0 ? (() => {
+                const postingConsistencyBlock = videos && videos.length > 0 ? (() => {
                   const dismissKey = `ytg_posting_consistency_dismissed:${data?.channel?.channel_id || 'x'}`
                   try { if (localStorage.getItem(dismissKey)) return null } catch {}
                   return (
@@ -1808,7 +1738,7 @@ export default function Dashboard() {
                   )
                 })() : null
 
-                const bestTimeBlock = (feedFilter === 'all' || feedFilter === 'insights') && videos && videos.length >= 5 ? (() => {
+                const bestTimeBlock = videos && videos.length >= 5 ? (() => {
                   const dismissKey = `ytg_best_time_dismissed:${data?.channel?.channel_id || 'x'}`
                   try { if (localStorage.getItem(dismissKey)) return null } catch {}
                   return (
@@ -1823,7 +1753,7 @@ export default function Dashboard() {
                 })() : null
 
                 // ── CHANNEL HEALTH block (full row) ──
-                const channelHealthBlock = (feedFilter === 'all' || feedFilter === 'insights') && (patterns || data.insights) ? (
+                const channelHealthBlock = (patterns || data.insights) ? (
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, alignItems: 'stretch' }}>
                     {patterns && (
                       <ContentMixFeedCard
@@ -1891,55 +1821,57 @@ export default function Dashboard() {
                   </div>
                 ) : null
 
-                const hasHowYouPublish = postingConsistencyBlock || bestTimeBlock
+                // ── FEED REGISTRY ──────────────────────────────────
+                // Single source of truth for which category each card
+                // belongs to. The render order below is also the All
+                // tab's visual order. Filtering by tab is a pure
+                // projection of this list — Insights tab = entries
+                // with category 'insights' that have data, Actions
+                // tab = category 'actions' with data, etc. Add a new
+                // card by appending one line.
+                // topPerformerBlock is omitted intentionally: merged
+                // into Title Suggestion card.
+                const FEED = [
+                  { category: 'actions',      block: priorityActionsBlock },
+                  { category: 'actions',      block: dailyIdeasBlock },
+                  { category: 'actions',      block: titleSuggestionBlock },
+                  { category: 'actions',      block: missingDescriptionBlock },
+                  { category: 'actions',      block: missingTagsBlock },
+                  { category: 'actions',      block: unansweredCommentBlock },
+                  { category: 'achievements', block: milestoneBlock },
+                  { category: 'achievements', block: trackedLiftBlock },
+                  { category: 'insights',     block: nicheHeroBlock },
+                  { category: 'insights',     block: suggestedCompetitorsBlock },
+                  { category: 'insights',     block: topSearchTermsBlock },
+                  { category: 'insights',     block: relatedTrafficBlock },
+                  { category: 'insights',     block: competitorActivityBlock },
+                  { category: 'insights',     block: postingConsistencyBlock },
+                  { category: 'insights',     block: bestTimeBlock },
+                  { category: 'insights',     block: channelHealthBlock },
+                ]
 
-                // VidIQ-style continuous Feed. Each card carries its own
-                // eyebrow (category + age + dismiss), so the section-level
-                // H2 buckets ("What to do next", "Recent wins", "Your niche",
-                // "Channel health") are gone. "How you publish" is the lone
-                // retained section head — deliberate editorial emphasis on
-                // the publishing-rhythm cards.
+                const counts = {
+                  all: null,
+                  actions:      FEED.filter(i => i.category === 'actions'      && i.block).length,
+                  insights:     FEED.filter(i => i.category === 'insights'     && i.block).length,
+                  achievements: FEED.filter(i => i.category === 'achievements' && i.block).length,
+                }
+
+                const visible = FEED.filter(i => i.block && (feedFilter === 'all' || i.category === feedFilter))
+
                 return (
                   <>
+                    <FeedFilterPills
+                      value={feedFilter}
+                      counts={counts}
+                      onChange={setFeedFilterPersist}
+                    />
+
                     <div className="ov-stack">
-                      {/* Actions — things to do now. Match the filter-pill
-                          'Actions' bucket exactly so switching tabs reads
-                          as one coherent block. */}
-                      {priorityActionsBlock}
-                      {dailyIdeasBlock}
-                      {titleSuggestionBlock}
-                      {missingDescriptionBlock}
-                      {missingTagsBlock}
-                      {unansweredCommentBlock}
-
-                      {/* Achievements — recent wins. Brief positive break
-                          between work and exploration.
-                          topPerformerBlock removed: merged into Title
-                          Suggestion card. */}
-                      {milestoneBlock}
-                      {trackedLiftBlock}
-
-                      {/* Insights — context and exploration. Niche outlier
-                          leads as the visual centerpiece. */}
-                      {nicheHeroBlock}
-                      {suggestedCompetitorsBlock}
-                      {topSearchTermsBlock}
-                      {relatedTrafficBlock}
-                      {competitorActivityBlock}
+                      {visible.map((item, idx) => (
+                        <Fragment key={idx}>{item.block}</Fragment>
+                      ))}
                     </div>
-
-                    {hasHowYouPublish && (
-                      <div className="ov-stack" style={{ marginTop: 12 }}>
-                        {postingConsistencyBlock}
-                        {bestTimeBlock}
-                      </div>
-                    )}
-
-                    {channelHealthBlock && (
-                      <div style={{ marginTop: 12 }}>
-                        {channelHealthBlock}
-                      </div>
-                    )}
 
                     {/* Pinned AI input — sticky-bottom shortcut into ChatCoach.
                         Always visible on the Feed regardless of filter so the
