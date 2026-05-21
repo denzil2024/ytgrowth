@@ -112,27 +112,23 @@ export function FeedCard({
         e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'
       }}
     >
+      {/* Uniform header: h3 title in 16/600 (matching Add Description and
+          Title Suggestion). Icon circle dropped so every Feed card reads
+          as one design system. Age sits next to the title; rightSlot and
+          dismiss stay at the far right. */}
       <div style={{
-        display: 'flex', alignItems: 'center', gap: 9,
-        marginBottom: 10,
+        display: 'flex', alignItems: 'center', gap: 10,
+        marginBottom: 12,
       }}>
-        <span style={{
-          flexShrink: 0,
-          width: 24, height: 24, borderRadius: 7,
-          display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-          background: iconBg,
-          color: iconColor,
-        }}>
-          <Icon size={13} strokeWidth={2.1} />
-        </span>
-        <span style={{
-          fontSize: 11, fontWeight: 600, color: SHELL.text2,
-          letterSpacing: '0.10em', textTransform: 'uppercase',
-        }}>{category}</span>
+        <h3 style={{
+          fontSize: 16, fontWeight: 600, color: SHELL.text1,
+          letterSpacing: '-0.2px', lineHeight: 1.3, margin: 0,
+        }}>{category}</h3>
         {age && (
-          <span style={{ fontSize: 11, color: SHELL.text3, fontWeight: 500, letterSpacing: '-0.01em' }}>
-            · {age}
-          </span>
+          <span style={{
+            fontSize: 12.5, fontWeight: 450, color: SHELL.text3,
+            letterSpacing: '-0.01em',
+          }}>· {age}</span>
         )}
         <div style={{ flex: 1 }}/>
         {rightSlot}
@@ -3279,7 +3275,8 @@ export function SuggestedCompetitorsCard({ suggestions, category, onTrack, onDis
 // red "N views to you" pill. Click anywhere on a tile opens the video
 // on YouTube in a new tab.
 export function RelatedTrafficCard({ items, ageLabel, reason, rawSourceCount, onOpen, onDismiss }) {
-  const top = (items || []).slice(0, 6)
+  // Limited to 3 for visual uniformity with other Feed cards (was 6).
+  const top = (items || []).slice(0, 3)
   // Empty-state explainer. Renders the card head with a clear "why
   // nothing showed" message instead of silently disappearing.
   const reasonCopy = top.length === 0 ? (() => {
@@ -3361,10 +3358,11 @@ export function RelatedTrafficCard({ items, ageLabel, reason, rawSourceCount, on
         }}>{reasonCopy}</div>
       )}
 
-      {/* 2-up grid (auto-fill, collapses to 1-up on narrow widths) */}
+      {/* 3-up grid (auto-fit, collapses to 1-up on narrow widths). Slice
+          is capped at 3 above so the grid never has trailing empty cells. */}
       {top.length > 0 && <div style={{
         display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
         gap: 14,
       }}>
         {top.map((it, i) => {

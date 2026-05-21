@@ -1859,16 +1859,10 @@ export default function Dashboard() {
                     </div>
 
                     {hasHowYouPublish && (
-                      <>
-                        <div className="ov-section-head">
-                          <h2>How you publish</h2>
-                          <span className="ov-section-meta">28-day rhythm</span>
-                        </div>
-                        <div className="ov-stack">
-                          {postingConsistencyBlock}
-                          {bestTimeBlock}
-                        </div>
-                      </>
+                      <div className="ov-stack" style={{ marginTop: 12 }}>
+                        {postingConsistencyBlock}
+                        {bestTimeBlock}
+                      </div>
                     )}
 
                     {channelHealthBlock && (
