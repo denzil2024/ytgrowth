@@ -205,19 +205,15 @@ function InteractiveBundleCard({ bundle, channelId, onDismiss, onOpenSeoStudio, 
 
   return (
     <section className="nh-section">
-      {/* Header row */}
-      <div className="nh-section-head">
-        <span className="nh-section-title">
-          <span className="nh-dot" style={{ background: C.red }} />
-          Niche Outlier
-        </span>
-        <span className="nh-section-age">· {refreshedAge}</span>
-        <div className="nh-section-spacer" />
-        {/* No dismiss X — this is a core feature, not a notification. A
-            user can't dismiss it the way they dismiss a Priority Action. */}
-      </div>
-
       <article className="nh-card">
+        {/* Uniform header: title in 16/600, age in 12.5/450, matching the
+            Feed card chassis. No dismiss X — this is a core feature, not
+            a notification. */}
+        <div className="nh-card-head">
+          <h3 className="nh-card-title">Niche Outlier</h3>
+          <span className="nh-card-age">· {refreshedAge}</span>
+        </div>
+
         {/* Pill row */}
         <div className="nh-pills">
           {tabs.map(t => (
@@ -474,17 +470,11 @@ function LegacySingleCard({ data, onDismiss, onNavigate }) {
   const v = data.outlier || {}
   return (
     <section className="nh-section">
-      <div className="nh-section-head">
-        <span className="nh-section-title">
-          <span className="nh-dot" style={{ background: C.red }} />
-          Niche Outlier
-        </span>
-        <span className="nh-section-age">· {relAge(v.refreshed_at) || 'this week'}</span>
-        <div className="nh-section-spacer" />
-        {/* No dismiss X — Niche Outlier is a core feature, not a
-            notification users should be able to delete by accident. */}
-      </div>
       <article className="nh-card">
+        <div className="nh-card-head">
+          <h3 className="nh-card-title">Niche Outlier</h3>
+          <span className="nh-card-age">· {relAge(v.refreshed_at) || 'this week'}</span>
+        </div>
         <VideoFeatured v={{ ...v, outlier_mult: v.outlier_mult || v.sub_ratio }} onOpenSeoStudio={null} />
         <div className="nh-card-foot">
           <p className="nh-foot-hint">Want more? Run a targeted search.</p>
@@ -510,10 +500,10 @@ function LegacySingleCard({ data, onDismiss, onNavigate }) {
 function SectionSkeleton() {
   return (
     <section className="nh-section">
-      <div className="nh-section-head">
-        <span className="nh-sk" style={{ width: 180, height: 14, borderRadius: 6 }} />
-      </div>
       <article className="nh-card">
+        <div className="nh-card-head">
+          <span className="nh-sk" style={{ width: 180, height: 14, borderRadius: 6 }} />
+        </div>
         <div className="nh-feat">
           <div className="nh-sk" style={{ width: 220, aspectRatio: '16/9', borderRadius: 10, flexShrink: 0 }} />
           <div style={{ flex: 1 }}>
@@ -537,13 +527,10 @@ function EmptyOutlier({ reason, onNavigate }) {
   if (noOutliersYet) {
     return (
       <section className="nh-section">
-        <div className="nh-section-head">
-          <span className="nh-section-title">
-            <span className="nh-dot" style={{ background: C.red }} />
-            Niche Outlier
-          </span>
-        </div>
         <article className="nh-card">
+          <div className="nh-card-head">
+            <h3 className="nh-card-title">Niche Outlier</h3>
+          </div>
           <p className="nh-eyebrow">Unlock this card</p>
           <p className="nh-suggested-title" style={{ fontSize: 15, marginBottom: 10 }}>
             Run Outliers once and we will pin the strongest videos, thumbnails, and breakout
@@ -573,13 +560,10 @@ function EmptyOutlier({ reason, onNavigate }) {
 
   return (
     <section className="nh-section">
-      <div className="nh-section-head">
-        <span className="nh-section-title">
-          <span className="nh-dot" style={{ background: C.red }} />
-          Niche Outlier
-        </span>
-      </div>
       <article className="nh-card">
+        <div className="nh-card-head">
+          <h3 className="nh-card-title">Niche Outlier</h3>
+        </div>
         <div className="nh-empty-row">
           <div className="nh-spin" />
           <div>
@@ -604,25 +588,19 @@ function EmptyOutlier({ reason, onNavigate }) {
 const styles = `
 .nh-section { margin-bottom: 16px; }
 
-.nh-section-head {
-  display: flex; align-items: center; gap: 6px;
-  margin: 0 4px 10px 4px;
-  min-height: 22px;
+.nh-card-head {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 12px;
 }
-.nh-section-title {
-  display: inline-flex; align-items: center; gap: 8px;
-  font-size: 13.5px; font-weight: 600; color: ${C.text1};
-  letter-spacing: -0.2px;
+.nh-card-title {
+  font-size: 16px; font-weight: 600; color: ${C.text1};
+  letter-spacing: -0.2px; line-height: 1.3;
+  margin: 0;
 }
-.nh-dot {
-  width: 7px; height: 7px; border-radius: 50%;
-  display: inline-block; flex-shrink: 0;
+.nh-card-age {
+  font-size: 12.5px; font-weight: 450; color: ${C.text3};
+  letter-spacing: -0.01em;
 }
-.nh-section-age {
-  font-size: 12px; color: ${C.text3}; font-weight: 500;
-  letter-spacing: -0.1px;
-}
-.nh-section-spacer { flex: 1; }
 .nh-x {
   width: 22px; height: 22px; border-radius: 6px;
   border: none; background: transparent;
