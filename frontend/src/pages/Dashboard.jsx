@@ -1126,7 +1126,28 @@ export default function Dashboard() {
                 )
 
                 return (
-                  <div className="ov-hero-strip">
+                  <article style={{
+                    background: SHELL.cardFlat,
+                    border: '1px solid rgba(255,255,255,0.08)',
+                    borderRadius: 14,
+                    padding: '14px 18px 16px 18px',
+                    boxShadow: '0 1px 2px rgba(255,255,255,0.04), 0 6px 18px rgba(255,255,255,0.05), inset 0 1px 0 rgba(255,255,255,0.7)',
+                    marginBottom: 28,
+                  }}>
+                    {/* Uniform 16/600 title inside the card — matches Add
+                        Description / Title Suggestion chassis. */}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
+                      <h3 style={{
+                        fontSize: 16, fontWeight: 600, color: SHELL.text1,
+                        letterSpacing: '-0.2px', lineHeight: 1.3, margin: 0,
+                      }}>Channel Snapshot</h3>
+                      <span style={{
+                        fontSize: 12.5, fontWeight: 450, color: SHELL.text3,
+                        letterSpacing: '-0.01em',
+                      }}>· {data.channel.channel_name || 'your channel'}</span>
+                    </div>
+
+                    <div className="ov-hero-strip" style={{ marginBottom: 0 }}>
 
                     {/* Tile 1: Subscribers + 90d delta + milestone bar */}
                     <div className="ov-hero-tile">
@@ -1204,7 +1225,8 @@ export default function Dashboard() {
                       </div>
                     </div>
 
-                  </div>
+                    </div>
+                  </article>
                 )
               })()}
 
