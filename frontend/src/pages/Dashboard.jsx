@@ -3573,9 +3573,20 @@ function DailyIdeasCard({ ideas, lastUpdated, isStale, isFree, refreshing, onRef
 // hits the actual Track button there (which IS the analyze call). This
 // avoids surprise credit burn from a one-click track on the Feed.
 function TitleSuggestionCard({ video, suggestions, ageLabel, applyingIdx, appliedIdx, applyError, onApply, onOpenStudio, onDismiss }) {
+  const [activeIdx, setActiveIdx] = useState(0)
   if (!video || !suggestions?.length) return null
   const thumbAspect = video.is_short ? '9 / 16' : '16 / 9'
   const thumbWidth  = video.is_short ? 150 : 280
+  const idx     = Math.max(0, Math.min(suggestions.length - 1, activeIdx))
+  const focused = suggestions[idx]
+  const score   = Math.max(0, Math.min(100, Math.round(Number(focused?.score || 0))))
+  const tone    = score >= 80 ? { bg: 'rgba(22,163,74,0.16)',  text: '#34d27b', bdr: 'rgba(22,163,74,0.32)' }
+                : score >= 50 ? { bg: 'rgba(217,118,6,0.16)',  text: '#f0a23b', bdr: 'rgba(217,118,6,0.32)' }
+                :                { bg: 'rgba(229,37,27,0.13)', text: '#fb6a60', bdr: 'rgba(229,37,27,0.32)' }
+  const isApplying = applyingIdx === idx
+  const isApplied  = appliedIdx  === idx
+  const ctaLabel   = isApplied ? 'Applied to YouTube' : isApplying ? 'Applying…' : 'Apply Title'
+  const canCycle   = suggestions.length > 1
 
   return (
     <article style={{
@@ -3619,23 +3630,25 @@ function TitleSuggestionCard({ video, suggestions, ageLabel, applyingIdx, applie
         )}
       </div>
 
+      {/* Inset compare panel: HD thumb LEFT, current → rewrite stack RIGHT */}
       <div style={{
         display: 'flex',
-        gap: 16,
-        alignItems: 'flex-start',
+        gap: 18,
+        alignItems: 'stretch',
         padding: 14,
         background: 'rgba(255,255,255,0.02)',
         border: '1px solid rgba(255,255,255,0.06)',
         borderRadius: 12,
-        marginBottom: 12,
+        marginBottom: 14,
       }}>
         <div style={{ flexShrink: 0, width: thumbWidth }}>
-          {video.thumbnail ? (
+          {(video.video_id || video.thumbnail) ? (
             <img
-              src={video.thumbnail}
+              src={ytMaxThumbUrl(video.video_id) || video.thumbnail}
               alt=""
               loading="lazy"
-              onError={e => { e.currentTarget.style.visibility = 'hidden' }}
+              onLoad={makeThumbOnLoad(video.video_id, video.thumbnail)}
+              onError={makeThumbOnError(video.video_id, video.thumbnail)}
               style={{
                 display: 'block',
                 width: '100%', aspectRatio: thumbAspect,
@@ -3653,103 +3666,142 @@ function TitleSuggestionCard({ video, suggestions, ageLabel, applyingIdx, applie
               border: '1px solid rgba(255,255,255,0.08)',
             }}/>
           )}
-          <p style={{
-            margin: '8px 0 0',
-            fontSize: 12, fontWeight: 600, color: SHELL.text2,
-            letterSpacing: '-0.01em', lineHeight: 1.35,
-            display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical',
-            overflow: 'hidden', textOverflow: 'ellipsis',
-          }}>{video.title}</p>
         </div>
 
-        <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: 10 }}>
-          {suggestions.map((s, i) => {
-            const score = Math.max(0, Math.min(100, Math.round(Number(s.score || 0))))
-            const tone  = score >= 80 ? { bg: 'rgba(22,163,74,0.16)',  text: '#34d27b', bdr: 'rgba(22,163,74,0.32)' }
-                        : score >= 50 ? { bg: 'rgba(217,118,6,0.16)',  text: '#f0a23b', bdr: 'rgba(217,118,6,0.32)' }
-                        :                { bg: 'rgba(229,37,27,0.13)', text: '#fb6a60', bdr: 'rgba(229,37,27,0.32)' }
-            const isApplying = applyingIdx === i
-            const isApplied  = appliedIdx  === i
-            const ctaLabel   = isApplied ? 'Applied' : isApplying ? 'Applying…' : 'Apply'
-            return (
-              <div key={i} style={{
-                display: 'flex', alignItems: 'center', gap: 12,
-                padding: '10px 12px',
-                background: SHELL.cardFlat,
-                border: '1px solid rgba(255,255,255,0.08)',
-                borderRadius: 10,
-              }}>
-                <span style={{
-                  flexShrink: 0,
-                  width: 34, height: 34, borderRadius: 99,
-                  background: tone.bg, color: tone.text,
-                  border: `1px solid ${tone.bdr}`,
-                  display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-                  fontSize: 12.5, fontWeight: 600,
-                  letterSpacing: '-0.02em',
-                  fontVariantNumeric: 'tabular-nums',
-                }}>{score}</span>
-                <p style={{
-                  flex: 1, minWidth: 0, margin: 0,
-                  fontSize: 13.5, fontWeight: 600, color: SHELL.text1,
-                  letterSpacing: '-0.15px', lineHeight: 1.4,
-                }} title={s.why_it_works || ''}>{s.title}</p>
-                <button
-                  type="button"
-                  disabled={isApplying || isApplied}
-                  onClick={() => onApply?.(s, i, video)}
-                  style={{
-                    flexShrink: 0,
-                    display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 6,
-                    padding: '7px 14px', borderRadius: 100,
-                    border: 'none',
-                    background: isApplied ? 'rgba(22,163,74,0.85)' : '#e5251b',
-                    color: '#fff',
-                    fontFamily: 'inherit',
-                    fontSize: 12.5, fontWeight: 600, letterSpacing: '-0.05px',
-                    boxShadow: isApplied ? 'none' : '0 1px 3px rgba(229,37,27,0.28)',
-                    cursor: (isApplying || isApplied) ? 'default' : 'pointer',
-                    transition: 'filter 0.14s, transform 0.14s, background 0.2s',
-                  }}
-                  onMouseEnter={e => { if (!isApplying && !isApplied) { e.currentTarget.style.filter = 'brightness(1.08)'; e.currentTarget.style.transform = 'translateY(-1px)' } }}
-                  onMouseLeave={e => { e.currentTarget.style.filter = 'none'; e.currentTarget.style.transform = 'translateY(0)' }}
-                >
-                  {isApplying && <RefreshCw size={12} strokeWidth={2.1} style={{ animation: 'spin 1s linear infinite' }} />}
-                  {ctaLabel}
-                </button>
-              </div>
-            )
-          })}
+        <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 0 }}>
+          {/* Current title (no score; SEO Studio doesn't score the original) */}
+          <div style={{ minWidth: 0 }}>
+            <p style={{
+              margin: '0 0 4px',
+              fontSize: 11, fontWeight: 600, color: SHELL.text3,
+              letterSpacing: '0.08em', textTransform: 'uppercase',
+            }}>Your title now</p>
+            <p style={{
+              margin: 0, fontSize: 13.5, fontWeight: 600, color: SHELL.text2,
+              letterSpacing: '-0.1px', lineHeight: 1.4,
+              display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical',
+              overflow: 'hidden', textOverflow: 'ellipsis',
+            }}>{video.title}</p>
+          </div>
+
+          {/* Divider with centered arrow circle */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '12px 0' }}>
+            <div style={{ flex: 1, height: 1, background: 'rgba(255,255,255,0.08)' }}/>
+            <span style={{
+              flexShrink: 0,
+              width: 22, height: 22, borderRadius: 99,
+              background: 'rgba(255,255,255,0.06)',
+              border: '1px solid rgba(255,255,255,0.10)',
+              display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+              color: SHELL.text3,
+            }}>
+              <ArrowDown size={12} strokeWidth={2.2} />
+            </span>
+            <div style={{ flex: 1, height: 1, background: 'rgba(255,255,255,0.08)' }}/>
+          </div>
+
+          {/* Focused rewrite (score chip + title) */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12, minWidth: 0 }}>
+            <span style={{
+              flexShrink: 0,
+              width: 34, height: 34, borderRadius: 99,
+              background: tone.bg, color: tone.text,
+              border: `1px solid ${tone.bdr}`,
+              display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+              fontSize: 12.5, fontWeight: 600,
+              letterSpacing: '-0.02em',
+              fontVariantNumeric: 'tabular-nums',
+            }}>{score}</span>
+            <p style={{
+              flex: 1, minWidth: 0, margin: 0,
+              fontSize: 14, fontWeight: 600, color: SHELL.text1,
+              letterSpacing: '-0.15px', lineHeight: 1.4,
+              display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical',
+              overflow: 'hidden', textOverflow: 'ellipsis',
+            }}>{focused.title}</p>
+          </div>
+
+          {/* Why this works */}
+          {focused.why_it_works && (
+            <p style={{
+              margin: '8px 0 0 46px',
+              fontSize: 12.5, fontWeight: 450, color: SHELL.text3,
+              letterSpacing: '-0.01em', lineHeight: 1.45,
+            }}>{focused.why_it_works}</p>
+          )}
         </div>
       </div>
 
-      <div style={{ display: 'flex', alignItems: 'center', gap: 10, paddingTop: 4 }}>
-        <span style={{ fontSize: 11.5, fontWeight: 500, color: SHELL.text3, letterSpacing: '-0.01em' }}>
-          From your last SEO Studio analysis
-        </span>
-        <div style={{ flex: 1 }}/>
-        {onOpenStudio && (
+      {/* Pagination dots — only when there are multiple suggestions */}
+      {canCycle && (
+        <div style={{ display: 'flex', justifyContent: 'center', gap: 6, marginBottom: 12 }}>
+          {suggestions.map((_, i) => (
+            <button
+              key={i}
+              type="button"
+              onClick={() => setActiveIdx(i)}
+              aria-label={`Suggestion ${i + 1} of ${suggestions.length}`}
+              style={{
+                width: i === idx ? 18 : 6, height: 6,
+                borderRadius: 99,
+                border: 'none',
+                background: i === idx ? '#e5251b' : 'rgba(255,255,255,0.18)',
+                cursor: 'pointer',
+                padding: 0,
+                transition: 'width 0.2s, background 0.2s',
+              }}
+            />
+          ))}
+        </div>
+      )}
+
+      {/* Bottom action row: Regenerate (cycle) + Apply Title (primary) */}
+      <div style={{ display: 'grid', gridTemplateColumns: canCycle ? '1fr 1fr' : '1fr', gap: 10 }}>
+        {canCycle && (
           <button
             type="button"
-            onClick={onOpenStudio}
+            onClick={() => setActiveIdx((idx + 1) % suggestions.length)}
             style={{
-              display: 'inline-flex', alignItems: 'center', gap: 5,
-              padding: '6px 11px', borderRadius: 100,
-              border: '1px solid rgba(255,255,255,0.08)',
-              background: 'rgba(255,255,255,0.02)',
-              color: SHELL.text2,
+              display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 7,
+              padding: '10px 14px', borderRadius: 100,
+              border: '1px solid rgba(255,255,255,0.10)',
+              background: 'rgba(255,255,255,0.03)',
+              color: SHELL.text1,
               fontFamily: 'inherit',
-              fontSize: 11.5, fontWeight: 600, letterSpacing: '-0.05px',
+              fontSize: 13, fontWeight: 600, letterSpacing: '-0.05px',
               cursor: 'pointer',
-              transition: 'background 0.14s, border-color 0.14s, color 0.14s',
+              transition: 'background 0.14s, border-color 0.14s',
             }}
-            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.16)'; e.currentTarget.style.color = SHELL.text1 }}
-            onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.02)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'; e.currentTarget.style.color = SHELL.text2 }}
+            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.07)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.18)' }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.03)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.10)' }}
           >
-            Open in SEO Studio
-            <ArrowRight size={11} strokeWidth={2.4} />
+            <RefreshCw size={13} strokeWidth={2.1} />
+            Next suggestion
           </button>
         )}
+
+        <button
+          type="button"
+          disabled={isApplying || isApplied}
+          onClick={() => onApply?.(focused, idx, video)}
+          style={{
+            display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 7,
+            padding: '10px 14px', borderRadius: 100,
+            border: 'none',
+            background: isApplied ? 'rgba(22,163,74,0.85)' : '#e5251b',
+            color: '#fff',
+            fontFamily: 'inherit',
+            fontSize: 13, fontWeight: 600, letterSpacing: '-0.05px',
+            boxShadow: isApplied ? 'none' : '0 1px 3px rgba(229,37,27,0.28)',
+            cursor: (isApplying || isApplied) ? 'default' : 'pointer',
+            transition: 'filter 0.14s, transform 0.14s, background 0.2s',
+          }}
+          onMouseEnter={e => { if (!isApplying && !isApplied) { e.currentTarget.style.filter = 'brightness(1.08)'; e.currentTarget.style.transform = 'translateY(-1px)' } }}
+          onMouseLeave={e => { e.currentTarget.style.filter = 'none'; e.currentTarget.style.transform = 'translateY(0)' }}
+        >
+          {isApplying && <RefreshCw size={13} strokeWidth={2.1} style={{ animation: 'spin 1s linear infinite' }} />}
+          {ctaLabel}
+        </button>
       </div>
 
       {applyError && (

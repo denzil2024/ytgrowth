@@ -72,16 +72,20 @@ window.fetch = async (url, opts) => {
     return J({
       ok: true,
       video: {
-        video_id: 'dQw4w9WgXcQ',
+        video_id: 'kJQP7kiw5Fk',
         title: 'My Monthly Grocery Haul VLOG with JUST Ksh 12,000',
-        thumbnail: 'https://i.ytimg.com/vi/dQw4w9WgXcQ/hqdefault.jpg',
+        thumbnail: 'https://i.ytimg.com/vi/kJQP7kiw5Fk/hqdefault.jpg',
         views: 3420,
         published_at: '2026-05-06',
         is_short: false,
       },
-      current: { title: 'My Grocery Shopping Haul Went Off Budget Again, Home Essentials', clickScore: 42, weakness: 'Hook is generic and the payoff (the actual budget) is missing.' },
-      rewrite: { title: 'I spent Ksh 12,000 on a month of groceries, here is what fit', clickScore: 82, why: 'Leads with the real number you spent, keeps the surprise as the hook.' },
+      suggestions: [
+        { title: 'I spent Ksh 12,000 on a month of groceries, here is what fit', score: 87, why_it_works: 'Leads with the real number, keeps the surprise as the hook.' },
+        { title: 'Feeding a family on Ksh 12K, the honest monthly haul', score: 81, why_it_works: 'Specific number plus an honesty signal.' },
+        { title: 'Inside a Ksh 12K grocery month in Nairobi', score: 74, why_it_works: 'Place plus number, builds curiosity.' },
+      ],
       age_label: '3w ago',
+      source: 'feed_generated',
     })
   }
   if (u.includes('/dashboard/suggested-competitors')) return J({ ok: true, suggestions: [], category: null })
