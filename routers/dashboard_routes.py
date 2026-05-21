@@ -1164,10 +1164,12 @@ def missing_description(request: Request):
 
     from app.insights import parse_duration_seconds
 
-    # Pick: most recent video with a title AND a thin description (< 80 chars).
-    # Threshold matches the user's choice in the design review; descriptions
-    # shorter than this either match no search queries or duplicate the title.
-    THRESHOLD = 80
+    # Pick: most recent video with a title AND a thin description (< 250 chars).
+    # 250 covers near-empty, single-sentence, and "above-the-fold only" desc
+    # patterns. YouTube needs ~200-300 chars of body text to confidently match
+    # a video to search queries; under 250 there are not enough keyword
+    # occurrences for the algorithm to rank well. 80 chars was barely a title.
+    THRESHOLD = 250
     pick = None
     for v in sorted(videos, key=lambda x: (x.get("published_at") or ""), reverse=True):
         if not (v.get("title") or "").strip():
