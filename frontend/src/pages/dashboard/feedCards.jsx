@@ -2457,6 +2457,220 @@ export function TrendingKeywordCard({ keyword, score, momentum, subsLabel, fresh
   )
 }
 
+// Missing Tags card. Same chassis as Missing Description: thumb LEFT,
+// explainer + AI tag chips RIGHT, Next set / Publish actions. Cycles
+// through up to 3 AI-generated tag sets via the secondary button.
+export function MissingTagsCard({
+  video, tagSets, ageLabel,
+  publishing, published, publishError,
+  onPublish, onDismiss,
+}) {
+  const [setIdx, setSetIdx] = useState(0)
+  if (!video || !tagSets?.length) return null
+  const idx     = Math.max(0, Math.min(tagSets.length - 1, setIdx))
+  const tags    = tagSets[idx] || []
+  if (!tags.length) return null
+  const canCycle = tagSets.length > 1
+  const thumbAspect = video.is_short ? '9 / 16' : '16 / 9'
+  const thumbWidth  = video.is_short ? 150 : 280
+  const ctaLabel = published ? 'Published to YouTube' : publishing ? 'Publishing…' : 'Publish Tags'
+  const currentCount = Number(video.current_tag_count || 0)
+  const countLabel = currentCount === 0
+    ? 'no tags'
+    : currentCount === 1
+      ? '1 tag'
+      : `only ${currentCount} tags`
+
+  return (
+    <article style={{
+      background: SHELL.cardFlat,
+      border: '1px solid rgba(255,255,255,0.08)',
+      borderRadius: 14,
+      padding: '14px 18px 16px 18px',
+      boxShadow: '0 1px 2px rgba(255,255,255,0.04), 0 6px 18px rgba(255,255,255,0.05), inset 0 1px 0 rgba(255,255,255,0.7)',
+      marginBottom: 12,
+    }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
+        <h3 style={{
+          fontSize: 16, fontWeight: 600, color: SHELL.text1,
+          letterSpacing: '-0.2px', lineHeight: 1.3, margin: 0,
+        }}>Add Tags</h3>
+        {ageLabel && (
+          <span style={{
+            fontSize: 12.5, fontWeight: 450, color: SHELL.text3,
+            letterSpacing: '-0.01em',
+          }}>· {ageLabel}</span>
+        )}
+        <div style={{ flex: 1 }}/>
+        {onDismiss && (
+          <button
+            type="button"
+            onClick={onDismiss}
+            aria-label="Dismiss"
+            style={{
+              width: 28, height: 28, borderRadius: 8,
+              border: 'none', background: 'transparent',
+              color: 'rgba(255,255,255,0.36)',
+              cursor: 'pointer',
+              display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+              transition: 'background 0.14s, color 0.14s',
+            }}
+            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; e.currentTarget.style.color = SHELL.text1 }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'rgba(255,255,255,0.36)' }}
+          >
+            <XIcon size={14} strokeWidth={2} />
+          </button>
+        )}
+      </div>
+
+      <div style={{
+        display: 'flex',
+        gap: 18,
+        alignItems: 'stretch',
+        padding: 14,
+        background: 'rgba(255,255,255,0.02)',
+        border: '1px solid rgba(255,255,255,0.06)',
+        borderRadius: 12,
+        marginBottom: 14,
+      }}>
+        <div style={{ flexShrink: 0, width: thumbWidth }}>
+          {(video.video_id || video.thumbnail) ? (
+            <img
+              src={ytMaxThumbUrl(video.video_id) || video.thumbnail}
+              alt=""
+              loading="lazy"
+              onLoad={makeThumbOnLoad(video.video_id, video.thumbnail)}
+              onError={makeThumbOnError(video.video_id, video.thumbnail)}
+              style={{
+                display: 'block',
+                width: '100%', aspectRatio: thumbAspect,
+                objectFit: 'cover',
+                borderRadius: 12,
+                background: 'rgba(255,255,255,0.06)',
+                border: '1px solid rgba(255,255,255,0.08)',
+              }}
+            />
+          ) : (
+            <div style={{
+              width: '100%', aspectRatio: thumbAspect,
+              borderRadius: 12,
+              background: 'rgba(255,255,255,0.06)',
+              border: '1px solid rgba(255,255,255,0.08)',
+            }}/>
+          )}
+        </div>
+
+        <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: 10 }}>
+          <p style={{
+            margin: 0, fontSize: 13.5, fontWeight: 450, color: SHELL.text2,
+            letterSpacing: '-0.05px', lineHeight: 1.45,
+          }}>
+            Your {video.is_short ? 'last short' : 'latest video'} has {countLabel}.
+            YouTube uses tags to match your video to search queries and related-video suggestions.
+          </p>
+
+          <div style={{
+            border: '1px solid rgba(255,255,255,0.08)',
+            borderRadius: 10,
+            background: 'rgba(0,0,0,0.16)',
+            overflow: 'hidden',
+          }}>
+            <div style={{
+              display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+              padding: '7px 12px',
+              borderBottom: '1px solid rgba(255,255,255,0.06)',
+              background: 'rgba(255,255,255,0.02)',
+            }}>
+              <span style={{
+                fontSize: 11, fontWeight: 600, color: SHELL.text3,
+                letterSpacing: '0.10em', textTransform: 'uppercase',
+              }}>AI tags</span>
+              <span style={{
+                fontSize: 11, fontWeight: 600, color: SHELL.text3,
+                fontVariantNumeric: 'tabular-nums',
+                letterSpacing: '-0.01em',
+              }}>{tags.length} tags</span>
+            </div>
+            <div style={{
+              padding: '10px 12px',
+              display: 'flex', flexWrap: 'wrap', gap: 6,
+            }}>
+              {tags.map((t, i) => (
+                <span key={`${idx}-${i}-${t}`} style={{
+                  display: 'inline-flex', alignItems: 'center',
+                  padding: '4px 10px', borderRadius: 100,
+                  background: 'rgba(255,255,255,0.04)',
+                  border: '1px solid rgba(255,255,255,0.08)',
+                  color: SHELL.text1,
+                  fontSize: 12, fontWeight: 500,
+                  letterSpacing: '-0.01em',
+                  lineHeight: 1.3,
+                }}>{t}</span>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style={{ display: 'grid', gridTemplateColumns: canCycle ? '1fr 1fr' : '1fr', gap: 10 }}>
+        {canCycle && (
+          <button
+            type="button"
+            disabled={publishing || published}
+            onClick={() => setSetIdx((idx + 1) % tagSets.length)}
+            style={{
+              display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 7,
+              padding: '10px 14px', borderRadius: 100,
+              border: '1px solid rgba(255,255,255,0.10)',
+              background: 'rgba(255,255,255,0.03)',
+              color: SHELL.text1,
+              fontFamily: 'inherit',
+              fontSize: 13, fontWeight: 600, letterSpacing: '-0.05px',
+              cursor: (publishing || published) ? 'default' : 'pointer',
+              opacity: (publishing || published) ? 0.5 : 1,
+              transition: 'background 0.14s, border-color 0.14s',
+            }}
+            onMouseEnter={e => { if (!publishing && !published) { e.currentTarget.style.background = 'rgba(255,255,255,0.07)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.18)' } }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.03)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.10)' }}
+          >
+            <RefreshCw size={13} strokeWidth={2.1} />
+            Next set
+          </button>
+        )}
+
+        <button
+          type="button"
+          disabled={publishing || published}
+          onClick={() => onPublish?.(tags, video)}
+          style={{
+            display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 7,
+            padding: '10px 14px', borderRadius: 100,
+            border: 'none',
+            background: published ? 'rgba(22,163,74,0.85)' : '#e5251b',
+            color: '#fff',
+            fontFamily: 'inherit',
+            fontSize: 13, fontWeight: 600, letterSpacing: '-0.05px',
+            boxShadow: published ? 'none' : '0 1px 3px rgba(229,37,27,0.28)',
+            cursor: (publishing || published) ? 'default' : 'pointer',
+            transition: 'filter 0.14s, transform 0.14s, background 0.2s',
+          }}
+          onMouseEnter={e => { if (!publishing && !published) { e.currentTarget.style.filter = 'brightness(1.08)'; e.currentTarget.style.transform = 'translateY(-1px)' } }}
+          onMouseLeave={e => { e.currentTarget.style.filter = 'none'; e.currentTarget.style.transform = 'translateY(0)' }}
+        >
+          {publishing && <RefreshCw size={13} strokeWidth={2.1} style={{ animation: 'spin 1s linear infinite' }} />}
+          {ctaLabel}
+        </button>
+      </div>
+
+      {publishError && (
+        <p style={{ margin: '8px 2px 0', fontSize: 12, fontWeight: 500, color: '#fb6a60' }}>
+          {publishError}
+        </p>
+      )}
+    </article>
+  )
+}
+
 // Top Search Terms card. Real YouTube Analytics data: the actual queries
 // viewers typed to find this creator's videos in the last 28 days. Each
 // row is a query + view count from that query. No AI, no scoring guesses

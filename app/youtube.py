@@ -184,6 +184,7 @@ def get_recent_videos(credentials, max_results=20, uploads_playlist_id=None):
             "duration": duration,
             "thumbnail": snippet.get("thumbnails", {}).get("medium", {}).get("url", ""),
             "description": snippet.get("description", ""),
+            "tags": snippet.get("tags", []) or [],
         })
     return videos
 

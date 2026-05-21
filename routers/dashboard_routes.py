@@ -1706,3 +1706,185 @@ def _trending_keyword_impl(request: Request, debug: bool = False):
     if debug:
         return JSONResponse({"ok": True, "keyword": None, "_debug": diag})
     return JSONResponse({"ok": True, "keyword": None})
+
+
+@router.get("/missing-tags")
+def missing_tags(request: Request):
+    """Feed card: surface ONE recent video whose tag count is below the
+    healthy floor (5) and return 3 AI-generated tag-set drafts the user
+    can publish with one click. Mirrors the Missing Description pattern
+    end-to-end: candidate walk, meaningful-title filter, cross-user cache
+    on the Claude call. Honors YT_QUOTA_PAUSED.
+
+    Pass ?debug=1 for the per-candidate diagnostic.
+    """
+    debug = request.query_params.get("debug") == "1"
+
+    import os as _os
+    if _os.getenv("YT_QUOTA_PAUSED") == "1":
+        return JSONResponse({"ok": True, "video": None})
+
+    data, _ = get_session(request.session.get("session_id"))
+    if not data:
+        return JSONResponse({"ok": False, "reason": "not_authenticated"}, status_code=401)
+
+    channel = (data or {}).get("channel", {}) or {}
+    videos  = (data or {}).get("videos",  []) or []
+    channel_id = channel.get("channel_id", "") or ""
+    if not channel_id or not videos:
+        return JSONResponse({"ok": True, "video": None, "_debug": {"halted": "no_channel_or_videos"}} if debug else {"ok": True, "video": None})
+
+    from app.insights import parse_duration_seconds
+
+    TAG_FLOOR = 5
+    MAX_TRIES = 5
+
+    def _meaningful_title(t: str) -> bool:
+        if not t:
+            return False
+        stripped = " ".join(w for w in t.split() if not w.startswith("#")).strip()
+        return len(stripped) >= 15
+
+    # Pick candidates: newest-first videos with a meaningful title AND
+    # fewer than TAG_FLOOR tags. Skip hashtag-only / livestream titles
+    # because Claude can't generate niche-relevant tags from "is live!".
+    candidates = []
+    for v in sorted(videos, key=lambda x: (x.get("published_at") or ""), reverse=True):
+        t = (v.get("title") or "").strip()
+        if not _meaningful_title(t):
+            continue
+        cur_tags = v.get("tags") or []
+        if len(cur_tags) >= TAG_FLOOR:
+            continue
+        candidates.append(v)
+
+    if not candidates:
+        return JSONResponse({"ok": True, "video": None, "_debug": {"candidates_total": 0}} if debug else {"ok": True, "video": None})
+
+    def _age_label(iso: str) -> str:
+        if not iso:
+            return ""
+        try:
+            dt = datetime.datetime.fromisoformat((iso or "")[:10])
+        except Exception:
+            return ""
+        days = (datetime.datetime.now() - dt).days
+        if days <= 0:  return "today"
+        if days == 1:  return "1d ago"
+        if days < 7:   return f"{days}d ago"
+        if days < 30:  return f"{days // 7}w ago"
+        if days < 365: return f"{days // 30}mo ago"
+        return f"{days // 365}y ago"
+
+    def _subs_tier(n: int) -> str:
+        if n < 10_000:    return "micro"
+        if n < 100_000:   return "small"
+        if n < 1_000_000: return "mid"
+        return "large"
+
+    from app.seo import generate_tag_suggestions
+    from app.utils import cached_ai_output
+
+    top_titles = [
+        (v.get("title") or "")
+        for v in sorted(videos, key=lambda x: x.get("views", 0) or 0, reverse=True)[:5]
+        if v.get("title")
+    ]
+    channel_context = {
+        "channel_name":     channel.get("channel_name", "") or "",
+        "channel_keywords": channel.get("keywords", "") or "",
+        "top_video_titles": top_titles,
+    }
+
+    def _try_pick(pick, diag_out=None):
+        title    = (pick.get("title") or "").strip()
+        is_short = parse_duration_seconds(pick.get("duration", "PT0S")) <= 60
+        cur_tags = pick.get("tags") or []
+
+        video_payload = {
+            "video_id":         pick.get("video_id", ""),
+            "title":            title,
+            "thumbnail":        pick.get("thumbnail", ""),
+            "published_at":     (pick.get("published_at") or "")[:10],
+            "is_short":         bool(is_short),
+            "current_tag_count": len(cur_tags),
+        }
+
+        cache_inputs = {
+            "title":          title,
+            "is_short":       bool(is_short),
+            "channel_kw":     (channel.get("keywords", "") or "").lower()[:200],
+            "subs_tier":      _subs_tier(int(channel.get("subscribers", 0) or 0)),
+            "prompt_version": "feed_tags_v1",
+        }
+
+        def _fetch():
+            try:
+                sets, err = generate_tag_suggestions(
+                    title=title,
+                    niche=(channel.get("keywords", "") or "").split(",")[0].strip() or "",
+                    current_tags=cur_tags,
+                    channel_context=channel_context,
+                )
+                return {"sets": sets or [], "error": err or ""}
+            except Exception as e:
+                print(f"[missing-tags] generate error: {e}")
+                return {"sets": [], "error": str(e)}
+
+        out = cached_ai_output(
+            function_name="feed_missing_tags",
+            inputs=cache_inputs,
+            ttl_hours=24 * 30,
+            fetch_fn=_fetch,
+        )
+
+        sets = out.get("sets") or []
+        # Defensive: ensure each set is a list of strings
+        cleaned_sets: list[list[str]] = []
+        for s in sets[:3]:
+            if not isinstance(s, list):
+                continue
+            tags = [str(t).strip() for t in s if isinstance(t, str) and t.strip()]
+            if 5 <= len(tags) <= 20:
+                cleaned_sets.append(tags[:15])
+
+        if diag_out is not None:
+            diag_out["sets_received"] = len(sets)
+            diag_out["sets_cleaned"]  = len(cleaned_sets)
+            diag_out["error"]         = (out.get("error") or "")[:200]
+
+        if cleaned_sets:
+            return {
+                "ok":          True,
+                "video":       video_payload,
+                "tag_sets":    cleaned_sets,
+                "age_label":   _age_label(pick.get("published_at", "")),
+                "source":      "feed_generated",
+            }
+        return None
+
+    diag_walk = []
+    for pick in candidates[:MAX_TRIES]:
+        per = {"video_id": pick.get("video_id", ""), "title": (pick.get("title") or "")[:60]}
+        try:
+            result = _try_pick(pick, diag_out=per if debug else None)
+        except Exception as e:
+            import traceback as _tb
+            per["outcome"] = "exception"
+            per["error"]   = str(e)
+            per["trace"]   = _tb.format_exc().splitlines()[-6:]
+            print(f"[missing-tags] _try_pick exception for '{(pick.get('title') or '')[:60]}': {e}")
+            diag_walk.append(per)
+            continue
+        if result:
+            if debug:
+                per["outcome"] = "yielded_sets"
+                result["_debug"] = {"candidates_total": len(candidates), "walk": diag_walk + [per]}
+                return JSONResponse(result)
+            return JSONResponse(result)
+        per["outcome"] = "no_sets"
+        diag_walk.append(per)
+
+    if debug:
+        return JSONResponse({"ok": True, "video": None, "_debug": {"candidates_total": len(candidates), "max_tries": MAX_TRIES, "walk": diag_walk}})
+    return JSONResponse({"ok": True, "video": None})

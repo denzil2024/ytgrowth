@@ -1607,6 +1607,115 @@ Return ONLY this JSON array — no markdown, no commentary:
         return [], top_kw_phrases, str(e)
 
 
+def generate_tag_suggestions(
+    title: str,
+    niche: str = "",
+    current_tags: list[str] | None = None,
+    channel_context: dict | None = None,
+) -> tuple[list[list[str]], str]:
+    """Generate 3 alternative tag sets for a YouTube video.
+
+    Returns (tag_sets, error_string). tag_sets is a list of up to 3 lists
+    of strings; each inner list is a complete tag set (10-15 tags) the
+    user could publish verbatim. Tags are normalised lowercase, no
+    hashtags, no commas inside tags.
+
+    Designed for the Feed Missing Tags card: light prompt, no autocomplete
+    or keyword-score dependencies (unlike the description generator). The
+    caller wraps this in cached_ai_output so cross-user identical inputs
+    pay Claude once.
+    """
+    import json as _json
+    api_key = os.getenv("ANTHROPIC_API_KEY", "")
+    if not api_key:
+        return [], "ANTHROPIC_API_KEY is not set"
+
+    client = _make_client()
+
+    # Build channel context block — helps Claude pick tags that match the
+    # creator's niche language vs. generic high-volume tags.
+    channel_block = ""
+    if channel_context:
+        ch_name    = channel_context.get("channel_name", "") or ""
+        ch_kw      = channel_context.get("channel_keywords", "") or ""
+        top_titles = channel_context.get("top_video_titles", []) or []
+        parts = []
+        if ch_name:
+            parts.append(f"Channel name: {ch_name}")
+        if ch_kw:
+            parts.append(f"Channel keywords/topics: {ch_kw[:300]}")
+        if top_titles:
+            titles_str = "\n".join(f"  - {t}" for t in top_titles[:5])
+            parts.append(f"Creator's top videos (for context):\n{titles_str}")
+        if parts:
+            channel_block = "\nCHANNEL CONTEXT:\n" + "\n".join(parts) + "\n"
+
+    current_block = ""
+    if current_tags:
+        ct = ", ".join((current_tags or [])[:20])
+        current_block = f"\nCURRENT TAGS (may be empty or thin):\n{ct}\n"
+
+    prompt = f"""You are a YouTube SEO assistant. Generate 3 ALTERNATIVE tag sets for this video.
+
+VIDEO TITLE: "{title}"
+PRIMARY NICHE: {niche or "general"}
+{channel_block}{current_block}
+Rules for each tag set:
+- 10 to 15 tags per set
+- Each tag is 2 to 4 words, all lowercase, no hashtags, no commas inside tags
+- Mix of broad (1-2 word) and long-tail (3-4 word) tags
+- Include the obvious title-based tags first, then niche/audience tags, then 1-2 location/identity tags if appropriate
+- No banned punctuation: NO em-dashes, NO en-dashes (use plain hyphens only)
+- No duplicate tags within a set
+- Tags must be the words a viewer would actually search
+
+Return ONLY a JSON array of 3 arrays of strings. No prose, no markdown fences. Example shape:
+[
+  ["tag one","tag two","another tag","longer tail tag"],
+  ["different set","second variant tag","etc"],
+  ["third variant","another option","more"]
+]
+"""
+
+    try:
+        msg = client.messages.create(
+            model="claude-haiku-4-5-20251001",
+            max_tokens=1500,
+            messages=[{"role": "user", "content": prompt}],
+        )
+        raw = msg.content[0].text.strip()
+        if raw.startswith("```"):
+            raw = re.sub(r"^```[a-z]*\n?", "", raw)
+            raw = re.sub(r"\n?```$", "", raw.strip())
+        parsed = _json.loads(raw)
+        if not isinstance(parsed, list):
+            return [], "non-array response"
+        cleaned: list[list[str]] = []
+        for entry in parsed[:3]:
+            if not isinstance(entry, list):
+                continue
+            tags: list[str] = []
+            seen = set()
+            for t in entry:
+                if not isinstance(t, str):
+                    continue
+                # Strip dashes and surrounding whitespace, lower-case, drop empties
+                tag = t.replace("—", "-").replace("–", "-").strip().lower()
+                tag = re.sub(r"\s+", " ", tag)
+                if not tag or tag in seen or len(tag) > 40:
+                    continue
+                seen.add(tag)
+                tags.append(tag)
+            if 5 <= len(tags) <= 20:
+                cleaned.append(tags[:15])
+        if not cleaned:
+            return [], "no usable sets after cleaning"
+        return cleaned, ""
+    except Exception as e:
+        print(f"Tag generation error: {e}")
+        return [], str(e)
+
+
 # ─── Intent matching ───────────────────────────────────────────────────────────
 
 def _filter_by_intent(niche_phrase: str, videos: list[dict]) -> list[dict]:
@@ -1683,7 +1792,7 @@ def analyze_title(credentials, title: str, confirmed_keyword: str = "", channel_
     # Step 2: ONE YouTube search using the title (or confirmed keyword).
     # max_results=50 still costs the same 100 quota units; we keep the
     # full pool for the competitive-videos panel in the UI and use only
-    # the top 5 long-form for keyword extraction below.
+    # the top 10 long-form for keyword extraction below.
     raw_all = search_top_videos(credentials, search_terms, max_results=50, include_shorts=True)
     raw_videos = [v for v in raw_all if not v.get("is_short")]
     raw_shorts = [v for v in raw_all if     v.get("is_short")]
@@ -1694,13 +1803,16 @@ def analyze_title(credentials, title: str, confirmed_keyword: str = "", channel_
     intent_videos = raw_videos
     top_videos    = raw_videos
 
-    # Top 5 long-form videos feed keyword extraction. The rest stay in the
-    # competitive-videos UI panel but don't influence keywords.
-    keyword_source_videos = top_videos[:5]
+    # Top 10 long-form videos feed keyword extraction. We use 10 (not 5)
+    # so a couple of off-topic / outlier results don't poison the pool —
+    # there's always some noise in the top of YouTube search (clickbait
+    # tangents, old viral videos, etc.) and 10 gives breathing room while
+    # still costing the same 100 quota units as 5.
+    keyword_source_videos = top_videos[:10]
     top_titles = [v["title"] for v in keyword_source_videos]
     print(f"Videos found: {len(raw_videos)} long-form, {len(raw_shorts)} shorts. Keywords harvested from top {len(keyword_source_videos)}.")
 
-    # Step 3: Aggregate tags from the top 5 ranking videos only.
+    # Step 3: Aggregate tags from the top 10 ranking videos only.
     tag_freq: dict[str, int] = {}
     for v in keyword_source_videos:
         for tag in v.get("tags", []):

@@ -47,7 +47,7 @@ import {
   MilestoneFeedCard, ContentMixFeedCard, ChannelHealthFeedCard,
   TopPerformerCard, PostingConsistencyCard, BestTimeCard,
   TrackedLiftCard, DailyIdeasCard, TitleSuggestionCard,
-  MissingDescriptionCard, TopSearchTermsCard,
+  MissingDescriptionCard, MissingTagsCard, TopSearchTermsCard,
   SuggestedCompetitorsCard, RelatedTrafficCard, CompetitorActivityCard,
 } from './dashboard/feedCards'
 import {
@@ -131,6 +131,12 @@ export default function Dashboard() {
   const [descPublishing, setDescPublishing] = useState(false)
   const [descPublished, setDescPublished] = useState(false)
   const [descPublishError, setDescPublishError] = useState('')
+  // Missing Tags card. Same auto-curated pattern as Missing Description:
+  // backend picks one video with < 5 tags and returns up to 3 AI tag sets.
+  const [missingTags, setMissingTags] = useState(null)
+  const [tagsPublishing, setTagsPublishing] = useState(false)
+  const [tagsPublished, setTagsPublished] = useState(false)
+  const [tagsPublishError, setTagsPublishError] = useState('')
   // Top Search Terms card. Real YouTube Analytics data — the queries
   // viewers actually typed to find the user's videos in the last 28 days.
   // Cached per-channel for 24h. Null while loading or when there's no
@@ -315,6 +321,14 @@ export default function Dashboard() {
     fetch('/dashboard/missing-description', { credentials: 'include' })
       .then(r => r.ok ? r.json() : null)
       .then(d => { if (d && d.ok && d.video && d.drafts?.length) setMissingDescription(d) })
+      .catch(() => {})
+
+    // Load Missing Tags: same auto-curated pattern as Missing Description.
+    // Backend picks the first video with < 5 tags and returns up to 3 AI
+    // tag-set drafts. Card hides itself if no candidate.
+    fetch('/dashboard/missing-tags', { credentials: 'include' })
+      .then(r => r.ok ? r.json() : null)
+      .then(d => { if (d && d.ok && d.video && d.tag_sets?.length) setMissingTags(d) })
       .catch(() => {})
 
     // Load Top Search Terms: backend hits YouTube Analytics for the
@@ -1462,6 +1476,49 @@ export default function Dashboard() {
                   )
                 })() : null
 
+                const missingTagsBlock = (feedFilter === 'all' || feedFilter === 'insights') && missingTags?.video && missingTags?.tag_sets?.length ? (() => {
+                  const dismissKey = `ytg_missing_tags_dismissed:${data?.channel?.channel_id || 'x'}:${missingTags.video.video_id || 'x'}`
+                  try { if (localStorage.getItem(dismissKey)) return null } catch {}
+                  return (
+                    <MissingTagsCard
+                      key="missing-tags"
+                      video={missingTags.video}
+                      tagSets={missingTags.tag_sets}
+                      ageLabel={missingTags.age_label || ''}
+                      publishing={tagsPublishing}
+                      published={tagsPublished}
+                      publishError={tagsPublishError}
+                      onPublish={async (tags, vid) => {
+                        if (!tags?.length || !vid?.video_id) return
+                        setTagsPublishing(true)
+                        setTagsPublishError('')
+                        try {
+                          const res = await fetch('/seo/update-video', {
+                            method: 'POST',
+                            credentials: 'include',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ video_id: vid.video_id, tags }),
+                          })
+                          const d = await res.json().catch(() => ({}))
+                          if (!res.ok || d?.error) {
+                            setTagsPublishError(d?.error || 'Update failed. Try again.')
+                          } else {
+                            setTagsPublished(true)
+                          }
+                        } catch {
+                          setTagsPublishError('Could not reach the server.')
+                        } finally {
+                          setTagsPublishing(false)
+                        }
+                      }}
+                      onDismiss={() => {
+                        try { localStorage.setItem(dismissKey, '1') } catch {}
+                        setChecked(prev => ({ ...prev }))
+                      }}
+                    />
+                  )
+                })() : null
+
                 const missingDescriptionBlock = (feedFilter === 'all' || feedFilter === 'insights') && missingDescription?.video && missingDescription?.drafts?.length ? (() => {
                   const dismissKey = `ytg_missing_description_dismissed:${data?.channel?.channel_id || 'x'}:${missingDescription.video.video_id || 'x'}`
                   try { if (localStorage.getItem(dismissKey)) return null } catch {}
@@ -1731,6 +1788,7 @@ export default function Dashboard() {
                       {nicheHeroBlock}
                       {titleSuggestionBlock}
                       {missingDescriptionBlock}
+                      {missingTagsBlock}
                       {suggestedCompetitorsBlock}
                       {topSearchTermsBlock}
                       {relatedTrafficBlock}

@@ -308,6 +308,11 @@ class UpdateVideoRequest(BaseModel):
     video_id: str
     title: str = ""
     description: str = ""
+    # Optional tags list. When provided AND non-empty, replaces the
+    # existing tag set on the video. An empty list ([]) is treated as
+    # "don't touch tags" so a Feed Title/Description publish doesn't
+    # accidentally wipe a user's existing tags.
+    tags: list[str] | None = None
 
 
 @router.post("/update-video")
@@ -319,7 +324,8 @@ def update_video_route(body: UpdateVideoRequest, request: Request):
     feat = check_free_tier_access(channel_id_check, "video_optimize")
     if not feat["allowed"]:
         return _locked_response("video_optimize", feat.get("reason", "locked"))
-    if not body.title and not body.description:
+    has_tags_payload = bool(body.tags)
+    if not body.title and not body.description and not has_tags_payload:
         return JSONResponse({"error": "Nothing to update."}, status_code=400)
     try:
         from googleapiclient.discovery import build
@@ -343,6 +349,22 @@ def update_video_route(body: UpdateVideoRequest, request: Request):
             snippet["title"] = body.title
         if body.description:
             snippet["description"] = body.description
+        if has_tags_payload:
+            # Clean: trim, drop empties, dedupe, cap at 30 (YouTube allows
+            # ~500 chars total across all tags; ~30 keeps us safely under).
+            seen = set()
+            cleaned_tags: list[str] = []
+            for t in body.tags or []:
+                if not isinstance(t, str):
+                    continue
+                tag = t.strip()
+                if not tag or tag.lower() in seen or len(tag) > 40:
+                    continue
+                seen.add(tag.lower())
+                cleaned_tags.append(tag)
+                if len(cleaned_tags) >= 30:
+                    break
+            snippet["tags"] = cleaned_tags
         youtube.videos().update(
             part="snippet",
             body={"id": body.video_id, "snippet": snippet},
