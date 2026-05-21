@@ -52,7 +52,7 @@ try {
     await page.evaluate(() => document.fonts ? document.fonts.ready : Promise.resolve())
     await page.waitForTimeout(3200)
     const out = path.join(__dirname, `feed-${stt}.png`)
-    await page.screenshot({ path: out, fullPage: false })
+    await page.screenshot({ path: out, fullPage: true })
     console.log(`OK: wrote ${out}`)
     await ctx.close()
   }

@@ -3660,18 +3660,18 @@ function TitleSuggestionCard({ video, current, rewrite, ageLabel, onUse, onAskCo
         )}
       </div>
 
-      {/* Inset compare panel: 16:9 thumb left, current → new title stack right */}
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: '320px 1fr',
-        gap: 18,
-        alignItems: 'center',
-        padding: 14,
-        background: 'rgba(255,255,255,0.02)',
-        border: '1px solid rgba(255,255,255,0.06)',
-        borderRadius: 12,
+      {/* Block 1 — TEXT: instruction line ("we found a stronger title") */}
+      <p style={{
+        margin: '0 0 14px',
+        fontSize: 13.5, fontWeight: 450, color: SHELL.text2,
+        letterSpacing: '-0.01em', lineHeight: 1.55,
       }}>
-        {/* Thumbnail 16:9 */}
+        Try this rewrite. Your current title scores <strong style={{ color: curTone.text, fontWeight: 600 }}>{curScore}</strong>{'. '}
+        Claude scored a stronger version at <strong style={{ color: newTone.text, fontWeight: 600 }}>{newScore}</strong>.
+      </p>
+
+      {/* Block 2 — VISUAL: centered 16:9 thumbnail, full-width */}
+      <div style={{ marginBottom: 14 }}>
         {video.thumbnail ? (
           <img
             src={video.thumbnail}
@@ -3679,6 +3679,7 @@ function TitleSuggestionCard({ video, current, rewrite, ageLabel, onUse, onAskCo
             loading="lazy"
             onError={e => { e.currentTarget.style.visibility = 'hidden' }}
             style={{
+              display: 'block',
               width: '100%', aspectRatio: '16 / 9',
               objectFit: 'cover',
               borderRadius: 12,
@@ -3694,79 +3695,80 @@ function TitleSuggestionCard({ video, current, rewrite, ageLabel, onUse, onAskCo
             border: '1px solid rgba(255,255,255,0.08)',
           }}/>
         )}
+      </div>
 
-        {/* Compare stack */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 10, minWidth: 0 }}>
-          {/* Current title row */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12, minWidth: 0 }}>
-            <span style={{
-              flexShrink: 0,
-              width: 34, height: 34, borderRadius: 99,
-              background: curTone.bg, color: curTone.text,
-              border: `1px solid ${curTone.bdr}`,
-              display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: 12.5, fontWeight: 600,
-              letterSpacing: '-0.02em',
-              fontVariantNumeric: 'tabular-nums',
-            }}>{curScore}</span>
-            <p style={{
-              flex: 1, minWidth: 0, margin: 0,
-              fontSize: 14, fontWeight: 600, color: SHELL.text1,
-              letterSpacing: '-0.15px', lineHeight: 1.4,
-              display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical',
-              overflow: 'hidden', textOverflow: 'ellipsis',
-            }}
-            title={current.title}
-            >{current.title}</p>
-          </div>
-
-          {/* Arrow */}
-          <div style={{ display: 'flex', justifyContent: 'flex-start', paddingLeft: 10, color: SHELL.text3 }}>
-            <ArrowDown size={16} strokeWidth={2} />
-          </div>
-
-          {/* Rewrite row */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12, minWidth: 0 }}>
-            <span style={{
-              flexShrink: 0,
-              width: 34, height: 34, borderRadius: 99,
-              background: newTone.bg, color: newTone.text,
-              border: `1px solid ${newTone.bdr}`,
-              display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: 12.5, fontWeight: 600,
-              letterSpacing: '-0.02em',
-              fontVariantNumeric: 'tabular-nums',
-            }}>{newScore}</span>
-            <p style={{
-              flex: 1, minWidth: 0, margin: 0,
-              fontSize: 14, fontWeight: 600, color: SHELL.text1,
-              letterSpacing: '-0.15px', lineHeight: 1.4,
-              display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical',
-              overflow: 'hidden', textOverflow: 'ellipsis',
-            }}
-            title={rewrite.why || rewrite.title}
-            >{rewrite.title}</p>
-            <button
-              type="button"
-              onClick={() => onUse?.(rewrite, video)}
-              aria-label="Use this title in SEO Studio"
-              style={{
-                flexShrink: 0,
-                width: 32, height: 32, borderRadius: 99,
-                border: '1px solid rgba(229,37,27,0.32)',
-                background: 'rgba(229,37,27,0.10)',
-                color: '#fb6a60',
-                cursor: 'pointer',
-                display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-                transition: 'background 0.14s, border-color 0.14s, transform 0.14s',
-              }}
-              onMouseEnter={e => { e.currentTarget.style.background = '#e5251b'; e.currentTarget.style.color = '#fff'; e.currentTarget.style.borderColor = '#e5251b'; e.currentTarget.style.transform = 'translateY(-1px)' }}
-              onMouseLeave={e => { e.currentTarget.style.background = 'rgba(229,37,27,0.10)'; e.currentTarget.style.color = '#fb6a60'; e.currentTarget.style.borderColor = 'rgba(229,37,27,0.32)'; e.currentTarget.style.transform = 'translateY(0)' }}
-            >
-              <Pencil size={14} strokeWidth={2} />
-            </button>
-          </div>
+      {/* Block 3 — TEXT: before / after compare stack */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 14 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12, minWidth: 0 }}>
+          <span style={{
+            flexShrink: 0,
+            width: 34, height: 34, borderRadius: 99,
+            background: curTone.bg, color: curTone.text,
+            border: `1px solid ${curTone.bdr}`,
+            display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+            fontSize: 12.5, fontWeight: 600,
+            letterSpacing: '-0.02em',
+            fontVariantNumeric: 'tabular-nums',
+          }}>{curScore}</span>
+          <p style={{
+            flex: 1, minWidth: 0, margin: 0,
+            fontSize: 14, fontWeight: 600, color: SHELL.text1,
+            letterSpacing: '-0.15px', lineHeight: 1.4,
+          }}>{current.title}</p>
         </div>
+
+        <div style={{ display: 'flex', justifyContent: 'flex-start', paddingLeft: 10, color: SHELL.text3 }}>
+          <ArrowDown size={16} strokeWidth={2} />
+        </div>
+
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12, minWidth: 0 }}>
+          <span style={{
+            flexShrink: 0,
+            width: 34, height: 34, borderRadius: 99,
+            background: newTone.bg, color: newTone.text,
+            border: `1px solid ${newTone.bdr}`,
+            display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+            fontSize: 12.5, fontWeight: 600,
+            letterSpacing: '-0.02em',
+            fontVariantNumeric: 'tabular-nums',
+          }}>{newScore}</span>
+          <p style={{
+            flex: 1, minWidth: 0, margin: 0,
+            fontSize: 14, fontWeight: 600, color: SHELL.text1,
+            letterSpacing: '-0.15px', lineHeight: 1.4,
+          }}>{rewrite.title}</p>
+        </div>
+
+        {rewrite.why && (
+          <p style={{
+            margin: '4px 0 0 46px',
+            fontSize: 12.5, fontWeight: 450, color: SHELL.text3,
+            letterSpacing: '-0.01em', lineHeight: 1.5,
+          }}>{rewrite.why}</p>
+        )}
+      </div>
+
+      {/* Block 4 — ACTION: labelled brand-red CTA, right-aligned */}
+      <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+        <button
+          type="button"
+          onClick={() => onUse?.(rewrite, video)}
+          style={{
+            display: 'inline-flex', alignItems: 'center', gap: 7,
+            padding: '9px 16px', borderRadius: 100,
+            border: 'none', cursor: 'pointer',
+            background: '#e5251b', color: '#fff',
+            fontFamily: 'inherit',
+            fontSize: 13, fontWeight: 600, letterSpacing: '-0.05px',
+            boxShadow: '0 1px 3px rgba(229,37,27,0.28)',
+            transition: 'filter 0.14s, transform 0.14s',
+          }}
+          onMouseEnter={e => { e.currentTarget.style.filter = 'brightness(1.08)'; e.currentTarget.style.transform = 'translateY(-1px)' }}
+          onMouseLeave={e => { e.currentTarget.style.filter = 'none'; e.currentTarget.style.transform = 'translateY(0)' }}
+        >
+          <Pencil size={13} strokeWidth={2.1} />
+          Use this title
+        </button>
       </div>
     </article>
   )
@@ -6275,12 +6277,16 @@ export default function Dashboard() {
                 const titleSuggestionBlock = (feedFilter === 'all' || feedFilter === 'insights') && titleSuggestion?.video && titleSuggestion?.current && titleSuggestion?.rewrite ? (() => {
                   const dismissKey = `ytg_title_suggestion_dismissed:${data?.channel?.channel_id || 'x'}:${titleSuggestion.video.video_id || 'x'}`
                   try { if (localStorage.getItem(dismissKey)) return null } catch {}
-                  // Quality gate: rewrite must beat current by 8+ points.
-                  // Backend enforces this too, but the frontend short-circuits
-                  // as a second line of defence so weak rewrites never paint.
-                  const lift = Math.round(Number(titleSuggestion.rewrite.clickScore || 0))
-                                - Math.round(Number(titleSuggestion.current.clickScore || 0))
-                  if (lift < 8) return null
+                  // Quality gate: rewrite must beat current by 8+ AND clear
+                  // an absolute floor of 75. Belt-and-brace the em-dash strip
+                  // too. Backend enforces the same; the frontend guards
+                  // against a stale-cache or partial response slipping through.
+                  const newScore = Math.round(Number(titleSuggestion.rewrite.clickScore || 0))
+                  const curScore = Math.round(Number(titleSuggestion.current.clickScore || 0))
+                  const rewriteTitle = String(titleSuggestion.rewrite.title || '')
+                  if (newScore < 75) return null
+                  if (newScore - curScore < 8) return null
+                  if (rewriteTitle.includes('—') || rewriteTitle.includes('–')) return null
                   return (
                     <TitleSuggestionCard
                       key="title-suggestion"

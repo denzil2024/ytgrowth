@@ -79,9 +79,9 @@ window.fetch = async (url, opts) => {
         published_at: '2026-05-06',
         is_short: false,
       },
-      current: { title: 'My Monthly Grocery Haul VLOG with JUST Ksh 12,000', clickScore: 71, weakness: 'Leads with the budget number, not the surprise. Hook is buried.' },
-      rewrite: { title: 'I spent only Ksh 12,000 on a month of groceries, here is what fit', clickScore: 86, why: 'Leads with a personal stake and curiosity, keeps the price as the hook.' },
-      age_label: '14d ago',
+      current: { title: 'My Grocery Shopping Haul Went Off Budget Again, Home Essentials', clickScore: 42, weakness: 'Hook is generic and the payoff (the actual budget) is missing.' },
+      rewrite: { title: 'I spent Ksh 12,000 on a month of groceries, here is what fit', clickScore: 82, why: 'Leads with the real number you spent, keeps the surprise as the hook.' },
+      age_label: '3w ago',
     })
   }
   if (u.includes('/dashboard/suggested-competitors')) return J({ ok: true, suggestions: [], category: null })

@@ -822,7 +822,7 @@ def title_suggestion(request: Request):
         "is_short":        bool(is_short),
         "winning_titles":  sorted(winning_titles),
         "model":           "claude-sonnet-4-6",
-        "prompt_version":  "v2",
+        "prompt_version":  "v3",
     }
 
     def _fetch():
@@ -847,7 +847,13 @@ Tasks - return ONLY valid JSON, no markdown:
 1. current: {{"clickScore":0-100, "weakness":"one short sentence on the single biggest problem with the original title"}}
 2. rewrite: {{"title":"<=70 chars, natural human phrasing, not clickbait, in the same niche voice", "clickScore":0-100, "why":"one short sentence on what changed and why it should land harder"}}
 
-The rewrite must clearly beat the current title. If you can't beat it by at least 10 points, score it honestly anyway.
+Hard rules for the rewrite:
+- NO em-dashes (use commas, parentheses, colons, or split sentences instead).
+- NO " | " (pipe) separator.
+- NO clickbait phrases ("you won't believe", "shocking", "this changed everything", etc).
+- Lead with the payoff: a specific number, a concrete result, or a first-person stake.
+- Keep the niche voice from the winning titles above without copying any of them.
+- Score the rewrite high (80+) only if you genuinely believe it will outperform the original. Otherwise score it honestly.
 
 {{"current":{{"clickScore":0,"weakness":""}},"rewrite":{{"title":"","clickScore":0,"why":""}}}}"""
         try:
@@ -864,16 +870,30 @@ The rewrite must clearly beat the current title. If you can't beat it by at leas
             result = json.loads(raw)
             cur = result.get("current") or {}
             rew = result.get("rewrite") or {}
+
+            def _clean(s: str) -> str:
+                # Em-dash + en-dash are banned brand-wide. Strip them and the
+                # " | " separator that Claude likes to lean on. Also strip
+                # straight pipes used as separators.
+                t = (s or "").strip()
+                t = t.replace("—", ",").replace("–", ",")
+                t = t.replace(" | ", ", ").replace("|", ",")
+                # Collapse "title, , subtitle" or trailing commas from the swaps.
+                import re as _re2
+                t = _re2.sub(r"\s*,\s*,\s*", ", ", t)
+                t = _re2.sub(r"\s+", " ", t).strip(" ,")
+                return t
+
             return {
                 "current": {
                     "title":      original_title,
                     "clickScore": int(cur.get("clickScore", 0) or 0),
-                    "weakness":   str(cur.get("weakness", "") or ""),
+                    "weakness":   _clean(cur.get("weakness", "") or ""),
                 },
                 "rewrite": {
-                    "title":      str(rew.get("title", "") or "").strip(),
+                    "title":      _clean(rew.get("title", "") or ""),
                     "clickScore": int(rew.get("clickScore", 0) or 0),
-                    "why":        str(rew.get("why", "") or ""),
+                    "why":        _clean(rew.get("why", "") or ""),
                 },
             }
         except Exception as e:
@@ -891,13 +911,18 @@ The rewrite must clearly beat the current title. If you can't beat it by at leas
     current = out.get("current") or None
     rewrite = out.get("rewrite") or None
 
-    # Quality gate (mirror the frontend gate, belt-and-braces): the rewrite
-    # must beat the current by 8+ points. Otherwise return only the video
-    # so the frontend hides the card.
+    # Quality gate: rewrite must (a) beat current by 8+ AND (b) clear a
+    # minimum score floor of 75. Without the floor we sometimes showed
+    # "less bad" rewrites (e.g. 28 -> 62) that still felt mediocre. Also
+    # belt-and-brace the em-dash strip: if the rewrite still contains one
+    # after cleaning, hide the card and let the next cache miss try again.
     if (
         not current
         or not rewrite
         or not rewrite.get("title")
+        or "—" in rewrite["title"]
+        or "–" in rewrite["title"]
+        or int(rewrite.get("clickScore") or 0) < 75
         or int(rewrite.get("clickScore") or 0) - int(current.get("clickScore") or 0) < 8
     ):
         return JSONResponse({"ok": True, "video": None})
