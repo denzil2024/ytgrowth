@@ -1067,10 +1067,13 @@ export default function Dashboard() {
                 const subsSeries = data.analytics?.subs_series_28d
                 const channelScore = data.insights?.channelScore
                 const haveScore = typeof channelScore === 'number'
+                // On-dark variants so the score reads with weight against
+                // the Channel Snapshot card instead of muddy red-on-red /
+                // dim green-on-green.
                 const scoreColor = !haveScore ? SHELL.text3
-                  : channelScore >= 70 ? '#059669'
+                  : channelScore >= 70 ? '#34d27b'
                   : channelScore >= 50 ? SHELL.text1
-                  : '#dc2626'
+                  : '#fb6a60'
                 const scoreLabel = !haveScore ? 'Awaiting audit'
                   : channelScore >= 70 ? 'Strong'
                   : channelScore >= 50 ? 'Steady'
@@ -1094,9 +1097,12 @@ export default function Dashboard() {
                   if (d === null || d === undefined || Number.isNaN(Number(d))) return null
                   const n = Number(d)
                   const pos = n >= 0
-                  const color = pos ? '#059669' : '#dc2626'
-                  const bg    = pos ? 'rgba(22,163,74,0.14)' : 'rgba(229,37,27,0.07)'
-                  const bdr   = pos ? 'rgba(22,163,74,0.34)' : 'rgba(229,37,27,0.20)'
+                  // Brighter on-dark variants so the chip pops against the
+                  // dark Channel Snapshot card instead of looking muddy red
+                  // on red-tinted background.
+                  const color = pos ? '#34d27b' : '#fb6a60'
+                  const bg    = pos ? 'rgba(52,210,123,0.14)' : 'rgba(251,106,96,0.13)'
+                  const bdr   = pos ? 'rgba(52,210,123,0.34)' : 'rgba(251,106,96,0.32)'
                   return (
                     <span style={{
                       display: 'inline-flex', alignItems: 'center', gap: 3,
@@ -1112,18 +1118,27 @@ export default function Dashboard() {
                     </span>
                   )
                 }
-                const renderMilestoneBar = (pct) => (
-                  <div style={{
-                    height: 3, background: 'rgba(255,255,255,0.10)', borderRadius: 99, overflow: 'hidden',
-                  }}>
+                const renderMilestoneBar = (pct) => {
+                  // Nearing the next milestone (>= 70%) reads as a positive
+                  // status, so the bar switches to a vivid green gradient.
+                  // Below that, it stays the brand red gradient.
+                  const nearing = pct >= 70
+                  const gradient = nearing
+                    ? 'linear-gradient(90deg, rgba(52,210,123,0.55) 0%, #34d27b 100%)'
+                    : 'linear-gradient(90deg, rgba(229,37,27,0.55) 0%, #e5251b 100%)'
+                  return (
                     <div style={{
-                      width: `${pct}%`, height: '100%',
-                      background: 'linear-gradient(90deg, rgba(229,37,27,0.55) 0%, #e5251b 100%)',
-                      borderRadius: 99,
-                      transition: 'width 0.8s cubic-bezier(0.34,1.56,0.64,1)',
-                    }}/>
-                  </div>
-                )
+                      height: 3, background: 'rgba(255,255,255,0.10)', borderRadius: 99, overflow: 'hidden',
+                    }}>
+                      <div style={{
+                        width: `${pct}%`, height: '100%',
+                        background: gradient,
+                        borderRadius: 99,
+                        transition: 'width 0.8s cubic-bezier(0.34,1.56,0.64,1)',
+                      }}/>
+                    </div>
+                  )
+                }
 
                 return (
                   <article style={{
@@ -1178,16 +1193,27 @@ export default function Dashboard() {
                     {/* Tile 3: 28-day momentum (real sparkline or analytics nudge) */}
                     <div className="ov-hero-tile">
                       <p style={eyebrow}>28-day momentum</p>
-                      {subsSeries && subsSeries.length >= 2 ? (
+                      {subsSeries && subsSeries.length >= 2 ? (() => {
+                        // Steadily rising = recent half outperforms the
+                        // earlier half AND the final value beats the first.
+                        // Both clauses guard against single-spike noise.
+                        const half = Math.floor(subsSeries.length / 2)
+                        const avg = (arr) => arr.reduce((s, v) => s + v, 0) / arr.length
+                        const rising = avg(subsSeries.slice(half)) > avg(subsSeries.slice(0, half))
+                          && subsSeries[subsSeries.length - 1] > subsSeries[0]
+                        const stroke = rising ? '#34d27b' : '#e5251b'
+                        const fill   = rising ? 'rgba(52,210,123,0.14)' : 'rgba(229,37,27,0.10)'
+                        return (
                         <>
                           <div style={{ marginTop: -2 }}>
-                            <Sparkline data={subsSeries} width={200} height={54} />
+                            <Sparkline data={subsSeries} width={200} height={54} stroke={stroke} fill={fill} />
                           </div>
                           <p style={{ ...subMeta, marginTop: 'auto' }}>
                             Daily subscriber net since {new Date(Date.now() - 27 * 86400000).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
                           </p>
                         </>
-                      ) : (
+                        )
+                      })() : (
                         <>
                           <p style={{ fontSize: 13, fontWeight: 500, color: SHELL.text2, lineHeight: 1.4, margin: 0 }}>
                             Connect YouTube Analytics on your next reconnect to unlock the 28-day trend line.
