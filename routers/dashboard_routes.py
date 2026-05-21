@@ -1129,3 +1129,193 @@ def title_suggestion(request: Request):
         db2.close()
 
     return JSONResponse({"ok": True, "video": None})
+
+
+@router.get("/missing-description")
+def missing_description(request: Request):
+    """Surface an AI-drafted description for the user's most-recent video
+    whose current description is thin (< 80 chars). Same auto-curated
+    pattern as title-suggestion: zero new YouTube quota, two paths.
+
+      Path 1: User already ran SEO Studio on that video -> return the first
+        description from SeoAnalysisCache.desc_result_json verbatim.
+      Path 2: Headstart. Call SEO Studio's generate_description_suggestions
+        with channel context only (no live YouTube search, no autocomplete
+        fetch). Wrap in cached_ai_output keyed on title + niche + creator-
+        size tier so similar videos in similar niches share the result.
+
+    If no candidate video exists (every description is already >= 80 chars)
+    the card hides itself by returning video=null. Honors YT_QUOTA_PAUSED
+    by skipping the candidate scan entirely.
+    """
+    import os as _os
+    if _os.getenv("YT_QUOTA_PAUSED") == "1":
+        return JSONResponse({"ok": True, "video": None})
+
+    data, _ = get_session(request.session.get("session_id"))
+    if not data:
+        return JSONResponse({"ok": False, "reason": "not_authenticated"}, status_code=401)
+
+    channel = (data or {}).get("channel", {}) or {}
+    videos  = (data or {}).get("videos",  []) or []
+    channel_id = channel.get("channel_id", "") or ""
+    if not channel_id or not videos:
+        return JSONResponse({"ok": True, "video": None})
+
+    from app.insights import parse_duration_seconds
+
+    # Pick: most recent video with a title AND a thin description (< 80 chars).
+    # Threshold matches the user's choice in the design review; descriptions
+    # shorter than this either match no search queries or duplicate the title.
+    THRESHOLD = 80
+    pick = None
+    for v in sorted(videos, key=lambda x: (x.get("published_at") or ""), reverse=True):
+        if not (v.get("title") or "").strip():
+            continue
+        if len((v.get("description") or "").strip()) >= THRESHOLD:
+            continue
+        pick = v
+        break
+    if not pick:
+        return JSONResponse({"ok": True, "video": None})
+
+    title         = (pick.get("title") or "").strip()
+    is_short      = parse_duration_seconds(pick.get("duration", "PT0S")) <= 60
+    current_desc  = (pick.get("description") or "").strip()
+    current_len   = len(current_desc)
+
+    def _age_label(iso: str) -> str:
+        if not iso:
+            return ""
+        try:
+            dt = datetime.datetime.fromisoformat((iso or "")[:10])
+        except Exception:
+            return ""
+        days = (datetime.datetime.now() - dt).days
+        if days <= 0:  return "today"
+        if days == 1:  return "1d ago"
+        if days < 7:   return f"{days}d ago"
+        if days < 30:  return f"{days // 7}w ago"
+        if days < 365: return f"{days // 30}mo ago"
+        return f"{days // 365}y ago"
+
+    def _clean_description(d: str) -> str:
+        """Strip banned punctuation. Em-dashes and en-dashes are out per the
+        repo style. Returns '' if nothing left after stripping."""
+        if not d:
+            return ""
+        return d.replace("—", "-").replace("–", "-").strip()
+
+    video_payload = {
+        "video_id":               pick.get("video_id", ""),
+        "title":                  title,
+        "thumbnail":              pick.get("thumbnail", ""),
+        "published_at":           (pick.get("published_at") or "")[:10],
+        "is_short":               bool(is_short),
+        "current_description_length": current_len,
+    }
+
+    # Path 1: user already ran SEO Studio on this video -> use cached descriptions.
+    db = SessionLocal()
+    try:
+        row = (
+            db.query(SeoAnalysisCache)
+            .filter_by(channel_id=channel_id, title_lower=title.lower())
+            .first()
+        )
+        if row and row.desc_result_json:
+            try:
+                cached = json.loads(row.desc_result_json) or []
+            except Exception:
+                cached = []
+            drafts = []
+            for entry in cached[:3]:
+                # entry shape: { "description": "...", ... } or plain string
+                draft = _clean_description(
+                    entry.get("description") if isinstance(entry, dict) else str(entry)
+                )
+                if draft:
+                    drafts.append(draft)
+            if drafts:
+                return JSONResponse({
+                    "ok":        True,
+                    "video":     video_payload,
+                    "drafts":    drafts,
+                    "age_label": _age_label(pick.get("published_at", "")),
+                    "source":    "studio_cache",
+                })
+    finally:
+        db.close()
+
+    # Path 2: headstart. Call SEO Studio's description generator with channel
+    # context only. Cross-user cached so two creators with similar titles in
+    # the same niche tier share the result.
+    from app.seo import generate_description_suggestions
+    from app.utils import cached_ai_output
+
+    top_titles = [
+        (v.get("title") or "")
+        for v in sorted(videos, key=lambda x: x.get("views", 0) or 0, reverse=True)[:5]
+        if v.get("title")
+    ]
+    channel_context = {
+        "channel_name":     channel.get("channel_name", "") or "",
+        "channel_keywords": channel.get("keywords", "") or "",
+        "top_video_titles": top_titles,
+    }
+
+    def _subs_tier(n: int) -> str:
+        if n < 10_000:    return "micro"
+        if n < 100_000:   return "small"
+        if n < 1_000_000: return "mid"
+        return "large"
+
+    cache_inputs = {
+        "title":          title,
+        "is_short":       bool(is_short),
+        "channel_kw":     (channel.get("keywords", "") or "").lower()[:200],
+        "subs_tier":      _subs_tier(int(channel.get("subscribers", 0) or 0)),
+        "prompt_version": "feed_desc_v1",
+    }
+
+    def _fetch():
+        try:
+            descriptions, _kw, err = generate_description_suggestions(
+                title=title,
+                current_description=current_desc[:240],
+                niche=(channel.get("keywords", "") or "").split(",")[0].strip() or "",
+                intent_analysis=None,
+                keyword_scores=[],
+                channel_context=channel_context,
+                autocomplete=[],
+            )
+            return {"descriptions": descriptions or [], "error": err or ""}
+        except Exception as e:
+            print(f"[missing-description] generate error: {e}")
+            return {"descriptions": [], "error": str(e)}
+
+    out = cached_ai_output(
+        function_name="feed_missing_description",
+        inputs=cache_inputs,
+        ttl_hours=24 * 30,
+        fetch_fn=_fetch,
+    )
+
+    drafts = []
+    for entry in (out.get("descriptions") or [])[:3]:
+        draft = _clean_description(
+            entry.get("description") if isinstance(entry, dict) else str(entry)
+        )
+        if draft:
+            drafts.append(draft)
+    if drafts:
+        return JSONResponse({
+            "ok":        True,
+            "video":     video_payload,
+            "drafts":    drafts,
+            "age_label": _age_label(pick.get("published_at", "")),
+            "source":    "feed_generated",
+        })
+
+    print(f"[missing-description] empty for video '{title[:60]}' (err={out.get('error', 'none')})")
+    return JSONResponse({"ok": True, "video": None})

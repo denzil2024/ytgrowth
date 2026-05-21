@@ -2101,6 +2101,221 @@ export function TitleSuggestionCard({ video, suggestions, ageLabel, applyingIdx,
   )
 }
 
+// Add Missing Description card. Mirrors TitleSuggestionCard's chassis (dark
+// surface, inset compare panel, two-up action row) but features a single
+// AI-drafted description because descriptions are too long to compare
+// side-by-side. Auto-curated: the backend picks the user's most-recent
+// video with a sub-80-character description, so the card hides itself when
+// there is nothing meaningful to action.
+export function MissingDescriptionCard({
+  video, drafts, ageLabel,
+  publishing, published, publishError,
+  onPublish, onDismiss,
+}) {
+  const [draftIdx, setDraftIdx] = useState(0)
+  if (!video || !drafts?.length) return null
+  const idx   = Math.max(0, Math.min(drafts.length - 1, draftIdx))
+  const draft = drafts[idx] || ''
+  if (!draft) return null
+  const canCycle = drafts.length > 1
+  const thumbAspect = video.is_short ? '9 / 16' : '16 / 9'
+  const thumbWidth  = video.is_short ? 150 : 280
+  const ctaLabel = published ? 'Published to YouTube' : publishing ? 'Publishing…' : 'Publish Description'
+  const currentLen = Number(video.current_description_length || 0)
+  const lenLabel = currentLen === 0
+    ? 'no description'
+    : currentLen <= 8
+      ? `only ${currentLen} chars`
+      : `${currentLen} chars`
+
+  return (
+    <article style={{
+      background: SHELL.cardFlat,
+      border: '1px solid rgba(255,255,255,0.08)',
+      borderRadius: 14,
+      padding: '14px 18px 16px 18px',
+      boxShadow: '0 1px 2px rgba(255,255,255,0.04), 0 6px 18px rgba(255,255,255,0.05), inset 0 1px 0 rgba(255,255,255,0.7)',
+      marginBottom: 12,
+    }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
+        <h3 style={{
+          fontSize: 16, fontWeight: 600, color: SHELL.text1,
+          letterSpacing: '-0.2px', lineHeight: 1.3, margin: 0,
+        }}>Add Description</h3>
+        {ageLabel && (
+          <span style={{
+            fontSize: 12.5, fontWeight: 450, color: SHELL.text3,
+            letterSpacing: '-0.01em',
+          }}>· {ageLabel}</span>
+        )}
+        <div style={{ flex: 1 }}/>
+        {onDismiss && (
+          <button
+            type="button"
+            onClick={onDismiss}
+            aria-label="Dismiss"
+            style={{
+              width: 28, height: 28, borderRadius: 8,
+              border: 'none', background: 'transparent',
+              color: 'rgba(255,255,255,0.36)',
+              cursor: 'pointer',
+              display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+              transition: 'background 0.14s, color 0.14s',
+            }}
+            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; e.currentTarget.style.color = SHELL.text1 }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'rgba(255,255,255,0.36)' }}
+          >
+            <XIcon size={14} strokeWidth={2} />
+          </button>
+        )}
+      </div>
+
+      {/* Inset compare panel: HD thumb LEFT, explainer + AI draft RIGHT */}
+      <div style={{
+        display: 'flex',
+        gap: 18,
+        alignItems: 'stretch',
+        padding: 14,
+        background: 'rgba(255,255,255,0.02)',
+        border: '1px solid rgba(255,255,255,0.06)',
+        borderRadius: 12,
+        marginBottom: 14,
+      }}>
+        <div style={{ flexShrink: 0, width: thumbWidth }}>
+          {(video.video_id || video.thumbnail) ? (
+            <img
+              src={ytMaxThumbUrl(video.video_id) || video.thumbnail}
+              alt=""
+              loading="lazy"
+              onLoad={makeThumbOnLoad(video.video_id, video.thumbnail)}
+              onError={makeThumbOnError(video.video_id, video.thumbnail)}
+              style={{
+                display: 'block',
+                width: '100%', aspectRatio: thumbAspect,
+                objectFit: 'cover',
+                borderRadius: 12,
+                background: 'rgba(255,255,255,0.06)',
+                border: '1px solid rgba(255,255,255,0.08)',
+              }}
+            />
+          ) : (
+            <div style={{
+              width: '100%', aspectRatio: thumbAspect,
+              borderRadius: 12,
+              background: 'rgba(255,255,255,0.06)',
+              border: '1px solid rgba(255,255,255,0.08)',
+            }}/>
+          )}
+        </div>
+
+        <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: 10, justifyContent: 'center' }}>
+          {/* Explainer line. References the specific gap, not a generic nag. */}
+          <p style={{
+            margin: 0, fontSize: 13.5, fontWeight: 450, color: SHELL.text2,
+            letterSpacing: '-0.05px', lineHeight: 1.45,
+          }}>
+            Your {video.is_short ? 'last short' : 'latest video'} has {lenLabel}.
+            YouTube uses descriptions to match your video to search queries.
+          </p>
+
+          {/* AI draft preview */}
+          <div style={{
+            border: '1px solid rgba(255,255,255,0.08)',
+            borderRadius: 10,
+            background: 'rgba(0,0,0,0.16)',
+            overflow: 'hidden',
+          }}>
+            <div style={{
+              display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+              padding: '7px 12px',
+              borderBottom: '1px solid rgba(255,255,255,0.06)',
+              background: 'rgba(255,255,255,0.02)',
+            }}>
+              <span style={{
+                fontSize: 11, fontWeight: 600, color: SHELL.text3,
+                letterSpacing: '0.10em', textTransform: 'uppercase',
+              }}>AI draft</span>
+              <span style={{
+                fontSize: 11, fontWeight: 600, color: SHELL.text3,
+                fontVariantNumeric: 'tabular-nums',
+                letterSpacing: '-0.01em',
+              }}>{draft.length} chars</span>
+            </div>
+            <p style={{
+              margin: 0, padding: '10px 12px',
+              fontSize: 13.5, fontWeight: 450, color: SHELL.text1,
+              letterSpacing: '-0.05px', lineHeight: 1.5,
+              whiteSpace: 'pre-wrap',
+              display: '-webkit-box',
+              WebkitBoxOrient: 'vertical',
+              WebkitLineClamp: 4,
+              overflow: 'hidden',
+            }}>{draft}</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Bottom action row: Regenerate cycles through the cached drafts
+          (no extra Claude call) + Publish (primary CTA). */}
+      <div style={{ display: 'grid', gridTemplateColumns: canCycle ? '1fr 1fr' : '1fr', gap: 10 }}>
+        {canCycle && (
+          <button
+            type="button"
+            disabled={publishing || published}
+            onClick={() => setDraftIdx((idx + 1) % drafts.length)}
+            style={{
+              display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 7,
+              padding: '10px 14px', borderRadius: 100,
+              border: '1px solid rgba(255,255,255,0.10)',
+              background: 'rgba(255,255,255,0.03)',
+              color: SHELL.text1,
+              fontFamily: 'inherit',
+              fontSize: 13, fontWeight: 600, letterSpacing: '-0.05px',
+              cursor: (publishing || published) ? 'default' : 'pointer',
+              opacity: (publishing || published) ? 0.5 : 1,
+              transition: 'background 0.14s, border-color 0.14s',
+            }}
+            onMouseEnter={e => { if (!publishing && !published) { e.currentTarget.style.background = 'rgba(255,255,255,0.07)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.18)' } }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.03)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.10)' }}
+          >
+            <RefreshCw size={13} strokeWidth={2.1} />
+            Next draft
+          </button>
+        )}
+
+        <button
+          type="button"
+          disabled={publishing || published}
+          onClick={() => onPublish?.(draft, video)}
+          style={{
+            display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 7,
+            padding: '10px 14px', borderRadius: 100,
+            border: 'none',
+            background: published ? 'rgba(22,163,74,0.85)' : '#e5251b',
+            color: '#fff',
+            fontFamily: 'inherit',
+            fontSize: 13, fontWeight: 600, letterSpacing: '-0.05px',
+            boxShadow: published ? 'none' : '0 1px 3px rgba(229,37,27,0.28)',
+            cursor: (publishing || published) ? 'default' : 'pointer',
+            transition: 'filter 0.14s, transform 0.14s, background 0.2s',
+          }}
+          onMouseEnter={e => { if (!publishing && !published) { e.currentTarget.style.filter = 'brightness(1.08)'; e.currentTarget.style.transform = 'translateY(-1px)' } }}
+          onMouseLeave={e => { e.currentTarget.style.filter = 'none'; e.currentTarget.style.transform = 'translateY(0)' }}
+        >
+          {publishing && <RefreshCw size={13} strokeWidth={2.1} style={{ animation: 'spin 1s linear infinite' }} />}
+          {ctaLabel}
+        </button>
+      </div>
+
+      {publishError && (
+        <p style={{ margin: '8px 2px 0', fontSize: 12, fontWeight: 500, color: '#fb6a60' }}>
+          {publishError}
+        </p>
+      )}
+    </article>
+  )
+}
+
 export function SuggestedCompetitorsCard({ suggestions, category, onTrack, onDismiss, onOpenAll }) {
   const top = (suggestions || []).slice(0, 4)
   if (top.length < 3) return null  // hide if signal is thin

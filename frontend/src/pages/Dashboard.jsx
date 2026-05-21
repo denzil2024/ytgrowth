@@ -47,6 +47,7 @@ import {
   MilestoneFeedCard, ContentMixFeedCard, ChannelHealthFeedCard,
   TopPerformerCard, PostingConsistencyCard, BestTimeCard,
   TrackedLiftCard, DailyIdeasCard, TitleSuggestionCard,
+  MissingDescriptionCard,
   SuggestedCompetitorsCard, RelatedTrafficCard, CompetitorActivityCard,
 } from './dashboard/feedCards'
 import {
@@ -123,6 +124,13 @@ export default function Dashboard() {
   const [titleApplyingIdx, setTitleApplyingIdx] = useState(null)
   const [titleAppliedIdx, setTitleAppliedIdx] = useState(null)
   const [titleApplyError, setTitleApplyError] = useState('')
+  // Missing Description card. Same auto-curated pattern as title-suggestion:
+  // backend picks one video with a thin description and returns up to 3 AI
+  // drafts. Publish state is binary (success hides the card next refresh).
+  const [missingDescription, setMissingDescription] = useState(null)
+  const [descPublishing, setDescPublishing] = useState(false)
+  const [descPublished, setDescPublished] = useState(false)
+  const [descPublishError, setDescPublishError] = useState('')
   const [relatedTraffic, setRelatedTraffic] = useState(null)
   const [refreshingIdeas, setRefreshingIdeas] = useState(false)
   // Competitor Activity (recent uploads from tracked competitors).
@@ -293,6 +301,15 @@ export default function Dashboard() {
     fetch('/dashboard/title-suggestion', { credentials: 'include' })
       .then(r => r.ok ? r.json() : null)
       .then(d => { if (d && d.ok && d.video && d.suggestions?.length) setTitleSuggestion(d) })
+      .catch(() => {})
+
+    // Load Missing Description: backend walks the user's videos most-recent
+    // first, picks the first one with a sub-80-char description, and returns
+    // up to 3 AI drafts (either from SEO Studio cache or a fresh cross-user
+    // cached Claude call). Card hides itself if no candidate.
+    fetch('/dashboard/missing-description', { credentials: 'include' })
+      .then(r => r.ok ? r.json() : null)
+      .then(d => { if (d && d.ok && d.video && d.drafts?.length) setMissingDescription(d) })
       .catch(() => {})
 
     // Load Related Traffic: YouTube Analytics detail of which OTHER
@@ -1431,6 +1448,49 @@ export default function Dashboard() {
                   )
                 })() : null
 
+                const missingDescriptionBlock = (feedFilter === 'all' || feedFilter === 'insights') && missingDescription?.video && missingDescription?.drafts?.length ? (() => {
+                  const dismissKey = `ytg_missing_description_dismissed:${data?.channel?.channel_id || 'x'}:${missingDescription.video.video_id || 'x'}`
+                  try { if (localStorage.getItem(dismissKey)) return null } catch {}
+                  return (
+                    <MissingDescriptionCard
+                      key="missing-description"
+                      video={missingDescription.video}
+                      drafts={missingDescription.drafts}
+                      ageLabel={missingDescription.age_label || ''}
+                      publishing={descPublishing}
+                      published={descPublished}
+                      publishError={descPublishError}
+                      onPublish={async (draft, vid) => {
+                        if (!draft || !vid?.video_id) return
+                        setDescPublishing(true)
+                        setDescPublishError('')
+                        try {
+                          const res = await fetch('/seo/update-video', {
+                            method: 'POST',
+                            credentials: 'include',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ video_id: vid.video_id, description: draft }),
+                          })
+                          const d = await res.json().catch(() => ({}))
+                          if (!res.ok || d?.error) {
+                            setDescPublishError(d?.error || 'Update failed. Try again.')
+                          } else {
+                            setDescPublished(true)
+                          }
+                        } catch {
+                          setDescPublishError('Could not reach the server.')
+                        } finally {
+                          setDescPublishing(false)
+                        }
+                      }}
+                      onDismiss={() => {
+                        try { localStorage.setItem(dismissKey, '1') } catch {}
+                        setChecked(prev => ({ ...prev }))
+                      }}
+                    />
+                  )
+                })() : null
+
                 const suggestedCompetitorsBlock = (feedFilter === 'all' || feedFilter === 'insights') && suggestedCompetitors?.suggestions?.length >= 1 ? (() => {
                   const dismissKey = `ytg_suggested_competitors_dismissed:${data?.channel?.channel_id || 'x'}`
                   try { if (localStorage.getItem(dismissKey)) return null } catch {}
@@ -1634,6 +1694,7 @@ export default function Dashboard() {
                       {trackedLiftBlock}
                       {nicheHeroBlock}
                       {titleSuggestionBlock}
+                      {missingDescriptionBlock}
                       {suggestedCompetitorsBlock}
                       {relatedTrafficBlock}
                       {competitorActivityBlock}
