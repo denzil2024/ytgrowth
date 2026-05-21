@@ -67,6 +67,24 @@ window.fetch = async (url, opts) => {
       channels:   [ch('UCa', 'valentine mwangi', '@valentinemwangii', 5.9, 1), ch('UCb', 'Miss Eva', '@missevaspeaks', 3.1, 2), ch('UCc', 'sassyinkorea', '@sassyinkorea', 2.0, 1)],
     } })
   }
+  if (u.includes('/dashboard/title-suggestion')) {
+    if (state === 'fresh') return J({ ok: true, video: null })
+    return J({
+      ok: true,
+      video: {
+        video_id: 'dQw4w9WgXcQ',
+        title: 'My Monthly Grocery Haul VLOG with JUST Ksh 12,000',
+        thumbnail: 'https://i.ytimg.com/vi/dQw4w9WgXcQ/hqdefault.jpg',
+        views: 3420,
+        published_at: '2026-05-06',
+        is_short: false,
+      },
+      current: { title: 'My Monthly Grocery Haul VLOG with JUST Ksh 12,000', clickScore: 71, weakness: 'Leads with the budget number, not the surprise. Hook is buried.' },
+      rewrite: { title: 'I spent only Ksh 12,000 on a month of groceries, here is what fit', clickScore: 86, why: 'Leads with a personal stake and curiosity, keeps the price as the hook.' },
+      age_label: '14d ago',
+    })
+  }
+  if (u.includes('/dashboard/suggested-competitors')) return J({ ok: true, suggestions: [], category: null })
   if (u.includes('/chat/state')) return J({ conversations: [], conversation_id: null })
   if (u.includes('/dashboard/')) return J({})
   if (u.startsWith('http')) return origFetch(url, opts)

@@ -732,21 +732,18 @@ def suggested_competitors(request: Request):
 
 @router.get("/title-suggestion")
 def title_suggestion(request: Request):
-    """Scored title rewrites for one of the creator's recent under-performers.
+    """Title rewrite suggestion for one of the creator's recent under-performers.
 
     Picks a video locally from the session (no YouTube quota): the most
     recent video below the creator's recent-median views, falling back to
     the most recent video if the channel is too small to have a meaningful
     median.
 
-    Generates three alternatives via Claude, wrapped in `cached_ai_output`
-    so two creators with overlapping inputs (same original title + same
-    niche + same size tier) share the same result. 14d TTL — titles
-    don't go stale fast.
-
-    Returns video metadata + alternatives. The frontend opens SEO Studio
-    pre-filled with the chosen alt, so the actual title push goes through
-    the standard credit-spend path.
+    Single Claude call evaluates the current title (clickScore + weakness)
+    AND generates ONE stronger rewrite (clickScore + why). Wrapped in
+    `cached_ai_output` so two creators with overlapping inputs share the
+    same result. 14d TTL. Quality gate: only ships if rewrite scores at
+    least 8 points higher than the current title (else the card hides).
     """
     data, _ = get_session(request.session.get("session_id"))
     if not data:
@@ -755,35 +752,58 @@ def title_suggestion(request: Request):
     channel = (data or {}).get("channel", {}) or {}
     videos  = (data or {}).get("videos",  []) or []
     if not videos:
-        return JSONResponse({"ok": True, "video": None, "alternatives": []})
+        return JSONResponse({"ok": True, "video": None})
 
     from app.competitors import extract_niche_keywords
     from app.insights import parse_duration_seconds
 
     # Recent pool: last 90 days, has a title we can rewrite. Fall back to
-    # the most recent 15 if nothing falls in the 90d window (newer channels
-    # / dormant uploads).
+    # the most recent 15 if nothing falls in the 90d window.
     cutoff = (datetime.datetime.now() - datetime.timedelta(days=90)).strftime("%Y-%m-%d")
     recent = [v for v in videos if (v.get("published_at") or "")[:10] >= cutoff and v.get("title")]
     if len(recent) < 3:
         recent = [v for v in videos if v.get("title")][:15]
     if not recent:
-        return JSONResponse({"ok": True, "video": None, "alternatives": []})
+        return JSONResponse({"ok": True, "video": None})
 
-    # Median over the recent pool. Under-performer = below median.
     views_sorted = sorted(int(v.get("views", 0) or 0) for v in recent)
     median_views = views_sorted[len(views_sorted) // 2] if views_sorted else 0
     under = [v for v in recent if int(v.get("views", 0) or 0) < median_views]
 
     if under:
         pick = sorted(under, key=lambda v: (v.get("published_at") or ""), reverse=True)[0]
-        reason = "Below your recent median views"
     else:
         pick = sorted(recent, key=lambda v: (v.get("published_at") or ""), reverse=True)[0]
-        reason = "Your most recent video"
 
     is_short = parse_duration_seconds(pick.get("duration", "PT0S")) <= 60
     niche_kw = extract_niche_keywords(channel, videos) or []
+
+    # Winning titles in this niche, pulled from the creator's own outliers
+    # cache so Claude sees what's already working in the space. Falls back
+    # to an empty list when no outliers report has been run yet.
+    winning_titles = []
+    db = SessionLocal()
+    try:
+        from database.models import OutliersReport
+        my_id = channel.get("channel_id") or ""
+        if my_id:
+            row = (
+                db.query(OutliersReport)
+                .filter_by(channel_id=my_id)
+                .order_by(OutliersReport.created_at.desc())
+                .first()
+            )
+            if row and row.result_json:
+                try:
+                    payload = json.loads(row.result_json) or {}
+                    vids = (payload.get("videos") or [])[:3]
+                    winning_titles = [str(v.get("title") or "").strip() for v in vids if v.get("title")]
+                except Exception:
+                    pass
+    except Exception:
+        pass
+    finally:
+        db.close()
 
     def _subs_tier(n: int) -> str:
         if n < 10_000:    return "micro"
@@ -792,13 +812,17 @@ def title_suggestion(request: Request):
         return "large"
 
     original_title = (pick.get("title") or "").strip()
+    description    = (pick.get("description") or "").strip()[:240]
+
     cache_inputs = {
-        "original_title": original_title,
-        "niche_kw":       sorted((k or "").strip().lower() for k in niche_kw[:5]),
-        "subs_tier":      _subs_tier(int(channel.get("subscribers", 0) or 0)),
-        "is_short":       bool(is_short),
-        "model":          "claude-sonnet-4-6",
-        "prompt_version": "v1",
+        "original_title":  original_title,
+        "description":     description,
+        "niche_kw":        sorted((k or "").strip().lower() for k in niche_kw[:5]),
+        "subs_tier":       _subs_tier(int(channel.get("subscribers", 0) or 0)),
+        "is_short":        bool(is_short),
+        "winning_titles":  sorted(winning_titles),
+        "model":           "claude-sonnet-4-6",
+        "prompt_version":  "v2",
     }
 
     def _fetch():
@@ -806,23 +830,31 @@ def title_suggestion(request: Request):
         import re as _re
         client = make_anthropic_client()
         fmt_label = "Short (under 60s)" if is_short else "Long-form"
-        prompt = f"""You rewrite YouTube titles. The video below underperformed and the creator wants three sharper alternatives.
+        winners_block = ""
+        if winning_titles:
+            joined = "\n".join(f"- {t}" for t in winning_titles)
+            winners_block = f"\nTitles already winning in this niche (for pattern inspiration, do NOT copy):\n{joined}\n"
+        desc_block = f'\nVideo description (first 240 chars): "{description}"\n' if description else ""
+
+        prompt = f"""You are a YouTube title strategist. The video below underperformed. Score the current title, then write ONE stronger rewrite.
 
 Original title: "{original_title}"
 Format: {fmt_label}
 Creator size tier: {cache_inputs["subs_tier"]}
-Niche keywords the channel ranks for: {cache_inputs["niche_kw"]}
+Niche keywords the channel ranks for: {cache_inputs["niche_kw"]}{desc_block}{winners_block}
 
 Tasks - return ONLY valid JSON, no markdown:
-1. Three alternative titles. Each <=70 characters. Natural human phrasing, NOT clickbait. Vary the angle across the three (e.g. one curiosity-led, one specificity-led, one first-person-stake).
-2. For each: clickScore 0-100 (higher = stronger hook + clearer specificity vs original), why (one short sentence on what changed and why it should land harder).
+1. current: {{"clickScore":0-100, "weakness":"one short sentence on the single biggest problem with the original title"}}
+2. rewrite: {{"title":"<=70 chars, natural human phrasing, not clickbait, in the same niche voice", "clickScore":0-100, "why":"one short sentence on what changed and why it should land harder"}}
 
-{{"alternatives":[{{"title":"","clickScore":0,"why":""}},{{"title":"","clickScore":0,"why":""}},{{"title":"","clickScore":0,"why":""}}]}}"""
+The rewrite must clearly beat the current title. If you can't beat it by at least 10 points, score it honestly anyway.
+
+{{"current":{{"clickScore":0,"weakness":""}},"rewrite":{{"title":"","clickScore":0,"why":""}}}}"""
         try:
             resp = client.messages.create(
                 model="claude-sonnet-4-6",
-                max_tokens=600,
-                system="You write YouTube titles. Return only valid JSON, no markdown.",
+                max_tokens=500,
+                system="You evaluate and rewrite YouTube titles. Return only valid JSON, no markdown.",
                 messages=[{"role": "user", "content": prompt}],
             )
             raw = resp.content[0].text.strip()
@@ -830,13 +862,23 @@ Tasks - return ONLY valid JSON, no markdown:
                 raw = _re.sub(r"^```[a-z]*\n?", "", raw)
                 raw = _re.sub(r"\n?```$", "", raw)
             result = json.loads(raw)
-            alts = result.get("alternatives") or []
-            alts = [a for a in alts if (a or {}).get("title")]
-            alts.sort(key=lambda a: int(a.get("clickScore", 0) or 0), reverse=True)
-            return {"alternatives": alts[:3]}
+            cur = result.get("current") or {}
+            rew = result.get("rewrite") or {}
+            return {
+                "current": {
+                    "title":      original_title,
+                    "clickScore": int(cur.get("clickScore", 0) or 0),
+                    "weakness":   str(cur.get("weakness", "") or ""),
+                },
+                "rewrite": {
+                    "title":      str(rew.get("title", "") or "").strip(),
+                    "clickScore": int(rew.get("clickScore", 0) or 0),
+                    "why":        str(rew.get("why", "") or ""),
+                },
+            }
         except Exception as e:
             print(f"[title-suggestion] Claude error: {e}")
-            return {"alternatives": [], "_error": str(e)}
+            return {"_error": str(e)}
 
     from app.utils import cached_ai_output
     out = cached_ai_output(
@@ -845,6 +887,37 @@ Tasks - return ONLY valid JSON, no markdown:
         ttl_hours=24 * 14,
         fetch_fn=_fetch,
     )
+
+    current = out.get("current") or None
+    rewrite = out.get("rewrite") or None
+
+    # Quality gate (mirror the frontend gate, belt-and-braces): the rewrite
+    # must beat the current by 8+ points. Otherwise return only the video
+    # so the frontend hides the card.
+    if (
+        not current
+        or not rewrite
+        or not rewrite.get("title")
+        or int(rewrite.get("clickScore") or 0) - int(current.get("clickScore") or 0) < 8
+    ):
+        return JSONResponse({"ok": True, "video": None})
+
+    # Relative-age label "1d ago" / "3d ago" / "1mo ago" — small UI niceness
+    # since the card head shows it next to the title.
+    def _age_label(iso: str) -> str:
+        if not iso:
+            return ""
+        try:
+            dt = datetime.datetime.fromisoformat((iso or "")[:10])
+        except Exception:
+            return ""
+        days = (datetime.datetime.now() - dt).days
+        if days <= 0:    return "today"
+        if days == 1:    return "1d ago"
+        if days < 7:     return f"{days}d ago"
+        if days < 30:    return f"{days // 7}w ago"
+        if days < 365:   return f"{days // 30}mo ago"
+        return f"{days // 365}y ago"
 
     return JSONResponse({
         "ok": True,
@@ -856,6 +929,7 @@ Tasks - return ONLY valid JSON, no markdown:
             "published_at": (pick.get("published_at") or "")[:10],
             "is_short":     bool(is_short),
         },
-        "alternatives": out.get("alternatives") or [],
-        "reason":       reason,
+        "current":   current,
+        "rewrite":   rewrite,
+        "age_label": _age_label(pick.get("published_at", "")),
     })
