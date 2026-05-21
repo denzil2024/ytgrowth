@@ -1314,11 +1314,14 @@ export default function ThumbnailScore({ channelData, onNavigate, plan, freeTier
 
   return (
     <div style={{
-      // Negative margin + matching padding so the white page bg extends to the scroll container edges,
-      // the same trick SEO Optimizer and Overview use. Inter is applied page-scoped here, never globally.
+      // Negative margin + matching padding so the page extends to the
+      // scroll container edges, the same trick Overview / SEO use.
+      // No background here: the dark-route ground in Dashboard.jsx
+      // (#0e0e10) shows through, so this page reads as one system with
+      // Competitors / Keywords / Outliers instead of a lighter #1c1c21
+      // band that broke the topbar→body continuity.
       margin: '-36px -40px -72px',
       padding: '36px 40px 72px',
-      background: C.cardFlat,
       minHeight: 'calc(100vh - 52px)',
     }}>
      {/* 1040 centered column — every polished feature page (Video Ideas / SEO / Overview) wraps content
