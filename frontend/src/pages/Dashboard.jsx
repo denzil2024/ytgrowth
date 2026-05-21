@@ -1379,7 +1379,6 @@ export default function Dashboard() {
                           },
                         }
                       })}
-                      totalCount={all.length}
                     />
                   )
                 })() : null
@@ -1903,18 +1902,26 @@ export default function Dashboard() {
                 return (
                   <>
                     <div className="ov-stack">
+                      {/* Actions — things to do now. Match the filter-pill
+                          'Actions' bucket exactly so switching tabs reads
+                          as one coherent block. */}
                       {priorityActionsBlock}
                       {dailyIdeasBlock}
-                      {milestoneBlock}
-                      {/* topPerformerBlock removed: merged into Title Suggestion card,
-                          which now picks the top-views video and shows its view count
-                          alongside the title compare. */}
-                      {trackedLiftBlock}
-                      {nicheHeroBlock}
                       {titleSuggestionBlock}
                       {missingDescriptionBlock}
                       {missingTagsBlock}
                       {unansweredCommentBlock}
+
+                      {/* Achievements — recent wins. Brief positive break
+                          between work and exploration.
+                          topPerformerBlock removed: merged into Title
+                          Suggestion card. */}
+                      {milestoneBlock}
+                      {trackedLiftBlock}
+
+                      {/* Insights — context and exploration. Niche outlier
+                          leads as the visual centerpiece. */}
+                      {nicheHeroBlock}
                       {suggestedCompetitorsBlock}
                       {topSearchTermsBlock}
                       {relatedTrafficBlock}

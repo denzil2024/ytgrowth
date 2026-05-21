@@ -169,7 +169,7 @@ export function FeedCard({
 // paragraph as a bold headline. Each row here shows ONE short action line
 // (action.action, falling back to a clamped problem). Click a row to expand
 // the diagnostic prose + "why this works"; otherwise nothing is shown.
-export function ActionsRailCard({ items, totalCount }) {
+export function ActionsRailCard({ items }) {
   const [openKey, setOpenKey] = useState(null)
   if (!items || items.length === 0) return null
 
@@ -221,7 +221,7 @@ export function ActionsRailCard({ items, totalCount }) {
           fontSize: 11, fontWeight: 600, color: SHELL.text3,
           background: 'rgba(255,255,255,0.06)', padding: '2px 8px', borderRadius: 99,
           fontVariantNumeric: 'tabular-nums',
-        }}>{items.length} of {totalCount}</span>
+        }}>{items.length}</span>
       </div>
 
       {/* Rows */}
