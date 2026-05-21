@@ -89,6 +89,19 @@ window.fetch = async (url, opts) => {
     })
   }
   if (u.includes('/dashboard/suggested-competitors')) return J({ ok: true, suggestions: [], category: null })
+  if (u.includes('/dashboard/related-traffic')) {
+    if (state === 'fresh') return J({ ok: true, items: [] })
+    return J({
+      ok: true,
+      refreshed_at: new Date(Date.now() - 86400_000).toISOString(),
+      items: [
+        { video_id: 'JGwWNGJdvx8', title: 'WHAT Ksh 25,662 GROCERY SHOPPING WILL GET YOU IN NAIROBI IN MID-2025', channel_name: 'Diary of a Kenyan Wife', thumbnail: '', duration_seconds: 713, view_count: 8330, views_to_you: 3 },
+        { video_id: 'OPf0YbXqDm0', title: 'Found my DREAM PALACE — This house has it all', channel_name: 'Adventure Apes', thumbnail: '', duration_seconds: 2647, view_count: 35900, views_to_you: 2 },
+        { video_id: 'kJQP7kiw5Fk', title: 'Living in a 300 sq ft Apartment | Where I Store…', channel_name: 'Tiny Living Co', thumbnail: '', duration_seconds: 824, view_count: 15400, views_to_you: 2 },
+        { video_id: '3JZ_D3ELwOQ', title: 'The Downsizing Decision: Tiny Apartment Living After 55', channel_name: 'Boomer Vlog', thumbnail: '', duration_seconds: 1248, view_count: 14200, views_to_you: 1 },
+      ],
+    })
+  }
   if (u.includes('/chat/state')) return J({ conversations: [], conversation_id: null })
   if (u.includes('/dashboard/')) return J({})
   if (u.startsWith('http')) return origFetch(url, opts)

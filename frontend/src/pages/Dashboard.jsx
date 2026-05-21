@@ -21,6 +21,7 @@ import {
   Lightbulb,        // Daily Ideas category
   Users,            // Competitor Activity category
   UserPlus,         // Suggested Competitors category
+  Eye,              // Related Traffic — total view-count icon
   Wand2,            // Title Suggestion category (legacy import, kept for parity)
   ArrowDown,        // Title Suggestion before-/after arrow
   Pencil,           // Title Suggestion inline edit action
@@ -3984,10 +3985,193 @@ function SuggestedCompetitorsCard({ suggestions, category, onTrack, onDismiss, o
 }
 
 // Competitor Activity card. Shows recent uploads from the channels the
-// user tracks via the Competitors feature. Habit-forming surface: every
-// time a competitor posts, this card updates. Three uploads shown as a
-// row of mini cards (thumbnail + title + competitor name + views + age).
-// Click any to open the video on YouTube.
+// Related Traffic card. Auto-curated, zero-credit. Shows up to 6 OTHER
+// videos on YouTube that recently sent views to this creator (via the
+// "Suggested videos" surface), surfaced from Analytics. Visual model
+// mirrors the VidIQ Feed reference: large HD thumbnails in a 2-up grid,
+// duration badge bottom-right of each thumb, title 2-line clamp, stats
+// row showing the source video's total views with an arrow to a brand-
+// red "N views to you" pill. Click anywhere on a tile opens the video
+// on YouTube in a new tab.
+function RelatedTrafficCard({ items, ageLabel, onOpen, onDismiss }) {
+  const top = (items || []).slice(0, 6)
+  if (top.length === 0) return null
+
+  function fmtDuration(sec) {
+    sec = Math.max(0, Math.floor(Number(sec || 0)))
+    const h = Math.floor(sec / 3600)
+    const m = Math.floor((sec % 3600) / 60)
+    const s = sec % 60
+    if (h > 0) return `${h}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`
+    return `${m}:${String(s).padStart(2, '0')}`
+  }
+
+  return (
+    <article style={{
+      background: SHELL.cardFlat,
+      border: '1px solid rgba(255,255,255,0.08)',
+      borderRadius: 14,
+      padding: '14px 18px 16px 18px',
+      boxShadow: '0 1px 2px rgba(255,255,255,0.04), 0 6px 18px rgba(255,255,255,0.05), inset 0 1px 0 rgba(255,255,255,0.7)',
+      marginBottom: 12,
+    }}>
+      {/* Plain head: title + age + dismiss */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
+        <h3 style={{
+          fontSize: 16, fontWeight: 600, color: SHELL.text1,
+          letterSpacing: '-0.2px', lineHeight: 1.3, margin: 0,
+        }}>{`New Traffic From ${top.length} Related ${top.length === 1 ? 'Video' : 'Videos'}`}</h3>
+        {ageLabel && (
+          <span style={{
+            fontSize: 12.5, fontWeight: 450, color: SHELL.text3,
+            letterSpacing: '-0.01em',
+          }}>· {ageLabel}</span>
+        )}
+        <div style={{ flex: 1 }}/>
+        {onDismiss && (
+          <button
+            type="button"
+            onClick={onDismiss}
+            aria-label="Dismiss"
+            style={{
+              width: 28, height: 28, borderRadius: 8,
+              border: 'none', background: 'transparent',
+              color: 'rgba(255,255,255,0.36)',
+              cursor: 'pointer',
+              display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+              transition: 'background 0.14s, color 0.14s',
+            }}
+            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; e.currentTarget.style.color = SHELL.text1 }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'rgba(255,255,255,0.36)' }}
+          >
+            <XIcon size={14} strokeWidth={2} />
+          </button>
+        )}
+      </div>
+
+      {/* 2-up grid (auto-fill, collapses to 1-up on narrow widths) */}
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
+        gap: 14,
+      }}>
+        {top.map((it, i) => {
+          const dur = fmtDuration(it.duration_seconds)
+          return (
+            <button
+              key={it.video_id || i}
+              type="button"
+              onClick={() => onOpen?.(it)}
+              aria-label={`Open ${it.title} on YouTube`}
+              style={{
+                display: 'flex', flexDirection: 'column', gap: 0,
+                padding: 0,
+                background: 'transparent',
+                border: 'none',
+                borderRadius: 12,
+                cursor: 'pointer',
+                textAlign: 'left',
+                transition: 'transform 0.18s cubic-bezier(0.2,0.7,0.3,1)',
+              }}
+              onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)' }}
+              onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)' }}
+            >
+              {/* HD thumbnail with duration badge */}
+              <div style={{ position: 'relative', width: '100%' }}>
+                {(it.video_id || it.thumbnail) ? (
+                  <img
+                    src={ytMaxThumbUrl(it.video_id) || it.thumbnail}
+                    alt=""
+                    loading="lazy"
+                    onLoad={makeThumbOnLoad(it.video_id, it.thumbnail)}
+                    onError={makeThumbOnError(it.video_id, it.thumbnail)}
+                    style={{
+                      display: 'block',
+                      width: '100%', aspectRatio: '16 / 9',
+                      objectFit: 'cover',
+                      borderRadius: 12,
+                      background: 'rgba(255,255,255,0.06)',
+                      border: '1px solid rgba(255,255,255,0.08)',
+                    }}
+                  />
+                ) : (
+                  <div style={{
+                    width: '100%', aspectRatio: '16 / 9',
+                    borderRadius: 12,
+                    background: 'rgba(255,255,255,0.06)',
+                    border: '1px solid rgba(255,255,255,0.08)',
+                  }}/>
+                )}
+                {dur && dur !== '0:00' && (
+                  <span style={{
+                    position: 'absolute', right: 8, bottom: 8,
+                    padding: '3px 7px', borderRadius: 6,
+                    background: 'rgba(0,0,0,0.82)',
+                    color: '#fff',
+                    fontSize: 11.5, fontWeight: 600,
+                    letterSpacing: '-0.01em',
+                    fontVariantNumeric: 'tabular-nums',
+                    lineHeight: 1.1,
+                  }}>{dur}</span>
+                )}
+              </div>
+
+              {/* Title */}
+              <p style={{
+                margin: '10px 2px 0',
+                fontSize: 13.5, fontWeight: 600, color: SHELL.text1,
+                letterSpacing: '-0.1px', lineHeight: 1.35,
+                display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical',
+                overflow: 'hidden', textOverflow: 'ellipsis',
+                minHeight: 36,
+              }}>{it.title || 'Untitled'}</p>
+
+              {/* Channel name (subtle) */}
+              {it.channel_name && (
+                <p style={{
+                  margin: '4px 2px 0',
+                  fontSize: 12, fontWeight: 450, color: SHELL.text3,
+                  letterSpacing: '-0.01em', lineHeight: 1.3,
+                  whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
+                }}>{it.channel_name}</p>
+              )}
+
+              {/* Stats row: eye + view count → "N views to you" pill */}
+              <div style={{
+                display: 'flex', alignItems: 'center', gap: 8,
+                margin: '8px 2px 0',
+              }}>
+                <span style={{
+                  display: 'inline-flex', alignItems: 'center', gap: 5,
+                  color: SHELL.text3,
+                  fontSize: 12, fontWeight: 500,
+                  letterSpacing: '-0.01em',
+                  fontVariantNumeric: 'tabular-nums',
+                }}>
+                  <Eye size={12} strokeWidth={2.2} />
+                  {fmtNum(it.view_count || 0)}
+                </span>
+                <ArrowRight size={12} strokeWidth={2.2} style={{ color: SHELL.text3 }}/>
+                <span style={{
+                  display: 'inline-flex', alignItems: 'center', gap: 4,
+                  padding: '3px 9px', borderRadius: 100,
+                  background: 'rgba(229,37,27,0.13)',
+                  border: '1px solid rgba(229,37,27,0.32)',
+                  color: '#fb6a60',
+                  fontSize: 11.5, fontWeight: 600,
+                  letterSpacing: '-0.01em',
+                  fontVariantNumeric: 'tabular-nums',
+                }}>{fmtNum(it.views_to_you || 0)} {it.views_to_you === 1 ? 'view to you' : 'views to you'}</span>
+              </div>
+            </button>
+          )
+        })}
+      </div>
+    </article>
+  )
+}
+
+
 function CompetitorActivityCard({ items, refreshing, onRefresh, onOpen, onOpenAll, onDismiss }) {
   const top3 = (items || []).slice(0, 3)
   if (top3.length === 0) return null
@@ -5073,6 +5257,7 @@ export default function Dashboard() {
   const [titleApplyingIdx, setTitleApplyingIdx] = useState(null)
   const [titleAppliedIdx, setTitleAppliedIdx] = useState(null)
   const [titleApplyError, setTitleApplyError] = useState('')
+  const [relatedTraffic, setRelatedTraffic] = useState(null)
   const [refreshingIdeas, setRefreshingIdeas] = useState(false)
   // Competitor Activity (recent uploads from tracked competitors).
   const [competitorActivity, setCompetitorActivity] = useState(null)
@@ -5242,6 +5427,15 @@ export default function Dashboard() {
     fetch('/dashboard/title-suggestion', { credentials: 'include' })
       .then(r => r.ok ? r.json() : null)
       .then(d => { if (d && d.ok && d.video && d.suggestions?.length) setTitleSuggestion(d) })
+      .catch(() => {})
+
+    // Load Related Traffic: YouTube Analytics detail of which OTHER
+    // videos are sending us suggested-video traffic. Backend filters
+    // to viewCount >= 10K, drops our own uploads, sorts by views-to-you.
+    // 24h DB cache so this costs 1 Data API unit per user per day.
+    fetch('/dashboard/related-traffic', { credentials: 'include' })
+      .then(r => r.ok ? r.json() : null)
+      .then(d => { if (d && d.ok && d.items?.length) setRelatedTraffic(d) })
       .catch(() => {})
 
     // Load plan + per-feature gate state (for free-tier gating on child pages).
@@ -6393,6 +6587,35 @@ export default function Dashboard() {
                   )
                 })() : null
 
+                const relatedTrafficBlock = (feedFilter === 'all' || feedFilter === 'insights') && relatedTraffic?.items?.length > 0 ? (() => {
+                  const dismissKey = `ytg_related_traffic_dismissed:${data?.channel?.channel_id || 'x'}`
+                  try { if (localStorage.getItem(dismissKey)) return null } catch {}
+                  // Relative age from refreshed_at — soft "Nd ago" label.
+                  let ageLabel = ''
+                  try {
+                    if (relatedTraffic.refreshed_at) {
+                      const ts = new Date(relatedTraffic.refreshed_at).getTime()
+                      const days = Math.max(0, Math.floor((Date.now() - ts) / 86400000))
+                      ageLabel = days === 0 ? 'today' : days === 1 ? '1d ago' : `${days}d ago`
+                    }
+                  } catch {}
+                  return (
+                    <RelatedTrafficCard
+                      key="related-traffic"
+                      items={relatedTraffic.items}
+                      ageLabel={ageLabel}
+                      onOpen={(it) => {
+                        if (!it?.video_id) return
+                        try { window.open(`https://www.youtube.com/watch?v=${it.video_id}`, '_blank', 'noopener,noreferrer') } catch {}
+                      }}
+                      onDismiss={() => {
+                        try { localStorage.setItem(dismissKey, '1') } catch {}
+                        setChecked(prev => ({ ...prev }))
+                      }}
+                    />
+                  )
+                })() : null
+
                 const competitorActivityBlock = (feedFilter === 'all' || feedFilter === 'insights') && competitorActivity?.items?.length > 0 ? (() => {
                   const dismissKey = `ytg_competitor_activity_dismissed:${data?.channel?.channel_id || 'x'}`
                   try { if (localStorage.getItem(dismissKey)) return null } catch {}
@@ -6518,7 +6741,7 @@ export default function Dashboard() {
 
                 const hasWhatToDoNext = priorityActionsBlock || dailyIdeasBlock
                 const hasRecentWins = milestoneBlock || topPerformerBlock || trackedLiftBlock
-                const hasYourNiche = nicheHeroBlock || titleSuggestionBlock || suggestedCompetitorsBlock || competitorActivityBlock
+                const hasYourNiche = nicheHeroBlock || titleSuggestionBlock || suggestedCompetitorsBlock || relatedTrafficBlock || competitorActivityBlock
                 const hasHowYouPublish = postingConsistencyBlock || bestTimeBlock
 
                 return (
@@ -6557,6 +6780,7 @@ export default function Dashboard() {
                           {nicheHeroBlock}
                           {titleSuggestionBlock}
                           {suggestedCompetitorsBlock}
+                          {relatedTrafficBlock}
                           {competitorActivityBlock}
                         </div>
                       </>

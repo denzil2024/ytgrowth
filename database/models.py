@@ -323,6 +323,19 @@ class CompetitorActivityCache(Base):
     cached_at   = Column(DateTime, default=_now, index=True)
 
 
+class RelatedTrafficCache(Base):
+    """Dashboard 'New traffic from related videos' Feed card. Per-channel
+    snapshot of which OTHER YouTube videos sent views to this creator's
+    channel in the last N days, via YouTube Analytics
+    insightTrafficSourceDetail. 24h TTL. Analytics quota is separate from
+    the Data API budget, and the videos.list resolve costs one Data API
+    unit per refresh per channel."""
+    __tablename__ = "related_traffic_cache"
+    channel_id  = Column(String,   primary_key=True)
+    result_json = Column(Text,     nullable=False)
+    cached_at   = Column(DateTime, default=_now, index=True)
+
+
 class AIOutputCache(Base):
     """Cross-user cache for Claude / Haiku outputs, keyed by input
     fingerprint (SHA-256 of function name + sorted JSON of relevant
@@ -634,6 +647,10 @@ try:
         # so the 24h TTL survives Railway restarts. One row per user channel.
         "CREATE TABLE IF NOT EXISTS competitor_activity_cache (channel_id TEXT PRIMARY KEY, result_json TEXT NOT NULL, cached_at DATETIME)",
         "CREATE INDEX IF NOT EXISTS ix_competitor_activity_cache_cached_at ON competitor_activity_cache (cached_at)",
+        # Dashboard 'new traffic from related videos' Feed card — per-channel
+        # 24h cache of the YouTube Analytics traffic-source detail.
+        "CREATE TABLE IF NOT EXISTS related_traffic_cache (channel_id TEXT PRIMARY KEY, result_json TEXT NOT NULL, cached_at DATETIME)",
+        "CREATE INDEX IF NOT EXISTS ix_related_traffic_cache_cached_at ON related_traffic_cache (cached_at)",
         # Public channel stats lookup cache — anonymous tool, bot-vulnerable.
         # DB-backed so restarts don't wipe the cache and re-expose us to a
         # flood of fresh API calls on the next 500 unique lookups.

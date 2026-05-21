@@ -38,7 +38,7 @@ from app.niche_outliers import (
     is_stale,
     personalize_angle,
 )
-from database.models import SessionLocal, SeoOptimization, SeoAnalysisCache, CompetitorAnalysisCache, CompetitorActivityCache, TopChannelCache, YoutubeSearchCache
+from database.models import SessionLocal, SeoOptimization, SeoAnalysisCache, CompetitorAnalysisCache, CompetitorActivityCache, RelatedTrafficCache, TopChannelCache, YoutubeSearchCache
 from routers.auth import get_session
 from routers.admin_routes import _is_admin
 
@@ -726,6 +726,165 @@ def suggested_competitors(request: Request):
             "category":    best_cat,
             "niche_keywords": niche_kw[:5],
         })
+    finally:
+        db.close()
+
+
+_RELATED_TRAFFIC_TTL_HOURS = 24
+
+
+def _read_related_traffic_cache(db, channel_id):
+    try:
+        row = db.query(RelatedTrafficCache).filter_by(channel_id=channel_id).first()
+        if not row:
+            return None
+        cached_at = row.cached_at
+        if cached_at and cached_at.tzinfo is None:
+            cached_at = cached_at.replace(tzinfo=datetime.timezone.utc)
+        if not cached_at:
+            return None
+        age_h = (datetime.datetime.now(datetime.timezone.utc) - cached_at).total_seconds() / 3600
+        if age_h >= _RELATED_TRAFFIC_TTL_HOURS:
+            return None
+        try:
+            return json.loads(row.result_json)
+        except Exception:
+            return None
+    except Exception as e:
+        print(f"[related-traffic] cache read error: {e}")
+        return None
+
+
+def _write_related_traffic_cache(db, channel_id, payload):
+    try:
+        row = db.query(RelatedTrafficCache).filter_by(channel_id=channel_id).first()
+        body = json.dumps(payload, default=str)
+        now = datetime.datetime.now(datetime.timezone.utc)
+        if row:
+            row.result_json = body
+            row.cached_at   = now
+        else:
+            db.add(RelatedTrafficCache(channel_id=channel_id, result_json=body, cached_at=now))
+        db.commit()
+    except Exception as e:
+        print(f"[related-traffic] cache write error: {e}")
+        try: db.rollback()
+        except Exception: pass
+
+
+@router.get("/related-traffic")
+def related_traffic(request: Request, force: int = 0):
+    """Feed card: "New traffic from N related videos."
+
+    Pulls the per-source-video traffic breakdown for the user's channel
+    (which OTHER YouTube videos drove views to them in the last ~14d),
+    resolves each ID to title + thumbnail + channel + view count via a
+    single videos.list batch (1 Data API unit), filters out the user's
+    own uploads, drops any source video with absolute viewCount under
+    10K (the high-quality filter), sorts by views-to-you desc, returns
+    top 6.
+
+    Cache: 24h DB-persisted (RelatedTrafficCache). force=1 bypasses.
+    """
+    data, creds = get_session(request.session.get("session_id"))
+    if not data:
+        return JSONResponse({"error": "Not authenticated."}, status_code=401)
+
+    channel = (data or {}).get("channel", {}) or {}
+    channel_id = channel.get("channel_id", "") or ""
+    if not channel_id:
+        return JSONResponse({"ok": True, "items": []})
+
+    db = SessionLocal()
+    try:
+        if not force:
+            cached = _read_related_traffic_cache(db, channel_id)
+            if cached is not None:
+                return JSONResponse(cached)
+
+        from app.youtube import get_related_traffic_source_videos, build_youtube_client
+        from app.insights import parse_duration_seconds
+
+        sources = get_related_traffic_source_videos(creds, channel_id, days=14, max_results=15)
+        if not sources:
+            payload = {"ok": True, "items": [], "refreshed_at": datetime.datetime.now(datetime.timezone.utc).isoformat()}
+            _write_related_traffic_cache(db, channel_id, payload)
+            return JSONResponse(payload)
+
+        # Resolve all source video IDs in ONE videos.list batch. 1 Data
+        # API unit total regardless of how many IDs (up to 50).
+        source_ids = [s["source_video_id"] for s in sources if s.get("source_video_id")]
+        if not source_ids:
+            payload = {"ok": True, "items": [], "refreshed_at": datetime.datetime.now(datetime.timezone.utc).isoformat()}
+            _write_related_traffic_cache(db, channel_id, payload)
+            return JSONResponse(payload)
+
+        try:
+            youtube = build_youtube_client(creds)
+            resp = youtube.videos().list(
+                part="snippet,statistics,contentDetails",
+                id=",".join(source_ids[:50]),
+            ).execute()
+            yt_items = resp.get("items", []) or []
+        except Exception as e:
+            print(f"[related-traffic] videos.list error: {e}")
+            payload = {"ok": True, "items": [], "refreshed_at": datetime.datetime.now(datetime.timezone.utc).isoformat()}
+            _write_related_traffic_cache(db, channel_id, payload)
+            return JSONResponse(payload)
+
+        # Map metadata by ID for the join below.
+        meta_by_id = {}
+        for it in yt_items:
+            vid = it.get("id", "")
+            if not vid:
+                continue
+            snip  = it.get("snippet", {}) or {}
+            stats = it.get("statistics", {}) or {}
+            cd    = it.get("contentDetails", {}) or {}
+            meta_by_id[vid] = {
+                "title":            snip.get("title", "") or "",
+                "channel_id":       snip.get("channelId", "") or "",
+                "channel_name":     snip.get("channelTitle", "") or "",
+                "thumbnail":        (snip.get("thumbnails", {}).get("medium", {}) or {}).get("url", "") or "",
+                "published_at":     snip.get("publishedAt", "") or "",
+                "duration_seconds": parse_duration_seconds(cd.get("duration", "PT0S") or "PT0S"),
+                "view_count":       int(stats.get("viewCount", 0) or 0),
+            }
+
+        # Filter + sort: drop user's own uploads, drop low-view source
+        # videos (< 10K), keep top 6 by views-to-you.
+        QUALITY_FLOOR_VIEWS = 10_000
+        items = []
+        for s in sources:
+            vid = s.get("source_video_id", "")
+            meta = meta_by_id.get(vid)
+            if not meta:
+                continue
+            if meta["channel_id"] == channel_id:
+                continue
+            if meta["view_count"] < QUALITY_FLOOR_VIEWS:
+                continue
+            items.append({
+                "video_id":         vid,
+                "title":            meta["title"],
+                "channel_id":       meta["channel_id"],
+                "channel_name":     meta["channel_name"],
+                "thumbnail":        meta["thumbnail"],
+                "published_at":     (meta["published_at"] or "")[:10],
+                "duration_seconds": meta["duration_seconds"],
+                "view_count":       meta["view_count"],
+                "views_to_you":     int(s.get("views_to_you", 0) or 0),
+            })
+            if len(items) >= 6:
+                break
+
+        payload = {
+            "ok":           True,
+            "items":        items,
+            "refreshed_at": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+        }
+        _write_related_traffic_cache(db, channel_id, payload)
+        return JSONResponse(payload)
     finally:
         db.close()
 

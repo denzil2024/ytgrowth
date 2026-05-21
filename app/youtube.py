@@ -329,6 +329,57 @@ def get_traffic_sources(credentials, channel_id):
         return None
 
 
+def get_related_traffic_source_videos(credentials, channel_id, days=14, max_results=15):
+    """Per-source-video breakdown of who is sending the channel its traffic.
+
+    Calls YouTube Analytics with insightTrafficSourceDetail filtered to
+    RELATED_VIDEO (the "Suggested videos" surface). Returns a list of
+    {source_video_id, views_to_you} sorted by views_to_you desc.
+
+    Analytics API has its own quota (separate from the 10K Data API
+    budget), so this call is free against our quota math.
+    """
+    try:
+        analytics = build("youtubeAnalytics", "v2", credentials=credentials)
+        end_date = datetime.now().strftime("%Y-%m-%d")
+        start_date = (datetime.now() - timedelta(days=days)).strftime("%Y-%m-%d")
+        rows = []
+        for filter_type in ("RELATED_VIDEO", "SUGGESTED_VIDEO"):
+            try:
+                resp = analytics.reports().query(
+                    ids=f"channel=={channel_id}",
+                    startDate=start_date,
+                    endDate=end_date,
+                    metrics="views",
+                    dimensions="insightTrafficSourceDetail",
+                    filters=f"insightTrafficSourceType=={filter_type}",
+                    sort="-views",
+                    maxResults=max_results,
+                ).execute()
+                rows.extend(resp.get("rows", []) or [])
+            except Exception as inner:
+                # SUGGESTED_VIDEO isn't always a valid filter value depending
+                # on the channel's Analytics surface, so we accept partial
+                # results instead of failing the whole call.
+                print(f"[related-traffic] {filter_type} filter skipped: {inner}")
+                continue
+
+        # Merge by source video id, sum views across both filter types.
+        merged: dict[str, int] = {}
+        for r in rows:
+            vid = (r[0] or "").strip()
+            if not vid:
+                continue
+            merged[vid] = merged.get(vid, 0) + int(r[1] or 0)
+
+        # Sort by views-to-you desc and clip to max_results
+        ranked = sorted(merged.items(), key=lambda kv: kv[1], reverse=True)[:max_results]
+        return [{"source_video_id": vid, "views_to_you": views} for vid, views in ranked]
+    except Exception as e:
+        print(f"Related traffic source videos error: {e}")
+        return []
+
+
 def get_shares(credentials, channel_id):
     try:
         analytics = build("youtubeAnalytics", "v2", credentials=credentials)
