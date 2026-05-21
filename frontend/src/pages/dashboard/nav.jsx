@@ -74,7 +74,7 @@ export function NavBtn({ label, active, onClick, badge, dot }) {
       )}
       {typeof badge === 'number' && badge > 0 && (
         <span style={{
-          background: C.red, color: '#fff',
+          background: 'rgba(229,37,27,0.10)', color: '#fb6a60',
           fontSize: 10.5, fontWeight: 700, padding: '1px 7px',
           borderRadius: 20, minWidth: 18, textAlign: 'center',
           letterSpacing: '-0.01em', fontVariantNumeric: 'tabular-nums',
@@ -188,7 +188,7 @@ export function NavGroup({ label, children, anyChildActive, defaultOpen = true, 
         <span style={{ flex: 1 }}>{label}</span>
         {typeof badge === 'number' && badge > 0 && (
           <span style={{
-            background: C.red, color: '#fff',
+            background: 'rgba(229,37,27,0.10)', color: '#fb6a60',
             fontSize: 10.5, fontWeight: 700, padding: '1px 7px',
             borderRadius: 20, minWidth: 18, textAlign: 'center',
             letterSpacing: '-0.01em', fontVariantNumeric: 'tabular-nums',
