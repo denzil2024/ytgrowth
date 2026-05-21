@@ -539,7 +539,7 @@ export function ChannelSwitcher({ channels, channelsAllowed, canAddMore, current
       >
         {current.channel_thumbnail
           ? <img src={current.channel_thumbnail} alt="" style={{ width: 36, height: 36, borderRadius: '50%', objectFit: 'cover', flexShrink: 0, border: `1.5px solid ${SHELL.hair}` }} />
-          : <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'rgba(229,37,27,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 600, color: '#e5251b', flexShrink: 0 }}>{(current.channel_name || '?')[0].toUpperCase()}</div>
+          : <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'rgba(251,106,96,0.13)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 600, color: '#fb6a60', flexShrink: 0 }}>{(current.channel_name || '?')[0].toUpperCase()}</div>
         }
         <div style={{ minWidth: 0, flex: 1 }}>
           <p style={{ fontSize: 14, fontWeight: 600, color: SHELL.text1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', letterSpacing: '-0.2px' }}>{current.channel_name}</p>
@@ -577,7 +577,7 @@ export function ChannelSwitcher({ channels, channelsAllowed, canAddMore, current
             >
               {ch.channel_thumbnail
                 ? <img src={ch.channel_thumbnail} alt="" style={{ width: 28, height: 28, borderRadius: '50%', objectFit: 'cover', flexShrink: 0 }} />
-                : <div style={{ width: 28, height: 28, borderRadius: '50%', background: 'rgba(229,37,27,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: 600, color: '#e5251b', flexShrink: 0 }}>{(ch.channel_name || '?')[0].toUpperCase()}</div>
+                : <div style={{ width: 28, height: 28, borderRadius: '50%', background: 'rgba(251,106,96,0.13)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: 600, color: '#fb6a60', flexShrink: 0 }}>{(ch.channel_name || '?')[0].toUpperCase()}</div>
               }
               <div style={{ flex: 1, minWidth: 0 }}>
                 <p style={{ fontSize: 14, fontWeight: 500, color: SHELL.text1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{ch.channel_name}</p>

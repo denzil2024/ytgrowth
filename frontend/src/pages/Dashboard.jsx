@@ -606,7 +606,7 @@ export default function Dashboard() {
                 <div style={{ display: 'flex', alignItems: 'center', gap: 13, marginBottom: 16 }}>
                   {data.channel.thumbnail
                     ? <img src={data.channel.thumbnail} alt="" style={{ width: 42, height: 42, borderRadius: '50%', objectFit: 'cover', flexShrink: 0, boxShadow: `0 0 0 2px ${SHELL.hair}` }}/>
-                    : <div style={{ width: 42, height: 42, borderRadius: '50%', background: 'rgba(229,37,27,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, fontWeight: 600, color: C.red, flexShrink: 0, boxShadow: `0 0 0 2px ${SHELL.hair}` }}>{data.channel.channel_name[0].toUpperCase()}</div>
+                    : <div style={{ width: 42, height: 42, borderRadius: '50%', background: 'rgba(251,106,96,0.13)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, fontWeight: 600, color: '#fb6a60', flexShrink: 0, boxShadow: `0 0 0 2px ${SHELL.hair}` }}>{data.channel.channel_name[0].toUpperCase()}</div>
                   }
                   <div style={{ minWidth: 0, flex: 1 }}>
                     <p style={{ fontSize: 14.5, fontWeight: 600, color: SHELL.text1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', letterSpacing: '-0.25px', lineHeight: 1.2 }}>{data.channel.channel_name}</p>
@@ -615,22 +615,32 @@ export default function Dashboard() {
                 </div>
               )
             }
-            {/* Health score bar */}
-            <div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 8 }}>
-                <span style={{ fontSize: 10.5, fontWeight: 600, color: SHELL.text2, letterSpacing: '0.09em', textTransform: 'uppercase' }}>Channel health</span>
-                <span style={{ display: 'inline-flex', alignItems: 'baseline', gap: 2, fontVariantNumeric: 'tabular-nums' }}>
-                  <span style={{ fontSize: 16, fontWeight: 700, color: scoreColor(score), letterSpacing: '-0.4px', lineHeight: 1 }}>{score}</span>
-                  <span style={{ fontSize: 10.5, fontWeight: 600, color: SHELL.text3 }}>/100</span>
-                </span>
-              </div>
-              <div style={{ background: SHELL.track, borderRadius: 99, height: 6, overflow: 'hidden' }}>
-                <div style={{
-                  width: `${score}%`, height: '100%', background: scoreColor(score), borderRadius: 99,
-                  transition: 'width 1.2s cubic-bezier(0.34,1.56,0.64,1)',
-                }}/>
-              </div>
-            </div>
+            {/* Health score bar. Uses on-dark color variants so the score
+                and bar fill stop reading muddy against the dark profile
+                card (the imported scoreColor returns the light-page red /
+                amber / green which lose contrast here). */}
+            {(() => {
+              const onDarkScoreColor = score >= 75 ? '#34d27b'
+                : score >= 50 ? '#f0a23b'
+                : '#fb6a60'
+              return (
+                <div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 8 }}>
+                    <span style={{ fontSize: 10.5, fontWeight: 600, color: SHELL.text2, letterSpacing: '0.09em', textTransform: 'uppercase' }}>Channel health</span>
+                    <span style={{ display: 'inline-flex', alignItems: 'baseline', gap: 2, fontVariantNumeric: 'tabular-nums' }}>
+                      <span style={{ fontSize: 16, fontWeight: 700, color: onDarkScoreColor, letterSpacing: '-0.4px', lineHeight: 1 }}>{score}</span>
+                      <span style={{ fontSize: 10.5, fontWeight: 600, color: SHELL.text3 }}>/100</span>
+                    </span>
+                  </div>
+                  <div style={{ background: SHELL.track, borderRadius: 99, height: 6, overflow: 'hidden' }}>
+                    <div style={{
+                      width: `${score}%`, height: '100%', background: onDarkScoreColor, borderRadius: 99,
+                      transition: 'width 1.2s cubic-bezier(0.34,1.56,0.64,1)',
+                    }}/>
+                  </div>
+                </div>
+              )
+            })()}
            </div>
           </div>
         )}
