@@ -3999,9 +3999,12 @@ function RelatedTrafficCard({ items, ageLabel, reason, rawSourceCount, onOpen, o
   // nothing showed" message instead of silently disappearing.
   const reasonCopy = top.length === 0 ? (() => {
     if (reason === 'no_analytics_traffic') return 'No suggested-video traffic recorded for your channel in the last 14 days. As your watch time grows, YouTube will start surfacing your videos as suggestions and this card will populate.'
-    if (reason === 'all_filtered')         return `Found ${rawSourceCount || 0} source video${rawSourceCount === 1 ? '' : 's'} sending traffic, but none cleared the 10K-view quality floor. Either the sources are tiny channels, or your own uploads, so we're hiding them.`
+    if (reason === 'all_filtered')         return `Found ${rawSourceCount || 0} source video${rawSourceCount === 1 ? '' : 's'} sending traffic, but none cleared the 10K-view quality floor. Either the sources are tiny channels, or your own uploads, so we are hiding them.`
     if (reason === 'resolve_failed')       return 'Could not resolve the source videos via YouTube. We will retry on the next refresh.'
     if (reason === 'no_source_ids')        return 'No source video IDs in the Analytics response. Common when a channel is brand new or has zero suggested-video traffic.'
+    if (reason === 'not_authenticated')    return 'Sign in again to load related-traffic data. Your session may have expired.'
+    if (reason === 'request_failed')       return 'The Analytics request failed. Reload the Feed to try again.'
+    if (reason === 'network_error')        return 'Network error reaching the server. Check your connection and reload.'
     return null
   })() : null
   if (top.length === 0 && !reasonCopy) return null
@@ -5454,13 +5457,19 @@ export default function Dashboard() {
       .catch(() => {})
 
     // Load Related Traffic: YouTube Analytics detail of which OTHER
-    // videos are sending us suggested-video traffic. We ALWAYS store the
-    // response (even when ok=false with a reason) so the card can render
-    // an explainer state instead of silently disappearing.
+    // videos are sending us suggested-video traffic. Store EVERY response
+    // shape (200 with items, 200 with reason, 401 auth-fail, network
+    // failure) so the card always paints something instead of vanishing.
     fetch('/dashboard/related-traffic', { credentials: 'include' })
-      .then(r => r.ok ? r.json() : null)
+      .then(async r => {
+        let body = null
+        try { body = await r.json() } catch {}
+        if (r.ok && body) return body
+        if (r.status === 401) return { ok: false, reason: 'not_authenticated', items: [] }
+        return { ok: false, reason: 'request_failed', items: [], status: r.status }
+      })
       .then(d => { if (d) setRelatedTraffic(d) })
-      .catch(() => {})
+      .catch(() => { setRelatedTraffic({ ok: false, reason: 'network_error', items: [] }) })
 
     // Load plan + per-feature gate state (for free-tier gating on child pages).
     fetch('/auth/me', { credentials: 'include' })
@@ -6612,7 +6621,10 @@ export default function Dashboard() {
                 })() : null
 
                 const relatedTrafficBlock = (feedFilter === 'all' || feedFilter === 'insights') && relatedTraffic ? (() => {
-                  const dismissKey = `ytg_related_traffic_dismissed:${data?.channel?.channel_id || 'x'}`
+                  // Dismiss key bumped to v2 so any leftover dismissals
+                  // from the previous render-only-when-populated version
+                  // don't keep the new card hidden.
+                  const dismissKey = `ytg_related_traffic_dismissed_v2:${data?.channel?.channel_id || 'x'}`
                   try { if (localStorage.getItem(dismissKey)) return null } catch {}
                   // Relative age from refreshed_at — soft "Nd ago" label.
                   let ageLabel = ''
