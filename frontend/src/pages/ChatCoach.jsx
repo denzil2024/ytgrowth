@@ -14,7 +14,7 @@
    - DEL  /chat/conversations/:id  delete a thread.
 */
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import {
@@ -168,23 +168,26 @@ const MARKDOWN_COMPONENTS = {
       )
     }
     return (
-      // Inline code reads as a tagged chip, not raw monospace floating
-      // in the prose. Softer than `code` styling but distinct from
-      // body text so quoted titles / handles stand out.
+      // Inline code = quoted titles / keywords / handles. Use the
+      // prose font (Geist) so it doesn't read as cold log-output
+      // monospace. Amber tint + chip background marks it as a
+      // discrete keyword token.
       <code style={{
-        fontFamily: FONT_MONO, fontSize: '0.86em', fontWeight: 500,
-        color: C.t1, letterSpacing: '-0.01em',
-        background: 'rgba(255,255,255,0.05)',
-        border: `1px solid ${C.hair}`,
+        fontFamily: FONT_STACK, fontSize: '0.94em', fontWeight: 500,
+        color: '#f0a23b', letterSpacing: 'inherit',
+        background: 'rgba(240,162,59,0.10)',
+        border: '1px solid rgba(240,162,59,0.22)',
         borderRadius: 6,
         padding: '1px 6px',
       }}>{children}</code>
     )
   },
+  // Callouts / takeaways. Green left bar marks them as "the win
+  // line" without coloring whole rows.
   blockquote: ({ children }) => (
     <blockquote style={{
       margin: '10px 0 14px 0', padding: '2px 0 2px 14px',
-      borderLeft: `2px solid ${C.hairStrong}`, color: C.t3, fontWeight: 400,
+      borderLeft: '2px solid #34d27b', color: C.t2, fontWeight: 400,
     }}>{children}</blockquote>
   ),
   // Section headers — accent bar to the left so they break the prose
@@ -702,21 +705,10 @@ export default function ChatCoach({ onNavigate, billingPlan, chatMode, chatTarge
                       <Message key={i} role={m.role} content={m.content} sources={m.sources} />
                     ))}
                     {sending && (
-                      <div style={{ display: 'flex', alignItems: 'flex-start', gap: 13 }}>
+                      <div className="ytg-fade-up" style={{ display: 'flex', alignItems: 'flex-start', gap: 13, animation: `ytgFadeUp 0.35s ${C.spring} both` }}>
                         <Avatar />
-                        <div style={{
-                          flex: 1, minWidth: 0, paddingTop: 4,
-                          display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap',
-                        }}>
-                          <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5 }}>
-                            <Dot delay="0s"/><Dot delay="0.15s"/><Dot delay="0.3s"/>
-                          </span>
-                          {availableSources.length > 0 && (
-                            <span style={{ fontSize: 12.5, color: C.t4, fontWeight: 400, letterSpacing: '-0.005em' }}>
-                              Reading {availableSources.slice(0, 3).join(', ')}
-                              {availableSources.length > 3 ? `, +${availableSources.length - 3} more` : ''}
-                            </span>
-                          )}
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <ThinkingTimeline sources={availableSources} />
                         </div>
                       </div>
                     )}
@@ -806,6 +798,56 @@ function Message({ role, content, sources }) {
   )
 }
 
+
+/* ─── Thinking timeline. Text-only progress rows that fade in while the
+       assistant is generating. No icons, no checkmarks, no color
+       coding — the goal is "I can see it working", not a celebration
+       checklist. Steps stagger in via the existing ytgFadeUp keyframes.
+       Earlier steps fade to muted so the current step reads as live. ── */
+function ThinkingTimeline({ sources }) {
+  const steps = useMemo(() => {
+    const base = [
+      'Reading your channel context',
+      'Checking your recent videos',
+      'Pulling your analytics',
+    ]
+    if (sources && sources.length > 0) {
+      const head = sources.slice(0, 2).join(' and ')
+      base.push(`Cross-referencing ${head}`)
+    }
+    base.push('Drafting your answer')
+    return base
+  }, [sources])
+
+  const [shown, setShown] = useState(1)
+  useEffect(() => {
+    if (shown >= steps.length) return
+    const t = setTimeout(() => setShown(s => Math.min(s + 1, steps.length)), 750)
+    return () => clearTimeout(t)
+  }, [shown, steps.length])
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 6, paddingTop: 2 }}>
+      {steps.slice(0, shown).map((step, i) => {
+        const isCurrent = i === shown - 1
+        return (
+          <div
+            key={i}
+            className="ytg-fade-up"
+            style={{
+              animation: `ytgFadeUp 0.30s ${C.spring} both`,
+              fontSize: 13.5, fontWeight: 400, letterSpacing: '-0.005em',
+              color: isCurrent ? C.t2 : C.t4,
+              opacity: isCurrent ? 1 : 0.7,
+            }}
+          >
+            {step}{isCurrent ? '…' : ''}
+          </div>
+        )
+      })}
+    </div>
+  )
+}
 
 /* Typing dots — neutral, no alarm colour, calm bounce. */
 function Dot({ delay }) {
