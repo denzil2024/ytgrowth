@@ -3098,8 +3098,12 @@ export function TopSearchTermsCard({ items, refreshedAt, onResearch, onDismiss }
 }
 
 export function SuggestedCompetitorsCard({ suggestions, category, onTrack, onDismiss, onOpenAll }) {
-  const top = (suggestions || []).slice(0, 4)
-  if (top.length < 3) return null  // hide if signal is thin
+  // Show 2-3 suggestions. Lowered from "<3 -> hide" because for many
+  // creators (especially geographic or thin niches) the candidate pool
+  // is small after own-channel + already-tracked filtering. A single
+  // suggestion isn't enough to feel like a "list", but two is.
+  const top = (suggestions || []).slice(0, 3)
+  if (top.length < 2) return null
 
   const subline = category
     ? `Based on your top niche: ${category.replace(/-/g, ' ')}`

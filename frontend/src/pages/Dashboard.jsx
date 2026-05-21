@@ -1624,7 +1624,7 @@ export default function Dashboard() {
                   )
                 })() : null
 
-                const suggestedCompetitorsBlock = (feedFilter === 'all' || feedFilter === 'insights') && suggestedCompetitors?.suggestions?.length >= 1 ? (() => {
+                const suggestedCompetitorsBlock = (feedFilter === 'all' || feedFilter === 'insights') && suggestedCompetitors?.suggestions?.length >= 2 ? (() => {
                   const dismissKey = `ytg_suggested_competitors_dismissed:${data?.channel?.channel_id || 'x'}`
                   try { if (localStorage.getItem(dismissKey)) return null } catch {}
                   return (

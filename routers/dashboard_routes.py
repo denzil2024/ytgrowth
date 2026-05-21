@@ -615,22 +615,47 @@ def suggested_competitors(request: Request):
     niche_kw = extract_niche_keywords(channel, videos) or []
     niche_kw_lower = [str(k).lower() for k in niche_kw]
 
-    # Map this user's niche keywords to one of the 14 TopChannelCache
-    # categories by simple substring overlap with each category's seed
-    # query. If nothing matches, we skip the TopChannelCache pull and
-    # fall back to the comp: search cache (secondary source below).
+    # Build a WIDER pool of tokens to match against category seed terms.
+    # The original implementation only used the extracted niche_keywords,
+    # which for many channels are just "shorts/lifestyle/budget" — too
+    # generic to match any of the 14 curated categories. We now also
+    # consider:
+    #   - the channel name (e.g. "Life with Nthenya" -> ["life","nthenya"])
+    #   - the YouTube channel.keywords field (creator-declared niche)
+    #   - tokens from the user's top 5 videos by VIEWS (their actual hits)
+    # All deduped + lowercased + filtered to len > 3.
+    import re as _re
+    extra_tokens: set[str] = set()
+    def _add(s: str):
+        for w in _re.split(r"[\s,/|·\-_:#@()\\[\\]]+", (s or "").lower()):
+            w = w.strip()
+            if len(w) > 3 and not w.isdigit():
+                extra_tokens.add(w)
+    _add(channel.get("channel_name") or "")
+    _add(channel.get("keywords") or "")
+    for v in sorted(videos, key=lambda x: x.get("views", 0) or 0, reverse=True)[:5]:
+        _add(v.get("title") or "")
+    match_tokens = list({*niche_kw_lower, *extra_tokens})
+
+    # Map this user's tokens to one of the 14 TopChannelCache categories
+    # by substring overlap with each category's seed query. If nothing
+    # scores, fall back to "vlogs" (broadest creator-style match) rather
+    # than returning empty — generic vlogger channels are still useful
+    # nudges for thin-niche channels.
     best_cat = None
     best_score = 0
     for cat, query in CATEGORY_QUERIES.items():
         terms = [t for t in query.lower().split() if len(t) > 2]
         score = 0
-        for kw in niche_kw_lower:
+        for kw in match_tokens:
             for term in terms:
                 if term in kw or kw in term:
                     score += 1
         if score > best_score:
             best_score = score
             best_cat = cat
+    if best_cat is None and "vlogs" in CATEGORY_QUERIES:
+        best_cat = "vlogs"
 
     db = SessionLocal()
     try:
