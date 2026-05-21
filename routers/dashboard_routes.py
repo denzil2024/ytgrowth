@@ -1892,6 +1892,8 @@ def missing_tags(request: Request):
 
 
 _UNANSWERED_COMMENT_TTL_HOURS = 12
+_UNANSWERED_COMMENT_NULL_TTL_HOURS = 1  # Don't sit on null for 12h —
+# if user replies to comments mid-day, fresh picks should appear quickly.
 
 
 def _read_unanswered_comment_cache(db, channel_id):
@@ -1905,12 +1907,18 @@ def _read_unanswered_comment_cache(db, channel_id):
         if not cached_at:
             return None
         age_h = (datetime.datetime.now(datetime.timezone.utc) - cached_at).total_seconds() / 3600
-        if age_h >= _UNANSWERED_COMMENT_TTL_HOURS:
-            return None
         try:
-            return json.loads(row.result_json)
+            payload = json.loads(row.result_json)
         except Exception:
             return None
+        # Null rows (no candidate found) age out faster than positive
+        # picks so a creator who clears their backlog sees fresh nulls
+        # turn into surfaced comments within an hour.
+        is_null = not (payload and payload.get("comment"))
+        ttl = _UNANSWERED_COMMENT_NULL_TTL_HOURS if is_null else _UNANSWERED_COMMENT_TTL_HOURS
+        if age_h >= ttl:
+            return None
+        return payload
     except Exception as e:
         print(f"[unanswered-comment] cache read error: {e}")
         return None
@@ -1982,7 +1990,8 @@ def unanswered_comment(request: Request, force: int = 0):
     from app.utils import cached_ai_output
     import hashlib as _hashlib
 
-    MAX_VIDEOS = 3  # Cap quota: at most MAX_VIDEOS commentThreads.list calls per cold pick
+    MAX_VIDEOS = 5  # Cap quota: at most MAX_VIDEOS commentThreads.list calls per cold pick
+    MAX_THREADS_PER_VIDEO = 50  # Wider window than the 20 default so we catch unanswered comments past the very newest few
 
     db = SessionLocal()
     try:
@@ -2004,8 +2013,23 @@ def unanswered_comment(request: Request, force: int = 0):
             video_id = v.get("video_id", "")
             if not video_id:
                 continue
-            unanswered = get_unanswered_comments_for_video(creds, channel_id, video_id, max_results=20)
-            diag_walk.append({"video_id": video_id, "title": (v.get("title") or "")[:60], "unanswered_count": len(unanswered)})
+            if debug:
+                unanswered, threads_diag = get_unanswered_comments_for_video(
+                    creds, channel_id, video_id,
+                    max_results=MAX_THREADS_PER_VIDEO, return_diag=True,
+                )
+                diag_walk.append({
+                    "video_id":         video_id,
+                    "title":            (v.get("title") or "")[:60],
+                    "unanswered_count": len(unanswered),
+                    "threads_sample":   threads_diag,
+                })
+            else:
+                unanswered = get_unanswered_comments_for_video(
+                    creds, channel_id, video_id,
+                    max_results=MAX_THREADS_PER_VIDEO,
+                )
+                diag_walk.append({"video_id": video_id, "title": (v.get("title") or "")[:60], "unanswered_count": len(unanswered)})
             if unanswered:
                 chosen = (v, unanswered[0])
                 break
@@ -2013,7 +2037,12 @@ def unanswered_comment(request: Request, force: int = 0):
         if not chosen:
             payload = {"ok": True, "comment": None}
             if debug:
-                payload["_debug"] = {"candidates": diag_walk}
+                payload["_debug"] = {
+                    "channel_id_suffix": channel_id[-10:] if channel_id else "",
+                    "max_videos":        MAX_VIDEOS,
+                    "max_threads":       MAX_THREADS_PER_VIDEO,
+                    "candidates":        diag_walk,
+                }
             _write_unanswered_comment_cache(db, channel_id, {"ok": True, "comment": None})
             return JSONResponse(payload)
 

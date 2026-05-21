@@ -381,7 +381,7 @@ def get_related_traffic_source_videos(credentials, channel_id, days=14, max_resu
         return []
 
 
-def get_unanswered_comments_for_video(credentials, channel_id, video_id, max_results=20):
+def get_unanswered_comments_for_video(credentials, channel_id, video_id, max_results=50, return_diag=False):
     """Return the top-level comments on a video that the channel owner
     has NOT replied to. One commentThreads.list call (1 quota unit).
 
@@ -391,8 +391,12 @@ def get_unanswered_comments_for_video(credentials, channel_id, video_id, max_res
     we accept the risk of false-positive "unanswered" on those rare cases
     rather than spending more quota fetching every reply page.
 
-    Returns a list of {comment_id, thread_id, text, author_name,
-    author_image, published_at, like_count} sorted newest-first.
+    When return_diag=True, also returns a small per-thread inspection
+    array used by the Feed debug endpoint to diagnose owner-detection
+    misfires. The diag list is bounded to the first 5 threads so the
+    response stays small.
+
+    Returns (unanswered_list[, diag_list]).
     """
     try:
         youtube = build("youtube", "v3", credentials=credentials)
@@ -405,37 +409,43 @@ def get_unanswered_comments_for_video(credentials, channel_id, video_id, max_res
         ).execute()
     except Exception as e:
         print(f"[unanswered-comments] commentThreads.list failed for {video_id}: {e}")
+        if return_diag:
+            return [], [{"error": str(e)[:200]}]
         return []
 
     out = []
-    for thread in resp.get("items", []) or []:
+    diag = []
+    for i, thread in enumerate(resp.get("items", []) or []):
         thread_id = thread.get("id", "")
         snippet   = (thread.get("snippet") or {})
         top       = (snippet.get("topLevelComment") or {})
         top_snip  = (top.get("snippet") or {})
         top_id    = top.get("id", "")
         text      = (top_snip.get("textDisplay") or top_snip.get("textOriginal") or "").strip()
+        top_author_cid = ((top_snip.get("authorChannelId") or {}).get("value") or "")
+        replies = ((thread.get("replies") or {}).get("comments") or [])
+        reply_author_ids = [
+            ((r.get("snippet") or {}).get("authorChannelId") or {}).get("value") or ""
+            for r in replies
+        ]
+        owner_replied = any(cid == channel_id for cid in reply_author_ids)
+        is_owner_top  = top_author_cid == channel_id
+
+        if return_diag and i < 5:
+            diag.append({
+                "author":            (top_snip.get("authorDisplayName") or "")[:40],
+                "top_author_cid":    top_author_cid[-10:] if top_author_cid else "",
+                "is_owner_top":      is_owner_top,
+                "reply_count":       int(snippet.get("totalReplyCount") or 0),
+                "reply_author_ids":  [cid[-10:] for cid in reply_author_ids if cid],
+                "owner_replied":     owner_replied,
+                "text_preview":      text[:60],
+            })
+
         if not text or not top_id:
             continue
-
-        # Skip if the top-level commenter IS the channel owner — that's
-        # the creator posting a pinned comment, not someone to reply to.
-        top_author_cid = ((top_snip.get("authorChannelId") or {}).get("value") or "")
-        if top_author_cid == channel_id:
+        if is_owner_top:
             continue
-
-        # Has the channel owner replied? Walk the included replies and
-        # match authorChannelId.value. We can't see all replies for very
-        # active threads, but the included subset is plenty for the
-        # picker's first-found heuristic.
-        replies = ((thread.get("replies") or {}).get("comments") or [])
-        owner_replied = False
-        for r in replies:
-            r_snip = (r.get("snippet") or {})
-            r_cid  = ((r_snip.get("authorChannelId") or {}).get("value") or "")
-            if r_cid == channel_id:
-                owner_replied = True
-                break
         if owner_replied:
             continue
 
@@ -450,6 +460,8 @@ def get_unanswered_comments_for_video(credentials, channel_id, video_id, max_res
             "like_count":    int(top_snip.get("likeCount") or 0),
         })
 
+    if return_diag:
+        return out, diag
     return out
 
 
