@@ -58,28 +58,22 @@ if (typeof document !== 'undefined' && !document.getElementById('ytg-chat-scroll
     .ytg-chat-textarea::placeholder { color: #87878f }
     @keyframes ytgFadeUp { from { opacity: 0; transform: translateY(8px) } to { opacity: 1; transform: none } }
     @media (prefers-reduced-motion: reduce) { .ytg-fade-up { animation: none !important } }
-    /* Bulleted list — accent dot instead of a thin character glyph.
-       Reads as a deliberate marker, not a paragraph leader. */
+    /* Bulleted list — small neutral dot, just enough to mark each row. */
     .md-list-ul > li { padding-left: 20px; }
     .md-list-ul > li::before {
       content: ''; position: absolute; left: 4px; top: 11px;
-      width: 5px; height: 5px; border-radius: 100px;
-      background: rgba(251,106,96,0.75);
+      width: 4px; height: 4px; border-radius: 100px;
+      background: rgba(255,255,255,0.36);
     }
-    /* Numbered list — small filled badge for the digit. Brings the
-       step structure forward without painting whole rows red. */
-    .md-list-ol > li { counter-increment: mdlist; padding-left: 34px; }
+    /* Numbered list — plain digit with a period. No badge pill;
+       the structure carries itself via the indent. */
+    .md-list-ol > li { counter-increment: mdlist; padding-left: 26px; }
     .md-list-ol > li::before {
-      content: counter(mdlist);
-      position: absolute; left: 0; top: 1px;
-      width: 22px; height: 22px;
-      display: inline-flex; align-items: center; justify-content: center;
-      background: rgba(251,106,96,0.12);
-      border: 1px solid rgba(251,106,96,0.22);
-      color: #fb6a60;
-      border-radius: 100px;
-      font-size: 11.5px; font-weight: 700;
-      font-variant-numeric: tabular-nums; line-height: 1;
+      content: counter(mdlist) '.';
+      position: absolute; left: 0; top: 0;
+      color: rgba(255,255,255,0.55);
+      font-size: 13.5px; font-weight: 600;
+      font-variant-numeric: tabular-nums; line-height: inherit;
     }
   `
   document.head.appendChild(s)
@@ -168,15 +162,14 @@ const MARKDOWN_COMPONENTS = {
       )
     }
     return (
-      // Inline code = quoted titles / keywords / handles. Use the
-      // prose font (Geist) so it doesn't read as cold log-output
-      // monospace. Amber tint + chip background marks it as a
-      // discrete keyword token.
+      // Inline code = quoted titles / keywords / handles. Amber TEXT
+      // on a neutral chip — sparingly enough that only the keyword
+      // tokens carry color, not the whole chip background.
       <code style={{
         fontFamily: FONT_STACK, fontSize: '0.94em', fontWeight: 500,
         color: '#f0a23b', letterSpacing: 'inherit',
-        background: 'rgba(240,162,59,0.10)',
-        border: '1px solid rgba(240,162,59,0.22)',
+        background: 'rgba(255,255,255,0.05)',
+        border: `1px solid ${C.hair}`,
         borderRadius: 6,
         padding: '1px 6px',
       }}>{children}</code>
@@ -190,25 +183,16 @@ const MARKDOWN_COMPONENTS = {
       borderLeft: '2px solid #34d27b', color: C.t2, fontWeight: 400,
     }}>{children}</blockquote>
   ),
-  // Section headers — accent bar to the left so they break the prose
-  // visually. Bigger top gap so each section reads as its own beat.
+  // Section headers — plain bold, generous top gap so each section
+  // reads as its own beat without colored accents.
   h1: ({ children }) => (
-    <h3 style={{ margin: '24px 0 10px 0', fontSize: 16, fontWeight: 600, color: C.t1, letterSpacing: '-0.015em', lineHeight: 1.35, display: 'flex', alignItems: 'center', gap: 10 }}>
-      <span aria-hidden style={{ width: 3, height: 17, borderRadius: 2, background: '#fb6a60', flexShrink: 0 }} />
-      <span>{children}</span>
-    </h3>
+    <h3 style={{ margin: '24px 0 10px 0', fontSize: 16, fontWeight: 600, color: C.t1, letterSpacing: '-0.015em', lineHeight: 1.35 }}>{children}</h3>
   ),
   h2: ({ children }) => (
-    <h3 style={{ margin: '24px 0 10px 0', fontSize: 15.5, fontWeight: 600, color: C.t1, letterSpacing: '-0.015em', lineHeight: 1.35, display: 'flex', alignItems: 'center', gap: 10 }}>
-      <span aria-hidden style={{ width: 3, height: 16, borderRadius: 2, background: '#fb6a60', flexShrink: 0 }} />
-      <span>{children}</span>
-    </h3>
+    <h3 style={{ margin: '24px 0 10px 0', fontSize: 15.5, fontWeight: 600, color: C.t1, letterSpacing: '-0.015em', lineHeight: 1.35 }}>{children}</h3>
   ),
   h3: ({ children }) => (
-    <h3 style={{ margin: '22px 0 10px 0', fontSize: 15.5, fontWeight: 600, color: C.t1, letterSpacing: '-0.01em', lineHeight: 1.35, display: 'flex', alignItems: 'center', gap: 10 }}>
-      <span aria-hidden style={{ width: 3, height: 16, borderRadius: 2, background: '#fb6a60', flexShrink: 0 }} />
-      <span>{children}</span>
-    </h3>
+    <h3 style={{ margin: '22px 0 10px 0', fontSize: 15.5, fontWeight: 600, color: C.t1, letterSpacing: '-0.01em', lineHeight: 1.35 }}>{children}</h3>
   ),
   a: ({ children, href }) => (
     <a href={href} target="_blank" rel="noopener noreferrer"
@@ -730,20 +714,18 @@ export default function ChatCoach({ onNavigate, billingPlan, chatMode, chatTarge
 }
 
 
-/* ─── Assistant mark. Subtle red tint so the assistant feels alive
-       instead of muted, but no solid red wash (that would scream). ─── */
+/* ─── Assistant mark. Quiet raised circle, neutral icon. The chat
+       prose itself doesn't get colored decoration; the avatar stays
+       muted to match. ──────────────────────────────────────────── */
 function Avatar() {
   return (
     <span style={{
       flexShrink: 0,
       width: 32, height: 32, borderRadius: 9,
       display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-      background: 'rgba(251,106,96,0.10)',
-      border: `1px solid rgba(251,106,96,0.22)`,
-      color: '#fb6a60',
-      boxShadow: '0 1px 2px rgba(0,0,0,0.30)',
+      background: C.raised, border: `1px solid ${C.hair}`, color: C.t3,
     }}>
-      <Sparkles size={17} strokeWidth={1.9} />
+      <Sparkles size={16} strokeWidth={1.8} />
     </span>
   )
 }
