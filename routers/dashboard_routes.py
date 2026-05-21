@@ -1131,6 +1131,41 @@ def title_suggestion(request: Request):
     return JSONResponse({"ok": True, "video": None})
 
 
+@router.get("/missing-description/_debug")
+def missing_description_debug(request: Request):
+    """Temporary diagnostic. Returns a thin snapshot of the videos the
+    missing-description picker is iterating over: title, duration, is_short
+    flag, and the length of the description as read from session. If shorts
+    are absent here, the loader is dropping them. If shorts are present with
+    description_length > 250, the threshold is the issue."""
+    data, _ = get_session(request.session.get("session_id"))
+    if not data:
+        return JSONResponse({"ok": False, "reason": "not_authenticated"}, status_code=401)
+    from app.insights import parse_duration_seconds
+    videos = (data or {}).get("videos", []) or []
+    rows = []
+    for v in sorted(videos, key=lambda x: (x.get("published_at") or ""), reverse=True):
+        dur = v.get("duration", "PT0S")
+        secs = parse_duration_seconds(dur)
+        desc = (v.get("description") or "")
+        rows.append({
+            "video_id":            v.get("video_id", ""),
+            "title":               (v.get("title") or "")[:80],
+            "published_at":        (v.get("published_at") or "")[:10],
+            "duration":            dur,
+            "duration_secs":       secs,
+            "is_short":            secs <= 60,
+            "description_length":  len(desc),
+            "description_preview": desc[:120],
+        })
+    return JSONResponse({
+        "ok": True,
+        "total_videos": len(videos),
+        "threshold":    250,
+        "videos":       rows,
+    })
+
+
 @router.get("/missing-description")
 def missing_description(request: Request):
     """Surface an AI-drafted description for the user's most-recent video
