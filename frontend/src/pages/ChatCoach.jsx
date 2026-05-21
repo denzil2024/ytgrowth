@@ -58,15 +58,28 @@ if (typeof document !== 'undefined' && !document.getElementById('ytg-chat-scroll
     .ytg-chat-textarea::placeholder { color: #87878f }
     @keyframes ytgFadeUp { from { opacity: 0; transform: translateY(8px) } to { opacity: 1; transform: none } }
     @media (prefers-reduced-motion: reduce) { .ytg-fade-up { animation: none !important } }
+    /* Bulleted list — accent dot instead of a thin character glyph.
+       Reads as a deliberate marker, not a paragraph leader. */
+    .md-list-ul > li { padding-left: 20px; }
     .md-list-ul > li::before {
-      content: '•'; position: absolute; left: 4px; top: 0;
-      font-size: 14px; font-weight: 600; color: rgba(255,255,255,0.32); line-height: inherit;
+      content: ''; position: absolute; left: 4px; top: 11px;
+      width: 5px; height: 5px; border-radius: 100px;
+      background: rgba(251,106,96,0.75);
     }
-    .md-list-ol > li { counter-increment: mdlist }
+    /* Numbered list — small filled badge for the digit. Brings the
+       step structure forward without painting whole rows red. */
+    .md-list-ol > li { counter-increment: mdlist; padding-left: 34px; }
     .md-list-ol > li::before {
-      content: counter(mdlist) '.'; position: absolute; left: 0; top: 0;
-      font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.32);
-      font-variant-numeric: tabular-nums; line-height: inherit;
+      content: counter(mdlist);
+      position: absolute; left: 0; top: 1px;
+      width: 22px; height: 22px;
+      display: inline-flex; align-items: center; justify-content: center;
+      background: rgba(251,106,96,0.12);
+      border: 1px solid rgba(251,106,96,0.22);
+      color: #fb6a60;
+      border-radius: 100px;
+      font-size: 11.5px; font-weight: 700;
+      font-variant-numeric: tabular-nums; line-height: 1;
     }
   `
   document.head.appendChild(s)
@@ -139,7 +152,9 @@ const MARKDOWN_COMPONENTS = {
     <ol className="md-list-ol" style={{ margin: '8px 0 14px 0', padding: 0, listStyle: 'none', counterReset: 'mdlist', display: 'flex', flexDirection: 'column', gap: 7 }}>{children}</ol>
   ),
   li: ({ children }) => (
-    <li style={{ position: 'relative', paddingLeft: 22 }}>{children}</li>
+    // padding-left set per-list-type in the CSS above (ul = 20, ol = 34)
+    // so the marker (dot vs badge) has the right gutter.
+    <li style={{ position: 'relative' }}>{children}</li>
   ),
   code: ({ inline, children }) => {
     if (inline === false) {
@@ -153,9 +168,16 @@ const MARKDOWN_COMPONENTS = {
       )
     }
     return (
+      // Inline code reads as a tagged chip, not raw monospace floating
+      // in the prose. Softer than `code` styling but distinct from
+      // body text so quoted titles / handles stand out.
       <code style={{
         fontFamily: FONT_MONO, fontSize: '0.86em', fontWeight: 500,
         color: C.t1, letterSpacing: '-0.01em',
+        background: 'rgba(255,255,255,0.05)',
+        border: `1px solid ${C.hair}`,
+        borderRadius: 6,
+        padding: '1px 6px',
       }}>{children}</code>
     )
   },
@@ -165,14 +187,25 @@ const MARKDOWN_COMPONENTS = {
       borderLeft: `2px solid ${C.hairStrong}`, color: C.t3, fontWeight: 400,
     }}>{children}</blockquote>
   ),
+  // Section headers — accent bar to the left so they break the prose
+  // visually. Bigger top gap so each section reads as its own beat.
   h1: ({ children }) => (
-    <h3 style={{ margin: '20px 0 8px 0', fontSize: 16, fontWeight: 600, color: C.t1, letterSpacing: '-0.015em', lineHeight: 1.35 }}>{children}</h3>
+    <h3 style={{ margin: '24px 0 10px 0', fontSize: 16, fontWeight: 600, color: C.t1, letterSpacing: '-0.015em', lineHeight: 1.35, display: 'flex', alignItems: 'center', gap: 10 }}>
+      <span aria-hidden style={{ width: 3, height: 17, borderRadius: 2, background: '#fb6a60', flexShrink: 0 }} />
+      <span>{children}</span>
+    </h3>
   ),
   h2: ({ children }) => (
-    <h3 style={{ margin: '20px 0 8px 0', fontSize: 15.5, fontWeight: 600, color: C.t1, letterSpacing: '-0.015em', lineHeight: 1.35 }}>{children}</h3>
+    <h3 style={{ margin: '24px 0 10px 0', fontSize: 15.5, fontWeight: 600, color: C.t1, letterSpacing: '-0.015em', lineHeight: 1.35, display: 'flex', alignItems: 'center', gap: 10 }}>
+      <span aria-hidden style={{ width: 3, height: 16, borderRadius: 2, background: '#fb6a60', flexShrink: 0 }} />
+      <span>{children}</span>
+    </h3>
   ),
   h3: ({ children }) => (
-    <h3 style={{ margin: '18px 0 6px 0', fontSize: 15, fontWeight: 600, color: C.t1, letterSpacing: '-0.01em', lineHeight: 1.35 }}>{children}</h3>
+    <h3 style={{ margin: '22px 0 10px 0', fontSize: 15.5, fontWeight: 600, color: C.t1, letterSpacing: '-0.01em', lineHeight: 1.35, display: 'flex', alignItems: 'center', gap: 10 }}>
+      <span aria-hidden style={{ width: 3, height: 16, borderRadius: 2, background: '#fb6a60', flexShrink: 0 }} />
+      <span>{children}</span>
+    </h3>
   ),
   a: ({ children, href }) => (
     <a href={href} target="_blank" rel="noopener noreferrer"
@@ -711,14 +744,14 @@ function Avatar() {
   return (
     <span style={{
       flexShrink: 0,
-      width: 28, height: 28, borderRadius: 8,
+      width: 32, height: 32, borderRadius: 9,
       display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
       background: 'rgba(251,106,96,0.10)',
       border: `1px solid rgba(251,106,96,0.22)`,
       color: '#fb6a60',
       boxShadow: '0 1px 2px rgba(0,0,0,0.30)',
     }}>
-      <Sparkles size={15} strokeWidth={1.9} />
+      <Sparkles size={17} strokeWidth={1.9} />
     </span>
   )
 }
