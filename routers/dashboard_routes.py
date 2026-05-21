@@ -1153,10 +1153,16 @@ def missing_description(request: Request):
 
     If no candidate exists or none yield drafts, the card hides itself.
     Honors YT_QUOTA_PAUSED.
+
+    Pass ?debug=1 to get a per-candidate diagnostic instead of the rendered
+    payload (shows which candidates were tried and which path produced
+    drafts or returned empty).
     """
+    debug = request.query_params.get("debug") == "1"
+
     import os as _os
     if _os.getenv("YT_QUOTA_PAUSED") == "1":
-        return JSONResponse({"ok": True, "video": None})
+        return JSONResponse({"ok": True, "video": None, "_debug": {"halted": "YT_QUOTA_PAUSED"}} if debug else {"ok": True, "video": None})
 
     data, _ = get_session(request.session.get("session_id"))
     if not data:
@@ -1166,7 +1172,7 @@ def missing_description(request: Request):
     videos  = (data or {}).get("videos",  []) or []
     channel_id = channel.get("channel_id", "") or ""
     if not channel_id or not videos:
-        return JSONResponse({"ok": True, "video": None})
+        return JSONResponse({"ok": True, "video": None, "_debug": {"halted": "no_channel_or_videos", "channel_id": bool(channel_id), "videos_n": len(videos)}} if debug else {"ok": True, "video": None})
 
     from app.insights import parse_duration_seconds
 
@@ -1345,31 +1351,52 @@ def missing_description(request: Request):
         return None
 
     # Walk candidates, return the first one that yields drafts.
+    diag_walk = []
     for pick in candidates[:MAX_TRIES]:
-        result = _try_pick(pick)
+        try:
+            result = _try_pick(pick)
+        except Exception as e:
+            import traceback as _tb
+            err = str(e)
+            tb = _tb.format_exc().splitlines()[-6:]
+            print(f"[missing-description] _try_pick exception for '{(pick.get('title') or '')[:60]}': {err}")
+            diag_walk.append({"video_id": pick.get("video_id", ""), "title": (pick.get("title") or "")[:60], "outcome": "exception", "error": err, "trace": tb})
+            continue
         if result:
+            if debug:
+                result["_debug"] = {"candidates_total": len(candidates), "walk": diag_walk + [{"video_id": pick.get("video_id", ""), "title": (pick.get("title") or "")[:60], "outcome": "yielded_drafts", "source": result.get("source", "")}]}
+                return JSONResponse(result)
             return JSONResponse(result)
+        diag_walk.append({"video_id": pick.get("video_id", ""), "title": (pick.get("title") or "")[:60], "outcome": "no_drafts"})
 
     print(f"[missing-description] no candidate among {len(candidates)} yielded drafts")
+    if debug:
+        return JSONResponse({"ok": True, "video": None, "_debug": {"candidates_total": len(candidates), "max_tries": MAX_TRIES, "walk": diag_walk}})
     return JSONResponse({"ok": True, "video": None})
 
 
 @router.get("/trending-keyword")
 def trending_keyword(request: Request):
-    """Surface ONE keyword from existing cached research that's currently
-    'active' (top-5 video shipped in last 30 days). Zero new YouTube quota:
-    pulls from data we already paid for.
+    """Surface ONE keyword from existing cached research. Zero new YouTube
+    quota. Two paths (user's own research, then cross-user niche pool).
 
-      Path 1: User's own KeywordsResearchCache. Walk every research row this
-        channel has saved; flatten the keywords list inside each result_json;
-        pick the highest-opportunityScore keyword with momentum=='active'.
-      Path 2: Niche-warmer pool. Pull YoutubeSearchCache rows with the 'kw:'
-        prefix, ordered by hit_count desc. Decode result_json, pick one whose
-        top-5 freshness gives momentum='active'. Bias to entries whose query
-        token-overlaps the user's niche keywords.
-
-    Returns null if no candidate exists. Card hides itself on null.
+    Wrapped end-to-end in try/except so a parse error in one stale cache
+    row doesn't 500 the whole card. On exception, returns null + reason.
+    Pass ?debug=1 to get a diagnostic dump instead of the rendered payload.
     """
+    debug = request.query_params.get("debug") == "1"
+    try:
+        return _trending_keyword_impl(request, debug=debug)
+    except Exception as e:
+        import traceback as _tb
+        tb = _tb.format_exc()
+        print(f"[trending-keyword] unhandled exception: {e}\n{tb}")
+        if debug:
+            return JSONResponse({"ok": False, "reason": "exception", "error": str(e), "trace": tb.splitlines()[-12:]})
+        return JSONResponse({"ok": True, "keyword": None})
+
+
+def _trending_keyword_impl(request: Request, debug: bool = False):
     data, _ = get_session(request.session.get("session_id"))
     if not data:
         return JSONResponse({"ok": False, "reason": "not_authenticated"}, status_code=401)
@@ -1436,9 +1463,12 @@ def trending_keyword(request: Request):
             "source":     source,
         }
 
+    diag = {"niche_tokens": sorted(niche_tokens), "channel_id": channel_id[:10] + "..." if channel_id else ""}
+
     db = SessionLocal()
     try:
         # Path 1: user's own keyword research.
+        path1 = {"rows_seen": 0, "keywords_scanned": 0, "active_found": 0}
         if channel_id:
             rows = (
                 db.query(KeywordsResearchCache)
@@ -1447,6 +1477,7 @@ def trending_keyword(request: Request):
                 .limit(20)
                 .all()
             )
+            path1["rows_seen"] = len(rows)
             best = None
             best_age = None
             for row in rows:
@@ -1455,15 +1486,22 @@ def trending_keyword(request: Request):
                 except Exception:
                     continue
                 kws = payload.get("keywords") or payload.get("keyword_scores") or []
+                path1["keywords_scanned"] += len(kws)
                 for kw in kws:
                     if _momentum(kw) != "active":
                         continue
+                    path1["active_found"] += 1
                     score = int(kw.get("opportunityScore") or 0)
                     if best is None or score > int(best.get("opportunityScore") or 0):
                         best = kw
                         best_age = row.updated_at.isoformat() if row.updated_at else None
-            if best:
+            if best and not debug:
                 return JSONResponse(_payload(best, "user_research", best_age))
+            if best and debug:
+                pl = _payload(best, "user_research", best_age)
+                pl["_debug"] = {**diag, "path1": path1, "path2": "skipped (path1 found)"}
+                return JSONResponse(pl)
+        diag["path1"] = path1
 
         # Path 2: cross-user kw: cache. Each row's result_json is a COMPETITION
         # DICT for the single query stored in original_query — NOT a research-
@@ -1502,6 +1540,7 @@ def trending_keyword(request: Request):
             else:               fresh = 80
             return max(0, min(100, int(feas * 0.6 + fresh * 0.4)))
 
+        path2 = {"rows_seen": len(rows), "passed_niche": 0, "passed_result_count": 0, "candidates": 0}
         best = None
         best_score = -1
         best_age = None
@@ -1511,14 +1550,21 @@ def trending_keyword(request: Request):
                 continue
             if niche_tokens and not any(t in q.lower() for t in niche_tokens):
                 continue
+            path2["passed_niche"] += 1
             try:
                 comp = json.loads(row.result_json) or {}
             except Exception:
                 continue
+            if not isinstance(comp, dict):
+                continue
             # Skip rows the competition fetcher returned empty (no result_count
             # = the query was rejected or YouTube returned nothing usable).
-            if int(comp.get("result_count") or 0) <= 0:
+            try:
+                if int(comp.get("result_count") or 0) <= 0:
+                    continue
+            except (TypeError, ValueError):
                 continue
+            path2["passed_result_count"] += 1
             synthesised = {
                 "keyword":          q,
                 "opportunityScore": _score_from_competition(comp),
@@ -1526,19 +1572,25 @@ def trending_keyword(request: Request):
                 "momentum":         "",  # set inside _payload via _momentum()
             }
             mom = _momentum(synthesised)
-            # Prefer 'active' but accept any momentum so the card has something
-            # to show for users in niches where nothing is shipping fresh.
             score = synthesised["opportunityScore"]
             if mom == "active":
                 score += 8  # nudge active winners ahead of stale ones
+            path2["candidates"] += 1
             if score > best_score:
                 best = synthesised
                 best_score = score
                 best_age = row.cached_at.isoformat() if row.cached_at else None
+        diag["path2"] = path2
 
-        if best:
+        if best and not debug:
             return JSONResponse(_payload(best, "niche_pool", best_age))
+        if best and debug:
+            pl = _payload(best, "niche_pool", best_age)
+            pl["_debug"] = diag
+            return JSONResponse(pl)
     finally:
         db.close()
 
+    if debug:
+        return JSONResponse({"ok": True, "keyword": None, "_debug": diag})
     return JSONResponse({"ok": True, "keyword": None})
