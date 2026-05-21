@@ -1272,9 +1272,16 @@ def missing_description(request: Request):
                     cached = []
                 drafts = []
                 for entry in cached[:3]:
-                    draft = _clean_description(
-                        entry.get("description") if isinstance(entry, dict) else str(entry)
-                    )
+                    # generate_description_suggestions returns dicts shaped as
+                    # {"type", "label", "preview", "full", "why_it_works"}.
+                    # The full ready-to-publish text is in "full"; fall back
+                    # to "description" / "preview" / the dict-as-string if a
+                    # legacy row was written with a different shape.
+                    if isinstance(entry, dict):
+                        raw = entry.get("full") or entry.get("description") or entry.get("preview") or ""
+                    else:
+                        raw = str(entry)
+                    draft = _clean_description(raw)
                     if draft:
                         drafts.append(draft)
                 if drafts:
@@ -1458,7 +1465,12 @@ def trending_keyword(request: Request):
             if best:
                 return JSONResponse(_payload(best, "user_research", best_age))
 
-        # Path 2: cross-user kw: cache, biased to niche tokens.
+        # Path 2: cross-user kw: cache. Each row's result_json is a COMPETITION
+        # DICT for the single query stored in original_query — NOT a research-
+        # result list of multiple keywords (that's KeywordsResearchCache). We
+        # synthesise a keyword-shaped object per row so it flows through the
+        # same _payload() helper. Score is derived from real competition data
+        # (smaller channel size = higher score, fresher landscape = bonus).
         rows = (
             db.query(YoutubeSearchCache)
             .filter(YoutubeSearchCache.cache_key.like("kw:%"))
@@ -1466,26 +1478,64 @@ def trending_keyword(request: Request):
             .limit(120)
             .all()
         )
+
+        def _score_from_competition(comp: dict) -> int:
+            """Cheap opportunity score from the competition dict alone. Mirrors
+            the spirit of app/keywords.py _score_with_real_data but stripped of
+            inputs we don't have here (autocomplete rank, Claude intent). Range
+            0-100."""
+            subs = int(comp.get("top_subs_median") or 0)
+            days = comp.get("days_since_newest")
+            # Feasibility from top-5 median subs (smaller = easier)
+            if   subs == 0:        feas = 50
+            elif subs < 1_000:     feas = 95
+            elif subs < 10_000:    feas = 85
+            elif subs < 50_000:    feas = 70
+            elif subs < 250_000:   feas = 55
+            elif subs < 1_000_000: feas = 35
+            else:                  feas = 15
+            # Freshness — unclaimed landscape lifts; active landscape ok; stale neutral
+            if days is None:    fresh = 50
+            elif days < 30:     fresh = 65
+            elif days < 90:     fresh = 55
+            elif days < 180:    fresh = 60
+            else:               fresh = 80
+            return max(0, min(100, int(feas * 0.6 + fresh * 0.4)))
+
         best = None
         best_score = -1
         best_age = None
         for row in rows:
-            q = (row.original_query or "").lower()
-            if niche_tokens and not any(t in q for t in niche_tokens):
+            q = (row.original_query or "").strip()
+            if not q:
+                continue
+            if niche_tokens and not any(t in q.lower() for t in niche_tokens):
                 continue
             try:
-                payload = json.loads(row.result_json) or {}
+                comp = json.loads(row.result_json) or {}
             except Exception:
                 continue
-            kws = payload.get("keywords") or payload.get("keyword_scores") or []
-            for kw in kws:
-                if _momentum(kw) != "active":
-                    continue
-                score = int(kw.get("opportunityScore") or 0)
-                if score > best_score:
-                    best = kw
-                    best_score = score
-                    best_age = row.cached_at.isoformat() if row.cached_at else None
+            # Skip rows the competition fetcher returned empty (no result_count
+            # = the query was rejected or YouTube returned nothing usable).
+            if int(comp.get("result_count") or 0) <= 0:
+                continue
+            synthesised = {
+                "keyword":          q,
+                "opportunityScore": _score_from_competition(comp),
+                "competition":      comp,
+                "momentum":         "",  # set inside _payload via _momentum()
+            }
+            mom = _momentum(synthesised)
+            # Prefer 'active' but accept any momentum so the card has something
+            # to show for users in niches where nothing is shipping fresh.
+            score = synthesised["opportunityScore"]
+            if mom == "active":
+                score += 8  # nudge active winners ahead of stale ones
+            if score > best_score:
+                best = synthesised
+                best_score = score
+                best_age = row.cached_at.isoformat() if row.cached_at else None
+
         if best:
             return JSONResponse(_payload(best, "niche_pool", best_age))
     finally:
