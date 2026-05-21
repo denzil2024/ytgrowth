@@ -1083,12 +1083,22 @@ def title_suggestion(request: Request):
 
     from app.insights import parse_duration_seconds
 
-    # Pick: the single most recent video that has a title.
+    # Pick: the user's TOP-PERFORMING video by views (was most-recent).
+    # Per the Phase 2 Feed merge — Top Performer and Title Suggestion now
+    # share one card, so suggestions are written for the video that
+    # already proves the audience cares. Falls back to most-recent only
+    # when no video has views (brand-new channel).
     pick = None
-    for v in sorted(videos, key=lambda x: (x.get("published_at") or ""), reverse=True):
-        if (v.get("title") or "").strip():
+    sorted_by_views = sorted(videos, key=lambda x: int(x.get("views", 0) or 0), reverse=True)
+    for v in sorted_by_views:
+        if (v.get("title") or "").strip() and int(v.get("views", 0) or 0) > 0:
             pick = v
             break
+    if not pick:
+        for v in sorted(videos, key=lambda x: (x.get("published_at") or ""), reverse=True):
+            if (v.get("title") or "").strip():
+                pick = v
+                break
     if not pick:
         return JSONResponse({"ok": True, "video": None})
 

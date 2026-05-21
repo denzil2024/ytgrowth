@@ -1845,7 +1845,9 @@ export default function Dashboard() {
                       {priorityActionsBlock}
                       {dailyIdeasBlock}
                       {milestoneBlock}
-                      {topPerformerBlock}
+                      {/* topPerformerBlock removed: merged into Title Suggestion card,
+                          which now picks the top-views video and shows its view count
+                          alongside the title compare. */}
                       {trackedLiftBlock}
                       {nicheHeroBlock}
                       {titleSuggestionBlock}

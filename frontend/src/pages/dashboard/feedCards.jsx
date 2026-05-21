@@ -1871,6 +1871,14 @@ export function TitleSuggestionCard({ video, suggestions, ageLabel, applyingIdx,
   const isApplied  = appliedIdx  === idx
   const ctaLabel   = isApplied ? 'Applied to YouTube' : isApplying ? 'Applying…' : 'Apply Title'
   const canCycle   = suggestions.length > 1
+  const views      = Number(video.views || 0)
+  // Format view count for the subline. The endpoint now picks the
+  // user's top-views video, so the subline doubles as the "Top
+  // Performer" surface (the standalone card was merged into this one).
+  const viewsLabel = views >= 1_000_000 ? `${(views / 1_000_000).toFixed(1)}M views`
+                   : views >= 1_000     ? `${(views / 1_000).toFixed(views >= 10_000 ? 0 : 1)}K views`
+                   : views > 0          ? `${views.toLocaleString()} views`
+                   : ''
 
   return (
     <article style={{
@@ -1885,7 +1893,13 @@ export function TitleSuggestionCard({ video, suggestions, ageLabel, applyingIdx,
         <h3 style={{
           fontSize: 16, fontWeight: 600, color: SHELL.text1,
           letterSpacing: '-0.2px', lineHeight: 1.3, margin: 0,
-        }}>Title Suggestion</h3>
+        }}>Top Performer · Title Suggestion</h3>
+        {viewsLabel && (
+          <span style={{
+            fontSize: 12.5, fontWeight: 450, color: SHELL.text3,
+            letterSpacing: '-0.01em',
+          }}>· {viewsLabel}</span>
+        )}
         {ageLabel && (
           <span style={{
             fontSize: 12.5, fontWeight: 450, color: SHELL.text3,
