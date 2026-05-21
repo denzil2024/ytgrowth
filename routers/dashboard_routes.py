@@ -732,14 +732,22 @@ def suggested_competitors(request: Request):
 
 @router.get("/title-suggestion")
 def title_suggestion(request: Request):
-    """Surface SEO Studio title suggestions in the Feed.
+    """Surface SEO Studio title suggestions for the user's MOST RECENT video.
 
-    Walks the user's videos most-recent-first and returns the first one
-    that already has a row in SeoAnalysisCache (i.e. they ran SEO Studio
-    on it). The suggestions are copied verbatim from that cached result,
-    so the Feed card uses the exact same titles SEO Studio produced.
+    Pick: the most recent video by published_at. Always the same pick, no
+    "under-performer" filter or median games.
 
-    Zero new YouTube quota, zero new Claude calls. Reads only.
+    Source of suggestions:
+      1. If the user has already run SEO Studio on that video, return the
+         cached suggestions verbatim from SeoAnalysisCache.
+      2. Otherwise, call SEO Studio's generate_title_suggestions function
+         with channel context (viral videos, niche keywords) but NO YouTube
+         search. Same Claude prompt SEO Studio uses, just without the live
+         competitive-data block. Wrapped in cached_ai_output so two users
+         with similar inputs (same title, niche, tier) share the result.
+
+    Zero new YouTube quota in either path. The Feed gives every user a
+    headstart even if they've never opened SEO Studio.
     """
     data, _ = get_session(request.session.get("session_id"))
     if not data:
@@ -753,11 +761,18 @@ def title_suggestion(request: Request):
 
     from app.insights import parse_duration_seconds
 
-    sorted_videos = sorted(
-        [v for v in videos if v.get("title")],
-        key=lambda v: (v.get("published_at") or ""),
-        reverse=True,
-    )
+    # Pick: the single most recent video that has a title.
+    pick = None
+    for v in sorted(videos, key=lambda x: (x.get("published_at") or ""), reverse=True):
+        if (v.get("title") or "").strip():
+            pick = v
+            break
+    if not pick:
+        return JSONResponse({"ok": True, "video": None})
+
+    title       = (pick.get("title") or "").strip()
+    is_short    = parse_duration_seconds(pick.get("duration", "PT0S")) <= 60
+    description = (pick.get("description") or "").strip()[:240]
 
     def _age_label(iso: str) -> str:
         if not iso:
@@ -774,58 +789,124 @@ def title_suggestion(request: Request):
         if days < 365: return f"{days // 30}mo ago"
         return f"{days // 365}y ago"
 
+    def _clean_suggestions(raw_list):
+        """Drop any title with banned punctuation and pick the fields the
+        Feed card actually renders."""
+        out = []
+        for s in (raw_list or [])[:3]:
+            t = (s.get("title") or "").strip()
+            if not t or "—" in t or "–" in t:
+                continue
+            out.append({
+                "title":        t,
+                "score":        int(s.get("score") or 0),
+                "why_it_works": (s.get("why_it_works") or "").strip(),
+                "angle":        (s.get("angle") or "").strip(),
+            })
+        return out
+
+    video_payload = {
+        "video_id":     pick.get("video_id", ""),
+        "title":        title,
+        "thumbnail":    pick.get("thumbnail", ""),
+        "views":        int(pick.get("views", 0) or 0),
+        "published_at": (pick.get("published_at") or "")[:10],
+        "is_short":     bool(is_short),
+    }
+
+    # Path 1: user has already run SEO Studio on this video -> return cached.
     db = SessionLocal()
     try:
-        for v in sorted_videos[:25]:
-            title = (v.get("title") or "").strip()
-            if not title:
-                continue
-            row = (
-                db.query(SeoAnalysisCache)
-                .filter_by(channel_id=channel_id, title_lower=title.lower())
-                .first()
-            )
-            if not row or not row.result_json:
-                continue
+        row = (
+            db.query(SeoAnalysisCache)
+            .filter_by(channel_id=channel_id, title_lower=title.lower())
+            .first()
+        )
+        if row and row.result_json:
             try:
-                result = json.loads(row.result_json) or {}
+                cached = (json.loads(row.result_json) or {}).get("suggestions") or []
             except Exception:
-                continue
-            raw_suggestions = result.get("suggestions") or []
-            if not raw_suggestions:
-                continue
-
-            # Pass through only the fields the Feed card actually uses.
-            # Drop any rewrite that still contains an em-/en-dash (brand rule).
-            suggestions = []
-            for s in raw_suggestions[:3]:
-                t = (s.get("title") or "").strip()
-                if not t or "—" in t or "–" in t:
-                    continue
-                suggestions.append({
-                    "title":        t,
-                    "score":        int(s.get("score") or 0),
-                    "why_it_works": (s.get("why_it_works") or "").strip(),
-                    "angle":        (s.get("angle") or "").strip(),
+                cached = []
+            cleaned = _clean_suggestions(cached)
+            if cleaned:
+                return JSONResponse({
+                    "ok":          True,
+                    "video":       video_payload,
+                    "suggestions": cleaned,
+                    "age_label":   _age_label(pick.get("published_at", "")),
+                    "source":      "studio_cache",
                 })
-            if not suggestions:
-                continue
-
-            is_short = parse_duration_seconds(v.get("duration", "PT0S")) <= 60
-            return JSONResponse({
-                "ok": True,
-                "video": {
-                    "video_id":     v.get("video_id", ""),
-                    "title":        title,
-                    "thumbnail":    v.get("thumbnail", ""),
-                    "views":        int(v.get("views", 0) or 0),
-                    "published_at": (v.get("published_at") or "")[:10],
-                    "is_short":     bool(is_short),
-                },
-                "suggestions": suggestions,
-                "age_label":   _age_label(v.get("published_at", "")),
-            })
-
-        return JSONResponse({"ok": True, "video": None})
     finally:
         db.close()
+
+    # Path 2: headstart. Call the same SEO Studio function with channel
+    # context only (no YouTube search -> zero quota burn). Cross-user
+    # cached via cached_ai_output so repeated titles in similar niches
+    # don't keep re-calling Claude.
+    from app.seo import generate_title_suggestions
+    from app.utils import cached_ai_output
+
+    viral_videos = [
+        {"title": v.get("title", "") or "", "views": int(v.get("views", 0) or 0)}
+        for v in sorted(videos, key=lambda x: x.get("views", 0) or 0, reverse=True)[:5]
+        if v.get("title")
+    ]
+    channel_context = {
+        "channel_name":     channel.get("channel_name", "") or "",
+        "channel_keywords": channel.get("keywords", "") or "",
+        "top_video_titles": [v["title"] for v in viral_videos],
+        "viral_videos":     viral_videos,
+    }
+
+    def _subs_tier(n: int) -> str:
+        if n < 10_000:    return "micro"
+        if n < 100_000:   return "small"
+        if n < 1_000_000: return "mid"
+        return "large"
+
+    cache_inputs = {
+        "title":          title,
+        "description":    description,
+        "viral_titles":   sorted(v["title"].lower() for v in viral_videos),
+        "channel_kw":     (channel.get("keywords", "") or "").lower()[:200],
+        "subs_tier":      _subs_tier(int(channel.get("subscribers", 0) or 0)),
+        "is_short":       bool(is_short),
+        "prompt_version": "feed_v1",
+    }
+
+    def _fetch():
+        try:
+            suggestions, _intent, err = generate_title_suggestions(
+                title=title,
+                search_terms=[title],
+                top_videos=[],
+                score_data={},
+                keyword_scores=[],
+                autocomplete=[],
+                context=description,
+                primary_phrase=title,
+                channel_context=channel_context,
+            )
+            return {"suggestions": suggestions or [], "error": err or ""}
+        except Exception as e:
+            print(f"[title-suggestion] generate error: {e}")
+            return {"suggestions": [], "error": str(e)}
+
+    out = cached_ai_output(
+        function_name="feed_title_suggestion_seo_compat",
+        inputs=cache_inputs,
+        ttl_hours=24 * 14,
+        fetch_fn=_fetch,
+    )
+
+    fresh = _clean_suggestions(out.get("suggestions") or [])
+    if not fresh:
+        return JSONResponse({"ok": True, "video": None})
+
+    return JSONResponse({
+        "ok":          True,
+        "video":       video_payload,
+        "suggestions": fresh,
+        "age_label":   _age_label(pick.get("published_at", "")),
+        "source":      "feed_generated",
+    })
