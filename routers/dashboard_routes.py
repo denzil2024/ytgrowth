@@ -731,7 +731,7 @@ def suggested_competitors(request: Request):
 
 
 @router.get("/title-suggestion")
-def title_suggestion(request: Request):
+def title_suggestion(request: Request, refresh: int = 0):
     """Title rewrite suggestion for one of the creator's recent under-performers.
 
     Picks a video locally from the session (no YouTube quota): the most
@@ -824,6 +824,10 @@ def title_suggestion(request: Request):
         "model":           "claude-sonnet-4-6",
         "prompt_version":  "v3",
     }
+    # On explicit Regenerate, bust the cache by adding a nonce so the user
+    # gets a fresh Claude call instead of the previously cached rewrite.
+    if refresh:
+        cache_inputs["nonce"] = int(datetime.datetime.now().timestamp())
 
     def _fetch():
         from app.utils import make_anthropic_client
@@ -911,19 +915,19 @@ Hard rules for the rewrite:
     current = out.get("current") or None
     rewrite = out.get("rewrite") or None
 
-    # Quality gate: rewrite must (a) beat current by 8+ AND (b) clear a
-    # minimum score floor of 75. Without the floor we sometimes showed
-    # "less bad" rewrites (e.g. 28 -> 62) that still felt mediocre. Also
-    # belt-and-brace the em-dash strip: if the rewrite still contains one
-    # after cleaning, hide the card and let the next cache miss try again.
+    # Quality gate: rewrite must beat the current by 5+ points. Earlier
+    # we also had a 75-point absolute floor, which silently hid the card
+    # for users whose Claude-rated current title was low (the rewrite
+    # would still be an improvement, just not in the 75+ band). The user
+    # wants to SEE rewrites whenever there's a real lift, so the floor is
+    # gone, only the relative lift gate remains. Em-dash check stays.
     if (
         not current
         or not rewrite
         or not rewrite.get("title")
         or "—" in rewrite["title"]
         or "–" in rewrite["title"]
-        or int(rewrite.get("clickScore") or 0) < 75
-        or int(rewrite.get("clickScore") or 0) - int(current.get("clickScore") or 0) < 8
+        or int(rewrite.get("clickScore") or 0) - int(current.get("clickScore") or 0) < 5
     ):
         return JSONResponse({"ok": True, "video": None})
 
