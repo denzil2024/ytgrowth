@@ -1858,9 +1858,12 @@ export default function Dashboard() {
                 // topPerformerBlock is omitted intentionally: merged
                 // into Title Suggestion card.
                 const FEED = [
-                  { category: 'actions',      block: priorityActionsBlock },
-                  { category: 'achievements', block: topPerformerBlock },
+                  // Title Suggestion already shows the top-performing video
+                  // (thumb + view count) inline, so the standalone
+                  // topPerformerBlock would be a duplicate. Lead with the
+                  // merged card directly after the stat strip.
                   { category: 'actions',      block: titleSuggestionBlock },
+                  { category: 'actions',      block: priorityActionsBlock },
                   { category: 'actions',      block: missingDescriptionBlock },
                   { category: 'insights',     block: nicheHeroBlock },
                   { category: 'actions',      block: missingTagsBlock },
