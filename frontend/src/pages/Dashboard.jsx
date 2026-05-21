@@ -3993,9 +3993,18 @@ function SuggestedCompetitorsCard({ suggestions, category, onTrack, onDismiss, o
 // row showing the source video's total views with an arrow to a brand-
 // red "N views to you" pill. Click anywhere on a tile opens the video
 // on YouTube in a new tab.
-function RelatedTrafficCard({ items, ageLabel, onOpen, onDismiss }) {
+function RelatedTrafficCard({ items, ageLabel, reason, rawSourceCount, onOpen, onDismiss }) {
   const top = (items || []).slice(0, 6)
-  if (top.length === 0) return null
+  // Empty-state explainer. Renders the card head with a clear "why
+  // nothing showed" message instead of silently disappearing.
+  const reasonCopy = top.length === 0 ? (() => {
+    if (reason === 'no_analytics_traffic') return 'No suggested-video traffic recorded for your channel in the last 14 days. As your watch time grows, YouTube will start surfacing your videos as suggestions and this card will populate.'
+    if (reason === 'all_filtered')         return `Found ${rawSourceCount || 0} source video${rawSourceCount === 1 ? '' : 's'} sending traffic, but none cleared the 10K-view quality floor. Either the sources are tiny channels, or your own uploads, so we're hiding them.`
+    if (reason === 'resolve_failed')       return 'Could not resolve the source videos via YouTube. We will retry on the next refresh.'
+    if (reason === 'no_source_ids')        return 'No source video IDs in the Analytics response. Common when a channel is brand new or has zero suggested-video traffic.'
+    return null
+  })() : null
+  if (top.length === 0 && !reasonCopy) return null
 
   function fmtDuration(sec) {
     sec = Math.max(0, Math.floor(Number(sec || 0)))
@@ -4020,7 +4029,9 @@ function RelatedTrafficCard({ items, ageLabel, onOpen, onDismiss }) {
         <h3 style={{
           fontSize: 16, fontWeight: 600, color: SHELL.text1,
           letterSpacing: '-0.2px', lineHeight: 1.3, margin: 0,
-        }}>{`New Traffic From ${top.length} Related ${top.length === 1 ? 'Video' : 'Videos'}`}</h3>
+        }}>{top.length > 0
+          ? `New Traffic From ${top.length} Related ${top.length === 1 ? 'Video' : 'Videos'}`
+          : 'New Traffic From Related Videos'}</h3>
         {ageLabel && (
           <span style={{
             fontSize: 12.5, fontWeight: 450, color: SHELL.text3,
@@ -4049,8 +4060,21 @@ function RelatedTrafficCard({ items, ageLabel, onOpen, onDismiss }) {
         )}
       </div>
 
+      {/* Empty-state explainer — silent failures become visible failures. */}
+      {top.length === 0 && reasonCopy && (
+        <div style={{
+          padding: '16px 18px',
+          background: 'rgba(255,255,255,0.02)',
+          border: '1px dashed rgba(255,255,255,0.10)',
+          borderRadius: 12,
+          color: SHELL.text2,
+          fontSize: 13, fontWeight: 450, lineHeight: 1.55,
+          letterSpacing: '-0.01em',
+        }}>{reasonCopy}</div>
+      )}
+
       {/* 2-up grid (auto-fill, collapses to 1-up on narrow widths) */}
-      <div style={{
+      {top.length > 0 && <div style={{
         display: 'grid',
         gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
         gap: 14,
@@ -4166,7 +4190,7 @@ function RelatedTrafficCard({ items, ageLabel, onOpen, onDismiss }) {
             </button>
           )
         })}
-      </div>
+      </div>}
     </article>
   )
 }
@@ -5430,12 +5454,12 @@ export default function Dashboard() {
       .catch(() => {})
 
     // Load Related Traffic: YouTube Analytics detail of which OTHER
-    // videos are sending us suggested-video traffic. Backend filters
-    // to viewCount >= 10K, drops our own uploads, sorts by views-to-you.
-    // 24h DB cache so this costs 1 Data API unit per user per day.
+    // videos are sending us suggested-video traffic. We ALWAYS store the
+    // response (even when ok=false with a reason) so the card can render
+    // an explainer state instead of silently disappearing.
     fetch('/dashboard/related-traffic', { credentials: 'include' })
       .then(r => r.ok ? r.json() : null)
-      .then(d => { if (d && d.ok && d.items?.length) setRelatedTraffic(d) })
+      .then(d => { if (d) setRelatedTraffic(d) })
       .catch(() => {})
 
     // Load plan + per-feature gate state (for free-tier gating on child pages).
@@ -6587,7 +6611,7 @@ export default function Dashboard() {
                   )
                 })() : null
 
-                const relatedTrafficBlock = (feedFilter === 'all' || feedFilter === 'insights') && relatedTraffic?.items?.length > 0 ? (() => {
+                const relatedTrafficBlock = (feedFilter === 'all' || feedFilter === 'insights') && relatedTraffic ? (() => {
                   const dismissKey = `ytg_related_traffic_dismissed:${data?.channel?.channel_id || 'x'}`
                   try { if (localStorage.getItem(dismissKey)) return null } catch {}
                   // Relative age from refreshed_at — soft "Nd ago" label.
@@ -6602,8 +6626,10 @@ export default function Dashboard() {
                   return (
                     <RelatedTrafficCard
                       key="related-traffic"
-                      items={relatedTraffic.items}
+                      items={relatedTraffic.items || []}
                       ageLabel={ageLabel}
+                      reason={relatedTraffic.reason || ''}
+                      rawSourceCount={relatedTraffic.raw_source_count || 0}
                       onOpen={(it) => {
                         if (!it?.video_id) return
                         try { window.open(`https://www.youtube.com/watch?v=${it.video_id}`, '_blank', 'noopener,noreferrer') } catch {}

@@ -90,7 +90,7 @@ window.fetch = async (url, opts) => {
   }
   if (u.includes('/dashboard/suggested-competitors')) return J({ ok: true, suggestions: [], category: null })
   if (u.includes('/dashboard/related-traffic')) {
-    if (state === 'fresh') return J({ ok: true, items: [] })
+    if (state === 'fresh') return J({ ok: false, reason: 'no_analytics_traffic', items: [], refreshed_at: new Date().toISOString() })
     return J({
       ok: true,
       refreshed_at: new Date(Date.now() - 86400_000).toISOString(),

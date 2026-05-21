@@ -807,7 +807,8 @@ def related_traffic(request: Request, force: int = 0):
 
         sources = get_related_traffic_source_videos(creds, channel_id, days=14, max_results=15)
         if not sources:
-            payload = {"ok": True, "items": [], "refreshed_at": datetime.datetime.now(datetime.timezone.utc).isoformat()}
+            print(f"[related-traffic] no Analytics rows for channel {channel_id} (no SUGGESTED_VIDEO traffic in last 14d, or scope missing)")
+            payload = {"ok": False, "reason": "no_analytics_traffic", "items": [], "refreshed_at": datetime.datetime.now(datetime.timezone.utc).isoformat()}
             _write_related_traffic_cache(db, channel_id, payload)
             return JSONResponse(payload)
 
@@ -815,7 +816,7 @@ def related_traffic(request: Request, force: int = 0):
         # API unit total regardless of how many IDs (up to 50).
         source_ids = [s["source_video_id"] for s in sources if s.get("source_video_id")]
         if not source_ids:
-            payload = {"ok": True, "items": [], "refreshed_at": datetime.datetime.now(datetime.timezone.utc).isoformat()}
+            payload = {"ok": False, "reason": "no_source_ids", "items": [], "refreshed_at": datetime.datetime.now(datetime.timezone.utc).isoformat()}
             _write_related_traffic_cache(db, channel_id, payload)
             return JSONResponse(payload)
 
@@ -828,7 +829,7 @@ def related_traffic(request: Request, force: int = 0):
             yt_items = resp.get("items", []) or []
         except Exception as e:
             print(f"[related-traffic] videos.list error: {e}")
-            payload = {"ok": True, "items": [], "refreshed_at": datetime.datetime.now(datetime.timezone.utc).isoformat()}
+            payload = {"ok": False, "reason": "resolve_failed", "items": [], "refreshed_at": datetime.datetime.now(datetime.timezone.utc).isoformat()}
             _write_related_traffic_cache(db, channel_id, payload)
             return JSONResponse(payload)
 
@@ -877,6 +878,21 @@ def related_traffic(request: Request, force: int = 0):
             })
             if len(items) >= 6:
                 break
+
+        # If filtering dropped everything, surface a specific reason
+        # instead of pretending we have data. Tells the user the call
+        # succeeded but no source videos cleared the quality bar.
+        if not items:
+            print(f"[related-traffic] all {len(sources)} sources filtered out (own-channel + 10K-view floor) for channel {channel_id}")
+            payload = {
+                "ok":              False,
+                "reason":          "all_filtered",
+                "items":           [],
+                "raw_source_count": len(sources),
+                "refreshed_at":    datetime.datetime.now(datetime.timezone.utc).isoformat(),
+            }
+            _write_related_traffic_cache(db, channel_id, payload)
+            return JSONResponse(payload)
 
         payload = {
             "ok":           True,
