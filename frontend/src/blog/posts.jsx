@@ -57,6 +57,305 @@ export const CATEGORIES = {
 
 export const posts = [
   {
+    slug: 'more-views-on-youtube',
+    title: 'How to Get More Views on YouTube: 11 Strategies That Work in 2026',
+    excerpt: 'Most creators stuck at low view counts have a problem in one specific part of the YouTube view funnel. The 11 strategies that move the three levers that actually matter: impressions, click-through rate, and retention.',
+    date: '2026-05-21',
+    category: CATEGORIES.growth,
+    cover: '/blog/more-views-on-youtube-cover.webp',
+    author: 'Denzil',
+    readTime: '12 min read',
+    content: () => (
+      <>
+        <p>YouTube does not distribute videos randomly. Every video goes through the same process: the platform shows it to a small test audience, measures how many people clicked and how long they watched, then decides whether to push it further based on those two signals.</p>
+
+        <p>How to get more views on youtube starts with understanding that funnel. Most creators stuck at low view counts have a problem in one specific part of it, not everywhere at once. This guide identifies which part is holding your channel back and gives you 11 strategies to fix it.</p>
+
+        <p>Each strategy connects directly to one of three levers: impressions, click-through rate, and retention. These are the only variables that determine how to gain views on youtube consistently. Everything else is secondary.</p>
+
+        <h2>How YouTube Decides How Many Views Your Video Gets</h2>
+
+        <p>Before applying any strategy, understanding how YouTube distributes views saves you from fixing the wrong problem. Every video on the platform moves through the same funnel regardless of channel size or niche.</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Stage</th>
+              <th>What It Measures</th>
+              <th>What Moves You Forward</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Impressions</strong></td><td>How many times YouTube shows your thumbnail</td><td>Strong keyword targeting and topic demand</td></tr>
+            <tr><td><strong>CTR</strong></td><td>How many viewers click after seeing the thumbnail</td><td>Compelling thumbnail and title combination</td></tr>
+            <tr><td><strong>Views</strong></td><td>Total clicks that become watch sessions</td><td>Strong CTR from a large impression base</td></tr>
+            <tr><td><strong>Retention</strong></td><td>How long viewers watch after clicking</td><td>Engaging content structure and strong hook</td></tr>
+            <tr><td><strong>Wider Distribution</strong></td><td>Algorithm pushes video to larger audiences</td><td>Strong CTR and retention signals combined</td></tr>
+          </tbody>
+        </table>
+
+        <p>YouTube tests every video with a small sample audience first. If CTR and retention are strong in that test window, the algorithm expands distribution to a wider audience. If either metric is weak, distribution slows and the video settles at a low view count regardless of how frequently the channel uploads.</p>
+
+        <p>This funnel explains why two videos on the same channel can perform completely differently. The one with stronger packaging and retention signals gets expanded distribution. The one with weaker signals stays small.</p>
+
+        <p>How do i get more views on youtube is therefore a <a href="/blog/youtube-channel-audit">diagnostic question</a> before it is a strategy question. Check your impressions, CTR, and retention in YouTube Studio before changing anything. The metric furthest from its benchmark is your starting point.</p>
+
+        <h2>1. Get More Impressions Through Keyword Research</h2>
+
+        <p>Impressions are at the top of the funnel. Without them, strong CTR and retention have no audience to work on. How to get more impressions on youtube starts with two things: creating content people are actively searching for and building a track record of strong performance that triggers browse and suggested feed placement.</p>
+
+        <img src="/blog/more-views-on-youtube-keyword-research.webp" alt="Keyword research surfacing topics with proven search volume to target for impressions" />
+
+        <ul>
+          <li><strong>Search impressions</strong> are the most reliable starting point for a smaller channel. When you target a keyword with proven search volume, YouTube indexes your video against that query and serves it to viewers searching for that exact topic. Those impressions are consistent and predictable because they are driven by viewer demand rather than algorithmic momentum.</li>
+          <li><strong>Browse and suggested impressions</strong> come from the algorithm recommending your content to viewers who are not actively searching. These impressions are earned through historical performance. A channel with a strong CTR and retention track record across multiple videos gets more browse placement because YouTube has evidence that its content satisfies viewers.</li>
+        </ul>
+
+        <p>The fastest way to increase search impressions is to research <a href="/blog/youtube-tag-finder">your primary keyword</a> before filming. A video built around a phrase with real monthly search volume will generate impressions from day one. A video built around a topic no one searches for will not appear in search results regardless of its quality.</p>
+
+        <blockquote><strong>Pro Tip:</strong> Open the Inspiration tab in YouTube Studio Analytics and check the Content Gaps section for your niche. Every gap listed is a topic your audience is actively searching for that your channel has not yet covered. These are your highest confidence impression opportunities because the demand is already confirmed by your own audience's search behavior. The <a href="/features/keyword-research">Keyword Explorer</a> in ytgrowth.io surfaces the same gaps with live search volume and competition data so you can prioritize which topics to film first.</blockquote>
+
+        <h2>2. Improve CTR With Better Thumbnails</h2>
+
+        <p>Impressions without clicks are a wasted distribution. How to get a lot of views on youtube depends heavily on converting the impressions you already have into actual views. A 1% improvement in CTR across a large impression base produces more views than publishing three additional videos in the same period.</p>
+
+        <p>Your <a href="/blog/youtube-thumbnail-ideas">thumbnail</a> and title are the only two variables that determine whether a viewer clicks. They work as a pair. A strong thumbnail with a weak title loses clicks. A strong title with a weak thumbnail loses clicks. Both need to communicate the same message and reinforce each other.</p>
+
+        <img src="/blog/more-views-on-youtube-thumbnails.webp" alt="High-contrast thumbnail with a single focal point, high-emotion expression, and minimal text overlay" />
+
+        <h3>Thumbnail Principles That Drive CTR</h3>
+
+        <ul>
+          <li>High contrast between subject and background so the image reads clearly at small sizes</li>
+          <li>A single clear focal point, one face, one object, one number, not multiple competing elements</li>
+          <li>High-emotion facial expression if a face is present. Neutral expressions do not signal anything worth clicking</li>
+          <li>Colors that stand out against YouTube's predominantly red, black, and white interface. Blue, orange, green, and yellow consistently outperform red and black thumbnails in crowded feeds</li>
+          <li>No more than three to five words of text. More than that competes with the visual rather than supporting it</li>
+        </ul>
+
+        <h3>Title Principles That Drive CTR</h3>
+
+        <ul>
+          <li>Primary keyword in the first half of the title for both SEO and readability</li>
+          <li>A clear benefit or outcome the viewer gets by watching</li>
+          <li>Numbers, brackets, and parentheses increase clicks by signaling specific, structured content</li>
+          <li>Under 60 characters to avoid truncation in search results and mobile feeds</li>
+        </ul>
+
+        <h3>How to Find Your Lowest CTR Videos</h3>
+
+        <p>Open YouTube Studio, click Analytics, then the Reach tab. Sort your videos by impressions and identify which high-impression videos have the lowest CTR. These are your highest leverage optimization targets. A thumbnail update on a video already receiving impressions can revive distribution without publishing anything new.</p>
+
+        <p>For new uploads, the <a href="/features/thumbnail-iq">Thumbnail IQ</a> feature in ytgrowth.io scores your thumbnail against niche benchmarks before you publish, so weak packaging is identified and fixed before a single impression is wasted on a thumbnail that will not convert.</p>
+
+        <h2>3. Improve Retention With Stronger Content Structure</h2>
+
+        <p>CTR earns the click. Retention earns the distribution. When viewers click your video and watch a significant portion of it, YouTube interprets that as a quality signal and expands the video's reach to a wider audience. When they click and leave within the first 30 seconds, YouTube interprets the opposite and pulls back distribution.</p>
+
+        <h3>How to Find Your Retention Data</h3>
+
+        <ol>
+          <li>Open <strong>YouTube Studio</strong> and click <strong>Analytics</strong> in the left menu.</li>
+          <li>Click the <strong>Engagement tab</strong> at the top of the Analytics page.</li>
+          <li>Click any video and open its individual analytics.</li>
+          <li>Scroll to the Audience Retention graph and read the curve shape.</li>
+        </ol>
+
+        <p><strong>The first 30 seconds is the highest leverage retention moment in any video</strong>. Viewers decide within the opening seconds whether the content is worth their time. An intro that starts with "hey guys welcome back" before delivering any value loses a significant percentage of viewers before the content begins.</p>
+
+        <img src="/blog/more-views-on-youtube-retention.webp" alt="Audience retention graph showing the steep drop in the first 30 seconds that signals a weak intro" />
+
+        <p>The first sentence of every video should either deliver the promised value immediately or create enough curiosity that leaving feels like a loss.</p>
+
+        <p>Three content habits that improve <a href="/blog/youtube-watch-hours">retention</a> across every video:</p>
+
+        <ul>
+          <li><strong>Match the intro to the title promise:</strong> If the title says "how to double your CTR," the first 30 seconds should address CTR directly. Any detour before that point costs viewers.</li>
+          <li><strong>Use pattern interrupts every 60 to 90 seconds:</strong> A cut, a graphic, a change in camera angle, or a new piece of information resets viewer attention and flattens the retention curve through the middle of the video.</li>
+          <li><strong>Remove filler sections ruthlessly:</strong> Every segment that does not advance the video's core promise is a potential drop-off point. Tighter editing consistently produces stronger retention than longer, more relaxed pacing.</li>
+        </ul>
+
+        <blockquote><strong>Pro Tip:</strong> Watch your three lowest-retention videos back to back with the retention graph open alongside. Look for the moment each curve drops sharpest and identify what was happening in the video at that exact timestamp. Patterns across multiple videos reveal content habits worth eliminating rather than one-off editing issues worth ignoring.</blockquote>
+
+        <h2>4. Publish Consistently on a Realistic Schedule</h2>
+
+        <p>Consistency on YouTube builds two things simultaneously: algorithmic momentum and audience habit. The algorithm favors channels that publish predictably because it can anticipate new content and prime its recommendation systems accordingly. Viewers develop watching habits around channels that show up reliably on a schedule they can count on.</p>
+
+        <p>The most damaging consistency mistake is choosing an unsustainable schedule. A creator who commits to four videos per week and maintains it for two weeks before dropping to one per month does more damage to their channel momentum than a creator who commits to one video per week and holds that schedule without interruption for a year.</p>
+
+        <img src="/blog/more-views-on-youtube-upload-frequency.webp" alt="Sustainable upload schedule that the creator can actually maintain at their current production capacity" />
+
+        <p>Consistency <a href="/blog/grow-youtube-channel">compounds</a> in both directions. A channel publishing one video per week for 52 weeks builds 52 indexed pieces of content, each generating its own impressions and search traffic. That library compounds over time as older videos continue pulling views while new ones are published on top of them. A channel publishing sporadically produces no such compounding effect because the algorithm never builds a reliable distribution pattern around it.</p>
+
+        <p>Pick the upload frequency you can sustain at your current production capacity. One video per week is enough to build momentum. One video per fortnight works if quality is consistently strong. The schedule matters less than the reliability of keeping it.</p>
+
+        <p>How to get more views and subscribers on youtube through consistency is straightforward. Subscribers form around channels they can predict. A viewer who watches one video and enjoys it subscribes when they trust more content is coming. An inconsistent upload history undermines that trust before it forms.</p>
+
+        <h2>5. Use Playlists to Increase Watch Time and Session Time</h2>
+
+        <p>Playlists extend how long viewers stay on your channel in a single session. When a video ends and the next one in a playlist auto-plays, the viewer stays in your content ecosystem rather than being pulled away to another channel by YouTube's suggested feed.</p>
+
+        <p>That extended session time signals to the algorithm that your channel consistently satisfies viewers, which increases browse and suggested feed placement across your entire library.</p>
+
+        <img src="/blog/more-views-on-youtube-playlists.webp" alt="Playlist sequence keeping viewers on your channel through multiple videos in one session" />
+
+        <p>Session time is a channel-level metric, not a video-level one. A viewer who watches three videos in one session contributes more to your channel's algorithmic standing than three separate viewers who each watch one video and leave. Playlists are the most direct tool for turning single-video viewers into multi-video sessions.</p>
+
+        <h3>How to Structure Playlists for Maximum Watch Time</h3>
+
+        <ul>
+          <li><strong>Group videos by specific topic or outcome rather than broad category:</strong> A playlist titled "YouTube SEO Step by Step" holds attention better than one titled "YouTube Tips" because the viewer knows exactly what they are getting from each video in the sequence.</li>
+          <li><strong>Order videos with the strongest performer first:</strong> The first video in a playlist determines whether the viewer continues to the second. Place your highest-retention video at the start to set the tone for the rest of the sequence.</li>
+          <li><strong>Keep playlists focused and under 15 videos:</strong> A playlist with 50 videos feels overwhelming and reduces the likelihood of a viewer committing to the sequence.</li>
+        </ul>
+
+        <p>Playlists also improve how to get more views and subscribers on youtube because viewers who watch multiple videos in one session are significantly more likely to subscribe than viewers who watch a single video. The additional context from multiple videos builds the familiarity that converts casual viewers into subscribers.</p>
+
+        <h2>6. Use YouTube Shorts as a Discovery Funnel</h2>
+
+        <p>YouTube Shorts generate over 200 billion views per day in 2026. That volume represents the largest top-of-funnel discovery opportunity available to creators on the platform, and most channels are either not using it or using it in a way that does not connect back to their long-form content.</p>
+
+        <img src="/blog/more-views-on-youtube-shorts.webp" alt="YouTube Shorts feed serving short vertical videos as a top-of-funnel discovery surface" />
+
+        <p>The strategic role of <a href="/blog/youtube-shorts-algorithm">Shorts</a> is not to replace long-form content. It is to introduce your channel to viewers who would never find it through search or suggested feed placement on long-form videos. A Short that reaches 50,000 viewers who have never seen your channel before is a subscriber acquisition opportunity that a long-form video with the same view count would take significantly longer to achieve.</p>
+
+        <h3>How to Use Shorts as a Discovery Funnel</h3>
+
+        <ul>
+          <li>Clip the single most valuable or surprising moment from a long-form video and publish it as a Short. End the Short with a clear call to action directing viewers to the full video on your channel.</li>
+          <li>Create standalone Shorts that answer one focused question in your niche. Keep them under 60 seconds and deliver the answer within the first five seconds to hold the viewer through the full clip.</li>
+          <li>Publish Shorts between long-form uploads to keep your channel active in subscriber feeds and maintain algorithmic momentum during gaps in your long-form schedule.</li>
+        </ul>
+
+        <p>How to get views on youtube shorts through long-form connection is the key distinction between Shorts that build a channel and Shorts that exist in isolation. A Short with no connection to your broader content attracts viewers who have no reason to subscribe.</p>
+
+        <p>A Short that teases a longer video gives the viewer a clear next step that compounds into watch time, subscribers, and long-form views simultaneously.</p>
+
+        <h2>7. Optimize Your Titles for Search Intent</h2>
+
+        <p>A search-optimized title generates impressions for months and years after publishing. A click-optimized title generates impressions only when the algorithm decides to push it. The strongest titles do both simultaneously, which is why title writing is one of the highest leverage skills a creator can develop.</p>
+
+        <p><a href="/blog/what-is-youtube-seo">Search intent</a> is the specific outcome a viewer wants when they type a query into YouTube. A viewer searching how to get more views on youtube wants a practical guide they can act on immediately.</p>
+
+        <img src="/blog/more-views-on-youtube-seo-studio.webp" alt="Title scored against search intent and primary keyword placement for both ranking and CTR" />
+
+        <p>A viewer searching "<strong>best YouTube growth tips</strong>" wants a list of ideas. Those two viewers have different intents and the same video will not satisfy both equally. Matching your title to the exact intent behind a search query improves both your search ranking and your CTR at the same time.</p>
+
+        <h3>How to Write a Title That Captures Search Intent and Drives Clicks</h3>
+
+        <ul>
+          <li><strong>Start with the primary keyword in the first half of the title:</strong> YouTube and viewers both read left to right and the first words carry the most weight for both search ranking and click decisions.</li>
+          <li><strong>Add a specific outcome or number after the keyword:</strong> "How to get more views on youtube: 12 Strategies That Work in 2026" tells the viewer exactly what they get and when the information was last verified.</li>
+          <li>Keep the title under 60 characters to prevent truncation in search results and mobile feeds where the majority of YouTube traffic originates.</li>
+          <li><strong>Avoid clickbait phrasing that overpromises and underdelivers:</strong> YouTube penalizes videos where viewers click and leave quickly. A title that sets accurate expectations produces stronger retention than one that overpromises and disappoints.</li>
+        </ul>
+
+        <p>Speaking your keyword in the first 30 seconds of the video reinforces your topic relevance through YouTube's automatic caption indexing. YouTube reads captions as additional metadata. A video that mentions its primary keyword naturally within the opening sentences gives the algorithm a third confirmation of the video's topic alongside the <a href="/features/seo-studio">title and description</a>.</p>
+
+        <h2>8. Promote Across Platforms</h2>
+
+        <p>Cross-platform promotion generates external impressions that compound on top of the impressions YouTube's algorithm produces organically. Every view that comes from outside YouTube tells the algorithm that your content has demand beyond the platform, which strengthens its confidence in distributing the video to a wider internal audience.</p>
+
+        <p>The most effective external platforms for driving YouTube traffic in 2026 are:</p>
+
+        <h3>Instagram and TikTok</h3>
+
+        <p>Clip a 30 to 60 second vertical segment from your video and post it as a Reel or TikTok with a clear call to action directing viewers to the full video on YouTube. Vertical clips repurposed from horizontal long-form content require minimal additional production time and reach audiences already consuming video content in a format they are comfortable with.</p>
+
+        <h3>Reddit</h3>
+
+        <p>Find the two or three subreddits most active in your niche and participate genuinely before sharing content. Reddit communities respond negatively to accounts that appear only to drop links. Build a presence first, then share videos when they directly answer a question the community is already asking.</p>
+
+        <img src="/blog/more-views-on-youtube-reddit.webp" alt="Reddit niche subreddit thread where a genuine participant shares a video that answers the question" />
+
+        <h3>Email</h3>
+
+        <p>An email list is the most reliable external traffic source available to a creator because it reaches an audience that has already opted in to hear from you. A short email to your list on publish day with a direct link to the new video generates a concentrated burst of early views that strengthens the video's performance in YouTube's test window.</p>
+
+        <h3>Blog Content</h3>
+
+        <p>Embedding your videos in relevant blog posts generates search traffic from Google that converts directly into YouTube views. A blog post targeting the same keyword as your video creates two search ranking opportunities from one piece of content.</p>
+
+        <blockquote><strong>Pro Tip:</strong> Prioritize one or two external platforms rather than spreading effort across every channel at once. Consistent presence on two platforms outperforms inconsistent presence on five every time.</blockquote>
+
+        <h2>9. Build Engagement to Signal Quality</h2>
+
+        <p>Engagement signals, comments, likes, and shares, tell the algorithm that viewers are not just watching your content passively but actively responding to it. A video with strong watch time and strong engagement receives wider distribution than a video with identical watch time and no engagement because the combination of both signals indicates a higher level of viewer satisfaction.</p>
+
+        <p>Comments carry the most weight of the three engagement signals because they require the most effort from a viewer. A viewer who watches a video and leaves a comment is demonstrating a level of investment that passive viewing does not. YouTube interprets that investment as a quality signal and factors it into distribution decisions.</p>
+
+        <p>How to prompt engagement without begging for it:</p>
+
+        <ul>
+          <li>Ask one specific question at a natural point in the video rather than a generic "let me know in the comments" at the end. A specific question gives viewers something concrete to respond to. "<strong>Which of these strategies are you going to try first</strong>" produces more comments than "<strong>leave a comment below.</strong>"</li>
+          <li>Respond to every comment in the first 24 hours after publishing. Early comment activity signals to the algorithm that the video is generating active discussion, which increases the likelihood of broader distribution during the critical early test window.</li>
+          <li>Use community posts between uploads to keep your audience engaged with your channel when no new video is live. A poll, a behind the scenes image, or a question directed at your subscribers maintains notification click rates and signals to YouTube that your channel has an active community rather than a passive one.</li>
+        </ul>
+
+        <p>How do you get more views on youtube through engagement is a compounding process. A channel with a consistently engaged audience builds a stronger algorithmic signal over time than a channel with higher view counts but no meaningful engagement beneath the surface.</p>
+
+        <h2>10. Analyse Your Data and Double Down on What Works</h2>
+
+        <p>Every upload generates performance data that tells you exactly what worked, what did not, and what to replicate on the next video. Creators who review that data consistently after every upload make better content decisions than creators who rely on instinct alone, regardless of how experienced they are.</p>
+
+        <p>The goal of data analysis is not to understand every metric in YouTube Studio. It is to identify the specific patterns in your own channel's performance that separate your highest-performing videos from your lowest-performing ones and replicate those patterns deliberately.</p>
+
+        <img src="/blog/more-views-on-youtube-analytics.webp" alt="YouTube Studio analytics dashboard showing impressions, CTR, view duration, traffic sources, and new vs returning viewers" />
+
+        <p>The five metrics to review after every upload:</p>
+
+        <ol>
+          <li><strong>Impressions:</strong> Is the video being served to a meaningful audience. Low impressions on a new upload within the first 48 hours signals a keyword or topic demand problem.</li>
+          <li><strong>CTR: Are viewers clicking after seeing the thumbnail:</strong> Below 4% in the first 48 hours means the packaging needs updating before the test window closes.</li>
+          <li><strong>Average view duration:</strong> Are viewers staying once they click. Below 40% signals a content structure or hook problem worth addressing in the next upload.</li>
+          <li><strong>Traffic sources:</strong> Where are the views coming from? A video pulling strong search traffic confirms keyword targeting is working. A video pulling only browse traffic has no search foundation to sustain long-term views.</li>
+          <li><strong>New vs returning viewers:</strong> Is the video reaching beyond your existing subscriber base. A high returning viewer ratio on a search-optimized video suggests the keyword targeting is not pulling in new audiences effectively.</li>
+        </ol>
+
+        <p>How to gain more views on youtube through data is a compounding process. Each upload reviewed and learned from improves the next one. Over 20 to 30 uploads, the patterns become clear enough to build a repeatable content system around what your specific audience responds to most.</p>
+
+        <p>If you want a structured view of how your channel's key metrics compare against competing channels in your niche, the <a href="/features/channel-audit">Channel Audit</a> in ytgrowth.io benchmarks your CTR, retention, SEO, and content patterns against your top competitors and surfaces the single highest priority improvement to act on before your next upload.</p>
+
+        <h2>11. Collaborate With Other Creators</h2>
+
+        <p>Collaborations expose your channel to an audience that already watches content like yours. A viewer who subscribes to a <a href="/blog/youtube-competitor-analysis">channel in your niche</a> and discovers your content through a collaboration is a higher quality potential subscriber than a viewer who finds you through a broad trending topic, because they are already proven consumers of the type of content you make.</p>
+
+        <p>The most effective collaborations happen between channels of similar size. A creator with 500 subscribers collaborating with a channel that has 500,000 subscribers delivers almost no value to the larger channel and produces a lopsided result that is unlikely to be repeated. Two channels with similar audience sizes and complementary content create a genuine exchange of value where both audiences benefit.</p>
+
+        <img src="/blog/more-views-on-youtube-collab.webp" alt="Two creators of similar size featured together in a collaboration video that cross-introduces both audiences" />
+
+        <p>Collaboration formats that work across most niches:</p>
+
+        <ul>
+          <li><strong>Guest appearances:</strong> Feature another creator in one of your videos or appear in theirs. Each creator brings their own perspective and the combined content is stronger than either would produce alone.</li>
+          <li><strong>Joint videos:</strong> Both creators contribute to a single piece of content published on one or both channels simultaneously. This format works particularly well for comparison, debate, or challenge content where two perspectives add genuine value.</li>
+          <li><strong>Shoutout exchanges:</strong> Each creator mentions the other's channel in a relevant video with a direct recommendation to subscribe. This works best when the audience overlap is high and the recommendation feels genuine rather than transactional.</li>
+        </ul>
+
+        <p>Finding collaboration partners requires research rather than cold outreach. Study channels in your niche with a similar subscriber count, review their content to confirm the audience overlap is genuine, and reach out with a specific collaboration idea rather than a vague expression of interest. A specific proposal is significantly easier to say yes to than an open-ended request to "<strong>work together sometime</strong>."</p>
+
+        <h2>Views Are a System, Not a Lottery</h2>
+
+        <p>How to get more views on youtube is not a question with one answer. It is a system with three inputs: impressions, click-through rate, and retention. Every strategy in this guide connects directly to one of those three levers.</p>
+
+        <p>Creators who grow consistently are not luckier than the ones who stay stuck. They understand which lever is weakest on their channel right now, fix it with a specific and measurable change, and track whether that change moves the relevant metric before touching anything else.</p>
+
+        <p>Start with your YouTube Studio data before applying any strategy from this guide. Check your impressions, CTR, and average view duration. The metric furthest from its benchmark is your starting point. Fix that one first.</p>
+
+        <p>How can i get more views on youtube is ultimately a diagnostic question before it is a strategy question. A channel with strong impressions but weak CTR needs better thumbnails and titles, not more keyword research. A channel with strong CTR but weak retention needs better content structure, not more cross-platform promotion. The fix is specific to the problem.</p>
+
+        <p>Apply the strategies in this guide in order of impact on your weakest lever. Review your data after every upload. Double down on what your analytics show is working and adjust what is not. That process applied consistently across 20 to 30 uploads compounds into a channel that grows predictably rather than one that waits for a lucky break that may never come.</p>
+
+        <CtaCard
+          to="/features/channel-audit"
+          title="Find your weakest lever in under 30 seconds"
+          sub="Channel Audit scores your impressions, CTR, retention, and SEO against competing channels in your niche, then tells you exactly which lever to fix first before your next upload. Free to try."
+          button="Try Channel Audit →"
+        />
+      </>
+    ),
+  },
+  {
     slug: 'youtube-channel-audit',
     title: 'YouTube Channel Audit: A Step-by-Step Guide to Finding What Is Holding Your Channel Back',
     excerpt: 'Most channels that are not growing have one specific fixable problem they have never identified because they have never looked for it systematically. The full eight-step audit across branding, SEO, CTR, retention, traffic, audience, competitors, and Shorts, plus a checklist you can save and run every quarter.',
