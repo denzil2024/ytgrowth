@@ -2316,6 +2316,147 @@ export function MissingDescriptionCard({
   )
 }
 
+// Trending Keyword card. Surfaces ONE active-momentum keyword from cached
+// research (either the user's own or the cross-user niche-warmer pool).
+// Single CTA: route to Keyword Research with the term pre-filled. Score
+// badge uses the same green/amber/red palette as ScoreRing so the visual
+// language stays one system. Minimal v1: no sparkline, no VPH gauge —
+// those land in the Phase-2 holistic Feed polish pass.
+export function TrendingKeywordCard({ keyword, score, momentum, subsLabel, freshLabel, ageLabel, onResearch, onDismiss }) {
+  if (!keyword) return null
+  const s = Math.max(0, Math.min(100, Number(score) || 0))
+  const tone = s >= 75 ? { bg: 'rgba(22,163,74,0.20)', text: '#34d27b', bdr: 'rgba(22,163,74,0.35)' }
+             : s >= 50 ? { bg: 'rgba(217,118,6,0.20)', text: '#f0a23b', bdr: 'rgba(217,118,6,0.35)' }
+             :          { bg: 'rgba(229,37,27,0.16)', text: '#fb6a60', bdr: 'rgba(229,37,27,0.35)' }
+  const momLabel = momentum === 'active' ? 'active'
+                 : momentum === 'unclaimed' ? 'unclaimed'
+                 : momentum === 'steady' ? 'steady'
+                 : ''
+
+  return (
+    <article style={{
+      background: SHELL.cardFlat,
+      border: '1px solid rgba(255,255,255,0.08)',
+      borderRadius: 14,
+      padding: '14px 18px 16px 18px',
+      boxShadow: '0 1px 2px rgba(255,255,255,0.04), 0 6px 18px rgba(255,255,255,0.05), inset 0 1px 0 rgba(255,255,255,0.7)',
+      marginBottom: 12,
+    }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
+        <h3 style={{
+          fontSize: 16, fontWeight: 600, color: SHELL.text1,
+          letterSpacing: '-0.2px', lineHeight: 1.3, margin: 0,
+        }}>Trending Keyword</h3>
+        {ageLabel && (
+          <span style={{
+            fontSize: 12.5, fontWeight: 450, color: SHELL.text3,
+            letterSpacing: '-0.01em',
+          }}>· {ageLabel}</span>
+        )}
+        <div style={{ flex: 1 }}/>
+        {onDismiss && (
+          <button
+            type="button"
+            onClick={onDismiss}
+            aria-label="Dismiss"
+            style={{
+              width: 28, height: 28, borderRadius: 8,
+              border: 'none', background: 'transparent',
+              color: 'rgba(255,255,255,0.36)',
+              cursor: 'pointer',
+              display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+              transition: 'background 0.14s, color 0.14s',
+            }}
+            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; e.currentTarget.style.color = SHELL.text1 }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'rgba(255,255,255,0.36)' }}
+          >
+            <XIcon size={14} strokeWidth={2} />
+          </button>
+        )}
+      </div>
+
+      {/* Inset panel: score LEFT, keyword + context RIGHT */}
+      <div style={{
+        display: 'flex',
+        gap: 16,
+        alignItems: 'center',
+        padding: 14,
+        background: 'rgba(255,255,255,0.02)',
+        border: '1px solid rgba(255,255,255,0.06)',
+        borderRadius: 12,
+        marginBottom: 14,
+      }}>
+        <div style={{
+          flexShrink: 0,
+          width: 64, height: 64, borderRadius: 14,
+          display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+          background: tone.bg,
+          border: `1px solid ${tone.bdr}`,
+          color: tone.text,
+          fontSize: 22, fontWeight: 600, letterSpacing: '-1px',
+          fontVariantNumeric: 'tabular-nums',
+        }}>{s}</div>
+
+        <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: 6 }}>
+          <p style={{
+            margin: 0, fontSize: 18, fontWeight: 600, color: SHELL.text1,
+            letterSpacing: '-0.3px', lineHeight: 1.25,
+            overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+          }}>{keyword}</p>
+
+          <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '4px 10px' }}>
+            {momLabel && (
+              <span style={{
+                fontSize: 11, fontWeight: 600,
+                padding: '2px 9px', borderRadius: 100,
+                background: 'rgba(255,255,255,0.06)',
+                border: '1px solid rgba(255,255,255,0.10)',
+                color: SHELL.text2,
+                letterSpacing: '-0.01em',
+              }}>{momLabel}</span>
+            )}
+            {subsLabel && (
+              <span style={{ fontSize: 12.5, fontWeight: 450, color: SHELL.text2, letterSpacing: '-0.01em' }}>
+                · {subsLabel}
+              </span>
+            )}
+          </div>
+
+          {freshLabel && (
+            <p style={{
+              margin: 0, fontSize: 12.5, fontWeight: 450, color: SHELL.text3,
+              letterSpacing: '-0.01em',
+            }}>{freshLabel}</p>
+          )}
+        </div>
+      </div>
+
+      <button
+        type="button"
+        onClick={() => onResearch?.(keyword)}
+        style={{
+          width: '100%',
+          display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 7,
+          padding: '10px 14px', borderRadius: 100,
+          border: 'none',
+          background: '#e5251b',
+          color: '#fff',
+          fontFamily: 'inherit',
+          fontSize: 13, fontWeight: 600, letterSpacing: '-0.05px',
+          boxShadow: '0 1px 3px rgba(229,37,27,0.28)',
+          cursor: 'pointer',
+          transition: 'filter 0.14s, transform 0.14s',
+        }}
+        onMouseEnter={e => { e.currentTarget.style.filter = 'brightness(1.08)'; e.currentTarget.style.transform = 'translateY(-1px)' }}
+        onMouseLeave={e => { e.currentTarget.style.filter = 'none'; e.currentTarget.style.transform = 'translateY(0)' }}
+      >
+        Research this keyword
+        <ArrowRight size={13} strokeWidth={2.1} />
+      </button>
+    </article>
+  )
+}
+
 export function SuggestedCompetitorsCard({ suggestions, category, onTrack, onDismiss, onOpenAll }) {
   const top = (suggestions || []).slice(0, 4)
   if (top.length < 3) return null  // hide if signal is thin

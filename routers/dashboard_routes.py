@@ -38,7 +38,7 @@ from app.niche_outliers import (
     is_stale,
     personalize_angle,
 )
-from database.models import SessionLocal, SeoOptimization, SeoAnalysisCache, CompetitorAnalysisCache, CompetitorActivityCache, RelatedTrafficCache, TopChannelCache, YoutubeSearchCache
+from database.models import SessionLocal, SeoOptimization, SeoAnalysisCache, CompetitorAnalysisCache, CompetitorActivityCache, RelatedTrafficCache, TopChannelCache, YoutubeSearchCache, KeywordsResearchCache
 from routers.auth import get_session
 from routers.admin_routes import _is_admin
 
@@ -1345,3 +1345,150 @@ def missing_description(request: Request):
 
     print(f"[missing-description] no candidate among {len(candidates)} yielded drafts")
     return JSONResponse({"ok": True, "video": None})
+
+
+@router.get("/trending-keyword")
+def trending_keyword(request: Request):
+    """Surface ONE keyword from existing cached research that's currently
+    'active' (top-5 video shipped in last 30 days). Zero new YouTube quota:
+    pulls from data we already paid for.
+
+      Path 1: User's own KeywordsResearchCache. Walk every research row this
+        channel has saved; flatten the keywords list inside each result_json;
+        pick the highest-opportunityScore keyword with momentum=='active'.
+      Path 2: Niche-warmer pool. Pull YoutubeSearchCache rows with the 'kw:'
+        prefix, ordered by hit_count desc. Decode result_json, pick one whose
+        top-5 freshness gives momentum='active'. Bias to entries whose query
+        token-overlaps the user's niche keywords.
+
+    Returns null if no candidate exists. Card hides itself on null.
+    """
+    data, _ = get_session(request.session.get("session_id"))
+    if not data:
+        return JSONResponse({"ok": False, "reason": "not_authenticated"}, status_code=401)
+
+    channel = (data or {}).get("channel", {}) or {}
+    channel_id = channel.get("channel_id", "") or ""
+    niche_kw_raw = (channel.get("keywords", "") or "").lower()
+    # Tokenize niche keywords: split on commas / spaces, keep words >= 4 chars
+    niche_tokens = set()
+    for chunk in niche_kw_raw.replace(",", " ").split():
+        token = chunk.strip().lower()
+        if len(token) >= 4:
+            niche_tokens.add(token)
+
+    def _momentum(kw_obj):
+        """Reproduce app/keywords.py _momentum_from_competition without
+        importing (cheap dict lookup). 'active' = newest top-5 < 30 days."""
+        comp = kw_obj.get("competition") or {}
+        days = comp.get("days_since_newest")
+        if days is None:        return ""
+        if days < 30:           return "active"
+        if days > 180:          return "unclaimed"
+        return "steady"
+
+    def _payload(kw_obj, source, age_iso=None):
+        comp  = kw_obj.get("competition") or {}
+        score = int(kw_obj.get("opportunityScore") or 0)
+        subs_med = int(comp.get("top_subs_median") or 0)
+        days     = comp.get("days_since_newest")
+        # Concise context strings the card renders verbatim. Keep them
+        # narrowly factual so they read as a competitive snapshot, not
+        # marketing copy.
+        if subs_med >= 1_000_000:   subs_label = "top 5 channels over 1M subs"
+        elif subs_med >= 100_000:   subs_label = "top 5 channels 100k-1M subs"
+        elif subs_med >= 50_000:    subs_label = "top 5 channels 50k-100k subs"
+        elif subs_med >= 10_000:    subs_label = "top 5 channels 10k-50k subs"
+        elif subs_med >= 1_000:     subs_label = "top 5 channels under 10k subs"
+        else:                       subs_label = ""
+        if days is None:    fresh_label = ""
+        elif days <= 1:     fresh_label = "newest top-5 video shipped today"
+        elif days < 14:     fresh_label = f"newest top-5 video shipped {days} days ago"
+        elif days < 60:     fresh_label = f"newest top-5 video shipped {days // 7} weeks ago"
+        else:               fresh_label = f"newest top-5 video shipped {days // 30} months ago"
+        age_label = ""
+        if age_iso:
+            try:
+                dt = datetime.datetime.fromisoformat(age_iso[:19])
+                ds = (datetime.datetime.utcnow() - dt).days
+                if ds <= 0:   age_label = "refreshed today"
+                elif ds == 1: age_label = "refreshed 1d ago"
+                elif ds < 7:  age_label = f"refreshed {ds}d ago"
+                elif ds < 30: age_label = f"refreshed {ds // 7}w ago"
+                else:         age_label = f"refreshed {ds // 30}mo ago"
+            except Exception:
+                age_label = ""
+        return {
+            "ok":         True,
+            "keyword":    (kw_obj.get("keyword") or "").strip(),
+            "score":      max(0, min(100, score)),
+            "momentum":   _momentum(kw_obj),
+            "subs_label": subs_label,
+            "fresh_label": fresh_label,
+            "age_label":  age_label,
+            "source":     source,
+        }
+
+    db = SessionLocal()
+    try:
+        # Path 1: user's own keyword research.
+        if channel_id:
+            rows = (
+                db.query(KeywordsResearchCache)
+                .filter_by(channel_id=channel_id)
+                .order_by(KeywordsResearchCache.updated_at.desc())
+                .limit(20)
+                .all()
+            )
+            best = None
+            best_age = None
+            for row in rows:
+                try:
+                    payload = json.loads(row.result_json) or {}
+                except Exception:
+                    continue
+                kws = payload.get("keywords") or payload.get("keyword_scores") or []
+                for kw in kws:
+                    if _momentum(kw) != "active":
+                        continue
+                    score = int(kw.get("opportunityScore") or 0)
+                    if best is None or score > int(best.get("opportunityScore") or 0):
+                        best = kw
+                        best_age = row.updated_at.isoformat() if row.updated_at else None
+            if best:
+                return JSONResponse(_payload(best, "user_research", best_age))
+
+        # Path 2: cross-user kw: cache, biased to niche tokens.
+        rows = (
+            db.query(YoutubeSearchCache)
+            .filter(YoutubeSearchCache.cache_key.like("kw:%"))
+            .order_by(YoutubeSearchCache.hit_count.desc(), YoutubeSearchCache.last_hit_at.desc())
+            .limit(120)
+            .all()
+        )
+        best = None
+        best_score = -1
+        best_age = None
+        for row in rows:
+            q = (row.original_query or "").lower()
+            if niche_tokens and not any(t in q for t in niche_tokens):
+                continue
+            try:
+                payload = json.loads(row.result_json) or {}
+            except Exception:
+                continue
+            kws = payload.get("keywords") or payload.get("keyword_scores") or []
+            for kw in kws:
+                if _momentum(kw) != "active":
+                    continue
+                score = int(kw.get("opportunityScore") or 0)
+                if score > best_score:
+                    best = kw
+                    best_score = score
+                    best_age = row.cached_at.isoformat() if row.cached_at else None
+        if best:
+            return JSONResponse(_payload(best, "niche_pool", best_age))
+    finally:
+        db.close()
+
+    return JSONResponse({"ok": True, "keyword": None})

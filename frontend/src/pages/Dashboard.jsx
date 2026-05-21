@@ -47,7 +47,7 @@ import {
   MilestoneFeedCard, ContentMixFeedCard, ChannelHealthFeedCard,
   TopPerformerCard, PostingConsistencyCard, BestTimeCard,
   TrackedLiftCard, DailyIdeasCard, TitleSuggestionCard,
-  MissingDescriptionCard,
+  MissingDescriptionCard, TrendingKeywordCard,
   SuggestedCompetitorsCard, RelatedTrafficCard, CompetitorActivityCard,
 } from './dashboard/feedCards'
 import {
@@ -131,6 +131,9 @@ export default function Dashboard() {
   const [descPublishing, setDescPublishing] = useState(false)
   const [descPublished, setDescPublished] = useState(false)
   const [descPublishError, setDescPublishError] = useState('')
+  // Trending Keyword card. Surfaces one active-momentum keyword from cached
+  // research. Null = no candidate yet -> card hides.
+  const [trendingKeyword, setTrendingKeyword] = useState(null)
   const [relatedTraffic, setRelatedTraffic] = useState(null)
   const [refreshingIdeas, setRefreshingIdeas] = useState(false)
   // Competitor Activity (recent uploads from tracked competitors).
@@ -310,6 +313,14 @@ export default function Dashboard() {
     fetch('/dashboard/missing-description', { credentials: 'include' })
       .then(r => r.ok ? r.json() : null)
       .then(d => { if (d && d.ok && d.video && d.drafts?.length) setMissingDescription(d) })
+      .catch(() => {})
+
+    // Load Trending Keyword: backend pulls one active-momentum keyword from
+    // either the user's own KeywordsResearchCache or the cross-user niche
+    // pool. Zero new YouTube quota. Card hides if no candidate exists.
+    fetch('/dashboard/trending-keyword', { credentials: 'include' })
+      .then(r => r.ok ? r.json() : null)
+      .then(d => { if (d && d.ok && d.keyword) setTrendingKeyword(d) })
       .catch(() => {})
 
     // Load Related Traffic: YouTube Analytics detail of which OTHER
@@ -1519,6 +1530,33 @@ export default function Dashboard() {
                   )
                 })() : null
 
+                const trendingKeywordBlock = (feedFilter === 'all' || feedFilter === 'insights') && trendingKeyword?.keyword ? (() => {
+                  const dismissKey = `ytg_trending_keyword_dismissed:${data?.channel?.channel_id || 'x'}:${trendingKeyword.keyword || 'x'}`
+                  try { if (localStorage.getItem(dismissKey)) return null } catch {}
+                  return (
+                    <TrendingKeywordCard
+                      key="trending-keyword"
+                      keyword={trendingKeyword.keyword}
+                      score={trendingKeyword.score}
+                      momentum={trendingKeyword.momentum}
+                      subsLabel={trendingKeyword.subs_label}
+                      freshLabel={trendingKeyword.fresh_label}
+                      ageLabel={trendingKeyword.age_label}
+                      onResearch={(kw) => {
+                        // Stash the keyword for Keyword Research to pre-fill
+                        // its input. Same prefill-then-navigate pattern as
+                        // Suggested Competitors -> Competitors page.
+                        try { if (kw) sessionStorage.setItem('keywords_prefilledQuery', kw) } catch {}
+                        setNav('Keywords')
+                      }}
+                      onDismiss={() => {
+                        try { localStorage.setItem(dismissKey, '1') } catch {}
+                        setChecked(prev => ({ ...prev }))
+                      }}
+                    />
+                  )
+                })() : null
+
                 const relatedTrafficBlock = (feedFilter === 'all' || feedFilter === 'insights') && relatedTraffic ? (() => {
                   // Dismiss key bumped to v2 so any leftover dismissals
                   // from the previous render-only-when-populated version
@@ -1696,6 +1734,7 @@ export default function Dashboard() {
                       {titleSuggestionBlock}
                       {missingDescriptionBlock}
                       {suggestedCompetitorsBlock}
+                      {trendingKeywordBlock}
                       {relatedTrafficBlock}
                       {competitorActivityBlock}
                     </div>

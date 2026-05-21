@@ -887,7 +887,17 @@ export default function Keywords({ plan, freeTierFeatures }) {
   useKwStyles()
 
   const saved = loadSaved()
-  const [keyword,       setKeyword]       = useState(saved?.keyword || '')
+  // Trending Keyword Feed card stashes a query in sessionStorage before
+  // routing here. Honor it once on mount, then clear so back-nav doesn't
+  // keep overriding the user's edits.
+  const prefilledFromFeed = (() => {
+    try {
+      const q = sessionStorage.getItem('keywords_prefilledQuery')
+      if (q) sessionStorage.removeItem('keywords_prefilledQuery')
+      return q || ''
+    } catch { return '' }
+  })()
+  const [keyword,       setKeyword]       = useState(prefilledFromFeed || saved?.keyword || '')
   const [loadingIntent, setLoadingIntent] = useState(false)
   const [intentOptions, setIntentOptions] = useState(null)
   const [loading,       setLoading]       = useState(false)
