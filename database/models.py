@@ -348,6 +348,19 @@ class SearchTermsCache(Base):
     cached_at   = Column(DateTime, default=_now, index=True)
 
 
+class UnansweredCommentCache(Base):
+    """Dashboard 'Unanswered Comment' Feed card. Per-channel snapshot of
+    one picked unanswered comment (with AI reply drafts) for the user to
+    action. 12h TTL — comments are dynamic, but the picker is expensive
+    enough (up to 3 commentThreads.list calls = 3 quota units cold) that
+    we don't want to re-pick on every Feed load. Invalidated when the user
+    actually posts a reply, so the next Feed load picks a different one."""
+    __tablename__ = "unanswered_comment_cache"
+    channel_id  = Column(String,   primary_key=True)
+    result_json = Column(Text,     nullable=False)
+    cached_at   = Column(DateTime, default=_now, index=True)
+
+
 class AIOutputCache(Base):
     """Cross-user cache for Claude / Haiku outputs, keyed by input
     fingerprint (SHA-256 of function name + sorted JSON of relevant

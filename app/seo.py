@@ -1716,6 +1716,92 @@ Return ONLY a JSON array of 3 arrays of strings. No prose, no markdown fences. E
         return [], str(e)
 
 
+def generate_comment_reply_suggestions(
+    comment_text: str,
+    comment_author: str = "",
+    video_title: str = "",
+    channel_name: str = "",
+    channel_keywords: str = "",
+) -> tuple[list[str], str]:
+    """Generate 3 alternative replies a creator could post to one comment.
+
+    Returns (replies, error_string). Each reply is a plain string ready to
+    paste back into YouTube. Tone is friendly, brief, sounds like a real
+    creator (not a brand bot). Replies are 1-3 sentences each.
+
+    Light Haiku call; the caller wraps in cached_ai_output so identical
+    (comment, channel) inputs share output across users.
+    """
+    import json as _json
+    api_key = os.getenv("ANTHROPIC_API_KEY", "")
+    if not api_key:
+        return [], "ANTHROPIC_API_KEY is not set"
+    if not (comment_text or "").strip():
+        return [], "empty comment"
+
+    client = _make_client()
+
+    safe_author = (comment_author or "").strip().lstrip("@")[:40]
+    safe_video  = (video_title or "").strip()[:120]
+    safe_chan   = (channel_name or "").strip()[:80]
+    safe_kw     = (channel_keywords or "").strip()[:120]
+
+    prompt = f"""You are helping a YouTube creator reply to a comment on one of their videos.
+
+VIDEO: "{safe_video}"
+CHANNEL: {safe_chan or "(unknown)"}
+NICHE: {safe_kw or "general"}
+
+VIEWER COMMENT (from @{safe_author or "viewer"}):
+\"\"\"{(comment_text or "").strip()[:600]}\"\"\"
+
+Write 3 ALTERNATIVE replies the creator could post. Each reply:
+- 1 to 3 short sentences (under 280 chars total)
+- Warm, genuine, sounds like a real person, not a brand
+- Acknowledges what the commenter said specifically
+- May ask a follow-up question OR answer their question briefly when one was asked
+- NO em-dashes, NO en-dashes (use commas or plain hyphens)
+- NO emoji-spam (one tasteful emoji max, optional)
+- NEVER asks them to like, subscribe, or share
+
+Return ONLY a JSON array of 3 strings. No prose, no markdown fences. Example:
+["Reply one text.","Reply two text.","Reply three text."]
+"""
+
+    try:
+        msg = client.messages.create(
+            model="claude-haiku-4-5-20251001",
+            max_tokens=1200,
+            messages=[{"role": "user", "content": prompt}],
+        )
+        raw = msg.content[0].text.strip()
+        if raw.startswith("```"):
+            raw = re.sub(r"^```[a-z]*\n?", "", raw)
+            raw = re.sub(r"\n?```$", "", raw.strip())
+        parsed = _json.loads(raw)
+        if not isinstance(parsed, list):
+            return [], "non-array response"
+        cleaned: list[str] = []
+        seen = set()
+        for entry in parsed[:3]:
+            if not isinstance(entry, str):
+                continue
+            reply = entry.replace("—", "-").replace("–", "-").strip()
+            if not reply or len(reply) > 600:
+                continue
+            key = reply.lower()
+            if key in seen:
+                continue
+            seen.add(key)
+            cleaned.append(reply)
+        if not cleaned:
+            return [], "no usable replies after cleaning"
+        return cleaned, ""
+    except Exception as e:
+        print(f"Comment reply generation error: {e}")
+        return [], str(e)
+
+
 # ─── Intent matching ───────────────────────────────────────────────────────────
 
 def _filter_by_intent(niche_phrase: str, videos: list[dict]) -> list[dict]:

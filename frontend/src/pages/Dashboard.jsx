@@ -47,7 +47,7 @@ import {
   MilestoneFeedCard, ContentMixFeedCard, ChannelHealthFeedCard,
   TopPerformerCard, PostingConsistencyCard, BestTimeCard,
   TrackedLiftCard, DailyIdeasCard, TitleSuggestionCard,
-  MissingDescriptionCard, MissingTagsCard, TopSearchTermsCard,
+  MissingDescriptionCard, MissingTagsCard, UnansweredCommentCard, TopSearchTermsCard,
   SuggestedCompetitorsCard, RelatedTrafficCard, CompetitorActivityCard,
 } from './dashboard/feedCards'
 import {
@@ -137,6 +137,14 @@ export default function Dashboard() {
   const [tagsPublishing, setTagsPublishing] = useState(false)
   const [tagsPublished, setTagsPublished] = useState(false)
   const [tagsPublishError, setTagsPublishError] = useState('')
+  // Unanswered Comment card. Backend surfaces one comment the user hasn't
+  // replied to on a recent video + 3 AI reply drafts. Post fires
+  // comments.insert via /dashboard/post-comment-reply (50 quota units per
+  // user click).
+  const [unansweredComment, setUnansweredComment] = useState(null)
+  const [replyPosting, setReplyPosting] = useState(false)
+  const [replyPosted, setReplyPosted] = useState(false)
+  const [replyPostError, setReplyPostError] = useState('')
   // Top Search Terms card. Real YouTube Analytics data — the queries
   // viewers actually typed to find the user's videos in the last 28 days.
   // Cached per-channel for 24h. Null while loading or when there's no
@@ -329,6 +337,15 @@ export default function Dashboard() {
     fetch('/dashboard/missing-tags', { credentials: 'include' })
       .then(r => r.ok ? r.json() : null)
       .then(d => { if (d && d.ok && d.video && d.tag_sets?.length) setMissingTags(d) })
+      .catch(() => {})
+
+    // Load Unanswered Comment: backend picks the most recent unreplied
+    // comment on one of the user's recent videos + up to 3 AI reply
+    // drafts. Cached per-channel for 12h; invalidated after a successful
+    // reply post so the next Feed load picks a different comment.
+    fetch('/dashboard/unanswered-comment', { credentials: 'include' })
+      .then(r => r.ok ? r.json() : null)
+      .then(d => { if (d && d.ok && d.comment && d.replies?.length) setUnansweredComment(d) })
       .catch(() => {})
 
     // Load Top Search Terms: backend hits YouTube Analytics for the
@@ -1476,6 +1493,50 @@ export default function Dashboard() {
                   )
                 })() : null
 
+                const unansweredCommentBlock = (feedFilter === 'all' || feedFilter === 'actions') && unansweredComment?.comment && unansweredComment?.replies?.length ? (() => {
+                  const dismissKey = `ytg_unanswered_comment_dismissed:${data?.channel?.channel_id || 'x'}:${unansweredComment.comment.comment_id || 'x'}`
+                  try { if (localStorage.getItem(dismissKey)) return null } catch {}
+                  return (
+                    <UnansweredCommentCard
+                      key="unanswered-comment"
+                      video={unansweredComment.video}
+                      comment={unansweredComment.comment}
+                      replies={unansweredComment.replies}
+                      posting={replyPosting}
+                      posted={replyPosted}
+                      postError={replyPostError}
+                      onPost={async (replyText, c) => {
+                        const parentId = c?.thread_id || c?.comment_id
+                        if (!parentId || !replyText) return
+                        setReplyPosting(true)
+                        setReplyPostError('')
+                        try {
+                          const res = await fetch('/dashboard/post-comment-reply', {
+                            method: 'POST',
+                            credentials: 'include',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ parent_id: parentId, reply_text: replyText }),
+                          })
+                          const d = await res.json().catch(() => ({}))
+                          if (!res.ok || d?.ok === false) {
+                            setReplyPostError(d?.error || 'Could not post reply. Try again.')
+                          } else {
+                            setReplyPosted(true)
+                          }
+                        } catch {
+                          setReplyPostError('Could not reach the server.')
+                        } finally {
+                          setReplyPosting(false)
+                        }
+                      }}
+                      onDismiss={() => {
+                        try { localStorage.setItem(dismissKey, '1') } catch {}
+                        setChecked(prev => ({ ...prev }))
+                      }}
+                    />
+                  )
+                })() : null
+
                 const missingTagsBlock = (feedFilter === 'all' || feedFilter === 'insights') && missingTags?.video && missingTags?.tag_sets?.length ? (() => {
                   const dismissKey = `ytg_missing_tags_dismissed:${data?.channel?.channel_id || 'x'}:${missingTags.video.video_id || 'x'}`
                   try { if (localStorage.getItem(dismissKey)) return null } catch {}
@@ -1789,6 +1850,7 @@ export default function Dashboard() {
                       {titleSuggestionBlock}
                       {missingDescriptionBlock}
                       {missingTagsBlock}
+                      {unansweredCommentBlock}
                       {suggestedCompetitorsBlock}
                       {topSearchTermsBlock}
                       {relatedTrafficBlock}

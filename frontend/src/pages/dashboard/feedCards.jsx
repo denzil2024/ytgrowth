@@ -2671,6 +2671,223 @@ export function MissingTagsCard({
   )
 }
 
+// Unanswered Comment card. Surfaces ONE real viewer comment from one of
+// the creator's recent videos that they haven't replied to, plus 3 AI
+// reply drafts. The "Post Reply" CTA hits /dashboard/post-comment-reply
+// which calls YouTube comments.insert (50 quota units per click).
+export function UnansweredCommentCard({
+  video, comment, replies,
+  posting, posted, postError,
+  onPost, onDismiss,
+}) {
+  const [replyIdx, setReplyIdx] = useState(0)
+  if (!comment || !replies?.length) return null
+  const idx       = Math.max(0, Math.min(replies.length - 1, replyIdx))
+  const reply     = replies[idx] || ''
+  if (!reply) return null
+  const canCycle  = replies.length > 1
+  const ctaLabel  = posted ? 'Reply posted' : posting ? 'Posting…' : 'Post Reply'
+  const authorName = (comment.author_name || '@viewer').replace(/^@?/, '@')
+
+  let ageLabel = ''
+  try {
+    if (comment.published_at) {
+      const ts = new Date(comment.published_at).getTime()
+      const days = Math.max(0, Math.floor((Date.now() - ts) / 86400000))
+      ageLabel = days === 0 ? 'today' : days === 1 ? '1d ago' : `${days}d ago`
+    }
+  } catch {}
+
+  return (
+    <article style={{
+      background: SHELL.cardFlat,
+      border: '1px solid rgba(255,255,255,0.08)',
+      borderRadius: 14,
+      padding: '14px 18px 16px 18px',
+      boxShadow: '0 1px 2px rgba(255,255,255,0.04), 0 6px 18px rgba(255,255,255,0.05), inset 0 1px 0 rgba(255,255,255,0.7)',
+      marginBottom: 12,
+    }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
+        <h3 style={{
+          fontSize: 16, fontWeight: 600, color: SHELL.text1,
+          letterSpacing: '-0.2px', lineHeight: 1.3, margin: 0,
+        }}>Unanswered Comment</h3>
+        {ageLabel && (
+          <span style={{
+            fontSize: 12.5, fontWeight: 450, color: SHELL.text3,
+            letterSpacing: '-0.01em',
+          }}>· {ageLabel}</span>
+        )}
+        <div style={{ flex: 1 }}/>
+        {onDismiss && (
+          <button
+            type="button"
+            onClick={onDismiss}
+            aria-label="Dismiss"
+            style={{
+              width: 28, height: 28, borderRadius: 8,
+              border: 'none', background: 'transparent',
+              color: 'rgba(255,255,255,0.36)',
+              cursor: 'pointer',
+              display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+              transition: 'background 0.14s, color 0.14s',
+            }}
+            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; e.currentTarget.style.color = SHELL.text1 }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'rgba(255,255,255,0.36)' }}
+          >
+            <XIcon size={14} strokeWidth={2} />
+          </button>
+        )}
+      </div>
+
+      {/* Comment block: avatar + author + text + on-video subline */}
+      <div style={{
+        padding: 14,
+        background: 'rgba(255,255,255,0.02)',
+        border: '1px solid rgba(255,255,255,0.06)',
+        borderRadius: 12,
+        marginBottom: 10,
+      }}>
+        <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
+          {comment.author_image ? (
+            <img
+              src={comment.author_image}
+              alt=""
+              referrerPolicy="no-referrer"
+              style={{
+                flexShrink: 0,
+                width: 38, height: 38, borderRadius: '50%',
+                objectFit: 'cover',
+                background: 'rgba(255,255,255,0.06)',
+                border: '1px solid rgba(255,255,255,0.10)',
+              }}
+            />
+          ) : (
+            <div style={{
+              flexShrink: 0,
+              width: 38, height: 38, borderRadius: '50%',
+              background: 'rgba(255,255,255,0.06)',
+              border: '1px solid rgba(255,255,255,0.10)',
+              display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+              color: SHELL.text3, fontSize: 14, fontWeight: 600,
+            }}>{(authorName || '@').replace(/^@/, '').slice(0, 1).toUpperCase() || '@'}</div>
+          )}
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, marginBottom: 4, flexWrap: 'wrap' }}>
+              <span style={{
+                fontSize: 13, fontWeight: 600, color: SHELL.text1,
+                letterSpacing: '-0.05px',
+              }}>{authorName}</span>
+              {video?.title && (
+                <span style={{ fontSize: 12, fontWeight: 450, color: SHELL.text3, letterSpacing: '-0.01em' }}>
+                  · on "{video.title.length > 48 ? video.title.slice(0, 46) + '…' : video.title}"
+                </span>
+              )}
+            </div>
+            <p style={{
+              margin: 0, fontSize: 13.5, fontWeight: 450, color: SHELL.text1,
+              letterSpacing: '-0.05px', lineHeight: 1.5,
+              whiteSpace: 'pre-wrap',
+              display: '-webkit-box',
+              WebkitBoxOrient: 'vertical',
+              WebkitLineClamp: 4,
+              overflow: 'hidden',
+            }}>{comment.text || ''}</p>
+          </div>
+        </div>
+      </div>
+
+      {/* AI reply draft */}
+      <div style={{
+        border: '1px solid rgba(255,255,255,0.08)',
+        borderRadius: 10,
+        background: 'rgba(0,0,0,0.16)',
+        overflow: 'hidden',
+        marginBottom: 14,
+      }}>
+        <div style={{
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          padding: '7px 12px',
+          borderBottom: '1px solid rgba(255,255,255,0.06)',
+          background: 'rgba(255,255,255,0.02)',
+        }}>
+          <span style={{
+            fontSize: 11, fontWeight: 600, color: SHELL.text3,
+            letterSpacing: '0.10em', textTransform: 'uppercase',
+          }}>AI reply</span>
+          <span style={{
+            fontSize: 11, fontWeight: 600, color: SHELL.text3,
+            fontVariantNumeric: 'tabular-nums',
+            letterSpacing: '-0.01em',
+          }}>{reply.length} chars</span>
+        </div>
+        <p style={{
+          margin: 0, padding: '10px 12px',
+          fontSize: 13.5, fontWeight: 450, color: SHELL.text1,
+          letterSpacing: '-0.05px', lineHeight: 1.5,
+          whiteSpace: 'pre-wrap',
+        }}>{reply}</p>
+      </div>
+
+      <div style={{ display: 'grid', gridTemplateColumns: canCycle ? '1fr 1fr' : '1fr', gap: 10 }}>
+        {canCycle && (
+          <button
+            type="button"
+            disabled={posting || posted}
+            onClick={() => setReplyIdx((idx + 1) % replies.length)}
+            style={{
+              display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 7,
+              padding: '10px 14px', borderRadius: 100,
+              border: '1px solid rgba(255,255,255,0.10)',
+              background: 'rgba(255,255,255,0.03)',
+              color: SHELL.text1,
+              fontFamily: 'inherit',
+              fontSize: 13, fontWeight: 600, letterSpacing: '-0.05px',
+              cursor: (posting || posted) ? 'default' : 'pointer',
+              opacity: (posting || posted) ? 0.5 : 1,
+              transition: 'background 0.14s, border-color 0.14s',
+            }}
+            onMouseEnter={e => { if (!posting && !posted) { e.currentTarget.style.background = 'rgba(255,255,255,0.07)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.18)' } }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.03)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.10)' }}
+          >
+            <RefreshCw size={13} strokeWidth={2.1} />
+            Next draft
+          </button>
+        )}
+
+        <button
+          type="button"
+          disabled={posting || posted}
+          onClick={() => onPost?.(reply, comment)}
+          style={{
+            display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 7,
+            padding: '10px 14px', borderRadius: 100,
+            border: 'none',
+            background: posted ? 'rgba(22,163,74,0.85)' : '#e5251b',
+            color: '#fff',
+            fontFamily: 'inherit',
+            fontSize: 13, fontWeight: 600, letterSpacing: '-0.05px',
+            boxShadow: posted ? 'none' : '0 1px 3px rgba(229,37,27,0.28)',
+            cursor: (posting || posted) ? 'default' : 'pointer',
+            transition: 'filter 0.14s, transform 0.14s, background 0.2s',
+          }}
+          onMouseEnter={e => { if (!posting && !posted) { e.currentTarget.style.filter = 'brightness(1.08)'; e.currentTarget.style.transform = 'translateY(-1px)' } }}
+          onMouseLeave={e => { e.currentTarget.style.filter = 'none'; e.currentTarget.style.transform = 'translateY(0)' }}
+        >
+          {posting && <RefreshCw size={13} strokeWidth={2.1} style={{ animation: 'spin 1s linear infinite' }} />}
+          {ctaLabel}
+        </button>
+      </div>
+
+      {postError && (
+        <p style={{ margin: '8px 2px 0', fontSize: 12, fontWeight: 500, color: '#fb6a60' }}>
+          {postError}
+        </p>
+      )}
+    </article>
+  )
+}
+
 // Top Search Terms card. Real YouTube Analytics data: the actual queries
 // viewers typed to find this creator's videos in the last 28 days. Each
 // row is a query + view count from that query. No AI, no scoring guesses

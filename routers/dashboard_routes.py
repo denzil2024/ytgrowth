@@ -24,6 +24,7 @@ import threading
 
 from fastapi import APIRouter, Request
 from fastapi.responses import JSONResponse
+from pydantic import BaseModel
 
 import datetime
 import json
@@ -38,7 +39,7 @@ from app.niche_outliers import (
     is_stale,
     personalize_angle,
 )
-from database.models import SessionLocal, SeoOptimization, SeoAnalysisCache, CompetitorAnalysisCache, CompetitorActivityCache, RelatedTrafficCache, SearchTermsCache, TopChannelCache, YoutubeSearchCache, KeywordsResearchCache
+from database.models import SessionLocal, SeoOptimization, SeoAnalysisCache, CompetitorAnalysisCache, CompetitorActivityCache, RelatedTrafficCache, SearchTermsCache, UnansweredCommentCache, TopChannelCache, YoutubeSearchCache, KeywordsResearchCache
 from routers.auth import get_session
 from routers.admin_routes import _is_admin
 
@@ -1888,3 +1889,236 @@ def missing_tags(request: Request):
     if debug:
         return JSONResponse({"ok": True, "video": None, "_debug": {"candidates_total": len(candidates), "max_tries": MAX_TRIES, "walk": diag_walk}})
     return JSONResponse({"ok": True, "video": None})
+
+
+_UNANSWERED_COMMENT_TTL_HOURS = 12
+
+
+def _read_unanswered_comment_cache(db, channel_id):
+    try:
+        row = db.query(UnansweredCommentCache).filter_by(channel_id=channel_id).first()
+        if not row:
+            return None
+        cached_at = row.cached_at
+        if cached_at and cached_at.tzinfo is None:
+            cached_at = cached_at.replace(tzinfo=datetime.timezone.utc)
+        if not cached_at:
+            return None
+        age_h = (datetime.datetime.now(datetime.timezone.utc) - cached_at).total_seconds() / 3600
+        if age_h >= _UNANSWERED_COMMENT_TTL_HOURS:
+            return None
+        try:
+            return json.loads(row.result_json)
+        except Exception:
+            return None
+    except Exception as e:
+        print(f"[unanswered-comment] cache read error: {e}")
+        return None
+
+
+def _write_unanswered_comment_cache(db, channel_id, payload):
+    try:
+        row = db.query(UnansweredCommentCache).filter_by(channel_id=channel_id).first()
+        body = json.dumps(payload, default=str)
+        now = datetime.datetime.now(datetime.timezone.utc)
+        if row:
+            row.result_json = body
+            row.cached_at   = now
+        else:
+            db.add(UnansweredCommentCache(channel_id=channel_id, result_json=body, cached_at=now))
+        db.commit()
+    except Exception as e:
+        print(f"[unanswered-comment] cache write error: {e}")
+        try: db.rollback()
+        except Exception: pass
+
+
+def _invalidate_unanswered_comment_cache(channel_id):
+    """Called after the user posts a reply so the next Feed load picks a
+    different unanswered comment instead of re-surfacing the one they
+    just answered."""
+    db = SessionLocal()
+    try:
+        row = db.query(UnansweredCommentCache).filter_by(channel_id=channel_id).first()
+        if row:
+            db.delete(row)
+            db.commit()
+    except Exception as e:
+        print(f"[unanswered-comment] invalidate error: {e}")
+        try: db.rollback()
+        except Exception: pass
+    finally:
+        db.close()
+
+
+@router.get("/unanswered-comment")
+def unanswered_comment(request: Request, force: int = 0):
+    """Feed card: surface ONE unanswered comment on one of the user's
+    recent videos, plus 3 AI reply drafts the user can post with one click.
+
+    Cost cold cache: up to MAX_VIDEOS commentThreads.list calls (1 unit
+    each). Cost warm cache (12h): 0 units. Posting a reply costs 50
+    units, but that fires only on user click via /post-comment-reply.
+    """
+    debug = request.query_params.get("debug") == "1"
+
+    import os as _os
+    if _os.getenv("YT_QUOTA_PAUSED") == "1":
+        return JSONResponse({"ok": True, "comment": None})
+
+    data, creds = get_session(request.session.get("session_id"))
+    if not data:
+        return JSONResponse({"ok": False, "reason": "not_authenticated"}, status_code=401)
+
+    channel = (data or {}).get("channel", {}) or {}
+    videos  = (data or {}).get("videos",  []) or []
+    channel_id = channel.get("channel_id", "") or ""
+    if not channel_id or not videos:
+        return JSONResponse({"ok": True, "comment": None})
+
+    from app.insights import parse_duration_seconds
+    from app.youtube import get_unanswered_comments_for_video
+    from app.seo import generate_comment_reply_suggestions
+    from app.utils import cached_ai_output
+    import hashlib as _hashlib
+
+    MAX_VIDEOS = 3  # Cap quota: at most MAX_VIDEOS commentThreads.list calls per cold pick
+
+    db = SessionLocal()
+    try:
+        if not force:
+            cached = _read_unanswered_comment_cache(db, channel_id)
+            if cached is not None:
+                return JSONResponse(cached)
+
+        def _meaningful(t: str) -> bool:
+            stripped = " ".join(w for w in (t or "").split() if not w.startswith("#")).strip()
+            return len(stripped) >= 15
+
+        videos_sorted = sorted(videos, key=lambda x: (x.get("published_at") or ""), reverse=True)
+        candidate_videos = [v for v in videos_sorted if _meaningful(v.get("title") or "")][:MAX_VIDEOS]
+
+        diag_walk = []
+        chosen = None
+        for v in candidate_videos:
+            video_id = v.get("video_id", "")
+            if not video_id:
+                continue
+            unanswered = get_unanswered_comments_for_video(creds, channel_id, video_id, max_results=20)
+            diag_walk.append({"video_id": video_id, "title": (v.get("title") or "")[:60], "unanswered_count": len(unanswered)})
+            if unanswered:
+                chosen = (v, unanswered[0])
+                break
+
+        if not chosen:
+            payload = {"ok": True, "comment": None}
+            if debug:
+                payload["_debug"] = {"candidates": diag_walk}
+            _write_unanswered_comment_cache(db, channel_id, {"ok": True, "comment": None})
+            return JSONResponse(payload)
+
+        v, c = chosen
+        video_payload = {
+            "video_id":   v.get("video_id", ""),
+            "title":      (v.get("title") or "").strip(),
+            "thumbnail":  v.get("thumbnail", ""),
+            "is_short":   parse_duration_seconds(v.get("duration", "PT0S")) <= 60,
+        }
+        comment_payload = {
+            "comment_id":   c.get("comment_id", ""),
+            "thread_id":    c.get("thread_id", ""),
+            "text":         c.get("text", ""),
+            "author_name":  c.get("author_name", ""),
+            "author_image": c.get("author_image", ""),
+            "published_at": c.get("published_at", ""),
+            "like_count":   c.get("like_count", 0),
+        }
+
+        comment_hash = _hashlib.sha256(c.get("text", "").encode("utf-8")).hexdigest()[:16]
+        cache_inputs = {
+            "comment_hash":   comment_hash,
+            "channel_kw":     (channel.get("keywords", "") or "").lower()[:200],
+            "video_title":    video_payload["title"][:120],
+            "prompt_version": "feed_comment_reply_v1",
+        }
+
+        def _fetch():
+            try:
+                replies, err = generate_comment_reply_suggestions(
+                    comment_text=c.get("text", ""),
+                    comment_author=c.get("author_name", ""),
+                    video_title=video_payload["title"],
+                    channel_name=channel.get("channel_name", "") or "",
+                    channel_keywords=channel.get("keywords", "") or "",
+                )
+                return {"replies": replies or [], "error": err or ""}
+            except Exception as e:
+                print(f"[unanswered-comment] generate error: {e}")
+                return {"replies": [], "error": str(e)}
+
+        out = cached_ai_output(
+            function_name="feed_comment_reply",
+            inputs=cache_inputs,
+            ttl_hours=24 * 7,
+            fetch_fn=_fetch,
+        )
+        replies = [r for r in (out.get("replies") or []) if isinstance(r, str) and r.strip()][:3]
+        if not replies:
+            payload = {"ok": True, "comment": None}
+            if debug:
+                payload["_debug"] = {"candidates": diag_walk, "claude_error": (out.get("error") or "")[:200]}
+            _write_unanswered_comment_cache(db, channel_id, {"ok": True, "comment": None})
+            return JSONResponse(payload)
+
+        payload = {
+            "ok":       True,
+            "video":    video_payload,
+            "comment":  comment_payload,
+            "replies":  replies,
+            "source":   "feed_generated",
+        }
+        if debug:
+            payload["_debug"] = {"candidates": diag_walk}
+        _write_unanswered_comment_cache(db, channel_id, {k: v for k, v in payload.items() if k != "_debug"})
+        return JSONResponse(payload)
+    finally:
+        db.close()
+
+
+class _PostCommentReplyBody(BaseModel):
+    parent_id:  str
+    reply_text: str
+
+
+@router.post("/post-comment-reply")
+def post_comment_reply_route(body: _PostCommentReplyBody, request: Request):
+    """User-action endpoint: post a reply to one YouTube comment thread.
+    Costs 50 quota units per successful insert. Only fires on explicit
+    user click. On success, invalidates the unanswered-comment cache so
+    the next Feed load picks a different comment."""
+    import os as _os
+    if _os.getenv("YT_QUOTA_PAUSED") == "1":
+        return JSONResponse({"ok": False, "error": "Posting is temporarily disabled."}, status_code=503)
+
+    data, creds = get_session(request.session.get("session_id"))
+    if not creds:
+        return JSONResponse({"ok": False, "error": "Not authenticated."}, status_code=401)
+
+    parent_id  = (body.parent_id or "").strip()
+    reply_text = (body.reply_text or "").strip()
+    if not parent_id or not reply_text:
+        return JSONResponse({"ok": False, "error": "Missing parent_id or reply_text."}, status_code=400)
+    if len(reply_text) > 1000:
+        return JSONResponse({"ok": False, "error": "Reply too long."}, status_code=400)
+
+    from app.youtube import post_comment_reply as _post
+
+    ok, err = _post(creds, parent_id, reply_text)
+    if not ok:
+        return JSONResponse({"ok": False, "error": err or "Could not post reply."}, status_code=500)
+
+    channel_id = (data or {}).get("channel", {}).get("channel_id", "") or ""
+    if channel_id:
+        _invalidate_unanswered_comment_cache(channel_id)
+
+    return JSONResponse({"ok": True})
