@@ -98,7 +98,7 @@ export const posts = [
 
         <p>This funnel explains why two videos on the same channel can perform completely differently. The one with stronger packaging and retention signals gets expanded distribution. The one with weaker signals stays small.</p>
 
-        <p>How do i get more views on youtube is therefore a <a href="/blog/youtube-channel-audit">diagnostic question</a> before it is a strategy question. Check your impressions, CTR, and retention in YouTube Studio before changing anything. The metric furthest from its benchmark is your starting point.</p>
+        <p>How do i get more views on youtube is therefore a diagnostic question before it is a strategy question. <a href="/blog/youtube-channel-audit">Check your impressions, CTR, and retention</a> in YouTube Studio before changing anything. The metric furthest from its benchmark is your starting point.</p>
 
         <h2>1. Get More Impressions Through Keyword Research</h2>
 
@@ -119,7 +119,7 @@ export const posts = [
 
         <p>Impressions without clicks are a wasted distribution. How to get a lot of views on youtube depends heavily on converting the impressions you already have into actual views. A 1% improvement in CTR across a large impression base produces more views than publishing three additional videos in the same period.</p>
 
-        <p>Your <a href="/blog/youtube-thumbnail-ideas">thumbnail</a> and title are the only two variables that determine whether a viewer clicks. They work as a pair. A strong thumbnail with a weak title loses clicks. A strong title with a weak thumbnail loses clicks. Both need to communicate the same message and reinforce each other.</p>
+        <p>Your <a href="/blog/youtube-thumbnail-ideas">thumbnail and title</a> are the only two variables that determine whether a viewer clicks. They work as a pair. A strong thumbnail with a weak title loses clicks. A strong title with a weak thumbnail loses clicks. Both need to communicate the same message and reinforce each other.</p>
 
         <img src="/blog/more-views-on-youtube-thumbnails.webp" alt="High-contrast thumbnail with a single focal point, high-emotion expression, and minimal text overlay" />
 
@@ -150,7 +150,7 @@ export const posts = [
 
         <h2>3. Improve Retention With Stronger Content Structure</h2>
 
-        <p>CTR earns the click. Retention earns the distribution. When viewers click your video and watch a significant portion of it, YouTube interprets that as a quality signal and expands the video's reach to a wider audience. When they click and leave within the first 30 seconds, YouTube interprets the opposite and pulls back distribution.</p>
+        <p>CTR earns the click. Retention earns the distribution. When viewers click your video and <a href="/blog/youtube-watch-hours">watch a significant portion</a> of it, YouTube interprets that as a quality signal and expands the video's reach to a wider audience. When they click and leave within the first 30 seconds, YouTube interprets the opposite and pulls back distribution.</p>
 
         <h3>How to Find Your Retention Data</h3>
 
@@ -167,7 +167,7 @@ export const posts = [
 
         <p>The first sentence of every video should either deliver the promised value immediately or create enough curiosity that leaving feels like a loss.</p>
 
-        <p>Three content habits that improve <a href="/blog/youtube-watch-hours">retention</a> across every video:</p>
+        <p>Three content habits that improve retention across every video:</p>
 
         <ul>
           <li><strong>Match the intro to the title promise:</strong> If the title says "how to double your CTR," the first 30 seconds should address CTR directly. Any detour before that point costs viewers.</li>
@@ -185,7 +185,7 @@ export const posts = [
 
         <img src="/blog/more-views-on-youtube-upload-frequency.webp" alt="Sustainable upload schedule that the creator can actually maintain at their current production capacity" />
 
-        <p>Consistency <a href="/blog/grow-youtube-channel">compounds</a> in both directions. A channel publishing one video per week for 52 weeks builds 52 indexed pieces of content, each generating its own impressions and search traffic. That library compounds over time as older videos continue pulling views while new ones are published on top of them. A channel publishing sporadically produces no such compounding effect because the algorithm never builds a reliable distribution pattern around it.</p>
+        <p>Consistency <a href="/blog/grow-youtube-channel">compounds in both directions</a>. A channel publishing one video per week for 52 weeks builds 52 indexed pieces of content, each generating its own impressions and search traffic. That library compounds over time as older videos continue pulling views while new ones are published on top of them. A channel publishing sporadically produces no such compounding effect because the algorithm never builds a reliable distribution pattern around it.</p>
 
         <p>Pick the upload frequency you can sustain at your current production capacity. One video per week is enough to build momentum. One video per fortnight works if quality is consistently strong. The schedule matters less than the reliability of keeping it.</p>
 
@@ -217,7 +217,7 @@ export const posts = [
 
         <img src="/blog/more-views-on-youtube-shorts.webp" alt="YouTube Shorts feed serving short vertical videos as a top-of-funnel discovery surface" />
 
-        <p>The strategic role of <a href="/blog/youtube-shorts-algorithm">Shorts</a> is not to replace long-form content. It is to introduce your channel to viewers who would never find it through search or suggested feed placement on long-form videos. A Short that reaches 50,000 viewers who have never seen your channel before is a subscriber acquisition opportunity that a long-form video with the same view count would take significantly longer to achieve.</p>
+        <p>The <a href="/blog/youtube-shorts-algorithm">strategic role of Shorts</a> is not to replace long-form content. It is to introduce your channel to viewers who would never find it through search or suggested feed placement on long-form videos. A Short that reaches 50,000 viewers who have never seen your channel before is a subscriber acquisition opportunity that a long-form video with the same view count would take significantly longer to achieve.</p>
 
         <h3>How to Use Shorts as a Discovery Funnel</h3>
 
@@ -428,7 +428,7 @@ export const posts = [
 
         <h2>Step 2: Audit Your SEO and Metadata</h2>
 
-        <p>Weak <a href="/blog/what-is-youtube-seo">metadata</a> is the most common reason a well-produced video gets no search traffic. YouTube reads your title, description, tags, chapters, and hashtags to categorize your content and match it to search queries. Missing or inaccurate signals in any of these fields limit your discoverability before a single viewer sees the thumbnail.</p>
+        <p><a href="/blog/what-is-youtube-seo">Weak metadata</a> is the most common reason a well-produced video gets no search traffic. YouTube reads your title, description, tags, chapters, and hashtags to categorize your content and match it to search queries. Missing or inaccurate signals in any of these fields limit your discoverability before a single viewer sees the thumbnail.</p>
 
         <p>Work through this checklist for your last 10 uploaded videos:</p>
 
@@ -451,7 +451,7 @@ export const posts = [
         <h3>Tags</h3>
 
         <ul>
-          <li>8 to 10 <a href="/blog/youtube-tags">tags</a> per video combining the primary keyword, long-tail variations, and niche-specific phrases</li>
+          <li><a href="/blog/youtube-tags">8 to 10 tags</a> per video combining the primary keyword, long-tail variations, and niche-specific phrases</li>
           <li>No single-word tags and no irrelevant trending terms</li>
           <li>Tags are consistent with the title and description topic</li>
         </ul>
@@ -863,7 +863,7 @@ export const posts = [
 
         <p>TubeBuddy is a post-publish optimization engine. It is built around the question: how do I make the content I have already published perform better? Its strongest features sit on the back end of content creation. A/B testing titles and thumbnails on live videos, bulk processing descriptions and tags across your entire library, and auditing individual video health after upload.</p>
 
-        <p><a href="/blog/vidiq-review">vidIQ</a> is a pre-publish research and discovery tool. It is built around the question: what should I be creating in the first place? Its strongest features sit at the front end of content creation. Keyword validation, competitor tracking, <a href="/blog/youtube-trends">trending topic feeds</a>, and AI-powered idea generation before you film a single frame.</p>
+        <p>vidIQ is a pre-publish <a href="/blog/vidiq-review">research and discovery tool</a>. It is built around the question: what should I be creating in the first place? Its strongest features sit at the front end of content creation. Keyword validation, competitor tracking, <a href="/blog/youtube-trends">trending topic feeds</a>, and AI-powered idea generation before you film a single frame.</p>
 
         <table>
           <thead>
@@ -915,7 +915,7 @@ export const posts = [
 
         <h3>SEO and Metadata</h3>
 
-        <p>TubeBuddy's SEO scorecard sits directly inside YouTube Studio and grades every video's <a href="/blog/what-is-youtube-seo">metadata</a> in real time during upload. It flags missing tags, weak descriptions, and title issues before you publish. vidIQ offers similar guidance but with less granular scoring at the video level.</p>
+        <p>TubeBuddy's SEO scorecard sits directly inside YouTube Studio and grades <a href="/blog/what-is-youtube-seo">every video's metadata</a> in real time during upload. It flags missing tags, weak descriptions, and title issues before you publish. vidIQ offers similar guidance but with less granular scoring at the video level.</p>
 
         <h3>Competitor Analysis</h3>
 
@@ -1239,7 +1239,7 @@ export const posts = [
         <p><strong>The most common CTR killers:</strong></p>
 
         <ul>
-          <li><a href="/blog/youtube-thumbnail-ideas">Thumbnails</a> with too much text, low contrast, or no clear focal point</li>
+          <li>Thumbnails with too much text, low contrast, or no clear focal point</li>
           <li>Titles that describe the video instead of selling the reason to watch it</li>
           <li>Thumbnail and title combinations that do not reinforce the same message</li>
           <li>Faces with neutral expressions instead of high-emotion reactions that signal the video's energy</li>
@@ -1247,7 +1247,7 @@ export const posts = [
 
         <h3>How to Fix It</h3>
 
-        <p>Open YouTube Studio, go to the Reach tab, and sort your videos by CTR. Find your lowest performers and update their thumbnails first. Changing a thumbnail on an existing video resets its distribution test with the algorithm. A stronger thumbnail on an old video can revive traffic that has completely stopped.</p>
+        <p>Open YouTube Studio, go to the Reach tab, and sort your videos by CTR. Find your lowest performers and <a href="/blog/youtube-thumbnail-ideas">update their thumbnails</a> first. Changing a thumbnail on an existing video resets its distribution test with the algorithm. A stronger thumbnail on an old video can revive traffic that has completely stopped.</p>
 
         <p>For new uploads, test your thumbnail concept before publishing. <a href="/features/thumbnail-iq">Thumbnail IQ</a> scores your thumbnail against niche benchmarks using a two-layer analysis of visual hierarchy and algorithm signals, so you know whether it is competitive before a single impression is wasted.</p>
 
@@ -1524,7 +1524,7 @@ export const posts = [
         <p>Here is how to use it correctly:</p>
 
         <ol>
-          <li>Go to <a href="https://trends.google.com" target="_blank" rel="noopener">trends.google.com</a> and type your niche topic into the search bar.</li>
+          <li>Go to <a href="https://trends.google.com" target="_blank" rel="noopener">Google Trends</a> and type your niche topic into the search bar.</li>
           <li>Set your region to your target audience's country.</li>
           <li><strong>Set the time range:</strong> Use 90 days to identify sustained trends and 7 days to identify short-term spikes.</li>
           <li><strong>Click the search type dropdown</strong>, which defaults to Web Search, and switch it to YouTube Search. This filters all data to show only YouTube-specific search behavior.</li>
@@ -1678,7 +1678,7 @@ export const posts = [
 
         <h3>Shorts-First Storytelling</h3>
 
-        <p>Creators are building content strategies around <a href="/blog/youtube-shorts-algorithm">Shorts</a> as the primary discovery format rather than a supplementary one. Short-form vertical video is now the entry point for new audiences, with long-form content serving as the depth layer for viewers who convert from Shorts.</p>
+        <p>Creators are building content strategies around <a href="/blog/youtube-shorts-algorithm">Shorts as the primary discovery format</a> rather than a supplementary one. Short-form vertical video is now the entry point for new audiences, with long-form content serving as the depth layer for viewers who convert from Shorts.</p>
 
         <img src="/blog/youtube-trends-shorts.webp" alt="Shorts-first storytelling with short-form vertical video as the discovery entry point to long-form content" />
 
