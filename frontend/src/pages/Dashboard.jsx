@@ -1839,6 +1839,7 @@ export default function Dashboard() {
                   { category: 'actions',      block: missingTagsBlock },
                   { category: 'actions',      block: unansweredCommentBlock },
                   { category: 'achievements', block: milestoneBlock },
+                  { category: 'achievements', block: topPerformerBlock },
                   { category: 'achievements', block: trackedLiftBlock },
                   { category: 'insights',     block: nicheHeroBlock },
                   { category: 'insights',     block: suggestedCompetitorsBlock },
