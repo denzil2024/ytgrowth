@@ -6777,52 +6777,28 @@ export default function Dashboard() {
                   </div>
                 ) : null
 
-                const hasWhatToDoNext = priorityActionsBlock || dailyIdeasBlock
-                const hasRecentWins = milestoneBlock || topPerformerBlock || trackedLiftBlock
-                const hasYourNiche = nicheHeroBlock || titleSuggestionBlock || suggestedCompetitorsBlock || relatedTrafficBlock || competitorActivityBlock
                 const hasHowYouPublish = postingConsistencyBlock || bestTimeBlock
 
+                // VidIQ-style continuous Feed. Each card carries its own
+                // eyebrow (category + age + dismiss), so the section-level
+                // H2 buckets ("What to do next", "Recent wins", "Your niche",
+                // "Channel health") are gone. "How you publish" is the lone
+                // retained section head — deliberate editorial emphasis on
+                // the publishing-rhythm cards.
                 return (
                   <>
-                    {hasWhatToDoNext && (
-                      <>
-                        <div className="ov-section-head">
-                          <h2>What to do next</h2>
-                        </div>
-                        <div className="ov-stack">
-                          {priorityActionsBlock}
-                          {dailyIdeasBlock}
-                        </div>
-                      </>
-                    )}
-
-                    {hasRecentWins && (
-                      <>
-                        <div className="ov-section-head">
-                          <h2>Recent wins</h2>
-                        </div>
-                        <div className="ov-stack">
-                          {milestoneBlock}
-                          {topPerformerBlock}
-                          {trackedLiftBlock}
-                        </div>
-                      </>
-                    )}
-
-                    {hasYourNiche && (
-                      <>
-                        <div className="ov-section-head">
-                          <h2>Your niche</h2>
-                        </div>
-                        <div className="ov-stack">
-                          {nicheHeroBlock}
-                          {titleSuggestionBlock}
-                          {suggestedCompetitorsBlock}
-                          {relatedTrafficBlock}
-                          {competitorActivityBlock}
-                        </div>
-                      </>
-                    )}
+                    <div className="ov-stack">
+                      {priorityActionsBlock}
+                      {dailyIdeasBlock}
+                      {milestoneBlock}
+                      {topPerformerBlock}
+                      {trackedLiftBlock}
+                      {nicheHeroBlock}
+                      {titleSuggestionBlock}
+                      {suggestedCompetitorsBlock}
+                      {relatedTrafficBlock}
+                      {competitorActivityBlock}
+                    </div>
 
                     {hasHowYouPublish && (
                       <>
@@ -6838,13 +6814,9 @@ export default function Dashboard() {
                     )}
 
                     {channelHealthBlock && (
-                      <>
-                        <div className="ov-section-head">
-                          <h2>Channel health</h2>
-                          {data.insights && <span className="ov-section-meta">See full audit ↓</span>}
-                        </div>
+                      <div style={{ marginTop: 12 }}>
                         {channelHealthBlock}
-                      </>
+                      </div>
                     )}
                   </>
                 )
