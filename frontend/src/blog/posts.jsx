@@ -520,7 +520,7 @@ export const posts = [
 
         <img src="/blog/youtube-channel-audit-ytgrowth.webp" alt="YTGrowth Channel Audit output surfacing the single highest priority fix with competitor benchmarks built in" />
 
-        <p>For creators who want a complete youtube channel audit online without spending hours on manual data collection, it compresses a three-hour audit into under 10 minutes.</p>
+        <p>For creators who want a complete youtube channel audit online without spending hours on manual data collection, it compresses a three-hour audit into under 30 seconds.</p>
 
         <h2>Make Auditing a Habit, Not a Rescue Mission</h2>
 
@@ -534,7 +534,7 @@ export const posts = [
 
         <CtaCard
           to="/features/channel-audit"
-          title="Run a full channel audit in under 10 minutes"
+          title="Run a full channel audit in under 30 seconds"
           sub="Channel Audit runs the same 10-dimension analysis you just read through, surfaces your single highest priority fix, and benchmarks your CTR, retention, and SEO against competitors in your specific niche. Free to try."
           button="Try Channel Audit →"
         />
