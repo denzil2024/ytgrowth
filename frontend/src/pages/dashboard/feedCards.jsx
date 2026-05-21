@@ -7,6 +7,8 @@ import { useState } from 'react'
 import {
   ArrowDown, ArrowRight, ChevronDown, ExternalLink, Eye, Flame,
   RefreshCw, Users,
+  Target, Trophy, BarChart3, Activity, CalendarDays,
+  Clock, TrendingUp, Lightbulb, UserPlus,
   X as XIcon,
 } from 'lucide-react'
 import { C, SHELL, DAYS_SHORT, DAYS_LONG } from './tokens'
