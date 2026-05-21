@@ -3572,21 +3572,10 @@ function DailyIdeasCard({ ideas, lastUpdated, isStale, isFree, refreshing, onRef
 // page, which reads the prefill and pre-runs the search. The user then
 // hits the actual Track button there (which IS the analyze call). This
 // avoids surprise credit burn from a one-click track on the Feed.
-function TitleSuggestionCard({ video, current, rewrite, ageLabel, onApply, onRegenerate, onAskCoach, onDismiss, applyState = 'idle', applyError = '', regenerating = false }) {
-  if (!video || !current || !rewrite) return null
-
-  const curScore = Math.max(0, Math.min(100, Math.round(Number(current.clickScore || 0))))
-  const newScore = Math.max(0, Math.min(100, Math.round(Number(rewrite.clickScore || 0))))
+function TitleSuggestionCard({ video, suggestions, ageLabel, applyingIdx, appliedIdx, applyError, onApply, onOpenStudio, onDismiss }) {
+  if (!video || !suggestions?.length) return null
   const thumbAspect = video.is_short ? '9 / 16' : '16 / 9'
   const thumbWidth  = video.is_short ? 150 : 280
-
-  function scoreTone(s) {
-    if (s >= 80) return { bg: 'rgba(22,163,74,0.16)',  text: '#34d27b', bdr: 'rgba(22,163,74,0.32)' }
-    if (s >= 50) return { bg: 'rgba(217,118,6,0.16)',  text: '#f0a23b', bdr: 'rgba(217,118,6,0.32)' }
-    return            { bg: 'rgba(229,37,27,0.13)',    text: '#fb6a60', bdr: 'rgba(229,37,27,0.32)' }
-  }
-  const curTone = scoreTone(curScore)
-  const newTone = scoreTone(newScore)
 
   return (
     <article style={{
@@ -3596,20 +3585,7 @@ function TitleSuggestionCard({ video, current, rewrite, ageLabel, onApply, onReg
       padding: '14px 18px 16px 18px',
       boxShadow: '0 1px 2px rgba(255,255,255,0.04), 0 6px 18px rgba(255,255,255,0.05), inset 0 1px 0 rgba(255,255,255,0.7)',
       marginBottom: 12,
-      transition: 'box-shadow 0.2s cubic-bezier(0.2,0.7,0.3,1), transform 0.2s cubic-bezier(0.2,0.7,0.3,1), border-color 0.2s',
-    }}
-      onMouseEnter={e => {
-        e.currentTarget.style.boxShadow = '0 2px 6px rgba(255,255,255,0.06), 0 12px 32px rgba(255,255,255,0.07), inset 0 1px 0 rgba(255,255,255,0.7)'
-        e.currentTarget.style.transform = 'translateY(-1px)'
-        e.currentTarget.style.borderColor = 'rgba(255,255,255,0.12)'
-      }}
-      onMouseLeave={e => {
-        e.currentTarget.style.boxShadow = '0 1px 2px rgba(255,255,255,0.04), 0 6px 18px rgba(255,255,255,0.05), inset 0 1px 0 rgba(255,255,255,0.7)'
-        e.currentTarget.style.transform = 'translateY(0)'
-        e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'
-      }}
-    >
-      {/* Plain head: title-case label + age, chat + dismiss right */}
+    }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
         <h3 style={{
           fontSize: 16, fontWeight: 600, color: SHELL.text1,
@@ -3622,25 +3598,6 @@ function TitleSuggestionCard({ video, current, rewrite, ageLabel, onApply, onReg
           }}>· {ageLabel}</span>
         )}
         <div style={{ flex: 1 }}/>
-        {onAskCoach && (
-          <button
-            type="button"
-            onClick={onAskCoach}
-            aria-label="Ask AI Coach about this title"
-            style={{
-              width: 28, height: 28, borderRadius: 8,
-              border: 'none', background: 'transparent',
-              color: 'rgba(255,255,255,0.55)',
-              cursor: 'pointer',
-              display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-              transition: 'background 0.14s, color 0.14s',
-            }}
-            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; e.currentTarget.style.color = SHELL.text1 }}
-            onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'rgba(255,255,255,0.55)' }}
-          >
-            <MessageCircle size={15} strokeWidth={2} />
-          </button>
-        )}
         {onDismiss && (
           <button
             type="button"
@@ -3662,9 +3619,6 @@ function TitleSuggestionCard({ video, current, rewrite, ageLabel, onApply, onReg
         )}
       </div>
 
-      {/* Inset compare panel: thumb left (9:16 for Shorts, 16:9 long-form),
-          before / divider / after stack right. The divider has a centered
-          down-arrow circle, matching VidIQ. */}
       <div style={{
         display: 'flex',
         gap: 16,
@@ -3673,9 +3627,8 @@ function TitleSuggestionCard({ video, current, rewrite, ageLabel, onApply, onReg
         background: 'rgba(255,255,255,0.02)',
         border: '1px solid rgba(255,255,255,0.06)',
         borderRadius: 12,
-        marginBottom: 14,
+        marginBottom: 12,
       }}>
-        {/* Thumbnail */}
         <div style={{ flexShrink: 0, width: thumbWidth }}>
           {video.thumbnail ? (
             <img
@@ -3700,154 +3653,106 @@ function TitleSuggestionCard({ video, current, rewrite, ageLabel, onApply, onReg
               border: '1px solid rgba(255,255,255,0.08)',
             }}/>
           )}
+          <p style={{
+            margin: '8px 0 0',
+            fontSize: 12, fontWeight: 600, color: SHELL.text2,
+            letterSpacing: '-0.01em', lineHeight: 1.35,
+            display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical',
+            overflow: 'hidden', textOverflow: 'ellipsis',
+          }}>{video.title}</p>
         </div>
 
-        {/* Compare stack */}
-        <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 0 }}>
-          {/* Current title row */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12, minWidth: 0, padding: '4px 0' }}>
-            <span style={{
-              flexShrink: 0,
-              width: 32, height: 32, borderRadius: 99,
-              background: curTone.bg, color: curTone.text,
-              border: `1px solid ${curTone.bdr}`,
-              display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: 12, fontWeight: 600,
-              letterSpacing: '-0.02em',
-              fontVariantNumeric: 'tabular-nums',
-            }}>{curScore}</span>
-            <p style={{
-              flex: 1, minWidth: 0, margin: 0,
-              fontSize: 13.5, fontWeight: 600, color: SHELL.text1,
-              letterSpacing: '-0.15px', lineHeight: 1.4,
-              display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical',
-              overflow: 'hidden', textOverflow: 'ellipsis',
-            }}>{current.title}</p>
-          </div>
-
-          {/* Divider with centered arrow-in-circle */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '8px 0' }}>
-            <div style={{ flex: 1, height: 1, background: 'rgba(255,255,255,0.08)' }}/>
-            <span style={{
-              flexShrink: 0,
-              width: 22, height: 22, borderRadius: 99,
-              background: 'rgba(255,255,255,0.06)',
-              border: '1px solid rgba(255,255,255,0.10)',
-              display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-              color: SHELL.text3,
-            }}>
-              <ArrowDown size={12} strokeWidth={2.2} />
-            </span>
-            <div style={{ flex: 1, height: 1, background: 'rgba(255,255,255,0.08)' }}/>
-          </div>
-
-          {/* Rewrite row with inline pencil (jump to SEO Studio for full edit) */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12, minWidth: 0, padding: '4px 0' }}>
-            <span style={{
-              flexShrink: 0,
-              width: 32, height: 32, borderRadius: 99,
-              background: newTone.bg, color: newTone.text,
-              border: `1px solid ${newTone.bdr}`,
-              display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: 12, fontWeight: 600,
-              letterSpacing: '-0.02em',
-              fontVariantNumeric: 'tabular-nums',
-            }}>{newScore}</span>
-            <p style={{
-              flex: 1, minWidth: 0, margin: 0,
-              fontSize: 13.5, fontWeight: 600, color: SHELL.text1,
-              letterSpacing: '-0.15px', lineHeight: 1.4,
-              display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical',
-              overflow: 'hidden', textOverflow: 'ellipsis',
-            }}>{rewrite.title}</p>
-            {onAskCoach && (
-              <button
-                type="button"
-                onClick={onAskCoach}
-                aria-label="Edit this title in SEO Studio"
-                style={{
+        <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: 10 }}>
+          {suggestions.map((s, i) => {
+            const score = Math.max(0, Math.min(100, Math.round(Number(s.score || 0))))
+            const tone  = score >= 80 ? { bg: 'rgba(22,163,74,0.16)',  text: '#34d27b', bdr: 'rgba(22,163,74,0.32)' }
+                        : score >= 50 ? { bg: 'rgba(217,118,6,0.16)',  text: '#f0a23b', bdr: 'rgba(217,118,6,0.32)' }
+                        :                { bg: 'rgba(229,37,27,0.13)', text: '#fb6a60', bdr: 'rgba(229,37,27,0.32)' }
+            const isApplying = applyingIdx === i
+            const isApplied  = appliedIdx  === i
+            const ctaLabel   = isApplied ? 'Applied' : isApplying ? 'Applying…' : 'Apply'
+            return (
+              <div key={i} style={{
+                display: 'flex', alignItems: 'center', gap: 12,
+                padding: '10px 12px',
+                background: SHELL.cardFlat,
+                border: '1px solid rgba(255,255,255,0.08)',
+                borderRadius: 10,
+              }}>
+                <span style={{
                   flexShrink: 0,
-                  width: 28, height: 28, borderRadius: 7,
-                  border: 'none', background: 'transparent',
-                  color: 'rgba(255,255,255,0.55)',
-                  cursor: 'pointer',
+                  width: 34, height: 34, borderRadius: 99,
+                  background: tone.bg, color: tone.text,
+                  border: `1px solid ${tone.bdr}`,
                   display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-                  transition: 'background 0.14s, color 0.14s',
-                }}
-                onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; e.currentTarget.style.color = SHELL.text1 }}
-                onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'rgba(255,255,255,0.55)' }}
-              >
-                <Pencil size={13} strokeWidth={2} />
-              </button>
-            )}
-          </div>
-
-          {rewrite.why && (
-            <p style={{
-              margin: '8px 0 0 44px',
-              fontSize: 12.5, fontWeight: 450, color: SHELL.text3,
-              letterSpacing: '-0.01em', lineHeight: 1.45,
-            }}>{rewrite.why}</p>
-          )}
+                  fontSize: 12.5, fontWeight: 600,
+                  letterSpacing: '-0.02em',
+                  fontVariantNumeric: 'tabular-nums',
+                }}>{score}</span>
+                <p style={{
+                  flex: 1, minWidth: 0, margin: 0,
+                  fontSize: 13.5, fontWeight: 600, color: SHELL.text1,
+                  letterSpacing: '-0.15px', lineHeight: 1.4,
+                }} title={s.why_it_works || ''}>{s.title}</p>
+                <button
+                  type="button"
+                  disabled={isApplying || isApplied}
+                  onClick={() => onApply?.(s, i, video)}
+                  style={{
+                    flexShrink: 0,
+                    display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+                    padding: '7px 14px', borderRadius: 100,
+                    border: 'none',
+                    background: isApplied ? 'rgba(22,163,74,0.85)' : '#e5251b',
+                    color: '#fff',
+                    fontFamily: 'inherit',
+                    fontSize: 12.5, fontWeight: 600, letterSpacing: '-0.05px',
+                    boxShadow: isApplied ? 'none' : '0 1px 3px rgba(229,37,27,0.28)',
+                    cursor: (isApplying || isApplied) ? 'default' : 'pointer',
+                    transition: 'filter 0.14s, transform 0.14s, background 0.2s',
+                  }}
+                  onMouseEnter={e => { if (!isApplying && !isApplied) { e.currentTarget.style.filter = 'brightness(1.08)'; e.currentTarget.style.transform = 'translateY(-1px)' } }}
+                  onMouseLeave={e => { e.currentTarget.style.filter = 'none'; e.currentTarget.style.transform = 'translateY(0)' }}
+                >
+                  {isApplying && <RefreshCw size={12} strokeWidth={2.1} style={{ animation: 'spin 1s linear infinite' }} />}
+                  {ctaLabel}
+                </button>
+              </div>
+            )
+          })}
         </div>
       </div>
 
-      {/* Bottom action row: Regenerate + Apply Title */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
-        <button
-          type="button"
-          disabled={regenerating}
-          onClick={() => onRegenerate?.()}
-          style={{
-            display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 7,
-            padding: '10px 14px', borderRadius: 100,
-            border: '1px solid rgba(255,255,255,0.10)',
-            background: 'rgba(255,255,255,0.03)',
-            color: SHELL.text1,
-            fontFamily: 'inherit',
-            fontSize: 13, fontWeight: 600, letterSpacing: '-0.05px',
-            cursor: regenerating ? 'progress' : 'pointer',
-            opacity: regenerating ? 0.65 : 1,
-            transition: 'background 0.14s, border-color 0.14s',
-          }}
-          onMouseEnter={e => { if (!regenerating) { e.currentTarget.style.background = 'rgba(255,255,255,0.07)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.18)' } }}
-          onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.03)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.10)' }}
-        >
-          <RefreshCw size={13} strokeWidth={2.1} style={regenerating ? { animation: 'spin 1s linear infinite' } : undefined} />
-          {regenerating ? 'Regenerating…' : 'Regenerate'}
-        </button>
-
-        <button
-          type="button"
-          disabled={applyState === 'loading' || applyState === 'success'}
-          onClick={() => onApply?.(rewrite, video)}
-          style={{
-            display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 7,
-            padding: '10px 14px', borderRadius: 100,
-            border: 'none',
-            background: applyState === 'success' ? 'rgba(22,163,74,0.85)' : '#e5251b',
-            color: '#fff',
-            fontFamily: 'inherit',
-            fontSize: 13, fontWeight: 600, letterSpacing: '-0.05px',
-            boxShadow: applyState === 'success' ? 'none' : '0 1px 3px rgba(229,37,27,0.28)',
-            cursor: (applyState === 'loading' || applyState === 'success') ? 'default' : 'pointer',
-            transition: 'filter 0.14s, transform 0.14s, background 0.2s',
-          }}
-          onMouseEnter={e => { if (applyState === 'idle' || applyState === 'error') { e.currentTarget.style.filter = 'brightness(1.08)'; e.currentTarget.style.transform = 'translateY(-1px)' } }}
-          onMouseLeave={e => { e.currentTarget.style.filter = 'none'; e.currentTarget.style.transform = 'translateY(0)' }}
-        >
-          {applyState === 'loading' && <RefreshCw size={13} strokeWidth={2.1} style={{ animation: 'spin 1s linear infinite' }} />}
-          {applyState === 'success'
-            ? 'Applied to YouTube'
-            : applyState === 'loading'
-              ? 'Applying…'
-              : applyState === 'error'
-                ? 'Retry Apply'
-                : 'Apply Title'}
-        </button>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, paddingTop: 4 }}>
+        <span style={{ fontSize: 11.5, fontWeight: 500, color: SHELL.text3, letterSpacing: '-0.01em' }}>
+          From your last SEO Studio analysis
+        </span>
+        <div style={{ flex: 1 }}/>
+        {onOpenStudio && (
+          <button
+            type="button"
+            onClick={onOpenStudio}
+            style={{
+              display: 'inline-flex', alignItems: 'center', gap: 5,
+              padding: '6px 11px', borderRadius: 100,
+              border: '1px solid rgba(255,255,255,0.08)',
+              background: 'rgba(255,255,255,0.02)',
+              color: SHELL.text2,
+              fontFamily: 'inherit',
+              fontSize: 11.5, fontWeight: 600, letterSpacing: '-0.05px',
+              cursor: 'pointer',
+              transition: 'background 0.14s, border-color 0.14s, color 0.14s',
+            }}
+            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.16)'; e.currentTarget.style.color = SHELL.text1 }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.02)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'; e.currentTarget.style.color = SHELL.text2 }}
+          >
+            Open in SEO Studio
+            <ArrowRight size={11} strokeWidth={2.4} />
+          </button>
+        )}
       </div>
 
-      {applyState === 'error' && applyError && (
+      {applyError && (
         <p style={{ margin: '8px 2px 0', fontSize: 12, fontWeight: 500, color: '#fb6a60' }}>
           {applyError}
         </p>
@@ -5113,9 +5018,9 @@ export default function Dashboard() {
   const [dailyIdeas, setDailyIdeas] = useState(null)
   const [suggestedCompetitors, setSuggestedCompetitors] = useState(null)
   const [titleSuggestion, setTitleSuggestion] = useState(null)
-  const [titleApplyState, setTitleApplyState] = useState('idle')
+  const [titleApplyingIdx, setTitleApplyingIdx] = useState(null)
+  const [titleAppliedIdx, setTitleAppliedIdx] = useState(null)
   const [titleApplyError, setTitleApplyError] = useState('')
-  const [titleRegenerating, setTitleRegenerating] = useState(false)
   const [refreshingIdeas, setRefreshingIdeas] = useState(false)
   // Competitor Activity (recent uploads from tracked competitors).
   const [competitorActivity, setCompetitorActivity] = useState(null)
@@ -5278,13 +5183,13 @@ export default function Dashboard() {
       .then(d => { if (d && d.ok && d.suggestions?.length) setSuggestedCompetitors(d) })
       .catch(() => {})
 
-    // Load Title Suggestion: picks a recent under-performer locally, asks
-    // Claude to score the current title and write ONE stronger rewrite
-    // (cross-user cached, 14d TTL). Backend already enforces the
-    // rewrite>=current+8 quality gate; we re-check on render too.
+    // Load Title Suggestion: backend walks the user's videos most-recent
+    // first and returns the first one that already has a SeoAnalysisCache
+    // row. The suggestions are copied verbatim from that cached SEO Studio
+    // analysis, so the Feed reuses Studio's output (no new Claude / quota).
     fetch('/dashboard/title-suggestion', { credentials: 'include' })
       .then(r => r.ok ? r.json() : null)
-      .then(d => { if (d && d.ok && d.video && d.current && d.rewrite) setTitleSuggestion(d) })
+      .then(d => { if (d && d.ok && d.video && d.suggestions?.length) setTitleSuggestion(d) })
       .catch(() => {})
 
     // Load plan + per-feature gate state (for free-tier gating on child pages).
@@ -6359,63 +6264,44 @@ export default function Dashboard() {
                   />
                 ) : null
 
-                const titleSuggestionBlock = (feedFilter === 'all' || feedFilter === 'insights') && titleSuggestion?.video && titleSuggestion?.current && titleSuggestion?.rewrite ? (() => {
-                  const dismissKey = `ytg_title_suggestion_dismissed:${data?.channel?.channel_id || 'x'}:${titleSuggestion.video.video_id || 'x'}`
+                const titleSuggestionBlock = (feedFilter === 'all' || feedFilter === 'insights') && titleSuggestion?.video && titleSuggestion?.suggestions?.length ? (() => {
+                  const dismissKey = `ytg_title_suggestion_dismissed_v5:${data?.channel?.channel_id || 'x'}:${titleSuggestion.video.video_id || 'x'}`
                   try { if (localStorage.getItem(dismissKey)) return null } catch {}
-                  // Belt-and-braces em-dash check (banned brand-wide). The
-                  // backend strips them, but if one survives we refuse to
-                  // render the card. Quality threshold is enforced server-
-                  // side so the user actually sees suggestions.
-                  const rewriteTitle = String(titleSuggestion.rewrite.title || '')
-                  if (rewriteTitle.includes('—') || rewriteTitle.includes('–')) return null
                   return (
                     <TitleSuggestionCard
                       key="title-suggestion"
                       video={titleSuggestion.video}
-                      current={titleSuggestion.current}
-                      rewrite={titleSuggestion.rewrite}
+                      suggestions={titleSuggestion.suggestions}
                       ageLabel={titleSuggestion.age_label || ''}
-                      applyState={titleApplyState}
+                      applyingIdx={titleApplyingIdx}
+                      appliedIdx={titleAppliedIdx}
                       applyError={titleApplyError}
-                      regenerating={titleRegenerating}
-                      onApply={async (alt, vid) => {
-                        if (!alt?.title || !vid?.video_id) return
-                        setTitleApplyState('loading')
+                      onApply={async (s, i, vid) => {
+                        if (!s?.title || !vid?.video_id) return
+                        setTitleApplyingIdx(i)
                         setTitleApplyError('')
                         try {
                           const res = await fetch('/seo/update-video', {
                             method: 'POST',
                             credentials: 'include',
                             headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ video_id: vid.video_id, title: alt.title }),
+                            body: JSON.stringify({ video_id: vid.video_id, title: s.title }),
                           })
                           const d = await res.json().catch(() => ({}))
                           if (!res.ok || d?.error) {
-                            setTitleApplyState('error')
                             setTitleApplyError(d?.error || 'Update failed. Try again.')
                           } else {
-                            setTitleApplyState('success')
+                            setTitleAppliedIdx(i)
                           }
                         } catch {
-                          setTitleApplyState('error')
                           setTitleApplyError('Could not reach the server.')
+                        } finally {
+                          setTitleApplyingIdx(null)
                         }
                       }}
-                      onRegenerate={async () => {
-                        if (titleRegenerating) return
-                        setTitleRegenerating(true)
-                        setTitleApplyState('idle')
-                        setTitleApplyError('')
+                      onOpenStudio={() => {
                         try {
-                          const res = await fetch('/dashboard/title-suggestion?refresh=1', { credentials: 'include' })
-                          const d = await res.ok ? await res.json() : null
-                          if (d && d.ok && d.video && d.current && d.rewrite) setTitleSuggestion(d)
-                        } catch {}
-                        finally { setTitleRegenerating(false) }
-                      }}
-                      onAskCoach={() => {
-                        try {
-                          if (titleSuggestion.rewrite?.title) sessionStorage.setItem('seoOptimizer_prefilledTitle', titleSuggestion.rewrite.title)
+                          if (titleSuggestion.video?.title) sessionStorage.setItem('seoOptimizer_prefilledTitle', titleSuggestion.video.title)
                         } catch {}
                         setNav('SEO Studio')
                       }}

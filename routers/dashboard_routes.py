@@ -38,7 +38,7 @@ from app.niche_outliers import (
     is_stale,
     personalize_angle,
 )
-from database.models import SessionLocal, SeoOptimization, CompetitorAnalysisCache, CompetitorActivityCache, TopChannelCache, YoutubeSearchCache
+from database.models import SessionLocal, SeoOptimization, SeoAnalysisCache, CompetitorAnalysisCache, CompetitorActivityCache, TopChannelCache, YoutubeSearchCache
 from routers.auth import get_session
 from routers.admin_routes import _is_admin
 
@@ -731,19 +731,15 @@ def suggested_competitors(request: Request):
 
 
 @router.get("/title-suggestion")
-def title_suggestion(request: Request, refresh: int = 0):
-    """Title rewrite suggestion for one of the creator's recent under-performers.
+def title_suggestion(request: Request):
+    """Surface SEO Studio title suggestions in the Feed.
 
-    Picks a video locally from the session (no YouTube quota): the most
-    recent video below the creator's recent-median views, falling back to
-    the most recent video if the channel is too small to have a meaningful
-    median.
+    Walks the user's videos most-recent-first and returns the first one
+    that already has a row in SeoAnalysisCache (i.e. they ran SEO Studio
+    on it). The suggestions are copied verbatim from that cached result,
+    so the Feed card uses the exact same titles SEO Studio produced.
 
-    Single Claude call evaluates the current title (clickScore + weakness)
-    AND generates ONE stronger rewrite (clickScore + why). Wrapped in
-    `cached_ai_output` so two creators with overlapping inputs share the
-    same result. 14d TTL. Quality gate: only ships if rewrite scores at
-    least 8 points higher than the current title (else the card hides).
+    Zero new YouTube quota, zero new Claude calls. Reads only.
     """
     data, _ = get_session(request.session.get("session_id"))
     if not data:
@@ -751,188 +747,18 @@ def title_suggestion(request: Request, refresh: int = 0):
 
     channel = (data or {}).get("channel", {}) or {}
     videos  = (data or {}).get("videos",  []) or []
-    if not videos:
+    channel_id = channel.get("channel_id", "") or ""
+    if not channel_id or not videos:
         return JSONResponse({"ok": True, "video": None})
 
-    from app.competitors import extract_niche_keywords
     from app.insights import parse_duration_seconds
 
-    # Recent pool: last 90 days, has a title we can rewrite. Fall back to
-    # the most recent 15 if nothing falls in the 90d window.
-    cutoff = (datetime.datetime.now() - datetime.timedelta(days=90)).strftime("%Y-%m-%d")
-    recent = [v for v in videos if (v.get("published_at") or "")[:10] >= cutoff and v.get("title")]
-    if len(recent) < 3:
-        recent = [v for v in videos if v.get("title")][:15]
-    if not recent:
-        return JSONResponse({"ok": True, "video": None})
-
-    views_sorted = sorted(int(v.get("views", 0) or 0) for v in recent)
-    median_views = views_sorted[len(views_sorted) // 2] if views_sorted else 0
-    under = [v for v in recent if int(v.get("views", 0) or 0) < median_views]
-
-    if under:
-        pick = sorted(under, key=lambda v: (v.get("published_at") or ""), reverse=True)[0]
-    else:
-        pick = sorted(recent, key=lambda v: (v.get("published_at") or ""), reverse=True)[0]
-
-    is_short = parse_duration_seconds(pick.get("duration", "PT0S")) <= 60
-    niche_kw = extract_niche_keywords(channel, videos) or []
-
-    # Winning titles in this niche, pulled from the creator's own outliers
-    # cache so Claude sees what's already working in the space. Falls back
-    # to an empty list when no outliers report has been run yet.
-    winning_titles = []
-    db = SessionLocal()
-    try:
-        from database.models import OutliersReport
-        my_id = channel.get("channel_id") or ""
-        if my_id:
-            row = (
-                db.query(OutliersReport)
-                .filter_by(channel_id=my_id)
-                .order_by(OutliersReport.created_at.desc())
-                .first()
-            )
-            if row and row.result_json:
-                try:
-                    payload = json.loads(row.result_json) or {}
-                    vids = (payload.get("videos") or [])[:3]
-                    winning_titles = [str(v.get("title") or "").strip() for v in vids if v.get("title")]
-                except Exception:
-                    pass
-    except Exception:
-        pass
-    finally:
-        db.close()
-
-    def _subs_tier(n: int) -> str:
-        if n < 10_000:    return "micro"
-        if n < 100_000:   return "small"
-        if n < 1_000_000: return "mid"
-        return "large"
-
-    original_title = (pick.get("title") or "").strip()
-    description    = (pick.get("description") or "").strip()[:240]
-
-    cache_inputs = {
-        "original_title":  original_title,
-        "description":     description,
-        "niche_kw":        sorted((k or "").strip().lower() for k in niche_kw[:5]),
-        "subs_tier":       _subs_tier(int(channel.get("subscribers", 0) or 0)),
-        "is_short":        bool(is_short),
-        "winning_titles":  sorted(winning_titles),
-        "model":           "claude-sonnet-4-6",
-        "prompt_version":  "v3",
-    }
-    # On explicit Regenerate, bust the cache by adding a nonce so the user
-    # gets a fresh Claude call instead of the previously cached rewrite.
-    if refresh:
-        cache_inputs["nonce"] = int(datetime.datetime.now().timestamp())
-
-    def _fetch():
-        from app.utils import make_anthropic_client
-        import re as _re
-        client = make_anthropic_client()
-        fmt_label = "Short (under 60s)" if is_short else "Long-form"
-        winners_block = ""
-        if winning_titles:
-            joined = "\n".join(f"- {t}" for t in winning_titles)
-            winners_block = f"\nTitles already winning in this niche (for pattern inspiration, do NOT copy):\n{joined}\n"
-        desc_block = f'\nVideo description (first 240 chars): "{description}"\n' if description else ""
-
-        prompt = f"""You are a YouTube title strategist. The video below underperformed. Score the current title, then write ONE stronger rewrite.
-
-Original title: "{original_title}"
-Format: {fmt_label}
-Creator size tier: {cache_inputs["subs_tier"]}
-Niche keywords the channel ranks for: {cache_inputs["niche_kw"]}{desc_block}{winners_block}
-
-Tasks - return ONLY valid JSON, no markdown:
-1. current: {{"clickScore":0-100, "weakness":"one short sentence on the single biggest problem with the original title"}}
-2. rewrite: {{"title":"<=70 chars, natural human phrasing, not clickbait, in the same niche voice", "clickScore":0-100, "why":"one short sentence on what changed and why it should land harder"}}
-
-Hard rules for the rewrite:
-- NO em-dashes (use commas, parentheses, colons, or split sentences instead).
-- NO " | " (pipe) separator.
-- NO clickbait phrases ("you won't believe", "shocking", "this changed everything", etc).
-- Lead with the payoff: a specific number, a concrete result, or a first-person stake.
-- Keep the niche voice from the winning titles above without copying any of them.
-- Score the rewrite high (80+) only if you genuinely believe it will outperform the original. Otherwise score it honestly.
-
-{{"current":{{"clickScore":0,"weakness":""}},"rewrite":{{"title":"","clickScore":0,"why":""}}}}"""
-        try:
-            resp = client.messages.create(
-                model="claude-sonnet-4-6",
-                max_tokens=500,
-                system="You evaluate and rewrite YouTube titles. Return only valid JSON, no markdown.",
-                messages=[{"role": "user", "content": prompt}],
-            )
-            raw = resp.content[0].text.strip()
-            if raw.startswith("```"):
-                raw = _re.sub(r"^```[a-z]*\n?", "", raw)
-                raw = _re.sub(r"\n?```$", "", raw)
-            result = json.loads(raw)
-            cur = result.get("current") or {}
-            rew = result.get("rewrite") or {}
-
-            def _clean(s: str) -> str:
-                # Em-dash + en-dash are banned brand-wide. Strip them and the
-                # " | " separator that Claude likes to lean on. Also strip
-                # straight pipes used as separators.
-                t = (s or "").strip()
-                t = t.replace("—", ",").replace("–", ",")
-                t = t.replace(" | ", ", ").replace("|", ",")
-                # Collapse "title, , subtitle" or trailing commas from the swaps.
-                import re as _re2
-                t = _re2.sub(r"\s*,\s*,\s*", ", ", t)
-                t = _re2.sub(r"\s+", " ", t).strip(" ,")
-                return t
-
-            return {
-                "current": {
-                    "title":      original_title,
-                    "clickScore": int(cur.get("clickScore", 0) or 0),
-                    "weakness":   _clean(cur.get("weakness", "") or ""),
-                },
-                "rewrite": {
-                    "title":      _clean(rew.get("title", "") or ""),
-                    "clickScore": int(rew.get("clickScore", 0) or 0),
-                    "why":        _clean(rew.get("why", "") or ""),
-                },
-            }
-        except Exception as e:
-            print(f"[title-suggestion] Claude error: {e}")
-            return {"_error": str(e)}
-
-    from app.utils import cached_ai_output
-    out = cached_ai_output(
-        function_name="feed_title_suggestion",
-        inputs=cache_inputs,
-        ttl_hours=24 * 14,
-        fetch_fn=_fetch,
+    sorted_videos = sorted(
+        [v for v in videos if v.get("title")],
+        key=lambda v: (v.get("published_at") or ""),
+        reverse=True,
     )
 
-    current = out.get("current") or None
-    rewrite = out.get("rewrite") or None
-
-    # Quality gate: rewrite must beat the current by 5+ points. Earlier
-    # we also had a 75-point absolute floor, which silently hid the card
-    # for users whose Claude-rated current title was low (the rewrite
-    # would still be an improvement, just not in the 75+ band). The user
-    # wants to SEE rewrites whenever there's a real lift, so the floor is
-    # gone, only the relative lift gate remains. Em-dash check stays.
-    if (
-        not current
-        or not rewrite
-        or not rewrite.get("title")
-        or "—" in rewrite["title"]
-        or "–" in rewrite["title"]
-        or int(rewrite.get("clickScore") or 0) - int(current.get("clickScore") or 0) < 5
-    ):
-        return JSONResponse({"ok": True, "video": None})
-
-    # Relative-age label "1d ago" / "3d ago" / "1mo ago" — small UI niceness
-    # since the card head shows it next to the title.
     def _age_label(iso: str) -> str:
         if not iso:
             return ""
@@ -941,24 +767,65 @@ Hard rules for the rewrite:
         except Exception:
             return ""
         days = (datetime.datetime.now() - dt).days
-        if days <= 0:    return "today"
-        if days == 1:    return "1d ago"
-        if days < 7:     return f"{days}d ago"
-        if days < 30:    return f"{days // 7}w ago"
-        if days < 365:   return f"{days // 30}mo ago"
+        if days <= 0:  return "today"
+        if days == 1:  return "1d ago"
+        if days < 7:   return f"{days}d ago"
+        if days < 30:  return f"{days // 7}w ago"
+        if days < 365: return f"{days // 30}mo ago"
         return f"{days // 365}y ago"
 
-    return JSONResponse({
-        "ok": True,
-        "video": {
-            "video_id":     pick.get("video_id", ""),
-            "title":        original_title,
-            "thumbnail":    pick.get("thumbnail", ""),
-            "views":        int(pick.get("views", 0) or 0),
-            "published_at": (pick.get("published_at") or "")[:10],
-            "is_short":     bool(is_short),
-        },
-        "current":   current,
-        "rewrite":   rewrite,
-        "age_label": _age_label(pick.get("published_at", "")),
-    })
+    db = SessionLocal()
+    try:
+        for v in sorted_videos[:25]:
+            title = (v.get("title") or "").strip()
+            if not title:
+                continue
+            row = (
+                db.query(SeoAnalysisCache)
+                .filter_by(channel_id=channel_id, title_lower=title.lower())
+                .first()
+            )
+            if not row or not row.result_json:
+                continue
+            try:
+                result = json.loads(row.result_json) or {}
+            except Exception:
+                continue
+            raw_suggestions = result.get("suggestions") or []
+            if not raw_suggestions:
+                continue
+
+            # Pass through only the fields the Feed card actually uses.
+            # Drop any rewrite that still contains an em-/en-dash (brand rule).
+            suggestions = []
+            for s in raw_suggestions[:3]:
+                t = (s.get("title") or "").strip()
+                if not t or "—" in t or "–" in t:
+                    continue
+                suggestions.append({
+                    "title":        t,
+                    "score":        int(s.get("score") or 0),
+                    "why_it_works": (s.get("why_it_works") or "").strip(),
+                    "angle":        (s.get("angle") or "").strip(),
+                })
+            if not suggestions:
+                continue
+
+            is_short = parse_duration_seconds(v.get("duration", "PT0S")) <= 60
+            return JSONResponse({
+                "ok": True,
+                "video": {
+                    "video_id":     v.get("video_id", ""),
+                    "title":        title,
+                    "thumbnail":    v.get("thumbnail", ""),
+                    "views":        int(v.get("views", 0) or 0),
+                    "published_at": (v.get("published_at") or "")[:10],
+                    "is_short":     bool(is_short),
+                },
+                "suggestions": suggestions,
+                "age_label":   _age_label(v.get("published_at", "")),
+            })
+
+        return JSONResponse({"ok": True, "video": None})
+    finally:
+        db.close()
