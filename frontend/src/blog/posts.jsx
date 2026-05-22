@@ -31,6 +31,31 @@ export function CtaButton({ to = '/dashboard', children = 'Try free →' }) {
   return <a href={to} className="bp-cta-inline">{children}</a>
 }
 
+/* Copy-to-clipboard pill — same red pill styling as CtaButton but the click
+   handler writes a fixed string of text to the user's clipboard. Use above
+   any <pre> block of template text the reader is meant to paste verbatim
+   (description templates, channel about templates, script outlines, etc.).
+   The label flips to "Copied" for 1.6s on success. */
+export function CopyTemplateButton({ text, label = 'Copy template →' }) {
+  return (
+    <a
+      href="#"
+      onClick={(e) => {
+        e.preventDefault()
+        if (typeof navigator === 'undefined' || !navigator.clipboard) return
+        const el = e.currentTarget
+        navigator.clipboard.writeText(text).then(() => {
+          if (!el) return
+          const orig = el.textContent
+          el.textContent = 'Copied'
+          setTimeout(() => { el.textContent = orig }, 1600)
+        }).catch(() => {})
+      }}
+      className="bp-cta-inline"
+    >{label}</a>
+  )
+}
+
 /* Row-style promo card — title + sub on the left, red pill on the right.
    Use to upsell a specific feature or surface a free tool inside a post. */
 export function CtaCard({ to = '/dashboard', title, sub, button = 'Try free →' }) {
@@ -56,6 +81,328 @@ export const CATEGORIES = {
 }
 
 export const posts = [
+  {
+    slug: 'youtube-description-template',
+    title: 'YouTube Description Template: How to Write Video and Channel Descriptions That Work',
+    excerpt: 'A YouTube description is the second most important piece of metadata after the title. A complete template for every content type, a separate template for your channel, and the best practices that apply to both.',
+    date: '2026-05-22',
+    category: CATEGORIES.seo,
+    cover: '/blog/youtube-description-template-cover.webp',
+    author: 'Denzil',
+    readTime: '10 min read',
+    content: () => {
+      const TUTORIAL_TEMPLATE = `In this video you will learn [specific outcome the viewer achieves]. This step-by-step guide covers [key steps or tools covered] so you can [result] without [common obstacle].
+
+In this tutorial you will learn:
+
+- [Step or point 1]
+- [Step or point 2]
+- [Step or point 3]
+
+Timestamps:
+00:00 Introduction
+01:00 [Section title]
+03:30 [Section title]
+06:00 [Section title]
+
+Watch this next: [Related video title] - [Link]
+
+Subscribe for new [tutorials/videos] every [day]: [Subscribe link]
+
+[Resource mentioned in video]: [Link]
+[Website or tool]: [Link]
+
+#[BroadNicheTag] #[SpecificNicheTag] #[SpecificNicheTag] #[YourChannelName]`
+
+      const REVIEW_TEMPLATE = `In this video I review [product name] after [time period] of use and give you an honest verdict on whether it is worth buying. This [product name] review covers [key aspects: pricing, features, performance] so you can make an informed decision before spending your money.
+
+What I cover in this review:
+
+- [Feature or aspect 1]
+- [Feature or aspect 2]
+- [Feature or aspect 3]
+- Final verdict
+
+Timestamps:
+00:00 Quick verdict
+01:10 Setup and pricing
+03:30 Feature breakdown
+06:45 Best use cases
+[Last timestamp] My recommendation
+
+Watch this next: [Related review or comparison] - [Link]
+
+Subscribe for honest reviews every [day]: [Subscribe link]
+
+[Product link or affiliate link]: [Link]
+[Alternative product mentioned]: [Link]
+
+#[BroadNicheTag] #[ProductTag] #[ReviewTag] #[YourChannelName]`
+
+      const VLOG_TEMPLATE = `In this video I take you through [specific day, event, or experience]. If you are [target viewer identity] this video shows you what [experience or situation] looks like in real life.
+
+In this vlog:
+
+- [Moment or highlight 1]
+- [Moment or highlight 2]
+- [Moment or highlight 3]
+
+Timestamps:
+00:00 Introduction
+01:00 [First moment]
+04:00 [Second moment]
+07:30 [Third moment]
+
+Watch this next: [Related vlog or video] - [Link]
+
+Subscribe for new vlogs every [day]: [Subscribe link]
+
+[Products or places mentioned]: [Link]
+[Social media]: [Link]
+
+#[BroadNicheTag] #[SpecificNicheTag] #[VlogTag] #[YourChannelName]`
+
+      const EDUCATIONAL_CHANNEL = `[Channel name] publishes weekly tutorials on [specific topic] for [target viewer]. Every video covers [type of content: step-by-step guides, tool reviews, strategy breakdowns] so you can [specific outcome] without [common obstacles].
+
+New videos every [day of week].
+
+Topics covered:
+- [Topic 1]
+- [Topic 2]
+- [Topic 3]
+
+Subscribe for new tutorials every [day]: [Subscribe link]
+
+[Website or free resource]: [Link]`
+
+      const PERSONAL_CHANNEL = `[Your name] is a [your role or identity] sharing [type of content] for [target viewer]. This channel covers [content pillar 1], [content pillar 2], and [content pillar 3] every [upload frequency].
+
+If you are [specific viewer identity] looking to [specific outcome], subscribe for new videos every [day].
+
+[Website]: [Link]
+[Instagram or other platform]: [Link]`
+
+      const BUSINESS_CHANNEL = `[Brand name] is a [type of business] helping [target customer] achieve [specific outcome]. Our channel publishes [type of content: tutorials, case studies, product demos, industry insights] every [upload frequency].
+
+Subscribe to stay updated on [content topic] and learn how to [key benefit].
+
+[Website]: [Link]
+[Product or service page]: [Link]
+[Social media]: [Link]`
+
+      return (
+      <>
+        <p>A YouTube description is the second most important piece of metadata on any video after the title. YouTube reads it to categorize your content, match it to search queries, and decide which suggested feeds to place it in.</p>
+
+        <p>Most creators treat it as an afterthought. A youtube description template fixes that by giving you a proven structure to fill in before every upload rather than writing from a blank field under time pressure.</p>
+
+        <p>This guide covers a complete youtube video description template for every content type, a separate template for your channel description, and the best practices that apply to both.</p>
+
+        <h2>Why YouTube Descriptions Matter More Than Most Creators Think</h2>
+
+        <p>YouTube cannot watch your video before deciding where to distribute it. It reads your metadata first. Your title, description, and tags are the three signals it uses to categorize your content and match it to the right search queries and suggested feeds. A weak description leaves that categorization incomplete.</p>
+
+        <p>The description field has two distinct zones that serve different purposes:</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Zone</th>
+              <th>Character Range</th>
+              <th>Who Reads It</th>
+              <th>What It Does</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Above the fold</td><td>First 200 characters</td><td>Viewers and algorithm</td><td>Hook the viewer, front-load primary keyword</td></tr>
+            <tr><td>Below the fold</td><td>Characters 201 to 5,000</td><td>Algorithm and engaged viewers</td><td>Supporting keywords, links, timestamps, CTAs</td></tr>
+          </tbody>
+        </table>
+
+        <p>The first 200 characters appear above the "Show More" button on both desktop and mobile without the viewer needing to expand the description. Most viewers never click Show More. That makes the opening two sentences the most valuable real estate in your entire description.</p>
+
+        <p>Everything above the fold should earn its place. Your primary keyword belongs in the first sentence. Your supporting keyword variation belongs in the second. Everything else goes below the fold where it adds SEO value without competing for the viewer's attention in the critical first impression window.</p>
+
+        <p>A strong description and a strong <a href="/blog/youtube-title">title work as a combined SEO signal</a>. YouTube reads both together to build its understanding of your video's topic. A title targeting one keyword and a description targeting a completely different one sends a conflicting signal that weakens both.</p>
+
+        <h2>The YouTube Video Description Template</h2>
+
+        <p>This is the master youtube video description template you can apply to every upload. Each section has a specific job. Fill them in order and the description is complete before you publish.</p>
+
+        <h3>Section 1: Hook and Keyword Opening (First 200 Characters)</h3>
+
+        <p>State what the video covers and include your <a href="/blog/youtube-tag-finder">primary keyword naturally</a> in the first sentence. Add a supporting keyword variation in the second. Keep this to two sentences maximum. Everything in this section appears above the Show More button without the viewer needing to expand the description.</p>
+
+        <p><strong>Example:</strong> "In this video you will learn how to write a YouTube description that ranks in search and keeps viewers watching. This complete youtube description template covers every section from keyword placement to CTAs."</p>
+
+        <h3>Section 2: Video Summary (100 to 150 Words)</h3>
+
+        <p>Expand on the opening with a short paragraph summarizing what the viewer will learn. Use natural <a href="/blog/youtube-tags">keyword variations</a> throughout. Cover the main problem the video solves, the key points addressed, and who the video is most useful for.</p>
+
+        <h3>Section 3: Timestamps and Chapters</h3>
+
+        <p>Add timestamped chapters for any video over five minutes. Format them as:</p>
+
+        <pre>00:00 Introduction
+01:30 First section title
+04:15 Second section title
+07:40 Third section title</pre>
+
+        <h3>Section 4: Call to Action and Next Video Link</h3>
+
+        <p>One primary CTA is enough. Link to the most relevant video on your channel to extend <a href="/blog/youtube-watch-hours">viewer session time</a>. Example: "Watch this next: [Video Title] - [Link] / Subscribe for new videos every [day]: [Subscribe Link]"</p>
+
+        <h3>Section 5: Important Links</h3>
+
+        <p>Include relevant external links one per line. Website, social media profiles, affiliate products, or free resources mentioned in the video.</p>
+
+        <h3>Section 6: Hashtags</h3>
+
+        <p>Add 3 to 5 hashtags at the bottom of the description following the 3-tier framework: one broad, two niche-specific, one brand.</p>
+
+        <h2>Copy-Paste YouTube Video Description Templates by Content Type</h2>
+
+        <p>These three templates apply the master structure to specific content types. Replace the bracketed placeholders with your own details before publishing. Use the copy button above each template to grab the full text to your clipboard, then paste it directly into your video's description field.</p>
+
+        <h3>Tutorial and How-To Videos</h3>
+
+        <p><CopyTemplateButton text={TUTORIAL_TEMPLATE} /></p>
+
+        <pre>{TUTORIAL_TEMPLATE}</pre>
+
+        <h3>Product Review and Comparison Videos</h3>
+
+        <p><CopyTemplateButton text={REVIEW_TEMPLATE} /></p>
+
+        <pre>{REVIEW_TEMPLATE}</pre>
+
+        <h3>Vlog and Day in the Life Videos</h3>
+
+        <p><CopyTemplateButton text={VLOG_TEMPLATE} /></p>
+
+        <pre>{VLOG_TEMPLATE}</pre>
+
+        <CtaCard
+          to="/features/seo-studio"
+          title="One workflow for title, description, tags, and hashtags"
+          sub="SEO Studio runs your complete metadata against the top-ranking videos in your niche and pushes the winning combination to YouTube with one click, so the template above ships fully optimized rather than half-applied. Free to try."
+          button="Try SEO Studio →"
+        />
+
+        <h2>How to Write the Best Description for a YouTube Channel</h2>
+
+        <p>Your channel description sits on your About page and serves a different purpose from your video descriptions. It is not a summary of one video. It is a pitch to every new visitor who lands on your channel page and wants to <a href="/blog/free-subs-on-youtube">decide whether subscribing is worth their time</a>.</p>
+
+        <p>The channel description has a 1,000-character limit. That is approximately 150 to 200 words. Every word needs to earn its place.</p>
+
+        <img src="/blog/youtube-description-template-best-description.webp" alt="A clear, specific YouTube channel description that states who the channel serves, what it delivers, and how often" />
+
+        <p>What a good youtube channel description must cover:</p>
+
+        <ul>
+          <li><strong>Who the channel is for:</strong> State your target viewer in the first sentence. "This channel is for small business owners who want to grow on YouTube without a production team" is specific. "Welcome to my channel" is not.</li>
+          <li><strong>What the channel delivers:</strong> Describe the type of content you publish and the specific value it provides. Tutorial videos, product reviews, weekly vlogs, and industry commentary are all specific. "All kinds of videos" is not.</li>
+          <li><strong>How often you publish:</strong> Include your upload schedule. A viewer deciding whether to subscribe wants to know what they are committing to.</li>
+          <li><strong>Primary keywords:</strong> YouTube reads your channel description for <a href="/blog/what-is-youtube-seo">topic categorization</a> the same way it reads video descriptions. Include your two or three core niche keywords naturally within the first 200 characters.</li>
+          <li><strong>A call to action:</strong> End with one clear instruction. Subscribe, visit your website, or follow on social media. One CTA is enough.</li>
+        </ul>
+
+        <p>What to leave out:</p>
+
+        <ul>
+          <li>Generic welcome phrases that waste character space</li>
+          <li>Lists of every topic you have ever covered</li>
+          <li>Personal backstory that does not relate to the viewer's decision to subscribe</li>
+        </ul>
+
+        <h2>YouTube Channel Description Examples and Templates</h2>
+
+        <p>These three templates cover the most common channel types. Each one stays within the 1,000-character limit. Replace the bracketed placeholders with your own details, then paste into your About page.</p>
+
+        <h3>Educational and Tutorial Channel</h3>
+
+        <p><CopyTemplateButton text={EDUCATIONAL_CHANNEL} /></p>
+
+        <pre>{EDUCATIONAL_CHANNEL}</pre>
+
+        <h3>Personal Brand and Vlog Channel</h3>
+
+        <p><CopyTemplateButton text={PERSONAL_CHANNEL} /></p>
+
+        <pre>{PERSONAL_CHANNEL}</pre>
+
+        <h3>Business and Brand Channel</h3>
+
+        <p><CopyTemplateButton text={BUSINESS_CHANNEL} /></p>
+
+        <pre>{BUSINESS_CHANNEL}</pre>
+
+        <p>A good youtube channel description works the same way across all three templates. It leads with who the channel serves, states what it delivers, and ends with one clear next step. The specific details change. The structure does not.</p>
+
+        <h2>YouTube Description Best Practices</h2>
+
+        <p>These six rules apply to every description you write, whether for a video upload or your channel About page.</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Best Practice</th>
+              <th>Why It Matters</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Front-load your primary keyword</td><td>YouTube and viewers both read left to right. Keywords in the first sentence carry more SEO weight than those buried further down</td></tr>
+            <tr><td>Keep CTAs above the fold</td><td>The first 200 characters are visible without clicking Show More. Place your most important link or action within that window</td></tr>
+            <tr><td>Use natural keyword variation</td><td>Repeating the same keyword phrase multiple times does not improve ranking. Use synonyms and related phrases to cover more search queries naturally</td></tr>
+            <tr><td>Keep paragraphs short</td><td>Long blocks of text in descriptions reduce readability. Two to three sentences per paragraph maximum</td></tr>
+            <tr><td>Update old descriptions when refreshing content</td><td>Updating a description on an existing video sends a fresh indexing signal to the algorithm and can improve search ranking on videos that have stalled</td></tr>
+            <tr><td>Never copy the same description across multiple videos</td><td>Duplicate descriptions are treated as low-quality metadata by YouTube and can suppress search visibility across all affected videos</td></tr>
+          </tbody>
+        </table>
+
+        <blockquote><strong>Pro Tip:</strong> YouTube Studio allows you to set a default description that pre-populates every new upload. Use this feature to add your permanent links, social media handles, subscribe CTA, and hashtags automatically. You only need to fill in the video-specific sections at the top before publishing. To set it up, go to YouTube Studio, click Settings, then Upload Defaults, and add your template in the Description field.</blockquote>
+
+        <p>The <a href="/features/seo-studio">SEO Studio</a> in ytgrowth.io covers full metadata optimization including description structure, keyword placement, and tag recommendations in one workflow so every upload is optimized before it goes live.</p>
+
+        <img src="/blog/youtube-description-template-seo-studio.webp" alt="SEO Studio scoring a full video description against the live YouTube niche before upload" />
+
+        <h2>Frequently Asked Questions</h2>
+
+        <h3>How Long Should a YouTube Video Description Be?</h3>
+
+        <p>YouTube allows up to 5,000 characters for video descriptions. There is no minimum requirement but descriptions under 200 words leave significant keyword and SEO value on the table. A well-structured description of 200 to 350 words covering the six sections in this guide is enough to satisfy both the algorithm and the viewer without padding.</p>
+
+        <h3>What Should I Put in My YouTube Description?</h3>
+
+        <p>A complete youtube video description template covers six elements in order: a keyword-rich opening in the first 200 characters, a video summary with supporting keywords, timestamped chapters for videos over five minutes, a call to action with a next video link, important external links, and three to five hashtags at the bottom.</p>
+
+        <h3>Does the YouTube Description Affect SEO?</h3>
+
+        <p>Yes. YouTube reads your description to categorize your video, match it to search queries, and determine suggested video placement. The first 200 characters carry the most weight. Natural keyword placement throughout the full description reinforces the topic signal your title establishes and improves both search ranking and suggested feed placement.</p>
+
+        <h3>Can I Use the Same Description Template for Every Video?</h3>
+
+        <p>The structure stays the same across every upload. The content changes. Your keyword opening, video summary, and timestamps are specific to each video and must be written fresh. Your CTA, links, and hashtags can remain consistent across uploads and are best set as a default template in YouTube Studio's Upload Defaults settings.</p>
+
+        <h3>What Is the Best Description for a YouTube Channel?</h3>
+
+        <p>A good youtube channel description leads with who the channel is for, states what it delivers and how often, includes two to three core niche keywords naturally, and ends with one clear call to action. It stays within the 1,000-character limit and avoids generic phrases that waste character space without communicating value to a new visitor.</p>
+
+        <h2>A Template Saves Time. A Good Template Builds a Channel</h2>
+
+        <p>A youtube description template is not just a time-saving tool. It is a consistency system that ensures every upload sends a complete, accurate <a href="/blog/youtube-algorithm">metadata signal to the algorithm</a> without relying on memory or effort under time pressure.</p>
+
+        <p>The structure in this guide works because it is built around what YouTube needs to categorize your content and what viewers need to decide whether to watch. A keyword-rich opening above the fold. A clear video summary with supporting keywords.</p>
+
+        <p>Timestamps, CTAs, links, and hashtags in the right order. Apply that structure consistently and your descriptions compound into a searchable content library rather than a collection of undiscoverable uploads.</p>
+
+        <p>The same discipline applies to your channel description. A best description for youtube channel tells every new visitor exactly who the channel is for, what it delivers, and why subscribing is worth their time. One well-written channel description works for you on every visit without needing to be rewritten.</p>
+
+        <p>Set your permanent links, social handles, and hashtags as a default template in YouTube Studio Upload Defaults. Fill in the video-specific sections before every upload. That process takes under five minutes and covers everything the algorithm needs to distribute your content accurately.</p>
+      </>
+      )
+    },
+  },
   {
     slug: 'youtube-title',
     title: 'How to Write a YouTube Title That Ranks and Gets Clicked',
@@ -130,8 +477,6 @@ export const posts = [
 
         <p>Formulas give you a repeatable structure that balances keyword placement and click motivation without starting from a blank page on every upload. Each formula below includes the pattern and a specific example.</p>
 
-        <img src="/blog/youtube-title-formulas.webp" alt="The seven YouTube title formulas at a glance with pattern and example for each" />
-
         <h3>Formula 1: How to + Outcome + Constraint</h3>
 
         <p>The most reliable search-friendly formula. It matches how-to search intent directly and adds a constraint that makes the outcome feel more achievable.</p>
@@ -195,6 +540,13 @@ export const posts = [
         </ul>
 
         <p>A description that simply repeats the title word for word adds no additional keyword signal and no additional viewer value. Restate the promise in different words, add one or two supporting details, and move into the body of the description from there.</p>
+
+        <CtaCard
+          to="/features/seo-studio"
+          title="Score every title against the live YouTube niche"
+          sub="SEO Studio runs your title, description, tags, and hashtags against the top-ranking videos in your niche, then pushes the winning combination to YouTube with one click. Free to try."
+          button="Try SEO Studio →"
+        />
 
         <h2>How Your Thumbnail and Title Work as a Pair</h2>
 
@@ -289,13 +641,6 @@ export const posts = [
         <p>That process applied consistently across every upload compounds into a channel where strong CTR becomes the norm rather than the exception.</p>
 
         <p>If you want to take the guesswork out of optimizing your full video metadata beyond the title, the <a href="/features/seo-studio">SEO Studio</a> in ytgrowth.io covers keyword placement, description optimization, tags, and hashtags in one structured workflow so every upload is fully optimized before it goes live.</p>
-
-        <CtaCard
-          to="/features/seo-studio"
-          title="Score every title against the live YouTube niche"
-          sub="SEO Studio runs your title, description, tags, and hashtags against the top-ranking videos in your niche, then pushes the winning combination to YouTube with one click. Free to try."
-          button="Try SEO Studio →"
-        />
       </>
     ),
   },
@@ -559,6 +904,13 @@ export const posts = [
 
         <p>If you want a structured view of how your channel's key metrics compare against competing channels in your niche, the <a href="/features/channel-audit">Channel Audit</a> in ytgrowth.io benchmarks your CTR, retention, SEO, and content patterns against your top competitors and surfaces the single highest priority improvement to act on before your next upload.</p>
 
+        <CtaCard
+          to="/features/channel-audit"
+          title="Find your weakest lever in under 30 seconds"
+          sub="Channel Audit scores your impressions, CTR, retention, and SEO against competing channels in your niche, then tells you exactly which lever to fix first before your next upload. Free to try."
+          button="Try Channel Audit →"
+        />
+
         <h2>11. Collaborate With Other Creators</h2>
 
         <p>Collaborations expose your channel to an audience that already watches content like yours. A viewer who subscribes to a <a href="/blog/youtube-competitor-analysis">channel in your niche</a> and discovers your content through a collaboration is a higher quality potential subscriber than a viewer who finds you through a broad trending topic, because they are already proven consumers of the type of content you make.</p>
@@ -588,13 +940,6 @@ export const posts = [
         <p>How can i get more views on youtube is ultimately a diagnostic question before it is a strategy question. A channel with strong impressions but weak CTR needs better thumbnails and titles, not more keyword research. A channel with strong CTR but weak retention needs better content structure, not more cross-platform promotion. The fix is specific to the problem.</p>
 
         <p>Apply the strategies in this guide in order of impact on your weakest lever. Review your data after every upload. Double down on what your analytics show is working and adjust what is not. That process applied consistently across 20 to 30 uploads compounds into a channel that grows predictably rather than one that waits for a lucky break that may never come.</p>
-
-        <CtaCard
-          to="/features/channel-audit"
-          title="Find your weakest lever in under 30 seconds"
-          sub="Channel Audit scores your impressions, CTR, retention, and SEO against competing channels in your niche, then tells you exactly which lever to fix first before your next upload. Free to try."
-          button="Try Channel Audit →"
-        />
       </>
     ),
   },
@@ -929,6 +1274,13 @@ export const posts = [
 
         <blockquote><strong>Pro Tip:</strong> Use your highest-retention long-form videos as the source material for Shorts. Clip the single most valuable moment from each video and publish it as a Short with a clear call to action pointing to the full video. This approach attracts Shorts viewers who are already interested in your core content and converts them into long-form viewers more reliably than standalone Shorts topics.</blockquote>
 
+        <CtaCard
+          to="/features/channel-audit"
+          title="Run a full channel audit in under 30 seconds"
+          sub="Channel Audit runs the same 10-dimension analysis you just read through, surfaces your single highest priority fix, and benchmarks your CTR, retention, and SEO against competitors in your specific niche. Free to try."
+          button="Try Channel Audit →"
+        />
+
         <h2>The YouTube Channel Audit Checklist</h2>
 
         <p>Use this youtube channel audit checklist every quarter. Work through each category in order and note any item that fails its check as a priority action for the next 30 days.</p>
@@ -1073,13 +1425,6 @@ export const posts = [
         <p>The eight steps in this guide cover every dimension that determines whether your channel grows or stalls. Branding and profile, SEO and metadata, CTR and thumbnails, audience retention, traffic sources, audience data, competitor benchmarks, and Shorts performance. Each one feeds into the next. A weakness in any single dimension limits what every other dimension can achieve.</p>
 
         <p>Run the checklist every 90 days. Track your five key metrics across quarters. Fix the highest priority item first before moving to the next. That process applied consistently is what separates channels that grow predictably from channels that post consistently and wonder why nothing changes.</p>
-
-        <CtaCard
-          to="/features/channel-audit"
-          title="Run a full channel audit in under 30 seconds"
-          sub="Channel Audit runs the same 10-dimension analysis you just read through, surfaces your single highest priority fix, and benchmarks your CTR, retention, and SEO against competitors in your specific niche. Free to try."
-          button="Try Channel Audit →"
-        />
       </>
     ),
   },
@@ -1638,6 +1983,13 @@ export const posts = [
 
         <p>The creators who succeed on YouTube are not the most talented ones. They are the ones who stayed consistent long enough for the platform's mechanics to work in their favor.</p>
 
+        <CtaCard
+          to="/features/channel-audit"
+          title="Get a 10-dimension audit of your channel in minutes"
+          sub="Channel Audit runs your channel against CTR, retention, SEO, competitor benchmarks, and content patterns, then tells you exactly which of the 10 reasons above is hurting you most and what to fix first. Free to try."
+          button="Try Channel Audit →"
+        />
+
         <h2>The Priority Order for Fixing Your Channel</h2>
 
         <p>Most creators who read a list of growth problems try to fix everything simultaneously. That approach spreads effort across ten problems and solves none of them properly. Growth improvements compound when you fix the highest impact problem first, stabilize it, then move to the next.</p>
@@ -1678,13 +2030,6 @@ export const posts = [
         <p>Run the three-metric diagnostic at the top of this guide before changing anything. Identify which number is furthest from its benchmark. That is your starting point. Fix it completely before moving to the next priority on the table.</p>
 
         <p>The creators who turn stalling channels around are not the ones who overhaul everything at once. They are the ones who identify the single highest-impact problem, fix it with a specific and measurable change, and track whether that change moves the relevant metric before touching anything else.</p>
-
-        <CtaCard
-          to="/features/channel-audit"
-          title="Get a 10-dimension audit of your channel in minutes"
-          sub="Channel Audit runs your channel against CTR, retention, SEO, competitor benchmarks, and content patterns, then tells you exactly which of the 10 reasons above is hurting you most and what to fix first. Free to try."
-          button="Try Channel Audit →"
-        />
 
         <p><strong>Growth on YouTube is not a mystery. It is a sequence of fixable problems. Start with the right one.</strong></p>
       </>
