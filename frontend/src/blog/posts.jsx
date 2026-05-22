@@ -130,6 +130,8 @@ export const posts = [
 
         <p>Formulas give you a repeatable structure that balances keyword placement and click motivation without starting from a blank page on every upload. Each formula below includes the pattern and a specific example.</p>
 
+        <img src="/blog/youtube-title-formulas.webp" alt="The seven YouTube title formulas at a glance with pattern and example for each" />
+
         <h3>Formula 1: How to + Outcome + Constraint</h3>
 
         <p>The most reliable search-friendly formula. It matches how-to search intent directly and adds a constraint that makes the outcome feel more achievable.</p>
@@ -229,6 +231,8 @@ export const posts = [
         <h3>Mistake 3: Title Too Long for Mobile</h3>
 
         <p>A title that runs past 65 characters gets truncated on mobile feeds where the majority of YouTube traffic originates. If the most compelling part of your title sits beyond the 60-character mark, most viewers will never see it. Write the title, count the characters, and cut anything that does not earn its place.</p>
+
+        <img src="/blog/youtube-title-mobile-truncation.webp" alt="Mobile YouTube feed showing a long title truncated past the 60-character mark next to one that fits" />
 
         <h3>Mistake 4: Thumbnail and Title Repeating the Same Message</h3>
 
