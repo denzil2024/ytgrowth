@@ -57,6 +57,245 @@ export const CATEGORIES = {
 
 export const posts = [
   {
+    slug: 'youtube-title',
+    title: 'How to Write a YouTube Title That Ranks and Gets Clicked',
+    excerpt: 'A YouTube title has two jobs: tell the algorithm what the video is about and give the viewer a specific reason to click. The core rules, seven proven formulas, and a three-question test you can run on every title before publishing.',
+    date: '2026-05-22',
+    category: CATEGORIES.seo,
+    cover: '/blog/youtube-title-cover.webp',
+    author: 'Denzil',
+    readTime: '10 min read',
+    content: () => (
+      <>
+        <p>A YouTube title has two jobs. The first is to tell the algorithm what your video is about so it appears in the right search results. The second is to give the viewer a specific reason to click when they see it in their feed.</p>
+
+        <p>Most creators optimize for one and ignore the other. A title built purely around a keyword ranks in search but loses the click to a more compelling competitor. A title built purely for curiosity earns clicks from browse traffic but never appears in search results at all.</p>
+
+        <p>How to write a good youtube title means solving both problems in under 60 characters. This guide covers the core rules, proven title formulas, and a three-question test you can run on every title before publishing to make sure it works on both levels.</p>
+
+        <h2>What Makes a YouTube Title Work</h2>
+
+        <p>Every title you write is being evaluated by two audiences simultaneously: <a href="/blog/youtube-algorithm">the YouTube algorithm</a> and the viewer scrolling their feed. Both need to be satisfied for a title to perform well.</p>
+
+        <p>The algorithm reads your title to categorize your video and match it to relevant search queries. It weights keywords that appear early in the title more heavily than those buried at the end. A title with a clear, specific keyword signal gets indexed accurately. A vague or stuffed title gets misread or ignored.</p>
+
+        <p>The viewer reads your title to decide whether clicking is worth their time. They are scanning a feed of competing thumbnails and titles in under two seconds. A title that communicates a clear benefit, outcome, or curiosity gap earns the click. A title that is generic, vague, or misleading loses it.</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Title Type</th>
+              <th>Search Performance</th>
+              <th>CTR Performance</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Keyword only ("YouTube Title Tips")</td><td>Strong</td><td>Weak</td></tr>
+            <tr><td>Click-bait only ("You Won't Believe This")</td><td>Weak</td><td>Short-term spike, long-term drop</td></tr>
+            <tr><td>Both combined ("How to Write a YouTube Title That Gets Clicked")</td><td>Strong</td><td>Strong</td></tr>
+          </tbody>
+        </table>
+
+        <p>How to write good youtube titles that satisfy both audiences requires putting the primary keyword early in the title and building the rest of the title around a specific benefit or outcome the viewer gets by watching. That combination is the foundation every formula in this guide is built on.</p>
+
+        <h2>How to Write a Good YouTube Title: The Core Rules</h2>
+
+        <p>Before applying any formula, five rules apply to every title regardless of niche, format, or content type. Breaking any one of them limits either your search ranking, your CTR, or both.</p>
+
+        <h3>Rule 1: Put Your Primary Keyword in the First 40 to 60 Characters</h3>
+
+        <p>YouTube weights keywords that appear early in the title more heavily for search ranking. Viewers scanning a feed read left to right and make click decisions based on the first few words. A keyword buried at the end of a long title carries <a href="/blog/what-is-youtube-seo">less SEO weight</a> and less viewer impact than one placed at the front.</p>
+
+        <img src="/blog/youtube-title-primary-keyword.webp" alt="Primary keyword placed within the first 40 to 60 characters of the YouTube title for ranking weight" />
+
+        <h3>Rule 2: Keep Your Title Between 40 and 65 Characters</h3>
+
+        <p>YouTube displays approximately 60 characters in desktop search results and roughly 50 on mobile feeds. A title that runs longer than 65 characters gets truncated and the most important part of your message may never be seen. The median title length of top-performing videos is eight words, which typically falls between 45 and 55 characters.</p>
+
+        <h3>Rule 3: Use Specific Numbers and Details Over Vague Claims</h3>
+
+        <p>"How to Save Money" is vague. "How to Save $500 a Month on a Tight Budget" is specific. Specific titles signal credibility, set clear expectations, and consistently outperform vague ones on CTR because they tell the viewer exactly what they are getting before they click.</p>
+
+        <img src="/blog/youtube-title-specific-numbers.webp" alt="Specific number and outcome in a YouTube title outperforming a vague version on click-through rate" />
+
+        <h3>Rule 4: Do Not Keyword Stuff</h3>
+
+        <p>YouTube's algorithm now understands content at a semantic level. It reads your transcript, analyzes your visuals, and builds a full picture of your video's topic beyond the title alone. Repeating the same keyword multiple times in a title does not improve ranking. It makes the title harder to read and reduces CTR without any SEO benefit.</p>
+
+        <h3>Rule 5: Write the Title Before You Write the Script</h3>
+
+        <p>A title written before filming forces clarity on what the video is actually about. A title written after filming often reflects what was covered rather than what the viewer is searching for. Starting with the title aligns your entire script around a specific viewer intent from the first sentence.</p>
+
+        <h2>How to Write the Best Title for Your YouTube Video Using Proven Formulas</h2>
+
+        <p>Formulas give you a repeatable structure that balances keyword placement and click motivation without starting from a blank page on every upload. Each formula below includes the pattern and a specific example.</p>
+
+        <h3>Formula 1: How to + Outcome + Constraint</h3>
+
+        <p>The most reliable search-friendly formula. It matches how-to search intent directly and adds a constraint that makes the outcome feel more achievable.</p>
+
+        <p><strong>Example:</strong> "How to Lose Weight Without Going to the Gym"</p>
+
+        <h3>Formula 2: Number + Things + Result</h3>
+
+        <p>Numbers signal specific, structured content and consistently outperform non-numbered titles on CTR. The result tells the viewer what they get from the list.</p>
+
+        <p><strong>Example:</strong> "7 YouTube Mistakes That Are Killing Your Views"</p>
+
+        <h3>Formula 3: Why + Common Belief + Is Wrong</h3>
+
+        <p>Challenges an assumption the viewer already holds, which creates enough curiosity to earn the click even from viewers who were not actively searching for the topic.</p>
+
+        <p><strong>Example:</strong> "Why Posting Every Day Is Hurting Your Channel"</p>
+
+        <h3>Formula 4: The Truth About + Topic</h3>
+
+        <p>A curiosity gap formula that implies the viewer is missing something important. Works best when the video genuinely delivers a perspective most content in the niche does not cover.</p>
+
+        <p><strong>Example:</strong> "The Truth About YouTube Monetization Nobody Tells You"</p>
+
+        <h3>Formula 5: X vs Y</h3>
+
+        <p>Comparison intent is one of the highest-CTR search patterns on YouTube because the viewer is actively making a decision and wants a clear verdict.</p>
+
+        <p><strong>Example:</strong> "<a href="/blog/tubebuddy-vs-vidiq">TubeBuddy vs vidIQ</a>: Which One Is Actually Worth It"</p>
+
+        <h3>Formula 6: The Warning or Mistake Pattern</h3>
+
+        <p>Negative framing triggers a stronger click response than positive framing in most niches because viewers are more motivated to avoid a loss than to achieve a gain.</p>
+
+        <p><strong>Example:</strong> "Stop Making These 5 YouTube Title Mistakes"</p>
+
+        <h3>Formula 7: Number + Adjective + Topic + Result</h3>
+
+        <p>Combines specificity, an emotional modifier, and a clear outcome into one tight title structure.</p>
+
+        <p><strong>Example:</strong> "12 Proven Strategies to <a href="/blog/more-views-on-youtube">Get More Views on YouTube</a>"</p>
+
+        <blockquote><strong>Pro Tip:</strong> Write three to five title variations using different formulas before choosing the strongest one. The first title you write is rarely the best one. Running multiple variations forces you to find the most compelling angle rather than defaulting to the most obvious phrasing.</blockquote>
+
+        <h2>How to Write Title and Description in YouTube Together</h2>
+
+        <p>Your title and description are not two separate tasks. They are two parts of the same signal you send to YouTube about what your video covers and who it is for. A strong title with a weak description leaves half that signal incomplete.</p>
+
+        <p>The description's first two sentences carry the most SEO weight of anything you write below the title. YouTube reads those opening lines as the primary context for your video's topic alongside the title itself.</p>
+
+        <img src="/blog/youtube-title-description.webp" alt="Title and description working together as a connected SEO signal in YouTube Studio" />
+
+        <p>Place your primary keyword naturally in the first sentence and a supporting keyword variation in the second. Everything after that is written for the viewer, not the algorithm.</p>
+
+        <p>How to write title and description in youtube as a connected system:</p>
+
+        <ul>
+          <li><strong>The title states the promise:</strong> The opening two lines of the description restate and expand it with natural keyword variation.</li>
+          <li><strong>The title targets the primary keyword:</strong> The description targets supporting long-tail variations that the title does not have room for.</li>
+          <li><strong>The title earns the click:</strong> The description confirms to the viewer who has already clicked that they are in the right place.</li>
+        </ul>
+
+        <p>A description that simply repeats the title word for word adds no additional keyword signal and no additional viewer value. Restate the promise in different words, add one or two supporting details, and move into the body of the description from there.</p>
+
+        <h2>How Your Thumbnail and Title Work as a Pair</h2>
+
+        <p>Your <a href="/blog/youtube-thumbnail-ideas">thumbnail and title</a> are evaluated together by every viewer who sees your video in a feed. They are not two separate creative decisions. They are one combined packaging unit and the strongest combinations treat them that way.</p>
+
+        <p>The thumbnail's job is to create the hook. The title's job is to deliver the context. When both are designed around the same message, the viewer gets a complete picture of what the video offers in under two seconds. When they repeat each other, half the available communication space is wasted.</p>
+
+        <img src="/blog/youtube-title-thumbnails.webp" alt="Thumbnail and title combination complementing rather than repeating each other" />
+
+        <p>A thumbnail showing a shocked face next to the words "THIS CHANGED EVERYTHING" paired with a title that says "This Changed Everything" tells the viewer nothing specific. A thumbnail showing the same shocked face paired with a title that says "Why I Deleted My Best-Performing Video" uses both elements to communicate something specific and curiosity-driven that neither could achieve alone.</p>
+
+        <h3>The Test for a Strong Thumbnail and Title Combination</h3>
+
+        <p>Cover the thumbnail and ask whether the title alone gives the viewer enough reason to click. Then cover the title and ask whether the thumbnail alone communicates the video's topic clearly. If both pass independently, the combination will be stronger than either on its own.</p>
+
+        <p>For new uploads, the <a href="/features/thumbnail-iq">Thumbnail IQ</a> feature in ytgrowth.io scores your thumbnail against niche benchmarks before you publish, so you can confirm the visual side of your packaging is competitive before pairing it with your title.</p>
+
+        <h2>Title Mistakes That Kill CTR</h2>
+
+        <p>Knowing how to write a youtube title that performs well is only half the equation. The other half is knowing which habits consistently suppress CTR and fixing them before they become patterns across your entire library.</p>
+
+        <h3>Mistake 1: Clickbait That Overpromises</h3>
+
+        <p>A title that overpromises inflates clicks in the short term. When viewers land on a video that does not deliver what the title suggested, they leave early. That drop-off tells YouTube the content is not relevant and the algorithm pulls back on distribution.</p>
+
+        <p>The fix is straightforward: write a title that accurately reflects what the video delivers. Strong CTR built on accurate expectations produces better long-term results than a spike built on disappointment.</p>
+
+        <img src="/blog/youtube-title-clickbait.webp" alt="Clickbait title with overpromise causing early viewer drop-off and suppressed distribution" />
+
+        <h3>Mistake 2: Keyword Stuffing</h3>
+
+        <p>"How to Write YouTube Titles, Best YouTube Title Tips, YouTube Title SEO 2026" is not a title. It is a tag list formatted as a sentence. Keyword stuffing makes titles unreadable and reduces CTR without improving search ranking. Include one primary keyword naturally and let the description and <a href="/blog/youtube-tags">tags handle supporting keyword variations</a>.</p>
+
+        <h3>Mistake 3: Title Too Long for Mobile</h3>
+
+        <p>A title that runs past 65 characters gets truncated on mobile feeds where the majority of YouTube traffic originates. If the most compelling part of your title sits beyond the 60-character mark, most viewers will never see it. Write the title, count the characters, and cut anything that does not earn its place.</p>
+
+        <h3>Mistake 4: Thumbnail and Title Repeating the Same Message</h3>
+
+        <p>Covered in the previous section but worth reinforcing here as a CTR mistake. When both elements say the same thing, the combined packaging communicates no more than either element does alone. Use the thumbnail and title to complement each other, not duplicate each other.</p>
+
+        <h2>The Three-Question Test Before You Publish</h2>
+
+        <p>Before finalizing any title, run it through three questions. A title that passes all three is ready to publish. A title that fails any one of them needs another revision.</p>
+
+        <h3>Question 1: Does It Include My Primary Keyword Naturally?</h3>
+
+        <p>Read the title out loud. If the keyword sounds forced or interrupts the natural flow of the sentence, it needs to be rewritten. A keyword placed naturally reads as a normal sentence to a viewer and as a clear topic signal to the algorithm. Both outcomes require the same thing: a keyword that fits the title rather than a title built around the keyword.</p>
+
+        <h3>Question 2: If I Saw This Alongside 10 Competitor Titles, Would I Click It?</h3>
+
+        <p>Open YouTube and search your primary keyword. Look at the titles currently ranking for that query. Read your title alongside them as a viewer with no investment in your channel. If it does not stand out or offer something the competing titles do not, it needs a stronger benefit, a more specific number, or a more compelling angle before it is ready.</p>
+
+        <img src="/blog/youtube-title-good-title.webp" alt="Strong YouTube title alongside competitor results passing the click-test in feed view" />
+
+        <h3>Question 3: Does It Accurately Reflect What the Video Delivers?</h3>
+
+        <p>A title that sets an expectation the video does not meet produces <a href="/blog/youtube-watch-hours">early drop-offs that suppress distribution</a>. Every word in the title should correspond to something the video actually delivers. If the title promises a transformation, the video needs to deliver one. If it promises a specific number of tips, that number needs to be in the video.</p>
+
+        <blockquote><strong>Pro Tip:</strong> Write three to five title variations before choosing the final one. Run each variation through the three-question test and pick the one that passes most convincingly. The first title you write is rarely the strongest one.</blockquote>
+
+        <h2>Frequently Asked Questions</h2>
+
+        <h3>How Long Should a YouTube Title Be?</h3>
+
+        <p>Keep your title between 40 and 65 characters. YouTube truncates titles beyond 60 characters on mobile feeds where the majority of traffic originates. The median title length of top-performing videos is eight words, which typically falls between 45 and 55 characters.</p>
+
+        <h3>Should I Put My Keyword at the Beginning of My YouTube Title?</h3>
+
+        <p>Yes. Place your primary keyword within the first 40 to 60 characters of the title. YouTube weights keywords that appear early more heavily for search ranking, and viewers scanning a feed read left to right and make click decisions based on the first words they see.</p>
+
+        <h3>Can I Change a YouTube Title After Publishing?</h3>
+
+        <p>Yes. You can update a title at any time inside YouTube Studio by opening the video's details page and editing the title field directly. Updating a title on an existing video can improve CTR and trigger a fresh distribution test from the algorithm, making it one of the easiest ways to revive a video that has stopped performing.</p>
+
+        <h3>How Do I Know if My YouTube Title Is Working?</h3>
+
+        <p><a href="/blog/youtube-channel-audit">Check your CTR in YouTube Studio</a> under the Reach tab within the first 48 hours of publishing. A CTR below 4% on a new upload signals the title or thumbnail is not converting impressions into clicks. If impressions are strong but CTR is weak, the title is the first variable to update.</p>
+
+        <h3>Should I Use the Same Title Formula for Every Video?</h3>
+
+        <p>No. Different content types perform better with different formulas. How-to content performs best with the outcome plus constraint formula. List content performs best with a numbered title. Commentary and opinion content performs best with curiosity gap or challenge formulas. Study which formula your highest-CTR videos use and apply it to similar content going forward.</p>
+
+        <h2>Your Title Is the First Thing That Either Works or Doesn't</h2>
+
+        <p>Every view your video gets starts with a title decision. A viewer saw your title, decided it was worth their time, and clicked. Everything that happens after that click depends on your content. Everything before it depends on your title.</p>
+
+        <p>How to write a youtube title that performs well is not a creative skill. It is a repeatable process. <a href="/blog/youtube-tag-finder">Research the keyword</a> before you write anything. Apply a formula that matches the content type. Keep it under 65 characters. Run it through the three-question test. Pair it with a thumbnail that complements rather than repeats it.</p>
+
+        <p>That process applied consistently across every upload compounds into a channel where strong CTR becomes the norm rather than the exception.</p>
+
+        <p>If you want to take the guesswork out of optimizing your full video metadata beyond the title, the <a href="/features/seo-studio">SEO Studio</a> in ytgrowth.io covers keyword placement, description optimization, tags, and hashtags in one structured workflow so every upload is fully optimized before it goes live.</p>
+
+        <CtaCard
+          to="/features/seo-studio"
+          title="Score every title against the live YouTube niche"
+          sub="SEO Studio runs your title, description, tags, and hashtags against the top-ranking videos in your niche, then pushes the winning combination to YouTube with one click. Free to try."
+          button="Try SEO Studio →"
+        />
+      </>
+    ),
+  },
+  {
     slug: 'more-views-on-youtube',
     title: 'How to Get More Views on YouTube: 11 Strategies That Work in 2026',
     excerpt: 'Most creators stuck at low view counts have a problem in one specific part of the YouTube view funnel. The 11 strategies that move the three levers that actually matter: impressions, click-through rate, and retention.',
