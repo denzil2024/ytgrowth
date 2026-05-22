@@ -1,4 +1,4 @@
-import{r as e}from"./chunk-DECur_0Z.js";import{n as t,t as n}from"./jsx-runtime-CP2iHdEU.js";import{i as r,n as i,r as a}from"./index-U7DqCA8T.js";import{t as o}from"./LandingFooter-BSfMA8xY.js";import{t as s}from"./SiteHeader-B5nrvV2X.js";import{n as c,r as l,t as u}from"./posts-D_6ii1xB.js";var d=e(t(),1),f=n();function p(){let[e,t]=(0,d.useState)(typeof window<`u`?window.innerWidth:1280);return(0,d.useEffect)(()=>{let e=()=>t(window.innerWidth);return window.addEventListener(`resize`,e),()=>window.removeEventListener(`resize`,e)},[]),{isMobile:e<=768,isTablet:e<=1024}}function m(){(0,d.useEffect)(()=>{if(document.getElementById(`bp-styles`))return;let e=document.createElement(`link`);e.id=`bp-font`,e.rel=`stylesheet`,e.href=`https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700;800;900&family=Inter:wght@300;400;500;600;700;800&display=swap`,document.head.appendChild(e);let t=document.createElement(`style`);t.id=`bp-styles`,t.textContent=`
+import{r as e}from"./chunk-DECur_0Z.js";import{n as t,t as n}from"./jsx-runtime-CP2iHdEU.js";import{i as r,n as i,r as a}from"./index-CxQNhgpv.js";import{t as o}from"./LandingFooter-BSfMA8xY.js";import{t as s}from"./SiteHeader-B5nrvV2X.js";import{n as c,r as l,t as u}from"./posts-DcpsvSAn.js";var d=e(t(),1),f=n();function p(){let[e,t]=(0,d.useState)(typeof window<`u`?window.innerWidth:1280);return(0,d.useEffect)(()=>{let e=()=>t(window.innerWidth);return window.addEventListener(`resize`,e),()=>window.removeEventListener(`resize`,e)},[]),{isMobile:e<=768,isTablet:e<=1024}}function m(){(0,d.useEffect)(()=>{if(document.getElementById(`bp-styles`))return;let e=document.createElement(`link`);e.id=`bp-font`,e.rel=`stylesheet`,e.href=`https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700;800;900&family=Inter:wght@300;400;500;600;700;800&display=swap`,document.head.appendChild(e);let t=document.createElement(`style`);t.id=`bp-styles`,t.textContent=`
       :root {
         --ytg-bg:           #f4f4f6;
         --ytg-bg-2:         #ecedf1;
@@ -409,6 +409,60 @@ import{r as e}from"./chunk-DECur_0Z.js";import{n as t,t as n}from"./jsx-runtime-
         border: 0;
         border-top: 1px solid var(--ytg-border);
         margin: 2.8em 0;
+      }
+
+      /* Template block — light card with a Copy pill in the top-right.
+         Used in posts that hand the reader a paste-ready text artifact
+         (description templates, channel about templates, script outlines).
+         Monospace body but readable on a light surface — the dark <pre>
+         treatment is wrong for paste-ready text the reader needs to scan. */
+      .bp-prose .bp-template-block {
+        position: relative;
+        background: var(--ytg-bg);
+        border: 1px solid var(--ytg-border);
+        border-radius: 14px;
+        margin: 2.4em 0;
+        padding: 52px 30px 28px 30px;
+      }
+      .bp-prose .bp-template-copy {
+        position: absolute;
+        top: 12px;
+        right: 14px;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: #ffffff;
+        border: 1px solid var(--ytg-border);
+        padding: 6px 12px 6px 10px;
+        font-size: 12.5px;
+        font-weight: 700;
+        color: var(--ytg-accent);
+        cursor: pointer;
+        font-family: 'Inter', system-ui, sans-serif;
+        border-radius: 100px;
+        letter-spacing: -0.1px;
+        transition: background 0.15s, border-color 0.15s, color 0.15s, box-shadow 0.15s;
+        box-shadow: 0 1px 2px rgba(10,10,15,0.04);
+      }
+      .bp-prose .bp-template-copy:hover {
+        background: var(--ytg-accent-light);
+        border-color: rgba(229,48,42,0.20);
+        box-shadow: 0 2px 6px rgba(229,48,42,0.10);
+      }
+      .bp-prose .bp-template-copy svg { flex-shrink: 0; }
+      .bp-prose .bp-template-text {
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 13.5px;
+        line-height: 1.75;
+        color: var(--ytg-text);
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        margin: 0;
+      }
+      @media (max-width: 768px) {
+        .bp-prose .bp-template-block { padding: 48px 18px 20px; border-radius: 12px; }
+        .bp-prose .bp-template-text { font-size: 12.5px; line-height: 1.7; }
+        .bp-prose .bp-template-copy { top: 10px; right: 10px; font-size: 12px; padding: 5px 11px 5px 9px; }
       }
 
       .bp-prose table {

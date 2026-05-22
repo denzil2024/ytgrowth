@@ -31,28 +31,37 @@ export function CtaButton({ to = '/dashboard', children = 'Try free →' }) {
   return <a href={to} className="bp-cta-inline">{children}</a>
 }
 
-/* Copy-to-clipboard pill — same red pill styling as CtaButton but the click
-   handler writes a fixed string of text to the user's clipboard. Use above
-   any <pre> block of template text the reader is meant to paste verbatim
-   (description templates, channel about templates, script outlines, etc.).
-   The label flips to "Copied" for 1.6s on success. */
-export function CopyTemplateButton({ text, label = 'Copy template →' }) {
+/* Template block — a light card holding paste-ready text (description
+   templates, channel about templates, script outlines, etc.) with a small
+   "Copy" pill in the top-right that writes the full text to the user's
+   clipboard. The label flips to "Copied" for 1.6s on success. Use this
+   instead of <pre> when the reader is supposed to copy the text verbatim. */
+export function TemplateBlock({ text }) {
   return (
-    <a
-      href="#"
-      onClick={(e) => {
-        e.preventDefault()
-        if (typeof navigator === 'undefined' || !navigator.clipboard) return
-        const el = e.currentTarget
-        navigator.clipboard.writeText(text).then(() => {
-          if (!el) return
-          const orig = el.textContent
-          el.textContent = 'Copied'
-          setTimeout(() => { el.textContent = orig }, 1600)
-        }).catch(() => {})
-      }}
-      className="bp-cta-inline"
-    >{label}</a>
+    <div className="bp-template-block">
+      <button
+        type="button"
+        className="bp-template-copy"
+        onClick={(e) => {
+          if (typeof navigator === 'undefined' || !navigator.clipboard) return
+          const btn = e.currentTarget
+          const labelEl = btn.querySelector('.bp-template-copy-label')
+          navigator.clipboard.writeText(text).then(() => {
+            if (!labelEl) return
+            labelEl.textContent = 'Copied'
+            setTimeout(() => { labelEl.textContent = 'Copy' }, 1600)
+          }).catch(() => {})
+        }}
+      >
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+          <rect width="13" height="13" x="9" y="9" rx="2"/>
+          <path d="M5 15c-1.1 0-2-.9-2-2V5c0-1.1.9-2 2-2h8c1.1 0 2 .9 2 2"/>
+        </svg>
+        <span className="bp-template-copy-label">Copy</span>
+      </button>
+      <div className="bp-template-text">{text}</div>
+    </div>
   )
 }
 
@@ -243,10 +252,10 @@ Subscribe to stay updated on [content topic] and learn how to [key benefit].
 
         <p>Add timestamped chapters for any video over five minutes. Format them as:</p>
 
-        <pre>00:00 Introduction
+        <TemplateBlock text={`00:00 Introduction
 01:30 First section title
 04:15 Second section title
-07:40 Third section title</pre>
+07:40 Third section title`} />
 
         <h3>Section 4: Call to Action and Next Video Link</h3>
 
@@ -266,21 +275,15 @@ Subscribe to stay updated on [content topic] and learn how to [key benefit].
 
         <h3>Tutorial and How-To Videos</h3>
 
-        <p><CopyTemplateButton text={TUTORIAL_TEMPLATE} /></p>
-
-        <pre>{TUTORIAL_TEMPLATE}</pre>
+        <TemplateBlock text={TUTORIAL_TEMPLATE} />
 
         <h3>Product Review and Comparison Videos</h3>
 
-        <p><CopyTemplateButton text={REVIEW_TEMPLATE} /></p>
-
-        <pre>{REVIEW_TEMPLATE}</pre>
+        <TemplateBlock text={REVIEW_TEMPLATE} />
 
         <h3>Vlog and Day in the Life Videos</h3>
 
-        <p><CopyTemplateButton text={VLOG_TEMPLATE} /></p>
-
-        <pre>{VLOG_TEMPLATE}</pre>
+        <TemplateBlock text={VLOG_TEMPLATE} />
 
         <CtaCard
           to="/features/seo-studio"
@@ -321,21 +324,15 @@ Subscribe to stay updated on [content topic] and learn how to [key benefit].
 
         <h3>Educational and Tutorial Channel</h3>
 
-        <p><CopyTemplateButton text={EDUCATIONAL_CHANNEL} /></p>
-
-        <pre>{EDUCATIONAL_CHANNEL}</pre>
+        <TemplateBlock text={EDUCATIONAL_CHANNEL} />
 
         <h3>Personal Brand and Vlog Channel</h3>
 
-        <p><CopyTemplateButton text={PERSONAL_CHANNEL} /></p>
-
-        <pre>{PERSONAL_CHANNEL}</pre>
+        <TemplateBlock text={PERSONAL_CHANNEL} />
 
         <h3>Business and Brand Channel</h3>
 
-        <p><CopyTemplateButton text={BUSINESS_CHANNEL} /></p>
-
-        <pre>{BUSINESS_CHANNEL}</pre>
+        <TemplateBlock text={BUSINESS_CHANNEL} />
 
         <p>A good youtube channel description works the same way across all three templates. It leads with who the channel serves, states what it delivers, and ends with one clear next step. The specific details change. The structure does not.</p>
 

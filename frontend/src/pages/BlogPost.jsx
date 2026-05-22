@@ -557,6 +557,60 @@ function useStyles() {
         margin: 2.8em 0;
       }
 
+      /* Template block — light card with a Copy pill in the top-right.
+         Used in posts that hand the reader a paste-ready text artifact
+         (description templates, channel about templates, script outlines).
+         Monospace body but readable on a light surface — the dark <pre>
+         treatment is wrong for paste-ready text the reader needs to scan. */
+      .bp-prose .bp-template-block {
+        position: relative;
+        background: var(--ytg-bg);
+        border: 1px solid var(--ytg-border);
+        border-radius: 14px;
+        margin: 2.4em 0;
+        padding: 52px 30px 28px 30px;
+      }
+      .bp-prose .bp-template-copy {
+        position: absolute;
+        top: 12px;
+        right: 14px;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: #ffffff;
+        border: 1px solid var(--ytg-border);
+        padding: 6px 12px 6px 10px;
+        font-size: 12.5px;
+        font-weight: 700;
+        color: var(--ytg-accent);
+        cursor: pointer;
+        font-family: 'Inter', system-ui, sans-serif;
+        border-radius: 100px;
+        letter-spacing: -0.1px;
+        transition: background 0.15s, border-color 0.15s, color 0.15s, box-shadow 0.15s;
+        box-shadow: 0 1px 2px rgba(10,10,15,0.04);
+      }
+      .bp-prose .bp-template-copy:hover {
+        background: var(--ytg-accent-light);
+        border-color: rgba(229,48,42,0.20);
+        box-shadow: 0 2px 6px rgba(229,48,42,0.10);
+      }
+      .bp-prose .bp-template-copy svg { flex-shrink: 0; }
+      .bp-prose .bp-template-text {
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 13.5px;
+        line-height: 1.75;
+        color: var(--ytg-text);
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        margin: 0;
+      }
+      @media (max-width: 768px) {
+        .bp-prose .bp-template-block { padding: 48px 18px 20px; border-radius: 12px; }
+        .bp-prose .bp-template-text { font-size: 12.5px; line-height: 1.7; }
+        .bp-prose .bp-template-copy { top: 10px; right: 10px; font-size: 12px; padding: 5px 11px 5px 9px; }
+      }
+
       .bp-prose table {
         width: 100%;
         border-collapse: collapse;
